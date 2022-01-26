@@ -79,21 +79,21 @@ export default class AppFiresideHostThumb extends Vue {
 
 <template>
 	<div class="-thumb">
-		<app-user-card-hover :user="host.userModel" :hover-delay="0" no-stats>
+		<AppUserCardHover :user="host.userModel" :hover-delay="0" no-stats>
 			<div class="-click-capture" @click="onClick">
 				<div class="-display-thumb" :class="{ '-hidden': !showingVideoThumb }">
 					<template v-if="showingVideoThumb">
-						<app-fireside-stream-video
+						<AppFiresideStreamVideo
 							v-if="c.rtc.value && !c.rtc.value.videoPaused"
 							:rtc-user="host"
 							low-bitrate
 						/>
-						<app-jolticon v-else icon="camera" class="-display-thumb-icon" />
+						<AppJolticon v-else icon="camera" class="-display-thumb-icon" />
 					</template>
 				</div>
 
 				<div class="-avatar-wrap" :class="{ '-full': !showingVideoThumb }">
-					<app-fireside-host-thumb-indicator :host="host" />
+					<AppFiresideHostThumbIndicator :host="host" />
 				</div>
 
 				<div class="-spacer" />
@@ -107,35 +107,35 @@ export default class AppFiresideHostThumb extends Vue {
 						v-app-tooltip="$gettext(`Muted`)"
 						class="-option -option-warn anim-fade-enter-enlarge anim-fade-leave-shrink"
 					>
-						<app-jolticon icon="audio-mute" />
+						<AppJolticon icon="audio-mute" />
 					</span>
 				</transition>
 
 				<div class="-options-spacer" />
 
-				<app-popper
+				<AppPopper
 					v-if="!hideOptions"
 					placement="top"
 					@show="emitShowPopper"
 					@hide="emitHidePopper"
 				>
 					<a v-app-tooltip="$gettext('Options')" class="-option -option-show-hover">
-						<app-jolticon icon="cog" />
+						<AppJolticon icon="cog" />
 					</a>
 
 					<template #popover>
 						<div class="list-group">
 							<a v-if="!host.micAudioMuted" class="list-group-item" @click="mute()">
-								<translate>Mute</translate>
+								<AppTranslate>Mute</AppTranslate>
 							</a>
 							<a v-else class="list-group-item" @click="unmute()">
-								<translate>Unmute</translate>
+								<AppTranslate>Unmute</AppTranslate>
 							</a>
 						</div>
 					</template>
-				</app-popper>
+				</AppPopper>
 			</div>
-		</app-user-card-hover>
+		</AppUserCardHover>
 	</div>
 </template>
 

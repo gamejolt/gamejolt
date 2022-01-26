@@ -167,7 +167,7 @@ export default class AppUserSpawnDay extends Vue {
 </script>
 
 <template>
-	<app-alert-dismissable
+	<AppAlertDismissable
 		v-if="shouldShowSpawnDay"
 		alert-type="info"
 		:dismiss-key="`user-spawn-day-${user.id}-${spawnDayYear}`"
@@ -185,13 +185,13 @@ export default class AppUserSpawnDay extends Vue {
 				That means on this day, you have been on Game Jolt for %{ years }!
 			</p>
 			<p>
-				<translate>
+				<AppTranslate>
 					Tell your followers, let the world know!
-				</translate>
+				</AppTranslate>
 			</p>
-			<app-button @click="showNewPost">
-				<translate>Celebrate</translate>
-			</app-button>
+			<AppButton @click="showNewPost">
+				<AppTranslate>Celebrate</AppTranslate>
+			</AppButton>
 		</template>
 		<template v-else>
 			<h4>
@@ -205,16 +205,16 @@ export default class AppUserSpawnDay extends Vue {
 			</p>
 			<template v-if="user.shouts_enabled">
 				<p>
-					<translate>
+					<AppTranslate>
 						It is customary to wish them a happy Spawn Day, so you should too.
-					</translate>
+					</AppTranslate>
 				</p>
-				<app-button @click="showComments">
-					<translate>Send your wishes</translate>
-				</app-button>
+				<AppButton @click="showComments">
+					<AppTranslate>Send your wishes</AppTranslate>
+				</AppButton>
 			</template>
 		</template>
-	</app-alert-dismissable>
+	</AppAlertDismissable>
 </template>
 
 <style lang="stylus" scoped>

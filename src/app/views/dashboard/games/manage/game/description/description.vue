@@ -59,23 +59,23 @@ export default class RouteDashGamesManageGameDescription extends BaseRouteCompon
 			<div class="page-help">
 				<h4>Writing a Good Description</h4>
 				<p>
-					<translate>
+					<AppTranslate>
 						A good description generally contains things like a gameplay summary,
 						control overview, story, credits, etc. You can edit your description
 						whenever you want and add to it over time.
-					</translate>
+					</AppTranslate>
 				</p>
 				<p>
-					<translate>
+					<AppTranslate>
 						You can also upload images to use as in-context shots for your game or for
 						stylized headings.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 		</div>
 
 		<div class="col-sm-8 col-sm-pull-4">
-			<form-game-description :model="game" :tags="tags" @submit="onSaved" />
+			<FormGameDescription :model="game" :tags="tags" @submit="onSaved" />
 		</div>
 	</div>
 </template>

@@ -125,7 +125,7 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 	<div v-if="scoreTable" class="route-discover-games-view-scores-list">
 		<section class="section">
 			<div class="container">
-				<app-scoreboard-selector
+				<AppScoreboardSelector
 					v-if="Screen.isMobile && scoreTables.length > 1"
 					:current-table="scoreTable"
 					:tables="scoreTables"
@@ -142,7 +142,7 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 						</p>
 						<br />
 
-						<app-nav-tab-list v-if="app.user">
+						<AppNavTabList v-if="app.user">
 							<ul>
 								<li>
 									<router-link
@@ -153,7 +153,7 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 										}"
 										active-class="active"
 									>
-										<translate>game.scores.best_tab</translate>
+										<AppTranslate>game.scores.best_tab</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -167,43 +167,43 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 										}"
 										active-class="active"
 									>
-										<translate>game.scores.user_tab</translate>
+										<AppTranslate>game.scores.user_tab</AppTranslate>
 									</router-link>
 								</li>
 							</ul>
-						</app-nav-tab-list>
+						</AppNavTabList>
 
 						<!--
 							When screen isn't XS, we split the scores out into two columns.
 						-->
-						<app-loading-fade :is-loading="isRouteLoading">
+						<AppLoadingFade :is-loading="isRouteLoading">
 							<div v-if="!Screen.isXs" class="row">
 								<div class="col-sm-6">
-									<app-score-list :scores="scoresLeft" :step="2" />
+									<AppScoreList :scores="scoresLeft" :step="2" />
 								</div>
 								<div class="col-sm-6">
-									<app-score-list
+									<AppScoreList
 										:scores="scoresRight"
 										:start-rank="2"
 										:step="2"
 									/>
 								</div>
 							</div>
-						</app-loading-fade>
+						</AppLoadingFade>
 
 						<!--
 							When screen is XS we just show as one long list.
 						-->
-						<app-loading-fade :is-loading="isRouteLoading">
-							<app-score-list v-if="Screen.isXs" :scores="scores" />
-						</app-loading-fade>
+						<AppLoadingFade :is-loading="isRouteLoading">
+							<AppScoreList v-if="Screen.isXs" :scores="scores" />
+						</AppLoadingFade>
 
 						<div v-if="!scores.length" class="alert alert-notice full-bleed-xs">
 							<template v-if="type === 'best'">
-								<translate>game.scores.no_scores_html</translate>
+								<AppTranslate>game.scores.no_scores_html</AppTranslate>
 							</template>
 							<template v-else-if="type === 'user'">
-								<translate>game.scores.no_user_scores_html</translate>
+								<AppTranslate>game.scores.no_user_scores_html</AppTranslate>
 							</template>
 						</div>
 					</div>
@@ -215,15 +215,15 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 						<!--
 							We put some extra spacing in here because of the affixed game header.
 						-->
-						<app-scroll-affix :scroll-offset="80">
+						<AppScrollAffix :scroll-offset="80">
 							<div class="-score-selector-nav">
-								<app-scoreboard-selector
+								<AppScoreboardSelector
 									:current-table="scoreTable"
 									:tables="scoreTables"
 									@select="changeTable($event)"
 								/>
 							</div>
-						</app-scroll-affix>
+						</AppScrollAffix>
 					</div>
 				</div>
 			</div>

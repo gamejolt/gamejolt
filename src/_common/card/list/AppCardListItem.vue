@@ -49,7 +49,7 @@ function onClick() {
 			@click="onClick"
 		>
 			<div v-if="isDraggable" class="card-drag-handle">
-				<app-jolticon icon="arrows-v" />
+				<AppJolticon icon="arrows-v" />
 			</div>
 			<slot />
 		</AppCard>

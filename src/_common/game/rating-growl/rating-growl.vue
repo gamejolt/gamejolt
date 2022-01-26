@@ -34,20 +34,20 @@ export default class AppGameRatingGrowl extends Vue {
 <template>
 	<div>
 		<h4>
-			<translate>What did you think?</translate>
+			<AppTranslate>What did you think?</AppTranslate>
 		</h4>
 
 		<p>{{ game.title }}</p>
 
 		<div>
-			<app-rating-widget :game="game" />
+			<AppRatingWidget :game="game" />
 		</div>
 
 		<br />
 
 		<p>
 			<em>
-				<translate>Rating the games you play helps us show you better stuff.</translate>
+				<AppTranslate>Rating the games you play helps us show you better stuff.</AppTranslate>
 			</em>
 		</p>
 	</div>

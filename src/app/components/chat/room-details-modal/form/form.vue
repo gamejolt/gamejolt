@@ -32,16 +32,16 @@ export default class FormRoomDetails extends mixins(Wrapper) implements FormOnLo
 </script>
 
 <template>
-	<app-form :controller="form">
+	<AppForm :controller="form">
 		<div class="-form">
-			<app-form-group
+			<AppFormGroup
 				name="title"
 				class="-form-input"
 				:label="$gettext(`Title`)"
 				hide-label
 				optional
 			>
-				<app-form-control
+				<AppFormControl
 					type="text"
 					:validators="[
 						validateMinLength(titleMinLength),
@@ -51,14 +51,14 @@ export default class FormRoomDetails extends mixins(Wrapper) implements FormOnLo
 					:placeholder="$gettext(`Empty group title`)"
 				/>
 
-				<app-form-control-errors />
-			</app-form-group>
+				<AppFormControlErrors />
+			</AppFormGroup>
 
-			<app-button solid primary :disabled="!valid" @click="onRename">
-				<translate>Rename</translate>
-			</app-button>
+			<AppButton solid primary :disabled="!valid" @click="onRename">
+				<AppTranslate>Rename</AppTranslate>
+			</AppButton>
 		</div>
-	</app-form>
+	</AppForm>
 </template>
 
 <style lang="stylus" scoped>

@@ -31,14 +31,14 @@ export default class FormContentBlockEditor extends mixins(Wrapper) {
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="content_markdown" :label="$gettext('Content')" hide-label>
-			<app-form-control-markdown
+	<AppForm :controller="form">
+		<AppFormGroup name="content_markdown" :label="$gettext('Content')" hide-label>
+			<AppFormControlMarkdown
 				:markdown-mode="mode + '-site'"
 				media-item-type="sites-content-image"
 			/>
 
-			<app-form-control-errors />
-		</app-form-group>
-	</app-form>
+			<AppFormControlErrors />
+		</AppFormGroup>
+	</AppForm>
 </template>

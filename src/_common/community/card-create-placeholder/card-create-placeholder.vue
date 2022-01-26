@@ -13,11 +13,11 @@ export default class AppCommunityCardCreatePlaceholder extends Vue {}
 <template>
 	<div class="community-card-create-placeholder sheet">
 		<div class="-text">
-			<translate>Create a Community</translate>
+			<AppTranslate>Create a Community</AppTranslate>
 		</div>
 		<div class="-widget">
 			<div class="-widget-button">
-				<app-community-add-widget />
+				<AppCommunityAddWidget />
 			</div>
 		</div>
 	</div>

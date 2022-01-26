@@ -35,18 +35,18 @@ export default class AppUserBlockOverlay extends Vue {
 				<div class="row">
 					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
 						<div class="user-block">
-							<app-jolticon class="jolticon-4x" icon="friend-remove-2" notice />
+							<AppJolticon class="jolticon-4x" icon="friend-remove-2" notice />
 
-							<h4><translate>You blocked this user.</translate></h4>
+							<h4><AppTranslate>You blocked this user.</AppTranslate></h4>
 							<p>
-								<translate>Are you sure you want to view their profile?</translate>
+								<AppTranslate>Are you sure you want to view their profile?</AppTranslate>
 							</p>
 							<br />
 
 							<p class="-buttons">
-								<app-button trans @click="proceed">
-									<translate>Proceed to Profile</translate>
-								</app-button>
+								<AppButton trans @click="proceed">
+									<AppTranslate>Proceed to Profile</AppTranslate>
+								</AppButton>
 							</p>
 
 							<br />
@@ -57,7 +57,7 @@ export default class AppUserBlockOverlay extends Vue {
 									class="link-muted"
 									:to="{ name: 'dash.account.blocks' }"
 								>
-									<translate>Manage blocked users</translate>
+									<AppTranslate>Manage blocked users</AppTranslate>
 								</router-link>
 							</p>
 						</div>

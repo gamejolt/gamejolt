@@ -43,7 +43,7 @@ export default class AppSitesManagePage extends Vue {
 
 <template>
 	<div>
-		<app-nav-tab-list>
+		<AppNavTabList>
 			<ul>
 				<li>
 					<router-link
@@ -56,9 +56,9 @@ export default class AppSitesManagePage extends Vue {
 						:class="{ active: tab === 'template' }"
 					>
 						<span v-if="templateEnabled" class="page-active-tab">
-							<app-jolticon icon="checkbox" />
+							<AppJolticon icon="checkbox" />
 						</span>
-						<translate>Use a Template</translate>
+						<AppTranslate>Use a Template</AppTranslate>
 					</router-link>
 				</li>
 				<li>
@@ -72,9 +72,9 @@ export default class AppSitesManagePage extends Vue {
 						:class="{ active: tab === 'static' }"
 					>
 						<span v-if="staticEnabled" class="page-active-tab">
-							<app-jolticon icon="checkbox" />
+							<AppJolticon icon="checkbox" />
 						</span>
-						<translate>Upload Your Own</translate>
+						<AppTranslate>Upload Your Own</AppTranslate>
 					</router-link>
 				</li>
 			</ul>
@@ -89,11 +89,11 @@ export default class AppSitesManagePage extends Vue {
 						}"
 						:class="{ active: tab === 'domain' }"
 					>
-						<translate>Custom Domain</translate>
+						<AppTranslate>Custom Domain</AppTranslate>
 					</router-link>
 				</li>
 			</ul>
-		</app-nav-tab-list>
+		</AppNavTabList>
 
 		<div
 			v-if="(templateEnabled && tab === 'template') || (staticEnabled && tab === 'static')"
@@ -102,25 +102,25 @@ export default class AppSitesManagePage extends Vue {
 			<div class="col-sm-9">
 				<div v-if="templateEnabled" class="alert full-bleed-xs">
 					<p>
-						<strong><translate>Your site is turned on and active.</translate></strong>
+						<strong><AppTranslate>Your site is turned on and active.</AppTranslate></strong>
 					</p>
-					<p><translate>You can customize it using the site editor below.</translate></p>
+					<p><AppTranslate>You can customize it using the site editor below.</AppTranslate></p>
 				</div>
 
 				<div v-if="staticEnabled" class="alert full-bleed-xs">
 					<p>
 						<strong
-							><translate
+							><AppTranslate
 								>Your static site is turned on and active.</translate
 							></strong
 						>
 					</p>
-					<p><translate>You can upload new static site builds at any time.</translate></p>
+					<p><AppTranslate>You can upload new static site builds at any time.</AppTranslate></p>
 				</div>
 			</div>
 			<div class="col-sm-3">
 				<div class="clearfix">
-					<app-button
+					<AppButton
 						v-app-tooltip="
 							$gettext(
 								`This will turn your Site off completely and it will no longer be accessible.`
@@ -129,28 +129,28 @@ export default class AppSitesManagePage extends Vue {
 						class="pull-right"
 						@click="disable()"
 					>
-						<translate>Disable</translate>
-					</app-button>
+						<AppTranslate>Disable</AppTranslate>
+					</AppButton>
 				</div>
 				<br />
 			</div>
 		</div>
 
-		<app-sites-manage-page-template
+		<AppSitesManagePageTemplate
 			v-if="tab === 'template'"
 			:site="site"
 			:enabled="templateEnabled"
 			:static-enabled="staticEnabled"
 		/>
 
-		<app-sites-manage-page-static
+		<AppSitesManagePageStatic
 			v-else-if="tab === 'static'"
 			:site="site"
 			:enabled="staticEnabled"
 			:template-enabled="templateEnabled"
 		/>
 
-		<app-sites-manage-page-domain v-else-if="tab === 'domain'" :site="site" :game="game" />
+		<AppSitesManagePageDomain v-else-if="tab === 'domain'" :site="site" :game="game" />
 	</div>
 </template>
 

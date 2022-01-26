@@ -67,13 +67,13 @@ export default class AppCommunitySliderItem extends Vue {
 				'background-image': isUnread ? gradient : undefined,
 			}"
 		>
-			<app-media-item-backdrop
+			<AppMediaItemBackdrop
 				class="-backdrop"
 				:media-item="community.thumbnail"
 				radius="full"
 			>
-				<app-community-thumbnail-img class="-thumb" :community="community" />
-			</app-media-item-backdrop>
+				<AppCommunityThumbnailImg class="-thumb" :community="community" />
+			</AppMediaItemBackdrop>
 		</div>
 
 		<div class="-label">

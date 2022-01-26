@@ -25,26 +25,26 @@ export default class RouteDashGamesManageGameWizardFinish extends BaseRouteCompo
 		<div class="col-sm-7">
 			<div class="alert">
 				<div v-if="canPublish">
-					<translate>
+					<AppTranslate>
 						Your game is ready to be published to the site! If you're not ready yet, you
 						can always save it for later.
-					</translate>
+					</AppTranslate>
 				</div>
 				<div v-else>
-					<translate>
+					<AppTranslate>
 						You still have some information to fill out before we can publish it to the
 						site. You can always save it for later and come back to it, though!
-					</translate>
+					</AppTranslate>
 				</div>
 
 				<div class="alert-actions">
-					<app-button primary :disabled="!canPublish" @click="routeStore.publish()">
-						<translate>Publish</translate>
-					</app-button>
+					<AppButton primary :disabled="!canPublish" @click="routeStore.publish()">
+						<AppTranslate>Publish</AppTranslate>
+					</AppButton>
 
-					<app-button trans @click="routeStore.saveDraft()">
-						<translate>Save Draft</translate>
-					</app-button>
+					<AppButton trans @click="routeStore.saveDraft()">
+						<AppTranslate>Save Draft</AppTranslate>
+					</AppButton>
 				</div>
 			</div>
 		</div>

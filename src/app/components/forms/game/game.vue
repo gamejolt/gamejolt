@@ -106,30 +106,30 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 </script>
 
 <template>
-	<app-form :controller="form">
+	<AppForm :controller="form">
 		<div v-if="stage === 'dev-status'">
 			<p class="page-help">
-				<translate>
+				<AppTranslate>
 					Choose the stage of development that your game is currently in. You are able to
 					change your development stage at any point.
-				</translate>
+				</AppTranslate>
 			</p>
 
-			<app-game-dev-stage-selector @select="selectStage" />
+			<AppGameDevStageSelector @select="selectStage" />
 		</div>
 		<div v-else-if="stage === 'details'">
 			<fieldset>
-				<app-form-group name="title" :label="$gettext(`dash.games.form.title_label`)">
-					<app-form-control
+				<AppFormGroup name="title" :label="$gettext(`dash.games.form.title_label`)">
+					<AppFormControl
 						type="text"
 						:validators="[validateMaxLength(250)]"
 						:disabled="!hasAllPerms"
 					/>
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-				<app-form-group name="path" :label="$gettext(`URL Path`)">
-					<app-form-control
+				<AppFormGroup name="path" :label="$gettext(`URL Path`)">
+					<AppFormControl
 						type="text"
 						:validators="[
 							validateUrlPath(),
@@ -143,16 +143,16 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 						:disabled="!hasAllPerms"
 					/>
 
-					<app-form-control-errors />
+					<AppFormControlErrors />
 
 					<div class="help-block">
 						<div>
-							<translate>
+							<AppTranslate>
 								Customize your game page URLs. Make them really pretty.
-							</translate>
+							</AppTranslate>
 						</div>
 						<div>
-							<translate>Game Page URL</translate>
+							<AppTranslate>Game Page URL</AppTranslate>
 							<code>
 								<span>gamejolt.com/</span>
 								<b>{{ formModel.path?.toLowerCase() || '_' }}</b>
@@ -160,53 +160,53 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 							</code>
 						</div>
 					</div>
-				</app-form-group>
+				</AppFormGroup>
 
-				<app-form-group
+				<AppFormGroup
 					name="web_site"
 					:label="$gettext(`dash.games.form.website_label`)"
 					:optional="true"
 				>
-					<app-form-control
+					<AppFormControl
 						type="url"
 						:validators="[validateMaxLength(250)]"
 						:disabled="!hasAllPerms"
 					/>
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-				<app-form-group
+				<AppFormGroup
 					v-if="engines"
 					name="creation_tool"
 					:label="$gettext(`dash.games.form.engine_label`)"
 				>
-					<app-form-control-select :disabled="!hasBuildsPerms">
+					<AppFormControlSelect :disabled="!hasBuildsPerms">
 						<option value="">
-							<translate>dash.games.form.engine_placeholder</translate>
+							<AppTranslate>dash.games.form.engine_placeholder</AppTranslate>
 						</option>
 						<option v-for="(label, key) of engines" :key="key" :value="key">
 							{{ label }}
 						</option>
-					</app-form-control-select>
-					<app-form-control-errors />
-				</app-form-group>
+					</AppFormControlSelect>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-				<app-expand :when="formModel.creation_tool === 'other'">
-					<app-form-group
+				<AppExpand :when="formModel.creation_tool === 'other'">
+					<AppFormGroup
 						name="creation_tool_other"
 						:label="$gettext(`dash.games.form.engine_other_label`)"
 						:optional="true"
 					>
-						<app-form-control
+						<AppFormControl
 							type="text"
 							:validators="[validateMaxLength(200)]"
 							:disabled="!hasBuildsPerms"
 						/>
 
-						<app-form-control-errors />
+						<AppFormControlErrors />
 
 						<p class="help-block">
-							<translate>dash.games.form.engine_other_help</translate>
+							<AppTranslate>dash.games.form.engine_other_help</AppTranslate>
 							{{ ' ' }}
 							<span
 								v-app-tooltip.touchable="
@@ -214,43 +214,43 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 								"
 								class="text-help"
 							>
-								<translate>dash.games.form.engine_other_why</translate>
+								<AppTranslate>dash.games.form.engine_other_why</AppTranslate>
 							</span>
 						</p>
-					</app-form-group>
-				</app-expand>
+					</AppFormGroup>
+				</AppExpand>
 
 				<template v-if="hasSalesPerms">
-					<app-form-group
+					<AppFormGroup
 						name="referrals_enabled"
 						:label="$gettext(`Add to partner system?`)"
 					>
-						<app-form-control-toggle class="pull-right" />
+						<AppFormControlToggle class="pull-right" />
 
 						<div class="help-block">
 							<div>
-								<translate>
+								<AppTranslate>
 									This will allow Game Jolt Partners to be able to download the
 									game for free, and give them a 10% cut of sales they refer to
 									your game.
-								</translate>
+								</AppTranslate>
 								{{ ' ' }}
 								<router-link
 									:to="{ name: 'landing.partners' }"
 									class="link-help"
 									target="_blank"
 								>
-									<translate>What is a Game Jolt Partner?</translate>
+									<AppTranslate>What is a Game Jolt Partner?</AppTranslate>
 								</router-link>
 							</div>
 							<br />
 
 							<div>
 								<em>
-									<translate>
+									<AppTranslate>
 										Note: This will only be enabled for "paid" or "name your
 										price" games.
-									</translate>
+									</AppTranslate>
 								</em>
 							</div>
 
@@ -262,29 +262,29 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 							<div v-if="account && account.tos_signed_developer === 1">
 								<br />
 								<div class="alert alert-notice">
-									<translate>
+									<AppTranslate>
 										You must sign the new Distribution Agreement which covers
 										the terms for the Partner Program before your games will
 										become available in the Partner Program.
-									</translate>
+									</AppTranslate>
 									{{ ' ' }}
 									<router-link :to="{ name: 'dash.account.financials' }">
-										<translate>
+										<AppTranslate>
 											Click here to view the new Distribution Agreement
-										</translate>
+										</AppTranslate>
 									</router-link>
 								</div>
 							</div>
 						</div>
-					</app-form-group>
+					</AppFormGroup>
 				</template>
 			</fieldset>
 
-			<app-dash-game-wizard-controls>
-				<app-form-button v-if="method === 'edit'">
-					<translate>Save Details</translate>
-				</app-form-button>
-			</app-dash-game-wizard-controls>
+			<AppDashGameWizardControls>
+				<AppFormButton v-if="method === 'edit'">
+					<AppTranslate>Save Details</AppTranslate>
+				</AppFormButton>
+			</AppDashGameWizardControls>
 		</div>
-	</app-form>
+	</AppForm>
 </template>

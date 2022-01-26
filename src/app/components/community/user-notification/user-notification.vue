@@ -64,20 +64,20 @@ export default class AppCommunityUserNotification extends Vue {
 </script>
 
 <template>
-	<app-alert-dismissable
+	<AppAlertDismissable
 		class="-notification"
 		no-margin
 		:dismiss-tooltip="$gettext(`Dismiss`)"
 		@dismiss="onDismiss"
 	>
 		<div class="-community">
-			<app-community-thumbnail-img
+			<AppCommunityThumbnailImg
 				:community="notification.community"
 				class="-community-img"
 			/>
 			<span class="-community-title">{{ notification.community.name }}</span>
 			<span class="dot-separator" />
-			<app-time-ago :date="notification.added_on" class="-community-date" />
+			<AppTimeAgo :date="notification.added_on" class="-community-date" />
 		</div>
 
 		<div class="-message">
@@ -99,7 +99,7 @@ export default class AppCommunityUserNotification extends Vue {
 			</div>
 
 			<template v-if="hasReason">
-				<div><translate>The reason for this action is as follows:</translate></div>
+				<div><AppTranslate>The reason for this action is as follows:</AppTranslate></div>
 				<div class="-reason">
 					<em>
 						<strong>
@@ -109,7 +109,7 @@ export default class AppCommunityUserNotification extends Vue {
 				</div>
 			</template>
 		</div>
-	</app-alert-dismissable>
+	</AppAlertDismissable>
 </template>
 
 <style lang="stylus" scoped>

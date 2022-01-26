@@ -357,7 +357,7 @@ export default class AppVideoPlayer extends Vue {
 		@mousemove="onMouseMove"
 		@keydown="onKeypress"
 	>
-		<app-responsive-dimensions
+		<AppResponsiveDimensions
 			class="-video-container"
 			:class="{ '-with-stats': shouldShowVideoStats }"
 			:style="{ minWidth: blackBarsBreakpoint || 'unset' }"
@@ -373,7 +373,7 @@ export default class AppVideoPlayer extends Vue {
 				}"
 				@click="onVideoClick"
 			>
-				<app-video-player-shaka-lazy
+				<AppVideoPlayerShakaLazy
 					v-if="player && !GJ_IS_SSR"
 					class="-video"
 					:style="{ width }"
@@ -385,18 +385,18 @@ export default class AppVideoPlayer extends Vue {
 				This will show behind the video so that we can switch to it while
 				the video is loading and when it's unfocused/not active.
 				-->
-				<app-media-item-backdrop
+				<AppMediaItemBackdrop
 					class="-backdrop"
 					:style="{ height, width, position: GJ_IS_SSR ? 'relative' : null }"
 					:media-item="mediaItem"
 				>
-					<app-img-responsive
+					<AppImgResponsive
 						class="-img"
 						:style="{ width }"
 						:src="mediaItem.mediaserver_url"
 						alt=""
 					/>
-				</app-media-item-backdrop>
+				</AppMediaItemBackdrop>
 
 				<div
 					class="-overlay -ui"
@@ -406,7 +406,7 @@ export default class AppVideoPlayer extends Vue {
 					}"
 					@click="onVideoClick"
 				>
-					<app-loading v-if="shouldShowLoading" no-color hide-label stationary />
+					<AppLoading v-if="shouldShowLoading" no-color hide-label stationary />
 					<template v-else>
 						<transition>
 							<div
@@ -417,7 +417,7 @@ export default class AppVideoPlayer extends Vue {
 									anim-fade-enter-enlarge anim-fade-leave-shrink
 								"
 							>
-								<app-jolticon class="-paused-indicator-icon" icon="play" />
+								<AppJolticon class="-paused-indicator-icon" icon="play" />
 							</div>
 						</transition>
 					</template>
@@ -433,11 +433,11 @@ export default class AppVideoPlayer extends Vue {
 					>
 						<div class="-bottom-gradient">
 							<div class="-bottom-controls">
-								<app-player-scrubber :player="player" />
+								<AppPlayerScrubber :player="player" />
 
 								<div class="-row">
-									<app-player-playback :player="player" />
-									<app-player-volume
+									<AppPlayerPlayback :player="player" />
+									<AppPlayerVolume
 										:player="player"
 										has-slider
 										@volume-down="triggerVolumeDown"
@@ -454,7 +454,7 @@ export default class AppVideoPlayer extends Vue {
 											{{ readableTime }}
 										</div>
 									</div>
-									<app-player-fullscreen :player="player" />
+									<AppPlayerFullscreen :player="player" />
 								</div>
 							</div>
 						</div>
@@ -464,13 +464,13 @@ export default class AppVideoPlayer extends Vue {
 
 			<div v-if="shouldShowVideoStats" class="-video-stats">
 				<span v-app-tooltip.touchable="$gettext(`Plays`)">
-					<app-jolticon icon="play" />
+					<AppJolticon icon="play" />
 					<span class="-video-stats-label">
 						{{ formatNumber(viewCount) }}
 					</span>
 				</span>
 			</div>
-		</app-responsive-dimensions>
+		</AppResponsiveDimensions>
 	</div>
 </template>
 

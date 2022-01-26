@@ -16,7 +16,7 @@ export default class AppCommunitySliderDiscoverItem extends Vue {}
 
 <template>
 	<div class="-item">
-		<app-community-discover-widget />
+		<AppCommunityDiscoverWidget />
 	</div>
 </template>
 

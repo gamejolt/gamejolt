@@ -53,17 +53,17 @@ export default class AppPostEditModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button :disabled="closeButtonDisabled" @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton :disabled="closeButtonDisabled" @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-body">
-			<app-loading-fade :is-loading="!post">
-				<app-post-add-placeholder v-if="!post" />
-				<form-post
+			<AppLoadingFade :is-loading="!post">
+				<AppPostAddPlaceholder v-if="!post" />
+				<FormPost
 					v-else
 					:model="post"
 					:default-community="community"
@@ -71,7 +71,7 @@ export default class AppPostEditModal extends mixins(BaseModal) {
 					@submit="onSubmitted"
 					@video-upload-status-change="onVideoUploadStatusChanged"
 				/>
-			</app-loading-fade>
+			</AppLoadingFade>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

@@ -48,7 +48,7 @@ export default class RouteSearchCommunities extends BaseRouteComponent {
 					:key="community.id"
 					class="col-sm-6 col-md-4 col-lg-3 anim-fade-in"
 				>
-					<app-community-card :community="community" track-goto elevate />
+					<AppCommunityCard :community="community" track-goto elevate />
 				</div>
 			</div>
 		</div>

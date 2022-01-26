@@ -87,7 +87,7 @@ export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
 				<div class="col-xs-6 col-sm-4">
 					<div class="stat-big stat-big-smaller">
 						<div class="stat-big-label">
-							<translate>Revenue To Date</translate>
+							<AppTranslate>Revenue To Date</AppTranslate>
 						</div>
 						<div class="stat-big-digit">
 							<a @click="isShowingRevenueBreakdown = !isShowingRevenueBreakdown">
@@ -99,11 +99,11 @@ export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
 				<div class="col-xs-6 col-sm-4">
 					<div class="stat-big stat-big-smaller">
 						<div class="stat-big-label">
-							<translate>Pending Revenue</translate>
+							<AppTranslate>Pending Revenue</AppTranslate>
 						</div>
 						<div class="stat-big-digit">
 							{{ formatCurrency(revenuePendingActivation) }}
-							<app-jolticon
+							<AppJolticon
 								v-app-tooltip.touchable="
 									$gettext(
 										`To account for refunds, chargebacks, and fraud, we hold on to sales revenue for 7 days.`
@@ -118,7 +118,7 @@ export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
 				<div class="col-xs-6 col-sm-4">
 					<div class="stat-big stat-big-smaller">
 						<div class="stat-big-label">
-							<translate>Wallet Balance</translate>
+							<AppTranslate>Wallet Balance</AppTranslate>
 						</div>
 						<div class="stat-big-digit">{{ formatCurrency(walletBalance) }}</div>
 					</div>
@@ -126,22 +126,22 @@ export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
 			</div>
 			<br />
 
-			<app-expand :when="isShowingRevenueBreakdown">
+			<AppExpand :when="isShowingRevenueBreakdown">
 				<div class="well fill-offset">
 					<table class="table table-condensed">
 						<tbody>
 							<tr>
-								<th><translate>Revenue To Date</translate></th>
+								<th><AppTranslate>Revenue To Date</AppTranslate></th>
 								<td class="text-right">{{ formatCurrency(revenueTotal) }}</td>
 							</tr>
 							<tr>
-								<th><translate>Pending Revenue</translate></th>
+								<th><AppTranslate>Pending Revenue</AppTranslate></th>
 								<td class="text-right">
 									{{ formatCurrency(revenuePendingActivation) }}
 								</td>
 							</tr>
 							<tr>
-								<th><translate>Total Revenue</translate></th>
+								<th><AppTranslate>Total Revenue</AppTranslate></th>
 								<td class="text-right">
 									{{ formatCurrency(revenueTotal + revenuePendingActivation) }}
 								</td>
@@ -152,13 +152,13 @@ export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
 					<table class="table table-condensed">
 						<tbody>
 							<tr>
-								<th><translate>Withdrawals Processing</translate></th>
+								<th><AppTranslate>Withdrawals Processing</AppTranslate></th>
 								<td class="text-right">
 									{{ formatCurrency(revenuePendingWithdraw) }}
 								</td>
 							</tr>
 							<tr>
-								<th><translate>Withdrawn To Date</translate></th>
+								<th><AppTranslate>Withdrawn To Date</AppTranslate></th>
 								<td class="text-right">{{ formatCurrency(revenueWithdrawn) }}</td>
 							</tr>
 						</tbody>
@@ -166,17 +166,17 @@ export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
 					<table class="table table-condensed sans-margin-bottom">
 						<tbody>
 							<tr>
-								<th><translate>Wallet Purchases</translate></th>
+								<th><AppTranslate>Wallet Purchases</AppTranslate></th>
 								<td class="text-right">{{ formatCurrency(revenueSpent) }}</td>
 							</tr>
 							<tr>
-								<th><translate>Wallet Balance</translate></th>
+								<th><AppTranslate>Wallet Balance</AppTranslate></th>
 								<td class="text-right">{{ formatCurrency(walletBalance) }}</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
-			</app-expand>
+			</AppExpand>
 
 			<div v-if="revenuePendingWithdraw > 0" class="alert alert-info">
 				<p v-translate="{ amount: formatCurrency(revenuePendingWithdraw) }">
@@ -196,7 +196,7 @@ export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
 
 			<div v-translate>dash.funds.withdraw.page_help_html</div>
 
-			<form-withdraw-funds
+			<FormWithdrawFunds
 				:user="user"
 				:paypal-email="email"
 				:min-amount="minAmount"
@@ -206,9 +206,9 @@ export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
 		</div>
 		<div v-else class="col-md-6 col-centered">
 			<p class="lead text-center">
-				<translate>
+				<AppTranslate>
 					Once you make money on Game Jolt, you will be able to withdraw it here.
-				</translate>
+				</AppTranslate>
 			</p>
 		</div>
 	</div>

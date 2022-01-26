@@ -54,13 +54,13 @@ export default class AppTagList extends Vue {
 </script>
 
 <template>
-	<app-scroll-scroller horizontal>
+	<AppScrollScroller horizontal>
 		<div class="-list">
 			<div v-for="tag of tags" :key="tag.id" class="-list-item">
-				<app-tag-thumbnail class="-list-thumb" :tag="tag.id" :event-cat="eventCat" />
+				<AppTagThumbnail class="-list-thumb" :tag="tag.id" :event-cat="eventCat" />
 			</div>
 		</div>
-	</app-scroll-scroller>
+	</AppScrollScroller>
 </template>
 
 <style lang="stylus" scoped>

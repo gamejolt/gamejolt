@@ -33,7 +33,7 @@ export default class AppUserCardPlaceholder extends Vue {}
 				</div>
 
 				<div class="-follow">
-					<app-button-placeholder block />
+					<AppButtonPlaceholder block />
 				</div>
 			</div>
 		</div>

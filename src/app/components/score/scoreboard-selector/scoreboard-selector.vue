@@ -18,7 +18,7 @@ export default class AppScoreboardSelector extends Vue {
 </script>
 
 <template>
-	<app-list-group-selector :items="tables" :current="currentTable" @change="emitSelect($event)">
+	<AppListGroupSelector :items="tables" :current="currentTable" @change="emitSelect($event)">
 		<template #default="{ item }">
 			<h5 class="list-group-item-heading sans-margin-bottom">
 				<strong>{{ item.name }}</strong>
@@ -27,5 +27,5 @@ export default class AppScoreboardSelector extends Vue {
 				{{ item.description }}
 			</p>
 		</template>
-	</app-list-group-selector>
+	</AppListGroupSelector>
 </template>

@@ -184,21 +184,21 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 	<div class="row">
 		<div class="col-md-10 col-lg-9">
 			<h2 class="section-header">
-				<translate>dash.games.trophies.heading</translate>
+				<AppTranslate>dash.games.trophies.heading</AppTranslate>
 			</h2>
 
 			<div class="page-help">
 				<p>
-					<translate>
+					<AppTranslate>
 						The API lets you add multiple unique trophies, each forged from a material
 						that indicates how difficult it is to achieve: bronze (easiest), silver,
 						gold, or platinum (hardest).
-					</translate>
+					</AppTranslate>
 				</p>
 				<p>
-					<app-link-help page="dev-trophies" class="link-help">
-						<translate>dash.games.trophies.page_help_link</translate>
-					</app-link-help>
+					<AppLinkHelp page="dev-trophies" class="link-help">
+						<AppTranslate>dash.games.trophies.page_help_link</AppTranslate>
+					</AppLinkHelp>
 				</p>
 			</div>
 
@@ -211,48 +211,48 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 
 			<div v-for="difficulty of GameTrophy.difficulties" :key="difficulty">
 				<h4>
-					<translate :translate-params="{ difficulty: trophyLabels[difficulty] }">
+					<AppTranslate :translate-params="{ difficulty: trophyLabels[difficulty] }">
 						%{ difficulty } Trophies
-					</translate>
+					</AppTranslate>
 				</h4>
 
 				<p v-if="!groupedTrophies[difficulty].length" class="text-muted small">
-					<translate> No trophies added yet for this difficulty level. </translate>
+					<AppTranslate> No trophies added yet for this difficulty level. </AppTranslate>
 				</p>
 
-				<app-card-list
+				<AppCardList
 					:items="groupedTrophies[difficulty]"
 					:active-item="activeItem[difficulty]"
 					:is-adding="isAdding[difficulty]"
 					is-draggable
 					@activate="activeItem[difficulty] = $event"
 				>
-					<app-card-list-draggable
+					<AppCardListDraggable
 						item-key="id"
 						@change="saveTrophySort(difficulty, $event)"
 					>
 						<template #item="{ element: trophy }">
-							<app-card-list-item
+							<AppCardListItem
 								:id="`trophy-container-${trophy.id}`"
 								:item="trophy"
 							>
 								<div class="row">
 									<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
-										<app-trophy-thumbnail :trophy="trophy" no-highlight />
+										<AppTrophyThumbnail :trophy="trophy" no-highlight />
 
 										<br class="visible-xs" />
 									</div>
 									<div class="col-xs-12 col-sm-10">
 										<a class="card-remove" @click.stop="removeTrophy(trophy)">
-											<app-jolticon icon="remove" />
+											<AppJolticon icon="remove" />
 										</a>
 
 										<div class="card-stats">
 											<div class="stat-big">
 												<div class="stat-big-label">
-													<translate>
+													<AppTranslate>
 														dash.games.trophies.trophy_id_label
-													</translate>
+													</AppTranslate>
 												</div>
 												<div class="stat-big-digit">
 													{{ trophy.id }}
@@ -279,9 +279,9 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 												"
 												class="tag tag-notice"
 											>
-												<translate>
+												<AppTranslate>
 													dash.games.trophies.hidden_tag
-												</translate>
+												</AppTranslate>
 											</span>
 											<span
 												v-if="trophy.secret"
@@ -290,36 +290,36 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 												"
 												class="tag"
 											>
-												<translate>
+												<AppTranslate>
 													dash.games.trophies.secret_tag
-												</translate>
+												</AppTranslate>
 											</span>
 										</div>
 									</div>
 								</div>
 
 								<template #body>
-									<form-game-trophy
+									<FormGameTrophy
 										:game="game"
 										:model="trophy"
 										@submit="onTrophyEdited"
 									/>
 								</template>
-							</app-card-list-item>
+							</AppCardListItem>
 						</template>
-					</app-card-list-draggable>
+					</AppCardListDraggable>
 
-					<app-card-list-add
+					<AppCardListAdd
 						:label="$gettext('New Trophy')"
 						@toggle="isAdding[difficulty] = !isAdding[difficulty]"
 					>
-						<form-game-trophy
+						<FormGameTrophy
 							:game="game"
 							:difficulty="difficulty"
 							@submit="onTrophyAdded"
 						/>
-					</app-card-list-add>
-				</app-card-list>
+					</AppCardListAdd>
+				</AppCardList>
 			</div>
 		</div>
 	</div>

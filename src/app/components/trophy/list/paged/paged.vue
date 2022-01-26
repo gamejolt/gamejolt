@@ -105,19 +105,19 @@ export default class AppTrophyListPaged extends Vue {
 					:key="trophy.key"
 					class="-item col-sm-6 col-md-4 col-lg-4"
 				>
-					<app-trophy-card :user-trophy="trophy" />
+					<AppTrophyCard :user-trophy="trophy" />
 				</div>
 			</div>
 
-			<app-loading v-if="isLoading" centered />
+			<AppLoading v-if="isLoading" centered />
 			<div v-else-if="shouldShowLoadMore" class="page-cut">
-				<app-button
+				<AppButton
 					v-app-track-event="`profile-trophies:more`"
 					trans
 					@click="onClickLoadMore()"
 				>
-					<translate>Load More</translate>
-				</app-button>
+					<AppTranslate>Load More</AppTranslate>
+				</AppButton>
 			</div>
 		</template>
 	</div>

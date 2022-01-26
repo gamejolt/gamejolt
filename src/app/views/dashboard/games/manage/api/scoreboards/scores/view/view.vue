@@ -75,10 +75,10 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 	<div v-if="isRouteBootstrapped">
 		<h2 class="section-header">
 			<div class="section-header-controls">
-				<app-button sparse icon="remove" @click="removeScore" />
+				<AppButton sparse icon="remove" @click="removeScore" />
 			</div>
 
-			<translate>dash.games.scores.view.heading</translate>
+			<AppTranslate>dash.games.scores.view.heading</AppTranslate>
 		</h2>
 
 		<div class="table-responsive">
@@ -89,7 +89,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 				<tbody>
 					<tr>
 						<th>
-							<translate>dash.games.scores.view.user_label</translate>
+							<AppTranslate>dash.games.scores.view.user_label</AppTranslate>
 						</th>
 						<td>
 							<!-- User Score -->
@@ -108,14 +108,14 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 								{{ score.guest }}
 								<br />
 								<small class="text-muted">
-									<translate>dash.games.scores.guest_tag</translate>
+									<AppTranslate>dash.games.scores.guest_tag</AppTranslate>
 								</small>
 							</span>
 						</td>
 					</tr>
 					<tr>
 						<th>
-							<translate>dash.games.scores.view.table_label</translate>
+							<AppTranslate>dash.games.scores.view.table_label</AppTranslate>
 						</th>
 						<td>
 							<router-link
@@ -130,19 +130,19 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 					</tr>
 					<tr>
 						<th>
-							<translate>dash.games.scores.view.string_label</translate>
+							<AppTranslate>dash.games.scores.view.string_label</AppTranslate>
 						</th>
 						<td>{{ score.score }}</td>
 					</tr>
 					<tr>
 						<th>
-							<translate>dash.games.scores.view.sort_label</translate>
+							<AppTranslate>dash.games.scores.view.sort_label</AppTranslate>
 						</th>
 						<td>{{ formatNumber(score.sort) }}</td>
 					</tr>
 					<tr>
 						<th>
-							<translate>dash.games.scores.view.date_label</translate>
+							<AppTranslate>dash.games.scores.view.date_label</AppTranslate>
 						</th>
 						<td>
 							{{ formatDate(score.logged_on, 'medium') }}
@@ -150,12 +150,12 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 					</tr>
 					<tr>
 						<th>
-							<translate>dash.games.scores.view.data_label</translate>
+							<AppTranslate>dash.games.scores.view.data_label</AppTranslate>
 						</th>
 						<td>
 							<pre v-if="score.extra_data" class="small">{{ score.extra_data }}</pre>
 							<span v-else class="small text-muted">
-								<translate>dash.games.scores.view.data_none_help</translate>
+								<AppTranslate>dash.games.scores.view.data_none_help</AppTranslate>
 							</span>
 						</td>
 					</tr>

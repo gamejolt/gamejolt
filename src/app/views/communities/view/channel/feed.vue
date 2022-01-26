@@ -191,30 +191,30 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 </script>
 
 <template>
-	<app-communities-view-page-container>
+	<AppCommunitiesViewPageContainer>
 		<template #default>
 			<h1 class="section-header" :class="{ 'h2 -text-overflow': Screen.isMobile }">
-				<translate v-if="channel === routeStore.allChannel">All Posts</translate>
+				<AppTranslate v-if="channel === routeStore.allChannel">All Posts</AppTranslate>
 				<template v-else>{{ channel.displayTitle }}</template>
 				<small v-if="Screen.isDesktop">in {{ community.name }}</small>
 			</h1>
 
 			<div v-if="channel.visibility === 'draft'">
-				<app-illustration :src="illNoComments">
-					<translate>
+				<AppIllustration :src="illNoComments">
+					<AppTranslate>
 						This is a draft channel. When it gets published, the post feed will appear
 						here.
-					</translate>
-				</app-illustration>
+					</AppTranslate>
+				</AppIllustration>
 			</div>
-			<app-communities-view-feed
+			<AppCommunitiesViewFeed
 				v-else
 				:feed="feed"
 				@add-post="onPostAdded"
 				@load-new="loadedNew"
 			/>
 		</template>
-	</app-communities-view-page-container>
+	</AppCommunitiesViewPageContainer>
 </template>
 
 <style lang="stylus" scoped>

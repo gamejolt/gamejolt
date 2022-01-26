@@ -65,7 +65,7 @@ export function initTranslations(app: App) {
 	app.config.globalProperties.$gettextInterpolate = $gettextInterpolate;
 
 	// Add into the global app for convenience of usage.
-	app.component('Translate', AppTranslate);
+	app.component('AppTranslate', AppTranslate);
 	app.directive('Translate', TranslateDirective);
 }
 

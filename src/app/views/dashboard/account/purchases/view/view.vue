@@ -82,13 +82,13 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 <template>
 	<div v-if="isRouteBootstrapped">
 		<p class="text-muted">
-			<translate :translate-params="{ orderId: order.id }"> Order #%{orderId} </translate>
+			<AppTranslate :translate-params="{ orderId: order.id }"> Order #%{orderId} </AppTranslate>
 
 			<span class="dot-separator" />
 
-			<translate :translate-params="{ date: formatDate(order.completed_on, 'medium') }">
+			<AppTranslate :translate-params="{ date: formatDate(order.completed_on, 'medium') }">
 				Ordered on %{date}
-			</translate>
+			</AppTranslate>
 		</p>
 
 		<!--
@@ -96,13 +96,13 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 			this.
 		-->
 		<div v-if="order._is_refunded && firstRefund" class="alert alert-notice">
-			<translate
+			<AppTranslate
 				:translate-params="{
 					date: formatDate(firstRefund.created_on, 'medium'),
 				}"
 			>
 				This order was refunded on %{ date }.
-			</translate>
+			</AppTranslate>
 		</div>
 
 		<hr />
@@ -110,7 +110,7 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 		<div class="row">
 			<div class="col-sm-4">
 				<h4 class="section-header">
-					<translate>Billing</translate>
+					<AppTranslate>Billing</AppTranslate>
 				</h4>
 
 				<div v-if="billingAddress.fullname">
@@ -147,7 +147,7 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 			</div>
 			<div class="col-sm-4">
 				<h4 :class="{ 'section-header': !Screen.isXs }">
-					<translate>Payment</translate>
+					<AppTranslate>Payment</AppTranslate>
 				</h4>
 				<div v-for="payment of order.payments" :key="payment.id">
 					<template v-if="payment.method === OrderPayment.METHOD_CC_STRIPE">
@@ -169,23 +169,23 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 			</div>
 			<div class="col-sm-4">
 				<h4 :class="{ 'section-header': !Screen.isXs }">
-					<translate>Summary</translate>
+					<AppTranslate>Summary</AppTranslate>
 				</h4>
 
 				<table class="-summary-table">
 					<tbody>
 						<tr>
-							<th><translate>Subtotal</translate></th>
+							<th><AppTranslate>Subtotal</AppTranslate></th>
 							<td>{{ formatCurrency(order.amount) }}</td>
 						</tr>
 						<tr v-if="order.tax_amount">
-							<th><translate>Tax</translate></th>
+							<th><AppTranslate>Tax</AppTranslate></th>
 							<td>{{ formatCurrency(order.tax_amount) }}</td>
 						</tr>
 					</tbody>
 					<tfoot>
 						<tr>
-							<th><translate>Total</translate></th>
+							<th><AppTranslate>Total</AppTranslate></th>
 							<td>{{ formatCurrency(order.total_amount) }}</td>
 						</tr>
 					</tfoot>
@@ -198,7 +198,7 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 		<div v-for="item of order.items" :key="item.id">
 			<h4>
 				<span v-if="item.is_refunded" class="tag tag-notice">
-					<translate>Refunded</translate>
+					<AppTranslate>Refunded</AppTranslate>
 				</span>
 				{{ item.sellable.title }}
 				&mdash;
@@ -221,7 +221,7 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 								},
 							}"
 						>
-							<app-game-thumbnail-img
+							<AppGameThumbnailImg
 								animate
 								:game="gamesById[firstPackage.game_id]"
 							/>
@@ -242,7 +242,7 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 							</router-link>
 							<br />
 							<span class="small">
-								<translate>by</translate>
+								<AppTranslate>by</AppTranslate>
 								{{ ' ' }}
 								<router-link
 									:to="{
@@ -261,7 +261,7 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 						<p />
 
 						<h5 class="sans-margin">
-							<translate>Packages</translate>
+							<AppTranslate>Packages</AppTranslate>
 						</h5>
 
 						<div class="small text-muted">

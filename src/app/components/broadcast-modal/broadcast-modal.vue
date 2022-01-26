@@ -71,20 +71,20 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-header">
 			<h1 class="text-center section-header">
-				<translate>We've built some new stuff!</translate>
+				<AppTranslate>We've built some new stuff!</AppTranslate>
 			</h1>
 
 			<p class="small text-center">
-				<translate>Constantly improving for your enjoyment. Be enjoyed!</translate>
+				<AppTranslate>Constantly improving for your enjoyment. Be enjoyed!</AppTranslate>
 			</p>
 		</div>
 
@@ -101,12 +101,12 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 							@click="post = _post"
 						>
 							<h5 class="list-group-item-heading">
-								<app-jolticon v-if="post.id === _post.id" icon="chevron-right" />
+								<AppJolticon v-if="post.id === _post.id" icon="chevron-right" />
 
 								{{ _post.getShortLead() }}
 
 								<div class="tiny text-muted">
-									<app-time-ago :date="_post.published_on" />
+									<AppTimeAgo :date="_post.published_on" />
 								</div>
 							</h5>
 						</a>
@@ -115,31 +115,31 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 				<div class="col-sm-8 col-sm-pull-4">
 					<div v-if="post.hasMedia">
 						<div v-for="item of post.media" :key="item.id">
-							<app-responsive-dimensions
+							<AppResponsiveDimensions
 								class="-media-item"
 								:ratio="item.width / item.height"
 							>
-								<app-img-responsive
+								<AppImgResponsive
 									v-if="!item.is_animated"
 									class="-img"
 									:src="item.mediaserver_url"
 									alt=""
 								/>
 
-								<app-video
+								<AppVideo
 									v-else
 									class="-video"
 									:player="getVideoController(item)"
 									:show-loading="true"
 								/>
-							</app-responsive-dimensions>
+							</AppResponsiveDimensions>
 
 							<br />
 						</div>
 					</div>
 
 					<div v-if="post.hasVideo">
-						<app-video-player
+						<AppVideoPlayer
 							v-if="video.provider === 'gamejolt'"
 							context="page"
 							:media-item="video.posterMediaItem"
@@ -147,7 +147,7 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 							autoplay
 							@play="onVideoPlay"
 						/>
-						<app-video-embed
+						<AppVideoEmbed
 							v-else
 							video-provider="youtube"
 							:video-id="video.video_id"
@@ -158,32 +158,32 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 					</div>
 
 					<div class="tiny text-muted">
-						<app-time-ago v-if="post.isActive" :date="post.published_on" />
+						<AppTimeAgo v-if="post.isActive" :date="post.published_on" />
 					</div>
 
-					<app-sticker-target :controller="stickerTargetController">
-						<app-content-viewer :source="post.lead_content" />
-					</app-sticker-target>
+					<AppStickerTarget :controller="stickerTargetController">
+						<AppContentViewer :source="post.lead_content" />
+					</AppStickerTarget>
 
 					<div v-if="post.has_article">
 						<div class="page-cut" />
 
-						<app-content-viewer :source="post.article_content" />
+						<AppContentViewer :source="post.article_content" />
 					</div>
 
 					<template v-if="post.hasPoll">
-						<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
+						<AppPollVoting :poll="post.poll" :game="post.game" :user="post.user" />
 
 						<br />
 					</template>
 
-					<app-post-controls :post="post" location="broadcast" event-label="broadcast" />
+					<AppPostControls :post="post" location="broadcast" event-label="broadcast" />
 
 					<br />
 					<br />
-					<app-comment-widget-lazy :model="post" display-mode="comments" />
+					<AppCommentWidgetLazy :model="post" display-mode="comments" />
 				</div>
 			</div>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

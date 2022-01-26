@@ -173,7 +173,7 @@ export default class AppFiresidePostEmbed extends Vue {
 				<div class="-thumb-img-container" />
 				<div class="-thumb-play">
 					<div class="-thumb-play-icon-bg" />
-					<app-jolticon
+					<AppJolticon
 						v-app-tooltip.touchable="$gettext(`Processing...`)"
 						class="-thumb-play-icon"
 						icon="broadcast"
@@ -202,7 +202,7 @@ export default class AppFiresidePostEmbed extends Vue {
 					<img v-if="thumbUrl" :src="thumbUrl" class="-thumb-img" />
 				</div>
 				<div class="-thumb-play">
-					<app-jolticon
+					<AppJolticon
 						class="-thumb-play-icon -thumb-play-icon-play"
 						:icon="playIcon"
 						big
@@ -210,27 +210,27 @@ export default class AppFiresidePostEmbed extends Vue {
 				</div>
 			</div>
 			<div v-else class="-player">
-				<app-responsive-dimensions :ratio="16 / 9">
-					<app-scroll-inview
+				<AppResponsiveDimensions :ratio="16 / 9">
+					<AppScrollInview
 						:config="InviewConfig"
 						@inview="onInviewChanged(true)"
 						@outview="onInviewChanged(false)"
 					>
 						<template v-if="shouldShowEmbedContent">
-							<app-video-embed
+							<AppVideoEmbed
 								v-if="embed.type === TYPE_YOUTUBE"
 								:video-id="embed.extraData.videoId"
 								video-provider="youtube"
 								:autoplay="shouldAutoplay"
 							/>
-							<app-sketchfab-embed
+							<AppSketchfabEmbed
 								v-else-if="embed.type === TYPE_SKETCHFAB"
 								:sketchfab-id="embed.extraData.modelId"
 								:autoplay="shouldAutoplay"
 							/>
 						</template>
-					</app-scroll-inview>
-				</app-responsive-dimensions>
+					</AppScrollInview>
+				</AppResponsiveDimensions>
 			</div>
 
 			<div class="-info" :class="{ '-info-open': isOpen }">
@@ -241,7 +241,7 @@ export default class AppFiresidePostEmbed extends Vue {
 					{{ description }}
 				</div>
 
-				<div class="text-muted"><app-jolticon icon="link" /> {{ website }}</div>
+				<div class="text-muted"><AppJolticon icon="link" /> {{ website }}</div>
 			</div>
 		</template>
 	</div>

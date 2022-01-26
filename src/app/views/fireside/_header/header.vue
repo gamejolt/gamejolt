@@ -89,14 +89,14 @@ export default class AppFiresideHeader extends Vue {
 							@{{ fireside.user.username }}
 						</router-link>
 						{{ ' ' }}
-						<app-user-avatar-img class="-avatar" :user="fireside.user" />
+						<AppUserAvatarImg class="-avatar" :user="fireside.user" />
 						<span>'s Fireside</span>
 
 						<template v-if="fireside.community">
 							{{ ' ' }}
 							<span>in </span>
 							<div class="-avatar -community-avatar">
-								<app-community-thumbnail-img :community="fireside.community" />
+								<AppCommunityThumbnailImg :community="fireside.community" />
 							</div>
 							{{ ' ' }}
 							<router-link :to="fireside.community.routeLocation">
@@ -105,7 +105,7 @@ export default class AppFiresideHeader extends Vue {
 						</template>
 
 						<span v-if="c.isDraft.value" class="-tag tag">
-							<translate>Draft</translate>
+							<AppTranslate>Draft</AppTranslate>
 						</span>
 
 						<span
@@ -115,7 +115,7 @@ export default class AppFiresideHeader extends Vue {
 							"
 							class="-tag tag"
 						>
-							<translate>Featured</translate>
+							<AppTranslate>Featured</AppTranslate>
 						</span>
 					</small>
 					<div class="-fireside-title-text" :title="fireside.title">
@@ -139,7 +139,7 @@ export default class AppFiresideHeader extends Vue {
 						v-if="c.shouldShowStreamingOptions.value && !c.isPersonallyStreaming.value"
 						class="-stats-btn"
 					>
-						<app-button
+						<AppButton
 							v-app-tooltip="$gettext(`Start Stream / Voice Chat`)"
 							icon="broadcast"
 							circle
@@ -150,11 +150,11 @@ export default class AppFiresideHeader extends Vue {
 
 					{{ ' ' }}
 
-					<app-fireside-settings-popper @show="onShowPopper" @hide="onHidePopper">
+					<AppFiresideSettingsPopper @show="onShowPopper" @hide="onHidePopper">
 						<div class="-stats-btn">
-							<app-button icon="ellipsis-v" circle sparse solid />
+							<AppButton icon="ellipsis-v" circle sparse solid />
 						</div>
-					</app-fireside-settings-popper>
+					</AppFiresideSettingsPopper>
 				</div>
 			</div>
 		</template>

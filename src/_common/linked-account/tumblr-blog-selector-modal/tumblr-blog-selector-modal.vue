@@ -76,7 +76,7 @@ export default class AppModalTumblrBlogSelector extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-header">
 			<h2 class="modal-title">
 				{{ title }}
@@ -85,14 +85,14 @@ export default class AppModalTumblrBlogSelector extends mixins(BaseModal) {
 
 		<div class="modal-body">
 			<div class="full-bleed">
-				<app-linked-account provider="tumblr" :account="account" :preview="true">
-					<app-loading v-if="isLoading" />
+				<AppLinkedAccount provider="tumblr" :account="account" :preview="true">
+					<AppLoading v-if="isLoading" />
 					<div v-else>
 						<div v-if="!hasBlogs">
 							<small class="text-muted">
-								<translate>
+								<AppTranslate>
 									You have no Tumblr blogs associated with your account.
-								</translate>
+								</AppTranslate>
 							</small>
 						</div>
 
@@ -113,21 +113,21 @@ export default class AppModalTumblrBlogSelector extends mixins(BaseModal) {
 								"
 								class="text-muted"
 							>
-								<translate>Currently Linked</translate>
+								<AppTranslate>Currently Linked</AppTranslate>
 							</small>
 						</div>
 					</div>
-				</app-linked-account>
+				</AppLinkedAccount>
 			</div>
 		</div>
 
 		<div class="modal-footer">
-			<app-button primary solid :disabled="!canConfirm" @click="ok">
-				<translate>OK</translate>
-			</app-button>
-			<app-button trans @click="cancel">
-				<translate>Cancel</translate>
-			</app-button>
+			<AppButton primary solid :disabled="!canConfirm" @click="ok">
+				<AppTranslate>OK</AppTranslate>
+			</AppButton>
+			<AppButton trans @click="cancel">
+				<AppTranslate>Cancel</AppTranslate>
+			</AppButton>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

@@ -336,55 +336,55 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 <template>
 	<div class="route-game-overview">
 		<!-- Media Bar -->
-		<app-game-media-bar v-if="game?.media_count" :media-items="mediaItems" />
+		<AppGameMediaBar v-if="game?.media_count" :media-items="mediaItems" />
 
 		<section class="section section-thin fill-backdrop">
-			<app-ad-widget
+			<AppAdWidget
 				v-if="shouldShowAds && !Screen.isMobile"
 				class="-leaderboard-ad"
 				size="leaderboard"
 				placement="top"
 			/>
 
-			<app-page-container xl>
+			<AppPageContainer xl>
 				<template #left>
-					<app-discover-games-view-overview-statbar />
+					<AppDiscoverGamesViewOverviewStatbar />
 
-					<app-share-card
+					<AppShareCard
 						class="-share-card"
 						resource="game"
 						:url="shareLink"
 						bleed-padding
 					/>
 
-					<app-user-known-followers
+					<AppUserKnownFollowers
 						v-if="isOverviewLoaded"
 						:users="knownFollowers"
 						:count="knownFollowerCount"
 					/>
 
-					<app-game-community-badge v-if="game?.community" :community="game.community" />
+					<AppGameCommunityBadge v-if="game?.community" :community="game.community" />
 				</template>
 
 				<template v-if="!Screen.isMobile && game?.comments_enabled" #left-bottom>
 					<div class="pull-right">
-						<app-button trans @click="showComments()">
-							<translate>View All</translate>
-						</app-button>
+						<AppButton trans @click="showComments()">
+							<AppTranslate>View All</AppTranslate>
+						</AppButton>
 					</div>
 
 					<h4 class="section-header">
-						<translate>Comments</translate>
+						<AppTranslate>Comments</AppTranslate>
 						<small v-if="commentsCount > 0">({{ formatNumber(commentsCount) }})</small>
 					</h4>
 
-					<app-comment-add-button
+					<AppCommentAddButton
 						v-if="shouldShowCommentAdd"
 						:model="game"
 						display-mode="comments"
 					/>
 
-					<app-comment-overview
+					<AppCommentOverview
 						:comments="overviewComments"
 						:model="game"
 						display-mode="comments"
@@ -393,7 +393,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 				</template>
 
 				<template #right>
-					<app-ad-widget
+					<AppAdWidget
 						v-if="shouldShowAds && !Screen.isMobile"
 						class="-recommended-ad"
 						size="rectangle"
@@ -402,10 +402,10 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 					<template v-if="!Screen.isMobile">
 						<h4 class="section-header">
-							<translate>Recommended</translate>
+							<AppTranslate>Recommended</AppTranslate>
 						</h4>
 
-						<app-discover-games-view-overview-recommended />
+						<AppDiscoverGamesViewOverviewRecommended />
 					</template>
 				</template>
 
@@ -429,7 +429,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 							'alert-notice': msg.type === 'alert',
 						}"
 					>
-						<app-jolticon icon="notice" />
+						<AppJolticon icon="notice" />
 						<span v-html="msg.message" />
 					</div>
 
@@ -450,23 +450,23 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 						<!--
 							Partner Controls
 						-->
-						<app-card v-if="hasPartnerControls">
+						<AppCard v-if="hasPartnerControls">
 							<div class="card-content">
 								<p>
-									<translate tag="strong">
+									<AppTranslate tag="strong">
 										This game is part of the Partner system!
-									</translate>
-									<translate>
+									</AppTranslate>
+									<AppTranslate>
 										You can use this link for sharing the game.
-									</translate>
+									</AppTranslate>
 								</p>
 								<input class="form-control" :value="partnerLink" />
 							</div>
 							<div class="card-controls">
-								<app-button primary @click="copyPartnerLink">
-									<translate>Copy Partner Link</translate>
-								</app-button>
-								<app-button
+								<AppButton primary @click="copyPartnerLink">
+									<AppTranslate>Copy Partner Link</AppTranslate>
+								</AppButton>
+								<AppButton
 									v-if="game"
 									trans
 									:to="{
@@ -474,27 +474,27 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 										params: { resource: 'Game', resourceId: game.id },
 									}"
 								>
-									<translate>View Analytics</translate>
-								</app-button>
+									<AppTranslate>View Analytics</AppTranslate>
+								</AppButton>
 							</div>
-						</app-card>
+						</AppCard>
 
 						<div v-if="shouldShowMultiplePackagesMessage" class="alert alert-notice">
-							<app-jolticon icon="notice" />
-							<translate>
+							<AppJolticon icon="notice" />
+							<AppTranslate>
 								There are multiple packages for your device. Please choose one
 								below.
-							</translate>
+							</AppTranslate>
 						</div>
 
-						<app-lazy-placeholder :when="isOverviewLoaded">
+						<AppLazyPlaceholder :when="isOverviewLoaded">
 							<div
 								class="lazy-placeholder -package-placeholder"
 								style="height: 135px"
 							/>
 
 							<div v-if="externalPackages.length">
-								<app-game-external-package-card
+								<AppGameExternalPackageCard
 									v-for="externalPackage of externalPackages"
 									:key="`external-${externalPackage.id}`"
 									:package="externalPackage"
@@ -502,7 +502,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 							</div>
 
 							<div v-if="packages.length">
-								<app-game-package-card
+								<AppGamePackageCard
 									v-for="pkg of packages"
 									:key="pkg.id"
 									:game="game"
@@ -520,16 +520,16 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 								We want to key it by the game ID so that it
 								resets completely when the page changes.
 							-->
-							<app-game-soundtrack-card
+							<AppGameSoundtrackCard
 								v-if="game && songs.length"
 								:key="game.id"
 								:game="game"
 								:songs="songs"
 							/>
-						</app-lazy-placeholder>
+						</AppLazyPlaceholder>
 					</div>
 
-					<app-discover-games-view-overview-supporters
+					<AppDiscoverGamesViewOverviewSupporters
 						v-if="supporters.length > 0"
 						:supporters="supporters"
 						:supporter-count="supporterCount"
@@ -548,7 +548,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 							Set a :key to let vue know that it should update
 							this when the game changes.
 						-->
-						<app-fade-collapse
+						<AppFadeCollapse
 							:key="game.description_content"
 							:collapse-height="600"
 							:is-open="showDetails || !postsCount"
@@ -556,50 +556,50 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 							@require-change="routeStore.setCanToggleDescription"
 							@expand="routeStore.toggleDetails()"
 						>
-							<app-content-viewer :source="game.description_content" />
-						</app-fade-collapse>
+							<AppContentViewer :source="game.description_content" />
+						</AppFadeCollapse>
 
 						<div v-if="showDetails">
 							<hr />
 							<div class="row">
 								<div class="col-sm-6">
-									<app-discover-games-view-overview-details :game="game" />
+									<AppDiscoverGamesViewOverviewDetails :game="game" />
 								</div>
 								<div class="col-sm-6">
-									<app-lazy-placeholder :when="isOverviewLoaded">
+									<AppLazyPlaceholder :when="isOverviewLoaded">
 										<div class="lazy-placeholder" style="height: 115px" />
-										<app-game-ogrs :game="game" />
-									</app-lazy-placeholder>
+										<AppGameOgrs :game="game" />
+									</AppLazyPlaceholder>
 								</div>
 							</div>
 						</div>
 
 						<div class="page-cut page-cut-no-margin">
-							<app-button
+							<AppButton
 								v-app-track-event="`game-profile:show-full-description`"
 								trans
 								@click="routeStore.toggleDetails()"
 							>
-								<translate v-if="!showDetails">Show More</translate>
-								<translate v-else>Less</translate>
-							</app-button>
+								<AppTranslate v-if="!showDetails">Show More</AppTranslate>
+								<AppTranslate v-else>Less</AppTranslate>
+							</AppButton>
 						</div>
 					</div>
 				</div>
 
-				<app-post-add-button v-if="hasDevlogPerms" :game="game" @add="onPostAdded" />
+				<AppPostAddButton v-if="hasDevlogPerms" :game="game" @add="onPostAdded" />
 
-				<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />
+				<AppActivityFeedPlaceholder v-if="!feed || !feed.isBootstrapped" />
 				<template v-else>
-					<app-activity-feed v-if="feed.hasItems" :feed="feed" />
+					<AppActivityFeed v-if="feed.hasItems" :feed="feed" />
 					<div v-else class="alert">
-						<translate>
+						<AppTranslate>
 							Nothing has been posted to this project page yet. Maybe check back
 							later!
-						</translate>
+						</AppTranslate>
 					</div>
 				</template>
-			</app-page-container>
+			</AppPageContainer>
 		</section>
 	</div>
 </template>

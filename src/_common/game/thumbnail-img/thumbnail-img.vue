@@ -59,7 +59,7 @@ function imgLoadChange(isLoaded: boolean) {
 	>
 		<div class="-inner">
 			<AppMediaItemBackdrop :media-item="mediaItem" radius="lg">
-				<app-jolticon class="-icon" icon="game" />
+				<AppJolticon class="-icon" icon="game" />
 
 				<div v-if="mediaItem && !hideMedia" class="-media">
 					<AppImgResponsive

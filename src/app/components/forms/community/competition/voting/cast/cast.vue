@@ -186,7 +186,7 @@ export default class FormCommunityCompetitionVotingCast extends Vue {
 </script>
 
 <template>
-	<app-loading-fade :is-loading="isSaving">
+	<AppLoadingFade :is-loading="isSaving">
 		<template v-if="competition.voting_type === 'categories'">
 			<div
 				v-for="votingCategory of sortedVotingCategories"
@@ -195,7 +195,7 @@ export default class FormCommunityCompetitionVotingCast extends Vue {
 			>
 				<label class="col-sm-4 -category-label" control-label>
 					{{ votingCategory.name }}
-					<app-jolticon
+					<AppJolticon
 						v-if="votingCategory.description"
 						v-app-tooltip.touchable="votingCategory.description"
 						class="text-muted"
@@ -212,7 +212,7 @@ export default class FormCommunityCompetitionVotingCast extends Vue {
 							:class="{ '-rating-na-active': isCategoryNA(votingCategory) }"
 							@click="onClickRating(votingCategory, 0)"
 						>
-							<b><translate>n/a</translate></b>
+							<b><AppTranslate>n/a</AppTranslate></b>
 						</div>
 					</div>
 					<div
@@ -228,7 +228,7 @@ export default class FormCommunityCompetitionVotingCast extends Vue {
 							@mouseleave="onRatingMouseLeave(votingCategory)"
 							@click="onClickRating(votingCategory, i)"
 						>
-							<app-jolticon
+							<AppJolticon
 								:icon="
 									isCategoryVote(votingCategory, i)
 										? 'bolt-filled'
@@ -248,16 +248,16 @@ export default class FormCommunityCompetitionVotingCast extends Vue {
 			</div>
 			<div class="row">
 				<label class="col-sm-4 -overall-label" control-label>
-					<translate>Your Overall</translate>
+					<AppTranslate>Your Overall</AppTranslate>
 					<div class="text-muted">
-						<i><translate>(calculated)</translate></i>
+						<i><AppTranslate>(calculated)</AppTranslate></i>
 					</div>
 				</label>
 				<div class="col-sm-8">
 					<div class="-overall-rating">
 						<b>
 							<template v-if="overallRating === 0">
-								<translate>n/a</translate>
+								<AppTranslate>n/a</AppTranslate>
 							</template>
 							<template v-else>
 								{{ formatNumber(overallRating, { maximumFractionDigits: 2 }) }}
@@ -265,17 +265,17 @@ export default class FormCommunityCompetitionVotingCast extends Vue {
 						</b>
 					</div>
 					<div class="-controls">
-						<app-button
+						<AppButton
 							icon="chevron-right"
 							primary
 							:disabled="!isSaveButtonEnabled"
 							@click="onClickSave"
 						>
-							<translate>Save Vote</translate>
-						</app-button>
-						<app-button v-if="hasVoted" icon="remove" @click="onClickClear">
-							<translate>Clear Vote</translate>
-						</app-button>
+							<AppTranslate>Save Vote</AppTranslate>
+						</AppButton>
+						<AppButton v-if="hasVoted" icon="remove" @click="onClickClear">
+							<AppTranslate>Clear Vote</AppTranslate>
+						</AppButton>
 					</div>
 				</div>
 			</div>
@@ -283,7 +283,7 @@ export default class FormCommunityCompetitionVotingCast extends Vue {
 		<template v-else>
 			<div>
 				<div>
-					<b><translate>Your Rating:</translate></b>
+					<b><AppTranslate>Your Rating:</AppTranslate></b>
 				</div>
 			</div>
 			<div class="-overall-rating-container">
@@ -297,7 +297,7 @@ export default class FormCommunityCompetitionVotingCast extends Vue {
 						@mouseleave="onRatingMouseLeave(null)"
 						@click="onClickRating(null, i)"
 					>
-						<app-jolticon
+						<AppJolticon
 							:icon="isCategoryVote(null, i) ? 'bolt-filled' : 'bolt-unfilled'"
 							:class="{
 								'-rating-bolt-hovered': isCategoryRatingHovered(null, i),
@@ -311,20 +311,20 @@ export default class FormCommunityCompetitionVotingCast extends Vue {
 				</span>
 			</div>
 			<div class="-controls">
-				<app-button
+				<AppButton
 					icon="chevron-right"
 					primary
 					:disabled="!isSaveButtonEnabled"
 					@click="onClickSave"
 				>
-					<translate>Save Vote</translate>
-				</app-button>
-				<app-button v-if="hasVoted" icon="remove" @click="onClickClear">
-					<translate>Clear Vote</translate>
-				</app-button>
+					<AppTranslate>Save Vote</AppTranslate>
+				</AppButton>
+				<AppButton v-if="hasVoted" icon="remove" @click="onClickClear">
+					<AppTranslate>Clear Vote</AppTranslate>
+				</AppButton>
 			</div>
 		</template>
-	</app-loading-fade>
+	</AppLoadingFade>
 </template>
 
 <style lang="stylus" scoped>

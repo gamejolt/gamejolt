@@ -64,10 +64,10 @@ export default class AppPlayerVolume extends Vue {
 <template>
 	<div class="-container">
 		<div class="player-control-button" @click="onClickMute">
-			<app-jolticon :icon="isMuted ? 'audio-mute' : 'audio'" />
+			<AppJolticon :icon="isMuted ? 'audio-mute' : 'audio'" />
 		</div>
 
-		<app-slider
+		<AppSlider
 			v-if="!Screen.isMobile && hasSlider"
 			class="-slider"
 			:percent="player.volume"

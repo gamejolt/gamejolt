@@ -37,7 +37,7 @@ export default class RouteWeplay extends BaseRouteComponent {
 				<div class="header-content">
 					<div class="title">
 						<div class="logo">
-							<app-weplay-logo />
+							<AppWeplayLogo />
 						</div>
 						<h1>STAJOLTIA</h1>
 						<p class="lead">
@@ -92,7 +92,7 @@ export default class RouteWeplay extends BaseRouteComponent {
 						<table class="control-table">
 							<tr>
 								<td>
-									<app-button
+									<AppButton
 										v-app-tooltip="$gettext('Jump Left')"
 										class="control-up-left"
 										circle
@@ -101,10 +101,10 @@ export default class RouteWeplay extends BaseRouteComponent {
 									/>
 								</td>
 								<td>
-									<app-button circle solid icon="chevron-up" disabled />
+									<AppButton circle solid icon="chevron-up" disabled />
 								</td>
 								<td>
-									<app-button
+									<AppButton
 										v-app-tooltip="$gettext('Jump Right')"
 										class="control-up-right"
 										circle
@@ -115,10 +115,10 @@ export default class RouteWeplay extends BaseRouteComponent {
 							</tr>
 							<tr>
 								<td>
-									<app-button circle solid icon="chevron-left" disabled />
+									<AppButton circle solid icon="chevron-left" disabled />
 								</td>
 								<td>
-									<app-button
+									<AppButton
 										v-app-tooltip.bottom="$gettext('Pickup')"
 										circle
 										solid
@@ -127,7 +127,7 @@ export default class RouteWeplay extends BaseRouteComponent {
 									/>
 								</td>
 								<td>
-									<app-button circle solid icon="chevron-right" disabled />
+									<AppButton circle solid icon="chevron-right" disabled />
 								</td>
 							</tr>
 						</table>
@@ -143,16 +143,16 @@ export default class RouteWeplay extends BaseRouteComponent {
 							<tr>
 								<td />
 								<td>
-									<app-button v-app-tooltip="$gettext('Jump')" solid disabled>
+									<AppButton v-app-tooltip="$gettext('Jump')" solid disabled>
 										A
-									</app-button>
+									</AppButton>
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<app-button v-app-tooltip="$gettext('Attack')" solid disabled>
+									<AppButton v-app-tooltip="$gettext('Attack')" solid disabled>
 										B
-									</app-button>
+									</AppButton>
 								</td>
 							</tr>
 						</table>
@@ -172,7 +172,7 @@ export default class RouteWeplay extends BaseRouteComponent {
 					<div class="description">
 						<div class="well desc-item">
 							<h2>
-								<app-jolticon class="-icon" icon="game" highlight />
+								<AppJolticon class="-icon" icon="game" highlight />
 								Game where you want, when you want.
 							</h2>
 							<p>
@@ -189,7 +189,7 @@ export default class RouteWeplay extends BaseRouteComponent {
 						</div>
 						<div class="well desc-item">
 							<h2>
-								<app-jolticon class="-icon" icon="video" highlight />
+								<AppJolticon class="-icon" icon="video" highlight />
 								Up to 4K HDR at 60 FPS. PSYCHE!
 							</h2>
 							<p>
@@ -202,7 +202,7 @@ export default class RouteWeplay extends BaseRouteComponent {
 						</div>
 						<div class="well desc-item">
 							<h2>
-								<app-jolticon class="-icon" icon="twitch" highlight />
+								<AppJolticon class="-icon" icon="twitch" highlight />
 								New ways to play through Twitch and beyond.
 							</h2>
 							<p>
@@ -213,14 +213,14 @@ export default class RouteWeplay extends BaseRouteComponent {
 						</div>
 						<div class="well desc-item">
 							<h2>
-								<app-jolticon class="-icon" icon="bolt-unfilled" highlight />
+								<AppJolticon class="-icon" icon="bolt-unfilled" highlight />
 								Play instaJOLTly.
 							</h2>
 							<p>No updates, no downloads. Jump right into the game.</p>
 						</div>
 						<div class="well desc-item">
 							<h2>
-								<app-jolticon class="-icon" icon="token" highlight />
+								<AppJolticon class="-icon" icon="token" highlight />
 								Money? Never heard of it.
 							</h2>
 							<p>
@@ -230,7 +230,7 @@ export default class RouteWeplay extends BaseRouteComponent {
 						</div>
 						<div class="well desc-item">
 							<h2>
-								<app-jolticon class="-icon" icon="chart" highlight />
+								<AppJolticon class="-icon" icon="chart" highlight />
 								Always getting better.
 							</h2>
 							<p>

@@ -141,16 +141,16 @@ export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent
 </script>
 
 <template>
-	<app-communities-view-page-container full>
+	<AppCommunitiesViewPageContainer full>
 		<h2 class="section-header">
-			<translate>Audit Log</translate>
+			<AppTranslate>Audit Log</AppTranslate>
 		</h2>
 
 		<div class="page-help">
 			<p>
-				<translate>
+				<AppTranslate>
 					Chronological list of moderation activity in this community.
-				</translate>
+				</AppTranslate>
 			</p>
 		</div>
 
@@ -160,7 +160,7 @@ export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent
 					<span class="-inner">{{ formatDate(item.item.added_on, 'mediumDate') }}</span>
 				</div>
 
-				<app-community-activity-item
+				<AppCommunityActivityItem
 					:item="item.item"
 					:usersplit="item.usersplit"
 					:show-icon="item.showIcon"
@@ -169,14 +169,14 @@ export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent
 		</div>
 
 		<template v-if="isLoading">
-			<app-loading centered />
+			<AppLoading centered />
 		</template>
 		<div v-else-if="!isAtEnd" class="page-cut -more">
-			<app-button v-app-track-event="`community-edit-activity:more`" trans @click="loadMore">
-				<translate>Load More</translate>
-			</app-button>
+			<AppButton v-app-track-event="`community-edit-activity:more`" trans @click="loadMore">
+				<AppTranslate>Load More</AppTranslate>
+			</AppButton>
 		</div>
-	</app-communities-view-page-container>
+	</AppCommunitiesViewPageContainer>
 </template>
 
 <style lang="stylus" scoped>

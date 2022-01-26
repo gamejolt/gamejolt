@@ -116,18 +116,18 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 		<div class="row">
 			<div class="col-lg-8">
 				<div v-if="game.isVisible" class="alert alert-highlight">
-					<app-jolticon icon="check" />
-					<translate>This game page is published to the site.</translate>
+					<AppJolticon icon="check" />
+					<AppTranslate>This game page is published to the site.</AppTranslate>
 				</div>
 
 				<!-- Show a little message if they still have builds being processed. -->
 				<div v-if="hasBuildsProcessing" class="alert">
-					<app-progress-poller
+					<AppProgressPoller
 						:url="`/web/dash/developer/games/poll-build-progress/${game.id}`"
 						@complete="onAllBuildsProcessed"
 					/>
 
-					<app-progress-bar thin active indeterminate :percent="100" />
+					<AppProgressBar thin active indeterminate :percent="100" />
 
 					<p>
 						<span v-translate>
@@ -137,16 +137,16 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 					</p>
 				</div>
 
-				<app-expand :when="!game.isVisible && canPublish">
+				<AppExpand :when="!game.isVisible && canPublish">
 					<div class="alert alert-highlight">
 						<p>
-							<translate>
+							<AppTranslate>
 								Your game page is ready to publish to the site for all to see!
-							</translate>
+							</AppTranslate>
 						</p>
 
-						<app-game-perms required="all" tag="div" class="alert-actions">
-							<app-button
+						<AppGamePerms required="all" tag="div" class="alert-actions">
+							<AppButton
 								v-app-tooltip="
 									$gettext(`dash.games.overview.todo_info_publish_button_tooltip`)
 								"
@@ -154,53 +154,53 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 								block
 								@click="routeStore.publish()"
 							>
-								<translate>dash.games.overview.todo_info_publish_button</translate>
-							</app-button>
-						</app-game-perms>
+								<AppTranslate>dash.games.overview.todo_info_publish_button</AppTranslate>
+							</AppButton>
+						</AppGamePerms>
 					</div>
-				</app-expand>
+				</AppExpand>
 
-				<app-expand :when="game.canceled">
+				<AppExpand :when="game.canceled">
 					<div class="alert">
 						<p>
-							<translate>
+							<AppTranslate>
 								Your game is set as being a canceled game. You can transition back
 								to a normal game page at any time!
-							</translate>
+							</AppTranslate>
 						</p>
 
-						<app-game-perms required="all" tag="div" class="alert-actions">
-							<app-button
+						<AppGamePerms required="all" tag="div" class="alert-actions">
+							<AppButton
 								v-app-tooltip="$gettext(`This will make your game active again.`)"
 								primary
 								block
 								@click="routeStore.uncancel()"
 							>
-								<translate>Uncancel Game</translate>
-							</app-button>
-						</app-game-perms>
+								<AppTranslate>Uncancel Game</AppTranslate>
+							</AppButton>
+						</AppGamePerms>
 					</div>
-				</app-expand>
+				</AppExpand>
 			</div>
 		</div>
 
 		<div v-if="game.community" class="row">
-			<app-community-perms :community="game.community" tag="div">
+			<AppCommunityPerms :community="game.community" tag="div">
 				<div class="col-lg-8">
 					<router-link :to="game.community.routeEditLocation">
-						<app-button icon="users">Edit Community</app-button>
+						<AppButton icon="users">Edit Community</AppButton>
 					</router-link>
 				</div>
-			</app-community-perms>
+			</AppCommunityPerms>
 		</div>
 
 		<h2>
-			<translate>dash.games.overview.stats_heading</translate>
+			<AppTranslate>dash.games.overview.stats_heading</AppTranslate>
 		</h2>
 
 		<div class="row">
 			<div class="col-lg-8">
-				<app-graph-widget
+				<AppGraphWidget
 					class="-graph"
 					:url="`/web/dash/developer/games/graphs/overview/${game.id}`"
 				/>
@@ -210,7 +210,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 					<div class="col-xs-6 col-sm-4 col-lg-6">
 						<div class="stat-big">
 							<div class="stat-big-label">
-								<translate>dash.games.overview.stats_views</translate>
+								<AppTranslate>dash.games.overview.stats_views</AppTranslate>
 							</div>
 							<div class="stat-big-digit">
 								{{ formatNumber(viewCount) }}
@@ -220,7 +220,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 					<div class="col-xs-6 col-sm-4 col-lg-6">
 						<div class="stat-big">
 							<div class="stat-big-label">
-								<translate>dash.games.overview.stats_plays</translate>
+								<AppTranslate>dash.games.overview.stats_plays</AppTranslate>
 							</div>
 							<div class="stat-big-digit">
 								{{ formatNumber(downloadCount) }}
@@ -230,7 +230,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 					<div class="col-xs-6 col-sm-4 col-lg-6">
 						<div class="stat-big">
 							<div class="stat-big-label">
-								<translate>Likes</translate>
+								<AppTranslate>Likes</AppTranslate>
 							</div>
 							<div class="stat-big-digit">
 								{{ formatNumber(likeCount) }}
@@ -240,7 +240,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 					<div class="col-xs-6 col-sm-4 col-lg-6">
 						<div class="stat-big">
 							<div class="stat-big-label">
-								<translate>Avg. Rating</translate>
+								<AppTranslate>Avg. Rating</AppTranslate>
 							</div>
 							<div class="stat-big-digit">
 								{{ averageRating }}
@@ -250,7 +250,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 					<div class="col-xs-6 col-sm-4 col-lg-6">
 						<div class="stat-big">
 							<div class="stat-big-label">
-								<translate>dash.games.overview.stats_comments</translate>
+								<AppTranslate>dash.games.overview.stats_comments</AppTranslate>
 							</div>
 							<div class="stat-big-digit">
 								{{ formatNumber(commentCount) }}
@@ -260,7 +260,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 					<div class="col-xs-6 col-sm-4 col-lg-6">
 						<div class="stat-big">
 							<div class="stat-big-label">
-								<translate>dash.games.overview.stats_followers</translate>
+								<AppTranslate>dash.games.overview.stats_followers</AppTranslate>
 							</div>
 							<div class="stat-big-digit">
 								{{ formatNumber(game.follower_count) }}
@@ -271,8 +271,8 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 			</div>
 		</div>
 
-		<app-game-perms required="analytics" tag="div" class="visible-xs">
-			<app-button
+		<AppGamePerms required="analytics" tag="div" class="visible-xs">
+			<AppButton
 				block
 				icon="chart"
 				:to="{
@@ -280,9 +280,9 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 					params: { resource: 'Game', resourceId: game.id },
 				}"
 			>
-				<translate>View Game Analytics</translate>
-			</app-button>
-		</app-game-perms>
+				<AppTranslate>View Game Analytics</AppTranslate>
+			</AppButton>
+		</AppGamePerms>
 	</div>
 </template>
 

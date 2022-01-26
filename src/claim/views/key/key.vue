@@ -150,7 +150,7 @@ export default class RouteKey extends BaseRouteComponent {
 
 <template>
 	<div v-if="isRouteBootstrapped">
-		<app-invalid-key v-if="invalidKey" />
+		<AppInvalidKey v-if="invalidKey" />
 		<section v-else class="container">
 			<component
 				:is="component"

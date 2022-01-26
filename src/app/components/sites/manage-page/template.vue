@@ -66,41 +66,41 @@ export default class AppSitesManagePageTemplate extends Vue {
 			<div class="row">
 				<div class="col-xs-8 col-centered">
 					<p class="lead">
-						<translate>
+						<AppTranslate>
 							Use one of our pre-built templates and customize it to your style.
-						</translate>
+						</AppTranslate>
 					</p>
 
-					<app-button v-app-tooltip="enableTooltip" primary @click="enable()">
-						<translate>Turn On</translate>
-					</app-button>
+					<AppButton v-app-tooltip="enableTooltip" primary @click="enable()">
+						<AppTranslate>Turn On</AppTranslate>
+					</AppButton>
 				</div>
 			</div>
 		</div>
 		<div v-else>
 			<div class="alert alert-notice visible-xs full-bleed-xs">
 				<p>
-					<translate>
+					<AppTranslate>
 						The site editor doesn't work on mobile devices at this time.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 
 			<div class="hidden-xs">
-				<app-button :href="themeEditorLocation" target="_blank">
-					<translate>Customize Theme</translate>
-				</app-button>
+				<AppButton :href="themeEditorLocation" target="_blank">
+					<AppTranslate>Customize Theme</AppTranslate>
+				</AppButton>
 
-				<app-button :href="contentEditorLocation" target="_blank">
-					<translate>Edit Content</translate>
-				</app-button>
+				<AppButton :href="contentEditorLocation" target="_blank">
+					<AppTranslate>Edit Content</AppTranslate>
+				</AppButton>
 			</div>
 
 			<h2>
-				<translate>Settings</translate>
+				<AppTranslate>Settings</AppTranslate>
 			</h2>
 
-			<form-site-settings :model="site" @submit="onSettingsSaved" />
+			<FormSiteSettings :model="site" @submit="onSettingsSaved" />
 		</div>
 	</div>
 </template>

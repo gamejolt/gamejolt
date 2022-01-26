@@ -73,17 +73,17 @@ export default class RouteDashGamesManageApiSettings extends BaseRouteComponent 
 	<div class="row">
 		<div class="col-lg-8">
 			<h2 class="section-header">
-				<translate>dash.games.api.settings.heading</translate>
+				<AppTranslate>dash.games.api.settings.heading</AppTranslate>
 			</h2>
 
 			<div class="alert alert-notice">
 				<p>
-					<strong><translate>Never give your private key to anyone!</translate></strong>
-					<translate>
+					<strong><AppTranslate>Never give your private key to anyone!</AppTranslate></strong>
+					<AppTranslate>
 						Your game's key is used to validate that API requests are coming from your
 						game. If villains or knaves get ahold of it, they can send in fake requests
 						pretending to be your game. Not good!
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 
@@ -95,13 +95,13 @@ export default class RouteDashGamesManageApiSettings extends BaseRouteComponent 
 					<tbody>
 						<tr>
 							<th>
-								<translate>dash.games.api.settings.game_id_label</translate>
+								<AppTranslate>dash.games.api.settings.game_id_label</AppTranslate>
 							</th>
 							<td>{{ game.id }}</td>
 						</tr>
 						<tr>
 							<th>
-								<translate>dash.games.api.settings.key_label</translate>
+								<AppTranslate>dash.games.api.settings.key_label</AppTranslate>
 							</th>
 							<td>
 								<template v-if="shouldShowKey">
@@ -110,15 +110,15 @@ export default class RouteDashGamesManageApiSettings extends BaseRouteComponent 
 								</template>
 								<p v-else>
 									<a class="link-muted" @click="shouldShowKey = true">
-										<translate>dash.games.api.settings.key_show_link</translate>
+										<AppTranslate>dash.games.api.settings.key_show_link</AppTranslate>
 									</a>
 								</p>
 
-								<app-button @click="generateNewKey">
-									<translate>
+								<AppButton @click="generateNewKey">
+									<AppTranslate>
 										dash.games.api.settings.key_generate_button
-									</translate>
-								</app-button>
+									</AppTranslate>
+								</AppButton>
 							</td>
 						</tr>
 					</tbody>

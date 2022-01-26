@@ -88,32 +88,32 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 			<div class="container">
 				<div class="col-sm-10 col-md-8 col-lg-6 col-centered text-center">
 					<p>
-						<app-jolticon icon="notice" big />
+						<AppJolticon icon="notice" big />
 					</p>
 					<template v-if="game.locked_status === GAME_LOCKED_STATUS_DMCA">
 						<div key="locked-reason-dmca">
 							<p>
-								<b><translate>This game was removed from the site.</translate></b>
+								<b><AppTranslate>This game was removed from the site.</AppTranslate></b>
 							</p>
 							<p>
-								<translate>
+								<AppTranslate>
 									We have received a DMCA takedown notice and were required to
 									remove it from the site. Only you are able to view it.
-								</translate>
+								</AppTranslate>
 							</p>
 						</div>
 					</template>
 					<template v-else-if="game.locked_status === GAME_LOCKED_STATUS_ADULT">
 						<div key="locked-reason-adult">
 							<p>
-								<b><translate>This page is made private.</translate></b>
+								<b><AppTranslate>This page is made private.</AppTranslate></b>
 							</p>
 							<p>
-								<translate>
+								<AppTranslate>
 									The game page has been removed from Game Jolt's public listings.
 									You have access to this page and its contents until December 31,
 									2022.
-								</translate>
+								</AppTranslate>
 							</p>
 						</div>
 					</template>
@@ -121,12 +121,12 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 			</div>
 		</section>
 
-		<app-page-header :hide-nav="isWizard">
+		<AppPageHeader :hide-nav="isWizard">
 			<div class="row">
 				<div class="col-sm-8">
 					<template v-if="isWizard">
 						<h1 class="section-header">
-							<translate>Add Game</translate>
+							<AppTranslate>Add Game</AppTranslate>
 						</h1>
 						<h4 class="section-header">
 							{{ game.title }}
@@ -155,31 +155,31 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 
 					<p class="text-muted small">
 						<span v-if="game._is_wip" class="tag">
-							<translate>Early Access</translate>
+							<AppTranslate>Early Access</AppTranslate>
 						</span>
 						<span v-else-if="game._is_devlog" class="tag">
-							<translate>Devlog</translate>
+							<AppTranslate>Devlog</AppTranslate>
 						</span>
 
 						<template v-if="!isWizard">
 							<span v-if="game.isUnlisted" class="tag tag-notice">
-								<translate>Unlisted</translate>
+								<AppTranslate>Unlisted</AppTranslate>
 							</span>
 
 							<template v-if="game.isVisible">
 								<span class="tag tag-highlight">
-									<translate>dash.games.published_tag</translate>
+									<AppTranslate>dash.games.published_tag</AppTranslate>
 								</span>
 								<span class="dot-separator" />
-								<app-time-ago :date="game.published_on" />
+								<AppTimeAgo :date="game.published_on" />
 							</template>
 						</template>
 					</p>
 				</div>
 				<div v-if="!isWizard" class="col-sm-4">
 					<p>
-						<app-game-perms required="analytics">
-							<app-button
+						<AppGamePerms required="analytics">
+							<AppButton
 								icon="chart"
 								class="hidden-xs"
 								:to="{
@@ -187,39 +187,39 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 									params: { resource: 'Game', resourceId: game.id },
 								}"
 							>
-								<translate>View Analytics</translate>
-							</app-button>
-						</app-game-perms>
+								<AppTranslate>View Analytics</AppTranslate>
+							</AppButton>
+						</AppGamePerms>
 						{{ ' ' }}
-						<app-button icon="arrow-forward" :to="game.getUrl()">
-							<translate>dash.games.view_page_button</translate>
-						</app-button>
+						<AppButton icon="arrow-forward" :to="game.getUrl()">
+							<AppTranslate>dash.games.view_page_button</AppTranslate>
+						</AppButton>
 					</p>
 				</div>
 			</div>
 
-			<app-expand :when="!isWizard && game.isUnlisted">
+			<AppExpand :when="!isWizard && game.isUnlisted">
 				<div class="alert alert-notice">
-					<translate>
+					<AppTranslate>
 						This game is currently unlisted from the public game listings, but can still
 						be accessed through your game's URL.
-					</translate>
+					</AppTranslate>
 					<template v-if="!game.published_on">
-						<translate>
+						<AppTranslate>
 							We recommend keeping it unlisted until you've finished filling out the
 							details and added some media. Don't forget to publish it when it's
 							ready!
-						</translate>
+						</AppTranslate>
 					</template>
 				</div>
-			</app-expand>
+			</AppExpand>
 
-			<app-expand :when="game.isVisible && !game.is_listable">
+			<AppExpand :when="game.isVisible && !game.is_listable">
 				<div v-translate class="alert alert-notice">
 					<b>Your game page is no longer visible in game listings!</b>
 					It must have active game builds for it to show.
 				</div>
-			</app-expand>
+			</AppExpand>
 
 			<template #nav>
 				<nav class="platform-list inline">
@@ -235,7 +235,7 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 									active: $route.name.indexOf('dash.games.manage.game') === 0,
 								}"
 							>
-								<translate>Overview/Setup</translate>
+								<AppTranslate>Overview/Setup</AppTranslate>
 							</router-link>
 						</li>
 						<li v-app-tooltip.bottom="$gettext(`dash.games.news_tooltip`)">
@@ -245,10 +245,10 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 									active: $route.name.indexOf('dash.games.manage.devlog') === 0,
 								}"
 							>
-								<translate>Devlog</translate>
+								<AppTranslate>Devlog</AppTranslate>
 							</router-link>
 						</li>
-						<app-game-perms
+						<AppGamePerms
 							v-app-tooltip.bottom="$gettext(`dash.games.api_tooltip`)"
 							required="game-api"
 							tag="li"
@@ -259,10 +259,10 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 									active: $route.name.indexOf('dash.games.manage.api') === 0,
 								}"
 							>
-								<translate>dash.games.api_tab</translate>
+								<AppTranslate>dash.games.api_tab</AppTranslate>
 							</router-link>
-						</app-game-perms>
-						<app-game-perms
+						</AppGamePerms>
+						<AppGamePerms
 							v-if="!game.is_locked"
 							v-app-tooltip.bottom="
 								$gettext(`Manage your game keys and give access to users.`)
@@ -277,10 +277,10 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 										$route.name.indexOf('dash.games.manage.key-groups') === 0,
 								}"
 							>
-								<translate>Keys/Access</translate>
+								<AppTranslate>Keys/Access</AppTranslate>
 							</router-link>
-						</app-game-perms>
-						<app-game-perms
+						</AppGamePerms>
+						<AppGamePerms
 							v-app-tooltip.bottom="
 								$gettext(
 									`Game Jolt Sites are customizable external sites for your portfolio and games!`
@@ -293,9 +293,9 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 								:to="{ name: 'dash.games.manage.site' }"
 								active-class="active"
 							>
-								<translate>Site</translate>
+								<AppTranslate>Site</AppTranslate>
 							</router-link>
-						</app-game-perms>
+						</AppGamePerms>
 
 						<li
 							v-if="game.developer.id == user.id"
@@ -307,13 +307,13 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 								:to="{ name: 'dash.games.manage.collaborators' }"
 								active-class="active"
 							>
-								<translate>Collaborators</translate>
+								<AppTranslate>Collaborators</AppTranslate>
 							</router-link>
 						</li>
 					</ul>
 				</nav>
 			</template>
-		</app-page-header>
+		</AppPageHeader>
 
 		<router-view />
 	</div>

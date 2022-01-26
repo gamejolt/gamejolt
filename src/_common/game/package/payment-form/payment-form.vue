@@ -416,7 +416,7 @@ export default class FormGamePackagePayment
 </script>
 
 <template>
-	<app-form :controller="form">
+	<AppForm :controller="form">
 		<template v-if="checkoutStep === 'primary'">
 			<div v-if="partner" class="alert full-bleed">
 				<span v-translate="{ user: partner.display_name }">
@@ -424,19 +424,19 @@ export default class FormGamePackagePayment
 					sale will go to %{ user }.
 				</span>
 				<router-link class="link-help" :to="{ name: 'landing.partners' }" target="_blank">
-					<translate>Learn more about the Game Jolt Partner system.</translate>
+					<AppTranslate>Learn more about the Game Jolt Partner system.</AppTranslate>
 				</router-link>
 			</div>
 
 			<p v-if="isNameYourPrice">
 				<template v-if="!pricing.amount">
-					<translate
+					<AppTranslate
 						:translate-params="{
 							developer: game.developer.display_name,
 						}"
 					>
 						Show %{ developer } some love by supporting them!
-					</translate>
+					</AppTranslate>
 				</template>
 				<template v-else>
 					<span v-translate="{ amount: formattedAmount }">
@@ -455,9 +455,9 @@ export default class FormGamePackagePayment
 			<hr />
 		</template>
 
-		<app-loading v-if="!isBootstrapped" />
+		<AppLoading v-if="!isBootstrapped" />
 		<template v-else>
-			<app-loading-fade :is-loading="isProcessing">
+			<AppLoadingFade :is-loading="isProcessing">
 				<div
 					v-if="checkoutStep === 'primary'"
 					:class="{
@@ -465,7 +465,7 @@ export default class FormGamePackagePayment
 						row: Screen.isXs,
 					}"
 				>
-					<app-form-group
+					<AppFormGroup
 						name="amount"
 						:label="$gettext(`Name your price`)"
 						label-class="col-sm-4"
@@ -473,7 +473,7 @@ export default class FormGamePackagePayment
 						<div class="col-sm-8">
 							<span class="amount-input">
 								<span class="amount-input-currency">$</span>
-								<app-form-control
+								<AppFormControl
 									type="currency"
 									step="1"
 									:validators="[validateMinValue(_minOrderAmount)]"
@@ -481,9 +481,9 @@ export default class FormGamePackagePayment
 							</span>
 
 							<span v-if="!isNameYourPrice" class="text-muted">
-								<translate :translate-params="{ amount: formattedAmount }">
+								<AppTranslate :translate-params="{ amount: formattedAmount }">
 									(%{ amount } or more)
-								</translate>
+								</AppTranslate>
 							</span>
 
 							<!--
@@ -491,18 +491,18 @@ export default class FormGamePackagePayment
 								yet, don't show an error since technically it's
 								valid for them not to pay anything.
 							-->
-							<app-form-control-errors
+							<AppFormControlErrors
 								v-if="!isNameYourPrice || formModel.amount > 0"
 								:label="$gettext(`price`)"
 							>
-								<app-form-control-error
+								<AppFormControlError
 									v-if="isNameYourPrice"
 									when="min_value"
 									:message="minOrderMessage"
 								/>
-							</app-form-control-errors>
+							</AppFormControlErrors>
 						</div>
-					</app-form-group>
+					</AppFormGroup>
 
 					<!--
 						If it's PWYW and they haven't entered a price in
@@ -510,50 +510,50 @@ export default class FormGamePackagePayment
 						We want to make it clear that they can get the
 						game for free by showing the link.
 					-->
-					<app-expand :when="!isNameYourPrice || formModel.amount > 0">
+					<AppExpand :when="!isNameYourPrice || formModel.amount > 0">
 						<div class="row">
 							<div class="col-sm-offset-4 col-sm-8">
 								<p class="small">
 									<strong>
-										<translate>Support the developer by paying more</translate>
+										<AppTranslate>Support the developer by paying more</AppTranslate>
 									</strong>
 								</p>
 
 								<p>
-									<app-button primary sparse @click="addMoney(1)">+$1</app-button>
-									<app-button primary sparse @click="addMoney(2)">+$2</app-button>
-									<app-button primary sparse @click="addMoney(5)">+$5</app-button>
-									<app-button primary sparse @click="addMoney(10)">
+									<AppButton primary sparse @click="addMoney(1)">+$1</AppButton>
+									<AppButton primary sparse @click="addMoney(2)">+$2</AppButton>
+									<AppButton primary sparse @click="addMoney(5)">+$5</AppButton>
+									<AppButton primary sparse @click="addMoney(10)">
 										+$10
-									</app-button>
+									</AppButton>
 								</p>
 
 								<hr />
 							</div>
 						</div>
 
-						<app-form-group
+						<AppFormGroup
 							v-if="!app.user"
 							name="email_address"
 							:label="$gettext(`Email Address:`)"
 							label-class="col-sm-4"
 						>
 							<div class="col-sm-8">
-								<app-form-control type="email" />
-								<app-form-control-errors :label="$gettext('email address')" />
+								<AppFormControl type="email" />
+								<AppFormControlErrors :label="$gettext('email address')" />
 							</div>
-						</app-form-group>
+						</AppFormGroup>
 
 						<div class="form-group">
 							<label class="col-sm-4 control-label">
-								<translate>Checkout with:</translate>
+								<AppTranslate>Checkout with:</AppTranslate>
 							</label>
 							<div class="col-sm-8">
 								<!--
 								If they have any wallet funds, we try let them checkout with their wallet.
 								If they don't have enough funds in their wallet for the order, we give 'em a message.
 							-->
-								<app-expand :when="valid">
+								<AppExpand :when="valid">
 									<div
 										v-if="
 											app.user &&
@@ -578,15 +578,15 @@ export default class FormGamePackagePayment
 											</div>
 											<div class="saved-card-content">
 												<div class="saved-card-label">
-													<translate>Your Wallet</translate>
+													<AppTranslate>Your Wallet</AppTranslate>
 												</div>
 												<div class="small">
-													<translate>Balance:</translate>
+													<AppTranslate>Balance:</AppTranslate>
 													{{ formatCurrency(walletBalance) }}
 
 													<span v-if="walletTax > 0" class="text-muted">
 														+{{ formatCurrency(walletTax) }}
-														<translate>tax</translate>
+														<AppTranslate>tax</AppTranslate>
 													</span>
 												</div>
 											</div>
@@ -613,7 +613,7 @@ export default class FormGamePackagePayment
 													</div>
 													<div class="saved-card-content">
 														<div class="saved-card-label">
-															<translate>Saved Card</translate>
+															<AppTranslate>Saved Card</AppTranslate>
 														</div>
 														<span class="tag">
 															{{ cards[0].brand }}
@@ -634,13 +634,13 @@ export default class FormGamePackagePayment
 																	cardsTax[cards[0].id].amount
 																)
 															}}
-															<translate>tax</translate>
+															<AppTranslate>tax</AppTranslate>
 														</small>
 													</div>
 												</span>
 											</div>
 
-											<app-popper
+											<AppPopper
 												v-if="cards.length > 1"
 												class="saved-card-more"
 												popover-class="fill-darkest"
@@ -649,7 +649,7 @@ export default class FormGamePackagePayment
 													v-app-tooltip="$gettext('Select another card')"
 													:class="{ disabled: isLoadingMethods }"
 												>
-													<app-jolticon icon="chevron-down" />
+													<AppJolticon icon="chevron-down" />
 												</span>
 
 												<template #popover>
@@ -677,17 +677,17 @@ export default class FormGamePackagePayment
 																		cardsTax[card.id].amount
 																	)
 																}}
-																<translate>tax</translate>
+																<AppTranslate>tax</AppTranslate>
 															</small>
 														</a>
 													</div>
 												</template>
-											</app-popper>
+											</AppPopper>
 										</div>
 									</template>
-								</app-expand>
+								</AppExpand>
 
-								<app-form-button
+								<AppFormButton
 									icon="credit-card"
 									:solid="false"
 									:primary="false"
@@ -695,49 +695,49 @@ export default class FormGamePackagePayment
 									@before-submit="checkoutCard()"
 								>
 									<template v-if="cards.length">
-										<translate>New Card</translate>
+										<AppTranslate>New Card</AppTranslate>
 									</template>
 									<template v-else>
-										<translate>Card</translate>
+										<AppTranslate>Card</AppTranslate>
 									</template>
-								</app-form-button>
+								</AppFormButton>
 
-								<app-button :disabled="!valid" @click="collectAddress('paypal')">
-									<translate>PayPal</translate>
-								</app-button>
+								<AppButton :disabled="!valid" @click="collectAddress('paypal')">
+									<AppTranslate>PayPal</AppTranslate>
+								</AppButton>
 							</div>
 						</div>
-					</app-expand>
+					</AppExpand>
 
 					<div v-if="isNameYourPrice && build" class="row">
 						<div class="col-sm-offset-4 col-sm-8">
 							<a class="small" @click="emitSkip()">
-								<translate v-if="isDownloading">
+								<AppTranslate v-if="isDownloading">
 									No thanks, take me to the download.
-								</translate>
-								<translate v-else-if="isInstalling">
+								</AppTranslate>
+								<AppTranslate v-else-if="isInstalling">
 									No thanks, just install it.
-								</translate>
-								<translate v-else-if="isPlaying">
+								</AppTranslate>
+								<AppTranslate v-else-if="isPlaying">
 									No thanks, take me to the game.
-								</translate>
+								</AppTranslate>
 							</a>
 						</div>
 					</div>
 				</div>
 				<template v-else-if="checkoutStep === 'address'">
 					<div class="alert full-bleed">
-						<app-jolticon icon="info-circle" />
-						<translate>
+						<AppJolticon icon="info-circle" />
+						<AppTranslate>
 							Because of international tax laws, we are required to collect this
 							information.
-						</translate>
+						</AppTranslate>
 					</div>
 
 					<div class="row">
 						<div class="col-sm-6">
-							<app-form-group name="country" :label="$gettext('Country')">
-								<app-form-control-select>
+							<AppFormGroup name="country" :label="$gettext('Country')">
+								<AppFormControlSelect>
 									<option
 										v-for="country of countries"
 										:key="country.code"
@@ -745,26 +745,26 @@ export default class FormGamePackagePayment
 									>
 										{{ country.name }}
 									</option>
-								</app-form-control-select>
-								<app-form-control-errors />
-							</app-form-group>
+								</AppFormControlSelect>
+								<AppFormControlErrors />
+							</AppFormGroup>
 						</div>
 					</div>
 
-					<app-form-group name="street1" :label="$gettext('Street Address')">
-						<app-form-control type="text" />
-						<app-form-control-errors />
-					</app-form-group>
+					<AppFormGroup name="street1" :label="$gettext('Street Address')">
+						<AppFormControl type="text" />
+						<AppFormControlErrors />
+					</AppFormGroup>
 
 					<div class="row">
 						<div class="col-sm-6">
-							<app-form-group
+							<AppFormGroup
 								name="region"
 								:label="$gettext('State/Province/County')"
 							>
-								<app-form-control v-if="!regions" type="text" validate-on-blur />
+								<AppFormControl v-if="!regions" type="text" validate-on-blur />
 
-								<app-form-control-select v-else>
+								<AppFormControlSelect v-else>
 									<option
 										v-for="region of regions"
 										:key="region.code"
@@ -772,16 +772,16 @@ export default class FormGamePackagePayment
 									>
 										{{ region.name }}
 									</option>
-								</app-form-control-select>
+								</AppFormControlSelect>
 
-								<app-form-control-errors />
-							</app-form-group>
+								<AppFormControlErrors />
+							</AppFormGroup>
 						</div>
 						<div class="col-sm-6">
-							<app-form-group name="postcode" :label="$gettext('Zip/Postal Code')">
-								<app-form-control type="text" />
-								<app-form-control-errors />
-							</app-form-group>
+							<AppFormGroup name="postcode" :label="$gettext('Zip/Postal Code')">
+								<AppFormControl type="text" />
+								<AppFormControlErrors />
+							</AppFormGroup>
 						</div>
 					</div>
 
@@ -792,21 +792,21 @@ export default class FormGamePackagePayment
 						<div class="pull-right small" style="position: relative; z-index: 1">
 							<a class="link-muted" @click="startOver">
 								&laquo;
-								<translate>Go back</translate>
+								<AppTranslate>Go back</AppTranslate>
 							</a>
 						</div>
 
 						<div v-if="checkoutType === 'paypal'">
-							<app-form-button
+							<AppFormButton
 								:solid="false"
 								:disabled="!valid"
 								@before-submit="checkoutPaypal()"
 							>
-								<translate>Proceed to PayPal</translate>
-							</app-form-button>
+								<AppTranslate>Proceed to PayPal</AppTranslate>
+							</AppFormButton>
 						</div>
 						<div v-else-if="checkoutType === 'wallet'">
-							<app-loading
+							<AppLoading
 								v-if="!calculatedAddressTax && valid"
 								class="loading-centered"
 								:label="$gettext('Calculating tax...')"
@@ -817,8 +817,8 @@ export default class FormGamePackagePayment
 								class="anim-fade-in small"
 							>
 								+{{ formatCurrency(addressTaxAmount) }}
-								<translate>tax</translate>
-								<app-jolticon
+								<AppTranslate>tax</AppTranslate>
+								<AppJolticon
 									v-app-tooltip.touchable="
 										$gettext(
 											`We are required to collect taxes on orders for certain regions.`
@@ -830,29 +830,29 @@ export default class FormGamePackagePayment
 							</p>
 
 							<div v-if="!hasSufficientWalletFunds" class="alert">
-								<translate>
+								<AppTranslate>
 									You do not have enough funds in your Wallet for this order.
-								</translate>
+								</AppTranslate>
 							</div>
 
-							<app-button
+							<AppButton
 								primary
 								:disabled="
 									!valid || !calculatedAddressTax || !hasSufficientWalletFunds
 								"
 								@click="checkoutWallet"
 							>
-								<translate>Buy Using Wallet</translate>
+								<AppTranslate>Buy Using Wallet</AppTranslate>
 								<small v-if="calculatedAddressTax">
 									{{ formatCurrency(formModel.amount * 100 + addressTaxAmount) }}
 								</small>
-							</app-button>
+							</AppButton>
 						</div>
 					</div>
 				</template>
-			</app-loading-fade>
+			</AppLoadingFade>
 		</template>
-	</app-form>
+	</AppForm>
 </template>
 
 <style lang="stylus" src="./payment-form.styl" scoped></style>

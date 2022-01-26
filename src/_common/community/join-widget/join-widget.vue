@@ -107,7 +107,7 @@ export default class AppCommunityJoinWidget extends Vue {
 </script>
 
 <template>
-	<app-button
+	<AppButton
 		v-app-auth-required
 		v-app-tooltip="canJoin ? '' : $gettext(`You already joined too many communities`)"
 		class="community-follow-widget"
@@ -119,10 +119,10 @@ export default class AppCommunityJoinWidget extends Vue {
 		@click="onClick"
 	>
 		<template v-if="!community.is_member">
-			<translate>Join Community</translate>
+			<AppTranslate>Join Community</AppTranslate>
 		</template>
 		<template v-else>
-			<translate>Joined</translate>
+			<AppTranslate>Joined</AppTranslate>
 		</template>
-	</app-button>
+	</AppButton>
 </template>

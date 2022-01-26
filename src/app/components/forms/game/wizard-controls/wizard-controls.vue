@@ -46,12 +46,12 @@ export default class AppDashGameWizardControls extends Vue {
 			<hr />
 
 			<div class="pull-right">
-				<app-form-button v-if="inForm" :disabled="!canProceed" @after-submit="next">
-					<translate>Save & Next</translate>
-				</app-form-button>
-				<app-button v-else :disabled="!canProceed" @click="next">
-					<translate>Next Step</translate>
-				</app-button>
+				<AppFormButton v-if="inForm" :disabled="!canProceed" @after-submit="next">
+					<AppTranslate>Save & Next</AppTranslate>
+				</AppFormButton>
+				<AppButton v-else :disabled="!canProceed" @click="next">
+					<AppTranslate>Next Step</AppTranslate>
+				</AppButton>
 			</div>
 		</div>
 		<div v-else>

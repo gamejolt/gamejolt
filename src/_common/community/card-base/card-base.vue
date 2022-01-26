@@ -64,7 +64,7 @@ export default class AppCommunityCardBase extends Vue {
 </script>
 
 <template>
-	<app-theme
+	<AppTheme
 		class="community-card sheet sheet-full sheet-no-full-bleed"
 		:class="{ 'sheet-elevate': elevate }"
 		:theme="community.theme"
@@ -89,7 +89,7 @@ export default class AppCommunityCardBase extends Vue {
 						@click="trackGotoCommunity()"
 					>
 						{{ community.name }}
-						<app-community-verified-tick :community="community" />
+						<AppCommunityVerifiedTick :community="community" />
 					</router-link>
 				</div>
 
@@ -111,26 +111,26 @@ export default class AppCommunityCardBase extends Vue {
 
 				<div class="-controls">
 					<template v-if="community.hasPerms() && allowEdit">
-						<app-button
+						<AppButton
 							v-if="!isEditing"
 							v-app-track-event="`community-card-inline:community-edit`"
 							primary
 							block
 							:to="community.routeEditLocation"
 						>
-							<translate>Edit Community</translate>
-						</app-button>
-						<app-button
+							<AppTranslate>Edit Community</AppTranslate>
+						</AppButton>
+						<AppButton
 							v-else
 							primary
 							block
 							:to="community.routeLocation"
 							@click="trackGotoCommunity()"
 						>
-							<translate>View Community</translate>
-						</app-button>
+							<AppTranslate>View Community</AppTranslate>
+						</AppButton>
 					</template>
-					<app-community-join-widget
+					<AppCommunityJoinWidget
 						v-else
 						:community="community"
 						:disabled="!!community.user_block"
@@ -138,7 +138,7 @@ export default class AppCommunityCardBase extends Vue {
 						hide-count
 						location="card"
 					/>
-					<app-button
+					<AppButton
 						v-if="shouldShowModTools"
 						class="-moderate"
 						:href="Environment.baseUrl + `/moderate/communities/view/${community.id}`"
@@ -149,7 +149,7 @@ export default class AppCommunityCardBase extends Vue {
 				</div>
 			</div>
 		</div>
-	</app-theme>
+	</AppTheme>
 </template>
 
 <style lang="stylus" src="./card-base.styl" scoped></style>

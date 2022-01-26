@@ -113,7 +113,7 @@ export default class RouteLandingRedlight extends BaseRouteComponent {
 				</div>
 
 				<div class="social-widgets text-center">
-					<app-social-twitter-share
+					<AppSocialTwitterShare
 						:content="
 							$gettext(
 								'Check out Game Jolt #Redlight. Helping AAA studios reach critical mass. #gamedev'
@@ -123,7 +123,7 @@ export default class RouteLandingRedlight extends BaseRouteComponent {
 
 					<span class="dot-separator hidden-xs" />
 
-					<app-social-facebook-like />
+					<AppSocialFacebookLike />
 				</div>
 			</div>
 		</section>
@@ -215,40 +215,40 @@ export default class RouteLandingRedlight extends BaseRouteComponent {
 							<hr class="underbar" />
 
 							<p>
-								<app-jolticon icon="checkbox" />
+								<AppJolticon icon="checkbox" />
 								Desperately fumble around trying to get votes from anywhere on the
 								internet.
 							</p>
 							<p>
-								<app-jolticon icon="checkbox" />
+								<AppJolticon icon="checkbox" />
 								Spend all your money and free time trying to get redlit.
 							</p>
 							<p>
-								<app-jolticon icon="checkbox" />
+								<AppJolticon icon="checkbox" />
 								Include the Game Jolt Redlight logo on your game pages across all
 								other platforms.
 							</p>
 							<p>
-								<app-jolticon icon="checkbox" />
+								<AppJolticon icon="checkbox" />
 								Add into your game demo "Vote for us on Game Jolt Redlight".
 							</p>
 							<p>
-								<app-jolticon icon="checkbox" />
+								<AppJolticon icon="checkbox" />
 								Upload said demo to all platforms to direct traffic to your Game
 								Jolt Redlight page.
 							</p>
 							<p>
-								<app-jolticon icon="checkbox" />
+								<AppJolticon icon="checkbox" />
 								Wipe away the tears and include Redlight every time you tweet,
 								whether your tweet is related or not.
 							</p>
 							<p>
-								<app-jolticon icon="checkbox" />
+								<AppJolticon icon="checkbox" />
 								Employ a team of people devoted to Redlight. After all, you have the
 								money.
 							</p>
 							<p>
-								<app-jolticon icon="checkbox" />
+								<AppJolticon icon="checkbox" />
 								Once you're redlit,
 								<router-link :to="{ name: 'landing.indieaf' }">
 									get indie AF!
@@ -294,11 +294,11 @@ export default class RouteLandingRedlight extends BaseRouteComponent {
 							</p>
 
 							<div class="social-widgets">
-								<app-social-twitter-share :content="tweet" />
+								<AppSocialTwitterShare :content="tweet" />
 
 								<span class="dot-separator hidden-xs" />
 
-								<app-social-facebook-like />
+								<AppSocialFacebookLike />
 							</div>
 						</div>
 					</div>
@@ -313,11 +313,11 @@ export default class RouteLandingRedlight extends BaseRouteComponent {
 							<hr class="underbar underbar-center" />
 
 							<p>
-								<app-link-external
+								<AppLinkExternal
 									href="https://docs.google.com/document/d/1RMMr-9ZTfTFSQMD8Q-1JFkFo9ztX0OktORAn9Se02fg/edit"
 								>
 									We sent out an email to all the top players.
-								</app-link-external>
+								</AppLinkExternal>
 								No one has gotten back to us yet. We will update here when they do.
 							</p>
 						</div>
@@ -448,7 +448,7 @@ export default class RouteLandingRedlight extends BaseRouteComponent {
 
 					<div class="row">
 						<div class="col-sm-6 col-md-5 col-lg-4 col-centered">
-							<app-auth-join />
+							<AppAuthJoin />
 						</div>
 					</div>
 				</div>

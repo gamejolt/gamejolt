@@ -121,7 +121,7 @@ export default class AppGameCollectionFollowWidget extends Vue {
 </script>
 
 <template>
-	<app-button
+	<AppButton
 		v-app-auth-required
 		v-app-tooltip.bottom="tooltip"
 		v-app-track-event="`game-collection-follow:${!isFollowing ? 'follow' : 'unfollow'}`"
@@ -137,13 +137,13 @@ export default class AppGameCollectionFollowWidget extends Vue {
 	>
 		<template v-if="!circle">
 			<template v-if="!isFollowing">
-				<translate v-if="collection.type === 'developer'">Follow Developer</translate>
-				<translate v-else-if="collection.type === 'jam'">Follow Jam</translate>
-				<translate v-else>Follow Playlist</translate>
+				<AppTranslate v-if="collection.type === 'developer'">Follow Developer</AppTranslate>
+				<AppTranslate v-else-if="collection.type === 'jam'">Follow Jam</AppTranslate>
+				<AppTranslate v-else>Follow Playlist</AppTranslate>
 			</template>
 			<template v-else>
-				<translate>Following</translate>
+				<AppTranslate>Following</AppTranslate>
 			</template>
 		</template>
-	</app-button>
+	</AppButton>
 </template>

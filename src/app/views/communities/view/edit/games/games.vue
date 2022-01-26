@@ -123,56 +123,56 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 </script>
 
 <template>
-	<app-communities-view-page-container>
-		<app-community-perms :community="community" required="community-channels">
+	<AppCommunitiesViewPageContainer>
+		<AppCommunityPerms :community="community" required="community-channels">
 			<h2 class="section-header">
-				<translate>Linked Games</translate>
+				<AppTranslate>Linked Games</AppTranslate>
 			</h2>
 
 			<div class="page-help">
 				<p>
-					<translate>
+					<AppTranslate>
 						Link your games to this community. Doing so will show the game in your
 						community sidebar as well as showing the community on your game page. Each
 						of your games can only be linked to a single community.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 
 			<div v-if="!canLinkNewGames">
 				<p>
-					<translate :translate-params="{ count: maxLinkedGames }">
+					<AppTranslate :translate-params="{ count: maxLinkedGames }">
 						You've reached the maximum limit of %{ maxLinkedGames } games linked to this
 						community.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 			<div v-else-if="!hasMoreGamesToLink">
 				<p>
-					<translate>
+					<AppTranslate>
 						All your games are linked to a community. Remember, each game can only be
 						linked to a single community at this time.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 			<div v-else>
-				<app-button block primary @click="onClickLinkGame">
-					<translate>Link Game</translate>
-				</app-button>
+				<AppButton block primary @click="onClickLinkGame">
+					<AppTranslate>Link Game</AppTranslate>
+				</AppButton>
 			</div>
 
 			<br />
 
-			<app-card-list v-if="hasLinkedGames" :items="community.games" is-draggable>
-				<app-card-list-draggable item-key="id" @change="saveSort">
+			<AppCardList v-if="hasLinkedGames" :items="community.games" is-draggable>
+				<AppCardListDraggable item-key="id" @change="saveSort">
 					<template #item="{ element: game }">
-						<app-card-list-item :id="`game-container-${game.id}`" :item="game">
+						<AppCardListItem :id="`game-container-${game.id}`" :item="game">
 							<div class="row">
 								<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
 									<router-link
 										:to="{ name: game.getSref(), params: game.getSrefParams() }"
 									>
-										<app-game-thumbnail-img :game="game" />
+										<AppGameThumbnailImg :game="game" />
 									</router-link>
 
 									<br class="visible-xs" />
@@ -183,7 +183,7 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 										class="card-remove"
 										@click.stop="onClickUnlinkGame(game)"
 									>
-										<app-jolticon icon="remove" />
+										<AppJolticon icon="remove" />
 									</a>
 
 									<div class="card-title">
@@ -191,7 +191,7 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 									</div>
 
 									<div v-if="!game.isVisible" class="card-meta card-meta-sm">
-										<translate
+										<AppTranslate
 											v-app-tooltip.bottom="
 												$gettext(
 													`This game is unlisted and won't show in the community sidebar until you publish it.`
@@ -199,14 +199,14 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 											"
 										>
 											(Unlisted)
-										</translate>
+										</AppTranslate>
 									</div>
 								</div>
 							</div>
-						</app-card-list-item>
+						</AppCardListItem>
 					</template>
-				</app-card-list-draggable>
-			</app-card-list>
-		</app-community-perms>
-	</app-communities-view-page-container>
+				</AppCardListDraggable>
+			</AppCardList>
+		</AppCommunityPerms>
+	</AppCommunitiesViewPageContainer>
 </template>

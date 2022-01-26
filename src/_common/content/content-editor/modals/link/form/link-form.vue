@@ -20,13 +20,13 @@ export default class AppFormContentEditorLink extends mixins(Wrapper) {
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="href" :optional="false" :label="$gettext(`Link Destination`)">
-			<app-form-control placeholder="https://example.com" focus />
-		</app-form-group>
+	<AppForm :controller="form">
+		<AppFormGroup name="href" :optional="false" :label="$gettext(`Link Destination`)">
+			<AppFormControl placeholder="https://example.com" focus />
+		</AppFormGroup>
 
-		<app-form-button :disabled="!valid">
-			<translate>Insert Link</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton :disabled="!valid">
+			<AppTranslate>Insert Link</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

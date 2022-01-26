@@ -81,35 +81,35 @@ export default class RouteCommunitiesViewEditChannelsEdit extends BaseRouteCompo
 <template>
 	<!-- Read comment in routeResolved for why the channel might not exist yet. -->
 	<div v-if="channel">
-		<app-page-header v-bind="pageHeaderProps" should-affix-nav @edit-cover="onClickEditHeader">
+		<AppPageHeader v-bind="pageHeaderProps" should-affix-nav @edit-cover="onClickEditHeader">
 			<template v-if="canEditHeader" #cover-edit-buttons>
-				<translate>Upload Header</translate>
+				<AppTranslate>Upload Header</AppTranslate>
 			</template>
 
 			<template #default>
 				<div class="text-muted small">
 					<span v-if="channel.visibility === 'draft'" class="tag">
-						<translate>Draft</translate>
+						<AppTranslate>Draft</AppTranslate>
 					</span>
 					<span v-else-if="channel.visibility === 'published'" class="tag tag-highlight">
-						<translate>Published</translate>
+						<AppTranslate>Published</AppTranslate>
 					</span>
 
 					<template v-if="competition">
 						<span v-if="competition.period === 'pre-comp'" class="tag">
-							<translate>Future</translate>
+							<AppTranslate>Future</AppTranslate>
 						</span>
 						<span
 							v-else-if="competition.period === 'running'"
 							class="tag tag-highlight"
 						>
-							<translate>Running</translate>
+							<AppTranslate>Running</AppTranslate>
 						</span>
 						<span v-else-if="competition.period === 'voting'" class="tag tag-highlight">
-							<translate>Voting</translate>
+							<AppTranslate>Voting</AppTranslate>
 						</span>
 						<span v-else-if="competition.period === 'post-comp'" class="tag">
-							<translate>Finished</translate>
+							<AppTranslate>Finished</AppTranslate>
 						</span>
 					</template>
 
@@ -120,7 +120,7 @@ export default class RouteCommunitiesViewEditChannelsEdit extends BaseRouteCompo
 						"
 						class="tag tag-notice"
 					>
-						<translate>Archived</translate>
+						<AppTranslate>Archived</AppTranslate>
 					</span>
 				</div>
 
@@ -142,7 +142,7 @@ export default class RouteCommunitiesViewEditChannelsEdit extends BaseRouteCompo
 											'communities.view.edit.channels.overview',
 									}"
 								>
-									<translate>Channel</translate>
+									<AppTranslate>Channel</AppTranslate>
 								</router-link>
 							</li>
 							<li v-if="competition">
@@ -152,7 +152,7 @@ export default class RouteCommunitiesViewEditChannelsEdit extends BaseRouteCompo
 									}"
 									active-class="active"
 								>
-									<translate>Manage Jam</translate>
+									<AppTranslate>Manage Jam</AppTranslate>
 								</router-link>
 							</li>
 						</ul>
@@ -161,20 +161,20 @@ export default class RouteCommunitiesViewEditChannelsEdit extends BaseRouteCompo
 			</template>
 
 			<template #controls>
-				<app-page-header-controls>
-					<app-button
+				<AppPageHeaderControls>
+					<AppButton
 						:to="{
 							name: 'communities.view.channel',
 						}"
 						block
 						icon="arrow-forward"
 					>
-						<translate v-if="competition">View Jam</translate>
-						<translate v-else>View Channel</translate>
-					</app-button>
-				</app-page-header-controls>
+						<AppTranslate v-if="competition">View Jam</AppTranslate>
+						<AppTranslate v-else>View Channel</AppTranslate>
+					</AppButton>
+				</AppPageHeaderControls>
 			</template>
-		</app-page-header>
+		</AppPageHeader>
 
 		<router-view />
 	</div>

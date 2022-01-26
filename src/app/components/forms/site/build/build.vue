@@ -59,29 +59,29 @@ export default class FormDashSiteBuild extends mixins(Wrapper) implements FormOn
 </script>
 
 <template>
-	<app-form class="form-dash-site-build" :controller="form">
-		<app-form-group name="file" :hide-label="true">
+	<AppForm class="form-dash-site-build" :controller="form">
+		<AppFormGroup name="file" :hide-label="true">
 			<p class="help-block">
-				<translate
+				<AppTranslate
 					:translate-params="{
 						maxFilesize: maxFilesize / 1024 / 1024,
 					}"
 				>
 					Static site uploads are currently capped at %{ maxFilesize }MB. Please upload a
 					.zip file with an index.html file in the root of the folder.
-				</translate>
+				</AppTranslate>
 			</p>
 
-			<app-form-control-upload
+			<AppFormControlUpload
 				:validators="[validateFilesize(maxFilesize)]"
 				accept=".zip"
 				:upload-link-label="$gettext(`Upload a .zip file.`)"
 				@changed="onFileSelect"
 			/>
 
-			<app-form-control-errors />
-		</app-form-group>
-	</app-form>
+			<AppFormControlErrors />
+		</AppFormGroup>
+	</AppForm>
 </template>
 
 <style lang="stylus" scoped>

@@ -263,7 +263,7 @@ export default class AppClientGameButtons extends Vue {
 <template>
 	<span class="client-game-buttons">
 		<span v-if="!localPackage" v-app-tooltip="installTooltip" style="display: inline-block">
-			<app-button
+			<AppButton
 				primary
 				solid
 				icon="download-box"
@@ -273,8 +273,8 @@ export default class AppClientGameButtons extends Vue {
 				:lg="large"
 				@click.stop="install()"
 			>
-				<translate>Install</translate>
-			</app-button>
+				<AppTranslate>Install</AppTranslate>
+			</AppButton>
 		</span>
 
 		<template v-else>
@@ -288,55 +288,55 @@ export default class AppClientGameButtons extends Vue {
 								: $gettext('Update Failed')
 						}}
 					</span>
-					<app-button
+					<AppButton
 						primary
 						:overlay="overlay"
 						:sm="small"
 						:lg="large"
 						@click.stop="retryInstall()"
 					>
-						<translate>Retry</translate>
-					</app-button>
+						<AppTranslate>Retry</AppTranslate>
+					</AppButton>
 				</template>
 
-				<app-client-install-progress v-if="!noProgress" :local-package="localPackage" />
+				<AppClientInstallProgress v-if="!noProgress" :local-package="localPackage" />
 
 				<template v-if="localPackage.isPatching">
 					<template v-if="localPackage.isPatchQueued">
-						<translate class="tag">QUEUED</translate>
+						<AppTranslate class="tag">QUEUED</AppTranslate>
 					</template>
 
 					<template v-else-if="localPackage.isUpdating">
-						<translate class="tag tag-highlight">UPDATING</translate>
+						<AppTranslate class="tag tag-highlight">UPDATING</AppTranslate>
 					</template>
 
 					<template v-else-if="!localPackage.isPatchQueued">
 						<template v-if="!localPackage.isPatchPaused">
-							<app-button
+							<AppButton
 								:overlay="overlay"
 								:sm="small"
 								:lg="large"
 								@click.stop="pause()"
 							>
-								<translate v-if="!small">Pause</translate>
-							</app-button>
+								<AppTranslate v-if="!small">Pause</AppTranslate>
+							</AppButton>
 						</template>
 
 						<template v-else>
-							<app-button
+							<AppButton
 								primary
 								:overlay="overlay"
 								:sm="small"
 								:lg="large"
 								@click.stop="resume()"
 							>
-								<translate v-if="!small">Resume</translate>
-							</app-button>
+								<AppTranslate v-if="!small">Resume</AppTranslate>
+							</AppButton>
 						</template>
 					</template>
 				</template>
 
-				<app-button
+				<AppButton
 					v-if="localPackage.install_state"
 					v-app-tooltip="$gettext('Cancel Installation')"
 					circle
@@ -352,7 +352,7 @@ export default class AppClientGameButtons extends Vue {
 			<span v-if="localPackage.isSettled">
 				<!-- Single game launching. -->
 				<template v-if="gamePackages.length === 1">
-					<app-button
+					<AppButton
 						v-if="!localPackage.isRunning"
 						v-app-tooltip="
 							localPackage.isRunning
@@ -367,18 +367,18 @@ export default class AppClientGameButtons extends Vue {
 						:lg="large"
 						@click.stop="launch(localPackage)"
 					>
-						<translate>Launch</translate>
-					</app-button>
+						<AppTranslate>Launch</AppTranslate>
+					</AppButton>
 				</template>
 
 				<!-- Multi game launching. -->
-				<app-popper
+				<AppPopper
 					v-if="gamePackages.length > 1"
 					popover-class="fill-darkest"
 					@show="emitShowLaunchOptions()"
 					@hide="emitHideLaunchOptions()"
 				>
-					<app-button
+					<AppButton
 						primary
 						solid
 						icon="play"
@@ -386,8 +386,8 @@ export default class AppClientGameButtons extends Vue {
 						:sm="small"
 						:lg="large"
 					>
-						<translate>Launch</translate>
-					</app-button>
+						<AppTranslate>Launch</AppTranslate>
+					</AppButton>
 
 					<template #popover>
 						<div class="list-group list-group-dark thin">
@@ -400,21 +400,21 @@ export default class AppClientGameButtons extends Vue {
 								}"
 								@click="launch(pkg)"
 							>
-								<app-jolticon icon="play" />
+								<AppJolticon icon="play" />
 								{{ pkg.title || game.title }}
 							</a>
 						</div>
 					</template>
-				</app-popper>
+				</AppPopper>
 			</span>
 
-			<app-popper
+			<AppPopper
 				v-if="!localPackage.install_state"
 				class="fill-darkest"
 				@show="emitShowOptions()"
 				@hide="emitHideOptions()"
 			>
-				<app-button
+				<AppButton
 					circle
 					icon="ellipsis-v"
 					:trans="!overlay"
@@ -435,8 +435,8 @@ export default class AppClientGameButtons extends Vue {
 								},
 							}"
 						>
-							<app-jolticon icon="game" />
-							<translate>View Game</translate>
+							<AppJolticon icon="game" />
+							<AppTranslate>View Game</AppTranslate>
 						</router-link>
 						<a
 							v-for="pkg of settledGamePackages"
@@ -444,7 +444,7 @@ export default class AppClientGameButtons extends Vue {
 							class="list-group-item has-icon"
 							@click="openFolder(pkg)"
 						>
-							<app-jolticon icon="folder-open" />
+							<AppJolticon icon="folder-open" />
 							<span v-translate="{ title: pkg.title || game.title }">
 								Open Folder for %{ title }
 							</span>
@@ -458,14 +458,14 @@ export default class AppClientGameButtons extends Vue {
 							}"
 							@click="uninstallPackage(pkg)"
 						>
-							<app-jolticon icon="remove" notice />
+							<AppJolticon icon="remove" notice />
 							<span v-translate="{ title: pkg.title || game.title }">
 								Uninstall %{ title }
 							</span>
 						</a>
 					</div>
 				</template>
-			</app-popper>
+			</AppPopper>
 		</template>
 	</span>
 </template>

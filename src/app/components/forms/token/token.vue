@@ -31,26 +31,26 @@ export default class FormToken
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="token" :label="$gettext('Game Token')">
-			<app-form-control
+	<AppForm :controller="form">
+		<AppFormGroup name="token" :label="$gettext('Game Token')">
+			<AppFormControl
 				type="text"
 				:validators="[validateMinLength(4), validateMaxLength(30)]"
 				autocomplete="off"
 				focus
 			/>
 
-			<app-form-control-errors />
+			<AppFormControlErrors />
 
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					For security reasons, don't make your game token the same as your password.
-				</translate>
+				</AppTranslate>
 			</p>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-button>
-			<translate>Save Game Token</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton>
+			<AppTranslate>Save Game Token</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

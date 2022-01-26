@@ -22,32 +22,32 @@ export default class AppClientSystemReportModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>system_report.send.heading</translate>
+				<AppTranslate>system_report.send.heading</AppTranslate>
 			</h2>
 		</div>
 
 		<div class="modal-body">
 			<p class="text-muted small">
-				<translate>system_report.send.help</translate>
+				<AppTranslate>system_report.send.help</AppTranslate>
 			</p>
 
 			<p class="text-muted small" v-translate>
 				If you experienced a bug, please report it first on our
-				<app-link-external href="https://github.com/gamejolt/issue-tracker" target-self>
+				<AppLinkExternal href="https://github.com/gamejolt/issue-tracker" target-self>
 					issue tracker
-				</app-link-external>
+				</AppLinkExternal>
 			</p>
 
-			<form-client-system-report @submit="onSubmit" />
+			<FormClientSystemReport @submit="onSubmit" />
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

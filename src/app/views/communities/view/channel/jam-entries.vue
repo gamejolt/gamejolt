@@ -347,18 +347,18 @@ export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComp
 	<div>
 		<template v-if="!competition.entry_count">
 			<h2 class="section-header">
-				<translate>Entries</translate>
+				<AppTranslate>Entries</AppTranslate>
 			</h2>
 
-			<app-illustration :src="illNoComments">
+			<AppIllustration :src="illNoComments">
 				<p>
-					<translate>No entries have been submitted to this jam yet...</translate>
+					<AppTranslate>No entries have been submitted to this jam yet...</AppTranslate>
 				</p>
-			</app-illustration>
+			</AppIllustration>
 		</template>
 		<template v-else>
 			<h2 class="section-header">
-				<translate
+				<AppTranslate
 					:translate-n="competition.entry_count"
 					:translate-params="{
 						count: formatNumber(competition.entry_count),
@@ -366,7 +366,7 @@ export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComp
 					translate-plural="%{ count } Entries"
 				>
 					%{ count } Entry
-				</translate>
+				</AppTranslate>
 			</h2>
 
 			<div v-if="hasCategories" class="-category-nav-container">
@@ -396,7 +396,7 @@ export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComp
 
 			<div>
 				<span v-if="!category" class="pull-right">
-					<app-button
+					<AppButton
 						v-if="shouldShowAwardsFirstOption"
 						sm
 						class="-awards-first"
@@ -405,14 +405,14 @@ export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComp
 							query: { page: undefined, sort: sort, 'ignore-awards': +!ignoreAwards },
 						}"
 					>
-						<translate>Show Awards first</translate>
-					</app-button>
-					<translate>Sort by</translate>
+						<AppTranslate>Show Awards first</AppTranslate>
+					</AppButton>
+					<AppTranslate>Sort by</AppTranslate>
 					{{ ' ' }}
-					<app-popper>
+					<AppPopper>
 						<span class="-sort">
 							{{ selectedSortOption.text }}
-							<app-jolticon icon="chevron-down" />
+							<AppJolticon icon="chevron-down" />
 						</span>
 
 						<template #popover>
@@ -425,7 +425,7 @@ export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComp
 									class="list-group-item has-addon"
 								>
 									<div class="list-group-item-addon">
-										<app-jolticon
+										<AppJolticon
 											v-if="selectedSortOption.sort === sortOption.sort"
 											icon="check"
 										/>
@@ -434,10 +434,10 @@ export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComp
 								</router-link>
 							</div>
 						</template>
-					</app-popper>
+					</AppPopper>
 				</span>
 
-				<app-community-competition-entry-grid
+				<AppCommunityCompetitionEntryGrid
 					:competition="competition"
 					:num-placeholders="numPlaceholders"
 					:entries="entries"
@@ -446,7 +446,7 @@ export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComp
 					:category="selectedCategory"
 				/>
 
-				<app-pagination
+				<AppPagination
 					v-if="pageCount > 0"
 					:total-items="competition.entry_count"
 					:items-per-page="perPage"

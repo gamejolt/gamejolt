@@ -67,9 +67,9 @@ export default class FormThemeEditorImage
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="file" :hide-label="true">
-			<app-form-control-upload
+	<AppForm :controller="form">
+		<AppFormGroup name="file" :hide-label="true">
+			<AppFormControlUpload
 				:validators="[
 					validateFilesize(maxFilesize),
 					validateImageMaxDimensions({ width: maxWidth, height: maxHeight }),
@@ -79,7 +79,7 @@ export default class FormThemeEditorImage
 				@changed="submit"
 			/>
 
-			<app-form-control-errors />
-		</app-form-group>
-	</app-form>
+			<AppFormControlErrors />
+		</AppFormGroup>
+	</AppForm>
 </template>

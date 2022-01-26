@@ -115,7 +115,7 @@ export default class AppCommentControls extends Vue {
 <template>
 	<span class="comment-controls">
 		<span v-app-auth-required>
-			<app-button
+			<AppButton
 				v-app-tooltip="votingTooltip"
 				v-app-track-event="`comment-widget:vote-click`"
 				icon="thumbs-up"
@@ -137,7 +137,7 @@ export default class AppCommentControls extends Vue {
 			</a>
 			<span v-else class="blip-missing" />
 
-			<app-button
+			<AppButton
 				v-app-track-event="`comment-widget:vote-click`"
 				icon="thumbs-down"
 				circle
@@ -147,7 +147,7 @@ export default class AppCommentControls extends Vue {
 				@click="onDownvoteClick()"
 			/>
 
-			<app-button
+			<AppButton
 				v-if="canPlaceStickers"
 				v-app-tooltip="$gettext('Place Sticker')"
 				v-app-track-event="`comment-widget:place-sticker`"
@@ -162,7 +162,7 @@ export default class AppCommentControls extends Vue {
 
 		<template v-if="showReply">
 			<span v-if="canReply" v-app-auth-required>
-				<app-button
+				<AppButton
 					v-app-tooltip="$gettext(`Reply`)"
 					v-app-track-event="`comment-widget:reply-click`"
 					class="-control-margin"
@@ -172,15 +172,15 @@ export default class AppCommentControls extends Vue {
 					@click="onReplyClick(true)"
 				/>
 			</span>
-			<app-button v-if="children.length" class="-replies" trans @click="onReplyClick(false)">
-				<translate
+			<AppButton v-if="children.length" class="-replies" trans @click="onReplyClick(false)">
+				<AppTranslate
 					:translate-n="children.length"
 					:translate-params="{ count: children.length }"
 					translate-plural="+ %{ count } replies"
 				>
 					+ %{ count } reply
-				</translate>
-			</app-button>
+				</AppTranslate>
+			</AppButton>
 		</template>
 	</span>
 </template>

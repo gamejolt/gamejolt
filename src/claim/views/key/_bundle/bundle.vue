@@ -49,29 +49,29 @@ export default class AppKeyBundle extends Vue {
 		<div v-if="!app.user" class="alert full-bleed full-bleed-xs text-center">
 			<p>
 				<a :href="loginUrl">
-					<translate>
+					<AppTranslate>
 						Sign in to Game Jolt to be able to claim this bundle into your Library.
-					</translate>
+					</AppTranslate>
 				</a>
 			</p>
 		</div>
 
 		<p v-if="app.user">
-			<app-button primary block @click="claim()">
-				<translate>Claim Bundle into Library</translate>
-			</app-button>
+			<AppButton primary block @click="claim()">
+				<AppTranslate>Claim Bundle into Library</AppTranslate>
+			</AppButton>
 		</p>
 
 		<h1 class="section-header">{{ bundle.title }}</h1>
 		<p>{{ bundle.description }}</p>
 
 		<h3>
-			<translate>Games in Bundle</translate>
+			<AppTranslate>Games in Bundle</AppTranslate>
 		</h3>
 
 		<div class="row">
 			<div v-for="game of games" :key="game.id" class="col-sm-6">
-				<app-game-thumbnail
+				<AppGameThumbnail
 					:game="game"
 					:link-to="
 						$router.resolve({

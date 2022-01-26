@@ -55,16 +55,16 @@ export default class AppGameDevStageConfirmModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>Are you sure?</translate>
+				<AppTranslate>Are you sure?</AppTranslate>
 			</h2>
 		</div>
 
 		<div class="modal-body">
 			<p>
-				<translate
+				<AppTranslate
 					:translate-params="{
 						from: fromTranslated,
 						to: toTranslated,
@@ -72,32 +72,32 @@ export default class AppGameDevStageConfirmModal extends mixins(BaseModal) {
 				>
 					When switching your game page from a %{ from } page to a %{ to } page, the follow changes
 					will occur:
-				</translate>
+				</AppTranslate>
 			</p>
 
 			<ul>
 				<!-- Builds -->
 				<li v-if="from === 'devlog'">
-					<translate>
+					<AppTranslate>
 						Public packages/builds for your game will now be visible to everyone.
-					</translate>
+					</AppTranslate>
 				</li>
 				<li v-else-if="to === 'devlog'">
-					<translate>
+					<AppTranslate>
 						Any public packages/builds for your game will be hidden while your game page is
 						devlog-only.
-					</translate>
+					</AppTranslate>
 				</li>
 
 				<!-- Devlog Tab -->
 				<li v-if="from === 'devlog'">
-					<translate>
+					<AppTranslate>
 						Your game's devlog feed will be moved into its own tab. You can continue posting devlog
 						posts for your game.
-					</translate>
+					</AppTranslate>
 				</li>
 				<li v-else-if="to === 'devlog'">
-					<translate>Your game's devlog feed will move back to your game's main page.</translate>
+					<AppTranslate>Your game's devlog feed will move back to your game's main page.</AppTranslate>
 				</li>
 
 				<!-- Published Date -->
@@ -106,18 +106,18 @@ export default class AppGameDevStageConfirmModal extends mixins(BaseModal) {
 						action === 'devlog:wip' || action === 'devlog:complete' || action === 'wip:complete'
 					"
 				>
-					<translate>Your game will be added to the top of the "new game" list.</translate>
+					<AppTranslate>Your game will be added to the top of the "new game" list.</AppTranslate>
 				</li>
 			</ul>
 		</div>
 
 		<div class="modal-footer">
-			<app-button primary @click="proceed()">
-				<translate>Proceed</translate>
-			</app-button>
-			<app-button trans @click="cancel()">
-				<translate>Cancel</translate>
-			</app-button>
+			<AppButton primary @click="proceed()">
+				<AppTranslate>Proceed</AppTranslate>
+			</AppButton>
+			<AppButton trans @click="cancel()">
+				<AppTranslate>Cancel</AppTranslate>
+			</AppButton>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

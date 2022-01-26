@@ -100,12 +100,12 @@ export default class AppGamePlaylistAddToPopover extends Vue {
 
 <template>
 	<div class="add-to-playlist-popover">
-		<app-loading v-if="isLoading" :centered="true" />
+		<AppLoading v-if="isLoading" :centered="true" />
 		<template v-else>
 			<div class="list-group list-group-dark">
 				<a class="list-group-item has-icon" @click="addToNewPlaylist">
-					<app-jolticon icon="add" />
-					<translate>library.playlists.add_to.new_playlist_button</translate>
+					<AppJolticon icon="add" />
+					<AppTranslate>library.playlists.add_to.new_playlist_button</AppTranslate>
 				</a>
 				<div v-if="playlists.length" class="list-group-item">
 					<input
@@ -133,10 +133,10 @@ export default class AppGamePlaylistAddToPopover extends Vue {
 					"
 					@click="selectPlaylist(playlist)"
 				>
-					<app-jolticon icon="playlist" />
-					<app-jolticon icon="check" />
-					<app-jolticon icon="remove" />
-					<app-jolticon icon="add" />
+					<AppJolticon icon="playlist" />
+					<AppJolticon icon="check" />
+					<AppJolticon icon="remove" />
+					<AppJolticon icon="add" />
 					{{ playlist.name }}
 				</a>
 			</div>

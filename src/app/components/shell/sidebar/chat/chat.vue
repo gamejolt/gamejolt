@@ -102,7 +102,7 @@ export default class AppShellSidebarChat extends Vue {
 					<ul>
 						<li v-if="chats.length > 0">
 							<a :class="{ active: tab === 'chats' }" @click="tab = 'chats'">
-								<translate>Chats</translate>
+								<AppTranslate>Chats</AppTranslate>
 							</a>
 						</li>
 						<li>
@@ -110,7 +110,7 @@ export default class AppShellSidebarChat extends Vue {
 								:class="{ active: chats.length === 0 || tab === 'friends' }"
 								@click="tab = 'friends'"
 							>
-								<translate>Friends</translate>
+								<AppTranslate>Friends</AppTranslate>
 								<span class="badge badge-subtle">
 									{{ friendsCountLocalized }}
 								</span>
@@ -123,18 +123,18 @@ export default class AppShellSidebarChat extends Vue {
 					v-if="chats.length === 0 || (tab === 'friends' && !friends.length)"
 					class="nav-well"
 				>
-					<translate>No friends yet.</translate>
+					<AppTranslate>No friends yet.</AppTranslate>
 				</div>
-				<app-chat-user-list v-else :entries="tab === 'chats' ? chats : friends" />
+				<AppChatUserList v-else :entries="tab === 'chats' ? chats : friends" />
 			</template>
 			<template v-else-if="chat.connected">
-				<app-loading centered :label="$gettext(`Loading your chats...`)" />
+				<AppLoading centered :label="$gettext(`Loading your chats...`)" />
 			</template>
 			<template v-else>
-				<app-illustration class="-no-chat" :src="illMaintenance">
-					<p><translate>The chat server went away...</translate></p>
-					<p><translate>It should be back shortly.</translate></p>
-				</app-illustration>
+				<AppIllustration class="-no-chat" :src="illMaintenance">
+					<p><AppTranslate>The chat server went away...</AppTranslate></p>
+					<p><AppTranslate>It should be back shortly.</AppTranslate></p>
+				</AppIllustration>
 			</template>
 		</div>
 	</div>

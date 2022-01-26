@@ -67,7 +67,7 @@ export default class AppShellCbarControls extends Vue {
 <template>
 	<div class="shell-cbar-controls">
 		<!-- Library - Screen.isXs -->
-		<app-shell-cbar-item
+		<AppShellCbarItem
 			v-if="Screen.isXs"
 			class="-control"
 			:highlight="highlight"
@@ -79,13 +79,13 @@ export default class AppShellCbarControls extends Vue {
 				class="-control-item"
 				@click="toggleLeftPane('library')"
 			>
-				<app-jolticon class="-control-icon" icon="gamejolt" />
+				<AppJolticon class="-control-icon" icon="gamejolt" />
 			</a>
-		</app-shell-cbar-item>
+		</AppShellCbarItem>
 
 		<template v-if="user">
 			<!-- Chat -->
-			<app-shell-cbar-item
+			<AppShellCbarItem
 				v-if="chat"
 				class="-control"
 				:highlight="highlight"
@@ -99,12 +99,12 @@ export default class AppShellCbarControls extends Vue {
 					class="-control-item"
 					@click="toggleLeftPane('chat')"
 				>
-					<app-jolticon class="-control-icon" icon="user-messages" />
+					<AppJolticon class="-control-icon" icon="user-messages" />
 				</a>
-			</app-shell-cbar-item>
+			</AppShellCbarItem>
 
 			<!-- Library - !Screen.isXs -->
-			<app-shell-cbar-item
+			<AppShellCbarItem
 				v-if="!Screen.isXs"
 				class="-control"
 				:highlight="highlight"
@@ -117,9 +117,9 @@ export default class AppShellCbarControls extends Vue {
 					class="-control-item"
 					@click="toggleLeftPane('library')"
 				>
-					<app-jolticon class="-control-icon" icon="books" />
+					<AppJolticon class="-control-icon" icon="books" />
 				</a>
-			</app-shell-cbar-item>
+			</AppShellCbarItem>
 		</template>
 
 		<hr v-if="Screen.isXs || user" class="-hr" />

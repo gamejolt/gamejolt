@@ -94,7 +94,7 @@ export default class AppPageHeader extends Vue {
 				'is-editable': coverEditable,
 			}"
 		>
-			<app-editable-overlay
+			<AppEditableOverlay
 				v-if="coverEditable"
 				:class="{ '-cover-img': !!coverMediaItem }"
 				:disabled="!coverEditable"
@@ -115,16 +115,16 @@ export default class AppPageHeader extends Vue {
 						'min-height': !coverMediaItem ? '200px' : '',
 					}"
 				>
-					<app-media-item-cover
+					<AppMediaItemCover
 						v-if="!!coverMediaItem"
 						:media-item="coverMediaItem"
 						:max-height="coverMaxHeight"
 						:blur="blurHeader"
 					/>
 				</div>
-			</app-editable-overlay>
+			</AppEditableOverlay>
 			<div v-else-if="!!coverMediaItem" class="-cover-img">
-				<app-media-item-cover
+				<AppMediaItemCover
 					:media-item="coverMediaItem"
 					:max-height="coverMaxHeight"
 					:blur="blurHeader"
@@ -179,12 +179,12 @@ export default class AppPageHeader extends Vue {
 			</div>
 		</section>
 
-		<app-autoscroll-anchor
+		<AppAutoscrollAnchor
 			v-if="hasNav && !hideNav"
 			:anchor-key="autoscrollAnchorKey"
 			:disabled="disableAutoscrollAnchor"
 		>
-			<app-scroll-affix :disabled="!(shouldAffixNav && Screen.isLg && Screen.height > 750)">
+			<AppScrollAffix :disabled="!(shouldAffixNav && Screen.isLg && Screen.height > 750)">
 				<section class="section page-header-nav">
 					<div class="container">
 						<div class="row">
@@ -208,8 +208,8 @@ export default class AppPageHeader extends Vue {
 						</div>
 					</div>
 				</section>
-			</app-scroll-affix>
-		</app-autoscroll-anchor>
+			</AppScrollAffix>
+		</AppAutoscrollAnchor>
 	</header>
 </template>
 

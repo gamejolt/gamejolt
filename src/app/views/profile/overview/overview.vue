@@ -524,25 +524,25 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		<section v-if="!user.status" class="section fill-notice">
 			<div class="container">
 				<h2 class="-banned-header">
-					<translate>profile.banned_message_html</translate>
+					<AppTranslate>profile.banned_message_html</AppTranslate>
 				</h2>
 
-				<app-expand :when="isFriend">
+				<AppExpand :when="isFriend">
 					<p>
-						<strong><translate>This user was your friend.</translate></strong>
+						<strong><AppTranslate>This user was your friend.</AppTranslate></strong>
 						<br />
-						<translate>
+						<AppTranslate>
 							If you remove them from your friends list, you will no longer be able to
 							access your chat history with them.
-						</translate>
+						</AppTranslate>
 					</p>
 
-					<app-button solid @click="routeStore.removeFriend()">
-						<translate>profile.remove_friend_button</translate>
-					</app-button>
-				</app-expand>
+					<AppButton solid @click="routeStore.removeFriend()">
+						<AppTranslate>profile.remove_friend_button</AppTranslate>
+					</AppButton>
+				</AppExpand>
 
-				<app-expand :when="user.is_following">
+				<AppExpand :when="user.is_following">
 					<!-- Create some padding -->
 					<template v-if="isFriend">
 						<br />
@@ -550,22 +550,22 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 					</template>
 
 					<p>
-						<strong><translate>You were following this user.</translate></strong>
+						<strong><AppTranslate>You were following this user.</AppTranslate></strong>
 						<br />
-						<translate>
+						<AppTranslate>
 							If you unfollow them now, you won't be able to follow them again.
-						</translate>
+						</AppTranslate>
 					</p>
 
-					<app-button solid @click="onClickUnfollow()">
-						<translate>Unfollow</translate>
-					</app-button>
-				</app-expand>
+					<AppButton solid @click="onClickUnfollow()">
+						<AppTranslate>Unfollow</AppTranslate>
+					</AppButton>
+				</AppExpand>
 			</div>
 		</section>
 		<section v-else class="section fill-backdrop">
 			<div>
-				<app-page-container xl order="left,main,right">
+				<AppPageContainer xl order="left,main,right">
 					<template #left>
 						<!-- Bio -->
 						<template v-if="!isOverviewLoaded">
@@ -582,7 +582,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 								Set a :key to let vue know that it should update
 								this when the user changes.
 							-->
-							<app-fade-collapse
+							<AppFadeCollapse
 								:key="user.bio_content"
 								:collapse-height="200"
 								:is-open="showFullDescription"
@@ -590,8 +590,8 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 								@require-change="canToggleDescription = $event"
 								@expand="showFullDescription = true"
 							>
-								<app-content-viewer :source="user.bio_content" />
-							</app-fade-collapse>
+								<AppContentViewer :source="user.bio_content" />
+							</AppFadeCollapse>
 
 							<p>
 								<a
@@ -607,26 +607,26 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 						<!-- Shouts -->
 						<template v-if="shouldShowShouts">
 							<div class="pull-right">
-								<app-button trans @click="showComments()">
-									<translate>View All</translate>
-								</app-button>
+								<AppButton trans @click="showComments()">
+									<AppTranslate>View All</AppTranslate>
+								</AppButton>
 							</div>
 
 							<h4 class="section-header">
-								<translate>Shouts</translate>
+								<AppTranslate>Shouts</AppTranslate>
 								<small v-if="commentsCount">
 									({{ formatNumber(commentsCount) }})
 								</small>
 							</h4>
 
-							<app-comment-add-button
+							<AppCommentAddButton
 								v-if="shouldShowShoutAdd"
 								:model="user"
 								:placeholder="addCommentPlaceholder"
 								display-mode="shouts"
 							/>
 
-							<app-comment-overview
+							<AppCommentOverview
 								:comments="overviewComments"
 								:model="user"
 								display-mode="shouts"
@@ -636,9 +636,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 					</template>
 
 					<template #right>
-						<app-share-card resource="user" :url="shareUrl" bleed-padding />
+						<AppShareCard resource="user" :url="shareUrl" bleed-padding />
 
-						<app-user-known-followers
+						<AppUserKnownFollowers
 							v-if="shouldShowKnownFollowers"
 							:users="knownFollowers"
 							:count="knownFollowerCount"
@@ -646,24 +646,24 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 						<template v-if="hasQuickButtonsSection">
 							<!-- Add Friend -->
-							<app-button
+							<AppButton
 								v-if="canAddAsFriend"
 								block
 								@click="routeStore.sendFriendRequest()"
 							>
-								<translate>profile.friend_request_button</translate>
-							</app-button>
-							<app-button
+								<AppTranslate>profile.friend_request_button</AppTranslate>
+							</AppButton>
+							<AppButton
 								v-else-if="canMessage"
 								block
 								icon="user-messages"
 								@click="openMessaging"
 							>
-								<translate>Message</translate>
-							</app-button>
+								<AppTranslate>Message</AppTranslate>
+							</AppButton>
 
 							<template v-if="Screen.isMobile">
-								<app-button
+								<AppButton
 									v-if="gamesCount > 0"
 									block
 									:to="{
@@ -672,7 +672,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 									}"
 								>
 									{{ formatNumber(gamesCount) }} Games
-								</app-button>
+								</AppButton>
 							</template>
 
 							<br />
@@ -682,43 +682,43 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 						<template v-if="hasLinksSection">
 							<template v-if="linkedAccounts.length">
 								<div v-if="twitchAccount">
-									<app-link-external
+									<AppLinkExternal
 										class="link-unstyled"
 										:href="twitchAccount.platformLink"
 									>
-										<app-jolticon :icon="twitchAccount.icon" />
+										<AppJolticon :icon="twitchAccount.icon" />
 										{{ ' ' }}
 										{{ twitchAccount.name }}
-									</app-link-external>
+									</AppLinkExternal>
 								</div>
 								<div v-if="twitterAccount">
-									<app-link-external
+									<AppLinkExternal
 										class="link-unstyled"
 										:href="twitterAccount.platformLink"
 									>
-										<app-jolticon :icon="twitterAccount.icon" />
+										<AppJolticon :icon="twitterAccount.icon" />
 										{{ ' ' }}
 										<span>@</span>
 										{{ twitterAccount.name }}
-									</app-link-external>
+									</AppLinkExternal>
 								</div>
 								<div v-if="tumblrAccount && tumblrAccount.tumblrSelectedBlog">
-									<app-link-external
+									<AppLinkExternal
 										class="link-unstyled"
 										:href="tumblrAccount.tumblrSelectedBlog.url"
 									>
-										<app-jolticon :icon="tumblrAccount.icon" />
+										<AppJolticon :icon="tumblrAccount.icon" />
 										{{ ' ' }}
 										{{ tumblrAccount.tumblrSelectedBlog.title }}
-									</app-link-external>
+									</AppLinkExternal>
 								</div>
 							</template>
 							<div v-if="user.web_site">
-								<app-link-external class="link-unstyled" :href="user.web_site">
-									<app-jolticon icon="link" />
+								<AppLinkExternal class="link-unstyled" :href="user.web_site">
+									<AppJolticon icon="link" />
 									{{ ' ' }}
-									<translate>Website</translate>
-								</app-link-external>
+									<AppTranslate>Website</AppTranslate>
+								</AppLinkExternal>
 							</div>
 
 							<br />
@@ -729,18 +729,18 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 						<template v-if="hasCommunitiesSection">
 							<div class="clearfix">
 								<div v-if="canShowMoreCommunities" class="pull-right">
-									<app-button
+									<AppButton
 										trans
 										:disabled="isLoadingAllCommunities"
 										@click="toggleShowAllCommunities"
 									>
-										<translate>View All</translate>
+										<AppTranslate>View All</AppTranslate>
 										<small>({{ formatNumber(communitiesCount) }})</small>
-									</app-button>
+									</AppButton>
 								</div>
 
 								<h4 class="section-header">
-									<translate>Communities</translate>
+									<AppTranslate>Communities</AppTranslate>
 								</h4>
 							</div>
 
@@ -763,11 +763,11 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 											params: { path: community.path },
 										}"
 									>
-										<app-community-thumbnail-img
+										<AppCommunityThumbnailImg
 											class="-community-thumb"
 											:community="community"
 										/>
-										<app-community-verified-tick
+										<AppCommunityVerifiedTick
 											class="-community-verified-tick"
 											:community="community"
 											no-tooltip
@@ -783,25 +783,25 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 						<template v-if="hasGamesSection">
 							<div class="clearfix">
 								<div class="pull-right">
-									<app-button
+									<AppButton
 										trans
 										:to="{
 											name: 'library.collection.developer',
 											params: { id: user.username },
 										}"
 									>
-										<translate>View All</translate>
+										<AppTranslate>View All</AppTranslate>
 										<small>({{ formatNumber(gamesCount) }})</small>
-									</app-button>
+									</AppButton>
 								</div>
 
 								<h4 class="section-header">
-									<translate>Latest Games</translate>
+									<AppTranslate>Latest Games</AppTranslate>
 								</h4>
 							</div>
 
-							<app-game-list-placeholder v-if="!isOverviewLoaded" :num="7" />
-							<app-game-list
+							<AppGameListPlaceholder v-if="!isOverviewLoaded" :num="7" />
+							<AppGameList
 								v-else-if="games.length"
 								:games="games"
 								event-label="profile"
@@ -811,12 +811,12 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 						<!-- Trophies -->
 						<template v-if="shouldShowTrophies">
 							<h4 class="section-header">
-								<translate>Trophies</translate>
+								<AppTranslate>Trophies</AppTranslate>
 							</h4>
 
 							<div class="-trophies">
 								<template v-if="previewTrophies.length">
-									<app-trophy-thumbnail
+									<AppTrophyThumbnail
 										v-for="trophy of previewTrophies"
 										:key="trophy.key"
 										class="-trophy"
@@ -845,85 +845,85 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 					<template v-if="userBlockedYou">
 						<div class="alert">
 							<p>
-								<app-jolticon icon="notice" notice />
-								<b><translate>This user blocked you.</translate></b>
-								<translate>
+								<AppJolticon icon="notice" notice />
+								<b><AppTranslate>This user blocked you.</AppTranslate></b>
+								<AppTranslate>
 									You are unable to shout at them or comment on their posts and
 									games.
-								</translate>
+								</AppTranslate>
 							</p>
 						</div>
 					</template>
 
 					<!-- Friend Requests -->
 					<template v-if="userFriendship">
-						<app-expand
+						<AppExpand
 							:when="userFriendship.state === UserFriendship.STATE_REQUEST_SENT"
 							:animate-initial="true"
 						>
 							<div class="alert">
 								<p>
-									<translate
+									<AppTranslate
 										:translate-params="{
 											username: '@' + userFriendship.target_user.username,
 										}"
 									>
 										Friend request to %{ username } pending acceptance.
-									</translate>
+									</AppTranslate>
 								</p>
-								<app-button @click="routeStore.cancelFriendRequest()">
-									<translate>profile.friend_request_cancel</translate>
-								</app-button>
+								<AppButton @click="routeStore.cancelFriendRequest()">
+									<AppTranslate>profile.friend_request_cancel</AppTranslate>
+								</AppButton>
 							</div>
-						</app-expand>
+						</AppExpand>
 
-						<app-expand
+						<AppExpand
 							:when="userFriendship.state === UserFriendship.STATE_REQUEST_RECEIVED"
 							:animate-initial="true"
 						>
 							<div class="alert">
 								<p>
-									<translate
+									<AppTranslate
 										:translate-params="{
 											username: '@' + userFriendship.user.username,
 										}"
 									>
 										%{ username } would like to be your friend.
-									</translate>
+									</AppTranslate>
 								</p>
-								<app-button primary solid @click="onFriendRequestAccept">
-									<translate>profile.friend_request_accept</translate>
-								</app-button>
-								<app-button
+								<AppButton primary solid @click="onFriendRequestAccept">
+									<AppTranslate>profile.friend_request_accept</AppTranslate>
+								</AppButton>
+								<AppButton
 									v-app-tooltip="
 										$gettext('profile.friend_request_decline_tooltip')
 									"
 									trans
 									@click="onFriendRequestReject"
 								>
-									<translate>profile.friend_request_decline</translate>
-								</app-button>
+									<AppTranslate>profile.friend_request_decline</AppTranslate>
+								</AppButton>
 							</div>
-						</app-expand>
+						</AppExpand>
 					</template>
 
 					<!-- Fireside -->
-					<app-scroll-inview
+					<AppScrollInview
 						v-if="shouldShowFireside"
 						:config="FiresideScrollInviewConfig"
 						@inview="onFiresideInview"
 						@outview="onFiresideOutview"
 					>
-						<app-fireside-badge
+						<AppFiresideBadge
 							:key="fireside"
 							:fireside="fireside"
 							:show-preview="canShowFiresidePreview"
 							@changed="onFiresideBadgeChanged"
 						/>
-					</app-scroll-inview>
+					</AppScrollInview>
 
 					<router-view />
-				</app-page-container>
+				</AppPageContainer>
 			</div>
 		</section>
 	</div>

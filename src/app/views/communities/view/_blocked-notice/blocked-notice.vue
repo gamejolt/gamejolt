@@ -30,11 +30,11 @@ export default class AppBlockedNotice extends Vue {
 <template>
 	<div v-if="community.isBlocked" class="alert alert-notice">
 		<p>
-			<app-jolticon icon="notice" />
+			<AppJolticon icon="notice" />
 			<span>
-				<b><translate>You have been blocked from this community.</translate></b>
+				<b><AppTranslate>You have been blocked from this community.</AppTranslate></b>
 				<br />
-				<translate>The reason for your block is as follows:</translate>
+				<AppTranslate>The reason for your block is as follows:</AppTranslate>
 			</span>
 			<br />
 
@@ -46,15 +46,15 @@ export default class AppBlockedNotice extends Vue {
 		</p>
 
 		<div>
-			<translate>
+			<AppTranslate>
 				You are unable to create any new posts in this community until your block gets
 				lifted or expires.
-			</translate>
+			</AppTranslate>
 		</div>
 
 		<div v-if="community.user_block && community.user_block.doesExpire">
 			Your block will expire in
-			<b><app-time-ago :date="community.user_block.expires_on" without-suffix /></b>
+			<b><AppTimeAgo :date="community.user_block.expires_on" without-suffix /></b>
 		</div>
 	</div>
 </template>

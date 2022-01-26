@@ -79,7 +79,7 @@ export default class AppContentViewer extends Vue {
 
 <template>
 	<div class="content-viewer" :class="viewerStyleClass">
-		<app-content-viewer-base-component v-if="doc" :content="content" />
+		<AppContentViewerBaseComponent v-if="doc" :content="content" />
 	</div>
 </template>
 

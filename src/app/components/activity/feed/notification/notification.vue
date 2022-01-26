@@ -128,7 +128,7 @@ export default class AppActivityFeedNotification extends Vue {
 			<div class="notification-item">
 				<div class="notification-container" @click.stop="go">
 					<router-link :to="notification.routeLocation">
-						<app-timeline-list-item :is-new="isNew">
+						<AppTimelineListItem :is-new="isNew">
 							<template #bubble>
 								<template
 									v-if="
@@ -137,19 +137,19 @@ export default class AppActivityFeedNotification extends Vue {
 									"
 								>
 									<div class="-community-thumb">
-										<app-community-thumbnail-img
+										<AppCommunityThumbnailImg
 											class="img-circle"
 											:community="notification.from_model"
 										/>
 									</div>
 								</template>
 								<template v-else-if="fromIsUser">
-									<app-user-card-hover
+									<AppUserCardHover
 										:user="notification.from_model"
 										:disabled="!feed.shouldShowUserCards"
 									>
-										<app-user-avatar :user="notification.from_model" />
-									</app-user-card-hover>
+										<AppUserAvatar :user="notification.from_model" />
+									</AppUserCardHover>
 								</template>
 								<template
 									v-else-if="
@@ -160,7 +160,7 @@ export default class AppActivityFeedNotification extends Vue {
 									"
 								>
 									<div class="-community-thumb">
-										<app-community-thumbnail-img
+										<AppCommunityThumbnailImg
 											class="img-circle"
 											:community="notification.action_model.community"
 										/>
@@ -187,17 +187,17 @@ export default class AppActivityFeedNotification extends Vue {
 									/>
 
 									<div class="timeline-list-item-meta">
-										<app-time-ago :date="notification.added_on" />
+										<AppTimeAgo :date="notification.added_on" />
 									</div>
 
 									<div v-if="hasDetails" class="timeline-list-item-details">
 										<div class="timeline-list-item-content">
-											<app-fade-collapse
+											<AppFadeCollapse
 												:collapse-height="160"
 												:is-open="false"
 												@require-change="canToggleContent = $event"
 											>
-												<app-content-viewer
+												<AppContentViewer
 													v-if="
 														notification.type ===
 															Notification.TYPE_COMMENT_ADD ||
@@ -208,7 +208,7 @@ export default class AppActivityFeedNotification extends Vue {
 														notification.action_model.comment_content
 													"
 												/>
-												<app-content-viewer
+												<AppContentViewer
 													v-else-if="
 														notification.type ===
 														Notification.TYPE_MENTION
@@ -256,19 +256,19 @@ export default class AppActivityFeedNotification extends Vue {
 														notification.action_model.trophy.description
 													}}
 												</span>
-											</app-fade-collapse>
+											</AppFadeCollapse>
 										</div>
 									</div>
 								</div>
 							</div>
 
 							<div class="-overlay" />
-						</app-timeline-list-item>
+						</AppTimelineListItem>
 					</router-link>
 				</div>
 				<div v-if="isNew" class="-actions">
 					<a @click.stop.prevent="onMarkRead">
-						<app-jolticon
+						<AppJolticon
 							v-app-tooltip="$gettext(`Mark as Read`)"
 							icon="radio-circle"
 						/>

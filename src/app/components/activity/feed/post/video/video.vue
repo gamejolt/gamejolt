@@ -52,7 +52,7 @@ export default class AppActivityFeedPostVideo extends Vue {
 <template>
 	<div class="-spacing">
 		<template v-if="!video.is_processing && video.posterMediaItem">
-			<app-activity-feed-video-player
+			<AppActivityFeedVideoPlayer
 				class="-video"
 				:feed-item="item"
 				:manifests="video.manifestSources"
@@ -62,7 +62,7 @@ export default class AppActivityFeedPostVideo extends Vue {
 			/>
 		</template>
 		<div v-else class="well sans-rounded fill-offset">
-			<app-video-processing-progress :post="post" @complete="onVideoProcessingComplete" />
+			<AppVideoProcessingProgress :post="post" @complete="onVideoProcessingComplete" />
 		</div>
 	</div>
 </template>

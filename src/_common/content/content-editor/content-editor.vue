@@ -423,7 +423,7 @@ export default class AppContentEditor extends Vue {
 				minHeight: containerMinHeight,
 			}"
 		>
-			<app-scroll-scroller class="content-container-scroller" thin @scroll="onScroll">
+			<AppScrollScroller class="content-container-scroller" thin @scroll="onScroll">
 				<div
 					:class="{
 						'content-container-gutter-1': editorGutterSize === 1,
@@ -448,29 +448,29 @@ export default class AppContentEditor extends Vue {
 					</span>
 				</transition>
 
-				<app-content-editor-inset-controls v-if="!GJ_IS_MOBILE_APP">
+				<AppContentEditorInsetControls v-if="!GJ_IS_MOBILE_APP">
 					<transition name="fade">
-						<app-content-editor-controls-gif v-if="shouldShowGifButton" />
+						<AppContentEditorControlsGif v-if="shouldShowGifButton" />
 					</transition>
 					<transition name="fade">
-						<app-content-editor-controls-emoji
+						<AppContentEditorControlsEmoji
 							v-if="shouldShowEmojiPanel"
 							@visibility-change="onEmojiPanelVisibilityChanged"
 						/>
 					</transition>
-				</app-content-editor-inset-controls>
-			</app-scroll-scroller>
+				</AppContentEditorInsetControls>
+			</AppScrollScroller>
 		</div>
 
 		<template v-if="!GJ_IS_MOBILE_APP">
 			<transition name="fade">
-				<app-content-editor-block-controls v-if="shouldShowControls" />
+				<AppContentEditorBlockControls v-if="shouldShowControls" />
 			</transition>
 			<transition name="fade">
-				<app-content-editor-text-controls v-if="shouldShowTextControls" />
+				<AppContentEditorTextControls v-if="shouldShowTextControls" />
 			</transition>
 			<transition name="fade">
-				<app-content-editor-controls-mention-autocomplete
+				<AppContentEditorControlsMentionAutocomplete
 					:can-show="canShowMention"
 					@insert="onInsertMention"
 					@user-change="onMentionUsersChange"
@@ -478,7 +478,7 @@ export default class AppContentEditor extends Vue {
 			</transition>
 		</template>
 
-		<app-content-editor-node-renderer />
+		<AppContentEditorNodeRenderer />
 	</div>
 </template>
 

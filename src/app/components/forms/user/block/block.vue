@@ -59,10 +59,10 @@ export default class FormUserBlock
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="username">
-			<app-form-control-prefix prefix="@">
-				<app-form-control
+	<AppForm :controller="form">
+		<AppFormGroup name="username">
+			<AppFormControlPrefix prefix="@">
+				<AppFormControl
 					:validators="[
 						validateMaxLength(100),
 						validateAvailability({
@@ -71,30 +71,30 @@ export default class FormUserBlock
 					]"
 					validate-on-blur
 				/>
-			</app-form-control-prefix>
+			</AppFormControlPrefix>
 
-			<app-form-control-errors :label="$gettext('username')">
-				<app-form-control-error
+			<AppFormControlErrors :label="$gettext('username')">
+				<AppFormControlError
 					when="availability"
 					:message="$gettext(`This user does not exist.`)"
 				/>
-			</app-form-control-errors>
-		</app-form-group>
+			</AppFormControlErrors>
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="removeComments"
 			:label="$gettext(`Remove the user's comments from your profile and posts?`)"
 		>
-			<app-form-control-toggle class="pull-right" />
+			<AppFormControlToggle class="pull-right" />
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					All of their shouts on your profile and comments on your posts will be removed.
-				</translate>
+				</AppTranslate>
 			</p>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-button>
-			<translate>Block</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton>
+			<AppTranslate>Block</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

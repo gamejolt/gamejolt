@@ -46,11 +46,11 @@ export default class AppFiresideStreamOptions extends Vue {
 
 <template>
 	<div class="-options-wrap">
-		<app-fireside-settings-popper @show="emitShowPopper" @hide="emitHidePopper">
+		<AppFiresideSettingsPopper @show="emitShowPopper" @hide="emitHidePopper">
 			<div class="-options">
-				<app-jolticon class="-icon" icon="ellipsis-v" />
+				<AppJolticon class="-icon" icon="ellipsis-v" />
 			</div>
-		</app-fireside-settings-popper>
+		</AppFiresideSettingsPopper>
 	</div>
 </template>
 

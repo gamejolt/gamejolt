@@ -19,7 +19,7 @@ const hasContent = computed(() => !!slots.default);
 
 <template>
 	<div class="-container">
-		<app-theme-svg class="-ill" :src="src" />
+		<AppThemeSvg class="-ill" :src="src" />
 		<div v-if="hasContent" class="-text" :class="{ '-sm': sm }">
 			<slot />
 		</div>

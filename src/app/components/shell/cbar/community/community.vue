@@ -127,7 +127,7 @@ export default class AppShellCbarCommunity extends Vue {
 
 <template>
 	<div>
-		<app-popper
+		<AppPopper
 			popover-class="fill-darkest"
 			trigger="right-click"
 			placement="right"
@@ -139,7 +139,7 @@ export default class AppShellCbarCommunity extends Vue {
 		>
 			<template #default>
 				<div @click.capture="onCommunityClick">
-					<app-shell-cbar-item
+					<AppShellCbarItem
 						class="-community"
 						:is-active="isActive"
 						:is-unread="isUnread"
@@ -154,59 +154,59 @@ export default class AppShellCbarCommunity extends Vue {
 							}"
 							@click="onGotoCommunity"
 						>
-							<app-media-item-backdrop
+							<AppMediaItemBackdrop
 								class="-backdrop"
 								:media-item="community.thumbnail"
 								radius="full"
 							>
-								<app-community-thumbnail-img
+								<AppCommunityThumbnailImg
 									class="-thumb"
 									:community="community"
 								/>
-							</app-media-item-backdrop>
+							</AppMediaItemBackdrop>
 						</router-link>
-					</app-shell-cbar-item>
+					</AppShellCbarItem>
 				</div>
 			</template>
 
 			<template #popover>
 				<div class="list-group list-group-dark">
-					<app-community-perms :community="community">
+					<AppCommunityPerms :community="community">
 						<router-link
 							class="list-group-item has-icon"
 							:to="community.routeEditLocation"
 						>
-							<app-jolticon icon="edit" />
-							<translate>Edit Community</translate>
+							<AppJolticon icon="edit" />
+							<AppTranslate>Edit Community</AppTranslate>
 						</router-link>
-					</app-community-perms>
+					</AppCommunityPerms>
 					<a
 						v-if="shouldShowLeave"
 						class="list-group-item has-icon"
 						@click="onLeaveCommunityClick"
 					>
-						<app-jolticon icon="remove" notice />
-						<translate>Leave Community</translate>
+						<AppJolticon icon="remove" notice />
+						<AppTranslate>Leave Community</AppTranslate>
 					</a>
 					<a
 						v-else-if="shouldShowJoin"
 						class="list-group-item has-icon"
 						@click="onJoinCommunityClick"
 					>
-						<app-jolticon icon="add" notice />
-						<translate>Join Community</translate>
+						<AppJolticon icon="add" notice />
+						<AppTranslate>Join Community</AppTranslate>
 					</a>
 					<a
 						v-if="shouldShowModerate"
 						class="list-group-item has-icon"
 						@click="gotoModerate"
 					>
-						<app-jolticon icon="cog" />
-						<translate>Moderate Community</translate>
+						<AppJolticon icon="cog" />
+						<AppTranslate>Moderate Community</AppTranslate>
 					</a>
 				</div>
 			</template>
-		</app-popper>
+		</AppPopper>
 
 		<hr v-if="!community.is_member" class="-hr" />
 	</div>

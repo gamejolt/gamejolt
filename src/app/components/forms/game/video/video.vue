@@ -79,11 +79,11 @@ export default class FormGameVideo extends mixins(Wrapper) {
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="_url" :label="$gettext(`dash.games.media.video.form.url_label`)">
-			<app-form-control type="text" :validators="[validatePattern(REGEX_VIDEO)]" />
+	<AppForm :controller="form">
+		<AppFormGroup name="_url" :label="$gettext(`dash.games.media.video.form.url_label`)">
+			<AppFormControl type="text" :validators="[validatePattern(REGEX_VIDEO)]" />
 
-			<app-form-control-errors
+			<AppFormControlErrors
 				:label="$gettext(`dash.games.media.video.form.url_error_label`)"
 			/>
 
@@ -100,27 +100,27 @@ export default class FormGameVideo extends mixins(Wrapper) {
 			</p>
 			<template v-if="hasValidVideoUrl && videoData">
 				<br />
-				<app-video-embed :video-provider="videoData.type" :video-id="videoData.id" />
+				<AppVideoEmbed :video-provider="videoData.type" :video-id="videoData.id" />
 			</template>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-group name="title" :label="$gettext(`dash.games.media.video.form.title_label`)">
-			<app-form-control type="text" :validators="[validateMaxLength(150)]" />
-			<app-form-control-errors />
-		</app-form-group>
+		<AppFormGroup name="title" :label="$gettext(`dash.games.media.video.form.title_label`)">
+			<AppFormControl type="text" :validators="[validateMaxLength(150)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="description"
 			:label="$gettext(`dash.games.media.video.form.description_label`)"
 			:optional="true"
 		>
-			<app-form-control-textarea rows="5" :validators="[validateMaxLength(2500)]" />
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlTextarea rows="5" :validators="[validateMaxLength(2500)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-button show-when-valid>
-			<translate v-if="method === 'add'">Add</translate>
-			<translate v-else-if="method === 'edit'">Save</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton show-when-valid>
+			<AppTranslate v-if="method === 'add'">Add</AppTranslate>
+			<AppTranslate v-else-if="method === 'edit'">Save</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

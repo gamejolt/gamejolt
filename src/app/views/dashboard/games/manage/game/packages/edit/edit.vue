@@ -202,14 +202,14 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 				<li>
 					<router-link :to="{ name: 'dash.games.manage.game.packages.list' }">
 						<span class="breadcrumb-tag">&nbsp;</span>
-						<translate>Packages</translate>
+						<AppTranslate>Packages</AppTranslate>
 					</router-link>
-					<app-jolticon icon="chevron-right" class="breadcrumb-separator" />
+					<AppJolticon icon="chevron-right" class="breadcrumb-separator" />
 				</li>
 				<li>
 					<span class="active">
 						<span class="breadcrumb-tag">
-							<translate>dash.games.releases.manage.breadcrumb_package</translate>
+							<AppTranslate>dash.games.releases.manage.breadcrumb_package</AppTranslate>
 						</span>
 						{{ package.title || game.title }}
 					</span>
@@ -219,18 +219,18 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 
 		<hr />
 
-		<app-nav-tab-list>
+		<AppNavTabList>
 			<ul>
-				<app-game-perms required="builds,sales" :either="true" tag="li">
+				<AppGamePerms required="builds,sales" :either="true" tag="li">
 					<router-link
 						:to="{
 							name: 'dash.games.manage.game.packages.edit',
 						}"
 						exact-active-class="active"
 					>
-						<translate>Edit Package</translate>
+						<AppTranslate>Edit Package</AppTranslate>
 					</router-link>
-				</app-game-perms>
+				</AppGamePerms>
 				<li>
 					<router-link
 						:to="{
@@ -238,11 +238,11 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 						}"
 						exact-active-class="active"
 					>
-						<translate>Widget</translate>
+						<AppTranslate>Widget</AppTranslate>
 					</router-link>
 				</li>
 			</ul>
-		</app-nav-tab-list>
+		</AppNavTabList>
 
 		<br />
 
@@ -255,7 +255,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 						"
 						class="alert alert-notice"
 					>
-						<app-jolticon icon="notice" />
+						<AppJolticon icon="notice" />
 						<span v-translate>
 							<strong>
 								This package won't show up on your devlog-only game page.
@@ -271,7 +271,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 								},
 							}"
 						>
-							<translate>Go to Overview/Setup page</translate>
+							<AppTranslate>Go to Overview/Setup page</AppTranslate>
 						</router-link>
 					</div>
 
@@ -283,19 +283,19 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 							),
 						}"
 					>
-						<translate>Package Preview</translate>
+						<AppTranslate>Package Preview</AppTranslate>
 					</h3>
 
-					<app-game-perms tag="div" required="sales">
-						<app-button primary block @click="editPackage()">
+					<AppGamePerms tag="div" required="sales">
+						<AppButton primary block @click="editPackage()">
 							Edit Package Details
-						</app-button>
+						</AppButton>
 						<br />
-					</app-game-perms>
+					</AppGamePerms>
 
-					<app-loading v-if="isLoadingPreview" />
+					<AppLoading v-if="isLoadingPreview" />
 					<template v-else>
-						<app-game-package-card
+						<AppGamePackageCard
 							v-if="previewPackage"
 							:game="game"
 							:sellable="previewSellable"
@@ -305,17 +305,17 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 						/>
 
 						<template v-if="buildsProcessingCount > 0">
-							<app-progress-poller
+							<AppProgressPoller
 								:url="`/web/dash/developer/games/packages/poll-processing-builds/${game.id}/${package.id}/${buildsProcessingCount}`"
 								@complete="onBuildsProcessed($event)"
 							/>
 
 							<div class="alert">
-								<app-jolticon icon="notice" />
-								<translate>
+								<AppJolticon icon="notice" />
+								<AppTranslate>
 									This package has builds that are still processing. They will be
 									available in the package as soon as they're finished processing.
-								</translate>
+								</AppTranslate>
 							</div>
 						</template>
 					</template>
@@ -323,53 +323,53 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 			</div>
 
 			<h3>
-				<translate>dash.games.packages.manage.releases.heading</translate>
+				<AppTranslate>dash.games.packages.manage.releases.heading</AppTranslate>
 			</h3>
 
 			<div class="row">
 				<div class="col-sm-4 col-sm-push-8">
 					<div class="page-help">
 						<p>
-							<translate>
+							<AppTranslate>
 								Releases represent new versions of your package. If you update a
 								package, you should add a release. You can group all of the new
 								builds for different platforms into a single new release.
-							</translate>
+							</AppTranslate>
 						</p>
 						<p>
-							<app-link-help page="dev-packages" class="link-help">
-								<translate>
+							<AppLinkHelp page="dev-packages" class="link-help">
+								<AppTranslate>
 									dash.games.packages.manage.releases.page_help_link
-								</translate>
-							</app-link-help>
+								</AppTranslate>
+							</AppLinkHelp>
 						</p>
 					</div>
 				</div>
 
 				<div class="col-sm-8 col-sm-pull-4">
 					<div v-if="!releases.length" class="alert alert-notice">
-						<p><translate>There are no releases in this package yet.</translate></p>
+						<p><AppTranslate>There are no releases in this package yet.</AppTranslate></p>
 						<p>
-							<translate>
+							<AppTranslate>
 								Add a release to this package in order to upload builds/files to it.
-							</translate>
+							</AppTranslate>
 						</p>
 					</div>
 
-					<app-game-perms tag="div" required="builds">
-						<app-button primary block :disabled="isAddingRelease" @click="newRelease">
-							<translate>New Release</translate>
-						</app-button>
+					<AppGamePerms tag="div" required="builds">
+						<AppButton primary block :disabled="isAddingRelease" @click="newRelease">
+							<AppTranslate>New Release</AppTranslate>
+						</AppButton>
 						<br />
-					</app-game-perms>
+					</AppGamePerms>
 
 					<div v-if="releases.length">
-						<app-card v-for="release of releases" :key="release.id">
-							<app-game-perms required="builds">
+						<AppCard v-for="release of releases" :key="release.id">
+							<AppGamePerms required="builds">
 								<a class="card-remove" @click="removeRelease(release)">
-									<app-jolticon icon="remove" />
+									<AppJolticon icon="remove" />
 								</a>
-							</app-game-perms>
+							</AppGamePerms>
 
 							<div class="card-title">
 								<h4>
@@ -403,9 +403,9 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 										"
 										class="tag"
 									>
-										<app-jolticon icon="inactive" />
+										<AppJolticon icon="inactive" />
 										{{ ' ' }}
-										<translate>Draft</translate>
+										<AppTranslate>Draft</AppTranslate>
 									</span>
 									<template v-else>
 										<span
@@ -416,12 +416,12 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 											"
 											class="tag tag-notice"
 										>
-											<app-jolticon icon="calendar-grid" />
+											<AppJolticon icon="calendar-grid" />
 											{{ ' ' }}
-											<translate>Scheduled</translate>
+											<AppTranslate>Scheduled</AppTranslate>
 										</span>
 										{{ ' ' }}
-										<app-time-ago
+										<AppTimeAgo
 											:date="release.scheduled_for"
 											without-suffix
 										/>
@@ -437,22 +437,22 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 									"
 									class="tag tag-highlight"
 								>
-									<app-jolticon icon="active" />
+									<AppJolticon icon="active" />
 									{{ ' ' }}
-									<translate>
+									<AppTranslate>
 										dash.games.packages.manage.releases.published_tag
-									</translate>
+									</AppTranslate>
 								</span>
 
 								<span class="dot-separator" />
 
 								<template v-if="!release.build_count">
-									<translate>
+									<AppTranslate>
 										dash.games.packages.manage.releases.builds_count_none
-									</translate>
+									</AppTranslate>
 								</template>
 								<template v-else>
-									<translate
+									<AppTranslate
 										:translate-params="{
 											count: formatNumber(release.build_count),
 										}"
@@ -460,13 +460,13 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 										translate-plural="%{ count } builds"
 									>
 										%{ count } build
-									</translate>
+									</AppTranslate>
 								</template>
 							</div>
 
 							<div v-if="hasBuildsPerms || hasAnalyticsPerms" class="card-controls">
-								<app-game-perms required="builds">
-									<app-button
+								<AppGamePerms required="builds">
+									<AppButton
 										primary
 										:to="{
 											name: 'dash.games.manage.game.packages.release.edit',
@@ -476,12 +476,12 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 											},
 										}"
 									>
-										<translate>Edit Release</translate>
-									</app-button>
-								</app-game-perms>
+										<AppTranslate>Edit Release</AppTranslate>
+									</AppButton>
+								</AppGamePerms>
 								{{ ' ' }}
-								<app-game-perms required="analytics">
-									<app-button
+								<AppGamePerms required="analytics">
+									<AppButton
 										trans
 										:to="{
 											name: 'dash.analytics',
@@ -491,14 +491,14 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 											},
 										}"
 									>
-										<translate>Analytics</translate>
-									</app-button>
-								</app-game-perms>
+										<AppTranslate>Analytics</AppTranslate>
+									</AppButton>
+								</AppGamePerms>
 							</div>
-						</app-card>
+						</AppCard>
 					</div>
 
-					<app-dash-game-wizard-controls
+					<AppDashGameWizardControls
 						:disabled="!game._is_devlog && !game.has_active_builds"
 					/>
 				</div>

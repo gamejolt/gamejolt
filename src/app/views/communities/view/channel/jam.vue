@@ -186,19 +186,19 @@ export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
 
 <template>
 	<div>
-		<app-communities-view-page-container full>
-			<app-community-perms :community="community" perms="community-competitions">
-				<app-button
+		<AppCommunitiesViewPageContainer full>
+			<AppCommunityPerms :community="community" perms="community-competitions">
+				<AppButton
 					icon="edit"
 					:to="{
 						name: 'communities.view.edit.channels.competition.overview',
 						params: { id: community.id },
 					}"
 				>
-					<translate>Edit Jam</translate>
-				</app-button>
+					<AppTranslate>Edit Jam</AppTranslate>
+				</AppButton>
 				<hr />
-			</app-community-perms>
+			</AppCommunityPerms>
 
 			<div class="-header">
 				<div class="-header-title">
@@ -213,78 +213,78 @@ export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
 				</div>
 				<div class="-header-end">
 					<div class="-header-meta">
-						<app-community-competition-countdown :competition="competition" />
+						<AppCommunityCompetitionCountdown :competition="competition" />
 					</div>
 					<div v-if="canSubmitEntry" class="-header-actions">
-						<app-button primary solid @click="onClickSubmit">
-							<translate>Submit an entry</translate>
-						</app-button>
+						<AppButton primary solid @click="onClickSubmit">
+							<AppTranslate>Submit an entry</AppTranslate>
+						</AppButton>
 					</div>
 				</div>
 			</div>
 
 			<div v-if="channel.description_content" class="sheet sheet-elevate">
-				<app-fade-collapse
+				<AppFadeCollapse
 					:collapse-height="500"
 					:is-open="isDescriptionOpen"
 					@require-change="canToggleDescriptionChanged"
 				>
-					<app-content-viewer :source="channel.description_content" />
-				</app-fade-collapse>
+					<AppContentViewer :source="channel.description_content" />
+				</AppFadeCollapse>
 
 				<div v-if="canToggleDescription" class="page-cut page-cut-no-margin">
-					<app-button trans @click="toggleDescription()">
-						<translate v-if="!isDescriptionOpen">Show More</translate>
-						<translate v-else>Less</translate>
-					</app-button>
+					<AppButton trans @click="toggleDescription()">
+						<AppTranslate v-if="!isDescriptionOpen">Show More</AppTranslate>
+						<AppTranslate v-else>Less</AppTranslate>
+					</AppButton>
 				</div>
 			</div>
 
 			<template v-if="shouldShowUserSubmissions">
 				<h2>
-					<translate>Your submissions</translate>
+					<AppTranslate>Your submissions</AppTranslate>
 
 					<div v-if="canSubmitEntry" class="-submission-button">
-						<app-button @click="onClickSubmit">
-							<translate>Submit an entry</translate>
-						</app-button>
+						<AppButton @click="onClickSubmit">
+							<AppTranslate>Submit an entry</AppTranslate>
+						</AppButton>
 					</div>
 				</h2>
 
 				<template v-if="canSubmitEntry">
 					<p v-if="!hasSubmittedEntries" class="help-block">
-						<translate>You have not submitted an entry to this jam... yet?</translate>
+						<AppTranslate>You have not submitted an entry to this jam... yet?</AppTranslate>
 					</p>
 				</template>
 				<template v-else-if="competition.period === 'pre-comp'">
 					<p class="help-block">
-						<translate>
+						<AppTranslate>
 							You'll be able to submit your entry from this page once the jam starts.
-						</translate>
+						</AppTranslate>
 					</p>
 				</template>
 				<template v-else-if="competition.periodNum >= 2">
 					<p class="help-block">
-						<translate>The jam has ended and submissions are now closed.</translate>
+						<AppTranslate>The jam has ended and submissions are now closed.</AppTranslate>
 					</p>
 				</template>
 				<template v-else-if="channel.visibility === 'draft'">
 					<p v-if="!hasSubmittedEntries" class="help-block">
-						<translate>
+						<AppTranslate>
 							The jam is set up as a draft. Publish the jam to open submissions.
-						</translate>
+						</AppTranslate>
 					</p>
 				</template>
 				<template v-else-if="channel.is_archived">
 					<p class="help-block">
-						<translate>
+						<AppTranslate>
 							This channel is archived and entries cannot be submitted.
-						</translate>
+						</AppTranslate>
 					</p>
 				</template>
 
 				<div v-if="hasSubmittedEntries">
-					<app-community-competition-entry-grid
+					<AppCommunityCompetitionEntryGrid
 						:competition="competition"
 						:num-placeholders="2"
 						:entries="userEntries"
@@ -299,7 +299,7 @@ export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
 			<template v-if="competition.hasStarted">
 				<route-communities-view-channel-jam-entries :categories="categories" />
 			</template>
-		</app-communities-view-page-container>
+		</AppCommunitiesViewPageContainer>
 	</div>
 </template>
 

@@ -78,12 +78,12 @@ export default class RouteUpgrade extends BaseRouteComponent {
 					</strong>
 				</p>
 
-				<app-progress-bar active :percent="progress" />
+				<AppProgressBar active :percent="progress" />
 			</template>
 
-			<app-button v-else lg @click="update()">
+			<AppButton v-else lg @click="update()">
 				Update now
-			</app-button>
+			</AppButton>
 		</div>
 	</section>
 </template>

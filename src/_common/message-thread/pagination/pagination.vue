@@ -30,11 +30,11 @@ export default class AppMessageThreadPagination extends Vue {
 </script>
 
 <template>
-	<app-timeline-list-item v-if="hasPages">
+	<AppTimelineListItem v-if="hasPages">
 		<div class="timeline-list-item-details">
 			<br />
 
-			<app-pagination
+			<AppPagination
 				:items-per-page="itemsPerPage"
 				:total-items="totalItems"
 				:current-page="currentPage"
@@ -43,5 +43,5 @@ export default class AppMessageThreadPagination extends Vue {
 				@pagechange="pageChange"
 			/>
 		</div>
-	</app-timeline-list-item>
+	</AppTimelineListItem>
 </template>

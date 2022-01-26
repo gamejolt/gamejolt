@@ -123,7 +123,7 @@ export default class AppUserFollowWidget extends Vue {
 </script>
 
 <template>
-	<app-button
+	<AppButton
 		v-if="shouldShow"
 		v-app-auth-required
 		v-app-tooltip.bottom="tooltip"
@@ -140,11 +140,11 @@ export default class AppUserFollowWidget extends Vue {
 	>
 		<template v-if="!circle">
 			<template v-if="!user.is_following">
-				<translate>Follow</translate>
+				<AppTranslate>Follow</AppTranslate>
 			</template>
 			<template v-else>
-				<translate>Following</translate>
+				<AppTranslate>Following</AppTranslate>
 			</template>
 		</template>
-	</app-button>
+	</AppButton>
 </template>

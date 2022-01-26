@@ -87,7 +87,7 @@ export default class AppShellAccountPopover extends Vue {
 </script>
 
 <template>
-	<app-popper
+	<AppPopper
 		v-if="app.user"
 		v-app-track-event="`top-nav:user-menu:toggle`"
 		popover-class="fill-darkest"
@@ -97,7 +97,7 @@ export default class AppShellAccountPopover extends Vue {
 		@hide="onHide()"
 	>
 		<a class="navbar-item navbar-avatar" :class="{ active: isShowing }">
-			<app-user-avatar-img :user="app.user" />
+			<AppUserAvatarImg :user="app.user" />
 		</a>
 
 		<template v-if="isShowing" #popover>
@@ -125,7 +125,7 @@ export default class AppShellAccountPopover extends Vue {
 							name: GJ_IS_DESKTOP_APP ? 'library.installed' : 'library.overview',
 						}"
 					>
-						<translate>Game Library</translate>
+						<AppTranslate>Game Library</AppTranslate>
 					</router-link>
 					<router-link
 						v-app-track-event="`account-popover:account`"
@@ -134,21 +134,21 @@ export default class AppShellAccountPopover extends Vue {
 							name: Screen.isXs ? 'dash.account-mobile-nav' : 'dash.account.edit',
 						}"
 					>
-						<translate>Edit Account</translate>
+						<AppTranslate>Edit Account</AppTranslate>
 					</router-link>
 					<a
 						v-app-track-event="`account-popover:token`"
 						class="list-group-item offline-disable"
 						@click="showToken"
 					>
-						<translate>Game Token</translate>
+						<AppTranslate>Game Token</AppTranslate>
 					</a>
 					<router-link
 						v-app-track-event="`account-popover:settings`"
 						class="list-group-item"
 						:to="{ name: 'settings' }"
 					>
-						<translate>Settings</translate>
+						<AppTranslate>Settings</AppTranslate>
 					</router-link>
 					<a
 						v-app-track-event="`account-popover:dark`"
@@ -156,16 +156,16 @@ export default class AppShellAccountPopover extends Vue {
 						@click="toggleDark()"
 					>
 						<small class="pull-right text-muted">
-							<translate v-if="isDark">on</translate>
-							<translate v-else>off</translate>
+							<AppTranslate v-if="isDark">on</AppTranslate>
+							<AppTranslate v-else>off</AppTranslate>
 						</small>
-						<translate>Dark Mode</translate>
+						<AppTranslate>Dark Mode</AppTranslate>
 					</a>
 				</div>
 
 				<div class="account-popover-separator" />
 
-				<app-shell-user-box />
+				<AppShellUserBox />
 
 				<!--
 					We don't know if they have revenue until we do the call.
@@ -175,14 +175,14 @@ export default class AppShellAccountPopover extends Vue {
 
 					<div class="list-group-dark">
 						<div v-if="walletAmount === false" class="list-group-item small">
-							<translate>Loading...</translate>
+							<AppTranslate>Loading...</AppTranslate>
 						</div>
 						<router-link
 							v-else
 							class="list-group-item small"
 							:to="{ name: 'dash.account.withdraw-funds' }"
 						>
-							<app-jolticon
+							<AppJolticon
 								v-app-tooltip.touchable="
 									$gettext(
 										`These are your available funds to either buy games with or withdraw.`
@@ -192,7 +192,7 @@ export default class AppShellAccountPopover extends Vue {
 								icon="help-circle"
 							/>
 
-							<translate>Wallet Balance</translate>
+							<AppTranslate>Wallet Balance</AppTranslate>
 							&mdash;
 							<span class="account-popover-currency">
 								{{ formatCurrency(walletAmount) }}
@@ -214,8 +214,8 @@ export default class AppShellAccountPopover extends Vue {
 							class="list-group-item text-right"
 							@click="logout"
 						>
-							<app-jolticon icon="logout" notice />
-							<translate>Logout</translate>
+							<AppJolticon icon="logout" notice />
+							<AppTranslate>Logout</AppTranslate>
 						</a>
 					</div>
 				</template>
@@ -234,16 +234,16 @@ export default class AppShellAccountPopover extends Vue {
 									class="list-group-item"
 									@click="logout"
 								>
-									<app-jolticon icon="logout" notice />
-									<translate>Logout</translate>
+									<AppJolticon icon="logout" notice />
+									<AppTranslate>Logout</AppTranslate>
 								</a>
 							</div>
 						</div>
 						<div class="pull-right text-center" style="width: 50%">
 							<div class="list-group-dark">
 								<a class="list-group-item" @click="quit()">
-									<app-jolticon icon="remove" notice />
-									<translate>Quit</translate>
+									<AppJolticon icon="remove" notice />
+									<AppTranslate>Quit</AppTranslate>
 								</a>
 							</div>
 						</div>
@@ -251,7 +251,7 @@ export default class AppShellAccountPopover extends Vue {
 				</template>
 			</div>
 		</template>
-	</app-popper>
+	</AppPopper>
 </template>
 
 <style lang="stylus" scoped>

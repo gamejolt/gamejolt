@@ -73,20 +73,20 @@ export default class AppHomeFireside extends Vue {
 </script>
 
 <template>
-	<app-loading-fade :is-loading="isLoading">
+	<AppLoadingFade :is-loading="isLoading">
 		<div class="-header">
 			<h4 class="section-header" :class="{ h6: Screen.isXs }">
-				<translate>Firesides</translate>
+				<AppTranslate>Firesides</AppTranslate>
 			</h4>
 			<span class="help-inline">
 				<a class="link-unstyled" @click="emitRequestRefresh()">
-					<translate>Refresh</translate>
+					<AppTranslate>Refresh</AppTranslate>
 				</a>
 			</span>
 		</div>
 
 		<template v-if="featuredFireside && Screen.isDesktop">
-			<app-fireside-badge :fireside="featuredFireside" show-preview />
+			<AppFiresideBadge :fireside="featuredFireside" show-preview />
 		</template>
 
 		<div class="-list">
@@ -97,15 +97,15 @@ export default class AppHomeFireside extends Vue {
 			>
 				<div :class="{ '-scroller-inner': shouldDisplaySingleRow }">
 					<div v-if="showPlaceholders" key="placeholders" :style="gridStyling">
-						<app-fireside-avatar-base
+						<AppFiresideAvatarBase
 							v-for="i of gridColumns"
 							:key="i"
 							is-placeholder
 						/>
 					</div>
 					<div v-else key="list" :style="gridStyling">
-						<app-fireside-avatar-add v-if="!userFireside" key="add" />
-						<app-fireside-avatar
+						<AppFiresideAvatarAdd v-if="!userFireside" key="add" />
+						<AppFiresideAvatar
 							v-for="fireside of displayFiresides"
 							:key="fireside.id"
 							:fireside="fireside"
@@ -115,7 +115,7 @@ export default class AppHomeFireside extends Vue {
 				</div>
 			</component>
 		</div>
-	</app-loading-fade>
+	</AppLoadingFade>
 </template>
 
 <style lang="stylus" scoped>

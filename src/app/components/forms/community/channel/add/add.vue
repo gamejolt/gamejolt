@@ -158,27 +158,27 @@ export default class FormCommunityChannelAdd extends mixins(Wrapper) {
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="display_title" :label="$gettext(`Display Name`)" optional>
+	<AppForm :controller="form">
+		<AppFormGroup name="display_title" :label="$gettext(`Display Name`)" optional>
 			<div class="help-block">
-				<translate>
+				<AppTranslate>
 					This should be short and to the point. If you don't fill in a display name,
 					we'll use your channel's URL path as its name.
-				</translate>
+				</AppTranslate>
 			</div>
 
-			<app-form-control
+			<AppFormControl
 				:validators="[validateMinLength(3), validateMaxLength(30)]"
 				validate-on-blur
 				:placeholder="formModel.title"
 				@changed="onChangedDisplayTitle"
 			/>
 
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group name="title" :label="$gettext(`URL Path`)">
-			<app-form-control
+		<AppFormGroup name="title" :label="$gettext(`URL Path`)">
+			<AppFormControl
 				type="text"
 				:validators="[
 					validateMinLength(3),
@@ -192,8 +192,8 @@ export default class FormCommunityChannelAdd extends mixins(Wrapper) {
 				validate-on-blur
 				@changed="onChangedTitle"
 			/>
-			<app-form-control-errors>
-				<app-form-control-error
+			<AppFormControlErrors>
+				<AppFormControlError
 					when="too_many_channels"
 					:message="
 						$gettext(
@@ -202,14 +202,14 @@ export default class FormCommunityChannelAdd extends mixins(Wrapper) {
 					"
 				/>
 
-				<app-form-control-error
+				<AppFormControlError
 					when="availability"
 					:message="
 						$gettext('A channel in this community with that URL path already exists.')
 					"
 				/>
 
-				<app-form-control-error
+				<AppFormControlError
 					when="pattern"
 					:message="
 						$gettext(
@@ -217,27 +217,27 @@ export default class FormCommunityChannelAdd extends mixins(Wrapper) {
 						)
 					"
 				/>
-			</app-form-control-errors>
-		</app-form-group>
+			</AppFormControlErrors>
+		</AppFormGroup>
 
-		<app-form-community-channel-permissions />
+		<AppFormCommunityChannelPermissions />
 
-		<app-form-group v-if="shouldShowType" name="type" :label="$gettext(`Channel Type`)">
+		<AppFormGroup v-if="shouldShowType" name="type" :label="$gettext(`Channel Type`)">
 			<div v-for="channelType of types" :key="channelType.radioValue" class="radio">
 				<label>
-					<app-form-control-radio type="radio" :value="channelType.radioValue" />
+					<AppFormControlRadio type="radio" :value="channelType.radioValue" />
 					{{ channelType.text }}
 					<span v-if="channelType.helpText" class="help-inline">
 						- {{ channelType.helpText }}
 					</span>
 				</label>
 			</div>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-button :disabled="!isValid">
-			<translate>Add</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton :disabled="!isValid">
+			<AppTranslate>Add</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>
 
 <style lang="stylus" scoped></style>

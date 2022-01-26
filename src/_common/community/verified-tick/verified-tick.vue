@@ -30,7 +30,7 @@ export default class AppCommunityVerifiedTick extends Vue {
 </script>
 
 <template>
-	<app-jolticon
+	<AppJolticon
 		v-if="community.is_verified"
 		:class="{
 			'-small': small,

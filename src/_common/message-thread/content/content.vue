@@ -11,7 +11,7 @@ export default class AppMessageThreadContent extends Vue {}
 </script>
 
 <template>
-	<app-timeline-list-item>
+	<AppTimelineListItem>
 		<slot />
-	</app-timeline-list-item>
+	</AppTimelineListItem>
 </template>

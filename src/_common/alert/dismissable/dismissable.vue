@@ -46,15 +46,15 @@ export default class AppAlertDismissable extends Vue {
 </script>
 
 <template>
-	<app-expand :when="shouldShow">
+	<AppExpand :when="shouldShow">
 		<div class="alert sans-margin-bottom" :class="`alert-${alertType}`">
 			<a v-app-tooltip="dismissTooltip" class="alert-dismiss" @click="dismiss">
-				<app-jolticon icon="remove" />
+				<AppJolticon icon="remove" />
 			</a>
 			<div class="alert-content">
 				<slot />
 			</div>
 		</div>
 		<br v-if="!noMargin" />
-	</app-expand>
+	</AppExpand>
 </template>

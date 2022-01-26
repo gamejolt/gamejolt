@@ -122,7 +122,7 @@ export default class AppNavChannels extends Vue {
 
 <template>
 	<div>
-		<app-community-channel-card
+		<AppCommunityChannelCard
 			:community="community"
 			:path="frontpageChannel.title"
 			:label="$gettext(`Frontpage`)"
@@ -132,7 +132,7 @@ export default class AppNavChannels extends Vue {
 			@click="store.toggleLeftPane()"
 		/>
 
-		<app-community-channel-card
+		<AppCommunityChannelCard
 			:community="community"
 			:path="allChannel.title"
 			sort="hot"
@@ -144,11 +144,11 @@ export default class AppNavChannels extends Vue {
 		/>
 
 		<h5 class="-heading">
-			<translate>Channels</translate>
+			<AppTranslate>Channels</AppTranslate>
 		</h5>
 
 		<template v-if="community.channels">
-			<app-community-channel-card
+			<AppCommunityChannelCard
 				v-for="channel of community.channels"
 				:key="channel.id"
 				:community="community"
@@ -166,10 +166,10 @@ export default class AppNavChannels extends Vue {
 
 		<template v-if="community.has_archived_channels">
 			<h5 class="-heading -archived-heading" @click="onClickArchivedChannels">
-				<app-jolticon
+				<AppJolticon
 					:icon="routeStore.expandedArchivedChannels ? 'chevron-down' : 'chevron-right'"
 				/>
-				<translate>Archived Channels</translate>
+				<AppTranslate>Archived Channels</AppTranslate>
 			</h5>
 
 			<template
@@ -179,7 +179,7 @@ export default class AppNavChannels extends Vue {
 				"
 			>
 				<template v-if="routeStore.archivedChannels.length">
-					<app-community-channel-card
+					<AppCommunityChannelCard
 						v-for="channel of routeStore.archivedChannels"
 						:key="channel.id"
 						:community="community"
@@ -197,7 +197,7 @@ export default class AppNavChannels extends Vue {
 				</template>
 
 				<template v-if="isLoadingArchivedChannels">
-					<app-loading centered />
+					<AppLoading centered />
 				</template>
 			</template>
 		</template>

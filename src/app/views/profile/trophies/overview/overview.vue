@@ -239,17 +239,17 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 	<div>
 		<div v-if="!hasTrophies" class="alert alert-info">
 			<span>
-				<translate>This user has not achieved any trophies ... yet.</translate>
+				<AppTranslate>This user has not achieved any trophies ... yet.</AppTranslate>
 			</span>
 		</div>
 
-		<app-timeline-list v-else>
+		<AppTimelineList v-else>
 			<div v-for="entry of trophyEntries" :key="entry.trophies[0].key">
-				<app-timeline-list-item>
+				<AppTimelineListItem>
 					<template #bubble>
 						<div class="-timeline-icon">
-							<app-jolticon v-if="entry.game" icon="trophy" />
-							<app-jolticon v-else icon="gamejolt" />
+							<AppJolticon v-if="entry.game" icon="trophy" />
+							<AppJolticon v-else icon="gamejolt" />
 						</div>
 					</template>
 
@@ -301,12 +301,12 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 					</div>
 
 					<div class="timeline-list-item-meta">
-						<app-time-ago :date="entry.trophies[0].logged_on" />
+						<AppTimeAgo :date="entry.trophies[0].logged_on" />
 					</div>
 
 					<div class="timeline-list-item-details">
 						<div class="timeline-list-item-content">
-							<app-trophy-thumbnail
+							<AppTrophyThumbnail
 								v-for="userTrophy of entry.trophies"
 								:key="userTrophy.id"
 								class="-trophy-thumb"
@@ -316,29 +316,29 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 							/>
 						</div>
 					</div>
-				</app-timeline-list-item>
+				</AppTimelineListItem>
 				<div class="timeline-list-item-split" />
 			</div>
 			<p>
-				<app-button v-if="canLoadMore" :disabled="isLoadingMore" @click="onClickShowMore">
-					<translate>Show More</translate>
-				</app-button>
+				<AppButton v-if="canLoadMore" :disabled="isLoadingMore" @click="onClickShowMore">
+					<AppTranslate>Show More</AppTranslate>
+				</AppButton>
 				<router-link
 					:to="{
 						name: 'profile.trophies.all',
 					}"
 				>
-					<app-button>
-						<translate>View all trophies</translate>
-					</app-button>
+					<AppButton>
+						<AppTranslate>View all trophies</AppTranslate>
+					</AppButton>
 				</router-link>
 			</p>
 			<p v-if="isDev" class="-dev-trophy-link small">
-				<app-link-help page="dev-trophies" class="link-help">
-					<translate>Learn how to integrate trophies into YOUR game!</translate>
-				</app-link-help>
+				<AppLinkHelp page="dev-trophies" class="link-help">
+					<AppTranslate>Learn how to integrate trophies into YOUR game!</AppTranslate>
+				</AppLinkHelp>
 			</p>
-		</app-timeline-list>
+		</AppTimelineList>
 	</div>
 </template>
 

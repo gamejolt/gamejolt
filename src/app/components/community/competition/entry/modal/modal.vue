@@ -137,26 +137,26 @@ export default class AppCommunityCompetitionEntryModal extends mixins(BaseModal)
 </script>
 
 <template>
-	<app-modal class="-entry-modal">
+	<AppModal class="-entry-modal">
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 		<div class="modal-body">
 			<template v-if="!!m_entry">
-				<app-game-badge full-bleed :game="m_entry.resource" />
+				<AppGameBadge full-bleed :game="m_entry.resource" />
 
 				<div class="-section">
 					<div class="pull-right">
-						<app-user-card-hover :user="author">
-							<app-user-avatar class="-author-avatar" :user="author" />
-						</app-user-card-hover>
+						<AppUserCardHover :user="author">
+							<AppUserAvatar class="-author-avatar" :user="author" />
+						</AppUserCardHover>
 					</div>
 					<div>
 						<div class="-author-name">
-							<translate>By</translate>
-							<app-user-card-hover class="-hover-card" :user="author">
+							<AppTranslate>By</AppTranslate>
+							<AppUserCardHover class="-hover-card" :user="author">
 								<router-link
 									:to="{
 										name: 'profile.overview',
@@ -164,15 +164,15 @@ export default class AppCommunityCompetitionEntryModal extends mixins(BaseModal)
 									}"
 								>
 									{{ author.display_name }}
-									<app-user-verified-tick :user="author" />
+									<AppUserVerifiedTick :user="author" />
 								</router-link>
-							</app-user-card-hover>
+							</AppUserCardHover>
 						</div>
 						<div class="-entered-date">
-							<translate>Entered on</translate>
+							<AppTranslate>Entered on</AppTranslate>
 							<b>{{ formatDate(m_entry.added_on, 'short') }}</b>
 							<i class="text-muted">
-								(<app-time-ago :date="m_entry.added_on" strict />)
+								(<AppTimeAgo :date="m_entry.added_on" strict />)
 							</i>
 						</div>
 					</div>
@@ -180,33 +180,33 @@ export default class AppCommunityCompetitionEntryModal extends mixins(BaseModal)
 
 				<div class="row">
 					<div class="col-sm-6 -entry-button">
-						<app-button
+						<AppButton
 							block
 							primary
 							icon="chevron-right"
 							:to="m_entry.resource.routeLocation"
 						>
-							<translate>View Game</translate>
-						</app-button>
+							<AppTranslate>View Game</AppTranslate>
+						</AppButton>
 					</div>
 					<div class="col-sm-6 -entry-button">
-						<app-button block icon="link" @click="copyShareUrl">
-							<translate>Copy Voting Link</translate>
-						</app-button>
+						<AppButton block icon="link" @click="copyShareUrl">
+							<AppTranslate>Copy Voting Link</AppTranslate>
+						</AppButton>
 					</div>
 				</div>
 
 				<div v-if="m_entry.is_removed" class="-section alert alert-notice">
 					<p>
-						<translate>
+						<AppTranslate>
 							This entry was removed from the jam and cannot be viewed anymore.
-						</translate>
+						</AppTranslate>
 					</p>
 				</div>
 
 				<div v-if="shouldShowAwards">
 					<div v-for="entryAward of sortedAwards" :key="entryAward.id" class="-award">
-						<app-jolticon
+						<AppJolticon
 							v-app-tooltip.touchable="$gettext(`Jam Award`)"
 							class="-award-icon"
 							icon="medal"
@@ -227,18 +227,18 @@ export default class AppCommunityCompetitionEntryModal extends mixins(BaseModal)
 
 				<div class="-section">
 					<span v-if="shouldShowVoteCount" class="-vote-count">
-						<translate
+						<AppTranslate
 							:translate-n="m_entry.vote_count"
 							:translate-params="{ count: m_entry.vote_count }"
 							translate-plural="This entry has %{ count } votes, currently. Check back after the voting period to see the final results."
 						>
 							This entry has %{ count } vote, currently. Check back after the voting
 							period to see the final results.
-						</translate>
+						</AppTranslate>
 					</span>
 
 					<template v-if="competition">
-						<app-community-competition-voting-widget
+						<AppCommunityCompetitionVotingWidget
 							:competition="competition"
 							:entry="m_entry"
 							:voting-categories="votingCategories"
@@ -248,13 +248,13 @@ export default class AppCommunityCompetitionEntryModal extends mixins(BaseModal)
 							:is-blocked="isBlocked"
 						/>
 					</template>
-					<app-loading v-else centered />
+					<AppLoading v-else centered />
 				</div>
 			</template>
 
-			<app-loading v-else centered />
+			<AppLoading v-else centered />
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" scoped>

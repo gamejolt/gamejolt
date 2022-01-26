@@ -76,7 +76,7 @@ export default class AppModalFacebookPageSelector extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-header">
 			<h2 class="modal-title">
 				{{ title }}
@@ -87,14 +87,14 @@ export default class AppModalFacebookPageSelector extends mixins(BaseModal) {
 			<p>{{ message }}</p>
 
 			<div class="row">
-				<app-linked-account provider="facebook" :account="account" preview>
-					<app-loading v-if="isLoading" />
+				<AppLinkedAccount provider="facebook" :account="account" preview>
+					<AppLoading v-if="isLoading" />
 					<div v-else>
 						<div v-if="!hasPages">
 							<small class="text-muted">
-								<translate>
+								<AppTranslate>
 									You have no Facebook Pages associated with your account.
-								</translate>
+								</AppTranslate>
 							</small>
 						</div>
 						<div v-for="page of pages" :key="page.id">
@@ -114,21 +114,21 @@ export default class AppModalFacebookPageSelector extends mixins(BaseModal) {
 								"
 								class="text-muted"
 							>
-								<translate>Currently Linked</translate>
+								<AppTranslate>Currently Linked</AppTranslate>
 							</small>
 						</div>
 					</div>
-				</app-linked-account>
+				</AppLinkedAccount>
 			</div>
 		</div>
 
 		<div class="modal-footer">
-			<app-button primary solid :disabled="!canConfirm" @click="ok">
-				<translate>OK</translate>
-			</app-button>
-			<app-button trans @click="cancel">
-				<translate>Cancel</translate>
-			</app-button>
+			<AppButton primary solid :disabled="!canConfirm" @click="ok">
+				<AppTranslate>OK</AppTranslate>
+			</AppButton>
+			<AppButton trans @click="cancel">
+				<AppTranslate>Cancel</AppTranslate>
+			</AppButton>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

@@ -28,17 +28,17 @@ export default class AppFormGameDescriptionTags extends Vue {
 </script>
 
 <template>
-	<app-tag-suggestion :tags="tags" :text="text" :content="documents" @tag="emitTag($event)">
-		<app-jolticon icon="tags" class="middle" />
+	<AppTagSuggestion :tags="tags" :text="text" :content="documents" @tag="emitTag($event)">
+		<AppJolticon icon="tags" class="middle" />
 		<strong>
-			<translate>Game Tags</translate>
+			<AppTranslate>Game Tags</AppTranslate>
 		</strong>
 
 		<p class="help-block">
-			<translate>
+			<AppTranslate>
 				Tag your game to increase its visibility. It's recommended to include at least one of the
 				listed tags, although you can add your own by putting a #hashtag in your description.
-			</translate>
+			</AppTranslate>
 		</p>
-	</app-tag-suggestion>
+	</AppTagSuggestion>
 </template>

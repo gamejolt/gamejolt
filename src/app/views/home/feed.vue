@@ -229,10 +229,10 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 
 <template>
 	<section class="section fill-backdrop">
-		<app-page-container xl>
+		<AppPageContainer xl>
 			<template #left>
 				<template v-if="hasSimpleHome">
-					<app-scroll-affix>
+					<AppScrollAffix>
 						<nav class="-menu">
 							<ol>
 								<li v-for="tab of tabs" :key="tab">
@@ -246,8 +246,8 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 											active: feedTab === 'fyp',
 										}"
 									>
-										<app-jolticon class="-menu-icon" icon="home" />
-										<translate>For You</translate>
+										<AppJolticon class="-menu-icon" icon="home" />
+										<AppTranslate>For You</AppTranslate>
 									</router-link>
 									<router-link
 										v-if="tab === 'activity'"
@@ -259,8 +259,8 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 											active: feedTab === 'activity',
 										}"
 									>
-										<app-jolticon class="-menu-icon" icon="friends" />
-										<translate>Following</translate>
+										<AppJolticon class="-menu-icon" icon="friends" />
+										<AppTranslate>Following</AppTranslate>
 										<span
 											v-if="hasUnreadActivity"
 											class="-unread-tag anim-fade-enter anim-fade-leave"
@@ -273,22 +273,22 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 											:to="developerCollection.routeLocation"
 											active-class="active"
 										>
-											<app-jolticon class="-menu-icon" icon="game" />
-											<translate>Your Games</translate>
+											<AppJolticon class="-menu-icon" icon="game" />
+											<AppTranslate>Your Games</AppTranslate>
 										</router-link>
 									</li>
 								</template>
 							</ol>
 						</nav>
-					</app-scroll-affix>
+					</AppScrollAffix>
 				</template>
 				<template v-else>
-					<app-user-card v-if="Screen.isDesktop" :user="user" />
+					<AppUserCard v-if="Screen.isDesktop" :user="user" />
 
 					<template v-if="hasGamesSection">
 						<div class="clearfix">
 							<div class="pull-right">
-								<app-button
+								<AppButton
 									v-app-tooltip="$gettext(`Add Game`)"
 									icon="add"
 									circle
@@ -297,7 +297,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 								/>
 							</div>
 							<h4 class="section-header">
-								<translate>Manage Games</translate>
+								<AppTranslate>Manage Games</AppTranslate>
 							</h4>
 						</div>
 
@@ -343,7 +343,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 								class="link-muted"
 								@click="isShowingAllGames = !isShowingAllGames"
 							>
-								<translate>Show all</translate>
+								<AppTranslate>Show all</AppTranslate>
 							</a>
 						</p>
 					</template>
@@ -351,7 +351,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			</template>
 
 			<template v-if="!Screen.isMobile" #right>
-				<app-home-fireside
+				<AppHomeFireside
 					:featured-fireside="featuredFireside"
 					:user-fireside="userFireside"
 					:firesides="firesides"
@@ -361,18 +361,18 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 				/>
 			</template>
 
-			<app-post-add-button @add="onPostAdded" />
+			<AppPostAddButton @add="onPostAdded" />
 
 			<template v-if="Screen.isXs">
 				<h6 class="-feed-heading">
-					<translate>Communities</translate>
+					<AppTranslate>Communities</AppTranslate>
 				</h6>
 
-				<app-community-slider-placeholder v-if="!isRouteBootstrapped" :num="1" />
-				<app-community-slider v-else :communities="communities" with-add-button />
+				<AppCommunitySliderPlaceholder v-if="!isRouteBootstrapped" :num="1" />
+				<AppCommunitySlider v-else :communities="communities" with-add-button />
 			</template>
 
-			<app-home-fireside
+			<AppHomeFireside
 				v-if="Screen.isMobile"
 				:user-fireside="userFireside"
 				:firesides="firesides"
@@ -382,7 +382,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			/>
 
 			<div v-if="!hasSimpleHome" class="full-bleed-xs">
-				<app-nav-tab-list center class="-inline-menu">
+				<AppNavTabList center class="-inline-menu">
 					<ul>
 						<li v-for="tab of tabs" :key="tab">
 							<router-link
@@ -395,7 +395,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 									active: feedTab === 'activity',
 								}"
 							>
-								<translate>Following</translate>
+								<AppTranslate>Following</AppTranslate>
 								<span
 									v-if="hasUnreadActivity"
 									class="-unread-tag anim-fade-enter anim-fade-leave"
@@ -411,16 +411,16 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 									active: feedTab === 'fyp',
 								}"
 							>
-								<translate>For You</translate>
+								<AppTranslate>For You</AppTranslate>
 							</router-link>
 						</li>
 					</ul>
-				</app-nav-tab-list>
+				</AppNavTabList>
 			</div>
 
 			<route-home-activity v-if="feedTab === 'activity'" />
 			<route-home-fyp v-else-if="feedTab === 'fyp'" />
-		</app-page-container>
+		</AppPageContainer>
 	</section>
 </template>
 

@@ -69,12 +69,12 @@ export default class AppCommunityChunk extends Vue {
 			>
 				<div class="-thumbnail">
 					<div class="-thumbnail-inner">
-						<app-media-item-backdrop :media-item="community.thumbnail" radius="full">
-							<app-community-thumbnail-img :community="community" />
-						</app-media-item-backdrop>
+						<AppMediaItemBackdrop :media-item="community.thumbnail" radius="full">
+							<AppCommunityThumbnailImg :community="community" />
+						</AppMediaItemBackdrop>
 					</div>
 
-					<app-community-verified-tick
+					<AppCommunityVerifiedTick
 						class="-thumbnail-verified"
 						:community="community"
 						no-tooltip
@@ -99,14 +99,14 @@ export default class AppCommunityChunk extends Vue {
 			</router-link>
 
 			<div class="-header-button">
-				<app-button
+				<AppButton
 					:to="community.routeLocation"
 					outline
 					primary
 					@click="trackGotoCommunity()"
 				>
-					<translate> View Community </translate>
-				</app-button>
+					<AppTranslate> View Community </AppTranslate>
+				</AppButton>
 			</div>
 		</div>
 
@@ -119,7 +119,7 @@ export default class AppCommunityChunk extends Vue {
 				<template v-if="isLoadingPosts">
 					<template v-for="(item, index) of preferredCardsPerRow" :key="item">
 						<div class="-card">
-							<app-post-card-placeholder />
+							<AppPostCardPlaceholder />
 						</div>
 
 						<div
@@ -133,7 +133,7 @@ export default class AppCommunityChunk extends Vue {
 				<template v-else-if="items.length > 0">
 					<template v-for="(item, index) of items" :key="item.id">
 						<div class="-card">
-							<app-post-card :post="item.action" :source="postOpenSource" with-user />
+							<AppPostCard :post="item.action" :source="postOpenSource" with-user />
 						</div>
 
 						<div

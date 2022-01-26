@@ -53,15 +53,15 @@ export default class AppContentEditorLinkModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-body">
-			<app-form-content-editor-link :model="linkData" @submit="onSubmit" />
+			<AppFormContentEditorLink :model="linkData" @submit="onSubmit" />
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

@@ -15,7 +15,7 @@ export default class AppAnalyticsReportSimpleStat extends Vue {
 <template>
 	<div class="col-sm-6 col-sm-3">
 		<div class="alert" v-if="!reportData.hasData">
-			<translate>No data yet.</translate>
+			<AppTranslate>No data yet.</AppTranslate>
 		</div>
 
 		<div class="stat-big" v-if="reportData.hasData">

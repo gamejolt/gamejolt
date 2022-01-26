@@ -42,7 +42,7 @@ export default class AppFiresideHostThumbIndicator extends Vue {
 		<div class="-indicator-color" />
 		<div class="-indicator">
 			<template v-if="host.userModel">
-				<app-user-avatar-img class="-img -help" :user="host.userModel" />
+				<AppUserAvatarImg class="-img -help" :user="host.userModel" />
 			</template>
 		</div>
 	</div>

@@ -34,8 +34,8 @@ export default class AppGraphWidget extends Vue {
 
 <template>
 	<div>
-		<app-loading v-if="isLoading" :big="true" />
+		<AppLoading v-if="isLoading" :big="true" />
 
-		<app-graph v-if="!isLoading && graphData" :dataset="graphData.graph" />
+		<AppGraph v-if="!isLoading && graphData" :dataset="graphData.graph" />
 	</div>
 </template>

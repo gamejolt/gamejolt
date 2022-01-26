@@ -136,7 +136,7 @@ export default class AppMediaItemPost extends Vue {
 
 <template>
 	<div class="media-item-post" :class="{ '-inline': inline }" @click="onClickImage">
-		<app-responsive-dimensions
+		<AppResponsiveDimensions
 			class="-media"
 			:class="{
 				'-filled': isFilled,
@@ -147,7 +147,7 @@ export default class AppMediaItemPost extends Vue {
 			@change="onDimensionsChange"
 		>
 			<div v-if="shouldShowFullscreenOption" class="-toolbar">
-				<app-button
+				<AppButton
 					v-app-tooltip="$gettext(`Fullscreen`)"
 					overlay
 					circle
@@ -156,13 +156,13 @@ export default class AppMediaItemPost extends Vue {
 					@click="emitFullscreen(mediaItem)"
 				/>
 			</div>
-			<app-media-item-backdrop class="-backdrop" :media-item="mediaItem" :radius="itemRadius">
-				<app-sticker-target
+			<AppMediaItemBackdrop class="-backdrop" :media-item="mediaItem" :radius="itemRadius">
+				<AppStickerTarget
 					class="-stickers"
 					:controller="stickerTargetController"
 					:disabled="stickersDisabled"
 				>
-					<app-img-responsive
+					<AppImgResponsive
 						v-if="!isPostHydrated || !mediaItem.is_animated"
 						class="-img"
 						:style="itemStyling"
@@ -170,7 +170,7 @@ export default class AppMediaItemPost extends Vue {
 						alt=""
 						ondragstart="return false"
 					/>
-					<app-video
+					<AppVideo
 						v-else-if="isActive && videoController"
 						class="-video"
 						:style="itemStyling"
@@ -178,9 +178,9 @@ export default class AppMediaItemPost extends Vue {
 						:should-play="shouldVideoPlay"
 						show-loading
 					/>
-				</app-sticker-target>
-			</app-media-item-backdrop>
-		</app-responsive-dimensions>
+				</AppStickerTarget>
+			</AppMediaItemBackdrop>
+		</AppResponsiveDimensions>
 	</div>
 </template>
 

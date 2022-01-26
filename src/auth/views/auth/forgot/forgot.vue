@@ -23,9 +23,9 @@ export default class RouteAuthForgot extends BaseRouteComponent {
 <template>
 	<div>
 		<h2 class="section-header anim-fade-in-enlarge">
-			<translate>Trouble logging in?</translate>
+			<AppTranslate>Trouble logging in?</AppTranslate>
 		</h2>
 
-		<form-retrieve-login @submit="onSubmitted" />
+		<FormRetrieveLogin @submit="onSubmitted" />
 	</div>
 </template>

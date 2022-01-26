@@ -97,7 +97,7 @@ function select(date: Date) {
 						style="width: 100%"
 						@click="move(-1)"
 					>
-						<app-jolticon icon="chevron-left" />
+						<AppJolticon icon="chevron-left" />
 					</button>
 				</th>
 				<th colspan="5">
@@ -117,7 +117,7 @@ function select(date: Date) {
 						style="width: 100%"
 						@click="move(1)"
 					>
-						<app-jolticon icon="chevron-right" />
+						<AppJolticon icon="chevron-right" />
 					</button>
 				</th>
 			</tr>

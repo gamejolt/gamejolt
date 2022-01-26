@@ -62,40 +62,40 @@ export default class AppSupportersModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate
+				<AppTranslate
 					:translate-n="supporterCount"
 					:translate-params="{ count: formatNumber(supporterCount) }"
 					translate-plural="%{ count } supporters"
 				>
 					1 supporter
-				</translate>
+				</AppTranslate>
 			</h2>
 			<p>
-				<translate
+				<AppTranslate
 					>The kind people that supported by paying more than the minimum.</translate
 				>
 			</p>
 		</div>
 
 		<div class="modal-body">
-			<app-user-list :users="users" />
+			<AppUserList :users="users" />
 
-			<app-loading v-if="isLoading" centered />
+			<AppLoading v-if="isLoading" centered />
 
 			<div v-if="shouldShowLoadMore" class="page-cut">
-				<app-button trans @click="loadMore()">
-					<translate>Load More</translate>
-				</app-button>
+				<AppButton trans @click="loadMore()">
+					<AppTranslate>Load More</AppTranslate>
+				</AppButton>
 			</div>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

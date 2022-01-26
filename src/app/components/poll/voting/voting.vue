@@ -145,7 +145,7 @@ export default class AppPollVoting extends Vue {
 					'-chosen': item.is_voted,
 				}"
 			>
-				<app-progress-bar :percent="getItemPercentage(item) * 100">
+				<AppProgressBar :percent="getItemPercentage(item) * 100">
 					<span v-if="!shouldObscureResults" class="-progress-percent">
 						{{
 							formatNumber(getItemPercentage(item), {
@@ -156,41 +156,41 @@ export default class AppPollVoting extends Vue {
 					</span>
 
 					{{ item.text }}
-				</app-progress-bar>
+				</AppProgressBar>
 			</div>
 
 			<div v-if="poll.is_private" class="alert">
-				<translate>The results of this poll are private.</translate>
+				<AppTranslate>The results of this poll are private.</AppTranslate>
 			</div>
 		</template>
 
 		<div>
 			<template v-if="!showResults">
 				<span v-app-auth-required>
-					<app-button
+					<AppButton
 						:disabled="!chosenItemId || isProcessing"
 						@click="vote(chosenItemId!)"
 					>
-						<translate>Vote</translate>
-					</app-button>
+						<AppTranslate>Vote</AppTranslate>
+					</AppButton>
 				</span>
 				&nbsp;
 			</template>
 
 			<span class="text-muted">
-				<translate
+				<AppTranslate
 					:translate-n="poll.vote_count || 0"
 					:translate-params="{ votes: formatNumber(poll.vote_count || 0) }"
 					translate-plural="%{ votes } votes"
 				>
 					%{ votes } vote
-				</translate>
+				</AppTranslate>
 
 				<span class="dot-separator" />
 
-				<app-time-ago v-if="isVotable" :date="poll.end_time" is-future />
-				<translate v-else-if="poll.end_time">Voting finished</translate>
-				<translate v-else>Draft poll</translate>
+				<AppTimeAgo v-if="isVotable" :date="poll.end_time" is-future />
+				<AppTranslate v-else-if="poll.end_time">Voting finished</AppTranslate>
+				<AppTranslate v-else>Draft poll</AppTranslate>
 			</span>
 		</div>
 	</div>

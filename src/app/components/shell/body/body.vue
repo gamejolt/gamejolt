@@ -26,7 +26,7 @@ export default class AppShellBody extends Vue {
 		<div class="shell-body-main">
 			<slot />
 		</div>
-		<app-shell-footer v-if="hasFooter" />
+		<AppShellFooter v-if="hasFooter" />
 	</div>
 </template>
 

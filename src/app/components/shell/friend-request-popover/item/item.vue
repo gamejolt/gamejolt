@@ -56,17 +56,17 @@ export default class AppShellFriendRequestPopoverItem extends Vue {
 </script>
 
 <template>
-	<app-scroll-inview
+	<AppScrollInview
 		class="-item"
 		:config="InviewConfig"
 		@inview="isInview = true"
 		@outview="isInview = false"
 	>
 		<router-link v-if="isInview" :to="them.url">
-			<app-card>
+			<AppCard>
 				<div class="shell-card-popover-card-media">
 					<div class="friend-request-popover-avatar">
-						<app-user-avatar-img :user="them" />
+						<AppUserAvatarImg :user="them" />
 					</div>
 				</div>
 				<div class="shell-card-popover-card-body">
@@ -78,7 +78,7 @@ export default class AppShellFriendRequestPopoverItem extends Vue {
 							of the elements is only prevented with 'prevent'.
 						-->
 						<template v-if="isPending">
-							<app-button
+							<AppButton
 								v-app-tooltip="$gettext(`Cancel`)"
 								tag="span"
 								trans
@@ -88,7 +88,7 @@ export default class AppShellFriendRequestPopoverItem extends Vue {
 							/>
 						</template>
 						<template v-else>
-							<app-button
+							<AppButton
 								v-app-tooltip="$gettext(`Add Friend`)"
 								tag="span"
 								primary
@@ -96,7 +96,7 @@ export default class AppShellFriendRequestPopoverItem extends Vue {
 								icon="friend-add-2"
 								@click.prevent="accept"
 							/>
-							<app-button
+							<AppButton
 								v-app-tooltip="
 									$gettext(`Dismiss request. Sender will not be notified.`)
 								"
@@ -112,7 +112,7 @@ export default class AppShellFriendRequestPopoverItem extends Vue {
 					<div class="card-title">
 						<h5>
 							<span class="-name -name-container">{{ them.display_name }}</span>
-							<app-user-verified-tick :user="them" />
+							<AppUserVerifiedTick :user="them" />
 						</h5>
 
 						<h5 class="-name">
@@ -120,9 +120,9 @@ export default class AppShellFriendRequestPopoverItem extends Vue {
 						</h5>
 					</div>
 				</div>
-			</app-card>
+			</AppCard>
 		</router-link>
-	</app-scroll-inview>
+	</AppScrollInview>
 </template>
 
 <style lang="stylus" scoped>

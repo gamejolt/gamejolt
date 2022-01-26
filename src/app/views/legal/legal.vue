@@ -47,27 +47,27 @@ export default class RouteLegal extends BaseRouteComponent {
 						<ul>
 							<li>
 								<router-link :to="{ name: 'legal.terms' }" active-class="active">
-									<translate>Terms of Use</translate>
+									<AppTranslate>Terms of Use</AppTranslate>
 								</router-link>
 							</li>
 							<li>
 								<router-link :to="{ name: 'legal.privacy' }" active-class="active">
-									<translate>Privacy Policy</translate>
+									<AppTranslate>Privacy Policy</AppTranslate>
 								</router-link>
 							</li>
 							<li>
 								<router-link :to="{ name: 'legal.cookies' }" active-class="active">
-									<translate>Cookie Policy</translate>
+									<AppTranslate>Cookie Policy</AppTranslate>
 								</router-link>
 							</li>
 							<li>
 								<router-link :to="{ name: 'legal.ads' }" active-class="active">
-									<translate>Advertising Platforms</translate>
+									<AppTranslate>Advertising Platforms</AppTranslate>
 								</router-link>
 							</li>
 							<li>
 								<router-link :to="{ name: 'legal.deletion' }" active-class="active">
-									<translate>Account Deletion</translate>
+									<AppTranslate>Account Deletion</AppTranslate>
 								</router-link>
 							</li>
 						</ul>

@@ -13,9 +13,9 @@ export default class AppMessageThread extends Vue {
 </script>
 
 <template>
-	<app-timeline-list class="message-thread" :is-nested="isNested">
+	<AppTimelineList class="message-thread" :is-nested="isNested">
 		<slot />
-	</app-timeline-list>
+	</AppTimelineList>
 </template>
 
 <style lang="stylus" scoped>

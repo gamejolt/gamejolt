@@ -48,7 +48,7 @@ export default class RouteLandingGameApi extends BaseRouteComponent {
 		<section class="section landing-header text-center">
 			<div class="container">
 				<h1>
-					<app-theme-svg
+					<AppThemeSvg
 						:src="imageJolt"
 						alt=""
 						:width="17 * 3"
@@ -67,9 +67,9 @@ export default class RouteLandingGameApi extends BaseRouteComponent {
 						</p>
 
 						<div class="text-center">
-							<app-button primary :to="{ name: 'landing.game-api-doc' }">
+							<AppButton primary :to="{ name: 'landing.game-api-doc' }">
 								Get Started
-							</app-button>
+							</AppButton>
 						</div>
 					</div>
 				</div>
@@ -113,7 +113,7 @@ export default class RouteLandingGameApi extends BaseRouteComponent {
 				<div class="row">
 					<div class="col-lg-4">
 						<div class="landing-graphic">
-							<app-theme-svg
+							<AppThemeSvg
 								:src="assetPaths['./leaderboards.svg'].default"
 								alt="Leaderboards"
 							/>
@@ -130,7 +130,7 @@ export default class RouteLandingGameApi extends BaseRouteComponent {
 
 					<div class="col-lg-4">
 						<div class="landing-graphic">
-							<app-theme-svg
+							<AppThemeSvg
 								:src="assetPaths['./trophies.svg'].default"
 								alt="Trophies"
 							/>
@@ -146,7 +146,7 @@ export default class RouteLandingGameApi extends BaseRouteComponent {
 
 					<div class="col-lg-4">
 						<div class="landing-graphic">
-							<app-theme-svg
+							<AppThemeSvg
 								:src="assetPaths['./data-storage.svg'].default"
 								alt="Data Storage"
 							/>
@@ -165,7 +165,7 @@ export default class RouteLandingGameApi extends BaseRouteComponent {
 
 					<div class="col-lg-4 col-centered-lg">
 						<div class="landing-graphic">
-							<app-theme-svg
+							<AppThemeSvg
 								:src="assetPaths['./sessions.svg'].default"
 								alt="Sessions"
 							/>
@@ -186,9 +186,9 @@ export default class RouteLandingGameApi extends BaseRouteComponent {
 						<h1>Sounds cool, yeah?</h1>
 						<hr class="underbar underbar-center" />
 
-						<app-button primary lg :to="{ name: 'landing.game-api-doc' }">
+						<AppButton primary lg :to="{ name: 'landing.game-api-doc' }">
 							Get Started
-						</app-button>
+						</AppButton>
 					</div>
 				</div>
 			</div>

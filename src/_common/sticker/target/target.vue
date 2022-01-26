@@ -172,7 +172,7 @@ export default class AppStickerTarget extends Vue {
 </script>
 
 <template>
-	<app-scroll-inview
+	<AppScrollInview
 		:config="InviewConfig"
 		class="sticker-target"
 		@inview="onInview"
@@ -185,7 +185,7 @@ export default class AppStickerTarget extends Vue {
 					'-faded': shouldFade,
 				}"
 			>
-				<app-sticker
+				<AppSticker
 					v-for="sticker of stickers"
 					:key="sticker.id"
 					class="-sticker -sticker-animate"
@@ -198,7 +198,7 @@ export default class AppStickerTarget extends Vue {
 		</transition>
 
 		<slot />
-	</app-scroll-inview>
+	</AppScrollInview>
 </template>
 
 <style lang="stylus" scoped>

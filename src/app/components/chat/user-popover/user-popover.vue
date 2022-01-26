@@ -194,7 +194,7 @@ export default class AppChatUserPopover extends Vue {
 		<div class="fill-darker -info-container">
 			<div class="-avatar-container">
 				<div class="-avatar-img">
-					<app-user-avatar class="-avatar" :user="user" />
+					<AppUserAvatar class="-avatar" :user="user" />
 					<div class="-avatar-circle" />
 				</div>
 			</div>
@@ -202,13 +202,13 @@ export default class AppChatUserPopover extends Vue {
 			<div class="-names">
 				<div class="-displayname">
 					<b>{{ user.display_name }}</b>
-					<app-user-verified-tick class="-verified-icon" :user="user" />
+					<AppUserVerifiedTick class="-verified-icon" :user="user" />
 				</div>
 				<div class="-username text-muted">@{{ user.username }}</div>
 			</div>
 
 			<div v-if="isOnline !== null" class="-status">
-				<app-chat-user-online-status
+				<AppChatUserOnlineStatus
 					class="-status-bubble"
 					:is-online="isOnline"
 					:size="16"
@@ -218,14 +218,14 @@ export default class AppChatUserPopover extends Vue {
 			</div>
 
 			<div v-if="isOwner" class="-status">
-				<app-jolticon class="-status-icon" icon="crown" />
+				<AppJolticon class="-status-icon" icon="crown" />
 				&nbsp;
-				<translate>Room Owner</translate>
+				<AppTranslate>Room Owner</AppTranslate>
 			</div>
 			<div v-else-if="isModerator" class="-status">
-				<app-jolticon class="-status-icon" icon="star" />
+				<AppJolticon class="-status-icon" icon="star" />
 				&nbsp;
-				<translate>Moderator</translate>
+				<AppTranslate>Moderator</AppTranslate>
 			</div>
 		</div>
 		<div class="list-group list-group-dark">
@@ -233,26 +233,26 @@ export default class AppChatUserPopover extends Vue {
 				:to="{ name: 'profile.overview', params: { username: user.username } }"
 				class="list-group-item has-icon"
 			>
-				<app-jolticon icon="user" />
-				<translate>View Profile</translate>
+				<AppJolticon icon="user" />
+				<AppTranslate>View Profile</AppTranslate>
 			</router-link>
 			<a v-if="canMessage" class="list-group-item has-icon" @click="onClickSendMessage">
-				<app-jolticon icon="message" />
-				<translate>Send Message</translate>
+				<AppJolticon icon="message" />
+				<AppTranslate>Send Message</AppTranslate>
 			</a>
 			<template v-if="canModerate">
 				<template v-if="canChangeModerator">
 					<hr />
 					<template v-if="!isModerator">
 						<a class="list-group-item has-icon" @click="onClickPromoteModerator">
-							<app-jolticon icon="star" />
-							<translate>Promote to Moderator</translate>
+							<AppJolticon icon="star" />
+							<AppTranslate>Promote to Moderator</AppTranslate>
 						</a>
 					</template>
 					<template v-else>
 						<a class="list-group-item has-icon" @click="onClickDemoteModerator">
-							<app-jolticon icon="remove" notice />
-							<translate>Demote Moderator</translate>
+							<AppJolticon icon="remove" notice />
+							<AppTranslate>Demote Moderator</AppTranslate>
 						</a>
 					</template>
 				</template>
@@ -260,8 +260,8 @@ export default class AppChatUserPopover extends Vue {
 				<template v-if="canKick">
 					<hr />
 					<a class="list-group-item has-icon" @click="onClickKick">
-						<app-jolticon icon="logout" notice />
-						<translate>Kick from Room</translate>
+						<AppJolticon icon="logout" notice />
+						<AppTranslate>Kick from Room</AppTranslate>
 					</a>
 				</template>
 			</template>

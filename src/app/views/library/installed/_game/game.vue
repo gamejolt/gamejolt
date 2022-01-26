@@ -69,11 +69,11 @@ export default class AppLibraryInstalledGame extends Vue {
 		@mouseenter="isHovering = true"
 		@mouseleave="isHovering = false"
 	>
-		<app-game-thumbnail class="-thumb" :game="game._game" hide-pricing />
+		<AppGameThumbnail class="-thumb" :game="game._game" hide-pricing />
 
 		<div v-if="shouldShowControls" class="-meta-outer">
 			<div class="-meta">
-				<app-client-game-buttons
+				<AppClientGameButtons
 					:game="game._game"
 					overlay
 					has-installable-builds
@@ -89,7 +89,7 @@ export default class AppLibraryInstalledGame extends Vue {
 						{{ packageVersion }}
 					</template>
 					<template v-else>
-						<translate>library.installed.multiple_packages</translate>
+						<AppTranslate>library.installed.multiple_packages</AppTranslate>
 					</template>
 				</span>
 			</div>

@@ -362,7 +362,7 @@ export default class AppActivityFeedPost extends Vue {
 
 <template>
 	<div v-app-observe-dimensions="onResize" class="-container">
-		<app-activity-feed-post-blocked
+		<AppActivityFeedPostBlocked
 			v-if="shouldBlock"
 			:username="user.username"
 			@show="onUnhideBlock"
@@ -378,13 +378,13 @@ export default class AppActivityFeedPost extends Vue {
 		>
 			<div v-if="user" class="-header">
 				<div class="-header-content">
-					<app-user-card-hover :user="user" :disabled="!feed.shouldShowUserCards">
+					<AppUserCardHover :user="user" :disabled="!feed.shouldShowUserCards">
 						<div class="-header-avatar">
 							<div class="-header-avatar-inner">
-								<app-user-avatar :user="user" />
+								<AppUserAvatar :user="user" />
 							</div>
 						</div>
-					</app-user-card-hover>
+					</AppUserCardHover>
 
 					<div class="-header-byline">
 						<div class="-header-byline-name">
@@ -397,7 +397,7 @@ export default class AppActivityFeedPost extends Vue {
 									}"
 								>
 									{{ user.display_name }}
-									<app-user-verified-tick :user="user" />
+									<AppUserVerifiedTick :user="user" />
 								</router-link>
 							</strong>
 
@@ -424,7 +424,7 @@ export default class AppActivityFeedPost extends Vue {
 					</div>
 				</div>
 				<div class="-header-meta small text-muted">
-					<app-user-follow-widget
+					<AppUserFollowWidget
 						v-if="shouldShowFollow"
 						class="-header-meta-follow"
 						:user="user"
@@ -435,10 +435,10 @@ export default class AppActivityFeedPost extends Vue {
 
 					<span>
 						<span v-if="shouldShowIsPinned" class="tag">
-							<app-jolticon icon="thumbtack" />
-							<translate>Pinned</translate>
+							<AppJolticon icon="thumbtack" />
+							<AppTranslate>Pinned</AppTranslate>
 						</span>
-						<app-activity-feed-post-time
+						<AppActivityFeedPostTime
 							v-if="shouldShowDate"
 							:post="post"
 							:link="linkResolved"
@@ -447,14 +447,14 @@ export default class AppActivityFeedPost extends Vue {
 				</div>
 			</div>
 
-			<app-activity-feed-post-video
+			<AppActivityFeedPostVideo
 				v-if="post.hasVideo"
 				:item="item"
 				:post="post"
 				@query-param="onQueryParam"
 			/>
 
-			<app-activity-feed-post-media
+			<AppActivityFeedPostMedia
 				v-if="post.hasMedia"
 				:item="item"
 				:post="post"
@@ -463,38 +463,38 @@ export default class AppActivityFeedPost extends Vue {
 
 			<div ref="sticker-scroll" />
 
-			<app-sticker-target :controller="stickerTargetController" :disabled="!canPlaceSticker">
+			<AppStickerTarget :controller="stickerTargetController" :disabled="!canPlaceSticker">
 				<!--
 					This shouldn't ever really show a collapser. It's for the jokers that think it would
 					be fun to make a post with a bunch of new lines.
 					-->
-				<app-fade-collapse
+				<AppFadeCollapse
 					:collapse-height="400"
 					:is-open="isLeadOpen"
 					:animate="false"
 					@require-change="canToggleLeadChanged"
 				>
-					<app-content-viewer
+					<AppContentViewer
 						class="fireside-post-lead"
 						:source="post.lead_content"
 						:display-rules="displayRules"
 					/>
-				</app-fade-collapse>
-			</app-sticker-target>
+				</AppFadeCollapse>
+			</AppStickerTarget>
 
 			<a v-if="canToggleLead" class="hidden-text-expander" @click="toggleLead()" />
 
-			<app-sticker-controls-overlay>
-				<app-fireside-post-embed
+			<AppStickerControlsOverlay>
+				<AppFiresidePostEmbed
 					v-for="embed of post.embeds"
 					:key="embed.id"
 					:embed="embed"
 				/>
 
-				<app-activity-feed-post-text v-if="post.has_article" :item="item" :post="post" />
+				<AppActivityFeedPostText v-if="post.has_article" :item="item" :post="post" />
 
 				<div v-if="post.hasPoll" class="-poll" @click.stop>
-					<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
+					<AppPollVoting :poll="post.poll" :game="post.game" :user="post.user" />
 				</div>
 
 				<div
@@ -502,26 +502,26 @@ export default class AppActivityFeedPost extends Vue {
 					class="-reactions-container -controls-buffer"
 					@click.stop
 				>
-					<app-sticker-reactions
+					<AppStickerReactions
 						:controller="stickerTargetController"
 						@show="scrollToStickers()"
 					/>
 				</div>
 
-				<app-scroll-scroller
+				<AppScrollScroller
 					v-if="shouldShowCommunities"
 					class="-communities -controls-buffer"
 					horizontal
 				>
-					<app-community-pill
+					<AppCommunityPill
 						v-for="postCommunity of communities"
 						:key="postCommunity.id"
 						:community-link="postCommunity"
 					/>
-				</app-scroll-scroller>
-			</app-sticker-controls-overlay>
+				</AppScrollScroller>
+			</AppStickerControlsOverlay>
 
-			<app-post-controls
+			<AppPostControls
 				class="-controls"
 				:post="post"
 				:feed="feed"

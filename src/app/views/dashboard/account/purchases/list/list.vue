@@ -44,10 +44,10 @@ export default class RouteDashAccountPurchasesList extends BaseRouteComponent {
 		<table v-if="orders.length" class="table">
 			<thead>
 				<tr>
-					<th><translate>Order #</translate></th>
-					<th><translate>Item(s)</translate></th>
-					<th><translate>Purchase Date</translate></th>
-					<th class="text-right"><translate>Amount</translate></th>
+					<th><AppTranslate>Order #</AppTranslate></th>
+					<th><AppTranslate>Item(s)</AppTranslate></th>
+					<th><AppTranslate>Purchase Date</AppTranslate></th>
+					<th class="text-right"><AppTranslate>Amount</AppTranslate></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -72,7 +72,7 @@ export default class RouteDashAccountPurchasesList extends BaseRouteComponent {
 					</td>
 					<td class="text-right">
 						<span v-if="order._is_refunded" class="tag tag-notice">
-							<translate>Refunded</translate>
+							<AppTranslate>Refunded</AppTranslate>
 						</span>
 						{{ formatCurrency(order.total_amount) }}
 					</td>
@@ -82,10 +82,10 @@ export default class RouteDashAccountPurchasesList extends BaseRouteComponent {
 		<div v-else class="row">
 			<div class="col-md-6 col-centered">
 				<p class="lead text-center">
-					<translate>
+					<AppTranslate>
 						You haven't bought any games on the site yet. Once you do, you'll be able to
 						see all of your orders here and the details for each order.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 		</div>

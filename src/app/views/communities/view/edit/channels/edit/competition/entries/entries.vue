@@ -244,22 +244,22 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 
 <template>
 	<div>
-		<h2 class="sans-margin-top"><translate>Manage Jam Entries</translate></h2>
+		<h2 class="sans-margin-top"><AppTranslate>Manage Jam Entries</AppTranslate></h2>
 
 		<template v-if="isLoading">
-			<app-loading centered />
+			<AppLoading centered />
 		</template>
 		<template v-else-if="competition.periodNum === CompetitionPeriodPreComp">
 			<p>
-				<translate>
+				<AppTranslate>
 					The jam has not yet begun and has no entries. Check back later when the jam has
 					started.
-				</translate>
+				</AppTranslate>
 			</p>
 			<p class="help-block">
-				<translate>The Jam starts on:</translate>
+				<AppTranslate>The Jam starts on:</AppTranslate>
 
-				<app-community-competition-date
+				<AppCommunityCompetitionDate
 					:date="competition.starts_on"
 					:timezone="competition.timezone"
 				/>
@@ -267,18 +267,18 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 		</template>
 		<template v-else>
 			<template v-if="entryCount === 0">
-				<app-illustration :src="illNoCommentsSmall">
+				<AppIllustration :src="illNoCommentsSmall">
 					<p>
-						<translate v-if="competition.periodNum >= CompetitionPeriodVoting">
+						<AppTranslate v-if="competition.periodNum >= CompetitionPeriodVoting">
 							No new entries can be submitted to the jam, and none have been submitted
 							during its runtime.
-						</translate>
-						<translate v-else>
+						</AppTranslate>
+						<AppTranslate v-else>
 							There are currently no submissions entered into the jam yet. Once they
 							are entered, they will show up here.
-						</translate>
+						</AppTranslate>
 					</p>
-				</app-illustration>
+				</AppIllustration>
 			</template>
 
 			<template v-else>
@@ -299,7 +299,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 						</span>
 					</template>
 					<template v-else>
-						<translate>No entries have been hidden.</translate>
+						<AppTranslate>No entries have been hidden.</AppTranslate>
 					</template>
 				</p>
 
@@ -313,9 +313,9 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 										:to="getSortLocation('name')"
 										class="link-unstyled -header"
 									>
-										<span><translate>Title</translate></span>
+										<span><AppTranslate>Title</AppTranslate></span>
 										<span v-if="currentSort === 'name'">
-											<app-jolticon
+											<AppJolticon
 												v-app-tooltip="sortDirectionLabel"
 												:icon="sortIcon"
 											/>
@@ -328,9 +328,9 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 										:to="getSortLocation('user')"
 										class="link-unstyled -header"
 									>
-										<span><translate>Developer</translate></span>
+										<span><AppTranslate>Developer</AppTranslate></span>
 										<span v-if="currentSort === 'user'">
-											<app-jolticon
+											<AppJolticon
 												v-app-tooltip="sortDirectionLabel"
 												:icon="sortIcon"
 											/>
@@ -343,9 +343,9 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 										:to="getSortLocation('time')"
 										class="link-unstyled -header"
 									>
-										<span><translate>Entered</translate></span>
+										<span><AppTranslate>Entered</AppTranslate></span>
 										<span v-if="currentSort === 'time'">
-											<app-jolticon
+											<AppJolticon
 												v-app-tooltip="sortDirectionLabel"
 												:icon="sortIcon"
 											/>
@@ -358,9 +358,9 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 										:to="getSortLocation('visibility')"
 										class="link-unstyled -header"
 									>
-										<span><translate>Visibility</translate></span>
+										<span><AppTranslate>Visibility</AppTranslate></span>
 										<span v-if="currentSort === 'visibility'">
-											<app-jolticon
+											<AppJolticon
 												v-app-tooltip="sortDirectionLabel"
 												:icon="sortIcon"
 											/>
@@ -385,9 +385,9 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 										}"
 										class="-user-link"
 									>
-										<app-user-card-hover :user="entry.resource.developer">
+										<AppUserCardHover :user="entry.resource.developer">
 											<span class="-user-link">
-												<app-user-avatar-img
+												<AppUserAvatarImg
 													class="-avatar"
 													:user="entry.resource.developer"
 												/>
@@ -395,18 +395,18 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 													@{{ entry.resource.developer.username }}
 												</span>
 												&nbsp;
-												<app-user-verified-tick
+												<AppUserVerifiedTick
 													:user="entry.resource.developer"
 												/>
 											</span>
-										</app-user-card-hover>
+										</AppUserCardHover>
 									</router-link>
 								</td>
 								<td>
-									<app-time-ago :date="entry.added_on" />
+									<AppTimeAgo :date="entry.added_on" />
 								</td>
 								<td>
-									<app-button
+									<AppButton
 										v-app-tooltip="
 											entry.is_removed
 												? $gettext(`Readmit entry into the Jam`)
@@ -415,16 +415,16 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 										sm
 										@click="onClickRemoveEntry(entry)"
 									>
-										<translate v-if="entry.is_removed">Readmit Entry</translate>
-										<translate v-else>Hide Entry</translate>
-									</app-button>
+										<AppTranslate v-if="entry.is_removed">Readmit Entry</AppTranslate>
+										<AppTranslate v-else>Hide Entry</AppTranslate>
+									</AppButton>
 								</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
 
-				<app-pagination
+				<AppPagination
 					:total-items="entryCount"
 					:current-page="currentPage"
 					:items-per-page="perPage"
@@ -433,11 +433,11 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 				<!-- Probably on a too high page due to editing url. -->
 				<template v-if="entryCount > 0 && entries.length === 0">
 					<h4>
-						<translate>Whoops! There are no entries back here...</translate>
+						<AppTranslate>Whoops! There are no entries back here...</AppTranslate>
 					</h4>
-					<app-button :to="getFirstPageLocation()" icon="reply">
-						<translate>Go back</translate>
-					</app-button>
+					<AppButton :to="getFirstPageLocation()" icon="reply">
+						<AppTranslate>Go back</AppTranslate>
+					</AppButton>
 				</template>
 			</template>
 		</template>

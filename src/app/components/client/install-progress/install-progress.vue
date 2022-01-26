@@ -68,7 +68,7 @@ export default class AppClientInstallProgress extends Vue {
 			<strong>{{ ((packageProgress.progress || 0) * 100.0).toFixed(0) }}%</strong>
 		</p>
 
-		<app-progress-bar
+		<AppProgressBar
 			thin
 			:percent="(packageProgress.progress || 0) * 100.0"
 			:indeterminate="localPackage.isUnpacking"

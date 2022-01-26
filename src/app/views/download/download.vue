@@ -172,42 +172,42 @@ export default class RouteDownload extends BaseRouteComponent {
 
 <template>
 	<section v-if="isRouteBootstrapped" class="-section section">
-		<app-ad-widget
+		<AppAdWidget
 			v-if="!Screen.isMobile"
 			class="-leaderboard-ad"
 			size="leaderboard"
 			placement="top"
 		/>
 
-		<app-page-container xl>
+		<AppPageContainer xl>
 			<template v-if="Screen.isDesktop" #left>
-				<app-scroll-affix>
-					<app-ad-widget size="rectangle" placement="side" />
-				</app-scroll-affix>
+				<AppScrollAffix>
+					<AppAdWidget size="rectangle" placement="side" />
+				</AppScrollAffix>
 			</template>
 			<template v-if="Screen.isLg" #right>
-				<app-scroll-affix>
-					<app-ad-widget size="rectangle" placement="side" />
-				</app-scroll-affix>
+				<AppScrollAffix>
+					<AppAdWidget size="rectangle" placement="side" />
+				</AppScrollAffix>
 			</template>
 			<template #default>
-				<app-game-badge :game="game" full-bleed />
+				<AppGameBadge :game="game" full-bleed />
 
 				<h2 class="section-header">
 					<template v-if="type === 'build'">
-						<translate :translate-params="{ game: game.title }">
+						<AppTranslate :translate-params="{ game: game.title }">
 							Downloading %{ game }...
-						</translate>
+						</AppTranslate>
 					</template>
 					<template v-else-if="type === 'soundtrack'">
-						<translate :translate-params="{ game: game.title }">
+						<AppTranslate :translate-params="{ game: game.title }">
 							Downloading soundtrack for %{ game }...
-						</translate>
+						</AppTranslate>
 					</template>
 				</h2>
 
 				<p class="small text-muted">
-					<translate> Your download will begin in just a moment... </translate>
+					<AppTranslate> Your download will begin in just a moment... </AppTranslate>
 				</p>
 
 				<!--
@@ -216,14 +216,14 @@ export default class RouteDownload extends BaseRouteComponent {
 				something.
 				-->
 				<div :style="{ visibility: started ? 'hidden' : undefined }">
-					<app-loading :hide-label="true" />
+					<AppLoading :hide-label="true" />
 					<br />
 				</div>
 
-				<app-ad-widget size="video" placement="content" />
+				<AppAdWidget size="video" placement="content" />
 
 				<h2>
-					<translate>game.download.game.recommended_heading</translate>
+					<AppTranslate>game.download.game.recommended_heading</AppTranslate>
 				</h2>
 
 				<div class="scrollable-grid-xs">
@@ -233,7 +233,7 @@ export default class RouteDownload extends BaseRouteComponent {
 							:key="game.id"
 							class="scrollable-grid-item col-xs-10 col-sm-6"
 						>
-							<app-game-thumbnail
+							<AppGameThumbnail
 								v-app-track-event="'recommended-games:click:download'"
 								:game="game"
 							/>
@@ -241,7 +241,7 @@ export default class RouteDownload extends BaseRouteComponent {
 					</div>
 				</div>
 			</template>
-		</app-page-container>
+		</AppPageContainer>
 	</section>
 </template>
 

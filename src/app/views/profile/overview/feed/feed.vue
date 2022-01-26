@@ -140,11 +140,11 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 <template>
 	<div>
 		<!-- Spawn day -->
-		<app-user-spawn-day :user="user" @post-add="onPostAdded" />
+		<AppUserSpawnDay :user="user" @post-add="onPostAdded" />
 
-		<app-post-add-button v-if="isOwner" @add="onPostAdded" />
+		<AppPostAddButton v-if="isOwner" @add="onPostAdded" />
 
-		<app-nav-tab-list>
+		<AppNavTabList>
 			<ul>
 				<li>
 					<router-link
@@ -156,7 +156,7 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 							active: tab === 'active',
 						}"
 					>
-						<translate>Posts</translate>
+						<AppTranslate>Posts</AppTranslate>
 					</router-link>
 				</li>
 				<li v-app-tooltip="likeFeedTooltip">
@@ -170,8 +170,8 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 							active: tab === 'likes',
 						}"
 					>
-						<translate>Likes</translate>
-						<app-jolticon v-if="isLikeFeedDisabled" icon="subscribed" />
+						<AppTranslate>Likes</AppTranslate>
+						<AppJolticon v-if="isLikeFeedDisabled" icon="subscribed" />
 					</router-link>
 				</li>
 				<template v-if="isOwner">
@@ -187,7 +187,7 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 								active: tab === 'draft',
 							}"
 						>
-							<translate>Draft Posts</translate>
+							<AppTranslate>Draft Posts</AppTranslate>
 						</router-link>
 					</li>
 					<li>
@@ -202,41 +202,41 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 								active: tab === 'scheduled',
 							}"
 						>
-							<translate>Scheduled Posts</translate>
+							<AppTranslate>Scheduled Posts</AppTranslate>
 						</router-link>
 					</li>
 				</template>
 			</ul>
-		</app-nav-tab-list>
+		</AppNavTabList>
 
-		<app-illustration v-if="isLikeFeed && isLikeFeedDisabled && !isOwner" :src="illNoComments">
+		<AppIllustration v-if="isLikeFeed && isLikeFeedDisabled && !isOwner" :src="illNoComments">
 			<p>
-				<translate>This user has made their liked posts private.</translate>
+				<AppTranslate>This user has made their liked posts private.</AppTranslate>
 			</p>
-		</app-illustration>
-		<app-activity-feed-placeholder v-else-if="!feed || !feed.isBootstrapped" />
+		</AppIllustration>
+		<AppActivityFeedPlaceholder v-else-if="!feed || !feed.isBootstrapped" />
 		<template v-else>
-			<app-activity-feed
+			<AppActivityFeed
 				v-if="feed.hasItems"
 				:feed="feed"
 				@edit-post="onPostEdited"
 				@publish-post="onPostPublished"
 				@remove-post="onPostRemoved"
 			/>
-			<app-illustration v-else :src="illNoComments">
+			<AppIllustration v-else :src="illNoComments">
 				<p>
 					<template v-if="isOwner">
-						<translate v-if="isLikeFeed">You haven't liked anything yet.</translate>
-						<translate v-else>You haven't posted anything yet.</translate>
+						<AppTranslate v-if="isLikeFeed">You haven't liked anything yet.</AppTranslate>
+						<AppTranslate v-else>You haven't posted anything yet.</AppTranslate>
 					</template>
 					<template v-else>
-						<translate v-if="isLikeFeed">
+						<AppTranslate v-if="isLikeFeed">
 							This user hasn't liked anything yet.
-						</translate>
-						<translate v-else>This user hasn't posted anything yet.</translate>
+						</AppTranslate>
+						<AppTranslate v-else>This user hasn't posted anything yet.</AppTranslate>
 					</template>
 				</p>
-			</app-illustration>
+			</AppIllustration>
 		</template>
 	</div>
 </template>

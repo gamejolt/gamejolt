@@ -105,7 +105,7 @@ export default class AppKeyGame extends Vue {
 <template>
 	<div>
 		<div class="game-cover">
-			<app-media-item-cover
+			<AppMediaItemCover
 				v-if="game.header_media_item"
 				:media-item="game.header_media_item"
 			/>
@@ -114,7 +114,7 @@ export default class AppKeyGame extends Vue {
 		<!-- If this game is in a bundle, show a back button. -->
 		<template v-if="bundle">
 			<br />
-			<app-button
+			<AppButton
 				block
 				:to="{
 					name: 'key',
@@ -122,14 +122,14 @@ export default class AppKeyGame extends Vue {
 					query: {},
 				}"
 			>
-				<translate>Back to Bundle</translate>
-			</app-button>
+				<AppTranslate>Back to Bundle</AppTranslate>
+			</AppButton>
 		</template>
 
 		<div class="text-center">
 			<h1>{{ game.title }}</h1>
 			<h4>
-				<translate>by</translate>
+				<AppTranslate>by</AppTranslate>
 				{{ ' ' }}
 				<a class="link-unstyled" :href="Environment.baseUrl + game.developer.url">
 					{{ game.developer.display_name }}
@@ -151,27 +151,27 @@ export default class AppKeyGame extends Vue {
 			<div v-if="!app.user" class="alert full-bleed full-bleed-xs text-center">
 				<p>
 					<a :href="loginUrl">
-						<translate>
+						<AppTranslate>
 							Sign in to Game Jolt to be able to claim this game into your Library.
-						</translate>
+						</AppTranslate>
 					</a>
 				</p>
 			</div>
 			<p v-else>
-				<app-button primary block @click="claim">
-					<translate>Claim Game into Library</translate>
-				</app-button>
+				<AppButton primary block @click="claim">
+					<AppTranslate>Claim Game into Library</AppTranslate>
+				</AppButton>
 			</p>
 		</template>
 
-		<app-fade-collapse
+		<AppFadeCollapse
 			:collapse-height="isClaimOnly ? undefined : 400"
 			:is-open="showingFullDescription"
 			@require-change="canToggleDescription = $event"
 			@expand="showingFullDescription = true"
 		>
-			<app-content-viewer :source="game.description_content" />
-		</app-fade-collapse>
+			<AppContentViewer :source="game.description_content" />
+		</AppFadeCollapse>
 
 		<a
 			v-if="canToggleDescription"
@@ -190,16 +190,16 @@ export default class AppKeyGame extends Vue {
 					'alert-notice': msg.type === 'alert',
 				}"
 			>
-				<app-jolticon icon="notice" />
+				<AppJolticon icon="notice" />
 				<span v-html="msg.message" />
 			</div>
 
 			<h2>
-				<translate>Releases</translate>
+				<AppTranslate>Releases</AppTranslate>
 			</h2>
 
 			<div v-if="packagePayload && packagePayload.packages.length" class="packages-list">
-				<app-game-package-card
+				<AppGamePackageCard
 					v-for="pkg of packagePayload.packages"
 					:key="pkg.id"
 					:game="game"
@@ -212,7 +212,7 @@ export default class AppKeyGame extends Vue {
 			</div>
 
 			<div v-else class="alert alert-notice">
-				<translate>No releases yet.</translate>
+				<AppTranslate>No releases yet.</AppTranslate>
 			</div>
 		</template>
 	</div>

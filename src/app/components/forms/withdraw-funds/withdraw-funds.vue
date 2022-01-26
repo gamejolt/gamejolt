@@ -37,42 +37,42 @@ export default class FormWithdrawFunds extends mixins(Wrapper) implements FormOn
 </script>
 
 <template>
-	<app-form :controller="form">
-		<div class="alert"><translate>dash.funds.withdraw.form_help_html</translate></div>
+	<AppForm :controller="form">
+		<div class="alert"><AppTranslate>dash.funds.withdraw.form_help_html</AppTranslate></div>
 
-		<app-form-group
+		<AppFormGroup
 			v-if="!user.paypal_id"
 			name="email_address"
 			:label="$gettext(`dash.funds.withdraw.email_label`)"
 		>
-			<p class="help-block above"><translate>dash.funds.withdraw.email_help</translate></p>
-			<app-form-control type="email" />
-			<app-form-control-errors />
-		</app-form-group>
+			<p class="help-block above"><AppTranslate>dash.funds.withdraw.email_help</AppTranslate></p>
+			<AppFormControl type="email" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
 		<div v-else class="form-group">
-			<label class="control-label"><translate>Current PayPal Account</translate></label>
+			<label class="control-label"><AppTranslate>Current PayPal Account</AppTranslate></label>
 			<div class="form-static">{{ user.paypal_email_address }}</div>
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					You can link a different PayPal account in your payment setup.
-				</translate>
+				</AppTranslate>
 				{{ ' ' }}
 				<router-link :to="{ name: 'dash.account.financials' }">
-					<translate>Go to your financials page.</translate>
+					<AppTranslate>Go to your financials page.</AppTranslate>
 				</router-link>
 			</p>
 		</div>
 
-		<app-form-group name="amount" :label="$gettext(`dash.funds.withdraw.amount_label`)">
+		<AppFormGroup name="amount" :label="$gettext(`dash.funds.withdraw.amount_label`)">
 			<p class="help-block above">
-				<translate :translate-params="{ amount: formatCurrency(minAmount * 100) }">
+				<AppTranslate :translate-params="{ amount: formatCurrency(minAmount * 100) }">
 					The minimum amount you can withdraw at this time is %{ amount }.
-				</translate>
+				</AppTranslate>
 			</p>
 			<div class="input-group">
 				<span class="input-group-addon">$</span>
-				<app-form-control
+				<AppFormControl
 					type="currency"
 					step="1"
 					:validators="[
@@ -81,11 +81,11 @@ export default class FormWithdrawFunds extends mixins(Wrapper) implements FormOn
 					]"
 				/>
 			</div>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-button>
-			<translate>dash.funds.withdraw.submit_button</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton>
+			<AppTranslate>dash.funds.withdraw.submit_button</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

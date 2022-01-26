@@ -29,7 +29,7 @@ export default class AppAnalyticsReportTopComposition extends Vue {
 		-->
 		<div :class="reportData.graph !== null ? 'col-sm-8' : 'col-xs-12'">
 			<div v-if="!reportData.hasData" class="alert">
-				<translate>No data yet.</translate>
+				<AppTranslate>No data yet.</AppTranslate>
 			</div>
 
 			<table v-if="reportData.hasData" class="table table-striped table-condensed">
@@ -88,7 +88,7 @@ export default class AppAnalyticsReportTopComposition extends Vue {
 			v-if="!Screen.isXs && reportData.hasData && reportData.graph !== null"
 			class="col-sm-4"
 		>
-			<app-graph type="doughnut" :dataset="reportData.graph" />
+			<AppGraph type="doughnut" :dataset="reportData.graph" />
 		</div>
 	</div>
 </template>

@@ -23,19 +23,19 @@ export default class AppCommunitySidebarModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-body">
-			<app-community-sidebar
+			<AppCommunitySidebar
 				:is-editing="isEditing"
 				:community="community"
 				:sidebar-data="sidebarData"
 			/>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

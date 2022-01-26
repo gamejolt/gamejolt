@@ -122,10 +122,10 @@ export default class AppShellSidebarLibrary extends Vue {
 					active-class="active"
 				>
 					<span class="shell-nav-icon">
-						<app-jolticon icon="compass-needle" />
+						<AppJolticon icon="compass-needle" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>Explore</translate>
+						<AppTranslate>Explore</AppTranslate>
 					</span>
 				</router-link>
 			</li>
@@ -140,10 +140,10 @@ export default class AppShellSidebarLibrary extends Vue {
 					:class="{ active: ($route.name || '').startsWith('discover.games.') }"
 				>
 					<span class="shell-nav-icon">
-						<app-jolticon icon="game" />
+						<AppJolticon icon="game" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>Store</translate>
+						<AppTranslate>Store</AppTranslate>
 					</span>
 				</router-link>
 			</li>
@@ -155,10 +155,10 @@ export default class AppShellSidebarLibrary extends Vue {
 					:class="{ active: $route.name && $route.name.indexOf('search') === 0 }"
 				>
 					<span class="shell-nav-icon">
-						<app-jolticon icon="search" />
+						<AppJolticon icon="search" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>Search</translate>
+						<AppTranslate>Search</AppTranslate>
 					</span>
 				</router-link>
 			</li>
@@ -172,10 +172,10 @@ export default class AppShellSidebarLibrary extends Vue {
 					active-class="active"
 				>
 					<span class="shell-nav-icon">
-						<app-jolticon icon="download-box" />
+						<AppJolticon icon="download-box" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>Installed Games</translate>
+						<AppTranslate>Installed Games</AppTranslate>
 					</span>
 				</router-link>
 			</li>
@@ -187,10 +187,10 @@ export default class AppShellSidebarLibrary extends Vue {
 					active-class="active"
 				>
 					<span class="shell-nav-icon">
-						<app-jolticon icon="user" />
+						<AppJolticon icon="user" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>library.nav.developer</translate>
+						<AppTranslate>library.nav.developer</AppTranslate>
 					</span>
 				</router-link>
 			</li>
@@ -202,10 +202,10 @@ export default class AppShellSidebarLibrary extends Vue {
 					active-class="active"
 				>
 					<span class="shell-nav-icon">
-						<app-jolticon icon="subscribe" />
+						<AppJolticon icon="subscribe" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>library.nav.followed</translate>
+						<AppTranslate>library.nav.followed</AppTranslate>
 					</span>
 				</router-link>
 			</li>
@@ -217,10 +217,10 @@ export default class AppShellSidebarLibrary extends Vue {
 					active-class="active"
 				>
 					<span class="shell-nav-icon">
-						<app-jolticon icon="heart-filled" />
+						<AppJolticon icon="heart-filled" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>Owned Games</translate>
+						<AppTranslate>Owned Games</AppTranslate>
 					</span>
 				</router-link>
 			</li>
@@ -238,10 +238,10 @@ export default class AppShellSidebarLibrary extends Vue {
 					"
 				>
 					<span class="shell-nav-icon">
-						<app-jolticon icon="phone" />
+						<AppJolticon icon="phone" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>Get the Mobile App</translate>
+						<AppTranslate>Get the Mobile App</AppTranslate>
 					</span>
 				</router-link>
 			</li>
@@ -258,10 +258,10 @@ export default class AppShellSidebarLibrary extends Vue {
 					"
 				>
 					<span class="shell-nav-icon">
-						<app-jolticon icon="client" />
+						<AppJolticon icon="client" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>Get the Desktop App</translate>
+						<AppTranslate>Get the Desktop App</AppTranslate>
 					</span>
 				</router-link>
 			</li>
@@ -270,7 +270,7 @@ export default class AppShellSidebarLibrary extends Vue {
 		<template v-if="app.user">
 			<template v-if="bundleCollections.length">
 				<div class="nav-heading">
-					<translate>library.nav.bundles</translate>
+					<AppTranslate>library.nav.bundles</AppTranslate>
 					<span class="badge">
 						{{ bundleCollectionsLength }}
 					</span>
@@ -289,7 +289,7 @@ export default class AppShellSidebarLibrary extends Vue {
 							:title="bundleCollection.name"
 						>
 							<span class="shell-nav-icon">
-								<app-jolticon icon="bundle" />
+								<AppJolticon icon="bundle" />
 							</span>
 							<span class="shell-nav-label">
 								{{ bundleCollection.name }}
@@ -302,22 +302,22 @@ export default class AppShellSidebarLibrary extends Vue {
 			<!-- Playlists -->
 			<template v-if="isLibraryBootstrapped">
 				<div class="nav-heading" :title="$gettext(`library.nav.playlists`)">
-					<translate>library.nav.playlists</translate>
+					<AppTranslate>library.nav.playlists</AppTranslate>
 					<span class="badge">
 						{{ collectionsLength }}
 					</span>
 				</div>
 
 				<div class="nav-controls">
-					<app-button
+					<AppButton
 						v-app-track-event="`sidebar:playlist-add`"
 						primary
 						block
 						class="offline-disable"
 						@click="showAddPlaylistModal"
 					>
-						<translate>library.nav.new_playlist_button</translate>
-					</app-button>
+						<AppTranslate>library.nav.new_playlist_button</AppTranslate>
+					</AppButton>
 				</div>
 
 				<div v-if="collections.length > 0" class="nav-controls">
@@ -338,7 +338,7 @@ export default class AppShellSidebarLibrary extends Vue {
 						<li class="offline-disable">
 							<a @click="toggleFolder(key)">
 								<span class="shell-nav-icon">
-									<app-jolticon
+									<AppJolticon
 										:icon="
 											openFolders.indexOf(key) === -1
 												? 'folder'
@@ -348,19 +348,19 @@ export default class AppShellSidebarLibrary extends Vue {
 								</span>
 								{{ playlistFolders[key].title }}
 							</a>
-							<app-expand :when="openFolders.indexOf(key) !== -1">
-								<app-shell-sidebar-collection-list
+							<AppExpand :when="openFolders.indexOf(key) !== -1">
+								<AppShellSidebarCollectionList
 									:collections="playlistFolders[key].collections.value"
 									:filter="playlistFilterQuery"
 									:should-sort="key === 'developers'"
 								/>
-							</app-expand>
+							</AppExpand>
 						</li>
 					</ul>
 				</div>
 
 				<!-- Main Playlists (not in folders) -->
-				<app-shell-sidebar-collection-list
+				<AppShellSidebarCollectionList
 					:collections="mainPlaylists"
 					:filter="playlistFilterQuery"
 				/>

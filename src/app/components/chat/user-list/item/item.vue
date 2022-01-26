@@ -139,14 +139,14 @@ export default class AppChatUserListItem extends Vue {
 </script>
 
 <template>
-	<app-scroll-inview
+	<AppScrollInview
 		tag="li"
 		class="-container"
 		:config="InviewConfig"
 		@inview="isInview = true"
 		@outview="isInview = false"
 	>
-		<app-popper
+		<AppPopper
 			popover-class="fill-darkest"
 			trigger="right-click"
 			placement="bottom"
@@ -173,7 +173,7 @@ export default class AppChatUserListItem extends Vue {
 							<div class="-avatar">
 								<template v-if="user">
 									<img :src="user.img_avatar" />
-									<app-chat-user-online-status
+									<AppChatUserOnlineStatus
 										v-if="isOnline !== null"
 										class="-avatar-status"
 										:is-online="isOnline"
@@ -181,7 +181,7 @@ export default class AppChatUserListItem extends Vue {
 									/>
 								</template>
 								<div v-else class="-group-icon">
-									<app-jolticon icon="users" />
+									<AppJolticon icon="users" />
 								</div>
 							</div>
 						</div>
@@ -197,20 +197,20 @@ export default class AppChatUserListItem extends Vue {
 			<template #popover>
 				<div class="fill-darker">
 					<div class="list-group list-group-dark">
-						<app-chat-notification-settings :room-id="roomId" :is-pm-room="!!user" />
+						<AppChatNotificationSettings :room-id="roomId" :is-pm-room="!!user" />
 
 						<template v-if="!user">
 							<hr />
 							<a class="list-group-item has-icon" @click="leaveRoom">
-								<app-jolticon icon="logout" notice />
-								<translate>Leave Room</translate>
+								<AppJolticon icon="logout" notice />
+								<AppTranslate>Leave Room</AppTranslate>
 							</a>
 						</template>
 					</div>
 				</div>
 			</template>
-		</app-popper>
-	</app-scroll-inview>
+		</AppPopper>
+	</AppScrollInview>
 </template>
 
 <style lang="stylus" scoped>

@@ -166,7 +166,7 @@ export default class AppGameFollowWidget extends Vue {
 </script>
 
 <template>
-	<app-popper
+	<AppPopper
 		class="game-follow-widget"
 		popover-class="fill-darkest"
 		trigger="manual"
@@ -175,7 +175,7 @@ export default class AppGameFollowWidget extends Vue {
 		:block="block"
 		@click-away="onFollowPopoverDismissed"
 	>
-		<app-button
+		<AppButton
 			:id="widgetId"
 			v-app-auth-required
 			v-app-tooltip="tooltip"
@@ -191,24 +191,24 @@ export default class AppGameFollowWidget extends Vue {
 		>
 			<template v-if="!circle">
 				<template v-if="!game.is_following">
-					<translate>Follow</translate>
+					<AppTranslate>Follow</AppTranslate>
 				</template>
 				<template v-else>
-					<translate>Following</translate>
+					<AppTranslate>Following</AppTranslate>
 				</template>
 			</template>
-		</app-button>
+		</AppButton>
 
 		<template #popover>
 			<div class="well">
 				<p class="small">
-					<translate>
+					<AppTranslate>
 						Would you also like to follow this developer? You will get notified when
 						they release new games.
-					</translate>
+					</AppTranslate>
 				</p>
-				<app-user-follow-widget :user="game.developer" block location="gameFollow" />
+				<AppUserFollowWidget :user="game.developer" block location="gameFollow" />
 			</div>
 		</template>
-	</app-popper>
+	</AppPopper>
 </template>

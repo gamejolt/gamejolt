@@ -294,25 +294,25 @@ export default class AppFiresideStream extends Vue {
 		<template v-if="hasVideo">
 			<template v-if="isLoadingVideo">
 				<div class="-overlay -visible-center">
-					<app-loading centered stationary no-color hide-label />
+					<AppLoading centered stationary no-color hide-label />
 				</div>
 			</template>
 			<template v-else>
 				<div :key="rtcUser.uid">
-					<app-fireside-video
+					<AppFiresideVideo
 						v-if="shouldShowVideo"
 						class="-video-player -click-target"
 						:rtc-user="rtcUser"
 					/>
-					<app-fireside-desktop-audio v-if="shouldPlayDesktopAudio" :rtc-user="rtcUser" />
-					<app-fireside-video-stats v-if="shouldShowVideoStats" @click.capture.stop />
+					<AppFiresideDesktopAudio v-if="shouldPlayDesktopAudio" :rtc-user="rtcUser" />
+					<AppFiresideVideoStats v-if="shouldShowVideoStats" @click.capture.stop />
 				</div>
 			</template>
 		</template>
 		<template v-else>
 			<div class="-overlay -visible-center">
 				<div class="-host-wrapper">
-					<app-fireside-host-thumb-indicator class="-host" :host="rtcUser" />
+					<AppFiresideHostThumbIndicator class="-host" :host="rtcUser" />
 				</div>
 			</div>
 		</template>
@@ -330,7 +330,7 @@ export default class AppFiresideStream extends Vue {
 							ref="paused"
 							class="-paused-indicator -click-target anim-fade-leave-shrink"
 						>
-							<app-jolticon class="-paused-indicator-icon" icon="play" />
+							<AppJolticon class="-paused-indicator-icon" icon="play" />
 						</div>
 					</transition>
 				</template>
@@ -342,15 +342,15 @@ export default class AppFiresideStream extends Vue {
 						:class="{ '-fade-top': !shouldDarkenAll }"
 					>
 						<div style="flex: auto; overflow: hidden">
-							<app-fireside-header is-overlay />
+							<AppFiresideHeader is-overlay />
 							<div class="-overlay-members">
-								<translate
+								<AppTranslate
 									:translate-n="memberCount"
 									:translate-params="{ count: formatNumber(memberCount) }"
 									translate-plural="%{ count } members"
 								>
 									%{ count } member
-								</translate>
+								</AppTranslate>
 							</div>
 						</div>
 					</div>
@@ -365,7 +365,7 @@ export default class AppFiresideStream extends Vue {
 						<div class="-overlay-bottom -control" @click.stop>
 							<div class="-video-controls">
 								<div v-if="hasVideo && !hasHosts">
-									<app-button
+									<AppButton
 										circle
 										trans
 										overlay
@@ -375,8 +375,8 @@ export default class AppFiresideStream extends Vue {
 								</div>
 
 								<div v-if="hasVolumeControls" class="-volume">
-									<app-jolticon icon="audio" />
-									<app-slider
+									<AppJolticon icon="audio" />
+									<AppSlider
 										class="-volume-slider"
 										:percent="desktopVolume"
 										@scrub="onVolumeScrub"
@@ -385,7 +385,7 @@ export default class AppFiresideStream extends Vue {
 							</div>
 						</div>
 
-						<app-fireside-host-list
+						<AppFiresideHostList
 							v-if="hasHosts"
 							class="-hosts"
 							hide-thumb-options
@@ -410,7 +410,7 @@ export default class AppFiresideStream extends Vue {
 					'-super-hot-streak': stickerStreak.count >= 10,
 				}"
 			>
-				<translate v-if="Screen.isDesktop">STREAK</translate>
+				<AppTranslate v-if="Screen.isDesktop">STREAK</AppTranslate>
 				x{{ streakCount }}
 			</div>
 

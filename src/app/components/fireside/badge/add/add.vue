@@ -52,7 +52,7 @@ export default class AppFiresideBadgeAdd extends Vue {
 </script>
 
 <template>
-	<app-theme
+	<AppTheme
 		v-app-tooltip.touchable="
 			!community || community.is_member
 				? null
@@ -71,19 +71,19 @@ export default class AppFiresideBadgeAdd extends Vue {
 			<div class="-content">
 				<h4 class="sans-margin -title">
 					<small class="-subtitle">
-						<translate>Stoke the flames</translate>
+						<AppTranslate>Stoke the flames</AppTranslate>
 					</small>
 					<br />
 					<template v-if="isCommunity">
-						<translate>Start a fireside in this community!</translate>
+						<AppTranslate>Start a fireside in this community!</AppTranslate>
 					</template>
 					<template v-else>
-						<translate>Start a fireside!</translate>
+						<AppTranslate>Start a fireside!</AppTranslate>
 					</template>
 				</h4>
 			</div>
 		</div>
-	</app-theme>
+	</AppTheme>
 </template>
 
 <style lang="stylus" scoped>

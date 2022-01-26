@@ -10,7 +10,7 @@ const { user } = useCommonStore();
 <template>
 	<div class="post-add-button sheet sheet-elevate">
 		<span class="-avatar">
-			<app-user-avatar-img :user="user" />
+			<AppUserAvatarImg :user="user" />
 		</span>
 		<div class="-input">
 			<AppFormControl

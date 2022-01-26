@@ -90,44 +90,44 @@ export default class RouteApproveLogin extends BaseRouteComponent {
 <template>
 	<div class="anim-fade-in-up">
 		<h2 class="section-header">
-			<translate>You must approve this device</translate>
+			<AppTranslate>You must approve this device</AppTranslate>
 		</h2>
 
 		<p>
-			<translate>
+			<AppTranslate>
 				We've sent you an email with a link to approve this device. We are doing this in
 				order to protect your account.
-			</translate>
+			</AppTranslate>
 		</p>
 
 		<div v-if="isPolling" class="-polling">
 			<p class="small text-muted">
-				<translate>
+				<AppTranslate>
 					If you don't see the email within a few minutes, please check your spam folder.
 					It might have gobbled it up.
-				</translate>
+				</AppTranslate>
 			</p>
 		</div>
 		<template v-else>
 			<div class="-error alert alert-notice">
-				<translate v-if="isExpired">
+				<AppTranslate v-if="isExpired">
 					Oh no! This login request has expired. Please try logging in again.
-				</translate>
-				<translate v-else-if="isRejected">
+				</AppTranslate>
+				<AppTranslate v-else-if="isRejected">
 					Oh no! This login request got rejected.
-				</translate>
+				</AppTranslate>
 			</div>
 
-			<app-button class="-back-button" :to="{ name: 'auth.login' }" block>
-				<translate>Go Back</translate>
-			</app-button>
+			<AppButton class="-back-button" :to="{ name: 'auth.login' }" block>
+				<AppTranslate>Go Back</AppTranslate>
+			</AppButton>
 		</template>
 
 		<!--
 			We poll to see if their account gets authorized or not.
 			When it does, we can log them in.
 		-->
-		<app-progress-poller
+		<AppProgressPoller
 			v-if="pollingToken"
 			:url="`/web/auth/poll-blocked-login/${pollingToken}`"
 			@complete="onApproved"

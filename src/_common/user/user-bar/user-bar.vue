@@ -39,7 +39,7 @@ export default class AppUserBar extends Vue {
 				<ul class="navbar-items">
 					<li>
 						<a class="user-bar-user" :href="userLink">
-							<app-user-avatar-img class="user-bar-avatar" :user="user" />
+							<AppUserAvatarImg class="user-bar-avatar" :user="user" />
 
 							<span class="user-bar-username">
 								{{ user.username }}

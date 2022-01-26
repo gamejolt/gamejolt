@@ -88,7 +88,7 @@ export default class AppChatWindowSend extends Vue {
 	<!-- Message Sending -->
 	<div class="chat-window-send fill-backdrop">
 		<div class="-container">
-			<app-chat-window-send-form
+			<AppChatWindowSendForm
 				:single-line-mode="isSingleLineMode"
 				:room="room"
 				@submit="submit($event)"

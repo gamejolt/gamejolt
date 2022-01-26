@@ -14,14 +14,14 @@ export default class AppGameAddBanner extends Vue {}
 	<div class="add-game-banner">
 		<div class="-row container-xl">
 			<div class="-message">
-				<translate>
+				<AppTranslate>
 					Game Jolt's Store is an open platform to share your games with the world.
-				</translate>
+				</AppTranslate>
 			</div>
 			<div v-app-auth-required class="-button">
-				<app-button solid :to="{ name: 'dash.games.add' }">
-					<translate>Add Your Game</translate>
-				</app-button>
+				<AppButton solid :to="{ name: 'dash.games.add' }">
+					<AppTranslate>Add Your Game</AppTranslate>
+				</AppButton>
 			</div>
 		</div>
 		<hr />

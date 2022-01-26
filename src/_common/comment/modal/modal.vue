@@ -33,22 +33,22 @@ export default class AppCommentModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-body">
-			<app-comment-widget
+			<AppCommentWidget
 				:model="model"
 				:autofocus="autofocusAdd"
 				:initial-tab="initialTab"
 				:display-mode="displayMode"
 			/>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" scoped>

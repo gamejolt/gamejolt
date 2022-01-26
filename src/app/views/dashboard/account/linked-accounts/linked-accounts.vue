@@ -214,7 +214,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 	<div>
 		<div class="row linked-accounts-list">
 			<div class="col-md-8 col-lg-6">
-				<app-linked-account
+				<AppLinkedAccount
 					:account="facebookAccount"
 					:disabled="loading"
 					provider="facebook"
@@ -224,7 +224,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 				/>
 			</div>
 			<div class="col-md-8 col-lg-6">
-				<app-linked-account
+				<AppLinkedAccount
 					:account="twitterAccount"
 					:disabled="loading"
 					provider="twitter"
@@ -234,7 +234,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 				/>
 			</div>
 			<div class="col-md-8 col-lg-6">
-				<app-linked-account
+				<AppLinkedAccount
 					:account="googleAccount"
 					:disabled="loading"
 					provider="google"
@@ -244,7 +244,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 				/>
 			</div>
 			<div class="col-md-8 col-lg-6">
-				<app-linked-account
+				<AppLinkedAccount
 					:account="twitchAccount"
 					:disabled="loading"
 					provider="twitch"
@@ -254,7 +254,7 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 				/>
 			</div>
 			<div class="col-md-8 col-lg-6">
-				<app-linked-account
+				<AppLinkedAccount
 					:account="tumblrAccount"
 					:disabled="loading"
 					provider="tumblr"

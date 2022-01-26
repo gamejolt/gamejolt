@@ -22,24 +22,24 @@ export default class AppCommunityChannelChangeUrlModal extends mixins(BaseModal)
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>Change Channel URL</translate>
+				<AppTranslate>Change Channel URL</AppTranslate>
 			</h2>
 		</div>
 		<div class="modal-body">
-			<form-community-channel-change-url
+			<FormCommunityChannelChangeUrl
 				:model="channel"
 				:community="community"
 				:channels="channels"
 				@submit="onSubmit"
 			/>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

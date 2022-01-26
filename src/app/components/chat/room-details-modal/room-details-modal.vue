@@ -31,21 +31,21 @@ export default class AppChatRoomDetailsModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>Edit group details</translate>
+				<AppTranslate>Edit group details</AppTranslate>
 			</h2>
 		</div>
 
 		<div class="modal-body">
-			<form-room-details :model="room" @submit="onSubmit($event)" />
+			<FormRoomDetails :model="room" @submit="onSubmit($event)" />
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

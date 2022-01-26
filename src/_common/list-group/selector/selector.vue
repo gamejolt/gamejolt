@@ -22,10 +22,10 @@ export default class AppListGroupSelector extends Vue {
 
 <template>
 	<div class="list-group">
-		<app-popper popover-class="fill-bg" block track-trigger-width hide-on-state-change>
+		<AppPopper popover-class="fill-bg" block track-trigger-width hide-on-state-change>
 			<a class="list-group-item has-addon">
 				<div class="list-group-item-addon">
-					<app-jolticon icon="chevron-down" />
+					<AppJolticon icon="chevron-down" />
 				</div>
 
 				<slot :item="current" />
@@ -40,13 +40,13 @@ export default class AppListGroupSelector extends Vue {
 						@click="select(item)"
 					>
 						<div class="list-group-item-addon">
-							<app-jolticon v-if="current && current.id === item.id" icon="check" />
+							<AppJolticon v-if="current && current.id === item.id" icon="check" />
 						</div>
 
 						<slot :item="item" />
 					</a>
 				</div>
 			</template>
-		</app-popper>
+		</AppPopper>
 	</div>
 </template>

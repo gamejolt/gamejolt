@@ -75,7 +75,7 @@ export default class RouteLandingIndieaf extends BaseRouteComponent {
 				<div class="row">
 					<div class="col-sm-7 col-centered">
 						<div class="social-widgets text-center">
-							<app-social-twitter-share
+							<AppSocialTwitterShare
 								:content="
 									$gettext('Get indie.AF with Game Jolt Sites #indiedev #gamedev')
 								"
@@ -83,7 +83,7 @@ export default class RouteLandingIndieaf extends BaseRouteComponent {
 
 							<span class="dot-separator hidden-xs" />
 
-							<app-social-facebook-like />
+							<AppSocialFacebookLike />
 						</div>
 						<br />
 
@@ -316,7 +316,7 @@ export default class RouteLandingIndieaf extends BaseRouteComponent {
 
 							<div class="row">
 								<div class="col-lg-8 col-centered">
-									<app-auth-join />
+									<AppAuthJoin />
 								</div>
 							</div>
 						</section>

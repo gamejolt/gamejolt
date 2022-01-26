@@ -52,7 +52,7 @@ export default class AppColorpicker extends Vue {
 
 <template>
 	<div class="colorpicker">
-		<app-popper>
+		<AppPopper>
 			<div
 				class="color"
 				:class="{ empty: !colors.hex }"
@@ -68,19 +68,19 @@ export default class AppColorpicker extends Vue {
 
 					<div class="colorpicker-well">
 						<div class="col">
-							<app-button primary solid block @click="accept">
-								<translate>Accept</translate>
-							</app-button>
+							<AppButton primary solid block @click="accept">
+								<AppTranslate>Accept</AppTranslate>
+							</AppButton>
 						</div>
 						<div class="col">
-							<app-button trans block @click="cancel">
-								<translate>Cancel</translate>
-							</app-button>
+							<AppButton trans block @click="cancel">
+								<AppTranslate>Cancel</AppTranslate>
+							</AppButton>
 						</div>
 					</div>
 				</div>
 			</template>
-		</app-popper>
+		</AppPopper>
 	</div>
 </template>
 

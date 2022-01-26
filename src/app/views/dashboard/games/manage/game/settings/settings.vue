@@ -83,7 +83,7 @@ export default class RouteDashGamesManageGameSettings extends BaseRouteComponent
 	<div class="row">
 		<div class="col-md-8">
 			<template v-if="!isCollaborator">
-				<form-game-settings :model="game" @submit="onSaved" />
+				<FormGameSettings :model="game" @submit="onSaved" />
 
 				<br />
 			</template>
@@ -91,36 +91,36 @@ export default class RouteDashGamesManageGameSettings extends BaseRouteComponent
 			<div v-if="!isWizard" class="-danger-zone well fill-offset">
 				<template v-if="isCollaborator">
 					<h4>
-						<translate>Leave Project</translate>
+						<AppTranslate>Leave Project</AppTranslate>
 					</h4>
 
 					<div class="page-help">
 						<p>
-							<translate>
+							<AppTranslate>
 								You are currently a collaborator on this project. Leaving the
 								project will revoke all management access to the game, including any
 								devlog posts you may have written for it.
-							</translate>
+							</AppTranslate>
 						</p>
 					</div>
 
-					<app-button @click="routeStore.leaveProject()">
-						<translate>Leave Project</translate>
-					</app-button>
+					<AppButton @click="routeStore.leaveProject()">
+						<AppTranslate>Leave Project</AppTranslate>
+					</AppButton>
 				</template>
 				<template v-else>
 					<template v-if="!isUnlisted">
 						<h4>
-							<translate>Unlist Game</translate>
+							<AppTranslate>Unlist Game</AppTranslate>
 						</h4>
 
 						<div class="page-help">
 							<p>
-								<translate>
+								<AppTranslate>
 									Your game page is currently published. You can unlist it to hide
 									it from the game listings. People with the link will still be
 									able to view it.
-								</translate>
+								</AppTranslate>
 							</p>
 							<p v-if="hasCompetitionEntries" v-translate>
 								<b>Warning:</b>
@@ -129,40 +129,40 @@ export default class RouteDashGamesManageGameSettings extends BaseRouteComponent
 							</p>
 						</div>
 
-						<app-button @click="routeStore.hide()">
-							<translate>Unlist Game</translate>
-						</app-button>
+						<AppButton @click="routeStore.hide()">
+							<AppTranslate>Unlist Game</AppTranslate>
+						</AppButton>
 					</template>
 
 					<template v-if="!isCanceled">
 						<h4>
-							<translate>Cancel Game</translate>
+							<AppTranslate>Cancel Game</AppTranslate>
 						</h4>
 
 						<div class="page-help">
 							<p>
-								<translate>
+								<AppTranslate>
 									Canceling your game will signal to everyone that you're no
 									longer working on it. People will still be able to view the game
 									page and access your published packages, but it will not show in
 									game listings.
-								</translate>
+								</AppTranslate>
 							</p>
 							<p>
-								<translate>
+								<AppTranslate>
 									If you've transitioned development off of Game Jolt, you must
 									remove your game instead.
-								</translate>
+								</AppTranslate>
 							</p>
 						</div>
 
-						<app-button @click="routeStore.cancel()">
-							<translate>Cancel Game</translate>
-						</app-button>
+						<AppButton @click="routeStore.cancel()">
+							<AppTranslate>Cancel Game</AppTranslate>
+						</AppButton>
 					</template>
 
 					<h4>
-						<translate>Remove Game</translate>
+						<AppTranslate>Remove Game</AppTranslate>
 					</h4>
 
 					<div class="page-help">
@@ -178,14 +178,14 @@ export default class RouteDashGamesManageGameSettings extends BaseRouteComponent
 					</div>
 
 					<div v-if="game.has_sales" class="alert">
-						<translate>
+						<AppTranslate>
 							You can't remove games with active sales at this time.
-						</translate>
+						</AppTranslate>
 					</div>
 
-					<app-button :disabled="game.has_sales" @click="routeStore.removeGame()">
-						<translate>Remove Game</translate>
-					</app-button>
+					<AppButton :disabled="game.has_sales" @click="routeStore.removeGame()">
+						<AppTranslate>Remove Game</AppTranslate>
+					</AppButton>
 				</template>
 			</div>
 		</div>

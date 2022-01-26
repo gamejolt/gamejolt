@@ -26,7 +26,7 @@ export default class AppCommunityCardPlaceholder extends Vue {
 				<div class="-name" />
 				<div class="-member-counts" />
 				<div class="-controls">
-					<app-button-placeholder block />
+					<AppButtonPlaceholder block />
 				</div>
 			</div>
 		</div>

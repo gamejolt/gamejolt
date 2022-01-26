@@ -129,7 +129,7 @@ export default class AppTrophyModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="-content">
 			<div class="-background">
 				<div class="-bg" :class="bgClass"></div>
@@ -137,9 +137,9 @@ export default class AppTrophyModal extends mixins(BaseModal) {
 			</div>
 			<div class="-content-inner">
 				<div class="modal-controls">
-					<app-button @click="modal.dismiss()">
-						<translate>Close</translate>
-					</app-button>
+					<AppButton @click="modal.dismiss()">
+						<AppTranslate>Close</AppTranslate>
+					</AppButton>
 				</div>
 
 				<div class="modal-header">
@@ -153,7 +153,7 @@ export default class AppTrophyModal extends mixins(BaseModal) {
 								class="-subtitle-link link-unstyled"
 								v-app-tooltip="game.title"
 							>
-								<app-jolticon icon="game" />
+								<AppJolticon icon="game" />
 								<span v-translate="{ title: game.title }">
 									Game Trophy of
 									<b>%{ title }</b>
@@ -161,19 +161,19 @@ export default class AppTrophyModal extends mixins(BaseModal) {
 							</router-link>
 						</template>
 						<template v-else>
-							<app-jolticon icon="gamejolt" />
+							<AppJolticon icon="gamejolt" />
 							<span>Game Jolt Trophy</span>
 							<router-link v-if="artist" :to="artist.url" class="-subtitle-link link-unstyled">
 								<span class="dot-separator" />
-								<app-user-card-hover :user="artist">
+								<AppUserCardHover :user="artist">
 									<span v-translate="{ username: artist.username }">
 										Art by
 										<b>@%{ username }</b>
 									</span>
 									<span class="-subtitle-avatar">
-										<app-user-avatar-img :user="artist" />
+										<AppUserAvatarImg :user="artist" />
 									</span>
-								</app-user-card-hover>
+								</AppUserCardHover>
 							</router-link>
 						</template>
 					</div>
@@ -182,13 +182,13 @@ export default class AppTrophyModal extends mixins(BaseModal) {
 				<div class="modal-body">
 					<div class="-trophy-view">
 						<div class="-thumbnail">
-							<app-trophy-thumbnail
+							<AppTrophyThumbnail
 								:trophy="trophy"
 								no-tooltip
 								:no-highlight="loggedInUserUnlocked"
 							/>
 							<div v-if="canReceiveExp" class="-exp text-muted">
-								<app-jolticon icon="exp" />
+								<AppJolticon icon="exp" />
 								<span v-translate="{ exp: trophy.experience }">
 									%{ exp } EXP
 								</span>
@@ -197,19 +197,19 @@ export default class AppTrophyModal extends mixins(BaseModal) {
 						<div class="-info">
 							<span class="text-muted small">
 								Achieved
-								<app-time-ago :date="userTrophy.logged_on" />
+								<AppTimeAgo :date="userTrophy.logged_on" />
 							</span>
 
 							<span v-if="completionPercentageForDisplay" class="text-muted small">
 								<span class="dot-separator small" v-if="Screen.isDesktop" />
 								<br v-else />
 								<span v-if="completionPercentageForDisplay === 1">
-									<translate>&lt;1% of players achieved this trophy</translate>
+									<AppTranslate>&lt;1% of players achieved this trophy</AppTranslate>
 								</span>
 								<span v-else-if="completionPercentageForDisplay === 100">
-									<translate>
+									<AppTranslate>
 										100% of players achieved this trophy
-									</translate>
+									</AppTranslate>
 								</span>
 								<span v-else v-translate="{ num: completionPercentageForDisplay }">
 									~%{ num }% of players achieved this trophy
@@ -222,17 +222,17 @@ export default class AppTrophyModal extends mixins(BaseModal) {
 
 							<div v-if="shouldShowFriends" class="small">
 								<div>
-									<translate>Friends who achieved this trophy</translate>
+									<AppTranslate>Friends who achieved this trophy</AppTranslate>
 								</div>
 
-								<app-user-avatar-list :users="friends" sm />
+								<AppUserAvatarList :users="friends" sm />
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" src="./modal.styl" scoped></style>

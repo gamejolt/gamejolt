@@ -28,7 +28,7 @@ export default class AppWidgetCompilerWidgetGameList extends Vue {
 	<div class="widget-compiler-widget-game-list" :class="contentClass">
 		<div class="-game-list">
 			<a v-for="game of games" :key="game.id" class="-game" :href="url(game)">
-				<app-game-thumbnail-img animate :game="game" />
+				<AppGameThumbnailImg animate :game="game" />
 				<div class="-title">{{ game.title }}</div>
 			</a>
 		</div>

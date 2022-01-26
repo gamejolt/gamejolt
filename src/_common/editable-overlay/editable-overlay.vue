@@ -15,7 +15,7 @@ export default class AppEditableOverlay extends Vue {
 		<div v-if="!disabled" class="-overlay-container theme-dark" @click.capture.stop="click">
 			<div class="-overlay" />
 			<div class="-overlay-content">
-				<app-jolticon class="-icon" icon="edit" />
+				<AppJolticon class="-icon" icon="edit" />
 				<strong class="-label">
 					<slot name="overlay" />
 				</strong>

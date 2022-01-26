@@ -82,59 +82,59 @@ export default class FormFiresideAdd extends mixins(Wrapper) {
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="title" :label="$gettext(`Title`)">
-			<app-form-control
+	<AppForm :controller="form">
+		<AppFormGroup name="title" :label="$gettext(`Title`)">
+			<AppFormControl
 				type="text"
 				:validators="[validateMinLength(4), validateMaxLength(100)]"
 				:placeholder="defaultTitle"
 				focus
 				@blur="onBlurTitle"
 			/>
-			<app-form-control-errors />
+			<AppFormControlErrors />
 			<div class="help-block">
-				<translate>Let everyone know what you're doing in this fireside.</translate>
+				<AppTranslate>Let everyone know what you're doing in this fireside.</AppTranslate>
 			</div>
-		</app-form-group>
+		</AppFormGroup>
 
 		<template v-if="canSelectCommunity">
-			<app-form-group name="community_id" :label="$gettext(`Start in a community?`)">
+			<AppFormGroup name="community_id" :label="$gettext(`Start in a community?`)">
 				<div class="help-block">
-					<translate>
+					<AppTranslate>
 						You can start firesides in communities you collaborate on. If you do,
 						community members will be notified and other collaborators can stream with
 						you.
-					</translate>
+					</AppTranslate>
 				</div>
 
-				<app-forms-community-pill
+				<AppFormsCommunityPill
 					v-if="selectedCommunity"
 					:community="selectedCommunity"
 					:with-channel="false"
 					@remove="onRemoveCommunity"
 				/>
-				<app-forms-community-pill-add
+				<AppFormsCommunityPillAdd
 					v-else
 					:communities="selectableCommunities"
 					:with-channel="false"
 					@add-community="onAddCommunity"
 				/>
-			</app-form-group>
+			</AppFormGroup>
 		</template>
 
-		<app-form-button icon="fireside" :disabled="!valid">
-			<translate>Let's go!</translate>
-		</app-form-button>
-		<app-form-button
+		<AppFormButton icon="fireside" :disabled="!valid">
+			<AppTranslate>Let's go!</AppTranslate>
+		</AppFormButton>
+		<AppFormButton
 			:solid="false"
 			:primary="false"
 			:disabled="!valid"
 			trans
 			@before-submit="onDraftSubmit()"
 		>
-			<translate>Start as draft</translate>
-		</app-form-button>
-	</app-form>
+			<AppTranslate>Start as draft</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>
 
 <style lang="stylus" scoped></style>

@@ -61,7 +61,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 		<section class="section landing-header text-center">
 			<div class="container">
 				<h1>
-					<app-theme-svg class="bolt" :src="imageJolt" alt="" strict-colors />
+					<AppThemeSvg class="bolt" :src="imageJolt" alt="" strict-colors />
 					Marketplace
 				</h1>
 
@@ -101,7 +101,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg
+								<AppThemeSvg
 									:src="assetPaths['./revenue-share.svg'].default"
 									alt=""
 								/>
@@ -120,7 +120,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="assetPaths['./taxes.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./taxes.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Taxes</h4>
@@ -132,7 +132,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="assetPaths['./payouts.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./payouts.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Payouts</h4>
@@ -147,7 +147,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4 col-md-offset-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="assetPaths['./wallet.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./wallet.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Game Jolt Wallet</h4>
@@ -170,7 +170,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg
+								<AppThemeSvg
 									:src="assetPaths['./selling-options.svg'].default"
 									alt=""
 								/>
@@ -187,7 +187,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="assetPaths['./keys.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./keys.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Flexible Key Management</h4>
@@ -207,7 +207,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg
+								<AppThemeSvg
 									:src="assetPaths['./early-access.svg'].default"
 									alt=""
 								/>
@@ -227,7 +227,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4 col-md-offset-2">
 							<div class="landing-graphic">
-								<app-theme-svg
+								<AppThemeSvg
 									:src="assetPaths['./analytics.svg'].default"
 									alt=""
 								/>
@@ -248,7 +248,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg
+								<AppThemeSvg
 									:src="assetPaths['./supporter-focused.svg'].default"
 									alt=""
 								/>
@@ -276,23 +276,23 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 					<div class="row">
 						<div class="col-sm-6 col-md-5 col-lg-4 col-centered">
 							<template v-if="!app.user">
-								<app-auth-join />
+								<AppAuthJoin />
 								<br />
 							</template>
 							<div v-else class="text-center">
 								<p>Get started at</p>
 								<p>
-									<app-button primary :to="{ name: 'dash.account.financials' }">
+									<AppButton primary :to="{ name: 'dash.account.financials' }">
 										Marketplace Account Setup
-									</app-button>
+									</AppButton>
 								</p>
 							</div>
 
 							<p class="text-muted text-center">
 								Or
-								<app-contact-link email="contact@gamejolt.com">
+								<AppContactLink email="contact@gamejolt.com">
 									contact us
-								</app-contact-link>
+								</AppContactLink>
 								if you have questions!
 							</p>
 						</div>

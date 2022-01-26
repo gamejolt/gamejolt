@@ -120,28 +120,28 @@ export default class AppCommentOverview extends Vue {
 			>
 				<div class="-byline">
 					<div class="-avatar">
-						<app-user-card-hover :user="comment.user">
-							<app-user-avatar-img :user="comment.user" />
-						</app-user-card-hover>
+						<AppUserCardHover :user="comment.user">
+							<AppUserAvatarImg :user="comment.user" />
+						</AppUserCardHover>
 					</div>
 
 					<strong>{{ comment.user.display_name }}</strong>
-					<app-user-verified-tick :user="comment.user" />
+					<AppUserVerifiedTick :user="comment.user" />
 					{{ ' ' }}
 					<small class="text-muted">@{{ comment.user.username }}</small>
 				</div>
-				<app-fade-collapse :collapse-height="150">
+				<AppFadeCollapse :collapse-height="150">
 					<div class="-content">
-						<app-content-viewer :source="comment.comment_content" />
+						<AppContentViewer :source="comment.comment_content" />
 					</div>
-				</app-fade-collapse>
+				</AppFadeCollapse>
 			</div>
 		</div>
 	</div>
-	<app-illustration v-else-if="!hasComments" :src="illNoCommentsSmall" sm>
-		<translate v-if="displayMode === 'comments'">No comments yet.</translate>
-		<translate v-else-if="displayMode === 'shouts'">No shouts yet.</translate>
-	</app-illustration>
+	<AppIllustration v-else-if="!hasComments" :src="illNoCommentsSmall" sm>
+		<AppTranslate v-if="displayMode === 'comments'">No comments yet.</AppTranslate>
+		<AppTranslate v-else-if="displayMode === 'shouts'">No shouts yet.</AppTranslate>
+	</AppIllustration>
 </template>
 
 <style lang="stylus" scoped>

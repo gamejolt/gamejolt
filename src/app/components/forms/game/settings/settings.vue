@@ -33,97 +33,97 @@ export default class FormGameSettings extends mixins(Wrapper) implements FormOnL
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group
+	<AppForm :controller="form">
+		<AppFormGroup
 			v-if="!hasPackagesForSale"
 			name="ads_enabled"
 			:label="$gettext(`dash.games.settings.ads_label`)"
 		>
-			<app-form-control-toggle class="pull-right" />
+			<AppFormControlToggle class="pull-right" />
 			<div class="help-block">
 				<p>
 					<strong>
-						<translate>Turning this off will remove all ads for this game.</translate>
+						<AppTranslate>Turning this off will remove all ads for this game.</AppTranslate>
 					</strong>
 				</p>
 				<p>
-					<translate>
+					<AppTranslate>
 						Only do this if you don't want your game monetized, or if your game is
 						subject to a license that doesn't allow monetization.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
-		</app-form-group>
+		</AppFormGroup>
 		<div v-else class="form-group">
 			<label class="control-label">
-				<translate>dash.games.settings.ads_label</translate>
+				<AppTranslate>dash.games.settings.ads_label</AppTranslate>
 			</label>
 			<div class="alert">
-				<translate v-if="hasPackagesForSale">
+				<AppTranslate v-if="hasPackagesForSale">
 					We don't show ads on Marketplace game pages (even for pay what you want games).
-				</translate>
+				</AppTranslate>
 			</div>
 		</div>
 
-		<app-form-group
+		<AppFormGroup
 			name="comments_enabled"
 			:label="$gettext(`dash.games.settings.comments_label`)"
 		>
-			<app-form-control-toggle class="pull-right" />
+			<AppFormControlToggle class="pull-right" />
 			<div class="help-block">
 				<p>
 					<strong>
-						<translate>
+						<AppTranslate>
 							Turning this off will disable comments for this game and hide any
 							comments already on the page.
-						</translate>
+						</AppTranslate>
 					</strong>
 				</p>
 
 				<p>
-					<translate>
+					<AppTranslate>
 						The community will no longer be able to give you feedback via comments, but
 						you may prefer this if your game contains sensitive or controversial
 						material.
-					</translate>
+					</AppTranslate>
 				</p>
 
 				<p>
-					<translate>
+					<AppTranslate>
 						This will never remove comments from your game page—merely hide them. If you
 						allow comments again in the future, all previously hidden comments will be
 						restored.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-group name="ratings_enabled" :label="$gettext('Allow ratings?')">
-			<app-form-control-toggle class="pull-right" />
+		<AppFormGroup name="ratings_enabled" :label="$gettext('Allow ratings?')">
+			<AppFormControlToggle class="pull-right" />
 
 			<div class="help-block">
 				<p>
 					<strong>
-						<translate>
+						<AppTranslate>
 							Turning this off will disable ratings for this game and hide any ratings
 							already on the page.
-						</translate>
+						</AppTranslate>
 					</strong>
 				</p>
 				<p>
-					<translate>
+					<AppTranslate>
 						Your game's voltage will be calculated as if it had received no likes or
 						dislikes. If you allow ratings in the future, the old ratings will be
 						reapplied and your voltage will be recalculated.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-dash-game-wizard-controls>
-			<app-form-button>
-				<translate>dash.games.settings.save_button</translate>
-			</app-form-button>
-		</app-dash-game-wizard-controls>
-	</app-form>
+		<AppDashGameWizardControls>
+			<AppFormButton>
+				<AppTranslate>dash.games.settings.save_button</AppTranslate>
+			</AppFormButton>
+		</AppDashGameWizardControls>
+	</AppForm>
 </template>

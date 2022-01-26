@@ -50,7 +50,7 @@ export default class AppCommunitiesEditChannelListPresetItem extends Vue {
 </script>
 
 <template>
-	<app-card-list-item :id="elementId" :item="{ presetType }">
+	<AppCardListItem :id="elementId" :item="{ presetType }">
 		<div class="card-title">
 			<h5>
 				{{ label }}
@@ -58,10 +58,10 @@ export default class AppCommunitiesEditChannelListPresetItem extends Vue {
 		</div>
 
 		<template #body>
-			<app-community-channel-card-edit
+			<AppCommunityChannelCardEdit
 				:background="background"
 				@click="onClickEditBackground"
 			/>
 		</template>
-	</app-card-list-item>
+	</AppCardListItem>
 </template>

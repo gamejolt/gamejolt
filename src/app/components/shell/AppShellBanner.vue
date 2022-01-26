@@ -35,7 +35,7 @@ onUnmounted(() => {
 		@click="clickBanner()"
 	>
 		<a class="-close" @click.stop="closeBanner()">
-			<app-jolticon icon="remove" />
+			<AppJolticon icon="remove" />
 		</a>
 
 		<div class="-message" v-html="currentBanner.message" />

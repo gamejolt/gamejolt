@@ -48,17 +48,17 @@ export default class AppDiscoverGamesViewOverviewRecommended extends Vue {
 </script>
 
 <template>
-	<app-game-list-placeholder v-if="!isLoaded" :num="5" />
+	<AppGameListPlaceholder v-if="!isLoaded" :num="5" />
 	<div v-else>
-		<app-game-list :games="recommendedGames" event-label="recommended" />
+		<AppGameList :games="recommendedGames" event-label="recommended" />
 
 		<template v-if="shouldShowBottomAd">
 			<!-- Extra space for the page nav -->
-			<app-scroll-affix :scroll-offset="80">
+			<AppScrollAffix :scroll-offset="80">
 				<div class="-ad">
-					<app-ad-widget size="video" placement="side" />
+					<AppAdWidget size="video" placement="side" />
 				</div>
-			</app-scroll-affix>
+			</AppScrollAffix>
 		</template>
 	</div>
 </template>

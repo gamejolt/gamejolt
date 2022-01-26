@@ -21,7 +21,7 @@ export default class AppGameCollectionGrid extends Vue {
 			:key="collection._id"
 			class="col-xs-12 col-sm-6 col-lg-4 game-collection-grid-item"
 		>
-			<app-game-collection-grid-item :collection="collection" :event-label="eventLabel" />
+			<AppGameCollectionGridItem :collection="collection" :event-label="eventLabel" />
 		</div>
 	</div>
 </template>

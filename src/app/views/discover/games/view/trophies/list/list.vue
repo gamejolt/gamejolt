@@ -85,12 +85,12 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 		<section class="section">
 			<div class="container">
 				<h2 class="section-header">
-					<translate>game.trophies.heading</translate>
+					<AppTranslate>game.trophies.heading</AppTranslate>
 				</h2>
 
 				<div class="row">
 					<div class="col-sm-10 col-md-9 col-lg-5 col-lg-push-7">
-						<app-trophy-completion
+						<AppTrophyCompletion
 							v-if="app.user"
 							:total="trophies.length"
 							:achieved="achieved.length"
@@ -98,14 +98,14 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 						/>
 					</div>
 					<div class="col-sm-10 col-md-9 col-lg-7 col-lg-pull-5">
-						<app-nav-tab-list v-if="filteredTrophies.achieved.length">
+						<AppNavTabList v-if="filteredTrophies.achieved.length">
 							<ul>
 								<li>
 									<a
 										:class="{ active: currentFilter === 'all' }"
 										@click="currentFilter = 'all'"
 									>
-										<translate>game.trophies.all_tab</translate>
+										<AppTranslate>game.trophies.all_tab</AppTranslate>
 										<span class="badge hidden-xs">
 											{{ formatNumber(trophies.length) }}
 										</span>
@@ -116,7 +116,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 										:class="{ active: currentFilter === 'achieved' }"
 										@click="currentFilter = 'achieved'"
 									>
-										<translate>game.trophies.achieved_tab</translate>
+										<AppTranslate>game.trophies.achieved_tab</AppTranslate>
 										<span class="badge hidden-xs">
 											{{ formatNumber(filteredTrophies.achieved.length) }}
 										</span>
@@ -127,20 +127,20 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 										:class="{ active: currentFilter === 'unachieved' }"
 										@click="currentFilter = 'unachieved'"
 									>
-										<translate>game.trophies.unachieved_tab</translate>
+										<AppTranslate>game.trophies.unachieved_tab</AppTranslate>
 										<span class="badge hidden-xs">
 											{{ formatNumber(filteredTrophies.unachieved.length) }}
 										</span>
 									</a>
 								</li>
 							</ul>
-						</app-nav-tab-list>
+						</AppNavTabList>
 
 						<div v-if="showInvisibleTrophyMessage" class="alert alert-notice">
-							<translate>trophies.invisible_trophies_message</translate>
+							<AppTranslate>trophies.invisible_trophies_message</AppTranslate>
 						</div>
 
-						<app-trophy-list
+						<AppTrophyList
 							:trophies="
 								currentFilter === 'all' ? trophies : filteredTrophies[currentFilter]
 							"
@@ -153,7 +153,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 
 		<section v-if="!trophies.length" class="section fill-offset">
 			<div class="container text-center">
-				<translate>game.trophies.no_trophies_html</translate>
+				<AppTranslate>game.trophies.no_trophies_html</AppTranslate>
 			</div>
 		</section>
 	</div>

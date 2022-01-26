@@ -101,7 +101,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRo
 	<div v-if="isRouteBootstrapped">
 		<h2 class="section-header">
 			<div class="section-header-controls">
-				<app-button
+				<AppButton
 					v-app-tooltip="$gettext(`Remove All Scores`)"
 					sparse
 					icon="remove"
@@ -109,16 +109,16 @@ export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRo
 				/>
 			</div>
 
-			<translate>dash.games.scores.user.list.heading</translate>
+			<AppTranslate>dash.games.scores.user.list.heading</AppTranslate>
 			{{ ' ' }}
 			<small>
-				<translate>dash.games.scores.user.list.heading_for</translate>
+				<AppTranslate>dash.games.scores.user.list.heading_for</AppTranslate>
 				{{ ' ' }}
 				<router-link class="link-unstyled" :to="user.url">
 					<strong>{{ user.display_name }}</strong>
 				</router-link>
 				{{ ' ' }}
-				<translate>dash.games.scores.user.list.heading_on</translate>
+				<AppTranslate>dash.games.scores.user.list.heading_on</AppTranslate>
 				{{ ' ' }}
 				<router-link
 					class="link-unstyled"
@@ -134,11 +134,11 @@ export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRo
 
 		<div v-if="!scores.length" class="alert alert-notice anim-fade-in">
 			<p>
-				<translate>The user has no scores on this scoreboard.</translate>
+				<AppTranslate>The user has no scores on this scoreboard.</AppTranslate>
 			</p>
 		</div>
 
-		<app-manage-game-list-scores
+		<AppManageGameListScores
 			v-if="scores.length"
 			:score-table="scoreTable"
 			:scores="scores"

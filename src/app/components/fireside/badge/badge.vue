@@ -140,7 +140,7 @@ export default class AppFiresideBadge extends Vue {
 </script>
 
 <template>
-	<app-theme v-if="shouldDisplay" :theme="theme">
+	<AppTheme v-if="shouldDisplay" :theme="theme">
 		<component :is="fireside && !fireside.is_expired ? 'router-link' : 'div'" :to="location">
 			<div class="-fireside-badge fill-darkest">
 				<div
@@ -148,7 +148,7 @@ export default class AppFiresideBadge extends Vue {
 					v-app-observe-dimensions="onBadgeDimensionsChanged"
 					class="-fireside-badge-padding"
 				>
-					<app-media-item-backdrop
+					<AppMediaItemBackdrop
 						v-if="headerMediaItem"
 						class="-backdrop"
 						:media-item="headerMediaItem"
@@ -162,7 +162,7 @@ export default class AppFiresideBadge extends Vue {
 						>
 							<div class="-header-overlay" />
 						</div>
-					</app-media-item-backdrop>
+					</AppMediaItemBackdrop>
 					<div v-else class="-backdrop">
 						<div class="-header -header-fill">
 							<div class="-header-overlay" />
@@ -171,13 +171,13 @@ export default class AppFiresideBadge extends Vue {
 
 					<div class="-content">
 						<div v-app-tooltip.left="avatarTooltip" class="-avatar">
-							<app-user-avatar-img v-if="fireside" :user="fireside.user" />
+							<AppUserAvatarImg v-if="fireside" :user="fireside.user" />
 						</div>
 						<div>
 							<div v-if="fireside && !fireside.is_expired">
 								<span class="tag">
 									<span class="-new-tag" />
-									<translate
+									<AppTranslate
 										:translate-n="fireside.member_count || 0"
 										:translate-params="{
 											count: formatNumber(fireside.member_count || 0),
@@ -185,11 +185,11 @@ export default class AppFiresideBadge extends Vue {
 										translate-plural="%{ count } Members"
 									>
 										%{ count } Member
-									</translate>
+									</AppTranslate>
 								</span>
 
 								<span v-if="fireside.is_draft" class="tag">
-									<translate>Draft</translate>
+									<AppTranslate>Draft</AppTranslate>
 								</span>
 
 								<span
@@ -199,33 +199,33 @@ export default class AppFiresideBadge extends Vue {
 									"
 									class="tag"
 								>
-									<translate>Featured</translate>
+									<AppTranslate>Featured</AppTranslate>
 								</span>
 							</div>
 							<div class="-title">
 								<template v-if="fireside && !fireside.is_expired">
 									{{ fireside.title }}
 								</template>
-								<translate v-else>
+								<AppTranslate v-else>
 									This fireside has expired. See you next time!
-								</translate>
+								</AppTranslate>
 							</div>
 						</div>
 						<div v-if="fireside && isStreaming" class="-live">
-							<translate>LIVE</translate>
+							<AppTranslate>LIVE</AppTranslate>
 						</div>
 					</div>
 				</div>
 
 				<div v-if="canExpandPreview" class="-preview">
-					<app-expand :when="showPreview">
+					<AppExpand :when="showPreview">
 						<div
 							class="-preview-placeholder"
 							:style="{ 'margin-top': -containerHeight + 'px' }"
 						/>
-					</app-expand>
+					</AppExpand>
 
-					<app-fireside-stream-preview
+					<AppFiresideStreamPreview
 						v-if="fireside && !fireside.is_expired"
 						class="-preview-inner"
 						:class="{ '-hidden': !showPreview }"
@@ -238,7 +238,7 @@ export default class AppFiresideBadge extends Vue {
 				</div>
 			</div>
 		</component>
-	</app-theme>
+	</AppTheme>
 </template>
 
 <style lang="stylus" scoped>

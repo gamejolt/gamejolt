@@ -94,33 +94,33 @@ export default class RouteCommunitiesViewEditModerators extends BaseRouteCompone
 </script>
 
 <template>
-	<app-communities-view-page-container>
+	<AppCommunitiesViewPageContainer>
 		<h2 class="section-header">
-			<translate>Collaborators</translate>
+			<AppTranslate>Collaborators</AppTranslate>
 		</h2>
 
 		<div class="page-help">
 			<p>
-				<translate>
+				<AppTranslate>
 					Assign collaborators and choose their access level to help manage your
 					community.
-				</translate>
+				</AppTranslate>
 			</p>
 		</div>
 
-		<app-card-list
+		<AppCardList
 			:items="collaborators"
 			:active-item="activeCollaborator"
 			:is-adding="isShowingCollaboratorAdd"
 			@activate="activeCollaborator = $event"
 		>
-			<app-card-list-item
+			<AppCardListItem
 				v-for="collaborator of collaborators"
 				:key="collaborator.id"
 				:item="collaborator"
 			>
 				<a class="card-remove" @click.stop="removeCollaborator(collaborator)">
-					<app-jolticon icon="remove" />
+					<AppJolticon icon="remove" />
 				</a>
 
 				<div v-if="collaborator.user" class="card-title">
@@ -130,39 +130,39 @@ export default class RouteCommunitiesViewEditModerators extends BaseRouteCompone
 				<div class="card-meta">
 					<span class="tag">
 						<template v-if="collaborator.role === Collaborator.ROLE_EQUAL_COLLABORATOR">
-							<translate>Full Collaborator</translate>
+							<AppTranslate>Full Collaborator</AppTranslate>
 						</template>
 						<template v-else-if="collaborator.role === Collaborator.ROLE_JAM_ORGANIZER">
-							<translate>Jam Organizer</translate>
+							<AppTranslate>Jam Organizer</AppTranslate>
 						</template>
 						<template v-else-if="collaborator.role === Collaborator.ROLE_MODERATOR">
-							<translate>Moderator</translate>
+							<AppTranslate>Moderator</AppTranslate>
 						</template>
 						<template v-else> - </template>
 					</span>
 
 					<template v-if="collaborator.status !== Collaborator.STATUS_ACTIVE">
-						<span class="tag"><translate>Invited</translate></span>
+						<span class="tag"><AppTranslate>Invited</AppTranslate></span>
 						<br />
-						<translate>This user hasn't accepted their invitation yet.</translate>
+						<AppTranslate>This user hasn't accepted their invitation yet.</AppTranslate>
 					</template>
 				</div>
 
 				<template #body>
-					<form-community-collaborator
+					<FormCommunityCollaborator
 						:model="collaborator"
 						:community="community"
 						@submit="onSavedCollaborator"
 					/>
 				</template>
-			</app-card-list-item>
+			</AppCardListItem>
 
-			<app-card-list-add
+			<AppCardListAdd
 				:label="$gettext(`Add Collaborator`)"
 				@toggle="isShowingCollaboratorAdd = !isShowingCollaboratorAdd"
 			>
-				<form-community-collaborator :community="community" @submit="onAddedCollaborator" />
-			</app-card-list-add>
-		</app-card-list>
-	</app-communities-view-page-container>
+				<FormCommunityCollaborator :community="community" @submit="onAddedCollaborator" />
+			</AppCardListAdd>
+		</AppCardList>
+	</AppCommunitiesViewPageContainer>
 </template>

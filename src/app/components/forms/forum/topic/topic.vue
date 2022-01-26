@@ -46,29 +46,29 @@ export default class FormForumTopic extends mixins(Wrapper) {
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="title" :label="$gettext('Title')">
-			<app-form-control type="text" :validators="[validateMaxLength(300)]" />
+	<AppForm :controller="form">
+		<AppFormGroup name="title" :label="$gettext('Title')">
+			<AppFormControl type="text" :validators="[validateMaxLength(300)]" />
 
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group name="text_content" :label="$gettext('Topic Content')">
-			<app-form-control-content
+		<AppFormGroup name="text_content" :label="$gettext('Topic Content')">
+			<AppFormControlContent
 				content-context="forum-post"
 				:validators="[validateContentRequired(), validateContentNoActiveUploads()]"
 			/>
 
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-button>
-			<translate v-if="method === 'add'">Add Topic</translate>
-			<translate v-if="method === 'edit'">Save</translate>
-		</app-form-button>
+		<AppFormButton>
+			<AppTranslate v-if="method === 'add'">Add Topic</AppTranslate>
+			<AppTranslate v-if="method === 'edit'">Save</AppTranslate>
+		</AppFormButton>
 
-		<app-button v-if="method === 'edit'" trans @click="onCancel">
-			<translate>Cancel</translate>
-		</app-button>
-	</app-form>
+		<AppButton v-if="method === 'edit'" trans @click="onCancel">
+			<AppTranslate>Cancel</AppTranslate>
+		</AppButton>
+	</AppForm>
 </template>

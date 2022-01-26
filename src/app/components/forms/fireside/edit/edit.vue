@@ -12,21 +12,21 @@ export default class FormFiresideEdit extends mixins(Wrapper) {
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="title">
-			<app-form-control
+	<AppForm :controller="form">
+		<AppFormGroup name="title">
+			<AppFormControl
 				type="text"
 				:validators="[validateMinLength(4), validateMaxLength(100)]"
 				validate-on-blur
 				focus
 			/>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-button :disabled="!valid">
-			<translate>Save</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton :disabled="!valid">
+			<AppTranslate>Save</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>
 
 <style lang="stylus" scoped></style>

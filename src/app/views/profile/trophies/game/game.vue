@@ -104,7 +104,7 @@ export default class RouteProfileTrophiesGame extends BaseRouteComponent {
 	<div>
 		<div v-if="game" class="row">
 			<div class="col-sm-7">
-				<app-trophy-completion
+				<AppTrophyCompletion
 					v-if="completion"
 					class="-completion"
 					:total="completion.totalCount"
@@ -113,25 +113,25 @@ export default class RouteProfileTrophiesGame extends BaseRouteComponent {
 					:is-logged-in-user="isLoggedInUser"
 				/>
 				<p>
-					<app-button :to="game.routeLocation">
-						<translate>View Game</translate>
-					</app-button>
-					<app-button
+					<AppButton :to="game.routeLocation">
+						<AppTranslate>View Game</AppTranslate>
+					</AppButton>
+					<AppButton
 						:to="{
 							name: 'discover.games.view.trophies.list',
 							params: game.getSrefParams(),
 						}"
 					>
-						<translate>View All Trophies</translate>
-					</app-button>
+						<AppTranslate>View All Trophies</AppTranslate>
+					</AppButton>
 				</p>
 			</div>
 			<div class="col-sm-5 hidden-xs">
-				<app-game-thumbnail class="-game-thumbnail" :game="game" />
+				<AppGameThumbnail class="-game-thumbnail" :game="game" />
 			</div>
 		</div>
 		<hr class="hidden-xs" />
-		<app-trophy-list-paged :initial-trophies="trophies" :url="listLoadMoreUrl" />
+		<AppTrophyListPaged :initial-trophies="trophies" :url="listLoadMoreUrl" />
 	</div>
 </template>
 

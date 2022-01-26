@@ -27,12 +27,12 @@ export default class AppCommunityChannelSelect extends Vue {
 <template>
 	<div v-if="validChannels.length">
 		<span v-for="channel of validChannels" :key="channel.id">
-			<app-pill
+			<AppPill
 				:class="{ active: modelValue && modelValue.id === channel.id }"
 				@click="emitUpdate(channel)"
 			>
 				{{ channel.displayTitle }}
-			</app-pill>
+			</AppPill>
 		</span>
 	</div>
 </template>

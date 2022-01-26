@@ -180,31 +180,31 @@ export default class AppShell extends Vue {
 			'has-banner': hasBanner && !isShellHidden,
 		}"
 	>
-		<app-sticker-layer>
+		<AppStickerLayer>
 			<template v-if="isShellHidden">
 				<slot />
 			</template>
-			<app-shell-body v-else>
+			<AppShellBody v-else>
 				<slot />
-			</app-shell-body>
-		</app-sticker-layer>
+			</AppShellBody>
+		</AppStickerLayer>
 
-		<app-shell-top-nav v-if="hasTopBar" />
-		<app-shell-cbar />
-		<app-shell-sidebar v-if="hasSidebar" />
-		<app-shell-banner v-if="!isShellHidden" />
+		<AppShellTopNav v-if="hasTopBar" />
+		<AppShellCbar />
+		<AppShellSidebar v-if="hasSidebar" />
+		<AppShellBanner v-if="!isShellHidden" />
 
-		<app-chat-windows v-if="chat" />
+		<AppChatWindows v-if="chat" />
 
 		<div v-if="GJ_IS_DESKTOP_APP" key="shell-client">
-			<app-client-base />
-			<app-client-shell />
+			<AppClientBase />
+			<AppClientShell />
 		</div>
 
-		<app-shell-hot-bottom>
-			<app-minbar v-show="!visibleRightPane" />
-			<app-client-status-bar v-if="GJ_IS_DESKTOP_APP" key="shell-client-status-bar" />
-		</app-shell-hot-bottom>
+		<AppShellHotBottom>
+			<AppMinbar v-show="!visibleRightPane" />
+			<AppClientStatusBar v-if="GJ_IS_DESKTOP_APP" key="shell-client-status-bar" />
+		</AppShellHotBottom>
 	</div>
 </template>
 

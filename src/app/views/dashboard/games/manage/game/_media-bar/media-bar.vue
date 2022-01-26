@@ -61,7 +61,7 @@ export default class AppManageGameMediaBar extends Vue {
 </script>
 
 <template>
-	<app-scroll-scroller class="fill-darker" horizontal thin>
+	<AppScrollScroller class="fill-darker" horizontal thin>
 		<div class="-items" :style="{ height: mediaBarHeight + 'px' }">
 			<a class="-add" @click="add()">
 				<div
@@ -72,10 +72,10 @@ export default class AppManageGameMediaBar extends Vue {
 					}"
 				>
 					<div>
-						<app-jolticon icon="add" big />
+						<AppJolticon icon="add" big />
 						<br />
 						<b class="-label">
-							<translate>Add Media</translate>
+							<AppTranslate>Add Media</AppTranslate>
 						</b>
 					</div>
 				</div>
@@ -89,20 +89,20 @@ export default class AppManageGameMediaBar extends Vue {
 			>
 				<template #item="{ element: item }">
 					<div>
-						<app-game-media-bar-item class="-item" :item="item" @click="open(item)">
-							<app-editable-overlay class="-item-hover hidden-xs" @click="open(item)">
+						<AppGameMediaBarItem class="-item" :item="item" @click="open(item)">
+							<AppEditableOverlay class="-item-hover hidden-xs" @click="open(item)">
 								<template #overlay>
-									<translate>click to edit</translate>
+									<AppTranslate>click to edit</AppTranslate>
 									<br />
-									<translate>drag to sort</translate>
+									<AppTranslate>drag to sort</AppTranslate>
 								</template>
-							</app-editable-overlay>
-						</app-game-media-bar-item>
+							</AppEditableOverlay>
+						</AppGameMediaBarItem>
 					</div>
 				</template>
 			</draggable>
 		</div>
-	</app-scroll-scroller>
+	</AppScrollScroller>
 </template>
 
 <style lang="stylus" src="./media-bar.styl" scoped></style>

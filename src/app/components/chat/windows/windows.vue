@@ -34,7 +34,7 @@ export default class AppChatWindows extends Vue {
 	<!--
 		Can currently only have one window open at a time.
 	-->
-	<app-chat-window
+	<AppChatWindow
 		v-if="chat.room && visibleLeftPane === 'chat'"
 		:room="chat.room"
 		:messages="chat.messages[chat.room.id]"

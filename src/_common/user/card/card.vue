@@ -70,7 +70,7 @@ export default class AppUserCard extends Vue {
 </script>
 
 <template>
-	<app-theme
+	<AppTheme
 		class="user-card sheet sheet-full sheet-no-full-bleed"
 		:class="{ 'sheet-elevate': elevate }"
 		:theme="user.theme"
@@ -84,20 +84,20 @@ export default class AppUserCard extends Vue {
 			/>
 
 			<router-link :to="user.url" class="-avatar">
-				<app-user-avatar-img :user="user" />
+				<AppUserAvatarImg :user="user" />
 			</router-link>
 
 			<div class="-well fill-bg">
 				<div v-if="user.follows_you" class="-follows-you">
 					<span class="tag">
-						<translate>Follows You</translate>
+						<AppTranslate>Follows You</AppTranslate>
 					</span>
 				</div>
 
 				<div class="-display-name">
 					<router-link :to="user.url" class="link-unstyled">
 						{{ user.display_name }}
-						<app-user-verified-tick :user="user" />
+						<AppUserVerifiedTick :user="user" />
 					</router-link>
 				</div>
 
@@ -136,14 +136,14 @@ export default class AppUserCard extends Vue {
 				</div>
 
 				<div v-if="app.user" class="-follow">
-					<app-user-follow-widget
+					<AppUserFollowWidget
 						v-if="user.id !== app.user.id"
 						:user="user"
 						location="card"
 						block
 						hide-count
 					/>
-					<app-button
+					<AppButton
 						v-else
 						:to="{
 							name: 'profile.overview',
@@ -151,14 +151,14 @@ export default class AppUserCard extends Vue {
 						}"
 						block
 					>
-						<translate>View Profile</translate>
-					</app-button>
+						<AppTranslate>View Profile</AppTranslate>
+					</AppButton>
 				</div>
 			</div>
 		</div>
 
 		<div v-if="!noStats" class="-stats -well">
-			<app-loading v-if="isLoading" class="sans-margin" centered />
+			<AppLoading v-if="isLoading" class="sans-margin" centered />
 			<ul v-else class="stat-list">
 				<li class="stat-big stat-big-smaller">
 					<router-link
@@ -169,7 +169,7 @@ export default class AppUserCard extends Vue {
 						}"
 					>
 						<div class="stat-big-label">
-							<translate>Posts</translate>
+							<AppTranslate>Posts</AppTranslate>
 						</div>
 						<div class="stat-big-digit">
 							{{ formatNumber(postCount) }}
@@ -185,7 +185,7 @@ export default class AppUserCard extends Vue {
 						}"
 					>
 						<div class="stat-big-label">
-							<translate>Games</translate>
+							<AppTranslate>Games</AppTranslate>
 						</div>
 						<div class="stat-big-digit">
 							{{ formatNumber(gameCount) }}
@@ -201,7 +201,7 @@ export default class AppUserCard extends Vue {
 						}"
 					>
 						<div class="stat-big-label">
-							<translate>Likes</translate>
+							<AppTranslate>Likes</AppTranslate>
 						</div>
 						<div class="stat-big-digit">
 							{{ formatFuzzynumber(likeCount) }}
@@ -210,7 +210,7 @@ export default class AppUserCard extends Vue {
 				</li>
 			</ul>
 		</div>
-	</app-theme>
+	</AppTheme>
 </template>
 
 <style lang="stylus" src="./card.styl" scoped></style>

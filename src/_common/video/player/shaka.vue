@@ -155,7 +155,7 @@ export default class AppVideoPlayerShaka extends Vue {
 </script>
 
 <template>
-	<app-video
+	<AppVideo
 		:player="player"
 		:should-play="shouldAutoplay"
 		:init-callback="initShakaWithVideo"

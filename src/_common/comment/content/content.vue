@@ -42,22 +42,22 @@ export default class AppCommentContent extends Vue {
 
 <template>
 	<div>
-		<app-sticker-target :controller="stickerTargetController" :disabled="!canPlaceStickers">
-			<app-fade-collapse
+		<AppStickerTarget :controller="stickerTargetController" :disabled="!canPlaceStickers">
+			<AppFadeCollapse
 				:collapse-height="375"
 				:is-open="showFullContent"
 				@require-change="canToggleContent = $event"
 				@expand="showFullContent = true"
 			>
-				<app-content-viewer :source="content" />
+				<AppContentViewer :source="content" />
 
 				<p v-if="comment.modified_on" class="text-muted small">
-					<b><translate>Last modified on</translate></b>
+					<b><AppTranslate>Last modified on</AppTranslate></b>
 					<span :title="formatDate(comment.modified_on, 'medium')">
 						{{ formatDate(comment.modified_on, 'longDate') }}
 					</span>
 				</p>
-			</app-fade-collapse>
+			</AppFadeCollapse>
 
 			<a
 				v-if="canToggleContent"
@@ -65,14 +65,14 @@ export default class AppCommentContent extends Vue {
 				class="hidden-text-expander"
 				@click="showFullContent = !showFullContent"
 			/>
-		</app-sticker-target>
+		</AppStickerTarget>
 
-		<app-sticker-controls-overlay
+		<AppStickerControlsOverlay
 			v-if="comment.sticker_counts.length"
 			class="-reactions-container"
 		>
-			<app-sticker-reactions :controller="stickerTargetController" />
-		</app-sticker-controls-overlay>
+			<AppStickerReactions :controller="stickerTargetController" />
+		</AppStickerControlsOverlay>
 	</div>
 </template>
 

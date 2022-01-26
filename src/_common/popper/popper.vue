@@ -484,9 +484,9 @@ export default class AppPopper extends Vue {
 					<div class="-header">
 						<slot name="header" />
 					</div>
-					<app-scroll-scroller ref="scroller" class="-main" thin>
+					<AppScrollScroller ref="scroller" class="-main" thin>
 						<slot name="popover" />
-					</app-scroll-scroller>
+					</AppScrollScroller>
 					<div class="-footer">
 						<slot name="footer" />
 					</div>

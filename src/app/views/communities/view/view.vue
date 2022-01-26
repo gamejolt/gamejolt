@@ -240,18 +240,18 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 </script>
 
 <template>
-	<app-shell-content-with-sidebar v-if="community">
+	<AppShellContentWithSidebar v-if="community">
 		<template #default>
 			<!-- Community Header Image -->
-			<app-editable-overlay
+			<AppEditableOverlay
 				v-if="coverEditable"
 				:class="{ '-cover-img': !!coverMediaItem }"
 				:disabled="!coverEditable"
 				@click="showEditHeader()"
 			>
 				<template #overlay>
-					<translate v-if="!coverMediaItem">Upload Header</translate>
-					<translate v-else>Change Header</translate>
+					<AppTranslate v-if="!coverMediaItem">Upload Header</AppTranslate>
+					<AppTranslate v-else>Change Header</AppTranslate>
 				</template>
 
 				<!-- If no cover media, reserve space with a min-height. -->
@@ -262,22 +262,22 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 							'min-height': !coverMediaItem ? '200px' : '',
 						}"
 					>
-						<app-media-item-cover v-if="coverMediaItem" :media-item="coverMediaItem" />
+						<AppMediaItemCover v-if="coverMediaItem" :media-item="coverMediaItem" />
 					</div>
 				</template>
-			</app-editable-overlay>
+			</AppEditableOverlay>
 			<div v-else-if="!!coverMediaItem && isShowingHeader" class="-cover-img">
-				<app-media-item-cover :media-item="coverMediaItem" />
+				<AppMediaItemCover :media-item="coverMediaItem" />
 			</div>
 
 			<!-- Mobile Header -->
 			<template v-if="!routeStore.isShowingSidebar && !isEditing">
-				<app-mobile-header :has-unread="hasUnreadPosts" />
+				<AppMobileHeader :has-unread="hasUnreadPosts" />
 			</template>
 
 			<router-view />
 		</template>
-	</app-shell-content-with-sidebar>
+	</AppShellContentWithSidebar>
 </template>
 
 <style lang="stylus" scoped>

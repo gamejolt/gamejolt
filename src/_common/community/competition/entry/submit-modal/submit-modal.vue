@@ -91,39 +91,39 @@ export default class AppCommunityCompetitionEntrySubmitModal extends mixins(Base
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>Choose a game to submit</translate>
+				<AppTranslate>Choose a game to submit</AppTranslate>
 			</h2>
 		</div>
 		<div class="modal-body">
-			<app-loading v-if="isLoading" centered />
+			<AppLoading v-if="isLoading" centered />
 			<template v-else-if="selectedGame">
-				<app-game-thumbnail
+				<AppGameThumbnail
 					:game="selectedGame"
 					class="-game-thumb-selected"
 					hide-pricing
 				/>
 				<p class="help-block">
-					<translate>
+					<AppTranslate>
 						Before submitting, make sure that you have read and understood the rules of
 						the jam.
-					</translate>
+					</AppTranslate>
 				</p>
-				<app-button solid primary @click="onClickSubmit">
-					<translate>Submit</translate>
-				</app-button>
+				<AppButton solid primary @click="onClickSubmit">
+					<AppTranslate>Submit</AppTranslate>
+				</AppButton>
 			</template>
 			<template v-else-if="games.length">
 				<div v-for="game of games" :key="game.id" class="-game">
 					<div class="-game-thumb">
-						<app-game-thumbnail-img :game="game" />
+						<AppGameThumbnailImg :game="game" />
 					</div>
 
 					<div class="-game-label">
@@ -131,26 +131,26 @@ export default class AppCommunityCompetitionEntrySubmitModal extends mixins(Base
 					</div>
 
 					<div class="-game-button">
-						<app-button primary @click="onClickSelectGame(game)">
-							<translate>Select</translate>
-						</app-button>
+						<AppButton primary @click="onClickSelectGame(game)">
+							<AppTranslate>Select</AppTranslate>
+						</AppButton>
 					</div>
 				</div>
 			</template>
 			<div v-else class="alert">
 				<p>
-					<translate>You have no games available to be submitted.</translate>
+					<AppTranslate>You have no games available to be submitted.</AppTranslate>
 				</p>
 				<p v-translate>
 					To enter a game into the jam, upload it to Game Jolt first,
 					<b>make sure it is published</b>, then return to this page.
 				</p>
-				<app-button :to="{ name: 'dash.games.add' }">
-					<translate>Add Game</translate>
-				</app-button>
+				<AppButton :to="{ name: 'dash.games.add' }">
+					<AppTranslate>Add Game</AppTranslate>
+				</AppButton>
 			</div>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" scoped>

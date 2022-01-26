@@ -121,8 +121,8 @@ export default class AppDiscoverHomeBanner extends Vue {
 
 <template>
 	<div v-if="!item || isLoading" class="-placeholder" />
-	<app-theme v-else :theme="theme" force-dark>
-		<app-media-item-backdrop class="-backdrop" :media-item="bannerMediaItem">
+	<AppTheme v-else :theme="theme" force-dark>
+		<AppMediaItemBackdrop class="-backdrop" :media-item="bannerMediaItem">
 			<section
 				class="-banner landing-header-no-fill"
 				:style="{
@@ -165,7 +165,7 @@ export default class AppDiscoverHomeBanner extends Vue {
 
 							<div class="-controls">
 								<template v-if="item.game">
-									<app-button
+									<AppButton
 										v-if="item.custom_url"
 										v-app-track-event="`home:banner:custom-${item.game.id}`"
 										solid
@@ -173,18 +173,18 @@ export default class AppDiscoverHomeBanner extends Vue {
 										target="_blank"
 									>
 										{{ item.custom_text }}
-									</app-button>
+									</AppButton>
 
-									<app-button
+									<AppButton
 										v-if="shouldShowViewGame"
 										v-app-track-event="`home:banner:${item.game.id}`"
 										solid
 										:to="location"
 									>
-										<translate>View Game</translate>
-									</app-button>
+										<AppTranslate>View Game</AppTranslate>
+									</AppButton>
 
-									<app-game-follow-widget
+									<AppGameFollowWidget
 										v-if="shouldShowFollowGame"
 										v-app-track-event="`home:banner:follow-${item.game.id}`"
 										:game="item.game"
@@ -194,7 +194,7 @@ export default class AppDiscoverHomeBanner extends Vue {
 									/>
 								</template>
 								<template v-else-if="item.community">
-									<app-button
+									<AppButton
 										v-if="item.custom_url"
 										v-app-track-event="
 											`home:banner:custom-community-${item.community.path}`
@@ -204,9 +204,9 @@ export default class AppDiscoverHomeBanner extends Vue {
 										target="_blank"
 									>
 										{{ item.custom_text }}
-									</app-button>
+									</AppButton>
 
-									<app-button
+									<AppButton
 										v-if="shouldShowViewCommunity"
 										v-app-track-event="
 											`home:banner:community-${item.community.path}`
@@ -214,10 +214,10 @@ export default class AppDiscoverHomeBanner extends Vue {
 										solid
 										:to="location"
 									>
-										<translate>View Community</translate>
-									</app-button>
+										<AppTranslate>View Community</AppTranslate>
+									</AppButton>
 
-									<app-community-join-widget
+									<AppCommunityJoinWidget
 										v-if="shouldShowJoinCommunity"
 										:community="item.community"
 										solid
@@ -226,41 +226,41 @@ export default class AppDiscoverHomeBanner extends Vue {
 									/>
 								</template>
 								<template v-else-if="item.jam">
-									<app-button
+									<AppButton
 										v-if="shouldShowJamViewGames"
 										v-app-track-event="`home:banner:${item.jam.id}`"
 										primary
 										solid
 										:to="location"
 									>
-										<translate>View Games</translate>
-									</app-button>
-									<app-button
+										<AppTranslate>View Games</AppTranslate>
+									</AppButton>
+									<AppButton
 										v-app-track-event="`home:banne:jam-${item.jam.id}`"
 										solid
 										:href="item.jam.fullUrl"
 										target="_blank"
 									>
-										<translate>View Jam Page</translate>
-									</app-button>
+										<AppTranslate>View Jam Page</AppTranslate>
+									</AppButton>
 								</template>
 								<template v-else-if="item.custom_url">
-									<app-button
+									<AppButton
 										v-app-track-event="`home:banner:custom`"
 										solid
 										:href="item.custom_url"
 										target="_blank"
 									>
 										{{ item.custom_text }}
-									</app-button>
+									</AppButton>
 								</template>
 							</div>
 						</div>
 					</div>
 				</div>
 			</section>
-		</app-media-item-backdrop>
-	</app-theme>
+		</AppMediaItemBackdrop>
+	</AppTheme>
 </template>
 
 <style lang="stylus" scoped>

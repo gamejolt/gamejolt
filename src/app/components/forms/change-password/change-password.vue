@@ -40,41 +40,41 @@ export default class FormChangePassword extends mixins(Wrapper) implements FormO
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group
+	<AppForm :controller="form">
+		<AppFormGroup
 			v-if="requiresOld"
 			name="old_password"
 			:label="$gettext(`dash.change_pass.old_password_label`)"
 		>
-			<app-form-control
+			<AppFormControl
 				type="password"
 				:validators="[validateMinLength(4), validateMaxLength(300)]"
 				validate-on-blur
 			/>
 
-			<app-form-control-errors label="password">
-				<app-form-control-error
+			<AppFormControlErrors label="password">
+				<AppFormControlError
 					when="server"
 					:message="$gettext(`dash.change_pass.invalid_old_password_error`)"
 				/>
-			</app-form-control-errors>
-		</app-form-group>
+			</AppFormControlErrors>
+		</AppFormGroup>
 
-		<app-form-group name="password" :label="$gettext(`dash.change_pass.password_label`)">
-			<app-form-control
+		<AppFormGroup name="password" :label="$gettext(`dash.change_pass.password_label`)">
+			<AppFormControl
 				type="password"
 				:validators="[validateMinLength(4), validateMaxLength(300)]"
 				validate-on-blur
 			/>
 
-			<app-form-control-errors label="new password" />
-		</app-form-group>
+			<AppFormControlErrors label="new password" />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="confirm_password"
 			:label="$gettext(`dash.change_pass.confirm_password_label`)"
 		>
-			<app-form-control
+			<AppFormControl
 				type="password"
 				:validators="[
 					validateMinLength(4),
@@ -84,16 +84,16 @@ export default class FormChangePassword extends mixins(Wrapper) implements FormO
 				validate-on-blur
 			/>
 
-			<app-form-control-errors label="new password">
-				<app-form-control-error
+			<AppFormControlErrors label="new password">
+				<AppFormControlError
 					when="match"
 					:message="$gettext(`dash.change_pass.no_match_error`)"
 				/>
-			</app-form-control-errors>
-		</app-form-group>
+			</AppFormControlErrors>
+		</AppFormGroup>
 
-		<app-form-button>
-			<translate>dash.change_pass.submit_button</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton>
+			<AppTranslate>dash.change_pass.submit_button</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

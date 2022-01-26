@@ -63,7 +63,7 @@ export default class AppProfileTrophiesNav extends Vue {
 					}"
 					exact-active-class="active"
 				>
-					<translate>Latest Activity</translate>
+					<AppTranslate>Latest Activity</AppTranslate>
 				</router-link>
 			</li>
 			<li>
@@ -73,7 +73,7 @@ export default class AppProfileTrophiesNav extends Vue {
 					}"
 					exact-active-class="active"
 				>
-					<translate>All Trophies</translate>
+					<AppTranslate>All Trophies</AppTranslate>
 					<span class="badge">{{ formatNumber(trophyCount) }}</span>
 				</router-link>
 			</li>
@@ -84,20 +84,20 @@ export default class AppProfileTrophiesNav extends Vue {
 					}"
 					exact-active-class="active"
 				>
-					<translate>Game Jolt Trophies</translate>
+					<AppTranslate>Game Jolt Trophies</AppTranslate>
 					<span class="badge">{{ formatNumber(siteTrophyCount) }}</span>
 				</router-link>
 			</li>
 		</ul>
 		<template v-if="hasGames">
 			<hr />
-			<app-list-group-selector
+			<AppListGroupSelector
 				:items="games"
 				:current="currentGame"
 				@change="changeGame($event)"
 			>
 				<template #default="{ item }">
-					<translate v-if="!item">Choose a game...</translate>
+					<AppTranslate v-if="!item">Choose a game...</AppTranslate>
 					<template v-else>
 						<span
 							class="badge"
@@ -108,7 +108,7 @@ export default class AppProfileTrophiesNav extends Vue {
 						{{ item.title }}
 					</template>
 				</template>
-			</app-list-group-selector>
+			</AppListGroupSelector>
 		</template>
 	</nav>
 </template>

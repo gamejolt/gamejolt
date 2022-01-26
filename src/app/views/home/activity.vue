@@ -84,14 +84,14 @@ export default class RouteHomeActivity extends BaseRouteComponent {
 </script>
 
 <template>
-	<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />
+	<AppActivityFeedPlaceholder v-if="!feed || !feed.isBootstrapped" />
 	<div v-else>
 		<div v-if="!feed.hasItems" class="alert full-bleed-xs text-center">
 			<p class="lead">
-				<translate>
+				<AppTranslate>
 					You don't have any activity yet. Follow games to stay up to date on their latest
 					development!
-				</translate>
+				</AppTranslate>
 			</p>
 
 			<router-link
@@ -100,11 +100,11 @@ export default class RouteHomeActivity extends BaseRouteComponent {
 					name: 'discover.home',
 				}"
 			>
-				<app-button icon="compass-needle" solid lg>
-					<translate>Explore</translate>
-				</app-button>
+				<AppButton icon="compass-needle" solid lg>
+					<AppTranslate>Explore</AppTranslate>
+				</AppButton>
 			</router-link>
 		</div>
-		<app-activity-feed v-else :feed="feed" @load-new="onLoadedNew" @load-more="onLoadMore" />
+		<AppActivityFeed v-else :feed="feed" @load-new="onLoadedNew" @load-more="onLoadMore" />
 	</div>
 </template>

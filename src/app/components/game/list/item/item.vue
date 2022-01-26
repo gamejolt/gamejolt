@@ -35,7 +35,7 @@ export default class AppGameListItem extends Vue {
 			class="-thumb"
 			:to="url"
 		>
-			<app-game-thumbnail-img :game="game" />
+			<AppGameThumbnailImg :game="game" />
 		</router-link>
 
 		<div class="-meta">
@@ -48,7 +48,7 @@ export default class AppGameListItem extends Vue {
 				{{ game.title }}
 			</router-link>
 
-			<app-user-card-hover class="-dev -spacing" :user="game.developer">
+			<AppUserCardHover class="-dev -spacing" :user="game.developer">
 				<router-link
 					v-app-track-event="eventLabel ? 'game-list:dev:' + eventLabel : undefined"
 					class="link-muted"
@@ -58,23 +58,23 @@ export default class AppGameListItem extends Vue {
 					}"
 					:title="`${game.developer.display_name} (@${game.developer.username})`"
 				>
-					<translate>by</translate>
+					<AppTranslate>by</AppTranslate>
 					{{ ' ' }}
 					<strong>
 						{{ game.developer.display_name }}
 					</strong>
-					<app-user-verified-tick :user="game.developer" />
+					<AppUserVerifiedTick :user="game.developer" />
 				</router-link>
-			</app-user-card-hover>
+			</AppUserCardHover>
 
 			<div class="-followers -spacing text-muted">
-				<translate
+				<AppTranslate
 					:translate-n="game.follower_count || 0"
 					:translate-params="{ count: formatNumber(game.follower_count || 0) }"
 					translate-plural="%{ count } followers"
 				>
 					%{ count } follower
-				</translate>
+				</AppTranslate>
 			</div>
 		</div>
 	</div>

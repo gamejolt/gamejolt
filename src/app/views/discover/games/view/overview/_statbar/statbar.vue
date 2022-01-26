@@ -59,14 +59,14 @@ export default class AppDiscoverGamesViewOverviewStatbar extends Vue {
 	>
 		<div class="-stat">
 			<div class="-label">
-				<translate>views</translate>
+				<AppTranslate>views</AppTranslate>
 			</div>
-			<app-lazy-placeholder :when="isOverviewLoaded">
+			<AppLazyPlaceholder :when="isOverviewLoaded">
 				<span class="lazy-placeholder" />
 				<span class="-metric" :title="formatNumber(profileCount)">
 					<strong>{{ formatFuzzynumber(profileCount) }}</strong>
 				</span>
-			</app-lazy-placeholder>
+			</AppLazyPlaceholder>
 		</div>
 		<template v-if="game?.ratings_enabled">
 			<a
@@ -75,18 +75,18 @@ export default class AppDiscoverGamesViewOverviewStatbar extends Vue {
 				@click="showLikers()"
 			>
 				<div class="-label">
-					<translate>likes</translate>
+					<AppTranslate>likes</AppTranslate>
 				</div>
-				<app-lazy-placeholder :when="isOverviewLoaded">
+				<AppLazyPlaceholder :when="isOverviewLoaded">
 					<span class="lazy-placeholder" />
 					<span class="-metric" :title="formatNumber(likeCount)">
 						<strong>{{ formatFuzzynumber(likeCount) }}</strong>
 					</span>
-				</app-lazy-placeholder>
+				</AppLazyPlaceholder>
 			</a>
 			<div class="-split" />
 			<div class="-rating">
-				<app-rating-widget :game="game" :user-rating="userRating" hide-count />
+				<AppRatingWidget :game="game" :user-rating="userRating" hide-count />
 			</div>
 		</template>
 	</div>

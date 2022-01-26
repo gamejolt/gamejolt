@@ -132,27 +132,27 @@ export default class RouteContent extends BaseRouteComponent {
 				<h2>Edit {{ title }}</h2>
 				<table class="text-muted">
 					<tr>
-						<th><translate>Source</translate></th>
+						<th><AppTranslate>Source</AppTranslate></th>
 						<td>
 							<a target="_blank" :href="resourceUrl">{{ resourceTitle }}</a>
 						</td>
 					</tr>
 					<tr v-if="ownerName && ownerUrl">
-						<th><translate>Owner</translate></th>
+						<th><AppTranslate>Owner</AppTranslate></th>
 						<td>
 							<a target="_blank" :href="ownerUrl">{{ ownerName }}</a>
 						</td>
 					</tr>
 					<tr>
-						<th><translate>Last edit</translate></th>
+						<th><AppTranslate>Last edit</AppTranslate></th>
 						<td>
-							<app-time-ago :date="lastEdit" strict />
+							<AppTimeAgo :date="lastEdit" strict />
 						</td>
 					</tr>
 				</table>
 
 				<div class="content-container">
-					<app-content-editor
+					<AppContentEditor
 						class="content-editor-moderate"
 						:value="contentJson"
 						:content-context="contentContext"
@@ -163,8 +163,8 @@ export default class RouteContent extends BaseRouteComponent {
 				<br />
 
 				<div class="alert alert-info">
-					<app-jolticon icon="info-circle" />
-					<translate>Image uploads are currently unavailable.</translate>
+					<AppJolticon icon="info-circle" />
+					<AppTranslate>Image uploads are currently unavailable.</AppTranslate>
 				</div>
 
 				<div class="log-reason">
@@ -179,16 +179,16 @@ export default class RouteContent extends BaseRouteComponent {
 				</div>
 
 				<div class="controls">
-					<app-button primary solid :disabled="!canSubmit" @click="submit">
-						<translate>Submit</translate>
-					</app-button>
+					<AppButton primary solid :disabled="!canSubmit" @click="submit">
+						<AppTranslate>Submit</AppTranslate>
+					</AppButton>
 				</div>
 			</template>
-			<app-loading v-else />
+			<AppLoading v-else />
 		</div>
 
 		<div v-if="isLoading" class="loading-overlay">
-			<app-loading big centered />
+			<AppLoading big centered />
 		</div>
 	</div>
 </template>

@@ -50,7 +50,7 @@ export default class RouteDashAccountPaymentMethods extends BaseRouteComponent {
 	<div v-if="isRouteBootstrapped" class="row">
 		<template v-if="hasPaymentSources">
 			<div v-for="paymentSource of paymentSources" :key="paymentSource.id" class="col-md-6">
-				<app-user-payment-source-card
+				<AppUserPaymentSourceCard
 					:payment-source="paymentSource"
 					show-remove
 					@remove="onRemove(paymentSource)"
@@ -60,7 +60,7 @@ export default class RouteDashAccountPaymentMethods extends BaseRouteComponent {
 		<template v-else>
 			<div class="col-md-6 col-centered">
 				<p class="lead text-center">
-					<translate>You do not have any payment methods saved yet.</translate>
+					<AppTranslate>You do not have any payment methods saved yet.</AppTranslate>
 				</p>
 			</div>
 		</template>

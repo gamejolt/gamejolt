@@ -279,21 +279,21 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 </script>
 
 <template>
-	<app-scroll-inview
+	<AppScrollInview
 		class="-player theme-dark"
 		:config="InviewConfigFocused"
 		:controller="focusedController"
 		@mouseleave="onMouseOut"
 		@mouseenter="onMouseIn"
 	>
-		<app-responsive-dimensions
+		<AppResponsiveDimensions
 			class="-video-container"
 			:ratio="mediaItem.width / mediaItem.height"
 			:max-height="maxPlayerHeight"
 			@change="onChangeDimensions"
 		>
 			<div class="-content-container">
-				<app-video-player-shaka-lazy
+				<AppVideoPlayerShakaLazy
 					v-if="player && !GJ_IS_SSR"
 					class="-video"
 					:style="{ width }"
@@ -303,27 +303,27 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 				/>
 
 				<div v-if="shouldShowLoading" class="-overlay -ui">
-					<app-loading no-color hide-label stationary />
+					<AppLoading no-color hide-label stationary />
 				</div>
 
 				<!--
 				This will show behind the video so that we can switch to it while
 				the video is loading and when it's unfocused/not active.
 				-->
-				<app-media-item-backdrop
+				<AppMediaItemBackdrop
 					class="-backdrop"
 					:style="{ height, width, position: GJ_IS_SSR ? 'relative' : null }"
 					:media-item="mediaItem"
 				>
-					<app-img-responsive
+					<AppImgResponsive
 						class="-img"
 						:style="{ width }"
 						:src="mediaItem.mediaserver_url"
 						alt=""
 					/>
-				</app-media-item-backdrop>
+				</AppMediaItemBackdrop>
 			</div>
-		</app-responsive-dimensions>
+		</AppResponsiveDimensions>
 
 		<div v-if="player" class="-bottom -ui" @click.stop>
 			<div class="-bottom-gradient">
@@ -334,7 +334,7 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 							class="-control"
 							@click="onClickPlayback"
 						>
-							<app-jolticon :icon="player.state === 'playing' ? 'pause' : 'play'" />
+							<AppJolticon :icon="player.state === 'playing' ? 'pause' : 'play'" />
 						</div>
 					</transition>
 
@@ -372,7 +372,7 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 										class="-control"
 										@click="onClickMute"
 									>
-										<app-jolticon
+										<AppJolticon
 											:icon="player.volume > 0 ? 'audio' : 'audio-mute'"
 										/>
 									</div>
@@ -383,7 +383,7 @@ export default class AppActivityFeedVideoPlayer extends Vue {
 				</div>
 			</div>
 		</div>
-	</app-scroll-inview>
+	</AppScrollInview>
 </template>
 
 <style lang="stylus" scoped>

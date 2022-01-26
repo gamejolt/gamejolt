@@ -47,20 +47,20 @@ export default class AppShareCard extends Vue {
 	>
 		<div class="-content">
 			<h4 v-if="!hideHeading">
-				<translate>Share</translate>
+				<AppTranslate>Share</AppTranslate>
 			</h4>
 
 			<div class="-content-row">
 				<!-- force update on input so that the URL re-applies and they can't edit -->
 				<input class="-url form-control" :value="url" @input="$forceUpdate()" />
 
-				<app-button class="-copy" @click="copyLink()">
-					<translate>Copy</translate>
-				</app-button>
+				<AppButton class="-copy" @click="copyLink()">
+					<AppTranslate>Copy</AppTranslate>
+				</AppButton>
 			</div>
 
 			<div class="-content-row-lower">
-				<app-share-card-tile
+				<AppShareCardTile
 					v-for="i in providers"
 					:key="i"
 					:resource="resource"
@@ -70,7 +70,7 @@ export default class AppShareCard extends Vue {
 				/>
 
 				<a class="-tile -dense" @click="openShareModal()">
-					<app-jolticon class="-icon" icon="ellipsis-h" />
+					<AppJolticon class="-icon" icon="ellipsis-h" />
 				</a>
 			</div>
 		</div>

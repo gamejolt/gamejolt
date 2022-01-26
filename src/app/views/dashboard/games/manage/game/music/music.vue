@@ -100,11 +100,11 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 		<div class="col-sm-4 col-sm-push-8">
 			<div class="page-help">
 				<p>
-					<translate>
+					<AppTranslate>
 						Let people enjoy your game's soundtrack whenever they want! Upload MP3s of
 						music from your game and the songs will appear on your game page in a nice
 						little music player. Don't upload copyrighted songs without permission!
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 		</div>
@@ -112,26 +112,26 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 		<div class="col-sm-8 col-sm-pull-4">
 			<div v-if="!songs.length" class="alert">
 				<p>
-					<translate>
+					<AppTranslate>
 						You haven't added any music. Upload some songs from your game! The music
 						player's worth it, trust us!
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 
-			<app-loading-fade :is-loading="isProcessing">
-				<app-card-list
+			<AppLoadingFade :is-loading="isProcessing">
+				<AppCardList
 					:items="songs"
 					:active-item="activeItem"
 					:is-adding="isAdding"
 					is-draggable
 					@activate="activeItem = $event"
 				>
-					<app-card-list-draggable item-key="id" @change="saveSongSort">
+					<AppCardListDraggable item-key="id" @change="saveSongSort">
 						<template #item="{ element: song }">
-							<app-card-list-item :item="song">
+							<AppCardListItem :item="song">
 								<a class="card-remove" @click.stop="removeSong(song)">
-									<app-jolticon icon="remove" />
+									<AppJolticon icon="remove" />
 								</a>
 
 								<div class="card-title">
@@ -139,26 +139,26 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 								</div>
 
 								<template #body>
-									<form-game-song
+									<FormGameSong
 										:game="game"
 										:model="song"
 										@submit="onSongEdited"
 									/>
 								</template>
-							</app-card-list-item>
+							</AppCardListItem>
 						</template>
-					</app-card-list-draggable>
+					</AppCardListDraggable>
 
-					<app-card-list-add
+					<AppCardListAdd
 						:label="$gettext('dash.games.music.add_button')"
 						@toggle="isAdding = !isAdding"
 					>
-						<form-game-song :game="game" @submit="onSongAdded" />
-					</app-card-list-add>
-				</app-card-list>
-			</app-loading-fade>
+						<FormGameSong :game="game" @submit="onSongAdded" />
+					</AppCardListAdd>
+				</AppCardList>
+			</AppLoadingFade>
 
-			<app-dash-game-wizard-controls />
+			<AppDashGameWizardControls />
 		</div>
 	</div>
 </template>

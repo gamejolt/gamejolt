@@ -52,17 +52,17 @@ export default class RouteCommunitiesViewMembers extends BaseRouteComponent {
 </script>
 
 <template>
-	<app-communities-view-page-container full>
+	<AppCommunitiesViewPageContainer full>
 		<div v-if="!community.member_count" class="alert alert-info">
-			<translate>
+			<AppTranslate>
 				No one is a member of this community yet. Maybe you could be the first!
-			</translate>
+			</AppTranslate>
 		</div>
-		<app-follower-list
+		<AppFollowerList
 			v-else
 			:url="loadUrl"
 			:initial-users="users"
 			:count="community.member_count || 0"
 		/>
-	</app-communities-view-page-container>
+	</AppCommunitiesViewPageContainer>
 </template>

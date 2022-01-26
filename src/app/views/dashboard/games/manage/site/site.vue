@@ -44,21 +44,21 @@ export default class RouteDashGamesManageSite extends BaseRouteComponent {
 			<template v-if="!game.path">
 				<div class="alert">
 					<p>
-						<translate>
+						<AppTranslate>
 							In order to set up a custom site for your game, you first have to set a
 							URL path in your game details page.
-						</translate>
+						</AppTranslate>
 					</p>
 					<div class="alert-actions">
-						<app-button
+						<AppButton
 							primary
 							:to="{
 								name: 'dash.games.manage.game.details',
 								params: { id: game.id },
 							}"
 						>
-							<translate>Edit Game Details</translate>
-						</app-button>
+							<AppTranslate>Edit Game Details</AppTranslate>
+						</AppButton>
 					</div>
 				</div>
 				<br />
@@ -68,7 +68,7 @@ export default class RouteDashGamesManageSite extends BaseRouteComponent {
 			<div class="row">
 				<div class="col-lg-8">
 					<div :class="{ '-disabled': !game.path }">
-						<app-sites-manage-page :site="site" :game="game" />
+						<AppSitesManagePage :site="site" :game="game" />
 					</div>
 				</div>
 				<div class="col-lg-4">
@@ -76,33 +76,33 @@ export default class RouteDashGamesManageSite extends BaseRouteComponent {
 
 					<p class="page-help">
 						<strong>
-							<translate>
+							<AppTranslate>
 								Game Jolt Sites are customizable external sites for your portfolio
 								and games!
-							</translate>
+							</AppTranslate>
 						</strong>
-						<translate>
+						<AppTranslate>
 							You can use a customizable template, or simply upload your own static
 							site.
-						</translate>
+						</AppTranslate>
 					</p>
 
 					<p class="page-help">
-						<translate>
+						<AppTranslate>
 							Sites don't replace your Game Jolt game page. You can use your Site URL
 							to share your site with others.
-						</translate>
+						</AppTranslate>
 					</p>
 
 					<p class="page-help">
 						<router-link :to="{ name: 'dash.account.site' }">
-							<translate>You can also create a user portfolio site.</translate>
+							<AppTranslate>You can also create a user portfolio site.</AppTranslate>
 						</router-link>
 					</p>
 
 					<hr />
 
-					<app-sites-link-card v-if="game.path" :site="site" />
+					<AppSitesLinkCard v-if="game.path" :site="site" />
 				</div>
 			</div>
 		</div>

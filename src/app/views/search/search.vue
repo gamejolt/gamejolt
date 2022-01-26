@@ -139,10 +139,10 @@ export default class RouteSearch extends BaseRouteComponent {
 
 <template>
 	<div>
-		<app-page-header should-affix-nav :hide-nav="!hasSearch">
+		<AppPageHeader should-affix-nav :hide-nav="!hasSearch">
 			<template v-if="Screen.isXs">
 				<label>
-					<translate>Enter your search</translate>
+					<AppTranslate>Enter your search</AppTranslate>
 				</label>
 				<!--
 					If they click into a tag (which goes to search page), we
@@ -150,19 +150,19 @@ export default class RouteSearch extends BaseRouteComponent {
 					see results. Only autofocus search on mobile if they haven't
 					searched for anything yet.
 				-->
-				<app-search autocomplete-disabled :autofocus="!hasSearch" />
+				<AppSearch autocomplete-disabled :autofocus="!hasSearch" />
 			</template>
 			<template v-else>
 				<template v-if="!hasSearch">
 					<p class="text-center text-muted">
-						<app-jolticon icon="chevron-up" />
-						<translate>search.results_placeholder</translate>
-						<app-jolticon icon="chevron-up" />
+						<AppJolticon icon="chevron-up" />
+						<AppTranslate>search.results_placeholder</AppTranslate>
+						<AppJolticon icon="chevron-up" />
 					</p>
 				</template>
 				<template v-else>
 					<div class="small text-upper text-muted">
-						<translate>search.showing_label</translate>
+						<AppTranslate>search.showing_label</AppTranslate>
 					</div>
 
 					<h2 class="sans-margin-top">
@@ -181,7 +181,7 @@ export default class RouteSearch extends BaseRouteComponent {
 								:to="{ name: 'search.results', query: { q: query } }"
 								exact-active-class="active"
 							>
-								<translate>search.results.overview_tab</translate>
+								<AppTranslate>search.results.overview_tab</AppTranslate>
 							</router-link>
 						</li>
 						<li v-if="searchPayload.communitiesCount">
@@ -189,7 +189,7 @@ export default class RouteSearch extends BaseRouteComponent {
 								:to="{ name: 'search.communities', query: { q: query } }"
 								exact-active-class="active"
 							>
-								<translate>Communities</translate>
+								<AppTranslate>Communities</AppTranslate>
 								<span class="badge">
 									{{ formatNumber(searchPayload.communitiesCount) }}
 								</span>
@@ -200,7 +200,7 @@ export default class RouteSearch extends BaseRouteComponent {
 								:to="{ name: 'search.users', query: { q: query } }"
 								exact-active-class="active"
 							>
-								<translate>search.results.users_tab</translate>
+								<AppTranslate>search.results.users_tab</AppTranslate>
 								<span class="badge">
 									{{ formatNumber(searchPayload.usersCount) }}
 								</span>
@@ -211,7 +211,7 @@ export default class RouteSearch extends BaseRouteComponent {
 								:to="{ name: 'search.games', query: { q: query } }"
 								exact-active-class="active"
 							>
-								<translate>search.results.games_tab</translate>
+								<AppTranslate>search.results.games_tab</AppTranslate>
 								<span class="badge">
 									{{ formatNumber(searchPayload.gamesCount) }}
 								</span>
@@ -220,22 +220,22 @@ export default class RouteSearch extends BaseRouteComponent {
 					</ul>
 				</nav>
 			</template>
-		</app-page-header>
+		</AppPageHeader>
 
-		<app-expand :when="noResults">
+		<AppExpand :when="noResults">
 			<section class="section fill-offset">
 				<div class="container">
-					<translate>search.results.no_results</translate>
+					<AppTranslate>search.results.no_results</AppTranslate>
 				</div>
 			</section>
-		</app-expand>
+		</AppExpand>
 
 		<div id="search-results" class="fill-backdrop">
 			<router-view />
 
 			<br />
 
-			<app-pagination
+			<AppPagination
 				v-if="searchPayload.perPage && searchPayload.count"
 				class="text-center"
 				:items-per-page="searchPayload.perPage"

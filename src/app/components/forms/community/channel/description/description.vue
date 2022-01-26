@@ -37,9 +37,9 @@ export default class FormCommunityChannelDescription extends mixins(Wrapper) imp
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="description_content" hide-label>
-			<app-form-control-content
+	<AppForm :controller="form">
+		<AppFormGroup name="description_content" hide-label>
+			<AppFormControlContent
 				:placeholder="$gettext(`Write your channel description here...`)"
 				content-context="community-channel-description"
 				:model-id="model.id"
@@ -51,11 +51,11 @@ export default class FormCommunityChannelDescription extends mixins(Wrapper) imp
 				:max-height="0"
 			/>
 
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-button show-when-valid>
-			<translate>Save Description</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton show-when-valid>
+			<AppTranslate>Save Description</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

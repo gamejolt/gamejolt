@@ -124,14 +124,14 @@ export default class AppMobileHeader extends Vue {
 </script>
 
 <template>
-	<app-theme class="-community-card" :theme="community.theme">
+	<AppTheme class="-community-card" :theme="community.theme">
 		<div class="-well">
 			<!-- Thumbnail -->
 			<div class="-thumbnail">
 				<div class="-thumbnail-inner">
-					<app-editable-thumbnail />
+					<AppEditableThumbnail />
 				</div>
-				<app-community-verified-tick class="-verified" :community="community" />
+				<AppCommunityVerifiedTick class="-verified" :community="community" />
 			</div>
 
 			<!-- Name / Members -->
@@ -164,7 +164,7 @@ export default class AppMobileHeader extends Vue {
 		<div class="-controls">
 			<!-- Context Menu -->
 			<div v-if="shouldShowChannelsMenu" class="-controls-item -menu">
-				<app-button
+				<AppButton
 					v-app-track-event="`community-mobile-header:toggle-context`"
 					icon="menu"
 					trans
@@ -174,19 +174,19 @@ export default class AppMobileHeader extends Vue {
 				>
 					<div v-if="hasUnread" class="-unread-blip" />
 					<template v-if="!Screen.isXs || !shouldShowAbout">
-						<translate v-if="routeStore && routeStore.channelPath">
+						<AppTranslate v-if="routeStore && routeStore.channelPath">
 							Channels
-						</translate>
-						<translate v-else>Menu</translate>
+						</AppTranslate>
+						<AppTranslate v-else>Menu</AppTranslate>
 					</template>
-				</app-button>
+				</AppButton>
 			</div>
 
 			<div class="-spacer" />
 
 			<!-- Join / Edit / View -->
 			<div v-if="!community.hasPerms()" class="-controls-item -controls-primary">
-				<app-community-join-widget
+				<AppCommunityJoinWidget
 					:community="community"
 					:disabled="!!community.user_block"
 					block
@@ -201,14 +201,14 @@ export default class AppMobileHeader extends Vue {
 				v-app-track-event="`community-mobile-header:community-about`"
 				class="-controls-item -about"
 			>
-				<app-button trans @click="onClickAbout">
-					<translate>About</translate>
-				</app-button>
+				<AppButton trans @click="onClickAbout">
+					<AppTranslate>About</AppTranslate>
+				</AppButton>
 			</div>
 
 			<!-- Popover Extras -->
-			<app-popper class="-controls-item -extra" popover-class="fill-darkest">
-				<app-button class="link-unstyled" icon="ellipsis-v" trans sparse circle />
+			<AppPopper class="-controls-item -extra" popover-class="fill-darkest">
+				<AppButton class="link-unstyled" icon="ellipsis-v" trans sparse circle />
 
 				<template #popover>
 					<div class="list-group list-group-dark">
@@ -217,8 +217,8 @@ export default class AppMobileHeader extends Vue {
 							class="list-group-item has-icon"
 							@click="copyShareUrl"
 						>
-							<app-jolticon icon="link" />
-							<translate>Copy link to community</translate>
+							<AppJolticon icon="link" />
+							<AppTranslate>Copy link to community</AppTranslate>
 						</a>
 						<a
 							v-if="shouldShowModTools"
@@ -229,14 +229,14 @@ export default class AppMobileHeader extends Vue {
 							target="_blank"
 							@click="onClickExtrasOption"
 						>
-							<app-jolticon icon="cog" />
+							<AppJolticon icon="cog" />
 							<span>Moderate Community</span>
 						</a>
 					</div>
 				</template>
-			</app-popper>
+			</AppPopper>
 		</div>
-	</app-theme>
+	</AppTheme>
 </template>
 
 <style lang="stylus" scoped>

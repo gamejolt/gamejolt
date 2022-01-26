@@ -133,99 +133,99 @@ export default class RouteCommunitiesViewEditChannelsList extends BaseRouteCompo
 </script>
 
 <template>
-	<app-communities-view-page-container>
-		<app-community-perms
+	<AppCommunitiesViewPageContainer>
+		<AppCommunityPerms
 			:community="community"
 			required="community-channels,community-competitions"
 			either
 		>
 			<h2 class="section-header">
-				<translate>Channels</translate>
+				<AppTranslate>Channels</AppTranslate>
 			</h2>
 
 			<div class="page-help">
 				<p>
-					<translate>
+					<AppTranslate>
 						Channels make it easy for your community members to organize their posts
 						into individual sub-topics.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 
-			<app-card-list
+			<AppCardList
 				v-if="hasFullChannelsPermission"
 				:items="communityPresetChannels"
 				:active-item="activeItem"
 				:is-adding="isShowingChannelAdd"
 				@activate="onActivate"
 			>
-				<app-card-list-add
+				<AppCardListAdd
 					:label="$gettext(`Add Channel`)"
 					@toggle="isShowingChannelAdd = !isShowingChannelAdd"
 				>
-					<form-community-channel-add
+					<FormCommunityChannelAdd
 						:community="community"
 						:channels="community.channels"
 						:archived-channels="routeStore.archivedChannels"
 						@submit="onChannelAdded"
 					/>
-				</app-card-list-add>
+				</AppCardListAdd>
 
-				<app-communities-edit-channel-list-preset-item
+				<AppCommunitiesEditChannelListPresetItem
 					v-for="presetType of communityPresetChannels"
 					:key="presetType"
 					:community="community"
 					:preset-type="presetType"
 					@edit="onPresetListItemSaved"
 				/>
-			</app-card-list>
+			</AppCardList>
 
-			<app-card-list
+			<AppCardList
 				v-if="community.channels"
 				:items="community.channels"
 				:is-draggable="hasFullChannelsPermission"
 			>
-				<app-card-list-draggable item-key="id" @change="saveChannelSort">
+				<AppCardListDraggable item-key="id" @change="saveChannelSort">
 					<template #item="{ element: channel }">
-						<app-communities-edit-channel-list-item :channel="channel" />
+						<AppCommunitiesEditChannelListItem :channel="channel" />
 					</template>
-				</app-card-list-draggable>
-			</app-card-list>
+				</AppCardListDraggable>
+			</AppCardList>
 
 			<template v-if="community.has_archived_channels">
 				<h3 class="-archived-heading" @click="onClickArchivedChannels">
-					<app-jolticon
+					<AppJolticon
 						:icon="
 							routeStore.expandedArchivedChannels ? 'chevron-down' : 'chevron-right'
 						"
 					/>
-					<translate>Archived Channels</translate>
+					<AppTranslate>Archived Channels</AppTranslate>
 				</h3>
 
 				<template v-if="routeStore.expandedArchivedChannels">
 					<template v-if="routeStore.archivedChannels.length">
-						<app-card-list
+						<AppCardList
 							:items="routeStore.archivedChannels"
 							:is-draggable="hasFullChannelsPermission"
 						>
-							<app-card-list-draggable
+							<AppCardListDraggable
 								item-key="id"
 								@change="saveChannelSortArchived"
 							>
 								<template #item="{ element: channel }">
-									<app-communities-edit-channel-list-item :channel="channel" />
+									<AppCommunitiesEditChannelListItem :channel="channel" />
 								</template>
-							</app-card-list-draggable>
-						</app-card-list>
+							</AppCardListDraggable>
+						</AppCardList>
 					</template>
 
 					<template v-if="isLoadingArchivedChannels">
-						<app-loading centered />
+						<AppLoading centered />
 					</template>
 				</template>
 			</template>
-		</app-community-perms>
-	</app-communities-view-page-container>
+		</AppCommunityPerms>
+	</AppCommunitiesViewPageContainer>
 </template>
 
 <style lang="stylus" scoped>

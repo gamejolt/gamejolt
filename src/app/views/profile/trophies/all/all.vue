@@ -58,10 +58,10 @@ export default class RouteProfileTrophiesAll extends BaseRouteComponent {
 	<div>
 		<div v-if="!hasTrophies" class="alert alert-info">
 			<span>
-				<translate>This user has not achieved any trophies...yet.</translate>
+				<AppTranslate>This user has not achieved any trophies...yet.</AppTranslate>
 			</span>
 		</div>
 
-		<app-trophy-list-paged v-else :initial-trophies="trophies" :url="listLoadMoreUrl" />
+		<AppTrophyListPaged v-else :initial-trophies="trophies" :url="listLoadMoreUrl" />
 	</div>
 </template>

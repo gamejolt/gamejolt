@@ -29,7 +29,7 @@ export default class AppGameCollectionGridItem extends Vue {
 <template>
 	<div class="game-collection-grid-item">
 		<router-link :to="collection.routeLocation" v-app-track-event="eventLabel">
-			<app-game-collection-thumbnail :collection="collection" />
+			<AppGameCollectionThumbnail :collection="collection" />
 
 			<div class="game-collection-title h4">
 				<template v-if="collection.type === 'developer'">
@@ -40,28 +40,28 @@ export default class AppGameCollectionGridItem extends Vue {
 						Games Made
 						<small>by %{ developer }</small>
 					</span>
-					<translate v-else> Your Games </translate>
+					<AppTranslate v-else> Your Games </AppTranslate>
 				</template>
 				<template v-else-if="collection.type === 'followed'">
 					<span v-if="notOwner" v-translate="{ user: '@' + collection.owner.username }">
 						Games Followed
 						<small>by %{ user }</small>
 					</span>
-					<translate v-else> Your Followed Games </translate>
+					<AppTranslate v-else> Your Followed Games </AppTranslate>
 				</template>
 				<template v-else-if="collection.type === 'owned'">
 					<span v-if="notOwner" v-translate="{ user: '@' + collection.owner.username }">
 						Games Owned
 						<small>by %{ user }</small>
 					</span>
-					<translate v-else> Your Owned Games </translate>
+					<AppTranslate v-else> Your Owned Games </AppTranslate>
 				</template>
 				<template v-else-if="collection.type === 'recommended'">
 					<span v-if="notOwner" v-translate="{ user: '@' + collection.owner.username }">
 						Daily Mix
 						<small>for %{ user }</small>
 					</span>
-					<translate v-else> Your Daily Mix </translate>
+					<AppTranslate v-else> Your Daily Mix </AppTranslate>
 				</template>
 				<template v-else>
 					{{ collection.name }}

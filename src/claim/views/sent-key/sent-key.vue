@@ -15,13 +15,13 @@ export default class RouteSentKey extends BaseRouteComponent {
 <template>
 	<section class="container">
 		<p class="lead text-center">
-			<translate>Awesome. We're sending you an email with your keys.</translate>
+			<AppTranslate>Awesome. We're sending you an email with your keys.</AppTranslate>
 		</p>
 		<p class="lead text-center">
-			<translate>
+			<AppTranslate>
 				Note that it might take a few minutes. If you don't see it soon, check your spam folder or
 				something, okay?
-			</translate>
+			</AppTranslate>
 		</p>
 	</section>
 </template>

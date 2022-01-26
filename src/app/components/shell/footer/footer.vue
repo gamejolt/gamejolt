@@ -55,7 +55,7 @@ export default class AppShellFooter extends Vue {
 						<br class="visible-xs" />
 						Test the beta version of the Game Jolt app.
 					</p>
-					<app-app-buttons source="footer" />
+					<AppAppButtons source="footer" />
 				</div>
 
 				<br />
@@ -76,7 +76,7 @@ export default class AppShellFooter extends Vue {
 											})
 										"
 									>
-										<translate>Mobile App</translate>
+										<AppTranslate>Mobile App</AppTranslate>
 									</router-link>
 								</li>
 								<li v-if="!GJ_IS_DESKTOP_APP">
@@ -89,15 +89,15 @@ export default class AppShellFooter extends Vue {
 											})
 										"
 									>
-										<translate>Desktop App</translate>
+										<AppTranslate>Desktop App</AppTranslate>
 									</router-link>
 								</li>
 								<li>
-									<app-link-external
+									<AppLinkExternal
 										href="https://www.redbubble.com/people/gamejolt/shop"
 									>
-										<translate>Merch</translate>
-									</app-link-external>
+										<AppTranslate>Merch</AppTranslate>
+									</AppLinkExternal>
 								</li>
 							</ol>
 						</div>
@@ -111,7 +111,7 @@ export default class AppShellFooter extends Vue {
 											params: { path: 'guidelines' },
 										}"
 									>
-										<translate>Site Guidelines</translate>
+										<AppTranslate>Site Guidelines</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -121,12 +121,12 @@ export default class AppShellFooter extends Vue {
 											params: { path: 'support' },
 										}"
 									>
-										<translate>Support</translate>
+										<AppTranslate>Support</AppTranslate>
 									</router-link>
 								</li>
 								<li>
 									<router-link :to="{ name: 'landing.about' }">
-										<translate>About</translate>
+										<AppTranslate>About</AppTranslate>
 									</router-link>
 								</li>
 							</ol>
@@ -135,17 +135,17 @@ export default class AppShellFooter extends Vue {
 							<ol class="list-unstyled footer-link-list">
 								<li>
 									<router-link :to="{ name: 'legal.terms' }">
-										<translate>legal.terms</translate>
+										<AppTranslate>legal.terms</AppTranslate>
 									</router-link>
 								</li>
 								<li>
 									<router-link :to="{ name: 'legal.privacy' }">
-										<translate>legal.privacy</translate>
+										<AppTranslate>legal.privacy</AppTranslate>
 									</router-link>
 								</li>
 								<li v-if="!GJ_IS_DESKTOP_APP">
 									<router-link :to="{ name: 'legal.cookies' }">
-										<translate>Cookie Policy</translate>
+										<AppTranslate>Cookie Policy</AppTranslate>
 									</router-link>
 								</li>
 							</ol>
@@ -154,24 +154,24 @@ export default class AppShellFooter extends Vue {
 							<div class="text-muted" style="margin-bottom: 4px">
 								<small>
 									<strong>
-										<translate>For Developers</translate>
+										<AppTranslate>For Developers</AppTranslate>
 									</strong>
 								</small>
 							</div>
 							<ol class="list-unstyled footer-link-list">
 								<li>
 									<router-link :to="{ name: 'landing.game-api' }">
-										<translate>Game API</translate>
+										<AppTranslate>Game API</AppTranslate>
 									</router-link>
 								</li>
 								<li>
 									<router-link :to="{ name: 'landing.marketplace' }">
-										<translate>Marketplace</translate>
+										<AppTranslate>Marketplace</AppTranslate>
 									</router-link>
 								</li>
 								<li>
 									<router-link :to="{ name: 'landing.partners' }">
-										<translate>Partner Program</translate>
+										<AppTranslate>Partner Program</AppTranslate>
 									</router-link>
 								</li>
 							</ol>
@@ -185,7 +185,7 @@ export default class AppShellFooter extends Vue {
 			<div class="clearfix">
 				<div v-if="!Screen.isXs" class="footer-jolt">
 					<router-link :to="{ name: 'home' }">
-						<app-theme-svg
+						<AppThemeSvg
 							:src="imageJolt"
 							alt=""
 							width="68"
@@ -196,14 +196,14 @@ export default class AppShellFooter extends Vue {
 				</div>
 				<div class="footer-meta">
 					<p>
-						<app-button
+						<AppButton
 							trans
 							circle
 							icon="twitter-bird"
 							href="https://twitter.com/gamejolt"
 							target="_blank"
 						/>
-						<app-button
+						<AppButton
 							trans
 							circle
 							icon="facebook"
@@ -216,7 +216,7 @@ export default class AppShellFooter extends Vue {
 
 					<p v-if="GJ_IS_DESKTOP_APP" class="tiny text-muted">
 						<a class="link-muted" @click="showSystemReport">
-							<translate>footer.send_system_report</translate>
+							<AppTranslate>footer.send_system_report</AppTranslate>
 						</a>
 						<span class="dot-separator" />
 						v{{ clientVersion }}
@@ -224,13 +224,13 @@ export default class AppShellFooter extends Vue {
 				</div>
 				<div class="footer-translations">
 					<div>
-						<app-translate-lang-selector />
+						<AppTranslateLangSelector />
 					</div>
 
 					<br class="hidden-xs" />
 
 					<p class="small text-muted">
-						<translate>footer.translations</translate>
+						<AppTranslate>footer.translations</AppTranslate>
 					</p>
 				</div>
 			</div>

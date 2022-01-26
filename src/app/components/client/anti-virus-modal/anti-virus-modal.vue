@@ -13,11 +13,11 @@ export default class AppClientAntiVirusModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-header">
@@ -32,25 +32,25 @@ export default class AppClientAntiVirusModal extends mixins(BaseModal) {
 
 		<div class="modal-body">
 			<p>
-				<translate>
+				<AppTranslate>
 					Looks like your anti-virus program removed an executable we need to manage your game
 					library.
-				</translate>
+				</AppTranslate>
 			</p>
 
 			<p>
-				<translate>
+				<AppTranslate>
 					Sadly, it's common for anti-virus programs to quarantine legitimate programs like the
 					Client that require access to your file system.
-				</translate>
+				</AppTranslate>
 			</p>
 
 			<p>
-				<translate>
+				<AppTranslate>
 					There should be a way to mark the Client as trusted in your anti-virus program to restore
 					functionality of the Client.
-				</translate>
+				</AppTranslate>
 			</p>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

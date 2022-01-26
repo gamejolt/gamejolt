@@ -35,16 +35,16 @@ export default class AppMessageThreadItem extends Vue {
 
 <template>
 	<div :id="id" class="message-thread-item" :class="{ '-blocked': isBlocked }">
-		<app-timeline-list-item
+		<AppTimelineListItem
 			:is-active="isActive"
 			:is-new="isNew"
 			:is-thread="isShowingReplies || isReply"
 			:is-last="isLast"
 		>
 			<template v-if="!isBlocked && user" #bubble>
-				<app-user-card-hover :user="user">
-					<app-user-avatar :user="user" />
-				</app-user-card-hover>
+				<AppUserCardHover :user="user">
+					<AppUserAvatar :user="user" />
+				</AppUserCardHover>
 			</template>
 
 			<slot v-if="isBlocked" name="blocked" />
@@ -61,14 +61,14 @@ export default class AppMessageThreadItem extends Vue {
 									class="link-unstyled"
 								>
 									{{ user.display_name }}
-									<app-user-verified-tick :user="user" />
+									<AppUserVerifiedTick :user="user" />
 								</router-link>
 
 								<small class="text-muted">@{{ user.username }}</small>
 							</span>
 
 							<template v-if="repliedTo">
-								<app-jolticon icon="arrow-forward" />
+								<AppJolticon icon="arrow-forward" />
 
 								<span class="-author tiny">
 									<router-link
@@ -95,7 +95,7 @@ export default class AppMessageThreadItem extends Vue {
 
 						<div class="-meta-sub">
 							<small class="text-muted" :title="formatDate(date, 'medium')">
-								<app-time-ago :date="date" />
+								<AppTimeAgo :date="date" />
 							</small>
 						</div>
 					</div>
@@ -107,7 +107,7 @@ export default class AppMessageThreadItem extends Vue {
 					</div>
 				</div>
 			</template>
-		</app-timeline-list-item>
+		</AppTimelineListItem>
 
 		<div v-if="isShowingReplies && !isBlocked" class="-replies">
 			<slot name="replies" />

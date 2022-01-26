@@ -144,14 +144,14 @@ export default class AppGameMediaBar extends Vue {
 </script>
 
 <template>
-	<app-scroll-scroller class="media-bar fill-darker" horizontal thin>
+	<AppScrollScroller class="media-bar fill-darker" horizontal thin>
 		<div class="-items" :style="{ height: mediaBarHeight + 'px' }">
 			<div v-if="!mediaItems || !mediaItems.length" class="-loading-container">
-				<app-loading centered no-color stationary hide-label />
+				<AppLoading centered no-color stationary hide-label />
 			</div>
 
 			<div v-if="mediaItems && mediaItems.length">
-				<app-game-media-bar-item
+				<AppGameMediaBarItem
 					v-for="item of mediaItems"
 					:key="item.id"
 					:item="item"
@@ -159,7 +159,7 @@ export default class AppGameMediaBar extends Vue {
 				/>
 			</div>
 		</div>
-	</app-scroll-scroller>
+	</AppScrollScroller>
 </template>
 
 <style lang="stylus" scoped>

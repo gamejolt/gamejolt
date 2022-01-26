@@ -124,41 +124,41 @@ export default class FormGameNewBuild extends mixins(Wrapper) implements FormOnL
 </script>
 
 <template>
-	<app-form class="game-new-build-form" :controller="form">
+	<AppForm class="game-new-build-form" :controller="form">
 		<!--
 		Can only add files. Can't edit builds anymore.
 		They need to release a new version to do that.
 	-->
-		<app-form-group
+		<AppFormGroup
 			name="file"
 			:label="$gettext('Upload File')"
 			:hide-label="true"
 			:optional="true"
 		>
-			<app-form-control-upload
+			<AppFormControlUpload
 				:validators="[validateFilesize(maxFilesize)]"
 				:accept="uploadAccept"
 				@changed="submit"
 			/>
 
-			<app-form-control-errors :label="$gettext(`dash.games.builds.form.file_error_label`)" />
+			<AppFormControlErrors :label="$gettext(`dash.games.builds.form.file_error_label`)" />
 
-			<app-expand :when="hasBrowserTypeError">
+			<AppExpand :when="hasBrowserTypeError">
 				<br />
 				<div class="alert alert-notice sans-margin-bottom">
-					<translate>
+					<AppTranslate>
 						You can't upload multiple browser builds of the same type into the same
 						release. If you're trying to update your build, add a new release first.
-					</translate>
+					</AppTranslate>
 				</div>
-			</app-expand>
+			</AppExpand>
 
 			<p class="help-block" v-if="type === 'browser'">
-				<translate>
+				<AppTranslate>
 					For HTML builds, upload a .zip archive containing all of your build's files and
 					assets. There must be an index.html file in the root folder.
-				</translate>
+				</AppTranslate>
 			</p>
-		</app-form-group>
-	</app-form>
+		</AppFormGroup>
+	</AppForm>
 </template>

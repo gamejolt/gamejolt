@@ -9,8 +9,8 @@ export default class AppActivityFeedNewButton extends Vue {
 
 <template>
 	<p>
-		<app-button outline primary block @click="emitClick">
+		<AppButton outline primary block @click="emitClick">
 			<slot />
-		</app-button>
+		</AppButton>
 	</p>
 </template>

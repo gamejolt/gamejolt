@@ -82,7 +82,7 @@ export default class AppFormsCommunityPillSelector extends Vue {
 </script>
 
 <template>
-	<app-popper popover-class="fill-bg" height="45vh" hide-on-state-change @hide="resetSelections">
+	<AppPopper popover-class="fill-bg" height="45vh" hide-on-state-change @hide="resetSelections">
 		<slot />
 
 		<template v-if="selectedCommunity && withChannel" #header>
@@ -92,19 +92,19 @@ export default class AppFormsCommunityPillSelector extends Vue {
 				@click="unselectCommunity"
 			>
 				<div class="-community-img">
-					<app-community-thumbnail-img :community="selectedCommunity" />
-					<app-jolticon v-if="!isInitial" class="-back" icon="arrow-left" />
+					<AppCommunityThumbnailImg :community="selectedCommunity" />
+					<AppJolticon v-if="!isInitial" class="-back" icon="arrow-left" />
 				</div>
 				<span class="-text">
 					{{ selectedCommunity.name }}
 				</span>
-				<app-community-verified-tick class="-tick" :community="selectedCommunity" small />
+				<AppCommunityVerifiedTick class="-tick" :community="selectedCommunity" small />
 			</a>
 		</template>
 
 		<template #popover>
 			<div class="-container">
-				<app-scroll-helper :when="!!selectedCommunity" />
+				<AppScrollHelper :when="!!selectedCommunity" />
 				<div v-if="shouldShowCommunitySelector" class="-communities list-group">
 					<a
 						v-for="community of communities"
@@ -112,7 +112,7 @@ export default class AppFormsCommunityPillSelector extends Vue {
 						class="-community-item list-group-item"
 						@click="selectCommunity(community)"
 					>
-						<app-community-thumbnail-img
+						<AppCommunityThumbnailImg
 							class="-community-img"
 							:community="community"
 						/>
@@ -120,7 +120,7 @@ export default class AppFormsCommunityPillSelector extends Vue {
 						<span class="-text">
 							{{ community.name }}
 						</span>
-						<app-community-verified-tick class="-tick" :community="community" small />
+						<AppCommunityVerifiedTick class="-tick" :community="community" small />
 					</a>
 				</div>
 
@@ -133,12 +133,12 @@ export default class AppFormsCommunityPillSelector extends Vue {
 							@click="selectChannel(channel)"
 						>
 							<span class="-text">
-								<app-jolticon
+								<AppJolticon
 									v-if="channel.type === 'competition'"
 									v-app-tooltip="$gettext(`Game Jam`)"
 									icon="jams"
 								/>
-								<app-jolticon
+								<AppJolticon
 									v-if="channel.isUnpublished"
 									v-app-tooltip="$gettext(`Channel is not publicly visible`)"
 									icon="subscribed"
@@ -151,7 +151,7 @@ export default class AppFormsCommunityPillSelector extends Vue {
 				</div>
 			</div>
 		</template>
-	</app-popper>
+	</AppPopper>
 </template>
 
 <style lang="stylus" src="./selector.styl" scoped></style>

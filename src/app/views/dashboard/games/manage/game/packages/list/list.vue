@@ -137,69 +137,69 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 		<div class="col-sm-4 col-sm-push-8">
 			<div class="page-help">
 				<p>
-					<translate>
+					<AppTranslate>
 						Packages are how you organize and distribute your game's builds and other
 						files.
-					</translate>
+					</AppTranslate>
 				</p>
 				<p>
-					<translate>
+					<AppTranslate>
 						Your primary package should contain the builds you want people to play. You
 						can create new packages to contain additional files, such as level editors,
 						art packs, expansions, and other DLC.
-					</translate>
+					</AppTranslate>
 				</p>
 				<p>
-					<app-link-help page="dev-packages" class="link-help">
-						<translate>dash.games.packages.page_help_link</translate>
-					</app-link-help>
+					<AppLinkHelp page="dev-packages" class="link-help">
+						<AppTranslate>dash.games.packages.page_help_link</AppTranslate>
+					</AppLinkHelp>
 				</p>
 			</div>
 		</div>
 
 		<div class="col-sm-8 col-sm-pull-4">
 			<div v-if="game._is_devlog" class="alert">
-				<app-jolticon icon="notice" notice />
+				<AppJolticon icon="notice" notice />
 				{{ ' ' }}
-				<b><translate>Public packages do not show on devlog-only game pages.</translate></b>
+				<b><AppTranslate>Public packages do not show on devlog-only game pages.</AppTranslate></b>
 				{{ ' ' }}
-				<translate>
+				<AppTranslate>
 					You are only able to create private packages for testers while your game page is
 					only a devlog. Once you publish your game page into early access or as a
 					complete game, your public packages will show.
-				</translate>
+				</AppTranslate>
 			</div>
 
 			<div v-if="!packages.length" class="alert">
-				<p v-if="hasAllPerms"><translate>You haven't added any packages yet.</translate></p>
+				<p v-if="hasAllPerms"><AppTranslate>You haven't added any packages yet.</AppTranslate></p>
 				<p v-else>
-					<translate>
+					<AppTranslate>
 						This game hasn't got any packages yet, and you don't have permissions to
 						create any.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 
-			<app-game-perms required="all" tag="div">
-				<app-button primary block @click="addPackage()">
-					<translate>dash.games.packages.add_package_button</translate>
-				</app-button>
-			</app-game-perms>
+			<AppGamePerms required="all" tag="div">
+				<AppButton primary block @click="addPackage()">
+					<AppTranslate>dash.games.packages.add_package_button</AppTranslate>
+				</AppButton>
+			</AppGamePerms>
 			<br />
 
-			<app-card-list v-if="packages.length" :items="packages" :is-draggable="hasBuildsPerms">
-				<app-card-list-draggable item-key="id" @change="saveSort">
+			<AppCardList v-if="packages.length" :items="packages" :is-draggable="hasBuildsPerms">
+				<AppCardListDraggable item-key="id" @change="saveSort">
 					<template #item="{ element: pkg }">
-						<app-card-list-item :item="pkg">
-							<app-game-perms required="all">
+						<AppCardListItem :item="pkg">
+							<AppGamePerms required="all">
 								<a
 									v-if="!pkg.has_sales"
 									class="card-remove"
 									@click="removePackage(pkg)"
 								>
-									<app-jolticon icon="remove" />
+									<AppJolticon icon="remove" />
 								</a>
-							</app-game-perms>
+							</AppGamePerms>
 
 							<div class="card-title">
 								<h4>
@@ -229,7 +229,7 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 									"
 									class="tag tag-highlight"
 								>
-									<translate>Primary Package</translate>
+									<AppTranslate>Primary Package</AppTranslate>
 								</span>
 
 								<span
@@ -241,18 +241,18 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 									"
 									class="tag tag-notice"
 								>
-									<translate>Private</translate>
+									<AppTranslate>Private</AppTranslate>
 								</span>
 
 								<template
 									v-if="sellables[pkg.id] && sellables[pkg.id].type === 'pwyw'"
 								>
 									<span class="tag">
-										<translate>Pay What You Want</translate>
+										<AppTranslate>Pay What You Want</AppTranslate>
 									</span>
 									<span class="dot-separator" />
 									<strong>
-										<translate>Suggested Price</translate>
+										<AppTranslate>Suggested Price</AppTranslate>
 									</strong>
 									&mdash;
 									<template
@@ -264,7 +264,7 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 										{{ formatCurrency(sellables[pkg.id].pricings[0].amount) }}
 									</template>
 									<template v-else>
-										<translate>None</translate>
+										<AppTranslate>None</AppTranslate>
 									</template>
 								</template>
 								<template
@@ -273,18 +273,18 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 									"
 								>
 									<span class="tag">
-										<translate>Paid</translate>
+										<AppTranslate>Paid</AppTranslate>
 									</span>
 									<span class="dot-separator" />
 									<strong>
-										<translate>Price</translate>
+										<AppTranslate>Price</AppTranslate>
 									</strong>
 									&mdash;
 									{{ formatCurrency(sellables[pkg.id].pricings[0].amount) }}
 								</template>
 								<template v-else>
 									<span class="tag">
-										<translate>Free</translate>
+										<AppTranslate>Free</AppTranslate>
 									</span>
 								</template>
 							</div>
@@ -294,30 +294,30 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 							</div>
 
 							<div class="card-controls">
-								<app-game-perms required="builds">
-									<app-button
+								<AppGamePerms required="builds">
+									<AppButton
 										primary
 										:to="{
 											name: 'dash.games.manage.game.packages.edit',
 											params: { packageId: pkg.id },
 										}"
 									>
-										<translate>Manage</translate>
-									</app-button>
-								</app-game-perms>
+										<AppTranslate>Manage</AppTranslate>
+									</AppButton>
+								</AppGamePerms>
 								{{ ' ' }}
-								<app-button
+								<AppButton
 									trans
 									:to="{
 										name: 'dash.games.manage.game.packages.edit.widget',
 										params: { packageId: pkg.id },
 									}"
 								>
-									<translate>Widget</translate>
-								</app-button>
+									<AppTranslate>Widget</AppTranslate>
+								</AppButton>
 								{{ ' ' }}
-								<app-game-perms required="analytics">
-									<app-button
+								<AppGamePerms required="analytics">
+									<AppButton
 										trans
 										:to="{
 											name: 'dash.analytics',
@@ -327,16 +327,16 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 											},
 										}"
 									>
-										<translate>Analytics</translate>
-									</app-button>
-								</app-game-perms>
+										<AppTranslate>Analytics</AppTranslate>
+									</AppButton>
+								</AppGamePerms>
 							</div>
-						</app-card-list-item>
+						</AppCardListItem>
 					</template>
-				</app-card-list-draggable>
-			</app-card-list>
+				</AppCardListDraggable>
+			</AppCardList>
 
-			<app-dash-game-wizard-controls
+			<AppDashGameWizardControls
 				:disabled="!game._is_devlog && !game.has_active_builds"
 			/>
 		</div>

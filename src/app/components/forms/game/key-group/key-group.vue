@@ -47,68 +47,68 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group v-if="method === 'add'" name="type" :label="$gettext(`Key Type`)">
+	<AppForm :controller="form">
+		<AppFormGroup v-if="method === 'add'" name="type" :label="$gettext(`Key Type`)">
 			<div class="radio">
 				<label>
-					<app-form-control-radio :value="KeyGroup.TYPE_USER" />
-					<translate>User</translate>
+					<AppFormControlRadio :value="KeyGroup.TYPE_USER" />
+					<AppTranslate>User</AppTranslate>
 					&mdash;
-					<translate class="help-inline">
+					<AppTranslate class="help-inline">
 						Only the Game Jolt users you specify will be able to access and claim your
 						game. Useful for testers, friends, etc.
-					</translate>
+					</AppTranslate>
 				</label>
 			</div>
 			<div class="radio">
 				<label>
-					<app-form-control-radio :value="KeyGroup.TYPE_ANONYMOUS_CLAIM" />
-					<translate>Claim-Only</translate>
+					<AppFormControlRadio :value="KeyGroup.TYPE_ANONYMOUS_CLAIM" />
+					<AppTranslate>Claim-Only</AppTranslate>
 					&mdash;
-					<translate class="help-inline">
+					<AppTranslate class="help-inline">
 						Game can only be accessed once the key is claimed by a Game Jolt user.
 						Useful for key giveaways where you'd like only one person to be able to
 						claim per key, but you don't care who claims it.
-					</translate>
+					</AppTranslate>
 				</label>
 			</div>
 			<div class="radio">
 				<label>
-					<app-form-control-radio :value="KeyGroup.TYPE_ANONYMOUS" />
-					<translate>Unrestricted (Anonymous)</translate>
+					<AppFormControlRadio :value="KeyGroup.TYPE_ANONYMOUS" />
+					<AppTranslate>Unrestricted (Anonymous)</AppTranslate>
 					&mdash;
-					<translate class="help-inline">
+					<AppTranslate class="help-inline">
 						Anyone can access the game through the key page until the key has been
 						claimed by a Game Jolt user. Useful for press keys, bundles, or any time you
 						need to anonymously give out keys and see which have been claimed.
-					</translate>
+					</AppTranslate>
 				</label>
 			</div>
 			<div class="radio">
 				<label>
-					<app-form-control-radio :value="KeyGroup.TYPE_EMAIL" />
-					<translate>Unrestricted (Email)</translate>
+					<AppFormControlRadio :value="KeyGroup.TYPE_EMAIL" />
+					<AppTranslate>Unrestricted (Email)</AppTranslate>
 					&mdash;
-					<translate class="help-inline">
+					<AppTranslate class="help-inline">
 						Behaves exactly like Unrestricted keys, except they can be retrieved at any
 						time through a retrieval page by entering their email address. Useful for
 						assigning keys for Kickstarter rewards, etc
-					</translate>
+					</AppTranslate>
 				</label>
 			</div>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group v-if="!!formModel.type" name="name" :label="$gettext(`Label`)">
+		<AppFormGroup v-if="!!formModel.type" name="name" :label="$gettext(`Label`)">
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					This is just so you can keep track of your groups. It won't be shown to users.
-				</translate>
+				</AppTranslate>
 			</p>
-			<app-form-control type="text" :validators="[validateMaxLength(150)]" />
-		</app-form-group>
+			<AppFormControl type="text" :validators="[validateMaxLength(150)]" />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			v-if="
 				!!formModel.type &&
 				method === 'add' &&
@@ -118,54 +118,54 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 			name="amount"
 			:label="$gettext(`# of Keys to Generate`)"
 		>
-			<app-form-control
+			<AppFormControl
 				type="number"
 				step="1"
 				min="1"
 				max="20000"
 				:validators="[validateMinValue(1), validateMaxValue(20000)]"
 			/>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			v-if="!!formModel.type && method === 'add' && formModel.type === KeyGroup.TYPE_EMAIL"
 			name="emails"
 			:label="$gettext(`Email Addresses`)"
 		>
 			<p class="help-block">
-				<translate>Paste one email address per line, or separate them by commas.</translate>
+				<AppTranslate>Paste one email address per line, or separate them by commas.</AppTranslate>
 			</p>
-			<app-form-control-textarea rows="10" :validators="[validateMaxLength(25000)]" />
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlTextarea rows="10" :validators="[validateMaxLength(25000)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			v-if="!!formModel.type && method === 'add' && formModel.type === KeyGroup.TYPE_USER"
 			name="users"
 			:label="$gettext(`Usernames`)"
 		>
 			<p class="help-block">
-				<translate>Paste one username per line, or separate them by commas.</translate>
+				<AppTranslate>Paste one username per line, or separate them by commas.</AppTranslate>
 			</p>
-			<app-form-control-textarea rows="10" :validators="[validateMaxLength(25000)]" />
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlTextarea rows="10" :validators="[validateMaxLength(25000)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			v-if="!!formModel.type"
 			name="package_ids"
 			:label="$gettext(`Access Permissions`)"
 		>
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					The packages for your game that this key group will give access to.
-				</translate>
+				</AppTranslate>
 			</p>
 
 			<div v-for="pkg of packages" :key="pkg.id" class="checkbox">
 				<label>
-					<app-form-control-checkbox :value="pkg.id" />
+					<AppFormControlCheckbox :value="pkg.id" />
 					<span
 						v-if="pkg.visibility === GamePackage.VISIBILITY_PRIVATE"
 						v-app-tooltip="
@@ -175,27 +175,27 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 						"
 						class="tag tag-notice"
 					>
-						<translate>Private</translate>
+						<AppTranslate>Private</AppTranslate>
 					</span>
 					{{ pkg.title || game.title }}
 				</label>
 			</div>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-expand :when="serverErrors['num-keys']">
+		<AppExpand :when="serverErrors['num-keys']">
 			<div class="alert alert-notice">
-				<translate
+				<AppTranslate
 					:translate-params="{
 						max: formatNumber(20000),
 					}"
 				>
 					You can only have a max of %{ max } keys in a single key group.
-				</translate>
+				</AppTranslate>
 			</div>
-		</app-expand>
+		</AppExpand>
 
-		<app-form-button v-if="!!formModel.type && changed && arePackagesChosen">
-			<translate>Save Key Group</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton v-if="!!formModel.type && changed && arePackagesChosen">
+			<AppTranslate>Save Key Group</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

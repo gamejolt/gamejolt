@@ -38,9 +38,9 @@ export default class AppActivityFeedVideoEmbed extends Vue {
 
 <template>
 	<div class="-video-embed">
-		<app-responsive-dimensions :ratio="16 / 9">
-			<app-video-embed v-if="isHydrated" video-provider="youtube" :video-id="videoId" />
-		</app-responsive-dimensions>
+		<AppResponsiveDimensions :ratio="16 / 9">
+			<AppVideoEmbed v-if="isHydrated" video-provider="youtube" :video-id="videoId" />
+		</AppResponsiveDimensions>
 	</div>
 </template>
 

@@ -238,8 +238,8 @@ export default class AppPostCard extends Vue {
 
 <template>
 	<div v-if="post" class="post-card">
-		<app-responsive-dimensions :ratio="aspectRatio" @change="calcData()">
-			<app-scroll-inview
+		<AppResponsiveDimensions :ratio="aspectRatio" @change="calcData()">
+			<AppScrollInview
 				:config="InviewConfig"
 				:style="{
 					width: cardWidth,
@@ -252,8 +252,8 @@ export default class AppPostCard extends Vue {
 				<div ref="card" class="-inner">
 					<template v-if="!!mediaItem">
 						<div class="-inner-media">
-							<app-media-item-backdrop class="-backdrop" :media-item="mediaItem">
-								<app-img-responsive
+							<AppMediaItemBackdrop class="-backdrop" :media-item="mediaItem">
+								<AppImgResponsive
 									class="-img"
 									:src="mediaItem.mediaserver_url"
 									alt=""
@@ -262,10 +262,10 @@ export default class AppPostCard extends Vue {
 										height: imageHeight,
 									}"
 								/>
-							</app-media-item-backdrop>
+							</AppMediaItemBackdrop>
 
 							<template v-if="videoController && isHydrated">
-								<app-video
+								<AppVideo
 									class="-video"
 									:player="videoController"
 									:should-play="shouldPlayVideo"
@@ -281,21 +281,21 @@ export default class AppPostCard extends Vue {
 					</template>
 
 					<template v-else>
-						<app-fade-collapse
+						<AppFadeCollapse
 							class="-inner-message"
 							:collapse-height="leadHeight"
 							ignore-threshold
 							size="sm"
 						>
-							<app-content-viewer :source="post.lead_content" />
-						</app-fade-collapse>
+							<AppContentViewer :source="post.lead_content" />
+						</AppFadeCollapse>
 					</template>
 
 					<router-link class="-link" :to="post.routeLocation" @click="trackPostOpen()" />
 
 					<div class="-details" :class="{ '-light': !!mediaItem }">
 						<template v-if="withUser">
-							<app-user-avatar class="-details-user-avatar" :user="post.user" />
+							<AppUserAvatar class="-details-user-avatar" :user="post.user" />
 							<a class="-details-user-name" :href="userLink">
 								@{{ post.user.username }}
 							</a>
@@ -304,28 +304,28 @@ export default class AppPostCard extends Vue {
 						<span class="-details-spacer" />
 
 						<template v-if="post.scheduled_for">
-							<app-jolticon icon="calendar" />
+							<AppJolticon icon="calendar" />
 						</template>
 
 						<template v-if="post.hasPoll">
-							<app-jolticon
+							<AppJolticon
 								:class="{ '-voted': votedOnPoll }"
 								icon="pedestals-numbers"
 							/>
 						</template>
 
 						<template v-if="post.is_pinned">
-							<app-jolticon icon="thumbtack" />
+							<AppJolticon icon="thumbtack" />
 						</template>
 
-						<app-jolticon icon="heart-filled" :class="{ '-liked': likedPost }" />
+						<AppJolticon icon="heart-filled" :class="{ '-liked': likedPost }" />
 						<span class="-details-likes">
 							{{ formatFuzzynumber(post.like_count) }}
 						</span>
 					</div>
 				</div>
-			</app-scroll-inview>
-		</app-responsive-dimensions>
+			</AppScrollInview>
+		</AppResponsiveDimensions>
 	</div>
 </template>
 

@@ -42,15 +42,15 @@ export default class AppThemeSelector extends Vue {
 <template>
 	<div>
 		<div id="theme-selector-selection" class="list-group">
-			<app-popper block track-trigger-width>
+			<AppPopper block track-trigger-width>
 				<a class="list-group-item has-icon">
 					<template v-if="!current">
-						<app-jolticon icon="chevron-down" class="list-group-item-icon" />
-						<em><translate>Please choose a theme...</translate></em>
+						<AppJolticon icon="chevron-down" class="list-group-item-icon" />
+						<em><AppTranslate>Please choose a theme...</AppTranslate></em>
 					</template>
 					<template v-else>
 						<div class="list-group-item-heading">
-							<app-jolticon icon="chevron-down" class="list-group-item-icon" />
+							<AppJolticon icon="chevron-down" class="list-group-item-icon" />
 							<strong>{{ current.name }}</strong>
 							{{ ' ' }}
 							<small class="text-muted">by @{{ current.user.username }}</small>
@@ -80,7 +80,7 @@ export default class AppThemeSelector extends Vue {
 						</a>
 					</div>
 				</template>
-			</app-popper>
+			</AppPopper>
 		</div>
 	</div>
 </template>

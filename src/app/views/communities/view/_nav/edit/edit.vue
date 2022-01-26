@@ -37,10 +37,10 @@ export default class AppNavEdit extends Vue {
 					}"
 					exact-active-class="active"
 				>
-					<translate>Details</translate>
+					<AppTranslate>Details</AppTranslate>
 				</router-link>
 			</li>
-			<app-community-perms
+			<AppCommunityPerms
 				tag="li"
 				:community="community"
 				required="community-channels,community-competitions"
@@ -56,10 +56,10 @@ export default class AppNavEdit extends Vue {
 					}"
 					active-class="active"
 				>
-					<translate>Channels</translate>
+					<AppTranslate>Channels</AppTranslate>
 				</router-link>
-			</app-community-perms>
-			<app-community-perms
+			</AppCommunityPerms>
+			<AppCommunityPerms
 				tag="li"
 				:community="community"
 				required="community-games"
@@ -74,10 +74,10 @@ export default class AppNavEdit extends Vue {
 					}"
 					active-class="active"
 				>
-					<translate>Games</translate>
+					<AppTranslate>Games</AppTranslate>
 				</router-link>
-			</app-community-perms>
-			<app-community-perms
+			</AppCommunityPerms>
+			<AppCommunityPerms
 				tag="li"
 				:community="community"
 				required="community-moderators"
@@ -92,10 +92,10 @@ export default class AppNavEdit extends Vue {
 					}"
 					active-class="active"
 				>
-					<translate>Collaborators</translate>
+					<AppTranslate>Collaborators</AppTranslate>
 				</router-link>
-			</app-community-perms>
-			<app-community-perms
+			</AppCommunityPerms>
+			<AppCommunityPerms
 				tag="li"
 				:community="community"
 				required="community-blocks"
@@ -110,10 +110,10 @@ export default class AppNavEdit extends Vue {
 					}"
 					active-class="active"
 				>
-					<translate>Blocked Users</translate>
+					<AppTranslate>Blocked Users</AppTranslate>
 				</router-link>
-			</app-community-perms>
-			<app-community-perms tag="li" :community="community" required="community-activity">
+			</AppCommunityPerms>
+			<AppCommunityPerms tag="li" :community="community" required="community-activity">
 				<router-link
 					:to="{
 						name: 'communities.view.edit.activity',
@@ -124,9 +124,9 @@ export default class AppNavEdit extends Vue {
 					active-class="active"
 					@click.capture="onChangeSection('communities.view.edit.blocks')"
 				>
-					<translate>Audit Log</translate>
+					<AppTranslate>Audit Log</AppTranslate>
 				</router-link>
-			</app-community-perms>
+			</AppCommunityPerms>
 		</ul>
 	</nav>
 </template>

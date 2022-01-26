@@ -165,12 +165,12 @@ export default class AppThemeEditorFontSelector extends Vue {
 
 <template>
 	<div>
-		<app-theme-editor-font-selector-style-injector :font-definitions="fontDefinitions" />
+		<AppThemeEditorFontSelectorStyleInjector :font-definitions="fontDefinitions" />
 
 		<div class="font-selector" :class="{ 'is-open': isSelectorShowing }">
 			<div class="font-selector-selected" @click="toggleSelector()">
 				<span v-if="isSelectorShowing" class="font-selector-cancel">
-					<translate>cancel</translate>
+					<AppTranslate>cancel</AppTranslate>
 				</span>
 
 				<a
@@ -178,11 +178,11 @@ export default class AppThemeEditorFontSelector extends Vue {
 					class="font-selector-clear"
 					@click="clearSelectedFont()"
 				>
-					<translate>clear</translate>
+					<AppTranslate>clear</AppTranslate>
 				</a>
 
 				<div v-if="!selectedFont" class="font-selector-selected-label">
-					<translate>Choose a font...</translate>
+					<AppTranslate>Choose a font...</AppTranslate>
 				</div>
 				<div
 					v-else

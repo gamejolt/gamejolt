@@ -55,13 +55,13 @@ export default class AppUserListItem extends Vue {
 		}"
 	>
 		<component :is="userHoverCard ? 'app-user-card-hover' : 'div'" :user="user" class="-avatar">
-			<app-user-avatar-img :user="user" />
+			<AppUserAvatarImg :user="user" />
 		</component>
 
 		<div class="-label">
 			<div class="-name">
 				{{ user.display_name }}
-				<app-user-verified-tick :user="user" />
+				<AppUserVerifiedTick :user="user" />
 			</div>
 			<div class="-username">@{{ user.username }}</div>
 		</div>
@@ -71,7 +71,7 @@ export default class AppUserListItem extends Vue {
 				Gotta prevent default so that the router-link doesn't go to the
 				user page. The stop is so that we don't double track events.
 			-->
-			<app-user-follow-widget
+			<AppUserFollowWidget
 				:user="user"
 				hide-count
 				location="userList"

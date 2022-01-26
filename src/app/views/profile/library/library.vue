@@ -56,7 +56,7 @@ export default class RouteProfileLibrary extends BaseRouteComponent {
 <template>
 	<section class="section">
 		<div class="container">
-			<app-game-collection-grid :collections="collections" />
+			<AppGameCollectionGrid :collections="collections" />
 		</div>
 	</section>
 </template>

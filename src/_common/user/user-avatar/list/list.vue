@@ -36,7 +36,7 @@ export default class AppUserAvatarList extends Vue {
 				'-user-sm': sm,
 			}"
 		>
-			<app-user-avatar
+			<AppUserAvatar
 				v-app-tooltip="user.display_name + ' (@' + user.username + ')'"
 				class="-avatar"
 				:class="{
@@ -44,7 +44,7 @@ export default class AppUserAvatarList extends Vue {
 				}"
 				:user="user"
 			/>
-			<app-user-verified-tick v-if="!sm" class="-tick" :user="user" />
+			<AppUserVerifiedTick v-if="!sm" class="-tick" :user="user" />
 		</div>
 	</div>
 </template>

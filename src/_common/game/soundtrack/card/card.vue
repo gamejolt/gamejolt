@@ -70,40 +70,40 @@ export default class AppGameSoundtrackCard extends Vue {
 </script>
 
 <template>
-	<app-card class="soundtrack-package-card">
+	<AppCard class="soundtrack-package-card">
 		<div class="card-title">
 			<h4>
-				<translate>Game Soundtrack</translate>
-				<app-jolticon icon="musical-note-double" big class="pull-right text-muted" />
+				<AppTranslate>Game Soundtrack</AppTranslate>
+				<AppJolticon icon="musical-note-double" big class="pull-right text-muted" />
 			</h4>
 		</div>
 
 		<div class="card-meta">
-			<translate
+			<AppTranslate
 				:translate-n="songs.length"
 				:translate-params="{ count: formatNumber(songs.length) }"
 				translate-plural="%{ count } songs"
 			>
 				%{ count } song
-			</translate>
+			</AppTranslate>
 		</div>
 
 		<br />
 
 		<div class="card-content">
-			<app-fade-collapse
+			<AppFadeCollapse
 				:collapse-height="250"
 				:is-open="isShowingSoundtrack"
 				@require-change="canToggleSoundtrack = $event"
 				@expand="isShowingSoundtrack = true"
 			>
-				<app-audio-playlist
+				<AppAudioPlaylist
 					ref="playlist"
 					:songs="songs"
 					@play="isPlaying = true"
 					@stop="isPlaying = false"
 				/>
-			</app-fade-collapse>
+			</AppFadeCollapse>
 		</div>
 
 		<a
@@ -114,14 +114,14 @@ export default class AppGameSoundtrackCard extends Vue {
 		/>
 
 		<div class="card-controls">
-			<app-button
+			<AppButton
 				v-app-track-event="`game-soundtrack-card:download`"
 				primary
 				@click="download"
 			>
-				<translate>Download</translate>
-				<app-jolticon icon="musical-note-double" class="jolticon-addon" />
-			</app-button>
+				<AppTranslate>Download</AppTranslate>
+				<AppJolticon icon="musical-note-double" class="jolticon-addon" />
+			</AppButton>
 		</div>
-	</app-card>
+	</AppCard>
 </template>

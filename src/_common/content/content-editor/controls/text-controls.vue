@@ -183,7 +183,7 @@ export default class AppContentEditorTextControls extends Vue {
 					@click.prevent="onClickBold"
 					@mousedown.prevent
 				>
-					<app-jolticon icon="bold" />
+					<AppJolticon icon="bold" />
 				</button>
 				<button
 					v-if="contextCapabilities.textItalic"
@@ -195,7 +195,7 @@ export default class AppContentEditorTextControls extends Vue {
 					@click.prevent="onClickItalic"
 					@mousedown.prevent
 				>
-					<app-jolticon icon="italic" />
+					<AppJolticon icon="italic" />
 				</button>
 				<button
 					v-if="contextCapabilities.textStrike"
@@ -207,7 +207,7 @@ export default class AppContentEditorTextControls extends Vue {
 					@click.prevent="onClickStrikethrough"
 					@mousedown.prevent
 				>
-					<app-jolticon icon="strikethrough" />
+					<AppJolticon icon="strikethrough" />
 				</button>
 				<button
 					v-if="contextCapabilities.textLink && contextCapabilities.customLink"
@@ -219,7 +219,7 @@ export default class AppContentEditorTextControls extends Vue {
 					@click.prevent="onClickLink"
 					@mousedown.prevent
 				>
-					<app-jolticon icon="link" />
+					<AppJolticon icon="link" />
 				</button>
 				<button
 					v-if="contextCapabilities.textCode"
@@ -231,7 +231,7 @@ export default class AppContentEditorTextControls extends Vue {
 					@click.prevent="onClickCode"
 					@mousedown.prevent
 				>
-					<app-jolticon icon="brackets" />
+					<AppJolticon icon="brackets" />
 				</button>
 
 				<template v-if="shouldShowHeading">
@@ -245,7 +245,7 @@ export default class AppContentEditorTextControls extends Vue {
 						@click.prevent="onClickHeading(1)"
 						@mousedown.prevent
 					>
-						<app-jolticon icon="h1" />
+						<AppJolticon icon="h1" />
 					</button>
 					<button
 						v-app-tooltip="$gettext('Heading Level 2')"
@@ -256,7 +256,7 @@ export default class AppContentEditorTextControls extends Vue {
 						@click.prevent="onClickHeading(2)"
 						@mousedown.prevent
 					>
-						<app-jolticon icon="h2" />
+						<AppJolticon icon="h2" />
 					</button>
 				</template>
 			</div>

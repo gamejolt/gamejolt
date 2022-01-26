@@ -96,11 +96,11 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
-						<app-game-perms :game="game" required="devlogs">
-							<app-post-add-button :game="game" @add="onPostAdded" />
-						</app-game-perms>
+						<AppGamePerms :game="game" required="devlogs">
+							<AppPostAddButton :game="game" @add="onPostAdded" />
+						</AppGamePerms>
 
-						<app-nav-tab-list>
+						<AppNavTabList>
 							<ul>
 								<li>
 									<router-link
@@ -112,7 +112,7 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 											active: tab === 'active',
 										}"
 									>
-										<translate>Posts</translate>
+										<AppTranslate>Posts</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -127,7 +127,7 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 											active: tab === 'draft',
 										}"
 									>
-										<translate>Draft Posts</translate>
+										<AppTranslate>Draft Posts</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -142,15 +142,15 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 											active: tab === 'scheduled',
 										}"
 									>
-										<translate>Scheduled Posts</translate>
+										<AppTranslate>Scheduled Posts</AppTranslate>
 									</router-link>
 								</li>
 							</ul>
-						</app-nav-tab-list>
+						</AppNavTabList>
 
-						<app-activity-feed-placeholder v-if="!feed || !feed.isBootstrapped" />
+						<AppActivityFeedPlaceholder v-if="!feed || !feed.isBootstrapped" />
 						<template v-else>
-							<app-activity-feed
+							<AppActivityFeed
 								v-if="feed.hasItems"
 								:feed="feed"
 								@edit-post="onPostEdited"
@@ -160,15 +160,15 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 							<div v-else class="alert">
 								<template v-if="tab === 'active'">
 									<p>
-										<translate>You haven't published any posts yet.</translate>
+										<AppTranslate>You haven't published any posts yet.</AppTranslate>
 									</p>
 								</template>
 								<template v-else-if="tab === 'draft'">
-									<p><translate>You don't have any draft posts.</translate></p>
+									<p><AppTranslate>You don't have any draft posts.</AppTranslate></p>
 								</template>
 								<template v-else-if="tab === 'scheduled'">
 									<p>
-										<translate>You don't have any scheduled posts.</translate>
+										<AppTranslate>You don't have any scheduled posts.</AppTranslate>
 									</p>
 								</template>
 							</div>

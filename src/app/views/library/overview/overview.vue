@@ -114,29 +114,29 @@ export default class RouteLibraryOverview extends BaseRouteComponent {
 
 <template>
 	<div class="route-library-overview">
-		<app-page-header>
+		<AppPageHeader>
 			<h1 class="section-header sans-margin-bottom">
-				<translate>library.heading</translate>
+				<AppTranslate>library.heading</AppTranslate>
 			</h1>
 			<div class="text-muted small">
 				<p>
-					<translate>
+					<AppTranslate>
 						This is your personalized library of games. Here dwell the games you've
 						followed and any playlists or bundles that you've made or followed.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
-		</app-page-header>
+		</AppPageHeader>
 
 		<!--
 			When they are offline, we show them this message.
 		-->
 		<section v-if="Connection.isClientOffline" class="section fill-notice text-center">
 			<p>
-				<app-jolticon icon="notice" big />
+				<AppJolticon icon="notice" big />
 			</p>
 			<p class="sans-margin">
-				<translate>You must be online to access your playlists.</translate>
+				<AppTranslate>You must be online to access your playlists.</AppTranslate>
 			</p>
 		</section>
 
@@ -153,13 +153,13 @@ export default class RouteLibraryOverview extends BaseRouteComponent {
 				</div>
 
 				<div :class="!Screen.isXs ? 'container' : ''">
-					<app-game-collection-list
+					<AppGameCollectionList
 						v-if="Screen.isXs"
 						:collections="group.collections"
 						:event-label="`library-overview:collection:${group.eventLabel}`"
 					/>
 
-					<app-game-collection-grid
+					<AppGameCollectionGrid
 						v-else
 						:collections="group.collections"
 						:event-label="`library-overview:collection:${group.eventLabel}`"

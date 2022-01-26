@@ -338,11 +338,11 @@ export default class AppFormPostVideo
 </script>
 
 <template>
-	<app-loading-fade :is-loading="!isLoaded">
+	<AppLoadingFade :is-loading="!isLoaded">
 		<template v-if="shouldShowFormPlaceholder">
-			<app-form-legend compact :deletable="canRemoveUploadingVideo">
+			<AppFormLegend compact :deletable="canRemoveUploadingVideo">
 				<span class="-placeholder-text" style="width: 60px" />
-			</app-form-legend>
+			</AppFormLegend>
 			<p class="help-block">
 				<span class="-placeholder-text" style="width: 230px" />
 				<br />
@@ -353,13 +353,13 @@ export default class AppFormPostVideo
 			<span class="-placeholder-add" />
 		</template>
 		<template v-else-if="videoProvider === FiresidePostVideo.PROVIDER_GAMEJOLT">
-			<app-form-legend compact :deletable="canRemoveUploadingVideo" @delete="onDeleteUpload">
-				<translate>Video</translate>
-			</app-form-legend>
+			<AppFormLegend compact :deletable="canRemoveUploadingVideo" @delete="onDeleteUpload">
+				<AppTranslate>Video</AppTranslate>
+			</AppFormLegend>
 
 			<template v-if="videoStatus === 'idle'">
-				<app-form :controller="form">
-					<app-form-group
+				<AppForm :controller="form">
+					<AppFormGroup
 						name="video"
 						class="sans-margin-bottom"
 						hide-label
@@ -367,12 +367,12 @@ export default class AppFormPostVideo
 						:label="$gettext(`Video`)"
 					>
 						<p class="help-block">
-							<translate>
+							<AppTranslate>
 								Your video must be between 1 second and 30 minutes long.
-							</translate>
+							</AppTranslate>
 							<br />
-							<translate>Videos must be bigger than 200x200.</translate>
-							<translate>Video filetypes currently supported:</translate>
+							<AppTranslate>Videos must be bigger than 200x200.</AppTranslate>
+							<AppTranslate>Video filetypes currently supported:</AppTranslate>
 							<span
 								v-for="filetype of allowedFiletypes"
 								:key="filetype"
@@ -396,17 +396,17 @@ export default class AppFormPostVideo
 							>
 								<div class="-add-inner">
 									<div>
-										<app-jolticon icon="add" big />
+										<AppJolticon icon="add" big />
 										<br />
 										<b>
-											<translate>Video</translate>
+											<AppTranslate>Video</AppTranslate>
 										</b>
 									</div>
 								</div>
 							</a>
 						</div>
 
-						<app-form-control-upload
+						<AppFormControlUpload
 							ref="upload"
 							class="-upload-input"
 							:validators="[validateFilesize(maxFilesize)]"
@@ -414,41 +414,41 @@ export default class AppFormPostVideo
 							@changed="videoSelected()"
 						/>
 
-						<app-form-control-errors />
-					</app-form-group>
-				</app-form>
+						<AppFormControlErrors />
+					</AppFormGroup>
+				</AppForm>
 			</template>
 			<template v-else-if="videoStatus === 'uploading'">
-				<app-progress-bar :percent="uploadProgress * 100" />
+				<AppProgressBar :percent="uploadProgress * 100" />
 
-				<translate>Uploading...</translate>
+				<AppTranslate>Uploading...</AppTranslate>
 				{{ formatNumber(uploadProgress, { style: 'percent' }) }}
 
-				<app-button
+				<AppButton
 					class="pull-right"
 					trans
 					:disabled="uploadProgress === 1"
 					@click="cancelUpload"
 				>
-					<translate>Cancel Upload</translate>
-				</app-button>
+					<AppTranslate>Cancel Upload</AppTranslate>
+				</AppButton>
 			</template>
 			<template v-else-if="videoStatus === 'processing'">
-				<app-video-processing-progress
+				<AppVideoProcessingProgress
 					:post="post"
 					@complete="onProcessingComplete"
 					@error="onProcessingError"
 				/>
 			</template>
 			<template v-else-if="videoStatus === 'complete'">
-				<app-video-player
+				<AppVideoPlayer
 					class="-video-player"
 					:media-item="videoMediaItem"
 					:manifests="videoManifestSources"
 				/>
 			</template>
 		</template>
-	</app-loading-fade>
+	</AppLoadingFade>
 </template>
 
 <style lang="stylus" scoped>

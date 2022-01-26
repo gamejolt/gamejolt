@@ -141,15 +141,15 @@ export default class AppCommentThreadModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-body">
-			<app-comment-widget
+			<AppCommentWidget
 				:model="model"
 				:thread-comment-id="commentId"
 				:show-tabs="false"
@@ -161,12 +161,12 @@ export default class AppCommentThreadModal extends mixins(BaseModal) {
 
 		<template v-if="shouldShowReply" #footer>
 			<div>
-				<app-message-thread-add
+				<AppMessageThreadAdd
 					v-if="parent"
 					hide-message-split
 					:class="{ '-thread-editor-focus': isEditorFocused }"
 				>
-					<form-comment
+					<FormComment
 						:comment-model="model"
 						:parent-id="parent.id"
 						:placeholder="$gettext(`Leave a reply...`)"
@@ -175,10 +175,10 @@ export default class AppCommentThreadModal extends mixins(BaseModal) {
 						@editor-focus="onEditorFocus"
 						@editor-blur="onEditorBlur"
 					/>
-				</app-message-thread-add>
+				</AppMessageThreadAdd>
 			</div>
 		</template>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" scoped>

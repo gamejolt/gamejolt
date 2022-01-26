@@ -96,8 +96,8 @@ export default class FormAvatar extends mixins(Wrapper) implements FormOnLoad, F
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="file" :label="$gettext(`Upload New Avatar`)" :optional="true">
+	<AppForm :controller="form">
+		<AppFormGroup name="file" :label="$gettext(`Upload New Avatar`)" :optional="true">
 			<p v-translate class="help-block">
 				Your image must be a PNG or JPG.
 				<br />
@@ -109,7 +109,7 @@ export default class FormAvatar extends mixins(Wrapper) implements FormOnLoad, F
 				.
 			</p>
 
-			<app-form-control-upload
+			<AppFormControlUpload
 				:validators="[
 					validateFilesize(maxFilesize),
 					validateImageMinDimensions({ width: minSize, height: minSize }),
@@ -119,16 +119,16 @@ export default class FormAvatar extends mixins(Wrapper) implements FormOnLoad, F
 				@changed="avatarSelected()"
 			/>
 
-			<app-form-control-errors :label="$gettext(`avatar`)" />
-		</app-form-group>
+			<AppFormControlErrors :label="$gettext(`avatar`)" />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			v-if="formModel.avatar_media_item && !formModel.file"
 			name="avatar_crop"
 			:label="$gettext('Your Uploaded Avatar')"
 		>
 			<div class="form-control-static">
-				<app-form-control-crop
+				<AppFormControlCrop
 					:src="formModel.avatar_media_item.img_url"
 					:aspect-ratio="1"
 					:min-width="minSize"
@@ -137,36 +137,36 @@ export default class FormAvatar extends mixins(Wrapper) implements FormOnLoad, F
 					:max-height="maxSize"
 				/>
 
-				<app-form-control-errors :label="$gettext('crop')" />
+				<AppFormControlErrors :label="$gettext('crop')" />
 			</div>
-		</app-form-group>
+		</AppFormGroup>
 
 		<template v-if="formModel.avatar_media_item && form.valid">
 			<div>
-				<app-form-button>
-					<translate>Save</translate>
-				</app-form-button>
+				<AppFormButton>
+					<AppTranslate>Save</AppTranslate>
+				</AppFormButton>
 
-				<app-button trans @click="clearAvatar()">
-					<translate>Remove Avatar</translate>
-				</app-button>
+				<AppButton trans @click="clearAvatar()">
+					<AppTranslate>Remove Avatar</AppTranslate>
+				</AppButton>
 			</div>
 
 			<br />
 			<br />
 		</template>
 
-		<app-form-group name="disable_gravatar" :label="$gettext(`Disable Gravatar?`)">
-			<app-form-control-toggle class="pull-right" @changed="gravatarToggled()" />
+		<AppFormGroup name="disable_gravatar" :label="$gettext(`Disable Gravatar?`)">
+			<AppFormControlToggle class="pull-right" @changed="gravatarToggled()" />
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					By default we fallback to using Gravatar if you have one. If you would like to
 					disable the Gravatar fallback, you can toggle this on.
-				</translate>
-				<app-link-external href="https://gravatar.com" class="link-help">
-					<translate>What is Gravatar?</translate>
-				</app-link-external>
+				</AppTranslate>
+				<AppLinkExternal href="https://gravatar.com" class="link-help">
+					<AppTranslate>What is Gravatar?</AppTranslate>
+				</AppLinkExternal>
 			</p>
-		</app-form-group>
-	</app-form>
+		</AppFormGroup>
+	</AppForm>
 </template>

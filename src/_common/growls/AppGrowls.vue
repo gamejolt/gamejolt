@@ -7,7 +7,7 @@ import { Growls } from './growls.service';
 <template>
 	<div class="growl-container">
 		<transition-group>
-			<app-growl
+			<AppGrowl
 				v-for="(growl, index) of Growls.growls"
 				:key="index"
 				:growl="growl"

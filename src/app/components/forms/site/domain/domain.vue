@@ -48,20 +48,20 @@ export default class FormSiteDomain extends mixins(Wrapper) {
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group
+	<AppForm :controller="form">
+		<AppFormGroup
 			name="domain_type"
 			:label="$gettext(`How would you like to access your site?`)"
 		>
 			<div class="radio">
 				<label>
-					<app-form-control-radio value="io" />
+					<AppFormControlRadio value="io" />
 					<span v-html="ioUrl"></span>
 				</label>
 			</div>
 			<div class="radio">
 				<label>
-					<app-form-control-radio value="af" />
+					<AppFormControlRadio value="af" />
 					<span v-html="afUrl"></span>
 					&mdash;
 					<router-link
@@ -69,25 +69,25 @@ export default class FormSiteDomain extends mixins(Wrapper) {
 						target="_blank"
 						class="link-help small"
 					>
-						<translate>Learn more about being indie.AF</translate>
+						<AppTranslate>Learn more about being indie.AF</AppTranslate>
 					</router-link>
 				</label>
 			</div>
 			<div class="radio">
 				<label>
-					<app-form-control-radio value="domain" />
-					<strong><translate>Custom Domain</translate></strong>
+					<AppFormControlRadio value="domain" />
+					<strong><AppTranslate>Custom Domain</AppTranslate></strong>
 					&mdash;
-					<translate class="help-inline">
+					<AppTranslate class="help-inline">
 						Use a custom domain that you own to access your site.
-					</translate>
+					</AppTranslate>
 				</label>
 			</div>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-expand :when="formModel.domain_type === 'domain'">
-			<app-form-group name="domain" :label="$gettext(`Domain`)">
-				<app-form-control
+		<AppExpand :when="formModel.domain_type === 'domain'">
+			<AppFormGroup name="domain" :label="$gettext(`Domain`)">
+				<AppFormControl
 					placeholder="example.com"
 					:validators="[
 						validateMaxLength(100),
@@ -99,35 +99,35 @@ export default class FormSiteDomain extends mixins(Wrapper) {
 					]"
 				/>
 
-				<app-form-control-errors />
-			</app-form-group>
+				<AppFormControlErrors />
+			</AppFormGroup>
 
 			<p>
 				<strong>
-					<translate>How to set up your custom domain?</translate>
+					<AppTranslate>How to set up your custom domain?</AppTranslate>
 				</strong>
 			</p>
 
 			<p>
-				<translate>
+				<AppTranslate>
 					In order to set up your custom domain you'll need to point its DNS over to us.
 					Look for the DNS options in your registrar's control panel.
-				</translate>
+				</AppTranslate>
 			</p>
 
 			<p>
-				<translate>
+				<AppTranslate>
 					If you'd like your main root/apex domain to point to us (such as example.com),
 					you'll have to set two DNS entries for your domain.
-				</translate>
+				</AppTranslate>
 			</p>
 
 			<table class="table">
 				<thead>
 					<tr>
-						<th><translate>Type</translate></th>
-						<th><translate>Host</translate></th>
-						<th><translate>Value</translate></th>
+						<th><AppTranslate>Type</AppTranslate></th>
+						<th><AppTranslate>Host</AppTranslate></th>
+						<th><AppTranslate>Value</AppTranslate></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -151,32 +151,32 @@ export default class FormSiteDomain extends mixins(Wrapper) {
 			</table>
 
 			<p>
-				<translate>
+				<AppTranslate>
 					If there is a TTL setting, you can leave that as the default for each entry.
-				</translate>
+				</AppTranslate>
 			</p>
 
 			<p>
-				<translate>
+				<AppTranslate>
 					This will set up your DNS to redirect your root/apex domain (example.com) over
 					to a www subdomain (www.example.com). This ensures that people hit the correct
 					host when trying to view your custom domain site.
-				</translate>
+				</AppTranslate>
 			</p>
 
 			<p>
-				<translate>
+				<AppTranslate>
 					If you'd like to point a subdomain over to us (such as mygame.mystudio.com), you
 					will only have to set one entry for the subdomain portion of your domain.
-				</translate>
+				</AppTranslate>
 			</p>
 
 			<table class="table">
 				<thead>
 					<tr>
-						<th><translate>Type</translate></th>
-						<th><translate>Host</translate></th>
-						<th><translate>Value</translate></th>
+						<th><AppTranslate>Type</AppTranslate></th>
+						<th><AppTranslate>Host</AppTranslate></th>
+						<th><AppTranslate>Value</AppTranslate></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -193,24 +193,24 @@ export default class FormSiteDomain extends mixins(Wrapper) {
 
 			<p>
 				<strong>
-					<translate>
+					<AppTranslate>
 						Note that it could take up to 24 hours for your domain registrar to
 						propagate these changes across the internet and for your site to be
 						accessible using your custom domain.
-					</translate>
+					</AppTranslate>
 				</strong>
 			</p>
 
 			<p>
-				<translate>
+				<AppTranslate>
 					If you're having trouble, send an email to contact@gamejolt.com with all the
 					information you can and we'll help you out!
-				</translate>
+				</AppTranslate>
 			</p>
-		</app-expand>
+		</AppExpand>
 
-		<app-form-button>
-			<translate>Save</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton>
+			<AppTranslate>Save</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

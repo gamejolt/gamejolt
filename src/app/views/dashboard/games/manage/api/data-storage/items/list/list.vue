@@ -69,7 +69,7 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 <template>
 	<div>
 		<h2 class="section-header">
-			<translate>dash.games.data_store.items.heading</translate>
+			<AppTranslate>dash.games.data_store.items.heading</AppTranslate>
 		</h2>
 
 		<div class="page-help">
@@ -79,15 +79,15 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 				All stored data items will show up here.
 			</p>
 			<p>
-				<translate>
+				<AppTranslate>
 					Currently, you can only view (and remove) globally stored data items. Stored
 					user data items are not viewable at this time.
-				</translate>
+				</AppTranslate>
 			</p>
 			<p>
-				<app-link-help page="dev-data-storage" class="link-help">
-					<translate>dash.games.data_store.items.page_help_link</translate>
-				</app-link-help>
+				<AppLinkHelp page="dev-data-storage" class="link-help">
+					<AppTranslate>dash.games.data_store.items.page_help_link</AppTranslate>
+				</AppLinkHelp>
 			</p>
 		</div>
 
@@ -100,13 +100,13 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 				<thead>
 					<tr>
 						<th>
-							<translate>dash.games.data_store.items.key_label</translate>
+							<AppTranslate>dash.games.data_store.items.key_label</AppTranslate>
 						</th>
 						<th>
-							<translate>dash.games.data_store.items.preview_label</translate>
+							<AppTranslate>dash.games.data_store.items.preview_label</AppTranslate>
 						</th>
 						<th>
-							<translate>dash.games.data_store.items.date_label</translate>
+							<AppTranslate>dash.games.data_store.items.date_label</AppTranslate>
 						</th>
 						<th />
 					</tr>
@@ -133,9 +133,9 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 						</td>
 						<td class="text-right">
 							<div class="table-controls">
-								<app-popper popover-class="fill-darkest">
+								<AppPopper popover-class="fill-darkest">
 									<a class="link-muted">
-										<app-jolticon icon="ellipsis-h" />
+										<AppJolticon icon="ellipsis-h" />
 									</a>
 
 									<template #popover>
@@ -144,14 +144,14 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 												class="list-group-item has-icon"
 												@click="removeItem(item)"
 											>
-												<app-jolticon icon="remove" notice />
-												<translate>
+												<AppJolticon icon="remove" notice />
+												<AppTranslate>
 													dash.games.data_store.items.remove_button
-												</translate>
+												</AppTranslate>
 											</a>
 										</div>
 									</template>
-								</app-popper>
+								</AppPopper>
 							</div>
 						</td>
 					</tr>

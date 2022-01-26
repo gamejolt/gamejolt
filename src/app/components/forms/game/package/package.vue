@@ -284,17 +284,17 @@ export default class FormGamePackage
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-loading-fade :is-loading="isProcessing">
-			<app-form-group name="title" :label="$gettext(`dash.games.packages.form.title_label`)">
+	<AppForm :controller="form">
+		<AppLoadingFade :is-loading="isProcessing">
+			<AppFormGroup name="title" :label="$gettext(`dash.games.packages.form.title_label`)">
 				<p class="help-block">
-					<translate>
+					<AppTranslate>
 						This is the name that shows up on your game page above the Download/Play
 						button. For your main package, use the title of your game.
-					</translate>
+					</AppTranslate>
 				</p>
 
-				<app-form-control
+				<AppFormControl
 					max="150"
 					:validators="[
 						validateMaxLength(150),
@@ -307,10 +307,10 @@ export default class FormGamePackage
 					:disabled="!hasBuildsPerms"
 				/>
 
-				<app-form-control-errors />
-			</app-form-group>
+				<AppFormControlErrors />
+			</AppFormGroup>
 
-			<app-form-group
+			<AppFormGroup
 				name="description"
 				:label="$gettext(`dash.games.packages.form.description_label`)"
 				:optional="true"
@@ -323,42 +323,42 @@ export default class FormGamePackage
 				</p>
 
 				<div v-if="!showDescriptionInput">
-					<app-button :disabled="!hasBuildsPerms" @click="showDescriptionInput = true">
-						<translate>dash.games.packages.form.description_change_button</translate>
-					</app-button>
+					<AppButton :disabled="!hasBuildsPerms" @click="showDescriptionInput = true">
+						<AppTranslate>dash.games.packages.form.description_change_button</AppTranslate>
+					</AppButton>
 				</div>
 				<div v-else>
-					<app-form-control-textarea
+					<AppFormControlTextarea
 						rows="2"
 						:validators="[validateMaxLength(750)]"
 						:disabled="!hasBuildsPerms"
 					/>
-					<app-form-control-errors />
+					<AppFormControlErrors />
 				</div>
-			</app-form-group>
+			</AppFormGroup>
 
-			<app-form-group name="visibility" :label="$gettext(`Visibility`)">
+			<AppFormGroup name="visibility" :label="$gettext(`Visibility`)">
 				<div class="radio" :class="{ disabled: !hasAllPerms }">
 					<label>
-						<app-form-control-radio
+						<AppFormControlRadio
 							:value="GamePackage.VISIBILITY_PUBLIC"
 							:disabled="!hasAllPerms"
 						/>
-						<translate>Public</translate>
+						<AppTranslate>Public</AppTranslate>
 						&mdash;
 						<span class="help-inline">
-							<translate>Anyone can access this package.</translate>
+							<AppTranslate>Anyone can access this package.</AppTranslate>
 						</span>
 					</label>
 				</div>
 
 				<div class="radio" :class="{ disabled: !hasAllPerms }">
 					<label>
-						<app-form-control-radio
+						<AppFormControlRadio
 							:value="GamePackage.VISIBILITY_PRIVATE"
 							:disabled="!hasAllPerms"
 						/>
-						<translate>Private</translate>
+						<AppTranslate>Private</AppTranslate>
 						&mdash;
 						<span v-translate class="help-inline">
 							Only you can access this package, as well as any keys you assign. You
@@ -370,54 +370,54 @@ export default class FormGamePackage
 				</div>
 
 				<div class="alert">
-					<translate>
+					<AppTranslate>
 						Note that regardless of this setting, your package will only be visible on
 						your game's page if it has published releases in it.
-					</translate>
+					</AppTranslate>
 				</div>
-			</app-form-group>
+			</AppFormGroup>
 
-			<app-form-group
+			<AppFormGroup
 				v-if="game.referrals_enabled"
 				name="partner_visibility"
 				:label="$gettext(`Partner Visibility`)"
 			>
-				<app-form-control-toggle class="pull-right" :disabled="!hasSalesPerms" />
+				<AppFormControlToggle class="pull-right" :disabled="!hasSalesPerms" />
 				<p class="help-block">
-					<translate>
+					<AppTranslate>
 						Enabling this will allow partners to access this package even if it's marked
 						as Private or your game is a Devlog-only project.
-					</translate>
+					</AppTranslate>
 					{{ ' ' }}
 					<router-link
 						:to="{ name: 'landing.partners' }"
 						class="link-help"
 						target="_blank"
 					>
-						<translate>What is a Game Jolt Partner?</translate>
+						<AppTranslate>What is a Game Jolt Partner?</AppTranslate>
 					</router-link>
 				</p>
-			</app-form-group>
+			</AppFormGroup>
 
-			<app-form-group name="pricing_type" :label="$gettext(`Pricing Type`)">
+			<AppFormGroup name="pricing_type" :label="$gettext(`Pricing Type`)">
 				<div v-if="isFangame" class="alert alert-notice">
-					<translate>
+					<AppTranslate>
 						Accepting payments for fangames is illegal and against our terms. If you
 						sell fangames, we will remove your account and block you from the
 						Marketplace.
-					</translate>
+					</AppTranslate>
 				</div>
 				<div v-else>
 					<p v-if="!isUserVerified" class="help-block">
-						<app-jolticon icon="notice" />
+						<AppJolticon icon="notice" />
 						<template v-if="user && game.developer.id === user.id">
-							<translate>
+							<AppTranslate>
 								You must set up your financial information before you can start
 								accepting money.
-							</translate>
+							</AppTranslate>
 							{{ ' ' }}
 							<router-link :to="{ name: 'dash.account.financials' }">
-								<translate>Go to financial set up.</translate>
+								<AppTranslate>Go to financial set up.</AppTranslate>
 							</router-link>
 						</template>
 						<span
@@ -435,19 +435,19 @@ export default class FormGamePackage
 						v-if="isUserVerified && model && model.has_browser_builds"
 						class="alert alert-notice"
 					>
-						<translate>
+						<AppTranslate>
 							Packages with browser builds cannot be sold at this time.
-						</translate>
+						</AppTranslate>
 					</div>
 				</div>
 
 				<div class="radio" :class="{ disabled: !hasSalesPerms }">
 					<label>
-						<app-form-control-radio value="free" :disabled="!hasSalesPerms" />
-						<translate>Free</translate>
+						<AppFormControlRadio value="free" :disabled="!hasSalesPerms" />
+						<AppTranslate>Free</AppTranslate>
 						&mdash;
 						<span class="help-inline">
-							<translate>Completely free with no option to pay at all.</translate>
+							<AppTranslate>Completely free with no option to pay at all.</AppTranslate>
 						</span>
 					</label>
 				</div>
@@ -457,17 +457,17 @@ export default class FormGamePackage
 					:class="{ disabled: !isUserVerified || isFangame || !hasSalesPerms }"
 				>
 					<label>
-						<app-form-control-radio
+						<AppFormControlRadio
 							value="pwyw"
 							:disabled="!isUserVerified || isFangame || !hasSalesPerms"
 						/>
 
-						<translate>Pay What You Want</translate>
+						<AppTranslate>Pay What You Want</AppTranslate>
 						&mdash;
 						<span class="help-inline">
-							<translate>
+							<AppTranslate>
 								They will be able to pay $0 or more. They set the price.
-							</translate>
+							</AppTranslate>
 						</span>
 					</label>
 				</div>
@@ -483,7 +483,7 @@ export default class FormGamePackage
 					}"
 				>
 					<label>
-						<app-form-control-radio
+						<AppFormControlRadio
 							value="paid"
 							:disabled="
 								!isUserVerified ||
@@ -492,18 +492,18 @@ export default class FormGamePackage
 								!hasSalesPerms
 							"
 						/>
-						<translate>Paid</translate>
+						<AppTranslate>Paid</AppTranslate>
 						&mdash;
 						<span class="help-inline">
-							<translate>
+							<AppTranslate>
 								Charge a specific price with the ability for them to pay more.
-							</translate>
+							</AppTranslate>
 						</span>
 					</label>
 				</div>
-			</app-form-group>
+			</AppFormGroup>
 
-			<app-form-group
+			<AppFormGroup
 				v-if="formModel.pricing_type === 'pwyw'"
 				name="price"
 				:label="$gettext(`Suggested Price`)"
@@ -511,79 +511,79 @@ export default class FormGamePackage
 			>
 				<div class="row">
 					<div class="col-sm-3">
-						<app-form-group name="has_suggested_price" :hide-label="true">
-							<app-form-control-toggle :disabled="!hasSalesPerms" />
-						</app-form-group>
+						<AppFormGroup name="has_suggested_price" :hide-label="true">
+							<AppFormControlToggle :disabled="!hasSalesPerms" />
+						</AppFormGroup>
 						<br class="visible-xs" />
 					</div>
 					<div class="col-sm-9">
 						<div class="input-group">
 							<span class="input-group-addon">$</span>
-							<app-form-control
+							<AppFormControl
 								type="currency"
 								step="1"
 								:validators="[validateMinValue(minPrice / 100)]"
 								:disabled="!formModel.has_suggested_price || !hasSalesPerms"
 							/>
 						</div>
-						<app-form-control-errors />
+						<AppFormControlErrors />
 					</div>
 				</div>
-			</app-form-group>
+			</AppFormGroup>
 
-			<app-form-group
+			<AppFormGroup
 				v-if="formModel.pricing_type === 'paid'"
 				name="price"
 				:label="$gettext(`Price`)"
 			>
 				<div class="input-group">
 					<span class="input-group-addon">$</span>
-					<app-form-control
+					<AppFormControl
 						type="currency"
 						step="1"
 						:validators="[validateMinValue(minPrice / 100)]"
 						:disabled="!hasSalesPerms"
 					/>
 				</div>
-				<app-form-control-errors />
-			</app-form-group>
+				<AppFormControlErrors />
+			</AppFormGroup>
 
 			<div v-if="formModel.pricing_type === 'paid'">
-				<app-game-perms
+				<AppGamePerms
 					v-if="!promotionalPricing && !isShowingSaleForm"
 					tag="div"
 					required="sales"
 				>
 					<div>
-						<app-button @click="isShowingSaleForm = true">
-							<translate>Set Up Sale</translate>
-						</app-button>
+						<AppButton @click="isShowingSaleForm = true">
+							<AppTranslate>Set Up Sale</AppTranslate>
+						</AppButton>
 					</div>
 					<br />
-				</app-game-perms>
+				</AppGamePerms>
 				<div v-else-if="isShowingSaleForm" class="well fill-offset full-bleed">
 					<fieldset>
-						<app-form-legend compact>
-							<translate>Set up sale</translate>
-						</app-form-legend>
+						<AppFormLegend compact>
+							<AppTranslate>Set up sale</AppTranslate>
+						</AppFormLegend>
 
-						<app-form-group name="sale_timezone" :label="$gettext(`Timezone`)">
+						<AppFormGroup name="sale_timezone" :label="$gettext(`Timezone`)">
 							<p class="help-block">
-								<translate>
+								<AppTranslate>
 									All time selection below will use this timezone.
-								</translate>
+								</AppTranslate>
 							</p>
 
 							<p class="help-block">
 								<strong>
-									<translate>
+									<AppTranslate>
 										Should auto-detect, but if it doesn't, choose your closest
 										city.
-									</translate>
+									</AppTranslate>
 								</strong>
 							</p>
 
-							<app-form-control-select>
+							<AppFormControlSelect>
 								<optgroup
 									v-for="(timezones, region) in timezones"
 									:key="region"
@@ -597,57 +597,57 @@ export default class FormGamePackage
 										{{ timezone.label }}
 									</option>
 								</optgroup>
-							</app-form-control-select>
+							</AppFormControlSelect>
 
-							<app-form-control-errors />
-						</app-form-group>
+							<AppFormControlErrors />
+						</AppFormGroup>
 
 						<div class="form-group">
 							<label class="control-label">
-								<translate>Start</translate>
+								<AppTranslate>Start</AppTranslate>
 							</label>
 
 							<!--
 								Can only set this when first setting up a sale.
 							-->
-							<app-form-group
+							<AppFormGroup
 								v-if="!promotionalPricing"
 								name="sale_start_now"
 								:hide-label="true"
 							>
 								<div class="checkbox">
 									<label>
-										<app-form-control-checkbox />
-										<translate>Start immediately?</translate>
+										<AppFormControlCheckbox />
+										<AppTranslate>Start immediately?</AppTranslate>
 									</label>
 								</div>
-							</app-form-group>
+							</AppFormGroup>
 
-							<app-form-group
+							<AppFormGroup
 								v-if="!formModel.sale_start_now || promotionalPricing"
 								name="sale_start"
 								:hide-label="true"
 							>
-								<app-form-control-date
+								<AppFormControlDate
 									:timezone-offset="saleTimezoneOffset"
 									:min-date="now"
 								/>
-								<app-form-control-errors :label="$gettext(`start time`)" />
-							</app-form-group>
+								<AppFormControlErrors :label="$gettext(`start time`)" />
+							</AppFormGroup>
 						</div>
 
-						<app-form-group name="sale_end" :label="$gettext(`End`)">
-							<app-form-control-date
+						<AppFormGroup name="sale_end" :label="$gettext(`End`)">
+							<AppFormControlDate
 								:timezone-offset="saleTimezoneOffset"
 								:min-date="formModel.sale_start"
 							/>
-							<app-form-control-errors :label="$gettext(`end time`)" />
-						</app-form-group>
+							<AppFormControlErrors :label="$gettext(`end time`)" />
+						</AppFormGroup>
 
-						<app-form-group name="sale_price" :label="$gettext(`Sale Price`)">
+						<AppFormGroup name="sale_price" :label="$gettext(`Sale Price`)">
 							<div class="input-group">
 								<span class="input-group-addon">$</span>
-								<app-form-control
+								<AppFormControl
 									type="currency"
 									step="1"
 									:validators="[
@@ -667,16 +667,16 @@ export default class FormGamePackage
 								}}% off
 							</p>
 
-							<app-form-control-errors />
-						</app-form-group>
+							<AppFormControlErrors />
+						</AppFormGroup>
 					</fieldset>
 				</div>
 				<div v-else-if="promotionalPricing" class="well fill-offset full-bleed">
 					<div v-if="promotionalPricing.start > now" class="alert">
-						<translate>A sale is currently scheduled.</translate>
+						<AppTranslate>A sale is currently scheduled.</AppTranslate>
 					</div>
 					<div v-else class="alert alert-highlight">
-						<translate>Your sale is currently running.</translate>
+						<AppTranslate>Your sale is currently running.</AppTranslate>
 					</div>
 
 					<table class="table sans-margin-bottom">
@@ -684,19 +684,19 @@ export default class FormGamePackage
 							<col class="col-xs-4 col-sm-4 col-md-3" />
 						</colgroup>
 						<tr>
-							<th><translate>Timezone</translate></th>
+							<th><AppTranslate>Timezone</AppTranslate></th>
 							<td>
 								{{ promotionalPricing.timezone }}
 								<div class="text-muted small">
-									<translate>All times are based off this timezone.</translate>
+									<AppTranslate>All times are based off this timezone.</AppTranslate>
 								</div>
 							</td>
 						</tr>
 						<tr>
-							<th><translate>Start</translate></th>
+							<th><AppTranslate>Start</AppTranslate></th>
 							<td>
 								{{ formatDate(saleStartLocal, 'medium') }}
-								<app-time-ago
+								<AppTimeAgo
 									:date="promotionalPricing.start"
 									is-future
 									class="text-muted small"
@@ -704,10 +704,10 @@ export default class FormGamePackage
 							</td>
 						</tr>
 						<tr>
-							<th><translate>End</translate></th>
+							<th><AppTranslate>End</AppTranslate></th>
 							<td>
 								{{ formatDate(saleEndLocal, 'medium') }}
-								<app-time-ago
+								<AppTimeAgo
 									:date="promotionalPricing.end"
 									is-future
 									class="text-muted small"
@@ -715,7 +715,7 @@ export default class FormGamePackage
 							</td>
 						</tr>
 						<tr>
-							<th><translate>Price</translate></th>
+							<th><AppTranslate>Price</AppTranslate></th>
 							<td>
 								{{ formatCurrency(promotionalPricing.amount) }}
 								<small class="text-muted">
@@ -733,60 +733,60 @@ export default class FormGamePackage
 
 					<br />
 
-					<app-game-perms tag="div" required="sales">
-						<app-button v-if="!isShowingSaleForm" @click="isShowingSaleForm = true">
-							<translate>Edit Sale</translate>
-						</app-button>
-						<app-button trans @click="cancelSale()">
-							<translate>Cancel Sale</translate>
-						</app-button>
-					</app-game-perms>
+					<AppGamePerms tag="div" required="sales">
+						<AppButton v-if="!isShowingSaleForm" @click="isShowingSaleForm = true">
+							<AppTranslate>Edit Sale</AppTranslate>
+						</AppButton>
+						<AppButton trans @click="cancelSale()">
+							<AppTranslate>Cancel Sale</AppTranslate>
+						</AppButton>
+					</AppGamePerms>
 				</div>
 			</div>
 
-			<app-form-group
+			<AppFormGroup
 				name="primary"
 				:label="$gettext(`Primary Package`)"
 				:optional="!startedPrimary && hasPrimarySellable"
 			>
 				<p class="help-block">
-					<translate>
+					<AppTranslate>
 						We use the primary package to determine the price to show on game listings.
 						You can only have one primary package for your game.
-					</translate>
+					</AppTranslate>
 				</p>
 				<div class="checkbox">
 					<label>
-						<app-form-control-checkbox
+						<AppFormControlCheckbox
 							:disabled="startedPrimary || !hasPrimarySellable"
 						/>
 
 						<template v-if="!hasPrimarySellable">
 							<strong>
-								<translate>
+								<AppTranslate>
 									Since you don't have any packages yet, we'll mark this as your
 									primary one.
-								</translate>
+								</AppTranslate>
 							</strong>
 						</template>
 						<template v-else>
 							<template v-if="!startedPrimary">
-								<translate>Make this package the primary package</translate>
+								<AppTranslate>Make this package the primary package</AppTranslate>
 							</template>
 							<strong v-else>
-								<translate>This is currently the primary package</translate>
+								<AppTranslate>This is currently the primary package</AppTranslate>
 							</strong>
 						</template>
 					</label>
 				</div>
-			</app-form-group>
+			</AppFormGroup>
 
-			<app-form-button>
-				<translate v-if="method === 'add'">
+			<AppFormButton>
+				<AppTranslate v-if="method === 'add'">
 					dash.games.packages.form.add_package_button
-				</translate>
-				<translate v-else-if="method === 'edit'">Save Package</translate>
-			</app-form-button>
-		</app-loading-fade>
-	</app-form>
+				</AppTranslate>
+				<AppTranslate v-else-if="method === 'edit'">Save Package</AppTranslate>
+			</AppFormButton>
+		</AppLoadingFade>
+	</AppForm>
 </template>

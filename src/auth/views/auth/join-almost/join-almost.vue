@@ -65,37 +65,37 @@ export default class RouteJoinAlmost extends BaseRouteComponent {
 		<h2 class="section-header">
 			<!-- signups with gamejolt required a captcha to be solved. lets congratulate them \o/ -->
 			<template v-if="isGamejoltSignup">
-				<translate>Almost there, human!</translate>
+				<AppTranslate>Almost there, human!</AppTranslate>
 				<br />
 				(ヽ° - °)ヽ┳━┳
 			</template>
 			<template v-else>
-				<translate>Almost there!</translate>
+				<AppTranslate>Almost there!</AppTranslate>
 			</template>
 		</h2>
 
 		<p>
-			<translate>
+			<AppTranslate>
 				Before you can log in to Game Jolt, you need to verify the email address on your account.
-			</translate>
+			</AppTranslate>
 		</p>
 		<p>
-			<translate>
+			<AppTranslate>
 				We've sent you an email with instructions on how to authorize your account.
-			</translate>
+			</AppTranslate>
 		</p>
 		<p class="small text-muted">
-			<translate>auth.join.almost.spam</translate>
+			<AppTranslate>auth.join.almost.spam</AppTranslate>
 		</p>
 		<p class="small text-muted">
-			<translate>auth.join.almost.urgency</translate>
+			<AppTranslate>auth.join.almost.urgency</AppTranslate>
 		</p>
 
 		<!--
 		We poll to see if their account gets authorized or not.
 		When it does, we can log them in.
 	-->
-		<app-progress-poller
+		<AppProgressPoller
 			v-if="isGamejoltSignup"
 			:url="`/web/auth/poll-authorized/${username}`"
 			@complete="onAuthorized"

@@ -101,15 +101,15 @@ export default class AppGameMediaItemEditModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button trans @click="remove()">
+			<AppButton trans @click="remove()">
 				{{ removeText }}
-			</app-button>
+			</AppButton>
 
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-body">
@@ -117,39 +117,39 @@ export default class AppGameMediaItemEditModal extends mixins(BaseModal) {
 			<!-- <div class="col-sm-4">
 				<br>
 
-				<app-button
+				<AppButton
 					block
 					trans
 					@click.stop="Clipboard.copy( Environment.baseUrl + item.getUrl( game ) )"
 					v-app-tooltip="copyLinkTooltip"
 					>
-					<translate>Copy Link</translate>
-				</app-button>
+					<AppTranslate>Copy Link</AppTranslate>
+				</AppButton>
 
-				<app-button
+				<AppButton
 					block
 					trans
 					@click="remove()"
 					>
 					{{ removeText }}
-				</app-button>
+				</AppButton>
 			</div> -->
 			<!-- <div class="col-sm-8"> -->
-			<form-game-image
+			<FormGameImage
 				v-if="item.media_type === 'image'"
 				:game="game"
 				:model="item"
 				@submit="onMediaEdited"
 			/>
 
-			<form-game-video
+			<FormGameVideo
 				v-else-if="item.media_type === 'video'"
 				:game="game"
 				:model="item"
 				@submit="onMediaEdited"
 			/>
 
-			<form-game-sketchfab
+			<FormGameSketchfab
 				v-else-if="item.media_type === 'sketchfab'"
 				:game="game"
 				:model="item"
@@ -159,9 +159,9 @@ export default class AppGameMediaItemEditModal extends mixins(BaseModal) {
 			<hr />
 
 			<p class="text-right">
-				<app-button v-app-tooltip="copyLinkTooltip" trans @click.stop="copyLink()">
-					<translate>Copy Link</translate>
-				</app-button>
+				<AppButton v-app-tooltip="copyLinkTooltip" trans @click.stop="copyLink()">
+					<AppTranslate>Copy Link</AppTranslate>
+				</AppButton>
 			</p>
 
 			<template v-if="item.media_type === 'image'">
@@ -176,5 +176,5 @@ export default class AppGameMediaItemEditModal extends mixins(BaseModal) {
 			<!-- </div> -->
 			<!-- </div> -->
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

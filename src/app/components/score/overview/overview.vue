@@ -119,7 +119,7 @@ export default class AppScoreOverview extends Vue {
 							},
 						}"
 					>
-						<translate>scores.overview.heading</translate>
+						<AppTranslate>scores.overview.heading</AppTranslate>
 					</router-link>
 					<small v-if="scoreTables.length > 1">
 						({{ formatNumber(scoreTables.length) }})
@@ -130,7 +130,7 @@ export default class AppScoreOverview extends Vue {
 			</div>
 
 			<div class="col-xs-12" :class="size === 'full' ? 'col-lg-6' : ''">
-				<app-scoreboard-selector
+				<AppScoreboardSelector
 					v-if="scoreTables.length > 1"
 					:current-table="scoreTable"
 					:tables="scoreTables"
@@ -147,12 +147,12 @@ export default class AppScoreOverview extends Vue {
 			<div v-if="app.user" class="col-xs-12" :class="size === 'full' ? 'col-lg-6' : ''">
 				<div class="score-overview-user-best">
 					<h4 class="section-header">
-						<translate>scores.overview.user_best_heading</translate>
+						<AppTranslate>scores.overview.user_best_heading</AppTranslate>
 					</h4>
 
 					<div class="row">
 						<div class="col-sm-3 hidden-xs">
-							<app-user-avatar :user="app.user" />
+							<AppUserAvatar :user="app.user" />
 						</div>
 
 						<div
@@ -166,13 +166,13 @@ export default class AppScoreOverview extends Vue {
 							<div v-if="!userBestScore" class="alert full-bleed-xs">
 								<p>
 									<strong>
-										<translate>
+										<AppTranslate>
 											scores.overview.user_best_none_heading
-										</translate>
+										</AppTranslate>
 									</strong>
 								</p>
 								<p>
-									<translate> What'cha waitin' for? Get gaming! </translate>
+									<AppTranslate> What'cha waitin' for? Get gaming! </AppTranslate>
 								</p>
 							</div>
 
@@ -190,16 +190,16 @@ export default class AppScoreOverview extends Vue {
 								<h4 class="sans-margin">{{ userBestScore.score }}</h4>
 								<div>
 									<span class="text-muted">
-										<app-time-ago :date="userBestScore.logged_on" />
+										<AppTimeAgo :date="userBestScore.logged_on" />
 									</span>
 								</div>
 								<br />
 
 								<div>
-									<app-jolticon icon="exp" class="text-muted middle" />
+									<AppJolticon icon="exp" class="text-muted middle" />
 									{{ formatNumber(userScoreExperience || 0) }}
 									<span class="initialism">
-										<translate>leveling.exp</translate>
+										<AppTranslate>leveling.exp</AppTranslate>
 									</span>
 								</div>
 							</div>
@@ -220,7 +220,7 @@ export default class AppScoreOverview extends Vue {
 							'section-header': !app.user || (Screen.isDesktop && size === 'full'),
 						}"
 					>
-						<translate>scores.overview.top_scores_heading</translate>
+						<AppTranslate>scores.overview.top_scores_heading</AppTranslate>
 					</h4>
 
 					<template v-if="scores.length">
@@ -229,19 +229,19 @@ export default class AppScoreOverview extends Vue {
 						-->
 						<div v-if="!Screen.isXs" class="row">
 							<div class="col-sm-6">
-								<app-score-list :scores="scoresLeft" :step="2" />
+								<AppScoreList :scores="scoresLeft" :step="2" />
 							</div>
 							<div class="col-sm-6">
-								<app-score-list :scores="scoresRight" :start-rank="2" :step="2" />
+								<AppScoreList :scores="scoresRight" :start-rank="2" :step="2" />
 							</div>
 						</div>
 
 						<!--
 						When screen is XS we just show as one long list.
 						-->
-						<app-score-list v-if="Screen.isXs" :scores="scores" />
+						<AppScoreList v-if="Screen.isXs" :scores="scores" />
 
-						<app-button
+						<AppButton
 							block-xs
 							:to="{
 								name: 'discover.games.view.scores.list',
@@ -253,11 +253,11 @@ export default class AppScoreOverview extends Vue {
 								},
 							}"
 						>
-							<translate>scores.overview.view_more_button</translate>
-						</app-button>
+							<AppTranslate>scores.overview.view_more_button</AppTranslate>
+						</AppButton>
 					</template>
 					<div v-else class="alert full-bleed-xs">
-						<translate>scores.overview.no_scores_html</translate>
+						<AppTranslate>scores.overview.no_scores_html</AppTranslate>
 					</div>
 				</div>
 			</div>

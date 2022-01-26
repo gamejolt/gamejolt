@@ -73,7 +73,7 @@ export default class AppAuthJoinForm
 	>
 		<div class="auth-form-container">
 			<div class="anim-fade-in">
-				<app-button
+				<AppButton
 					class="-google"
 					block
 					solid
@@ -81,18 +81,18 @@ export default class AppAuthJoinForm
 					@click="linkedChoose('google')"
 				>
 					<img :src="googleImage" alt="" />
-					<span><translate>Sign up with Google</translate></span>
-				</app-button>
+					<span><AppTranslate>Sign up with Google</AppTranslate></span>
+				</AppButton>
 			</div>
 
 			<div class="auth-line-thru">
-				<translate>or</translate>
+				<AppTranslate>or</AppTranslate>
 			</div>
 
-			<app-form class="auth-form" :controller="form">
+			<AppForm class="auth-form" :controller="form">
 				<fieldset :disabled="Connection.isClientOffline ? 'true' : undefined">
-					<app-form-group name="email" :label="$gettext('Email')" hide-label>
-						<app-form-control
+					<AppFormGroup name="email" :label="$gettext('Email')" hide-label>
+						<AppFormControl
 							type="email"
 							:disabled="blocked"
 							:validators="[
@@ -104,11 +104,11 @@ export default class AppAuthJoinForm
 							:placeholder="$gettext('Email')"
 						/>
 
-						<app-form-control-errors />
-					</app-form-group>
+						<AppFormControlErrors />
+					</AppFormGroup>
 
-					<app-form-group name="username" :label="$gettext('Username')" hide-label>
-						<app-form-control
+					<AppFormGroup name="username" :label="$gettext('Username')" hide-label>
+						<AppFormControl
 							type="text"
 							:disabled="blocked"
 							:validators="[
@@ -123,11 +123,11 @@ export default class AppAuthJoinForm
 							:placeholder="$gettext('Username')"
 						/>
 
-						<app-form-control-errors />
-					</app-form-group>
+						<AppFormControlErrors />
+					</AppFormGroup>
 
-					<app-form-group name="password" :label="$gettext('Password')" hide-label>
-						<app-form-control
+					<AppFormGroup name="password" :label="$gettext('Password')" hide-label>
+						<AppFormControl
 							type="password"
 							:disabled="blocked"
 							:validators="[validateMinLength(4), validateMaxLength(300)]"
@@ -135,20 +135,20 @@ export default class AppAuthJoinForm
 							:placeholder="$gettext('Password')"
 						/>
 
-						<app-form-control-errors />
-					</app-form-group>
+						<AppFormControlErrors />
+					</AppFormGroup>
 
 					<div class="form-group">
-						<app-form-button block :disabled="blocked">
-							<translate>Sign Up</translate>
-						</app-form-button>
+						<AppFormButton block :disabled="blocked">
+							<AppTranslate>Sign Up</AppTranslate>
+						</AppFormButton>
 					</div>
 				</fieldset>
 
 				<div v-if="blocked" class="alert alert-notice -blocked-message">
-					<translate>You must wait 15 minutes before creating another account.</translate>
+					<AppTranslate>You must wait 15 minutes before creating another account.</AppTranslate>
 				</div>
-			</app-form>
+			</AppForm>
 
 			<div class="-terms">
 				By signing up, you agree to the

@@ -46,7 +46,7 @@ export default class RouteLandingAbout extends BaseRouteComponent {
 		<section class="section landing-header text-center">
 			<div class="container">
 				<h1>
-					<app-theme-svg
+					<AppThemeSvg
 						v-app-tooltip="$gettext('This is a lightning bolt!')"
 						class="bolt anim-fade-in-down"
 						:src="imageJolt"
@@ -141,16 +141,16 @@ export default class RouteLandingAbout extends BaseRouteComponent {
 
 							<p>
 								<strong>For support</strong>, email us at
-								<app-contact-link email="contact@gamejolt.com">
+								<AppContactLink email="contact@gamejolt.com">
 									contact@gamejolt.com
-								</app-contact-link>
+								</AppContactLink>
 							</p>
 
 							<p>
 								<strong>Press/business inquiries</strong>, email Yaprak DeCarmine at
-								<app-contact-link email="yaprak@gamejolt.com">
+								<AppContactLink email="yaprak@gamejolt.com">
 									yaprak@gamejolt.com
-								</app-contact-link>
+								</AppContactLink>
 							</p>
 						</div>
 					</div>

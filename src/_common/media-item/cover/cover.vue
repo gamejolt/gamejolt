@@ -94,18 +94,18 @@ export default class AppMediaItemCover extends Vue {
 	<div class="media-item-cover-container" :class="{ '-blur': blur }">
 		<section class="section media-item-cover" :class="{ loaded: isLoaded }">
 			<div class="media-item-cover-img">
-				<app-media-item-backdrop
+				<AppMediaItemBackdrop
 					class="-backdrop"
 					:media-item="mediaItem"
 					:style="{ height }"
 				>
-					<app-img-responsive
+					<AppImgResponsive
 						v-show="isLoaded"
 						:src="mediaItem.mediaserver_url"
 						@imgloadchange="onLoadChange"
 						alt=""
 					/>
-				</app-media-item-backdrop>
+				</AppMediaItemBackdrop>
 			</div>
 
 			<div class="media-item-cover-content">

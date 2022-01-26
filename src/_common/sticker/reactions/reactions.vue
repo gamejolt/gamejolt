@@ -75,7 +75,7 @@ export default class AppStickerReactions extends Vue {
 		}"
 		@click.stop="onClick"
 	>
-		<app-sticker-reactions-item
+		<AppStickerReactionsItem
 			v-for="{ stickerId, imgUrl, count } of reactions"
 			:key="stickerId"
 			:img-url="imgUrl"

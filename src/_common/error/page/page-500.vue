@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<h1><translate>Internal Server Error</translate></h1>
-		<p><translate>There's been an error, and it's of the dubious sort.</translate></p>
+		<h1><AppTranslate>Internal Server Error</AppTranslate></h1>
+		<p><AppTranslate>There's been an error, and it's of the dubious sort.</AppTranslate></p>
 	</div>
 </template>

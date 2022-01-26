@@ -20,18 +20,18 @@ export default class AppGameCoverButtonsBuildButtons extends Vue {
 
 <template>
 	<div>
-		<app-button v-if="browserBuilds.length" primary solid icon="play" @click="emitPlay()">
-			<translate>Play Game</translate>
-		</app-button>
+		<AppButton v-if="browserBuilds.length" primary solid icon="play" @click="emitPlay()">
+			<AppTranslate>Play Game</AppTranslate>
+		</AppButton>
 
-		<app-button
+		<AppButton
 			v-if="downloadableBuilds.length"
 			primary
 			:solid="!browserBuilds.length"
 			icon="download"
 			@click="emitDownload()"
 		>
-			<translate>Download</translate>
-		</app-button>
+			<AppTranslate>Download</AppTranslate>
+		</AppButton>
 	</div>
 </template>

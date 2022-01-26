@@ -33,6 +33,6 @@ export default class AppSitesManagePageDomain extends Vue {
 
 <template>
 	<div>
-		<form-site-domain :model="site" :user="app.user" :game="game" @submit="onDomainSaved" />
+		<FormSiteDomain :model="site" :user="app.user" :game="game" @submit="onDomainSaved" />
 	</div>
 </template>

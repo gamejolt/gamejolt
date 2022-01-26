@@ -366,8 +366,8 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-shortkey shortkey="tab" @press="onTabKeyPressed" />
+	<AppForm :controller="form">
+		<AppShortkey shortkey="tab" @press="onTabKeyPressed" />
 
 		<div class="-top-indicators">
 			<span v-if="Screen.isXs && !!typingText" class="-typing">
@@ -376,14 +376,14 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 		</div>
 
 		<div v-if="isEditing" class="-editing-message">
-			<app-jolticon icon="edit" />
-			<translate>Editing Message</translate>
+			<AppJolticon icon="edit" />
+			<AppTranslate>Editing Message</AppTranslate>
 			<a class="-editing-message-cancel" @click="cancelEditing">
-				<translate>Cancel</translate>
+				<AppTranslate>Cancel</AppTranslate>
 			</a>
 		</div>
 
-		<app-form-group
+		<AppFormGroup
 			name="content"
 			hide-label
 			class="-form"
@@ -393,7 +393,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 			}"
 		>
 			<div class="-input">
-				<app-form-control-content
+				<AppFormControlContent
 					ref="editor"
 					:content-context="room.messagesContentContext"
 					:temp-resource-context-data="contentEditorTempResourceContextData"
@@ -415,10 +415,10 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 					@changed="onChange($event)"
 				/>
 
-				<app-form-control-errors label="message" />
+				<AppFormControlErrors label="message" />
 			</div>
 
-			<app-button
+			<AppButton
 				v-app-tooltip="isEditing ? $gettext(`Edit message`) : $gettext(`Send message`)"
 				:disabled="isSendButtonDisabled"
 				class="-send-button"
@@ -429,7 +429,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 				:solid="hasContent"
 				@click="onSubmit"
 			/>
-		</app-form-group>
+		</AppFormGroup>
 
 		<div v-if="!Screen.isXs" class="-bottom-indicators anim-fade-in no-animate-leave">
 			<transition name="fade">
@@ -439,7 +439,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 			</transition>
 
 			<span v-if="showMultiLineNotice" class="-multi-line">
-				<app-jolticon icon="notice" />
+				<AppJolticon icon="notice" />
 				<span v-if="isMac" v-translate>
 					You are in multi-line editing mode. Press
 					<code>cmd+enter</code>
@@ -452,7 +452,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 				</span>
 			</span>
 		</div>
-	</app-form>
+	</AppForm>
 </template>
 
 <style lang="stylus" scoped>

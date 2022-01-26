@@ -201,7 +201,7 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 
 <template>
 	<div v-if="topic">
-		<app-page-header>
+		<AppPageHeader>
 			<div>
 				<span
 					v-if="topic.is_locked"
@@ -210,8 +210,8 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 					"
 					class="tag"
 				>
-					<app-jolticon icon="lock" />
-					<translate>Locked</translate>
+					<AppJolticon icon="lock" />
+					<AppTranslate>Locked</AppTranslate>
 				</span>
 			</div>
 
@@ -220,45 +220,45 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 			</h1>
 
 			<div>
-				<translate>by</translate>
+				<AppTranslate>by</AppTranslate>
 				{{ ' ' }}
 				<router-link
 					:to="{ name: 'profile.overview', params: { username: topic.user.username } }"
 				>
 					{{ topic.user.display_name }}
-					<app-user-verified-tick :user="topic.user" />
+					<AppUserVerifiedTick :user="topic.user" />
 					{{ ' ' }}
 					<small>@{{ topic.user.username }}</small>
 				</router-link>
 
 				<span v-if="!Screen.isXs" class="small">
 					<span class="dot-separator" />
-					<app-time-ago :date="topic.posted_on" />
+					<AppTimeAgo :date="topic.posted_on" />
 				</span>
 			</div>
 
 			<template #spotlight>
-				<app-user-card-hover :user="topic.user">
-					<app-user-avatar :user="topic.user" />
-				</app-user-card-hover>
+				<AppUserCardHover :user="topic.user">
+					<AppUserAvatar :user="topic.user" />
+				</AppUserCardHover>
 			</template>
 
 			<template #nav>
-				<app-forum-breadcrumbs :channel="channel" :sort="sort" page="view-topic" />
+				<AppForumBreadcrumbs :channel="channel" :sort="sort" page="view-topic" />
 			</template>
 
 			<template v-if="app.user" #controls>
-				<app-page-header-controls>
-					<app-button
+				<AppPageHeaderControls>
+					<AppButton
 						v-if="!isFollowing"
 						v-app-tooltip="$gettext(`Keep track of replies in this topic.`)"
 						primary
 						block
 						@click="follow"
 					>
-						<translate>Follow</translate>
-					</app-button>
-					<app-button
+						<AppTranslate>Follow</AppTranslate>
+					</AppButton>
+					<AppButton
 						v-else
 						v-app-tooltip="$gettext(`Stop Following`)"
 						primary
@@ -268,18 +268,18 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 						@mouseenter="unfollowHover = true"
 						@mouseleave="unfollowHover = false"
 					>
-						<translate>Following</translate>
-					</app-button>
+						<AppTranslate>Following</AppTranslate>
+					</AppButton>
 
 					<template v-if="app.user" #end>
-						<app-popper popover-class="fill-darkest">
-							<app-button circle trans icon="ellipsis-v" />
+						<AppPopper popover-class="fill-darkest">
+							<AppButton circle trans icon="ellipsis-v" />
 
 							<template #popover>
 								<div class="list-group list-group-dark thin">
 									<a class="list-group-item has-icon" @click="report">
-										<app-jolticon icon="flag" notice />
-										<translate>Report Topic</translate>
+										<AppJolticon icon="flag" notice />
+										<AppTranslate>Report Topic</AppTranslate>
 									</a>
 									<a
 										v-if="app.user.permission_level > 0"
@@ -290,7 +290,7 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 										"
 										target="_blank"
 									>
-										<translate>Toggle Sticky</translate>
+										<AppTranslate>Toggle Sticky</AppTranslate>
 									</a>
 									<a
 										v-if="app.user.permission_level > 0"
@@ -301,7 +301,7 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 										"
 										target="_blank"
 									>
-										<translate>Toggle Lock</translate>
+										<AppTranslate>Toggle Lock</AppTranslate>
 									</a>
 									<a
 										v-if="app.user.permission_level > 0"
@@ -312,7 +312,7 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 										"
 										target="_blank"
 									>
-										<translate>Edit Topic</translate>
+										<AppTranslate>Edit Topic</AppTranslate>
 									</a>
 									<a
 										v-if="app.user.permission_level > 0"
@@ -323,7 +323,7 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 										"
 										target="_blank"
 									>
-										<translate>Move Topic</translate>
+										<AppTranslate>Move Topic</AppTranslate>
 									</a>
 									<a
 										v-if="app.user.permission_level > 0"
@@ -334,7 +334,7 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 										"
 										target="_blank"
 									>
-										<translate>Remove Topic</translate>
+										<AppTranslate>Remove Topic</AppTranslate>
 									</a>
 									<a
 										v-if="app.user.permission_level > 0"
@@ -345,39 +345,39 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 										"
 										target="_blank"
 									>
-										<translate>Moderate User</translate>
+										<AppTranslate>Moderate User</AppTranslate>
 									</a>
 								</div>
 							</template>
-						</app-popper>
+						</AppPopper>
 					</template>
-				</app-page-header-controls>
+				</AppPageHeaderControls>
 			</template>
-		</app-page-header>
+		</AppPageHeader>
 
 		<section class="section">
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-3 col-sm-push-9 col-md-offset-1 col-md-push-8">
-						<app-scroll-affix v-if="app.user" :disabled="!Screen.isDesktop">
-							<app-button
+						<AppScrollAffix v-if="app.user" :disabled="!Screen.isDesktop">
+							<AppButton
 								v-if="!topic.is_locked"
 								v-app-scroll-to="`add-reply`"
 								primary
 								block
 							>
-								<translate>Add Reply</translate>
-							</app-button>
+								<AppTranslate>Add Reply</AppTranslate>
+							</AppButton>
 
-							<app-button
+							<AppButton
 								v-if="topic.user_id === app.user.id && !topic.is_locked"
 								block
 								:disabled="isEditingTopic"
 								@click="editTopic"
 							>
-								<translate>Edit</translate>
-							</app-button>
-						</app-scroll-affix>
+								<AppTranslate>Edit</AppTranslate>
+							</AppButton>
+						</AppScrollAffix>
 
 						<br />
 					</div>
@@ -393,16 +393,16 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 										We do a fade collapse for the main post after the first page.
 									-->
 									<div v-if="currentPage > 1">
-										<app-fade-collapse
+										<AppFadeCollapse
 											:collapse-height="200"
 											:is-open="showFullDescription"
 											@require-change="canToggleDescription = $event"
 											@expand="showFullDescription = true"
 										>
-											<app-content-viewer
+											<AppContentViewer
 												:source="topic.main_post.text_content"
 											/>
-										</app-fade-collapse>
+										</AppFadeCollapse>
 
 										<a
 											v-if="canToggleDescription"
@@ -415,7 +415,7 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 									<!--
 										No fade collapse on first page.
 									-->
-									<app-content-viewer
+									<AppContentViewer
 										v-if="currentPage <= 1"
 										:source="topic.main_post.text_content"
 									/>
@@ -428,15 +428,15 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 										'text-right': !Screen.isXs,
 									}"
 								>
-									<app-forum-topic-upvote-widget :topic="topic" />
+									<AppForumTopicUpvoteWidget :topic="topic" />
 								</div>
 							</div>
 						</template>
 						<template v-else>
 							<h3 class="section-header">
-								<translate>Edit Topic</translate>
+								<AppTranslate>Edit Topic</AppTranslate>
 							</h3>
-							<form-forum-topic
+							<FormForumTopic
 								:model="topic"
 								:channel="channel"
 								@cancel="closeEditTopic"
@@ -451,13 +451,13 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 							{{ formatNumber(topic.replies_count) }} replies.
 						</p>
 
-						<app-message-thread-pagination
+						<AppMessageThreadPagination
 							:items-per-page="perPage"
 							:total-items="topic.replies_count"
 							:current-page="currentPage"
 						/>
 
-						<app-forum-post-list
+						<AppForumPostList
 							id="forum-posts-list"
 							:topic="topic"
 							:posts="posts"
@@ -466,7 +466,7 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 							@replied="onPostAdded"
 						/>
 
-						<app-message-thread-pagination
+						<AppMessageThreadPagination
 							:items-per-page="perPage"
 							:total-items="topic.replies_count"
 							:current-page="currentPage"
@@ -476,30 +476,30 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 						<hr />
 
 						<template v-if="app.user">
-							<app-message-thread-add v-if="!topic.is_locked">
+							<AppMessageThreadAdd v-if="!topic.is_locked">
 								<h4 id="add-reply" class="sans-margin-top">
-									<translate>Add Reply</translate>
+									<AppTranslate>Add Reply</AppTranslate>
 								</h4>
 
-								<form-forum-post :topic="topic" @submit="onPostAdded" />
-							</app-message-thread-add>
+								<FormForumPost :topic="topic" @submit="onPostAdded" />
+							</AppMessageThreadAdd>
 
 							<div v-if="topic.is_locked" class="alert full-bleed-xs">
 								<p>
-									<app-jolticon icon="lock" />
-									<translate>
+									<AppJolticon icon="lock" />
+									<AppTranslate>
 										This topic is locked and can no longer be replied to.
-									</translate>
+									</AppTranslate>
 								</p>
 							</div>
 						</template>
 						<div v-else class="alert full-bleed-xs">
 							<p>
-								<app-jolticon icon="exclamation-circle" />
+								<AppJolticon icon="exclamation-circle" />
 								<a :href="loginUrl">
-									<translate>
+									<AppTranslate>
 										You must be logged in to Game Jolt to post replies.
-									</translate>
+									</AppTranslate>
 								</a>
 							</p>
 						</div>

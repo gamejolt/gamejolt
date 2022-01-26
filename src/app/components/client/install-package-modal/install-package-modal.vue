@@ -67,31 +67,31 @@ export default class AppClientInstallPackageModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<app-jolticon icon="download-box" big />
-				<translate>Choose a Package</translate>
+				<AppJolticon icon="download-box" big />
+				<AppTranslate>Choose a Package</AppTranslate>
 			</h2>
 		</div>
 
 		<div class="modal-body">
 			<p>
-				<translate>
+				<AppTranslate>
 					This game has multiple installable packages. Please choose the one you'd like to
 					install.
-				</translate>
+				</AppTranslate>
 			</p>
 
-			<app-loading v-if="isLoading" big />
+			<AppLoading v-if="isLoading" big />
 			<template v-else-if="installablePackages.length">
-				<app-game-package-card
+				<AppGamePackageCard
 					v-for="pkg of installablePackages"
 					:key="pkg.id"
 					:game="game"
@@ -102,8 +102,8 @@ export default class AppClientInstallPackageModal extends mixins(BaseModal) {
 				/>
 			</template>
 			<template v-else class="alert alert-notice">
-				<translate>This game doesn't have any packages to install.</translate>
+				<AppTranslate>This game doesn't have any packages to install.</AppTranslate>
 			</template>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

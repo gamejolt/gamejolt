@@ -67,10 +67,10 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 	<div v-if="isRouteBootstrapped">
 		<h2 class="section-header">
 			<div class="section-header-controls">
-				<app-button sparse icon="remove" @click="remove" />
+				<AppButton sparse icon="remove" @click="remove" />
 			</div>
 
-			<translate>dash.games.data_store.items.view.heading</translate>
+			<AppTranslate>dash.games.data_store.items.view.heading</AppTranslate>
 		</h2>
 
 		<div class="table-responsive">
@@ -81,7 +81,7 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 				<tbody>
 					<tr>
 						<th>
-							<translate>dash.games.data_store.items.view.key_label</translate>
+							<AppTranslate>dash.games.data_store.items.view.key_label</AppTranslate>
 						</th>
 						<td>
 							<code>{{ item.key }}</code>
@@ -89,7 +89,7 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 					</tr>
 					<tr>
 						<th>
-							<translate>dash.games.data_store.items.view.date_label</translate>
+							<AppTranslate>dash.games.data_store.items.view.date_label</AppTranslate>
 						</th>
 						<td>
 							{{ formatDate(item.posted_on, 'medium') }}
@@ -97,7 +97,7 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 					</tr>
 					<tr>
 						<th>
-							<translate>dash.games.data_store.items.view.data_label</translate>
+							<AppTranslate>dash.games.data_store.items.view.data_label</AppTranslate>
 						</th>
 						<td class="small">
 							<pre>{{ item.data }}</pre>

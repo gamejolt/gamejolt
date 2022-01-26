@@ -161,9 +161,9 @@ export default class AppFormPostMedia
 </script>
 
 <template>
-	<app-loading-fade :is-loading="isLoading">
-		<app-form :controller="form">
-			<app-form-group
+	<AppLoadingFade :is-loading="isLoading">
+		<AppForm :controller="form">
+			<AppFormGroup
 				name="image"
 				class="sans-margin-bottom"
 				hide-label
@@ -171,12 +171,12 @@ export default class AppFormPostMedia
 				:label="$gettext(`Image`)"
 			>
 				<p class="help-block">
-					<translate>Your image must be a PNG, JPG, or GIF.</translate>
+					<AppTranslate>Your image must be a PNG, JPG, or GIF.</AppTranslate>
 					<br />
-					<b><translate>Animated GIFs are supported.</translate></b>
+					<b><AppTranslate>Animated GIFs are supported.</AppTranslate></b>
 				</p>
 
-				<app-scroll-scroller horizontal thin>
+				<AppScrollScroller horizontal thin>
 					<div
 						class="-items"
 						@dragover="onDragOver($event)"
@@ -192,10 +192,10 @@ export default class AppFormPostMedia
 						>
 							<div class="-add-inner">
 								<div>
-									<app-jolticon icon="add" big />
+									<AppJolticon icon="add" big />
 									<br />
 									<b>
-										<translate>Images/GIFs</translate>
+										<AppTranslate>Images/GIFs</AppTranslate>
 									</b>
 								</div>
 							</div>
@@ -209,7 +209,7 @@ export default class AppFormPostMedia
 						>
 							<template #item="{ element }">
 								<div class="-item">
-									<app-form-post-media-item
+									<AppFormPostMediaItem
 										:item="element"
 										@remove="emitRemove(element)"
 									/>
@@ -217,9 +217,9 @@ export default class AppFormPostMedia
 							</template>
 						</draggable>
 					</div>
-				</app-scroll-scroller>
+				</AppScrollScroller>
 
-				<app-form-control-upload
+				<AppFormControlUpload
 					ref="upload"
 					class="-upload-input"
 					:validators="[
@@ -231,10 +231,10 @@ export default class AppFormPostMedia
 					@changed="mediaSelected()"
 				/>
 
-				<app-form-control-errors />
-			</app-form-group>
-		</app-form>
-	</app-loading-fade>
+				<AppFormControlErrors />
+			</AppFormGroup>
+		</AppForm>
+	</AppLoadingFade>
 </template>
 
 <style lang="stylus" scoped>

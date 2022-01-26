@@ -159,7 +159,7 @@ export default class RouteLandingClient extends BaseRouteComponent {
 				<div class="row">
 					<div class="col-lg-6 col-centered">
 						<h1>
-							<app-theme-svg class="bolt" :src="imageJolt" alt="" strict-colors />
+							<AppThemeSvg class="bolt" :src="imageJolt" alt="" strict-colors />
 							Desktop App
 						</h1>
 						<p class="lead">
@@ -198,35 +198,35 @@ export default class RouteLandingClient extends BaseRouteComponent {
 
 				<div class="row">
 					<div class="header-download-buttons">
-						<app-button
+						<AppButton
 							v-if="shouldOfferWindows"
 							primary
 							lg
 							@click="download(platform, '32')"
 						>
-							<app-jolticon icon="download" />
+							<AppJolticon icon="download" />
 							Download for Windows
-						</app-button>
+						</AppButton>
 
-						<app-button
+						<AppButton
 							v-if="shouldOfferMac"
 							primary
 							lg
 							@click="download(platform, '64')"
 						>
-							<app-jolticon icon="download" />
+							<AppJolticon icon="download" />
 							Download for OS X
-						</app-button>
+						</AppButton>
 
-						<app-button
+						<AppButton
 							v-if="shouldOfferLinux"
 							primary
 							lg
 							@click="download(platform, arch)"
 						>
-							<app-jolticon icon="download" />
+							<AppJolticon icon="download" />
 							Download for Linux 64bit
-						</app-button>
+						</AppButton>
 					</div>
 				</div>
 
@@ -272,45 +272,45 @@ export default class RouteLandingClient extends BaseRouteComponent {
 						<div class="col-lg-9 col-centered">
 							<div class="row">
 								<div class="download-footer-col col-sm-4">
-									<p><app-jolticon icon="linux" class="jolticon-4x" /></p>
+									<p><AppJolticon icon="linux" class="jolticon-4x" /></p>
 									<p>
-										<app-button
+										<AppButton
 											v-app-track-event="`client-landing:download:linux`"
 											primary
 											block
 											@click="download('linux', '64')"
 										>
-											<app-jolticon icon="download" />
+											<AppJolticon icon="download" />
 											Download Linux 64bit
-										</app-button>
+										</AppButton>
 									</p>
 								</div>
 								<div class="download-footer-col col-sm-4">
-									<p><app-jolticon icon="mac" class="jolticon-4x" /></p>
+									<p><AppJolticon icon="mac" class="jolticon-4x" /></p>
 									<p>
-										<app-button
+										<AppButton
 											v-app-track-event="`client-landing:download:mac`"
 											primary
 											block
 											@click="download('mac', '64')"
 										>
-											<app-jolticon icon="download" />
+											<AppJolticon icon="download" />
 											Download Mac
-										</app-button>
+										</AppButton>
 									</p>
 								</div>
 								<div class="download-footer-col col-sm-4">
-									<p><app-jolticon icon="windows" class="jolticon-4x" /></p>
+									<p><AppJolticon icon="windows" class="jolticon-4x" /></p>
 									<p>
-										<app-button
+										<AppButton
 											v-app-track-event="`client-landing:download:win`"
 											primary
 											block
 											@click="download('windows', '32')"
 										>
-											<app-jolticon icon="download" />
+											<AppJolticon icon="download" />
 											Download Windows
-										</app-button>
+										</AppButton>
 									</p>
 								</div>
 							</div>

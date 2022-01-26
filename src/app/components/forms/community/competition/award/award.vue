@@ -46,9 +46,9 @@ export default class FormCommunityCompetitionAward
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="name" :label="$gettext(`Award Name`)">
-			<app-form-control
+	<AppForm :controller="form">
+		<AppFormGroup name="name" :label="$gettext(`Award Name`)">
+			<AppFormControl
 				:validators="[
 					validateMaxLength(50),
 					validateAvailability({
@@ -58,23 +58,23 @@ export default class FormCommunityCompetitionAward
 				validate-on-blur
 				:placeholder="$gettext(`1st Place, Best Graphics, etc...`)"
 			/>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group name="description" :label="$gettext(`Award Description`)" optional>
-			<app-form-control-textarea :validators="[validateMaxLength(250)]" />
-			<app-form-control-errors />
+		<AppFormGroup name="description" :label="$gettext(`Award Description`)" optional>
+			<AppFormControlTextarea :validators="[validateMaxLength(250)]" />
+			<AppFormControlErrors />
 
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Descriptions aren't required, but you may use them if the award name isn't
 					descriptive enough.
-				</translate>
+				</AppTranslate>
 			</p>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-button show-when-valid>
-			<translate>Save Award</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton show-when-valid>
+			<AppTranslate>Save Award</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

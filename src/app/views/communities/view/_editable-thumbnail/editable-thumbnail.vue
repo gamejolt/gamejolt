@@ -42,17 +42,17 @@ export default class AppEditableThumbnail extends Vue {
 </script>
 
 <template>
-	<app-editable-overlay v-if="canEdit" class="-fill" @click="showEditAvatar()">
+	<AppEditableOverlay v-if="canEdit" class="-fill" @click="showEditAvatar()">
 		<template #overlay>
-			<translate>Change</translate>
+			<AppTranslate>Change</AppTranslate>
 		</template>
-		<app-media-item-backdrop :media-item="community.thumbnail">
-			<app-community-thumbnail-img :community="community" />
-		</app-media-item-backdrop>
-	</app-editable-overlay>
+		<AppMediaItemBackdrop :media-item="community.thumbnail">
+			<AppCommunityThumbnailImg :community="community" />
+		</AppMediaItemBackdrop>
+	</AppEditableOverlay>
 	<router-link v-else :to="community.routeLocation">
-		<app-media-item-backdrop :media-item="community.thumbnail">
-			<app-community-thumbnail-img :community="community" />
-		</app-media-item-backdrop>
+		<AppMediaItemBackdrop :media-item="community.thumbnail">
+			<AppCommunityThumbnailImg :community="community" />
+		</AppMediaItemBackdrop>
 	</router-link>
 </template>

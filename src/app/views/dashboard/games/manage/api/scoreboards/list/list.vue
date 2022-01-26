@@ -100,57 +100,57 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 <template>
 	<div>
 		<h2 class="section-header">
-			<translate>dash.games.scoreboards.heading</translate>
+			<AppTranslate>dash.games.scoreboards.heading</AppTranslate>
 		</h2>
 
 		<div class="page-help">
 			<p>
-				<translate>
+				<AppTranslate>
 					The API allows you to add multiple customized scoreboards, with control over
 					sorting options and guest scoring, and the ability to attach extra hidden data
 					to scores.
-				</translate>
+				</AppTranslate>
 			</p>
 			<p>
-				<translate>
+				<AppTranslate>
 					The primary scoreboard is the one that will show by default on your game's page.
 					Set a new primary by dragging a scoreboard into the first slot.
-				</translate>
+				</AppTranslate>
 			</p>
 			<p>
-				<app-link-help page="dev-scoreboards" class="link-help">
-					<translate>dash.games.scoreboards.page_help_link</translate>
-				</app-link-help>
+				<AppLinkHelp page="dev-scoreboards" class="link-help">
+					<AppTranslate>dash.games.scoreboards.page_help_link</AppTranslate>
+				</AppLinkHelp>
 			</p>
 		</div>
 
 		<div class="row">
 			<div class="col-md-10 col-lg-9">
-				<app-card-list
+				<AppCardList
 					:items="scoreTables"
 					:active-item="activeItem"
 					:is-adding="isAdding"
 					is-draggable
 					@activate="activeItem = $event"
 				>
-					<app-card-list-draggable item-key="id" @change="saveSort">
+					<AppCardListDraggable item-key="id" @change="saveSort">
 						<template #item="{ element: scoreTable, index }">
-							<app-card-list-item :item="scoreTable">
+							<AppCardListItem :item="scoreTable">
 								<!-- Can only remove if there is more than one score table left. -->
 								<a
 									v-if="scoreTables.length > 1"
 									class="card-remove"
 									@click.stop="removeTable(scoreTable)"
 								>
-									<app-jolticon icon="remove" />
+									<AppJolticon icon="remove" />
 								</a>
 
 								<div class="card-stats">
 									<div class="stat-big">
 										<div class="stat-big-label">
-											<translate>
+											<AppTranslate>
 												dash.games.scoreboards.table_id_label
-											</translate>
+											</AppTranslate>
 										</div>
 										<div class="stat-big-digit">{{ scoreTable.id }}</div>
 									</div>
@@ -170,7 +170,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 										"
 										class="tag tag-highlight"
 									>
-										<translate>dash.games.scoreboards.primary_tag</translate>
+										<AppTranslate>dash.games.scoreboards.primary_tag</AppTranslate>
 									</span>
 									<span
 										v-if="scoreTable.allow_guest_scores"
@@ -179,7 +179,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 										"
 										class="tag"
 									>
-										<translate>dash.games.scoreboards.guest_tag</translate>
+										<AppTranslate>dash.games.scoreboards.guest_tag</AppTranslate>
 									</span>
 									<span
 										v-if="scoreTable.unique_scores"
@@ -188,7 +188,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 										"
 										class="tag"
 									>
-										<translate>dash.games.scoreboards.unique_tag</translate>
+										<AppTranslate>dash.games.scoreboards.unique_tag</AppTranslate>
 									</span>
 									<span
 										v-if="
@@ -200,7 +200,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 										"
 										class="tag"
 									>
-										<translate>dash.games.scoreboards.asc_tag</translate>
+										<AppTranslate>dash.games.scoreboards.asc_tag</AppTranslate>
 									</span>
 									<span
 										v-if="
@@ -212,7 +212,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 										"
 										class="tag"
 									>
-										<translate>dash.games.scoreboards.desc_tag</translate>
+										<AppTranslate>dash.games.scoreboards.desc_tag</AppTranslate>
 									</span>
 								</div>
 
@@ -222,35 +222,35 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 
 								<div class="card-controls">
 									<!-- Don't propagate the click so that it doesn't open the accordion item. -->
-									<app-button
+									<AppButton
 										:to="{
 											name: 'dash.games.manage.api.scoreboards.scores.list',
 											params: { table: scoreTable.id },
 										}"
 										@click.stop
 									>
-										<translate>dash.games.scoreboards.scores_button</translate>
-									</app-button>
+										<AppTranslate>dash.games.scoreboards.scores_button</AppTranslate>
+									</AppButton>
 								</div>
 
 								<template #body>
-									<form-game-score-table
+									<FormGameScoreTable
 										:game="game"
 										:model="scoreTable"
 										@submit="onTableEdited"
 									/>
 								</template>
-							</app-card-list-item>
+							</AppCardListItem>
 						</template>
-					</app-card-list-draggable>
+					</AppCardListDraggable>
 
-					<app-card-list-add
+					<AppCardListAdd
 						:label="$gettext(`dash.games.scoreboards.add_button`)"
 						@toggle="isAdding = !isAdding"
 					>
-						<form-game-score-table :game="game" @submit="onTableAdded" />
-					</app-card-list-add>
-				</app-card-list>
+						<FormGameScoreTable :game="game" @submit="onTableAdded" />
+					</AppCardListAdd>
+				</AppCardList>
 			</div>
 		</div>
 	</div>

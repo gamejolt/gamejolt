@@ -29,26 +29,26 @@ export default class AppGamePackageCardMoreOptions extends Vue {
 			class="list-group-item has-icon"
 			@click="click(extraBuild.build)"
 		>
-			<app-jolticon :icon="extraBuild.icon" />
+			<AppJolticon :icon="extraBuild.icon" />
 
 			<!-- We show the filename if it's an "Other" build. -->
 			<template v-if="!extraBuild.build.os_other">
-				<translate v-if="extraBuild.build.type === 'downloadable'"> Download </translate>
-				<translate
+				<AppTranslate v-if="extraBuild.build.type === 'downloadable'"> Download </AppTranslate>
+				<AppTranslate
 					v-else-if="extraBuild.build.type === 'rom'"
 					:translate-params="{ platform: emulatorInfo[extraBuild.build.emulator_type] }"
 					translate-comment="%{ platform } will be the platform we are downloading for, such as Game Boy, NES, etc."
 				>
 					Download %{ platform } ROM
-				</translate>
-				<translate v-else> Play </translate>
+				</AppTranslate>
+				<AppTranslate v-else> Play </AppTranslate>
 			</template>
 			<template v-else>
 				{{ extraBuild.build.primary_file.filename }}
 			</template>
 
 			<small v-if="extraBuild.arch === '64'">
-				<translate>64-bit</translate>
+				<AppTranslate>64-bit</AppTranslate>
 			</small>
 
 			<small class="text-muted">
@@ -63,7 +63,7 @@ export default class AppGamePackageCardMoreOptions extends Vue {
 			<small v-if="GJ_IS_DESKTOP_APP && extraBuild.type !== 'html'" class="text-muted">
 				<br />
 				<em>
-					<translate>(will open in browser)</translate>
+					<AppTranslate>(will open in browser)</AppTranslate>
 				</em>
 			</small>
 		</a>

@@ -113,32 +113,32 @@ export default class AppLinkedAccount extends Vue {
 </script>
 
 <template>
-	<app-card>
+	<AppCard>
 		<div class="-icon">
-			<app-jolticon big :icon="providerIcon" />
+			<AppJolticon big :icon="providerIcon" />
 		</div>
 
 		<div class="-body">
 			<h5>
-				<translate>{{ providerName }}</translate>
+				<AppTranslate>{{ providerName }}</AppTranslate>
 			</h5>
 
 			<template v-if="!isAccountSet">
 				<p>
 					<small class="text-muted">
-						<translate>Not linked.</translate>
+						<AppTranslate>Not linked.</AppTranslate>
 					</small>
 				</p>
 
-				<app-button
+				<AppButton
 					v-if="!preview"
 					primary
 					:disabled="disabled"
 					icon="link"
 					@click="onLink()"
 				>
-					<translate>Link Now</translate>
-				</app-button>
+					<AppTranslate>Link Now</AppTranslate>
+				</AppButton>
 			</template>
 			<template v-else>
 				<p>
@@ -153,12 +153,12 @@ export default class AppLinkedAccount extends Vue {
 				</p>
 
 				<div v-if="!preview">
-					<app-button :disabled="disabled" @click="onSync()">
-						<translate>Sync</translate>
-					</app-button>
-					<app-button trans :disabled="disabled" @click="onUnlink()">
-						<translate>Unlink</translate>
-					</app-button>
+					<AppButton :disabled="disabled" @click="onSync()">
+						<AppTranslate>Sync</AppTranslate>
+					</AppButton>
+					<AppButton trans :disabled="disabled" @click="onUnlink()">
+						<AppTranslate>Unlink</AppTranslate>
+					</AppButton>
 				</div>
 
 				<div v-if="showTumblrBlog" class="-tumblr-blog">
@@ -171,35 +171,35 @@ export default class AppLinkedAccount extends Vue {
 								</a>
 							</strong>
 						</p>
-						<app-button :disabled="disabled" @click="onSelectTumblrBlog">
-							<translate>Change Blog</translate>
-						</app-button>
-						<app-button
+						<AppButton :disabled="disabled" @click="onSelectTumblrBlog">
+							<AppTranslate>Change Blog</AppTranslate>
+						</AppButton>
+						<AppButton
 							v-if="account.tumblrSelectedBlog"
 							:disabled="disabled"
 							trans
 							@click="onUnlinkTumblrBlog"
 						>
-							<translate>Unlink Blog</translate>
-						</app-button>
+							<AppTranslate>Unlink Blog</AppTranslate>
+						</AppButton>
 					</template>
 					<template v-else>
 						<div class="alert alert-notice">
-							<translate>
+							<AppTranslate>
 								Before you can publish to Tumblr, you have to select a blog within
 								your Tumblr account that you'd like to use.
-							</translate>
+							</AppTranslate>
 						</div>
-						<app-button :disabled="disabled" @click="onSelectTumblrBlog">
-							<translate>Select Blog</translate>
-						</app-button>
+						<AppButton :disabled="disabled" @click="onSelectTumblrBlog">
+							<AppTranslate>Select Blog</AppTranslate>
+						</AppButton>
 					</template>
 				</div>
 			</template>
 
 			<slot />
 		</div>
-	</app-card>
+	</AppCard>
 </template>
 
 <style lang="stylus" scoped>

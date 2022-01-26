@@ -146,7 +146,7 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 <template>
 	<div v-if="shouldShow">
 		<template v-if="votingActive">
-			<h3><translate>Cast Your Vote</translate></h3>
+			<h3><AppTranslate>Cast Your Vote</AppTranslate></h3>
 			<template v-if="!user">
 				<div class="alert">
 					<p>
@@ -183,9 +183,9 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 			<template v-else-if="isOwner">
 				<div class="alert">
 					<p>
-						<translate>
+						<AppTranslate>
 							Nice try, my friend, but you can't vote on your own submission!
-						</translate>
+						</AppTranslate>
 					</p>
 				</div>
 			</template>
@@ -194,10 +194,10 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 			>
 				<div class="alert">
 					<p>
-						<translate>
+						<AppTranslate>
 							Only participants can vote on entries of this jam. To participate,
 							submit an entry to this jam.
-						</translate>
+						</AppTranslate>
 					</p>
 				</div>
 			</template>
@@ -212,9 +212,9 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 					<p class="help-block">
 						<i>
 							<span>
-								<translate>The voting period will end in:</translate>
+								<AppTranslate>The voting period will end in:</AppTranslate>
 								<b>
-									<app-time-ago
+									<AppTimeAgo
 										is-future
 										without-suffix
 										:date="competition.voting_ends_on"
@@ -223,17 +223,17 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 							</span>
 							<br />
 							<span>
-								<translate>
+								<AppTranslate>
 									Votes must be cast during the voting period. You can change your
 									vote at any time before then, but after voting has ended, your
 									decision will be finalized. You can vote for as many entries as
 									you wish.
-								</translate>
+								</AppTranslate>
 							</span>
 						</i>
 					</p>
 
-					<form-community-competition-voting-cast
+					<FormCommunityCompetitionVotingCast
 						:entry="entry"
 						:competition="competition"
 						:voting-categories="votingCategories"
@@ -244,22 +244,22 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 		</template>
 
 		<template v-else>
-			<h3><translate>Voting Results</translate></h3>
+			<h3><AppTranslate>Voting Results</AppTranslate></h3>
 
 			<template v-if="!competition.are_results_calculated">
 				<p>
-					<translate>
+					<AppTranslate>
 						We are currently working on processing the voting results. Check back later
 						to see the final results!
-					</translate>
+					</AppTranslate>
 				</p>
 			</template>
 			<template v-else-if="hasNoVotes">
 				<p>
-					<translate>
+					<AppTranslate>
 						Aw, shucks! This entry wasn't voted on during the voting period, which means
 						it has no voting results. You can still check the game out, though!
-					</translate>
+					</AppTranslate>
 				</p>
 			</template>
 			<template v-else>
@@ -284,48 +284,48 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 					</i>
 					<small v-if="!moreVoteResultInfoVisible">
 						[
-						<a @click="onClickMoreInfo"><translate>more info</translate></a>
+						<a @click="onClickMoreInfo"><AppTranslate>more info</AppTranslate></a>
 						]
 					</small>
 				</p>
 				<template v-if="moreVoteResultInfoVisible">
-					<h4><translate>How Are Voting Results Calculated?</translate></h4>
+					<h4><AppTranslate>How Are Voting Results Calculated?</AppTranslate></h4>
 					<p>
-						<translate>
+						<AppTranslate>
 							First, everyone rates entries from 1-5 in one or more categories. The
 							ratings for each category are averaged to calculate a final score.
 							Ratings of "n/a" are not included in the calculations.
-						</translate>
+						</AppTranslate>
 					</p>
 					<p>
-						<translate>
+						<AppTranslate>
 							When the voting period ends, all scores given by all voters are
 							tabulated to arrive at a weighted average for each entry. The weighted
 							averages determine the entries' overall rankings.
-						</translate>
+						</AppTranslate>
 					</p>
-					<h4><translate>What's a Weighted Average?</translate></h4>
+					<h4><AppTranslate>What's a Weighted Average?</AppTranslate></h4>
 					<p>
-						<translate>
+						<AppTranslate>
 							To arrive at a weighted average for a particular entry, its scores are
 							compared to those of every other entry. Higher occurrences of the same
 							score are given more value, or "weight".
-						</translate>
+						</AppTranslate>
 					</p>
 					<p>
-						<translate>
+						<AppTranslate>
 							The goal is to come up with a projection, based on all available data,
 							of the entry's "true average". The more votes an entry has, the more
 							accurate this average will be.
-						</translate>
+						</AppTranslate>
 					</p>
 					<p>
-						<translate>
+						<AppTranslate>
 							Using weighted averages prevents an entry with a single 5 rating from
 							trumping entries with, for example, several 4 ratings. Similarly, if an
 							entry gets only one low vote and several high ones, its overall score
 							won't be crushed.
-						</translate>
+						</AppTranslate>
 					</p>
 				</template>
 				<div>
@@ -333,13 +333,13 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 						<thead>
 							<tr>
 								<th>
-									<translate>Category</translate>
+									<AppTranslate>Category</AppTranslate>
 								</th>
 								<th>
-									<translate>Rank</translate>
+									<AppTranslate>Rank</AppTranslate>
 								</th>
 								<th>
-									<translate>Score</translate>
+									<AppTranslate>Score</AppTranslate>
 								</th>
 							</tr>
 						</thead>
@@ -351,7 +351,7 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 											voteResult.community_competition_voting_category_id
 										)
 									}}
-									<app-jolticon
+									<AppJolticon
 										v-if="
 											getVotingCategoryDescription(
 												voteResult.community_competition_voting_category_id

@@ -83,7 +83,7 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 		<section class="section">
 			<div class="container">
 				<h2 class="section-header">
-					<translate>Access Keys</translate>
+					<AppTranslate>Access Keys</AppTranslate>
 				</h2>
 
 				<div class="row">
@@ -102,8 +102,8 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 					</div>
 
 					<div class="col-md-7 col-md-pull-4">
-						<app-card-list :items="keyGroups" :is-adding="isAdding">
-							<app-card-list-item
+						<AppCardList :items="keyGroups" :is-adding="isAdding">
+							<AppCardListItem
 								v-for="group of keyGroups"
 								:key="group.id"
 								:item="group"
@@ -128,24 +128,24 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 												<template
 													v-if="group.type === KeyGroup.TYPE_ANONYMOUS"
 												>
-													<translate>Unrestricted (Anonymous)</translate>
+													<AppTranslate>Unrestricted (Anonymous)</AppTranslate>
 												</template>
 												<template
 													v-else-if="
 														group.type === KeyGroup.TYPE_ANONYMOUS_CLAIM
 													"
 												>
-													<translate>Claim-Only</translate>
+													<AppTranslate>Claim-Only</AppTranslate>
 												</template>
 												<template
 													v-else-if="group.type === KeyGroup.TYPE_EMAIL"
 												>
-													<translate>Unrestricted (Email)</translate>
+													<AppTranslate>Unrestricted (Email)</AppTranslate>
 												</template>
 												<template
 													v-else-if="group.type === KeyGroup.TYPE_USER"
 												>
-													<translate>User</translate>
+													<AppTranslate>User</AppTranslate>
 												</template>
 											</span>
 										</div>
@@ -155,7 +155,7 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 
 										<div class="key-groups-progress small text-muted">
 											<div>
-												<strong><translate>Viewed</translate></strong>
+												<strong><AppTranslate>Viewed</AppTranslate></strong>
 												{{ formatNumber(group.viewed_count || 0) }} /
 												{{ formatNumber(group.key_count || 0) }}
 												({{
@@ -168,7 +168,7 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 													)
 												}})
 											</div>
-											<app-progress-bar
+											<AppProgressBar
 												thin
 												:percent="
 													((group.viewed_count || 0) /
@@ -179,7 +179,7 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 											<br />
 
 											<div>
-												<strong><translate>Claimed</translate></strong>
+												<strong><AppTranslate>Claimed</AppTranslate></strong>
 												{{ formatNumber(group.claimed_count || 0) }} /
 												{{ formatNumber(group.key_count || 0) }}
 												({{
@@ -195,7 +195,7 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 													)
 												}})
 											</div>
-											<app-progress-bar
+											<AppProgressBar
 												thin
 												:percent="
 													divide(group.claimed_count, group.key_count) *
@@ -207,29 +207,29 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 								</div>
 
 								<div class="card-controls">
-									<app-button
+									<AppButton
 										primary
 										:to="{
 											name: 'dash.games.manage.key-groups.edit',
 											params: { keyGroupId: group.id },
 										}"
 									>
-										<translate>Manage</translate>
-									</app-button>
+										<AppTranslate>Manage</AppTranslate>
+									</AppButton>
 								</div>
-							</app-card-list-item>
+							</AppCardListItem>
 
-							<app-card-list-add
+							<AppCardListAdd
 								:label="$gettext('Add Key Group')"
 								@toggle="isAdding = !isAdding"
 							>
-								<form-game-key-group
+								<FormGameKeyGroup
 									:game="game"
 									:packages="packages"
 									@submit="onKeyGroupAdded"
 								/>
-							</app-card-list-add>
-						</app-card-list>
+							</AppCardListAdd>
+						</AppCardList>
 					</div>
 				</div>
 			</div>

@@ -382,7 +382,7 @@ export default class RouteProfile extends BaseRouteComponent {
 			If this user is banned, we show very little.
 		-->
 		<template v-if="!user.status">
-			<app-page-header>
+			<AppPageHeader>
 				<h1>
 					{{ user.display_name }}
 					<br />
@@ -390,17 +390,17 @@ export default class RouteProfile extends BaseRouteComponent {
 				</h1>
 
 				<div class="text-muted small">
-					<translate>profile.joined</translate>
+					<AppTranslate>profile.joined</AppTranslate>
 					{{ ' ' }}
-					<app-time-ago :date="user.created_on" />
+					<AppTimeAgo :date="user.created_on" />
 				</div>
-			</app-page-header>
+			</AppPageHeader>
 
 			<router-view />
 		</template>
 		<template v-else>
-			<app-user-block-overlay :user="user">
-				<app-page-header
+			<AppUserBlockOverlay :user="user">
+				<AppPageHeader
 					:cover-media-item="user.header_media_item"
 					:cover-max-height="400"
 					should-affix-nav
@@ -414,21 +414,21 @@ export default class RouteProfile extends BaseRouteComponent {
 							}"
 						>
 							{{ user.display_name }}
-							<app-user-verified-tick :user="user" big />
+							<AppUserVerifiedTick :user="user" big />
 							<small>@{{ user.username }}</small>
 						</router-link>
 					</h1>
 					<div class="small text-muted">
 						<!-- Joined on -->
-						<translate>profile.joined</translate>
+						<AppTranslate>profile.joined</AppTranslate>
 						{{ ' ' }}
-						<app-time-ago :date="user.created_on" />
+						<AppTimeAgo :date="user.created_on" />
 
 						<template v-if="isRouteBootstrapped">
 							<span class="dot-separator" />
 
 							<!-- Dogtag -->
-							<app-user-dogtag :type="user.dogtag" />
+							<AppUserDogtag :type="user.dogtag" />
 
 							<!-- Friend status -->
 							<span
@@ -439,7 +439,7 @@ export default class RouteProfile extends BaseRouteComponent {
 								v-app-tooltip="$gettext('profile.friend_tooltip')"
 								class="tag tag-highlight"
 							>
-								<translate>profile.friend_tag</translate>
+								<AppTranslate>profile.friend_tag</AppTranslate>
 							</span>
 
 							<!-- Online status -->
@@ -449,14 +449,14 @@ export default class RouteProfile extends BaseRouteComponent {
 									v-app-tooltip="$gettext('profile.offline_tooltip')"
 									class="tag"
 								>
-									<translate>profile.offline_tag</translate>
+									<AppTranslate>profile.offline_tag</AppTranslate>
 								</span>
 								<span
 									v-else
 									v-app-tooltip="$gettext('profile.online_tooltip')"
 									class="tag tag-highlight"
 								>
-									<translate>profile.online_tag</translate>
+									<AppTranslate>profile.online_tag</AppTranslate>
 								</span>
 							</template>
 
@@ -466,13 +466,13 @@ export default class RouteProfile extends BaseRouteComponent {
 								v-app-tooltip="$gettext('This user is following you.')"
 								class="tag tag-highlight"
 							>
-								<translate>Follows You</translate>
+								<AppTranslate>Follows You</AppTranslate>
 							</span>
 						</template>
 					</div>
 
 					<template #spotlight>
-						<app-user-avatar :user="user" />
+						<AppUserAvatar :user="user" />
 					</template>
 
 					<template #nav>
@@ -483,7 +483,7 @@ export default class RouteProfile extends BaseRouteComponent {
 										:to="{ name: 'profile.overview' }"
 										:class="{ active: $route.name === 'profile.overview' }"
 									>
-										<translate>profile.overview_tab</translate>
+										<AppTranslate>profile.overview_tab</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -491,7 +491,7 @@ export default class RouteProfile extends BaseRouteComponent {
 										:to="{ name: 'profile.following' }"
 										active-class="active"
 									>
-										<translate>Following</translate>
+										<AppTranslate>Following</AppTranslate>
 										<span class="badge">
 											{{ formatNumber(user.following_count) }}
 										</span>
@@ -502,7 +502,7 @@ export default class RouteProfile extends BaseRouteComponent {
 										:to="{ name: 'profile.followers' }"
 										active-class="active"
 									>
-										<translate>Followers</translate>
+										<AppTranslate>Followers</AppTranslate>
 										<span class="badge">
 											{{ formatNumber(user.follower_count) }}
 										</span>
@@ -513,7 +513,7 @@ export default class RouteProfile extends BaseRouteComponent {
 								-->
 								<li v-if="user.shouts_enabled && Screen.isMobile">
 									<a @click="showComments()">
-										<translate>Shouts</translate>
+										<AppTranslate>Shouts</AppTranslate>
 										<span class="badge">
 											{{ formatNumber(commentsCount) }}
 										</span>
@@ -524,7 +524,7 @@ export default class RouteProfile extends BaseRouteComponent {
 										:to="{ name: 'profile.library' }"
 										active-class="active"
 									>
-										<translate>profile.library_tab</translate>
+										<AppTranslate>profile.library_tab</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -532,16 +532,16 @@ export default class RouteProfile extends BaseRouteComponent {
 										:to="{ name: 'profile.trophies' }"
 										active-class="active"
 									>
-										<translate>Trophies</translate>
+										<AppTranslate>Trophies</AppTranslate>
 										<span class="badge">
 											{{ formatNumber(trophyCount) }}
 										</span>
 									</router-link>
 								</li>
 								<li>
-									<app-popper popover-class="fill-darkest">
+									<AppPopper popover-class="fill-darkest">
 										<a>
-											<app-jolticon icon="ellipsis-v" />
+											<AppJolticon icon="ellipsis-v" />
 										</a>
 
 										<template #popover>
@@ -551,18 +551,18 @@ export default class RouteProfile extends BaseRouteComponent {
 													class="list-group-item has-icon"
 													@click="copyShareUrl"
 												>
-													<app-jolticon icon="link" />
-													<translate>Copy link to user</translate>
+													<AppJolticon icon="link" />
+													<AppTranslate>Copy link to user</AppTranslate>
 												</a>
 												<a
 													v-if="app.user && user.id !== app.user.id"
 													class="list-group-item has-icon"
 													@click="report"
 												>
-													<app-jolticon icon="flag" />
-													<translate>
+													<AppJolticon icon="flag" />
+													<AppTranslate>
 														profile.report_user_button
-													</translate>
+													</AppTranslate>
 												</a>
 												<a
 													v-if="
@@ -573,18 +573,18 @@ export default class RouteProfile extends BaseRouteComponent {
 													class="list-group-item has-icon"
 													@click="routeStore.removeFriend()"
 												>
-													<app-jolticon icon="friend-remove-1" notice />
-													<translate>
+													<AppJolticon icon="friend-remove-1" notice />
+													<AppTranslate>
 														profile.remove_friend_button
-													</translate>
+													</AppTranslate>
 												</a>
 												<a
 													v-if="canBlock"
 													class="list-group-item has-icon"
 													@click="blockUser"
 												>
-													<app-jolticon icon="friend-remove-2" notice />
-													<translate>Block user</translate>
+													<AppJolticon icon="friend-remove-2" notice />
+													<AppTranslate>Block user</AppTranslate>
 												</a>
 												<a
 													v-if="app.user && app.user.permission_level > 0"
@@ -592,28 +592,28 @@ export default class RouteProfile extends BaseRouteComponent {
 													:href="`${Environment.baseUrl}/moderate/users/view/${user.id}`"
 													target="_blank"
 												>
-													<app-jolticon icon="cog" />
-													<translate>
+													<AppJolticon icon="cog" />
+													<AppTranslate>
 														profile.moderate_user_button
-													</translate>
+													</AppTranslate>
 												</a>
 											</div>
 										</template>
-									</app-popper>
+									</AppPopper>
 								</li>
 							</ul>
 						</nav>
 					</template>
 
 					<template #controls>
-						<app-page-header-controls>
-							<app-user-follow-widget
+						<AppPageHeaderControls>
+							<AppUserFollowWidget
 								v-if="shouldShowFollow"
 								:user="user"
 								block
 								location="profilePage"
 							/>
-							<app-button
+							<AppButton
 								v-else-if="shouldShowEdit"
 								primary
 								block
@@ -621,14 +621,14 @@ export default class RouteProfile extends BaseRouteComponent {
 									name: 'dash.account.edit',
 								}"
 							>
-								<translate>Edit Profile</translate>
-							</app-button>
-						</app-page-header-controls>
+								<AppTranslate>Edit Profile</AppTranslate>
+							</AppButton>
+						</AppPageHeaderControls>
 					</template>
-				</app-page-header>
+				</AppPageHeader>
 
 				<router-view />
-			</app-user-block-overlay>
+			</AppUserBlockOverlay>
 		</template>
 	</div>
 </template>

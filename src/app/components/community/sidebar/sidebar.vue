@@ -181,19 +181,19 @@ export default class AppCommunitySidebar extends Vue {
 	<div>
 		<div v-if="shouldShowKnownMembers">
 			<h5 class="section-header">
-				<translate
+				<AppTranslate
 					:translate-n="sidebarData.knownMemberCount"
 					:translate-params="{ count: membersYouKnowCount }"
 					translate-plural="%{ count } members you know"
 				>
 					1 member you know
-				</translate>
+				</AppTranslate>
 			</h5>
-			<app-user-avatar-list :users="sidebarData.knownMembers" />
+			<AppUserAvatarList :users="sidebarData.knownMembers" />
 			<br />
 		</div>
 
-		<app-community-description
+		<AppCommunityDescription
 			:key="community.id"
 			:community="community"
 			:is-editing="isEditing"
@@ -202,41 +202,41 @@ export default class AppCommunitySidebar extends Vue {
 		<div v-if="shouldShowGames" class="-game-list">
 			<div class="clearfix">
 				<div v-if="hasMoreGames" class="pull-right">
-					<app-button trans @click="toggleGamesList">
-						<translate v-if="gameListCollapsed"> View All </translate>
-						<translate v-else> Show fewer </translate>
-					</app-button>
+					<AppButton trans @click="toggleGamesList">
+						<AppTranslate v-if="gameListCollapsed"> View All </AppTranslate>
+						<AppTranslate v-else> Show fewer </AppTranslate>
+					</AppButton>
 				</div>
 
 				<h5 class="section-header">
-					<translate>Games</translate>
+					<AppTranslate>Games</AppTranslate>
 				</h5>
 			</div>
-			<app-game-list :games="visibleGames" event-label="community-sidebar" />
+			<AppGameList :games="visibleGames" event-label="community-sidebar" />
 		</div>
 
 		<div class="-mod-list">
 			<div class="clearfix">
 				<div v-if="hasMoreCollaborators" class="pull-right">
-					<app-button
+					<AppButton
 						trans
 						:disabled="isLoadingMoreCollaborators"
 						@click="toggleCollaboratorList"
 					>
-						<translate v-if="collaboratorListCollapsed || isLoadingMoreCollaborators">
+						<AppTranslate v-if="collaboratorListCollapsed || isLoadingMoreCollaborators">
 							View All
-						</translate>
-						<translate v-else>Show fewer</translate>
-					</app-button>
+						</AppTranslate>
+						<AppTranslate v-else>Show fewer</AppTranslate>
+					</AppButton>
 				</div>
 
 				<h5 class="section-header">
-					<translate>Collaborators</translate>
+					<AppTranslate>Collaborators</AppTranslate>
 				</h5>
 			</div>
 
 			<div v-for="user of moderators" :key="user.id" class="-mod-list-entry">
-				<app-user-card-hover :user="user">
+				<AppUserCardHover :user="user">
 					<router-link :to="user.url">
 						<span>
 							@{{ user.username }}
@@ -246,7 +246,7 @@ export default class AppCommunitySidebar extends Vue {
 									class="img-responsive -mod-avatar-img"
 									alt=""
 								/>
-								<app-jolticon
+								<AppJolticon
 									v-if="user.is_verified"
 									class="-mod-verified"
 									icon="verified"
@@ -254,25 +254,25 @@ export default class AppCommunitySidebar extends Vue {
 							</span>
 						</span>
 					</router-link>
-				</app-user-card-hover>
+				</AppUserCardHover>
 				<span v-if="sidebarData.owner && user.id === sidebarData.owner.id" class="badge">
-					<translate>owner</translate>
+					<AppTranslate>owner</AppTranslate>
 				</span>
 			</div>
 		</div>
 
 		<div class="-community-end small">
-			<app-share-card resource="community" :url="shareUrl" bleed-padding />
+			<AppShareCard resource="community" :url="shareUrl" bleed-padding />
 
 			<div class="text-muted">
 				<template v-if="shouldShowReport">
 					<a @click="onClickReport">
-						<translate>Report</translate>
+						<AppTranslate>Report</AppTranslate>
 					</a>
 					<span class="dot-separator" />
 				</template>
 				A community for
-				<app-time-ago :date="community.added_on" without-suffix />
+				<AppTimeAgo :date="community.added_on" without-suffix />
 			</div>
 		</div>
 	</div>

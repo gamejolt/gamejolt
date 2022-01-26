@@ -114,51 +114,51 @@ export default class AppFiresidePostGotoGrowl extends Vue {
 	<div>
 		<h4 class="section-header">
 			<span v-if="action === 'publish'">
-				<translate>Your post was published!</translate>
+				<AppTranslate>Your post was published!</AppTranslate>
 			</span>
 			<span v-else-if="action === 'scheduled-publish'">
-				<translate>Your scheduled post was published!</translate>
+				<AppTranslate>Your scheduled post was published!</AppTranslate>
 			</span>
 			<span v-else-if="isActive">
-				<app-jolticon icon="share-airplane" />
-				<translate>Your post was added!</translate>
+				<AppJolticon icon="share-airplane" />
+				<AppTranslate>Your post was added!</AppTranslate>
 			</span>
 			<span v-else-if="isDraft">
-				<app-jolticon icon="edit" />
-				<translate>Your post was saved as a draft.</translate>
+				<AppJolticon icon="edit" />
+				<AppTranslate>Your post was saved as a draft.</AppTranslate>
 			</span>
 			<span v-else>
-				<app-jolticon icon="calendar-grid" />
-				<translate>Your post was scheduled.</translate>
+				<AppJolticon icon="calendar-grid" />
+				<AppTranslate>Your post was scheduled.</AppTranslate>
 			</span>
 		</h4>
 
 		<div v-if="isScheduled">
 			It's scheduled to be published automatically in
-			<app-time-ago :date="post.scheduled_for" without-suffix />
+			<AppTimeAgo :date="post.scheduled_for" without-suffix />
 			.
 		</div>
 
 		<div class="-controls">
 			<router-link :to="post.routeLocation">
-				<app-button @click="onClickedView">
-					<translate>View Post</translate>
-				</app-button>
+				<AppButton @click="onClickedView">
+					<AppTranslate>View Post</AppTranslate>
+				</AppButton>
 			</router-link>
 			<router-link v-if="isDraft" :to="draftsLocation">
-				<app-button @click="onClickedView">
-					<translate>All Drafts</translate>
-				</app-button>
+				<AppButton @click="onClickedView">
+					<AppTranslate>All Drafts</AppTranslate>
+				</AppButton>
 			</router-link>
 			<router-link v-else-if="isScheduled" :to="scheduledLocation">
-				<app-button @click="onClickedView">
-					<translate>All Scheduled Posts</translate>
-				</app-button>
+				<AppButton @click="onClickedView">
+					<AppTranslate>All Scheduled Posts</AppTranslate>
+				</AppButton>
 			</router-link>
 			<router-link v-else-if="shouldShowCommunityRedirect" :to="communityLocation">
-				<app-button @click="onClickedView">
-					<translate>Go to Community</translate>
-				</app-button>
+				<AppButton @click="onClickedView">
+					<AppTranslate>Go to Community</AppTranslate>
+				</AppButton>
 			</router-link>
 		</div>
 	</div>

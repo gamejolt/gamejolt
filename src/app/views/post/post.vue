@@ -151,8 +151,8 @@ export default class RoutePost extends BaseRouteComponent {
 </script>
 
 <template>
-	<app-post-page-placeholder v-if="!post" />
-	<app-post-page
+	<AppPostPagePlaceholder v-if="!post" />
+	<AppPostPage
 		v-else
 		:post="post"
 		:community-notifications="communityNotifications"

@@ -40,7 +40,7 @@ export default class AppFiresideStreamPlayback extends Vue {
 <template>
 	<div class="-options-wrap" @click.capture.stop="togglePlayback">
 		<div class="-options">
-			<app-jolticon class="-icon" :icon="videoPaused ? 'play' : 'pause'" />
+			<AppJolticon class="-icon" :icon="videoPaused ? 'play' : 'pause'" />
 		</div>
 	</div>
 </template>

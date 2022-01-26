@@ -15,5 +15,5 @@ export default class AppCommunityThumbnailImg extends Vue {
 </script>
 
 <template>
-	<app-img-responsive :src="community.img_thumbnail" class="community-thumbnail-img" alt="" />
+	<AppImgResponsive :src="community.img_thumbnail" class="community-thumbnail-img" alt="" />
 </template>

@@ -57,25 +57,25 @@ export default class FormSettingsDev extends mixins(Wrapper) {
 </script>
 
 <template>
-	<app-form :controller="form" @changed="onChange">
+	<AppForm :controller="form" @changed="onChange">
 		<fieldset id="settings-dev">
 			<legend>
-				<translate>Dev</translate>
+				<AppTranslate>Dev</AppTranslate>
 			</legend>
 
-			<app-form-group
+			<AppFormGroup
 				v-for="test of tests"
 				:key="test.name"
 				:name="test.name"
 				:label="`Test: ${test.name}`"
 			>
-				<app-form-control-toggle v-if="isBool(test)" class="pull-right" />
-				<app-form-control-select v-else-if="isString(test)">
+				<AppFormControlToggle v-if="isBool(test)" class="pull-right" />
+				<AppFormControlSelect v-else-if="isString(test)">
 					<option v-for="v in stringValues(test)" :key="v" :value="v">
 						{{ v }}
 					</option>
-				</app-form-control-select>
-			</app-form-group>
+				</AppFormControlSelect>
+			</AppFormGroup>
 		</fieldset>
-	</app-form>
+	</AppForm>
 </template>

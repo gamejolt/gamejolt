@@ -30,8 +30,8 @@ export default class AppForumPostList extends Vue {
 </script>
 
 <template>
-	<app-message-thread class="forum-post-list">
-		<app-forum-post-list-item
+	<AppMessageThread class="forum-post-list">
+		<AppForumPostListItem
 			v-for="post of posts"
 			:key="post.id"
 			:topic="topic"
@@ -39,5 +39,5 @@ export default class AppForumPostList extends Vue {
 			:user-post-count="userPostCounts[post.user_id]"
 			@replied="onReplied"
 		/>
-	</app-message-thread>
+	</AppMessageThread>
 </template>

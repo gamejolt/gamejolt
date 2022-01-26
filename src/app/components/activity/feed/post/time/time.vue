@@ -25,15 +25,15 @@ export default class AppActivityFeedPostTime extends Vue {
 	<router-link :to="link" class="link-unstyled">
 		<template v-if="post.isScheduled">
 			<span class="tag" style="vertical-align: middle">
-				<app-jolticon icon="calendar-grid" />
+				<AppJolticon icon="calendar-grid" />
 				{{ ' ' }}
-				<translate>Scheduled</translate>
+				<AppTranslate>Scheduled</AppTranslate>
 			</span>
 			{{ ' ' }}
-			<app-time-ago :date="post.scheduled_for" strict without-suffix />
+			<AppTimeAgo :date="post.scheduled_for" strict without-suffix />
 		</template>
 		<template v-else>
-			<app-time-ago :date="date" strict without-suffix />
+			<AppTimeAgo :date="date" strict without-suffix />
 		</template>
 	</router-link>
 </template>

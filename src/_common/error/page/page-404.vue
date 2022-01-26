@@ -1,10 +1,10 @@
 <template>
 	<div>
-		<h1><translate>Page Not Found</translate></h1>
+		<h1><AppTranslate>Page Not Found</AppTranslate></h1>
 		<p>
-			<translate>
+			<AppTranslate>
 				You found a secret! But upon further inspection, you realize it's just an empty page.
-			</translate>
+			</AppTranslate>
 		</p>
 	</div>
 </template>

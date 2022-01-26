@@ -119,7 +119,7 @@ export default class AppRatingWidget extends Vue {
 <template>
 	<div class="rating-widget">
 		<span v-app-auth-required>
-			<app-button
+			<AppButton
 				class="-like-button"
 				icon="thumbs-up"
 				circle
@@ -145,7 +145,7 @@ export default class AppRatingWidget extends Vue {
 		<span v-else class="blip-missing" />
 
 		<span v-app-auth-required>
-			<app-button
+			<AppButton
 				icon="thumbs-down"
 				circle
 				trans

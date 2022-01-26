@@ -122,7 +122,7 @@ export default class AppTrophyThumbnail extends Vue {
 	>
 		<div ref="thumb" class="trophy-thumbnail-img">
 			<div class="trophy-thumbnail-img-inner">
-				<app-img-responsive v-if="hasThumbnailImg" :src="imgSrc" />
+				<AppImgResponsive v-if="hasThumbnailImg" :src="imgSrc" />
 				<img
 					v-else
 					:class="`trophy-thumbnail-img-${imgMultiplier}x`"

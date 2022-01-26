@@ -23,7 +23,7 @@ export default class AppCommunitySliderPlaceholder extends Vue {
 
 <template>
 	<div class="-list">
-		<app-scroll-scroller class="-scroller" thin horizontal>
+		<AppScrollScroller class="-scroller" thin horizontal>
 			<div class="-flex">
 				<template v-for="n in num" :key="n">
 					<div class="-container">
@@ -39,7 +39,7 @@ export default class AppCommunitySliderPlaceholder extends Vue {
 					<div class="-item -last" />
 				</div>
 			</div>
-		</app-scroll-scroller>
+		</AppScrollScroller>
 	</div>
 </template>
 

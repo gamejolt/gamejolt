@@ -77,12 +77,12 @@ export default class RouteDashAccount extends BaseRouteComponent {
 <template>
 	<div>
 		<div v-if="Screen.isXs" class="well fill-darker sans-margin-bottom">
-			<app-button block icon="chevron-left" :to="{ name: 'dash.account-mobile-nav' }">
-				<translate>Back to Account</translate>
-			</app-button>
+			<AppButton block icon="chevron-left" :to="{ name: 'dash.account-mobile-nav' }">
+				<AppTranslate>Back to Account</AppTranslate>
+			</AppButton>
 		</div>
 
-		<app-page-header>
+		<AppPageHeader>
 			<h1>{{ heading }}</h1>
 
 			<p>
@@ -90,23 +90,23 @@ export default class RouteDashAccount extends BaseRouteComponent {
 			</p>
 
 			<template v-if="!Screen.isXs" #spotlight>
-				<app-editable-overlay
+				<AppEditableOverlay
 					class="-fill"
 					:disabled="$route.name !== 'dash.account.edit'"
 					@click="showEditAvatar()"
 				>
 					<template #overlay>
-						<translate>Change</translate>
+						<AppTranslate>Change</AppTranslate>
 					</template>
-					<app-user-avatar :user="user" />
-				</app-editable-overlay>
+					<AppUserAvatar :user="user" />
+				</AppEditableOverlay>
 			</template>
-		</app-page-header>
+		</AppPageHeader>
 
-		<app-expand :when="$route.name === 'dash.account.edit'">
-			<app-editable-overlay @click="showEditHeader()">
+		<AppExpand :when="$route.name === 'dash.account.edit'">
+			<AppEditableOverlay @click="showEditHeader()">
 				<template #overlay>
-					<translate>Change Profile Header</translate>
+					<AppTranslate>Change Profile Header</AppTranslate>
 				</template>
 
 				<!--
@@ -118,14 +118,14 @@ export default class RouteDashAccount extends BaseRouteComponent {
 						'min-height': !user.header_media_item ? '200px' : '',
 					}"
 				>
-					<app-media-item-cover
+					<AppMediaItemCover
 						v-if="user.header_media_item"
 						:media-item="user.header_media_item"
 						:max-height="400"
 					/>
 				</div>
-			</app-editable-overlay>
-		</app-expand>
+			</AppEditableOverlay>
+		</AppExpand>
 
 		<!-- Don't show content before this route has loaded in the account data. -->
 		<section v-if="isRouteBootstrapped" class="section">
@@ -139,7 +139,7 @@ export default class RouteDashAccount extends BaseRouteComponent {
 										:to="{ name: 'dash.account.edit' }"
 										active-class="active"
 									>
-										<translate>Profile</translate>
+										<AppTranslate>Profile</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -147,7 +147,7 @@ export default class RouteDashAccount extends BaseRouteComponent {
 										:to="{ name: 'dash.account.site' }"
 										active-class="active"
 									>
-										<translate>Portfolio Site</translate>
+										<AppTranslate>Portfolio Site</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -155,7 +155,7 @@ export default class RouteDashAccount extends BaseRouteComponent {
 										:to="{ name: 'dash.account.blocks' }"
 										active-class="active"
 									>
-										<translate>Blocked Users</translate>
+										<AppTranslate>Blocked Users</AppTranslate>
 									</router-link>
 								</li>
 							</ul>
@@ -166,7 +166,7 @@ export default class RouteDashAccount extends BaseRouteComponent {
 										:to="{ name: 'dash.account.linked-accounts' }"
 										active-class="active"
 									>
-										<translate>Linked Accounts</translate>
+										<AppTranslate>Linked Accounts</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -174,7 +174,7 @@ export default class RouteDashAccount extends BaseRouteComponent {
 										:to="{ name: 'dash.account.email-preferences' }"
 										active-class="active"
 									>
-										<translate>Email Preferences</translate>
+										<AppTranslate>Email Preferences</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -182,7 +182,7 @@ export default class RouteDashAccount extends BaseRouteComponent {
 										:to="{ name: 'dash.account.change-password' }"
 										active-class="active"
 									>
-										<translate>Password</translate>
+										<AppTranslate>Password</AppTranslate>
 									</router-link>
 								</li>
 							</ul>
@@ -193,7 +193,7 @@ export default class RouteDashAccount extends BaseRouteComponent {
 										:to="{ name: 'dash.account.payment-methods' }"
 										active-class="active"
 									>
-										<translate>Payment Methods</translate>
+										<AppTranslate>Payment Methods</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -201,7 +201,7 @@ export default class RouteDashAccount extends BaseRouteComponent {
 										:to="{ name: 'dash.account.addresses' }"
 										active-class="active"
 									>
-										<translate>Saved Addresses</translate>
+										<AppTranslate>Saved Addresses</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -209,7 +209,7 @@ export default class RouteDashAccount extends BaseRouteComponent {
 										:to="{ name: 'dash.account.purchases.list' }"
 										active-class="active"
 									>
-										<translate>Purchases</translate>
+										<AppTranslate>Purchases</AppTranslate>
 									</router-link>
 								</li>
 							</ul>
@@ -220,7 +220,7 @@ export default class RouteDashAccount extends BaseRouteComponent {
 										:to="{ name: 'dash.account.financials' }"
 										active-class="active"
 									>
-										<translate>Marketplace Account Setup</translate>
+										<AppTranslate>Marketplace Account Setup</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -228,7 +228,7 @@ export default class RouteDashAccount extends BaseRouteComponent {
 										:to="{ name: 'dash.account.withdraw-funds' }"
 										active-class="active"
 									>
-										<translate>Revenue</translate>
+										<AppTranslate>Revenue</AppTranslate>
 									</router-link>
 								</li>
 							</ul>
@@ -236,12 +236,12 @@ export default class RouteDashAccount extends BaseRouteComponent {
 					</div>
 					<div class="col-xs-12 col-sm-9 col-md-10">
 						<template v-if="Screen.isXs && $route.name === 'dash.account.edit'">
-							<app-editable-overlay class="-avatar-xs" @click="showEditAvatar()">
+							<AppEditableOverlay class="-avatar-xs" @click="showEditAvatar()">
 								<template #overlay>
-									<translate>Change</translate>
+									<AppTranslate>Change</AppTranslate>
 								</template>
-								<app-user-avatar :user="user" />
-							</app-editable-overlay>
+								<AppUserAvatar :user="user" />
+							</AppEditableOverlay>
 
 							<hr />
 						</template>

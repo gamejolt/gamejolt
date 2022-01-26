@@ -85,7 +85,7 @@ export default class AppCommunityChannelCard extends Vue {
 			:style="{ height }"
 		>
 			<div v-if="backgroundItem" class="-card-bg">
-				<app-media-item-backdrop :media-item="backgroundItem" radius="lg">
+				<AppMediaItemBackdrop :media-item="backgroundItem" radius="lg">
 					<div
 						class="-card-bg-img"
 						:style="{
@@ -93,29 +93,29 @@ export default class AppCommunityChannelCard extends Vue {
 						}"
 					/>
 					<div class="-overlay" />
-				</app-media-item-backdrop>
+				</AppMediaItemBackdrop>
 			</div>
 
 			<div class="-card-content">
 				<div class="-card-content-title">
-					<app-jolticon
+					<AppJolticon
 						v-if="isArchived"
 						v-app-tooltip.top="$gettext(`Archived Channel`)"
 						icon="lock"
 					/>
-					<app-jolticon
+					<AppJolticon
 						v-else-if="isLocked"
 						v-app-tooltip.top="
 							$gettext(`You do not have permissions to post to this channel`)
 						"
 						icon="lock"
 					/>
-					<app-jolticon
+					<AppJolticon
 						v-if="isUnpublished"
 						v-app-tooltip.top="$gettext(`Channel is not publicly visible`)"
 						icon="subscribed"
 					/>
-					<app-jolticon
+					<AppJolticon
 						v-if="channelType === 'competition'"
 						v-app-tooltip.top="$gettext(`Jam`)"
 						icon="jams"

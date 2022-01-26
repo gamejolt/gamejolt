@@ -27,14 +27,14 @@ export default class RouteAuthJoin extends BaseRouteComponent {
 
 <template>
 	<div>
-		<app-auth-join overlay />
+		<AppAuthJoin overlay />
 
 		<div class="auth-page-links text-right anim-fade-in">
 			<div class="auth-page-link">
-				<translate>Already have an account?</translate>
+				<AppTranslate>Already have an account?</AppTranslate>
 				{{ ' ' }}
 				<router-link :to="{ name: 'auth.login' }">
-					<translate>Log in!</translate>
+					<AppTranslate>Log in!</AppTranslate>
 				</router-link>
 			</div>
 		</div>

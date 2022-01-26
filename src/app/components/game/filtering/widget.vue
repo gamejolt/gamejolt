@@ -75,7 +75,7 @@ export default class AppGameFilteringWidget extends Vue {
 		<nav class="game-filtering-widget-list platform-list inline">
 			<ul>
 				<li v-for="filter of filters" :key="filter">
-					<app-popper popover-class="fill-darkest">
+					<AppPopper popover-class="fill-darkest">
 						<a v-app-track-event="`game-filtering:tab-${filter}`">
 							{{ definitions[filter].label }}
 							<template v-if="definitions[filter].type === 'radio'">
@@ -98,7 +98,7 @@ export default class AppGameFilteringWidget extends Vue {
 								</span>
 							</template>
 
-							<app-jolticon icon="chevron-down" />
+							<AppJolticon icon="chevron-down" />
 						</a>
 
 						<template #popover>
@@ -121,7 +121,7 @@ export default class AppGameFilteringWidget extends Vue {
 										v-if="definitions[filter].type === 'array'"
 										class="list-group-item-addon"
 									>
-										<app-jolticon
+										<AppJolticon
 											:icon="
 												filtering.isFilterOptionSet(filter, option)
 													? 'checkbox'
@@ -135,7 +135,7 @@ export default class AppGameFilteringWidget extends Vue {
 										v-if="definitions[filter].type === 'radio'"
 										class="list-group-item-addon"
 									>
-										<app-jolticon
+										<AppJolticon
 											:icon="
 												filtering.isFilterOptionSet(filter, option)
 													? hovered[filter] === option
@@ -146,7 +146,7 @@ export default class AppGameFilteringWidget extends Vue {
 										/>
 									</div>
 
-									<app-jolticon
+									<AppJolticon
 										v-if="filter === 'os' || filter === 'browser'"
 										:icon="getJolticon(filter, option)"
 									/>
@@ -155,7 +155,7 @@ export default class AppGameFilteringWidget extends Vue {
 								</a>
 							</div>
 						</template>
-					</app-popper>
+					</AppPopper>
 				</li>
 			</ul>
 		</nav>

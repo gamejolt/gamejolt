@@ -13,9 +13,9 @@ export default class AppActivityFeedPostBlocked extends Vue {
 <template>
 	<div class="alert">
 		<span v-translate="{ username }"> Hidden post by blocked user <b>@%{ username }</b>. </span>
-		<app-button trans @click="show">
-			<translate>Show</translate>
-		</app-button>
+		<AppButton trans @click="show">
+			<AppTranslate>Show</AppTranslate>
+		</AppButton>
 	</div>
 </template>
 

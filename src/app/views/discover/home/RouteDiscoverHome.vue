@@ -127,12 +127,12 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 </script>
 
 <template>
-	<app-home-default
+	<AppHomeDefault
 		v-if="split === 'default'"
 		:is-bootstrapped="isRouteBootstrapped"
 		:featured-item="featuredItem"
 		:featured-communities="featuredCommunities"
 		:featured-fireside="featuredFireside"
 	/>
-	<app-home-slider v-else-if="split === 'hero'" :posts="heroPosts" />
+	<AppHomeSlider v-else-if="split === 'hero'" :posts="heroPosts" />
 </template>

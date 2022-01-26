@@ -25,7 +25,7 @@ export default class RouteLandingPartners extends BaseRouteComponent {
 		<section class="section landing-header text-center">
 			<div class="container">
 				<h1>
-					<app-theme-svg class="bolt" :src="imageJolt" alt="" strict-colors />
+					<AppThemeSvg class="bolt" :src="imageJolt" alt="" strict-colors />
 					Partners
 				</h1>
 
@@ -36,13 +36,13 @@ export default class RouteLandingPartners extends BaseRouteComponent {
 							people buy the game!
 						</p>
 
-						<app-button
+						<AppButton
 							primary
 							href="https://docs.google.com/a/gamejolt.com/forms/d/1d_5jMXtKa8rYndFy1lZhzdiArdhZp6kycX-h1IOwjAU"
 							target="_blank"
 						>
 							Apply Now
-						</app-button>
+						</AppButton>
 					</div>
 				</div>
 			</div>
@@ -54,7 +54,7 @@ export default class RouteLandingPartners extends BaseRouteComponent {
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg
+								<AppThemeSvg
 									:src="assetPaths['./supporting-indies.svg'].default"
 									alt=""
 								/>
@@ -71,7 +71,7 @@ export default class RouteLandingPartners extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg
+								<AppThemeSvg
 									:src="assetPaths['./revenue-share.svg'].default"
 									alt=""
 								/>
@@ -91,7 +91,7 @@ export default class RouteLandingPartners extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 							<div class="landing-graphic">
-								<app-theme-svg
+								<AppThemeSvg
 									:src="assetPaths['./access-any-game.svg'].default"
 									alt=""
 								/>
@@ -135,14 +135,14 @@ export default class RouteLandingPartners extends BaseRouteComponent {
 							<h3>Who should sign up?</h3>
 
 							<p>
-								<app-jolticon icon="youtube" />
+								<AppJolticon icon="youtube" />
 								<strong>YouTubers</strong>
 								must have at least 50,000 subs and an average of 3,000 views per
 								video.
 							</p>
 
 							<p>
-								<app-jolticon icon="twitch" />
+								<AppJolticon icon="twitch" />
 								<strong>Twitch streamers</strong>
 								must have at least 3,000 followers. If you're a Twitch partner,
 								we'll automatically make you a Game Jolt partner.
@@ -170,14 +170,14 @@ export default class RouteLandingPartners extends BaseRouteComponent {
 								the program.
 							</p>
 
-							<app-button
+							<AppButton
 								primary
 								block
 								href="https://docs.google.com/a/gamejolt.com/forms/d/1d_5jMXtKa8rYndFy1lZhzdiArdhZp6kycX-h1IOwjAU"
 								target="_blank"
 							>
 								Apply Now
-							</app-button>
+							</AppButton>
 						</div>
 					</div>
 				</div>

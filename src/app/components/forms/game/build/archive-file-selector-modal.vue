@@ -62,25 +62,25 @@ export default class AppArchiveFileSelectorModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="close()">
-				<translate>
+			<AppButton @click="close()">
+				<AppTranslate>
 					dash.games.releases.builds.launch_options.file_selector.cancel_button
-				</translate>
-			</app-button>
+				</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>
+				<AppTranslate>
 					dash.games.releases.builds.launch_options.file_selector.heading
-				</translate>
+				</AppTranslate>
 			</h2>
 		</div>
 
 		<div class="modal-body">
-			<app-loading v-if="!isLoaded" :big="true" class="loading-centered" />
+			<AppLoading v-if="!isLoaded" :big="true" class="loading-centered" />
 
 			<div v-else-if="files.length">
 				<div class="form-group">
@@ -110,11 +110,11 @@ export default class AppArchiveFileSelectorModal extends mixins(BaseModal) {
 
 			<div v-else class="alert alert-notice">
 				<p>
-					<translate>
+					<AppTranslate>
 						Oh no! We didn't find any executable files for this platform in the archive.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

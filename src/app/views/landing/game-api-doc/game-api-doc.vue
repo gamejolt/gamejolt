@@ -35,16 +35,16 @@ export default class RouteLandingGameApiDoc extends BaseRouteComponent {
 				<div class="row">
 					<div class="col-lg-offset-1 col-lg-11">
 						<h1>
-							<app-theme-svg
+							<AppThemeSvg
 								:src="imageJolt"
 								alt=""
 								:width="17 * 3"
 								:height="18 * 3"
 								strict-colors
 							/>
-							<translate>Game API</translate>
+							<AppTranslate>Game API</AppTranslate>
 							<sup>
-								<translate>Documentation</translate>
+								<AppTranslate>Documentation</AppTranslate>
 							</sup>
 						</h1>
 					</div>

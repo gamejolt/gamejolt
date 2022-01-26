@@ -42,7 +42,7 @@ export default class RouteProfileTrophies extends BaseRouteComponent {
 			<div class="row">
 				<div v-if="Screen.isDesktop" class="col-md-3">
 					<nav class="platform-list">
-						<app-profile-trophies-nav
+						<AppProfileTrophiesNav
 							:games="games"
 							:site-trophy-count="siteTrophyCount"
 							:unviewed-games="unviewedGames"

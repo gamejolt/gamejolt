@@ -39,10 +39,10 @@ export default class RouteDashGamesAdd extends BaseRouteComponent {
 			<div class="row">
 				<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 					<h1 class="section-header">
-						<translate>dash.games.add.heading</translate>
+						<AppTranslate>dash.games.add.heading</AppTranslate>
 					</h1>
 
-					<form-game @submit="onSubmit" />
+					<FormGame @submit="onSubmit" />
 				</div>
 			</div>
 		</div>

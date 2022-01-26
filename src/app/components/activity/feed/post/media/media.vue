@@ -136,7 +136,7 @@ export default class AppActivityFeedPostMedia extends Vue {
 		>
 			<div class="-container">
 				<div ref="slider" class="-slider">
-					<app-media-item-post
+					<AppMediaItemPost
 						v-for="(mediaItem, index) of post.media"
 						:key="mediaItem.id"
 						:media-item="mediaItem"
@@ -153,7 +153,7 @@ export default class AppActivityFeedPostMedia extends Vue {
 
 			<template v-if="post.media.length > 1">
 				<div class="-prev" :class="{ '-hide': page === 1 }" @click.stop="goPrev">
-					<app-jolticon icon="chevron-left" />
+					<AppJolticon icon="chevron-left" />
 				</div>
 
 				<div
@@ -161,12 +161,12 @@ export default class AppActivityFeedPostMedia extends Vue {
 					:class="{ '-hide': page === post.media.length }"
 					@click.stop="goNext"
 				>
-					<app-jolticon icon="chevron-right" />
+					<AppJolticon icon="chevron-right" />
 				</div>
 			</template>
 		</AppTouch>
 
-		<app-event-item-media-indicator
+		<AppEventItemMediaIndicator
 			v-if="post.media.length > 1"
 			class="-indicator"
 			:count="post.media.length"

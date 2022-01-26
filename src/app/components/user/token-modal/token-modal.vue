@@ -40,48 +40,48 @@ export default class AppUserTokenModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<app-jolticon icon="token" big />
-				<translate v-if="!isChanging">Your Game Token</translate>
-				<translate v-else>Change Game Token</translate>
+				<AppJolticon icon="token" big />
+				<AppTranslate v-if="!isChanging">Your Game Token</AppTranslate>
+				<AppTranslate v-else>Change Game Token</AppTranslate>
 			</h2>
 		</div>
 
 		<div class="modal-body">
 			<p class="text-muted small">
-				<translate>
+				<AppTranslate>
 					Your game token is like a special password you use to log into games that
 					support high scores and achievements.
-				</translate>
+				</AppTranslate>
 				[
-				<app-link-help page="tokens" target="_blank">
-					<translate>more info</translate>
-				</app-link-help>
+				<AppLinkHelp page="tokens" target="_blank">
+					<AppTranslate>more info</AppTranslate>
+				</AppLinkHelp>
 				]
 			</p>
 
 			<p class="text-muted small">
-				<translate>
+				<AppTranslate>
 					Never share your account password. In fact, if a game asks for your password
 					instead of your game token, please report it!
-				</translate>
+				</AppTranslate>
 			</p>
 
-			<app-expand :when="!isChanging">
+			<AppExpand :when="!isChanging">
 				<table class="table">
 					<tbody>
 						<tr>
 							<th>Current Game Token</th>
 							<td>
-								<app-loading v-if="!token" />
+								<AppLoading v-if="!token" />
 								<p v-else>
 									<code>{{ token }}</code>
 								</p>
@@ -89,21 +89,21 @@ export default class AppUserTokenModal extends mixins(BaseModal) {
 						</tr>
 					</tbody>
 				</table>
-			</app-expand>
+			</AppExpand>
 
-			<app-expand :when="isChanging">
-				<form-token :token="token" @submit="onTokenChanged" />
-			</app-expand>
+			<AppExpand :when="isChanging">
+				<FormToken :token="token" @submit="onTokenChanged" />
+			</AppExpand>
 		</div>
 
 		<div class="modal-footer">
-			<app-button
+			<AppButton
 				v-if="!isChanging"
 				class="anim-fade-enter anim-fade-leave"
 				@click="showChangeForm"
 			>
-				<translate>Change Game Token</translate>
-			</app-button>
+				<AppTranslate>Change Game Token</AppTranslate>
+			</AppButton>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

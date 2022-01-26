@@ -237,7 +237,7 @@ export default class AppPostPage extends Vue {
 			<div class="container-xl">
 				<div class="full-bleed-xs">
 					<template v-if="video.provider === 'gamejolt'">
-						<app-video-player
+						<AppVideoPlayer
 							v-if="!video.is_processing && video.posterMediaItem"
 							context="page"
 							:media-item="video.posterMediaItem"
@@ -249,7 +249,7 @@ export default class AppPostPage extends Vue {
 							@play="onVideoPlay"
 						/>
 						<template v-else>
-							<app-video-processing-progress
+							<AppVideoProcessingProgress
 								:post="post"
 								@complete="onVideoProcessingComplete"
 							/>
@@ -259,10 +259,10 @@ export default class AppPostPage extends Vue {
 			</div>
 		</template>
 
-		<app-page-container xl>
+		<AppPageContainer xl>
 			<template #default>
 				<template v-if="communityNotifications">
-					<app-community-user-notification
+					<AppCommunityUserNotification
 						v-for="communityNotification of communityNotifications"
 						:key="communityNotification.id"
 						:notification="communityNotification"
@@ -271,7 +271,7 @@ export default class AppPostPage extends Vue {
 				</template>
 
 				<div class="post-view">
-					<app-game-badge
+					<AppGameBadge
 						v-if="post.game"
 						class="-game-badge"
 						:game="post.game"
@@ -282,21 +282,21 @@ export default class AppPostPage extends Vue {
 						<!-- User Info -->
 						<div class="-user-info">
 							<div class="-avatar">
-								<app-user-card-hover :user="displayUser" :disabled="Screen.isXs">
-									<app-user-avatar class="-circle-img" :user="displayUser" />
-								</app-user-card-hover>
+								<AppUserCardHover :user="displayUser" :disabled="Screen.isXs">
+									<AppUserAvatar class="-circle-img" :user="displayUser" />
+								</AppUserCardHover>
 							</div>
 
 							<router-link :to="displayUser.url" class="-name link-unstyled">
 								<span>
 									<strong>{{ displayUser.display_name }}</strong>
-									<app-user-verified-tick :user="displayUser" />
+									<AppUserVerifiedTick :user="displayUser" />
 								</span>
 								<span class="tiny text-muted">@{{ displayUser.username }}</span>
 							</router-link>
 
 							<div class="-controls">
-								<app-user-follow-widget
+								<AppUserFollowWidget
 									v-if="!user || displayUser.id !== user.id"
 									:user="displayUser"
 									hide-count
@@ -314,7 +314,7 @@ export default class AppPostPage extends Vue {
 
 					<div v-if="post.hasMedia" class="-media-items">
 						<div v-for="item of post.media" :key="item.id">
-							<app-media-item-post
+							<AppMediaItemPost
 								class="-media-item"
 								:media-item="item"
 								is-active
@@ -326,26 +326,26 @@ export default class AppPostPage extends Vue {
 					</div>
 
 					<div class="tiny text-muted">
-						<app-time-ago v-if="post.isActive" :date="post.published_on" strict />
+						<AppTimeAgo v-if="post.isActive" :date="post.published_on" strict />
 						<template v-else-if="post.isScheduled">
 							<span class="tag" style="vertical-align: middle">
-								<app-jolticon icon="calendar-grid" />
+								<AppJolticon icon="calendar-grid" />
 								{{ ' ' }}
-								<translate>Scheduled</translate>
+								<AppTranslate>Scheduled</AppTranslate>
 							</span>
 							{{ ' ' }}
-							<app-time-ago :date="post.scheduled_for" strict without-suffix />
+							<AppTimeAgo :date="post.scheduled_for" strict without-suffix />
 						</template>
 						<span v-else-if="post.isDraft" class="tag" style="vertical-align: middle">
-							<translate>Draft</translate>
+							<AppTranslate>Draft</AppTranslate>
 						</span>
 					</div>
 
-					<app-sticker-target :controller="stickerTargetController">
-						<app-content-viewer :source="post.lead_content" />
-					</app-sticker-target>
+					<AppStickerTarget :controller="stickerTargetController">
+						<AppContentViewer :source="post.lead_content" />
+					</AppStickerTarget>
 
-					<app-fireside-post-embed
+					<AppFiresidePostEmbed
 						v-for="embed of post.embeds"
 						:key="embed.id"
 						:embed="embed"
@@ -362,51 +362,51 @@ export default class AppPostPage extends Vue {
 								<span class="lazy-placeholder" style="width: 70%" />
 							</p>
 						</template>
-						<app-content-viewer v-else :source="post.article_content" />
+						<AppContentViewer v-else :source="post.article_content" />
 					</div>
 				</div>
 
-				<app-sticker-controls-overlay v-if="post.hasPoll">
-					<app-poll-voting :poll="post.poll" :game="post.game" :user="post.user" />
+				<AppStickerControlsOverlay v-if="post.hasPoll">
+					<AppPollVoting :poll="post.poll" :game="post.game" :user="post.user" />
 
 					<br />
-				</app-sticker-controls-overlay>
+				</AppStickerControlsOverlay>
 
-				<app-sticker-controls-overlay
+				<AppStickerControlsOverlay
 					v-if="communities.length || post.sticker_counts.length"
 				>
-					<app-sticker-reactions
+					<AppStickerReactions
 						v-if="post.sticker_counts.length"
 						:controller="stickerTargetController"
 						@show="scrollToStickers()"
 					/>
 
-					<app-scroll-scroller class="-communities" horizontal thin>
-						<app-community-pill
+					<AppScrollScroller class="-communities" horizontal thin>
+						<AppCommunityPill
 							v-for="postCommunity of communities"
 							:key="postCommunity.id"
 							:community-link="postCommunity"
 						/>
-					</app-scroll-scroller>
+					</AppScrollScroller>
 
 					<template v-if="shouldShowCommunityPublishError">
 						<br />
 						<div class="well fill-offset">
-							<app-jolticon icon="notice" notice />
+							<AppJolticon icon="notice" notice />
 							<span>
-								<translate>
+								<AppTranslate>
 									You can't publish this post to the selected community channel
 									because you don't have permissions to post into that specific
 									channel. Please select a different channel.
-								</translate>
+								</AppTranslate>
 							</span>
 						</div>
 					</template>
 
 					<div class="-controls-spacing" />
-				</app-sticker-controls-overlay>
+				</AppStickerControlsOverlay>
 
-				<app-post-controls
+				<AppPostControls
 					:post="post"
 					should-show-follow
 					location="postPage"
@@ -417,22 +417,22 @@ export default class AppPostPage extends Vue {
 				/>
 
 				<div class="-share">
-					<app-share-card resource="post" :url="post.url" offset-color />
+					<AppShareCard resource="post" :url="post.url" offset-color />
 				</div>
 
 				<div v-if="Screen.isMobile">
-					<app-post-page-recommendations :posts="recommendedPosts" />
+					<AppPostPageRecommendations :posts="recommendedPosts" />
 				</div>
 
 				<br />
 				<br />
-				<app-comment-widget-lazy :model="post" display-mode="comments" />
+				<AppCommentWidgetLazy :model="post" display-mode="comments" />
 			</template>
 
 			<template v-if="!Screen.isMobile" #right>
-				<app-post-page-recommendations :posts="recommendedPosts" />
+				<AppPostPageRecommendations :posts="recommendedPosts" />
 			</template>
-		</app-page-container>
+		</AppPageContainer>
 	</section>
 </template>
 

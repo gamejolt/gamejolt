@@ -74,7 +74,7 @@ export default class AppPostAddButton extends Vue {
 <template>
 	<div v-app-auth-required class="post-add-button sheet sheet-elevate">
 		<span class="-avatar">
-			<app-user-avatar-img :user="user" />
+			<AppUserAvatarImg :user="user" />
 		</span>
 		<div class="-input" @click="open()">
 			{{ placeholderMessage }}

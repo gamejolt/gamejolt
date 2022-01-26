@@ -97,9 +97,9 @@ export default class AppForumChannelList extends Vue {
 					<template v-for="latestPost of [indexedPosts[channel.id]]" :key="latestPost.id">
 						<div class="forum-channel-list-item-latest-topic clearfix">
 							<div class="forum-channel-list-item-latest-topic-avatar">
-								<app-user-card-hover :user="latestPost.user">
-									<app-user-avatar :user="latestPost.user" />
-								</app-user-card-hover>
+								<AppUserCardHover :user="latestPost.user">
+									<AppUserAvatar :user="latestPost.user" />
+								</AppUserCardHover>
 							</div>
 
 							<div class="forum-channel-list-item-latest-topic-info">
@@ -121,7 +121,7 @@ export default class AppForumChannelList extends Vue {
 									</router-link>
 								</div>
 								<div class="text-muted">
-									<translate>by</translate>
+									<AppTranslate>by</AppTranslate>
 									{{ ' ' }}
 									<strong>
 										<router-link
@@ -132,14 +132,14 @@ export default class AppForumChannelList extends Vue {
 											}"
 										>
 											{{ latestPost.user.display_name }}
-											<app-user-verified-tick :user="latestPost.user" small />
+											<AppUserVerifiedTick :user="latestPost.user" small />
 										</router-link>
 									</strong>
 									{{ ' ' }}
 									<span class="tiny">@{{ latestPost.user.username }}</span>
 								</div>
 								<div class="text-muted">
-									<app-time-ago :date="latestPost.posted_on" />
+									<AppTimeAgo :date="latestPost.posted_on" />
 								</div>
 							</div>
 						</div>

@@ -137,17 +137,17 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<template #default>
 			<div class="modal-controls">
-				<app-button @click="modal.dismiss()">
-					<translate>Close</translate>
-				</app-button>
+				<AppButton @click="modal.dismiss()">
+					<AppTranslate>Close</AppTranslate>
+				</AppButton>
 			</div>
 
 			<div class="modal-header">
 				<h2 class="modal-title">
-					<translate>Manage Hosts</translate>
+					<AppTranslate>Manage Hosts</AppTranslate>
 				</h2>
 			</div>
 
@@ -159,15 +159,15 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 						placeholder="Filter..."
 					/>
 
-					<app-illustration v-if="filteredUsers.length === 0" :src="illNoCommentsSmall">
+					<AppIllustration v-if="filteredUsers.length === 0" :src="illNoCommentsSmall">
 						<p>
-							<translate>There are no people here.</translate>
+							<AppTranslate>There are no people here.</AppTranslate>
 						</p>
-					</app-illustration>
+					</AppIllustration>
 					<div v-else class="-user-list">
 						<div v-for="user of filteredUsers" :key="user.id" class="-user-list-item">
 							<div class="-avatar">
-								<app-user-avatar-img :user="user" />
+								<AppUserAvatarImg :user="user" />
 							</div>
 
 							<div class="-label">
@@ -179,25 +179,25 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 
 							<div class="-action">
 								<div v-if="isUserStreaming(user)" class="-live">
-									<translate>LIVE</translate>
+									<AppTranslate>LIVE</AppTranslate>
 								</div>
 
-								<app-button
+								<AppButton
 									:disabled="isUserProcessing(user)"
 									:solid="isHost(user)"
 									:primary="isHost(user)"
 									@click="processUser(user)"
 								>
-									<translate v-if="!isHost(user)">Add</translate>
-									<translate v-else>Remove</translate>
-								</app-button>
+									<AppTranslate v-if="!isHost(user)">Add</AppTranslate>
+									<AppTranslate v-else>Remove</AppTranslate>
+								</AppButton>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</template>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" scoped>

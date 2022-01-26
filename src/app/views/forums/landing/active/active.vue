@@ -36,14 +36,14 @@ export default class RouteForumsLandingActive extends BaseRouteComponent {
 		<div class="container">
 			<div class="alert full-bleed-xs">
 				<p>
-					<translate>
+					<AppTranslate>
 						Some topics from all channels sorted by when they last had a post. Smell how fresh.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 			<br />
 
-			<app-forum-topic-list :topics="topics" :post-count-per-page="postCountPerPage" />
+			<AppForumTopicList :topics="topics" :post-count-per-page="postCountPerPage" />
 		</div>
 	</div>
 </template>

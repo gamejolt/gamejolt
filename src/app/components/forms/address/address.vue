@@ -31,11 +31,11 @@ export default class FormAddress extends mixins(Wrapper) {
 </script>
 
 <template>
-	<app-form :controller="form">
+	<AppForm :controller="form">
 		<div class="row">
 			<div class="col-sm-6">
-				<app-form-group name="country" :label="$gettext('Country')">
-					<app-form-control-select>
+				<AppFormGroup name="country" :label="$gettext('Country')">
+					<AppFormControlSelect>
 						<option
 							v-for="country of countries"
 							:key="country.code"
@@ -43,41 +43,41 @@ export default class FormAddress extends mixins(Wrapper) {
 						>
 							{{ country.name }}
 						</option>
-					</app-form-control-select>
-					<app-form-control-errors />
-				</app-form-group>
+					</AppFormControlSelect>
+					<AppFormControlErrors />
+				</AppFormGroup>
 			</div>
 		</div>
 
-		<app-form-group name="street1" :label="$gettext('Street Address')">
-			<app-form-control type="text" />
-			<app-form-control-errors />
-		</app-form-group>
+		<AppFormGroup name="street1" :label="$gettext('Street Address')">
+			<AppFormControl type="text" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
 		<div class="row">
 			<div class="col-sm-6">
-				<app-form-group name="region" :label="$gettext('State/Province/County')">
-					<app-form-control v-if="!regions" type="text" />
+				<AppFormGroup name="region" :label="$gettext('State/Province/County')">
+					<AppFormControl v-if="!regions" type="text" />
 
-					<app-form-control-select v-else>
+					<AppFormControlSelect v-else>
 						<option v-for="region of regions" :key="region.code" :value="region.code">
 							{{ region.name }}
 						</option>
-					</app-form-control-select>
+					</AppFormControlSelect>
 
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 			</div>
 			<div class="col-sm-6">
-				<app-form-group name="postcode" :label="$gettext('Zip/Postal Code')">
-					<app-form-control type="text" />
-					<app-form-control-errors />
-				</app-form-group>
+				<AppFormGroup name="postcode" :label="$gettext('Zip/Postal Code')">
+					<AppFormControl type="text" />
+					<AppFormControlErrors />
+				</AppFormGroup>
 			</div>
 		</div>
 
-		<app-form-button show-when-valid>
-			<translate>Save</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton show-when-valid>
+			<AppTranslate>Save</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

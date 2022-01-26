@@ -37,21 +37,21 @@ export default class AppClientGameCoverButtons extends Vue {
 			For Client we hide this once they start installing a package or if they have something
 			installed.
 		-->
-		<app-button
+		<AppButton
 			v-if="browserBuilds.length > 0 && !localPackage"
 			primary
 			outline
 			icon="play"
 			@click="emitPlay()"
 		>
-			<translate>Quick Play</translate>
-		</app-button>
+			<AppTranslate>Quick Play</AppTranslate>
+		</AppButton>
 
 		<!--
 			Only show if there is any downloadable builds for the game. The component will show a
 			tooltip saying it can't be installed for their platform if there's not an installable build.
 		-->
-		<app-client-game-buttons
+		<AppClientGameButtons
 			v-if="downloadableBuilds.length > 0"
 			label="game-cover"
 			:game="game"

@@ -359,7 +359,7 @@ export default class AppStickerLayerDrawer extends Vue {
 				:is="Screen.isPointerMouse ? 'app-scroll-scroller' : 'div'"
 				:style="styles.dimensions"
 			>
-				<app-loading-fade :is-loading="isLoading">
+				<AppLoadingFade :is-loading="isLoading">
 					<component
 						:is="drawerNavigationComponent"
 						class="-scroller"
@@ -372,7 +372,7 @@ export default class AppStickerLayerDrawer extends Vue {
 							<template v-if="hasStickers">
 								<template v-for="(sheet, index) in stickerSheets" :key="index">
 									<div class="-sheet" :style="styles.sheet">
-										<app-sticker-layer-drawer-item
+										<AppStickerLayerDrawerItem
 											v-for="item of sheet"
 											:key="item.sticker.id"
 											:style="styles.stickers"
@@ -388,14 +388,14 @@ export default class AppStickerLayerDrawer extends Vue {
 							<template v-else-if="hasLoaded">
 								<div class="-no-stckers text-center">
 									<p class="lead" style="padding: 0 16px">
-										<translate>
+										<AppTranslate>
 											Oh no! Looks like you don't have any stickers.
-										</translate>
+										</AppTranslate>
 									</p>
 									<p>
-										<translate>
+										<AppTranslate>
 											Use Game Jolt, like some posts, and you might get some.
-										</translate>
+										</AppTranslate>
 									</p>
 								</div>
 							</template>
@@ -405,12 +405,12 @@ export default class AppStickerLayerDrawer extends Vue {
 						</div>
 					</component>
 					<div v-if="!Screen.isPointerMouse">
-						<app-event-item-media-indicator
+						<AppEventItemMediaIndicator
 							:count="stickerSheets.length"
 							:current="sheetPage"
 						/>
 					</div>
-				</app-loading-fade>
+				</AppLoadingFade>
 			</component>
 		</div>
 		<div class="-margin" @click="onClickMargin()" />

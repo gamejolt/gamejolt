@@ -27,28 +27,28 @@ export default class AppFormsCommunityPillIncomplete extends Vue {
 </script>
 
 <template>
-	<app-forms-community-pill-selector
+	<AppFormsCommunityPillSelector
 		:communities="communities"
 		:initial-community="community"
 		@select="emitAdd"
 	>
-		<app-pill-bi class="-pill" no-hover>
+		<AppPillBi class="-pill" no-hover>
 			<template #img>
-				<app-community-thumbnail-img :community="community" />
+				<AppCommunityThumbnailImg :community="community" />
 			</template>
 
 			<template #left>
 				{{ community.name }}
-				<app-community-verified-tick class="-tick" :community="community" small />
+				<AppCommunityVerifiedTick class="-tick" :community="community" small />
 			</template>
 
 			<template #right>
 				<span class="-channel">
-					<translate>Select Channel</translate>
+					<AppTranslate>Select Channel</AppTranslate>
 				</span>
 			</template>
-		</app-pill-bi>
-	</app-forms-community-pill-selector>
+		</AppPillBi>
+	</AppFormsCommunityPillSelector>
 </template>
 
 <style lang="stylus" scoped>

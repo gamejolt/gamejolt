@@ -57,25 +57,25 @@ export default class RouteDashGamesManageGameMaturity extends BaseRouteComponent
 <template>
 	<div class="row">
 		<div class="col-sm-5 col-sm-push-7">
-			<app-scroll-affix v-if="current" :disabled="!Screen.isDesktop" :scroll-offset="15">
+			<AppScrollAffix v-if="current" :disabled="!Screen.isDesktop" :scroll-offset="15">
 				<div v-if="current.tigrs_age" class="anim-fade-enter anim-fade-leave">
-					<app-game-ogrs :game="current" />
+					<AppGameOgrs :game="current" />
 				</div>
-			</app-scroll-affix>
+			</AppScrollAffix>
 
 			<div class="page-help">
 				<p>
-					<translate>
+					<AppTranslate>
 						Every game on Game Jolt, even works-in-progress, needs a maturity rating to
 						describe its content. Accurate ratings and details about content help gamers
 						make informed decisions. Remember, you can always come back later and make
 						changes.
-					</translate>
+					</AppTranslate>
 				</p>
 				<p>
-					<app-link-help page="dev-maturity-ratings" class="link-help">
-						<translate>dash.games.maturity.page_help_link</translate>
-					</app-link-help>
+					<AppLinkHelp page="dev-maturity-ratings" class="link-help">
+						<AppTranslate>dash.games.maturity.page_help_link</AppTranslate>
+					</AppLinkHelp>
 				</p>
 			</div>
 		</div>
@@ -84,7 +84,7 @@ export default class RouteDashGamesManageGameMaturity extends BaseRouteComponent
 			<!--
 			We set current whenever the form model changes so updates can be reflected in scroll affix and tigrs.
 			-->
-			<form-game-maturity :model="game" @changed="current = $event" @submit="onSaved" />
+			<FormGameMaturity :model="game" @changed="current = $event" @submit="onSaved" />
 		</div>
 	</div>
 </template>

@@ -586,19 +586,19 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 <template>
 	<div v-if="game" class="route-discover-games-view">
-		<app-game-maturity-block :game="game">
+		<AppGameMaturityBlock :game="game">
 			<section v-if="collaboratorInvite" class="section section-thin fill-highlight">
 				<div class="container text-center">
 					<p v-translate="{ username: game.developer.username }">
 						<b>@%{ username }</b>
 						has invited you to collaborate on this game.
 					</p>
-					<app-button solid @click="acceptCollaboration()">
-						<translate>Accept</translate>
-					</app-button>
-					<app-button solid @click="declineCollaboration()">
-						<translate>Decline</translate>
-					</app-button>
+					<AppButton solid @click="acceptCollaboration()">
+						<AppTranslate>Accept</AppTranslate>
+					</AppButton>
+					<AppButton solid @click="declineCollaboration()">
+						<AppTranslate>Decline</AppTranslate>
+					</AppButton>
 				</div>
 			</section>
 
@@ -606,14 +606,14 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 				Don't affix the nav on download pages.
 				It takes a lot of space out vertically when on small browser size.
 			-->
-			<app-page-header
+			<AppPageHeader
 				:cover-media-item="game.header_media_item"
 				should-affix-nav
 				:autoscroll-anchor-key="autoscrollAnchorKey"
 				:show-cover-buttons="shouldShowCoverButtons"
 			>
 				<template v-if="shouldShowCoverButtons" #cover-buttons>
-					<app-game-cover-buttons
+					<AppGameCoverButtons
 						v-if="!Screen.isXs"
 						:game="game"
 						:packages="packages"
@@ -625,11 +625,11 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 						@show-multiple-packages="scrollToMultiplePackages"
 					/>
 
-					<app-game-perms :game="game">
+					<AppGamePerms :game="game">
 						<!-- we need this stupid space for some reason -->
 						&nbsp;
 
-						<app-button
+						<AppButton
 							v-app-tooltip="$gettext(`Manage Game`)"
 							circle
 							trans
@@ -640,8 +640,8 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 							}"
 						/>
 
-						<app-game-perms :game="game" required="analytics">
-							<app-button
+						<AppGamePerms :game="game" required="analytics">
+							<AppButton
 								v-app-tooltip="$gettext(`View Game Analytics`)"
 								circle
 								trans
@@ -651,22 +651,22 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 									params: { resource: 'Game', resourceId: game.id },
 								}"
 							/>
-						</app-game-perms>
-					</app-game-perms>
+						</AppGamePerms>
+					</AppGamePerms>
 				</template>
 
 				<template #spotlight>
-					<app-user-card-hover :user="game.developer">
-						<app-user-avatar :user="game.developer" />
-					</app-user-card-hover>
+					<AppUserCardHover :user="game.developer">
+						<AppUserAvatar :user="game.developer" />
+					</AppUserCardHover>
 				</template>
 
 				<template #nav>
-					<app-discover-games-view-nav />
+					<AppDiscoverGamesViewNav />
 				</template>
 
 				<template #controls>
-					<app-discover-games-view-controls />
+					<AppDiscoverGamesViewControls />
 				</template>
 
 				<h1 :class="{ h2: Screen.isMobile }">
@@ -676,7 +676,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 				</h1>
 
 				<div>
-					<translate>by</translate>
+					<AppTranslate>by</AppTranslate>
 					{{ ' ' }}
 					<router-link
 						:to="{
@@ -685,13 +685,13 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 						}"
 					>
 						{{ game.developer.display_name }}
-						<app-user-verified-tick :user="game.developer" />
+						<AppUserVerifiedTick :user="game.developer" />
 						<small>@{{ game.developer.username }}</small>
 					</router-link>
 				</div>
-			</app-page-header>
+			</AppPageHeader>
 
 			<router-view />
-		</app-game-maturity-block>
+		</AppGameMaturityBlock>
 	</div>
 </template>

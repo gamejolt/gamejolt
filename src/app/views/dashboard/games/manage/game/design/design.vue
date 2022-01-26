@@ -58,7 +58,7 @@ export default class RouteDashGamesManageGameDesign extends BaseRouteComponent {
 	<div class="route-manage-game-design">
 		<div class="row">
 			<div class="col-md-9">
-				<form-game-design :model="game" @submit="onSubmit" />
+				<FormGameDesign :model="game" @submit="onSubmit" />
 			</div>
 		</div>
 	</div>

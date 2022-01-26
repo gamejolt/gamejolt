@@ -27,7 +27,7 @@ export default class AppClientStatusBarPatchItem extends Vue {
 </script>
 
 <template>
-	<app-progress-bar
+	<AppProgressBar
 		:percent="(pkg.patchProgress || 0) * 100"
 		thin
 		:style="{ width }"

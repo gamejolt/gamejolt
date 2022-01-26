@@ -11,16 +11,16 @@ export default class AppStickerCardHidden extends Vue {
 <template>
 	<div class="-card" :class="{ '-redeemable': !disabled, '-disabled': disabled }">
 		<div class="-img">
-			<app-jolticon class="-icon jolticon-3x" icon="sticker" />
+			<AppJolticon class="-icon jolticon-3x" icon="sticker" />
 		</div>
 		<div class="-pocket fill-darkest">
-			<translate
+			<AppTranslate
 				:translate-n="count + 1"
 				:translate-params="{ count: count }"
 				translate-plural="Unlock %{count}"
 			>
 				Unlocking...
-			</translate>
+			</AppTranslate>
 		</div>
 	</div>
 </template>

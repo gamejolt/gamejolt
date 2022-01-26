@@ -102,12 +102,12 @@ export default class AppActivityFeedPostText extends Vue {
 				<div class="-page-cut-content-placeholder" />
 			</div>
 
-			<app-content-viewer :source="post.article_content" disable-lightbox />
+			<AppContentViewer :source="post.article_content" disable-lightbox />
 		</template>
 
 		<div class="-page-cut-bottom page-cut">
 			<div class="page-cut-content">
-				<app-loading
+				<AppLoading
 					v-if="isLoading"
 					class="-loading"
 					centered
@@ -115,10 +115,10 @@ export default class AppActivityFeedPostText extends Vue {
 					stationary
 					@click.stop
 				/>
-				<app-button v-else trans @click.stop="toggleFull()">
-					<translate v-if="!isOpen">Read article</translate>
-					<translate v-else>Less</translate>
-				</app-button>
+				<AppButton v-else trans @click.stop="toggleFull()">
+					<AppTranslate v-if="!isOpen">Read article</AppTranslate>
+					<AppTranslate v-else>Less</AppTranslate>
+				</AppButton>
 			</div>
 		</div>
 	</div>

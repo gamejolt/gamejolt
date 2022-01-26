@@ -96,7 +96,7 @@ export default class AppThemeEditor extends Vue {
 
 <template>
 	<div class="theme-editor">
-		<app-loading v-if="!isLoaded" />
+		<AppLoading v-if="!isLoaded" />
 		<div v-else>
 			<p v-if="definition.styleGroups.length > 1">
 				<select v-model="selectedGroup" class="form-control">
@@ -143,13 +143,13 @@ export default class AppThemeEditor extends Vue {
 									class="clear-link"
 									@click="updateField(definitionField, undefined)"
 								>
-									<translate>clear</translate>
+									<AppTranslate>clear</AppTranslate>
 								</a>
-								<app-colorpicker v-model="theme[definitionField]" />
+								<AppColorpicker v-model="theme[definitionField]" />
 							</div>
 
 							<!-- Image -->
-							<app-theme-editor-image
+							<AppThemeEditorImage
 								v-else-if="definition.definitions[definitionField].type === 'image'"
 								v-model="theme[definitionField]"
 								type="sites-theme-image"
@@ -157,7 +157,7 @@ export default class AppThemeEditor extends Vue {
 							/>
 
 							<!-- Font Family -->
-							<app-theme-editor-font-selector
+							<AppThemeEditorFontSelector
 								v-else-if="
 									definition.definitions[definitionField].type === 'fontFamily'
 								"
@@ -194,16 +194,16 @@ export default class AppThemeEditor extends Vue {
 							>
 								<select v-model="theme[definitionField]" class="form-control">
 									<option :value="undefined">
-										<translate>Repeat</translate>
+										<AppTranslate>Repeat</AppTranslate>
 									</option>
 									<option value="repeat-x">
-										<translate>Repeat Horizontal</translate>
+										<AppTranslate>Repeat Horizontal</AppTranslate>
 									</option>
 									<option value="repeat-y">
-										<translate>Repeat Vertical</translate>
+										<AppTranslate>Repeat Vertical</AppTranslate>
 									</option>
 									<option value="no-repeat">
-										<translate>Don't Repeat</translate>
+										<AppTranslate>Don't Repeat</AppTranslate>
 									</option>
 								</select>
 							</div>
@@ -218,10 +218,10 @@ export default class AppThemeEditor extends Vue {
 							>
 								<select v-model="theme[definitionField]" class="form-control">
 									<option :value="undefined">
-										<translate>Auto (Default)</translate>
+										<AppTranslate>Auto (Default)</AppTranslate>
 									</option>
-									<option value="cover"><translate>Cover</translate></option>
-									<option value="contain"><translate>Contain</translate></option>
+									<option value="cover"><AppTranslate>Cover</AppTranslate></option>
+									<option value="contain"><AppTranslate>Contain</AppTranslate></option>
 								</select>
 							</div>
 
@@ -234,21 +234,21 @@ export default class AppThemeEditor extends Vue {
 								class="theme-editor-dropdown"
 							>
 								<select v-model="theme[definitionField]" class="form-control">
-									<option :value="undefined"><translate>Top</translate></option>
-									<option value="topLeft"><translate>Top Left</translate></option>
-									<option value="right"><translate>Right</translate></option>
+									<option :value="undefined"><AppTranslate>Top</AppTranslate></option>
+									<option value="topLeft"><AppTranslate>Top Left</AppTranslate></option>
+									<option value="right"><AppTranslate>Right</AppTranslate></option>
 									<option value="topRight">
-										<translate>Top Right</translate>
+										<AppTranslate>Top Right</AppTranslate>
 									</option>
 									<option value="bottomRight">
-										<translate>Bottom Right</translate>
+										<AppTranslate>Bottom Right</AppTranslate>
 									</option>
-									<option value="bottom"><translate>Bottom</translate></option>
+									<option value="bottom"><AppTranslate>Bottom</AppTranslate></option>
 									<option value="bottomLeft">
-										<translate>Bottom Left</translate>
+										<AppTranslate>Bottom Left</AppTranslate>
 									</option>
-									<option value="left"><translate>Left</translate></option>
-									<option value="center"><translate>Center</translate></option>
+									<option value="left"><AppTranslate>Left</AppTranslate></option>
+									<option value="center"><AppTranslate>Center</AppTranslate></option>
 								</select>
 							</div>
 

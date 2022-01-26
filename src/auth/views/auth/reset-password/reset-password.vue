@@ -44,9 +44,9 @@ export default class RouteAuthResetPassword extends BaseRouteComponent {
 <template>
 	<div>
 		<h2 class="section-header anim-fade-in-enlarge">
-			<translate>auth.reset_password.heading</translate>
+			<AppTranslate>auth.reset_password.heading</AppTranslate>
 		</h2>
 
-		<form-reset-password :user-id="userId" :token="token" @submit="onSubmitted" />
+		<FormResetPassword :user-id="userId" :token="token" @submit="onSubmitted" />
 	</div>
 </template>

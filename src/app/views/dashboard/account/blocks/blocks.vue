@@ -113,70 +113,70 @@ export default class RouteDashAccountBlocks extends BaseRouteComponent {
 	<div class="row">
 		<div class="col-md-3 col-md-push-9 col-lg-4 col-lg-push-8">
 			<div class="page-help">
-				<translate>
+				<AppTranslate>
 					When you block someone, that user won't be able to follow you, send you a friend
 					request, or reply to your posts and comments.
-				</translate>
-				<app-link-help page="blocking-users" class="link-help">
-					<translate>Learn more about what happens when you block a user</translate>
-				</app-link-help>
+				</AppTranslate>
+				<AppLinkHelp page="blocking-users" class="link-help">
+					<AppTranslate>Learn more about what happens when you block a user</AppTranslate>
+				</AppLinkHelp>
 			</div>
 		</div>
 		<div class="col-md-9 col-md-pull-3 col-lg-8 col-lg-pull-4">
 			<template v-if="!isRouteBootstrapped || isRouteLoading">
-				<app-loading centered />
+				<AppLoading centered />
 			</template>
 			<template v-else>
 				<template v-if="totalCount === 0">
 					<p class="lead text-center">
-						<translate>You aren't blocking anyone.</translate>
+						<AppTranslate>You aren't blocking anyone.</AppTranslate>
 					</p>
 					<br />
 				</template>
 
-				<app-card-list :is-adding="isBlocking">
-					<app-card-list-add
+				<AppCardList :is-adding="isBlocking">
+					<AppCardListAdd
 						:label="$gettext('Block User')"
 						@toggle="isBlocking = !isBlocking"
 					>
-						<form-user-block @submit="onBlockSubmit" />
-					</app-card-list-add>
-				</app-card-list>
+						<FormUserBlock @submit="onBlockSubmit" />
+					</AppCardListAdd>
+				</AppCardList>
 
 				<template v-if="totalCount !== 0">
 					<div v-for="block of blocks" :key="block.id" class="-item">
-						<app-user-avatar class="-item-avatar" :user="block.user" />
+						<AppUserAvatar class="-item-avatar" :user="block.user" />
 
 						<div class="-item-label">
 							<div class="-item-name">
 								{{ block.user.display_name }}
-								<app-user-verified-tick :user="block.user" />
+								<AppUserVerifiedTick :user="block.user" />
 							</div>
 
 							<div class="-item-username">@{{ block.user.username }}</div>
 
 							<small>
-								<translate>Blocked:</translate>
+								<AppTranslate>Blocked:</AppTranslate>
 								{{ ' ' }}
-								<app-time-ago :date="block.blocked_on" />
+								<AppTimeAgo :date="block.blocked_on" />
 							</small>
 						</div>
 
-						<app-button class="-item-controls" @click="onClickUnblock(block)">
-							<translate>Unblock</translate>
-						</app-button>
+						<AppButton class="-item-controls" @click="onClickUnblock(block)">
+							<AppTranslate>Unblock</AppTranslate>
+						</AppButton>
 					</div>
 
 					<div v-if="shouldShowLoadMore" class="page-cut">
-						<app-button
+						<AppButton
 							v-app-track-event="`profile-edit-blocks:more`"
 							trans
 							@click="loadMore()"
 						>
-							<translate>Load More</translate>
-						</app-button>
+							<AppTranslate>Load More</AppTranslate>
+						</AppButton>
 					</div>
-					<app-loading v-else-if="isLoadingMore" centered />
+					<AppLoading v-else-if="isLoadingMore" centered />
 				</template>
 			</template>
 		</div>

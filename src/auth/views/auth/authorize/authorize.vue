@@ -42,26 +42,26 @@ export default class RouteAuthAuthorize extends BaseRouteComponent {
 </script>
 
 <template>
-	<app-loading :label="$gettext('Just one moment...')" centered big v-if="isRouteLoading" />
+	<AppLoading :label="$gettext('Just one moment...')" centered big v-if="isRouteLoading" />
 	<div class="anim-fade-in-up" v-else>
 		<template v-if="isSuccess">
 			<h2 class="section-header">
-				<translate>auth.authorize.success_growl_title</translate>
+				<AppTranslate>auth.authorize.success_growl_title</AppTranslate>
 			</h2>
 			<div>
-				<translate>auth.authorize.success_growl</translate>
+				<AppTranslate>auth.authorize.success_growl</AppTranslate>
 			</div>
 		</template>
 		<template v-else>
 			<h2 class="section-header">
-				<translate>auth.authorize.invalid.heading</translate>
+				<AppTranslate>auth.authorize.invalid.heading</AppTranslate>
 			</h2>
 			<div>
-				<p><translate>Your authorization code is invalid.</translate></p>
+				<p><AppTranslate>Your authorization code is invalid.</AppTranslate></p>
 				<p>
-					<translate>
+					<AppTranslate>
 						Please make sure to copy and paste the full URL that we emailed you.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 		</template>

@@ -113,7 +113,7 @@ export default class AppStickerLayerGhost extends Vue {
 		</div>
 		<transition name="-fade">
 			<div v-if="shouldShowStickerControls" class="-controls" :style="controlsStyling">
-				<app-button
+				<AppButton
 					icon="check"
 					primary
 					solid

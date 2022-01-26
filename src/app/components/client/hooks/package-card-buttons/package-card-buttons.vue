@@ -266,18 +266,18 @@ export default class AppClientPackageCardButtons extends Vue {
 		<!-- Messaging for weird cases... -->
 		<div v-if="downloadableUnsupported" class="alert">
 			<p>
-				<app-jolticon icon="notice" notice />
-				<translate>This package can not be installed on your system.</translate>
+				<AppJolticon icon="notice" notice />
+				<AppTranslate>This package can not be installed on your system.</AppTranslate>
 			</p>
 		</div>
 
 		<div v-if="downloadableUnsupportedHasQuickPlay" class="alert">
 			<p>
-				<app-jolticon icon="notice" notice />
-				<translate>
+				<AppJolticon icon="notice" notice />
+				<AppTranslate>
 					This package can not be installed on your system, but can be quick played in the
 					client.
-				</translate>
+				</AppTranslate>
 			</p>
 		</div>
 
@@ -287,11 +287,11 @@ export default class AppClientPackageCardButtons extends Vue {
 				class="alert alert-notice"
 			>
 				<p>
-					<app-jolticon icon="notice" />
-					<translate>
+					<AppJolticon icon="notice" />
+					<AppTranslate>
 						Oh no! We couldn't download this package. Perhaps check that you're still
 						online?
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 
@@ -300,11 +300,11 @@ export default class AppClientPackageCardButtons extends Vue {
 				class="alert alert-notice"
 			>
 				<p>
-					<app-jolticon icon="notice" />
-					<translate>
+					<AppJolticon icon="notice" />
+					<AppTranslate>
 						Oh no! We couldn't unpack this package after downloading it. Maybe try
 						again?
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 
@@ -313,76 +313,76 @@ export default class AppClientPackageCardButtons extends Vue {
 				class="alert alert-notice"
 			>
 				<p>
-					<app-jolticon icon="notice" />
-					<translate>Oh no! We couldn't remove this package. Maybe try again?</translate>
+					<AppJolticon icon="notice" />
+					<AppTranslate>Oh no! We couldn't remove this package. Maybe try again?</AppTranslate>
 				</p>
 			</div>
 
 			<div v-if="localPackage.isRunning" class="alert alert-highlight">
 				<p>
-					<app-jolticon icon="play" />
-					<translate>
+					<AppJolticon icon="play" />
+					<AppTranslate>
 						You are currently running this package. Some options have been disabled
 						while it's open.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 		</template>
 
 		<!-- Able to install game -->
-		<app-button
+		<AppButton
 			v-if="canInstall && !localPackage"
 			primary
 			icon="download-box"
 			@click="installClick(card.downloadableBuild)"
 		>
-			<translate>Install</translate>
+			<AppTranslate>Install</AppTranslate>
 			<small>({{ formatFilesize(card.downloadableBuild.primary_file.filesize) }})</small>
-		</app-button>
+		</AppButton>
 
 		<!-- Game is installing or installed -->
 		<template v-if="localPackage">
 			<template v-if="localPackage.isPatching">
-				<app-expand :when="localPackage.isDownloading || localPackage.isUnpacking">
+				<AppExpand :when="localPackage.isDownloading || localPackage.isUnpacking">
 					<div class="alert">
-						<app-client-install-progress :local-package="localPackage" />
+						<AppClientInstallProgress :local-package="localPackage" />
 					</div>
-				</app-expand>
+				</AppExpand>
 
 				<template v-if="localPackage.isPatchQueued">
 					<span class="tag big">
-						<translate>QUEUED</translate>
+						<AppTranslate>QUEUED</AppTranslate>
 					</span>
 				</template>
 				<template v-else>
-					<app-button v-if="!localPackage.isPatchPaused" @click="pauseInstall()">
-						<translate>Pause</translate>
-					</app-button>
-					<app-button v-else primary @click="resumeInstall()">
-						<translate>Resume</translate>
-					</app-button>
+					<AppButton v-if="!localPackage.isPatchPaused" @click="pauseInstall()">
+						<AppTranslate>Pause</AppTranslate>
+					</AppButton>
+					<AppButton v-else primary @click="resumeInstall()">
+						<AppTranslate>Resume</AppTranslate>
+					</AppButton>
 				</template>
 			</template>
 
 			<!-- Game failed to install -->
-			<app-button v-if="localPackage.didInstallFail" primary @click="retryInstall()">
-				<translate>Retry Install</translate>
-			</app-button>
+			<AppButton v-if="localPackage.didInstallFail" primary @click="retryInstall()">
+				<AppTranslate>Retry Install</AppTranslate>
+			</AppButton>
 
 			<!-- Game failed to update -->
-			<app-button v-if="localPackage.didUpdateFail" primary @click="retryInstall()">
-				<translate>Retry Update</translate>
-			</app-button>
+			<AppButton v-if="localPackage.didUpdateFail" primary @click="retryInstall()">
+				<AppTranslate>Retry Update</AppTranslate>
+			</AppButton>
 
 			<!-- Game failed to uninstall -->
-			<app-button v-if="localPackage.didRemoveFail" primary @click="retryUninstall()">
-				<translate>Retry Uninstall</translate>
-			</app-button>
+			<AppButton v-if="localPackage.didRemoveFail" primary @click="retryUninstall()">
+				<AppTranslate>Retry Uninstall</AppTranslate>
+			</AppButton>
 
 			<!--
 				Can only cancel installs, not updates.
 			-->
-			<app-button
+			<AppButton
 				v-if="localPackage.install_state"
 				v-app-tooltip="$gettext('Cancel Installation')"
 				circle
@@ -392,36 +392,36 @@ export default class AppClientPackageCardButtons extends Vue {
 			/>
 
 			<!-- Game is installed -->
-			<app-button
+			<AppButton
 				v-if="localPackage.isSettled && !localPackage.isRunning"
 				primary
 				solid
 				icon="play"
 				@click="launchPackage()"
 			>
-				<translate>Launch</translate>
-			</app-button>
+				<AppTranslate>Launch</AppTranslate>
+			</AppButton>
 		</template>
 
 		<!--
 			Browser quick play
 			We hide this as soon as they install the game.
 		-->
-		<app-button
+		<AppButton
 			v-else-if="card.browserBuild"
 			primary
 			icon="play"
 			@click="buildClick(card.browserBuild)"
 		>
-			<translate>Quick Play</translate>
-			<app-jolticon icon="addon" :class="`jolticon-${card.showcasedBrowserIcon}`" />
-		</app-button>
+			<AppTranslate>Quick Play</AppTranslate>
+			<AppJolticon icon="addon" :class="`jolticon-${card.showcasedBrowserIcon}`" />
+		</AppButton>
 
-		<app-popper
+		<AppPopper
 			v-if="card.extraBuilds.length || (localPackage && !localPackage.install_state)"
 			popover-class="fill-darkest"
 		>
-			<app-button
+			<AppButton
 				v-app-track-event="`game-package-card:more-options`"
 				circle
 				icon="ellipsis-v"
@@ -435,7 +435,7 @@ export default class AppClientPackageCardButtons extends Vue {
 				>
 					<template v-if="localPackage.isSettled">
 						<a class="list-group-item has-icon" @click="openFolder()">
-							<app-jolticon icon="folder-open" />
+							<AppJolticon icon="folder-open" />
 							<span v-translate="{ title: localPackage.title || game.title }">
 								Open Folder for %{ title }
 							</span>
@@ -449,8 +449,8 @@ export default class AppClientPackageCardButtons extends Vue {
 							class="list-group-item has-icon warning"
 							@click="uninstall()"
 						>
-							<app-jolticon icon="remove" notice />
-							<translate>Uninstall</translate>
+							<AppJolticon icon="remove" notice />
+							<AppTranslate>Uninstall</AppTranslate>
 						</a>
 					</template>
 
@@ -463,8 +463,8 @@ export default class AppClientPackageCardButtons extends Vue {
 							class="list-group-item has-icon warning"
 							@click="buildClick(card.browserBuild)"
 						>
-							<app-jolticon icon="html5" />
-							<translate>Quick Play</translate>
+							<AppJolticon icon="html5" />
+							<AppTranslate>Quick Play</AppTranslate>
 							<small class="text-muted">
 								({{ formatFilesize(card.browserBuild.primary_file.filesize) }})
 							</small>
@@ -473,12 +473,12 @@ export default class AppClientPackageCardButtons extends Vue {
 				</div>
 
 				<!-- The non-client options. -->
-				<app-game-package-card-more-options
+				<AppGamePackageCardMoreOptions
 					:card="card"
 					@click="buildClick($event, true)"
 				/>
 			</template>
-		</app-popper>
+		</AppPopper>
 	</div>
 </template>
 

@@ -76,19 +76,19 @@ export default class FormCommunityThumbnail
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group
+	<AppForm :controller="form">
+		<AppFormGroup
 			name="file"
 			:label="$gettext(`Upload New Thumbnail`)"
 			:optional="!!formModel.thumbnail"
 		>
 			<p class="help-block">
-				<translate>Your image must be a PNG or JPG.</translate>
+				<AppTranslate>Your image must be a PNG or JPG.</AppTranslate>
 				<br />
 				<strong>
-					<translate>
+					<AppTranslate>
 						PNGs are highly recommended as they produce a lossless image.
-					</translate>
+					</AppTranslate>
 				</strong>
 			</p>
 			<p v-translate="{ dimensions: '1000×1000' }" class="help-block strong">
@@ -97,7 +97,7 @@ export default class FormCommunityThumbnail
 				.
 			</p>
 
-			<app-form-control-upload
+			<AppFormControlUpload
 				:validators="[
 					validateFilesize(maxFilesize),
 					validateImageMinDimensions({ width: minSize, height: minSize }),
@@ -107,16 +107,16 @@ export default class FormCommunityThumbnail
 				@changed="thumbnailSelected()"
 			/>
 
-			<app-form-control-errors :label="$gettext(`thumbnail`)" />
-		</app-form-group>
+			<AppFormControlErrors :label="$gettext(`thumbnail`)" />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			v-if="formModel.thumbnail && !formModel.file"
 			name="thumbnail_crop"
 			:label="$gettext('Your Uploaded Thumbnail')"
 		>
 			<div class="form-control-static">
-				<app-form-control-crop
+				<AppFormControlCrop
 					:src="formModel.thumbnail.img_url"
 					:aspect-ratio="1"
 					:min-width="minSize"
@@ -125,16 +125,16 @@ export default class FormCommunityThumbnail
 					:max-height="maxSize"
 				/>
 
-				<app-form-control-errors :label="$gettext('crop')" />
+				<AppFormControlErrors :label="$gettext('crop')" />
 			</div>
-		</app-form-group>
+		</AppFormGroup>
 
 		<template v-if="formModel.thumbnail && form.valid">
 			<div>
-				<app-form-button>
-					<translate>Save</translate>
-				</app-form-button>
+				<AppFormButton>
+					<AppTranslate>Save</AppTranslate>
+				</AppFormButton>
 			</div>
 		</template>
-	</app-form>
+	</AppForm>
 </template>

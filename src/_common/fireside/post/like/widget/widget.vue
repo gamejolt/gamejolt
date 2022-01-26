@@ -124,7 +124,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 <template>
 	<span class="fireside-post-like-widget">
 		<span class="-like">
-			<app-button
+			<AppButton
 				v-app-tooltip="tooltip"
 				v-app-track-event="`fireside-post-like-widget:click`"
 				v-app-auth-required
@@ -140,14 +140,14 @@ export default class AppFiresidePostLikeWidget extends Vue {
 			/>
 
 			<div v-if="showLikeAnim" class="-like-anim-container">
-				<app-jolticon class="-like-anim" icon="heart-filled" notice />
+				<AppJolticon class="-like-anim" icon="heart-filled" notice />
 			</div>
 			<div v-if="showDislikeAnim" class="-like-anim-container">
 				<span class="-dislike-anim-piece">
-					<app-jolticon class="-dislike-anim -left" icon="heart-filled" notice />
+					<AppJolticon class="-dislike-anim -left" icon="heart-filled" notice />
 				</span>
 				<span class="-dislike-anim-piece">
-					<app-jolticon class="-dislike-anim -right" icon="heart-filled" notice />
+					<AppJolticon class="-dislike-anim -right" icon="heart-filled" notice />
 				</span>
 			</div>
 		</span>

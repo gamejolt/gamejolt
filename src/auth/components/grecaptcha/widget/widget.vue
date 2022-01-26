@@ -100,11 +100,11 @@ export default class AppGrecaptchaWidget extends Vue {
 
 <template>
 	<span>
-		<app-loading v-if="!loaded" />
+		<AppLoading v-if="!loaded" />
 		<div v-else ref="grecaptcha">
-			<translate v-if="!loadedAndValid">
+			<AppTranslate v-if="!loadedAndValid">
 				We could not load in Google's captcha widget.
-			</translate>
+			</AppTranslate>
 		</div>
 	</span>
 </template>

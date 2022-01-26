@@ -81,35 +81,35 @@ export default class AppLikesModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate
+				<AppTranslate
 					:translate-n="realCount"
 					:translate-params="{ count: formatNumber(realCount) }"
 					translate-plural="%{ count } likes"
 				>
 					1 like
-				</translate>
+				</AppTranslate>
 			</h2>
 		</div>
 
 		<div class="modal-body">
-			<app-user-list :users="users" />
+			<AppUserList :users="users" />
 
-			<app-loading v-if="isLoading" centered />
+			<AppLoading v-if="isLoading" centered />
 
 			<div v-if="shouldShowLoadMore" class="page-cut">
-				<app-button trans @click="loadMore()">
-					<translate>Load More</translate>
-				</app-button>
+				<AppButton trans @click="loadMore()">
+					<AppTranslate>Load More</AppTranslate>
+				</AppButton>
 			</div>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

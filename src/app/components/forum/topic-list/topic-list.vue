@@ -59,7 +59,7 @@ export default class AppForumTopicList extends Vue {
 			:class="{ '-has-voting': shouldShowVoting(topic) }"
 		>
 			<div v-if="shouldShowVoting(topic)" class="-vote">
-				<app-forum-topic-upvote-widget :topic="topic" />
+				<AppForumTopicUpvoteWidget :topic="topic" />
 			</div>
 			<div class="-main">
 				<div class="row">
@@ -75,7 +75,7 @@ export default class AppForumTopicList extends Vue {
 								v-if="topic.is_sticky"
 								v-app-tooltip="$gettext(`This topic is pinned.`)"
 							>
-								<app-jolticon icon="thumbtack" highlight />
+								<AppJolticon icon="thumbtack" highlight />
 							</span>
 
 							<!-- Locked -->
@@ -87,7 +87,7 @@ export default class AppForumTopicList extends Vue {
 									)
 								"
 							>
-								<app-jolticon icon="lock" class="text-muted" />
+								<AppJolticon icon="lock" class="text-muted" />
 							</span>
 
 							<router-link
@@ -102,7 +102,7 @@ export default class AppForumTopicList extends Vue {
 							</router-link>
 						</h5>
 						<div class="forum-topic-list-item-author">
-							<translate>by</translate>
+							<AppTranslate>by</AppTranslate>
 							{{ ' ' }}
 							<router-link
 								class="link-muted"
@@ -112,7 +112,7 @@ export default class AppForumTopicList extends Vue {
 								}"
 							>
 								{{ topic.user.display_name }}
-								<app-user-verified-tick :user="topic.user" />
+								<AppUserVerifiedTick :user="topic.user" />
 							</router-link>
 							{{ ' ' }}
 							<span class="tiny">@{{ topic.user.username }}</span>
@@ -144,9 +144,9 @@ export default class AppForumTopicList extends Vue {
 					<div v-if="Screen.isDesktop" class="col-md-3 text-muted small">
 						<div class="forum-topic-list-item-latest-post clearfix">
 							<div class="forum-topic-list-item-latest-post-avatar">
-								<app-user-card-hover :user="topic.latest_post.user">
-									<app-user-avatar :user="topic.latest_post.user" />
-								</app-user-card-hover>
+								<AppUserCardHover :user="topic.latest_post.user">
+									<AppUserAvatar :user="topic.latest_post.user" />
+								</AppUserCardHover>
 							</div>
 							<div class="forum-topic-list-item-latest-post-info">
 								<div class="forum-topic-list-item-latest-post-info-username">
@@ -165,11 +165,11 @@ export default class AppForumTopicList extends Vue {
 										}"
 									>
 										{{ topic.latest_post.user.display_name }}
-										<app-user-verified-tick :user="topic.latest_post.user" />
+										<AppUserVerifiedTick :user="topic.latest_post.user" />
 									</router-link>
 								</div>
 								<div class="text-muted">@{{ topic.latest_post.user.username }}</div>
-								<app-time-ago :date="topic.latest_post.posted_on" />
+								<AppTimeAgo :date="topic.latest_post.posted_on" />
 							</div>
 						</div>
 					</div>

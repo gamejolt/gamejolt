@@ -420,7 +420,7 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 
 <template>
 	<div v-if="isRouteBootstrapped" class="route-analytics">
-		<app-page-header>
+		<AppPageHeader>
 			<nav class="breadcrumb">
 				<ul>
 					<li>
@@ -433,10 +433,10 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 							replace
 							active-class="active"
 						>
-							<translate class="breadcrumb-tag" translate>User</translate>
+							<AppTranslate class="breadcrumb-tag" translate>User</AppTranslate>
 							@{{ user.username }}
 						</router-link>
-						<app-jolticon
+						<AppJolticon
 							v-if="game"
 							icon="chevron-right"
 							class="breadcrumb-separator"
@@ -452,10 +452,10 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 							replace
 							active-class="active"
 						>
-							<translate class="breadcrumb-tag">Game</translate>
+							<AppTranslate class="breadcrumb-tag">Game</AppTranslate>
 							{{ game.title }}
 						</router-link>
-						<app-jolticon
+						<AppJolticon
 							v-if="package"
 							icon="chevron-right"
 							class="breadcrumb-separator"
@@ -471,10 +471,10 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 							replace
 							active-class="active"
 						>
-							<translate class="breadcrumb-tag" translate>Package</translate>
+							<AppTranslate class="breadcrumb-tag" translate>Package</AppTranslate>
 							{{ package.title || game.title }}
 						</router-link>
-						<app-jolticon
+						<AppJolticon
 							v-if="release"
 							icon="chevron-right"
 							class="breadcrumb-separator"
@@ -490,7 +490,7 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 							replace
 							active-class="active"
 						>
-							<translate class="breadcrumb-tag">Release</translate>
+							<AppTranslate class="breadcrumb-tag">Release</AppTranslate>
 							{{ release.version_number }}
 						</router-link>
 					</li>
@@ -539,9 +539,9 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 			</template>
 
 			<template v-if="period === 'monthly'" #controls>
-				<app-page-header-controls>
+				<AppPageHeaderControls>
 					<template #start>
-						<app-button
+						<AppButton
 							circle
 							trans
 							icon="chevron-left"
@@ -566,7 +566,7 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 					</div>
 
 					<template v-if="now > endTime" #end>
-						<app-button
+						<AppButton
 							circle
 							trans
 							icon="chevron-right"
@@ -583,14 +583,14 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 							replace
 						/>
 					</template>
-				</app-page-header-controls>
+				</AppPageHeaderControls>
 			</template>
-		</app-page-header>
+		</AppPageHeader>
 
 		<template v-if="metricData[metric.key]">
-			<app-expand :when="period === 'monthly' && !!metricData[metric.key].graph">
-				<app-graph :dataset="metricData[metric.key].graph" />
-			</app-expand>
+			<AppExpand :when="period === 'monthly' && !!metricData[metric.key].graph">
+				<AppGraph :dataset="metricData[metric.key].graph" />
+			</AppExpand>
 
 			<section class="section section-thin">
 				<div class="container">
@@ -624,7 +624,7 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 									</div>
 								</div>
 
-								<app-graph
+								<AppGraph
 									v-if="period === 'monthly' && metricData[metric.key]"
 									:dataset="metricData[metric.key].graph"
 									:background-variant="true"
@@ -642,7 +642,7 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 					<div class="container">
 						<div class="row">
 							<div v-if="Screen.isDesktop" class="col-md-3">
-								<app-scroll-affix>
+								<AppScrollAffix>
 									<nav class="platform-list">
 										<ul>
 											<li
@@ -656,7 +656,7 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 											</li>
 										</ul>
 									</nav>
-								</app-scroll-affix>
+								</AppScrollAffix>
 							</div>
 							<div class="col-md-9">
 								<div
@@ -668,29 +668,29 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 										{{ report.title }}
 									</h2>
 
-									<app-loading v-if="!report.isLoaded" />
+									<AppLoading v-if="!report.isLoaded" />
 
 									<div v-if="report.isLoaded" class="row">
 										<div v-for="(component, n) of report.components" :key="n">
-											<app-analytics-report-simple-stat
+											<AppAnalyticsReportSimpleStat
 												v-if="
 													component.type === 'sum' ||
 													component.type === 'average'
 												"
 												:report-data="component"
 											/>
-											<app-analytics-report-top-composition
+											<AppAnalyticsReportTopComposition
 												v-else-if="component.type === 'top-composition'"
 												:report-data="component"
 											/>
-											<app-analytics-report-top-composition-value
+											<AppAnalyticsReportTopCompositionValue
 												v-else-if="
 													component.type === 'top-composition-sum' ||
 													component.type === 'top-composition-avg'
 												"
 												:report-data="component"
 											/>
-											<app-analytics-report-rating-breakdown
+											<AppAnalyticsReportRatingBreakdown
 												v-else-if="component.type === 'rating-breakdown'"
 												:report-data="component"
 											/>

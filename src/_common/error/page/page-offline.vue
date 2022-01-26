@@ -11,17 +11,17 @@ export default class AppErrorPageOffline extends Vue {
 
 <template>
 	<div>
-		<h1><translate>Can't Connect</translate></h1>
+		<h1><AppTranslate>Can't Connect</AppTranslate></h1>
 		<p>
-			<strong><translate>We are having trouble connecting to Game Jolt.</translate></strong>
+			<strong><AppTranslate>We are having trouble connecting to Game Jolt.</AppTranslate></strong>
 		</p>
-		<p><translate>Check your internet connection and try again.</translate></p>
+		<p><AppTranslate>Check your internet connection and try again.</AppTranslate></p>
 		<br />
 
 		<p>
-			<app-button primary @click="retry">
-				<translate>Retry</translate>
-			</app-button>
+			<AppButton primary @click="retry">
+				<AppTranslate>Retry</AppTranslate>
+			</AppButton>
 		</p>
 	</div>
 </template>

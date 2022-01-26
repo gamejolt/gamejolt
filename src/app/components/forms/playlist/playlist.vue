@@ -12,15 +12,15 @@ export default class FormPlaylist extends mixins(Wrapper) {
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="name" :label="$gettext('library.playlists.form.name_label')">
-			<app-form-control type="text" :validators="[validateMaxLength(100)]" focus />
-			<app-form-control-errors />
-		</app-form-group>
+	<AppForm :controller="form">
+		<AppFormGroup name="name" :label="$gettext('library.playlists.form.name_label')">
+			<AppFormControl type="text" :validators="[validateMaxLength(100)]" focus />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-button>
-			<translate v-if="method === 'add'">Add Playlist</translate>
-			<translate v-else>Save Playlist</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton>
+			<AppTranslate v-if="method === 'add'">Add Playlist</AppTranslate>
+			<AppTranslate v-else>Save Playlist</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>
