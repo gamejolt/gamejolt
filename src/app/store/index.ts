@@ -3,7 +3,10 @@ import { Router } from 'vue-router';
 import { CommunityJoinLocation } from '../../_common/analytics/analytics.service';
 import { Api } from '../../_common/api/api.service';
 import { Backdrop, BackdropController } from '../../_common/backdrop/backdrop.service';
-import { Community } from '../../_common/community/community.model';
+import {
+	Community,
+	joinCommunity as joinTargetCommunity,
+} from '../../_common/community/community.model';
 import { Connection } from '../../_common/connection/connection-service';
 import {
 	ContentFocus,
@@ -396,7 +399,7 @@ export function createAppStore({
 		}
 
 		if (!community.is_member) {
-			await joinCommunity(community, location);
+			await joinTargetCommunity(community, location);
 		}
 
 		grid.value?.joinCommunity(community);

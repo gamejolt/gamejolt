@@ -5,6 +5,18 @@ import { defineConfig, UserConfig as ViteUserConfigActual } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
 import { parseOptionsFromEnv } from './scripts/helpers/vite';
 
+const sectionOverrides: Record<string, Record<string, unknown>> = {
+	'widget-package': {
+		router: false,
+	},
+	gameserver: {
+		router: false,
+	},
+	editor: {
+		router: false,
+	},
+};
+
 type ViteUserConfig = ViteUserConfigActual & {
 	// This is an experimental feature, and as of time of writing
 	// does not exists with the type definition the package exports.
@@ -18,8 +30,6 @@ type ViteUserConfig = ViteUserConfigActual & {
 type EmptyObject = { [k in any]: never };
 
 const noopDirectiveTransform = () => ({ props: [] });
-
-// TODO(vue3): we need a way to remove client-related code completely
 
 // https://vitejs.dev/config/
 export default defineConfig(async configEnv => {
@@ -205,9 +215,9 @@ export default defineConfig(async configEnv => {
 			GJ_BUILD_TYPE: JSON.stringify(gjOpts.buildType),
 			GJ_VERSION: JSON.stringify(gjOpts.version),
 			GJ_WITH_UPDATER: JSON.stringify(gjOpts.withUpdater),
-
-			// TODO: engooden this.
-			GJ_HAS_ROUTER: JSON.stringify(true),
+			GJ_HAS_ROUTER: JSON.stringify(
+				sectionOverrides[gjOpts.section]?.router === false ? false : true
+			),
 
 			// Disable redirecting between section during serve.
 			// This is because as of time of writing we only support watching

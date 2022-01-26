@@ -21,6 +21,13 @@ import { initTranslations } from './translate/translate.service';
  * point can call to get what it needs.
  */
 export function bootstrapCommon(appComponent: Component, router?: Router) {
+	// Check to make sure our build config is correct.
+	if (GJ_BUILD_TYPE === 'development' && GJ_HAS_ROUTER !== !!router) {
+		throw new Error(
+			`Invalid vite config. Section router config is wrong. GJ_HAS_ROUTER: ${GJ_HAS_ROUTER}, router: ${!!router}`
+		);
+	}
+
 	const app = import.meta.env.SSR ? createSSRApp(appComponent) : createApp(appComponent);
 
 	// Our global stores.
