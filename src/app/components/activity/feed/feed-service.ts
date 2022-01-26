@@ -5,6 +5,7 @@ import { EventItem } from '../../../../_common/event-item/event-item.model';
 import { FiresidePostGotoGrowl } from '../../../../_common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../_common/game/game.model';
+import { HistoryCache } from '../../../../_common/history/cache/cache.service';
 import { Notification } from '../../../../_common/notification/notification-model';
 import { BaseRouteComponent } from '../../../../_common/route/route-component';
 import { User } from '../../../../_common/user/user.model';
@@ -18,7 +19,6 @@ import { ActivityFeedView, ActivityFeedViewOptions } from './view';
 const MaxCachedCount = 3;
 
 interface ActivityFeedCachedState {
-	key?: string;
 	href?: string;
 	view: ActivityFeedView;
 }
@@ -273,13 +273,7 @@ export class ActivityFeedService {
 		// Do nothing.
 	}
 
-	private static getCachedStateKey() {
-		// vue-router maintains a history key for each route in the history.
-		return typeof history !== 'undefined' ? history.state && history.state.key : undefined;
-	}
-
 	private static makeCachedState(items: ActivityFeedInput[], options: BootstrapOptions) {
-		const key = this.getCachedStateKey();
 		const href = typeof window !== 'undefined' ? window.location.href : undefined;
 
 		const state = new ActivityFeedState(options);
@@ -287,7 +281,6 @@ export class ActivityFeedService {
 		view.append(items);
 
 		const cachedState: ActivityFeedCachedState = {
-			key,
 			href,
 			view,
 		};
@@ -300,13 +293,17 @@ export class ActivityFeedService {
 	}
 
 	private static findCachedState() {
-		const key = this.getCachedStateKey();
+		const historyState = HistoryCache.getHistoryState();
+		if (!historyState) {
+			return undefined;
+		}
+
 		const href = typeof window !== 'undefined' ? window.location.href : undefined;
 
 		// Note that we have to check the history state key AND the actual URL.
 		// If you replace a route with vue, the history state key stays the
 		// same, even though the route changes.
-		return this.cache.find(item => item.key === key && item.href === href);
+		return this.cache.find(i => i.href === href);
 	}
 
 	private static bootstrapFeedFromCache() {

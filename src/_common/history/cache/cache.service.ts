@@ -1,10 +1,9 @@
-import { RouteLocationNormalized } from 'vue-router';
+import { HistoryState, RouteLocationNormalized } from 'vue-router';
 import { arrayRemove } from '../../../utils/array';
 
 const MAX_ITEMS = 10;
 
 interface HistoryCacheState<T = any> {
-	stateKey: any;
 	tag: string | undefined;
 	url: string;
 	data?: T;
@@ -13,15 +12,29 @@ interface HistoryCacheState<T = any> {
 export class HistoryCache {
 	private static states: HistoryCacheState[] = [];
 
-	private static getStateKey() {
-		// vue-router maintains a history key for each route in the history.
-		return typeof history !== 'undefined' ? history.state && history.state.key : undefined;
+	/**
+	 * Returns the history state tracked by vue router, as long as we're not on
+	 * the latest entry. This is so that we try to get historical states only
+	 * (going back).
+	 */
+	static getHistoryState(): HistoryState | null {
+		// vue-router maintains a history state for each route in the history.
+		const historyState = typeof history !== 'undefined' ? history.state : undefined;
+		if (!historyState || historyState.forward === null) {
+			return null;
+		}
+
+		return historyState;
 	}
 
 	static get<T = any>(route: RouteLocationNormalized, tag?: string) {
-		const stateKey = this.getStateKey();
+		const historyState = this.getHistoryState();
+		if (!historyState) {
+			return null;
+		}
+
 		const state: HistoryCacheState<T> | undefined = this.states.find(
-			i => i.url === route.fullPath && i.tag === tag && i.stateKey === stateKey
+			i => i.url === route.fullPath && i.tag === tag
 		);
 
 		if (state) {
@@ -47,10 +60,8 @@ export class HistoryCache {
 			state.data = data;
 		} else {
 			const url = route.fullPath;
-			const stateKey = this.getStateKey();
 
 			this.states.push({
-				stateKey,
 				tag,
 				url,
 				data,
