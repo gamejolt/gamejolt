@@ -9,6 +9,10 @@ export default class AppGameFilteringInput extends Vue {
 
 	query = '';
 
+	declare $refs: {
+		input: HTMLElement;
+	};
+
 	created() {
 		this.query = this.filtering.filters.query;
 	}
@@ -34,7 +38,7 @@ export default class AppGameFilteringInput extends Vue {
 
 	blur() {
 		if (this.$refs.input) {
-			(this.$refs.input as HTMLElement).blur();
+			this.$refs.input.blur();
 		}
 	}
 }
