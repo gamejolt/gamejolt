@@ -24,8 +24,8 @@ export async function createApp() {
 	app.provide(AppStoreKey, appStore);
 
 	if (GJ_IS_DESKTOP_APP) {
-		const { bootstrapCommonClient } = await import('../_common/client/bootstrap');
-		bootstrapCommonClient({ commonStore });
+		const { bootstrapClient } = await import('./bootstrap-client');
+		bootstrapClient({ commonStore });
 	}
 
 	GamePlayModal.init({ canMinimize: true });

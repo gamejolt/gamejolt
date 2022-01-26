@@ -1,4 +1,4 @@
-import * as path from 'path';
+const path = require('path') as typeof import('path');
 import iconPath from '../../../static-assets/client/icon-256x256.png';
 import { getDeviceOS } from '../../device/device.service';
 import { Shortcut } from '../client-voodoo-imports';

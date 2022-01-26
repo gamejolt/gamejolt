@@ -1,5 +1,5 @@
-import * as os from 'os';
-import * as path from 'path';
+const os = require('os') as typeof import('os');
+const path = require('path') as typeof import('path');
 const win = nw.Window.get();
 
 export class Client {

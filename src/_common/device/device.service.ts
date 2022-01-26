@@ -62,7 +62,7 @@ export function setDeviceUserAgent(userAgent: string) {
 
 export function getDeviceOS(): DeviceOs {
 	if (GJ_IS_DESKTOP_APP) {
-		const os = require('os');
+		const os = require('os') as typeof import('os');
 		const type = os.type();
 		if (type === 'Linux') {
 			return 'linux';
