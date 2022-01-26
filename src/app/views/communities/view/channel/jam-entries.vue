@@ -408,6 +408,7 @@ export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComp
 						<translate>Show Awards first</translate>
 					</app-button>
 					<translate>Sort by</translate>
+					{{ ' ' }}
 					<app-popper>
 						<span class="-sort">
 							{{ selectedSortOption.text }}

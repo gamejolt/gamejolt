@@ -2,6 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { numberSort } from '../../../../../utils/array';
+import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import {
 	CommunityCompetition,
 	CompetitionPeriodVoting,
@@ -23,6 +24,7 @@ import FormCommunityCompetitionVotingCast from '../../../forms/community/competi
 	},
 	directives: {
 		AppTooltip,
+		AppAuthRequired,
 	},
 })
 export default class AppCommunityCompetitionVotingWidget extends Vue {
