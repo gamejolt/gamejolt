@@ -71,7 +71,7 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal ref="modal">
+	<app-modal>
 		<div class="modal-controls">
 			<app-button @click="modal.dismiss()">
 				<translate>Close</translate>
