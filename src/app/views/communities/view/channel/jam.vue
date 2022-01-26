@@ -85,15 +85,15 @@ export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
 	}
 
 	get channel() {
-		return this.routeStore.channel!;
+		return this.routeStore.channel;
 	}
 
 	get competition() {
-		return this.routeStore.competition!;
+		return this.routeStore.competition;
 	}
 
 	get shouldShowUserSubmissions() {
-		if (this.isLoading) {
+		if (this.isLoading || !this.competition) {
 			return false;
 		}
 
@@ -120,8 +120,8 @@ export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
 
 	get canSubmitEntry() {
 		return (
-			this.competition.period === 'running' &&
-			this.channel.visibility === 'published' &&
+			this.competition?.period === 'running' &&
+			this.channel?.visibility === 'published' &&
 			!this.channel.is_archived
 		);
 	}
@@ -131,13 +131,9 @@ export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
 	}
 
 	get routeTitle() {
-		if (!this.routeStore.channel) {
-			return null;
-		}
-
 		return this.$gettextInterpolate(`%{ channel } - %{ name } Community on Game Jolt`, {
 			name: this.community.name,
-			channel: this.channel.displayTitle,
+			channel: this.channel?.displayTitle,
 		});
 	}
 
@@ -164,22 +160,30 @@ export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
 	}
 
 	async onClickSubmit() {
+		if (!this.competition) {
+			return;
+		}
+
 		const result = await CommunityCompetitionEntrySubmitModal.show(this.competition);
 		if (result) {
 			this.userEntries.unshift(result);
 
 			showSuccessGrowl(this.$gettext(`Successfully submitted your entry to the jam!`));
 
-			// Triggers the grid to refetch.
-			this.competition.entry_count++;
+			if (this.competition) {
+				// Triggers the grid to refetch.
+				this.competition.entry_count++;
+			}
 		}
 	}
 
 	onEntryRemoved(entry: CommunityCompetitionEntry) {
 		arrayRemove(this.userEntries, i => i.id === entry.id);
 
-		// Triggers the grid to refetch.
-		this.competition.entry_count--;
+		if (this.competition) {
+			// Triggers the grid to refetch.
+			this.competition.entry_count--;
+		}
 	}
 }
 </script>
@@ -202,11 +206,14 @@ export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
 
 			<div class="-header">
 				<div class="-header-title">
-					<h1 :class="{ 'text-center': Screen.isXs, h2: Screen.isMobile }">
+					<h1 v-if="channel" :class="{ 'text-center': Screen.isXs, h2: Screen.isMobile }">
 						{{ channel.displayTitle }}
 					</h1>
 
-					<div v-if="!competition.hasEnded" class="-header-subtitle text-muted">
+					<div
+						v-if="competition && !competition.hasEnded"
+						class="-header-subtitle text-muted"
+					>
 						Submissions are open <b>{{ formatDate(competition.starts_on) }}</b> to
 						<b>{{ formatDate(competition.ends_on) }}</b>
 					</div>
@@ -223,7 +230,7 @@ export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
 				</div>
 			</div>
 
-			<div v-if="channel.description_content" class="sheet sheet-elevate">
+			<div v-if="channel && channel.description_content" class="sheet sheet-elevate">
 				<AppFadeCollapse
 					:collapse-height="500"
 					:is-open="isDescriptionOpen"
@@ -253,29 +260,33 @@ export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
 
 				<template v-if="canSubmitEntry">
 					<p v-if="!hasSubmittedEntries" class="help-block">
-						<AppTranslate>You have not submitted an entry to this jam... yet?</AppTranslate>
+						<AppTranslate>
+							You have not submitted an entry to this jam... yet?
+						</AppTranslate>
 					</p>
 				</template>
-				<template v-else-if="competition.period === 'pre-comp'">
+				<template v-else-if="competition && competition.period === 'pre-comp'">
 					<p class="help-block">
 						<AppTranslate>
 							You'll be able to submit your entry from this page once the jam starts.
 						</AppTranslate>
 					</p>
 				</template>
-				<template v-else-if="competition.periodNum >= 2">
+				<template v-else-if="competition && competition.periodNum >= 2">
 					<p class="help-block">
-						<AppTranslate>The jam has ended and submissions are now closed.</AppTranslate>
+						<AppTranslate>
+							The jam has ended and submissions are now closed.
+						</AppTranslate>
 					</p>
 				</template>
-				<template v-else-if="channel.visibility === 'draft'">
+				<template v-else-if="channel && channel.visibility === 'draft'">
 					<p v-if="!hasSubmittedEntries" class="help-block">
 						<AppTranslate>
 							The jam is set up as a draft. Publish the jam to open submissions.
 						</AppTranslate>
 					</p>
 				</template>
-				<template v-else-if="channel.is_archived">
+				<template v-else-if="channel && channel.is_archived">
 					<p class="help-block">
 						<AppTranslate>
 							This channel is archived and entries cannot be submitted.
@@ -296,7 +307,7 @@ export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
 				<br />
 			</template>
 
-			<template v-if="competition.hasStarted">
+			<template v-if="competition && competition.hasStarted">
 				<route-communities-view-channel-jam-entries :categories="categories" />
 			</template>
 		</AppCommunitiesViewPageContainer>

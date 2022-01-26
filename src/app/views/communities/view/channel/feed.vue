@@ -73,7 +73,7 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 	}
 
 	get channel() {
-		return this.routeStore.channel!;
+		return this.routeStore.channel;
 	}
 
 	get channelPath() {
@@ -85,6 +85,10 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 	}
 
 	get routeTitle() {
+		if (!this.channel) {
+			return null;
+		}
+
 		const title = this.$gettextInterpolate(`%{ name } Community on Game Jolt`, {
 			name: this.community.name,
 		});
@@ -127,6 +131,7 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 		if (
 			this.feed &&
 			this.feed.newCount === 0 &&
+			this.channel &&
 			this.communityState.unreadChannels.includes(this.channel.id)
 		) {
 			this.feed.newCount = 1;
@@ -146,7 +151,12 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 			fromCache
 		);
 
-		if (!fromCache && this.user && !isVirtualChannel(this.routeStore, this.channel)) {
+		if (
+			!fromCache &&
+			this.user &&
+			this.channel &&
+			!isVirtualChannel(this.routeStore, this.channel)
+		) {
 			this.pushViewToGrid();
 		}
 
@@ -160,6 +170,7 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 		// It might be read after posts have been loaded in a different client.
 		if (
 			this.user &&
+			this.channel &&
 			!isVirtualChannel(this.routeStore, this.channel) &&
 			this.communityState.unreadChannels.includes(this.channel.id)
 		) {
@@ -170,7 +181,7 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 	private pushViewToGrid() {
 		this.grid?.pushViewNotifications('community-channel', {
 			communityId: this.community.id,
-			channelId: this.channel.id,
+			channelId: this.channel?.id,
 		});
 
 		// When the entire community has no unreads left, push that event to grid.
@@ -195,11 +206,11 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 		<template #default>
 			<h1 class="section-header" :class="{ 'h2 -text-overflow': Screen.isMobile }">
 				<AppTranslate v-if="channel === routeStore.allChannel">All Posts</AppTranslate>
-				<template v-else>{{ channel.displayTitle }}</template>
-				<small v-if="Screen.isDesktop">in {{ community.name }}</small>
+				<template v-else-if="channel">{{ channel.displayTitle }}</template>
+				<small v-if="Screen.isDesktop">{{ ' ' }} in {{ community.name }}</small>
 			</h1>
 
-			<div v-if="channel.visibility === 'draft'">
+			<div v-if="channel && channel.visibility === 'draft'">
 				<AppIllustration :src="illNoComments">
 					<AppTranslate>
 						This is a draft channel. When it gets published, the post feed will appear
