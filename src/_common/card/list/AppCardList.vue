@@ -13,6 +13,9 @@ const items = ref(props.items);
 watch(
 	() => props.items,
 	() => {
+		if (props.items === c.items.value) {
+			return;
+		}
 		c.items.value = props.items;
 	},
 	{
@@ -25,7 +28,7 @@ provide(Key, c);
 </script>
 
 <script lang="ts">
-import { ExtractPropTypes, inject, InjectionKey, provide, Ref, ref, toRefs, watch } from 'vue';
+import { ExtractPropTypes, inject, InjectionKey, provide, ref, Ref, toRefs, watch } from 'vue';
 
 function defineCardListItems() {
 	return {
