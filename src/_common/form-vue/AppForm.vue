@@ -155,7 +155,7 @@ export function createForm<T>({
 		}
 
 		// Since the modelClass probably changed.
-		formModel.value = _makeFormModel() as T;
+		formModel.value = _makeFormModel();
 	}
 
 	onMounted(() => {
@@ -188,7 +188,7 @@ export function createForm<T>({
 		});
 	}
 
-	function _makeFormModel() {
+	function _makeFormModel(): T {
 		// If a model class was assigned to this form, then create a copy of it
 		// on the instance. Otherwise just copy the object.
 		if (model?.value) {
@@ -319,6 +319,7 @@ export function createForm<T>({
 
 			// If we should reset/reload on successful submit, let's do that now.
 			if (resetOnSubmit.value || reloadOnSubmit.value) {
+				formModel.value = _makeFormModel();
 				_init();
 			}
 
