@@ -34,7 +34,7 @@ import AppPostAddButton from '../../components/post/add-button/add-button.vue';
 import { useAppStore } from '../../store';
 import { useLibraryStore } from '../../store/library';
 import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
-import AppHomeFireside from './_fireside/fireside.vue';
+import AppHomeFireside from './_fireside/AppHomeFireside.vue';
 
 class DashGame {
 	constructor(

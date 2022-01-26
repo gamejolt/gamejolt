@@ -279,7 +279,9 @@ export default class AppGamePackageCard extends Vue {
 
 		<div v-if="sale" class="card-content card-sale-info">
 			<strong><AppTranslate>On sale!</AppTranslate></strong>
+			{{ ' ' }}
 			<AppTranslate>Offer ends in</AppTranslate>
+			{{ ' ' }}
 			<AppCountdown :end="pricing.end" />
 		</div>
 
@@ -343,11 +345,9 @@ export default class AppGamePackageCard extends Vue {
 					</AppButton>
 
 					<span class="game-package-card-payment-what-link">
-						(
 						<a class="link-help" @click="isWhatOpen = !isWhatOpen">
 							<AppTranslate>What do you get?</AppTranslate>
 						</a>
-						)
 					</span>
 				</div>
 			</template>
@@ -356,7 +356,9 @@ export default class AppGamePackageCard extends Vue {
 				<hr />
 
 				<div class="alert">
-					<AppTranslate>You also get access to keys for these other platforms.</AppTranslate>
+					<AppTranslate>
+						You also get access to keys for these other platforms.
+					</AppTranslate>
 				</div>
 
 				<div v-for="linkedKey of linkedKeys" :key="linkedKey.key" class="clearfix">
