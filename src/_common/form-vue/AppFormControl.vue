@@ -16,6 +16,9 @@ interface ValidationOptions {
  */
 export function defineFormControlProps() {
 	return {
+		disabled: {
+			type: Boolean,
+		},
 		validators: {
 			type: Array as PropType<FormValidator[]>,
 			default: () => [],
@@ -188,9 +191,6 @@ const props = defineProps({
 	focus: {
 		type: Boolean,
 	},
-	disabled: {
-		type: Boolean,
-	},
 	htmlListId: {
 		type: String,
 		default: undefined,
@@ -261,9 +261,8 @@ function onBlur() {
 		class="form-control"
 		:type="controlType"
 		:value="controlVal"
-		:disabled="disabled"
+		:disabled="disabled ? 'true' : undefined"
 		:list="htmlListId"
-		v-bind="$attrs"
 		@input="onChange"
 		@blur="onBlur"
 	/>

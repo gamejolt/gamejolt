@@ -164,8 +164,8 @@ export default class AppShareCardTile extends Vue {
 <template>
 	<a class="-tile" :class="{ '-dense': dense }" @click="shareProviderLink()">
 		<div class="-icon">
-			<app-jolticon class="-icon-primary" :icon="icon" />
-			<app-jolticon class="-icon-secondary" icon="share-airplane" />
+			<AppJolticon class="-icon-primary" :icon="icon" />
+			<AppJolticon class="-icon-secondary" icon="share-airplane" />
 		</div>
 
 		<span>{{ text }}</span>

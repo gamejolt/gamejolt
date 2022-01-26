@@ -19,7 +19,7 @@ export default class AppModalConfirm extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-header">
 			<h2 class="modal-title">
 				{{ title }}
@@ -31,14 +31,14 @@ export default class AppModalConfirm extends mixins(BaseModal) {
 		</div>
 
 		<div class="modal-footer">
-			<app-button primary solid @click="ok">
-				<translate v-if="buttonType === 'ok'">OK</translate>
-				<translate v-else-if="buttonType === 'yes'">Yes</translate>
-			</app-button>
-			<app-button trans @click="cancel">
-				<translate v-if="buttonType === 'ok'">Cancel</translate>
-				<translate v-else-if="buttonType === 'yes'">No</translate>
-			</app-button>
+			<AppButton primary solid @click="ok">
+				<AppTranslate v-if="buttonType === 'ok'">OK</AppTranslate>
+				<AppTranslate v-else-if="buttonType === 'yes'">Yes</AppTranslate>
+			</AppButton>
+			<AppButton trans @click="cancel">
+				<AppTranslate v-if="buttonType === 'ok'">Cancel</AppTranslate>
+				<AppTranslate v-else-if="buttonType === 'yes'">No</AppTranslate>
+			</AppButton>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

@@ -34,7 +34,7 @@ export default class AppPostPageRecommendations extends Vue {
 <template>
 	<div class="post-page-recommendations">
 		<h4>
-			<translate>Next up</translate>
+			<AppTranslate>Next up</AppTranslate>
 		</h4>
 		<component
 			:is="shouldScroll ? 'app-scroll-scroller' : 'div'"
@@ -46,7 +46,7 @@ export default class AppPostPageRecommendations extends Vue {
 				<template v-if="!usablePosts.length">
 					<template v-for="i of 4" :key="i">
 						<div class="-post">
-							<app-post-card-placeholder />
+							<AppPostCardPlaceholder />
 						</div>
 
 						<div
@@ -61,7 +61,7 @@ export default class AppPostPageRecommendations extends Vue {
 				<template v-else>
 					<template v-for="(recommendedPost, i) of usablePosts" :key="recommendedPost.id">
 						<div class="-post">
-							<app-post-card
+							<AppPostCard
 								:post="recommendedPost"
 								with-user
 								source="postRecommendation"

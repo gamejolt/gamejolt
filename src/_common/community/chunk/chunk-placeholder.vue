@@ -41,7 +41,7 @@ export default class AppCommunityChunkPlaceholder extends Vue {
 			<div class="-content" :class="{ '-scrollable': Screen.isXs }">
 				<template v-for="(item, index) of preferredCardsPerRow" :key="item">
 					<div class="-card">
-						<app-post-card-placeholder />
+						<AppPostCardPlaceholder />
 					</div>
 
 					<div

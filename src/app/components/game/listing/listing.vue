@@ -63,7 +63,7 @@ export default class AppGameListing extends Vue {
 	<div id="games" class="game-listing">
 		<section class="section">
 			<div class="container-xl">
-				<app-nav-tab-list v-if="!hideSectionNav">
+				<AppNavTabList v-if="!hideSectionNav">
 					<ul>
 						<li v-if="includeFeaturedSection">
 							<router-link
@@ -72,7 +72,7 @@ export default class AppGameListing extends Vue {
 								:to="{ name: $route.name, params: { section: null } }"
 								:class="{ active: !$route.params.section }"
 							>
-								<translate>games.list.sections_selector_featured</translate>
+								<AppTranslate>games.list.sections_selector_featured</AppTranslate>
 							</router-link>
 						</li>
 						<li>
@@ -82,7 +82,7 @@ export default class AppGameListing extends Vue {
 								:to="{ name: $route.name, params: { section: 'hot' } }"
 								:class="{ active: $route.params.section === 'hot' }"
 							>
-								<translate>games.list.sections_selector_hot</translate>
+								<AppTranslate>games.list.sections_selector_hot</AppTranslate>
 							</router-link>
 						</li>
 						<li>
@@ -92,7 +92,7 @@ export default class AppGameListing extends Vue {
 								:to="{ name: $route.name, params: { section: 'best' } }"
 								:class="{ active: $route.params.section === 'best' }"
 							>
-								<translate>games.list.sections_selector_best</translate>
+								<AppTranslate>games.list.sections_selector_best</AppTranslate>
 							</router-link>
 						</li>
 						<li>
@@ -102,31 +102,31 @@ export default class AppGameListing extends Vue {
 								:to="{ name: $route.name, params: { section: 'new' } }"
 								:class="{ active: $route.params.section === 'new' }"
 							>
-								<translate>games.list.sections_selector_new</translate>
+								<AppTranslate>games.list.sections_selector_new</AppTranslate>
 							</router-link>
 						</li>
 					</ul>
-				</app-nav-tab-list>
+				</AppNavTabList>
 
 				<template v-if="!hideFilters">
 					<div class="-filtering-well">
-						<app-game-filtering-widget :filtering="filtering" />
+						<AppGameFilteringWidget :filtering="filtering" />
 					</div>
 
 					<div class="clearfix">
-						<app-game-filtering-tags :filtering="filtering" />
+						<AppGameFilteringTags :filtering="filtering" />
 					</div>
 					<br />
 				</template>
 
 				<template v-if="listing.isBootstrapped">
 					<template v-if="listing.gamesCount">
-						<app-loading-fade :is-loading="isLoading">
+						<AppLoadingFade :is-loading="isLoading">
 							<slot />
-						</app-loading-fade>
+						</AppLoadingFade>
 
 						<template v-if="!infinite || GJ_IS_SSR">
-							<app-pagination
+							<AppPagination
 								class="text-center"
 								:items-per-page="listing.perPage"
 								:total-items="listing.gamesCount"
@@ -135,23 +135,23 @@ export default class AppGameListing extends Vue {
 							/>
 						</template>
 						<template v-else-if="!listing.reachedEnd">
-							<app-scroll-inview
+							<AppScrollInview
 								v-if="!listing.isLoadingMore"
 								:config="inviewConfig"
 								@inview="emitLoad"
 							/>
-							<app-loading v-else centered />
+							<AppLoading v-else centered />
 						</template>
 					</template>
 				</template>
-				<app-game-grid-placeholder v-else :num="16" />
+				<AppGameGridPlaceholder v-else :num="16" />
 
 				<div
 					v-if="listing.isBootstrapped && !listing.gamesCount"
 					class="alert alert-notice anim-fade-in-enlarge"
 				>
 					<p>
-						<translate>No games match your filters. Zoinks!</translate>
+						<AppTranslate>No games match your filters. Zoinks!</AppTranslate>
 					</p>
 				</div>
 			</div>

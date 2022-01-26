@@ -40,5 +40,11 @@ function onChange() {
 </script>
 
 <template>
-	<input type="radio" :name="name" :checked="checked" @change="onChange" />
+	<input
+		type="radio"
+		:name="name"
+		:checked="checked ? 'true' : undefined"
+		:disabled="disabled ? 'true' : undefined"
+		@change="onChange"
+	/>
 </template>

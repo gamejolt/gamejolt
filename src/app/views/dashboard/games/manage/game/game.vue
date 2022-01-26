@@ -48,12 +48,12 @@ export default class RouteDashGamesManageGame extends BaseRouteComponent {
 
 <template>
 	<div>
-		<app-expand :when="$route.name === 'dash.games.manage.game.design'">
-			<app-editable-overlay @click="showEditHeader()">
+		<AppExpand :when="$route.name === 'dash.games.manage.game.design'">
+			<AppEditableOverlay @click="showEditHeader()">
 				<template #overlay>
 					<span>
-						<translate v-if="!game.header_media_item">Upload Game Header</translate>
-						<translate v-else>Change Header</translate>
+						<AppTranslate v-if="!game.header_media_item">Upload Game Header</AppTranslate>
+						<AppTranslate v-else>Change Header</AppTranslate>
 					</span>
 				</template>
 
@@ -64,23 +64,23 @@ export default class RouteDashGamesManageGame extends BaseRouteComponent {
 						'min-height': !game.header_media_item ? '200px' : '',
 					}"
 				>
-					<app-media-item-cover
+					<AppMediaItemCover
 						v-if="game.header_media_item"
 						:media-item="game.header_media_item"
 					/>
 				</div>
-			</app-editable-overlay>
-		</app-expand>
+			</AppEditableOverlay>
+		</AppExpand>
 
-		<app-expand :when="$route.name === 'dash.games.manage.game.design'">
-			<app-manage-game-media-bar :game="game" :media-items="media" />
-		</app-expand>
+		<AppExpand :when="$route.name === 'dash.games.manage.game.design'">
+			<AppManageGameMediaBar :game="game" :media-items="media" />
+		</AppExpand>
 
 		<div v-if="Screen.isMobile" class="container">
 			<br />
-			<app-nav-tab-list>
-				<app-manage-game-nav />
-			</app-nav-tab-list>
+			<AppNavTabList>
+				<AppManageGameNav />
+			</AppNavTabList>
 		</div>
 
 		<section class="section">
@@ -88,7 +88,7 @@ export default class RouteDashGamesManageGame extends BaseRouteComponent {
 				<div class="row">
 					<div v-if="Screen.isDesktop" class="col-md-2">
 						<nav class="platform-list">
-							<app-manage-game-nav />
+							<AppManageGameNav />
 						</nav>
 					</div>
 					<div class="col-xs-12 col-md-10">

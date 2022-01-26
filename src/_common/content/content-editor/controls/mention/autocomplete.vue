@@ -215,7 +215,7 @@ export default class AppContentEditorControlsMentionAutocomplete extends Vue {
 	<div ref="container" :style="styling" class="-container">
 		<transition name="fade">
 			<div v-if="visible" ref="list" class="-autocomplete">
-				<app-loading
+				<AppLoading
 					v-if="isLoading && isInverted"
 					class="-loading-top"
 					centered
@@ -232,17 +232,17 @@ export default class AppContentEditorControlsMentionAutocomplete extends Vue {
 					>
 						<div v-if="user.is_following" class="-follow-indicator">
 							<small class="text-muted">
-								<app-jolticon icon="user" />
-								<translate v-if="user.follows_you">You follow each other</translate>
-								<translate v-else>Following</translate>
+								<AppJolticon icon="user" />
+								<AppTranslate v-if="user.follows_you">You follow each other</AppTranslate>
+								<AppTranslate v-else>Following</AppTranslate>
 							</small>
 						</div>
 						<div class="-user">
-							<app-user-avatar-img class="-avatar" :user="user" />
+							<AppUserAvatarImg class="-avatar" :user="user" />
 							<div class="-names">
 								<div class="-name-row">
 									<strong>{{ user.display_name }}</strong>
-									<app-user-verified-tick :user="user" />
+									<AppUserVerifiedTick :user="user" />
 								</div>
 								<div>
 									<small>@{{ user.username }}</small>
@@ -252,7 +252,7 @@ export default class AppContentEditorControlsMentionAutocomplete extends Vue {
 					</button>
 				</template>
 
-				<app-loading
+				<AppLoading
 					v-if="isLoading && !isInverted"
 					class="-loading-bottom"
 					centered

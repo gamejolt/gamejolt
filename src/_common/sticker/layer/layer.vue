@@ -76,7 +76,7 @@ export default class AppStickerLayer extends Vue {
 
 <template>
 	<div class="-layer" :class="{ '-dragging': isDragging }" @contextmenu="onContextMenu">
-		<app-sticker-layer-placement-mask
+		<AppStickerLayerPlacementMask
 			v-if="isShowingDrawer"
 			class="-placement-mask"
 			:layer="layer"

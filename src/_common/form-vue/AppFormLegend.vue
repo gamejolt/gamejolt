@@ -32,7 +32,7 @@ const emit = defineEmits({
 			<div class="-label"><slot /></div>
 			<div v-if="compact" class="-compactbar" />
 			<div v-if="deletable" class="-delete">
-				<app-button sparse circle icon="remove" @click="emit('delete')" />
+				<AppButton sparse circle icon="remove" @click="emit('delete')" />
 			</div>
 		</div>
 	</legend>

@@ -77,14 +77,14 @@ export default class AppDiscoverHomeCommunities extends Vue {
 	<div class="container">
 		<div class="text-center">
 			<h2 class="section-header">
-				<translate>Browse Communities</translate>
+				<AppTranslate>Browse Communities</AppTranslate>
 			</h2>
 
 			<p>
-				<translate>
+				<AppTranslate>
 					Find a community to create and explore gaming videos, fanart, discussions and
 					more!
-				</translate>
+				</AppTranslate>
 			</p>
 
 			<hr class="underbar underbar-center" />
@@ -92,14 +92,14 @@ export default class AppDiscoverHomeCommunities extends Vue {
 
 		<div v-if="isLoading" class="row">
 			<div v-for="i of 8" :key="i" class="col-sm-6 col-md-4 col-lg-3">
-				<app-community-card-placeholder />
+				<AppCommunityCardPlaceholder />
 			</div>
 		</div>
 		<template v-else>
 			<template v-if="filteredCommunities.top.length > 0">
 				<div class="row">
 					<template v-for="community of filteredCommunities.top" :key="community.id">
-						<app-community-chunk class="-chunk" :community="community" />
+						<AppCommunityChunk class="-chunk" :community="community" />
 					</template>
 				</div>
 			</template>
@@ -112,7 +112,7 @@ export default class AppDiscoverHomeCommunities extends Vue {
 					:key="community.id"
 					class="col-sm-6 col-md-4 col-lg-3 anim-fade-in"
 				>
-					<app-community-card
+					<AppCommunityCard
 						v-app-track-event="`home:communities:click`"
 						:community="community"
 						track-goto
@@ -125,12 +125,12 @@ export default class AppDiscoverHomeCommunities extends Vue {
 		<br />
 
 		<div class="page-cut">
-			<app-button
+			<AppButton
 				v-app-track-event="`home:more-btn:communities`"
 				:to="{ name: 'discover.communities' }"
 			>
-				<translate>Browse More Communities</translate>
-			</app-button>
+				<AppTranslate>Browse More Communities</AppTranslate>
+			</AppButton>
 		</div>
 	</div>
 </template>

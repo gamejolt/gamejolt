@@ -131,9 +131,9 @@ export default class FormComment
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="comment_content" :label="$gettext('Leave a Comment')" hide-label>
-			<app-form-control-content
+	<AppForm :controller="form">
+		<AppFormGroup name="comment_content" :label="$gettext('Leave a Comment')" hide-label>
+			<AppFormControlContent
 				:placeholder="placeholder || $gettext(`Leave a comment...`)"
 				:content-context="contentContext"
 				:autofocus="autofocus"
@@ -150,24 +150,24 @@ export default class FormComment
 				@blur="onBlurEditor"
 			/>
 
-			<app-form-control-errors label="comment" />
-		</app-form-group>
+			<AppFormControlErrors label="comment" />
+		</AppFormGroup>
 
 		<p v-if="shouldShowGuidelines" class="-guidelines">
 			Remember to be respectful and follow our
-			<app-link-help page="guidelines">Site Guidelines</app-link-help>.
+			<AppLinkHelp page="guidelines">Site Guidelines</AppLinkHelp>.
 		</p>
 		<div v-else class="-buttons">
-			<app-button v-if="method === 'edit'" trans @click="onCancel">
-				<translate>Cancel</translate>
-			</app-button>
+			<AppButton v-if="method === 'edit'" trans @click="onCancel">
+				<AppTranslate>Cancel</AppTranslate>
+			</AppButton>
 
-			<app-form-button show-when-valid>
-				<translate v-if="method === 'add'">Add Comment</translate>
-				<translate v-else-if="method === 'edit'">Save</translate>
-			</app-form-button>
+			<AppFormButton show-when-valid>
+				<AppTranslate v-if="method === 'add'">Add Comment</AppTranslate>
+				<AppTranslate v-else-if="method === 'edit'">Save</AppTranslate>
+			</AppFormButton>
 		</div>
-	</app-form>
+	</AppForm>
 </template>
 
 <style lang="stylus" scoped>

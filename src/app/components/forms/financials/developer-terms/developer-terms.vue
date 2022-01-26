@@ -82,24 +82,24 @@ export default class AppDeveloperTerms extends Vue {
 				v-app-tooltip="$gettext(`You have completed this section.`)"
 				class="pull-right done-icon"
 			>
-				<app-jolticon icon="check" big />
+				<AppJolticon icon="check" big />
 			</span>
-			<translate>Developer Distribution Agreement</translate>
+			<AppTranslate>Developer Distribution Agreement</AppTranslate>
 		</legend>
 
 		<div v-if="hasSignedDeveloperAgreement" class="form-group">
 			<p class="small">
-				<translate
+				<AppTranslate
 					:translate-params="{
 						date: formatDate(account.tos_signed_developer_timestamp, 'medium'),
 					}"
 				>
 					You have agreed to our Distribution Agreement on %{ date }.
-				</translate>
+				</AppTranslate>
 				<br />
-				<app-link-external :href="agreementLink">
-					<translate>View Distribution Agreement</translate>
-				</app-link-external>
+				<AppLinkExternal :href="agreementLink">
+					<AppTranslate>View Distribution Agreement</AppTranslate>
+				</AppLinkExternal>
 			</p>
 		</div>
 		<div v-else>
@@ -109,52 +109,52 @@ export default class AppDeveloperTerms extends Vue {
 			<div v-if="hasSignedSomeAgreement" class="form-group">
 				<div class="small">
 					<div>
-						<translate>
+						<AppTranslate>
 							If you would like to sell games on the Marketplace, you must accept the
 							Distribution Agreement.
-						</translate>
+						</AppTranslate>
 					</div>
 					<div>
 						<router-link class="link-help" :to="{ name: 'landing.marketplace' }">
-							<translate>Learn more</translate>
+							<AppTranslate>Learn more</AppTranslate>
 						</router-link>
 					</div>
 				</div>
 				<br />
 
-				<app-button v-if="!showAgreement" primary @click="showAgreement = true">
-					<translate>Show Developer Distribution Agreement</translate>
-				</app-button>
+				<AppButton v-if="!showAgreement" primary @click="showAgreement = true">
+					<AppTranslate>Show Developer Distribution Agreement</AppTranslate>
+				</AppButton>
 			</div>
 		</div>
 
 		<div v-if="hasSignedOldDeveloperAgreement" class="form-group">
 			<div class="alert alert-notice">
-				<translate>
+				<AppTranslate>
 					You have signed an older version of the Distribution Agreement. To be able to
 					include your games in the Partner Program you must accept the new agreement.
-				</translate>
+				</AppTranslate>
 				<router-link :to="{ name: 'landing.partners' }">
-					<translate>Learn more about the Partner Program</translate>
+					<AppTranslate>Learn more about the Partner Program</AppTranslate>
 				</router-link>
 			</div>
 
-			<app-button v-if="!showAgreement" primary @click="showAgreement = true">
-				<translate>Show New Distribution Agreement</translate>
-			</app-button>
+			<AppButton v-if="!showAgreement" primary @click="showAgreement = true">
+				<AppTranslate>Show New Distribution Agreement</AppTranslate>
+			</AppButton>
 
 			<!--
 				Show a diff between the terms.
 			-->
 			<div v-if="showAgreement" class="alert">
 				<p>
-					<translate>We publicly track and version all of our terms.</translate>
-					<app-link-external :href="agreementDiffLink">
-						<translate>
+					<AppTranslate>We publicly track and version all of our terms.</AppTranslate>
+					<AppLinkExternal :href="agreementDiffLink">
+						<AppTranslate>
 							See the "diff" between the version you signed previously and the current
 							version.
-						</translate>
-					</app-link-external>
+						</AppTranslate>
+					</AppLinkExternal>
 				</p>
 			</div>
 		</div>
@@ -168,18 +168,18 @@ export default class AppDeveloperTerms extends Vue {
 			<div class="checkbox">
 				<label>
 					<input v-model="checked" type="checkbox" />
-					<translate>
+					<AppTranslate>
 						By checking this box and clicking the button below marked "I Agree," I agree
 						that I have read, understand, and agree to be bound by the terms of this
 						agreement.
-					</translate>
+					</AppTranslate>
 				</label>
 			</div>
 			<br />
 
-			<app-button primary solid :disabled="!checked" @click="onAccept()">
-				<translate>I Agree</translate>
-			</app-button>
+			<AppButton primary solid :disabled="!checked" @click="onAccept()">
+				<AppTranslate>I Agree</AppTranslate>
+			</AppButton>
 		</div>
 	</fieldset>
 </template>

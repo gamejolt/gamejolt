@@ -272,7 +272,7 @@ export default class AppCommentWidgetComment extends Vue {
 </script>
 
 <template>
-	<app-message-thread-item
+	<AppMessageThreadItem
 		:user="shouldBlock ? null : comment.user"
 		:date="comment.posted_on"
 		:is-showing-replies="shouldShowReplies"
@@ -283,42 +283,42 @@ export default class AppCommentWidgetComment extends Vue {
 	>
 		<template v-if="comment.is_pinned || isOwner || isCollaborator" #tags>
 			<span v-if="comment.is_pinned" class="tag">
-				<app-jolticon icon="thumbtack" />
-				<translate>Pinned</translate>
+				<AppJolticon icon="thumbtack" />
+				<AppTranslate>Pinned</AppTranslate>
 			</span>
 
 			<span v-if="isOwner" class="tag">
-				<translate>Owner</translate>
+				<AppTranslate>Owner</AppTranslate>
 			</span>
 			<span v-else-if="isCollaborator" class="tag">
-				<translate>Collaborator</translate>
+				<AppTranslate>Collaborator</AppTranslate>
 			</span>
 		</template>
 
 		<template #meta>
-			<app-popper v-if="user" popover-class="fill-darkest">
+			<AppPopper v-if="user" popover-class="fill-darkest">
 				<a v-app-tooltip="$gettext('More Options')" class="link-muted">
-					<app-jolticon icon="ellipsis-v" class="middle" />
+					<AppJolticon icon="ellipsis-v" class="middle" />
 				</a>
 
 				<template #popover>
 					<div class="list-group list-group-dark">
 						<a class="list-group-item has-icon" @click="copyPermalink">
-							<app-jolticon icon="link" />
-							<translate>Copy Link</translate>
+							<AppJolticon icon="link" />
+							<AppTranslate>Copy Link</AppTranslate>
 						</a>
 						<a v-if="canPin" class="list-group-item has-icon" @click="pinComment">
-							<app-jolticon icon="thumbtack" />
-							<translate v-if="comment.is_pinned">Unpin Comment</translate>
-							<translate v-else>Pin Comment</translate>
+							<AppJolticon icon="thumbtack" />
+							<AppTranslate v-if="comment.is_pinned">Unpin Comment</AppTranslate>
+							<AppTranslate v-else>Pin Comment</AppTranslate>
 						</a>
 						<a
 							v-if="user.id === comment.user.id"
 							class="list-group-item has-icon"
 							@click="startEdit"
 						>
-							<app-jolticon icon="edit" />
-							<translate>Edit Comment</translate>
+							<AppJolticon icon="edit" />
+							<AppTranslate>Edit Comment</AppTranslate>
 						</a>
 						<a
 							v-if="canFollow"
@@ -335,21 +335,21 @@ export default class AppCommentWidgetComment extends Vue {
 							class="list-group-item has-icon"
 							@click="onFollowClick"
 						>
-							<app-jolticon icon="subscribe" />
-							<translate v-if="comment.subscription">Following</translate>
-							<translate v-else>Follow Thread</translate>
+							<AppJolticon icon="subscribe" />
+							<AppTranslate v-if="comment.subscription">Following</AppTranslate>
+							<AppTranslate v-else>Follow Thread</AppTranslate>
 						</a>
 						<a v-if="canRemove" class="list-group-item has-icon" @click="removeComment">
-							<app-jolticon icon="remove" notice />
-							<translate>Remove Comment</translate>
+							<AppJolticon icon="remove" notice />
+							<AppTranslate>Remove Comment</AppTranslate>
 						</a>
 						<a
 							v-if="user.id !== comment.user.id"
 							class="list-group-item has-icon"
 							@click="report"
 						>
-							<app-jolticon icon="flag" notice />
-							<translate>Report Comment</translate>
+							<AppJolticon icon="flag" notice />
+							<AppTranslate>Report Comment</AppTranslate>
 						</a>
 						<a
 							v-if="user.permission_level >= 3"
@@ -357,17 +357,17 @@ export default class AppCommentWidgetComment extends Vue {
 							:href="`${Environment.baseUrl}/moderate/comments/remove/${comment.id}`"
 							target="_blank"
 						>
-							<app-jolticon icon="remove" notice />
+							<AppJolticon icon="remove" notice />
 							<template v-if="canRemove">
-								<translate>Remove Comment (Moderate)</translate>
+								<AppTranslate>Remove Comment (Moderate)</AppTranslate>
 							</template>
 							<template v-else>
-								<translate>Remove Comment</translate>
+								<AppTranslate>Remove Comment</AppTranslate>
 							</template>
 						</a>
 					</div>
 				</template>
-			</app-popper>
+			</AppPopper>
 		</template>
 
 		<template #default>
@@ -380,14 +380,14 @@ export default class AppCommentWidgetComment extends Vue {
 			<div ref="scrollTarget" class="-scroll-target" />
 
 			<template v-if="!isEditing">
-				<app-comment-content
+				<AppCommentContent
 					:comment="comment"
 					:content="comment.comment_content"
 					:can-place-stickers="canPlaceStickers"
 				/>
 			</template>
 			<template v-else>
-				<form-comment
+				<FormComment
 					:model="comment"
 					:comment-model="model"
 					@submit="onCommentEdit"
@@ -397,7 +397,7 @@ export default class AppCommentWidgetComment extends Vue {
 		</template>
 
 		<template #controls>
-			<app-comment-controls
+			<AppCommentControls
 				:comment="comment"
 				:children="children"
 				:parent="parent"
@@ -410,7 +410,7 @@ export default class AppCommentWidgetComment extends Vue {
 
 		<!-- Child Comments -->
 		<template v-if="shouldShowReplies" #replies>
-			<app-comment-widget-comment
+			<AppCommentWidgetComment
 				v-for="(child, i) of children"
 				:key="child.id"
 				:model="model"
@@ -421,13 +421,13 @@ export default class AppCommentWidgetComment extends Vue {
 		</template>
 
 		<template v-if="shouldBlock" #blocked>
-			<app-comment-widget-comment-blocked
+			<AppCommentWidgetCommentBlocked
 				:comment="comment"
 				:reason="blockReason"
 				@show="onUnhideBlock"
 			/>
 		</template>
-	</app-message-thread-item>
+	</AppMessageThreadItem>
 </template>
 
 <style lang="stylus" scoped>

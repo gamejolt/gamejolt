@@ -24,26 +24,26 @@ export default class FormFiresidePublish extends mixins(Wrapper) {
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group
+	<AppForm :controller="form">
+		<AppFormGroup
 			v-if="showAdvancedCommunityOptions"
 			name="auto_feature"
 			:label="$gettext(`Automatically feature in community?`)"
 		>
-			<app-form-control-toggle class="pull-right" />
+			<AppFormControlToggle class="pull-right" />
 
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Will automatically feature this fireside in your selected community. This will
 					notify every member in the community that the fireside has started.
-				</translate>
+				</AppTranslate>
 			</p>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-button :disabled="!valid">
-			<translate>Publish</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton :disabled="!valid">
+			<AppTranslate>Publish</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>
 
 <style lang="stylus" scoped></style>

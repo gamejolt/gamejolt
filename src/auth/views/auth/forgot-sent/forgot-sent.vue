@@ -15,20 +15,20 @@ export default class RouteAuthForgotSent extends BaseRouteComponent {
 <template>
 	<div class="anim-fade-in-up">
 		<h2 class="section-header">
-			<translate>Credentials Sent</translate>
+			<AppTranslate>Credentials Sent</AppTranslate>
 		</h2>
 
 		<p>
-			<translate>
+			<AppTranslate>
 				We've sent information on how to log in to the email address on your account.
-			</translate>
+			</AppTranslate>
 		</p>
 
 		<p class="small text-muted">
-			<translate>
+			<AppTranslate>
 				If you don't see our email within 10 minutes, please check your spam folder. It
 				might have been gobbled up!
-			</translate>
+			</AppTranslate>
 		</p>
 	</div>
 </template>

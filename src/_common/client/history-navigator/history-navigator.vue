@@ -16,7 +16,7 @@ export default class AppClientHistoryNavigator extends Vue {
 			title="Go back"
 			@click="HistoryNavigator.back()"
 		>
-			<app-jolticon icon="chevron-left" />
+			<AppJolticon icon="chevron-left" />
 		</a>
 		<a
 			v-if="HistoryNavigator.canGoForward"
@@ -24,7 +24,7 @@ export default class AppClientHistoryNavigator extends Vue {
 			title="Go forward"
 			@click="HistoryNavigator.forward()"
 		>
-			<app-jolticon icon="chevron-right" />
+			<AppJolticon icon="chevron-right" />
 		</a>
 	</span>
 </template>

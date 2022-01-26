@@ -86,8 +86,8 @@ export default class FormCommunityChannelBackground
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group
+	<AppForm :controller="form">
+		<AppFormGroup
 			name="file"
 			:label="
 				!formModel.background
@@ -97,11 +97,11 @@ export default class FormCommunityChannelBackground
 			:optional="!!formModel.background"
 		>
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Channel images are backgrounds for your community channels. They give a viewer
 					an easy way to identify what kind of content can be found in the channel. Text
 					can be overlayed, so make sure no important information is on this image.
-				</translate>
+				</AppTranslate>
 			</p>
 
 			<p v-translate class="help-block">
@@ -124,7 +124,7 @@ export default class FormCommunityChannelBackground
 				<code>%{dimensions}</code>.
 			</p>
 
-			<app-form-control-upload
+			<AppFormControlUpload
 				:validators="[
 					validateFilesize(maxFilesize),
 					validateImageMaxDimensions({ width: maxWidth, height: maxHeight }),
@@ -133,16 +133,16 @@ export default class FormCommunityChannelBackground
 				@changed="backgroundSelected()"
 			/>
 
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			v-if="formModel.background && !formModel.file"
 			name="background_crop"
 			:label="$gettext(`Crop Current Background`)"
 		>
 			<div class="form-control-static">
-				<app-form-control-crop
+				<AppFormControlCrop
 					:src="formModel.background.img_url"
 					:min-width="minWidth"
 					:min-height="minHeight"
@@ -152,17 +152,17 @@ export default class FormCommunityChannelBackground
 					:max-aspect-ratio="aspectRatio"
 				/>
 
-				<app-form-control-errors />
+				<AppFormControlErrors />
 			</div>
-		</app-form-group>
+		</AppFormGroup>
 
 		<template v-if="formModel.background">
-			<app-form-button>
-				<translate>Save</translate>
-			</app-form-button>
-			<app-button trans @click="clearBackground()">
-				<translate>Remove Background</translate>
-			</app-button>
+			<AppFormButton>
+				<AppTranslate>Save</AppTranslate>
+			</AppFormButton>
+			<AppButton trans @click="clearBackground()">
+				<AppTranslate>Remove Background</AppTranslate>
+			</AppButton>
 		</template>
-	</app-form>
+	</AppForm>
 </template>

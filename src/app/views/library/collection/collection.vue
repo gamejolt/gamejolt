@@ -363,14 +363,14 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 <template>
 	<div v-if="collection">
-		<app-page-header
+		<AppPageHeader
 			class="library-collection-header"
 			:hide-nav="type === 'bundle'"
 			:autoscroll-anchor-key="collection._id"
 		>
 			<div class="row collection-copy">
 				<div v-if="!Screen.isXs" class="col-sm-4 col-md-3">
-					<app-game-collection-thumbnail
+					<AppGameCollectionThumbnail
 						:key="collection._id"
 						class="anim-fade-in-enlarge"
 						:collection="collection"
@@ -385,25 +385,25 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 							<template v-if="type === 'followed'">
 								<template v-if="collection.isOwner">
 									<h1>
-										<translate>Your Followed Games</translate>
+										<AppTranslate>Your Followed Games</AppTranslate>
 									</h1>
 									<p class="text-muted small">
-										<translate>
+										<AppTranslate>
 											When you follow a game, it shows up here.
-										</translate>
+										</AppTranslate>
 										<br />
-										<translate>
+										<AppTranslate>
 											You'll receive notifications when developers post news
 											about any games you're following.
-										</translate>
+										</AppTranslate>
 									</p>
 								</template>
 								<template v-else-if="user">
 									<h1>
-										<translate>Games Followed</translate>
+										<AppTranslate>Games Followed</AppTranslate>
 									</h1>
 									<h4>
-										<translate>by</translate>
+										<AppTranslate>by</AppTranslate>
 										{{ ' ' }}
 										<router-link
 											class="link-unstyled"
@@ -418,9 +418,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 										<small>@{{ user.username }}</small>
 									</h4>
 									<p class="text-muted small">
-										<translate :translate-params="{ user: user.display_name }">
+										<AppTranslate :translate-params="{ user: user.display_name }">
 											These are the games that %{ user } is following.
-										</translate>
+										</AppTranslate>
 									</p>
 								</template>
 							</template>
@@ -431,32 +431,32 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 							<template v-else-if="type === 'developer'">
 								<template v-if="collection.isOwner">
 									<h1>
-										<translate>Your Games</translate>
+										<AppTranslate>Your Games</AppTranslate>
 									</h1>
 									<p class="text-muted small">
-										<translate>
+										<AppTranslate>
 											These are the games that you've made or collaborated on.
 											Be proud!
-										</translate>
+										</AppTranslate>
 										<br />
-										<translate>
+										<AppTranslate>
 											Feel free to share this page with others to show off
 											your games.
-										</translate>
+										</AppTranslate>
 									</p>
 									<br />
 									<div>
-										<app-button :to="{ name: 'dash.games.add' }">
-											<translate>Add Your Game</translate>
-										</app-button>
+										<AppButton :to="{ name: 'dash.games.add' }">
+											<AppTranslate>Add Your Game</AppTranslate>
+										</AppButton>
 									</div>
 								</template>
 								<template v-else-if="user">
 									<h1>
-										<translate>Games</translate>
+										<AppTranslate>Games</AppTranslate>
 									</h1>
 									<h4>
-										<translate>by</translate>
+										<AppTranslate>by</AppTranslate>
 										{{ ' ' }}
 										<router-link
 											class="link-unstyled"
@@ -471,9 +471,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 										<small>@{{ user.username }}</small>
 									</h4>
 									<p class="text-muted small">
-										<translate :translate-params="{ user: user.display_name }">
+										<AppTranslate :translate-params="{ user: user.display_name }">
 											These are the games made by %{ user }.
-										</translate>
+										</AppTranslate>
 									</p>
 								</template>
 							</template>
@@ -484,18 +484,18 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 							<template v-else-if="type === 'owned'">
 								<template v-if="collection.isOwner">
 									<h1>
-										<translate>Your Owned Games</translate>
+										<AppTranslate>Your Owned Games</AppTranslate>
 									</h1>
 									<p class="text-muted small">
-										<translate>These are all the games you own.</translate>
+										<AppTranslate>These are all the games you own.</AppTranslate>
 									</p>
 								</template>
 								<template v-else-if="user">
 									<h1>
-										<translate>Games Owned</translate>
+										<AppTranslate>Games Owned</AppTranslate>
 									</h1>
 									<h4>
-										<translate>by</translate>
+										<AppTranslate>by</AppTranslate>
 										{{ ' ' }}
 										<router-link
 											class="link-unstyled"
@@ -510,9 +510,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 										<small>@{{ user.username }}</small>
 									</h4>
 									<p class="text-muted small">
-										<translate :translate-params="{ user: user.display_name }">
+										<AppTranslate :translate-params="{ user: user.display_name }">
 											These are all the games owned by %{ user }.
-										</translate>
+										</AppTranslate>
 									</p>
 								</template>
 							</template>
@@ -523,21 +523,21 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 							<template v-else-if="type === 'recommended'">
 								<template v-if="collection.isOwner">
 									<h1>
-										<translate>Your Daily Mix</translate>
+										<AppTranslate>Your Daily Mix</AppTranslate>
 									</h1>
 									<p class="text-muted small">
-										<translate>
+										<AppTranslate>
 											Every day we pick a handful of games that we think you
 											may like!
-										</translate>
+										</AppTranslate>
 									</p>
 								</template>
 								<template v-else-if="user">
 									<h1>
-										<translate>Daily Mix</translate>
+										<AppTranslate>Daily Mix</AppTranslate>
 									</h1>
 									<h4>
-										<translate>for</translate>
+										<AppTranslate>for</AppTranslate>
 										{{ ' ' }}
 										<router-link
 											class="link-unstyled"
@@ -563,7 +563,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 								</h1>
 
 								<h4 v-if="!collection.isOwner">
-									<translate>by</translate>
+									<AppTranslate>by</AppTranslate>
 									{{ ' ' }}
 									<router-link
 										class="link-unstyled"
@@ -593,14 +593,14 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 							<template v-else-if="type === 'jam' && jam">
 								<h1>{{ jam.name }}</h1>
 								<p class="text-muted small">
-									<translate :translate-params="{ jam: jam.name }">
+									<AppTranslate :translate-params="{ jam: jam.name }">
 										These are the jam games entered into %{ jam }.
-									</translate>
+									</AppTranslate>
 								</p>
 								<p>
-									<app-button :href="jam.fullUrl" target="_blank">
-										<translate>View Jam Page</translate>
-									</app-button>
+									<AppButton :href="jam.fullUrl" target="_blank">
+										<AppTranslate>View Jam Page</AppTranslate>
+									</AppButton>
 								</p>
 							</template>
 						</div>
@@ -612,13 +612,13 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 				<ul class="stat-list">
 					<li v-if="shouldShowFollowers" class="stat-big stat-big-smaller">
 						<div class="stat-big-label">
-							<translate>library.collection.followers_label</translate>
+							<AppTranslate>library.collection.followers_label</AppTranslate>
 						</div>
 						<div class="stat-big-digit">{{ formatNumber(followerCount) }}</div>
 					</li>
 					<li class="stat-big stat-big-smaller">
 						<div class="stat-big-label">
-							<translate>library.collection.games_label</translate>
+							<AppTranslate>library.collection.games_label</AppTranslate>
 						</div>
 						<div class="stat-big-digit">
 							{{ formatNumber(listing?.gamesCount || 0) }}
@@ -628,9 +628,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 			</template>
 
 			<template #controls>
-				<app-page-header-controls>
+				<AppPageHeaderControls>
 					<!-- Following -->
-					<app-game-collection-follow-widget
+					<AppGameCollectionFollowWidget
 						v-if="shouldShowFollow"
 						block
 						:collection="collection"
@@ -641,15 +641,15 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 					<template v-if="shouldShowEditPlaylist">
 						<!-- Editing Playlist -->
-						<app-button block @click="libraryEditPlaylist(libraryStore, collection)">
-							<translate>Edit Playlist</translate>
-						</app-button>
+						<AppButton block @click="libraryEditPlaylist(libraryStore, collection)">
+							<AppTranslate>Edit Playlist</AppTranslate>
+						</AppButton>
 					</template>
 
 					<!-- More options -->
 					<template v-if="shouldShowEditPlaylist" #end>
-						<app-popper popover-class="fill-darkest">
-							<app-button icon="ellipsis-v" circle trans />
+						<AppPopper popover-class="fill-darkest">
+							<AppButton icon="ellipsis-v" circle trans />
 
 							<template #popover>
 								<div class="list-group list-group-dark">
@@ -657,31 +657,31 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 										class="list-group-item has-icon"
 										@click="libraryRemovePlaylist(libraryStore, collection)"
 									>
-										<app-jolticon icon="remove" notice />
-										<translate>
+										<AppJolticon icon="remove" notice />
+										<AppTranslate>
 											library.collection.remove_playlist_button
-										</translate>
+										</AppTranslate>
 									</a>
 								</div>
 							</template>
-						</app-popper>
+						</AppPopper>
 					</template>
-				</app-page-header-controls>
+				</AppPageHeaderControls>
 			</template>
-		</app-page-header>
+		</AppPageHeader>
 
-		<app-game-listing
+		<AppGameListing
 			:listing="listing"
 			:filtering="filtering"
 			hide-section-nav
 			:is-loading="isRouteLoading"
 		>
-			<app-game-grid v-if="listing" :games="listing.games" event-label="collection-games">
+			<AppGameGrid v-if="listing" :games="listing.games" event-label="collection-games">
 				<template
 					v-if="type === 'playlist' || type === 'followed'"
 					#thumbnail-controls="props"
 				>
-					<app-button
+					<AppButton
 						v-if="type === 'playlist' && collection.isOwner"
 						v-app-tooltip="$gettext(`Remove from playlist`)"
 						icon="remove"
@@ -690,7 +690,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 						@click="removeFromPlaylist(props.game)"
 					/>
 
-					<app-button
+					<AppButton
 						v-if="type === 'followed' && collection.isOwner"
 						v-app-tooltip="$gettext(`Stop following`)"
 						icon="remove"
@@ -699,43 +699,43 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 						@click="removeFromLibrary(props.game)"
 					/>
 				</template>
-			</app-game-grid>
-		</app-game-listing>
+			</AppGameGrid>
+		</AppGameListing>
 
 		<section v-if="recommendedGames.length" class="section">
 			<div class="container-xl">
 				<div class="clearfix">
 					<h1 class="section-header">
-						<translate>Recommended Games</translate>
+						<AppTranslate>Recommended Games</AppTranslate>
 					</h1>
 					<div :class="{ 'pull-left': !Screen.isXs }">
 						<p>
-							<translate>
+							<AppTranslate>
 								We remixed this playlist into a tasty collection of other games that
 								you may enjoy.
-							</translate>
+							</AppTranslate>
 						</p>
 						<hr class="underbar" />
 					</div>
 					<div class="hidden-xs pull-right">
-						<app-button @click="mixPlaylist(true)">
-							<translate>Refresh</translate>
-						</app-button>
+						<AppButton @click="mixPlaylist(true)">
+							<AppTranslate>Refresh</AppTranslate>
+						</AppButton>
 					</div>
 				</div>
 
-				<app-loading-fade :is-loading="isLoadingRecommended">
-					<app-game-grid
+				<AppLoadingFade :is-loading="isLoadingRecommended">
+					<AppGameGrid
 						:games="recommendedGames"
 						scrollable
 						event-label="collection-games-mix"
 					/>
-				</app-loading-fade>
+				</AppLoadingFade>
 
 				<p class="visible-xs">
-					<app-button block @click="mixPlaylist(true)">
-						<translate>Refresh</translate>
-					</app-button>
+					<AppButton block @click="mixPlaylist(true)">
+						<AppTranslate>Refresh</AppTranslate>
+					</AppButton>
 				</p>
 			</div>
 		</section>

@@ -32,7 +32,7 @@ export default class AppTrophyCompletion extends Vue {
 </script>
 
 <template>
-	<app-card class="trophy-completion">
+	<AppCard class="trophy-completion">
 		<template v-if="achieved > 0">
 			<p>
 				<span
@@ -64,32 +64,32 @@ export default class AppTrophyCompletion extends Vue {
 			</p>
 			<br />
 
-			<app-progress-bar thin :percent="completionRate" />
+			<AppProgressBar thin :percent="completionRate" />
 
 			<div class="clearfix">
 				<div class="pull-left">
 					<div class="stat-big stat-big-smaller" style="margin-bottom: 0">
 						<div class="stat-big-digit">{{ formatNumber(completionRate) }}%</div>
 						<div class="stat-big-label">
-							<translate>trophies.completion.completion_label</translate>
+							<AppTranslate>trophies.completion.completion_label</AppTranslate>
 						</div>
 					</div>
 				</div>
 				<div class="pull-right">
 					<div class="stat-big stat-big-smaller text-right" style="margin-bottom: 0">
 						<div class="stat-big-digit">
-							<app-jolticon icon="exp" class="text-muted" />
+							<AppJolticon icon="exp" class="text-muted" />
 							{{ formatNumber(experience) }}
 						</div>
 						<div class="stat-big-label">
-							<translate>trophies.completion.exp_gained_label</translate>
+							<AppTranslate>trophies.completion.exp_gained_label</AppTranslate>
 						</div>
 					</div>
 				</div>
 			</div>
 		</template>
 		<template v-else>
-			<translate>You haven't achieved any trophies for this game yet!</translate>
+			<AppTranslate>You haven't achieved any trophies for this game yet!</AppTranslate>
 		</template>
-	</app-card>
+	</AppCard>
 </template>

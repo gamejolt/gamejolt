@@ -44,15 +44,15 @@ export default class FormCommunityChannelChangeUrl extends mixins(Wrapper) {
 </script>
 
 <template>
-	<app-form :controller="form">
+	<AppForm :controller="form">
 		<div>
-			<app-form-community-channel-title :community="community" hide-label />
+			<AppFormCommunityChannelTitle :community="community" hide-label />
 		</div>
 
-		<app-form-button :disabled="!isValid">
-			<translate>Save</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton :disabled="!isValid">
+			<AppTranslate>Save</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>
 
 <style lang="stylus" scoped>

@@ -32,10 +32,7 @@ export default class AppTrophyList extends Vue {
 	<div class="trophy-list">
 		<div v-for="trophy of trophies" :key="trophy.id" class="trophy-list-item">
 			<div class="trophy-list-item-thumbnail">
-				<app-trophy-thumbnail
-					:trophy="trophy"
-					:is-achieved="!!achievedIndexed[trophy.id]"
-				/>
+				<AppTrophyThumbnail :trophy="trophy" :is-achieved="!!achievedIndexed[trophy.id]" />
 			</div>
 
 			<div class="trophy-list-item-content">
@@ -56,7 +53,7 @@ export default class AppTrophyList extends Vue {
 
 				<div v-else class="trophy-list-item-description small text-muted">
 					<em>
-						<translate>Achieve this trophy to view the description.</translate>
+						<AppTranslate>Achieve this trophy to view the description.</AppTranslate>
 					</em>
 				</div>
 
@@ -65,14 +62,14 @@ export default class AppTrophyList extends Vue {
 						v-app-tooltip="$gettext(`trophies.exp_gained_tooltip`)"
 						class="text-muted"
 					>
-						<app-jolticon icon="exp" class="middle" />
-						{{ formatNumber(trophy.experience) }}
-						<translate
+						<AppJolticon icon="exp" class="middle" />
+						{{ ' ' + formatNumber(trophy.experience) + ' ' }}
+						<AppTranslate
 							class="small"
 							translate-comment="As in abbreviation for experience. If one doesnt exist for your language, or if its not a short word just leave it as EXP."
 						>
 							EXP
-						</translate>
+						</AppTranslate>
 					</span>
 
 					<template v-if="achievedIndexed[trophy.id]">
@@ -80,11 +77,11 @@ export default class AppTrophyList extends Vue {
 						<br class="visible-xs" />
 
 						<span class="tag tag-highlight">
-							<translate>trophies.achieved_tag</translate>
+							<AppTranslate>trophies.achieved_tag</AppTranslate>
 						</span>
 						<span class="dot-separator" />
 						<small class="text-muted">
-							<app-time-ago :date="achievedIndexed[trophy.id].logged_on" />
+							<AppTimeAgo :date="achievedIndexed[trophy.id].logged_on" />
 						</small>
 					</template>
 				</div>

@@ -8,9 +8,6 @@ import {
 
 const props = defineProps({
 	...defineFormControlProps(),
-	disabled: {
-		type: Boolean,
-	},
 });
 
 const emit = defineEmits({

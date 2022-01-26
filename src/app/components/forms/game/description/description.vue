@@ -5,14 +5,14 @@ import { ContentWriter } from '../../../../../_common/content/content-writer';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import {
-	BaseForm,
-	FormOnLoad,
-	FormOnSubmitSuccess,
+BaseForm,
+FormOnLoad,
+FormOnSubmitSuccess
 } from '../../../../../_common/form-vue/form.service';
 import {
-	validateContentMaxLength,
-	validateContentNoActiveUploads,
-	validateContentRequired,
+validateContentMaxLength,
+validateContentNoActiveUploads,
+validateContentRequired
 } from '../../../../../_common/form-vue/validators';
 import { Game } from '../../../../../_common/game/game.model';
 import { AppGamePerms } from '../../../game/perms/perms';
@@ -113,16 +113,16 @@ export default class FormGameDescription
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="description_content" :label="$gettext('Description')">
+	<AppFormButton :controller="form">
+		<AppFormGroup name="description_content" :label="$gettext('Description')">
 			<template #label>
-				<app-jolticon icon="edit" />
+				<AppJolticon icon="edit" />
 				<strong>
-					<translate>Game Description</translate>
+					<AppTranslate>Game Description</AppTranslate>
 				</strong>
 			</template>
 
-			<app-form-control-content
+			<AppFormControlContent
 				:placeholder="$gettext(`Write your game description here...`)"
 				content-context="game-description"
 				:model-id="model.id"
@@ -134,10 +134,10 @@ export default class FormGameDescription
 				:max-height="0"
 			/>
 
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-game-description-tags
+		<AppFormGameDescriptionTags
 			class="-tags"
 			:text="tagText"
 			:tags="tags"
@@ -145,7 +145,7 @@ export default class FormGameDescription
 			@tag="addTag($event)"
 		/>
 
-		<app-expand :when="isFnafDetected">
+		<AppExpand :when="isFnafDetected">
 			<div class="alert alert-notice">
 				<div v-translate>
 					<strong>
@@ -158,40 +158,40 @@ export default class FormGameDescription
 					Five Nights at Freddy's series.
 				</div>
 
-				<app-game-perms required="details" tag="div" class="alert-actions">
-					<app-form-button
+				<AppGamePerms required="details" tag="div" class="alert-actions">
+					<AppFormButton
 						:solid="false"
 						trans
 						icon="tag"
 						@before-submit="addAutotag('fnaf')"
 					>
-						<translate
+						<AppTranslate
 							translate-comment="Used to accept an automatic tag suggestion for a game"
 						>
 							Okay
-						</translate>
-					</app-form-button>
+						</AppTranslate>
+					</AppFormButton>
 
-					<app-form-button
+					<AppFormButton
 						:solid="false"
 						:primary="false"
 						trans
 						@before-submit="skipAutotag()"
 					>
-						<translate>Don't Tag</translate>
-					</app-form-button>
-				</app-game-perms>
+						<AppTranslate>Don't Tag</AppTranslate>
+					</AppFormButton>
+				</AppGamePerms>
 			</div>
-		</app-expand>
+		</AppExpand>
 
-		<app-game-perms required="details">
-			<app-dash-game-wizard-controls v-if="!isFnafDetected">
-				<app-form-button>
-					<translate>Save Description</translate>
-				</app-form-button>
-			</app-dash-game-wizard-controls>
-		</app-game-perms>
-	</app-form>
+		<AppGamePerms required="details">
+			<AppDashGameWizardControls v-if="!isFnafDetected">
+				<AppFormButton>
+					<AppTranslate>Save Description</AppTranslate>
+				</AppFormButton>
+			</AppDashGameWizardControls>
+		</AppGamePerms>
+	</AppForm>
 </template>
 
 <style lang="stylus" scoped>

@@ -30,45 +30,45 @@ export default class RouteDashCommunitiesAdd extends BaseRouteComponent {
 
 <template>
 	<section class="section">
-		<app-page-container no-left order="right,main">
+		<AppPageContainer no-left order="right,main">
 			<template #right>
-				<h3><translate>What are Communities?</translate></h3>
+				<h3><AppTranslate>What are Communities?</AppTranslate></h3>
 				<p>
-					<translate>
+					<AppTranslate>
 						Communities gather people around a specific game or interest to share
 						thoughts, art, wiki, guides, videos, and more.
-					</translate>
+					</AppTranslate>
 				</p>
 
-				<h3><translate>Get Featured</translate></h3>
+				<h3><AppTranslate>Get Featured</AppTranslate></h3>
 				<p>
-					<translate>
+					<AppTranslate>
 						We are looking for Communities that can act as role models. We feature the
 						most active communities with a constant stream of awesome content, all over
 						Game Jolt.
-					</translate>
+					</AppTranslate>
 				</p>
 
-				<h3><translate>Communities are Beta</translate></h3>
+				<h3><AppTranslate>Communities are Beta</AppTranslate></h3>
 				<p>
-					<translate>
+					<AppTranslate>
 						we will be updating and changing how communities function as we gather
 						feedback from users. Have a suggestions? Let us know!
-					</translate>
+					</AppTranslate>
 				</p>
 			</template>
 
 			<h2>
-				<translate>Create Your Community</translate>
+				<AppTranslate>Create Your Community</AppTranslate>
 				<br />
 				<small>
-					<translate>
+					<AppTranslate>
 						Communities are a magical place where people of similar interests gather.
-					</translate>
+					</AppTranslate>
 				</small>
 			</h2>
 
-			<form-community @submit="onSubmit" />
-		</app-page-container>
+			<FormCommunity @submit="onSubmit" />
+		</AppPageContainer>
 	</section>
 </template>

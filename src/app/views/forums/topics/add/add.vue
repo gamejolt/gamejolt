@@ -65,26 +65,26 @@ export default class RouteForumsTopicsAdd extends BaseRouteComponent {
 
 <template>
 	<div v-if="isRouteBootstrapped">
-		<app-page-header>
+		<AppPageHeader>
 			<h1>
-				<translate>Add Topic</translate>
+				<AppTranslate>Add Topic</AppTranslate>
 			</h1>
 
 			<template #spotlight>
-				<app-user-avatar :user="app.user" />
+				<AppUserAvatar :user="app.user" />
 			</template>
 
 			<template #nav>
-				<app-forum-breadcrumbs :channel="channel" sort="active" page="add-topic" />
+				<AppForumBreadcrumbs :channel="channel" sort="active" page="add-topic" />
 			</template>
-		</app-page-header>
+		</AppPageHeader>
 
 		<div class="section">
 			<div class="container">
 				<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
-					<app-forum-rules />
+					<AppForumRules />
 
-					<form-forum-topic :channel="channel" @submit="onCreated" />
+					<FormForumTopic :channel="channel" @submit="onCreated" />
 				</div>
 			</div>
 		</div>

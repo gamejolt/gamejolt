@@ -24,24 +24,24 @@ export default class AppFiresidePublishModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>Publish your fireside?</translate>
+				<AppTranslate>Publish your fireside?</AppTranslate>
 			</h2>
 		</div>
 		<div class="modal-body">
 			<p>
-				<translate>This will make it visible for everyone.</translate>
+				<AppTranslate>This will make it visible for everyone.</AppTranslate>
 			</p>
-			<form-fireside-publish :fireside="fireside" @submit="onFormSubmit" />
+			<FormFiresidePublish :fireside="fireside" @submit="onFormSubmit" />
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" scoped></style>

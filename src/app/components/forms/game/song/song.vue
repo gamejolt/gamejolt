@@ -49,31 +49,31 @@ export default class FormGameSong extends mixins(Wrapper) implements FormOnLoad 
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="title" :label="$gettext(`dash.games.music.form.title_label`)">
-			<app-form-control type="text" :validators="[validateMaxLength(150)]" />
-			<app-form-control-errors />
-		</app-form-group>
+	<AppForm :controller="form">
+		<AppFormGroup name="title" :label="$gettext(`dash.games.music.form.title_label`)">
+			<AppFormControl type="text" :validators="[validateMaxLength(150)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group name="file" :label="fileLabel" :optional="method === 'edit'">
+		<AppFormGroup name="file" :label="fileLabel" :optional="method === 'edit'">
 			<p class="help-block">
-				<translate
+				<AppTranslate
 					:translate-params="{
 						maxFilesize: formatNumber(maxFilesize / 1024 / 1024),
 					}"
 				>
 					Song uploads are currently capped at %{ maxFilesize }MB per file. Only MP3s are
 					supported at this time.
-				</translate>
+				</AppTranslate>
 			</p>
 
-			<app-form-control-upload :validators="[validateFilesize(maxFilesize)]" accept=".mp3" />
+			<AppFormControlUpload :validators="[validateFilesize(maxFilesize)]" accept=".mp3" />
 
-			<app-form-control-errors :label="$gettext(`dash.games.music.form.file_error_label`)" />
-		</app-form-group>
+			<AppFormControlErrors :label="$gettext(`dash.games.music.form.file_error_label`)" />
+		</AppFormGroup>
 
-		<app-form-button>
-			<translate>dash.games.music.form.submit_button</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton>
+			<AppTranslate>dash.games.music.form.submit_button</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

@@ -34,9 +34,9 @@ export default class AppScoreList extends Vue {
 			class="score-list-item clearfix anim-fade-in-up no-animate-leave"
 		>
 			<div class="score-list-media">
-				<app-user-card-hover :user="score.user">
-					<app-user-avatar :user="score.user" />
-				</app-user-card-hover>
+				<AppUserCardHover :user="score.user">
+					<AppUserAvatar :user="score.user" />
+				</AppUserCardHover>
 			</div>
 
 			<div class="score-list-content">
@@ -51,7 +51,7 @@ export default class AppScoreList extends Vue {
 					<template v-if="score.user">
 						<router-link :to="score.user.url">
 							{{ score.user.display_name }}
-							<app-user-verified-tick :user="score.user" />
+							<AppUserVerifiedTick :user="score.user" />
 						</router-link>
 						<small class="text-muted">@{{ score.user.username }}</small>
 					</template>
@@ -59,13 +59,13 @@ export default class AppScoreList extends Vue {
 						{{ score.guest }}
 						<em class="text-muted small">
 							(
-							<translate>scores.guest</translate>
+							<AppTranslate>scores.guest</AppTranslate>
 							)
 						</em>
 					</template>
 				</div>
 				<div class="score-list-time text-muted small">
-					<app-time-ago :date="score.logged_on" />
+					<AppTimeAgo :date="score.logged_on" />
 				</div>
 			</div>
 		</li>

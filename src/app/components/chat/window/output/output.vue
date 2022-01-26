@@ -243,7 +243,7 @@ export default class AppChatWindowOutput extends Vue {
 	trigger when the send box changes size or when the window changes--and we
 	need to autoscroll if the content changes within the scroller.
 	-->
-	<app-scroll-scroller
+	<AppScrollScroller
 		v-app-observe-dimensions="tryAutoscroll"
 		:controller="scroller"
 		@scroll="queueOnScroll"
@@ -253,20 +253,20 @@ export default class AppChatWindowOutput extends Vue {
 			class="-container anim-fade-in no-animate-leave"
 		>
 			<div v-if="shouldShowIntro" class="-intro">
-				<app-illustration :src="illNoChat">
-					<translate v-if="room.isPmRoom">
+				<AppIllustration :src="illNoChat">
+					<AppTranslate v-if="room.isPmRoom">
 						Your friend is still loading. Encourage them with a message!
-					</translate>
-					<translate v-else-if="room.isFiresideRoom">
+					</AppTranslate>
+					<AppTranslate v-else-if="room.isFiresideRoom">
 						Waiting for folks to load in. Spark the discussion with a message!
-					</translate>
-					<translate v-else>
+					</AppTranslate>
+					<AppTranslate v-else>
 						Waiting for friends to load in. Encourage them with a message!
-					</translate>
-				</app-illustration>
+					</AppTranslate>
+				</AppIllustration>
 			</div>
 
-			<app-loading v-if="isLoadingOlder" class="loading-centered" />
+			<AppLoading v-if="isLoadingOlder" class="loading-centered" />
 
 			<div v-app-observe-dimensions="tryAutoscroll">
 				<div v-for="message of allMessages" :key="message.id">
@@ -278,7 +278,7 @@ export default class AppChatWindowOutput extends Vue {
 
 					<hr v-if="!message.dateSplit && !message.combine" class="-hr" />
 
-					<app-chat-window-output-item
+					<AppChatWindowOutputItem
 						:message="message"
 						:room="room"
 						:is-new="isNewMessage(message)"
@@ -294,7 +294,7 @@ export default class AppChatWindowOutput extends Vue {
 				/>
 			</transition>
 		</div>
-	</app-scroll-scroller>
+	</AppScrollScroller>
 </template>
 
 <style lang="stylus" src="./output.styl" scoped></style>

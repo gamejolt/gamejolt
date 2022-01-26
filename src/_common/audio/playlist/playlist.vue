@@ -131,7 +131,7 @@ export default class AppAudioPlaylist extends Vue {
 <template>
 	<div>
 		<div class="-player clearfix">
-			<app-audio-player
+			<AppAudioPlayer
 				v-if="currentSong"
 				ref="player"
 				:song="currentSong"
@@ -139,7 +139,7 @@ export default class AppAudioPlaylist extends Vue {
 				@end="onSongEnded"
 			/>
 
-			<app-button
+			<AppButton
 				v-app-track-event="`audio-playlist:click:button`"
 				class="-player-play"
 				sparse
@@ -152,7 +152,7 @@ export default class AppAudioPlaylist extends Vue {
 			</div>
 
 			<div class="-scrubber">
-				<app-audio-scrubber
+				<AppAudioScrubber
 					class="-scrubber-component"
 					:duration="duration"
 					:current-time="currentTime"
@@ -181,7 +181,7 @@ export default class AppAudioPlaylist extends Vue {
 				:class="{ active: currentSong && song.id === currentSong.id }"
 			>
 				<span class="-playlist-play">
-					<app-button
+					<AppButton
 						v-app-track-event="`audio-playlist:click:icon`"
 						sparse
 						trans

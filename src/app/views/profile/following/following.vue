@@ -51,9 +51,9 @@ export default class RouteProfileFollowing extends BaseRouteComponent {
 	<section class="section fill-backdrop">
 		<div class="container">
 			<div v-if="!user?.following_count" class="alert alert-info">
-				<translate>This person isn't following anyone yet.</translate>
+				<AppTranslate>This person isn't following anyone yet.</AppTranslate>
 			</div>
-			<app-follower-list
+			<AppFollowerList
 				v-else
 				:url="loadUrl"
 				:initial-users="users"

@@ -34,8 +34,8 @@ export default class AppCommunitiesEditCompetitionNav extends Vue {
 				}"
 				exact-active-class="active"
 			>
-				<app-jolticon icon="info-circle" />
-				<translate>Overview</translate>
+				<AppJolticon icon="info-circle" />
+				<AppTranslate>Overview</AppTranslate>
 			</router-link>
 		</li>
 		<li>
@@ -45,8 +45,8 @@ export default class AppCommunitiesEditCompetitionNav extends Vue {
 				}"
 				active-class="active"
 			>
-				<app-jolticon icon="edit" />
-				<translate>Edit</translate>
+				<AppJolticon icon="edit" />
+				<AppTranslate>Edit</AppTranslate>
 			</router-link>
 		</li>
 		<li>
@@ -56,14 +56,14 @@ export default class AppCommunitiesEditCompetitionNav extends Vue {
 				}"
 				active-class="active"
 			>
-				<app-jolticon icon="pedestals-numbers" />
-				<translate>Voting</translate>
+				<AppJolticon icon="pedestals-numbers" />
+				<AppTranslate>Voting</AppTranslate>
 				&nbsp;
 				<span v-if="competition.is_voting_enabled" class="tag tag-highlight">
-					<translate>On</translate>
+					<AppTranslate>On</AppTranslate>
 				</span>
 				<span v-else class="tag">
-					<translate>Off</translate>
+					<AppTranslate>Off</AppTranslate>
 				</span>
 			</router-link>
 		</li>
@@ -74,8 +74,8 @@ export default class AppCommunitiesEditCompetitionNav extends Vue {
 				}"
 				active-class="active"
 			>
-				<app-jolticon icon="game" />
-				<translate>Entries</translate>
+				<AppJolticon icon="game" />
+				<AppTranslate>Entries</AppTranslate>
 				&nbsp;
 				<span class="tag">
 					{{ formatNumber(competition.entry_count) }}
@@ -89,8 +89,8 @@ export default class AppCommunitiesEditCompetitionNav extends Vue {
 				}"
 				active-class="active"
 			>
-				<app-jolticon icon="medal" />
-				<translate>Assign Awards</translate>
+				<AppJolticon icon="medal" />
+				<AppTranslate>Assign Awards</AppTranslate>
 			</router-link>
 		</li>
 	</ul>

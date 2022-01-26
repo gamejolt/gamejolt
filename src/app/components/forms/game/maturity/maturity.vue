@@ -299,258 +299,258 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 </script>
 
 <template>
-	<app-form :controller="form" @changed="emitChanged($event)">
-		<app-form-group name="tigrs_age" :label="$gettext(`dash.games.maturity.age_label`)">
+	<AppForm :controller="form" @changed="emitChanged($event)">
+		<AppFormGroup name="tigrs_age" :label="$gettext(`dash.games.maturity.age_label`)">
 			<p v-if="model._is_wip" class="help-block">
-				<translate>
+				<AppTranslate>
 					If you don't know what the final content of your game will be, give an educated
 					guess. You can make changes later.
-				</translate>
+				</AppTranslate>
 			</p>
 
 			<!-- skip the first element, it's a placeholder for unrated maturity that shouldn't be selectable -->
 			<div v-for="(item, index) in age.slice(1)" :key="index" class="radio">
 				<label>
-					<app-form-control-radio :value="index + 1" />
+					<AppFormControlRadio :value="index + 1" />
 					{{ item.label }}
 					<span v-if="item.description" class="help-inline">
 						- {{ item.description }}
 					</span>
 				</label>
 			</div>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-expand :when="formModel.tigrs_age !== 0">
+		<AppExpand :when="formModel.tigrs_age !== 0">
 			<fieldset>
-				<legend><translate>dash.games.maturity.violence_legend</translate></legend>
+				<legend><AppTranslate>dash.games.maturity.violence_legend</AppTranslate></legend>
 
-				<app-form-group
+				<AppFormGroup
 					name="tigrs_cartoon_violence"
 					:label="$gettext(`dash.games.maturity.cartoon_violence_label`)"
 				>
 					<div v-for="(item, index) in cartoonViolence" :key="index" class="radio">
 						<label>
-							<app-form-control-radio :value="index" />
+							<AppFormControlRadio :value="index" />
 							{{ item.label }}
 							<span v-if="item.description" class="help-inline">
 								- {{ item.description }}
 							</span>
 						</label>
 					</div>
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-				<app-form-group
+				<AppFormGroup
 					name="tigrs_fantasy_violence"
 					:label="$gettext(`dash.games.maturity.fantasy_violence_label`)"
 				>
 					<div v-for="(item, index) in fantasyViolence" :key="index" class="radio">
 						<label>
-							<app-form-control-radio :value="index" />
+							<AppFormControlRadio :value="index" />
 							{{ item.label }}
 							<span v-if="item.description" class="help-inline">
 								- {{ item.description }}
 							</span>
 						</label>
 					</div>
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-				<app-form-group
+				<AppFormGroup
 					name="tigrs_realistic_violence"
 					:label="$gettext(`dash.games.maturity.realistic_violence_label`)"
 				>
 					<div v-for="(item, index) in realisticViolence" :key="index" class="radio">
 						<label>
-							<app-form-control-radio :value="index" />
+							<AppFormControlRadio :value="index" />
 							{{ item.label }}
 							<span v-if="item.description" class="help-inline">
 								- {{ item.description }}
 							</span>
 						</label>
 					</div>
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-				<app-form-group
+				<AppFormGroup
 					name="tigrs_bloodshed"
 					:label="$gettext(`dash.games.maturity.bloodshed_label`)"
 				>
 					<div v-for="(item, index) in bloodshed" :key="index" class="radio">
 						<label>
-							<app-form-control-radio :value="index" />
+							<AppFormControlRadio :value="index" />
 							{{ item.label }}
 							<span v-if="item.description" class="help-inline">
 								- {{ item.description }}
 							</span>
 						</label>
 					</div>
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-				<app-form-group
+				<AppFormGroup
 					name="tigrs_sexual_violence"
 					:label="$gettext(`dash.games.maturity.sexual_violence_label`)"
 				>
 					<div v-for="(item, index) in sexualViolence" :key="index" class="radio">
 						<label>
-							<app-form-control-radio :value="index" />
+							<AppFormControlRadio :value="index" />
 							{{ item.label }}
 							<span v-if="item.description" class="help-inline">
 								- {{ item.description }}
 							</span>
 						</label>
 					</div>
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 			</fieldset>
 
 			<fieldset>
-				<legend><translate>dash.games.maturity.substances_legend</translate></legend>
+				<legend><AppTranslate>dash.games.maturity.substances_legend</AppTranslate></legend>
 
-				<app-form-group
+				<AppFormGroup
 					name="tigrs_alcohol"
 					:label="$gettext(`dash.games.maturity.alcohol_label`)"
 				>
 					<div v-for="(item, index) in alcohol" :key="index" class="radio">
 						<label>
-							<app-form-control-radio :value="index" />
+							<AppFormControlRadio :value="index" />
 							{{ item.label }}
 							<span v-if="item.description" class="help-inline">
 								- {{ item.description }}
 							</span>
 						</label>
 					</div>
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-				<app-form-group
+				<AppFormGroup
 					name="tigrs_drugs"
 					:label="$gettext(`dash.games.maturity.drugs_label`)"
 				>
 					<div v-for="(item, index) in drugs" :key="index" class="radio">
 						<label>
-							<app-form-control-radio :value="index" />
+							<AppFormControlRadio :value="index" />
 							{{ item.label }}
 							<span v-if="item.description" class="help-inline">
 								- {{ item.description }}
 							</span>
 						</label>
 					</div>
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-				<app-form-group
+				<AppFormGroup
 					name="tigrs_tobacco"
 					:label="$gettext(`dash.games.maturity.tobacco_label`)"
 				>
 					<div v-for="(item, index) in tobacco" :key="index" class="radio">
 						<label>
-							<app-form-control-radio :value="index" />
+							<AppFormControlRadio :value="index" />
 							{{ item.label }}
 							<span v-if="item.description" class="help-inline">
 								- {{ item.description }}
 							</span>
 						</label>
 					</div>
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 			</fieldset>
 
 			<fieldset>
-				<legend><translate>dash.games.maturity.sex_nudity_legend</translate></legend>
+				<legend><AppTranslate>dash.games.maturity.sex_nudity_legend</AppTranslate></legend>
 
-				<app-form-group
+				<AppFormGroup
 					name="tigrs_nudity"
 					:label="$gettext(`dash.games.maturity.nudity_label`)"
 				>
 					<div v-for="(item, index) in nudity" :key="index" class="radio">
 						<label>
-							<app-form-control-radio :value="index" />
+							<AppFormControlRadio :value="index" />
 							{{ item.label }}
 							<span v-if="item.description" class="help-inline">
 								- {{ item.description }}
 							</span>
 						</label>
 					</div>
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-				<app-form-group
+				<AppFormGroup
 					name="tigrs_sexual_themes"
 					:label="$gettext(`dash.games.maturity.sexual_themes_label`)"
 				>
 					<div v-for="(item, index) in sexualThemes" :key="index" class="radio">
 						<label>
-							<app-form-control-radio :value="index" />
+							<AppFormControlRadio :value="index" />
 							{{ item.label }}
 							<span v-if="item.description" class="help-inline">
 								- {{ item.description }}
 							</span>
 						</label>
 					</div>
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 			</fieldset>
 
 			<fieldset>
-				<legend><translate>dash.games.maturity.misc_legend</translate></legend>
+				<legend><AppTranslate>dash.games.maturity.misc_legend</AppTranslate></legend>
 
-				<app-form-group
+				<AppFormGroup
 					name="tigrs_language"
 					:label="$gettext(`dash.games.maturity.language_label`)"
 				>
 					<div v-for="(item, index) in language" :key="index" class="radio">
 						<label>
-							<app-form-control-radio :value="index" />
+							<AppFormControlRadio :value="index" />
 							{{ item.label }}
 							<span v-if="item.description" class="help-inline">
 								- {{ item.description }}
 							</span>
 						</label>
 					</div>
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-				<app-form-group
+				<AppFormGroup
 					name="tigrs_humor"
 					:label="$gettext(`dash.games.maturity.humor_label`)"
 				>
 					<div v-for="(item, index) in humor" :key="index" class="radio">
 						<label>
-							<app-form-control-radio :value="index" />
+							<AppFormControlRadio :value="index" />
 							{{ item.label }}
 							<span v-if="item.description" class="help-inline">
 								- {{ item.description }}
 							</span>
 						</label>
 					</div>
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-				<app-form-group
+				<AppFormGroup
 					name="tigrs_gambling"
 					:label="$gettext(`dash.games.maturity.gambling_label`)"
 				>
 					<div v-for="(item, index) in gambling" :key="index" class="radio">
 						<label>
-							<app-form-control-radio :value="index" />
+							<AppFormControlRadio :value="index" />
 							{{ item.label }}
 							<span v-if="item.description" class="help-inline">
 								- {{ item.description }}
 							</span>
 						</label>
 					</div>
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 			</fieldset>
-		</app-expand>
+		</AppExpand>
 
-		<app-dash-game-wizard-controls :disabled="!formModel.tigrs_age">
-			<app-form-button :disabled="!formModel.tigrs_age || !valid">
-				<translate>dash.games.maturity.save_button</translate>
-			</app-form-button>
-		</app-dash-game-wizard-controls>
-	</app-form>
+		<AppDashGameWizardControls :disabled="!formModel.tigrs_age">
+			<AppFormButton :disabled="!formModel.tigrs_age || !valid">
+				<AppTranslate>dash.games.maturity.save_button</AppTranslate>
+			</AppFormButton>
+		</AppDashGameWizardControls>
+	</AppForm>
 </template>

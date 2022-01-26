@@ -130,14 +130,14 @@ export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteC
 </script>
 
 <template>
-	<app-communities-view-page-container full>
+	<AppCommunitiesViewPageContainer full>
 		<div class="row">
 			<div class="col-md-8">
 				<h2 class="section-header">
-					<translate>Details</translate>
+					<AppTranslate>Details</AppTranslate>
 				</h2>
 
-				<form-community-channel-edit
+				<FormCommunityChannelEdit
 					:community="community"
 					:model="channel"
 					@submit="onSubmit"
@@ -146,9 +146,9 @@ export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteC
 
 				<template v-if="canEditDescription">
 					<h2>
-						<translate>Edit Description</translate>
+						<AppTranslate>Edit Description</AppTranslate>
 					</h2>
-					<form-community-channel-description :model="channel" />
+					<FormCommunityChannelDescription :model="channel" />
 				</template>
 			</div>
 		</div>
@@ -159,53 +159,53 @@ export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteC
 						<div class="well fill-offset">
 							<template v-if="!channel.is_archived">
 								<h4 class="section-header">
-									<translate>Archive Channel</translate>
+									<AppTranslate>Archive Channel</AppTranslate>
 								</h4>
 
 								<div class="page-help">
 									<p>
-										<translate>
+										<AppTranslate>
 											Archiving a channel will hide it from the community's
 											channel list and sets it to read-only for all users. Any
 											existing posts in the channel will remain there, and the
 											channel can still be viewed.
-										</translate>
+										</AppTranslate>
 									</p>
 								</div>
 
-								<app-button :disabled="!canArchive" @click="onClickArchive">
-									<translate>Archive Channel</translate>
-								</app-button>
+								<AppButton :disabled="!canArchive" @click="onClickArchive">
+									<AppTranslate>Archive Channel</AppTranslate>
+								</AppButton>
 
 								<p v-if="!canArchive" class="help-block sans-margin-bottom">
-									<translate>
+									<AppTranslate>
 										The last public channel cannot be archived.
-									</translate>
+									</AppTranslate>
 								</p>
 							</template>
 
 							<template v-else>
 								<h4 class="sans-margin-top">
-									<translate>Restore Channel</translate>
+									<AppTranslate>Restore Channel</AppTranslate>
 								</h4>
 
 								<div class="page-help">
 									<p>
-										<translate>
+										<AppTranslate>
 											Restoring a channel will remove it from the archive and
 											make it publicly visible again.
-										</translate>
+										</AppTranslate>
 									</p>
 								</div>
 
-								<app-button @click="onClickUnarchive">
-									<translate>Restore Channel</translate>
-								</app-button>
+								<AppButton @click="onClickUnarchive">
+									<AppTranslate>Restore Channel</AppTranslate>
+								</AppButton>
 							</template>
 						</div>
 					</div>
 				</div>
 			</section>
 		</template>
-	</app-communities-view-page-container>
+	</AppCommunitiesViewPageContainer>
 </template>

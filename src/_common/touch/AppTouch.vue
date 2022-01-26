@@ -24,7 +24,12 @@ declare class MovementDataExtras {
 	screenY: number;
 }
 
-export type AppTouchInput = MovementData & ReturnType<typeof getEmitData>;
+export type AppTouchInput = MovementData & {
+	preventDefault: () => void;
+	target: HTMLElement;
+	center: { x: number; y: number };
+	pointer: FlexibleTouchEvent;
+};
 
 type VerticalOption = 'up' | 'down' | 'vertical' | 'all';
 type HorizontalOption = 'left' | 'right' | 'horizontal' | 'all';
@@ -44,6 +49,12 @@ type TimestampedCoordinates = Coordinates & {
 interface PanOptions {
 	direction?: AppTouchDirection;
 	threshold?: number;
+}
+
+export function isTouchEvent(event: FlexibleTouchEvent): event is TouchEvent {
+	// Desktop firefox will freak out and break if we don't do something like
+	// this before calling `instanceof TouchEvent`.
+	return typeof window.TouchEvent !== 'undefined' && event instanceof TouchEvent;
 }
 </script>
 
@@ -79,7 +90,6 @@ const listenerEvents = new Map<
 				onTouchMove(event);
 			},
 			{
-				passive: false,
 				capture: true,
 			},
 		],
@@ -112,7 +122,6 @@ const listenerEvents = new Map<
 			{
 				passive: true,
 				capture: true,
-				once: true,
 			},
 		],
 	],
@@ -123,7 +132,6 @@ const listenerEvents = new Map<
 			{
 				passive: true,
 				capture: true,
-				once: true,
 			},
 		],
 	],
@@ -138,9 +146,24 @@ const listenerEvents = new Map<
 			},
 		],
 	],
+	[
+		'dragstart',
+		[
+			(event: FlexibleTouchEvent) => {
+				_preventEvents(event);
+				onPanEnd(event);
+			},
+			{
+				passive: false,
+				capture: true,
+				once: true,
+			},
+		],
+	],
 ]);
 
 let isDragging = false;
+let prevented = false;
 let startCoords: TimestampedCoordinates | null = null;
 let lastCoords: TimestampedCoordinates | null = null;
 let lastMovementData: (MovementData & MovementDataExtras) | null = null;
@@ -180,6 +203,11 @@ const canVertical = computed(() => {
 });
 
 function onPanStart(event: FlexibleTouchEvent) {
+	if (prevented) {
+		event.preventDefault();
+		return;
+	}
+
 	if (startCoords) {
 		return;
 	}
@@ -201,6 +229,11 @@ function onPanStart(event: FlexibleTouchEvent) {
 }
 
 function onPanMove(event: FlexibleTouchEvent) {
+	if (prevented) {
+		event.preventDefault();
+		return;
+	}
+
 	if (!waitingForFrame) {
 		waitingForFrame = true;
 		window.requestAnimationFrame(() => _handlePanMove(event));
@@ -210,7 +243,7 @@ function onPanMove(event: FlexibleTouchEvent) {
 function _handlePanMove(event: FlexibleTouchEvent) {
 	waitingForFrame = false;
 
-	if (!startCoords) {
+	if (!startCoords || _getUniqueTouches(event).length > 1) {
 		return;
 	}
 
@@ -239,7 +272,11 @@ function _handlePanMove(event: FlexibleTouchEvent) {
 
 		// If we go past the threshold for a direction that isn't allowed, treat
 		// this as the end of a pan and clean up.
-		if (shouldCancel) {
+		//
+		// This should only matter for touch events, where drags can either be
+		// scroll events or the start of navigation events.
+		if (isTouchEvent(event) && shouldCancel) {
+			_preventEvents(event);
 			// Manually reset [didEmitEnd] so that future events are handled properly.
 			didEmitEnd = false;
 			onPanEnd(event, true);
@@ -261,6 +298,11 @@ function _handlePanMove(event: FlexibleTouchEvent) {
 }
 
 function onPanEnd(event: FlexibleTouchEvent, force = false) {
+	if (isTouchEvent(event) && _getUniqueTouches(event).length > 1) {
+		// We still have a touch giving us events
+		return;
+	}
+
 	if (!didEmitStart) {
 		cleanup();
 		return;
@@ -273,7 +315,7 @@ function onPanEnd(event: FlexibleTouchEvent, force = false) {
 }
 
 function onTouchMove(event: TouchEvent) {
-	if (isDragging) {
+	if (isDragging || prevented) {
 		event.preventDefault();
 		return;
 	}
@@ -291,18 +333,25 @@ function onTouchMove(event: TouchEvent) {
 }
 
 function getCoordinatesFromEvent(event: FlexibleTouchEvent): TimestampedCoordinates {
-	let screenX = startCoords?.x || 0;
-	let screenY = startCoords?.y || 0;
+	let screenX = 0;
+	let screenY = 0;
 
 	if (event instanceof MouseEvent) {
 		screenX = event.screenX;
 		screenY = event.screenY;
 	} else if (isTouchEvent(event)) {
-		const touches = [...event.touches, ...event.changedTouches];
-		const touch = touches.length > 0 ? touches[0] : lastMovementData;
-		if (touch) {
-			screenX = touch.screenX;
-			screenY = touch.screenY;
+		const touches = _getUniqueTouches(event);
+
+		if (!touches.length) {
+			screenX = startCoords?.x || 0;
+			screenY = startCoords?.y || 0;
+		} else {
+			for (const touch of touches) {
+				screenX += touch.screenX;
+				screenY += touch.screenY;
+			}
+			screenX = Math.round(screenX / touches.length);
+			screenY = Math.round(screenY / touches.length);
 		}
 	}
 
@@ -351,7 +400,7 @@ function getMovementData(event: FlexibleTouchEvent) {
 	return lastMovementData;
 }
 
-function getEmitData(event: FlexibleTouchEvent, data: MovementData) {
+function getEmitData(event: FlexibleTouchEvent, data: MovementData): AppTouchInput {
 	let x = 0;
 	let y = 0;
 
@@ -359,9 +408,7 @@ function getEmitData(event: FlexibleTouchEvent, data: MovementData) {
 		x = event.clientX;
 		y = event.clientY;
 	} else if (isTouchEvent(event)) {
-		// If this is a touchEnd event, we may only get data from
-		// [changedTouches]. Grab them all, just in case.
-		const touchEvents = [...event.touches, ...event.changedTouches];
+		const touchEvents = _getUniqueTouches(event);
 
 		for (const touch of touchEvents) {
 			x += touch.clientX;
@@ -401,10 +448,30 @@ function emitPanEnd(event: AppTouchInput) {
 	cleanup();
 }
 
-function isTouchEvent(event: FlexibleTouchEvent) {
-	// Desktop firefox will freak out and break if we don't do something like
-	// this before calling `instanceof TouchEvent`.
-	return typeof window.TouchEvent !== 'undefined' && event instanceof TouchEvent;
+function _preventEvents(event: Event) {
+	prevented = true;
+	event.preventDefault();
+}
+
+function _getUniqueTouches(event: FlexibleTouchEvent) {
+	if (!isTouchEvent(event)) {
+		return [];
+	}
+
+	const touchEvents = [...event.touches, ...event.changedTouches];
+	const result: Touch[] = [];
+
+	const trackedIds: Record<number, boolean> = {};
+
+	touchEvents.forEach(i => {
+		if (trackedIds[i.identifier]) {
+			return;
+		}
+		result.push(i);
+		trackedIds[i.identifier] = true;
+	});
+
+	return result;
 }
 
 /** Resets all data except for [didEmitEnd] */
@@ -422,6 +489,7 @@ function cleanup() {
 	}
 
 	attachedListeners = null;
+	prevented = false;
 }
 </script>
 

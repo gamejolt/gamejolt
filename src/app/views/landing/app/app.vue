@@ -37,7 +37,7 @@ export default class RouteLandingApp extends BaseRouteComponent {
 					phone!
 				</p>
 
-				<app-app-buttons source="landing" />
+				<AppAppButtons source="landing" />
 			</div>
 		</section>
 
@@ -67,7 +67,7 @@ export default class RouteLandingApp extends BaseRouteComponent {
 			<div class="container text-center">
 				<h1 class="section-header">Get the Game Jolt App!</h1>
 
-				<app-app-buttons source="landing" />
+				<AppAppButtons source="landing" />
 
 				<br />
 				<br />

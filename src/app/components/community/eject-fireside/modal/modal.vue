@@ -80,31 +80,31 @@ export default class AppCommunityEjectFiresideModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate :translate-params="{ communityName: firesideCommunity.community.name }">
+				<AppTranslate :translate-params="{ communityName: firesideCommunity.community.name }">
 					Eject fireside from %{ communityName }?
-				</translate>
+				</AppTranslate>
 			</h2>
 		</div>
 		<div class="modal-body">
-			<form-community-eject-fireside
+			<FormCommunityEjectFireside
 				v-if="shouldShowForm"
 				:community="firesideCommunity.community"
 				@change="onChangeForm"
 			/>
 
-			<app-button primary icon="eject" @click="onEject">
-				<translate>Eject</translate>
-			</app-button>
+			<AppButton primary icon="eject" @click="onEject">
+				<AppTranslate>Eject</AppTranslate>
+			</AppButton>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" scoped>

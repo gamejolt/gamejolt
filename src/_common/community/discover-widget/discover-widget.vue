@@ -23,7 +23,7 @@ export default class AppCommunityDiscoverWidget extends Vue {
 
 <template>
 	<router-link v-app-tooltip="tooltip" class="-discover" :to="{ name: 'discover.communities' }">
-		<app-jolticon icon="search" />
+		<AppJolticon icon="search" />
 	</router-link>
 </template>
 

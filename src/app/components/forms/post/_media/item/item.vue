@@ -29,10 +29,10 @@ export default class AppFormPostMediaItem extends Vue {
 <template>
 	<div class="-item" :style="{ width, height }">
 		<div class="-controls theme-dark">
-			<app-button icon="remove" overlay sparse @click.capture="emitRemove()" />
+			<AppButton icon="remove" overlay sparse @click.capture="emitRemove()" />
 		</div>
 
-		<app-img-responsive :src="item.mediaserver_url" alt="" />
+		<AppImgResponsive :src="item.mediaserver_url" alt="" />
 	</div>
 </template>
 

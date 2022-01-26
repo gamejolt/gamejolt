@@ -11,5 +11,5 @@ export default class AppActivityFeedPlaceholder extends Vue {}
 </script>
 
 <template>
-	<app-activity-feed-item-placeholder />
+	<AppActivityFeedItemPlaceholder />
 </template>

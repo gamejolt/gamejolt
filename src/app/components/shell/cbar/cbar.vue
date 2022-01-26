@@ -50,26 +50,26 @@ export default class AppShellCbar extends Vue {
 
 <template>
 	<div id="shell-cbar" class="theme-dark">
-		<app-scroll-scroller v-if="hasCbar" class="-scroller" hide-scrollbar>
+		<AppScrollScroller v-if="hasCbar" class="-scroller" hide-scrollbar>
 			<div class="-inner">
-				<app-shell-cbar-controls />
+				<AppShellCbarControls />
 
 				<transition-group tag="div" name="-communities">
-					<app-shell-cbar-community
+					<AppShellCbarCommunity
 						v-for="community of communities"
 						:key="community.id"
 						class="-community-item"
 						:community="community"
 					/>
 				</transition-group>
-				<app-shell-cbar-item>
-					<app-community-discover-widget tooltip-placement="right" @contextmenu.prevent />
-				</app-shell-cbar-item>
-				<app-shell-cbar-item>
-					<app-community-add-widget tooltip-placement="right" @contextmenu.prevent />
-				</app-shell-cbar-item>
+				<AppShellCbarItem>
+					<AppCommunityDiscoverWidget tooltip-placement="right" @contextmenu.prevent />
+				</AppShellCbarItem>
+				<AppShellCbarItem>
+					<AppCommunityAddWidget tooltip-placement="right" @contextmenu.prevent />
+				</AppShellCbarItem>
 			</div>
-		</app-scroll-scroller>
+		</AppScrollScroller>
 	</div>
 </template>
 

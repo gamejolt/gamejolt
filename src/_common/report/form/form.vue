@@ -446,12 +446,12 @@ export default class AppReportForm extends mixins(Wrapper) implements FormOnSubm
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="reason" :label="$gettext(`What's the reason?`)">
+	<AppForm :controller="form">
+		<AppFormGroup name="reason" :label="$gettext(`What's the reason?`)">
 			<div v-for="reason of reasons" :key="reason.radioValue">
 				<div class="radio">
 					<label>
-						<app-form-control-radio
+						<AppFormControlRadio
 							type="radio"
 							:value="reason.radioValue"
 							@changed="onChangeReason"
@@ -461,22 +461,22 @@ export default class AppReportForm extends mixins(Wrapper) implements FormOnSubm
 				</div>
 
 				<div v-if="formModel.reason === reason.radioValue && !!reason.source">
-					<app-form-group name="source" hide-label>
-						<app-form-control
+					<AppFormGroup name="source" hide-label>
+						<AppFormControl
 							type="text"
 							:validators="[validateMaxLength(maxLengthSource)]"
 							:placeholder="reason.source.placeholder"
 						/>
 
-						<app-form-control-errors />
-					</app-form-group>
+						<AppFormControlErrors />
+					</AppFormGroup>
 				</div>
 
 				<div
 					v-if="formModel.reason === reason.radioValue && !!reason.contexts"
 					class="-context"
 				>
-					<app-form-group
+					<AppFormGroup
 						name="context"
 						:label="$gettext(`Select one or more options that the report applies to`)"
 					>
@@ -486,7 +486,7 @@ export default class AppReportForm extends mixins(Wrapper) implements FormOnSubm
 							class="checkbox"
 						>
 							<label>
-								<app-form-control-checkbox
+								<AppFormControlCheckbox
 									:value="context.checkValue"
 									@changed="onChangeContext"
 								/>
@@ -495,36 +495,36 @@ export default class AppReportForm extends mixins(Wrapper) implements FormOnSubm
 							</label>
 						</div>
 
-						<app-form-control-errors />
-					</app-form-group>
+						<AppFormControlErrors />
+					</AppFormGroup>
 				</div>
 
 				<div v-if="formModel.reason === reason.radioValue && !!reason.infoText">
 					<p class="help-block">
-						<app-jolticon icon="exclamation-circle" />
+						<AppJolticon icon="exclamation-circle" />
 						{{ reason.infoText }}
 					</p>
 				</div>
 			</div>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="description"
 			:label="$gettext(`Describe your report`)"
 			:optional="isDescriptionOptional"
 		>
-			<app-form-control-textarea
+			<AppFormControlTextarea
 				type="text"
 				:validators="[validateMaxLength(maxLengthDescription)]"
 			/>
 
-			<app-form-control-errors :label="$gettext(`description`)" />
-		</app-form-group>
+			<AppFormControlErrors :label="$gettext(`description`)" />
+		</AppFormGroup>
 
-		<app-form-button :disabled="!valid">
-			<translate>Send Report</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton :disabled="!valid">
+			<AppTranslate>Send Report</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>
 
 <style lang="stylus" scoped>

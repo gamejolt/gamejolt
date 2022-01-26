@@ -48,7 +48,7 @@ export default class AppGameOgrsTag extends Vue {
 
 <template>
 	<div class="game-ogrs-tag theme-dark">
-		<app-theme-svg
+		<AppThemeSvg
 			class="-tag"
 			:src="imgTagUrl"
 			width="80"
@@ -57,7 +57,7 @@ export default class AppGameOgrsTag extends Vue {
 			strict-colors
 		/>
 		<template v-if="full">
-			<app-theme-svg
+			<AppThemeSvg
 				class="-face"
 				:src="imgUrl"
 				width="80"

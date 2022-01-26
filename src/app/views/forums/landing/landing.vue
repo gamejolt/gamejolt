@@ -19,10 +19,10 @@ export default class RouteForumsLanding extends BaseRouteComponent {
 
 <template>
 	<div>
-		<app-page-header class="forum-header-landing">
+		<AppPageHeader class="forum-header-landing">
 			<div :class="{ 'text-center': Screen.isXs }">
 				<h1>
-					<translate>Game Jolt Forums</translate>
+					<AppTranslate>Game Jolt Forums</AppTranslate>
 				</h1>
 				<img
 					class="forum-header-landing-mascot"
@@ -41,7 +41,7 @@ export default class RouteForumsLanding extends BaseRouteComponent {
 								:to="{ name: 'forums.landing.overview' }"
 								:class="{ active: $route.name === 'forums.landing.overview' }"
 							>
-								<translate>Overview</translate>
+								<AppTranslate>Overview</AppTranslate>
 							</router-link>
 						</li>
 						<li>
@@ -49,13 +49,13 @@ export default class RouteForumsLanding extends BaseRouteComponent {
 								:to="{ name: 'forums.landing.active' }"
 								active-class="active"
 							>
-								<translate>Active Topics</translate>
+								<AppTranslate>Active Topics</AppTranslate>
 							</router-link>
 						</li>
 					</ul>
 				</nav>
 			</template>
-		</app-page-header>
+		</AppPageHeader>
 
 		<router-view />
 	</div>

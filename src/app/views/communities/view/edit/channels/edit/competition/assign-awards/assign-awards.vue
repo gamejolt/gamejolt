@@ -74,39 +74,39 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwards ext
 
 <template>
 	<div>
-		<h2 class="sans-margin-top"><translate>Assign Awards</translate></h2>
+		<h2 class="sans-margin-top"><AppTranslate>Assign Awards</AppTranslate></h2>
 
 		<template v-if="isLoading">
-			<app-loading centered />
+			<AppLoading centered />
 		</template>
 
 		<template v-else-if="awards.length === 0">
 			<div class="alert">
 				<p>
-					<translate>
+					<AppTranslate>
 						You have created no awards for this jam yet. Go over to the Voting section
 						to create awards.
-					</translate>
+					</AppTranslate>
 				</p>
-				<app-button
+				<AppButton
 					icon="edit"
 					:to="{ name: 'communities.view.edit.channels.competition.voting' }"
 				>
-					<translate>Create Awards</translate>
-				</app-button>
+					<AppTranslate>Create Awards</AppTranslate>
+				</AppButton>
 			</div>
 		</template>
 
 		<template v-else>
 			<p v-if="noAwardSelected">
-				<translate>
+				<AppTranslate>
 					These are the awards you've created. Select an award below to choose which
 					entries to give it to.
-				</translate>
+				</AppTranslate>
 			</p>
 
 			<div class="-award-list">
-				<app-button
+				<AppButton
 					v-for="award of awards"
 					:key="award.id"
 					class="-award"
@@ -120,7 +120,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwards ext
 					:badge="(award.entry_count || 0).toString()"
 				>
 					{{ award.name }}
-				</app-button>
+				</AppButton>
 			</div>
 
 			<router-view @assign="onAssignAward($event)" @unassign="onUnassignAward($event)" />

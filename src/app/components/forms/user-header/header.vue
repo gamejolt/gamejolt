@@ -93,18 +93,18 @@ export default class FormUserHeader
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group
+	<AppForm :controller="form">
+		<AppFormGroup
 			name="file"
 			:label="$gettext(`Upload New Header`)"
 			:optional="!!formModel.header_media_item"
 		>
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Headers are the big, banner-like images that adorn the tops of pages. For your
 					header to look its best on all devices, make sure anything important is located
 					near the center of the image.
-				</translate>
+				</AppTranslate>
 			</p>
 			<p class="help-block" v-translate>
 				Your image must be a PNG or JPG.
@@ -117,12 +117,12 @@ export default class FormUserHeader
 				(ratio of 4 ÷ 1).
 			</p>
 			<p class="help-block">
-				<app-link-help page="dev-page-headers" class="link-help">
-					<translate>What are the header requirements and guidelines?</translate>
-				</app-link-help>
+				<AppLinkHelp page="dev-page-headers" class="link-help">
+					<AppTranslate>What are the header requirements and guidelines?</AppTranslate>
+				</AppLinkHelp>
 			</p>
 
-			<app-form-control-upload
+			<AppFormControlUpload
 				:validators="[
 					validateFilesize(maxFilesize),
 					validateImageMinDimensions({ width: minWidth, height: minHeight }),
@@ -132,16 +132,16 @@ export default class FormUserHeader
 				@changed="headerSelected()"
 			/>
 
-			<app-form-control-errors :label="$gettext(`header`)" />
-		</app-form-group>
+			<AppFormControlErrors :label="$gettext(`header`)" />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="header_crop"
 			:label="$gettext(`Crop Current Header`)"
 			v-if="formModel.header_media_item && !formModel.file"
 		>
 			<div class="form-control-static">
-				<app-form-control-crop
+				<AppFormControlCrop
 					:src="formModel.header_media_item.img_url"
 					:min-width="minWidth"
 					:min-height="minHeight"
@@ -151,17 +151,17 @@ export default class FormUserHeader
 					:max-aspect-ratio="maxAspectRatio"
 				/>
 
-				<app-form-control-errors />
+				<AppFormControlErrors />
 			</div>
-		</app-form-group>
+		</AppFormGroup>
 
 		<template v-if="formModel.header_media_item">
-			<app-form-button>
-				<translate>Save</translate>
-			</app-form-button>
-			<app-button trans @click="clearHeader()">
-				<translate>Remove Header</translate>
-			</app-button>
+			<AppFormButton>
+				<AppTranslate>Save</AppTranslate>
+			</AppFormButton>
+			<AppButton trans @click="clearHeader()">
+				<AppTranslate>Remove Header</AppTranslate>
+			</AppButton>
 		</template>
-	</app-form>
+	</AppForm>
 </template>

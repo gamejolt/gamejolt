@@ -171,7 +171,7 @@ export default class AppCommunityActivityItem extends Vue {
 <template>
 	<div class="-item" :class="{ '-item-usersplit': usersplit }">
 		<span v-if="!Screen.isXs" class="-left">
-			<app-user-avatar v-if="usersplit" class="-avatar" :user="item.user" />
+			<AppUserAvatar v-if="usersplit" class="-avatar" :user="item.user" />
 			<span
 				v-else
 				v-app-tooltip="
@@ -193,8 +193,8 @@ export default class AppCommunityActivityItem extends Vue {
 				<!-- This is for when the user that took the action is not available anymore. -->
 				<template v-else>
 					<span class="text-muted">
-						<translate>Someone</translate>
-						<app-jolticon
+						<AppTranslate>Someone</AppTranslate>
+						<AppJolticon
 							v-app-tooltip="$gettext(`This user is no longer active.`)"
 							icon="help-circle"
 						/>
@@ -213,10 +213,10 @@ export default class AppCommunityActivityItem extends Vue {
 						class="-user-sub-date"
 					>
 						<span v-if="isToday">
-							<translate>Today</translate>
+							<AppTranslate>Today</AppTranslate>
 						</span>
 						<span v-else-if="isYesterday">
-							<translate>Yesterday</translate>
+							<AppTranslate>Yesterday</AppTranslate>
 						</span>
 						<span
 							v-if="isToday || isYesterday"
@@ -239,7 +239,7 @@ export default class AppCommunityActivityItem extends Vue {
 						'-icon-other': color !== 'notice' && color !== 'theme',
 					}"
 				>
-					<app-jolticon v-if="shouldShowIcon" :icon="icon" />
+					<AppJolticon v-if="shouldShowIcon" :icon="icon" />
 				</span>
 
 				<div class="-action">
@@ -476,7 +476,7 @@ export default class AppCommunityActivityItem extends Vue {
 					<template v-if="hasReason">
 						<br />
 						<span class="-reason-row">
-							<translate>Reason:</translate>
+							<AppTranslate>Reason:</AppTranslate>
 							<i>{{ ' ' + reasonText }}</i>
 						</span>
 					</template>

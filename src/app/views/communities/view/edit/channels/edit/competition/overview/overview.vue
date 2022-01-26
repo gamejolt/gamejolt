@@ -102,18 +102,20 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 <template>
 	<div>
 		<h2 class="sans-margin-top">
-			<translate>Jam Overview</translate>
+			<AppTranslate>Jam Overview</AppTranslate>
 		</h2>
 		<p class="help-block">
 			<!-- Starts on -->
 			<span>
 				<template v-if="competition.periodNum === 0">
-					<translate>Your jam will start in about</translate>
-					<app-time-ago without-suffix is-future :date="competition.starts_on" />
+					<AppTranslate>Your jam will start in about</AppTranslate>
+					{{ ' ' }}
+					<AppTimeAgo without-suffix is-future :date="competition.starts_on" />
 				</template>
 				<template v-else>
-					<translate>Your jam started about</translate>
-					<app-time-ago :date="competition.starts_on" />
+					<AppTranslate>Your jam started about</AppTranslate>
+					{{ ' ' }}
+					<AppTimeAgo :date="competition.starts_on" />
 				</template>
 			</span>
 
@@ -122,10 +124,10 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 			<!-- Ends on -->
 			<span>
 				<template v-if="competition.periodNum < 2">
-					<translate>It will run for about</translate>
+					<AppTranslate>It will run for about</AppTranslate>
 				</template>
 				<template v-else>
-					<translate>It ran for about</translate>
+					<AppTranslate>It ran for about</AppTranslate>
 				</template>
 				{{ formatDuration(competitionRuntime, 'en') }}
 			</span>
@@ -136,15 +138,15 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 			<span>
 				<template v-if="competition.is_voting_enabled">
 					<template v-if="competition.periodNum < 3">
-						<translate>Voting will last for about</translate>
+						<AppTranslate>Voting will last for about</AppTranslate>
 					</template>
 					<template v-else>
-						<translate>Voting lasted for about</translate>
+						<AppTranslate>Voting lasted for about</AppTranslate>
 					</template>
 					{{ formatDuration(competitionVotingRuntime, 'en') }}
 				</template>
 				<template v-else>
-					<i><translate>Voting is disabled.</translate></i>
+					<i><AppTranslate>Voting is disabled.</AppTranslate></i>
 				</template>
 			</span>
 		</p>
@@ -163,7 +165,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 				</span>
 			</p>
 
-			<app-button
+			<AppButton
 				block
 				overlay
 				icon="edit"
@@ -171,8 +173,8 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 					name: 'communities.view.edit.channels.competition.voting',
 				}"
 			>
-				<translate>Set Up Voting</translate>
-			</app-button>
+				<AppTranslate>Set Up Voting</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div v-if="channel.visibility === 'draft'" class="alert alert-notice">
@@ -180,22 +182,22 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 				<span v-translate><b>This jam is a draft</b> and only moderators can view it.</span>
 			</p>
 			<p>
-				<translate>
+				<AppTranslate>
 					You can leave it as a draft and work on it, then publish it when you're ready
 					for it to be visible in the community's channel list.
-				</translate>
+				</AppTranslate>
 			</p>
-			<app-button block overlay icon="active" @click="onClickPublish">
-				<translate>Publish</translate>
-			</app-button>
+			<AppButton block overlay icon="active" @click="onClickPublish">
+				<AppTranslate>Publish</AppTranslate>
+			</AppButton>
 		</div>
 
 		<table class="table">
 			<tbody>
 				<tr>
 					<th>
-						<translate>Jam name</translate>
-						<app-jolticon
+						<AppTranslate>Jam name</AppTranslate>
+						<AppJolticon
 							v-app-tooltip.touchable="
 								$gettext(
 									`The jam's name is the same as the channel's display name.`
@@ -211,8 +213,8 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 				</tr>
 				<tr>
 					<th>
-						<translate>URL</translate>
-						<app-jolticon
+						<AppTranslate>URL</AppTranslate>
+						<AppJolticon
 							v-app-tooltip.touchable="
 								$gettext(`The jam's URL is the same as the channel's URL path.`)
 							"
@@ -229,28 +231,28 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 				</tr>
 				<tr>
 					<th>
-						<translate>Timezone</translate>
+						<AppTranslate>Timezone</AppTranslate>
 					</th>
 					<td>
 						<template v-if="competition.timezone">
 							{{ competition.timezone }}
 							<p class="help-block sans-margin-bottom">
-								<translate>All jam times are based off this timezone.</translate>
+								<AppTranslate>All jam times are based off this timezone.</AppTranslate>
 							</p>
 						</template>
 						<template v-else>
 							<span class="help-inline">
-								<i><translate>No timezone selected</translate></i>
+								<i><AppTranslate>No timezone selected</AppTranslate></i>
 							</span>
 						</template>
 					</td>
 				</tr>
 				<tr>
 					<th>
-						<translate>Start date</translate>
+						<AppTranslate>Start date</AppTranslate>
 					</th>
 					<td>
-						<app-community-competition-date
+						<AppCommunityCompetitionDate
 							:date="competition.starts_on"
 							:timezone="competition.timezone"
 						/>
@@ -258,10 +260,10 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 				</tr>
 				<tr>
 					<th>
-						<translate>End date</translate>
+						<AppTranslate>End date</AppTranslate>
 					</th>
 					<td>
-						<app-community-competition-date
+						<AppCommunityCompetitionDate
 							:date="competition.ends_on"
 							:timezone="competition.timezone"
 						/>
@@ -269,10 +271,10 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 				</tr>
 				<tr v-if="competition.is_voting_enabled">
 					<th>
-						<translate>Voting end date</translate>
+						<AppTranslate>Voting end date</AppTranslate>
 					</th>
 					<td>
-						<app-community-competition-date
+						<AppCommunityCompetitionDate
 							:date="competition.voting_ends_on"
 							:timezone="competition.timezone"
 						/>

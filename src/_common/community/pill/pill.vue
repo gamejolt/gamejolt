@@ -50,28 +50,28 @@ export default class AppCommunityPill extends Vue {
 </script>
 
 <template>
-	<app-pill v-if="!channel" :to="toCommunity">
+	<AppPill v-if="!channel" :to="toCommunity">
 		<template #img>
-			<app-community-thumbnail-img :community="community" />
+			<AppCommunityThumbnailImg :community="community" />
 		</template>
 
 		<template #default>
 			{{ community.name }}
-			<app-community-verified-tick class="-tick" :community="community" small />
+			<AppCommunityVerifiedTick class="-tick" :community="community" small />
 		</template>
-	</app-pill>
-	<app-pill-bi v-else :left-to="toCommunity" :right-to="toChannel">
+	</AppPill>
+	<AppPillBi v-else :left-to="toCommunity" :right-to="toChannel">
 		<template #img>
-			<app-community-thumbnail-img :community="community" />
+			<AppCommunityThumbnailImg :community="community" />
 		</template>
 
 		<template #left>
 			{{ community.name }}
-			<app-community-verified-tick class="-tick" :community="community" small />
+			<AppCommunityVerifiedTick class="-tick" :community="community" small />
 		</template>
 
 		<template #right>
-			<app-jolticon
+			<AppJolticon
 				v-if="channel.type === 'competition'"
 				v-app-tooltip="$gettext(`Jam`)"
 				icon="jams"
@@ -80,14 +80,14 @@ export default class AppCommunityPill extends Vue {
 
 			{{ channel.displayTitle }}
 
-			<app-jolticon
+			<AppJolticon
 				v-if="communityLink.isFeatured"
 				v-app-tooltip="$gettext(`Featured`)"
 				class="-featured-icon"
 				icon="star"
 			/>
 		</template>
-	</app-pill-bi>
+	</AppPillBi>
 </template>
 
 <style lang="stylus" scoped>

@@ -118,84 +118,84 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 
 <template>
 	<div>
-		<app-communities-view-page-container>
+		<AppCommunitiesViewPageContainer>
 			<template #default>
-				<app-alert-dismissable
+				<AppAlertDismissable
 					v-if="isOwner"
 					alert-type="info"
 					:dismiss-key="`community-${community.id}.welcome-msg`"
 				>
 					<h2 class="section-header">
-						<translate>Welcome to your new community! 🎉</translate>
+						<AppTranslate>Welcome to your new community! 🎉</AppTranslate>
 					</h2>
 
 					<ul>
 						<li>
 							<p>
-								<strong><translate>Your community is live!</translate></strong>
+								<strong><AppTranslate>Your community is live!</AppTranslate></strong>
 								<br />
-								<translate>
+								<AppTranslate>
 									Users can already see and join your community on Game Jolt.
-								</translate>
+								</AppTranslate>
 							</p>
 						</li>
 
 						<li>
-							<strong><translate>Customize the %$@#! out of it</translate></strong>
+							<strong><AppTranslate>Customize the %$@#! out of it</AppTranslate></strong>
 							<br />
-							<translate>
+							<AppTranslate>
 								You can edit every aspect of your community in this page. Set a
 								description, upload a thumbnail and header, customize your channels
 								- make it real pretty!
-							</translate>
+							</AppTranslate>
 						</li>
 
 						<li>
 							<strong>
-								<translate>Assign moderators and collaborators</translate>
+								<AppTranslate>Assign moderators and collaborators</AppTranslate>
 							</strong>
 							<br />
-							<translate>
+							<AppTranslate>
 								Invite others to help you moderate and contribute to your community.
-							</translate>
+							</AppTranslate>
 						</li>
 
 						<li>
-							<strong><translate>Get Featured</translate></strong>
+							<strong><AppTranslate>Get Featured</AppTranslate></strong>
 							<br />
-							<translate>
+							<AppTranslate>
 								Share your community with your friends, post about it on Reddit,
 								Facebook, Twitter and Discord. Game Jolt staff will be looking for
 								active communities to feature on the home page.
-							</translate>
+							</AppTranslate>
 						</li>
 					</ul>
-				</app-alert-dismissable>
+				</AppAlertDismissable>
 
 				<!-- Details -->
-				<app-community-perms :community="community" required="community-details">
+				<AppCommunityPerms :community="community" required="community-details">
 					<h2 class="section-header">
-						<translate>Details</translate>
+						<AppTranslate>Details</AppTranslate>
 					</h2>
 
-					<form-community :model="community" @submit="onDetailsChange" />
+					<FormCommunity :model="community" @submit="onDetailsChange" />
 					<div class="-spacer" />
 
 					<template v-if="routeStore.canEditDescription && Screen.isMobile">
 						<h2 class="section-header">
-							<translate>Edit Description</translate>
+							<AppTranslate>Edit Description</AppTranslate>
 						</h2>
 
-						<form-community-description :model="community" />
+						<FormCommunityDescription :model="community" />
 						<div class="-spacer" />
 					</template>
-				</app-community-perms>
+				</AppCommunityPerms>
 
 				<!-- Leave/Remove Community -->
 				<div class="-danger-zone well fill-offset">
 					<template v-if="isOwner">
 						<h2>
-							<translate>Remove Community</translate>
+							<AppTranslate>Remove Community</AppTranslate>
 						</h2>
 
 						<div class="page-help">
@@ -205,39 +205,39 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 							</p>
 						</div>
 
-						<app-button @click="removeCommunity()">
-							<translate>Remove Community</translate>
-						</app-button>
+						<AppButton @click="removeCommunity()">
+							<AppTranslate>Remove Community</AppTranslate>
+						</AppButton>
 					</template>
 					<template v-else>
 						<h2>
-							<translate>Leave Community</translate>
+							<AppTranslate>Leave Community</AppTranslate>
 						</h2>
 
 						<div class="page-help">
 							<p>
-								<translate>
+								<AppTranslate>
 									You are currently a moderator on this community. Leaving the
 									community will revoke all of your moderation permissions.
-								</translate>
+								</AppTranslate>
 							</p>
 						</div>
 
-						<app-button @click="leaveCommunity()">
-							<translate>Leave Community</translate>
-						</app-button>
+						<AppButton @click="leaveCommunity()">
+							<AppTranslate>Leave Community</AppTranslate>
+						</AppButton>
 					</template>
 				</div>
 			</template>
 
 			<template v-if="routeStore.canEditDescription && !Screen.isMobile" #sidebar>
 				<h2 class="section-header">
-					<translate>Edit Description</translate>
+					<AppTranslate>Edit Description</AppTranslate>
 				</h2>
 
-				<form-community-description :model="community" />
+				<FormCommunityDescription :model="community" />
 			</template>
-		</app-communities-view-page-container>
+		</AppCommunitiesViewPageContainer>
 	</div>
 </template>
 

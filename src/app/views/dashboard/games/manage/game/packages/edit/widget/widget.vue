@@ -60,45 +60,45 @@ export default class RouteDashGamesManageGamePackagesEditWidget extends BaseRout
 			<div class="page-help">
 				<p>
 					<strong>
-						<translate>
+						<AppTranslate>
 							You can use our Package Widget to embed games directly on your own site!
-						</translate>
+						</AppTranslate>
 					</strong>
 				</p>
 
 				<p>
-					<translate>
+					<AppTranslate>
 						For purchases made by Game Jolt members, your game will automatically appear
 						in their Game Library.
-					</translate>
+					</AppTranslate>
 				</p>
 				<p>
-					<translate>
+					<AppTranslate>
 						Purchases made by folks who aren't members or signed into Game Jolt will be
 						emailed a link to a game key page; all future updates you make to your games
 						will be retrievable through this same page.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 
 			<h3>
-				<translate>Configure</translate>
+				<AppTranslate>Configure</AppTranslate>
 			</h3>
 
 			<div class="form-horizontal">
 				<div class="form-group">
-					<label class="control-label col-xs-3"><translate>Theme</translate></label>
+					<label class="control-label col-xs-3"><AppTranslate>Theme</AppTranslate></label>
 					<div class="col-xs-9">
 						<div class="radio">
 							<label>
 								<input v-model="theme" type="radio" value="" />
-								<translate>Dark</translate>
+								<AppTranslate>Dark</AppTranslate>
 							</label>
 						</div>
 						<div class="radio">
 							<label>
 								<input v-model="theme" type="radio" value="light" />
-								<translate>Light</translate>
+								<AppTranslate>Light</AppTranslate>
 							</label>
 						</div>
 					</div>
@@ -106,14 +106,14 @@ export default class RouteDashGamesManageGamePackagesEditWidget extends BaseRout
 			</div>
 
 			<h3>
-				<translate>Embed Code</translate>
+				<AppTranslate>Embed Code</AppTranslate>
 			</h3>
 
 			<textarea v-model="widgetCode" class="form-control" rows="3" readonly />
 		</div>
 		<div class="col-sm-10 col-md-7 col-lg-6">
 			<h3 :class="{ 'section-header': Screen.isDesktop }">
-				<translate>Widget Preview</translate>
+				<AppTranslate>Widget Preview</AppTranslate>
 			</h3>
 
 			<div class="full-bleed-xs">

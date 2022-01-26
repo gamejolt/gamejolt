@@ -108,7 +108,7 @@ export default class AppScrollAffix extends Vue {
 </script>
 
 <template>
-	<app-scroll-inview :config="InviewConfig" @inview="inview" @outview="outview">
+	<AppScrollInview :config="InviewConfig" @inview="inview" @outview="outview">
 		<div
 			v-if="isAffixed"
 			ref="placeholder"
@@ -124,7 +124,7 @@ export default class AppScrollAffix extends Vue {
 		>
 			<slot />
 		</div>
-	</app-scroll-inview>
+	</AppScrollInview>
 </template>
 
 <style lang="stylus" scoped>

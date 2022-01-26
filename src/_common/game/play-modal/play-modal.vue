@@ -70,15 +70,15 @@ export default class AppGamePlayModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="fill-darkest">
 			<div class="modal-controls -header-controls clearfix">
-				<app-button v-if="canMinimize" @click="minimize">
-					<translate>Minimize</translate>
-				</app-button>
-				<app-button @click="close">
-					<translate>Close</translate>
-				</app-button>
+				<AppButton v-if="canMinimize" @click="minimize">
+					<AppTranslate>Minimize</AppTranslate>
+				</AppButton>
+				<AppButton @click="close">
+					<AppTranslate>Close</AppTranslate>
+				</AppButton>
 			</div>
 
 			<div class="-body">
@@ -99,7 +99,7 @@ export default class AppGamePlayModal extends mixins(BaseModal) {
 				/>
 			</div>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" scoped>

@@ -35,7 +35,7 @@ export default class RouteBadgeFeatured extends BaseRouteComponent {
 
 <template>
 	<section class="section">
-		<form-game-featured-badge v-if="game" :game="game" />
+		<FormGameFeaturedBadge v-if="game" :game="game" />
 	</section>
 </template>
 

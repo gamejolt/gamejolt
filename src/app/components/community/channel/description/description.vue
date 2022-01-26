@@ -28,13 +28,13 @@ export default class AppCommunityChannelDescription extends Vue {
 
 <template>
 	<div>
-		<app-fade-collapse
+		<AppFadeCollapse
 			:collapse-height="600"
 			:is-open="isDescriptionOpen"
 			@require-change="canToggleDescriptionChanged"
 		>
-			<app-content-viewer :source="channel.description_content" />
-		</app-fade-collapse>
+			<AppContentViewer :source="channel.description_content" />
+		</AppFadeCollapse>
 
 		<a v-if="canToggleDescription" class="hidden-text-expander" @click="toggleDescription()" />
 	</div>

@@ -34,8 +34,8 @@ export default class FormGameKeyGroupAddKeys extends mixins(Wrapper) implements 
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group
+	<AppForm :controller="form">
+		<AppFormGroup
 			name="amount"
 			:label="$gettext(`# of Keys to Generate`)"
 			v-if="
@@ -43,54 +43,54 @@ export default class FormGameKeyGroupAddKeys extends mixins(Wrapper) implements 
 				keyGroup.type === KeyGroup.TYPE_ANONYMOUS_CLAIM
 			"
 		>
-			<app-form-control
+			<AppFormControl
 				type="number"
 				step="1"
 				min="1"
 				:max="20000 - keyGroup.key_count"
 				:validators="[validateMinValue(1), validateMaxValue(20000 - keyGroup.key_count)]"
 			/>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="emails"
 			:label="$gettext(`Email Addresses`)"
 			v-if="keyGroup.type === KeyGroup.TYPE_EMAIL"
 		>
 			<p class="help-block">
-				<translate>Paste one email address per line, or separate them by commas.</translate>
+				<AppTranslate>Paste one email address per line, or separate them by commas.</AppTranslate>
 			</p>
-			<app-form-control-textarea rows="10" :validators="[validateMaxLength(25000)]" />
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlTextarea rows="10" :validators="[validateMaxLength(25000)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="users"
 			:label="$gettext(`Usernames`)"
 			v-if="keyGroup.type === KeyGroup.TYPE_USER"
 		>
 			<p class="help-block">
-				<translate>Paste one username per line, or separate them by commas.</translate>
+				<AppTranslate>Paste one username per line, or separate them by commas.</AppTranslate>
 			</p>
-			<app-form-control-textarea rows="10" :validators="[validateMaxLength(25000)]" />
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlTextarea rows="10" :validators="[validateMaxLength(25000)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-expand :when="serverErrors['num-keys']">
+		<AppExpand :when="serverErrors['num-keys']">
 			<div class="alert alert-notice">
-				<translate
+				<AppTranslate
 					:translate-params="{
 						max: formatNumber(20000),
 					}"
 				>
 					You can only have a max of %{ max } keys in a single key group.
-				</translate>
+				</AppTranslate>
 			</div>
-		</app-expand>
+		</AppExpand>
 
-		<app-form-button>
-			<translate>Add</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton>
+			<AppTranslate>Add</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

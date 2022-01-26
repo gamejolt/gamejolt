@@ -164,18 +164,18 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 			<div class="row">
 				<div class="col-sm-10 col-md-7 col-lg-6">
 					<h2 class="section-header">
-						<translate>Edit Key Group</translate>
+						<AppTranslate>Edit Key Group</AppTranslate>
 					</h2>
 
-					<form-game-key-group :game="game" :packages="packages" :model="keyGroup" />
+					<FormGameKeyGroup :game="game" :packages="packages" :model="keyGroup" />
 				</div>
 				<div class="col-sm-10 col-md-4 col-md-offset-1 col-lg-5">
 					<div v-if="keyGroup.type === KeyGroup.TYPE_EMAIL" class="alert">
 						<p>
-							<translate>
+							<AppTranslate>
 								You can hand out this URL for people to retrieve the keys attached
 								to their email addresses.
-							</translate>
+							</AppTranslate>
 						</p>
 						<a :href="`${Environment.baseUrl}/claim/g-${game.id}`" target="_blank">
 							{{ Environment.baseUrl }}/claim/g-{{ game.id }}
@@ -193,7 +193,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 					</div>
 
 					<h5>
-						<strong><translate>Viewed</translate></strong>
+						<strong><AppTranslate>Viewed</AppTranslate></strong>
 					</h5>
 					<p>
 						{{ formatNumber(keyGroup.viewed_count || 0) }} /
@@ -211,13 +211,13 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 						</small>
 					</p>
 
-					<app-progress-bar
+					<AppProgressBar
 						thin
 						:percent="((keyGroup.viewed_count || 0) / (keyGroup.key_count || 0)) * 100"
 					/>
 
 					<h5>
-						<strong><translate>Claimed</translate></strong>
+						<strong><AppTranslate>Claimed</AppTranslate></strong>
 					</h5>
 					<p>
 						{{ formatNumber(keyGroup.claimed_count || 0) }} /
@@ -235,7 +235,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 						</small>
 					</p>
 
-					<app-progress-bar
+					<AppProgressBar
 						thin
 						:percent="((keyGroup.claimed_count || 0) / (keyGroup.key_count || 0)) * 100"
 					/>
@@ -243,41 +243,41 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 					<hr />
 
 					<div>
-						<app-button block @click="removeGroup(keyGroup)">
-							<translate>Remove Key Group</translate>
-						</app-button>
+						<AppButton block @click="removeGroup(keyGroup)">
+							<AppTranslate>Remove Key Group</AppTranslate>
+						</AppButton>
 					</div>
 				</div>
 			</div>
 
 			<h2>
 				<div class="section-header-controls">
-					<app-button primary @click="isShowingAddKeys = !isShowingAddKeys">
-						<translate>Add Keys</translate>
-					</app-button>
-					<app-button
+					<AppButton primary @click="isShowingAddKeys = !isShowingAddKeys">
+						<AppTranslate>Add Keys</AppTranslate>
+					</AppButton>
+					<AppButton
 						:href="`${Environment.baseUrl}/x/keys/export-csv/${game.id}/${keyGroup.id}`"
 						target="_blank"
 					>
-						<translate>Export CSV</translate>
-					</app-button>
+						<AppTranslate>Export CSV</AppTranslate>
+					</AppButton>
 				</div>
 
-				<translate>Keys</translate>
+				<AppTranslate>Keys</AppTranslate>
 			</h2>
 
-			<app-expand :when="isShowingAddKeys" class="full-bleed-xs">
+			<AppExpand :when="isShowingAddKeys" class="full-bleed-xs">
 				<div class="well fill-offset">
 					<div class="row">
 						<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
-							<form-game-key-group-add-keys
+							<FormGameKeyGroupAddKeys
 								:key-group="keyGroup"
 								@submit="onNewKeysAdded"
 							/>
 						</div>
 					</div>
 				</div>
-			</app-expand>
+			</AppExpand>
 
 			<div class="well fill-offset full-bleed-xs">
 				<form class="form-inline" @submit.prevent="searchKeys()">
@@ -290,10 +290,10 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 							:placeholder="$gettext('Filter')"
 						/>
 					</div>
-
-					<app-button trans @click="searchKeys">
-						<translate>Search</translate>
-					</app-button>
+					{{ ' ' }}
+					<AppButton trans @click="searchKeys">
+						<AppTranslate>Search</AppTranslate>
+					</AppButton>
 				</form>
 			</div>
 
@@ -302,20 +302,22 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 					<thead>
 						<tr>
 							<th>
-								<translate translate-cocmment="Refers to a game's key group's key">
+								<AppTranslate
+									translate-cocmment="Refers to a game's key group's key"
+								>
 									Key
-								</translate>
+								</AppTranslate>
 							</th>
 							<th v-if="keyGroup.type === KeyGroup.TYPE_EMAIL">
-								<translate>Email</translate>
+								<AppTranslate>Email</AppTranslate>
 							</th>
-							<th><translate>User</translate></th>
+							<th><AppTranslate>User</AppTranslate></th>
 							<th>
-								<translate translate-comment="Refers to claiming a game's key">
+								<AppTranslate translate-comment="Refers to claiming a game's key">
 									Claimed On
-								</translate>
+								</AppTranslate>
 							</th>
-							<th><translate>Last Viewed On</translate></th>
+							<th><AppTranslate>Last Viewed On</AppTranslate></th>
 							<th />
 						</tr>
 					</thead>
@@ -327,7 +329,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 									v-app-tooltip="$gettext(`Copy Key Page URL`)"
 									@click="copyKeyLink(key)"
 								>
-									<app-jolticon icon="link" />
+									<AppJolticon icon="link" />
 								</a>
 							</td>
 
@@ -343,17 +345,17 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 							</td>
 
 							<td>
-								<app-time-ago v-if="!!key.claimed_on" :date="key.claimed_on" />
+								<AppTimeAgo v-if="!!key.claimed_on" :date="key.claimed_on" />
 								<template v-else>-</template>
 							</td>
 
 							<td>
-								<app-time-ago v-if="!!key.viewed_on" :date="key.viewed_on" />
+								<AppTimeAgo v-if="!!key.viewed_on" :date="key.viewed_on" />
 								<template v-else>-</template>
 							</td>
 
 							<td style="text-align: right">
-								<app-button sm sparse trans icon="remove" @click="removeKey(key)" />
+								<AppButton sm sparse trans icon="remove" @click="removeKey(key)" />
 							</td>
 						</tr>
 					</tbody>

@@ -68,12 +68,12 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 	<div v-if="isRouteBootstrapped">
 		<h2 class="section-header">
 			<div class="section-header-controls">
-				<app-button sparse icon="remove" @click="remove" />
+				<AppButton sparse icon="remove" @click="remove" />
 			</div>
 
-			<translate translate-comment="Refers to game API data store items">
+			<AppTranslate translate-comment="Refers to game API data store items">
 				Item Details
-			</translate>
+			</AppTranslate>
 		</h2>
 
 		<div class="table-responsive">
@@ -84,9 +84,9 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 				<tbody>
 					<tr>
 						<th>
-							<translate translate-comment="This refers to game API key">
+							<AppTranslate translate-comment="This refers to game API key">
 								Key
-							</translate>
+							</AppTranslate>
 						</th>
 						<td>
 							<code>{{ item.key }}</code>
@@ -94,11 +94,11 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 					</tr>
 					<tr>
 						<th>
-							<translate
+							<AppTranslate
 								translate-comment="Refers to the date/time when a game API data store item was created"
 							>
 								Stored On
-							</translate>
+							</AppTranslate>
 						</th>
 						<td>
 							{{ formatDate(item.posted_on, 'medium') }}
@@ -106,11 +106,11 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 					</tr>
 					<tr>
 						<th>
-							<translate
+							<AppTranslate
 								translate-comment="Refers to the value of a game API data store item"
 							>
 								Item Data
-							</translate>
+							</AppTranslate>
 						</th>
 						<td class="small">
 							<pre>{{ item.data }}</pre>

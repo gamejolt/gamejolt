@@ -177,7 +177,7 @@ export default class AppContentEditorBlockControls extends Vue {
 						class="-mobile-control"
 						@click="onClickMedia"
 					>
-						<app-jolticon icon="screenshot" />
+						<AppJolticon icon="screenshot" />
 					</button>
 					<button
 						v-if="contextCapabilities.hasAnyEmbed"
@@ -186,7 +186,7 @@ export default class AppContentEditorBlockControls extends Vue {
 						class="-mobile-control"
 						@click="onClickEmbed"
 					>
-						<app-jolticon icon="embed" />
+						<AppJolticon icon="embed" />
 					</button>
 					<button
 						v-if="contextCapabilities.codeBlock"
@@ -195,7 +195,7 @@ export default class AppContentEditorBlockControls extends Vue {
 						class="-mobile-control"
 						@click="onClickCodeBlock"
 					>
-						<app-jolticon icon="brackets" />
+						<AppJolticon icon="brackets" />
 					</button>
 					<button
 						v-if="contextCapabilities.blockquote"
@@ -204,7 +204,7 @@ export default class AppContentEditorBlockControls extends Vue {
 						class="-mobile-control"
 						@click="onClickBlockquote"
 					>
-						<app-jolticon icon="blockquote" />
+						<AppJolticon icon="blockquote" />
 					</button>
 					<button
 						v-if="contextCapabilities.spoiler"
@@ -213,7 +213,7 @@ export default class AppContentEditorBlockControls extends Vue {
 						class="-mobile-control"
 						@click="onClickSpoiler"
 					>
-						<app-jolticon icon="inactive" />
+						<AppJolticon icon="inactive" />
 					</button>
 					<button
 						v-if="contextCapabilities.hr"
@@ -222,7 +222,7 @@ export default class AppContentEditorBlockControls extends Vue {
 						class="-mobile-control"
 						@click="onClickHr"
 					>
-						<app-jolticon icon="hr" />
+						<AppJolticon icon="hr" />
 					</button>
 					<button
 						v-if="contextCapabilities.list"
@@ -231,7 +231,7 @@ export default class AppContentEditorBlockControls extends Vue {
 						class="-mobile-control"
 						@click="onClickBulletList"
 					>
-						<app-jolticon icon="bullet-list" />
+						<AppJolticon icon="bullet-list" />
 					</button>
 					<button
 						v-if="contextCapabilities.list"
@@ -240,11 +240,11 @@ export default class AppContentEditorBlockControls extends Vue {
 						class="-mobile-control"
 						@click="onClickOrderedList"
 					>
-						<app-jolticon icon="numbered-list" />
+						<AppJolticon icon="numbered-list" />
 					</button>
 				</template>
 				<template v-else>
-					<app-button
+					<AppButton
 						class="-add-button"
 						:class="{
 							'-add-button-rotated': !collapsed,
@@ -257,7 +257,7 @@ export default class AppContentEditorBlockControls extends Vue {
 					<transition name="fade">
 						<span v-if="!collapsed">
 							<span class="dot-separator" />
-							<app-button
+							<AppButton
 								v-if="contextCapabilities.media"
 								v-app-tooltip="$gettext('Add an image or GIF')"
 								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
@@ -266,7 +266,7 @@ export default class AppContentEditorBlockControls extends Vue {
 								icon="screenshot"
 								@click="onClickMedia"
 							/>
-							<app-button
+							<AppButton
 								v-if="contextCapabilities.hasAnyEmbed"
 								v-app-tooltip="$gettext('Add an embed')"
 								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
@@ -275,7 +275,7 @@ export default class AppContentEditorBlockControls extends Vue {
 								icon="embed"
 								@click="onClickEmbed"
 							/>
-							<app-button
+							<AppButton
 								v-if="contextCapabilities.codeBlock"
 								v-app-tooltip="$gettext('Add a code block')"
 								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
@@ -284,7 +284,7 @@ export default class AppContentEditorBlockControls extends Vue {
 								icon="brackets"
 								@click="onClickCodeBlock"
 							/>
-							<app-button
+							<AppButton
 								v-if="contextCapabilities.blockquote"
 								v-app-tooltip="$gettext('Add a quote')"
 								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
@@ -293,7 +293,7 @@ export default class AppContentEditorBlockControls extends Vue {
 								icon="blockquote"
 								@click="onClickBlockquote"
 							/>
-							<app-button
+							<AppButton
 								v-if="contextCapabilities.spoiler"
 								v-app-tooltip="$gettext('Add a spoiler')"
 								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
@@ -302,7 +302,7 @@ export default class AppContentEditorBlockControls extends Vue {
 								icon="inactive"
 								@click="onClickSpoiler"
 							/>
-							<app-button
+							<AppButton
 								v-if="contextCapabilities.hr"
 								v-app-tooltip="$gettext('Add a separator')"
 								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
@@ -311,7 +311,7 @@ export default class AppContentEditorBlockControls extends Vue {
 								icon="hr"
 								@click="onClickHr"
 							/>
-							<app-button
+							<AppButton
 								v-if="contextCapabilities.list"
 								v-app-tooltip="$gettext('Add a bulleted list')"
 								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
@@ -320,7 +320,7 @@ export default class AppContentEditorBlockControls extends Vue {
 								icon="bullet-list"
 								@click="onClickBulletList"
 							/>
-							<app-button
+							<AppButton
 								v-if="contextCapabilities.list"
 								v-app-tooltip="$gettext('Add a numbered list')"
 								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"

@@ -193,19 +193,19 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 
 <template>
 	<div>
-		<app-loading-fade :is-loading="isLoading">
+		<AppLoadingFade :is-loading="isLoading">
 			<div v-if="noAwards" class="alert">
 				<p>
-					<translate>No entries have been chosen for this award yet.</translate>
+					<AppTranslate>No entries have been chosen for this award yet.</AppTranslate>
 				</p>
 			</div>
 			<template v-else>
 				<div v-if="awardedEntries.length > 1" class="alert">
 					<p>
-						<translate>
+						<AppTranslate>
 							You can sort the entries within this award to decide their order on the
 							Games page.
-						</translate>
+						</AppTranslate>
 					</p>
 				</div>
 
@@ -221,10 +221,10 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 							<tr>
 								<th />
 								<th>
-									<translate>Entry</translate>
+									<AppTranslate>Entry</AppTranslate>
 								</th>
 								<th>
-									<translate>Developer</translate>
+									<AppTranslate>Developer</AppTranslate>
 								</th>
 							</tr>
 						</thead>
@@ -247,9 +247,9 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 												v-if="draggableItems.length > 1"
 												class="-drag-handle"
 											>
-												<app-jolticon icon="arrows-v" />
+												<AppJolticon icon="arrows-v" />
 											</div>
-											<app-button
+											<AppButton
 												v-app-tooltip="
 													$gettext(`Remove assigned award from entry`)
 												"
@@ -264,7 +264,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 										<a @click="onClickShowEntry(element)">
 											{{ element.resource.title }}
 										</a>
-										<app-jolticon
+										<AppJolticon
 											v-if="element.is_removed"
 											v-app-tooltip.touchable="
 												$gettext(`This entry was hidden from the jam`)
@@ -286,9 +286,9 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 				</div>
 			</template>
 
-			<h3><translate>Choose Entries</translate></h3>
+			<h3><AppTranslate>Choose Entries</AppTranslate></h3>
 			<p class="help-block">
-				<translate>Choose an entry or entries to win this award.</translate>
+				<AppTranslate>Choose an entry or entries to win this award.</AppTranslate>
 			</p>
 
 			<input
@@ -306,7 +306,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 							No entries matched your filter of <code>"%{ filter }"</code>.
 						</span>
 						<span v-else>
-							<translate>There are no more entries without this award.</translate>
+							<AppTranslate>There are no more entries without this award.</AppTranslate>
 						</span>
 					</p>
 				</div>
@@ -325,10 +325,10 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 							<tr>
 								<th />
 								<th>
-									<translate>Entry</translate>
+									<AppTranslate>Entry</AppTranslate>
 								</th>
 								<th>
-									<translate>Developer</translate>
+									<AppTranslate>Developer</AppTranslate>
 								</th>
 							</tr>
 						</thead>
@@ -336,7 +336,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 						<tbody>
 							<tr v-for="entry of entries" :key="entry.id">
 								<td>
-									<app-button
+									<AppButton
 										v-app-tooltip="$gettext(`Assign award to entry`)"
 										icon="add"
 										sparse
@@ -348,7 +348,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 									<a @click="onClickShowEntry(entry)">
 										{{ entry.resource.title }}
 									</a>
-									<app-jolticon
+									<AppJolticon
 										v-if="entry.is_removed"
 										v-app-tooltip.touchable="
 											$gettext(`This entry was hidden from the jam`)
@@ -368,7 +368,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 					</table>
 				</div>
 
-				<app-pagination
+				<AppPagination
 					:total-items="unassignedCount"
 					:current-page="page"
 					:items-per-page="perPage"
@@ -380,13 +380,13 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 			<!-- Probably on a too high page -->
 			<template v-else>
 				<h4>
-					<translate>Whoops! There are no entries back here...</translate>
+					<AppTranslate>Whoops! There are no entries back here...</AppTranslate>
 				</h4>
-				<app-button icon="reply" @click="onPageChanged(1)">
-					<translate>Go back</translate>
-				</app-button>
+				<AppButton icon="reply" @click="onPageChanged(1)">
+					<AppTranslate>Go back</AppTranslate>
+				</AppButton>
 			</template>
-		</app-loading-fade>
+		</AppLoadingFade>
 	</div>
 </template>
 

@@ -25,39 +25,39 @@ export default class AppClientPackageCardMeta extends Vue {
 	<span class="client-package-card-meta" v-if="localPackage">
 		<template v-if="localPackage.isInstalling">
 			<template v-if="!localPackage.isPatchPaused">
-				<translate class="tag tag-highlight text-upper" v-if="localPackage.isInstalling">
+				<AppTranslate class="tag tag-highlight text-upper" v-if="localPackage.isInstalling">
 					Installing
-				</translate>
-				<translate
+				</AppTranslate>
+				<AppTranslate
 					class="tag tag-notice text-upper"
 					v-else-if="localPackage.didInstallFail"
 				>
 					Install Failed
-				</translate>
+				</AppTranslate>
 			</template>
 			<template v-else>
-				<translate class="tag text-upper">Install Paused</translate>
+				<AppTranslate class="tag text-upper">Install Paused</AppTranslate>
 			</template>
 		</template>
 		<template v-else-if="localPackage.isUpdating">
 			<template v-if="!localPackage.isPatchPaused">
-				<translate class="tag tag-highlight text-upper" v-if="localPackage.isUpdating">
+				<AppTranslate class="tag tag-highlight text-upper" v-if="localPackage.isUpdating">
 					Updating
-				</translate>
-				<translate class="tag tag-notice text-upper" v-else-if="localPackage.didUpdateFail">
+				</AppTranslate>
+				<AppTranslate class="tag tag-notice text-upper" v-else-if="localPackage.didUpdateFail">
 					Update Failed
-				</translate>
+				</AppTranslate>
 			</template>
 			<template v-else>
-				<translate class="tag text-upper">Update Paused</translate>
+				<AppTranslate class="tag text-upper">Update Paused</AppTranslate>
 			</template>
 		</template>
 		<template v-else-if="localPackage.isSettled">
-			<translate class="tag text-upper" v-if="!localPackage.isRunning">Installed</translate>
-			<translate class="tag tag-highlight text-upper" v-else>Running</translate>
+			<AppTranslate class="tag text-upper" v-if="!localPackage.isRunning">Installed</AppTranslate>
+			<AppTranslate class="tag tag-highlight text-upper" v-else>Running</AppTranslate>
 		</template>
-		<translate class="tag text-upper" v-else-if="localPackage.isRemoving">Removing</translate>
-		<translate class="tag tag-notice text-upper" v-else>Failed</translate>
+		<AppTranslate class="tag text-upper" v-else-if="localPackage.isRemoving">Removing</AppTranslate>
+		<AppTranslate class="tag tag-notice text-upper" v-else>Failed</AppTranslate>
 
 		<span class="dot-separator"></span>
 	</span>

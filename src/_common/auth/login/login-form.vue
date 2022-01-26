@@ -168,50 +168,50 @@ export default class AppAuthLoginForm
 		}"
 	>
 		<div v-show="showForm" class="auth-form-container">
-			<app-form class="auth-form" :controller="form">
-				<fieldset :disabled="Connection.isClientOffline">
-					<app-form-group
+			<AppForm class="auth-form" :controller="form">
+				<fieldset :disabled="Connection.isClientOffline ? 'true' : undefined">
+					<AppFormGroup
 						name="username"
 						:label="$gettext('Username')"
 						:hide-label="true"
 					>
 						<!-- Min not needed since the login will fail if incorrect anyway. -->
-						<app-form-control
+						<AppFormControl
 							type="text"
 							:placeholder="$gettext('Username')"
 							:validators="[validateMaxLength(30), validateUsername()]"
 							@changed="onChanged"
 						/>
 
-						<app-form-control-errors />
-					</app-form-group>
+						<AppFormControlErrors />
+					</AppFormGroup>
 
-					<app-form-group
+					<AppFormGroup
 						name="password"
 						:label="$gettext('Password')"
 						:hide-label="true"
 					>
-						<app-form-control
+						<AppFormControl
 							type="password"
 							:placeholder="$gettext('Password')"
 							:validators="[validateMaxLength(300)]"
 							@changed="onChanged"
 						/>
 
-						<app-form-control-errors />
-					</app-form-group>
+						<AppFormControlErrors />
+					</AppFormGroup>
 
 					<div
 						v-if="tryAgain"
 						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
 					>
 						<p>
-							<translate>
+							<AppTranslate>
 								Something went wrong on our end while trying to log you in.
-							</translate>
+							</AppTranslate>
 						</p>
 						<p>
-							<translate>Try again in a few minutes, sorry about that!</translate>
+							<AppTranslate>Try again in a few minutes, sorry about that!</AppTranslate>
 						</p>
 					</div>
 
@@ -219,18 +219,18 @@ export default class AppAuthLoginForm
 						v-if="invalidLogin"
 						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
 					>
-						<p><translate>Incorrect username or password.</translate></p>
+						<p><AppTranslate>Incorrect username or password.</AppTranslate></p>
 						<p>
-							<translate :translate-params="{ attempts }">
+							<AppTranslate :translate-params="{ attempts }">
 								Please note, after %{ attempts } incorrect login attempts you will
 								be locked out of your account for 1 hour.
-							</translate>
+							</AppTranslate>
 						</p>
 						<p>
-							<translate>
+							<AppTranslate>
 								If you've forgotten your username or password, you can retrieve them
 								below.
-							</translate>
+							</AppTranslate>
 						</p>
 					</div>
 
@@ -239,10 +239,10 @@ export default class AppAuthLoginForm
 						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
 					>
 						<p>
-							<translate>
+							<AppTranslate>
 								Whoa, there! You've tried to log in too many times and just straight
 								up failed. You'll have to cool down a bit before trying again.
-							</translate>
+							</AppTranslate>
 						</p>
 					</div>
 
@@ -251,9 +251,9 @@ export default class AppAuthLoginForm
 						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
 					>
 						<p>
-							<translate>
+							<AppTranslate>
 								Oh no, your captcha couldn't be validated. Please try again.
-							</translate>
+							</AppTranslate>
 						</p>
 					</div>
 
@@ -262,38 +262,38 @@ export default class AppAuthLoginForm
 						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
 					>
 						<p>
-							<translate>
+							<AppTranslate>
 								The device you're logging in from has been blocked.
-							</translate>
+							</AppTranslate>
 						</p>
 						<p>
-							<translate :translate-params="{ email: 'contact@gamejolt.com' }">
+							<AppTranslate :translate-params="{ email: 'contact@gamejolt.com' }">
 								If you did not do this, or blocked the login by mistake, contact us
 								at %{ email } right away. Your account may be compromised.
-							</translate>
+							</AppTranslate>
 						</p>
 					</div>
 
-					<app-loading
+					<AppLoading
 						v-if="form.isProcessing"
 						:label="$gettext('Figuring this all out...')"
 						:centered="true"
 					/>
 
 					<div class="form-group">
-						<app-form-button block>
-							<translate>Log In</translate>
-						</app-form-button>
+						<AppFormButton block>
+							<AppTranslate>Log In</AppTranslate>
+						</AppFormButton>
 					</div>
 				</fieldset>
-			</app-form>
+			</AppForm>
 
 			<div class="auth-line-thru">
-				<translate>or</translate>
+				<AppTranslate>or</AppTranslate>
 			</div>
 
 			<div class="anim-fade-in">
-				<app-button
+				<AppButton
 					class="-google"
 					solid
 					block
@@ -301,12 +301,12 @@ export default class AppAuthLoginForm
 					@click="linkedChoose('google')"
 				>
 					<img :src="googleImage" alt="" />
-					<span><translate>Sign in with Google</translate></span>
-				</app-button>
+					<span><AppTranslate>Sign in with Google</AppTranslate></span>
+				</AppButton>
 			</div>
 		</div>
 		<div v-if="!showForm">
-			<app-grecaptcha-widget @response="onRecaptchaResponse" />
+			<AppGrecaptchaWidget @response="onRecaptchaResponse" />
 		</div>
 	</div>
 </template>

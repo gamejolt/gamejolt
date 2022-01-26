@@ -51,9 +51,9 @@ export default class AppPartnerTerms extends Vue {
 				v-app-tooltip="$gettext(`You have completed this section.`)"
 				class="pull-right done-icon"
 			>
-				<app-jolticon icon="check" big />
+				<AppJolticon icon="check" big />
 			</span>
-			<translate>Partner Agreement</translate>
+			<AppTranslate>Partner Agreement</AppTranslate>
 		</legend>
 
 		<div v-if="!hasSignedPartnerAgreement">
@@ -63,17 +63,17 @@ export default class AppPartnerTerms extends Vue {
 			<div v-if="hasSignedSomeAgreement && !showAgreement" class="form-group">
 				<div class="small">
 					<div>
-						<translate>
+						<AppTranslate>
 							If you would like to be a Game Jolt partner, you must accept the Partner
 							Agreement.
-						</translate>
+						</AppTranslate>
 					</div>
 				</div>
 				<br />
 
-				<app-button primary @click="showAgreement = true">
-					<translate>Show Partner Agreement</translate>
-				</app-button>
+				<AppButton primary @click="showAgreement = true">
+					<AppTranslate>Show Partner Agreement</AppTranslate>
+				</AppButton>
 			</div>
 
 			<div v-if="!hasSignedSomeAgreement || showAgreement" class="form-group">
@@ -85,34 +85,34 @@ export default class AppPartnerTerms extends Vue {
 				<div class="checkbox">
 					<label>
 						<input v-model="checked" type="checkbox" />
-						<translate>
+						<AppTranslate>
 							By checking this box and clicking the button below marked "I Agree," I
 							agree that I have read, understand, and agree to be bound by the terms
 							of this agreement.
-						</translate>
+						</AppTranslate>
 					</label>
 				</div>
 				<br />
 
-				<app-button primary solid :disabled="!checked" @click="onAccept()">
-					<translate>I Agree</translate>
-				</app-button>
+				<AppButton primary solid :disabled="!checked" @click="onAccept()">
+					<AppTranslate>I Agree</AppTranslate>
+				</AppButton>
 			</div>
 		</div>
 
 		<div v-if="hasSignedPartnerAgreement" class="form-group">
 			<p class="small">
-				<translate
+				<AppTranslate
 					:translate-params="{
 						date: formatDate(account.tos_signed_partner_timestamp, 'medium'),
 					}"
 				>
 					You have agreed to our Partner Agreement on %{ date }.
-				</translate>
+				</AppTranslate>
 				<br />
-				<app-link-external :href="agreementLink">
-					<translate>View Partner Agreement</translate>
-				</app-link-external>
+				<AppLinkExternal :href="agreementLink">
+					<AppTranslate>View Partner Agreement</AppTranslate>
+				</AppLinkExternal>
 			</p>
 		</div>
 	</fieldset>

@@ -38,24 +38,24 @@ export default class AppGameMediaItemAddModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-body">
-			<app-nav-tab-list>
+			<AppNavTabList>
 				<ul>
 					<li>
 						<a @click="tab = 'image'" :class="{ active: tab === 'image' }">
-							<translate>Images</translate>
+							<AppTranslate>Images</AppTranslate>
 						</a>
 					</li>
 					<li>
 						<a @click="tab = 'video'" :class="{ active: tab === 'video' }">
-							<translate>Videos</translate>
+							<AppTranslate>Videos</AppTranslate>
 						</a>
 					</li>
 					<li>
@@ -64,68 +64,68 @@ export default class AppGameMediaItemAddModal extends mixins(BaseModal) {
 						</a>
 					</li>
 				</ul>
-			</app-nav-tab-list>
+			</AppNavTabList>
 
 			<br />
 
 			<template v-if="tab === 'image'">
 				<div class="alert full-bleed-xs">
 					<p>
-						<translate>
+						<AppTranslate>
 							Add screenshots, concept drawings, photos of little clay models, fake box covers, or
 							any other original art created for the game. Yes, even if it's a text-based game!
-						</translate>
+						</AppTranslate>
 					</p>
 					<br />
 					<div>
-						<app-link-help page="dev-media-images" class="link-help">
-							<translate>dash.games.media.add.image.page_help_link</translate>
-						</app-link-help>
+						<AppLinkHelp page="dev-media-images" class="link-help">
+							<AppTranslate>dash.games.media.add.image.page_help_link</AppTranslate>
+						</AppLinkHelp>
 					</div>
 				</div>
 
-				<form-game-image :game="game" @submit="onImagesAdd" />
+				<FormGameImage :game="game" @submit="onImagesAdd" />
 			</template>
 			<template v-else-if="tab === 'video'">
 				<div class="alert full-bleed-xs">
 					<p>
-						<translate>
+						<AppTranslate>
 							Add videos you've created, such as trailers, gameplay footage, walkthroughs, etc.
-						</translate>
+						</AppTranslate>
 					</p>
 					<p>
-						<translate>
+						<AppTranslate>
 							Please don't add Let's Plays or reviews. Let the content owners do that themselves in
 							the comments.
-						</translate>
+						</AppTranslate>
 					</p>
 					<br />
 					<div>
-						<app-link-help page="dev-media-videos" class="link-help">
-							<translate>dash.games.media.add.video.page_help_link</translate>
-						</app-link-help>
+						<AppLinkHelp page="dev-media-videos" class="link-help">
+							<AppTranslate>dash.games.media.add.video.page_help_link</AppTranslate>
+						</AppLinkHelp>
 					</div>
 				</div>
 
-				<form-game-video :game="game" @submit="onVideoAdd" />
+				<FormGameVideo :game="game" @submit="onVideoAdd" />
 			</template>
 			<template v-else-if="tab === 'sketchfab'">
 				<div class="alert full-bleed-xs">
 					<p>
-						<translate>
+						<AppTranslate>
 							With Sketchfab you can embed 3D content from your game in the browser. You can also
 							view that content from any Virtual Reality headset. AMAZING!
-						</translate>
+						</AppTranslate>
 					</p>
 					<p>
-						<app-link-external class="link-help" href="https://sketchfab.com/">
-							<translate>Learn more about Sketchfab...</translate>
-						</app-link-external>
+						<AppLinkExternal class="link-help" href="https://sketchfab.com/">
+							<AppTranslate>Learn more about Sketchfab...</AppTranslate>
+						</AppLinkExternal>
 					</p>
 				</div>
 
-				<form-game-sketchfab :game="game" @submit="onSketchfabAdd" />
+				<FormGameSketchfab :game="game" @submit="onSketchfabAdd" />
 			</template>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

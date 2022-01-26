@@ -251,11 +251,11 @@ export default class AppPostControls extends Vue {
 
 <template>
 	<div>
-		<app-sticker-controls-overlay end>
+		<AppStickerControlsOverlay end>
 			<div class="post-controls">
 				<div class="-row">
 					<div v-if="showUserControls" class="-row">
-						<app-fireside-post-like-widget
+						<AppFiresidePostLikeWidget
 							v-if="shouldShowLike"
 							:post="post"
 							:location="location"
@@ -264,7 +264,7 @@ export default class AppPostControls extends Vue {
 						/>
 
 						<div v-if="shouldShowCommentsButton" class="-inline-button">
-							<app-button
+							<AppButton
 								v-app-tooltip="$gettext('View Comments')"
 								icon="comment"
 								circle
@@ -283,7 +283,7 @@ export default class AppPostControls extends Vue {
 							<span v-else class="blip-missing" />
 						</div>
 
-						<app-button
+						<AppButton
 							v-if="shouldShowStickersButton"
 							v-app-tooltip="$gettext('Place Sticker')"
 							v-app-auth-required
@@ -294,26 +294,26 @@ export default class AppPostControls extends Vue {
 						/>
 					</div>
 					<div v-else-if="post.is_processing" class="-row fill-offset -processing">
-						<app-post-controls-save-progress :post="post" />
+						<AppPostControlsSaveProgress :post="post" />
 					</div>
 					<span v-if="shouldShowExtra" class="-extra">
 						<span v-if="shouldShowEdit && !showUserControls" class="-extra">
-							<app-button
+							<AppButton
 								v-if="canPublish"
 								class="-inline-button"
 								primary
 								@click="publish()"
 							>
-								<translate>Publish</translate>
-							</app-button>
-							<app-button class="-inline-button" @click="openEdit()">
-								<translate>Edit</translate>
-							</app-button>
+								<AppTranslate>Publish</AppTranslate>
+							</AppButton>
+							<AppButton class="-inline-button" @click="openEdit()">
+								<AppTranslate>Edit</AppTranslate>
+							</AppButton>
 
 							<span class="-spacing-right" />
 						</span>
 
-						<app-post-controls-more
+						<AppPostControlsMore
 							:post="post"
 							@remove="emitPostRemove"
 							@feature="emitPostFeature"
@@ -330,26 +330,26 @@ export default class AppPostControls extends Vue {
 					class="-row small"
 					:class="{ '-spacing-top': shouldShowEdit, tiny: Screen.isXs }"
 				>
-					<app-post-controls-stats :key="'stats'" class="text-muted" :post="post" />
+					<AppPostControlsStats :key="'stats'" class="text-muted" :post="post" />
 
 					<span v-if="shouldShowEdit && showUserControls" class="-extra">
-						<app-button
+						<AppButton
 							v-if="canPublish"
 							class="-inline-button"
 							primary
 							@click="publish()"
 						>
-							<translate>Publish</translate>
-						</app-button>
-						<app-button class="-inline-button" @click="openEdit()">
-							<translate>Edit</translate>
-						</app-button>
+							<AppTranslate>Publish</AppTranslate>
+						</AppButton>
+						<AppButton class="-inline-button" @click="openEdit()">
+							<AppTranslate>Edit</AppTranslate>
+						</AppButton>
 					</span>
 				</div>
 			</div>
-		</app-sticker-controls-overlay>
+		</AppStickerControlsOverlay>
 
-		<app-post-controls-user-follow
+		<AppPostControlsUserFollow
 			:post="post"
 			:should-show="isShowingFollow"
 			@close="onUserFollowDismissal"

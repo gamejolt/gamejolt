@@ -11,74 +11,74 @@ export default class AppButtonStyleguide extends Vue {}
 
 		<h3>Button Types</h3>
 		<div>
-			<app-button>Default</app-button>
-			<app-button solid>Solid</app-button>
-			<app-button primary>Primary</app-button>
-			<app-button primary solid>Primary Solid</app-button>
-			<app-button trans>Transparent</app-button>
+			<AppButton>Default</AppButton>
+			<AppButton solid>Solid</AppButton>
+			<AppButton primary>Primary</AppButton>
+			<AppButton primary solid>Primary Solid</AppButton>
+			<AppButton trans>Transparent</AppButton>
 		</div>
 
 		<h3>Icons</h3>
 		<div>
-			<app-button icon="heart">Default</app-button>
-			<app-button icon="heart" solid>Solid</app-button>
-			<app-button icon="heart" primary>Primary</app-button>
-			<app-button icon="heart" primary solid>Primary Solid</app-button>
-			<app-button icon="heart" trans>Transparent</app-button>
+			<AppButton icon="heart">Default</AppButton>
+			<AppButton icon="heart" solid>Solid</AppButton>
+			<AppButton icon="heart" primary>Primary</AppButton>
+			<AppButton icon="heart" primary solid>Primary Solid</AppButton>
+			<AppButton icon="heart" trans>Transparent</AppButton>
 		</div>
 
 		<h3>Sparse (icon-only)</h3>
 		<div>
-			<app-button sparse icon="heart" />
-			<app-button sparse icon="heart" solid />
-			<app-button sparse icon="heart" primary />
-			<app-button sparse icon="heart" primary solid />
-			<app-button sparse icon="heart" trans />
+			<AppButton sparse icon="heart" />
+			<AppButton sparse icon="heart" solid />
+			<AppButton sparse icon="heart" primary />
+			<AppButton sparse icon="heart" primary solid />
+			<AppButton sparse icon="heart" trans />
 		</div>
 
 		<h3>Circle (icon-only)</h3>
 		<div>
-			<app-button circle icon="heart" />
-			<app-button circle icon="heart" solid />
-			<app-button circle icon="heart" primary />
-			<app-button circle icon="heart" primary solid />
-			<app-button circle icon="heart" trans />
+			<AppButton circle icon="heart" />
+			<AppButton circle icon="heart" solid />
+			<AppButton circle icon="heart" primary />
+			<AppButton circle icon="heart" primary solid />
+			<AppButton circle icon="heart" trans />
 		</div>
 
 		<h3>Badges</h3>
 		<div>
-			<app-button badge="42">Default</app-button>
-			<app-button badge="42" solid>Solid</app-button>
-			<app-button badge="42" primary>Primary</app-button>
-			<app-button badge="42" primary solid>Primary Solid</app-button>
-			<app-button badge="42" trans>Transparent</app-button>
+			<AppButton badge="42">Default</AppButton>
+			<AppButton badge="42" solid>Solid</AppButton>
+			<AppButton badge="42" primary>Primary</AppButton>
+			<AppButton badge="42" primary solid>Primary Solid</AppButton>
+			<AppButton badge="42" trans>Transparent</AppButton>
 		</div>
 
 		<h3>Overlay (over images)</h3>
 		<div>
-			<app-button overlay icon="heart">Default</app-button>
-			<app-button overlay icon="heart" solid>Solid</app-button>
-			<app-button overlay icon="heart" primary>Primary</app-button>
-			<app-button overlay icon="heart" primary solid>Primary Solid</app-button>
-			<app-button overlay icon="heart" trans>Transparent</app-button>
+			<AppButton overlay icon="heart">Default</AppButton>
+			<AppButton overlay icon="heart" solid>Solid</AppButton>
+			<AppButton overlay icon="heart" primary>Primary</AppButton>
+			<AppButton overlay icon="heart" primary solid>Primary Solid</AppButton>
+			<AppButton overlay icon="heart" trans>Transparent</AppButton>
 		</div>
 
 		<h3>Block Buttons</h3>
 		<div>
-			<app-button block>Default</app-button>
-			<app-button block solid>Solid</app-button>
-			<app-button block primary>Primary</app-button>
-			<app-button block primary solid>Primary Solid</app-button>
-			<app-button block trans>Transparent</app-button>
+			<AppButton block>Default</AppButton>
+			<AppButton block solid>Solid</AppButton>
+			<AppButton block primary>Primary</AppButton>
+			<AppButton block primary solid>Primary Solid</AppButton>
+			<AppButton block trans>Transparent</AppButton>
 		</div>
 
 		<h3>Disabled</h3>
 		<div>
-			<app-button disabled>Default</app-button>
-			<app-button disabled solid>Solid</app-button>
-			<app-button disabled primary>Primary</app-button>
-			<app-button disabled primary solid>Primary Solid</app-button>
-			<app-button disabled trans>Transparent</app-button>
+			<AppButton disabled>Default</AppButton>
+			<AppButton disabled solid>Solid</AppButton>
+			<AppButton disabled primary>Primary</AppButton>
+			<AppButton disabled primary solid>Primary Solid</AppButton>
+			<AppButton disabled trans>Transparent</AppButton>
 		</div>
 	</section>
 </template>

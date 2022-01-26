@@ -72,17 +72,17 @@ export default class AppChatInviteModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<template #default>
 			<div class="modal-controls">
-				<app-button @click="modal.dismiss()">
-					<translate>Close</translate>
-				</app-button>
+				<AppButton @click="modal.dismiss()">
+					<AppTranslate>Close</AppTranslate>
+				</AppButton>
 			</div>
 
 			<div class="modal-header">
 				<h2 class="modal-title">
-					<translate>Choose Friends</translate>
+					<AppTranslate>Choose Friends</AppTranslate>
 				</h2>
 			</div>
 
@@ -94,7 +94,7 @@ export default class AppChatInviteModal extends mixins(BaseModal) {
 						placeholder="Filter..."
 					/>
 
-					<app-scroll-scroller>
+					<AppScrollScroller>
 						<div class="-user-list">
 							<div
 								v-for="user of filteredUsers"
@@ -103,7 +103,7 @@ export default class AppChatInviteModal extends mixins(BaseModal) {
 								@click="toggle(user)"
 							>
 								<div class="-avatar">
-									<app-user-avatar-img :user="user" />
+									<AppUserAvatarImg :user="user" />
 								</div>
 
 								<div class="-label">
@@ -113,37 +113,37 @@ export default class AppChatInviteModal extends mixins(BaseModal) {
 									<div class="-username">@{{ user.username }}</div>
 								</div>
 								<div class="-radio" :class="{ '-active': selected(user) }">
-									<app-jolticon
+									<AppJolticon
 										:icon="selected(user) ? 'checkbox' : 'box-empty'"
 									/>
 								</div>
 							</div>
 						</div>
-					</app-scroll-scroller>
+					</AppScrollScroller>
 				</div>
 			</div>
 		</template>
 
 		<template #footer>
 			<div class="-bottom">
-				<app-user-avatar-list
+				<AppUserAvatarList
 					v-if="selectedUsers.length > 0"
 					class="-selected-users"
 					:users="selectedUsers"
 					sm
 				/>
 
-				<app-button primary block :disabled="selectedUsers.length < 1" @click="invite">
+				<AppButton primary block :disabled="selectedUsers.length < 1" @click="invite">
 					<template v-if="room.isPmRoom">
-						<translate>Create Group</translate>
+						<AppTranslate>Create Group</AppTranslate>
 					</template>
 					<template v-else>
-						<translate>Add To Group</translate>
+						<AppTranslate>Add To Group</AppTranslate>
 					</template>
-				</app-button>
+				</AppButton>
 			</div>
 		</template>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" scoped>

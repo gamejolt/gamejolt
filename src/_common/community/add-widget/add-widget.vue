@@ -63,7 +63,7 @@ export default class AppCommunityAddWidget extends Vue {
 		class="-add"
 		:to="{ name: 'dash.communities.add' }"
 	>
-		<app-jolticon icon="add" big />
+		<AppJolticon icon="add" big />
 	</router-link>
 	<a
 		v-else
@@ -73,7 +73,7 @@ export default class AppCommunityAddWidget extends Vue {
 		:class="{ '-disabled': user }"
 		@click="showGrowl"
 	>
-		<app-jolticon icon="add" big />
+		<AppJolticon icon="add" big />
 	</a>
 </template>
 

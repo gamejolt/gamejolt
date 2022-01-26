@@ -42,37 +42,37 @@ export default class RouteDashAccountSite extends BaseRouteComponent {
 <template>
 	<div v-if="isRouteBootstrapped" class="row">
 		<div class="col-md-9 col-lg-8">
-			<app-sites-manage-page :site="site" />
+			<AppSitesManagePage :site="site" />
 		</div>
 		<div class="col-md-3 col-lg-4">
 			<br class="hidden-lg" />
 
 			<p class="page-help">
 				<strong>
-					<translate>
+					<AppTranslate>
 						Game Jolt Sites are customizable external sites for your portfolio and
 						games!
-					</translate>
+					</AppTranslate>
 				</strong>
-				<translate>
+				<AppTranslate>
 					You can use a customizable template, or simply upload your own static site.
-				</translate>
+				</AppTranslate>
 			</p>
 
 			<p class="page-help">
-				<translate>
+				<AppTranslate>
 					Sites don't replace your Game Jolt user profile page. You can use your Site URL
 					to share your site with others.
-				</translate>
+				</AppTranslate>
 			</p>
 
 			<p class="page-help">
-				<translate>You can set up a game site when managing your game.</translate>
+				<AppTranslate>You can set up a game site when managing your game.</AppTranslate>
 			</p>
 
 			<hr />
 
-			<app-sites-link-card :site="site" />
+			<AppSitesLinkCard :site="site" />
 		</div>
 	</div>
 </template>

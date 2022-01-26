@@ -51,7 +51,7 @@ export default class RouteForumsLandingOverview extends BaseRouteComponent {
 <template>
 	<section class="section">
 		<div class="container">
-			<app-forum-rules />
+			<AppForumRules />
 
 			<div v-for="category of categories" :key="category.id">
 				<div class="forum-section-header">
@@ -60,7 +60,7 @@ export default class RouteForumsLandingOverview extends BaseRouteComponent {
 					</h2>
 				</div>
 
-				<app-forum-channel-list
+				<AppForumChannelList
 					:category="category"
 					:channels="groupedChannels[category.id]"
 					:latest-posts="latestPosts"

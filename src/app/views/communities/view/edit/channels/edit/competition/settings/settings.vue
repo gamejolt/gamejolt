@@ -21,5 +21,5 @@ export default class RouteCommunitiesViewEditChannelsCompetitionSettings extends
 </script>
 
 <template>
-	<form-community-competition-edit :model="competition" />
+	<FormCommunityCompetitionEdit :model="competition" />
 </template>

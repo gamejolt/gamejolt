@@ -33,22 +33,22 @@ export default class AppShareCardModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>Share to</translate>
+				<AppTranslate>Share to</AppTranslate>
 			</h2>
 		</div>
 
 		<div class="modal-body">
 			<div class="-grid">
-				<app-share-card-tile
+				<AppShareCardTile
 					v-for="i of providers"
 					:key="i"
 					class="-tile"
@@ -58,11 +58,11 @@ export default class AppShareCardModal extends mixins(BaseModal) {
 				/>
 			</div>
 
-			<app-button class="-copy" @click="copyLink()">
-				<translate>Copy link</translate>
-			</app-button>
+			<AppButton class="-copy" @click="copyLink()">
+				<AppTranslate>Copy link</AppTranslate>
+			</AppButton>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" scoped>

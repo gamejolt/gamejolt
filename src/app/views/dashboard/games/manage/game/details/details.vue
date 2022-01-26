@@ -61,15 +61,15 @@ export default class RouteDashGamesManageGameDetails extends BaseRouteComponent 
 		<div class="col-md-8">
 			<template v-if="!isWizard && !isCollaborator">
 				<h2 class="section-header">
-					<translate>Development Stage</translate>
+					<AppTranslate>Development Stage</AppTranslate>
 				</h2>
 
-				<app-game-dev-stage-selector :game="game" />
+				<AppGameDevStageSelector :game="game" />
 
 				<hr />
 			</template>
 
-			<form-game :model="game" @submit="onSaved" />
+			<FormGame :model="game" @submit="onSaved" />
 		</div>
 	</div>
 </template>

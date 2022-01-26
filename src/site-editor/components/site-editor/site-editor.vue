@@ -104,7 +104,7 @@ export default class AppSiteEditor extends Vue {
 <template>
 	<div class="site-editor fill-darkest" :class="'site-editor-tab-' + tab">
 		<div class="site-editor-body">
-			<app-loading v-if="!isLoaded" />
+			<AppLoading v-if="!isLoaded" />
 			<div v-else>
 				<div class="site-editor-nav">
 					<nav class="navbar">
@@ -120,7 +120,7 @@ export default class AppSiteEditor extends Vue {
 										}"
 										active-class="active"
 									>
-										<translate>Customize Theme</translate>
+										<AppTranslate>Customize Theme</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -133,7 +133,7 @@ export default class AppSiteEditor extends Vue {
 										}"
 										active-class="active"
 									>
-										<translate>Edit Content</translate>
+										<AppTranslate>Edit Content</AppTranslate>
 									</router-link>
 								</li>
 							</ul>
@@ -143,9 +143,9 @@ export default class AppSiteEditor extends Vue {
 
 						<div class="navbar-right">
 							<div class="navbar-controls">
-								<app-button primary solid @click="save()">
-									<translate>Save</translate>
-								</app-button>
+								<AppButton primary solid @click="save()">
+									<AppTranslate>Save</AppTranslate>
+								</AppButton>
 							</div>
 						</div>
 					</nav>
@@ -162,16 +162,16 @@ export default class AppSiteEditor extends Vue {
 				>
 					<div class="well">
 						<h3 class="sans-margin-top">
-							<translate>Choose a Theme</translate>
+							<AppTranslate>Choose a Theme</AppTranslate>
 						</h3>
 
 						<p class="small text-muted">
-							<translate>
+							<AppTranslate>
 								Themes decide the layout and general styling of your site.
-							</translate>
+							</AppTranslate>
 						</p>
 
-						<app-theme-selector
+						<AppThemeSelector
 							:templates="templates"
 							:current-template="currentTemplateId"
 							@change="store.setTemplateId($event)"
@@ -179,7 +179,7 @@ export default class AppSiteEditor extends Vue {
 
 						<template v-if="!!currentTemplateId">
 							<div v-for="templateId of [currentTemplateId]" :key="templateId">
-								<app-theme-editor
+								<AppThemeEditor
 									window-id="site-editor-iframe"
 									:resource-id="site?.id"
 									:template="templateId"
@@ -200,7 +200,7 @@ export default class AppSiteEditor extends Vue {
 					"
 				>
 					<div class="well">
-						<app-content-block-editor
+						<AppContentBlockEditor
 							window-id="site-editor-iframe"
 							:site="site"
 							:content-block="site?.content_blocks?.[0]"

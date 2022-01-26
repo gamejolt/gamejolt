@@ -55,20 +55,20 @@ export default class AppFiresideAvatarBase extends Vue {
 		<div class="-header">
 			<div class="-avatar">
 				<div class="-avatar-inner">
-					<app-media-item-backdrop
+					<AppMediaItemBackdrop
 						class="-avatar-img"
 						:class="{ '-dashed': borderStyle === 'dashed' }"
 						:media-item="avatarMediaItem"
 					>
 						<slot v-if="!isPlaceholder" name="avatar" />
-					</app-media-item-backdrop>
+					</AppMediaItemBackdrop>
 
 					<slot v-if="!isPlaceholder" name="extras" />
 				</div>
 			</div>
 
 			<div v-if="community" class="-community">
-				<app-community-thumbnail-img
+				<AppCommunityThumbnailImg
 					v-if="!isPlaceholder"
 					class="-community-img"
 					:community="community"
@@ -77,7 +77,7 @@ export default class AppFiresideAvatarBase extends Vue {
 
 			<div v-if="hasTag" class="-tag" :class="{ '-live': isLive }">
 				<slot v-if="!isPlaceholder" name="tag" />
-				<translate v-else>CHAT</translate>
+				<AppTranslate v-else>CHAT</AppTranslate>
 			</div>
 		</div>
 

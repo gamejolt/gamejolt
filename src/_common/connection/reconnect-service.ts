@@ -5,7 +5,7 @@ const TIMEOUT_MAX = 30000;
 
 export class ConnectionReconnect {
 	// Just an image, so should be pretty lightweight.
-	private checkUrl = 'https://s.gamejolt.com/img/offline-connection-check.png';
+	private checkUrl = 'https://s.gjcdn.net/img/offline-connection-check.png';
 
 	private timeoutMs = TIMEOUT_INITIAL;
 	private timeoutHandle?: NodeJS.Timer;

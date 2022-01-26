@@ -40,7 +40,7 @@ export default class AppPostControlsSaveProgress extends Vue {
 <template>
 	<div>
 		<div>
-			<app-progress-bar
+			<AppProgressBar
 				class="-bar"
 				:indeterminate="isIndeterminate"
 				:percent="progress * 100"
@@ -49,14 +49,14 @@ export default class AppPostControlsSaveProgress extends Vue {
 			/>
 		</div>
 		<template v-if="post.status === 'active'">
-			<translate>
+			<AppTranslate>
 				Your post is being processed and will be published once it's ready
-			</translate>
+			</AppTranslate>
 		</template>
 		<template v-else>
-			<translate>Parts of your post are being processed</translate>
+			<AppTranslate>Parts of your post are being processed</AppTranslate>
 		</template>
-		<app-progress-poller
+		<AppProgressPoller
 			:url="`/web/posts/manage/save-post-progress/${post.id}`"
 			:interval="2000"
 			@progress="onProgress"

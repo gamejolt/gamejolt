@@ -200,7 +200,7 @@ export default class AppGamePackageCard extends Vue {
 </script>
 
 <template>
-	<app-card :id="`game-package-card-${package.id}`" class="game-package-card">
+	<AppCard :id="`game-package-card-${package.id}`" class="game-package-card">
 		<div class="game-package-card-pricing fill-gray">
 			<!-- Fixed Pricing -->
 			<div v-if="sellable.type === 'paid'">
@@ -220,15 +220,15 @@ export default class AppGamePackageCard extends Vue {
 
 			<!-- Pay What You Want -->
 			<div v-else-if="sellable.type === 'pwyw'">
-				<translate class="game-package-card-pricing-tag text-lower">
+				<AppTranslate class="game-package-card-pricing-tag text-lower">
 					Name Your Price
-				</translate>
+				</AppTranslate>
 			</div>
 
 			<!-- Free/Default -->
 			<div v-else-if="sellable.type === 'free'">
 				<strong class="game-package-card-pricing-amount text-upper">
-					<translate>Free</translate>
+					<AppTranslate>Free</AppTranslate>
 				</strong>
 			</div>
 		</div>
@@ -239,7 +239,7 @@ export default class AppGamePackageCard extends Vue {
 			class="game-package-card-pricing game-package-card-pricing-owned fill-highlight"
 		>
 			<strong class="text-upper">
-				<translate>Owned</translate>
+				<AppTranslate>Owned</AppTranslate>
 			</strong>
 		</div>
 
@@ -258,7 +258,7 @@ export default class AppGamePackageCard extends Vue {
 				:card="card"
 			/>
 
-			<app-jolticon
+			<AppJolticon
 				v-for="supportKey of card.platformSupport"
 				:key="supportKey"
 				v-app-tooltip="card.platformSupportInfo[supportKey].tooltip"
@@ -267,31 +267,33 @@ export default class AppGamePackageCard extends Vue {
 
 			<template v-if="card.showcasedRelease">
 				{{ ' ' }}
-				<translate>Version:</translate>
+				<AppTranslate>Version:</AppTranslate>
 				{{ ' ' }}
 				<strong>{{ card.showcasedRelease.version_number }}</strong>
 
 				<span class="dot-separator" />
 
-				<app-time-ago :date="card.showcasedRelease.published_on" />
+				<AppTimeAgo :date="card.showcasedRelease.published_on" />
 			</template>
 		</div>
 
 		<div v-if="sale" class="card-content card-sale-info">
-			<strong><translate>On sale!</translate></strong>
-			<translate>Offer ends in</translate>
-			<app-countdown :end="pricing.end" />
+			<strong><AppTranslate>On sale!</AppTranslate></strong>
+			{{ ' ' }}
+			<AppTranslate>Offer ends in</AppTranslate>
+			{{ ' ' }}
+			<AppCountdown :end="pricing.end" />
 		</div>
 
 		<div v-if="package.description" class="card-content">
-			<app-fade-collapse
+			<AppFadeCollapse
 				:collapse-height="100"
 				:is-open="showFullDescription"
 				@require-change="canToggleDescription = $event"
 				@expand="showFullDescription = true"
 			>
 				<div>{{ package.description }}</div>
-			</app-fade-collapse>
+			</AppFadeCollapse>
 
 			<a
 				v-if="canToggleDescription"
@@ -303,15 +305,15 @@ export default class AppGamePackageCard extends Vue {
 
 		<div v-if="!isOwned && card.hasSteamKey" class="card-content">
 			<p>
-				<app-jolticon icon="steam" />
-				<translate>You will also get a Steam key with this purchase.</translate>
+				<AppJolticon icon="steam" />
+				<AppTranslate>You will also get a Steam key with this purchase.</AppTranslate>
 			</p>
 		</div>
 
 		<template v-if="!card.showcasedRelease">
 			<br />
 			<div class="alert alert-notice">
-				<translate>No published releases yet.</translate>
+				<AppTranslate>No published releases yet.</AppTranslate>
 			</div>
 		</template>
 		<div v-else class="card-controls">
@@ -328,9 +330,9 @@ export default class AppGamePackageCard extends Vue {
 				<template v-if="isPartner && sellable.type === 'paid' && !isOwned">
 					<br />
 					<div class="alert">
-						<translate>
+						<AppTranslate>
 							You get access to this package because you're a partner.
-						</translate>
+						</AppTranslate>
 					</div>
 					<hr />
 				</template>
@@ -338,16 +340,14 @@ export default class AppGamePackageCard extends Vue {
 
 			<template v-if="sellable.type === 'paid' && !isOwned">
 				<div class="clearfix">
-					<app-button primary @click="showPayment(null, false)">
-						<translate>Buy Now</translate>
-					</app-button>
+					<AppButton primary @click="showPayment(null, false)">
+						<AppTranslate>Buy Now</AppTranslate>
+					</AppButton>
 
 					<span class="game-package-card-payment-what-link">
-						(
 						<a class="link-help" @click="isWhatOpen = !isWhatOpen">
-							<translate>What do you get?</translate>
+							<AppTranslate>What do you get?</AppTranslate>
 						</a>
-						)
 					</span>
 				</div>
 			</template>
@@ -356,20 +356,22 @@ export default class AppGamePackageCard extends Vue {
 				<hr />
 
 				<div class="alert">
-					<translate>You also get access to keys for these other platforms.</translate>
+					<AppTranslate>
+						You also get access to keys for these other platforms.
+					</AppTranslate>
 				</div>
 
 				<div v-for="linkedKey of linkedKeys" :key="linkedKey.key" class="clearfix">
 					<div class="pull-right">
 						&nbsp;
-						<app-button @click="copyProviderKey(linkedKey)">
-							<translate>Copy</translate>
-						</app-button>
+						<AppButton @click="copyProviderKey(linkedKey)">
+							<AppTranslate>Copy</AppTranslate>
+						</AppButton>
 					</div>
 
 					<div class="input-group">
 						<span class="input-group-addon">
-							<app-jolticon
+							<AppJolticon
 								v-if="providerIcons[linkedKey.provider]"
 								:icon="providerIcons[linkedKey.provider]"
 							/>
@@ -381,7 +383,7 @@ export default class AppGamePackageCard extends Vue {
 			</template>
 		</div>
 
-		<app-expand :when="isWhatOpen" class="package-card-well-expander">
+		<AppExpand :when="isWhatOpen" class="package-card-well-expander">
 			<div class="package-card-well">
 				<div v-for="build of builds" :key="build.id">
 					{{ build.primary_file.filename }}
@@ -406,11 +408,11 @@ export default class AppGamePackageCard extends Vue {
 				</div>
 
 				<div v-if="card.hasSteamKey">
-					<translate>1 Steam key</translate>
+					<AppTranslate>1 Steam key</AppTranslate>
 				</div>
 			</div>
-		</app-expand>
-	</app-card>
+		</AppExpand>
+	</AppCard>
 </template>
 
 <style lang="stylus" src="./card.styl" scoped></style>

@@ -40,27 +40,27 @@ export default class AppGameModLinks extends Vue {
 <template>
 	<div class="list-group list-group-dark">
 		<a class="list-group-item has-icon" target="_blank" @click="tag('fnaf')">
-			<app-jolticon icon="tag" />
+			<AppJolticon icon="tag" />
 			<span>Tag: #fnaf</span>
 		</a>
 		<a class="list-group-item has-icon" target="_blank" @click="tag('fangame')">
-			<app-jolticon icon="tag" />
+			<AppJolticon icon="tag" />
 			<span>Tag: #fangame</span>
 		</a>
 		<a class="list-group-item has-icon" target="_blank" @click="tag('gjhot')">
-			<app-jolticon icon="tag" />
+			<AppJolticon icon="tag" />
 			<span>Tag: #gjhot</span>
 		</a>
 		<a class="list-group-item has-icon" target="_blank" @click="untag('gjhot')">
-			<app-jolticon icon="tag" />
+			<AppJolticon icon="tag" />
 			<span>Untag: #gjhot</span>
 		</a>
 		<a class="list-group-item has-icon" target="_blank" @click="tag('gjboost')">
-			<app-jolticon icon="tag" />
+			<AppJolticon icon="tag" />
 			<span>Tag: #gjboost</span>
 		</a>
 		<a class="list-group-item has-icon" target="_blank" @click="tag('gjhome')">
-			<app-jolticon icon="tag" />
+			<AppJolticon icon="tag" />
 			<span>Tag: #gjhome</span>
 		</a>
 		<a
@@ -68,7 +68,7 @@ export default class AppGameModLinks extends Vue {
 			:href="Environment.baseUrl + `/moderate/games/view/${game.id}`"
 			target="_blank"
 		>
-			<app-jolticon icon="cog" />
+			<AppJolticon icon="cog" />
 			<span>Moderate Game</span>
 		</a>
 	</div>

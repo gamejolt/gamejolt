@@ -47,24 +47,24 @@ export default class FormGameImage extends mixins(Wrapper) implements FormOnLoad
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group
+	<AppForm :controller="form">
+		<AppFormGroup
 			v-if="method === 'add'"
 			name="file"
 			:label="$gettext(`dash.games.media.image.form.image_label`)"
 			:hide-label="true"
 		>
 			<p class="help-block" v-translate>
-				<translate>Your image must be a PNG or JPG.</translate>
+				<AppTranslate>Your image must be a PNG or JPG.</AppTranslate>
 				<br />
 				<strong>
-					<translate>
+					<AppTranslate>
 						PNGs are highly recommended as they produce a lossless image.
-					</translate>
+					</AppTranslate>
 				</strong>
 			</p>
 
-			<app-form-control-upload
+			<AppFormControlUpload
 				:validators="[
 					validateFilesize(maxFilesize),
 					validateImageMaxDimensions({ width: maxWidth, height: maxHeight }),
@@ -74,25 +74,25 @@ export default class FormGameImage extends mixins(Wrapper) implements FormOnLoad
 				@changed="imagesSelected()"
 			/>
 
-			<app-form-control-errors :label="$gettext(`selection of images`)" />
-		</app-form-group>
+			<AppFormControlErrors :label="$gettext(`selection of images`)" />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			v-if="method !== 'add'"
 			name="caption"
 			:label="$gettext(`dash.games.media.image.form.caption_label`)"
 			:optional="true"
 		>
-			<app-form-control type="text" :validators="[validateMaxLength(200)]" />
-			<app-form-control-errors />
+			<AppFormControl type="text" :validators="[validateMaxLength(200)]" />
+			<AppFormControlErrors />
 			<p class="help-block">
-				<translate>dash.games.media.image.form.caption_help</translate>
+				<AppTranslate>dash.games.media.image.form.caption_help</AppTranslate>
 			</p>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-button v-if="method !== 'add'" show-when-valid>
-			<translate v-if="method === 'add'">Add</translate>
-			<translate v-else-if="method === 'edit'">Save</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton v-if="method !== 'add'" show-when-valid>
+			<AppTranslate v-if="method === 'add'">Add</AppTranslate>
+			<AppTranslate v-else-if="method === 'edit'">Save</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

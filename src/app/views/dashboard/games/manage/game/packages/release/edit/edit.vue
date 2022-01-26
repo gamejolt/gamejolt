@@ -141,9 +141,9 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 				<li>
 					<router-link :to="{ name: 'dash.games.manage.game.packages.list' }">
 						<span class="breadcrumb-tag">&nbsp;</span>
-						<translate>Packages</translate>
+						<AppTranslate>Packages</AppTranslate>
 					</router-link>
-					<span class="breadcrumb-separator"><app-jolticon icon="chevron-right" /></span>
+					<span class="breadcrumb-separator"><AppJolticon icon="chevron-right" /></span>
 				</li>
 				<li>
 					<router-link
@@ -155,16 +155,20 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 						}"
 					>
 						<span class="breadcrumb-tag">
-							<translate translate-comment="The noun for package">Package</translate>
+							<AppTranslate translate-comment="The noun for package">
+								Package
+							</AppTranslate>
 						</span>
 						{{ package.title || game.title }}
 					</router-link>
-					<span class="breadcrumb-separator"><app-jolticon icon="chevron-right" /></span>
+					<span class="breadcrumb-separator"><AppJolticon icon="chevron-right" /></span>
 				</li>
 				<li>
 					<span class="active">
 						<span class="breadcrumb-tag">
-							<translate translate-comment="The noun for release">Release</translate>
+							<AppTranslate translate-comment="The noun for release">
+								Release
+							</AppTranslate>
 						</span>
 						{{ release.version_number }}
 					</span>
@@ -176,7 +180,7 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 
 		<div class="row">
 			<div class="col-lg-9">
-				<form-game-release
+				<FormGameRelease
 					:model="release"
 					:game="game"
 					:package="package"

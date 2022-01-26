@@ -33,17 +33,17 @@ export default class AppCommunityCompetitionHeaderModal extends mixins(BaseModal
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-body">
-			<form-community-competition-header :model="competition" @submit="onSubmit" />
+			<FormCommunityCompetitionHeader :model="competition" @submit="onSubmit" />
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" scoped></style>

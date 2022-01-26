@@ -95,22 +95,22 @@ export default class AppFiresideAddModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 		<div class="modal-body">
 			<p class="lead">
-				<translate>
+				<AppTranslate>
 					Firesides are temporary pop-up rooms where you can chat and stream with your
 					friends, followers, and communities!
-				</translate>
+				</AppTranslate>
 			</p>
 
-			<app-loading v-if="isLoading" centered />
-			<form-fireside-add
+			<AppLoading v-if="isLoading" centered />
+			<FormFiresideAdd
 				v-else
 				:community="community"
 				:default-title="defaultTitle"
@@ -118,7 +118,7 @@ export default class AppFiresideAddModal extends mixins(BaseModal) {
 				@submit="onSubmit"
 			/>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" scoped></style>

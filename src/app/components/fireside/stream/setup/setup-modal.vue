@@ -25,46 +25,46 @@ export default class AppStreamSetupModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<template v-if="!c.canBrowserStream.value">
 			<div class="modal-body">
-				<app-illustration :src="illNoCommentsSmall">
+				<AppIllustration :src="illNoCommentsSmall">
 					<p>
-						<translate>
+						<AppTranslate>
 							Your browser either cannot stream, or will have poor performance.
-						</translate>
+						</AppTranslate>
 					</p>
 					<p>
-						<translate>
+						<AppTranslate>
 							Please use a different browser, such as Google Chrome or Microsoft Edge,
 							if you want to start a stream.
-						</translate>
+						</AppTranslate>
 					</p>
-				</app-illustration>
+				</AppIllustration>
 			</div>
 		</template>
 		<template v-else-if="c.isStreamingElsewhere.value">
 			<div class="modal-body">
-				<app-illustration :src="illNoCommentsSmall">
+				<AppIllustration :src="illNoCommentsSmall">
 					<p>
-						<translate>
+						<AppTranslate>
 							You're currently streaming on another device. Stop that stream before
 							starting a new one.
-						</translate>
+						</AppTranslate>
 					</p>
-				</app-illustration>
+				</AppIllustration>
 			</div>
 		</template>
 		<template v-else>
 			<div class="modal-body">
-				<app-stream-setup :c="c" @close="onClose()" />
+				<AppStreamSetup :c="c" @close="onClose()" />
 			</div>
 		</template>
-	</app-modal>
+	</AppModal>
 </template>

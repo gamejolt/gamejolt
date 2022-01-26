@@ -62,7 +62,7 @@ export default class AppChatUserList extends Vue {
 		</div>
 
 		<ul v-show="entries.length" class="shell-nav">
-			<app-chat-user-list-item
+			<AppChatUserListItem
 				v-for="user of filteredEntries"
 				:key="getKeyForEntry(user)"
 				:item="user"

@@ -95,16 +95,16 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 </script>
 
 <template>
-	<app-form :controller="form">
+	<AppForm :controller="form">
 		<!--
 			Show the current image if there is one.
 		-->
 		<div v-if="formModel.has_thumbnail" class="form-group">
 			<label class="control-label">
-				<translate>Current Trophy Image</translate>
+				<AppTranslate>Current Trophy Image</AppTranslate>
 			</label>
 
-			<app-img-responsive
+			<AppImgResponsive
 				:src="formModel.img_thumbnail"
 				:alt="$gettext('Current Trophy Image')"
 			/>
@@ -112,23 +112,23 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 			<br />
 
 			<div class="clearfix">
-				<app-button @click="clearImage">
-					<translate>Clear Image</translate>
-				</app-button>
+				<AppButton @click="clearImage">
+					<AppTranslate>Clear Image</AppTranslate>
+				</AppButton>
 			</div>
 		</div>
 
 		<!-- TODO(vue3) translate-comment="Refers to a difficulty level. How easy/hard it is to accomplish." -->
-		<app-form-group v-if="method === 'edit'" name="difficulty" :label="$gettext(`Difficulty`)">
-			<app-form-control-select>
+		<AppFormGroup v-if="method === 'edit'" name="difficulty" :label="$gettext(`Difficulty`)">
+			<AppFormControlSelect>
 				<option v-for="item of difficultyOptions" :key="item.label" :value="item.value">
 					{{ item.label }}
 				</option>
-			</app-form-control-select>
-			<app-form-control-errors />
-		</app-form-group>
+			</AppFormControlSelect>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="file"
 			:label="
 				!formModel.has_thumbnail
@@ -145,11 +145,11 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 
 			<p class="help-block">
 				<a class="link-help">
-					<translate>dash.games.trophies.form.image_help_link</translate>
+					<AppTranslate>dash.games.trophies.form.image_help_link</AppTranslate>
 				</a>
 			</p>
 
-			<app-form-control-upload
+			<AppFormControlUpload
 				:validators="[
 					validateFilesize(maxFilesize),
 					validateImageMaxDimensions({ width: maxWidth, height: maxHeight }),
@@ -157,43 +157,43 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 				accept=".png,.jpg,.jpeg,.webp"
 			/>
 
-			<app-form-control-errors
+			<AppFormControlErrors
 				:label="$gettext(`dash.games.trophies.form.image_error_label`)"
 			/>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-group name="title" :label="$gettext(`dash.games.trophies.form.title_label`)">
-			<app-form-control type="text" :validators="[validateMaxLength(150)]" />
-			<app-form-control-errors />
-		</app-form-group>
+		<AppFormGroup name="title" :label="$gettext(`dash.games.trophies.form.title_label`)">
+			<AppFormControl type="text" :validators="[validateMaxLength(150)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="description"
 			:label="$gettext(`dash.games.trophies.form.description_label`)"
 		>
-			<app-form-control-textarea rows="3" :validators="[validateMaxLength(1500)]" />
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlTextarea rows="3" :validators="[validateMaxLength(1500)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group name="secret" :label="$gettext(`dash.games.trophies.form.secret_label`)">
+		<AppFormGroup name="secret" :label="$gettext(`dash.games.trophies.form.secret_label`)">
 			<p class="help-block">
-				<translate>dash.games.trophies.form.secret_help</translate>
+				<AppTranslate>dash.games.trophies.form.secret_help</AppTranslate>
 			</p>
-			<app-form-control-toggle />
-		</app-form-group>
+			<AppFormControlToggle />
+		</AppFormGroup>
 
-		<app-form-group name="visible" :label="$gettext(`Visible`)">
+		<AppFormGroup name="visible" :label="$gettext(`Visible`)">
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Hidden trophies are invisible to everyone but the game's developer, for testing
 					and other nefarious reasons.
-				</translate>
+				</AppTranslate>
 			</p>
-			<app-form-control-toggle />
-		</app-form-group>
+			<AppFormControlToggle />
+		</AppFormGroup>
 
-		<app-form-button>
-			<translate>dash.games.trophies.form.save_button</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton>
+			<AppTranslate>dash.games.trophies.form.save_button</AppTranslate>
+		</AppFormButton>
+	</AppFormGroup>
 </template>

@@ -51,7 +51,7 @@ export default class RouteDashAccountEmailPreferences extends BaseRouteComponent
 <template>
 	<div v-if="isRouteBootstrapped" class="row">
 		<div class="col-md-9 col-lg-8">
-			<form-email-preferences :model="user" />
+			<FormEmailPreferences :model="user" />
 		</div>
 	</div>
 </template>

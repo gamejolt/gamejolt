@@ -58,24 +58,24 @@ export default class FormForumPost extends mixins(Wrapper) {
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="text_content" :label="$gettext('Post Content')" :hide-label="true">
-			<app-form-control-content
+	<AppForm :controller="form">
+		<AppFormGroup name="text_content" :label="$gettext('Post Content')" :hide-label="true">
+			<AppFormControlContent
 				content-context="forum-post"
 				:validators="[validateContentRequired(), validateContentNoActiveUploads()]"
 				:max-height="0"
 			/>
 
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-button>
-			<translate v-if="method === 'add'">Add Reply</translate>
-			<translate v-if="method === 'edit'">Save</translate>
-		</app-form-button>
+		<AppFormButton>
+			<AppTranslate v-if="method === 'add'">Add Reply</AppTranslate>
+			<AppTranslate v-if="method === 'edit'">Save</AppTranslate>
+		</AppFormButton>
 
-		<app-button v-if="method === 'edit' || replyTo" trans @click="onCancel">
-			<translate>Cancel</translate>
-		</app-button>
-	</app-form>
+		<AppButton v-if="method === 'edit' || replyTo" trans @click="onCancel">
+			<AppTranslate>Cancel</AppTranslate>
+		</AppButton>
+	</AppForm>
 </template>

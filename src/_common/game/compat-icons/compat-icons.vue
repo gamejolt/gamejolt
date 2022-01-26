@@ -41,7 +41,7 @@ export default class AppGameCompatIcons extends Vue {
 
 <template>
 	<span v-if="platforms.length" class="game-compat-icons">
-		<app-jolticon
+		<AppJolticon
 			v-for="platform of platforms"
 			:key="platform"
 			class="-icon"

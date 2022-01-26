@@ -233,8 +233,8 @@ export default class AppPostControlsMore extends Vue {
 </script>
 
 <template>
-	<app-popper popover-class="fill-darkest">
-		<app-button sparse circle trans icon="ellipsis-v" />
+	<AppPopper popover-class="fill-darkest">
+		<AppButton sparse circle trans icon="ellipsis-v" />
 
 		<template #popover>
 			<div class="list-group list-group-dark">
@@ -243,16 +243,16 @@ export default class AppPostControlsMore extends Vue {
 					class="list-group-item has-icon"
 					@click="copyShareUrl"
 				>
-					<app-jolticon icon="link" />
-					<translate>Copy link to post</translate>
+					<AppJolticon icon="link" />
+					<AppTranslate>Copy link to post</AppTranslate>
 				</a>
 
 				<template v-if="shouldShowPins">
 					<a class="list-group-item has-icon" @click="togglePin">
-						<app-jolticon icon="thumbtack" />
+						<AppJolticon icon="thumbtack" />
 
-						<translate v-if="post.is_pinned">Unpin</translate>
-						<translate v-else>Pin</translate>
+						<AppTranslate v-if="post.is_pinned">Unpin</AppTranslate>
+						<AppTranslate v-else>Pin</AppTranslate>
 					</a>
 				</template>
 
@@ -262,14 +262,14 @@ export default class AppPostControlsMore extends Vue {
 					class="list-group-item has-icon"
 					@click="report"
 				>
-					<app-jolticon icon="flag" />
-					<translate>Report post</translate>
+					<AppJolticon icon="flag" />
+					<AppTranslate>Report post</AppTranslate>
 				</a>
 
 				<!-- Remove -->
 				<a v-if="canEdit" class="list-group-item has-icon" @click.stop="remove()">
-					<app-jolticon icon="remove" notice />
-					<translate>Remove</translate>
+					<AppJolticon icon="remove" notice />
+					<AppTranslate>Remove</AppTranslate>
 				</a>
 
 				<!-- Moderate -->
@@ -279,25 +279,25 @@ export default class AppPostControlsMore extends Vue {
 					:href="siteModerateLink"
 					target="_blank"
 				>
-					<app-jolticon icon="cog" />
-					<translate>Moderate</translate>
+					<AppJolticon icon="cog" />
+					<AppTranslate>Moderate</AppTranslate>
 				</a>
 
 				<!-- When published to platforms, shows links to created resources. -->
 				<template v-if="canEdit && post.platforms_published_to.length > 0">
 					<hr />
 					<div class="-header list-group-item">
-						<translate>Published to:</translate>
+						<AppTranslate>Published to:</AppTranslate>
 					</div>
-					<app-link-external
+					<AppLinkExternal
 						v-for="platform of post.platforms_published_to"
 						:key="platform.url"
 						class="list-group-item has-icon"
 						:href="platform.url"
 					>
-						<app-jolticon :icon="getProviderIcon(platform.created_resource_provider)" />
+						<AppJolticon :icon="getProviderIcon(platform.created_resource_provider)" />
 						{{ platform.created_resource_account_name }}
-					</app-link-external>
+					</AppLinkExternal>
 				</template>
 
 				<!-- Community feature/unfeature, move to channel and eject -->
@@ -305,63 +305,63 @@ export default class AppPostControlsMore extends Vue {
 					<div v-for="i of post.manageableCommunities" :key="i.id">
 						<hr />
 						<h5 class="-header list-group-item has-icon">
-							<app-community-thumbnail-img :community="i.community" />
+							<AppCommunityThumbnailImg :community="i.community" />
 							{{ i.community.name }}
 						</h5>
-						<app-community-perms :community="i.community" required="community-features">
+						<AppCommunityPerms :community="i.community" required="community-features">
 							<a class="list-group-item has-icon" @click.stop="toggleFeatured(i)">
-								<app-jolticon icon="star" />
+								<AppJolticon icon="star" />
 								<template v-if="i.isFeatured">
-									<translate :translate-params="{ community: i.community.name }">
+									<AppTranslate :translate-params="{ community: i.community.name }">
 										Unfeature from %{ community }
-									</translate>
+									</AppTranslate>
 								</template>
 								<template v-else>
-									<translate :translate-params="{ community: i.community.name }">
+									<AppTranslate :translate-params="{ community: i.community.name }">
 										Feature in %{ community }
-									</translate>
+									</AppTranslate>
 								</template>
 							</a>
-						</app-community-perms>
+						</AppCommunityPerms>
 
-						<app-community-perms :community="i.community" required="community-posts">
+						<AppCommunityPerms :community="i.community" required="community-posts">
 							<a
 								class="list-group-item has-icon"
 								@click.stop="movePostFromCommunityChannel(i)"
 							>
-								<app-jolticon icon="arrow-forward" />
-								<translate>Move to a different channel</translate>
+								<AppJolticon icon="arrow-forward" />
+								<AppTranslate>Move to a different channel</AppTranslate>
 							</a>
 
 							<a
 								class="list-group-item has-icon"
 								@click.stop="rejectFromCommunity(i)"
 							>
-								<app-jolticon icon="eject" />
+								<AppJolticon icon="eject" />
 
-								<translate :translate-params="{ community: i.community.name }">
+								<AppTranslate :translate-params="{ community: i.community.name }">
 									Eject from %{ community }
-								</translate>
+								</AppTranslate>
 							</a>
-						</app-community-perms>
+						</AppCommunityPerms>
 
-						<app-community-perms
+						<AppCommunityPerms
 							v-if="shouldShowBlockCommunityUser"
 							:community="i.community"
 							required="community-blocks"
 						>
 							<a class="list-group-item has-icon" @click.stop="blockFromCommunity(i)">
-								<app-jolticon icon="friend-remove-2" />
-								<translate :translate-params="{ community: i.community.name }">
+								<AppJolticon icon="friend-remove-2" />
+								<AppTranslate :translate-params="{ community: i.community.name }">
 									Block author from %{ community }
-								</translate>
+								</AppTranslate>
 							</a>
-						</app-community-perms>
+						</AppCommunityPerms>
 					</div>
 				</template>
 			</div>
 		</template>
-	</app-popper>
+	</AppPopper>
 </template>
 
 <style lang="stylus" scoped>

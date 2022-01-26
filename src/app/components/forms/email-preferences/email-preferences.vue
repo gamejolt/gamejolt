@@ -106,9 +106,9 @@ export default class FormEmailPreferences extends mixins(Wrapper) implements For
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="email_address">
-			<app-form-control
+	<AppForm :controller="form">
+		<AppFormGroup name="email_address">
+			<AppFormControl
 				type="email"
 				:validators="[
 					validateMaxLength(200),
@@ -119,106 +119,106 @@ export default class FormEmailPreferences extends mixins(Wrapper) implements For
 				]"
 				validate-on-blur
 			/>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
 		<hr />
 
 		<div class="clearfix">
 			<template v-if="!emailsDisabled">
-				<app-button class="pull-right" trans @click="toggleEmails(false)">
-					<translate>Turn off emails</translate>
-				</app-button>
+				<AppButton class="pull-right" trans @click="toggleEmails(false)">
+					<AppTranslate>Turn off emails</AppTranslate>
+				</AppButton>
 			</template>
 			<template v-else>
 				<div class="pull-left">
 					<p>
-						<app-jolticon icon="notice" notice />
-						<translate>Emails are currently turned off.</translate>
+						<AppJolticon icon="notice" notice />
+						<AppTranslate>Emails are currently turned off.</AppTranslate>
 					</p>
 				</div>
-				<app-button class="pull-right" primary solid @click="toggleEmails(true)">
-					<translate>Turn on emails</translate>
-				</app-button>
+				<AppButton class="pull-right" primary solid @click="toggleEmails(true)">
+					<AppTranslate>Turn on emails</AppTranslate>
+				</AppButton>
 			</template>
 		</div>
 
 		<br />
 
-		<app-loading-fade :is-loading="isTogglingEmails">
-			<fieldset :disabled="emailsDisabled">
+		<AppLoadingFade :is-loading="isTogglingEmails">
+			<fieldset :disabled="emailsDisabled ? 'true' : undefined">
 				<legend>
-					<translate>Activity</translate>
+					<AppTranslate>Activity</AppTranslate>
 				</legend>
 
 				<p class="help-block">
-					<translate>
+					<AppTranslate>
 						Let us know what kinds of activity you'd like to get emailed for.
-					</translate>
+					</AppTranslate>
 				</p>
 
-				<app-form-group name="notifications" hide-label optional>
+				<AppFormGroup name="notifications" hide-label optional>
 					<div
 						v-for="notificationType of notificationTypes"
 						:key="notificationType.key"
 						class="checkbox"
 					>
 						<label>
-							<app-form-control-checkbox :value="notificationType.key" />
+							<AppFormControlCheckbox :value="notificationType.key" />
 
 							{{ notificationType.label }}
 						</label>
 					</div>
-				</app-form-group>
+				</AppFormGroup>
 			</fieldset>
 
-			<fieldset :disabled="emailsDisabled">
+			<fieldset :disabled="emailsDisabled ? 'true' : undefined">
 				<legend>
-					<translate>Updates from Game Jolt</translate>
+					<AppTranslate>Updates from Game Jolt</AppTranslate>
 				</legend>
 
 				<div class="form-horizontal">
-					<app-form-group
+					<AppFormGroup
 						name="notify_gj_news"
 						:label="$gettext(`News and product changes`)"
 						label-class="col-sm-4"
 						disabled
 					>
 						<div class="col-sm-8">
-							<app-form-control-toggle :disabled="emailsDisabled" />
+							<AppFormControlToggle :disabled="emailsDisabled" />
 							<p class="help-block">
-								<translate>
+								<AppTranslate>
 									Get emails about new features and changes to Game Jolt.
-								</translate>
+								</AppTranslate>
 							</p>
 						</div>
-					</app-form-group>
+					</AppFormGroup>
 
-					<app-form-group
+					<AppFormGroup
 						name="notify_gj_recommendations"
 						:label="$gettext(`Suggestions and recommendations`)"
 						label-class="col-sm-4"
 					>
 						<div class="col-sm-8">
-							<app-form-control-toggle :disabled="emailsDisabled" />
+							<AppFormControlToggle :disabled="emailsDisabled" />
 							<p class="help-block">
-								<translate>
+								<AppTranslate>
 									Get email recommendations about content on Game Jolt that we
 									think you might like.
-								</translate>
+								</AppTranslate>
 							</p>
 						</div>
-					</app-form-group>
+					</AppFormGroup>
 				</div>
 			</fieldset>
-		</app-loading-fade>
+		</AppLoadingFade>
 
 		<div class="row">
 			<div class="col-sm-8 col-sm-offset-4">
-				<app-form-button>
-					<translate>Save Preferences</translate>
-				</app-form-button>
+				<AppFormButton>
+					<AppTranslate>Save Preferences</AppTranslate>
+				</AppFormButton>
 			</div>
 		</div>
-	</app-form>
+	</AppForm>
 </template>

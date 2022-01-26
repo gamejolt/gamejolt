@@ -34,17 +34,18 @@ export default class AppGameCollectionList extends Vue {
 		>
 			<div class="row">
 				<div class="col-xs-3">
-					<app-game-collection-thumbnail :collection="collection" :hide-tag="true" />
+					<AppGameCollectionThumbnail :collection="collection" :hide-tag="true" />
 				</div>
 				<div class="col-xs-9">
 					<div class="game-collection-title h5">
 						{{ collection.name }}
 
 						<small v-if="collection.from_subscription">
-							<translate translate-comment="As in made by: / the author is:">
+							{{ ' ' }}
+							<AppTranslate translate-comment="As in made by: / the author is:">
 								by
-							</translate>
-							@{{ collection.owner.username }}
+							</AppTranslate>
+							{{ ' @' + collection.owner.username }}
 						</small>
 					</div>
 				</div>

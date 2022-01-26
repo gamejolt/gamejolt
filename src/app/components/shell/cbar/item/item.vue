@@ -69,7 +69,7 @@ export default class AppShellCbarItem extends Vue {
 			class="-context-indicator"
 			:class="{ '-showing': isShowingPane }"
 		>
-			<app-jolticon icon="menu" />
+			<AppJolticon icon="menu" />
 		</div>
 		<div v-if="notificationCount > 0" class="-notification-count">
 			{{ notificationCountText }}

@@ -80,36 +80,36 @@ export default class RouteCommunitiesViewFiresides extends BaseRouteComponent {
 </script>
 
 <template>
-	<app-communities-view-page-container full>
+	<AppCommunitiesViewPageContainer full>
 		<h1 class="section-header" :class="{ 'h2 -text-overflow': Screen.isMobile }">
-			<translate>Active Firesides</translate>
+			<AppTranslate>Active Firesides</AppTranslate>
 			<small v-if="Screen.isDesktop">in {{ community.name }}</small>
 		</h1>
 		<br />
 
-		<app-illustration v-if="!community.allow_firesides" :src="illNoComments">
+		<AppIllustration v-if="!community.allow_firesides" :src="illNoComments">
 			<p>
-				<translate>This community doesn't allow firesides.</translate>
+				<AppTranslate>This community doesn't allow firesides.</AppTranslate>
 			</p>
-		</app-illustration>
-		<app-illustration
+		</AppIllustration>
+		<AppIllustration
 			v-else-if="isRouteBootstrapped && firesides.length === 0"
 			:src="illNoComments"
 		>
 			<p>
-				<translate>There are no active firesides in this community yet.</translate>
+				<AppTranslate>There are no active firesides in this community yet.</AppTranslate>
 			</p>
-		</app-illustration>
+		</AppIllustration>
 		<div v-else :style="gridStyling">
 			<template v-if="!firesides.length">
-				<app-fireside-avatar-base
+				<AppFiresideAvatarBase
 					v-for="i of placeholderCount"
 					:key="`placeholder-${i}`"
 					:is-placeholder="true"
 				/>
 			</template>
 			<template v-else>
-				<app-fireside-avatar
+				<AppFiresideAvatar
 					v-for="fireside of firesides"
 					:key="fireside.id"
 					:fireside="fireside"
@@ -117,5 +117,5 @@ export default class RouteCommunitiesViewFiresides extends BaseRouteComponent {
 				/>
 			</template>
 		</div>
-	</app-communities-view-page-container>
+	</AppCommunitiesViewPageContainer>
 </template>

@@ -152,7 +152,7 @@ export default class AppGameOgrs extends Vue {
 				'hide-tag': hideTag,
 			}"
 		>
-			<app-game-ogrs-tag v-if="!hideTag" full :game="game" />
+			<AppGameOgrsTag v-if="!hideTag" full :game="game" />
 
 			<div v-if="!hideDescriptors && descriptors.length" class="game-ogrs-descriptors">
 				<div

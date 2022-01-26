@@ -389,8 +389,8 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 </script>
 
 <template>
-	<app-form :controller="form" class="form-dashboard-managed-account">
-		<app-loading v-if="!isDataLoaded" />
+	<AppForm :controller="form" class="form-dashboard-managed-account">
+		<AppLoading v-if="!isDataLoaded" />
 
 		<div v-if="isDataLoaded">
 			<!--
@@ -398,48 +398,48 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 				We need this information first.
 			-->
 			<div v-if="!account.is_stripe_initialized">
-				<app-form-group name="type" :label="$gettext('Account Type')">
+				<AppFormGroup name="type" :label="$gettext('Account Type')">
 					<div class="radio">
 						<label>
-							<app-form-control-radio value="individual" />
-							<translate>Individual</translate>
+							<AppFormControlRadio value="individual" />
+							<AppTranslate>Individual</AppTranslate>
 							<br />
 							<span class="help-inline">
-								<translate>
+								<AppTranslate>
 									Are you a sole proprietor, partnership or otherwise an
 									individual human being?
-								</translate>
+								</AppTranslate>
 							</span>
 						</label>
 					</div>
 					<div class="radio">
 						<label>
-							<app-form-control-radio value="company" />
-							<translate>Company</translate>
+							<AppFormControlRadio value="company" />
+							<AppTranslate>Company</AppTranslate>
 							<br />
 							<span class="help-inline">
-								<translate>
+								<AppTranslate>
 									Are you a company / corporation / business / charity / trust
 									fund / etc?
-								</translate>
+								</AppTranslate>
 							</span>
 						</label>
 					</div>
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-				<app-form-group name="country_code" :label="$gettext('Country Code')">
+				<AppFormGroup name="country_code" :label="$gettext('Country Code')">
 					<p class="help-block">
-						<translate>
+						<AppTranslate>
 							Select the country of your residence or the country that your business
 							is legally established in. We're working hard on expanding our reach,
 							and hope to get more countries supported soon.
-						</translate>
+						</AppTranslate>
 					</p>
 
-					<app-form-control-select>
+					<AppFormControlSelect>
 						<option value="">
-							<translate>Please select your country...</translate>
+							<AppTranslate>Please select your country...</AppTranslate>
 						</option>
 						<option
 							v-for="(_country, code) of stripe.countries"
@@ -448,76 +448,76 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 						>
 							{{ Geo.getCountryName(code) }}
 						</option>
-					</app-form-control-select>
-					<app-form-control-errors label="country" />
+					</AppFormControlSelect>
+					<AppFormControlErrors label="country" />
 
-					<app-expand :when="!formModel.country_code">
+					<AppExpand :when="!formModel.country_code">
 						<br />
 						<div class="alert sans-margin-bottom">
 							<p>
-								<translate>
+								<AppTranslate>
 									If you do not see your country above, all is not lost! We can
 									still manually approve your account.
-								</translate>
+								</AppTranslate>
 							</p>
 							<p>
-								<app-link-external href="https://goo.gl/forms/igg8T9dQnZLT2c1l2">
-									<translate>Request manual approval here.</translate>
-								</app-link-external>
+								<AppLinkExternal href="https://goo.gl/forms/igg8T9dQnZLT2c1l2">
+									<AppTranslate>Request manual approval here.</AppTranslate>
+								</AppLinkExternal>
 							</p>
 						</div>
-					</app-expand>
-				</app-form-group>
+					</AppExpand>
+				</AppFormGroup>
 			</div>
 
 			<div v-if="account.is_stripe_initialized">
 				<div class="alert">
 					<p>
-						<translate>
+						<AppTranslate>
 							This information is needed for tax purposes as well as account
 							verification. We use Stripe to store and verify this data.
-						</translate>
+						</AppTranslate>
 						{{ ' ' }}
-						<app-link-help page="why-tax-forms" class="link-help">
-							<translate>Learn more</translate>
-						</app-link-help>
+						<AppLinkHelp page="why-tax-forms" class="link-help">
+							<AppTranslate>Learn more</AppTranslate>
+						</AppLinkHelp>
 					</p>
 				</div>
 
 				<div v-if="isVerificationPending" class="alert alert-notice">
 					<p>
 						<strong>
-							<translate>
+							<AppTranslate>
 								Stripe is in the process of verifying your details.
-							</translate>
+							</AppTranslate>
 						</strong>
 						{{ ' ' }}
-						<translate>
+						<AppTranslate>
 							This can take anywhere from a few minutes to a few days. We'll contact
 							you when the verification process is complete and if Stripe requires
 							additional supporting documents (such as a photo ID) in order to
 							identify you. Hang tight!
-						</translate>
+						</AppTranslate>
 					</p>
 				</div>
 
 				<div v-if="requiresVerificationDocument" class="alert alert-notice">
 					<p>
 						<strong>
-							<translate>
+							<AppTranslate>
 								Stripe needs additional identification documents in order to verify
 								your account.
-							</translate>
+							</AppTranslate>
 						</strong>
 						{{ ' ' }}
-						<translate>Please enter them below.</translate>
+						<AppTranslate>Please enter them below.</AppTranslate>
 					</p>
 				</div>
 
 				<div class="form-horizontal">
 					<div class="form-group">
 						<label class="control-label col-sm-4">
-							<translate>Country</translate>
+							<AppTranslate>Country</AppTranslate>
 						</label>
 						<div class="form-static col-sm-8">
 							{{ Geo.getCountryName(account.country_code) }}
@@ -526,14 +526,14 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 
 					<div class="form-group">
 						<label class="control-label col-sm-4">
-							<translate>Business Type</translate>
+							<AppTranslate>Business Type</AppTranslate>
 						</label>
 						<div class="form-static col-sm-8">
 							<template v-if="account.type === 'individual'">
-								<translate>Individual</translate>
+								<AppTranslate>Individual</AppTranslate>
 							</template>
 							<template v-else-if="account.type === 'company'">
-								<translate>Company</translate>
+								<AppTranslate>Company</AppTranslate>
 							</template>
 						</div>
 					</div>
@@ -545,13 +545,13 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 					Individual Account Setup
 				-->
 				<div v-if="account.type === 'individual'">
-					<h4><translate>Your Details</translate></h4>
+					<h4><AppTranslate>Your Details</AppTranslate></h4>
 
 					<div v-if="account.status === 'unverified'" class="alert">
-						<p><translate>Please fill in your personal information.</translate></p>
+						<p><AppTranslate>Please fill in your personal information.</AppTranslate></p>
 					</div>
 
-					<app-financials-managed-account-person
+					<AppFinancialsManagedAccountPerson
 						ref="individual"
 						name-prefix="individual"
 						:country-code="account.country_code"
@@ -562,22 +562,22 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 					Company Account Setup
 				-->
 				<div v-else-if="account.type === 'company'">
-					<h4><translate>Company Details</translate></h4>
+					<h4><AppTranslate>Company Details</AppTranslate></h4>
 
-					<app-financials-managed-account-company-details />
+					<AppFinancialsManagedAccountCompanyDetails />
 
-					<h4><translate>Representative Details</translate></h4>
+					<h4><AppTranslate>Representative Details</AppTranslate></h4>
 
 					<div v-if="account.status === 'unverified'" class="alert">
 						<p>
-							<translate>
+							<AppTranslate>
 								We are required to collection information for a representative of
 								your company.
-							</translate>
+							</AppTranslate>
 						</p>
 					</div>
 
-					<app-financials-managed-account-person
+					<AppFinancialsManagedAccountPerson
 						v-if="representative"
 						ref="representative"
 						:name-prefix="representative.id"
@@ -588,34 +588,34 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 			<!--
 				There may be a specific error message, or a generic one.
 			-->
-			<app-expand :when="!!genericError">
+			<AppExpand :when="!!genericError">
 				<div class="alert alert-notice">
 					<p v-if="genericError !== true">{{ genericError }}</p>
 					<p v-else-if="!account.is_stripe_initialized">
-						<translate>
+						<AppTranslate>
 							Something went wrong. Please check that you've entered everything
 							correctly.
-						</translate>
+						</AppTranslate>
 					</p>
 					<p v-else>
-						<translate>
+						<AppTranslate>
 							Something went wrong. Please check that you've entered everything
 							correctly. This is usually because of an invalid zip/postal code,
 							invalid SSN/EIN or phone number.
-						</translate>
+						</AppTranslate>
 					</p>
 				</div>
-			</app-expand>
+			</AppExpand>
 
-			<app-loading v-if="form.isProcessing" :label="$gettext(`Processing...`)" />
+			<AppLoading v-if="form.isProcessing" :label="$gettext(`Processing...`)" />
 
-			<app-form-button v-if="!isComplete && !isVerificationPending">
-				<translate>Save and Continue</translate>
-			</app-form-button>
+			<AppFormButton v-if="!isComplete && !isVerificationPending">
+				<AppTranslate>Save and Continue</AppTranslate>
+			</AppFormButton>
 
 			<br />
 		</div>
-	</app-form>
+	</AppForm>
 </template>
 
 <style lang="stylus" scoped>

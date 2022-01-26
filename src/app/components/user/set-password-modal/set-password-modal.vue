@@ -20,30 +20,30 @@ export default class AppUserSetPasswordModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-header">
-			<h2 class="modal-title"><translate>Set Password</translate></h2>
+			<h2 class="modal-title"><AppTranslate>Set Password</AppTranslate></h2>
 		</div>
 
 		<div class="modal-body">
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					You don't have a password set on your account since you had signed up through a linked
 					account.
-				</translate>
+				</AppTranslate>
 				<br />
-				<translate>
+				<AppTranslate>
 					To continue being able to log in after you've unlinked, please set a password.
-				</translate>
+				</AppTranslate>
 			</p>
 
-			<form-set-password @submit="onPasswordSet"></form-set-password>
+			<FormSetPassword @submit="onPasswordSet"></form-set-password>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

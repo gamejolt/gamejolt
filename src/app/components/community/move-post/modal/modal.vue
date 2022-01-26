@@ -100,49 +100,49 @@ export default class AppCommunityMovePostModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>Which channel to move to?</translate>
+				<AppTranslate>Which channel to move to?</AppTranslate>
 			</h2>
 		</div>
 
 		<div class="modal-body">
 			<template v-if="canMove">
-				<app-community-channel-select
+				<AppCommunityChannelSelect
 					v-model="selectedChannel"
 					class="-channel-select"
 					:channels="selectableChannels"
 				/>
 
-				<form-community-move-post
+				<FormCommunityMovePost
 					v-if="shouldShowForm"
 					:community="firesidePostCommunity.community"
 					@change="onChangeForm"
 				/>
 
-				<app-button
+				<AppButton
 					primary
 					icon="arrow-forward"
 					:disabled="!hasSelectedChannel"
 					@click="onMove"
 				>
-					<translate>Move</translate>
-				</app-button>
+					<AppTranslate>Move</AppTranslate>
+				</AppButton>
 			</template>
 			<span v-else>
-				<translate>
+				<AppTranslate>
 					There are no channels in this community that the post can be moved to.
-				</translate>
+				</AppTranslate>
 			</span>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" scoped>

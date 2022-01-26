@@ -91,19 +91,19 @@ export default class RouteSearchResults extends BaseRouteComponent {
 			<section class="section section-thin">
 				<div class="container">
 					<h3 class="-heading">
-						<app-button
+						<AppButton
 							class="pull-right"
 							trans
 							:to="{ name: 'search.communities', query: { q: query } }"
 						>
-							<translate>View All</translate>
-						</app-button>
+							<AppTranslate>View All</AppTranslate>
+						</AppButton>
 
 						<router-link
 							class="link-unstyled"
 							:to="{ name: 'search.communities', query: { q: query } }"
 						>
-							<translate>Communities</translate>
+							<AppTranslate>Communities</AppTranslate>
 						</router-link>
 						<small>({{ formatNumber(searchPayload.communitiesCount) }})</small>
 					</h3>
@@ -115,7 +115,7 @@ export default class RouteSearchResults extends BaseRouteComponent {
 								:key="community.id"
 								class="scrollable-grid-item col-xs-5 col-sm-2"
 							>
-								<app-community-thumbnail :community="community" />
+								<AppCommunityThumbnail :community="community" />
 							</div>
 						</div>
 					</div>
@@ -123,34 +123,34 @@ export default class RouteSearchResults extends BaseRouteComponent {
 			</section>
 		</template>
 
-		<app-page-container no-left order="right,main">
+		<AppPageContainer no-left order="right,main">
 			<!-- Games -->
 			<template v-if="!Screen.isMobile && searchPayload.games.length" #right>
 				<h3 class="-heading">
-					<app-button
+					<AppButton
 						class="pull-right"
 						trans
 						:to="{ name: 'search.games', query: { q: query } }"
 					>
-						<translate>View All</translate>
-					</app-button>
+						<AppTranslate>View All</AppTranslate>
+					</AppButton>
 
 					<router-link
 						class="link-unstyled"
 						:to="{ name: 'search.games', query: { q: query } }"
 					>
-						<translate>search.results.games_heading</translate>
+						<AppTranslate>search.results.games_heading</AppTranslate>
 					</router-link>
 					<small>({{ formatNumber(searchPayload.gamesCount) }})</small>
 				</h3>
 
-				<app-game-grid
+				<AppGameGrid
 					v-if="Screen.isMobile"
 					:games="searchPayload.games"
 					force-scrollable
 					event-label="search-overview-games"
 				/>
-				<app-game-list
+				<AppGameList
 					v-else
 					:games="searchPayload.games"
 					event-label="search-overview-games"
@@ -161,7 +161,7 @@ export default class RouteSearchResults extends BaseRouteComponent {
 						class="link-muted"
 						:to="{ name: 'search.games', query: { q: query } }"
 					>
-						<translate>View all</translate>
+						<AppTranslate>View all</AppTranslate>
 					</router-link>
 				</div>
 			</template>
@@ -169,19 +169,19 @@ export default class RouteSearchResults extends BaseRouteComponent {
 			<!-- Users -->
 			<template v-if="searchPayload.users.length">
 				<h3 class="-heading">
-					<app-button
+					<AppButton
 						class="pull-right"
 						trans
 						:to="{ name: 'search.users', query: { q: query } }"
 					>
-						<translate>View All</translate>
-					</app-button>
+						<AppTranslate>View All</AppTranslate>
+					</AppButton>
 
 					<router-link
 						class="link-unstyled"
 						:to="{ name: 'search.users', query: { q: query } }"
 					>
-						<translate>search.results.users_heading</translate>
+						<AppTranslate>search.results.users_heading</AppTranslate>
 					</router-link>
 					<small>({{ formatNumber(searchPayload.usersCount) }})</small>
 				</h3>
@@ -193,7 +193,7 @@ export default class RouteSearchResults extends BaseRouteComponent {
 							:key="user.id"
 							class="scrollable-grid-item col-xs-10 col-sm-6"
 						>
-							<app-user-card :user="user" elevate />
+							<AppUserCard :user="user" elevate />
 						</div>
 					</div>
 				</div>
@@ -202,12 +202,12 @@ export default class RouteSearchResults extends BaseRouteComponent {
 			<!-- Posts -->
 			<template v-if="feed && feed.hasItems">
 				<h3 class="-heading">
-					<translate>Posts</translate>
+					<AppTranslate>Posts</AppTranslate>
 				</h3>
 
-				<app-activity-feed :feed="feed" />
+				<AppActivityFeed :feed="feed" />
 			</template>
-		</app-page-container>
+		</AppPageContainer>
 	</section>
 </template>
 

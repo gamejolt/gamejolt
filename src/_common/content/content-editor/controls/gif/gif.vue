@@ -34,7 +34,7 @@ export default class AppContentEditorControlsGif extends Vue {
 
 <template>
 	<transition name="fade">
-		<app-jolticon
+		<AppJolticon
 			v-if="visible"
 			v-app-tooltip="$gettext('Insert Gif')"
 			class="gif-button inset-container-controls"

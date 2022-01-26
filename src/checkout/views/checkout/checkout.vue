@@ -94,7 +94,7 @@ export default class RouteCheckout extends BaseRouteComponent {
 <template>
 	<section v-if="isRouteBootstrapped" class="container">
 		<div class="game-cover">
-			<app-media-item-cover
+			<AppMediaItemCover
 				v-if="game.header_media_item"
 				:media-item="game.header_media_item"
 			/>
@@ -105,14 +105,14 @@ export default class RouteCheckout extends BaseRouteComponent {
 				{{ game.title }}
 			</h1>
 			<h4>
-				<translate>by</translate>
+				<AppTranslate>by</AppTranslate>
 				{{ ' ' }}
 				{{ game.developer.display_name }}
 			</h4>
 		</div>
 		<br />
 
-		<form-payment :cards="cards" :order="order" @submit="onSubmit" />
+		<FormPayment :cards="cards" :order="order" @submit="onSubmit" />
 	</section>
 </template>
 

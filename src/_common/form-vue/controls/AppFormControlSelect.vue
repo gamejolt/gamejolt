@@ -44,6 +44,7 @@ since nothing ever needs to hook into it so far.
 		:name="name"
 		class="form-control"
 		:value="controlVal"
+		:disabled="disabled ? 'true' : undefined"
 		@click.stop
 		@change="onChange"
 	>

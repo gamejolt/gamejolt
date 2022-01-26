@@ -58,20 +58,20 @@ export default class AppCommunityCompetitionEntryGrid extends Vue {
 <template>
 	<div>
 		<p v-if="pageCount > 0 && currentPage > 0" class="text-muted small">
-			<translate
+			<AppTranslate
 				:translate-params="{
 					count: formatNumber(pageCount),
 					page: formatNumber(currentPage),
 				}"
 			>
 				Page %{ page } of %{ count }
-			</translate>
+			</AppTranslate>
 		</p>
 
 		<div class="-grid-items">
 			<template v-if="entries.length > 0">
 				<div v-for="entry of entries" :key="entry.id" class="-grid-item">
-					<app-community-competition-entry-thumbnail
+					<AppCommunityCompetitionEntryThumbnail
 						:entry="entry"
 						:show-rank="shouldShowThumbnailRanks"
 						:voting-category="category"

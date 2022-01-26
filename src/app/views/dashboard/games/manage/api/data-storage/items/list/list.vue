@@ -70,9 +70,9 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 <template>
 	<div>
 		<h2 class="section-header">
-			<translate translate-comment="Refers to game API data store">
+			<AppTranslate translate-comment="Refers to game API data store">
 				Data Storage Items
-			</translate>
+			</AppTranslate>
 		</h2>
 
 		<div class="page-help">
@@ -82,15 +82,15 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 				All stored data items will show up here.
 			</p>
 			<p>
-				<translate>
+				<AppTranslate>
 					Currently, you can only view (and remove) globally stored data items. Stored
 					user data items are not viewable at this time.
-				</translate>
+				</AppTranslate>
 			</p>
 			<p>
-				<app-link-help page="dev-data-storage" class="link-help">
-					<translate>dash.games.data_store.items.page_help_link</translate>
-				</app-link-help>
+				<AppLinkHelp page="dev-data-storage" class="link-help">
+					<AppTranslate>dash.games.data_store.items.page_help_link</AppTranslate>
+				</AppLinkHelp>
 			</p>
 		</div>
 
@@ -103,25 +103,25 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 				<thead>
 					<tr>
 						<th>
-							<translate
+							<AppTranslate
 								translate-comment="Refers to the key name for a game API data store item"
 							>
 								Key
-							</translate>
+							</AppTranslate>
 						</th>
 						<th>
-							<translate
+							<AppTranslate
 								translate-comment="Used when previewing a game API data store item value"
 							>
 								Data Preview
-							</translate>
+							</AppTranslate>
 						</th>
 						<th>
-							<translate
+							<AppTranslate
 								translate-comment="Refers to the date/time when a game API data store item was created"
 							>
 								Stored On
-							</translate>
+							</AppTranslate>
 						</th>
 						<th />
 					</tr>
@@ -148,9 +148,9 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 						</td>
 						<td class="text-right">
 							<div class="table-controls">
-								<app-popper popover-class="fill-darkest">
+								<AppPopper popover-class="fill-darkest">
 									<a class="link-muted">
-										<app-jolticon icon="cog" />
+										<AppJolticon icon="ellipsis-h" />
 									</a>
 
 									<template #popover>
@@ -159,16 +159,17 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 												class="list-group-item has-icon"
 												@click="removeItem(item)"
 											>
-												<app-jolticon icon="remove" notice />
-												<translate
+												<AppJolticon icon="remove" notice />
+												{{ ' ' }}
+												<AppTranslate
 													translate-comment="Used to remove a game API data store item"
 												>
 													Remove Item
-												</translate>
+												</AppTranslate>
 											</a>
 										</div>
 									</template>
-								</app-popper>
+								</AppPopper>
 							</div>
 						</td>
 					</tr>

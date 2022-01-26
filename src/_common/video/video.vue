@@ -268,7 +268,7 @@ export default class AppVideo extends Vue {
 	<div class="video">
 		<template v-if="!GJ_IS_SSR">
 			<div v-if="!isLoaded && showLoading" class="video-loader">
-				<app-loading hide-label no-color stationary />
+				<AppLoading hide-label no-color stationary />
 			</div>
 		</template>
 		<template v-else>

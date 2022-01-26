@@ -95,21 +95,21 @@ export default class AppFollowerList extends Vue {
 	<div class="follower-list">
 		<div v-if="!users.length" class="-list">
 			<div v-for="i of placeholderCount" :key="i">
-				<app-user-card-placeholder />
+				<AppUserCardPlaceholder />
 			</div>
 		</div>
 		<template v-else>
 			<div class="-list">
 				<div v-for="_user of users" :key="_user.id">
-					<app-user-card :user="_user" elevate />
+					<AppUserCard :user="_user" elevate />
 				</div>
 			</div>
 
-			<app-loading v-if="isLoading" centered />
+			<AppLoading v-if="isLoading" centered />
 			<div v-else-if="shouldShowLoadMore" class="page-cut">
-				<app-button v-app-track-event="`profile-followers:more`" trans @click="loadMore()">
-					<translate>Load More</translate>
-				</app-button>
+				<AppButton v-app-track-event="`profile-followers:more`" trans @click="loadMore()">
+					<AppTranslate>Load More</AppTranslate>
+				</AppButton>
 			</div>
 		</template>
 	</div>

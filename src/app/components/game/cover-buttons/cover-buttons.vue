@@ -157,9 +157,9 @@ export default class AppGameCoverButtons extends Vue {
 			If the primary is for sale and they don't own it yet, the only button we should show is the
 			buy button.
 		-->
-		<app-button v-if="game._can_buy_primary_sellable" primary @click="buy()">
-			<translate>Buy Game</translate>
-		</app-button>
+		<AppButton v-if="game._can_buy_primary_sellable" primary @click="buy()">
+			<AppTranslate>Buy Game</AppTranslate>
+		</AppButton>
 
 		<!--
 			If the game is not for sale, or if they own the game, then show the normal buttons.

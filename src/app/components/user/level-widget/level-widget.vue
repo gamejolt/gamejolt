@@ -42,7 +42,7 @@ export default class AppUserLevelWidget extends Vue {
 				<div class="stat-big-digit">{{ formatNumber(user.experience_next) }} EXP</div>
 			</div>
 		</div>
-		<app-progress-bar
+		<AppProgressBar
 			class="user-level-widget-progress"
 			thin
 			:percent="user.level_next_percentage"

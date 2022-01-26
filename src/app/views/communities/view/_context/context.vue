@@ -38,11 +38,11 @@ export default class AppCommunitiesViewContext extends Vue {
 <template>
 	<div v-if="routeStore.isLoaded" class="sidebar-context-channels">
 		<div class="-card">
-			<app-communities-view-card overflow />
+			<AppCommunitiesViewCard overflow />
 		</div>
 
-		<app-nav-channels v-if="!isEditing" />
-		<app-nav-edit v-else @change-section="onChangeSection" />
+		<AppNavChannels v-if="!isEditing" />
+		<AppNavEdit v-else @change-section="onChangeSection" />
 	</div>
 </template>
 

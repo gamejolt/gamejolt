@@ -72,24 +72,24 @@ export default class AppCommunitiesEditChannelListItem extends Vue {
 </script>
 
 <template>
-	<app-card-list-item :item="channel" force-expandable-padding>
+	<AppCardListItem :item="channel" force-expandable-padding>
 		<a
 			v-if="canRemoveChannel"
 			v-app-tooltip="$gettext(`Remove Channel`)"
 			class="card-remove"
 			@click.stop="onClickRemoveChannel(channel)"
 		>
-			<app-jolticon icon="remove" />
+			<AppJolticon icon="remove" />
 		</a>
 
 		<div class="card-title">
 			<div>
 				<span v-if="channel.type === 'competition'" class="tag">
-					<app-jolticon icon="jams" />
-					<translate>Game Jam</translate>
+					<AppJolticon icon="jams" />
+					<AppTranslate>Game Jam</AppTranslate>
 				</span>
 				<span v-if="channel.visibility === 'draft'" class="tag">
-					<translate>Draft</translate>
+					<AppTranslate>Draft</AppTranslate>
 				</span>
 			</div>
 			<div>
@@ -106,17 +106,17 @@ export default class AppCommunitiesEditChannelListItem extends Vue {
 		</div>
 
 		<div v-if="canEditChannel" class="-controls">
-			<app-button
+			<AppButton
 				primary
 				:to="{
 					name: 'communities.view.edit.channels.overview',
 					params: { channel: channel.title },
 				}"
 			>
-				<translate>Edit Channel</translate>
-			</app-button>
+				<AppTranslate>Edit Channel</AppTranslate>
+			</AppButton>
 		</div>
-	</app-card-list-item>
+	</AppCardListItem>
 </template>
 
 <style lang="stylus" scoped>

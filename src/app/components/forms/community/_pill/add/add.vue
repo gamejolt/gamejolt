@@ -24,19 +24,19 @@ export default class AppFormsCommunityPillAdd extends Vue {
 </script>
 
 <template>
-	<app-forms-community-pill-selector
+	<AppFormsCommunityPillSelector
 		:communities="communities"
 		:with-channel="withChannel"
 		@select="emitAdd"
 		@select-community="emitAddCommunity"
 	>
-		<app-pill class="-add">
+		<AppPill class="-add">
 			<template #img>
-				<app-jolticon icon="add" />
+				<AppJolticon icon="add" />
 			</template>
-			<translate>Add Community</translate>
-		</app-pill>
-	</app-forms-community-pill-selector>
+			<AppTranslate>Add Community</AppTranslate>
+		</AppPill>
+	</AppFormsCommunityPillSelector>
 </template>
 
 <style lang="stylus" scoped>

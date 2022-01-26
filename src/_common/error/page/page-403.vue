@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<h1><translate>Forbidden</translate></h1>
-		<p><translate>You do not have access to this page.</translate></p>
+		<h1><AppTranslate>Forbidden</AppTranslate></h1>
+		<p><AppTranslate>You do not have access to this page.</AppTranslate></p>
 	</div>
 </template>

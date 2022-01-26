@@ -23,7 +23,7 @@ export default class AppVideoPlayerFullscreen extends Vue {
 
 <template>
 	<div class="player-control-button" @click="toggleFullscreen">
-		<app-jolticon :icon="!player.isFullscreen ? 'fullscreen' : 'unfullscreen'" />
+		<AppJolticon :icon="!player.isFullscreen ? 'fullscreen' : 'unfullscreen'" />
 	</div>
 </template>
 

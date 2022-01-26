@@ -288,8 +288,8 @@ export default class FormGameRelease
 </script>
 
 <template>
-	<app-form class="game-release-form" :controller="form">
-		<app-form-group
+	<AppForm class="game-release-form" :controller="form">
+		<AppFormGroup
 			name="version_number"
 			:title="$gettext('dash.games.releases.form.version_number_label')"
 		>
@@ -301,12 +301,12 @@ export default class FormGameRelease
 					<code>MAJOR.MINOR.PATCH</code>
 					.
 				</p>
-				<app-link-help page="dev-packages" class="link-help">
-					<translate>dash.games.releases.form.version_number_help_link</translate>
-				</app-link-help>
+				<AppLinkHelp page="dev-packages" class="link-help">
+					<AppTranslate>dash.games.releases.form.version_number_help_link</AppTranslate>
+				</AppLinkHelp>
 			</div>
 
-			<app-form-control
+			<AppFormControl
 				:validators="[
 					validateSemver(),
 					validateMaxLength(50),
@@ -317,23 +317,23 @@ export default class FormGameRelease
 				]"
 				:validate-delay="500"
 			/>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
 		<fieldset>
-			<app-form-legend compact>
-				<translate>Builds</translate>
-			</app-form-legend>
+			<AppFormLegend compact>
+				<AppTranslate>Builds</AppTranslate>
+			</AppFormLegend>
 
 			<div v-if="!builds.length" class="alert alert-notice">
-				<translate>
+				<AppTranslate>
 					You don't have any builds in this release yet. You won't be able to publish
 					until you put some in.
-				</translate>
+				</AppTranslate>
 			</div>
 
-			<app-card-list :items="builds">
-				<form-game-build
+			<AppCardList :items="builds">
+				<FormGameBuild
 					v-for="build of builds"
 					:key="build.id"
 					:model="build"
@@ -347,27 +347,27 @@ export default class FormGameRelease
 					@remove-build="removeBuild"
 					@submit="onBuildEdited(build, $event)"
 				/>
-			</app-card-list>
+			</AppCardList>
 
 			<br />
 
 			<div v-if="areBuildsLockedByJam" class="alert alert-notice sans-margin">
-				<app-jolticon icon="notice" />
+				<AppJolticon icon="notice" />
 				<strong>
-					<translate>
+					<AppTranslate>
 						Your game is part of a jam that locks builds during voting.
-					</translate>
+					</AppTranslate>
 				</strong>
-				<translate>
+				<AppTranslate>
 					You will not be able to add new builds until the voting period ends.
-				</translate>
+				</AppTranslate>
 			</div>
 			<div v-else class="row">
 				<div class="col-sm-6">
 					<h5 class="sans-margin-top">
-						<strong><translate>Upload Downloadable Build</translate></strong>
+						<strong><AppTranslate>Upload Downloadable Build</AppTranslate></strong>
 					</h5>
-					<form-game-new-build
+					<FormGameNewBuild
 						type="downloadable"
 						:game="game"
 						:package="package"
@@ -378,9 +378,9 @@ export default class FormGameRelease
 				<div class="col-sm-6">
 					<br class="visible-xs" />
 					<h5 class="sans-margin-top">
-						<strong><translate>Upload Browser Build</translate></strong>
+						<strong><AppTranslate>Upload Browser Build</AppTranslate></strong>
 					</h5>
-					<form-game-new-build
+					<FormGameNewBuild
 						v-if="!areWebBuildsLockedBySellable"
 						type="browser"
 						:game="game"
@@ -390,47 +390,47 @@ export default class FormGameRelease
 						@submit="onBuildAdded"
 					/>
 					<div v-else class="alert">
-						<translate>
+						<AppTranslate>
 							Browser builds can not currently be uploaded to games that are for sale.
-						</translate>
+						</AppTranslate>
 					</div>
 				</div>
 			</div>
 		</fieldset>
 
 		<fieldset v-if="model.status !== GameRelease.STATUS_PUBLISHED">
-			<app-form-legend compact>
-				<translate>Schedule publishing of release</translate>
-			</app-form-legend>
+			<AppFormLegend compact>
+				<AppTranslate>Schedule publishing of release</AppTranslate>
+			</AppFormLegend>
 
 			<template v-if="!isScheduling">
 				<p class="help-block">
-					<translate>
+					<AppTranslate>
 						You can set a future date/time that this release will publish.
-					</translate>
+					</AppTranslate>
 				</p>
 
 				<p>
-					<app-button @click="addSchedule()">
-						<translate>Add Schedule</translate>
-					</app-button>
+					<AppButton @click="addSchedule()">
+						<AppTranslate>Add Schedule</AppTranslate>
+					</AppButton>
 				</p>
 			</template>
 			<template v-else-if="isScheduling && timezones">
-				<app-form-group name="scheduled_for_timezone" :label="$gettext(`Timezone`)">
+				<AppFormGroup name="scheduled_for_timezone" :label="$gettext(`Timezone`)">
 					<p class="help-block">
-						<translate>All time selection below will use this timezone.</translate>
+						<AppTranslate>All time selection below will use this timezone.</AppTranslate>
 					</p>
 
 					<p class="help-block">
 						<strong>
-							<translate>
+							<AppTranslate>
 								Should auto-detect, but if it doesn't, choose your closest city.
-							</translate>
+							</AppTranslate>
 						</strong>
 					</p>
 
-					<app-form-control-select>
+					<AppFormControlSelect>
 						<optgroup
 							v-for="(timezones, region) of timezones"
 							:key="region"
@@ -444,23 +444,23 @@ export default class FormGameRelease
 								{{ timezone.label }}
 							</option>
 						</optgroup>
-					</app-form-control-select>
+					</AppFormControlSelect>
 
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-				<app-form-group name="scheduled_for" :label="$gettext(`Date and time`)">
-					<app-form-control-date
+				<AppFormGroup name="scheduled_for" :label="$gettext(`Date and time`)">
+					<AppFormControlDate
 						:timezone-offset="scheduledTimezoneOffset"
 						:min-date="now"
 					/>
-					<app-form-control-errors :label="$gettext(`scheduled for`)" />
-				</app-form-group>
+					<AppFormControlErrors :label="$gettext(`scheduled for`)" />
+				</AppFormGroup>
 
 				<p class="text-right">
-					<app-button trans @click="removeSchedule()">
-						<translate>Remove Scheduling</translate>
-					</app-button>
+					<AppButton trans @click="removeSchedule()">
+						<AppTranslate>Remove Scheduling</AppTranslate>
+					</AppButton>
 				</p>
 			</template>
 		</fieldset>
@@ -472,53 +472,53 @@ export default class FormGameRelease
 			We don't use app-form-button because we needed to do some async operations before submitting.
 		-->
 		<template v-if="model.status !== GameRelease.STATUS_PUBLISHED">
-			<app-button
+			<AppButton
 				v-if="isScheduling"
 				primary
 				solid
 				:disabled="!valid || !builds.length"
 				@click="saveDraft()"
 			>
-				<translate>Schedule release</translate>
-			</app-button>
-			<app-button
+				<AppTranslate>Schedule release</AppTranslate>
+			</AppButton>
+			<AppButton
 				v-else
 				primary
 				solid
 				:disabled="!valid || !builds.length"
 				@click="savePublished()"
 			>
-				<translate>Publish Release</translate>
-			</app-button>
+				<AppTranslate>Publish Release</AppTranslate>
+			</AppButton>
 
-			<app-button
+			<AppButton
 				v-if="!isScheduling"
 				:disabled="!valid || !builds.length"
 				@click="saveDraft()"
 			>
-				<translate>Save Draft</translate>
-			</app-button>
+				<AppTranslate>Save Draft</AppTranslate>
+			</AppButton>
 		</template>
 		<template v-else>
-			<app-button primary solid :disabled="!valid || !builds.length" @click="save()">
-				<translate>Save Release</translate>
-			</app-button>
+			<AppButton primary solid :disabled="!valid || !builds.length" @click="save()">
+				<AppTranslate>Save Release</AppTranslate>
+			</AppButton>
 		</template>
 
 		<div :class="{ 'pull-right': !Screen.isXs }">
 			<br class="visible-xs" />
 
-			<app-button
+			<AppButton
 				v-if="model.status === GameRelease.STATUS_PUBLISHED"
 				trans
 				@click="unpublish()"
 			>
-				<translate>Unpublish Release</translate>
-			</app-button>
+				<AppTranslate>Unpublish Release</AppTranslate>
+			</AppButton>
 
-			<app-button trans @click="remove()">
-				<translate>Remove Release</translate>
-			</app-button>
+			<AppButton trans @click="remove()">
+				<AppTranslate>Remove Release</AppTranslate>
+			</AppButton>
 		</div>
-	</app-form>
+	</AppForm>
 </template>

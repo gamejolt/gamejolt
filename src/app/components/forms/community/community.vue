@@ -68,30 +68,26 @@ export default class FormCommunity extends mixins(Wrapper) implements FormOnSubm
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="name" :label="$gettext(`Name`)">
+	<AppForm :controller="form">
+		<AppFormGroup name="name" :label="$gettext(`Name`)">
 			<div class="help-block">
-				<translate>Choose a short and descriptive name for your community.</translate>
+				<AppTranslate>Choose a short and descriptive name for your community.</AppTranslate>
 			</div>
-			<app-form-control
-				type="text"
-				:validators="[validateMaxLength(100)]"
-				:disabled="method === 'edit' && !formModel.games.length"
-			/>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControl type="text" :validators="[validateMaxLength(100)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
 		<!-- URL Path is only editable during community creation -->
-		<app-form-group v-if="method === 'add'" name="path" :label="$gettext(`URL Path`)">
+		<AppFormGroup v-if="method === 'add'" name="path" :label="$gettext(`URL Path`)">
 			<div class="help-block">
 				<p>
-					<translate>
+					<AppTranslate>
 						Community URLs should be memorable, unique, and as short as possible.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
-			<app-form-control-prefix prefix="gamejolt.com/c/">
-				<app-form-control
+			<AppFormControlPrefix prefix="gamejolt.com/c/">
+				<AppFormControl
 					:validators="[
 						validateUrlPath(),
 						validateMaxLength(50),
@@ -101,66 +97,66 @@ export default class FormCommunity extends mixins(Wrapper) implements FormOnSubm
 					]"
 					:validate-delay="500"
 				/>
-			</app-form-control-prefix>
+			</AppFormControlPrefix>
 
 			<div class="help-block">
 				<p>
 					<strong>
-						<translate>Once a URL path is chosen it cannot be changed!</translate>
+						<AppTranslate>Once a URL path is chosen it cannot be changed!</AppTranslate>
 					</strong>
 				</p>
 			</div>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
 		<!-- Post placeholder text only shows whens editing -->
-		<app-form-group
+		<AppFormGroup
 			v-if="method !== 'add'"
 			name="post_placeholder_text"
 			:label="$gettext(`Post Placeholder`)"
 			optional
 		>
 			<div class="help-block">
-				<translate>Customize the placeholder message for post creations.</translate>
+				<AppTranslate>Customize the placeholder message for post creations.</AppTranslate>
 			</div>
 
 			<AppPostAddButtonFormControl />
 
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
 		<!-- Color Theme - only show this in the edit part, not creation -->
-		<app-form-group v-if="method !== 'add'" name="theme" :label="$gettext(`Color Theme`)">
-			<app-form-control-theme class="pull-right" @changed="onThemeChanged()" />
+		<AppFormGroup v-if="method !== 'add'" name="theme" :label="$gettext(`Color Theme`)">
+			<AppFormControlTheme class="pull-right" @changed="onThemeChanged()" />
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Give your page a splash of color! When people view this community, they'll be
 					switched to this theme.
-				</translate>
+				</AppTranslate>
 			</p>
-		</app-form-group>
+		</AppFormGroup>
 
 		<!-- DISABLED_ALLOW_FIRESIDES -->
 		<!-- Temporarely disabled -->
-		<!-- <app-form-group name="allow_firesides" :label="$gettext(`Allow community firesides?`)">
-			<app-form-control-toggle class="pull-right" />
+		<!-- <AppFormGroup name="allow_firesides" :label="$gettext(`Allow community firesides?`)">
+			<AppFormControlToggle class="pull-right" />
 
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Will allow any member of the community to start a fireside in this community.
-				</translate>
+				</AppTranslate>
 			</p>
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					You are able to eject firesides at any time, and blocked users will not be able
 					to create any firesides in your community.
-				</translate>
+				</AppTranslate>
 			</p>
-		</app-form-group> -->
+		</AppFormGroup> -->
 
-		<app-form-button show-when-valid>
-			<translate v-if="method === 'add'">Create</translate>
-			<translate v-else>Save Details</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton show-when-valid>
+			<AppTranslate v-if="method === 'add'">Create</AppTranslate>
+			<AppTranslate v-else>Save Details</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

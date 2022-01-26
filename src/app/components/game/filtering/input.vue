@@ -42,11 +42,11 @@ export default class AppGameFilteringInput extends Vue {
 
 <template>
 	<form class="game-filtering-input" @submit.prevent="sendSearch">
-		<app-jolticon icon="filter" />
+		<AppJolticon icon="filter" />
 
 		<transition>
 			<a v-if="query" class="anim-fade-enter anim-fade-leave" @click="clear">
-				<app-jolticon icon="remove" />
+				<AppJolticon icon="remove" />
 			</a>
 		</transition>
 

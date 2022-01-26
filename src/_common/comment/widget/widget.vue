@@ -417,38 +417,38 @@ const {
 	<div class="comment-widget">
 		<div v-if="displayMode">
 			<h4 v-if="displayMode" class="sans-margin-top">
-				<translate
+				<AppTranslate
 					v-if="displayMode === 'comments'"
 					:translate-n="totalCommentsCount"
 					:translate-params="{ count: formatNumber(totalCommentsCount) }"
 					translate-plural="%{ count } comments"
 				>
 					1 comment
-				</translate>
-				<translate
+				</AppTranslate>
+				<AppTranslate
 					v-else
 					:translate-n="totalCommentsCount"
 					:translate-params="{ count: formatNumber(totalCommentsCount) }"
 					translate-plural="%{ count } shouts"
 				>
 					1 shout
-				</translate>
+				</AppTranslate>
 			</h4>
 		</div>
 
-		<app-loading v-if="!hasBootstrapped && !hasError" centered />
+		<AppLoading v-if="!hasBootstrapped && !hasError" centered />
 		<div v-else-if="hasError" class="alert alert-notice">
-			<translate>Couldn't fetch comments.</translate>
+			<AppTranslate>Couldn't fetch comments.</AppTranslate>
 		</div>
 		<div v-else-if="hasBootstrapped">
 			<template v-if="shouldShowAdd">
-				<app-message-thread-add v-if="user" hide-message-split>
-					<form-comment
+				<AppMessageThreadAdd v-if="user" hide-message-split>
+					<FormComment
 						:comment-model="model"
 						:autofocus="autofocus"
 						@submit="onCommentAdd"
 					/>
-				</app-message-thread-add>
+				</AppMessageThreadAdd>
 				<div v-else class="alert">
 					<p>
 						You must be
@@ -459,7 +459,7 @@ const {
 			</template>
 
 			<div v-if="shouldShowTabs">
-				<app-nav-tab-list>
+				<AppNavTabList>
 					<ul>
 						<li>
 							<a
@@ -467,7 +467,7 @@ const {
 								:class="{ active: isSortHot }"
 								@click="sortHot()"
 							>
-								<translate>Hot</translate>
+								<AppTranslate>Hot</AppTranslate>
 							</a>
 						</li>
 						<li v-if="showTopSorting">
@@ -476,7 +476,7 @@ const {
 								:class="{ active: isSortTop }"
 								@click="sortTop()"
 							>
-								<translate>Top</translate>
+								<AppTranslate>Top</AppTranslate>
 							</a>
 						</li>
 						<li>
@@ -485,7 +485,7 @@ const {
 								:class="{ active: isSortNew }"
 								@click="sortNew()"
 							>
-								<translate>New</translate>
+								<AppTranslate>New</AppTranslate>
 							</a>
 						</li>
 						<li>
@@ -494,15 +494,15 @@ const {
 								:class="{ active: isSortYou }"
 								@click="sortYou()"
 							>
-								<translate>You</translate>
+								<AppTranslate>You</AppTranslate>
 							</a>
 						</li>
 					</ul>
-				</app-nav-tab-list>
+				</AppNavTabList>
 			</div>
 
-			<app-message-thread>
-				<app-comment-widget-comment
+			<AppMessageThread>
+				<AppCommentWidgetComment
 					v-for="comment of comments"
 					:key="comment.id"
 					:model="model"
@@ -510,25 +510,25 @@ const {
 					:children="childComments[comment.id]"
 					:show-children="isThreadView"
 				/>
-			</app-message-thread>
+			</AppMessageThread>
 
 			<div v-if="shouldShowLoadMore" class="page-cut">
-				<app-button v-app-track-event="`comment-widget:more`" trans @click="loadMore">
-					<translate>Load More</translate>
-				</app-button>
+				<AppButton v-app-track-event="`comment-widget:more`" trans @click="loadMore">
+					<AppTranslate>Load More</AppTranslate>
+				</AppButton>
 			</div>
 
-			<app-loading v-if="isLoading" class="loading-centered" />
+			<AppLoading v-if="isLoading" class="loading-centered" />
 			<div v-else-if="shouldShowEmptyMessage">
-				<app-illustration :src="illNoComments">
+				<AppIllustration :src="illNoComments">
 					<p>
-						<translate v-if="shouldShowAdd">
+						<AppTranslate v-if="shouldShowAdd">
 							Everyone else seems to be in sleep mode, why don't you start the
 							conversation?
-						</translate>
-						<translate v-else>Everyone seems to be in sleep mode.</translate>
+						</AppTranslate>
+						<AppTranslate v-else>Everyone seems to be in sleep mode.</AppTranslate>
 					</p>
-				</app-illustration>
+				</AppIllustration>
 			</div>
 		</div>
 	</div>

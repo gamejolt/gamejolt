@@ -16,71 +16,71 @@ export default class FormSiteSettings extends mixins(Wrapper) {
 
 import { validateGaTrackingId } from '../../../../../_common/form-vue/validators';
 <template>
-	<app-form :controller="form">
-		<app-form-group name="title" :label="$gettext(`Page Title`)" :optional="true">
+	<AppForm :controller="form">
+		<AppFormGroup name="title" :label="$gettext(`Page Title`)" :optional="true">
 			<div class="help-block" v-if="!formModel.game_id">
-				<translate>
+				<AppTranslate>
 					You can override the default title for your site. This will show in search
 					engines, and in the tab bar of browsers. By default it's your display name.
-				</translate>
+				</AppTranslate>
 			</div>
 			<div class="help-block" v-else>
-				<translate>
+				<AppTranslate>
 					You can override the default title for your site. This will show in search
 					engines, and in the tab bar of browsers. By default it's the title of your game.
-				</translate>
+				</AppTranslate>
 			</div>
 
-			<app-form-control :validators="[validateMaxLength(100)]" />
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControl :validators="[validateMaxLength(100)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group name="description" :label="$gettext(`Description`)" :optional="true">
+		<AppFormGroup name="description" :label="$gettext(`Description`)" :optional="true">
 			<div class="help-block">
-				<translate>
+				<AppTranslate>
 					Search engines show this as the description under the page title in search
 					results.
-				</translate>
+				</AppTranslate>
 			</div>
-			<app-form-control-textarea rows="3" :validators="[validateMaxLength(250)]" />
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlTextarea rows="3" :validators="[validateMaxLength(250)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="ga_tracking_id"
 			:label="$gettext(`dash.games.settings.ga_tracking_id_label`)"
 			:optional="true"
 		>
-			<app-form-control
+			<AppFormControl
 				:validators="[validateMaxLength(30), validateGaTrackingId()]"
 				:placeholder="$gettext(`dash.games.settings.ga_tracking_id_placeholder`)"
 			/>
 
-			<app-form-control-errors
+			<AppFormControlErrors
 				:label="$gettext(`dash.games.settings.ga_tracking_id_error_label`)"
 			/>
 
 			<div class="help-block">
 				<p>
-					<translate>
+					<AppTranslate>
 						Use Google Analytics to track a multitude of stats and get tons of
 						information about your site. Just enter your Google Analytics tracking ID
 						here and we'll start sending data over there right away.
-					</translate>
+					</AppTranslate>
 				</p>
 				<p>
-					<app-link-external
+					<AppLinkExternal
 						class="link-help"
 						href="https://support.google.com/analytics/answer/1008080"
 					>
-						<translate>How do I get my tracking ID?</translate>
-					</app-link-external>
+						<AppTranslate>How do I get my tracking ID?</AppTranslate>
+					</AppLinkExternal>
 				</p>
 			</div>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-button>
-			<translate>Save</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton>
+			<AppTranslate>Save</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

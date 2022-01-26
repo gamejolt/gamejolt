@@ -341,7 +341,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		<div class="row">
 			<!--
 		<div class="col-md-8 col-lg-6">
-			<app-linked-account
+			<AppLinkedAccount
 				provider="facebook"
 				:account="facebookAccount"
 				@sync="onLink"
@@ -349,7 +349,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 				@unlink="onUnlink">
 				<div v-if="facebookAccount" class="-facebook-page">
 					<h5>
-						<translate>Linked Page</translate>
+						<AppTranslate>Linked Page</AppTranslate>
 					</h5>
 					<template v-if="facebookAccount.facebookSelectedPage">
 						<p>
@@ -359,33 +359,33 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 								</a>
 							</strong>
 						</p>
-						<app-button
+						<AppButton
 							@click="onSelectFacebookPage">
-							<translate>Change</translate>
-						</app-button>
-						<app-button
+							<AppTranslate>Change</AppTranslate>
+						</AppButton>
+						<AppButton
 							v-if="facebookAccount.facebookSelectedPage"
 							@click="onUnlinkFacebookPage"
 							trans>
-							<translate>Unlink</translate>
-						</app-button>
+							<AppTranslate>Unlink</AppTranslate>
+						</AppButton>
 					</template>
 					<template v-else>
 						<p>
-							<small class="text-muted"><translate>Not linked.</translate></small>
+							<small class="text-muted"><AppTranslate>Not linked.</AppTranslate></small>
 						</p>
-						<app-button
+						<AppButton
 							@click="onSelectFacebookPage"
 							icon="link">
-							<translate>Link Now</translate>
-						</app-button>
+							<AppTranslate>Link Now</AppTranslate>
+						</AppButton>
 					</template>
 				</div>
-			</app-linked-account>
+			</AppLinkedAccount>
 		</div>
 		-->
 			<div class="col-md-8 col-lg-6">
-				<app-linked-account
+				<AppLinkedAccount
 					provider="twitter"
 					:account="twitterAccount"
 					:disabled="loading"
@@ -397,7 +397,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 
 			<!--
 		<div class="col-md-8 col-lg-6">
-			<app-linked-account
+			<AppLinkedAccount
 				provider="discord"
 				:account="discordAccount"
 				@sync="onLink"
@@ -406,7 +406,7 @@ export default class RouteDashGamesManageGameLinkedAccounts extends BaseRouteCom
 		</div>
 		-->
 			<div class="col-md-8 col-lg-6">
-				<app-linked-account
+				<AppLinkedAccount
 					provider="tumblr"
 					:account="tumblrAccount"
 					:disabled="loading"

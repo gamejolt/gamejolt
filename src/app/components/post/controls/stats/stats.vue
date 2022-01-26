@@ -38,12 +38,12 @@ export default class AppPostControlsStats extends Vue {
 
 <template>
 	<div v-if="shouldShowStats">
-		<translate
+		<AppTranslate
 			:translate-n="post.view_count || 0"
 			:translate-params="{ count: formatNumber(post.view_count || 0) }"
 			translate-plural="%{ count } views"
 		>
 			%{ count } view
-		</translate>
+		</AppTranslate>
 	</div>
 </template>

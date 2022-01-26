@@ -50,7 +50,7 @@ export default class AppForumTopicUpvoteWidget extends Vue {
 
 <template>
 	<span class="topic-upvote-button" v-if="canUpvote" v-app-auth-required>
-		<app-button
+		<AppButton
 			icon="thumbs-up"
 			circle
 			trans

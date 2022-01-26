@@ -35,11 +35,11 @@ export default class AppPostControlsUserFollow extends Vue {
 		<div v-if="shouldShow" class="-user-follow anim-fade-enter alert">
 			<div class="-content">
 				<p class="-flex-auto small">
-					<translate>Would you also like to follow this user?</translate>
+					<AppTranslate>Would you also like to follow this user?</AppTranslate>
 					<br />
-					<translate>You will get notified when they post new stuff.</translate>
+					<AppTranslate>You will get notified when they post new stuff.</AppTranslate>
 				</p>
-				<app-user-follow-widget
+				<AppUserFollowWidget
 					class="-flex-none"
 					:sm="Screen.isXs"
 					:user="user"
@@ -47,7 +47,7 @@ export default class AppPostControlsUserFollow extends Vue {
 				/>
 			</div>
 			<div class="-cancel">
-				<app-button class="-cancel" circle trans icon="remove" @click="emitClose()" />
+				<AppButton class="-cancel" circle trans icon="remove" @click="emitClose()" />
 			</div>
 		</div>
 	</transition>

@@ -32,7 +32,7 @@ export default class AppFiresideShare extends Vue {
 </script>
 
 <template>
-	<app-share-card
+	<AppShareCard
 		class="-share-card"
 		resource="fireside"
 		:url="shareUrl"

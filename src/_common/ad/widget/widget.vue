@@ -47,7 +47,7 @@ function _makeAdSlot() {
 		}"
 	>
 		<div class="-content">
-			<app-ad-widget-inner class="-inner" :ad-slot="adSlot" />
+			<AppAdWidgetInner class="-inner" :ad-slot="adSlot" />
 		</div>
 	</div>
 </template>

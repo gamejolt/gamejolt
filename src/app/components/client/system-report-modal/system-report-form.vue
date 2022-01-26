@@ -49,17 +49,17 @@ export default class FormClientSystemReport extends mixins(Wrapper) implements F
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="issue_tracker_url" optional :label="$gettext('Issue Tracker Link')">
+	<AppForm :controller="form">
+		<AppFormGroup name="issue_tracker_url" optional :label="$gettext('Issue Tracker Link')">
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Paste the link to your ticket here. It's optional, but without it we can't get
 					back to you if we need more info to solve it.
-				</translate>
+				</AppTranslate>
 				<AppEmoji emoji="huh" />
 			</p>
 
-			<app-form-control
+			<AppFormControl
 				type="text"
 				placeholder="https://github.com/gamejolt/issue-tracker/issues/1313"
 				:validators="[
@@ -69,27 +69,27 @@ export default class FormClientSystemReport extends mixins(Wrapper) implements F
 					),
 				]"
 			/>
-			<app-form-control-errors :label="$gettext('link')">
-				<app-form-control-error
+			<AppFormControlErrors :label="$gettext('link')">
+				<AppFormControlError
 					when="pattern"
 					:message="$gettext(`This doesn't look like a valid issue link.`)"
 				/>
-			</app-form-control-errors>
-		</app-form-group>
+			</AppFormControlErrors>
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="description"
 			:label="$gettext('system_report.form.description_label')"
 		>
 			<p class="help-block">
-				<translate>system_report.form.description_help</translate>
+				<AppTranslate>system_report.form.description_help</AppTranslate>
 			</p>
-			<app-form-control-textarea maxlength="1000" rows="5" />
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlTextarea maxlength="1000" rows="5" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-button :disabled="!valid">
-			<translate>system_report.form.submit_button</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton :disabled="!valid">
+			<AppTranslate>system_report.form.submit_button</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

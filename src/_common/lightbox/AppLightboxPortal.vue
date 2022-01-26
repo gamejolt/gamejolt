@@ -184,39 +184,39 @@ function panEnd(event: AppTouchInput) {
 			@panmove="pan"
 			@panend="panEnd"
 		>
-			<app-shortkey shortkey="arrowleft" @press="goPrev" />
-			<app-shortkey shortkey="arrowright" @press="goNext" />
+			<AppShortkey shortkey="arrowleft" @press="goPrev" />
+			<AppShortkey shortkey="arrowright" @press="goNext" />
 
 			<div class="-inner">
 				<div class="-controls">
-					<a v-if="activeIndex > 0" class="-prev" @mousedown="goPrev">
-						<app-jolticon icon="chevron-left" />
+					<a v-if="activeIndex > 0" class="-prev" @click="goPrev">
+						<AppJolticon icon="chevron-left" />
 					</a>
 					<div v-else class="-prev -hideable" />
 
 					<div>
-						<app-button
+						<AppButton
 							v-if="activeMediaItem && activeMediaType === 'image'"
 							icon="download"
 							trans
 							:href="activeMediaItem.img_url"
 							target="_blank"
 						>
-							<translate>Download</translate>
-						</app-button>
-						<app-button @click="close">
-							<translate>Close</translate>
-						</app-button>
+							<AppTranslate>Download</AppTranslate>
+						</AppButton>
+						<AppButton @click="close">
+							<AppTranslate>Close</AppTranslate>
+						</AppButton>
 					</div>
 
-					<a v-if="hasNext" class="-next" @mousedown="goNext">
-						<app-jolticon icon="chevron-right" />
+					<a v-if="hasNext" class="-next" @click="goNext">
+						<AppJolticon icon="chevron-right" />
 					</a>
 					<div v-else class="-next -hideable" />
 				</div>
 
 				<div ref="slider" class="-slider">
-					<app-lightbox-item
+					<AppLightboxItem
 						v-for="(item, index) of items"
 						:key="item.getModelId()"
 						:item="item"

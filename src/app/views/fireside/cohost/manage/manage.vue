@@ -26,7 +26,7 @@ export default class AppFiresideCohostManage extends Vue {
 			class="-options"
 			@click="openManageModal"
 		>
-			<app-jolticon class="-icon" icon="add" />
+			<AppJolticon class="-icon" icon="add" />
 		</div>
 	</div>
 </template>

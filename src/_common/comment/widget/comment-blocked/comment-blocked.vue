@@ -25,12 +25,12 @@ export default class AppCommentWidgetCommentBlocked extends Vue {
 		</template>
 		<template v-else-if="reason === 'mentioned-blocked-user'">
 			<span>
-				<translate>A blocked user is mentioned in this comment.</translate>
+				<AppTranslate>A blocked user is mentioned in this comment.</AppTranslate>
 			</span>
 		</template>
-		<app-button trans @click="show">
-			<translate>Show</translate>
-		</app-button>
+		<AppButton trans @click="show">
+			<AppTranslate>Show</AppTranslate>
+		</AppButton>
 	</div>
 </template>
 

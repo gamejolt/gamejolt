@@ -92,7 +92,7 @@ export default class AppUserKnownFollowers extends Vue {
 <template>
 	<div v-if="app.user && users.length" class="-known-followers">
 		<div class="-known-followers-list">
-			<app-user-avatar-list :users="users" sm inline />
+			<AppUserAvatarList :users="users" sm inline />
 		</div>
 		<div class="-known-followers-text-container">
 			<span class="-known-followers-text text-muted">

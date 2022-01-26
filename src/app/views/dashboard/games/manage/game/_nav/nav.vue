@@ -48,10 +48,10 @@ export default class AppManageGameNav extends Vue {
 					}"
 					exact-active-class="active"
 				>
-					<translate>Overview</translate>
+					<AppTranslate>Overview</AppTranslate>
 				</router-link>
 			</li>
-			<app-game-perms tag="li" required="builds,sales" :either="true">
+			<AppGamePerms tag="li" required="builds,sales" :either="true">
 				<router-link
 					:to="{
 						name: 'dash.games.manage.game.details',
@@ -59,11 +59,11 @@ export default class AppManageGameNav extends Vue {
 					}"
 					active-class="active"
 				>
-					<app-manage-game-nav-required :is-complete="true" />
-					<translate>Details</translate>
+					<AppManageGameNavRequired :is-complete="true" />
+					<AppTranslate>Details</AppTranslate>
 				</router-link>
-			</app-game-perms>
-			<app-game-perms tag="li" required="details,media" :either="true">
+			</AppGamePerms>
+			<AppGamePerms tag="li" required="details,media" :either="true">
 				<router-link
 					:to="{
 						name: 'dash.games.manage.game.description',
@@ -71,11 +71,11 @@ export default class AppManageGameNav extends Vue {
 					}"
 					active-class="active"
 				>
-					<app-manage-game-nav-required :is-complete="game.hasDescription" />
-					<translate>Description</translate>
+					<AppManageGameNavRequired :is-complete="game.hasDescription" />
+					<AppTranslate>Description</AppTranslate>
 				</router-link>
-			</app-game-perms>
-			<app-game-perms tag="li" required="media">
+			</AppGamePerms>
+			<AppGamePerms tag="li" required="media">
 				<router-link
 					:to="{
 						name: 'dash.games.manage.game.design',
@@ -83,11 +83,11 @@ export default class AppManageGameNav extends Vue {
 					}"
 					active-class="active"
 				>
-					<app-manage-game-nav-required :is-complete="!!game.thumbnail_media_item" />
-					<translate>Design</translate>
+					<AppManageGameNavRequired :is-complete="!!game.thumbnail_media_item" />
+					<AppTranslate>Design</AppTranslate>
 				</router-link>
-			</app-game-perms>
-			<app-game-perms
+			</AppGamePerms>
+			<AppGamePerms
 				v-if="!isWizard || !game._is_devlog"
 				tag="li"
 				required="builds,sales"
@@ -104,14 +104,14 @@ export default class AppManageGameNav extends Vue {
 							$route.name.indexOf('dash.games.manage.game.packages') === 0,
 					}"
 				>
-					<app-manage-game-nav-required
+					<AppManageGameNavRequired
 						v-if="!game._is_devlog"
 						:is-complete="game.has_active_builds"
 					/>
-					<translate>Packages</translate>
+					<AppTranslate>Packages</AppTranslate>
 				</router-link>
-			</app-game-perms>
-			<app-game-perms tag="li" required="details">
+			</AppGamePerms>
+			<AppGamePerms tag="li" required="details">
 				<router-link
 					:to="{
 						name: 'dash.games.manage.game.maturity',
@@ -119,11 +119,11 @@ export default class AppManageGameNav extends Vue {
 					}"
 					active-class="active"
 				>
-					<app-manage-game-nav-required :is-complete="!!game.tigrs_age" />
-					<translate>Maturity</translate>
+					<AppManageGameNavRequired :is-complete="!!game.tigrs_age" />
+					<AppTranslate>Maturity</AppTranslate>
 				</router-link>
-			</app-game-perms>
-			<app-game-perms v-if="!isWizard" tag="li" required="music">
+			</AppGamePerms>
+			<AppGamePerms v-if="!isWizard" tag="li" required="music">
 				<router-link
 					:to="{
 						name: 'dash.games.manage.game.music',
@@ -131,10 +131,10 @@ export default class AppManageGameNav extends Vue {
 					}"
 					active-class="active"
 				>
-					<translate>Music</translate>
+					<AppTranslate>Music</AppTranslate>
 				</router-link>
-			</app-game-perms>
-			<app-game-perms
+			</AppGamePerms>
+			<AppGamePerms
 				v-if="!isWizard && app.user && app.user.id === game.developer.id"
 				tag="li"
 				required="all"
@@ -146,10 +146,10 @@ export default class AppManageGameNav extends Vue {
 					}"
 					active-class="active"
 				>
-					<translate>Linked Accounts</translate>
+					<AppTranslate>Linked Accounts</AppTranslate>
 				</router-link>
-			</app-game-perms>
-			<app-game-perms v-if="!isWizard" tag="li">
+			</AppGamePerms>
+			<AppGamePerms v-if="!isWizard" tag="li">
 				<router-link
 					:to="{
 						name: 'dash.games.manage.game.settings',
@@ -157,32 +157,32 @@ export default class AppManageGameNav extends Vue {
 					}"
 					active-class="active"
 				>
-					<translate>Settings</translate>
+					<AppTranslate>Settings</AppTranslate>
 				</router-link>
-			</app-game-perms>
+			</AppGamePerms>
 		</ul>
 
-		<app-game-perms
+		<AppGamePerms
 			v-if="$route.name !== 'dash.games.manage.game.wizard-finish'"
 			required="all"
 			tag="div"
 			class="hidden-xs"
 		>
-			<app-button
+			<AppButton
 				v-if="game.isUnlisted"
 				primary
 				block
 				:disabled="!canPublish"
 				@click="routeStore.publish()"
 			>
-				<translate>Publish</translate>
-			</app-button>
+				<AppTranslate>Publish</AppTranslate>
+			</AppButton>
 
-			<app-button v-if="isWizard" primary block @click="routeStore.saveDraft()">
-				<translate class="visible-lg">Save Draft</translate>
-				<translate class="visible-md">Save</translate>
-			</app-button>
-		</app-game-perms>
+			<AppButton v-if="isWizard" primary block @click="routeStore.saveDraft()">
+				<AppTranslate class="visible-lg">Save Draft</AppTranslate>
+				<AppTranslate class="visible-md">Save</AppTranslate>
+			</AppButton>
+		</AppGamePerms>
 	</div>
 </template>
 

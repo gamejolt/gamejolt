@@ -44,14 +44,14 @@ export default class AppGamePlaylistAddToWidget extends Vue {
 </script>
 
 <template>
-	<app-popper
+	<AppPopper
 		v-if="game.isVisible"
 		popover-class="fill-darkest"
 		placement="bottom"
 		@show="isShown = true"
 		@hide="isShown = false"
 	>
-		<app-button
+		<AppButton
 			v-app-auth-required
 			v-app-tooltip.bottom="$gettext('Add to Playlist')"
 			v-app-track-event="`add-to-playlist:widget:${eventLabel}`"
@@ -62,7 +62,7 @@ export default class AppGamePlaylistAddToWidget extends Vue {
 		/>
 
 		<template v-if="isShown" #popover>
-			<app-game-playlist-add-to-popover :game="game" />
+			<AppGamePlaylistAddToPopover :game="game" />
 		</template>
-	</app-popper>
+	</AppPopper>
 </template>

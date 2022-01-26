@@ -29,7 +29,7 @@ export default class AppShellClient extends Vue {
 
 <template>
 	<div>
-		<app-client-intro v-if="userBootstrapped && isShowingIntro" @finish="isShowingIntro = false" />
-		<app-client-system-progress />
+		<AppClientIntro v-if="userBootstrapped && isShowingIntro" @finish="isShowingIntro = false" />
+		<AppClientSystemProgress />
 	</div>
 </template>

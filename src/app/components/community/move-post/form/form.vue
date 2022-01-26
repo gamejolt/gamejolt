@@ -61,8 +61,8 @@ export default class FormCommunityMovePost extends mixins(Wrapper) {
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group
+	<AppForm :controller="form">
+		<AppFormGroup
 			name="notifyUser"
 			:label="$gettext(`Do you want to notify the author that their post got moved?`)"
 		>
@@ -72,31 +72,31 @@ export default class FormCommunityMovePost extends mixins(Wrapper) {
 				class="radio"
 			>
 				<label>
-					<app-form-control-radio :value="optionValue" />
+					<AppFormControlRadio :value="optionValue" />
 					{{ optionDisplay }}
 				</label>
 			</div>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group v-if="shouldShowReasons" name="reasonType" :label="$gettext('Move reason')">
+		<AppFormGroup v-if="shouldShowReasons" name="reasonType" :label="$gettext('Move reason')">
 			<div v-for="(reasonDisplay, reason) in defaultReasons" :key="reason" class="radio">
 				<label>
-					<app-form-control-radio :value="reason" />
+					<AppFormControlRadio :value="reason" />
 					{{ reasonDisplay }}
 				</label>
 			</div>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group v-if="showReasonOther" name="reason" hide-label>
+		<AppFormGroup v-if="showReasonOther" name="reason" hide-label>
 			<div class="help-inline">
 				<span v-translate>
 					Enter other move reason.
 					<b>This is shown to the post author.</b>
 				</span>
 			</div>
-			<app-form-control
+			<AppFormControl
 				type="text"
 				html-list-id="move-post-reasons-list"
 				:validators="[validateMaxLength(100)]"
@@ -104,7 +104,7 @@ export default class FormCommunityMovePost extends mixins(Wrapper) {
 			<datalist id="move-post-reasons-list">
 				<option v-for="optionStr of otherOptions" :key="optionStr" :value="optionStr" />
 			</datalist>
-			<app-form-control-errors />
-		</app-form-group>
-	</app-form>
+			<AppFormControlErrors />
+		</AppFormGroup>
+	</AppForm>
 </template>

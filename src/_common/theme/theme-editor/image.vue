@@ -33,7 +33,7 @@ export default class AppThemeEditorImage extends Vue {
 <template>
 	<div class="theme-editor-image">
 		<a v-if="modelValue" class="theme-editor-image-clear" @click="clear()">
-			<translate>clear</translate>
+			<AppTranslate>clear</AppTranslate>
 		</a>
 
 		<div class="theme-editor-image-content">
@@ -44,7 +44,7 @@ export default class AppThemeEditorImage extends Vue {
 				alt=""
 			/>
 
-			<form-theme-editor-image :type="type" :parent-id="parentId" @submit="onImageAdded" />
+			<FormThemeEditorImage :type="type" :parent-id="parentId" @submit="onImageAdded" />
 		</div>
 	</div>
 </template>

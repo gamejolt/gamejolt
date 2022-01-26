@@ -54,37 +54,37 @@ export default class FormOnboardingFollows
 </script>
 
 <template>
-	<app-form :controller="form">
+	<AppForm :controller="form">
 		<div class="-form">
 			<section class="-message">
 				<h3 class="section-header">
-					<translate> Join Interesting Communities </translate>
+					<AppTranslate> Join Interesting Communities </AppTranslate>
 				</h3>
 
 				<p class="text-muted">
-					<translate>
+					<AppTranslate>
 						Explore fan-created artwork, videos, game guides and more.
-					</translate>
+					</AppTranslate>
 				</p>
 			</section>
 
 			<section class="-communities">
-				<app-scroll-scroller thin>
+				<AppScrollScroller thin>
 					<div class="-list">
-						<app-onboarding-follows-community-item
+						<AppOnboardingFollowsCommunityItem
 							v-for="community of communities"
 							:key="community.id"
 							:community="community"
 						/>
 					</div>
-				</app-scroll-scroller>
+				</AppScrollScroller>
 			</section>
 
 			<section class="-controls">
 				<slot name="controls" :canContinue="canContinue" :shouldShowSkip="shouldShowSkip" />
 			</section>
 		</div>
-	</app-form>
+	</AppForm>
 </template>
 
 <style lang="stylus" scoped>

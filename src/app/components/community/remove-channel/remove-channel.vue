@@ -82,47 +82,47 @@ export default class AppCommunityRemoveChannel extends Vue {
 		</p>
 
 		<template v-if="!moving">
-			<app-button primary icon="arrow-forward" @click="moving = true">
-				<translate>Move</translate>
-			</app-button>
+			<AppButton primary icon="arrow-forward" @click="moving = true">
+				<AppTranslate>Move</AppTranslate>
+			</AppButton>
 
-			<app-button primary icon="remove" @click="onEject">
-				<translate>Eject</translate>
-			</app-button>
+			<AppButton primary icon="remove" @click="onEject">
+				<AppTranslate>Eject</AppTranslate>
+			</AppButton>
 		</template>
 		<span v-else class="-where-to">Where to?</span>
 
-		<app-expand :when="moving">
-			<app-community-channel-select
+		<AppExpand :when="moving">
+			<AppCommunityChannelSelect
 				v-model="selectedChannel"
 				class="-channel-select"
 				:channels="channels"
 			/>
 
 			<div class="-move-controls">
-				<app-button
+				<AppButton
 					primary
 					:disabled="!hasSelectedChannel"
 					icon="arrow-forward"
 					@click="onMove"
 				>
-					<translate>Move</translate>
-				</app-button>
+					<AppTranslate>Move</AppTranslate>
+				</AppButton>
 				<a @click="moving = false">
-					<app-jolticon icon="remove" />
+					<AppJolticon icon="remove" />
 				</a>
 			</div>
-		</app-expand>
+		</AppExpand>
 
 		<p class="help-block">
-			<translate>
+			<AppTranslate>
 				Removing a channel is irreversible. Once it's gone, it's gone for good.
-			</translate>
+			</AppTranslate>
 			<template v-if="moving">
 				<br />
-				<translate>
+				<AppTranslate>
 					It might take a few moments for the posts to show in the new channel.
-				</translate>
+				</AppTranslate>
 			</template>
 		</p>
 	</div>

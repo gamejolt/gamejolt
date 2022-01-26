@@ -77,17 +77,19 @@ export default class RouteDashGamesManageApiSettings extends BaseRouteComponent 
 	<div class="row">
 		<div class="col-lg-8">
 			<h2 class="section-header">
-				<translate>Game API Settings</translate>
+				<AppTranslate>Game API Settings</AppTranslate>
 			</h2>
 
 			<div class="alert alert-notice">
 				<p>
-					<strong><translate>Never give your private key to anyone!</translate></strong>
-					<translate>
+					<strong>
+						<AppTranslate>Never give your private key to anyone!</AppTranslate>
+					</strong>
+					<AppTranslate>
 						Your game's key is used to validate that API requests are coming from your
 						game. If villains or knaves get ahold of it, they can send in fake requests
 						pretending to be your game. Not good!
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 
@@ -99,15 +101,15 @@ export default class RouteDashGamesManageApiSettings extends BaseRouteComponent 
 					<tbody>
 						<tr>
 							<th>
-								<translate>Game ID</translate>
+								<AppTranslate>Game ID</AppTranslate>
 							</th>
 							<td>{{ game.id }}</td>
 						</tr>
 						<tr>
 							<th>
-								<translate translate-comment="This refers to game API key">
+								<AppTranslate translate-comment="This refers to game API key">
 									Private Key
-								</translate>
+								</AppTranslate>
 							</th>
 							<td>
 								<template v-if="shouldShowKey">
@@ -116,15 +118,17 @@ export default class RouteDashGamesManageApiSettings extends BaseRouteComponent 
 								</template>
 								<p v-else>
 									<a class="link-muted" @click="shouldShowKey = true">
-										<translate translate-comment="This refers to game API key">
+										<AppTranslate
+											translate-comment="This refers to game API key"
+										>
 											(show key)
-										</translate>
+										</AppTranslate>
 									</a>
 								</p>
 
-								<app-button @click="generateNewKey">
-									<translate>Generate New Key</translate>
-								</app-button>
+								<AppButton @click="generateNewKey">
+									<AppTranslate>Generate New Key</AppTranslate>
+								</AppButton>
 							</td>
 						</tr>
 					</tbody>

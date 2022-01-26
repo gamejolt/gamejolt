@@ -37,19 +37,19 @@ export default class AppCommunitySlider extends Vue {
 
 <template>
 	<div v-if="communities.length || withAddButton" class="-list">
-		<app-scroll-scroller class="-scroller" horizontal thin>
+		<AppScrollScroller class="-scroller" horizontal thin>
 			<div class="-flex">
-				<app-community-slider-item
+				<AppCommunitySliderItem
 					v-for="community of communities"
 					:key="community.id"
 					:community="community"
 					:event-cat="eventCat"
 				/>
 
-				<app-community-slider-discover-item />
-				<app-community-slider-add-item v-if="withAddButton" />
+				<AppCommunitySliderDiscoverItem />
+				<AppCommunitySliderAddItem v-if="withAddButton" />
 			</div>
-		</app-scroll-scroller>
+		</AppScrollScroller>
 	</div>
 </template>
 

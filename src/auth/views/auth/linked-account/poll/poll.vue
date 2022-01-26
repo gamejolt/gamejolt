@@ -55,7 +55,7 @@ export default class RouteAuthLinkedAccountPoll extends BaseRouteComponent {
 		<template v-if="isPolling">
 			<p>Please login to your account through your web browser.</p>
 
-			<app-progress-poller
+			<AppProgressPoller
 				:url="`/web/auth/poll-oauth/${token}`"
 				:interval="2500"
 				@complete="completed"
@@ -63,7 +63,7 @@ export default class RouteAuthLinkedAccountPoll extends BaseRouteComponent {
 			/>
 		</template>
 		<template v-else>
-			<app-loading
+			<AppLoading
 				:label="$gettext('Processing. Please wait...')"
 				:centered="true"
 				:big="true"

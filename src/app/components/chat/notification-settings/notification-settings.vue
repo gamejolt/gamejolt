@@ -65,12 +65,12 @@ export default class AppChatNotificationSettings extends Vue {
 </script>
 
 <template>
-	<app-loading-fade
+	<AppLoadingFade
 		class="chat-notification-settings"
 		:is-loading="isLoadingNotificationSettings"
 	>
 		<h5 class="-header list-group-item">
-			<translate>Notifications</translate>
+			<AppTranslate>Notifications</AppTranslate>
 		</h5>
 
 		<a
@@ -79,12 +79,12 @@ export default class AppChatNotificationSettings extends Vue {
 			class="list-group-item has-icon"
 			@click="onClickSetNotificationLevel(setting.level)"
 		>
-			<app-jolticon
+			<AppJolticon
 				:icon="setting.level === notificationLevel ? 'radio-circle-filled' : 'radio-circle'"
 			/>
 			{{ setting.text }}
 		</a>
-	</app-loading-fade>
+	</AppLoadingFade>
 </template>
 
 <style lang="stylus" scoped>

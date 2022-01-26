@@ -125,7 +125,7 @@ export default class AppGameGrid extends Vue {
 <template>
 	<div :id="`grid-pagination-${id}`">
 		<p v-if="gamesCount" class="text-muted small">
-			<translate
+			<AppTranslate
 				:translate-n="gamesCount"
 				:translate-params="{
 					count: formatNumber(gamesCount),
@@ -134,14 +134,14 @@ export default class AppGameGrid extends Vue {
 				translate-plural="Page %{ page } of %{ count } games."
 			>
 				Page %{ page } of %{ count } games.
-			</translate>
+			</AppTranslate>
 		</p>
 
 		<div :class="{ 'scrollable-grid': isScrollable }">
 			<div class="game-grid-items">
 				<div v-if="Screen.isDesktop && shouldShowAds" class="game-grid-ad">
 					<div class="game-grid-ad-inner">
-						<app-ad-widget
+						<AppAdWidget
 							size="rectangle"
 							placement="content"
 							:meta="{ staticSize: true }"
@@ -157,7 +157,7 @@ export default class AppGameGrid extends Vue {
 				<template v-for="(game, i) of processedGames" :key="game.id">
 					<div v-if="shouldShowAd(i)" class="game-grid-ad">
 						<div class="game-grid-ad-inner">
-							<app-ad-widget
+							<AppAdWidget
 								size="rectangle"
 								placement="content"
 								:meta="{ staticSize: true }"
@@ -165,16 +165,16 @@ export default class AppGameGrid extends Vue {
 						</div>
 					</div>
 					<div class="game-grid-item">
-						<app-game-thumbnail
+						<AppGameThumbnail
 							v-app-track-event="
 								eventLabel ? 'game-grid:click:' + eventLabel : undefined
 							"
 							:game="game"
 						>
 							<slot name="thumbnail-controls" :game="game">
-								<app-game-thumbnail-controls :game="game" />
+								<AppGameThumbnailControls :game="game" />
 							</slot>
-						</app-game-thumbnail>
+						</AppGameThumbnail>
 					</div>
 				</template>
 			</div>

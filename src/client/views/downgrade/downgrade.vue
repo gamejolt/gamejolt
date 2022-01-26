@@ -51,7 +51,7 @@ export default class RouteDowngrade extends BaseRouteComponent {
 			<p class="lead">This is required so that none of your information is lost!</p>
 			<p v-if="downloadUrl" class="lead">
 				<a :href="downloadUrl">
-					<app-jolticon icon="download-box" />
+					<AppJolticon icon="download-box" />
 					Download the old version of the Game Jolt Client.
 				</a>
 			</p>

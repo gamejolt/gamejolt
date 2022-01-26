@@ -134,13 +134,13 @@ export default class RouteDiscoverCommunities extends BaseRouteComponent {
 	<section class="section fill-backdrop">
 		<div class="container">
 			<h1 class="text-center">
-				<translate>Browse Communities</translate>
+				<AppTranslate>Browse Communities</AppTranslate>
 			</h1>
 
 			<br />
 			<br />
 
-			<app-loading v-if="isLoadingFirst" centered />
+			<AppLoading v-if="isLoadingFirst" centered />
 			<template v-else>
 				<div class="row">
 					<div
@@ -148,17 +148,17 @@ export default class RouteDiscoverCommunities extends BaseRouteComponent {
 						:key="community.id"
 						class="-item col-sm-6 col-md-4 col-lg-3 anim-fade-in"
 					>
-						<app-community-card :community="community" elevate />
+						<AppCommunityCard :community="community" elevate />
 					</div>
 				</div>
 
 				<template v-if="hasMore">
-					<app-scroll-inview
+					<AppScrollInview
 						v-if="!isLoadingMore"
 						:config="inviewConfig"
 						@inview="loadMore()"
 					/>
-					<app-loading v-else class="-loading-more" centered />
+					<AppLoading v-else class="-loading-more" centered />
 				</template>
 			</template>
 
@@ -166,10 +166,10 @@ export default class RouteDiscoverCommunities extends BaseRouteComponent {
 				<div class="page-cut" />
 
 				<h2 class="-lead text-center">
-					<translate>Can't find your dream community?</translate>
+					<AppTranslate>Can't find your dream community?</AppTranslate>
 				</h2>
 
-				<app-community-card-create-placeholder style="margin: 0 auto" />
+				<AppCommunityCardCreatePlaceholder style="margin: 0 auto" />
 			</div>
 		</div>
 	</section>

@@ -32,9 +32,9 @@ export default class AppUserAvatar extends Vue {
 
 <template>
 	<a v-if="user" class="user-avatar" :href="href">
-		<app-user-avatar-img :user="user" />
+		<AppUserAvatarImg :user="user" />
 	</a>
-	<app-user-avatar-img v-else />
+	<AppUserAvatarImg v-else />
 </template>
 
 <style lang="stylus" scoped>

@@ -216,52 +216,52 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			<div class="container text-center">
 				<p>
 					<b>
-						<translate>You've been invited to collaborate on this community.</translate>
+						<AppTranslate>You've been invited to collaborate on this community.</AppTranslate>
 					</b>
 				</p>
-				<app-button
+				<AppButton
 					v-app-tooltip.bottom="acceptCollaborationTooltip"
 					solid
 					:disabled="!canAcceptCollaboration"
 					@click="acceptCollaboration()"
 				>
-					<translate>Accept</translate>
-				</app-button>
-				<app-button solid @click="declineCollaboration()">
-					<translate>Decline</translate>
-				</app-button>
+					<AppTranslate>Accept</AppTranslate>
+				</AppButton>
+				<AppButton solid @click="declineCollaboration()">
+					<AppTranslate>Decline</AppTranslate>
+				</AppButton>
 			</div>
 		</section>
 
-		<app-communities-view-page-container>
+		<AppCommunitiesViewPageContainer>
 			<template #default>
 				<div v-if="displayablePreviewFiresides.length > 0 || community.allow_firesides">
 					<div class="-firesides-header">
 						<h4 class="section-header">
-							<translate>Firesides</translate>
+							<AppTranslate>Firesides</AppTranslate>
 						</h4>
 
-						<app-button
+						<AppButton
 							trans
 							:to="{
 								name: 'communities.view.firesides',
 								params: { path: community.path },
 							}"
 						>
-							<translate>View All</translate>
-						</app-button>
+							<AppTranslate>View All</AppTranslate>
+						</AppButton>
 					</div>
 				</div>
 
-				<app-loading-fade :is-loading="!isRouteBootstrapped">
+				<AppLoadingFade :is-loading="!isRouteBootstrapped">
 					<div
 						v-if="displayablePreviewFiresides.length > 0 || canCreateFireside"
 						class="-firesides-grid"
 						:style="firesidesGridStyling"
 					>
-						<app-fireside-avatar-add v-if="canCreateFireside" :community="community" />
+						<AppFiresideAvatarAdd v-if="canCreateFireside" :community="community" />
 
-						<app-fireside-avatar
+						<AppFiresideAvatar
 							v-for="fireside in displayablePreviewFiresides"
 							:key="fireside.id"
 							:fireside="fireside"
@@ -269,18 +269,18 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 							@eject="onFiresideEject"
 						/>
 					</div>
-				</app-loading-fade>
+				</AppLoadingFade>
 
-				<app-communities-view-feed
+				<AppCommunitiesViewFeed
 					:feed="feed"
 					@add-post="onPostAdded"
 					@load-new="loadedNew"
 				/>
 			</template>
 			<template #sidebar>
-				<app-community-sidebar :sidebar-data="sidebarData" :community="community" />
+				<AppCommunitySidebar :sidebar-data="sidebarData" :community="community" />
 			</template>
-		</app-communities-view-page-container>
+		</AppCommunitiesViewPageContainer>
 	</div>
 </template>
 

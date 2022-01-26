@@ -120,21 +120,21 @@ export default class AppCommunityCompetitionEntryThumbnail extends Vue {
 		<router-link :to="game.routeLocation">
 			<div @click.prevent="onClickThumbnail">
 				<div class="-thumb">
-					<app-game-thumbnail-img :game="game" class="-game-img" />
+					<AppGameThumbnailImg :game="game" class="-game-img" />
 
 					<div v-if="shouldShowAwards" class="-game-img-award-border" />
 
 					<div class="-inner">
 						<div v-if="shouldShowRank" class="-rank">
 							{{ displayCategoryName }}
-							<translate>Rank</translate>
+							<AppTranslate>Rank</AppTranslate>
 							<b>#{{ displayRank }}</b>
 						</div>
 						<div v-else-if="shouldShowNoVotes" class="-rank">
-							<translate>No Votes</translate>
+							<AppTranslate>No Votes</AppTranslate>
 						</div>
 						<div v-if="shouldShowRemove" class="-remove">
-							<app-button
+							<AppButton
 								v-app-tooltip="$gettext(`Remove Entry`)"
 								icon="remove"
 								sparse
@@ -167,7 +167,7 @@ export default class AppCommunityCompetitionEntryThumbnail extends Vue {
 							v-app-tooltip="entryAward.community_competition_award.description"
 							class="-award"
 						>
-							<app-jolticon class="-award-icon" icon="medal" />
+							<AppJolticon class="-award-icon" icon="medal" />
 							<small>
 								<b>{{ entryAward.community_competition_award.name }}</b>
 							</small>

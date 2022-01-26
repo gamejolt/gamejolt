@@ -28,15 +28,15 @@ export default class AppReportModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-body">
-			<app-block-form :user="user" @submit="onSubmittedBlock" />
+			<AppBlockForm :user="user" @submit="onSubmittedBlock" />
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

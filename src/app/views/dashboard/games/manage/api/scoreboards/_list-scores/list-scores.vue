@@ -45,16 +45,16 @@ export default class AppManageGameListScores extends Vue {
 			<thead>
 				<tr>
 					<th v-if="!isForUser">
-						<translate translate-comment="As in placement">Rank</translate>
+						<AppTranslate translate-comment="As in placement">Rank</AppTranslate>
 					</th>
 					<th>
-						<translate>Score</translate>
+						<AppTranslate>Score</AppTranslate>
 					</th>
 					<th v-if="!isForUser">
-						<translate>dash.games.scores.list.user_label</translate>
+						<AppTranslate>dash.games.scores.list.user_label</AppTranslate>
 					</th>
 					<th>
-						<translate>dash.games.scores.list.date_label</translate>
+						<AppTranslate>dash.games.scores.list.date_label</AppTranslate>
 					</th>
 					<th />
 				</tr>
@@ -92,7 +92,7 @@ export default class AppManageGameListScores extends Vue {
 							{{ score.guest }}
 							<br />
 							<small class="text-muted">
-								<translate>dash.games.scores.guest_tag</translate>
+								<AppTranslate>dash.games.scores.guest_tag</AppTranslate>
 							</small>
 						</span>
 					</td>
@@ -101,9 +101,9 @@ export default class AppManageGameListScores extends Vue {
 					</td>
 					<td class="text-right">
 						<div class="table-controls">
-							<app-popper popover-class="fill-darkest">
+							<AppPopper popover-class="fill-darkest">
 								<a class="text-muted">
-									<app-jolticon icon="cog" />
+									<AppJolticon icon="ellipsis-h" />
 								</a>
 
 								<template #popover>
@@ -112,14 +112,14 @@ export default class AppManageGameListScores extends Vue {
 											class="list-group-item has-icon"
 											@click="removeScore(score)"
 										>
-											<app-jolticon icon="remove" notice />
-											<translate>
+											<AppJolticon icon="remove" notice />
+											<AppTranslate>
 												dash.games.scores.list.remove_button
-											</translate>
+											</AppTranslate>
 										</a>
 									</div>
 								</template>
-							</app-popper>
+							</AppPopper>
 						</div>
 					</td>
 				</tr>

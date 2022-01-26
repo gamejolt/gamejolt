@@ -131,13 +131,13 @@ export default class AppChatWindow extends Vue {
 				<div class="chat-window-header-wrap">
 					<div class="chat-window-header fill-offset">
 						<div class="chat-window-header-controls">
-							<app-chat-window-menu :room="room" />
+							<AppChatWindowMenu :room="room" />
 
 							<span
 								@mouseenter="friendAddJolticonVersion = 2"
 								@mouseleave="friendAddJolticonVersion = 1"
 							>
-								<app-button
+								<AppButton
 									v-app-tooltip="
 										room.isPmRoom
 											? $gettext('Create Group Chat')
@@ -151,7 +151,7 @@ export default class AppChatWindow extends Vue {
 								/>
 							</span>
 
-							<app-button
+							<AppButton
 								v-if="!room.isPmRoom"
 								v-app-tooltip="
 									isShowingUsers
@@ -165,7 +165,7 @@ export default class AppChatWindow extends Vue {
 								@click="toggleUsers"
 							/>
 
-							<app-button
+							<AppButton
 								v-app-tooltip="$gettext('Close Room')"
 								class="-header-control"
 								circle
@@ -187,7 +187,7 @@ export default class AppChatWindow extends Vue {
 								"
 							>
 								<div class="-icon">
-									<app-jolticon icon="users" />
+									<AppJolticon icon="users" />
 								</div>
 							</span>
 							<router-link
@@ -201,7 +201,7 @@ export default class AppChatWindow extends Vue {
 								:to="room.user.url"
 							>
 								<img class="-icon" :src="room.user.img_avatar" alt="" />
-								<app-chat-user-online-status
+								<AppChatUserOnlineStatus
 									:is-online="room.user.isOnline"
 									:size="16"
 								/>
@@ -218,7 +218,7 @@ export default class AppChatWindow extends Vue {
 								<router-link class="link-unstyled" :to="room.user.url">
 									{{ roomTitle }}
 								</router-link>
-								<app-user-verified-tick :user="room.user" />
+								<AppUserVerifiedTick :user="room.user" />
 								<br />
 								<small>@{{ room.user.username }}</small>
 							</h3>
@@ -227,7 +227,7 @@ export default class AppChatWindow extends Vue {
 				</div>
 
 				<div class="chat-window-output fill-backdrop">
-					<app-chat-window-output
+					<AppChatWindowOutput
 						:key="room.id"
 						class="chat-window-output-inner"
 						:room="room"
@@ -237,7 +237,7 @@ export default class AppChatWindow extends Vue {
 				</div>
 
 				<div v-if="chat.currentUser" class="chat-window-send-container">
-					<app-chat-window-send :room="room" @focus-change="emitFocusChange" />
+					<AppChatWindowSend :room="room" @focus-change="emitFocusChange" />
 				</div>
 			</div>
 		</div>
@@ -249,25 +249,25 @@ export default class AppChatWindow extends Vue {
 			<div v-if="!room.isPmRoom && isShowingUsers" class="chat-window-users">
 				<div v-if="!Screen.isXs" class="chat-window-users-shadow" />
 
-				<app-scroll-scroller class="chat-window-users-scroller">
+				<AppScrollScroller class="chat-window-users-scroller">
 					<template v-if="Screen.isXs">
 						<br />
 						<div class="nav-controls">
-							<app-button block icon="chevron-left" @click="toggleUsers">
-								<translate>Back to Chat</translate>
-							</app-button>
+							<AppButton block icon="chevron-left" @click="toggleUsers">
+								<AppTranslate>Back to Chat</AppTranslate>
+							</AppButton>
 						</div>
 					</template>
 
 					<div class="nav-heading">
-						<translate>Members</translate>
+						<AppTranslate>Members</AppTranslate>
 						<span class="badge badge-subtle">
 							{{ membersCount }}
 						</span>
 					</div>
 
-					<app-chat-member-list v-if="users" :users="users.collection" :room="room" />
-				</app-scroll-scroller>
+					<AppChatMemberList v-if="users" :users="users.collection" :room="room" />
+				</AppScrollScroller>
 			</div>
 		</div>
 	</div>

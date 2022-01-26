@@ -187,7 +187,7 @@ export default class AppShellNotificationPopover extends Vue {
 </script>
 
 <template>
-	<app-popper
+	<AppPopper
 		v-if="!Connection.isClientOffline"
 		popover-class="fill-dark"
 		fixed
@@ -209,7 +209,7 @@ export default class AppShellNotificationPopover extends Vue {
 				{{ count }}
 			</span>
 			<div v-if="hasNewUnlockedStickers" class="-new-tag anim-fade-enter anim-fade-leave" />
-			<app-jolticon icon="bell-filled" />
+			<AppJolticon icon="bell-filled" />
 			<div ref="newStickerAnimContainer" class="-new-sticker-anim-container">
 				<div
 					v-for="{ key, stickerImg } in animatingStickers"
@@ -224,7 +224,7 @@ export default class AppShellNotificationPopover extends Vue {
 		<template v-if="feed && isShowing" #header>
 			<div class="-header fill-darker small">
 				<a class="link-muted" @click="markNotificationsAsRead()">
-					<translate>Mark All as Read</translate>
+					<AppTranslate>Mark All as Read</AppTranslate>
 				</a>
 			</div>
 		</template>
@@ -233,21 +233,21 @@ export default class AppShellNotificationPopover extends Vue {
 			<div class="shell-card-popover">
 				<template v-if="isLoading">
 					<br />
-					<app-loading centered />
+					<AppLoading centered />
 				</template>
 				<template v-else>
-					<app-shell-notification-popover-sticker-nav-item
+					<AppShellNotificationPopoverStickerNavItem
 						v-if="totalStickersCount > 0"
 						:sticker-count="totalStickersCount"
 						:has-new="hasNewUnlockedStickers"
 					/>
 					<template v-if="!feed || !feed.hasItems">
 						<div class="alert">
-							<translate>You don't have any notifications yet.</translate>
+							<AppTranslate>You don't have any notifications yet.</AppTranslate>
 						</div>
 					</template>
 					<template v-else>
-						<app-activity-feed :feed="feed" />
+						<AppActivityFeed :feed="feed" />
 					</template>
 				</template>
 			</div>
@@ -255,12 +255,12 @@ export default class AppShellNotificationPopover extends Vue {
 
 		<template v-if="feed && isShowing" #footer>
 			<div class="fill-darker">
-				<app-button :to="{ name: 'notifications' }" block trans>
-					<translate>View All</translate>
-				</app-button>
+				<AppButton :to="{ name: 'notifications' }" block trans>
+					<AppTranslate>View All</AppTranslate>
+				</AppButton>
 			</div>
 		</template>
-	</app-popper>
+	</AppPopper>
 </template>
 
 <style lang="stylus" scoped>

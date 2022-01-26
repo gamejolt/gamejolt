@@ -19,7 +19,7 @@ export default class AppClientBase extends Vue {
 
 <template>
 	<div>
-		<app-client-tray v-if="os === 'windows'" />
-		<app-client-mac-app-menu v-if="os === 'mac'" />
+		<AppClientTray v-if="os === 'windows'" />
+		<AppClientMacAppMenu v-if="os === 'mac'" />
 	</div>
 </template>

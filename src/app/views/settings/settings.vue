@@ -67,21 +67,21 @@ export default class RouteSettings extends BaseRouteComponent {
 
 <template>
 	<div>
-		<app-page-header>
+		<AppPageHeader>
 			<div class="row">
 				<div class="col-sm-9 col-sm-offset-3 col-md-8 col-md-offset-2 col-lg-6">
 					<h1>
-						<translate>settings.heading</translate>
+						<AppTranslate>settings.heading</AppTranslate>
 					</h1>
 				</div>
 			</div>
-		</app-page-header>
+		</AppPageHeader>
 
 		<section class="section">
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-3 col-md-2 hidden-xs">
-						<app-scroll-affix>
+						<AppScrollAffix>
 							<nav class="platform-list">
 								<ul>
 									<li v-for="(label, section) of sections" :key="section">
@@ -91,13 +91,13 @@ export default class RouteSettings extends BaseRouteComponent {
 									</li>
 								</ul>
 							</nav>
-						</app-scroll-affix>
+						</AppScrollAffix>
 					</div>
 					<div class="col-sm-9 col-md-8 col-lg-6">
-						<form-settings />
+						<FormSettings />
 
 						<template v-if="hasDev">
-							<form-settings-dev />
+							<FormSettingsDev />
 						</template>
 					</div>
 				</div>

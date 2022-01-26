@@ -35,8 +35,8 @@ export default class AppActivityFeedItemPlaceholder extends Vue {}
 			</div>
 
 			<div class="-controls">
-				<app-button-placeholder sparse circle />
-				<app-button-placeholder sparse circle />
+				<AppButtonPlaceholder sparse circle />
+				<AppButtonPlaceholder sparse circle />
 			</div>
 		</div>
 	</div>

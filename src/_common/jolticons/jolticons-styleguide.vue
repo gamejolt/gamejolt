@@ -216,7 +216,7 @@ export default class AppJolticonsStyleguide extends Vue {
 		<div class="row">
 			<div v-for="jolticon of filteredIcons" :key="jolticon" class="col-xs-2 text-center">
 				<p v-app-tooltip="jolticon">
-					<app-jolticon :icon="jolticon" big />
+					<AppJolticon :icon="jolticon" big />
 				</p>
 			</div>
 		</div>

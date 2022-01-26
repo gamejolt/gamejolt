@@ -168,10 +168,10 @@ export default class AppClientIntro extends Vue {
 				alt="Game Jolt"
 			/>
 		</div>
-		<app-expand :when="shouldShowLoading">
+		<AppExpand :when="shouldShowLoading">
 			<br />
-			<app-loading centered />
-		</app-expand>
+			<AppLoading centered />
+		</AppExpand>
 	</div>
 </template>
 

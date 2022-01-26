@@ -152,51 +152,51 @@ export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
 </script>
 
 <template>
-	<app-communities-view-page-container full>
+	<AppCommunitiesViewPageContainer full>
 		<h2 class="section-header">
-			<translate>Blocked Users</translate>
+			<AppTranslate>Blocked Users</AppTranslate>
 		</h2>
 
 		<div class="page-help">
 			<p>
-				<translate>
+				<AppTranslate>
 					Block users from contributing to this community. They will not be able to join
 					or post.
-				</translate>
+				</AppTranslate>
 			</p>
 		</div>
 
-		<app-card-list :is-adding="isAdding">
-			<app-card-list-add :label="$gettext('Block User')" @toggle="isAdding = !isAdding">
-				<form-community-block :community="community" @submit="onBlockSubmit" />
-			</app-card-list-add>
-		</app-card-list>
+		<AppCardList :is-adding="isAdding">
+			<AppCardListAdd :label="$gettext('Block User')" @toggle="isAdding = !isAdding">
+				<FormCommunityBlock :community="community" @submit="onBlockSubmit" />
+			</AppCardListAdd>
+		</AppCardList>
 		<div class="table-responsive">
 			<table v-if="hasBlocks" class="table">
 				<thead>
 					<tr>
 						<th class="-header" @click="changeSort('name')">
-							<translate>Blocked user</translate>
+							<AppTranslate>Blocked user</AppTranslate>
 							<span v-if="sort === 'name'">
-								<app-jolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
+								<AppJolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
 							</span>
 						</th>
 						<th class="-header" @click="changeSort('blocker')">
-							<translate>Issued by</translate>
+							<AppTranslate>Issued by</AppTranslate>
 							<span v-if="sort === 'blocker'">
-								<app-jolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
+								<AppJolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
 							</span>
 						</th>
 						<th class="-header" @click="changeSort('blocked-on')">
-							<translate>Blocked on</translate>
+							<AppTranslate>Blocked on</AppTranslate>
 							<span v-if="sort === 'blocked-on'">
-								<app-jolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
+								<AppJolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
 							</span>
 						</th>
 						<th class="-header" @click="changeSort('expires-on')">
-							<translate>Expires</translate>
+							<AppTranslate>Expires</AppTranslate>
 							<span v-if="sort === 'expires-on'">
-								<app-jolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
+								<AppJolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
 							</span>
 						</th>
 						<th />
@@ -212,14 +212,14 @@ export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
 								}"
 								class="-user-link"
 							>
-								<app-user-card-hover :user="block.user">
+								<AppUserCardHover :user="block.user">
 									<span class="-user-link">
-										<app-user-avatar-img class="-avatar" :user="block.user" />
+										<AppUserAvatarImg class="-avatar" :user="block.user" />
 										<span class="-user-link-name">
 											@{{ block.user.username }}
 										</span>
 									</span>
-								</app-user-card-hover>
+								</AppUserCardHover>
 							</router-link>
 						</td>
 
@@ -232,9 +232,9 @@ export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
 								}"
 								class="-user-link"
 							>
-								<app-user-card-hover :user="block.blocked_by_user">
+								<AppUserCardHover :user="block.blocked_by_user">
 									<span class="-user-link">
-										<app-user-avatar-img
+										<AppUserAvatarImg
 											class="-avatar"
 											:user="block.blocked_by_user"
 										/>
@@ -242,22 +242,22 @@ export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
 											@{{ block.blocked_by_user.username }}
 										</span>
 									</span>
-								</app-user-card-hover>
+								</AppUserCardHover>
 							</router-link>
 							<span v-else> - </span>
 						</td>
 
 						<td class="-info">
-							<app-time-ago :date="block.blocked_on" />
+							<AppTimeAgo :date="block.blocked_on" />
 						</td>
 
 						<td class="-info">
-							<translate v-if="!block.doesExpire"> Never </translate>
-							<app-time-ago v-else :date="block.expires_on" is-future />
+							<AppTranslate v-if="!block.doesExpire"> Never </AppTranslate>
+							<AppTimeAgo v-else :date="block.expires_on" is-future />
 						</td>
 
 						<td>
-							<app-jolticon
+							<AppJolticon
 								v-app-tooltip="$gettext(`Lift Block`)"
 								class="-lift"
 								icon="remove"
@@ -269,14 +269,14 @@ export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
 			</table>
 		</div>
 
-		<app-pagination
+		<AppPagination
 			:total-items="totalCount"
 			:current-page="page"
 			:items-per-page="perPage"
 			prevent-url-change
 			@pagechange="onPageChanged"
 		/>
-	</app-communities-view-page-container>
+	</AppCommunitiesViewPageContainer>
 </template>
 
 <style lang="stylus" scoped>

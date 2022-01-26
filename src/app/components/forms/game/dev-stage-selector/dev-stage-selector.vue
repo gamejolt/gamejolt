@@ -66,11 +66,11 @@ export default class AppGameDevStageSelector extends Vue {
 	<div class="dev-stage-selector">
 		<div v-for="stage of stages" :key="stage">
 			<a @click="select(stage)">
-				<app-card :is-disabled="!isEnabled(stage)">
+				<AppCard :is-disabled="!isEnabled(stage)">
 					<div class="dev-stage-selector-content">
 						<div class="card-title">
 							<h4>
-								<app-jolticon
+								<AppJolticon
 									:icon="
 										game && game.development_status === stage
 											? 'radio-circle-filled'
@@ -78,48 +78,48 @@ export default class AppGameDevStageSelector extends Vue {
 									"
 								/>
 								<template v-if="stage === Game.DEVELOPMENT_STATUS_DEVLOG">
-									<translate>Devlog-Only</translate>
+									<AppTranslate>Devlog-Only</AppTranslate>
 								</template>
 								<template v-else-if="stage === Game.DEVELOPMENT_STATUS_WIP">
-									<translate>Early Access</translate>
+									<AppTranslate>Early Access</AppTranslate>
 								</template>
 								<template v-else-if="stage === Game.DEVELOPMENT_STATUS_FINISHED">
-									<translate>Complete/Stable</translate>
+									<AppTranslate>Complete/Stable</AppTranslate>
 								</template>
 							</h4>
 						</div>
 
 						<div class="card-content">
 							<template v-if="stage === Game.DEVELOPMENT_STATUS_DEVLOG">
-								<translate>
+								<AppTranslate>
 									You don't have anything playable yet, but would like to share
 									active game development in the form of images, videos, posts and
 									more.
-								</translate>
+								</AppTranslate>
 							</template>
 							<template v-else-if="stage === Game.DEVELOPMENT_STATUS_WIP">
-								<translate>
+								<AppTranslate>
 									Your game has playable builds, but you're still actively
 									developing it.
-								</translate>
+								</AppTranslate>
 							</template>
 							<template v-else-if="stage === Game.DEVELOPMENT_STATUS_FINISHED">
-								<translate>
+								<AppTranslate>
 									Your game is complete. It's in a stable state and you only plan
 									on making bug fixes, performance optimizations, or small
 									improvements.
-								</translate>
+								</AppTranslate>
 							</template>
 						</div>
 
 						<template v-if="!isEnabled(stage)">
 							<br />
 							<div class="alert sans-margin">
-								<app-jolticon icon="notice" />
-								<translate>
+								<AppJolticon icon="notice" />
+								<AppTranslate>
 									You must have active published packages to transition to this
 									stage.
-								</translate>
+								</AppTranslate>
 							</div>
 						</template>
 					</div>
@@ -147,7 +147,7 @@ export default class AppGameDevStageSelector extends Vue {
 							alt=""
 						/>
 					</div>
-				</app-card>
+				</AppCard>
 			</a>
 		</div>
 	</div>

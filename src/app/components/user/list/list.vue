@@ -28,7 +28,7 @@ export default class AppUserList extends Vue {
 
 <template>
 	<div class="user-list">
-		<app-user-list-item
+		<AppUserListItem
 			v-for="user of users"
 			:key="user.id"
 			:user="user"

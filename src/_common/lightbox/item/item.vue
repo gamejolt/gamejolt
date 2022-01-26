@@ -138,7 +138,7 @@ export default class AppLightboxItem extends Vue {
 			<template v-if="mediaType === 'image'">
 				<div class="-embed">
 					<!-- The min/max will be the actual dimensions for the image thumbnail. -->
-					<app-media-item-backdrop
+					<AppMediaItemBackdrop
 						:media-item="mediaItem"
 						:style="{
 							width: maxWidth ? maxWidth + 'px' : undefined,
@@ -149,7 +149,7 @@ export default class AppLightboxItem extends Vue {
 						}"
 						radius="lg"
 					>
-						<app-img-responsive
+						<AppImgResponsive
 							v-if="!mediaItem.is_animated || !shouldVideoPlay"
 							class="-img"
 							:src="item.img_thumbnail"
@@ -161,13 +161,13 @@ export default class AppLightboxItem extends Vue {
 							:src="mediaItem.img_url"
 							:alt="item.caption"
 						/>
-						<app-video
+						<AppVideo
 							v-else-if="videoController"
 							class="-video"
 							:player="videoController"
 							show-loading
 						/>
-					</app-media-item-backdrop>
+					</AppMediaItemBackdrop>
 				</div>
 
 				<div v-if="item.caption" ref="caption" class="-caption">
@@ -179,7 +179,7 @@ export default class AppLightboxItem extends Vue {
 			<template v-else-if="mediaType === 'video'">
 				<div v-if="isActive" class="-embed">
 					<!-- We want to wait until the size is properly calculated, otherwise the player won't size properly. -->
-					<app-video-embed
+					<AppVideoEmbed
 						v-if="initialized"
 						:video-provider="item.type"
 						:video-id="item.url"
@@ -198,7 +198,7 @@ export default class AppLightboxItem extends Vue {
 			<!-- Sketchfab -->
 			<template v-else-if="mediaType === 'sketchfab'">
 				<div v-if="isActive" class="-embed">
-					<app-sketchfab-embed
+					<AppSketchfabEmbed
 						:sketchfab-id="item.sketchfab_id"
 						:max-width="maxWidth"
 						:max-height="maxHeight"

@@ -83,7 +83,7 @@ export default class RouteWelcome extends BaseRouteComponent {
 			<template #controls="{ shouldShowSkip, canContinue }">
 				<section class="-controls">
 					<template v-if="shouldShowSkip">
-						<app-form-button
+						<AppFormButton
 							class="-skip"
 							block
 							:primary="false"
@@ -91,13 +91,13 @@ export default class RouteWelcome extends BaseRouteComponent {
 							trans
 							:disabled="!canContinue"
 						>
-							<translate>Skip</translate>
-						</app-form-button>
+							<AppTranslate>Skip</AppTranslate>
+						</AppFormButton>
 					</template>
 					<template v-else>
-						<app-form-button primary block solid :disabled="!canContinue">
-							<translate>Next</translate>
-						</app-form-button>
+						<AppFormButton primary block solid :disabled="!canContinue">
+							<AppTranslate>Next</AppTranslate>
+						</AppFormButton>
 					</template>
 				</section>
 			</template>

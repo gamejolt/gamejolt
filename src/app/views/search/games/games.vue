@@ -42,7 +42,7 @@ export default class RouteSearchGames extends BaseRouteComponent {
 <template>
 	<section class="section">
 		<div v-if="hasSearch" class="container-xl">
-			<app-game-grid
+			<AppGameGrid
 				:games="searchPayload.games"
 				:games-count="searchPayload.gamesCount"
 				:current-page="searchPayload.page"

@@ -99,34 +99,34 @@ export default class RouteJoinCaptcha extends BaseRouteComponent {
 <template>
 	<div class="anim-fade-in-up">
 		<h2 class="section-header">
-			<translate>Are you a robot?</translate>
+			<AppTranslate>Are you a robot?</AppTranslate>
 			<br />
 			(ノಠ益ಠ)ノ彡┻━┻
 		</h2>
 
 		<br />
-		<app-grecaptcha-widget @response="onRecaptchaResponse" />
+		<AppGrecaptchaWidget @response="onRecaptchaResponse" />
 		<br />
 		<div class="alert alert-notice" v-if="serverErrors">
-			<translate v-if="serverErrors.token">
+			<AppTranslate v-if="serverErrors.token">
 				Oh no, your sign-up session has expired!
-			</translate>
-			<translate v-else-if="serverErrors.captcha">
+			</AppTranslate>
+			<AppTranslate v-else-if="serverErrors.captcha">
 				Oh no, your captcha couldn't be validated. Please try again.
-			</translate>
-			<translate v-else-if="serverErrors.email || serverErrors.username">
+			</AppTranslate>
+			<AppTranslate v-else-if="serverErrors.email || serverErrors.username">
 				Oh no, someone already registered with your email or username! Gotta go fast.
-			</translate>
-			<translate v-else-if="serverErrors['rate-limit']">
+			</AppTranslate>
+			<AppTranslate v-else-if="serverErrors['rate-limit']">
 				You must wait 15 minutes before creating another account.
-			</translate>
-			<translate v-else>
+			</AppTranslate>
+			<AppTranslate v-else>
 				Something weird happened!
-			</translate>
+			</AppTranslate>
 			<br />
-			<app-button primary @click="retryJoin" v-if="!serverErrors['rate-limit']">
-				<translate>Retry</translate>
-			</app-button>
+			<AppButton primary @click="retryJoin" v-if="!serverErrors['rate-limit']">
+				<AppTranslate>Retry</AppTranslate>
+			</AppButton>
 		</div>
 	</div>
 </template>

@@ -134,30 +134,30 @@ export default class FormOnboardingProfile
 </script>
 
 <template>
-	<app-form :controller="form">
+	<AppForm :controller="form">
 		<div class="-form">
 			<section class="-message">
 				<h3 class="section-header">
-					<translate>Let's get you set up!</translate>
+					<AppTranslate>Let's get you set up!</AppTranslate>
 				</h3>
 			</section>
 
 			<section class="-avatar">
-				<app-editable-overlay @click="chooseAvatar()">
+				<AppEditableOverlay @click="chooseAvatar()">
 					<template #overlay>
-						<translate>Change</translate>
+						<AppTranslate>Change</AppTranslate>
 					</template>
-					<app-user-avatar :user="user" />
-				</app-editable-overlay>
+					<AppUserAvatar :user="user" />
+				</AppEditableOverlay>
 			</section>
 
-			<app-form-group v-if="showUsername" name="username" hide-label>
+			<AppFormGroup v-if="showUsername" name="username" hide-label>
 				<section class="-username">
 					<div class="-field-row">
-						<div class="-hello text-muted"><translate>Hello! It'sa me,</translate></div>
+						<div class="-hello text-muted"><AppTranslate>Hello! It'sa me,</AppTranslate></div>
 						<div class="-field">
 							<div class="-at text-muted">@</div>
-							<app-form-control
+							<AppFormControl
 								type="text"
 								:validators="[
 									validateMinLength(3),
@@ -172,13 +172,13 @@ export default class FormOnboardingProfile
 							/>
 						</div>
 					</div>
-					<app-form-control-errors hide-caret />
+					<AppFormControlErrors hide-caret />
 				</section>
-			</app-form-group>
+			</AppFormGroup>
 
 			<section class="-bio">
-				<app-form-group name="bio" optional hide-label>
-					<app-form-control-content
+				<AppFormGroup name="bio" optional hide-label>
+					<AppFormControlContent
 						v-if="isLoaded"
 						class="-bio-input anim-fade-in"
 						content-context="user-bio"
@@ -188,12 +188,12 @@ export default class FormOnboardingProfile
 						:max-height="0"
 					/>
 					<div v-else class="-bio-input-placeholder" />
-				</app-form-group>
+				</AppFormGroup>
 			</section>
 
 			<slot name="controls" :canContinue="canContinue" :shouldShowSkip="shouldShowSkip" />
 		</div>
-	</app-form>
+	</AppForm>
 </template>
 
 <style lang="stylus" src="./profile.styl" scoped></style>

@@ -79,30 +79,30 @@ export default class FormGameFeaturedBadge extends mixins(Wrapper) {
 	<div class="container">
 		<h1 class="section-header">Generate your Featured Badge!</h1>
 
-		<app-form :controller="form">
+		<AppForm :controller="form">
 			<div class="-form">
 				<div class="-selectors">
 					<!-- SVG File Selector -->
-					<app-form-group name="color" class="-selectors-item" label="Badge Color">
+					<AppFormGroup name="color" class="-selectors-item" label="Badge Color">
 						<div v-for="{ label, key } of colorOptions" :key="key" class="checkbox">
 							<label>
-								<app-form-control-radio :value="key" />
+								<AppFormControlRadio :value="key" />
 								{{ label }}
 							</label>
 						</div>
-					</app-form-group>
-					<app-form-group name="size" class="-selectors-item" label="Badge Size">
+					</AppFormGroup>
+					<AppFormGroup name="size" class="-selectors-item" label="Badge Size">
 						<div
 							v-for="{ label, key } of sizeOptions"
 							:key="key.width"
 							class="checkbox"
 						>
 							<label>
-								<app-form-control-radio :value="key" />
+								<AppFormControlRadio :value="key" />
 								{{ label }}
 							</label>
 						</div>
-					</app-form-group>
+					</AppFormGroup>
 				</div>
 
 				<div class="-preview">
@@ -117,12 +117,12 @@ export default class FormGameFeaturedBadge extends mixins(Wrapper) {
 					<code class="-preview-output">
 						{{ processedTag }}
 					</code>
-					<app-button class="-submit" icon="edit" @click="onClickCopy">
+					<AppButton class="-submit" icon="edit" @click="onClickCopy">
 						Copy to Clipboard
-					</app-button>
+					</AppButton>
 				</div>
 			</div>
-		</app-form>
+		</AppForm>
 	</div>
 </template>
 

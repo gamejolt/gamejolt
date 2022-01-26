@@ -170,9 +170,9 @@ export default class AppCommunitiesViewFeed extends Vue {
 
 <template>
 	<div>
-		<app-blocked-notice :community="community" />
+		<AppBlockedNotice :community="community" />
 
-		<app-post-add-button
+		<AppPostAddButton
 			v-if="shouldShowPostAdd"
 			:community="community"
 			:channel="channel"
@@ -180,7 +180,7 @@ export default class AppCommunitiesViewFeed extends Vue {
 			@add="emitAddPost"
 		/>
 
-		<app-nav-tab-list v-if="shouldShowTabs">
+		<AppNavTabList v-if="shouldShowTabs">
 			<ul>
 				<li>
 					<router-link
@@ -195,7 +195,7 @@ export default class AppCommunitiesViewFeed extends Vue {
 							active: tab === 'new',
 						}"
 					>
-						<translate>New</translate>
+						<AppTranslate>New</AppTranslate>
 					</router-link>
 				</li>
 				<li>
@@ -214,15 +214,15 @@ export default class AppCommunitiesViewFeed extends Vue {
 							active: tab === 'hot',
 						}"
 					>
-						<translate>Hot</translate>
+						<AppTranslate>Hot</AppTranslate>
 					</router-link>
 				</li>
 			</ul>
-		</app-nav-tab-list>
+		</AppNavTabList>
 
-		<app-activity-feed-placeholder v-if="!feed" />
+		<AppActivityFeedPlaceholder v-if="!feed" />
 		<template v-else>
-			<app-activity-feed
+			<AppActivityFeed
 				v-if="feed.hasItems"
 				:feed="feed"
 				@unfeature-post="onPostUnfeatured"
@@ -236,19 +236,19 @@ export default class AppCommunitiesViewFeed extends Vue {
 					What are you waiting for? %{ message } Make people happy.
 				</div>
 				<div v-else-if="channel.is_archived">
-					<app-illustration :src="illNoCommentsSmall">
+					<AppIllustration :src="illNoCommentsSmall">
 						<p>
-							<translate>Shhh. This channel is archived.</translate>
+							<AppTranslate>Shhh. This channel is archived.</AppTranslate>
 						</p>
-					</app-illustration>
+					</AppIllustration>
 				</div>
 				<div v-else v-translate class="alert">
-					<translate>There are no posts in this channel.</translate>
+					<AppTranslate>There are no posts in this channel.</AppTranslate>
 				</div>
 			</div>
 			<div v-else class="alert">
 				<div>
-					<translate>There are no featured posts in this community.</translate>
+					<AppTranslate>There are no featured posts in this community.</AppTranslate>
 				</div>
 			</div>
 		</template>

@@ -17,19 +17,19 @@ export default class AppBroadcastCard extends Vue {
 <template>
 	<div>
 		<router-link v-app-track-event="`dash:overview:broadcast-view`" :to="post.routeLocation">
-			<app-card>
+			<AppCard>
 				<div class="clearfix">
-					<app-jolticon class="-icon" icon="broadcast" big />
+					<AppJolticon class="-icon" icon="broadcast" big />
 					<div class="-content">
 						{{ post.getShortLead() }}
 					</div>
 				</div>
-			</app-card>
+			</AppCard>
 		</router-link>
 
 		<!-- <div class="text-right small">
 		<a class="link-muted" :href="Environment.firesideBaseUrl + `/tag/gjbroadcast`" target="_blank" v-app-track-event="`dash:overview:broadcast-all`">
-			<translate>dash.overview.broadcast_view_all</translate>
+			<AppTranslate>dash.overview.broadcast_view_all</AppTranslate>
 		</a>
 	</div> -->
 	</div>

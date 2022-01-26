@@ -203,16 +203,16 @@ export default class AppChatWindowOutputItem extends Vue {
 		:style="{ 'background-color': isEditingColor }"
 	>
 		<a v-if="!message.combine" class="chat-window-message-avatar">
-			<app-popper placement="right">
+			<AppPopper placement="right">
 				<img
 					class="img-responsive -chat-window-message-avatar-img"
 					:src="message.user.img_avatar"
 					alt=""
 				/>
 				<template #popover>
-					<app-chat-user-popover :user="message.user" :room="room" />
+					<AppChatUserPopover :user="message.user" :room="room" />
 				</template>
-			</app-popper>
+			</AppPopper>
 		</a>
 
 		<div class="chat-window-message-container">
@@ -233,14 +233,14 @@ export default class AppChatWindowOutputItem extends Vue {
 						class="chat-window-message-byline-error"
 						@click="onClickResend"
 					>
-						<app-jolticon icon="notice" notice />
+						<AppJolticon icon="notice" notice />
 					</span>
 					<span
 						v-else
 						v-app-tooltip="$gettext(`Sending...`)"
 						class="chat-window-message-byline-notice"
 					>
-						<app-jolticon icon="broadcast" />
+						<AppJolticon icon="broadcast" />
 					</span>
 				</span>
 			</div>
@@ -250,13 +250,13 @@ export default class AppChatWindowOutputItem extends Vue {
 				class="chat-window-message-options"
 				:class="{ 'chat-window-message-options-open': messageOptionsVisible }"
 			>
-				<app-popper
+				<AppPopper
 					@show="messageOptionsVisible = true"
 					@hide="messageOptionsVisible = false"
 				>
 					<template #default>
 						<a v-app-tooltip="$gettext('More Options')" class="link-muted">
-							<app-jolticon icon="ellipsis-v" class="middle" />
+							<AppJolticon icon="ellipsis-v" class="middle" />
 						</a>
 					</template>
 
@@ -267,8 +267,8 @@ export default class AppChatWindowOutputItem extends Vue {
 								class="list-group-item has-icon"
 								@click="startEdit"
 							>
-								<app-jolticon icon="edit" />
-								<translate>Edit Message</translate>
+								<AppJolticon icon="edit" />
+								<AppTranslate>Edit Message</AppTranslate>
 							</a>
 
 							<a
@@ -276,12 +276,12 @@ export default class AppChatWindowOutputItem extends Vue {
 								class="list-group-item has-icon"
 								@click="removeMessage"
 							>
-								<app-jolticon icon="remove" notice />
-								<translate>Remove Message</translate>
+								<AppJolticon icon="remove" notice />
+								<AppTranslate>Remove Message</AppTranslate>
 							</a>
 						</div>
 					</template>
-				</app-popper>
+				</AppPopper>
 			</div>
 
 			<div class="chat-window-message-content-wrap">
@@ -301,18 +301,18 @@ export default class AppChatWindowOutputItem extends Vue {
 						class="chat-window-message-queue-error"
 						@click="onClickResend"
 					>
-						<app-jolticon icon="notice" notice />
+						<AppJolticon icon="notice" notice />
 					</span>
 					<span
 						v-else
 						v-app-tooltip="$gettext(`Sending...`)"
 						class="chat-window-message-queue-notice"
 					>
-						<app-jolticon icon="broadcast" />
+						<AppJolticon icon="broadcast" />
 					</span>
 				</template>
 
-				<app-content-viewer :source="message.content" :display-rules="displayRules" />
+				<AppContentViewer :source="message.content" :display-rules="displayRules" />
 
 				<span
 					v-if="editingState"
@@ -320,7 +320,7 @@ export default class AppChatWindowOutputItem extends Vue {
 					class="-edited"
 					:class="{ 'text-muted': !isEditing }"
 				>
-					<translate>{{ editingState.display }}</translate>
+					<AppTranslate>{{ editingState.display }}</AppTranslate>
 				</span>
 			</div>
 		</div>

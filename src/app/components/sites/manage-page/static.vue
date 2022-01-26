@@ -78,15 +78,15 @@ export default class AppSitesManagePageStatic extends Vue {
 			<div class="row">
 				<div class="col-xs-8 col-centered">
 					<p class="lead">
-						<translate>
+						<AppTranslate>
 							Have a site already or want to create one from scratch? Upload a .zip
 							file of your site's content and we'll host it for you!
-						</translate>
+						</AppTranslate>
 					</p>
 
-					<form-dash-site-build v-if="!site.build" :site="site" @submit="onBuildAdded" />
+					<FormDashSiteBuild v-if="!site.build" :site="site" @submit="onBuildAdded" />
 
-					<app-button
+					<AppButton
 						v-else
 						v-app-tooltip="
 							enableTooltip
@@ -94,15 +94,15 @@ export default class AppSitesManagePageStatic extends Vue {
 						primary
 						@click="activateBuild()"
 					>
-						<translate>Turn On</translate>
-					</app-button>
+						<AppTranslate>Turn On</AppTranslate>
+					</AppButton>
 				</div>
 			</div>
 		</div>
 		<div v-else>
-			<h2><translate>Upload a New Build</translate></h2>
+			<h2><AppTranslate>Upload a New Build</AppTranslate></h2>
 
-			<form-dash-site-build :site="site" @submit="onBuildAdded" />
+			<FormDashSiteBuild :site="site" @submit="onBuildAdded" />
 		</div>
 	</div>
 </template>

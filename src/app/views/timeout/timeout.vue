@@ -132,7 +132,7 @@ export default class RouteTimeout extends BaseRouteComponent {
 		<div class="container">
 			<div class="-content">
 				<div class="-centered">
-					<app-theme-svg
+					<AppThemeSvg
 						:src="imageGameJoltLogo"
 						alt="Game Jolt"
 						:width="164 * logoScale"
@@ -144,21 +144,21 @@ export default class RouteTimeout extends BaseRouteComponent {
 
 				<template v-if="timeout && timeout.getIsActive()">
 					<div class="-centered">
-						<app-illustration :src="illTimeOut">
+						<AppIllustration :src="illTimeOut">
 							<p>
-								<translate>You've been put in time-out.</translate>
+								<AppTranslate>You've been put in time-out.</AppTranslate>
 							</p>
-						</app-illustration>
+						</AppIllustration>
 
 						<template v-if="!isExpired">
 							<p class="text-center">
-								<translate>
+								<AppTranslate>
 									You will be allowed back on Game Jolt again in:
-								</translate>
+								</AppTranslate>
 							</p>
 							<p class="text-center">
 								<strong>
-									<app-timeout-countdown :expires-on="timeout.expires_on" />
+									<AppTimeoutCountdown :expires-on="timeout.expires_on" />
 								</strong>
 							</p>
 						</template>
@@ -167,7 +167,7 @@ export default class RouteTimeout extends BaseRouteComponent {
 
 					<template v-if="reasonText">
 						<h3 class="sans-margin-top">
-							<translate>Reason</translate>
+							<AppTranslate>Reason</AppTranslate>
 						</h3>
 
 						<pre>{{ reasonText }}</pre>
@@ -175,7 +175,7 @@ export default class RouteTimeout extends BaseRouteComponent {
 
 					<p>
 						Please read the
-						<app-link-help page="guidelines">Site Guidelines</app-link-help>
+						<AppLinkHelp page="guidelines">Site Guidelines</AppLinkHelp>
 						for more information on what sort of content is allowed on Game Jolt as well
 						as how to behave as a good Game Jolt Citizen.
 					</p>
@@ -184,37 +184,37 @@ export default class RouteTimeout extends BaseRouteComponent {
 					<template v-if="timeout.resource_content !== null">
 						<div class="sheet sheet-elevate">
 							<p>
-								<translate>
+								<AppTranslate>
 									Being put in time-out was caused in part by the content below.
-								</translate>
+								</AppTranslate>
 							</p>
 
 							<pre>{{ timeout.resource_content }}</pre>
 
 							<p>
-								<translate>
+								<AppTranslate>
 									In order to be allowed back on Game Jolt, you have to delete the
 									content in question.
-								</translate>
+								</AppTranslate>
 							</p>
 
-							<app-button solid @click="onClickClearResource">
-								<translate>Delete Content</translate>
-							</app-button>
+							<AppButton solid @click="onClickClearResource">
+								<AppTranslate>Delete Content</AppTranslate>
+							</AppButton>
 						</div>
 					</template>
 
 					<p>
 						If you would like to get in contact with us, please send an email to
-						<app-contact-link email="contact@gamejolt.com">
+						<AppContactLink email="contact@gamejolt.com">
 							contact@gamejolt.com
-						</app-contact-link>
+						</AppContactLink>
 					</p>
 				</template>
 				<template v-else>
 					<div class="text-center">
 						<p>You're no longer in time-out, yay!</p>
-						<app-button @click="onClickLeave">Go To Game Jolt</app-button>
+						<AppButton @click="onClickLeave">Go To Game Jolt</AppButton>
 					</div>
 				</template>
 			</div>

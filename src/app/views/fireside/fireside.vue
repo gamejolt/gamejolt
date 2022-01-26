@@ -335,11 +335,11 @@ export default class RouteFireside extends BaseRouteComponent {
 </script>
 
 <template>
-	<app-fireside-container v-if="c" :controller="c" class="-fireside">
-		<app-fireside-banner />
+	<AppFiresideContainer v-if="c" :controller="c" class="-fireside">
+		<AppFiresideBanner />
 
 		<template v-if="!shouldShowHeaderInBody">
-			<app-fireside-header
+			<AppFiresideHeader
 				class="-header"
 				:show-controls="shouldShowTitleControls"
 				:has-chat="!shouldShowChatMembers"
@@ -355,7 +355,7 @@ export default class RouteFireside extends BaseRouteComponent {
 			}"
 		>
 			<div v-if="shouldShowFiresideStats" class="-leading">
-				<app-fireside-stats />
+				<AppFiresideStats />
 			</div>
 
 			<div
@@ -380,7 +380,7 @@ export default class RouteFireside extends BaseRouteComponent {
 								height: videoHeight + 'px',
 							}"
 						>
-							<app-sticker-target
+							<AppStickerTarget
 								class="-video-inner"
 								:controller="c.stickerTargetController"
 								:style="{
@@ -391,8 +391,8 @@ export default class RouteFireside extends BaseRouteComponent {
 								}"
 							>
 								<template v-if="c.rtc.value && c.rtc.value.focusedUser">
-									<app-popper trigger="right-click">
-										<app-fireside-stream
+									<AppPopper trigger="right-click">
+										<AppFiresideStream
 											:rtc-user="c.rtc.value.focusedUser"
 											:has-header="
 												shouldShowHeaderInBody || shouldFullscreenStream
@@ -406,35 +406,35 @@ export default class RouteFireside extends BaseRouteComponent {
 													class="list-group-item"
 													@click="toggleVideoStats()"
 												>
-													<translate>Toggle Video Stats</translate>
+													<AppTranslate>Toggle Video Stats</AppTranslate>
 												</a>
 											</div>
 										</template>
-									</app-popper>
+									</AppPopper>
 								</template>
-							</app-sticker-target>
+							</AppStickerTarget>
 						</div>
 					</div>
 				</div>
 
 				<div v-if="c.rtc.value && shouldShowDesktopHosts" class="-hosts-padding">
 					<div class="-hosts">
-						<app-fireside-host-list />
+						<AppFiresideHostList />
 					</div>
 
-					<app-fireside-share v-if="!c.isDraft.value" class="-share" hide-heading />
+					<AppFiresideShare v-if="!c.isDraft.value" class="-share" hide-heading />
 				</div>
 			</div>
 
 			<template v-if="c.status.value === 'loading' || c.status.value === 'initial'">
 				<div key="loading" class="-message-wrapper">
 					<div class="-message">
-						<app-illustration :src="illEndOfFeed">
-							<app-loading
+						<AppIllustration :src="illEndOfFeed">
+							<AppLoading
 								centered
 								:label="$gettext(`Traveling to the fireside...`)"
 							/>
-						</app-illustration>
+						</AppIllustration>
 					</div>
 				</div>
 			</template>
@@ -443,19 +443,19 @@ export default class RouteFireside extends BaseRouteComponent {
 				<div key="unauthorized" class="-message-wrapper">
 					<div class="-message">
 						<h2 class="section-header text-center">
-							<translate>Join Game Jolt</translate>
+							<AppTranslate>Join Game Jolt</AppTranslate>
 						</h2>
 
 						<div class="text-center">
 							<p class="lead">
-								<translate>Do you love games as much as we do?</translate>
+								<AppTranslate>Do you love games as much as we do?</AppTranslate>
 							</p>
 						</div>
 
 						<hr class="underbar underbar-center" />
 						<br />
 
-						<app-auth-join />
+						<AppAuthJoin />
 					</div>
 				</div>
 			</template>
@@ -463,16 +463,16 @@ export default class RouteFireside extends BaseRouteComponent {
 			<template v-else-if="c.status.value === 'expired'">
 				<div key="expired" class="-message-wrapper">
 					<div class="-message">
-						<app-illustration :src="illNoCommentsSmall">
+						<AppIllustration :src="illNoCommentsSmall">
 							<p>
-								<translate>This fireside's fire has burned out.</translate>
+								<AppTranslate>This fireside's fire has burned out.</AppTranslate>
 							</p>
 							<p>
 								<router-link :to="{ name: 'home' }">
-									<small><translate>Everybody go home</translate></small>
+									<small><AppTranslate>Everybody go home</AppTranslate></small>
 								</router-link>
 							</p>
-						</app-illustration>
+						</AppIllustration>
 					</div>
 				</div>
 			</template>
@@ -480,18 +480,18 @@ export default class RouteFireside extends BaseRouteComponent {
 			<template v-else-if="c.status.value === 'setup-failed'">
 				<div key="setup-failed" class="-message-wrapper">
 					<div class="-message">
-						<app-illustration :src="illMaintenance">
+						<AppIllustration :src="illMaintenance">
 							<p>
-								<translate>Could not reach this fireside.</translate>
+								<AppTranslate>Could not reach this fireside.</AppTranslate>
 								<br />
-								<translate>Maybe try finding it again?</translate>
+								<AppTranslate>Maybe try finding it again?</AppTranslate>
 							</p>
 							&nbsp;
-							<app-button block @click="onClickRetry">
-								<translate>Retry</translate>
-							</app-button>
+							<AppButton block @click="onClickRetry">
+								<AppTranslate>Retry</AppTranslate>
+							</AppButton>
 							&nbsp;
-						</app-illustration>
+						</AppIllustration>
 					</div>
 				</div>
 			</template>
@@ -499,21 +499,21 @@ export default class RouteFireside extends BaseRouteComponent {
 			<template v-else-if="c.status.value === 'disconnected'">
 				<div key="disconnected" class="-message-wrapper">
 					<div class="-message">
-						<app-illustration :src="illNoCommentsSmall">
+						<AppIllustration :src="illNoCommentsSmall">
 							<p>
-								<translate>
+								<AppTranslate>
 									You have been disconnected from fireside services.
-								</translate>
+								</AppTranslate>
 								<br />
 								<br />
 								<small>
-									<translate>
+									<AppTranslate>
 										We are actively trying to reconnect you, but you can also
 										try refreshing the page.
-									</translate>
+									</AppTranslate>
 								</small>
 							</p>
-						</app-illustration>
+						</AppIllustration>
 					</div>
 				</div>
 			</template>
@@ -522,15 +522,15 @@ export default class RouteFireside extends BaseRouteComponent {
 				<div key="blocked" class="-message-wrapper">
 					<div class="-message">
 						<div class="text-center">
-							<app-jolticon icon="friend-remove-2" big notice />
+							<AppJolticon icon="friend-remove-2" big notice />
 						</div>
 						<div class="text-center">
 							<h3>
-								<translate>You are blocked from joining this fireside</translate>
+								<AppTranslate>You are blocked from joining this fireside</AppTranslate>
 							</h3>
 							<p>
 								<router-link :to="{ name: 'home' }">
-									<small><translate>Return home</translate></small>
+									<small><AppTranslate>Return home</AppTranslate></small>
 								</router-link>
 							</p>
 						</div>
@@ -543,23 +543,23 @@ export default class RouteFireside extends BaseRouteComponent {
 				class="-chat"
 				:class="{ '-trailing': c.isStreaming.value }"
 			>
-				<app-fade-collapse
+				<AppFadeCollapse
 					v-if="shouldShowReactions"
 					class="-reactions"
 					:collapse-height="100"
 				>
-					<app-sticker-reactions :controller="c.stickerTargetController" />
-				</app-fade-collapse>
+					<AppStickerReactions :controller="c.stickerTargetController" />
+				</AppFadeCollapse>
 
-				<app-expand v-if="!shouldShowDesktopHosts" :when="shouldShowMobileHosts">
+				<AppExpand v-if="!shouldShowDesktopHosts" :when="shouldShowMobileHosts">
 					<div class="-mobile-hosts">
-						<app-fireside-host-list hide-thumb-options />
+						<AppFiresideHostList hide-thumb-options />
 					</div>
-				</app-expand>
+				</AppExpand>
 
 				<div v-if="c.status.value === 'joined'" class="-chat-wrapper">
 					<div class="-chat-window">
-						<app-chat-window-output
+						<AppChatWindowOutput
 							v-if="c.chatRoom.value"
 							ref="output"
 							class="-chat-window-output fill-backdrop"
@@ -577,7 +577,7 @@ export default class RouteFireside extends BaseRouteComponent {
 								</p>
 							</div>
 						</div>
-						<app-chat-window-send
+						<AppChatWindowSend
 							v-else-if="chat && chat.currentUser"
 							class="-chat-window-input"
 							:room="c.chatRoom.value"
@@ -588,14 +588,14 @@ export default class RouteFireside extends BaseRouteComponent {
 			</div>
 			<div v-if="shouldShowChatMembers" class="-trailing">
 				<div class="-chat-members">
-					<app-fireside-chat-members
+					<AppFiresideChatMembers
 						:chat-users="c.chatUsers.value"
 						:chat-room="c.chatRoom.value"
 					/>
 				</div>
 			</div>
 		</div>
-	</app-fireside-container>
+	</AppFiresideContainer>
 </template>
 
 <style lang="stylus" scoped>

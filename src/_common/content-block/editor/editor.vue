@@ -145,67 +145,67 @@ export default class AppContentBlockEditor extends Vue {
 				<div class="col-xs-9">
 					<p>
 						<strong>
-							<translate>Insert Widgets</translate>
+							<AppTranslate>Insert Widgets</AppTranslate>
 						</strong>
 						{{ ' ' }}
 						<span class="text-muted small">
-							<translate>embed dynamic content</translate>
+							<AppTranslate>embed dynamic content</AppTranslate>
 						</span>
 					</p>
 
 					<template v-if="!site.game_id">
-						<app-button
+						<AppButton
 							v-app-tooltip="$gettext('Will show your profile bio.')"
 							@click="insertAtCaret('{% user-bio %}')"
 						>
-							<translate>User Bio</translate>
-						</app-button>
-						<app-button
+							<AppTranslate>User Bio</AppTranslate>
+						</AppButton>
+						<AppButton
 							v-app-tooltip="$gettext('Will show a grid of all your games.')"
 							@click="insertAtCaret('{% game-list %}')"
 						>
-							<translate>Game List</translate>
-						</app-button>
-						<app-button
+							<AppTranslate>Game List</AppTranslate>
+						</AppButton>
+						<AppButton
 							trans
 							:href="Environment.helpBaseUrl + '/widgets-user-site'"
 							target="_blank"
 						>
-							<translate>View all</translate>
-						</app-button>
+							<AppTranslate>View all</AppTranslate>
+						</AppButton>
 					</template>
 					<template v-else>
-						<app-button
+						<AppButton
 							v-app-tooltip="
 								$gettext(`Will show your game's media (screenshots, videos, etc).`)
 							"
 							@click="insertAtCaret('{% game-media num=6 %}')"
 						>
-							<translate>Game Media</translate>
-						</app-button>
-						<app-button
+							<AppTranslate>Game Media</AppTranslate>
+						</AppButton>
+						<AppButton
 							v-app-tooltip="$gettext('Will show your game\'s description.')"
 							@click="insertAtCaret('{% game-description %}')"
 						>
-							<translate>Game Description</translate>
-						</app-button>
-						<app-button
+							<AppTranslate>Game Description</AppTranslate>
+						</AppButton>
+						<AppButton
 							v-app-tooltip="$gettext('Will show your game\'s packages.')"
 							@click="insertAtCaret('{% game-packages %}')"
 						>
-							<translate>Game Packages</translate>
-						</app-button>
-						<app-button
+							<AppTranslate>Game Packages</AppTranslate>
+						</AppButton>
+						<AppButton
 							trans
 							:href="Environment.helpBaseUrl + '/widgets-game-site'"
 							target="_blank"
 						>
-							<translate>View all</translate>
-						</app-button>
+							<AppTranslate>View all</AppTranslate>
+						</AppButton>
 					</template>
 				</div>
 				<div class="col-xs-3">
-					<app-loading
+					<AppLoading
 						v-if="isPreviewLoading"
 						class="pull-right"
 						:hide-label="true"
@@ -218,7 +218,7 @@ export default class AppContentBlockEditor extends Vue {
 			The ng-repeat will refresh the DOM any time the current block changes.
 			This will create a new editor instance and refresh the block content.
 		-->
-			<form-content-block-editor
+			<FormContentBlockEditor
 				:mode="site.game_id ? 'game' : 'user'"
 				:model="contentBlock"
 			/>

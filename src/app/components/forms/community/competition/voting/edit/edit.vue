@@ -114,14 +114,14 @@ export default class FormCommunityCompetitionVotingEdit extends mixins(Wrapper) 
 <template>
 	<div>
 		<div v-if="isInitial" class="alert alert-notice">
-			<translate>
+			<AppTranslate>
 				You must fill out the form below and save it before voting will be enabled.
-			</translate>
+			</AppTranslate>
 		</div>
 
-		<app-form :controller="form">
+		<AppForm :controller="form">
 			<template v-if="timezoneService && timezoneService.loaded">
-				<app-form-group name="voting_ends_on" :label="$gettext(`Voting End Date and Time`)">
+				<AppFormGroup name="voting_ends_on" :label="$gettext(`Voting End Date and Time`)">
 					<p class="help-block">
 						<span v-translate>
 							Voting starts when the jam ends and continues until the date and time
@@ -130,34 +130,34 @@ export default class FormCommunityCompetitionVotingEdit extends mixins(Wrapper) 
 						</span>
 					</p>
 
-					<app-form-control-date
+					<AppFormControlDate
 						:timezone-offset="timezoneService.activeTimezoneOffset"
 						:min-date="formModel.ends_on"
 					/>
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
 				<template v-if="canEditDetails">
 					<fieldset>
-						<app-form-legend>
-							<translate>Community Voting</translate>
-						</app-form-legend>
+						<AppFormLegend>
+							<AppTranslate>Community Voting</AppTranslate>
+						</AppFormLegend>
 
 						<p class="help-block">
-							<translate>
+							<AppTranslate>
 								This allows members of the community to judge jam entries by rating
 								them. You can specify who can vote and the type of voting below. At
 								the end of the voting period, the ratings will be tallied and the
 								entries will be ranked.
-							</translate>
+							</AppTranslate>
 						</p>
 
-						<app-form-group name="has_community_voting" hide-label>
-							<app-form-control-toggle />
-						</app-form-group>
+						<AppFormGroup name="has_community_voting" hide-label>
+							<AppFormControlToggle />
+						</AppFormGroup>
 
 						<template v-if="formModel.has_community_voting">
-							<app-form-group
+							<AppFormGroup
 								name="voting_user_restriction"
 								:label="$gettext(`Who can vote?`)"
 							>
@@ -167,7 +167,7 @@ export default class FormCommunityCompetitionVotingEdit extends mixins(Wrapper) 
 									class="radio"
 								>
 									<label>
-										<app-form-control-radio
+										<AppFormControlRadio
 											type="radio"
 											:value="option.radioValue"
 										/>
@@ -177,15 +177,15 @@ export default class FormCommunityCompetitionVotingEdit extends mixins(Wrapper) 
 										</span>
 									</label>
 								</div>
-							</app-form-group>
-							<app-form-group name="voting_type">
+							</AppFormGroup>
+							<AppFormGroup name="voting_type">
 								<div
 									v-for="option of votingTypeOptions"
 									:key="option.radioValue"
 									class="radio"
 								>
 									<label>
-										<app-form-control-radio
+										<AppFormControlRadio
 											type="radio"
 											:value="option.radioValue"
 										/>
@@ -195,49 +195,49 @@ export default class FormCommunityCompetitionVotingEdit extends mixins(Wrapper) 
 										</span>
 									</label>
 								</div>
-							</app-form-group>
+							</AppFormGroup>
 						</template>
 					</fieldset>
 
 					<fieldset>
-						<app-form-legend>
-							<translate>Awards</translate>
-						</app-form-legend>
+						<AppFormLegend>
+							<AppTranslate>Awards</AppTranslate>
+						</AppFormLegend>
 
 						<p class="help-block">
-							<translate>
+							<AppTranslate>
 								This lets you create awards and then choose entries to receive them.
 								Awards can be added and assigned at any time, but we recommend
 								assigning them during the voting period. After voting, award-winning
 								entries will be displayed by default at the top of the Games page.
-							</translate>
+							</AppTranslate>
 						</p>
 
-						<app-form-group name="has_awards" hide-label>
-							<app-form-control-toggle />
-						</app-form-group>
+						<AppFormGroup name="has_awards" hide-label>
+							<AppFormControlToggle />
+						</AppFormGroup>
 					</fieldset>
 
 					<div v-if="!isVotingValid" class="alert alert-notice">
-						<translate>
+						<AppTranslate>
 							If you have voting on, you must enable either community voting or
 							awards, or both.
-						</translate>
+						</AppTranslate>
 					</div>
 				</template>
 
-				<app-form-button :disabled="!isValid">
-					<translate>Save</translate>
-				</app-form-button>
-				<app-button @click="onClickCancel">
-					<translate>Cancel</translate>
-				</app-button>
+				<AppFormButton :disabled="!isValid">
+					<AppTranslate>Save</AppTranslate>
+				</AppFormButton>
+				<AppButton @click="onClickCancel">
+					<AppTranslate>Cancel</AppTranslate>
+				</AppButton>
 			</template>
 
 			<template v-else>
-				<app-loading centered />
+				<AppLoading centered />
 			</template>
-		</app-form>
+		</AppForm>
 	</div>
 </template>
 

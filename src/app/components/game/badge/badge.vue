@@ -19,12 +19,12 @@ export default class AppGameBadge extends Vue {
 </script>
 
 <template>
-	<app-theme
+	<AppTheme
 		class="-game-container fill-darkest"
 		:class="{ '-full-bleed': fullBleed }"
 		:theme="game.theme"
 	>
-		<app-media-item-backdrop
+		<AppMediaItemBackdrop
 			v-if="game.header_media_item"
 			class="-backdrop"
 			:media-item="game.header_media_item"
@@ -38,14 +38,14 @@ export default class AppGameBadge extends Vue {
 			>
 				<div class="-header-gradient" />
 			</div>
-		</app-media-item-backdrop>
+		</AppMediaItemBackdrop>
 
 		<div class="-content">
 			<router-link class="-link" :to="game.getUrl()" />
 
 			<div class="-details">
 				<div class="tag">
-					<translate>Game</translate>
+					<AppTranslate>Game</AppTranslate>
 				</div>
 				<div class="-name">
 					{{ game.title }}
@@ -53,10 +53,10 @@ export default class AppGameBadge extends Vue {
 			</div>
 
 			<div class="-follow-button">
-				<app-game-follow-widget :game="game" overlay hide-count location="badge" />
+				<AppGameFollowWidget :game="game" overlay hide-count location="badge" />
 			</div>
 		</div>
-	</app-theme>
+	</AppTheme>
 </template>
 
 <style lang="stylus" scoped>

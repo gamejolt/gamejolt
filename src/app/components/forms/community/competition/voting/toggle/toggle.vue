@@ -34,8 +34,8 @@ export default class FormCommunityCompetitionVotingToggle extends mixins(Wrapper
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="is_voting_enabled" hide-label>
+	<AppForm :controller="form">
+		<AppFormGroup name="is_voting_enabled" hide-label>
 			<p class="help-block">
 				<span v-translate>
 					This allows members of the community to judge games by rating them after the
@@ -44,7 +44,7 @@ export default class FormCommunityCompetitionVotingToggle extends mixins(Wrapper
 				</span>
 			</p>
 
-			<app-form-control-toggle :disabled="form.isProcessing" @changed="onToggle" />
-		</app-form-group>
-	</app-form>
+			<AppFormControlToggle :disabled="form.isProcessing" @changed="onToggle" />
+		</AppFormGroup>
+	</AppForm>
 </template>

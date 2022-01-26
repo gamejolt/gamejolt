@@ -42,26 +42,26 @@ export default class RouteAuthAuthorize extends BaseRouteComponent {
 </script>
 
 <template>
-	<app-loading :label="$gettext('Just one moment...')" centered big v-if="isRouteLoading" />
+	<AppLoading :label="$gettext('Just one moment...')" centered big v-if="isRouteLoading" />
 	<div class="anim-fade-in-up" v-else>
 		<template v-if="isSuccess">
 			<h2 class="section-header">
-				<translate>Account Authorized</translate>
+				<AppTranslate>Account Authorized</AppTranslate>
 			</h2>
 			<div>
-				<translate>We're redirecting you to your Game Jolt dashboard now.</translate>
+				<AppTranslate>We're redirecting you to your Game Jolt dashboard now.</AppTranslate>
 			</div>
 		</template>
 		<template v-else>
 			<h2 class="section-header">
-				<translate>Invalid Authorization</translate>
+				<AppTranslate>Invalid Authorization</AppTranslate>
 			</h2>
 			<div>
-				<p><translate>Your authorization code is invalid.</translate></p>
+				<p><AppTranslate>Your authorization code is invalid.</AppTranslate></p>
 				<p>
-					<translate>
+					<AppTranslate>
 						Please make sure to copy and paste the full URL that we emailed you.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 		</template>

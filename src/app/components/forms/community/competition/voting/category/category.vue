@@ -46,9 +46,9 @@ export default class FormCommunityCompetitionVotingCategory
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="name" :label="$gettext(`Category Name`)">
-			<app-form-control
+	<AppForm :controller="form">
+		<AppFormGroup name="name" :label="$gettext(`Category Name`)">
+			<AppFormControl
 				:validators="[
 					validateMaxLength(50),
 					validateAvailability({
@@ -58,23 +58,23 @@ export default class FormCommunityCompetitionVotingCategory
 				validate-on-blur
 				:placeholder="$gettext(`Graphics, Sound, etc...`)"
 			/>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group name="description" :label="$gettext(`Category Description`)" optional>
-			<app-form-control-textarea :validators="[validateMaxLength(250)]" />
-			<app-form-control-errors />
+		<AppFormGroup name="description" :label="$gettext(`Category Description`)" optional>
+			<AppFormControlTextarea :validators="[validateMaxLength(250)]" />
+			<AppFormControlErrors />
 
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Often a description isn't needed. We suggest filling it in only for
 					clarification if the name isn't guidance enough.
-				</translate>
+				</AppTranslate>
 			</p>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-button show-when-valid>
-			<translate>Save Category</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton show-when-valid>
+			<AppTranslate>Save Category</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

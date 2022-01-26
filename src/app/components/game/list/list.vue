@@ -19,7 +19,7 @@ export default class AppGameList extends Vue {
 
 <template>
 	<div class="game-list">
-		<app-game-list-item
+		<AppGameListItem
 			v-for="game of games"
 			:key="game.id"
 			:game="game"

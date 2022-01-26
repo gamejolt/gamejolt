@@ -130,22 +130,22 @@ export default class RouteNotifications extends BaseRouteComponent {
 			<div class="row">
 				<div class="col-sm-9 col-md-8 col-lg-7 col-centered">
 					<template v-if="!feed || !feed.isBootstrapped">
-						<app-shell-notification-popover-sticker-nav-item-placeholder />
-						<app-activity-feed-placeholder />
+						<AppShellNotificationPopoverStickerNavItemPlaceholder />
+						<AppActivityFeedPlaceholder />
 					</template>
 					<template v-else>
 						<template v-if="!feed.hasItems">
 							<template v-if="shouldShowStickerPlaceholder">
-								<app-shell-notification-popover-sticker-nav-item-placeholder />
+								<AppShellNotificationPopoverStickerNavItemPlaceholder />
 							</template>
-							<app-shell-notification-popover-sticker-nav-item
+							<AppShellNotificationPopoverStickerNavItem
 								v-else-if="shouldShowStickers"
 								:sticker-count="totalStickersCount"
 								:has-new="hasNewUnlockedStickers"
 							/>
 
 							<div class="alert full-bleed-xs">
-								<translate>You don't have any notifications yet.</translate>
+								<AppTranslate>You don't have any notifications yet.</AppTranslate>
 							</div>
 						</template>
 						<template v-else>
@@ -154,20 +154,20 @@ export default class RouteNotifications extends BaseRouteComponent {
 									class="link-muted small"
 									@click="store.markNotificationsAsRead()"
 								>
-									<translate>Mark All as Read</translate>
+									<AppTranslate>Mark All as Read</AppTranslate>
 								</a>
 							</p>
 
 							<template v-if="shouldShowStickerPlaceholder">
-								<app-shell-notification-popover-sticker-nav-item-placeholder />
+								<AppShellNotificationPopoverStickerNavItemPlaceholder />
 							</template>
-							<app-shell-notification-popover-sticker-nav-item
+							<AppShellNotificationPopoverStickerNavItem
 								v-else-if="shouldShowStickers"
 								:sticker-count="totalStickersCount"
 								:has-new="hasNewUnlockedStickers"
 							/>
 
-							<app-activity-feed :feed="feed" @load-new="onLoadedNew" />
+							<AppActivityFeed :feed="feed" @load-new="onLoadedNew" />
 						</template>
 					</template>
 				</div>

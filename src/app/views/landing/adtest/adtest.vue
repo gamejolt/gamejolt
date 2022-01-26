@@ -48,20 +48,20 @@ export default class RouteAdtest extends BaseRouteComponent {
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-9">
-					<app-ad-widget size="leaderboard" placement="top" />
-					<app-ad-widget size="rectangle" placement="content" />
+					<AppAdWidget size="leaderboard" placement="top" />
+					<AppAdWidget size="rectangle" placement="content" />
 
 					<div class="alert" style="height: 2500px;" />
 
-					<app-ad-widget size="rectangle" placement="content" />
-					<app-ad-widget size="rectangle" placement="content" />
+					<AppAdWidget size="rectangle" placement="content" />
+					<AppAdWidget size="rectangle" placement="content" />
 				</div>
 
 				<div class="col-lg-3">
-					<app-ad-widget size="rectangle" placement="side" />
-					<app-scroll-affix>
-						<app-ad-widget size="video" placement="side" />
-					</app-scroll-affix>
+					<AppAdWidget size="rectangle" placement="side" />
+					<AppScrollAffix>
+						<AppAdWidget size="video" placement="side" />
+					</AppScrollAffix>
 				</div>
 			</div>
 		</div>

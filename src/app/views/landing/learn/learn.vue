@@ -35,7 +35,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 		<section class="section landing-header text-center">
 			<div class="container">
 				<h1>
-					<app-theme-svg
+					<AppThemeSvg
 						v-app-tooltip="$gettext('This is a lightning bolt.')"
 						class="bolt anim-fade-in-down"
 						:src="imageJolt"
@@ -63,7 +63,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="assetPaths['./gamers.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./gamers.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Gamers</h4>
@@ -77,7 +77,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="assetPaths['./lpers.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./lpers.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Let's Players</h4>
@@ -93,7 +93,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 							<div class="landing-graphic">
-								<app-theme-svg
+								<AppThemeSvg
 									:src="assetPaths['./developers.svg'].default"
 									alt=""
 								/>
@@ -185,7 +185,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 						<div class="col-md-1" />
 						<div class="col-sm-5">
 							<div class="landing-graphic-full hidden-xs">
-								<app-theme-svg :src="assetPaths['./discover.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./discover.svg'].default" alt="" />
 							</div>
 						</div>
 					</div>
@@ -197,7 +197,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 					<div class="row">
 						<div class="col-sm-5 col-sm-push-7 col-md-push-0">
 							<div class="landing-graphic-full hidden-xs">
-								<app-theme-svg :src="assetPaths['./interact.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./interact.svg'].default" alt="" />
 							</div>
 						</div>
 						<div class="col-md-1" />
@@ -259,7 +259,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 						<div class="col-md-1" />
 						<div class="col-sm-5">
 							<div class="landing-graphic-full hidden-xs">
-								<app-theme-svg :src="assetPaths['./support.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./support.svg'].default" alt="" />
 							</div>
 						</div>
 					</div>
@@ -271,7 +271,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 					<div class="row">
 						<div class="col-sm-5 col-sm-push-7 col-md-push-0">
 							<div class="landing-graphic-full hidden-xs">
-								<app-theme-svg :src="assetPaths['./feeds.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./feeds.svg'].default" alt="" />
 							</div>
 						</div>
 						<div class="col-md-1" />
@@ -349,7 +349,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 						<div class="col-md-1" />
 						<div class="col-sm-5">
 							<div class="landing-graphic-full hidden-xs">
-								<app-theme-svg :src="assetPaths['./organize.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./organize.svg'].default" alt="" />
 							</div>
 						</div>
 					</div>
@@ -361,7 +361,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 					<div class="row">
 						<div class="col-sm-5 col-sm-push-7 col-md-push-0">
 							<div class="landing-graphic-full hidden-xs">
-								<app-theme-svg
+								<AppThemeSvg
 									:src="assetPaths['./achievements.svg'].default"
 									alt=""
 								/>
@@ -400,7 +400,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="assetPaths['./friends.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./friends.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Friends</h4>
@@ -414,7 +414,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg :src="assetPaths['./chat.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./chat.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Chat</h4>
@@ -429,7 +429,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 							<div class="landing-graphic">
-								<app-theme-svg :src="assetPaths['./forums.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./forums.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Forums</h4>
@@ -498,16 +498,16 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 					<br />
 					<br />
 
-					<app-button solid :to="{ name: 'landing.client' }">
-						<translate>Get Desktop Client</translate>
-					</app-button>
+					<AppButton solid :to="{ name: 'landing.client' }">
+						<AppTranslate>Get Desktop Client</AppTranslate>
+					</AppButton>
 				</div>
 			</section>
 
 			<section v-if="!app.user" class="section">
 				<div class="container">
 					<h1 class="section-header text-center">
-						<translate>Join</translate>
+						<AppTranslate>Join</AppTranslate>
 					</h1>
 
 					<hr class="underbar underbar-center" />
@@ -515,7 +515,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 
 					<div class="row">
 						<div class="col-sm-6 col-md-5 col-lg-4 col-centered">
-							<app-auth-join />
+							<AppAuthJoin />
 						</div>
 					</div>
 				</div>

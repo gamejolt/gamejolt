@@ -126,18 +126,18 @@ export default class AppPagination extends Vue {
 					class="pagination-item"
 					@click.capture="onPageClick($event, 1)"
 				>
-					<app-button v-app-no-autoscroll :to="getPageLocation(1)">
-						<translate>First</translate>
-					</app-button>
+					<AppButton v-app-no-autoscroll :to="getPageLocation(1)">
+						<AppTranslate>First</AppTranslate>
+					</AppButton>
 				</div>
 				<div
 					v-if="hasPrevious"
 					class="pagination-item"
 					@click.capture="onPageClick($event, prevPage)"
 				>
-					<app-button v-app-no-autoscroll :to="getPageLocation(prevPage)">
-						<translate>Previous</translate>
-					</app-button>
+					<AppButton v-app-no-autoscroll :to="getPageLocation(prevPage)">
+						<AppTranslate>Previous</AppTranslate>
+					</AppButton>
 				</div>
 
 				<div
@@ -145,9 +145,9 @@ export default class AppPagination extends Vue {
 					class="pagination-item"
 					@click.capture="onPageClick($event, prevChunkPage)"
 				>
-					<app-button v-app-no-autoscroll sparse :to="getPageLocation(prevChunkPage)">
+					<AppButton v-app-no-autoscroll sparse :to="getPageLocation(prevChunkPage)">
 						...
-					</app-button>
+					</AppButton>
 				</div>
 
 				<div
@@ -157,17 +157,17 @@ export default class AppPagination extends Vue {
 					:class="{ active: page === currentPage }"
 					@click.capture="onPageClick($event, page)"
 				>
-					<app-button
+					<AppButton
 						v-if="page !== currentPage"
 						v-app-no-autoscroll
 						sparse
 						:to="getPageLocation(page > 1 ? page : undefined)"
 					>
 						{{ page }}
-					</app-button>
-					<app-button v-else solid sparse>
+					</AppButton>
+					<AppButton v-else solid sparse>
 						{{ page }}
-					</app-button>
+					</AppButton>
 				</div>
 
 				<div
@@ -175,9 +175,9 @@ export default class AppPagination extends Vue {
 					class="pagination-item"
 					@click.capture="onPageClick($event, nextChunkPage)"
 				>
-					<app-button v-app-no-autoscroll sparse :to="getPageLocation(nextChunkPage)">
+					<AppButton v-app-no-autoscroll sparse :to="getPageLocation(nextChunkPage)">
 						...
-					</app-button>
+					</AppButton>
 				</div>
 
 				<div
@@ -185,18 +185,18 @@ export default class AppPagination extends Vue {
 					class="pagination-item"
 					@click.capture="onPageClick($event, nextPage)"
 				>
-					<app-button v-app-no-autoscroll :to="getPageLocation(nextPage)">
-						<translate>Next</translate>
-					</app-button>
+					<AppButton v-app-no-autoscroll :to="getPageLocation(nextPage)">
+						<AppTranslate>Next</AppTranslate>
+					</AppButton>
 				</div>
 				<div
 					v-if="hasNext && currentPage !== totalPages - 1"
 					class="pagination-item"
 					@click.capture="onPageClick($event, totalPages)"
 				>
-					<app-button v-app-no-autoscroll :to="getPageLocation(totalPages)">
-						<translate>Last</translate>
-					</app-button>
+					<AppButton v-app-no-autoscroll :to="getPageLocation(totalPages)">
+						<AppTranslate>Last</AppTranslate>
+					</AppButton>
 				</div>
 			</div>
 		</template>
@@ -211,24 +211,24 @@ export default class AppPagination extends Vue {
 					class="pagination-item previous"
 					@click.capture="onPageClick($event, prevPage)"
 				>
-					<app-button v-app-no-autoscroll :to="getPageLocation(prevPage)">
+					<AppButton v-app-no-autoscroll :to="getPageLocation(prevPage)">
 						{{ previousText || '&laquo; Previous' }}
-					</app-button>
+					</AppButton>
 					<span v-if="!hasPrevious">{{ previousText || '&laquo; Previous' }}</span>
 				</div>
 				<div v-if="currentPage > 1" class="pagination-item">
-					<app-button solid sparse>
+					<AppButton solid sparse>
 						{{ currentPage }}
-					</app-button>
+					</AppButton>
 				</div>
 				<div
 					v-if="hasNext"
 					class="pagination-item next"
 					@click.capture="onPageClick($event, nextPage)"
 				>
-					<app-button v-app-no-autoscroll :to="getPageLocation(nextPage)">
+					<AppButton v-app-no-autoscroll :to="getPageLocation(nextPage)">
 						{{ nextText || 'Next &raquo;' }}
-					</app-button>
+					</AppButton>
 					<span v-if="!hasNext">{{ nextText || 'Next &raquo;' }}</span>
 				</div>
 			</div>

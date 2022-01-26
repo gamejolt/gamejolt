@@ -35,25 +35,25 @@ export default class FormRetrieveLogin extends mixins(Wrapper) implements FormOn
 </script>
 
 <template>
-	<app-form :controller="form">
-		<fieldset :disabled="Connection.isClientOffline">
-			<app-form-group name="email" :label="$gettext('Email or Username')" hide-label>
+	<AppForm :controller="form">
+		<fieldset :disabled="Connection.isClientOffline ? 'true' : undefined">
+			<AppFormGroup name="email" :label="$gettext('Email or Username')" hide-label>
 				<p class="help-block">
-					<translate>
+					<AppTranslate>
 						Enter the email address or username on your account and we'll send you a
 						link to get into your account.
-					</translate>
+					</AppTranslate>
 				</p>
 
-				<app-form-control
+				<AppFormControl
 					type="text"
 					validate-on-blur
 					:placeholder="$gettext('Email or Username')"
 					@changed="onChanged"
 				/>
 
-				<app-form-control-errors />
-			</app-form-group>
+				<AppFormControlErrors />
+			</AppFormGroup>
 
 			<br />
 
@@ -68,9 +68,9 @@ export default class FormRetrieveLogin extends mixins(Wrapper) implements FormOn
 				</p>
 			</div>
 
-			<app-form-button block>
-				<translate>Send Login Link</translate>
-			</app-form-button>
+			<AppFormButton block>
+				<AppTranslate>Send Login Link</AppTranslate>
+			</AppFormButton>
 		</fieldset>
-	</app-form>
+	</AppForm>
 </template>

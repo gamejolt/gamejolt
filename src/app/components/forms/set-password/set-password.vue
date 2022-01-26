@@ -24,18 +24,18 @@ export default class FormSetPassword extends mixins(Wrapper) implements FormOnSu
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="password">
-			<app-form-control
+	<AppForm :controller="form">
+		<AppFormGroup name="password">
+			<AppFormControl
 				type="password"
 				:validators="[validateMinLength(4), validateMaxLength(30)]"
 				validate-on-blur
 			/>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-button>
-			<translate>Set Account Password</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton>
+			<AppTranslate>Set Account Password</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

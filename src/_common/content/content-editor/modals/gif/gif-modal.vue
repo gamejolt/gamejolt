@@ -247,22 +247,22 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal ref="modalComponent" tabindex="0">
+	<AppModal ref="modalComponent" tabindex="0">
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-body">
 			<div v-if="hasError" class="error-container">
-				<p><translate>Something went wrong.</translate></p>
-				<app-button @click="onRetry"><translate>Retry</translate></app-button>
+				<p><AppTranslate>Something went wrong.</AppTranslate></p>
+				<AppButton @click="onRetry"><AppTranslate>Retry</AppTranslate></AppButton>
 			</div>
 
 			<template v-else>
 				<div class="input-container">
-					<app-button
+					<AppButton
 						v-if="shouldShowResetButton"
 						sparse
 						trans
@@ -270,19 +270,19 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 						@click="onClickReset"
 					/>
 					<div class="search-bar">
-						<app-jolticon icon="search" class="search-icon text-muted" />
+						<AppJolticon icon="search" class="search-icon text-muted" />
 						<div
 							v-if="shouldShowResetButton"
 							class="search-clear"
 							@click="onClickReset"
 						>
-							<app-jolticon class="-icon" icon="remove" />
+							<AppJolticon class="-icon" icon="remove" />
 						</div>
 						<input
 							ref="searchInput"
 							class="search form-control"
 							:placeholder="$gettext('Search Tenor...')"
-							:disabled="loadingCategories"
+							:disabled="loadingCategories ? 'true' : undefined"
 							:value="searchValue"
 							@input="onSearchInput"
 							@keydown="onSearchKeyDown"
@@ -290,9 +290,9 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 					</div>
 				</div>
 				<div v-if="loadingCategories" class="loading-categories">
-					<app-loading centered big />
+					<AppLoading centered big />
 				</div>
-				<app-scroll-scroller
+				<AppScrollScroller
 					v-else
 					:controller="contentScroller"
 					class="gif-content"
@@ -357,13 +357,13 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 							</span>
 						</div>
 						<div v-else-if="shouldShowMoreButton" class="more-container">
-							<app-button @click="loadNextPage">More</app-button>
+							<AppButton @click="loadNextPage">More</AppButton>
 						</div>
 					</div>
-				</app-scroll-scroller>
+				</AppScrollScroller>
 			</template>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" src="./gif-modal.styl" scoped></style>

@@ -64,22 +64,22 @@ export default class AppGameMaturityBlock extends Vue {
 					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
 						<div class="game-maturity-block">
 							<h4>
-								<translate>This game is tagged for mature audiences.</translate>
+								<AppTranslate>This game is tagged for mature audiences.</AppTranslate>
 							</h4>
 							<p>
-								<translate>
+								<AppTranslate>
 									It could contain content you may not want to view.
-								</translate>
+								</AppTranslate>
 							</p>
 							<br />
 
-							<app-game-ogrs :game="game" />
+							<AppGameOgrs :game="game" />
 							<br />
 
 							<p>
-								<app-button block primary @click="proceed">
-									<translate>Proceed to Game</translate>
-								</app-button>
+								<AppButton block primary @click="proceed">
+									<AppTranslate>Proceed to Game</AppTranslate>
+								</AppButton>
 							</p>
 
 							<br />
@@ -87,14 +87,14 @@ export default class AppGameMaturityBlock extends Vue {
 
 							<p>
 								<a class="link-muted" @click="removeRestriction">
-									<translate>Don't ask me again, geez...</translate>
+									<AppTranslate>Don't ask me again, geez...</AppTranslate>
 								</a>
 							</p>
 
 							<p class="small text-muted">
-								<translate>
+								<AppTranslate>
 									This setting will apply to this browser/device only.
-								</translate>
+								</AppTranslate>
 							</p>
 						</div>
 					</div>

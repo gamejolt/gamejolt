@@ -54,18 +54,18 @@ export default class AppFiresideHostList extends Vue {
 </script>
 
 <template>
-	<app-scroll-scroller v-if="c.rtc.value" class="-fireside-hosts" horizontal>
+	<AppScrollScroller v-if="c.rtc.value" class="-fireside-hosts" horizontal>
 		<div class="-fireside-hosts-inner">
-			<app-fireside-stream-playback v-if="showPlayback" />
+			<AppFiresideStreamPlayback v-if="showPlayback" />
 
-			<app-fireside-stream-options
+			<AppFiresideStreamOptions
 				@show-popper="emitShowPopper"
 				@hide-popper="emitHidePopper"
 			/>
 
-			<app-fireside-cohost-manage v-if="canManageCohosts" />
+			<AppFiresideCohostManage v-if="canManageCohosts" />
 
-			<app-fireside-host-thumb
+			<AppFiresideHostThumb
 				v-for="host of c.rtc.value.users"
 				:key="host.uid"
 				class="-host-thumb"
@@ -75,13 +75,13 @@ export default class AppFiresideHostList extends Vue {
 				@hide-popper="emitHidePopper"
 			/>
 
-			<app-fireside-host-list-sticker-button
+			<AppFiresideHostListStickerButton
 				v-if="canPlaceStickers"
 				v-app-auth-required
 				@click="onClickStickerButton"
 			/>
 		</div>
-	</app-scroll-scroller>
+	</AppScrollScroller>
 </template>
 
 <style lang="stylus" scoped>

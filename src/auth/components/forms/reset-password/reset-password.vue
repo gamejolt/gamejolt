@@ -34,30 +34,30 @@ export default class FormResetPassword extends mixins(Wrapper) implements FormOn
 </script>
 
 <template>
-	<app-form :controller="form">
-		<fieldset :disabled="Connection.isClientOffline">
-			<app-form-group name="password" :label="$gettext('New Password')" :hide-label="true">
+	<AppForm :controller="form">
+		<fieldset :disabled="Connection.isClientOffline ? 'true' : undefined">
+			<AppFormGroup name="password" :label="$gettext('New Password')" :hide-label="true">
 				<p class="help-block">
-					<translate>
+					<AppTranslate>
 						If you'd like to reset your password, enter a new one below.
-					</translate>
+					</AppTranslate>
 				</p>
 
-				<app-form-control
+				<AppFormControl
 					type="password"
 					:validators="[validateMinLength(4), validateMaxLength(300)]"
 					validate-on-blur
 					:placeholder="$gettext('New Password')"
 				/>
 
-				<app-form-control-errors />
-			</app-form-group>
+				<AppFormControlErrors />
+			</AppFormGroup>
 
 			<br />
 
-			<app-form-button block>
-				<translate>Reset Password</translate>
-			</app-form-button>
+			<AppFormButton block>
+				<AppTranslate>Reset Password</AppTranslate>
+			</AppFormButton>
 		</fieldset>
-	</app-form>
+	</AppForm>
 </template>

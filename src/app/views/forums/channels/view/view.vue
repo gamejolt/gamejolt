@@ -91,7 +91,7 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 
 <template>
 	<div v-if="channel">
-		<app-page-header>
+		<AppPageHeader>
 			<h1>#{{ channel.name }}</h1>
 
 			<!-- Don't let it get too long! -->
@@ -104,7 +104,7 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 			<div class="clearfix">
 				<div :class="{ 'pull-right': !Screen.isXs }">
 					<div>
-						<app-button
+						<AppButton
 							primary
 							:block="Screen.isXs"
 							:to="{
@@ -112,8 +112,8 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 								params: { channel: channel.name },
 							}"
 						>
-							<translate>Add Topic</translate>
-						</app-button>
+							<AppTranslate>Add Topic</AppTranslate>
+						</AppButton>
 					</div>
 				</div>
 
@@ -136,14 +136,14 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 			</div>
 
 			<template #nav>
-				<app-forum-breadcrumbs :channel="channel" :sort="sort" />
+				<AppForumBreadcrumbs :channel="channel" :sort="sort" />
 			</template>
-		</app-page-header>
+		</AppPageHeader>
 
 		<div class="section">
 			<div id="forum-topics-list" class="container">
 				<template v-if="stickyTopics.length">
-					<app-forum-topic-list
+					<AppForumTopicList
 						:topics="stickyTopics"
 						:post-count-per-page="postCountPerPage"
 					/>
@@ -151,7 +151,7 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 					<br />
 				</template>
 
-				<app-nav-tab-list>
+				<AppNavTabList>
 					<ul>
 						<li>
 							<router-link
@@ -162,7 +162,7 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 								}"
 								:class="{ active: sort === 'active' }"
 							>
-								<translate>Active</translate>
+								<AppTranslate>Active</AppTranslate>
 							</router-link>
 						</li>
 						<li>
@@ -174,7 +174,7 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 								}"
 								:class="{ active: sort === 'new' }"
 							>
-								<translate>New</translate>
+								<AppTranslate>New</AppTranslate>
 							</router-link>
 						</li>
 						<li>
@@ -186,7 +186,7 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 								}"
 								:class="{ active: sort === 'top' }"
 							>
-								<translate>Top</translate>
+								<AppTranslate>Top</AppTranslate>
 							</router-link>
 						</li>
 						<li>
@@ -198,14 +198,14 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 								}"
 								:class="{ active: sort === 'archived' }"
 							>
-								<translate>Archived</translate>
+								<AppTranslate>Archived</AppTranslate>
 							</router-link>
 						</li>
 					</ul>
 
 					<template v-if="topics.length" #meta>
 						<span class="text-muted small">
-							<translate
+							<AppTranslate
 								:translate-params="{
 									currentPage: formatNumber(currentPage),
 									count: formatNumber(listableTopicsCount),
@@ -214,22 +214,22 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 								translate-plural="Page %{ currentPage } of %{ count } topics."
 							>
 								%{ count } topic.
-							</translate>
+							</AppTranslate>
 						</span>
 					</template>
-				</app-nav-tab-list>
+				</AppNavTabList>
 
 				<br />
 
 				<template v-if="topics.length">
-					<app-forum-topic-list
+					<AppForumTopicList
 						:topics="topics"
 						:sort="sort"
 						:use-upvotes="channel.type === 'voting'"
 						:post-count-per-page="postCountPerPage"
 					/>
 
-					<app-pagination
+					<AppPagination
 						:pager="true"
 						:items-per-page="perPage"
 						:total-items="listableTopicsCount"
@@ -239,18 +239,18 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 				</template>
 				<div v-else class="text-center">
 					<p class="lead">
-						<translate>There aren't any topics here yet!</translate>
+						<AppTranslate>There aren't any topics here yet!</AppTranslate>
 					</p>
 					<p>
-						<app-button
+						<AppButton
 							primary
 							:to="{
 								name: 'forums.topics.add',
 								params: { channel: channel.name },
 							}"
 						>
-							<translate>Add Topic</translate>
-						</app-button>
+							<AppTranslate>Add Topic</AppTranslate>
+						</AppButton>
 					</p>
 				</div>
 			</div>

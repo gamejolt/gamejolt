@@ -198,15 +198,15 @@ export default class AppFiresideAvatar extends Vue {
 </script>
 
 <template>
-	<app-fireside-avatar-base
+	<AppFiresideAvatarBase
 		:avatar-media-item="fireside.user.avatar_media_item"
 		:community="hideCommunity ? null : community"
 		:is-live="isLive"
 	>
 		<template #extras>
-			<app-popper v-if="canModerate" class="-extras" popover-class="fill-darkest">
+			<AppPopper v-if="canModerate" class="-extras" popover-class="fill-darkest">
 				<template #default>
-					<app-jolticon icon="cog" />
+					<AppJolticon icon="cog" />
 				</template>
 
 				<template #popover>
@@ -215,7 +215,7 @@ export default class AppFiresideAvatar extends Vue {
 							<hr v-if="index !== 0" />
 
 							<h5 class="-extras-header list-group-item has-icon">
-								<app-community-thumbnail-img
+								<AppCommunityThumbnailImg
 									class="-img"
 									:community="i.community"
 								/>
@@ -227,32 +227,32 @@ export default class AppFiresideAvatar extends Vue {
 								class="list-group-item has-icon"
 								@click="toggleFeatured(i)"
 							>
-								<app-jolticon icon="star" />
-								<translate v-if="i.isFeatured">Unfeature fireside</translate>
-								<translate v-else>Feature fireside</translate>
+								<AppJolticon icon="star" />
+								<AppTranslate v-if="i.isFeatured">Unfeature fireside</AppTranslate>
+								<AppTranslate v-else>Feature fireside</AppTranslate>
 							</a>
 
 							<a class="list-group-item has-icon" @click="ejectFireside(i)">
-								<app-jolticon icon="eject" />
-								<translate>Eject fireside</translate>
+								<AppJolticon icon="eject" />
+								<AppTranslate>Eject fireside</AppTranslate>
 							</a>
 						</div>
 					</div>
 				</template>
-			</app-popper>
+			</AppPopper>
 		</template>
 
 		<template #avatar>
-			<app-user-avatar-img :user="fireside.user" />
+			<AppUserAvatarImg :user="fireside.user" />
 		</template>
 
 		<template #tag>
 			<div>
-				<app-jolticon v-if="isFeaturedInCommunity" icon="star" />
+				<AppJolticon v-if="isFeaturedInCommunity" icon="star" />
 
-				<translate v-if="fireside.is_draft">DRAFT</translate>
-				<translate v-else-if="isLive">LIVE</translate>
-				<translate v-else>CHAT</translate>
+				<AppTranslate v-if="fireside.is_draft">DRAFT</AppTranslate>
+				<AppTranslate v-else-if="isLive">LIVE</AppTranslate>
+				<AppTranslate v-else>CHAT</AppTranslate>
 			</div>
 		</template>
 
@@ -261,7 +261,7 @@ export default class AppFiresideAvatar extends Vue {
 		</template>
 
 		<template #link>
-			<app-popper trigger="hover" no-hover-popover>
+			<AppPopper trigger="hover" no-hover-popover>
 				<template #default>
 					<router-link class="-link" :to="fireside.location" />
 				</template>
@@ -269,8 +269,8 @@ export default class AppFiresideAvatar extends Vue {
 				<template #popover>
 					<div class="-tooltip">
 						<div class="-tooltip-row -tooltip-members">
-							<app-chat-user-online-status is-online :absolute="false" />
-							<translate
+							<AppChatUserOnlineStatus is-online :absolute="false" />
+							<AppTranslate
 								:translate-n="fireside.member_count || 0"
 								:translate-params="{
 									count: formatNumber(fireside.member_count || 0),
@@ -278,22 +278,22 @@ export default class AppFiresideAvatar extends Vue {
 								translate-plural="%{ count } members"
 							>
 								%{ count } member
-							</translate>
+							</AppTranslate>
 						</div>
 
 						<hr />
 
 						<div class="-tooltip-row -tooltip-user">
-							<translate>by</translate>
+							<AppTranslate>by</AppTranslate>
 							{{ ' ' }}
-							<app-user-avatar-img class="-tooltip-img" :user="fireside.user" />
+							<AppUserAvatarImg class="-tooltip-img" :user="fireside.user" />
 							{{ ' ' }}
 							@{{ fireside.user.username }}
 						</div>
 
 						<div v-if="community" class="-tooltip-row -tooltip-community">
-							<translate>in</translate>
-							<app-community-thumbnail-img
+							<AppTranslate>in</AppTranslate>
+							<AppCommunityThumbnailImg
 								class="-tooltip-img"
 								:community="community"
 							/>
@@ -301,9 +301,9 @@ export default class AppFiresideAvatar extends Vue {
 						</div>
 					</div>
 				</template>
-			</app-popper>
+			</AppPopper>
 		</template>
-	</app-fireside-avatar-base>
+	</AppFiresideAvatarBase>
 </template>
 
 <style lang="stylus" scoped>

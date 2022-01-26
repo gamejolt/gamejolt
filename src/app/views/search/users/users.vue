@@ -48,7 +48,7 @@ export default class RouteSearchUsers extends BaseRouteComponent {
 					:key="user.id"
 					class="-item col-sm-6 col-md-4 col-lg-3"
 				>
-					<app-user-card :user="user" elevate />
+					<AppUserCard :user="user" elevate />
 				</div>
 			</div>
 		</div>

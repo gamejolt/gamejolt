@@ -63,7 +63,7 @@ export default class AppOnboardingFollowsCommunityItem extends Vue {
 	<div class="-item">
 		<div class="-pressy">
 			<div class="-wrapper">
-				<app-community-thumbnail-img
+				<AppCommunityThumbnailImg
 					class="-img"
 					:style="{
 						'border-color': community.is_member ? highlight : '',
@@ -79,7 +79,7 @@ export default class AppOnboardingFollowsCommunityItem extends Vue {
 						'background-color': highlight,
 					}"
 				>
-					<app-jolticon class="-icon" icon="check" :style="{ color: highlightFg }" />
+					<AppJolticon class="-icon" icon="check" :style="{ color: highlightFg }" />
 				</div>
 			</div>
 		</div>

@@ -32,7 +32,7 @@ export default class AppBlockForm extends mixins(Wrapper) implements FormOnSubmi
 </script>
 
 <template>
-	<app-form :controller="form">
+	<AppForm :controller="form">
 		<div>
 			<p>
 				<span v-translate="{ username: user.username }">
@@ -42,35 +42,35 @@ export default class AppBlockForm extends mixins(Wrapper) implements FormOnSubmi
 			</p>
 
 			<p>
-				<translate>
+				<AppTranslate>
 					They won't be able to follow you, send you a friend request, or reply to your
 					posts and comments.
-				</translate>
+				</AppTranslate>
 			</p>
 
 			<p>
-				<app-link-help page="blocking-users" class="link-help">
-					<translate>Learn more about what happens when you block a user</translate>
-				</app-link-help>
+				<AppLinkHelp page="blocking-users" class="link-help">
+					<AppTranslate>Learn more about what happens when you block a user</AppTranslate>
+				</AppLinkHelp>
 			</p>
 		</div>
 
 		<br />
 
-		<app-form-group
+		<AppFormGroup
 			name="removeComments"
 			:label="$gettext(`Remove the user's comments from your profile and posts?`)"
 		>
-			<app-form-control-toggle class="pull-right" />
+			<AppFormControlToggle class="pull-right" />
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					All of their shouts on your profile and comments on your posts will be removed.
-				</translate>
+				</AppTranslate>
 			</p>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-button>
-			<translate>Block User</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton>
+			<AppTranslate>Block User</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

@@ -81,7 +81,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresList extends BaseRo
 <template>
 	<div>
 		<h2 class="section-header">
-			<translate>dash.games.scores.list.heading</translate>
+			<AppTranslate>dash.games.scores.list.heading</AppTranslate>
 		</h2>
 
 		<div class="row">
@@ -103,18 +103,18 @@ export default class RouteDashGamesManageApiScoreboardsScoresList extends BaseRo
 
 		<div class="page-help">
 			<p>
-				<translate>
+				<AppTranslate>
 					These are all of the scores that have been submitted to this scoreboard by users
 					and guests (if allowed).
-				</translate>
+				</AppTranslate>
 			</p>
 		</div>
 
 		<div v-if="!scores.length" key="no-scores" class="alert alert-notice anim-fade-in">
-			<p><translate>This table lacks scores, alas.</translate></p>
+			<p><AppTranslate>This table lacks scores, alas.</AppTranslate></p>
 		</div>
 
-		<app-manage-game-list-scores
+		<AppManageGameListScores
 			v-if="scores.length"
 			:score-table="scoreTable"
 			:scores="scores"

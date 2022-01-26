@@ -93,7 +93,7 @@ export default class AppStickerLayerPlacementMask extends Vue {
 				<mask id="myMask">
 					<rect x="0" y="0" :width="width" :height="height" fill="white" />
 					<template v-if="hasCalculated">
-						<app-sticker-layer-placement-mask-item
+						<AppStickerLayerPlacementMaskItem
 							v-for="(target, i) of layer.targets.value"
 							:key="`${viewbox}-${i}`"
 							:target="target"
@@ -114,7 +114,7 @@ export default class AppStickerLayerPlacementMask extends Vue {
 			</svg>
 
 			<template v-if="hasCalculated">
-				<app-sticker-layer-placement-mask-target
+				<AppStickerLayerPlacementMaskTarget
 					v-for="(target, i) of layer.targets.value"
 					:key="`${viewbox}-${i}`"
 					:target="target"
@@ -123,8 +123,8 @@ export default class AppStickerLayerPlacementMask extends Vue {
 			</template>
 		</div>
 
-		<app-sticker-layer-drawer class="-drawer" />
-		<app-sticker-layer-ghost v-if="sticker" class="-ghost" />
+		<AppStickerLayerDrawer class="-drawer" />
+		<AppStickerLayerGhost v-if="sticker" class="-ghost" />
 	</div>
 </template>
 

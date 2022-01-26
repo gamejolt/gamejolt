@@ -278,59 +278,59 @@ export default class AppActivityFeed extends Vue {
 	-->
 	<div :key="feed.id" class="activity-feed">
 		<template v-if="newCount > 0 || feed.isLoadingNew">
-			<app-scroll-inview :config="InviewConfigShowNew" @inview="onNewButtonInview">
-				<app-expand v-if="!feed.isLoadingNew" :when="isNewButtonInview">
-					<app-activity-feed-new-button @click="loadNew()">
-						<translate>Show new items</translate>
-					</app-activity-feed-new-button>
-				</app-expand>
-				<app-loading v-else class="loading-centered" />
-			</app-scroll-inview>
+			<AppScrollInview :config="InviewConfigShowNew" @inview="onNewButtonInview">
+				<AppExpand v-if="!feed.isLoadingNew" :when="isNewButtonInview">
+					<AppActivityFeedNewButton @click="loadNew()">
+						<AppTranslate>Show new items</AppTranslate>
+					</AppActivityFeedNewButton>
+				</AppExpand>
+				<AppLoading v-else class="loading-centered" />
+			</AppScrollInview>
 		</template>
 
 		<!-- Need the div so that we can target the last child in the container. -->
 		<div>
 			<div v-for="item of feed.items" :key="item.id" class="-item">
-				<app-activity-feed-item :item="item" />
+				<AppActivityFeedItem :item="item" />
 			</div>
 		</div>
 
 		<!--
 			If they are viewing a slice of the state, then we don't want to allow loading more.
 		-->
-		<app-scroll-inview
+		<AppScrollInview
 			v-if="!feed.slice"
 			:config="InviewConfigLoadMore"
 			@inview="onScrollLoadMore"
 		>
 			<div v-if="shouldShowLoadMore" class="page-cut">
-				<app-button
+				<AppButton
 					v-app-track-event="`activity-feed:more`"
 					:to="GJ_IS_SSR ? { query: { feed_last_id: lastPostScrollId } } : undefined"
 					trans
 					@click="loadMoreButton"
 				>
-					<translate>Load More</translate>
-				</app-button>
+					<AppTranslate>Load More</AppTranslate>
+				</AppButton>
 			</div>
 
-			<app-loading v-if="feed.isLoadingMore" class="-bottom-loading loading-centered" />
+			<AppLoading v-if="feed.isLoadingMore" class="-bottom-loading loading-centered" />
 
-			<app-illustration v-if="feed.reachedEnd" :src="illEndOfFeed">
+			<AppIllustration v-if="feed.reachedEnd" :src="illEndOfFeed">
 				<p>
-					<translate>
+					<AppTranslate>
 						You've found a clearing at the end of this feed. Should you set up camp?
-					</translate>
+					</AppTranslate>
 				</p>
 				<p>
-					<app-jolticon icon="arrow-right" />
-					<b><translate>Yes</translate></b>
-					<app-jolticon icon="arrow-left" />
+					<AppJolticon icon="arrow-right" />
+					<b><AppTranslate>Yes</AppTranslate></b>
+					<AppJolticon icon="arrow-left" />
 					<br />
-					<translate>No</translate>
+					<AppTranslate>No</AppTranslate>
 				</p>
-			</app-illustration>
-		</app-scroll-inview>
+			</AppIllustration>
+		</AppScrollInview>
 	</div>
 </template>
 

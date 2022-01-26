@@ -7362,10 +7362,9 @@ vm2@3.9.5:
   resolved "https://registry.yarnpkg.com/vm2/-/vm2-3.9.5.tgz#5288044860b4bbace443101fcd3bddb2a0aa2496"
   integrity sha512-LuCAHZN75H9tdrAiLFf030oW7nJV5xwNMuk1ymOZwopmuK3d2H4L1Kv4+GFHgarKiLfXXLFU+7LDABHnwOkWng==
 
-vue-class-component@8.0.0-rc.1:
+vue-class-component@gamejolt/vue-class-component#fix-ssr:
   version "8.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/vue-class-component/-/vue-class-component-8.0.0-rc.1.tgz#db692cd97656eb9a08206c03d0b7398cdb1d9420"
-  integrity sha512-w1nMzsT/UdbDAXKqhwTmSoyuJzUXKrxLE77PCFVuC6syr8acdFDAq116xgvZh9UCuV0h+rlCtxXolr3Hi3HyPQ==
+  resolved "https://codeload.github.com/gamejolt/vue-class-component/tar.gz/8cad49132f049a078e126b0aa772b9b13d388802"
 
 vue-eslint-parser@^8.0.1:
   version "8.0.1"

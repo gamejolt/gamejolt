@@ -33,14 +33,14 @@ export default class RouteLandingHelp extends BaseRouteComponent {
 				<div class="row">
 					<div class="col-lg-offset-1 col-lg-11">
 						<h1>
-							<app-theme-svg
+							<AppThemeSvg
 								:src="imageJolt"
 								alt=""
 								:width="17 * 3"
 								:height="18 * 3"
 								strict-colors
 							/>
-							<translate>Help Docs</translate>
+							<AppTranslate>Help Docs</AppTranslate>
 						</h1>
 					</div>
 				</div>

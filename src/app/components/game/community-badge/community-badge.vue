@@ -20,7 +20,7 @@ export default class AppGameCommunityBadge extends Vue {
 </script>
 
 <template>
-	<app-theme :theme="community.theme">
+	<AppTheme :theme="community.theme">
 		<router-link
 			:to="{
 				name: 'communities.view.overview',
@@ -28,7 +28,7 @@ export default class AppGameCommunityBadge extends Vue {
 			}"
 		>
 			<div class="-community-container fill-darkest">
-				<app-media-item-backdrop
+				<AppMediaItemBackdrop
 					v-if="community.header"
 					class="-backdrop"
 					:media-item="community.header"
@@ -42,7 +42,7 @@ export default class AppGameCommunityBadge extends Vue {
 					>
 						<div class="-header-gradient" />
 					</div>
-				</app-media-item-backdrop>
+				</AppMediaItemBackdrop>
 
 				<div class="-content">
 					<div class="-thumbnail">
@@ -50,13 +50,13 @@ export default class AppGameCommunityBadge extends Vue {
 					</div>
 					<div>
 						<div class="tag">
-							<translate>Game Community</translate>
+							<AppTranslate>Game Community</AppTranslate>
 						</div>
 						<div class="-name">
 							{{ community.name }}
 						</div>
 						<div v-if="community.member_count > 0" class="-member-count">
-							<translate
+							<AppTranslate
 								:translate-n="community.member_count || 0"
 								:translate-params="{
 									count: formatNumber(community.member_count || 0),
@@ -64,13 +64,13 @@ export default class AppGameCommunityBadge extends Vue {
 								translate-plural="%{ count } Members"
 							>
 								%{ count } Member
-							</translate>
+							</AppTranslate>
 						</div>
 					</div>
 				</div>
 			</div>
 		</router-link>
-	</app-theme>
+	</AppTheme>
 </template>
 
 <style lang="stylus" scoped src="./community-badge.styl"></style>

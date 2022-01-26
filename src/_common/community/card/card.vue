@@ -32,7 +32,7 @@ export default class AppCommunityCard extends Vue {
 </script>
 
 <template>
-	<app-community-card-base
+	<AppCommunityCardBase
 		:community="community"
 		:elevate="elevate"
 		:allow-edit="allowEdit"
@@ -40,10 +40,10 @@ export default class AppCommunityCard extends Vue {
 	>
 		<template #thumbnail>
 			<router-link :to="community.routeLocation" @click="trackGotoCommunity()">
-				<app-media-item-backdrop :media-item="community.thumbnail">
-					<app-community-thumbnail-img :community="community" />
-				</app-media-item-backdrop>
+				<AppMediaItemBackdrop :media-item="community.thumbnail">
+					<AppCommunityThumbnailImg :community="community" />
+				</AppMediaItemBackdrop>
 			</router-link>
 		</template>
-	</app-community-card-base>
+	</AppCommunityCardBase>
 </template>

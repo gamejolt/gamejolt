@@ -65,16 +65,16 @@ export default class RouteDashLinking extends BaseRouteComponent {
 	<section class="section">
 		<div class="container">
 			<div v-if="token">
-				<p><translate>Please use your web browser to complete the process.</translate></p>
+				<p><AppTranslate>Please use your web browser to complete the process.</AppTranslate></p>
 
-				<app-progress-poller
+				<AppProgressPoller
 					:url="`/web/auth/poll-oauth/${token}`"
 					:interval="2500"
 					@complete="completed"
 					@error="failed"
 				/>
 
-				<app-loading :label="$gettext('Linking...')" />
+				<AppLoading :label="$gettext('Linking...')" />
 			</div>
 		</div>
 	</section>

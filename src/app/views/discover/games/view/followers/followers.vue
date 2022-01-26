@@ -51,9 +51,9 @@ export default class RouteProfileFollowers extends BaseRouteComponent {
 	<section class="section fill-backdrop">
 		<div class="container">
 			<div v-if="!game?.follower_count" class="alert alert-info">
-				<translate>No one is following this game yet.</translate>
+				<AppTranslate>No one is following this game yet.</AppTranslate>
 			</div>
-			<app-follower-list
+			<AppFollowerList
 				v-else
 				:url="loadUrl"
 				:initial-users="users"

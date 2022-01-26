@@ -44,7 +44,7 @@ export default class AppUserVerifiedTick extends Vue {
 </script>
 
 <template>
-	<app-jolticon
+	<AppJolticon
 		v-if="shouldShow"
 		v-app-tooltip="tooltip"
 		:class="{

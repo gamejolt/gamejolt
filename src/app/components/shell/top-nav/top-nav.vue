@@ -162,7 +162,7 @@ export default class AppShellTopNav extends Vue {
 					}"
 					@click="store.toggleCbarMenu()"
 				>
-					<app-jolticon icon="menu" />
+					<AppJolticon icon="menu" />
 					<div
 						v-if="chatStore.chat && chat.roomNotificationsCount > 0"
 						class="-notification-chat notification-tag tag tag-highlight"
@@ -172,7 +172,7 @@ export default class AppShellTopNav extends Vue {
 				</a>
 
 				<!-- History Navigator (for desktop app) -->
-				<app-client-history-navigator />
+				<AppClientHistoryNavigator />
 
 				<router-link
 					v-app-track-event="`top-nav:main-menu:home`"
@@ -183,13 +183,13 @@ export default class AppShellTopNav extends Vue {
 					}"
 					:to="{ name: 'home' }"
 				>
-					<app-theme-svg
+					<AppThemeSvg
 						v-if="!Screen.isMobile"
 						:src="imageGameJoltLogo"
 						alt=""
 						strict-colors
 					/>
-					<app-theme-svg v-else :src="imageJolt" alt="" strict-colors />
+					<AppThemeSvg v-else :src="imageJolt" alt="" strict-colors />
 					<span
 						v-if="unreadActivityCount > 0"
 						class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
@@ -205,9 +205,9 @@ export default class AppShellTopNav extends Vue {
 					:class="{ active: $route.name === 'discover.home' }"
 					:to="{ name: 'discover.home' }"
 				>
-					<app-jolticon icon="compass-needle" class="-section-icon" />
+					<AppJolticon icon="compass-needle" class="-section-icon" />
 					<strong class="text-upper">
-						<translate>Explore</translate>
+						<AppTranslate>Explore</AppTranslate>
 					</strong>
 				</router-link>
 
@@ -222,11 +222,11 @@ export default class AppShellTopNav extends Vue {
 					}"
 				>
 					<strong class="text-upper">
-						<translate>Store</translate>
+						<AppTranslate>Store</AppTranslate>
 					</strong>
 				</router-link>
 
-				<app-popper
+				<AppPopper
 					v-if="shouldShowMoreMenu"
 					v-app-track-event="`top-nav:more-menu:toggle`"
 					popover-class="fill-darkest"
@@ -236,7 +236,7 @@ export default class AppShellTopNav extends Vue {
 					@hide="moreMenuShowing = false"
 				>
 					<a class="navbar-item" :class="{ active: moreMenuShowing }">
-						<app-jolticon icon="ellipsis-v" />
+						<AppJolticon icon="ellipsis-v" />
 					</a>
 
 					<template #popover>
@@ -251,8 +251,8 @@ export default class AppShellTopNav extends Vue {
 									})
 								"
 							>
-								<app-jolticon icon="phone" />
-								<translate>Get the Mobile App</translate>
+								<AppJolticon icon="phone" />
+								<AppTranslate>Get the Mobile App</AppTranslate>
 							</router-link>
 
 							<router-link
@@ -266,8 +266,8 @@ export default class AppShellTopNav extends Vue {
 									})
 								"
 							>
-								<app-jolticon icon="client" />
-								<translate>Get the Desktop App</translate>
+								<AppJolticon icon="client" />
+								<AppTranslate>Get the Desktop App</AppTranslate>
 							</router-link>
 
 							<router-link
@@ -275,20 +275,20 @@ export default class AppShellTopNav extends Vue {
 								class="list-group-item has-icon offline-disable"
 								:to="{ name: 'forums.landing.overview' }"
 							>
-								<app-jolticon icon="forums" />
-								<translate>Forums</translate>
+								<AppJolticon icon="forums" />
+								<AppTranslate>Forums</AppTranslate>
 							</router-link>
 						</div>
 					</template>
-				</app-popper>
+				</AppPopper>
 			</div>
 		</div>
 
 		<div class="navbar-center">
-			<app-config-loaded class="-search">
+			<AppConfigLoaded class="-search">
 				<!-- Search Input -->
-				<app-search v-if="shouldShowSearch" />
-			</app-config-loaded>
+				<AppSearch v-if="shouldShowSearch" />
+			</AppConfigLoaded>
 		</div>
 
 		<!--
@@ -304,7 +304,7 @@ export default class AppShellTopNav extends Vue {
 		>
 			<template v-if="Screen.isSm && shouldShowAppPromotion">
 				<div class="-button">
-					<app-button
+					<AppButton
 						:to="{ name: 'landing.app' }"
 						@click="
 							trackAppPromotionClick({
@@ -313,13 +313,13 @@ export default class AppShellTopNav extends Vue {
 							})
 						"
 					>
-						<translate>Get App</translate>
-					</app-button>
+						<AppTranslate>Get App</AppTranslate>
+					</AppButton>
 				</div>
 			</template>
 			<template v-else-if="!GJ_IS_DESKTOP_APP && Screen.isDesktop">
 				<div class="-button">
-					<app-button
+					<AppButton
 						:to="{ name: 'landing.client' }"
 						@click="
 							trackAppPromotionClick({
@@ -328,18 +328,18 @@ export default class AppShellTopNav extends Vue {
 							})
 						"
 					>
-						<translate>Get App</translate>
-					</app-button>
+						<AppTranslate>Get App</AppTranslate>
+					</AppButton>
 				</div>
 			</template>
 
 			<div v-app-observe-dimensions="checkColWidths" class="-col">
 				<template v-if="app.user">
 					<!-- Notifications -->
-					<app-shell-notification-popover />
+					<AppShellNotificationPopover />
 
 					<!-- Friend Requests -->
-					<app-shell-friend-request-popover />
+					<AppShellFriendRequestPopover />
 
 					<!-- Connection Status -->
 					<span
@@ -349,11 +349,11 @@ export default class AppShellTopNav extends Vue {
 						"
 						class="navbar-item disconnected-icon"
 					>
-						<app-jolticon icon="offline" />
+						<AppJolticon icon="offline" />
 					</span>
 
 					<!-- User Menu -->
-					<app-shell-account-popover />
+					<AppShellAccountPopover />
 				</template>
 
 				<!-- Login/Join Buttons -->
@@ -364,7 +364,7 @@ export default class AppShellTopNav extends Vue {
 								v-app-track-event="`top-nav:login:click`"
 								:href="Environment.authBaseUrl + '/login'"
 							>
-								<translate>nav.login</translate>
+								<AppTranslate>nav.login</AppTranslate>
 							</a>
 						</li>
 						<li>
@@ -372,7 +372,7 @@ export default class AppShellTopNav extends Vue {
 								v-app-track-event="`top-nav:join:click`"
 								:href="Environment.authBaseUrl + '/join'"
 							>
-								<translate>Sign Up</translate>
+								<AppTranslate>Sign Up</AppTranslate>
 							</a>
 						</li>
 					</ul>

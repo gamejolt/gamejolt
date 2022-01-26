@@ -26,9 +26,9 @@ export default class AppFormCommunityChannelPermissions extends Vue {
 </script>
 
 <template>
-	<app-form-group name="permission_posting" :label="$gettext('Channel Posting Permissions')">
+	<AppFormGroup name="permission_posting" :label="$gettext('Channel Posting Permissions')">
 		<div class="help-inline">
-			<translate>Choose who can post to this channel.</translate>
+			<AppTranslate>Choose who can post to this channel.</AppTranslate>
 		</div>
 		<div
 			v-for="(permissionDisplay, permission) of permissionPostingOptions"
@@ -36,10 +36,10 @@ export default class AppFormCommunityChannelPermissions extends Vue {
 			class="radio"
 		>
 			<label>
-				<app-form-control-radio :value="permission" />
+				<AppFormControlRadio :value="permission" />
 				{{ permissionDisplay }}
 			</label>
 		</div>
-		<app-form-control-errors />
-	</app-form-group>
+		<AppFormControlErrors />
+	</AppFormGroup>
 </template>

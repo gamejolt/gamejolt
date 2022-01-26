@@ -16,10 +16,10 @@ export default class AppAnalyticsReportRatingBreakdown extends Vue {
 			<thead>
 				<tr>
 					<th>
-						<translate>Rating Given</translate>
+						<AppTranslate>Rating Given</AppTranslate>
 					</th>
 					<th class="text-right">
-						<translate>Count</translate>
+						<AppTranslate>Count</AppTranslate>
 					</th>
 					<th style="width: 150px" />
 				</tr>
@@ -27,10 +27,10 @@ export default class AppAnalyticsReportRatingBreakdown extends Vue {
 			<tbody>
 				<tr v-for="i of [1, 0]" :key="i">
 					<td v-if="i === 1">
-						<translate>Like</translate>
+						<AppTranslate>Like</AppTranslate>
 					</td>
 					<td v-else>
-						<translate>Dislike</translate>
+						<AppTranslate>Dislike</AppTranslate>
 					</td>
 					<td class="text-right">
 						{{ formatNumber(reportData.data[i] || 0) }}

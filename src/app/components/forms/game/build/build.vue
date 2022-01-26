@@ -458,15 +458,15 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 </script>
 
 <template>
-	<app-card-list-item class="game-build-form" force-active :item="model">
+	<AppCardListItem class="game-build-form" force-active :item="model">
 		<a class="card-remove" @click="remove()">
-			<app-jolticon icon="remove" />
+			<AppJolticon icon="remove" />
 		</a>
 
 		<div class="card-stats">
 			<div class="stat-big stat-big-smaller">
 				<div class="stat-big-label">
-					<translate>dash.games.releases.builds.downloads_label</translate>
+					<AppTranslate>dash.games.releases.builds.downloads_label</AppTranslate>
 				</div>
 				<div
 					class="stat-big-digit"
@@ -488,52 +488,52 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 
 		<div class="card-meta">
 			<span v-if="model.type === GameBuild.TYPE_DOWNLOADABLE" class="tag">
-				<app-jolticon icon="download" />
-				<translate>Downloadable</translate>
+				<AppJolticon icon="download" />
+				<AppTranslate>Downloadable</AppTranslate>
 			</span>
 			<span v-else-if="model.type === GameBuild.TYPE_HTML" class="tag">
-				<app-jolticon icon="html5" />
-				<translate>games.browser_html</translate>
+				<AppJolticon icon="html5" />
+				<AppTranslate>games.browser_html</AppTranslate>
 			</span>
 			<span v-else-if="model.type === GameBuild.TYPE_FLASH" class="tag">
-				<app-jolticon icon="flash" />
-				<translate>games.browser_flash</translate>
+				<AppJolticon icon="flash" />
+				<AppTranslate>games.browser_flash</AppTranslate>
 			</span>
 			<span v-else-if="model.type === GameBuild.TYPE_UNITY" class="tag">
-				<app-jolticon icon="unity" />
-				<translate>games.browser_unity</translate>
+				<AppJolticon icon="unity" />
+				<AppTranslate>games.browser_unity</AppTranslate>
 			</span>
 			<span v-else-if="model.type === GameBuild.TYPE_SILVERLIGHT" class="tag">
-				<app-jolticon icon="silverlight" />
-				<translate>games.browser_silverlight</translate>
+				<AppJolticon icon="silverlight" />
+				<AppTranslate>games.browser_silverlight</AppTranslate>
 			</span>
 			<span v-else-if="model.type === GameBuild.TYPE_APPLET" class="tag">
-				<app-jolticon icon="java" />
-				<translate>games.browser_applet</translate>
+				<AppJolticon icon="java" />
+				<AppTranslate>games.browser_applet</AppTranslate>
 			</span>
 			<span v-else-if="model.type === GameBuild.TYPE_ROM" class="tag">
-				<app-jolticon icon="rom" />
-				<translate>ROM</translate>
+				<AppJolticon icon="rom" />
+				<AppTranslate>ROM</AppTranslate>
 			</span>
 
 			<!--
 				Missing fields.
 			-->
 			<span v-if="model.hasError(GameBuild.ERROR_MISSING_FIELDS)" class="tag tag-notice">
-				<app-jolticon icon="notice" />
-				<translate>Incomplete</translate>
+				<AppJolticon icon="notice" />
+				<AppTranslate>Incomplete</AppTranslate>
 			</span>
 
 			<span v-else>
 				<span v-if="model.status === GameBuild.STATUS_ADDING" class="tag">
-					<translate>Processing</translate>
+					<AppTranslate>Processing</AppTranslate>
 				</span>
 				<span
 					v-else-if="model.status === GameBuild.STATUS_ACTIVE"
 					class="tag tag-highlight"
 				>
-					<app-jolticon icon="check" />
-					<translate>Active</translate>
+					<AppJolticon icon="check" />
+					<AppTranslate>Active</AppTranslate>
 				</span>
 			</span>
 		</div>
@@ -542,48 +542,52 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 			Processing the build.
 		-->
 		<template v-if="shouldPollProgress">
-			<app-progress-poller
+			<AppProgressPoller
 				:url="pollUrl"
 				@progress="processPollerResponse"
 				@complete="processPollerResponse"
 			/>
 
-			<app-expand :when="!model.errors">
+			<AppExpand :when="!model.errors">
 				<br />
-				<app-progress-bar thin indeterminate active :percent="100" />
+				<AppProgressBar thin indeterminate active :percent="100" />
 
 				<div v-translate class="text-center small">
 					<strong>Processing build.</strong>
 					It will become available in this release as soon as we're done.
 				</div>
-			</app-expand>
+			</AppExpand>
 		</template>
 
 		<template #body>
-			<app-form :controller="form">
+			<AppForm :controller="form">
 				<div
 					v-if="model.type === GameBuild.TYPE_APPLET"
 					class="alert alert-notice sans-margin"
 				>
-					<app-jolticon icon="notice" />
-					<strong><translate>Java Applets have been deprecated.</translate></strong>
-					<translate>
+					<AppJolticon icon="notice" />
+					<strong><AppTranslate>Java Applets have been deprecated.</AppTranslate></strong>
+					<AppTranslate>
 						You can no longer edit your Java Applet builds, although gamers will still
 						be able to play them if their browsers support them. You can add .jar files
 						as downloadables and the Game Jolt Client will correctly launch them for
 						users instead.
-					</translate>
+					</AppTranslate>
 				</div>
 				<div
 					v-else-if="model.type === GameBuild.TYPE_SILVERLIGHT"
 					class="alert alert-notice sans-margin"
 				>
-					<app-jolticon icon="notice" />
-					<strong><translate>Silverlight builds have been deprecated.</translate></strong>
-					<translate>
+					<AppJolticon icon="notice" />
+					<strong
+						><AppTranslate
+							>Silverlight builds have been deprecated.</AppTranslate
+						></strong
+					>
+					<AppTranslate>
 						You can no longer edit your Silverlight builds, although gamers will still
 						be able to play them if their browsers support them.
-					</translate>
+					</AppTranslate>
 				</div>
 
 				<!--
@@ -591,12 +595,16 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 				-->
 				<div v-if="!isDeprecated">
 					<template v-if="archiveError">
-						<app-expand class="-archive-error" :when="true">
+						<AppExpand class="-archive-error" :when="true">
 							<div class="alert alert-notice sans-margin-bottom">
 								<p>{{ archiveError }}</p>
-								<p><translate>Please re-upload with a valid archive.</translate></p>
+								<p>
+									<AppTranslate
+										>Please re-upload with a valid archive.</AppTranslate
+									>
+								</p>
 							</div>
-						</app-expand>
+						</AppExpand>
 					</template>
 
 					<div
@@ -604,7 +612,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 							model.primary_file.is_archive && !model.primary_file.is_archive_ready
 						"
 					>
-						<app-loading
+						<AppLoading
 							class="-rummaging"
 							:label="
 								$gettext(`Give us a second, we're rummaging through the archive...`)
@@ -617,7 +625,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 							v-if="isSettingPlatform"
 							class="game-build-form-spinner no-animate-leave"
 						>
-							<app-loading :hide-label="true" />
+							<AppLoading :hide-label="true" />
 						</div>
 
 						<!--
@@ -631,11 +639,11 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 								When this build is not able to launch on certain platforms.
 							-->
 							<p v-if="restrictedPlatforms.length">
-								<app-jolticon icon="info-circle" />
-								<translate>
+								<AppJolticon icon="info-circle" />
+								<AppTranslate>
 									This build is not launchable on certain platforms. They've been
 									disabled below.
-								</translate>
+								</AppTranslate>
 							</p>
 
 							<p
@@ -644,15 +652,15 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 									'sans-margin-top': !restrictedPlatforms.length,
 								}"
 							>
-								<translate>
+								<AppTranslate>
 									Select "Other" if this build is for a platform that's not shown,
 									or if it's a non-executable file such as a PDF.
-								</translate>
+								</AppTranslate>
 							</p>
 
 							<div class="clearfix">
 								<div v-for="platform of platformOptions" :key="platform.key">
-									<app-form-group
+									<AppFormGroup
 										:name="`os_${platform.key}`"
 										:optional="true"
 										:hide-label="true"
@@ -662,25 +670,25 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 											:class="{ disabled: isPlatformDisabled(platform.key) }"
 										>
 											<label>
-												<app-form-control-checkbox
+												<AppFormControlCheckbox
 													:disabled="isPlatformDisabled(platform.key)"
 													@changed="platformChanged(platform.key)"
 												/>
 												{{ platform.label }}
 											</label>
 										</div>
-									</app-form-group>
+									</AppFormGroup>
 								</div>
 							</div>
 
-							<app-expand :when="hasPlatformsError">
+							<AppExpand :when="hasPlatformsError">
 								<div class="alert alert-notice sans-margin-bottom">
-									<translate>
+									<AppTranslate>
 										You have to select at least one platform on which your build
 										runs (or "Other").
-									</translate>
+									</AppTranslate>
 								</div>
-							</app-expand>
+							</AppExpand>
 						</div>
 
 						<!--
@@ -688,11 +696,11 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 							In that case, it is forced as "other".
 						-->
 						<p v-if="forceOther" class="sans-margin">
-							<app-jolticon icon="info-circle" />
-							<translate>
+							<AppJolticon icon="info-circle" />
+							<AppTranslate>
 								This build doesn't seem to be a Windows, macOS, or Linux build, so
 								we've marked it as 'Other' for you.
-							</translate>
+							</AppTranslate>
 						</p>
 
 						<!--
@@ -706,10 +714,10 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 							"
 							class="form-horizontal"
 						>
-							<legend><translate>Launch Options</translate></legend>
+							<legend><AppTranslate>Launch Options</AppTranslate></legend>
 
 							<div v-if="model.primary_file.is_archive">
-								<app-form-group
+								<AppFormGroup
 									v-for="platform of availablePlatformOptions"
 									:key="platform.key"
 									:name="`launch_${platform.key}`"
@@ -718,7 +726,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 								>
 									<div class="col-sm-9">
 										<div class="input-group input-group-sm">
-											<app-form-control
+											<AppFormControl
 												:validators="[validateMaxLength(500)]"
 												@changed="onBuildFieldChanged"
 											/>
@@ -734,12 +742,12 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 													class="link-unstyled"
 													@click="openFileSelector(platform.key)"
 												>
-													<app-jolticon icon="ellipsis-h" />
+													<AppJolticon icon="ellipsis-h" />
 												</a>
 											</span>
 										</div>
 
-										<app-form-control-errors
+										<AppFormControlErrors
 											:ignore-dirty="true"
 											:label="
 												$gettext(
@@ -748,151 +756,149 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 											"
 										/>
 									</div>
-								</app-form-group>
+								</AppFormGroup>
 							</div>
 
-							<app-expand :when="serverErrors.launchOptions">
+							<AppExpand :when="serverErrors.launchOptions">
 								<div class="alert alert-notice">
 									<strong>
-										<translate>
+										<AppTranslate>
 											The launch options you entered are invalid.
-										</translate>
+										</AppTranslate>
 									</strong>
-									<translate>
+									<AppTranslate>
 										Make sure each selected file is in your build and that it
 										works on the appropriate operating system.
-									</translate>
+									</AppTranslate>
 								</div>
-							</app-expand>
+							</AppExpand>
 
-							<app-expand :when="!model.primary_file.is_archive">
+							<AppExpand :when="!model.primary_file.is_archive">
 								<div>
 									<p>
 										<strong>
-											<translate>
+											<AppTranslate>
 												We've detected that this build is a standalone
 												executable file.
-											</translate>
+											</AppTranslate>
 										</strong>
 									</p>
-									<p><translate>It can be launched automatically.</translate></p>
+									<p>
+										<AppTranslate
+											>It can be launched automatically.</AppTranslate
+										>
+									</p>
 								</div>
-							</app-expand>
+							</AppExpand>
 						</fieldset>
 
 						<!--
 							Browser Embed Dimensions
 						-->
 						<div v-if="isBrowserBased">
-							<app-form-group
+							<AppFormGroup
 								name="embed_fit_to_screen"
 								:label="$gettext(`Fit to screen?`)"
 							>
-								<app-form-control-toggle
+								<AppFormControlToggle
 									class="pull-right"
 									@changed="onBuildFieldChanged"
 								/>
 
 								<p class="help-block">
-									<translate>
+									<AppTranslate>
 										If your game can stretch to fit the browser viewport, you
 										can turn this option on to take up the whole available
 										space.
-									</translate>
+									</AppTranslate>
 								</p>
-							</app-form-group>
+							</AppFormGroup>
 
 							<template v-if="!isFitToScreen">
 								<hr />
 
 								<p class="help-block">
-									<translate>
+									<AppTranslate>
 										These are the dimensions at which your browser build will be
 										displayed.
-									</translate>
+									</AppTranslate>
 								</p>
 
 								<div class="row">
 									<div class="col-sm-6">
 										<!-- TODO(vue3) translate-comment="Width of the browser game canvas" -->
-										<app-form-group
-											name="embed_width"
-											:label="$gettext(`Width`)"
-										>
-											<app-form-control
+										<AppFormGroup name="embed_width" :label="$gettext(`Width`)">
+											<AppFormControl
 												class="input-sm"
 												type="number"
 												@changed="onBuildFieldChanged"
 											/>
-											<app-form-control-errors :ignore-dirty="true" />
-										</app-form-group>
+											<AppFormControlErrors :ignore-dirty="true" />
+										</AppFormGroup>
 									</div>
 									<div class="col-sm-6">
 										<!-- TODO(vue3) translate-comment="Height of the browser game canvas" -->
-										<app-form-group
+										<AppFormGroup
 											name="embed_height"
 											:label="$gettext(`Height`)"
 										>
-											<app-form-control
+											<AppFormControl
 												class="input-sm"
 												type="number"
 												@changed="onBuildFieldChanged"
 											/>
-											<app-form-control-errors :ignore-dirty="true" />
-										</app-form-group>
+											<AppFormControlErrors :ignore-dirty="true" />
+										</AppFormGroup>
 									</div>
 								</div>
 							</template>
 
-							<app-form-group
-								name="https_enabled"
-								:label="$gettext(`HTTPS support?`)"
-							>
-								<app-form-control-toggle
+							<AppFormGroup name="https_enabled" :label="$gettext(`HTTPS support?`)">
+								<AppFormControlToggle
 									class="pull-right"
 									@changed="onBuildFieldChanged"
 								/>
 
 								<p class="help-block">
-									<translate>
+									<AppTranslate>
 										If your game doesn't work on HTTPS you can disable this and
 										we'll serve it over HTTP instead. It's highly recommended to
 										get your game working on HTTPS! Some features may not work
 										on HTTP in more recent browsers.
-									</translate>
+									</AppTranslate>
 								</p>
-							</app-form-group>
+							</AppFormGroup>
 						</div>
 
 						<!--
 							Unity Right Click Menu
 						-->
-						<app-form-group
+						<AppFormGroup
 							v-if="formModel.type === GameBuild.TYPE_UNITY"
 							name="browser_disable_right_click"
 							:label="$gettext(`dash.games.builds.form.disable_right_click_label`)"
 						>
 							<p class="help-block">
-								<translate>
+								<AppTranslate>
 									dash.games.builds.form.disable_right_click_help
-								</translate>
+								</AppTranslate>
 							</p>
-							<app-form-control-toggle @changed="onBuildFieldChanged" />
-						</app-form-group>
+							<AppFormControlToggle @changed="onBuildFieldChanged" />
+						</AppFormGroup>
 
 						<div v-if="model.type === GameBuild.TYPE_UNITY" class="alert alert-notice">
-							<app-jolticon icon="notice" />
+							<AppJolticon icon="notice" />
 							<strong>
-								<translate>
+								<AppTranslate>
 									Most browsers have stopped supporting the Unity Web Player.
-								</translate>
+								</AppTranslate>
 							</strong>
-							<translate>Please consider exporting to WebGL instead.</translate>
+							<AppTranslate>Please consider exporting to WebGL instead.</AppTranslate>
 						</div>
 
 						<p v-if="model.type === GameBuild.TYPE_ROM" class="sans-margin">
-							<app-jolticon icon="info-circle" />
-							<translate
+							<AppJolticon icon="info-circle" />
+							<AppTranslate
 								:translate-params="{
 									platform: emulatorsInfo[model.emulator_type],
 								}"
@@ -900,29 +906,26 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 							>
 								We've detected this build is actually a ROM for the %{ platform }.
 								We will automatically emulate it in browser for you!
-							</translate>
+							</AppTranslate>
 						</p>
 
-						<app-expand :when="hasBrowserError">
+						<AppExpand :when="hasBrowserError">
 							<div class="alert alert-notice sans-margin-bottom">
-								<translate>
+								<AppTranslate>
 									This build has more info to fill in before it will be available
 									in this release.
-								</translate>
+								</AppTranslate>
 							</div>
-						</app-expand>
+						</AppExpand>
 					</template>
 
-					<app-form-button
-						v-if="valid && wasChanged"
-						class="game-build-form-submit-button"
-					>
-						<translate>Save Build</translate>
-					</app-form-button>
+					<AppFormButton v-if="valid && wasChanged" class="game-build-form-submit-button">
+						<AppTranslate>Save Build</AppTranslate>
+					</AppFormButton>
 				</div>
-			</app-form>
+			</AppForm>
 		</template>
-	</app-card-list-item>
+	</AppCardListItem>
 </template>
 
 <style lang="stylus" scoped>

@@ -24,25 +24,25 @@ export default class AppCommunityRemoveChannelModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate :translate-params="{ title: channel.title }">
+				<AppTranslate :translate-params="{ title: channel.title }">
 					Remove "%{ title }" channel?
-				</translate>
+				</AppTranslate>
 			</h2>
 		</div>
 
 		<div class="modal-body">
 			<template v-if="channel.type === 'competition'">
 				<div class="alert">
-					<h4 class="sans-margin-top"><translate>Removing a Jam Channel</translate></h4>
+					<h4 class="sans-margin-top"><AppTranslate>Removing a Jam Channel</AppTranslate></h4>
 					<p>
 						<span v-translate>
 							This channel contains a <b>Jam</b>, which gets removed when this channel
@@ -58,13 +58,13 @@ export default class AppCommunityRemoveChannelModal extends mixins(BaseModal) {
 				</div>
 			</template>
 
-			<app-community-remove-channel
+			<AppCommunityRemoveChannel
 				:community="community"
 				:channel="channel"
 				@removed="onRemoved"
 			/>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" scoped>

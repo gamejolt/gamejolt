@@ -11,7 +11,7 @@ defineProps({
 <template>
 	<div class="loading-fade" :class="{ 'loading-fade-loading': isLoading }">
 		<div v-if="isLoading" class="loading-fade-img">
-			<app-loading centered hide-label stationary />
+			<AppLoading centered hide-label stationary />
 		</div>
 		<div class="loading-fade-content">
 			<slot />

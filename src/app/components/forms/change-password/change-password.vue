@@ -40,34 +40,34 @@ export default class FormChangePassword extends mixins(Wrapper) implements FormO
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group v-if="requiresOld" name="old_password" :label="$gettext(`Old Password`)">
-			<app-form-control
+	<AppForm :controller="form">
+		<AppFormGroup v-if="requiresOld" name="old_password" :label="$gettext(`Old Password`)">
+			<AppFormControl
 				type="password"
 				:validators="[validateMinLength(4), validateMaxLength(300)]"
 				validate-on-blur
 			/>
 
-			<app-form-control-errors label="password">
-				<app-form-control-error
+			<AppFormControlErrors label="password">
+				<AppFormControlError
 					when="server"
 					:message="$gettext(`The password you entered is invalid.`)"
 				/>
-			</app-form-control-errors>
-		</app-form-group>
+			</AppFormControlErrors>
+		</AppFormGroup>
 
-		<app-form-group name="password" :label="$gettext(`New Password`)">
-			<app-form-control
+		<AppFormGroup name="password" :label="$gettext(`New Password`)">
+			<AppFormControl
 				type="password"
 				:validators="[validateMinLength(4), validateMaxLength(300)]"
 				validate-on-blur
 			/>
 
-			<app-form-control-errors label="new password" />
-		</app-form-group>
+			<AppFormControlErrors label="new password" />
+		</AppFormGroup>
 
-		<app-form-group name="confirm_password" :label="$gettext(`Confirm New Password`)">
-			<app-form-control
+		<AppFormGroup name="confirm_password" :label="$gettext(`Confirm New Password`)">
+			<AppFormControl
 				type="password"
 				:validators="[
 					validateMinLength(4),
@@ -77,8 +77,8 @@ export default class FormChangePassword extends mixins(Wrapper) implements FormO
 				validate-on-blur
 			/>
 
-			<app-form-control-errors label="new password">
-				<app-form-control-error
+			<AppFormControlErrors label="new password">
+				<AppFormControlError
 					when="match"
 					:message="
 						$gettext(
@@ -86,11 +86,11 @@ export default class FormChangePassword extends mixins(Wrapper) implements FormO
 						)
 					"
 				/>
-			</app-form-control-errors>
-		</app-form-group>
+			</AppFormControlErrors>
+		</AppFormGroup>
 
-		<app-form-button>
-			<translate>Change Account Password</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton>
+			<AppTranslate>Change Account Password</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

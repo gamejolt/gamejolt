@@ -34,15 +34,15 @@ export default class AppCommunityHeaderModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-body">
-			<form-community-header :model="community" @submit="onSubmit" />
+			<FormCommunityHeader :model="community" @submit="onSubmit" />
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

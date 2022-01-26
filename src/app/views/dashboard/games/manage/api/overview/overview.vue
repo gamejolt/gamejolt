@@ -78,26 +78,26 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 <template>
 	<div>
 		<h2 class="section-header">
-			<translate>Game API Overview</translate>
+			<AppTranslate>Game API Overview</AppTranslate>
 		</h2>
 
 		<div class="page-help">
 			<p>
-				<translate>
+				<AppTranslate>
 					The Game API lets you spice up your game with scoreboards, trophies, cloud data
 					storage, session logging, and more.
-				</translate>
+				</AppTranslate>
 			</p>
 			<p>
-				<translate>
+				<AppTranslate>
 					You can check the links below to see if the community has already written an API
 					library or plugin for the engine/tool/language you use. Of course, you can
 					always write one yourself and share it in the forums!
-				</translate>
+				</AppTranslate>
 			</p>
 			<p>
 				<router-link class="link-help" :to="{ name: 'landing.game-api' }">
-					<translate>Learn more about the Game API...</translate>
+					<AppTranslate>Learn more about the Game API...</AppTranslate>
 				</router-link>
 				<br />
 				<router-link
@@ -107,17 +107,19 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 						params: { name: 'gj-game-api', sort: 'active' },
 					}"
 				>
-					<translate>Find help in the API forums...</translate>
+					<AppTranslate>Find help in the API forums...</AppTranslate>
 				</router-link>
 			</p>
 		</div>
 
 		<h2 class="sans-margin-bottom">
-			<translate translate-comment="This refers to game API sessions">Sessions</translate>
+			<AppTranslate translate-comment="This refers to game API sessions"
+				>Sessions</AppTranslate
+			>
 		</h2>
 
 		<p class="text-muted small">
-			<translate>Sessions show you who's playing your game and for how long.</translate>
+			<AppTranslate>Sessions show you who's playing your game and for how long.</AppTranslate>
 		</p>
 
 		<div class="well fill-offset full-bleed-xs sans-margin-bottom">
@@ -125,9 +127,9 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<translate translate-comment="This refers to game API sessions">
+							<AppTranslate translate-comment="This refers to game API sessions">
 								Active Sessions
-							</translate>
+							</AppTranslate>
 						</div>
 						<div class="stat-big-digit">
 							{{ formatNumber(numActiveSessions) }}
@@ -137,11 +139,11 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<translate
+							<AppTranslate
 								translate-comment="This refers to the total session time logged for a game"
 							>
 								Total Time
-							</translate>
+							</AppTranslate>
 						</div>
 						<div class="stat-big-digit">
 							{{ formatDuration(sessionStats.time || 0) }}
@@ -151,9 +153,9 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<translate translate-comment="This refers to game API sessions">
+							<AppTranslate translate-comment="This refers to game API sessions">
 								Avg. Session Time
-							</translate>
+							</AppTranslate>
 						</div>
 						<div class="stat-big-digit">
 							{{ formatDuration(sessionStats.avg || 0) }}
@@ -163,9 +165,9 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<translate tarnslate-comment="This refers to game API sessions">
+							<AppTranslate tarnslate-comment="This refers to game API sessions">
 								Users w/ Sessions
-							</translate>
+							</AppTranslate>
 						</div>
 						<div class="stat-big-digit">
 							{{ formatNumber(sessionStats['user-count']) }}
@@ -180,7 +182,9 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 				class="link-unstyled"
 				:to="{ name: 'dash.games.manage.api.trophies.list' }"
 			>
-				<translate translate-comment="This refers to game trophies">Trophies</translate>
+				<AppTranslate translate-comment="This refers to game trophies">
+					Trophies
+				</AppTranslate>
 			</router-link>
 		</h2>
 
@@ -189,9 +193,9 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<translate translate-comment="This refers to game trophies">
+							<AppTranslate translate-comment="This refers to game trophies">
 								Trophies
-							</translate>
+							</AppTranslate>
 						</div>
 						<div class="stat-big-digit">
 							{{ formatNumber(numActiveTrophies) }}
@@ -201,10 +205,11 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<translate translate-comment="This refers to game trophies">
+							<AppTranslate translate-comment="This refers to game trophies">
 								Trophy EXP
-							</translate>
-							<app-jolticon
+							</AppTranslate>
+							{{ ' ' }}
+							<AppJolticon
 								v-app-tooltip.touchable="
 									$gettext(`The total awardable EXP for trophies in your game.`)
 								"
@@ -213,15 +218,15 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 						</div>
 						<div class="stat-big-digit">
 							<template v-if="!numActiveTrophies">
-								<translate>N/A</translate>
+								<AppTranslate>N/A</AppTranslate>
 							</template>
 							<template v-else>
-								{{ formatNumber(totalTrophyExp) }}
-								<translate
+								{{ formatNumber(totalTrophyExp) + ' ' }}
+								<AppTranslate
 									translate-comment="As in abbreviation for experience. If one doesnt exist for your language, or if its not a short word just leave it as EXP."
 								>
 									EXP
-								</translate>
+								</AppTranslate>
 							</template>
 						</div>
 					</div>
@@ -229,9 +234,9 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<translate translate-comment="This refers to game trophies">
+							<AppTranslate translate-comment="This refers to game trophies">
 								Trophies Achieved
-							</translate>
+							</AppTranslate>
 						</div>
 						<div class="stat-big-digit">
 							{{ formatNumber(totalAchievedTrophies) }}
@@ -241,9 +246,9 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<translate translate-comment="This refers to game trophies">
+							<AppTranslate translate-comment="This refers to game trophies">
 								Users w/ Trophies
-							</translate>
+							</AppTranslate>
 						</div>
 						<div class="stat-big-digit">
 							{{ formatNumber(totalUsersWithTrophies) }}
@@ -258,7 +263,7 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 				class="link-unstyled"
 				:to="{ name: 'dash.games.manage.api.scoreboards.list' }"
 			>
-				<translate translate-comment="This refers to game scores">Scores</translate>
+				<AppTranslate translate-comment="This refers to game scores">Scores</AppTranslate>
 			</router-link>
 		</h2>
 
@@ -267,10 +272,11 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<translate translate-comment="This refers to game scores">
+							<AppTranslate translate-comment="This refers to game scores">
 								Total Scores
-							</translate>
-							<app-jolticon
+							</AppTranslate>
+							{{ ' ' }}
+							<AppJolticon
 								v-app-tooltip.touchable="
 									$gettext(
 										`The total number of scores across all of the game's scoreboards, including guest scores.`
@@ -287,8 +293,9 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<translate>Users w/ Scores</translate>
-							<app-jolticon
+							<AppTranslate>Users w/ Scores</AppTranslate>
+							{{ ' ' }}
+							<AppJolticon
 								v-app-tooltip.touchable="
 									$gettext(
 										`The number of users with scores on any of the game's scoreboards. Does not include guests.`
@@ -310,9 +317,9 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 				class="link-unstyled"
 				:to="{ name: 'dash.games.manage.api.data-storage.items.list' }"
 			>
-				<translate translate-comment="This is referring to the Game API data store">
+				<AppTranslate translate-comment="This is referring to the Game API data store">
 					Data Store
-				</translate>
+				</AppTranslate>
 			</router-link>
 		</h2>
 
@@ -321,12 +328,13 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<translate
+							<AppTranslate
 								translate-comment="This is referring to global items set in the Game API data store."
 							>
 								Global Items
-							</translate>
-							<app-jolticon
+							</AppTranslate>
+							{{ ' ' }}
+							<AppJolticon
 								v-app-tooltip.touchable="
 									$gettext(`The total number of stored global data items.`)
 								"

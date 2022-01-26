@@ -21,9 +21,9 @@ export default class RouteDashGamesManageApi extends BaseRouteComponent {
 	<div>
 		<div v-if="Screen.isMobile" class="container">
 			<br />
-			<app-nav-tab-list>
-				<app-manage-game-api-nav />
-			</app-nav-tab-list>
+			<AppNavTabList>
+				<AppManageGameApiNav />
+			</AppNavTabList>
 		</div>
 
 		<section class="section">
@@ -31,7 +31,7 @@ export default class RouteDashGamesManageApi extends BaseRouteComponent {
 				<div class="row">
 					<div v-if="Screen.isDesktop" class="col-md-2">
 						<nav class="platform-list">
-							<app-manage-game-api-nav />
+							<AppManageGameApiNav />
 						</nav>
 					</div>
 					<div class="col-xs-12 col-md-10">

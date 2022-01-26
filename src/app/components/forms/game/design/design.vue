@@ -59,71 +59,71 @@ export default class FormGameDesign extends mixins(Wrapper) {
 </script>
 
 <template>
-	<app-form :controller="form">
+	<AppForm :controller="form">
 		<div class="row">
 			<div class="col-sm-6">
 				<h4 class="sans-margin-top">
-					<translate>Game Thumbnail</translate>
+					<AppTranslate>Game Thumbnail</AppTranslate>
 				</h4>
 
 				<div class="page-help">
 					<p>
-						<translate>
+						<AppTranslate>
 							A thumbnail is the little rectangular image that represents your game
 							throughout the site. People can click it in game listings and search
 							results to get to your game page.
-						</translate>
+						</AppTranslate>
 					</p>
 					<p>
-						<translate>
+						<AppTranslate>
 							Please don't choose an image that contains nudity, swear words, or
 							adult-oriented imagery.
-						</translate>
+						</AppTranslate>
 					</p>
 					<p>
-						<app-link-help page="dev-thumbnails" class="link-help">
-							<translate>dash.games.thumbnail.page_help_link</translate>
-						</app-link-help>
+						<AppLinkHelp page="dev-thumbnails" class="link-help">
+							<AppTranslate>dash.games.thumbnail.page_help_link</AppTranslate>
+						</AppLinkHelp>
 					</p>
 				</div>
 			</div>
 			<div class="col-sm-6">
-				<app-editable-overlay class="-thumb-overlay" @click="showEditThumbnail()">
+				<AppEditableOverlay class="-thumb-overlay" @click="showEditThumbnail()">
 					<template #overlay>
 						<span>
-							<translate v-if="!model.thumbnail_media_item">
+							<AppTranslate v-if="!model.thumbnail_media_item">
 								Upload Thumbnail
-							</translate>
-							<translate v-else>Change Thumbnail</translate>
+							</AppTranslate>
+							<AppTranslate v-else>Change Thumbnail</AppTranslate>
 						</span>
 					</template>
-					<app-game-thumbnail-img animate :game="model" />
-				</app-editable-overlay>
+					<AppGameThumbnailImg animate :game="model" />
+				</AppEditableOverlay>
 			</div>
 		</div>
 
 		<div v-if="hasThumbnailError" class="alert alert-notice">
-			<translate>You must upload a thumbnail for your game.</translate>
+			<AppTranslate>You must upload a thumbnail for your game.</AppTranslate>
 		</div>
 
 		<hr />
 
-		<app-form-group name="theme" :label="$gettext(`Color Theme`)">
-			<app-form-control-theme class="pull-right" @changed="onThemeChanged()" />
+		<AppFormGroup name="theme" :label="$gettext(`Color Theme`)">
+			<AppFormControlTheme class="pull-right" @changed="onThemeChanged()" />
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Give your page a splash of color! When people view your game page, they'll be
 					switched to this theme.
-				</translate>
+				</AppTranslate>
 			</p>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-dash-game-wizard-controls>
-			<app-form-button>
-				<translate>Save</translate>
-			</app-form-button>
-		</app-dash-game-wizard-controls>
-	</app-form>
+		<AppDashGameWizardControls>
+			<AppFormButton>
+				<AppTranslate>Save</AppTranslate>
+			</AppFormButton>
+		</AppDashGameWizardControls>
+	</AppForm>
 </template>
 
 <style lang="stylus" scoped>

@@ -53,17 +53,17 @@ export default class AppFiresideBanner extends Vue {
 </script>
 
 <template>
-	<app-expand class="fireside-banner" :when="shouldShowBanner">
+	<AppExpand class="fireside-banner" :when="shouldShowBanner">
 		<div class="-inner fill-notice" @click="onClickBanner()">
 			<div class="-message">
-				<translate>
+				<AppTranslate>
 					Your fireside is expiring soon. Click here to stoke the flames!
-				</translate>
+				</AppTranslate>
 			</div>
 		</div>
 
-		<app-progress-bar class="-progress" :percent="c.expiresProgressValue.value" thin />
-	</app-expand>
+		<AppProgressBar class="-progress" :percent="c.expiresProgressValue.value" thin />
+	</AppExpand>
 </template>
 
 <style lang="stylus" scoped>

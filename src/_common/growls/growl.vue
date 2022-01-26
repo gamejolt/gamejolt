@@ -86,7 +86,7 @@ export default class AppGrowl extends Vue {
 		@click="onClick"
 	>
 		<a class="growl-close" @click="remove">
-			<app-jolticon icon="remove" />
+			<AppJolticon icon="remove" />
 		</a>
 
 		<div class="growl-inner fill-gray">
@@ -101,7 +101,7 @@ export default class AppGrowl extends Vue {
 					<p>{{ growl.message }}</p>
 				</div>
 			</template>
-			<app-growl-dynamic
+			<AppGrowlDynamic
 				v-else
 				:component="growl.component"
 				:props="growl.props"

@@ -26,18 +26,18 @@ export default class AppCookieBanner extends Vue {
 <template>
 	<div class="cookie-banner fill-darker" v-if="shouldShow">
 		<p>
-			<translate>
+			<AppTranslate>
 				We use cookies to ensure you get the best personalized experience on our website as
 				well as keeping you signed into your account.
-			</translate>
+			</AppTranslate>
 			<a class="link-help" :href="Environment.baseUrl + '/cookies'" @click="close()">
-				<translate>Learn more</translate>
+				<AppTranslate>Learn more</AppTranslate>
 			</a>
 		</p>
 		<div class="text-right">
-			<app-button @click="close()">
-				<translate>Okay!</translate>
-			</app-button>
+			<AppButton @click="close()">
+				<AppTranslate>Okay!</AppTranslate>
+			</AppButton>
 		</div>
 	</div>
 </template>

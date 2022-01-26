@@ -51,7 +51,7 @@ export default class AppAuthLogin extends Vue {
 
 <template>
 	<div class="auth-login">
-		<app-auth-login-form
+		<AppAuthLoginForm
 			:overlay="overlay"
 			@submit="onLoggedIn"
 			@needs-approved-login="onNeedsApprovedLogin"

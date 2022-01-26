@@ -16,7 +16,7 @@ export default class AppCommunitySliderAddItem extends Vue {}
 
 <template>
 	<div class="-item">
-		<app-community-add-widget />
+		<AppCommunityAddWidget />
 	</div>
 </template>
 

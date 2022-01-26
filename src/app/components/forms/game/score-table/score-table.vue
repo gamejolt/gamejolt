@@ -30,69 +30,69 @@ export default class FormGameScoreTable extends mixins(Wrapper) {
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="name" :label="$gettext(`dash.games.scoreboard.form.name_label`)">
-			<app-form-control type="text" :validators="[validateMaxLength(50)]" />
-			<app-form-control-errors />
-		</app-form-group>
+	<AppFormGroup :controller="form">
+		<AppFormGroup name="name" :label="$gettext(`dash.games.scoreboard.form.name_label`)">
+			<AppFormControl type="text" :validators="[validateMaxLength(50)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="description"
 			:optional="true"
 			:label="$gettext(`dash.games.scoreboard.form.description_label`)"
 		>
-			<app-form-control-textarea rows="5" :validators="[validateMaxLength(250)]" />
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlTextarea rows="5" :validators="[validateMaxLength(250)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="allow_guest_scores"
 			:label="$gettext(`dash.games.scoreboard.form.guest_label`)"
 		>
-			<p class="help-block"><translate>dash.games.scoreboard.form.guest_help</translate></p>
-			<app-form-control-toggle />
-		</app-form-group>
+			<p class="help-block"><AppTranslate>dash.games.scoreboard.form.guest_help</AppTranslate></p>
+			<AppFormControlToggle />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="unique_scores"
 			:label="$gettext(`dash.games.scoreboard.form.unique_label`)"
 		>
-			<p class="help-block"><translate>Only show a user's best score?</translate></p>
-			<app-form-control-toggle />
-		</app-form-group>
+			<p class="help-block"><AppTranslate>Only show a user's best score?</AppTranslate></p>
+			<AppFormControlToggle />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="scores_sorting_direction"
 			:label="$gettext(`dash.games.scoreboard.form.direction_label`)"
 		>
 			<div class="radio">
 				<label>
-					<app-form-control-radio :value="GameScoreTable.SORTING_DIRECTION_DESC" />
-					<translate translate-comment="As in going from highest to lowest">
+					<AppFormControlRadio :value="GameScoreTable.SORTING_DIRECTION_DESC" />
+					<AppTranslate translate-comment="As in going from highest to lowest">
 						Descending
-					</translate>
+					</AppTranslate>
 					<br />
 					<span class="help-inline">
-						<translate>dash.games.scoreboard.form.desc_help</translate>
+						<AppTranslate>dash.games.scoreboard.form.desc_help</AppTranslate>
 					</span>
 				</label>
 			</div>
 			<div class="radio">
 				<label>
-					<app-form-control-radio :value="GameScoreTable.SORTING_DIRECTION_ASC" />
-					<translate translate-comment="As in going from lowest to highest">
+					<AppFormControlRadio :value="GameScoreTable.SORTING_DIRECTION_ASC" />
+					<AppTranslate translate-comment="As in going from lowest to highest">
 						Ascending
-					</translate>
+					</AppTranslate>
 					<br />
 					<span class="help-inline">
-						<translate>dash.games.scoreboard.form.asc_help</translate>
+						<AppTranslate>dash.games.scoreboard.form.asc_help</AppTranslate>
 					</span>
 				</label>
 			</div>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-button>
-			<translate>dash.games.scoreboard.form.save_button</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton>
+			<AppTranslate>dash.games.scoreboard.form.save_button</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

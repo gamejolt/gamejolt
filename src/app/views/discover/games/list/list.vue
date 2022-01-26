@@ -308,15 +308,15 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 		<section v-if="section !== 'by-date'" class="fill-offset">
 			<div class="container-xl">
 				<h2 class="text-center">
-					<translate>Browse Games</translate>
+					<AppTranslate>Browse Games</AppTranslate>
 				</h2>
 			</div>
-			<app-tag-list />
+			<AppTagList />
 		</section>
 
-		<app-game-add-banner v-if="Screen.isDesktop" />
+		<AppGameAddBanner v-if="Screen.isDesktop" />
 
-		<app-game-listing
+		<AppGameListing
 			v-if="listing"
 			:listing="listing"
 			:filtering="filtering"
@@ -327,15 +327,15 @@ export default class RouteDiscoverGamesList extends BaseRouteComponent {
 			@load="loadMore"
 		>
 			<div v-if="section === 'new'" class="alert alert-info anim-fade-in-enlarge">
-				<translate>
+				<AppTranslate>
 					Newly added games are not moderated, curated, or vetted by the community. You
 					can find a goldmine of undiscovered talent or you may see some of the scariest
 					shit of your life.
-				</translate>
+				</AppTranslate>
 			</div>
 
-			<app-game-grid :games="listing.games" show-ads event-label="browse-games" />
-		</app-game-listing>
+			<AppGameGrid :games="listing.games" show-ads event-label="browse-games" />
+		</AppGameListing>
 	</div>
 </template>
 

@@ -124,39 +124,39 @@ export default class RouteDashStickers extends BaseRouteComponent {
 
 <template>
 	<div>
-		<app-page-header :cover-media-item="coverMediaItem" :cover-max-height="250">
+		<AppPageHeader :cover-media-item="coverMediaItem" :cover-max-height="250">
 			<router-link :to="{ name: 'dash.stickers' }">
 				<h1 class="section-header sans-margin-bottom">
-					<translate>Your Stickers</translate>
+					<AppTranslate>Your Stickers</AppTranslate>
 				</h1>
 			</router-link>
 			<div class="text-muted small">
 				<p>
-					<translate> Marvel at your collection of beautiful stickers. </translate>
+					<AppTranslate> Marvel at your collection of beautiful stickers. </AppTranslate>
 				</p>
 			</div>
-		</app-page-header>
+		</AppPageHeader>
 
 		<section class="section">
 			<div class="container">
 				<div class="row">
 					<div class="col-md-4 col-md-push-8">
-						<app-progress-bar class="-progress" :percent="stickerProgress">
+						<AppProgressBar class="-progress" :percent="stickerProgress">
 							<strong>{{ stickerProgress }}% to next sticker</strong>
-						</app-progress-bar>
+						</AppProgressBar>
 
 						<p class="small">
-							<translate>
+							<AppTranslate>
 								Get more stickers by liking posts on Game Jolt. Every time you like
 								a post, you gain progress to getting your next sticker. Like posts,
 								get stickers!
-							</translate>
+							</AppTranslate>
 						</p>
 					</div>
 					<div class="col-md-8 col-md-pull-4">
 						<template v-if="hasStickersInCollection">
 							<div class="-collection">
-								<app-sticker-card
+								<AppStickerCard
 									v-for="stickerCount of stickerCollection"
 									:key="stickerCount.sticker_id"
 									:sticker="stickerCount.sticker"
@@ -166,7 +166,7 @@ export default class RouteDashStickers extends BaseRouteComponent {
 							</div>
 						</template>
 						<p v-else>
-							<translate>You don't have any stickers yet.</translate>
+							<AppTranslate>You don't have any stickers yet.</AppTranslate>
 						</p>
 					</div>
 				</div>

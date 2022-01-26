@@ -133,10 +133,10 @@ export default class FormCommunityBlock extends mixins(Wrapper) implements FormO
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="username">
-			<app-form-control-prefix prefix="@">
-				<app-form-control
+	<AppForm :controller="form">
+		<AppFormGroup name="username">
+			<AppFormControlPrefix prefix="@">
+				<AppFormControl
 					:validators="[
 						validateMaxLength(100),
 						validateAvailability({
@@ -146,68 +146,68 @@ export default class FormCommunityBlock extends mixins(Wrapper) implements FormO
 					validate-on-blur
 					:disabled="usernameLocked"
 				/>
-			</app-form-control-prefix>
+			</AppFormControlPrefix>
 
-			<app-form-control-errors :label="$gettext('username')">
-				<app-form-control-error
+			<AppFormControlErrors :label="$gettext('username')">
+				<AppFormControlError
 					when="availability"
 					:message="$gettext(`This user does not exist.`)"
 				/>
-			</app-form-control-errors>
-		</app-form-group>
+			</AppFormControlErrors>
+		</AppFormGroup>
 
-		<app-form-group name="reasonType" :label="$gettext('Block reason')">
+		<AppFormGroup name="reasonType" :label="$gettext('Block reason')">
 			<div v-for="(reasonDisplay, reason) in defaultReasons" :key="reason" class="radio">
 				<label>
-					<app-form-control-radio :value="reason" />
+					<AppFormControlRadio :value="reason" />
 					{{ reasonDisplay }}
 				</label>
 			</div>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group v-if="showReasonOther" name="reason" hide-label>
+		<AppFormGroup v-if="showReasonOther" name="reason" hide-label>
 			<div class="help-inline">
 				<span v-translate>
 					Enter other block reason.
 					<b>This is shown to the blocked user.</b>
 				</span>
 			</div>
-			<app-form-control
+			<AppFormControl
 				html-list-id="block-user-reasons-list"
 				:validators="[validateMaxLength(100)]"
 			/>
 			<datalist id="block-user-reasons-list">
 				<option v-for="optionStr of otherOptions" :key="optionStr" :value="optionStr" />
 			</datalist>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group name="expiry" :label="$gettext('Block expires in...')">
+		<AppFormGroup name="expiry" :label="$gettext('Block expires in...')">
 			<div v-for="(expiryDisplay, expiry) in expiryOptions" :key="expiry" class="radio">
 				<label>
-					<app-form-control-radio :value="expiry" />
+					<AppFormControlRadio :value="expiry" />
 					{{ expiryDisplay }}
 				</label>
 			</div>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="ejectPosts"
 			:label="$gettext(`Eject user's posts from the community?`)"
 		>
-			<app-form-control-toggle class="pull-right" />
+			<AppFormControlToggle class="pull-right" />
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Once the user is blocked, all their posts will be ejected from the community.
 					This also affects their featured posts.
-				</translate>
+				</AppTranslate>
 			</p>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-button :disabled="!valid">
-			<translate>Block</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton :disabled="!valid">
+			<AppTranslate>Block</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

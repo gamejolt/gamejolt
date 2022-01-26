@@ -41,15 +41,15 @@ export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
 </script>
 
 <template>
-	<app-form :controller="form">
+	<AppForm :controller="form">
 		<fieldset>
-			<app-form-legend>
-				<translate>Date and Time</translate>
-			</app-form-legend>
+			<AppFormLegend>
+				<AppTranslate>Date and Time</AppTranslate>
+			</AppFormLegend>
 
-			<template v-if="timezoneService && timezoneService.loaded">
+			<template v-if="model && timezoneService && timezoneService.loaded">
 				<template v-if="!model.hasStarted">
-					<app-form-group name="timezone" :label="$gettext(`Select a Timezone`)">
+					<AppFormGroup name="timezone" :label="$gettext(`Select a Timezone`)">
 						<p class="help-block">
 							<span v-translate>
 								All time selection below will use this timezone.
@@ -62,13 +62,13 @@ export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
 
 						<p class="help-block">
 							<strong>
-								<translate>
+								<AppTranslate>
 									Should auto-detect, but if it doesn't, choose your closest city.
-								</translate>
+								</AppTranslate>
 							</strong>
 						</p>
 
-						<app-form-control-select>
+						<AppFormControlSelect>
 							<optgroup
 								v-for="(timezones, region) of timezoneService.timezones"
 								:key="region"
@@ -82,21 +82,21 @@ export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
 									{{ timezone.label }}
 								</option>
 							</optgroup>
-						</app-form-control-select>
+						</AppFormControlSelect>
 
-						<app-form-control-errors />
-					</app-form-group>
+						<AppFormControlErrors />
+					</AppFormGroup>
 				</template>
 				<template v-else>
-					<app-form-group name="timezone" :label="$gettext(`Selected Timezone`)">
+					<AppFormGroup name="timezone" :label="$gettext(`Selected Timezone`)">
 						<p class="help-block">
-							<translate>All time selection below are using this timezone.</translate>
+							<AppTranslate>All time selection below are using this timezone.</AppTranslate>
 						</p>
 						{{ timezoneService.activeTimezoneName }}
-					</app-form-group>
+					</AppFormGroup>
 				</template>
 
-				<app-form-group name="starts_on" :label="$gettext(`Start Date and Time`)">
+				<AppFormGroup name="starts_on" :label="$gettext(`Start Date and Time`)">
 					<template v-if="!model.hasStarted">
 						<p class="help-block">
 							<span v-translate>
@@ -105,27 +105,27 @@ export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
 							</span>
 						</p>
 
-						<app-form-control-date
+						<AppFormControlDate
 							:timezone-offset="timezoneService.activeTimezoneOffset"
 							:min-date="timezoneService.now"
 							:max-date="formModel.ends_on"
 						/>
-						<app-form-control-errors />
+						<AppFormControlErrors />
 					</template>
 
 					<template v-else>
-						<app-community-competition-date
+						<AppCommunityCompetitionDate
 							:date="model.starts_on"
 							:timezone="model.timezone"
 						/>
 
 						<p class="help-block">
-							<translate>Your jam began on this date and time.</translate>
+							<AppTranslate>Your jam began on this date and time.</AppTranslate>
 						</p>
 					</template>
-				</app-form-group>
+				</AppFormGroup>
 
-				<app-form-group name="ends_on" :label="$gettext(`End Date and Time`)">
+				<AppFormGroup name="ends_on" :label="$gettext(`End Date and Time`)">
 					<template v-if="!model.hasEnded">
 						<p class="help-block">
 							<span v-translate>
@@ -134,40 +134,40 @@ export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
 							</span>
 						</p>
 
-						<app-form-control-date
+						<AppFormControlDate
 							:timezone-offset="timezoneService.activeTimezoneOffset"
 							:min-date="formModel.starts_on"
 							:max-date="
 								formModel.is_voting_enabled ? formModel.voting_ends_on : undefined
 							"
 						/>
-						<app-form-control-errors />
+						<AppFormControlErrors />
 					</template>
 
 					<template v-else>
-						<app-community-competition-date
+						<AppCommunityCompetitionDate
 							:date="model.ends_on"
 							:timezone="model.timezone"
 						/>
 
 						<p class="help-block">
-							<translate>Your jam ended on this date and time.</translate>
+							<AppTranslate>Your jam ended on this date and time.</AppTranslate>
 						</p>
 					</template>
-				</app-form-group>
+				</AppFormGroup>
 			</template>
 
 			<template v-else>
-				<app-loading centered />
+				<AppLoading centered />
 			</template>
 		</fieldset>
 
-		<app-form-button
+		<AppFormButton
 			v-if="shouldShowSaveButton"
 			show-when-valid
-			:disabled="!timezoneService.loaded"
+			:disabled="!timezoneService || !timezoneService.loaded"
 		>
-			<translate>Save</translate>
-		</app-form-button>
-	</app-form>
+			<AppTranslate>Save</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

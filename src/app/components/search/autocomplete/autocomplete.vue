@@ -146,7 +146,7 @@ export default class AppSearchAutocomplete extends Vue {
 			}
 		}
 
-		this.search.blur();
+		this.search.focusToken.blur();
 	}
 
 	viewAll() {
@@ -189,8 +189,8 @@ export default class AppSearchAutocomplete extends Vue {
 <template>
 	<div class="search-autocomplete-popover">
 		<div v-if="isHidden" class="well sans-margin-bottom">
-			<app-jolticon icon="chevron-up" />
-			<translate>Enter your search query for maximum finding...</translate>
+			<AppJolticon icon="chevron-up" />
+			<AppTranslate>Enter your search query for maximum finding...</AppTranslate>
 		</div>
 		<template v-else>
 			<!-- View All -->
@@ -200,14 +200,14 @@ export default class AppSearchAutocomplete extends Vue {
 					:class="{ active: selected === 0 }"
 					@mousedown="viewAll()"
 				>
-					<translate>search.autocomplete.show_all</translate>
+					<AppTranslate>search.autocomplete.show_all</AppTranslate>
 				</a>
 			</div>
 
 			<!-- Installed Games -->
 			<template v-if="libraryGames.length">
 				<div class="popper-heading">
-					<translate>search.autocomplete.installed_heading</translate>
+					<AppTranslate>search.autocomplete.installed_heading</AppTranslate>
 				</div>
 				<div class="list-group list-group-dark thin">
 					<router-link
@@ -222,7 +222,7 @@ export default class AppSearchAutocomplete extends Vue {
 						:class="{ active: items[selected - 1] === libraryGame }"
 					>
 						<span class="search-game-thumbnail">
-							<app-game-thumbnail-img :game="libraryGame" />
+							<AppGameThumbnailImg :game="libraryGame" />
 						</span>
 
 						{{ libraryGame.title }}
@@ -233,7 +233,7 @@ export default class AppSearchAutocomplete extends Vue {
 			<!-- Games -->
 			<template v-if="games.length">
 				<div class="popper-heading">
-					<translate>search.autocomplete.games_heading</translate>
+					<AppTranslate>search.autocomplete.games_heading</AppTranslate>
 				</div>
 				<div class="list-group list-group-dark thin">
 					<router-link
@@ -248,11 +248,11 @@ export default class AppSearchAutocomplete extends Vue {
 						:class="{ active: items[selected - 1] === game }"
 					>
 						<div class="pull-right">
-							<app-game-compat-icons :game="game" />
+							<AppGameCompatIcons :game="game" />
 						</div>
 
 						<span class="search-game-thumbnail">
-							<app-game-thumbnail-img :game="game" />
+							<AppGameThumbnailImg :game="game" />
 						</span>
 
 						{{ game.title }}
@@ -263,7 +263,7 @@ export default class AppSearchAutocomplete extends Vue {
 			<!-- Users -->
 			<template v-if="users.length">
 				<div class="popper-heading">
-					<translate>search.autocomplete.users_heading</translate>
+					<AppTranslate>search.autocomplete.users_heading</AppTranslate>
 				</div>
 				<div class="list-group list-group-dark thin">
 					<router-link
@@ -279,7 +279,7 @@ export default class AppSearchAutocomplete extends Vue {
 					>
 						<img :src="user.img_avatar" class="search-user-avatar" alt="" />
 						{{ user.display_name }}
-						<app-user-verified-tick :user="user" small />
+						<AppUserVerifiedTick :user="user" small />
 						<span class="tiny text-muted">@{{ user.username }}</span>
 					</router-link>
 				</div>

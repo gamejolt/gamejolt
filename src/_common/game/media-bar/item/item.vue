@@ -40,8 +40,8 @@ export default class AppGameMediaBarItem extends Vue {
 	<div class="media-bar-item" :style="{ width, height }">
 		<a class="-wrapper" :style="{ height }">
 			<slot />
-			<app-media-item-backdrop class="-backdrop" :media-item="item.media_item" radius="lg">
-				<app-img-responsive
+			<AppMediaItemBackdrop class="-backdrop" :media-item="item.media_item" radius="lg">
+				<AppImgResponsive
 					v-if="item.media_type !== 'sketchfab'"
 					:src="item.img_thumbnail"
 					:title="item.media_type == 'image' ? item.caption : item.title"
@@ -49,14 +49,14 @@ export default class AppGameMediaBarItem extends Vue {
 				/>
 
 				<img v-else class="img-responsive" :src="item.img_thumbnail" alt="" />
-			</app-media-item-backdrop>
+			</AppMediaItemBackdrop>
 
 			<span class="-play" v-if="item.media_type === 'video'">
-				<app-jolticon icon="play" />
+				<AppJolticon icon="play" />
 			</span>
 
 			<span class="-play" v-if="item.media_type === 'sketchfab'">
-				<app-jolticon icon="sketchfab" />
+				<AppJolticon icon="sketchfab" />
 			</span>
 		</a>
 	</div>

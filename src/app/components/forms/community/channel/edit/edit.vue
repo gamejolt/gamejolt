@@ -79,26 +79,26 @@ export default class FormCommunityChannelEdit
 </script>
 
 <template>
-	<app-form :controller="form">
-		<app-form-group name="display_title" :label="$gettext(`Display Name`)" optional>
+	<AppForm :controller="form">
+		<AppFormGroup name="display_title" :label="$gettext(`Display Name`)" optional>
 			<div class="help-block">
-				<translate>
+				<AppTranslate>
 					This should be short and to the point. If you don't fill in a display name,
 					we'll use your channel's URL path as its name.
-				</translate>
+				</AppTranslate>
 			</div>
 
-			<app-form-control
+			<AppFormControl
 				:validators="[validateMinLength(3), validateMaxLength(30)]"
 				validate-on-blur
 				:placeholder="formModel.title"
 			/>
 
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group name="title" :label="$gettext(`URL Path`)">
-			<app-form-control
+		<AppFormGroup name="title" :label="$gettext(`URL Path`)">
+			<AppFormControl
 				type="text"
 				:validators="[
 					validateMinLength(3),
@@ -110,15 +110,15 @@ export default class FormCommunityChannelEdit
 				]"
 				:validate-delay="500"
 			/>
-			<app-form-control-errors>
-				<app-form-control-error
+			<AppFormControlErrors>
+				<AppFormControlError
 					when="availability"
 					:message="
 						$gettext('A channel in this community with that URL path already exists.')
 					"
 				/>
 
-				<app-form-control-error
+				<AppFormControlError
 					when="pattern"
 					:message="
 						$gettext(
@@ -126,20 +126,20 @@ export default class FormCommunityChannelEdit
 						)
 					"
 				/>
-			</app-form-control-errors>
-		</app-form-group>
+			</AppFormControlErrors>
+		</AppFormGroup>
 
-		<app-community-channel-card-edit
+		<AppCommunityChannelCardEdit
 			:background="formModel.background"
 			@click="onClickEditBackground"
 		/>
 
 		<br />
 
-		<app-form-community-channel-permissions v-if="shouldShowPermissions" />
+		<AppFormCommunityChannelPermissions v-if="shouldShowPermissions" />
 
-		<app-form-button show-when-valid>
-			<translate>Save Channel</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton show-when-valid>
+			<AppTranslate>Save Channel</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

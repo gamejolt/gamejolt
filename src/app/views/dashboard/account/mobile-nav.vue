@@ -12,11 +12,11 @@ export default class RouteDashAccountMobileNav extends Vue {}
 
 <template>
 	<div>
-		<app-page-header>
+		<AppPageHeader>
 			<h1>
-				<translate>Manage Account</translate>
+				<AppTranslate>Manage Account</AppTranslate>
 			</h1>
-		</app-page-header>
+		</AppPageHeader>
 
 		<nav>
 			<div class="list-group">
@@ -25,77 +25,77 @@ export default class RouteDashAccountMobileNav extends Vue {}
 					:to="{ name: 'dash.account.edit' }"
 					active-class="active"
 				>
-					<translate>Profile</translate>
+					<AppTranslate>Profile</AppTranslate>
 				</router-link>
 				<router-link
 					class="list-group-item"
 					:to="{ name: 'dash.account.site' }"
 					active-class="active"
 				>
-					<translate>Portfolio Site</translate>
+					<AppTranslate>Portfolio Site</AppTranslate>
 				</router-link>
 				<router-link
 					class="list-group-item"
 					:to="{ name: 'dash.account.blocks' }"
 					active-class="active"
 				>
-					<translate>Blocked Users</translate>
+					<AppTranslate>Blocked Users</AppTranslate>
 				</router-link>
 				<router-link
 					class="list-group-item"
 					:to="{ name: 'dash.account.linked-accounts' }"
 					active-class="active"
 				>
-					<translate>Linked Accounts</translate>
+					<AppTranslate>Linked Accounts</AppTranslate>
 				</router-link>
 				<router-link
 					class="list-group-item"
 					:to="{ name: 'dash.account.email-preferences' }"
 					active-class="active"
 				>
-					<translate>Email Preferences</translate>
+					<AppTranslate>Email Preferences</AppTranslate>
 				</router-link>
 				<router-link
 					class="list-group-item"
 					:to="{ name: 'dash.account.change-password' }"
 					active-class="active"
 				>
-					<translate>Password</translate>
+					<AppTranslate>Password</AppTranslate>
 				</router-link>
 				<router-link
 					class="list-group-item"
 					:to="{ name: 'dash.account.payment-methods' }"
 					active-class="active"
 				>
-					<translate>Payment Methods</translate>
+					<AppTranslate>Payment Methods</AppTranslate>
 				</router-link>
 				<router-link
 					class="list-group-item"
 					:to="{ name: 'dash.account.addresses' }"
 					active-class="active"
 				>
-					<translate>Saved Addresses</translate>
+					<AppTranslate>Saved Addresses</AppTranslate>
 				</router-link>
 				<router-link
 					class="list-group-item"
 					:to="{ name: 'dash.account.purchases.list' }"
 					active-class="active"
 				>
-					<translate>Purchases</translate>
+					<AppTranslate>Purchases</AppTranslate>
 				</router-link>
 				<router-link
 					class="list-group-item"
 					:to="{ name: 'dash.account.financials' }"
 					active-class="active"
 				>
-					<translate>Marketplace Account Setup</translate>
+					<AppTranslate>Marketplace Account Setup</AppTranslate>
 				</router-link>
 				<router-link
 					class="list-group-item"
 					:to="{ name: 'dash.account.withdraw-funds' }"
 					active-class="active"
 				>
-					<translate>Revenue</translate>
+					<AppTranslate>Revenue</AppTranslate>
 				</router-link>
 			</div>
 		</nav>

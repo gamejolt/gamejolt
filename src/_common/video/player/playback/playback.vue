@@ -31,7 +31,7 @@ export default class AppVideoPlayerPlayback extends Vue {
 
 <template>
 	<div class="player-control-button" @click.capture.prevent="onClickPlayback">
-		<app-jolticon :icon="icon" />
+		<AppJolticon :icon="icon" />
 	</div>
 </template>
 

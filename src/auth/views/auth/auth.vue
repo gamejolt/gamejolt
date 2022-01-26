@@ -83,7 +83,7 @@ export default class RouteAuth extends BaseRouteComponent {
 							: Environment.authBaseUrl + '/login'
 					"
 				>
-					<app-theme-svg
+					<AppThemeSvg
 						:src="imageGameJoltLogo"
 						width="328"
 						height="36"
@@ -97,11 +97,11 @@ export default class RouteAuth extends BaseRouteComponent {
 				<div class="auth-island">
 					<div v-if="Connection.isClientOffline" class="alert alert-notice">
 						<p>
-							<app-jolticon icon="offline" />
-							<translate>
+							<AppJolticon icon="offline" />
+							<AppTranslate>
 								We're having trouble connecting to Game Jolt. Please check your
 								connection to the Internet.
-							</translate>
+							</AppTranslate>
 						</p>
 					</div>
 
@@ -113,7 +113,7 @@ export default class RouteAuth extends BaseRouteComponent {
 				v-if="!GJ_IS_DESKTOP_APP && shouldShowCoverImage && Screen.isDesktop"
 				class="-game-credits anim-fade-in-up"
 			>
-				<app-game-cover-credits :game="coverGame" />
+				<AppGameCoverCredits :game="coverGame" />
 			</div>
 
 			<div class="auth-shell-bottom-links">
@@ -122,14 +122,14 @@ export default class RouteAuth extends BaseRouteComponent {
 					:href="Environment.baseUrl + '/terms'"
 					target="_blank"
 				>
-					<translate>Terms</translate>
+					<AppTranslate>Terms</AppTranslate>
 				</a>
 				<a
 					class="link-unstyled anim-fade-in stagger"
 					:href="Environment.baseUrl + '/privacy'"
 					target="_blank"
 				>
-					<translate>Privacy</translate>
+					<AppTranslate>Privacy</AppTranslate>
 				</a>
 				<a
 					v-if="!GJ_IS_DESKTOP_APP"
@@ -137,10 +137,10 @@ export default class RouteAuth extends BaseRouteComponent {
 					:href="Environment.baseUrl + '/cookies'"
 					target="_blank"
 				>
-					<translate>Cookie Policy</translate>
+					<AppTranslate>Cookie Policy</AppTranslate>
 				</a>
 
-				<app-translate-lang-selector />
+				<AppTranslateLangSelector />
 			</div>
 		</div>
 	</div>

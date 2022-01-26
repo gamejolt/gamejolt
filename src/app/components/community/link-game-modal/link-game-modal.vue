@@ -66,22 +66,22 @@ export default class AppCommunityLinkGameModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>Choose a game to link</translate>
+				<AppTranslate>Choose a game to link</AppTranslate>
 			</h2>
 		</div>
 		<div class="modal-body">
 			<template v-if="games.length">
 				<div v-for="game of games" :key="game.id" class="-game">
 					<div class="-game-thumb">
-						<app-game-thumbnail-img :game="game" />
+						<AppGameThumbnailImg :game="game" />
 					</div>
 
 					<div class="-game-label">
@@ -92,37 +92,37 @@ export default class AppCommunityLinkGameModal extends mixins(BaseModal) {
 									$gettext(`Unlisted games do not show in the community sidebar.`)
 								"
 							>
-								<translate>Unlisted</translate>
+								<AppTranslate>Unlisted</AppTranslate>
 							</span>
 						</div>
 					</div>
 
 					<div class="-game-button">
-						<app-button primary @click="onClickLink(game)">
-							<translate>Link</translate>
-						</app-button>
+						<AppButton primary @click="onClickLink(game)">
+							<AppTranslate>Link</AppTranslate>
+						</AppButton>
 					</div>
 				</div>
 			</template>
 			<div v-else-if="!isLoading" class="page-help">
 				<p>
-					<translate>
+					<AppTranslate>
 						You have no more games available to link. Just remember, games can only be
 						linked to a single community.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
 
-			<app-loading v-if="isLoading" centered />
+			<AppLoading v-if="isLoading" centered />
 			<template v-else-if="!lastPage">
 				<div class="page-cut">
-					<app-button @click="onClickLoadMore">
-						<translate>Load More</translate>
-					</app-button>
+					<AppButton @click="onClickLoadMore">
+						<AppTranslate>Load More</AppTranslate>
+					</AppButton>
 				</div>
 			</template>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" scoped>

@@ -43,8 +43,8 @@ export default class AppDiscoverGamesViewOverviewSupporters extends Vue {
 <template>
 	<div class="-supporters">
 		<h4 class="-heading">
-			<translate>Supporters</translate>
-			<app-jolticon
+			<AppTranslate>Supporters</AppTranslate>
+			<AppJolticon
 				v-app-tooltip.touchable="
 					$gettext(
 						`The kind people that supported by paying more than the minimum. Sorted by amount contributed.`
@@ -58,18 +58,18 @@ export default class AppDiscoverGamesViewOverviewSupporters extends Vue {
 		<div class="-list">
 			<div class="-list-fade" />
 			<div v-for="user of supporters.slice(0, 16)" :key="user.id" class="-supporter">
-				<app-user-card-hover :user="user">
+				<AppUserCardHover :user="user">
 					<router-link class="user-avatar" :to="user.url">
-						<app-user-avatar-img :user="user" />
+						<AppUserAvatarImg :user="user" />
 					</router-link>
-				</app-user-card-hover>
+				</AppUserCardHover>
 			</div>
 		</div>
 
 		<div class="-all">
-			<app-button trans @click="viewAll()">
-				<translate>View All</translate>
-			</app-button>
+			<AppButton trans @click="viewAll()">
+				<AppTranslate>View All</AppTranslate>
+			</AppButton>
 		</div>
 	</div>
 </template>

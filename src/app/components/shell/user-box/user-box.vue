@@ -33,7 +33,7 @@ export default class AppShellUserBox extends Vue {
 				<em>{{ app.user.level }}</em>
 				<span class="user-box-exp-stats-help">
 					[
-					<app-link-help page="user-exp"> ? </app-link-help>
+					<AppLinkHelp page="user-exp"> ? </AppLinkHelp>
 					]
 				</span>
 			</div>
@@ -44,8 +44,8 @@ export default class AppShellUserBox extends Vue {
 			</div>
 		</div>
 		<div class="user-box-exp-progress">
-			<app-jolticon icon="exp" />
-			<app-progress-bar
+			<AppJolticon icon="exp" />
+			<AppProgressBar
 				thin
 				:percent="app.user.level_next_percentage"
 				v-app-tooltip="`${app.user.level_next_percentage}% progress to next level`"

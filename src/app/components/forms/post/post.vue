@@ -216,6 +216,14 @@ export default class FormPost
 		);
 	}
 
+	get isPollTooShort() {
+		return this.hasPoll && this.pollDuration < this.MIN_POLL_DURATION;
+	}
+
+	get isPollTooLong() {
+		return this.hasPoll && this.pollDuration > this.MAX_POLL_DURATION;
+	}
+
 	get scheduledTimezoneOffset() {
 		if (!this.formModel.scheduled_for_timezone) {
 			return 0;
@@ -317,7 +325,12 @@ export default class FormPost
 	}
 
 	get submitButtonsEnabled() {
-		return this.valid && this.uploadingVideoStatus !== VideoStatus.UPLOADING;
+		return (
+			this.valid &&
+			this.uploadingVideoStatus !== VideoStatus.UPLOADING &&
+			!this.isPollTooShort &&
+			!this.isPollTooLong
+		);
 	}
 
 	@Watch('formModel.post_to_user_profile')
@@ -893,37 +906,37 @@ export default class FormPost
 </script>
 
 <template>
-	<app-form v-if="model" :controller="form">
+	<AppForm v-if="model" :controller="form">
 		<!-- Attachments -->
 		<div v-if="!enabledAttachments" class="-attachment-controls">
-			<app-button
+			<AppButton
 				trans
 				:primary="enabledImages"
 				:solid="enabledImages"
 				icon="screenshot"
 				@click="enableImages()"
 			>
-				<translate>Images/GIFs</translate>
-			</app-button>
+				<AppTranslate>Images/GIFs</AppTranslate>
+			</AppButton>
 
-			<app-button
+			<AppButton
 				trans
 				:primary="enabledVideo"
 				:solid="enabledVideo"
 				icon="video"
 				@click="enableVideo()"
 			>
-				<translate>Video</translate>
-			</app-button>
+				<AppTranslate>Video</AppTranslate>
+			</AppButton>
 		</div>
 		<div v-else class="well fill-offset full-bleed">
 			<!-- Images -->
 			<fieldset v-if="enabledImages">
-				<app-form-legend compact deletable @delete="disableAttachments()">
-					<translate>Select images</translate>
-				</app-form-legend>
+				<AppFormLegend compact deletable @delete="disableAttachments()">
+					<AppTranslate>Select images</AppTranslate>
+				</AppFormLegend>
 
-				<app-form-post-media
+				<AppFormPostMedia
 					:media-items="formModel.media"
 					:post="formModel"
 					:max-filesize="maxFilesize"
@@ -938,7 +951,7 @@ export default class FormPost
 			</fieldset>
 
 			<!-- Video -->
-			<app-form-post-video
+			<AppFormPostVideo
 				v-else-if="enabledVideo"
 				:post="formModel"
 				:was-published="wasPublished"
@@ -950,13 +963,13 @@ export default class FormPost
 		</div>
 
 		<!-- Post title (short) -->
-		<app-form-group
+		<AppFormGroup
 			name="lead_content"
 			class="-lead-form-group"
 			:label="!longEnabled ? $gettext(`Post`) : $gettext(`Summary`)"
 			hide-label
 		>
-			<app-form-control-content
+			<AppFormControlContent
 				content-context="fireside-post-lead"
 				autofocus
 				:placeholder="
@@ -973,30 +986,30 @@ export default class FormPost
 			<div class="-hp">
 				<div class="-hp-label">HP</div>
 				<div class="-hp-bar">
-					<app-progress-bar thin :percent="leadLengthPercent" :animate="false" />
+					<AppProgressBar thin :percent="leadLengthPercent" :animate="false" />
 				</div>
 				<div v-if="leadLengthPercent <= 10" class="-hp-count">
 					{{ leadLengthLimit - formModel.leadLength }}
 				</div>
 			</div>
 
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
 		<!-- Post body (long) -->
 		<div v-if="longEnabled" class="well fill-offset full-bleed">
 			<fieldset>
-				<app-form-legend compact deletable @delete="toggleLong()">
-					<translate>Article content</translate>
-				</app-form-legend>
+				<AppFormLegend compact deletable @delete="toggleLong()">
+					<AppTranslate>Article content</AppTranslate>
+				</AppFormLegend>
 
-				<app-form-group
+				<AppFormGroup
 					name="article_content"
 					:label="$gettext(`Article Content`)"
 					hide-label
 					optional
 				>
-					<app-form-control-content
+					<AppFormControlContent
 						:placeholder="$gettext(`Write your article here...`)"
 						content-context="fireside-post-article"
 						:model-id="model.id"
@@ -1007,30 +1020,30 @@ export default class FormPost
 						:max-height="0"
 					/>
 
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 			</fieldset>
 		</div>
 
 		<!-- Poll -->
 		<div v-if="hasPoll" class="well fill-offset full-bleed">
 			<fieldset>
-				<app-form-legend compact :deletable="isPollEditable" @delete="removePoll()">
-					<translate>Set up poll</translate>
-				</app-form-legend>
+				<AppFormLegend compact :deletable="isPollEditable" @delete="removePoll()">
+					<AppTranslate>Set up poll</AppTranslate>
+				</AppFormLegend>
 
 				<!-- i starts from 1 -->
 				<div v-for="i of formModel.poll_item_count" :key="i" class="-poll-option">
-					<app-form-group :name="'poll_item' + i" :label="$gettext(`choice`)" hide-label>
-						<app-form-control
+					<AppFormGroup :name="'poll_item' + i" :label="$gettext(`choice`)" hide-label>
+						<AppFormControl
 							type="text"
 							:validators="[validateMaxLength(64)]"
 							:placeholder="$gettextInterpolate('Choice %{ num }', { num: i })"
 							:disabled="!isPollEditable"
 						/>
 
-						<app-form-control-errors />
-					</app-form-group>
+						<AppFormControlErrors />
+					</AppFormGroup>
 
 					<!-- Can't have less than 2 poll items -->
 					<a
@@ -1038,7 +1051,7 @@ export default class FormPost
 						class="-poll-option-remove link-muted"
 						@click="removePollItem(i)"
 					>
-						<app-jolticon icon="remove" />
+						<AppJolticon icon="remove" />
 					</a>
 				</div>
 
@@ -1048,7 +1061,7 @@ export default class FormPost
 						@click="addPollItem()"
 					>
 						+
-						<translate>Add choice</translate>
+						<AppTranslate>Add choice</AppTranslate>
 					</a>
 				</div>
 			</fieldset>
@@ -1056,14 +1069,14 @@ export default class FormPost
 			<br />
 
 			<fieldset class="-poll-duration">
-				<app-form-legend compact>
-					<translate>Duration</translate>
-				</app-form-legend>
+				<AppFormLegend compact>
+					<AppTranslate>Duration</AppTranslate>
+				</AppFormLegend>
 
 				<div class="row">
 					<div class="col-xs-4">
-						<app-form-group name="poll_days" :label="$gettext('Days')">
-							<app-form-control
+						<AppFormGroup name="poll_days" :label="$gettext('Days')" optional>
+							<AppFormControl
 								type="number"
 								step="1"
 								min="0"
@@ -1071,12 +1084,12 @@ export default class FormPost
 								:disabled="!isPollEditable"
 								:validators="[validateMinValue(0), validateMaxValue(14)]"
 							/>
-						</app-form-group>
+						</AppFormGroup>
 					</div>
 
 					<div class="col-xs-4">
-						<app-form-group name="poll_hours" :label="$gettext('Hours')">
-							<app-form-control
+						<AppFormGroup name="poll_hours" :label="$gettext('Hours')" optional>
+							<AppFormControl
 								type="number"
 								step="1"
 								min="0"
@@ -1084,12 +1097,12 @@ export default class FormPost
 								:disabled="!isPollEditable"
 								:validators="[validateMinValue(0), validateMaxValue(23)]"
 							/>
-						</app-form-group>
+						</AppFormGroup>
 					</div>
 
 					<div class="col-xs-4">
-						<app-form-group name="poll_minutes" :label="$gettext('Minutes')">
-							<app-form-control
+						<AppFormGroup name="poll_minutes" :label="$gettext('Minutes')" optional>
+							<AppFormControl
 								type="number"
 								step="1"
 								min="0"
@@ -1097,42 +1110,42 @@ export default class FormPost
 								:disabled="!isPollEditable"
 								:validators="[validateMinValue(0), validateMaxValue(59)]"
 							/>
-						</app-form-group>
+						</AppFormGroup>
 					</div>
 				</div>
 
-				<p v-if="pollDuration < MIN_POLL_DURATION" class="help-block error">
-					<translate>
+				<p v-if="isPollTooShort" class="help-block error">
+					<AppTranslate>
 						Too short! Polls must be between 5 minutes and 14 days long.
-					</translate>
+					</AppTranslate>
 				</p>
-				<p v-else-if="pollDuration > MAX_POLL_DURATION" class="help-block error">
-					<translate>
+				<p v-else-if="isPollTooLong" class="help-block error">
+					<AppTranslate>
 						Too long! Polls must be between 5 minutes and 14 days long.
-					</translate>
+					</AppTranslate>
 				</p>
 				<br v-else />
 			</fieldset>
 
 			<fieldset>
-				<app-form-legend
+				<AppFormLegend
 					compact
 					expandable
 					:expanded="isShowingMorePollOptions"
 					@click="isShowingMorePollOptions = !isShowingMorePollOptions"
 				>
-					<translate>More options</translate>
-				</app-form-legend>
+					<AppTranslate>More options</AppTranslate>
+				</AppFormLegend>
 
 				<div v-show="isShowingMorePollOptions">
-					<app-form-group name="poll_is_private" :label="$gettext(`Private results?`)">
-						<app-form-control-toggle class="pull-right" />
+					<AppFormGroup name="poll_is_private" :label="$gettext(`Private results?`)">
+						<AppFormControlToggle class="pull-right" />
 						<p class="help-block sans-margin-top">
-							<translate>
+							<AppTranslate>
 								The poll's results will be kept hidden if this is turned on.
-							</translate>
+							</AppTranslate>
 						</p>
-					</app-form-group>
+					</AppFormGroup>
 				</div>
 			</fieldset>
 		</div>
@@ -1140,24 +1153,24 @@ export default class FormPost
 		<!-- Scheduling -->
 		<div v-if="!wasPublished && isScheduling && timezones" class="well fill-offset full-bleed">
 			<fieldset>
-				<app-form-legend compact deletable @delete="removeSchedule()">
-					<translate>Schedule publishing of post</translate>
-				</app-form-legend>
+				<AppFormLegend compact deletable @delete="removeSchedule()">
+					<AppTranslate>Schedule publishing of post</AppTranslate>
+				</AppFormLegend>
 
-				<app-form-group name="scheduled_for_timezone" :label="$gettext(`Timezone`)">
+				<AppFormGroup name="scheduled_for_timezone" :label="$gettext(`Timezone`)">
 					<p class="help-block">
-						<translate>All time selection below will use this timezone.</translate>
+						<AppTranslate>All time selection below will use this timezone.</AppTranslate>
 					</p>
 
 					<p class="help-block">
 						<strong>
-							<translate>
+							<AppTranslate>
 								Should auto-detect, but if it doesn't, choose your closest city.
-							</translate>
+							</AppTranslate>
 						</strong>
 					</p>
 
-					<app-form-control-select>
+					<AppFormControlSelect>
 						<optgroup
 							v-for="(timezones, region) of timezones"
 							:key="region"
@@ -1171,18 +1184,18 @@ export default class FormPost
 								{{ timezone.label }}
 							</option>
 						</optgroup>
-					</app-form-control-select>
+					</AppFormControlSelect>
 
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-				<app-form-group name="scheduled_for" :label="$gettext(`Date and time`)">
-					<app-form-control-date
+				<AppFormGroup name="scheduled_for" :label="$gettext(`Date and time`)">
+					<AppFormControlDate
 						:timezone-offset="scheduledTimezoneOffset"
 						:min-date="now"
 					/>
-					<app-form-control-errors :label="$gettext(`scheduled for`)" />
-				</app-form-group>
+					<AppFormControlErrors :label="$gettext(`scheduled for`)" />
+				</AppFormGroup>
 			</fieldset>
 		</div>
 
@@ -1190,51 +1203,51 @@ export default class FormPost
 		<template v-if="accessPermissionsEnabled">
 			<div v-if="!wasPublished" class="well fill-offset full-bleed">
 				<fieldset>
-					<app-form-legend compact deletable @delete="disableAccessPermissions()">
-						<translate>Access permissions</translate>
-					</app-form-legend>
+					<AppFormLegend compact deletable @delete="disableAccessPermissions()">
+						<AppTranslate>Access permissions</AppTranslate>
+					</AppFormLegend>
 
-					<app-form-group
+					<AppFormGroup
 						name="key_group_ids"
 						:label="$gettext(`Access Permissions`)"
 						hide-label
 					>
 						<div v-if="!keyGroups.length" class="alert">
-							<translate>
+							<AppTranslate>
 								You can make this post available to only the users within a key
 								group. For example, this is useful for sending news updates to
 								testers. You can create a user key group through the "Keys/Access"
 								page.
-							</translate>
+							</AppTranslate>
 						</div>
 						<div v-else>
 							<p class="help-block">
-								<translate>
+								<AppTranslate>
 									You can make this post available to only the users within a key
 									group. For example, this is useful for sending news updates to
 									testers. Only User-type key groups can be selected.
-								</translate>
+								</AppTranslate>
 							</p>
 
 							<div v-for="keyGroup of keyGroups" :key="keyGroup.id" class="checkbox">
 								<label>
-									<app-form-control-checkbox :value="keyGroup.id" />
+									<AppFormControlCheckbox :value="keyGroup.id" />
 									{{ keyGroup.name }}
 								</label>
 							</div>
 						</div>
-					</app-form-group>
+					</AppFormGroup>
 				</fieldset>
 			</div>
 			<div v-else class="form-group well fill-offset full-bleed">
 				<label class="control-label">
-					<translate>Access Permissions</translate>
+					<AppTranslate>Access Permissions</AppTranslate>
 				</label>
 				<div class="alert">
-					<translate>
+					<AppTranslate>
 						The below key groups have access to this post. You can't edit who has access
 						after posting since notifications have already gone out.
-					</translate>
+					</AppTranslate>
 				</div>
 				<div>
 					<span v-for="keyGroup of model.key_groups" :key="keyGroup.id" class="tag">
@@ -1247,22 +1260,22 @@ export default class FormPost
 		<!-- Other platforms -->
 		<div v-if="isPublishingToPlatforms" class="well fill-offset full-bleed">
 			<fieldset>
-				<app-form-legend compact deletable @delete="removePublishingToPlatforms()">
-					<translate>Publish your post to other platforms</translate>
-				</app-form-legend>
+				<AppFormLegend compact deletable @delete="removePublishingToPlatforms()">
+					<AppTranslate>Publish your post to other platforms</AppTranslate>
+				</AppFormLegend>
 
 				<div v-if="!linkedAccounts.length" class="alert">
-					<translate>You can publish this post to other platforms!</translate>
-					<translate v-if="!model.game">
+					<AppTranslate>You can publish this post to other platforms!</AppTranslate>
+					<AppTranslate v-if="!model.game">
 						Set up your linked accounts in your user account.
-					</translate>
-					<translate v-else>
+					</AppTranslate>
+					<AppTranslate v-else>
 						Set up your linked accounts either in your game dashboard, or your user
 						account.
-					</translate>
+					</AppTranslate>
 				</div>
 				<div v-else class="-linked-accounts">
-					<app-form-group
+					<AppFormGroup
 						v-for="account of linkedAccounts"
 						:key="account.id"
 						:name="`linked_account_${account.id}`"
@@ -1271,7 +1284,7 @@ export default class FormPost
 					>
 						<div class="-linked-account">
 							<div class="-linked-account-icon">
-								<app-jolticon
+								<AppJolticon
 									v-app-tooltip="account.providerDisplayName"
 									:icon="account.icon"
 									big
@@ -1283,23 +1296,23 @@ export default class FormPost
 							</div>
 
 							<div class="-linked-account-toggle">
-								<app-form-control-toggle
+								<AppFormControlToggle
 									@changed="changeLinkedAccount(account.id)"
 								/>
 							</div>
 						</div>
-					</app-form-group>
+					</AppFormGroup>
 				</div>
 			</fieldset>
 		</div>
 
 		<div v-if="hasPublishedToPlatforms" class="alert">
 			<strong>
-				<translate>This post has been published to other platforms.</translate>
+				<AppTranslate>This post has been published to other platforms.</AppTranslate>
 			</strong>
-			<translate>
+			<AppTranslate>
 				Any edits made to this post will not be reflected on those other platforms.
-			</translate>
+			</AppTranslate>
 		</div>
 
 		<template v-if="platformRestrictions.length">
@@ -1316,9 +1329,9 @@ export default class FormPost
 
 		<!-- Communities -->
 		<template v-if="isLoaded">
-			<app-scroll-scroller v-if="shouldShowCommunities" class="-communities" horizontal thin>
+			<AppScrollScroller v-if="shouldShowCommunities" class="-communities" horizontal thin>
 				<transition-group tag="div" class="-communities-list">
-					<app-forms-community-pill-incomplete
+					<AppFormsCommunityPillIncomplete
 						v-if="incompleteDefaultCommunity"
 						key="incomplete"
 						class="-community-pill anim-fade-in-enlarge no-animate-leave"
@@ -1327,7 +1340,7 @@ export default class FormPost
 						@add="attachIncompleteCommunity"
 					/>
 
-					<app-forms-community-pill
+					<AppFormsCommunityPill
 						v-for="{ community, channel } of attachedCommunities"
 						:key="community.id"
 						class="-community-pill anim-fade-in-enlarge no-animate-leave"
@@ -1338,7 +1351,7 @@ export default class FormPost
 					/>
 
 					<template v-if="!wasPublished && canAddCommunity">
-						<app-forms-community-pill-add
+						<AppFormsCommunityPillAdd
 							key="add"
 							v-app-scroll-when="scrollingKey"
 							class="-community-pill anim-fade-in-enlarge no-animate-leave"
@@ -1347,11 +1360,11 @@ export default class FormPost
 						/>
 					</template>
 				</transition-group>
-			</app-scroll-scroller>
+			</AppScrollScroller>
 			<p v-else-if="!wasPublished" class="help-block">
-				<translate>Join some communities to post to them.</translate>
+				<AppTranslate>Join some communities to post to them.</AppTranslate>
 				<span v-app-tooltip.touchable="$gettext(`Go to the explore page and find some!`)">
-					<app-jolticon class="text-muted" icon="help-circle" />
+					<AppJolticon class="text-muted" icon="help-circle" />
 				</span>
 			</p>
 		</template>
@@ -1363,36 +1376,36 @@ export default class FormPost
 
 		<div v-if="!wasPublished" class="-error-no-channel">
 			<div class="-caret" :class="{ '-hide': !hasChannelError }" />
-			<app-expand :when="hasChannelError">
+			<AppExpand :when="hasChannelError">
 				<div class="-error -earmark alert alert-notice">
-					<translate>Choose a channel to post to.</translate>
+					<AppTranslate>Choose a channel to post to.</AppTranslate>
 				</div>
-			</app-expand>
+			</AppExpand>
 		</div>
 
 		<!-- Author options -->
 		<template v-if="shouldShowAuthorOptions">
 			<fieldset>
 				<!-- Post to profile -->
-				<app-form-group
+				<AppFormGroup
 					v-if="user && user.id == model.user.id"
 					name="post_to_user_profile"
 					class="sans-margin-bottom"
 					:label="$gettext(`Post to Profile`)"
 				>
-					<app-form-control-toggle class="pull-right" />
+					<AppFormControlToggle class="pull-right" />
 					<p class="help-block sans-margin-top">
 						This will post to your profile as well as the game page.
 					</p>
-				</app-form-group>
+				</AppFormGroup>
 
 				<!-- Post as game owner -->
-				<app-form-group
+				<AppFormGroup
 					v-if="model.user.id != model.game.developer.id"
 					name="as_game_owner"
 					:label="$gettext(`Post as Game Owner`)"
 				>
-					<app-form-control-toggle class="pull-right" />
+					<AppFormControlToggle class="pull-right" />
 					<div
 						v-if="formModel.as_game_owner"
 						v-app-tooltip.touchable="
@@ -1401,26 +1414,26 @@ export default class FormPost
 						"
 						class="-author-avatar pull-right"
 					>
-						<app-user-avatar-img :user="model.game.developer" />
+						<AppUserAvatarImg :user="model.game.developer" />
 					</div>
 					<p class="help-block sans-margin-top">
-						<translate
+						<AppTranslate
 							:translate-params="{
 								owner: `@${model.game.developer.username}`,
 								author: `@${model.user.username}`,
 							}"
 						>
 							This will show %{ owner } as the user that posted.
-						</translate>
+						</AppTranslate>
 					</p>
-				</app-form-group>
+				</AppFormGroup>
 			</fieldset>
 		</template>
 
 		<!-- Controls -->
 		<div class="-controls">
 			<div class="-controls-attachments">
-				<app-button
+				<AppButton
 					v-if="!longEnabled"
 					v-app-tooltip="$gettext(`Add Article`)"
 					sparse
@@ -1430,7 +1443,7 @@ export default class FormPost
 					@click="toggleLong()"
 				/>
 
-				<app-button
+				<AppButton
 					v-if="!hasPoll"
 					v-app-tooltip="$gettext(`Add Poll`)"
 					sparse
@@ -1440,7 +1453,7 @@ export default class FormPost
 					@click="createPoll()"
 				/>
 
-				<app-button
+				<AppButton
 					v-if="!wasPublished && !isScheduling"
 					v-app-tooltip="$gettext(`Schedule Post`)"
 					sparse
@@ -1450,7 +1463,7 @@ export default class FormPost
 					@click="addSchedule()"
 				/>
 
-				<app-button
+				<AppButton
 					v-if="!accessPermissionsEnabled && !wasPublished && model.game"
 					v-app-tooltip="$gettext(`Access Permissions`)"
 					sparse
@@ -1460,7 +1473,7 @@ export default class FormPost
 					@click="enableAccessPermissions()"
 				/>
 
-				<app-button
+				<AppButton
 					v-if="!wasPublished && !isPublishingToPlatforms"
 					v-app-tooltip="$gettext(`Publish to Other Platforms`)"
 					sparse
@@ -1473,7 +1486,7 @@ export default class FormPost
 
 			<div class="-controls-submit">
 				<div class="-controls-submit-button">
-					<app-form-button
+					<AppFormButton
 						v-if="!wasPublished && !isScheduling"
 						:disabled="!submitButtonsEnabled"
 						:solid="false"
@@ -1482,12 +1495,12 @@ export default class FormPost
 						:block="Screen.isXs"
 						@before-submit="onDraftSubmit()"
 					>
-						<translate>Save Draft</translate>
-					</app-form-button>
+						<AppTranslate>Save Draft</AppTranslate>
+					</AppFormButton>
 				</div>
 				{{ ' ' }}
 				<div class="-controls-submit-button">
-					<app-form-button
+					<AppFormButton
 						:disabled="!submitButtonsEnabled"
 						primary
 						solid
@@ -1495,11 +1508,11 @@ export default class FormPost
 						@before-submit="onPublishSubmit()"
 					>
 						{{ mainActionText }}
-					</app-form-button>
+					</AppFormButton>
 				</div>
 			</div>
 		</div>
-	</app-form>
+	</AppForm>
 </template>
 
 <style lang="stylus" scoped>

@@ -53,7 +53,7 @@ export default class AppVideoProcessingProgress extends Vue {
 
 <template>
 	<div>
-		<app-progress-poller
+		<AppProgressPoller
 			:url="`/web/posts/manage/add-video-progress/${post.id}`"
 			:interval="3000"
 			@progress="onProgress"
@@ -61,10 +61,10 @@ export default class AppVideoProcessingProgress extends Vue {
 			@error="emitError"
 		/>
 
-		<app-responsive-dimensions :ratio="16 / 9">
+		<AppResponsiveDimensions :ratio="16 / 9">
 			<div v-if="hasData" class="-preview">
 				<template v-if="videoPosterImgUrl">
-					<app-img-responsive
+					<AppImgResponsive
 						class="-preview-img"
 						:src="videoPosterImgUrl"
 						:style="{
@@ -73,15 +73,15 @@ export default class AppVideoProcessingProgress extends Vue {
 					/>
 
 					<div class="-preview-icon-container">
-						<app-jolticon icon="video" big class="-poster-icon -overlay-icon" />
+						<AppJolticon icon="video" big class="-poster-icon -overlay-icon" />
 					</div>
 				</template>
-				<app-jolticon v-else icon="video" big class="-poster-icon" />
+				<AppJolticon v-else icon="video" big class="-poster-icon" />
 			</div>
-		</app-responsive-dimensions>
+		</AppResponsiveDimensions>
 
 		<br />
-		<app-progress-bar
+		<AppProgressBar
 			:percent="progress"
 			:indeterminate="isIndeterminate"
 			thin
@@ -90,11 +90,11 @@ export default class AppVideoProcessingProgress extends Vue {
 		/>
 
 		<div>
-			<translate>
+			<AppTranslate>
 				Your video is currently being processed. This could take some time depending on the
 				size of your video.
-			</translate>
-			<translate v-if="post.isActive"> We will publish your post once it's ready. </translate>
+			</AppTranslate>
+			<AppTranslate v-if="post.isActive"> We will publish your post once it's ready. </AppTranslate>
 		</div>
 	</div>
 </template>

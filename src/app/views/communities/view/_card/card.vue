@@ -21,9 +21,9 @@ export default class AppCommunitiesViewCard extends Vue {
 </script>
 
 <template>
-	<app-community-card-base :community="community" overflow>
+	<AppCommunityCardBase :community="community" overflow>
 		<template #thumbnail>
-			<app-editable-thumbnail />
+			<AppEditableThumbnail />
 		</template>
-	</app-community-card-base>
+	</AppCommunityCardBase>
 </template>

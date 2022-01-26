@@ -65,17 +65,17 @@ export default class AppActivityFeedItem extends Vue {
 </script>
 
 <template>
-	<app-scroll-inview
+	<AppScrollInview
 		:config="InviewConfig"
 		@inview="onInviewChange(true)"
 		@outview="onInviewChange(false)"
 	>
-		<app-scroll-inview
+		<AppScrollInview
 			:config="InviewConfigHydration"
 			@inview="onInviewHydrationChange(true)"
 			@outview="onInviewHydrationChange(false)"
 		>
-			<app-activity-feed-item-placeholder
+			<AppActivityFeedItemPlaceholder
 				v-if="item.type !== 'notification' && !isBootstrapped"
 			/>
 			<template v-else>
@@ -83,16 +83,16 @@ export default class AppActivityFeedItem extends Vue {
 				Notifications are so small that there's no reason to not include them
 				into the view.
 				-->
-				<app-activity-feed-post
+				<AppActivityFeedPost
 					v-if="item.type === 'event-item'"
 					:item="item"
 					@resize="onResize"
 				/>
-				<app-activity-feed-notification
+				<AppActivityFeedNotification
 					v-else-if="item.type === 'notification'"
 					:item="item"
 				/>
 			</template>
-		</app-scroll-inview>
-	</app-scroll-inview>
+		</AppScrollInview>
+	</AppScrollInview>
 </template>

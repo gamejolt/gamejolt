@@ -44,19 +44,19 @@ export default class AppShellSidebar extends Vue {
 </script>
 
 <template>
-	<app-scroll-scroller id="shell-sidebar" class="shell-pane shell-pane-left" thin>
-		<app-shortkey v-if="user" shortkey="c" @press="store.toggleLeftPane('chat')" />
-		<app-shortkey
+	<AppScrollScroller id="shell-sidebar" class="shell-pane shell-pane-left" thin>
+		<AppShortkey v-if="user" shortkey="c" @press="store.toggleLeftPane('chat')" />
+		<AppShortkey
 			v-if="user || Screen.isXs"
 			shortkey="m"
 			@press="store.toggleLeftPane('library')"
 		/>
-		<app-shortkey shortkey="y" @press="store.toggleLeftPane('context')" />
+		<AppShortkey shortkey="y" @press="store.toggleLeftPane('context')" />
 
-		<app-shell-sidebar-chat v-if="visibleLeftPane === 'chat'" />
-		<app-shell-sidebar-library v-if="visibleLeftPane === 'library'" />
-		<app-shell-sidebar-context v-if="visibleLeftPane === 'context'" />
-	</app-scroll-scroller>
+		<AppShellSidebarChat v-if="visibleLeftPane === 'chat'" />
+		<AppShellSidebarLibrary v-if="visibleLeftPane === 'library'" />
+		<AppShellSidebarContext v-if="visibleLeftPane === 'context'" />
+	</AppScrollScroller>
 </template>
 
 <style lang="stylus" scoped>

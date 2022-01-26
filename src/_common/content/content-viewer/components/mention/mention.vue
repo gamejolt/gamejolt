@@ -41,7 +41,7 @@ export default class AppContentViewerMention extends Vue {
 <template>
 	<span class="user-mention">
 		<template v-if="user">
-			<app-user-card-hover :user="user">
+			<AppUserCardHover :user="user">
 				<router-link :to="user.url">
 					<span>
 						<slot />
@@ -52,7 +52,7 @@ export default class AppContentViewerMention extends Vue {
 								class="img-responsive mention-avatar-img"
 								alt=""
 							/>
-							<app-jolticon
+							<AppJolticon
 								v-if="user.is_verified"
 								class="mention-verified"
 								icon="verified"
@@ -60,7 +60,7 @@ export default class AppContentViewerMention extends Vue {
 						</span>
 					</span>
 				</router-link>
-			</app-user-card-hover>
+			</AppUserCardHover>
 		</template>
 		<!-- Placeholder until the user data is hydrated: -->
 		<template v-else>

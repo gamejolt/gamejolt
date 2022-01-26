@@ -212,10 +212,10 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends B
 <template>
 	<div>
 		<h2 class="sans-margin-top">
-			<translate>Voting</translate>
+			<AppTranslate>Voting</AppTranslate>
 		</h2>
 
-		<form-community-competition-voting-toggle
+		<FormCommunityCompetitionVotingToggle
 			v-if="canToggleVoting"
 			ref="toggleForm"
 			:model="competition"
@@ -224,14 +224,14 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends B
 
 		<div v-else-if="!competition.is_voting_enabled" class="alert">
 			<p>
-				<translate>
+				<AppTranslate>
 					Voting is disabled. Because the jam is already over, it cannot be enabled.
-				</translate>
+				</AppTranslate>
 			</p>
 		</div>
 
 		<template v-if="isEditing">
-			<form-community-competition-voting-edit
+			<FormCommunityCompetitionVotingEdit
 				:model="competition"
 				@cancel="onFormCancel"
 				@submit="onFormSubmit"
@@ -243,133 +243,133 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends B
 				<tbody>
 					<tr>
 						<th>
-							<translate>Voting end date</translate>
+							<AppTranslate>Voting end date</AppTranslate>
 						</th>
 						<td>
-							<app-community-competition-date
+							<AppCommunityCompetitionDate
 								:date="competition.voting_ends_on"
 								:timezone="competition.timezone"
 							/>
 							<span class="help-inline">
 								<template v-if="competition.periodNum <= CompetitionPeriodVoting">
-									(<translate>in</translate>
-									<app-time-ago
+									(<AppTranslate>in</AppTranslate>
+									<AppTimeAgo
 										without-suffix
 										is-future
 										:date="competition.voting_ends_on"
 									/>)
 								</template>
 								<template v-else>
-									(<app-time-ago :date="competition.voting_ends_on" />)
+									(<AppTimeAgo :date="competition.voting_ends_on" />)
 								</template>
 							</span>
 						</td>
 					</tr>
 					<tr>
 						<th>
-							<translate>Community voting?</translate>
+							<AppTranslate>Community voting?</AppTranslate>
 						</th>
 						<td>
 							<span v-if="competition.has_community_voting" class="tag tag-highlight">
-								<translate>On</translate>
+								<AppTranslate>On</AppTranslate>
 							</span>
 							<span v-else class="tag">
-								<translate>Off</translate>
+								<AppTranslate>Off</AppTranslate>
 							</span>
 						</td>
 					</tr>
 					<template v-if="competition.has_community_voting">
 						<tr>
 							<th>
-								<translate>Who can vote?</translate>
+								<AppTranslate>Who can vote?</AppTranslate>
 							</th>
 							<td>
 								<template v-if="competition.voting_user_restriction === 'users'">
-									<translate>Any Game Jolt user</translate>
+									<AppTranslate>Any Game Jolt user</AppTranslate>
 								</template>
 								<template v-else>
-									<translate>Only jam participants</translate>
+									<AppTranslate>Only jam participants</AppTranslate>
 								</template>
 							</td>
 						</tr>
 						<tr>
 							<th>
-								<translate>Voting type</translate>
+								<AppTranslate>Voting type</AppTranslate>
 							</th>
 							<td>
 								<template v-if="competition.voting_type === 'overall'">
-									<translate>Overall</translate>
+									<AppTranslate>Overall</AppTranslate>
 								</template>
 								<template v-else>
-									<translate>Categories</translate>
+									<AppTranslate>Categories</AppTranslate>
 								</template>
 							</td>
 						</tr>
 					</template>
 					<tr>
 						<th>
-							<translate>Awards?</translate>
+							<AppTranslate>Awards?</AppTranslate>
 						</th>
 						<td>
 							<span v-if="competition.has_awards" class="tag tag-highlight">
-								<translate>On</translate>
+								<AppTranslate>On</AppTranslate>
 							</span>
 							<span v-else class="tag">
-								<translate>Off</translate>
+								<AppTranslate>Off</AppTranslate>
 							</span>
 						</td>
 					</tr>
 				</tbody>
 			</table>
 
-			<app-button v-if="canEditVoting" icon="edit" @click="onClickChange">
-				<translate>Change</translate>
-			</app-button>
+			<AppButton v-if="canEditVoting" icon="edit" @click="onClickChange">
+				<AppTranslate>Change</AppTranslate>
+			</AppButton>
 
 			<template v-if="votingCategoriesEnabled">
 				<h3>
-					<translate>Voting Categories</translate>
+					<AppTranslate>Voting Categories</AppTranslate>
 				</h3>
 
 				<p class="help-block">
-					<translate>
+					<AppTranslate>
 						These are the categories on which users can vote. Voters can give entries a
 						rating in each category you create. You can only edit categories before
 						voting starts.
-					</translate>
+					</AppTranslate>
 				</p>
 				<p class="help-block">
-					<translate>
+					<AppTranslate>
 						Entries are ranked within each category and assigned an overall rank based
 						on their category ratings.
-					</translate>
+					</AppTranslate>
 				</p>
 
 				<template v-if="canEditVotingCategories">
 					<div v-if="!hasVotingCategories" class="alert alert-notice">
-						<translate>You must add categories before voting starts.</translate>
+						<AppTranslate>You must add categories before voting starts.</AppTranslate>
 					</div>
 
-					<app-card-list
+					<AppCardList
 						:items="votingCategories"
 						:active-item="activeVotingCategory"
 						:is-adding="isShowingVotingCategoryAdd"
 						is-draggable
 						@activate="activeVotingCategory = $event"
 					>
-						<app-card-list-add
+						<AppCardListAdd
 							:label="$gettext(`Add Category`)"
 							@toggle="isShowingVotingCategoryAdd = !isShowingVotingCategoryAdd"
 						>
-							<form-community-competition-voting-category
+							<FormCommunityCompetitionVotingCategory
 								:competition="competition"
 								@submit="onCategoryAddSubmit"
 							/>
-						</app-card-list-add>
+						</AppCardListAdd>
 
-						<app-card-list-draggable item-key="id" @change="saveCategorySort">
+						<AppCardListDraggable item-key="id" @change="saveCategorySort">
 							<template #item="{ element: category }">
-								<app-card-list-item
+								<AppCardListItem
 									:id="`category-container-${category.id}`"
 									:item="category"
 								>
@@ -378,7 +378,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends B
 										class="card-remove"
 										@click.stop="onClickRemoveCategory(category)"
 									>
-										<app-jolticon icon="remove" />
+										<AppJolticon icon="remove" />
 									</a>
 
 									<div>
@@ -389,27 +389,27 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends B
 									</div>
 
 									<template #body>
-										<form-community-competition-voting-category
+										<FormCommunityCompetitionVotingCategory
 											:competition="competition"
 											:model="category"
 										/>
 									</template>
-								</app-card-list-item>
+								</AppCardListItem>
 							</template>
-						</app-card-list-draggable>
-					</app-card-list>
+						</AppCardListDraggable>
+					</AppCardList>
 				</template>
 
 				<template v-else>
 					<div v-if="!hasVotingCategories" class="alert alert-notice">
-						<translate>
+						<AppTranslate>
 							No voting categories were added before voting began. Because of this,
 							users cannot vote on entries.
-						</translate>
+						</AppTranslate>
 					</div>
 					<template v-else>
-						<app-card-list :items="votingCategories">
-							<app-card-list-item
+						<AppCardList :items="votingCategories">
+							<AppCardListItem
 								v-for="category in votingCategories"
 								:id="`category-container-${category.id}`"
 								:key="category.id"
@@ -421,63 +421,63 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends B
 								<div v-if="category.description">
 									<small class="text-muted">{{ category.description }}</small>
 								</div>
-							</app-card-list-item>
-						</app-card-list>
+							</AppCardListItem>
+						</AppCardList>
 					</template>
 				</template>
 			</template>
 
 			<template v-if="canEditAwards">
 				<h3>
-					<translate>Awards</translate>
+					<AppTranslate>Awards</AppTranslate>
 				</h3>
 
 				<p class="help-block">
-					<translate>
+					<AppTranslate>
 						These are the awards that can be assigned to entries. Awards can be added
 						and assigned at any time, but we recommend assigning them during the voting
 						period.
-					</translate>
+					</AppTranslate>
 				</p>
 				<p class="help-block">
-					<translate>
+					<AppTranslate>
 						Award-winning entries are displayed by default at the top of the Games page
 						based on the order they appear below.
-					</translate>
+					</AppTranslate>
 				</p>
 
 				<div v-if="!hasAwards" class="alert alert-notice">
-					<translate>
+					<AppTranslate>
 						You must add awards before you can assign them to entries.
-					</translate>
+					</AppTranslate>
 				</div>
 
-				<app-card-list
+				<AppCardList
 					:items="awards"
 					:active-item="activeAward"
 					:is-adding="isShowingAwardAdd"
 					is-draggable
 					@activate="activeAward = $event"
 				>
-					<app-card-list-add
+					<AppCardListAdd
 						:label="$gettext(`Add Award`)"
 						@toggle="isShowingAwardAdd = !isShowingAwardAdd"
 					>
-						<form-community-competition-award
+						<FormCommunityCompetitionAward
 							:competition="competition"
 							@submit="onAwardAddSubmit"
 						/>
-					</app-card-list-add>
+					</AppCardListAdd>
 
-					<app-card-list-draggable item-key="id" @change="saveAwardSort">
+					<AppCardListDraggable item-key="id" @change="saveAwardSort">
 						<template #item="{ element: award }">
-							<app-card-list-item :id="`award-container-${award.id}`" :item="award">
+							<AppCardListItem :id="`award-container-${award.id}`" :item="award">
 								<a
 									v-app-tooltip="$gettext(`Remove Award`)"
 									class="card-remove"
 									@click.stop="onClickRemoveAward(award)"
 								>
-									<app-jolticon icon="remove" />
+									<AppJolticon icon="remove" />
 								</a>
 
 								<div>
@@ -488,15 +488,15 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends B
 								</div>
 
 								<template #body>
-									<form-community-competition-award
+									<FormCommunityCompetitionAward
 										:competition="competition"
 										:model="award"
 									/>
 								</template>
-							</app-card-list-item>
+							</AppCardListItem>
 						</template>
-					</app-card-list-draggable>
-				</app-card-list>
+					</AppCardListDraggable>
+				</AppCardList>
 			</template>
 		</template>
 	</div>

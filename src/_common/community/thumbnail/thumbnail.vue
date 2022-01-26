@@ -36,13 +36,13 @@ export default class AppCommunityThumbnail extends Vue {
 		@click="onGotoCommunity"
 	>
 		<div class="-thumb">
-			<app-media-item-backdrop
+			<AppMediaItemBackdrop
 				class="-thumb-inner"
 				:media-item="community.thumbnail"
 				radius="full"
 			>
-				<app-community-thumbnail-img class="-thumb-img" :community="community" />
-			</app-media-item-backdrop>
+				<AppCommunityThumbnailImg class="-thumb-img" :community="community" />
+			</AppMediaItemBackdrop>
 		</div>
 
 		<div class="-label">

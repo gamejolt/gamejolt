@@ -44,14 +44,14 @@ export default class RouteDashGamesManageGamePackagesAdd extends BaseRouteCompon
 				<li>
 					<router-link :to="{ name: 'dash.games.manage.game.packages.list' }">
 						<span class="breadcrumb-tag">&nbsp;</span>
-						<translate>Packages</translate>
+						<AppTranslate>Packages</AppTranslate>
 					</router-link>
-					<app-jolticon icon="chevron-right" class="breadcrumb-separator" />
+					<AppJolticon icon="chevron-right" class="breadcrumb-separator" />
 				</li>
 				<li>
 					<span class="active">
 						<span class="breadcrumb-tag">&nbsp;</span>
-						<translate>Add Package</translate>
+						<AppTranslate>Add Package</AppTranslate>
 					</span>
 				</li>
 			</ul>
@@ -68,27 +68,27 @@ export default class RouteDashGamesManageGamePackagesAdd extends BaseRouteCompon
 			>
 				<div class="page-help">
 					<p>
-						<translate>
+						<AppTranslate>
 							Packages are how you organize and distribute your game's builds and
 							other files.
-						</translate>
+						</AppTranslate>
 					</p>
 					<p>
-						<translate>
+						<AppTranslate>
 							Your primary package should contain the builds you want people to play.
 							You can create new packages to contain additional files, such as level
 							editors, art packs, expansions, and other DLC.
-						</translate>
+						</AppTranslate>
 					</p>
 					<p>
-						<app-link-help page="dev-packages" class="link-help">
-							<translate>dash.games.packages.page_help_link</translate>
-						</app-link-help>
+						<AppLinkHelp page="dev-packages" class="link-help">
+							<AppTranslate>dash.games.packages.page_help_link</AppTranslate>
+						</AppLinkHelp>
 					</p>
 				</div>
 			</div>
 			<div class="col-sm-8 col-sm-pull-4 col-md-7 col-md-pull-4 col-lg-8 col-lg-pull-4">
-				<form-game-package :game="game" @submit="onPackageAdded" />
+				<FormGamePackage :game="game" @submit="onPackageAdded" />
 			</div>
 		</div>
 	</div>

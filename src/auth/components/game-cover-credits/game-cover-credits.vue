@@ -36,21 +36,21 @@ export default class AppGameCoverCredits extends Vue {
 					{{ coverGame.title }}
 				</div>
 				<div class="-dev text-muted">
-					<translate>by</translate>
+					<AppTranslate>by</AppTranslate>
 					<strong>{{ coverGame.developer.display_name }}</strong>
 				</div>
 				<div class="-followers text-muted">
-					<translate
+					<AppTranslate
 						:translate-n="coverGame.follower_count || 0"
 						:translate-params="{ count: formatNumber(coverGame.follower_count || 0) }"
 						translate-plural="%{ count } followers"
 					>
 						%{ count } follower
-					</translate>
+					</AppTranslate>
 				</div>
 			</div>
 			<div class="-img">
-				<app-game-thumbnail-img :game="coverGame" />
+				<AppGameThumbnailImg :game="coverGame" />
 			</div>
 		</div>
 	</router-link>

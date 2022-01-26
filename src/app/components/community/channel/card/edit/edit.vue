@@ -20,10 +20,10 @@ export default class AppCommunityChannelCardEdit extends Vue {
 </script>
 
 <template>
-	<app-editable-overlay class="-background-overlay" @click="onClickEdit">
+	<AppEditableOverlay class="-background-overlay" @click="onClickEdit">
 		<template #overlay>
 			<span>
-				<translate>Change Background</translate>
+				<AppTranslate>Change Background</AppTranslate>
 			</span>
 		</template>
 
@@ -36,7 +36,7 @@ export default class AppCommunityChannelCardEdit extends Vue {
 				/>
 			</div>
 		</template>
-	</app-editable-overlay>
+	</AppEditableOverlay>
 </template>
 
 <style lang="stylus" scoped>

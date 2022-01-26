@@ -37,7 +37,7 @@ export default class AppFiresideStreamPreview extends Vue {
 		<router-link class="-link" :to="location">
 			<div class="-video-wrapper">
 				<div class="-video-inner">
-					<app-fireside-stream-preview-video
+					<AppFiresideStreamPreviewVideo
 						:fireside="fireside"
 						:show-live="showLive"
 						:show-live-users="showLiveUsers"

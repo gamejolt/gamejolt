@@ -106,8 +106,8 @@ export default class AppClientStatusBar extends Vue {
 	>
 		<div class="pull-left">
 			<div v-if="numPlaying > 0" class="-item">
-				<app-jolticon icon="play" />
-				<translate>Currently Playing:</translate>
+				<AppJolticon icon="play" />
+				<AppTranslate>Currently Playing:</AppTranslate>
 				<strong :title="currentlyPlayingList">
 					{{ currentlyPlayingList }}
 				</strong>
@@ -119,16 +119,16 @@ export default class AppClientStatusBar extends Vue {
 				class="-item link-unstyled"
 				:to="{ name: 'library.installed' }"
 			>
-				<translate
+				<AppTranslate
 					:translate-n="numPatching || 0"
 					:translate-params="{ count: formatNumber(numPatching || 0) }"
 					translate-plural="%{ count } Downloads"
 				>
 					%{ count } Download
-				</translate>
+				</AppTranslate>
 				&nbsp;
 				<div class="-progress">
-					<app-client-status-bar-patch-item
+					<AppClientStatusBarPatchItem
 						v-for="packageId of currentlyPatchingIds"
 						:key="packageId"
 						:package-id="packageId"
@@ -141,20 +141,20 @@ export default class AppClientStatusBar extends Vue {
 			<div v-if="hasUpdate || showUpdaterIssue" class="-item">
 				<b>
 					<template v-if="hasUpdate">
-						<translate>New Client version available!</translate>
+						<AppTranslate>New Client version available!</AppTranslate>
 						<a @click="updateApply()">
-							<translate>Update now</translate>
+							<AppTranslate>Update now</AppTranslate>
 						</a>
 					</template>
 					<template v-else>
-						<translate>Uh oh, client has trouble updating!</translate>
+						<AppTranslate>Uh oh, client has trouble updating!</AppTranslate>
 						<a class="-notice" @click="quitClient()">
-							<app-jolticon notice icon="notice" />
-							<translate>Try restarting</translate>
+							<AppJolticon notice icon="notice" />
+							<AppTranslate>Try restarting</AppTranslate>
 						</a>
 						&nbsp;
 						<a class="-dismiss" @click="dismissUpdaterWarning()">
-							<app-jolticon class="-dismiss" icon="remove" />
+							<AppJolticon class="-dismiss" icon="remove" />
 						</a>
 					</template>
 				</b>
