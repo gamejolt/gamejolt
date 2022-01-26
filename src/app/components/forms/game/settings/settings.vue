@@ -19,7 +19,6 @@ export default class FormGameSettings extends mixins(Wrapper) implements FormOnL
 	saveMethod = '$saveSettings' as const;
 
 	hasPackagesForSale = false;
-	hasAdultContent = false;
 
 	readonly validateGaTrackingId = validateGaTrackingId;
 
@@ -29,7 +28,6 @@ export default class FormGameSettings extends mixins(Wrapper) implements FormOnL
 
 	onLoad(payload: any) {
 		this.hasPackagesForSale = payload.hasPackagesForSale;
-		this.hasAdultContent = payload.hasAdultContent;
 	}
 }
 </script>
@@ -37,71 +35,7 @@ export default class FormGameSettings extends mixins(Wrapper) implements FormOnL
 <template>
 	<app-form :controller="form">
 		<app-form-group
-			name="ga_tracking_id"
-			:label="$gettext(`dash.games.settings.ga_tracking_id_label`)"
-			:optional="true"
-		>
-			<app-form-control
-				type="text"
-				:validators="[validateMaxLength(30), validateGaTrackingId()]"
-				:placeholder="$gettext(`dash.games.settings.ga_tracking_id_placeholder`)"
-			/>
-
-			<app-form-control-errors
-				:label="$gettext(`dash.games.settings.ga_tracking_id_error_label`)"
-			/>
-
-			<div class="help-block">
-				<p>
-					Use
-					<app-link-external href="http://google.com/analytics">
-						Google Analytics
-					</app-link-external>
-					to track a multitude of stats and get tons of information about your game page.
-					Just enter your Google Analytics tracking ID here and we'll start sending data
-					over there right away.
-				</p>
-
-				<p><strong>Here's how to set get started:</strong></p>
-
-				<ul>
-					<li>
-						Create (or log into an existing)
-						<app-link-external href="http://www.google.com/analytics">
-							Google Analytics
-						</app-link-external>
-						account.
-					</li>
-					<li>
-						Set up a new Property (go to the
-						<em>Admin</em>
-						tab and select
-						<em>Create new property</em>
-						from the dropdown menu under
-						<em>Property</em>
-						).
-					</li>
-					<li>
-						Select
-						<em>Website</em>
-						and enter
-						<strong>gamejolt.com</strong>
-						as the URL.
-					</li>
-					<li>Select an Industry Category and a Reporting Time Zone.</li>
-					<li>
-						Click
-						<em>Get Tracking ID</em>
-						.
-					</li>
-					<li>Come back here and enter your Tracking ID.</li>
-					<li>You're all set!</li>
-				</ul>
-			</div>
-		</app-form-group>
-
-		<app-form-group
-			v-if="!hasPackagesForSale && !hasAdultContent"
+			v-if="!hasPackagesForSale"
 			name="ads_enabled"
 			:label="$gettext(`dash.games.settings.ads_label`)"
 		>
@@ -114,7 +48,7 @@ export default class FormGameSettings extends mixins(Wrapper) implements FormOnL
 				</p>
 				<p>
 					<translate>
-						Only do this if you don't want to monetize your game, or if your game is
+						Only do this if you don't want your game monetized, or if your game is
 						subject to a license that doesn't allow monetization.
 					</translate>
 				</p>
@@ -127,9 +61,6 @@ export default class FormGameSettings extends mixins(Wrapper) implements FormOnL
 			<div class="alert">
 				<translate v-if="hasPackagesForSale">
 					We don't show ads on Marketplace game pages (even for pay what you want games).
-				</translate>
-				<translate v-else-if="hasAdultContent">
-					We don't show ads on adult games.
 				</translate>
 			</div>
 		</div>

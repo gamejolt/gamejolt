@@ -216,6 +216,14 @@ export default class FormPost
 		);
 	}
 
+	get isPollTooShort() {
+		return this.hasPoll && this.pollDuration < this.MIN_POLL_DURATION;
+	}
+
+	get isPollTooLong() {
+		return this.hasPoll && this.pollDuration > this.MAX_POLL_DURATION;
+	}
+
 	get scheduledTimezoneOffset() {
 		if (!this.formModel.scheduled_for_timezone) {
 			return 0;
@@ -317,7 +325,12 @@ export default class FormPost
 	}
 
 	get submitButtonsEnabled() {
-		return this.valid && this.uploadingVideoStatus !== VideoStatus.UPLOADING;
+		return (
+			this.valid &&
+			this.uploadingVideoStatus !== VideoStatus.UPLOADING &&
+			!this.isPollTooShort &&
+			!this.isPollTooLong
+		);
 	}
 
 	@Watch('formModel.post_to_user_profile')
@@ -1062,7 +1075,7 @@ export default class FormPost
 
 				<div class="row">
 					<div class="col-xs-4">
-						<app-form-group name="poll_days" :label="$gettext('Days')">
+						<app-form-group name="poll_days" :label="$gettext('Days')" optional>
 							<app-form-control
 								type="number"
 								step="1"
@@ -1075,7 +1088,7 @@ export default class FormPost
 					</div>
 
 					<div class="col-xs-4">
-						<app-form-group name="poll_hours" :label="$gettext('Hours')">
+						<app-form-group name="poll_hours" :label="$gettext('Hours')" optional>
 							<app-form-control
 								type="number"
 								step="1"
@@ -1088,7 +1101,7 @@ export default class FormPost
 					</div>
 
 					<div class="col-xs-4">
-						<app-form-group name="poll_minutes" :label="$gettext('Minutes')">
+						<app-form-group name="poll_minutes" :label="$gettext('Minutes')" optional>
 							<app-form-control
 								type="number"
 								step="1"
@@ -1101,12 +1114,12 @@ export default class FormPost
 					</div>
 				</div>
 
-				<p v-if="pollDuration < MIN_POLL_DURATION" class="help-block error">
+				<p v-if="isPollTooShort" class="help-block error">
 					<translate>
 						Too short! Polls must be between 5 minutes and 14 days long.
 					</translate>
 				</p>
-				<p v-else-if="pollDuration > MAX_POLL_DURATION" class="help-block error">
+				<p v-else-if="isPollTooLong" class="help-block error">
 					<translate>
 						Too long! Polls must be between 5 minutes and 14 days long.
 					</translate>

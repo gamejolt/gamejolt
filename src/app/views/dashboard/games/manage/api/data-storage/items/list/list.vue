@@ -135,7 +135,7 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 							<div class="table-controls">
 								<app-popper popover-class="fill-darkest">
 									<a class="link-muted">
-										<app-jolticon icon="cog" />
+										<app-jolticon icon="ellipsis-h" />
 									</a>
 
 									<template #popover>

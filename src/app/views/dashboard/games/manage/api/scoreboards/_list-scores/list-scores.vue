@@ -103,7 +103,7 @@ export default class AppManageGameListScores extends Vue {
 						<div class="table-controls">
 							<app-popper popover-class="fill-darkest">
 								<a class="text-muted">
-									<app-jolticon icon="cog" />
+									<app-jolticon icon="ellipsis-h" />
 								</a>
 
 								<template #popover>

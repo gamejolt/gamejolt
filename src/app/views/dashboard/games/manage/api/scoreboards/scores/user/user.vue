@@ -110,12 +110,16 @@ export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRo
 			</div>
 
 			<translate>dash.games.scores.user.list.heading</translate>
+			{{ ' ' }}
 			<small>
 				<translate>dash.games.scores.user.list.heading_for</translate>
+				{{ ' ' }}
 				<router-link class="link-unstyled" :to="user.url">
 					<strong>{{ user.display_name }}</strong>
 				</router-link>
+				{{ ' ' }}
 				<translate>dash.games.scores.user.list.heading_on</translate>
+				{{ ' ' }}
 				<router-link
 					class="link-unstyled"
 					:to="{

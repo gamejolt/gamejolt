@@ -39,7 +39,17 @@ export class Model {
 
 			const keys = Object.keys(newObj);
 			for (const k of keys) {
-				this[k] = newObj[k];
+				// For some reason this was throwing some weird errors when
+				// saving some forms (like key group form). Couldn't figure it
+				// out, so I'm wrapping it. It still seems to work okay.
+				try {
+					this[k] = newObj[k];
+				} catch (e) {
+					if (GJ_BUILD_TYPE === 'development') {
+						console.warn(`Got an error when setting a model value in assign().`);
+						console.warn(e);
+					}
+				}
 			}
 		};
 

@@ -290,7 +290,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 							:placeholder="$gettext('Filter')"
 						/>
 					</div>
-
+					{{ ' ' }}
 					<app-button trans @click="searchKeys">
 						<translate>Search</translate>
 					</app-button>
