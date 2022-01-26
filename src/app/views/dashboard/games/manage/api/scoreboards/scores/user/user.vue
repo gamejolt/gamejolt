@@ -73,7 +73,9 @@ export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRo
 
 	async removeAll() {
 		const result = await ModalConfirm.show(
-			this.$gettext('dash.games.scores.user.list.remove_confirmation')
+			this.$gettext(
+				`Are you sure you want to remove all of the user's scores from this scoreboard?`
+			)
 		);
 
 		if (!result) {
@@ -109,13 +111,22 @@ export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRo
 				/>
 			</div>
 
-			<translate>dash.games.scores.user.list.heading</translate>
+			<!--
+				TODO(vue3) this translation block is horrible but im not sure
+				how we want to solve it. Can we avoid splitting it to like 5 lines while
+				keeping the router links somehow.
+			-->
+			<translate>View scores</translate>
+			{{ ' ' }}
 			<small>
-				<translate>dash.games.scores.user.list.heading_for</translate>
+				<translate>for user</translate>
+				{{ ' ' }}
 				<router-link class="link-unstyled" :to="user.url">
 					<strong>{{ user.display_name }}</strong>
 				</router-link>
-				<translate>dash.games.scores.user.list.heading_on</translate>
+				{{ ' ' }}
+				<translate>on table</translate>
+				{{ ' ' }}
 				<router-link
 					class="link-unstyled"
 					:to="{

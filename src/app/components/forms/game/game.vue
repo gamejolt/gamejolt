@@ -119,7 +119,7 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 		</div>
 		<div v-else-if="stage === 'details'">
 			<fieldset>
-				<app-form-group name="title" :label="$gettext(`dash.games.form.title_label`)">
+				<app-form-group name="title" :label="$gettext(`Title`)">
 					<app-form-control
 						type="text"
 						:validators="[validateMaxLength(250)]"
@@ -214,7 +214,11 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 								"
 								class="text-help"
 							>
-								<translate>dash.games.form.engine_other_why</translate>
+								<translate
+									translate-comment="When hovering over this, we show a tooltip with additional information"
+								>
+									Why?
+								</translate>
 							</span>
 						</p>
 					</app-form-group>

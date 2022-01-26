@@ -30,12 +30,16 @@ export default class RouteAuthLinkedAccountFacebookCallback extends BaseRouteCom
 			if ($payload.reason && $payload.reason === 'no-email') {
 				showErrorGrowl({
 					sticky: true,
-					message: this.$gettext(`auth.linked_account.facebook.no_email_growl`),
+					message: this.$gettext(
+						`Your Facebook account did not return an email address. Make sure you have verified it with Facebook.`
+					),
 				});
 			} else if ($payload.reason && $payload.reason === 'duplicate-email') {
 				showErrorGrowl({
 					sticky: true,
-					message: this.$gettext(`auth.linked_account.facebook.duplicate_email_growl`),
+					message: this.$gettext(
+						`The email address on this Facebook account is already in use. Perhaps you already have an account?`
+					),
 				});
 			} else if ($payload.reason && $payload.reason === 'no-unique-username') {
 				showErrorGrowl({
@@ -48,7 +52,7 @@ export default class RouteAuthLinkedAccountFacebookCallback extends BaseRouteCom
 				showErrorGrowl({
 					sticky: true,
 					title: this.$gettext('Login Failed'),
-					message: this.$gettext('auth.linked_account.facebook.failed_growl'),
+					message: this.$gettext('Unable to log in with Facebook.'),
 				});
 			}
 			this.$router.push({ name: 'auth.join' });

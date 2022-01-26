@@ -43,7 +43,9 @@ export default class RouteDashGamesManageApiSettings extends BaseRouteComponent 
 
 	async generateNewKey() {
 		const result = await ModalConfirm.show(
-			this.$gettext('dash.games.api.settings.generate_confirmation')
+			this.$gettext(
+				'Are you sure you want to generate a new key? If you do, any builds of your game using the current key will stop working.'
+			)
 		);
 
 		if (!result) {
@@ -60,8 +62,10 @@ export default class RouteDashGamesManageApiSettings extends BaseRouteComponent 
 			this.privateKey = response.newKey;
 			this.shouldShowKey = true;
 			showSuccessGrowl({
-				title: this.$gettext('dash.games.api.settings.generate_growl_title'),
-				message: this.$gettext('dash.games.api.settings.generate_growl'),
+				title: this.$gettext('New Key Generated'),
+				message: this.$gettext(
+					`Generated a brand new private key for your game. You'll need to update your game's code with the new key.`
+				),
 				sticky: true,
 			});
 		}
@@ -73,7 +77,7 @@ export default class RouteDashGamesManageApiSettings extends BaseRouteComponent 
 	<div class="row">
 		<div class="col-lg-8">
 			<h2 class="section-header">
-				<translate>dash.games.api.settings.heading</translate>
+				<translate>Game API Settings</translate>
 			</h2>
 
 			<div class="alert alert-notice">
@@ -95,13 +99,15 @@ export default class RouteDashGamesManageApiSettings extends BaseRouteComponent 
 					<tbody>
 						<tr>
 							<th>
-								<translate>dash.games.api.settings.game_id_label</translate>
+								<translate>Game ID</translate>
 							</th>
 							<td>{{ game.id }}</td>
 						</tr>
 						<tr>
 							<th>
-								<translate>dash.games.api.settings.key_label</translate>
+								<translate translate-comment="This refers to game API key">
+									Private Key
+								</translate>
 							</th>
 							<td>
 								<template v-if="shouldShowKey">
@@ -110,14 +116,14 @@ export default class RouteDashGamesManageApiSettings extends BaseRouteComponent 
 								</template>
 								<p v-else>
 									<a class="link-muted" @click="shouldShowKey = true">
-										<translate>dash.games.api.settings.key_show_link</translate>
+										<translate translate-comment="This refers to game API key">
+											(show key)
+										</translate>
 									</a>
 								</p>
 
 								<app-button @click="generateNewKey">
-									<translate>
-										dash.games.api.settings.key_generate_button
-									</translate>
+									<translate>Generate New Key</translate>
 								</app-button>
 							</td>
 						</tr>

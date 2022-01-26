@@ -41,7 +41,9 @@ export default class AppGameCollectionList extends Vue {
 						{{ collection.name }}
 
 						<small v-if="collection.from_subscription">
-							<translate>library.by</translate>
+							<translate translate-comment="As in made by: / the author is:">
+								by
+							</translate>
 							@{{ collection.owner.username }}
 						</small>
 					</div>

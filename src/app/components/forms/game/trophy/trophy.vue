@@ -118,11 +118,8 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 			</div>
 		</div>
 
-		<app-form-group
-			v-if="method === 'edit'"
-			name="difficulty"
-			:label="$gettext(`dash.games.trophies.form.difficulty_label`)"
-		>
+		<!-- TODO(vue3) translate-comment="Refers to a difficulty level. How easy/hard it is to accomplish." -->
+		<app-form-group v-if="method === 'edit'" name="difficulty" :label="$gettext(`Difficulty`)">
 			<app-form-control-select>
 				<option v-for="item of difficultyOptions" :key="item.label" :value="item.value">
 					{{ item.label }}
@@ -187,7 +184,10 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 
 		<app-form-group name="visible" :label="$gettext(`Visible`)">
 			<p class="help-block">
-				<translate>dash.games.trophies.form.hidden_help</translate>
+				<translate>
+					Hidden trophies are invisible to everyone but the game's developer, for testing
+					and other nefarious reasons.
+				</translate>
 			</p>
 			<app-form-control-toggle />
 		</app-form-group>

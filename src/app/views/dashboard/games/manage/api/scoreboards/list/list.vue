@@ -166,7 +166,9 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 									<span
 										v-if="index === 0"
 										v-app-tooltip="
-											$gettext(`dash.games.scoreboards.primary_tooltip`)
+											$gettext(
+												`The primary scoreboard is displayed on your game page by default. If your game's API library doesn't support multiple scoreboards, all scores will be submitted to the primary scoreboard.`
+											)
 										"
 										class="tag tag-highlight"
 									>
@@ -184,7 +186,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 									<span
 										v-if="scoreTable.unique_scores"
 										v-app-tooltip="
-											$gettext(`dash.games.scoreboards.unique_tooltip`)
+											$gettext(`Only displays a user's best score.`)
 										"
 										class="tag"
 									>
@@ -200,7 +202,11 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 										"
 										class="tag"
 									>
-										<translate>dash.games.scoreboards.asc_tag</translate>
+										<translate
+											translate-comment="As in going from lowest to highest"
+										>
+											Ascending
+										</translate>
 									</span>
 									<span
 										v-if="
@@ -212,7 +218,11 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 										"
 										class="tag"
 									>
-										<translate>dash.games.scoreboards.desc_tag</translate>
+										<translate
+											translate-comment="As in going from lowest to highest"
+										>
+											Descending
+										</translate>
 									</span>
 								</div>
 

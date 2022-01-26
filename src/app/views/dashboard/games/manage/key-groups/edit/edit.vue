@@ -301,12 +301,20 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 				<table class="table table-hover">
 					<thead>
 						<tr>
-							<th><translate>Key</translate></th>
+							<th>
+								<translate translate-cocmment="Refers to a game's key group's key">
+									Key
+								</translate>
+							</th>
 							<th v-if="keyGroup.type === KeyGroup.TYPE_EMAIL">
 								<translate>Email</translate>
 							</th>
 							<th><translate>User</translate></th>
-							<th><translate>Claimed On</translate></th>
+							<th>
+								<translate translate-comment="Refers to claiming a game's key">
+									Claimed On
+								</translate>
+							</th>
 							<th><translate>Last Viewed On</translate></th>
 							<th />
 						</tr>

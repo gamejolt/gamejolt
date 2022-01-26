@@ -17,15 +17,15 @@ export default class AppGameCollectionThumbnail extends Vue {
 <template>
 	<div class="collection-thumbnail">
 		<span class="tag tag-highlight" v-if="!hideTag">
-			<translate v-if="collection.type === 'developer'">library.playlists.developer_tag</translate>
-			<translate v-else-if="collection.type === 'followed'">
-				Followed Games
+			<translate v-if="collection.type === 'developer'">Developer's Games</translate>
+			<translate v-else-if="collection.type === 'followed'"> Followed Games </translate>
+			<translate v-else-if="collection.type === 'playlist'"> Playlist </translate>
+			<translate v-else-if="collection.type === 'bundle'">
+				library.playlists.bundle_tag
 			</translate>
-			<translate v-else-if="collection.type === 'playlist'">
-				Playlist
+			<translate v-else-if="collection.type === 'tag'" translate-comment="The noun for a tag">
+				Tag
 			</translate>
-			<translate v-else-if="collection.type === 'bundle'">library.playlists.bundle_tag</translate>
-			<translate v-else-if="collection.type === 'tag'">library.playlists.tag_tag</translate>
 			<translate v-else-if="collection.type === 'owned'">Owned Games</translate>
 			<translate v-else-if="collection.type === 'recommended'">Daily Mix</translate>
 			<translate v-else-if="collection.type === 'jam'">Jam</translate>

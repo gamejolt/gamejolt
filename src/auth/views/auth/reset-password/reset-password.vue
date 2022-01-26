@@ -28,13 +28,13 @@ export default class RouteAuthResetPassword extends BaseRouteComponent {
 	}
 
 	get routeTitle() {
-		return this.$gettext('auth.reset_password.page_title');
+		return this.$gettext('Reset Password');
 	}
 
 	onSubmitted() {
 		showSuccessGrowl(
-			this.$gettext('auth.reset_password.success_growl'),
-			this.$gettext('auth.reset_password.success_growl_title')
+			this.$gettext('Your password has been reset. Now you can log in with your new one.'),
+			this.$gettext('Password Changed')
 		);
 		this.$router.push({ name: 'auth.login' });
 	}
@@ -44,7 +44,7 @@ export default class RouteAuthResetPassword extends BaseRouteComponent {
 <template>
 	<div>
 		<h2 class="section-header anim-fade-in-enlarge">
-			<translate>auth.reset_password.heading</translate>
+			<translate>Reset Password</translate>
 		</h2>
 
 		<form-reset-password :user-id="userId" :token="token" @submit="onSubmitted" />

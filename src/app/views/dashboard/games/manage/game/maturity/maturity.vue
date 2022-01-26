@@ -45,7 +45,7 @@ export default class RouteDashGamesManageGameMaturity extends BaseRouteComponent
 
 	onSaved() {
 		showSuccessGrowl(
-			this.$gettext(`dash.games.maturity.saved_growl`),
+			this.$gettext(`Your game's maturity information has been updated.`),
 			this.$gettext(`dash.games.maturity.saved_growl_title`)
 		);
 

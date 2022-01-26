@@ -166,7 +166,8 @@ function thumbSelected() {
 					:disabled="thumb.is_animated"
 				/>
 
-				<AppFormControlErrors :label="$gettext(`dash.games.thumbnail.crop_error_label`)" />
+				<!-- TODO(vue3) translate-comment="As in a crop of an image" -->
+				<AppFormControlErrors :label="$gettext(`crop`)" />
 			</div>
 			<div v-else>
 				<img :src="thumb.img_url" alt="" />

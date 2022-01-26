@@ -41,11 +41,7 @@ export default class FormChangePassword extends mixins(Wrapper) implements FormO
 
 <template>
 	<app-form :controller="form">
-		<app-form-group
-			v-if="requiresOld"
-			name="old_password"
-			:label="$gettext(`dash.change_pass.old_password_label`)"
-		>
+		<app-form-group v-if="requiresOld" name="old_password" :label="$gettext(`Old Password`)">
 			<app-form-control
 				type="password"
 				:validators="[validateMinLength(4), validateMaxLength(300)]"
@@ -55,12 +51,12 @@ export default class FormChangePassword extends mixins(Wrapper) implements FormO
 			<app-form-control-errors label="password">
 				<app-form-control-error
 					when="server"
-					:message="$gettext(`dash.change_pass.invalid_old_password_error`)"
+					:message="$gettext(`The password you entered is invalid.`)"
 				/>
 			</app-form-control-errors>
 		</app-form-group>
 
-		<app-form-group name="password" :label="$gettext(`dash.change_pass.password_label`)">
+		<app-form-group name="password" :label="$gettext(`New Password`)">
 			<app-form-control
 				type="password"
 				:validators="[validateMinLength(4), validateMaxLength(300)]"
@@ -70,10 +66,7 @@ export default class FormChangePassword extends mixins(Wrapper) implements FormO
 			<app-form-control-errors label="new password" />
 		</app-form-group>
 
-		<app-form-group
-			name="confirm_password"
-			:label="$gettext(`dash.change_pass.confirm_password_label`)"
-		>
+		<app-form-group name="confirm_password" :label="$gettext(`Confirm New Password`)">
 			<app-form-control
 				type="password"
 				:validators="[
@@ -87,13 +80,17 @@ export default class FormChangePassword extends mixins(Wrapper) implements FormO
 			<app-form-control-errors label="new password">
 				<app-form-control-error
 					when="match"
-					:message="$gettext(`dash.change_pass.no_match_error`)"
+					:message="
+						$gettext(
+							`The passwords you entered don't match. Try re-typing them and make sure they're identical.`
+						)
+					"
 				/>
 			</app-form-control-errors>
 		</app-form-group>
 
 		<app-form-button>
-			<translate>dash.change_pass.submit_button</translate>
+			<translate>Change Account Password</translate>
 		</app-form-button>
 	</app-form>
 </template>

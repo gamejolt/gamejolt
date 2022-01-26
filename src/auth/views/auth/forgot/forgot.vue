@@ -11,7 +11,7 @@ import FormRetrieveLogin from '../../../components/forms/retrieve-login/retrieve
 })
 export default class RouteAuthForgot extends BaseRouteComponent {
 	get routeTitle() {
-		return this.$gettext('auth.forgot.page_title');
+		return this.$gettext('Retrieve Login Credentials');
 	}
 
 	onSubmitted() {

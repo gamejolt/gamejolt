@@ -20,7 +20,7 @@ export default class RouteAuthJoin extends BaseRouteComponent {
 	readonly Connection = Connection;
 
 	get routeTitle() {
-		return this.$gettext('auth.join.page_title');
+		return this.$gettext('Join Game Jolt - The Largest Collection of Indie Games by People');
 	}
 }
 </script>

@@ -7,7 +7,7 @@ import { BaseRouteComponent } from '../../../../_common/route/route-component';
 })
 export default class RouteAuthForgotSent extends BaseRouteComponent {
 	get routeTitle() {
-		return this.$gettext('auth.forgot.sent.page_title');
+		return this.$gettext('Credentials Sent');
 	}
 }
 </script>
@@ -15,7 +15,7 @@ export default class RouteAuthForgotSent extends BaseRouteComponent {
 <template>
 	<div class="anim-fade-in-up">
 		<h2 class="section-header">
-			<translate>auth.forgot.sent.heading</translate>
+			<translate>Credentials Sent</translate>
 		</h2>
 
 		<p>
@@ -25,7 +25,10 @@ export default class RouteAuthForgotSent extends BaseRouteComponent {
 		</p>
 
 		<p class="small text-muted">
-			<translate>auth.forgot.sent.spam</translate>
+			<translate>
+				If you don't see our email within 10 minutes, please check your spam folder. It
+				might have been gobbled up!
+			</translate>
 		</p>
 	</div>
 </template>

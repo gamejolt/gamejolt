@@ -64,7 +64,7 @@ export default class RouteAuthLinkedAccountPoll extends BaseRouteComponent {
 		</template>
 		<template v-else>
 			<app-loading
-				:label="$gettext('auth.linked_account.loading_message')"
+				:label="$gettext('Processing. Please wait...')"
 				:centered="true"
 				:big="true"
 			/>

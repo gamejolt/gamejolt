@@ -37,7 +37,10 @@ export default class AppClientSystemReportModal extends mixins(BaseModal) {
 
 		<div class="modal-body">
 			<p class="text-muted small">
-				<translate>system_report.send.help</translate>
+				<translate>
+					This will send a system report to us with details about your device and client
+					log. We don't collect personal information through this.
+				</translate>
 			</p>
 
 			<p class="text-muted small" v-translate>

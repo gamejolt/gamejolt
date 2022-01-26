@@ -165,7 +165,11 @@ export default class FormGameDescription
 						icon="tag"
 						@before-submit="addAutotag('fnaf')"
 					>
-						<translate>dash.games.add.fnaf_autotag_accept</translate>
+						<translate
+							translate-comment="Used to accept an automatic tag suggestion for a game"
+						>
+							Okay
+						</translate>
 					</app-form-button>
 
 					<app-form-button
@@ -174,7 +178,7 @@ export default class FormGameDescription
 						trans
 						@before-submit="skipAutotag()"
 					>
-						<translate>dash.games.add.fnaf_autotag_reject</translate>
+						<translate>Don't Tag</translate>
 					</app-form-button>
 				</app-game-perms>
 			</div>

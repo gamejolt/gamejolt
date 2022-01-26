@@ -57,7 +57,7 @@ export default class FormGameScoreTable extends mixins(Wrapper) {
 			name="unique_scores"
 			:label="$gettext(`dash.games.scoreboard.form.unique_label`)"
 		>
-			<p class="help-block"><translate>dash.games.scoreboard.form.unique_help</translate></p>
+			<p class="help-block"><translate>Only show a user's best score?</translate></p>
 			<app-form-control-toggle />
 		</app-form-group>
 
@@ -68,7 +68,9 @@ export default class FormGameScoreTable extends mixins(Wrapper) {
 			<div class="radio">
 				<label>
 					<app-form-control-radio :value="GameScoreTable.SORTING_DIRECTION_DESC" />
-					<translate>dash.games.scoreboard.form.desc_label</translate>
+					<translate translate-comment="As in going from highest to lowest">
+						Descending
+					</translate>
 					<br />
 					<span class="help-inline">
 						<translate>dash.games.scoreboard.form.desc_help</translate>
@@ -78,7 +80,9 @@ export default class FormGameScoreTable extends mixins(Wrapper) {
 			<div class="radio">
 				<label>
 					<app-form-control-radio :value="GameScoreTable.SORTING_DIRECTION_ASC" />
-					<translate>dash.games.scoreboard.form.asc_label</translate>
+					<translate translate-comment="As in going from lowest to highest">
+						Ascending
+					</translate>
 					<br />
 					<span class="help-inline">
 						<translate>dash.games.scoreboard.form.asc_help</translate>

@@ -209,7 +209,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 				<li>
 					<span class="active">
 						<span class="breadcrumb-tag">
-							<translate>dash.games.releases.manage.breadcrumb_package</translate>
+							<translate translate-comment="The noun for package">Package</translate>
 						</span>
 						{{ package.title || game.title }}
 					</span>
@@ -398,7 +398,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 										v-if="!release.isScheduled"
 										v-app-tooltip="
 											$gettext(
-												`dash.games.packages.manage.releases.hidden_tooltip`
+												`This release is hidden and won't show up on your game page until published.`
 											)
 										"
 										class="tag"

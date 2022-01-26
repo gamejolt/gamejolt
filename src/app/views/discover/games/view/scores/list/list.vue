@@ -203,7 +203,7 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 								<translate>game.scores.no_scores_html</translate>
 							</template>
 							<template v-else-if="type === 'user'">
-								<translate>game.scores.no_user_scores_html</translate>
+								<translate>You don't have any scores here yet!</translate>
 							</template>
 						</div>
 					</div>

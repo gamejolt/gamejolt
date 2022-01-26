@@ -146,10 +146,9 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 						</p>
 
 						<app-game-perms required="all" tag="div" class="alert-actions">
+							<!-- TODO(vue3) translate-comment="Flavor text that shows up when you hover over the publish game button" -->
 							<app-button
-								v-app-tooltip="
-									$gettext(`dash.games.overview.todo_info_publish_button_tooltip`)
-								"
+								v-app-tooltip="$gettext(`Ohhhh, yeah!`)"
 								primary
 								block
 								@click="routeStore.publish()"

@@ -27,7 +27,7 @@ export default class RouteDashAccountChangePassword extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		this.routeStore.heading = $gettext(`dash.change_pass.page_title`);
+		this.routeStore.heading = $gettext(`Change Password`);
 	}
 
 	routeResolved($payload: any) {

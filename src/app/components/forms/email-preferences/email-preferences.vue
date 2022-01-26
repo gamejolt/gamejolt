@@ -216,7 +216,7 @@ export default class FormEmailPreferences extends mixins(Wrapper) implements For
 		<div class="row">
 			<div class="col-sm-8 col-sm-offset-4">
 				<app-form-button>
-					<translate>dash.email_prefs.submit_button</translate>
+					<translate>Save Preferences</translate>
 				</app-form-button>
 			</div>
 		</div>

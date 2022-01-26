@@ -155,7 +155,7 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 						}"
 					>
 						<span class="breadcrumb-tag">
-							<translate>dash.games.releases.manage.breadcrumb_package</translate>
+							<translate translate-comment="The noun for package">Package</translate>
 						</span>
 						{{ package.title || game.title }}
 					</router-link>
@@ -164,7 +164,7 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 				<li>
 					<span class="active">
 						<span class="breadcrumb-tag">
-							<translate>dash.games.releases.manage.breadcrumb_release</translate>
+							<translate translate-comment="The noun for release">Release</translate>
 						</span>
 						{{ release.version_number }}
 					</span>

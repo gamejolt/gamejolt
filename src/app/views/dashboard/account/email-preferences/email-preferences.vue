@@ -39,7 +39,7 @@ export default class RouteDashAccountEmailPreferences extends BaseRouteComponent
 	}
 
 	routeCreated() {
-		this.routeStore.heading = $gettext(`dash.email_prefs.page_title`);
+		this.routeStore.heading = $gettext(`Email Preferences`);
 	}
 
 	routeResolved($payload: any) {

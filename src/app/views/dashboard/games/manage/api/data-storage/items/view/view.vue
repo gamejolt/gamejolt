@@ -50,7 +50,8 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 
 	async remove() {
 		const result = await ModalConfirm.show(
-			this.$gettext('dash.games.data_store.items.remove_confirmation')
+			// TODO(vue3) translate-comment="This refers to game API data storage items specifically"
+			this.$gettext('Are you sure you want to remove this item?')
 		);
 
 		if (!result) {
@@ -70,7 +71,9 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 				<app-button sparse icon="remove" @click="remove" />
 			</div>
 
-			<translate>dash.games.data_store.items.view.heading</translate>
+			<translate translate-comment="Refers to game API data store items">
+				Item Details
+			</translate>
 		</h2>
 
 		<div class="table-responsive">
@@ -81,7 +84,9 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 				<tbody>
 					<tr>
 						<th>
-							<translate>dash.games.data_store.items.view.key_label</translate>
+							<translate translate-comment="This refers to game API key">
+								Key
+							</translate>
 						</th>
 						<td>
 							<code>{{ item.key }}</code>
@@ -89,7 +94,11 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 					</tr>
 					<tr>
 						<th>
-							<translate>dash.games.data_store.items.view.date_label</translate>
+							<translate
+								translate-comment="Refers to the date/time when a game API data store item was created"
+							>
+								Stored On
+							</translate>
 						</th>
 						<td>
 							{{ formatDate(item.posted_on, 'medium') }}
@@ -97,7 +106,11 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 					</tr>
 					<tr>
 						<th>
-							<translate>dash.games.data_store.items.view.data_label</translate>
+							<translate
+								translate-comment="Refers to the value of a game API data store item"
+							>
+								Item Data
+							</translate>
 						</th>
 						<td class="small">
 							<pre>{{ item.data }}</pre>

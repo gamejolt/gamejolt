@@ -49,7 +49,8 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 
 	async removeItem(item: GameDataStoreItem) {
 		const result = await ModalConfirm.show(
-			this.$gettext('dash.games.data_store.items.remove_confirmation')
+			// TODO(vue3) translate-comment="This refers to game API data storage items specifically"
+			this.$gettext('Are you sure you want to remove this item?')
 		);
 
 		if (!result) {
@@ -69,7 +70,9 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 <template>
 	<div>
 		<h2 class="section-header">
-			<translate>dash.games.data_store.items.heading</translate>
+			<translate translate-comment="Refers to game API data store">
+				Data Storage Items
+			</translate>
 		</h2>
 
 		<div class="page-help">
@@ -100,13 +103,25 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 				<thead>
 					<tr>
 						<th>
-							<translate>dash.games.data_store.items.key_label</translate>
+							<translate
+								translate-comment="Refers to the key name for a game API data store item"
+							>
+								Key
+							</translate>
 						</th>
 						<th>
-							<translate>dash.games.data_store.items.preview_label</translate>
+							<translate
+								translate-comment="Used when previewing a game API data store item value"
+							>
+								Data Preview
+							</translate>
 						</th>
 						<th>
-							<translate>dash.games.data_store.items.date_label</translate>
+							<translate
+								translate-comment="Refers to the date/time when a game API data store item was created"
+							>
+								Stored On
+							</translate>
 						</th>
 						<th />
 					</tr>
@@ -145,8 +160,10 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 												@click="removeItem(item)"
 											>
 												<app-jolticon icon="remove" notice />
-												<translate>
-													dash.games.data_store.items.remove_button
+												<translate
+													translate-comment="Used to remove a game API data store item"
+												>
+													Remove Item
 												</translate>
 											</a>
 										</div>

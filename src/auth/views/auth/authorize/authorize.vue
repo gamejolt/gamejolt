@@ -46,15 +46,15 @@ export default class RouteAuthAuthorize extends BaseRouteComponent {
 	<div class="anim-fade-in-up" v-else>
 		<template v-if="isSuccess">
 			<h2 class="section-header">
-				<translate>auth.authorize.success_growl_title</translate>
+				<translate>Account Authorized</translate>
 			</h2>
 			<div>
-				<translate>auth.authorize.success_growl</translate>
+				<translate>We're redirecting you to your Game Jolt dashboard now.</translate>
 			</div>
 		</template>
 		<template v-else>
 			<h2 class="section-header">
-				<translate>auth.authorize.invalid.heading</translate>
+				<translate>Invalid Authorization</translate>
 			</h2>
 			<div>
 				<p><translate>Your authorization code is invalid.</translate></p>

@@ -19,7 +19,7 @@ import { startWizard } from '../manage/manage.store';
 })
 export default class RouteDashGamesAdd extends BaseRouteComponent {
 	get routeTitle() {
-		return this.$gettext('dash.games.add.page_title');
+		return this.$gettext('Add Game');
 	}
 
 	onSubmit(game: Game) {
@@ -39,7 +39,7 @@ export default class RouteDashGamesAdd extends BaseRouteComponent {
 			<div class="row">
 				<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 					<h1 class="section-header">
-						<translate>dash.games.add.heading</translate>
+						<translate>Add a Game</translate>
 					</h1>
 
 					<form-game @submit="onSubmit" />

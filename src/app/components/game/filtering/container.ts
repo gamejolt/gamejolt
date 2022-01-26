@@ -65,7 +65,8 @@ export class GameFilteringContainer {
 					windows: $gettext('games.filtering.os_windows'),
 					mac: $gettext('games.filtering.os_mac'),
 					linux: $gettext('games.filtering.os_linux'),
-					other: $gettext('games.filtering.os_other'),
+					// TODO(vue3) translate-comment="As in other than the rest of the things specified"
+					other: $gettext('Other'),
 					rom: $gettext('ROM'),
 				},
 			},
@@ -88,7 +89,8 @@ export class GameFilteringContainer {
 				},
 			},
 			status: {
-				label: $gettext('games.filtering.status'),
+				// TODO(vue3) translate-comment="As in game development status/stage"
+				label: $gettext('Status'),
 				type: 'array',
 				options: {
 					complete: $gettext('Complete/Stable'),

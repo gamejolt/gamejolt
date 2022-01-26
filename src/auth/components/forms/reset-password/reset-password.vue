@@ -36,20 +36,18 @@ export default class FormResetPassword extends mixins(Wrapper) implements FormOn
 <template>
 	<app-form :controller="form">
 		<fieldset :disabled="Connection.isClientOffline">
-			<app-form-group
-				name="password"
-				:label="$gettext('auth.reset_password.password_label')"
-				:hide-label="true"
-			>
+			<app-form-group name="password" :label="$gettext('New Password')" :hide-label="true">
 				<p class="help-block">
-					<translate>auth.reset_password.password_help</translate>
+					<translate>
+						If you'd like to reset your password, enter a new one below.
+					</translate>
 				</p>
 
 				<app-form-control
 					type="password"
 					:validators="[validateMinLength(4), validateMaxLength(300)]"
 					validate-on-blur
-					:placeholder="$gettext('auth.reset_password.password_label')"
+					:placeholder="$gettext('New Password')"
 				/>
 
 				<app-form-control-errors />
@@ -58,7 +56,7 @@ export default class FormResetPassword extends mixins(Wrapper) implements FormOn
 			<br />
 
 			<app-form-button block>
-				<translate>auth.reset_password.submit_button</translate>
+				<translate>Reset Password</translate>
 			</app-form-button>
 		</fieldset>
 	</app-form>

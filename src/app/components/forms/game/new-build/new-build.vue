@@ -141,7 +141,7 @@ export default class FormGameNewBuild extends mixins(Wrapper) implements FormOnL
 				@changed="submit"
 			/>
 
-			<app-form-control-errors :label="$gettext(`dash.games.builds.form.file_error_label`)" />
+			<app-form-control-errors :label="$gettext(`file`)" />
 
 			<app-expand :when="hasBrowserTypeError">
 				<br />

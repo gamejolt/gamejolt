@@ -157,18 +157,12 @@ export default class AppScoreOverview extends Vue {
 
 						<div
 							:key="scoreTable?.id"
-							class="
-								col-xs-12 col-sm-9
-								anim-fade-in-right
-								no-animate-leave no-animate-xs
-							"
+							class="col-xs-12 col-sm-9 anim-fade-in-right no-animate-leave no-animate-xs"
 						>
 							<div v-if="!userBestScore" class="alert full-bleed-xs">
 								<p>
 									<strong>
-										<translate>
-											scores.overview.user_best_none_heading
-										</translate>
+										<translate>You Haven't Scored Yet!</translate>
 									</strong>
 								</p>
 								<p>
@@ -199,7 +193,11 @@ export default class AppScoreOverview extends Vue {
 									<app-jolticon icon="exp" class="text-muted middle" />
 									{{ formatNumber(userScoreExperience || 0) }}
 									<span class="initialism">
-										<translate>leveling.exp</translate>
+										<translate
+											translate-comment="As in abbreviation for experience. If one doesnt exist for your language, or if its not a short word just leave it as EXP."
+										>
+											EXP
+										</translate>
 									</span>
 								</div>
 							</div>

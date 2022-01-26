@@ -19,7 +19,7 @@ export default class RouteJoinAlmost extends BaseRouteComponent {
 	password: string | null = null;
 
 	get routeTitle() {
-		return this.$gettext('auth.join.almost.page_title');
+		return this.$gettext('Almost there!');
 	}
 
 	get isGamejoltSignup() {
@@ -76,7 +76,8 @@ export default class RouteJoinAlmost extends BaseRouteComponent {
 
 		<p>
 			<translate>
-				Before you can log in to Game Jolt, you need to verify the email address on your account.
+				Before you can log in to Game Jolt, you need to verify the email address on your
+				account.
 			</translate>
 		</p>
 		<p>
@@ -85,10 +86,16 @@ export default class RouteJoinAlmost extends BaseRouteComponent {
 			</translate>
 		</p>
 		<p class="small text-muted">
-			<translate>auth.join.almost.spam</translate>
+			<translate>
+				If you don't see an email within 10 minutes, please check your spam folder. It might
+				have gobbled it up.
+			</translate>
 		</p>
 		<p class="small text-muted">
-			<translate>auth.join.almost.urgency</translate>
+			<translate>
+				Note that you have a week to authorize your account. After that, it will be deleted
+				and you'll have to sign up again.
+			</translate>
 		</p>
 
 		<!--

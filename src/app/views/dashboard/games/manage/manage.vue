@@ -249,7 +249,11 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 							</router-link>
 						</li>
 						<app-game-perms
-							v-app-tooltip.bottom="$gettext(`dash.games.api_tooltip`)"
+							v-app-tooltip.bottom="
+								$gettext(
+									`Manage your game's API integration (trophies, scoreboards, data storage, etc.)`
+								)
+							"
 							required="game-api"
 							tag="li"
 						>
@@ -259,7 +263,7 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 									active: $route.name.indexOf('dash.games.manage.api') === 0,
 								}"
 							>
-								<translate>dash.games.api_tab</translate>
+								<translate>Game API</translate>
 							</router-link>
 						</app-game-perms>
 						<app-game-perms

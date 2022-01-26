@@ -38,14 +38,23 @@ export default class FormWithdrawFunds extends mixins(Wrapper) implements FormOn
 
 <template>
 	<app-form :controller="form">
-		<div class="alert"><translate>dash.funds.withdraw.form_help_html</translate></div>
+		<div class="alert">
+			<translate>
+				Make sure that the information you enter below is correct. You will not get a chance
+				to change it after you submit.
+			</translate>
+		</div>
 
 		<app-form-group
 			v-if="!user.paypal_id"
 			name="email_address"
-			:label="$gettext(`dash.funds.withdraw.email_label`)"
+			:label="$gettext(`PayPal Email Address`)"
 		>
-			<p class="help-block above"><translate>dash.funds.withdraw.email_help</translate></p>
+			<p class="help-block above">
+				<translate>
+					This must be a valid email address attached to a PayPal account.
+				</translate>
+			</p>
 			<app-form-control type="email" />
 			<app-form-control-errors />
 		</app-form-group>
@@ -64,7 +73,7 @@ export default class FormWithdrawFunds extends mixins(Wrapper) implements FormOn
 			</p>
 		</div>
 
-		<app-form-group name="amount" :label="$gettext(`dash.funds.withdraw.amount_label`)">
+		<app-form-group name="amount" :label="$gettext(`Amount to Withdraw`)">
 			<p class="help-block above">
 				<translate :translate-params="{ amount: formatCurrency(minAmount * 100) }">
 					The minimum amount you can withdraw at this time is %{ amount }.
@@ -85,7 +94,7 @@ export default class FormWithdrawFunds extends mixins(Wrapper) implements FormOn
 		</app-form-group>
 
 		<app-form-button>
-			<translate>dash.funds.withdraw.submit_button</translate>
+			<translate>Send Withdrawal Request</translate>
 		</app-form-button>
 	</app-form>
 </template>

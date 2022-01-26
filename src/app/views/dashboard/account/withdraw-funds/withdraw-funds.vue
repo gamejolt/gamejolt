@@ -53,7 +53,7 @@ export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		this.routeStore.heading = $gettext(`dash.funds.withdraw.page_title`);
+		this.routeStore.heading = $gettext(`Withdraw Revenue`);
 	}
 
 	routeResolved($payload: any) {
@@ -71,8 +71,10 @@ export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
 
 	onSubmit() {
 		showSuccessGrowl(
-			this.$gettext('dash.funds.withdraw.success_growl'),
-			this.$gettext('dash.funds.withdraw.success_growl_title')
+			this.$gettext(
+				`Your request has been sent and will be processed within 3 days. At the time it's processed, your balance will be updated to reflect the changes.`
+			),
+			this.$gettext('Request Sent')
 		);
 
 		this.$router.push({ name: 'home' });
@@ -194,7 +196,22 @@ export default class RouteDashAccountWithdrawFunds extends BaseRouteComponent {
 				</p>
 			</div>
 
-			<div v-translate>dash.funds.withdraw.page_help_html</div>
+			<div>
+				<p>
+					<translate>
+						Please allow 3 days for withdrawals to be processed. At this time all
+						withdrawals are processed through PayPal:
+					</translate>
+					{{ ' ' }}
+					<a href="https://www.paypal.com" target="_blank">https://www.paypal.com</a>.
+				</p>
+
+				<p v-translate>
+					If you don't have a PayPal account, you will not be able to withdraw any money.
+					Please be sure to sign up with a PayPal account <em>before</em> trying to
+					withdraw funds.
+				</p>
+			</div>
 
 			<form-withdraw-funds
 				:user="user"

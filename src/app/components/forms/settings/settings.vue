@@ -202,7 +202,7 @@ export default class FormSettings extends mixins(Wrapper) {
 			<app-form-group
 				v-if="formModel.max_download_count !== -1"
 				name="max_download_count"
-				:label="$gettext('settings.max_download_count_label')"
+				:label="$gettext('Max # of Simultaneous Downloads')"
 				:hide-label="true"
 			>
 				<app-form-control type="number" :validators="[validateMinValue(1)]" />
@@ -227,7 +227,7 @@ export default class FormSettings extends mixins(Wrapper) {
 			<app-form-group
 				v-if="formModel.max_extract_count !== -1"
 				name="max_extract_count"
-				:label="$gettext('settings.max_extract_count_label')"
+				:label="$gettext('Max # of Simultaneous Extractions')"
 				:hide-label="true"
 			>
 				<app-form-control type="number" :validators="[validateMinValue(1)]" />
@@ -243,7 +243,9 @@ export default class FormSettings extends mixins(Wrapper) {
 			>
 				<app-form-control-toggle class="pull-right" />
 				<p class="help-block">
-					<translate>settings.queue_when_playing_help</translate>
+					<translate>
+						Should we pause all game installs and updates when you're playing a game?
+					</translate>
 				</p>
 			</app-form-group>
 

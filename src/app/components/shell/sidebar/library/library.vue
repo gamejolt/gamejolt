@@ -329,7 +329,16 @@ export default class AppShellSidebarLibrary extends Vue {
 					/>
 				</div>
 				<div v-else class="-no-playlists alert">
-					<div v-translate>library.nav.no_playlists_html</div>
+					<p>
+						<translate>
+							Create playlists to organize and share the games in your library.
+						</translate>
+					</p>
+					<p>
+						<translate>
+							Follow other people's playlists to discover more games!
+						</translate>
+					</p>
 				</div>
 
 				<!-- Playlist Folders -->

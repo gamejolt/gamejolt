@@ -38,8 +38,8 @@ export default class RouteAuthLinkedAccountTwitterCallback extends BaseRouteComp
 			} else {
 				showErrorGrowl({
 					sticky: true,
-					title: this.$gettext('auth.linked_account.twitter.failed_growl_title'),
-					message: this.$gettext('auth.linked_account.twitter.failed_growl'),
+					title: this.$gettext('Login Failed'),
+					message: this.$gettext('Unable to log in with Twitter.'),
 				});
 			}
 			this.$router.push({ name: 'auth.join' });

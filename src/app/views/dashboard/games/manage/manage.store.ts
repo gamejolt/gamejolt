@@ -165,7 +165,9 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 
 	async function publish() {
 		const result = await ModalConfirm.show(
-			$gettext('dash.games.overview.publish_confirmation')
+			$gettext(
+				`Publishing your game makes it visible on the site, so make sure your game page is lookin' good!`
+			)
 		);
 		if (!result) {
 			return;
@@ -174,7 +176,9 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 		await game.value!.$setStatus(Game.STATUS_VISIBLE);
 
 		showSuccessGrowl(
-			$gettext('dash.games.overview.published_growl'),
+			$gettext(
+				`You've published your game to the site! Huzzah! Remember to spread the word...`
+			),
 			$gettext('dash.games.overview.published_growl_title')
 		);
 

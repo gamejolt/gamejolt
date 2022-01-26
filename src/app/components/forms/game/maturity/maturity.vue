@@ -44,15 +44,18 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 			label: $gettext('dash.games.maturity.none_option'),
 		},
 		{
-			label: $gettext('dash.games.maturity.mild_option'),
+			// TODO(vue3) translate-comment="Used as a quantity/tendency"
+			label: $gettext('Mild'),
 			description: $gettext('dash.games.maturity.cartoon_violence_1_description'),
 		},
 		{
-			label: $gettext('dash.games.maturity.moderate_option'),
+			// TODO(vue3) translate-comment="Used as a quantity/tendency"
+			label: $gettext('Moderate'),
 			description: $gettext('dash.games.maturity.cartoon_violence_2_description'),
 		},
 		{
-			label: $gettext('dash.games.maturity.intense_option'),
+			// TODO(vue3) translate-comment="Used as a quantity/tendency"
+			label: $gettext('Intense'),
 			description: $gettext('dash.games.maturity.cartoon_violence_3_description'),
 		},
 	];
@@ -62,15 +65,18 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 			label: $gettext('dash.games.maturity.none_option'),
 		},
 		{
-			label: $gettext('dash.games.maturity.mild_option'),
+			// TODO(vue3) translate-comment="Used as a quantity/tendency"
+			label: $gettext('Mild'),
 			description: $gettext('dash.games.maturity.fantasy_violence_1_description'),
 		},
 		{
-			label: $gettext('dash.games.maturity.moderate_option'),
+			// TODO(vue3) translate-comment="Used as a quantity/tendency"
+			label: $gettext('Moderate'),
 			description: $gettext('dash.games.maturity.fantasy_violence_2_description'),
 		},
 		{
-			label: $gettext('dash.games.maturity.intense_option'),
+			// TODO(vue3) translate-comment="Used as a quantity/tendency"
+			label: $gettext('Intense'),
 			description: $gettext('dash.games.maturity.fantasy_violence_3_description'),
 		},
 	];
@@ -80,15 +86,18 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 			label: $gettext('dash.games.maturity.none_option'),
 		},
 		{
-			label: $gettext('dash.games.maturity.mild_option'),
+			// TODO(vue3) translate-comment="Used as a quantity/tendency"
+			label: $gettext('Mild'),
 			description: $gettext('dash.games.maturity.realistic_violence_1_description'),
 		},
 		{
-			label: $gettext('dash.games.maturity.moderate_option'),
+			// TODO(vue3) translate-comment="Used as a quantity/tendency"
+			label: $gettext('Moderate'),
 			description: $gettext('dash.games.maturity.realistic_violence_2_description'),
 		},
 		{
-			label: $gettext('dash.games.maturity.intense_option'),
+			// TODO(vue3) translate-comment="Used as a quantity/tendency"
+			label: $gettext('Intense'),
 			description: $gettext('dash.games.maturity.realistic_violence_3_description'),
 		},
 	];
@@ -98,15 +107,18 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 			label: $gettext('dash.games.maturity.none_option'),
 		},
 		{
-			label: $gettext('dash.games.maturity.mild_option'),
+			// TODO(vue3) translate-comment="Used as a quantity/tendency"
+			label: $gettext('Mild'),
 			description: $gettext('dash.games.maturity.bloodshed_1_description'),
 		},
 		{
-			label: $gettext('dash.games.maturity.moderate_option'),
+			// TODO(vue3) translate-comment="Used as a quantity/tendency"
+			label: $gettext('Moderate'),
 			description: $gettext('dash.games.maturity.bloodshed_2_description'),
 		},
 		{
-			label: $gettext('dash.games.maturity.intense_option'),
+			// TODO(vue3) translate-comment="Used as a quantity/tendency"
+			label: $gettext('Intense'),
 			description: $gettext('dash.games.maturity.bloodshed_3_description'),
 		},
 	];
@@ -126,11 +138,13 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 			label: $gettext('dash.games.maturity.none_option'),
 		},
 		{
-			label: $gettext('dash.games.maturity.reference_option'),
+			// TODO(vue3) translate-comment="As in has a reference to this topic"
+			label: $gettext('Reference'),
 			description: $gettext('dash.games.maturity.alcohol_1_description'),
 		},
 		{
-			label: $gettext('dash.games.maturity.use_option'),
+			// TODO(vue3) translate-comment="As in the usage / consumption of something"
+			label: $gettext('Use'),
 			description: $gettext('dash.games.maturity.alcohol_2_description'),
 		},
 	];
@@ -140,11 +154,13 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 			label: $gettext('dash.games.maturity.none_option'),
 		},
 		{
-			label: $gettext('dash.games.maturity.reference_option'),
+			// TODO(vue3) translate-comment="As in has a reference to this topic"
+			label: $gettext('Reference'),
 			description: $gettext('dash.games.maturity.drugs_1_description'),
 		},
 		{
-			label: $gettext('dash.games.maturity.use_option'),
+			// TODO(vue3) translate-comment="As in the usage / consumption of something"
+			label: $gettext('Use'),
 			description: $gettext('dash.games.maturity.drugs_2_description'),
 		},
 	];
@@ -154,11 +170,13 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 			label: $gettext('dash.games.maturity.none_option'),
 		},
 		{
-			label: $gettext('dash.games.maturity.reference_option'),
+			// TODO(vue3) translate-comment="As in has a reference to this topic"
+			label: $gettext('Reference'),
 			description: $gettext('dash.games.maturity.tobacco_1_description'),
 		},
 		{
-			label: $gettext('dash.games.maturity.use_option'),
+			// TODO(vue3) translate-comment="As in the usage / consumption of something"
+			label: $gettext('Use'),
 			description: $gettext('dash.games.maturity.tobacco_2_description'),
 		},
 	];
@@ -186,11 +204,13 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 			description: $gettext('dash.games.maturity.sexual_themes_1_description'),
 		},
 		{
-			label: $gettext('dash.games.maturity.moderate_option'),
+			// TODO(vue3) translate-comment="Used as a quantity/tendency"
+			label: $gettext('Moderate'),
 			description: $gettext('dash.games.maturity.sexual_themes_2_description'),
 		},
 		{
-			label: $gettext('dash.games.maturity.graphic_option'),
+			// TODO(vue3) translate-comment="As in graphic content"
+			label: $gettext('Graphic'),
 			description: $gettext('dash.games.maturity.sexual_themes_3_description'),
 		},
 	];
@@ -200,15 +220,18 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 			label: $gettext('dash.games.maturity.none_option'),
 		},
 		{
-			label: $gettext('dash.games.maturity.mild_option'),
+			// TODO(vue3) translate-comment="Used as a quantity/tendency"
+			label: $gettext('Mild'),
 			description: $gettext('dash.games.maturity.language_1_description'),
 		},
 		{
-			label: $gettext('dash.games.maturity.moderate_option'),
+			// TODO(vue3) translate-comment="Used as a quantity/tendency"
+			label: $gettext('Moderate'),
 			description: $gettext('dash.games.maturity.language_2_description'),
 		},
 		{
-			label: $gettext('dash.games.maturity.strong_option'),
+			// TODO(vue3) translate-comment="Used as a quantity/tendency"
+			label: $gettext('Strong'),
 			description: $gettext('dash.games.maturity.language_3_description'),
 		},
 	];
@@ -222,11 +245,13 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 			description: $gettext('dash.games.maturity.humor_1_description'),
 		},
 		{
-			label: $gettext('dash.games.maturity.moderate_option'),
+			// TODO(vue3) translate-comment="Used as a quantity/tendency"
+			label: $gettext('Moderate'),
 			description: $gettext('dash.games.maturity.humor_2_description'),
 		},
 		{
-			label: $gettext('dash.games.maturity.strong_option'),
+			// TODO(vue3) translate-comment="Used as a quantity/tendency"
+			label: $gettext('Strong'),
 			description: $gettext('dash.games.maturity.humor_3_description'),
 		},
 	];
@@ -237,7 +262,7 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 		},
 		{
 			label: $gettext('dash.games.maturity.simulated_option'),
-			description: $gettext('dash.games.maturity.gambling_1_description'),
+			description: $gettext('Players can gamble using "play" money.'),
 		},
 		{
 			label: $gettext('dash.games.maturity.real_gambling_option'),
@@ -277,7 +302,10 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 	<app-form :controller="form" @changed="emitChanged($event)">
 		<app-form-group name="tigrs_age" :label="$gettext(`dash.games.maturity.age_label`)">
 			<p v-if="model._is_wip" class="help-block">
-				<translate>dash.games.maturity.wip_help</translate>
+				<translate>
+					If you don't know what the final content of your game will be, give an educated
+					guess. You can make changes later.
+				</translate>
 			</p>
 
 			<!-- skip the first element, it's a placeholder for unrated maturity that shouldn't be selectable -->

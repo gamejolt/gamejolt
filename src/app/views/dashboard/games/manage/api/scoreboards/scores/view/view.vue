@@ -115,7 +115,9 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 					</tr>
 					<tr>
 						<th>
-							<translate>dash.games.scores.view.table_label</translate>
+							<translate translate-comment="Refers to game scoreboard table">
+								Table
+							</translate>
 						</th>
 						<td>
 							<router-link
@@ -155,7 +157,11 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 						<td>
 							<pre v-if="score.extra_data" class="small">{{ score.extra_data }}</pre>
 							<span v-else class="small text-muted">
-								<translate>dash.games.scores.view.data_none_help</translate>
+								<translate>
+									No extra data for this score. You can use the extra data field
+									to store information to help you weed out cheaters and validate
+									scores. It's never shown to users.
+								</translate>
 							</span>
 						</td>
 					</tr>

@@ -11,5 +11,5 @@ export default class AuthLinkedAccountProcessing extends Vue {}
 </script>
 
 <template>
-	<app-loading :label="$gettext('auth.linked_account.loading_message')" centered big />
+	<app-loading :label="$gettext('Processing. Please wait...')" centered big />
 </template>

@@ -122,14 +122,14 @@ export default class RouteAuth extends BaseRouteComponent {
 					:href="Environment.baseUrl + '/terms'"
 					target="_blank"
 				>
-					<translate>auth.legal.terms</translate>
+					<translate>Terms</translate>
 				</a>
 				<a
 					class="link-unstyled anim-fade-in stagger"
 					:href="Environment.baseUrl + '/privacy'"
 					target="_blank"
 				>
-					<translate>auth.legal.privacy</translate>
+					<translate>Privacy</translate>
 				</a>
 				<a
 					v-if="!GJ_IS_DESKTOP_APP"

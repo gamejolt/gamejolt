@@ -36,7 +36,7 @@ export default class RouteAuthLogin extends BaseRouteComponent {
 	redirect = '';
 
 	get routeTitle() {
-		return this.$gettext('auth.login.page_title');
+		return this.$gettext('Log in to Game Jolt');
 	}
 
 	routeCreated() {

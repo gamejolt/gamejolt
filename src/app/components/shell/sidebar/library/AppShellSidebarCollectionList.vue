@@ -87,7 +87,9 @@ function filterComparator(item: GameCollection) {
 					{{ collection.name }}
 
 					<small v-if="collection.owner && collection.from_subscription">
-						<AppTranslate>library.by</AppTranslate>
+						<AppTranslate translate-comment="As in made by: / the author is:">
+							by
+						</AppTranslate>
 						@{{ collection.owner.username }}
 					</small>
 				</span>

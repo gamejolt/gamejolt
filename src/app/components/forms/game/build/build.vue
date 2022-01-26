@@ -194,7 +194,8 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 			},
 			{
 				key: 'other',
-				label: this.$gettext('dash.games.builds.form.other_tag'),
+				// TODO(vue3) translate-comment="As in other than the rest of the things specified"
+				label: this.$gettext('Other'),
 				icon: 'other-os',
 			},
 		];
@@ -813,9 +814,10 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 
 								<div class="row">
 									<div class="col-sm-6">
+										<!-- TODO(vue3) translate-comment="Width of the browser game canvas" -->
 										<app-form-group
 											name="embed_width"
-											:label="$gettext(`dash.games.builds.form.width_label`)"
+											:label="$gettext(`Width`)"
 										>
 											<app-form-control
 												class="input-sm"
@@ -826,9 +828,10 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 										</app-form-group>
 									</div>
 									<div class="col-sm-6">
+										<!-- TODO(vue3) translate-comment="Height of the browser game canvas" -->
 										<app-form-group
 											name="embed_height"
-											:label="$gettext(`dash.games.builds.form.height_label`)"
+											:label="$gettext(`Height`)"
 										>
 											<app-form-control
 												class="input-sm"

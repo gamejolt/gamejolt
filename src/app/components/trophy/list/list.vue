@@ -67,7 +67,12 @@ export default class AppTrophyList extends Vue {
 					>
 						<app-jolticon icon="exp" class="middle" />
 						{{ formatNumber(trophy.experience) }}
-						<translate class="small">leveling.exp</translate>
+						<translate
+							class="small"
+							translate-comment="As in abbreviation for experience. If one doesnt exist for your language, or if its not a short word just leave it as EXP."
+						>
+							EXP
+						</translate>
 					</span>
 
 					<template v-if="achievedIndexed[trophy.id]">

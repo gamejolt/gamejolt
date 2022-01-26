@@ -45,7 +45,7 @@ export default class AppManageGameListScores extends Vue {
 			<thead>
 				<tr>
 					<th v-if="!isForUser">
-						<translate>dash.games.scores.list.rank_label</translate>
+						<translate translate-comment="As in placement">Rank</translate>
 					</th>
 					<th>
 						<translate>Score</translate>

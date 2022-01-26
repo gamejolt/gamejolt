@@ -116,7 +116,11 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 										:class="{ active: currentFilter === 'achieved' }"
 										@click="currentFilter = 'achieved'"
 									>
-										<translate>game.trophies.achieved_tab</translate>
+										<translate
+											translate-comment="As in trophies that are achieved"
+										>
+											Achieved
+										</translate>
 										<span class="badge hidden-xs">
 											{{ formatNumber(filteredTrophies.achieved.length) }}
 										</span>
@@ -137,7 +141,10 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 						</app-nav-tab-list>
 
 						<div v-if="showInvisibleTrophyMessage" class="alert alert-notice">
-							<translate>trophies.invisible_trophies_message</translate>
+							<translate>
+								Some trophies may be invisible to players. You're seeing them
+								because you're the developer.
+							</translate>
 						</div>
 
 						<app-trophy-list
