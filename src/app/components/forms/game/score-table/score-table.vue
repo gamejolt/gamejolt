@@ -30,7 +30,7 @@ export default class FormGameScoreTable extends mixins(Wrapper) {
 </script>
 
 <template>
-	<AppFormGroup :controller="form">
+	<AppForm :controller="form">
 		<AppFormGroup name="name" :label="$gettext(`dash.games.scoreboard.form.name_label`)">
 			<AppFormControl type="text" :validators="[validateMaxLength(50)]" />
 			<AppFormControlErrors />
@@ -49,7 +49,9 @@ export default class FormGameScoreTable extends mixins(Wrapper) {
 			name="allow_guest_scores"
 			:label="$gettext(`dash.games.scoreboard.form.guest_label`)"
 		>
-			<p class="help-block"><AppTranslate>dash.games.scoreboard.form.guest_help</AppTranslate></p>
+			<p class="help-block">
+				<AppTranslate>dash.games.scoreboard.form.guest_help</AppTranslate>
+			</p>
 			<AppFormControlToggle />
 		</AppFormGroup>
 
