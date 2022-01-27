@@ -6,7 +6,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/rou
 const paths = import.meta.glob('../../../../lib/doc-game-api/v1.x/**/*.md');
 
 @Options({
-	name: 'RouteLandingGameApiDoc',
+	name: 'RouteLandingGameApiDocContent',
 })
 @RouteResolver({
 	async resolver({ route }) {
