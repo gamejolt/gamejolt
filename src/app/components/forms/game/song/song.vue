@@ -28,9 +28,9 @@ export default class FormGameSong extends mixins(Wrapper) implements FormOnLoad 
 
 	get fileLabel() {
 		if (this.method === 'add') {
-			return this.$gettext('dash.games.music.form.add_file_label');
+			return this.$gettext('Song File');
 		} else {
-			return this.$gettext('dash.games.music.form.change_file_label');
+			return this.$gettext('Change Song File');
 		}
 	}
 
@@ -50,7 +50,7 @@ export default class FormGameSong extends mixins(Wrapper) implements FormOnLoad 
 
 <template>
 	<AppForm :controller="form">
-		<AppFormGroup name="title" :label="$gettext(`dash.games.music.form.title_label`)">
+		<AppFormGroup name="title" :label="$gettext(`Song Title`)">
 			<AppFormControl type="text" :validators="[validateMaxLength(150)]" />
 			<AppFormControlErrors />
 		</AppFormGroup>
@@ -69,11 +69,11 @@ export default class FormGameSong extends mixins(Wrapper) implements FormOnLoad 
 
 			<AppFormControlUpload :validators="[validateFilesize(maxFilesize)]" accept=".mp3" />
 
-			<AppFormControlErrors :label="$gettext(`dash.games.music.form.file_error_label`)" />
+			<AppFormControlErrors :label="$gettext(`song`)" />
 		</AppFormGroup>
 
 		<AppFormButton>
-			<AppTranslate>dash.games.music.form.submit_button</AppTranslate>
+			<AppTranslate>Save Song</AppTranslate>
 		</AppFormButton>
 	</AppForm>
 </template>

@@ -80,7 +80,7 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 
 	async removeSong(song: GameSong) {
 		const result = await ModalConfirm.show(
-			this.$gettext('dash.games.music.remove_confirmation')
+			this.$gettext('Are you sure you want to remove this song?')
 		);
 
 		if (!result) {
@@ -150,7 +150,7 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 					</AppCardListDraggable>
 
 					<AppCardListAdd
-						:label="$gettext('dash.games.music.add_button')"
+						:label="$gettext('Add Song')"
 						@toggle="isAdding = !isAdding"
 					>
 						<FormGameSong :game="game" @submit="onSongAdded" />

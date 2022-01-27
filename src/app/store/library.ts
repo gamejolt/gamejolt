@@ -262,7 +262,7 @@ export async function libraryRemoveGameFromPlaylist(
 
 	if (options.shouldConfirm) {
 		const result = await ModalConfirm.show(
-			$gettext('library.playlists.remove_game_confirmation')
+			$gettext('Are you sure you want to remove this game from the playlist?')
 		);
 
 		if (!result) {

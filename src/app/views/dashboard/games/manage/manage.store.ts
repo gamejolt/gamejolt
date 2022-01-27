@@ -179,7 +179,7 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 			$gettext(
 				`You've published your game to the site! Huzzah! Remember to spread the word...`
 			),
-			$gettext('dash.games.overview.published_growl_title')
+			$gettext('Game Published')
 		);
 
 		finishWizard();
@@ -240,7 +240,7 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 	}
 
 	async function removeGame() {
-		const result = await ModalConfirm.show($gettext('dash.games.remove_confirmation'));
+		const result = await ModalConfirm.show($gettext('Are you sure you want to permanently remove your game?'));
 
 		if (!result) {
 			return;
@@ -249,8 +249,8 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 		await game.value!.$remove();
 
 		showInfoGrowl(
-			$gettext('dash.games.removed_growl'),
-			$gettext('dash.games.removed_growl_title')
+			$gettext('Your game has been removed from the site. Maybe a phoenix will rise in its place one day.'),
+			$gettext('Game Removed')
 		);
 
 		router.push({ name: 'home' });

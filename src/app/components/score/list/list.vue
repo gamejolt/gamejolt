@@ -59,7 +59,7 @@ export default class AppScoreList extends Vue {
 						{{ score.guest }}
 						<em class="text-muted small">
 							(
-							<AppTranslate>scores.guest</AppTranslate>
+							<AppTranslate>guest</AppTranslate>
 							)
 						</em>
 					</template>

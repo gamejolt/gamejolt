@@ -29,7 +29,7 @@ export default class AppBroadcastCard extends Vue {
 
 		<!-- <div class="text-right small">
 		<a class="link-muted" :href="Environment.firesideBaseUrl + `/tag/gjbroadcast`" target="_blank" v-app-track-event="`dash:overview:broadcast-all`">
-			<AppTranslate>dash.overview.broadcast_view_all</AppTranslate>
+			<AppTranslate>View All Changelog Broadcasts</AppTranslate>
 		</a>
 	</div> -->
 	</div>

@@ -13,8 +13,8 @@ import FormClientSystemReport from './system-report-form.vue';
 export default class AppClientSystemReportModal extends mixins(BaseModal) {
 	onSubmit() {
 		showSuccessGrowl(
-			Translate.$gettext('system_report.sent_growl'),
-			Translate.$gettext('system_report.sent_growl_title')
+			Translate.$gettext('Your system report has been sent.'),
+			Translate.$gettext('Report Sent')
 		);
 		this.modal.dismiss();
 	}
@@ -31,7 +31,7 @@ export default class AppClientSystemReportModal extends mixins(BaseModal) {
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<AppTranslate>system_report.send.heading</AppTranslate>
+				<AppTranslate>Send System Report</AppTranslate>
 			</h2>
 		</div>
 

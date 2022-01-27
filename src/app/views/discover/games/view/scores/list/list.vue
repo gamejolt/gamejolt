@@ -153,7 +153,7 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 										}"
 										active-class="active"
 									>
-										<AppTranslate>game.scores.best_tab</AppTranslate>
+										<AppTranslate>All Scores</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -167,7 +167,7 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 										}"
 										active-class="active"
 									>
-										<AppTranslate>game.scores.user_tab</AppTranslate>
+										<AppTranslate>Your Scores</AppTranslate>
 									</router-link>
 								</li>
 							</ul>
@@ -196,7 +196,7 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 
 						<div v-if="!scores.length" class="alert alert-notice full-bleed-xs">
 							<template v-if="type === 'best'">
-								<AppTranslate>game.scores.no_scores_html</AppTranslate>
+								<AppTranslate>There are no scores on this scoreboard yet.</AppTranslate>
 							</template>
 							<template v-else-if="type === 'user'">
 								<AppTranslate>You don't have any scores here yet!</AppTranslate>

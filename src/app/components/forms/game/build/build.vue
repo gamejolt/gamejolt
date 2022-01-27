@@ -164,32 +164,32 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 		return [
 			{
 				key: 'windows',
-				label: this.$gettext('dash.games.builds.form.windows_tag'),
+				label: this.$gettext('Windows'),
 				icon: 'windows',
 			},
 			{
 				key: 'windows_64',
-				label: this.$gettext('dash.games.builds.form.windows_64_tag'),
+				label: this.$gettext('Windows 64-bit'),
 				icon: 'windows',
 			},
 			{
 				key: 'mac',
-				label: this.$gettext('dash.games.builds.form.mac_tag'),
+				label: this.$gettext('Mac'),
 				icon: 'mac',
 			},
 			{
 				key: 'mac_64',
-				label: this.$gettext('dash.games.builds.form.mac_64_tag'),
+				label: this.$gettext('Mac 64-bit'),
 				icon: 'mac',
 			},
 			{
 				key: 'linux',
-				label: this.$gettext('dash.games.builds.form.linux_tag'),
+				label: this.$gettext('Linux'),
 				icon: 'linux',
 			},
 			{
 				key: 'linux_64',
-				label: this.$gettext('dash.games.builds.form.linux_64_tag'),
+				label: this.$gettext('Linux 64-bit'),
 				icon: 'linux',
 			},
 			{
@@ -466,7 +466,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 		<div class="card-stats">
 			<div class="stat-big stat-big-smaller">
 				<div class="stat-big-label">
-					<AppTranslate>dash.games.releases.builds.downloads_label</AppTranslate>
+					<AppTranslate>Downloads</AppTranslate>
 				</div>
 				<div
 					class="stat-big-digit"
@@ -493,23 +493,23 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 			</span>
 			<span v-else-if="model.type === GameBuild.TYPE_HTML" class="tag">
 				<AppJolticon icon="html5" />
-				<AppTranslate>games.browser_html</AppTranslate>
+				<AppTranslate>HTML</AppTranslate>
 			</span>
 			<span v-else-if="model.type === GameBuild.TYPE_FLASH" class="tag">
 				<AppJolticon icon="flash" />
-				<AppTranslate>games.browser_flash</AppTranslate>
+				<AppTranslate>Flash</AppTranslate>
 			</span>
 			<span v-else-if="model.type === GameBuild.TYPE_UNITY" class="tag">
 				<AppJolticon icon="unity" />
-				<AppTranslate>games.browser_unity</AppTranslate>
+				<AppTranslate>Unity</AppTranslate>
 			</span>
 			<span v-else-if="model.type === GameBuild.TYPE_SILVERLIGHT" class="tag">
 				<AppJolticon icon="silverlight" />
-				<AppTranslate>games.browser_silverlight</AppTranslate>
+				<AppTranslate>Silverlight</AppTranslate>
 			</span>
 			<span v-else-if="model.type === GameBuild.TYPE_APPLET" class="tag">
 				<AppJolticon icon="java" />
-				<AppTranslate>games.browser_applet</AppTranslate>
+				<AppTranslate>Java Applet</AppTranslate>
 			</span>
 			<span v-else-if="model.type === GameBuild.TYPE_ROM" class="tag">
 				<AppJolticon icon="rom" />
@@ -736,7 +736,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 												<a
 													v-app-tooltip="
 														$gettext(
-															`dash.games.releases.builds.launch_options.form.file_selector_tooltip`
+															`Browse file list.`
 														)
 													"
 													class="link-unstyled"
@@ -751,7 +751,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 											:ignore-dirty="true"
 											:label="
 												$gettext(
-													`dash.games.releases.builds.launch_options.form.file_error_label`
+													`path to the executable file`
 												)
 											"
 										/>
@@ -876,11 +876,11 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 						<AppFormGroup
 							v-if="formModel.type === GameBuild.TYPE_UNITY"
 							name="browser_disable_right_click"
-							:label="$gettext(`dash.games.builds.form.disable_right_click_label`)"
+							:label="$gettext(`Disable right click?`)"
 						>
 							<p class="help-block">
 								<AppTranslate>
-									dash.games.builds.form.disable_right_click_help
+									This allows you to disable right mouse click behavior. Only enable this if your game needs to intercept right clicks.
 								</AppTranslate>
 							</p>
 							<AppFormControlToggle @changed="onBuildFieldChanged" />

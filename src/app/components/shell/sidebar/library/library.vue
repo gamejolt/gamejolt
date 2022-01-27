@@ -190,7 +190,7 @@ export default class AppShellSidebarLibrary extends Vue {
 						<AppJolticon icon="user" />
 					</span>
 					<span class="shell-nav-label">
-						<AppTranslate>library.nav.developer</AppTranslate>
+						<AppTranslate>Your Games</AppTranslate>
 					</span>
 				</router-link>
 			</li>
@@ -205,7 +205,7 @@ export default class AppShellSidebarLibrary extends Vue {
 						<AppJolticon icon="subscribe" />
 					</span>
 					<span class="shell-nav-label">
-						<AppTranslate>library.nav.followed</AppTranslate>
+						<AppTranslate>Followed Games</AppTranslate>
 					</span>
 				</router-link>
 			</li>
@@ -270,7 +270,7 @@ export default class AppShellSidebarLibrary extends Vue {
 		<template v-if="app.user">
 			<template v-if="bundleCollections.length">
 				<div class="nav-heading">
-					<AppTranslate>library.nav.bundles</AppTranslate>
+					<AppTranslate>Bundles</AppTranslate>
 					<span class="badge">
 						{{ bundleCollectionsLength }}
 					</span>
@@ -301,8 +301,8 @@ export default class AppShellSidebarLibrary extends Vue {
 
 			<!-- Playlists -->
 			<template v-if="isLibraryBootstrapped">
-				<div class="nav-heading" :title="$gettext(`library.nav.playlists`)">
-					<AppTranslate>library.nav.playlists</AppTranslate>
+				<div class="nav-heading" :title="$gettext(`Playlists`)">
+					<AppTranslate>Playlists</AppTranslate>
 					<span class="badge">
 						{{ collectionsLength }}
 					</span>
@@ -316,7 +316,7 @@ export default class AppShellSidebarLibrary extends Vue {
 						class="offline-disable"
 						@click="showAddPlaylistModal"
 					>
-						<AppTranslate>library.nav.new_playlist_button</AppTranslate>
+						<AppTranslate>New Playlist</AppTranslate>
 					</AppButton>
 				</div>
 
@@ -325,7 +325,7 @@ export default class AppShellSidebarLibrary extends Vue {
 						v-model="playlistFilterQuery"
 						type="search"
 						class="form-control"
-						:placeholder="$gettext(`library.nav.filter_playlists_placeholder`)"
+						:placeholder="$gettext(`Filter playlists...`)"
 					/>
 				</div>
 				<div v-else class="-no-playlists alert">

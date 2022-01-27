@@ -180,7 +180,7 @@ function onBlur() {
 		>
 			<div class="-input">
 				<label :for="`search-input-${inputId}`" class="sr-only">
-					<AppTranslate>search.input.placeholder</AppTranslate>
+					<AppTranslate>Search</AppTranslate>
 				</label>
 
 				<AppPopper

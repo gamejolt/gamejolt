@@ -66,7 +66,7 @@ export default class AppArchiveFileSelectorModal extends mixins(BaseModal) {
 		<div class="modal-controls">
 			<AppButton @click="close()">
 				<AppTranslate>
-					dash.games.releases.builds.launch_options.file_selector.cancel_button
+					Cancel
 				</AppTranslate>
 			</AppButton>
 		</div>
@@ -74,7 +74,7 @@ export default class AppArchiveFileSelectorModal extends mixins(BaseModal) {
 		<div class="modal-header">
 			<h2 class="modal-title">
 				<AppTranslate>
-					dash.games.releases.builds.launch_options.file_selector.heading
+					Select Executable File
 				</AppTranslate>
 			</h2>
 		</div>
@@ -90,7 +90,7 @@ export default class AppArchiveFileSelectorModal extends mixins(BaseModal) {
 						type="search"
 						:placeholder="
 							$gettext(
-								`dash.games.releases.builds.launch_options.file_selector.filter_placeholder`
+								`Filter files...`
 							)
 						"
 					/>

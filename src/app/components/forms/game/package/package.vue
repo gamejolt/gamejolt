@@ -286,7 +286,7 @@ export default class FormGamePackage
 <template>
 	<AppForm :controller="form">
 		<AppLoadingFade :is-loading="isProcessing">
-			<AppFormGroup name="title" :label="$gettext(`dash.games.packages.form.title_label`)">
+			<AppFormGroup name="title" :label="$gettext(`Package Name`)">
 				<p class="help-block">
 					<AppTranslate>
 						This is the name that shows up on your game page above the Download/Play
@@ -312,7 +312,7 @@ export default class FormGamePackage
 
 			<AppFormGroup
 				name="description"
-				:label="$gettext(`dash.games.packages.form.description_label`)"
+				:label="$gettext(`Package Description`)"
 				:optional="true"
 			>
 				<p v-translate class="help-block">
@@ -324,7 +324,7 @@ export default class FormGamePackage
 
 				<div v-if="!showDescriptionInput">
 					<AppButton :disabled="!hasBuildsPerms" @click="showDescriptionInput = true">
-						<AppTranslate>dash.games.packages.form.description_change_button</AppTranslate>
+						<AppTranslate>Enter Description</AppTranslate>
 					</AppButton>
 				</div>
 				<div v-else>
@@ -783,7 +783,7 @@ export default class FormGamePackage
 
 			<AppFormButton>
 				<AppTranslate v-if="method === 'add'">
-					dash.games.packages.form.add_package_button
+					Add Package
 				</AppTranslate>
 				<AppTranslate v-else-if="method === 'edit'">Save Package</AppTranslate>
 			</AppFormButton>

@@ -46,7 +46,7 @@ export default class RouteDashGamesManageGameMaturity extends BaseRouteComponent
 	onSaved() {
 		showSuccessGrowl(
 			this.$gettext(`Your game's maturity information has been updated.`),
-			this.$gettext(`dash.games.maturity.saved_growl_title`)
+			this.$gettext(`Maturity Rating Saved`)
 		);
 
 		Scroll.to(0);
@@ -74,7 +74,7 @@ export default class RouteDashGamesManageGameMaturity extends BaseRouteComponent
 				</p>
 				<p>
 					<AppLinkHelp page="dev-maturity-ratings" class="link-help">
-						<AppTranslate>dash.games.maturity.page_help_link</AppTranslate>
+						<AppTranslate>What is a maturity rating?</AppTranslate>
 					</AppLinkHelp>
 				</p>
 			</div>

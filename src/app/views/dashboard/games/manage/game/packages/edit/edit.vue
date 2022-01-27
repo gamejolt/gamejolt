@@ -173,7 +173,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 
 	async removeRelease(release: GameRelease) {
 		const result = await ModalConfirm.show(
-			this.$gettext('dash.games.releases.manage.remove_release_confirmation')
+			this.$gettext('Are you sure you want to remove this release? All of its builds will be removed as well.')
 		);
 
 		if (!result) {
@@ -183,8 +183,8 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 		await release.$remove(this.game);
 
 		showSuccessGrowl(
-			this.$gettext('dash.games.releases.manage.remove_release_growl'),
-			this.$gettext('dash.games.releases.manage.remove_release_growl_title')
+			this.$gettext('The release and its builds have been removed from the package.'),
+			this.$gettext('Release Removed')
 		);
 
 		const index = this.releases.findIndex(i => i.id === release.id);
@@ -325,7 +325,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 			</div>
 
 			<h3>
-				<AppTranslate>dash.games.packages.manage.releases.heading</AppTranslate>
+				<AppTranslate>Releases</AppTranslate>
 			</h3>
 
 			<div class="row">
@@ -341,7 +341,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 						<p>
 							<AppLinkHelp page="dev-packages" class="link-help">
 								<AppTranslate>
-									dash.games.packages.manage.releases.page_help_link
+									Learn more about releases...
 								</AppTranslate>
 							</AppLinkHelp>
 						</p>
@@ -433,7 +433,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 									v-if="release.status === GameRelease.STATUS_PUBLISHED"
 									v-app-tooltip="
 										$gettext(
-											`dash.games.packages.manage.releases.published_tooltip`
+											`This release is published and can be accessed from your game page.`
 										)
 									"
 									class="tag tag-highlight"
@@ -441,7 +441,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 									<AppJolticon icon="active" />
 									{{ ' ' }}
 									<AppTranslate>
-										dash.games.packages.manage.releases.published_tag
+										Published
 									</AppTranslate>
 								</span>
 
@@ -449,7 +449,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 
 								<template v-if="!release.build_count">
 									<AppTranslate>
-										dash.games.packages.manage.releases.builds_count_none
+										No builds yet.
 									</AppTranslate>
 								</template>
 								<template v-else>

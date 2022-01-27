@@ -52,7 +52,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 
 	async removeScore() {
 		const result = await ModalConfirm.show(
-			this.$gettext('dash.games.scores.view.remove_confirmation')
+			this.$gettext('Are you sure you want to remove this score?')
 		);
 
 		if (!result) {
@@ -78,7 +78,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 				<AppButton sparse icon="remove" @click="removeScore" />
 			</div>
 
-			<AppTranslate>dash.games.scores.view.heading</AppTranslate>
+			<AppTranslate>Score Details</AppTranslate>
 		</h2>
 
 		<div class="table-responsive">
@@ -89,7 +89,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 				<tbody>
 					<tr>
 						<th>
-							<AppTranslate>dash.games.scores.view.user_label</AppTranslate>
+							<AppTranslate>User</AppTranslate>
 						</th>
 						<td>
 							<!-- User Score -->
@@ -108,7 +108,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 								{{ score.guest }}
 								<br />
 								<small class="text-muted">
-									<AppTranslate>dash.games.scores.guest_tag</AppTranslate>
+									<AppTranslate>Guest</AppTranslate>
 								</small>
 							</span>
 						</td>
@@ -132,19 +132,19 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 					</tr>
 					<tr>
 						<th>
-							<AppTranslate>dash.games.scores.view.string_label</AppTranslate>
+							<AppTranslate>Score String</AppTranslate>
 						</th>
 						<td>{{ score.score }}</td>
 					</tr>
 					<tr>
 						<th>
-							<AppTranslate>dash.games.scores.view.sort_label</AppTranslate>
+							<AppTranslate>Sort Value</AppTranslate>
 						</th>
 						<td>{{ formatNumber(score.sort) }}</td>
 					</tr>
 					<tr>
 						<th>
-							<AppTranslate>dash.games.scores.view.date_label</AppTranslate>
+							<AppTranslate>Scored On</AppTranslate>
 						</th>
 						<td>
 							{{ formatDate(score.logged_on, 'medium') }}
@@ -152,7 +152,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 					</tr>
 					<tr>
 						<th>
-							<AppTranslate>dash.games.scores.view.data_label</AppTranslate>
+							<AppTranslate>Extra Data</AppTranslate>
 						</th>
 						<td>
 							<pre v-if="score.extra_data" class="small">{{ score.extra_data }}</pre>

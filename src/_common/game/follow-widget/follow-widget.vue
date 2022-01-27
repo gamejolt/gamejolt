@@ -146,8 +146,8 @@ export default class AppGameFollowWidget extends Vue {
 			} catch (e) {
 				failed = true;
 				showErrorGrowl(
-					this.$gettext('library.followed.remove_game_error_growl'),
-					this.$gettext('library.followed.remove_game_error_growl_title')
+					this.$gettext('Uh-oh, something has prevented you from unfollowing this game.'),
+					this.$gettext('Oh no!')
 				);
 			} finally {
 				trackGameFollow(false, { failed, location: this.location });

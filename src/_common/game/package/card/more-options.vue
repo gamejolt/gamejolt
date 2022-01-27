@@ -63,7 +63,8 @@ export default class AppGamePackageCardMoreOptions extends Vue {
 			<small v-if="GJ_IS_DESKTOP_APP && extraBuild.type !== 'html'" class="text-muted">
 				<br />
 				<em>
-					<AppTranslate>(will open in browser)</AppTranslate>
+					<AppTranslate>
+ (will open in browser)</AppTranslate>
 				</em>
 			</small>
 		</a>

@@ -103,7 +103,7 @@ function thumbSelected() {
 		<!-- They are required to upload a media item if there is none set yet. -->
 		<AppFormGroup
 			name="file"
-			:label="$gettext(`dash.games.thumbnail.upload_label`)"
+			:label="$gettext(`Upload New Thumbnail`)"
 			:optional="thumb && canCrop"
 		>
 			<p v-translate class="help-block">
@@ -120,7 +120,7 @@ function thumbSelected() {
 			</p>
 			<p class="help-block">
 				<AppLinkHelp page="dev-thumbnails" class="link-help">
-					<AppTranslate>dash.games.thumbnail.page_help_link</AppTranslate>
+					<AppTranslate>What are the thumbnail requirements and guidelines?</AppTranslate>
 				</AppLinkHelp>
 			</p>
 
@@ -134,7 +134,7 @@ function thumbSelected() {
 				@changed="thumbSelected()"
 			/>
 
-			<AppFormControlErrors :label="$gettext(`dash.games.thumbnail.upload_error_label`)" />
+			<AppFormControlErrors :label="$gettext(`thumbnail image`)" />
 		</AppFormGroup>
 
 		<AppFormGroup
@@ -142,8 +142,8 @@ function thumbSelected() {
 			name="thumb_crop"
 			:label="
 				canCrop
-					? $gettext('dash.games.thumbnail.crop_label')
-					: $gettext('dash.games.thumbnail.nocrop_label')
+					? $gettext('Crop Current Thumbnail')
+					: $gettext('Current Thumbnail')
 			"
 		>
 			<div v-if="canCrop && thumb.is_animated" class="alert">

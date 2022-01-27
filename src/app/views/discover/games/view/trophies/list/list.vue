@@ -85,7 +85,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 		<section class="section">
 			<div class="container">
 				<h2 class="section-header">
-					<AppTranslate>game.trophies.heading</AppTranslate>
+					<AppTranslate>Trophies</AppTranslate>
 				</h2>
 
 				<div class="row">
@@ -105,7 +105,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 										:class="{ active: currentFilter === 'all' }"
 										@click="currentFilter = 'all'"
 									>
-										<AppTranslate>game.trophies.all_tab</AppTranslate>
+										<AppTranslate>All</AppTranslate>
 										<span class="badge hidden-xs">
 											{{ formatNumber(trophies.length) }}
 										</span>
@@ -133,7 +133,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 										:class="{ active: currentFilter === 'unachieved' }"
 										@click="currentFilter = 'unachieved'"
 									>
-										<AppTranslate>game.trophies.unachieved_tab</AppTranslate>
+										<AppTranslate>Not Achieved</AppTranslate>
 										<span class="badge hidden-xs">
 											{{ formatNumber(filteredTrophies.unachieved.length) }}
 										</span>
@@ -162,7 +162,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 
 		<section v-if="!trophies.length" class="section fill-offset">
 			<div class="container text-center">
-				<AppTranslate>game.trophies.no_trophies_html</AppTranslate>
+				<AppTranslate>There are no trophies for this game yet. Bug the developer about adding some!</AppTranslate>
 			</div>
 		</section>
 	</div>

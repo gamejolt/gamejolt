@@ -59,7 +59,7 @@ export default class AppTrophyList extends Vue {
 
 				<div class="trophy-list-item-meta">
 					<span
-						v-app-tooltip="$gettext(`trophies.exp_gained_tooltip`)"
+						v-app-tooltip="$gettext(`The amount of EXP gained from this trophy.`)"
 						class="text-muted"
 					>
 						<AppJolticon icon="exp" class="middle" />
@@ -77,7 +77,7 @@ export default class AppTrophyList extends Vue {
 						<br class="visible-xs" />
 
 						<span class="tag tag-highlight">
-							<AppTranslate>trophies.achieved_tag</AppTranslate>
+							<AppTranslate>Achieved!</AppTranslate>
 						</span>
 						<span class="dot-separator" />
 						<small class="text-muted">

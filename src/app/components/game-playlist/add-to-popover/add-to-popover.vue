@@ -105,7 +105,7 @@ export default class AppGamePlaylistAddToPopover extends Vue {
 			<div class="list-group list-group-dark">
 				<a class="list-group-item has-icon" @click="addToNewPlaylist">
 					<AppJolticon icon="add" />
-					<AppTranslate>library.playlists.add_to.new_playlist_button</AppTranslate>
+					<AppTranslate>New Playlist</AppTranslate>
 				</a>
 				<div v-if="playlists.length" class="list-group-item">
 					<input
@@ -113,7 +113,7 @@ export default class AppGamePlaylistAddToPopover extends Vue {
 						v-app-focus-when
 						type="search"
 						class="form-control"
-						:placeholder="$gettext('library.playlists.add_to.filter_placeholder')"
+						:placeholder="$gettext('Filter playlists...')"
 						@keydown.esc.stop="close"
 					/>
 				</div>

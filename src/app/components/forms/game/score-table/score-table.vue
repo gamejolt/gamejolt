@@ -31,7 +31,7 @@ export default class FormGameScoreTable extends mixins(Wrapper) {
 
 <template>
 	<AppForm :controller="form">
-		<AppFormGroup name="name" :label="$gettext(`dash.games.scoreboard.form.name_label`)">
+		<AppFormGroup name="name" :label="$gettext(`Name`)">
 			<AppFormControl type="text" :validators="[validateMaxLength(50)]" />
 			<AppFormControlErrors />
 		</AppFormGroup>
@@ -39,7 +39,7 @@ export default class FormGameScoreTable extends mixins(Wrapper) {
 		<AppFormGroup
 			name="description"
 			:optional="true"
-			:label="$gettext(`dash.games.scoreboard.form.description_label`)"
+			:label="$gettext(`Description`)"
 		>
 			<AppFormControlTextarea rows="5" :validators="[validateMaxLength(250)]" />
 			<AppFormControlErrors />
@@ -47,17 +47,17 @@ export default class FormGameScoreTable extends mixins(Wrapper) {
 
 		<AppFormGroup
 			name="allow_guest_scores"
-			:label="$gettext(`dash.games.scoreboard.form.guest_label`)"
+			:label="$gettext(`Guest Scoring`)"
 		>
 			<p class="help-block">
-				<AppTranslate>dash.games.scoreboard.form.guest_help</AppTranslate>
+				<AppTranslate>Allow guests to submit scores?</AppTranslate>
 			</p>
 			<AppFormControlToggle />
 		</AppFormGroup>
 
 		<AppFormGroup
 			name="unique_scores"
-			:label="$gettext(`dash.games.scoreboard.form.unique_label`)"
+			:label="$gettext(`Unique Scores`)"
 		>
 			<p class="help-block"><AppTranslate>Only show a user's best score?</AppTranslate></p>
 			<AppFormControlToggle />
@@ -65,7 +65,7 @@ export default class FormGameScoreTable extends mixins(Wrapper) {
 
 		<AppFormGroup
 			name="scores_sorting_direction"
-			:label="$gettext(`dash.games.scoreboard.form.direction_label`)"
+			:label="$gettext(`Sort Direction`)"
 		>
 			<div class="radio">
 				<label>
@@ -75,7 +75,7 @@ export default class FormGameScoreTable extends mixins(Wrapper) {
 					</AppTranslate>
 					<br />
 					<span class="help-inline">
-						<AppTranslate>dash.games.scoreboard.form.desc_help</AppTranslate>
+						<AppTranslate>Scores with higher values are ranked better.</AppTranslate>
 					</span>
 				</label>
 			</div>
@@ -87,14 +87,14 @@ export default class FormGameScoreTable extends mixins(Wrapper) {
 					</AppTranslate>
 					<br />
 					<span class="help-inline">
-						<AppTranslate>dash.games.scoreboard.form.asc_help</AppTranslate>
+						<AppTranslate>Scores with lower values are ranked better.</AppTranslate>
 					</span>
 				</label>
 			</div>
 		</AppFormGroup>
 
 		<AppFormButton>
-			<AppTranslate>dash.games.scoreboard.form.save_button</AppTranslate>
+			<AppTranslate>Save Scoreboard</AppTranslate>
 		</AppFormButton>
 	</AppForm>
 </template>

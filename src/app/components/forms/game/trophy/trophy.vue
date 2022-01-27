@@ -34,19 +34,19 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 	get difficultyOptions() {
 		return [
 			{
-				label: this.$gettext('trophies.bronze'),
+				label: this.$gettext('Bronze'),
 				value: GameTrophy.DIFFICULTY_BRONZE,
 			},
 			{
-				label: this.$gettext('trophies.silver'),
+				label: this.$gettext('Silver'),
 				value: GameTrophy.DIFFICULTY_SILVER,
 			},
 			{
-				label: this.$gettext('trophies.gold'),
+				label: this.$gettext('Gold'),
 				value: GameTrophy.DIFFICULTY_GOLD,
 			},
 			{
-				label: this.$gettext('trophies.platinum'),
+				label: this.$gettext('Platinum'),
 				value: GameTrophy.DIFFICULTY_PLATINUM,
 			},
 		];
@@ -74,7 +74,7 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 
 	async clearImage() {
 		const result = await ModalConfirm.show(
-			this.$gettext('dash.games.trophies.form.clear_image_confirmation')
+			this.$gettext('Are you sure you want to clear this trophy image?')
 		);
 
 		if (!result) {
@@ -132,8 +132,8 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 			name="file"
 			:label="
 				!formModel.has_thumbnail
-					? $gettext('dash.games.trophies.form.upload_label')
-					: $gettext('dash.games.trophies.form.change_image_label')
+					? $gettext('Trophy Image')
+					: $gettext('Change Trophy Image')
 			"
 			:optional="true"
 		>
@@ -145,7 +145,7 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 
 			<p class="help-block">
 				<a class="link-help">
-					<AppTranslate>dash.games.trophies.form.image_help_link</AppTranslate>
+					<AppTranslate>Learn more about trophy images...</AppTranslate>
 				</a>
 			</p>
 
@@ -157,25 +157,25 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 				accept=".png,.jpg,.jpeg,.webp"
 			/>
 
-			<AppFormControlErrors :label="$gettext(`dash.games.trophies.form.image_error_label`)" />
+			<AppFormControlErrors :label="$gettext(`trophy image`)" />
 		</AppFormGroup>
 
-		<AppFormGroup name="title" :label="$gettext(`dash.games.trophies.form.title_label`)">
+		<AppFormGroup name="title" :label="$gettext(`Title`)">
 			<AppFormControl type="text" :validators="[validateMaxLength(150)]" />
 			<AppFormControlErrors />
 		</AppFormGroup>
 
 		<AppFormGroup
 			name="description"
-			:label="$gettext(`dash.games.trophies.form.description_label`)"
+			:label="$gettext(`Description`)"
 		>
 			<AppFormControlTextarea rows="3" :validators="[validateMaxLength(1500)]" />
 			<AppFormControlErrors />
 		</AppFormGroup>
 
-		<AppFormGroup name="secret" :label="$gettext(`dash.games.trophies.form.secret_label`)">
+		<AppFormGroup name="secret" :label="$gettext(`Secret`)">
 			<p class="help-block">
-				<AppTranslate>dash.games.trophies.form.secret_help</AppTranslate>
+				<AppTranslate>Secret trophies hide everything but their titles from players until they are achieved.</AppTranslate>
 			</p>
 			<AppFormControlToggle />
 		</AppFormGroup>
@@ -191,7 +191,7 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 		</AppFormGroup>
 
 		<AppFormButton>
-			<AppTranslate>dash.games.trophies.form.save_button</AppTranslate>
+			<AppTranslate>Save Trophy</AppTranslate>
 		</AppFormButton>
 	</AppForm>
 </template>

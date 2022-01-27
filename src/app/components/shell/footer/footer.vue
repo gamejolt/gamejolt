@@ -210,7 +210,7 @@ export default class AppShellFooter extends Vue {
 
 					<p v-if="GJ_IS_DESKTOP_APP" class="tiny text-muted">
 						<a class="link-muted" @click="showSystemReport">
-							<AppTranslate>footer.send_system_report</AppTranslate>
+							<AppTranslate>Send System Report</AppTranslate>
 						</a>
 						<span class="dot-separator" />
 						v{{ clientVersion }}
@@ -224,7 +224,7 @@ export default class AppShellFooter extends Vue {
 					<br class="hidden-xs" />
 
 					<p class="small text-muted">
-						<AppTranslate>footer.translations</AppTranslate>
+						<AppTranslate>Translations are a community project.</AppTranslate>
 					</p>
 				</div>
 			</div>

@@ -27,7 +27,7 @@ export default class RouteLibraryInstalled extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		Meta.title = this.$gettext('library.installed.page_title');
+		Meta.title = this.$gettext('Installed Games');
 	}
 }
 </script>
@@ -35,7 +35,7 @@ export default class RouteLibraryInstalled extends BaseRouteComponent {
 <template>
 	<div>
 		<AppPageHeader>
-			<h1><AppTranslate>library.installed.heading</AppTranslate></h1>
+			<h1><AppTranslate>Installed Games</AppTranslate></h1>
 			<br />
 		</AppPageHeader>
 

@@ -51,10 +51,10 @@ export default class AppManageGameListScores extends Vue {
 						<AppTranslate>Score</AppTranslate>
 					</th>
 					<th v-if="!isForUser">
-						<AppTranslate>dash.games.scores.list.user_label</AppTranslate>
+						<AppTranslate>User</AppTranslate>
 					</th>
 					<th>
-						<AppTranslate>dash.games.scores.list.date_label</AppTranslate>
+						<AppTranslate>Date</AppTranslate>
 					</th>
 					<th />
 				</tr>
@@ -92,7 +92,7 @@ export default class AppManageGameListScores extends Vue {
 							{{ score.guest }}
 							<br />
 							<small class="text-muted">
-								<AppTranslate>dash.games.scores.guest_tag</AppTranslate>
+								<AppTranslate>Guest</AppTranslate>
 							</small>
 						</span>
 					</td>
@@ -114,7 +114,7 @@ export default class AppManageGameListScores extends Vue {
 										>
 											<AppJolticon icon="remove" notice />
 											<AppTranslate>
-												dash.games.scores.list.remove_button
+												Remove Score
 											</AppTranslate>
 										</a>
 									</div>

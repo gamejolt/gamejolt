@@ -64,9 +64,9 @@ export default class AppGameMediaItemEditModal extends mixins(BaseModal) {
 	async remove() {
 		let typeLabel = '';
 		if (this.item.media_type === 'image') {
-			typeLabel = this.$gettext('dash.games.media.image_label').toLowerCase();
+			typeLabel = this.$gettext('Image').toLowerCase();
 		} else if (this.item.media_type === 'video') {
-			typeLabel = this.$gettext('dash.games.media.video_label').toLowerCase();
+			typeLabel = this.$gettext('Video').toLowerCase();
 		} else if (this.item.media_type === 'sketchfab') {
 			typeLabel = this.$gettext('sketchfab model').toLowerCase();
 		}

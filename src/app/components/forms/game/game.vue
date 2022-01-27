@@ -164,7 +164,7 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 
 				<AppFormGroup
 					name="web_site"
-					:label="$gettext(`dash.games.form.website_label`)"
+					:label="$gettext(`Website`)"
 					:optional="true"
 				>
 					<AppFormControl
@@ -178,11 +178,11 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 				<AppFormGroup
 					v-if="engines"
 					name="creation_tool"
-					:label="$gettext(`dash.games.form.engine_label`)"
+					:label="$gettext(`Engine/Language/Creation Tool`)"
 				>
 					<AppFormControlSelect :disabled="!hasBuildsPerms">
 						<option value="">
-							<AppTranslate>dash.games.form.engine_placeholder</AppTranslate>
+							<AppTranslate>Select an engine/language/tool...</AppTranslate>
 						</option>
 						<option v-for="(label, key) of engines" :key="key" :value="key">
 							{{ label }}
@@ -194,7 +194,7 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 				<AppExpand :when="formModel.creation_tool === 'other'">
 					<AppFormGroup
 						name="creation_tool_other"
-						:label="$gettext(`dash.games.form.engine_other_label`)"
+						:label="$gettext(`Other Engine/Language/Tool`)"
 						:optional="true"
 					>
 						<AppFormControl
@@ -206,11 +206,11 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 						<AppFormControlErrors />
 
 						<p class="help-block">
-							<AppTranslate>dash.games.form.engine_other_help</AppTranslate>
+							<AppTranslate>Which engine, language, or tool?</AppTranslate>
 							{{ ' ' }}
 							<span
 								v-app-tooltip.touchable="
-									$gettext(`dash.games.form.engine_other_why_tooltip`)
+									$gettext(`This helps us create better filtering options around which tools people use.`)
 								"
 								class="text-help"
 							>

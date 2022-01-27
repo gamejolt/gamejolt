@@ -116,7 +116,7 @@ export default class FormProfile extends mixins(Wrapper) implements FormOnLoad, 
 		<AppFormGroup
 			v-if="!usernameTimeLeft"
 			name="username"
-			:label="$gettext(`dash.profile.edit.username_label`)"
+			:label="$gettext(`Username`)"
 		>
 			<AppFormControl
 				type="text"
@@ -156,7 +156,7 @@ export default class FormProfile extends mixins(Wrapper) implements FormOnLoad, 
 
 		<div v-else class="form-group">
 			<label class="control-label">
-				<AppTranslate>dash.profile.edit.username_label</AppTranslate>
+				<AppTranslate>Username</AppTranslate>
 			</label>
 			<p class="form-control-static">{{ formModel.username }}</p>
 			<p class="help-block">
@@ -170,7 +170,7 @@ export default class FormProfile extends mixins(Wrapper) implements FormOnLoad, 
 
 		<AppFormGroup
 			name="name"
-			:label="$gettext(`dash.profile.edit.display_name_label`)"
+			:label="$gettext(`Display Name`)"
 			:optional="true"
 		>
 			<AppFormControl
@@ -198,7 +198,7 @@ export default class FormProfile extends mixins(Wrapper) implements FormOnLoad, 
 
 		<AppFormGroup
 			name="web_site"
-			:label="$gettext(`dash.profile.edit.website_label`)"
+			:label="$gettext(`Website`)"
 			:optional="true"
 		>
 			<AppFormControl type="url" :validators="[validateMaxLength(250)]" />
@@ -207,7 +207,7 @@ export default class FormProfile extends mixins(Wrapper) implements FormOnLoad, 
 
 		<AppFormGroup
 			name="bio_content"
-			:label="$gettext(`dash.profile.edit.description_label`)"
+			:label="$gettext(`Profile Bio`)"
 			:optional="true"
 		>
 			<AppFormControlContent
@@ -278,7 +278,7 @@ export default class FormProfile extends mixins(Wrapper) implements FormOnLoad, 
 		</AppFormGroup>
 
 		<AppFormButton>
-			<AppTranslate>dash.profile.edit.submit_button</AppTranslate>
+			<AppTranslate>Save Profile</AppTranslate>
 		</AppFormButton>
 	</AppForm>
 </template>

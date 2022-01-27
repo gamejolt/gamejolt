@@ -13,7 +13,7 @@ export default class FormPlaylist extends mixins(Wrapper) {
 
 <template>
 	<AppForm :controller="form">
-		<AppFormGroup name="name" :label="$gettext('library.playlists.form.name_label')">
+		<AppFormGroup name="name" :label="$gettext('Name')">
 			<AppFormControl type="text" :validators="[validateMaxLength(100)]" focus />
 			<AppFormControlErrors />
 		</AppFormGroup>

@@ -80,11 +80,11 @@ export default class FormGameVideo extends mixins(Wrapper) {
 
 <template>
 	<AppForm :controller="form">
-		<AppFormGroup name="_url" :label="$gettext(`dash.games.media.video.form.url_label`)">
+		<AppFormGroup name="_url" :label="$gettext(`Video URL`)">
 			<AppFormControl type="text" :validators="[validatePattern(REGEX_VIDEO)]" />
 
 			<AppFormControlErrors
-				:label="$gettext(`dash.games.media.video.form.url_error_label`)"
+				:label="$gettext(`video URL`)"
 			/>
 
 			<p v-translate class="help-block">
@@ -104,14 +104,14 @@ export default class FormGameVideo extends mixins(Wrapper) {
 			</template>
 		</AppFormGroup>
 
-		<AppFormGroup name="title" :label="$gettext(`dash.games.media.video.form.title_label`)">
+		<AppFormGroup name="title" :label="$gettext(`Title`)">
 			<AppFormControl type="text" :validators="[validateMaxLength(150)]" />
 			<AppFormControlErrors />
 		</AppFormGroup>
 
 		<AppFormGroup
 			name="description"
-			:label="$gettext(`dash.games.media.video.form.description_label`)"
+			:label="$gettext(`Description`)"
 			:optional="true"
 		>
 			<AppFormControlTextarea rows="5" :validators="[validateMaxLength(2500)]" />

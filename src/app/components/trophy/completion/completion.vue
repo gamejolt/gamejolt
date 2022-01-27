@@ -71,7 +71,7 @@ export default class AppTrophyCompletion extends Vue {
 					<div class="stat-big stat-big-smaller" style="margin-bottom: 0">
 						<div class="stat-big-digit">{{ formatNumber(completionRate) }}%</div>
 						<div class="stat-big-label">
-							<AppTranslate>trophies.completion.completion_label</AppTranslate>
+							<AppTranslate>Completion</AppTranslate>
 						</div>
 					</div>
 				</div>
@@ -82,7 +82,7 @@ export default class AppTrophyCompletion extends Vue {
 							{{ formatNumber(experience) }}
 						</div>
 						<div class="stat-big-label">
-							<AppTranslate>trophies.completion.exp_gained_label</AppTranslate>
+							<AppTranslate>EXP Gained</AppTranslate>
 						</div>
 					</div>
 				</div>

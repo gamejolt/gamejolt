@@ -82,7 +82,7 @@ export default class FormGameDesign extends mixins(Wrapper) {
 					</p>
 					<p>
 						<AppLinkHelp page="dev-thumbnails" class="link-help">
-							<AppTranslate>dash.games.thumbnail.page_help_link</AppTranslate>
+							<AppTranslate>What are the thumbnail requirements and guidelines?</AppTranslate>
 						</AppLinkHelp>
 					</p>
 				</div>

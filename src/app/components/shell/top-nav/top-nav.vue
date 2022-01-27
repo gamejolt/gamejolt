@@ -364,7 +364,7 @@ export default class AppShellTopNav extends Vue {
 								v-app-track-event="`top-nav:login:click`"
 								:href="Environment.authBaseUrl + '/login'"
 							>
-								<AppTranslate>nav.login</AppTranslate>
+								<AppTranslate>Log In</AppTranslate>
 							</a>
 						</li>
 						<li>

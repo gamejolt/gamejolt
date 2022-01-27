@@ -79,17 +79,17 @@ export default class FormClientSystemReport extends mixins(Wrapper) implements F
 
 		<AppFormGroup
 			name="description"
-			:label="$gettext('system_report.form.description_label')"
+			:label="$gettext('Description')"
 		>
 			<p class="help-block">
-				<AppTranslate>system_report.form.description_help</AppTranslate>
+				<AppTranslate>Describe what this system report is about, any bugs you may have encountered, and how you can reproduce.</AppTranslate>
 			</p>
 			<AppFormControlTextarea maxlength="1000" rows="5" />
 			<AppFormControlErrors />
 		</AppFormGroup>
 
 		<AppFormButton :disabled="!valid">
-			<AppTranslate>system_report.form.submit_button</AppTranslate>
+			<AppTranslate>Submit Bug Report</AppTranslate>
 		</AppFormButton>
 	</AppForm>
 </template>

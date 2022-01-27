@@ -139,7 +139,7 @@ export default class RouteSearchResults extends BaseRouteComponent {
 						class="link-unstyled"
 						:to="{ name: 'search.games', query: { q: query } }"
 					>
-						<AppTranslate>search.results.games_heading</AppTranslate>
+						<AppTranslate>Games</AppTranslate>
 					</router-link>
 					<small>({{ formatNumber(searchPayload.gamesCount) }})</small>
 				</h3>
@@ -181,7 +181,7 @@ export default class RouteSearchResults extends BaseRouteComponent {
 						class="link-unstyled"
 						:to="{ name: 'search.users', query: { q: query } }"
 					>
-						<AppTranslate>search.results.users_heading</AppTranslate>
+						<AppTranslate>Users</AppTranslate>
 					</router-link>
 					<small>({{ formatNumber(searchPayload.usersCount) }})</small>
 				</h3>

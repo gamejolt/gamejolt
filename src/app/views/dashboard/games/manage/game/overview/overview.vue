@@ -194,7 +194,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 		</div>
 
 		<h2>
-			<AppTranslate>dash.games.overview.stats_heading</AppTranslate>
+			<AppTranslate>Quick Stats</AppTranslate>
 		</h2>
 
 		<div class="row">
@@ -209,7 +209,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 					<div class="col-xs-6 col-sm-4 col-lg-6">
 						<div class="stat-big">
 							<div class="stat-big-label">
-								<AppTranslate>dash.games.overview.stats_views</AppTranslate>
+								<AppTranslate>Views</AppTranslate>
 							</div>
 							<div class="stat-big-digit">
 								{{ formatNumber(viewCount) }}
@@ -219,7 +219,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 					<div class="col-xs-6 col-sm-4 col-lg-6">
 						<div class="stat-big">
 							<div class="stat-big-label">
-								<AppTranslate>dash.games.overview.stats_plays</AppTranslate>
+								<AppTranslate>Plays/Downloads</AppTranslate>
 							</div>
 							<div class="stat-big-digit">
 								{{ formatNumber(downloadCount) }}
@@ -249,7 +249,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 					<div class="col-xs-6 col-sm-4 col-lg-6">
 						<div class="stat-big">
 							<div class="stat-big-label">
-								<AppTranslate>dash.games.overview.stats_comments</AppTranslate>
+								<AppTranslate>Comments</AppTranslate>
 							</div>
 							<div class="stat-big-digit">
 								{{ formatNumber(commentCount) }}
@@ -259,7 +259,7 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 					<div class="col-xs-6 col-sm-4 col-lg-6">
 						<div class="stat-big">
 							<div class="stat-big-label">
-								<AppTranslate>dash.games.overview.stats_followers</AppTranslate>
+								<AppTranslate>Followers</AppTranslate>
 							</div>
 							<div class="stat-big-digit">
 								{{ formatNumber(game.follower_count) }}

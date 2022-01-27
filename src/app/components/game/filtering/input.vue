@@ -59,7 +59,7 @@ export default class AppGameFilteringInput extends Vue {
 			v-model="query"
 			type="search"
 			class="form-control"
-			:placeholder="$gettext('games.filtering.input_placeholder')"
+			:placeholder="$gettext('Filter results...')"
 			@blur="sendSearch"
 			@keydown.esc.stop.prevent="blur"
 		/>

@@ -15,7 +15,7 @@ export default class AppErrorPageOffline extends Vue {
 		<p>
 			<strong><AppTranslate>We are having trouble connecting to Game Jolt.</AppTranslate></strong>
 		</p>
-		<p><AppTranslate>Check your internet connection and try again.</AppTranslate></p>
+		<p><AppTranslate>Check your Internet connection and try again.</AppTranslate></p>
 		<br />
 
 		<p>
