@@ -10,7 +10,6 @@ import { validateUsername } from '../../form-vue/validators';
 import { Provider } from '../../linked-account/linked-account.model';
 import { LinkedAccounts } from '../../linked-account/linked-accounts.service';
 import AppLoading from '../../loading/loading.vue';
-import { WithSSRContextFilepath } from '../../route/route-component';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import googleImage from '../google-icon.svg';
 
@@ -25,7 +24,6 @@ class Wrapper extends BaseForm<any> {}
 		AppTooltip,
 	},
 })
-@WithSSRContextFilepath('_common/auth/login/login-form.vue')
 export default class AppAuthLoginForm
 	extends mixins(Wrapper)
 	implements FormOnSubmit, FormOnSubmitError, FormOnLoad
@@ -170,11 +168,7 @@ export default class AppAuthLoginForm
 		<div v-show="showForm" class="auth-form-container">
 			<AppForm class="auth-form" :controller="form">
 				<fieldset :disabled="Connection.isClientOffline ? 'true' : undefined">
-					<AppFormGroup
-						name="username"
-						:label="$gettext('Username')"
-						:hide-label="true"
-					>
+					<AppFormGroup name="username" :label="$gettext('Username')" hide-label>
 						<!-- Min not needed since the login will fail if incorrect anyway. -->
 						<AppFormControl
 							type="text"
@@ -186,11 +180,7 @@ export default class AppAuthLoginForm
 						<AppFormControlErrors />
 					</AppFormGroup>
 
-					<AppFormGroup
-						name="password"
-						:label="$gettext('Password')"
-						:hide-label="true"
-					>
+					<AppFormGroup name="password" :label="$gettext('Password')" hide-label>
 						<AppFormControl
 							type="password"
 							:placeholder="$gettext('Password')"
@@ -211,7 +201,9 @@ export default class AppAuthLoginForm
 							</AppTranslate>
 						</p>
 						<p>
-							<AppTranslate>Try again in a few minutes, sorry about that!</AppTranslate>
+							<AppTranslate>
+								Try again in a few minutes, sorry about that!
+							</AppTranslate>
 						</p>
 					</div>
 

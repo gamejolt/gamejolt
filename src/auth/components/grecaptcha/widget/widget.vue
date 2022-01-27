@@ -3,7 +3,6 @@ import { nextTick } from 'vue';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
-import { WithSSRContextFilepath } from '../../../../_common/route/route-component';
 import { GrecaptchaSdk } from '../sdk/sdk.service';
 
 @Options({
@@ -11,7 +10,6 @@ import { GrecaptchaSdk } from '../sdk/sdk.service';
 		AppLoading,
 	},
 })
-@WithSSRContextFilepath('auth/components/grecaptcha/widget/widget.vue')
 export default class AppGrecaptchaWidget extends Vue {
 	@Prop({ type: String, default: 'dark' })
 	theme!: 'light' | 'dark';

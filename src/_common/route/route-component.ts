@@ -1,4 +1,4 @@
-import { ComponentOptions, useSSRContext } from 'vue';
+import { ComponentOptions, watch } from 'vue';
 import { createDecorator, setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import { RouteLocationNormalized, Router } from 'vue-router';
@@ -37,37 +37,6 @@ export function RouteResolver(options: RouteResolverOptions = {}) {
 	});
 }
 
-/**
- * HACK: @vitejs/plugin-vue normally injects some code in our component's setup
- * function to make them register themselves while they are being rendered. This lets
- * our SSR server keep track of which components were rendered during a request,
- * which in turn lets us use ssr-manifest to map them to the JS/CSS chunks that are
- * required to render/hydrate them on the client side.
- *
- * For some reason it looks like some of our components don't seem to register
- * themselves to ssr render context. At the time of writing I don't know why that
- * is, so as a temporary solution this interface is introduced to allow us
- * to call the bit of code to register the components manually.
- */
-export function WithSSRContextFilepath(filepath: string) {
-	return createDecorator(componentOptions => {
-		if (!import.meta.env.SSR) {
-			return;
-		}
-
-		const originalSetup = componentOptions.setup;
-		componentOptions.setup = (props, ctx) => {
-			console.log(`In WithSSRContextFilepath('${filepath}')`);
-
-			const ssrCtx = useSSRContext()!;
-			(ssrCtx.modules || (ssrCtx.modules = new Set())).add(filepath);
-
-			// Call the original setup if one was provided.
-			return !!originalSetup ? originalSetup(props, ctx) : undefined;
-		};
-	});
-}
-
 @Options({})
 export class BaseRouteComponent extends Vue {
 	private commonStore_ = setup(() => useCommonStore());
@@ -102,6 +71,12 @@ export class BaseRouteComponent extends Vue {
 		const name = this.$options.name!;
 
 		this.routeCreated();
+
+		watch(
+			() => this.$route,
+			(to, from) => this._onRouteChange(to, from),
+			{ flush: 'post' }
+		);
 
 		// Set up to watch the route title change.
 		if (this.routeTitle) {
@@ -446,32 +421,6 @@ function _setupBeforeRouteEnter(options: ComponentOptions) {
 			await resolver.resolvePayload();
 		}
 	};
-
-	options.beforeRouteUpdate = function (this: BaseRouteComponent, to, from) {
-		if (!options.routeResolverOptions) {
-			return;
-		}
-
-		//  We want the route to resolve, and then perform this as a sort of
-		//  "after route update."
-		_batchRouteChange(() => this._onRouteChange(to, from));
-	};
-}
-
-let _batchedRouteChanges: (() => void)[] = [];
-function _batchRouteChange(newFn: () => void) {
-	if (!_batchedRouteChanges.length) {
-		setTimeout(() => {
-			const callbacks = [..._batchedRouteChanges];
-			_batchedRouteChanges = [];
-
-			for (const fn of callbacks) {
-				fn();
-			}
-		});
-	}
-
-	_batchedRouteChanges.push(newFn);
 }
 
 class Resolver {
