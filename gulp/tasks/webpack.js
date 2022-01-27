@@ -14,7 +14,6 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const VueSSRServerPlugin = require('vue-server-renderer/server-plugin');
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const OfflinePlugin = require('offline-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
 const OptimizeCssnanoPlugin = require('@intervolga/optimize-cssnano-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
@@ -496,16 +495,6 @@ module.exports = function (config) {
 				config.ssr === 'server' && config.isWeb
 					? new VueSSRServerPlugin({
 							filename: 'vue-ssr-server-bundle-' + section + '.json',
-					  })
-					: noop,
-				hasOfflineSupport
-					? new OfflinePlugin({
-							excludes: ['**/.*', '**/*.map', 'vue-ssr-*', '**/*gameApiDocContent*'],
-							ServiceWorker: {
-								events: true,
-								output: 'sjw.js',
-								publicPath: 'https://gamejolt.com/sjw.js',
-							},
 					  })
 					: noop,
 				devNoop || new webpack.HashedModuleIdsPlugin(),
