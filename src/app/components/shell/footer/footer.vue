@@ -135,12 +135,12 @@ export default class AppShellFooter extends Vue {
 							<ol class="list-unstyled footer-link-list">
 								<li>
 									<router-link :to="{ name: 'legal.terms' }">
-										<AppTranslate>legal.terms</AppTranslate>
+										<AppTranslate>Terms</AppTranslate>
 									</router-link>
 								</li>
 								<li>
 									<router-link :to="{ name: 'legal.privacy' }">
-										<AppTranslate>legal.privacy</AppTranslate>
+										<AppTranslate>Privacy</AppTranslate>
 									</router-link>
 								</li>
 								<li v-if="!GJ_IS_DESKTOP_APP">
@@ -185,13 +185,7 @@ export default class AppShellFooter extends Vue {
 			<div class="clearfix">
 				<div v-if="!Screen.isXs" class="footer-jolt">
 					<router-link :to="{ name: 'home' }">
-						<AppThemeSvg
-							:src="imageJolt"
-							alt=""
-							width="68"
-							height="72"
-							strict-colors
-						/>
+						<AppThemeSvg :src="imageJolt" alt="" width="68" height="72" strict-colors />
 					</router-link>
 				</div>
 				<div class="footer-meta">
