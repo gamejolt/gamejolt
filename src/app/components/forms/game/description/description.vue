@@ -5,14 +5,14 @@ import { ContentWriter } from '../../../../../_common/content/content-writer';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import {
-BaseForm,
-FormOnLoad,
-FormOnSubmitSuccess
+	BaseForm,
+	FormOnLoad,
+	FormOnSubmitSuccess,
 } from '../../../../../_common/form-vue/form.service';
 import {
-validateContentMaxLength,
-validateContentNoActiveUploads,
-validateContentRequired
+	validateContentMaxLength,
+	validateContentNoActiveUploads,
+	validateContentRequired,
 } from '../../../../../_common/form-vue/validators';
 import { Game } from '../../../../../_common/game/game.model';
 import { AppGamePerms } from '../../../game/perms/perms';
@@ -113,7 +113,7 @@ export default class FormGameDescription
 </script>
 
 <template>
-	<AppFormButton :controller="form">
+	<AppForm :controller="form">
 		<AppFormGroup name="description_content" :label="$gettext('Description')">
 			<template #label>
 				<AppJolticon icon="edit" />

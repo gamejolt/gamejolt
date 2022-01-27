@@ -43,7 +43,7 @@ export default class AppUserSetPasswordModal extends mixins(BaseModal) {
 				</AppTranslate>
 			</p>
 
-			<FormSetPassword @submit="onPasswordSet"></form-set-password>
+			<FormSetPassword @submit="onPasswordSet" />
 		</div>
 	</AppModal>
 </template>
