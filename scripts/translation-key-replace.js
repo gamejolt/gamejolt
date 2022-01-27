@@ -194,6 +194,21 @@ const { resolve } = require('path/posix');
 		return result;
 	}
 
+	async function saveMainJson(langCode, mainFile) {
+		if (!langCodes.includes(langCode)) {
+			throw new Error(`Unsupported language '${langCode}'`);
+		}
+
+		await fs.mkdirp(path.join(outputTranslationsDir, langCode));
+		await fs.writeJson(
+			path.join(outputTranslationsDir, langCode, 'main.json'),
+			{ [langCode]: mainFile },
+			{
+				encoding: 'utf8',
+			}
+		);
+	}
+
 	function getMainJsonDefinitions(mainJson) {
 		return Object.keys(mainJson);
 	}
@@ -220,31 +235,17 @@ const { resolve } = require('path/posix');
 		return poFile.items.map(item => item.msgid).filter(msgid => !!msgid);
 	}
 
-	async function findPoDefinitionsNotInMainJson() {
-		const mainFile = await getMainJson('en_US');
-		const mainDefs = getMainJsonDefinitions(mainFile);
-
-		for (const langCode of langCodes) {
-			const poFile = await getPoFile(langCode);
-			const poDefs = getPoDefinitions(poFile);
-
-			const missingDefs = poDefs.filter(poDef => mainDefs.includes(poDef));
-			if (missingDefs.length > 0) {
-				console.log(
-					`Found some definition in '${langCode}' po file that do not exist in en_US/main.json:\n\t${missingDefs.join(
-						`\n\t`
-					)}`
-				);
-			}
-		}
-	}
-
 	console.log('Finding en_US definitions in main.json and po files.');
 	const enMainFile = await getMainJson('en_US');
 	const enMainDefs = getMainJsonDefinitions(enMainFile);
 	const enPoFile = await getPoFile('en_US');
 	const enPoDefs = getPoDefinitions(enPoFile);
 
+	// Find definitions that are not referenced from the source code.
+	// These will be removed from the po and json files:
+	// 1. Create a set of all known definitions from joining the definitions in the po and json files.
+	// 2. Mark all of the definitions as unused.
+	// 3. Search for the definitions in all source files and mark them as seen.
 	const enMainUnusedDefs = Object.fromEntries(enMainDefs.map(defKey => [defKey, true]));
 	const enPoUnusedDefs = Object.fromEntries(enPoDefs.map(defKey => [defKey, true]));
 	const enUnusedDefs = Object.assign({}, enMainUnusedDefs, enPoUnusedDefs);
@@ -256,7 +257,13 @@ const { resolve } = require('path/posix');
 		let contents = await fs.readFile(fullPath, { encoding: 'utf-8' });
 
 		// collapse everything to one line so we can match strings that have been folded to multiple lines by auto formatting.
+		// This helps match strings like this:
+		// 	<AppTranslate>
+		// 		Where were you
+		// 		when club penguin die
+		// 	</AppTranslate>
 		contents = contents.replaceAll(/\s{2,}|\n/gi, ' ');
+
 		// Trim strings inside elements so we can match things like <AppTranslate> my.key </AppTranslate>
 		contents = contents.replaceAll(/>\s*(.*?)\s*</gi, '>$1<');
 
@@ -266,19 +273,14 @@ const { resolve } = require('path/posix');
 				continue;
 			}
 
+			// After normalizing the contents we should be able to do a straightforward includes.
 			if (contents.includes(def)) {
 				enUnusedDefs[def] = false;
 			}
 		}
 	}
 
-	const enPoUnusedDefKeys = enPoDefs.filter(def => enUnusedDefs[def] === true);
-	console.log(`${enPoUnusedDefKeys.length}/${enPoDefs.length} po definitions are unused`);
-	if (enPoUnusedDefKeys.length) {
-		console.log('Removing unused definitions');
-		enPoFile.items = enPoFile.items.filter(item => !enPoUnusedDefKeys.includes(item.msgid));
-	}
-
+	// Remove unused definitions from the json file.
 	const enMainUnusedDefKeys = enMainDefs.filter(def => enUnusedDefs[def] === true);
 	console.log(
 		`${enMainUnusedDefKeys.length}/${enMainDefs.length} main.json definitions are unused`
@@ -290,45 +292,77 @@ const { resolve } = require('path/posix');
 		}
 	}
 
-	const enPoUsedDefKeys = enPoDefs.filter(def => enUnusedDefs[def] === false);
-	const enDefinedInPoButMissingInMainJson = enPoUsedDefKeys.filter(
-		def => !enMainDefs.includes(def)
-	);
-	console.log(
-		`${enDefinedInPoButMissingInMainJson.length} in-use definitions in po are missing from main.json`
-	);
-
-	if (enDefinedInPoButMissingInMainJson.length) {
-		console.log('Adding them to main.json...');
-		for (const defToAdd of enDefinedInPoButMissingInMainJson) {
-			const poItem = enPoFile.items.find(item => item.msgid === defToAdd);
-
-			// For plural items in the .po file we need to add the plural forms as an array value in the .json field.
-			// The first element is the singular form, so would just be defToAdd, and is identical to the key we'll set in the .json.
-			if (poItem.msgid_plural) {
-				enMainDefs[defToAdd] = [defToAdd, ...poItem.msgstr.slice(1)];
-			} else {
-				enMainDefs[defToAdd] = defToAdd;
-			}
-		}
+	// Use the current state of enMainFile to construct a mapping of old key => new key.
+	// It handles plural translations by using their singular form as key.
+	// This matches how are json files were compiled, and as of time of writing all of
+	// our plural forms use the same msgid_plural and msgid fields in the po file, so we
+	// should be getting a clean 1-to-1 mapping.
+	const old2newDefs = {};
+	for (const [defKey, defValue] of Object.entries(enMainFile)) {
+		old2newDefs[defKey] = Array.isArray(defValue) ? defValue[0] : defValue;
 	}
 
-	console.log('Loading string replaceable translations in order');
-	const stringReplaceableTranslations = await fs.readJson(
-		path.resolve(__dirname, 'string-replaceable-translations.json'),
-		{
-			encoding: 'utf-8',
+	// Fix up the json files for all languages.
+	for (const langCode of langCodes) {
+		if (langCode === 'en_US') {
+			continue;
 		}
+
+		const mainFile = await getMainJson(langCode);
+
+		// Delete unused definitions. We're assuming the english language is
+		// a complete reference by now, so these should be all the unused keys.
+		for (const mainUnusedDefKey of enMainUnusedDefKeys) {
+			delete mainFile[mainUnusedDefKey];
+		}
+
+		// Replace the keys from the old style to the new according to the mapping
+		// constructed from the english language file.
+		for (const defKey in old2newDefs) {
+			if (!Object.prototype.hasOwnProperty.call(mainFile, defKey)) {
+				console.warn(
+					`main.json file for language '${langCode}' is missing definition for '${defKey}`
+				);
+				continue;
+			}
+
+			const defValue = mainFile[defKey];
+			delete mainFile[defKey];
+
+			const newKey = old2newDefs[defKey];
+			mainFile[newKey] = defValue;
+		}
+
+		await saveMainJson(langCode, mainFile);
+	}
+
+	// Finally replace the old style translation keys in the source code.
+	// The keys whose translations contain escape characters <>'"`\ are skipped because
+	// they have been manually replaced by now. This is because it was hard to figure out
+	// which context the translation key was being used in (html or javascript).
+	console.log('Finding string replaceable translations');
+
+	const escapeChars = new RegExp(/[<>'"`\\]/);
+	const stringReplaceableTranslations = Object.fromEntries(
+		Object.entries(enMainFile).filter(([defKey, defValue]) => {
+			// typeof string check rules out plural forms.
+			// This have also been dealt with manually.
+			return typeof defValue === 'string' && !escapeChars.test(defValue);
+		})
 	);
 
+	// The translation entries need to be sorted by length to avoid replacing a short key
+	// whose value makes it match a second translation key down the line.
+	// This is not 100% foolproof but its good enough for us right now.
 	const stringReplaceableTranslationEntries = Object.entries(stringReplaceableTranslations)
 		.sort((def1, def2) => {
 			const def1Key = def1[0];
 			const def2Key = def2[0];
-			return def1Key.localeCompare(def2Key);
+			return def1Key.length - def2Key.length;
 		})
 		.reverse();
 
+	// Do the actual replacement.
 	console.log('Replacing in source files...');
 	for await (const entry of readdirp(path.join(rootDir, 'src'), {
 		fileFilter: ['*.vue', '*.ts'],
@@ -362,23 +396,22 @@ const { resolve } = require('path/posix');
 		}
 	}
 
-	await fs.mkdirp(path.join(outputTranslationsDir, 'en_US'));
-	await fs.writeJson(
-		path.join(outputTranslationsDir, 'en_US', 'main.json'),
-		{ en_US: enMainFile },
-		{ encoding: 'utf-8' }
-	);
+	// await fs.mkdirp(path.join(outputTranslationsDir, 'en_US'));
+	// await fs.writeJson(
+	// 	path.join(outputTranslationsDir, 'en_US', 'main.json'),
+	// 	{ en_US: enMainFile },
+	// 	{ encoding: 'utf-8' }
+	// );
 
-	await fs.mkdirp(path.join(outputSiteTranslationsDir, 'en_US'));
-	await new Promise((resolve, reject) => {
-		enPoFile.save(path.join(outputSiteTranslationsDir, 'en_US', 'main.po'), err => {
-			if (err) {
-				return reject(err);
-			}
-			return resolve();
-		});
-	});
+	// await fs.mkdirp(path.join(outputSiteTranslationsDir, 'en_US'));
+	// await new Promise((resolve, reject) => {
+	// 	enPoFile.save(path.join(outputSiteTranslationsDir, 'en_US', 'main.po'), err => {
+	// 		if (err) {
+	// 			return reject(err);
+	// 		}
+	// 		return resolve();
+	// 	});
+	// });
 
-	// findPoDefinitionsNotInMainJson();
 	console.log('Done');
 })();
