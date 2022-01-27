@@ -12,6 +12,7 @@ import { useCommonStore } from '../store/common-store';
 import { EventTopic } from '../system/event/event-topic';
 
 export interface RouteResolverOptions {
+	name: string;
 	lazy?: boolean;
 	cache?: boolean;
 	reloadOnHashChange?: boolean;

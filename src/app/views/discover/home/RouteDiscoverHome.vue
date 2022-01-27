@@ -1,6 +1,6 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { computed, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
@@ -9,86 +9,41 @@ import { Environment } from '../../../../_common/environment/environment.service
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Meta } from '../../../../_common/meta/meta-service';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { createAppRoute } from '../../../../_common/route/route-composition';
 import { useCommonStore } from '../../../../_common/store/common-store';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
 import socialImage from '../../../img/social/social-share-header.png';
 import AppHomeDefault from './AppHomeDefault.vue';
 import AppHomeSlider from './AppHomeSlider.vue';
 
-@Options({
+export default defineComponent({
 	name: 'RouteDiscoverHome',
-	components: {
-		AppHomeDefault,
-		AppHomeSlider,
+	resolveRoute: {
+		cache: true,
+		lazy: true,
+		deps: {},
+		resolver: () => Api.sendRequest('/web/discover'),
 	},
-})
-@RouteResolver({
-	cache: true,
-	lazy: true,
-	deps: {},
-	resolver: () => Api.sendRequest('/web/discover'),
-})
-export default class RouteDiscoverHome extends BaseRouteComponent {
-	commonStore = setup(() => useCommonStore());
+});
+</script>
 
-	get user() {
-		return this.commonStore.user;
-	}
+<script lang="ts" setup>
+const route = useRoute();
+const { user, userBootstrapped } = useCommonStore();
 
-	get userBootstrapped() {
-		return this.commonStore.userBootstrapped;
-	}
+const featuredItem = ref<FeaturedItem>();
+const featuredCommunities = ref<Community[]>([]);
+const featuredFireside = ref<Fireside>();
+const heroPosts = ref<FiresidePost[]>([]);
+const split = ref<'default' | 'hero'>();
 
-	featuredItem: FeaturedItem | null = null;
-	featuredCommunities: Community[] = [];
-	featuredFireside: Fireside | null = null;
-	heroPosts: FiresidePost[] = [];
-
-	split: null | 'default' | 'hero' = null;
-
-	get routeTitle() {
-		if (this.user) {
-			return this.$gettext(`Explore`);
-		}
-		return null;
-	}
-
-	routeCreated() {
-		Meta.title = null;
-
-		this.$watch(
-			() => this.userBootstrapped,
-			(userBootstrapped: boolean) => {
-				if (!userBootstrapped) {
-					return;
-				}
-
-				// If we bootstrapped and are logged out, then we've decided to
-				// show this as a split test. If we're logged in, we always use
-				// the default, since it's used as the discover page.
-				if (!this.user) {
-					// If they came in through an ad, we want to force them into
-					// the "hero" split test and save it into their session so
-					// that it always shows when they go back.
-					if (this.$route.query['utm_campaign'] === 'pmf_communities') {
-						configSaveOverride(configGuestHome, 'hero');
-					}
-
-					trackExperimentEngagement(configGuestHome);
-					this.split = configGuestHome.value;
-				} else {
-					this.split = 'default';
-				}
-			},
-			{ immediate: true }
-		);
-	}
-
-	routeResolved($payload: any) {
-		Meta.description = $payload.metaDescription;
-		Meta.fb = $payload.fb;
-		Meta.twitter = $payload.twitter;
+const { isBootstrapped } = createAppRoute({
+	routeTitle: computed(() => (user.value ? $gettext(`Explore`) : null)),
+	onResolved({ payload }) {
+		Meta.description = payload.metaDescription;
+		Meta.fb = payload.fb;
+		Meta.twitter = payload.twitter;
 		Meta.fb.image = Meta.twitter.image = socialImage;
 		Meta.fb.url = Meta.twitter.url = Environment.baseUrl;
 
@@ -104,32 +59,61 @@ export default class RouteDiscoverHome extends BaseRouteComponent {
 			},
 		};
 
-		this.featuredItem = $payload.featuredItem ? new FeaturedItem($payload.featuredItem) : null;
+		featuredItem.value = payload.featuredItem
+			? new FeaturedItem(payload.featuredItem)
+			: undefined;
 
-		if ($payload.isFollowingFeatured && this.featuredItem) {
-			if (this.featuredItem.game) {
-				this.featuredItem.game.is_following = true;
-			} else if (this.featuredItem.community) {
-				this.featuredItem.community.is_member = true;
+		if (payload.isFollowingFeatured && featuredItem.value) {
+			if (featuredItem.value.game) {
+				featuredItem.value.game.is_following = true;
+			} else if (featuredItem.value.community) {
+				featuredItem.value.community.is_member = true;
 			}
 		}
 
-		this.featuredCommunities = Community.populate($payload.communities);
-		this.featuredFireside = $payload.featuredFireside
-			? new Fireside($payload.featuredFireside)
-			: null;
+		featuredCommunities.value = Community.populate(payload.communities);
+		featuredFireside.value = payload.featuredFireside
+			? new Fireside(payload.featuredFireside)
+			: undefined;
 
-		this.heroPosts = FiresidePost.populate<FiresidePost>($payload.heroPosts).filter(
+		heroPosts.value = FiresidePost.populate<FiresidePost>(payload.heroPosts).filter(
 			i => i.hasMedia || i.hasVideo
 		);
-	}
-}
+	},
+});
+
+watch(
+	userBootstrapped,
+	(userBootstrapped: boolean) => {
+		if (!userBootstrapped) {
+			return;
+		}
+
+		// If we bootstrapped and are logged out, then we've decided to
+		// show this as a split test. If we're logged in, we always use
+		// the default, since it's used as the discover page.
+		if (!user.value) {
+			// If they came in through an ad, we want to force them into
+			// the "hero" split test and save it into their session so
+			// that it always shows when they go back.
+			if (route.query['utm_campaign'] === 'pmf_communities') {
+				configSaveOverride(configGuestHome, 'hero');
+			}
+
+			trackExperimentEngagement(configGuestHome);
+			split.value = configGuestHome.value;
+		} else {
+			split.value = 'default';
+		}
+	},
+	{ immediate: true }
+);
 </script>
 
 <template>
 	<AppHomeDefault
 		v-if="split === 'default'"
-		:is-bootstrapped="isRouteBootstrapped"
+		:is-bootstrapped="isBootstrapped"
 		:featured-item="featuredItem"
 		:featured-communities="featuredCommunities"
 		:featured-fireside="featuredFireside"
