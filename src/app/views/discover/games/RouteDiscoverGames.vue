@@ -5,11 +5,12 @@ import {
 	AppPromotionStoreKey,
 	setAppPromotionCohort,
 } from '../../../../utils/mobile-app';
-import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 
 @Options({
 	name: 'RouteDiscoverGames',
 })
+@RouteResolver()
 export default class RouteDiscoverGames extends BaseRouteComponent {
 	@Inject({ from: AppPromotionStoreKey })
 	appPromotion!: AppPromotionStore;

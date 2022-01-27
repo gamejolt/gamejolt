@@ -6,8 +6,8 @@ import { Api } from '../../../_common/api/api.service';
 import {
 	createAppRoute,
 	asyncRouteLoader,
-	defineRouteComponent,
-} from '../../../_common/route/route-composition';
+	defineAppRouteOptions,
+} from '../../../_common/route/route-component';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { IntentService } from '../../components/intent/intent.service';
 import { HomeFeedService } from './home-feed.service';
@@ -17,9 +17,8 @@ const RouteDiscoverHome = defineAsyncComponent(() =>
 	asyncRouteLoader(router, import('../discover/home/RouteDiscoverHome.vue'))
 );
 
-export default defineComponent({
-	...defineRouteComponent({
-		name: 'RouteHome',
+export default {
+	...defineAppRouteOptions({
 		lazy: true,
 		deps: { query: IntentService.APPROVED_LOGIN_QUERY_PARAMS },
 		resolver: async ({ route }) => {
@@ -31,7 +30,7 @@ export default defineComponent({
 			return await Api.sendRequest('/web/touch');
 		},
 	}),
-});
+};
 </script>
 
 <script lang="ts" setup>

@@ -4,7 +4,7 @@ import { arrayRemove } from '../../../utils/array';
 const MAX_ITEMS = 10;
 
 interface HistoryCacheState<T = any> {
-	tag: string | undefined;
+	tag: string | symbol | undefined;
 	url: string;
 	data?: T;
 }
@@ -27,7 +27,7 @@ export class HistoryCache {
 		return historyState;
 	}
 
-	static get<T = any>(route: RouteLocationNormalized, tag?: string) {
+	static get<T = any>(route: RouteLocationNormalized, tag?: string | symbol) {
 		const historyState = this.getHistoryState();
 		if (!historyState) {
 			return null;
@@ -49,11 +49,11 @@ export class HistoryCache {
 		return null;
 	}
 
-	static has(route: RouteLocationNormalized, tag?: string) {
+	static has(route: RouteLocationNormalized, tag?: string | symbol) {
 		return !!this.get(route, tag);
 	}
 
-	static store<T = any>(route: RouteLocationNormalized, data: T, tag?: string) {
+	static store<T = any>(route: RouteLocationNormalized, data: T, tag?: string | symbol) {
 		const state = this.get(route, tag);
 
 		if (state) {

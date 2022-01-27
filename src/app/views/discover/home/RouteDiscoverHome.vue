@@ -9,7 +9,7 @@ import { Environment } from '../../../../_common/environment/environment.service
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Meta } from '../../../../_common/meta/meta-service';
-import { createAppRoute } from '../../../../_common/route/route-composition';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
@@ -17,15 +17,14 @@ import socialImage from '../../../img/social/social-share-header.png';
 import AppHomeDefault from './AppHomeDefault.vue';
 import AppHomeSlider from './AppHomeSlider.vue';
 
-export default defineComponent({
-	name: 'RouteDiscoverHome',
-	resolveRoute: {
+export default {
+	...defineAppRouteOptions({
 		cache: true,
 		lazy: true,
 		deps: {},
 		resolver: () => Api.sendRequest('/web/discover'),
-	},
-});
+	}),
+};
 </script>
 
 <script lang="ts" setup>
