@@ -8,7 +8,7 @@ type LazyLanguageImport = () => Promise<{
 }>;
 
 const _translationImports: Record<string, LazyLanguageImport> = import.meta.env.SSR
-	? { '../../translations/en_US/main.json': () => import('../../translations/en_US/main.json') }
+	? {}
 	: import.meta.glob('../../translations/*/main.json');
 
 const LangStorageKey = 'lang';
@@ -56,7 +56,12 @@ export function initTranslations(app: App) {
 	// Initialize our starting values. [loadCurrentLanguage] should be called
 	// once the app is mounted to switch to their real language.
 	_language.value = (!import.meta.env.SSR && localStorage.getItem(LangStorageKey)) || 'en_US';
-	_translations.value = {};
+	_translations.value = {
+		// Specifically for en_US we don't want to do translations.
+		// We use the english translations as the translation keys, so
+		// we can reliably fall back to just using the key for english.
+		en_US: {},
+	};
 	loadCurrentLanguage();
 
 	// Convenience to make it easier to translate in templates.
@@ -74,18 +79,24 @@ export function initTranslations(app: App) {
  * have to wait for the translations to load before showing anything.
  */
 export async function loadCurrentLanguage() {
-	_translationsReady = new Promise(async resolve => {
+	if (import.meta.env.SSR || _language.value === 'en_US') {
+		_translationsReady = Promise.resolve();
+		return;
+	}
+
+	_translationsReady = (async () => {
+		// Save the language to a variable first to avoid populating
+		// the wrong language if the current language changes while importing.
+		const lang = _language.value;
 		const { default: translationData } = await _translationImports[
-			`../../translations/${_language.value}/main.json`
+			`../../translations/${lang}/main.json`
 		]();
 
-		const newTranslations = translationData[_language.value];
+		const newTranslations = translationData[lang];
 		if (newTranslations) {
-			_translations.value[_language.value] = newTranslations;
+			_translations.value[lang] = newTranslations;
 		}
-
-		resolve();
-	});
+	})();
 }
 
 export async function translationsReady() {
