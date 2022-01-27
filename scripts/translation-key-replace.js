@@ -158,12 +158,10 @@ const { resolve } = require('path/posix');
 
 	const rootDir = path.resolve(__dirname, '..');
 	const inputDir = path.join(rootDir, 'translations-bak', 'input');
-	const outputDir = path.join(rootDir, 'translations-bak', 'output');
 
 	const inputTranslationsDir = path.join(inputDir, 'src-translations');
 	const inputSiteTranslationsDir = path.join(inputDir, 'site-translations');
-	const outputTranslationsDir = path.join(outputDir, 'src-translations');
-	const outputSiteTranslationsDir = path.join(outputDir, 'site-translations');
+	const outputTranslationsDir = path.join(rootDir, 'src', 'translations');
 
 	const _loadedMainJsons = {};
 	async function getMainJson(langCode) {
@@ -384,34 +382,10 @@ const { resolve } = require('path/posix');
 		}
 
 		if (contents != originalContents) {
-			console.log(fullPath);
-			const newPath = path.join(
-				outputDir,
-				'src',
-				path.relative(path.join(rootDir, 'src'), fullPath)
-			);
-
-			await fs.mkdirp(path.dirname(newPath));
+			console.log(`Fixed up: '${fullPath}`);
 			await fs.writeFile(fullPath, contents, { encoding: 'utf-8' });
 		}
 	}
-
-	// await fs.mkdirp(path.join(outputTranslationsDir, 'en_US'));
-	// await fs.writeJson(
-	// 	path.join(outputTranslationsDir, 'en_US', 'main.json'),
-	// 	{ en_US: enMainFile },
-	// 	{ encoding: 'utf-8' }
-	// );
-
-	// await fs.mkdirp(path.join(outputSiteTranslationsDir, 'en_US'));
-	// await new Promise((resolve, reject) => {
-	// 	enPoFile.save(path.join(outputSiteTranslationsDir, 'en_US', 'main.po'), err => {
-	// 		if (err) {
-	// 			return reject(err);
-	// 		}
-	// 		return resolve();
-	// 	});
-	// });
 
 	console.log('Done');
 })();
