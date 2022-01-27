@@ -7,7 +7,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/rou
 const paths = import.meta.glob('../../../../lib/doc-help/src/**/*.md');
 
 @Options({
-	name: 'RouteLandingHelp',
+	name: 'RouteLandingHelpContent',
 })
 @RouteResolver({
 	async resolver({ route }) {

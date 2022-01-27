@@ -157,9 +157,7 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 				accept=".png,.jpg,.jpeg,.webp"
 			/>
 
-			<AppFormControlErrors
-				:label="$gettext(`dash.games.trophies.form.image_error_label`)"
-			/>
+			<AppFormControlErrors :label="$gettext(`dash.games.trophies.form.image_error_label`)" />
 		</AppFormGroup>
 
 		<AppFormGroup name="title" :label="$gettext(`dash.games.trophies.form.title_label`)">
@@ -195,5 +193,5 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 		<AppFormButton>
 			<AppTranslate>dash.games.trophies.form.save_button</AppTranslate>
 		</AppFormButton>
-	</AppFormGroup>
+	</AppForm>
 </template>
