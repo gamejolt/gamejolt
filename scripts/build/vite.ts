@@ -1,5 +1,5 @@
 import { readFile } from 'fs-extra';
-import { gjSectionNames, sectionConfigs } from './section-config';
+import { gjSectionConfigs, gjSectionNames } from './section-config';
 
 const path = require('path') as typeof import('path');
 
@@ -94,7 +94,7 @@ export async function inferAndValidateFromParsedOptions(opts: ParsedOptions) {
 	const withUpdater = false;
 
 	// Merge current section config with defaults.
-	const currentSectionConfig = sectionConfigs[opts.section];
+	const currentSectionConfig = gjSectionConfigs[opts.section];
 
 	// Don't build a section that is not supported for the configured platform.
 	if (!getSectionNamesForPlatform(opts.platform).includes(opts.section)) {
@@ -132,8 +132,9 @@ export function getSectionNamesForPlatform(platform: Options['platform']) {
 			break;
 
 		default:
+			// Return copy of section names to avoid accidental mutations.
 			return [...gjSectionNames];
 	}
 
-	return gjSectionNames.filter(sectionName => sectionConfigs[sectionName][fieldToCheck]);
+	return gjSectionNames.filter(sectionName => gjSectionConfigs[sectionName][fieldToCheck]);
 }

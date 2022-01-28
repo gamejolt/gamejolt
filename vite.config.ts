@@ -80,34 +80,37 @@ export default defineConfig(async configEnv => {
 							gjOpts.section !== 'app'
 								? ''
 								: `
-	<!-- Add to homescreen for Chrome on Android -->
-	<meta name="mobile-web-app-capable" content="yes" />
+		<!-- Add to homescreen for Chrome on Android -->
+		<meta name="mobile-web-app-capable" content="yes" />
 
-	<!-- Add to homescreen for Safari on iOS -->
-	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<meta name="apple-mobile-web-app-title" content="Game Jolt" />
-	<link
-		rel="apple-touch-icon-precomposed"
-		href="./app/img/touch/apple-touch-icon-precomposed.png"
-	/>
+		<!-- Add to homescreen for Safari on iOS -->
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-title" content="Game Jolt" />
+		<link
+			rel="apple-touch-icon-precomposed"
+			href="./app/img/touch/apple-touch-icon-precomposed.png"
+		/>
 
-	<!-- Tile icon for Win8 (144x144 + tile color) -->
-	<meta
-		name="msapplication-TileImage"
-		content="./app/img/touch/ms-touch-icon-144x144-precomposed.png"
-	/>
-	<meta name="msapplication-TileColor" content="#191919" />`.trim()
+		<!-- Tile icon for Win8 (144x144 + tile color) -->
+		<meta
+			name="msapplication-TileImage"
+			content="./app/img/touch/ms-touch-icon-144x144-precomposed.png"
+		/>
+		<meta name="msapplication-TileColor" content="#191919" />`.trim()
 						);
 
 						html = html.replaceAll(
 							'<!-- gj:firebase-shenanigans -->',
 							`
-	<script>
-		${fs.readFileSync(
-			path.resolve(__dirname, 'node_modules/first-input-delay/dist/first-input-delay.min.js'),
-			{ encoding: 'utf-8' }
-		)}
-	</script>`.trim()
+		<script>
+			${fs.readFileSync(
+				path.resolve(
+					__dirname,
+					'node_modules/first-input-delay/dist/first-input-delay.min.js'
+				),
+				{ encoding: 'utf-8' }
+			)}
+		</script>`.trim()
 						);
 
 						html = html.replaceAll(

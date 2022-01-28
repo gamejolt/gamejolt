@@ -11,7 +11,7 @@ export const gjSectionNames = [
 	'z',
 ] as const;
 
-export type GjSection = typeof gjSectionNames[number];
+export type GjSectionName = typeof gjSectionNames[number];
 
 export type GjSectionConfig = {
 	// Title to default to in the web page.
@@ -37,7 +37,7 @@ export type GjSectionConfig = {
 	mobileApp: boolean;
 };
 
-export const sectionDefaultConfig: GjSectionConfig = {
+const sectionDefaultConfig: GjSectionConfig = {
 	title: 'Game Jolt - Games for the love of it',
 	hasRouter: true,
 	allowCrawlers: false,
@@ -48,7 +48,7 @@ export const sectionDefaultConfig: GjSectionConfig = {
 	mobileApp: false,
 };
 
-export const sectionOverrides: Partial<Record<GjSection, Partial<GjSectionConfig>>> = {
+const sectionOverrides: Partial<Record<GjSectionName, Partial<GjSectionConfig>>> = {
 	app: {
 		title: 'Game Jolt - Games for the love of it',
 		allowCrawlers: true,
@@ -101,9 +101,9 @@ function mergeSectionConfig(sectionConfig: Partial<GjSectionConfig>): GjSectionC
 	return Object.assign({}, sectionDefaultConfig, sectionConfig);
 }
 
-export const sectionConfigs = Object.fromEntries(
+export const gjSectionConfigs = Object.fromEntries(
 	gjSectionNames.map(name => {
 		const sectionConfig = mergeSectionConfig(sectionOverrides[name] ?? {});
 		return [name, sectionConfig];
 	})
-) as Record<GjSection, GjSectionConfig>;
+) as Record<GjSectionName, GjSectionConfig>;
