@@ -135,17 +135,6 @@ export default defineConfig(async configEnv => {
 							`<title>${gjOpts.currentSectionConfig.title}</title>`
 						);
 
-						// gj:ssr-metatags is substituted in ssr/server.js with the metatags
-						// after the request has run.
-						html = html.replace(
-							'<!-- gj:ssr-shenanigans -->',
-							`
-		<!-- Favicon -->
-		<link rel="shortcut icon" type="image/png" href="https://s.gjcdn.net/img/favicon.png" />
-
-		<!-- gj:ssr-metatags -->`.trim()
-						);
-
 						const bodyClass = gjOpts.currentSectionConfig.htmlBodyClass;
 						if (bodyClass) {
 							html = html.replace(
