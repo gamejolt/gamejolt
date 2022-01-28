@@ -112,7 +112,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRo
 			</div>
 
 			<!--
-				TODO(vue3) this translation block is horrible but im not sure
+				TODO: this translation block is horrible but im not sure
 				how we want to solve it. Can we avoid splitting it to like 5 lines while
 				keeping the router links somehow.
 			-->
