@@ -3,6 +3,8 @@ import { arrayRemove, numberSort } from '../../utils/array';
 import { Analytics } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
 import { showErrorGrowl } from '../growls/growls.service';
+import AppModalStickerLayer from '../modal/AppModalStickerLayer.vue';
+import { setModalBodyWrapper } from '../modal/modal.service';
 import {
 	getCollidingStickerTarget,
 	StickerLayerController,
@@ -57,6 +59,9 @@ export function createDrawerStore() {
 	const activeLayer = computed(() => {
 		return layers.value[layers.value.length - 1];
 	});
+
+	// Set up modals to have the sticker layer as their body element.
+	setModalBodyWrapper(AppModalStickerLayer);
 
 	const c = {
 		layers,

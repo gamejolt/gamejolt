@@ -55,6 +55,12 @@ export class Modal<T = any> {
 class ModalsService {
 	modals: Modal[] = [];
 	incrementer = 0;
+
+	/**
+	 * Can be set within a section to define a wrapping component for all modal
+	 * bodies.
+	 */
+	modalBodyWrapper?: Component;
 }
 
 export const Modals = reactive(new ModalsService()) as ModalsService;
@@ -83,4 +89,8 @@ export function findModalById(modalId: string) {
 
 function _removeModal(modal: Modal) {
 	arrayRemove(Modals.modals, i => i.id === modal.id);
+}
+
+export function setModalBodyWrapper(component: Component) {
+	Modals.modalBodyWrapper = markRaw(component);
 }
