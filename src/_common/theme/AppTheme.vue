@@ -141,7 +141,7 @@ const styles = computed(() => {
 	}
 
 	// We collapse whitespace so that it's a smaller output.
-	return styles.replaceAll(/\s+/g, '');
+	return styles.replace(/\s+/g, '');
 });
 </script>
 
