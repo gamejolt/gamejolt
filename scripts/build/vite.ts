@@ -1,13 +1,13 @@
 import { readFile } from 'fs-extra';
+import { gjSectionNames, sectionConfigs } from './section-config';
+
 const path = require('path') as typeof import('path');
 
-export type ParsedOptions = ReturnType<typeof parseOptionsFromEnv> extends Promise<infer T>
-	? T
-	: never;
+type UnwrapPromise<T> = T extends Promise<infer U> ? U : never;
 
-export type InferredOptions = Record<string, unknown>;
+export type ParsedOptions = UnwrapPromise<ReturnType<typeof parseOptionsFromEnv>>;
 
-export type Options = ParsedOptions & InferredOptions;
+export type Options = UnwrapPromise<ReturnType<typeof inferAndValidateFromParsedOptions>>;
 
 export async function parseOptionsFromEnv() {
 	function isExpectedValue<T>(
@@ -42,23 +42,7 @@ export async function parseOptionsFromEnv() {
 	}
 
 	// Which section to build.
-	const section = parseOption(
-		process.env['GJ_SECTION'],
-		'Section',
-		[
-			'app',
-			'auth',
-			'checkout',
-			'claim',
-			'client',
-			'editor',
-			'gameserver',
-			'site-editor',
-			'widget-package',
-			'z',
-		] as const,
-		'app'
-	);
+	const section = parseOption(process.env['GJ_SECTION'], 'Section', gjSectionNames, 'app');
 
 	// Which platform to build for.
 	const platform = parseOption(
@@ -86,6 +70,15 @@ export async function parseOptionsFromEnv() {
 		'development'
 	);
 
+	return {
+		section,
+		platform,
+		environment,
+		buildType,
+	};
+}
+
+export async function inferAndValidateFromParsedOptions(opts: ParsedOptions) {
 	// The version we report to the backend.
 	// Defaults to the version specified in package.json.
 	// Overriding this makes sense only in development, and is usually
@@ -95,17 +88,52 @@ export async function parseOptionsFromEnv() {
 	);
 	const version: string = process.env['GJ_VERSION'] ?? packageJson.version;
 
-	// TODO: infer this from other properties.
+	// TODO(vue3): infer this from other properties.
 	// I'm not sure if we want to keep the same logic we did before,
 	// it depends on how packaging up the client works with vite once I get that working.
 	const withUpdater = false;
 
+	// Merge current section config with defaults.
+	const currentSectionConfig = sectionConfigs[opts.section];
+
+	// Don't build a section that is not supported for the configured platform.
+	if (!getSectionNamesForPlatform(opts.platform).includes(opts.section)) {
+		throw new Error(
+			`Not supported building section '${opts.section}' for platform '${opts.platform}'`
+		);
+	}
+
 	return {
-		section,
-		platform,
-		environment,
-		buildType,
+		...opts,
 		version,
 		withUpdater,
+		currentSectionConfig,
 	};
+}
+
+export async function parseAndInferOptionsFromEnv() {
+	const parsedOpts = await parseOptionsFromEnv();
+	return await inferAndValidateFromParsedOptions(parsedOpts);
+}
+
+export function getSectionNamesForPlatform(platform: Options['platform']) {
+	let fieldToCheck: 'desktopApp' | 'ssr' | 'mobileApp';
+	switch (platform) {
+		case 'desktop':
+			fieldToCheck = 'desktopApp';
+			break;
+
+		case 'ssr':
+			fieldToCheck = 'ssr';
+			break;
+
+		case 'mobile':
+			fieldToCheck = 'mobileApp';
+			break;
+
+		default:
+			return [...gjSectionNames];
+	}
+
+	return gjSectionNames.filter(sectionName => sectionConfigs[sectionName][fieldToCheck]);
 }

@@ -3,69 +3,9 @@ import * as path from 'path';
 // import nodeBuiltins from 'rollup-plugin-node-builtins';
 import { defineConfig, UserConfig as ViteUserConfigActual } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
-import { Options as ViteHelperOptions, parseOptionsFromEnv } from './scripts/helpers/vite';
+import { parseAndInferOptionsFromEnv } from './scripts/build/vite';
 
 const fs = require('fs-extra') as typeof import('fs-extra');
-
-type GjSection = ViteHelperOptions['section'];
-
-type GjSectionConfig = {
-	title: string;
-	hasRouter: boolean;
-	allowCrawlers: boolean;
-	htmlBodyClass: string;
-	jsScripts: string;
-};
-
-const defaultSectionConfig: GjSectionConfig = {
-	title: 'Game Jolt - Games for the love of it',
-	hasRouter: true,
-	allowCrawlers: false,
-	htmlBodyClass: '',
-	jsScripts: '',
-};
-
-const sectionOverrides: Partial<Record<GjSection, Partial<GjSectionConfig>>> = {
-	app: {
-		title: 'Game Jolt - Games for the love of it',
-		allowCrawlers: true,
-	},
-	auth: {
-		title: 'Game Jolt - Games for the love of it',
-		allowCrawlers: true,
-		htmlBodyClass: 'fill-darkest',
-	},
-	checkout: {
-		title: 'Checkout - Game Jolt',
-		jsScripts: '<script type="text/javascript" src="https://js.stripe.com/v2/"></script>',
-	},
-	claim: {
-		title: 'Claim - Game Jolt',
-	},
-	'site-editor': {
-		title: 'Edit Site - Game Jolt',
-	},
-	gameserver: {
-		title: 'Playing Game - Game Jolt',
-		hasRouter: false,
-	},
-	client: {
-		title: 'Game Jolt',
-		htmlBodyClass: 'fill-darkest',
-	},
-	'widget-package': {
-		title: 'Get Game from Game Jolt',
-		hasRouter: false,
-	},
-	z: {
-		title: 'Game Jolt - Games for the love of it',
-		htmlBodyClass: 'main-body',
-	},
-	editor: {
-		title: 'Editor',
-		hasRouter: false,
-	},
-};
 
 type ViteUserConfig = ViteUserConfigActual & {
 	// This is an experimental feature, and as of time of writing
@@ -80,13 +20,7 @@ type ViteUserConfig = ViteUserConfigActual & {
 // https://vitejs.dev/config/
 export default defineConfig(async configEnv => {
 	const { command } = configEnv;
-	const gjOpts = await parseOptionsFromEnv();
-
-	// Merge current section config with defaults.
-	const sectionConfig: GjSectionConfig = Object.assign(
-		defaultSectionConfig,
-		sectionOverrides[gjOpts.section] ?? {}
-	);
+	const gjOpts = await parseAndInferOptionsFromEnv();
 
 	type EmptyObject = { [k in any]: never };
 	type GetValueOrEmpty = <T>(value: T) => T | EmptyObject;
@@ -136,7 +70,7 @@ export default defineConfig(async configEnv => {
 
 						html = html.replaceAll(
 							'<!-- gj:crawlers -->',
-							sectionConfig.allowCrawlers
+							gjOpts.currentSectionConfig.allowCrawlers
 								? ''
 								: '<meta name="robots" content="noindex, nofollow" />'
 						);
@@ -178,7 +112,7 @@ export default defineConfig(async configEnv => {
 
 						html = html.replaceAll(
 							'<!-- gj:section-title -->',
-							`<title>${sectionConfig.title}</title>`
+							`<title>${gjOpts.currentSectionConfig.title}</title>`
 						);
 
 						html = html.replaceAll(
@@ -188,8 +122,8 @@ export default defineConfig(async configEnv => {
 
 						html = html.replaceAll(
 							'<!-- gj:body-class -->',
-							sectionConfig.htmlBodyClass
-								? `class="${sectionConfig.htmlBodyClass}"`
+							gjOpts.currentSectionConfig.htmlBodyClass
+								? `class="${gjOpts.currentSectionConfig.htmlBodyClass}"`
 								: ''
 						);
 
@@ -362,7 +296,7 @@ export default defineConfig(async configEnv => {
 			GJ_BUILD_TYPE: JSON.stringify(gjOpts.buildType),
 			GJ_VERSION: JSON.stringify(gjOpts.version),
 			GJ_WITH_UPDATER: JSON.stringify(gjOpts.withUpdater),
-			GJ_HAS_ROUTER: JSON.stringify(sectionConfig.hasRouter),
+			GJ_HAS_ROUTER: JSON.stringify(gjOpts.currentSectionConfig.hasRouter),
 
 			// Disable redirecting between section during serve.
 			// This is because as of time of writing we only support watching
