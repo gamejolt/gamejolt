@@ -146,12 +146,13 @@ export default defineConfig(async configEnv => {
 		<!-- gj:ssr-metatags -->`.trim()
 						);
 
-						html = html.replace(
-							'<!-- gj:body-class -->',
-							gjOpts.currentSectionConfig.htmlBodyClass
-								? `class="${gjOpts.currentSectionConfig.htmlBodyClass}"`
-								: ''
-						);
+						const bodyClass = gjOpts.currentSectionConfig.htmlBodyClass;
+						if (bodyClass) {
+							html = html.replace(
+								`<body id="root">`,
+								`<body id="root" class"${bodyClass}">`
+							);
+						}
 
 						return html;
 					},
