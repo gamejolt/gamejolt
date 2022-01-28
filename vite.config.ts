@@ -3,7 +3,8 @@ import * as path from 'path';
 // import nodeBuiltins from 'rollup-plugin-node-builtins';
 import { defineConfig, UserConfig as ViteUserConfigActual } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
-import { parseAndInferOptionsFromEnv } from './scripts/build/vite';
+import viteHtmlResolve from './scripts/build/vite-html-resolve';
+import { parseAndInferOptionsFromEnv } from './scripts/build/vite-options';
 
 const fs = require('fs-extra') as typeof import('fs-extra');
 
@@ -49,25 +50,29 @@ export default defineConfig(async configEnv => {
 
 	const noopDirectiveTransform = () => ({ props: [] });
 
+	const htmlResolver = viteHtmlResolve();
+
 	return {
 		plugins: [
-			// Does a simple string replace to include our section entrypoint in the html.
+			// Does a simple string replace based interpolation in our html.
 			//
 			// I originally used vite-plugin-html here but for some reason
 			// it only worked during build, but not during serve. Looks like Vite
 			// tried parsing index.html before vite-plugin-html processed it, which
 			// meant Vite was seeing invalid looking html and died.
 			{
-				name: 'gj:section-patch',
+				name: 'gj:index-interpolations',
 				enforce: 'pre',
 				transformIndexHtml: {
 					enforce: 'pre',
 					transform: html => {
+						// Patch our entrypoint depending on our section.
 						html = html.replaceAll(
 							'<!-- gj:section-entrypoint -->',
 							`<script type="module" src="/${gjOpts.section}/main.ts"></script>`
 						);
 
+						// Tell spider man to go back home.
 						html = html.replaceAll(
 							'<!-- gj:crawlers -->',
 							gjOpts.currentSectionConfig.allowCrawlers
@@ -75,6 +80,8 @@ export default defineConfig(async configEnv => {
 								: '<meta name="robots" content="noindex, nofollow" />'
 						);
 
+						// These are only set for app section.
+						// Note: the <meta content> images are resolved using our viteHtmlResolve plugin.
 						html = html.replaceAll(
 							'<!-- gj:app-section-shenanigans -->',
 							gjOpts.section !== 'app'
@@ -118,9 +125,15 @@ export default defineConfig(async configEnv => {
 							`<title>${gjOpts.currentSectionConfig.title}</title>`
 						);
 
+						// gj:ssr-metatags is substituted in ssr/server.js with the metatags
+						// after the request has run.
 						html = html.replaceAll(
-							'<!-- gj:fb-og-image-url -->',
-							'./app/img/meta-default-image.png'
+							'<!-- gj:ssr-shenanigans -->',
+							`
+		<!-- Favicon -->
+		<link rel="shortcut icon" type="image/png" href="https://s.gjcdn.net/img/favicon.png" />
+
+		<!-- gj:ssr-metatags -->`.trim()
 						);
 
 						html = html.replaceAll(
@@ -134,6 +147,30 @@ export default defineConfig(async configEnv => {
 					},
 				},
 			},
+
+			// These images are used directly in the index.html but vite does not
+			// resolve them. It seems it only looks at <img src>, <a href> and the likes, but not
+			// all tags like <meta content>.
+			//
+			// This plugin basically injects the necessary <img src> and whatever to
+			// make vite resolve them, and then returns what they resolved to.
+			//
+			// In the post plugin callback we use these resolved paths to do a simple
+			// string replace to get em in.
+			htmlResolver.prePlugin([
+				'./app/img/meta-default-image.png',
+				'./app/img/touch/ms-touch-icon-144x144-precomposed.png',
+			]),
+			htmlResolver.postPlugin((resolved, html) => {
+				for (const entry of resolved.entries()) {
+					const query = entry[0];
+					const result = entry[1];
+
+					html = html.replaceAll(query, result);
+				}
+
+				return html;
+			}),
 
 			vue({
 				...onlyInSSR<Partial<VueOptions>>({
