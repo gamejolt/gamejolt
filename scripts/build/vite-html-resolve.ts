@@ -97,15 +97,13 @@ export default function viteHtmlResolve(options?: HtmlResolvePluginOptions) {
 			transformIndexHtml: {
 				enforce: 'post',
 				transform: (html, ctx) => {
-					const imgMatcher = new RegExp(
-						`<img ${captureResolveId} src=${captureString}>`,
-						'g'
-					);
+					const imgMatcher = new RegExp(`<img ${captureResolveId} src=${captureString}>`);
 
 					let match: RegExpExecArray | null;
 					while ((match = imgMatcher.exec(html)) !== null) {
 						// Remove the match from html.
-						html = html.slice(0, match.index - 1) + html.slice(imgMatcher.lastIndex);
+						html =
+							html.slice(0, match.index) + html.slice(match.index + match[0].length);
 
 						const id = parseInt(match[1]);
 						const resolvedPath = match[2];
