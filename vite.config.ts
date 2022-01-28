@@ -63,19 +63,19 @@ export default defineConfig(async configEnv => {
 				transformIndexHtml: {
 					enforce: 'pre',
 					transform: html => {
-						html = html.replaceAll(
+						html = html.replace(
 							'<!-- gj:section-entrypoint -->',
 							`<script type="module" src="/${gjOpts.section}/main.ts"></script>`
 						);
 
-						html = html.replaceAll(
+						html = html.replace(
 							'<!-- gj:crawlers -->',
 							gjOpts.currentSectionConfig.allowCrawlers
 								? ''
 								: '<meta name="robots" content="noindex, nofollow" />'
 						);
 
-						html = html.replaceAll(
+						html = html.replace(
 							'<!-- gj:app-section-shenanigans -->',
 							gjOpts.section !== 'app'
 								? ''
@@ -99,7 +99,7 @@ export default defineConfig(async configEnv => {
 		<meta name="msapplication-TileColor" content="#191919" />`.trim()
 						);
 
-						html = html.replaceAll(
+						html = html.replace(
 							'<!-- gj:firebase-shenanigans -->',
 							`
 		<script>
@@ -113,17 +113,17 @@ export default defineConfig(async configEnv => {
 		</script>`.trim()
 						);
 
-						html = html.replaceAll(
+						html = html.replace(
 							'<!-- gj:section-title -->',
 							`<title>${gjOpts.currentSectionConfig.title}</title>`
 						);
 
-						html = html.replaceAll(
+						html = html.replace(
 							'<!-- gj:fb-og-image-url -->',
 							'./app/img/meta-default-image.png'
 						);
 
-						html = html.replaceAll(
+						html = html.replace(
 							'<!-- gj:body-class -->',
 							gjOpts.currentSectionConfig.htmlBodyClass
 								? `class="${gjOpts.currentSectionConfig.htmlBodyClass}"`
