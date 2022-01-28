@@ -38,6 +38,7 @@ export default defineConfig(async configEnv => {
 	};
 
 	const onlyInSSR = emptyUnless(() => gjOpts.platform === 'ssr');
+	const notInSSR = emptyUnless(() => gjOpts.platform !== 'ssr');
 	const isInDocker = !!process.env['GAMEJOLT_IN_DOCKER'];
 	const onlyInDocker = emptyUnless(() => isInDocker);
 	const onlyInDesktopApp = emptyUnless(() => gjOpts.platform === 'desktop');
@@ -271,9 +272,11 @@ export default defineConfig(async configEnv => {
 			}),
 
 			rollupOptions: {
-				// When building for ssr the entrypoint is specified in build.ssr,
-				// and the index.html input file should NOT be specified.
-				input: gjOpts.platform === 'ssr' ? undefined : inputHtmlFile,
+				...notInSSR<RollupOptions>({
+					// When building for ssr the entrypoint is specified in build.ssr,
+					// and the index.html input file should NOT be specified.
+					input: inputHtmlFile,
+				}),
 
 				...onlyInDesktopApp<RollupOptions>({
 					// plugins: [nodeBuiltins()],
