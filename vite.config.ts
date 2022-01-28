@@ -67,13 +67,13 @@ export default defineConfig(async configEnv => {
 					enforce: 'pre',
 					transform: html => {
 						// Patch our entrypoint depending on our section.
-						html = html.replaceAll(
+						html = html.replace(
 							'<!-- gj:section-entrypoint -->',
 							`<script type="module" src="/${gjOpts.section}/main.ts"></script>`
 						);
 
 						// Tell spider man to go back home.
-						html = html.replaceAll(
+						html = html.replace(
 							'<!-- gj:crawlers -->',
 							gjOpts.currentSectionConfig.allowCrawlers
 								? ''
@@ -82,7 +82,7 @@ export default defineConfig(async configEnv => {
 
 						// These are only set for app section.
 						// Note: the <meta content> images are resolved using our viteHtmlResolve plugin.
-						html = html.replaceAll(
+						html = html.replace(
 							'<!-- gj:app-section-shenanigans -->',
 							gjOpts.section !== 'app'
 								? ''
@@ -106,7 +106,7 @@ export default defineConfig(async configEnv => {
 		<meta name="msapplication-TileColor" content="#191919" />`.trim()
 						);
 
-						html = html.replaceAll(
+						html = html.replace(
 							'<!-- gj:firebase-shenanigans -->',
 							`
 		<script>
@@ -120,14 +120,14 @@ export default defineConfig(async configEnv => {
 		</script>`.trim()
 						);
 
-						html = html.replaceAll(
+						html = html.replace(
 							'<!-- gj:section-title -->',
 							`<title>${gjOpts.currentSectionConfig.title}</title>`
 						);
 
 						// gj:ssr-metatags is substituted in ssr/server.js with the metatags
 						// after the request has run.
-						html = html.replaceAll(
+						html = html.replace(
 							'<!-- gj:ssr-shenanigans -->',
 							`
 		<!-- Favicon -->
@@ -136,7 +136,7 @@ export default defineConfig(async configEnv => {
 		<!-- gj:ssr-metatags -->`.trim()
 						);
 
-						html = html.replaceAll(
+						html = html.replace(
 							'<!-- gj:body-class -->',
 							gjOpts.currentSectionConfig.htmlBodyClass
 								? `class="${gjOpts.currentSectionConfig.htmlBodyClass}"`

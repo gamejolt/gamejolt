@@ -1,12 +1,12 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import AppPostCardPlaceholder from '../../../app/components/fireside/post/card/card-placeholder.vue';
-import AppPostCard from '../../../app/components/fireside/post/card/card.vue';
 import { PostOpenSource, trackGotoCommunity } from '../../analytics/analytics.service';
 import { Api } from '../../api/api.service';
 import { EventItem } from '../../event-item/event-item.model';
 import { formatNumber } from '../../filters/number';
-import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
+import AppPostCard from '../../fireside/post/card/AppPostCard.vue';
+import AppPostCardPlaceholder from '../../fireside/post/card/AppPostCardPlaceholder.vue';
+import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
 import { Community } from '../community.model';
@@ -19,8 +19,8 @@ import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 		AppCommunityThumbnailImg,
 		AppMediaItemBackdrop,
 		AppCommunityJoinWidget,
-		AppPostCard,
 		AppCommunityVerifiedTick,
+		AppPostCard,
 		AppPostCardPlaceholder,
 		AppScrollScroller,
 	},

@@ -3,7 +3,6 @@ import { Options } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
 import { ContentDocument } from '../../../_common/content/content-document';
 import AppContentEditor from '../../../_common/content/content-editor/content-editor.vue';
-import AppContentViewer from '../../../_common/content/content-viewer/content-viewer.vue';
 import AppLoading from '../../../_common/loading/loading.vue';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
@@ -16,7 +15,6 @@ import { User } from '../../../_common/user/user.model';
 		AppContentEditor,
 		AppLoading,
 		AppTimeAgo,
-		AppContentViewer,
 	},
 })
 @RouteResolver({

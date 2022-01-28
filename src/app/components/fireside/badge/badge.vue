@@ -3,7 +3,7 @@ import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
-import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
+import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { AppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';

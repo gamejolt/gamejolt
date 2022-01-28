@@ -3,7 +3,7 @@ import { Inject, Options, Vue } from 'vue-property-decorator';
 import { isEditingCommunity } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
 import AppEditableOverlay from '../../../../../_common/editable-overlay/editable-overlay.vue';
-import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
+import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { CommunityThumbnailModal } from '../../../../components/forms/community/thumbnail/modal/modal.service';
 import { routeCommunitiesViewEditDetails } from '../edit/details/details.route';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';

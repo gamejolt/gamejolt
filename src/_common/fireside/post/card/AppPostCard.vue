@@ -1,31 +1,29 @@
 <script lang="ts">
 import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { PostOpenSource, trackPostOpen } from '../../../../../_common/analytics/analytics.service';
-import { ContentFocus } from '../../../../../_common/content-focus/content-focus.service';
-import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
-import { Environment } from '../../../../../_common/environment/environment.service';
-import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
-import { formatFuzzynumber } from '../../../../../_common/filters/fuzzynumber';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
-import AppLoading from '../../../../../_common/loading/loading.vue';
-import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
-import { MediaItem } from '../../../../../_common/media-item/media-item-model';
-import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
-import { AppResponsiveDimensions } from '../../../../../_common/responsive-dimensions/responsive-dimensions';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
-import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
+import { PostOpenSource, trackPostOpen } from '../../../analytics/analytics.service';
+import { ContentFocus } from '../../../content-focus/content-focus.service';
+import AppContentViewer from '../../../content/content-viewer/content-viewer.vue';
+import { Environment } from '../../../environment/environment.service';
+import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
+import { formatFuzzynumber } from '../../../filters/fuzzynumber';
+import { AppImgResponsive } from '../../../img/responsive/responsive';
+import AppLoading from '../../../loading/loading.vue';
+import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
+import { MediaItem } from '../../../media-item/media-item-model';
+import { AppObserveDimensions } from '../../../observe-dimensions/observe-dimensions.directive';
+import { AppResponsiveDimensions } from '../../../responsive-dimensions/responsive-dimensions';
+import { Screen } from '../../../screen/screen-service';
+import AppScrollInview, { ScrollInviewConfig } from '../../../scroll/inview/AppScrollInview.vue';
+import AppUserAvatar from '../../../user/user-avatar/user-avatar.vue';
 import {
 	createVideoPlayerController,
 	getVideoPlayerFromSources,
 	VideoPlayerController,
 	VideoPlayerControllerContext,
-} from '../../../../../_common/video/player/controller';
-import AppVideo from '../../../../../_common/video/video.vue';
+} from '../../../video/player/controller';
+import AppVideo from '../../../video/video.vue';
+import { FiresidePost } from '../post-model';
 
 const _InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 

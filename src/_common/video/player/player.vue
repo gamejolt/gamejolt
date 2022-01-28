@@ -4,7 +4,7 @@ import { AppVideoPlayerShakaLazy } from '../../../app/components/lazy';
 import { formatNumber } from '../../filters/number';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import AppLoading from '../../loading/loading.vue';
-import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
+import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../media-item/media-item-model';
 import {
 	AppResponsiveDimensions,
@@ -411,11 +411,7 @@ export default class AppVideoPlayer extends Vue {
 						<transition>
 							<div
 								v-if="shouldShowPausedIndicator"
-								class="
-									-paused-indicator
-									-ui
-									anim-fade-enter-enlarge anim-fade-leave-shrink
-								"
+								class="-paused-indicator -ui anim-fade-enter-enlarge anim-fade-leave-shrink"
 							>
 								<AppJolticon class="-paused-indicator-icon" icon="play" />
 							</div>

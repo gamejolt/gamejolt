@@ -5,7 +5,7 @@ import { trackGotoCommunity } from '../../../../../_common/analytics/analytics.s
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
-import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
+import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
@@ -159,10 +159,7 @@ export default class AppShellCbarCommunity extends Vue {
 								:media-item="community.thumbnail"
 								radius="full"
 							>
-								<AppCommunityThumbnailImg
-									class="-thumb"
-									:community="community"
-								/>
+								<AppCommunityThumbnailImg class="-thumb" :community="community" />
 							</AppMediaItemBackdrop>
 						</router-link>
 					</AppShellCbarItem>

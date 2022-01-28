@@ -7,10 +7,9 @@ import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.s
 import { Screen } from '../screen/screen-service';
 import AppScrollAffix from '../scroll/affix/affix.vue';
 import AppScrollScroller, { createScroller } from '../scroll/AppScrollScroller.vue';
-import AppStickerLayer from '../sticker/layer/layer.vue';
 import AppTheme from '../theme/AppTheme.vue';
 import { Theme } from '../theme/theme.model';
-import { useModal } from './modal.service';
+import { Modals, useModal } from './modal.service';
 
 export interface AppModalInterface {
 	scrollTo: (offsetY: number) => void;
@@ -136,7 +135,10 @@ function scrollTo(offsetY: number) {
 				'modal-full': modal.size === 'full',
 			}"
 		>
-			<component :is="!drawer ? 'div' : AppStickerLayer" class="modal-sticker-layer">
+			<component
+				:is="Modals.modalBodyWrapper || 'div'"
+				v-bind="Modals.modalBodyWrapper ? { modal } : {}"
+			>
 				<AppTheme
 					class="modal-content"
 					:theme="theme"
@@ -178,14 +180,6 @@ function scrollTo(offsetY: number) {
 	position: absolute
 	z-index: 2
 
-.modal-sticker-layer
-	position: relative
-	min-height: 100vh
-
-	@media $media-sm-up
-		padding: 30px 0
-		padding-top: 100px
-
 .modal-content
 	change-bg('bg')
 	theme-prop('color', 'fg')
@@ -213,9 +207,6 @@ function scrollTo(offsetY: number) {
 
 .modal-full
 	change-bg('bg')
-
-	.modal-sticker-layer
-		padding: 0
 
 	.modal-content
 		-fullscreen()
