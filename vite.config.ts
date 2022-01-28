@@ -140,7 +140,7 @@ export default defineConfig(async configEnv => {
 						if (bodyClass) {
 							html = html.replace(
 								`<body id="root">`,
-								`<body id="root" class"${bodyClass}">`
+								`<body id="root" class="${bodyClass}">`
 							);
 						}
 
