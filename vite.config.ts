@@ -279,7 +279,7 @@ export default defineConfig(async configEnv => {
 			// we need to explicitly allow vite to clear the build directory.
 			// This is needed to avoid accidentally referencing old assets
 			// while developing
-			emptyOutDir: true,
+			emptyOutDir: gjOpts.emptyOutDir,
 
 			// Write to build/web normally and to build/server for ssr.
 			outDir: path.resolve(

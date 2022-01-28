@@ -70,11 +70,20 @@ export async function parseOptionsFromEnv() {
 		'development'
 	);
 
+	const emptyOutDirStr = parseOption(
+		process.env['GJ_EMPTY_OUTDIR'],
+		'Empty output directory before building',
+		['y', 'n', 'yes', 'no', 'true', 'false', 'on', 'off', '1', '0'] as const,
+		'y'
+	);
+	const emptyOutDir = ['y', 'yes', 'true', 'on', '1'].includes(emptyOutDirStr) ? true : false;
+
 	return {
 		section,
 		platform,
 		environment,
 		buildType,
+		emptyOutDir,
 	};
 }
 
