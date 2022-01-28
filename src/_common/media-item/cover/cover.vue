@@ -4,7 +4,7 @@ import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { AppImgResponsive } from '../../img/responsive/responsive';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
-import AppMediaItemBackdrop from '../backdrop/backdrop.vue';
+import AppMediaItemBackdrop from '../backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../media-item-model';
 
 @Options({
@@ -94,11 +94,7 @@ export default class AppMediaItemCover extends Vue {
 	<div class="media-item-cover-container" :class="{ '-blur': blur }">
 		<section class="section media-item-cover" :class="{ loaded: isLoaded }">
 			<div class="media-item-cover-img">
-				<AppMediaItemBackdrop
-					class="-backdrop"
-					:media-item="mediaItem"
-					:style="{ height }"
-				>
+				<AppMediaItemBackdrop class="-backdrop" :media-item="mediaItem" :style="{ height }">
 					<AppImgResponsive
 						v-show="isLoaded"
 						:src="mediaItem.mediaserver_url"

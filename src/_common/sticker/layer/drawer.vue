@@ -4,7 +4,6 @@ import { setup } from 'vue-class-component';
 import { Options, Vue, Watch } from 'vue-property-decorator';
 import AppEventItemMediaIndicator from '../../../app/components/event-item/media-indicator/media-indicator.vue';
 import { useAppStore } from '../../../app/store';
-import { StickerCount } from '../../../app/views/dashboard/stickers/stickers.vue';
 import { shallowSetup } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import {
@@ -20,7 +19,7 @@ import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
 import { useEventSubscription } from '../../system/event/event-topic';
 import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
 import AppStickerCard from '../card/card.vue';
-import { Sticker } from '../sticker.model';
+import { Sticker, StickerStack } from '../sticker.model';
 import AppSticker from '../sticker.vue';
 import AppStickerLayerDrawerItem from './drawer-item.vue';
 
@@ -92,10 +91,10 @@ export default class AppStickerLayerDrawer extends Vue {
 		return this.chunkStickers(this.items);
 	}
 
-	private chunkStickers(stickers: StickerCount[]) {
+	private chunkStickers(stickers: StickerStack[]) {
 		const sheets = [];
 
-		let current: StickerCount[] = [];
+		let current: StickerStack[] = [];
 		for (const i of stickers) {
 			current.push(i);
 
@@ -235,7 +234,7 @@ export default class AppStickerLayerDrawer extends Vue {
 		this._updateSliderOffset();
 	}
 
-	assignTouchedSticker(sticker: StickerCount) {
+	assignTouchedSticker(sticker: StickerStack) {
 		if (
 			!this.drawerStore.isDrawerOpen.value ||
 			this.drawerStore.sticker.value ||

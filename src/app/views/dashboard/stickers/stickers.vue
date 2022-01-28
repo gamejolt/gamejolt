@@ -11,12 +11,12 @@ import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerCard from '../../../../_common/sticker/card/card.vue';
-import { Sticker } from '../../../../_common/sticker/sticker.model';
+import { Sticker, StickerStack } from '../../../../_common/sticker/sticker.model';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { useAppStore } from '../../../store';
 import backgroundImage from './background.png';
 
-export type InitPayload = {
+type InitPayload = {
 	balance: number;
 	stickerCounts: StickerCountPayload[];
 	stickers: any[];
@@ -27,12 +27,6 @@ export type InitPayload = {
 type StickerCountPayload = {
 	sticker_id: number;
 	count: number;
-};
-
-export type StickerCount = {
-	sticker_id: number;
-	count: number;
-	sticker: Sticker;
 };
 
 const FetchStickersEndpoint = '/web/stickers/dash';
@@ -61,7 +55,7 @@ export default class RouteDashStickers extends BaseRouteComponent {
 	readonly formatNumber = formatNumber;
 
 	balance = 0;
-	stickerCollection: StickerCount[] = [];
+	stickerCollection: StickerStack[] = [];
 	stickerCost = 10;
 	newStickerIds: number[] = [];
 
@@ -103,7 +97,7 @@ export default class RouteDashStickers extends BaseRouteComponent {
 				count: stickerCountPayload.count,
 				sticker_id: stickerCountPayload.sticker_id,
 				sticker: new Sticker(stickerData),
-			} as StickerCount;
+			} as StickerStack;
 			this.stickerCollection.push(stickerCount);
 		}
 		this.stickerCollection.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));

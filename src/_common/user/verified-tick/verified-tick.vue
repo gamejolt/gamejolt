@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { ChatUser } from '../../../app/components/chat/user';
+import type { ChatUser } from '../../../app/components/chat/user';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { User } from '../user.model';
 

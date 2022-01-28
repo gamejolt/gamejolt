@@ -4,7 +4,7 @@ import { Options, Prop, Vue } from 'vue-property-decorator';
 import { numberSort } from '../../../../../utils/array';
 import AppCommunityCardPlaceholder from '../../../../../_common/community/card-placeholder/card-placeholder.vue';
 import AppCommunityCard from '../../../../../_common/community/card/card.vue';
-import AppCommunityChunkPlaceholder from '../../../../../_common/community/chunk/chunk-placeholder.vue';
+import AppCommunityChunkPlaceholder from '../../../../../_common/community/chunk/AppCommunityChunkPlaceholder.vue';
 import AppCommunityChunk from '../../../../../_common/community/chunk/chunk.vue';
 import { Community } from '../../../../../_common/community/community.model';
 import { Screen } from '../../../../../_common/screen/screen-service';
