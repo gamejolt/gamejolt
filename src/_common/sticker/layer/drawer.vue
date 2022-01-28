@@ -1,9 +1,7 @@
 <script lang="ts">
 import { nextTick } from 'vue';
-import { setup } from 'vue-class-component';
 import { Options, Vue, Watch } from 'vue-property-decorator';
 import AppEventItemMediaIndicator from '../../../app/components/event-item/media-indicator/media-indicator.vue';
-import { useAppStore } from '../../../app/store';
 import { shallowSetup } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import {
@@ -34,12 +32,7 @@ import AppStickerLayerDrawerItem from './drawer-item.vue';
 	},
 })
 export default class AppStickerLayerDrawer extends Vue {
-	store = setup(() => useAppStore());
 	drawerStore = shallowSetup(() => useDrawerStore());
-
-	get hasCbar() {
-		return this.store.hasCbar;
-	}
 
 	sheetPage = 1;
 	isSwiping = false;
@@ -345,7 +338,7 @@ export default class AppStickerLayerDrawer extends Vue {
 <template>
 	<div
 		class="sticker-drawer"
-		:class="{ '-cbar-shifted': hasCbar, '-touch': !Screen.isPointerMouse }"
+		:class="{ '-touch': !Screen.isPointerMouse }"
 		:style="styles.shell"
 		@contextmenu.prevent
 		@mousemove="onMouseMove"
@@ -436,9 +429,6 @@ export default class AppStickerLayerDrawer extends Vue {
 	display: flex
 	justify-content: center
 	transition: transform 250ms $strong-ease-out
-
-	&.-cbar-shifted
-		left: $shell-cbar-width
 
 .-margin
 	flex: auto
