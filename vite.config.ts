@@ -226,7 +226,7 @@ export default defineConfig(async configEnv => {
 			// In production builds we serve all assets from the cdn.
 			// For desktop and mobile apps we serve from the locally bundled assets.
 			if (gjOpts.buildType === 'production') {
-				return 'https://s.gjcdn.net';
+				return 'https://s.gjcdn.net/';
 			}
 
 			// Return default, this is vite's default.
