@@ -60,7 +60,6 @@ const sectionOverrides: Partial<Record<GjSectionName, Partial<GjSectionConfig>>>
 		allowCrawlers: true,
 		htmlBodyClass: 'fill-darkest',
 		desktopApp: true,
-		ssr: true,
 	},
 	checkout: {
 		title: 'Checkout - Game Jolt',

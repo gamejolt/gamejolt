@@ -302,7 +302,9 @@ export default defineConfig(async configEnv => {
 			// at which components ended up being rendered in said request.
 			//
 			// It is only useful to generate this when building the web frontend.
-			ssrManifest: gjOpts.platform === 'web',
+			//
+			// We only build ssr for app section at the moment.
+			ssrManifest: gjOpts.platform === 'web' && gjOpts.section === 'app',
 
 			// This is the entry point of the ssr bundle.
 			...onlyInSSR<Partial<ViteUserConfig['build']>>({
