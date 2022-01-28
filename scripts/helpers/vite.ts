@@ -1,11 +1,11 @@
 import { readFile } from 'fs-extra';
-import path from 'path';
+const path = require('path') as typeof import('path');
 
 export type ParsedOptions = ReturnType<typeof parseOptionsFromEnv> extends Promise<infer T>
 	? T
 	: never;
 
-export type InferredOptions = {};
+export type InferredOptions = Record<string, unknown>;
 
 export type Options = ParsedOptions & InferredOptions;
 
@@ -53,6 +53,7 @@ export async function parseOptionsFromEnv() {
 			'client',
 			'editor',
 			'gameserver',
+			'site-editor',
 			'widget-package',
 			'z',
 		] as const,

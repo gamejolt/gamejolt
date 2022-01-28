@@ -3,17 +3,67 @@ import * as path from 'path';
 // import nodeBuiltins from 'rollup-plugin-node-builtins';
 import { defineConfig, UserConfig as ViteUserConfigActual } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
-import { parseOptionsFromEnv } from './scripts/helpers/vite';
+import { Options as ViteHelperOptions, parseOptionsFromEnv } from './scripts/helpers/vite';
 
-const sectionOverrides: Record<string, Record<string, unknown>> = {
-	'widget-package': {
-		router: false,
+const fs = require('fs-extra') as typeof import('fs-extra');
+
+type GjSection = ViteHelperOptions['section'];
+
+type GjSectionConfig = {
+	title: string;
+	hasRouter: boolean;
+	allowCrawlers: boolean;
+	htmlBodyClass: string;
+	jsScripts: string;
+};
+
+const defaultSectionConfig: GjSectionConfig = {
+	title: 'Game Jolt - Games for the love of it',
+	hasRouter: true,
+	allowCrawlers: false,
+	htmlBodyClass: '',
+	jsScripts: '',
+};
+
+const sectionOverrides: Partial<Record<GjSection, Partial<GjSectionConfig>>> = {
+	app: {
+		title: 'Game Jolt - Games for the love of it',
+		allowCrawlers: true,
+	},
+	auth: {
+		title: 'Game Jolt - Games for the love of it',
+		allowCrawlers: true,
+		htmlBodyClass: 'fill-darkest',
+	},
+	checkout: {
+		title: 'Checkout - Game Jolt',
+		jsScripts: '<script type="text/javascript" src="https://js.stripe.com/v2/"></script>',
+	},
+	claim: {
+		title: 'Claim - Game Jolt',
+	},
+	'site-editor': {
+		title: 'Edit Site - Game Jolt',
 	},
 	gameserver: {
-		router: false,
+		title: 'Playing Game - Game Jolt',
+		hasRouter: false,
+	},
+	client: {
+		title: 'Game Jolt',
+		htmlBodyClass: 'fill-darkest',
+	},
+	'widget-package': {
+		title: 'Get Game from Game Jolt',
+		hasRouter: false,
+	},
+	z: {
+		title: 'Game Jolt - Games for the love of it',
+		htmlBodyClass: 'main-body',
 	},
 	editor: {
-		router: false,
+		title: 'Editor',
+		hasRouter: false,
 	},
 };
 
@@ -27,15 +77,18 @@ type ViteUserConfig = ViteUserConfigActual & {
 	};
 };
 
-type EmptyObject = { [k in any]: never };
-
-const noopDirectiveTransform = () => ({ props: [] });
-
 // https://vitejs.dev/config/
 export default defineConfig(async configEnv => {
 	const { command } = configEnv;
 	const gjOpts = await parseOptionsFromEnv();
 
+	// Merge current section config with defaults.
+	const sectionConfig: GjSectionConfig = Object.assign(
+		defaultSectionConfig,
+		sectionOverrides[gjOpts.section] ?? {}
+	);
+
+	type EmptyObject = { [k in any]: never };
 	type GetValueOrEmpty = <T>(value: T) => T | EmptyObject;
 	const emptyUnless = (condition: () => boolean): GetValueOrEmpty => {
 		return value => {
@@ -49,7 +102,7 @@ export default defineConfig(async configEnv => {
 	const onlyInSSR = emptyUnless(() => gjOpts.platform === 'ssr');
 	const isInDocker = !!process.env['GAMEJOLT_IN_DOCKER'];
 	const onlyInDocker = emptyUnless(() => isInDocker);
-	const onlyInClient = emptyUnless(() => gjOpts.platform === 'desktop');
+	const onlyInDesktopApp = emptyUnless(() => gjOpts.platform === 'desktop');
 
 	const stylusOptions = {
 		imports: [
@@ -59,6 +112,8 @@ export default defineConfig(async configEnv => {
 			path.resolve(__dirname, 'src/_styles/mixins.styl'),
 		],
 	};
+
+	const noopDirectiveTransform = () => ({ props: [] });
 
 	return {
 		plugins: [
@@ -74,10 +129,71 @@ export default defineConfig(async configEnv => {
 				transformIndexHtml: {
 					enforce: 'pre',
 					transform: html => {
-						return html.replaceAll(
-							'<!--gj-section-->',
+						html = html.replaceAll(
+							'<!-- gj:section-entrypoint -->',
 							`<script type="module" src="/${gjOpts.section}/main.ts"></script>`
 						);
+
+						html = html.replaceAll(
+							'<!-- gj:crawlers -->',
+							sectionConfig.allowCrawlers
+								? ''
+								: '<meta name="robots" content="noindex, nofollow" />'
+						);
+
+						html = html.replaceAll(
+							'<!-- gj:app-section-shenanigans -->',
+							gjOpts.section !== 'app'
+								? ''
+								: `
+	<!-- Add to homescreen for Chrome on Android -->
+	<meta name="mobile-web-app-capable" content="yes" />
+
+	<!-- Add to homescreen for Safari on iOS -->
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-title" content="Game Jolt" />
+	<link
+		rel="apple-touch-icon-precomposed"
+		href="./app/img/touch/apple-touch-icon-precomposed.png"
+	/>
+
+	<!-- Tile icon for Win8 (144x144 + tile color) -->
+	<meta
+		name="msapplication-TileImage"
+		content="./app/img/touch/ms-touch-icon-144x144-precomposed.png"
+	/>
+	<meta name="msapplication-TileColor" content="#191919" />`.trim()
+						);
+
+						html = html.replaceAll(
+							'<!-- gj:firebase-shenanigans -->',
+							`
+	<script>
+		${fs.readFileSync(
+			path.resolve(__dirname, 'node_modules/first-input-delay/dist/first-input-delay.min.js'),
+			{ encoding: 'utf-8' }
+		)}
+	</script>`.trim()
+						);
+
+						html = html.replaceAll(
+							'<!-- gj:section-title -->',
+							`<title>${sectionConfig.title}</title>`
+						);
+
+						html = html.replaceAll(
+							'<!-- gj:fb-og-image-url -->',
+							'./app/img/meta-default-image.png'
+						);
+
+						html = html.replaceAll(
+							'<!-- gj:body-class -->',
+							sectionConfig.htmlBodyClass
+								? `class="${sectionConfig.htmlBodyClass}"`
+								: ''
+						);
+
+						return html;
 					},
 				},
 			},
@@ -111,7 +227,38 @@ export default defineConfig(async configEnv => {
 				mode: [MarkdownMode.HTML],
 			}),
 		],
+
 		root: 'src',
+
+		base: (() => {
+			// When watching simply return root.
+			// This is a vite default.
+			if (command === 'serve') {
+				return '/';
+			}
+
+			// Desktop app assets are bundled into /package/
+			// TODO: this is problably not correct. check this.
+			if (gjOpts.platform === 'desktop') {
+				return '/package/';
+			}
+
+			// Mobile app assets are expected to always resolve
+			// from a relative path, so make sure to not root it.
+			if (gjOpts.platform === 'mobile') {
+				return '';
+			}
+
+			// In production builds we serve all assets from the cdn.
+			// For desktop and mobile apps we serve from the locally bundled assets.
+			if (gjOpts.buildType === 'production') {
+				return 'https://s.gjcdn.net';
+			}
+
+			// Return default, this is vite's default.
+			return '/';
+		})(),
+
 		server: {
 			port: 8080,
 			strictPort: true,
@@ -142,7 +289,7 @@ export default defineConfig(async configEnv => {
 			}),
 		},
 		build: {
-			...onlyInClient<Partial<ViteUserConfig['build']>>({
+			...onlyInDesktopApp<Partial<ViteUserConfig['build']>>({
 				// This lets us use top-level awaits which allows us
 				// to use our conditional imports as if they were imported
 				// syncronously.
@@ -215,9 +362,7 @@ export default defineConfig(async configEnv => {
 			GJ_BUILD_TYPE: JSON.stringify(gjOpts.buildType),
 			GJ_VERSION: JSON.stringify(gjOpts.version),
 			GJ_WITH_UPDATER: JSON.stringify(gjOpts.withUpdater),
-			GJ_HAS_ROUTER: JSON.stringify(
-				sectionOverrides[gjOpts.section]?.router === false ? false : true
-			),
+			GJ_HAS_ROUTER: JSON.stringify(sectionConfig.hasRouter),
 
 			// Disable redirecting between section during serve.
 			// This is because as of time of writing we only support watching
