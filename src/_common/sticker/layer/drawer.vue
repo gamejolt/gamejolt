@@ -135,8 +135,7 @@ export default class AppStickerLayerDrawer extends Vue {
 			shell: [
 				{
 					transform: `translateY(0)`,
-					// Max-width is unset when Xs (so it can bleed and span the whole width), with margins of 64px on other breakpoints.
-					maxWidth: Screen.isXs ? 'unset' : `calc(100% - 64px)`,
+					left: Screen.isXs ? 0 : '64px',
 					// Max-height of 2 sticker rows
 					maxHeight: Screen.isPointerMouse
 						? `${this.drawerPadding * 2 + this.stickerSize * numRowsShowing}px`
@@ -423,6 +422,7 @@ export default class AppStickerLayerDrawer extends Vue {
 
 .sticker-drawer
 	position: fixed
+	left: 0
 	right: 0
 	bottom: 0
 	display: flex
