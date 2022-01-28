@@ -271,7 +271,9 @@ export default defineConfig(async configEnv => {
 			}),
 
 			rollupOptions: {
-				input: inputHtmlFile,
+				// When building for ssr the entrypoint is specified in build.ssr,
+				// and the index.html input file should NOT be specified.
+				input: gjOpts.platform === 'ssr' ? undefined : inputHtmlFile,
 
 				...onlyInDesktopApp<RollupOptions>({
 					// plugins: [nodeBuiltins()],
