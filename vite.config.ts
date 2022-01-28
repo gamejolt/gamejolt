@@ -18,6 +18,9 @@ type ViteUserConfig = ViteUserConfigActual & {
 	};
 };
 
+type Defined<T> = T extends undefined ? never : T;
+type RollupOptions = Defined<Defined<ViteUserConfig['build']>['rollupOptions']>;
+
 // https://vitejs.dev/config/
 export default defineConfig(async configEnv => {
 	const { command } = configEnv;
@@ -51,6 +54,13 @@ export default defineConfig(async configEnv => {
 	const noopDirectiveTransform = () => ({ props: [] });
 
 	const htmlResolver = viteHtmlResolve();
+
+	const indexHtml = path.resolve(__dirname, 'src', 'index.html');
+	let inputHtmlFile = indexHtml;
+	if (command === 'build' && gjOpts.section !== 'app') {
+		inputHtmlFile = path.resolve(indexHtml, '..', `${gjOpts.section}.html`);
+		fs.copyFileSync(indexHtml, inputHtmlFile);
+	}
 
 	return {
 		plugins: [
@@ -268,12 +278,16 @@ export default defineConfig(async configEnv => {
 				// to use our conditional imports as if they were imported
 				// syncronously.
 				target: 'esnext',
+			}),
 
-				rollupOptions: {
+			rollupOptions: {
+				input: inputHtmlFile,
+
+				...onlyInDesktopApp<RollupOptions>({
 					// plugins: [nodeBuiltins()],
 					external: ['client-voodoo', 'axios'],
-				},
-			}),
+				}),
+			},
 
 			// Since we're building outside of the root dir,
 			// we need to explicitly allow vite to clear the build directory.
