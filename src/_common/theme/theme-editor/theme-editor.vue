@@ -2,7 +2,6 @@
 import { nextTick, toRaw, watch } from 'vue';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
-import AppCodemirror from '../../codemirror/codemirror.vue';
 import AppColorpicker from '../../colorpicker/colorpicker.vue';
 import AppLoading from '../../loading/loading.vue';
 import { SiteTemplate } from '../../site/template/template-model';
@@ -20,7 +19,6 @@ interface StyleGroup {
 @Options({
 	components: {
 		AppLoading,
-		AppCodemirror,
 		AppThemeEditorFontSelector,
 		AppThemeEditorImage,
 		AppColorpicker,
@@ -220,8 +218,12 @@ export default class AppThemeEditor extends Vue {
 									<option :value="undefined">
 										<AppTranslate>Auto (Default)</AppTranslate>
 									</option>
-									<option value="cover"><AppTranslate>Cover</AppTranslate></option>
-									<option value="contain"><AppTranslate>Contain</AppTranslate></option>
+									<option value="cover">
+										<AppTranslate>Cover</AppTranslate>
+									</option>
+									<option value="contain">
+										<AppTranslate>Contain</AppTranslate>
+									</option>
 								</select>
 							</div>
 
@@ -234,21 +236,31 @@ export default class AppThemeEditor extends Vue {
 								class="theme-editor-dropdown"
 							>
 								<select v-model="theme[definitionField]" class="form-control">
-									<option :value="undefined"><AppTranslate>Top</AppTranslate></option>
-									<option value="topLeft"><AppTranslate>Top Left</AppTranslate></option>
-									<option value="right"><AppTranslate>Right</AppTranslate></option>
+									<option :value="undefined">
+										<AppTranslate>Top</AppTranslate>
+									</option>
+									<option value="topLeft">
+										<AppTranslate>Top Left</AppTranslate>
+									</option>
+									<option value="right">
+										<AppTranslate>Right</AppTranslate>
+									</option>
 									<option value="topRight">
 										<AppTranslate>Top Right</AppTranslate>
 									</option>
 									<option value="bottomRight">
 										<AppTranslate>Bottom Right</AppTranslate>
 									</option>
-									<option value="bottom"><AppTranslate>Bottom</AppTranslate></option>
+									<option value="bottom">
+										<AppTranslate>Bottom</AppTranslate>
+									</option>
 									<option value="bottomLeft">
 										<AppTranslate>Bottom Left</AppTranslate>
 									</option>
 									<option value="left"><AppTranslate>Left</AppTranslate></option>
-									<option value="center"><AppTranslate>Center</AppTranslate></option>
+									<option value="center">
+										<AppTranslate>Center</AppTranslate>
+									</option>
 								</select>
 							</div>
 
