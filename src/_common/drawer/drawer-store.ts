@@ -3,12 +3,12 @@ import { arrayRemove, numberSort } from '../../utils/array';
 import { Analytics } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
 import { showErrorGrowl } from '../growls/growls.service';
-import AppModalStickerLayer from '../modal/AppModalStickerLayer.vue';
 import { setModalBodyWrapper } from '../modal/modal.service';
 import {
 	getCollidingStickerTarget,
 	StickerLayerController,
 } from '../sticker/layer/layer-controller';
+import AppStickerLayer from '../sticker/layer/layer.vue';
 import { StickerPlacement } from '../sticker/placement/placement.model';
 import { Sticker, StickerStack } from '../sticker/sticker.model';
 import {
@@ -60,8 +60,8 @@ export function createDrawerStore() {
 		return layers.value[layers.value.length - 1];
 	});
 
-	// Set up modals to have the sticker layer as their body element.
-	setModalBodyWrapper(AppModalStickerLayer);
+	// Set up modals to have the sticker layer as their layer element.
+	setModalBodyWrapper(AppStickerLayer);
 
 	const c = {
 		layers,

@@ -138,6 +138,7 @@ function scrollTo(offsetY: number) {
 			<component
 				:is="Modals.modalBodyWrapper || 'div'"
 				v-bind="Modals.modalBodyWrapper ? { modal } : {}"
+				class="modal-layer"
 			>
 				<AppTheme
 					class="modal-content"
@@ -180,6 +181,14 @@ function scrollTo(offsetY: number) {
 	position: absolute
 	z-index: 2
 
+.modal-layer
+	position: relative
+	min-height: 100vh
+
+	@media $media-sm-up
+		padding: 30px 0
+		padding-top: 100px
+
 .modal-content
 	change-bg('bg')
 	theme-prop('color', 'fg')
@@ -207,6 +216,9 @@ function scrollTo(offsetY: number) {
 
 .modal-full
 	change-bg('bg')
+
+	.modal-layer
+		padding: 0
 
 	.modal-content
 		-fullscreen()
