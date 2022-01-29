@@ -131,9 +131,16 @@ export default defineConfig(async configEnv => {
 		</script>`.trim()
 						);
 
+						// Fallback title for the section in case it doesn't get set by the route.
 						html = html.replace(
 							'<!-- gj:section-title -->',
 							`<title>${gjOpts.currentSectionConfig.title}</title>`
+						);
+
+						// Any additional scripts that need to be embedded for the section.
+						html = html.replace(
+							'<!-- gj:section-scripts -->',
+							gjOpts.currentSectionConfig.jsScripts
 						);
 
 						const bodyClass = gjOpts.currentSectionConfig.htmlBodyClass;
