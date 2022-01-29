@@ -251,7 +251,7 @@ export class Api {
 			});
 		}
 
-		promise.then(() => {
+		promise.finally(() => {
 			if (showLoading) {
 				--this.loadingBarRequests.value;
 			}
