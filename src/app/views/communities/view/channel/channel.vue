@@ -7,7 +7,7 @@ import { CommunityChannel } from '../../../../../_common/community/channel/chann
 import {
 	asyncRouteLoader,
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../_common/route/route-component';
 import {
 	CommunityRouteStore,
@@ -34,7 +34,7 @@ export const CommunitiesViewChannelDeps = {
 		),
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['path', 'channel'] },
 	resolver: ({ route }) => {
 		const channel = getChannelPathFromRoute(route);

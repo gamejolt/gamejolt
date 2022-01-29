@@ -36,7 +36,7 @@ import { HistoryTick } from '../../../../../_common/history-tick/history-tick-se
 import { LinkedAccount } from '../../../../../_common/linked-account/linked-account.model';
 import { PartnerReferral } from '../../../../../_common/partner-referral/partner-referral-service';
 import { Registry } from '../../../../../_common/registry/registry.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { EventSubscription } from '../../../../../_common/system/event/event-topic';
@@ -376,7 +376,7 @@ const GameThemeKey = 'game';
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	lazy: true,
 	cache: true,
 	deps: { params: ['slug', 'id'], query: ['intent'] },

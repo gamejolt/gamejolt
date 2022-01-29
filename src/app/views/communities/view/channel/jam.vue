@@ -18,7 +18,7 @@ import AppIllustration from '../../../../../_common/illustration/AppIllustration
 import {
 	asyncRouteLoader,
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
@@ -48,7 +48,7 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 		),
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['path', 'channel'] },
 	resolver: ({ route }) => {
 		const channel = getChannelPathFromRoute(route);

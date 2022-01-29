@@ -10,7 +10,7 @@ import AppProgressBar from '../../../../../../../_common/progress/bar/bar.vue';
 import { AppProgressPoller } from '../../../../../../../_common/progress/poller/poller';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
@@ -34,7 +34,7 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/developer/games/overview/' + route.params.id),

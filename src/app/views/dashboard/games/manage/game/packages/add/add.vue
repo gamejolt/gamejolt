@@ -2,7 +2,10 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { GamePackage } from '../../../../../../../../_common/game/package/package.model';
-import { BaseRouteComponent } from '../../../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../../../_common/route/route-component';
 import FormGamePackage from '../../../../../../../components/forms/game/package/package.vue';
 import { useGameDashRouteController } from '../../../manage.store';
 
@@ -12,6 +15,7 @@ import { useGameDashRouteController } from '../../../manage.store';
 		FormGamePackage,
 	},
 })
+@OptionsForRoute()
 export default class RouteDashGamesManageGamePackagesAdd extends BaseRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
@@ -61,10 +65,7 @@ export default class RouteDashGamesManageGamePackagesAdd extends BaseRouteCompon
 
 		<div class="row">
 			<div
-				class="
-					hidden-xs
-					col-sm-4 col-sm-push-8 col-md-4 col-md-push-8 col-lg-4 col-lg-push-8
-				"
+				class="hidden-xs col-sm-4 col-sm-push-8 col-md-4 col-md-push-8 col-lg-4 col-lg-push-8"
 			>
 				<div class="page-help">
 					<p>

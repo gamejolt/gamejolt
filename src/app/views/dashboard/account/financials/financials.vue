@@ -1,7 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { BaseRouteComponent } from '../../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import FormFinancials from '../../../../components/forms/financials/financials.vue';
 import { useAccountRouteController } from '../account.vue';
@@ -12,6 +12,7 @@ import { useAccountRouteController } from '../account.vue';
 		FormFinancials,
 	},
 })
+@OptionsForRoute()
 export default class RouteDashAccountFinancials extends BaseRouteComponent {
 	routeStore = setup(() => useAccountRouteController()!);
 

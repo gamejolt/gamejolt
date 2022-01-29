@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Inject, Options, Watch } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
-import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { AppActivityFeedLazy } from '../../components/lazy';
@@ -16,7 +16,7 @@ import { RouteActivityFeedController } from './feed.vue';
 		AppActivityFeedPlaceholder,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: true,
 	lazy: true,
 	resolver: ({ route }) =>

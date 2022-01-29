@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import AppCommunityCard from '../../../../_common/community/card/card.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Search, sendSearch } from '../../../components/search/search-service';
 import { useSearchRouteController } from '../search.vue';
 
@@ -12,7 +12,7 @@ import { useSearchRouteController } from '../search.vue';
 		AppCommunityCard,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: true,
 	resolver: ({ route }) =>
 		sendSearch(route.query.q as string, {

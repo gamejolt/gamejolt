@@ -12,7 +12,7 @@ import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.
 import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import FormGameSong from '../../../../../../components/forms/game/song/song.vue';
 import AppDashGameWizardControls from '../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
@@ -30,7 +30,7 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppLoadingFade,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: ({ route }) => Api.sendRequest('/web/dash/developer/games/music/' + route.params.id),
 })
@@ -149,10 +149,7 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 						</template>
 					</AppCardListDraggable>
 
-					<AppCardListAdd
-						:label="$gettext('Add Song')"
-						@toggle="isAdding = !isAdding"
-					>
+					<AppCardListAdd :label="$gettext('Add Song')" @toggle="isAdding = !isAdding">
 						<FormGameSong :game="game" @submit="onSongAdded" />
 					</AppCardListAdd>
 				</AppCardList>

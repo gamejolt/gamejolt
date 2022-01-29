@@ -8,7 +8,7 @@ import AppNavTabList from '../../../../../../../_common/nav/tab-list/tab-list.vu
 import { Popper } from '../../../../../../../_common/popper/popper.service';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../../../_common/scroll/affix/affix.vue';
@@ -33,7 +33,7 @@ import { useGameRouteController } from '../../view.vue';
 		AppNoAutoscroll,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: true,
 	deps: { params: ['tableId', 'type'], query: ['page'] },
 	resolver({ route }) {
@@ -196,7 +196,9 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 
 						<div v-if="!scores.length" class="alert alert-notice full-bleed-xs">
 							<template v-if="type === 'best'">
-								<AppTranslate>There are no scores on this scoreboard yet.</AppTranslate>
+								<AppTranslate
+									>There are no scores on this scoreboard yet.</AppTranslate
+								>
 							</template>
 							<template v-else-if="type === 'user'">
 								<AppTranslate>You don't have any scores here yet!</AppTranslate>

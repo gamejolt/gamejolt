@@ -3,7 +3,10 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Game } from '../../../../../../../_common/game/game.model';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
-import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../../../_common/scroll/affix/affix.vue';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
@@ -19,6 +22,7 @@ import { useGameDashRouteController } from '../../manage.store';
 		FormGameMaturity,
 	},
 })
+@OptionsForRoute()
 export default class RouteDashGamesManageGameMaturity extends BaseRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 

@@ -7,13 +7,13 @@ import {
 	setPageAdsSettings,
 	useAdsController,
 } from '../../../_common/ad/ad-store';
-import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { User } from '../../../_common/user/user.model';
 
 @Options({
 	name: 'RouteLegal',
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: () => User.touch(),
 })

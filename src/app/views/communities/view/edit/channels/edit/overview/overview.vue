@@ -7,7 +7,10 @@ import {
 	showSuccessGrowl,
 } from '../../../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
-import { BaseRouteComponent } from '../../../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../../../../_common/scroll/scroll.service';
 import FormCommunityChannelDescription from '../../../../../../../components/forms/community/channel/description/description.vue';
@@ -23,6 +26,7 @@ import AppCommunitiesViewPageContainer from '../../../../_page-container/page-co
 		FormCommunityChannelDescription,
 	},
 })
+@OptionsForRoute()
 export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;

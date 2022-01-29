@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import AppCommunityThumbnail from '../../../../_common/community/thumbnail/thumbnail.vue';
 import { formatNumber } from '../../../../_common/filters/number';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppUserCard from '../../../../_common/user/card/card.vue';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
@@ -28,7 +28,7 @@ import { useSearchRouteController } from '../search.vue';
 		AppActivityFeedPlaceholder,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	resolver: ({ route }) => sendSearch(route.query.q + ''),
 })
 export default class RouteSearchResults extends BaseRouteComponent {

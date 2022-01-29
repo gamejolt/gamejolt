@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import { RouteRecordRaw } from 'vue-router';
 import { initRouter } from '../../utils/router';
 import { Api } from '../../_common/api/api.service';
-import { BaseRouteComponent, RouteResolver } from '../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../_common/route/route-component';
 import { useSiteEditorStore } from '../store/index';
 
 // Empty route component. We just use it to send API calls and set up the store
@@ -12,7 +12,7 @@ import { useSiteEditorStore } from '../store/index';
 @Options({
 	name: 'RouteEditor',
 })
-@RouteResolver({
+@OptionsForRoute({
 	lazy: false,
 	cache: false,
 	resolver({ route }) {

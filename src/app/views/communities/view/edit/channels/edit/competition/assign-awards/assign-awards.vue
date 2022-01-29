@@ -5,7 +5,7 @@ import { CommunityCompetitionAward } from '../../../../../../../../../_common/co
 import AppLoading from '../../../../../../../../../_common/loading/loading.vue';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../../../_common/route/route-component';
 
 type Payload = {
@@ -18,7 +18,7 @@ type Payload = {
 		AppLoading,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['id', 'channel'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(

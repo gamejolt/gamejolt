@@ -11,7 +11,10 @@ import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail-img/th
 import { Geo } from '../../../../../../_common/geo/geo.service';
 import { Order } from '../../../../../../_common/order/order.model';
 import { OrderPayment } from '../../../../../../_common/order/payment/payment.model';
-import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { useAccountRouteController } from '../../account.vue';
@@ -22,7 +25,7 @@ import { useAccountRouteController } from '../../account.vue';
 		AppGameThumbnailImg,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['id'] },
 	resolver: ({ route }) => Api.sendRequest('/web/dash/purchases/' + route.params.id),
 })
@@ -82,7 +85,9 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 <template>
 	<div v-if="isRouteBootstrapped">
 		<p class="text-muted">
-			<AppTranslate :translate-params="{ orderId: order.id }"> Order #%{orderId} </AppTranslate>
+			<AppTranslate :translate-params="{ orderId: order.id }">
+				Order #%{orderId}
+			</AppTranslate>
 
 			<span class="dot-separator" />
 
@@ -221,10 +226,7 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 								},
 							}"
 						>
-							<AppGameThumbnailImg
-								animate
-								:game="gamesById[firstPackage.game_id]"
-							/>
+							<AppGameThumbnailImg animate :game="gamesById[firstPackage.game_id]" />
 						</router-link>
 					</div>
 					<div class="col-xs-10">

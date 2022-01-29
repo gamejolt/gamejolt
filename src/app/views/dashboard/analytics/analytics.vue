@@ -11,7 +11,7 @@ import { GamePackage } from '../../../../_common/game/package/package.model';
 import { GameRelease } from '../../../../_common/game/release/release.model';
 import AppGraph from '../../../../_common/graph/graph.vue';
 import AppLoading from '../../../../_common/loading/loading.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../_common/scroll/affix/affix.vue';
 import { AppScrollTo } from '../../../../_common/scroll/to/to.directive';
@@ -66,7 +66,7 @@ import {
 		AppScrollTo,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: false,
 	deps: {
 		params: ['resource', 'resourceId', 'metricKey'],

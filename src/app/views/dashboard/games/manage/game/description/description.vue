@@ -5,7 +5,7 @@ import { Api } from '../../../../../../../_common/api/api.service';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import FormGameDescription from '../../../../../../components/forms/game/description/description.vue';
@@ -17,7 +17,7 @@ import { useGameDashRouteController } from '../../manage.store';
 		FormGameDescription,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: () => Api.sendRequest('/web/dash/developer/games/description'),
 })

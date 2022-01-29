@@ -2,7 +2,7 @@
 import { Inject, Options } from 'vue-property-decorator';
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { User } from '../../../../../_common/user/user.model';
 import AppFollowerList from '../../../../components/follower/list/list.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
@@ -19,7 +19,7 @@ function getFetchUrl(route: RouteLocationNormalized) {
 		AppCommunitiesViewPageContainer,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: true,
 	lazy: true,
 	deps: {

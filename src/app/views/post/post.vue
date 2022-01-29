@@ -11,7 +11,7 @@ import { CommunityUserNotification } from '../../../_common/community/user-notif
 import { $viewPost, FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Meta } from '../../../_common/meta/meta-service';
 import { Registry } from '../../../_common/registry/registry.service';
-import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import { Translate } from '../../../_common/translate/translate.service';
 import { IntentService } from '../../components/intent/intent.service';
@@ -27,7 +27,7 @@ const PostThemeKey = 'post';
 		AppPostPagePlaceholder,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	lazy: true,
 	cache: true,
 	deps: { params: ['slug'], query: ['intent'] },

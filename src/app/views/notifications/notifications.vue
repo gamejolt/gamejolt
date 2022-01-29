@@ -4,7 +4,7 @@ import { Options, Watch } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
 import { HistoryCache } from '../../../_common/history/cache/cache.service';
 import { Notification } from '../../../_common/notification/notification-model';
-import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../components/activity/feed/view';
@@ -24,7 +24,7 @@ const HistoryCacheFeedTag = 'notifications-feed';
 		AppShellNotificationPopoverStickerNavItemPlaceholder,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	lazy: true,
 	deps: { query: ['feed_last_id'] },
 	resolver: ({ route }) =>

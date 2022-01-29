@@ -12,7 +12,7 @@ import AppCommunityCard from '../../../../_common/community/card/card.vue';
 import { Community } from '../../../../_common/community/community.model';
 import { HistoryCache } from '../../../../_common/history/cache/cache.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
@@ -37,7 +37,7 @@ interface CacheData {
 		AppCommunityCardCreatePlaceholder,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: true,
 	lazy: true,
 	deps: {},

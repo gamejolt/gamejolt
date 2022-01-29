@@ -8,7 +8,7 @@ import { Game } from '../../../_common/game/game.model';
 import { showErrorGrowl } from '../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
 import { Navigate } from '../../../_common/navigate/navigate.service';
-import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { useCommonStore } from '../../../_common/store/common-store';
 import AppInvalidKey from '../../components/AppInvalidKey.vue';
 import AppKeyBundle from './_bundle/bundle.vue';
@@ -20,7 +20,7 @@ import AppKeyGame from './_game/game.vue';
 		AppInvalidKey,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: true,
 	resolver({ route }) {
 		let url = '/claim/view/' + route.params.accessKey;

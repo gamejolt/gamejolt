@@ -13,7 +13,7 @@ import AppExpand from '../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../_common/filters/number';
 import { Meta } from '../../../_common/meta/meta-service';
 import AppPagination from '../../../_common/pagination/pagination.vue';
-import { BaseRouteComponent } from '../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { Scroll } from '../../../_common/scroll/scroll.service';
 import AppPageHeader from '../../components/page-header/page-header.vue';
@@ -79,6 +79,7 @@ function createController({ route }: { route: RouteLocationNormalized }) {
 		AppPagination,
 	},
 })
+@OptionsForRoute()
 export default class RouteSearch extends BaseRouteComponent {
 	routeStore = setup(() => {
 		const c = createController({ route: useRoute() });

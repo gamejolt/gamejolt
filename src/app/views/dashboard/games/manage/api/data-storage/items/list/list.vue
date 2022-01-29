@@ -8,7 +8,7 @@ import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/c
 import AppPopper from '../../../../../../../../../_common/popper/popper.vue';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../../../_common/route/route-component';
 import { useGameDashRouteController } from '../../../../manage.store';
 
@@ -18,7 +18,7 @@ import { useGameDashRouteController } from '../../../../manage.store';
 		AppPopper,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/developer/games/api/data-storage/' + route.params.id),

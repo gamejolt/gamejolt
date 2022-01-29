@@ -8,7 +8,7 @@ import AppCardListAdd from '../../../../../_common/card/list/AppCardListAdd.vue'
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { UserBlock } from '../../../../../_common/user/block/block.model';
@@ -30,7 +30,7 @@ import { useAccountRouteController } from '../account.vue';
 	},
 	directives: {},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	lazy: false,
 	resolver: () => Api.sendRequest('/web/dash/blocks'),

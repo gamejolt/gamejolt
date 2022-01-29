@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
-import { BaseRouteComponent } from '../../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../_common/translate/translate.service';
@@ -15,6 +15,7 @@ import { useAccountRouteController } from '../account.vue';
 		FormProfile,
 	},
 })
+@OptionsForRoute()
 export default class RouteDashAccountEdit extends BaseRouteComponent {
 	routeStore = setup(() => useAccountRouteController()!);
 	commonStore = setup(() => useCommonStore());

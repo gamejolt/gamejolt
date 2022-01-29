@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import AppTrophyCard from '../../../../components/trophy/card/card.vue';
@@ -16,7 +16,7 @@ import { useProfileRouteController } from '../../profile.vue';
 		AppTrophyListPaged,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	resolver: ({ route }) => Api.sendRequest('/web/profile/trophies/all/@' + route.params.username),
 })
 export default class RouteProfileTrophiesAll extends BaseRouteComponent {

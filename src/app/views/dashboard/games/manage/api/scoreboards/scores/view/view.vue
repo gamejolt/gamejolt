@@ -8,7 +8,7 @@ import { GameScoreTable } from '../../../../../../../../../_common/game/score-ta
 import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../../../_common/route/route-component';
 import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
 import { useGameDashRouteController } from '../../../../manage.store';
@@ -16,7 +16,7 @@ import { useGameDashRouteController } from '../../../../manage.store';
 @Options({
 	name: 'RouteDashGamesManageApiScoreboardsScoresView',
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['score'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(

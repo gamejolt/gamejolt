@@ -6,7 +6,7 @@ import AppContactLink from '../../../../_common/contact-link/contact-link.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../_common/game/game.model';
 import { Meta } from '../../../../_common/meta/meta-service';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
@@ -22,7 +22,7 @@ import socialImage from './social.png';
 		AppContactLink,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: () => Api.sendRequest('/web/marketplace'),
 })
@@ -227,10 +227,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4 col-md-offset-2">
 							<div class="landing-graphic">
-								<AppThemeSvg
-									:src="assetPaths['./analytics.svg'].default"
-									alt=""
-								/>
+								<AppThemeSvg :src="assetPaths['./analytics.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Powerful Analytics</h4>

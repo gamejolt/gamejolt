@@ -563,7 +563,7 @@ function isLeafRoute(key?: symbol) {
  * composition API now instead.
  * @deprecated
  */
-export function RouteResolver(options: AppRouteOptions = {}) {
+export function OptionsForRoute(options: AppRouteOptions = {}) {
 	return createDecorator(componentOptions => {
 		Object.assign(componentOptions, defineAppRouteOptions(options));
 	});

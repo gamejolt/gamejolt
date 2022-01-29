@@ -1,7 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -18,6 +18,7 @@ import { imageJolt } from '../../../img/images';
 		AppTooltip,
 	},
 })
+@OptionsForRoute()
 export default class RouteLandingLearn extends BaseRouteComponent {
 	commonStore = setup(() => useCommonStore());
 
@@ -93,10 +94,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 							<div class="landing-graphic">
-								<AppThemeSvg
-									:src="assetPaths['./developers.svg'].default"
-									alt=""
-								/>
+								<AppThemeSvg :src="assetPaths['./developers.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Studios</h4>

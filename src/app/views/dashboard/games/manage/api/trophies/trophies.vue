@@ -11,7 +11,7 @@ import { GameTrophy } from '../../../../../../../_common/game/trophy/trophy.mode
 import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
@@ -34,7 +34,7 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/developer/games/api/trophies/' + route.params.id),
@@ -232,10 +232,7 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 						@change="saveTrophySort(difficulty, $event)"
 					>
 						<template #item="{ element: trophy }">
-							<AppCardListItem
-								:id="`trophy-container-${trophy.id}`"
-								:item="trophy"
-							>
+							<AppCardListItem :id="`trophy-container-${trophy.id}`" :item="trophy">
 								<div class="row">
 									<div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0">
 										<AppTrophyThumbnail :trophy="trophy" no-highlight />
@@ -250,9 +247,7 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 										<div class="card-stats">
 											<div class="stat-big">
 												<div class="stat-big-label">
-													<AppTranslate>
-														Trophy ID
-													</AppTranslate>
+													<AppTranslate> Trophy ID </AppTranslate>
 												</div>
 												<div class="stat-big-digit">
 													{{ trophy.id }}
@@ -275,24 +270,24 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 											<span
 												v-if="!trophy.visible"
 												v-app-tooltip="
-													$gettext(`Trophies that are hidden will only appear on the site for you, the developer, for testing purposes.`)
+													$gettext(
+														`Trophies that are hidden will only appear on the site for you, the developer, for testing purposes.`
+													)
 												"
 												class="tag tag-notice"
 											>
-												<AppTranslate>
-													Hidden
-												</AppTranslate>
+												<AppTranslate> Hidden </AppTranslate>
 											</span>
 											<span
 												v-if="trophy.secret"
 												v-app-tooltip="
-													$gettext(`Making a trophy secret hides everything but its name until it is achieved.`)
+													$gettext(
+														`Making a trophy secret hides everything but its name until it is achieved.`
+													)
 												"
 												class="tag"
 											>
-												<AppTranslate>
-													Secret
-												</AppTranslate>
+												<AppTranslate> Secret </AppTranslate>
 											</span>
 										</div>
 									</div>

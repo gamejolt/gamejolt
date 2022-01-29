@@ -1,11 +1,12 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
 import { html } from '../../../../lib/terms/privacy/global.md';
-import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 
 @Options({
 	name: 'RouteLegalPrivacy',
 })
+@OptionsForRoute()
 export default class RouteLegalPrivacy extends BaseRouteComponent {
 	readonly template = html;
 

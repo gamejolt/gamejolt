@@ -23,7 +23,7 @@ import { HistoryTick } from '../../../_common/history-tick/history-tick-service'
 import AppLoading from '../../../_common/loading/loading.vue';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { PayloadError } from '../../../_common/payload/payload-service';
-import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
 import AppGameBadge from '../../components/game/badge/badge.vue';
@@ -42,7 +42,7 @@ const DownloadDelay = 3000;
 		AppScrollAffix,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['type'], query: ['game_id', 'build_id'] },
 	async resolver({ route }) {
 		const getQuery = (name: string) =>

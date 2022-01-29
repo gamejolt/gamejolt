@@ -11,7 +11,7 @@ import {
 } from '../../../../../_common/linked-account/linked-account.model';
 import AppLinkedAccount from '../../../../../_common/linked-account/linked-account.vue';
 import { LinkedAccounts } from '../../../../../_common/linked-account/linked-accounts.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettext, Translate } from '../../../../../_common/translate/translate.service';
 import { UserSetPasswordModal } from '../../../../components/user/set-password-modal/set-password-modal.service';
@@ -23,7 +23,7 @@ import { useAccountRouteController } from '../account.vue';
 		AppLinkedAccount,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: () => Api.sendRequest('/web/dash/linked-accounts?resource=User'),
 })

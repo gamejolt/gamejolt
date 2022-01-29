@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { Site } from '../../../../../_common/site/site-model';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppSitesLinkCard from '../../../../components/sites/link-card/link-card.vue';
@@ -16,7 +16,7 @@ import { useAccountRouteController } from '../account.vue';
 		AppSitesLinkCard,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: () => Api.sendRequest('/web/dash/sites'),
 })

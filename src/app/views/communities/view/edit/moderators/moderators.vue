@@ -8,7 +8,10 @@ import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem
 import { Collaborator } from '../../../../../../_common/collaborator/collaborator.model';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../_common/route/route-component';
 import FormCommunityCollaborator from '../../../../../components/forms/community/collaborator/collaborator.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
@@ -23,7 +26,7 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 		FormCommunityCollaborator,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['id'] },
 	resolver({ route }) {
 		return Api.sendRequest('/web/dash/communities/collaborators/' + route.params.id);

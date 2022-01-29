@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import { numberSort } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
 import { Game } from '../../../../../_common/game/game.model';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
@@ -32,7 +32,7 @@ type TrophyEntry = {
 		AppTrophyThumbnail,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/profile/trophies/overview/@' + route.params.username),

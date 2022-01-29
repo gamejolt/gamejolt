@@ -19,7 +19,7 @@ import { Environment } from '../../../../_common/environment/environment.service
 import { formatNumber } from '../../../../_common/filters/number';
 import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
 import AppPopper from '../../../../_common/popper/popper.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
 import { ContextPane, useSidebarStore } from '../../../../_common/sidebar/sidebar.store';
@@ -64,7 +64,7 @@ export const CommunityThemeKey = 'community';
 		AppMediaItemCover,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: true,
 	deps: { params: ['path'] },
 	async resolver({ route }) {

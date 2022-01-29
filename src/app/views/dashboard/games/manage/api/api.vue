@@ -1,7 +1,10 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
 import AppNavTabList from '../../../../../../_common/nav/tab-list/tab-list.vue';
-import { BaseRouteComponent } from '../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppManageGameApiNav from './AppManageGameApiNav.vue';
 
@@ -12,6 +15,7 @@ import AppManageGameApiNav from './AppManageGameApiNav.vue';
 		AppNavTabList,
 	},
 })
+@OptionsForRoute()
 export default class RouteDashGamesManageApi extends BaseRouteComponent {
 	readonly Screen = Screen;
 }

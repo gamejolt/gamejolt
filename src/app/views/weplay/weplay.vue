@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
 import AppCard from '../../../_common/card/AppCard.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { User } from '../../../_common/user/user.model';
@@ -17,7 +17,7 @@ import AppWeplayLogo from '../../components/weplay/logo/AppWeplayLogo.vue';
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: () => User.touch(),
 })

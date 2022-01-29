@@ -5,7 +5,7 @@ import { ContentDocument } from '../../../_common/content/content-document';
 import AppContentEditor from '../../../_common/content/content-editor/content-editor.vue';
 import AppLoading from '../../../_common/loading/loading.vue';
 import { Navigate } from '../../../_common/navigate/navigate.service';
-import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import { User } from '../../../_common/user/user.model';
 
@@ -17,7 +17,7 @@ import { User } from '../../../_common/user/user.model';
 		AppTimeAgo,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['resource', 'resource-Id'] },
 	async resolver({ route }) {
 		await User.touch();

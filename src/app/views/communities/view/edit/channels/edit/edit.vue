@@ -4,7 +4,7 @@ import { Api } from '../../../../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../../../../_common/community/channel/channel.model';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { CommunityCompetitionHeaderModal } from '../../../../../../components/community/competition/header-modal/header-modal.service';
@@ -26,7 +26,7 @@ import AppCommunitiesViewPageContainer from '../../../_page-container/page-conta
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['id', 'channel'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(

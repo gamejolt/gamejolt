@@ -6,7 +6,10 @@ import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.v
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import AppPagination from '../../../../../../_common/pagination/pagination.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../_common/route/route-component';
 import { AppTimeAgo } from '../../../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { UserBlock } from '../../../../../../_common/user/block/block.model';
@@ -32,7 +35,7 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['id'] },
 	resolver({ route }) {
 		return Api.sendRequest('/web/dash/communities/blocks/' + route.params.id);

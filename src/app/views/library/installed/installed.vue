@@ -2,7 +2,7 @@
 import { Options } from 'vue-property-decorator';
 import AppAlertDismissable from '../../../../_common/alert/dismissable/dismissable.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
-import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 // import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
 import AppLibraryInstalledGame from './_game/game.vue';
@@ -15,6 +15,7 @@ import AppLibraryInstalledGame from './_game/game.vue';
 		AppLibraryInstalledGame,
 	},
 })
+@OptionsForRoute()
 export default class RouteLibraryInstalled extends BaseRouteComponent {
 	// @ClientLibraryState
 	// games!: ClientLibraryStore['games'];

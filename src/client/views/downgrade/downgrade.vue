@@ -2,14 +2,14 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
 import { getDeviceOS } from '../../../_common/device/device.service';
-import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 
 const ManifestUrl = 'https://d.gamejolt.net/data/client/manifest-2.json';
 
 @Options({
 	name: 'RouteDowngrade',
 })
-@RouteResolver({
+@OptionsForRoute({
 	resolver: () => Api.sendRawRequest(ManifestUrl),
 })
 export default class RouteDowngrade extends BaseRouteComponent {

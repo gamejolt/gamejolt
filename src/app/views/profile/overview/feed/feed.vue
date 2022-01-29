@@ -7,7 +7,7 @@ import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
@@ -43,7 +43,7 @@ function getFetchUrl(route: RouteLocationNormalized) {
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: false,
 	lazy: true,
 	deps: { params: ['feedSection'], query: ['tab', 'feed_last_id'] },
@@ -226,7 +226,9 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 			<AppIllustration v-else :src="illNoComments">
 				<p>
 					<template v-if="isOwner">
-						<AppTranslate v-if="isLikeFeed">You haven't liked anything yet.</AppTranslate>
+						<AppTranslate v-if="isLikeFeed"
+							>You haven't liked anything yet.</AppTranslate
+						>
 						<AppTranslate v-else>You haven't posted anything yet.</AppTranslate>
 					</template>
 					<template v-else>

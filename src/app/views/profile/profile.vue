@@ -10,7 +10,7 @@ import { formatNumber } from '../../../_common/filters/number';
 import AppPopper from '../../../_common/popper/popper.vue';
 import { Registry } from '../../../_common/registry/registry.service';
 import { ReportModal } from '../../../_common/report/modal/modal.service';
-import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../_common/share/share.service';
 import { useCommonStore } from '../../../_common/store/common-store';
@@ -206,7 +206,7 @@ const ProfileThemeKey = 'profile';
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: true,
 	lazy: true,
 	deps: { params: ['username'], query: ['intent'] },
@@ -560,9 +560,7 @@ export default class RouteProfile extends BaseRouteComponent {
 													@click="report"
 												>
 													<AppJolticon icon="flag" />
-													<AppTranslate>
-														Report user
-													</AppTranslate>
+													<AppTranslate> Report user </AppTranslate>
 												</a>
 												<a
 													v-if="
@@ -574,9 +572,7 @@ export default class RouteProfile extends BaseRouteComponent {
 													@click="routeStore.removeFriend()"
 												>
 													<AppJolticon icon="friend-remove-1" notice />
-													<AppTranslate>
-														Remove Friend
-													</AppTranslate>
+													<AppTranslate> Remove Friend </AppTranslate>
 												</a>
 												<a
 													v-if="canBlock"
@@ -593,9 +589,7 @@ export default class RouteProfile extends BaseRouteComponent {
 													target="_blank"
 												>
 													<AppJolticon icon="cog" />
-													<AppTranslate>
-														Moderate User
-													</AppTranslate>
+													<AppTranslate> Moderate User </AppTranslate>
 												</a>
 											</div>
 										</template>

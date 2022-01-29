@@ -5,7 +5,7 @@ import { useRouter } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { Game } from '../../../../../_common/game/game.model';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
@@ -28,7 +28,7 @@ import { createGameDashRouteController, ManageGameThemeKey } from './manage.stor
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['id'], query: ['intent'] },
 	async resolver({ route }) {
 		const intentRedirect = IntentService.checkRoute(route, {

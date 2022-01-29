@@ -6,7 +6,10 @@ import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
 import { Game } from '../../../../../../_common/game/game.model';
 import AppMediaItemCover from '../../../../../../_common/media-item/cover/cover.vue';
 import AppNavTabList from '../../../../../../_common/nav/tab-list/tab-list.vue';
-import { BaseRouteComponent } from '../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { GameHeaderModal } from '../../../../../components/game/header-modal/header-modal.service';
 import { useGameDashRouteController } from '../manage.store';
@@ -24,6 +27,7 @@ import AppManageGameNav from './_nav/nav.vue';
 		AppMediaItemCover,
 	},
 })
+@OptionsForRoute()
 export default class RouteDashGamesManageGame extends BaseRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
@@ -52,7 +56,9 @@ export default class RouteDashGamesManageGame extends BaseRouteComponent {
 			<AppEditableOverlay @click="showEditHeader()">
 				<template #overlay>
 					<span>
-						<AppTranslate v-if="!game.header_media_item">Upload Game Header</AppTranslate>
+						<AppTranslate v-if="!game.header_media_item">
+							Upload Game Header
+						</AppTranslate>
 						<AppTranslate v-else>Change Header</AppTranslate>
 					</span>
 				</template>

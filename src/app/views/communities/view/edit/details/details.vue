@@ -7,7 +7,10 @@ import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbn
 import AppEditableOverlay from '../../../../../../_common/editable-overlay/editable-overlay.vue';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
-import { BaseRouteComponent } from '../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { useThemeStore } from '../../../../../../_common/theme/theme.store';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
@@ -30,6 +33,7 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 		AppAlertDismissable,
 	},
 })
+@OptionsForRoute()
 export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
@@ -132,7 +136,9 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 					<ul>
 						<li>
 							<p>
-								<strong><AppTranslate>Your community is live!</AppTranslate></strong>
+								<strong>
+									<AppTranslate>Your community is live!</AppTranslate>
+								</strong>
 								<br />
 								<AppTranslate>
 									Users can already see and join your community on Game Jolt.
@@ -141,7 +147,9 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 						</li>
 
 						<li>
-							<strong><AppTranslate>Customize the %$@#! out of it</AppTranslate></strong>
+							<strong>
+								<AppTranslate>Customize the %$@#! out of it</AppTranslate>
+							</strong>
 							<br />
 							<AppTranslate>
 								You can edit every aspect of your community in this page. Set a

@@ -2,7 +2,7 @@
 import { Options } from 'vue-property-decorator';
 import AppAuthJoin from '../../../../_common/auth/join/join.vue';
 import { Connection } from '../../../../_common/connection/connection-service';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { loggedUserBlock } from '../auth.vue';
 
 @Options({
@@ -11,7 +11,7 @@ import { loggedUserBlock } from '../auth.vue';
 		AppAuthJoin,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	async resolver() {
 		return loggedUserBlock();
 	},

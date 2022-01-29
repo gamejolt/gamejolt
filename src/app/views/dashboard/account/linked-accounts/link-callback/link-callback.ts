@@ -5,10 +5,13 @@ import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import {
-getLinkedAccountProviderDisplayName,
-LinkedAccount
+	getLinkedAccountProviderDisplayName,
+	LinkedAccount,
 } from '../../../../../../_common/linked-account/linked-account.model';
-import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
 
 function constructUrl(baseUrl: string, route: RouteLocationNormalized) {
@@ -31,7 +34,7 @@ function constructUrl(baseUrl: string, route: RouteLocationNormalized) {
 @Options({
 	name: 'RouteDashAccountLinkedAccountsLinkCallback',
 })
-@RouteResolver({
+@OptionsForRoute({
 	resolver({ route }) {
 		const url = constructUrl('/web/dash/linked-accounts/link-callback/', route);
 		// Force POST.

@@ -2,14 +2,14 @@ import { h } from 'vue';
 import { Options } from 'vue-property-decorator';
 import { RouteLocationRedirect } from '../../../../utils/router';
 import { PayloadError } from '../../../../_common/payload/payload-service';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 
 const paths = import.meta.glob('../../../../lib/doc-help/src/**/*.md');
 
 @Options({
 	name: 'RouteLandingHelpContent',
 })
-@RouteResolver({
+@OptionsForRoute({
 	async resolver({ route }) {
 		// First check the path as is, then check with "index".
 		const path = route.params.path;

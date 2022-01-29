@@ -3,7 +3,10 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../_common/route/route-component';
 import { User } from '../../../../../../_common/user/user.model';
 import AppFollowerList from '../../../../../components/follower/list/list.vue';
 import { useGameRouteController } from '../view.vue';
@@ -18,7 +21,7 @@ function getFetchUrl(route: RouteLocationNormalized) {
 		AppFollowerList,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: true,
 	lazy: true,
 	deps: {},

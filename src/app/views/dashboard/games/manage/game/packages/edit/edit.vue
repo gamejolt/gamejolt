@@ -19,7 +19,7 @@ import AppNavTabList from '../../../../../../../../_common/nav/tab-list/tab-list
 import { AppProgressPoller } from '../../../../../../../../_common/progress/poller/poller';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../../_common/route/route-component';
 import { Sellable } from '../../../../../../../../_common/sellable/sellable.model';
 import { AppTimeAgo } from '../../../../../../../../_common/time/ago/ago';
@@ -48,7 +48,7 @@ import { useGameDashRouteController } from '../../../manage.store';
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['packageId'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
@@ -173,7 +173,9 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 
 	async removeRelease(release: GameRelease) {
 		const result = await ModalConfirm.show(
-			this.$gettext('Are you sure you want to remove this release? All of its builds will be removed as well.')
+			this.$gettext(
+				'Are you sure you want to remove this release? All of its builds will be removed as well.'
+			)
 		);
 
 		if (!result) {
@@ -340,9 +342,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 						</p>
 						<p>
 							<AppLinkHelp page="dev-packages" class="link-help">
-								<AppTranslate>
-									Learn more about releases...
-								</AppTranslate>
+								<AppTranslate> Learn more about releases... </AppTranslate>
 							</AppLinkHelp>
 						</p>
 					</div>
@@ -440,17 +440,13 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 								>
 									<AppJolticon icon="active" />
 									{{ ' ' }}
-									<AppTranslate>
-										Published
-									</AppTranslate>
+									<AppTranslate> Published </AppTranslate>
 								</span>
 
 								<span class="dot-separator" />
 
 								<template v-if="!release.build_count">
-									<AppTranslate>
-										No builds yet.
-									</AppTranslate>
+									<AppTranslate> No builds yet. </AppTranslate>
 								</template>
 								<template v-else>
 									<AppTranslate

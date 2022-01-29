@@ -5,7 +5,7 @@ import { imageGameJoltLogo } from '../../../app/img/images';
 import { redirectToDashboard } from '../../../_common/auth/auth.service';
 import { Connection } from '../../../_common/connection/connection-service';
 import { Environment } from '../../../_common/environment/environment.service';
-import { BaseRouteComponent } from '../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { commonStore } from '../../../_common/store/common-store';
 import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
@@ -37,6 +37,7 @@ export function loggedUserBlock() {
 		await authStore.bootstrap();
 	},
 })
+@OptionsForRoute()
 export default class RouteAuth extends BaseRouteComponent {
 	store = setup(() => useAuthStore());
 

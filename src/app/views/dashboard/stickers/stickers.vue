@@ -8,7 +8,7 @@ import { useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { formatNumber } from '../../../../_common/filters/number';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerCard from '../../../../_common/sticker/card/card.vue';
 import { Sticker, StickerStack } from '../../../../_common/sticker/sticker.model';
@@ -39,7 +39,7 @@ const FetchStickersEndpoint = '/web/stickers/dash';
 		AppProgressBar,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: () => Api.sendRequest(FetchStickersEndpoint),
 })

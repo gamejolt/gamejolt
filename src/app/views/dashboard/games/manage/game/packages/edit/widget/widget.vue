@@ -4,7 +4,7 @@ import { Api } from '../../../../../../../../../_common/api/api.service';
 import { Environment } from '../../../../../../../../../_common/environment/environment.service';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../../../../_common/screen/screen-service';
 import { Sellable } from '../../../../../../../../../_common/sellable/sellable.model';
@@ -12,7 +12,7 @@ import { Sellable } from '../../../../../../../../../_common/sellable/sellable.m
 @Options({
 	name: 'RouteDashGamesManageGamePackagesEditWidget',
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest(

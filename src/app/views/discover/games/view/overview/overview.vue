@@ -33,7 +33,10 @@ import { HistoryTick } from '../../../../../../_common/history-tick/history-tick
 import { AppLazyPlaceholder } from '../../../../../../_common/lazy/placeholder/placeholder';
 import { Meta } from '../../../../../../_common/meta/meta-service';
 import { PartnerReferral } from '../../../../../../_common/partner-referral/partner-referral-service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShareCard from '../../../../../../_common/share/card/card.vue';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
@@ -84,7 +87,7 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 		AppShareCard,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	lazy: true,
 	cache: true,
 	deps: { query: ['feed_last_id'] },

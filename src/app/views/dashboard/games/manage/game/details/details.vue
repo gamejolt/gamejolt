@@ -2,7 +2,10 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
-import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector.vue';
@@ -16,6 +19,7 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppGameDevStageSelector,
 	},
 })
+@OptionsForRoute()
 export default class RouteDashGamesManageGameDetails extends BaseRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 	commonStore = setup(() => useCommonStore());

@@ -1,11 +1,12 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
 import { html } from '../../../../lib/terms/cookies/global.md';
-import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 
 @Options({
 	name: 'RouteLegalCookies',
 })
+@OptionsForRoute()
 export default class RouteLegalCookies extends BaseRouteComponent {
 	readonly template = html;
 

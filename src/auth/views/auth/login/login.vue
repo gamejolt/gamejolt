@@ -3,7 +3,7 @@ import { Options } from 'vue-property-decorator';
 import { RouteLocationRedirect } from '../../../../utils/router';
 import AppAuthLogin from '../../../../_common/auth/login/login.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { loggedUserBlock } from '../auth.vue';
 
@@ -13,7 +13,7 @@ import { loggedUserBlock } from '../auth.vue';
 		AppAuthLogin,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { query: ['intent'] },
 	async resolver({ route }) {
 		if (route.query.intent === 'approve-login-expired') {

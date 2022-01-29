@@ -5,7 +5,7 @@ import { Api } from '../../../../../_common/api/api.service';
 import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
 import { showInfoGrowl } from '../../../../../_common/growls/growls.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import FormForumTopic from '../../../../components/forms/forum/topic/topic.vue';
@@ -23,7 +23,7 @@ import AppPageHeader from '../../../../components/page-header/page-header.vue';
 		FormForumTopic,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['channel'] },
 	resolver: ({ route }) => Api.sendRequest('/web/forums/topics/create/' + route.params.channel),
 })

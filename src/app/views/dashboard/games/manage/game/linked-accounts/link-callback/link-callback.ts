@@ -13,14 +13,14 @@ import {
 } from '../../../../../../../../_common/linked-account/linked-account.model';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../../_common/route/route-component';
 import { useGameDashRouteController } from '../../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageGameLinkedAccountsLinkCallback',
 })
-@RouteResolver({
+@OptionsForRoute({
 	resolver({ route }) {
 		const url = RouteDashGamesManageGameLinkedAccountsLinkCallback.constructUrl(
 			'/web/dash/linked-accounts/link-callback/',

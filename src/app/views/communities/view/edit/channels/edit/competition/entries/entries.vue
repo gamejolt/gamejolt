@@ -14,7 +14,7 @@ import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/c
 import AppPagination from '../../../../../../../../../_common/pagination/pagination.vue';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../../../_common/route/route-component';
 import { AppNoAutoscroll } from '../../../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import { AppTimeAgo } from '../../../../../../../../../_common/time/ago/ago';
@@ -88,7 +88,7 @@ function getValidSortDirectionQueryParam(route: RouteLocationNormalized) {
 		AppNoAutoscroll,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['id', 'channel'], query: ['sort', 'sort-direction', 'page'] },
 	resolver: ({ route }) => {
 		const query = [];
@@ -415,7 +415,9 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 										sm
 										@click="onClickRemoveEntry(entry)"
 									>
-										<AppTranslate v-if="entry.is_removed">Readmit Entry</AppTranslate>
+										<AppTranslate v-if="entry.is_removed"
+											>Readmit Entry</AppTranslate
+										>
 										<AppTranslate v-else>Hide Entry</AppTranslate>
 									</AppButton>
 								</td>

@@ -8,7 +8,7 @@ import { showSuccessGrowl } from '../../../../../../../../../_common/growls/grow
 import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../../../_common/route/route-component';
 import { AppTimeAgo } from '../../../../../../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
@@ -25,7 +25,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['id', 'channel'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
@@ -237,7 +237,9 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 						<template v-if="competition.timezone">
 							{{ competition.timezone }}
 							<p class="help-block sans-margin-bottom">
-								<AppTranslate>All jam times are based off this timezone.</AppTranslate>
+								<AppTranslate
+									>All jam times are based off this timezone.</AppTranslate
+								>
 							</p>
 						</template>
 						<template v-else>

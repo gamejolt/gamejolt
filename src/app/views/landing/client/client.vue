@@ -12,7 +12,7 @@ import { Game } from '../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import { HistoryTick } from '../../../../_common/history-tick/history-tick-service';
 import { Navigate } from '../../../../_common/navigate/navigate.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppScrollTo } from '../../../../_common/scroll/to/to.directive';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
@@ -27,7 +27,7 @@ import { imageJolt } from '../../../img/images';
 		AppScrollTo,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: true,
 	lazy: true,
 	deps: {},

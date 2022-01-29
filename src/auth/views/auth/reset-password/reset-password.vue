@@ -2,7 +2,7 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import FormResetPassword from '../../../components/forms/reset-password/reset-password.vue';
 
 @Options({
@@ -11,7 +11,7 @@ import FormResetPassword from '../../../components/forms/reset-password/reset-pa
 		FormResetPassword,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	// Will return a 404 if the key isn't correct for this user.
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/auth/check-reset-key/' + route.params.userId, {

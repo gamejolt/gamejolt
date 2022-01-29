@@ -10,7 +10,7 @@ import { formatFuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import AppGameAddBanner from '../../../../../_common/game/add-banner/add-banner.vue';
 import { HistoryCache } from '../../../../../_common/history/cache/cache.service';
 import { Meta } from '../../../../../_common/meta/meta-service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import {
@@ -40,7 +40,7 @@ const listingKey = 'CachedListing';
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	lazy: true,
 	cache: true,
 	async resolver({ route }) {

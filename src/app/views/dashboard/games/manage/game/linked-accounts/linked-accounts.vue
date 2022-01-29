@@ -18,7 +18,7 @@ import { LinkedAccounts } from '../../../../../../../_common/linked-account/link
 import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import { useGameDashRouteController } from '../../manage.store';
 
@@ -28,7 +28,7 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppLinkedAccount,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/linked-accounts?resource=Game&resourceId=' + route.params.id),

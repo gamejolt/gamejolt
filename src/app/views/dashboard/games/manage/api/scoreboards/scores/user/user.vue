@@ -7,7 +7,7 @@ import { showSuccessGrowl } from '../../../../../../../../../_common/growls/grow
 import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../../../_common/route/route-component';
 import { AppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
 import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
@@ -24,7 +24,7 @@ import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['table', 'user'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(

@@ -17,7 +17,7 @@ import AppMessageThreadPagination from '../../../../../_common/message-thread/pa
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../_common/report/modal/modal.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../_common/scroll/affix/affix.vue';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
@@ -62,7 +62,7 @@ import AppPageHeader from '../../../../components/page-header/page-header.vue';
 		AppScrollTo,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: true,
 	deps: { params: ['slug', 'id'], query: ['page'] },
 	async resolver({ route }) {

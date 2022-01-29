@@ -7,14 +7,14 @@ import { GameDataStoreItem } from '../../../../../../../../../_common/game/data-
 import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../../../_common/route/route-component';
 import { useGameDashRouteController } from '../../../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageApiDataStorageItemsView',
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['item'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(

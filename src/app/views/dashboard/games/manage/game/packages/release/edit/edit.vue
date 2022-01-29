@@ -10,7 +10,7 @@ import { showSuccessGrowl } from '../../../../../../../../../_common/growls/grow
 import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../../../_common/route/route-component';
 import FormGameRelease from '../../../../../../../../components/forms/game/release/release.vue';
 import { useGameDashRouteController } from '../../../../manage.store';
@@ -21,7 +21,7 @@ import { useGameDashRouteController } from '../../../../manage.store';
 		FormGameRelease,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['packageId', 'releaseId'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
@@ -93,7 +93,9 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 
 	async unpublishRelease(release: GameRelease) {
 		const result = await ModalConfirm.show(
-			this.$gettext('Are you sure you want to hide this release? It will no longer be accessible from your game page.')
+			this.$gettext(
+				'Are you sure you want to hide this release? It will no longer be accessible from your game page.'
+			)
 		);
 
 		if (!result) {
@@ -110,7 +112,9 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 
 	async removeRelease(release: GameRelease) {
 		const result = await ModalConfirm.show(
-			this.$gettext('Are you sure you want to remove this release? All of its builds will be removed as well.')
+			this.$gettext(
+				'Are you sure you want to remove this release? All of its builds will be removed as well.'
+			)
 		);
 
 		if (!result) {

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
 import nav from '../../../../lib/doc-game-api/v1.x/nav.json';
-import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { imageJolt } from '../../../img/images';
 
@@ -11,6 +11,7 @@ import { imageJolt } from '../../../img/images';
 		AppThemeSvg,
 	},
 })
+@OptionsForRoute()
 export default class RouteLandingGameApiDoc extends BaseRouteComponent {
 	readonly nav = nav;
 	readonly imageJolt = imageJolt;

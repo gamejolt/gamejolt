@@ -6,7 +6,10 @@ import { Api } from '../../../../../../_common/api/api.service';
 import { EventItem } from '../../../../../../_common/event-item/event-item.model';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import AppNavTabList from '../../../../../../_common/nav/tab-list/tab-list.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../_common/route/route-component';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
@@ -30,7 +33,7 @@ function getFetchUrl(route: RouteLocationNormalized) {
 		AppNavTabList,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: false,
 	lazy: false,
 	deps: { query: ['tab', 'feed_last_id'] },
@@ -160,15 +163,21 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 							<div v-else class="alert">
 								<template v-if="tab === 'active'">
 									<p>
-										<AppTranslate>You haven't published any posts yet.</AppTranslate>
+										<AppTranslate
+											>You haven't published any posts yet.</AppTranslate
+										>
 									</p>
 								</template>
 								<template v-else-if="tab === 'draft'">
-									<p><AppTranslate>You don't have any draft posts.</AppTranslate></p>
+									<p>
+										<AppTranslate>You don't have any draft posts.</AppTranslate>
+									</p>
 								</template>
 								<template v-else-if="tab === 'scheduled'">
 									<p>
-										<AppTranslate>You don't have any scheduled posts.</AppTranslate>
+										<AppTranslate
+											>You don't have any scheduled posts.</AppTranslate
+										>
 									</p>
 								</template>
 							</div>

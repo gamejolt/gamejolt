@@ -16,7 +16,7 @@ import AppNavTabList from '../../../_common/nav/tab-list/tab-list.vue';
 import {
 	asyncRouteLoader,
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
@@ -70,7 +70,7 @@ export class RouteActivityFeedController {
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: true,
 	lazy: true,
 	resolver: () => Api.sendRequest('/web/dash/home'),

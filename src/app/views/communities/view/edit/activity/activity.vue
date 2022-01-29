@@ -5,7 +5,10 @@ import { CommunityActivityItem } from '../../../../../../_common/community/activ
 import AppCommunityActivityItem from '../../../../../../_common/community/activity-item/activity-item.vue';
 import { formatDate } from '../../../../../../_common/filters/date';
 import AppLoading from '../../../../../../_common/loading/loading.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../_common/route/route-component';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
 
@@ -24,7 +27,7 @@ type ActivityItem = {
 		AppLoading,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['id'] },
 	resolver({ route }) {
 		return Api.sendRequest('/web/dash/communities/activity/' + route.params.id);

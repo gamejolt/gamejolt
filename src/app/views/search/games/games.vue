@@ -1,7 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import AppGameGrid from '../../../components/game/grid/grid.vue';
 import { Search, sendSearch } from '../../../components/search/search-service';
 import { useSearchRouteController } from '../search.vue';
@@ -12,7 +12,7 @@ import { useSearchRouteController } from '../search.vue';
 		AppGameGrid,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: true,
 	resolver: ({ route }) =>
 		sendSearch(route.query.q as string, {

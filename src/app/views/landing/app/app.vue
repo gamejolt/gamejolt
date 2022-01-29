@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
 import AppAppButtons from '../../../../_common/app-buttons/app-buttons.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import phonesImage from './phones.png';
 
 @Options({
@@ -10,7 +10,7 @@ import phonesImage from './phones.png';
 		AppAppButtons,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: true,
 	lazy: true,
 	deps: {},
@@ -53,13 +53,7 @@ export default class RouteLandingApp extends BaseRouteComponent {
 
 		<section class="section">
 			<div class="container text-center">
-				<img
-					class="-phones"
-					:src="phonesImage"
-					width="385"
-					height="300"
-					alt=""
-				/>
+				<img class="-phones" :src="phonesImage" width="385" height="300" alt="" />
 			</div>
 		</section>
 

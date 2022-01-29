@@ -5,7 +5,7 @@ import { overrideAdsAdapter, useAdsController } from '../../../../_common/ad/ad-
 import { AdPlaywireAdapter } from '../../../../_common/ad/playwire/playwire-adapter';
 import { AdProperAdapter } from '../../../../_common/ad/proper/proper-adapter';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
-import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import AppScrollAffix from '../../../../_common/scroll/affix/affix.vue';
 
 @Options({
@@ -15,6 +15,7 @@ import AppScrollAffix from '../../../../_common/scroll/affix/affix.vue';
 		AppScrollAffix,
 	},
 })
+@OptionsForRoute()
 export default class RouteAdtest extends BaseRouteComponent {
 	ads = setup(() => useAdsController());
 
@@ -51,7 +52,7 @@ export default class RouteAdtest extends BaseRouteComponent {
 					<AppAdWidget size="leaderboard" placement="top" />
 					<AppAdWidget size="rectangle" placement="content" />
 
-					<div class="alert" style="height: 2500px;" />
+					<div class="alert" style="height: 2500px" />
 
 					<AppAdWidget size="rectangle" placement="content" />
 					<AppAdWidget size="rectangle" placement="content" />

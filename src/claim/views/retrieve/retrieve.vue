@@ -4,7 +4,7 @@ import { Api } from '../../../_common/api/api.service';
 import { GameBundle } from '../../../_common/game-bundle/game-bundle.model';
 import { Game } from '../../../_common/game/game.model';
 import { Meta } from '../../../_common/meta/meta-service';
-import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import AppInvalidKey from '../../components/AppInvalidKey.vue';
 import FormRetrieve from '../../components/forms/FormRetrieve.vue';
 
@@ -28,7 +28,7 @@ type Payload = SuccessPayload | ErrorPayload | undefined;
 		AppInvalidKey,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	async resolver({ route }): Promise<Payload> {
 		let type: 'game' | 'bundle' | undefined;
 		let key = '';
@@ -128,7 +128,9 @@ export default class RouteRetrieve extends BaseRouteComponent {
 
 			<p>
 				<template v-if="!resourceTitle">
-					<AppTranslate>Please enter your email address to retrieve your keys.</AppTranslate>
+					<AppTranslate
+						>Please enter your email address to retrieve your keys.</AppTranslate
+					>
 				</template>
 				<template v-if="resourceTitle">
 					<span v-translate="{ resource: resourceTitle }">

@@ -12,7 +12,7 @@ import { showSuccessGrowl } from '../../../../../../../../_common/growls/growls.
 import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../../_common/route/route-component';
 import { Sellable } from '../../../../../../../../_common/sellable/sellable.model';
 import { AppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
@@ -34,7 +34,7 @@ import { useGameDashRouteController } from '../../../manage.store';
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id),
@@ -161,7 +161,11 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 			<div v-if="game._is_devlog" class="alert">
 				<AppJolticon icon="notice" notice />
 				{{ ' ' }}
-				<b><AppTranslate>Public packages do not show on devlog-only game pages.</AppTranslate></b>
+				<b
+					><AppTranslate
+						>Public packages do not show on devlog-only game pages.</AppTranslate
+					></b
+				>
 				{{ ' ' }}
 				<AppTranslate>
 					You are only able to create private packages for testers while your game page is
@@ -171,7 +175,9 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 			</div>
 
 			<div v-if="!packages.length" class="alert">
-				<p v-if="hasAllPerms"><AppTranslate>You haven't added any packages yet.</AppTranslate></p>
+				<p v-if="hasAllPerms">
+					<AppTranslate>You haven't added any packages yet.</AppTranslate>
+				</p>
 				<p v-else>
 					<AppTranslate>
 						This game hasn't got any packages yet, and you don't have permissions to
@@ -336,9 +342,7 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 				</AppCardListDraggable>
 			</AppCardList>
 
-			<AppDashGameWizardControls
-				:disabled="!game._is_devlog && !game.has_active_builds"
-			/>
+			<AppDashGameWizardControls :disabled="!game._is_devlog && !game.has_active_builds" />
 		</div>
 	</div>
 </template>

@@ -7,7 +7,7 @@ import { GameTrophy } from '../../../../../../../_common/game/trophy/trophy.mode
 import AppNavTabList from '../../../../../../../_common/nav/tab-list/tab-list.vue';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import { UserGameTrophy } from '../../../../../../../_common/user/trophy/game-trophy.model';
@@ -23,7 +23,7 @@ import { useGameRouteController } from '../../view.vue';
 		AppNavTabList,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: true,
 	deps: {},
 	resolver: ({ route }) => Api.sendRequest('/web/discover/games/trophies/' + route.params.id),
@@ -162,7 +162,10 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 
 		<section v-if="!trophies.length" class="section fill-offset">
 			<div class="container text-center">
-				<AppTranslate>There are no trophies for this game yet. Bug the developer about adding some!</AppTranslate>
+				<AppTranslate
+					>There are no trophies for this game yet. Bug the developer about adding
+					some!</AppTranslate
+				>
 			</div>
 		</section>
 	</div>

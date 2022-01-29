@@ -6,7 +6,7 @@ import { formatDuration } from '../../../../../../../_common/filters/duration';
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { useGameDashRouteController } from '../../manage.store';
@@ -17,7 +17,7 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: ({ route }) => Api.sendRequest('/web/dash/developer/games/api/' + route.params.id),
 })

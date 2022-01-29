@@ -4,7 +4,7 @@ import { Client } from '../../../../_common/client/safe-exports';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { AppProgressPoller } from '../../../../_common/progress/poller/poller';
-import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 
 @Options({
 	name: 'RouteDashLinking',
@@ -13,6 +13,7 @@ import { BaseRouteComponent } from '../../../../_common/route/route-component';
 		AppLoading,
 	},
 })
+@OptionsForRoute()
 export default class RouteDashLinking extends BaseRouteComponent {
 	token!: string;
 
@@ -65,7 +66,11 @@ export default class RouteDashLinking extends BaseRouteComponent {
 	<section class="section">
 		<div class="container">
 			<div v-if="token">
-				<p><AppTranslate>Please use your web browser to complete the process.</AppTranslate></p>
+				<p>
+					<AppTranslate>
+						Please use your web browser to complete the process.
+					</AppTranslate>
+				</p>
 
 				<AppProgressPoller
 					:url="`/web/auth/poll-oauth/${token}`"

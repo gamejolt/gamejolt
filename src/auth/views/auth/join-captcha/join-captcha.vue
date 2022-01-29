@@ -1,8 +1,8 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
-import { Growls, showErrorGrowl } from '../../../../_common/growls/growls.service';
-import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import { showErrorGrowl } from '../../../../_common/growls/growls.service';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import AppGrecaptchaWidget from '../../../components/grecaptcha/widget/widget.vue';
 
 @Options({
@@ -11,6 +11,7 @@ import AppGrecaptchaWidget from '../../../components/grecaptcha/widget/widget.vu
 		AppGrecaptchaWidget,
 	},
 })
+@OptionsForRoute()
 export default class RouteJoinCaptcha extends BaseRouteComponent {
 	authToken: string = null as any;
 
@@ -120,9 +121,7 @@ export default class RouteJoinCaptcha extends BaseRouteComponent {
 			<AppTranslate v-else-if="serverErrors['rate-limit']">
 				You must wait 15 minutes before creating another account.
 			</AppTranslate>
-			<AppTranslate v-else>
-				Something weird happened!
-			</AppTranslate>
+			<AppTranslate v-else> Something weird happened! </AppTranslate>
 			<br />
 			<AppButton primary @click="retryJoin" v-if="!serverErrors['rate-limit']">
 				<AppTranslate>Retry</AppTranslate>

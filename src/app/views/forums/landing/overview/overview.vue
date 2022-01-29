@@ -4,7 +4,7 @@ import { Api } from '../../../../../_common/api/api.service';
 import { ForumCategory } from '../../../../../_common/forum/category/category.model';
 import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
 import { ForumPost } from '../../../../../_common/forum/post/post.model';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import AppForumChannelList from '../../../../components/forum/channel-list/channel-list.vue';
 import AppForumRules from '../../../../components/forum/rules/rules.vue';
 
@@ -15,7 +15,7 @@ import AppForumRules from '../../../../components/forum/rules/rules.vue';
 		AppForumChannelList,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: true,
 	deps: {},
 	resolver: () => Api.sendRequest('/web/forums'),

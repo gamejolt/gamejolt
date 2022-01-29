@@ -10,7 +10,7 @@ import { GameScoreTable } from '../../../../../../../../_common/game/score-table
 import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../../_common/route/route-component';
 import { AppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import FormGameScoreTable from '../../../../../../../components/forms/game/score-table/score-table.vue';
@@ -29,7 +29,7 @@ import { useGameDashRouteController } from '../../../manage.store';
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/developer/games/api/scores/' + route.params.id),
@@ -148,9 +148,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 								<div class="card-stats">
 									<div class="stat-big">
 										<div class="stat-big-label">
-											<AppTranslate>
-												Table ID
-											</AppTranslate>
+											<AppTranslate> Table ID </AppTranslate>
 										</div>
 										<div class="stat-big-digit">{{ scoreTable.id }}</div>
 									</div>
@@ -172,9 +170,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 										"
 										class="tag tag-highlight"
 									>
-										<AppTranslate
-											>Primary Scoreboard</AppTranslate
-										>
+										<AppTranslate>Primary Scoreboard</AppTranslate>
 									</span>
 									<span
 										v-if="scoreTable.allow_guest_scores"
@@ -183,9 +179,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 										"
 										class="tag"
 									>
-										<AppTranslate
-											>Guest Scoring</AppTranslate
-										>
+										<AppTranslate>Guest Scoring</AppTranslate>
 									</span>
 									<span
 										v-if="scoreTable.unique_scores"
@@ -194,9 +188,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 										"
 										class="tag"
 									>
-										<AppTranslate
-											>Unique Scores</AppTranslate
-										>
+										<AppTranslate>Unique Scores</AppTranslate>
 									</span>
 									<span
 										v-if="
@@ -204,7 +196,9 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 											GameScoreTable.SORTING_DIRECTION_ASC
 										"
 										v-app-tooltip="
-											$gettext(`Scores with lower values are ranked better/higher.`)
+											$gettext(
+												`Scores with lower values are ranked better/higher.`
+											)
 										"
 										class="tag"
 									>
@@ -220,7 +214,9 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 											GameScoreTable.SORTING_DIRECTION_DESC
 										"
 										v-app-tooltip="
-											$gettext(`Scores with higher values are ranked better/higher.`)
+											$gettext(
+												`Scores with higher values are ranked better/higher.`
+											)
 										"
 										class="tag"
 									>
@@ -245,9 +241,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 										}"
 										@click.stop
 									>
-										<AppTranslate
-											>View Scores</AppTranslate
-										>
+										<AppTranslate>View Scores</AppTranslate>
 									</AppButton>
 								</div>
 

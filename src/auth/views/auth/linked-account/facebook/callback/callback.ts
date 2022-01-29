@@ -8,13 +8,16 @@ import {
 	redirectToOnboarding,
 } from '../../../../../../_common/auth/auth.service';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../_common/route/route-component';
 import AuthLinkedAccountProcessing from '../../_processing/processing.vue';
 
 @Options({
 	name: 'RouteAuthLinkedAccountFacebookCallback',
 })
-@RouteResolver({
+@OptionsForRoute({
 	lazy: true,
 	resolver({ route }) {
 		const { code, state } = route.query;

@@ -5,7 +5,7 @@ import { Api } from '../../../../../../../../../_common/api/api.service';
 import { GameScoreTable } from '../../../../../../../../../_common/game/score-table/score-table.model';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../../../_common/scroll/scroll.service';
 import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
@@ -18,7 +18,7 @@ import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 		AppManageGameListScores,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['table'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(

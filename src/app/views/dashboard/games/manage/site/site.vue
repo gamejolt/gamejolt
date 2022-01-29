@@ -2,7 +2,10 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../_common/route/route-component';
 import { Site } from '../../../../../../_common/site/site-model';
 import AppSitesLinkCard from '../../../../../components/sites/link-card/link-card.vue';
 import AppSitesManagePage from '../../../../../components/sites/manage-page/manage-page.vue';
@@ -15,7 +18,7 @@ import { useGameDashRouteController } from '../manage.store';
 		AppSitesManagePage,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: ({ route }) => Api.sendRequest('/web/dash/sites/' + route.params.id),
 })

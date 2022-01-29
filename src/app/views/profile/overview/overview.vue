@@ -31,7 +31,7 @@ import '../../../../_common/lazy/placeholder/placeholder.styl';
 import { LinkedAccount, Provider } from '../../../../_common/linked-account/linked-account.model';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
@@ -83,7 +83,7 @@ const FiresideScrollInviewConfig = new ScrollInviewConfig({
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: true,
 	lazy: true,
 	deps: {},
@@ -895,9 +895,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 									<AppTranslate>Add Friend</AppTranslate>
 								</AppButton>
 								<AppButton
-									v-app-tooltip="
-										$gettext('The sender will not be notified.')
-									"
+									v-app-tooltip="$gettext('The sender will not be notified.')"
 									trans
 									@click="onFriendRequestReject"
 								>

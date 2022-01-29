@@ -11,7 +11,7 @@ import { KeyGroup } from '../../../../../../../_common/key-group/key-group.model
 import AppProgressBar from '../../../../../../../_common/progress/bar/bar.vue';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/key-group.vue';
 import { useGameDashRouteController } from '../../manage.store';
@@ -26,7 +26,7 @@ import { useGameDashRouteController } from '../../manage.store';
 		FormGameKeyGroup,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/developer/games/key-groups/' + route.params.id),
@@ -128,7 +128,9 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 												<template
 													v-if="group.type === KeyGroup.TYPE_ANONYMOUS"
 												>
-													<AppTranslate>Unrestricted (Anonymous)</AppTranslate>
+													<AppTranslate
+														>Unrestricted (Anonymous)</AppTranslate
+													>
 												</template>
 												<template
 													v-else-if="
@@ -140,7 +142,9 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 												<template
 													v-else-if="group.type === KeyGroup.TYPE_EMAIL"
 												>
-													<AppTranslate>Unrestricted (Email)</AppTranslate>
+													<AppTranslate
+														>Unrestricted (Email)</AppTranslate
+													>
 												</template>
 												<template
 													v-else-if="group.type === KeyGroup.TYPE_USER"
@@ -179,7 +183,9 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 											<br />
 
 											<div>
-												<strong><AppTranslate>Claimed</AppTranslate></strong>
+												<strong
+													><AppTranslate>Claimed</AppTranslate></strong
+												>
 												{{ formatNumber(group.claimed_count || 0) }} /
 												{{ formatNumber(group.key_count || 0) }}
 												({{

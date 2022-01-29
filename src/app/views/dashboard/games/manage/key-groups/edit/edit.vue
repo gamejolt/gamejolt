@@ -18,7 +18,7 @@ import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm
 import AppProgressBar from '../../../../../../../_common/progress/bar/bar.vue';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import { AppTimeAgo } from '../../../../../../../_common/time/ago/ago';
 import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
@@ -39,7 +39,7 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['keyGroupId'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(

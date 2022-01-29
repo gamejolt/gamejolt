@@ -12,7 +12,7 @@ import AppLoading from '../../../../../../../../../../_common/loading/loading.vu
 import AppPagination from '../../../../../../../../../../_common/pagination/pagination.vue';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../../../../_common/route/route-component';
 import { AppTooltip } from '../../../../../../../../../../_common/tooltip/tooltip-directive';
 import { CommunityCompetitionEntryModal } from '../../../../../../../../../components/community/competition/entry/modal/modal.service';
@@ -54,7 +54,7 @@ function makeRequest(route: RouteLocationNormalized, page = 1, filterValue = '')
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['awardId'] },
 	resolver: ({ route }) => makeRequest(route),
 })
@@ -306,7 +306,9 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 							No entries matched your filter of <code>"%{ filter }"</code>.
 						</span>
 						<span v-else>
-							<AppTranslate>There are no more entries without this award.</AppTranslate>
+							<AppTranslate
+								>There are no more entries without this award.</AppTranslate
+							>
 						</span>
 					</p>
 				</div>

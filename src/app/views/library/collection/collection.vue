@@ -13,7 +13,7 @@ import { Jam } from '../../../../_common/jam/jam.model';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import AppPopper from '../../../../_common/popper/popper.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
@@ -59,7 +59,7 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 		AppAuthRequired,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	// Not really able to make this lazy since it needs payload to build out the
 	// header.
 	cache: true,
@@ -418,7 +418,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 										<small>@{{ user.username }}</small>
 									</h4>
 									<p class="text-muted small">
-										<AppTranslate :translate-params="{ user: user.display_name }">
+										<AppTranslate
+											:translate-params="{ user: user.display_name }"
+										>
 											These are the games that %{ user } is following.
 										</AppTranslate>
 									</p>
@@ -471,7 +473,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 										<small>@{{ user.username }}</small>
 									</h4>
 									<p class="text-muted small">
-										<AppTranslate :translate-params="{ user: user.display_name }">
+										<AppTranslate
+											:translate-params="{ user: user.display_name }"
+										>
 											These are the games made by %{ user }.
 										</AppTranslate>
 									</p>
@@ -487,7 +491,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 										<AppTranslate>Your Owned Games</AppTranslate>
 									</h1>
 									<p class="text-muted small">
-										<AppTranslate>These are all the games you own.</AppTranslate>
+										<AppTranslate
+											>These are all the games you own.</AppTranslate
+										>
 									</p>
 								</template>
 								<template v-else-if="user">
@@ -510,7 +516,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 										<small>@{{ user.username }}</small>
 									</h4>
 									<p class="text-muted small">
-										<AppTranslate :translate-params="{ user: user.display_name }">
+										<AppTranslate
+											:translate-params="{ user: user.display_name }"
+										>
 											These are all the games owned by %{ user }.
 										</AppTranslate>
 									</p>
@@ -658,9 +666,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 										@click="libraryRemovePlaylist(libraryStore, collection)"
 									>
 										<AppJolticon icon="remove" notice />
-										<AppTranslate>
-											Remove Playlist
-										</AppTranslate>
+										<AppTranslate> Remove Playlist </AppTranslate>
 									</a>
 								</div>
 							</template>

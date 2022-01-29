@@ -1,14 +1,14 @@
 import { h } from 'vue';
 import { Options } from 'vue-property-decorator';
 import { PayloadError } from '../../../../_common/payload/payload-service';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 
 const paths = import.meta.glob('../../../../lib/doc-game-api/v1.x/**/*.md');
 
 @Options({
 	name: 'RouteLandingGameApiDocContent',
 })
-@RouteResolver({
+@OptionsForRoute({
 	async resolver({ route }) {
 		console.log(route.params.path);
 		// First check the path as is, then check with "index".

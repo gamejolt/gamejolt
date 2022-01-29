@@ -9,7 +9,7 @@ import {
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Navigate } from '../../../../_common/navigate/navigate.service';
 import { AppProgressPoller } from '../../../../_common/progress/poller/poller';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 
 @Options({
 	name: 'RouteApproveLogin',
@@ -18,7 +18,7 @@ import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/rou
 		AppLoading,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	async resolver({ route }) {
 		if (!import.meta.env.SSR) {
 			const pollingToken = sessionStorage.getItem('login-polling-token');

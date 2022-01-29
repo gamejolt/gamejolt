@@ -8,7 +8,10 @@ import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem
 import { Game } from '../../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../_common/route/route-component';
 import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { CommunityLinkGameModal } from '../../../../../components/community/link-game-modal/link-game-modal.service';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
@@ -30,7 +33,7 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['id'] },
 	resolver({ route }) {
 		return Api.sendRequest('/web/dash/communities/games/' + route.params.id);

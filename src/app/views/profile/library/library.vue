@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import AppGameCollectionGrid from '../../../components/game/collection/grid/grid.vue';
 import { useProfileRouteController } from '../profile.vue';
@@ -13,7 +13,7 @@ import { useProfileRouteController } from '../profile.vue';
 		AppGameCollectionGrid,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: ({ route }) => Api.sendRequest('/web/library/@' + route.params.username),
 })

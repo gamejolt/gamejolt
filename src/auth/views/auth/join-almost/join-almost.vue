@@ -5,7 +5,7 @@ import { authOnLogin, redirectToOnboarding } from '../../../../_common/auth/auth
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { AppProgressPoller } from '../../../../_common/progress/poller/poller';
-import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 
 @Options({
 	name: 'RouteJoinAlmost',
@@ -14,6 +14,7 @@ import { BaseRouteComponent } from '../../../../_common/route/route-component';
 		AppLoading,
 	},
 })
+@OptionsForRoute()
 export default class RouteJoinAlmost extends BaseRouteComponent {
 	username: string | null = null;
 	password: string | null = null;

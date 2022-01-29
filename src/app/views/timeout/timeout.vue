@@ -8,7 +8,7 @@ import { showErrorGrowl, showInfoGrowl } from '../../../_common/growls/growls.se
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import AppLinkHelp from '../../../_common/link/AppLinkHelp.vue';
 import { Navigate } from '../../../_common/navigate/navigate.service';
-import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { commonStore, useCommonStore } from '../../../_common/store/common-store';
 import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
@@ -29,7 +29,7 @@ import { imageGameJoltLogo } from '../../img/images';
 		AppTimeoutCountdown,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	resolver: async () => {
 		const payload = await Api.sendRequest('/web/touch');
 

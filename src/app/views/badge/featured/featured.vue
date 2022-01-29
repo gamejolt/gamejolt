@@ -2,7 +2,7 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { Game } from '../../../../_common/game/game.model';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import FormGameFeaturedBadge from '../../../components/forms/game/featured-badge/featured-badge.vue';
 
 @Options({
@@ -11,7 +11,7 @@ import FormGameFeaturedBadge from '../../../components/forms/game/featured-badge
 		FormGameFeaturedBadge,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	lazy: true,
 	cache: true,
 	deps: { params: ['gameId'] },

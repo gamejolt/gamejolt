@@ -9,7 +9,10 @@ import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem
 import { Collaborator } from '../../../../../../_common/collaborator/collaborator.model';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../_common/route/route-component';
 import { AppTimeAgo } from '../../../../../../_common/time/ago/ago';
 import FormGameCollaborator from '../../../../../components/forms/game/collaborator/collaborator.vue';
 import { useGameDashRouteController } from '../manage.store';
@@ -24,7 +27,7 @@ import { useGameDashRouteController } from '../manage.store';
 		FormGameCollaborator,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/developer/games/collaborators/' + route.params.id),

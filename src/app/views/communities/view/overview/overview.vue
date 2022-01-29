@@ -7,7 +7,7 @@ import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
@@ -44,7 +44,7 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: true,
 	lazy: true,
 	deps: CommunitiesViewChannelDeps,
@@ -216,7 +216,9 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			<div class="container text-center">
 				<p>
 					<b>
-						<AppTranslate>You've been invited to collaborate on this community.</AppTranslate>
+						<AppTranslate
+							>You've been invited to collaborate on this community.</AppTranslate
+						>
 					</b>
 				</p>
 				<AppButton

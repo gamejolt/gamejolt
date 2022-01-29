@@ -4,7 +4,7 @@ import { Client } from '../../../../../_common/client/safe-exports';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { AppProgressPoller } from '../../../../../_common/progress/poller/poller';
-import { BaseRouteComponent } from '../../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 
 @Options({
 	name: 'RouteAuthLinkedAccountPoll',
@@ -13,6 +13,7 @@ import { BaseRouteComponent } from '../../../../../_common/route/route-component
 		AppLoading,
 	},
 })
+@OptionsForRoute()
 export default class RouteAuthLinkedAccountPoll extends BaseRouteComponent {
 	token = '';
 	isPolling = true;

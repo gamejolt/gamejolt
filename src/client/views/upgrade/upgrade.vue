@@ -2,7 +2,7 @@
 import { Options } from 'vue-property-decorator';
 import { ClientUpdater } from '../../../_common/client/client-updater.service';
 import AppProgressBar from '../../../_common/progress/bar/bar.vue';
-import { BaseRouteComponent } from '../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 
 @Options({
 	name: 'RouteUpgrade',
@@ -10,6 +10,7 @@ import { BaseRouteComponent } from '../../../_common/route/route-component';
 		AppProgressBar,
 	},
 })
+@OptionsForRoute()
 export default class RouteUpgrade extends BaseRouteComponent {
 	get status() {
 		return ClientUpdater.clientUpdateStatus;
@@ -51,7 +52,9 @@ export default class RouteUpgrade extends BaseRouteComponent {
 			<p class="lead">This version is outdated.</p>
 
 			<p>We've added some epic new features the current client is incompatible with.</p>
-			<p>Instead of staring at our lovely error messages, let's get your client up to speed!</p>
+			<p>
+				Instead of staring at our lovely error messages, let's get your client up to speed!
+			</p>
 
 			<br />
 
@@ -72,18 +75,14 @@ export default class RouteUpgrade extends BaseRouteComponent {
 						<template v-if="status === 'fetching'">
 							Downloading new version ...
 						</template>
-						<template v-else>
-							Checking for updates ...
-						</template>
+						<template v-else> Checking for updates ... </template>
 					</strong>
 				</p>
 
 				<AppProgressBar active :percent="progress" />
 			</template>
 
-			<AppButton v-else lg @click="update()">
-				Update now
-			</AppButton>
+			<AppButton v-else lg @click="update()"> Update now </AppButton>
 		</div>
 	</section>
 </template>

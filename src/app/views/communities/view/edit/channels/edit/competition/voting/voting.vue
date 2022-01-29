@@ -16,7 +16,7 @@ import { showErrorGrowl } from '../../../../../../../../../_common/growls/growls
 import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../../../_common/scroll/scroll.service';
 import { AppTimeAgo } from '../../../../../../../../../_common/time/ago/ago';
@@ -47,7 +47,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view
 		AppTooltip,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['id', 'channel'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(

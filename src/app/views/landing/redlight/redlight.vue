@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Meta } from '../../../../_common/meta/meta-service';
-import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -23,6 +23,7 @@ function getRandomInt(min: number, max: number) {
 		AppAuthJoin: AppAuthJoinLazy,
 	},
 })
+@OptionsForRoute()
 export default class RouteLandingRedlight extends BaseRouteComponent {
 	commonStore = setup(() => useCommonStore());
 

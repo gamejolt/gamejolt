@@ -8,7 +8,7 @@ import { showErrorGrowl } from '../../../_common/growls/growls.service';
 import AppMediaItemCover from '../../../_common/media-item/cover/cover.vue';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { Order } from '../../../_common/order/order.model';
-import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { Sellable } from '../../../_common/sellable/sellable.model';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import FormPayment from '../../components/forms/payment/payment.vue';
@@ -22,7 +22,7 @@ const CheckoutThemeKey = 'checkout';
 		FormPayment,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	resolver: ({ route }) => Api.sendRequest('/web/checkout/' + route.params.orderId),
 })
 export default class RouteCheckout extends BaseRouteComponent {
@@ -94,10 +94,7 @@ export default class RouteCheckout extends BaseRouteComponent {
 <template>
 	<section v-if="isRouteBootstrapped" class="container">
 		<div class="game-cover">
-			<AppMediaItemCover
-				v-if="game.header_media_item"
-				:media-item="game.header_media_item"
-			/>
+			<AppMediaItemCover v-if="game.header_media_item" :media-item="game.header_media_item" />
 		</div>
 
 		<div class="text-center">

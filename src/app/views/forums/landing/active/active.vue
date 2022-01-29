@@ -2,7 +2,7 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import AppForumTopicList from '../../../../components/forum/topic-list/topic-list.vue';
 
 @Options({
@@ -11,7 +11,7 @@ import AppForumTopicList from '../../../../components/forum/topic-list/topic-lis
 		AppForumTopicList,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: true,
 	deps: {},
 	resolver: () => Api.sendRequest('/web/forums/active-topics'),
@@ -37,7 +37,8 @@ export default class RouteForumsLandingActive extends BaseRouteComponent {
 			<div class="alert full-bleed-xs">
 				<p>
 					<AppTranslate>
-						Some topics from all channels sorted by when they last had a post. Smell how fresh.
+						Some topics from all channels sorted by when they last had a post. Smell how
+						fresh.
 					</AppTranslate>
 				</p>
 			</div>

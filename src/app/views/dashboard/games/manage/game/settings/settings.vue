@@ -7,7 +7,7 @@ import { Game } from '../../../../../../../_common/game/game.model';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
@@ -21,7 +21,7 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppExpand,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['id'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(`/web/dash/developer/games/settings/view/${route.params.id}`),

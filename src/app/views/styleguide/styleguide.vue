@@ -4,7 +4,7 @@ import AppButtonStyleguide from '../../../_common/button/button-styleguide.vue';
 import AppJolticonsStyleguide from '../../../_common/jolticons/jolticons-styleguide.vue';
 import AppListGroupStyleguide from '../../../_common/list-group/list-group-styleguide.vue';
 import AppProgressBarStyleguide from '../../../_common/progress/bar/bar-styleguide.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
 import { AppScrollTo } from '../../../_common/scroll/to/to.directive';
 import AppThemeSvgStyleguide from '../../../_common/theme/svg/svg-styleguide.vue';
@@ -26,7 +26,7 @@ import AppStyleguideColor from './color/color.vue';
 		AppScrollTo,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: () => User.touch(),
 })

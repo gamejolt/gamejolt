@@ -5,7 +5,7 @@ import { RouteLocationRedirect } from '../../../../../utils/router';
 import { Api } from '../../../../../_common/api/api.service';
 import { Game } from '../../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../../_common/game/thumbnail/AppGameThumbnail.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
@@ -29,7 +29,7 @@ type CompletionData = {
 		AppGameThumbnail,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['id'] },
 	async resolver({ route }) {
 		const payload = await Api.sendRequest(

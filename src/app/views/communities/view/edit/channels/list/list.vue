@@ -10,7 +10,10 @@ import {
 } from '../../../../../../../_common/community/community.model';
 import { showErrorGrowl } from '../../../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../../../_common/loading/loading.vue';
-import { BaseRouteComponent } from '../../../../../../../_common/route/route-component';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../../_common/route/route-component';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
 import { CommunityRemoveChannelModal } from '../../../../../../components/community/remove-channel/modal/modal.service';
 import FormCommunityChannelAdd from '../../../../../../components/forms/community/channel/add/add.vue';
@@ -38,6 +41,7 @@ import AppCommunitiesEditChannelListPresetItem from './_preset-item/preset-item.
 		AppLoading,
 	},
 })
+@OptionsForRoute()
 export default class RouteCommunitiesViewEditChannelsList extends BaseRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
@@ -208,10 +212,7 @@ export default class RouteCommunitiesViewEditChannelsList extends BaseRouteCompo
 							:items="routeStore.archivedChannels"
 							:is-draggable="hasFullChannelsPermission"
 						>
-							<AppCardListDraggable
-								item-key="id"
-								@change="saveChannelSortArchived"
-							>
+							<AppCardListDraggable item-key="id" @change="saveChannelSortArchived">
 								<template #item="{ element: channel }">
 									<AppCommunitiesEditChannelListItem :channel="channel" />
 								</template>

@@ -20,7 +20,7 @@ import { AppObserveDimensions } from '../../../_common/observe-dimensions/observ
 import { Popper } from '../../../_common/popper/popper.service';
 import AppPopper from '../../../_common/popper/popper.vue';
 import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
-import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../_common/scroll/AppScrollScroller.vue';
 import AppStickerReactions from '../../../_common/sticker/reactions/reactions.vue';
@@ -90,7 +90,7 @@ const FiresideThemeKey = 'fireside';
 		AppAuthRequired,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: { params: ['hash'] },
 	resolver: ({ route }) => Api.sendRequest(`/web/fireside/fetch/${route.params.hash}?meta=1`),
 	lazy: true,
@@ -526,7 +526,9 @@ export default class RouteFireside extends BaseRouteComponent {
 						</div>
 						<div class="text-center">
 							<h3>
-								<AppTranslate>You are blocked from joining this fireside</AppTranslate>
+								<AppTranslate
+									>You are blocked from joining this fireside</AppTranslate
+								>
 							</h3>
 							<p>
 								<router-link :to="{ name: 'home' }">

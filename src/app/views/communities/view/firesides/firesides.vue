@@ -4,7 +4,7 @@ import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppFiresideAvatar from '../../../../components/fireside/avatar/avatar.vue';
 import AppFiresideAvatarBase from '../../../../components/fireside/avatar/_base/base.vue';
@@ -25,7 +25,7 @@ function getFetchUrl(route: RouteLocationNormalized) {
 		AppFiresideAvatarBase,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	cache: true,
 	lazy: true,
 	deps: {

@@ -6,7 +6,7 @@ import { Api } from '../../../../_common/api/api.service';
 import AppEditableOverlay from '../../../../_common/editable-overlay/editable-overlay.vue';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
@@ -37,7 +37,7 @@ function createController() {
 		AppEditableOverlay,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	// We want to reload this data every time we come into this section.
 	resolver: () => Api.sendRequest('/web/dash/account'),

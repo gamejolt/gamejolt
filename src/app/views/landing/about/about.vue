@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
 import AppContactLink from '../../../../_common/contact-link/contact-link.vue';
-import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -19,6 +19,7 @@ import profileThoro from './thoro.jpg';
 		AppTooltip,
 	},
 })
+@OptionsForRoute()
 export default class RouteLandingAbout extends BaseRouteComponent {
 	readonly assetUrls = import.meta.globEager('./*.png');
 	readonly Screen = Screen;

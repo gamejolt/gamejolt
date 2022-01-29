@@ -2,7 +2,7 @@
 import { defineAsyncComponent } from '@vue/runtime-core';
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
 import { AppScrollTo } from '../../../_common/scroll/to/to.directive';
 import { useCommonStore } from '../../../_common/store/common-store';
@@ -24,7 +24,7 @@ import AppPageHeader from '../../components/page-header/page-header.vue';
 		AppScrollTo,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: () => User.touch(),
 })

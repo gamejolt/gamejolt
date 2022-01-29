@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
 import { PayloadError } from '../../../_common/payload/payload-service';
-import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 
 const ActionUnsubscribeNotification = 'unsubscribe-notification';
 const ActionUnsubscribeGJ = 'unsubscribe-gj';
@@ -10,7 +10,7 @@ const ValidActions = [ActionUnsubscribeNotification, ActionUnsubscribeGJ];
 @Options({
 	name: 'RouteIntent',
 })
-@RouteResolver({
+@OptionsForRoute({
 	async resolver({ route }) {
 		if (ValidActions.indexOf(route.params.action) === -1) {
 			return PayloadError.fromHttpError(404);
@@ -47,15 +47,15 @@ export default class RouteIntent extends BaseRouteComponent {
 					<template v-if="unsubscribedNotification">
 						<p class="lead">
 							<AppTranslate>
-								You have opted out of getting emails like this, and they will no longer be sent to
-								you.
+								You have opted out of getting emails like this, and they will no
+								longer be sent to you.
 							</AppTranslate>
 						</p>
 						<hr />
 						<p class="small text-muted">
 							<AppTranslate>
-								You can choose to stop receiving all emails from Game Jolt, or adjust which emails
-								get sent to you, in your email preferences.
+								You can choose to stop receiving all emails from Game Jolt, or
+								adjust which emails get sent to you, in your email preferences.
 							</AppTranslate>
 							<br />
 							<router-link :to="{ name: 'dash.account.email-preferences' }">
@@ -66,14 +66,15 @@ export default class RouteIntent extends BaseRouteComponent {
 					<template v-else-if="unsubscribedGJ">
 						<p class="lead">
 							<AppTranslate>
-								You will no longer get emails from Game Jolt about product updates, new features, or
-								recommendations about stuff you might like.
+								You will no longer get emails from Game Jolt about product updates,
+								new features, or recommendations about stuff you might like.
 							</AppTranslate>
 						</p>
 						<hr />
 						<p class="small text-muted">
 							<AppTranslate>
-								You can adjust which emails get sent to you in your email preferences.
+								You can adjust which emails get sent to you in your email
+								preferences.
 							</AppTranslate>
 							<br />
 							<router-link :to="{ name: 'dash.account.email-preferences' }">

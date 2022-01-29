@@ -2,7 +2,7 @@
 import { Options } from 'vue-property-decorator';
 import { stringSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../_common/route/route-component';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppProfileTrophiesNav, { TrophyNavGame } from './_nav/nav.vue';
 
@@ -12,7 +12,7 @@ import AppProfileTrophiesNav, { TrophyNavGame } from './_nav/nav.vue';
 		AppProfileTrophiesNav,
 	},
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: ({ route }) => Api.sendRequest('/web/profile/trophies/@' + route.params.username),
 })
