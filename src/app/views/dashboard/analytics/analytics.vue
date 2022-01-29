@@ -1,4 +1,5 @@
 <script lang="ts">
+import { reactive } from 'vue';
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
@@ -255,9 +256,9 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 	}
 
 	pullReport(title: string, ...components: ReportComponent[]) {
-		const report = new SiteAnalyticsReport(
-			title,
-			components,
+		const report = reactive(new SiteAnalyticsReport(title, components)) as SiteAnalyticsReport;
+
+		report.init(
 			this.resource,
 			this.resourceId,
 			this.metric.collection,
@@ -627,7 +628,7 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 								<AppGraph
 									v-if="period === 'monthly' && metricData[metric.key]"
 									:dataset="metricData[metric.key].graph"
-									:background-variant="true"
+									background-variant
 								/>
 							</router-link>
 						</div>

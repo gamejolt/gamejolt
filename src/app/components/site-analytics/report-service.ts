@@ -1,7 +1,7 @@
 import { arrayUnique } from '../../../utils/array';
 import { Api } from '../../../_common/api/api.service';
 import { Geo } from '../../../_common/geo/geo.service';
-import { Translate } from '../../../_common/translate/translate.service';
+import { $gettext } from '../../../_common/translate/translate.service';
 import {
 	Analyzer,
 	Collection,
@@ -16,9 +16,9 @@ import {
 export class SiteAnalyticsReport {
 	isLoaded = false;
 
-	constructor(
-		public title: string,
-		public components: ReportComponent[],
+	constructor(public title: string, public components: ReportComponent[]) {}
+
+	init(
 		resource: ResourceName,
 		resourceId: number,
 		collection: Collection,
@@ -275,7 +275,7 @@ export class SiteAnalyticsReport {
 			if (field === 'country') {
 				Object.values(response.result).forEach((val: any) => {
 					if (val.label === 'other') {
-						val.label = Translate.$gettext('Unknown');
+						val.label = $gettext(`Unknown`);
 					} else {
 						val.label = Geo.getCountryName(val.label) || val.label;
 					}
