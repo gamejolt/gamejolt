@@ -5,7 +5,8 @@ import { Api } from '../../_common/api/api.service';
 import { Backdrop, BackdropController } from '../../_common/backdrop/backdrop.service';
 import {
 	Community,
-	joinCommunity as joinTargetCommunity,
+	joinCommunity as joinCommunityModel,
+	leaveCommunity as leaveCommunityModel,
 } from '../../_common/community/community.model';
 import { Connection } from '../../_common/connection/connection-service';
 import {
@@ -399,7 +400,7 @@ export function createAppStore({
 		}
 
 		if (!community.is_member) {
-			await joinTargetCommunity(community, location);
+			await joinCommunityModel(community, location);
 		}
 
 		grid.value?.joinCommunity(community);
@@ -431,7 +432,7 @@ export function createAppStore({
 				}
 			}
 
-			await leaveCommunity(community, location);
+			await leaveCommunityModel(community, location);
 		}
 
 		grid.value?.leaveCommunity(community);
