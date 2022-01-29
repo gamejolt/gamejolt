@@ -5,7 +5,7 @@ import { RouteLocationDefinition } from '../../../../../utils/router';
 import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/join-widget.vue';
 import AppGameFollowWidget from '../../../../../_common/game/follow-widget/follow-widget.vue';
 import { Jam } from '../../../../../_common/jam/jam.model';
-import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
+import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTheme from '../../../../../_common/theme/AppTheme.vue';

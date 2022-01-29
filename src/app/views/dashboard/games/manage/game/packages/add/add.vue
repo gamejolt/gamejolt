@@ -82,7 +82,7 @@ export default class RouteDashGamesManageGamePackagesAdd extends BaseRouteCompon
 					</p>
 					<p>
 						<AppLinkHelp page="dev-packages" class="link-help">
-							<AppTranslate>dash.games.packages.page_help_link</AppTranslate>
+							<AppTranslate>Learn more about packages...</AppTranslate>
 						</AppLinkHelp>
 					</p>
 				</div>

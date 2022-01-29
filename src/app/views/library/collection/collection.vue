@@ -612,13 +612,13 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 				<ul class="stat-list">
 					<li v-if="shouldShowFollowers" class="stat-big stat-big-smaller">
 						<div class="stat-big-label">
-							<AppTranslate>library.collection.followers_label</AppTranslate>
+							<AppTranslate>Followers</AppTranslate>
 						</div>
 						<div class="stat-big-digit">{{ formatNumber(followerCount) }}</div>
 					</li>
 					<li class="stat-big stat-big-smaller">
 						<div class="stat-big-label">
-							<AppTranslate>library.collection.games_label</AppTranslate>
+							<AppTranslate>Games</AppTranslate>
 						</div>
 						<div class="stat-big-digit">
 							{{ formatNumber(listing?.gamesCount || 0) }}
@@ -659,7 +659,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 									>
 										<AppJolticon icon="remove" notice />
 										<AppTranslate>
-											library.collection.remove_playlist_button
+											Remove Playlist
 										</AppTranslate>
 									</a>
 								</div>

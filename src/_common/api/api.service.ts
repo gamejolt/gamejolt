@@ -3,9 +3,6 @@ import { ref } from 'vue';
 import { Environment } from '../environment/environment.service';
 import { Payload } from '../payload/payload-service';
 
-// TODO(vue3-ssr): Refactor into a service through which we require Axios
-// so this will work from everywhere.
-
 // Force using node http adapter in SSR.
 // We need to do this because when in the server the code is rendered
 // from a vm that interfers with how axios detects which adapter it should use.
@@ -254,7 +251,7 @@ export class Api {
 			});
 		}
 
-		promise.then(() => {
+		promise.finally(() => {
 			if (showLoading) {
 				--this.loadingBarRequests.value;
 			}

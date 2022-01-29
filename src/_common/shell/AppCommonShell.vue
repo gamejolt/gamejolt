@@ -9,7 +9,7 @@ import AppBackdropPortal from '../backdrop/AppBackdropPortal.vue';
 import AppGrowls from '../growls/AppGrowls.vue';
 import AppLightboxPortal from '../lightbox/AppLightboxPortal.vue';
 import AppLoadingBar from '../loading/bar/bar.vue';
-import AppModals from '../modal/AppModals.vue';
+import AppModalPortal from '../modal/AppModalPortal.vue';
 import AppScrollInviewParent from '../scroll/inview/AppScrollInviewParent.vue';
 import AppTheme from '../theme/AppTheme.vue';
 import AppTooltipPortal from '../tooltip/AppTooltipPortal.vue';
@@ -27,7 +27,7 @@ import AppTooltipPortal from '../tooltip/AppTooltipPortal.vue';
 			<AppTheme />
 			<AppLoadingBar />
 			<AppGrowls />
-			<AppModals />
+			<AppModalPortal />
 		</AppScrollInviewParent>
 	</div>
 </template>

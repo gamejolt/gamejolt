@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
-import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
+import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { useAppStore } from '../../../../store';
 
 @Options({
@@ -67,11 +67,7 @@ export default class AppCommunitySliderItem extends Vue {
 				'background-image': isUnread ? gradient : undefined,
 			}"
 		>
-			<AppMediaItemBackdrop
-				class="-backdrop"
-				:media-item="community.thumbnail"
-				radius="full"
-			>
+			<AppMediaItemBackdrop class="-backdrop" :media-item="community.thumbnail" radius="full">
 				<AppCommunityThumbnailImg class="-thumb" :community="community" />
 			</AppMediaItemBackdrop>
 		</div>

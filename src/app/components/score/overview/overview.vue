@@ -119,7 +119,7 @@ export default class AppScoreOverview extends Vue {
 							},
 						}"
 					>
-						<AppTranslate>scores.overview.heading</AppTranslate>
+						<AppTranslate>Scoreboards</AppTranslate>
 					</router-link>
 					<small v-if="scoreTables.length > 1">
 						({{ formatNumber(scoreTables.length) }})
@@ -147,7 +147,7 @@ export default class AppScoreOverview extends Vue {
 			<div v-if="app.user" class="col-xs-12" :class="size === 'full' ? 'col-lg-6' : ''">
 				<div class="score-overview-user-best">
 					<h4 class="section-header">
-						<AppTranslate>scores.overview.user_best_heading</AppTranslate>
+						<AppTranslate>Your Best Score</AppTranslate>
 					</h4>
 
 					<div class="row">
@@ -218,7 +218,7 @@ export default class AppScoreOverview extends Vue {
 							'section-header': !app.user || (Screen.isDesktop && size === 'full'),
 						}"
 					>
-						<AppTranslate>scores.overview.top_scores_heading</AppTranslate>
+						<AppTranslate>Best Scores</AppTranslate>
 					</h4>
 
 					<template v-if="scores.length">
@@ -251,11 +251,11 @@ export default class AppScoreOverview extends Vue {
 								},
 							}"
 						>
-							<AppTranslate>scores.overview.view_more_button</AppTranslate>
+							<AppTranslate>View Full Scoreboard</AppTranslate>
 						</AppButton>
 					</template>
 					<div v-else class="alert full-bleed-xs">
-						<AppTranslate>scores.overview.no_scores_html</AppTranslate>
+						<AppTranslate>There are no scores on this scoreboard yet.</AppTranslate>
 					</div>
 				</div>
 			</div>

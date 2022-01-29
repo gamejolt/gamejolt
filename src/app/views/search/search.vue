@@ -111,7 +111,7 @@ export default class RouteSearch extends BaseRouteComponent {
 				query: this.$route.query.q,
 			});
 		}
-		return this.$gettext('search.page_title');
+		return this.$gettext('Search Game Jolt');
 	}
 
 	get noResults() {
@@ -156,13 +156,13 @@ export default class RouteSearch extends BaseRouteComponent {
 				<template v-if="!hasSearch">
 					<p class="text-center text-muted">
 						<AppJolticon icon="chevron-up" />
-						<AppTranslate>search.results_placeholder</AppTranslate>
+						<AppTranslate>Enter your search query above.</AppTranslate>
 						<AppJolticon icon="chevron-up" />
 					</p>
 				</template>
 				<template v-else>
 					<div class="small text-upper text-muted">
-						<AppTranslate>search.showing_label</AppTranslate>
+						<AppTranslate>Showing results for</AppTranslate>
 					</div>
 
 					<h2 class="sans-margin-top">
@@ -181,7 +181,7 @@ export default class RouteSearch extends BaseRouteComponent {
 								:to="{ name: 'search.results', query: { q: query } }"
 								exact-active-class="active"
 							>
-								<AppTranslate>search.results.overview_tab</AppTranslate>
+								<AppTranslate>All</AppTranslate>
 							</router-link>
 						</li>
 						<li v-if="searchPayload.communitiesCount">
@@ -200,7 +200,7 @@ export default class RouteSearch extends BaseRouteComponent {
 								:to="{ name: 'search.users', query: { q: query } }"
 								exact-active-class="active"
 							>
-								<AppTranslate>search.results.users_tab</AppTranslate>
+								<AppTranslate>Users</AppTranslate>
 								<span class="badge">
 									{{ formatNumber(searchPayload.usersCount) }}
 								</span>
@@ -211,7 +211,7 @@ export default class RouteSearch extends BaseRouteComponent {
 								:to="{ name: 'search.games', query: { q: query } }"
 								exact-active-class="active"
 							>
-								<AppTranslate>search.results.games_tab</AppTranslate>
+								<AppTranslate>Games</AppTranslate>
 								<span class="badge">
 									{{ formatNumber(searchPayload.gamesCount) }}
 								</span>
@@ -225,7 +225,7 @@ export default class RouteSearch extends BaseRouteComponent {
 		<AppExpand :when="noResults">
 			<section class="section fill-offset">
 				<div class="container">
-					<AppTranslate>search.results.no_results</AppTranslate>
+					<AppTranslate>No results for that search query.</AppTranslate>
 				</div>
 			</section>
 		</AppExpand>

@@ -158,16 +158,16 @@ export default class FormSettings extends mixins(Wrapper) {
 	<AppForm :controller="form" @changed="onChange">
 		<fieldset v-if="GJ_IS_DESKTOP_APP" id="settings-client">
 			<legend>
-				<AppTranslate>settings.client</AppTranslate>
+				<AppTranslate>Client</AppTranslate>
 			</legend>
 
 			<AppFormGroup
 				name="game_install_dir"
-				:label="$gettext('settings.game_install_dir_label')"
+				:label="$gettext('Installed Games Directory')"
 			>
 				<div class="pull-right">
 					<AppButton sm @click="changeLocation('game-install-dir')">
-						<AppTranslate>settings.change_location_button</AppTranslate>
+						<AppTranslate>Change Location</AppTranslate>
 					</AppButton>
 				</div>
 
@@ -176,7 +176,7 @@ export default class FormSettings extends mixins(Wrapper) {
 				</div>
 
 				<p class="help-block">
-					<AppTranslate>settings.game_install_dir_help</AppTranslate>
+					<AppTranslate>This is the directory on your computer that games will install into.</AppTranslate>
 				</p>
 
 				<input
@@ -193,7 +193,7 @@ export default class FormSettings extends mixins(Wrapper) {
 			<AppFormGroup
 				:class="{ 'sans-margin-bottom': formModel.limit_downloads }"
 				name="limit_downloads"
-				:label="$gettext('settings.limit_downloads_label')"
+				:label="$gettext('Limit simultaneous downloads?')"
 			>
 				<AppFormControlToggle class="pull-right" />
 			</AppFormGroup>
@@ -207,7 +207,7 @@ export default class FormSettings extends mixins(Wrapper) {
 			>
 				<AppFormControl type="number" :validators="[validateMinValue(1)]" />
 				<p class="help-block">
-					<AppTranslate>settings.max_download_count_help</AppTranslate>
+					<AppTranslate>If you have more than this number, downloads will be queued up.</AppTranslate>
 				</p>
 				<AppFormControlErrors />
 			</AppFormGroup>
@@ -215,11 +215,11 @@ export default class FormSettings extends mixins(Wrapper) {
 			<AppFormGroup
 				:class="{ 'sans-margin-bottom': formModel.limit_downloads }"
 				name="limit_extractions"
-				:label="$gettext('settings.limit_extractions_label')"
+				:label="$gettext('Limit simultaneous extractions?')"
 			>
 				<AppFormControlToggle class="pull-right" />
 				<p class="help-block">
-					<AppTranslate>settings.limit_extractions_help</AppTranslate>
+					<AppTranslate>An extraction is when the game is unpacked and installed after downloading.</AppTranslate>
 				</p>
 			</AppFormGroup>
 			<br v-if="formModel.limit_downloads" />
@@ -232,14 +232,14 @@ export default class FormSettings extends mixins(Wrapper) {
 			>
 				<AppFormControl type="number" :validators="[validateMinValue(1)]" />
 				<p class="help-block">
-					<AppTranslate>settings.max_extract_count_help</AppTranslate>
+					<AppTranslate>If you have more than this number, extractions will be queued up.</AppTranslate>
 				</p>
 				<AppFormControlErrors />
 			</AppFormGroup>
 
 			<AppFormGroup
 				name="queue_when_playing"
-				:label="$gettext('settings.queue_when_playing_label')"
+				:label="$gettext('Pause when playing?')"
 			>
 				<AppFormControlToggle class="pull-right" />
 				<p class="help-block">
@@ -252,7 +252,7 @@ export default class FormSettings extends mixins(Wrapper) {
 			<AppFormGroup
 				v-if="canClientAutostart"
 				name="autostart_client"
-				:label="$gettext('settings.autostart_client_label')"
+				:label="$gettext('Start when Windows starts?')"
 			>
 				<AppFormControlToggle class="pull-right" />
 			</AppFormGroup>

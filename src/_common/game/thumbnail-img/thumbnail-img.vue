@@ -2,7 +2,7 @@
 import { computed, PropType, ref } from 'vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
 import { AppImgResponsive } from '../../img/responsive/responsive';
-import AppMediaItemBackdrop from '../../media-item/backdrop/backdrop.vue';
+import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { Screen } from '../../screen/screen-service';
 import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppVideo from '../../video/video.vue';

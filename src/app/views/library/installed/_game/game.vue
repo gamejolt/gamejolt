@@ -89,7 +89,7 @@ export default class AppLibraryInstalledGame extends Vue {
 						{{ packageVersion }}
 					</template>
 					<template v-else>
-						<AppTranslate>library.installed.multiple_packages</AppTranslate>
+						<AppTranslate>Multiple Packages</AppTranslate>
 					</template>
 				</span>
 			</div>

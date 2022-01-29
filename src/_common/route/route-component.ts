@@ -246,7 +246,6 @@ export function createAppRoute({
 			} else if (payload instanceof RouteLocationRedirect) {
 				// We want to clear out all current resolvers before doing the
 				// redirect. They will re-resolve after the route changes.
-				// TODO(vue3-ssr): Why do we do things differently here for SSR?
 				if (import.meta.env.SSR) {
 					redirect(router.resolve(payload.location).href);
 				} else {

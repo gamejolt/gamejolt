@@ -223,7 +223,7 @@ export default class RouteDownload extends BaseRouteComponent {
 				<AppAdWidget size="video" placement="content" />
 
 				<h2>
-					<AppTranslate>game.download.game.recommended_heading</AppTranslate>
+					<AppTranslate>You May Also Like</AppTranslate>
 				</h2>
 
 				<div class="scrollable-grid-xs">

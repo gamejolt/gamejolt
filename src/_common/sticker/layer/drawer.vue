@@ -1,10 +1,7 @@
 <script lang="ts">
 import { nextTick } from 'vue';
-import { setup } from 'vue-class-component';
 import { Options, Vue, Watch } from 'vue-property-decorator';
 import AppEventItemMediaIndicator from '../../../app/components/event-item/media-indicator/media-indicator.vue';
-import { useAppStore } from '../../../app/store';
-import { StickerCount } from '../../../app/views/dashboard/stickers/stickers.vue';
 import { shallowSetup } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import {
@@ -20,7 +17,7 @@ import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
 import { useEventSubscription } from '../../system/event/event-topic';
 import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
 import AppStickerCard from '../card/card.vue';
-import { Sticker } from '../sticker.model';
+import { Sticker, StickerStack } from '../sticker.model';
 import AppSticker from '../sticker.vue';
 import AppStickerLayerDrawerItem from './drawer-item.vue';
 
@@ -35,12 +32,7 @@ import AppStickerLayerDrawerItem from './drawer-item.vue';
 	},
 })
 export default class AppStickerLayerDrawer extends Vue {
-	store = setup(() => useAppStore());
 	drawerStore = shallowSetup(() => useDrawerStore());
-
-	get hasCbar() {
-		return this.store.hasCbar;
-	}
 
 	sheetPage = 1;
 	isSwiping = false;
@@ -92,10 +84,10 @@ export default class AppStickerLayerDrawer extends Vue {
 		return this.chunkStickers(this.items);
 	}
 
-	private chunkStickers(stickers: StickerCount[]) {
+	private chunkStickers(stickers: StickerStack[]) {
 		const sheets = [];
 
-		let current: StickerCount[] = [];
+		let current: StickerStack[] = [];
 		for (const i of stickers) {
 			current.push(i);
 
@@ -143,8 +135,7 @@ export default class AppStickerLayerDrawer extends Vue {
 			shell: [
 				{
 					transform: `translateY(0)`,
-					// Max-width is unset when Xs (so it can bleed and span the whole width), with margins of 64px on other breakpoints.
-					maxWidth: Screen.isXs ? 'unset' : `calc(100% - 64px)`,
+					left: Screen.isXs ? 0 : '64px',
 					// Max-height of 2 sticker rows
 					maxHeight: Screen.isPointerMouse
 						? `${this.drawerPadding * 2 + this.stickerSize * numRowsShowing}px`
@@ -235,7 +226,7 @@ export default class AppStickerLayerDrawer extends Vue {
 		this._updateSliderOffset();
 	}
 
-	assignTouchedSticker(sticker: StickerCount) {
+	assignTouchedSticker(sticker: StickerStack) {
 		if (
 			!this.drawerStore.isDrawerOpen.value ||
 			this.drawerStore.sticker.value ||
@@ -346,7 +337,7 @@ export default class AppStickerLayerDrawer extends Vue {
 <template>
 	<div
 		class="sticker-drawer"
-		:class="{ '-cbar-shifted': hasCbar, '-touch': !Screen.isPointerMouse }"
+		:class="{ '-touch': !Screen.isPointerMouse }"
 		:style="styles.shell"
 		@contextmenu.prevent
 		@mousemove="onMouseMove"
@@ -437,9 +428,6 @@ export default class AppStickerLayerDrawer extends Vue {
 	display: flex
 	justify-content: center
 	transition: transform 250ms $strong-ease-out
-
-	&.-cbar-shifted
-		left: $shell-cbar-width
 
 .-margin
 	flex: auto

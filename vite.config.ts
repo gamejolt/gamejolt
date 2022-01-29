@@ -3,19 +3,10 @@ import * as path from 'path';
 // import nodeBuiltins from 'rollup-plugin-node-builtins';
 import { defineConfig, UserConfig as ViteUserConfigActual } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
-import { parseOptionsFromEnv } from './scripts/helpers/vite';
+import viteHtmlResolve from './scripts/build/vite-html-resolve';
+import { parseAndInferOptionsFromEnv } from './scripts/build/vite-options';
 
-const sectionOverrides: Record<string, Record<string, unknown>> = {
-	'widget-package': {
-		router: false,
-	},
-	gameserver: {
-		router: false,
-	},
-	editor: {
-		router: false,
-	},
-};
+const fs = require('fs-extra') as typeof import('fs-extra');
 
 type ViteUserConfig = ViteUserConfigActual & {
 	// This is an experimental feature, and as of time of writing
@@ -27,15 +18,15 @@ type ViteUserConfig = ViteUserConfigActual & {
 	};
 };
 
-type EmptyObject = { [k in any]: never };
-
-const noopDirectiveTransform = () => ({ props: [] });
+type Defined<T> = T extends undefined ? never : T;
+type RollupOptions = Defined<Defined<ViteUserConfig['build']>['rollupOptions']>;
 
 // https://vitejs.dev/config/
 export default defineConfig(async configEnv => {
 	const { command } = configEnv;
-	const gjOpts = await parseOptionsFromEnv();
+	const gjOpts = await parseAndInferOptionsFromEnv();
 
+	type EmptyObject = { [k in any]: never };
 	type GetValueOrEmpty = <T>(value: T) => T | EmptyObject;
 	const emptyUnless = (condition: () => boolean): GetValueOrEmpty => {
 		return value => {
@@ -47,9 +38,10 @@ export default defineConfig(async configEnv => {
 	};
 
 	const onlyInSSR = emptyUnless(() => gjOpts.platform === 'ssr');
+	const notInSSR = emptyUnless(() => gjOpts.platform !== 'ssr');
 	const isInDocker = !!process.env['GAMEJOLT_IN_DOCKER'];
 	const onlyInDocker = emptyUnless(() => isInDocker);
-	const onlyInClient = emptyUnless(() => gjOpts.platform === 'desktop');
+	const onlyInDesktopApp = emptyUnless(() => gjOpts.platform === 'desktop');
 
 	const stylusOptions = {
 		imports: [
@@ -60,27 +52,133 @@ export default defineConfig(async configEnv => {
 		],
 	};
 
+	const noopDirectiveTransform = () => ({ props: [] });
+
+	const htmlResolver = viteHtmlResolve();
+
+	const indexHtml = path.resolve(__dirname, 'src', 'index.html');
+	let inputHtmlFile = indexHtml;
+	if (command === 'build' && gjOpts.section !== 'app') {
+		inputHtmlFile = path.resolve(indexHtml, '..', `${gjOpts.section}.html`);
+		fs.copyFileSync(indexHtml, inputHtmlFile);
+	}
+
 	return {
 		plugins: [
-			// Does a simple string replace to include our section entrypoint in the html.
+			// Does a simple string replace based interpolation in our html.
 			//
 			// I originally used vite-plugin-html here but for some reason
 			// it only worked during build, but not during serve. Looks like Vite
 			// tried parsing index.html before vite-plugin-html processed it, which
 			// meant Vite was seeing invalid looking html and died.
 			{
-				name: 'gj:section-patch',
+				name: 'gj:index-interpolations',
 				enforce: 'pre',
 				transformIndexHtml: {
 					enforce: 'pre',
 					transform: html => {
-						return html.replaceAll(
-							'<!--gj-section-->',
+						// Patch our entrypoint depending on our section.
+						html = html.replace(
+							'<!-- gj:section-entrypoint -->',
 							`<script type="module" src="/${gjOpts.section}/main.ts"></script>`
 						);
+
+						// Tell spider man to go back home.
+						html = html.replace(
+							'<!-- gj:crawlers -->',
+							gjOpts.currentSectionConfig.allowCrawlers
+								? ''
+								: '<meta name="robots" content="noindex, nofollow" />'
+						);
+
+						// These are only set for app section.
+						// Note: the <meta content> images are resolved using our viteHtmlResolve plugin.
+						html = html.replace(
+							'<!-- gj:app-section-shenanigans -->',
+							gjOpts.section !== 'app'
+								? ''
+								: `
+		<!-- Add to homescreen for Chrome on Android -->
+		<meta name="mobile-web-app-capable" content="yes" />
+
+		<!-- Add to homescreen for Safari on iOS -->
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-title" content="Game Jolt" />
+		<link
+			rel="apple-touch-icon-precomposed"
+			href="./app/img/touch/apple-touch-icon-precomposed.png"
+		/>
+
+		<!-- Tile icon for Win8 (144x144 + tile color) -->
+		<meta
+			name="msapplication-TileImage"
+			content="./app/img/touch/ms-touch-icon-144x144-precomposed.png"
+		/>
+		<meta name="msapplication-TileColor" content="#191919" />`.trim()
+						);
+
+						html = html.replace(
+							'<!-- gj:firebase-shenanigans -->',
+							`
+		<script>
+			${fs.readFileSync(
+				path.resolve(
+					__dirname,
+					'node_modules/first-input-delay/dist/first-input-delay.min.js'
+				),
+				{ encoding: 'utf-8' }
+			)}
+		</script>`.trim()
+						);
+
+						// Fallback title for the section in case it doesn't get set by the route.
+						html = html.replace(
+							'<!-- gj:section-title -->',
+							`<title>${gjOpts.currentSectionConfig.title}</title>`
+						);
+
+						// Any additional scripts that need to be embedded for the section.
+						html = html.replace(
+							'<!-- gj:section-scripts -->',
+							gjOpts.currentSectionConfig.jsScripts
+						);
+
+						const bodyClass = gjOpts.currentSectionConfig.htmlBodyClass;
+						if (bodyClass) {
+							html = html.replace(
+								`<body id="root">`,
+								`<body id="root" class="${bodyClass}">`
+							);
+						}
+
+						return html;
 					},
 				},
 			},
+
+			// These images are used directly in the index.html but vite does not
+			// resolve them. It seems it only looks at <img src>, <a href> and the likes, but not
+			// all tags like <meta content>.
+			//
+			// This plugin basically injects the necessary <img src> and whatever to
+			// make vite resolve them, and then returns what they resolved to.
+			//
+			// In the post plugin callback we use these resolved paths to do a simple
+			// string replace to get em in.
+			htmlResolver.prePlugin([
+				'./app/img/meta-default-image.png',
+				'./app/img/touch/ms-touch-icon-144x144-precomposed.png',
+			]),
+			htmlResolver.postPlugin((resolved, html) => {
+				for (const entry of resolved.entries()) {
+					const query = entry[0];
+					const result = entry[1];
+
+					html = html.replaceAll(query, result);
+				}
+
+				return html;
+			}),
 
 			vue({
 				...onlyInSSR<Partial<VueOptions>>({
@@ -111,7 +209,38 @@ export default defineConfig(async configEnv => {
 				mode: [MarkdownMode.HTML],
 			}),
 		],
+
 		root: 'src',
+
+		base: (() => {
+			// When watching simply return root.
+			// This is a vite default.
+			if (command === 'serve') {
+				return '/';
+			}
+
+			// Desktop app assets are bundled into /package/
+			// TODO: this is problably not correct. check this.
+			if (gjOpts.platform === 'desktop') {
+				return '/package/';
+			}
+
+			// Mobile app assets are expected to always resolve
+			// from a relative path, so make sure to not root it.
+			if (gjOpts.platform === 'mobile') {
+				return '';
+			}
+
+			// In production builds we serve all assets from the cdn.
+			// For desktop and mobile apps we serve from the locally bundled assets.
+			if (gjOpts.buildType === 'production') {
+				return 'https://s.gjcdn.net/';
+			}
+
+			// Return default, this is vite's default.
+			return '/';
+		})(),
+
 		server: {
 			port: 8080,
 			strictPort: true,
@@ -142,23 +271,31 @@ export default defineConfig(async configEnv => {
 			}),
 		},
 		build: {
-			...onlyInClient<Partial<ViteUserConfig['build']>>({
+			...onlyInDesktopApp<Partial<ViteUserConfig['build']>>({
 				// This lets us use top-level awaits which allows us
 				// to use our conditional imports as if they were imported
 				// syncronously.
 				target: 'esnext',
+			}),
 
-				rollupOptions: {
+			rollupOptions: {
+				...notInSSR<RollupOptions>({
+					// When building for ssr the entrypoint is specified in build.ssr,
+					// and the index.html input file should NOT be specified.
+					input: inputHtmlFile,
+				}),
+
+				...onlyInDesktopApp<RollupOptions>({
 					// plugins: [nodeBuiltins()],
 					external: ['client-voodoo', 'axios'],
-				},
-			}),
+				}),
+			},
 
 			// Since we're building outside of the root dir,
 			// we need to explicitly allow vite to clear the build directory.
 			// This is needed to avoid accidentally referencing old assets
 			// while developing
-			emptyOutDir: true,
+			emptyOutDir: gjOpts.emptyOutDir,
 
 			// Write to build/web normally and to build/server for ssr.
 			outDir: path.resolve(
@@ -172,7 +309,9 @@ export default defineConfig(async configEnv => {
 			// at which components ended up being rendered in said request.
 			//
 			// It is only useful to generate this when building the web frontend.
-			ssrManifest: gjOpts.platform === 'web',
+			//
+			// We only build ssr for app section at the moment.
+			ssrManifest: gjOpts.platform === 'web' && gjOpts.section === 'app',
 
 			// This is the entry point of the ssr bundle.
 			...onlyInSSR<Partial<ViteUserConfig['build']>>({
@@ -215,9 +354,7 @@ export default defineConfig(async configEnv => {
 			GJ_BUILD_TYPE: JSON.stringify(gjOpts.buildType),
 			GJ_VERSION: JSON.stringify(gjOpts.version),
 			GJ_WITH_UPDATER: JSON.stringify(gjOpts.withUpdater),
-			GJ_HAS_ROUTER: JSON.stringify(
-				sectionOverrides[gjOpts.section]?.router === false ? false : true
-			),
+			GJ_HAS_ROUTER: JSON.stringify(gjOpts.currentSectionConfig.hasRouter),
 
 			// Disable redirecting between section during serve.
 			// This is because as of time of writing we only support watching

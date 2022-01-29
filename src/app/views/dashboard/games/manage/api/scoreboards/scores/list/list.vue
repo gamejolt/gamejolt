@@ -81,7 +81,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresList extends BaseRo
 <template>
 	<div>
 		<h2 class="section-header">
-			<AppTranslate>dash.games.scores.list.heading</AppTranslate>
+			<AppTranslate>View Scores</AppTranslate>
 		</h2>
 
 		<div class="row">

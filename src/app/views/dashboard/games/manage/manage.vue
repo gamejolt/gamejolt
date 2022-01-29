@@ -172,7 +172,7 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 
 							<template v-if="game.isVisible">
 								<span class="tag tag-highlight">
-									<AppTranslate>dash.games.published_tag</AppTranslate>
+									<AppTranslate>Published</AppTranslate>
 								</span>
 								<span class="dot-separator" />
 								<AppTimeAgo :date="game.published_on" />
@@ -196,7 +196,7 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 						</AppGamePerms>
 						{{ ' ' }}
 						<AppButton icon="arrow-forward" :to="game.getUrl()">
-							<AppTranslate>dash.games.view_page_button</AppTranslate>
+							<AppTranslate>View Game Page</AppTranslate>
 						</AppButton>
 					</p>
 				</div>
@@ -242,7 +242,7 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 								<AppTranslate>Overview/Setup</AppTranslate>
 							</router-link>
 						</li>
-						<li v-app-tooltip.bottom="$gettext(`dash.games.news_tooltip`)">
+						<li v-app-tooltip.bottom="$gettext(`Manage news updates for your game.`)">
 							<router-link
 								:to="{ name: 'dash.games.manage.devlog' }"
 								:class="{

@@ -183,7 +183,7 @@ export default class FormGameRelease
 
 	async removeBuild(build: GameBuild) {
 		const result = await ModalConfirm.show(
-			this.$gettext('dash.games.releases.builds.remove_build_confirmation')
+			this.$gettext('Are you sure you want to remove this build?')
 		);
 
 		if (!result) {
@@ -194,8 +194,8 @@ export default class FormGameRelease
 		arrayRemove(this.builds, _build => _build.id === build.id);
 
 		showSuccessGrowl(
-			this.$gettext('dash.games.releases.builds.remove_build_growl'),
-			this.$gettext('dash.games.releases.builds.remove_build_growl_title')
+			this.$gettext('The build has been removed from the release.'),
+			this.$gettext('Build Removed')
 		);
 	}
 
@@ -208,7 +208,7 @@ export default class FormGameRelease
 
 	async savePublished() {
 		const result = await ModalConfirm.show(
-			this.$gettext('dash.games.releases.manage.publish_release_confirmation')
+			this.$gettext('Are you sure you want to publish this release? All of its builds will become active on your game page.')
 		);
 
 		if (!result) {
@@ -219,8 +219,8 @@ export default class FormGameRelease
 		await this.save();
 
 		showSuccessGrowl(
-			this.$gettext('dash.games.releases.manage.publish_release_growl'),
-			this.$gettext('dash.games.releases.manage.publish_release_growl_title')
+			this.$gettext('The release is now active on your game page.'),
+			this.$gettext('Release Published')
 		);
 	}
 
@@ -291,7 +291,7 @@ export default class FormGameRelease
 	<AppForm class="game-release-form" :controller="form">
 		<AppFormGroup
 			name="version_number"
-			:title="$gettext('dash.games.releases.form.version_number_label')"
+			:title="$gettext('Version Number')"
 		>
 			<div class="help-block">
 				<p v-translate>
@@ -302,7 +302,7 @@ export default class FormGameRelease
 					.
 				</p>
 				<AppLinkHelp page="dev-packages" class="link-help">
-					<AppTranslate>dash.games.releases.form.version_number_help_link</AppTranslate>
+					<AppTranslate>Learn more about choosing a good version number...</AppTranslate>
 				</AppLinkHelp>
 			</div>
 

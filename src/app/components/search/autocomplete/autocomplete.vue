@@ -200,14 +200,14 @@ export default class AppSearchAutocomplete extends Vue {
 					:class="{ active: selected === 0 }"
 					@mousedown="viewAll()"
 				>
-					<AppTranslate>search.autocomplete.show_all</AppTranslate>
+					<AppTranslate>Show all results...</AppTranslate>
 				</a>
 			</div>
 
 			<!-- Installed Games -->
 			<template v-if="libraryGames.length">
 				<div class="popper-heading">
-					<AppTranslate>search.autocomplete.installed_heading</AppTranslate>
+					<AppTranslate>Installed Games</AppTranslate>
 				</div>
 				<div class="list-group list-group-dark thin">
 					<router-link
@@ -233,7 +233,7 @@ export default class AppSearchAutocomplete extends Vue {
 			<!-- Games -->
 			<template v-if="games.length">
 				<div class="popper-heading">
-					<AppTranslate>search.autocomplete.games_heading</AppTranslate>
+					<AppTranslate>Games</AppTranslate>
 				</div>
 				<div class="list-group list-group-dark thin">
 					<router-link
@@ -263,7 +263,7 @@ export default class AppSearchAutocomplete extends Vue {
 			<!-- Users -->
 			<template v-if="users.length">
 				<div class="popper-heading">
-					<AppTranslate>search.autocomplete.users_heading</AppTranslate>
+					<AppTranslate>Users</AppTranslate>
 				</div>
 				<div class="list-group list-group-dark thin">
 					<router-link

@@ -67,10 +67,10 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 
 	get trophyLabels() {
 		return {
-			[GameTrophy.DIFFICULTY_BRONZE]: this.$gettext('trophies.bronze'),
-			[GameTrophy.DIFFICULTY_SILVER]: this.$gettext('trophies.silver'),
-			[GameTrophy.DIFFICULTY_GOLD]: this.$gettext('trophies.gold'),
-			[GameTrophy.DIFFICULTY_PLATINUM]: this.$gettext('trophies.platinum'),
+			[GameTrophy.DIFFICULTY_BRONZE]: this.$gettext('Bronze'),
+			[GameTrophy.DIFFICULTY_SILVER]: this.$gettext('Silver'),
+			[GameTrophy.DIFFICULTY_GOLD]: this.$gettext('Gold'),
+			[GameTrophy.DIFFICULTY_PLATINUM]: this.$gettext('Platinum'),
 		};
 	}
 
@@ -145,7 +145,7 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 
 	async removeTrophy(trophy: GameTrophy) {
 		const result = await ModalConfirm.show(
-			this.$gettext('dash.games.trophies.remove_confirmation')
+			this.$gettext('Are you sure you want to remove this trophy?')
 		);
 
 		if (!result) {
@@ -184,7 +184,7 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 	<div class="row">
 		<div class="col-md-10 col-lg-9">
 			<h2 class="section-header">
-				<AppTranslate>dash.games.trophies.heading</AppTranslate>
+				<AppTranslate>Game Trophies</AppTranslate>
 			</h2>
 
 			<div class="page-help">
@@ -197,7 +197,7 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 				</p>
 				<p>
 					<AppLinkHelp page="dev-trophies" class="link-help">
-						<AppTranslate>dash.games.trophies.page_help_link</AppTranslate>
+						<AppTranslate>Learn more about trophies...</AppTranslate>
 					</AppLinkHelp>
 				</p>
 			</div>
@@ -251,7 +251,7 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 											<div class="stat-big">
 												<div class="stat-big-label">
 													<AppTranslate>
-														dash.games.trophies.trophy_id_label
+														Trophy ID
 													</AppTranslate>
 												</div>
 												<div class="stat-big-digit">
@@ -275,23 +275,23 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 											<span
 												v-if="!trophy.visible"
 												v-app-tooltip="
-													$gettext(`dash.games.trophies.hidden_tooltip`)
+													$gettext(`Trophies that are hidden will only appear on the site for you, the developer, for testing purposes.`)
 												"
 												class="tag tag-notice"
 											>
 												<AppTranslate>
-													dash.games.trophies.hidden_tag
+													Hidden
 												</AppTranslate>
 											</span>
 											<span
 												v-if="trophy.secret"
 												v-app-tooltip="
-													$gettext(`dash.games.trophies.secret_tooltip`)
+													$gettext(`Making a trophy secret hides everything but its name until it is achieved.`)
 												"
 												class="tag"
 											>
 												<AppTranslate>
-													dash.games.trophies.secret_tag
+													Secret
 												</AppTranslate>
 											</span>
 										</div>

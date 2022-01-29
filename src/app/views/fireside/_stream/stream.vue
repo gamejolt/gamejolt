@@ -298,7 +298,7 @@ export default class AppFiresideStream extends Vue {
 				</div>
 			</template>
 			<template v-else>
-				<div :key="rtcUser.uid">
+				<div :key="rtcUser.uid" :style="{ width: '100%', height: '100%' }">
 					<AppFiresideVideo
 						v-if="shouldShowVideo"
 						class="-video-player -click-target"

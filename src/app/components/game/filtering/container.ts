@@ -59,32 +59,32 @@ export class GameFilteringContainer {
 				},
 			},
 			os: {
-				label: $gettext('games.filtering.os'),
+				label: $gettext('OS'),
 				type: 'array',
 				options: {
-					windows: $gettext('games.filtering.os_windows'),
-					mac: $gettext('games.filtering.os_mac'),
-					linux: $gettext('games.filtering.os_linux'),
+					windows: $gettext('Windows'),
+					mac: $gettext('Mac'),
+					linux: $gettext('Linux'),
 					// TODO(vue3) translate-comment="As in other than the rest of the things specified"
 					other: $gettext('Other'),
 					rom: $gettext('ROM'),
 				},
 			},
 			browser: {
-				label: $gettext('games.filtering.browser'),
+				label: $gettext('Browser'),
 				type: 'array',
 				options: {
-					html: $gettext('games.filtering.browser_html'),
-					flash: $gettext('games.filtering.browser_flash'),
-					unity: $gettext('games.filtering.browser_unity'),
+					html: $gettext('HTML'),
+					flash: $gettext('Flash'),
+					unity: $gettext('Unity'),
 				},
 			},
 			maturity: {
-				label: $gettext('games.filtering.maturity'),
+				label: $gettext('Maturity'),
 				type: 'array',
 				options: {
-					everyone: $gettext('games.filtering.maturity_everyone'),
-					teen: $gettext('games.filtering.maturity_teen'),
+					everyone: $gettext('All Ages'),
+					teen: $gettext('Teen Content'),
 					adult: $gettext('Mature Content'),
 				},
 			},

@@ -61,7 +61,7 @@ function report() {
 						:to="{ name: 'discover.games.view.overview' }"
 						:class="{ active: $route.name === 'discover.games.view.overview' }"
 					>
-						<AppTranslate>games.view.overview_tab</AppTranslate>
+						<AppTranslate>Overview</AppTranslate>
 					</RouterLink>
 				</li>
 
@@ -97,7 +97,7 @@ function report() {
 						}"
 						:class="{ active: $route.name === 'discover.games.view.scores.list' }"
 					>
-						<AppTranslate>games.view.scores_tab</AppTranslate>
+						<AppTranslate>Scores</AppTranslate>
 					</RouterLink>
 				</li>
 
@@ -106,7 +106,7 @@ function report() {
 						:to="{ name: 'discover.games.view.trophies.list' }"
 						active-class="active"
 					>
-						<AppTranslate>games.view.trophies_tab</AppTranslate>
+						<AppTranslate>Trophies</AppTranslate>
 						<span class="badge">{{ formatNumber(trophiesCount) }}</span>
 					</RouterLink>
 				</li>

@@ -89,7 +89,7 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 			</p>
 			<p>
 				<AppLinkHelp page="dev-data-storage" class="link-help">
-					<AppTranslate>dash.games.data_store.items.page_help_link</AppTranslate>
+					<AppTranslate>Learn more about data storage...</AppTranslate>
 				</AppLinkHelp>
 			</p>
 		</div>

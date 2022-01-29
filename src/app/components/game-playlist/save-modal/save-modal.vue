@@ -34,8 +34,8 @@ export default class AppGamePlaylistSaveModal extends mixins(BaseModal) {
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<AppTranslate v-if="!collection">library.playlists.save_modal.add_heading</AppTranslate>
-				<AppTranslate v-else>library.playlists.save_modal.edit_heading</AppTranslate>
+				<AppTranslate v-if="!collection">Add Playlist</AppTranslate>
+				<AppTranslate v-else>Edit Playlist</AppTranslate>
 			</h2>
 		</div>
 

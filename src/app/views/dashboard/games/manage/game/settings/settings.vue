@@ -71,8 +71,8 @@ export default class RouteDashGamesManageGameSettings extends BaseRouteComponent
 
 	onSaved() {
 		showSuccessGrowl(
-			this.$gettext('dash.games.settings.save_growl'),
-			this.$gettext('dash.games.settings.save_growl_title')
+			this.$gettext('Your game settings have been saved.'),
+			this.$gettext('Settings Saved')
 		);
 		Scroll.to(0);
 	}

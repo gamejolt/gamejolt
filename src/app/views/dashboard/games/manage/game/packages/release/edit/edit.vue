@@ -93,7 +93,7 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 
 	async unpublishRelease(release: GameRelease) {
 		const result = await ModalConfirm.show(
-			this.$gettext('dash.games.releases.manage.unpublish_release_confirmation')
+			this.$gettext('Are you sure you want to hide this release? It will no longer be accessible from your game page.')
 		);
 
 		if (!result) {
@@ -103,14 +103,14 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 		await release.$unpublish(this.game);
 
 		showSuccessGrowl(
-			this.$gettext('dash.games.releases.manage.unpublish_release_growl'),
-			this.$gettext('dash.games.releases.manage.unpublish_release_growl_title')
+			this.$gettext('The release has been unpublished and is now hidden.'),
+			this.$gettext('Release Hidden')
 		);
 	}
 
 	async removeRelease(release: GameRelease) {
 		const result = await ModalConfirm.show(
-			this.$gettext('dash.games.releases.manage.remove_release_confirmation')
+			this.$gettext('Are you sure you want to remove this release? All of its builds will be removed as well.')
 		);
 
 		if (!result) {
@@ -120,8 +120,8 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 		await release.$remove(this.game);
 
 		showSuccessGrowl(
-			this.$gettext('dash.games.releases.manage.remove_release_growl'),
-			this.$gettext('dash.games.releases.manage.remove_release_growl_title')
+			this.$gettext('The release and its builds have been removed from the package.'),
+			this.$gettext('Release Removed')
 		);
 
 		this.$router.push({

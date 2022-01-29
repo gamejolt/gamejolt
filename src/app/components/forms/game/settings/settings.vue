@@ -37,7 +37,7 @@ export default class FormGameSettings extends mixins(Wrapper) implements FormOnL
 		<AppFormGroup
 			v-if="!hasPackagesForSale"
 			name="ads_enabled"
-			:label="$gettext(`dash.games.settings.ads_label`)"
+			:label="$gettext(`Show ads?`)"
 		>
 			<AppFormControlToggle class="pull-right" />
 			<div class="help-block">
@@ -56,7 +56,7 @@ export default class FormGameSettings extends mixins(Wrapper) implements FormOnL
 		</AppFormGroup>
 		<div v-else class="form-group">
 			<label class="control-label">
-				<AppTranslate>dash.games.settings.ads_label</AppTranslate>
+				<AppTranslate>Show ads?</AppTranslate>
 			</label>
 			<div class="alert">
 				<AppTranslate v-if="hasPackagesForSale">
@@ -67,7 +67,7 @@ export default class FormGameSettings extends mixins(Wrapper) implements FormOnL
 
 		<AppFormGroup
 			name="comments_enabled"
-			:label="$gettext(`dash.games.settings.comments_label`)"
+			:label="$gettext(`Allow comments?`)"
 		>
 			<AppFormControlToggle class="pull-right" />
 			<div class="help-block">
@@ -122,7 +122,7 @@ export default class FormGameSettings extends mixins(Wrapper) implements FormOnL
 
 		<AppDashGameWizardControls>
 			<AppFormButton>
-				<AppTranslate>dash.games.settings.save_button</AppTranslate>
+				<AppTranslate>Save Settings</AppTranslate>
 			</AppFormButton>
 		</AppDashGameWizardControls>
 	</AppForm>

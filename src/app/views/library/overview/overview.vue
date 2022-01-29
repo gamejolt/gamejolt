@@ -48,7 +48,7 @@ export default class RouteLibraryOverview extends BaseRouteComponent {
 	readonly Screen = Screen;
 
 	get routeTitle() {
-		return this.$gettext('library.page_title');
+		return this.$gettext('Your Library of Games');
 	}
 
 	get collectionGroups() {
@@ -116,7 +116,7 @@ export default class RouteLibraryOverview extends BaseRouteComponent {
 	<div class="route-library-overview">
 		<AppPageHeader>
 			<h1 class="section-header sans-margin-bottom">
-				<AppTranslate>library.heading</AppTranslate>
+				<AppTranslate>Game Library</AppTranslate>
 			</h1>
 			<div class="text-muted small">
 				<p>

@@ -99,8 +99,9 @@ server.use(async (req, res) => {
 		const preloadLinks = renderPreloadLinks(renderCtx.modules, ssrManifest);
 
 		const html = indexHtmlTemplate
-			.replace(`<!--ssr-preload-links-->`, preloadLinks)
-			.replace(`<!--ssr-outlet-->`, appHtml);
+			.replace(`<!-- ssr-preload-links -->`, preloadLinks)
+			.replace(`<!-- ssr-outlet -->`, appHtml)
+			.replace(`<!-- gj:ssr-metatags -->`, context.meta.renderTags());
 
 		res.status(200)
 			.set({ 'Content-Type': 'text/html' })

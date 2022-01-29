@@ -48,16 +48,16 @@ import { validateGaTrackingId } from '../../../../../_common/form-vue/validators
 
 		<AppFormGroup
 			name="ga_tracking_id"
-			:label="$gettext(`dash.games.settings.ga_tracking_id_label`)"
+			:label="$gettext(`Google Analytics Tracking ID`)"
 			:optional="true"
 		>
 			<AppFormControl
 				:validators="[validateMaxLength(30), validateGaTrackingId()]"
-				:placeholder="$gettext(`dash.games.settings.ga_tracking_id_placeholder`)"
+				:placeholder="$gettext(`Example: UA-1234567-1`)"
 			/>
 
 			<AppFormControlErrors
-				:label="$gettext(`dash.games.settings.ga_tracking_id_error_label`)"
+				:label="$gettext(`tracking ID`)"
 			/>
 
 			<div class="help-block">

@@ -1,15 +1,16 @@
 import { computed, inject, InjectionKey, provide, ref, shallowRef, toRaw } from 'vue';
-import { StickerCount } from '../../app/views/dashboard/stickers/stickers.vue';
 import { arrayRemove, numberSort } from '../../utils/array';
 import { Analytics } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
 import { showErrorGrowl } from '../growls/growls.service';
+import AppModalStickerLayer from '../modal/AppModalStickerLayer.vue';
+import { setModalBodyWrapper } from '../modal/modal.service';
 import {
 	getCollidingStickerTarget,
 	StickerLayerController,
 } from '../sticker/layer/layer-controller';
 import { StickerPlacement } from '../sticker/placement/placement.model';
-import { Sticker } from '../sticker/sticker.model';
+import { Sticker, StickerStack } from '../sticker/sticker.model';
 import {
 	addStickerToTarget,
 	getStickerModelResourceName,
@@ -30,7 +31,7 @@ export function createDrawerStore() {
 	const layers = shallowRef<StickerLayerController[]>([]);
 	const targetController = shallowRef<StickerTargetController | null>(null);
 
-	const drawerItems = shallowRef<StickerCount[]>([]);
+	const drawerItems = shallowRef<StickerStack[]>([]);
 	const placedItem = shallowRef<StickerPlacement | null>(null);
 	const sticker = shallowRef<Sticker | null>(null);
 	const streak = shallowRef<StickerStreak | null>(null);
@@ -58,6 +59,9 @@ export function createDrawerStore() {
 	const activeLayer = computed(() => {
 		return layers.value[layers.value.length - 1];
 	});
+
+	// Set up modals to have the sticker layer as their body element.
+	setModalBodyWrapper(AppModalStickerLayer);
 
 	const c = {
 		layers,
@@ -142,7 +146,7 @@ async function _initializeDrawerContent(store: DrawerStore) {
 			count: stickerCountPayload.count,
 			sticker_id: stickerCountPayload.sticker_id,
 			sticker: new Sticker(stickerData),
-		} as StickerCount;
+		} as StickerStack;
 	});
 
 	store.drawerItems.value.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));

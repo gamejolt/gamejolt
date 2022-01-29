@@ -80,7 +80,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 
 	async removeTable(table: GameScoreTable) {
 		const result = await ModalConfirm.show(
-			this.$gettext('dash.games.scoreboards.remove_confirmation')
+			this.$gettext('Are you sure you want to remove this scoreboard?')
 		);
 
 		if (!result) {
@@ -100,7 +100,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 <template>
 	<div>
 		<h2 class="section-header">
-			<AppTranslate>dash.games.scoreboards.heading</AppTranslate>
+			<AppTranslate>Scoreboards</AppTranslate>
 		</h2>
 
 		<div class="page-help">
@@ -119,7 +119,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 			</p>
 			<p>
 				<AppLinkHelp page="dev-scoreboards" class="link-help">
-					<AppTranslate>dash.games.scoreboards.page_help_link</AppTranslate>
+					<AppTranslate>Learn more about scoreboards...</AppTranslate>
 				</AppLinkHelp>
 			</p>
 		</div>
@@ -149,7 +149,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 									<div class="stat-big">
 										<div class="stat-big-label">
 											<AppTranslate>
-												dash.games.scoreboards.table_id_label
+												Table ID
 											</AppTranslate>
 										</div>
 										<div class="stat-big-digit">{{ scoreTable.id }}</div>
@@ -173,18 +173,18 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 										class="tag tag-highlight"
 									>
 										<AppTranslate
-											>dash.games.scoreboards.primary_tag</AppTranslate
+											>Primary Scoreboard</AppTranslate
 										>
 									</span>
 									<span
 										v-if="scoreTable.allow_guest_scores"
 										v-app-tooltip="
-											$gettext(`dash.games.scoreboards.guest_tooltip`)
+											$gettext(`Allows guests to save their scores.`)
 										"
 										class="tag"
 									>
 										<AppTranslate
-											>dash.games.scoreboards.guest_tag</AppTranslate
+											>Guest Scoring</AppTranslate
 										>
 									</span>
 									<span
@@ -195,7 +195,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 										class="tag"
 									>
 										<AppTranslate
-											>dash.games.scoreboards.unique_tag</AppTranslate
+											>Unique Scores</AppTranslate
 										>
 									</span>
 									<span
@@ -204,7 +204,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 											GameScoreTable.SORTING_DIRECTION_ASC
 										"
 										v-app-tooltip="
-											$gettext(`dash.games.scoreboards.asc_tooltip`)
+											$gettext(`Scores with lower values are ranked better/higher.`)
 										"
 										class="tag"
 									>
@@ -220,7 +220,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 											GameScoreTable.SORTING_DIRECTION_DESC
 										"
 										v-app-tooltip="
-											$gettext(`dash.games.scoreboards.desc_tooltip`)
+											$gettext(`Scores with higher values are ranked better/higher.`)
 										"
 										class="tag"
 									>
@@ -246,7 +246,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 										@click.stop
 									>
 										<AppTranslate
-											>dash.games.scoreboards.scores_button</AppTranslate
+											>View Scores</AppTranslate
 										>
 									</AppButton>
 								</div>
@@ -263,7 +263,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 					</AppCardListDraggable>
 
 					<AppCardListAdd
-						:label="$gettext(`dash.games.scoreboards.add_button`)"
+						:label="$gettext(`Add Scoreboard`)"
 						@toggle="isAdding = !isAdding"
 					>
 						<FormGameScoreTable :game="game" @submit="onTableAdded" />

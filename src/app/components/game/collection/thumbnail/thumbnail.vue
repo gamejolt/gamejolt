@@ -21,7 +21,7 @@ export default class AppGameCollectionThumbnail extends Vue {
 			<AppTranslate v-else-if="collection.type === 'followed'"> Followed Games </AppTranslate>
 			<AppTranslate v-else-if="collection.type === 'playlist'"> Playlist </AppTranslate>
 			<AppTranslate v-else-if="collection.type === 'bundle'">
-				library.playlists.bundle_tag
+				Bundle
 			</AppTranslate>
 			<AppTranslate
 				v-else-if="collection.type === 'tag'"

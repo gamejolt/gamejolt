@@ -151,7 +151,7 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 				</p>
 				<p>
 					<AppLinkHelp page="dev-packages" class="link-help">
-						<AppTranslate>dash.games.packages.page_help_link</AppTranslate>
+						<AppTranslate>Learn more about packages...</AppTranslate>
 					</AppLinkHelp>
 				</p>
 			</div>
@@ -182,7 +182,7 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 
 			<AppGamePerms required="all" tag="div">
 				<AppButton primary block @click="addPackage()">
-					<AppTranslate>dash.games.packages.add_package_button</AppTranslate>
+					<AppTranslate>Add Package</AppTranslate>
 				</AppButton>
 			</AppGamePerms>
 			<br />

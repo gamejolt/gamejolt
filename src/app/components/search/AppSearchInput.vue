@@ -42,7 +42,7 @@ function onChange(event: InputEvent) {
 		type="search"
 		class="search-input form-control"
 		name="q"
-		:placeholder="$gettext('search.input.placeholder')"
+		:placeholder="$gettext('Search')"
 		autocomplete="off"
 		:value="modelValue"
 		@input="onChange"

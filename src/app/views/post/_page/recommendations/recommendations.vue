@@ -1,10 +1,10 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
+import AppPostCard from '../../../../../_common/fireside/post/card/AppPostCard.vue';
+import AppPostCardPlaceholder from '../../../../../_common/fireside/post/card/AppPostCardPlaceholder.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
-import AppPostCardPlaceholder from '../../../../components/fireside/post/card/card-placeholder.vue';
-import AppPostCard from '../../../../components/fireside/post/card/card.vue';
 
 @Options({
 	components: {

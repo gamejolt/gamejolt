@@ -80,8 +80,8 @@ export default class AppGameCollectionFollowWidget extends Vue {
 		}
 
 		return this.isFollowing
-			? this.$gettext('library.collection.unfollow_button_tooltip')
-			: this.$gettext('library.collection.follow_button_tooltip');
+			? this.$gettext('Unfollow this playlist to remove it from your library and stop receiving notifications.')
+			: this.$gettext('Follow this playlist to add it to your library and be notified when new games are added.');
 	}
 
 	get icon() {

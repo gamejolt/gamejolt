@@ -2,8 +2,17 @@
 /npm-debug.log
 /build/
 /debug.log
-/src/translations
 .DS_Store
 .cache
 yarn-error.log
 /gulp/tasks/client/vendor/tmp-gamejolt.iss
+
+# vite build for our html templates
+/src/auth.html
+/src/claim.html
+/src/checkout.html
+/src/site-editor.html
+/src/gameserver.html
+/src/z.html
+/src/widget-package.html
+/src/editor.html

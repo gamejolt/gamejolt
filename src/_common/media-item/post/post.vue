@@ -17,7 +17,7 @@ import AppStickerTarget from '../../sticker/target/target.vue';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppVideo from '../../video/video.vue';
-import AppMediaItemBackdrop from '../backdrop/backdrop.vue';
+import AppMediaItemBackdrop from '../backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../media-item-model';
 
 @Options({

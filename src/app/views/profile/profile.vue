@@ -390,7 +390,7 @@ export default class RouteProfile extends BaseRouteComponent {
 				</h1>
 
 				<div class="text-muted small">
-					<AppTranslate>profile.joined</AppTranslate>
+					<AppTranslate>Joined</AppTranslate>
 					{{ ' ' }}
 					<AppTimeAgo :date="user.created_on" />
 				</div>
@@ -420,7 +420,7 @@ export default class RouteProfile extends BaseRouteComponent {
 					</h1>
 					<div class="small text-muted">
 						<!-- Joined on -->
-						<AppTranslate>profile.joined</AppTranslate>
+						<AppTranslate>Joined</AppTranslate>
 						{{ ' ' }}
 						<AppTimeAgo :date="user.created_on" />
 
@@ -436,27 +436,27 @@ export default class RouteProfile extends BaseRouteComponent {
 									userFriendship &&
 									userFriendship.state === UserFriendship.STATE_FRIENDS
 								"
-								v-app-tooltip="$gettext('profile.friend_tooltip')"
+								v-app-tooltip="$gettext('You are friends! Awwww!')"
 								class="tag tag-highlight"
 							>
-								<AppTranslate>profile.friend_tag</AppTranslate>
+								<AppTranslate>Friend</AppTranslate>
 							</span>
 
 							<!-- Online status -->
 							<template v-if="isOnline !== null">
 								<span
 									v-if="isOnline === false"
-									v-app-tooltip="$gettext('profile.offline_tooltip')"
+									v-app-tooltip="$gettext('This user is currently offline.')"
 									class="tag"
 								>
-									<AppTranslate>profile.offline_tag</AppTranslate>
+									<AppTranslate>Offline</AppTranslate>
 								</span>
 								<span
 									v-else
-									v-app-tooltip="$gettext('profile.online_tooltip')"
+									v-app-tooltip="$gettext('This user is currently online.')"
 									class="tag tag-highlight"
 								>
-									<AppTranslate>profile.online_tag</AppTranslate>
+									<AppTranslate>Online</AppTranslate>
 								</span>
 							</template>
 
@@ -483,7 +483,7 @@ export default class RouteProfile extends BaseRouteComponent {
 										:to="{ name: 'profile.overview' }"
 										:class="{ active: $route.name === 'profile.overview' }"
 									>
-										<AppTranslate>profile.overview_tab</AppTranslate>
+										<AppTranslate>Profile</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -524,7 +524,7 @@ export default class RouteProfile extends BaseRouteComponent {
 										:to="{ name: 'profile.library' }"
 										active-class="active"
 									>
-										<AppTranslate>profile.library_tab</AppTranslate>
+										<AppTranslate>Library</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -561,7 +561,7 @@ export default class RouteProfile extends BaseRouteComponent {
 												>
 													<AppJolticon icon="flag" />
 													<AppTranslate>
-														profile.report_user_button
+														Report user
 													</AppTranslate>
 												</a>
 												<a
@@ -575,7 +575,7 @@ export default class RouteProfile extends BaseRouteComponent {
 												>
 													<AppJolticon icon="friend-remove-1" notice />
 													<AppTranslate>
-														profile.remove_friend_button
+														Remove Friend
 													</AppTranslate>
 												</a>
 												<a
@@ -594,7 +594,7 @@ export default class RouteProfile extends BaseRouteComponent {
 												>
 													<AppJolticon icon="cog" />
 													<AppTranslate>
-														profile.moderate_user_button
+														Moderate User
 													</AppTranslate>
 												</a>
 											</div>

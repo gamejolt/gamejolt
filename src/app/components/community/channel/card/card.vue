@@ -4,7 +4,7 @@ import {
 	Community,
 	CommunityPresetChannelType,
 } from '../../../../../_common/community/community.model';
-import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/backdrop.vue';
+import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../../../../_common/media-item/media-item-model';
 import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';

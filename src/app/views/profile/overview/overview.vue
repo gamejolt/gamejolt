@@ -524,7 +524,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		<section v-if="!user.status" class="section fill-notice">
 			<div class="container">
 				<h2 class="-banned-header">
-					<AppTranslate>profile.banned_message_html</AppTranslate>
+					<AppTranslate>This account is banned.</AppTranslate>
 				</h2>
 
 				<AppExpand :when="isFriend">
@@ -538,7 +538,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 					</p>
 
 					<AppButton solid @click="routeStore.removeFriend()">
-						<AppTranslate>profile.remove_friend_button</AppTranslate>
+						<AppTranslate>Remove Friend</AppTranslate>
 					</AppButton>
 				</AppExpand>
 
@@ -651,7 +651,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 								block
 								@click="routeStore.sendFriendRequest()"
 							>
-								<AppTranslate>profile.friend_request_button</AppTranslate>
+								<AppTranslate>Send Friend Request</AppTranslate>
 							</AppButton>
 							<AppButton
 								v-else-if="canMessage"
@@ -872,7 +872,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 									</AppTranslate>
 								</p>
 								<AppButton @click="routeStore.cancelFriendRequest()">
-									<AppTranslate>profile.friend_request_cancel</AppTranslate>
+									<AppTranslate>Cancel Request</AppTranslate>
 								</AppButton>
 							</div>
 						</AppExpand>
@@ -892,16 +892,16 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 									</AppTranslate>
 								</p>
 								<AppButton primary solid @click="onFriendRequestAccept">
-									<AppTranslate>profile.friend_request_accept</AppTranslate>
+									<AppTranslate>Add Friend</AppTranslate>
 								</AppButton>
 								<AppButton
 									v-app-tooltip="
-										$gettext('profile.friend_request_decline_tooltip')
+										$gettext('The sender will not be notified.')
 									"
 									trans
 									@click="onFriendRequestReject"
 								>
-									<AppTranslate>profile.friend_request_decline</AppTranslate>
+									<AppTranslate>Dismiss</AppTranslate>
 								</AppButton>
 							</div>
 						</AppExpand>

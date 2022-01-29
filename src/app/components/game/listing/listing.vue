@@ -72,7 +72,7 @@ export default class AppGameListing extends Vue {
 								:to="{ name: $route.name, params: { section: null } }"
 								:class="{ active: !$route.params.section }"
 							>
-								<AppTranslate>games.list.sections_selector_featured</AppTranslate>
+								<AppTranslate>Featured</AppTranslate>
 							</router-link>
 						</li>
 						<li>
@@ -82,7 +82,7 @@ export default class AppGameListing extends Vue {
 								:to="{ name: $route.name, params: { section: 'hot' } }"
 								:class="{ active: $route.params.section === 'hot' }"
 							>
-								<AppTranslate>games.list.sections_selector_hot</AppTranslate>
+								<AppTranslate>Hot</AppTranslate>
 							</router-link>
 						</li>
 						<li>
@@ -92,7 +92,7 @@ export default class AppGameListing extends Vue {
 								:to="{ name: $route.name, params: { section: 'best' } }"
 								:class="{ active: $route.params.section === 'best' }"
 							>
-								<AppTranslate>games.list.sections_selector_best</AppTranslate>
+								<AppTranslate>Best</AppTranslate>
 							</router-link>
 						</li>
 						<li>
@@ -102,7 +102,7 @@ export default class AppGameListing extends Vue {
 								:to="{ name: $route.name, params: { section: 'new' } }"
 								:class="{ active: $route.params.section === 'new' }"
 							>
-								<AppTranslate>games.list.sections_selector_new</AppTranslate>
+								<AppTranslate>New</AppTranslate>
 							</router-link>
 						</li>
 					</ul>

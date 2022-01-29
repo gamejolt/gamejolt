@@ -79,7 +79,7 @@ export default class AppGameMediaItemAddModal extends mixins(BaseModal) {
 					<br />
 					<div>
 						<AppLinkHelp page="dev-media-images" class="link-help">
-							<AppTranslate>dash.games.media.add.image.page_help_link</AppTranslate>
+							<AppTranslate>Learn more about screenshots/images...</AppTranslate>
 						</AppLinkHelp>
 					</div>
 				</div>
@@ -102,7 +102,7 @@ export default class AppGameMediaItemAddModal extends mixins(BaseModal) {
 					<br />
 					<div>
 						<AppLinkHelp page="dev-media-videos" class="link-help">
-							<AppTranslate>dash.games.media.add.video.page_help_link</AppTranslate>
+							<AppTranslate>Learn more about videos...</AppTranslate>
 						</AppLinkHelp>
 					</div>
 				</div>

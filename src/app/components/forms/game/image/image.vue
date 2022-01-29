@@ -51,7 +51,7 @@ export default class FormGameImage extends mixins(Wrapper) implements FormOnLoad
 		<AppFormGroup
 			v-if="method === 'add'"
 			name="file"
-			:label="$gettext(`dash.games.media.image.form.image_label`)"
+			:label="$gettext(`Image File`)"
 			:hide-label="true"
 		>
 			<p class="help-block" v-translate>
@@ -80,13 +80,13 @@ export default class FormGameImage extends mixins(Wrapper) implements FormOnLoad
 		<AppFormGroup
 			v-if="method !== 'add'"
 			name="caption"
-			:label="$gettext(`dash.games.media.image.form.caption_label`)"
+			:label="$gettext(`Caption`)"
 			:optional="true"
 		>
 			<AppFormControl type="text" :validators="[validateMaxLength(200)]" />
 			<AppFormControlErrors />
 			<p class="help-block">
-				<AppTranslate>dash.games.media.image.form.caption_help</AppTranslate>
+				<AppTranslate>This caption will appear when your image is viewed in full screen.</AppTranslate>
 			</p>
 		</AppFormGroup>
 

@@ -17,7 +17,7 @@ import {
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
 import { createLightbox } from '../../../../_common/lightbox/lightbox-helpers';
-import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/backdrop.vue';
+import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -372,9 +372,7 @@ export default class AppPostPage extends Vue {
 					<br />
 				</AppStickerControlsOverlay>
 
-				<AppStickerControlsOverlay
-					v-if="communities.length || post.sticker_counts.length"
-				>
+				<AppStickerControlsOverlay v-if="communities.length || post.sticker_counts.length">
 					<AppStickerReactions
 						v-if="post.sticker_counts.length"
 						:controller="stickerTargetController"

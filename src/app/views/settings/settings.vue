@@ -43,7 +43,7 @@ export default class RouteSettings extends BaseRouteComponent {
 		const sections: any = {};
 
 		if (GJ_IS_DESKTOP_APP) {
-			sections.client = this.$gettext('settings.client');
+			sections.client = this.$gettext('Client');
 		}
 
 		Object.assign(sections, {
@@ -71,7 +71,7 @@ export default class RouteSettings extends BaseRouteComponent {
 			<div class="row">
 				<div class="col-sm-9 col-sm-offset-3 col-md-8 col-md-offset-2 col-lg-6">
 					<h1>
-						<AppTranslate>settings.heading</AppTranslate>
+						<AppTranslate>Settings</AppTranslate>
 					</h1>
 				</div>
 			</div>
