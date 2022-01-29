@@ -13,6 +13,8 @@ import {
 import { Screen } from '../../screen/screen-service';
 import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { VideoSourceArray } from '../video.vue';
+import AppPlayerFullscreen from './AppVideoPlayerFullscreen.vue';
+import AppPlayerPlayback from './AppVideoPlayerPlayback.vue';
 import {
 	createVideoPlayerController,
 	queueVideoTimeChange,
@@ -22,8 +24,6 @@ import {
 	VideoPlayerController,
 	VideoPlayerControllerContext,
 } from './controller';
-import AppPlayerFullscreen from './fullscreen/fullscreen.vue';
-import AppPlayerPlayback from './playback/playback.vue';
 import AppPlayerScrubber from './scrubber/scrubber.vue';
 import AppPlayerVolume from './volume/volume.vue';
 
@@ -105,7 +105,7 @@ export default class AppVideoPlayer extends Vue {
 	@Prop({ type: Number, default: 0 }) viewCount!: number;
 	@Prop({ type: Boolean, default: false }) showVideoStats!: boolean;
 
-	player!: VideoPlayerController;
+	player: VideoPlayerController = null as any;
 	isHoveringControls = false;
 	private isHovered = false;
 	private _hideUITimer?: NodeJS.Timer;
@@ -320,6 +320,7 @@ export default class AppVideoPlayer extends Vue {
 
 	@Watch('player.queuedFullScreenChange')
 	syncWithState() {
+		console.log('syncing state');
 		if (this.player.queuedFullScreenChange !== null) {
 			if (this.player.queuedFullScreenChange) {
 				if (this.player.altControlsBehavior) {

@@ -15,6 +15,7 @@ module.exports = {
 		'no-undef': 'off',
 		'no-unused-vars': 'off',
 		'no-mixed-spaces-and-tabs': 'off',
+		'getter-return': 'off',
 		'@typescript-eslint/explicit-module-boundary-types': 'off',
 		'@typescript-eslint/no-empty-function': 'off',
 		'@typescript-eslint/no-explicit-any': 'off',
@@ -46,5 +47,6 @@ module.exports = {
 		],
 		'vue/max-attributes-per-line': 'off',
 		'vue/singleline-html-element-content-newline': 'off',
+		'vue/return-in-computed-property': 'off',
 	},
 };

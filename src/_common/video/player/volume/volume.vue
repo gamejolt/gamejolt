@@ -6,8 +6,7 @@ import {
 	SettingVideoPlayerFeedMuted,
 	SettingVideoPlayerMuted,
 } from '../../../settings/settings.service';
-import { ScrubberCallback } from '../../../slider/slider';
-import AppSlider from '../../../slider/slider.vue';
+import AppSlider, { ScrubberCallback } from '../../../slider/slider.vue';
 import { AppTooltip } from '../../../tooltip/tooltip-directive';
 import {
 	scrubVideoVolume,
