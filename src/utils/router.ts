@@ -10,7 +10,7 @@ import {
 	RouterHistory,
 } from 'vue-router';
 import { Environment } from '../_common/environment/environment.service';
-import { routeError404, RouteError404 } from '../_common/error/page/page.route';
+import { routeError404 } from '../_common/error/page/page.route';
 import { Navigate } from '../_common/navigate/navigate.service';
 import { initScrollBehavior } from '../_common/scroll/auto-scroll/autoscroll.service';
 
@@ -87,8 +87,8 @@ export function hijackLinks(router: Router, host: string) {
 
 		// Now try to match it against our routes and see if we got anything. If
 		// we match a 404 it's obviously wrong.
-		const matched = router.resolve(href).matched.flatMap(i => i.components);
-		if (matched.length > 0 && matched[0] !== RouteError404) {
+		const { matched } = router.resolve(href);
+		if (matched.length > 0 && matched[0].name !== 'error.404') {
 			// We matched a route! Let's go to it and stop the browser from doing
 			// anything with the link click.
 			e.preventDefault();
