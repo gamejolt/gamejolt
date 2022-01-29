@@ -24,7 +24,7 @@ defineProps({
 </template>
 
 <style lang="stylus" scoped>
-.modal-sticker-layer
+.-modal-sticker-layer
 	position: relative
 	min-height: 100vh
 
