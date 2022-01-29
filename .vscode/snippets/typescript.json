@@ -13,21 +13,6 @@
 			""
 		]
 	},
-	"Vue Route Component": {
-		"prefix": "vue-route-component",
-		"body": [
-			"import { Options } from 'vue-property-decorator';",
-			"",
-			"@Options({",
-			"\tname: 'Route${2:Component}',",
-			"})",
-			"@RouteResolver({",
-			"\tresolver: ({ route }) => {$0}",
-			"})",
-			"export default class Route${2:Component} extends BaseRouteComponent {}",
-			""
-		]
-	},
 	"Vue Route": {
 		"prefix": "vue-route",
 		"body": [
@@ -39,34 +24,6 @@
 			"\tcomponent: () => import('./${4:home}'),",
 			"};",
 			"$0"
-		]
-	},
-	"Vue form": {
-		"prefix": "vue-form",
-		"body": [
-			"import { Options } from 'vue-property-decorator';",
-			"",
-			"@Options({})",
-			"export class Form${1:Login} extends BaseForm<$2> {",
-			"\tmodelClass = $2;",
-			"",
-			"\tonInit() {",
-			"\t\t$0",
-			"\t}",
-			"}",
-			""
-		]
-	},
-	"Vue modal component": {
-		"prefix": "vue-modal-component",
-		"body": [
-			"import { Options } from 'vue-property-decorator';",
-			"",
-			"@Options({})",
-			"export default class App${1:Login}Modal extends BaseModal {",
-			"$0",
-			"}",
-			""
 		]
 	},
 	"Vue modal service": {
@@ -85,21 +42,8 @@
 			"$0"
 		]
 	},
-	"Vue route resolver": {
-		"prefix": "vue-route-resolver",
-		"body": [
-			"@RouteResolver({",
-			"\tdeps: {},",
-			"\tresolver: ({ route }) => Api.sendRequest($1),",
-			"})$0"
-		]
-	},
-	"Vue prop definition": {
+	"Vue props": {
 		"prefix": "vue-prop",
-		"body": ["@Prop({ type: ${1:String}, required: ${2:true} })"]
-	},
-	"Vue emit": {
-		"prefix": "vue-emit",
-		"body": ["@Emit('${1:event}')", "emit${2:Func}() {}"]
+		"body": ["${1:name}: {", "\ttype: ${1:String},", "\trequired: true,", "},"]
 	}
 }
