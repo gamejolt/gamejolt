@@ -1,5 +1,17 @@
 <script lang="ts">
-import * as Chart from 'chart.js';
+import {
+	ArcElement,
+	CategoryScale,
+	Chart,
+	ChartOptions,
+	DoughnutController,
+	Legend,
+	LinearScale,
+	LineController,
+	LineElement,
+	PointElement,
+	Tooltip,
+} from 'chart.js';
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { formatDate } from '../filters/date';
@@ -8,84 +20,97 @@ import { useThemeStore } from '../theme/theme.store';
 // Try to match site styling.
 const fontFamily = `Nunito, 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif`;
 
-const chartOptions: any = {
+const chartOptions: ChartOptions<'doughnut' | 'line'> = {
 	responsive: true,
 	maintainAspectRatio: false,
-
-	legend: {
-		position: 'bottom',
-		// Gotta silence stupid TS error.
-		labels: {
-			fontColor: '#c1c1c1',
-			usePointStyle: true,
-			fontFamily,
+	plugins: {
+		legend: {
+			position: 'bottom',
+			labels: {
+				color: '#c1c1c1',
+				usePointStyle: true,
+				font: {
+					family: fontFamily,
+				},
+			},
+		},
+		tooltip: {
+			cornerRadius: 0,
+			titleColor: '#fff',
+			titleFont: {
+				family: fontFamily,
+				size: 14,
+			},
+			bodyColor: '#c1c1c1',
+			bodyFont: {
+				family: fontFamily,
+				size: 11,
+			},
 		},
 	},
-
 	scales: {
-		xAxes: [
-			{
-				gridLines: {
-					display: false,
-				},
+		x: {
+			grid: {
+				display: false,
 			},
-		],
-		yAxes: [
-			{
-				gridLines: {
-					display: false,
-				},
-				ticks: {
-					beginAtZero: true,
-				},
+		},
+		y: {
+			beginAtZero: true,
+			grid: {
+				display: false,
 			},
-		],
-	},
-
-	tooltips: {
-		cornerRadius: 0,
-		titleFontFamily: fontFamily,
-		titleFontColor: '#fff',
-		titleFontSize: 14,
-		bodyFontFamily: fontFamily,
-		bodyFontColor: '#c1c1c1',
-		bodyFontSize: 11,
+		},
 	},
 };
 
-const lineChartOptions: any = {
-	tooltips: {
-		// Tells it to show the tooltip even if not hovered directly over
-		// the point.
-		intersect: false,
-		mode: 'index',
+const lineChartOptions: ChartOptions<'line'> = {
+	plugins: {
+		tooltip: {
+			// Tells it to show the tooltip even if not hovered directly over
+			// the point.
+			intersect: false,
+			mode: 'index',
+		},
 	},
-
 	hover: {
 		intersect: false,
 		mode: 'index',
 	},
 };
 
-const pieChartOptions: any = {
+const doughnutChartOptions: ChartOptions<'doughnut'> = {
 	scales: {
-		xAxes: [{ display: false }],
-		yAxes: [{ display: false, ticks: { beginAtZero: true } }],
+		x: { display: false },
+		y: { display: false, beginAtZero: true },
 	},
 };
 
-const backgroundVariantChartOptions: any = {
-	legend: {
-		display: false,
+const backgroundVariantChartOptions: ChartOptions<'doughnut' | 'line'> = {
+	plugins: {
+		legend: {
+			display: false,
+		},
+		tooltip: {
+			enabled: false,
+		},
 	},
 	scales: {
-		xAxes: [{ display: false }],
-		yAxes: [{ display: false, ticks: { beginAtZero: true } }],
-	},
-	tooltips: {
-		enabled: false,
+		x: { display: false },
+		y: { display: false, beginAtZero: true },
 	},
 };
+
+Chart.register(
+	LineController,
+	DoughnutController,
+	LineElement,
+	PointElement,
+	ArcElement,
+	LinearScale,
+	CategoryScale,
+	Tooltip,
+	Legend
+);
 
 @Options({})
 export default class AppGraph extends Vue {
@@ -93,7 +118,7 @@ export default class AppGraph extends Vue {
 	dataset!: any[];
 
 	@Prop({ type: String, default: 'line' })
-	type!: string;
+	type!: 'line' | 'doughnut';
 
 	@Prop(Boolean)
 	backgroundVariant?: boolean;
@@ -133,6 +158,8 @@ export default class AppGraph extends Vue {
 				borderColor: color,
 				borderWidth: 1,
 
+				tension: 0.3,
+
 				pointRadius: 4,
 				pointBorderWidth: 2,
 				pointBackgroundColor: color,
@@ -149,13 +176,13 @@ export default class AppGraph extends Vue {
 		Object.assign(this.ourColors, JSON.parse(JSON.stringify(this.globalColors)));
 
 		if (this.type === 'line') {
-			Object.assign(this.chartOptions, lineChartOptions);
-		} else if (this.type === 'pie' || this.type === 'doughnut') {
-			Object.assign(this.chartOptions, pieChartOptions);
+			this._mergeOptions(lineChartOptions);
+		} else if (this.type === 'doughnut') {
+			this._mergeOptions(doughnutChartOptions);
 		}
 
 		if (this.backgroundVariant) {
-			Object.assign(this.chartOptions, backgroundVariantChartOptions);
+			this._mergeOptions(backgroundVariantChartOptions);
 
 			this.ourColors[0] = {
 				borderWidth: 1,
@@ -188,6 +215,22 @@ export default class AppGraph extends Vue {
 		this.checkData();
 	}
 
+	// Very hacky way to get our above options merged together when needed.
+	private _mergeOptions(from: ChartOptions) {
+		if (from?.plugins?.tooltip) {
+			Object.assign(this.chartOptions.plugins.tooltip, from.plugins.tooltip);
+		}
+		if (from?.plugins?.legend) {
+			Object.assign(this.chartOptions.plugins.legend, from.plugins.legend);
+		}
+		if (from?.scales?.x) {
+			Object.assign(this.chartOptions.scales.x, from.scales.x);
+		}
+		if (from?.scales?.y) {
+			Object.assign(this.chartOptions.scales.y, from.scales.y);
+		}
+	}
+
 	private checkData() {
 		if (!this.dataset) {
 			return;
@@ -217,7 +260,7 @@ export default class AppGraph extends Vue {
 
 				this.graphData.datasets.push(dataset);
 			});
-		} else if (this.type === 'pie' || this.type === 'doughnut') {
+		} else if (this.type === 'doughnut') {
 			this.graphData.datasets.push({
 				data: [],
 			});
