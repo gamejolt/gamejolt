@@ -46,7 +46,7 @@ function uploadDocument(stripePublishableKey: string) {
 		formData.append('purpose', 'identity_document');
 
 		// TODO(vue3): gotta check if this works
-		formData.append('file', form.formModel[`${prefix.value}.front`][0]);
+		formData.append('file', form.formModel[`${prefix.value}.front`]);
 
 		const xhr = new XMLHttpRequest();
 		xhr.open('POST', StripeFileUploadUrl);
@@ -63,7 +63,7 @@ function uploadDocument(stripePublishableKey: string) {
 				const data = JSON.parse(xhr.responseText);
 
 				if (xhr.status !== 200) {
-					throw new Error(data.error || 'Unknown error');
+					throw new Error(data.error?.message || 'Unknown error');
 				}
 
 				if (!data.id) {
