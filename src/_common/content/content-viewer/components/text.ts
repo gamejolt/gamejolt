@@ -1,5 +1,6 @@
 import { h } from 'vue';
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { Environment } from '../../../environment/environment.service';
 import AppLinkExternal from '../../../link/AppLinkExternal.vue';
 import { ContentObject } from '../../content-object';
 import { ContentOwnerController, ContentOwnerControllerKey } from '../../content-owner';
@@ -74,7 +75,7 @@ export class AppContentViewerText extends Vue {
 			const children = [vnode];
 
 			// Make sure the href is prefaced by a protocol.
-			let href = attrs.href;
+			let href = attrs.href as string;
 			if (!/^[a-z][a-z0-9+\-.]*:\/\//i.test(href)) {
 				href = '//' + href;
 			}
@@ -88,9 +89,21 @@ export class AppContentViewerText extends Vue {
 				elementAttrs.title = attrs.href;
 			}
 
-			vnode = h(AppLinkExternal, elementAttrs, {
-				default: () => children,
-			});
+			// If this is a local link to gamejolt.com, we want to open it in
+			// same tab, otherwise we open in new window.
+			const ourHost =
+				href.startsWith(Environment.baseUrl) ||
+				href.startsWith(Environment.baseUrlInsecure);
+
+			if (ourHost) {
+				vnode = h('a', elementAttrs, {
+					default: () => children,
+				});
+			} else {
+				vnode = h(AppLinkExternal, elementAttrs, {
+					default: () => children,
+				});
+			}
 		} else if (this.isMention) {
 			const attrs = this.getMarkAttrs('mention');
 			const children = [vnode];

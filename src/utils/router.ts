@@ -46,27 +46,22 @@ export function hijackLinks(router: Router, host: string) {
 	}
 
 	document.body.addEventListener('click', e => {
+		let elem: HTMLElement | null = e.target as any;
+		while (elem && !(elem instanceof HTMLAnchorElement)) {
+			elem = elem?.parentNode as HTMLElement | null;
+		}
+
+		if (!elem) {
+			return;
+		}
+
 		// Should we handle this event?
-		const guard = guardHijackEvent(e);
+		const guard = guardHijackEvent(elem, e);
 		if (guard === 'passthrough') {
 			return;
 		}
 
-		// Try to find an A tag.
-		let target = e.target as HTMLAnchorElement;
-		if (!(target instanceof HTMLElement)) {
-			return;
-		}
-
-		while (target.nodeName.toLowerCase() !== 'a') {
-			// Immediately stop if we hit the end.
-			if ((target as any) === document || !target.parentNode) {
-				return;
-			}
-			target = target.parentNode as HTMLAnchorElement;
-		}
-
-		let href = target.href;
+		let href = elem.href;
 		if (!href) {
 			return;
 		}
@@ -125,7 +120,7 @@ export function hijackLinks(router: Router, host: string) {
 
 // Basically taken from vue-router router-link. Decides if we should do any
 // logic against this particular event.
-function guardHijackEvent(e: any): 'passthrough' | 'window' | 'handle' {
+function guardHijackEvent(elem: HTMLElement, e: any): 'passthrough' | 'window' | 'handle' {
 	const ke = e as KeyboardEvent;
 	const me = e as MouseEvent;
 
@@ -150,19 +145,10 @@ function guardHijackEvent(e: any): 'passthrough' | 'window' | 'handle' {
 		return 'passthrough';
 	}
 
-	let elem = e.target;
-	while (elem && !(elem instanceof HTMLAnchorElement)) {
-		elem = elem?.parentNode;
-	}
-
-	if (!elem) {
-		return 'passthrough';
-	}
-
 	// don't redirect if `target="_blank"`
 	if (elem.getAttribute) {
 		const target = elem.getAttribute('target');
-		if (/\b_blank\b/i.test(target)) {
+		if (target && /\b_blank\b/i.test(target)) {
 			// Client handles target="_blank" correctly.
 			return 'passthrough';
 		}
@@ -220,4 +206,22 @@ export function getAbsoluteLink(router: Router, location: RouteLocationRaw) {
 	url = url.replace(/^#/, '');
 
 	return Environment.baseUrl + url;
+}
+
+/**
+ * Returns a query parameter from a route as either a string or null. If the
+ * query was in an array format, it will try pulling the first time.
+ */
+export function getQuery(route: RouteLocationNormalized, key: string) {
+	const val = route.query[key];
+
+	if (!val) {
+		return null;
+	}
+
+	if (Array.isArray(val)) {
+		return val[0] ?? null;
+	}
+
+	return val ?? null;
 }
