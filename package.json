@@ -104,6 +104,7 @@
 		"ua-parser-js": "1.0.2",
 		"undertaker-forward-reference": "1.0.2",
 		"vite": "2.7.13",
+		"vite-plugin-imagemin": "0.6.1",
 		"vite-plugin-markdown": "2.0.2",
 		"vm2": "3.9.5",
 		"vue": "3.2.29",
