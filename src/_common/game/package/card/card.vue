@@ -21,7 +21,7 @@ import { GamePlayModal } from '../../play-modal/play-modal.service';
 import { GameRelease } from '../../release/release.model';
 import { GamePackage } from '../package.model';
 import { GamePackagePurchaseModal } from '../purchase-modal/purchase-modal.service';
-import AppGamePackageCardButtons from './buttons.vue';
+import AppGamePackageCardButtons from './AppGamePackageCardButtons.vue';
 import { GamePackageCardModel } from './card.model';
 
 @Options({

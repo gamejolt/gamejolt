@@ -8,8 +8,8 @@ import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatFilesize } from '../../../../../_common/filters/filesize';
 import { GameBuild } from '../../../../../_common/game/build/build.model';
 import { Game } from '../../../../../_common/game/game.model';
+import AppGamePackageCardMoreOptions from '../../../../../_common/game/package/card/AppGamePackageCardMoreOptions.vue';
 import { GamePackageCardModel } from '../../../../../_common/game/package/card/card.model';
-import AppGamePackageCardMoreOptions from '../../../../../_common/game/package/card/more-options.vue';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
@@ -314,7 +314,9 @@ export default class AppClientPackageCardButtons extends Vue {
 			>
 				<p>
 					<AppJolticon icon="notice" />
-					<AppTranslate>Oh no! We couldn't remove this package. Maybe try again?</AppTranslate>
+					<AppTranslate>
+						Oh no! We couldn't remove this package. Maybe try again?
+					</AppTranslate>
 				</p>
 			</div>
 
@@ -473,10 +475,7 @@ export default class AppClientPackageCardButtons extends Vue {
 				</div>
 
 				<!-- The non-client options. -->
-				<AppGamePackageCardMoreOptions
-					:card="card"
-					@click="buildClick($event, true)"
-				/>
+				<AppGamePackageCardMoreOptions :card="card" @click="buildClick($event, true)" />
 			</template>
 		</AppPopper>
 	</div>

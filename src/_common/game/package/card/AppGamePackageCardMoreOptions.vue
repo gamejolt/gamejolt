@@ -1,23 +1,27 @@
-<script lang="ts">
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType } from 'vue';
 import { formatFilesize } from '../../../filters/filesize';
 import { GameBuild } from '../../build/build.model';
 import { GamePackageCardModel } from './card.model';
+import AppJolticon from '../../../jolticon/AppJolticon.vue';
+import AppTranslate from '../../../translate/AppTranslate.vue';
 
-@Options({})
-export default class AppGamePackageCardMoreOptions extends Vue {
-	@Prop(Object) card!: GamePackageCardModel;
+defineProps({
+	card: {
+		type: Object as PropType<GamePackageCardModel>,
+		required: true,
+	},
+});
 
-	readonly emulatorInfo = GameBuild.emulatorInfo;
-	readonly formatFilesize = formatFilesize;
+const emit = defineEmits({
+	click: (_build: GameBuild) => true,
+});
 
-	@Emit('click')
-	emitClick(_build: GameBuild) {}
-
-	click(build: GameBuild) {
-		this.emitClick(build);
-	}
+function click(build: GameBuild) {
+	emit('click', build);
 }
+
+const emulatorInfo = GameBuild.emulatorInfo;
 </script>
 
 <template>
@@ -33,7 +37,9 @@ export default class AppGamePackageCardMoreOptions extends Vue {
 
 			<!-- We show the filename if it's an "Other" build. -->
 			<template v-if="!extraBuild.build.os_other">
-				<AppTranslate v-if="extraBuild.build.type === 'downloadable'"> Download </AppTranslate>
+				<AppTranslate v-if="extraBuild.build.type === 'downloadable'">
+					Download
+				</AppTranslate>
 				<AppTranslate
 					v-else-if="extraBuild.build.type === 'rom'"
 					:translate-params="{ platform: emulatorInfo[extraBuild.build.emulator_type] }"
@@ -56,15 +62,17 @@ export default class AppGamePackageCardMoreOptions extends Vue {
 			</small>
 
 			<!-- If the version is different than the main release, then show it. -->
-			<span v-if="extraBuild.build.game_release_id !== card.showcasedRelease.id" class="tiny">
-				<em>v{{ extraBuild.build._release.version_number }}</em>
+			<span
+				v-if="extraBuild.build.game_release_id !== card.showcasedRelease?.id"
+				class="tiny"
+			>
+				<em>v{{ extraBuild.build._release!.version_number }}</em>
 			</span>
 
 			<small v-if="GJ_IS_DESKTOP_APP && extraBuild.type !== 'html'" class="text-muted">
 				<br />
 				<em>
-					<AppTranslate>
- (will open in browser)</AppTranslate>
+					<AppTranslate>(will open in browser)</AppTranslate>
 				</em>
 			</small>
 		</a>

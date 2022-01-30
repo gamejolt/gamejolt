@@ -1,46 +1,48 @@
-<script lang="ts">
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType } from 'vue';
 import { formatFilesize } from '../../../filters/filesize';
 import AppPopper from '../../../popper/popper.vue';
-import { Screen } from '../../../screen/screen-service';
 import { GameBuild } from '../../build/build.model';
 import { GamePackage } from '../package.model';
 import { GamePackageCardModel } from './card.model';
-import AppGamePackageCardMoreOptions from './more-options.vue';
+import AppGamePackageCardMoreOptions from './AppGamePackageCardMoreOptions.vue';
+import AppButton from '../../../button/AppButton.vue';
+import AppTranslate from '../../../translate/AppTranslate.vue';
+import AppJolticon from '../../../jolticon/AppJolticon.vue';
 
-@Options({
-	components: {
-		AppPopper,
-		AppGamePackageCardMoreOptions,
+defineProps({
+	package: {
+		type: Object as PropType<GamePackage>,
+		required: true,
 	},
-})
-export default class AppGamePackageCardButtons extends Vue {
-	@Prop(Object) package!: GamePackage;
-	@Prop(Object) card!: GamePackageCardModel;
+	card: {
+		type: Object as PropType<GamePackageCardModel>,
+		required: true,
+	},
+});
 
-	readonly Screen = Screen;
-	readonly formatFilesize = formatFilesize;
+const emit = defineEmits({
+	click: (_data: { build: GameBuild; fromExtraSection: boolean }) => true,
+});
 
-	@Emit('click')
-	emitClick(_data: { build: GameBuild; fromExtraSection: boolean }) {}
-
-	click(build: GameBuild, fromExtraSection = false) {
-		this.emitClick({ build, fromExtraSection });
-	}
+function click(build: GameBuild, fromExtraSection = false) {
+	emit('click', { build, fromExtraSection });
 }
 </script>
 
 <template>
 	<div class="game-package-card-app-buttons">
-		<AppButton v-if="card.browserBuild" primary @click="click(card.browserBuild)">
+		<AppButton v-if="card.browserBuild" primary @click="click(card.browserBuild!)">
 			<AppTranslate>Play</AppTranslate>
 			<AppJolticon class="jolticon-addon" :icon="card.showcasedBrowserIcon" />
 		</AppButton>
 
+		{{ ' ' }}
+
 		<AppButton
 			v-if="card.downloadableBuild"
 			:primary="!card.browserBuild"
-			@click="click(card.downloadableBuild)"
+			@click="click(card.downloadableBuild!)"
 		>
 			<AppTranslate>Download</AppTranslate>
 			{{ ' ' }}
@@ -52,6 +54,8 @@ export default class AppGamePackageCardButtons extends Vue {
 			</small>
 			<AppJolticon class="jolticon-addon" :icon="card.showcasedOsIcon" />
 		</AppButton>
+
+		{{ ' ' }}
 
 		<!--
 		If this package only has "Other" builds, then we make it look like a download button with a
