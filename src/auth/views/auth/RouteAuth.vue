@@ -1,18 +1,20 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
 import { imageGameJoltLogo } from '../../../app/img/images';
+import { Api } from '../../../_common/api/api.service';
 import { redirectToDashboard } from '../../../_common/auth/auth.service';
 import { Connection } from '../../../_common/connection/connection-service';
 import { Environment } from '../../../_common/environment/environment.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { commonStore } from '../../../_common/store/common-store';
 import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
 import AppTranslateLangSelector from '../../../_common/translate/lang-selector/lang-selector.vue';
 import AppCoverImg from '../../components/AppCoverImg.vue';
 import AppGameCoverCredits from '../../components/game-cover-credits/game-cover-credits.vue';
-import { authStore, useAuthStore } from '../../store/index';
+import { useAuthStore } from '../../store/index';
+import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import { RouterView } from 'vue-router';
 import './auth-content.styl';
 
 export function loggedUserBlock() {
@@ -25,39 +27,21 @@ export function loggedUserBlock() {
 	}
 }
 
-@Options({
-	name: 'RouteAuth',
-	components: {
-		AppCoverImg,
-		AppTranslateLangSelector,
-		AppThemeSvg,
-		AppGameCoverCredits,
+export default {
+	...defineAppRouteOptions({
+		resolver: () => Api.sendRequest('/web/auth/get-customized-page'),
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+const { bootstrap, shouldShowCoverImage, coverMediaItem, coverGame } = useAuthStore();
+
+createAppRoute({
+	onResolved({ payload }) {
+		bootstrap(payload);
 	},
-	async beforeRouteEnter(_to, _from) {
-		await authStore.bootstrap();
-	},
-})
-@OptionsForRoute()
-export default class RouteAuth extends BaseRouteComponent {
-	store = setup(() => useAuthStore());
-
-	get shouldShowCoverImage() {
-		return this.store.shouldShowCoverImage;
-	}
-
-	get coverMediaItem() {
-		return this.store.coverMediaItem;
-	}
-
-	get coverGame() {
-		return this.store.coverGame;
-	}
-
-	readonly Environment = Environment;
-	readonly Connection = Connection;
-	readonly Screen = Screen;
-	readonly imageGameJoltLogo = imageGameJoltLogo;
-}
+});
 </script>
 
 <template>
@@ -106,7 +90,7 @@ export default class RouteAuth extends BaseRouteComponent {
 						</p>
 					</div>
 
-					<router-view />
+					<RouterView />
 				</div>
 			</div>
 
@@ -147,4 +131,69 @@ export default class RouteAuth extends BaseRouteComponent {
 	</div>
 </template>
 
-<style lang="stylus" src="./auth.styl" scoped></style>
+<style lang="stylus" scoped>
+#auth-container
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+
+	&.has-cover-img
+		text-shadow: 1px 1px 1px rgba($black, 0.3)
+
+.auth-scroll-container
+	scrollable()
+	position: relative
+	height: 100%
+	z-index: $zindex-scroll-container
+
+.auth-island
+	position: relative
+	z-index: $zindex-content
+	margin: 0 auto
+	max-width: 350px
+
+	@media $media-sm-up
+		margin-bottom: 20px
+
+.auth-logo
+	margin-top: 30px
+	margin-bottom: 30px
+	position: relative
+	z-index: $zindex-content
+
+	@media $media-sm-up
+		margin-top: 100px
+
+	a
+		&
+		&:hover
+			border-bottom: 0 !important
+
+	img
+		margin: 0 auto
+
+.auth-shell-bottom-links
+	position: relative
+	margin-top: $grid-gutter-width-xs
+	margin-bottom: $grid-gutter-width-xs
+	text-align: center
+	z-index: $zindex-content
+
+	@media $media-sm-up
+		position: fixed
+		bottom: 0
+		left: 0
+		margin-left: 20px
+		margin-bottom: 20px
+		text-align: left
+
+	> a
+		margin-right: 20px
+
+.-game-credits
+	position: fixed
+	right: 20px
+	bottom: 20px
+</style>

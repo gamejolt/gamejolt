@@ -1,5 +1,4 @@
 import { inject, InjectionKey, ref } from 'vue';
-import { Api } from '../../_common/api/api.service';
 import { Game } from '../../_common/game/game.model';
 import { MediaItem } from '../../_common/media-item/media-item-model';
 
@@ -16,9 +15,7 @@ export function createAuthStore() {
 	const coverMediaItem = ref<MediaItem>();
 	const coverGame = ref<Game>();
 
-	async function bootstrap() {
-		const payload = await Api.sendRequest('/web/auth/get-customized-page');
-
+	function bootstrap(payload: any) {
 		coverMediaItem.value = payload.mediaItem && new MediaItem(payload.mediaItem);
 		coverGame.value = payload.game && new Game(payload.game);
 	}
