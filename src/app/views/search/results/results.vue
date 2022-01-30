@@ -12,7 +12,7 @@ import { ActivityFeedView } from '../../../components/activity/feed/view';
 import AppGameGrid from '../../../components/game/grid/grid.vue';
 import AppGameList from '../../../components/game/list/list.vue';
 import { AppActivityFeedLazy } from '../../../components/lazy';
-import AppPageContainer from '../../../components/page-container/page-container.vue';
+import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import { Search, sendSearch } from '../../../components/search/search-service';
 import { useSearchRouteController } from '../search.vue';
 

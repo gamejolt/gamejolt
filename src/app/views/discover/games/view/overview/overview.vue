@@ -47,7 +47,7 @@ import AppGameCommunityBadge from '../../../../../components/game/community-badg
 import AppGameOgrs from '../../../../../components/game/ogrs/ogrs.vue';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { AppActivityFeedLazy } from '../../../../../components/lazy';
-import AppPageContainer from '../../../../../components/page-container/page-container.vue';
+import AppPageContainer from '../../../../../components/page-container/AppPageContainer.vue';
 import AppPostAddButton from '../../../../../components/post/add-button/add-button.vue';
 import AppRatingWidget from '../../../../../components/rating/widget/widget.vue';
 import AppUserKnownFollowers from '../../../../../components/user/known-followers/known-followers.vue';

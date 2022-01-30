@@ -41,9 +41,5 @@
 			"}",
 			"$0"
 		]
-	},
-	"Vue props": {
-		"prefix": "vue-prop",
-		"body": ["${1:name}: {", "\ttype: ${1:String},", "\trequired: true,", "},"]
 	}
 }

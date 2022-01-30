@@ -27,7 +27,7 @@ import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/rout
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
 import AppGameBadge from '../../components/game/badge/badge.vue';
-import AppPageContainer from '../../components/page-container/page-container.vue';
+import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
 
 const DownloadDelay = 3000;
 

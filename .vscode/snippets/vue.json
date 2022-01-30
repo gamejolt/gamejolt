@@ -62,5 +62,9 @@
 			"\t<AppForm :controller=\"form\"></AppForm>",
 			"</template>"
 		]
+	},
+	"Vue prop": {
+		"prefix": "vue-prop",
+		"body": ["${1:name}: {", "\ttype: ${2:String},", "\trequired: true,", "},"]
 	}
 }

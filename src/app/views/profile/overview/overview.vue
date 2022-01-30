@@ -48,7 +48,7 @@ import AppCommentOverview from '../../../components/comment/overview/overview.vu
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import AppGameList from '../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
-import AppPageContainer from '../../../components/page-container/page-container.vue';
+import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import { TrophyModal } from '../../../components/trophy/modal/modal.service';
 import AppTrophyThumbnail from '../../../components/trophy/thumbnail/thumbnail.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/known-followers.vue';

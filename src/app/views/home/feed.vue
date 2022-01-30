@@ -29,7 +29,7 @@ import { ActivityFeedView } from '../../components/activity/feed/view';
 import AppCommunitySliderPlaceholder from '../../components/community/slider/placeholder/placeholder.vue';
 import AppCommunitySlider from '../../components/community/slider/slider.vue';
 import { onFiresideStart } from '../../components/grid/client.service';
-import AppPageContainer from '../../components/page-container/page-container.vue';
+import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
 import { useAppStore } from '../../store';
 import { useLibraryStore } from '../../store/library';
