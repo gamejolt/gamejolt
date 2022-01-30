@@ -131,9 +131,13 @@ export function createAppRoute({
 		{ flush: 'post' }
 	);
 
-	watch([routeTitle, disableTitleSuffix], ([routeTitle, disableTitleSuffix]) => {
-		setMetaTitle(routeTitle, disableTitleSuffix);
-	});
+	watch(
+		[routeTitle, disableTitleSuffix],
+		([routeTitle, disableTitleSuffix]) => {
+			setMetaTitle(routeTitle, disableTitleSuffix);
+		},
+		{ immediate: true }
+	);
 
 	const activeResolver = _activeRouteResolvers.get(routeKey);
 	if (activeResolver) {
