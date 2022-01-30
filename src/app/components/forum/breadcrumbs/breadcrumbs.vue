@@ -1,3 +1,15 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { ForumChannel } from '../../../../_common/forum/channel/channel.model';
+
+@Options({})
+export default class AppForumBreadcrumbs extends Vue {
+	@Prop(Object) channel?: ForumChannel;
+	@Prop(String) sort?: string;
+	@Prop(String) page?: string;
+}
+</script>
+
 <template>
 	<nav class="breadcrumb dark-variant">
 		<ul>
@@ -6,9 +18,9 @@
 					<span class="breadcrumb-tag">
 						&nbsp;
 					</span>
-					<translate>Forums</translate>
+					<AppTranslate>Forums</AppTranslate>
 				</router-link>
-				<app-jolticon v-if="channel" icon="chevron-right" class="breadcrumb-separator" />
+				<AppJolticon v-if="channel" icon="chevron-right" class="breadcrumb-separator" />
 			</li>
 
 			<li v-if="channel">
@@ -19,10 +31,10 @@
 						params: { name: channel.name, sort: sort },
 					}"
 				>
-					<translate class="breadcrumb-tag">Channel</translate>
+					<AppTranslate class="breadcrumb-tag">Channel</AppTranslate>
 					#{{ channel.name }}
 				</router-link>
-				<app-jolticon v-if="page" icon="chevron-right" class="breadcrumb-separator" />
+				<AppJolticon v-if="page" icon="chevron-right" class="breadcrumb-separator" />
 			</li>
 
 			<li v-if="page">
@@ -31,15 +43,13 @@
 						&nbsp;
 					</span>
 					<template v-if="page === 'add-topic'">
-						<translate>New Topic</translate>
+						<AppTranslate>New Topic</AppTranslate>
 					</template>
 					<template v-else-if="page === 'view-topic'">
-						<translate>View Topic</translate>
+						<AppTranslate>View Topic</AppTranslate>
 					</template>
 				</span>
 			</li>
 		</ul>
 	</nav>
 </template>
-
-<script lang="ts" src="./breadcrumbs"></script>

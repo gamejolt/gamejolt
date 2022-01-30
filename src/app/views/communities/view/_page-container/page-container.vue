@@ -1,4 +1,23 @@
-<script lang="ts" src="./page-container"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Screen } from '../../../../../_common/screen/screen-service';
+
+@Options({})
+export default class AppCommunitiesViewPageContainer extends Vue {
+	@Prop({ type: Boolean, default: false })
+	full!: boolean;
+
+	readonly Screen = Screen;
+
+	get sidebarHasContent() {
+		return !!this.$slots.sidebar;
+	}
+
+	get shouldShowSidebar() {
+		return Screen.isLg || (Screen.isMd && this.sidebarHasContent);
+	}
+}
+</script>
 
 <template>
 	<div class="-container">
@@ -22,9 +41,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $-offset-width = 110px
 $-content-width = 650px
 // Subtracting 31px gives us the exact content

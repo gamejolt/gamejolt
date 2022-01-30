@@ -1,10 +1,73 @@
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import { Meta } from '../../../../_common/meta/meta-service';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import { AppScrollTo } from '../../../../_common/scroll/to/to.directive';
+import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
+import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import { AppAuthJoinLazy } from '../../../components/lazy';
+import socialImage from './social.png';
+
+@Options({
+	name: 'RouteLandingIndieaf',
+	components: {
+		AppSocialTwitterShare,
+		AppSocialFacebookLike,
+		AppAuthJoin: AppAuthJoinLazy,
+	},
+	directives: {
+		AppScrollTo,
+	},
+})
+@OptionsForRoute()
+export default class RouteLandingIndieaf extends BaseRouteComponent {
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
+
+	state: 'bogus' | 'indie' = 'bogus';
+
+	readonly assetPaths = import.meta.globEager('./*.(svg|jpg|png)');
+
+	get routeTitle() {
+		return `Get Indie.AF // Freakin' legit customizable game sites`;
+	}
+
+	routeCreated() {
+		Meta.description = `Build your own customizable site with an indie.af domain through Game Jolt Sites!`;
+
+		Meta.fb = {
+			type: 'website',
+			title: this.routeTitle,
+			description: Meta.description,
+		};
+
+		Meta.twitter = {
+			card: 'summary_large_image',
+			title: this.routeTitle,
+			description: Meta.description,
+		};
+
+		Meta.fb.image = Meta.twitter.image = socialImage;
+	}
+}
+</script>
+
 <template>
 	<div class="route-landing-indieaf fill-darkest">
 		<div class="indieaf-header">
 			<div class="container">
 				<p class="lead">Don't you want to be</p>
 
-				<img class="img-responsive indieaf-logo" src="./header.jpg" alt="" />
+				<img
+					class="img-responsive indieaf-logo"
+					:src="assetPaths['./header.jpg'].default"
+					alt=""
+				/>
 			</div>
 		</div>
 
@@ -13,19 +76,21 @@
 				<div class="row">
 					<div class="col-sm-7 col-centered">
 						<div class="social-widgets text-center">
-							<app-social-twitter-share
-								:content="$gettext('Get indie.AF with Game Jolt Sites #indiedev #gamedev')"
+							<AppSocialTwitterShare
+								:content="
+									$gettext('Get indie.AF with Game Jolt Sites #indiedev #gamedev')
+								"
 							/>
 
-							<span class="dot-separator hidden-xs"></span>
+							<span class="dot-separator hidden-xs" />
 
-							<app-social-facebook-like />
+							<AppSocialFacebookLike />
 						</div>
 						<br />
 
 						<p class="text-center">
-							Build your own customizable portfolio and game sites with an indie.af domain name
-							through
+							Build your own customizable portfolio and game sites with an indie.af
+							domain name through
 							<a
 								href="http://fireside.gamejolt.com/post/custom-game-sites-portfolios-fgjzjsa8"
 								target="_blank"
@@ -38,7 +103,7 @@
 
 						<div class="text-center">
 							<div>
-								<a class="button-af" href="#get-indie-af" v-app-scroll-to>
+								<a v-app-scroll-to class="button-af" href="#get-indie-af">
 									Get Indie.AF
 								</a>
 							</div>
@@ -52,22 +117,38 @@
 						<br class="hidden-xs" />
 						<hr class="underbar underbar-center" />
 
-						<div class="spacer"></div>
+						<div class="spacer" />
 
-						<div class="row" v-if="state === 'bogus'">
+						<div v-if="state === 'bogus'" class="row">
 							<div class="col-xs-7">
-								<img class="img-responsive" src="./site-io.jpg" alt="" />
+								<img
+									class="img-responsive"
+									:src="assetPaths['./site-io.jpg'].default"
+									alt=""
+								/>
 							</div>
 							<div class="col-xs-5">
-								<img class="img-responsive" src="./bogusdude.svg" alt="" />
+								<img
+									class="img-responsive"
+									:src="assetPaths['./bogusdude.svg'].default"
+									alt=""
+								/>
 							</div>
 						</div>
-						<div class="row" v-if="state === 'indie'">
+						<div v-if="state === 'indie'" class="row">
 							<div class="col-xs-7">
-								<img class="img-responsive" src="./site-af.jpg" alt="" />
+								<img
+									class="img-responsive"
+									:src="assetPaths['./site-af.jpg'].default"
+									alt=""
+								/>
 							</div>
 							<div class="col-xs-5">
-								<img class="img-responsive" src="./cooldude.svg" alt="" />
+								<img
+									class="img-responsive"
+									:src="assetPaths['./cooldude.svg'].default"
+									alt=""
+								/>
 							</div>
 						</div>
 
@@ -80,26 +161,38 @@
 							</p>
 						</template>
 
-						<h2 class="text-center">
-							Why should you be INDIE.AF?
-						</h2>
+						<h2 class="text-center">Why should you be INDIE.AF?</h2>
 						<hr class="underbar underbar-center" />
 						<br />
 
 						<div class="indieaf-vs-row">
-							<img class="indieaf-vs-img" src="./vs.png" alt="" />
+							<img
+								class="indieaf-vs-img"
+								:src="assetPaths['./vs.png'].default"
+								alt=""
+							/>
 							<div class="indieaf-vs-col left"><strong>gamejolt.io</strong></div>
 							<div class="indieaf-vs-col right"><strong>indie.af</strong></div>
 						</div>
 
 						<div class="indieaf-vs-row">
-							<img class="indieaf-vs-img" src="./vs.png" alt="" />
+							<img
+								class="indieaf-vs-img"
+								:src="assetPaths['./vs.png'].default"
+								alt=""
+							/>
 							<div class="indieaf-vs-col left">Trendy, but also bogus</div>
-							<div class="indieaf-vs-col right">Not bogus, not trendy. Radical AF!</div>
+							<div class="indieaf-vs-col right">
+								Not bogus, not trendy. Radical AF!
+							</div>
 						</div>
 
 						<div class="indieaf-vs-row">
-							<img class="indieaf-vs-img" src="./vs.png" alt="" />
+							<img
+								class="indieaf-vs-img"
+								:src="assetPaths['./vs.png'].default"
+								alt=""
+							/>
 							<div class="indieaf-vs-col left">
 								Sounds like
 								<em>ew</em>
@@ -108,78 +201,97 @@
 						</div>
 
 						<div class="indieaf-vs-row">
-							<img class="indieaf-vs-img" src="./vs.png" alt="" />
+							<img
+								class="indieaf-vs-img"
+								:src="assetPaths['./vs.png'].default"
+								alt=""
+							/>
 							<div class="indieaf-vs-col left">Child's play</div>
 							<div class="indieaf-vs-col right">Grown up AF!</div>
 						</div>
 
 						<div class="indieaf-vs-row">
-							<img class="indieaf-vs-img" src="./vs.png" alt="" />
+							<img
+								class="indieaf-vs-img"
+								:src="assetPaths['./vs.png'].default"
+								alt=""
+							/>
 							<div class="indieaf-vs-col left">People wonder why it's not .com</div>
 							<div class="indieaf-vs-col right">.af AF!</div>
 						</div>
 
 						<div class="indieaf-vs-row">
-							<img class="indieaf-vs-img" src="./vs.png" alt="" />
+							<img
+								class="indieaf-vs-img"
+								:src="assetPaths['./vs.png'].default"
+								alt=""
+							/>
 							<div class="indieaf-vs-col left">Over saturated</div>
 							<div class="indieaf-vs-col right">No one is using AF!</div>
 						</div>
 
 						<div class="indieaf-vs-row">
-							<img class="indieaf-vs-img" src="./vs.png" alt="" />
-							<div class="indieaf-vs-col left">Are you a startup, or are you indie?</div>
+							<img
+								class="indieaf-vs-img"
+								:src="assetPaths['./vs.png'].default"
+								alt=""
+							/>
+							<div class="indieaf-vs-col left">
+								Are you a startup, or are you indie?
+							</div>
 							<div class="indieaf-vs-col right">INDIE AF!!!</div>
 						</div>
 
-						<h2 class="text-center">
-							What people are saying
-						</h2>
+						<h2 class="text-center">What people are saying</h2>
 						<hr class="underbar underbar-center" />
 						<br />
 
 						<div class="indieaf-quote">
 							<p>
-								When I used to walk down the street, people would point and say, "Look at them,
-								they're grody." Now I'm cool AF.
+								When I used to walk down the street, people would point and say,
+								"Look at them, they're grody." Now I'm cool AF.
 							</p>
 							<div class="indieaf-quote-who">- Cool AF kid</div>
 						</div>
 
 						<div class="indieaf-quote">
-							<p>Everyone wants to get with me now I’m indie.af. Thanks Game Jolt!</p>
+							<p>Everyone wants to get with me now I'm indie.af. Thanks Game Jolt!</p>
 							<div class="indieaf-quote-who">- Popular AF kid</div>
 						</div>
 
 						<div class="indieaf-quote">
 							<p>
-								Before I became indie.af, I was a nobody, and no one played my games. Now I’ve been
-								getting plays for days!
+								Before I became indie.af, I was a nobody, and no one played my
+								games. Now I've been getting plays for days!
 							</p>
 							<div class="indieaf-quote-who">- Indie AF kid</div>
 						</div>
 
 						<div class="indieaf-quote">
-							<p>Ever since I made the move, I’ve got a couple more Twitter followers!</p>
+							<p>
+								Ever since I made the move, I've got a couple more Twitter
+								followers!
+							</p>
 							<div class="indieaf-quote-who">- Twitter AF kid</div>
 						</div>
 
 						<div class="indieaf-quote">
 							<p>
-								I don't really see the point. It's just a stupid domain name. No one will think
-								you're actually cooler.
+								I don't really see the point. It's just a stupid domain name. No one
+								will think you're actually cooler.
 							</p>
 							<div class="indieaf-quote-who">- Bogus IO kid</div>
 						</div>
 
-						<h2 class="text-center" id="get-indie-af">
-							Get Indie.AF
-						</h2>
+						<h2 id="get-indie-af" class="text-center">Get Indie.AF</h2>
 						<hr class="underbar underbar-center" />
 						<br />
 
 						<p>
 							Create a portfolio site in your
-							<router-link :to="{ name: 'dash.account.site' }">Edit Account</router-link>
+							<router-link :to="{ name: 'dash.account.site' }">
+								Edit Account
+							</router-link>
 							section. To create custom game sites, click on the
 							<strong>Sites</strong>
 							tab when managing your game.
@@ -198,16 +310,14 @@
 						</p>
 
 						<section v-if="!user">
-							<h2 class="section-header text-center">
-								Join
-							</h2>
+							<h2 class="section-header text-center">Join</h2>
 
 							<hr class="underbar underbar-center" />
 							<br />
 
 							<div class="row">
 								<div class="col-lg-8 col-centered">
-									<app-auth-join />
+									<AppAuthJoin />
 								</div>
 							</div>
 						</section>
@@ -218,6 +328,9 @@
 	</div>
 </template>
 
-<style lang="stylus" src="./indieaf.styl" scoped></style>
+<!-- Import the font we use on this page through a normal CSS import. -->
+<style lang="css">
+@import url('https://fonts.googleapis.com/css?family=Megrim');
+</style>
 
-<script lang="ts" src="./indieaf"></script>
+<style lang="stylus" src="./indieaf.styl" scoped></style>

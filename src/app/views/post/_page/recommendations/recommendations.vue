@@ -1,9 +1,40 @@
-<script lang="ts" src="./recommendations"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import AppPostCard from '../../../../../_common/fireside/post/card/AppPostCard.vue';
+import AppPostCardPlaceholder from '../../../../../_common/fireside/post/card/AppPostCardPlaceholder.vue';
+import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
+
+@Options({
+	components: {
+		AppPostCard,
+		AppPostCardPlaceholder,
+		AppScrollScroller,
+	},
+})
+export default class AppPostPageRecommendations extends Vue {
+	@Prop({ type: Array, required: true })
+	posts!: FiresidePost[];
+
+	get shouldScroll() {
+		return Screen.isXs;
+	}
+
+	get usablePosts() {
+		if (Screen.isSm && !this.shouldScroll) {
+			return this.posts.slice(0, 8);
+		}
+
+		return this.posts;
+	}
+}
+</script>
 
 <template>
 	<div class="post-page-recommendations">
 		<h4>
-			<translate>Next up</translate>
+			<AppTranslate>Next up</AppTranslate>
 		</h4>
 		<component
 			:is="shouldScroll ? 'app-scroll-scroller' : 'div'"
@@ -13,14 +44,13 @@
 		>
 			<div class="-posts">
 				<template v-if="!usablePosts.length">
-					<template v-for="i of 4">
-						<div :key="i" class="-post">
-							<app-post-card-placeholder />
+					<template v-for="i of 4" :key="i">
+						<div class="-post">
+							<AppPostCardPlaceholder />
 						</div>
 
 						<div
 							v-if="shouldScroll"
-							:key="'spacer-' + i"
 							:class="{
 								'-spacer': i < usablePosts.length,
 								'-spacer-large': i === usablePosts.length,
@@ -29,9 +59,9 @@
 					</template>
 				</template>
 				<template v-else>
-					<template v-for="(recommendedPost, i) of usablePosts">
-						<div :key="recommendedPost.id" class="-post">
-							<app-post-card
+					<template v-for="(recommendedPost, i) of usablePosts" :key="recommendedPost.id">
+						<div class="-post">
+							<AppPostCard
 								:post="recommendedPost"
 								with-user
 								source="postRecommendation"
@@ -40,7 +70,6 @@
 
 						<div
 							v-if="shouldScroll"
-							:key="'spacer-' + i"
 							:class="{
 								'-spacer': i + 1 < usablePosts.length,
 								'-spacer-large': i + 1 === usablePosts.length,
@@ -54,9 +83,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $-grid-gap = 16px
 
 .post-page-recommendations

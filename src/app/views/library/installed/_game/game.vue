@@ -1,3 +1,64 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import AppGameThumbnail from '../../../../../_common/game/thumbnail/AppGameThumbnail.vue';
+import AppClientGameButtons from '../../../../components/client/game-buttons/game-buttons.vue';
+import { LocalDbGame } from '../../../../components/client/local-db/game/game.model';
+// import { ClientLibraryState, ClientLibraryStore } from '../../../../store/client-library';
+
+@Options({
+	components: {
+		AppGameThumbnail,
+		AppClientGameButtons,
+	},
+})
+export default class AppLibraryInstalledGame extends Vue {
+	@Prop(Object)
+	game!: LocalDbGame;
+
+	// @ClientLibraryState
+	// packagesByGameId!: ClientLibraryStore['packagesByGameId'];
+	packagesByGameId!: any;
+
+	// @ClientLibraryState
+	// packages!: ClientLibraryStore['packages'];
+	packages!: any;
+
+	isHovering = false;
+	isShowingOptions = false;
+	isShowingLaunchOptions = false;
+
+	get hasMultiplePackages() {
+		return this.packagesByGameId[this.game.id].length > 1;
+	}
+
+	get packageVersion() {
+		return this.packagesByGameId[this.game.id][0].release.version_number;
+	}
+
+	get isInstalling() {
+		return this.packages.some(i => {
+			return !!i.install_state && i.game_id === this.game.id;
+		});
+	}
+
+	get isUpdating() {
+		return this.packages.some(i => {
+			return !!i.update_state && i.game_id === this.game.id;
+		});
+	}
+
+	get shouldShowControls() {
+		return (
+			this.isHovering ||
+			this.isShowingOptions ||
+			this.isShowingLaunchOptions ||
+			this.isInstalling ||
+			this.isUpdating
+		);
+	}
+}
+</script>
+
 <template>
 	<div
 		class="client-installed-game"
@@ -8,14 +69,11 @@
 		@mouseenter="isHovering = true"
 		@mouseleave="isHovering = false"
 	>
-		<app-game-thumbnail class="-thumb" :game="game._game" hide-pricing hide-controls />
+		<AppGameThumbnail class="-thumb" :game="game._game" hide-pricing />
 
-		<!--
-		Try to reduce the # of watchers on page.
-	-->
-		<div class="-meta-outer" v-if="shouldShowControls">
+		<div v-if="shouldShowControls" class="-meta-outer">
 			<div class="-meta">
-				<app-client-game-buttons
+				<AppClientGameButtons
 					:game="game._game"
 					overlay
 					has-installable-builds
@@ -31,7 +89,7 @@
 						{{ packageVersion }}
 					</template>
 					<template v-else>
-						<translate>library.installed.multiple_packages</translate>
+						<AppTranslate>Multiple Packages</AppTranslate>
 					</template>
 				</span>
 			</div>
@@ -40,5 +98,3 @@
 </template>
 
 <style lang="stylus" src="./game.styl" scoped></style>
-
-<script lang="ts" src="./game"></script>

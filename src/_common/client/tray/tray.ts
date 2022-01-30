@@ -1,125 +1,130 @@
-import Vue, { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { Navigate } from '../../navigate/navigate.service';
-import { Screen } from '../../screen/screen-service';
-import { AppStore } from '../../store/app-store';
-import { Client } from '../client.service';
+import { h } from 'vue';
+import { Options, Vue } from 'vue-property-decorator';
+// import { Navigate } from '../../navigate/navigate.service';
+// import { Screen } from '../../screen/screen-service';
+import { useCommonStore } from '../../store/common-store';
+// import { Client } from '../client.service';
 
-@Component({})
+// const trayIcons = import.meta.globEager('./icon*.png');
+
+@Options({})
 export class AppClientTray extends Vue {
-	@State
-	app!: AppStore;
+	commonStore = setup(() => useCommonStore());
 
-	isFocused = false;
-	isMinimized = false;
-	isClosed = false;
+	// get app() {
+	// 	return this.commonStore;
+	// }
 
-	tray: nw.Tray | null = null;
+	// isFocused = false;
+	// isMinimized = false;
+	// isClosed = false;
 
-	static hook = {
-		menuBuilder: undefined as ((menu: nw.Menu) => void) | undefined,
-	};
+	// tray: nw.Tray | null = null;
 
-	/**
-	 * Whether or not the app will actually quit when you tell it to or if it
-	 * will do a soft quit.
-	 */
-	get isClientGreedy() {
-		return Navigate.currentClientSection === 'app';
-	}
+	// static hook = {
+	// 	menuBuilder: undefined as ((menu: nw.Menu) => void) | undefined,
+	// };
 
-	mounted() {
-		this.registerWindowEvents();
-		this.createTray();
-	}
+	// /**
+	//  * Whether or not the app will actually quit when you tell it to or if it
+	//  * will do a soft quit.
+	//  */
+	// get isClientGreedy() {
+	// 	return Navigate.currentClientSection === 'app';
+	// }
 
-	destroyed() {
-		this.removeTray();
-	}
+	// mounted() {
+	// 	this.registerWindowEvents();
+	// 	this.createTray();
+	// }
 
-	registerWindowEvents() {
-		const win = nw.Window.get();
+	// unmounted() {
+	// 	this.removeTray();
+	// }
 
-		win.on('blur', () => (this.isFocused = false));
-		win.on('focus', () => (this.isFocused = true));
-		win.on('minimize', () => {
-			this.isMinimized = true;
-		});
-		win.on('restore', () => {
-			this.isMinimized = false;
-		});
+	// registerWindowEvents() {
+	// 	const win = nw.Window.get();
 
-		win.on('close', () => {
-			// If we should just minimize to tray instead of quitting.
-			if (this.isClientGreedy) {
-				this.isClosed = true;
-				this.isMinimized = false;
-				Client.hide();
-			} else {
-				// Otherwise actually quit.
-				Client.quit();
-			}
-		});
-	}
+	// 	win.on('blur', () => (this.isFocused = false));
+	// 	win.on('focus', () => (this.isFocused = true));
+	// 	win.on('minimize', () => {
+	// 		this.isMinimized = true;
+	// 	});
+	// 	win.on('restore', () => {
+	// 		this.isMinimized = false;
+	// 	});
 
-	createTray() {
-		if (this.tray || Navigate.isRedirecting) {
-			return;
-		}
+	// 	win.on('close', () => {
+	// 		// If we should just minimize to tray instead of quitting.
+	// 		if (this.isClientGreedy) {
+	// 			this.isClosed = true;
+	// 			this.isMinimized = false;
+	// 			Client.hide();
+	// 		} else {
+	// 			// Otherwise actually quit.
+	// 			Client.quit();
+	// 		}
+	// 	});
+	// }
 
-		this.tray = new nw.Tray({
-			title: 'Game Jolt Client',
-			// This has to be a relative path, hence the removal of the first /.
-			icon: require(`./icon${Screen.isHiDpi ? '-2x' : ''}.png`).substr(1),
-		});
+	// createTray() {
+	// 	if (this.tray || Navigate.isRedirecting) {
+	// 		return;
+	// 	}
 
-		Navigate.registerDestructor(() => {
-			this.removeTray();
-		});
+	// 	this.tray = new nw.Tray({
+	// 		title: 'Game Jolt Client',
+	// 		// This has to be a relative path, hence the removal of the first /.
+	// 		// TODO(vue3): check to make sure this still works
+	// 		icon: trayIcons[`./icon${Screen.isHiDpi ? '-2x' : ''}.png`].default.substr(1),
+	// 	});
 
-		this.tray.on('click', () => this.toggleVisibility());
+	// 	Navigate.registerDestructor(() => {
+	// 		this.removeTray();
+	// 	});
 
-		const menu = new nw.Menu();
+	// 	this.tray.on('click', () => this.toggleVisibility());
 
-		if (AppClientTray.hook.menuBuilder) {
-			AppClientTray.hook.menuBuilder(menu);
-		}
+	// 	const menu = new nw.Menu();
 
-		const quitItem = new nw.MenuItem({
-			label: this.$gettext('Quit'),
-		});
+	// 	if (AppClientTray.hook.menuBuilder) {
+	// 		AppClientTray.hook.menuBuilder(menu);
+	// 	}
 
-		quitItem.on('click', () => Client.quit());
+	// 	const quitItem = new nw.MenuItem({
+	// 		label: this.$gettext('Quit'),
+	// 	});
 
-		menu.append(quitItem);
+	// 	quitItem.on('click', () => Client.quit());
 
-		this.tray.menu = menu;
-	}
+	// 	menu.append(quitItem);
 
-	removeTray() {
-		if (!this.tray) {
-			return;
-		}
+	// 	this.tray.menu = menu;
+	// }
 
-		this.tray.remove();
-		this.tray = null;
-	}
+	// removeTray() {
+	// 	if (!this.tray) {
+	// 		return;
+	// 	}
 
-	private toggleVisibility() {
-		const win = nw.Window.get();
+	// 	this.tray.remove();
+	// 	this.tray = null;
+	// }
 
-		if (this.isClosed || this.isMinimized || !this.isFocused) {
-			console.log('toggleVisibility');
-			Client.show();
-			this.isClosed = false;
-		} else {
-			// If the window is being shown and is focused, let's minimize it.
-			win.minimize();
-		}
-	}
+	// private toggleVisibility() {
+	// 	const win = nw.Window.get();
 
-	render(h: CreateElement) {
+	// 	if (this.isClosed || this.isMinimized || !this.isFocused) {
+	// 		console.log('toggleVisibility');
+	// 		Client.show();
+	// 		this.isClosed = false;
+	// 	} else {
+	// 		// If the window is being shown and is focused, let's minimize it.
+	// 		win.minimize();
+	// 	}
+	// }
+
+	render() {
 		return h('div');
 	}
 }

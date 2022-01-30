@@ -1,6 +1,7 @@
-import AgoraRTC from 'agora-rtc-sdk-ng';
-import { makeObservableService } from '../../utils/vue';
-import { EventTopic } from '../system/event/event-topic';
+import { reactive } from 'vue';
+import { importNoSSR } from '../code-splitting';
+
+const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
 
 export type MediaDeviceType = 'webcam' | 'mic' | 'speaker';
 
@@ -26,62 +27,62 @@ const DefaultDetectionOptions = <DetectionOptions>{
 	prompt: true,
 };
 
-export abstract class MediaDeviceService {
-	private static p_webcamsWasPrompted = false;
-	private static p_webcams: readonly MediaDeviceInfo[] = [];
-	private static p_webcamsPermissionError = false;
+class _MediaDeviceService {
+	private p_webcamsWasPrompted = false;
+	private p_webcams: readonly MediaDeviceInfo[] = [];
+	private p_webcamsPermissionError = false;
 
-	private static p_micsWasPrompted = false;
-	private static p_mics: readonly MediaDeviceInfo[] = [];
-	private static p_micsPermissionError = false;
+	private p_micsWasPrompted = false;
+	private p_mics: readonly MediaDeviceInfo[] = [];
+	private p_micsPermissionError = false;
 
-	private static p_speakersWasPrompted = false;
-	private static p_speakers: readonly MediaDeviceInfo[] = [];
-	private static p_speakersPermissionError = false;
+	private p_speakersWasPrompted = false;
+	private p_speakers: readonly MediaDeviceInfo[] = [];
+	private p_speakersPermissionError = false;
 
-	static get webcams() {
+	get webcams() {
 		return this.p_webcams;
 	}
 
-	static get hasWebcamPermissions() {
+	get hasWebcamPermissions() {
 		return (
 			this.p_webcams.length !== 0 ||
 			(this.p_webcamsWasPrompted && !this.p_webcamsPermissionError)
 		);
 	}
 
-	static get webcamPermissionsWerePrompted() {
+	get webcamPermissionsWerePrompted() {
 		return this.p_webcamsWasPrompted;
 	}
 
-	static get mics() {
+	get mics() {
 		return this.p_mics;
 	}
 
-	static get hasMicPermissions() {
+	get hasMicPermissions() {
 		return this.p_mics.length !== 0 || (this.p_micsWasPrompted && !this.p_micsPermissionError);
 	}
 
-	static get micPermissionsWerePrompted() {
+	get micPermissionsWerePrompted() {
 		return this.p_micsWasPrompted;
 	}
 
-	static get speakers() {
+	get speakers() {
 		return this.p_speakers;
 	}
 
-	static get hasSpeakerPermissions() {
+	get hasSpeakerPermissions() {
 		return (
 			this.p_speakers.length !== 0 ||
 			(this.p_speakersWasPrompted && !this.p_speakersPermissionError)
 		);
 	}
 
-	static get speakerPermissionsWerePrompted() {
+	get speakerPermissionsWerePrompted() {
 		return this.p_speakersWasPrompted;
 	}
 
-	static async detectDevices(options?: Partial<DetectionOptions>) {
+	async detectDevices(options?: Partial<DetectionOptions>) {
 		await Promise.all([
 			this.detectWebcams(options),
 			this.detectMics(options),
@@ -89,7 +90,7 @@ export abstract class MediaDeviceService {
 		]);
 	}
 
-	static async detectWebcams(options?: Partial<DetectionOptions>): Promise<void> {
+	async detectWebcams(options?: Partial<DetectionOptions>): Promise<void> {
 		const effectiveOptions = {
 			...DefaultDetectionOptions,
 			...(options || {}),
@@ -103,6 +104,7 @@ export abstract class MediaDeviceService {
 		}
 
 		try {
+			const AgoraRTC = await AgoraRTCLazy;
 			const cameras = await AgoraRTC.getCameras(!effectiveOptions.prompt);
 			this.p_webcams = Object.freeze(
 				cameras
@@ -123,7 +125,7 @@ export abstract class MediaDeviceService {
 		}
 	}
 
-	static async detectMics(options?: Partial<DetectionOptions>): Promise<void> {
+	async detectMics(options?: Partial<DetectionOptions>): Promise<void> {
 		const effectiveOptions = {
 			...DefaultDetectionOptions,
 			...(options || {}),
@@ -137,6 +139,7 @@ export abstract class MediaDeviceService {
 		}
 
 		try {
+			const AgoraRTC = await AgoraRTCLazy;
 			const mics = await AgoraRTC.getMicrophones(!effectiveOptions.prompt);
 			this.p_mics = Object.freeze(
 				mics
@@ -157,7 +160,7 @@ export abstract class MediaDeviceService {
 		}
 	}
 
-	static async detectSpeakers(options?: Partial<DetectionOptions>): Promise<void> {
+	async detectSpeakers(options?: Partial<DetectionOptions>): Promise<void> {
 		const effectiveOptions = {
 			...DefaultDetectionOptions,
 			...(options || {}),
@@ -171,6 +174,7 @@ export abstract class MediaDeviceService {
 		}
 
 		try {
+			const AgoraRTC = await AgoraRTCLazy;
 			const speakers = await AgoraRTC.getPlaybackDevices(!effectiveOptions.prompt);
 			this.p_speakers = Object.freeze(
 				speakers
@@ -191,7 +195,7 @@ export abstract class MediaDeviceService {
 		}
 	}
 
-	private static asAgoraError(e: any): { name: 'AgoraRTCException'; code: string } | null {
+	private asAgoraError(e: any): { name: 'AgoraRTCException'; code: string } | null {
 		const isAgoraError =
 			typeof e === 'object' &&
 			Object.prototype.hasOwnProperty.call(e, 'name') &&
@@ -201,26 +205,23 @@ export abstract class MediaDeviceService {
 		return isAgoraError ? e : null;
 	}
 
-	private static isPermissionError(e: any) {
+	private isPermissionError(e: any) {
 		return this.asAgoraError(e)?.code === 'PERMISSION_DENIED';
 	}
 }
 
-makeObservableService(MediaDeviceService);
+export const MediaDeviceService = reactive(new _MediaDeviceService()) as _MediaDeviceService;
 
-export const MediaDeviceObserver = new EventTopic<MediaDeviceType>();
+AgoraRTCLazy.then(AgoraRTC => {
+	AgoraRTC.onCameraChanged = async () => {
+		await MediaDeviceService.detectWebcams({ prompt: false, skipIfPrompted: false });
+	};
 
-AgoraRTC.onCameraChanged = async () => {
-	await MediaDeviceService.detectWebcams({ prompt: false, skipIfPrompted: false });
-	MediaDeviceObserver.next('webcam');
-};
+	AgoraRTC.onMicrophoneChanged = async () => {
+		await MediaDeviceService.detectMics({ prompt: false, skipIfPrompted: false });
+	};
 
-AgoraRTC.onMicrophoneChanged = async () => {
-	await MediaDeviceService.detectMics({ prompt: false, skipIfPrompted: false });
-	MediaDeviceObserver.next('mic');
-};
-
-AgoraRTC.onPlaybackDeviceChanged = async () => {
-	await MediaDeviceService.detectSpeakers({ prompt: false, skipIfPrompted: false });
-	MediaDeviceObserver.next('speaker');
-};
+	AgoraRTC.onPlaybackDeviceChanged = async () => {
+		await MediaDeviceService.detectSpeakers({ prompt: false, skipIfPrompted: false });
+	};
+});

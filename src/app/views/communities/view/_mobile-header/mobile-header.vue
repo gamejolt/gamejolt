@@ -1,14 +1,137 @@
-<script lang="ts" src="./mobile-header"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { getAbsoluteLink } from '../../../../../utils/router';
+import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/join-widget.vue';
+import AppCommunityVerifiedTick from '../../../../../_common/community/verified-tick/verified-tick.vue';
+import { Environment } from '../../../../../_common/environment/environment.service';
+import { formatNumber } from '../../../../../_common/filters/number';
+import { Popper } from '../../../../../_common/popper/popper.service';
+import AppPopper from '../../../../../_common/popper/popper.vue';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import { copyShareLink } from '../../../../../_common/share/share.service';
+import { useSidebarStore } from '../../../../../_common/sidebar/sidebar.store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
+import AppTheme from '../../../../../_common/theme/AppTheme.vue';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { CommunitySidebarModal } from '../../../../components/community/sidebar/modal/modal.service';
+import { useAppStore } from '../../../../store';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
+import AppEditableThumbnail from '../_editable-thumbnail/editable-thumbnail.vue';
+
+@Options({
+	components: {
+		AppPopper,
+		AppTheme,
+		AppCommunityVerifiedTick,
+		AppEditableThumbnail,
+		AppCommunityJoinWidget,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppMobileHeader extends Vue {
+	@Prop({ type: Boolean, default: false }) hasUnread!: boolean;
+
+	store = setup(() => useAppStore());
+	commonStore = setup(() => useCommonStore());
+	sidebarStore = setup(() => useSidebarStore());
+
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
+
+	get user() {
+		return this.commonStore.user;
+	}
+	get activeContextPane() {
+		return this.sidebarStore.activeContextPane;
+	}
+
+	readonly Environment = Environment;
+	readonly Screen = Screen;
+	readonly formatNumber = formatNumber;
+
+	get community() {
+		return this.routeStore.community;
+	}
+
+	get channel() {
+		return this.routeStore.channel;
+	}
+
+	get memberCount() {
+		return this.community.member_count || 0;
+	}
+
+	get shouldShowModTools() {
+		return this.user?.isMod === true;
+	}
+
+	get isFeaturedChannel() {
+		return this.routeStore.channelPath === 'featured';
+	}
+
+	get shouldShowChannelsMenu() {
+		return !!this.activeContextPane;
+	}
+
+	get isJam() {
+		return this.channel?.type === 'competition';
+	}
+
+	get shouldShowAbout() {
+		// It's too confusing to see an "About" button for the community as well
+		// as the jam info.
+		if (this.isJam) {
+			return false;
+		}
+
+		if (this.routeStore.sidebarData) {
+			return Screen.isMobile;
+		}
+
+		return false;
+	}
+
+	onClickMenu() {
+		this.store.toggleLeftPane('context');
+	}
+
+	onClickAbout() {
+		const { sidebarData, community } = this.routeStore;
+
+		if (sidebarData) {
+			CommunitySidebarModal.show({
+				isEditing: false,
+				sidebarData,
+				community,
+			});
+		}
+	}
+
+	onClickExtrasOption() {
+		Popper.hideAll();
+	}
+
+	copyShareUrl() {
+		const url = getAbsoluteLink(this.$router, this.community.routeLocation);
+		copyShareLink(url, 'community');
+
+		Popper.hideAll();
+	}
+}
+</script>
 
 <template>
-	<app-theme class="-community-card" :theme="community.theme">
+	<AppTheme class="-community-card" :theme="community.theme">
 		<div class="-well">
 			<!-- Thumbnail -->
 			<div class="-thumbnail">
 				<div class="-thumbnail-inner">
-					<app-editable-thumbnail />
+					<AppEditableThumbnail />
 				</div>
-				<app-community-verified-tick class="-verified" :community="community" />
+				<AppCommunityVerifiedTick class="-verified" :community="community" />
 			</div>
 
 			<!-- Name / Members -->
@@ -22,7 +145,7 @@
 				<div class="-members small">
 					<router-link
 						v-app-track-event="`community-mobile-header:community-members`"
-						v-translate="{ count: number(memberCount) }"
+						v-translate="{ count: formatNumber(memberCount) }"
 						:translate-n="memberCount"
 						translate-plural="<b>%{count}</b> members"
 						:to="{
@@ -41,7 +164,7 @@
 		<div class="-controls">
 			<!-- Context Menu -->
 			<div v-if="shouldShowChannelsMenu" class="-controls-item -menu">
-				<app-button
+				<AppButton
 					v-app-track-event="`community-mobile-header:toggle-context`"
 					icon="menu"
 					trans
@@ -51,19 +174,19 @@
 				>
 					<div v-if="hasUnread" class="-unread-blip" />
 					<template v-if="!Screen.isXs || !shouldShowAbout">
-						<translate v-if="routeStore && routeStore.channelPath">
+						<AppTranslate v-if="routeStore && routeStore.channelPath">
 							Channels
-						</translate>
-						<translate v-else>Menu</translate>
+						</AppTranslate>
+						<AppTranslate v-else>Menu</AppTranslate>
 					</template>
-				</app-button>
+				</AppButton>
 			</div>
 
 			<div class="-spacer" />
 
 			<!-- Join / Edit / View -->
 			<div v-if="!community.hasPerms()" class="-controls-item -controls-primary">
-				<app-community-join-widget
+				<AppCommunityJoinWidget
 					:community="community"
 					:disabled="!!community.user_block"
 					block
@@ -78,14 +201,14 @@
 				v-app-track-event="`community-mobile-header:community-about`"
 				class="-controls-item -about"
 			>
-				<app-button trans @click="onClickAbout">
-					<translate>About</translate>
-				</app-button>
+				<AppButton trans @click="onClickAbout">
+					<AppTranslate>About</AppTranslate>
+				</AppButton>
 			</div>
 
 			<!-- Popover Extras -->
-			<app-popper class="-controls-item -extra" popover-class="fill-darkest">
-				<app-button class="link-unstyled" icon="ellipsis-v" trans sparse circle />
+			<AppPopper class="-controls-item -extra" popover-class="fill-darkest">
+				<AppButton class="link-unstyled" icon="ellipsis-v" trans sparse circle />
 
 				<template #popover>
 					<div class="list-group list-group-dark">
@@ -94,8 +217,8 @@
 							class="list-group-item has-icon"
 							@click="copyShareUrl"
 						>
-							<app-jolticon icon="link" />
-							<translate>Copy link to community</translate>
+							<AppJolticon icon="link" />
+							<AppTranslate>Copy link to community</AppTranslate>
 						</a>
 						<a
 							v-if="shouldShowModTools"
@@ -106,20 +229,17 @@
 							target="_blank"
 							@click="onClickExtrasOption"
 						>
-							<app-jolticon icon="cog" />
+							<AppJolticon icon="cog" />
 							<span>Moderate Community</span>
 						</a>
 					</div>
 				</template>
-			</app-popper>
+			</AppPopper>
 		</div>
-	</app-theme>
+	</AppTheme>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $-thumbnail-size = 80px
 $-thumbnail-size-sm = 48px
 $-bg-color-base = var(--theme-bg)
@@ -229,7 +349,7 @@ $-bg-color-base = var(--theme-bg)
 		.-menu
 			margin-right: 8px
 
-			>>> .jolticon
+			::v-deep(.jolticon)
 				margin: 0
 
 	&-primary

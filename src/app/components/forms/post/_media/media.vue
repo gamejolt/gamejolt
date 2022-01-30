@@ -1,7 +1,169 @@
+<script lang="ts">
+import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
+import draggable from 'vuedraggable';
+import { Api } from '../../../../../_common/api/api.service';
+import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import AppFormControlUpload, {
+	AppFormControlUploadInterface,
+} from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import {
+	BaseForm,
+	FormOnSubmit,
+	FormOnSubmitError,
+	FormOnSubmitSuccess,
+} from '../../../../../_common/form-vue/form.service';
+import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
+import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
+import { MediaItem } from '../../../../../_common/media-item/media-item-model';
+import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
+import AppFormPostMediaItem from './item/item.vue';
+
+interface FormModel {
+	image: File[] | null;
+	_progress: ProgressEvent | null;
+}
+
+class Wrapper extends BaseForm<FormModel> {}
+
+@Options({
+	components: {
+		draggable,
+		AppScrollScroller,
+		AppImgResponsive,
+		AppFormPostMediaItem,
+		AppFormControlUpload,
+		AppLoadingFade,
+	},
+})
+export default class AppFormPostMedia
+	extends mixins(Wrapper)
+	implements FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError
+{
+	@Prop({ type: Object })
+	post!: FiresidePost;
+
+	@Prop(Number)
+	maxFilesize!: number;
+
+	@Prop(Number)
+	maxWidth!: number;
+
+	@Prop(Number)
+	maxHeight!: number;
+
+	@Prop(Array)
+	mediaItems!: MediaItem[];
+
+	@Prop(Boolean)
+	loading?: boolean;
+
+	isDropActive = false;
+
+	declare $refs: {
+		upload: AppFormControlUploadInterface;
+	};
+
+	@Emit('upload')
+	emitUpload(_newMediaItems: MediaItem[]) {}
+
+	@Emit('error')
+	emitError(_reason: string) {}
+
+	@Emit('sort')
+	emitSort(_mediaItems: MediaItem[]) {}
+
+	@Emit('remove')
+	emitRemove(_mediaItem: MediaItem) {}
+
+	get isLoading() {
+		return this.form.isProcessing || this.loading;
+	}
+
+	get internalItems() {
+		return this.mediaItems;
+	}
+
+	set internalItems(mediaItems: MediaItem[]) {
+		this.emitSort(mediaItems);
+	}
+
+	created() {
+		this.form.resetOnSubmit = true;
+	}
+
+	onInit() {
+		this.setField('image', null);
+	}
+
+	mediaSelected() {
+		if (this.formModel.image !== null) {
+			this.form.submit();
+		}
+	}
+
+	showSelectMedia() {
+		this.$refs.upload?.showFileSelect();
+	}
+
+	onDragOver(e: DragEvent) {
+		// Don't do anything if not a file drop.
+		if (
+			!e.dataTransfer ||
+			!e.dataTransfer.items.length ||
+			e.dataTransfer.items[0].kind !== 'file'
+		) {
+			return;
+		}
+
+		e.preventDefault();
+		this.isDropActive = true;
+	}
+
+	onDragLeave() {
+		this.isDropActive = false;
+	}
+
+	// File select resulting from a drop onto the input.
+	async onDrop(e: DragEvent) {
+		// Don't do anything if not a file drop.
+		if (
+			!e.dataTransfer ||
+			!e.dataTransfer.items.length ||
+			e.dataTransfer.items[0].kind !== 'file'
+		) {
+			return;
+		}
+
+		e.preventDefault();
+		this.isDropActive = false;
+		this.$refs.upload?.drop(e);
+	}
+
+	async onSubmit() {
+		return Api.sendRequest(
+			`/web/posts/manage/add-media/${this.post.id}`,
+			{},
+			{
+				file: this.formModel.image,
+				progress: e => this.setField('_progress', e),
+			}
+		);
+	}
+
+	onSubmitSuccess(response: any) {
+		this.emitUpload(MediaItem.populate(response.mediaItems));
+	}
+
+	onSubmitError(response: any) {
+		this.emitError(response.reason);
+	}
+}
+</script>
+
 <template>
-	<app-loading-fade :is-loading="isLoading">
-		<app-form name="postMediaForm" ref="form">
-			<app-form-group
+	<AppLoadingFade :is-loading="isLoading">
+		<AppForm :controller="form">
+			<AppFormGroup
 				name="image"
 				class="sans-margin-bottom"
 				hide-label
@@ -9,12 +171,12 @@
 				:label="$gettext(`Image`)"
 			>
 				<p class="help-block">
-					<translate>Your image must be a PNG, JPG, or GIF.</translate>
+					<AppTranslate>Your image must be a PNG, JPG, or GIF.</AppTranslate>
 					<br />
-					<b><translate>Animated GIFs are supported.</translate></b>
+					<b><AppTranslate>Animated GIFs are supported.</AppTranslate></b>
 				</p>
 
-				<app-scroll-scroller horizontal thin>
+				<AppScrollScroller horizontal thin>
 					<div
 						class="-items"
 						@dragover="onDragOver($event)"
@@ -30,48 +192,53 @@
 						>
 							<div class="-add-inner">
 								<div>
-									<app-jolticon icon="add" big />
+									<AppJolticon icon="add" big />
 									<br />
 									<b>
-										<translate>Images/GIFs</translate>
+										<AppTranslate>Images/GIFs</AppTranslate>
 									</b>
 								</div>
 							</div>
 						</a>
 
 						<draggable
-							style="display: inline-flex"
 							v-model="internalItems"
-							:options="{ delay: 100, delayOnTouchOnly: true }"
+							style="display: inline-flex"
+							v-bind="{ delay: 100, delayOnTouchOnly: true }"
+							item-key="id"
 						>
-							<div class="-item" v-for="item of internalItems" :key="item.id">
-								<app-form-post-media-item :item="item" @remove="emitRemove(item)" />
-							</div>
+							<template #item="{ element }">
+								<div class="-item">
+									<AppFormPostMediaItem
+										:item="element"
+										@remove="emitRemove(element)"
+									/>
+								</div>
+							</template>
 						</draggable>
 					</div>
-				</app-scroll-scroller>
+				</AppScrollScroller>
 
-				<app-form-control-upload
-					class="-upload-input"
+				<AppFormControlUpload
 					ref="upload"
-					:rules="{
-						filesize: maxFilesize,
-						max_img_dimensions: [maxWidth, maxHeight],
-					}"
+					class="-upload-input"
+					:validators="[
+						validateFilesize(maxFilesize),
+						validateImageMaxDimensions({ width: maxWidth, height: maxHeight }),
+					]"
 					accept=".png,.jpg,.jpeg,.gif,.webp"
 					multiple
 					@changed="mediaSelected()"
 				/>
 
-				<app-form-control-errors />
-			</app-form-group>
-		</app-form>
-	</app-loading-fade>
+				<AppFormControlErrors />
+			</AppFormGroup>
+		</AppForm>
+	</AppLoadingFade>
 </template>
 
 <style lang="stylus" scoped>
 @import './variables'
-@import '~styles-lib/mixins'
 
 .-items
 	white-space: nowrap
@@ -113,5 +280,3 @@
 .-upload-input
 	display: none
 </style>
-
-<script lang="ts" src="./media"></script>

@@ -1,87 +1,74 @@
-import Vue from 'vue';
-import { namespace } from 'vuex-class';
+import { Component, computed, inject, InjectionKey, markRaw, ref } from 'vue';
 import { arrayRemove } from '../../utils/array';
-import { VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
 
-const SidebarStoreNamespace = 'sidebar';
-export const { State: SidebarState, Action: SidebarAction, Mutation: SidebarMutation } = namespace(
-	SidebarStoreNamespace
-);
+export const SidebarStoreKey: InjectionKey<SidebarStore> = Symbol('sidebar-store');
 
-export type SidebarActions = Record<string, any>;
+export type SidebarStore = ReturnType<typeof createSidebarStore>;
 
-export type SidebarMutations = {
-	'sidebar/addContextPane': typeof Vue;
-	'sidebar/removeContextPane': ContextPane | null;
-	'sidebar/showContextOnRouteChange': boolean;
-};
-
-export class ContextPane {
-	constructor(public readonly component: typeof Vue, public props: Record<string, any> = {}) {}
+export function useSidebarStore() {
+	return inject(SidebarStoreKey)!;
 }
 
-/**
- * 1. Initialize what we need for the context pane:
- *   - readonly sidebarComponent = /* the Vue component to use *\/
- *   - contextPane: null | ContextPane = null
- *
- * 2. routeCreated() - 'if (!this.contextPane)':
- *   - this.addContextPane(this.sidebarComponent)
- *   - this.contextPane = this.activeContextPane
- *
- * 3. If the context component needs any props:
- *   - this.contextPane.props = { /* required props *\/ };
- *
- * 4. routeDestroyed() - Panes will hide if there's no activeContextPane:
- *   - this.removeContextPane(this.contextPane)
- */
-@VuexModule()
-export class SidebarStore extends VuexStore<SidebarStore, SidebarActions, SidebarMutations> {
-	private _contextPanes: ContextPane[] = [];
+export interface ContextPane {
+	readonly component: Component;
+	props: Record<string, any>;
+}
+
+export function createSidebarStore() {
+	const _contextPanes = ref<ContextPane[]>([]);
+
 	/** Whether or not we should hide any panes automatically */
-	hideOnRouteChange = true;
+	const hideOnRouteChange = ref(true);
+
 	/** Whether or not we should show any panes automatically */
-	showOnRouteChange = false;
+	const showOnRouteChange = ref(false);
 
 	/** The most recently set context pane */
-	get activeContextPane() {
-		if (this._contextPanes.length > 0) {
-			return this._contextPanes[this._contextPanes.length - 1];
+	const activeContextPane = computed(() => {
+		if (_contextPanes.value.length > 0) {
+			return _contextPanes.value[_contextPanes.value.length - 1];
 		}
 
 		return null;
-	}
+	});
 
-	@VuexMutation
-	addContextPane(
-		component?: SidebarMutations['sidebar/addContextPane'],
-		props?: Record<string, any>
-	) {
+	function addContextPane(component?: Component, props?: Record<string, any>) {
 		if (component) {
-			const pane = new ContextPane(component, props);
-			this._contextPanes.push(pane);
+			_contextPanes.value.push({
+				component: markRaw(component),
+				props: props || {},
+			});
 		}
-		this.hideOnRouteChange = false;
+		hideOnRouteChange.value = false;
 	}
 
 	/**
-	 * Pass the local 'contextPane' variable to remove the contextPane from the store.
+	 * Pass the local 'contextPane' variable to remove the contextPane from the
+	 * store.
 	 *
 	 * This should generally be triggered within routeDestroyed().
 	 */
-	@VuexMutation
-	removeContextPane(pane?: SidebarMutations['sidebar/removeContextPane']) {
+	function removeContextPane(pane?: ContextPane | null) {
 		if (pane) {
-			arrayRemove(this._contextPanes, i => i === pane);
+			arrayRemove(_contextPanes.value, i => i === pane);
 		}
-		this.hideOnRouteChange = true;
+		hideOnRouteChange.value = true;
 	}
 
 	/**
-	 * Whether or not to show the context pane after the route changes - resets to 'false' after route changes.
+	 * Whether or not to show the context pane after the route changes - resets
+	 * to 'false' after route changes.
 	 */
-	@VuexMutation
-	showContextOnRouteChange(shouldShow: SidebarMutations['sidebar/showContextOnRouteChange']) {
-		this.showOnRouteChange = shouldShow;
+	function showContextOnRouteChange(shouldShow: boolean) {
+		showOnRouteChange.value = shouldShow;
 	}
+
+	return {
+		hideOnRouteChange,
+		showOnRouteChange,
+		activeContextPane,
+		addContextPane,
+		removeContextPane,
+		showContextOnRouteChange,
+	};
 }

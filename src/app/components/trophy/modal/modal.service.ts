@@ -1,13 +1,12 @@
-import { asyncComponentLoader } from '../../../../utils/utils';
-import { Modal } from '../../../../_common/modal/modal.service';
+import { defineAsyncComponent } from 'vue';
+import { showModal } from '../../../../_common/modal/modal.service';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 
 export class TrophyModal {
 	static async show(userTrophy: UserBaseTrophy) {
-		return await Modal.show<void>({
+		return await showModal<void>({
 			modalId: 'Trophy',
-			component: () =>
-				asyncComponentLoader(import(/* webpackChunkName: "TrophyModal" */ './modal.vue')),
+			component: defineAsyncComponent(() => import('./modal.vue')),
 			props: {
 				userTrophy,
 			},

@@ -1,4 +1,17 @@
-<script lang="ts" src="./card-placeholder"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import AppButtonPlaceholder from '../../button/AppButtonPlaceholder.vue';
+import { Environment } from '../../environment/environment.service';
+
+@Options({
+	components: { AppButtonPlaceholder },
+})
+export default class AppCommunityCardPlaceholder extends Vue {
+	@Prop({ type: Boolean, default: false }) elevate!: boolean;
+
+	readonly Environment = Environment;
+}
+</script>
 
 <template>
 	<div class="community-card-placeholder sheet sheet-full sheet-no-full-bleed">
@@ -13,7 +26,7 @@
 				<div class="-name" />
 				<div class="-member-counts" />
 				<div class="-controls">
-					<app-button-placeholder block />
+					<AppButtonPlaceholder block />
 				</div>
 			</div>
 		</div>
@@ -21,9 +34,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .community-card-placeholder
 	rounded-corners-lg()
 	margin-bottom: $line-height-computed

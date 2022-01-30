@@ -1,11 +1,348 @@
-<script lang="ts" src="./video"></script>
+<script lang="ts">
+import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
+import { Api } from '../../../../../_common/api/api.service';
+import { formatNumber } from '../../../../../_common/filters/number';
+import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { FiresidePostVideo } from '../../../../../_common/fireside/post/video/video-model';
+import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
+import AppFormControlUpload, {
+	AppFormControlUploadInterface,
+} from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
+import {
+	BaseForm,
+	FormOnLoad,
+	FormOnSubmit,
+	FormOnSubmitError,
+	FormOnSubmitSuccess,
+} from '../../../../../_common/form-vue/form.service';
+import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
+import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
+import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { Payload } from '../../../../../_common/payload/payload-service';
+import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
+import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
+import AppVideoPlayer from '../../../../../_common/video/player/player.vue';
+import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/processing-progress.vue';
+
+interface FormModel {
+	video: File | null;
+	_progress: ProgressEvent | null;
+}
+
+export const enum VideoStatus {
+	/** No video is being uploaded */
+	IDLE = 'idle',
+	/** The video file is being uploaded to the Game Jolt server */
+	UPLOADING = 'uploading',
+	/** The uploaded video file is being processed */
+	PROCESSING = 'processing',
+	/** The video upload and processing is completed and the video can be viewed */
+	COMPLETE = 'complete',
+}
+
+class Wrapper extends BaseForm<FormModel> {}
+
+@Options({
+	components: {
+		AppLoadingFade,
+		AppFormControlUpload,
+		AppProgressBar,
+		AppFormLegend,
+		AppVideoEmbed,
+		AppVideoPlayer,
+		AppVideoProcessingProgress,
+	},
+	directives: {
+		AppFocusWhen,
+	},
+})
+export default class AppFormPostVideo
+	extends mixins(Wrapper)
+	implements FormOnSubmit, FormOnLoad, FormOnSubmitError, FormOnSubmitSuccess
+{
+	@Prop({ type: Object }) post!: FiresidePost;
+	@Prop({ type: Boolean, required: true }) wasPublished!: boolean;
+
+	// These fields are populated through the form load.
+	maxFilesize = 1000;
+	maxDuration = 60;
+	maxAspect = 2;
+	minAspect = 0.5;
+	allowedFiletypes: string[] = [];
+
+	videoProvider = FiresidePostVideo.PROVIDER_GAMEJOLT;
+	isDropActive = false;
+	uploadCancelToken: AbortController | null = null;
+
+	readonly FiresidePostVideo = FiresidePostVideo;
+	readonly formatNumber = formatNumber;
+
+	declare $refs: {
+		upload: AppFormControlUploadInterface;
+	};
+
+	@Emit('delete')
+	emitDelete() {}
+
+	@Emit('video-status-change')
+	emitVideoStatusChange(_status: VideoStatus) {}
+
+	@Emit('video-change')
+	emitVideoChange(_video: FiresidePostVideo | null) {}
+
+	@Emit('video-provider-change')
+	emitVideoProviderChange(_provider: string) {}
+
+	get loadUrl() {
+		return `/web/posts/manage/add-video/${this.post.id}`;
+	}
+
+	get videos() {
+		return this.post.videos || [];
+	}
+
+	get uploadProgress() {
+		const progressEvent = this.formModel._progress as ProgressEvent | null;
+		if (!progressEvent) {
+			return 0;
+		}
+
+		return progressEvent.loaded / progressEvent.total;
+	}
+
+	get canRemoveUploadingVideo() {
+		return !this.wasPublished && this.videoStatus !== VideoStatus.UPLOADING;
+	}
+
+	get uploadedVideo() {
+		const video = this.videos.length ? this.videos[0] : null;
+		return video && video.provider === FiresidePostVideo.PROVIDER_GAMEJOLT ? video : null;
+	}
+
+	get videoManifestSources() {
+		return this.uploadedVideo?.manifestSources ?? [];
+	}
+
+	get videoMediaItem() {
+		return this.uploadedVideo?.posterMediaItem;
+	}
+
+	get shouldShowFormPlaceholder() {
+		return !this.isLoaded && !this.wasPublished;
+	}
+
+	get allowedFiletypesString() {
+		return this.allowedFiletypes.map(i => `.${i}`).join(',');
+	}
+
+	get videoStatus() {
+		if (this.uploadedVideo) {
+			if (this.uploadedVideo.is_processing) {
+				return VideoStatus.PROCESSING;
+			}
+			return VideoStatus.COMPLETE;
+		}
+
+		if (this.form.isProcessing) {
+			return VideoStatus.UPLOADING;
+		}
+
+		return VideoStatus.IDLE;
+	}
+
+	@Watch('videoStatus')
+	onVideoStatusChange() {
+		this.emitVideoStatusChange(this.videoStatus);
+	}
+
+	onInit() {
+		if (this.videos.length) {
+			const video = this.videos[0];
+			if (video.provider === FiresidePostVideo.PROVIDER_GAMEJOLT) {
+				this.setVideoProvider(FiresidePostVideo.PROVIDER_GAMEJOLT);
+			}
+		} else {
+			this.setVideoProvider(FiresidePostVideo.PROVIDER_GAMEJOLT);
+		}
+	}
+
+	onLoad($payload: any) {
+		this.maxFilesize = $payload.maxFilesize;
+		this.maxDuration = $payload.maxDuration;
+		this.maxAspect = $payload.maxAspect;
+		this.minAspect = $payload.minAspect;
+		this.allowedFiletypes = $payload.allowedFiletypes;
+	}
+
+	async onSubmit() {
+		this.uploadCancelToken = Api.createCancelToken();
+		return Api.sendRequest(
+			`/web/posts/manage/add-video/${this.post.id}`,
+			{},
+			{
+				file: this.formModel.video,
+				progress: e => this.onProgressUpdate(e),
+				fileCancelToken: this.uploadCancelToken.signal,
+			}
+		);
+	}
+
+	onSubmitError($payload: any) {
+		// We receive an error when the upload was cancelled, but we do not want
+		// to show an error message. It's also useless to cancel the upload
+		// again, since it was just cancelled.
+		if (!Payload.isCancelledUpload($payload)) {
+			showErrorGrowl(this.$gettext('Your video was not submitted successfully.'));
+			this.cancelUpload();
+		}
+	}
+
+	onSubmitSuccess($payload: any) {
+		if (!$payload.video) {
+			showErrorGrowl(this.$gettext('Your video was not submitted successfully.'));
+
+			this.cancelUpload();
+			return;
+		}
+
+		this.emitVideoChange(new FiresidePostVideo($payload.video));
+	}
+
+	videoSelected() {
+		if (this.formModel.video !== null) {
+			this.form.submit();
+		}
+	}
+
+	onProgressUpdate(e: ProgressEvent | null) {
+		if (e) {
+			this.setField('_progress', e);
+		} else {
+			// The event is null when the file is done uploading, discard cancel
+			// token now.
+			this.uploadCancelToken = null;
+		}
+	}
+
+	private validateDataTransfer(e: DragEvent) {
+		return (
+			e.dataTransfer && e.dataTransfer.items.length && e.dataTransfer.items[0].kind === 'file'
+		);
+	}
+
+	onDragOver(e: DragEvent) {
+		// Don't do anything if not a file drop.
+		if (!this.validateDataTransfer(e)) {
+			return;
+		}
+
+		e.preventDefault();
+		this.isDropActive = true;
+	}
+
+	onDragLeave() {
+		this.isDropActive = false;
+	}
+
+	// File select resulting from a drop onto the input.
+	onDrop(e: DragEvent) {
+		// Don't do anything if not a file drop.
+		if (!this.validateDataTransfer(e)) {
+			return;
+		}
+
+		e.preventDefault();
+		this.isDropActive = false;
+		this.$refs.upload?.drop(e);
+	}
+
+	showSelectVideo() {
+		this.$refs.upload?.showFileSelect();
+	}
+
+	onProcessingComplete({ video }: any) {
+		// Final progress update must have the result video set.
+		if (!video) {
+			showErrorGrowl(this.$gettext('The server did not return the processed video.'));
+			this.cancelUpload();
+			return;
+		}
+
+		showSuccessGrowl({
+			title: this.$gettext('📽 Video uploaded!'),
+			message: this.$gettext(
+				'Your video was successfully processed. The post can now be published.'
+			),
+			// Send as system notification because the user might tab away from the window
+			// since the uploading/processing can take a while.
+			system: true,
+		});
+
+		this.emitVideoChange(new FiresidePostVideo(video));
+	}
+
+	onProcessingError(payload: any) {
+		if (payload.reason) {
+			showErrorGrowl(
+				this.$gettextInterpolate(
+					'The server was unable to finish processing your video. Status: %{ reason }',
+					{ reason: (payload.reason as string).toUpperCase().replace('-', '_') }
+				)
+			);
+		} else {
+			showErrorGrowl(
+				this.$gettext(
+					'The server was unable to finish processing your video. Status: GENERIC_FAILURE'
+				)
+			);
+		}
+
+		this.cancelUpload();
+	}
+
+	cancelUpload() {
+		// Cancel the file upload now.
+		if (this.uploadCancelToken) {
+			this.uploadCancelToken.abort();
+			this.uploadCancelToken = null;
+		}
+
+		this.setField('_progress', null);
+		this.setField('video', null);
+	}
+
+	setVideoProvider(provider: string) {
+		this.videoProvider = provider;
+		this.emitVideoProviderChange(this.videoProvider);
+	}
+
+	async onDeleteUpload() {
+		if (this.videoStatus !== VideoStatus.IDLE) {
+			const result = await ModalConfirm.show(
+				this.$gettext(
+					`Are you sure you want to remove this video? You'll be able to add another one later.`
+				),
+				this.$gettext('Remove video?')
+			);
+
+			if (!result) {
+				return;
+			}
+		}
+
+		this.cancelUpload();
+		this.emitDelete();
+	}
+}
+</script>
 
 <template>
-	<app-loading-fade :is-loading="!isLoaded">
+	<AppLoadingFade :is-loading="!isLoaded">
 		<template v-if="shouldShowFormPlaceholder">
-			<app-form-legend compact :deletable="canRemoveUploadingVideo">
+			<AppFormLegend compact :deletable="canRemoveUploadingVideo">
 				<span class="-placeholder-text" style="width: 60px" />
-			</app-form-legend>
+			</AppFormLegend>
 			<p class="help-block">
 				<span class="-placeholder-text" style="width: 230px" />
 				<br />
@@ -16,13 +353,13 @@
 			<span class="-placeholder-add" />
 		</template>
 		<template v-else-if="videoProvider === FiresidePostVideo.PROVIDER_GAMEJOLT">
-			<app-form-legend compact :deletable="canRemoveUploadingVideo" @delete="onDeleteUpload">
-				<translate>Video</translate>
-			</app-form-legend>
+			<AppFormLegend compact :deletable="canRemoveUploadingVideo" @delete="onDeleteUpload">
+				<AppTranslate>Video</AppTranslate>
+			</AppFormLegend>
 
 			<template v-if="videoStatus === 'idle'">
-				<app-form ref="form" name="postVideoGameJoltForm">
-					<app-form-group
+				<AppForm :controller="form">
+					<AppFormGroup
 						name="video"
 						class="sans-margin-bottom"
 						hide-label
@@ -30,12 +367,12 @@
 						:label="$gettext(`Video`)"
 					>
 						<p class="help-block">
-							<translate>
+							<AppTranslate>
 								Your video must be between 1 second and 30 minutes long.
-							</translate>
+							</AppTranslate>
 							<br />
-							<translate> Videos must be bigger than 200x200. </translate>
-							<translate> Video filetypes currently supported: </translate>
+							<AppTranslate>Videos must be bigger than 200x200.</AppTranslate>
+							<AppTranslate>Video filetypes currently supported:</AppTranslate>
 							<span
 								v-for="filetype of allowedFiletypes"
 								:key="filetype"
@@ -59,66 +396,63 @@
 							>
 								<div class="-add-inner">
 									<div>
-										<app-jolticon icon="add" big />
+										<AppJolticon icon="add" big />
 										<br />
 										<b>
-											<translate>Video</translate>
+											<AppTranslate>Video</AppTranslate>
 										</b>
 									</div>
 								</div>
 							</a>
 						</div>
 
-						<app-form-control-upload
+						<AppFormControlUpload
 							ref="upload"
 							class="-upload-input"
-							:rules="{
-								filesize: maxFilesize,
-							}"
+							:validators="[validateFilesize(maxFilesize)]"
 							:accept="allowedFiletypesString"
 							@changed="videoSelected()"
 						/>
 
-						<app-form-control-errors />
-					</app-form-group>
-				</app-form>
+						<AppFormControlErrors />
+					</AppFormGroup>
+				</AppForm>
 			</template>
 			<template v-else-if="videoStatus === 'uploading'">
-				<app-progress-bar :percent="uploadProgress * 100" />
+				<AppProgressBar :percent="uploadProgress * 100" />
 
-				<translate>Uploading...</translate>
-				{{ number(uploadProgress, { style: 'percent' }) }}
+				<AppTranslate>Uploading...</AppTranslate>
+				{{ formatNumber(uploadProgress, { style: 'percent' }) }}
 
-				<app-button
+				<AppButton
 					class="pull-right"
 					trans
 					:disabled="uploadProgress === 1"
 					@click="cancelUpload"
 				>
-					<translate>Cancel Upload</translate>
-				</app-button>
+					<AppTranslate>Cancel Upload</AppTranslate>
+				</AppButton>
 			</template>
 			<template v-else-if="videoStatus === 'processing'">
-				<app-video-processing-progress
+				<AppVideoProcessingProgress
 					:post="post"
 					@complete="onProcessingComplete"
 					@error="onProcessingError"
 				/>
 			</template>
 			<template v-else-if="videoStatus === 'complete'">
-				<app-video-player
+				<AppVideoPlayer
 					class="-video-player"
 					:media-item="videoMediaItem"
 					:manifests="videoManifestSources"
 				/>
 			</template>
 		</template>
-	</app-loading-fade>
+	</AppLoadingFade>
 </template>
 
 <style lang="stylus" scoped>
 @import '../_media/variables'
-@import '~styles-lib/mixins'
 
 .-placeholder-text
 	lazy-placeholder-inline()

@@ -1,4 +1,4 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 import { routeDashGamesManageGameDescription } from './description/description.route';
 import { routeDashGamesManageGameDesign } from './design/design.route';
 import { routeDashGamesManageGameDetails } from './details/details.route';
@@ -14,9 +14,9 @@ import { routeDashGamesManageGamePackageReleaseEdit } from './packages/release/e
 import { routeDashGamesManageGameSettings } from './settings/settings.route';
 import { routeDashGamesManageGameWizardFinish } from './wizard-finish/wizard-finish.route';
 
-export const routeDashGamesManageGame: RouteConfig = {
-	path: '/dashboard/games/:id(\\d+)',
-	component: () => import(/* webpackChunkName: "routeDashGamesManageGame" */ './game.vue'),
+export const routeDashGamesManageGame: RouteRecordRaw = {
+	path: '',
+	component: () => import('./game.vue'),
 	children: [
 		routeDashGamesManageGameOverview,
 		routeDashGamesManageGameDetails,

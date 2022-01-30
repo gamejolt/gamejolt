@@ -1,26 +1,31 @@
-<script lang="ts" src="./hidden"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppStickerCardHidden extends Vue {
+	@Prop({ type: Number, default: 0 }) count!: number;
+	@Prop({ type: Boolean, default: false }) disabled!: boolean;
+}
+</script>
 
 <template>
 	<div class="-card" :class="{ '-redeemable': !disabled, '-disabled': disabled }">
 		<div class="-img">
-			<app-jolticon class="-icon jolticon-3x" icon="sticker" />
+			<AppJolticon class="-icon jolticon-3x" icon="sticker" />
 		</div>
 		<div class="-pocket fill-darkest">
-			<translate
+			<AppTranslate
 				:translate-n="count + 1"
 				:translate-params="{ count: count }"
 				translate-plural="Unlock %{count}"
 			>
 				Unlocking...
-			</translate>
+			</AppTranslate>
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-redeemable
 	elevate-hover-1()
 

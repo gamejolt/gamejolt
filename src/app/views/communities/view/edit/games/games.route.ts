@@ -1,7 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeCommunitiesViewEditGames: RouteConfig = {
+export const routeCommunitiesViewEditGames: RouteRecordRaw = {
 	name: 'communities.view.edit.games',
 	path: 'games',
-	component: () => import(/* webpackChunkName: "routeCommunitiesViewEdit" */ './games.vue'),
+	component: () => import('./games.vue'),
 };

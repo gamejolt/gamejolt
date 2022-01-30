@@ -1,5 +1,3 @@
-@require 'fonts'
-
 //
 // Scaffolding
 // --------------------------------------------------
@@ -12,7 +10,8 @@
 *
 	box-sizing: border-box
 
-*:before, *:after
+*:before
+*:after
 	box-sizing: border-box
 
 // Body reset
@@ -22,7 +21,13 @@ html
 
 // iOS and macOS makes text look terrible without this
 // https://www.mobomo.com/2014/05/better-font-smoothing-in-chrome-on-mac-os-x/
-*, html, body, button, input, select, textarea
+*
+html
+body
+button
+input
+select
+textarea
 	-webkit-font-smoothing: antialiased
 
 @media only screen and (-webkit-min-device-pixel-ratio: 1.25), only screen and (min-device-pixel-ratio: 1.25), only screen and (min-resolution: 200dpi), only screen and (min-resolution: 1.25dppx)
@@ -37,11 +42,16 @@ body
 
 // https://github.com/ftlabs/fastclick#when-it-isnt-needed
 // http://msdn.microsoft.com/en-us/library/ie/hh772044(v=vs.85).aspx
-a, input, button
+a
+input
+button
 	touch-action: manipulation
 
 // Reset fonts for relevant elements
-input, button, select, textarea
+input
+button
+select
+textarea
 	font-family: inherit
 	font-size: inherit
 	line-height: inherit
@@ -53,7 +63,8 @@ a
 	// Force pointer. Some times we don't have "href" attributes.
 	cursor: pointer
 
-	&:hover, &:focus
+	&:hover
+	&:focus
 		theme-prop('color', 'link-hover')
 		text-decoration: none
 
@@ -72,7 +83,8 @@ a
 	border-bottom-width: $border-width-base
 	border-bottom-style: solid
 
-	&:hover, &:focus
+	&:hover
+	&:focus
 		theme-prop('border-bottom-color', 'link-hover')
 
 .link-block
@@ -144,69 +156,119 @@ hr.underbar
 
 // Headings
 // -------------------------
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6
+h1
+h2
+h3
+h4
+h5
+h6
+.h1
+.h2
+.h3
+.h4
+.h5
+.h6
 	font-family: $headings-font-family
 	font-weight: $headings-font-weight
 	line-height: $headings-line-height
 	word-wrap: break-word
 	font-weight: bold
 
-	small, .small, code
+	small
+	.small
+	code
 		font-weight: normal
 
-	small, .small
+	small
+	.small
 		theme-prop('color', 'fg-muted')
 		line-height: 1
 
-h1, .h1, h2, .h2, h3, .h3, h4, .h4
+h1
+.h1
+h2
+.h2
+h3
+.h3
+h4
+.h4
 	margin-top: ($line-height-computed * 2.5)
 	margin-bottom: $font-size-base
 
-	small, .small
+	small
+	.small
 		font-size: 65%
 
-h5, .h5, h6, .h6
+h5
+.h5
+h6
+.h6
 	margin-top: ($line-height-computed * 2)
 	margin-bottom: $font-size-base
 
-	small, .small
+	small
+	.small
 		font-size: 75%
 
-h1, .h1, .text-size-h1
+h1
+.h1
+.text-size-h1
 	font-size: $font-size-h1
 
-h2, .h2, .text-size-h2
+h2
+.h2
+.text-size-h2
 	font-size: $font-size-h2
 
-h3, .h3, .text-size-h3
+h3
+.h3
+.text-size-h3
 	font-size: $font-size-h3
 
-h4, .h4, .text-size-h4
+h4
+.h4
+.text-size-h4
 	font-size: $font-size-h4
 
-h5, .h5, .text-size-h5
+h5
+.h5
+.text-size-h5
 	font-size: $font-size-h5
 
-h6, .h6, .text-size-h6
+h6
+.h6
+.text-size-h6
 	font-size: $font-size-h6
 
 @media $media-xs
-	h1, .h1, .text-size-h1
+	h1
+	.h1
+	.text-size-h1
 		font-size: $font-size-h1-xs
 
-	h2, .h2, .text-size-h2
+	h2
+	.h2
+	.text-size-h2
 		font-size: $font-size-h2-xs
 
-	h3, .h3, .text-size-h3
+	h3
+	.h3
+	.text-size-h3
 		font-size: $font-size-h3-xs
 
-	h4, .h4, .text-size-h4
+	h4
+	.h4
+	.text-size-h4
 		font-size: $font-size-h4-xs
 
-	h5, .h5, .text-size-h5
+	h5
+	.h5
+	.text-size-h5
 		font-size: $font-size-h5-xs
 
-	h6, .h6, .text-size-h6
+	h6
+	.h6
+	.text-size-h6
 		font-size: $font-size-h6-xs
 
 // Body text
@@ -228,7 +290,8 @@ p
 // -------------------------
 
 // Ex: 14px base font * 85% = about 12px
-small, .small
+small
+.small
 	font-size: $font-size-small
 
 .tiny
@@ -274,11 +337,13 @@ cite
 // --------------------------------------------------
 
 // Unordered and Ordered lists
-ul, ol
+ul
+ol
 	margin-top: 0
 	margin-bottom: ($line-height-computed / 2)
 
-	ul, ol
+	ul
+	ol
 		margin-bottom: 0
 
 li
@@ -307,7 +372,8 @@ dl
 	margin-top: 0 // Remove browser default
 	margin-bottom: $line-height-computed
 
-dt, dd
+dt
+dd
 	line-height: $line-height-base
 
 dt
@@ -337,7 +403,8 @@ dd
 // ----
 
 // Abbreviations and acronyms
-abbr[title], abbr[data-original-title]
+abbr[title]
+abbr[data-original-title]
 	cursor: help
 	border-bottom: $border-width-base dotted $abbr-border-color
 
@@ -360,12 +427,15 @@ blockquote
 	border-left-width: 5px
 	border-left-style: solid
 
-	p, ul, ol
+	p
+	ul
+	ol
 		&:last-child
 			margin-bottom: 0
 
 // Quotes
-blockquote:before, blockquote:after
+blockquote:before
+blockquote:after
 	content: ''
 
 // Addresses
@@ -375,7 +445,10 @@ address
 	line-height: $line-height-base
 
 // Inline and block code styles
-code, kbd, pre, samp
+code
+kbd
+pre
+samp
 	font-family: $font-family-monospace
 
 // Inline code

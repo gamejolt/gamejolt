@@ -1,34 +1,93 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { formatNumber } from '../../../../_common/filters/number';
+import { ForumTopic } from '../../../../_common/forum/topic/topic.model';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { AppTimeAgo } from '../../../../_common/time/ago/ago';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
+import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
+import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
+import AppForumTopicUpvoteWidget from '../topic/upvote-widget/upvote-widget.vue';
+
+@Options({
+	components: {
+		AppTimeAgo,
+		AppUserCardHover,
+		AppUserAvatar,
+		AppForumTopicUpvoteWidget,
+		AppUserVerifiedTick,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppForumTopicList extends Vue {
+	@Prop(Array) topics!: ForumTopic[];
+	@Prop(String) sort!: string;
+	@Prop(Boolean) useUpvotes!: boolean;
+	@Prop(Number) postCountPerPage!: number;
+
+	readonly formatNumber = formatNumber;
+	readonly Screen = Screen;
+
+	getPostPage(topic: ForumTopic) {
+		if (!this.postCountPerPage) {
+			return undefined;
+		}
+
+		const page = Math.ceil((topic.replies_count || 0) / this.postCountPerPage);
+		if (page === 1) {
+			return undefined;
+		}
+
+		return page;
+	}
+
+	shouldShowVoting(topic: ForumTopic) {
+		return this.useUpvotes && !topic.is_locked;
+	}
+}
+</script>
+
 <template>
 	<div class="forum-topic-list">
 		<div
-			class="forum-topic-list-item"
 			v-for="topic of topics"
 			:key="topic.id"
+			class="forum-topic-list-item"
 			:class="{ '-has-voting': shouldShowVoting(topic) }"
 		>
-			<div class="-vote" v-if="shouldShowVoting(topic)">
-				<app-forum-topic-upvote-widget :topic="topic" />
+			<div v-if="shouldShowVoting(topic)" class="-vote">
+				<AppForumTopicUpvoteWidget :topic="topic" />
 			</div>
 			<div class="-main">
 				<div class="row">
 					<div class="col-sm-9 col-md-7">
 						<h5 class="forum-topic-list-item-title">
 							<!-- Notifications -->
-							<span class="tag tag-highlight" v-if="!!topic.notifications.length">
-								{{ topic.notifications.length | number }}
+							<span v-if="!!topic.notifications.length" class="tag tag-highlight">
+								{{ formatNumber(topic.notifications.length) }}
 							</span>
 
 							<!-- Pinned -->
-							<span v-if="topic.is_sticky" v-app-tooltip="$gettext(`This topic is pinned.`)">
-								<app-jolticon icon="thumbtack" highlight />
+							<span
+								v-if="topic.is_sticky"
+								v-app-tooltip="$gettext(`This topic is pinned.`)"
+							>
+								<AppJolticon icon="thumbtack" highlight />
 							</span>
 
 							<!-- Locked -->
 							<span
 								v-if="topic.is_locked"
-								v-app-tooltip="$gettext(`This topic is locked and can no longer be replied to.`)"
+								v-app-tooltip="
+									$gettext(
+										`This topic is locked and can no longer be replied to.`
+									)
+								"
 							>
-								<app-jolticon icon="lock" class="text-muted" />
+								<AppJolticon icon="lock" class="text-muted" />
 							</span>
 
 							<router-link
@@ -43,7 +102,8 @@
 							</router-link>
 						</h5>
 						<div class="forum-topic-list-item-author">
-							<translate>by</translate>
+							<AppTranslate>by</AppTranslate>
+							{{ ' ' }}
 							<router-link
 								class="link-muted"
 								:to="{
@@ -52,15 +112,18 @@
 								}"
 							>
 								{{ topic.user.display_name }}
-								<app-user-verified-tick :user="topic.user" />
+								<AppUserVerifiedTick :user="topic.user" />
 							</router-link>
+							{{ ' ' }}
 							<span class="tiny">@{{ topic.user.username }}</span>
 						</div>
 					</div>
-					<div class="col-sm-3 col-md-2 text-muted small" :class="{ 'text-right': !Screen.isXs }">
+					<div
+						class="col-sm-3 col-md-2 text-muted small"
+						:class="{ 'text-right': !Screen.isXs }"
+					>
 						<span
-							key="replies-count"
-							v-translate="{ count: number(topic.replies_count || 0) }"
+							v-translate="{ count: formatNumber(topic.replies_count || 0) }"
 							:translate-n="topic.replies_count || 0"
 							translate-plural="<b>%{ count }</b> Replies"
 						>
@@ -68,10 +131,9 @@
 							Reply
 						</span>
 						<br class="hidden-xs" />
-						<span class="hidden-sm hidden-md hidden-lg dot-separator"></span>
+						<span class="hidden-sm hidden-md hidden-lg dot-separator" />
 						<span
-							key="followers-count"
-							v-translate="{ count: number(topic.followers_count || 0) }"
+							v-translate="{ count: formatNumber(topic.followers_count || 0) }"
 							:translate-n="topic.followers_count || 0"
 							translate-plural="<b>%{ count }</b> Followers"
 						>
@@ -79,12 +141,12 @@
 							Follower
 						</span>
 					</div>
-					<div class="col-md-3 text-muted small" v-if="Screen.isDesktop">
+					<div v-if="Screen.isDesktop" class="col-md-3 text-muted small">
 						<div class="forum-topic-list-item-latest-post clearfix">
 							<div class="forum-topic-list-item-latest-post-avatar">
-								<app-user-card-hover :user="topic.latest_post.user">
-									<app-user-avatar :user="topic.latest_post.user" />
-								</app-user-card-hover>
+								<AppUserCardHover :user="topic.latest_post.user">
+									<AppUserAvatar :user="topic.latest_post.user" />
+								</AppUserCardHover>
 							</div>
 							<div class="forum-topic-list-item-latest-post-info">
 								<div class="forum-topic-list-item-latest-post-info-username">
@@ -103,11 +165,11 @@
 										}"
 									>
 										{{ topic.latest_post.user.display_name }}
-										<app-user-verified-tick :user="topic.latest_post.user" />
+										<AppUserVerifiedTick :user="topic.latest_post.user" />
 									</router-link>
 								</div>
 								<div class="text-muted">@{{ topic.latest_post.user.username }}</div>
-								<app-time-ago :date="topic.latest_post.posted_on" />
+								<AppTimeAgo :date="topic.latest_post.posted_on" />
 							</div>
 						</div>
 					</div>
@@ -118,5 +180,3 @@
 </template>
 
 <style lang="stylus" src="./topic-list.styl" scoped></style>
-
-<script lang="ts" src="./topic-list"></script>

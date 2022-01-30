@@ -1,31 +1,110 @@
-<script lang="ts" src="./modal"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { mixins, Options, Prop } from 'vue-property-decorator';
+import { FiresideCommunity } from '../../../../../_common/fireside/community/community.model';
+import { Fireside } from '../../../../../_common/fireside/fireside.model';
+import { BaseModal } from '../../../../../_common/modal/base';
+import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
+import { useCommonStore } from '../../../../../_common/store/common-store';
+import { REASON_OTHER } from '../../../../../_common/user/action-reasons';
+import { FormModel } from '../form/form';
+import FormCommunityEjectFireside from '../form/form.vue';
+import { CommunityEjectFiresideModalResult } from './modal.service';
+
+@Options({
+	components: {
+		FormCommunityEjectFireside,
+	},
+})
+export default class AppCommunityEjectFiresideModal extends mixins(BaseModal) {
+	@Prop({ type: Object, required: true })
+	firesideCommunity!: FiresideCommunity;
+
+	@Prop({ type: Object, required: true })
+	fireside!: Fireside;
+
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
+
+	reasonFormModel: FormModel | null = null;
+
+	get shouldShowForm() {
+		// Do not show the form when the logged in user is the owner of the fireside.
+		// It does not make sense to let them notify themselves.
+		return this.fireside.user.id !== this.user!.id;
+	}
+
+	created() {
+		// Create a default form model, because the form will not show when the
+		// fireside owner opens this modal.
+		this.reasonFormModel = {
+			notifyUser: 'no',
+			reason: null,
+			reasonType: null,
+		};
+	}
+
+	onChangeForm(formModel: FormModel) {
+		this.reasonFormModel = formModel;
+	}
+
+	onEject() {
+		if (this.reasonFormModel === null) {
+			return;
+		}
+
+		const notifyUser = this.reasonFormModel.notifyUser !== 'no';
+		const hasReason = notifyUser && this.reasonFormModel.notifyUser === 'yes-reason';
+
+		const result = {
+			notifyUser,
+			reason: hasReason ? this.reasonFormModel.reason : null,
+			reasonType: hasReason ? this.reasonFormModel.reasonType : null,
+		} as CommunityEjectFiresideModalResult;
+
+		// Add custom options entry to list of options.
+		if (result.reasonType === REASON_OTHER && result.reason) {
+			const options = getDatalistOptions(
+				'community-eject',
+				this.firesideCommunity.community.id.toString()
+			);
+			options.unshiftItem(result.reason);
+		}
+
+		this.modal.resolve(result);
+	}
+}
+</script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<span v-translate="{ communityName: firesideCommunity.community.name }">
+				<AppTranslate :translate-params="{ communityName: firesideCommunity.community.name }">
 					Eject fireside from %{ communityName }?
-				</span>
+				</AppTranslate>
 			</h2>
 		</div>
 		<div class="modal-body">
-			<form-community-eject-fireside
+			<FormCommunityEjectFireside
 				v-if="shouldShowForm"
 				:community="firesideCommunity.community"
 				@change="onChangeForm"
 			/>
 
-			<app-button primary icon="eject" @click="onEject">
-				<translate>Eject</translate>
-			</app-button>
+			<AppButton primary icon="eject" @click="onEject">
+				<AppTranslate>Eject</AppTranslate>
+			</AppButton>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" scoped>

@@ -1,5 +1,10 @@
 import { Api, RequestOptions } from '../api/api.service';
 
+/**
+ * Helper type that looks like our model classes.
+ */
+export type ModelClassType<T> = { new (data?: T): T };
+
 export type ModelSaveRequestOptions = RequestOptions & { data?: any };
 
 export class Model {
@@ -32,12 +37,19 @@ export class Model {
 			// This way we retain those fields.
 			const newObj = new self(other);
 
-			// Vue needs to be alerted of data changes. Use the set method in
-			// Vue only so that it can be aware of changes.
-			const Vue = require('vue').default;
 			const keys = Object.keys(newObj);
 			for (const k of keys) {
-				Vue.set(this, k, newObj[k]);
+				// For some reason this was throwing some weird errors when
+				// saving some forms (like key group form). Couldn't figure it
+				// out, so I'm wrapping it. It still seems to work okay.
+				try {
+					this[k] = newObj[k];
+				} catch (e) {
+					if (GJ_BUILD_TYPE === 'development') {
+						console.warn(`Got an error when setting a model value in assign().`);
+						console.warn(e);
+					}
+				}
 			}
 		};
 

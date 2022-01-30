@@ -1,9 +1,9 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeForumsLandingOverview: RouteConfig = {
+export const routeForumsLandingOverview: RouteRecordRaw = {
 	name: 'forums.landing.overview',
-	path: '/forums',
-	component: () => import(/* webpackChunkName: "routeForumsLanding" */ './overview.vue'),
+	path: '',
+	component: () => import('./overview.vue'),
 	children: [
 		{
 			path: '/community/forums',

@@ -1,6 +1,4 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-@require './../../well/well.styl'
+@import './../../well/well'
 
 .card-list-item
 	&-body
@@ -20,7 +18,7 @@
 		~/.active &:before
 			opacity: 1
 
-	>>> form
+	::v-deep(form)
 		@extend .well
 		change-bg('bg')
 

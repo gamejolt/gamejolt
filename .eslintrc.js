@@ -8,13 +8,14 @@ module.exports = {
 	extends: [
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
-		'plugin:vue/recommended',
+		'plugin:vue/vue3-recommended',
 	],
 	rules: {
 		'no-empty': ['error', { allowEmptyCatch: true }],
 		'no-undef': 'off',
 		'no-unused-vars': 'off',
 		'no-mixed-spaces-and-tabs': 'off',
+		'getter-return': 'off',
 		'@typescript-eslint/explicit-module-boundary-types': 'off',
 		'@typescript-eslint/no-empty-function': 'off',
 		'@typescript-eslint/no-explicit-any': 'off',
@@ -46,5 +47,6 @@ module.exports = {
 		],
 		'vue/max-attributes-per-line': 'off',
 		'vue/singleline-html-element-content-newline': 'off',
+		'vue/return-in-computed-property': 'off',
 	},
 };

@@ -1,4 +1,156 @@
-<script lang="ts" src="./client"></script>
+<script lang="ts">
+import { Options } from 'vue-property-decorator';
+import { trackAppDownload } from '../../../../_common/analytics/analytics.service';
+import { Api } from '../../../../_common/api/api.service';
+import {
+	DeviceArch,
+	DeviceOs,
+	getDeviceArch,
+	getDeviceOS,
+} from '../../../../_common/device/device.service';
+import { Game } from '../../../../_common/game/game.model';
+import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
+import { HistoryTick } from '../../../../_common/history-tick/history-tick-service';
+import { Navigate } from '../../../../_common/navigate/navigate.service';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { AppScrollTo } from '../../../../_common/scroll/to/to.directive';
+import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
+import { imageJolt } from '../../../img/images';
+
+@Options({
+	name: 'RouteLandingClient',
+	components: {
+		AppThemeSvg,
+	},
+	directives: {
+		AppScrollTo,
+	},
+})
+@OptionsForRoute({
+	cache: true,
+	lazy: true,
+	deps: {},
+	resolver: () => Api.sendRequest('/web/client'),
+})
+export default class RouteLandingClient extends BaseRouteComponent {
+	private packageData: GamePackagePayloadModel | null = null;
+	private fallbackUrl = 'https://gamejolt.com';
+
+	readonly platform = getDeviceOS();
+	readonly arch = getDeviceArch();
+	readonly Screen = Screen;
+	readonly imageJolt = imageJolt;
+	readonly assetPaths = import.meta.globEager('./*.(jpg|png)');
+
+	routeResolved(payload: any) {
+		this.packageData = new GamePackagePayloadModel(payload.packageData);
+		this.fallbackUrl = payload.clientGameUrl;
+	}
+
+	disableRouteTitleSuffix = true;
+
+	get routeTitle() {
+		return `Game Jolt Desktop App`;
+	}
+
+	get detectedPlatformDisplay() {
+		switch (this.platform) {
+			case 'windows':
+				return 'Windows';
+			case 'mac':
+				return 'macOS';
+			case 'linux':
+				return 'Linux';
+			default:
+				return 'Unknown';
+		}
+	}
+
+	get isDetectedPlatformIncompatible() {
+		// Couldn't detect platform.
+		if (this.platform === 'other') {
+			return true;
+		}
+
+		// All Windows platforms are supported.
+		if (this.platform === 'windows') {
+			return false;
+		}
+
+		// On Linux and macOS only 64 bit is supported.
+		return this.arch === '32';
+	}
+
+	get shouldOfferWindows() {
+		return this.isDetectedPlatformIncompatible || this.platform === 'windows';
+	}
+
+	get shouldOfferMac() {
+		return (
+			this.isDetectedPlatformIncompatible || (this.platform === 'mac' && this.arch === '64')
+		);
+	}
+
+	get shouldOfferLinux() {
+		return (
+			this.isDetectedPlatformIncompatible || (this.platform === 'linux' && this.arch === '64')
+		);
+	}
+
+	get showMascot() {
+		if (Screen.isXs) {
+			return false;
+		}
+
+		if (this.isDetectedPlatformIncompatible) {
+			return Screen.isSm;
+		}
+
+		return true;
+	}
+
+	async download(platform: DeviceOs, arch: DeviceArch) {
+		HistoryTick.sendBeacon('client-download');
+		trackAppDownload({ platform, arch });
+
+		const downloadUrl = await this.getDownloadUrl(platform, arch);
+		if (downloadUrl === null) {
+			Navigate.gotoExternal(this.fallbackUrl);
+			return;
+		}
+
+		Navigate.goto(downloadUrl);
+	}
+
+	private async getDownloadUrl(platform: string, arch: string) {
+		if (!this.packageData) {
+			return null;
+		}
+
+		const installableBuilds = Game.pluckInstallableBuilds(
+			this.packageData.packages,
+			platform,
+			arch
+		);
+		const bestBuild = Game.chooseBestBuild(installableBuilds, platform, arch);
+		if (!bestBuild) {
+			return null;
+		}
+
+		try {
+			const result = await bestBuild.getDownloadUrl();
+			if (!result || !result.url) {
+				return null;
+			}
+			return result.url;
+		} catch (err) {
+			console.warn(err);
+			return null;
+		}
+	}
+}
+</script>
 
 <template>
 	<div class="route-landing-client">
@@ -7,7 +159,7 @@
 				<div class="row">
 					<div class="col-lg-6 col-centered">
 						<h1>
-							<app-theme-svg class="bolt" src="~img/jolt.svg" alt="" strict-colors />
+							<AppThemeSvg class="bolt" :src="imageJolt" alt="" strict-colors />
 							Desktop App
 						</h1>
 						<p class="lead">
@@ -46,35 +198,35 @@
 
 				<div class="row">
 					<div class="header-download-buttons">
-						<app-button
+						<AppButton
 							v-if="shouldOfferWindows"
 							primary
 							lg
 							@click="download(platform, '32')"
 						>
-							<app-jolticon icon="download" />
+							<AppJolticon icon="download" />
 							Download for Windows
-						</app-button>
+						</AppButton>
 
-						<app-button
+						<AppButton
 							v-if="shouldOfferMac"
 							primary
 							lg
 							@click="download(platform, '64')"
 						>
-							<app-jolticon icon="download" />
+							<AppJolticon icon="download" />
 							Download for OS X
-						</app-button>
+						</AppButton>
 
-						<app-button
+						<AppButton
 							v-if="shouldOfferLinux"
 							primary
 							lg
 							@click="download(platform, arch)"
 						>
-							<app-jolticon icon="download" />
+							<AppJolticon icon="download" />
 							Download for Linux 64bit
-						</app-button>
+						</AppButton>
 					</div>
 				</div>
 
@@ -95,7 +247,7 @@
 				<div v-if="showMascot" class="container">
 					<img
 						class="client-presentation-mascot"
-						src="./clyde-video-overlay.png"
+						:src="assetPaths['./clyde-video-overlay.png'].default"
 						width="178"
 						height="130"
 						alt="Clyde Slicker"
@@ -107,7 +259,7 @@
 							class="img-responsive"
 							width="1300"
 							height="893"
-							src="./client-presentation.jpg"
+							:src="assetPaths['./client-presentation.jpg'].default"
 							alt="Game Jolt Client"
 						/>
 					</div>
@@ -120,45 +272,45 @@
 						<div class="col-lg-9 col-centered">
 							<div class="row">
 								<div class="download-footer-col col-sm-4">
-									<p><app-jolticon icon="linux" class="jolticon-4x" /></p>
+									<p><AppJolticon icon="linux" class="jolticon-4x" /></p>
 									<p>
-										<app-button
+										<AppButton
 											v-app-track-event="`client-landing:download:linux`"
 											primary
 											block
 											@click="download('linux', '64')"
 										>
-											<app-jolticon icon="download" />
+											<AppJolticon icon="download" />
 											Download Linux 64bit
-										</app-button>
+										</AppButton>
 									</p>
 								</div>
 								<div class="download-footer-col col-sm-4">
-									<p><app-jolticon icon="mac" class="jolticon-4x" /></p>
+									<p><AppJolticon icon="mac" class="jolticon-4x" /></p>
 									<p>
-										<app-button
+										<AppButton
 											v-app-track-event="`client-landing:download:mac`"
 											primary
 											block
 											@click="download('mac', '64')"
 										>
-											<app-jolticon icon="download" />
+											<AppJolticon icon="download" />
 											Download Mac
-										</app-button>
+										</AppButton>
 									</p>
 								</div>
 								<div class="download-footer-col col-sm-4">
-									<p><app-jolticon icon="windows" class="jolticon-4x" /></p>
+									<p><AppJolticon icon="windows" class="jolticon-4x" /></p>
 									<p>
-										<app-button
+										<AppButton
 											v-app-track-event="`client-landing:download:win`"
 											primary
 											block
 											@click="download('windows', '32')"
 										>
-											<app-jolticon icon="download" />
+											<AppJolticon icon="download" />
 											Download Windows
-										</app-button>
+										</AppButton>
 									</p>
 								</div>
 							</div>
@@ -171,9 +323,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .route-landing-client
 	overflow-x: hidden
 	overflow-y: hidden

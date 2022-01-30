@@ -1,9 +1,9 @@
-import { asyncComponentLoader } from '../../../utils/utils';
+import { defineAsyncComponent } from 'vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { Environment } from '../../environment/environment.service';
-import { Growls } from '../../growls/growls.service';
+import { showErrorGrowl } from '../../growls/growls.service';
 import { HistoryTick } from '../../history-tick/history-tick-service';
-import { Modal } from '../../modal/modal.service';
+import { showModal } from '../../modal/modal.service';
 import { Navigate } from '../../navigate/navigate.service';
 import { Popper } from '../../popper/popper.service';
 import { Translate } from '../../translate/translate.service';
@@ -22,7 +22,7 @@ export class GamePlayModal {
 		Analytics.trackEvent('game-play', 'play');
 
 		if (this.hasModal) {
-			Growls.error(
+			showErrorGrowl(
 				Translate.$gettext(
 					`You already have a browser game open. You can only have one running at a time.`
 				)
@@ -41,7 +41,7 @@ export class GamePlayModal {
 
 		// Will open the gameserver in their browser.
 		if (
-			GJ_IS_CLIENT &&
+			GJ_IS_DESKTOP_APP &&
 			build.type !== GameBuild.TYPE_HTML &&
 			build.type !== GameBuild.TYPE_ROM
 		) {
@@ -56,7 +56,7 @@ export class GamePlayModal {
 		// We also open the game in a new tab if it's not https enabled so the
 		// site doesn't complain about mixed security elements.
 		// In the client however we can continue to embed because we don't have cookie issues.
-		if (!build.https_enabled || !GJ_IS_CLIENT) {
+		if (!build.https_enabled || !GJ_IS_DESKTOP_APP) {
 			// We have to open the window first before getting the URL. The
 			// browser will block the popup unless it's done directly in the
 			// onclick handler. Once we have the download URL we can direct the
@@ -73,12 +73,9 @@ export class GamePlayModal {
 		const url = await this.getDownloadUrl(build, { key: options.key });
 		const canMinimize = this.canMinimize;
 
-		await Modal.show({
+		await showModal({
 			modalId: 'GamePlay',
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "GamePlayModal" */ './play-modal.vue')
-				),
+			component: defineAsyncComponent(() => import('./play-modal.vue')),
 			props: { game, build, url, canMinimize },
 			noBackdrop: true,
 			noBackdropClose: true,

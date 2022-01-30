@@ -1,6 +1,4 @@
 @import './variables'
-@import '~styles/variables'
-@import '~styles-lib/mixins'
 
 .-bottom-loading
 	margin-top: $-item-padding-v
@@ -9,5 +7,5 @@
 		margin-top: 0
 
 // Don't show the split for the last item in the list.
-.-item:last-child >>> .timeline-list-item-split
+.-item:last-child ::v-deep(.timeline-list-item-split)
 	display: none

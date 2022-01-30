@@ -1,170 +1,265 @@
-<script lang="ts" src="./profile"></script>
+<script lang="ts">
+import { formatDistanceToNow } from 'date-fns';
+import { setup } from 'vue-class-component';
+import { mixins, Options } from 'vue-property-decorator';
+import { Environment } from '../../../../_common/environment/environment.service';
+import AppExpand from '../../../../_common/expand/AppExpand.vue';
+import AppFormControlContent from '../../../../_common/form-vue/controls/AppFormControlContent.vue';
+import AppFormControlTheme from '../../../../_common/form-vue/controls/AppFormControlTheme.vue';
+import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import { BaseForm, FormOnLoad, FormOnSubmitError } from '../../../../_common/form-vue/form.service';
+import {
+	validateContentMaxLength,
+	validateContentNoActiveUploads,
+	validateContentRequired,
+	validateUsername,
+} from '../../../../_common/form-vue/validators';
+import AppLoading from '../../../../_common/loading/loading.vue';
+import { DefaultTheme } from '../../../../_common/theme/theme.model';
+import { useThemeStore } from '../../../../_common/theme/theme.store';
+import { User } from '../../../../_common/user/user.model';
+
+class Wrapper extends BaseForm<User> {}
+
+@Options({
+	components: {
+		AppLoading,
+		AppExpand,
+		AppFormControlTheme,
+		AppFormControlToggle,
+		AppFormControlContent,
+	},
+})
+export default class FormProfile extends mixins(Wrapper) implements FormOnLoad, FormOnSubmitError {
+	modelClass = User;
+
+	themeStore = setup(() => useThemeStore());
+
+	usernameChangedOn = 0;
+	usernameTimeLeft = 0;
+	usernameDuration = '';
+	isBioLocked = false;
+	bioLengthLimit = 5_000;
+
+	readonly Environment = Environment;
+	readonly validateUsername = validateUsername;
+	readonly validateContentRequired = validateContentRequired;
+	readonly validateContentMaxLength = validateContentMaxLength;
+	readonly validateContentNoActiveUploads = validateContentNoActiveUploads;
+
+	get loadUrl() {
+		return '/web/dash/profile/save';
+	}
+
+	get mentionsSettingOptions() {
+		return [
+			{
+				value: 2,
+				text: this.$gettext(`No one`),
+			},
+			{
+				value: 0,
+				text: this.$gettext(`People you know`),
+			},
+			{
+				value: 1,
+				text: this.$gettext(`Everyone`),
+			},
+		];
+	}
+
+	created() {
+		this.form.reloadOnSubmit = true;
+	}
+
+	unmounted() {
+		this.themeStore.setFormTheme(null);
+	}
+
+	onLoad(payload: any) {
+		this.usernameChangedOn = payload.usernameChangedOn;
+		this.usernameTimeLeft = payload.usernameTimeLeft;
+
+		if (this.usernameTimeLeft) {
+			this.usernameDuration = formatDistanceToNow(Date.now() + this.usernameTimeLeft);
+		}
+
+		this.isBioLocked = payload.isBioLocked;
+		this.bioLengthLimit = payload.bioLengthLimit;
+	}
+
+	onSubmitError(response: any) {
+		if (response.errors && response.errors['bio-locked']) {
+			this.isBioLocked = true;
+		}
+	}
+
+	onThemeChanged() {
+		// Default would be the default theme for site.
+		this.themeStore.setFormTheme(this.formModel.theme ?? DefaultTheme);
+	}
+}
+</script>
 
 <template>
-	<app-form name="profileForm">
-		<app-form-group name="theme" :label="$gettext(`Color Theme`)">
-			<app-form-control-theme class="pull-right" @changed="onThemeChanged()" />
+	<AppForm :controller="form">
+		<AppFormGroup name="theme" :label="$gettext(`Color Theme`)">
+			<AppFormControlTheme class="pull-right" @changed="onThemeChanged()" />
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Setting a theme will change how Game Jolt looks for you. When other people view
 					your profile, they'll also be switched to your theme.
-				</translate>
+				</AppTranslate>
 			</p>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			v-if="!usernameTimeLeft"
 			name="username"
-			:label="$gettext(`dash.profile.edit.username_label`)"
+			:label="$gettext(`Username`)"
 		>
-			<app-form-control
+			<AppFormControl
 				type="text"
-				:rules="{
-					min: 3,
-					max: 30,
-					pattern: 'username',
-					availability: {
+				:validators="[
+					validateMinLength(3),
+					validateMaxLength(30),
+					validateUsername(),
+					validateAvailability({
 						url: '/web/dash/profile/check-field-availability/username',
 						initVal: model.username,
-					},
-				}"
-				:validate-on="['blur']"
+					}),
+				]"
+				validate-on-blur
 			/>
 
-			<app-form-control-errors />
+			<AppFormControlErrors />
 
 			<p class="help-block">
-				<translate>Profile URL</translate>
+				<AppTranslate>Profile URL</AppTranslate>
+				{{ ' ' }}
 				<code>
 					{{ Environment.baseUrl }}/@
 					<strong>{{ formModel.username || '_' }}</strong>
 				</code>
 			</p>
 
-			<app-expand :when="formModel.username !== model.username">
+			<AppExpand :when="formModel.username !== model.username">
 				<div class="alert">
-					<translate>
+					<AppTranslate>
 						Changing your username will change your public profile URL. Any current
 						links to your old profile URL will not automatically redirect to your new
 						profile URL.
-					</translate>
+					</AppTranslate>
 				</div>
-			</app-expand>
-		</app-form-group>
+			</AppExpand>
+		</AppFormGroup>
 
-		<div class="form-group" v-else>
+		<div v-else class="form-group">
 			<label class="control-label">
-				<translate>dash.profile.edit.username_label</translate>
+				<AppTranslate>Username</AppTranslate>
 			</label>
 			<p class="form-control-static">{{ formModel.username }}</p>
 			<p class="help-block">
-				<translate>You can only change your username once a week.</translate>
+				<AppTranslate>You can only change your username once a week.</AppTranslate>
 				<br />
-				<translate :translate-params="{ duration: usernameDuration }">
+				<AppTranslate :translate-params="{ duration: usernameDuration }">
 					You have %{ duration } left until you can change it again.
-				</translate>
+				</AppTranslate>
 			</p>
 		</div>
 
-		<app-form-group
+		<AppFormGroup
 			name="name"
-			:label="$gettext(`dash.profile.edit.display_name_label`)"
+			:label="$gettext(`Display Name`)"
 			:optional="true"
 		>
-			<app-form-control
+			<AppFormControl
 				type="text"
-				:rules="{
-					max: 100,
-					availability: {
+				:validators="[
+					validateMaxLength(100),
+					validateAvailability({
 						url: '/web/dash/profile/check-field-availability/name',
 						initVal: model.name,
-					},
-				}"
-				:validate-on="['blur']"
+					}),
+				]"
+				validate-on-blur
 			/>
 
-			<app-form-control-errors />
+			<AppFormControlErrors />
 
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Your display name is an optional personal identifier (such as a company name or
 					real name). Unlike usernames, display names can contain spaces and special
 					characters.
-				</translate>
+				</AppTranslate>
 			</p>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="web_site"
-			:label="$gettext(`dash.profile.edit.website_label`)"
+			:label="$gettext(`Website`)"
 			:optional="true"
 		>
-			<app-form-control
-				type="url"
-				:rules="{
-					max: 250,
-				}"
-			/>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControl type="url" :validators="[validateMaxLength(250)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="bio_content"
-			:label="$gettext(`dash.profile.edit.description_label`)"
+			:label="$gettext(`Profile Bio`)"
 			:optional="true"
 		>
-			<app-form-control-content
+			<AppFormControlContent
 				content-context="user-bio"
 				:disabled="isBioLocked"
 				:model-id="model.id"
 				:max-height="0"
-				:rules="{
-					max_content_length: [bioLengthLimit],
-				}"
+				:validators="[validateContentMaxLength(bioLengthLimit)]"
 			/>
 
-			<app-form-control-errors />
+			<AppFormControlErrors />
 
 			<div v-if="isBioLocked" class="control-errors">
 				<p class="help-block error">
-					<translate>You cannot edit your bio. It's been flagged as spam.</translate>
+					<AppTranslate>You cannot edit your bio. It's been flagged as spam.</AppTranslate>
 				</p>
 			</div>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-group name="shouts_enabled" :label="$gettext(`Allow shouts?`)">
-			<app-form-control-toggle class="pull-right" />
+		<AppFormGroup name="shouts_enabled" :label="$gettext(`Allow shouts?`)">
+			<AppFormControlToggle class="pull-right" />
 
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Will let people post short comments on your profile page. Turning this off will
 					hide any shouts already on the page.
-				</translate>
+				</AppTranslate>
 			</p>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-group name="friend_requests_enabled" :label="$gettext(`Allow friend requests?`)">
-			<app-form-control-toggle class="pull-right" />
+		<AppFormGroup name="friend_requests_enabled" :label="$gettext(`Allow friend requests?`)">
+			<AppFormControlToggle class="pull-right" />
 
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Allows people to send you friend requests. Friends can use the private chat
 					feature to send messages to each other. With this feature turned off, you will
 					still be able to send friend requests to other users.
-				</translate>
+				</AppTranslate>
 			</p>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-group name="liked_posts_enabled" :label="$gettext(`Show your liked posts?`)">
-			<app-form-control-toggle class="pull-right" />
+		<AppFormGroup name="liked_posts_enabled" :label="$gettext(`Show your liked posts?`)">
+			<AppFormControlToggle class="pull-right" />
 
 			<p class="help-block">
-				<translate>Will publicly show the posts you've liked on your profile.</translate>
+				<AppTranslate>Will publicly show the posts you've liked on your profile.</AppTranslate>
 			</p>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-group name="mentions_setting" :label="$gettext(`Who can mention you?`)">
-			<app-form-control-select>
+		<AppFormGroup name="mentions_setting" :label="$gettext(`Who can mention you?`)">
+			<AppFormControlSelect>
 				<option
 					v-for="mentionSettingOption of mentionsSettingOptions"
 					:key="mentionSettingOption.value"
@@ -172,18 +267,18 @@
 				>
 					{{ mentionSettingOption.text }}
 				</option>
-			</app-form-control-select>
+			</AppFormControlSelect>
 
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Select which users you will receive mention notifications from. "People you
 					know" are users you follow or are friends with.
-				</translate>
+				</AppTranslate>
 			</p>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-button>
-			<translate>dash.profile.edit.submit_button</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton>
+			<AppTranslate>Save Profile</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

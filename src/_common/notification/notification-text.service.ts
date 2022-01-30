@@ -3,7 +3,7 @@ import {
 	CommunityUserNotification,
 	NotificationType,
 } from '../community/user-notification/user-notification.model';
-import { currency } from '../filters/currency';
+import { formatCurrency } from '../filters/currency';
 import { FiresideCommunity } from '../fireside/community/community.model';
 import { Fireside } from '../fireside/fireside.model';
 import { FiresidePostCommunity } from '../fireside/post/community/community.model';
@@ -48,7 +48,7 @@ export class NotificationText {
 
 	private static getTranslationValues(notification: Notification) {
 		const subject = this.getSubjectTranslationValue(notification);
-		let output = { subject } as any;
+		const output = { subject } as any;
 
 		if (notification.to_model instanceof Game || notification.to_model instanceof ForumTopic) {
 			output.object = notification.to_model.title;
@@ -304,7 +304,7 @@ export class NotificationText {
 				const orderItem = notification.action_model as OrderItem;
 				const translationValues = {
 					object: sellable.title,
-					amount: currency(orderItem.amount),
+					amount: formatCurrency(orderItem.amount),
 					subject: this.getSubjectTranslationValue(notification),
 				};
 

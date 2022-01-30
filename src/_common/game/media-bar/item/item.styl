@@ -1,5 +1,3 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
 
 .media-bar-item
 	position: relative
@@ -34,14 +32,17 @@
 		.play-button-overlay
 			background-color: rgba($black, 0.85)
 
-			&, .jolticon
+			&
+			.jolticon
 				theme-prop('color', 'highlight')
 				cursor: zoom-in
 
 	// Can't zoom on xs.
-	&, .jolticon
+	&
+	.jolticon
 		cursor: default
 
 	@media $media-sm-up
-		&, .jolticon
+		&
+		.jolticon
 			cursor: zoom-in

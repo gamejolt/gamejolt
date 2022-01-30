@@ -1,9 +1,9 @@
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosPromise } from 'axios';
 import { RequestOptions } from '../api/api.service';
 import { Environment } from '../environment/environment.service';
-import { Growls } from '../growls/growls.service';
+import { showErrorGrowl } from '../growls/growls.service';
 import { Seo } from '../seo/seo.service';
-import { WithAppStore } from '../store/app-store';
+import { CommonStore } from '../store/common-store';
 import { Translate } from '../translate/translate.service';
 
 export type PayloadFormErrors = { [errorId: string]: boolean };
@@ -23,30 +23,28 @@ export class PayloadError {
 
 	constructor(public type: string, public response?: any, public status?: number) {}
 
-	static fromAxiosError(e: AxiosError) {
-		const response = e.response;
-
+	static fromAxiosError({ response }: AxiosError) {
 		// If the response indicated a failed connection.
 		if (response === undefined || response.status === -1) {
 			return new PayloadError(PayloadError.ERROR_OFFLINE);
-		} else if (response.status === 401) {
+		}
+
+		const data = response.data;
+
+		if (response.status === 401) {
 			// If it was a 401 error, then they need to be logged in.
 			// Let's redirect them to the login page on the main site.
-			return new PayloadError(PayloadError.ERROR_NOT_LOGGED, response.data || undefined, 401);
-		} else if (response.status === 403 && response.data.user?.timeout) {
-			return new PayloadError(
-				PayloadError.ERROR_USER_TIMED_OUT,
-				response.data || undefined,
-				403
-			);
+			return new PayloadError(PayloadError.ERROR_NOT_LOGGED, data || undefined, 401);
+		} else if (response.status === 403 && data.user?.timeout) {
+			return new PayloadError(PayloadError.ERROR_USER_TIMED_OUT, data || undefined, 403);
 		} else if (response.status === 429) {
-			return new PayloadError(PayloadError.ERROR_RATE_LIMIT, response.data || undefined, 429);
+			return new PayloadError(PayloadError.ERROR_RATE_LIMIT, data || undefined, 429);
 		}
 
 		// Otherwise, show an error page.
 		return new PayloadError(
 			PayloadError.ERROR_HTTP_ERROR,
-			response.data || undefined,
+			data || undefined,
 			response.status || undefined
 		);
 	}
@@ -61,15 +59,15 @@ export class Payload {
 	// These http errors are not redirects, so the noRedirect behavior should not apply to them.
 	static readonly httpNoRedirectOverrides = [429];
 
-	private static store: WithAppStore;
+	private static commonStore: CommonStore;
 	private static ver?: number = undefined;
 
-	static init(store: WithAppStore) {
-		this.store = store;
+	static init({ commonStore }: { commonStore: CommonStore }) {
+		this.commonStore = commonStore;
 	}
 
 	static async processResponse(
-		requestPromise: Promise<any>,
+		requestPromise: AxiosPromise<any>,
 		options: RequestOptions = {}
 	): Promise<any> {
 		options = {
@@ -96,17 +94,17 @@ export class Payload {
 				}
 			}
 
-			const data = response.data;
+			const responseData = response.data;
 
-			this.checkClientForceUpgrade(data);
-			this.checkPayloadUser(response, options);
-			this.checkPayloadConsents(response);
-			this.checkPayloadVersion(data, options);
-			this.checkPayloadSeo(data, options);
+			this.checkClientForceUpgrade(responseData);
+			this.checkPayloadUser(responseData, options);
+			this.checkPayloadConsents(responseData);
+			this.checkPayloadVersion(responseData, options);
+			this.checkPayloadSeo(responseData, options);
 
-			return data.payload;
-		} catch (error) {
-			if (!GJ_IS_SSR) {
+			return responseData.payload;
+		} catch (error: any) {
+			if (!import.meta.env.SSR) {
 				console.error('Payload error', error);
 			}
 
@@ -119,7 +117,7 @@ export class Payload {
 				response = error.response;
 			}
 
-			this.checkPayloadUser(response, options);
+			this.checkPayloadUser(response.data, options);
 
 			// Do not do error redirects when the user cancelled the upload file request.
 			if (this.isCancelledUpload(error)) {
@@ -147,7 +145,7 @@ export class Payload {
 	private static checkPayloadVersion(data: any, options: RequestOptions) {
 		// We ignore completely if we're in the client.
 		// We don't want the client refreshing when an update to site is pushed out.
-		if (options.ignorePayloadVersion || GJ_IS_CLIENT || GJ_IS_SSR) {
+		if (options.ignorePayloadVersion || GJ_IS_DESKTOP_APP || import.meta.env.SSR) {
 			return;
 		}
 
@@ -162,21 +160,18 @@ export class Payload {
 		}
 	}
 
-	private static checkPayloadUser(response: any, options: RequestOptions) {
-		if (options.ignorePayloadUser || !response || !response.data || !this.store) {
+	private static checkPayloadUser(data: any, options: RequestOptions) {
+		if (options.ignorePayloadUser || !data || !this.commonStore) {
 			return;
 		}
 
 		// Only process if this payload response had a user attached to it.
 		// It couid be null (for logged out) or an object (if logged in).
-		const data = response.data;
 		if (typeof data.user !== 'undefined') {
 			if (data.user === null) {
-				this.store.commit('app/clearUser');
+				this.commonStore.clearUser();
 			} else {
-				// There is a circular dependency if we import at top.
-				const User = require('../user/user.model').User;
-				this.store.commit('app/setUser', new User(data.user));
+				this.commonStore.setUser(data.user);
 			}
 		}
 	}
@@ -189,23 +184,22 @@ export class Payload {
 		Seo.processPayloadDirectives(data.meta.seo);
 	}
 
-	private static checkPayloadConsents(response: any) {
-		if (!response || !response.data || !this.store) {
+	private static checkPayloadConsents(data: any) {
+		if (!data || !this.commonStore) {
 			return;
 		}
 
-		const data = response.data;
 		if (typeof data.c === 'object') {
-			this.store.commit('app/setConsents', data.c);
+			this.commonStore.setConsents(data.c);
 			return;
 		}
 
-		this.store.commit('app/setConsents', {});
+		this.commonStore.setConsents({});
 	}
 
 	private static checkClientForceUpgrade(data: any) {
 		// We ignore completely if we're not in the client.
-		if (!GJ_IS_CLIENT) {
+		if (!GJ_IS_DESKTOP_APP) {
 			return;
 		}
 
@@ -221,18 +215,18 @@ export class Payload {
 			// reload.
 		} else if (error.type === PayloadError.ERROR_NOT_LOGGED) {
 			const redirect = encodeURIComponent(
-				GJ_IS_SSR ? Environment.ssrContext.url : window.location.href
+				import.meta.env.SSR ? Environment.ssrContext.url : window.location.href
 			);
 			const location = Environment.authBaseUrl + '/login?redirect=' + redirect;
-			this.store.commit('app/redirect', location);
+			this.commonStore.redirect(location);
 		} else if (error.type === PayloadError.ERROR_NEW_CLIENT_VERSION) {
-			this.store.commit('app/redirect', Environment.clientSectionUrl + '/upgrade');
+			this.commonStore.redirect(Environment.clientSectionUrl + '/upgrade');
 		} else if (error.type === PayloadError.ERROR_USER_TIMED_OUT) {
-			this.store.commit('app/redirect', Environment.wttfBaseUrl + '/timeout');
+			this.commonStore.redirect(Environment.wttfBaseUrl + '/timeout');
 		} else if (error.type === PayloadError.ERROR_INVALID) {
-			this.store.commit('app/setError', 500);
+			this.commonStore.setError(500);
 		} else if (error.type === PayloadError.ERROR_RATE_LIMIT) {
-			Growls.error({
+			showErrorGrowl({
 				title: Translate.$gettext(`Whoa there, slow down!`),
 				message: Translate.$gettext(
 					`Looks like you are doing that too much. Slow down, then try again in a few minutes.`
@@ -242,9 +236,9 @@ export class Payload {
 			error.type === PayloadError.ERROR_HTTP_ERROR &&
 			(!error.status || this.httpErrors.indexOf(error.status) !== -1)
 		) {
-			this.store.commit('app/setError', error.status || 500);
+			this.commonStore.setError(error.status || 500);
 		} else {
-			this.store.commit('app/setError', 'offline');
+			this.commonStore.setError('offline');
 		}
 
 		return error;

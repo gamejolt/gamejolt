@@ -1,4 +1,153 @@
-<script lang="ts" src="./top-nav"></script>
+<script lang="ts">
+import { defineAsyncComponent } from '@vue/runtime-core';
+import { setup } from 'vue-class-component';
+import { Inject, Options, Vue } from 'vue-property-decorator';
+import { shouldShowAppPromotion } from '../../../../utils/mobile-app';
+import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
+import { AppClientHistoryNavigator } from '../../../../_common/client/safe-exports';
+import { AppConfigLoaded } from '../../../../_common/config/loaded';
+import { Connection } from '../../../../_common/connection/connection-service';
+import { Environment } from '../../../../_common/environment/environment.service';
+import { AppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
+import AppPopper from '../../../../_common/popper/popper.vue';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { imageGameJoltLogo, imageJolt } from '../../../img/images';
+import { useAppStore } from '../../../store/index';
+import { ChatStore, ChatStoreKey } from '../../chat/chat-store';
+import AppSearch from '../../search/AppSearch.vue';
+
+@Options({
+	components: {
+		AppPopper,
+		AppShellAccountPopover: defineAsyncComponent(
+			() => import('../account-popover/account-popover.vue')
+		),
+		AppShellFriendRequestPopover: defineAsyncComponent(
+			() => import('../friend-request-popover/friend-request-popover.vue')
+		),
+		AppShellNotificationPopover: defineAsyncComponent(
+			() => import('../notification-popover/notification-popover.vue')
+		),
+		AppSearch,
+		AppThemeSvg,
+		AppConfigLoaded,
+		AppClientHistoryNavigator,
+	},
+	directives: {
+		AppTooltip,
+		AppObserveDimensions,
+	},
+})
+export default class AppShellTopNav extends Vue {
+	store = setup(() => useAppStore());
+	commonStore = setup(() => useCommonStore());
+
+	@Inject({ from: ChatStoreKey })
+	chatStore!: ChatStore;
+
+	get app() {
+		return this.commonStore;
+	}
+
+	get visibleLeftPane() {
+		return this.store.visibleLeftPane;
+	}
+	get hasSidebar() {
+		return this.store.hasSidebar;
+	}
+	get hasCbar() {
+		return this.store.hasCbar;
+	}
+	get unreadActivityCount() {
+		return this.store.unreadActivityCount;
+	}
+
+	moreMenuShowing = false;
+	baseMinColWidth: number | null = null;
+
+	declare $refs: {
+		left: HTMLDivElement;
+		right: HTMLDivElement;
+	};
+
+	readonly Environment = Environment;
+	readonly Screen = Screen;
+	readonly Connection = Connection;
+	readonly trackAppPromotionClick = trackAppPromotionClick;
+	readonly imageJolt = imageJolt;
+	readonly imageGameJoltLogo = imageGameJoltLogo;
+
+	get chat() {
+		return this.chatStore.chat!;
+	}
+
+	get isTimedOut() {
+		return this.app.isUserTimedOut;
+	}
+
+	get shouldShowSearch() {
+		return !Screen.isXs && !this.isTimedOut;
+	}
+
+	get shouldShowMenu() {
+		return Screen.isXs && !this.isTimedOut;
+	}
+
+	get shouldShowExplore() {
+		return !Screen.isXs && this.app.user && !this.isTimedOut;
+	}
+
+	get shouldShowMoreMenu() {
+		return !Screen.isXs && !this.isTimedOut;
+	}
+
+	get shouldShowAppPromotion() {
+		return shouldShowAppPromotion(this.$route);
+	}
+
+	get humanizedActivityCount() {
+		return this.unreadActivityCount < 100 ? this.unreadActivityCount : '99+';
+	}
+
+	get minColWidth() {
+		// When we are smaller than this, we just set the search to stretch
+		// full-width with a max-width. It mostly looks fine on sizes smaller
+		// than this.
+		if (Screen.width < 1300) {
+			return null;
+		}
+
+		return this.baseMinColWidth + 'px';
+	}
+
+	// Every time either the left or right column's dimensions changes, we run
+	// this function.
+	checkColWidths() {
+		const left = (this.$refs.left && this.$refs.left.getBoundingClientRect().width) || 0;
+		const right = (this.$refs.right && this.$refs.right.getBoundingClientRect().width) || 0;
+
+		// We want to size both columns to be the same width, so choose the
+		// largest among them.
+		let max = Math.max(left, right);
+		if (!max) {
+			this.baseMinColWidth = null;
+			return;
+		}
+
+		// Page content is centered within a column that is offset by the cbar (value of $shell-cbar-width),
+		// so this does the same offseting within the top nav for the search bar
+		// to align properly in the center with the page content.
+		if (this.hasCbar) {
+			max -= 70;
+		}
+
+		this.baseMinColWidth = max;
+	}
+}
+</script>
 
 <template>
 	<nav id="shell-top-nav" class="navbar backdrop-affected">
@@ -11,9 +160,9 @@
 					:class="{
 						active: !!visibleLeftPane,
 					}"
-					@click="toggleCbarMenu"
+					@click="store.toggleCbarMenu()"
 				>
-					<app-jolticon icon="menu" />
+					<AppJolticon icon="menu" />
 					<div
 						v-if="chatStore.chat && chat.roomNotificationsCount > 0"
 						class="-notification-chat notification-tag tag tag-highlight"
@@ -22,8 +171,8 @@
 					</div>
 				</a>
 
-				<!-- History Navigator (for desktop client) -->
-				<app-client-history-navigator v-if="GJ_IS_CLIENT" />
+				<!-- History Navigator (for desktop app) -->
+				<AppClientHistoryNavigator />
 
 				<router-link
 					v-app-track-event="`top-nav:main-menu:home`"
@@ -34,13 +183,13 @@
 					}"
 					:to="{ name: 'home' }"
 				>
-					<app-theme-svg
+					<AppThemeSvg
 						v-if="!Screen.isMobile"
-						src="~img/game-jolt-logo.svg"
+						:src="imageGameJoltLogo"
 						alt=""
 						strict-colors
 					/>
-					<app-theme-svg v-else src="~img/jolt.svg" alt="" strict-colors />
+					<AppThemeSvg v-else :src="imageJolt" alt="" strict-colors />
 					<span
 						v-if="unreadActivityCount > 0"
 						class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
@@ -56,9 +205,9 @@
 					:class="{ active: $route.name === 'discover.home' }"
 					:to="{ name: 'discover.home' }"
 				>
-					<app-jolticon icon="compass-needle" class="-section-icon" />
+					<AppJolticon icon="compass-needle" class="-section-icon" />
 					<strong class="text-upper">
-						<translate>Explore</translate>
+						<AppTranslate>Explore</AppTranslate>
 					</strong>
 				</router-link>
 
@@ -73,11 +222,11 @@
 					}"
 				>
 					<strong class="text-upper">
-						<translate>Store</translate>
+						<AppTranslate>Store</AppTranslate>
 					</strong>
 				</router-link>
 
-				<app-popper
+				<AppPopper
 					v-if="shouldShowMoreMenu"
 					v-app-track-event="`top-nav:more-menu:toggle`"
 					popover-class="fill-darkest"
@@ -87,7 +236,7 @@
 					@hide="moreMenuShowing = false"
 				>
 					<a class="navbar-item" :class="{ active: moreMenuShowing }">
-						<app-jolticon icon="ellipsis-v" />
+						<AppJolticon icon="ellipsis-v" />
 					</a>
 
 					<template #popover>
@@ -95,30 +244,30 @@
 							<router-link
 								class="list-group-item has-icon offline-disable"
 								:to="{ name: 'landing.app' }"
-								@click.native="
+								@click="
 									trackAppPromotionClick({
 										source: 'top-nav-options',
 										platform: 'mobile',
 									})
 								"
 							>
-								<app-jolticon icon="phone" />
-								<translate>Get the Mobile App</translate>
+								<AppJolticon icon="phone" />
+								<AppTranslate>Get the Mobile App</AppTranslate>
 							</router-link>
 
 							<router-link
-								v-if="!GJ_IS_CLIENT"
+								v-if="!GJ_IS_DESKTOP_APP"
 								class="list-group-item has-icon offline-disable"
 								:to="{ name: 'landing.client' }"
-								@click.native="
+								@click="
 									trackAppPromotionClick({
 										source: 'top-nav-options',
 										platform: 'desktop',
 									})
 								"
 							>
-								<app-jolticon icon="client" />
-								<translate>Get the Desktop App</translate>
+								<AppJolticon icon="client" />
+								<AppTranslate>Get the Desktop App</AppTranslate>
 							</router-link>
 
 							<router-link
@@ -126,20 +275,20 @@
 								class="list-group-item has-icon offline-disable"
 								:to="{ name: 'forums.landing.overview' }"
 							>
-								<app-jolticon icon="forums" />
-								<translate>Forums</translate>
+								<AppJolticon icon="forums" />
+								<AppTranslate>Forums</AppTranslate>
 							</router-link>
 						</div>
 					</template>
-				</app-popper>
+				</AppPopper>
 			</div>
 		</div>
 
 		<div class="navbar-center">
-			<app-config-loaded class="-search">
+			<AppConfigLoaded class="-search">
 				<!-- Search Input -->
-				<app-search v-if="shouldShowSearch" />
-			</app-config-loaded>
+				<AppSearch v-if="shouldShowSearch" />
+			</AppConfigLoaded>
 		</div>
 
 		<!--
@@ -155,42 +304,42 @@
 		>
 			<template v-if="Screen.isSm && shouldShowAppPromotion">
 				<div class="-button">
-					<app-button
+					<AppButton
 						:to="{ name: 'landing.app' }"
-						@click.native="
+						@click="
 							trackAppPromotionClick({
 								source: 'top-nav',
 								platform: 'mobile',
 							})
 						"
 					>
-						<translate>Get App</translate>
-					</app-button>
+						<AppTranslate>Get App</AppTranslate>
+					</AppButton>
 				</div>
 			</template>
-			<template v-else-if="!GJ_IS_CLIENT && Screen.isDesktop">
+			<template v-else-if="!GJ_IS_DESKTOP_APP && Screen.isDesktop">
 				<div class="-button">
-					<app-button
+					<AppButton
 						:to="{ name: 'landing.client' }"
-						@click.native="
+						@click="
 							trackAppPromotionClick({
 								source: 'top-nav',
 								platform: 'desktop',
 							})
 						"
 					>
-						<translate>Get App</translate>
-					</app-button>
+						<AppTranslate>Get App</AppTranslate>
+					</AppButton>
 				</div>
 			</template>
 
 			<div v-app-observe-dimensions="checkColWidths" class="-col">
 				<template v-if="app.user">
 					<!-- Notifications -->
-					<app-shell-notification-popover />
+					<AppShellNotificationPopover />
 
 					<!-- Friend Requests -->
-					<app-shell-friend-request-popover />
+					<AppShellFriendRequestPopover />
 
 					<!-- Connection Status -->
 					<span
@@ -200,11 +349,11 @@
 						"
 						class="navbar-item disconnected-icon"
 					>
-						<app-jolticon icon="offline" />
+						<AppJolticon icon="offline" />
 					</span>
 
 					<!-- User Menu -->
-					<app-shell-account-popover />
+					<AppShellAccountPopover />
 				</template>
 
 				<!-- Login/Join Buttons -->
@@ -215,7 +364,7 @@
 								v-app-track-event="`top-nav:login:click`"
 								:href="Environment.authBaseUrl + '/login'"
 							>
-								<translate>nav.login</translate>
+								<AppTranslate>Log In</AppTranslate>
 							</a>
 						</li>
 						<li>
@@ -223,7 +372,7 @@
 								v-app-track-event="`top-nav:join:click`"
 								:href="Environment.authBaseUrl + '/join'"
 							>
-								<translate>Sign Up</translate>
+								<AppTranslate>Sign Up</AppTranslate>
 							</a>
 						</li>
 					</ul>
@@ -234,9 +383,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 #shell-top-nav
 	position: fixed
 	z-index: $zindex-shell-top-nav

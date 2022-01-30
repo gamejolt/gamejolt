@@ -1,15 +1,22 @@
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppPostAddPlaceholder extends Vue {}
+</script>
+
 <template>
 	<div>
 		<!-- Attachments -->
 		<div class="-attachment-controls">
-			<div class="-button"></div>
-			<div class="-button"></div>
-			<div class="-button"></div>
+			<div class="-button" />
+			<div class="-button" />
+			<div class="-button" />
 		</div>
 
 		<!-- Post title (short) -->
 		<div class="form-group -lead-form-group">
-			<div class="form-control"></div>
+			<div class="form-control" />
 
 			<!-- HP -->
 			<div class="-hp">
@@ -26,15 +33,15 @@
 		<!-- Controls -->
 		<div class="-controls">
 			<div class="-controls-attachments">
-				<div class="-button"></div>
-				<div class="-button"></div>
-				<div class="-button"></div>
-				<div class="-button"></div>
+				<div class="-button" />
+				<div class="-button" />
+				<div class="-button" />
+				<div class="-button" />
 			</div>
 
 			<div class="-controls-submit">
 				<div class="-controls-submit-button">
-					<div class="-button"></div>
+					<div class="-button" />
 				</div>
 			</div>
 		</div>
@@ -42,8 +49,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
 @import '../../forms/community/_pill/variables'
 
 .-hp
@@ -144,5 +149,3 @@
 		&-submit
 			flex: none
 </style>
-
-<script lang="ts" src="./add-placeholder"></script>

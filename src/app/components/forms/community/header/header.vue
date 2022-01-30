@@ -1,18 +1,105 @@
-<script lang="ts" src="./header"></script>
+<script lang="ts">
+import { mixins, Options, Watch } from 'vue-property-decorator';
+import { Community } from '../../../../../_common/community/community.model';
+import AppFormControlCrop from '../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
+import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import {
+	BaseForm,
+	FormOnBeforeSubmit,
+	FormOnLoad,
+} from '../../../../../_common/form-vue/form.service';
+import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+
+type FormModel = Community & {
+	header_crop: any;
+};
+
+class Wrapper extends BaseForm<FormModel> {}
+
+@Options({
+	components: {
+		AppFormControlUpload,
+		AppFormControlCrop,
+	},
+})
+export default class FormCommunityHeader
+	extends mixins(Wrapper)
+	implements FormOnLoad, FormOnBeforeSubmit
+{
+	modelClass = Community as any;
+	saveMethod = '$saveHeader' as '$saveHeader' | '$clearHeader';
+
+	maxFilesize = 0;
+	minAspectRatio = 0;
+	maxAspectRatio = 0;
+	minWidth = 0;
+	minHeight = 0;
+	maxWidth = 0;
+	maxHeight = 0;
+
+	get loadUrl() {
+		return `/web/dash/communities/design/save_header/${this.model!.id}`;
+	}
+
+	get crop() {
+		return this.formModel.header ? this.formModel.header.getCrop() : undefined;
+	}
+
+	@Watch('crop')
+	onCropChange() {
+		this.setField('header_crop', this.crop);
+	}
+
+	onLoad(payload: any) {
+		this.maxFilesize = payload.maxFilesize;
+		this.minAspectRatio = payload.minAspectRatio;
+		this.maxAspectRatio = payload.maxAspectRatio;
+		this.minWidth = payload.minWidth;
+		this.maxWidth = payload.maxWidth;
+		this.minHeight = payload.minHeight;
+		this.maxHeight = payload.maxHeight;
+	}
+
+	onBeforeSubmit() {
+		if (this.saveMethod === '$saveHeader') {
+			// Backend expects this field.
+			this.setField('crop' as any, this.formModel.header_crop);
+		}
+	}
+
+	async clearHeader() {
+		const result = await ModalConfirm.show(
+			this.$gettext(`Are you sure you want to remove the community header?`)
+		);
+
+		if (result) {
+			this.saveMethod = '$clearHeader';
+			this.form.submit();
+		}
+	}
+
+	headerSelected() {
+		if (this.formModel.file) {
+			this.saveMethod = '$saveHeader';
+			this.form.submit();
+		}
+	}
+}
+</script>
 
 <template>
-	<app-form ref="form" name="headerForm">
-		<app-form-group
+	<AppForm :controller="form">
+		<AppFormGroup
 			name="file"
 			:label="$gettext(`Upload New Header`)"
 			:optional="!!formModel.header"
 		>
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Headers are the big, banner-like images that adorn the tops of pages. For your
 					header to look its best on all devices, make sure anything important is located
 					near the center of the image.
-				</translate>
+				</AppTranslate>
 			</p>
 			<p v-translate class="help-block">
 				Your image must be a PNG or JPG.
@@ -25,31 +112,31 @@
 				(ratio of 4 ÷ 1).
 			</p>
 			<p class="help-block">
-				<app-link-help page="dev-page-headers" class="link-help">
-					<translate>What are the header requirements and guidelines?</translate>
-				</app-link-help>
+				<AppLinkHelp page="dev-page-headers" class="link-help">
+					<AppTranslate>What are the header requirements and guidelines?</AppTranslate>
+				</AppLinkHelp>
 			</p>
 
-			<app-form-control-upload
-				:rules="{
-					filesize: maxFilesize,
-					min_img_dimensions: [minWidth, minHeight],
-					max_img_dimensions: [maxWidth, maxHeight],
-				}"
+			<AppFormControlUpload
+				:validators="[
+					validateFilesize(maxFilesize),
+					validateImageMinDimensions({ width: minWidth, height: minHeight }),
+					validateImageMaxDimensions({ width: maxWidth, height: maxHeight }),
+				]"
 				accept=".png,.jpg,.jpeg,.webp"
 				@changed="headerSelected()"
 			/>
 
-			<app-form-control-errors :label="$gettext(`header`)" />
-		</app-form-group>
+			<AppFormControlErrors :label="$gettext(`header`)" />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			v-if="formModel.header && !formModel.file"
 			name="header_crop"
 			:label="$gettext(`Crop Current Header`)"
 		>
 			<div class="form-control-static">
-				<app-form-control-crop
+				<AppFormControlCrop
 					:src="formModel.header.img_url"
 					:min-width="minWidth"
 					:min-height="minHeight"
@@ -59,17 +146,17 @@
 					:max-aspect-ratio="maxAspectRatio"
 				/>
 
-				<app-form-control-errors :label="$gettext('crop')" />
+				<AppFormControlErrors :label="$gettext('crop')" />
 			</div>
-		</app-form-group>
+		</AppFormGroup>
 
 		<template v-if="formModel.header">
-			<app-form-button>
-				<translate>Save</translate>
-			</app-form-button>
-			<app-button trans @click="clearHeader()">
-				<translate>Remove Header</translate>
-			</app-button>
+			<AppFormButton>
+				<AppTranslate>Save</AppTranslate>
+			</AppFormButton>
+			<AppButton trans @click="clearHeader()">
+				<AppTranslate>Remove Header</AppTranslate>
+			</AppButton>
 		</template>
-	</app-form>
+	</AppForm>
 </template>

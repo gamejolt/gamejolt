@@ -1,9 +1,9 @@
 import { formatDistanceStrict, formatDistanceToNow } from 'date-fns';
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
-import { date } from '../../filters/date';
+import { h } from 'vue';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { formatDate } from '../../filters/date';
 
-@Component({})
+@Options({})
 export class AppTimeAgo extends Vue {
 	@Prop({ type: [Number, Date], required: true })
 	date!: number | Date;
@@ -25,7 +25,7 @@ export class AppTimeAgo extends Vue {
 		this.refresh();
 	}
 
-	destroyed() {
+	unmounted() {
 		this.clearTimeout();
 	}
 
@@ -68,20 +68,18 @@ export class AppTimeAgo extends Vue {
 			secondsUntilUpdate = 300;
 		}
 
-		this.fixedTime = date(this.date, 'medium');
+		this.fixedTime = formatDate(this.date, 'medium');
 
-		if (!GJ_IS_SSR) {
+		if (!import.meta.env.SSR) {
 			this.timeout = window.setTimeout(() => this.refresh(), secondsUntilUpdate * 1000);
 		}
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h(
 			'span',
 			{
-				domProps: {
-					title: this.fixedTime,
-				},
+				title: this.fixedTime,
 			},
 			this.timeAgo
 		);

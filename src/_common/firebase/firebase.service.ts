@@ -30,7 +30,7 @@ export function getFirebaseApp() {
 }
 
 async function _initPerformanceMonitoring() {
-	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
 		return;
 	}
 

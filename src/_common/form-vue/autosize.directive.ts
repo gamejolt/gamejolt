@@ -1,5 +1,5 @@
+import { Directive } from '@vue/runtime-core';
 import * as autosize from 'autosize';
-import { DirectiveOptions } from 'vue';
 
 export interface AutosizeBootstrap {
 	/**
@@ -10,14 +10,14 @@ export interface AutosizeBootstrap {
 
 type AutosizeValue = (options: AutosizeBootstrap) => void;
 
-export const AppFormAutosize: DirectiveOptions = {
-	inserted(el, binding) {
+export const AppFormAutosize: Directive<HTMLElement, AutosizeValue | void> = {
+	mounted(el, binding) {
 		autosize(el);
 
 		// If a value was sent in, we call it as a function with our hooks so
 		// that the parent component can call into us.
 		if (binding.value) {
-			const bootstrap = binding.value as AutosizeValue;
+			const bootstrap = binding.value;
 			bootstrap({
 				updater() {
 					autosize.update(el);
@@ -25,7 +25,7 @@ export const AppFormAutosize: DirectiveOptions = {
 			});
 		}
 	},
-	unbind(el) {
+	unmounted(el) {
 		autosize.destroy(el);
 	},
 };

@@ -1,19 +1,18 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 
-@Component({})
+@Options({})
 export class AppGrowlDynamic extends Vue {
 	@Prop(Function) component!: typeof Vue;
 	@Prop(Object) props?: any;
 
-	render(h: CreateElement) {
+	@Emit('close')
+	emitClose() {}
+
+	render() {
 		return h(this.component, {
-			props: this.props,
-			on: {
-				close: () => {
-					this.$emit('close');
-				},
-			},
+			...this.props,
+			onClose: () => this.emitClose(),
 		});
 	}
 }

@@ -1,21 +1,26 @@
+<script lang="ts">
+import { mixins, Options } from 'vue-property-decorator';
+import { BaseForm } from '../../../../_common/form-vue/form.service';
+import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
+
+class Wrapper extends BaseForm<GamePlaylist> {}
+
+@Options({})
+export default class FormPlaylist extends mixins(Wrapper) {
+	modelClass = GamePlaylist;
+}
+</script>
+
 <template>
-	<app-form name="playlistForm">
-		<app-form-group name="name" :label="$gettext('library.playlists.form.name_label')">
-			<app-form-control
-				type="text"
-				:rules="{
-					max: 100,
-				}"
-				v-app-focus-when
-			/>
-			<app-form-control-errors />
-		</app-form-group>
+	<AppForm :controller="form">
+		<AppFormGroup name="name" :label="$gettext('Name')">
+			<AppFormControl type="text" :validators="[validateMaxLength(100)]" focus />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-button>
-			<translate v-if="method === 'add'">Add Playlist</translate>
-			<translate v-else>Save Playlist</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton>
+			<AppTranslate v-if="method === 'add'">Add Playlist</AppTranslate>
+			<AppTranslate v-else>Save Playlist</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>
-
-<script lang="ts" src="./playlist"></script>

@@ -1,10 +1,60 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { arrayIndexByFunc } from '../../../../utils/array';
+import { formatNumber } from '../../../../_common/filters/number';
+import { ForumCategory } from '../../../../_common/forum/category/category.model';
+import { ForumChannel } from '../../../../_common/forum/channel/channel.model';
+import { ForumPost } from '../../../../_common/forum/post/post.model';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { AppTimeAgo } from '../../../../_common/time/ago/ago';
+import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
+import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
+import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
+
+@Options({
+	components: {
+		AppUserCardHover,
+		AppUserAvatar,
+		AppTimeAgo,
+		AppUserVerifiedTick,
+	},
+})
+export default class AppForumChannelList extends Vue {
+	@Prop(Object) category!: ForumCategory;
+	@Prop(Array) channels!: ForumChannel[];
+	@Prop({ type: Array, default: [] })
+	latestPosts!: ForumPost[];
+	@Prop(Number) postCountPerPage!: number;
+
+	readonly formatNumber = formatNumber;
+	readonly Screen = Screen;
+
+	get indexedPosts() {
+		return arrayIndexByFunc(this.latestPosts, item => item.topic!.channel_id);
+	}
+
+	getPostPage(post: ForumPost) {
+		if (!this.postCountPerPage) {
+			return undefined;
+		}
+
+		const page = Math.ceil((post.topic.replies_count || 0) / this.postCountPerPage);
+		if (page === 1) {
+			return undefined;
+		}
+
+		return page;
+	}
+}
+</script>
+
 <template>
 	<div class="forum-channel-list">
-		<div class="forum-channel-list-item row" v-for="channel of channels" :key="channel.id">
+		<div v-for="channel of channels" :key="channel.id" class="forum-channel-list-item row">
 			<div class="col-sm-9 col-md-7">
 				<h4>
-					<span class="tag tag-highlight" v-if="channel.notifications_count">
-						{{ channel.notifications_count || 0 | number }}
+					<span v-if="channel.notifications_count" class="tag tag-highlight">
+						{{ formatNumber(channel.notifications_count || 0) }}
 					</span>
 					<router-link
 						class="link-unstyled"
@@ -22,8 +72,7 @@
 			</div>
 			<div class="col-sm-3 col-md-2 text-muted small" :class="{ 'text-right': !Screen.isXs }">
 				<span
-					key="topics-count"
-					v-translate="{ count: number(channel.topics_count || 0) }"
+					v-translate="{ count: formatNumber(channel.topics_count || 0) }"
 					:translate-n="channel.topics_count || 0"
 					translate-plural="<b>%{ count }</b> Topics"
 				>
@@ -32,11 +81,10 @@
 				</span>
 
 				<br class="hidden-xs" />
-				<span class="hidden-sm hidden-md hidden-lg dot-separator"></span>
+				<span class="hidden-sm hidden-md hidden-lg dot-separator" />
 
 				<span
-					key="replies-count"
-					v-translate="{ count: number(channel.replies_count || 0) }"
+					v-translate="{ count: formatNumber(channel.replies_count || 0) }"
 					:translate-n="channel.replies_count || 0"
 					translate-plural="<b>%{ count }</b> Replies"
 				>
@@ -44,72 +92,66 @@
 					Reply
 				</span>
 			</div>
-			<div class="col-md-3" v-if="Screen.isDesktop">
-				<div
-					class="forum-channel-list-item-latest-topic clearfix"
-					v-for="latestPost of [indexedPosts[channel.id]]"
-					v-if="latestPost"
-					:key="latestPost.id"
-				>
-					<template v-if="latestPost">
-						<div class="forum-channel-list-item-latest-topic-avatar">
-							<app-user-card-hover :user="latestPost.user">
-								<app-user-avatar :user="latestPost.user" />
-							</app-user-card-hover>
-						</div>
-
-						<div class="forum-channel-list-item-latest-topic-info">
-							<div class="forum-channel-list-item-latest-topic-info-title">
-								<router-link
-									:to="{
-										name: 'forums.topics.view',
-										params: {
-											slug: latestPost.topic.slug,
-											id: latestPost.topic.id,
-										},
-										hash: '#forum-post-' + latestPost.id,
-										query: {
-											page: getPostPage(latestPost),
-										},
-									}"
-								>
-									{{ latestPost.topic.title }}
-								</router-link>
+			<div v-if="Screen.isDesktop" class="col-md-3">
+				<template v-if="indexedPosts[channel.id]">
+					<template v-for="latestPost of [indexedPosts[channel.id]]" :key="latestPost.id">
+						<div class="forum-channel-list-item-latest-topic clearfix">
+							<div class="forum-channel-list-item-latest-topic-avatar">
+								<AppUserCardHover :user="latestPost.user">
+									<AppUserAvatar :user="latestPost.user" />
+								</AppUserCardHover>
 							</div>
-							<div class="text-muted">
-								<translate>by</translate>
-								<strong>
+
+							<div class="forum-channel-list-item-latest-topic-info">
+								<div class="forum-channel-list-item-latest-topic-info-title">
 									<router-link
-										class="link-muted"
 										:to="{
-											name: 'profile.overview',
-											params: { username: latestPost.user.username },
+											name: 'forums.topics.view',
+											params: {
+												slug: latestPost.topic.slug,
+												id: latestPost.topic.id,
+											},
+											hash: '#forum-post-' + latestPost.id,
+											query: {
+												page: getPostPage(latestPost),
+											},
 										}"
 									>
-										{{ latestPost.user.display_name }}
-										<app-user-verified-tick :user="latestPost.user" small />
+										{{ latestPost.topic.title }}
 									</router-link>
-								</strong>
-								<span class="tiny">@{{ latestPost.user.username }}</span>
-							</div>
-							<div class="text-muted">
-								<app-time-ago :date="latestPost.posted_on" />
+								</div>
+								<div class="text-muted">
+									<AppTranslate>by</AppTranslate>
+									{{ ' ' }}
+									<strong>
+										<router-link
+											class="link-muted"
+											:to="{
+												name: 'profile.overview',
+												params: { username: latestPost.user.username },
+											}"
+										>
+											{{ latestPost.user.display_name }}
+											<AppUserVerifiedTick :user="latestPost.user" small />
+										</router-link>
+									</strong>
+									{{ ' ' }}
+									<span class="tiny">@{{ latestPost.user.username }}</span>
+								</div>
+								<div class="text-muted">
+									<AppTimeAgo :date="latestPost.posted_on" />
+								</div>
 							</div>
 						</div>
 					</template>
-					<template v-if="!latestPost">
-						--
-					</template>
-				</div>
+				</template>
+				<template v-else> -- </template>
 			</div>
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .forum-channel-list-item
 	margin-bottom: $font-size-base * 2
 
@@ -136,5 +178,3 @@
 			&-user
 				text-overflow()
 </style>
-
-<script lang="ts" src="./channel-list"></script>

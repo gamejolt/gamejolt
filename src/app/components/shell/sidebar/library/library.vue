@@ -1,4 +1,116 @@
-<script lang="ts" src="./library"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
+import { stringSort } from '../../../../../utils/array';
+import { shouldShowAppPromotion } from '../../../../../utils/mobile-app';
+import { shallowSetup } from '../../../../../utils/vue';
+import { trackAppPromotionClick } from '../../../../../_common/analytics/analytics.service';
+import { Environment } from '../../../../../_common/environment/environment.service';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
+import { formatNumber } from '../../../../../_common/filters/number';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
+import AppShortkey from '../../../../../_common/shortkey/shortkey.vue';
+import { useCommonStore } from '../../../../../_common/store/common-store';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { useAppStore } from '../../../../store/index';
+import { libraryNewPlaylist, useLibraryStore } from '../../../../store/library';
+import AppShellSidebarCollectionList from './AppShellSidebarCollectionList.vue';
+
+@Options({
+	components: {
+		AppShellSidebarCollectionList,
+		AppExpand,
+		AppScrollScroller,
+		AppShortkey,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppShellSidebarLibrary extends Vue {
+	store = setup(() => useAppStore());
+	commonStore = setup(() => useCommonStore());
+	libraryStore = shallowSetup(() => useLibraryStore());
+
+	get app() {
+		return this.commonStore;
+	}
+	get isLibraryBootstrapped() {
+		return this.store.isLibraryBootstrapped;
+	}
+
+	playlistFilterQuery = '';
+	openFolders: string[] = [];
+
+	readonly Environment = Environment;
+	readonly Screen = Screen;
+	readonly trackAppPromotionClick = trackAppPromotionClick;
+
+	get bundleCollections() {
+		return this.libraryStore.bundleCollections.value;
+	}
+
+	get developerCollection() {
+		return this.libraryStore.developerCollection.value;
+	}
+	get followedCollection() {
+		return this.libraryStore.followedCollection.value;
+	}
+
+	get ownedCollection() {
+		return this.libraryStore.ownedCollection.value;
+	}
+
+	get collections() {
+		return this.libraryStore.collections.value;
+	}
+
+	get playlistFolders() {
+		return this.libraryStore.playlistFolders.value;
+	}
+
+	get collectionsLength() {
+		return formatNumber(this.collections.length);
+	}
+
+	get bundleCollectionsLength() {
+		return formatNumber(this.bundleCollections.length);
+	}
+
+	get filteredBundleCollections() {
+		return this.bundleCollections.sort((a, b) => stringSort(a.name, b.name));
+	}
+
+	get playlistFoldersToDisplay() {
+		return Object.keys(this.playlistFolders).filter(folder => folder !== 'main');
+	}
+
+	get shouldShowAppPromotion() {
+		return shouldShowAppPromotion(this.$route);
+	}
+
+	get mainPlaylists() {
+		return this.playlistFolders.main.collections.value;
+	}
+
+	toggleFolder(key: string) {
+		const index = this.openFolders.indexOf(key);
+		if (index === -1) {
+			this.openFolders.push(key);
+		} else {
+			this.openFolders.splice(index, 1);
+		}
+	}
+
+	async showAddPlaylistModal() {
+		const collection = await libraryNewPlaylist(this.libraryStore);
+		if (collection) {
+			this.$router.push(collection.routeLocation);
+		}
+	}
+}
+</script>
 
 <template>
 	<div id="shell-sidebar-library">
@@ -10,10 +122,10 @@
 					active-class="active"
 				>
 					<span class="shell-nav-icon">
-						<app-jolticon icon="compass-needle" />
+						<AppJolticon icon="compass-needle" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>Explore</translate>
+						<AppTranslate>Explore</AppTranslate>
 					</span>
 				</router-link>
 			</li>
@@ -28,10 +140,10 @@
 					:class="{ active: ($route.name || '').startsWith('discover.games.') }"
 				>
 					<span class="shell-nav-icon">
-						<app-jolticon icon="game" />
+						<AppJolticon icon="game" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>Store</translate>
+						<AppTranslate>Store</AppTranslate>
 					</span>
 				</router-link>
 			</li>
@@ -43,27 +155,27 @@
 					:class="{ active: $route.name && $route.name.indexOf('search') === 0 }"
 				>
 					<span class="shell-nav-icon">
-						<app-jolticon icon="search" />
+						<AppJolticon icon="search" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>Search</translate>
+						<AppTranslate>Search</AppTranslate>
 					</span>
 				</router-link>
 			</li>
 		</ul>
 
 		<ul v-if="app.user" class="shell-nav">
-			<li v-if="GJ_IS_CLIENT">
+			<li v-if="GJ_IS_DESKTOP_APP">
 				<router-link
 					v-app-track-event="`sidebar:collection:installed`"
 					:to="{ name: 'library.installed' }"
 					active-class="active"
 				>
 					<span class="shell-nav-icon">
-						<app-jolticon icon="download-box" />
+						<AppJolticon icon="download-box" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>Installed Games</translate>
+						<AppTranslate>Installed Games</AppTranslate>
 					</span>
 				</router-link>
 			</li>
@@ -75,10 +187,10 @@
 					active-class="active"
 				>
 					<span class="shell-nav-icon">
-						<app-jolticon icon="user" />
+						<AppJolticon icon="user" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>library.nav.developer</translate>
+						<AppTranslate>Your Games</AppTranslate>
 					</span>
 				</router-link>
 			</li>
@@ -90,10 +202,10 @@
 					active-class="active"
 				>
 					<span class="shell-nav-icon">
-						<app-jolticon icon="subscribe" />
+						<AppJolticon icon="subscribe" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>library.nav.followed</translate>
+						<AppTranslate>Followed Games</AppTranslate>
 					</span>
 				</router-link>
 			</li>
@@ -105,10 +217,10 @@
 					active-class="active"
 				>
 					<span class="shell-nav-icon">
-						<app-jolticon icon="heart-filled" />
+						<AppJolticon icon="heart-filled" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>Owned Games</translate>
+						<AppTranslate>Owned Games</AppTranslate>
 					</span>
 				</router-link>
 			</li>
@@ -118,7 +230,7 @@
 			<li class="offline-disable">
 				<router-link
 					:to="{ name: 'landing.app' }"
-					@click.native="
+					@click="
 						trackAppPromotionClick({
 							source: 'sidebar',
 							platform: 'mobile',
@@ -126,19 +238,19 @@
 					"
 				>
 					<span class="shell-nav-icon">
-						<app-jolticon icon="phone" />
+						<AppJolticon icon="phone" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>Get the Mobile App</translate>
+						<AppTranslate>Get the Mobile App</AppTranslate>
 					</span>
 				</router-link>
 			</li>
 		</ul>
-		<ul v-else-if="!GJ_IS_CLIENT && Screen.isDesktop" class="shell-nav">
+		<ul v-else-if="!GJ_IS_DESKTOP_APP && Screen.isDesktop" class="shell-nav">
 			<li class="offline-disable">
 				<router-link
 					:to="{ name: 'landing.client' }"
-					@click.native="
+					@click="
 						trackAppPromotionClick({
 							source: 'sidebar',
 							platform: 'desktop',
@@ -146,10 +258,10 @@
 					"
 				>
 					<span class="shell-nav-icon">
-						<app-jolticon icon="client" />
+						<AppJolticon icon="client" />
 					</span>
 					<span class="shell-nav-label">
-						<translate>Get the Desktop App</translate>
+						<AppTranslate>Get the Desktop App</AppTranslate>
 					</span>
 				</router-link>
 			</li>
@@ -158,7 +270,7 @@
 		<template v-if="app.user">
 			<template v-if="bundleCollections.length">
 				<div class="nav-heading">
-					<translate>library.nav.bundles</translate>
+					<AppTranslate>Bundles</AppTranslate>
 					<span class="badge">
 						{{ bundleCollectionsLength }}
 					</span>
@@ -177,7 +289,7 @@
 							:title="bundleCollection.name"
 						>
 							<span class="shell-nav-icon">
-								<app-jolticon icon="bundle" />
+								<AppJolticon icon="bundle" />
 							</span>
 							<span class="shell-nav-label">
 								{{ bundleCollection.name }}
@@ -189,23 +301,23 @@
 
 			<!-- Playlists -->
 			<template v-if="isLibraryBootstrapped">
-				<div class="nav-heading" :title="$gettext(`library.nav.playlists`)">
-					<translate>library.nav.playlists</translate>
+				<div class="nav-heading" :title="$gettext(`Playlists`)">
+					<AppTranslate>Playlists</AppTranslate>
 					<span class="badge">
 						{{ collectionsLength }}
 					</span>
 				</div>
 
 				<div class="nav-controls">
-					<app-button
+					<AppButton
 						v-app-track-event="`sidebar:playlist-add`"
 						primary
 						block
 						class="offline-disable"
 						@click="showAddPlaylistModal"
 					>
-						<translate>library.nav.new_playlist_button</translate>
-					</app-button>
+						<AppTranslate>New Playlist</AppTranslate>
+					</AppButton>
 				</div>
 
 				<div v-if="collections.length > 0" class="nav-controls">
@@ -213,11 +325,20 @@
 						v-model="playlistFilterQuery"
 						type="search"
 						class="form-control"
-						:placeholder="$gettext(`library.nav.filter_playlists_placeholder`)"
+						:placeholder="$gettext(`Filter playlists...`)"
 					/>
 				</div>
 				<div v-else class="-no-playlists alert">
-					<div v-translate>library.nav.no_playlists_html</div>
+					<p>
+						<AppTranslate>
+							Create playlists to organize and share the games in your library.
+						</AppTranslate>
+					</p>
+					<p>
+						<AppTranslate>
+							Follow other people's playlists to discover more games!
+						</AppTranslate>
+					</p>
 				</div>
 
 				<!-- Playlist Folders -->
@@ -226,7 +347,7 @@
 						<li class="offline-disable">
 							<a @click="toggleFolder(key)">
 								<span class="shell-nav-icon">
-									<app-jolticon
+									<AppJolticon
 										:icon="
 											openFolders.indexOf(key) === -1
 												? 'folder'
@@ -236,20 +357,20 @@
 								</span>
 								{{ playlistFolders[key].title }}
 							</a>
-							<app-expand :when="openFolders.indexOf(key) !== -1">
-								<app-shell-sidebar-collection-list
-									:collections="playlistFolders[key].collections"
+							<AppExpand :when="openFolders.indexOf(key) !== -1">
+								<AppShellSidebarCollectionList
+									:collections="playlistFolders[key].collections.value"
 									:filter="playlistFilterQuery"
 									:should-sort="key === 'developers'"
 								/>
-							</app-expand>
+							</AppExpand>
 						</li>
 					</ul>
 				</div>
 
 				<!-- Main Playlists (not in folders) -->
-				<app-shell-sidebar-collection-list
-					:collections="playlistFolders.main.collections"
+				<AppShellSidebarCollectionList
+					:collections="mainPlaylists"
 					:filter="playlistFilterQuery"
 				/>
 			</template>
@@ -258,8 +379,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 #shell-sidebar-library
 	padding-top: 16px
 

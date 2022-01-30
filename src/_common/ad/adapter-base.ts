@@ -1,11 +1,11 @@
-import Vue from 'vue';
+import { Component } from 'vue';
 import { AdSlot } from './ad-slot-info';
 
 export abstract class AdAdapterBase {
 	private ranOnce = false;
 	hasVideoSupport = false;
 
-	abstract component(slot: AdSlot): typeof Vue;
+	abstract component(slot: AdSlot): Component;
 
 	// Callbacks.
 	onBeforeRouteChange() {}
@@ -17,7 +17,7 @@ export abstract class AdAdapterBase {
 	 * first ad display (lazy initialization).
 	 */
 	protected runOnce(cb: () => void) {
-		if (GJ_IS_SSR || this.ranOnce) {
+		if (import.meta.env.SSR || this.ranOnce) {
 			return;
 		}
 

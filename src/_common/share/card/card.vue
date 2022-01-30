@@ -1,4 +1,44 @@
-<script lang="ts" src="./card"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { copyShareLink, ShareProvider, ShareResource } from '../share.service';
+import { ShareModal } from './_modal/modal.service';
+import AppShareCardTile from './_tile/tile.vue';
+
+@Options({
+	components: {
+		AppShareCardTile,
+	},
+})
+export default class AppShareCard extends Vue {
+	@Prop({ type: String, required: true })
+	resource!: ShareResource;
+
+	@Prop({ type: String, required: true })
+	url!: string;
+
+	@Prop({ type: Boolean })
+	hideHeading!: boolean;
+
+	@Prop({ type: Boolean })
+	bleedPadding!: boolean;
+
+	@Prop({ type: Boolean })
+	offsetColor!: boolean;
+
+	readonly providers: ShareProvider[] = ['facebook', 'twitter'];
+
+	openShareModal() {
+		ShareModal.show({
+			resource: this.resource,
+			url: this.url,
+		});
+	}
+
+	copyLink() {
+		copyShareLink(this.url, this.resource);
+	}
+}
+</script>
 
 <template>
 	<div
@@ -7,20 +47,20 @@
 	>
 		<div class="-content">
 			<h4 v-if="!hideHeading">
-				<translate>Share</translate>
+				<AppTranslate>Share</AppTranslate>
 			</h4>
 
 			<div class="-content-row">
 				<!-- force update on input so that the URL re-applies and they can't edit -->
 				<input class="-url form-control" :value="url" @input="$forceUpdate()" />
 
-				<app-button class="-copy" @click="copyLink()">
-					<translate>Copy</translate>
-				</app-button>
+				<AppButton class="-copy" @click="copyLink()">
+					<AppTranslate>Copy</AppTranslate>
+				</AppButton>
 			</div>
 
 			<div class="-content-row-lower">
-				<app-share-card-tile
+				<AppShareCardTile
 					v-for="i in providers"
 					:key="i"
 					:resource="resource"
@@ -30,7 +70,7 @@
 				/>
 
 				<a class="-tile -dense" @click="openShareModal()">
-					<app-jolticon class="-icon" icon="ellipsis-h" />
+					<AppJolticon class="-icon" icon="ellipsis-h" />
 				</a>
 			</div>
 		</div>

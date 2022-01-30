@@ -1,16 +1,13 @@
-import { asyncComponentLoader } from '../../../../../utils/utils';
-import { Modal } from '../../../../../_common/modal/modal.service';
+import { defineAsyncComponent } from 'vue';
+import { showModal } from '../../../../../_common/modal/modal.service';
 import { FiresideController } from '../../../../components/fireside/controller/controller';
 
 export class CohostManageModal {
 	static async show(controller: FiresideController) {
-		return await Modal.show({
+		return await showModal({
 			modalId: 'CohostManage',
 			size: 'sm',
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "CohostManageModal" */ './manage-modal.vue')
-				),
+			component: defineAsyncComponent(() => import('./manage-modal.vue')),
 			props: { controller },
 		});
 	}

@@ -1,9 +1,111 @@
-<script lang="ts" src="./game"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
+import { Environment } from '../../../../_common/environment/environment.service';
+import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
+import { GameBundle } from '../../../../_common/game-bundle/game-bundle.model';
+import { CustomMessage as CustomGameMessage, Game } from '../../../../_common/game/game.model';
+import AppGamePackageCard from '../../../../_common/game/package/card/card.vue';
+import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
+import { KeyGroup } from '../../../../_common/key-group/key-group.model';
+import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import { useThemeStore } from '../../../../_common/theme/theme.store';
+
+const ClaimGameThemeKey = 'claim-game';
+
+@Options({
+	components: {
+		AppFadeCollapse,
+		AppGamePackageCard,
+		AppMediaItemCover,
+		AppContentViewer,
+	},
+})
+export default class AppKeyGame extends Vue {
+	@Prop({ required: true })
+	payload!: any;
+
+	@Prop({ type: String, required: true })
+	loginUrl!: string;
+
+	@Prop(String)
+	accessKey?: string;
+
+	commonStore = setup(() => useCommonStore());
+	themeStore = setup(() => useThemeStore());
+
+	get app() {
+		return this.commonStore;
+	}
+
+	showingThanks = false;
+	isClaimOnly = false;
+
+	game: Game = null as any;
+	bundle: GameBundle | null = null;
+	keyGroup: KeyGroup | null = null;
+	packagePayload: GamePackagePayloadModel | null = null;
+	gameIsLocked = false;
+
+	canToggleDescription = false;
+	showingFullDescription = false;
+
+	customGameMessages: CustomGameMessage[] = [];
+
+	Environment = Environment;
+
+	@Emit('claim')
+	emitClaim(_game: Game) {}
+
+	created() {
+		this.showingThanks = typeof this.$route.query.thanks !== 'undefined';
+
+		this.game = new Game(this.payload.game);
+		this.bundle = this.payload.bundle ? new GameBundle(this.payload.bundle) : null;
+		this.keyGroup = this.payload.keyGroup ? new KeyGroup(this.payload.keyGroup) : null;
+		this.gameIsLocked = this.payload.gameIsLocked ?? false;
+		this.setPageTheme();
+
+		if (
+			this.keyGroup &&
+			(this.keyGroup.type === KeyGroup.TYPE_USER ||
+				this.keyGroup.type === KeyGroup.TYPE_ANONYMOUS_CLAIM)
+		) {
+			this.isClaimOnly = true;
+			return;
+		}
+
+		this.customGameMessages = this.payload.customMessages || [];
+
+		if (this.payload.packages && this.payload.packages.length) {
+			this.packagePayload = new GamePackagePayloadModel(this.payload);
+		}
+	}
+
+	unmounted() {
+		this.themeStore.clearPageTheme(ClaimGameThemeKey);
+	}
+
+	private setPageTheme() {
+		const theme = this.game.theme ?? null;
+		this.themeStore.setPageTheme({
+			key: ClaimGameThemeKey,
+			theme,
+		});
+	}
+
+	claim() {
+		this.emitClaim(this.game);
+	}
+}
+</script>
 
 <template>
 	<div>
 		<div class="game-cover">
-			<app-media-item-cover
+			<AppMediaItemCover
 				v-if="game.header_media_item"
 				:media-item="game.header_media_item"
 			/>
@@ -12,7 +114,7 @@
 		<!-- If this game is in a bundle, show a back button. -->
 		<template v-if="bundle">
 			<br />
-			<app-button
+			<AppButton
 				block
 				:to="{
 					name: 'key',
@@ -20,14 +122,15 @@
 					query: {},
 				}"
 			>
-				<translate>Back to Bundle</translate>
-			</app-button>
+				<AppTranslate>Back to Bundle</AppTranslate>
+			</AppButton>
 		</template>
 
 		<div class="text-center">
 			<h1>{{ game.title }}</h1>
 			<h4>
-				<translate>by</translate>
+				<AppTranslate>by</AppTranslate>
+				{{ ' ' }}
 				<a class="link-unstyled" :href="Environment.baseUrl + game.developer.url">
 					{{ game.developer.display_name }}
 				</a>
@@ -48,27 +151,27 @@
 			<div v-if="!app.user" class="alert full-bleed full-bleed-xs text-center">
 				<p>
 					<a :href="loginUrl">
-						<translate>
+						<AppTranslate>
 							Sign in to Game Jolt to be able to claim this game into your Library.
-						</translate>
+						</AppTranslate>
 					</a>
 				</p>
 			</div>
 			<p v-else>
-				<app-button primary block @click="claim">
-					<translate>Claim Game into Library</translate>
-				</app-button>
+				<AppButton primary block @click="claim">
+					<AppTranslate>Claim Game into Library</AppTranslate>
+				</AppButton>
 			</p>
 		</template>
 
-		<app-fade-collapse
+		<AppFadeCollapse
 			:collapse-height="isClaimOnly ? undefined : 400"
 			:is-open="showingFullDescription"
 			@require-change="canToggleDescription = $event"
 			@expand="showingFullDescription = true"
 		>
-			<app-content-viewer :source="game.description_content" />
-		</app-fade-collapse>
+			<AppContentViewer :source="game.description_content" />
+		</AppFadeCollapse>
 
 		<a
 			v-if="canToggleDescription"
@@ -80,22 +183,23 @@
 			<br v-if="customGameMessages.length" />
 
 			<div
-				v-for="msg of customGameMessages"
+				v-for="(msg, i) of customGameMessages"
+				:key="i"
 				class="alert full-bleed-xs"
 				:class="{
 					'alert-notice': msg.type === 'alert',
 				}"
 			>
-				<app-jolticon icon="notice" />
+				<AppJolticon icon="notice" />
 				<span v-html="msg.message" />
 			</div>
 
 			<h2>
-				<translate>Releases</translate>
+				<AppTranslate>Releases</AppTranslate>
 			</h2>
 
 			<div v-if="packagePayload && packagePayload.packages.length" class="packages-list">
-				<app-game-package-card
+				<AppGamePackageCard
 					v-for="pkg of packagePayload.packages"
 					:key="pkg.id"
 					:game="game"
@@ -108,16 +212,13 @@
 			</div>
 
 			<div v-else class="alert alert-notice">
-				<translate>No releases yet.</translate>
+				<AppTranslate>No releases yet.</AppTranslate>
 			</div>
 		</template>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .game-cover
 	margin-top: -($grid-gutter-width / 2)
 	margin-right: -($grid-gutter-width-xs / 2)

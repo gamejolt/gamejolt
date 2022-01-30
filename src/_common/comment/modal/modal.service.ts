@@ -1,5 +1,5 @@
-import { asyncComponentLoader } from '../../../utils/utils';
-import { Modal } from '../../modal/modal.service';
+import { defineAsyncComponent } from 'vue';
+import { showModal } from '../../modal/modal.service';
 import { Model } from '../../model/model.service';
 
 export type DisplayMode = 'comments' | 'shouts';
@@ -14,10 +14,9 @@ export class CommentModal {
 	static async show(options: CommentModalOptions) {
 		const { displayMode, model, initialTab } = options;
 
-		return await Modal.show<void>({
+		return await showModal<void>({
 			modalId: 'Comment-' + [model.constructor.name, model.id].join('-'),
-			component: () =>
-				asyncComponentLoader(import(/* webpackChunkName: "CommentModal" */ './modal.vue')),
+			component: defineAsyncComponent(() => import('./modal.vue')),
 			props: {
 				displayMode,
 				model,

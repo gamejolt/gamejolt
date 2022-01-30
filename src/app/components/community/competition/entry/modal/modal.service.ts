@@ -1,7 +1,7 @@
-import VueRouter from 'vue-router';
-import { asyncComponentLoader } from '../../../../../../utils/utils';
+import { defineAsyncComponent } from 'vue';
+import { Router } from 'vue-router';
 import { CommunityCompetitionEntry } from '../../../../../../_common/community/competition/entry/entry.model';
-import { Modal } from '../../../../../../_common/modal/modal.service';
+import { showModal } from '../../../../../../_common/modal/modal.service';
 
 export type CommunityCompetitionEntryModalHashDeregister = () => void;
 
@@ -14,8 +14,8 @@ export class CommunityCompetitionEntryModal {
 		return this.show({ entryId });
 	}
 
-	static async showFromHash(router: VueRouter) {
-		const hash = router.currentRoute.hash;
+	static async showFromHash(router: Router) {
+		const hash = router.currentRoute.value.hash;
 		if (!hash || !hash.includes('#entry-')) {
 			return;
 		}
@@ -29,19 +29,16 @@ export class CommunityCompetitionEntryModal {
 	}
 
 	private static async show(props: any) {
-		return await Modal.show<void>({
+		return await showModal<void>({
 			modalId: 'CommunityCompetitionEntry',
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "CommunityCompetitionEntryModal" */ './modal.vue')
-				),
+			component: defineAsyncComponent(() => import('./modal.vue')),
 			props,
 			size: 'sm',
 		});
 	}
 
-	static watchForHash(router: VueRouter) {
-		const checkPath = router.currentRoute.path;
+	static watchForHash(router: Router) {
+		const checkPath = router.currentRoute.value.path;
 		return router.afterEach((to, _from) => {
 			if (checkPath === to.path && !!to.hash) {
 				this.showFromHash(router);

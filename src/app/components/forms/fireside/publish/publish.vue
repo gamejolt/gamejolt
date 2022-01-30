@@ -1,26 +1,49 @@
-<script lang="ts" src="./publish"></script>
+<script lang="ts">
+import { mixins, Options } from 'vue-property-decorator';
+import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import { BaseForm } from '../../../../../_common/form-vue/form.service';
+
+export type FormModel = {
+	auto_feature: boolean;
+};
+
+class Wrapper extends BaseForm<FormModel> {}
+
+@Options({
+	components: {
+		AppFormControlToggle,
+	},
+})
+export default class FormFiresidePublish extends mixins(Wrapper) {
+	onInit() {
+		this.setField('auto_feature', true);
+	}
+
+	showAdvancedCommunityOptions = false;
+}
+</script>
 
 <template>
-	<app-form>
-		<app-form-group
+	<AppForm :controller="form">
+		<AppFormGroup
 			v-if="showAdvancedCommunityOptions"
 			name="auto_feature"
 			:label="$gettext(`Automatically feature in community?`)"
 		>
-			<app-form-control-toggle class="pull-right" />
+			<AppFormControlToggle class="pull-right" />
 
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Will automatically feature this fireside in your selected community. This will
 					notify every member in the community that the fireside has started.
-				</translate>
+				</AppTranslate>
 			</p>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-button :disabled="!valid">
-			<translate>Publish</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton :disabled="!valid">
+			<AppTranslate>Publish</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>
 
 <style lang="stylus" scoped></style>

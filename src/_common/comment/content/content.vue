@@ -1,23 +1,63 @@
-<script lang="ts" src="./content"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import AppContentViewer from '../../content/content-viewer/content-viewer.vue';
+import AppFadeCollapse from '../../fade-collapse/fade-collapse.vue';
+import { formatDate } from '../../filters/date';
+import AppStickerControlsOverlay from '../../sticker/controls-overlay/controls-overlay.vue';
+import AppStickerReactions from '../../sticker/reactions/reactions.vue';
+import {
+	createStickerTargetController,
+	StickerTargetController,
+} from '../../sticker/target/target-controller';
+import AppStickerTarget from '../../sticker/target/target.vue';
+import { Comment } from '../comment-model';
+import '../comment.styl';
+
+@Options({
+	components: {
+		AppFadeCollapse,
+		AppContentViewer,
+		AppStickerTarget,
+		AppStickerReactions,
+		AppStickerControlsOverlay,
+	},
+})
+export default class AppCommentContent extends Vue {
+	@Prop({ type: Object, required: true }) comment!: Comment;
+	@Prop({ type: String, default: '' }) content!: string;
+	@Prop({ type: Boolean, default: false }) canPlaceStickers!: boolean;
+
+	stickerTargetController!: StickerTargetController;
+
+	canToggleContent = false;
+	showFullContent = false;
+
+	readonly formatDate = formatDate;
+
+	created() {
+		this.stickerTargetController = createStickerTargetController(this.comment);
+	}
+}
+</script>
 
 <template>
 	<div>
-		<app-sticker-target :controller="stickerTargetController" :disabled="!canPlaceStickers">
-			<app-fade-collapse
+		<AppStickerTarget :controller="stickerTargetController" :disabled="!canPlaceStickers">
+			<AppFadeCollapse
 				:collapse-height="375"
 				:is-open="showFullContent"
 				@require-change="canToggleContent = $event"
 				@expand="showFullContent = true"
 			>
-				<app-content-viewer :source="content" />
+				<AppContentViewer :source="content" />
 
 				<p v-if="comment.modified_on" class="text-muted small">
-					<b><translate>Last modified on</translate></b>
-					<span :title="date(comment.modified_on, 'medium')">
-						{{ date(comment.modified_on, 'longDate') }}
+					<b><AppTranslate>Last modified on</AppTranslate></b>
+					<span :title="formatDate(comment.modified_on, 'medium')">
+						{{ formatDate(comment.modified_on, 'longDate') }}
 					</span>
 				</p>
-			</app-fade-collapse>
+			</AppFadeCollapse>
 
 			<a
 				v-if="canToggleContent"
@@ -25,21 +65,18 @@
 				class="hidden-text-expander"
 				@click="showFullContent = !showFullContent"
 			/>
-		</app-sticker-target>
+		</AppStickerTarget>
 
-		<app-sticker-controls-overlay
+		<AppStickerControlsOverlay
 			v-if="comment.sticker_counts.length"
 			class="-reactions-container"
 		>
-			<app-sticker-reactions :controller="stickerTargetController" />
-		</app-sticker-controls-overlay>
+			<AppStickerReactions :controller="stickerTargetController" />
+		</AppStickerControlsOverlay>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $-reactions-padding = ($grid-gutter-width / 2) * 0.75
 $-reactions-padding-xs = ($grid-gutter-width-xs / 2) * 0.75
 

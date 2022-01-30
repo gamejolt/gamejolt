@@ -2,7 +2,7 @@ import { Api } from '../../../../_common/api/api.service';
 import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
 import { Jam } from '../../../../_common/jam/jam.model';
 import { Model } from '../../../../_common/model/model.service';
-import { appStore } from '../../../../_common/store/app-store';
+import { commonStore } from '../../../../_common/store/common-store';
 import { User } from '../../../../_common/user/user.model';
 
 export class GameCollection extends Model {
@@ -68,8 +68,8 @@ export class GameCollection extends Model {
 	}
 
 	get isOwner() {
-		const user = appStore.state.user;
-		return !!(user && this.owner && user.id === this.owner.id);
+		const { user } = commonStore;
+		return !!(user.value && this.owner && user.value.id === this.owner.id);
 	}
 
 	getTitle() {

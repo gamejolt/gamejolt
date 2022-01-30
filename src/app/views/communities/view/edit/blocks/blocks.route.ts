@@ -1,7 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeCommunitiesViewEditBlocks: RouteConfig = {
+export const routeCommunitiesViewEditBlocks: RouteRecordRaw = {
 	name: 'communities.view.edit.blocks',
 	path: 'blocks',
-	component: () => import(/* webpackChunkName: "routeCommunitiesViewEdit" */ './blocks.vue'),
+	component: () => import('./blocks.vue'),
 };

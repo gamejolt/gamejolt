@@ -1,8 +1,34 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Environment } from '../../environment/environment.service';
+import { Game } from '../../game/game.model';
+import AppGameThumbnailImg from '../../game/thumbnail-img/thumbnail-img.vue';
+import { WidgetCompiler } from '../widget-compiler.service';
+
+@Options({
+	components: {
+		AppGameThumbnailImg,
+	},
+})
+export default class AppWidgetCompilerWidgetGameList extends Vue {
+	@Prop({ type: Array, default: () => [] })
+	games!: Game[];
+
+	get contentClass() {
+		return WidgetCompiler.getContentClass();
+	}
+
+	url(game: Game) {
+		return game.site ? game.site.url : Environment.baseUrl + game.getUrl();
+	}
+}
+</script>
+
 <template>
 	<div class="widget-compiler-widget-game-list" :class="contentClass">
 		<div class="-game-list">
-			<a class="-game" v-for="game of games" :key="game.id" :href="url(game)">
-				<app-game-thumbnail-img animate :game="game" />
+			<a v-for="game of games" :key="game.id" class="-game" :href="url(game)">
+				<AppGameThumbnailImg animate :game="game" />
 				<div class="-title">{{ game.title }}</div>
 			</a>
 		</div>
@@ -10,8 +36,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-
 .-game-list
 	text-align: center
 
@@ -39,5 +63,3 @@
 	font-weight: bold
 	font-size: 1.1em
 </style>
-
-<script lang="ts" src="./widget-game-list"></script>

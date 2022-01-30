@@ -1,14 +1,45 @@
-<script lang="ts" src="./learn"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { AppAuthJoinLazy } from '../../../components/lazy';
+import { imageJolt } from '../../../img/images';
+
+@Options({
+	name: 'RouteLandingLearn',
+	components: {
+		AppAuthJoin: AppAuthJoinLazy,
+		AppThemeSvg,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+@OptionsForRoute()
+export default class RouteLandingLearn extends BaseRouteComponent {
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
+
+	readonly imageJolt = imageJolt;
+	readonly assetPaths = import.meta.globEager('./*.(svg|png)');
+}
+</script>
 
 <template>
 	<div class="route-landing-learn">
 		<section class="section landing-header text-center">
 			<div class="container">
 				<h1>
-					<app-theme-svg
+					<AppThemeSvg
 						v-app-tooltip="$gettext('This is a lightning bolt.')"
 						class="bolt anim-fade-in-down"
-						src="~img/jolt.svg"
+						:src="imageJolt"
 						alt=""
 						strict-colors
 					/>
@@ -33,7 +64,7 @@
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg src="./gamers.svg" alt="" />
+								<AppThemeSvg :src="assetPaths['./gamers.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Gamers</h4>
@@ -47,7 +78,7 @@
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg src="./lpers.svg" alt="" />
+								<AppThemeSvg :src="assetPaths['./lpers.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Let's Players</h4>
@@ -63,7 +94,7 @@
 
 						<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 							<div class="landing-graphic">
-								<app-theme-svg src="./developers.svg" alt="" />
+								<AppThemeSvg :src="assetPaths['./developers.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Studios</h4>
@@ -152,7 +183,7 @@
 						<div class="col-md-1" />
 						<div class="col-sm-5">
 							<div class="landing-graphic-full hidden-xs">
-								<app-theme-svg src="./discover.svg" alt="" />
+								<AppThemeSvg :src="assetPaths['./discover.svg'].default" alt="" />
 							</div>
 						</div>
 					</div>
@@ -164,7 +195,7 @@
 					<div class="row">
 						<div class="col-sm-5 col-sm-push-7 col-md-push-0">
 							<div class="landing-graphic-full hidden-xs">
-								<app-theme-svg src="./interact.svg" alt="" />
+								<AppThemeSvg :src="assetPaths['./interact.svg'].default" alt="" />
 							</div>
 						</div>
 						<div class="col-md-1" />
@@ -226,7 +257,7 @@
 						<div class="col-md-1" />
 						<div class="col-sm-5">
 							<div class="landing-graphic-full hidden-xs">
-								<app-theme-svg src="./support.svg" alt="" />
+								<AppThemeSvg :src="assetPaths['./support.svg'].default" alt="" />
 							</div>
 						</div>
 					</div>
@@ -238,7 +269,7 @@
 					<div class="row">
 						<div class="col-sm-5 col-sm-push-7 col-md-push-0">
 							<div class="landing-graphic-full hidden-xs">
-								<app-theme-svg src="./feeds.svg" alt="" />
+								<AppThemeSvg :src="assetPaths['./feeds.svg'].default" alt="" />
 							</div>
 						</div>
 						<div class="col-md-1" />
@@ -316,7 +347,7 @@
 						<div class="col-md-1" />
 						<div class="col-sm-5">
 							<div class="landing-graphic-full hidden-xs">
-								<app-theme-svg src="./organize.svg" alt="" />
+								<AppThemeSvg :src="assetPaths['./organize.svg'].default" alt="" />
 							</div>
 						</div>
 					</div>
@@ -328,7 +359,10 @@
 					<div class="row">
 						<div class="col-sm-5 col-sm-push-7 col-md-push-0">
 							<div class="landing-graphic-full hidden-xs">
-								<app-theme-svg src="./achievements.svg" alt="" />
+								<AppThemeSvg
+									:src="assetPaths['./achievements.svg'].default"
+									alt=""
+								/>
 							</div>
 						</div>
 						<div class="col-md-1" />
@@ -364,7 +398,7 @@
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg src="./friends.svg" alt="" />
+								<AppThemeSvg :src="assetPaths['./friends.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Friends</h4>
@@ -378,7 +412,7 @@
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg src="./chat.svg" alt="" />
+								<AppThemeSvg :src="assetPaths['./chat.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Chat</h4>
@@ -393,7 +427,7 @@
 
 						<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 							<div class="landing-graphic">
-								<app-theme-svg src="./forums.svg" alt="" />
+								<AppThemeSvg :src="assetPaths['./forums.svg'].default" alt="" />
 							</div>
 
 							<h4 class="text-center">Forums</h4>
@@ -434,25 +468,25 @@
 					<div class="landing-graphic-full">
 						<img
 							class="visible-lg"
-							src="./device-montage.png"
+							:src="assetPaths['./device-montage.png'].default"
 							alt=""
 							style="margin: 0 auto; max-width: none; width: 912px; height: 484px"
 						/>
 						<img
 							class="visible-md"
-							src="./device-montage.png"
+							:src="assetPaths['./device-montage.png'].default"
 							alt=""
 							style="margin: 0 auto; max-width: none; width: 912px; height: 484px"
 						/>
 						<img
 							class="visible-sm"
-							src="./device-montage.png"
+							:src="assetPaths['./device-montage.png'].default"
 							alt=""
 							style="margin: 0 auto; max-width: none; width: 684px; height: 363px"
 						/>
 						<img
 							class="visible-xs"
-							src="./device-montage.png"
+							:src="assetPaths['./device-montage.png'].default"
 							alt=""
 							style="margin: 0 auto; max-width: none; width: 228px; height: 121px"
 						/>
@@ -462,16 +496,16 @@
 					<br />
 					<br />
 
-					<app-button solid :to="{ name: 'landing.client' }">
-						<translate>Get Desktop Client</translate>
-					</app-button>
+					<AppButton solid :to="{ name: 'landing.client' }">
+						<AppTranslate>Get Desktop Client</AppTranslate>
+					</AppButton>
 				</div>
 			</section>
 
 			<section v-if="!app.user" class="section">
 				<div class="container">
 					<h1 class="section-header text-center">
-						<translate>Join</translate>
+						<AppTranslate>Join</AppTranslate>
 					</h1>
 
 					<hr class="underbar underbar-center" />
@@ -479,7 +513,7 @@
 
 					<div class="row">
 						<div class="col-sm-6 col-md-5 col-lg-4 col-centered">
-							<app-auth-join />
+							<AppAuthJoin />
 						</div>
 					</div>
 				</div>
@@ -489,8 +523,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .route-landing-learn .landing-body
 	.loading
 		color: $white

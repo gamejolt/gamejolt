@@ -1,4 +1,29 @@
-<script lang="ts" src="./thumbnail"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { trackGotoCommunity } from '../../analytics/analytics.service';
+import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
+import { Community } from '../community.model';
+import AppCommunityThumbnailImg from './img/img.vue';
+
+@Options({
+	components: {
+		AppCommunityThumbnailImg,
+		AppMediaItemBackdrop,
+	},
+})
+export default class AppCommunityThumbnail extends Vue {
+	@Prop({ type: Object, required: true })
+	community!: Community;
+
+	onGotoCommunity() {
+		trackGotoCommunity({
+			source: 'thumbnail',
+			id: this.community.id,
+			path: this.community.path,
+		});
+	}
+}
+</script>
 
 <template>
 	<router-link
@@ -8,16 +33,16 @@
 			params: { path: community.path },
 		}"
 		:title="community.name"
-		@click.native="onGotoCommunity"
+		@click="onGotoCommunity"
 	>
 		<div class="-thumb">
-			<app-media-item-backdrop
+			<AppMediaItemBackdrop
 				class="-thumb-inner"
 				:media-item="community.thumbnail"
 				radius="full"
 			>
-				<app-community-thumbnail-img class="-thumb-img" :community="community" />
-			</app-media-item-backdrop>
+				<AppCommunityThumbnailImg class="-thumb-img" :community="community" />
+			</AppMediaItemBackdrop>
 		</div>
 
 		<div class="-label">
@@ -27,9 +52,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-thumb
 	img-circle()
 	change-bg('bg-offset')

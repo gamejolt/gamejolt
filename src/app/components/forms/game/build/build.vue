@@ -1,18 +1,478 @@
-<script lang="ts" src="./build"></script>
+<script lang="ts">
+import { computed, Ref } from 'vue';
+import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
+import { arrayRemove } from '../../../../../utils/array';
+import { shallowSetup } from '../../../../../utils/vue';
+import { Api } from '../../../../../_common/api/api.service';
+import AppCardListItem from '../../../../../_common/card/list/AppCardListItem.vue';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
+import { formatFilesize } from '../../../../../_common/filters/filesize';
+import { formatFuzzynumber } from '../../../../../_common/filters/fuzzynumber';
+import { formatNumber } from '../../../../../_common/filters/number';
+import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
+import { GameBuild } from '../../../../../_common/game/build/build.model';
+import { GameBuildLaunchOption } from '../../../../../_common/game/build/launch-option/launch-option.model';
+import { Game } from '../../../../../_common/game/game.model';
+import { GamePackage } from '../../../../../_common/game/package/package.model';
+import { GameRelease } from '../../../../../_common/game/release/release.model';
+import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
+import AppLoading from '../../../../../_common/loading/loading.vue';
+import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
+import { AppProgressPoller } from '../../../../../_common/progress/poller/poller';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { useFormGameRelease } from '../release/release.vue';
+import { ArchiveFileSelectorModal } from './archive-file-selector-modal.service';
+
+export interface FormGameBuildInterface {
+	buildId: number;
+	isDeprecated: Ref<boolean>;
+	save: () => Promise<boolean>;
+}
+
+type GameBuildFormModel = GameBuild & {
+	launch_windows: string;
+	launch_windows_64: string;
+	launch_mac: string;
+	launch_mac_64: string;
+	launch_linux: string;
+	launch_linux_64: string;
+	launch_other: string;
+};
+
+class Wrapper extends BaseForm<GameBuildFormModel> {}
+
+@Options({
+	components: {
+		AppCardListItem,
+		AppExpand,
+		AppProgressPoller,
+		AppProgressBar,
+		AppLoading,
+		AppFormControlToggle,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad {
+	modelClass = GameBuild as any;
+
+	@Prop(Object)
+	game!: Game;
+
+	@Prop(Object)
+	package!: GamePackage;
+
+	@Prop(Object)
+	release!: GameRelease;
+
+	@Prop(Array)
+	releaseLaunchOptions!: GameBuildLaunchOption[];
+
+	@Prop(Object)
+	buildDownloadCounts!: {
+		[buildId: number]: number;
+	};
+
+	@Prop(Array)
+	builds!: GameBuild[];
+
+	releaseForm = shallowSetup(() => useFormGameRelease()!);
+
+	maxFilesize = 0;
+	restrictedPlatforms: string[] = [];
+	forceOther = false;
+	romTypes: string[] = [];
+	isSettingPlatform = false;
+	prevCount = -1;
+	buildLaunchOptions: GameBuildLaunchOption[] = [];
+	wasChanged = false;
+
+	readonly formatNumber = formatNumber;
+	readonly formatFuzzynumber = formatFuzzynumber;
+	readonly formatFilesize = formatFilesize;
+	readonly GameBuild = GameBuild;
+
+	@Emit('remove-build')
+	emitRemoveBuild(_formModel: GameBuildFormModel) {}
+
+	@Emit('update-launch-options')
+	emitUpdateLaunchOptions(_formModel: GameBuildFormModel, _launchOptions: any) {}
+
+	get loadUrl() {
+		return `/web/dash/developer/games/builds/save/${this.game.id}/${this.package.id}/${
+			this.release.id
+		}/${this.model!.id}`;
+	}
+
+	get pollUrl() {
+		return `/web/dash/developer/games/builds/poll-progress/${this.game.id}/${this.package.id}/${
+			this.release.id
+		}/${this.model!.id}`;
+	}
+
+	get shouldPollProgress() {
+		return this.model && this.model.status === GameBuild.STATUS_ADDING && !this.archiveError;
+	}
+
+	get archiveError() {
+		if (!this.model) {
+			return '';
+		}
+
+		if (this.model.hasError(GameBuild.ERROR_INVALID_ARCHIVE)) {
+			return this.$gettext(
+				`The archive you uploaded looks corrupted, we can't extract it on our end.`
+			);
+		}
+
+		if (this.model.hasError(GameBuild.ERROR_PASSWORD_ARCHIVE)) {
+			return this.$gettext(`The archive you uploaded is password-protected.`);
+		}
+
+		if (this.model.hasError(GameBuild.ERROR_NOT_HTML_ARCHIVE)) {
+			return this.$gettext(
+				`The archive you uploaded doesn't look like a valid html build. We expect a zip with an index.html at the root of the archive.`
+			);
+		}
+
+		return '';
+	}
+
+	get hasBrowserError() {
+		return this.hasCustomError('browser');
+	}
+
+	get isBrowserBased() {
+		return this.model!.isBrowserBased;
+	}
+
+	get hasPlatformsError() {
+		return this.hasCustomError('platforms');
+	}
+
+	get isDeprecated() {
+		return Boolean(
+			this.model &&
+				(this.model.type === GameBuild.TYPE_APPLET ||
+					this.model.type === GameBuild.TYPE_SILVERLIGHT)
+		);
+	}
+
+	get platformOptions() {
+		return [
+			{
+				key: 'windows',
+				label: this.$gettext('Windows'),
+				icon: 'windows',
+			},
+			{
+				key: 'windows_64',
+				label: this.$gettext('Windows 64-bit'),
+				icon: 'windows',
+			},
+			{
+				key: 'mac',
+				label: this.$gettext('Mac'),
+				icon: 'mac',
+			},
+			{
+				key: 'mac_64',
+				label: this.$gettext('Mac 64-bit'),
+				icon: 'mac',
+			},
+			{
+				key: 'linux',
+				label: this.$gettext('Linux'),
+				icon: 'linux',
+			},
+			{
+				key: 'linux_64',
+				label: this.$gettext('Linux 64-bit'),
+				icon: 'linux',
+			},
+			{
+				key: 'other',
+				// TODO(vue3) translate-comment="As in other than the rest of the things specified"
+				label: this.$gettext('Other'),
+				icon: 'other-os',
+			},
+		];
+	}
+
+	get platformsValid() {
+		if (!this.model) {
+			return false;
+		}
+
+		if (this.model.type !== GameBuild.TYPE_DOWNLOADABLE) {
+			return true;
+		}
+
+		return (
+			!!this.model.os_windows ||
+			!!this.model.os_mac ||
+			!!this.model.os_linux ||
+			!!this.model.os_windows_64 ||
+			!!this.model.os_mac_64 ||
+			!!this.model.os_linux_64 ||
+			!!this.model.os_other
+		);
+	}
+
+	get availablePlatformOptions() {
+		if (!this.model) {
+			return [];
+		}
+
+		return this.platformOptions.filter(platform => (this.model as any)[`os_${platform.key}`]);
+	}
+
+	get emulatorsInfo(): { [type: string]: string } {
+		return {
+			[GameBuild.EMULATOR_GB]: this.$gettext('Game Boy'),
+			[GameBuild.EMULATOR_GBC]: this.$gettext('Game Boy Color'),
+			[GameBuild.EMULATOR_GBA]: this.$gettext('Game Boy Advance'),
+			[GameBuild.EMULATOR_NES]: this.$gettext('NES'),
+			[GameBuild.EMULATOR_SNES]: this.$gettext('SNES'),
+			[GameBuild.EMULATOR_VBOY]: this.$gettext('Virtual Boy'),
+			[GameBuild.EMULATOR_GENESIS]: this.$gettext('Genesis/Mega Drive'),
+			[GameBuild.EMULATOR_ATARI2600]: this.$gettext('Atari 2600'),
+			[GameBuild.EMULATOR_ZX]: this.$gettext('ZX Spectrum'),
+			[GameBuild.EMULATOR_C64]: this.$gettext('Commodore 64'),
+			[GameBuild.EMULATOR_CPC]: this.$gettext('Amstrad CPC'),
+			[GameBuild.EMULATOR_MSX]: this.$gettext('MSX'),
+		};
+	}
+
+	get isFitToScreen() {
+		return this.formModel && this.formModel.embed_fit_to_screen;
+	}
+
+	created() {
+		this.form.reloadOnSubmit = true;
+		this.releaseForm.buildForms.value.push({
+			buildId: this.model!.id,
+			isDeprecated: computed(() => this.isDeprecated),
+			save: () => this.save(),
+		});
+	}
+
+	beforeUnmount() {
+		arrayRemove(this.releaseForm.buildForms.value, i => i.buildId === this.model!.id);
+	}
+
+	onInit() {
+		this.maxFilesize = 0;
+		this.restrictedPlatforms = [];
+		this.forceOther = false;
+		this.romTypes = [];
+		this.isSettingPlatform = false;
+		this.prevCount = -1;
+		this.buildLaunchOptions = [];
+		this.wasChanged = false;
+
+		// This populates buildLaunchOptions for the first time.
+		this.onReleaseLaunchOptionsChanged();
+		this.validatePlatforms();
+	}
+
+	onLoad(payload: any) {
+		this.maxFilesize = payload.maxFilesize;
+		this.restrictedPlatforms = payload.restrictedPlatforms;
+		this.forceOther = payload.forceOther;
+		this.romTypes = payload.romTypes;
+	}
+
+	remove() {
+		this.emitRemoveBuild(this.model!);
+	}
+
+	// This is called by the release form.
+	public save() {
+		return this.form.submit();
+	}
+
+	isPlatformDisabled(platform: string) {
+		// Restricted by server.
+		if (this.restrictedPlatforms && Array.isArray(this.restrictedPlatforms)) {
+			if (this.restrictedPlatforms.indexOf(platform) !== -1) {
+				return true;
+			}
+		}
+
+		// Can only be other OR a platform.
+		if (platform !== 'other' && this.model!.os_other) {
+			return true;
+		} else if (
+			platform === 'other' &&
+			(this.model!.os_windows ||
+				this.model!.os_mac ||
+				this.model!.os_linux ||
+				this.model!.os_windows_64 ||
+				this.model!.os_mac_64 ||
+				this.model!.os_linux_64)
+		) {
+			return true;
+		}
+
+		// Can't choose a platform chosen by another build in this package.
+		if (platform !== 'other') {
+			const foundBuild = this.builds.find(value => (value as any)[`os_${platform}`] === true);
+			if (foundBuild && foundBuild.id !== this.model!.id) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	async platformChanged(platform: string) {
+		this.isSettingPlatform = true;
+
+		try {
+			const params = [
+				this.game.id,
+				this.package.id,
+				this.release.id,
+				this.model!.id,
+				platform,
+				(this.formModel as any)['os_' + platform] ? 1 : 0,
+			];
+
+			const response = await Api.sendRequest(
+				'/web/dash/developer/games/builds/set-platform/' + params.join('/'),
+				{},
+				{ detach: true }
+			);
+
+			this.model!.assign(response.gameBuild);
+			this.game.assign(response.game);
+
+			// Copy new platforms to the form model.
+			for (const _platform of GameBuildLaunchOption.LAUNCHABLE_PLATFORMS) {
+				const key = 'os_' + _platform;
+
+				// oh geez
+				this.setField(key as any, (this.model as any)[key]);
+			}
+
+			// Copy new launch options in.
+			this.emitUpdateLaunchOptions(this.model!, response.launchOptions);
+		} catch (err) {
+			console.error(err);
+			showErrorGrowl(this.$gettext('Could not set the platform for some reason.'));
+		} finally {
+			this.isSettingPlatform = false;
+		}
+
+		this.validatePlatforms();
+	}
+
+	private validatePlatforms() {
+		if (!this.platformsValid) {
+			this.setCustomError('platforms');
+		} else {
+			this.clearCustomError('platforms');
+		}
+	}
+
+	getExecutablePath(platform: string) {
+		return (this.formModel as any)['launch_' + platform];
+	}
+
+	@Watch('releaseLaunchOptions', { deep: true })
+	onReleaseLaunchOptionsChanged() {
+		this.buildLaunchOptions = this.releaseLaunchOptions.filter(
+			launchOption => launchOption.game_build_id === this.model!.id
+		);
+
+		if (this.prevCount === -1) {
+			this.prevCount = this.buildLaunchOptions.length;
+		}
+
+		for (const launchOption of this.buildLaunchOptions) {
+			this.setField(('launch_' + launchOption.os) as any, launchOption.executable_path);
+		}
+
+		this.prevCount = this.buildLaunchOptions.length;
+	}
+
+	@Watch('formModel.embed_width')
+	@Watch('formModel.embed_height')
+	@Watch('formModel.embed_fit_to_screen')
+	onDimensionsChanged() {
+		const hasError =
+			this.isBrowserBased &&
+			!this.isFitToScreen &&
+			(!this.formModel.embed_width || !this.formModel.embed_height);
+
+		if (hasError) {
+			this.setCustomError('browser');
+		} else {
+			this.clearCustomError('browser');
+		}
+	}
+
+	async openFileSelector(platform: string) {
+		const selected = await ArchiveFileSelectorModal.show(
+			this.game.id,
+			this.package.id,
+			this.release.id,
+			this.model!.id,
+			this.model!.primary_file.id,
+			platform
+		);
+
+		if (!selected) {
+			return;
+		}
+
+		this.setField(('launch_' + platform) as any, selected);
+		this.onBuildFieldChanged();
+	}
+
+	processPollerResponse(response: any) {
+		// Just copy over the new build data into our current one.
+		this.model!.assign(response.build);
+		if (response.game) {
+			this.game.assign(response.game);
+		}
+	}
+
+	/**
+	 * Must be called any time a field changes that we need to show the save
+	 * button for.
+	 */
+	onBuildFieldChanged() {
+		this.wasChanged = true;
+	}
+
+	onSubmitSuccess(response: any) {
+		if (this.game) {
+			this.game.assign(response.game);
+		}
+	}
+}
+</script>
 
 <template>
-	<app-card-list-item class="game-build-form" :force-active="true">
+	<AppCardListItem class="game-build-form" force-active :item="model">
 		<a class="card-remove" @click="remove()">
-			<app-jolticon icon="remove" />
+			<AppJolticon icon="remove" />
 		</a>
 
 		<div class="card-stats">
 			<div class="stat-big stat-big-smaller">
 				<div class="stat-big-label">
-					<translate>dash.games.releases.builds.downloads_label</translate>
+					<AppTranslate>Downloads</AppTranslate>
 				</div>
-				<div class="stat-big-digit" :title="number(buildDownloadCounts[model.id] || 0)">
-					{{ (buildDownloadCounts[model.id] || 0) | fuzzynumber }}
+				<div
+					class="stat-big-digit"
+					:title="formatNumber(buildDownloadCounts[model.id] || 0)"
+				>
+					{{ formatNumber(buildDownloadCounts[model.id] || 0) }}
 				</div>
 			</div>
 		</div>
@@ -20,58 +480,60 @@
 		<div class="card-title">
 			<h5>
 				{{ model.primary_file.filename }}
-				<small class="text-muted">({{ model.primary_file.filesize | filesize }})</small>
+				<small class="text-muted">
+					({{ formatFilesize(model.primary_file.filesize) }})
+				</small>
 			</h5>
 		</div>
 
 		<div class="card-meta">
 			<span v-if="model.type === GameBuild.TYPE_DOWNLOADABLE" class="tag">
-				<app-jolticon icon="download" />
-				<translate>Downloadable</translate>
+				<AppJolticon icon="download" />
+				<AppTranslate>Downloadable</AppTranslate>
 			</span>
 			<span v-else-if="model.type === GameBuild.TYPE_HTML" class="tag">
-				<app-jolticon icon="html5" />
-				<translate>games.browser_html</translate>
+				<AppJolticon icon="html5" />
+				<AppTranslate>HTML</AppTranslate>
 			</span>
 			<span v-else-if="model.type === GameBuild.TYPE_FLASH" class="tag">
-				<app-jolticon icon="flash" />
-				<translate>games.browser_flash</translate>
+				<AppJolticon icon="flash" />
+				<AppTranslate>Flash</AppTranslate>
 			</span>
 			<span v-else-if="model.type === GameBuild.TYPE_UNITY" class="tag">
-				<app-jolticon icon="unity" />
-				<translate>games.browser_unity</translate>
+				<AppJolticon icon="unity" />
+				<AppTranslate>Unity</AppTranslate>
 			</span>
 			<span v-else-if="model.type === GameBuild.TYPE_SILVERLIGHT" class="tag">
-				<app-jolticon icon="silverlight" />
-				<translate>games.browser_silverlight</translate>
+				<AppJolticon icon="silverlight" />
+				<AppTranslate>Silverlight</AppTranslate>
 			</span>
 			<span v-else-if="model.type === GameBuild.TYPE_APPLET" class="tag">
-				<app-jolticon icon="java" />
-				<translate>games.browser_applet</translate>
+				<AppJolticon icon="java" />
+				<AppTranslate>Java Applet</AppTranslate>
 			</span>
 			<span v-else-if="model.type === GameBuild.TYPE_ROM" class="tag">
-				<app-jolticon icon="rom" />
-				<translate>ROM</translate>
+				<AppJolticon icon="rom" />
+				<AppTranslate>ROM</AppTranslate>
 			</span>
 
 			<!--
 				Missing fields.
 			-->
 			<span v-if="model.hasError(GameBuild.ERROR_MISSING_FIELDS)" class="tag tag-notice">
-				<app-jolticon icon="notice" />
-				<translate>Incomplete</translate>
+				<AppJolticon icon="notice" />
+				<AppTranslate>Incomplete</AppTranslate>
 			</span>
 
 			<span v-else>
 				<span v-if="model.status === GameBuild.STATUS_ADDING" class="tag">
-					<translate>Processing</translate>
+					<AppTranslate>Processing</AppTranslate>
 				</span>
 				<span
 					v-else-if="model.status === GameBuild.STATUS_ACTIVE"
 					class="tag tag-highlight"
 				>
-					<app-jolticon icon="check" />
-					<translate>Active</translate>
+					<AppJolticon icon="check" />
+					<AppTranslate>Active</AppTranslate>
 				</span>
 			</span>
 		</div>
@@ -80,48 +542,52 @@
 			Processing the build.
 		-->
 		<template v-if="shouldPollProgress">
-			<app-progress-poller
+			<AppProgressPoller
 				:url="pollUrl"
 				@progress="processPollerResponse"
 				@complete="processPollerResponse"
 			/>
 
-			<app-expand :when="!model.errors">
+			<AppExpand :when="!model.errors">
 				<br />
-				<app-progress-bar thin indeterminate active :percent="100" />
+				<AppProgressBar thin indeterminate active :percent="100" />
 
 				<div v-translate class="text-center small">
 					<strong>Processing build.</strong>
 					It will become available in this release as soon as we're done.
 				</div>
-			</app-expand>
+			</AppExpand>
 		</template>
 
-		<template slot="body">
-			<app-form ref="form" name="buildForm">
+		<template #body>
+			<AppForm :controller="form">
 				<div
 					v-if="model.type === GameBuild.TYPE_APPLET"
 					class="alert alert-notice sans-margin"
 				>
-					<app-jolticon icon="notice" />
-					<strong><translate>Java Applets have been deprecated.</translate></strong>
-					<translate>
+					<AppJolticon icon="notice" />
+					<strong><AppTranslate>Java Applets have been deprecated.</AppTranslate></strong>
+					<AppTranslate>
 						You can no longer edit your Java Applet builds, although gamers will still
 						be able to play them if their browsers support them. You can add .jar files
 						as downloadables and the Game Jolt Client will correctly launch them for
 						users instead.
-					</translate>
+					</AppTranslate>
 				</div>
 				<div
 					v-else-if="model.type === GameBuild.TYPE_SILVERLIGHT"
 					class="alert alert-notice sans-margin"
 				>
-					<app-jolticon icon="notice" />
-					<strong><translate>Silverlight builds have been deprecated.</translate></strong>
-					<translate>
+					<AppJolticon icon="notice" />
+					<strong
+						><AppTranslate
+							>Silverlight builds have been deprecated.</AppTranslate
+						></strong
+					>
+					<AppTranslate>
 						You can no longer edit your Silverlight builds, although gamers will still
 						be able to play them if their browsers support them.
-					</translate>
+					</AppTranslate>
 				</div>
 
 				<!--
@@ -129,12 +595,16 @@
 				-->
 				<div v-if="!isDeprecated">
 					<template v-if="archiveError">
-						<app-expand class="-archive-error" :when="true">
+						<AppExpand class="-archive-error" :when="true">
 							<div class="alert alert-notice sans-margin-bottom">
 								<p>{{ archiveError }}</p>
-								<p><translate>Please re-upload with a valid archive.</translate></p>
+								<p>
+									<AppTranslate
+										>Please re-upload with a valid archive.</AppTranslate
+									>
+								</p>
 							</div>
-						</app-expand>
+						</AppExpand>
 					</template>
 
 					<div
@@ -142,7 +612,7 @@
 							model.primary_file.is_archive && !model.primary_file.is_archive_ready
 						"
 					>
-						<app-loading
+						<AppLoading
 							class="-rummaging"
 							:label="
 								$gettext(`Give us a second, we're rummaging through the archive...`)
@@ -155,7 +625,7 @@
 							v-if="isSettingPlatform"
 							class="game-build-form-spinner no-animate-leave"
 						>
-							<app-loading :hide-label="true" />
+							<AppLoading :hide-label="true" />
 						</div>
 
 						<!--
@@ -169,11 +639,11 @@
 								When this build is not able to launch on certain platforms.
 							-->
 							<p v-if="restrictedPlatforms.length">
-								<app-jolticon icon="info-circle" />
-								<translate>
+								<AppJolticon icon="info-circle" />
+								<AppTranslate>
 									This build is not launchable on certain platforms. They've been
 									disabled below.
-								</translate>
+								</AppTranslate>
 							</p>
 
 							<p
@@ -182,15 +652,15 @@
 									'sans-margin-top': !restrictedPlatforms.length,
 								}"
 							>
-								<translate>
+								<AppTranslate>
 									Select "Other" if this build is for a platform that's not shown,
 									or if it's a non-executable file such as a PDF.
-								</translate>
+								</AppTranslate>
 							</p>
 
 							<div class="clearfix">
 								<div v-for="platform of platformOptions" :key="platform.key">
-									<app-form-group
+									<AppFormGroup
 										:name="`os_${platform.key}`"
 										:optional="true"
 										:hide-label="true"
@@ -200,25 +670,25 @@
 											:class="{ disabled: isPlatformDisabled(platform.key) }"
 										>
 											<label>
-												<app-form-control-checkbox
+												<AppFormControlCheckbox
 													:disabled="isPlatformDisabled(platform.key)"
 													@changed="platformChanged(platform.key)"
 												/>
 												{{ platform.label }}
 											</label>
 										</div>
-									</app-form-group>
+									</AppFormGroup>
 								</div>
 							</div>
 
-							<app-expand :when="hasPlatformsError">
+							<AppExpand :when="hasPlatformsError">
 								<div class="alert alert-notice sans-margin-bottom">
-									<translate>
+									<AppTranslate>
 										You have to select at least one platform on which your build
 										runs (or "Other").
-									</translate>
+									</AppTranslate>
 								</div>
-							</app-expand>
+							</AppExpand>
 						</div>
 
 						<!--
@@ -226,11 +696,11 @@
 							In that case, it is forced as "other".
 						-->
 						<p v-if="forceOther" class="sans-margin">
-							<app-jolticon icon="info-circle" />
-							<translate>
+							<AppJolticon icon="info-circle" />
+							<AppTranslate>
 								This build doesn't seem to be a Windows, macOS, or Linux build, so
 								we've marked it as 'Other' for you.
-							</translate>
+							</AppTranslate>
 						</p>
 
 						<!--
@@ -244,10 +714,10 @@
 							"
 							class="form-horizontal"
 						>
-							<legend><translate>Launch Options</translate></legend>
+							<legend><AppTranslate>Launch Options</AppTranslate></legend>
 
 							<div v-if="model.primary_file.is_archive">
-								<app-form-group
+								<AppFormGroup
 									v-for="platform of availablePlatformOptions"
 									:key="platform.key"
 									:name="`launch_${platform.key}`"
@@ -256,11 +726,8 @@
 								>
 									<div class="col-sm-9">
 										<div class="input-group input-group-sm">
-											<app-form-control
-												maxlength="500"
-												:rules="{
-													max: 500,
-												}"
+											<AppFormControl
+												:validators="[validateMaxLength(500)]"
 												@changed="onBuildFieldChanged"
 											/>
 											<!--  TODO: this doesn't register when the file is selected to clear the error -->
@@ -269,169 +736,169 @@
 												<a
 													v-app-tooltip="
 														$gettext(
-															`dash.games.releases.builds.launch_options.form.file_selector_tooltip`
+															`Browse file list.`
 														)
 													"
 													class="link-unstyled"
 													@click="openFileSelector(platform.key)"
 												>
-													<app-jolticon icon="ellipsis-h" />
+													<AppJolticon icon="ellipsis-h" />
 												</a>
 											</span>
 										</div>
 
-										<app-form-control-errors
+										<AppFormControlErrors
 											:ignore-dirty="true"
 											:label="
 												$gettext(
-													`dash.games.releases.builds.launch_options.form.file_error_label`
+													`path to the executable file`
 												)
 											"
 										/>
 									</div>
-								</app-form-group>
+								</AppFormGroup>
 							</div>
 
-							<app-expand :when="serverErrors.launchOptions">
+							<AppExpand :when="serverErrors.launchOptions">
 								<div class="alert alert-notice">
 									<strong>
-										<translate>
+										<AppTranslate>
 											The launch options you entered are invalid.
-										</translate>
+										</AppTranslate>
 									</strong>
-									<translate>
+									<AppTranslate>
 										Make sure each selected file is in your build and that it
 										works on the appropriate operating system.
-									</translate>
+									</AppTranslate>
 								</div>
-							</app-expand>
+							</AppExpand>
 
-							<app-expand :when="!model.primary_file.is_archive">
+							<AppExpand :when="!model.primary_file.is_archive">
 								<div>
 									<p>
 										<strong>
-											<translate>
+											<AppTranslate>
 												We've detected that this build is a standalone
 												executable file.
-											</translate>
+											</AppTranslate>
 										</strong>
 									</p>
-									<p><translate>It can be launched automatically.</translate></p>
+									<p>
+										<AppTranslate
+											>It can be launched automatically.</AppTranslate
+										>
+									</p>
 								</div>
-							</app-expand>
+							</AppExpand>
 						</fieldset>
 
 						<!--
 							Browser Embed Dimensions
 						-->
 						<div v-if="isBrowserBased">
-							<app-form-group
+							<AppFormGroup
 								name="embed_fit_to_screen"
 								:label="$gettext(`Fit to screen?`)"
 							>
-								<app-form-control-toggle
+								<AppFormControlToggle
 									class="pull-right"
 									@changed="onBuildFieldChanged"
 								/>
 
 								<p class="help-block">
-									<translate>
+									<AppTranslate>
 										If your game can stretch to fit the browser viewport, you
 										can turn this option on to take up the whole available
 										space.
-									</translate>
+									</AppTranslate>
 								</p>
-							</app-form-group>
+							</AppFormGroup>
 
 							<template v-if="!isFitToScreen">
 								<hr />
 
 								<p class="help-block">
-									<translate>
+									<AppTranslate>
 										These are the dimensions at which your browser build will be
 										displayed.
-									</translate>
+									</AppTranslate>
 								</p>
 
 								<div class="row">
 									<div class="col-sm-6">
-										<app-form-group
-											name="embed_width"
-											:label="$gettext(`dash.games.builds.form.width_label`)"
-										>
-											<app-form-control
+										<!-- TODO(vue3) translate-comment="Width of the browser game canvas" -->
+										<AppFormGroup name="embed_width" :label="$gettext(`Width`)">
+											<AppFormControl
 												class="input-sm"
 												type="number"
 												@changed="onBuildFieldChanged"
 											/>
-											<app-form-control-errors :ignore-dirty="true" />
-										</app-form-group>
+											<AppFormControlErrors :ignore-dirty="true" />
+										</AppFormGroup>
 									</div>
 									<div class="col-sm-6">
-										<app-form-group
+										<!-- TODO(vue3) translate-comment="Height of the browser game canvas" -->
+										<AppFormGroup
 											name="embed_height"
-											:label="$gettext(`dash.games.builds.form.height_label`)"
+											:label="$gettext(`Height`)"
 										>
-											<app-form-control
+											<AppFormControl
 												class="input-sm"
 												type="number"
 												@changed="onBuildFieldChanged"
 											/>
-											<app-form-control-errors :ignore-dirty="true" />
-										</app-form-group>
+											<AppFormControlErrors :ignore-dirty="true" />
+										</AppFormGroup>
 									</div>
 								</div>
 							</template>
 
-							<app-form-group
-								name="https_enabled"
-								:label="$gettext(`HTTPS support?`)"
-							>
-								<app-form-control-toggle
+							<AppFormGroup name="https_enabled" :label="$gettext(`HTTPS support?`)">
+								<AppFormControlToggle
 									class="pull-right"
 									@changed="onBuildFieldChanged"
 								/>
 
 								<p class="help-block">
-									<translate>
+									<AppTranslate>
 										If your game doesn't work on HTTPS you can disable this and
 										we'll serve it over HTTP instead. It's highly recommended to
 										get your game working on HTTPS! Some features may not work
 										on HTTP in more recent browsers.
-									</translate>
+									</AppTranslate>
 								</p>
-							</app-form-group>
+							</AppFormGroup>
 						</div>
 
 						<!--
 							Unity Right Click Menu
 						-->
-						<app-form-group
+						<AppFormGroup
 							v-if="formModel.type === GameBuild.TYPE_UNITY"
 							name="browser_disable_right_click"
-							:label="$gettext(`dash.games.builds.form.disable_right_click_label`)"
+							:label="$gettext(`Disable right click?`)"
 						>
 							<p class="help-block">
-								<translate>
-									dash.games.builds.form.disable_right_click_help
-								</translate>
+								<AppTranslate>
+									This allows you to disable right mouse click behavior. Only enable this if your game needs to intercept right clicks.
+								</AppTranslate>
 							</p>
-							<app-form-control-toggle @changed="onBuildFieldChanged" />
-						</app-form-group>
+							<AppFormControlToggle @changed="onBuildFieldChanged" />
+						</AppFormGroup>
 
 						<div v-if="model.type === GameBuild.TYPE_UNITY" class="alert alert-notice">
-							<app-jolticon icon="notice" />
+							<AppJolticon icon="notice" />
 							<strong>
-								<translate>
+								<AppTranslate>
 									Most browsers have stopped supporting the Unity Web Player.
-								</translate>
+								</AppTranslate>
 							</strong>
-							<translate>Please consider exporting to WebGL instead.</translate>
+							<AppTranslate>Please consider exporting to WebGL instead.</AppTranslate>
 						</div>
 
 						<p v-if="model.type === GameBuild.TYPE_ROM" class="sans-margin">
-							<app-jolticon icon="info-circle" />
-							<translate
+							<AppJolticon icon="info-circle" />
+							<AppTranslate
 								:translate-params="{
 									platform: emulatorsInfo[model.emulator_type],
 								}"
@@ -439,29 +906,96 @@
 							>
 								We've detected this build is actually a ROM for the %{ platform }.
 								We will automatically emulate it in browser for you!
-							</translate>
+							</AppTranslate>
 						</p>
 
-						<app-expand :when="hasBrowserError">
+						<AppExpand :when="hasBrowserError">
 							<div class="alert alert-notice sans-margin-bottom">
-								<translate>
+								<AppTranslate>
 									This build has more info to fill in before it will be available
 									in this release.
-								</translate>
+								</AppTranslate>
 							</div>
-						</app-expand>
+						</AppExpand>
 					</template>
 
-					<app-form-button
-						v-if="valid && wasChanged"
-						class="game-build-form-submit-button"
-					>
-						<translate>Save Build</translate>
-					</app-form-button>
+					<AppFormButton v-if="valid && wasChanged" class="game-build-form-submit-button">
+						<AppTranslate>Save Build</AppTranslate>
+					</AppFormButton>
 				</div>
-			</app-form>
+			</AppForm>
 		</template>
-	</app-card-list-item>
+	</AppCardListItem>
 </template>
 
-<style lang="stylus" src="./build.styl" scoped></style>
+<style lang="stylus" scoped>
+
+.game-build-form
+	form
+		display: block
+		position: relative
+		font-size: $font-size-small
+		margin-top: 0 !important
+
+	legend
+		font-size: $font-size-h4
+
+	&-spinner
+		position: absolute
+		top: 0
+		right: 0
+		bottom: 0
+		left: 0
+		content: ''
+		background-color: rgba($white, 0.5)
+		z-index: 2
+		display: flex
+		align-items: center
+		justify-content: center
+		animation-name: fade-in
+		animation-duration: 500ms
+		animation-delay: 200ms
+		opacity: 0
+
+	.build-options
+		float: right
+		margin-left: 20px
+
+	.stat-big.stat-big-smaller
+		margin-bottom: 0
+
+	::v-deep(.help-block)
+	.alert
+		margin-bottom: ($line-height-computed / 2)
+
+	::v-deep(.form-group)
+		margin-bottom: $line-height-computed
+
+	// Need to do this because the rule above overrides it.
+	.-archive-error
+		::v-deep(.sans-margin-bottom)
+			margin-bottom: 0
+
+	&-submit-button
+		margin-top: ($line-height-computed / 2)
+
+	::v-deep(.downloadable-platforms)
+		&.form-group
+		.form-group
+			margin-left: 0
+			margin-right: 0
+
+		.form-group
+			float: left
+			margin-bottom: 0
+			margin-right: 20px
+
+		.checkbox
+			margin-top: 0
+
+	.-rummaging
+		margin-bottom: 0
+
+	.card-meta .tag
+		margin-right: 4px
+</style>

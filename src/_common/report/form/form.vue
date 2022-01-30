@@ -1,10 +1,457 @@
+<script lang="ts">
+import { mixins, Options, Prop } from 'vue-property-decorator';
+import { arrayRemove } from '../../../utils/array';
+import { Api } from '../../api/api.service';
+import { FiresidePost } from '../../fireside/post/post-model';
+import AppFormControlTextarea from '../../form-vue/controls/AppFormControlTextarea.vue';
+import { BaseForm, FormOnSubmit } from '../../form-vue/form.service';
+import { Game } from '../../game/game.model';
+
+interface FormModel {
+	reason: string;
+	context: string[];
+	description: string;
+	source: string;
+}
+
+class Wrapper extends BaseForm<FormModel> {}
+
+@Options({
+	components: {
+		AppFormControlTextarea,
+	},
+})
+export default class AppReportForm extends mixins(Wrapper) implements FormOnSubmit {
+	@Prop(String) type!: string;
+	@Prop(Object) resource!: any;
+
+	// Default values, get overwritten from backend.
+	maxLengthDescription = 200;
+	maxLengthSource = 255;
+
+	get isDescriptionOptional() {
+		if (!this.formModel.reason) {
+			return true;
+		}
+
+		// When "other" is selected as reason, they have to provide a description.
+		if (this.formModel.reason === 'other') {
+			return false;
+		}
+
+		// When "other" is selected as context, they have to provide a description.
+		if (this.formModel.context && this.formModel.context.includes('other')) {
+			return false;
+		}
+
+		return true;
+	}
+
+	get reasons(): any[] {
+		switch (this.type) {
+			case 'Game':
+				return [
+					{
+						radioValue: 'spam',
+						text: this.$gettext('It is spam or unwanted commercial content'),
+					},
+					{
+						radioValue: 'abuse',
+						text: this.$gettext(
+							'Incorrect maturity rating for the content in the game'
+						),
+					},
+					{
+						radioValue: 'explicit',
+						text: this.$gettext(
+							'It is pornographic or contains sexually explicit material'
+						),
+					},
+					{
+						radioValue: 'stolen',
+						text: this.$gettext('Game does not belong to this developer'),
+						source: {
+							placeholder: this.$gettext('Tell us where this game was stolen from'),
+						},
+					},
+					{
+						radioValue: 'no-info',
+						text: this.$gettext(
+							'No information on game page (no screenshots, sparse description, placeholder page, etc.)'
+						),
+					},
+					{
+						radioValue: 'malware',
+						text: this.$gettext('Virus or other form of malware'),
+					},
+					{
+						radioValue: 'other',
+						text: this.$gettext('Other'),
+					},
+				];
+			case 'Fireside_Post': {
+				const reasons = [
+					{
+						radioValue: 'spam',
+						text: this.$gettext('It is spam or unwanted commercial content'),
+					},
+					{
+						radioValue: 'abuse',
+						text: this.$gettext('It is hate speech or contains graphic content'),
+					},
+					{
+						radioValue: 'explicit',
+						text: this.$gettext(
+							'It is pornographic or contains sexually explicit material'
+						),
+					},
+					{
+						radioValue: 'harassment',
+						text: this.$gettext('It is harassment or bullying'),
+					},
+					{
+						radioValue: 'stolen',
+						text: this.$gettext('Content in this post does not belong to the author'),
+						source: {
+							placeholder: this.$gettext(
+								'Tell us where content in this post was stolen from'
+							),
+						},
+					},
+					{
+						radioValue: 'other',
+						text: this.$gettext('Other'),
+					},
+				];
+
+				// For a devlog post of a game that is maturity restricted, we don't want to show the "explicit" report option.
+				// Those devlog posts can be explicit, and we don't want to encourage false reports.
+				const isAdultGamePost =
+					this.resource instanceof FiresidePost &&
+					this.resource.game instanceof Game &&
+					this.resource.game.tigrs_age === 3;
+
+				// However, in cases where the post may be shown outside of the game page, we won't disable reporting.
+				const onlyShowsOnGame =
+					!this.resource.post_to_user_profile && this.resource.communities.length === 0;
+
+				if (isAdultGamePost && onlyShowsOnGame) {
+					arrayRemove(reasons, i => i.radioValue === 'explicit');
+				}
+
+				return reasons;
+			}
+			case 'Comment':
+			case 'Forum_Topic':
+			case 'Forum_Post':
+				return [
+					{
+						radioValue: 'spam',
+						text: this.$gettext('It is spam or unwanted commercial content'),
+					},
+					{
+						radioValue: 'abuse',
+						text: this.$gettext('It is hate speech or contains graphic content'),
+					},
+					{
+						radioValue: 'explicit',
+						text: this.$gettext(
+							'It is pornographic or contains sexually explicit material'
+						),
+					},
+					{
+						radioValue: 'harassment',
+						text: this.$gettext('It is harassment or bullying'),
+					},
+					{
+						radioValue: 'other',
+						text: this.$gettext('Other'),
+					},
+				];
+
+			case 'Community':
+				return [
+					{
+						radioValue: 'spam',
+						text: this.$gettext(`It is spam or unwanted commercial content`),
+					},
+					{
+						radioValue: 'abuse',
+						text: this.$gettext('Encourages posting of hate speech or graphic content'),
+					},
+					{
+						radioValue: 'harassment',
+						text: this.$gettext(
+							`This community is used to create targeted harassment or bullying`
+						),
+					},
+					{
+						radioValue: 'no-moderation',
+						text: this.$gettext(
+							'This community is not actively moderated by its moderators'
+						),
+					},
+					{
+						radioValue: 'other',
+						text: this.$gettext('Other'),
+					},
+				];
+
+			case 'Fireside':
+				return [
+					{
+						radioValue: 'abuse',
+						text: this.$gettext(
+							'Fireside is used to show/promote hate speech or graphic content'
+						),
+						contexts: [
+							{
+								checkValue: 'fireside/title',
+								text: this.$gettext('Title'),
+							},
+							{
+								checkValue: 'fireside/chat',
+								text: this.$gettext('Chat messages'),
+							},
+							{
+								checkValue: 'fireside/audio-video',
+								text: this.$gettext('Audio or video stream'),
+							},
+						],
+					},
+					{
+						radioValue: 'explicit',
+						text: this.$gettext('Fireside contains explicit or sensitive material'),
+						contexts: [
+							{
+								checkValue: 'fireside/title',
+								text: this.$gettext('Title'),
+							},
+							{
+								checkValue: 'fireside/chat',
+								text: this.$gettext('Chat messages'),
+							},
+							{
+								checkValue: 'fireside/audio-video',
+								text: this.$gettext('Audio or video stream'),
+							},
+						],
+					},
+					{
+						radioValue: 'no-moderation',
+						text: this.$gettext(
+							"This fireside's chat is not actively moderated by its moderators"
+						),
+					},
+					{
+						radioValue: 'other',
+						text: this.$gettext('Other'),
+					},
+				];
+
+			case 'User':
+				return [
+					{
+						radioValue: 'spam',
+						text: this.$gettext('Spammer'),
+						contexts: [
+							{
+								checkValue: 'user/posts',
+								text: this.$gettext('Posts'),
+							},
+							{
+								checkValue: 'user/comments',
+								text: this.$gettext('Comments'),
+							},
+							{
+								checkValue: 'user/games',
+								text: this.$gettext('Games'),
+							},
+							{
+								checkValue: 'user/chat',
+								text: this.$gettext('Chat Messages'),
+							},
+							{
+								checkValue: 'user/bio',
+								text: this.$gettext('Bio'),
+							},
+							{
+								checkValue: 'user/website',
+								text: this.$gettext('Website'),
+							},
+							{
+								checkValue: 'other',
+								text: this.$gettext('Other (please describe below)'),
+							},
+						],
+					},
+					{
+						radioValue: 'explicit',
+						text: this.$gettext(
+							'Profile or username contains explicit or sensitive material'
+						),
+						contexts: [
+							{
+								checkValue: 'user/header',
+								text: this.$gettext('Header'),
+							},
+							{
+								checkValue: 'user/avatar',
+								text: this.$gettext('Avatar'),
+							},
+							{
+								checkValue: 'user/name',
+								text: this.$gettext('Username or display name'),
+							},
+							{
+								checkValue: 'user/posts',
+								text: this.$gettext('Posts'),
+							},
+							{
+								checkValue: 'user/comments',
+								text: this.$gettext('Comments'),
+							},
+							{
+								checkValue: 'user/chat',
+								text: this.$gettext('Chat Messages'),
+							},
+							{
+								checkValue: 'user/bio',
+								text: this.$gettext('Bio'),
+							},
+							{
+								checkValue: 'user/website',
+								text: this.$gettext('Website or socials'),
+							},
+							{
+								checkValue: 'other',
+								text: this.$gettext('Other (please describe below)'),
+							},
+						],
+					},
+					{
+						radioValue: 'harassment',
+						text: this.$gettext('This user is harassing or bullying others'),
+						contexts: [
+							{
+								checkValue: 'user/posts',
+								text: this.$gettext('Posts'),
+							},
+							{
+								checkValue: 'user/comments',
+								text: this.$gettext('Comments'),
+							},
+							{
+								checkValue: 'user/chat',
+								text: this.$gettext('Chat Messages'),
+							},
+							{
+								checkValue: 'user/bio',
+								text: this.$gettext('Bio'),
+							},
+							{
+								checkValue: 'other',
+								text: this.$gettext('Other (please describe below)'),
+							},
+						],
+					},
+					{
+						radioValue: 'impersonation',
+						text: this.$gettext('Impersonating'),
+						source: {
+							placeholder: this.$gettext(
+								'Tell us which person this user is impersonating'
+							),
+						},
+					},
+					{
+						radioValue: 'other',
+						text: this.$gettext('Other'),
+					},
+				];
+		}
+
+		throw new Error('Resource has no reasons defined.');
+	}
+
+	created() {
+		this.form.warnOnDiscard = false;
+	}
+
+	async mounted() {
+		const payload = await Api.sendRequest('/web/report');
+
+		this.maxLengthDescription = payload.maxLengthDescription;
+		this.maxLengthSource = payload.maxLengthSource;
+	}
+
+	onChangeReason() {
+		this.setField('context', []);
+
+		this.validateContextSelected();
+	}
+
+	onChangeContext() {
+		this.validateContextSelected();
+	}
+
+	private validateContextSelected() {
+		let hasErrors = false;
+
+		// Check that if we have contexts to choose from, at least one of them is selected.
+		if (this.formModel.reason) {
+			const reason = this.reasons.find(i => i.radioValue === this.formModel.reason);
+			if (!reason) {
+				throw new Error('Invalid reason selected.');
+			}
+			if (reason.contexts && reason.contexts.length > 0) {
+				if (!this.formModel.context || this.formModel.context.length === 0) {
+					hasErrors = true;
+				}
+			}
+		}
+
+		if (hasErrors) {
+			this.setCustomError('context');
+		} else {
+			this.clearCustomError('context');
+		}
+	}
+
+	onSubmit() {
+		const data = {
+			resourceName: this.type,
+			resourceId: this.resource.id,
+			reason: this.formModel.reason,
+			context: this.formModel.context as string[] | undefined,
+			description: this.formModel.description,
+			source: this.formModel.source as string | undefined,
+		};
+
+		// Clear out context if the current reason doesn't have a context option.
+		if (!data.context || !this.reasons.find(i => i.radioValue === data.reason)!.contexts) {
+			delete (data as any).context;
+		}
+
+		// Clear out source if the current reason doesn't have a source option.
+		if (!data.source || !this.reasons.find(i => i.radioValue === data.reason)!.source) {
+			delete (data as any).source;
+		}
+
+		return Api.sendRequest('/web/report/submit', data, {
+			allowComplexData: ['context'],
+		});
+	}
+}
+</script>
+
 <template>
-	<app-form name="reportForm">
-		<app-form-group name="reason" :label="$gettext(`What's the reason?`)">
+	<AppForm :controller="form">
+		<AppFormGroup name="reason" :label="$gettext(`What's the reason?`)">
 			<div v-for="reason of reasons" :key="reason.radioValue">
 				<div class="radio">
 					<label>
-						<app-form-control-radio
+						<AppFormControlRadio
 							type="radio"
 							:value="reason.radioValue"
 							@changed="onChangeReason"
@@ -14,69 +461,73 @@
 				</div>
 
 				<div v-if="formModel.reason === reason.radioValue && !!reason.source">
-					<app-form-group name="source" hide-label>
-						<app-form-control
+					<AppFormGroup name="source" hide-label>
+						<AppFormControl
 							type="text"
-							:rules="{
-								max: maxLengthSource,
-							}"
+							:validators="[validateMaxLength(maxLengthSource)]"
 							:placeholder="reason.source.placeholder"
 						/>
 
-						<app-form-control-errors />
-					</app-form-group>
+						<AppFormControlErrors />
+					</AppFormGroup>
 				</div>
 
-				<div v-if="formModel.reason === reason.radioValue && !!reason.contexts" class="-context">
-					<app-form-group
+				<div
+					v-if="formModel.reason === reason.radioValue && !!reason.contexts"
+					class="-context"
+				>
+					<AppFormGroup
 						name="context"
 						:label="$gettext(`Select one or more options that the report applies to`)"
 					>
-						<div class="checkbox" v-for="context of reason.contexts" :key="context.checkValue">
+						<div
+							v-for="context of reason.contexts"
+							:key="context.checkValue"
+							class="checkbox"
+						>
 							<label>
-								<app-form-control-checkbox :value="context.checkValue" @changed="onChangeContext" />
+								<AppFormControlCheckbox
+									:value="context.checkValue"
+									@changed="onChangeContext"
+								/>
 
 								{{ context.text }}
 							</label>
 						</div>
 
-						<app-form-control-errors />
-					</app-form-group>
+						<AppFormControlErrors />
+					</AppFormGroup>
 				</div>
 
 				<div v-if="formModel.reason === reason.radioValue && !!reason.infoText">
 					<p class="help-block">
-						<app-jolticon icon="exclamation-circle" />
+						<AppJolticon icon="exclamation-circle" />
 						{{ reason.infoText }}
 					</p>
 				</div>
 			</div>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="description"
 			:label="$gettext(`Describe your report`)"
 			:optional="isDescriptionOptional"
 		>
-			<app-form-control-textarea
+			<AppFormControlTextarea
 				type="text"
-				:rules="{
-					max: maxLengthDescription,
-				}"
+				:validators="[validateMaxLength(maxLengthDescription)]"
 			/>
 
-			<app-form-control-errors :label="$gettext(`description`)" />
-		</app-form-group>
+			<AppFormControlErrors :label="$gettext(`description`)" />
+		</AppFormGroup>
 
-		<app-form-button :disabled="!valid">
-			<translate>Send Report</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton :disabled="!valid">
+			<AppTranslate>Send Report</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>
 
 <style lang="stylus" scoped>
 .-context
 	margin-left: 32px
 </style>
-
-<script lang="ts" src="./form"></script>

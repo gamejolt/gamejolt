@@ -1,14 +1,14 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
 
 $-cover-buttons-height = $button-md-line-height + 20px
 
 .-index
-	.-controls, .-nav
+	.-controls
+	.-nav
 		padding: 0 ($grid-gutter-width / 2)
 
 	@media $media-xs
-		.-controls, .-nav
+		.-controls
+		.-nav
 			padding: 0 ($grid-gutter-width-xs / 2)
 
 	@media $media-lg-up
@@ -39,7 +39,8 @@ $-cover-buttons-height = $button-md-line-height + 20px
 			margin-bottom: $grid-gutter-width
 			text-align: center
 
-		&.has-cover-image, &.is-editable
+		&.has-cover-image
+		&.is-editable
 			padding: 0
 
 			.page-header-content
@@ -167,7 +168,9 @@ $-cover-buttons-height = $button-md-line-height + 20px
 			z-index: 0
 
 .page-header-cover
-	.page-header-cover-buttons, .page-header-cover-spotlight, .page-header-content
+	.page-header-cover-buttons
+	.page-header-cover-spotlight
+	.page-header-content
 		z-index: 2
 
 .-cover-auto-height

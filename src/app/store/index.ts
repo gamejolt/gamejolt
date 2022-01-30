@@ -1,223 +1,159 @@
-import { Route } from 'vue-router';
-import { sync } from 'vuex-router-sync';
-import { VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
+import { computed, inject, InjectionKey, ref, Ref, shallowRef, ShallowRef, watch } from 'vue';
+import { Router } from 'vue-router';
 import { CommunityJoinLocation } from '../../_common/analytics/analytics.service';
 import { Api } from '../../_common/api/api.service';
-import { Backdrop } from '../../_common/backdrop/backdrop.service';
-import AppBackdrop from '../../_common/backdrop/backdrop.vue';
-import { Community, joinCommunity, leaveCommunity } from '../../_common/community/community.model';
+import { Backdrop, BackdropController } from '../../_common/backdrop/backdrop.service';
+import {
+	Community,
+	joinCommunity as joinCommunityModel,
+	leaveCommunity as leaveCommunityModel,
+} from '../../_common/community/community.model';
 import { Connection } from '../../_common/connection/connection-service';
-import { ContentFocus } from '../../_common/content-focus/content-focus.service';
+import {
+	ContentFocus,
+	registerContentFocusWatcher as registerFocusWatcher,
+} from '../../_common/content-focus/content-focus.service';
 import { FiresidePost } from '../../_common/fireside/post/post-model';
-import { Growls } from '../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../_common/growls/growls.service';
 import { ModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../_common/screen/screen-service';
-import {
-	SidebarActions,
-	SidebarMutations,
-	SidebarStore,
-} from '../../_common/sidebar/sidebar.store';
-import {
-	Actions as AppActions,
-	AppStore,
-	appStore,
-	Mutations as AppMutations,
-} from '../../_common/store/app-store';
-import { ThemeActions, ThemeMutations, ThemeStore } from '../../_common/theme/theme.store';
-import { Translate } from '../../_common/translate/translate.service';
+import { SidebarStore } from '../../_common/sidebar/sidebar.store';
+import { CommonStore } from '../../_common/store/common-store';
+import { $gettext } from '../../_common/translate/translate.service';
 import { ActivityFeedState } from '../components/activity/feed/state';
 import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
-import { GridClient } from '../components/grid/client.service';
+import type { GridClient } from '../components/grid/client.service';
 import { GridClientLazy } from '../components/lazy';
-import { router } from '../views';
-import { BannerActions, BannerMutations, BannerStore } from './banner';
-import * as _ClientLibraryMod from './client-library';
 import { CommunityStates } from './community-state';
-import { Actions as LibraryActions, LibraryStore, Mutations as LibraryMutations } from './library';
+import { LibraryStore } from './library';
 
-// Re-export our sub-modules.
-export { BannerModule, BannerStore } from './banner';
-
-export type Actions = AppActions &
-	ThemeActions &
-	LibraryActions &
-	BannerActions &
-	SidebarActions &
-	_ClientLibraryMod.Actions & {
-		bootstrap: void;
-		logout: void;
-		clear: void;
-		loadGrid: void;
-		clearGrid: void;
-		loadNotificationState: void;
-		clearNotificationState: void;
-		markNotificationsAsRead: void;
-		toggleCbarMenu: void;
-		toggleLeftPane: void;
-		toggleRightPane: void;
-		toggleChatPane: void;
-		clearPanes: void;
-		joinCommunity: { community: Community; location?: CommunityJoinLocation };
-		leaveCommunity: {
-			community: Community;
-			location?: CommunityJoinLocation;
-			shouldConfirm: boolean;
-		};
-	};
-
-export type Mutations = AppMutations &
-	ThemeMutations &
-	LibraryMutations &
-	BannerMutations &
-	SidebarMutations &
-	_ClientLibraryMod.Mutations & {
-		showShell: void;
-		hideShell: void;
-		showFooter: void;
-		hideFooter: void;
-		setHasContentSidebar: boolean;
-		setNotificationCount: { type: UnreadItemType; count: number };
-		incrementNotificationCount: { type: UnreadItemType; count: number };
-		setHasNewFriendRequests: boolean;
-		setHasNewUnlockedStickers: boolean;
-		setActiveCommunity: Community;
-		clearActiveCommunity: void;
-		viewCommunity: Community;
-		featuredPost: FiresidePost;
-	};
-
-let bootstrapResolver: ((value?: any) => void) | null = null;
-let backdrop: AppBackdrop | null = null;
-export let tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
-
-let _wantsGrid = false;
-let _gridLoadPromise: Promise<typeof GridClient> | null = null;
-let _gridBootstrapResolvers: ((client: GridClient) => void)[] = [];
-
-/**
- * Returns a promise that resolves once the Grid client is available.
- */
-export function tillGridBootstrapped() {
-	return new Promise<GridClient>(resolve => {
-		if (store.state.grid) {
-			resolve(store.state.grid);
-		} else {
-			_gridBootstrapResolvers.push(resolve);
-		}
-	});
-}
-
-const modules: any = {
-	app: appStore,
-	theme: new ThemeStore(),
-	library: new LibraryStore(),
-	banner: new BannerStore(),
-	sidebar: new SidebarStore(),
-};
-
-if (GJ_IS_CLIENT) {
-	const m: typeof _ClientLibraryMod = require('./client-library');
-	modules.clientLibrary = new m.ClientLibraryStore();
-}
+// TODO(vue3)
+// if (GJ_IS_DESKTOP_APP) {
+// 	const mod = await import('./client-library');
+// 	modules.clientLibrary = reactive(new mod.ClientLibraryStore());
+// }
 
 // the two types an event notification can assume, either "activity" for the post activity feed or "notifications"
 type UnreadItemType = 'activity' | 'notifications';
 type TogglableLeftPane = '' | 'chat' | 'context' | 'library';
 
-@VuexModule({
-	store: true,
-	modules,
-})
-export class Store extends VuexStore<Store, Actions, Mutations> {
-	app!: AppStore;
-	theme!: ThemeStore;
-	library!: LibraryStore;
-	banner!: BannerStore;
-	sidebar!: SidebarStore;
-	clientLibrary!: _ClientLibraryMod.ClientLibraryStore;
+export const AppStoreKey: InjectionKey<AppStore> = Symbol('app-store');
 
-	/** From the vuex-router-sync. */
-	route!: Route;
+export type AppStore = ReturnType<typeof createAppStore>;
 
-	grid: GridClient | null = null;
+export function useAppStore() {
+	return inject(AppStoreKey)!;
+}
 
-	isBootstrapped = false;
-	isLibraryBootstrapped = false;
-	isShellBootstrapped = false;
-	isShellHidden = false;
-	isFooterHidden = false;
+export function createAppStore({
+	router,
+	commonStore,
+	sidebarStore,
+	libraryStore,
+}: {
+	router: Router;
+	commonStore: CommonStore;
+	sidebarStore: SidebarStore;
+	libraryStore: LibraryStore;
+}) {
+	const grid = ref<GridClient>();
+	let _wantsGrid = false;
+	let _gridLoadPromise: Promise<typeof import('../components/grid/client.service')> | null = null;
+	let _gridBootstrapResolvers: ((client: GridClient) => void)[] = [];
+
+	const isBootstrapped = ref(false);
+	const _bootstrapResolver = ref(null) as Ref<((value?: any) => void) | null>;
+	const tillStoreBootstrapped = ref(new Promise(resolve => (_bootstrapResolver.value = resolve)));
+	const isLibraryBootstrapped = ref(false);
+	const isShellBootstrapped = ref(false);
+	const isShellHidden = ref(false);
+	const isFooterHidden = ref(false);
 
 	/** Unread items in the activity feed. */
-	unreadActivityCount = 0;
+	const unreadActivityCount = ref(0);
 	/** Unread items in the notification feed. */
-	unreadNotificationsCount = 0;
-	hasNewFriendRequests = false;
-	hasNewUnlockedStickers = false;
-	notificationState: ActivityFeedState | null = null;
+	const unreadNotificationsCount = ref(0);
+	const hasNewFriendRequests = ref(false);
+	const hasNewUnlockedStickers = ref(false);
+	const notificationState = ref<ActivityFeedState>();
 
-	mobileCbarShowing = false;
-	lastOpenLeftPane: Exclude<TogglableLeftPane, 'context'> = 'library';
-	overlayedLeftPane: TogglableLeftPane = '';
-	overlayedRightPane = '';
-	hasContentSidebar = false;
+	const mobileCbarShowing = ref(false);
+	const lastOpenLeftPane = ref<Exclude<TogglableLeftPane, 'context'>>('library');
+	const overlayedLeftPane = ref<TogglableLeftPane>('');
+	const overlayedRightPane = ref('');
+	const hasContentSidebar = ref(false);
 
 	/** Will be set to the community they're currently viewing (if any). */
-	activeCommunity: null | Community = null;
-	communities: Community[] = [];
-	communityStates: CommunityStates = new CommunityStates();
+	const activeCommunity = ref<Community>();
+	const communities = ref<Community[]>([]);
+	const communityStates = ref(new CommunityStates());
 
-	get hasTopBar() {
-		return !this.isShellHidden;
-	}
+	const _backdrop = shallowRef(null) as ShallowRef<BackdropController | null>;
 
-	get hasSidebar() {
-		return !this.isShellHidden;
-	}
+	const hasTopBar = computed(() => !isShellHidden.value);
+	const hasSidebar = computed(() => !isShellHidden.value);
+	const hasFooter = computed(() => !isFooterHidden.value);
 
-	get hasCbar() {
-		if (this.isShellHidden || this.app.isUserTimedOut) {
+	const hasCbar = computed(() => {
+		if (isShellHidden.value || commonStore.isUserTimedOut.value) {
 			return false;
 		}
 
 		// The cbar is pretty empty without a user and active context pane,
 		// so we want to hide it if those conditions are met.
-		if (!this.app.user && !this.sidebar.activeContextPane && !Screen.isXs) {
+		if (!commonStore.user.value && !sidebarStore.activeContextPane.value && !Screen.isXs) {
 			return false;
 		}
 
-		return this.mobileCbarShowing || !Screen.isXs;
-	}
-
-	get hasFooter() {
-		return !this.isFooterHidden;
-	}
+		return mobileCbarShowing.value || !Screen.isXs;
+	});
 
 	/**
 	 * Returns the current overlaying pane if there is one.
 	 *
 	 * Large breakpoint defaults to 'context' on applicable routes.
 	 * */
-	get visibleLeftPane(): TogglableLeftPane {
+	const visibleLeftPane = computed<TogglableLeftPane>(() => {
 		// If there's no other left-pane pane opened, Large breakpoint should
 		// always show the 'context' pane if there is a context component set.
-		if (Screen.isLg && this.sidebar.activeContextPane && !this.overlayedLeftPane) {
+		if (Screen.isLg && sidebarStore.activeContextPane.value && !overlayedLeftPane.value) {
 			return 'context';
 		}
 
-		return this.overlayedLeftPane;
+		return overlayedLeftPane.value;
+	});
+
+	const visibleRightPane = computed(() => overlayedRightPane.value);
+
+	const notificationCount = computed(
+		() => unreadActivityCount.value + unreadNotificationsCount.value
+	);
+
+	// Sync with the ContentFocus service.
+	registerFocusWatcher(
+		ContentFocus,
+		// We only care if the panes are overlaying, not if they're visible in
+		// the page without overlaying. Example is that context panes show
+		// in-page on large displays.
+		() => !overlayedLeftPane.value && !overlayedRightPane.value
+	);
+
+	// If we were offline, but we're online now, make sure our library is
+	// bootstrapped. Remember we always have an app user even if we were
+	// offline.
+	if (GJ_IS_DESKTOP_APP) {
+		watch(
+			() => Connection.isOffline,
+			(isOffline, prev) => {
+				if (!isOffline && prev === true) {
+					bootstrap();
+				}
+			}
+		);
 	}
 
-	get visibleRightPane() {
-		return this.overlayedRightPane;
-	}
-
-	get notificationCount() {
-		return this.unreadActivityCount + this.unreadNotificationsCount;
-	}
-
-	@VuexAction
-	async bootstrap() {
-		const prevResolver = bootstrapResolver;
+	async function bootstrap() {
+		const prevResolver = _bootstrapResolver;
 
 		// Detach so that errors in it doesn't cause the not found page to show. This is considered
 		// a sort of "async" load.
@@ -227,29 +163,28 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 				Api.sendRequest('/web/library', null, { detach: true }),
 			]);
 
-			this._setLibraryBootstrapped();
-			this._shellPayload(shellPayload);
+			_setLibraryBootstrapped();
+			_shellPayload(shellPayload);
 
 			// If we failed to finish before we unbootstrapped, then stop.
-			if (bootstrapResolver !== prevResolver) {
+			if (_bootstrapResolver !== prevResolver) {
 				return;
 			}
 
-			this.commit('library/bootstrap', libraryPayload);
+			libraryStore.bootstrap(libraryPayload);
 		} catch (e) {}
 
-		this._setBootstrapped();
+		_setBootstrapped();
 
-		if (!GJ_IS_CLIENT && !GJ_IS_SSR) {
+		if (!GJ_IS_DESKTOP_APP && !import.meta.env.SSR) {
 			BroadcastModal.check();
 		}
 	}
 
-	@VuexAction
-	async logout() {
+	async function logout() {
 		const result = await ModalConfirm.show(
-			Translate.$gettext('Are you seriously going to leave us?'),
-			Translate.$gettext('Logout?')
+			$gettext('Are you seriously going to leave us?'),
+			$gettext('Logout?')
 		);
 
 		if (!result) {
@@ -263,20 +198,15 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		// We go to the homepage currently just in case they're in a view they shouldn't be.
 		router.push({ name: 'discover.home' });
 
-		Growls.success(
-			Translate.$gettext('You are now logged out.'),
-			Translate.$gettext('Goodbye!')
-		);
+		showSuccessGrowl($gettext('You are now logged out.'), $gettext('Goodbye!'));
 	}
 
-	@VuexAction
-	async clear() {
-		tillStoreBootstrapped = new Promise(resolve => (bootstrapResolver = resolve));
-		this.commit('library/clear');
+	async function clear() {
+		tillStoreBootstrapped.value = new Promise(resolve => (_bootstrapResolver.value = resolve));
+		libraryStore.clear();
 	}
 
-	@VuexAction
-	async loadGrid() {
+	async function loadGrid() {
 		if (_wantsGrid) {
 			return;
 		}
@@ -284,240 +214,217 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 		_wantsGrid = true;
 		_gridLoadPromise ??= GridClientLazy();
 
-		const GridClient_ = await _gridLoadPromise;
+		const { createGridClient } = await _gridLoadPromise;
 
 		// If they disconnected before we loaded it in.
 		if (!_wantsGrid) {
 			return;
 		}
 
-		this._setGrid(new GridClient_());
+		_setGrid(createGridClient({ appStore: c }));
+		grid.value?.init();
 	}
 
-	@VuexAction
-	async clearGrid() {
+	async function clearGrid() {
 		_wantsGrid = false;
 
-		if (this.grid) {
-			this.grid.disconnect();
-		}
-
-		this._setGrid(null);
+		grid.value?.disconnect();
+		_setGrid(undefined);
 	}
 
-	@VuexAction
-	async loadNotificationState() {
+	async function loadNotificationState() {
 		const state = new ActivityFeedState({
 			type: 'Notification',
 			name: 'notification',
 			url: `/web/dash/activity/more/notifications`,
 		});
 
-		this._setNotificationState(state);
+		_setNotificationState(state);
 	}
 
-	@VuexAction
-	async clearNotificationState() {
-		this._setNotificationState(null);
+	async function clearNotificationState() {
+		_setNotificationState(undefined);
 	}
 
-	@VuexAction
-	async markNotificationsAsRead() {
-		if (!this.notificationState) {
+	async function markNotificationsAsRead() {
+		if (!notificationState.value) {
 			return;
 		}
 
 		// Reset the watermark first so that it happens immediately.
-		this._resetNotificationWatermark();
+		_resetNotificationWatermark();
 		await Api.sendRequest('/web/dash/activity/mark-all-read', {});
 	}
 
 	// This Action is only used for the 'Xs' breakpoint.
-	@VuexAction
-	async toggleCbarMenu() {
-		this._toggleCbarMenu();
-		if (this.visibleLeftPane) {
+	async function toggleCbarMenu() {
+		_toggleCbarMenu();
+		if (visibleLeftPane.value) {
 			// Close the left-pane if the cbar is also closing.
-			this._toggleLeftPane();
+			_toggleLeftPane();
 		} else {
-			// Open the left-pane depending on the SidebarStore information when the cbar shows.
-			this._toggleLeftPane(
-				this.sidebar.activeContextPane ? 'context' : this.lastOpenLeftPane
+			// Open the left-pane depending on the SidebarStore information when
+			// the cbar shows.
+			_toggleLeftPane(
+				sidebarStore.activeContextPane.value ? 'context' : lastOpenLeftPane.value
 			);
 		}
 
-		this.checkBackdrop();
+		checkBackdrop();
 	}
 
 	/** Show the context pane if there's one available. */
-	@VuexAction
-	async showContextPane() {
-		if (this.visibleLeftPane !== 'context' && this.sidebar.activeContextPane) {
-			this.toggleLeftPane('context');
+	async function showContextPane() {
+		if (visibleLeftPane.value !== 'context' && sidebarStore.activeContextPane.value) {
+			toggleLeftPane('context');
 		}
 	}
 
 	/** Passing no value will close any open left-panes. */
-	@VuexAction
-	async toggleLeftPane(type?: TogglableLeftPane) {
-		if (type === 'context' && !this.sidebar.activeContextPane) {
-			// Don't show the context pane if the SidebarStore has no context to show.
-			this._toggleLeftPane();
+	async function toggleLeftPane(type?: TogglableLeftPane) {
+		if (type === 'context' && !sidebarStore.activeContextPane.value) {
+			// Don't show the context pane if the SidebarStore has no context to
+			// show.
+			_toggleLeftPane();
 			return;
 		}
 
-		this._toggleLeftPane(type);
-		this.checkBackdrop();
+		_toggleLeftPane(type);
+		checkBackdrop();
 	}
 
-	@VuexAction
-	async toggleRightPane(type?: string) {
-		this._toggleRightPane(type);
-		this.checkBackdrop();
+	async function toggleRightPane(type?: string) {
+		_toggleRightPane(type);
+		checkBackdrop();
 	}
 
-	@VuexAction
-	async toggleChatPane() {
-		this._toggleLeftPane('chat');
-		this.checkBackdrop();
+	async function toggleChatPane() {
+		_toggleLeftPane('chat');
+		checkBackdrop();
 	}
 
-	@VuexAction
-	async clearPanes() {
-		this._clearPanes();
-		this.checkBackdrop();
+	async function clearPanes() {
+		_clearPanes();
+		checkBackdrop();
 	}
 
 	/** Using this will add or remove backdrops as needed for overlaying panes. */
-	@VuexAction
-	async checkBackdrop() {
+	async function checkBackdrop() {
 		if (
-			(!!this.overlayedRightPane || !!this.overlayedLeftPane) &&
+			(!!overlayedRightPane.value || !!overlayedLeftPane.value) &&
 			// We only want backdrops on the Lg breakpoint if the pane isn't context.
-			!(Screen.isLg && this.overlayedLeftPane === 'context')
+			!(Screen.isLg && overlayedLeftPane.value === 'context')
 		) {
-			if (backdrop) {
+			if (_backdrop.value) {
 				return;
 			}
 
-			this._addBackdrop();
-			backdrop!.$on('clicked', () => {
-				this._clearPanes();
-				this.checkBackdrop();
-			});
-		} else if (backdrop) {
-			this._removeBackdrop();
+			_addBackdrop();
+			_backdrop.value!.onClicked = () => {
+				_clearPanes();
+				checkBackdrop();
+			};
+		} else if (_backdrop) {
+			_removeBackdrop();
 		}
 	}
 
-	@VuexMutation
-	hideShell() {
-		this.isShellHidden = true;
+	function hideShell() {
+		isShellHidden.value = true;
 	}
 
-	@VuexMutation
-	showShell() {
-		this.isShellHidden = false;
+	function showShell() {
+		isShellHidden.value = false;
 	}
 
-	@VuexMutation
-	hideFooter() {
-		this.isFooterHidden = true;
+	function hideFooter() {
+		isFooterHidden.value = true;
 	}
 
-	@VuexMutation
-	showFooter() {
-		this.isFooterHidden = false;
+	function showFooter() {
+		isFooterHidden.value = false;
 	}
 
-	@VuexMutation
-	setHasContentSidebar(isShowing: Mutations['setHasContentSidebar']) {
-		// We use this to scooch the footer over to make room for the sidebar content, but we only care about
-		// that when the sidebar isn't behaving as an overlay - which is currently only on the Lg breakpoint.
+	function setHasContentSidebar(isShowing: boolean) {
+		// We use this to scooch the footer over to make room for the sidebar
+		// content, but we only care about that when the sidebar isn't behaving
+		// as an overlay - which is currently only on the Lg breakpoint.
 		if (Screen.isLg) {
-			this.hasContentSidebar = isShowing;
+			hasContentSidebar.value = isShowing;
 		} else {
-			this.hasContentSidebar = false;
+			hasContentSidebar.value = false;
 		}
 	}
 
-	@VuexMutation
-	incrementNotificationCount(payload: Mutations['incrementNotificationCount']) {
+	function incrementNotificationCount(payload: { type: UnreadItemType; count: number }) {
 		if (payload.type === 'activity') {
-			this.unreadActivityCount += payload.count;
+			unreadActivityCount.value += payload.count;
 		} else {
-			this.unreadNotificationsCount += payload.count;
+			unreadNotificationsCount.value += payload.count;
 		}
 	}
 
-	@VuexMutation
-	setNotificationCount(payload: Mutations['setNotificationCount']) {
+	function setNotificationCount(payload: { type: UnreadItemType; count: number }) {
 		if (payload.type === 'activity') {
-			this.unreadActivityCount = payload.count;
+			unreadActivityCount.value = payload.count;
 		} else {
-			this.unreadNotificationsCount = payload.count;
+			unreadNotificationsCount.value = payload.count;
 		}
 	}
 
-	@VuexMutation
-	setHasNewFriendRequests(has: Mutations['setHasNewFriendRequests']) {
-		this.hasNewFriendRequests = has;
+	function setHasNewFriendRequests(has: boolean) {
+		hasNewFriendRequests.value = has;
 	}
 
-	@VuexMutation
-	setHasNewUnlockedStickers(has: Mutations['setHasNewUnlockedStickers']) {
-		this.hasNewUnlockedStickers = has;
+	function setHasNewUnlockedStickers(has: boolean) {
+		hasNewUnlockedStickers.value = has;
 	}
 
-	@VuexMutation
-	private _setBootstrapped() {
-		this.isBootstrapped = true;
-		if (bootstrapResolver) {
-			bootstrapResolver();
-		}
+	function _setBootstrapped() {
+		isBootstrapped.value = true;
+		_bootstrapResolver.value?.();
 	}
 
-	@VuexMutation
-	private _setLibraryBootstrapped() {
-		this.isLibraryBootstrapped = true;
+	function _setLibraryBootstrapped() {
+		isLibraryBootstrapped.value = true;
 	}
 
-	@VuexMutation
-	private _shellPayload(payload: any) {
-		this.isShellBootstrapped = true;
-		this.communities = Community.populate(payload.communities);
+	function _shellPayload(payload: any) {
+		isShellBootstrapped.value = true;
+		communities.value = Community.populate(payload.communities);
 	}
 
-	@VuexAction
-	async joinCommunity({ community, location }: Actions['joinCommunity']) {
+	async function joinCommunity(community: Community, location?: CommunityJoinLocation) {
 		if (community._removed) {
 			return;
 		}
 
 		if (!community.is_member) {
-			await joinCommunity(community, location);
+			await joinCommunityModel(community, location);
 		}
 
-		this.grid?.joinCommunity(community);
-		this._joinCommunity(community);
+		grid.value?.joinCommunity(community);
+		_joinCommunity(community);
 	}
 
-	@VuexMutation
-	private _joinCommunity(community: Community) {
-		if (this.communities.find(c => c.id === community.id)) {
+	function _joinCommunity(community: Community) {
+		if (communities.value.find(c => c.id === community.id)) {
 			return;
 		}
 
-		this.communities.unshift(community);
+		communities.value.unshift(community);
 	}
 
-	@VuexAction
-	async leaveCommunity({ community, location, shouldConfirm }: Actions['leaveCommunity']) {
+	async function leaveCommunity(
+		community: Community,
+		location?: CommunityJoinLocation,
+		{ shouldConfirm }: { shouldConfirm?: boolean } = {}
+	) {
 		if (community.is_member && !community._removed) {
 			if (shouldConfirm) {
 				const result = await ModalConfirm.show(
-					Translate.$gettext(`Are you sure you want to leave this community?`),
-					Translate.$gettext(`Leave community?`)
+					$gettext(`Are you sure you want to leave this community?`),
+					$gettext(`Leave community?`)
 				);
 
 				if (!result) {
@@ -525,169 +432,223 @@ export class Store extends VuexStore<Store, Actions, Mutations> {
 				}
 			}
 
-			await leaveCommunity(community, location);
+			await leaveCommunityModel(community, location);
 		}
 
-		this.grid?.leaveCommunity(community);
-		this._leaveCommunity(community);
+		grid.value?.leaveCommunity(community);
+		_leaveCommunity(community);
 	}
 
-	@VuexMutation
-	private _leaveCommunity(community: Community) {
-		const communityState = this.communityStates.getCommunityState(community);
+	function _leaveCommunity(community: Community) {
+		const communityState = communityStates.value.getCommunityState(community);
 		communityState.reset();
 
-		const idx = this.communities.findIndex(c => c.id === community.id);
+		const idx = communities.value.findIndex(c => c.id === community.id);
 		if (idx === -1) {
 			return;
 		}
 
-		this.communities.splice(idx, 1);
+		communities.value.splice(idx, 1);
 	}
 
-	@VuexMutation
-	setActiveCommunity(community: Mutations['setActiveCommunity']) {
-		this.activeCommunity = community;
+	function setActiveCommunity(community: Community) {
+		activeCommunity.value = community;
 	}
 
-	@VuexMutation
-	clearActiveCommunity() {
-		this.activeCommunity = null;
+	function clearActiveCommunity() {
+		activeCommunity.value = undefined;
 	}
 
-	@VuexMutation
-	viewCommunity(community: Mutations['viewCommunity']) {
-		const communityState = this.communityStates.getCommunityState(community);
+	function viewCommunity(community: Community) {
+		const communityState = communityStates.value.getCommunityState(community);
 		communityState.hasUnreadFeaturedPosts = false;
 
-		const idx = this.communities.findIndex(c => c.id === community.id);
+		const idx = communities.value.findIndex(c => c.id === community.id);
 		if (idx === -1) {
 			return;
 		}
 
-		this.communities.splice(idx, 1);
-		this.communities.unshift(community);
+		communities.value.splice(idx, 1);
+		communities.value.unshift(community);
 	}
 
-	@VuexMutation
-	featuredPost(post: Mutations['featuredPost']) {
-		if (this.grid) {
-			this.grid.recordFeaturedPost(post);
-		}
+	function featuredPost(post: FiresidePost) {
+		grid.value?.recordFeaturedPost(post);
 	}
 
-	@VuexMutation
-	private _setGrid(grid: GridClient | null) {
-		if (grid !== null) {
+	function _setGrid(newGrid?: GridClient) {
+		if (newGrid) {
 			for (const resolver of _gridBootstrapResolvers) {
-				resolver(grid);
+				resolver(newGrid);
 			}
 			_gridBootstrapResolvers = [];
 		}
 
-		this.grid = grid;
+		grid.value = newGrid;
 	}
 
-	@VuexMutation
-	private _setNotificationState(state: ActivityFeedState | null) {
-		this.notificationState = state;
+	function _setNotificationState(state?: ActivityFeedState) {
+		notificationState.value = state;
 	}
 
-	@VuexMutation
-	private _resetNotificationWatermark() {
+	function _resetNotificationWatermark() {
 		// Mark all loaded notifications as read through the feed watermark.
 		// It's better than having to reload from the backend.
-		if (this.notificationState) {
-			this.notificationState.notificationWatermark = Date.now();
+		if (notificationState.value) {
+			notificationState.value.notificationWatermark = Date.now();
 		}
 	}
 
-	@VuexMutation
-	private _toggleCbarMenu() {
-		this.mobileCbarShowing = !this.mobileCbarShowing;
+	function _toggleCbarMenu() {
+		mobileCbarShowing.value = !mobileCbarShowing.value;
 	}
 
-	@VuexMutation
-	private _toggleLeftPane(type: TogglableLeftPane = '') {
-		if (!this.hasSidebar) {
-			this.overlayedLeftPane = '';
+	function _toggleLeftPane(type: TogglableLeftPane = '') {
+		if (!hasSidebar.value) {
+			overlayedLeftPane.value = '';
 			return;
 		}
 
-		if (this.overlayedLeftPane === type) {
-			this.overlayedLeftPane = '';
+		if (overlayedLeftPane.value === type) {
+			overlayedLeftPane.value = '';
 		} else {
-			this.overlayedLeftPane = type;
+			overlayedLeftPane.value = type;
 		}
 
 		if (type && type !== 'context') {
-			this.lastOpenLeftPane = type;
+			lastOpenLeftPane.value = type;
 		}
 
-		this.mobileCbarShowing = !!this.overlayedLeftPane;
-		this.overlayedRightPane = '';
+		mobileCbarShowing.value = !!overlayedLeftPane.value;
+		overlayedRightPane.value = '';
 	}
 
-	@VuexMutation
-	private _toggleRightPane(type = '') {
-		if (this.overlayedRightPane === type) {
-			this.overlayedRightPane = '';
+	function _toggleRightPane(type = '') {
+		if (overlayedRightPane.value === type) {
+			overlayedRightPane.value = '';
 		} else {
-			this.overlayedRightPane = type;
+			overlayedRightPane.value = type;
 		}
 
-		this.overlayedLeftPane = '';
+		overlayedLeftPane.value = '';
 	}
 
-	@VuexMutation
-	private _clearPanes() {
-		this.overlayedRightPane = '';
-		this.overlayedLeftPane = '';
-		this.mobileCbarShowing = false;
+	function _clearPanes() {
+		overlayedRightPane.value = '';
+		overlayedLeftPane.value = '';
+		mobileCbarShowing.value = false;
 	}
 
-	@VuexMutation
-	private _addBackdrop() {
-		if (backdrop) {
+	function _addBackdrop() {
+		if (_backdrop.value) {
 			return;
 		}
 
-		backdrop = Backdrop.push({ context: document.body });
+		_backdrop.value = Backdrop.push({ context: document.body });
 	}
 
-	@VuexMutation
-	private _removeBackdrop() {
-		if (!backdrop) {
+	function _removeBackdrop() {
+		if (!_backdrop.value) {
 			return;
 		}
 
-		Backdrop.remove(backdrop);
-		backdrop = null;
+		_backdrop.value.remove();
+		_backdrop.value = null;
 	}
-}
 
-export const store = new Store();
-
-// Sync the routes into the store.
-sync(store, router, { moduleName: 'route' });
-
-// Sync with the ContentFocus service.
-ContentFocus.registerWatcher(
-	// We only care if the panes are overlaying, not if they're visible in the
-	// page without overlaying. Example is that context panes show in-page on
-	// large displays.
-	() => !store.state.overlayedLeftPane && !store.state.overlayedRightPane
-);
-
-// If we were offline, but we're online now, make sure our library is bootstrapped. Remember we
-// always have an app user even if we were offline.
-if (GJ_IS_CLIENT) {
-	store.watch(
-		() => Connection.isOffline,
-		(isOffline, prev) => {
-			if (!isOffline && prev === true) {
-				store.dispatch('bootstrap');
+	/**
+	 * Returns a promise that resolves once the Grid client is available.
+	 */
+	function tillGridBootstrapped() {
+		return new Promise<GridClient>(resolve => {
+			if (grid.value) {
+				resolve(grid.value);
+			} else {
+				_gridBootstrapResolvers.push(resolve);
 			}
+		});
+	}
+
+	// Handles route meta changes during redirects.
+	// Routes in the app section can define the following meta:
+	// 	isFullPage: boolean - wether to not display the shell and treat the route as a "full page"
+	router.beforeEach((to, _from, next) => {
+		if (to.matched.some(record => record.meta.isFullPage)) {
+			hideShell();
+		} else {
+			showShell();
 		}
-	);
+
+		if (to.matched.some(record => record.meta.noFooter)) {
+			hideFooter();
+		} else {
+			showFooter();
+		}
+
+		next();
+	});
+
+	// We need to reference ourself when creating grid at the moment.
+	const c = {
+		grid,
+		isBootstrapped,
+		tillStoreBootstrapped,
+		isLibraryBootstrapped,
+		isShellBootstrapped,
+		isShellHidden,
+		isFooterHidden,
+		unreadActivityCount,
+		unreadNotificationsCount,
+		hasNewFriendRequests,
+		hasNewUnlockedStickers,
+		notificationState,
+		mobileCbarShowing,
+		lastOpenLeftPane,
+		overlayedLeftPane,
+		overlayedRightPane,
+		hasContentSidebar,
+		activeCommunity,
+		communities,
+		communityStates,
+		hasTopBar,
+		hasSidebar,
+		hasCbar,
+		hasFooter,
+		visibleLeftPane,
+		visibleRightPane,
+		notificationCount,
+		bootstrap,
+		logout,
+		clear,
+		loadGrid,
+		clearGrid,
+		loadNotificationState,
+		clearNotificationState,
+		markNotificationsAsRead,
+		toggleCbarMenu,
+		showContextPane,
+		toggleLeftPane,
+		toggleRightPane,
+		toggleChatPane,
+		clearPanes,
+		checkBackdrop,
+		hideShell,
+		showShell,
+		hideFooter,
+		showFooter,
+		setHasContentSidebar,
+		incrementNotificationCount,
+		setNotificationCount,
+		setHasNewFriendRequests,
+		setHasNewUnlockedStickers,
+		joinCommunity,
+		leaveCommunity,
+		setActiveCommunity,
+		clearActiveCommunity,
+		viewCommunity,
+		featuredPost,
+		tillGridBootstrapped,
+	};
+
+	return c;
 }

@@ -1,33 +1,113 @@
+<script lang="ts">
+import { inject, InjectionKey, provide, ref } from 'vue';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import { Api } from '../../../../_common/api/api.service';
+import AppEditableOverlay from '../../../../_common/editable-overlay/editable-overlay.vue';
+import AppExpand from '../../../../_common/expand/AppExpand.vue';
+import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
+import AppPageHeader from '../../../components/page-header/page-header.vue';
+import { UserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
+import { UserHeaderModal } from '../../../components/user/header-modal/header-modal.service';
+
+const Key: InjectionKey<Controller> = Symbol('account-route');
+
+type Controller = ReturnType<typeof createController>;
+
+export function useAccountRouteController() {
+	return inject(Key);
+}
+
+function createController() {
+	const heading = ref('');
+	return { heading };
+}
+
+@Options({
+	name: 'RouteDashAccount',
+	components: {
+		AppPageHeader,
+		AppUserAvatar,
+		AppExpand,
+		AppMediaItemCover,
+		AppEditableOverlay,
+	},
+})
+@OptionsForRoute({
+	deps: {},
+	// We want to reload this data every time we come into this section.
+	resolver: () => Api.sendRequest('/web/dash/account'),
+})
+export default class RouteDashAccount extends BaseRouteComponent {
+	routeStore = setup(() => {
+		const c = createController();
+		provide(Key, c);
+		return c;
+	});
+	commonStore = setup(() => useCommonStore());
+
+	readonly Screen = Screen;
+
+	get user() {
+		return this.commonStore.user!;
+	}
+
+	get heading() {
+		return this.routeStore.heading;
+	}
+
+	routeResolved(payload: any) {
+		this.commonStore.setUser(payload.user);
+	}
+
+	showEditHeader() {
+		UserHeaderModal.show();
+	}
+
+	showEditAvatar() {
+		UserAvatarModal.show();
+	}
+}
+</script>
+
 <template>
 	<div>
 		<div v-if="Screen.isXs" class="well fill-darker sans-margin-bottom">
-			<app-button block icon="chevron-left" :to="{ name: 'dash.account-mobile-nav' }">
-				<translate>Back to Account</translate>
-			</app-button>
+			<AppButton block icon="chevron-left" :to="{ name: 'dash.account-mobile-nav' }">
+				<AppTranslate>Back to Account</AppTranslate>
+			</AppButton>
 		</div>
 
-		<app-page-header>
+		<AppPageHeader>
 			<h1>{{ heading }}</h1>
 
 			<p>
-				<small>@{{ app.user.username }}</small>
+				<small>@{{ user.username }}</small>
 			</p>
 
-			<app-editable-overlay
-				v-if="!Screen.isXs"
-				slot="spotlight"
-				class="-fill"
-				@click="showEditAvatar()"
-				:disabled="$route.name !== 'dash.account.edit'"
-			>
-				<translate slot="overlay">Change</translate>
-				<app-user-avatar :user="app.user" />
-			</app-editable-overlay>
-		</app-page-header>
+			<template v-if="!Screen.isXs" #spotlight>
+				<AppEditableOverlay
+					class="-fill"
+					:disabled="$route.name !== 'dash.account.edit'"
+					@click="showEditAvatar()"
+				>
+					<template #overlay>
+						<AppTranslate>Change</AppTranslate>
+					</template>
+					<AppUserAvatar :user="user" />
+				</AppEditableOverlay>
+			</template>
+		</AppPageHeader>
 
-		<app-expand :when="$route.name === 'dash.account.edit'">
-			<app-editable-overlay @click="showEditHeader()">
-				<translate slot="overlay">Change Profile Header</translate>
+		<AppExpand :when="$route.name === 'dash.account.edit'">
+			<AppEditableOverlay @click="showEditHeader()">
+				<template #overlay>
+					<AppTranslate>Change Profile Header</AppTranslate>
+				</template>
 
 				<!--
 					If no header yet, show their highlight color with a min-height.
@@ -35,46 +115,58 @@
 				<div
 					class="fill-highlight"
 					:style="{
-						'min-height': !app.user.header_media_item ? '200px' : '',
+						'min-height': !user.header_media_item ? '200px' : '',
 					}"
 				>
-					<app-media-item-cover
-						v-if="app.user.header_media_item"
-						:media-item="app.user.header_media_item"
+					<AppMediaItemCover
+						v-if="user.header_media_item"
+						:media-item="user.header_media_item"
 						:max-height="400"
 					/>
 				</div>
-			</app-editable-overlay>
-		</app-expand>
+			</AppEditableOverlay>
+		</AppExpand>
 
 		<!-- Don't show content before this route has loaded in the account data. -->
-		<section class="section" v-if="isRouteBootstrapped">
+		<section v-if="isRouteBootstrapped" class="section">
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-3 col-md-2" v-if="!Screen.isXs">
+					<div v-if="!Screen.isXs" class="col-sm-3 col-md-2">
 						<nav class="platform-list">
 							<ul>
 								<li>
-									<router-link :to="{ name: 'dash.account.edit' }" active-class="active">
-										<translate>Profile</translate>
+									<router-link
+										:to="{ name: 'dash.account.edit' }"
+										active-class="active"
+									>
+										<AppTranslate>Profile</AppTranslate>
 									</router-link>
 								</li>
 								<li>
-									<router-link :to="{ name: 'dash.account.site' }" active-class="active">
-										<translate>Portfolio Site</translate>
+									<router-link
+										:to="{ name: 'dash.account.site' }"
+										active-class="active"
+									>
+										<AppTranslate>Portfolio Site</AppTranslate>
 									</router-link>
 								</li>
 								<li>
-									<router-link :to="{ name: 'dash.account.blocks' }" active-class="active">
-										<translate>Blocked Users</translate>
+									<router-link
+										:to="{ name: 'dash.account.blocks' }"
+										active-class="active"
+									>
+										<AppTranslate>Blocked Users</AppTranslate>
 									</router-link>
 								</li>
 							</ul>
 							<hr />
 							<ul>
 								<li>
-									<router-link :to="{ name: 'dash.account.linked-accounts' }" active-class="active">
-										<translate>Linked Accounts</translate>
+									<router-link
+										:to="{ name: 'dash.account.linked-accounts' }"
+										active-class="active"
+									>
+										<AppTranslate>Linked Accounts</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -82,43 +174,61 @@
 										:to="{ name: 'dash.account.email-preferences' }"
 										active-class="active"
 									>
-										<translate>Email Preferences</translate>
+										<AppTranslate>Email Preferences</AppTranslate>
 									</router-link>
 								</li>
 								<li>
-									<router-link :to="{ name: 'dash.account.change-password' }" active-class="active">
-										<translate>Password</translate>
-									</router-link>
-								</li>
-							</ul>
-							<hr />
-							<ul>
-								<li>
-									<router-link :to="{ name: 'dash.account.payment-methods' }" active-class="active">
-										<translate>Payment Methods</translate>
-									</router-link>
-								</li>
-								<li>
-									<router-link :to="{ name: 'dash.account.addresses' }" active-class="active">
-										<translate>Saved Addresses</translate>
-									</router-link>
-								</li>
-								<li>
-									<router-link :to="{ name: 'dash.account.purchases.list' }" active-class="active">
-										<translate>Purchases</translate>
+									<router-link
+										:to="{ name: 'dash.account.change-password' }"
+										active-class="active"
+									>
+										<AppTranslate>Password</AppTranslate>
 									</router-link>
 								</li>
 							</ul>
 							<hr />
 							<ul>
 								<li>
-									<router-link :to="{ name: 'dash.account.financials' }" active-class="active">
-										<translate>Marketplace Account Setup</translate>
+									<router-link
+										:to="{ name: 'dash.account.payment-methods' }"
+										active-class="active"
+									>
+										<AppTranslate>Payment Methods</AppTranslate>
 									</router-link>
 								</li>
 								<li>
-									<router-link :to="{ name: 'dash.account.withdraw-funds' }" active-class="active">
-										<translate>Revenue</translate>
+									<router-link
+										:to="{ name: 'dash.account.addresses' }"
+										active-class="active"
+									>
+										<AppTranslate>Saved Addresses</AppTranslate>
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										:to="{ name: 'dash.account.purchases.list' }"
+										active-class="active"
+									>
+										<AppTranslate>Purchases</AppTranslate>
+									</router-link>
+								</li>
+							</ul>
+							<hr />
+							<ul>
+								<li>
+									<router-link
+										:to="{ name: 'dash.account.financials' }"
+										active-class="active"
+									>
+										<AppTranslate>Marketplace Account Setup</AppTranslate>
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										:to="{ name: 'dash.account.withdraw-funds' }"
+										active-class="active"
+									>
+										<AppTranslate>Revenue</AppTranslate>
 									</router-link>
 								</li>
 							</ul>
@@ -126,10 +236,12 @@
 					</div>
 					<div class="col-xs-12 col-sm-9 col-md-10">
 						<template v-if="Screen.isXs && $route.name === 'dash.account.edit'">
-							<app-editable-overlay class="-avatar-xs" @click="showEditAvatar()">
-								<translate slot="overlay">Change</translate>
-								<app-user-avatar :user="app.user" />
-							</app-editable-overlay>
+							<AppEditableOverlay class="-avatar-xs" @click="showEditAvatar()">
+								<template #overlay>
+									<AppTranslate>Change</AppTranslate>
+								</template>
+								<AppUserAvatar :user="user" />
+							</AppEditableOverlay>
 
 							<hr />
 						</template>
@@ -143,9 +255,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .-fill
 	position: absolute
 	top: 0
@@ -159,5 +268,3 @@
 	border-radius: 50%
 	overflow: hidden
 </style>
-
-<script lang="ts" src="./account"></script>

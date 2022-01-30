@@ -1,7 +1,93 @@
-<script lang="ts" src="./account-popover"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../utils/vue';
+import { Api } from '../../../../_common/api/api.service';
+import { Client } from '../../../../_common/client/safe-exports';
+import { Connection } from '../../../../_common/connection/connection-service';
+import { useDrawerStore } from '../../../../_common/drawer/drawer-store';
+import { formatCurrency } from '../../../../_common/filters/currency';
+import AppPopper from '../../../../_common/popper/popper.vue';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { SettingThemeDark } from '../../../../_common/settings/settings.service';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import { useThemeStore } from '../../../../_common/theme/theme.store';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
+import { useAppStore } from '../../../store';
+import { UserTokenModal } from '../../user/token-modal/token-modal.service';
+import AppShellUserBox from '../user-box/user-box.vue';
+
+@Options({
+	components: {
+		AppPopper,
+		AppUserAvatarImg,
+		AppShellUserBox,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppShellAccountPopover extends Vue {
+	store = setup(() => useAppStore());
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
+
+	drawer = shallowSetup(() => useDrawerStore());
+
+	themeStore = setup(() => useThemeStore());
+
+	get isDark() {
+		return this.themeStore.isDark;
+	}
+
+	isShowing = false;
+	walletAmount: number | false = false;
+
+	readonly Screen = Screen;
+	readonly Connection = Connection;
+	readonly formatCurrency = formatCurrency;
+
+	onShow() {
+		this.isShowing = true;
+		this.getWallet();
+	}
+
+	onHide() {
+		this.isShowing = false;
+	}
+
+	showToken() {
+		UserTokenModal.show();
+	}
+
+	toggleDark() {
+		SettingThemeDark.set(!this.isDark);
+		this.themeStore.setDark(!this.isDark);
+	}
+
+	async getWallet() {
+		const response = await Api.sendRequest('/web/dash/funds/wallet', undefined, {
+			detach: true,
+		});
+		this.walletAmount = response.amount;
+	}
+
+	logout() {
+		this.store.logout();
+	}
+
+	quit() {
+		Client?.quit();
+	}
+}
+</script>
 
 <template>
-	<app-popper
+	<AppPopper
 		v-if="app.user"
 		v-app-track-event="`top-nav:user-menu:toggle`"
 		popover-class="fill-darkest"
@@ -11,7 +97,7 @@
 		@hide="onHide()"
 	>
 		<a class="navbar-item navbar-avatar" :class="{ active: isShowing }">
-			<app-user-avatar-img :user="app.user" />
+			<AppUserAvatarImg :user="app.user" />
 		</a>
 
 		<template v-if="isShowing" #popover>
@@ -35,9 +121,11 @@
 					<router-link
 						v-app-track-event="`account-popover:library`"
 						class="list-group-item"
-						:to="{ name: GJ_IS_CLIENT ? 'library.installed' : 'library.overview' }"
+						:to="{
+							name: GJ_IS_DESKTOP_APP ? 'library.installed' : 'library.overview',
+						}"
 					>
-						<translate>Game Library</translate>
+						<AppTranslate>Game Library</AppTranslate>
 					</router-link>
 					<router-link
 						v-app-track-event="`account-popover:account`"
@@ -46,21 +134,21 @@
 							name: Screen.isXs ? 'dash.account-mobile-nav' : 'dash.account.edit',
 						}"
 					>
-						<translate>Edit Account</translate>
+						<AppTranslate>Edit Account</AppTranslate>
 					</router-link>
 					<a
 						v-app-track-event="`account-popover:token`"
 						class="list-group-item offline-disable"
 						@click="showToken"
 					>
-						<translate>Game Token</translate>
+						<AppTranslate>Game Token</AppTranslate>
 					</a>
 					<router-link
 						v-app-track-event="`account-popover:settings`"
 						class="list-group-item"
 						:to="{ name: 'settings' }"
 					>
-						<translate>Settings</translate>
+						<AppTranslate>Settings</AppTranslate>
 					</router-link>
 					<a
 						v-app-track-event="`account-popover:dark`"
@@ -68,16 +156,16 @@
 						@click="toggleDark()"
 					>
 						<small class="pull-right text-muted">
-							<translate v-if="isDark">on</translate>
-							<translate v-else>off</translate>
+							<AppTranslate v-if="isDark">on</AppTranslate>
+							<AppTranslate v-else>off</AppTranslate>
 						</small>
-						<translate>Dark Mode</translate>
+						<AppTranslate>Dark Mode</AppTranslate>
 					</a>
 				</div>
 
 				<div class="account-popover-separator" />
 
-				<app-shell-user-box />
+				<AppShellUserBox />
 
 				<!--
 					We don't know if they have revenue until we do the call.
@@ -87,14 +175,14 @@
 
 					<div class="list-group-dark">
 						<div v-if="walletAmount === false" class="list-group-item small">
-							<translate>Loading...</translate>
+							<AppTranslate>Loading...</AppTranslate>
 						</div>
 						<router-link
 							v-else
 							class="list-group-item small"
 							:to="{ name: 'dash.account.withdraw-funds' }"
 						>
-							<app-jolticon
+							<AppJolticon
 								v-app-tooltip.touchable="
 									$gettext(
 										`These are your available funds to either buy games with or withdraw.`
@@ -104,10 +192,10 @@
 								icon="help-circle"
 							/>
 
-							<translate>Wallet Balance</translate>
+							<AppTranslate>Wallet Balance</AppTranslate>
 							&mdash;
 							<span class="account-popover-currency">
-								{{ walletAmount | currency }}
+								{{ formatCurrency(walletAmount) }}
 							</span>
 						</router-link>
 					</div>
@@ -117,7 +205,7 @@
 					We do slightly different styling here whether we're in client or not.
 					Enough changes to require different markup.
 				-->
-				<template v-if="!GJ_IS_CLIENT">
+				<template v-if="!GJ_IS_DESKTOP_APP">
 					<div class="account-popover-separator" />
 
 					<div class="list-group-dark">
@@ -126,8 +214,8 @@
 							class="list-group-item text-right"
 							@click="logout"
 						>
-							<app-jolticon icon="logout" notice />
-							<translate>Logout</translate>
+							<AppJolticon icon="logout" notice />
+							<AppTranslate>Logout</AppTranslate>
 						</a>
 					</div>
 				</template>
@@ -146,16 +234,16 @@
 									class="list-group-item"
 									@click="logout"
 								>
-									<app-jolticon icon="logout" notice />
-									<translate>Logout</translate>
+									<AppJolticon icon="logout" notice />
+									<AppTranslate>Logout</AppTranslate>
 								</a>
 							</div>
 						</div>
 						<div class="pull-right text-center" style="width: 50%">
 							<div class="list-group-dark">
 								<a class="list-group-item" @click="quit()">
-									<app-jolticon icon="remove" notice />
-									<translate>Quit</translate>
+									<AppJolticon icon="remove" notice />
+									<AppTranslate>Quit</AppTranslate>
 								</a>
 							</div>
 						</div>
@@ -163,13 +251,10 @@
 				</template>
 			</div>
 		</template>
-	</app-popper>
+	</AppPopper>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .account-popover
 	min-width: 250px
 	$account-popover-padding = 10px

@@ -1,4 +1,29 @@
-<script lang="ts" src="./nav"></script>
+<script lang="ts">
+import { Inject, Options, Vue } from 'vue-property-decorator';
+import { CompetitionPeriodVoting } from '../../../../../../../../../_common/community/competition/competition.model';
+import { formatNumber } from '../../../../../../../../../_common/filters/number';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view.store';
+
+@Options({})
+export default class AppCommunitiesEditCompetitionNav extends Vue {
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
+
+	readonly formatNumber = formatNumber;
+
+	get competition() {
+		return this.routeStore.competition!;
+	}
+
+	get canAssignAwards() {
+		return (
+			this.competition.is_voting_enabled &&
+			this.competition.has_awards &&
+			this.competition.periodNum >= CompetitionPeriodVoting
+		);
+	}
+}
+</script>
 
 <template>
 	<ul>
@@ -7,11 +32,10 @@
 				:to="{
 					name: 'communities.view.edit.channels.competition.overview',
 				}"
-				active-class="active"
-				exact
+				exact-active-class="active"
 			>
-				<app-jolticon icon="info-circle" />
-				<translate>Overview</translate>
+				<AppJolticon icon="info-circle" />
+				<AppTranslate>Overview</AppTranslate>
 			</router-link>
 		</li>
 		<li>
@@ -21,8 +45,8 @@
 				}"
 				active-class="active"
 			>
-				<app-jolticon icon="edit" />
-				<translate>Edit</translate>
+				<AppJolticon icon="edit" />
+				<AppTranslate>Edit</AppTranslate>
 			</router-link>
 		</li>
 		<li>
@@ -32,14 +56,14 @@
 				}"
 				active-class="active"
 			>
-				<app-jolticon icon="pedestals-numbers" />
-				<translate>Voting</translate>
+				<AppJolticon icon="pedestals-numbers" />
+				<AppTranslate>Voting</AppTranslate>
 				&nbsp;
 				<span v-if="competition.is_voting_enabled" class="tag tag-highlight">
-					<translate>On</translate>
+					<AppTranslate>On</AppTranslate>
 				</span>
 				<span v-else class="tag">
-					<translate>Off</translate>
+					<AppTranslate>Off</AppTranslate>
 				</span>
 			</router-link>
 		</li>
@@ -50,11 +74,11 @@
 				}"
 				active-class="active"
 			>
-				<app-jolticon icon="game" />
-				<translate>Entries</translate>
+				<AppJolticon icon="game" />
+				<AppTranslate>Entries</AppTranslate>
 				&nbsp;
 				<span class="tag">
-					{{ number(competition.entry_count) }}
+					{{ formatNumber(competition.entry_count) }}
 				</span>
 			</router-link>
 		</li>
@@ -65,8 +89,8 @@
 				}"
 				active-class="active"
 			>
-				<app-jolticon icon="medal" />
-				<translate>Assign Awards</translate>
+				<AppJolticon icon="medal" />
+				<AppTranslate>Assign Awards</AppTranslate>
 			</router-link>
 		</li>
 	</ul>

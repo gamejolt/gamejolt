@@ -1,28 +1,57 @@
-<script lang="ts" src="./modal"></script>
+<script lang="ts">
+import { mixins, Options, Prop } from 'vue-property-decorator';
+import { BaseModal } from '../../modal/base';
+import { Model } from '../../model/model.service';
+import { Screen } from '../../screen/screen-service';
+import AppCommentWidget from '../widget/widget.vue';
+import { DisplayMode } from './modal.service';
+
+@Options({
+	components: {
+		AppCommentWidget,
+	},
+})
+export default class AppCommentModal extends mixins(BaseModal) {
+	@Prop(String)
+	displayMode!: DisplayMode;
+
+	@Prop(Object)
+	model!: Model;
+
+	@Prop(String)
+	initialTab?: string;
+
+	get autofocusAdd() {
+		return !Screen.isXs;
+	}
+
+	onReplyAdd() {
+		// Dismiss the modal when a reply is added.
+		this.modal.dismiss();
+	}
+}
+</script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-body">
-			<app-comment-widget
+			<AppCommentWidget
 				:model="model"
 				:autofocus="autofocusAdd"
 				:initial-tab="initialTab"
 				:display-mode="displayMode"
 			/>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
->>> .timeline-list-item-split
+::v-deep(.timeline-list-item-split)
 	full-bleed()
 </style>

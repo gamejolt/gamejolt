@@ -1,13 +1,13 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { ConfigService } from './config.service';
 
-@Component({})
+@Options({})
 export class AppConfigLoaded extends Vue {
-	@Prop({ type: String, default: 'div', required: false })
+	@Prop({ type: String, required: false, default: 'div' })
 	tag!: string;
 
-	render(h: CreateElement) {
-		return h(this.tag, ConfigService.isLoaded ? this.$slots.default : null);
+	render() {
+		return h(this.tag, {}, ConfigService.isLoaded ? this.$slots.default?.() : undefined);
 	}
 }

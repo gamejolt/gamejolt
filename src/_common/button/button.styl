@@ -1,6 +1,3 @@
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 // Have to put all the sizing information here.
 make-button-size(size)
 	font-size: lookup('$button-' + size + '-font-size')
@@ -72,8 +69,8 @@ make-button-size(size)
 		text-decoration: none
 		cursor: pointer
 
-		>>> .jolticon-addon
-		>>> small
+		::v-deep(.jolticon-addon)
+		::v-deep(small)
 			theme-prop('color', 'bi-fg', true)
 
 	// Disabled state.
@@ -88,18 +85,21 @@ make-button-size(size)
 			cursor: not-allowed
 
 	// Content
-	>>> .jolticon-addon
+	::v-deep(.jolticon-addon)
 		theme-prop('color', 'fg-muted')
 		position: relative
 		top: -1px
 		vertical-align: middle
 		margin-left: 5px
 
-	>>> small
+	::v-deep(small)
 		theme-prop('color', 'fg-muted')
 		font-weight: normal
 		font-size: $font-size-tiny
 		vertical-align: baseline
+
+.button:not(.-block) + .button:not(.-block)
+	margin-left: 4px
 
 .-icon
 	position: relative

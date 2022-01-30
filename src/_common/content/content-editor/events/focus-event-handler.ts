@@ -1,10 +1,10 @@
 import { EditorView } from 'prosemirror-view';
-import AppContentEditorTS from '../content-editor';
+import { ContentEditorController } from '../content-editor-controller';
 
-export function focusEventHandler(editor: AppContentEditorTS) {
-	return function(_view: EditorView, _e: Event) {
+export function focusEventHandler(c: ContentEditorController) {
+	return function (_view: EditorView, _e: Event) {
 		// When the editor gets focus, always close the controls.
-		editor.controlsCollapsed = true;
+		c.controlsCollapsed = true;
 		return false;
 	};
 }

@@ -1,10 +1,8 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
+import { lazyImportNoSSR } from '../../../../../../../../../_common/code-splitting';
 
-export const routeCommunitiesViewEditChannelsCompetitionSettings: RouteConfig = {
+export const routeCommunitiesViewEditChannelsCompetitionSettings: RouteRecordRaw = {
 	name: 'communities.view.edit.channels.competition.settings',
 	path: 'settings',
-	component: () =>
-		import(
-			/* webpackChunkName: "routeCommunitiesViewEditChannelCompetitions" */ './settings.vue'
-		),
+	component: lazyImportNoSSR(() => import('./settings.vue')),
 };

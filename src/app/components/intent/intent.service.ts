@@ -1,7 +1,7 @@
-import { Route } from 'vue-router';
-import { LocationRedirect } from '../../../utils/router';
-import { Growls } from '../../../_common/growls/growls.service';
-import { Translate } from '../../../_common/translate/translate.service';
+import { RouteLocationNormalized } from 'vue-router';
+import { RouteLocationRedirect } from '../../../utils/router';
+import { showErrorGrowl, showInfoGrowl } from '../../../_common/growls/growls.service';
+import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
 
 export interface Intent {
 	intent: string;
@@ -15,43 +15,41 @@ export class IntentService {
 		'reject_login_error',
 	];
 
-	static checkRoute(route: Route, ...intents: Intent[]) {
+	static checkRoute(route: RouteLocationNormalized, ...intents: Intent[]) {
 		if (route.query.intent) {
-			for (let intent of intents) {
+			for (const intent of intents) {
 				if (route.query.intent === intent.intent) {
-					Growls.info({
+					showInfoGrowl({
 						sticky: true,
 						message: intent.message,
 					});
 					break;
 				}
 			}
-			return LocationRedirect.fromRoute(route, {}, { intent: undefined });
+			return RouteLocationRedirect.fromRoute(route, {}, { intent: undefined });
 		}
 		return null;
 	}
 
-	static checkApprovedLoginIntent(route: Route) {
+	static checkApprovedLoginIntent(route: RouteLocationNormalized) {
 		const approveLoginError = route.query.approve_login_error ?? null;
 		if (approveLoginError) {
 			if (approveLoginError === 'expired') {
-				Growls.error({
+				showErrorGrowl({
 					sticky: true,
-					message: Translate.$gettext(
-						`This login attempt has expired. Try logging in again.`
-					),
+					message: $gettext(`This login attempt has expired. Try logging in again.`),
 				});
 			} else if (approveLoginError === 'already-rejected') {
-				Growls.error({
+				showErrorGrowl({
 					sticky: true,
-					message: Translate.$gettextInterpolate(
+					message: $gettextInterpolate(
 						`The device you're logging in from has been blocked. If you did not do this, or blocked the login by mistake, contact us at %{ email } right away. Your account may be compromised.`,
 						{ email: 'contact@gamejolt.com' }
 					),
 				});
 			}
 
-			return LocationRedirect.fromRoute(
+			return RouteLocationRedirect.fromRoute(
 				route,
 				{},
 				{ intent: undefined, approve_login_error: undefined }
@@ -61,21 +59,21 @@ export class IntentService {
 		const rejectLoginError = route.query.reject_login_error ?? null;
 		if (rejectLoginError) {
 			if (rejectLoginError === 'expired') {
-				Growls.error({
+				showErrorGrowl({
 					sticky: true,
-					message: Translate.$gettext('This login request has expired.'),
+					message: $gettext('This login request has expired.'),
 				});
 			} else if (rejectLoginError === 'already-approved') {
-				Growls.error({
+				showErrorGrowl({
 					sticky: true,
-					message: Translate.$gettextInterpolate(
+					message: $gettextInterpolate(
 						`The device you're logging in from has already been approved. If you did not do this, or blocked the login by mistake, contact us at %{ email } right away. Your account may be compromised.`,
 						{ email: 'contact@gamejolt.com' }
 					),
 				});
 			}
 
-			return LocationRedirect.fromRoute(
+			return RouteLocationRedirect.fromRoute(
 				route,
 				{},
 				{ intent: undefined, reject_login_error: undefined }
@@ -86,11 +84,11 @@ export class IntentService {
 			route,
 			{
 				intent: 'approve-login',
-				message: Translate.$gettext('Login request approved.'),
+				message: $gettext('Login request approved.'),
 			},
 			{
 				intent: 'reject-login',
-				message: Translate.$gettext('Login request rejected.'),
+				message: $gettext('Login request rejected.'),
 			}
 		);
 

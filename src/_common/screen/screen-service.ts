@@ -1,5 +1,5 @@
+import { reactive } from '@vue/reactivity';
 import { debounce } from '../../utils/utils';
-import { makeObservableService } from '../../utils/vue';
 import { EventTopic } from '../system/event/event-topic';
 
 /**
@@ -16,55 +16,45 @@ const LG_WIDTH = 1200;
  */
 const HIDPI_BREAKPOINT = 1.5;
 
-export class Screen {
-	/**
-	 * The actual width of the browser/screen context.
-	 * Either in actual pixels, or device pixels if we can.
-	 */
-	static width = 0;
-	static windowWidth = 0;
+export const onScreenResize = new EventTopic<void>();
 
+class ScreenService {
 	/**
-	 * The actual height of the browser/screen context.
-	 * Either in actual pixels, or device pixels if we can.
+	 * The actual width of the browser/screen context. Either in actual pixels,
+	 * or device pixels if we can.
 	 */
-	static height = 0;
-	static windowHeight = 0;
+	width = 0;
 
 	/**
-	 * The breakpoint states.
+	 * The actual height of the browser/screen context. Either in actual pixels,
+	 * or device pixels if we can.
 	 */
-	static isXs = false;
-	static isSm = false;
-	static isMd = false;
-	static isLg = true; // lg is the default true state.
-	static breakpoint: 'xs' | 'sm' | 'md' | 'lg' = 'lg';
+	height = 0;
 
-	static isWindowXs = Screen.isXs;
-	static isWindowSm = Screen.isSm;
-	static isWindowMd = Screen.isMd;
-	static isWindowLg = Screen.isLg;
-	static windowBreakpoint: 'xs' | 'sm' | 'md' | 'lg' = 'lg';
-
+	isXs = false;
+	isSm = false;
+	isMd = false;
 	/**
-	 * Just some silly helpers.
+	 * lg is the default true state.
 	 */
-	static isMobile = false;
-	static isDesktop = true; // Desktop is default true state.
+	isLg = true;
 
-	static isWindowMobile = Screen.isMobile;
-	static isWindowDesktop = Screen.isDesktop;
+	get breakpoint() {
+		return this.isXs ? 'xs' : this.isSm ? 'sm' : this.isMd ? 'md' : 'lg';
+	}
 
-	/**
-	 * The context that the Screen's dimensions are based on.
-	 * If null we will just copy over the values of the "window" variants.
-	 */
-	static context: HTMLElement | null = null;
+	get isMobile() {
+		return this.isXs || this.isSm;
+	}
+
+	get isDesktop() {
+		return !this.isMobile;
+	}
 
 	/**
 	 * If it's Retina/HiDPI or not.
 	 */
-	static isHiDpi = GJ_IS_SSR
+	isHiDpi = import.meta.env.SSR
 		? false
 		: window.matchMedia(
 				'only screen and (-webkit-min-device-pixel-ratio: ' +
@@ -84,139 +74,16 @@ export class Screen {
 					'dpi)'
 		  ).matches;
 
-	static isPointerMouse = GJ_IS_SSR
+	isPointerMouse = import.meta.env.SSR
 		? true
 		: window.matchMedia('not screen and (pointer: coarse)').matches;
-
-	static resizeChanges = new EventTopic<void>();
-
-	/**
-	 * Simply recalculates the breakpoint checks.
-	 * Shouldn't need to call this often.
-	 */
-	static recalculate() {
-		this._onResize();
-	}
-
-	static async _onResize() {
-		// Get everything for the window first.
-		if (window.matchMedia('only screen and (max-width: ' + (SM_WIDTH - 1) + 'px)').matches) {
-			this.isWindowXs = true;
-			this.isWindowSm = false;
-			this.isWindowMd = false;
-			this.isWindowLg = false;
-			this.windowBreakpoint = 'xs';
-		} else if (
-			window.matchMedia(
-				'only screen and (min-width: ' +
-					SM_WIDTH +
-					'px) and (max-width: ' +
-					(MD_WIDTH - 1) +
-					'px)'
-			).matches
-		) {
-			this.isWindowXs = false;
-			this.isWindowSm = true;
-			this.isWindowMd = false;
-			this.isWindowLg = false;
-			this.windowBreakpoint = 'sm';
-		} else if (
-			window.matchMedia(
-				'only screen and (min-width: ' +
-					MD_WIDTH +
-					'px) and (max-width: ' +
-					(LG_WIDTH - 1) +
-					'px)'
-			).matches
-		) {
-			this.isWindowXs = false;
-			this.isWindowSm = false;
-			this.isWindowMd = true;
-			this.isWindowLg = false;
-			this.windowBreakpoint = 'md';
-		} else if (window.matchMedia('only screen and (min-width: ' + LG_WIDTH + 'px)').matches) {
-			this.isWindowXs = false;
-			this.isWindowSm = false;
-			this.isWindowMd = false;
-			this.isWindowLg = true;
-			this.windowBreakpoint = 'lg';
-		}
-
-		if (this.isWindowXs || this.isWindowSm) {
-			this.isWindowMobile = true;
-			this.isWindowDesktop = false;
-		} else {
-			this.isWindowMobile = false;
-			this.isWindowDesktop = true;
-		}
-
-		this.windowWidth = window.innerWidth > 0 ? window.innerWidth : (window as any)['width'];
-		this.windowHeight = window.innerHeight > 0 ? window.innerHeight : (window as any)['height'];
-
-		// Now if we have a Screen context set, let's get settings for that.
-		// Othwerise we simply use the $indow dimensions.
-		if (!this.context) {
-			this.isXs = this.isWindowXs;
-			this.isSm = this.isWindowSm;
-			this.isMd = this.isWindowMd;
-			this.isLg = this.isWindowLg;
-			this.isMobile = this.isWindowMobile;
-			this.isDesktop = this.isWindowDesktop;
-			this.width = this.windowWidth;
-			this.height = this.windowHeight;
-			this.breakpoint = this.windowBreakpoint;
-		} else {
-			// Pull dimensions from the Screen context.
-			// Not sure if media queries include the scrollbar in calculation or not.
-			// inner dimensions seem to not take into account any scrollbars.
-			this.width = this.context.clientWidth;
-			this.height = this.context.clientHeight;
-
-			if (this.width < SM_WIDTH) {
-				this.isXs = true;
-				this.isSm = false;
-				this.isMd = false;
-				this.isLg = false;
-				this.breakpoint = 'xs';
-			} else if (this.width >= SM_WIDTH && this.width < MD_WIDTH) {
-				this.isXs = false;
-				this.isSm = true;
-				this.isMd = false;
-				this.isLg = false;
-				this.breakpoint = 'sm';
-			} else if (this.width >= MD_WIDTH && this.width < LG_WIDTH) {
-				this.isXs = false;
-				this.isSm = false;
-				this.isMd = true;
-				this.isLg = false;
-				this.breakpoint = 'md';
-			} else if (this.width >= LG_WIDTH) {
-				this.isXs = false;
-				this.isSm = false;
-				this.isMd = false;
-				this.isLg = true;
-				this.breakpoint = 'lg';
-			}
-
-			if (this.isXs || this.isSm) {
-				this.isMobile = true;
-				this.isDesktop = false;
-			} else {
-				this.isMobile = false;
-				this.isDesktop = true;
-			}
-		}
-
-		// Emit every time we resize.
-		this.resizeChanges.next();
-	}
 }
 
-makeObservableService(Screen);
+export const Screen = reactive(new ScreenService()) as ScreenService;
 
-if (!GJ_IS_SSR) {
+if (!import.meta.env.SSR) {
 	// Check the breakpoints on app load.
-	Screen._onResize();
+	_onResize();
 
 	/**
 	 * This is used internally to check things every time window resizes.
@@ -224,6 +91,54 @@ if (!GJ_IS_SSR) {
 	 */
 	window.addEventListener(
 		'resize',
-		debounce(() => Screen._onResize(), 250)
+		debounce(() => _onResize(), 250)
 	);
+}
+
+async function _onResize() {
+	Screen.isXs = false;
+	Screen.isSm = false;
+	Screen.isMd = false;
+	Screen.isLg = false;
+
+	// Get everything for the window first.
+	if (window.matchMedia('only screen and (max-width: ' + (SM_WIDTH - 1) + 'px)').matches) {
+		Screen.isXs = true;
+	} else if (
+		window.matchMedia(
+			'only screen and (min-width: ' +
+				SM_WIDTH +
+				'px) and (max-width: ' +
+				(MD_WIDTH - 1) +
+				'px)'
+		).matches
+	) {
+		Screen.isSm = true;
+	} else if (
+		window.matchMedia(
+			'only screen and (min-width: ' +
+				MD_WIDTH +
+				'px) and (max-width: ' +
+				(LG_WIDTH - 1) +
+				'px)'
+		).matches
+	) {
+		Screen.isMd = true;
+	} else if (window.matchMedia('only screen and (min-width: ' + LG_WIDTH + 'px)').matches) {
+		Screen.isLg = true;
+	}
+
+	Screen.width = window.innerWidth > 0 ? window.innerWidth : (window as any)['width'];
+	Screen.height = window.innerHeight > 0 ? window.innerHeight : (window as any)['height'];
+
+	// Emit every time we resize.
+	onScreenResize.next();
+}
+
+/**
+ * Can be used to tell the Screen service to check sizing again in case things
+ * have shifted around without the screen actually resizing.
+ */
+export function triggerOnScreenResize() {
+	_onResize();
 }

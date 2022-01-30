@@ -1,8 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeProfileTrophiesOverview: RouteConfig = {
+export const routeProfileTrophiesOverview: RouteRecordRaw = {
 	path: '',
 	name: 'profile.trophies',
-	component: () =>
-		import(/* webpackChunkName: "routeProfileTrophiesOverview" */ './overview.vue'),
+	component: () => import('./overview.vue'),
 };

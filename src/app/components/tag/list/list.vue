@@ -1,18 +1,69 @@
-<script lang="ts" src="./list"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
+import { TagInfo, TagsInfo } from '../tags-info.service';
+import AppTagThumbnail from '../thumbnail/thumbnail.vue';
+
+const FeaturedTags = [
+	'action',
+	'horror',
+	'adventure',
+	'fangame',
+	'fnaf',
+	'undertale',
+	'fnf',
+	'rpg',
+	'other',
+	'multiplayer',
+	'platformer',
+	'scifi',
+	'retro',
+	'pointnclick',
+	'shooter',
+	'altgame',
+	'vr',
+	'survival',
+	'arcade',
+	'roguelike',
+	'puzzle',
+	'strategy',
+	'sports',
+];
+
+@Options({
+	components: {
+		AppScrollScroller,
+		AppTagThumbnail,
+	},
+})
+export default class AppTagList extends Vue {
+	@Prop({ type: String, default: 'global' }) eventCat!: string;
+
+	get tags() {
+		const tags: TagInfo[] = [];
+		for (const tag of FeaturedTags) {
+			const info = TagsInfo.tags.find(i => i.id === tag);
+			if (info) {
+				tags.push(info);
+			}
+		}
+
+		return tags;
+	}
+}
+</script>
 
 <template>
-	<app-scroll-scroller horizontal>
+	<AppScrollScroller horizontal>
 		<div class="-list">
 			<div v-for="tag of tags" :key="tag.id" class="-list-item">
-				<app-tag-thumbnail class="-list-thumb" :tag="tag.id" :event-cat="eventCat" />
+				<AppTagThumbnail class="-list-thumb" :tag="tag.id" :event-cat="eventCat" />
 			</div>
 		</div>
-	</app-scroll-scroller>
+	</AppScrollScroller>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-list
 	white-space: nowrap
 	text-align: center

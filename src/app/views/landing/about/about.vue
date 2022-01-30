@@ -1,14 +1,56 @@
-<script lang="ts" src="./about"></script>
+<script lang="ts">
+import { Options } from 'vue-property-decorator';
+import AppContactLink from '../../../../_common/contact-link/contact-link.vue';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { imageJolt } from '../../../img/images';
+import profileCros from './cros.jpg';
+import profileThoro from './thoro.jpg';
+
+@Options({
+	name: 'RouteLandingAbout',
+	components: {
+		AppThemeSvg,
+		AppContactLink,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+@OptionsForRoute()
+export default class RouteLandingAbout extends BaseRouteComponent {
+	readonly assetUrls = import.meta.globEager('./*.png');
+	readonly Screen = Screen;
+	readonly imageJolt = imageJolt;
+	readonly profileCros = profileCros;
+	readonly profileThoro = profileThoro;
+
+	colors = {
+		'#ccff00': 'black',
+		'#2f7f6f': 'white',
+		'#31d6ff': 'white',
+		'#ff3fac': 'white',
+	};
+
+	disableRouteTitleSuffix = true;
+
+	get routeTitle() {
+		return this.$gettext(`About Game Jolt`);
+	}
+}
+</script>
 
 <template>
 	<div class="route-landing-about">
 		<section class="section landing-header text-center">
 			<div class="container">
 				<h1>
-					<app-theme-svg
+					<AppThemeSvg
 						v-app-tooltip="$gettext('This is a lightning bolt!')"
 						class="bolt anim-fade-in-down"
-						src="~img/jolt.svg"
+						:src="imageJolt"
 						alt=""
 						strict-colors
 					/>
@@ -83,14 +125,14 @@
 							<div class="-staff">
 								<div class="-staff-item">
 									<a href="https://gamejolt.com/@thoro">
-										<img src="./thoro.jpg" alt="thoro" class="-avatar" />
+										<img :src="profileThoro" alt="thoro" class="-avatar" />
 									</a>
 									<strong>Yaprak</strong> <small>@thoro</small> <br />
 									Co-founder / CEO
 								</div>
 								<div class="-staff-item">
 									<a href="https://gamejolt.com/@cros">
-										<img src="./cros.jpg" alt="cros" class="-avatar" />
+										<img :src="profileCros" alt="cros" class="-avatar" />
 									</a>
 									<strong>David</strong> <small>@cros</small> <br />
 									Co-founder / CTO
@@ -100,16 +142,16 @@
 
 							<p>
 								<strong>For support</strong>, email us at
-								<app-contact-link email="contact@gamejolt.com">
+								<AppContactLink email="contact@gamejolt.com">
 									contact@gamejolt.com
-								</app-contact-link>
+								</AppContactLink>
 							</p>
 
 							<p>
 								<strong>Press/business inquiries</strong>, email Yaprak DeCarmine at
-								<app-contact-link email="yaprak@gamejolt.com">
+								<AppContactLink email="yaprak@gamejolt.com">
 									yaprak@gamejolt.com
-								</app-contact-link>
+								</AppContactLink>
 							</p>
 						</div>
 					</div>
@@ -134,13 +176,13 @@
 
 								<div class="visible-xs text-center">
 									<img
-										src="./gamejolt-logo-dark-1x.png"
+										:src="assetUrls['./gamejolt-logo-dark-1x.png'].default"
 										alt="Game Jolt Logo Dark"
 									/>
 								</div>
 								<div class="hidden-xs text-center">
 									<img
-										src="./gamejolt-logo-dark-2x.png"
+										:src="assetUrls['./gamejolt-logo-dark-2x.png'].default"
 										alt="Game Jolt Logo Dark"
 									/>
 								</div>
@@ -152,6 +194,7 @@
 										<a
 											:href="
 												assetUrls['./gamejolt-logo-dark-' + size + '.png']
+													.default
 											"
 											target="_blank"
 										>
@@ -171,7 +214,9 @@
 
 										<div class="text-center">
 											<img
-												src="./gamejolt-bolt-dark-2x.png"
+												:src="
+													assetUrls['./gamejolt-bolt-dark-2x.png'].default
+												"
 												alt="Game Jolt Bolt Dark"
 											/>
 										</div>
@@ -187,7 +232,7 @@
 													:href="
 														assetUrls[
 															'./gamejolt-bolt-dark-' + size + '.png'
-														]
+														].default
 													"
 													target="_blank"
 												>
@@ -215,7 +260,10 @@
 
 										<div class="text-center">
 											<img
-												src="./gamejolt-bolt-white-2x.png"
+												:src="
+													assetUrls['./gamejolt-bolt-white-2x.png']
+														.default
+												"
 												alt="Game Jolt Bolt White"
 											/>
 										</div>
@@ -231,7 +279,7 @@
 													:href="
 														assetUrls[
 															'./gamejolt-bolt-white-' + size + '.png'
-														]
+														].default
 													"
 													target="_blank"
 												>
@@ -250,7 +298,10 @@
 
 										<div class="text-center">
 											<img
-												src="./gamejolt-bolt-black-2x.png"
+												:src="
+													assetUrls['./gamejolt-bolt-black-2x.png']
+														.default
+												"
 												alt="Game Jolt Bolt Black"
 											/>
 										</div>
@@ -266,7 +317,7 @@
 													:href="
 														assetUrls[
 															'./gamejolt-bolt-black-' + size + '.png'
-														]
+														].default
 													"
 													target="_blank"
 												>
@@ -308,9 +359,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-color-hex-code
 	font-family: $font-family-monospace
 	font-weight: bold

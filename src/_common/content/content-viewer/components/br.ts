@@ -1,9 +1,13 @@
-import Vue, { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { ContentObject } from '../../content-object';
 
-@Component({})
+@Options({})
 export class AppContentViewerHardBreak extends Vue {
-	render(h: CreateElement) {
+	@Prop({ type: ContentObject })
+	contentData!: ContentObject;
+
+	render() {
 		return h('br');
 	}
 }

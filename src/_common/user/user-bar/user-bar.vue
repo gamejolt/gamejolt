@@ -1,3 +1,31 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Environment } from '../../environment/environment.service';
+import AppUserAvatarImg from '../user-avatar/img/img.vue';
+import { User } from '../user.model';
+
+@Options({
+	components: {
+		AppUserAvatarImg,
+	},
+})
+export default class AppUserBar extends Vue {
+	@Prop(Object) user!: User;
+	@Prop(String) site!: string;
+	@Prop(Boolean) hideSiteSelector?: boolean;
+
+	get userLink() {
+		// User link on fireside goes to their fireside profile if they are an
+		// approved author.
+		if (this.site === 'fireside' && this.user && this.user.can_manage) {
+			return '/@' + this.user.username;
+		}
+
+		return Environment.baseUrl + '/dashboard';
+	}
+}
+</script>
+
 <template>
 	<div class="container">
 		<nav class="user-bar navbar">
@@ -11,7 +39,7 @@
 				<ul class="navbar-items">
 					<li>
 						<a class="user-bar-user" :href="userLink">
-							<app-user-avatar-img class="user-bar-avatar" :user="user" />
+							<AppUserAvatarImg class="user-bar-avatar" :user="user" />
 
 							<span class="user-bar-username">
 								{{ user.username }}
@@ -53,5 +81,3 @@
 	.button
 		margin-top: 7px // Blah, stupid hardcoded
 </style>
-
-<script lang="ts" src="./user-bar"></script>

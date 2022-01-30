@@ -1,22 +1,21 @@
-import Vue, { CreateElement, VNode } from 'vue';
+import { h, VNode } from 'vue';
+import { Vue } from 'vue-property-decorator';
 import { WidgetCompilerContext } from './widget-compiler.service';
 
 export abstract class WidgetCompilerWidget {
 	abstract readonly name: string;
-	abstract compile(h: CreateElement, context: WidgetCompilerContext, params: string[]): VNode;
+	abstract compile(context: WidgetCompilerContext, params: string[]): VNode;
 
-	wrapComponent(h: CreateElement, component: typeof Vue, propGetter: () => any) {
+	wrapComponent(component: typeof Vue, propGetter: () => any) {
 		// Not sure if there is a way to do this without instantiating a new
 		// component.
 		const options = new component().$options;
 
-		return h(options, {
-			props: propGetter(),
-		});
+		return h(options, propGetter());
 	}
 
 	namedParams(params: string[] = []) {
-		let namedParams: { [k: string]: string } = {};
+		const namedParams: { [k: string]: string } = {};
 		for (const param of params) {
 			if (param.indexOf('=') === -1) {
 				continue;

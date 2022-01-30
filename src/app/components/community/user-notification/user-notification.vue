@@ -1,20 +1,83 @@
-<script lang="ts" src="./user-notification"></script>
+<script lang="ts">
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import AppAlertDismissable from '../../../../_common/alert/dismissable/dismissable.vue';
+import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
+import {
+	CommunityUserNotification,
+	NotificationType,
+} from '../../../../_common/community/user-notification/user-notification.model';
+import { AppTimeAgo } from '../../../../_common/time/ago/ago';
+import {
+	getCommunityEjectPostReasons,
+	getCommunityMovePostReasons,
+} from '../../../../_common/user/action-reasons';
+
+@Options({
+	components: {
+		AppCommunityThumbnailImg,
+		AppAlertDismissable,
+		AppTimeAgo,
+	},
+})
+export default class AppCommunityUserNotification extends Vue {
+	@Prop({ type: Object, required: true }) notification!: CommunityUserNotification;
+
+	@Emit('dismiss')
+	emitDismiss() {}
+
+	readonly NotificationType = NotificationType;
+
+	get notificationReasons() {
+		switch (this.notification.type) {
+			case NotificationType.POSTS_MOVE:
+				return getCommunityMovePostReasons();
+			case NotificationType.POSTS_EJECT:
+				return getCommunityEjectPostReasons();
+		}
+
+		throw new Error('No reasons defined.');
+	}
+
+	get hasReason() {
+		return this.notification.reason !== null;
+	}
+
+	get reasonText() {
+		const reason = this.notification.reason;
+		if (reason === null) {
+			return null;
+		}
+
+		const reasons = this.notificationReasons;
+		if (reasons[reason]) {
+			return reasons[reason];
+		}
+		return reason;
+	}
+
+	onDismiss() {
+		// Hope it succeeds, but don't wait on it.
+		this.notification.$remove();
+		this.emitDismiss();
+	}
+}
+</script>
 
 <template>
-	<app-alert-dismissable
+	<AppAlertDismissable
 		class="-notification"
 		no-margin
 		:dismiss-tooltip="$gettext(`Dismiss`)"
 		@dismiss="onDismiss"
 	>
 		<div class="-community">
-			<app-community-thumbnail-img
+			<AppCommunityThumbnailImg
 				:community="notification.community"
 				class="-community-img"
 			/>
 			<span class="-community-title">{{ notification.community.name }}</span>
 			<span class="dot-separator" />
-			<app-time-ago :date="notification.added_on" class="-community-date" />
+			<AppTimeAgo :date="notification.added_on" class="-community-date" />
 		</div>
 
 		<div class="-message">
@@ -36,7 +99,7 @@
 			</div>
 
 			<template v-if="hasReason">
-				<div><translate>The reason for this action is as follows:</translate></div>
+				<div><AppTranslate>The reason for this action is as follows:</AppTranslate></div>
 				<div class="-reason">
 					<em>
 						<strong>
@@ -46,13 +109,10 @@
 				</div>
 			</template>
 		</div>
-	</app-alert-dismissable>
+	</AppAlertDismissable>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-notification
 	margin-top: 8px
 	full-bleed-xs()

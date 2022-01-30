@@ -1,4 +1,36 @@
-<script lang="ts" src="./legal"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import {
+	AdSettingsContainer,
+	releasePageAdsSettings,
+	setPageAdsSettings,
+	useAdsController,
+} from '../../../_common/ad/ad-store';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
+import { User } from '../../../_common/user/user.model';
+
+@Options({
+	name: 'RouteLegal',
+})
+@OptionsForRoute({
+	deps: {},
+	resolver: () => User.touch(),
+})
+export default class RouteLegal extends BaseRouteComponent {
+	ads = setup(() => useAdsController());
+
+	routeCreated() {
+		const settings = new AdSettingsContainer();
+		settings.isPageDisabled = true;
+		setPageAdsSettings(this.ads, settings);
+	}
+
+	routeDestroyed() {
+		releasePageAdsSettings(this.ads);
+	}
+}
+</script>
 
 <template>
 	<section class="section">
@@ -15,31 +47,27 @@
 						<ul>
 							<li>
 								<router-link :to="{ name: 'legal.terms' }" active-class="active">
-									<translate>Terms of Use</translate>
+									<AppTranslate>Terms of Use</AppTranslate>
 								</router-link>
 							</li>
 							<li>
-								<router-link
-									:to="{ name: 'legal.privacy' }"
-									active-class="active"
-									exact
-								>
-									<translate>Privacy Policy</translate>
+								<router-link :to="{ name: 'legal.privacy' }" active-class="active">
+									<AppTranslate>Privacy Policy</AppTranslate>
 								</router-link>
 							</li>
 							<li>
 								<router-link :to="{ name: 'legal.cookies' }" active-class="active">
-									<translate>Cookie Policy</translate>
+									<AppTranslate>Cookie Policy</AppTranslate>
 								</router-link>
 							</li>
 							<li>
 								<router-link :to="{ name: 'legal.ads' }" active-class="active">
-									<translate>Advertising Platforms</translate>
+									<AppTranslate>Advertising Platforms</AppTranslate>
 								</router-link>
 							</li>
 							<li>
 								<router-link :to="{ name: 'legal.deletion' }" active-class="active">
-									<translate>Account Deletion</translate>
+									<AppTranslate>Account Deletion</AppTranslate>
 								</router-link>
 							</li>
 						</ul>

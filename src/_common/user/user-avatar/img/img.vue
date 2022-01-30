@@ -1,21 +1,32 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { User } from '../../user.model';
+import guestImage from '../guest.png';
+
+@Options({})
+export default class AppUserAvatarImg extends Vue {
+	@Prop(Object) user?: User;
+
+	hasError = false;
+
+	readonly guestImage = guestImage;
+}
+</script>
+
 <template>
 	<span class="user-avatar-img">
 		<img
-			key="user"
 			v-if="user && !hasError"
 			:src="user.img_avatar"
 			class="img-responsive"
 			alt=""
 			@error="hasError = true"
 		/>
-		<img key="guest" v-else src="../guest.png" class="img-responsive" alt="" />
+		<img v-else :src="guestImage" class="img-responsive" alt="" />
 	</span>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .user-avatar-img
 	display: block
 	position: relative
@@ -24,5 +35,3 @@
 		img-responsive()
 		img-circle()
 </style>
-
-<script lang="ts" src="./img"></script>

@@ -1,7 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDownload: RouteConfig = {
+export const routeDownload: RouteRecordRaw = {
 	name: 'download',
 	path: '/get/:type(build|soundtrack)',
-	component: () => import(/* webpackChunkName: "routeDownload" */ './download.vue'),
+	component: () => import('./download.vue'),
 };

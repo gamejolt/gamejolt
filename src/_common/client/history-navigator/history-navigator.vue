@@ -1,3 +1,13 @@
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+import { ClientHistoryNavigator } from './history-navigator.service';
+
+@Options({})
+export default class AppClientHistoryNavigator extends Vue {
+	readonly HistoryNavigator = ClientHistoryNavigator;
+}
+</script>
+
 <template>
 	<span>
 		<a
@@ -6,7 +16,7 @@
 			title="Go back"
 			@click="HistoryNavigator.back()"
 		>
-			<app-jolticon icon="chevron-left" />
+			<AppJolticon icon="chevron-left" />
 		</a>
 		<a
 			v-if="HistoryNavigator.canGoForward"
@@ -14,9 +24,7 @@
 			title="Go forward"
 			@click="HistoryNavigator.forward()"
 		>
-			<app-jolticon icon="chevron-right" />
+			<AppJolticon icon="chevron-right" />
 		</a>
 	</span>
 </template>
-
-<script lang="ts" src="./history-navigator"></script>

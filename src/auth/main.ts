@@ -1,7 +1,9 @@
 import { createApp } from './bootstrap';
 
-const { app, router } = createApp();
+async function start() {
+	const { app, router } = await createApp();
+	await router.isReady();
+	app.mount('#app');
+}
 
-router.onReady(() => {
-	app.$mount('#app');
-});
+start();

@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<h1><translate>Bad Request</translate></h1>
-		<p><translate>There's been an error, and it's of the dubious sort.</translate></p>
+		<h1><AppTranslate>Bad Request</AppTranslate></h1>
+		<p><AppTranslate>There's been an error, and it's of the dubious sort.</AppTranslate></p>
 	</div>
 </template>

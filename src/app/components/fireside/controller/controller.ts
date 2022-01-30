@@ -1,4 +1,6 @@
-import VueRouter from 'vue-router';
+import { InjectionKey, provide } from '@vue/runtime-core';
+import { computed, inject, ref, shallowReactive, shallowRef } from 'vue';
+import { Router } from 'vue-router';
 import { getAbsoluteLink } from '../../../../utils/router';
 import { getCurrentServerTime } from '../../../../utils/server-time';
 import { Api } from '../../../../_common/api/api.service';
@@ -7,19 +9,20 @@ import {
 	canCommunityFeatureFireside,
 } from '../../../../_common/community/community.model';
 import { configClientAllowStreaming } from '../../../../_common/config/config.service';
-import { Device } from '../../../../_common/device/device.service';
-import { duration } from '../../../../_common/filters/duration';
+import { getDeviceBrowser } from '../../../../_common/device/device.service';
+import { formatDuration } from '../../../../_common/filters/duration';
 import { Fireside, FIRESIDE_EXPIRY_THRESHOLD } from '../../../../_common/fireside/fireside.model';
 import { FiresideRTC } from '../../../../_common/fireside/rtc/rtc';
-import { Growls } from '../../../../_common/growls/growls.service';
+import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
-import { StickerTargetController } from '../../../../_common/sticker/target/target-controller';
-import { appStore } from '../../../../_common/store/app-store';
+import { createStickerTargetController } from '../../../../_common/sticker/target/target-controller';
+import { commonStore } from '../../../../_common/store/common-store';
 import { Translate } from '../../../../_common/translate/translate.service';
 import { ChatClient } from '../../chat/client';
 import { ChatRoomChannel } from '../../chat/room-channel';
+import { ChatUserCollection } from '../../chat/user-collection';
 import { FiresideChannel } from '../../grid/fireside-channel';
 import { FiresidePublishModal } from '../publish-modal/publish-modal.service';
 
@@ -33,147 +36,119 @@ export type RouteStatus =
 	| 'joined' // Currently joined to the fireside.
 	| 'blocked'; // Blocked from joining the fireside (user blocked).
 
-export const FiresideControllerKey = Symbol('fireside-controller');
-
+const FiresideControllerKey: InjectionKey<FiresideController> = Symbol('fireside-controller');
 type Options = { isMuted?: boolean };
 
-export class FiresideController {
-	constructor(
-		public readonly fireside: Fireside,
-		public readonly stickerTargetController: StickerTargetController,
-		{ isMuted }: Options
-	) {
-		this.isMuted = isMuted ?? false;
-	}
+export type FiresideController = ReturnType<typeof createFiresideController>;
 
-	readonly isMuted;
+export function createFiresideController(fireside: Fireside, options: Options = {}) {
+	const stickerTargetController = createStickerTargetController(fireside, undefined, true);
+	const isMuted = options.isMuted ?? false;
 
-	rtc: FiresideRTC | null = null;
-	status: RouteStatus = 'initial';
-	onRetry: (() => void) | null = null;
+	const rtc = shallowRef<FiresideRTC>();
+	const status = ref<RouteStatus>('initial');
+	const onRetry = ref<() => void>();
 
-	chat: ChatClient | null = null;
+	const chat = ref<ChatClient>();
 
-	gridChannel: FiresideChannel | null = null;
-	chatChannel: ChatRoomChannel | null = null;
-	expiryInterval: NodeJS.Timer | null = null;
-	chatPreviousConnectedState: boolean | null = null;
-	gridPreviousConnectedState: boolean | null = null;
+	const gridChannel = ref<FiresideChannel>();
+	const chatChannel = ref<ChatRoomChannel>();
+	const expiryInterval = ref<NodeJS.Timer>();
+	const chatPreviousConnectedState = ref<boolean>();
+	const gridPreviousConnectedState = ref<boolean>();
 
 	/**
 	 * Visually shows a warning to the owner when the fireside's time is running
 	 * low.
 	 */
-	hasExpiryWarning = false;
+	const hasExpiryWarning = ref(false);
 
-	isShowingStreamOverlay = false;
-	isShowingOverlayPopper = false;
-	isShowingStreamSetup = false;
+	const isShowingStreamOverlay = ref(false);
+	const isShowingOverlayPopper = ref(false);
+	const isShowingStreamSetup = ref(false);
 
-	updateInterval: NodeJS.Timer | null = null;
-	totalDurationText: string | null = null;
-	expiresDurationText: string | null = null;
-	expiresProgressValue: number | null = null;
+	const updateInterval = ref<NodeJS.Timer>();
+	const totalDurationText = ref<string>();
+	const expiresDurationText = ref<string>();
+	const expiresProgressValue = ref<number>();
 
-	_isExtending = false;
+	const isExtending = ref(false);
 
-	get user() {
-		return appStore.state.user;
-	}
+	const user = computed(() => commonStore.user.value);
+	const chatRoom = computed(() => chatChannel.value?.room);
 
-	get chatRoom() {
-		return this.chatChannel?.room;
-	}
-
-	get chatUsers() {
-		if (!this.chatRoom) {
+	const chatUsers = computed(() => {
+		if (!chatRoom.value) {
 			return undefined;
 		}
-		return this.chat?.roomMembers[this.chatRoom.id];
-	}
+		return chat.value?.roomMembers[chatRoom.value.id] as ChatUserCollection;
+	});
 
-	get isDraft() {
-		return this.fireside?.is_draft ?? true;
-	}
+	const isDraft = computed(() => fireside?.is_draft ?? true);
+	const isStreaming = computed(
+		() => !!(fireside?.is_streaming && rtc.value && rtc.value.users.length > 0)
+	);
+	const isPersonallyStreaming = computed(() => rtc.value?.isStreaming ?? false);
 
-	get isStreaming() {
-		return !!(this.fireside?.is_streaming && this.rtc && this.rtc.users.length > 0);
-	}
-
-	get isPersonallyStreaming() {
-		return this.rtc?.isStreaming ?? false;
-	}
-
-	get isStreamingElsewhere() {
-		if (!this.rtc || !this.rtc.userId) {
+	const isStreamingElsewhere = computed(() => {
+		if (!rtc.value?.userId) {
 			return false;
 		}
 
-		const user = this.rtc.users.find(i => i.userModel?.id === this.rtc?.userId);
+		const user = rtc.value.users.find(i => i.userModel?.id === rtc.value?.userId);
 		if (!user) {
 			return false;
 		}
 
 		// User is in the list of RTC users, but they are not streaming locally.
-		return !this.isPersonallyStreaming;
-	}
+		return !isPersonallyStreaming.value;
+	});
 
-	get shouldShowStreamingOptions() {
-		return this.canStream || this.isPersonallyStreaming;
-	}
+	const shouldShowStreamingOptions = computed(
+		() => canStream.value || isPersonallyStreaming.value
+	);
 
-	get canStream() {
+	const canStream = computed(() => {
 		return (
-			!!this.rtc?.producer &&
-			!!(Screen.isDesktop || (this.user && this.user.permission_level >= 4))
+			!!rtc.value?.producer &&
+			!!(Screen.isDesktop || (user.value && user.value.permission_level >= 4))
 		);
-	}
+	});
 
-	get isOwner() {
-		return !!this.user && this.user.id === this.fireside.user.id;
-	}
+	const isOwner = computed(() => !!user.value && user.value.id === fireside.user.id);
+	const canManageCohosts = computed(
+		() => isOwner.value || fireside.hasPerms('fireside-collaborators')
+	);
+	const canCommunityFeature = computed(
+		() => !!fireside.community && canCommunityFeatureFireside(fireside.community)
+	);
+	const canCommunityEject = computed(
+		() => !!fireside.community && canCommunityEjectFireside(fireside.community)
+	);
+	const canEdit = computed(() => isOwner.value || fireside.hasPerms('fireside-edit'));
 
-	get canManageCohosts() {
-		return this.isOwner || this.fireside.hasPerms('fireside-collaborators');
-	}
-
-	get canCommunityFeature() {
-		return !!this.fireside.community && canCommunityFeatureFireside(this.fireside.community);
-	}
-
-	get canCommunityEject() {
-		return !!this.fireside.community && canCommunityEjectFireside(this.fireside.community);
-	}
-
-	get canEdit() {
-		return this.isOwner || this.fireside.hasPerms('fireside-edit');
-	}
-
-	get canPublish() {
-		const role = this.fireside.role?.role;
+	const canPublish = computed(() => {
+		const role = fireside.role?.role;
 		return (
-			(this.isOwner || role === 'host' || role === 'cohost') &&
-			this.status === 'joined' &&
-			this.isDraft
+			(isOwner.value || role === 'host' || role === 'cohost') &&
+			status.value === 'joined' &&
+			isDraft.value
 		);
-	}
+	});
 
-	get canExtend() {
+	const canExtend = computed(() => {
 		return (
-			this.status === 'joined' &&
-			this.expiresProgressValue !== null &&
-			this.expiresProgressValue <= 95 &&
-			this.fireside.hasPerms('fireside-extend')
+			status.value === 'joined' &&
+			expiresProgressValue.value !== undefined &&
+			expiresProgressValue.value <= 95 &&
+			fireside.hasPerms('fireside-extend')
 		);
-	}
+	});
 
-	get canExtinguish() {
-		return this.isOwner || this.fireside.hasPerms('fireside-extinguish');
-	}
-
-	get canReport() {
-		return !(this.fireside.hasPerms() || this.fireside.community?.hasPerms() === true);
-	}
+	const canExtinguish = computed(() => isOwner.value || fireside.hasPerms('fireside-extinguish'));
+	const canReport = computed(
+		() => !(fireside.hasPerms() || fireside.community?.hasPerms() === true)
+	);
 
 	/**
 	 * Contains a block-list of browsers/clients that can't broadcast.
@@ -181,45 +156,82 @@ export class FiresideController {
 	 * Should suggest known-working browser instead of displaying stream-setup
 	 * form.
 	 */
-	get canBrowserStream() {
-		if (GJ_IS_CLIENT) {
+	const canBrowserStream = computed(() => {
+		if (GJ_IS_DESKTOP_APP) {
 			return configClientAllowStreaming.value;
 		}
 
-		return !(this.isFirefox || this.isSafari);
-	}
+		return !(_isFirefox.value || _isSafari.value);
+	});
 
-	private get browser() {
-		return Device.browser().toLowerCase();
-	}
+	const _browser = computed(() => getDeviceBrowser().toLowerCase());
 
 	// Can't broadcast properly - incapable of selecting an output device
-	private get isFirefox() {
-		return this.browser.indexOf('firefox') !== -1;
-	}
+	const _isFirefox = computed(() => _browser.value.indexOf('firefox') !== -1);
 
 	// Can't broadcast - incapable of dual streams
-	private get isSafari() {
-		return this.browser.indexOf('safari') !== -1;
-	}
-}
+	const _isSafari = computed(() => _browser.value.indexOf('safari') !== -1);
 
-export function createFiresideController(fireside: Fireside, options: Options = {}) {
-	return new FiresideController(
+	return shallowReactive({
 		fireside,
-		new StickerTargetController(fireside, undefined, true),
-		options
-	);
+		stickerTargetController,
+		isMuted,
+		rtc,
+		status,
+		onRetry,
+		chat,
+		gridChannel,
+		chatChannel,
+		expiryInterval,
+		chatPreviousConnectedState,
+		gridPreviousConnectedState,
+		hasExpiryWarning,
+		isShowingStreamOverlay,
+		isShowingOverlayPopper,
+		isShowingStreamSetup,
+		updateInterval,
+		totalDurationText,
+		expiresDurationText,
+		expiresProgressValue,
+		isExtending,
+		user,
+		chatRoom,
+		chatUsers,
+		isDraft,
+		isStreaming,
+		isPersonallyStreaming,
+		isStreamingElsewhere,
+		shouldShowStreamingOptions,
+		canStream,
+		isOwner,
+		canManageCohosts,
+		canCommunityFeature,
+		canCommunityEject,
+		canEdit,
+		canPublish,
+		canExtend,
+		canExtinguish,
+		canReport,
+		canBrowserStream,
+	});
 }
 
-export function getFiresideLink(c: FiresideController, router: VueRouter) {
+export function useFiresideController() {
+	return inject(FiresideControllerKey) || null;
+}
+
+export function provideFiresideController(c?: FiresideController | null) {
+	provide(FiresideControllerKey, c);
+}
+
+export function getFiresideLink(c: FiresideController, router: Router) {
 	if (!c.fireside) {
 		return;
 	}
 	return getAbsoluteLink(router, c.fireside.location);
 }
 
-export function copyFiresideLink(c: FiresideController, router: VueRouter) {
+export function copyFiresideLink(c: FiresideController, router: Router) {
 	const url = getFiresideLink(c, router);
 	if (url) {
 		copyShareLink(url, 'fireside');
@@ -227,11 +239,14 @@ export function copyFiresideLink(c: FiresideController, router: VueRouter) {
 }
 
 export function toggleStreamVideoStats(c: FiresideController) {
-	c.rtc!.shouldShowVideoStats = !(c.rtc?.shouldShowVideoStats ?? true);
+	if (!c.rtc.value) {
+		return;
+	}
+	c.rtc.value.shouldShowVideoStats = !c.rtc.value.shouldShowVideoStats;
 }
 
 export async function publishFireside(c: FiresideController) {
-	if (!c.fireside || c.status !== 'joined' || !c.isDraft) {
+	if (!c.fireside || c.status.value !== 'joined' || !c.isDraft.value) {
 		return;
 	}
 
@@ -242,11 +257,11 @@ export async function publishFireside(c: FiresideController) {
 	}
 
 	await c.fireside.$publish({ autoFeature: ret.autoFeature });
-	Growls.success(Translate.$gettext(`Your fireside is live!`));
+	showSuccessGrowl(Translate.$gettext(`Your fireside is live!`));
 }
 
 export async function extendFireside(c: FiresideController, growlOnFail = true) {
-	if (c.status !== 'joined' || !c.canExtend || !c.fireside) {
+	if (c.status.value !== 'joined' || !c.canExtend.value || !c.fireside) {
 		return;
 	}
 
@@ -261,7 +276,7 @@ export async function extendFireside(c: FiresideController, growlOnFail = true) 
 		c.fireside.expires_on = payload.expiresOn;
 		updateFiresideExpiryValues(c);
 	} else if (growlOnFail) {
-		Growls.info(
+		showInfoGrowl(
 			Translate.$gettext(
 				`Settle down there. Wait a couple seconds before playing with the fire again.`
 			)
@@ -270,7 +285,7 @@ export async function extendFireside(c: FiresideController, growlOnFail = true) 
 }
 
 export async function extinguishFireside(c: FiresideController) {
-	if (!c.fireside || !c.canExtinguish) {
+	if (!c.fireside || !c.canExtinguish.value) {
 		return;
 	}
 
@@ -293,37 +308,41 @@ export function updateFiresideExpiryValues(c: FiresideController) {
 
 	const now = getCurrentServerTime();
 
-	c.totalDurationText = duration((now - c.fireside.added_on) / 1000);
+	c.totalDurationText.value = formatDuration((now - c.fireside.added_on) / 1000);
 
 	if (c.fireside.expires_on > now) {
 		const expiresInS = c.fireside.getExpiryInMs() / 1000;
 
-		c.hasExpiryWarning = expiresInS < FIRESIDE_EXPIRY_THRESHOLD;
+		c.hasExpiryWarning.value = expiresInS < FIRESIDE_EXPIRY_THRESHOLD;
 
 		// Automatically extend for them if we're in a draft and get within 15
 		// seconds of the expiry warning threshold.
-		if (c.isDraft && !c._isExtending && expiresInS < FIRESIDE_EXPIRY_THRESHOLD + 15) {
-			c._isExtending = true;
+		if (
+			c.isDraft.value &&
+			!c.isExtending.value &&
+			expiresInS < FIRESIDE_EXPIRY_THRESHOLD + 15
+		) {
+			c.isExtending.value = true;
 			// Don't show growls if this fails.
 			extendFireside(c, false);
 			// Wait 5 seconds before we allow auto-extending again.
 			setTimeout(() => {
-				c._isExtending = false;
+				c.isExtending.value = false;
 			}, 5_000);
 		}
 
 		if (expiresInS > FIRESIDE_EXPIRY_THRESHOLD) {
-			c.expiresDurationText = null;
+			c.expiresDurationText.value = undefined;
 		} else {
-			c.expiresDurationText = duration(expiresInS);
+			c.expiresDurationText.value = formatDuration(expiresInS);
 		}
 
 		if (expiresInS > 300) {
-			c.expiresProgressValue = null;
+			c.expiresProgressValue.value = undefined;
 		} else {
-			c.expiresProgressValue = (expiresInS / 300) * 100;
+			c.expiresProgressValue.value = (expiresInS / 300) * 100;
 		}
 	} else {
-		c.expiresDurationText = null;
+		c.expiresDurationText.value = undefined;
 	}
 }

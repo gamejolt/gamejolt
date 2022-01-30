@@ -1,15 +1,36 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
+import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
+import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
+import { ChatClient } from '../client';
+import { ChatMessage } from '../message';
+
+@Options({
+	components: {
+		AppUserAvatar,
+		AppFadeCollapse,
+		AppContentViewer,
+	},
+})
+export default class AppChatNotificationGrowl extends Vue {
+	@Prop({ type: Object, required: true }) chat!: ChatClient;
+	@Prop({ type: Object, required: true }) message!: ChatMessage;
+}
+</script>
+
 <template>
 	<div class="-container">
-		<app-user-avatar class="-avatar" :user="message.user" />
+		<AppUserAvatar class="-avatar" :user="message.user" />
 		<div class="-content">
 			<h4 class="-header">
-				<app-jolticon icon="user-messages" />
+				<AppJolticon icon="user-messages" />
 				{{ message.user.display_name }}
 			</h4>
 
-			<app-fade-collapse :collapse-height="100">
-				<app-content-viewer :source="message.content" />
-			</app-fade-collapse>
+			<AppFadeCollapse :collapse-height="100">
+				<AppContentViewer :source="message.content" />
+			</AppFadeCollapse>
 
 			<!-- Block any interaction with the content inside the viewer. -->
 			<div class="-content-overlay"></div>
@@ -18,9 +39,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .-container
 	display: flex
 
@@ -45,7 +63,4 @@
 .-header
 	text-overflow()
 	margin-bottom: 8px
-
 </style>
-
-<script lang="ts" src="./notification-growl"></script>

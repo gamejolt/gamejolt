@@ -1,32 +1,53 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { formatNumber } from '../../../../../_common/filters/number';
+import AppGraph from '../../../../../_common/graph/graph.vue';
+import { Screen } from '../../../../../_common/screen/screen-service';
+
+@Options({
+	components: {
+		AppGraph,
+	},
+})
+export default class AppAnalyticsReportTopComposition extends Vue {
+	@Prop(Object) reportData!: any;
+
+	readonly Screen = Screen;
+	readonly formatNumber = formatNumber;
+
+	isScalarLabel(val: any) {
+		return typeof val.label !== 'object';
+	}
+}
+</script>
+
 <template>
 	<div>
 		<!--
-	If graph data is null, then don't show the graph and give more space for the
-	table.
-	-->
+		If graph data is null, then don't show the graph and give more space for the
+		table.
+		-->
 		<div :class="reportData.graph !== null ? 'col-sm-8' : 'col-xs-12'">
-			<div class="alert" v-if="!reportData.hasData">
-				<translate>No data yet.</translate>
+			<div v-if="!reportData.hasData" class="alert">
+				<AppTranslate>No data yet.</AppTranslate>
 			</div>
 
-			<table class="table table-striped table-condensed" v-if="reportData.hasData">
+			<table v-if="reportData.hasData" class="table table-striped table-condensed">
 				<thead>
 					<tr>
-						<th style="width: 20px"></th>
+						<th style="width: 20px" />
 						<th>
 							{{ reportData.fieldLabel }}
 						</th>
-						<th class="text-right">
-							<!--{{ analyticsCtrl.stats[ analyticsCtrl.eventType ].label }}-->
-						</th>
-						<th style="width: 150px"></th>
+						<th class="text-right" />
+						<th style="width: 150px" />
 					</tr>
 				</thead>
 				<tbody>
 					<tr v-for="(val, i) of reportData.data" :key="i">
-						<td>{{ (i + 1) | number }}.</td>
+						<td>{{ formatNumber(i + 1) }}.</td>
 						<th>
-							<template v-if="typeof val.label !== 'object'">
+							<template v-if="isScalarLabel(val)">
 								{{ val.label }}
 							</template>
 							<router-link
@@ -43,17 +64,19 @@
 							</router-link>
 						</th>
 						<td class="text-right">
-							{{ val.value | number }}
+							{{ formatNumber(val.value) }}
 						</td>
 						<td>
 							<div
 								class="report-percentage"
 								:style="{ width: (val / reportData.total) * 70 + 'px' }"
-							></div>
+							/>
 							<small>
 								{{
-									(val.value / reportData.total)
-										| number({ style: 'percent', maximumFractionDigits: 2 })
+									formatNumber(val.value / reportData.total, {
+										style: 'percent',
+										maximumFractionDigits: 2,
+									})
 								}}
 							</small>
 						</td>
@@ -61,12 +84,13 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="col-sm-4" v-if="!Screen.isXs && reportData.hasData && reportData.graph !== null">
-			<app-graph type="doughnut" :dataset="reportData.graph" />
+		<div
+			v-if="!Screen.isXs && reportData.hasData && reportData.graph !== null"
+			class="col-sm-4"
+		>
+			<AppGraph type="doughnut" :dataset="reportData.graph" />
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" src="./report-percentage.styl" scoped></style>
-
-<script lang="ts" src="./top-composition"></script>

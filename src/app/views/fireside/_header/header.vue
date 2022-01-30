@@ -1,4 +1,75 @@
-<script lang="ts" src="./header"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../utils/vue';
+import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
+import { formatNumber } from '../../../../_common/filters/number';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
+import { useFiresideController } from '../../../components/fireside/controller/controller';
+import { StreamSetupModal } from '../../../components/fireside/stream/setup/setup-modal.service';
+import { FiresideChatMembersModal } from '../_chat-members/modal/modal.service';
+import AppFiresideSettingsPopper from '../_settings-popper/settings-popper.vue';
+
+@Options({
+	components: {
+		AppCommunityThumbnailImg,
+		AppUserAvatarImg,
+		AppFiresideSettingsPopper,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppFiresideHeader extends Vue {
+	@Prop({ type: Boolean })
+	showControls!: boolean;
+
+	@Prop({ type: Boolean })
+	hasChat!: boolean;
+
+	@Prop({ type: Boolean })
+	hasChatStats!: boolean;
+
+	@Prop({ type: Boolean })
+	isOverlay!: boolean;
+
+	c = shallowSetup(() => useFiresideController()!);
+
+	readonly formatNumber = formatNumber;
+	readonly Screen = Screen;
+
+	get fireside() {
+		return this.c.fireside;
+	}
+
+	get memberCount() {
+		return this.c.chatRoom.value?.members.length ?? 1;
+	}
+
+	onClickShowChatMembers() {
+		if (!this.c.chatUsers.value || !this.c.chatRoom.value) {
+			return;
+		}
+
+		FiresideChatMembersModal.show(this.c.chatUsers.value, this.c.chatRoom.value);
+	}
+
+	onClickEditStream() {
+		StreamSetupModal.show(this.c);
+	}
+
+	onShowPopper() {
+		if (this.isOverlay) {
+			this.c.isShowingOverlayPopper.value = true;
+		}
+	}
+
+	onHidePopper() {
+		this.c.isShowingOverlayPopper.value = false;
+	}
+}
+</script>
 
 <template>
 	<div class="fireside-header" :class="{ '-overlay': isOverlay }">
@@ -17,21 +88,24 @@
 						>
 							@{{ fireside.user.username }}
 						</router-link>
-						<app-user-avatar-img class="-avatar" :user="fireside.user" />
+						{{ ' ' }}
+						<AppUserAvatarImg class="-avatar" :user="fireside.user" />
 						<span>'s Fireside</span>
 
 						<template v-if="fireside.community">
+							{{ ' ' }}
 							<span>in </span>
 							<div class="-avatar -community-avatar">
-								<app-community-thumbnail-img :community="fireside.community" />
+								<AppCommunityThumbnailImg :community="fireside.community" />
 							</div>
+							{{ ' ' }}
 							<router-link :to="fireside.community.routeLocation">
 								{{ fireside.community.name }}
 							</router-link>
 						</template>
 
-						<span v-if="c.isDraft" class="-tag tag">
-							<translate>Draft</translate>
+						<span v-if="c.isDraft.value" class="-tag tag">
+							<AppTranslate>Draft</AppTranslate>
 						</span>
 
 						<span
@@ -41,20 +115,20 @@
 							"
 							class="-tag tag"
 						>
-							<translate>Featured</translate>
+							<AppTranslate>Featured</AppTranslate>
 						</span>
 					</small>
 					<div class="-fireside-title-text" :title="fireside.title">
 						{{ fireside.title }}
 					</div>
 				</h2>
-				<div v-if="hasChatStats && c.chatUsers" class="-fireside-title-member-stats">
+				<div v-if="hasChatStats && c.chatUsers.value" class="-fireside-title-member-stats">
 					<ul class="stat-list">
 						<a @click="onClickShowChatMembers">
 							<li class="stat-big stat-big-smaller">
 								<div class="stat-big-label">Members</div>
 								<div class="stat-big-digit">
-									{{ number(c.chatUsers.count) }}
+									{{ formatNumber(c.chatUsers.value.count) }}
 								</div>
 							</li>
 						</a>
@@ -62,10 +136,10 @@
 				</div>
 				<div v-if="showControls" class="-fireside-title-controls">
 					<div
-						v-if="c.shouldShowStreamingOptions && !c.isPersonallyStreaming"
+						v-if="c.shouldShowStreamingOptions.value && !c.isPersonallyStreaming.value"
 						class="-stats-btn"
 					>
-						<app-button
+						<AppButton
 							v-app-tooltip="$gettext(`Start Stream / Voice Chat`)"
 							icon="broadcast"
 							circle
@@ -74,11 +148,13 @@
 						/>
 					</div>
 
-					<app-fireside-settings-popper @show="onShowPopper" @hide="onHidePopper">
+					{{ ' ' }}
+
+					<AppFiresideSettingsPopper @show="onShowPopper" @hide="onHidePopper">
 						<div class="-stats-btn">
-							<app-button icon="ellipsis-v" circle sparse solid />
+							<AppButton icon="ellipsis-v" circle sparse solid />
 						</div>
-					</app-fireside-settings-popper>
+					</AppFiresideSettingsPopper>
 				</div>
 			</div>
 		</template>
@@ -86,9 +162,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-overlay
 	*
 		text-shadow: 1px 1px 3px rgba($black, 0.5)

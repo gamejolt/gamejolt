@@ -1,3 +1,10 @@
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppPageHeaderControls extends Vue {}
+</script>
+
 <template>
 	<div class="-controls">
 		<div class="-start">
@@ -13,8 +20,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-
 .-controls
 	display: flex
 	align-items: center
@@ -37,5 +42,3 @@
 		@media $media-md
 			flex: none
 </style>
-
-<script lang="ts" src="./controls"></script>

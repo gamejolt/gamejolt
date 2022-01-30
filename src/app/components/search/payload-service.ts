@@ -38,7 +38,7 @@ export class SearchPayload {
 		this.communitiesCount = data.communitiesCount || 0;
 		this.libraryGames = [];
 
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			this.libraryGames = data.libraryGames || [];
 		}
 	}

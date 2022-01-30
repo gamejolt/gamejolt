@@ -1,32 +1,44 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import AppCard from '../../../_common/card/AppCard.vue';
+import { FiresidePost } from '../../../_common/fireside/post/post-model';
+
+@Options({
+	components: {
+		AppCard,
+	},
+})
+export default class AppBroadcastCard extends Vue {
+	@Prop(Object)
+	post!: FiresidePost;
+}
+</script>
+
 <template>
 	<div>
-		<router-link :to="post.routeLocation" v-app-track-event="`dash:overview:broadcast-view`">
-			<app-card>
+		<router-link v-app-track-event="`dash:overview:broadcast-view`" :to="post.routeLocation">
+			<AppCard>
 				<div class="clearfix">
-					<app-jolticon class="-icon" icon="broadcast" big />
+					<AppJolticon class="-icon" icon="broadcast" big />
 					<div class="-content">
 						{{ post.getShortLead() }}
 					</div>
 				</div>
-			</app-card>
+			</AppCard>
 		</router-link>
 
 		<!-- <div class="text-right small">
 		<a class="link-muted" :href="Environment.firesideBaseUrl + `/tag/gjbroadcast`" target="_blank" v-app-track-event="`dash:overview:broadcast-all`">
-			<translate>dash.overview.broadcast_view_all</translate>
+			<AppTranslate>View All Changelog Broadcasts</AppTranslate>
 		</a>
 	</div> -->
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-
 .-icon
 	float: left
 
 .-content
 	margin-left: 50px
 </style>
-
-<script lang="ts" src="./broadcast-card"></script>

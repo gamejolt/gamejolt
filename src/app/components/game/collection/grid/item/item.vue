@@ -1,44 +1,67 @@
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { useCommonStore } from '../../../../../../_common/store/common-store';
+import { GameCollection } from '../../collection.model';
+import AppGameCollectionThumbnail from '../../thumbnail/thumbnail.vue';
+
+@Options({
+	components: {
+		AppGameCollectionThumbnail,
+	},
+})
+export default class AppGameCollectionGridItem extends Vue {
+	@Prop(Object) collection!: GameCollection;
+	@Prop(String) eventLabel?: string;
+
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
+
+	get notOwner() {
+		return this.collection.from_subscription || !this.collection.isOwner;
+	}
+}
+</script>
+
 <template>
 	<div class="game-collection-grid-item">
 		<router-link :to="collection.routeLocation" v-app-track-event="eventLabel">
-			<app-game-collection-thumbnail :collection="collection" />
+			<AppGameCollectionThumbnail :collection="collection" />
 
 			<div class="game-collection-title h4">
 				<template v-if="collection.type === 'developer'">
-					<span v-if="notOwner" v-translate="{ developer: '@' + collection.owner.username }">
+					<span
+						v-if="notOwner"
+						v-translate="{ developer: '@' + collection.owner.username }"
+					>
 						Games Made
 						<small>by %{ developer }</small>
 					</span>
-					<translate v-else>
-						Your Games
-					</translate>
+					<AppTranslate v-else> Your Games </AppTranslate>
 				</template>
 				<template v-else-if="collection.type === 'followed'">
 					<span v-if="notOwner" v-translate="{ user: '@' + collection.owner.username }">
 						Games Followed
 						<small>by %{ user }</small>
 					</span>
-					<translate v-else>
-						Your Followed Games
-					</translate>
+					<AppTranslate v-else> Your Followed Games </AppTranslate>
 				</template>
 				<template v-else-if="collection.type === 'owned'">
 					<span v-if="notOwner" v-translate="{ user: '@' + collection.owner.username }">
 						Games Owned
 						<small>by %{ user }</small>
 					</span>
-					<translate v-else>
-						Your Owned Games
-					</translate>
+					<AppTranslate v-else> Your Owned Games </AppTranslate>
 				</template>
 				<template v-else-if="collection.type === 'recommended'">
 					<span v-if="notOwner" v-translate="{ user: '@' + collection.owner.username }">
 						Daily Mix
 						<small>for %{ user }</small>
 					</span>
-					<translate v-else>
-						Your Daily Mix
-					</translate>
+					<AppTranslate v-else> Your Daily Mix </AppTranslate>
 				</template>
 				<template v-else>
 					{{ collection.name }}
@@ -49,9 +72,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .game-collection-grid-item
 	margin-bottom: $grid-gutter-width-xs
 
@@ -83,5 +103,3 @@
 	> small
 		theme-prop('color', 'fg-muted')
 </style>
-
-<script lang="ts" src="./item"></script>

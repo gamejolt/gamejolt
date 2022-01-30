@@ -1,4 +1,4 @@
-import { DirectiveOptions } from 'vue';
+import { Directive } from 'vue';
 import { Scroll } from '../scroll.service';
 
 // I'm not sure of a better way to do this with Vue. When I tried to attach to
@@ -7,7 +7,7 @@ import { Scroll } from '../scroll.service';
 // is set to disable scrolling, we do so. It may also be more performant since
 // it doesn't have to register many click handlers.
 
-if (!GJ_IS_SSR) {
+if (!import.meta.env.SSR) {
 	// We use capturing so that we get it before it goes through the DOM.
 	document.addEventListener(
 		'click',
@@ -25,8 +25,8 @@ if (!GJ_IS_SSR) {
 	);
 }
 
-export const AppNoAutoscroll: DirectiveOptions = {
-	bind(el) {
+export const AppNoAutoscroll: Directive<HTMLElement> = {
+	beforeMount(el) {
 		el.dataset.gjAutoscroll = 'disabled';
 	},
 };

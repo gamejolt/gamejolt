@@ -1,11 +1,43 @@
-<script lang="ts" src="./preview"></script>
+<script lang="ts">
+import { defineAsyncComponent } from '@vue/runtime-core';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import { Fireside } from '../../../../../_common/fireside/fireside.model';
+
+@Options({
+	components: {
+		AppFiresideStreamPreviewVideo: defineAsyncComponent(
+			() => import('./AppFiresideStreamPreviewVideo.vue')
+		),
+	},
+})
+export default class AppFiresideStreamPreview extends Vue {
+	@Prop({ type: Object, required: true })
+	fireside!: Fireside;
+
+	@Prop({ type: Boolean, default: true })
+	showLive!: Fireside;
+
+	@Prop({ type: Boolean })
+	showLiveUsers!: Fireside;
+
+	@Emit('changed') emitChanged(_hasVideo: boolean, _isStreaming: boolean) {}
+
+	get location() {
+		return this.fireside.location;
+	}
+
+	onVideoChanged(hasVideo: boolean, isStreaming: boolean) {
+		this.emitChanged(hasVideo, isStreaming);
+	}
+}
+</script>
 
 <template>
 	<div class="-preview-container sheet sheet-full sheet-elevate">
 		<router-link class="-link" :to="location">
-			<div ref="videoWrapper" class="-video-wrapper">
+			<div class="-video-wrapper">
 				<div class="-video-inner">
-					<app-fireside-stream-preview-video
+					<AppFiresideStreamPreviewVideo
 						:fireside="fireside"
 						:show-live="showLive"
 						:show-live-users="showLiveUsers"
@@ -18,9 +50,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-preview-container
 	position: relative
 	overflow: hidden

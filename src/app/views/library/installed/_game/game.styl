@@ -1,15 +1,15 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
 
 .client-installed-game
 	position: relative
 
-	>>> img, >>> video
+	::v-deep(img)
+	::v-deep(video)
 		transition: all 1s
 		filter: grayscale(0)
 
 	&.-is-installing
-		>>> img, >>> video
+		::v-deep(img)
+		::v-deep(video)
 			filter: grayscale(100%)
 
 .-thumb
@@ -38,11 +38,11 @@
 	background-color: rgba(0, 0, 0, 0.5)
 	z-index: 2
 
-	>>> .client-game-buttons
+	::v-deep(.client-game-buttons)
 		display: block
 		width: 100%
 
-	>>> .client-install-progress
+	::v-deep(.client-install-progress)
 		rounded-corners()
 		margin: 0
 		margin-left: ($grid-gutter-width / 2)
@@ -52,7 +52,8 @@
 		background-color: rgba($black, 0.7)
 		color: $white
 
-		p, .progress
+		p
+		.progress
 			margin: 5px 0
 			font-size: $font-size-tiny
 

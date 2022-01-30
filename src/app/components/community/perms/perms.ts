@@ -1,15 +1,14 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import { propOptional, propRequired } from '../../../../utils/vue';
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Perm } from '../../../../_common/collaborator/collaboratable';
 import { Community } from '../../../../_common/community/community.model';
 
-@Component({})
+@Options({})
 export class AppCommunityPerms extends Vue {
-	@Prop(propRequired(Community)) community!: Community;
-	@Prop(propOptional(String, '')) required!: string;
-	@Prop(propOptional(Boolean, false)) either!: boolean;
-	@Prop(propOptional(String, 'span')) tag!: string;
+	@Prop({ type: Object, required: true }) community!: Community;
+	@Prop({ type: String, default: '' }) required!: string;
+	@Prop({ type: Boolean, default: false }) either!: boolean;
+	@Prop({ type: String, default: 'span' }) tag!: string;
 
 	get hasPerms() {
 		const perms = this.required.split(',') as Perm[];
@@ -20,9 +19,9 @@ export class AppCommunityPerms extends Vue {
 		);
 	}
 
-	render(h: CreateElement) {
+	render() {
 		if (this.hasPerms) {
-			return h(this.tag, this.$slots.default);
+			return h(this.tag, {}, this.$slots.default?.());
 		}
 	}
 }

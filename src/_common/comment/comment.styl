@@ -1,7 +1,7 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
 
-.game-comment-content .user-comment-content .fireside-post-comment-content
+.game-comment-content
+.user-comment-content
+.fireside-post-comment-content
 	// Remove empty P tags.
 	p:empty
 		display: none
@@ -11,7 +11,12 @@
 		img-responsive()
 
 	// Make all headings just look like bold text.
-	h1, h2, h3, h4, h5, h6
+	h1
+	h2
+	h3
+	h4
+	h5
+	h6
 		font-weight: bold
 		font-size: $font-size-base
 		margin: $font-size-base 0

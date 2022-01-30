@@ -1,24 +1,49 @@
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+import { Screen } from '../screen/screen-service';
+import { AppTooltip } from '../tooltip/tooltip-directive';
+import { Minbar, MinbarItem } from './minbar.service';
+
+@Options({
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppMinbar extends Vue {
+	readonly Minbar = Minbar;
+	readonly Screen = Screen;
+
+	onItemClick(item: MinbarItem) {
+		if (item.onClick) {
+			item.onClick();
+		}
+	}
+}
+</script>
+
 <template>
 	<div class="minbar">
 		<div class="minbar-items">
-			<transition>
+			<transition v-for="(item, index) of Minbar.items" :key="index">
 				<a
 					class="minbar-item anim-fade-enter-up anim-fade-leave-shrink"
-					v-for="(item, index) of Minbar.items"
-					:key="index"
 					:class="{ active: item.isActive }"
 					@click="onItemClick(item)"
 				>
 					<transition>
 						<span
-							class="tag tag-highlight notification-tag anim-fade-enter anim-fade-leave"
 							v-if="item.notificationCount"
+							class="
+								tag tag-highlight
+								notification-tag
+								anim-fade-enter anim-fade-leave
+							"
 						>
 							{{ item.notificationCount }}
 						</span>
 					</transition>
 
-					<div class="minbar-item-thumb" v-app-tooltip="item.title">
+					<div v-app-tooltip="item.title" class="minbar-item-thumb">
 						<img class="img-responsive" :src="item.thumb" alt="" />
 					</div>
 				</a>
@@ -28,9 +53,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .minbar
 	clearfix()
 
@@ -62,5 +84,3 @@
 	&-item-thumb > img
 		max-height: 50px
 </style>
-
-<script lang="ts" src="./minbar"></script>

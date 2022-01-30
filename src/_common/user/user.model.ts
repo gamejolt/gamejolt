@@ -153,13 +153,13 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 	}
 
 	static touch() {
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			return Promise.resolve();
 		}
 
 		// We don't want to wait for the touch in Client since we know it gets loaded in
 		// immediately.
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			Api.sendRequest('/web/touch', null, { detach: true });
 			return Promise.resolve();
 		}

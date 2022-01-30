@@ -1,11 +1,7 @@
-import {
-	Analytics as FirebaseAnalytics,
-	initializeAnalytics,
-	logEvent,
-	setCurrentScreen,
-	setUserId,
-} from 'firebase/analytics';
-import VueRouter from 'vue-router';
+import type { Analytics as FirebaseAnalytics } from 'firebase/analytics';
+import { initializeAnalytics, logEvent, setCurrentScreen, setUserId } from 'firebase/analytics';
+import { unref, watch } from 'vue';
+import { Router } from 'vue-router';
 import { arrayRemove } from '../../utils/array';
 import { AppPromotionSource } from '../../utils/mobile-app';
 import { AuthMethod } from '../auth/auth.service';
@@ -13,9 +9,9 @@ import { CommentVote } from '../comment/vote/vote-model';
 import { ConfigOption } from '../config/config.service';
 import { DeviceArch, DeviceOs } from '../device/device.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
+import { onRouteChangeAfter } from '../route/route-component';
 import { ShareProvider, ShareResource } from '../share/share.service';
-import { WithAppStore } from '../store/app-store';
-import { EventBus } from '../system/event/event-bus.service';
+import { CommonStore } from '../store/common-store';
 
 export const SOCIAL_NETWORK_FB = 'facebook';
 export const SOCIAL_NETWORK_TWITTER = 'twitter';
@@ -45,7 +41,7 @@ export type CommunityJoinLocation = 'onboarding' | 'card' | 'communityPage' | 'h
  */
 const EXP_ENGAGEMENT_EXPIRY = 5 * 60 * 1_000;
 
-let _store: WithAppStore;
+let _store: CommonStore;
 let _pageViewRecorded = false;
 
 let _analytics: FirebaseAnalytics;
@@ -55,7 +51,7 @@ function _getFirebaseAnalytics() {
 }
 
 function _getStoreUser() {
-	return _store.state.app.user;
+	return _store.user.value;
 }
 
 function _shouldTrack() {
@@ -72,15 +68,15 @@ function _shouldTrack() {
 /**
  * Initializes the analytics for use with the current app.
  */
-export function initAnalytics(store: WithAppStore) {
-	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+export function initAnalytics({ commonStore }: { commonStore: CommonStore }) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
 		return;
 	}
 
-	_store = store;
+	_store = commonStore;
 
-	_store.watch(
-		state => state.app.user,
+	watch(
+		() => unref(commonStore.user),
 		user => {
 			if (user?.id) {
 				_trackUserId(user.id);
@@ -94,8 +90,8 @@ export function initAnalytics(store: WithAppStore) {
 /**
  * Can be called to hook into the router to track pageviews automatically.
  */
-export function initAnalyticsRouter(router: VueRouter) {
-	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+export function initAnalyticsRouter(router: Router) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
 		return;
 	}
 
@@ -105,9 +101,9 @@ export function initAnalyticsRouter(router: VueRouter) {
 		next();
 	});
 
-	EventBus.on('routeChangeAfter', () => {
-		const route = router.currentRoute;
-		const analyticsPath = route.meta.analyticsPath;
+	onRouteChangeAfter.subscribe(() => {
+		const route = router.currentRoute.value;
+		const analyticsPath = route.meta.analyticsPath as string | undefined;
 
 		// Track the page view using the analyticsPath if we have one
 		// assigned to the route meta.
@@ -121,7 +117,7 @@ export function initAnalyticsRouter(router: VueRouter) {
 }
 
 function _trackPageview(path?: string) {
-	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
 		return;
 	}
 
@@ -178,7 +174,7 @@ function _trackEvent(
 	name: string,
 	eventParams: Record<string, string | number | boolean | undefined>
 ) {
-	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
 		return;
 	}
 
@@ -233,7 +229,7 @@ export function trackExperimentEngagement(option: ConfigOption) {
 }
 
 export function trackLogin(method: AuthMethod) {
-	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
 		return;
 	}
 
@@ -241,7 +237,7 @@ export function trackLogin(method: AuthMethod) {
 }
 
 export function trackJoin(method: AuthMethod) {
-	if (GJ_IS_SSR || GJ_IS_CLIENT) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
 		return;
 	}
 

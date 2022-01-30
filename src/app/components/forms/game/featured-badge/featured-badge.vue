@@ -1,33 +1,108 @@
-<script lang="ts" src="./featured-badge"></script>
+<script lang="ts">
+import { mixins, Options, Prop } from 'vue-property-decorator';
+import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
+import { Environment } from '../../../../../_common/environment/environment.service';
+import { BaseForm } from '../../../../../_common/form-vue/form.service';
+import { Game } from '../../../../../_common/game/game.model';
+
+interface FormModel {
+	color: string;
+	size: Record<'width' | 'height', string>;
+}
+
+class Wrapper extends BaseForm<FormModel> {}
+
+@Options({})
+export default class FormGameFeaturedBadge extends mixins(Wrapper) {
+	@Prop({ type: Object, required: true }) game!: Game;
+
+	get colorOptions() {
+		return [
+			{
+				key: 'black',
+				label: this.$gettext(`dark`),
+			},
+			{
+				key: 'white',
+				label: this.$gettext(`light`),
+			},
+		];
+	}
+
+	get sizeOptions() {
+		return [
+			{
+				key: {
+					width: '312px',
+					height: '204px',
+				},
+				label: this.$gettext(`Large (312x204)`),
+			},
+			{
+				key: {
+					width: '156px',
+					height: '102px',
+				},
+				label: this.$gettext(`Small (156x102)`),
+			},
+		];
+	}
+
+	get previewImage() {
+		return {
+			src: `https://gamejolt.com/img/badge/featured/${this.formModel.color}.png`,
+			alt: `Follow ${this.game.title} on Game Jolt`,
+			size: this.formModel.size,
+		};
+	}
+
+	get processedTag() {
+		const gameUrl = `href="${Environment.baseUrl}/games/${this.game.path}/${this.game.id}"`;
+		const imgSize = `width="${this.formModel.size.width}" height="${this.formModel.size.height}"`;
+		const imgAlt = `alt="${this.previewImage.alt.replace(/"/g, '&quot;')}"`;
+
+		return `<a ${gameUrl}><img ${imgSize} src="${this.previewImage.src}" ${imgAlt} /></a>`;
+	}
+
+	created() {
+		this.setField('color', this.colorOptions[0].key);
+		this.setField('size', this.sizeOptions[0].key);
+	}
+
+	onClickCopy() {
+		Clipboard.copy(this.processedTag);
+	}
+}
+</script>
 
 <template>
 	<div class="container">
 		<h1 class="section-header">Generate your Featured Badge!</h1>
 
-		<app-form name="featured-badge">
+		<AppForm :controller="form">
 			<div class="-form">
 				<div class="-selectors">
 					<!-- SVG File Selector -->
-					<app-form-group name="color" class="-selectors-item" label="Badge Color">
+					<AppFormGroup name="color" class="-selectors-item" label="Badge Color">
 						<div v-for="{ label, key } of colorOptions" :key="key" class="checkbox">
 							<label>
-								<app-form-control-radio :value="key" />
+								<AppFormControlRadio :value="key" />
 								{{ label }}
 							</label>
 						</div>
-					</app-form-group>
-					<app-form-group name="size" class="-selectors-item" label="Badge Size">
+					</AppFormGroup>
+					<AppFormGroup name="size" class="-selectors-item" label="Badge Size">
 						<div
 							v-for="{ label, key } of sizeOptions"
 							:key="key.width"
 							class="checkbox"
 						>
 							<label>
-								<app-form-control-radio :value="key" />
+								<AppFormControlRadio :value="key" />
 								{{ label }}
 							</label>
 						</div>
-					</app-form-group>
+					</AppFormGroup>
 				</div>
 
 				<div class="-preview">
@@ -42,19 +117,16 @@
 					<code class="-preview-output">
 						{{ processedTag }}
 					</code>
-					<app-button class="-submit" icon="edit" @click="onClickCopy">
+					<AppButton class="-submit" icon="edit" @click="onClickCopy">
 						Copy to Clipboard
-					</app-button>
+					</AppButton>
 				</div>
 			</div>
-		</app-form>
+		</AppForm>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-form
 	display: flex
 	flex-direction: column

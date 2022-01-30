@@ -1,4 +1,14 @@
-<script lang="ts" src="./page-placeholder"></script>
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+import { AppLazyPlaceholder } from '../../../../_common/lazy/placeholder/placeholder';
+
+@Options({
+	components: {
+		AppLazyPlaceholder,
+	},
+})
+export default class AppPostViewPlaceholder extends Vue {}
+</script>
 
 <template>
 	<section class="-section section-thin">

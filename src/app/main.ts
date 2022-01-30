@@ -1,11 +1,9 @@
 import { createApp } from './bootstrap';
 
-const { app, router, store } = createApp();
-
-if (window.__INITIAL_STATE__) {
-	store.replaceState(window.__INITIAL_STATE__.vuex);
+async function start() {
+	const { app, router } = await createApp();
+	await router.isReady();
+	app.mount('#app');
 }
 
-router.onReady(() => {
-	app.$mount('#app');
-});
+start();

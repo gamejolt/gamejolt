@@ -1,10 +1,12 @@
-import '../utils/polyfills';
 import { bootstrapCommon } from '../_common/bootstrap';
-import App from './app.vue';
+import App from './AppMain.vue';
 import './main.styl';
-import { store } from './store/index';
+import { createGameserverStore, GameserverStoreKey } from './store';
 
-const _createApp = bootstrapCommon(App, store);
 export function createApp() {
-	return { app: _createApp(), store };
+	const { app } = bootstrapCommon(App);
+
+	app.provide(GameserverStoreKey, createGameserverStore());
+
+	return { app };
 }

@@ -1,8 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDashGamesManageApiScoreboardsScoresList: RouteConfig = {
+export const routeDashGamesManageApiScoreboardsScoresList: RouteRecordRaw = {
 	name: 'dash.games.manage.api.scoreboards.scores.list',
 	path: 'scoreboards/:table(\\d+)',
-	component: () =>
-		import(/* webpackChunkName: "routeDashGamesManageApiScoreboardsScoresList" */ './list.vue'),
+	component: () => import('./list.vue'),
 };

@@ -1,9 +1,29 @@
-<script lang="ts" src="./card"></script>
+<script lang="ts">
+import { Inject, Options, Vue } from 'vue-property-decorator';
+import AppCommunityCardBase from '../../../../../_common/community/card-base/card-base.vue';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
+import AppEditableThumbnail from '../_editable-thumbnail/editable-thumbnail.vue';
+
+@Options({
+	components: {
+		AppCommunityCardBase,
+		AppEditableThumbnail,
+	},
+})
+export default class AppCommunitiesViewCard extends Vue {
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
+
+	get community() {
+		return this.routeStore.community;
+	}
+}
+</script>
 
 <template>
-	<app-community-card-base :community="community" overflow>
+	<AppCommunityCardBase :community="community" overflow>
 		<template #thumbnail>
-			<app-editable-thumbnail />
+			<AppEditableThumbnail />
 		</template>
-	</app-community-card-base>
+	</AppCommunityCardBase>
 </template>

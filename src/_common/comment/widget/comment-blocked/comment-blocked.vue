@@ -1,3 +1,21 @@
+<script lang="ts">
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import AppTimelineListItem from '../../../timeline-list/item/item.vue';
+import { Comment, CommentBlockReason } from '../../comment-model';
+
+@Options({
+	components: {
+		AppTimelineListItem,
+	},
+})
+export default class AppCommentWidgetCommentBlocked extends Vue {
+	@Prop({ type: Object, required: true }) comment!: Comment;
+	@Prop({ type: String, required: true }) reason!: CommentBlockReason;
+
+	@Emit('show') show() {}
+}
+</script>
+
 <template>
 	<div class="alert">
 		<template v-if="reason === 'commenter-blocked'">
@@ -7,19 +25,16 @@
 		</template>
 		<template v-else-if="reason === 'mentioned-blocked-user'">
 			<span>
-				<translate>A blocked user is mentioned in this comment.</translate>
+				<AppTranslate>A blocked user is mentioned in this comment.</AppTranslate>
 			</span>
 		</template>
-		<app-button trans @click="show">
-			<translate>Show</translate>
-		</app-button>
+		<AppButton trans @click="show">
+			<AppTranslate>Show</AppTranslate>
+		</AppButton>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .alert
 	display: flex
 	justify-content: space-between
@@ -31,5 +46,3 @@
 	button
 		margin: 0
 </style>
-
-<script lang="ts" src="./comment-blocked"></script>

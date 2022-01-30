@@ -1,4 +1,164 @@
-<script lang="ts" src="./embed"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import {
+	FiresidePostEmbed,
+	TYPE_SKETCHFAB,
+	TYPE_YOUTUBE,
+} from '../../../../../_common/fireside/post/embed/embed.model';
+import { Navigate } from '../../../../../_common/navigate/navigate.service';
+import { AppResponsiveDimensions } from '../../../../../_common/responsive-dimensions/responsive-dimensions';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import AppScrollInview, {
+	ScrollInviewConfig,
+} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
+import AppSketchfabEmbed from '../../../../../_common/sketchfab/embed/embed.vue';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
+
+const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.5}px` });
+
+@Options({
+	components: {
+		AppVideoEmbed,
+		AppScrollInview,
+		AppResponsiveDimensions,
+		AppSketchfabEmbed,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppFiresidePostEmbed extends Vue {
+	@Prop({ type: Object, required: true }) embed!: FiresidePostEmbed;
+	@Prop({ type: Boolean, default: true }) hideOutview!: boolean;
+
+	readonly InviewConfig = InviewConfig;
+	readonly TYPE_YOUTUBE = TYPE_YOUTUBE;
+	readonly TYPE_SKETCHFAB = TYPE_SKETCHFAB;
+
+	isOpen = false;
+	shouldAutoplay = true;
+	isInview = true;
+
+	get shouldShow() {
+		return this.embed.type === TYPE_YOUTUBE || this.embed.type === TYPE_SKETCHFAB;
+	}
+
+	get thumbUrl() {
+		if (this.embed.metadata && this.embed.metadata.image_media_item) {
+			return this.embed.metadata.image_media_item.mediaserver_url;
+		}
+
+		switch (this.embed.type) {
+			case TYPE_YOUTUBE: {
+				const videoId = this.embed.extraData.videoId;
+				return `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+			}
+		}
+
+		return undefined;
+	}
+
+	get title() {
+		if (this.embed.metadata && this.embed.metadata.title) {
+			return this.embed.metadata.title;
+		}
+
+		switch (this.embed.type) {
+			case TYPE_YOUTUBE:
+				return this.$gettext(`YouTube`);
+			case TYPE_SKETCHFAB:
+				return this.$gettext(`Sketchfab`);
+			default:
+				return undefined;
+		}
+	}
+
+	get website() {
+		if (this.embed.metadata && this.embed.metadata.site_url) {
+			// Node SSR doesn't support the URL api.
+			if (import.meta.env.SSR) {
+				return this.embed.metadata.site_url;
+			}
+
+			const url = new URL(this.embed.metadata.site_url);
+			let website = url.hostname;
+			if (
+				this.embed.metadata.site_name &&
+				this.embed.metadata.site_name !== this.embed.metadata.url
+			) {
+				website = this.embed.metadata.site_name + ' | ' + website;
+			}
+			return website;
+		}
+
+		switch (this.embed.type) {
+			case TYPE_YOUTUBE:
+				return 'youtube.com';
+			case TYPE_SKETCHFAB:
+				return 'sketchfab.com';
+			default:
+				return undefined;
+		}
+	}
+
+	get description() {
+		if (this.embed.metadata) {
+			if (this.embed.metadata.description) {
+				return this.embed.metadata.description.replace('\n', ' ');
+			}
+
+			if (this.embed.metadata.site_name) {
+				return this.embed.metadata.site_name;
+			}
+
+			return this.embed.metadata.site_url;
+		}
+
+		return this.embed.url;
+	}
+
+	get shouldShowEmbedContent() {
+		return this.isInview || !this.hideOutview;
+	}
+
+	get imageAlt() {
+		return this.embed.metadata?.image_alt;
+	}
+
+	get playIcon() {
+		switch (this.embed.type) {
+			case TYPE_SKETCHFAB:
+				return 'sketchfab';
+			case TYPE_YOUTUBE:
+				return 'play';
+		}
+
+		return 'blog-article';
+	}
+
+	onClick() {
+		if (this.embed.is_processing) {
+			return;
+		}
+
+		if (!this.isOpen) {
+			this.isOpen = true;
+		} else {
+			Navigate.newWindow(this.embed.url);
+		}
+	}
+
+	onInviewChanged(isInview: boolean) {
+		this.isInview = isInview;
+
+		// Disable autoplay when it was already opened
+		if (!isInview && this.isOpen) {
+			this.shouldAutoplay = false;
+		}
+	}
+}
+</script>
 
 <template>
 	<div
@@ -13,7 +173,7 @@
 				<div class="-thumb-img-container" />
 				<div class="-thumb-play">
 					<div class="-thumb-play-icon-bg" />
-					<app-jolticon
+					<AppJolticon
 						v-app-tooltip.touchable="$gettext(`Processing...`)"
 						class="-thumb-play-icon"
 						icon="broadcast"
@@ -42,7 +202,7 @@
 					<img v-if="thumbUrl" :src="thumbUrl" class="-thumb-img" />
 				</div>
 				<div class="-thumb-play">
-					<app-jolticon
+					<AppJolticon
 						class="-thumb-play-icon -thumb-play-icon-play"
 						:icon="playIcon"
 						big
@@ -50,27 +210,27 @@
 				</div>
 			</div>
 			<div v-else class="-player">
-				<app-responsive-dimensions :ratio="16 / 9">
-					<app-scroll-inview
+				<AppResponsiveDimensions :ratio="16 / 9">
+					<AppScrollInview
 						:config="InviewConfig"
 						@inview="onInviewChanged(true)"
 						@outview="onInviewChanged(false)"
 					>
 						<template v-if="shouldShowEmbedContent">
-							<app-video-embed
+							<AppVideoEmbed
 								v-if="embed.type === TYPE_YOUTUBE"
 								:video-id="embed.extraData.videoId"
 								video-provider="youtube"
 								:autoplay="shouldAutoplay"
 							/>
-							<app-sketchfab-embed
+							<AppSketchfabEmbed
 								v-else-if="embed.type === TYPE_SKETCHFAB"
 								:sketchfab-id="embed.extraData.modelId"
 								:autoplay="shouldAutoplay"
 							/>
 						</template>
-					</app-scroll-inview>
-				</app-responsive-dimensions>
+					</AppScrollInview>
+				</AppResponsiveDimensions>
 			</div>
 
 			<div class="-info" :class="{ '-info-open': isOpen }">
@@ -81,15 +241,13 @@
 					{{ description }}
 				</div>
 
-				<div class="text-muted"><app-jolticon icon="link" /> {{ website }}</div>
+				<div class="text-muted"><AppJolticon icon="link" /> {{ website }}</div>
 			</div>
 		</template>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
 @import './variables'
 
 .-embed

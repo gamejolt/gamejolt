@@ -1,11 +1,11 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 import { routeSearchCommunities } from './communities/communities.route';
 import { routeSearchGames } from './games/games.route';
 import { routeSearchResults } from './results/results.route';
 import { routeSearchUsers } from './users/users.route';
 
-export const routeSearch: RouteConfig = {
+export const routeSearch: RouteRecordRaw = {
 	path: '/search',
-	component: () => import(/* webpackChunkName: "routeSearch" */ './search.vue'),
+	component: () => import('./RouteSearch.vue'),
 	children: [routeSearchResults, routeSearchCommunities, routeSearchGames, routeSearchUsers],
 };

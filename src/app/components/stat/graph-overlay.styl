@@ -1,5 +1,3 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
 
 .stat-graph-overlay
 	display: block
@@ -24,7 +22,8 @@
 		padding-bottom: 3px
 
 		&.active
-			&, &:hover
+			&
+			&:hover
 				&::before
 					transition: none
 					opacity: 1

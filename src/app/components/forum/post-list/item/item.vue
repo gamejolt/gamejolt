@@ -1,7 +1,206 @@
-<script lang="ts" src="./item"></script>
+<script lang="ts">
+import { nextTick } from 'vue';
+import { setup } from 'vue-class-component';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Api } from '../../../../../_common/api/api.service';
+import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
+import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
+import { Environment } from '../../../../../_common/environment/environment.service';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
+import { formatDate } from '../../../../../_common/filters/date';
+import { formatNumber } from '../../../../../_common/filters/number';
+import { ForumPost } from '../../../../../_common/forum/post/post.model';
+import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
+import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
+import AppMessageThreadAdd from '../../../../../_common/message-thread/add/add.vue';
+import AppMessageThreadItem from '../../../../../_common/message-thread/item/item.vue';
+import AppMessageThread from '../../../../../_common/message-thread/message-thread.vue';
+import { Popper } from '../../../../../_common/popper/popper.service';
+import AppPopper from '../../../../../_common/popper/popper.vue';
+import { ReportModal } from '../../../../../_common/report/modal/modal.service';
+import AppScrollInview, {
+	ScrollInviewConfig,
+} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
+import { Scroll } from '../../../../../_common/scroll/scroll.service';
+import { useCommonStore } from '../../../../../_common/store/common-store';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import FormForumPost from '../../../forms/forum/post/post.vue';
+
+const InviewConfig = new ScrollInviewConfig();
+
+@Options({
+	components: {
+		AppScrollInview,
+		AppMessageThread,
+		AppMessageThreadItem,
+		AppMessageThreadAdd,
+		AppExpand,
+		FormForumPost,
+		AppPopper,
+		AppContentViewer,
+
+		// Since it's recursive it needs to be able to resolve itself.
+		AppForumPostListItem: () => Promise.resolve(AppForumPostListItem),
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppForumPostListItem extends Vue {
+	@Prop(Object) topic!: ForumTopic;
+	@Prop(Object) post!: ForumPost;
+	@Prop(Boolean) isReply!: boolean;
+	@Prop(Boolean) showReplies!: boolean;
+	@Prop(Boolean) isLastInThread?: boolean;
+
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
+
+	isEditing = false;
+	isReplying = false;
+	isShowingReplies = false;
+
+	showingParent = false;
+	parent: ForumPost | null = null;
+	replies: ForumPost[] = [];
+	totalReplyCount = 0;
+
+	readonly InviewConfig = InviewConfig;
+	readonly formatDate = formatDate;
+	readonly formatNumber = formatNumber;
+	readonly Environment = Environment;
+
+	@Emit('replied')
+	emitReplied(_newPost: ForumPost, _payload: any) {}
+
+	get id() {
+		return (this.isReply ? this.post.parent_post_id + '-' : '') + this.post.id;
+	}
+
+	get isActive() {
+		// We never mark ourselves as active if we're showing as a reply.
+		return !this.parent && this.$route.hash === '#forum-post-' + this.id;
+	}
+
+	@Watch('isActive', { immediate: true })
+	async onActiveChanged(isActive: boolean) {
+		// Wait till we're compiled into the DOM.
+		await nextTick();
+		if (isActive) {
+			Scroll.to(this.$el as HTMLElement);
+		}
+	}
+
+	toggleReplies() {
+		if (this.isShowingReplies) {
+			this.isShowingReplies = false;
+			return;
+		}
+
+		this.loadReplies();
+	}
+
+	async loadReplies() {
+		try {
+			const payload = await Api.sendRequest(
+				'/web/forums/posts/replies/' + this.post.id,
+				undefined,
+				{ noErrorRedirect: true }
+			);
+
+			this.replies = ForumPost.populate(payload.replies);
+			this.totalReplyCount = payload.repliesCount || 0;
+
+			if (!this.isShowingReplies) {
+				this.isShowingReplies = true;
+			}
+		} catch (e) {
+			showErrorGrowl(
+				this.$gettext(`Couldn't load replies for some reason.`),
+				this.$gettext(`Loading Failed`)
+			);
+		}
+	}
+
+	async loadParentPost() {
+		if (this.showingParent) {
+			this.showingParent = false;
+			return;
+		}
+
+		// Don't load it in more than once.
+		if (this.parent) {
+			this.showingParent = true;
+		}
+
+		try {
+			const payload = await Api.sendRequest(
+				'/web/forums/posts/parent/' + this.post.id,
+				undefined,
+				{
+					noErrorRedirect: true,
+				}
+			);
+			this.parent = new ForumPost(payload.parent);
+			this.showingParent = true;
+		} catch (e) {
+			// The post was probably removed.
+			this.parent = null;
+			this.showingParent = true;
+		}
+	}
+
+	reply() {
+		this.isReplying = true;
+	}
+
+	closeReply() {
+		this.isReplying = false;
+	}
+
+	onReplied(newPost: ForumPost, response: any) {
+		this.isReplying = false;
+
+		// If the replies list is open, refresh it.
+		if (this.isShowingReplies) {
+			this.loadReplies();
+		}
+
+		this.emitReplied(newPost, response);
+	}
+
+	edit() {
+		this.isEditing = true;
+		Popper.hideAll();
+	}
+
+	closeEdit() {
+		this.isEditing = false;
+	}
+
+	report() {
+		ReportModal.show(this.post);
+	}
+
+	onInviewChange(isInView: boolean) {
+		if (isInView && this.post.notification) {
+			// Don't wait for success before updating the view.
+			this.post.notification.$read();
+			this.post.notification = undefined;
+		}
+	}
+
+	copyPermalink() {
+		Clipboard.copy(this.post.getPermalink());
+	}
+}
+</script>
 
 <template>
-	<app-message-thread-item
+	<AppMessageThreadItem
 		:id="`forum-post-${id}`"
 		:user="post.user"
 		:replied-to="isReply ? post.replied_to : undefined"
@@ -12,7 +211,7 @@
 		:is-reply="isReply"
 		:is-last="isLastInThread"
 	>
-		<app-scroll-inview
+		<AppScrollInview
 			:config="InviewConfig"
 			@inview="onInviewChange(true)"
 			@outview="onInviewChange(false)"
@@ -22,7 +221,7 @@
 				class="forum-post-replied-to-button"
 				@click="loadParentPost"
 			>
-				<app-jolticon
+				<AppJolticon
 					class="middle"
 					:icon="'chevron-' + (!showingParent ? 'right' : 'down')"
 				/>
@@ -33,19 +232,19 @@
 				<small>@{{ post.replied_to.username }}</small>
 			</a>
 
-			<app-expand :when="showingParent">
+			<AppExpand :when="showingParent">
 				<div v-if="parent" class="forum-post-content-quoted">
-					<app-content-viewer :source="parent.text_content" />
+					<AppContentViewer :source="parent.text_content" />
 				</div>
 				<p v-else>
-					<strong><translate>Post removed.</translate></strong>
+					<strong><AppTranslate>Post removed.</AppTranslate></strong>
 				</p>
 				<hr />
-			</app-expand>
+			</AppExpand>
 
-			<app-content-viewer v-if="!isEditing" :source="post.text_content" />
+			<AppContentViewer v-if="!isEditing" :source="post.text_content" />
 			<template v-else>
-				<form-forum-post
+				<FormForumPost
 					:model="post"
 					:topic="topic"
 					@cancel="closeEdit"
@@ -56,11 +255,14 @@
 			</template>
 
 			<p v-if="post.modified_by_user && post.modified_on" class="text-muted small">
-				<translate>Last modified on</translate>
-				<span :title="date(post.modified_on, 'medium')">
-					{{ date(post.modified_on, 'longDate') }}
+				<AppTranslate>Last modified on</AppTranslate>
+				{{ ' ' }}
+				<span :title="formatDate(post.modified_on, 'medium')">
+					{{ formatDate(post.modified_on, 'longDate') }}
 				</span>
-				<translate>by</translate>
+				{{ ' ' }}
+				<AppTranslate>by</AppTranslate>
+				{{ ' ' }}
 				<router-link
 					class="link-unstyled"
 					:to="{
@@ -72,67 +274,75 @@
 						{{ post.modified_by_user.display_name }}
 					</strong>
 				</router-link>
+				{{ ' ' }}
 				<small>@{{ post.modified_by_user.username }}</small>
 			</p>
-		</app-scroll-inview>
+		</AppScrollInview>
 
 		<template #meta>
-			<app-popper v-if="app.user" popover-class="fill-darkest">
+			<AppPopper v-if="app.user" popover-class="fill-darkest">
 				<a v-app-tooltip="$gettext('Options')" class="link-muted">
-					<app-jolticon icon="ellipsis-v" class="middle" />
+					<AppJolticon icon="ellipsis-v" class="middle" />
 				</a>
-				<div slot="popover" class="list-group list-group-dark">
-					<a class="list-group-item has-icon" @click="copyPermalink">
-						<app-jolticon icon="link" />
-						<translate>Copy Link</translate>
-					</a>
 
-					<a
-						v-if="
-							app.user &&
+				<template #popover>
+					<div class="list-group list-group-dark">
+						<a class="list-group-item has-icon" @click="copyPermalink">
+							<AppJolticon icon="link" />
+							<AppTranslate>Copy Link</AppTranslate>
+						</a>
+
+						<a
+							v-if="
+								app.user &&
 								post.user_id === app.user.id &&
 								!topic.is_locked &&
 								!isEditing
-						"
-						class="list-group-item has-icon"
-						@click="edit()"
-					>
-						<app-jolticon icon="edit" />
-						<translate>Edit Post</translate>
-					</a>
-					<a class="list-group-item has-icon" @click="report">
-						<app-jolticon icon="flag" notice />
-						<translate>Report Post</translate>
-					</a>
-					<template v-if="app.user.permission_level > 0">
-						<a
-							class="list-group-item"
-							:href="Environment.baseUrl + `/moderate/forums/posts/edit/${post.id}`"
-							target="_blank"
+							"
+							class="list-group-item has-icon"
+							@click="edit()"
 						>
-							<translate>Edit (Mod)</translate>
+							<AppJolticon icon="edit" />
+							<AppTranslate>Edit Post</AppTranslate>
 						</a>
-						<a
-							class="list-group-item"
-							:href="Environment.baseUrl + `/moderate/forums/posts/remove/${post.id}`"
-							target="_blank"
-						>
-							<translate>Remove (Mod)</translate>
+						<a class="list-group-item has-icon" @click="report">
+							<AppJolticon icon="flag" notice />
+							<AppTranslate>Report Post</AppTranslate>
 						</a>
-						<a
-							class="list-group-item"
-							:href="Environment.baseUrl + `/moderate/users/view/${post.user_id}`"
-							target="_blank"
-						>
-							<translate>Moderate User</translate>
-						</a>
-					</template>
-				</div>
-			</app-popper>
+						<template v-if="app.user.permission_level > 0">
+							<a
+								class="list-group-item"
+								:href="
+									Environment.baseUrl + `/moderate/forums/posts/edit/${post.id}`
+								"
+								target="_blank"
+							>
+								<AppTranslate>Edit (Mod)</AppTranslate>
+							</a>
+							<a
+								class="list-group-item"
+								:href="
+									Environment.baseUrl + `/moderate/forums/posts/remove/${post.id}`
+								"
+								target="_blank"
+							>
+								<AppTranslate>Remove (Mod)</AppTranslate>
+							</a>
+							<a
+								class="list-group-item"
+								:href="Environment.baseUrl + `/moderate/users/view/${post.user_id}`"
+								target="_blank"
+							>
+								<AppTranslate>Moderate User</AppTranslate>
+							</a>
+						</template>
+					</div>
+				</template>
+			</AppPopper>
 		</template>
 
 		<template v-if="!isReply" #controls>
-			<app-button
+			<AppButton
 				v-if="!topic.is_locked && app.user"
 				v-app-tooltip="$gettext('Reply')"
 				class="forum-post-reply-button"
@@ -143,35 +353,35 @@
 				@click="reply"
 			/>
 
-			<app-button
+			<AppButton
 				v-if="post.replies_count && !isEditing"
 				type="a"
 				trans
 				@click="toggleReplies"
 			>
-				<translate
+				<AppTranslate
 					:translate-n="post.replies_count"
 					:translate-params="{ count: post.replies_count }"
 					translate-plural="+ %{ count } replies"
 				>
 					+ %{ count } reply
-				</translate>
-			</app-button>
+				</AppTranslate>
+			</AppButton>
 		</template>
 
 		<template v-if="isReplying || isShowingReplies" #replies>
-			<app-message-thread-add v-if="isReplying">
-				<form-forum-post
+			<AppMessageThreadAdd v-if="isReplying">
+				<FormForumPost
 					v-if="isReplying"
 					:topic="topic"
 					:reply-to="post"
 					@cancel="closeReply"
 					@submit="onReplied"
 				/>
-			</app-message-thread-add>
+			</AppMessageThreadAdd>
 
-			<app-message-thread v-if="isShowingReplies && replies.length > 0">
-				<app-forum-post-list-item
+			<AppMessageThread v-if="isShowingReplies && replies.length > 0">
+				<AppForumPostListItem
 					v-for="(reply, i) of replies"
 					:key="reply.id"
 					:topic="topic"
@@ -179,30 +389,27 @@
 					:is-reply="true"
 					:is-last-in-thread="i === replies.length - 1"
 				/>
-			</app-message-thread>
+			</AppMessageThread>
 
 			<template v-if="totalReplyCount - replies.length > 0">
 				<br />
 				<p>
-					<translate
+					<AppTranslate
 						:translate-n="totalReplyCount - replies.length"
 						:translate-params="{
-							count: number(totalReplyCount - replies.length),
+							count: formatNumber(totalReplyCount - replies.length),
 						}"
 						translate-plural="+%{ count } more hidden"
 					>
 						+%{ count } more hidden
-					</translate>
+					</AppTranslate>
 				</p>
 			</template>
 		</template>
-	</app-message-thread-item>
+	</AppMessageThreadItem>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .forum-post
 	&-replied-to-button
 		rounded-corners()

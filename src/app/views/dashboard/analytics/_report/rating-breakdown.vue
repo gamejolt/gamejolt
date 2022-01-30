@@ -1,37 +1,54 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { formatNumber } from '../../../../../_common/filters/number';
+
+@Options({})
+export default class AppAnalyticsReportRatingBreakdown extends Vue {
+	@Prop(Object) reportData!: any;
+
+	readonly formatNumber = formatNumber;
+}
+</script>
+
 <template>
 	<div class="col-sm-8">
 		<table class="table table-striped table-condensed">
 			<thead>
 				<tr>
 					<th>
-						<translate>Rating Given</translate>
+						<AppTranslate>Rating Given</AppTranslate>
 					</th>
 					<th class="text-right">
-						<translate>Count</translate>
+						<AppTranslate>Count</AppTranslate>
 					</th>
-					<th style="width: 150px"></th>
+					<th style="width: 150px" />
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="i of [1, 0]">
+				<tr v-for="i of [1, 0]" :key="i">
 					<td v-if="i === 1">
-						<translate>Like</translate>
+						<AppTranslate>Like</AppTranslate>
 					</td>
 					<td v-else>
-						<translate>Dislike</translate>
+						<AppTranslate>Dislike</AppTranslate>
 					</td>
 					<td class="text-right">
-						{{ reportData.data[i] || 0 | number }}
+						{{ formatNumber(reportData.data[i] || 0) }}
 					</td>
 					<td>
 						<div
 							class="report-percentage"
-							:style="{ width: ((reportData.data[i] || 0) / reportData.total) * 70 + 'px' }"
-						></div>
+							:style="{
+								width: ((reportData.data[i] || 0) / reportData.total) * 70 + 'px',
+							}"
+						/>
+						{{ ' ' }}
 						<small>
 							{{
-								reportData.data[i] / reportData.total ||
-									0 | number({ style: 'percent', maximumFractionDigits: 2 })
+								formatNumber(reportData.data[i] / reportData.total || 0, {
+									style: 'percent',
+									maximumFractionDigits: 2,
+								})
 							}}
 						</small>
 					</td>
@@ -42,5 +59,3 @@
 </template>
 
 <style lang="stylus" src="./report-percentage.styl" scoped></style>
-
-<script lang="ts" src="./rating-breakdown"></script>

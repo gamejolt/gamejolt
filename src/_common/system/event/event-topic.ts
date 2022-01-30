@@ -1,23 +1,49 @@
-import { EventBus, EventBusDeregister } from './event-bus.service';
+import { onMounted, onUnmounted } from 'vue';
+import { arrayRemove } from '../../../utils/array';
+
+type EventListener<T> = (arg: T) => void;
+type EventBusDeregister = () => void;
 
 export type EventSubscription = {
-	unsubscribe: EventBusDeregister;
+	/**
+	 * Will close the subscription. No more events will come after calling this.
+	 */
+	close: EventBusDeregister;
 };
 
-// Doesn't matter what this value is, it just needs to be the same between next() and subscribe()
-const TopicEventName = 'value';
-
 export class EventTopic<T> {
-	private e = new EventBus();
+	private listeners: EventListener<T>[] = [];
 
-	subscribe(callback: (arg: T) => any): EventSubscription {
-		const unsubFunc = this.e.on(TopicEventName, callback);
+	subscribe(listener: EventListener<T>): EventSubscription {
+		this.listeners.push(listener);
+
 		return {
-			unsubscribe: unsubFunc,
+			close: () => {
+				arrayRemove(this.listeners, i => i === listener);
+			},
 		};
 	}
 
 	next(value: T) {
-		this.e.emit(TopicEventName, value);
+		this.listeners.forEach(i => i(value));
 	}
+}
+
+export function useEventSubscription<T>(topic: EventTopic<T>, listener: EventListener<T>) {
+	let _subscription: EventSubscription | undefined;
+
+	function close() {
+		_subscription?.close();
+		_subscription = undefined;
+	}
+
+	onMounted(() => {
+		_subscription = topic.subscribe(listener);
+	});
+
+	onUnmounted(() => {
+		close();
+	});
+
+	return { close };
 }

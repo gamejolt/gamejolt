@@ -1,8 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDashGamesManageCollaborators: RouteConfig = {
+export const routeDashGamesManageCollaborators: RouteRecordRaw = {
 	name: 'dash.games.manage.collaborators',
 	path: 'collaborators',
-	component: () =>
-		import(/* webpackChunkName: "routeDashGamesManageCollaborators" */ './collaborators.vue'),
+	component: () => import('./collaborators.vue'),
 };

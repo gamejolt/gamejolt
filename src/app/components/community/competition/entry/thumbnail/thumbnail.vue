@@ -1,25 +1,140 @@
-<script lang="ts" src="./thumbnail"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import { CommunityCompetitionEntry } from '../../../../../../_common/community/competition/entry/entry.model';
+import { CommunityCompetitionVotingCategory } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
+import { Game } from '../../../../../../_common/game/game.model';
+import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
+import { showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
+import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
+import { useCommonStore } from '../../../../../../_common/store/common-store';
+import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
+import { CommunityCompetitionEntryModal } from '../modal/modal.service';
+
+@Options({
+	components: {
+		AppGameThumbnailImg,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppCommunityCompetitionEntryThumbnail extends Vue {
+	@Prop({ type: Object, required: true }) entry!: CommunityCompetitionEntry;
+	@Prop({ type: Boolean, default: false }) showRemove!: boolean;
+	@Prop({ type: Boolean, default: false }) showRank!: boolean;
+	/** Voting category the rank should be shown from. No voting category means Overall. */
+	@Prop(Object)
+	votingCategory?: CommunityCompetitionVotingCategory;
+	@Prop({ type: Boolean, default: false }) showAwards!: boolean;
+
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
+
+	@Emit('remove')
+	emitRemove() {}
+
+	get shouldShowRemove() {
+		return this.showRemove && this.user && this.user.id === this.entry.user.id;
+	}
+
+	get game() {
+		return this.entry.resource as Game;
+	}
+
+	get shouldShowRank() {
+		if (!this.showRank) {
+			return false;
+		}
+
+		if (!this.entry.vote_results || this.entry.vote_results.length === 0) {
+			return false;
+		}
+
+		return !!this.displayRank;
+	}
+
+	get shouldShowNoVotes() {
+		return (
+			this.showRank &&
+			!this.votingCategory &&
+			(!this.entry.vote_results || this.entry.vote_results.length === 0)
+		);
+	}
+
+	get displayRank() {
+		// Find the result for the given category.
+		const categoryId = this.votingCategory ? this.votingCategory.id : null;
+		const voteResult = this.entry.vote_results.find(
+			i => i.community_competition_voting_category_id === categoryId
+		);
+		if (voteResult) {
+			return voteResult.rank;
+		}
+	}
+
+	get displayCategoryName() {
+		if (this.votingCategory) {
+			return this.votingCategory.name;
+		}
+
+		return this.$gettext(`Overall`);
+	}
+
+	get hasAwards() {
+		return this.entry.awards && this.entry.awards.length > 0;
+	}
+
+	get shouldShowAwards() {
+		return this.showAwards && this.hasAwards;
+	}
+
+	async onClickRemove() {
+		const result = await ModalConfirm.show(
+			this.$gettext(`Are you sure you want to remove this entry from the jam?`)
+		);
+
+		if (result) {
+			await this.entry.$remove();
+			if (this.entry._removed) {
+				showSuccessGrowl(
+					this.$gettext(`Your entry was successfully removed from the jam.`)
+				);
+				this.emitRemove();
+			}
+		}
+	}
+
+	/** Instead of navigating to the link target, open the entry modal instead. */
+	onClickThumbnail() {
+		CommunityCompetitionEntryModal.showEntry(this.entry);
+	}
+}
+</script>
 
 <template>
 	<div class="-container">
 		<router-link :to="game.routeLocation">
 			<div @click.prevent="onClickThumbnail">
 				<div class="-thumb">
-					<app-game-thumbnail-img :game="game" class="-game-img" />
+					<AppGameThumbnailImg :game="game" class="-game-img" />
 
 					<div v-if="shouldShowAwards" class="-game-img-award-border" />
 
 					<div class="-inner">
 						<div v-if="shouldShowRank" class="-rank">
 							{{ displayCategoryName }}
-							<translate>Rank</translate>
+							<AppTranslate>Rank</AppTranslate>
 							<b>#{{ displayRank }}</b>
 						</div>
 						<div v-else-if="shouldShowNoVotes" class="-rank">
-							<translate>No Votes</translate>
+							<AppTranslate>No Votes</AppTranslate>
 						</div>
 						<div v-if="shouldShowRemove" class="-remove">
-							<app-button
+							<AppButton
 								v-app-tooltip="$gettext(`Remove Entry`)"
 								icon="remove"
 								sparse
@@ -52,7 +167,7 @@
 							v-app-tooltip="entryAward.community_competition_award.description"
 							class="-award"
 						>
-							<app-jolticon class="-award-icon" icon="medal" />
+							<AppJolticon class="-award-icon" icon="medal" />
 							<small>
 								<b>{{ entryAward.community_competition_award.name }}</b>
 							</small>
@@ -65,9 +180,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-container
 	margin-bottom: 24px
 
