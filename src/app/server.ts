@@ -3,6 +3,7 @@ import { Environment } from '../_common/environment/environment.service';
 import { renderMeta } from '../_common/meta/meta-service';
 import { translationsReady } from '../_common/translate/translate.service';
 import { createApp } from './bootstrap';
+import { renderToString } from 'vue/server-renderer';
 
 export default async (context: any) => {
 	const { app, router } = await createApp();
@@ -39,7 +40,10 @@ export default async (context: any) => {
 			},
 		};
 
-		return app;
+		const renderContext = {};
+		const appHtml = await renderToString(app, renderContext);
+
+		return [appHtml, renderContext];
 	} catch (e) {
 		throw { code: 500 };
 	}
