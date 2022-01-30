@@ -1,7 +1,6 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
 import * as path from 'path';
 import { defineConfig, UserConfig as ViteUserConfigActual } from 'vite';
-import imagemin from 'vite-plugin-imagemin';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
 import viteHtmlResolve from './scripts/build/vite-html-resolve';
 import { parseAndInferOptionsFromEnv } from './scripts/build/vite-options';
@@ -208,20 +207,6 @@ export default defineConfig(async configEnv => {
 			md({
 				mode: [MarkdownMode.HTML],
 			}),
-			imagemin({
-				mozjpeg: false,
-				pngquant: false,
-				gifsicle: {
-					optimizationLevel: 3,
-				},
-				optipng: {
-					optimizationLevel: 7,
-				},
-				svgo: {
-					multipass: true,
-					plugins: ['preset-default'],
-				},
-			}),
 		],
 
 		root: 'src',
@@ -293,6 +278,11 @@ export default defineConfig(async configEnv => {
 			}),
 
 			rollupOptions: {
+				output: {
+					chunkFileNames: 'assets/[hash].js',
+					assetFileNames: 'assets/[hash].[ext]',
+				},
+
 				...notInSSR<RollupOptions>({
 					// When building for ssr the entrypoint is specified in build.ssr,
 					// and the index.html input file should NOT be specified.
@@ -300,7 +290,6 @@ export default defineConfig(async configEnv => {
 				}),
 
 				...onlyInDesktopApp<RollupOptions>({
-					// plugins: [nodeBuiltins()],
 					external: ['client-voodoo', 'axios'],
 				}),
 			},
@@ -316,6 +305,8 @@ export default defineConfig(async configEnv => {
 				__dirname,
 				gjOpts.platform === 'ssr' ? path.join('build', 'server') : path.join('build', 'web')
 			),
+
+			minify: 'terser',
 
 			// The SSR manifest is used to keep track of which static assets are
 			// needed by which component. This lets us choose an optimal set of
