@@ -14,7 +14,7 @@ const AppEmbedSilverlight = defineAsyncComponent(
 	() => import('./components/AppEmbedSilverlight.vue')
 );
 
-const { build, embedWidthStyle, embedHeightStyle, bootstrap } = useGameserverStore();
+const { build, bootstrap } = useGameserverStore();
 
 // We need to tell the browser to attempt to upgrade any insecure requests on
 // the page. This allows game api calls in HTML games to get upgraded to https.
@@ -30,13 +30,7 @@ bootstrap();
 
 <template>
 	<AppCommonShell v-if="build">
-		<div
-			class="-build-embed fill-darker"
-			:style="{
-				width: embedWidthStyle,
-				height: embedHeightStyle,
-			}"
-		>
+		<div class="-build-embed fill-darker">
 			<AppEmbedFlash v-if="build.type === GameBuild.TYPE_FLASH" />
 			<AppEmbedHtml v-if="build.type === GameBuild.TYPE_HTML" />
 			<AppEmbedUnity v-if="build.type === GameBuild.TYPE_UNITY" />
