@@ -42,6 +42,7 @@ export default class AppAnalyticsReportRatingBreakdown extends Vue {
 								width: ((reportData.data[i] || 0) / reportData.total) * 70 + 'px',
 							}"
 						/>
+						{{ ' ' }}
 						<small>
 							{{
 								formatNumber(reportData.data[i] / reportData.total || 0, {

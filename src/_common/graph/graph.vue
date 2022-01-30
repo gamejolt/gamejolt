@@ -12,8 +12,9 @@ import {
 	PointElement,
 	Tooltip,
 } from 'chart.js';
+import { markRaw, toRaw, watch } from 'vue';
 import { setup } from 'vue-class-component';
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { formatDate } from '../filters/date';
 import { useThemeStore } from '../theme/theme.store';
 
@@ -197,22 +198,24 @@ export default class AppGraph extends Vue {
 			};
 			this.ourColors[1] = this.ourColors[0];
 		}
+
+		// Will only get called when dataset changes reference.
+		watch(
+			() => this.dataset,
+			() => this.checkData()
+		);
 	}
 
 	mounted() {
 		this.checkData();
 
-		this.chart = new Chart(this.$refs.canvas as HTMLCanvasElement, {
-			type: this.type,
-			data: this.graphData,
-			options: this.chartOptions,
-		});
-	}
-
-	// Will only get called when dataset changes reference.
-	@Watch('dataset')
-	onDatasetChanged() {
-		this.checkData();
+		this.chart = markRaw(
+			new Chart(this.$refs.canvas as HTMLCanvasElement, {
+				type: this.type,
+				data: toRaw(this.graphData),
+				options: toRaw(this.chartOptions),
+			})
+		);
 	}
 
 	// Very hacky way to get our above options merged together when needed.
@@ -236,44 +239,48 @@ export default class AppGraph extends Vue {
 			return;
 		}
 
-		this.graphData = {
-			labels: [],
-			datasets: [],
+		// Work on a raw version of the dataset so that we don't trigger a ton
+		// of proxying.
+		const rawDataset = toRaw(this.dataset);
+
+		const graphData = {
+			labels: [] as any[],
+			datasets: [] as any[],
 		};
 
 		if (this.type === 'line') {
-			this.dataset.forEach((series: any, i: number) => {
+			rawDataset.forEach((series: any, i: number) => {
 				const dataset: any = {
 					label: series.label,
 					data: [],
 				};
 
-				Object.assign(dataset, this.ourColors[i]);
+				Object.assign(dataset, toRaw(this.ourColors[i]));
 
 				for (const row of series.data) {
 					if (i === 0) {
-						this.graphData.labels.push(formatDate(row[0], 'LLL dd'));
+						graphData.labels.push(formatDate(row[0], 'LLL dd'));
 					}
 
 					dataset.data.push(row[1]);
 				}
 
-				this.graphData.datasets.push(dataset);
+				graphData.datasets.push(dataset);
 			});
 		} else if (this.type === 'doughnut') {
-			this.graphData.datasets.push({
+			graphData.datasets.push({
 				data: [],
 			});
 
-			this.dataset.forEach((item: any, i: number) => {
-				const dataset = this.graphData.datasets[0];
+			rawDataset.forEach((item: any, i: number) => {
+				const dataset = graphData.datasets[0];
 
 				dataset.data.push(item.value);
 
 				// We have to override the color info for the chart since the
 				// defaults are for line charts. We also skip the first color
 				// value since that's only for line charts (white).
-				const colorInfo = Object.assign({}, this.ourColors[i + 1]);
+				const colorInfo = Object.assign({}, toRaw(this.ourColors[i + 1]));
 				colorInfo.backgroundColor = colorInfo.borderColor;
 				colorInfo.borderColor = '#000';
 				colorInfo.hoverBackgroundColor = '#fff';
@@ -285,12 +292,14 @@ export default class AppGraph extends Vue {
 					dataset[n].push(colorInfo[n]);
 				}
 
-				this.graphData.labels.push(item.label);
+				graphData.labels.push(item.label);
 			});
 		}
 
+		this.graphData = graphData;
+
 		if (this.chart) {
-			this.chart.data = this.graphData;
+			this.chart.data = graphData;
 			this.chart.update();
 		}
 	}
