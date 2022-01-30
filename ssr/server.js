@@ -4,7 +4,8 @@ const bundleRunner = require('./bundle-runner');
 const express = require('express');
 const { renderPreloadLinks } = require('./preload-links');
 
-const projectRoot = path.dirname(path.dirname(__filename));
+const isProd = process.env.NODE_ENV === 'production' || argv.production;
+const projectRoot = path.resolve(__dirname, '..');
 
 const buildDir = path.join(projectRoot, 'build');
 const serverBuildPath = path.join(buildDir, 'server');
@@ -32,17 +33,17 @@ const serverVMScript = bundleRunner.getPreparedScript(serverBundleFile);
 const server = express();
 
 // Only needed in dev builds, in prod everything would be served from cdn.
-server.use(
-	express.static(webBuildPath, {
-		// maxAge: 0,
-		// fallthrough: true,
-		index: false,
-	})
-);
+if (!isProd) {
+	server.use(
+		express.static(webBuildPath, {
+			index: false,
+		})
+	);
 
-server.use('/favicon.ico', (req, res) => {
-	res.status(404).end();
-});
+	server.use('/favicon.ico', (req, res) => {
+		res.status(404).end();
+	});
+}
 
 // TODO: refactor this into somewhere else.
 
@@ -74,15 +75,12 @@ server.use(async (req, res) => {
 		const renderFunc = vm.run(
 			`
 			module.exports = async function () {
-				console.log('creating app');
 				const createApp = require(serverBundleFile).default;
 				const app = await createApp(context);
-				console.log('app created');
 
 				const { renderToString } = require('vue/server-renderer');
 				const renderCtx = {};
 				const appHtml = await renderToString(app, renderCtx);
-				console.log(Array.from(renderCtx.modules).join("\\n"));
 				return [appHtml, renderCtx];
 			};
 		`,
@@ -103,26 +101,35 @@ server.use(async (req, res) => {
 			.replace(`<!-- ssr-outlet -->`, appHtml)
 			.replace(`<!-- gj:ssr-metatags -->`, context.meta.renderTags());
 
-		res.status(200)
-			.set({ 'Content-Type': 'text/html' })
-			.end(html, () => {
-				const total = Date.now() - s;
-				console.log(
-					'response ended',
-					'total time:',
-					total + 'ms',
-					'render time:',
-					total - context.prefetchTime + 'ms',
-					req.url,
-					req.headers['host'],
-					req.headers['user-agent']
-				);
-			});
+		if (context.redirect) {
+			console.log('sending redirect', context.redirect);
+			res.redirect(301, context.redirect);
+			return;
+		} else if (context.errorCode) {
+			console.log('sending error code', context.errorCode);
+			res.status(context.errorCode);
+		} else {
+			res.status(200);
+		}
+
+		res.set({ 'Content-Type': 'text/html' }).end(html, () => {
+			const total = Date.now() - s;
+			console.log(
+				'response ended',
+				'total time:',
+				total + 'ms',
+				'render time:',
+				total - context.prefetchTime + 'ms',
+				req.url,
+				req.headers['host'],
+				req.headers['user-agent']
+			);
+		});
 
 		console.log('request ending');
 	} catch (e) {
-		console.log(e.stack);
-		res.status(500).end(e.stack);
+		console.log('got error', req.url, e);
+		res.status(500).end('Internal Server Error');
 	}
 });
 
