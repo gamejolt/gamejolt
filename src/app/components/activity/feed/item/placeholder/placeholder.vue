@@ -36,6 +36,7 @@ export default class AppActivityFeedItemPlaceholder extends Vue {}
 
 			<div class="-controls">
 				<AppButtonPlaceholder sparse circle />
+				{{ ' ' }}
 				<AppButtonPlaceholder sparse circle />
 			</div>
 		</div>
