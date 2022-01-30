@@ -1,78 +1,50 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { computed, Ref, ref } from 'vue';
+import { RouterLink, useRoute } from 'vue-router';
+import { getQuery } from '../../../../utils/router';
 import AppCommunityThumbnail from '../../../../_common/community/thumbnail/thumbnail.vue';
 import { formatNumber } from '../../../../_common/filters/number';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppUserCard from '../../../../_common/user/card/card.vue';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
-import AppActivityFeedPlaceholder from '../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../components/activity/feed/view';
 import AppGameGrid from '../../../components/game/grid/grid.vue';
 import AppGameList from '../../../components/game/list/list.vue';
-import { AppActivityFeedLazy } from '../../../components/lazy';
+import { AppActivityFeedLazy as AppActivityFeed } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
-import { Search, sendSearch } from '../../../components/search/search-service';
-import { useSearchRouteController } from '../search.vue';
+import { sendSearch } from '../../../components/search/search-service';
+import { useSearchRouteController } from '../RouteSearch.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 
-@Options({
-	name: 'RouteSearchResults',
-	components: {
-		AppPageContainer,
-		AppUserCard,
-		AppGameList,
-		AppGameGrid,
-		AppCommunityThumbnail,
-		AppActivityFeed: AppActivityFeedLazy,
-		AppActivityFeedPlaceholder,
+export default {
+	...defineAppRouteOptions({
+		cache: true,
+		resolver: ({ route }) => sendSearch(getQuery(route, 'q') ?? ''),
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+const route = useRoute();
+const { processPayload, hasSearch, searchPayload, query } = useSearchRouteController()!;
+
+const feed = ref(null) as Ref<ActivityFeedView | null>;
+
+createAppRoute({
+	onInit() {
+		feed.value = ActivityFeedService.bootstrapFeedFromCache();
 	},
-})
-@OptionsForRoute({
-	resolver: ({ route }) => sendSearch(route.query.q + ''),
-})
-export default class RouteSearchResults extends BaseRouteComponent {
-	routeStore = setup(() => useSearchRouteController()!);
+	onResolved({ payload, fromCache }) {
+		processPayload({ payload });
 
-	feed: ActivityFeedView | null = null;
-
-	readonly Search = Search;
-	readonly Screen = Screen;
-	readonly formatNumber = formatNumber;
-
-	get hasSearch() {
-		return this.routeStore.hasSearch;
-	}
-
-	get searchPayload() {
-		return this.routeStore.searchPayload;
-	}
-
-	get query() {
-		return this.routeStore.query;
-	}
-
-	get slicedUsers() {
-		return Screen.isXs ? this.searchPayload.users : this.searchPayload.users.slice(0, 2);
-	}
-
-	get slicedCommunities() {
-		return this.searchPayload.communities.slice(0, 6);
-	}
-
-	routeResolved(payload: any, fromCache: boolean) {
-		this.routeStore.processPayload({ payload, route: this.$route });
-
-		// We bootstrap the feed from cache in the routeResolved method since
-		// this page is not cached or lazy. We need this to get called after we
-		// resolve the store with data.
-		this.feed = ActivityFeedService.routeInit(this);
-		this.feed = ActivityFeedService.routed(
-			this.feed,
+		feed.value = ActivityFeedService.routed(
+			feed.value,
 			{
 				type: 'EventItem',
 				name: 'search',
-				url: `/web/posts/fetch/search/${encodeURIComponent(this.$route.query.q + '')}`,
+				url: `/web/posts/fetch/search/${encodeURIComponent(getQuery(route, 'q')!)}`,
 				shouldShowFollow: true,
 				itemsPerPage: payload.postsPerPage,
 				shouldShowDates: false,
@@ -80,8 +52,16 @@ export default class RouteSearchResults extends BaseRouteComponent {
 			payload.posts,
 			fromCache
 		);
-	}
-}
+	},
+});
+
+const slicedUsers = computed(() => {
+	return Screen.isXs ? searchPayload.value.users : searchPayload.value.users.slice(0, 2);
+});
+
+const slicedCommunities = computed(() => {
+	return searchPayload.value.communities.slice(0, 6);
+});
 </script>
 
 <template>
@@ -99,12 +79,12 @@ export default class RouteSearchResults extends BaseRouteComponent {
 							<AppTranslate>View All</AppTranslate>
 						</AppButton>
 
-						<router-link
+						<RouterLink
 							class="link-unstyled"
 							:to="{ name: 'search.communities', query: { q: query } }"
 						>
 							<AppTranslate>Communities</AppTranslate>
-						</router-link>
+						</RouterLink>
 						<small>({{ formatNumber(searchPayload.communitiesCount) }})</small>
 					</h3>
 
@@ -135,12 +115,12 @@ export default class RouteSearchResults extends BaseRouteComponent {
 						<AppTranslate>View All</AppTranslate>
 					</AppButton>
 
-					<router-link
+					<RouterLink
 						class="link-unstyled"
 						:to="{ name: 'search.games', query: { q: query } }"
 					>
 						<AppTranslate>Games</AppTranslate>
-					</router-link>
+					</RouterLink>
 					<small>({{ formatNumber(searchPayload.gamesCount) }})</small>
 				</h3>
 
@@ -157,12 +137,12 @@ export default class RouteSearchResults extends BaseRouteComponent {
 				/>
 
 				<div class="hidden-xs hidden-sm">
-					<router-link
+					<RouterLink
 						class="link-muted"
 						:to="{ name: 'search.games', query: { q: query } }"
 					>
 						<AppTranslate>View all</AppTranslate>
-					</router-link>
+					</RouterLink>
 				</div>
 			</template>
 
@@ -177,12 +157,12 @@ export default class RouteSearchResults extends BaseRouteComponent {
 						<AppTranslate>View All</AppTranslate>
 					</AppButton>
 
-					<router-link
+					<RouterLink
 						class="link-unstyled"
 						:to="{ name: 'search.users', query: { q: query } }"
 					>
 						<AppTranslate>Users</AppTranslate>
-					</router-link>
+					</RouterLink>
 					<small>({{ formatNumber(searchPayload.usersCount) }})</small>
 				</h3>
 

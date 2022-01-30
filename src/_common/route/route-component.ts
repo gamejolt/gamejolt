@@ -83,7 +83,7 @@ export function createAppRoute({
 	onDestroyed,
 	...options
 }: {
-	routeTitle: MaybeRef<string | null>;
+	routeTitle?: MaybeRef<string | null>;
 	disableTitleSuffix?: MaybeRef<boolean>;
 
 	/**
@@ -134,7 +134,9 @@ export function createAppRoute({
 	watch(
 		[routeTitle, disableTitleSuffix],
 		([routeTitle, disableTitleSuffix]) => {
-			setMetaTitle(routeTitle, disableTitleSuffix);
+			if (routeTitle !== undefined) {
+				setMetaTitle(routeTitle, disableTitleSuffix);
+			}
 		},
 		{ immediate: true }
 	);

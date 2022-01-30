@@ -6,6 +6,6 @@ import { routeSearchUsers } from './users/users.route';
 
 export const routeSearch: RouteRecordRaw = {
 	path: '/search',
-	component: () => import('./search.vue'),
+	component: () => import('./RouteSearch.vue'),
 	children: [routeSearchResults, routeSearchCommunities, routeSearchGames, routeSearchUsers],
 };

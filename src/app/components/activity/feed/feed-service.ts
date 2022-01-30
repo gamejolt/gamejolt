@@ -306,7 +306,7 @@ export class ActivityFeedService {
 		return this.cache.find(i => i.href === href);
 	}
 
-	private static bootstrapFeedFromCache() {
+	static bootstrapFeedFromCache() {
 		const state = this.findCachedState();
 		if (state) {
 			// Reset bootstrapped items so that we can go "back" to this feed

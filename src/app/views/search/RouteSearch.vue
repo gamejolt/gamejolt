@@ -1,8 +1,6 @@
 <script lang="ts">
 import { computed, inject, InjectionKey, provide, ref } from 'vue';
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
-import { RouteLocationNormalized, useRoute } from 'vue-router';
+import { RouterLink, RouterView, useRoute } from 'vue-router';
 import {
 	AdSettingsContainer,
 	releasePageAdsSettings,
@@ -13,13 +11,17 @@ import AppExpand from '../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../_common/filters/number';
 import { Meta } from '../../../_common/meta/meta-service';
 import AppPagination from '../../../_common/pagination/pagination.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { Scroll } from '../../../_common/scroll/scroll.service';
+import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
 import AppPageHeader from '../../components/page-header/page-header.vue';
 import AppSearch from '../../components/search/AppSearch.vue';
 import { SearchPayload } from '../../components/search/payload-service';
 import { Search } from '../../components/search/search-service';
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
+import { getQuery } from '../../../utils/router';
 
 const Key: InjectionKey<Controller> = Symbol('search-route');
 
@@ -29,24 +31,21 @@ export function useSearchRouteController() {
 	return inject(Key);
 }
 
-function createController({ route }: { route: RouteLocationNormalized }) {
+function createController() {
+	const route = useRoute();
+
 	// We store our own version of the search query and sync back to it on
 	// form submission.
-	const query = ref(`${route.query.q}`);
+	const query = ref(getQuery(route, 'q') ?? '');
 	const searchPayload = ref(new SearchPayload('all', {}));
 
 	const hasSearch = computed(() => !!query.value);
 
-	function processPayload({
-		payload,
-		route,
-	}: {
-		payload: SearchPayload;
-		route: RouteLocationNormalized;
-	}) {
+	function processPayload({ payload }: { payload: SearchPayload }) {
+		const newQuery = getQuery(route, 'q') ?? '';
 		query.value = '';
 
-		if (!route.query.q) {
+		if (!newQuery) {
 			searchPayload.value = new SearchPayload('all', {});
 			return;
 		}
@@ -54,7 +53,7 @@ function createController({ route }: { route: RouteLocationNormalized }) {
 		// Search results should always be deindexed.
 		Meta.seo.deindex();
 
-		query.value = route.query.q + '';
+		query.value = newQuery;
 		searchPayload.value = payload;
 
 		// We sync the query to the search service so that all places get
@@ -70,72 +69,49 @@ function createController({ route }: { route: RouteLocationNormalized }) {
 	};
 }
 
-@Options({
-	name: 'RouteSearch',
-	components: {
-		AppPageHeader,
-		AppExpand,
-		AppSearch,
-		AppPagination,
-	},
-})
-@OptionsForRoute()
-export default class RouteSearch extends BaseRouteComponent {
-	routeStore = setup(() => {
-		const c = createController({ route: useRoute() });
-		provide(Key, c);
-		return c;
-	});
+export default {
+	...defineAppRouteOptions({}),
+};
+</script>
 
-	ads = setup(() => useAdsController());
+<script lang="ts" setup>
+const route = useRoute();
+const ads = useAdsController();
 
-	get hasSearch() {
-		return this.routeStore.hasSearch;
-	}
+const c = createController();
+provide(Key, c);
 
-	get query() {
-		return this.routeStore.query;
-	}
+const { hasSearch, query, searchPayload } = c;
 
-	get searchPayload() {
-		return this.routeStore.searchPayload;
-	}
-
-	readonly Screen = Screen;
-	readonly Search = Search;
-	readonly Scroll = Scroll;
-	readonly formatNumber = formatNumber;
-
-	get routeTitle() {
-		if (this.$route.query.q) {
-			return this.$gettextInterpolate('Search results for %{ query }', {
-				query: this.$route.query.q,
+createAppRoute({
+	routeTitle: computed(() => {
+		if (route.query.q) {
+			return $gettextInterpolate(`Search results for %{ query }`, {
+				query: getQuery(route, 'q') ?? '',
 			});
 		}
-		return this.$gettext('Search Game Jolt');
-	}
-
-	get noResults() {
-		return (
-			this.hasSearch &&
-			!this.searchPayload.gamesCount &&
-			!this.searchPayload.usersCount &&
-			!this.searchPayload.postsCount
-		);
-	}
-
-	routeCreated() {
+		return $gettext(`Search Game Jolt`);
+	}),
+	onInit() {
 		// Always disable ads for now, until we get better controls of when
 		// adult content is shown in search.
 		const adSettings = new AdSettingsContainer();
 		adSettings.isPageDisabled = true;
-		setPageAdsSettings(this.ads, adSettings);
-	}
+		setPageAdsSettings(ads, adSettings);
+	},
+	onDestroyed() {
+		releasePageAdsSettings(ads);
+	},
+});
 
-	routeDestroyed() {
-		releasePageAdsSettings(this.ads);
-	}
-}
+const noResults = computed(() => {
+	return (
+		hasSearch.value &&
+		!searchPayload.value.gamesCount &&
+		!searchPayload.value.usersCount &&
+		!searchPayload.value.postsCount
+	);
+});
 </script>
 
 <template>
@@ -178,15 +154,15 @@ export default class RouteSearch extends BaseRouteComponent {
 				<nav class="platform-list inline">
 					<ul>
 						<li>
-							<router-link
+							<RouterLink
 								:to="{ name: 'search.results', query: { q: query } }"
 								exact-active-class="active"
 							>
 								<AppTranslate>All</AppTranslate>
-							</router-link>
+							</RouterLink>
 						</li>
 						<li v-if="searchPayload.communitiesCount">
-							<router-link
+							<RouterLink
 								:to="{ name: 'search.communities', query: { q: query } }"
 								exact-active-class="active"
 							>
@@ -194,10 +170,10 @@ export default class RouteSearch extends BaseRouteComponent {
 								<span class="badge">
 									{{ formatNumber(searchPayload.communitiesCount) }}
 								</span>
-							</router-link>
+							</RouterLink>
 						</li>
 						<li v-if="searchPayload.usersCount">
-							<router-link
+							<RouterLink
 								:to="{ name: 'search.users', query: { q: query } }"
 								exact-active-class="active"
 							>
@@ -205,10 +181,10 @@ export default class RouteSearch extends BaseRouteComponent {
 								<span class="badge">
 									{{ formatNumber(searchPayload.usersCount) }}
 								</span>
-							</router-link>
+							</RouterLink>
 						</li>
 						<li v-if="searchPayload.gamesCount">
-							<router-link
+							<RouterLink
 								:to="{ name: 'search.games', query: { q: query } }"
 								exact-active-class="active"
 							>
@@ -216,7 +192,7 @@ export default class RouteSearch extends BaseRouteComponent {
 								<span class="badge">
 									{{ formatNumber(searchPayload.gamesCount) }}
 								</span>
-							</router-link>
+							</RouterLink>
 						</li>
 					</ul>
 				</nav>
@@ -232,7 +208,7 @@ export default class RouteSearch extends BaseRouteComponent {
 		</AppExpand>
 
 		<div id="search-results" class="fill-backdrop">
-			<router-view />
+			<RouterView />
 
 			<br />
 
