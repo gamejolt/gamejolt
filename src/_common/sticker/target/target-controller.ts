@@ -43,11 +43,11 @@ export type StickerTargetController = {
 };
 
 export function createStickerTargetController(
-	model_: StickerTargetModel,
+	model: StickerTargetModel,
 	parent?: StickerTargetController | null,
 	isLive = false
 ) {
-	const model = reactive(model_);
+	model = reactive(model) as StickerTargetModel;
 	const isInview = ref(false);
 	const hasLoadedStickers = ref(false);
 

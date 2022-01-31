@@ -41,8 +41,8 @@ type Options = { isMuted?: boolean };
 
 export type FiresideController = ReturnType<typeof createFiresideController>;
 
-export function createFiresideController(fireside_: Fireside, options: Options = {}) {
-	const fireside = reactive(fireside_);
+export function createFiresideController(fireside: Fireside, options: Options = {}) {
+	fireside = reactive(fireside) as Fireside;
 	const stickerTargetController = createStickerTargetController(fireside, undefined, true);
 	const isMuted = options.isMuted ?? false;
 
