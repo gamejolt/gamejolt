@@ -23,7 +23,7 @@ import AppShellBody from './body/body.vue';
 import AppShellCbar from './cbar/cbar.vue';
 import AppShellHotBottom from './hot-bottom/hot-bottom.vue';
 import AppShellSidebar from './sidebar/sidebar.vue';
-import AppShellTopNav from './top-nav/top-nav.vue';
+import AppShellTopNav from './top-nav/AppShellTopNav.vue';
 
 @Options({
 	components: {

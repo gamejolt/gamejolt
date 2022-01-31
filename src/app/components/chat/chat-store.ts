@@ -1,8 +1,9 @@
+import { InjectionKey } from 'vue';
 import { AppStore } from '../../store';
 import { ChatClientLazy } from '../lazy';
 import { ChatClient as ChatClientType } from './client';
 
-export const ChatStoreKey = Symbol('chat-store');
+export const ChatStoreKey: InjectionKey<ChatStore> = Symbol('chat-store');
 export class ChatStore {
 	chat: ChatClientType | null = null;
 

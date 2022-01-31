@@ -1,6 +1,6 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Vue, Watch } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { ref, computed, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { sleep } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
 import { Connection } from '../../../../_common/connection/connection-service';
@@ -9,179 +9,144 @@ import { Notification } from '../../../../_common/notification/notification-mode
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useEventSubscription } from '../../../../_common/system/event/event-topic';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { AppStore, useAppStore } from '../../../store';
+import { AppTooltip as vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { useAppStore } from '../../../store';
 import { ActivityFeedView } from '../../activity/feed/view';
 import { onNewStickers } from '../../grid/client.service';
 import { AppActivityFeedLazy } from '../../lazy';
 import AppShellNotificationPopoverStickerNavItem from './sticker-nav-item/sticker-nav-item.vue';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
 
 interface StickerAnimationData {
 	key: string;
 	stickerImg: string;
 }
 
-@Options({
-	components: {
-		AppPopper,
-		AppLoading,
-		AppActivityFeed: AppActivityFeedLazy,
-		AppShellNotificationPopoverStickerNavItem,
-	},
-	directives: {
-		AppTooltip,
-	},
-})
-export default class AppShellNotificationPopover extends Vue {
-	store = setup(() => useAppStore());
+const route = useRoute();
+const router = useRouter();
+const {
+	notificationState,
+	unreadNotificationsCount,
+	hasNewUnlockedStickers,
+	markNotificationsAsRead,
+	grid,
+} = useAppStore();
 
-	get notificationState() {
-		return this.store.notificationState;
-	}
+const newStickerAnimContainer = ref<HTMLDivElement>();
+const isShowing = ref(false);
+const isLoading = ref(true);
+const feed = ref<ActivityFeedView>();
+const totalStickersCount = ref(0);
+const animatingStickers = ref<StickerAnimationData[]>([]);
 
-	get unreadNotificationsCount() {
-		return this.store.unreadNotificationsCount;
-	}
+useEventSubscription(onNewStickers, _onNewStickersHandler);
 
-	get markNotificationsAsRead() {
-		return this.store.markNotificationsAsRead;
-	}
-
-	get hasNewUnlockedStickers() {
-		return this.store.hasNewUnlockedStickers;
-	}
-
-	get grid() {
-		return this.store.grid;
-	}
-
-	isShowing = false;
-	isLoading = true;
-	feed: ActivityFeedView | null = null;
-	totalStickersCount = 0;
-
-	animatingStickers: StickerAnimationData[] = [];
-
-	readonly Connection = Connection;
-
-	declare $refs: {
-		newStickerAnimContainer: HTMLDivElement;
-	};
-
-	get count() {
-		return this.unreadNotificationsCount;
-	}
-
-	/**
-	 * For mobile, the navbar item should be active when they are on
-	 * notifications page, since there is no popover on mobile.
-	 */
-	get isNavbarItemActive() {
-		return (Screen.isXs && this.$route.name === 'notifications') || this.isShowing;
-	}
-
-	created() {
-		useEventSubscription(onNewStickers, this.onNewStickers.bind(this));
-	}
-
-	/**
-	 * This loads in lazily, so we want to capture it once it bootstraps into
-	 * the store and wrap it with a view.
-	 */
-	@Watch('notificationState', { immediate: true })
-	onNotificationStateChange(state: AppStore['notificationState']['value']) {
-		if (state) {
-			this.feed = new ActivityFeedView(state, {
+/**
+ * This loads in lazily, so we want to capture it once it bootstraps into the
+ * store and wrap it with a view.
+ */
+watch(
+	notificationState,
+	newState => {
+		if (newState) {
+			feed.value = new ActivityFeedView(newState, {
 				slice: 15,
 				shouldScroll: false,
 				shouldShowUserCards: false,
-				// Some default value before the real feed data gets populated on show.
+				// Some default value before the real feed data gets populated
+				// on show.
 				itemsPerPage: 15,
 			});
 		} else {
-			this.feed = null;
+			feed.value = undefined;
 		}
+	},
+	{ immediate: true }
+);
+
+/**
+ * For mobile, the navbar item should be active when they are on notifications
+ * page, since there is no popover on mobile.
+ */
+const isNavbarItemActive = computed(() => {
+	return (Screen.isXs && route.name === 'notifications') || isShowing.value;
+});
+
+/**
+ * When they click the item in the navbar, we don't want to open the popover on
+ * mobile. Let's just go to the notifications page.
+ */
+function onNavbarItemClick(e: Event) {
+	if (Screen.isXs) {
+		e.stopPropagation();
+		router.push({ name: 'notifications' });
 	}
+}
 
-	/**
-	 * When they click the item in the navbar, we don't want to open the popover
-	 * on mobile. Let's just go to the notifications page.
-	 */
-	onNavbarItemClick(e: Event) {
-		if (Screen.isXs) {
-			e.stopPropagation();
-			this.$router.push({ name: 'notifications' });
-		}
-	}
+async function onShow() {
+	isShowing.value = true;
 
-	async onShow() {
-		this.isShowing = true;
+	if (feed.value) {
+		// If the feed isn't bootstrapped with data, then we have to do the
+		// first bootstrapping call to get data into it.
+		if (!feed.value.isBootstrapped) {
+			const $payload = await Api.sendRequest('/web/dash/activity/notifications');
 
-		if (this.feed) {
-			// If the feed isn't bootstrapped with data, then we have to do the
-			// first bootstrapping call to get data into it.
-			if (!this.feed.isBootstrapped) {
-				const $payload = await Api.sendRequest('/web/dash/activity/notifications');
+			const items = Notification.populate($payload.items);
+			feed.value.append(items);
 
-				const items = Notification.populate($payload.items);
-				this.feed.append(items);
-
-				if ($payload.perPage) {
-					this.feed.itemsPerPage = $payload.perPage;
-				}
+			if ($payload.perPage) {
+				feed.value.itemsPerPage = $payload.perPage;
 			}
-			// If it is already bootstrapped, we just want to load new items if
-			// there is any.
-			else if (this.unreadNotificationsCount > 0) {
-				await this.feed.loadNew(this.unreadNotificationsCount);
-			}
-
-			if (this.unreadNotificationsCount > 0) {
-				this.grid?.pushViewNotifications('notifications');
-			}
+		}
+		// If it is already bootstrapped, we just want to load new items if
+		// there is any.
+		else if (unreadNotificationsCount.value > 0) {
+			await feed.value.loadNew(unreadNotificationsCount.value);
 		}
 
-		const countPayload = await Api.sendRequest(`/web/stickers/user-count`);
-		this.totalStickersCount = countPayload.count;
-
-		this.isLoading = false;
-	}
-
-	onHide() {
-		this.isShowing = false;
-	}
-
-	reset() {
-		this.feed?.clear();
-		this.isLoading = true;
-	}
-
-	/**
-	 * Handles the Grid event of new sticker unlocks to show animations.
-	 */
-	private async onNewStickers(stickerImgUrls: string[]) {
-		for (const stickerImgUrl of stickerImgUrls) {
-			const key = Date.now().toString();
-
-			this.animatingStickers.push({
-				key,
-				stickerImg: stickerImgUrl,
-			});
-
-			setTimeout(() => this.removeStickerAnimation(key), 1500);
-
-			// Sleep for slightly less than animation duration (~1.5s).
-			// This slightly overlays the animations which results in a smoother
-			// and faster unlock experience.
-			await sleep(1300);
+		if (unreadNotificationsCount.value > 0) {
+			grid.value?.pushViewNotifications('notifications');
 		}
 	}
 
-	removeStickerAnimation(key: string) {
-		const index = this.animatingStickers.findIndex(i => i.key === key);
-		if (index !== -1) {
-			this.animatingStickers.splice(index, 1);
-		}
+	const countPayload = await Api.sendRequest(`/web/stickers/user-count`);
+	totalStickersCount.value = countPayload.count;
+
+	isLoading.value = false;
+}
+
+function onHide() {
+	isShowing.value = false;
+}
+
+/**
+ * Handles the Grid event of new sticker unlocks to show animations.
+ */
+async function _onNewStickersHandler(stickerImgUrls: string[]) {
+	for (const stickerImgUrl of stickerImgUrls) {
+		const key = Date.now().toString();
+
+		animatingStickers.value.push({
+			key,
+			stickerImg: stickerImgUrl,
+		});
+
+		setTimeout(() => removeStickerAnimation(key), 1500);
+
+		// Sleep for slightly less than animation duration (~1.5s). This
+		// slightly overlays the animations which results in a smoother and
+		// faster unlock experience.
+		await sleep(1300);
+	}
+}
+
+function removeStickerAnimation(key: string) {
+	const index = animatingStickers.value.findIndex(i => i.key === key);
+	if (index !== -1) {
+		animatingStickers.value.splice(index, 1);
 	}
 }
 </script>
@@ -203,10 +168,10 @@ export default class AppShellNotificationPopover extends Vue {
 			@click.capture="onNavbarItemClick"
 		>
 			<span
-				v-if="count"
+				v-if="unreadNotificationsCount"
 				class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
 			>
-				{{ count }}
+				{{ unreadNotificationsCount }}
 			</span>
 			<div v-if="hasNewUnlockedStickers" class="-new-tag anim-fade-enter anim-fade-leave" />
 			<AppJolticon icon="bell-filled" />
@@ -247,7 +212,7 @@ export default class AppShellNotificationPopover extends Vue {
 						</div>
 					</template>
 					<template v-else>
-						<AppActivityFeed :feed="feed" />
+						<AppActivityFeedLazy :feed="feed" />
 					</template>
 				</template>
 			</div>

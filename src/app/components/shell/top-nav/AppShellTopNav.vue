@@ -1,158 +1,95 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { defineAsyncComponent } from '@vue/runtime-core';
-import { setup } from 'vue-class-component';
-import { Inject, Options, Vue } from 'vue-property-decorator';
 import { shouldShowAppPromotion } from '../../../../utils/mobile-app';
 import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
 import { AppClientHistoryNavigator } from '../../../../_common/client/safe-exports';
 import { AppConfigLoaded } from '../../../../_common/config/loaded';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { Environment } from '../../../../_common/environment/environment.service';
-import { AppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
+import { AppObserveDimensions as vAppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { AppTooltip as vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { imageGameJoltLogo, imageJolt } from '../../../img/images';
 import { useAppStore } from '../../../store/index';
-import { ChatStore, ChatStoreKey } from '../../chat/chat-store';
+import { ChatStoreKey } from '../../chat/chat-store';
 import AppSearch from '../../search/AppSearch.vue';
+import { ref, inject, computed } from 'vue';
+import { RouterLink } from 'vue-router';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
 
-@Options({
-	components: {
-		AppPopper,
-		AppShellAccountPopover: defineAsyncComponent(
-			() => import('../account-popover/account-popover.vue')
-		),
-		AppShellFriendRequestPopover: defineAsyncComponent(
-			() => import('../friend-request-popover/friend-request-popover.vue')
-		),
-		AppShellNotificationPopover: defineAsyncComponent(
-			() => import('../notification-popover/notification-popover.vue')
-		),
-		AppSearch,
-		AppThemeSvg,
-		AppConfigLoaded,
-		AppClientHistoryNavigator,
-	},
-	directives: {
-		AppTooltip,
-		AppObserveDimensions,
-	},
-})
-export default class AppShellTopNav extends Vue {
-	store = setup(() => useAppStore());
-	commonStore = setup(() => useCommonStore());
+const AppShellAccountPopover = defineAsyncComponent(
+	() => import('../account-popover/account-popover.vue')
+);
+const AppShellFriendRequestPopover = defineAsyncComponent(
+	() => import('../friend-request-popover/friend-request-popover.vue')
+);
+const AppShellNotificationPopover = defineAsyncComponent(
+	() => import('../notification-popover/AppShellNotificationPopover.vue')
+);
 
-	@Inject({ from: ChatStoreKey })
-	chatStore!: ChatStore;
+const { visibleLeftPane, hasCbar, unreadActivityCount, toggleCbarMenu } = useAppStore();
+const { isUserTimedOut, user, userBootstrapped } = useCommonStore();
+const chatStore = inject(ChatStoreKey)!;
 
-	get app() {
-		return this.commonStore;
+const left = ref<HTMLDivElement>();
+const right = ref<HTMLDivElement>();
+const moreMenuShowing = ref(false);
+const baseMinColWidth = ref<number>();
+
+const chat = computed(() => chatStore.chat);
+const shouldShowSearch = computed(() => !Screen.isXs && !isUserTimedOut.value);
+const shouldShowMenu = computed(() => Screen.isXs && !isUserTimedOut.value);
+const shouldShowExplore = computed(() => !Screen.isXs && user.value && !isUserTimedOut.value);
+const shouldShowMoreMenu = computed(() => !Screen.isXs && !isUserTimedOut.value);
+const humanizedActivityCount = computed(() =>
+	unreadActivityCount.value < 100 ? unreadActivityCount.value : '99+'
+);
+
+const minColWidth = computed(() => {
+	// When we are smaller than this, we just set the search to stretch
+	// full-width with a max-width. It mostly looks fine on sizes smaller
+	// than this.
+	if (Screen.width < 1300) {
+		return undefined;
 	}
 
-	get visibleLeftPane() {
-		return this.store.visibleLeftPane;
-	}
-	get hasSidebar() {
-		return this.store.hasSidebar;
-	}
-	get hasCbar() {
-		return this.store.hasCbar;
-	}
-	get unreadActivityCount() {
-		return this.store.unreadActivityCount;
-	}
+	return baseMinColWidth.value + 'px';
+});
 
-	moreMenuShowing = false;
-	baseMinColWidth: number | null = null;
+// Every time either the left or right column's dimensions changes, we run
+// this function.
+function _checkColWidths() {
+	const leftWidth = left.value?.getBoundingClientRect().width || 0;
+	const rightWidth = right.value?.getBoundingClientRect().width || 0;
 
-	declare $refs: {
-		left: HTMLDivElement;
-		right: HTMLDivElement;
-	};
-
-	readonly Environment = Environment;
-	readonly Screen = Screen;
-	readonly Connection = Connection;
-	readonly trackAppPromotionClick = trackAppPromotionClick;
-	readonly imageJolt = imageJolt;
-	readonly imageGameJoltLogo = imageGameJoltLogo;
-
-	get chat() {
-		return this.chatStore.chat!;
+	// We want to size both columns to be the same width, so choose the
+	// largest among them.
+	let max = Math.max(leftWidth, rightWidth);
+	if (!max) {
+		baseMinColWidth.value = undefined;
+		return;
 	}
 
-	get isTimedOut() {
-		return this.app.isUserTimedOut;
+	// Page content is centered within a column that is offset by the cbar (value of $shell-cbar-width),
+	// so this does the same offseting within the top nav for the search bar
+	// to align properly in the center with the page content.
+	if (hasCbar.value) {
+		max -= 70;
 	}
 
-	get shouldShowSearch() {
-		return !Screen.isXs && !this.isTimedOut;
-	}
-
-	get shouldShowMenu() {
-		return Screen.isXs && !this.isTimedOut;
-	}
-
-	get shouldShowExplore() {
-		return !Screen.isXs && this.app.user && !this.isTimedOut;
-	}
-
-	get shouldShowMoreMenu() {
-		return !Screen.isXs && !this.isTimedOut;
-	}
-
-	get shouldShowAppPromotion() {
-		return shouldShowAppPromotion(this.$route);
-	}
-
-	get humanizedActivityCount() {
-		return this.unreadActivityCount < 100 ? this.unreadActivityCount : '99+';
-	}
-
-	get minColWidth() {
-		// When we are smaller than this, we just set the search to stretch
-		// full-width with a max-width. It mostly looks fine on sizes smaller
-		// than this.
-		if (Screen.width < 1300) {
-			return null;
-		}
-
-		return this.baseMinColWidth + 'px';
-	}
-
-	// Every time either the left or right column's dimensions changes, we run
-	// this function.
-	checkColWidths() {
-		const left = (this.$refs.left && this.$refs.left.getBoundingClientRect().width) || 0;
-		const right = (this.$refs.right && this.$refs.right.getBoundingClientRect().width) || 0;
-
-		// We want to size both columns to be the same width, so choose the
-		// largest among them.
-		let max = Math.max(left, right);
-		if (!max) {
-			this.baseMinColWidth = null;
-			return;
-		}
-
-		// Page content is centered within a column that is offset by the cbar (value of $shell-cbar-width),
-		// so this does the same offseting within the top nav for the search bar
-		// to align properly in the center with the page content.
-		if (this.hasCbar) {
-			max -= 70;
-		}
-
-		this.baseMinColWidth = max;
-	}
+	baseMinColWidth.value = max;
 }
 </script>
 
 <template>
 	<nav id="shell-top-nav" class="navbar backdrop-affected">
 		<div ref="left" class="navbar-left" :style="{ 'min-width': minColWidth }">
-			<div v-app-observe-dimensions="checkColWidths" class="-col">
+			<div v-app-observe-dimensions="_checkColWidths" class="-col">
 				<a
 					v-if="shouldShowMenu"
 					v-app-track-event="`top-nav:cbar:toggle`"
@@ -160,11 +97,11 @@ export default class AppShellTopNav extends Vue {
 					:class="{
 						active: !!visibleLeftPane,
 					}"
-					@click="store.toggleCbarMenu()"
+					@click="toggleCbarMenu()"
 				>
 					<AppJolticon icon="menu" />
 					<div
-						v-if="chatStore.chat && chat.roomNotificationsCount > 0"
+						v-if="chat && chat.roomNotificationsCount > 0"
 						class="-notification-chat notification-tag tag tag-highlight"
 					>
 						{{ chat.roomNotificationsCount }}
@@ -174,7 +111,7 @@ export default class AppShellTopNav extends Vue {
 				<!-- History Navigator (for desktop app) -->
 				<AppClientHistoryNavigator />
 
-				<router-link
+				<RouterLink
 					v-app-track-event="`top-nav:main-menu:home`"
 					class="navbar-item"
 					:class="{
@@ -196,9 +133,9 @@ export default class AppShellTopNav extends Vue {
 					>
 						{{ humanizedActivityCount }}
 					</span>
-				</router-link>
+				</RouterLink>
 
-				<router-link
+				<RouterLink
 					v-if="shouldShowExplore"
 					v-app-track-event="`top-nav:main-menu:discover`"
 					class="navbar-item"
@@ -209,13 +146,13 @@ export default class AppShellTopNav extends Vue {
 					<strong class="text-upper">
 						<AppTranslate>Explore</AppTranslate>
 					</strong>
-				</router-link>
+				</RouterLink>
 
-				<router-link
+				<RouterLink
 					v-if="!Screen.isXs"
 					v-app-track-event="`top-nav:main-menu:store`"
 					class="navbar-item"
-					:class="{ active: ($route.name || '').startsWith('discover.games.') }"
+					:class="{ active: String($route.name).startsWith('discover.games.') }"
 					:to="{
 						name: 'discover.games.list._fetch',
 						params: { section: null },
@@ -224,7 +161,7 @@ export default class AppShellTopNav extends Vue {
 					<strong class="text-upper">
 						<AppTranslate>Store</AppTranslate>
 					</strong>
-				</router-link>
+				</RouterLink>
 
 				<AppPopper
 					v-if="shouldShowMoreMenu"
@@ -241,7 +178,7 @@ export default class AppShellTopNav extends Vue {
 
 					<template #popover>
 						<div class="list-group-dark">
-							<router-link
+							<RouterLink
 								class="list-group-item has-icon offline-disable"
 								:to="{ name: 'landing.app' }"
 								@click="
@@ -253,9 +190,9 @@ export default class AppShellTopNav extends Vue {
 							>
 								<AppJolticon icon="phone" />
 								<AppTranslate>Get the Mobile App</AppTranslate>
-							</router-link>
+							</RouterLink>
 
-							<router-link
+							<RouterLink
 								v-if="!GJ_IS_DESKTOP_APP"
 								class="list-group-item has-icon offline-disable"
 								:to="{ name: 'landing.client' }"
@@ -268,16 +205,16 @@ export default class AppShellTopNav extends Vue {
 							>
 								<AppJolticon icon="client" />
 								<AppTranslate>Get the Desktop App</AppTranslate>
-							</router-link>
+							</RouterLink>
 
-							<router-link
+							<RouterLink
 								v-app-track-event="`sidebar:forums`"
 								class="list-group-item has-icon offline-disable"
 								:to="{ name: 'forums.landing.overview' }"
 							>
 								<AppJolticon icon="forums" />
 								<AppTranslate>Forums</AppTranslate>
-							</router-link>
+							</RouterLink>
 						</div>
 					</template>
 				</AppPopper>
@@ -292,17 +229,17 @@ export default class AppShellTopNav extends Vue {
 		</div>
 
 		<!--
-			Hide this until we load the user data in, otherwise it'll flash
-			login/join buttons.
-			https://github.com/gamejolt/issue-tracker/issues/382
+		Hide this until we load the user data in, otherwise it'll flash
+		login/join buttons.
+		https://github.com/gamejolt/issue-tracker/issues/382
 		-->
 		<div
-			v-if="app.userBootstrapped && !isTimedOut"
+			v-if="userBootstrapped && !isUserTimedOut"
 			ref="right"
 			class="navbar-right"
 			:style="{ 'min-width': minColWidth }"
 		>
-			<template v-if="Screen.isSm && shouldShowAppPromotion">
+			<template v-if="Screen.isSm && shouldShowAppPromotion($route)">
 				<div class="-button">
 					<AppButton
 						:to="{ name: 'landing.app' }"
@@ -333,8 +270,8 @@ export default class AppShellTopNav extends Vue {
 				</div>
 			</template>
 
-			<div v-app-observe-dimensions="checkColWidths" class="-col">
-				<template v-if="app.user">
+			<div v-app-observe-dimensions="_checkColWidths" class="-col">
+				<template v-if="user">
 					<!-- Notifications -->
 					<AppShellNotificationPopover />
 
@@ -357,7 +294,7 @@ export default class AppShellTopNav extends Vue {
 				</template>
 
 				<!-- Login/Join Buttons -->
-				<template v-if="!app.user">
+				<template v-if="!user">
 					<ul class="navbar-items">
 						<li>
 							<a

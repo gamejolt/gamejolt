@@ -33,30 +33,6 @@ export interface ActivityFeedStateOptions {
 }
 
 export class ActivityFeedState {
-	feedType: 'Notification' | 'EventItem';
-	feedName: string;
-	items: ActivityFeedItem[] = [];
-	users: { [k: number]: User } = {};
-	games: { [k: number]: Game } = {};
-	notificationWatermark = 0; // Timestamp.
-	viewedItems: string[] = [];
-	isBootstrapped = false;
-	isLoadingMore = false;
-	isLoadingNew = false;
-	reachedEnd = false;
-	suppressTicks = false;
-	readonly loadMoreUrl: string;
-
-	get startScrollId() {
-		const firstPost = this.items[0];
-		return firstPost ? firstPost.scrollId : undefined;
-	}
-
-	get endScrollId() {
-		const lastFeedItem = this.items[this.items.length - 1];
-		return lastFeedItem ? lastFeedItem.scrollId : undefined;
-	}
-
 	constructor(options: ActivityFeedStateOptions) {
 		this.feedType = options.type;
 		this.feedName = options.name;
@@ -66,6 +42,31 @@ export class ActivityFeedState {
 		if (typeof options.notificationWatermark !== 'undefined') {
 			this.notificationWatermark = options.notificationWatermark;
 		}
+	}
+
+	feedType: 'Notification' | 'EventItem';
+	feedName: string;
+	readonly loadMoreUrl: string;
+	suppressTicks: boolean;
+
+	items: ActivityFeedItem[] = [];
+	users: { [k: number]: User } = {};
+	games: { [k: number]: Game } = {};
+	notificationWatermark = 0; // Timestamp.
+	viewedItems: string[] = [];
+	isBootstrapped = false;
+	isLoadingMore = false;
+	isLoadingNew = false;
+	reachedEnd = false;
+
+	get startScrollId() {
+		const firstPost = this.items[0];
+		return firstPost ? firstPost.scrollId : undefined;
+	}
+
+	get endScrollId() {
+		const lastFeedItem = this.items[this.items.length - 1];
+		return lastFeedItem ? lastFeedItem.scrollId : undefined;
 	}
 
 	clear() {

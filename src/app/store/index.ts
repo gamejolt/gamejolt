@@ -233,17 +233,15 @@ export function createAppStore({
 	}
 
 	async function loadNotificationState() {
-		const state = new ActivityFeedState({
+		notificationState.value = new ActivityFeedState({
 			type: 'Notification',
 			name: 'notification',
 			url: `/web/dash/activity/more/notifications`,
 		});
-
-		_setNotificationState(state);
 	}
 
 	async function clearNotificationState() {
-		_setNotificationState(undefined);
+		notificationState.value = undefined;
 	}
 
 	async function markNotificationsAsRead() {
@@ -485,10 +483,6 @@ export function createAppStore({
 		}
 
 		grid.value = newGrid;
-	}
-
-	function _setNotificationState(state?: ActivityFeedState) {
-		notificationState.value = state;
 	}
 
 	function _resetNotificationWatermark() {

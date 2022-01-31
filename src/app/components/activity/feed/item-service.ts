@@ -5,7 +5,7 @@ import { Notification } from '../../../../_common/notification/notification-mode
 export type ActivityFeedInput = Notification | EventItem;
 
 export class ActivityFeedItem {
-	feedItem: ActivityFeedInput;
+	constructor(public feedItem: ActivityFeedInput) {}
 
 	get id() {
 		return this.feedItem.id + '';
@@ -21,10 +21,6 @@ export class ActivityFeedItem {
 
 	get scrollId() {
 		return this.feedItem.scroll_id as string;
-	}
-
-	constructor(sourceItem: ActivityFeedInput) {
-		this.feedItem = sourceItem;
 	}
 
 	isEqual(other: ActivityFeedItem) {
