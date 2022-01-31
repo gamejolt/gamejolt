@@ -10,5 +10,6 @@
 		"rebornix.project-snippets",
 		"dbaeumer.vscode-eslint",
 		"johnsoncodehk.volar"
-	]
+	],
+	"unwantedRecommendations": ["octref.vetur", "vscode.typescript-language-features"]
 }
