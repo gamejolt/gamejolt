@@ -218,6 +218,22 @@ export default defineConfig(async configEnv => {
 
 		root: 'src',
 
+		cacheDir: (() => {
+			let dir = path.resolve(__dirname, 'node_modules') + path.sep;
+
+			if (gjOpts.platform === 'web' || gjOpts.platform === 'ssr') {
+				dir += '.vite';
+			} else {
+				dir += `.vite-${gjOpts.platform}`;
+			}
+
+			if (isInDocker) {
+				dir += '-docker';
+			}
+
+			return dir;
+		})(),
+
 		base: (() => {
 			// When watching simply return root.
 			// This is a vite default.
