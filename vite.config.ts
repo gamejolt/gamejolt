@@ -17,8 +17,7 @@ type ViteUserConfig = ViteUserConfigActual & {
 	};
 };
 
-type Defined<T> = T extends undefined ? never : T;
-type RollupOptions = Defined<Defined<ViteUserConfig['build']>['rollupOptions']>;
+type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'];
 
 // https://vitejs.dev/config/
 export default defineConfig(async configEnv => {
@@ -41,7 +40,9 @@ export default defineConfig(async configEnv => {
 	const isInDocker = !!process.env['GAMEJOLT_IN_DOCKER'];
 	const onlyInDocker = emptyUnless(() => isInDocker);
 	const onlyInDesktopApp = emptyUnless(() => gjOpts.platform === 'desktop');
+	const onlyInProdBuilds = emptyUnless(() => gjOpts.buildType === 'production');
 
+	// These will be imported in all styl files.
 	const stylusOptions = {
 		imports: [
 			// Import the section variables.
@@ -55,6 +56,12 @@ export default defineConfig(async configEnv => {
 
 	const htmlResolver = viteHtmlResolve();
 
+	// In order to do a full build of the frontend with all the sections
+	// we need to build into the same directory. For index.html this is an issue
+	// because the output filename is not hashed, so the different section's html
+	// files will overwrite each other.
+	// For this reason, simply rename index.html after the section name.
+	// (app section remains index.html since it is our 'main' section. Purely semantics)
 	const indexHtml = path.resolve(__dirname, 'src', 'index.html');
 	let inputHtmlFile = indexHtml;
 	if (command === 'build' && gjOpts.section !== 'app') {
@@ -278,10 +285,17 @@ export default defineConfig(async configEnv => {
 			}),
 
 			rollupOptions: {
-				output: {
-					chunkFileNames: 'assets/[hash].js',
-					assetFileNames: 'assets/[hash].[ext]',
-				},
+				...onlyInProdBuilds<RollupOptions>({
+					// By default vite outputs filenames with their chunks,
+					// but some ad blockers are outrageously aggressive with their
+					// filter lists, for example blocking any file that contains the
+					// string 'follow-widget'. It'd ridiculous.
+					// For this reason, do not output filenames in prod builds.
+					output: {
+						chunkFileNames: 'assets/[hash].js',
+						assetFileNames: 'assets/[hash].[ext]',
+					},
+				}),
 
 				...notInSSR<RollupOptions>({
 					// When building for ssr the entrypoint is specified in build.ssr,
@@ -306,6 +320,7 @@ export default defineConfig(async configEnv => {
 				gjOpts.platform === 'ssr' ? path.join('build', 'server') : path.join('build', 'web')
 			),
 
+			// TODO(david) document why this was set to 'terser'.
 			minify: 'terser',
 
 			// The SSR manifest is used to keep track of which static assets are
