@@ -128,9 +128,9 @@ export default class RouteRetrieve extends BaseRouteComponent {
 
 			<p>
 				<template v-if="!resourceTitle">
-					<AppTranslate
-						>Please enter your email address to retrieve your keys.</AppTranslate
-					>
+					<AppTranslate>
+						Please enter your email address to retrieve your keys.
+					</AppTranslate>
 				</template>
 				<template v-if="resourceTitle">
 					<span v-translate="{ resource: resourceTitle }">
@@ -139,6 +139,7 @@ export default class RouteRetrieve extends BaseRouteComponent {
 						.
 					</span>
 				</template>
+				{{ ' ' }}
 				<AppTranslate>We will email you a link to your download(s).</AppTranslate>
 			</p>
 
