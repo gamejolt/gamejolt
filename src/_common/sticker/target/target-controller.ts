@@ -4,11 +4,11 @@ import {
 	inject,
 	InjectionKey,
 	provide,
+	reactive,
 	ref,
 	Ref,
 	ShallowRef,
 	shallowRef,
-	toRaw,
 	WritableComputedRef,
 } from 'vue';
 import { Comment } from '../../comment/comment-model';
@@ -47,7 +47,7 @@ export function createStickerTargetController(
 	parent?: StickerTargetController | null,
 	isLive = false
 ) {
-	const _parent = toRaw(parent || null);
+	model = reactive(model) as StickerTargetModel;
 	const isInview = ref(false);
 	const hasLoadedStickers = ref(false);
 
@@ -69,7 +69,7 @@ export function createStickerTargetController(
 			}
 
 			return Boolean(
-				_shouldShow.value || _parent?.shouldShow.value || layer.value?.isShowingDrawer.value
+				_shouldShow.value || parent?.shouldShow.value || layer.value?.isShowingDrawer.value
 			);
 		},
 		set: value => {
@@ -98,12 +98,12 @@ export function createStickerTargetController(
 		children,
 		shouldLoad,
 		model,
-		parent: _parent,
+		parent: parent || null,
 		isLive,
 	};
 
-	if (_parent) {
-		_parent.children.value.push(c);
+	if (parent) {
+		parent.children.value.push(c);
 	}
 
 	return c;

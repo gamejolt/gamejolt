@@ -526,9 +526,9 @@ export default class RouteFireside extends BaseRouteComponent {
 						</div>
 						<div class="text-center">
 							<h3>
-								<AppTranslate
-									>You are blocked from joining this fireside</AppTranslate
-								>
+								<AppTranslate>
+									You are blocked from joining this fireside
+								</AppTranslate>
 							</h3>
 							<p>
 								<router-link :to="{ name: 'home' }">

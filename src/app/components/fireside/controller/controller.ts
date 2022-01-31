@@ -1,5 +1,5 @@
 import { InjectionKey, provide } from '@vue/runtime-core';
-import { computed, inject, ref, shallowReactive, shallowRef } from 'vue';
+import { computed, inject, reactive, ref, shallowReactive } from 'vue';
 import { Router } from 'vue-router';
 import { getAbsoluteLink } from '../../../../utils/router';
 import { getCurrentServerTime } from '../../../../utils/server-time';
@@ -42,10 +42,11 @@ type Options = { isMuted?: boolean };
 export type FiresideController = ReturnType<typeof createFiresideController>;
 
 export function createFiresideController(fireside: Fireside, options: Options = {}) {
+	fireside = reactive(fireside) as Fireside;
 	const stickerTargetController = createStickerTargetController(fireside, undefined, true);
 	const isMuted = options.isMuted ?? false;
 
-	const rtc = shallowRef<FiresideRTC>();
+	const rtc = ref<FiresideRTC>();
 	const status = ref<RouteStatus>('initial');
 	const onRetry = ref<() => void>();
 
