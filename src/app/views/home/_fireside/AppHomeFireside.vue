@@ -89,7 +89,7 @@ async function startFireside() {
 			<AppFiresideBadge :fireside="featuredFireside" show-preview />
 		</template>
 
-		<div v-if="firesides.length || isLoading" class="-list">
+		<div v-if="displayFiresides.length || isLoading" class="-list">
 			<component
 				:is="shouldDisplaySingleRow ? AppScrollScroller : 'div'"
 				:class="{ '-scroller': shouldDisplaySingleRow }"
