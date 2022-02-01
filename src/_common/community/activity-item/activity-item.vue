@@ -1,17 +1,187 @@
-<script lang="ts" src="./activity-item"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { RouteLocationRaw } from 'vue-router';
+import { formatDate } from '../../filters/date';
+import { Fireside } from '../../fireside/fireside.model';
+import { FiresidePost } from '../../fireside/post/post-model';
+import { Game } from '../../game/game.model';
+import { Screen } from '../../screen/screen-service';
+import { AppTimeAgo } from '../../time/ago/ago';
+import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { getSingleReasonText } from '../../user/action-reasons';
+import { UserBlock } from '../../user/block/block.model';
+import AppUserAvatar from '../../user/user-avatar/user-avatar.vue';
+import { User } from '../../user/user.model';
+import { CommunityChannel } from '../channel/channel.model';
+import { CommunityCompetition } from '../competition/competition.model';
+import { CommunityCompetitionEntry } from '../competition/entry/entry.model';
+import { CommunityActivityItem } from './activity-item.model';
+
+@Options({
+	components: {
+		AppTimeAgo,
+		AppUserAvatar,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppCommunityActivityItem extends Vue {
+	@Prop({ type: Object, required: true }) item!: CommunityActivityItem;
+	@Prop({ type: Boolean, required: true }) usersplit!: boolean;
+	@Prop({ type: Boolean, required: true }) showIcon!: boolean;
+
+	readonly Screen = Screen;
+	readonly formatDate = formatDate;
+	readonly CommunityActivityItem = CommunityActivityItem;
+
+	get loggedOn() {
+		return formatDate(this.item.added_on, 'medium');
+	}
+
+	get shouldShowIcon() {
+		return !!this.icon && this.showIcon;
+	}
+
+	get icon() {
+		return this.item.getTypeIcon()?.icon;
+	}
+
+	get color() {
+		return this.item.getTypeIcon()?.color;
+	}
+
+	get actionIsFiresidePost() {
+		return this.item.action_resource instanceof FiresidePost;
+	}
+
+	get actionIsUser() {
+		return this.item.action_resource instanceof User;
+	}
+
+	get isToday() {
+		return (
+			formatDate(this.item.added_on, 'mediumDate') === formatDate(Date.now(), 'mediumDate')
+		);
+	}
+
+	get isYesterday() {
+		const oneDay = 24 * 60 * 60 * 1000;
+		return (
+			formatDate(this.item.added_on, 'mediumDate') ===
+			formatDate(Date.now() - oneDay, 'mediumDate')
+		);
+	}
+
+	get actionTo(): RouteLocationRaw | undefined {
+		if (this.item.action_resource instanceof FiresidePost) {
+			return this.item.action_resource.routeLocation;
+		} else if (this.item.action_resource instanceof User) {
+			return this.item.action_resource.url;
+		} else if (this.item.action_resource instanceof UserBlock) {
+			return this.item.action_resource.user.url;
+		} else if (this.item.action_resource instanceof CommunityChannel) {
+			return {
+				name: 'communities.view.channel',
+				params: {
+					channel: this.item.action_resource.title,
+				},
+			};
+		} else if (this.item.action_resource instanceof Game) {
+			return this.item.action_resource.routeLocation;
+		} else if (this.item.action_resource instanceof CommunityCompetition) {
+			// For community competitions, the channel title is encoded in the extra data.
+			const channelTitle = this.getExtraData('channel-title');
+			return {
+				name: 'communities.view.channel',
+				params: {
+					channel: channelTitle,
+				},
+			};
+		} else if (this.item.action_resource instanceof CommunityCompetitionEntry) {
+			// For community competition entries, the channel title is encoded in the extra data.
+			const channelTitle = this.getExtraData('channel-title');
+			return {
+				name: 'communities.view.channel.entries',
+				params: {
+					channel: channelTitle,
+				},
+				hash: '#entry-' + this.item.action_resource.id,
+			};
+		} else if (this.item.action_resource instanceof Fireside) {
+			return this.item.action_resource.location;
+		}
+	}
+
+	get actionText() {
+		if (this.item.action_resource instanceof FiresidePost) {
+			return this.item.action_resource.getShortLead();
+		} else if (this.item.action_resource instanceof User) {
+			return '@' + this.item.action_resource.username;
+		} else if (this.item.action_resource instanceof UserBlock) {
+			return '@' + this.item.action_resource.user.username;
+		} else if (this.item.action_resource instanceof CommunityChannel) {
+			return this.item.action_resource.title;
+		} else if (this.item.action_resource instanceof Game) {
+			return this.item.action_resource.title;
+		} else if (this.item.action_resource instanceof CommunityCompetition) {
+			// For community competitions, the channel title is encoded in the extra data.
+			const channelTitle = this.getExtraData('channel-title');
+			return channelTitle;
+		} else if (this.item.action_resource instanceof CommunityCompetitionEntry) {
+			return this.item.action_resource.resource.title;
+		} else if (this.item.action_resource instanceof Fireside) {
+			return this.item.action_resource.title;
+		}
+	}
+
+	get shouldShowActionSecondLine() {
+		return !!this.actionTo || !!this.actionText;
+	}
+
+	get extraData(): Record<string, any> {
+		return JSON.parse(this.item.extra_data);
+	}
+
+	get reasonText() {
+		// The user block resource comes with a reason.
+		if (this.item.action_resource instanceof UserBlock) {
+			return getSingleReasonText(this.item.action_resource.reason);
+		}
+
+		// Some other actions might encode a "reason" field in the extra data.
+		const reason = this.getExtraData('reason');
+		if (!reason) {
+			return null;
+		}
+
+		return getSingleReasonText(reason);
+	}
+
+	get hasReason() {
+		return !!this.reasonText;
+	}
+
+	getExtraData(key: string) {
+		return this.extraData[key];
+	}
+}
+</script>
 
 <template>
 	<div class="-item" :class="{ '-item-usersplit': usersplit }">
 		<span v-if="!Screen.isXs" class="-left">
-			<app-user-avatar v-if="usersplit" class="-avatar" :user="item.user" />
+			<AppUserAvatar v-if="usersplit" class="-avatar" :user="item.user" />
 			<span
 				v-else
 				v-app-tooltip="
-					date(item.added_on, 'fullDate') + ' ' + date(item.added_on, 'shortTime')
+					formatDate(item.added_on, 'fullDate') +
+					' ' +
+					formatDate(item.added_on, 'shortTime')
 				"
 				class="-time"
 			>
-				{{ item.added_on | date('shortTime') }}
+				{{ formatDate(item.added_on, 'shortTime') }}
 			</span>
 		</span>
 
@@ -23,8 +193,8 @@
 				<!-- This is for when the user that took the action is not available anymore. -->
 				<template v-else>
 					<span class="text-muted">
-						<translate>Someone</translate>
-						<app-jolticon
+						<AppTranslate>Someone</AppTranslate>
+						<AppJolticon
 							v-app-tooltip="$gettext(`This user is no longer active.`)"
 							icon="help-circle"
 						/>
@@ -36,24 +206,26 @@
 					</template>
 					<span
 						v-app-tooltip="
-							date(item.added_on, 'fullDate') + ' ' + date(item.added_on, 'shortTime')
+							formatDate(item.added_on, 'fullDate') +
+							' ' +
+							formatDate(item.added_on, 'shortTime')
 						"
 						class="-user-sub-date"
 					>
 						<span v-if="isToday">
-							<translate>Today</translate>
+							<AppTranslate>Today</AppTranslate>
 						</span>
 						<span v-else-if="isYesterday">
-							<translate>Yesterday</translate>
+							<AppTranslate>Yesterday</AppTranslate>
 						</span>
 						<span
 							v-if="isToday || isYesterday"
-							v-translate="{ time: date(item.added_on, 'shortTime') }"
+							v-translate="{ time: formatDate(item.added_on, 'shortTime') }"
 						>
 							at %{ time }
 						</span>
 						<span v-else>
-							{{ date(item.added_on, 'shortDate') }}
+							{{ formatDate(item.added_on, 'shortDate') }}
 						</span>
 					</span>
 				</span>
@@ -67,7 +239,7 @@
 						'-icon-other': color !== 'notice' && color !== 'theme',
 					}"
 				>
-					<app-jolticon v-if="shouldShowIcon" :icon="icon" />
+					<AppJolticon v-if="shouldShowIcon" :icon="icon" />
 				</span>
 
 				<div class="-action">
@@ -304,8 +476,8 @@
 					<template v-if="hasReason">
 						<br />
 						<span class="-reason-row">
-							<translate>Reason: </translate>
-							<i>{{ reasonText }}</i>
+							<AppTranslate>Reason:</AppTranslate>
+							<i>{{ ' ' + reasonText }}</i>
 						</span>
 					</template>
 
@@ -327,9 +499,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $-left-size = 54px
 $-avatar-size = 40px
 

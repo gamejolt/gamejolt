@@ -7,18 +7,21 @@ type DispatchFunc = (tr: Transaction<ContentEditorSchema>) => void;
 
 export class ContentListService {
 	/**
-	 * Moves a list item one level up in the list indentation, but does NOT have the ability to lift it out of the list completely.
+	 * Moves a list item one level up in the list indentation, but does NOT have
+	 * the ability to lift it out of the list completely.
 	 *
-	 * Copied (and modified for TS) from https://github.com/ProseMirror/prosemirror-schema-list/blob/master/src/schema-list.js
+	 * Copied (and modified for TS) from
+	 * https://github.com/ProseMirror/prosemirror-schema-list/blob/master/src/schema-list.js
 	 *
 	 * Also includes the liftToOuterList function defined below.
 	 */
 	public static liftListItem(itemType: NodeType<ContentEditorSchema>) {
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const that = this;
 
 		return function(state: EditorState<ContentEditorSchema>, dispatch: DispatchFunc) {
-			let { $from, $to } = state.selection;
-			let range = $from.blockRange(
+			const { $from, $to } = state.selection;
+			const range = $from.blockRange(
 				$to,
 				node => node.childCount > 0 && node.firstChild!.type === itemType
 			);

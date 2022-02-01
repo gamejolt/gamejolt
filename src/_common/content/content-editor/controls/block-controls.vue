@@ -1,4 +1,155 @@
-<script lang="ts" src="./block-controls"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
+import { showErrorGrowl } from '../../../growls/growls.service';
+import { Screen } from '../../../screen/screen-service';
+import { AppTooltip } from '../../../tooltip/tooltip-directive';
+import {
+	editorInsertBlockquote,
+	editorInsertBulletList,
+	editorInsertCodeBlock,
+	editorInsertEmbed,
+	editorInsertHr,
+	editorInsertNumberedList,
+	editorInsertSpoiler,
+	editorUploadImageFile,
+	useContentEditorController,
+} from '../content-editor-controller';
+
+@Options({
+	components: {},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppContentEditorBlockControls extends Vue {
+	controller = setup(() => useContentEditorController()!);
+
+	private oldTop = 0;
+
+	readonly Screen = Screen;
+
+	declare $refs: {
+		container: HTMLElement;
+	};
+
+	get contextCapabilities() {
+		return this.controller.contextCapabilities;
+	}
+
+	get view() {
+		return this.controller.view!;
+	}
+
+	get shouldShow() {
+		return this.visible && this.top >= -24 && !this.isOverflowingBottom;
+	}
+
+	get isOverflowingBottom() {
+		return this.controller.window.height - this.top < 24;
+	}
+
+	get collapsed() {
+		return this.controller.controlsCollapsed;
+	}
+
+	get visible() {
+		if (!this.controller.scope.isFocused || this.controller.scope.hasSelection) {
+			return false;
+		}
+
+		return this.controller.capabilities.hasBlockControls;
+	}
+
+	get top() {
+		// Use the previous value if our new scope doesn't allow block controls.
+		if (!this.visible) {
+			return this.oldTop;
+		}
+
+		const {
+			scope: { cursorStartHeight },
+			relativeCursorTop,
+		} = this.controller;
+
+		// AppButton line-height is ~36px by default
+		const buttonHeight = 36;
+
+		const heightDiff = buttonHeight - cursorStartHeight;
+		this.oldTop = relativeCursorTop - heightDiff / 2;
+		return this.oldTop;
+	}
+
+	onClickExpand() {
+		this.controller.controlsCollapsed = !this.controller.controlsCollapsed;
+	}
+
+	onClickMedia() {
+		const input = document.createElement('input');
+		input.type = 'file';
+		input.accept = '.png,.jpg,.jpeg,.gif,.webp';
+		input.multiple = true;
+
+		input.onchange = e => {
+			if (e.target instanceof HTMLInputElement) {
+				const files = e.target.files;
+				if (files !== null) {
+					for (let i = 0; i < files.length; i++) {
+						const file = files[i];
+						const result = editorUploadImageFile(this.controller, file);
+						if (!result) {
+							showErrorGrowl({
+								title: this.$gettext('Invalid file selected'),
+								message: this.$gettextInterpolate(
+									'"%{ filename }" is not a valid image file.',
+									{ filename: file.name }
+								),
+							});
+						}
+					}
+				}
+			}
+		};
+
+		input.click();
+	}
+
+	onClickEmbed() {
+		this.controller.controlsCollapsed = true;
+		editorInsertEmbed(this.controller);
+	}
+
+	onClickCodeBlock() {
+		this.controller.controlsCollapsed = true;
+		editorInsertCodeBlock(this.controller);
+	}
+
+	onClickBlockquote() {
+		this.controller.controlsCollapsed = true;
+		editorInsertBlockquote(this.controller);
+	}
+
+	onClickHr() {
+		this.controller.controlsCollapsed = true;
+		editorInsertHr(this.controller);
+	}
+
+	onClickSpoiler() {
+		this.controller.controlsCollapsed = true;
+		editorInsertSpoiler(this.controller);
+	}
+
+	onClickBulletList() {
+		this.controller.controlsCollapsed = true;
+		editorInsertBulletList(this.controller);
+	}
+
+	onClickOrderedList() {
+		this.controller.controlsCollapsed = true;
+		editorInsertNumberedList(this.controller);
+	}
+}
+</script>
 
 <template>
 	<div
@@ -9,8 +160,8 @@
 			left: '-32px',
 		}"
 		:class="{
-			'controls-desktop': !Screen.isXs,
-			'controls-mobile': Screen.isXs,
+			'-controls-desktop': !Screen.isXs,
+			'-controls-mobile': Screen.isXs,
 		}"
 		tabindex="0"
 	>
@@ -23,77 +174,77 @@
 						v-if="contextCapabilities.media"
 						v-app-tooltip="$gettext('Add an image or GIF')"
 						type="button"
-						class="control-button"
+						class="-mobile-control"
 						@click="onClickMedia"
 					>
-						<app-jolticon icon="screenshot" />
+						<AppJolticon icon="screenshot" />
 					</button>
 					<button
 						v-if="contextCapabilities.hasAnyEmbed"
 						v-app-tooltip="$gettext('Add an embed')"
 						type="button"
-						class="control-button"
+						class="-mobile-control"
 						@click="onClickEmbed"
 					>
-						<app-jolticon icon="embed" />
+						<AppJolticon icon="embed" />
 					</button>
 					<button
 						v-if="contextCapabilities.codeBlock"
 						v-app-tooltip="$gettext('Add a code block')"
 						type="button"
-						class="control-button"
+						class="-mobile-control"
 						@click="onClickCodeBlock"
 					>
-						<app-jolticon icon="brackets" />
+						<AppJolticon icon="brackets" />
 					</button>
 					<button
 						v-if="contextCapabilities.blockquote"
 						v-app-tooltip="$gettext('Add a quote')"
 						type="button"
-						class="control-button"
+						class="-mobile-control"
 						@click="onClickBlockquote"
 					>
-						<app-jolticon icon="blockquote" />
+						<AppJolticon icon="blockquote" />
 					</button>
 					<button
 						v-if="contextCapabilities.spoiler"
 						v-app-tooltip="$gettext('Add a spoiler')"
 						type="button"
-						class="control-button"
+						class="-mobile-control"
 						@click="onClickSpoiler"
 					>
-						<app-jolticon icon="inactive" />
+						<AppJolticon icon="inactive" />
 					</button>
 					<button
 						v-if="contextCapabilities.hr"
 						v-app-tooltip="$gettext('Add a separator')"
 						type="button"
-						class="control-button"
+						class="-mobile-control"
 						@click="onClickHr"
 					>
-						<app-jolticon icon="hr" />
+						<AppJolticon icon="hr" />
 					</button>
 					<button
 						v-if="contextCapabilities.list"
 						v-app-tooltip="$gettext('Add a bulleted list')"
 						type="button"
-						class="control-button"
+						class="-mobile-control"
 						@click="onClickBulletList"
 					>
-						<app-jolticon icon="bullet-list" />
+						<AppJolticon icon="bullet-list" />
 					</button>
 					<button
 						v-if="contextCapabilities.list"
 						v-app-tooltip="$gettext('Add a numbered list')"
 						type="button"
-						class="control-button"
+						class="-mobile-control"
 						@click="onClickOrderedList"
 					>
-						<app-jolticon icon="numbered-list" />
+						<AppJolticon icon="numbered-list" />
 					</button>
 				</template>
 				<template v-else>
-					<app-button
+					<AppButton
 						class="-add-button"
 						:class="{
 							'-add-button-rotated': !collapsed,
@@ -106,73 +257,73 @@
 					<transition name="fade">
 						<span v-if="!collapsed">
 							<span class="dot-separator" />
-							<app-button
+							<AppButton
 								v-if="contextCapabilities.media"
 								v-app-tooltip="$gettext('Add an image or GIF')"
-								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
+								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="screenshot"
 								@click="onClickMedia"
 							/>
-							<app-button
+							<AppButton
 								v-if="contextCapabilities.hasAnyEmbed"
 								v-app-tooltip="$gettext('Add an embed')"
-								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
+								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="embed"
 								@click="onClickEmbed"
 							/>
-							<app-button
+							<AppButton
 								v-if="contextCapabilities.codeBlock"
 								v-app-tooltip="$gettext('Add a code block')"
-								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
+								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="brackets"
 								@click="onClickCodeBlock"
 							/>
-							<app-button
+							<AppButton
 								v-if="contextCapabilities.blockquote"
 								v-app-tooltip="$gettext('Add a quote')"
-								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
+								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="blockquote"
 								@click="onClickBlockquote"
 							/>
-							<app-button
+							<AppButton
 								v-if="contextCapabilities.spoiler"
 								v-app-tooltip="$gettext('Add a spoiler')"
-								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
+								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="inactive"
 								@click="onClickSpoiler"
 							/>
-							<app-button
+							<AppButton
 								v-if="contextCapabilities.hr"
 								v-app-tooltip="$gettext('Add a separator')"
-								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
+								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="hr"
 								@click="onClickHr"
 							/>
-							<app-button
+							<AppButton
 								v-if="contextCapabilities.list"
 								v-app-tooltip="$gettext('Add a bulleted list')"
-								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
+								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="bullet-list"
 								@click="onClickBulletList"
 							/>
-							<app-button
+							<AppButton
 								v-if="contextCapabilities.list"
 								v-app-tooltip="$gettext('Add a numbered list')"
-								class="anim-fade-in-enlarge no-animate-leave btn-stagger"
+								class="-control anim-fade-in-enlarge no-animate-leave btn-stagger"
 								circle
 								solid
 								icon="numbered-list"
@@ -187,8 +338,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
 @import './variables'
 
 .content-editor-controls
@@ -208,11 +357,15 @@
 .fade-leave-active
 	transition: opacity 0.2s
 
-.fade-enter
+.fade-enter-from
 .fade-leave-to
 	opacity: 0
 
-.controls-mobile
+.-control
+.-mobile-control
+	margin: 0 4px
+
+.-controls-mobile
 	position: fixed
 	top: auto !important
 	bottom: 0 !important
@@ -228,15 +381,15 @@
 		padding-left: 4px
 		padding-right: 4px
 
-		& > .control-button
+		& > .-mobile-control
 			padding-top: 0
 			padding-bottom: 0
 
-		& > .control-button > span
+		& > .-mobile-control > span
 			margin: $controls-margin-vertical $controls-margin-horizontal
 			font-size: $controls-font-size !important
 
-.control-button
+.-mobile-control
 	cursor: pointer
 	display: inline-block
 	pressy()

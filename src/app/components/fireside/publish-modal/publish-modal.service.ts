@@ -1,7 +1,7 @@
-import { asyncComponentLoader } from '../../../../utils/utils';
+import { defineAsyncComponent } from 'vue';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import { Modal } from '../../../../_common/modal/modal.service';
+import { showModal } from '../../../../_common/modal/modal.service';
 import { Translate } from '../../../../_common/translate/translate.service';
 
 interface FiresidePublishModalOptions {
@@ -29,12 +29,9 @@ export class FiresidePublishModal {
 		}
 
 		// Show a more complex modal for community options before publishing.
-		return await Modal.show<FiresidePublishModalResult>({
+		return await showModal<FiresidePublishModalResult>({
 			modalId: 'FiresidePublish',
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "FiresidePublishModal" */ './publish-modal.vue')
-				),
+			component: defineAsyncComponent(() => import('./publish-modal.vue')),
 			props: {
 				fireside,
 			},

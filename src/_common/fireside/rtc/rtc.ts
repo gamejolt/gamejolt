@@ -1,7 +1,9 @@
-import AgoraRTC, { IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
+import type { IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
+import { markRaw, reactive, toRaw } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
 import { debounce, sleep } from '../../../utils/utils';
+import { importNoSSR } from '../../code-splitting';
 import { Navigate } from '../../navigate/navigate.service';
 import { SettingStreamDesktopVolume } from '../../settings/settings.service';
 import { User } from '../../user/user.model';
@@ -30,6 +32,8 @@ import {
 	stopDesktopAudioPlayback,
 	updateVolumeLevel,
 } from './user';
+
+const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
 
 export const FiresideRTCKey = Symbol();
 
@@ -145,18 +149,20 @@ export function createFiresideRTC(
 	hosts: FiresideRTCHost[],
 	options: Options = {}
 ) {
-	const rtc = new FiresideRTC(
-		fireside,
-		userId,
-		appId,
-		streamingUid,
-		videoChannelName,
-		videoToken,
-		chatChannelName,
-		chatToken,
-		hosts,
-		options
-	);
+	const rtc = reactive(
+		new FiresideRTC(
+			fireside,
+			userId,
+			appId,
+			streamingUid,
+			videoChannelName,
+			videoToken,
+			chatChannelName,
+			chatToken,
+			hosts,
+			options
+		)
+	) as FiresideRTC;
 
 	// Initialize based on their pref.
 	setRTCDesktopVolume(rtc, SettingStreamDesktopVolume.get());
@@ -270,7 +276,7 @@ async function _setup(rtc: FiresideRTC) {
 	rtc.generation.cancel();
 	rtc.generation = gen;
 
-	_createChannels(rtc);
+	await _createChannels(rtc);
 	_createProducer(rtc);
 
 	for (let i = 0; i < 5; i++) {
@@ -297,7 +303,7 @@ function _finalizeSetup(rtc: FiresideRTC) {
 		// Run the debounced finalizeSetupFn again if the focusedUser doesn't
 		// exist or match any of our current hosts.
 		if (!rtc.focusedUser && rtc.finalizeSetupFn) {
-			rtc.finalizeSetupFn();
+			rtc.finalizeSetupFn?.();
 		}
 		return;
 	}
@@ -312,16 +318,17 @@ function _finalizeSetup(rtc: FiresideRTC) {
 	}, 500);
 
 	rtc.log(`Debouncing finalize setup.`);
-	rtc.finalizeSetupFn();
+	rtc.finalizeSetupFn?.();
 }
 
-function _createChannels(rtc: FiresideRTC) {
+async function _createChannels(rtc: FiresideRTC) {
 	rtc.log('Trace(createChannels)');
 
+	const AgoraRTC = await AgoraRTCLazy;
 	(AgoraRTC as any)?.setParameter('AUDIO_SOURCE_VOLUME_UPDATE_INTERVAL', 100);
 	rtc.volumeLevelInterval = setInterval(() => _updateVolumeLevels(rtc), 100);
 
-	rtc.videoChannel = createFiresideRTCChannel(rtc, rtc.videoChannelName, rtc.videoToken, {
+	rtc.videoChannel = await createFiresideRTCChannel(rtc, rtc.videoChannelName, rtc.videoToken, {
 		onTrackPublish(remoteUser, mediaType) {
 			rtc.log('Got user published (video channel)');
 
@@ -331,7 +338,7 @@ function _createChannels(rtc: FiresideRTC) {
 				return;
 			}
 
-			user.remoteVideoUser = remoteUser;
+			user.remoteVideoUser = markRaw(remoteUser);
 
 			if (mediaType === 'video') {
 				setUserHasVideo(user, true);
@@ -360,7 +367,7 @@ function _createChannels(rtc: FiresideRTC) {
 		},
 	});
 
-	rtc.chatChannel = createFiresideRTCChannel(rtc, rtc.chatChannelName, rtc.chatToken, {
+	rtc.chatChannel = await createFiresideRTCChannel(rtc, rtc.chatChannelName, rtc.chatToken, {
 		onTrackPublish(remoteUser, mediaType) {
 			rtc.log('got user published (audio chat channel)');
 
@@ -375,7 +382,7 @@ function _createChannels(rtc: FiresideRTC) {
 				return;
 			}
 
-			user.remoteChatUser = remoteUser;
+			user.remoteChatUser = markRaw(remoteUser);
 			setUserHasMicAudio(user, true);
 
 			_finalizeSetup(rtc);
@@ -466,7 +473,7 @@ function _removeUserIfNeeded(rtc: FiresideRTC, user: FiresideRTCUser) {
 
 	arrayRemove(rtc._users, i => i === user);
 
-	if (rtc.focusedUser === user) {
+	if (toRaw(rtc.focusedUser) === toRaw(user)) {
 		rtc.focusedUser = null;
 		chooseFocusedRTCUser(rtc);
 	}

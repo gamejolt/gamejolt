@@ -1,29 +1,113 @@
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import { arrayGroupBy, arrayIndexBy } from '../../../../../../utils/array';
+import { Api } from '../../../../../../_common/api/api.service';
+import { formatCurrency } from '../../../../../../_common/filters/currency';
+import { formatDate } from '../../../../../../_common/filters/date';
+import { Game } from '../../../../../../_common/game/game.model';
+import { GamePackage } from '../../../../../../_common/game/package/package.model';
+import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
+import { Geo } from '../../../../../../_common/geo/geo.service';
+import { Order } from '../../../../../../_common/order/order.model';
+import { OrderPayment } from '../../../../../../_common/order/payment/payment.model';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../_common/route/route-component';
+import { Screen } from '../../../../../../_common/screen/screen-service';
+import { $gettext } from '../../../../../../_common/translate/translate.service';
+import { useAccountRouteController } from '../../account.vue';
+
+@Options({
+	name: 'RouteDashAccountPurchasesView',
+	components: {
+		AppGameThumbnailImg,
+	},
+})
+@OptionsForRoute({
+	deps: { params: ['id'] },
+	resolver: ({ route }) => Api.sendRequest('/web/dash/purchases/' + route.params.id),
+})
+export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
+	routeStore = setup(() => useAccountRouteController()!);
+
+	order: Order = null as any;
+	packages: GamePackage[] = [];
+	games: Game[] = [];
+
+	readonly Geo = Geo;
+	readonly OrderPayment = OrderPayment;
+	readonly formatDate = formatDate;
+	readonly formatCurrency = formatCurrency;
+	readonly Screen = Screen;
+
+	get routeTitle() {
+		return this.routeStore.heading;
+	}
+
+	get gamesById() {
+		return arrayIndexBy(this.games, 'id');
+	}
+
+	get packagesBySellable() {
+		return arrayGroupBy(this.packages, 'sellable_id');
+	}
+
+	get firstRefund() {
+		if (
+			this.order._is_refunded &&
+			this.order.payments &&
+			this.order.payments[0] &&
+			this.order.payments[0].refunds
+		) {
+			return this.order.payments[0].refunds[0];
+		}
+		return null;
+	}
+
+	get billingAddress() {
+		return this.order.billing_address!;
+	}
+
+	routeCreated() {
+		this.routeStore.heading = $gettext(`Order Details`);
+	}
+
+	routeResolved($payload: any) {
+		this.order = new Order($payload.order);
+		this.games = Game.populate($payload.games);
+		this.packages = GamePackage.populate($payload.packages);
+	}
+}
+</script>
+
 <template>
 	<div v-if="isRouteBootstrapped">
 		<p class="text-muted">
-			<translate :translate-params="{ orderId: order.id }">
+			<AppTranslate :translate-params="{ orderId: order.id }">
 				Order #%{orderId}
-			</translate>
+			</AppTranslate>
 
 			<span class="dot-separator" />
 
-			<translate :translate-params="{ date: date(order.completed_on, 'medium') }">
+			<AppTranslate :translate-params="{ date: formatDate(order.completed_on, 'medium') }">
 				Ordered on %{date}
-			</translate>
+			</AppTranslate>
 		</p>
 
 		<!--
-		If the order was canceled but without a refund (just disabled), then we can't show
-		this.
-	-->
-		<div class="alert alert-notice" v-if="order._is_refunded && firstRefund">
-			<translate
+			If the order was canceled but without a refund (just disabled), then we can't show
+			this.
+		-->
+		<div v-if="order._is_refunded && firstRefund" class="alert alert-notice">
+			<AppTranslate
 				:translate-params="{
-					date: date(firstRefund.created_on, 'medium'),
+					date: formatDate(firstRefund.created_on, 'medium'),
 				}"
 			>
 				This order was refunded on %{ date }.
-			</translate>
+			</AppTranslate>
 		</div>
 
 		<hr />
@@ -31,43 +115,44 @@
 		<div class="row">
 			<div class="col-sm-4">
 				<h4 class="section-header">
-					<translate>Billing</translate>
+					<AppTranslate>Billing</AppTranslate>
 				</h4>
 
-				<div v-for="address of [order.billing_address]">
-					<div v-if="address.fullname">
-						<strong>{{ address.fullname }}</strong>
-					</div>
+				<div v-if="billingAddress.fullname">
+					<strong>{{ billingAddress.fullname }}</strong>
+				</div>
 
-					<div v-if="address.street1">
-						{{ address.street1 }}
-					</div>
+				<div v-if="billingAddress.street1">
+					{{ billingAddress.street1 }}
+				</div>
 
-					<div v-if="address.street2">
-						{{ address.street2 }}
-					</div>
+				<div v-if="billingAddress.street2">
+					{{ billingAddress.street2 }}
+				</div>
 
-					<div>
-						<template v-if="address.city">
-							{{ address.city }}
-						</template>
-						<template v-if="address.region">
-							{{ Geo.getRegionName(address.country, address.region) || address.region }}
-						</template>
-						<template v-if="address.postcode">
-							{{ address.postcode }}
-						</template>
-					</div>
+				<div>
+					<template v-if="billingAddress.city">
+						{{ billingAddress.city + ' ' }}
+					</template>
+					<template v-if="billingAddress.region && billingAddress.country">
+						{{
+							(Geo.getRegionName(billingAddress.country, billingAddress.region) ||
+								billingAddress.region) + ' '
+						}}
+					</template>
+					<template v-if="billingAddress.postcode">
+						{{ billingAddress.postcode + ' ' }}
+					</template>
+				</div>
 
-					<div v-if="address.country">
-						{{ Geo.getCountryName(address.country) }}
-					</div>
+				<div v-if="billingAddress.country">
+					{{ Geo.getCountryName(billingAddress.country) }}
 				</div>
 				<br />
 			</div>
 			<div class="col-sm-4">
 				<h4 :class="{ 'section-header': !Screen.isXs }">
-					<translate>Payment</translate>
+					<AppTranslate>Payment</AppTranslate>
 				</h4>
 				<div v-for="payment of order.payments" :key="payment.id">
 					<template v-if="payment.method === OrderPayment.METHOD_CC_STRIPE">
@@ -78,39 +163,35 @@
 						{{ payment.stripe_payment_source.last4 }}
 					</template>
 					<template v-else-if="payment.method === OrderPayment.METHOD_PAYPAL">
-						<span class="tag">
-							PayPal
-						</span>
+						<span class="tag"> PayPal </span>
 						{{ payment.paypal_email_address }}
 					</template>
 					<template v-else-if="payment.method === OrderPayment.METHOD_WALLET">
-						<span class="tag">
-							Wallet
-						</span>
-						{{ payment.amount | currency }}
+						<span class="tag"> Wallet </span>
+						{{ formatCurrency(payment.amount) }}
 					</template>
 				</div>
 			</div>
 			<div class="col-sm-4">
 				<h4 :class="{ 'section-header': !Screen.isXs }">
-					<translate>Summary</translate>
+					<AppTranslate>Summary</AppTranslate>
 				</h4>
 
 				<table class="-summary-table">
 					<tbody>
 						<tr>
-							<th><translate>Subtotal</translate></th>
-							<td>{{ order.amount | currency }}</td>
+							<th><AppTranslate>Subtotal</AppTranslate></th>
+							<td>{{ formatCurrency(order.amount) }}</td>
 						</tr>
 						<tr v-if="order.tax_amount">
-							<th><translate>Tax</translate></th>
-							<td>{{ order.tax_amount | currency }}</td>
+							<th><AppTranslate>Tax</AppTranslate></th>
+							<td>{{ formatCurrency(order.tax_amount) }}</td>
 						</tr>
 					</tbody>
 					<tfoot>
 						<tr>
-							<th><translate>Total</translate></th>
-							<td>{{ order.total_amount | currency }}</td>
+							<th><AppTranslate>Total</AppTranslate></th>
+							<td>{{ formatCurrency(order.total_amount) }}</td>
 						</tr>
 					</tfoot>
 				</table>
@@ -121,15 +202,18 @@
 
 		<div v-for="item of order.items" :key="item.id">
 			<h4>
-				<span class="tag tag-notice" v-if="item.is_refunded">
-					<translate>Refunded</translate>
+				<span v-if="item.is_refunded" class="tag tag-notice">
+					<AppTranslate>Refunded</AppTranslate>
 				</span>
 				{{ item.sellable.title }}
 				&mdash;
-				<small>{{ item.amount | currency }}</small>
+				<small>{{ formatCurrency(item.amount) }}</small>
 			</h4>
 
-			<div v-for="firstPackage of [packagesBySellable[item.sellable.id][0]]" :key="firstPackage.id">
+			<div
+				v-for="firstPackage of [packagesBySellable[item.sellable.id][0]]"
+				:key="firstPackage.id"
+			>
 				<div class="row">
 					<div class="col-xs-2">
 						<router-link
@@ -142,7 +226,7 @@
 								},
 							}"
 						>
-							<app-game-thumbnail-img animate :game="gamesById[firstPackage.game_id]" />
+							<AppGameThumbnailImg animate :game="gamesById[firstPackage.game_id]" />
 						</router-link>
 					</div>
 					<div class="col-xs-10">
@@ -160,11 +244,15 @@
 							</router-link>
 							<br />
 							<span class="small">
-								<translate>by</translate>
+								<AppTranslate>by</AppTranslate>
+								{{ ' ' }}
 								<router-link
 									:to="{
 										name: 'profile.overview',
-										params: { username: gamesById[firstPackage.game_id].developer.username },
+										params: {
+											username:
+												gamesById[firstPackage.game_id].developer.username,
+										},
 									}"
 								>
 									{{ gamesById[firstPackage.game_id].developer.display_name }}
@@ -172,10 +260,10 @@
 							</span>
 						</p>
 
-						<p></p>
+						<p />
 
 						<h5 class="sans-margin">
-							<translate>Packages</translate>
+							<AppTranslate>Packages</AppTranslate>
 						</h5>
 
 						<div class="small text-muted">
@@ -200,8 +288,7 @@
 		font-weight: normal
 
 	tfoot > tr
-		& > th, & > td
+		& > th
+		& > td
 			font-weight: bold
 </style>
-
-<script lang="ts" src="./view"></script>

@@ -1,19 +1,22 @@
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
-import { arrayRemove, arrayUnique } from '../../utils/array';
-import { Api } from '../api/api.service';
-import { PayloadFormErrors } from '../payload/payload-service';
-import AppFormButton from './button/button.vue';
-import { AppFormControlError } from './control-errors/control-error';
-import AppFormControlErrors from './control-errors/control-errors.vue';
-import AppFormControlCheckbox from './control/checkbox/checkbox.vue';
-import AppFormControl from './control/control.vue';
-import AppFormControlPrefixedInput from './control/prefixed-input/prefixed-input.vue';
-import AppFormControlRadio from './control/radio/radio.vue';
-import AppFormControlSelect from './control/select/select.vue';
-import AppFormControlTextarea from './control/textarea/textarea.vue';
-import AppForm from './form.vue';
-import AppFormGroup from './group/group.vue';
+import Vue, { computed, toRef } from 'vue';
+import { setup } from 'vue-class-component';
+import { Emit, Options, Prop } from 'vue-property-decorator';
+import { ModelClassType } from '../model/model.service';
+import { createForm } from './AppForm.vue';
+import { CommonFormComponents } from './form-common';
+import {
+	validateAvailability,
+	validateFilesize,
+	validateImageMaxDimensions,
+	validateImageMinDimensions,
+	validateMaxDate,
+	validateMaxLength,
+	validateMaxValue,
+	validateMinDate,
+	validateMinLength,
+	validateMinValue,
+	validatePattern,
+} from './validators';
 
 export interface FormOnInit {
 	onInit(): void;
@@ -41,261 +44,125 @@ export interface FormOnSubmitError {
 	onSubmitError(response: any): void;
 }
 
-export const CommonFormComponents = {
-	AppForm,
-	AppFormControl,
-	AppFormControlSelect,
-	AppFormControlTextarea,
-	AppFormControlRadio,
-	AppFormControlCheckbox,
-	AppFormControlPrefixedInput,
-	AppFormGroup,
-	AppFormControlErrors,
-	AppFormControlError,
-	AppFormButton,
-};
-
-@Component({
-	components: {
-		...CommonFormComponents,
-	},
+/**
+ * This is a wrapper now around a FormController.
+ *
+ * @deprecated use composition functions instead
+ */
+@Options({
+	components: CommonFormComponents,
 })
 export class BaseForm<T> extends Vue {
-	@Prop({ type: Object, required: false }) model?: Readonly<T>;
+	@Prop({ type: Object, required: false })
+	model?: Readonly<T>;
+
+	@Emit('submit')
+	emitSubmit(_formModel: Readonly<T>, _response: any) {}
 
 	// Some components, like Modals, might try to attach their own
 	// NavigationGuard callbacks so they can close themselves.
 	//
 	// Since we may require confirmation to change our route, they should
 	// instead do any cleanup when this emit triggers.
-	@Emit('route-change') emitRouteChange() {}
+	@Emit('route-change')
+	emitRouteChange() {}
 
-	formModel: Readonly<T> = {} as T;
-	modelClass?: { new (data?: T): T } = undefined;
-	resetOnSubmit = false;
-	warnOnDiscard = true;
+	modelClass?: ModelClassType<T> = undefined;
 	saveMethod?: keyof T;
-	method: 'add' | 'edit' = 'add';
-	changed = false;
-	attemptedSubmit = false;
-	hasFormErrors = false;
 
-	// These get overriden as getters in the child classes.
-	readonly loadData: any | null;
-	isLoaded: boolean | null = null;
-	isLoadedBootstrapped: boolean | null = null;
-	reloadOnSubmit = false;
+	// Common validators that were used in old form templates.
+	readonly validateMaxLength = validateMaxLength;
+	readonly validateMinLength = validateMinLength;
+	readonly validateMinValue = validateMinValue;
+	readonly validateMaxValue = validateMaxValue;
+	readonly validateMinDate = validateMinDate;
+	readonly validateMaxDate = validateMaxDate;
+	readonly validateAvailability = validateAvailability;
+	readonly validateFilesize = validateFilesize;
+	readonly validateImageMinDimensions = validateImageMinDimensions;
+	readonly validateImageMaxDimensions = validateImageMaxDimensions;
+	readonly validatePattern = validatePattern;
 
-	private changeDeregister?: Function;
+	form = setup(() =>
+		createForm<T>({
+			model: toRef(this.$props as this, 'model'),
+		})
+	);
 
-	state = {
-		isProcessing: false,
-		isShowingSuccess: false,
-	};
+	get method() {
+		return this.form.method;
+	}
 
-	successClearTimeout?: NodeJS.Timer;
-	serverErrors: PayloadFormErrors = {};
-	private customErrors: string[] = [];
+	get changed() {
+		return this.form.changed;
+	}
 
-	get loadUrl(): null | string {
-		return null;
+	get isLoaded() {
+		return this.form.isLoaded;
+	}
+
+	get serverErrors() {
+		return this.form.serverErrors;
+	}
+
+	get loadUrl(): undefined | string {
+		return undefined;
+	}
+
+	get loadData(): any {
+		return undefined;
+	}
+
+	get formModel() {
+		return (this.form.formModel ?? {}) as T;
 	}
 
 	get valid() {
-		return !this.hasFormErrors && this.customErrors.length === 0;
+		return this.form.valid;
 	}
 
 	created() {
-		this.privateInit();
-	}
-
-	mounted() {
-		if (!this.warnOnDiscard) {
-			return;
-		}
-
-		this.changeDeregister = this.$router.beforeEach((_to, _from, next) => {
-			if (this.changed) {
-				if (
-					!window.confirm(
-						this.$gettext(`Are you sure you want to discard your unsaved changes?`)
-					)
-				) {
-					return next(false);
-				}
-			}
-
-			this.emitRouteChange();
-			next();
+		this.form._override({
+			modelClass: this.modelClass,
+			saveMethod: computed(() => this.saveMethod),
+			loadUrl: computed(() => (this as Partial<FormOnLoad>).loadUrl),
+			loadData: computed(() => (this as Partial<FormOnLoad>).loadData),
+			onInit: () => this.onInit(),
+			onBeforeSubmit: (this as Partial<FormOnBeforeSubmit>).onBeforeSubmit?.bind(this),
+			onSubmit: (this as Partial<FormOnSubmit>).onSubmit?.bind(this),
+			onSubmitError: (this as Partial<FormOnSubmitError>).onSubmitError?.bind(this),
+			onLoad: (this as Partial<FormOnLoad>).onLoad?.bind(this),
+			onSubmitSuccess: response => {
+				// We used to set up a submit handler on every form component
+				// automatically. This is to reproduce that effect.
+				(this as Partial<FormOnSubmitSuccess>).onSubmitSuccess?.(response);
+				this.emitSubmit(this.formModel as any, response);
+			},
 		});
 	}
 
-	destroyed() {
-		if (this.changeDeregister) {
-			this.changeDeregister();
-			this.changeDeregister = undefined;
-		}
-	}
-
-	private privateInit() {
-		// Is a base model defined? If so, then we're editing.
-		if (this.model) {
-			this.method = 'edit';
-
-			// If a model class was assigned to this form, then create a copy of
-			// it on the instance. Otherwise just copy the object.
-			if (this.modelClass) {
-				this.formModel = new this.modelClass(this.model);
-			} else {
-				this.formModel = Object.assign({}, this.model);
-			}
-		} else {
-			// If we have a model class, then create a new one.
-			if (this.modelClass) {
-				this.formModel = new this.modelClass();
-			} else {
-				// Otherwise, just use an empty object as the form's model.
-				this.formModel = {} as T;
-			}
-		}
-
-		// This is the main way for forms to initialize.
-		if ((this as any).onInit) {
-			(this as any).onInit();
-		}
-
-		this._load();
-	}
-
-	private async _load() {
-		if (this.isLoaded && !this.reloadOnSubmit) {
-			return;
-		}
-
-		this.isLoaded = null;
-		if (!this.loadUrl) {
-			return;
-		}
-
-		this.isLoaded = false;
-
-		const payload = await Api.sendRequest(this.loadUrl, this.loadData || undefined, {
-			detach: true,
-		});
-
-		this.isLoaded = true;
-		this.isLoadedBootstrapped = true;
-		if ((this as any).onLoad) {
-			(this as any).onLoad(payload);
-		}
-	}
+	onInit() {}
 
 	/**
-	 * When setting form model field values we need to make sure Vue knows that
-	 * the field has changed. This ensures that we always let Vue know any time
-	 * we change a field.
+	 * We used to call this to let vue know that a field changed. With vue 3 we
+	 * no longer need to do this. Just set the fields directly on the formModel
+	 * now.
 	 */
 	setField<K extends keyof T>(key: K, value: T[K]) {
-		Vue.set(this.formModel as any, key as any, value);
+		if (this.formModel) {
+			this.formModel[key] = value;
+		}
 	}
 
 	setCustomError(error: string) {
-		this.customErrors.push(error);
-		this.customErrors = arrayUnique(this.customErrors);
+		this.form.setCustomError(error);
 	}
 
 	clearCustomError(error: string) {
-		arrayRemove(this.customErrors, i => i === error);
+		this.form.clearCustomError(error);
 	}
 
 	hasCustomError(error: string) {
-		return this.customErrors.indexOf(error) !== -1;
-	}
-
-	async _onSubmit() {
-		if (this.state.isProcessing) {
-			return false;
-		}
-
-		this.state.isProcessing = true;
-
-		let response: any;
-
-		try {
-			if ((this as any).onBeforeSubmit) {
-				(this as any).onBeforeSubmit();
-			}
-
-			if ((this as any).onSubmit) {
-				const _response = await (this as any).onSubmit();
-				if (_response.success === false) {
-					throw _response;
-				}
-
-				response = _response;
-			} else if (this.modelClass) {
-				response = await (this.formModel as any)[this.saveMethod || '$save']();
-
-				// Copy it back to the base model.
-				if (this.model) {
-					Object.assign(this.model, this.formModel);
-				}
-			}
-
-			if ((this as any).onSubmitSuccess) {
-				(this as any).onSubmitSuccess(response);
-			}
-
-			// Reset our state.
-			this.state.isProcessing = false;
-			this.changed = false;
-			this.attemptedSubmit = false;
-			this.serverErrors = {};
-
-			// Show successful form submission.
-			this._showSuccess();
-
-			// Send the new model back into the submit handler.
-			this.$emit('submit', this.formModel, response);
-
-			// If we should reset on successful submit, let's do that now.
-			if (this.resetOnSubmit) {
-				this.privateInit();
-
-				// Reset again in case init triggered changes.
-				this.changed = false;
-			}
-
-			return true;
-		} catch (_response) {
-			console.error('Form error', _response);
-
-			// Store the server validation errors.
-			if (_response && _response.errors) {
-				this.serverErrors = _response.errors;
-			}
-
-			if ((this as any).onSubmitError) {
-				(this as any).onSubmitError(_response);
-			}
-
-			// Reset our processing state.
-			this.state.isProcessing = false;
-			return false;
-		}
-	}
-
-	private _showSuccess() {
-		// Reset the timeout if it's already showing.
-		if (this.successClearTimeout) {
-			clearTimeout(this.successClearTimeout);
-		}
-
-		this.state.isShowingSuccess = true;
-
-		this.successClearTimeout = setTimeout(() => {
-			this.state.isShowingSuccess = false;
-			this.successClearTimeout = undefined;
-		}, 2000);
+		return this.form.hasCustomError(error);
 	}
 }

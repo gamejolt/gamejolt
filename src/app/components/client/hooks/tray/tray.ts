@@ -1,11 +1,11 @@
-import { Location } from 'vue-router';
+import { RouteLocationRaw } from 'vue-router';
 import { Client } from '../../../../../_common/client/client.service';
+import { commonStore } from '../../../../../_common/store/common-store';
 import { Translate } from '../../../../../_common/translate/translate.service';
-import { store } from '../../../../store/index';
 import { router } from '../../../../views/index';
 import { UserTokenModal } from '../../../user/token-modal/token-modal.service';
 
-function go(location: Location) {
+function go(location: RouteLocationRaw) {
 	router.push(location);
 	Client.show();
 }
@@ -64,7 +64,7 @@ export function clientTrayMenuBuilder(this: undefined, menu: nw.Menu) {
 			click: () =>
 				go({
 					name: 'profile.overview',
-					params: { username: store.state.app.user!.username },
+					params: { username: commonStore.user.value!.username },
 				}),
 		})
 	);
@@ -92,7 +92,11 @@ export function clientTrayMenuBuilder(this: undefined, menu: nw.Menu) {
 		new nw.MenuItem({
 			label: Translate.$gettext('Logout'),
 			click: () => {
-				store.dispatch('logout');
+				// TODO(vue3): Yariv, make the client tray builder take an
+				// optional app store when we're in the app section so we can
+				// properly do this without raw
+
+				// import appStore.logout();
 				Client.show();
 			},
 		})

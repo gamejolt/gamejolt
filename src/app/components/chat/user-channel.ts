@@ -1,7 +1,8 @@
 import { Channel, Presence, Socket } from 'phoenix';
-import Vue from 'vue';
+import { markRaw } from 'vue';
 import { arrayRemove } from '../../../utils/array';
-import { TabLeader } from '../../../utils/tab-leader';
+import type { TabLeaderInterface } from '../../../utils/tab-leader';
+import { importNoSSR } from '../../../_common/code-splitting';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
 import {
 	ChatClient,
@@ -15,6 +16,10 @@ import { ChatMessage } from './message';
 import { ChatNotificationGrowl } from './notification-growl/notification-growl.service';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
+
+const TabLeaderLazy = importNoSSR(
+	async () => (await import('../../../utils/tab-leader')).TabLeader
+);
 
 interface UserPresence {
 	metas: { phx_ref: string }[];
@@ -37,37 +42,55 @@ interface UpdateGroupTitlePayload {
 	room_id: number;
 }
 
-export class ChatUserChannel extends Channel {
-	readonly client: ChatClient;
-	readonly socket: Socket;
-	readonly tabLeader: TabLeader;
+export class ChatUserChannel {
+	constructor(public readonly userId: number, public readonly client: ChatClient, params?: any) {
+		this.socket = client.socket!;
 
-	constructor(userId: number, client: ChatClient, params?: any) {
-		super('user:' + userId, params, client.socket as Socket);
-		this.client = client;
-		this.socket = client.socket as Socket;
-		(this.socket as any).channels.push(this);
-		this.tabLeader = new TabLeader('chat_notification_channel');
-		this.tabLeader.init();
+		this.socketChannel = markRaw(new Channel('user:' + userId, params, this.socket));
+		(this.socket as any).channels.push(this.socketChannel);
+
+		this._tabLeader = null;
+	}
+
+	readonly socket: Socket;
+	readonly socketChannel: Channel;
+	private _tabLeader: TabLeaderInterface | null;
+
+	init() {
+		this._tabLeader = null;
+		TabLeaderLazy.then(TabLeader => {
+			this._tabLeader = new TabLeader('chat_notification_channel');
+			this._tabLeader.init();
+		});
 
 		this.setupPresence();
 
-		this.on('friend_updated', this.onFriendUpdated.bind(this));
-		this.on('friend_add', this.onFriendAdd.bind(this));
-		this.on('friend_remove', this.onFriendRemove.bind(this));
-		this.on('notification', this.onNotification.bind(this));
-		this.on('you_updated', this.onYouUpdated.bind(this));
-		this.on('clear_notifications', this.onClearNotifications.bind(this));
-		this.on('group_add', this.onGroupAdd.bind(this));
-		this.on('group_leave', this.onRoomLeave.bind(this));
-		this.on('update_title', this.onUpdateTitle.bind(this));
-		this.onClose(() => {
-			this.tabLeader.kill();
+		this.socketChannel.on('friend_updated', this.onFriendUpdated.bind(this));
+		this.socketChannel.on('friend_add', this.onFriendAdd.bind(this));
+		this.socketChannel.on('friend_remove', this.onFriendRemove.bind(this));
+		this.socketChannel.on('notification', this.onNotification.bind(this));
+		this.socketChannel.on('you_updated', this.onYouUpdated.bind(this));
+		this.socketChannel.on('clear_notifications', this.onClearNotifications.bind(this));
+		this.socketChannel.on('group_add', this.onGroupAdd.bind(this));
+		this.socketChannel.on('group_leave', this.onRoomLeave.bind(this));
+		this.socketChannel.on('update_title', this.onUpdateTitle.bind(this));
+		this.socketChannel.onClose(() => {
+			if (!this._tabLeader) {
+				return;
+			}
+
+			this._tabLeader.kill();
 		});
 	}
 
+	private get isTabLeader() {
+		// Assume we are not the tab leader if the lazy import did not resolve yet.
+		// Better to have no leader than multiple.
+		return this._tabLeader?.isLeader ?? false;
+	}
+
 	private setupPresence() {
-		const presence = new Presence(this);
+		const presence = markRaw(new Presence(this.socketChannel));
 
 		presence.onJoin(this.onFriendJoin.bind(this));
 		presence.onLeave(this.onFriendLeave.bind(this));
@@ -143,9 +166,9 @@ export class ChatUserChannel extends Channel {
 		newChatNotification(this.client, message.room_id);
 		updateChatRoomLastMessageOn(this.client, message);
 		// Play message received sound, but only on the tab leader.
-		let shouldPlay = this.tabLeader.isLeader;
+		let shouldPlay = this.isTabLeader;
 		// For client, only play when window is focussed.
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			shouldPlay = ContentFocus.isWindowFocused;
 		}
 		if (shouldPlay) {
@@ -153,7 +176,7 @@ export class ChatUserChannel extends Channel {
 		}
 
 		const room = this.client.groupRooms.find(i => i.id === message.room_id);
-		ChatNotificationGrowl.show(this.client, message, room, this.tabLeader.isLeader);
+		ChatNotificationGrowl.show(this.client, message, room, this.isTabLeader);
 	}
 
 	private onYouUpdated(data: Partial<ChatUser>) {
@@ -162,7 +185,7 @@ export class ChatUserChannel extends Channel {
 	}
 
 	private onClearNotifications(data: RoomIdPayload) {
-		Vue.delete(this.client.notifications, '' + data.room_id);
+		delete this.client.notifications[data.room_id];
 	}
 
 	private onGroupAdd(data: GroupAddPayload) {

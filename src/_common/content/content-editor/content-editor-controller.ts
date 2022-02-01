@@ -1,21 +1,34 @@
 import { lift, toggleMark, wrapIn } from 'prosemirror-commands';
 import { Fragment, Mark, MarkType, Node, NodeType } from 'prosemirror-model';
-import { EditorState, Selection, TextSelection, Transaction } from 'prosemirror-state';
+import { EditorState, Plugin, Selection, TextSelection, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import Vue from 'vue';
+import { inject, InjectionKey, markRaw, nextTick, reactive, unref, watch } from 'vue';
 import { isImage } from '../../../utils/image';
 import { uuidv4 } from '../../../utils/uuid';
+import { MaybeRef } from '../../../utils/vue';
 import { MediaItem } from '../../media-item/media-item-model';
-import { ContextCapabilities } from '../content-context';
+import { ContentContext, ContextCapabilities } from '../content-context';
+import { ContentDocument } from '../content-document';
+import { ContentFormatAdapter, ProsemirrorEditorFormat } from '../content-format-adapter';
 import { ContentHydrator } from '../content-hydrator';
 import { ContentEditorAppAdapterMessage, editorGetAppAdapter } from './app-adapter';
 import { ContentEditorService } from './content-editor.service';
+import buildEditorEvents from './events/build-events';
 import { MediaUploadTask } from './media-upload-task';
 import { SearchResult } from './modals/gif/gif-modal.service';
-import { BasicMentionRegex } from './plugins/input-rules/detect-mention-suggestion';
-import { ContentEditorSchema } from './schemas/content-editor-schema';
+import { NodeViewRenderData } from './node-views/base';
+import { buildEditorNodeViews } from './node-views/node-view-builder';
+import { BasicMentionRegex } from './plugins/input-rules';
+import { createEditorPlugins } from './plugins/plugins';
+import { ContentEditorSchema, generateEditorSchema } from './schemas/content-editor-schema';
 
-export const ContentEditorControllerKey = Symbol('content-editor-controller');
+export const ContentEditorControllerKey: InjectionKey<ContentEditorController> = Symbol(
+	'content-editor-controller'
+);
+
+export function useContentEditorController() {
+	return inject(ContentEditorControllerKey, null);
+}
 
 type Coordinates = {
 	left: number;
@@ -24,15 +37,110 @@ type Coordinates = {
 	bottom: number;
 };
 
+export function createContentEditor({
+	contentContext,
+	singleLineMode,
+	disabled,
+}: {
+	contentContext: ContentContext;
+	singleLineMode?: MaybeRef<boolean>;
+	disabled?: MaybeRef<boolean>;
+}): ContentEditorController {
+	const c = reactive(new ContentEditorController(contentContext)) as ContentEditorController;
+
+	c.contextCapabilities = markRaw(ContextCapabilities.getForContext(c.contentContext));
+	c.schema = markRaw(generateEditorSchema(c.contextCapabilities));
+	c.plugins = markRaw(createEditorPlugins(c));
+
+	// Sync over props into our controller.
+
+	watch(
+		() => unref(singleLineMode),
+		newVal => (c.singleLineMode = newVal ?? false),
+		{ immediate: true }
+	);
+
+	watch(
+		() => unref(disabled),
+		newVal => (c.disabled = newVal ?? false),
+		{ immediate: true }
+	);
+
+	// When stateCounter updates, we want to sync the scope, because something
+	// may changed.
+	watch(
+		() => c.stateCounter,
+		() => editorSyncScope(c)
+	);
+
+	return c;
+}
+
 export class ContentEditorController {
+	/**
+	 * Warning! Don't use this constructor. Use the {@link createContentEditor}
+	 * function instead so that reactivity is kept.
+	 */
+	constructor(public readonly contentContext: ContentContext) {}
+
+	// These will get set in the [createContentEditor] function.
+	contextCapabilities!: ContextCapabilities;
+	schema!: ContentEditorSchema;
+	plugins!: Plugin<any, ContentEditorSchema>[];
+
 	view: EditorView<ContentEditorSchema> | null = null;
-	contextCapabilities = ContextCapabilities.getEmpty();
 	window = new ContentEditorWindow();
 	scope = new ContentEditorScope();
 	capabilities = new ContentEditorScopeCapabilities();
 	hydrator = new ContentHydrator();
 
-	constructor(public readonly updateWindow: () => void) {}
+	/**
+	 * Keep a copy of the json version of the doc, to only set the content if
+	 * the external source changed.
+	 */
+	sourceContent: string | null = null;
+
+	disabled = false;
+	singleLineMode = false;
+
+	stateCounter = 0;
+	isFocused = false;
+	emojiPanelVisible = false;
+
+	/**
+	 * Gets updated through the update-is-empty-plugin.
+	 */
+	isEmpty = true;
+
+	/**
+	 * Whenever a rich component needs to render in the editor, we store it here
+	 * so we can build it out into the vue component tree.
+	 */
+	nodeViews: NodeViewRenderData[] = [];
+
+	/**
+	 * Indicates whether we want to currently show the mention suggestion panel.
+	 * Values > 0 indicate true.
+	 *
+	 * This and [mentionUserCount] are both checked elsewhere to prevent certain
+	 * mouse/keyboard events from triggering.
+	 */
+	canShowMentionSuggestions = 0;
+	mentionUserCount = 0;
+
+	controlsCollapsed = true;
+
+	declare _editor?: {
+		getWindowRect: () => DOMRect;
+		emitSubmit: () => void;
+		emitInput: (newSource: string) => void;
+	};
+
+	// Will get attached by the emoji panel when it's available within the
+	// web/client.
+	declare _emojiPanel?: {
+		show: () => void;
+	};
 
 	/**
 	 * The distance between the top of the editor container and the top of the cursor.
@@ -187,11 +295,84 @@ class ContentEditorScopeCapabilities {
 	}
 }
 
-export function editorSyncWindow(c: ContentEditorController, rect: DOMRect) {
-	const { width, height, left, top } = rect;
+export async function editorCreateView(
+	c: ContentEditorController,
+	viewElement: HTMLElement,
+	doc: ContentDocument,
+	{ shouldFocus }: { shouldFocus?: boolean } = {}
+) {
+	if (doc.context !== c.contentContext) {
+		throw new Error(
+			`The passed in content context is invalid. ${doc.context} != ${c.contentContext}`
+		);
+	}
+
+	// Do this here so we don't fire an update directly after populating.
+	doc.ensureEndParagraph();
+
+	const state = EditorState.create({
+		doc: Node.fromJSON(c.schema, ContentFormatAdapter.adaptIn(doc)),
+		plugins: c.plugins,
+	});
+
+	// Get rid of view for a previous doc that may have be set.
+	c.view?.destroy();
+
+	const nodeViews = buildEditorNodeViews(c);
+	const eventHandlers = buildEditorEvents(c);
+
+	// Since prosemirror handles the view, we want to make sure not to wrap it
+	// in a proxy or instances may not match with our state vs theirs.
+	c.view = markRaw(
+		new EditorView<ContentEditorSchema>(viewElement, {
+			state,
+			nodeViews,
+			handleDOMEvents: eventHandlers,
+			editable: () => !c.disabled,
+			attributes: {
+				'data-prevent-shortkey': '',
+			},
+		})
+	);
+
+	editorUpdateIsEmpty(c, state);
+
+	// Make sure we have a paragraph when loading in a new state
+	const { view } = c;
+	if (!c.disabled || view.state.doc.childCount === 0) {
+		const tr = editorEnsureEndNode(view.state.tr, view.state.schema.nodes.paragraph);
+		if (tr instanceof Transaction) {
+			view.dispatch(tr);
+		}
+	}
+
+	if (shouldFocus) {
+		// Wait here so images and other content can render in and scale
+		// properly. Otherwise the scroll at the end of the transaction
+		// below would not cover the entire doc.
+		await nextTick();
+
+		// Set selection at the end of the document.
+		const tr = view.state.tr;
+		const selection = Selection.atEnd(view.state.doc);
+		tr.setSelection(selection);
+		tr.scrollIntoView();
+		view.dispatch(tr);
+		view.focus();
+	}
+
+	++c.stateCounter;
+}
+
+export function editorSyncWindow(c: ContentEditorController) {
+	if (!c._editor) {
+		return;
+	}
+
+	const { width, height, left, top } = c._editor.getWindowRect();
 	c.window = new ContentEditorWindow({ width, height, left, top });
 
-	if (GJ_IS_APP) {
+	if (GJ_IS_MOBILE_APP) {
 		const msg = ContentEditorAppAdapterMessage.syncWindow(c);
 		editorGetAppAdapter().send(msg);
 	}
@@ -201,17 +382,13 @@ export function editorSyncWindow(c: ContentEditorController, rect: DOMRect) {
  * Syncs the current state under the cursor/selection, as well as the
  * capabilities for what can be done with that selection.
  */
-export function editorSyncScope(
-	c: ContentEditorController,
-	isDisabled: boolean,
-	isFocused: boolean
-) {
+export function editorSyncScope(c: ContentEditorController) {
 	if (!c.view) {
 		return;
 	}
 
 	// In this case, we don't want anything to be available.
-	if (isDisabled) {
+	if (c.disabled) {
 		c.capabilities = new ContentEditorScopeCapabilities();
 		return;
 	}
@@ -222,6 +399,7 @@ export function editorSyncScope(
 			state,
 			state: { doc, schema, selection },
 		},
+		isFocused,
 	} = c;
 	const emojiNodeType = schema.nodes.gjEmoji;
 	const cursorIndex = selection.$from.index();
@@ -264,8 +442,8 @@ export function editorSyncScope(
 
 	// App doesn't really care about the correct xy coordinates of the editor
 	// window, but others may need it to update any floating controls.
-	if (!GJ_IS_APP) {
-		c.updateWindow();
+	if (!GJ_IS_MOBILE_APP) {
+		editorSyncWindow(c);
 	}
 
 	c.scope = new ContentEditorScope({
@@ -343,7 +521,7 @@ export function editorSyncScope(
 			: null),
 	});
 
-	if (GJ_IS_APP) {
+	if (GJ_IS_MOBILE_APP) {
 		const msg = ContentEditorAppAdapterMessage.syncScope(c);
 		editorGetAppAdapter().send(msg);
 	}
@@ -714,6 +892,10 @@ export function editorInsertCodeBlock(c: ContentEditorController) {
 	_insertNewBlockNode(c, schema => schema.nodes.codeBlock.create());
 }
 
+export function editorShowEmojiPanel(c: ContentEditorController) {
+	c._emojiPanel?.show();
+}
+
 export function editorInsertEmoji(c: ContentEditorController, emojiType: string) {
 	if (!c.capabilities.emoji) {
 		return;
@@ -805,7 +987,7 @@ export function editorMediaUploadFinalize(uploadTask: MediaUploadTask, mediaItem
 		},
 	} = c;
 
-	Vue.delete(ContentEditorService.UploadTaskCache, uploadTask.uploadId);
+	delete ContentEditorService.UploadTaskCache[uploadTask.uploadId];
 
 	const nodePos = _findNode(
 		doc,
@@ -840,7 +1022,7 @@ export function editorMediaUploadCancel(uploadTask: MediaUploadTask) {
 		},
 	} = c;
 
-	Vue.delete(ContentEditorService.UploadTaskCache, uploadTask.uploadId);
+	delete ContentEditorService.UploadTaskCache[uploadTask.uploadId];
 
 	const nodePos = _findNode(
 		doc,
@@ -949,4 +1131,26 @@ function _getFragmentText(frag: Fragment<ContentEditorSchema> | Node<ContentEdit
 	});
 
 	return text;
+}
+
+export function editorUpdateContent(
+	c: ContentEditorController,
+	state: EditorState<ContentEditorSchema>
+) {
+	const source = ContentFormatAdapter.adaptOut(
+		state.doc.toJSON() as ProsemirrorEditorFormat,
+		c.contentContext
+	).toJson();
+	c.sourceContent = source;
+	c._editor?.emitInput(source);
+}
+
+export function editorUpdateIsEmpty(c: ContentEditorController, state: EditorState) {
+	// The "empty" prosemirror document takes up a length of 4.
+	c.isEmpty = state.doc.nodeSize <= 4;
+}
+
+export function editorSubmit(c: ContentEditorController) {
+	++c.stateCounter;
+	c._editor?.emitSubmit();
 }

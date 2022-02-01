@@ -1,26 +1,48 @@
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+import { Environment } from '../../environment/environment.service';
+
+@Options({})
+export default class AppCookieBanner extends Vue {
+	readonly Environment = Environment;
+
+	forceClosed = false;
+
+	get shouldShow() {
+		if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
+			return false;
+		}
+
+		return !this.forceClosed && !window.localStorage.getItem('banner:cookie');
+	}
+
+	close() {
+		this.forceClosed = true;
+		window.localStorage.setItem('banner:cookie', Date.now() + '');
+	}
+}
+</script>
+
 <template>
 	<div class="cookie-banner fill-darker" v-if="shouldShow">
 		<p>
-			<translate>
-				We use cookies to ensure you get the best personalized experience on our website as well as
-				keeping you signed into your account.
-			</translate>
+			<AppTranslate>
+				We use cookies to ensure you get the best personalized experience on our website as
+				well as keeping you signed into your account.
+			</AppTranslate>
 			<a class="link-help" :href="Environment.baseUrl + '/cookies'" @click="close()">
-				<translate>Learn more</translate>
+				<AppTranslate>Learn more</AppTranslate>
 			</a>
 		</p>
 		<div class="text-right">
-			<app-button @click="close()">
-				<translate>Okay!</translate>
-			</app-button>
+			<AppButton @click="close()">
+				<AppTranslate>Okay!</AppTranslate>
+			</AppButton>
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 $-width = 450px
 
 .cookie-banner
@@ -41,5 +63,3 @@ $-width = 450px
 		margin-left: -($-width / 2)
 		width: $-width
 </style>
-
-<script lang="ts" src="./banner"></script>

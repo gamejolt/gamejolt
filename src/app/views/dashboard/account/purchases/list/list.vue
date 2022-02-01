@@ -1,12 +1,56 @@
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import { Api } from '../../../../../../_common/api/api.service';
+import { formatCurrency } from '../../../../../../_common/filters/currency';
+import { formatDate } from '../../../../../../_common/filters/date';
+import { Order } from '../../../../../../_common/order/order.model';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../_common/route/route-component';
+import { $gettext } from '../../../../../../_common/translate/translate.service';
+import { useAccountRouteController } from '../../account.vue';
+
+@Options({
+	name: 'RouteDashAccountPurchasesList',
+})
+@OptionsForRoute({
+	cache: true,
+	deps: {},
+	resolver: () => Api.sendRequest('/web/dash/purchases'),
+})
+export default class RouteDashAccountPurchasesList extends BaseRouteComponent {
+	routeStore = setup(() => useAccountRouteController()!);
+
+	orders: Order[] = [];
+
+	readonly formatDate = formatDate;
+	readonly formatCurrency = formatCurrency;
+
+	get routeTitle() {
+		return this.routeStore.heading;
+	}
+
+	routeCreated() {
+		this.routeStore.heading = $gettext(`Order History`);
+	}
+
+	routeResolved($payload: any) {
+		this.orders = Order.populate($payload.orders);
+	}
+}
+</script>
+
 <template>
 	<div v-if="isRouteBootstrapped">
-		<table class="table" v-if="orders.length">
+		<table v-if="orders.length" class="table">
 			<thead>
 				<tr>
-					<th><translate>Order #</translate></th>
-					<th><translate>Item(s)</translate></th>
-					<th><translate>Purchase Date</translate></th>
-					<th class="text-right"><translate>Amount</translate></th>
+					<th><AppTranslate>Order #</AppTranslate></th>
+					<th><AppTranslate>Item(s)</AppTranslate></th>
+					<th><AppTranslate>Purchase Date</AppTranslate></th>
+					<th class="text-right"><AppTranslate>Amount</AppTranslate></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -26,14 +70,14 @@
 					<td>
 						{{ order.items[0].sellable ? order.items[0].sellable.title : '-' }}
 					</td>
-					<td :title="date(order.completed_on, 'medium')">
-						{{ order.completed_on | date('mediumDate') }}
+					<td :title="formatDate(order.completed_on, 'medium')">
+						{{ formatDate(order.completed_on, 'mediumDate') }}
 					</td>
 					<td class="text-right">
-						<span class="tag tag-notice" v-if="order._is_refunded">
-							<translate>Refunded</translate>
+						<span v-if="order._is_refunded" class="tag tag-notice">
+							<AppTranslate>Refunded</AppTranslate>
 						</span>
-						{{ order.total_amount | currency }}
+						{{ formatCurrency(order.total_amount) }}
 					</td>
 				</tr>
 			</tbody>
@@ -41,14 +85,12 @@
 		<div v-else class="row">
 			<div class="col-md-6 col-centered">
 				<p class="lead text-center">
-					<translate>
-						You haven't bought any games on the site yet. Once you do, you'll be able to see all of
-						your orders here and the details for each order.
-					</translate>
+					<AppTranslate>
+						You haven't bought any games on the site yet. Once you do, you'll be able to
+						see all of your orders here and the details for each order.
+					</AppTranslate>
 				</p>
 			</div>
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./list"></script>

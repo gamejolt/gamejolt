@@ -1,4 +1,33 @@
-<script lang="ts" src="./game-api-doc"></script>
+<script lang="ts">
+import { Options } from 'vue-property-decorator';
+import nav from '../../../../lib/doc-game-api/v1.x/nav.json';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
+import { imageJolt } from '../../../img/images';
+
+@Options({
+	name: 'RouteLandingGameApiDoc',
+	components: {
+		AppThemeSvg,
+	},
+})
+@OptionsForRoute()
+export default class RouteLandingGameApiDoc extends BaseRouteComponent {
+	readonly nav = nav;
+	readonly imageJolt = imageJolt;
+
+	get routeTitle() {
+		return this.$gettext(`Game API Documentation`);
+	}
+
+	inPath(url: string, exact = false) {
+		if (exact) {
+			return '/' + this.$route.params.path === url;
+		}
+		return ('/' + this.$route.params.path).indexOf(url) !== -1;
+	}
+}
+</script>
 
 <template>
 	<div>
@@ -7,16 +36,16 @@
 				<div class="row">
 					<div class="col-lg-offset-1 col-lg-11">
 						<h1>
-							<app-theme-svg
-								src="~img/jolt.svg"
+							<AppThemeSvg
+								:src="imageJolt"
 								alt=""
 								:width="17 * 3"
 								:height="18 * 3"
 								strict-colors
 							/>
-							<translate>Game API</translate>
+							<AppTranslate>Game API</AppTranslate>
 							<sup>
-								<translate>Documentation</translate>
+								<AppTranslate>Documentation</AppTranslate>
 							</sup>
 						</h1>
 					</div>
@@ -65,19 +94,16 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-@import '~styles-lib/tables'
+@import '../../../../_styles/common/tables'
 
-.-content >>>
-	h1:first-child
+.-content
+	::v-deep(h1:first-child)
 		margin-top: 0
 
-	table
+	::v-deep(table)
 		@extend .table
 
-	img
+	::v-deep(img)
 		img-responsive()
 		rounded-corners-lg()
 </style>
-

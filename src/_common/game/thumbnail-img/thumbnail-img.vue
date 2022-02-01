@@ -1,4 +1,54 @@
-<script lang="ts" src="./thumbnail-img"></script>
+<script lang="ts" setup>
+import { computed, PropType, ref } from 'vue';
+import { ContentFocus } from '../../content-focus/content-focus.service';
+import { AppImgResponsive } from '../../img/responsive/responsive';
+import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
+import { Screen } from '../../screen/screen-service';
+import { getVideoPlayerFromSources } from '../../video/player/controller';
+import AppVideo from '../../video/video.vue';
+import { Game } from '../game.model';
+
+const props = defineProps({
+	game: {
+		type: Object as PropType<Game>,
+		required: true,
+	},
+	hideMedia: {
+		type: Boolean,
+		default: false,
+	},
+	animate: {
+		type: Boolean,
+		default: false,
+	},
+});
+
+const isThumbnailLoaded = ref(import.meta.env.SSR);
+
+const mediaItem = computed(() => props.game.thumbnail_media_item);
+
+const hasVideo = computed(
+	() => mediaItem.value?.is_animated && Screen.isDesktop && !import.meta.env.SSR && props.animate
+);
+
+const shouldPlayVideo = computed(() => hasVideo.value && ContentFocus.hasFocus);
+
+const videoController = computed(() => {
+	if (!mediaItem.value) {
+		return;
+	}
+
+	const sourcesPayload = {
+		mp4: mediaItem.value.mediaserver_url_mp4,
+		webm: mediaItem.value.mediaserver_url_webm,
+	};
+	return getVideoPlayerFromSources(sourcesPayload, 'gif', mediaItem.value.mediaserver_url);
+});
+
+function imgLoadChange(isLoaded: boolean) {
+	isThumbnailLoaded.value = isLoaded;
+}
+</script>
 
 <template>
 	<div
@@ -8,33 +58,30 @@
 		}"
 	>
 		<div class="-inner">
-			<app-media-item-backdrop :media-item="mediaItem" radius="lg">
-				<app-jolticon class="-icon" icon="game" />
+			<AppMediaItemBackdrop :media-item="mediaItem" radius="lg">
+				<AppJolticon class="-icon" icon="game" />
 
 				<div v-if="mediaItem && !hideMedia" class="-media">
-					<app-img-responsive
+					<AppImgResponsive
 						class="-img"
 						:src="mediaItem.mediaserver_url"
 						alt=""
 						@imgloadchange="imgLoadChange"
 					/>
 
-					<app-video
+					<AppVideo
 						v-if="hasVideo && videoController"
 						class="-video"
 						:player="videoController"
 						:should-play="shouldPlayVideo"
 					/>
 				</div>
-			</app-media-item-backdrop>
+			</AppMediaItemBackdrop>
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .game-thumbnail-img
 	rounded-corners-lg()
 	change-bg('bg-offset')

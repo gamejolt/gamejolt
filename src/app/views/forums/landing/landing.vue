@@ -1,45 +1,68 @@
+<script lang="ts">
+import { Options } from 'vue-property-decorator';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppPageHeader from '../../../components/page-header/page-header.vue';
+import butterfliesImage from './butterflies.png';
+
+@Options({
+	name: 'RouteForumsLanding',
+	components: {
+		AppPageHeader,
+	},
+})
+@OptionsForRoute()
+export default class RouteForumsLanding extends BaseRouteComponent {
+	readonly Screen = Screen;
+	readonly butterfliesImage = butterfliesImage;
+}
+</script>
+
 <template>
 	<div>
-		<app-page-header class="forum-header-landing">
+		<AppPageHeader class="forum-header-landing">
 			<div :class="{ 'text-center': Screen.isXs }">
 				<h1>
-					<translate>Game Jolt Forums</translate>
+					<AppTranslate>Game Jolt Forums</AppTranslate>
 				</h1>
 				<img
 					class="forum-header-landing-mascot"
-					src="./butterflies.png"
+					:src="butterfliesImage"
 					width="218"
 					height="146"
 					alt="The Social Butterflies"
 				/>
 			</div>
 
-			<nav slot="nav" class="platform-list inline">
-				<ul>
-					<li>
-						<router-link
-							:to="{ name: 'forums.landing.overview' }"
-							:class="{ active: $route.name === 'forums.landing.overview' }"
-						>
-							<translate>Overview</translate>
-						</router-link>
-					</li>
-					<li>
-						<router-link :to="{ name: 'forums.landing.active' }" active-class="active">
-							<translate>Active Topics</translate>
-						</router-link>
-					</li>
-				</ul>
-			</nav>
-		</app-page-header>
+			<template #nav>
+				<nav class="platform-list inline">
+					<ul>
+						<li>
+							<router-link
+								:to="{ name: 'forums.landing.overview' }"
+								:class="{ active: $route.name === 'forums.landing.overview' }"
+							>
+								<AppTranslate>Overview</AppTranslate>
+							</router-link>
+						</li>
+						<li>
+							<router-link
+								:to="{ name: 'forums.landing.active' }"
+								active-class="active"
+							>
+								<AppTranslate>Active Topics</AppTranslate>
+							</router-link>
+						</li>
+					</ul>
+				</nav>
+			</template>
+		</AppPageHeader>
 
 		<router-view />
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-
 .forum-header-landing
 	position: relative
 
@@ -54,5 +77,3 @@
 			right: 0
 			bottom: -65px
 </style>
-
-<script lang="ts" src="./landing"></script>

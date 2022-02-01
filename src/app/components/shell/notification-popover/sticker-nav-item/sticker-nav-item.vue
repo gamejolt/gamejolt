@@ -1,26 +1,46 @@
-<script lang="ts" src="./sticker-nav-item"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { formatNumber } from '../../../../../_common/filters/number';
+import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+
+@Options({
+	components: {
+		AppTimelineListItem,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppShellNotificationPopoverStickerNavItem extends Vue {
+	@Prop({ type: Number, required: true }) stickerCount!: number;
+	@Prop({ type: Boolean, required: true }) hasNew!: boolean;
+
+	readonly formatNumber = formatNumber;
+}
+</script>
 
 <template>
 	<div>
 		<router-link :to="{ name: 'dash.stickers' }">
 			<div class="-item">
-				<app-timeline-list-item>
+				<AppTimelineListItem>
 					<template #bubble>
 						<div class="-icon-container">
-							<app-jolticon icon="sticker" :big="hasNew" :highlight="hasNew" />
+							<AppJolticon icon="sticker" :big="hasNew" :highlight="hasNew" />
 						</div>
 					</template>
 
 					<div class="timeline-list-item-title timeline-list-item-title-small -title">
-						<translate
+						<AppTranslate
 							:translate-n="stickerCount"
-							:translate-params="{ count: number(stickerCount) }"
+							:translate-params="{ count: formatNumber(stickerCount) }"
 							translate-plural="You have %{ count } stickers."
 						>
 							You have %{ count } sticker.
-						</translate>
+						</AppTranslate>
 					</div>
-				</app-timeline-list-item>
+				</AppTimelineListItem>
 
 				<div v-if="hasNew" class="-actions">
 					<span v-app-tooltip="$gettext(`View newly unlocked stickers`)" class="-icon" />
@@ -33,9 +53,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-item
 	display: flex
 	justify-content: space-between

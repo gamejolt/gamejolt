@@ -1,3 +1,16 @@
+import {
+	computed,
+	ComputedRef,
+	inject,
+	InjectionKey,
+	provide,
+	reactive,
+	ref,
+	Ref,
+	ShallowRef,
+	shallowRef,
+	WritableComputedRef,
+} from 'vue';
 import { Comment } from '../../comment/comment-model';
 import { Fireside } from '../../fireside/fireside.model';
 import { FiresidePost } from '../../fireside/post/post-model';
@@ -5,64 +18,103 @@ import { MediaItem } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
 import { StickerLayerController } from '../layer/layer-controller';
 import { StickerPlacement } from '../placement/placement.model';
-import { ValidStickerResource } from './target';
+import { ValidStickerResource } from './target.vue';
 
-export const StickerTargetParentControllerKey = Symbol('sticker-target-parent');
+const StickerTargetParentControllerKey: InjectionKey<StickerTargetController> =
+	Symbol('sticker-target-parent');
 
-export class StickerTargetController {
-	isInview = false;
-	stickers: StickerPlacement[] = [];
-	/** The stickers that have been added since the last time freshly rendered the target. */
-	newStickers: StickerPlacement[] = [];
-	hasLoadedStickers = false;
+type StickerTargetModel = FiresidePost | Comment | MediaItem | Fireside;
 
-	/**
-	 * This is the layer that this target lives within. It gets set when the
-	 * AppStickerTarget registers the target to the layer.
-	 */
-	layer: null | StickerLayerController = null;
+export type StickerTargetController = {
+	isInview: Ref<boolean>;
+	hasLoadedStickers: Ref<boolean>;
+	shouldLoad: ComputedRef<boolean>;
+	shouldShow: WritableComputedRef<boolean>;
 
-	parent: null | StickerTargetController = null;
-	children: StickerTargetController[] = [];
+	stickers: Ref<StickerPlacement[]>;
+	newStickers: Ref<StickerPlacement[]>;
 
-	private _shouldShow = false;
+	layer: ShallowRef<StickerLayerController | null>;
+	children: ShallowRef<StickerTargetController[]>;
 
-	get shouldShow() {
-		// Stickers in a Live context will show, fade, then remove themselves
-		// automatically. Always show Live stickers.
-		if (this.isLive) {
-			return true;
-		}
+	model: StickerTargetModel;
+	parent: StickerTargetController | null;
+	isLive: boolean;
+};
 
-		return Boolean(this._shouldShow || this.parent?.shouldShow || this.layer?.isShowingDrawer);
-	}
-
-	set shouldShow(shouldShow: boolean) {
-		this._shouldShow = shouldShow;
-	}
+export function createStickerTargetController(
+	model: StickerTargetModel,
+	parent?: StickerTargetController | null,
+	isLive = false
+) {
+	model = reactive(model) as StickerTargetModel;
+	const isInview = ref(false);
+	const hasLoadedStickers = ref(false);
 
 	/**
 	 * Note, the AppStickerTarget component is what actually loads the stickers
 	 * in based on this state changing.
 	 */
-	get shouldLoad() {
-		return !this.isLive && this.shouldShow && this.isInview && !this.hasLoadedStickers;
+	const shouldLoad = computed(() => {
+		return !isLive && shouldShow.value && isInview.value && !hasLoadedStickers.value;
+	});
+
+	const _shouldShow = ref(false);
+	const shouldShow = computed({
+		get: () => {
+			// Stickers in a Live context will show, fade, then remove themselves
+			// automatically. Always show Live stickers.
+			if (isLive) {
+				return true;
+			}
+
+			return Boolean(
+				_shouldShow.value || parent?.shouldShow.value || layer.value?.isShowingDrawer.value
+			);
+		},
+		set: value => {
+			_shouldShow.value = value;
+		},
+	});
+
+	const stickers = ref<StickerPlacement[]>([]);
+	/** The stickers that have been added since the last time freshly rendered the target. */
+	const newStickers = ref<StickerPlacement[]>([]);
+
+	/**
+	 * This is the layer that this target lives within. It gets set when the
+	 * AppStickerTarget registers the target to the layer.
+	 */
+	const layer = shallowRef<StickerLayerController | null>(null);
+	const children = shallowRef<StickerTargetController[]>([]);
+
+	const c: StickerTargetController = {
+		isInview,
+		hasLoadedStickers,
+		shouldShow,
+		stickers,
+		newStickers,
+		layer,
+		children,
+		shouldLoad,
+		model,
+		parent: parent || null,
+		isLive,
+	};
+
+	if (parent) {
+		parent.children.value.push(c);
 	}
 
-	constructor(
-		public readonly model: FiresidePost | Comment | MediaItem | Fireside,
-		parent?: StickerTargetController,
-		/**
-		 * Used to know if we should fade-out stickers after they've been
-		 * placed, and if we should fetch previous placement data or not.
-		 */
-		public readonly isLive = false
-	) {
-		if (parent) {
-			this.parent = parent;
-			parent.children.push(this);
-		}
-	}
+	return c;
+}
+
+export function provideStickerTargerController(controller?: StickerTargetController | null) {
+	provide(StickerTargetParentControllerKey, controller);
+}
+
+export function useStickerTargetController() {
+	return inject(StickerTargetParentControllerKey) || null;
 }
 
 export function toggleStickersShouldShow(
@@ -78,11 +130,11 @@ export function toggleStickersShouldShow(
 		return;
 	}
 
-	shouldShow = shouldShow ?? !controller.shouldShow;
-	controller.shouldShow = shouldShow;
+	shouldShow = shouldShow ?? !controller.shouldShow.value;
+	controller.shouldShow.value = shouldShow;
 
 	if (forceLoad) {
-		controller.hasLoadedStickers = false;
+		controller.hasLoadedStickers.value = false;
 	}
 }
 
@@ -100,25 +152,32 @@ export function getStickerModelResourceName(model: Model): ValidStickerResource 
 }
 
 export function addStickerToTarget(controller: StickerTargetController, sticker: StickerPlacement) {
-	controller.stickers.push(sticker);
-	controller.newStickers.push(sticker);
+	const { stickers, newStickers, isLive } = controller;
+
+	stickers.value.push(sticker);
+	newStickers.value.push(sticker);
 
 	// Anytime we add new stickers to a non-Live target, show all the stickers again.
-	if (!controller.isLive) {
+	if (!isLive) {
 		toggleStickersShouldShow(controller, false, true);
 	}
 }
-/// Use by stickers in a Live context to remove themselves after their animations finish.
+
+/**
+ * Use by stickers in a Live context to remove themselves after their animations finish.
+ */
 export function removeStickerFromTarget(
 	controller: StickerTargetController,
 	sticker: StickerPlacement
 ) {
-	let index = controller.stickers.indexOf(sticker);
+	const { stickers, newStickers } = controller;
+
+	let index = stickers.value.indexOf(sticker);
 	if (index !== -1) {
-		controller.stickers.splice(index, 1);
+		stickers.value.splice(index, 1);
 	}
-	index = controller.newStickers.indexOf(sticker);
+	index = newStickers.value.indexOf(sticker);
 	if (index !== -1) {
-		controller.newStickers.splice(index, 1);
+		newStickers.value.splice(index, 1);
 	}
 }

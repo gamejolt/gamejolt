@@ -1,8 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeAuthLinkedAccountTwitterCallback: RouteConfig = {
+export const routeAuthLinkedAccountTwitterCallback: RouteRecordRaw = {
 	name: 'auth.linked-account.twitter.callback',
 	path: 'twitter/callback',
-	component: () =>
-		import(/* webpackChunkName: "routeAuthLinkedAccountTwitterCallback" */ './callback'),
+	component: () => import('./callback'),
 };

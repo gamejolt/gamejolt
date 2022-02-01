@@ -1,13 +1,118 @@
-<script lang="ts" src="./emoji"></script>
+<script lang="ts">
+import { nextTick } from 'vue';
+import { setup } from 'vue-class-component';
+import { Emit, Options, Vue } from 'vue-property-decorator';
+import AppEmoji, { GJ_EMOJIS } from '../../../../emoji/AppEmoji.vue';
+import { AppTooltip } from '../../../../tooltip/tooltip-directive';
+import { editorInsertEmoji, useContentEditorController } from '../../content-editor-controller';
+
+@Options({
+	components: {
+		AppEmoji,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppContentEditorControlsEmoji extends Vue {
+	controller = setup(() => useContentEditorController()!);
+
+	emoji = 'huh'; // gets set to a random one at mounted
+	panelVisible = false;
+	clickedWithPanelVisible = false;
+
+	declare $refs: {
+		panel: HTMLElement;
+	};
+
+	@Emit('visibility-change')
+	emitVisibilityChange(_visible: boolean) {}
+
+	get visible() {
+		return this.controller.scope.isFocused && this.controller.capabilities.emoji;
+	}
+
+	get emojis() {
+		return GJ_EMOJIS;
+	}
+
+	private setPanelVisibility(visible: boolean) {
+		if (this.panelVisible !== visible) {
+			this.panelVisible = visible;
+			this.emitVisibilityChange(visible);
+		}
+	}
+
+	private setRandomEmoji() {
+		const prev = this.emoji;
+		do {
+			const emojiIndex = Math.floor(Math.random() * GJ_EMOJIS.length);
+			this.emoji = GJ_EMOJIS[emojiIndex];
+		} while (prev === this.emoji);
+	}
+
+	mounted() {
+		this.setRandomEmoji();
+
+		// Register the panel interface with the controller.
+		this.controller._emojiPanel = {
+			show: () => this.show(),
+		};
+	}
+
+	unmounted() {
+		this.controller._emojiPanel = undefined;
+	}
+
+	onMouseEnter() {
+		if (!this.panelVisible) {
+			this.setRandomEmoji();
+		}
+	}
+
+	onMouseDown() {
+		this.clickedWithPanelVisible = this.panelVisible;
+	}
+
+	onButtonClick() {
+		if (this.clickedWithPanelVisible) {
+			this.setPanelVisibility(false);
+		} else {
+			this.show();
+		}
+	}
+
+	onPanelFocus() {
+		this.setPanelVisibility(true);
+	}
+
+	onPanelBlur() {
+		this.setPanelVisibility(false);
+	}
+
+	onClickEmoji(emojiType: string) {
+		editorInsertEmoji(this.controller, emojiType);
+	}
+
+	public async show() {
+		this.setPanelVisibility(true);
+		await nextTick();
+		this.$refs.panel.focus();
+	}
+}
+</script>
 
 <template>
 	<div class="inset-container-controls">
 		<transition name="fade">
-			<span
+			<AppEmoji
 				v-if="visible"
 				v-app-tooltip="panelVisible ? '' : $gettext('Insert Emoji')"
 				class="emoji-button"
-				:class="spanClass"
+				:class="{
+					'emoji-button-active': panelVisible,
+				}"
+				:emoji="emoji"
 				tabindex="1"
 				@click="onButtonClick"
 				@mousedown="onMouseDown"
@@ -30,7 +135,7 @@
 					:title="':' + emoji + ':'"
 					@click="onClickEmoji(emoji)"
 				>
-					<span :class="'emoji-selector emoji emoji-' + emoji" />
+					<AppEmoji :emoji="emoji" />
 				</div>
 			</div>
 		</transition>
@@ -38,14 +143,11 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .fade-enter-active
 .fade-leave-active
 	transition: opacity 0.05s
 
-.fade-enter
+.fade-enter-from
 .fade-leave-to
 	opacity: 0
 

@@ -1,12 +1,14 @@
-import { BaseRouteComponent } from '../../../../_common/route/route-component';
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options } from 'vue-property-decorator';
+import { RouterView } from 'vue-router';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 
-@Component({
+@Options({
 	name: 'RouteAuthLinkedAccount',
 })
+@OptionsForRoute()
 export default class RouteAuthLinkedAccount extends BaseRouteComponent {
-	render(h: CreateElement) {
-		return h('router-view');
+	render() {
+		return h(RouterView);
 	}
 }

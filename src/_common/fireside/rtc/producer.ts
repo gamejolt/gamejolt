@@ -1,11 +1,9 @@
-import AgoraRTC, {
-	IAgoraRTCRemoteUser,
-	ILocalAudioTrack,
-	IRemoteAudioTrack,
-} from 'agora-rtc-sdk-ng';
+import type { IAgoraRTCRemoteUser, ILocalAudioTrack, IRemoteAudioTrack } from 'agora-rtc-sdk-ng';
+import { markRaw, reactive } from 'vue';
 import { MediaDeviceService } from '../../agora/media-device.service';
 import { Api } from '../../api/api.service';
-import { Growls } from '../../growls/growls.service';
+import { importNoSSR } from '../../code-splitting';
+import { showErrorGrowl } from '../../growls/growls.service';
 import { Navigate } from '../../navigate/navigate.service';
 import {
 	SettingStreamProducerDesktopAudio,
@@ -23,11 +21,13 @@ import {
 } from './channel';
 import { chooseFocusedRTCUser, FiresideRTC, renewRTCTokens } from './rtc';
 import {
-	FiresideRTCUser,
+	createFiresideRTCUser,
 	setUserHasDesktopAudio,
 	setUserHasMicAudio,
 	setUserHasVideo,
 } from './user';
+
+const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
 
 const RENEW_TOKEN_INTERVAL = 60_000;
 
@@ -89,7 +89,7 @@ export class FiresideRTCProducer {
 }
 
 export function createFiresideRTCProducer(rtc: FiresideRTC) {
-	const producer = new FiresideRTCProducer(rtc);
+	const producer = reactive(new FiresideRTCProducer(rtc)) as FiresideRTCProducer;
 
 	MediaDeviceService.detectDevices({ prompt: false });
 
@@ -238,11 +238,7 @@ async function _renewTokens(producer: FiresideRTCProducer) {
 			return;
 		}
 
-		const response = await Api.sendRequest(
-			'/web/dash/fireside/set-is-streaming/' + fireside.id,
-			{ is_streaming: true, streaming_uid: rtc.streamingUid },
-			{ detach: true }
-		);
+		const response = await _updateSetIsStreaming(producer);
 
 		if (response?.success !== true) {
 			throw new Error(response);
@@ -425,6 +421,7 @@ function _updateWebcamDevice(producer: FiresideRTCProducer) {
 				}
 			}
 
+			const AgoraRTC = await AgoraRTCLazy;
 			const track = await AgoraRTC.createCameraVideoTrack({
 				cameraId: deviceId,
 				optimizationMode: mode,
@@ -437,13 +434,47 @@ function _updateWebcamDevice(producer: FiresideRTCProducer) {
 			});
 
 			rtc.log(`Video webcam track ID: ${track.getTrackId()}`);
+
 			return track;
 		});
+
+		// No need to await on this. its not essential.
+		_updateSetIsStreaming(producer);
 
 		if (producer._videoPreviewElement) {
 			previewChannelVideo(videoChannel, producer._videoPreviewElement);
 		}
 	});
+}
+
+async function _updateSetIsStreaming(producer: FiresideRTCProducer) {
+	const { rtc } = producer;
+
+	let response: any = null;
+
+	try {
+		response = await Api.sendRequest(
+			'/web/dash/fireside/set-is-streaming/' + rtc.fireside.id,
+			{
+				is_streaming: producer._isStreaming,
+				streaming_uid: rtc.streamingUid,
+				has_video:
+					producer.selectedWebcamDeviceId !== PRODUCER_UNSET_DEVICE &&
+					rtc.videoChannel._localVideoTrack !== null,
+				has_mic_audio:
+					producer.selectedMicDeviceId !== PRODUCER_UNSET_DEVICE &&
+					rtc.chatChannel._localAudioTrack !== null,
+				has_desktop_audio:
+					producer.selectedDesktopAudioDeviceId !== PRODUCER_UNSET_DEVICE &&
+					rtc.videoChannel._localAudioTrack !== null,
+			},
+			{ detach: true }
+		);
+	} catch (e) {
+		rtc.logWarning(`Got error while trying to set what we're streaming.`, e);
+	}
+
+	return response;
 }
 
 function _updateDesktopAudioDevice(producer: FiresideRTCProducer) {
@@ -475,6 +506,7 @@ function _updateDesktopAudioDevice(producer: FiresideRTCProducer) {
 				return null;
 			}
 
+			const AgoraRTC = await AgoraRTCLazy;
 			const track = await AgoraRTC.createMicrophoneAudioTrack({
 				microphoneId: deviceId,
 				// We disable all this so that it doesn't affect the desktop audio in any way.
@@ -486,8 +518,12 @@ function _updateDesktopAudioDevice(producer: FiresideRTCProducer) {
 			track.setVolume(100);
 
 			rtc.log(`Desktop audio track ID: ${track.getTrackId()}`);
+
 			return track;
 		});
+
+		// No need to await on this. its not essential.
+		_updateSetIsStreaming(producer);
 	});
 }
 
@@ -517,14 +553,19 @@ function _updateMicDevice(producer: FiresideRTCProducer) {
 				return null;
 			}
 
+			const AgoraRTC = await AgoraRTCLazy;
 			const track = await AgoraRTC.createMicrophoneAudioTrack({
 				microphoneId: deviceId,
 			});
 			track.setVolume(100);
 
 			rtc.log(`Mic track ID: ${track.getTrackId()}`);
+
 			return track;
 		});
+
+		// No need to await on this. its not essential.
+		_updateSetIsStreaming(producer);
 	});
 }
 
@@ -631,7 +672,7 @@ export function setVideoPreviewElement(
 		_videoPreviewElement.innerHTML = '';
 	}
 
-	producer._videoPreviewElement = element;
+	producer._videoPreviewElement = element ? markRaw(element) : null;
 	if (element) {
 		previewChannelVideo(videoChannel, element);
 	}
@@ -664,24 +705,16 @@ export async function startStreaming(producer: FiresideRTCProducer) {
 
 		const {
 			rtc,
-			rtc: { fireside, videoChannel, chatChannel, generation },
+			rtc: { videoChannel, chatChannel },
 		} = producer;
+		const generation = rtc.generation;
 
-		let response: any = null;
-		try {
-			response = await Api.sendRequest(
-				'/web/dash/fireside/set-is-streaming/' + fireside.id,
-				{ is_streaming: true, streaming_uid: rtc.streamingUid },
-				{ detach: true }
-			);
-		} catch (e) {
-			rtc.logWarning(`Got error while trying to set that we're streaming.`, e);
-		}
+		const response = await _updateSetIsStreaming(producer);
 
 		if (response?.success !== true || generation.isCanceled) {
 			rtc.logWarning(`Couldn't start streaming.`, response);
 
-			Growls.error(
+			showErrorGrowl(
 				Translate.$gettext(
 					`Couldn't start streaming. Either fireside has ended, your permissions to stream have been revoked or you have a running stream elsewhere.`
 				)
@@ -699,7 +732,7 @@ export async function startStreaming(producer: FiresideRTCProducer) {
 			rtc.log(`Started streaming.`);
 		} catch (err) {
 			rtc.logError(err);
-			Growls.error(Translate.$gettext('Could not start streaming. Try again later.'));
+			showErrorGrowl(Translate.$gettext('Could not start streaming. Try again later.'));
 			await _stopStreaming(producer, false);
 		}
 	});
@@ -718,24 +751,15 @@ async function _stopStreaming(producer: FiresideRTCProducer, becomeBusy: boolean
 
 		const {
 			rtc,
-			rtc: { fireside, videoChannel, chatChannel },
+			rtc: { videoChannel, chatChannel },
 		} = producer;
 
 		// This just sets the backend to know that they stopped streaming
 		// immediately. We don't need to refresh or anything if it fails.
-		let response: any = null;
-		try {
-			response = await Api.sendRequest(
-				'/web/dash/fireside/set-is-streaming/' + fireside.id,
-				{ is_streaming: false, streaming_uid: rtc.streamingUid },
-				{ detach: true }
-			);
+		const response = await _updateSetIsStreaming(producer);
 
-			if (response?.success !== true) {
-				throw new Error(`API did not return success.`);
-			}
-		} catch (e) {
-			rtc.logWarning(`Got error while setting that we're not streaming.`, e);
+		if (response?.success !== true) {
+			throw new Error(`API did not return success.`);
 		}
 
 		// Failure here should end up forcing the app to reload to make
@@ -799,10 +823,16 @@ function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
 	const hadDesktopAudio = user?.hasDesktopAudio === true;
 	const hadMicAudio = user?.hasMicAudio === true;
 
-	user ??= new FiresideRTCUser(rtc, streamingUid);
-	user._videoTrack = videoChannel._localVideoTrack;
-	user._desktopAudioTrack = videoChannel._localAudioTrack;
-	user._micAudioTrack = chatChannel._localAudioTrack;
+	user ??= createFiresideRTCUser(rtc, streamingUid);
+	user._videoTrack = videoChannel._localVideoTrack
+		? markRaw(videoChannel._localVideoTrack)
+		: null;
+	user._desktopAudioTrack = videoChannel._localAudioTrack
+		? markRaw(videoChannel._localAudioTrack)
+		: null;
+	user._micAudioTrack = chatChannel._localAudioTrack
+		? markRaw(chatChannel._localAudioTrack)
+		: null;
 
 	const hasVideo = !!user._videoTrack;
 	const hasDesktopAudio = !!user._desktopAudioTrack;

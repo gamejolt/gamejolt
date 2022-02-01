@@ -1,6 +1,6 @@
 export class Graph {
 	static createGraphData(data: any[]): any {
-		let graphData: any = {};
+		const graphData: any = {};
 		graphData.graph = [];
 		graphData.tableData = [];
 		graphData.tableTotals = {};
@@ -25,7 +25,7 @@ export class Graph {
 				continue;
 			}
 
-			let tableData: any = {
+			const tableData: any = {
 				time: row.time * 1000,
 			};
 

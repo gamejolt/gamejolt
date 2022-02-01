@@ -1,14 +1,16 @@
-import { StickerCount } from '../../app/views/dashboard/stickers/stickers';
+import { computed, inject, InjectionKey, provide, ref, shallowRef, toRaw } from 'vue';
 import { arrayRemove, numberSort } from '../../utils/array';
 import { Analytics } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
-import { Growls } from '../growls/growls.service';
+import { showErrorGrowl } from '../growls/growls.service';
+import { setModalBodyWrapper } from '../modal/modal.service';
 import {
 	getCollidingStickerTarget,
 	StickerLayerController,
 } from '../sticker/layer/layer-controller';
+import AppStickerLayer from '../sticker/layer/layer.vue';
 import { StickerPlacement } from '../sticker/placement/placement.model';
-import { Sticker } from '../sticker/sticker.model';
+import { Sticker, StickerStack } from '../sticker/sticker.model';
 import {
 	addStickerToTarget,
 	getStickerModelResourceName,
@@ -16,45 +18,85 @@ import {
 } from '../sticker/target/target-controller';
 import { Translate } from '../translate/translate.service';
 
-export const DrawerStoreKey = Symbol('drawer-store');
+const DrawerStoreKey: InjectionKey<DrawerStore> = Symbol('drawer-store');
 
 interface StickerStreak {
 	sticker: Sticker;
 	count: number;
 }
 
-export class DrawerStore {
-	layers: StickerLayerController[] = [];
-	drawerItems: StickerCount[] = [];
-	targetController: StickerTargetController | null = null;
-	placedItem: StickerPlacement | null = null;
-	sticker: Sticker | null = null;
-	isDrawerOpen = false;
-	isDragging = false;
-	hasValidTarget = false;
-	isHoveringDrawer = false;
-	drawerHeight = 0;
-	stickerSize = 64;
-	hideDrawer = false;
-	stickerCurrency: number | null = null;
-	stickerCost: number | null = null;
-	isLoading = false;
-	hasLoaded = false;
-	streak: StickerStreak | null = null;
+export type DrawerStore = ReturnType<typeof createDrawerStore>;
 
-	_waitingForFrame = false;
-	_onPointerMove: ((event: MouseEvent | TouchEvent) => void) | null = null;
-	_onPointerUp: ((event: MouseEvent | TouchEvent) => void) | null = null;
-	_updateGhostPosition: ((position: { left: number; top: number }) => void) | null = null;
+export function createDrawerStore() {
+	const layers = shallowRef<StickerLayerController[]>([]);
+	const targetController = shallowRef<StickerTargetController | null>(null);
 
-	get activeLayer() {
-		// The active layer is always the last to be added to the stack.
-		return this.layers[this.layers.length - 1];
-	}
+	const drawerItems = shallowRef<StickerStack[]>([]);
+	const placedItem = shallowRef<StickerPlacement | null>(null);
+	const sticker = shallowRef<Sticker | null>(null);
+	const streak = shallowRef<StickerStreak | null>(null);
+
+	const drawerHeight = ref(0);
+	const stickerSize = ref(64);
+	const stickerCurrency = ref<number | null>(null);
+	const stickerCost = ref<number | null>(null);
+
+	const isDrawerOpen = ref(false);
+	const isDragging = ref(false);
+	const isHoveringDrawer = ref(false);
+	const isLoading = ref(false);
+	const hasLoaded = ref(false);
+	const hasValidTarget = ref(false);
+	const hideDrawer = ref(false);
+
+	const _waitingForFrame = ref(false);
+	const _onPointerMove = shallowRef<((event: MouseEvent | TouchEvent) => void) | null>(null);
+	const _onPointerUp = shallowRef<((event: MouseEvent | TouchEvent) => void) | null>(null);
+	const _updateGhostPosition = shallowRef<
+		((position: { left: number; top: number }) => void) | null
+	>(null);
+
+	const activeLayer = computed(() => {
+		return layers.value[layers.value.length - 1];
+	});
+
+	// Set up modals to have the sticker layer as their layer element.
+	setModalBodyWrapper(AppStickerLayer);
+
+	const c = {
+		layers,
+		drawerItems,
+		targetController,
+		placedItem,
+		sticker,
+		drawerHeight,
+		stickerSize,
+		stickerCurrency,
+		stickerCost,
+		streak,
+		isDrawerOpen,
+		isDragging,
+		isHoveringDrawer,
+		isLoading,
+		hasLoaded,
+		hasValidTarget,
+		hideDrawer,
+		_waitingForFrame,
+		_onPointerMove,
+		_onPointerUp,
+		_updateGhostPosition,
+		activeLayer,
+	};
+	provide(DrawerStoreKey, c);
+	return c;
+}
+
+export function useDrawerStore() {
+	return inject(DrawerStoreKey)!;
 }
 
 export function setStickerStreak(store: DrawerStore, sticker: Sticker, count: number) {
-	store.streak = {
+	store.streak.value = {
 		sticker,
 		count,
 	};
@@ -65,12 +107,12 @@ export function setStickerStreak(store: DrawerStore, sticker: Sticker, count: nu
  * when closing.
  */
 export function setDrawerOpen(store: DrawerStore, isOpen: boolean) {
-	if (isOpen === store.isDrawerOpen) {
+	if (isOpen === store.isDrawerOpen.value) {
 		return;
 	}
 
 	if (isOpen) {
-		store.isDrawerOpen = true;
+		store.isDrawerOpen.value = true;
 		_initializeDrawerContent(store);
 	} else {
 		_resetDrawerStore(store);
@@ -78,7 +120,7 @@ export function setDrawerOpen(store: DrawerStore, isOpen: boolean) {
 }
 
 export function setDrawerHidden(store: DrawerStore, shouldHide: boolean) {
-	store.hideDrawer = shouldHide;
+	store.hideDrawer.value = shouldHide;
 
 	// Everytime we un-hide the drawer we want to fetch their new stickers since they may have unlocked more.
 	if (!shouldHide) {
@@ -90,12 +132,12 @@ export function setDrawerHidden(store: DrawerStore, shouldHide: boolean) {
  * Send an API request to get the user stickers.
  */
 async function _initializeDrawerContent(store: DrawerStore) {
-	store.isLoading = true;
+	store.isLoading.value = true;
 	const payload = await Api.sendRequest('/web/stickers/dash');
 
-	store.stickerCost = payload.stickerCost;
-	store.stickerCurrency = payload.balance;
-	store.drawerItems = payload.stickerCounts.map((stickerCountPayload: any) => {
+	store.stickerCost.value = payload.stickerCost;
+	store.stickerCurrency.value = payload.balance;
+	store.drawerItems.value = payload.stickerCounts.map((stickerCountPayload: any) => {
 		const stickerData = payload.stickers.find(
 			(i: Sticker) => i.id === stickerCountPayload.sticker_id
 		);
@@ -104,12 +146,12 @@ async function _initializeDrawerContent(store: DrawerStore) {
 			count: stickerCountPayload.count,
 			sticker_id: stickerCountPayload.sticker_id,
 			sticker: new Sticker(stickerData),
-		} as StickerCount;
+		} as StickerStack;
 	});
 
-	store.drawerItems.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));
-	store.isLoading = false;
-	store.hasLoaded = true;
+	store.drawerItems.value.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));
+	store.isLoading.value = false;
+	store.hasLoaded.value = true;
 }
 
 /**
@@ -120,37 +162,37 @@ function _resetDrawerStore(store: DrawerStore) {
 	_removeEventListeners(store);
 	_removeDrawerStoreActiveItem(store);
 
-	store.targetController = null;
-	store.placedItem = null;
-	store.isDrawerOpen = false;
-	store.hasValidTarget = false;
-	store.isHoveringDrawer = false;
-	store.drawerHeight = 0;
-	store.hideDrawer = false;
+	store.targetController.value = null;
+	store.placedItem.value = null;
+	store.isDrawerOpen.value = false;
+	store.hasValidTarget.value = false;
+	store.isHoveringDrawer.value = false;
+	store.drawerHeight.value = 0;
+	store.hideDrawer.value = false;
 
-	store._waitingForFrame = false;
-	store._updateGhostPosition = null;
+	store._waitingForFrame.value = false;
+	store._updateGhostPosition.value = null;
 
-	store.activeLayer.hoveredTarget = null;
+	store.activeLayer.value.hoveredTarget.value = null;
 }
 
 export function registerStickerLayer(store: DrawerStore, layer: StickerLayerController) {
-	store.layers.push(layer);
+	store.layers.value.push(layer);
 }
 
 export function unregisterStickerLayer(store: DrawerStore, layer: StickerLayerController) {
-	arrayRemove(store.layers, i => i === layer);
+	arrayRemove(store.layers.value, i => toRaw(i) === toRaw(layer));
 }
 
 export function setDrawerStoreHeight(store: DrawerStore, height: number) {
-	store.drawerHeight = height;
+	store.drawerHeight.value = height;
 }
 
 export function assignDrawerStoreGhostCallback(
 	store: DrawerStore,
 	callback: (pos: { left: number; top: number }) => void
 ) {
-	store._updateGhostPosition = callback;
+	store._updateGhostPosition.value = callback;
 }
 
 /**
@@ -170,8 +212,8 @@ export function setDrawerStoreActiveItem(
 		return;
 	}
 
-	if (!store.sticker) {
-		store.sticker = sticker;
+	if (!store.sticker.value) {
+		store.sticker.value = sticker;
 
 		if (!fromTarget) {
 			alterDrawerStoreItemCount(store, sticker, false);
@@ -191,25 +233,25 @@ export function assignDrawerStoreItem(
 	item: StickerPlacement | null,
 	controller: StickerTargetController | null
 ) {
-	store.placedItem = item;
-	store.targetController = controller;
+	store.placedItem.value = item;
+	store.targetController.value = controller;
 }
 
 export async function commitDrawerStoreItemPlacement(store: DrawerStore) {
-	if (!store.placedItem || !store.targetController) {
+	if (!store.placedItem.value || !store.targetController.value) {
 		return;
 	}
 
-	const sticker = store.placedItem;
+	const sticker = store.placedItem.value;
 	if (!sticker) {
 		return;
 	}
 
 	Analytics.trackEvent('stickers', 'place-sticker');
 
-	const { targetController } = store;
-	const { model } = targetController;
+	const { model } = store.targetController.value;
 	const resourceType = getStickerModelResourceName(model);
+
 	const { success, resource, parent, stickerPlacement } = await Api.sendRequest(
 		'/web/stickers/place',
 		{
@@ -224,16 +266,16 @@ export async function commitDrawerStoreItemPlacement(store: DrawerStore) {
 	);
 
 	if (success) {
-		addStickerToTarget(targetController, new StickerPlacement(stickerPlacement));
+		addStickerToTarget(store.targetController.value, new StickerPlacement(stickerPlacement));
 
 		model.assign(resource);
-		if (parent && targetController.parent) {
-			targetController.parent.model.assign(parent);
+		if (parent && store.targetController.value.parent) {
+			store.targetController.value.parent.model.assign(parent);
 		}
 
 		setDrawerOpen(store, false);
 	} else {
-		Growls.error(Translate.$gettext(`Failed to place sticker.`));
+		showErrorGrowl(Translate.$gettext(`Failed to place sticker.`));
 	}
 }
 
@@ -245,7 +287,7 @@ export function alterDrawerStoreItemCount(
 	sticker: Sticker,
 	returnToDrawer = false
 ) {
-	const drawerItem = store.drawerItems.find(i => {
+	const drawerItem = store.drawerItems.value.find(i => {
 		return i.sticker.id === sticker.id;
 	});
 
@@ -267,7 +309,7 @@ export function alterDrawerStoreItemCount(
  * Remove the ghost element - triggered when returning an item to the drawer.
  */
 function _removeDrawerStoreActiveItem(store: DrawerStore) {
-	store.sticker = null;
+	store.sticker.value = null;
 }
 
 /**
@@ -275,9 +317,9 @@ function _removeDrawerStoreActiveItem(store: DrawerStore) {
  * and set any hovering state.
  */
 function _onDragItem(store: DrawerStore, event: MouseEvent | TouchEvent) {
-	store._waitingForFrame = false;
+	store._waitingForFrame.value = false;
 
-	if (!store._updateGhostPosition) {
+	if (!store._updateGhostPosition.value) {
 		return;
 	}
 
@@ -286,27 +328,29 @@ function _onDragItem(store: DrawerStore, event: MouseEvent | TouchEvent) {
 		return;
 	}
 
-	store._updateGhostPosition({
-		left: pointer.x - store.stickerSize / 2,
-		top: pointer.y - store.stickerSize / 2,
+	const stickerSize = store.stickerSize.value;
+
+	store._updateGhostPosition.value({
+		left: pointer.x - stickerSize / 2,
+		top: pointer.y - stickerSize / 2,
 	});
 
-	const drawerTop = store.isHoveringDrawer
-		? window.innerHeight - store.drawerHeight
-		: window.innerHeight - store.stickerSize;
+	const drawerTop = store.isHoveringDrawer.value
+		? window.innerHeight - store.drawerHeight.value
+		: window.innerHeight - stickerSize;
 
 	if (pointer.clientY > drawerTop) {
-		store.isHoveringDrawer = true;
+		store.isHoveringDrawer.value = true;
 	} else {
-		store.isHoveringDrawer = false;
+		store.isHoveringDrawer.value = false;
 	}
 
-	const layer = store.activeLayer;
+	const layer = store.activeLayer.value;
 	const target = getCollidingStickerTarget(layer, pointer.x, pointer.y);
-	if (target && !store.isHoveringDrawer) {
-		layer.hoveredTarget = target;
-	} else if (layer.hoveredTarget) {
-		layer.hoveredTarget = null;
+	if (target && !store.isHoveringDrawer.value) {
+		layer.hoveredTarget.value = target;
+	} else if (layer.hoveredTarget.value) {
+		layer.hoveredTarget.value = null;
 	}
 }
 
@@ -314,8 +358,8 @@ function _onDragItem(store: DrawerStore, event: MouseEvent | TouchEvent) {
  * 'Move' events for both mouse and touch.
  */
 const _onPointerMove = (store: DrawerStore) => (event: MouseEvent | TouchEvent) => {
-	if (!store._waitingForFrame) {
-		store._waitingForFrame = true;
+	if (!store._waitingForFrame.value) {
+		store._waitingForFrame.value = true;
 		window.requestAnimationFrame(() => _onDragItem(store, event));
 	}
 
@@ -327,9 +371,11 @@ const _onPointerMove = (store: DrawerStore) => (event: MouseEvent | TouchEvent) 
  * 'Up' or 'End' events for both mouse and touch.
  */
 const _onPointerUp = (store: DrawerStore) => (event: MouseEvent | TouchEvent) => {
-	if (store.isHoveringDrawer && store.sticker) {
+	const { isHoveringDrawer, sticker, activeLayer } = store;
+
+	if (isHoveringDrawer.value && sticker.value) {
 		Analytics.trackEvent('sticker-drawer', 'drop-drawer');
-		alterDrawerStoreItemCount(store, store.sticker, true);
+		alterDrawerStoreItemCount(store, sticker.value, true);
 		_removeEventListeners(store);
 		return;
 	}
@@ -339,13 +385,13 @@ const _onPointerUp = (store: DrawerStore) => (event: MouseEvent | TouchEvent) =>
 		return;
 	}
 
-	const target = getCollidingStickerTarget(store.activeLayer, pointer.x, pointer.y);
+	const target = getCollidingStickerTarget(activeLayer.value, pointer.x, pointer.y);
 	if (target) {
 		Analytics.trackEvent('sticker-drawer', 'drop-target');
 		target.onPlaceDrawerSticker(pointer);
-	} else if (store.sticker) {
+	} else if (sticker.value) {
 		Analytics.trackEvent('sticker-drawer', 'drop-mask');
-		alterDrawerStoreItemCount(store, store.sticker, true);
+		alterDrawerStoreItemCount(store, sticker.value, true);
 	}
 
 	_removeEventListeners(store);
@@ -356,10 +402,10 @@ const _onPointerUp = (store: DrawerStore) => (event: MouseEvent | TouchEvent) =>
  * from the document body.
  */
 function _setDraggingState(store: DrawerStore, isDragging: boolean) {
-	if (!store.sticker) {
-		store.isDragging = false;
+	if (!store.sticker.value) {
+		store.isDragging.value = false;
 	} else {
-		store.isDragging = isDragging;
+		store.isDragging.value = isDragging;
 	}
 }
 
@@ -371,8 +417,8 @@ function _addEventListeners(
 	onPointerMove: (event: MouseEvent | TouchEvent) => void,
 	onPointerUp: (event: MouseEvent | TouchEvent) => void
 ) {
-	store._onPointerMove = onPointerMove;
-	store._onPointerUp = onPointerUp;
+	store._onPointerMove.value = onPointerMove;
+	store._onPointerUp.value = onPointerUp;
 
 	window.addEventListener('mousemove', onPointerMove, {
 		passive: false,
@@ -390,18 +436,18 @@ function _addEventListeners(
 function _removeEventListeners(store: DrawerStore) {
 	_setDraggingState(store, false);
 
-	if (store._onPointerMove) {
-		window.removeEventListener('mousemove', store._onPointerMove);
-		window.removeEventListener('touchmove', store._onPointerMove);
+	if (store._onPointerMove.value) {
+		window.removeEventListener('mousemove', store._onPointerMove.value);
+		window.removeEventListener('touchmove', store._onPointerMove.value);
 	}
 
-	if (store._onPointerUp) {
-		window.removeEventListener('mouseup', store._onPointerUp);
-		window.removeEventListener('touchend', store._onPointerUp);
+	if (store._onPointerUp.value) {
+		window.removeEventListener('mouseup', store._onPointerUp.value);
+		window.removeEventListener('touchend', store._onPointerUp.value);
 	}
 
-	store._onPointerMove = null;
-	store._onPointerUp = null;
+	store._onPointerMove.value = null;
+	store._onPointerUp.value = null;
 }
 
 export interface PointerPosition {
@@ -418,15 +464,17 @@ export function getPointerPosition(
 	// If the active layer is within a scroller, we need to remove both the
 	// document scroll offset from the pointer position as well as the current
 	// scroller's offset. That'll convert it from page X/Y into the layer's X/Y.
-	const layer = store.activeLayer;
+	const layer = store.activeLayer.value;
+	const scroller = layer.scroller.value;
+
 	let scrollTop = 0;
 	let scrollLeft = 0;
-	if (layer.scroller) {
+	if (scroller) {
 		scrollTop = document.documentElement.scrollTop;
-		scrollTop -= layer.scroller.scrollElement?.scrollTop ?? 0;
+		scrollTop -= scroller.element.value?.scrollTop ?? 0;
 
 		scrollLeft = document.documentElement.scrollLeft;
-		scrollLeft -= layer.scroller.scrollElement?.scrollLeft ?? 0;
+		scrollLeft -= scroller.element.value?.scrollLeft ?? 0;
 	}
 
 	const pointerEvent = getPointerEvent(event);

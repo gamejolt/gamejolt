@@ -1,55 +1,109 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Analytics } from '../../../analytics/analytics.service';
+import AppCard from '../../../card/AppCard.vue';
+import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
+import { Navigate } from '../../../navigate/navigate.service';
+import { AppTooltip } from '../../../tooltip/tooltip-directive';
+import { GameBuild } from '../../build/build.model';
+import { GameExternalPackage } from '../external-package.model';
+
+@Options({
+	components: {
+		AppCard,
+		AppFadeCollapse,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppGameExternalPackageCard extends Vue {
+	@Prop(Object)
+	package!: GameExternalPackage;
+
+	showFullDescription = false;
+	canToggleDescription = false;
+
+	readonly GameBuild = GameBuild;
+
+	get platforms() {
+		const platforms = [];
+		for (let prop in this.package) {
+			if (!(this.package as any)[prop]) {
+				continue;
+			}
+
+			for (let prefix of ['os_', 'type_']) {
+				if (!prop.startsWith(prefix)) {
+					continue;
+				}
+
+				const field = prop.substr(prefix.length);
+				if (field in GameBuild.platformSupportInfo) {
+					platforms.push(field);
+				}
+			}
+		}
+		return platforms;
+	}
+
+	gotoExternal() {
+		Analytics.trackEvent('game-package-card', 'download', 'external');
+
+		Navigate.newWindow(this.package.url);
+	}
+}
+</script>
+
 <template>
-	<app-card class="game-external-package-card" :id="`game-external-package-card-${package.id}`">
+	<AppCard :id="`game-external-package-card-${package.id}`" class="game-external-package-card">
 		<div class="card-title">
 			<h4>
 				{{ package.title }}
 			</h4>
 		</div>
 
-		<div class="card-meta card-meta-sm" v-if="platforms.length">
-			<app-jolticon
+		<div v-if="platforms.length" class="card-meta card-meta-sm">
+			<AppJolticon
 				v-for="platform of platforms"
 				:key="platform"
-				:icon="GameBuild.platformSupportInfo[platform].icon"
 				v-app-tooltip="GameBuild.platformSupportInfo[platform].tooltip"
+				:icon="GameBuild.platformSupportInfo[platform].icon"
 			/>
 		</div>
 
-		<div class="card-content" v-if="package.description">
-			<app-fade-collapse
+		<div v-if="package.description" class="card-content">
+			<AppFadeCollapse
 				:collapse-height="100"
 				:is-open="showFullDescription"
 				@require-change="canToggleDescription = $event"
 				@expand="showFullDescription = true"
 			>
 				<div>{{ package.description }}</div>
-			</app-fade-collapse>
+			</AppFadeCollapse>
 
 			<a
-				class="hidden-text-expander"
 				v-if="canToggleDescription"
-				@click="showFullDescription = !showFullDescription"
 				v-app-track-event="`game-package-card:show-full-description`"
+				class="hidden-text-expander"
+				@click="showFullDescription = !showFullDescription"
 			/>
 		</div>
 
 		<div class="card-controls">
-			<app-button
+			<AppButton
+				v-app-tooltip="$gettext(`Play Off-Site`)"
 				primary
 				icon="world"
 				@click="gotoExternal()"
-				v-app-tooltip="$gettext(`Play Off-Site`)"
 			>
-				<translate>Play</translate>
-			</app-button>
+				<AppTranslate>Play</AppTranslate>
+			</AppButton>
 		</div>
-	</app-card>
+	</AppCard>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .game-external-package-card
 	.card
 		padding-bottom: 0
@@ -60,5 +114,3 @@
 		small
 			margin-left: 5px
 </style>
-
-<script lang="ts" src="./card"></script>

@@ -1,7 +1,7 @@
+import { defineAsyncComponent } from 'vue';
 import { Game } from '../../../../../_common/game/game.model';
-import { Modal } from '../../../../../_common/modal/modal.service';
+import { showModal } from '../../../../../_common/modal/modal.service';
 import { User } from '../../../../../_common/user/user.model';
-import { asyncComponentLoader } from '../../../../../utils/utils';
 
 interface GameSupportersModalOptions {
 	game: Game;
@@ -12,10 +12,9 @@ interface GameSupportersModalOptions {
 export class GameSupportersModal {
 	static async show(options: GameSupportersModalOptions) {
 		const { game, supporters, supporterCount } = options;
-		return await Modal.show<void>({
+		return await showModal<void>({
 			modalId: 'GameSupporters',
-			component: () =>
-				asyncComponentLoader(import(/* webpackChunkName: "GameSupportersModal" */ './modal.vue')),
+			component: defineAsyncComponent(() => import('./modal.vue')),
 			props: {
 				game,
 				supporters,

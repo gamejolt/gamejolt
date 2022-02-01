@@ -1,8 +1,8 @@
-import { DirectiveOptions } from 'vue';
+import { Directive } from '@vue/runtime-core';
 import { Analytics } from './analytics.service';
 
-export const AppTrackEvent: DirectiveOptions = {
-	bind(el, binding) {
+export const AppTrackEvent: Directive<HTMLElement, string> = {
+	beforeMount(el, binding) {
 		el.addEventListener('click', () => {
 			if (binding.value) {
 				const pieces = binding.value.split(':');

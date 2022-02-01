@@ -1,69 +1,75 @@
-import Vue from 'vue';
-import { VueRouter } from 'vue-router/types/router';
+import { Component, createApp, createSSRApp } from 'vue';
+import { Router } from 'vue-router';
 import { hijackLinks } from '../utils/router';
-import { bootstrapAppTranslations } from '../utils/translations';
-import { VuexStore } from '../utils/vuex';
 import { initAnalytics, initAnalyticsRouter } from './analytics/analytics.service';
 import { AppTrackEvent } from './analytics/track-event.directive';
-import AppButton from './button/button.vue';
+import AppButton from './button/AppButton.vue';
 import { ensureConfig } from './config/config.service';
-import { Connection } from './connection/connection-service';
-import AppJolticon from './jolticon/jolticon.vue';
-import AppLinkExternal from './link/external/external.vue';
-import AppLinkHelp from './link/help/help.vue';
-import { Meta } from './meta/meta-service';
+import { initConnectionService } from './connection/connection-service';
+import AppJolticon from './jolticon/AppJolticon.vue';
+import AppLinkExternal from './link/AppLinkExternal.vue';
+import AppLinkHelp from './link/AppLinkHelp.vue';
+import { initMetaService } from './meta/meta-service';
 import { Payload } from './payload/payload-service';
 import { Referrer } from './referrer/referrer.service';
-import { SettingThemeAlwaysOurs, SettingThemeDark } from './settings/settings.service';
+import { commonStore, CommonStoreKey } from './store/common-store';
+import { createThemeStore, ThemeStoreKey } from './theme/theme.store';
+import { initTranslations } from './translate/translate.service';
 
 /**
- * Bootstraps common services and returns a "createApp" function that our entry point can call to
- * get what it needs.
+ * Bootstraps common services and returns a "createApp" function that our entry
+ * point can call to get what it needs.
  */
-export function bootstrapCommon(appComponent: typeof Vue, store: VuexStore, router?: VueRouter) {
+export function bootstrapCommon(appComponent: Component, router?: Router) {
+	// Check to make sure our build config is correct.
+	if (GJ_BUILD_TYPE === 'development' && GJ_HAS_ROUTER !== !!router) {
+		throw new Error(
+			`Invalid vite config. Section router config is wrong. GJ_HAS_ROUTER: ${GJ_HAS_ROUTER}, router: ${!!router}`
+		);
+	}
+
+	const app = import.meta.env.SSR ? createSSRApp(appComponent) : createApp(appComponent);
+
+	// Our global stores.
+	app.provide(CommonStoreKey, commonStore);
+	app.provide(ThemeStoreKey, createThemeStore({ commonStore }));
+
 	// Try to start loading this as soon as possible.
 	ensureConfig();
 
-	if (store.state.theme) {
-		store.commit('theme/setDark', SettingThemeDark.get());
-		store.commit('theme/setAlwaysOurs', SettingThemeAlwaysOurs.get());
-	}
-
-	initAnalytics(store);
-	Payload.init(store);
-	Connection.init(store);
+	initAnalytics({ commonStore });
+	Payload.init({ commonStore });
+	initConnectionService({ commonStore });
 
 	if (router) {
-		Meta.init(router);
+		initMetaService(router);
 		Referrer.init(router);
 		initAnalyticsRouter(router);
 		hijackLinks(router, 'gamejolt.com');
 	}
 
 	// Common components.
-	Vue.component('AppButton', AppButton);
-	Vue.component('AppJolticon', AppJolticon);
-	Vue.component('AppLinkExternal', AppLinkExternal);
-	Vue.component('AppLinkHelp', AppLinkHelp);
-	Vue.directive('AppTrackEvent', AppTrackEvent);
+	app.component('AppButton', AppButton);
+	app.component('AppJolticon', AppJolticon);
+	app.component('AppLinkExternal', AppLinkExternal);
+	app.component('AppLinkHelp', AppLinkHelp);
+	app.directive('AppTrackEvent', AppTrackEvent);
 
-	// Set some constants so we can use them in templates.
-	Vue.use(vue => {
-		const proto = vue.prototype as any;
-		proto.GJ_SECTION = GJ_SECTION;
-		proto.GJ_IS_CLIENT = GJ_IS_CLIENT;
-		proto.GJ_IS_SSR = GJ_IS_SSR;
-	});
+	// We want our "env" constants to be available in vue templates.
+	app.config.globalProperties.GJ_SECTION = GJ_SECTION;
+	app.config.globalProperties.GJ_ENVIRONMENT = GJ_ENVIRONMENT;
+	app.config.globalProperties.GJ_BUILD_TYPE = GJ_BUILD_TYPE;
+	app.config.globalProperties.GJ_IS_DESKTOP_APP = GJ_IS_DESKTOP_APP;
+	app.config.globalProperties.GJ_IS_MOBILE_APP = GJ_IS_MOBILE_APP;
+	app.config.globalProperties.GJ_IS_SSR = import.meta.env.SSR;
+	app.config.globalProperties.GJ_VERSION = GJ_VERSION;
+	app.config.globalProperties.GJ_WITH_UPDATER = GJ_WITH_UPDATER;
 
-	return () => {
-		bootstrapAppTranslations();
+	initTranslations(app);
 
-		return new Vue({
-			// Needed for our vue plugins to know when it's the root vue instance.
-			gjIsRoot: true,
-			store,
-			router,
-			render: h => h(appComponent),
-		});
-	};
+	if (router) {
+		app.use(router);
+	}
+
+	return { app, commonStore };
 }

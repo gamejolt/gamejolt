@@ -1,4 +1,60 @@
-<script lang="ts" src="./add-widget"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { AppAuthRequired } from '../../auth/auth-required-directive';
+import { showErrorGrowl } from '../../growls/growls.service';
+import { useCommonStore } from '../../store/common-store';
+import { TooltipPlacement } from '../../tooltip/tooltip-controller';
+import { AppTooltip } from '../../tooltip/tooltip-directive';
+
+@Options({
+	directives: {
+		AppTooltip,
+		AppAuthRequired,
+	},
+})
+export default class AppCommunityAddWidget extends Vue {
+	@Prop({ type: String, default: 'bottom' })
+	tooltipPlacement!: TooltipPlacement;
+
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
+
+	get canCreate() {
+		return this.user && !!this.user.can_create_communities;
+	}
+
+	get tooltip() {
+		let content;
+		if (this.canCreate || !this.user) {
+			content = this.$gettext(`Create a Community`);
+		} else {
+			content = this.$gettext(`You own too many communities`);
+		}
+
+		return {
+			content,
+			placement: this.tooltipPlacement,
+		};
+	}
+
+	showGrowl() {
+		if (!this.user) {
+			return;
+		}
+
+		showErrorGrowl({
+			message: this.$gettext(
+				`You own too many communities. You must remove one before creating another.`
+			),
+			sticky: true,
+		});
+	}
+}
+</script>
 
 <template>
 	<router-link
@@ -7,7 +63,7 @@
 		class="-add"
 		:to="{ name: 'dash.communities.add' }"
 	>
-		<app-jolticon icon="add" big />
+		<AppJolticon icon="add" big />
 	</router-link>
 	<a
 		v-else
@@ -17,14 +73,11 @@
 		:class="{ '-disabled': user }"
 		@click="showGrowl"
 	>
-		<app-jolticon icon="add" big />
+		<AppJolticon icon="add" big />
 	</a>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-add
 	pressy()
 	display: flex

@@ -1,3 +1,202 @@
+<script lang="ts">
+import { Options } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../../../../../utils/vue';
+import { Api } from '../../../../../../../../_common/api/api.service';
+import AppCard from '../../../../../../../../_common/card/AppCard.vue';
+import AppExpand from '../../../../../../../../_common/expand/AppExpand.vue';
+import { formatNumber } from '../../../../../../../../_common/filters/number';
+import AppGamePackageCard from '../../../../../../../../_common/game/package/card/card.vue';
+import { GamePackagePayloadModel } from '../../../../../../../../_common/game/package/package-payload.model';
+import { GamePackage } from '../../../../../../../../_common/game/package/package.model';
+import { GameRelease } from '../../../../../../../../_common/game/release/release.model';
+import {
+	showErrorGrowl,
+	showSuccessGrowl,
+} from '../../../../../../../../_common/growls/growls.service';
+import AppLoading from '../../../../../../../../_common/loading/loading.vue';
+import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
+import AppNavTabList from '../../../../../../../../_common/nav/tab-list/tab-list.vue';
+import { AppProgressPoller } from '../../../../../../../../_common/progress/poller/poller';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../../../_common/route/route-component';
+import { Sellable } from '../../../../../../../../_common/sellable/sellable.model';
+import { AppTimeAgo } from '../../../../../../../../_common/time/ago/ago';
+import { AppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
+import FormGamePackage from '../../../../../../../components/forms/game/package/package.vue';
+import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
+import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
+import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
+import { useGameDashRouteController } from '../../../manage.store';
+
+@Options({
+	name: 'RouteDashGamesManageGamePackagesEdit',
+	components: {
+		AppTimeAgo,
+		AppNavTabList,
+		AppLoading,
+		AppGamePackageCard,
+		AppCard,
+		AppExpand,
+		FormGamePackage,
+		AppDashGameWizardControls,
+		AppProgressPoller,
+		AppGamePerms,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+@OptionsForRoute({
+	deps: { params: ['packageId'] },
+	resolver: ({ route }) =>
+		Api.sendRequest(
+			'/web/dash/developer/games/packages/' + route.params.id + '/' + route.params.packageId
+		),
+})
+export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteComponent {
+	routeStore = shallowSetup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game.value!;
+	}
+
+	package: GamePackage = null as any;
+	sellable: Sellable = null as any;
+	releases: GameRelease[] = [];
+
+	previewPackage: GamePackage | null = null;
+	previewSellable: Sellable | null = null;
+	previewData: GamePackagePayloadModel | null = null;
+	buildsProcessingCount = 0;
+	isLoadingPreview = false;
+	isAddingRelease = false;
+
+	GamePackage = GamePackage;
+	GameRelease = GameRelease;
+	formatNumber = formatNumber;
+
+	get hasBuildsPerms() {
+		return this.game && this.game.hasPerms('builds');
+	}
+
+	get hasAnalyticsPerms() {
+		return this.game && this.game.hasPerms('analytics');
+	}
+
+	get routeTitle() {
+		if (this.game && this.package) {
+			return this.$gettextInterpolate(`Edit Package %{ package } - %{ game }`, {
+				game: this.game.title,
+				package: this.package.title || this.game.title,
+			});
+		}
+		return null;
+	}
+
+	routeResolved($payload: any) {
+		this.package = new GamePackage($payload.package);
+		this.sellable = new Sellable($payload.sellable);
+		this.releases = GameRelease.populate($payload.releases);
+
+		this.previewData = null;
+		this.previewPackage = null;
+
+		this.loadPreview();
+	}
+
+	async loadPreview() {
+		this.isLoadingPreview = true;
+
+		const response = await Api.sendRequest(
+			'/web/dash/developer/games/packages/preview/' +
+				this.package.game_id +
+				'/' +
+				this.package.id,
+			null,
+			{ detach: true }
+		);
+
+		// We pull all new stuff for the preview so that we don't step on the form.
+		this.previewData = new GamePackagePayloadModel(response);
+		this.previewSellable = response.sellable ? new Sellable(response.sellable) : null;
+		this.previewPackage = this.previewData.packages.find(i => i.id === this.package.id) || null;
+		this.buildsProcessingCount = response.buildsProcessingCount || 0;
+		this.isLoadingPreview = false;
+
+		// Clear out any "bought" status in the sellable so it always shows as if we haven't bought it yet.
+		if (this.previewSellable) {
+			this.previewSellable.is_owned = false;
+		}
+	}
+
+	onBuildsProcessed(response: any) {
+		this.loadPreview();
+
+		if (response.game) {
+			this.game.assign(response.game);
+		}
+	}
+
+	async editPackage() {
+		// Keep our preview in sync.
+		await GamePackageEditModal.show(this.routeStore, this.package, this.sellable);
+		this.loadPreview();
+	}
+
+	async newRelease() {
+		this.isAddingRelease = true;
+
+		try {
+			const response = await Api.sendRequest(
+				'/web/dash/developer/games/releases/create-stub/' +
+					this.package.game_id +
+					'/' +
+					this.package.id,
+				{},
+				{ detach: true }
+			);
+
+			this.$router.push({
+				name: 'dash.games.manage.game.packages.release.edit',
+				params: {
+					packageId: this.package.id + '',
+					releaseId: response.newReleaseId + '',
+				},
+			});
+		} catch (e) {
+			showErrorGrowl(this.$gettext(`Could not create new release.`));
+			this.isAddingRelease = false;
+		}
+	}
+
+	async removeRelease(release: GameRelease) {
+		const result = await ModalConfirm.show(
+			this.$gettext(
+				'Are you sure you want to remove this release? All of its builds will be removed as well.'
+			)
+		);
+
+		if (!result) {
+			return;
+		}
+
+		await release.$remove(this.game);
+
+		showSuccessGrowl(
+			this.$gettext('The release and its builds have been removed from the package.'),
+			this.$gettext('Release Removed')
+		);
+
+		const index = this.releases.findIndex(i => i.id === release.id);
+		if (index !== -1) {
+			this.releases.splice(index, 1);
+		}
+	}
+}
+</script>
+
 <template>
 	<div v-if="isRouteBootstrapped">
 		<nav class="breadcrumb">
@@ -5,14 +204,16 @@
 				<li>
 					<router-link :to="{ name: 'dash.games.manage.game.packages.list' }">
 						<span class="breadcrumb-tag">&nbsp;</span>
-						<translate>Packages</translate>
+						<AppTranslate>Packages</AppTranslate>
 					</router-link>
-					<app-jolticon icon="chevron-right" class="breadcrumb-separator" />
+					<AppJolticon icon="chevron-right" class="breadcrumb-separator" />
 				</li>
 				<li>
 					<span class="active">
 						<span class="breadcrumb-tag">
-							<translate>dash.games.releases.manage.breadcrumb_package</translate>
+							<AppTranslate translate-comment="The noun for package">
+								Package
+							</AppTranslate>
 						</span>
 						{{ package.title || game.title }}
 					</span>
@@ -22,31 +223,30 @@
 
 		<hr />
 
-		<app-nav-tab-list>
+		<AppNavTabList>
 			<ul>
-				<app-game-perms required="builds,sales" :either="true" tag="li">
+				<AppGamePerms required="builds,sales" :either="true" tag="li">
 					<router-link
 						:to="{
 							name: 'dash.games.manage.game.packages.edit',
 						}"
-						active-class="active"
-						exact
+						exact-active-class="active"
 					>
-						<translate>Edit Package</translate>
+						<AppTranslate>Edit Package</AppTranslate>
 					</router-link>
-				</app-game-perms>
+				</AppGamePerms>
 				<li>
 					<router-link
 						:to="{
 							name: 'dash.games.manage.game.packages.edit.widget',
 						}"
-						active-class="active"
+						exact-active-class="active"
 					>
-						<translate>Widget</translate>
+						<AppTranslate>Widget</AppTranslate>
 					</router-link>
 				</li>
 			</ul>
-		</app-nav-tab-list>
+		</AppNavTabList>
 
 		<br />
 
@@ -54,14 +254,18 @@
 			<div class="row">
 				<div class="col-sm-8">
 					<div
+						v-if="
+							game._is_devlog && package.visibility === GamePackage.VISIBILITY_PUBLIC
+						"
 						class="alert alert-notice"
-						v-if="game._is_devlog && package.visibility === GamePackage.VISIBILITY_PUBLIC"
 					>
-						<app-jolticon icon="notice" />
+						<AppJolticon icon="notice" />
 						<span v-translate>
-							<strong>This package won't show up on your devlog-only game page.</strong>
-							Switch your game page to early access or complete from the Overview/Setup page for it
-							to show.
+							<strong>
+								This package won't show up on your devlog-only game page.
+							</strong>
+							Switch your game page to early access or complete from the
+							Overview/Setup page for it to show.
 						</span>
 						<router-link
 							:to="{
@@ -71,30 +275,31 @@
 								},
 							}"
 						>
-							<translate>Go to Overview/Setup page</translate>
+							<AppTranslate>Go to Overview/Setup page</AppTranslate>
 						</router-link>
 					</div>
 
 					<h3
 						:class="{
 							'section-header': !(
-								game._is_devlog && package.visibility === GamePackage.VISIBILITY_PUBLIC
+								game._is_devlog &&
+								package.visibility === GamePackage.VISIBILITY_PUBLIC
 							),
 						}"
 					>
-						<translate>Package Preview</translate>
+						<AppTranslate>Package Preview</AppTranslate>
 					</h3>
 
-					<app-game-perms tag="div" required="sales">
-						<app-button primary block @click="editPackage()">
+					<AppGamePerms tag="div" required="sales">
+						<AppButton primary block @click="editPackage()">
 							Edit Package Details
-						</app-button>
+						</AppButton>
 						<br />
-					</app-game-perms>
+					</AppGamePerms>
 
-					<app-loading v-if="isLoadingPreview" />
+					<AppLoading v-if="isLoadingPreview" />
 					<template v-else>
-						<app-game-package-card
+						<AppGamePackageCard
 							v-if="previewPackage"
 							:game="game"
 							:sellable="previewSellable"
@@ -104,19 +309,17 @@
 						/>
 
 						<template v-if="buildsProcessingCount > 0">
-							<app-progress-poller
-								:url="
-									`/web/dash/developer/games/packages/poll-processing-builds/${game.id}/${package.id}/${buildsProcessingCount}`
-								"
+							<AppProgressPoller
+								:url="`/web/dash/developer/games/packages/poll-processing-builds/${game.id}/${package.id}/${buildsProcessingCount}`"
 								@complete="onBuildsProcessed($event)"
 							/>
 
 							<div class="alert">
-								<app-jolticon icon="notice" />
-								<translate>
-									This package has builds that are still processing. They will be available in the
-									package as soon as they're finished processing.
-								</translate>
+								<AppJolticon icon="notice" />
+								<AppTranslate>
+									This package has builds that are still processing. They will be
+									available in the package as soon as they're finished processing.
+								</AppTranslate>
 							</div>
 						</template>
 					</template>
@@ -124,51 +327,53 @@
 			</div>
 
 			<h3>
-				<translate>dash.games.packages.manage.releases.heading</translate>
+				<AppTranslate>Releases</AppTranslate>
 			</h3>
 
 			<div class="row">
 				<div class="col-sm-4 col-sm-push-8">
 					<div class="page-help">
 						<p>
-							<translate>
-								Releases represent new versions of your package. If you update a package, you should
-								add a release. You can group all of the new builds for different platforms into a
-								single new release.
-							</translate>
+							<AppTranslate>
+								Releases represent new versions of your package. If you update a
+								package, you should add a release. You can group all of the new
+								builds for different platforms into a single new release.
+							</AppTranslate>
 						</p>
 						<p>
-							<app-link-help page="dev-packages" class="link-help">
-								<translate>dash.games.packages.manage.releases.page_help_link</translate>
-							</app-link-help>
+							<AppLinkHelp page="dev-packages" class="link-help">
+								<AppTranslate> Learn more about releases... </AppTranslate>
+							</AppLinkHelp>
 						</p>
 					</div>
 				</div>
 
 				<div class="col-sm-8 col-sm-pull-4">
-					<div class="alert alert-notice" v-if="!releases.length">
-						<p><translate>There are no releases in this package yet.</translate></p>
+					<div v-if="!releases.length" class="alert alert-notice">
 						<p>
-							<translate>
+							<AppTranslate>There are no releases in this package yet.</AppTranslate>
+						</p>
+						<p>
+							<AppTranslate>
 								Add a release to this package in order to upload builds/files to it.
-							</translate>
+							</AppTranslate>
 						</p>
 					</div>
 
-					<app-game-perms tag="div" required="builds">
-						<app-button primary block @click="newRelease" :disabled="isAddingRelease">
-							<translate>New Release</translate>
-						</app-button>
+					<AppGamePerms tag="div" required="builds">
+						<AppButton primary block :disabled="isAddingRelease" @click="newRelease">
+							<AppTranslate>New Release</AppTranslate>
+						</AppButton>
 						<br />
-					</app-game-perms>
+					</AppGamePerms>
 
 					<div v-if="releases.length">
-						<app-card v-for="release of releases" :key="release.id">
-							<app-game-perms required="builds">
+						<AppCard v-for="release of releases" :key="release.id">
+							<AppGamePerms required="builds">
 								<a class="card-remove" @click="removeRelease(release)">
-									<app-jolticon icon="remove" />
+									<AppJolticon icon="remove" />
 								</a>
-							</app-game-perms>
+							</AppGamePerms>
 
 							<div class="card-title">
 								<h4>
@@ -194,86 +399,105 @@
 							<div class="card-meta">
 								<template v-if="release.status === GameRelease.STATUS_HIDDEN">
 									<span
-										class="tag"
 										v-if="!release.isScheduled"
-										v-app-tooltip="$gettext(`dash.games.packages.manage.releases.hidden_tooltip`)"
+										v-app-tooltip="
+											$gettext(
+												`This release is hidden and won't show up on your game page until published.`
+											)
+										"
+										class="tag"
 									>
-										<app-jolticon icon="inactive" />
-										<translate>Draft</translate>
+										<AppJolticon icon="inactive" />
+										{{ ' ' }}
+										<AppTranslate>Draft</AppTranslate>
 									</span>
 									<template v-else>
 										<span
-											class="tag tag-notice"
 											v-app-tooltip="
 												$gettext(
 													`This release is scheduled and will be published to your game page in the future.`
 												)
 											"
+											class="tag tag-notice"
 										>
-											<app-jolticon icon="calendar-grid" />
-											<translate>Scheduled</translate>
+											<AppJolticon icon="calendar-grid" />
+											{{ ' ' }}
+											<AppTranslate>Scheduled</AppTranslate>
 										</span>
-
-										<app-time-ago :date="release.scheduled_for" without-suffix />
+										{{ ' ' }}
+										<AppTimeAgo :date="release.scheduled_for" without-suffix />
 									</template>
 								</template>
 
 								<span
-									class="tag tag-highlight"
 									v-if="release.status === GameRelease.STATUS_PUBLISHED"
-									v-app-tooltip="$gettext(`dash.games.packages.manage.releases.published_tooltip`)"
+									v-app-tooltip="
+										$gettext(
+											`This release is published and can be accessed from your game page.`
+										)
+									"
+									class="tag tag-highlight"
 								>
-									<app-jolticon icon="active" />
-									<translate>dash.games.packages.manage.releases.published_tag</translate>
+									<AppJolticon icon="active" />
+									{{ ' ' }}
+									<AppTranslate> Published </AppTranslate>
 								</span>
 
-								<span class="dot-separator"></span>
+								<span class="dot-separator" />
 
 								<template v-if="!release.build_count">
-									<translate>dash.games.packages.manage.releases.builds_count_none</translate>
+									<AppTranslate> No builds yet. </AppTranslate>
 								</template>
 								<template v-else>
-									<translate
+									<AppTranslate
 										:translate-params="{
-											count: number(release.build_count),
+											count: formatNumber(release.build_count),
 										}"
 										:translate-n="release.build_count"
 										translate-plural="%{ count } builds"
 									>
 										%{ count } build
-									</translate>
+									</AppTranslate>
 								</template>
 							</div>
 
-							<div class="card-controls" v-if="hasBuildsPerms || hasAnalyticsPerms">
-								<app-game-perms required="builds">
-									<app-button
+							<div v-if="hasBuildsPerms || hasAnalyticsPerms" class="card-controls">
+								<AppGamePerms required="builds">
+									<AppButton
 										primary
 										:to="{
 											name: 'dash.games.manage.game.packages.release.edit',
-											params: { packageId: package.id, releaseId: release.id },
+											params: {
+												packageId: package.id,
+												releaseId: release.id,
+											},
 										}"
 									>
-										<translate>Edit Release</translate>
-									</app-button>
-								</app-game-perms>
-
-								<app-game-perms required="analytics">
-									<app-button
+										<AppTranslate>Edit Release</AppTranslate>
+									</AppButton>
+								</AppGamePerms>
+								{{ ' ' }}
+								<AppGamePerms required="analytics">
+									<AppButton
 										trans
 										:to="{
 											name: 'dash.analytics',
-											params: { resource: 'Game_Release', resourceId: release.id },
+											params: {
+												resource: 'Game_Release',
+												resourceId: release.id,
+											},
 										}"
 									>
-										<translate>Analytics</translate>
-									</app-button>
-								</app-game-perms>
+										<AppTranslate>Analytics</AppTranslate>
+									</AppButton>
+								</AppGamePerms>
 							</div>
-						</app-card>
+						</AppCard>
 					</div>
 
-					<app-dash-game-wizard-controls :disabled="!game._is_devlog && !game.has_active_builds" />
+					<AppDashGameWizardControls
+						:disabled="!game._is_devlog && !game.has_active_builds"
+					/>
 				</div>
 			</div>
 		</template>
@@ -281,5 +505,3 @@
 		<router-view />
 	</div>
 </template>
-
-<script lang="ts" src="./edit"></script>

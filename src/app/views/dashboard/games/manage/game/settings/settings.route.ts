@@ -1,8 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDashGamesManageGameSettings: RouteConfig = {
+export const routeDashGamesManageGameSettings: RouteRecordRaw = {
 	name: 'dash.games.manage.game.settings',
 	path: 'settings',
-	component: () =>
-		import(/* webpackChunkName: "routeDashGamesManageGameSettingsname" */ './settings.vue'),
+	component: () => import('./settings.vue'),
 };

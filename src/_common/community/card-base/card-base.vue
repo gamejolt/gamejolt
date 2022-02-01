@@ -1,7 +1,70 @@
-<script lang="ts" src="./card-base"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { trackGotoCommunity } from '../../analytics/analytics.service';
+import { Environment } from '../../environment/environment.service';
+import { formatNumber } from '../../filters/number';
+import { useCommonStore } from '../../store/common-store';
+import AppTheme from '../../theme/AppTheme.vue';
+import { Community, isEditingCommunity } from '../community.model';
+import AppCommunityJoinWidget from '../join-widget/join-widget.vue';
+import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
+
+@Options({
+	components: {
+		AppTheme,
+		AppCommunityVerifiedTick,
+		AppCommunityJoinWidget,
+	},
+})
+export default class AppCommunityCardBase extends Vue {
+	@Prop({ type: Object, required: true }) community!: Community;
+	@Prop({ type: Boolean, default: false }) overflow!: boolean;
+	@Prop({ type: Boolean, default: false }) elevate!: boolean;
+	@Prop({ type: Boolean, default: true }) allowEdit!: boolean;
+	@Prop({ type: Boolean, default: false }) trackGoto!: boolean;
+
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
+
+	readonly formatNumber = formatNumber;
+	readonly Environment = Environment;
+
+	get memberCount() {
+		return this.community.member_count || 0;
+	}
+
+	get headerBackgroundImage() {
+		return this.community.header
+			? `url('${this.community.header.mediaserver_url}')`
+			: undefined;
+	}
+
+	get isEditing() {
+		return isEditingCommunity(this.$route);
+	}
+
+	get shouldShowModTools() {
+		return this.user && this.user.isMod;
+	}
+
+	trackGotoCommunity() {
+		if (this.trackGoto) {
+			trackGotoCommunity({
+				source: 'card',
+				id: this.community.id,
+				path: this.community.path,
+			});
+		}
+	}
+}
+</script>
 
 <template>
-	<app-theme
+	<AppTheme
 		class="community-card sheet sheet-full sheet-no-full-bleed"
 		:class="{ 'sheet-elevate': elevate }"
 		:theme="community.theme"
@@ -23,17 +86,17 @@
 					<router-link
 						:to="community.routeLocation"
 						class="link-unstyled"
-						@click.native="trackGotoCommunity()"
+						@click="trackGotoCommunity()"
 					>
 						{{ community.name }}
-						<app-community-verified-tick :community="community" />
+						<AppCommunityVerifiedTick :community="community" />
 					</router-link>
 				</div>
 
 				<div class="-member-counts small">
 					<router-link
 						v-app-track-event="`community-card:community-members`"
-						v-translate="{ count: number(memberCount) }"
+						v-translate="{ count: formatNumber(memberCount) }"
 						:translate-n="memberCount"
 						translate-plural="<b>%{count}</b> members"
 						:to="{
@@ -48,26 +111,26 @@
 
 				<div class="-controls">
 					<template v-if="community.hasPerms() && allowEdit">
-						<app-button
+						<AppButton
 							v-if="!isEditing"
 							v-app-track-event="`community-card-inline:community-edit`"
 							primary
 							block
 							:to="community.routeEditLocation"
 						>
-							<translate>Edit Community</translate>
-						</app-button>
-						<app-button
+							<AppTranslate>Edit Community</AppTranslate>
+						</AppButton>
+						<AppButton
 							v-else
 							primary
 							block
 							:to="community.routeLocation"
-							@click.native="trackGotoCommunity()"
+							@click="trackGotoCommunity()"
 						>
-							<translate>View Community</translate>
-						</app-button>
+							<AppTranslate>View Community</AppTranslate>
+						</AppButton>
 					</template>
-					<app-community-join-widget
+					<AppCommunityJoinWidget
 						v-else
 						:community="community"
 						:disabled="!!community.user_block"
@@ -75,7 +138,7 @@
 						hide-count
 						location="card"
 					/>
-					<app-button
+					<AppButton
 						v-if="shouldShowModTools"
 						class="-moderate"
 						:href="Environment.baseUrl + `/moderate/communities/view/${community.id}`"
@@ -86,7 +149,7 @@
 				</div>
 			</div>
 		</div>
-	</app-theme>
+	</AppTheme>
 </template>
 
 <style lang="stylus" src="./card-base.styl" scoped></style>

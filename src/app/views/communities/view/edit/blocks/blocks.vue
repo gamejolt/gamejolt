@@ -1,51 +1,205 @@
-<script lang="ts" src="./blocks"></script>
+<script lang="ts">
+import { Inject, Options } from 'vue-property-decorator';
+import { Api } from '../../../../../../_common/api/api.service';
+import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
+import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
+import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
+import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
+import AppPagination from '../../../../../../_common/pagination/pagination.vue';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../_common/route/route-component';
+import { AppTimeAgo } from '../../../../../../_common/time/ago/ago';
+import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
+import { UserBlock } from '../../../../../../_common/user/block/block.model';
+import AppUserCardHover from '../../../../../../_common/user/card/hover/hover.vue';
+import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/img/img.vue';
+import FormCommunityBlock from '../../../../../components/forms/community/ban/block.vue';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
+import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
+
+@Options({
+	name: 'RouteCommunitiesViewEditBlocks',
+	components: {
+		AppCommunitiesViewPageContainer,
+		FormCommunityBlock,
+		AppCardListAdd,
+		AppCardList,
+		AppUserAvatarImg,
+		AppTimeAgo,
+		AppUserCardHover,
+		AppPagination,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+@OptionsForRoute({
+	deps: { params: ['id'] },
+	resolver({ route }) {
+		return Api.sendRequest('/web/dash/communities/blocks/' + route.params.id);
+	},
+})
+export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
+
+	isAdding = false;
+	blocks: UserBlock[] = [];
+	totalCount = 0;
+	perPage = 0;
+
+	page = 1;
+	// Default to showing new blocks first
+	sort = 'blocked-on';
+	sortDirection = 'desc';
+
+	get community() {
+		return this.routeStore.community;
+	}
+
+	get sortIcon() {
+		if (this.sortDirection === 'asc') {
+			return 'chevron-up';
+		} else {
+			return 'chevron-down';
+		}
+	}
+
+	get sortDirectionLabel() {
+		if (this.sortDirection === 'asc') {
+			return this.$gettext('Ascending');
+		} else {
+			return this.$gettext('Descending');
+		}
+	}
+
+	get hasBlocks() {
+		return this.blocks.length > 0;
+	}
+
+	routeResolved($payload: any) {
+		this.blocks = UserBlock.populate($payload.blocks);
+		this.totalCount = $payload.totalCount;
+		this.perPage = $payload.perPage;
+
+		if (this.blocks.length === 0) {
+			this.isAdding = true;
+		}
+	}
+
+	onBlockSubmit() {
+		this.isAdding = false;
+		this.page = 1;
+		this.refetch();
+	}
+
+	async refetch() {
+		const url = `/web/dash/communities/blocks/${this.community.id}?page=${this.page}&sort=${this.sort}&sort-direction=${this.sortDirection}`;
+		const payload = await Api.sendRequest(url);
+		this.blocks = UserBlock.populate(payload.blocks);
+	}
+
+	changeSort(sort: string) {
+		if (this.sort === sort) {
+			this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+		} else {
+			this.sort = sort;
+			this.sortDirection = 'asc';
+		}
+
+		this.page = 1;
+		this.refetch();
+	}
+
+	async onClickLift(block: UserBlock) {
+		const response = await ModalConfirm.show(
+			this.$gettextInterpolate(
+				'Do you really want to lift the block for the user @%{ username } early? The reason they were blocked: %{ reason }',
+				{ username: block.user.username, reason: block.reason }
+			),
+			this.$gettext('Lift Block')
+		);
+
+		if (response) {
+			let success = false;
+			try {
+				const payload = await Api.sendRequest(
+					`/web/dash/communities/blocks/remove/${block.id}`,
+					{},
+					{
+						detach: true,
+					}
+				);
+
+				success = payload && payload.success;
+			} catch (e) {
+				console.error(e);
+				success = false;
+			}
+
+			if (success) {
+				this.refetch();
+			} else {
+				showErrorGrowl(this.$gettext('Failed to lift block.'));
+			}
+		}
+	}
+
+	onPageChanged(page: number) {
+		this.page = page;
+		this.refetch();
+	}
+}
+</script>
 
 <template>
-	<app-communities-view-page-container full>
+	<AppCommunitiesViewPageContainer full>
 		<h2 class="section-header">
-			<translate>Blocked Users</translate>
+			<AppTranslate>Blocked Users</AppTranslate>
 		</h2>
 
 		<div class="page-help">
 			<p>
-				<translate>
+				<AppTranslate>
 					Block users from contributing to this community. They will not be able to join
 					or post.
-				</translate>
+				</AppTranslate>
 			</p>
 		</div>
 
-		<app-card-list :is-adding="isAdding">
-			<app-card-list-add :label="$gettext('Block User')" @toggle="isAdding = !isAdding">
-				<form-community-block :community="community" @submit="onBlockSubmit" />
-			</app-card-list-add>
-		</app-card-list>
+		<AppCardList :is-adding="isAdding">
+			<AppCardListAdd :label="$gettext('Block User')" @toggle="isAdding = !isAdding">
+				<FormCommunityBlock :community="community" @submit="onBlockSubmit" />
+			</AppCardListAdd>
+		</AppCardList>
 		<div class="table-responsive">
 			<table v-if="hasBlocks" class="table">
 				<thead>
 					<tr>
 						<th class="-header" @click="changeSort('name')">
-							<translate>Blocked user</translate>
+							<AppTranslate>Blocked user</AppTranslate>
 							<span v-if="sort === 'name'">
-								<app-jolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
+								<AppJolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
 							</span>
 						</th>
 						<th class="-header" @click="changeSort('blocker')">
-							<translate>Issued by</translate>
+							<AppTranslate>Issued by</AppTranslate>
 							<span v-if="sort === 'blocker'">
-								<app-jolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
+								<AppJolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
 							</span>
 						</th>
 						<th class="-header" @click="changeSort('blocked-on')">
-							<translate>Blocked on</translate>
+							<AppTranslate>Blocked on</AppTranslate>
 							<span v-if="sort === 'blocked-on'">
-								<app-jolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
+								<AppJolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
 							</span>
 						</th>
 						<th class="-header" @click="changeSort('expires-on')">
-							<translate>Expires</translate>
+							<AppTranslate>Expires</AppTranslate>
 							<span v-if="sort === 'expires-on'">
-								<app-jolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
+								<AppJolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
 							</span>
 						</th>
 						<th />
@@ -61,14 +215,14 @@
 								}"
 								class="-user-link"
 							>
-								<app-user-card-hover :user="block.user">
+								<AppUserCardHover :user="block.user">
 									<span class="-user-link">
-										<app-user-avatar-img class="-avatar" :user="block.user" />
+										<AppUserAvatarImg class="-avatar" :user="block.user" />
 										<span class="-user-link-name">
 											@{{ block.user.username }}
 										</span>
 									</span>
-								</app-user-card-hover>
+								</AppUserCardHover>
 							</router-link>
 						</td>
 
@@ -81,9 +235,9 @@
 								}"
 								class="-user-link"
 							>
-								<app-user-card-hover :user="block.blocked_by_user">
+								<AppUserCardHover :user="block.blocked_by_user">
 									<span class="-user-link">
-										<app-user-avatar-img
+										<AppUserAvatarImg
 											class="-avatar"
 											:user="block.blocked_by_user"
 										/>
@@ -91,30 +245,26 @@
 											@{{ block.blocked_by_user.username }}
 										</span>
 									</span>
-								</app-user-card-hover>
+								</AppUserCardHover>
 							</router-link>
-							<span v-else>
-								-
-							</span>
+							<span v-else> - </span>
 						</td>
 
 						<td class="-info">
-							<app-time-ago :date="block.blocked_on" />
+							<AppTimeAgo :date="block.blocked_on" />
 						</td>
 
 						<td class="-info">
-							<translate v-if="!block.doesExpire">
-								Never
-							</translate>
-							<app-time-ago v-else :date="block.expires_on" is-future />
+							<AppTranslate v-if="!block.doesExpire"> Never </AppTranslate>
+							<AppTimeAgo v-else :date="block.expires_on" is-future />
 						</td>
 
 						<td>
-							<app-jolticon
+							<AppJolticon
 								v-app-tooltip="$gettext(`Lift Block`)"
 								class="-lift"
 								icon="remove"
-								@click.native="onClickLift(block)"
+								@click="onClickLift(block)"
 							/>
 						</td>
 					</tr>
@@ -122,20 +272,17 @@
 			</table>
 		</div>
 
-		<app-pagination
+		<AppPagination
 			:total-items="totalCount"
 			:current-page="page"
 			:items-per-page="perPage"
 			prevent-url-change
 			@pagechange="onPageChanged"
 		/>
-	</app-communities-view-page-container>
+	</AppCommunitiesViewPageContainer>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .table
 	margin-top: 20px
 

@@ -1,7 +1,21 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppEventItemMediaIndicator extends Vue {
+	@Prop(Number)
+	count!: number;
+
+	@Prop(Number)
+	current!: number;
+}
+</script>
+
 <template>
 	<div class="event-item-media-indicator">
 		<div
 			v-for="i of count"
+			:key="i"
 			class="-dot"
 			:class="{
 				'-active': current === i,
@@ -11,9 +25,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .event-item-media-indicator
 	display: flex
 	justify-content: center
@@ -30,5 +41,3 @@
 .-active
 	change-bg('link')
 </style>
-
-<script lang="ts" src="./media-indicator"></script>

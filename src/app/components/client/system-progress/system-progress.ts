@@ -1,14 +1,14 @@
-import Vue, { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
-
-import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
+import { h } from 'vue';
+import { Options, Vue } from 'vue-property-decorator';
 import { Client } from '../../../../_common/client/client.service';
+// import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
 
-@Component({})
+@Options({})
 export class AppClientSystemProgress extends Vue {
-	@ClientLibraryState totalPatchProgress!: ClientLibraryStore['totalPatchProgress'];
+	// @ClientLibraryState totalPatchProgress!: ClientLibraryStore['totalPatchProgress'];
+	totalPatchProgress: any = 0;
 
-	render(h: CreateElement) {
+	render() {
 		const progress = this.totalPatchProgress;
 		if (progress === null) {
 			Client.clearProgressBar();

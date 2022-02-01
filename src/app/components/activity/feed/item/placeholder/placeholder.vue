@@ -1,4 +1,14 @@
-<script lang="ts" src="./placeholder"></script>
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+import AppButtonPlaceholder from '../../../../../../_common/button/AppButtonPlaceholder.vue';
+
+@Options({
+	components: {
+		AppButtonPlaceholder,
+	},
+})
+export default class AppActivityFeedItemPlaceholder extends Vue {}
+</script>
 
 <template>
 	<div class="-container">
@@ -25,8 +35,9 @@
 			</div>
 
 			<div class="-controls">
-				<app-button-placeholder sparse circle />
-				<app-button-placeholder sparse circle />
+				<AppButtonPlaceholder sparse circle />
+				{{ ' ' }}
+				<AppButtonPlaceholder sparse circle />
 			</div>
 		</div>
 	</div>
@@ -34,7 +45,6 @@
 
 <style lang="stylus" scoped>
 @import '../../post/post'
-@import '~styles-lib/mixins'
 
 // Gotta override the border hover styling of event items.
 .-item

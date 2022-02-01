@@ -1,9 +1,8 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { WidgetCompiler, WidgetCompilerContext } from './widget-compiler.service';
 
-@Component({})
+@Options({})
 export class AppWidgetCompiler extends Vue {
 	@Prop(String) content!: string;
 	@Prop({ type: Boolean, default: false })
@@ -15,15 +14,15 @@ export class AppWidgetCompiler extends Vue {
 	})
 	context!: WidgetCompilerContext;
 
-	render(h: CreateElement) {
+	render() {
 		if (!this.content) {
 			return h('div');
 		}
 
 		if (this.isDisabled) {
-			return h('div', { domProps: { innerHTML: this.content } });
+			return h('div', { innerHTML: this.content });
 		}
 
-		return WidgetCompiler.compile(h, this.context, this.content);
+		return WidgetCompiler.compile(this.context, this.content);
 	}
 }

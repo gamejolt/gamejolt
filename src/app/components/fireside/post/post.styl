@@ -1,4 +1,4 @@
-@require '../../../../_styles/mixins/compiled-content'
+@import '../../../../_styles/mixins/compiled-content'
 
 $-font-size-xs = 16px
 $-font-size = 17px
@@ -14,7 +14,8 @@ $-lead-font-size = 19px
 	.spoiler
 		font-style: normal
 
-	img, iframe
+	img
+	iframe
 		rounded-corners-lg()
 
 .fireside-post-lead-content
@@ -25,9 +26,10 @@ $-lead-font-size = 19px
 	@media $media-sm-up
 		font-size: $-lead-font-size
 
-	>>> a
+	::v-deep(a)
 		theme-prop('color', 'link')
 
-		&:hover, &:focus
+		&:hover
+		&:focus
 			theme-prop('color', 'link')
 			text-decoration: underline

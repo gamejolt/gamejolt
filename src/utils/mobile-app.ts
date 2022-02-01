@@ -1,17 +1,22 @@
-import { Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
 
-export type AppPromotionSource = 'footer' | 'top-nav' | 'top-nav-options' | 'sidebar' | 'landing';
+export type AppPromotionSource =
+	| 'footer'
+	| 'top-nav'
+	| 'top-nav-options'
+	| 'sidebar'
+	| 'landing'
+	| 'home-hero';
 export type AppPromotionCohort = 'store' | 'community';
 
-export const AppPromotionStoreKey = Symbol();
+export const AppPromotionStoreKey = Symbol('app-promotion');
 
-// We currently are trying to show it in as many places as possible.
-export function shouldShowAppPromotion(route: Route) {
-	if (GJ_IS_CLIENT) {
+export function shouldShowAppPromotion(route: RouteLocationNormalized) {
+	if (GJ_IS_DESKTOP_APP) {
 		return false;
 	}
 
-	const name = route.name ?? '';
+	const name = (route.name as string) ?? '';
 	return (
 		name.startsWith('communities.') ||
 		name === 'home' ||
@@ -24,7 +29,7 @@ export function shouldShowAppPromotion(route: Route) {
 const storageKey = 'app-promotion-cohort';
 
 export class AppPromotionStore {
-	cohort: AppPromotionCohort | null = !GJ_IS_SSR
+	cohort: AppPromotionCohort | null = !import.meta.env.SSR
 		? (sessionStorage.getItem(storageKey) as AppPromotionCohort | null)
 		: null;
 
@@ -67,7 +72,7 @@ export function setAppPromotionCohort(store: AppPromotionStore, cohort: AppPromo
 
 	store.cohort = cohort;
 
-	if (!GJ_IS_SSR) {
+	if (!import.meta.env.SSR) {
 		sessionStorage.setItem(storageKey, cohort);
 	}
 }

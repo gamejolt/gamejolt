@@ -14,6 +14,18 @@ export class Navigate {
 	 * Only usable in client.
 	 */
 	static get currentClientSection() {
+		if (!GJ_IS_DESKTOP_APP) {
+			throw new Error('Attempted to use Navigate.currentClientSection outside of client');
+		}
+
+		// TODO(vue3) not sure this is the correct way to do this.
+		if (GJ_BUILD_TYPE === 'development') {
+			return GJ_SECTION;
+		}
+
+		// TODO(vue3) Environment urls changed, update this.
+		throw new Error('vue3 todo');
+
 		if (window.location.href.startsWith(Environment.wttfBaseUrl)) {
 			return 'app';
 		} else if (window.location.href.startsWith(Environment.authBaseUrl)) {
@@ -45,7 +57,7 @@ export class Navigate {
 
 		this.callDestructors();
 
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			nw.Window.get().reload();
 		} else {
 			window.location.reload();
@@ -60,7 +72,7 @@ export class Navigate {
 	}
 
 	static gotoExternal(href: string) {
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			nw.Shell.openExternal(href);
 		} else {
 			this.goto(href);
@@ -88,7 +100,7 @@ export class Navigate {
 			center?: boolean;
 		}
 	) {
-		if (GJ_IS_CLIENT) {
+		if (GJ_IS_DESKTOP_APP) {
 			Navigate.gotoExternal(url);
 		} else if (!windowOptions) {
 			window.open(url, '_blank');

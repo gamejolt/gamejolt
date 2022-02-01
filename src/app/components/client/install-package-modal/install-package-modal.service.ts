@@ -1,15 +1,12 @@
+import { defineAsyncComponent } from 'vue';
 import { Game } from '../../../../_common/game/game.model';
-import { Modal } from '../../../../_common/modal/modal.service';
-import { asyncComponentLoader } from '../../../../utils/utils';
+import { showModal } from '../../../../_common/modal/modal.service';
 
 export class ClientInstallPackageModal {
 	static async show(game: Game) {
-		return await Modal.show({
+		return await showModal({
 			modalId: 'ClientInstallPackage-' + game.id,
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "ClientInstallPackageModal" */ './install-package-modal.vue')
-				),
+			component: defineAsyncComponent(() => import('./install-package-modal.vue')),
 			props: { game },
 			size: 'sm',
 		});

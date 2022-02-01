@@ -1,15 +1,15 @@
 import ResizeObserver from 'resize-observer-polyfill';
-import { DirectiveOptions } from 'vue';
+import { Directive } from 'vue';
 
 const observers = new WeakMap<HTMLElement, ResizeObserver>();
 
-export const AppObserveDimensions: DirectiveOptions = {
-	inserted(el, binding) {
+export const AppObserveDimensions: Directive<HTMLElement, ResizeObserverCallback> = {
+	mounted(el, binding) {
 		const observer = new ResizeObserver(binding.value);
 		observer.observe(el);
 		observers.set(el, observer);
 	},
-	unbind(el) {
+	unmounted(el) {
 		const observer = observers.get(el);
 		if (observer) {
 			observer.disconnect();

@@ -1,7 +1,7 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 
-@Component({})
+@Options({})
 export class AppCountdown extends Vue {
 	@Prop(Number) end!: number;
 
@@ -16,14 +16,14 @@ export class AppCountdown extends Vue {
 		this.interval = window.setInterval(() => this.updateTimer(), 1000);
 	}
 
-	destroyed() {
+	unmounted() {
 		if (this.interval) {
 			window.clearInterval(this.interval);
 		}
 	}
 
-	render(h: CreateElement) {
-		return h('span', this.time);
+	render() {
+		return h('span', {}, this.time);
 	}
 
 	updateTimer() {

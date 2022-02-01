@@ -1,4 +1,98 @@
-<script lang="ts" src="./chat"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Inject, Options, Vue } from 'vue-property-decorator';
+import { EscapeStack } from '../../../../../_common/escape-stack/escape-stack.service';
+import { formatNumber } from '../../../../../_common/filters/number';
+import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
+import AppLoading from '../../../../../_common/loading/loading.vue';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import { illMaintenance } from '../../../../img/ill/illustrations';
+import { useAppStore } from '../../../../store';
+import { ChatStore, ChatStoreKey } from '../../../chat/chat-store';
+import { enterChatRoom, leaveChatRoom } from '../../../chat/client';
+import { sortByLastMessageOn } from '../../../chat/user-collection';
+import AppChatUserList from '../../../chat/user-list/user-list.vue';
+import AppChatWindows from '../../../chat/windows/windows.vue';
+
+@Options({
+	components: {
+		AppChatUserList,
+		AppChatWindows,
+		AppIllustration,
+		AppLoading,
+	},
+})
+export default class AppShellSidebarChat extends Vue {
+	store = setup(() => useAppStore());
+
+	@Inject({ from: ChatStoreKey })
+	chatStore!: ChatStore;
+
+	get visibleLeftPane() {
+		return this.store.visibleLeftPane;
+	}
+
+	tab: 'chats' | 'friends' = 'chats';
+
+	private escapeCallback?: () => void;
+
+	readonly Screen = Screen;
+	readonly illMaintenance = illMaintenance;
+
+	get chat() {
+		return this.chatStore.chat!;
+	}
+
+	get friends() {
+		return this.chat.friendsList.collection;
+	}
+
+	get groups() {
+		return this.chat.groupRooms;
+	}
+
+	get chats() {
+		return sortByLastMessageOn([...this.groups, ...this.friends]);
+	}
+
+	get hasGroupRooms() {
+		return this.groups.length > 0;
+	}
+
+	get friendsCount() {
+		return this.chat.friendsList.collection.length;
+	}
+
+	get friendsCountLocalized() {
+		return formatNumber(this.friendsCount);
+	}
+
+	mounted() {
+		// xs size needs to show the friends list
+		if (this.chat.sessionRoomId && !Screen.isXs) {
+			enterChatRoom(this.chat, this.chat.sessionRoomId);
+		}
+
+		this.escapeCallback = () => this.hideChatPane();
+		EscapeStack.register(this.escapeCallback);
+	}
+
+	unmounted() {
+		if (this.escapeCallback) {
+			EscapeStack.deregister(this.escapeCallback);
+			this.escapeCallback = undefined;
+		}
+
+		leaveChatRoom(this.chat);
+	}
+
+	hideChatPane() {
+		if (this.visibleLeftPane === 'chat') {
+			this.store.toggleLeftPane('chat');
+		}
+	}
+}
+</script>
 
 <template>
 	<div id="shell-chat-pane">
@@ -8,7 +102,7 @@
 					<ul>
 						<li v-if="chats.length > 0">
 							<a :class="{ active: tab === 'chats' }" @click="tab = 'chats'">
-								<translate>Chats</translate>
+								<AppTranslate>Chats</AppTranslate>
 							</a>
 						</li>
 						<li>
@@ -16,7 +110,7 @@
 								:class="{ active: chats.length === 0 || tab === 'friends' }"
 								@click="tab = 'friends'"
 							>
-								<translate>Friends</translate>
+								<AppTranslate>Friends</AppTranslate>
 								<span class="badge badge-subtle">
 									{{ friendsCountLocalized }}
 								</span>
@@ -29,26 +123,24 @@
 					v-if="chats.length === 0 || (tab === 'friends' && !friends.length)"
 					class="nav-well"
 				>
-					<translate>No friends yet.</translate>
+					<AppTranslate>No friends yet.</AppTranslate>
 				</div>
-				<app-chat-user-list v-else :entries="tab === 'chats' ? chats : friends" />
+				<AppChatUserList v-else :entries="tab === 'chats' ? chats : friends" />
 			</template>
 			<template v-else-if="chat.connected">
-				<app-loading centered :label="$gettext(`Loading your chats...`)" />
+				<AppLoading centered :label="$gettext(`Loading your chats...`)" />
 			</template>
 			<template v-else>
-				<app-illustration class="-no-chat" src="~img/ill/maintenance.svg">
-					<p><translate>The chat server went away...</translate></p>
-					<p><translate>It should be back shortly.</translate></p>
-				</app-illustration>
+				<AppIllustration class="-no-chat" :src="illMaintenance">
+					<p><AppTranslate>The chat server went away...</AppTranslate></p>
+					<p><AppTranslate>It should be back shortly.</AppTranslate></p>
+				</AppIllustration>
 			</template>
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 #shell-chat-pane
 	padding-top: 20px
 

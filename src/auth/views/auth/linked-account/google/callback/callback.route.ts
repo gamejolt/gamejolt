@@ -1,8 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeAuthLinkedAccountGoogleCallback: RouteConfig = {
+export const routeAuthLinkedAccountGoogleCallback: RouteRecordRaw = {
 	name: 'auth.linked-account.google.callback',
 	path: 'google/callback',
-	component: () =>
-		import(/* webpackChunkName: "routeAuthLinkedAccountGoogleCallback" */ './callback'),
+	component: () => import('./callback'),
 };

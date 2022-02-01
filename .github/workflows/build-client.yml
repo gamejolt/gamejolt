@@ -1,0 +1,219 @@
+name: Build Client
+
+on:
+  push:
+    tags:
+      - 'release/**'
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.4.2'
+          cache: yarn
+
+      - run: yarn install
+      - run: yarn run client-build
+      - run: cd build/prod-client && tar cvf client-build.tar .
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: client-build
+          path: build/prod-client/client-build.tar
+
+  build-win:
+    needs: build-frontend
+
+    strategy:
+      matrix:
+        targetplatform: [x86]
+
+    runs-on: windows-2016
+
+    env:
+      GOPATH: 'C:\go'
+      GJPUSH_TOKEN: ${{ secrets.GJ_PUSH_TOKEN }}
+      GJ_CERT_PASS: ${{ secrets.GJ_CERT_PASS }}
+
+    steps:
+      - uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Install code signing cert
+        run: |
+          Set-Content gulp\tasks\client\certs\cert.pfx.b64 ${{ secrets.GJ_CERT }}
+          CertUtil -Decode gulp\tasks\client\certs\cert.pfx.b64 gulp\tasks\client\certs\cert.pfx
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.4.2'
+          architecture: x86
+          cache: yarn
+
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '1.10.8'
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: client-build
+
+      # I guess windows doesn't need -p flag
+      - run: mkdir build/prod-client
+      - run: tar -xvf client-build.tar -C build/prod-client
+
+      # Enable VS2015 toolset
+      - run: 'call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86'
+        shell: cmd
+      - run: gcc -v
+
+      - run: echo %PATH%
+        shell: cmd
+
+      - run: yarn install
+
+      # Production release
+      - run: yarn run client-package --push-build
+        if: ${{ !endsWith(github.ref_name, '-stage') }}
+
+      # Stage release
+      - run: yarn run client-package --use-test-package --push-build
+        if: ${{ endsWith(github.ref_name, '-stage') }}
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: win32
+          path: build\prod-client-build\GameJoltClientSetup.exe
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: win32-package
+          path: build\prod-client-build\win32-package.tar.gz
+
+  build-linux:
+    needs: build-frontend
+    runs-on: ubuntu-latest
+
+    env:
+      GOPATH: /home/runner/go
+      GJPUSH_TOKEN: ${{ secrets.GJ_PUSH_TOKEN }}
+      GJ_CERT_PASS: ${{ secrets.GJ_CERT_PASS }}
+
+    steps:
+      - run: sudo apt-get update
+
+      - uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      # OpenGL dev dependencies
+      - run: sudo apt-get install -y libgl1-mesa-dev xorg-dev
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.4.2'
+          cache: yarn
+
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '1.10.8'
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: client-build
+
+      - run: mkdir -p build/prod-client
+      - run: tar -xvf client-build.tar -C build/prod-client
+
+      - run: yarn install
+
+      # Production release
+      - run: yarn run client-package --push-build
+        if: ${{ !endsWith(github.ref_name, '-stage') }}
+
+      # Stage release
+      - run: yarn run client-package --use-test-package --push-build
+        if: ${{ endsWith(github.ref_name, '-stage') }}
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: linux64
+          path: build/prod-client-build/GameJoltClient.tar.gz
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: linux64-package
+          path: build/prod-client-build/linux64-package.tar.gz
+
+  build-mac:
+    needs: build-frontend
+    runs-on: macos-latest
+
+    env:
+      GOPATH: /Users/runner/go
+      GJPUSH_TOKEN: ${{ secrets.GJ_PUSH_TOKEN }}
+      GJ_CERT_PASS: ${{ secrets.GJ_CERT_PASS }}
+
+    steps:
+      - uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.4.2'
+          cache: yarn
+
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '1.10.8'
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: client-build
+
+      - run: mkdir -p build/prod-client
+      - run: tar -xvf client-build.tar -C build/prod-client
+
+      - run: yarn install
+
+      # Production release
+      - run: yarn run client-package --push-build
+        if: ${{ !endsWith(github.ref_name, '-stage') }}
+
+      # Stage release
+      - run: yarn run client-package --use-test-package --push-build
+        if: ${{ endsWith(github.ref_name, '-stage') }}
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: macos64
+          path: build/prod-client-build/GameJoltClient.dmg
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: macos64-package
+          path: build/prod-client-build/osx64-package.tar.gz

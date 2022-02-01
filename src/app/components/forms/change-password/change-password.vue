@@ -1,66 +1,96 @@
+<script lang="ts">
+import { mixins, Options, Prop } from 'vue-property-decorator';
+import { Api } from '../../../../_common/api/api.service';
+import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
+import { validateMatch } from '../../../../_common/form-vue/validators';
+
+type FormModel = {
+	old_password: string;
+	password: string;
+	confirm_password: string;
+};
+
+class Wrapper extends BaseForm<FormModel> {}
+
+@Options({})
+export default class FormChangePassword extends mixins(Wrapper) implements FormOnSubmit {
+	@Prop({ type: Boolean, default: true })
+	requiresOld!: boolean;
+
+	readonly validateMatch = validateMatch;
+
+	created() {
+		this.form.warnOnDiscard = false;
+		this.form.resetOnSubmit = true;
+	}
+
+	onInit() {
+		this.setField('old_password', '');
+		this.setField('password', '');
+		this.setField('confirm_password', '');
+	}
+
+	onSubmit() {
+		return Api.sendRequest('/web/dash/account/set-password', {
+			old_password: this.formModel.old_password,
+			password: this.formModel.password,
+		});
+	}
+}
+</script>
+
 <template>
-	<app-form name="changePasswordForm">
-		<app-form-group
-			v-if="requiresOld"
-			name="old_password"
-			:label="$gettext(`dash.change_pass.old_password_label`)"
-		>
-			<app-form-control
+	<AppForm :controller="form">
+		<AppFormGroup v-if="requiresOld" name="old_password" :label="$gettext(`Old Password`)">
+			<AppFormControl
 				type="password"
-				:rules="{
-					min: 4,
-					max: 30,
-				}"
-				:validate-on="['blur']"
+				:validators="[validateMinLength(4), validateMaxLength(300)]"
+				validate-on-blur
 			/>
 
-			<app-form-control-errors label="password">
-				<app-form-control-error
+			<AppFormControlErrors label="password">
+				<AppFormControlError
 					when="server"
-					:message="$gettext(`dash.change_pass.invalid_old_password_error`)"
+					:message="$gettext(`The password you entered is invalid.`)"
 				/>
-			</app-form-control-errors>
-		</app-form-group>
+			</AppFormControlErrors>
+		</AppFormGroup>
 
-		<app-form-group name="password" :label="$gettext(`dash.change_pass.password_label`)">
-			<app-form-control
+		<AppFormGroup name="password" :label="$gettext(`New Password`)">
+			<AppFormControl
 				type="password"
-				:rules="{
-					min: 4,
-					max: 30,
-				}"
-				:validate-on="['blur']"
+				:validators="[validateMinLength(4), validateMaxLength(300)]"
+				validate-on-blur
 			/>
 
-			<app-form-control-errors label="new password" />
-		</app-form-group>
+			<AppFormControlErrors label="new password" />
+		</AppFormGroup>
 
-		<app-form-group
-			name="confirm_password"
-			:label="$gettext(`dash.change_pass.confirm_password_label`)"
-		>
-			<app-form-control
+		<AppFormGroup name="confirm_password" :label="$gettext(`Confirm New Password`)">
+			<AppFormControl
 				type="password"
-				:rules="{
-					min: 4,
-					max: 30,
-					confirmed: 'password',
-				}"
-				:validate-on="['blur']"
+				:validators="[
+					validateMinLength(4),
+					validateMaxLength(300),
+					validateMatch(formModel.password),
+				]"
+				validate-on-blur
 			/>
 
-			<app-form-control-errors label="new password">
-				<app-form-control-error
-					when="confirmed"
-					:message="$gettext(`dash.change_pass.no_match_error`)"
+			<AppFormControlErrors label="new password">
+				<AppFormControlError
+					when="match"
+					:message="
+						$gettext(
+							`The passwords you entered don't match. Try re-typing them and make sure they're identical.`
+						)
+					"
 				/>
-			</app-form-control-errors>
-		</app-form-group>
+			</AppFormControlErrors>
+		</AppFormGroup>
 
-		<app-form-button>
-			<translate>dash.change_pass.submit_button</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton>
+			<AppTranslate>Change Account Password</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>
-
-<script lang="ts" src="./change-password"></script>

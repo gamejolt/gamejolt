@@ -1,3 +1,19 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Environment } from '../../environment/environment.service';
+import { Sellable } from '../../sellable/sellable.model';
+
+@Options({})
+export default class AppWidgetCompilerWidgetGamePackages extends Vue {
+	@Prop({ type: Array, default: () => [] })
+	sellables!: Sellable[];
+	@Prop({ type: String, default: 'dark' })
+	theme!: string;
+
+	widgetHost = Environment.widgetHost;
+}
+</script>
+
 <template>
 	<div class="widget-compiler-widget-game-packages">
 		<div v-for="sellable of sellables" :key="sellable.id">
@@ -8,14 +24,12 @@
 				frameborder="0"
 				width="100%"
 				height="245"
-			></iframe>
+			/>
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-
 .widget-compiler-widget-game-packages
 	max-width: 500px
 	margin: 0 auto
@@ -23,5 +37,3 @@
 	iframe
 		margin-bottom: $line-height-computed
 </style>
-
-<script lang="ts" src="./widget-game-packages"></script>

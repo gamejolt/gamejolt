@@ -1,65 +1,100 @@
-<template>
-	<app-form name="scoreTableForm">
-		<app-form-group name="name" :label="$gettext(`dash.games.scoreboard.form.name_label`)">
-			<app-form-control type="text" :rules="{ max: 50 }" />
-			<app-form-control-errors />
-		</app-form-group>
+<script lang="ts">
+import { mixins, Options, Prop } from 'vue-property-decorator';
+import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import { BaseForm } from '../../../../../_common/form-vue/form.service';
+import { Game } from '../../../../../_common/game/game.model';
+import { GameScoreTable } from '../../../../../_common/game/score-table/score-table.model';
 
-		<app-form-group
+class Wrapper extends BaseForm<GameScoreTable> {}
+
+@Options({
+	components: {
+		AppFormControlToggle,
+	},
+})
+export default class FormGameScoreTable extends mixins(Wrapper) {
+	@Prop(Object) game!: Game;
+
+	modelClass = GameScoreTable;
+	GameScoreTable = GameScoreTable;
+
+	onInit() {
+		this.setField('game_id', this.game.id);
+
+		if (this.method === 'add') {
+			this.setField('unique_scores', true);
+			this.setField('scores_sorting_direction', GameScoreTable.SORTING_DIRECTION_DESC);
+		}
+	}
+}
+</script>
+
+<template>
+	<AppForm :controller="form">
+		<AppFormGroup name="name" :label="$gettext(`Name`)">
+			<AppFormControl type="text" :validators="[validateMaxLength(50)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
+
+		<AppFormGroup
 			name="description"
 			:optional="true"
-			:label="$gettext(`dash.games.scoreboard.form.description_label`)"
+			:label="$gettext(`Description`)"
 		>
-			<app-form-control-textarea rows="5" :rules="{ max: 250 }" />
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlTextarea rows="5" :validators="[validateMaxLength(250)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="allow_guest_scores"
-			:label="$gettext(`dash.games.scoreboard.form.guest_label`)"
+			:label="$gettext(`Guest Scoring`)"
 		>
-			<p class="help-block"><translate>dash.games.scoreboard.form.guest_help</translate></p>
-			<app-form-control-toggle />
-		</app-form-group>
+			<p class="help-block">
+				<AppTranslate>Allow guests to submit scores?</AppTranslate>
+			</p>
+			<AppFormControlToggle />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="unique_scores"
-			:label="$gettext(`dash.games.scoreboard.form.unique_label`)"
+			:label="$gettext(`Unique Scores`)"
 		>
-			<p class="help-block"><translate>dash.games.scoreboard.form.unique_help</translate></p>
-			<app-form-control-toggle />
-		</app-form-group>
+			<p class="help-block"><AppTranslate>Only show a user's best score?</AppTranslate></p>
+			<AppFormControlToggle />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			name="scores_sorting_direction"
-			:label="$gettext(`dash.games.scoreboard.form.direction_label`)"
+			:label="$gettext(`Sort Direction`)"
 		>
 			<div class="radio">
 				<label>
-					<app-form-control-radio :value="GameScoreTable.SORTING_DIRECTION_DESC" />
-					<translate>dash.games.scoreboard.form.desc_label</translate>
+					<AppFormControlRadio :value="GameScoreTable.SORTING_DIRECTION_DESC" />
+					<AppTranslate translate-comment="As in going from highest to lowest">
+						Descending
+					</AppTranslate>
 					<br />
 					<span class="help-inline">
-						<translate>dash.games.scoreboard.form.desc_help</translate>
+						<AppTranslate>Scores with higher values are ranked better.</AppTranslate>
 					</span>
 				</label>
 			</div>
 			<div class="radio">
 				<label>
-					<app-form-control-radio :value="GameScoreTable.SORTING_DIRECTION_ASC" />
-					<translate>dash.games.scoreboard.form.asc_label</translate>
+					<AppFormControlRadio :value="GameScoreTable.SORTING_DIRECTION_ASC" />
+					<AppTranslate translate-comment="As in going from lowest to highest">
+						Ascending
+					</AppTranslate>
 					<br />
 					<span class="help-inline">
-						<translate>dash.games.scoreboard.form.asc_help</translate>
+						<AppTranslate>Scores with lower values are ranked better.</AppTranslate>
 					</span>
 				</label>
 			</div>
-		</app-form-group>
+		</AppFormGroup>
 
-		<app-form-button>
-			<translate>dash.games.scoreboard.form.save_button</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton>
+			<AppTranslate>Save Scoreboard</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>
-
-<script lang="ts" src="./score-table"></script>

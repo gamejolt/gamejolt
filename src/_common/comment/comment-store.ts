@@ -1,11 +1,11 @@
-import Vue from 'vue';
+import { InjectionKey } from '@vue/runtime-core';
 import { arrayGroupBy, arrayRemove, numberSort } from '../../utils/array';
 import { Api } from '../api/api.service';
-import { Growls } from '../growls/growls.service';
+import { showSuccessGrowl } from '../growls/growls.service';
 import { Translate } from '../translate/translate.service';
 import { Comment, fetchComments } from './comment-model';
 
-export const CommentStoreManagerKey = Symbol('comment-store');
+export const CommentStoreManagerKey: InjectionKey<CommentStoreManager> = Symbol('comment-store');
 
 export class CommentStoreModel {
 	totalCount = 0;
@@ -85,7 +85,7 @@ export function lockCommentStore(
 	const storeId = resource + '/' + resourceId;
 
 	if (!manager.stores[storeId]) {
-		Vue.set(manager.stores, storeId, new CommentStoreModel(resource, resourceId));
+		manager.stores[storeId] = new CommentStoreModel(resource, resourceId);
 	}
 
 	++manager.stores[storeId].locks;
@@ -103,7 +103,7 @@ export function releaseCommentStore(manager: CommentStoreManager, store: Comment
 
 	--store.locks;
 	if (store.locks <= 0) {
-		Vue.delete(manager.stores, storeId);
+		delete manager.stores[storeId];
 	}
 }
 
@@ -181,7 +181,7 @@ function _addComments(store: CommentStoreModel, comments: Comment[]) {
 		// Replace an old instance of the comment in the store if it exists.
 		const index = store.comments.findIndex(c => c.id === comment.id);
 		if (index !== -1) {
-			Vue.set(store.comments, index, comment);
+			store.comments[index] = comment;
 		} else {
 			store.comments.push(comment);
 		}
@@ -211,7 +211,7 @@ export function onCommentAdd(manager: CommentStoreManager, comment: Comment) {
 	const store = getCommentStore(manager, comment.resource, comment.resource_id);
 
 	if (comment.status === Comment.STATUS_SPAM) {
-		Growls.success(
+		showSuccessGrowl(
 			Translate.$gettext(
 				'Your comment has been marked for review. Please allow some time for it to show on the site.'
 			),
@@ -233,7 +233,7 @@ export function onCommentAdd(manager: CommentStoreManager, comment: Comment) {
 export function onCommentEdit(manager: CommentStoreManager, comment: Comment) {
 	// Was it marked as possible spam?
 	if (comment.status === Comment.STATUS_SPAM) {
-		Growls.success(
+		showSuccessGrowl(
 			Translate.$gettext(
 				'Your comment has been marked for review. Please allow some time for it to show on the site.'
 			),

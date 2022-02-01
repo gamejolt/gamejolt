@@ -1,4 +1,9 @@
-<script lang="ts" src="./placeholder"></script>
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppShellNotificationPopoverStickerNavItemPlaceholder extends Vue {}
+</script>
 
 <template>
 	<div>
@@ -15,9 +20,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-item
 	display: flex
 	margin-bottom: 8px

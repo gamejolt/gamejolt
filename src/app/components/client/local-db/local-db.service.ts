@@ -1,7 +1,7 @@
-import { LocalDbGame } from './game/game.model';
-import { LocalDbPackage } from './package/package.model';
 import * as path from 'path';
 import { Collection } from './collection';
+import { LocalDbGame } from './game/game.model';
+import { LocalDbPackage } from './package/package.model';
 
 export class LocalDb {
 	readonly games: Collection<LocalDbGame>;

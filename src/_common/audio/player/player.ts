@@ -1,5 +1,5 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
+import { h, nextTick } from 'vue';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { GameSong } from '../../game/song/song.model';
 
 interface DurationPayload {
@@ -7,12 +7,12 @@ interface DurationPayload {
 	duration: number;
 }
 
-@Component({})
+@Options({})
 export class AppAudioPlayer extends Vue {
-	@Prop(GameSong)
+	@Prop(Object)
 	song!: GameSong;
 
-	$el!: HTMLAudioElement;
+	declare $el: HTMLAudioElement;
 
 	src = '';
 
@@ -33,16 +33,14 @@ export class AppAudioPlayer extends Vue {
 		this.setup();
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('audio', {
-			domProps: {
-				src: this.song.url,
-				preload: 'auto',
-			},
+			src: this.song.url,
+			preload: 'auto',
 		});
 	}
 
-	destroyed() {
+	unmounted() {
 		this.clearWatcher();
 	}
 
@@ -53,7 +51,7 @@ export class AppAudioPlayer extends Vue {
 	private async setup() {
 		this.clearWatcher();
 
-		await this.$nextTick();
+		await nextTick();
 
 		this.$el.play();
 		this.setWatcher();

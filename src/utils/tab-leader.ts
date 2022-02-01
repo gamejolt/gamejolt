@@ -1,10 +1,20 @@
 import { BroadcastChannel, createLeaderElection, LeaderElector } from 'broadcast-channel';
+import { markRaw } from 'vue';
+
+export interface TabLeaderConstructor {
+	new (name: string): TabLeaderInterface;
+}
+export interface TabLeaderInterface {
+	isLeader: boolean;
+	init: () => void;
+	kill: () => Promise<void>;
+}
 
 /**
- * Determines a leader between tabs.
+ * Determines a leader between tabs using broadcast-channel.
  * Continues to poll until this tab can become leader.
  */
-export class TabLeader {
+const BrowserTabLeader: TabLeaderConstructor = class BrowserTabLeader implements TabLeaderInterface {
 	private readonly elector: LeaderElector;
 	private readonly channel: BroadcastChannel;
 
@@ -15,13 +25,13 @@ export class TabLeader {
 	}
 
 	constructor(name: string) {
-		this.channel = new BroadcastChannel(name);
-		this.elector = createLeaderElection(this.channel);
+		this.channel = markRaw(new BroadcastChannel(name));
+		this.elector = markRaw(createLeaderElection(this.channel));
 	}
 
 	/**
-	 * This function begins the process of attemping to become the leader.
-	 * All tabs need this process to be active.
+	 * This function begins the process of attemping to become the leader. All
+	 * tabs need this process to be active.
 	 */
 	public init() {
 		// Can only be used when not dead yet.
@@ -41,4 +51,17 @@ export class TabLeader {
 		await this.channel.close();
 		await this.elector.die();
 	}
-}
+};
+
+const ClientTabLeader: TabLeaderConstructor = class ClientTabLeader implements TabLeaderInterface {
+	readonly isLeader = true;
+
+	constructor(name: string) {}
+
+	init() {}
+	kill() {
+		return Promise.resolve();
+	}
+};
+
+export const TabLeader = GJ_IS_DESKTOP_APP ? ClientTabLeader : BrowserTabLeader;

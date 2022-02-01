@@ -1,7 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 import { routeDashGamesManageApiDataStorageItemsList } from './data-storage/items/list/list.route';
 import { routeDashGamesManageApiDataStorageItemsView } from './data-storage/items/view/view.route';
-import { routeDashGamesManageApiMods } from './mods/mods.route';
 import { routeDashGamesManageApiOverview } from './overview/overview.route';
 import { routeDashGamesManageApiScoreboardsList } from './scoreboards/list/list.route';
 import { routeDashGamesManageApiScoreboardsScoresList } from './scoreboards/scores/list/list.route';
@@ -10,9 +9,9 @@ import { routeDashGamesManageApiScoreboardsScoresView } from './scoreboards/scor
 import { routeDashGamesManageApiSettings } from './settings/settings.route';
 import { routeDashGamesManageApiTrophies } from './trophies/trophies.route';
 
-export const routeDashGamesManageApi: RouteConfig = {
+export const routeDashGamesManageApi: RouteRecordRaw = {
 	path: 'api',
-	component: () => import(/* webpackChunkName: "routeDashGamesManageApi" */ './api.vue'),
+	component: () => import('./api.vue'),
 	children: [
 		routeDashGamesManageApiOverview,
 		routeDashGamesManageApiTrophies,
@@ -22,7 +21,6 @@ export const routeDashGamesManageApi: RouteConfig = {
 		routeDashGamesManageApiScoreboardsScoresList,
 		routeDashGamesManageApiScoreboardsScoresView,
 		routeDashGamesManageApiScoreboardsScoreUser,
-		routeDashGamesManageApiMods,
 		routeDashGamesManageApiSettings,
 	],
 };

@@ -1,15 +1,55 @@
-<script lang="ts" src="./edit"></script>
+<script lang="ts">
+import { mixins, Options } from 'vue-property-decorator';
+import {
+	CommunityCompetition,
+	CompetitionPeriodVoting,
+} from '../../../../../../_common/community/competition/competition.model';
+import { formatDate } from '../../../../../../_common/filters/date';
+import AppFormLegend from '../../../../../../_common/form-vue/AppFormLegend.vue';
+import AppFormControlDate from '../../../../../../_common/form-vue/controls/AppFormControlDate.vue';
+import { FormTimezoneService } from '../../../../../../_common/form-vue/form-timezone.service';
+import { BaseForm } from '../../../../../../_common/form-vue/form.service';
+import AppLoading from '../../../../../../_common/loading/loading.vue';
+import AppCommunityCompetitionDate from '../../../../community/competition/date/date.vue';
+
+class Wrapper extends BaseForm<CommunityCompetition> {}
+
+@Options({
+	components: {
+		AppFormLegend,
+		AppFormControlDate,
+		AppLoading,
+		AppCommunityCompetitionDate,
+	},
+})
+export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
+	modelClass = CommunityCompetition;
+	timezoneService: FormTimezoneService<CommunityCompetition> | null = null;
+
+	readonly formatDate = formatDate;
+
+	get shouldShowSaveButton() {
+		// Before and during the competition, start/end dates can be edited.
+		return this.model!.periodNum < CompetitionPeriodVoting;
+	}
+
+	async onInit() {
+		this.timezoneService = new FormTimezoneService(this.form);
+		await this.timezoneService.load(true);
+	}
+}
+</script>
 
 <template>
-	<app-form name="communityCompetitionFormEdit">
+	<AppForm :controller="form">
 		<fieldset>
-			<app-form-legend>
-				<translate>Date and Time</translate>
-			</app-form-legend>
+			<AppFormLegend>
+				<AppTranslate>Date and Time</AppTranslate>
+			</AppFormLegend>
 
-			<template v-if="timezoneService && timezoneService.loaded">
+			<template v-if="model && timezoneService && timezoneService.loaded">
 				<template v-if="!model.hasStarted">
-					<app-form-group name="timezone" :label="$gettext(`Select a Timezone`)">
+					<AppFormGroup name="timezone" :label="$gettext(`Select a Timezone`)">
 						<p class="help-block">
 							<span v-translate>
 								All time selection below will use this timezone.
@@ -22,13 +62,13 @@
 
 						<p class="help-block">
 							<strong>
-								<translate>
+								<AppTranslate>
 									Should auto-detect, but if it doesn't, choose your closest city.
-								</translate>
+								</AppTranslate>
 							</strong>
 						</p>
 
-						<app-form-control-select>
+						<AppFormControlSelect>
 							<optgroup
 								v-for="(timezones, region) of timezoneService.timezones"
 								:key="region"
@@ -42,23 +82,21 @@
 									{{ timezone.label }}
 								</option>
 							</optgroup>
-						</app-form-control-select>
+						</AppFormControlSelect>
 
-						<app-form-control-errors />
-					</app-form-group>
+						<AppFormControlErrors />
+					</AppFormGroup>
 				</template>
 				<template v-else>
-					<app-form-group name="timezone" :label="$gettext(`Selected Timezone`)">
+					<AppFormGroup name="timezone" :label="$gettext(`Selected Timezone`)">
 						<p class="help-block">
-							<translate>
-								All time selection below are using this timezone.
-							</translate>
+							<AppTranslate>All time selection below are using this timezone.</AppTranslate>
 						</p>
 						{{ timezoneService.activeTimezoneName }}
-					</app-form-group>
+					</AppFormGroup>
 				</template>
 
-				<app-form-group name="starts_on" :label="$gettext(`Start Date and Time`)">
+				<AppFormGroup name="starts_on" :label="$gettext(`Start Date and Time`)">
 					<template v-if="!model.hasStarted">
 						<p class="help-block">
 							<span v-translate>
@@ -67,29 +105,27 @@
 							</span>
 						</p>
 
-						<app-form-control-date
+						<AppFormControlDate
 							:timezone-offset="timezoneService.activeTimezoneOffset"
-							:rules="{
-								min_date: timezoneService.now,
-								max_date: formModel.ends_on,
-							}"
+							:min-date="timezoneService.now"
+							:max-date="formModel.ends_on"
 						/>
-						<app-form-control-errors />
+						<AppFormControlErrors />
 					</template>
 
 					<template v-else>
-						<app-community-competition-date
+						<AppCommunityCompetitionDate
 							:date="model.starts_on"
 							:timezone="model.timezone"
 						/>
 
 						<p class="help-block">
-							<translate>Your jam began on this date and time.</translate>
+							<AppTranslate>Your jam began on this date and time.</AppTranslate>
 						</p>
 					</template>
-				</app-form-group>
+				</AppFormGroup>
 
-				<app-form-group name="ends_on" :label="$gettext(`End Date and Time`)">
+				<AppFormGroup name="ends_on" :label="$gettext(`End Date and Time`)">
 					<template v-if="!model.hasEnded">
 						<p class="help-block">
 							<span v-translate>
@@ -98,37 +134,40 @@
 							</span>
 						</p>
 
-						<app-form-control-date
+						<AppFormControlDate
 							:timezone-offset="timezoneService.activeTimezoneOffset"
-							:rules="endsOnControlRules"
+							:min-date="formModel.starts_on"
+							:max-date="
+								formModel.is_voting_enabled ? formModel.voting_ends_on : undefined
+							"
 						/>
-						<app-form-control-errors />
+						<AppFormControlErrors />
 					</template>
 
 					<template v-else>
-						<app-community-competition-date
+						<AppCommunityCompetitionDate
 							:date="model.ends_on"
 							:timezone="model.timezone"
 						/>
 
 						<p class="help-block">
-							<translate>Your jam ended on this date and time.</translate>
+							<AppTranslate>Your jam ended on this date and time.</AppTranslate>
 						</p>
 					</template>
-				</app-form-group>
+				</AppFormGroup>
 			</template>
 
 			<template v-else>
-				<app-loading centered />
+				<AppLoading centered />
 			</template>
 		</fieldset>
 
-		<app-form-button
+		<AppFormButton
 			v-if="shouldShowSaveButton"
 			show-when-valid
-			:disabled="!timezoneService.loaded"
+			:disabled="!timezoneService || !timezoneService.loaded"
 		>
-			<translate>Save</translate>
-		</app-form-button>
-	</app-form>
+			<AppTranslate>Save</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

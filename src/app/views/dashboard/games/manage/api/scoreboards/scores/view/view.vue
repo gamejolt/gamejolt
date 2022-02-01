@@ -1,11 +1,84 @@
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import { Api } from '../../../../../../../../../_common/api/api.service';
+import { formatDate } from '../../../../../../../../../_common/filters/date';
+import { formatNumber } from '../../../../../../../../../_common/filters/number';
+import { GameScoreTable } from '../../../../../../../../../_common/game/score-table/score-table.model';
+import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../../../../_common/route/route-component';
+import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
+import { useGameDashRouteController } from '../../../../manage.store';
+
+@Options({
+	name: 'RouteDashGamesManageApiScoreboardsScoresView',
+})
+@OptionsForRoute({
+	deps: { params: ['score'] },
+	resolver: ({ route }) =>
+		Api.sendRequest(
+			'/web/dash/developer/games/api/scores/' + route.params.id + '/' + route.params.score
+		),
+})
+export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRouteComponent {
+	routeStore = setup(() => useGameDashRouteController()!);
+
+	get game() {
+		return this.routeStore.game!;
+	}
+
+	score: UserGameScore = null as any;
+	scoreTable: GameScoreTable = null as any;
+
+	readonly formatNumber = formatNumber;
+	readonly formatDate = formatDate;
+
+	get routeTitle() {
+		if (this.game) {
+			return this.$gettextInterpolate('Score Details - %{ game }', {
+				game: this.game.title,
+			});
+		}
+		return null;
+	}
+
+	routeResolved($payload: any) {
+		this.score = new UserGameScore($payload.score);
+		this.scoreTable = new GameScoreTable($payload.scoreTable);
+	}
+
+	async removeScore() {
+		const result = await ModalConfirm.show(
+			this.$gettext('Are you sure you want to remove this score?')
+		);
+
+		if (!result) {
+			return;
+		}
+
+		await this.score.$remove();
+
+		this.$router.push({
+			name: 'dash.games.manage.api.scoreboards.scores.list',
+			params: {
+				table: this.score.table_id + '',
+			},
+		});
+	}
+}
+</script>
+
 <template>
 	<div v-if="isRouteBootstrapped">
 		<h2 class="section-header">
 			<div class="section-header-controls">
-				<app-button sparse icon="remove" @click="removeScore" />
+				<AppButton sparse icon="remove" @click="removeScore" />
 			</div>
 
-			<translate>dash.games.scores.view.heading</translate>
+			<AppTranslate>Score Details</AppTranslate>
 		</h2>
 
 		<div class="table-responsive">
@@ -16,7 +89,7 @@
 				<tbody>
 					<tr>
 						<th>
-							<translate>dash.games.scores.view.user_label</translate>
+							<AppTranslate>User</AppTranslate>
 						</th>
 						<td>
 							<!-- User Score -->
@@ -35,14 +108,16 @@
 								{{ score.guest }}
 								<br />
 								<small class="text-muted">
-									<translate>dash.games.scores.guest_tag</translate>
+									<AppTranslate>Guest</AppTranslate>
 								</small>
 							</span>
 						</td>
 					</tr>
 					<tr>
 						<th>
-							<translate>dash.games.scores.view.table_label</translate>
+							<AppTranslate translate-comment="Refers to game scoreboard table">
+								Table
+							</AppTranslate>
 						</th>
 						<td>
 							<router-link
@@ -57,35 +132,36 @@
 					</tr>
 					<tr>
 						<th>
-							<translate>dash.games.scores.view.string_label</translate>
+							<AppTranslate>Score String</AppTranslate>
 						</th>
 						<td>{{ score.score }}</td>
 					</tr>
 					<tr>
 						<th>
-							<translate>dash.games.scores.view.sort_label</translate>
+							<AppTranslate>Sort Value</AppTranslate>
 						</th>
-						<td>{{ score.sort | number }}</td>
+						<td>{{ formatNumber(score.sort) }}</td>
 					</tr>
 					<tr>
 						<th>
-							<translate>dash.games.scores.view.date_label</translate>
+							<AppTranslate>Scored On</AppTranslate>
 						</th>
 						<td>
-							{{ score.logged_on | date('medium') }}
+							{{ formatDate(score.logged_on, 'medium') }}
 						</td>
 					</tr>
 					<tr>
 						<th>
-							<translate>dash.games.scores.view.data_label</translate>
+							<AppTranslate>Extra Data</AppTranslate>
 						</th>
 						<td>
-							<pre v-if="score.extra_data" class="small">
-							{{ score.extra_data }}
-						</pre
-							>
+							<pre v-if="score.extra_data" class="small">{{ score.extra_data }}</pre>
 							<span v-else class="small text-muted">
-								<translate>dash.games.scores.view.data_none_help</translate>
+								<AppTranslate>
+									No extra data for this score. You can use the extra data field
+									to store information to help you weed out cheaters and validate
+									scores. It's never shown to users.
+								</AppTranslate>
 							</span>
 						</td>
 					</tr>
@@ -94,5 +170,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./view"></script>

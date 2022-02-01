@@ -1,13 +1,14 @@
-import Vue from 'vue';
-import { store } from '../../../editor/store';
+import { reactive } from 'vue';
 import { objectPick } from '../../../utils/object';
 import { assertNever } from '../../../utils/utils';
 import { MediaItem } from '../../media-item/media-item-model';
 import { Theme } from '../../theme/theme.model';
+import { ThemeStore } from '../../theme/theme.store';
 import { ContentContext } from '../content-context';
 import { ContentHydrationType } from '../content-hydrator';
 import {
 	ContentEditorController,
+	createContentEditor,
 	editorInsertBlockquote,
 	editorInsertBulletList,
 	editorInsertCodeBlock,
@@ -28,17 +29,21 @@ import {
 import { ContentEditorService } from './content-editor.service';
 import { MediaUploadTask } from './media-upload-task';
 
+export function createContentEditorAppAdapter({ themeStore }: { themeStore: ThemeStore }) {
+	const c = reactive(new ContentEditorAppAdapter(() => themeStore)) as ContentEditorAppAdapter;
+	(window as any).gjEditor = c;
+	return c;
+}
+
 export class ContentEditorAppAdapter {
+	constructor(public readonly _getThemeStore: () => ThemeStore) {}
+
 	isInitialized = false;
-	context: null | ContentContext = null;
-	controller: null | ContentEditorController = null;
+	context?: ContentContext;
+	controller?: ContentEditorController;
 	initialContent = '';
 	placeholder = '';
-	theme: null | Theme = null;
-
-	constructor(public getController: () => ContentEditorController) {
-		(window as any).gjEditor = this;
-	}
+	theme?: Theme;
 
 	/**
 	 * This channel is set up by the app and can be used to send data back to
@@ -75,14 +80,12 @@ export class ContentEditorAppAdapter {
 		this.context = context;
 		this.initialContent = initialContent ?? '';
 		this.placeholder = placeholder ?? '';
-		this.theme = theme ? new Theme(theme) : null;
+		this.theme = theme ? new Theme(theme) : undefined;
+		this.controller = createContentEditor({ contentContext: this.context! });
 		this.isInitialized = true;
 
-		store.commit('theme/setDark', !(lightMode ?? false));
+		this._getThemeStore().setDark(!(lightMode ?? false));
 
-		// TODO: There's gotta be a better way?
-		await Vue.nextTick();
-		this.controller = this.getController();
 		this.send(ContentEditorAppAdapterMessage.initialized());
 	}
 
@@ -115,7 +118,7 @@ export class ContentEditorAppAdapter {
  * there's not one initialized.
  */
 export function editorGetAppAdapter() {
-	if (!GJ_IS_APP) {
+	if (!GJ_IS_MOBILE_APP) {
 		throw new Error(`Tried getting app adapter in non-app build.`);
 	}
 

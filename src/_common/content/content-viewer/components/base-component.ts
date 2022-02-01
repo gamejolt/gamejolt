@@ -1,7 +1,6 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { ContentObject } from '../../content-object';
-import { ContentOwner } from '../../content-owner';
 import { AppContentViewerBlockquote } from './blockquote';
 import { AppContentViewerHardBreak } from './br';
 import { AppContentViewerCodeBlock } from './code/code';
@@ -54,29 +53,23 @@ function getComponentType(data: ContentObject): any {
 	}
 }
 
-export function renderChildren(
-	h: CreateElement,
-	owner: ContentOwner,
-	childObjects: ReadonlyArray<ContentObject>
-) {
+export function renderChildren(childObjects: ReadonlyArray<ContentObject>) {
 	const children = [];
 	if (childObjects) {
-		for (const obj of childObjects) {
-			const childVNode = h(getComponentType(obj), { props: { data: obj, owner } });
+		for (const contentData of childObjects) {
+			const childVNode = h(getComponentType(contentData), { contentData });
 			children.push(childVNode);
 		}
 	}
 	return children;
 }
 
-@Component({})
+@Options({})
 export class AppContentViewerBaseComponent extends Vue {
 	@Prop(Array)
 	content!: ContentObject[];
-	@Prop(Object)
-	owner!: ContentOwner;
 
-	render(h: CreateElement) {
-		return h('div', renderChildren(h, this.owner, this.content));
+	render() {
+		return h('div', {}, renderChildren(this.content));
 	}
 }

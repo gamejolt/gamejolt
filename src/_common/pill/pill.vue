@@ -1,6 +1,47 @@
+<script lang="ts">
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppPill extends Vue {
+	@Prop({ type: Object, required: false })
+	to?: any;
+
+	@Emit('click')
+	emitClick(_e: MouseEvent) {}
+
+	get component() {
+		if (this.to) {
+			return 'router-link';
+		}
+
+		if (this.hasClickListener) {
+			return 'a';
+		}
+
+		return 'div';
+	}
+
+	get hasImg() {
+		return !!this.$slots.img;
+	}
+
+	get hasClickListener() {
+		return !!this.$attrs.onClick;
+	}
+
+	onClick(e: MouseEvent) {
+		if (this.component === 'div') {
+			return;
+		}
+
+		this.emitClick(e);
+	}
+}
+</script>
+
 <template>
 	<component :is="component" class="pill" :to="to" @click="onClick">
-		<span class="-img" v-if="hasImg">
+		<span v-if="hasImg" class="-img">
 			<slot name="img" />
 		</span>
 		<span class="-content">
@@ -10,9 +51,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .pill
 	rounded-corners()
 	change-bg('bg-offset')
@@ -44,5 +82,3 @@
 	width: 18px
 	height: 18px
 </style>
-
-<script lang="ts" src="./pill"></script>

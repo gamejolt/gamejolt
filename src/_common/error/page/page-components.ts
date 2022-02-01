@@ -1,4 +1,4 @@
-import Vue, { VueConstructor } from 'vue';
+import { Vue, VueConstructor } from 'vue-class-component';
 import ErrorPage400 from './page-400.vue';
 import ErrorPage403 from './page-403.vue';
 import ErrorPage404 from './page-404.vue';

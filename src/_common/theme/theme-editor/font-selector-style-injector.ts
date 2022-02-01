@@ -1,7 +1,7 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 
-@Component({})
+@Options({})
 export class AppThemeEditorFontSelectorStyleInjector extends Vue {
 	@Prop(String) fontDefinitions!: string;
 
@@ -10,7 +10,7 @@ export class AppThemeEditorFontSelectorStyleInjector extends Vue {
 		this.$el.innerHTML = this.fontDefinitions;
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('style');
 	}
 }

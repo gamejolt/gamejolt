@@ -1,15 +1,12 @@
-import { asyncComponentLoader } from '../../../../utils/utils';
+import { defineAsyncComponent } from 'vue';
 import { Game } from '../../../../_common/game/game.model';
-import { Modal } from '../../../../_common/modal/modal.service';
+import { showModal } from '../../../../_common/modal/modal.service';
 
 export class GameThumbnailModal {
 	static async show(game: Game) {
-		return await Modal.show<Game>({
+		return await showModal<Game>({
 			modalId: 'GameThumbnail',
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "GameThumbnailModal" */ './thumbnail-modal.vue')
-				),
+			component: defineAsyncComponent(() => import('./thumbnail-modal.vue')),
 			props: {
 				game,
 			},

@@ -1,38 +1,93 @@
-<script lang="ts" src="./stats"></script>
+<script lang="ts">
+import { setup, Vue } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../utils/vue';
+import AppCard from '../../../../_common/card/AppCard.vue';
+import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
+import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
+import AppShareCard from '../../../../_common/share/card/card.vue';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import {
+	extendFireside,
+	publishFireside,
+	useFiresideController,
+} from '../../../components/fireside/controller/controller';
+import { illEndOfFeed } from '../../../img/ill/illustrations';
+import AppFiresideShare from '../_share/share.vue';
+
+@Options({
+	components: {
+		AppIllustration,
+		AppProgressBar,
+		AppCard,
+		AppScrollScroller,
+		AppShareCard,
+		AppFiresideShare,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppFiresideStats extends Vue {
+	commonStore = setup(() => useCommonStore());
+
+	c = shallowSetup(() => useFiresideController()!);
+
+	readonly illEndOfFeed = illEndOfFeed;
+
+	get user() {
+		return this.commonStore.user;
+	}
+
+	get fireside() {
+		return this.c.fireside;
+	}
+
+	onClickPublish() {
+		publishFireside(this.c);
+	}
+
+	onClickExtend() {
+		extendFireside(this.c);
+	}
+}
+</script>
 
 <template>
 	<div class="fireside-stats">
-		<app-scroll-scroller thin>
-			<app-illustration src="~img/ill/end-of-feed.svg" />
+		<AppScrollScroller thin>
+			<AppIllustration :src="illEndOfFeed" />
 
-			<template v-if="!c.isDraft">
-				<template v-if="!c.isStreaming">
-					<div v-if="c.expiresProgressValue !== null" class="-burnout-bar">
-						<app-progress-bar :percent="c.expiresProgressValue" thin />
+			<template v-if="!c.isDraft.value">
+				<template v-if="!c.isStreaming.value">
+					<div v-if="c.expiresProgressValue.value !== null" class="-burnout-bar">
+						<AppProgressBar :percent="c.expiresProgressValue.value" thin />
 					</div>
 					<div v-else class="-burnout-bar-placeholder" />
 				</template>
 
-				<div v-if="c.totalDurationText" class="text-center">
-					<span><translate>Fireside active for:</translate></span>
+				<div v-if="c.totalDurationText.value" class="text-center">
+					<span><AppTranslate>Fireside active for:</AppTranslate></span>
 					<span>
-						<b>{{ c.totalDurationText }}</b>
+						<b>{{ c.totalDurationText.value }}</b>
 					</span>
 				</div>
 
 				<div
-					v-if="!c.isStreaming && c.expiresDurationText"
+					v-if="!c.isStreaming.value && c.expiresDurationText.value"
 					class="text-center -burnout-timer"
 				>
-					<span><translate>Fire burns out in:</translate></span>
+					<span><AppTranslate>Fire burns out in:</AppTranslate></span>
 					<span>
-						<b>{{ c.expiresDurationText }}</b>
+						<b>{{ c.expiresDurationText.value }}</b>
 					</span>
 				</div>
 			</template>
 
-			<template v-if="c.canPublish">
-				<app-button
+			<template v-if="c.canPublish.value">
+				<AppButton
 					v-app-tooltip.bottom="$gettext(`Make your fireside public`)"
 					block
 					primary
@@ -40,45 +95,42 @@
 					class="-publish-btn"
 					@click="onClickPublish()"
 				>
-					<translate>Publish</translate>
-				</app-button>
+					<AppTranslate>Publish</AppTranslate>
+				</AppButton>
 				<p class="help-block">
-					<translate>
+					<AppTranslate>
 						Your fireside is currently in draft. Only you can view it. Publish it to let
 						everyone join!
-					</translate>
+					</AppTranslate>
 				</p>
 			</template>
 
-			<template v-if="!c.isDraft && !c.isStreaming && c.canExtend">
-				<app-button
+			<template v-if="!c.isDraft.value && !c.isStreaming.value && c.canExtend.value">
+				<AppButton
 					v-app-tooltip.bottom="$gettext(`Extend the duration of your fireside`)"
 					block
 					icon="fireside"
 					class="-extend-btn"
 					@click="onClickExtend()"
 				>
-					<translate>Stoke the Flames</translate>
-				</app-button>
+					<AppTranslate>Stoke the Flames</AppTranslate>
+				</AppButton>
 				<p class="help-block">
-					<translate>
+					<AppTranslate>
 						Firesides stay open for as long as you're around. Stoke the flames to keep
 						your fireside going.
-					</translate>
+					</AppTranslate>
 				</p>
 			</template>
-		</app-scroll-scroller>
+		</AppScrollScroller>
 
-		<div v-if="!c.isDraft">
-			<app-fireside-share />
+		<div v-if="!c.isDraft.value">
+			<AppFiresideShare />
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .fireside-stats
 	display: flex
 	flex-direction: column

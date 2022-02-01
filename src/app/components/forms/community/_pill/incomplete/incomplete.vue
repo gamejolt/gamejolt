@@ -1,29 +1,58 @@
-<script lang="ts" src="./incomplete"></script>
+<script lang="ts">
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
+import { Community } from '../../../../../../_common/community/community.model';
+import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
+import AppCommunityVerifiedTick from '../../../../../../_common/community/verified-tick/verified-tick.vue';
+import AppPillBi from '../../../../../../_common/pill/bi/bi.vue';
+import AppFormsCommunityPillSelector from '../selector/selector.vue';
+
+@Options({
+	components: {
+		AppFormsCommunityPillSelector,
+		AppCommunityThumbnailImg,
+		AppCommunityVerifiedTick,
+		AppPillBi,
+	},
+})
+export default class AppFormsCommunityPillIncomplete extends Vue {
+	@Prop({ type: Array, required: true })
+	communities!: Community[];
+
+	@Prop({ type: Object, required: true })
+	community!: Community;
+
+	@Emit('add') emitAdd(_community: Community, _channel: CommunityChannel) {}
+}
+</script>
 
 <template>
-	<app-forms-community-pill-selector
+	<AppFormsCommunityPillSelector
 		:communities="communities"
 		:initial-community="community"
 		@select="emitAdd"
 	>
-		<app-pill-bi class="-pill" no-hover>
-			<app-community-thumbnail-img slot="img" :community="community" />
-
-			<template slot="left">
-				{{ community.name }}
-				<app-community-verified-tick class="-tick" :community="community" small />
+		<AppPillBi class="-pill" no-hover>
+			<template #img>
+				<AppCommunityThumbnailImg :community="community" />
 			</template>
 
-			<span slot="right" class="-channel">
-				<translate>Select Channel</translate>
-			</span>
-		</app-pill-bi>
-	</app-forms-community-pill-selector>
+			<template #left>
+				{{ community.name }}
+				<AppCommunityVerifiedTick class="-tick" :community="community" small />
+			</template>
+
+			<template #right>
+				<span class="-channel">
+					<AppTranslate>Select Channel</AppTranslate>
+				</span>
+			</template>
+		</AppPillBi>
+	</AppFormsCommunityPillSelector>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '../variables.styl'
+@import '../variables'
 
 .-pill
 	height: $pill-height

@@ -1,9 +1,152 @@
-<script lang="ts" src="./widget"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { numberSort } from '../../../../../utils/array';
+import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
+import {
+	CommunityCompetition,
+	CompetitionPeriodVoting,
+} from '../../../../../_common/community/competition/competition.model';
+import { CommunityCompetitionEntry } from '../../../../../_common/community/competition/entry/entry.model';
+import { CommunityCompetitionEntryVote } from '../../../../../_common/community/competition/entry/vote/vote.model';
+import { CommunityCompetitionVotingCategory } from '../../../../../_common/community/competition/voting-category/voting-category.model';
+import { Environment } from '../../../../../_common/environment/environment.service';
+import { formatNumber } from '../../../../../_common/filters/number';
+import { useCommonStore } from '../../../../../_common/store/common-store';
+import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import FormCommunityCompetitionVotingCast from '../../../forms/community/competition/voting/cast/cast.vue';
+
+@Options({
+	components: {
+		AppTimeAgo,
+		FormCommunityCompetitionVotingCast,
+	},
+	directives: {
+		AppTooltip,
+		AppAuthRequired,
+	},
+})
+export default class AppCommunityCompetitionVotingWidget extends Vue {
+	@Prop({ type: Object, required: true }) competition!: CommunityCompetition;
+	@Prop({ type: Object, required: true }) entry!: CommunityCompetitionEntry;
+	@Prop({ type: Array, required: true }) votingCategories!: CommunityCompetitionVotingCategory[];
+	@Prop({ type: Array, required: true }) userVotes!: CommunityCompetitionEntryVote[];
+	@Prop({ type: Boolean, required: true }) isParticipant!: boolean;
+	@Prop({ type: Boolean, required: true }) isArchived!: boolean;
+	@Prop({ type: Boolean, required: true }) isBlocked!: boolean;
+
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
+
+	moreVoteResultInfoVisible = false;
+
+	readonly formatNumber = formatNumber;
+
+	get loginUrl() {
+		let url =
+			Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath);
+
+		// Append the current entry modal hash to open it back up if there isn't one on the current url.
+		if (!this.$route.hash) {
+			const entryHash = '#entry-' + this.entry.id;
+			url += encodeURIComponent(entryHash);
+		}
+
+		return url;
+	}
+
+	get shouldShow() {
+		return (
+			this.competition.is_voting_enabled &&
+			this.competition.has_community_voting &&
+			this.competition.periodNum >= CompetitionPeriodVoting
+		);
+	}
+
+	get votingActive() {
+		return this.competition.period === 'voting';
+	}
+
+	get votingCategoryError() {
+		return this.competition.voting_type === 'categories' && this.votingCategories.length === 0;
+	}
+
+	get isOwner() {
+		return this.entry.author.id === this.user?.id;
+	}
+
+	get hasNoVotes() {
+		return !this.entry.vote_results || this.entry.vote_results.length === 0;
+	}
+
+	get overallRank() {
+		const overallResult = this.entry.vote_results.find(
+			i => i.community_competition_voting_category_id === null
+		);
+		if (overallResult) {
+			return overallResult.rank;
+		}
+
+		return 1;
+	}
+
+	get sortedVoteResults() {
+		// Sort the vote results in the same manner as the categories are sorted.
+		const categoryResults = this.entry.vote_results
+			.filter(i => i.community_competition_voting_category_id !== null)
+			.sort((a, b) =>
+				numberSort(
+					this.votingCategories.find(
+						i => i.id === a.community_competition_voting_category_id
+					)!.sort,
+					this.votingCategories.find(
+						i => i.id === b.community_competition_voting_category_id
+					)!.sort
+				)
+			);
+
+		// Put the "overall" result last.
+		const overallResult = this.entry.vote_results.find(
+			i => i.community_competition_voting_category_id === null
+		)!;
+
+		return [...categoryResults, overallResult];
+	}
+
+	onClickMoreInfo() {
+		this.moreVoteResultInfoVisible = true;
+	}
+
+	getVotingCategoryDisplayName(votingCategoryId: number | null) {
+		if (votingCategoryId === null) {
+			return this.$gettext(`Overall`);
+		}
+
+		const category = this.votingCategories.find(i => i.id === votingCategoryId);
+		if (category) {
+			return category.name;
+		}
+
+		return this.$gettext(`Unknown`);
+	}
+
+	getVotingCategoryDescription(votingCategoryId: number | null) {
+		const category = this.votingCategories.find(i => i.id === votingCategoryId);
+		if (category) {
+			return category.description;
+		}
+	}
+}
+</script>
 
 <template>
 	<div v-if="shouldShow">
 		<template v-if="votingActive">
-			<h3><translate>Cast Your Vote</translate></h3>
+			<h3><AppTranslate>Cast Your Vote</AppTranslate></h3>
 			<template v-if="!user">
 				<div class="alert">
 					<p>
@@ -40,9 +183,9 @@
 			<template v-else-if="isOwner">
 				<div class="alert">
 					<p>
-						<translate>
+						<AppTranslate>
 							Nice try, my friend, but you can't vote on your own submission!
-						</translate>
+						</AppTranslate>
 					</p>
 				</div>
 			</template>
@@ -51,31 +194,27 @@
 			>
 				<div class="alert">
 					<p>
-						<translate>
+						<AppTranslate>
 							Only participants can vote on entries of this jam. To participate,
 							submit an entry to this jam.
-						</translate>
+						</AppTranslate>
 					</p>
 				</div>
 			</template>
 			<template v-else>
 				<div>
-					<p
-						v-if="competition.voting_type === 'categories'"
-						key="voting-info"
-						v-translate
-					>
+					<p v-if="competition.voting_type === 'categories'" v-translate>
 						Vote for this entry by rating it in each of the categories below. If a
 						particular category doesn't apply for this entry, please choose
 						<code>n/a</code>. For example, it would be appropriate to choose
 						<code>n/a</code> for a "Graphics" category when rating a text-based game.
 					</p>
-					<p key="voting-period" class="help-block">
+					<p class="help-block">
 						<i>
 							<span>
-								<translate>The voting period will end in:</translate>
+								<AppTranslate>The voting period will end in:</AppTranslate>
 								<b>
-									<app-time-ago
+									<AppTimeAgo
 										is-future
 										without-suffix
 										:date="competition.voting_ends_on"
@@ -84,17 +223,17 @@
 							</span>
 							<br />
 							<span>
-								<translate>
+								<AppTranslate>
 									Votes must be cast during the voting period. You can change your
 									vote at any time before then, but after voting has ended, your
 									decision will be finalized. You can vote for as many entries as
 									you wish.
-								</translate>
+								</AppTranslate>
 							</span>
 						</i>
 					</p>
 
-					<form-community-competition-voting-cast
+					<FormCommunityCompetitionVotingCast
 						:entry="entry"
 						:competition="competition"
 						:voting-categories="votingCategories"
@@ -105,22 +244,22 @@
 		</template>
 
 		<template v-else>
-			<h3><translate>Voting Results</translate></h3>
+			<h3><AppTranslate>Voting Results</AppTranslate></h3>
 
 			<template v-if="!competition.are_results_calculated">
 				<p>
-					<translate>
+					<AppTranslate>
 						We are currently working on processing the voting results. Check back later
 						to see the final results!
-					</translate>
+					</AppTranslate>
 				</p>
 			</template>
 			<template v-else-if="hasNoVotes">
 				<p>
-					<translate>
+					<AppTranslate>
 						Aw, shucks! This entry wasn't voted on during the voting period, which means
 						it has no voting results. You can still check the game out, though!
-					</translate>
+					</AppTranslate>
 				</p>
 			</template>
 			<template v-else>
@@ -145,48 +284,48 @@
 					</i>
 					<small v-if="!moreVoteResultInfoVisible">
 						[
-						<a @click="onClickMoreInfo"><translate>more info</translate></a>
+						<a @click="onClickMoreInfo"><AppTranslate>more info</AppTranslate></a>
 						]
 					</small>
 				</p>
 				<template v-if="moreVoteResultInfoVisible">
-					<h4><translate>How Are Voting Results Calculated?</translate></h4>
+					<h4><AppTranslate>How Are Voting Results Calculated?</AppTranslate></h4>
 					<p>
-						<translate>
+						<AppTranslate>
 							First, everyone rates entries from 1-5 in one or more categories. The
 							ratings for each category are averaged to calculate a final score.
 							Ratings of "n/a" are not included in the calculations.
-						</translate>
+						</AppTranslate>
 					</p>
 					<p>
-						<translate>
+						<AppTranslate>
 							When the voting period ends, all scores given by all voters are
 							tabulated to arrive at a weighted average for each entry. The weighted
 							averages determine the entries' overall rankings.
-						</translate>
+						</AppTranslate>
 					</p>
-					<h4><translate>What's a Weighted Average?</translate></h4>
+					<h4><AppTranslate>What's a Weighted Average?</AppTranslate></h4>
 					<p>
-						<translate>
+						<AppTranslate>
 							To arrive at a weighted average for a particular entry, its scores are
 							compared to those of every other entry. Higher occurrences of the same
 							score are given more value, or "weight".
-						</translate>
+						</AppTranslate>
 					</p>
 					<p>
-						<translate>
+						<AppTranslate>
 							The goal is to come up with a projection, based on all available data,
 							of the entry's "true average". The more votes an entry has, the more
 							accurate this average will be.
-						</translate>
+						</AppTranslate>
 					</p>
 					<p>
-						<translate>
+						<AppTranslate>
 							Using weighted averages prevents an entry with a single 5 rating from
 							trumping entries with, for example, several 4 ratings. Similarly, if an
 							entry gets only one low vote and several high ones, its overall score
 							won't be crushed.
-						</translate>
+						</AppTranslate>
 					</p>
 				</template>
 				<div>
@@ -194,13 +333,13 @@
 						<thead>
 							<tr>
 								<th>
-									<translate>Category</translate>
+									<AppTranslate>Category</AppTranslate>
 								</th>
 								<th>
-									<translate>Rank</translate>
+									<AppTranslate>Rank</AppTranslate>
 								</th>
 								<th>
-									<translate>Score</translate>
+									<AppTranslate>Score</AppTranslate>
 								</th>
 							</tr>
 						</thead>
@@ -212,7 +351,7 @@
 											voteResult.community_competition_voting_category_id
 										)
 									}}
-									<app-jolticon
+									<AppJolticon
 										v-if="
 											getVotingCategoryDescription(
 												voteResult.community_competition_voting_category_id
@@ -232,7 +371,7 @@
 								</td>
 								<td>
 									{{
-										number(voteResult.rating, {
+										formatNumber(voteResult.rating, {
 											minimumFractionDigits: 2,
 											maximumFractionDigits: 2,
 										})
@@ -248,9 +387,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-rank-display
 	font-size: $font-size-large
 </style>

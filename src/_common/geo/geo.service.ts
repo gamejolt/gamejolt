@@ -41,7 +41,7 @@ export class Geo {
 				{ code: 'ad', name: Translate.$gettext('Andorra') },
 				{ code: 'ao', name: Translate.$gettext('Angola') },
 				{ code: 'ai', name: Translate.$gettext('Anguilla') },
-				{ code: 'aq', name: Translate.$gettext('Antarctica') },
+				{ code: 'aq', name: Translate.$gettext('Antartica') },
 				{ code: 'ag', name: Translate.$gettext('Antigua and Barbuda') },
 				{ code: 'ar', name: Translate.$gettext('Argentina') },
 				{ code: 'am', name: Translate.$gettext('Armenia') },

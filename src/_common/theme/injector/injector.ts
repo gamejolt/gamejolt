@@ -1,7 +1,7 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 
-@Component({})
+@Options({})
 export class AppThemeInjector extends Vue {
 	@Prop(Object) definition!: any;
 	@Prop(Object) theme!: any;
@@ -22,14 +22,14 @@ export class AppThemeInjector extends Vue {
 		this.refreshStyles(this.definition, this.theme);
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('style');
 	}
 
 	private refreshStyles(themeDefinition: any, currentTheme: any) {
-		let styles: string[] = [];
-		let fonts: string[] = [];
-		let css: string[] = [];
+		const styles: string[] = [];
+		const fonts: string[] = [];
+		const css: string[] = [];
 
 		Object.keys(themeDefinition.definitions).forEach((field: string) => {
 			const definition = themeDefinition.definitions[field];
@@ -88,9 +88,7 @@ export class AppThemeInjector extends Vue {
 						continue;
 					}
 
-					const rule = `${injection.selector} { ${injection.property}: ${
-						propertyValue
-					} !important }`;
+					const rule = `${injection.selector} { ${injection.property}: ${propertyValue} !important }`;
 					styles.push(rule);
 				}
 			}

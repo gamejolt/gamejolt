@@ -1,5 +1,5 @@
-import { asyncComponentLoader } from '../../../../utils/utils';
-import { Modal } from '../../../modal/modal.service';
+import { defineAsyncComponent } from 'vue';
+import { showModal } from '../../../modal/modal.service';
 import { User } from '../../../user/user.model';
 import { GameBuild } from '../../build/build.model';
 import { Game } from '../../game.model';
@@ -17,12 +17,9 @@ interface GamePackagePurchaseModalOptions {
 
 export class GamePackagePurchaseModal {
 	static async show(options: GamePackagePurchaseModalOptions) {
-		return await Modal.show<void>({
+		return await showModal<void>({
 			modalId: 'GamePackagePurchase',
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "GamePackagePurchaseModal" */ './purchase-modal.vue')
-				),
+			component: defineAsyncComponent(() => import('./purchase-modal.vue')),
 			size: 'sm',
 			props: options,
 		});

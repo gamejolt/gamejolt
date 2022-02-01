@@ -1,5 +1,10 @@
 import { Api, RequestOptions } from '../api/api.service';
 
+/**
+ * Helper type that looks like our model classes.
+ */
+export type ModelClassType<T> = { new (data?: T): T };
+
 export type ModelSaveRequestOptions = RequestOptions & { data?: any };
 
 export class Model {
@@ -12,12 +17,12 @@ export class Model {
 	_progress: ProgressEvent | null = null;
 
 	// We need to create some methods dynamically on the model.
-	static populate: (rows: any[]) => any[];
+	static populate: <T = any>(rows: T[]) => T[];
 	assign!: (other: any) => void;
 
 	static create(self: any) {
 		// These need to be created dynamically for each model type.
-		self.populate = function(rows: any[]): any[] {
+		self.populate = function (rows: any[]): any[] {
 			const models: any[] = [];
 			if (rows && Array.isArray(rows) && rows.length) {
 				for (const row of rows) {
@@ -27,17 +32,24 @@ export class Model {
 			return models;
 		};
 
-		self.prototype.assign = function(this: any, other: any) {
+		self.prototype.assign = function (this: any, other: any) {
 			// Some times the model constructors add new fields when populating.
 			// This way we retain those fields.
 			const newObj = new self(other);
 
-			// Vue needs to be alerted of data changes. Use the set method in
-			// Vue only so that it can be aware of changes.
-			const Vue = require('vue').default;
 			const keys = Object.keys(newObj);
 			for (const k of keys) {
-				Vue.set(this, k, newObj[k]);
+				// For some reason this was throwing some weird errors when
+				// saving some forms (like key group form). Couldn't figure it
+				// out, so I'm wrapping it. It still seems to work okay.
+				try {
+					this[k] = newObj[k];
+				} catch (e) {
+					if (GJ_BUILD_TYPE === 'development') {
+						console.warn(`Got an error when setting a model value in assign().`);
+						console.warn(e);
+					}
+				}
 			}
 		};
 

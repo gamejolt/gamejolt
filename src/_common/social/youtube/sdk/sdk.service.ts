@@ -2,7 +2,7 @@ export class YoutubeSdk {
 	private static isBootstrapped = false;
 
 	static load() {
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			return;
 		}
 

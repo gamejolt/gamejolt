@@ -2,11 +2,6 @@ import { Ruler } from '../ruler/ruler-service';
 import { Screen } from '../screen/screen-service';
 import { AppAutoscrollAnchor } from './auto-scroll/anchor';
 
-// Polyfill smooth scrolling.
-if (!GJ_IS_SSR) {
-	require('smoothscroll-polyfill').polyfill();
-}
-
 export type ScrollContext = HTMLElement | HTMLDocument;
 
 interface ScrollToOptions {
@@ -112,7 +107,7 @@ export class Scroll {
 	 * Scrolls to the element passed in.
 	 */
 	static to(input: string | number | HTMLElement, options: ScrollToOptions = {}) {
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			return;
 		}
 
@@ -153,7 +148,7 @@ export class Scroll {
 		offset: number,
 		options: ScrollToOptions = {}
 	) {
-		let top = this.getScrollTop(document) + element.getBoundingClientRect().top - offset;
+		const top = this.getScrollTop(document) + element.getBoundingClientRect().top - offset;
 		this.scrollTo(top, options);
 	}
 

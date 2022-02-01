@@ -1,22 +1,268 @@
-<script lang="ts" src="./gif-modal"></script>
+<script lang="ts">
+import { nextTick } from 'vue';
+import { mixins, Options } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../../utils/vue';
+import { Api } from '../../../../api/api.service';
+import AppLoading from '../../../../loading/loading.vue';
+import { AppModalInterface } from '../../../../modal/AppModal.vue';
+import { BaseModal } from '../../../../modal/base';
+import { Ruler } from '../../../../ruler/ruler-service';
+import { Screen } from '../../../../screen/screen-service';
+import AppScrollScroller, { createScroller } from '../../../../scroll/AppScrollScroller.vue';
+import { Category, ContentEditorGifModal, SearchResult } from './gif-modal.service';
+import mascotImage from './mascot-complete.png';
+
+@Options({
+	components: {
+		AppLoading,
+		AppScrollScroller,
+	},
+})
+export default class AppContentEditorGifModal extends mixins(BaseModal) {
+	private searchTimeout: NodeJS.Timer | null = null;
+	categories: Category[] = [];
+	searchResults: SearchResult[] = [];
+	searchValue = '';
+	loadingCategories = true;
+	isLoading = false;
+	loadedGifs = [] as string[];
+	// To make sure parallel search requests don't step on each other, this keeps the last term, so all previous searches will cancel.
+	currentSearchTerm = '';
+	currentSearchPage = 0;
+	isLastPage = false;
+	hasError = false;
+	contentScroller = shallowSetup(() => createScroller());
+
+	readonly Screen = Screen;
+	readonly mascotImage = mascotImage;
+
+	declare $refs: {
+		modalComponent: AppModalInterface;
+		searchInput: HTMLInputElement;
+	};
+
+	get shouldShowResetButton() {
+		return this.searchValue.length > 0;
+	}
+
+	get shouldShowCategories() {
+		return this.searchValue === '';
+	}
+
+	get reachedLastPage() {
+		return this.currentSearchPage === 3 || this.isLastPage;
+	}
+
+	get shouldShowMoreButton() {
+		return Screen.isXs && this.searchValue.length > 0 && !this.isLoading;
+	}
+
+	async mounted() {
+		await this.populateCategories();
+
+		// Wait for the categories to be loaded. The input is disabled until they are.
+		// Then wait a tick to make sure the `disabled` state goes away.
+		// Inputs cannot be focused until they are no longer disabled.
+		await nextTick();
+
+		// Focus now.
+		this.$refs.searchInput.focus();
+	}
+
+	private async populateCategories() {
+		if (ContentEditorGifModal.categories === undefined) {
+			try {
+				const payload = await Api.sendRequest('/web/content/tenor/categories', undefined, {
+					detach: true,
+				});
+				if (payload.categories) {
+					ContentEditorGifModal.categories = payload.categories;
+					for (let i = 0; i < ContentEditorGifModal.categories!.length; i++) {
+						ContentEditorGifModal.categories![i].index = i;
+					}
+				}
+			} catch (error) {
+				console.error(error);
+				this.hasError = true;
+			}
+		}
+		this.categories = ContentEditorGifModal.categories!;
+		this.loadingCategories = false;
+	}
+
+	private async startSearch() {
+		const term = this.searchValue;
+		this.currentSearchTerm = term;
+		const url =
+			'/web/content/tenor/search?q=' +
+			encodeURIComponent(term) +
+			'&page=' +
+			this.currentSearchPage;
+
+		try {
+			const payload = await Api.sendRequest(url, undefined, { detach: true });
+			if (this.currentSearchTerm === term) {
+				if (payload.results) {
+					this.isLastPage = payload.results.length === 0;
+
+					for (const result of payload.results) {
+						if (this.searchResults.every(i => i.id !== result.id)) {
+							this.searchResults.push(result);
+						}
+					}
+					for (let i = 0; i < this.searchResults.length; i++) {
+						this.searchResults[i].index = i;
+					}
+				}
+				this.isLoading = false;
+			}
+		} catch (error) {
+			console.error(error);
+			this.hasError = true;
+		}
+	}
+
+	onSearchInput(e: Event) {
+		if (this.searchValue === '') {
+			this.searchResults = [];
+		}
+
+		const value = (e.target! as HTMLInputElement).value;
+		this.searchValue = value;
+		let timeoutDelay = 200;
+
+		if (this.searchTimeout) {
+			clearTimeout(this.searchTimeout);
+			this.searchTimeout = null;
+			timeoutDelay += 200;
+		}
+
+		if (this.searchResults.length === 0) {
+			this.isLoading = true;
+		}
+
+		this.searchTimeout = setTimeout(() => {
+			this.currentSearchPage = 0;
+			this.isLoading = true;
+			this.searchResults = [];
+			this.scrollToTop();
+			this.startSearch();
+		}, timeoutDelay);
+	}
+
+	onSearchKeyDown(e: KeyboardEvent) {
+		if (e.key === 'Enter') {
+			this.scrollToTop();
+
+			this.isLoading = true;
+			this.searchResults = [];
+			this.startSearch();
+		}
+	}
+
+	onClickReset() {
+		this.searchValue = '';
+		this.currentSearchPage = 0;
+		this.scrollToTop();
+	}
+
+	onClickCategory(searchTerm: string) {
+		this.searchValue = searchTerm;
+		this.scrollToTop();
+
+		this.isLoading = true;
+		this.searchResults = [];
+		this.startSearch();
+	}
+
+	isGifLoading(id: string) {
+		return !this.loadedGifs.includes(id);
+	}
+
+	onGifLoaded(id: string) {
+		this.loadedGifs.push(id);
+	}
+
+	scrollToTop() {
+		// This has a v-if around it when loading, so it may not be in the DOM.
+		this.contentScroller.scrollTo(0);
+		this.$refs.modalComponent.scrollTo(0);
+	}
+
+	onContainerScroll() {
+		if (!this.isLoading && this.searchValue.length > 0 && !this.reachedLastPage) {
+			const container = this.contentScroller.element.value;
+			if (container) {
+				const height = Ruler.height(container);
+				if (container.scrollHeight < container.scrollTop + height + 100) {
+					this.loadNextPage();
+				}
+			}
+		}
+	}
+
+	loadNextPage() {
+		this.currentSearchPage++;
+		this.isLoading = true;
+		this.startSearch();
+	}
+
+	onClickSearchResult(searchResult: SearchResult) {
+		// Run this async
+		// Also don't care about whether this succeeds or not.
+		Api.sendRequest(
+			'/web/content/tenor/register-share/' + searchResult.id,
+			{},
+			{
+				detach: true,
+			}
+		).then();
+
+		this.modal.resolve(searchResult);
+	}
+
+	onRetry() {
+		this.hasError = false;
+
+		// Reset entire state
+		this.currentSearchPage = 0;
+		this.currentSearchTerm = '';
+		this.isLastPage = false;
+		this.categories = [];
+		ContentEditorGifModal.categories = undefined;
+		this.searchValue = '';
+		this.isLoading = false;
+		this.searchResults = [];
+		this.loadedGifs = [];
+
+		if (this.searchTimeout) {
+			clearTimeout(this.searchTimeout);
+			this.searchTimeout = null;
+		}
+
+		this.loadingCategories = true;
+		this.populateCategories();
+	}
+}
+</script>
 
 <template>
-	<app-modal ref="modal" tabindex="0">
+	<AppModal ref="modalComponent" tabindex="0">
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-body">
 			<div v-if="hasError" class="error-container">
-				<p><translate>Something went wrong.</translate></p>
-				<app-button @click="onRetry"><translate>Retry</translate></app-button>
+				<p><AppTranslate>Something went wrong.</AppTranslate></p>
+				<AppButton @click="onRetry"><AppTranslate>Retry</AppTranslate></AppButton>
 			</div>
 
 			<template v-else>
 				<div class="input-container">
-					<app-button
+					<AppButton
 						v-if="shouldShowResetButton"
 						sparse
 						trans
@@ -24,19 +270,19 @@
 						@click="onClickReset"
 					/>
 					<div class="search-bar">
-						<app-jolticon icon="search" class="search-icon text-muted" />
+						<AppJolticon icon="search" class="search-icon text-muted" />
 						<div
 							v-if="shouldShowResetButton"
 							class="search-clear"
 							@click="onClickReset"
 						>
-							<app-jolticon class="-icon" icon="remove" />
+							<AppJolticon class="-icon" icon="remove" />
 						</div>
 						<input
-							ref="search"
+							ref="searchInput"
 							class="search form-control"
 							:placeholder="$gettext('Search Tenor...')"
-							:disabled="loadingCategories"
+							:disabled="loadingCategories ? 'true' : undefined"
 							:value="searchValue"
 							@input="onSearchInput"
 							@keydown="onSearchKeyDown"
@@ -44,16 +290,16 @@
 					</div>
 				</div>
 				<div v-if="loadingCategories" class="loading-categories">
-					<app-loading centered big />
+					<AppLoading centered big />
 				</div>
-				<app-scroll-scroller
+				<AppScrollScroller
 					v-else
-					ref="contentScroller"
+					:controller="contentScroller"
 					class="gif-content"
 					:class="{
 						'gif-content-noscroll': isLoading && searchResults.length === 0,
 					}"
-					@scroll.native="onContainerScroll"
+					@scroll="onContainerScroll"
 				>
 					<div v-if="shouldShowCategories" class="-grid">
 						<div
@@ -105,19 +351,19 @@
 							</template>
 						</div>
 						<div v-if="reachedLastPage" class="end-of-scroll">
-							<img src="./mascot-complete.png" title="♥" />
+							<img :src="mascotImage" title="♥" />
 							<span class="text-muted">
 								These are not the GIFs you are looking for!
 							</span>
 						</div>
 						<div v-else-if="shouldShowMoreButton" class="more-container">
-							<app-button @click="loadNextPage">More</app-button>
+							<AppButton @click="loadNextPage">More</AppButton>
 						</div>
 					</div>
-				</app-scroll-scroller>
+				</AppScrollScroller>
 			</template>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" src="./gif-modal.styl" scoped></style>

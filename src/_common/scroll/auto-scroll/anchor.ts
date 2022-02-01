@@ -1,9 +1,9 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Ruler } from '../../ruler/ruler-service';
 import { Scroll } from '../scroll.service';
 
-@Component({})
+@Options({})
 export class AppAutoscrollAnchor extends Vue {
 	@Prop(Boolean)
 	disabled?: boolean;
@@ -29,7 +29,7 @@ export class AppAutoscrollAnchor extends Vue {
 
 	private beforeRouteDeregister?: Function;
 
-	$el!: HTMLDivElement;
+	declare $el: HTMLDivElement;
 
 	@Watch('anchorKey')
 	onAnchorKeyChange() {
@@ -60,7 +60,7 @@ export class AppAutoscrollAnchor extends Vue {
 		});
 	}
 
-	destroyed() {
+	unmounted() {
 		Scroll.autoscrollAnchor = undefined;
 
 		if (this.beforeRouteDeregister) {
@@ -69,7 +69,7 @@ export class AppAutoscrollAnchor extends Vue {
 		}
 	}
 
-	render(h: CreateElement) {
-		return h('div', this.$slots.default);
+	render() {
+		return h('div', {}, this.$slots.default?.());
 	}
 }

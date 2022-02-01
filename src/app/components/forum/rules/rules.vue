@@ -1,73 +1,85 @@
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+import AppExpand from '../../../../_common/expand/AppExpand.vue';
+
+@Options({
+	components: {
+		AppExpand,
+	},
+})
+export default class AppForumRules extends Vue {
+	isShowingRules = false;
+}
+</script>
+
 <template>
 	<div class="alert full-bleed-xs">
 		<p>
-			<translate>
-				Our forums have been coded up and delivered as a precious gem into your hands. Don't abuse
-				the privilege.
-			</translate>
+			<AppTranslate>
+				Our forums have been coded up and delivered as a precious gem into your hands. Don't
+				abuse the privilege.
+			</AppTranslate>
 		</p>
 		<p>
 			<a @click="isShowingRules = !isShowingRules">
-				<translate>Read through the rules before posting on the forums.</translate>
+				<AppTranslate>Read through the rules before posting on the forums.</AppTranslate>
 			</a>
 		</p>
 
-		<app-expand :when="isShowingRules">
+		<AppExpand :when="isShowingRules">
 			<hr />
 
 			<h5 class="sans-margin-top">
-				<translate>Forum Rules</translate>
+				<AppTranslate>Forum Rules</AppTranslate>
 			</h5>
 
 			<ol>
 				<li>
-					<b><translate>Keep it Nice</translate></b>
+					<b><AppTranslate>Keep it Nice</AppTranslate></b>
 					-
-					<translate>
+					<AppTranslate>
 						We're here to help each other as gamers and developers, not to pick fights.
-					</translate>
+					</AppTranslate>
 				</li>
 				<li>
-					<b><translate>No Advertising</translate></b>
+					<b><AppTranslate>No Advertising</AppTranslate></b>
 					-
-					<translate>
-						This is not the place to post news about your games. Game Jolt has devlogs for everyone
-						to use. You can post about game ideas you may have, but only post in the respective
-						channel.
-					</translate>
+					<AppTranslate>
+						This is not the place to post news about your games. Game Jolt has devlogs
+						for everyone to use. You can post about game ideas you may have, but only
+						post in the respective channel.
+					</AppTranslate>
 				</li>
 				<li>
-					<b><translate>No Spamming</translate></b>
+					<b><AppTranslate>No Spamming</AppTranslate></b>
 					-
-					<translate>
-						Most people these days have busy lives, so I think the last thing we need is to open up
-						a thread just to find a bunch of poop in word form.
-					</translate>
+					<AppTranslate>
+						Most people these days have busy lives, so I think the last thing we need is
+						to open up a thread just to find a bunch of poop in word form.
+					</AppTranslate>
 				</li>
 				<li>
-					<b><translate>Keep it Safe for Work</translate></b>
+					<b><AppTranslate>Keep it Safe for Work</AppTranslate></b>
 					-
-					<translate>
-						We'd like to keep the forums safe for younger folks to read through. Plus, how would
-						people be able to slack off at work if we don't keep it safe?
-					</translate>
+					<AppTranslate>
+						We'd like to keep the forums safe for younger folks to read through. Plus,
+						how would people be able to slack off at work if we don't keep it safe?
+					</AppTranslate>
 				</li>
 				<li>
-					<b><translate>Be Awesome</translate></b>
+					<b><AppTranslate>Be Awesome</AppTranslate></b>
 					-
-					<translate>We have no time for boring people.</translate>
+					<AppTranslate>We have no time for boring people.</AppTranslate>
 				</li>
 				<li>
-					<b><translate>Additional Rules</translate></b>
+					<b><AppTranslate>Additional Rules</AppTranslate></b>
 					-
-					<translate>
-						Each channel has some additional rules. Be sure to read them and follow them while
-						posting.
-					</translate>
+					<AppTranslate>
+						Each channel has some additional rules. Be sure to read them and follow them
+						while posting.
+					</AppTranslate>
 				</li>
 			</ol>
-		</app-expand>
+		</AppExpand>
 	</div>
 </template>
-
-<script lang="ts" src="./rules"></script>

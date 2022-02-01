@@ -1,17 +1,18 @@
-import { BaseRouteComponent, RouteResolver } from '../../../_common/route/route-component';
+import { h } from 'vue';
+import { Options } from 'vue-property-decorator';
+import { RouterView } from 'vue-router';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { User } from '../../../_common/user/user.model';
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
 
-@Component({
+@Options({
 	name: 'RouteLanding',
 })
-@RouteResolver({
+@OptionsForRoute({
 	deps: {},
 	resolver: () => User.touch(),
 })
 export default class RouteLanding extends BaseRouteComponent {
-	render(h: CreateElement) {
-		return h('router-view');
+	render() {
+		return h(RouterView);
 	}
 }

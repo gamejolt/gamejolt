@@ -1,17 +1,43 @@
-<script lang="ts" src="./app-buttons"></script>
+<script lang="ts">
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import {
+	AppPromotionSource,
+	AppPromotionStore,
+	AppPromotionStoreKey,
+} from '../../utils/mobile-app';
+import { trackAppPromotionClick } from '../analytics/analytics.service';
+import appStoreImage from './button-app-store.svg';
+import playStoreImage from './button-play-store.png';
+
+@Options({})
+export default class AppAppButtons extends Vue {
+	@Prop({ type: String, required: true })
+	source!: AppPromotionSource;
+
+	@Prop({ type: Boolean })
+	justified!: boolean;
+
+	@Inject({ from: AppPromotionStoreKey })
+	appPromotion!: AppPromotionStore;
+
+	readonly trackAppPromotionClick = trackAppPromotionClick;
+	readonly playStoreImage = playStoreImage;
+	readonly appStoreImage = appStoreImage;
+}
+</script>
 
 <template>
-	<div class="app-buttons">
+	<div class="app-buttons" :class="{ '-justified': justified }">
 		<a
 			class="-button"
 			:href="appPromotion.playStoreUrl"
 			target="_blank"
-			@click="trackAppPromotionClick({ source })"
+			@click="trackAppPromotionClick({ source, platform: 'mobile' })"
 		>
 			<img
-				src="./button-play-store.png"
-				:width="564 * (60 / 168)"
-				:height="60"
+				:src="playStoreImage"
+				:width="564 * (50 / 168)"
+				:height="50"
 				alt="Get it on Google Play"
 			/>
 		</a>
@@ -19,12 +45,12 @@
 			class="-button"
 			:href="appPromotion.appStoreUrl"
 			target="_blank"
-			@click="trackAppPromotionClick({ source })"
+			@click="trackAppPromotionClick({ source, platform: 'mobile' })"
 		>
 			<img
-				src="./button-app-store.svg"
-				:width="120 * (60 / 40)"
-				:height="60"
+				:src="appStoreImage"
+				:width="120 * (50 / 40)"
+				:height="50"
 				alt="Download on the App Store"
 			/>
 		</a>
@@ -32,13 +58,17 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .app-buttons
-	text-align: center
+	display: flex
+	flex-direction: row
+	align-items: center
+	justify-content: center
+	grid-gap: 15px
+
+	&.-justified
+		justify-content: space-between
 
 	.-button
-		display: inline-block
-		margin: 10px 20px
+		display: block
+		flex: none
 </style>

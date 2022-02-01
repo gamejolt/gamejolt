@@ -1,24 +1,147 @@
-<script lang="ts" src="./media"></script>
+<script lang="ts">
+import { computed } from 'vue';
+import { setup } from 'vue-class-component';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { Analytics } from '../../../../../../_common/analytics/analytics.service';
+import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
+import { createLightbox } from '../../../../../../_common/lightbox/lightbox-helpers';
+import AppMediaItemPost from '../../../../../../_common/media-item/post/post.vue';
+import { Screen } from '../../../../../../_common/screen/screen-service';
+import AppTouch, { AppTouchInput } from '../../../../../../_common/touch/AppTouch.vue';
+import AppEventItemMediaIndicator from '../../../../event-item/media-indicator/media-indicator.vue';
+import { ActivityFeedItem } from '../../item-service';
+import { ActivityFeedKey, ActivityFeedView } from '../../view';
+
+@Options({
+	components: {
+		AppMediaItemPost,
+		AppEventItemMediaIndicator,
+		AppTouch,
+	},
+})
+export default class AppActivityFeedPostMedia extends Vue {
+	@Prop({ type: Object, required: true })
+	item!: ActivityFeedItem;
+
+	@Prop({ type: Object, required: true })
+	post!: FiresidePost;
+
+	@Prop({ type: Boolean, required: false, default: false })
+	canPlaceSticker!: boolean;
+
+	@Inject({ from: ActivityFeedKey })
+	feed!: ActivityFeedView;
+
+	page = 1;
+	isDragging = false;
+
+	lightbox = setup(() => {
+		return createLightbox(computed(() => (this.$props as this).post.media));
+	});
+
+	readonly Screen = Screen;
+
+	declare $refs: {
+		slider: HTMLElement;
+	};
+
+	get isHydrated() {
+		return this.feed.isItemHydrated(this.item);
+	}
+
+	goNext() {
+		if (this.page >= this.post.media.length) {
+			this._updateSliderOffset();
+			return;
+		}
+
+		this.page = Math.min(this.page + 1, this.post.media.length);
+		this._updateSliderOffset();
+		Analytics.trackEvent('activity-feed', 'media-next');
+	}
+
+	goPrev() {
+		if (this.page <= 1) {
+			this._updateSliderOffset();
+			return;
+		}
+
+		this.page = Math.max(this.page - 1, 1);
+		this._updateSliderOffset();
+		Analytics.trackEvent('activity-feed', 'media-prev');
+	}
+
+	async onItemBootstrapped() {
+		this._updateSliderOffset();
+	}
+
+	private _updateSliderOffset(extraOffsetPx = 0) {
+		const pagePercent = this.page - 1;
+		const slider = this.$refs.slider;
+		const pagePx = slider.offsetWidth * -pagePercent;
+		slider.style.transform = `translate3d( ${pagePx + extraOffsetPx}px, 0, 0 )`;
+	}
+
+	panStart() {
+		this.isDragging = true;
+	}
+
+	pan(event: AppTouchInput) {
+		// In case the animation frame was retrieved after we stopped dragging.
+		if (!this.isDragging) {
+			return;
+		}
+
+		this._updateSliderOffset(event.deltaX);
+	}
+
+	panEnd(event: AppTouchInput) {
+		this.isDragging = false;
+
+		// Make sure we moved at a high enough velocity and/or distance to register the "swipe".
+		const { velocityX, deltaX, distance } = event;
+
+		if (
+			// Check if it was a fast flick,
+			(Math.abs(velocityX) > 0.55 && distance > 10) ||
+			// or if the pan distance was at least ~1/3 of the content area.
+			Math.abs(deltaX) >= this.$el.clientWidth / 3
+		) {
+			if (velocityX > 0 || deltaX > 0) {
+				this.goPrev();
+			} else {
+				this.goNext();
+			}
+			return;
+		}
+
+		this._updateSliderOffset();
+	}
+
+	onClickFullscreen() {
+		this.lightbox.show(this.page - 1);
+		Analytics.trackEvent('activity-feed', 'media-fullscreen');
+	}
+}
+</script>
 
 <template>
 	<div class="post-media">
-		<v-touch
+		<AppTouch
 			class="-lightbox"
 			:pan-options="{ direction: 'horizontal' }"
 			@panstart="panStart"
 			@panmove="pan"
 			@panend="panEnd"
-			@touchmove.native="onTouchMove"
-			@touchend.native="isDragging = false"
 		>
 			<div class="-container">
 				<div ref="slider" class="-slider">
-					<app-media-item-post
-						v-for="mediaItem of post.media"
+					<AppMediaItemPost
+						v-for="(mediaItem, index) of post.media"
 						:key="mediaItem.id"
 						:media-item="mediaItem"
 						:is-post-hydrated="isHydrated"
-						:is-active="getIsActiveMediaItem(mediaItem)"
+						:is-active="index === page - 1"
 						:can-place-sticker="canPlaceSticker"
 						restrict-device-max-height
 						inline
@@ -30,7 +153,7 @@
 
 			<template v-if="post.media.length > 1">
 				<div class="-prev" :class="{ '-hide': page === 1 }" @click.stop="goPrev">
-					<app-jolticon icon="chevron-left" />
+					<AppJolticon icon="chevron-left" />
 				</div>
 
 				<div
@@ -38,12 +161,12 @@
 					:class="{ '-hide': page === post.media.length }"
 					@click.stop="goNext"
 				>
-					<app-jolticon icon="chevron-right" />
+					<AppJolticon icon="chevron-right" />
 				</div>
 			</template>
-		</v-touch>
+		</AppTouch>
 
-		<app-event-item-media-indicator
+		<AppEventItemMediaIndicator
 			v-if="post.media.length > 1"
 			class="-indicator"
 			:count="post.media.length"
@@ -54,7 +177,6 @@
 
 <style lang="stylus" scoped>
 @import '../../variables'
-@import '~styles-lib/mixins'
 
 $-button-size = 60px
 

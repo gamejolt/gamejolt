@@ -1,3 +1,102 @@
+<script lang="ts">
+import { Options, Vue, Watch } from 'vue-property-decorator';
+import { ClientUpdater } from '../../../../_common/client/client-updater.service';
+import { Client } from '../../../../_common/client/client.service';
+import { formatNumber } from '../../../../_common/filters/number';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+// import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
+import AppClientStatusBarPatchItem from './patch-item/patch-item.vue';
+
+@Options({
+	components: {
+		AppClientStatusBarPatchItem,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppClientStatusBar extends Vue {
+	// @ClientLibraryState
+	// gamesById!: ClientLibraryStore['gamesById'];
+	gamesById: any = {};
+
+	// @ClientLibraryState
+	// numPlaying!: ClientLibraryStore['numPlaying'];
+	numPlaying: any = 0;
+
+	// @ClientLibraryState
+	// numPatching!: ClientLibraryStore['numPatching'];
+	numPatching: any = 0;
+
+	// @ClientLibraryState
+	// currentlyPlaying!: ClientLibraryStore['currentlyPlaying'];
+	currentlyPlaying: any = [];
+
+	// @ClientLibraryState
+	// currentlyPatching!: ClientLibraryStore['currentlyPatching'];
+	currentlyPatching: any = {};
+
+	updaterWarningDismissed = false;
+
+	readonly formatNumber = formatNumber;
+
+	get clientUpdateStatus() {
+		return ClientUpdater.clientUpdateStatus;
+	}
+
+	get isShowing() {
+		return (
+			this.numPatching > 0 || this.numPlaying > 0 || this.hasUpdate || this.showUpdaterIssue
+		);
+	}
+
+	get currentlyPlayingList() {
+		return this.currentlyPlaying.map(i => this.gamesById[i.game_id].title).join(', ');
+	}
+
+	get currentlyPatchingIds() {
+		return Object.keys(this.currentlyPatching).map(i => parseInt(i, 10));
+	}
+
+	get hasUpdate() {
+		return this.clientUpdateStatus === 'ready';
+	}
+
+	get showUpdaterIssue() {
+		return this.clientUpdateStatus === 'error' && !this.updaterWarningDismissed;
+	}
+
+	dismissUpdaterWarning() {
+		this.updaterWarningDismissed = true;
+	}
+
+	async updateClient() {
+		await ClientUpdater.updateClient();
+	}
+
+	@Watch('isShowing', { immediate: true })
+	onIsShowingChanged() {
+		if (this.isShowing) {
+			document.body.classList.add('has-hot-bottom');
+		} else {
+			document.body.classList.remove('has-hot-bottom');
+		}
+	}
+
+	unmounted() {
+		document.body.classList.remove('has-hot-bottom');
+	}
+
+	updateApply() {
+		this.updateClient();
+	}
+
+	quitClient() {
+		Client.quit();
+	}
+}
+</script>
+
 <template>
 	<div
 		class="status-bar fill-darker clearfix"
@@ -6,30 +105,30 @@
 		}"
 	>
 		<div class="pull-left">
-			<div class="-item" v-if="numPlaying > 0">
-				<app-jolticon icon="play" />
-				<translate>Currently Playing:</translate>
+			<div v-if="numPlaying > 0" class="-item">
+				<AppJolticon icon="play" />
+				<AppTranslate>Currently Playing:</AppTranslate>
 				<strong :title="currentlyPlayingList">
 					{{ currentlyPlayingList }}
 				</strong>
 			</div>
 
 			<router-link
-				class="-item link-unstyled"
 				v-if="numPatching > 0"
-				:to="{ name: 'library.installed' }"
 				v-app-tooltip="$gettext(`View Downloads`)"
+				class="-item link-unstyled"
+				:to="{ name: 'library.installed' }"
 			>
-				<translate
+				<AppTranslate
 					:translate-n="numPatching || 0"
-					:translate-params="{ count: number(numPatching || 0) }"
+					:translate-params="{ count: formatNumber(numPatching || 0) }"
 					translate-plural="%{ count } Downloads"
 				>
 					%{ count } Download
-				</translate>
+				</AppTranslate>
 				&nbsp;
 				<div class="-progress">
-					<app-client-status-bar-patch-item
+					<AppClientStatusBarPatchItem
 						v-for="packageId of currentlyPatchingIds"
 						:key="packageId"
 						:package-id="packageId"
@@ -39,23 +138,23 @@
 		</div>
 
 		<div class="pull-right">
-			<div class="-item" v-if="hasUpdate || showUpdaterIssue">
+			<div v-if="hasUpdate || showUpdaterIssue" class="-item">
 				<b>
 					<template v-if="hasUpdate">
-						<translate>New Client version available!</translate>
+						<AppTranslate>New Client version available!</AppTranslate>
 						<a @click="updateApply()">
-							<translate>Update now</translate>
+							<AppTranslate>Update now</AppTranslate>
 						</a>
 					</template>
 					<template v-else>
-						<translate>Uh oh, client has trouble updating!</translate>
+						<AppTranslate>Uh oh, client has trouble updating!</AppTranslate>
 						<a class="-notice" @click="quitClient()">
-							<app-jolticon notice icon="notice" />
-							<translate>Try restarting</translate>
+							<AppJolticon notice icon="notice" />
+							<AppTranslate>Try restarting</AppTranslate>
 						</a>
 						&nbsp;
 						<a class="-dismiss" @click="dismissUpdaterWarning()">
-							<app-jolticon class="-dismiss" icon="remove" />
+							<AppJolticon class="-dismiss" icon="remove" />
 						</a>
 					</template>
 				</b>
@@ -65,9 +164,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .status-bar
 	padding: 0 10px
 	height: $status-bar-height
@@ -105,5 +201,3 @@
 .-dismiss
 	theme-prop('color', 'white')
 </style>
-
-<script lang="ts" src="./status-bar"></script>

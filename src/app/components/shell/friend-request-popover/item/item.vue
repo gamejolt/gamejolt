@@ -1,17 +1,72 @@
-<script lang="ts" src="./item"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import AppCard from '../../../../../_common/card/AppCard.vue';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import AppScrollInview, {
+	ScrollInviewConfig,
+} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
+import { useCommonStore } from '../../../../../_common/store/common-store';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { UserFriendship } from '../../../../../_common/user/friendship/friendship.model';
+import AppUserAvatarImg from '../../../../../_common/user/user-avatar/img/img.vue';
+import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
+
+const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
+
+@Options({
+	components: {
+		AppScrollInview,
+		AppCard,
+		AppUserAvatarImg,
+		AppUserVerifiedTick,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppShellFriendRequestPopoverItem extends Vue {
+	@Prop({ type: Object, required: true }) request!: UserFriendship;
+
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
+
+	isInview = false;
+	readonly InviewConfig = InviewConfig;
+	readonly Screen = Screen;
+
+	get them() {
+		return this.request.getThem(this.user!);
+	}
+
+	/**
+	 * Is it a request we sent?
+	 */
+	get isPending() {
+		return this.request.target_user.id !== this.user!.id;
+	}
+
+	@Emit() cancel() {}
+	@Emit() accept() {}
+	@Emit() reject() {}
+}
+</script>
 
 <template>
-	<app-scroll-inview
+	<AppScrollInview
 		class="-item"
 		:config="InviewConfig"
 		@inview="isInview = true"
 		@outview="isInview = false"
 	>
 		<router-link v-if="isInview" :to="them.url">
-			<app-card>
+			<AppCard>
 				<div class="shell-card-popover-card-media">
 					<div class="friend-request-popover-avatar">
-						<app-user-avatar-img :user="them" />
+						<AppUserAvatarImg :user="them" />
 					</div>
 				</div>
 				<div class="shell-card-popover-card-body">
@@ -23,7 +78,7 @@
 							of the elements is only prevented with 'prevent'.
 						-->
 						<template v-if="isPending">
-							<app-button
+							<AppButton
 								v-app-tooltip="$gettext(`Cancel`)"
 								tag="span"
 								trans
@@ -33,7 +88,7 @@
 							/>
 						</template>
 						<template v-else>
-							<app-button
+							<AppButton
 								v-app-tooltip="$gettext(`Add Friend`)"
 								tag="span"
 								primary
@@ -41,7 +96,7 @@
 								icon="friend-add-2"
 								@click.prevent="accept"
 							/>
-							<app-button
+							<AppButton
 								v-app-tooltip="
 									$gettext(`Dismiss request. Sender will not be notified.`)
 								"
@@ -57,7 +112,7 @@
 					<div class="card-title">
 						<h5>
 							<span class="-name -name-container">{{ them.display_name }}</span>
-							<app-user-verified-tick :user="them" />
+							<AppUserVerifiedTick :user="them" />
 						</h5>
 
 						<h5 class="-name">
@@ -65,15 +120,12 @@
 						</h5>
 					</div>
 				</div>
-			</app-card>
+			</AppCard>
 		</router-link>
-	</app-scroll-inview>
+	</AppScrollInview>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-item
 	display: block
 	height: 85px

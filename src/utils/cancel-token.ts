@@ -1,27 +1,27 @@
 export class CancelToken {
-	private canceled = false;
-	private cancelPromise!: Promise<void>;
-	private cancelPromiseResolver!: () => void;
+	_canceled = false;
+	_cancelPromise!: Promise<void>;
+	_cancelPromiseResolver!: () => void;
 
 	constructor() {
-		this.cancelPromise = new Promise(resolver => (this.cancelPromiseResolver = resolver));
+		this._cancelPromise = new Promise(resolver => (this._cancelPromiseResolver = resolver));
 	}
 
 	get isCanceled() {
-		return this.canceled;
+		return this._canceled;
 	}
 
 	cancel() {
-		if (this.canceled) {
+		if (this._canceled) {
 			return;
 		}
 
-		this.canceled = true;
-		this.cancelPromiseResolver();
+		this._canceled = true;
+		this._cancelPromiseResolver();
 	}
 
 	untilCanceled() {
-		return this.cancelPromise;
+		return this._cancelPromise;
 	}
 
 	/**

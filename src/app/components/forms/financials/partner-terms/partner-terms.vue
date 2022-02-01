@@ -1,74 +1,119 @@
+<script lang="ts">
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import { html } from '../../../../../lib/terms/partner/global.md';
+import { formatDate } from '../../../../../_common/filters/date';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { UserStripeManagedAccount } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
+
+@Options({
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppPartnerTerms extends Vue {
+	@Prop(Object) account!: UserStripeManagedAccount;
+
+	checked = false;
+	showAgreement = false;
+	termsTemplate = html;
+
+	readonly formatDate = formatDate;
+
+	@Emit('accepted')
+	emitAccepted() {}
+
+	get hasSignedPartnerAgreement() {
+		return this.account && this.account.tos_signed_partner > 0;
+	}
+
+	get hasSignedSomeAgreement() {
+		return (
+			this.account &&
+			(this.account.tos_signed_developer > 0 || this.account.tos_signed_partner > 0)
+		);
+	}
+
+	get agreementLink() {
+		return 'https://github.com/gamejolt/terms/blob/0371c397b84ac1f10c911de52384a5a727dc9f15/partner/global.md';
+	}
+
+	onAccept() {
+		this.emitAccepted();
+	}
+}
+</script>
+
 <template>
 	<fieldset>
 		<legend>
 			<span
 				v-if="hasSignedPartnerAgreement"
-				class="pull-right done-icon"
 				v-app-tooltip="$gettext(`You have completed this section.`)"
+				class="pull-right done-icon"
 			>
-				<app-jolticon icon="check" big />
+				<AppJolticon icon="check" big />
 			</span>
-			<translate>Partner Agreement</translate>
+			<AppTranslate>Partner Agreement</AppTranslate>
 		</legend>
 
 		<div v-if="!hasSignedPartnerAgreement">
 			<!--
 				If they accepted a different agreement, then show that they can accept this one too.
 			-->
-			<div class="form-group" v-if="hasSignedSomeAgreement && !showAgreement">
+			<div v-if="hasSignedSomeAgreement && !showAgreement" class="form-group">
 				<div class="small">
 					<div>
-						<translate>
-							If you would to be a Game Jolt partner, you must accept the Partner Agreement.
-						</translate>
+						<AppTranslate>
+							If you would like to be a Game Jolt partner, you must accept the Partner
+							Agreement.
+						</AppTranslate>
 					</div>
 				</div>
 				<br />
 
-				<app-button primary @click="showAgreement = true">
-					<translate>Show Partner Agreement</translate>
-				</app-button>
+				<AppButton primary @click="showAgreement = true">
+					<AppTranslate>Show Partner Agreement</AppTranslate>
+				</AppButton>
 			</div>
 
-			<div class="form-group" v-if="!hasSignedSomeAgreement || showAgreement">
+			<div v-if="!hasSignedSomeAgreement || showAgreement" class="form-group">
 				<div class="tos-scroller">
-					<div v-html="termsTemplate"></div>
+					<div v-html="termsTemplate" />
 				</div>
 				<br />
 
 				<div class="checkbox">
 					<label>
-						<input type="checkbox" v-model="checked" />
-						<translate>
-							By checking this box and clicking the button below marked "I Agree," I agree that I
-							have read, understand, and agree to be bound by the terms of this agreement.
-						</translate>
+						<input v-model="checked" type="checkbox" />
+						<AppTranslate>
+							By checking this box and clicking the button below marked "I Agree," I
+							agree that I have read, understand, and agree to be bound by the terms
+							of this agreement.
+						</AppTranslate>
 					</label>
 				</div>
 				<br />
 
-				<app-button primary solid :disabled="!checked" @click="onAccept()">
-					<translate>I Agree</translate>
-				</app-button>
+				<AppButton primary solid :disabled="!checked" @click="onAccept()">
+					<AppTranslate>I Agree</AppTranslate>
+				</AppButton>
 			</div>
 		</div>
 
-		<div class="form-group" v-if="hasSignedPartnerAgreement">
+		<div v-if="hasSignedPartnerAgreement" class="form-group">
 			<p class="small">
-				<translate
+				<AppTranslate
 					:translate-params="{
-						date: date(account.tos_signed_partner_timestamp, 'medium'),
+						date: formatDate(account.tos_signed_partner_timestamp, 'medium'),
 					}"
 				>
 					You have agreed to our Partner Agreement on %{ date }.
-				</translate>
+				</AppTranslate>
 				<br />
-				<app-link-external :href="agreementLink">
-					<translate>View Partner Agreement</translate>
-				</app-link-external>
+				<AppLinkExternal :href="agreementLink">
+					<AppTranslate>View Partner Agreement</AppTranslate>
+				</AppLinkExternal>
 			</p>
 		</div>
 	</fieldset>
 </template>
-
-<script lang="ts" src="./partner-terms"></script>

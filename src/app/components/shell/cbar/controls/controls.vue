@@ -1,9 +1,73 @@
-<script lang="ts" src="./controls"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Inject, Options, Vue } from 'vue-property-decorator';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import { useCommonStore } from '../../../../../_common/store/common-store';
+import { DefaultTheme } from '../../../../../_common/theme/theme.model';
+import { useThemeStore } from '../../../../../_common/theme/theme.store';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { useAppStore } from '../../../../store/index';
+import { ChatStore, ChatStoreKey } from '../../../chat/chat-store';
+import AppShellCbarItem from '../item/item.vue';
+
+@Options({
+	components: {
+		AppShellCbarItem,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppShellCbarControls extends Vue {
+	store = setup(() => useAppStore());
+	commonStore = setup(() => useCommonStore());
+
+	@Inject({ from: ChatStoreKey })
+	chatStore!: ChatStore;
+
+	get user() {
+		return this.commonStore.user;
+	}
+
+	get activeCommunity() {
+		return this.store.activeCommunity;
+	}
+
+	get visibleLeftPane() {
+		return this.store.visibleLeftPane;
+	}
+
+	get toggleLeftPane() {
+		return this.store.toggleLeftPane;
+	}
+
+	themeStore = setup(() => useThemeStore());
+
+	declare $refs: {
+		stickerOrigin: HTMLDivElement;
+	};
+
+	readonly Screen = Screen;
+
+	get chat() {
+		return this.chatStore.chat;
+	}
+
+	get highlight() {
+		const theme = this.activeCommunity?.theme ?? this.themeStore.theme ?? DefaultTheme;
+		if (theme) {
+			return '#' + theme.darkHighlight_;
+		}
+
+		return null;
+	}
+}
+</script>
 
 <template>
 	<div class="shell-cbar-controls">
 		<!-- Library - Screen.isXs -->
-		<app-shell-cbar-item
+		<AppShellCbarItem
 			v-if="Screen.isXs"
 			class="-control"
 			:highlight="highlight"
@@ -15,13 +79,13 @@
 				class="-control-item"
 				@click="toggleLeftPane('library')"
 			>
-				<app-jolticon class="-control-icon" icon="gamejolt" />
+				<AppJolticon class="-control-icon" icon="gamejolt" />
 			</a>
-		</app-shell-cbar-item>
+		</AppShellCbarItem>
 
 		<template v-if="user">
 			<!-- Chat -->
-			<app-shell-cbar-item
+			<AppShellCbarItem
 				v-if="chat"
 				class="-control"
 				:highlight="highlight"
@@ -35,12 +99,12 @@
 					class="-control-item"
 					@click="toggleLeftPane('chat')"
 				>
-					<app-jolticon class="-control-icon" icon="user-messages" />
+					<AppJolticon class="-control-icon" icon="user-messages" />
 				</a>
-			</app-shell-cbar-item>
+			</AppShellCbarItem>
 
 			<!-- Library - !Screen.isXs -->
-			<app-shell-cbar-item
+			<AppShellCbarItem
 				v-if="!Screen.isXs"
 				class="-control"
 				:highlight="highlight"
@@ -53,9 +117,9 @@
 					class="-control-item"
 					@click="toggleLeftPane('library')"
 				>
-					<app-jolticon class="-control-icon" icon="books" />
+					<AppJolticon class="-control-icon" icon="books" />
 				</a>
-			</app-shell-cbar-item>
+			</AppShellCbarItem>
 		</template>
 
 		<hr v-if="Screen.isXs || user" class="-hr" />
@@ -63,8 +127,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
 @import '../variables'
 @import '../common'
 
@@ -76,7 +138,7 @@
 		position: relative
 		z-index: 1
 
-		>>> .jolticon
+		::v-deep(.jolticon)
 			color: var(--theme-lighter)
 
 		&-item

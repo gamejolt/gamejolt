@@ -1,5 +1,3 @@
-@import '~styles/variables'
-@import '~styles-lib/mixins'
 
 $-fb-color = #4267b2
 $-twitter-color = #38A1F3
@@ -29,15 +27,6 @@ $-twitch-color = #6441A4
 	display: flex
 	align-items: center
 
-.auth-form-overlay
-	.auth-form-container
-		@media $media-sm-up
-			rounded-corners-lg()
-			background-color: rgba($black, 0.4)
-			padding: ($grid-gutter-width / 2)
-			margin-left: -($grid-gutter-width / 2)
-			margin-right: @margin-left
-
 .auth-form
 	// Much less vertical spacing.
 	.form-group
@@ -58,10 +47,15 @@ $-twitch-color = #6441A4
 .auth-line-thru
 	position: relative
 	display: block
-	margin-top: $line-height-computed
-	margin-bottom: $line-height-computed
+	margin-top: 8px
+	margin-bottom: 8px
 	width: 100%
 	text-align: center
+	font-size: 12px
+
+	@media $media-sm-up
+		margin-top: 24px
+		margin-bottom: 24px
 
 	&::before
 	&::after
@@ -81,6 +75,11 @@ $-twitch-color = #6441A4
 		left: 50%
 		right: 0
 		margin-left: 40px
+
+	.auth-form-overlay &
+		&::before
+		&::after
+			border-color: rgba($white, 0.5)
 
 .-fb
 	-social-button($-fb-color)

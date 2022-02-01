@@ -1,14 +1,14 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Ruler } from '../ruler/ruler-service';
-import { Screen } from '../screen/screen-service';
-import { EventSubscription } from '../system/event/event-topic';
+import { onScreenResize } from '../screen/screen-service';
+import { useEventSubscription } from '../system/event/event-topic';
 
 export class AppResponsiveDimensionsChangeEvent {
 	constructor(public containerWidth: number, public height: number, public isFilled: boolean) {}
 }
 
-@Component({})
+@Options({})
 export class AppResponsiveDimensions extends Vue {
 	@Prop(Number)
 	ratio!: number;
@@ -19,23 +19,21 @@ export class AppResponsiveDimensions extends Vue {
 	@Prop(Number)
 	maxHeight?: number;
 
-	private resize$: EventSubscription | undefined;
 	private width: string | null = null;
 	private height = 'auto';
 
+	@Emit('change')
+	emitChange(_event: AppResponsiveDimensionsChangeEvent) {}
+
+	created() {
+		useEventSubscription(onScreenResize, () => this.updateDimensions());
+	}
+
 	mounted() {
-		this.resize$ = Screen.resizeChanges.subscribe(() => this.updateDimensions());
 		this.updateDimensions();
 	}
 
-	destroyed() {
-		if (this.resize$) {
-			this.resize$.unsubscribe();
-			this.resize$ = undefined;
-		}
-	}
-
-	render(h: CreateElement) {
+	render() {
 		return h(
 			'div',
 			{
@@ -46,7 +44,7 @@ export class AppResponsiveDimensions extends Vue {
 					maxHeight: this.maxHeight ? this.maxHeight + 'px' : undefined,
 				},
 			},
-			this.$slots.default
+			this.$slots.default?.()
 		);
 	}
 
@@ -72,6 +70,6 @@ export class AppResponsiveDimensions extends Vue {
 
 		this.width = `${width}px`;
 		this.height = `${height}px`;
-		this.$emit('change', new AppResponsiveDimensionsChangeEvent(width, height, isFilled));
+		this.emitChange(new AppResponsiveDimensionsChangeEvent(width, height, isFilled));
 	}
 }

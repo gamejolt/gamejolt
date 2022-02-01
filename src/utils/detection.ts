@@ -1,9 +1,9 @@
 // Feature detection for passive events.
 export let supportsPassiveEvents = false;
-if (!GJ_IS_SSR) {
+if (!import.meta.env.SSR) {
 	try {
 		const opts = Object.defineProperty({}, 'passive', {
-			get: function() {
+			get: function () {
 				supportsPassiveEvents = true;
 			},
 		});

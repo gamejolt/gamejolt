@@ -1,104 +1,162 @@
-<script lang="ts" src="./community"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { mixins, Options } from 'vue-property-decorator';
+import { Community } from '../../../../_common/community/community.model';
+import AppFormControlPrefix from '../../../../_common/form-vue/AppFormControlPrefix.vue';
+import AppFormControlTheme from '../../../../_common/form-vue/controls/AppFormControlTheme.vue';
+import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import { BaseForm, FormOnSubmitSuccess } from '../../../../_common/form-vue/form.service';
+import { validateUrlPath } from '../../../../_common/form-vue/validators';
+import { DefaultTheme } from '../../../../_common/theme/theme.model';
+import { useThemeStore } from '../../../../_common/theme/theme.store';
+import { useAppStore } from '../../../store';
+import AppPostAddButtonFormControl from '../../post/add-button/AppPostAddButtonFormControl.vue';
+
+class Wrapper extends BaseForm<Community> {}
+
+@Options({
+	components: {
+		AppPostAddButtonFormControl,
+		AppFormControlTheme,
+		AppFormControlToggle,
+		AppFormControlPrefix,
+	},
+})
+export default class FormCommunity extends mixins(Wrapper) implements FormOnSubmitSuccess {
+	modelClass = Community;
+
+	store = setup(() => useAppStore());
+	themeStore = setup(() => useThemeStore());
+
+	readonly validateUrlPath = validateUrlPath;
+
+	created() {
+		this.form.warnOnDiscard = this.method === 'edit';
+	}
+
+	onSubmitSuccess(response: any) {
+		if (this.method !== 'add') {
+			return;
+		}
+
+		const community = new Community(response.community);
+
+		// When creating a community you get auto joined to it,
+		// but aside from the actual join operation we also do other things
+		// in this store action so we gotta call it anyways.
+		this.store.joinCommunity(community);
+
+		this.$router.push(community.routeEditLocation);
+	}
+
+	onPostPlaceholderChange(placeholder: string) {
+		this.setField('post_placeholder_text', placeholder || null);
+	}
+
+	unmounted() {
+		this.themeStore.setFormTheme(null);
+	}
+
+	onThemeChanged() {
+		// Default theme would be the user theme. Don't want to fallback to page theme otherwise
+		// when clearing theme it'll show the page theme.
+		this.themeStore.setFormTheme(
+			this.formModel.theme ?? this.themeStore.userTheme ?? DefaultTheme
+		);
+	}
+}
+</script>
 
 <template>
-	<app-form name="detailsForm">
-		<app-form-group name="name" :label="$gettext(`Name`)">
+	<AppForm :controller="form">
+		<AppFormGroup name="name" :label="$gettext(`Name`)">
 			<div class="help-block">
-				<translate>Choose a short and descriptive name for your community.</translate>
+				<AppTranslate>Choose a short and descriptive name for your community.</AppTranslate>
 			</div>
-			<app-form-control
-				type="text"
-				:rules="{
-					max: 100,
-				}"
-				:disabled="method === 'edit' && formModel.game"
-			/>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControl type="text" :validators="[validateMaxLength(100)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
 		<!-- URL Path is only editable during community creation -->
-		<app-form-group v-if="method === 'add'" name="path" :label="$gettext(`URL Path`)">
+		<AppFormGroup v-if="method === 'add'" name="path" :label="$gettext(`URL Path`)">
 			<div class="help-block">
 				<p>
-					<translate>
+					<AppTranslate>
 						Community URLs should be memorable, unique, and as short as possible.
-					</translate>
+					</AppTranslate>
 				</p>
 			</div>
-			<app-form-control-prefixed-input
-				prefix="gamejolt.com/c/"
-				:rules="{
-					pattern: 'urlPath',
-					max: 50,
-					availability: {
-						url: '/web/dash/communities/check-field-availability/path',
-					},
-				}"
-				data-vv-delay="500"
-			/>
+			<AppFormControlPrefix prefix="gamejolt.com/c/">
+				<AppFormControl
+					:validators="[
+						validateUrlPath(),
+						validateMaxLength(50),
+						validateAvailability({
+							url: '/web/dash/communities/check-field-availability/path',
+						}),
+					]"
+					:validate-delay="500"
+				/>
+			</AppFormControlPrefix>
+
 			<div class="help-block">
 				<p>
 					<strong>
-						<translate>Once a URL path is chosen it cannot be changed!</translate>
+						<AppTranslate>Once a URL path is chosen it cannot be changed!</AppTranslate>
 					</strong>
 				</p>
 			</div>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
 		<!-- Post placeholder text only shows whens editing -->
-		<app-form-group
+		<AppFormGroup
 			v-if="method !== 'add'"
 			name="post_placeholder_text"
 			:label="$gettext(`Post Placeholder`)"
 			optional
 		>
 			<div class="help-block">
-				<translate>Customize the placeholder message for post creations.</translate>
+				<AppTranslate>Customize the placeholder message for post creations.</AppTranslate>
 			</div>
 
-			<app-post-add-button-form-control
-				:placeholder="$gettext(`Share your creations!`)"
-				:rules="{
-					max: 100,
-				}"
-			/>
+			<AppPostAddButtonFormControl />
 
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
 		<!-- Color Theme - only show this in the edit part, not creation -->
-		<app-form-group v-if="method !== 'add'" name="theme" :label="$gettext(`Color Theme`)">
-			<app-form-control-theme class="pull-right" @changed="onThemeChanged()" />
+		<AppFormGroup v-if="method !== 'add'" name="theme" :label="$gettext(`Color Theme`)">
+			<AppFormControlTheme class="pull-right" @changed="onThemeChanged()" />
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Give your page a splash of color! When people view this community, they'll be
 					switched to this theme.
-				</translate>
+				</AppTranslate>
 			</p>
-		</app-form-group>
+		</AppFormGroup>
 
 		<!-- DISABLED_ALLOW_FIRESIDES -->
 		<!-- Temporarely disabled -->
-		<!-- <app-form-group name="allow_firesides" :label="$gettext(`Allow community firesides?`)">
-			<app-form-control-toggle class="pull-right" />
+		<!-- <AppFormGroup name="allow_firesides" :label="$gettext(`Allow community firesides?`)">
+			<AppFormControlToggle class="pull-right" />
 
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Will allow any member of the community to start a fireside in this community.
-				</translate>
+				</AppTranslate>
 			</p>
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					You are able to eject firesides at any time, and blocked users will not be able
 					to create any firesides in your community.
-				</translate>
+				</AppTranslate>
 			</p>
-		</app-form-group> -->
+		</AppFormGroup> -->
 
-		<app-form-button show-when-valid>
-			<translate v-if="method === 'add'">Create</translate>
-			<translate v-else>Save Details</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton show-when-valid>
+			<AppTranslate v-if="method === 'add'">Create</AppTranslate>
+			<AppTranslate v-else>Save Details</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

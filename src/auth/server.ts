@@ -1,57 +1,27 @@
-import { Device } from '../_common/device/device.service';
+import { setDeviceUserAgent } from '../_common/device/device.service';
 import { Environment } from '../_common/environment/environment.service';
 import { Meta } from '../_common/meta/meta-service';
-import { createApp } from './bootstrap';
+import { createApp as bootstrapCreateApp } from './bootstrap';
 
-export default (context: any) => {
-	const { app, router } = createApp();
+export default async function (context: typeof Environment.ssrContext) {
+	const { app, router } = await bootstrapCreateApp();
 
-	return new Promise((resolve, reject) => {
-		const s = Date.now();
+	const s = Date.now();
 
-		Environment.ssrContext = context;
-		Device.ua = context.ua;
-		router.push(context.url);
+	Environment.ssrContext = context;
+	setDeviceUserAgent(context.ua);
 
-		// Wait until the route has resolved all possible async components and
-		// hooks.
-		router.onReady(async () => {
-			const matchedComponents = router.getMatchedComponents();
-			console.log(`got ${matchedComponents.length} matched route components`);
+	// set the router to the desired URL before rendering
+	router.push(context.url);
+	await router.isReady();
 
-			if (!matchedComponents.length) {
-				console.log('no matched routes');
-				return reject({ code: 404 });
-			}
+	console.log(`data pre-fetch: ${Date.now() - s}ms`);
 
-			try {
-				// const componentState = await Promise.all(
-				// 	matchedComponents.map((component: any) => {
-				// 		if (component.extendOptions.__INITIAL_STATE__) {
-				// 			return component.extendOptions.__INITIAL_STATE__;
-				// 		} else {
-				// 			return null;
-				// 		}
-				// 	})
-				// );
+	context.meta = {
+		title: Meta.title,
+	};
 
-				console.log(`data pre-fetch: ${Date.now() - s}ms`);
+	(context as any).prefetchTime = Date.now() - s;
 
-				context.state = {
-					// vuex: store.state,
-					// components: componentState,
-				};
-
-				context.meta = {
-					title: Meta.title,
-				};
-
-				context.prefetchTime = Date.now() - s;
-
-				resolve(app);
-			} catch (e) {
-				reject({ code: 500 });
-			}
-		});
-	});
-};
+	return app;
+}

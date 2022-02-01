@@ -42,7 +42,7 @@ export class ContentEditorSchema extends Schema<
 	'strong' | 'em' | 'code' | 'link' | 'strike' | 'mention' | 'tag'
 > {}
 
-export function generateSchema(capabilities: ContextCapabilities) {
+export function generateEditorSchema(capabilities: ContextCapabilities) {
 	return new ContentEditorSchema({
 		nodes: generateNodes(capabilities),
 		marks: generateMarks(capabilities),

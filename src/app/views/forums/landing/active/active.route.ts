@@ -1,7 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeForumsLandingActive: RouteConfig = {
+export const routeForumsLandingActive: RouteRecordRaw = {
 	name: 'forums.landing.active',
 	path: 'active',
-	component: () => import(/* webpackChunkName: "routeForumsLanding" */ './active.vue'),
+	component: () => import('./active.vue'),
 };

@@ -1,8 +1,109 @@
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Api } from '../../../../_common/api/api.service';
+import { formatNumber } from '../../../../_common/filters/number';
+import { Game } from '../../../../_common/game/game.model';
+import { GameScoreTable } from '../../../../_common/game/score-table/score-table.model';
+import { Popper } from '../../../../_common/popper/popper.service';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import { AppTimeAgo } from '../../../../_common/time/ago/ago';
+import { UserGameScore } from '../../../../_common/user/game-score/game-score.model';
+import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
+import AppScoreList from '../list/list.vue';
+import AppScoreboardSelector from '../scoreboard-selector/scoreboard-selector.vue';
+
+@Options({
+	components: {
+		AppTimeAgo,
+		AppScoreboardSelector,
+		AppScoreList,
+		AppUserAvatar,
+	},
+})
+export default class AppScoreOverview extends Vue {
+	@Prop(Object)
+	game!: Game;
+	@Prop(Object)
+	initialPayload?: any;
+	@Prop({ type: String, default: 'full' })
+	size!: 'full' | 'small';
+
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
+
+	scoreTables: GameScoreTable[] = [];
+	scoreTable: GameScoreTable | null = null;
+	scores: UserGameScore[] = [];
+	userBestScore: UserGameScore | null = null;
+	userScorePlacement = 0;
+	userScoreExperience = 0;
+
+	readonly Screen = Screen;
+	readonly formatNumber = formatNumber;
+
+	// Even.
+	get scoresLeft() {
+		return this.scores.filter((_score, i) => i % 2 === 0);
+	}
+
+	// Odd.
+	get scoresRight() {
+		return this.scores.filter((_score, i) => i % 2 === 1);
+	}
+
+	created() {
+		if (this.initialPayload) {
+			this.processPayload(this.initialPayload);
+		} else {
+			this.changeTable();
+		}
+	}
+
+	@Watch('initialPayload')
+	onChange() {
+		if (this.initialPayload) {
+			this.processPayload(this.initialPayload);
+		}
+	}
+
+	private processPayload(payload: any) {
+		this.scoreTables = payload.scoreTables ? GameScoreTable.populate(payload.scoreTables) : [];
+		this.scoreTable = payload.scoreTable ? new GameScoreTable(payload.scoreTable) : null;
+		this.scores = payload.scores ? UserGameScore.populate(payload.scores) : [];
+		this.userBestScore = payload.scoresUserBestScore
+			? new UserGameScore(payload.scoresUserBestScore)
+			: null;
+		this.userScorePlacement = payload.scoresUserScorePlacement || 0;
+		this.userScoreExperience = payload.scoresUserScoreExperience || 0;
+	}
+
+	async changeTable(table?: GameScoreTable) {
+		Popper.hideAll();
+
+		// Only if not current table.
+		if (table && this.scoreTable && table.id === this.scoreTable.id) {
+			return;
+		}
+
+		let url = '/web/discover/games/scores/overview/' + this.game.id;
+		if (table) {
+			url += '/' + table.id;
+		}
+
+		const payload = await Api.sendRequest(url);
+		this.processPayload(payload);
+	}
+}
+</script>
+
 <template>
 	<div>
-		<!--
-		Scoreboard info/selector.
-	-->
+		<!-- Scoreboard info/selector. -->
 		<div class="row">
 			<div class="col-xs-12" :class="size === 'full' ? 'col-lg-6' : ''">
 				<h2 class="section-header sans-margin-top">
@@ -13,21 +114,23 @@
 							params: {
 								slug: game.slug,
 								id: game.id,
-								tableId: scoreTable.id,
+								tableId: scoreTable?.id,
 								type: 'best',
 							},
 						}"
 					>
-						<translate>scores.overview.heading</translate>
+						<AppTranslate>Scoreboards</AppTranslate>
 					</router-link>
-					<small v-if="scoreTables.length > 1">({{ scoreTables.length | number }})</small>
+					<small v-if="scoreTables.length > 1">
+						({{ formatNumber(scoreTables.length) }})
+					</small>
 				</h2>
 
 				<hr class="underbar" />
 			</div>
 
 			<div class="col-xs-12" :class="size === 'full' ? 'col-lg-6' : ''">
-				<app-scoreboard-selector
+				<AppScoreboardSelector
 					v-if="scoreTables.length > 1"
 					:current-table="scoreTable"
 					:tables="scoreTables"
@@ -40,41 +143,40 @@
 			<!--
 			User Best Score
 			Only show if logged in.
-		-->
-			<div class="col-xs-12" :class="size === 'full' ? 'col-lg-6' : ''" v-if="app.user">
+			-->
+			<div v-if="app.user" class="col-xs-12" :class="size === 'full' ? 'col-lg-6' : ''">
 				<div class="score-overview-user-best">
 					<h4 class="section-header">
-						<translate>scores.overview.user_best_heading</translate>
+						<AppTranslate>Your Best Score</AppTranslate>
 					</h4>
 
 					<div class="row">
 						<div class="col-sm-3 hidden-xs">
-							<app-user-avatar :user="app.user" />
+							<AppUserAvatar :user="app.user" />
 						</div>
 
-						<!-- Animation Scope -->
 						<div
-							v-for="_ of [scoreTable]"
-							:key="_.id"
+							:key="scoreTable?.id"
 							class="col-xs-12 col-sm-9 anim-fade-in-right no-animate-leave no-animate-xs"
 						>
-							<div class="alert full-bleed-xs" v-if="!userBestScore">
+							<div v-if="!userBestScore" class="alert full-bleed-xs">
 								<p>
 									<strong>
-										<translate>scores.overview.user_best_none_heading</translate>
+										<AppTranslate>You Haven't Scored Yet!</AppTranslate>
 									</strong>
 								</p>
 								<p>
-									<translate>
-										What'cha waitin' for? Get gaming!
-									</translate>
+									<AppTranslate> What'cha waitin' for? Get gaming! </AppTranslate>
 								</p>
 							</div>
 
-							<div class="well fill-darkest clearfix full-bleed-xs" v-if="userBestScore">
+							<div
+								v-if="userBestScore"
+								class="well fill-darkest clearfix full-bleed-xs"
+							>
 								<div class="stat-big stat-big-smaller pull-right text-right">
 									<div class="stat-big-digit stat-big-highlight">
-										#{{ userScorePlacement | number }}
+										#{{ formatNumber(userScorePlacement) }}
 									</div>
 									<div class="stat-big-label">Current Rank</div>
 								</div>
@@ -82,16 +184,20 @@
 								<h4 class="sans-margin">{{ userBestScore.score }}</h4>
 								<div>
 									<span class="text-muted">
-										<app-time-ago :date="userBestScore.logged_on" />
+										<AppTimeAgo :date="userBestScore.logged_on" />
 									</span>
 								</div>
 								<br />
 
 								<div>
-									<app-jolticon icon="exp" class="text-muted middle" />
-									{{ (userScoreExperience || 0) | number }}
+									<AppJolticon icon="exp" class="text-muted middle" />
+									{{ formatNumber(userScoreExperience || 0) }}
 									<span class="initialism">
-										<translate>leveling.exp</translate>
+										<AppTranslate
+											translate-comment="As in abbreviation for experience. If one doesnt exist for your language, or if its not a short word just leave it as EXP."
+										>
+											EXP
+										</AppTranslate>
 									</span>
 								</div>
 							</div>
@@ -104,48 +210,52 @@
 			Top Scores
 			If we're showing this full-size, then we pull this bit to the right on MD-up.
 			This will collapse the row a bit so it's not really long.
-		-->
+			-->
 			<div class="col-xs-12" :class="size === 'full' ? 'col-lg-6 pull-right' : ''">
 				<div class="score-overview-top">
-					<h4 :class="{ 'section-header': !app.user || (Screen.isDesktop && size === 'full') }">
-						<translate>scores.overview.top_scores_heading</translate>
+					<h4
+						:class="{
+							'section-header': !app.user || (Screen.isDesktop && size === 'full'),
+						}"
+					>
+						<AppTranslate>Best Scores</AppTranslate>
 					</h4>
 
 					<template v-if="scores.length">
 						<!--
 						When screen isn't XS, we split the scores out into two columns.
-					-->
-						<div class="row" v-if="!Screen.isXs">
+						-->
+						<div v-if="!Screen.isXs" class="row">
 							<div class="col-sm-6">
-								<app-score-list :scores="scoresLeft" :step="2" />
+								<AppScoreList :scores="scoresLeft" :step="2" />
 							</div>
 							<div class="col-sm-6">
-								<app-score-list :scores="scoresRight" :start-rank="2" :step="2" />
+								<AppScoreList :scores="scoresRight" :start-rank="2" :step="2" />
 							</div>
 						</div>
 
 						<!--
 						When screen is XS we just show as one long list.
-					-->
-						<app-score-list :scores="scores" v-if="Screen.isXs" />
+						-->
+						<AppScoreList v-if="Screen.isXs" :scores="scores" />
 
-						<app-button
-							blockXs
+						<AppButton
+							block-xs
 							:to="{
 								name: 'discover.games.view.scores.list',
 								params: {
 									slug: game.slug,
 									id: game.id,
-									tableId: scoreTable.id,
+									tableId: scoreTable?.id,
 									type: 'best',
 								},
 							}"
 						>
-							<translate>scores.overview.view_more_button</translate>
-						</app-button>
+							<AppTranslate>View Full Scoreboard</AppTranslate>
+						</AppButton>
 					</template>
-					<div class="alert full-bleed-xs" v-else>
-						<translate>scores.overview.no_scores_html</translate>
+					<div v-else class="alert full-bleed-xs">
+						<AppTranslate>There are no scores on this scoreboard yet.</AppTranslate>
 					</div>
 				</div>
 			</div>
@@ -154,11 +264,9 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .score-overview-user-best
-	.well, .alert
+	.well
+	.alert
 		position: relative
 		margin-bottom: 0
 
@@ -171,5 +279,3 @@
 			caret(var(--theme-darkest), size: 9px)
 			content: ''
 </style>
-
-<script lang="ts" src="./overview"></script>

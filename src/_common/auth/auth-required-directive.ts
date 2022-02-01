@@ -1,13 +1,13 @@
-import { DirectiveOptions } from 'vue';
-import { appStore } from '../store/app-store';
+import { Directive } from 'vue';
+import { commonStore } from '../store/common-store';
 import { AuthModal } from './auth-modal.service';
 
-export const AppAuthRequired: DirectiveOptions = {
-	bind(el) {
+export const AppAuthRequired: Directive<HTMLElement, void> = {
+	beforeMount(el) {
 		el.addEventListener(
 			'click',
 			e => {
-				if (appStore.state.user) {
+				if (commonStore.user.value) {
 					return;
 				}
 

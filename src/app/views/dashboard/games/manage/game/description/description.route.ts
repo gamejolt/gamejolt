@@ -1,10 +1,9 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDashGamesManageGameDescription: RouteConfig = {
+export const routeDashGamesManageGameDescription: RouteRecordRaw = {
 	name: 'dash.games.manage.game.description',
 	path: 'description',
-	component: () =>
-		import(/* webpackChunkName: "routeDashGamesManageGameDescription" */ './description.vue'),
+	component: () => import('./description.vue'),
 	children: [
 		{
 			path: '/dashboard/developer/games/description/:id(\\d+)',

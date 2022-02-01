@@ -1,7 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDiscoverHome: RouteConfig = {
+export const routeDiscoverHome: RouteRecordRaw = {
 	name: 'discover.home',
 	path: '/discover',
-	component: () => import('./home.vue'),
+	component: () => import('./RouteDiscoverHome.vue'),
 };

@@ -1,9 +1,121 @@
-<script lang="ts" src="./controls"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../utils/vue';
+import { Analytics } from '../../analytics/analytics.service';
+import { AppAuthRequired } from '../../auth/auth-required-directive';
+import { setDrawerOpen, useDrawerStore } from '../../drawer/drawer-store';
+import { formatFuzzynumber } from '../../filters/fuzzynumber';
+import { LikersModal } from '../../likers/modal.service';
+import { Model } from '../../model/model.service';
+import { Screen } from '../../screen/screen-service';
+import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { addCommentVote, canCommentOnModel, Comment, removeCommentVote } from '../comment-model';
+import { CommentThreadModal } from '../thread/modal.service';
+import { CommentVote } from '../vote/vote-model';
+
+@Options({
+	directives: {
+		AppAuthRequired,
+		AppTooltip,
+	},
+})
+export default class AppCommentControls extends Vue {
+	@Prop({ type: Object, required: true }) model!: Model;
+	@Prop({ type: Object, required: true }) comment!: Comment;
+	@Prop({ type: Object, default: undefined }) parent?: Comment;
+	@Prop({ type: Array, default: () => [] }) children!: Comment[];
+	@Prop({ type: Boolean, default: false }) showReply!: boolean;
+	@Prop({ type: Boolean, default: false }) canReply!: boolean;
+	@Prop({ type: Boolean, default: false }) canPlaceStickers!: boolean;
+
+	drawer = shallowSetup(() => useDrawerStore());
+
+	readonly Screen = Screen;
+	readonly formatFuzzynumber = formatFuzzynumber;
+
+	get votingTooltip() {
+		const userHasVoted = !!this.comment.user_vote;
+		const count = this.comment.votes;
+
+		if (count <= 0) {
+			return this.$gettext('Give this comment some love!');
+		} else if (userHasVoted) {
+			if (count === 1) {
+				return this.$gettext('You like this comment');
+			} else {
+				return this.$gettextInterpolate(
+					this.$ngettext(
+						'You and another person like this comment.',
+						'You and %{ count } people like this comment.',
+						count - 1
+					),
+					{ count: count - 1 }
+				);
+			}
+		} else {
+			return this.$gettextInterpolate(
+				this.$ngettext(
+					'One person likes this comment.',
+					'%{ count } people like this comment.',
+					count
+				),
+				{ count }
+			);
+		}
+	}
+
+	get canComment() {
+		return canCommentOnModel(this.model, this.parent);
+	}
+
+	get hasUpvote() {
+		return this.comment.user_vote && this.comment.user_vote.vote === CommentVote.VOTE_UPVOTE;
+	}
+
+	get hasDownvote() {
+		return this.comment.user_vote && this.comment.user_vote.vote === CommentVote.VOTE_DOWNVOTE;
+	}
+
+	onUpvoteClick() {
+		this.voteComment(CommentVote.VOTE_UPVOTE);
+	}
+
+	onDownvoteClick() {
+		this.voteComment(CommentVote.VOTE_DOWNVOTE);
+	}
+
+	voteComment(vote: number) {
+		if (!this.comment.user_vote || this.comment.user_vote.vote !== vote) {
+			return addCommentVote(this.comment, vote);
+		} else {
+			return removeCommentVote(this.comment);
+		}
+	}
+
+	onReplyClick(autofocus: boolean) {
+		CommentThreadModal.show({
+			model: this.model,
+			commentId: this.comment.id,
+			displayMode: 'comments',
+			autofocus,
+		});
+	}
+
+	showLikers() {
+		LikersModal.show({ count: this.comment.votes, resource: this.comment });
+	}
+
+	async placeSticker() {
+		Analytics.trackEvent('post-controls', 'sticker-place', 'comments');
+		setDrawerOpen(this.drawer, true);
+	}
+}
+</script>
 
 <template>
 	<span class="comment-controls">
 		<span v-app-auth-required>
-			<app-button
+			<AppButton
 				v-app-tooltip="votingTooltip"
 				v-app-track-event="`comment-widget:vote-click`"
 				icon="thumbs-up"
@@ -21,11 +133,11 @@
 				:class="{ 'blip-active': comment.user_vote, mobile: Screen.isXs }"
 				@click="showLikers()"
 			>
-				{{ fuzzynumber(comment.votes) }}
+				{{ formatFuzzynumber(comment.votes) }}
 			</a>
 			<span v-else class="blip-missing" />
 
-			<app-button
+			<AppButton
 				v-app-track-event="`comment-widget:vote-click`"
 				icon="thumbs-down"
 				circle
@@ -35,7 +147,7 @@
 				@click="onDownvoteClick()"
 			/>
 
-			<app-button
+			<AppButton
 				v-if="canPlaceStickers"
 				v-app-tooltip="$gettext('Place Sticker')"
 				v-app-track-event="`comment-widget:place-sticker`"
@@ -50,7 +162,7 @@
 
 		<template v-if="showReply">
 			<span v-if="canReply" v-app-auth-required>
-				<app-button
+				<AppButton
 					v-app-tooltip="$gettext(`Reply`)"
 					v-app-track-event="`comment-widget:reply-click`"
 					class="-control-margin"
@@ -60,22 +172,20 @@
 					@click="onReplyClick(true)"
 				/>
 			</span>
-			<app-button v-if="children.length" class="-replies" trans @click="onReplyClick(false)">
-				<translate
+			<AppButton v-if="children.length" class="-replies" trans @click="onReplyClick(false)">
+				<AppTranslate
 					:translate-n="children.length"
 					:translate-params="{ count: children.length }"
 					translate-plural="+ %{ count } replies"
 				>
 					+ %{ count } reply
-				</translate>
-			</app-button>
+				</AppTranslate>
+			</AppButton>
 		</template>
 	</span>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-control-margin
 	margin-left: 8px
 

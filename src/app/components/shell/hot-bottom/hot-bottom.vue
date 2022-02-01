@@ -1,3 +1,10 @@
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppShellHotBottom extends Vue {}
+</script>
+
 <template>
 	<div id="shell-hot-bottom">
 		<slot></slot>
@@ -5,11 +12,7 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-
 #shell-hot-bottom
 	position: fixed
 	z-index: $zindex-shell-hot-bottom
 </style>
-
-<script lang="ts" src="./hot-bottom"></script>

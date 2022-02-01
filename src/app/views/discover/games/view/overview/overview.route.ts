@@ -1,7 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDiscoverGamesViewOverview: RouteConfig = {
+export const routeDiscoverGamesViewOverview: RouteRecordRaw = {
 	name: 'discover.games.view.overview',
-	path: '/games/:slug/:id(\\d+)',
-	component: () => import(/* webpackChunkName: "routeDiscoverGamesView" */ './overview.vue'),
+	path: '',
+	component: () => import('./overview.vue'),
 };

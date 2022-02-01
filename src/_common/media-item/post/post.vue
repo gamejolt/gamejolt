@@ -1,8 +1,142 @@
-<script lang="ts" src="./post"></script>
+<script lang="ts">
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../utils/vue';
+import { ContentFocus } from '../../content-focus/content-focus.service';
+import { AppImgResponsive } from '../../img/responsive/responsive';
+import {
+	AppResponsiveDimensions,
+	AppResponsiveDimensionsChangeEvent,
+} from '../../responsive-dimensions/responsive-dimensions';
+import { Screen } from '../../screen/screen-service';
+import {
+	createStickerTargetController,
+	StickerTargetController,
+	useStickerTargetController,
+} from '../../sticker/target/target-controller';
+import AppStickerTarget from '../../sticker/target/target.vue';
+import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { getVideoPlayerFromSources } from '../../video/player/controller';
+import AppVideo from '../../video/video.vue';
+import AppMediaItemBackdrop from '../backdrop/AppMediaItemBackdrop.vue';
+import { MediaItem } from '../media-item-model';
+
+@Options({
+	components: {
+		AppImgResponsive,
+		AppMediaItemBackdrop,
+		AppVideo,
+		AppResponsiveDimensions,
+		AppStickerTarget,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppMediaItemPost extends Vue {
+	@Prop({ type: Object, required: true }) mediaItem!: MediaItem;
+	@Prop({ type: Boolean, default: true }) isPostHydrated!: boolean;
+	@Prop({ type: Boolean, default: false }) isActive!: boolean;
+	@Prop({ type: Boolean, default: false }) restrictDeviceMaxHeight!: boolean;
+	@Prop({ type: Boolean, default: false }) inline!: boolean;
+	@Prop({ type: Boolean, default: false }) canPlaceSticker!: boolean;
+
+	parentStickerTarget = shallowSetup(() => useStickerTargetController());
+
+	stickerTargetController!: StickerTargetController;
+
+	isFilled = false;
+
+	readonly Screen = Screen;
+
+	@Emit('bootstrap') emitBootstrap() {}
+	@Emit('fullscreen') emitFullscreen(_mediaItem: MediaItem) {}
+
+	get shouldShowFullscreenOption() {
+		return (
+			this.restrictDeviceMaxHeight &&
+			this.mediaItem.height >= 100 &&
+			this.mediaItem.width >= 100
+		);
+	}
+
+	get shouldVideoPlay() {
+		return this.isActive && ContentFocus.hasFocus;
+	}
+
+	get videoController() {
+		const sources = {
+			mp4: this.mediaItem.mediaserver_url_mp4,
+			webm: this.mediaItem.mediaserver_url_webm,
+		};
+		return getVideoPlayerFromSources(sources, 'gif', this.mediaItem.mediaserver_url);
+	}
+
+	get itemRadius() {
+		if (this.inline) {
+			return this.isFilled ? undefined : 'lg';
+		}
+
+		return Screen.isXs && this.isFilled ? undefined : 'lg';
+	}
+
+	get itemStyling() {
+		const style: any = {};
+
+		if (!import.meta.env.SSR) {
+			Object.assign(style, {
+				maxWidth: this.mediaItem.width + 'px',
+				maxHeight: this.mediaItem.height + 'px',
+			});
+		}
+
+		return style;
+	}
+
+	get deviceMaxHeight() {
+		if (import.meta.env.SSR || !this.restrictDeviceMaxHeight) {
+			return undefined;
+		}
+
+		// If the screen size is considered mobile, we want to treat
+		// the mobile keyboard as if it doesn't exist. Using the
+		// 'window.screen.height' will let us get the height of
+		// the screen, rather than the viewport.
+		if (Screen.isMobile) {
+			return window.screen.height * 0.45;
+		}
+		return Screen.height * 0.45;
+	}
+
+	get stickersDisabled() {
+		return !this.isActive || !this.canPlaceSticker;
+	}
+
+	created() {
+		this.stickerTargetController = createStickerTargetController(
+			this.mediaItem,
+			this.parentStickerTarget
+		);
+	}
+
+	async onDimensionsChange(e: AppResponsiveDimensionsChangeEvent) {
+		this.emitBootstrap();
+		this.isFilled = e.isFilled;
+	}
+
+	onClickImage() {
+		// In feed means we are inline, and we use the fullscreen button to go fullscreen.
+		// Clicking on the image in feed does nothing.
+		// In the post view however, we don't show the button and instead a click anywhere on the image goes fullscreen.
+		if (!this.inline) {
+			this.emitFullscreen(this.mediaItem);
+		}
+	}
+}
+</script>
 
 <template>
 	<div class="media-item-post" :class="{ '-inline': inline }" @click="onClickImage">
-		<app-responsive-dimensions
+		<AppResponsiveDimensions
 			class="-media"
 			:class="{
 				'-filled': isFilled,
@@ -13,7 +147,7 @@
 			@change="onDimensionsChange"
 		>
 			<div v-if="shouldShowFullscreenOption" class="-toolbar">
-				<app-button
+				<AppButton
 					v-app-tooltip="$gettext(`Fullscreen`)"
 					overlay
 					circle
@@ -22,13 +156,13 @@
 					@click="emitFullscreen(mediaItem)"
 				/>
 			</div>
-			<app-media-item-backdrop class="-backdrop" :media-item="mediaItem" :radius="itemRadius">
-				<app-sticker-target
+			<AppMediaItemBackdrop class="-backdrop" :media-item="mediaItem" :radius="itemRadius">
+				<AppStickerTarget
 					class="-stickers"
 					:controller="stickerTargetController"
 					:disabled="stickersDisabled"
 				>
-					<app-img-responsive
+					<AppImgResponsive
 						v-if="!isPostHydrated || !mediaItem.is_animated"
 						class="-img"
 						:style="itemStyling"
@@ -36,7 +170,7 @@
 						alt=""
 						ondragstart="return false"
 					/>
-					<app-video
+					<AppVideo
 						v-else-if="isActive && videoController"
 						class="-video"
 						:style="itemStyling"
@@ -44,16 +178,13 @@
 						:should-play="shouldVideoPlay"
 						show-loading
 					/>
-				</app-sticker-target>
-			</app-media-item-backdrop>
-		</app-responsive-dimensions>
+				</AppStickerTarget>
+			</AppMediaItemBackdrop>
+		</AppResponsiveDimensions>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-stickers
 	width: 100%
 	height: 100%

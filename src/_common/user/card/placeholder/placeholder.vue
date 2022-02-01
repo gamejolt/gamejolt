@@ -1,3 +1,15 @@
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+import AppButtonPlaceholder from '../../../button/AppButtonPlaceholder.vue';
+
+@Options({
+	components: {
+		AppButtonPlaceholder,
+	},
+})
+export default class AppUserCardPlaceholder extends Vue {}
+</script>
+
 <template>
 	<div class="user-card sheet sheet-full">
 		<div class="-user-info">
@@ -21,7 +33,7 @@
 				</div>
 
 				<div class="-follow">
-					<app-button-placeholder block />
+					<AppButtonPlaceholder block />
 				</div>
 			</div>
 		</div>
@@ -31,8 +43,7 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '../card'
-@require '~styles-lib/mixins'
+@import '../card'
 
 .-avatar
 	change-bg('bg-subtle')
@@ -45,5 +56,3 @@
 	lazy-placeholder-inline()
 	height: $font-size-small
 </style>
-
-<script lang="ts" src="./placeholder"></script>

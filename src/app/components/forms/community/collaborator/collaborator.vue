@@ -1,68 +1,107 @@
-<script lang="ts" src="./collaborator"></script>
+<script lang="ts">
+import { mixins, Options, Prop } from 'vue-property-decorator';
+import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
+import { Community } from '../../../../../_common/community/community.model';
+import AppFormControlPrefix from '../../../../../_common/form-vue/AppFormControlPrefix.vue';
+import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
+import { BaseForm } from '../../../../../_common/form-vue/form.service';
+
+class Wrapper extends BaseForm<Collaborator> {}
+
+@Options({
+	components: {
+		AppFormControlPrefix,
+	},
+	directives: {
+		AppFocusWhen,
+	},
+})
+export default class FormCommunityCollaborator extends mixins(Wrapper) {
+	modelClass = Collaborator;
+	saveMethod = '$invite' as const;
+
+	@Prop({ type: Object, required: true }) community!: Community;
+
+	readonly Collaborator = Collaborator;
+
+	created() {
+		this.form.resetOnSubmit = true;
+	}
+
+	onInit() {
+		this.setField('resource', 'Community');
+		this.setField('resource_id', this.community.id);
+
+		if (this.model) {
+			this.setField('username', this.model.user!.username);
+		}
+	}
+}
+</script>
 
 <template>
-	<app-form name="collaboratorForm">
-		<app-form-group v-if="method === 'add'" name="username" :label="$gettext(`Username`)">
-			<app-form-control-prefixed-input
-				prefix="@"
-				:rules="{
-					max: 100,
-					availability: {
-						url: `/web/dash/communities/collaborators/check-field-availability/${community.id}`,
-						initVal: undefined,
-					},
-				}"
-				:validate-on="['blur']"
-			/>
+	<AppForm :controller="form">
+		<AppFormGroup v-if="method === 'add'" name="username" :label="$gettext(`Username`)">
+			<AppFormControlPrefix prefix="@">
+				<AppFormControl
+					:validators="[
+						validateMaxLength(100),
+						validateAvailability({
+							url: `/web/dash/communities/collaborators/check-field-availability/${community.id}`,
+						}),
+					]"
+					validate-on-blur
+				/>
+			</AppFormControlPrefix>
 
-			<app-form-control-errors :label="$gettext('username')">
-				<app-form-control-error
+			<AppFormControlErrors :label="$gettext('username')">
+				<AppFormControlError
 					when="availability"
 					:message="$gettext(`This user does not exist or is blocked.`)"
 				/>
-			</app-form-control-errors>
-		</app-form-group>
+			</AppFormControlErrors>
+		</AppFormGroup>
 
-		<app-form-group name="role" :label="$gettext('Role')">
+		<AppFormGroup name="role" :label="$gettext('Role')">
 			<div class="radio">
 				<label>
-					<app-form-control-radio :value="Collaborator.ROLE_EQUAL_COLLABORATOR" />
-					<translate>Full Collaborator</translate>
+					<AppFormControlRadio :value="Collaborator.ROLE_EQUAL_COLLABORATOR" />
+					<AppTranslate>Full Collaborator</AppTranslate>
 					&mdash;
-					<translate class="help-inline">
+					<AppTranslate class="help-inline">
 						They will be able to access and modify everything for the community. They
 						won't be able to add other collaborators.
-					</translate>
+					</AppTranslate>
 				</label>
 			</div>
 			<div class="radio">
 				<label>
-					<app-form-control-radio :value="Collaborator.ROLE_JAM_ORGANIZER" />
-					<translate>Jam Organizer</translate>
+					<AppFormControlRadio :value="Collaborator.ROLE_JAM_ORGANIZER" />
+					<AppTranslate>Jam Organizer</AppTranslate>
 					&mdash;
-					<translate class="help-inline">
+					<AppTranslate class="help-inline">
 						They will be able to organize jams of this community, and edit properties of
 						jam channels. They also have the same abilities as Moderators.
-					</translate>
+					</AppTranslate>
 				</label>
 			</div>
 			<div class="radio">
 				<label>
-					<app-form-control-radio :value="Collaborator.ROLE_MODERATOR" />
-					<translate>Moderator</translate>
+					<AppFormControlRadio :value="Collaborator.ROLE_MODERATOR" />
+					<AppTranslate>Moderator</AppTranslate>
 					&mdash;
-					<translate class="help-inline">
+					<AppTranslate class="help-inline">
 						They will be able to feature community posts, move them between channels and
 						eject them from the community.
-					</translate>
+					</AppTranslate>
 				</label>
 			</div>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-button v-if="!!formModel.role" show-when-valid>
-			<translate v-if="method === 'add'">Invite</translate>
-			<translate v-else>Save</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton v-if="!!formModel.role" show-when-valid>
+			<AppTranslate v-if="method === 'add'">Invite</AppTranslate>
+			<AppTranslate v-else>Save</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>

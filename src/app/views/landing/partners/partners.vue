@@ -1,9 +1,32 @@
+<script lang="ts">
+import { Options } from 'vue-property-decorator';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
+import { imageJolt } from '../../../img/images';
+
+@Options({
+	name: 'RouteLandingPartners',
+	components: {
+		AppThemeSvg,
+	},
+})
+@OptionsForRoute()
+export default class RouteLandingPartners extends BaseRouteComponent {
+	readonly imageJolt = imageJolt;
+	readonly assetPaths = import.meta.globEager('./*.svg');
+
+	get routeTitle() {
+		return `Become a Partner`;
+	}
+}
+</script>
+
 <template>
 	<div>
 		<section class="section landing-header text-center">
 			<div class="container">
 				<h1>
-					<app-theme-svg class="bolt" src="~img/jolt.svg" alt="" strict-colors />
+					<AppThemeSvg class="bolt" :src="imageJolt" alt="" strict-colors />
 					Partners
 				</h1>
 
@@ -14,13 +37,13 @@
 							people buy the game!
 						</p>
 
-						<app-button
+						<AppButton
 							primary
 							href="https://docs.google.com/a/gamejolt.com/forms/d/1d_5jMXtKa8rYndFy1lZhzdiArdhZp6kycX-h1IOwjAU"
 							target="_blank"
 						>
 							Apply Now
-						</app-button>
+						</AppButton>
 					</div>
 				</div>
 			</div>
@@ -32,21 +55,27 @@
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg src="./supporting-indies.svg" alt="" />
+								<AppThemeSvg
+									:src="assetPaths['./supporting-indies.svg'].default"
+									alt=""
+								/>
 							</div>
 
 							<h4 class="text-center">Indies supporting indies</h4>
 
 							<p>
 								When you promote games from your favorite indie game developers on
-								your YouTube or Twitch channels, they’ll support you right back!
+								your YouTube or Twitch channels, they'll support you right back!
 								Feel that indie fellowship.
 							</p>
 						</div>
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<app-theme-svg src="./revenue-share.svg" alt="" />
+								<AppThemeSvg
+									:src="assetPaths['./revenue-share.svg'].default"
+									alt=""
+								/>
 							</div>
 
 							<h4 class="text-center">Revenue Share</h4>
@@ -59,11 +88,14 @@
 							</p>
 						</div>
 
-						<div class="landing-break-sm"></div>
+						<div class="landing-break-sm" />
 
 						<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 							<div class="landing-graphic">
-								<app-theme-svg src="./access-any-game.svg" alt="" />
+								<AppThemeSvg
+									:src="assetPaths['./access-any-game.svg'].default"
+									alt=""
+								/>
 							</div>
 
 							<h4 class="text-center">Access any game</h4>
@@ -104,14 +136,14 @@
 							<h3>Who should sign up?</h3>
 
 							<p>
-								<app-jolticon icon="youtube" />
+								<AppJolticon icon="youtube" />
 								<strong>YouTubers</strong>
 								must have at least 50,000 subs and an average of 3,000 views per
 								video.
 							</p>
 
 							<p>
-								<app-jolticon icon="twitch" />
+								<AppJolticon icon="twitch" />
 								<strong>Twitch streamers</strong>
 								must have at least 3,000 followers. If you're a Twitch partner,
 								we'll automatically make you a Game Jolt partner.
@@ -139,14 +171,14 @@
 								the program.
 							</p>
 
-							<app-button
+							<AppButton
 								primary
 								block
 								href="https://docs.google.com/a/gamejolt.com/forms/d/1d_5jMXtKa8rYndFy1lZhzdiArdhZp6kycX-h1IOwjAU"
 								target="_blank"
 							>
 								Apply Now
-							</app-button>
+							</AppButton>
 						</div>
 					</div>
 				</div>
@@ -154,5 +186,3 @@
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./partners"></script>

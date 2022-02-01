@@ -1,12 +1,30 @@
-<script lang="ts" src="./badge"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import AppGameFollowWidget from '../../../../_common/game/follow-widget/follow-widget.vue';
+import { Game } from '../../../../_common/game/game.model';
+import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import AppTheme from '../../../../_common/theme/AppTheme.vue';
+
+@Options({
+	components: {
+		AppTheme,
+		AppMediaItemBackdrop,
+		AppGameFollowWidget,
+	},
+})
+export default class AppGameBadge extends Vue {
+	@Prop({ type: Object, required: true }) game!: Game;
+	@Prop({ type: Boolean, default: false }) fullBleed!: boolean;
+}
+</script>
 
 <template>
-	<app-theme
+	<AppTheme
 		class="-game-container fill-darkest"
 		:class="{ '-full-bleed': fullBleed }"
 		:theme="game.theme"
 	>
-		<app-media-item-backdrop
+		<AppMediaItemBackdrop
 			v-if="game.header_media_item"
 			class="-backdrop"
 			:media-item="game.header_media_item"
@@ -20,14 +38,14 @@
 			>
 				<div class="-header-gradient" />
 			</div>
-		</app-media-item-backdrop>
+		</AppMediaItemBackdrop>
 
 		<div class="-content">
 			<router-link class="-link" :to="game.getUrl()" />
 
 			<div class="-details">
 				<div class="tag">
-					<translate>Game</translate>
+					<AppTranslate>Game</AppTranslate>
 				</div>
 				<div class="-name">
 					{{ game.title }}
@@ -35,16 +53,13 @@
 			</div>
 
 			<div class="-follow-button">
-				<app-game-follow-widget :game="game" overlay hide-count location="badge" />
+				<AppGameFollowWidget :game="game" overlay hide-count location="badge" />
 			</div>
 		</div>
-	</app-theme>
+	</AppTheme>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-backdrop
 	// For some reason we need position static
 	// so the backdrop can get the height.

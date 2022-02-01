@@ -1,19 +1,30 @@
-<script lang="ts" src="./auth-modal"></script>
+<script lang="ts">
+import { mixins, Options } from 'vue-property-decorator';
+import { BaseModal } from '../modal/base';
+import AppAuthJoin from './join/join.vue';
+
+@Options({
+	components: {
+		AppAuthJoin,
+	},
+})
+export default class AppAuthModal extends mixins(BaseModal) {}
+</script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-body">
 			<div class="-auth-container">
-				<app-auth-join />
+				<AppAuthJoin />
 			</div>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" scoped>

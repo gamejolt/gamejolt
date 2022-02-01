@@ -1,0 +1,334 @@
+@import './common/bootstrap-variables'
+@import './common/functions'
+@import './common/zindex'
+
+//
+// GJ Color Palette
+$gj-green = #cf0
+$gj-dark-green = #2f7f6f
+$gj-pink = #ff3fac
+$gj-blue = #31d6ff
+$gj-overlay-notice = #f11a5c
+//
+// Shades of gray
+$black = #000000
+$gray-darkest = #111111
+$gray-darker = #1f1f1f
+$gray-dark = #292929
+$gray = #363636
+$gray-subtle = #444444
+$gray-light = #7e7e7e
+$gray-lighter = #a8a8a8
+$gray-lightest = #f0f0f0
+$white = #ffffff
+// For backdrop, we darken it a bit more on mobile since it acts like a gutter
+// between sheets and we need the contrast.
+$bg-backdrop-light = #fafafa
+$bg-backdrop-light-xs = #f6f6f6
+$bg-backdrop-dark = #252525
+$bg-backdrop-dark-xs = #222222
+//
+// Theme vars
+// Copy out the shades of gray that we use throughout the site
+$theme-white = $white
+$theme-white-trans = rgba($theme-white, 0)
+$theme-black = $black
+$theme-black-trans = rgba($theme-black, 0)
+$theme-darkest = $gray-darkest
+$theme-darkest-trans = rgba($theme-darkest, 0)
+$theme-darker = $gray-darker
+$theme-darker-trans = rgba($theme-darker, 0)
+$theme-dark = $gray-dark
+$theme-dark-trans = rgba($theme-dark, 0)
+$theme-gray = $gray
+$theme-gray-trans = rgba($theme-gray, 0)
+$theme-gray-subtle = $gray-subtle
+$theme-gray-subtle-trans = rgba($theme-gray-subtle, 0)
+$theme-light = $gray-light
+$theme-light-trans = rgba($theme-light, 0)
+$theme-lighter = $gray-lighter
+$theme-lighter-trans = rgba($theme-lighter, 0)
+$theme-lightest = $gray-lightest
+$theme-lightest-trans = rgba($theme-lightest, 0)
+// The main theme color -- should be bright (show well on dark, not on light)
+$theme-highlight = $gj-green
+$theme-highlight-trans = rgba($theme-highlight, 0)
+$theme-highlight-fg = light($theme-highlight) ? $black : $white
+$theme-highlight-fg-trans = rgba($theme-highlight-fg, 0)
+// The darker theme color (highlight should be able to overlay on top of this)
+$theme-backlight = $gj-dark-green
+$theme-backlight-trans = rgba($theme-backlight, 0)
+// Used for notices like notifications or errors
+$theme-notice = $gj-pink
+$theme-notice-trans = rgba($theme-notice, 0)
+$theme-notice-fg = light($theme-notice) ? $black : $white
+$theme-notice-fg-trans = rgba($theme-notice-fg, 0)
+// Bi-color themes
+$theme-bi-bg = $theme-backlight
+$theme-bi-bg-trans = rgba($theme-bi-bg, 0)
+$theme-bi-fg = $theme-highlight
+$theme-bi-fg-trans = rgba($theme-bi-fg, 0)
+// Base background color
+$theme-bg = $white
+$theme-bg-trans = rgba($theme-bg, 0)
+// Slightly darker background (used for info boxes and such)
+$theme-bg-offset = $theme-lightest
+$theme-bg-offset-trans = rgba($theme-bg-offset, 0)
+// Slightly lighter than the offset to be used to drop sheets on to
+$theme-bg-backdrop = $bg-backdrop-light
+$theme-bg-backdrop-trans = rgba($theme-bg-backdrop, 0)
+// A bit darker than the offset color (used for separator lines)
+$theme-bg-subtle = $theme-lighter
+$theme-bg-subtle-trans = rgba($theme-bg-subtle, 0)
+// Text color
+$theme-fg = $theme-dark
+$theme-fg-trans = rgba($theme-fg, 0)
+// Muted text color (used for less important content)
+$theme-fg-muted = $theme-light
+$theme-fg-muted-trans = rgba($theme-fg-muted, 0)
+// The default link color
+$theme-link = $theme-backlight
+$theme-link-trans = rgba($theme-link, 0)
+$theme-link-hover = $black
+$theme-link-hover-trans = rgba($theme-link-hover, 0)
+//
+// Dark theme vars
+$dark-theme-bg = $theme-dark
+$dark-theme-bg-trans = $theme-dark-trans
+$dark-theme-bg-offset = $theme-darker
+$dark-theme-bg-offset-trans = $theme-darker-trans
+$dark-theme-bg-backdrop = $bg-backdrop-dark
+$dark-theme-bg-backdrop-trans = rgba($dark-theme-bg-backdrop, 0)
+$dark-theme-bg-subtle = $theme-gray-subtle
+$dark-theme-bg-subtle-trans = $theme-gray-subtle-trans
+$dark-theme-fg = $theme-lightest
+$dark-theme-fg-trans = $theme-lightest-trans
+$dark-theme-fg-muted = $theme-light
+$dark-theme-fg-muted-trans = $theme-light-trans
+$dark-theme-link = $theme-highlight
+$dark-theme-link-trans = $theme-highlight-trans
+$dark-theme-link-hover = $white
+$dark-theme-link-hover-trans = rgba($dark-theme-link-hover, 0)
+$dark-theme-bi-bg = $theme-highlight
+$dark-theme-bi-bg-trans = $theme-highlight-trans
+$dark-theme-bi-fg = light($dark-theme-bi-bg) ? $black : $white
+$dark-theme-bi-fg-trans = rgba($dark-theme-bi-fg, 0)
+//
+// Base
+$border-radius-base = 6px
+$border-radius-small = 2px
+$border-radius-large = 12px
+$border-width-small = 1px
+$border-width-base = 1.5px
+$border-width-large = 2px
+$text-muted = $theme-light
+$hr-border = $theme-lighter
+//
+// Scaffolding
+$font-family-sans-serif = 'Nunito', 'Helvetica Neue', Helvetica, Arial, sans-serif
+$font-family-heading = 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif
+$font-family-serif = Georgia, 'Times New Roman', Times, serif
+$font-family-monospace = Inconsolata, Menlo, Monaco, 'Ubuntu Mono', Consolas, 'source-code-pro', 'Courier New', monospace
+$font-family-base = $font-family-sans-serif
+$font-family-tiny = $font-family-base
+$font-size-base = 15px
+$font-size-tiny = 11px
+$font-size-large = ceil($font-size-base * 1.25)
+$font-size-small = ceil($font-size-base * 0.85)
+$font-size-h1 = 28px
+$font-size-h1-xs = floor($font-size-base * 2)
+$font-size-h2 = 24px
+$font-size-h2-xs = floor($font-size-base * 1.7)
+$font-size-h3 = 21px
+$font-size-h3-xs = floor($font-size-base * 1.5)
+$font-size-h4 = 18px
+$font-size-h4-xs = floor($font-size-base * 1.2)
+$font-size-h5 = $font-size-base
+$font-size-h5-xs = $font-size-base
+$font-size-h6 = 12px
+$font-size-h6-xs = 12px
+// 20/14
+$line-height-base = 1.428571429
+$line-height-computed = floor($font-size-base * $line-height-base)
+$headings-font-family = $font-family-heading
+$headings-font-weight = 400
+$headings-line-height = 1.3
+//
+// Forms
+$input-border = $gray-lighter
+$input-border-focus = $gray
+$input-border-radius = $border-radius-base
+$input-color-placeholder = $gray-lighter
+$input-group-addon-bg = $gray-lighter
+$input-group-addon-border-color = $gray-lighter
+//
+// Code
+$code-color = $gray
+$code-bg = $gray-lightest
+$kbd-color = $white
+$kbd-bg = $gray-dark
+$pre-bg = $gray-dark
+$pre-color = $gray-lightest
+$pre-border-color = $pre-bg
+//
+// Pagination
+$pagination-color = $gj-dark-green
+$pagination-bg = $white
+$pagination-border = $gray-lighter
+$pagination-hover-color = $black
+$pagination-hover-bg = $gray-lightest
+$pagination-hover-border = $gray-lighter
+$pagination-active-color = $gj-green
+$pagination-active-bg = $gray-dark
+$pagination-active-border = $gray-dark
+$pagination-disabled-color = $gray-lighter
+$pagination-disabled-bg = $white
+$pagination-disabled-border = #ddd
+$pager-border-radius = 0
+//
+// Col Percentages
+$percentage-1 = (1 / 12) * 100%
+$percentage-2 = (2 / 12) * 100%
+$percentage-3 = (3 / 12) * 100%
+$percentage-4 = (4 / 12) * 100%
+$percentage-5 = (5 / 12) * 100%
+$percentage-6 = (6 / 12) * 100%
+$percentage-7 = (7 / 12) * 100%
+$percentage-8 = (8 / 12) * 100%
+$percentage-9 = (9 / 12) * 100%
+$percentage-10 = (10 / 12) * 100%
+$percentage-11 = (11 / 12) * 100%
+$percentage-12 = 100%
+//
+// Grid System
+$grid-columns = 12
+$grid-gutter-width = 40px
+$grid-gutter-width-xs = 30px
+//
+// Media Query Breakpoint Helpers
+$media-xs = media(max: $screen-xs-max)
+$media-sm = media(min: $screen-sm-min, max: $screen-sm-max)
+$media-sm-up = media(min: $screen-sm-min)
+$media-md = media(min: $screen-md-min, max: $screen-md-max)
+$media-md-up = media(min: $screen-md-min)
+$media-md-down = media(max: $screen-md-max)
+$media-sm-md = media(min: $screen-sm-min, max: $screen-md-max)
+$media-lg = media(min: $screen-lg-min)
+$media-lg-up = media(min: $screen-lg-min)
+$media-mobile = media(max: $screen-sm-max)
+//
+// Pointer Media Queries
+// Linux seems to have pointer information missing sometimes,
+// so we need to look for the absence of a coarse pointer instead of just a 'fine' pointer here.
+$media-pointer-mouse = 'not screen and (pointer: coarse)'
+//
+// Buttons
+$button-icon-size = 16px
+$button-md-padding-vertical = 8px
+$button-md-padding-horizontal = 16px
+$button-md-line-height = 20px + ($button-md-padding-vertical * 2)
+$button-md-icon-spacing-right = 5px
+$button-md-outline-border-size = $border-width-base
+$button-md-font-weight = bold
+$button-md-font-size = $font-size-small
+$button-md-border-radius = $border-radius-base
+$button-sm-padding-vertical = 3px
+$button-sm-padding-horizontal = 10px
+$button-sm-line-height = $button-icon-size + ($button-sm-padding-vertical * 2)
+$button-sm-icon-spacing-right = 3px
+$button-sm-outline-border-size = $border-width-base
+$button-sm-font-weight = normal
+$button-sm-font-size = $font-size-tiny
+$button-sm-border-radius = $border-radius-small
+$button-lg-padding-vertical = 18px
+$button-lg-padding-horizontal = 35px
+$button-lg-line-height = 20px + ($button-lg-padding-vertical * 2)
+$button-lg-icon-spacing-right = 8px
+$button-lg-outline-border-size = $border-width-large
+$button-lg-font-weight = bold
+$button-lg-font-size = $font-size-base
+$button-lg-border-radius = $border-radius-large
+//
+// Tab List
+$tab-list-padding-v = 7px
+$tab-list-padding-h = 10px
+//
+// Animations
+$weak-ease-in = cubic-bezier(0.55, 0.085, 0.68, 0.53)
+$weak-ease-out = cubic-bezier(0.25, 0.46, 0.45, 0.94)
+$weak-ease-in-out = cubic-bezier(0.455, 0.03, 0.515, 0.955)
+// Quart
+$ease-in = cubic-bezier(0.895, 0.03, 0.685, 0.22)
+$ease-out = cubic-bezier(0.165, 0.84, 0.44, 1)
+$ease-in-out = cubic-bezier(0.77, 0, 0.175, 1)
+// Expo
+$strong-ease-in = cubic-bezier(0.95, 0.05, 0.795, 0.035)
+$strong-ease-out = cubic-bezier(0.19, 1, 0.2, 1)
+$strong-ease-in-out = cubic-bezier(1, 0, 0, 1)
+// Back Easing
+$ease-in-back = cubic-bezier(0.6, -0.28, 0.735, 0.045)
+$ease-out-back = cubic-bezier(0.175, 0.885, 0.32, 1.275)
+$ease-in-out-back = cubic-bezier(0.68, -0.55, 0.265, 1.55)
+//
+// Popovers
+$popover-border-color = $gray-light
+$popover-bg-color = $gray-lightest
+$popover-bg-color-dark = $gray-darkest
+$popover-arrow-size = 8px
+$popover-size = 400px
+$popover-spacing = 5px
+// This will be used to push the popover away from the trigger by this amount.
+$popover-extra-margin = 2px
+//
+// Tooltips
+$tooltip-arrow-width = 5px
+$tooltip-arrow-color = $black
+$tooltip-color = $white
+$tooltip-bg = $black
+$tooltip-opacity = 1
+$tooltip-font-size = $font-size-small
+$tooltip-max-width = 250px
+//
+// Growls
+$growl-spacing = 10px
+$growl-width = 375px
+//
+// Progress Bar
+$progress-bg = $gray-lightest
+$progress-bar-bg = $gj-blue
+$progress-bar-color = $gray-dark
+$progress-darker-bg = $gray-darker
+$progress-danger-bg = $gray-darker
+$progress-bar-danger-bg = $gj-pink
+$progress-bar-danger-color = $white
+$progress-green-bg = $gray-darker
+$progress-bar-green-bg = $gj-green
+$progress-bar-green-color = $gray
+//
+// Modal
+$modal-padding = ($grid-gutter-width / 2)
+$modal-padding-xs = ($grid-gutter-width-xs / 2)
+//
+// Backdrop
+$backdrop-opacity = 0.5
+//
+// Timeline List
+$timeline-list-icon-size = 50px
+$timeline-list-avatar-size = 30px
+$timeline-list-avatar-margin = 10px
+//
+// Minbar
+$minbar-offset-right = 0
+$minbar-padding = 3px
+$minbar-spacing = 10px
+$minbar-border-width = 0
+//
+// Jolticon
+$jolticon-size = 16px
+//
+// List Groups
+$list-group-item-padding = 10px
+$list-group-item-padding-thin = 7px
+$list-group-icon-width = 30px
+$list-group-addon-width = 40px
+$list-group-drag-handle-width = 20px

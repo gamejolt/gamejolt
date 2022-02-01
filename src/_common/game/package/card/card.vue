@@ -1,7 +1,206 @@
-<script lang="ts" src="./card"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Analytics } from '../../../analytics/analytics.service';
+import AppCard from '../../../card/AppCard.vue';
+import { Clipboard } from '../../../clipboard/clipboard-service';
+import { AppCountdown } from '../../../countdown/countdown';
+import AppExpand from '../../../expand/AppExpand.vue';
+import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
+import { formatCurrency } from '../../../filters/currency';
+import { formatFilesize } from '../../../filters/filesize';
+import { LinkedKey } from '../../../linked-key/linked-key.model';
+import { SellablePricing } from '../../../sellable/pricing/pricing.model';
+import { Sellable } from '../../../sellable/sellable.model';
+import { AppTimeAgo } from '../../../time/ago/ago';
+import { AppTooltip } from '../../../tooltip/tooltip-directive';
+import { User } from '../../../user/user.model';
+import { GameBuild } from '../../build/build.model';
+import { GameDownloader } from '../../downloader/downloader.service';
+import { Game } from '../../game.model';
+import { GamePlayModal } from '../../play-modal/play-modal.service';
+import { GameRelease } from '../../release/release.model';
+import { GamePackage } from '../package.model';
+import { GamePackagePurchaseModal } from '../purchase-modal/purchase-modal.service';
+import AppGamePackageCardButtons from './AppGamePackageCardButtons.vue';
+import { GamePackageCardModel } from './card.model';
+
+@Options({
+	components: {
+		AppCard,
+		AppTimeAgo,
+		AppFadeCollapse,
+		AppExpand,
+		AppCountdown,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppGamePackageCard extends Vue {
+	@Prop(Object)
+	game!: Game;
+
+	@Prop(Object)
+	package!: GamePackage;
+
+	@Prop(Object)
+	sellable!: Sellable;
+
+	@Prop({ type: Array, default: () => [] })
+	releases!: GameRelease[];
+
+	@Prop({ type: Array, default: () => [] })
+	builds!: GameBuild[];
+
+	@Prop(String)
+	accessKey?: string;
+
+	@Prop(Boolean)
+	isPartner?: boolean;
+
+	@Prop(String)
+	partnerKey?: string;
+
+	@Prop(Object)
+	partner?: User;
+
+	static hook = {
+		meta: undefined as typeof Vue | undefined,
+		buttons: undefined as typeof Vue | undefined,
+	};
+
+	showFullDescription = false;
+	canToggleDescription = false;
+
+	isWhatOpen = false;
+	pricing: SellablePricing | null = null;
+	sale = false;
+	salePercentageOff = '';
+	saleOldPricing: SellablePricing | null = null;
+
+	providerIcons: { [provider: string]: string } = {
+		steam: 'steam',
+	};
+
+	readonly AppGamePackageCard = AppGamePackageCard;
+	readonly formatCurrency = formatCurrency;
+	readonly formatFilesize = formatFilesize;
+
+	get metaComponent() {
+		return AppGamePackageCard.hook.meta;
+	}
+
+	get buttonsComponent() {
+		return AppGamePackageCard.hook.buttons || AppGamePackageCardButtons;
+	}
+
+	get card() {
+		return new GamePackageCardModel(this.sellable, this.releases, this.builds, this.linkedKeys);
+	}
+
+	get isOwned() {
+		// If there is a key on the package, then we should show it as being
+		// "owned".
+		if (this.accessKey) {
+			return true;
+		}
+
+		return this.sellable && this.sellable.is_owned ? true : false;
+	}
+
+	get linkedKeys() {
+		if (!this.sellable) {
+			return [];
+		}
+
+		return this.sellable.linked_keys || [];
+	}
+
+	get canBuy() {
+		return (
+			this.sellable &&
+			!this.isOwned &&
+			(this.sellable.type === 'pwyw' || this.sellable.type === 'paid')
+		);
+	}
+
+	created() {
+		if (this.sellable && this.sellable.pricings.length > 0) {
+			this.pricing = this.sellable.pricings[0];
+			if (this.pricing.promotional) {
+				this.saleOldPricing = this.sellable.pricings[1];
+				this.sale = true;
+				this.salePercentageOff = (
+					((this.saleOldPricing.amount - this.pricing.amount) /
+						this.saleOldPricing.amount) *
+					100
+				).toFixed(0);
+			}
+		}
+	}
+
+	buildClick(build: GameBuild, fromExtraSection = false) {
+		// For client, if they clicked in the "options" section, then skip
+		// showing payment form. Just take them directly to site.
+		if (GJ_IS_DESKTOP_APP && fromExtraSection) {
+			this.doBuildClick(build, fromExtraSection);
+		} else if (this.sellable.type === 'pwyw' && this.canBuy) {
+			this.showPayment(build, fromExtraSection);
+		} else {
+			this.doBuildClick(build, fromExtraSection);
+		}
+	}
+
+	private doBuildClick(build: GameBuild, fromExtraSection = false) {
+		let operation = build.type === GameBuild.TYPE_DOWNLOADABLE ? 'download' : 'play';
+		if (build.type === GameBuild.TYPE_ROM && fromExtraSection) {
+			operation = 'download';
+		}
+
+		if (operation === 'download') {
+			this.download(build);
+		} else if (operation === 'play') {
+			this.showBrowserModal(build);
+		}
+	}
+
+	showPayment(build: GameBuild | null, fromExtraSection: boolean) {
+		GamePackagePurchaseModal.show({
+			game: this.game,
+			package: this.package,
+			build: build,
+			fromExtraSection,
+			partner: this.partner,
+			partnerKey: this.partnerKey,
+		});
+	}
+
+	private download(build: GameBuild) {
+		Analytics.trackEvent('game-package-card', 'download', 'download');
+
+		GameDownloader.download(this.$router, this.game, build, {
+			isOwned: this.isOwned || this.isPartner,
+			key: this.accessKey,
+		});
+	}
+
+	private showBrowserModal(build: GameBuild) {
+		Analytics.trackEvent('game-package-card', 'download', 'play');
+
+		GamePlayModal.show(this.game, build, {
+			// isOwned: this.isOwned || this.isPartner,
+			key: this.accessKey,
+		});
+	}
+
+	copyProviderKey(key: LinkedKey) {
+		Clipboard.copy(key.key);
+	}
+}
+</script>
 
 <template>
-	<app-card :id="`game-package-card-${package.id}`" class="game-package-card">
+	<AppCard :id="`game-package-card-${package.id}`" class="game-package-card">
 		<div class="game-package-card-pricing fill-gray">
 			<!-- Fixed Pricing -->
 			<div v-if="sellable.type === 'paid'">
@@ -9,27 +208,27 @@
 					-{{ salePercentageOff }}%
 				</span>
 				<strong class="game-package-card-pricing-amount">
-					{{ pricing.amount | currency }}
+					{{ formatCurrency(pricing.amount) }}
 				</strong>
 				<span
 					v-if="sale"
 					class="game-package-card-pricing-amount game-package-card-pricing-amount-old"
 				>
-					{{ saleOldPricing.amount | currency }}
+					{{ formatCurrency(saleOldPricing.amount) }}
 				</span>
 			</div>
 
 			<!-- Pay What You Want -->
 			<div v-else-if="sellable.type === 'pwyw'">
-				<translate class="game-package-card-pricing-tag text-lower">
+				<AppTranslate class="game-package-card-pricing-tag text-lower">
 					Name Your Price
-				</translate>
+				</AppTranslate>
 			</div>
 
 			<!-- Free/Default -->
 			<div v-else-if="sellable.type === 'free'">
 				<strong class="game-package-card-pricing-amount text-upper">
-					<translate>Free</translate>
+					<AppTranslate>Free</AppTranslate>
 				</strong>
 			</div>
 		</div>
@@ -40,7 +239,7 @@
 			class="game-package-card-pricing game-package-card-pricing-owned fill-highlight"
 		>
 			<strong class="text-upper">
-				<translate>Owned</translate>
+				<AppTranslate>Owned</AppTranslate>
 			</strong>
 		</div>
 
@@ -59,40 +258,42 @@
 				:card="card"
 			/>
 
-			<app-jolticon
+			<AppJolticon
 				v-for="supportKey of card.platformSupport"
 				:key="supportKey"
 				v-app-tooltip="card.platformSupportInfo[supportKey].tooltip"
 				:icon="card.platformSupportInfo[supportKey].icon"
 			/>
 
-			<span v-if="card.platformSupport.length" class="dot-separator" />
-
 			<template v-if="card.showcasedRelease">
-				<translate>Version:</translate>
+				{{ ' ' }}
+				<AppTranslate>Version:</AppTranslate>
+				{{ ' ' }}
 				<strong>{{ card.showcasedRelease.version_number }}</strong>
 
 				<span class="dot-separator" />
 
-				<app-time-ago :date="card.showcasedRelease.published_on" />
+				<AppTimeAgo :date="card.showcasedRelease.published_on" />
 			</template>
 		</div>
 
 		<div v-if="sale" class="card-content card-sale-info">
-			<strong><translate>On sale!</translate></strong>
-			<translate>Offer ends in</translate>
-			<app-countdown :end="pricing.end" />
+			<strong><AppTranslate>On sale!</AppTranslate></strong>
+			{{ ' ' }}
+			<AppTranslate>Offer ends in</AppTranslate>
+			{{ ' ' }}
+			<AppCountdown :end="pricing.end" />
 		</div>
 
 		<div v-if="package.description" class="card-content">
-			<app-fade-collapse
+			<AppFadeCollapse
 				:collapse-height="100"
 				:is-open="showFullDescription"
 				@require-change="canToggleDescription = $event"
 				@expand="showFullDescription = true"
 			>
 				<div>{{ package.description }}</div>
-			</app-fade-collapse>
+			</AppFadeCollapse>
 
 			<a
 				v-if="canToggleDescription"
@@ -104,15 +305,15 @@
 
 		<div v-if="!isOwned && card.hasSteamKey" class="card-content">
 			<p>
-				<app-jolticon icon="steam" />
-				<translate>You will also get a Steam key with this purchase.</translate>
+				<AppJolticon icon="steam" />
+				<AppTranslate>You will also get a Steam key with this purchase.</AppTranslate>
 			</p>
 		</div>
 
 		<template v-if="!card.showcasedRelease">
 			<br />
 			<div class="alert alert-notice">
-				<translate>No published releases yet.</translate>
+				<AppTranslate>No published releases yet.</AppTranslate>
 			</div>
 		</template>
 		<div v-else class="card-controls">
@@ -129,9 +330,9 @@
 				<template v-if="isPartner && sellable.type === 'paid' && !isOwned">
 					<br />
 					<div class="alert">
-						<translate>
+						<AppTranslate>
 							You get access to this package because you're a partner.
-						</translate>
+						</AppTranslate>
 					</div>
 					<hr />
 				</template>
@@ -139,16 +340,14 @@
 
 			<template v-if="sellable.type === 'paid' && !isOwned">
 				<div class="clearfix">
-					<app-button primary @click="showPayment(null, false)">
-						<translate>Buy Now</translate>
-					</app-button>
+					<AppButton primary @click="showPayment(null, false)">
+						<AppTranslate>Buy Now</AppTranslate>
+					</AppButton>
 
 					<span class="game-package-card-payment-what-link">
-						(
 						<a class="link-help" @click="isWhatOpen = !isWhatOpen">
-							<translate>What do you get?</translate>
+							<AppTranslate>What do you get?</AppTranslate>
 						</a>
-						)
 					</span>
 				</div>
 			</template>
@@ -157,20 +356,22 @@
 				<hr />
 
 				<div class="alert">
-					<translate>You also get access to keys for these other platforms.</translate>
+					<AppTranslate>
+						You also get access to keys for these other platforms.
+					</AppTranslate>
 				</div>
 
 				<div v-for="linkedKey of linkedKeys" :key="linkedKey.key" class="clearfix">
 					<div class="pull-right">
 						&nbsp;
-						<app-button @click="copyProviderKey(linkedKey)">
-							<translate>Copy</translate>
-						</app-button>
+						<AppButton @click="copyProviderKey(linkedKey)">
+							<AppTranslate>Copy</AppTranslate>
+						</AppButton>
 					</div>
 
 					<div class="input-group">
 						<span class="input-group-addon">
-							<app-jolticon
+							<AppJolticon
 								v-if="providerIcons[linkedKey.provider]"
 								:icon="providerIcons[linkedKey.provider]"
 							/>
@@ -182,14 +383,18 @@
 			</template>
 		</div>
 
-		<app-expand :when="isWhatOpen" class="package-card-well-expander">
+		<AppExpand :when="isWhatOpen" class="package-card-well-expander">
 			<div class="package-card-well">
 				<div v-for="build of builds" :key="build.id">
 					{{ build.primary_file.filename }}
-					<small class="text-muted">({{ build.primary_file.filesize | filesize }})</small>
+					{{ ' ' }}
+					<small class="text-muted">
+						({{ formatFilesize(build.primary_file.filesize) }})
+					</small>
 
 					<span
 						v-for="os of ['windows', 'mac', 'linux', 'other']"
+						:key="os"
 						class="package-card-well-os"
 					>
 						<template v-if="build['os_' + os] || build['os_' + os + '_64']">
@@ -203,11 +408,11 @@
 				</div>
 
 				<div v-if="card.hasSteamKey">
-					<translate>1 Steam key</translate>
+					<AppTranslate>1 Steam key</AppTranslate>
 				</div>
 			</div>
-		</app-expand>
-	</app-card>
+		</AppExpand>
+	</AppCard>
 </template>
 
 <style lang="stylus" src="./card.styl" scoped></style>

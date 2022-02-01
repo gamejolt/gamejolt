@@ -1,5 +1,3 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
 
 .page-header
 	$spotlight-size = $page-header-spotlight-size + $page-header-spotlight-margin
@@ -19,7 +17,8 @@
 		.link-muted
 			color: rgba($white, 0.6)
 
-		.tag, .user-dogtag
+		.tag
+		.user-dogtag
 			text-shadow: none
 
 		.meter-blip
@@ -30,7 +29,9 @@
 			background-color: $white
 
 	&-content
-		h1, h2, h3
+		h1
+		h2
+		h3
 			margin: 0
 
 			small

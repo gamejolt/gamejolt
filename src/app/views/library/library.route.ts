@@ -1,15 +1,15 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 import { routeLibraryCollectionRoutes } from './collection/collection.route';
 import { routeLibraryOverview } from './overview/overview.route';
 
-const children: RouteConfig[] = [routeLibraryOverview, ...routeLibraryCollectionRoutes];
+const children: RouteRecordRaw[] = [routeLibraryOverview, ...routeLibraryCollectionRoutes];
 
-if (GJ_IS_CLIENT) {
-	children.push(require('./installed/installed.route').routeLibraryInstalled);
+if (GJ_IS_DESKTOP_APP) {
+	children.push((await import('./installed/installed.route')).routeLibraryInstalled);
 }
 
-export const routeLibrary: RouteConfig = {
+export const routeLibrary: RouteRecordRaw = {
 	path: '/library',
-	component: () => import(/* webpackChunkName: "routeLibrary" */ './library'),
+	component: () => import('./library'),
 	children,
 };

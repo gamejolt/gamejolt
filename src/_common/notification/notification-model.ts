@@ -1,4 +1,4 @@
-import VueRouter, { RawLocation } from 'vue-router';
+import { RouteLocationRaw, Router } from 'vue-router';
 import { TrophyModal } from '../../app/components/trophy/modal/modal.service';
 import { assertNever } from '../../utils/utils';
 import { Collaborator } from '../collaborator/collaborator.model';
@@ -20,7 +20,7 @@ import { ForumTopic } from '../forum/topic/topic.model';
 import { GameLibraryGame } from '../game-library/game/game.model';
 import { Game } from '../game/game.model';
 import { GameRating } from '../game/rating/rating.model';
-import { Growls } from '../growls/growls.service';
+import { showErrorGrowl } from '../growls/growls.service';
 import { Mention } from '../mention/mention.model';
 import { Model } from '../model/model.service';
 import { Navigate } from '../navigate/navigate.service';
@@ -36,7 +36,7 @@ import { User } from '../user/user.model';
 
 function getRouteLocationForModel(
 	model: Game | User | FiresidePost | Community | Fireside
-): RawLocation {
+): RouteLocationRaw {
 	if (model instanceof User) {
 		return model.url;
 	} else if (model instanceof Game) {
@@ -225,14 +225,14 @@ export class Notification extends Model {
 			this.action_model = new FiresideCommunity(data.action_resource_model);
 		}
 
-		// Keep memory clean after bootstrapping the models.
-		const that: any = this;
-		delete that['from_resource_model'];
-		delete that['action_resource_model'];
-		delete that['to_resource_model'];
+		// Keep memory clean after bootstrapping the models (the super
+		// constructor will assign all data).
+		delete (this as any).from_resource_model;
+		delete (this as any).action_resource_model;
+		delete (this as any).to_resource_model;
 	}
 
-	get routeLocation(): RawLocation {
+	get routeLocation(): RouteLocationRaw {
 		switch (this.type) {
 			case Notification.TYPE_FRIENDSHIP_REQUEST:
 			case Notification.TYPE_FRIENDSHIP_ACCEPT:
@@ -326,7 +326,7 @@ export class Notification extends Model {
 		return '';
 	}
 
-	async go(router: VueRouter) {
+	async go(router: Router) {
 		if (this.routeLocation) {
 			router.push(this.routeLocation);
 		} else if (
@@ -380,7 +380,7 @@ export class Notification extends Model {
 				}
 			} catch (e) {
 				console.error(e);
-				Growls.error(Translate.$gettext(`Couldn't go to notification.`));
+				showErrorGrowl(Translate.$gettext(`Couldn't go to notification.`));
 			}
 		}
 	}

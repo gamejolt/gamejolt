@@ -1,17 +1,11 @@
-import { asyncComponentLoader } from '../../utils/utils';
-import { Analytics } from '../analytics/analytics.service';
-import { Modal } from '../modal/modal.service';
+import { defineAsyncComponent } from '@vue/runtime-core';
+import { showModal } from '../modal/modal.service';
 
 export class AuthModal {
 	static async show() {
-		Analytics.trackEvent('auth-required-modal', 'shown');
-
-		return await Modal.show<void>({
+		return await showModal<void>({
 			modalId: 'Auth',
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "AuthModal" */ './auth-modal.vue')
-				),
+			component: defineAsyncComponent(() => import('./auth-modal.vue')),
 			size: 'sm',
 			props: {},
 			noBackdropClose: true,

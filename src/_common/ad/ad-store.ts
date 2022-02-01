@@ -1,30 +1,25 @@
-import { Route } from 'vue-router';
+import { inject, InjectionKey, onUnmounted, provide } from '@vue/runtime-core';
+import { reactive } from 'vue';
+import { RouteLocationNormalized, useRouter } from 'vue-router';
 import { objectEquals } from '../../utils/object';
-import { installVuePlugin } from '../../utils/vue';
 import { Environment } from '../environment/environment.service';
 import { Model } from '../model/model.service';
-import { EventBus } from '../system/event/event-bus.service';
+import { onRouteChangeAfter } from '../route/route-component';
 import { AdSlot } from './ad-slot-info';
 import { AdAdapterBase } from './adapter-base';
 import { AdPlaywireAdapter } from './playwire/playwire-adapter';
 import { AdProperAdapter } from './proper/proper-adapter';
-import AppAdWidgetInner from './widget/inner';
 
-declare module 'vue/types/vue' {
-	interface Vue {
-		$ad: AdStore;
-	}
-}
+export const AdsControllerKey: InjectionKey<AdsController> = Symbol('ads');
 
 // To show ads on the page for dev, just change this to false.
 export const AdsDisabledDev = GJ_BUILD_TYPE === 'development';
 // export const AdsDisabledDev = false;
 
 /**
- * Whether or not we want to have click tracking enabled. It is not very
- * performant, so we should only turn on when needed.
+ * This is the interface that our ad components must register with us.
  */
-const ClickTrackingEnabled = false;
+export type AdInterface = { display: () => void };
 
 export class AdSettingsContainer {
 	isPageDisabled = false;
@@ -44,23 +39,21 @@ export const AdResourceTypeFiresidePost = 4;
 
 const defaultSettings = new AdSettingsContainer();
 
-type AdComponent = AppAdWidgetInner;
-
 /**
  * Inclusive of min and exclusive of max.
  */
-function getRandom(min: number, max: number) {
+function _getRandom(min: number, max: number) {
 	min = Math.ceil(min);
 	max = Math.floor(max);
 	return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function chooseAdapter() {
+function _chooseAdapter() {
 	const adapters = [AdProperAdapter];
-	return adapters[getRandom(0, adapters.length)];
+	return adapters[_getRandom(0, adapters.length)];
 }
 
-function didRouteChange(from: Route, to: Route) {
+function _didRouteChange(from: RouteLocationNormalized, to: RouteLocationNormalized) {
 	// We don't want to consider a route changing if just the hash changed. This
 	// helps with stuff like media bar.
 	return (
@@ -70,56 +63,20 @@ function didRouteChange(from: Route, to: Route) {
 	);
 }
 
-export class AdStore {
-	private videoAdapter = new AdPlaywireAdapter();
-	private adapter = new (chooseAdapter())() as AdAdapterBase;
+class AdsController {
+	videoAdapter = new AdPlaywireAdapter();
+	adapter = new (_chooseAdapter())() as AdAdapterBase;
 
-	private routeResolved = false;
-	private ads: Set<AdComponent> = new Set();
-	private pageSettings: AdSettingsContainer | null = null;
-	private clickTrackerBootstrapped = false;
-	private clickTrackers: Map<Element, Function> = new Map();
-	private focusedElem: Element | null = null;
-
-	static install() {
-		installVuePlugin('$ad', this, {
-			mounted(vm) {
-				if (GJ_IS_CLIENT || GJ_IS_SSR || AdsDisabledDev) {
-					return;
-				}
-
-				// We set up events so that we know when a route begins and when the
-				// routing is fully resolved.
-				vm.$router.beforeEach((to, from, next) => {
-					// Make sure we only update if the route actually changed,
-					// since this gets called even if just a simple hash has
-					// changed.
-					if (didRouteChange(from, to)) {
-						this.adapter.onBeforeRouteChange();
-						this.routeResolved = false;
-					}
-					next();
-				});
-
-				EventBus.on('routeChangeAfter', () => {
-					if (this.routeResolved) {
-						return;
-					}
-
-					this.routeResolved = true;
-					this.adapter.onRouteChanged();
-					this.displayAds(Array.from(this.ads));
-				});
-			},
-		});
-	}
+	routeResolved = false;
+	ads = new Set<AdInterface>();
+	pageSettings: AdSettingsContainer | null = null;
 
 	get settings() {
 		return this.pageSettings || defaultSettings;
 	}
 
 	get shouldShow() {
-		if (GJ_IS_CLIENT || GJ_IS_SSR) {
+		if (GJ_IS_DESKTOP_APP || import.meta.env.SSR) {
 			return false;
 		}
 
@@ -129,124 +86,130 @@ export class AdStore {
 
 		return true;
 	}
+}
 
-	setPageSettings(container: AdSettingsContainer) {
-		this.pageSettings = container;
+export function createAdsController() {
+	const c = reactive(new AdsController()) as AdsController;
+	provide(AdsControllerKey, c);
+
+	if (GJ_IS_DESKTOP_APP || import.meta.env.SSR || AdsDisabledDev) {
+		return c;
 	}
 
-	releasePageSettings() {
-		this.pageSettings = null;
-	}
-
-	chooseAdapterForSlot(slot: AdSlot) {
-		if (slot.size === 'video') {
-			return this.videoAdapter;
+	// We set up events so that we know when a route begins and when the
+	// routing is fully resolved.
+	const beforeDeregister = useRouter().beforeEach((to, from, next) => {
+		// Make sure we only update if the route actually changed,
+		// since this gets called even if just a simple hash has
+		// changed.
+		if (_didRouteChange(from, to)) {
+			c.adapter.onBeforeRouteChange();
+			c.routeResolved = false;
 		}
-		return this.adapter;
-	}
+		next();
+	});
 
-	/**
-	 * Should only be used for testing!
-	 */
-	overrideAdapter(adapter: AdAdapterBase) {
-		this.adapter = adapter;
-	}
-
-	addAd(ad: AdComponent) {
-		this.ads.add(ad);
-
-		// If the route already resolved then this ad was mounted after the
-		// fact. We have to call the initial display.
-		if (this.routeResolved) {
-			this.displayAds([ad]);
-		}
-	}
-
-	removeAd(ad: AdComponent) {
-		this.ads.delete(ad);
-	}
-
-	private async displayAds(ads: AdComponent[]) {
-		for (const ad of ads) {
-			ad.display();
-		}
-	}
-
-	async sendBeacon(event: string, type: string, resource?: string, resourceId?: number) {
-		let queryString = '';
-
-		// Cache busting.
-		queryString += 'cb=' + Date.now();
-
-		if (resource) {
-			if (resource === 'Game') {
-				queryString += '&resource_type=' + AdResourceTypeGame;
-				queryString += '&resource_id=' + resourceId;
-			} else if (resource === 'User') {
-				queryString += '&resource_type=' + AdResourceTypeUser;
-				queryString += '&resource_id=' + resourceId;
-			} else if (resource === 'Fireside_Post') {
-				queryString += '&resource_type=' + AdResourceTypeFiresidePost;
-				queryString += '&resource_id=' + resourceId;
-			}
-		}
-
-		let path = '/adserver';
-		if (event === AdEventClick) {
-			path += '/click';
-		} else {
-			path += `/log/${type}`;
-		}
-
-		if (GJ_BUILD_TYPE === 'development') {
-			console.log('Sending ad beacon.', { event, type, resource, resourceId });
-		}
-
-		// This is enough to send the beacon.
-		// No need to add it to the page.
-		const img = window.document.createElement('img');
-		img.src = `${Environment.apiHost}${path}?${queryString}`;
-	}
-
-	addClickTracker(elem: Element, cb: () => void) {
-		if (!ClickTrackingEnabled) {
+	const routeAfter$ = onRouteChangeAfter.subscribe(() => {
+		if (c.routeResolved) {
 			return;
 		}
 
-		this.clickTrackers.set(elem, cb);
-		if (this.shouldShow) {
-			this.initClickTracking();
+		c.routeResolved = true;
+		c.adapter.onRouteChanged();
+		_displayAds(Array.from(c.ads));
+	});
+
+	onUnmounted(() => {
+		beforeDeregister();
+		routeAfter$.close();
+	});
+
+	return c;
+}
+
+export function useAdsController() {
+	return inject(AdsControllerKey)!;
+}
+
+export function setPageAdsSettings(c: AdsController, container: AdSettingsContainer) {
+	c.pageSettings = container;
+}
+
+export function releasePageAdsSettings(c: AdsController) {
+	c.pageSettings = null;
+}
+
+export function chooseAdAdapterForSlot(c: AdsController, slot: AdSlot) {
+	if (slot.size === 'video') {
+		return c.videoAdapter;
+	}
+	return c.adapter;
+}
+
+/**
+ * Should only be used for testing!
+ */
+export function overrideAdsAdapter(c: AdsController, adapter: AdAdapterBase) {
+	c.adapter = adapter;
+}
+
+export function addAd(c: AdsController, ad: AdInterface) {
+	c.ads.add(ad);
+
+	// If the route already resolved then this ad was mounted after the
+	// fact. We have to call the initial display.
+	if (c.routeResolved) {
+		_displayAds([ad]);
+	}
+}
+
+export function removeAd(c: AdsController, ad: AdInterface) {
+	c.ads.delete(ad);
+}
+
+async function _displayAds(ads: AdInterface[]) {
+	for (const ad of ads) {
+		ad.display();
+	}
+}
+
+export async function sendAdBeacon(
+	event: string,
+	type: string,
+	resource?: string,
+	resourceId?: number
+) {
+	let queryString = '';
+
+	// Cache busting.
+	queryString += 'cb=' + Date.now();
+
+	if (resource) {
+		if (resource === 'Game') {
+			queryString += '&resource_type=' + AdResourceTypeGame;
+			queryString += '&resource_id=' + resourceId;
+		} else if (resource === 'User') {
+			queryString += '&resource_type=' + AdResourceTypeUser;
+			queryString += '&resource_id=' + resourceId;
+		} else if (resource === 'Fireside_Post') {
+			queryString += '&resource_type=' + AdResourceTypeFiresidePost;
+			queryString += '&resource_id=' + resourceId;
 		}
 	}
 
-	removeClickTracker(elem: Element) {
-		if (!ClickTrackingEnabled) {
-			return;
-		}
-
-		this.clickTrackers.delete(elem);
+	let path = '/adserver';
+	if (event === AdEventClick) {
+		path += '/click';
+	} else {
+		path += `/log/${type}`;
 	}
 
-	private initClickTracking() {
-		if (this.clickTrackerBootstrapped) {
-			return;
-		}
-
-		this.clickTrackerBootstrapped = true;
-
-		// Checking the active element in an interval seems to be the only way
-		// of tracking clicks.
-		setInterval(() => {
-			if (document.activeElement === this.focusedElem) {
-				return;
-			}
-
-			this.focusedElem = document.activeElement;
-			this.clickTrackers.forEach((cb, adElem) => {
-				if (this.focusedElem && adElem.contains(this.focusedElem)) {
-					cb();
-				}
-			});
-		}, 1000);
+	if (GJ_BUILD_TYPE === 'development') {
+		console.log('Sending ad beacon.', { event, type, resource, resourceId });
 	}
+
+	// This is enough to send the beacon.
+	// No need to add it to the page.
+	const img = window.document.createElement('img');
+	img.src = `${Environment.apiHost}${path}?${queryString}`;
 }

@@ -1,7 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDashCommunitiesAdd: RouteConfig = {
+export const routeDashCommunitiesAdd: RouteRecordRaw = {
 	name: 'dash.communities.add',
 	path: 'add',
-	component: () => import(/* webpackChunkName: "routeDashCommunitiesAdd" */ './add.vue'),
+	component: () => import('./add.vue'),
 };

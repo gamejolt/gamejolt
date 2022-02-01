@@ -1,11 +1,13 @@
-import Axios from 'axios';
 import { Channel, Socket } from 'phoenix';
+import { markRaw, reactive } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
-import { TabLeader } from '../../../utils/tab-leader';
+import type { TabLeaderInterface } from '../../../utils/tab-leader';
 import { sleep } from '../../../utils/utils';
 import { uuidv4 } from '../../../utils/uuid';
 import { Analytics } from '../../../_common/analytics/analytics.service';
+import { Api } from '../../../_common/api/api.service';
+import { importNoSSR } from '../../../_common/code-splitting';
 import { Community } from '../../../_common/community/community.model';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -15,23 +17,30 @@ import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { FiresideStreamNotification } from '../../../_common/fireside/stream-notification/stream-notification.model';
 import { GameTrophy } from '../../../_common/game/trophy/trophy.model';
-import { Growls } from '../../../_common/growls/growls.service';
+import { showInfoGrowl } from '../../../_common/growls/growls.service';
+import { Model } from '../../../_common/model/model.service';
 import { Notification } from '../../../_common/notification/notification-model';
 import { NotificationText } from '../../../_common/notification/notification-text.service';
 import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
 import { SiteTrophy } from '../../../_common/site/trophy/trophy.model';
-import { EventBus } from '../../../_common/system/event/event-bus.service';
-import { Translate } from '../../../_common/translate/translate.service';
+import { commonStore } from '../../../_common/store/common-store';
+import { EventTopic } from '../../../_common/system/event/event-topic';
+import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
 import { UserGameTrophy } from '../../../_common/user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
 import { User } from '../../../_common/user/user.model';
-import { store } from '../../store/index';
+import { AppStore } from '../../store/index';
 import { router } from '../../views';
-import { getTrophyImg } from '../trophy/thumbnail/thumbnail';
+import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
 import { CommunityChannel } from './community-channel';
+import { FiresideChannel } from './fireside-channel';
 
-export const GRID_EVENT_NEW_STICKER = 'grid-new-sticker-received';
-export const GRID_EVENT_FIRESIDE_START = 'grid-fireside-start';
+const TabLeaderLazy = importNoSSR(
+	async () => (await import('../../../utils/tab-leader')).TabLeader
+);
+
+export const onFiresideStart = new EventTopic<Model>();
+export const onNewStickers = new EventTopic<string[]>();
 
 interface NewNotificationPayload {
 	notification_data: {
@@ -119,16 +128,20 @@ export interface ClearNotificationsEventData extends ClearNotificationsPayload {
 	currentCount: number;
 }
 
-function clearNotifications(type: ClearNotificationsType, data: ClearNotificationsData = {}) {
+function clearNotifications(
+	appStore: AppStore,
+	type: ClearNotificationsType,
+	data: ClearNotificationsData = {}
+) {
 	switch (type) {
 		case 'activity':
-			store.commit('setNotificationCount', {
+			appStore.setNotificationCount({
 				type: 'activity',
 				count: 0,
 			});
 			break;
 		case 'notifications':
-			store.commit('setNotificationCount', {
+			appStore.setNotificationCount({
 				type: 'notifications',
 				count: 0,
 			});
@@ -137,29 +150,32 @@ function clearNotifications(type: ClearNotificationsType, data: ClearNotificatio
 			{
 				const communityChannelId = data.channelId as number;
 				const communityId = data.communityId as number;
-				const communityState = store.state.communityStates.getCommunityState(communityId);
+				const communityState =
+					appStore.communityStates.value.getCommunityState(communityId);
 				communityState.markChannelRead(communityChannelId);
 			}
 			break;
 		case 'community-featured':
 			{
 				const communityId = data.communityId as number;
-				const communityState = store.state.communityStates.getCommunityState(communityId);
+				const communityState =
+					appStore.communityStates.value.getCommunityState(communityId);
 				communityState.hasUnreadFeaturedPosts = false;
 			}
 			break;
 		case 'community-unread':
 			{
 				const communityId = data.communityId as number;
-				const communityState = store.state.communityStates.getCommunityState(communityId);
+				const communityState =
+					appStore.communityStates.value.getCommunityState(communityId);
 				communityState.hasUnreadPosts = false;
 			}
 			break;
 		case 'friend-requests':
-			store.commit('setHasNewFriendRequests', false);
+			appStore.setHasNewFriendRequests(false);
 			break;
 		case 'stickers':
-			store.commit('setHasNewUnlockedStickers', false);
+			appStore.setHasNewUnlockedStickers(false);
 			break;
 	}
 }
@@ -224,7 +240,14 @@ async function pollRequest(
 	return result;
 }
 
+export function createGridClient({ appStore }: { appStore: AppStore }) {
+	// We need to be able to get the raw app store without unwrapping its refs.
+	return reactive(new GridClient(() => appStore)) as GridClient;
+}
+
 export class GridClient {
+	constructor(public readonly _getAppStore: () => AppStore) {}
+
 	// Stores a unique id that identifies this session when it pushes data to Grid.
 	readonly clientId = uuidv4();
 
@@ -236,8 +259,10 @@ export class GridClient {
 	bootstrapReceived = false;
 	bootstrapTimestamp = 0;
 	bootstrapDelay = 1;
+	communityChannels: CommunityChannel[] = [];
+	firesideChannels: FiresideChannel[] = [];
 	notificationChannel: Channel | null = null;
-	tabLeader: TabLeader | null = null;
+	tabLeader: TabLeaderInterface | null = null;
 	/**
 	 * @see `deregisterViewingCommunity` doc-block for explanation.
 	 */
@@ -260,7 +285,7 @@ export class GridClient {
 	 */
 	private cancelToken: CancelToken = null as any;
 
-	constructor() {
+	init() {
 		this.cancelToken = new CancelToken();
 		this.connect();
 	}
@@ -289,7 +314,7 @@ export class GridClient {
 	private async connect() {
 		const cancelToken = this.cancelToken;
 
-		const user = store.state.app.user;
+		const user = commonStore.user.value;
 		if ((!this.isGuest && !user) || (this.isGuest && !!user)) {
 			return;
 		}
@@ -300,7 +325,7 @@ export class GridClient {
 			return;
 		}
 
-		const timedOut = store.state.app.isUserTimedOut;
+		const timedOut = commonStore.isUserTimedOut.value;
 
 		if (!authToken || timedOut) {
 			// Not properly logged in.
@@ -310,9 +335,12 @@ export class GridClient {
 		console.log('[Grid] Connecting...');
 
 		// get hostname from loadbalancer first
-		const hostResult = await pollRequest('Select server', cancelToken, () =>
-			Axios.get(Environment.gridHost, { ignoreLoadingBar: true, timeout: 3_000 })
-		);
+		const hostResult = await pollRequest('Select server', cancelToken, () => {
+			return Api.sendRawRequest(Environment.gridHost, {
+				timeout: 3_000,
+			});
+		});
+
 		if (cancelToken.isCanceled) {
 			console.log('[Grid] Aborted connection (2)');
 			return;
@@ -322,9 +350,15 @@ export class GridClient {
 		console.log('[Grid] Server selected:', host);
 
 		// heartbeat is 30 seconds, backend disconnects after 40 seconds
-		this.socket = new Socket(host, {
-			heartbeatIntervalMs: 30_000,
-		});
+		this.socket = markRaw(
+			new Socket(host, {
+				heartbeatIntervalMs: 30_000,
+				params: {
+					gj_platform: GJ_IS_DESKTOP_APP ? 'client' : 'web',
+					gj_platform_version: GJ_VERSION,
+				},
+			})
+		);
 
 		// TODO: niiiiils, any reason not to do this?
 		this.socket.onError(() => {
@@ -338,7 +372,7 @@ export class GridClient {
 		// this replaces the socket's "reconnectTimer" property with an empty object that matches the Phoenix "Timer" signature
 		// The 'reconnectTimer' usually restarts the connection after a delay, this prevents that from happening
 		const socketAny: any = this.socket;
-		if (socketAny.hasOwnProperty('reconnectTimer')) {
+		if (Object.prototype.hasOwnProperty.call(socketAny, 'reconnectTimer')) {
 			socketAny.reconnectTimer = { scheduleTimeout: () => {}, reset: () => {} };
 		}
 
@@ -352,13 +386,7 @@ export class GridClient {
 						return;
 					}
 
-					// TODO: shouldn't we be throwing an error if the socket is null here?
-					if (this.socket !== null) {
-						this.socket.connect({
-							gj_platform: GJ_IS_CLIENT ? 'client' : 'web',
-							gj_platform_version: GJ_VERSION,
-						});
-					}
+					this.socket?.connect();
 					resolve();
 				})
 		);
@@ -376,9 +404,11 @@ export class GridClient {
 		// User connections expected to handle a bunch of notification stuff.
 		else if (user) {
 			const userId = user.id.toString();
-			const channel = this.socket.channel('notifications:' + userId, {
-				auth_token: authToken,
-			});
+			const channel = markRaw(
+				this.socket.channel('notifications:' + userId, {
+					auth_token: authToken,
+				})
+			);
 			this.notificationChannel = channel;
 
 			await pollRequest(
@@ -390,7 +420,6 @@ export class GridClient {
 							.join()
 							.receive('error', reject)
 							.receive('ok', () => {
-								this.channels.push(channel);
 								this.markConnected();
 								resolve();
 							});
@@ -414,7 +443,8 @@ export class GridClient {
 				}
 			}
 
-			this.tabLeader = new TabLeader('grid_notification_channel_' + user.id);
+			const TabLeaderActual = await TabLeaderLazy;
+			this.tabLeader = new TabLeaderActual('grid_notification_channel_' + user.id);
 			this.tabLeader.init();
 
 			channel.on('new-notification', (payload: NewNotificationPayload) => {
@@ -498,20 +528,20 @@ export class GridClient {
 				this.notificationBacklog.push(payload);
 			} else {
 				const data = payload.notification_data.event_item;
-				const notification = new Notification(data);
+				const notification = reactive(new Notification(data)) as Notification;
 
 				// Only handle if timestamp is newer than the bootstrap timestamp
 				if (notification.added_on > this.bootstrapTimestamp) {
 					switch (notification.type) {
 						case Notification.TYPE_FRIENDSHIP_REQUEST:
 							// For an incoming friend request, set that they have a new friend request.
-							store.commit('setHasNewFriendRequests', true);
+							this._getAppStore().setHasNewFriendRequests(true);
 							this.spawnNotification(notification);
 							break;
 
 						case Notification.TYPE_FIRESIDE_START:
 							// Emit event that different components can pick up to update their views.
-							EventBus.emit(GRID_EVENT_FIRESIDE_START, notification.action_model);
+							onFiresideStart.next(notification.action_model);
 							this.spawnNotification(notification);
 							break;
 
@@ -528,22 +558,24 @@ export class GridClient {
 		if (payload.status === 'ok') {
 			console.log('[Grid] Received bootstrap.');
 
+			const appStore = this._getAppStore();
+
 			channel.onError(reason => {
 				console.log(`[Grid] Connection error encountered (Reason: ${reason}).`);
 				this.restart(0);
 			});
 
-			store.commit('setNotificationCount', {
+			appStore.setNotificationCount({
 				type: 'activity',
 				count: payload.body.activityUnreadCount,
 			});
-			store.commit('setNotificationCount', {
+			appStore.setNotificationCount({
 				type: 'notifications',
 				count: payload.body.notificationUnreadCount,
 			});
 
-			store.commit('setHasNewFriendRequests', payload.body.hasNewFriendRequests);
-			store.commit('setHasNewUnlockedStickers', payload.body.hasNewUnlockedStickers);
+			appStore.setHasNewFriendRequests(payload.body.hasNewFriendRequests);
+			appStore.setHasNewUnlockedStickers(payload.body.hasNewUnlockedStickers);
 			this.bootstrapTimestamp = payload.body.lastNotificationTime;
 
 			this.bootstrapReceived = true;
@@ -560,7 +592,8 @@ export class GridClient {
 			// when navigating into the community itself - this flag is cleared and the actual counts
 			// for the channels are populated.
 			for (const communityId of payload.body.unreadCommunities) {
-				const communityState = store.state.communityStates.getCommunityState(communityId);
+				const communityState =
+					appStore.communityStates.value.getCommunityState(communityId);
 				if (!communityState.dataBootstrapped) {
 					communityState.hasUnreadPosts = true;
 				}
@@ -571,7 +604,7 @@ export class GridClient {
 
 			// If we are viewing a community, call its bootstrap as well:
 			if (this.viewingCommunityId) {
-				const communityState = store.state.communityStates.getCommunityState(
+				const communityState = appStore.communityStates.value.getCommunityState(
 					this.viewingCommunityId
 				);
 				if (!communityState || !communityState.dataBootstrapped) {
@@ -596,7 +629,8 @@ export class GridClient {
 
 	handleCommunityBootstrap({ community_id, body }: CommunityBootstrapPayload) {
 		const communityId = parseInt(community_id, 10);
-		const communityState = store.state.communityStates.getCommunityState(communityId);
+		const communityState =
+			this._getAppStore().communityStates.value.getCommunityState(communityId);
 
 		// This flag was set to true in the main bootstrap and we need to unset it
 		// now that we have the actual unread channels in this community.
@@ -616,19 +650,21 @@ export class GridClient {
 			return;
 		}
 
-		clearNotifications(type, data);
+		clearNotifications(this._getAppStore(), type, data);
 	}
 
 	handleStickerUnlock({ sticker_img_urls }: StickerUnlockPayload) {
-		if (!store.state.hasNewUnlockedStickers) {
-			store.commit('setHasNewUnlockedStickers', true);
+		const appStore = this._getAppStore();
+
+		if (!appStore.hasNewUnlockedStickers.value) {
+			appStore.setHasNewUnlockedStickers(true);
 		}
 
-		EventBus.emit(GRID_EVENT_NEW_STICKER, sticker_img_urls);
+		onNewStickers.next(sticker_img_urls);
 	}
 
 	handlePostUpdated({ post_data, was_scheduled, was_published }: PostUpdatedPayload) {
-		const post = new FiresidePost(post_data);
+		const post = reactive(new FiresidePost(post_data)) as FiresidePost;
 
 		if (was_published) {
 			// Send out a growl to let the user know that their post was updated.
@@ -639,13 +675,13 @@ export class GridClient {
 	spawnNotification(notification: Notification) {
 		const feedType = notification.feedType;
 		if (feedType !== '') {
-			store.commit('incrementNotificationCount', { count: 1, type: feedType });
+			this._getAppStore().incrementNotificationCount({ count: 1, type: feedType });
 		}
 
 		// In Client when the feed notifications setting is disabled, don't show them notifications.
 		// On site we only use it to disable native browser notifications, but still try to show in
 		// the Growl.
-		if (GJ_IS_CLIENT && !SettingFeedNotifications.get()) {
+		if (GJ_IS_DESKTOP_APP && !SettingFeedNotifications.get()) {
 			return;
 		}
 
@@ -672,12 +708,12 @@ export class GridClient {
 		}
 
 		if (message !== undefined) {
-			let title = Translate.$gettext('New Notification');
+			let title = $gettext('New Notification');
 			if (notification.type === Notification.TYPE_POST_ADD) {
 				if (notification.from_model instanceof User) {
 					// We send a notification to the author of the post.
 					// Do not show a notification in that case, the purpose is to increment the activity feed counter.
-					if (notification.from_model.id === store.state.app.user?.id) {
+					if (notification.from_model.id === commonStore.user.value?.id) {
 						return;
 					}
 
@@ -692,18 +728,18 @@ export class GridClient {
 						username = notification.action_model.game.developer.username;
 					}
 
-					title = Translate.$gettextInterpolate(`New Post by @%{ username }`, {
+					title = $gettextInterpolate(`New Post by @%{ username }`, {
 						username,
 					});
 				} else {
-					title = Translate.$gettext('New Post');
+					title = $gettext('New Post');
 				}
 			} else if (notification.type === Notification.TYPE_GAME_TROPHY_ACHIEVED) {
 				if (
 					notification.action_model instanceof UserGameTrophy &&
 					notification.action_model.trophy instanceof GameTrophy
 				) {
-					title = Translate.$gettext(`Trophy Unlocked!`);
+					title = $gettext(`Trophy Unlocked!`);
 					message = notification.action_model.trophy.title;
 					icon = getTrophyImg(notification.action_model.trophy);
 				}
@@ -712,7 +748,7 @@ export class GridClient {
 					notification.action_model instanceof UserSiteTrophy &&
 					notification.action_model.trophy instanceof SiteTrophy
 				) {
-					title = Translate.$gettext(`Trophy Unlocked!`);
+					title = $gettext(`Trophy Unlocked!`);
 					message = notification.action_model.trophy.title;
 					icon = getTrophyImg(notification.action_model.trophy);
 				}
@@ -726,16 +762,16 @@ export class GridClient {
 				}
 			} else if (notification.type === Notification.TYPE_FIRESIDE_STREAM_NOTIFICATION) {
 				if (notification.action_model instanceof FiresideStreamNotification) {
-					title = Translate.$gettext('Fireside Stream');
+					title = $gettext('Fireside Stream');
 					icon = notification.action_model.users[0].img_avatar;
 				}
 			}
 
-			Growls.info({
+			showInfoGrowl({
 				title,
 				message,
 				icon,
-				onclick: () => {
+				onClick: () => {
 					Analytics.trackEvent('grid', 'notification-click', notification.type);
 					notification.go(router);
 				},
@@ -754,7 +790,7 @@ export class GridClient {
 		console.log('[Grid] Subscribing to community channels...');
 
 		const promises = [];
-		for (const community of store.state.communities) {
+		for (const community of this._getAppStore().communities.value) {
 			promises.push(this._joinCommunity(cancelToken, community));
 		}
 		return Promise.all(promises);
@@ -773,22 +809,24 @@ export class GridClient {
 			return;
 		}
 
-		// TODO: should we make this available for guests too?
-		const user = store.state.app.user;
+		const user = commonStore.user.value;
 		if (this.socket && user && authToken) {
 			const userId = user.id.toString();
 
-			const channel = new CommunityChannel(community, this.socket, {
-				auth_token: authToken,
-				user_id: userId,
-			});
+			const channel = reactive(
+				new CommunityChannel(community, this.socket, {
+					auth_token: authToken,
+					user_id: userId,
+				})
+			) as CommunityChannel;
+			channel.init();
 
 			await pollRequest(
 				`Join community channel '${community.name}' (${community.id})`,
 				cancelToken,
 				() =>
 					new Promise<void>((resolve, reject) => {
-						channel
+						channel.socketChannel
 							.join()
 							.receive('error', reject)
 							.receive('ok', () => {
@@ -797,7 +835,7 @@ export class GridClient {
 									return;
 								}
 
-								this.channels.push(channel);
+								this.communityChannels.push(channel);
 								resolve();
 							});
 					})
@@ -810,37 +848,46 @@ export class GridClient {
 				return;
 			}
 
-			channel.on('feature', (payload: CommunityFeaturePayload) => {
+			channel.socketChannel.on('feature', (payload: CommunityFeaturePayload) => {
 				if (cancelToken.isCanceled) {
 					return;
 				}
 
 				this.handleCommunityFeature(community.id, payload);
 			});
-			channel.on('new-post', (payload: CommunityNewPostPayload) => {
+			channel.socketChannel.on('new-post', (payload: CommunityNewPostPayload) => {
 				if (cancelToken.isCanceled) {
 					return;
 				}
 
 				this.handleCommunityNewPost(community.id, payload);
 			});
-			channel.on('feature-fireside', (payload: CommunityFeatureFiresidePayload) => {
-				if (cancelToken.isCanceled) {
-					return;
-				}
+			channel.socketChannel.on(
+				'feature-fireside',
+				(payload: CommunityFeatureFiresidePayload) => {
+					if (cancelToken.isCanceled) {
+						return;
+					}
 
-				this.handleCommunityFeatureFireside(community.id, payload);
-			});
+					this.handleCommunityFeatureFireside(community.id, payload);
+				}
+			);
 		}
 	}
 
 	async leaveCommunity(community: Community) {
-		const channel = this.channels.find(
-			c => c instanceof CommunityChannel && c.community.id === community.id
-		);
+		const channel = this.communityChannels.find(i => i.community.id === community.id);
 		if (channel) {
-			this.leaveChannel(channel);
-			arrayRemove(this.channels, c => c === channel);
+			this._leaveSocketChannel(channel.socketChannel);
+			arrayRemove(this.communityChannels, i => i === channel);
+		}
+	}
+
+	async leaveFireside(fireside: Fireside) {
+		const channel = this.firesideChannels.find(i => i.fireside.id === fireside.id);
+		if (channel) {
+			this._leaveSocketChannel(channel.socketChannel);
+			arrayRemove(this.firesideChannels, i => i === channel);
 		}
 	}
 
@@ -853,10 +900,11 @@ export class GridClient {
 			}
 		}
 
-		const communityState = store.state.communityStates.getCommunityState(communityId);
+		const appStore = this._getAppStore();
+		const communityState = appStore.communityStates.value.getCommunityState(communityId);
 		communityState.hasUnreadFeaturedPosts = true;
 
-		store.commit('incrementNotificationCount', { count: 1, type: 'activity' });
+		appStore.incrementNotificationCount({ count: 1, type: 'activity' });
 	}
 
 	handleCommunityFeatureFireside(_communityId: number, payload: CommunityFeatureFiresidePayload) {
@@ -866,14 +914,14 @@ export class GridClient {
 			return;
 		}
 
-		if (store.state.app.user && fireside.user.id == store.state.app.user.id) {
+		if (commonStore.user.value && fireside.user.id === commonStore.user.value.id) {
 			console.log('Suppress featured fireside notification for fireside owner.');
 			return;
 		}
 
-		Growls.info({
-			title: Translate.$gettext(`New Featured Fireside!`),
-			message: Translate.$gettextInterpolate(
+		showInfoGrowl({
+			title: $gettext(`New Featured Fireside!`),
+			message: $gettextInterpolate(
 				`@%{ username }'s fireside %{ firesideTitle } was featured in %{ communityName }!`,
 				{
 					username: fireside.user.username,
@@ -882,7 +930,7 @@ export class GridClient {
 				}
 			),
 			icon: fireside.user.img_avatar,
-			onclick: () => {
+			onClick: () => {
 				Analytics.trackEvent(
 					'grid',
 					'notification-click',
@@ -896,15 +944,14 @@ export class GridClient {
 
 	handleCommunityNewPost(communityId: number, payload: CommunityNewPostPayload) {
 		const channelId = parseInt(payload.channel_id, 10);
-		const communityState = store.state.communityStates.getCommunityState(communityId);
+		const communityState =
+			this._getAppStore().communityStates.value.getCommunityState(communityId);
 		communityState.markChannelUnread(channelId);
 	}
 
-	leaveChannel(channel: Channel) {
+	_leaveSocketChannel(channel: Channel) {
 		channel.leave();
-		if (this.socket !== null) {
-			this.socket.remove(channel);
-		}
+		this.socket?.remove(channel);
 	}
 
 	async disconnect() {
@@ -925,11 +972,18 @@ export class GridClient {
 		this.bootstrapReceived = false;
 		this.notificationBacklog = [];
 		this.bootstrapTimestamp = 0;
-		this.channels.forEach(channel => {
-			this.leaveChannel(channel);
-		});
-		this.channels = [];
-		this.notificationChannel = null;
+
+		this.communityChannels.forEach(i => this._leaveSocketChannel(i.socketChannel));
+		this.communityChannels = [];
+
+		this.firesideChannels.forEach(i => this._leaveSocketChannel(i.socketChannel));
+		this.firesideChannels = [];
+
+		if (this.notificationChannel) {
+			this._leaveSocketChannel(this.notificationChannel);
+			this.notificationChannel = null;
+		}
+
 		if (this.socket !== null) {
 			this.socket.disconnect();
 			this.socket = null;
@@ -959,7 +1013,7 @@ export class GridClient {
 
 		if (doClearNotifications) {
 			// Clear notifications on this client.
-			clearNotifications(type, data);
+			clearNotifications(this._getAppStore(), type, data);
 		}
 
 		if (this.notificationChannel) {

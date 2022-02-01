@@ -1,3 +1,13 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import './dogtag.styl';
+
+@Options({})
+export default class AppUserDogtag extends Vue {
+	@Prop(String) type!: string;
+}
+</script>
+
 <template>
 	<span
 		class="user-dogtag tag"
@@ -11,5 +21,3 @@
 		{{ type }}
 	</span>
 </template>
-
-<script lang="ts" src="./dogtag"></script>

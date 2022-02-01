@@ -1,34 +1,36 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import AppLinkExternal from '../../../link/external/external.vue';
+import { h } from 'vue';
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { Environment } from '../../../environment/environment.service';
+import AppLinkExternal from '../../../link/AppLinkExternal.vue';
 import { ContentObject } from '../../content-object';
-import { ContentOwner } from '../../content-owner';
+import { ContentOwnerController, ContentOwnerControllerKey } from '../../content-owner';
 import AppContentViewerMention from './mention/mention.vue';
 import AppContentViewerTag from './tag/tag.vue';
 
-@Component({})
+@Options({})
 export class AppContentViewerText extends Vue {
-	@Prop(ContentObject)
-	data!: ContentObject;
-	@Prop(Object)
-	owner!: ContentOwner;
+	@Prop({ type: ContentObject })
+	contentData!: ContentObject;
+
+	@Inject({ from: ContentOwnerControllerKey })
+	owner!: ContentOwnerController;
 
 	hasMark(mark: string) {
-		return this.data.marks && this.data.marks.some(m => m.type === mark);
+		return this.contentData.marks && this.contentData.marks.some(m => m.type === mark);
 	}
 
 	getMarkAttrs(mark: string) {
 		if (this.hasMark(mark)) {
-			return this.data.marks.find(m => m.type === mark)!.attrs;
+			return this.contentData.marks.find(m => m.type === mark)!.attrs;
 		}
 		return [];
 	}
 
 	get text() {
-		const text = this.data.text;
+		const text = this.contentData.text;
 
 		if (text && text?.length > 64 && this.isLink) {
-			const rules = this.owner.getContentRules();
+			const rules = this.owner.contentRules;
 			if (rules.truncateLinks) {
 				return text.substr(0, 64) + '…';
 			}
@@ -65,14 +67,15 @@ export class AppContentViewerText extends Vue {
 		return this.hasMark('tag');
 	}
 
-	render(h: CreateElement) {
-		let vnode = h('span', this.text);
+	render() {
+		let vnode = h('span', {}, this.text ?? undefined);
+
 		if (this.isLink) {
 			const attrs = this.getMarkAttrs('link');
 			const children = [vnode];
 
 			// Make sure the href is prefaced by a protocol.
-			let href = attrs.href;
+			let href = attrs.href as string;
 			if (!/^[a-z][a-z0-9+\-.]*:\/\//i.test(href)) {
 				href = '//' + href;
 			}
@@ -86,15 +89,31 @@ export class AppContentViewerText extends Vue {
 				elementAttrs.title = attrs.href;
 			}
 
-			vnode = h(AppLinkExternal, { attrs: elementAttrs }, children);
+			// If this is a local link to gamejolt.com, we want to open it in
+			// same tab, otherwise we open in new window.
+			const ourHost =
+				href.startsWith(Environment.baseUrl) ||
+				href.startsWith(Environment.baseUrlInsecure);
+
+			if (ourHost) {
+				vnode = h('a', elementAttrs, {
+					default: () => children,
+				});
+			} else {
+				vnode = h(AppLinkExternal, elementAttrs, {
+					default: () => children,
+				});
+			}
 		} else if (this.isMention) {
 			const attrs = this.getMarkAttrs('mention');
 			const children = [vnode];
 
 			vnode = h(
 				AppContentViewerMention,
-				{ props: { username: attrs.username, owner: this.owner } },
-				children
+				{ username: attrs.username },
+				{
+					default: () => children,
+				}
 			);
 		} else if (this.isTag) {
 			const attrs = this.getMarkAttrs('tag');
@@ -102,22 +121,24 @@ export class AppContentViewerText extends Vue {
 
 			vnode = h(
 				AppContentViewerTag,
-				{ props: { tag: attrs.tag, owner: this.owner } },
-				children
+				{ tag: attrs.tag },
+				{
+					default: () => children,
+				}
 			);
 		}
 
 		if (this.isBold) {
-			vnode = h('strong', [vnode]);
+			vnode = h('strong', {}, [vnode]);
 		}
 		if (this.isItalics) {
-			vnode = h('em', [vnode]);
+			vnode = h('em', {}, [vnode]);
 		}
 		if (this.isStrikethrough) {
-			vnode = h('s', [vnode]);
+			vnode = h('s', {}, [vnode]);
 		}
 		if (this.isCode) {
-			vnode = h('code', [vnode]);
+			vnode = h('code', {}, [vnode]);
 		}
 		return vnode;
 	}

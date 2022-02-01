@@ -1,4 +1,4 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 import { routeDashGamesManageApi } from './api/api.route';
 import { routeDashGamesManageCollaborators } from './collaborators/collaborators.route';
 import { routeDashGamesManageDevlog } from './devlog/devlog.route';
@@ -7,9 +7,9 @@ import { routeDashGamesManageKeyGroupsEdit } from './key-groups/edit/edit.route'
 import { routeDashGamesManageKeyGroupsList } from './key-groups/list/list.route';
 import { routeDashGamesManageSite } from './site/site.route';
 
-export const routeDashGamesManage: RouteConfig = {
+export const routeDashGamesManage: RouteRecordRaw = {
 	path: '/dashboard/games/:id(\\d+)',
-	component: () => import(/* webpackChunkName: "routeDashGamesManage" */ './manage.vue'),
+	component: () => import('./manage.vue'),
 	children: [
 		routeDashGamesManageGame,
 		routeDashGamesManageApi,

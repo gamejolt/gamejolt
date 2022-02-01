@@ -1,3 +1,26 @@
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
+import { formatNumber } from '../../../_common/filters/number';
+import AppGameThumbnailImg from '../../../_common/game/thumbnail-img/thumbnail-img.vue';
+import { useAuthStore } from '../../store/index';
+
+@Options({
+	components: {
+		AppGameThumbnailImg,
+	},
+})
+export default class AppGameCoverCredits extends Vue {
+	store = setup(() => useAuthStore());
+
+	get coverGame() {
+		return this.store.coverGame;
+	}
+
+	readonly formatNumber = formatNumber;
+}
+</script>
+
 <template>
 	<router-link
 		v-if="coverGame"
@@ -13,30 +36,27 @@
 					{{ coverGame.title }}
 				</div>
 				<div class="-dev text-muted">
-					<translate>by</translate>
+					<AppTranslate>by</AppTranslate>
 					<strong>{{ coverGame.developer.display_name }}</strong>
 				</div>
 				<div class="-followers text-muted">
-					<translate
+					<AppTranslate
 						:translate-n="coverGame.follower_count || 0"
-						:translate-params="{ count: number(coverGame.follower_count || 0) }"
+						:translate-params="{ count: formatNumber(coverGame.follower_count || 0) }"
 						translate-plural="%{ count } followers"
 					>
 						%{ count } follower
-					</translate>
+					</AppTranslate>
 				</div>
 			</div>
 			<div class="-img">
-				<app-game-thumbnail-img :game="coverGame" />
+				<AppGameThumbnailImg :game="coverGame" />
 			</div>
 		</div>
 	</router-link>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 $-image-width = 120px
 $-spacing = 8px
 $-padding = 8px
@@ -84,5 +104,3 @@ a:hover
 		text-overflow()
 		max-width: $-width - ($-image-width + $-spacing)
 </style>
-
-<script lang="ts" src="./game-cover-credits"></script>

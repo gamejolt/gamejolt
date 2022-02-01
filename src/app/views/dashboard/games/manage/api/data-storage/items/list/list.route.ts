@@ -1,8 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDashGamesManageApiDataStorageItemsList: RouteConfig = {
+export const routeDashGamesManageApiDataStorageItemsList: RouteRecordRaw = {
 	name: 'dash.games.manage.api.data-storage.items.list',
 	path: 'data-storage/items',
-	component: () =>
-		import(/* webpackChunkName: "routeDashGamesManageApiDataStorageItemsList" */ './list.vue'),
+	component: () => import('./list.vue'),
 };

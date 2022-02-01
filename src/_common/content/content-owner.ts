@@ -1,17 +1,46 @@
+import { reactive } from '@vue/reactivity';
+import { computed, inject, InjectionKey, ref } from 'vue';
+import { MaybeRef } from '../../utils/vue';
 import { ContentContext, ContextCapabilities } from './content-context';
-import { ContentDocument } from './content-document';
 import { ContentRules } from './content-editor/content-rules';
 import { ContentHydrator } from './content-hydrator';
 
-export interface ContentOwner {
-	getHydrator(): ContentHydrator;
-	getContextCapabilities(): ContextCapabilities;
-	getContext(): ContentContext;
+export const ContentOwnerControllerKey: InjectionKey<ContentOwnerController> = Symbol(
+	'content-owner-controller'
+);
 
-	getContent(): ContentDocument | null;
-	setContent(content: ContentDocument): void;
+export type ContentOwnerController = ReturnType<typeof createContentOwnerController>;
 
-	getModelId(): Promise<number>;
+export function useContentOwnerController() {
+	return inject(ContentOwnerControllerKey, null);
+}
 
-	getContentRules(): ContentRules;
+interface ContentOwnerControllerOptions {
+	context: MaybeRef<ContentContext>;
+	capabilities: MaybeRef<ContextCapabilities>;
+	contentRules?: MaybeRef<ContentRules | undefined>;
+	disableLightbox?: MaybeRef<boolean | undefined>;
+	getModelId?: () => Promise<number>;
+}
+
+export function createContentOwnerController(options: ContentOwnerControllerOptions) {
+	const { getModelId } = options;
+
+	const hydrator = ref<ContentHydrator>(new ContentHydrator());
+
+	const disableLightbox = ref(options.disableLightbox);
+	const context = ref(options.context);
+	const capabilities = ref(options.capabilities);
+
+	const _contentRules = ref(options.contentRules);
+	const contentRules = computed(() => _contentRules.value ?? new ContentRules());
+
+	return reactive({
+		context,
+		capabilities,
+		hydrator,
+		contentRules,
+		disableLightbox,
+		getModelId,
+	});
 }

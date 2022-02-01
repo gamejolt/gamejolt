@@ -1,171 +1,294 @@
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { mixins, Options } from 'vue-property-decorator';
+import AppExpand from '../../../../_common/expand/AppExpand.vue';
+import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import { BaseForm, FormOnLoad } from '../../../../_common/form-vue/form.service';
+import { validateUrlPath } from '../../../../_common/form-vue/validators';
+import { Game } from '../../../../_common/game/game.model';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppGameDevStageSelector from './dev-stage-selector/dev-stage-selector.vue';
+import AppDashGameWizardControls from './wizard-controls/wizard-controls.vue';
+
+class Wrapper extends BaseForm<Game> {}
+
+@Options({
+	components: {
+		AppFormControlToggle,
+		AppExpand,
+		AppDashGameWizardControls,
+		AppGameDevStageSelector,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
+
+	// We need to reset all the "is published", "has builds" stuff.
+	modelClass = Game;
+
+	account: any = null;
+	categories: any = null;
+	engines: any = null;
+
+	readonly validateUrlPath = validateUrlPath;
+
+	get hasAllPerms() {
+		// If we're currently adding the game - we automatically have permission for it.
+		if (this.method === 'add') {
+			return true;
+		}
+
+		return this.model?.hasPerms('all');
+	}
+
+	get hasBuildsPerms() {
+		// If we're currently adding the game - we automatically have permission for it.
+		if (this.method === 'add') {
+			return true;
+		}
+
+		return this.model?.hasPerms('builds');
+	}
+
+	get hasSalesPerms() {
+		// If we're currently adding the game - we automatically have permission for it.
+		if (this.method === 'add') {
+			return true;
+		}
+
+		return this.model?.hasPerms('sales');
+	}
+
+	get loadUrl() {
+		let url = '/web/dash/developer/games/save';
+		if (this.method === 'edit') {
+			url += '/' + this.model!.id;
+		}
+		return url;
+	}
+
+	get stage() {
+		if (this.formModel.development_status === undefined) {
+			return 'dev-status';
+		}
+		return 'details';
+	}
+
+	onInit() {
+		this.form.resetOnSubmit = true;
+
+		if (this.method === 'add') {
+			this.setField('referrals_enabled', true);
+
+			// No need to reset on submit during game add. It causes a flicker.
+			this.form.resetOnSubmit = false;
+		}
+	}
+
+	onLoad(payload: any) {
+		this.account = payload.account;
+		this.categories = payload.categories;
+		this.engines = payload.engines;
+	}
+
+	selectStage(stage: number) {
+		this.setField('development_status', stage);
+	}
+}
+</script>
+
 <template>
-	<app-form name="gameForm">
+	<AppForm :controller="form">
 		<div v-if="stage === 'dev-status'">
 			<p class="page-help">
-				<translate>
-					Choose the stage of development that your game is currently in. You are able to change
-					your development stage at any point.
-				</translate>
+				<AppTranslate>
+					Choose the stage of development that your game is currently in. You are able to
+					change your development stage at any point.
+				</AppTranslate>
 			</p>
 
-			<app-game-dev-stage-selector @select="selectStage" />
+			<AppGameDevStageSelector @select="selectStage" />
 		</div>
 		<div v-else-if="stage === 'details'">
 			<fieldset>
-				<app-form-group name="title" :label="$gettext(`dash.games.form.title_label`)">
-					<app-form-control
+				<AppFormGroup name="title" :label="$gettext(`Title`)">
+					<AppFormControl
 						type="text"
-						:rules="{
-							max: 250,
-						}"
+						:validators="[validateMaxLength(250)]"
 						:disabled="!hasAllPerms"
 					/>
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-				<app-form-group name="path" :label="$gettext(`URL Path`)">
-					<app-form-control
+				<AppFormGroup name="path" :label="$gettext(`URL Path`)">
+					<AppFormControl
 						type="text"
-						data-vv-delay="500"
-						:rules="{
-							pattern: 'urlPath',
-							max: 50,
-							availability: {
+						:validators="[
+							validateUrlPath(),
+							validateMaxLength(50),
+							validateAvailability({
 								url: '/web/dash/developer/games/check-field-availability/path',
-								initVal: method === 'edit' ? model.path : undefined,
-							},
-						}"
+								initVal: model?.path,
+							}),
+						]"
+						:validate-delay="500"
 						:disabled="!hasAllPerms"
 					/>
 
-					<app-form-control-errors />
+					<AppFormControlErrors />
 
 					<div class="help-block">
 						<div>
-							<translate>Customize your game page URLs. Make them really pretty.</translate>
+							<AppTranslate>
+								Customize your game page URLs. Make them really pretty.
+							</AppTranslate>
 						</div>
 						<div>
-							<translate>Game Page URL</translate>
-							<code v-html="gameUrl"></code>
-						</div>
-						<div>
-							<translate>Sites URL</translate>
-							<code v-html="siteUrl"></code>
+							<AppTranslate>Game Page URL</AppTranslate>
+							<code>
+								<span>gamejolt.com/</span>
+								<b>{{ formModel.path?.toLowerCase() || '_' }}</b>
+								<span>/{{ model?.id || 'id' }}</span>
+							</code>
 						</div>
 					</div>
-				</app-form-group>
+				</AppFormGroup>
 
-				<app-form-group
+				<AppFormGroup
 					name="web_site"
-					:label="$gettext(`dash.games.form.website_label`)"
+					:label="$gettext(`Website`)"
 					:optional="true"
 				>
-					<app-form-control
+					<AppFormControl
 						type="url"
-						:rules="{
-							max: 250,
-						}"
+						:validators="[validateMaxLength(250)]"
 						:disabled="!hasAllPerms"
 					/>
-					<app-form-control-errors />
-				</app-form-group>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-				<app-form-group
+				<AppFormGroup
 					v-if="engines"
 					name="creation_tool"
-					:label="$gettext(`dash.games.form.engine_label`)"
+					:label="$gettext(`Engine/Language/Creation Tool`)"
 				>
-					<app-form-control-select :disabled="!hasBuildsPerms">
+					<AppFormControlSelect :disabled="!hasBuildsPerms">
 						<option value="">
-							<translate>dash.games.form.engine_placeholder</translate>
+							<AppTranslate>Select an engine/language/tool...</AppTranslate>
 						</option>
 						<option v-for="(label, key) of engines" :key="key" :value="key">
 							{{ label }}
 						</option>
-					</app-form-control-select>
-					<app-form-control-errors />
-				</app-form-group>
+					</AppFormControlSelect>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-				<app-expand :when="formModel.creation_tool === 'other'">
-					<app-form-group
+				<AppExpand :when="formModel.creation_tool === 'other'">
+					<AppFormGroup
 						name="creation_tool_other"
-						:label="$gettext(`dash.games.form.engine_other_label`)"
+						:label="$gettext(`Other Engine/Language/Tool`)"
 						:optional="true"
 					>
-						<app-form-control
+						<AppFormControl
 							type="text"
-							:rules="{
-								max: 200,
-							}"
+							:validators="[validateMaxLength(200)]"
 							:disabled="!hasBuildsPerms"
 						/>
 
-						<app-form-control-errors />
+						<AppFormControlErrors />
 
 						<p class="help-block">
-							<translate>dash.games.form.engine_other_help</translate>
+							<AppTranslate>Which engine, language, or tool?</AppTranslate>
+							{{ ' ' }}
 							<span
+								v-app-tooltip.touchable="
+									$gettext(`This helps us create better filtering options around which tools people use.`)
+								"
 								class="text-help"
-								v-app-tooltip.touchable="$gettext(`dash.games.form.engine_other_why_tooltip`)"
 							>
-								<translate>dash.games.form.engine_other_why</translate>
+								<AppTranslate
+									translate-comment="When hovering over this, we show a tooltip with additional information"
+								>
+									Why?
+								</AppTranslate>
 							</span>
 						</p>
-					</app-form-group>
-				</app-expand>
+					</AppFormGroup>
+				</AppExpand>
 
 				<template v-if="hasSalesPerms">
-					<app-form-group name="referrals_enabled" :label="$gettext(`Add to partner system?`)">
-						<app-form-control-toggle class="pull-right" />
+					<AppFormGroup
+						name="referrals_enabled"
+						:label="$gettext(`Add to partner system?`)"
+					>
+						<AppFormControlToggle class="pull-right" />
 
 						<div class="help-block">
 							<div>
-								<translate>
-									This will allow Game Jolt Partners to be able to download the game for free, and
-									give them a 10% cut of sales they refer to your game.
-								</translate>
-								<router-link :to="{ name: 'landing.partners' }" class="link-help" target="_blank">
-									<translate>What is a Game Jolt Partner?</translate>
+								<AppTranslate>
+									This will allow Game Jolt Partners to be able to download the
+									game for free, and give them a 10% cut of sales they refer to
+									your game.
+								</AppTranslate>
+								{{ ' ' }}
+								<router-link
+									:to="{ name: 'landing.partners' }"
+									class="link-help"
+									target="_blank"
+								>
+									<AppTranslate>What is a Game Jolt Partner?</AppTranslate>
 								</router-link>
 							</div>
 							<br />
 
 							<div>
-								<em v-translate>
-									<b>Note</b>
-									: This will only be enabled for "paid" or "name your price" games.
+								<em>
+									<AppTranslate>
+										Note: This will only be enabled for "paid" or "name your
+										price" games.
+									</AppTranslate>
 								</em>
 							</div>
 
 							<!--
-							We only show this message to devs that have signed v1 of the distribution agreement.
-							That's because they've approved themselves to be part of the marketplace, but
-							haven't yet signed the terms for partners.
-						-->
+								We only show this message to devs that have signed v1 of the distribution agreement.
+								That's because they've approved themselves to be part of the marketplace, but
+								haven't yet signed the terms for partners.
+							-->
 							<div v-if="account && account.tos_signed_developer === 1">
 								<br />
 								<div class="alert alert-notice">
-									<translate>
-										You must sign the new Distribution Agreement which covers the terms for the
-										Partner Program before your games will become available in the Partner Program.
-									</translate>
+									<AppTranslate>
+										You must sign the new Distribution Agreement which covers
+										the terms for the Partner Program before your games will
+										become available in the Partner Program.
+									</AppTranslate>
+									{{ ' ' }}
 									<router-link :to="{ name: 'dash.account.financials' }">
-										<translate>Click here to view the new Distribution Agreement</translate>
+										<AppTranslate>
+											Click here to view the new Distribution Agreement
+										</AppTranslate>
 									</router-link>
 								</div>
 							</div>
 						</div>
-					</app-form-group>
+					</AppFormGroup>
 				</template>
 			</fieldset>
 
-			<app-dash-game-wizard-controls>
-				<app-form-button v-if="method === 'edit'">
-					<translate>Save Details</translate>
-				</app-form-button>
-			</app-dash-game-wizard-controls>
+			<AppDashGameWizardControls>
+				<AppFormButton v-if="method === 'edit'">
+					<AppTranslate>Save Details</AppTranslate>
+				</AppFormButton>
+			</AppDashGameWizardControls>
 		</div>
-	</app-form>
+	</AppForm>
 </template>
-
-<script lang="ts" src="./game"></script>

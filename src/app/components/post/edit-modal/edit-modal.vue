@@ -1,17 +1,73 @@
-<script lang="ts" src="./edit-modal"></script>
+<script lang="ts">
+import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
+import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
+import { Community } from '../../../../_common/community/community.model';
+import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
+import { BaseModal } from '../../../../_common/modal/base';
+import FormPost from '../../forms/post/post.vue';
+import { VideoStatus } from '../../forms/post/_video/video.vue';
+import AppPostAddPlaceholder from '../add-placeholder/add-placeholder.vue';
+
+@Options({
+	components: {
+		FormPost,
+		AppPostAddPlaceholder,
+		AppLoadingFade,
+	},
+})
+export default class AppPostEditModal extends mixins(BaseModal) {
+	@Prop({ type: [Object, async () => Object] })
+	postProvider!: FiresidePost | Promise<FiresidePost>;
+
+	@Prop(Object)
+	community?: Community;
+
+	@Prop(Object)
+	channel?: CommunityChannel;
+
+	post: FiresidePost | null = null;
+	videoUploadStatus: VideoStatus = VideoStatus.IDLE;
+
+	get closeButtonDisabled() {
+		return this.videoUploadStatus === VideoStatus.UPLOADING;
+	}
+
+	@Watch('postProvider', { immediate: true })
+	async postProviderSet() {
+		if (this.postProvider instanceof FiresidePost) {
+			this.post = this.postProvider;
+		} else {
+			this.post = await this.postProvider;
+		}
+	}
+
+	onRouteChange() {
+		this.modal.dismiss();
+	}
+
+	onSubmitted(post: FiresidePost) {
+		this.modal.resolve(post);
+	}
+
+	onVideoUploadStatusChanged(videoStatus: VideoStatus) {
+		this.videoUploadStatus = videoStatus;
+	}
+}
+</script>
 
 <template>
-	<app-modal ignore-router>
+	<AppModal ignore-router>
 		<div class="modal-controls">
-			<app-button :disabled="closeButtonDisabled" @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton :disabled="closeButtonDisabled" @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-body">
-			<app-loading-fade :is-loading="!post">
-				<app-post-add-placeholder v-if="!post" />
-				<form-post
+			<AppLoadingFade :is-loading="!post">
+				<AppPostAddPlaceholder v-if="!post" />
+				<FormPost
 					v-else
 					:model="post"
 					:default-community="community"
@@ -20,7 +76,7 @@
 					@submit="onSubmitted"
 					@video-upload-status-change="onVideoUploadStatusChanged"
 				/>
-			</app-loading-fade>
+			</AppLoadingFade>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>

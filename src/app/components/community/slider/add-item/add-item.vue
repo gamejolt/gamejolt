@@ -1,12 +1,27 @@
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+import AppCommunityAddWidget from '../../../../../_common/community/add-widget/add-widget.vue';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+
+@Options({
+	components: {
+		AppCommunityAddWidget,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppCommunitySliderAddItem extends Vue {}
+</script>
+
 <template>
 	<div class="-item">
-		<app-community-add-widget />
+		<AppCommunityAddWidget />
 	</div>
 </template>
 
 <style lang="stylus" scoped>
 @import '../common'
-@import '~common/jolticons/jolticons'
 
 .-item
 	position: relative
@@ -18,13 +33,11 @@
 		// Needed to counteract the height of the label the add button does not have.
 		vertical-align: top
 
-	>>> .jolticon
-		@extend .jolticon-2x
+	::v-deep(.jolticon)
+		font-size: $jolticon-size * 2
 
 	&:not(.-disabled)
 		// Undoes pressy()
 		transition: none !important
 		transform: none !important
 </style>
-
-<script lang="ts" src="./add-item"></script>

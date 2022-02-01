@@ -1,7 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeAuthJoin: RouteConfig = {
+export const routeAuthJoin: RouteRecordRaw = {
 	name: 'auth.join',
 	path: '/join',
-	component: () => import(/* webpackChunkName: "routeAuthJoin" */ './join.vue'),
+	component: () => import('./join.vue'),
 };

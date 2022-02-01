@@ -1,7 +1,146 @@
-<script lang="ts" src="./badge"></script>
+<script lang="ts">
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import AppExpand from '../../../../_common/expand/AppExpand.vue';
+import { formatNumber } from '../../../../_common/filters/number';
+import { Fireside } from '../../../../_common/fireside/fireside.model';
+import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { AppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
+import AppTheme from '../../../../_common/theme/AppTheme.vue';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
+import AppFiresideStreamPreview from '../stream/preview/preview.vue';
+
+@Options({
+	components: {
+		AppTheme,
+		AppMediaItemBackdrop,
+		AppUserAvatarImg,
+		AppFiresideStreamPreview,
+		AppExpand,
+	},
+	directives: {
+		AppTooltip,
+		AppObserveDimensions,
+	},
+})
+export default class AppFiresideBadge extends Vue {
+	@Prop({ type: Object, required: true })
+	fireside!: Fireside | null;
+
+	@Prop({ type: Boolean, required: false, default: null })
+	showPreview!: boolean | null;
+
+	@Emit('expire') emitExpire() {}
+	@Emit('changed') emitChanged(_hasVideo: boolean, _isStreaming: boolean) {}
+
+	canEmitExpiry = true;
+	expiryCheck: NodeJS.Timer | null = null;
+	isStreaming = false;
+	hasVideo = false;
+	hadInitialFireside = true;
+
+	containerHeight = 70;
+
+	readonly formatNumber = formatNumber;
+
+	declare $refs: {
+		badge: HTMLDivElement;
+	};
+
+	get shouldDisplay() {
+		return !!this.fireside || (this.hadInitialFireside && this.canExpandPreview);
+	}
+
+	get location() {
+		return this.fireside?.location ?? null;
+	}
+
+	get headerMediaItem() {
+		return this.fireside?.header_media_item ?? null;
+	}
+
+	get avatarTooltip() {
+		if (!this.fireside) {
+			return undefined;
+		}
+
+		return this.fireside.user.display_name + ' (@' + this.fireside.user.username + ')';
+	}
+
+	get theme() {
+		return this.fireside?.user.theme ?? null;
+	}
+
+	get canExpandPreview() {
+		// We want to react to showPreview changes. If showPreview is null,
+		// we'll probably never want to show the preview and shouldn't even let
+		// it connect to the RTC.
+		return this.showPreview !== null;
+	}
+
+	created() {
+		this.hadInitialFireside = !!this.fireside;
+	}
+
+	mounted() {
+		this.setupCheck();
+	}
+
+	unmounted() {
+		this.destroyExpiryCheck();
+	}
+
+	private setupCheck() {
+		// If the fireside is unjoinable from the get go, never emit expiry.
+		if (this.fireside && !this.fireside.isOpen()) {
+			this.canEmitExpiry = false;
+		} else if (!import.meta.env.SSR) {
+			this.canEmitExpiry = true;
+			this.destroyExpiryCheck();
+			setInterval(this.checkExpiry.bind(this), 1000);
+		}
+	}
+
+	// Set up a watch here, so that when we refetch info about the fireside
+	// without recreating this component, we reset the expiry checks.
+	@Watch('fireside', { deep: true })
+	watchFireside() {
+		this.setupCheck();
+	}
+
+	private checkExpiry() {
+		if (!this.canEmitExpiry) {
+			return;
+		}
+
+		if (!this.fireside || !this.fireside.isOpen()) {
+			this.onFiresidePreviewChanged(false, false);
+			this.canEmitExpiry = false;
+			this.emitExpire();
+		}
+	}
+
+	private destroyExpiryCheck() {
+		if (this.expiryCheck) {
+			clearInterval(this.expiryCheck);
+			this.expiryCheck = null;
+		}
+	}
+
+	onFiresidePreviewChanged(hasVideo: boolean, isStreaming: boolean) {
+		this.emitChanged(hasVideo, isStreaming);
+		this.hasVideo = hasVideo;
+		this.isStreaming = isStreaming;
+	}
+
+	onBadgeDimensionsChanged() {
+		this.containerHeight = this.$refs.badge.clientHeight;
+	}
+}
+</script>
 
 <template>
-	<app-theme v-if="shouldDisplay" :theme="theme">
+	<AppTheme v-if="shouldDisplay" :theme="theme">
 		<component :is="fireside && !fireside.is_expired ? 'router-link' : 'div'" :to="location">
 			<div class="-fireside-badge fill-darkest">
 				<div
@@ -9,7 +148,7 @@
 					v-app-observe-dimensions="onBadgeDimensionsChanged"
 					class="-fireside-badge-padding"
 				>
-					<app-media-item-backdrop
+					<AppMediaItemBackdrop
 						v-if="headerMediaItem"
 						class="-backdrop"
 						:media-item="headerMediaItem"
@@ -23,7 +162,7 @@
 						>
 							<div class="-header-overlay" />
 						</div>
-					</app-media-item-backdrop>
+					</AppMediaItemBackdrop>
 					<div v-else class="-backdrop">
 						<div class="-header -header-fill">
 							<div class="-header-overlay" />
@@ -32,25 +171,25 @@
 
 					<div class="-content">
 						<div v-app-tooltip.left="avatarTooltip" class="-avatar">
-							<app-user-avatar-img v-if="fireside" :user="fireside.user" />
+							<AppUserAvatarImg v-if="fireside" :user="fireside.user" />
 						</div>
 						<div>
 							<div v-if="fireside && !fireside.is_expired">
 								<span class="tag">
 									<span class="-new-tag" />
-									<translate
+									<AppTranslate
 										:translate-n="fireside.member_count || 0"
 										:translate-params="{
-											count: number(fireside.member_count || 0),
+											count: formatNumber(fireside.member_count || 0),
 										}"
 										translate-plural="%{ count } Members"
 									>
 										%{ count } Member
-									</translate>
+									</AppTranslate>
 								</span>
 
 								<span v-if="fireside.is_draft" class="tag">
-									<translate> Draft </translate>
+									<AppTranslate>Draft</AppTranslate>
 								</span>
 
 								<span
@@ -60,33 +199,33 @@
 									"
 									class="tag"
 								>
-									<translate> Featured </translate>
+									<AppTranslate>Featured</AppTranslate>
 								</span>
 							</div>
 							<div class="-title">
 								<template v-if="fireside && !fireside.is_expired">
 									{{ fireside.title }}
 								</template>
-								<translate v-else>
+								<AppTranslate v-else>
 									This fireside has expired. See you next time!
-								</translate>
+								</AppTranslate>
 							</div>
 						</div>
 						<div v-if="fireside && isStreaming" class="-live">
-							<translate>LIVE</translate>
+							<AppTranslate>LIVE</AppTranslate>
 						</div>
 					</div>
 				</div>
 
 				<div v-if="canExpandPreview" class="-preview">
-					<app-expand :when="showPreview">
+					<AppExpand :when="showPreview">
 						<div
 							class="-preview-placeholder"
 							:style="{ 'margin-top': -containerHeight + 'px' }"
 						/>
-					</app-expand>
+					</AppExpand>
 
-					<app-fireside-stream-preview
+					<AppFiresideStreamPreview
 						v-if="fireside && !fireside.is_expired"
 						class="-preview-inner"
 						:class="{ '-hidden': !showPreview }"
@@ -99,13 +238,10 @@
 				</div>
 			</div>
 		</component>
-	</app-theme>
+	</AppTheme>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $-zindex-backdrop = 1
 $-zindex-preview = 2
 $-zindex-content = 3

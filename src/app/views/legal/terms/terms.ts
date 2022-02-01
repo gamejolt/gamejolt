@@ -1,18 +1,18 @@
-import { BaseRouteComponent } from '../../../../_common/route/route-component';
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options } from 'vue-property-decorator';
+import { html } from '../../../../lib/terms/terms/global.md';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 
-const template: string = require('../../../../lib/terms/terms/global.md');
-
-@Component({
+@Options({
 	name: 'RouteLegalTerms',
 })
+@OptionsForRoute()
 export default class RouteLegalTerms extends BaseRouteComponent {
 	get routeTitle() {
 		return this.$gettext('Terms of Use');
 	}
 
-	render(h: CreateElement) {
-		return h('div', { domProps: { innerHTML: template } });
+	render() {
+		return h('div', { innerHTML: html });
 	}
 }

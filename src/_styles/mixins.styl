@@ -1,0 +1,434 @@
+@import './common/bootstrap-mixins'
+
+// Sync with the Theme component.
+theme-dark()
+	// Private mixin to make it easier to specify all variables that get set in
+	// dark mode.
+	-var($var)
+		--theme-{$var}: var(unquote('--dark-theme-' + $var))
+		--theme-{$var}-trans: var(unquote('--dark-theme-' + $var + '-trans'))
+
+	-var('highlight')
+	-var('backlight')
+	-var('notice')
+	-var('bi-bg')
+	-var('bi-fg')
+	-var('bg')
+	-var('bg-offset')
+	-var('bg-backdrop')
+	-var('bg-subtle')
+	-var('fg')
+	-var('fg-muted')
+	-var('link')
+	-var('link-hover')
+
+theme-prop($prop, $val, $important = false)
+	$important = $important ? '!important' : ''
+	{$prop}: lookup('$theme-' + $val) unquote($important)
+	{$prop}: unquote('var(--theme-' + $val + ')') unquote($important)
+
+change-bg($var, $important = false)
+	--theme-bg-actual: var(unquote('--theme-' + $var))
+	--theme-bg-actual-trans: var(unquote('--theme-' + $var + '-trans'))
+	theme-prop('background-color', $var, $important)
+
+rounded-corners-sm()
+	border-radius: $border-radius-small
+
+rounded-corners()
+	border-radius: $border-radius-base
+
+rounded-corners-lg()
+	border-radius: $border-radius-large
+
+/**
+ * Make a caret! Not for rabbits.
+ */
+caret(color, direction = 'left', size = 3px)
+	position: absolute
+	width: 0
+	height: 0
+	border-top: size solid transparent
+	border-right: size solid transparent
+	border-bottom: size solid transparent
+	border-left: size solid transparent
+	// Reset in case we stacked this mixin.
+	top: auto
+	left: auto
+	right: auto
+	bottom: auto
+	margin-top: 0
+	margin-left: 0
+
+	if (direction == 'left' || (direction == 'right'))
+		top: 50%
+		margin-top: -(size)
+	else if (direction == 'up' || (direction == 'down'))
+		left: 50%
+		margin-left: -(size)
+
+	if (direction == 'left')
+		left: -(size)
+		border-right: size solid color
+		border-left: none
+	else if (direction == 'up')
+		top: -(size)
+		border-bottom: size solid color
+		border-top: none
+	else if (direction == 'right')
+		right: -(size)
+		border-left: size solid color
+		border-right: none
+	else if (direction == 'down')
+		bottom: -(size)
+		border-top: size solid color
+		border-bottom: none
+
+$mdc-elevation-umbra-map = {
+	'0': '0px 0px 0px 0px',
+	'1': '0px 2px 1px -1px',
+	'2': '0px 3px 1px -2px',
+	'3': '0px 3px 3px -2px',
+	'4': '0px 2px 4px -1px',
+	'5': '0px 3px 5px -1px',
+	'6': '0px 3px 5px -1px',
+	'7': '0px 4px 5px -2px',
+	'8': '0px 5px 5px -3px',
+	'9': '0px 5px 6px -3px',
+	'10': '0px 6px 6px -3px',
+	'11': '0px 6px 7px -4px',
+	'12': '0px 7px 8px -4px',
+	'13': '0px 7px 8px -4px',
+	'14': '0px 7px 9px -4px',
+	'15': '0px 8px 9px -5px',
+	'16': '0px 8px 10px -5px',
+	'17': '0px 8px 11px -5px',
+	'18': '0px 9px 11px -5px',
+	'19': '0px 9px 12px -6px',
+	'20': '0px 10px 13px -6px',
+	'21': '0px 10px 13px -6px',
+	'22': '0px 10px 14px -6px',
+	'23': '0px 11px 14px -7px',
+	'24': '0px 11px 15px -7px'
+}
+$mdc-elevation-penumbra-map = {
+	'0': '0px 0px 0px 0px',
+	'1': '0px 1px 1px 0px',
+	'2': '0px 2px 2px 0px',
+	'3': '0px 3px 4px 0px',
+	'4': '0px 4px 5px 0px',
+	'5': '0px 5px 8px 0px',
+	'6': '0px 6px 10px 0px',
+	'7': '0px 7px 10px 1px',
+	'8': '0px 8px 10px 1px',
+	'9': '0px 9px 12px 1px',
+	'10': '0px 10px 14px 1px',
+	'11': '0px 11px 15px 1px',
+	'12': '0px 12px 17px 2px',
+	'13': '0px 13px 19px 2px',
+	'14': '0px 14px 21px 2px',
+	'15': '0px 15px 22px 2px',
+	'16': '0px 16px 24px 2px',
+	'17': '0px 17px 26px 2px',
+	'18': '0px 18px 28px 2px',
+	'19': '0px 19px 29px 2px',
+	'20': '0px 20px 31px 3px',
+	'21': '0px 21px 33px 3px',
+	'22': '0px 22px 35px 3px',
+	'23': '0px 23px 36px 3px',
+	'24': '0px 24px 38px 3px'
+}
+$mdc-elevation-ambient-map = {
+	'0': '0px 0px 0px 0px',
+	'1': '0px 1px 3px 0px',
+	'2': '0px 1px 5px 0px',
+	'3': '0px 1px 8px 0px',
+	'4': '0px 1px 10px 0px',
+	'5': '0px 1px 14px 0px',
+	'6': '0px 1px 18px 0px',
+	'7': '0px 2px 16px 1px',
+	'8': '0px 3px 14px 2px',
+	'9': '0px 3px 16px 2px',
+	'10': '0px 4px 18px 3px',
+	'11': '0px 4px 20px 3px',
+	'12': '0px 5px 22px 4px',
+	'13': '0px 5px 24px 4px',
+	'14': '0px 5px 26px 4px',
+	'15': '0px 6px 28px 5px',
+	'16': '0px 6px 30px 5px',
+	'17': '0px 6px 32px 5px',
+	'18': '0px 7px 34px 6px',
+	'19': '0px 7px 36px 6px',
+	'20': '0px 8px 38px 7px',
+	'21': '0px 8px 40px 7px',
+	'22': '0px 8px 42px 7px',
+	'23': '0px 9px 44px 8px',
+	'24': '0px 9px 46px 8px'
+}
+$mdc-elevation-baseline-color = $black
+// The opacities were tweaked from material design to be a little softer.
+$mdc-elevation-umbra-opacity = 0.15
+$mdc-elevation-penumbra-opacity = 0.1
+$mdc-elevation-ambient-opacity = 0.09
+
+elevate-transition()
+	// If elevations change, we want to transition the shadow.
+	transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+
+elevate(level = '0', color = $mdc-elevation-baseline-color)
+	$umbra-z-value = $mdc-elevation-umbra-map[level]
+	$penumbra-z-value = $mdc-elevation-penumbra-map[level]
+	$ambient-z-value = $mdc-elevation-ambient-map[level]
+	$umbra-color = rgba(color, $mdc-elevation-umbra-opacity)
+	$penumbra-color = rgba(color, $mdc-elevation-penumbra-opacity)
+	$ambient-color = rgba(color, $mdc-elevation-ambient-opacity)
+	box-shadow: unquote($umbra-z-value) $umbra-color, unquote($penumbra-z-value) $penumbra-color, unquote($ambient-z-value) $ambient-color
+	elevate-transition()
+
+/**
+ * Elevation
+ */
+elevate-0()
+	elevate-transition()
+	box-shadow: none
+
+// On mobile, sometimes shadows with elevate-1 between elements can be very busy, so we use a smaller shadow
+elevate-xs()
+	elevate('1')
+
+elevate-1()
+	elevate('3')
+
+elevate-2()
+	elevate('8')
+
+elevate-3()
+	elevate('24')
+
+// Hover animations
+elevate-hover-xs()
+	elevate-0()
+
+	&:hover
+		elevate-xs()
+
+elevate-hover-1()
+	elevate-0()
+
+	&:hover
+		elevate-1()
+
+elevate-hover-2()
+	elevate-0()
+
+	&:hover
+		elevate-2()
+
+elevate-hover-3()
+	elevate-0()
+
+	&:hover
+		elevate-3()
+
+/**
+ * Images
+ */
+img-circle()
+	border-radius: 50%
+
+overlay-img()
+	content: ''
+	display: block
+	position: absolute
+	top: 0 !important
+	left: 0 !important
+	width: 100%
+	height: 100%
+
+floating-img()
+	border: 1px solid rgba(255, 255, 255, 0.1)
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.8)
+
+/**
+ * Links
+ */
+$selection-color ?= #b4d5fe
+
+link-underlines(color, bg-color, bg-color-hover)
+	// Local mixin
+	_text-shadow-to-crop-underline(color)
+		text-shadow: 0.03em 0 color, -0.03em 0 color, 0 0.03em color, 0 -0.03em color, 0.06em 0 color, -0.06em 0 color, 0.09em 0 color, -0.09em 0 color, 0.12em 0 color, -0.12em 0 color, 0.15em 0 color, -0.15em 0 color
+
+	_text-shadow-to-crop-underline(bg-color)
+	color: color
+	text-decoration: none
+	background-image: linear-gradient(bg-color, bg-color), linear-gradient(bg-color, bg-color), linear-gradient(color, color)
+	background-size: 0.05em 1px, 0.05em 1px, 1px 1px
+	background-repeat: no-repeat, no-repeat, repeat-x
+	background-position: 0 90%, 100% 90%, 0 90%
+
+	&::selection
+		_text-shadow-to-crop-underline($selection-color)
+		background: $selection-color
+
+	&::-moz-selection
+		_text-shadow-to-crop-underline($selection-color)
+		background: $selection-color
+
+	&:before
+	&:after
+	*
+	*:before
+	*:after
+		text-shadow: none
+
+	&:visited
+		color: color
+
+	&:hover
+		background-image: linear-gradient(bg-color, bg-color), linear-gradient(bg-color, bg-color), linear-gradient(bg-color-hover, bg-color-hover)
+
+/**
+ * Clearfix
+ */
+clearfix()
+	&:before
+	&:after
+		content: ' '
+		display: table
+
+	&:after
+		clear: both
+
+/**
+ * Bleeds
+ */
+full-bleed()
+	margin-left: -($grid-gutter-width-xs / 2)
+	margin-right: @margin-left
+	border-radius: 0 !important
+	border-left: 0 !important
+	border-right: 0 !important
+
+	@media $media-sm-up
+		margin-left: -($grid-gutter-width / 2)
+		margin-right: @margin-left
+		border-radius: 0 !important
+		border-left: 0 !important
+		border-right: 0 !important
+
+full-bleed-xs()
+	@media $media-xs
+		margin-left: -($grid-gutter-width-xs / 2)
+		margin-right: @margin-left
+		border-radius: 0 !important
+		border-left: 0 !important
+		border-right: 0 !important
+
+full-bleed-sm()
+	@media $media-sm
+		margin-left: -($grid-gutter-width / 2)
+		margin-right: @margin-left
+		border-radius: 0 !important
+		border-left: 0 !important
+		border-right: 0 !important
+
+/**
+ * Scrollable
+ */
+scrollable()
+	overflow-y: auto
+	overflow-x: hidden
+	-webkit-overflow-scrolling: touch
+	will-change: scroll-position
+
+scrollable-x()
+	overflow-y: hidden
+	overflow-x: auto
+	-webkit-overflow-scrolling: touch
+	will-change: scroll-position
+
+/**
+ * Lists
+ */
+link-unstyled()
+	color: inherit
+
+	&:hover
+	&:focus
+		text-decoration: underline
+
+/**
+ * Placeholders
+ */
+lazy-placeholder-inline()
+	rounded-corners()
+	change-bg('bg-subtle')
+	display: inline-block
+	vertical-align: middle
+	width: 100%
+	height: $font-size-base
+
+lazy-placeholder-block()
+	rounded-corners()
+	change-bg('bg-subtle')
+	display: block
+	height: $font-size-base
+
+/**
+ * Dot Separator
+ */
+dot-separator()
+	change-bg('lighter')
+	display: inline-block
+	margin: 0 10px
+	height: 4px
+	width: 4px
+	border-radius: 100%
+	line-height: 20px
+	vertical-align: middle
+
+/**
+ * Pulls
+ */
+pull-right()
+	float: right !important
+
+pull-left()
+	float: left !important
+
+/**
+ * Input Placeholder Button
+ */
+input-placeholder-button()
+	theme-prop('border-color', 'bg-subtle')
+	theme-prop('color', 'fg-muted')
+	change-bg('bg-backdrop')
+	height: $input-height-base * 1.25
+	line-height: $input-height-base * 1.25
+	padding-left: $padding-base-horizontal
+	padding-right: $padding-base-horizontal
+	border-width: $border-width-base
+	border-style: solid
+	border-radius: $input-border-radius
+	font-style: italic
+	cursor: pointer
+
+	&:hover
+		theme-prop('border-color', 'fg-muted')
+
+line-clamp(lines = 2)
+	// https://github.com/postcss/autoprefixer/issues/1141#issuecomment-431280891
+	overflow: hidden
+	display: -webkit-box
+	-webkit-line-clamp: lines
+	/* autoprefixer: ignore next */
+	-webkit-box-orient: vertical
+	// Safari doesn't currently support `overflow-wrap: anywhere`, but this
+	// should be identical.
+	word-break: break-word
+	overflow-wrap: anywhere
+
+@import './mixins/animations'
+@import './mixins/play-button-overlay'
+@import './mixins/pressy'
