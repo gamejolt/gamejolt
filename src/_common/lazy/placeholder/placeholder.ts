@@ -1,14 +1,14 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import './placeholder.styl';
 
-@Component({})
+@Options({})
 export class AppLazyPlaceholder extends Vue {
 	@Prop() when!: any;
 	@Prop({ type: String, default: 'div' })
 	tag!: string;
 
-	render(h: CreateElement) {
+	render() {
 		return h(
 			this.tag,
 			{
@@ -17,7 +17,7 @@ export class AppLazyPlaceholder extends Vue {
 					'lazy-placeholder-resolved': !!this.when,
 				},
 			},
-			this.$slots.default
+			this.$slots.default?.()
 		);
 	}
 }

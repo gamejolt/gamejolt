@@ -1,12 +1,19 @@
-import Axios, { CancelTokenSource } from 'axios';
+import AxiosStatic, { AxiosRequestConfig } from 'axios';
+import { ref } from 'vue';
 import { Environment } from '../environment/environment.service';
 import { Payload } from '../payload/payload-service';
+
+// Force using node http adapter in SSR.
+// We need to do this because when in the server the code is rendered
+// from a vm that interfers with how axios detects which adapter it should use.
+const adapter = import.meta.env.SSR ? require('axios/lib/adapters/http') : undefined;
+const Axios = AxiosStatic.create({ adapter });
 
 // Memoized essentially, and lazily fetched when first needed.
 let _hasWebpSupport: null | Promise<boolean> = null;
 const hasWebpSupport = () => {
 	if (!_hasWebpSupport) {
-		_hasWebpSupport = GJ_IS_SSR
+		_hasWebpSupport = import.meta.env.SSR
 			? // SSR passes through the webp support from the client.
 			  Promise.resolve(Environment.ssrContext.accept.includes('image/webp'))
 			: // For normal clients we have to test for it by loading in a webp
@@ -99,10 +106,12 @@ export interface RequestOptions {
 	 * CancelToken function given to the Axios request when uploading a file.
 	 * Invoking the returned executor cancels the file upload.
 	 */
-	fileCancelToken?: CancelTokenSource;
+	fileCancelToken?: AbortSignal;
 }
 
 export class Api {
+	static loadingBarRequests = ref(0);
+
 	static apiHost: string = Environment.apiHost;
 	static uploadHost: string = Environment.uploadHost;
 	static apiPath = '/site-api';
@@ -184,18 +193,20 @@ export class Api {
 		// For SSR we pass in the frontend cookie of "ssr" so that the server
 		// knows that this is an SSR request and shouldn't store session data.
 		const headers: any = {};
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			headers.cookie = 'frontend=ssr;';
-		}
-
-		if (GJ_IS_CLIENT) {
-			// Modify all HTTP requests to include the client version.
-			headers['x-gj-client-version'] = GJ_VERSION;
 		}
 
 		if (await hasWebpSupport()) {
 			headers['accept'] = 'image/webp,*/*';
 		}
+
+		const showLoading = !options.ignoreLoadingBar;
+		if (showLoading) {
+			++this.loadingBarRequests.value;
+		}
+
+		let promise: Promise<any>;
 
 		if (options.file) {
 			// An upload request.
@@ -212,19 +223,17 @@ export class Api {
 				}
 			}
 
-			return Axios({
+			promise = this.sendRawRequest(url, {
 				method,
-				url,
 				data: formData,
 				headers,
 				withCredentials: options.withCredentials,
-				ignoreLoadingBar: options.ignoreLoadingBar,
+				signal: options.fileCancelToken,
 				onUploadProgress: (e: ProgressEvent) => {
 					if (options.progress && e.lengthComputable) {
 						options.progress(e);
 					}
 				},
-				cancelToken: options.fileCancelToken?.token,
 			}).then((response: any) => {
 				// When the request is done, send one last progress event of
 				// nothing to indicate that the transfer is complete.
@@ -233,20 +242,40 @@ export class Api {
 				}
 				return response;
 			});
+		} else {
+			promise = this.sendRawRequest(url, {
+				method,
+				data,
+				headers,
+				withCredentials: options.withCredentials,
+			});
 		}
 
-		return Axios({
-			method,
-			url,
-			data,
-			headers,
-			withCredentials: options.withCredentials,
-			ignoreLoadingBar: options.ignoreLoadingBar,
+		promise.finally(() => {
+			if (showLoading) {
+				--this.loadingBarRequests.value;
+			}
 		});
+
+		return promise;
 	}
 
 	public static createCancelToken() {
-		const CancelToken = Axios.CancelToken;
-		return CancelToken.source();
+		return new AbortController();
+	}
+
+	public static async sendRawRequest(url: string, config: AxiosRequestConfig = {}) {
+		const requestInfo = config;
+		requestInfo.url = url;
+
+		if (GJ_IS_DESKTOP_APP) {
+			requestInfo.headers = { ...requestInfo.headers, 'x-gj-client-version': GJ_VERSION };
+		}
+
+		if (!requestInfo.method) {
+			requestInfo.method = requestInfo.data ? 'POST' : 'GET';
+		}
+
+		return Axios(requestInfo);
 	}
 }

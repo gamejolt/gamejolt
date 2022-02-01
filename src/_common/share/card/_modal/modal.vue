@@ -1,24 +1,55 @@
+<script lang="ts">
+import { mixins, Options, Prop } from 'vue-property-decorator';
+import { BaseModal } from '../../../modal/base';
+import { copyShareLink, ShareProvider, ShareResource } from '../../share.service';
+import AppShareCardTile from '../_tile/tile.vue';
 
-<script lang="ts" src="./modal"></script>
+@Options({
+	components: {
+		AppShareCardTile,
+	},
+})
+export default class AppShareCardModal extends mixins(BaseModal) {
+	@Prop({ type: String, required: true })
+	resource!: ShareResource;
+
+	@Prop({ type: String, required: true })
+	url!: string;
+
+	readonly providers: ShareProvider[] = [
+		'facebook',
+		'twitter',
+		'reddit',
+		'whatsapp',
+		'fb_messenger',
+		'email',
+		'sms',
+	];
+
+	copyLink() {
+		copyShareLink(this.url, this.resource);
+	}
+}
+</script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>Share</translate>
+				<AppTranslate>Share to</AppTranslate>
 			</h2>
 		</div>
 
 		<div class="modal-body">
 			<div class="-grid">
-				<app-share-card-tile
-					v-for="i in providers"
+				<AppShareCardTile
+					v-for="i of providers"
 					:key="i"
 					class="-tile"
 					:resource="resource"
@@ -27,17 +58,14 @@
 				/>
 			</div>
 
-			<app-button class="-copy" @click="copyLink()">
-				<translate>Copy Link</translate>
-			</app-button>
+			<AppButton class="-copy" @click="copyLink()">
+				<AppTranslate>Copy link</AppTranslate>
+			</AppButton>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $-icon-size = 32px
 $-base-padding = 8px
 

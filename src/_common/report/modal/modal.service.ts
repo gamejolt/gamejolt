@@ -1,14 +1,13 @@
-import { asyncComponentLoader } from '../../../utils/utils';
-import { Modal } from '../../modal/modal.service';
+import { defineAsyncComponent } from 'vue';
+import { showModal } from '../../modal/modal.service';
 import { Model } from '../../model/model.service';
 
 export class ReportModal {
 	static async show(resource: Model) {
-		await Modal.show({
+		await showModal({
 			modalId: 'Report',
 			size: 'sm',
-			component: () =>
-				asyncComponentLoader(import(/* webpackChunkName: "ReportModal" */ './modal.vue')),
+			component: defineAsyncComponent(() => import('./modal.vue')),
 			props: { resource },
 		});
 	}

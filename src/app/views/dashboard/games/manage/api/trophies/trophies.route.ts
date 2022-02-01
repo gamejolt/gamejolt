@@ -1,8 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDashGamesManageApiTrophies: RouteConfig = {
+export const routeDashGamesManageApiTrophies: RouteRecordRaw = {
 	name: 'dash.games.manage.api.trophies.list',
 	path: 'trophies',
-	component: () =>
-		import(/* webpackChunkName: "routeDashGamesManageApiTrophies" */ './trophies.vue'),
+	component: () => import('./trophies.vue'),
 };

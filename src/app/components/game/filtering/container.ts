@@ -1,9 +1,9 @@
-import Vue from 'vue';
-import { Location, Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
 import { forEach } from '../../../../utils/collection';
 import { objectEquals } from '../../../../utils/object';
+import { RouteLocationDefinition } from '../../../../utils/router';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
-import { Translate } from '../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { router } from '../../../views/index';
 
 const STORAGE_KEY = 'game-filtering:filters-v2';
@@ -17,7 +17,7 @@ interface GameFilteringContainerDefinition {
 type Params = { [k: string]: string };
 type Filters = { [k: string]: any };
 
-export function checkGameFilteringRoute(route: Route) {
+export function checkGameFilteringRoute(route: RouteLocationNormalized) {
 	const params = route.query;
 
 	let paramFiltersFound = false;
@@ -28,7 +28,7 @@ export function checkGameFilteringRoute(route: Route) {
 	});
 
 	// We only do work if the URL is bare with no filters set yet.
-	if (!paramFiltersFound && !GJ_IS_SSR) {
+	if (!paramFiltersFound && !import.meta.env.SSR) {
 		const storageKey = window.sessionStorage.getItem(STORAGE_KEY);
 		if (storageKey) {
 			console.log('from storage');
@@ -47,64 +47,66 @@ export class GameFilteringContainer {
 	static get definitions(): { [k: string]: GameFilteringContainerDefinition } {
 		return {
 			price: {
-				label: Translate.$gettext('Price'),
+				label: $gettext('Price'),
 				type: 'radio',
 				options: {
-					free: Translate.$gettext('Free / Name Your Price'),
-					sale: Translate.$gettext('On Sale'),
-					paid: Translate.$gettext('Paid'),
-					'5-less': Translate.$gettext('$5 or less'),
-					'15-less': Translate.$gettext('$15 or less'),
-					'30-less': Translate.$gettext('$30 or less'),
+					free: $gettext('Free / Name Your Price'),
+					sale: $gettext('On Sale'),
+					paid: $gettext('Paid'),
+					'5-less': $gettext('$5 or less'),
+					'15-less': $gettext('$15 or less'),
+					'30-less': $gettext('$30 or less'),
 				},
 			},
 			os: {
-				label: Translate.$gettext('games.filtering.os'),
+				label: $gettext('OS'),
 				type: 'array',
 				options: {
-					windows: Translate.$gettext('games.filtering.os_windows'),
-					mac: Translate.$gettext('games.filtering.os_mac'),
-					linux: Translate.$gettext('games.filtering.os_linux'),
-					other: Translate.$gettext('games.filtering.os_other'),
-					rom: Translate.$gettext('ROM'),
+					windows: $gettext('Windows'),
+					mac: $gettext('Mac'),
+					linux: $gettext('Linux'),
+					// TODO(vue3) translate-comment="As in other than the rest of the things specified"
+					other: $gettext('Other'),
+					rom: $gettext('ROM'),
 				},
 			},
 			browser: {
-				label: Translate.$gettext('games.filtering.browser'),
+				label: $gettext('Browser'),
 				type: 'array',
 				options: {
-					html: Translate.$gettext('games.filtering.browser_html'),
-					flash: Translate.$gettext('games.filtering.browser_flash'),
-					unity: Translate.$gettext('games.filtering.browser_unity'),
+					html: $gettext('HTML'),
+					flash: $gettext('Flash'),
+					unity: $gettext('Unity'),
 				},
 			},
 			maturity: {
-				label: Translate.$gettext('games.filtering.maturity'),
+				label: $gettext('Maturity'),
 				type: 'array',
 				options: {
-					everyone: Translate.$gettext('games.filtering.maturity_everyone'),
-					teen: Translate.$gettext('games.filtering.maturity_teen'),
-					adult: Translate.$gettext('Mature Content'),
+					everyone: $gettext('All Ages'),
+					teen: $gettext('Teen Content'),
+					adult: $gettext('Mature Content'),
 				},
 			},
 			status: {
-				label: Translate.$gettext('games.filtering.status'),
+				// TODO(vue3) translate-comment="As in game development status/stage"
+				label: $gettext('Status'),
 				type: 'array',
 				options: {
-					complete: Translate.$gettext('Complete/Stable'),
-					wip: Translate.$gettext('Early Access'),
-					devlog: Translate.$gettext('Devlog'),
+					complete: $gettext('Complete/Stable'),
+					wip: $gettext('Early Access'),
+					devlog: $gettext('Devlog'),
 				},
 			},
 			partners: {
-				label: Translate.$gettext('Partners'),
+				label: $gettext('Partners'),
 				type: 'array',
 				options: {
-					partners: Translate.$gettext('Show Partner Games'),
+					partners: $gettext('Show Partner Games'),
 				},
 			},
 			query: {
-				label: Translate.$gettext('Filter'),
+				label: $gettext('Filter'),
 				type: 'string',
 			},
 		};
@@ -125,7 +127,7 @@ export class GameFilteringContainer {
 		return isEmpty(this.filters, { skipQuery: true });
 	}
 
-	constructor(route: Route) {
+	constructor(route: RouteLocationNormalized) {
 		// Default all filters to empty values.
 		forEach(GameFilteringContainer.definitions, (definition, key) => {
 			if (definition.type === 'array') {
@@ -140,7 +142,7 @@ export class GameFilteringContainer {
 		this.init(route);
 	}
 
-	init(route: Route) {
+	init(route: RouteLocationNormalized) {
 		const params = route.query;
 
 		forEach(GameFilteringContainer.definitions, (definition, filter) => {
@@ -199,7 +201,7 @@ export class GameFilteringContainer {
 		if (definition.type === 'array') {
 			this.filters[filter].push(value);
 		} else if (definition.type === 'string' || definition.type === 'radio') {
-			Vue.set(this.filters, filter, value);
+			this.filters[filter] = value;
 		}
 
 		this.saveFilters();
@@ -226,9 +228,9 @@ export class GameFilteringContainer {
 				this.filters[filter].splice(index, 1);
 			}
 		} else if (definition.type === 'string') {
-			Vue.set(this.filters, filter, '');
+			this.filters[filter] = '';
 		} else if (definition.type === 'radio') {
-			Vue.set(this.filters, filter, null);
+			this.filters[filter] = null;
 		}
 
 		this.saveFilters();
@@ -249,10 +251,10 @@ export class GameFilteringContainer {
 		return this.filters[filter].indexOf(option) !== -1;
 	}
 
-	getQueryString(route: Route, options: { page?: number } = {}) {
+	getQueryString(route: RouteLocationNormalized, options: { page?: number } = {}) {
 		const queryPieces: string[] = [];
 
-		queryPieces.push('section=' + (route.params.section ?? 'featured'));
+		queryPieces.push('section=' + (route.params.section || 'featured'));
 
 		if (route.query.sort) {
 			queryPieces.push('sort=' + route.query.sort);
@@ -266,7 +268,8 @@ export class GameFilteringContainer {
 			queryPieces.push('date=' + route.params.date);
 		}
 
-		const page = options.page ?? (route.query.page && parseInt(route.query.page as string, 10));
+		const page =
+			options.page || (route.query.page && parseInt(route.query.page as string)) || 1;
 		if (page > 1) {
 			queryPieces.push('page=' + page);
 		}
@@ -313,7 +316,7 @@ export class GameFilteringContainer {
 		Scroll.shouldAutoScroll = false;
 
 		const query = getRouteData(this.filters);
-		const location = getNewRouteLocation(router.currentRoute, query);
+		const location = getNewRouteLocation(router.currentRoute.value, query);
 
 		if (location) {
 			router.replace(location);
@@ -322,7 +325,7 @@ export class GameFilteringContainer {
 
 	private saveFilters() {
 		// Early out if this isn't a persisent filtering container.
-		if (!this.isPersistent && !GJ_IS_SSR) {
+		if (!this.isPersistent && !import.meta.env.SSR) {
 			return;
 		}
 
@@ -332,7 +335,7 @@ export class GameFilteringContainer {
 	}
 }
 
-function getNewRouteLocation(route: Route, filters: Filters) {
+function getNewRouteLocation(route: RouteLocationNormalized, filters: Filters) {
 	const query = Object.assign({}, filters);
 
 	if (!objectEquals(query, route.query)) {
@@ -340,7 +343,7 @@ function getNewRouteLocation(route: Route, filters: Filters) {
 			name: route.name,
 			params: route.params,
 			query,
-		} as Location;
+		} as RouteLocationDefinition;
 	}
 }
 

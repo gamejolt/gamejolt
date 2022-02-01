@@ -210,27 +210,27 @@ export class Theme extends Model {
 	}
 
 	get highlight_() {
-		return this.readableCustomLight || this.highlight;
+		return this._readableCustomLight || this.highlight;
 	}
 
 	get darkHighlight_() {
-		return this.readableCustomDark || this.highlight;
+		return this._readableCustomDark || this.highlight;
 	}
 
 	get backlight_() {
-		return this.readableCustomLight || this.backlight;
+		return this._readableCustomLight || this.backlight;
 	}
 
 	get darkBacklight_() {
-		return this.readableCustomDark || this.backlight;
+		return this._readableCustomDark || this.backlight;
 	}
 
 	get notice_() {
-		return this.readableCustomLight || this.notice;
+		return this._readableCustomLight || this.notice;
 	}
 
 	get darkNotice_() {
-		return this.readableCustomDark || this.notice;
+		return this._readableCustomDark || this.notice;
 	}
 
 	get tint_() {
@@ -252,17 +252,17 @@ export class Theme extends Model {
 	}
 
 	get biBg_() {
-		return this.readableCustomLight || this.backlight;
+		return this._readableCustomLight || this.backlight;
 	}
 
 	get biFg_() {
-		return this.readableCustomLight
+		return this._readableCustomLight
 			? readableColor('#' + this.biBg_).substr(1)
 			: this.highlight;
 	}
 
 	get darkBiBg_() {
-		return this.readableCustomDark || this.highlight;
+		return this._readableCustomDark || this.highlight;
 	}
 
 	get darkBiFg_() {
@@ -309,11 +309,11 @@ export class Theme extends Model {
 		return this.tintColor(GrayLightest, 0.04);
 	}
 
-	private get readableCustomDark() {
+	get _readableCustomDark() {
 		return getReadableCustom(this.custom, 'dark');
 	}
 
-	private get readableCustomLight() {
+	get _readableCustomLight() {
 		return getReadableCustom(this.custom, 'light');
 	}
 

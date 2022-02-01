@@ -1,39 +1,79 @@
-<script lang="ts" src="./cbar"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
+import AppCommunityAddWidget from '../../../../_common/community/add-widget/add-widget.vue';
+import AppCommunityDiscoverWidget from '../../../../_common/community/discover-widget/discover-widget.vue';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import { useAppStore } from '../../../store';
+import AppShellCbarCommunity from './community/community.vue';
+import AppShellCbarControls from './controls/controls.vue';
+import AppShellCbarItem from './item/item.vue';
+
+@Options({
+	components: {
+		AppScrollScroller,
+		AppShellCbarControls,
+		AppShellCbarItem,
+		AppShellCbarCommunity,
+		AppCommunityDiscoverWidget,
+		AppCommunityAddWidget,
+	},
+})
+export default class AppShellCbar extends Vue {
+	store = setup(() => useAppStore());
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
+
+	get hasCbar() {
+		return this.store.hasCbar;
+	}
+
+	get activeCommunity() {
+		return this.store.activeCommunity;
+	}
+
+	get communities() {
+		const communities = [...this.store.communities];
+
+		if (this.activeCommunity && !communities.find(i => i.id === this.activeCommunity!.id)) {
+			communities.unshift(this.activeCommunity);
+		}
+
+		return communities;
+	}
+}
+</script>
 
 <template>
 	<div id="shell-cbar" class="theme-dark">
-		<app-scroll-scroller v-if="hasCbar" class="-scroller" hide-scrollbar>
+		<AppScrollScroller v-if="hasCbar" class="-scroller" hide-scrollbar>
 			<div class="-inner">
-				<app-shell-cbar-controls />
+				<AppShellCbarControls />
 
-				<transition-group name="-communities">
-					<app-shell-cbar-community
+				<transition-group tag="div" name="-communities">
+					<AppShellCbarCommunity
 						v-for="community of communities"
 						:key="community.id"
 						class="-community-item"
 						:community="community"
 					/>
 				</transition-group>
-				<app-shell-cbar-item>
-					<app-community-discover-widget
-						tooltip-placement="right"
-						@contextmenu.native.prevent
-					/>
-				</app-shell-cbar-item>
-				<app-shell-cbar-item>
-					<app-community-add-widget
-						tooltip-placement="right"
-						@contextmenu.native.prevent
-					/>
-				</app-shell-cbar-item>
+				<AppShellCbarItem>
+					<AppCommunityDiscoverWidget tooltip-placement="right" @contextmenu.prevent />
+				</AppShellCbarItem>
+				<AppShellCbarItem>
+					<AppCommunityAddWidget tooltip-placement="right" @contextmenu.prevent />
+				</AppShellCbarItem>
 			</div>
-		</app-scroll-scroller>
+		</AppScrollScroller>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
 @import './variables'
 
 #shell-cbar
@@ -48,7 +88,7 @@
 	transition: transform 300ms $ease-out-back, opacity 150ms
 
 .-communities
-	&-enter
+	&-enter-from
 	&-leave-to
 		opacity: 0
 		transform: translateY(-15px)

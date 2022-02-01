@@ -1,32 +1,34 @@
+import { reactive } from '@vue/reactivity';
+import { ref } from 'vue';
 import { arrayRemove } from '../../utils/array';
-import AppBackdropTS from './backdrop';
-import AppBackdrop from './backdrop.vue';
 
-export interface BackdropOptions {
-	context?: HTMLElement;
+interface BackdropOptions {
+	context?: HTMLElement | string;
 	className?: string;
 }
 
-export class Backdrop {
-	private static backdrops: AppBackdropTS[] = [];
+function createBackdrop(
+	options: BackdropOptions & {
+		remove: () => void;
+	}
+) {
+	return reactive({
+		className: options.className,
+		context: options.context,
+		remove: options.remove,
+		onClicked: ref<(() => void) | null>(null),
+	});
+}
 
-	static push(options: BackdropOptions = {}) {
-		const el = document.createElement('div');
+class BackdropsService {
+	backdrops: BackdropController[] = [];
+
+	push(options: BackdropOptions) {
 		const scrollbarWidth = window.innerWidth - document.body.clientWidth;
-
-		if (!options.context) {
-			document.body.appendChild(el);
-		} else {
-			options.context.appendChild(el);
-		}
-
-		const backdrop: AppBackdropTS = new AppBackdrop({
-			propsData: {
-				className: options.className,
-			},
-		});
-
-		backdrop.$mount(el);
+		const backdrop = createBackdrop({
+			...options,
+			remove: () => Backdrop.remove(backdrop),
+		}) as BackdropController;
 
 		this.backdrops.push(backdrop);
 		document.body.classList.add('backdrop-active');
@@ -43,7 +45,7 @@ export class Backdrop {
 		return backdrop;
 	}
 
-	static checkBackdrops() {
+	checkBackdrops() {
 		if (this.backdrops.length !== 0) {
 			return;
 		}
@@ -60,10 +62,12 @@ export class Backdrop {
 		});
 	}
 
-	static remove(backdrop: AppBackdrop) {
-		backdrop.$destroy();
-		backdrop.$el.parentNode!.removeChild(backdrop.$el);
+	private remove(backdrop: BackdropController) {
 		arrayRemove(this.backdrops, i => i === backdrop);
 		this.checkBackdrops();
 	}
 }
+
+export const Backdrop = reactive(new BackdropsService()) as BackdropsService;
+
+export type BackdropController = ReturnType<typeof createBackdrop>;

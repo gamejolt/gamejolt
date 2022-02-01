@@ -1,5 +1,5 @@
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
 import {
 	authOnJoin,
@@ -7,14 +7,17 @@ import {
 	redirectToDashboard,
 	redirectToOnboarding,
 } from '../../../../../../_common/auth/auth.service';
-import { Growls } from '../../../../../../_common/growls/growls.service';
-import { BaseRouteComponent, RouteResolver } from '../../../../../../_common/route/route-component';
+import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../_common/route/route-component';
 import AuthLinkedAccountProcessing from '../../_processing/processing.vue';
 
-@Component({
+@Options({
 	name: 'RouteAuthLinkedAccountTwitterCallback',
 })
-@RouteResolver({
+@OptionsForRoute({
 	lazy: true,
 	resolver({ route }) {
 		const { code, state } = route.query;
@@ -28,7 +31,7 @@ export default class RouteAuthLinkedAccountTwitterCallback extends BaseRouteComp
 	routeResolved($payload: any) {
 		if (!$payload.success) {
 			if ($payload.reason && $payload.reason === 'no-email') {
-				Growls.error({
+				showErrorGrowl({
 					sticky: true,
 					title: this.$gettext('Login failed'),
 					message: this.$gettext(
@@ -36,10 +39,10 @@ export default class RouteAuthLinkedAccountTwitterCallback extends BaseRouteComp
 					),
 				});
 			} else {
-				Growls.error({
+				showErrorGrowl({
 					sticky: true,
-					title: this.$gettext('auth.linked_account.twitter.failed_growl_title'),
-					message: this.$gettext('auth.linked_account.twitter.failed_growl'),
+					title: this.$gettext('Login Failed'),
+					message: this.$gettext('Unable to log in with Twitter.'),
 				});
 			}
 			this.$router.push({ name: 'auth.join' });
@@ -56,7 +59,7 @@ export default class RouteAuthLinkedAccountTwitterCallback extends BaseRouteComp
 		redirectToDashboard();
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h(AuthLinkedAccountProcessing);
 	}
 }

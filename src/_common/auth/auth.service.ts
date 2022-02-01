@@ -7,7 +7,7 @@ import Onboarding from '../onboarding/onboarding.service';
 export type AuthMethod = 'email' | 'google' | 'facebook' | 'twitch' | 'twitter' | 'apple';
 
 export function redirectToOnboarding() {
-	if (GJ_IS_SSR) {
+	if (import.meta.env.SSR) {
 		return;
 	}
 
@@ -16,7 +16,7 @@ export function redirectToOnboarding() {
 }
 
 export function redirectToDashboard() {
-	if (GJ_IS_SSR) {
+	if (import.meta.env.SSR) {
 		return;
 	}
 

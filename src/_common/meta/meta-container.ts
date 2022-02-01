@@ -6,17 +6,17 @@ export class MetaField {
 }
 
 export class MetaContainer {
-	protected _attr = 'name';
-	protected _fields: { [key: string]: MetaField } = {};
+	_attr = 'name';
+	_fields: Record<string, MetaField> = {};
 
 	set(name: string, content: string | null) {
 		this._storeField(name, content);
 
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			return;
 		}
 
-		let elem = document.head.querySelector(`meta[${this._attr}="${name}"]`) as HTMLMetaElement;
+		let elem = document.head.querySelector<HTMLMetaElement>(`meta[${this._attr}="${name}"]`);
 
 		// Remove if we're nulling it out.
 		if (!content) {
@@ -40,29 +40,14 @@ export class MetaContainer {
 		return this._fields[name] ? this._fields[name].current : null;
 	}
 
-	render() {
-		let output = '';
-
-		for (const key in this._fields) {
-			const field = this._fields[key];
-			if (field.current) {
-				output +=
-					`<meta ${this._attr}="${key}" content="${escapeString(field.current)}" />` +
-					'\n';
-			}
-		}
-
-		return output;
-	}
-
 	protected _storeField(name: string, content: string | null) {
 		if (!this._fields[name]) {
 			const field = new MetaField();
 
-			if (!GJ_IS_SSR) {
-				const elem = document.head.querySelector(
+			if (!import.meta.env.SSR) {
+				const elem = document.head.querySelector<HTMLMetaElement>(
 					`meta[${this._attr}="${name}"]`
-				) as HTMLMetaElement;
+				);
 				if (elem) {
 					field.original = elem.content;
 				}
@@ -73,4 +58,19 @@ export class MetaContainer {
 
 		this._fields[name].current = content;
 	}
+}
+
+export function renderMetaContainer(container: MetaContainer) {
+	let output = '';
+
+	for (const key in container._fields) {
+		const field = container._fields[key];
+		if (field.current) {
+			output +=
+				`<meta ${container._attr}="${key}" content="${escapeString(field.current)}" />` +
+				'\n';
+		}
+	}
+
+	return output;
 }

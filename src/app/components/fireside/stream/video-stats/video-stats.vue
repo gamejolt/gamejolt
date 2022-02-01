@@ -1,4 +1,41 @@
-<script lang="ts" src="./video-stats"></script>
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../../utils/vue';
+import { useFiresideController } from '../../controller/controller';
+
+@Options({})
+export default class AppFiresideVideoStats extends Vue {
+	c = shallowSetup(() => useFiresideController()!);
+
+	private videoStats: any = {};
+	private statsInterval?: NodeJS.Timer;
+
+	get stats() {
+		const stats: Record<string, any> = {
+			[`Members`]: this.c.rtc.value?.users.length ?? 0,
+		};
+
+		const focusedId = this.c.rtc.value?.focusedUser?.uid;
+		if (focusedId && this.videoStats[focusedId]) {
+			Object.assign(stats, this.videoStats[focusedId]);
+		}
+
+		return stats;
+	}
+
+	mounted() {
+		this.statsInterval = setInterval(() => {
+			this.videoStats =
+				this.c.rtc.value?.videoChannel.agoraClient.getRemoteVideoStats() ?? {};
+		}, 3000);
+	}
+	beforeUnmount() {
+		if (this.statsInterval) {
+			clearInterval(this.statsInterval);
+		}
+	}
+}
+</script>
 
 <template>
 	<div class="-video-stats">
@@ -14,9 +51,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-video-stats
 	rounded-corners()
 	elevate-2()

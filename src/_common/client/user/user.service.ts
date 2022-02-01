@@ -1,19 +1,18 @@
+import { unref, watch } from 'vue';
 import { Api } from '../../api/api.service';
 import { Environment } from '../../environment/environment.service';
 import { Navigate } from '../../navigate/navigate.service';
-import { WithAppStore } from '../../store/app-store';
-import { User } from '../../user/user.model';
+import type { CommonStore } from '../../store/common-store';
 
 export class ClientUser {
-	static init(store: WithAppStore) {
+	static init({ commonStore: { user, setUser } }: { commonStore: CommonStore }) {
 		// We bootstrap the client with the previously stored user if there was any.
 		// This way they can access client offline with their previous user.
 		const localUser = localStorage.getItem('user');
 		if (localUser) {
-			const user = new User(JSON.parse(localUser));
-			store.commit('app/setUser', user);
+			setUser(JSON.parse(localUser));
 		} else if (Navigate.currentClientSection !== 'auth') {
-			if (GJ_WITH_LOCALSTOAGE_AUTH_REDIRECT) {
+			if (!GJ_DISABLE_SECTION_REDIRECTS) {
 				// Must be logged in to use client.
 				this.authRedirect();
 			} else {
@@ -27,10 +26,11 @@ export class ClientUser {
 			}
 		}
 
-		// When the app user changes in the store, freeze it into local storage so we can bootstrap
-		// from that next client launch (before any payload response).
-		store.watch(
-			state => state.app.user,
+		// When the app user changes in the store, freeze it into local storage
+		// so we can bootstrap from that next client launch (before any payload
+		// response).
+		watch(
+			() => unref(user),
 			user => {
 				if (user) {
 					localStorage.setItem('user', JSON.stringify(user));
@@ -45,6 +45,8 @@ export class ClientUser {
 	}
 
 	private static authRedirect() {
+		console.log('redirecting to auth');
+
 		// TODO: This is a hack to fix redirect loop between the client sections and the auth section.
 		// Since redirecting with window.location.href isnt really synchronous theres a race condition
 		// between the time user service figures out it has no user and redirects to auth

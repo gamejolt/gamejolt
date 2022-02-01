@@ -1,4 +1,4 @@
-import { Device } from '../device/device.service';
+import { getDeviceArch, getDeviceOS } from '../device/device.service';
 import { Environment } from '../environment/environment.service';
 import { PartnerReferral } from '../partner-referral/partner-referral-service';
 import { Referrer } from '../referrer/referrer.service';
@@ -36,7 +36,7 @@ export class HistoryTick {
 	}
 
 	static sendBeacon(type: string, resourceId?: number, options: BeaconOptions = {}) {
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			return;
 		}
 
@@ -47,8 +47,8 @@ export class HistoryTick {
 			queryParams.push('cb=' + Date.now());
 
 			// Device info.
-			queryParams.push('os=' + Device.os());
-			const arch = Device.arch();
+			queryParams.push('os=' + getDeviceOS());
+			const arch = getDeviceArch();
 			if (arch) {
 				queryParams.push('arch=' + arch);
 			}

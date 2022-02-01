@@ -1,4 +1,121 @@
-<script lang="ts" src="./window"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
+import { formatNumber } from '../../../../_common/filters/number';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
+import { SettingChatGroupShowMembers } from '../../../../_common/settings/settings.service';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
+import { useAppStore } from '../../../store/index';
+import { ChatStore, ChatStoreKey } from '../chat-store';
+import { leaveChatRoom } from '../client';
+import { ChatInviteModal } from '../invite-modal/invite-modal.service';
+import AppChatMemberList from '../member-list/AppChatMemberList.vue';
+import { ChatMessage } from '../message';
+import { ChatRoom, getChatRoomTitle } from '../room';
+import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
+import AppChatWindowMenu from './menu/menu.vue';
+import AppChatWindowOutput from './output/output.vue';
+import AppChatWindowSend from './send/send.vue';
+
+@Options({
+	components: {
+		AppScrollScroller,
+		AppChatUserOnlineStatus,
+		AppChatWindowSend,
+		AppChatWindowOutput,
+		AppFadeCollapse,
+		AppChatWindowMenu,
+		AppChatMemberList,
+		AppUserVerifiedTick,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppChatWindow extends Vue {
+	@Prop({ type: Object, required: true }) room!: ChatRoom;
+	@Prop({ type: Array, required: true }) messages!: ChatMessage[];
+	@Prop({ type: Array, required: true }) queuedMessages!: ChatMessage[];
+
+	store = setup(() => useAppStore());
+
+	@Inject({ from: ChatStoreKey })
+	chatStore!: ChatStore;
+
+	isShowingUsers = Screen.isXs ? false : SettingChatGroupShowMembers.get();
+	isDescriptionCollapsed = false;
+	friendAddJolticonVersion = 1;
+
+	readonly Screen = Screen;
+
+	@Emit('focus-change')
+	emitFocusChange(_focused: boolean) {}
+
+	get chat() {
+		return this.chatStore.chat!;
+	}
+
+	get users() {
+		return this.chat.roomMembers[this.room.id];
+	}
+
+	get roomTitle() {
+		return this.room.isGroupRoom
+			? getChatRoomTitle(this.room, this.chat)
+			: this.room.user?.display_name;
+	}
+
+	get membersCount() {
+		return formatNumber(this.room.members.length);
+	}
+
+	addGroup() {
+		// When creating a group from a PM window,
+		// we want to put the room user at the top of the list
+		const initialUser = this.room.user;
+		const invitableUsers = this.chat.friendsList.collection.filter(
+			friend => friend.id !== initialUser?.id
+		);
+
+		if (initialUser) {
+			invitableUsers.unshift(initialUser);
+		}
+
+		// Give the InviteModal the initialUser so it can set them as invited by default
+		ChatInviteModal.show(this.room, invitableUsers, initialUser);
+	}
+
+	addMembers() {
+		// Filter out the room members as we don't want to add them again.
+		const members = this.room.members.map(member => member.id);
+		const invitableUsers = this.chat.friendsList.collection.filter(
+			({ id }) => !members.includes(id)
+		);
+		ChatInviteModal.show(this.room, invitableUsers);
+	}
+
+	close() {
+		// xs size needs to show the friends list when closing the room.
+		// any other size can close the whole chat instead
+		if (Screen.isXs) {
+			leaveChatRoom(this.chat);
+		} else {
+			this.store.toggleLeftPane();
+		}
+	}
+
+	toggleUsers() {
+		this.isShowingUsers = !this.isShowingUsers;
+
+		if (!Screen.isXs) {
+			SettingChatGroupShowMembers.set(this.isShowingUsers);
+		}
+	}
+}
+</script>
 
 <template>
 	<div class="chat-window-wrap">
@@ -14,13 +131,13 @@
 				<div class="chat-window-header-wrap">
 					<div class="chat-window-header fill-offset">
 						<div class="chat-window-header-controls">
-							<app-chat-window-menu :room="room" />
+							<AppChatWindowMenu :room="room" />
 
 							<span
 								@mouseenter="friendAddJolticonVersion = 2"
 								@mouseleave="friendAddJolticonVersion = 1"
 							>
-								<app-button
+								<AppButton
 									v-app-tooltip="
 										room.isPmRoom
 											? $gettext('Create Group Chat')
@@ -34,7 +151,7 @@
 								/>
 							</span>
 
-							<app-button
+							<AppButton
 								v-if="!room.isPmRoom"
 								v-app-tooltip="
 									isShowingUsers
@@ -48,7 +165,7 @@
 								@click="toggleUsers"
 							/>
 
-							<app-button
+							<AppButton
 								v-app-tooltip="$gettext('Close Room')"
 								class="-header-control"
 								circle
@@ -59,11 +176,7 @@
 						</div>
 
 						<!-- Animation scope. -->
-						<div
-							v-for="room of [room]"
-							:key="room.id"
-							class="chat-window-header-content"
-						>
+						<div :key="room.id" class="chat-window-header-content">
 							<span
 								v-if="!room.isPmRoom"
 								class="
@@ -74,7 +187,7 @@
 								"
 							>
 								<div class="-icon">
-									<app-jolticon icon="users" />
+									<AppJolticon icon="users" />
 								</div>
 							</span>
 							<router-link
@@ -88,7 +201,7 @@
 								:to="room.user.url"
 							>
 								<img class="-icon" :src="room.user.img_avatar" alt="" />
-								<app-chat-user-online-status
+								<AppChatUserOnlineStatus
 									:is-online="room.user.isOnline"
 									:size="16"
 								/>
@@ -105,7 +218,7 @@
 								<router-link class="link-unstyled" :to="room.user.url">
 									{{ roomTitle }}
 								</router-link>
-								<app-user-verified-tick :user="room.user" />
+								<AppUserVerifiedTick :user="room.user" />
 								<br />
 								<small>@{{ room.user.username }}</small>
 							</h3>
@@ -113,11 +226,8 @@
 					</div>
 				</div>
 
-				<!-- The v-for is a hack to make sure we destroy/recreate each
-				time the room changes. -->
 				<div class="chat-window-output fill-backdrop">
-					<app-chat-window-output
-						v-for="room of [room]"
+					<AppChatWindowOutput
 						:key="room.id"
 						class="chat-window-output-inner"
 						:room="room"
@@ -127,7 +237,7 @@
 				</div>
 
 				<div v-if="chat.currentUser" class="chat-window-send-container">
-					<app-chat-window-send :room="room" @focus-change="emitFocusChange" />
+					<AppChatWindowSend :room="room" @focus-change="emitFocusChange" />
 				</div>
 			</div>
 		</div>
@@ -139,25 +249,25 @@
 			<div v-if="!room.isPmRoom && isShowingUsers" class="chat-window-users">
 				<div v-if="!Screen.isXs" class="chat-window-users-shadow" />
 
-				<app-scroll-scroller class="chat-window-users-scroller">
+				<AppScrollScroller class="chat-window-users-scroller">
 					<template v-if="Screen.isXs">
 						<br />
 						<div class="nav-controls">
-							<app-button block icon="chevron-left" @click="toggleUsers">
-								<translate>Back to Chat</translate>
-							</app-button>
+							<AppButton block icon="chevron-left" @click="toggleUsers">
+								<AppTranslate>Back to Chat</AppTranslate>
+							</AppButton>
 						</div>
 					</template>
 
 					<div class="nav-heading">
-						<translate>Members</translate>
+						<AppTranslate>Members</AppTranslate>
 						<span class="badge badge-subtle">
 							{{ membersCount }}
 						</span>
 					</div>
 
-					<app-chat-member-list v-if="users" :users="users.collection" :room="room" />
-				</app-scroll-scroller>
+					<AppChatMemberList v-if="users" :users="users.collection" :room="room" />
+				</AppScrollScroller>
 			</div>
 		</div>
 	</div>

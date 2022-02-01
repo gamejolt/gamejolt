@@ -1,21 +1,19 @@
-import { asyncComponentLoader } from '../../../../../utils/utils';
-import { Modal } from '../../../../../_common/modal/modal.service';
+import { defineAsyncComponent } from 'vue';
+import { lazyImportNoSSR } from '../../../../../_common/code-splitting';
+import { findModalById, showModal } from '../../../../../_common/modal/modal.service';
 import { FiresideController } from '../../controller/controller';
 
 const ModalId = 'firesideStreamSetup';
 
 export class StreamSetupModal {
 	static async show(c: FiresideController) {
-		if (!c.rtc?.producer) {
+		if (!c.rtc.value?.producer) {
 			return;
 		}
 
-		return await Modal.show<void>({
+		return await showModal<void>({
 			modalId: ModalId,
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "FiresideStreamSetup" */ './setup-modal.vue')
-				),
+			component: defineAsyncComponent(lazyImportNoSSR(() => import('./setup-modal.vue'))),
 			props: {
 				c,
 			},
@@ -26,7 +24,7 @@ export class StreamSetupModal {
 	}
 
 	static close() {
-		for (const modal of Modal.findByModalId(ModalId)) {
+		for (const modal of findModalById(ModalId)) {
 			modal.dismiss();
 		}
 	}

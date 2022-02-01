@@ -1,3 +1,32 @@
+<script lang="ts">
+import { Options } from 'vue-property-decorator';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
+import { imageJolt } from '../../../img/images';
+
+@Options({
+	name: 'RouteLandingHelp',
+	components: {
+		AppThemeSvg,
+	},
+})
+@OptionsForRoute()
+export default class RouteLandingHelp extends BaseRouteComponent {
+	readonly imageJolt = imageJolt;
+
+	get routeTitle() {
+		return this.$gettext(`Help Docs`);
+	}
+
+	inPath(url: string, exact = false) {
+		if (exact) {
+			return '/' + this.$route.params.path === url;
+		}
+		return ('/' + this.$route.params.path).indexOf(url) !== -1;
+	}
+}
+</script>
+
 <template>
 	<div>
 		<section class="section landing-header">
@@ -5,14 +34,14 @@
 				<div class="row">
 					<div class="col-lg-offset-1 col-lg-11">
 						<h1>
-							<app-theme-svg
-								src="~img/jolt.svg"
+							<AppThemeSvg
+								:src="imageJolt"
 								alt=""
 								:width="17 * 3"
 								:height="18 * 3"
 								strict-colors
 							/>
-							<translate>Help Docs</translate>
+							<AppTranslate>Help Docs</AppTranslate>
 						</h1>
 					</div>
 				</div>
@@ -32,11 +61,9 @@
 	</div>
 </template>
 
-<script lang="ts" src="./help"></script>
-
 <style lang="stylus" scoped>
-.-content >>>
+.-content
 	// Get rid of the top margin that headings produce from the compiled markdown.
-	h1:first-child
+	::v-deep(h1:first-child)
 		margin-top: 0
 </style>

@@ -1,8 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeAuthLinkedAccountTwitchCallback: RouteConfig = {
+export const routeAuthLinkedAccountTwitchCallback: RouteRecordRaw = {
 	name: 'auth.linked-account.twitch.callback',
 	path: 'twitch/callback',
-	component: () =>
-		import(/* webpackChunkName: "routeAuthLinkedAccountTwitchCallback" */ './callback'),
+	component: () => import('./callback'),
 };

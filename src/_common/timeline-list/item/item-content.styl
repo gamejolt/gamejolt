@@ -1,5 +1,3 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
 
 // Most of this styling needs to be done globally.
 .timeline-list
@@ -26,7 +24,8 @@
 			border-style: solid
 			z-index: 1
 
-			.timeline-list-item.active, .timeline-list-item.new
+			.timeline-list-item.active
+			.timeline-list-item.new
 				&
 					theme-prop('border-color', 'notice')
 
@@ -68,7 +67,8 @@
 			p:last-child
 				margin-bottom: 0
 
-		&-thumb, &-avatar
+		&-thumb
+		&-avatar
 			img-circle()
 			float: left
 			width: $timeline-list-avatar-size

@@ -1,24 +1,130 @@
+<script lang="ts">
+import { nextTick, toRaw, watch } from 'vue';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import { Api } from '../../api/api.service';
+import AppColorpicker from '../../colorpicker/colorpicker.vue';
+import AppLoading from '../../loading/loading.vue';
+import { SiteTemplate } from '../../site/template/template-model';
+import AppThemeEditorFontSelector from './font-selector.vue';
+import AppThemeEditorImage from './image.vue';
+
+interface StyleGroup {
+	name: string;
+	sections: {
+		section: string;
+		definitions: string[];
+	}[];
+}
+
+@Options({
+	components: {
+		AppLoading,
+		AppThemeEditorFontSelector,
+		AppThemeEditorImage,
+		AppColorpicker,
+	},
+})
+export default class AppThemeEditor extends Vue {
+	@Prop(String) windowId!: string;
+	@Prop(Number) template!: number;
+	@Prop(Object) theme!: any;
+	@Prop(Number) resourceId!: number;
+
+	isLoaded = false;
+
+	selectedGroup: StyleGroup = null as any;
+	templateObj: SiteTemplate = {} as any;
+	definition: any = {};
+
+	@Emit('change')
+	emitChange(_theme: any) {}
+
+	async created() {
+		const response = await Api.sendRequest(
+			'/sites-io/get-template/' + this.template,
+			undefined,
+			{
+				detach: true,
+			}
+		);
+
+		this.isLoaded = true;
+
+		this.templateObj = new SiteTemplate(response.template);
+		this.definition = this.templateObj.data;
+		this.selectedGroup = this.definition.styleGroups[0];
+
+		// Make sure we update the page with the current theme.
+		this.refresh(true);
+
+		watch(
+			() => this.theme,
+			() => this.refresh(),
+			{ deep: true }
+		);
+	}
+
+	async refresh(initial = false) {
+		// Gotta wait for the value to be saved.
+		await nextTick();
+
+		const iframe = document.getElementById(this.windowId) as HTMLIFrameElement | undefined;
+		if (iframe && iframe.contentWindow) {
+			const msg = {
+				type: 'theme-update',
+				template: toRaw(this.templateObj),
+				definition: toRaw(this.definition),
+				theme: toRaw(this.theme),
+			};
+
+			iframe.contentWindow.postMessage(msg, '*');
+		}
+
+		if (!initial) {
+			this.emitChange(this.theme);
+		}
+	}
+
+	updateField(field: string, content?: string) {
+		this.theme[field] = content;
+		this.refresh();
+	}
+}
+</script>
+
 <template>
 	<div class="theme-editor">
-		<app-loading v-if="!isLoaded" />
+		<AppLoading v-if="!isLoaded" />
 		<div v-else>
 			<p v-if="definition.styleGroups.length > 1">
-				<select class="form-control" v-model="selectedGroup">
-					<option v-for="group of definition.styleGroups" :value="group.name">
+				<select v-model="selectedGroup" class="form-control">
+					<option
+						v-for="group of definition.styleGroups"
+						:key="group.name"
+						:value="group.name"
+					>
 						{{ group.name }}
 					</option>
 				</select>
 			</p>
 
 			<form novalidate>
-				<div class="theme-editor-section" v-for="section of selectedGroup.sections">
+				<div
+					v-for="section of selectedGroup.sections"
+					:key="section.section"
+					class="theme-editor-section"
+				>
 					<h4>{{ section.section }}</h4>
 
 					<div class="theme-editor-definitions fill-offset">
 						<div
-							class="form-group"
 							v-for="definitionField of section.definitions"
-							:class="'theme-editor-definition-' + definition.definitions[definitionField].type"
+							:key="definitionField"
+							class="form-group"
+							:class="
+								'theme-editor-definition-' +
+								definition.definitions[definitionField].type
+							"
 						>
 							<label class="control-label">
 								{{ definition.definitions[definitionField].title }}
@@ -26,45 +132,49 @@
 
 							<!-- Colopicker -->
 							<div
-								class="theme-editor-colorpicker"
 								v-if="definition.definitions[definitionField].type === 'color'"
+								class="theme-editor-colorpicker"
 							>
 								<a
+									v-if="!!theme[definitionField]"
 									style="float: left"
 									class="clear-link"
-									v-if="!!theme[definitionField]"
 									@click="updateField(definitionField, undefined)"
 								>
-									<translate>clear</translate>
+									<AppTranslate>clear</AppTranslate>
 								</a>
-								<app-colorpicker v-model="theme[definitionField]" @input="refresh()" />
+								<AppColorpicker v-model="theme[definitionField]" />
 							</div>
 
 							<!-- Image -->
-							<app-theme-editor-image
+							<AppThemeEditorImage
 								v-else-if="definition.definitions[definitionField].type === 'image'"
+								v-model="theme[definitionField]"
 								type="sites-theme-image"
 								:parent-id="resourceId"
-								v-model="theme[definitionField]"
-								@input="refresh()"
 							/>
 
 							<!-- Font Family -->
-							<app-theme-editor-font-selector
-								v-else-if="definition.definitions[definitionField].type === 'fontFamily'"
-								class="theme-editor-font-family"
+							<AppThemeEditorFontSelector
+								v-else-if="
+									definition.definitions[definitionField].type === 'fontFamily'
+								"
 								v-model="theme[definitionField]"
-								@input="refresh()"
+								class="theme-editor-font-family"
 							/>
 
 							<!-- Dropdown -->
 							<div
+								v-else-if="
+									definition.definitions[definitionField].type === 'dropdown'
+								"
 								class="theme-editor-dropdown"
-								v-else-if="definition.definitions[definitionField].type === 'dropdown'"
 							>
-								<select class="form-control" v-model="theme[definitionField]" @input="refresh()">
+								<select v-model="theme[definitionField]" class="form-control">
 									<option
-										v-for="option of definition.definitions[definitionField].options"
+										v-for="option of definition.definitions[definitionField]
+											.options"
+										:key="option"
 										:value="option"
 									>
 										{{ option }}
@@ -74,60 +184,95 @@
 
 							<!-- Background Repeat -->
 							<div
+								v-else-if="
+									definition.definitions[definitionField].type ===
+									'backgroundRepeat'
+								"
 								class="theme-editor-dropdown"
-								v-else-if="definition.definitions[definitionField].type === 'backgroundRepeat'"
 							>
-								<select class="form-control" v-model="theme[definitionField]" @input="refresh()">
-									<option :value="undefined"><translate>Repeat</translate></option>
-									<option value="repeat-x"><translate>Repeat Horizontal</translate></option>
-									<option value="repeat-y"><translate>Repeat Vertical</translate></option>
-									<option value="no-repeat"><translate>Don't Repeat</translate></option>
+								<select v-model="theme[definitionField]" class="form-control">
+									<option :value="undefined">
+										<AppTranslate>Repeat</AppTranslate>
+									</option>
+									<option value="repeat-x">
+										<AppTranslate>Repeat Horizontal</AppTranslate>
+									</option>
+									<option value="repeat-y">
+										<AppTranslate>Repeat Vertical</AppTranslate>
+									</option>
+									<option value="no-repeat">
+										<AppTranslate>Don't Repeat</AppTranslate>
+									</option>
 								</select>
 							</div>
 
 							<!-- Background Size -->
 							<div
+								v-else-if="
+									definition.definitions[definitionField].type ===
+									'backgroundSize'
+								"
 								class="theme-editor-dropdown"
-								v-else-if="definition.definitions[definitionField].type === 'backgroundSize'"
 							>
-								<select class="form-control" v-model="theme[definitionField]" @input="refresh()">
-									<option :value="undefined"><translate>Auto (Default)</translate></option>
-									<option value="cover"><translate>Cover</translate></option>
-									<option value="contain"><translate>Contain</translate></option>
+								<select v-model="theme[definitionField]" class="form-control">
+									<option :value="undefined">
+										<AppTranslate>Auto (Default)</AppTranslate>
+									</option>
+									<option value="cover">
+										<AppTranslate>Cover</AppTranslate>
+									</option>
+									<option value="contain">
+										<AppTranslate>Contain</AppTranslate>
+									</option>
 								</select>
 							</div>
 
 							<!-- Background Position -->
 							<div
+								v-else-if="
+									definition.definitions[definitionField].type ===
+									'backgroundPosition'
+								"
 								class="theme-editor-dropdown"
-								v-else-if="definition.definitions[definitionField].type === 'backgroundPosition'"
 							>
-								<select class="form-control" v-model="theme[definitionField]" @input="refresh()">
-									<option :value="undefined"><translate>Top</translate></option>
-									<option value="topLeft"><translate>Top Left</translate></option>
-									<option value="right"><translate>Right</translate></option>
-									<option value="topRight"><translate>Top Right</translate></option>
-									<option value="bottomRight"><translate>Bottom Right</translate></option>
-									<option value="bottom"><translate>Bottom</translate></option>
-									<option value="bottomLeft"><translate>Bottom Left</translate></option>
-									<option value="left"><translate>Left</translate></option>
-									<option value="center"><translate>Center</translate></option>
+								<select v-model="theme[definitionField]" class="form-control">
+									<option :value="undefined">
+										<AppTranslate>Top</AppTranslate>
+									</option>
+									<option value="topLeft">
+										<AppTranslate>Top Left</AppTranslate>
+									</option>
+									<option value="right">
+										<AppTranslate>Right</AppTranslate>
+									</option>
+									<option value="topRight">
+										<AppTranslate>Top Right</AppTranslate>
+									</option>
+									<option value="bottomRight">
+										<AppTranslate>Bottom Right</AppTranslate>
+									</option>
+									<option value="bottom">
+										<AppTranslate>Bottom</AppTranslate>
+									</option>
+									<option value="bottomLeft">
+										<AppTranslate>Bottom Left</AppTranslate>
+									</option>
+									<option value="left"><AppTranslate>Left</AppTranslate></option>
+									<option value="center">
+										<AppTranslate>Center</AppTranslate>
+									</option>
 								</select>
 							</div>
 
 							<!-- CSS Input -->
 							<div
-								class="theme-editor-code"
 								v-else-if="definition.definitions[definitionField].type === 'css'"
+								class="theme-editor-code"
 							>
-								<app-codemirror
-									:value="theme[definitionField]"
-									:options="{
-										mode: 'css',
-										lineNumbers: false,
-										tabSize: 2,
-									}"
-									@input="updateField(definitionField, $event)"
+								<textarea
+									v-model="theme[definitionField]"
+									class="form-control"
+									rows="15"
 								/>
 							</div>
 						</div>
@@ -139,5 +284,3 @@
 </template>
 
 <style lang="stylus" src="./theme-editor.styl" scoped></style>
-
-<script lang="ts" src="./theme-editor"></script>

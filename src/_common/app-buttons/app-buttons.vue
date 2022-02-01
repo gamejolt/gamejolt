@@ -1,4 +1,30 @@
-<script lang="ts" src="./app-buttons"></script>
+<script lang="ts">
+import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import {
+	AppPromotionSource,
+	AppPromotionStore,
+	AppPromotionStoreKey,
+} from '../../utils/mobile-app';
+import { trackAppPromotionClick } from '../analytics/analytics.service';
+import appStoreImage from './button-app-store.svg';
+import playStoreImage from './button-play-store.png';
+
+@Options({})
+export default class AppAppButtons extends Vue {
+	@Prop({ type: String, required: true })
+	source!: AppPromotionSource;
+
+	@Prop({ type: Boolean })
+	justified!: boolean;
+
+	@Inject({ from: AppPromotionStoreKey })
+	appPromotion!: AppPromotionStore;
+
+	readonly trackAppPromotionClick = trackAppPromotionClick;
+	readonly playStoreImage = playStoreImage;
+	readonly appStoreImage = appStoreImage;
+}
+</script>
 
 <template>
 	<div class="app-buttons" :class="{ '-justified': justified }">
@@ -6,10 +32,10 @@
 			class="-button"
 			:href="appPromotion.playStoreUrl"
 			target="_blank"
-			@click="trackAppPromotionClick({ source })"
+			@click="trackAppPromotionClick({ source, platform: 'mobile' })"
 		>
 			<img
-				src="./button-play-store.png"
+				:src="playStoreImage"
 				:width="564 * (50 / 168)"
 				:height="50"
 				alt="Get it on Google Play"
@@ -19,10 +45,10 @@
 			class="-button"
 			:href="appPromotion.appStoreUrl"
 			target="_blank"
-			@click="trackAppPromotionClick({ source })"
+			@click="trackAppPromotionClick({ source, platform: 'mobile' })"
 		>
 			<img
-				src="./button-app-store.svg"
+				:src="appStoreImage"
 				:width="120 * (50 / 40)"
 				:height="50"
 				alt="Download on the App Store"
@@ -32,9 +58,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .app-buttons
 	display: flex
 	flex-direction: row

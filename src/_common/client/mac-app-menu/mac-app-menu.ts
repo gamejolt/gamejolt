@@ -1,9 +1,8 @@
-import Vue, { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
-
+import { h } from 'vue';
+import { Options, Vue } from 'vue-property-decorator';
 import { Client } from '../client.service';
 
-@Component({})
+@Options({})
 export class AppClientMacAppMenu extends Vue {
 	mounted() {
 		const win = nw.Window.get();
@@ -28,7 +27,7 @@ export class AppClientMacAppMenu extends Vue {
 		nw.App.on('reopen', () => Client.show());
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('div');
 	}
 }

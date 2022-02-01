@@ -1,8 +1,38 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { formatNumber } from '../../../../_common/filters/number';
+import { GameTrophy } from '../../../../_common/game/trophy/trophy.model';
+import { AppTimeAgo } from '../../../../_common/time/ago/ago';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { UserGameTrophy } from '../../../../_common/user/trophy/game-trophy.model';
+import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
+
+@Options({
+	components: {
+		AppTrophyThumbnail,
+		AppTimeAgo,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppTrophyList extends Vue {
+	@Prop(Array) trophies!: GameTrophy[];
+	@Prop(Array) achieved!: UserGameTrophy[];
+
+	readonly formatNumber = formatNumber;
+
+	get achievedIndexed() {
+		return UserGameTrophy.indexAchieved(this.achieved);
+	}
+}
+</script>
+
 <template>
 	<div class="trophy-list">
-		<div class="trophy-list-item" v-for="trophy of trophies" :key="trophy.id">
+		<div v-for="trophy of trophies" :key="trophy.id" class="trophy-list-item">
 			<div class="trophy-list-item-thumbnail">
-				<app-trophy-thumbnail :trophy="trophy" :is-achieved="!!achievedIndexed[trophy.id]" />
+				<AppTrophyThumbnail :trophy="trophy" :is-achieved="!!achievedIndexed[trophy.id]" />
 			</div>
 
 			<div class="trophy-list-item-content">
@@ -11,39 +41,47 @@
 				</h4>
 
 				<!--
-				We have to keep the trophy description secret unless they've achieved it, or if they're the dev.
-				The API should return garbage for the description, so let's put our own text in there.
-			-->
+					We have to keep the trophy description secret unless they've achieved it, or if they're the dev.
+					The API should return garbage for the description, so let's put our own text in there.
+				-->
 				<div
-					class="trophy-list-item-description small"
 					v-if="!trophy.secret || achievedIndexed[trophy.id]"
+					class="trophy-list-item-description small"
 				>
 					{{ trophy.description }}
 				</div>
 
-				<div class="trophy-list-item-description small text-muted" v-else>
+				<div v-else class="trophy-list-item-description small text-muted">
 					<em>
-						<translate>Achieve this trophy to view the description.</translate>
+						<AppTranslate>Achieve this trophy to view the description.</AppTranslate>
 					</em>
 				</div>
 
 				<div class="trophy-list-item-meta">
-					<span v-app-tooltip="$gettext(`trophies.exp_gained_tooltip`)" class="text-muted">
-						<app-jolticon icon="exp" class="middle" />
-						{{ trophy.experience | number }}
-						<translate class="small">leveling.exp</translate>
+					<span
+						v-app-tooltip="$gettext(`The amount of EXP gained from this trophy.`)"
+						class="text-muted"
+					>
+						<AppJolticon icon="exp" class="middle" />
+						{{ ' ' + formatNumber(trophy.experience) + ' ' }}
+						<AppTranslate
+							class="small"
+							translate-comment="As in abbreviation for experience. If one doesnt exist for your language, or if its not a short word just leave it as EXP."
+						>
+							EXP
+						</AppTranslate>
 					</span>
 
 					<template v-if="achievedIndexed[trophy.id]">
-						<span class="dot-separator hidden-xs"></span>
+						<span class="dot-separator hidden-xs" />
 						<br class="visible-xs" />
 
 						<span class="tag tag-highlight">
-							<translate>trophies.achieved_tag</translate>
+							<AppTranslate>Achieved!</AppTranslate>
 						</span>
-						<span class="dot-separator"></span>
+						<span class="dot-separator" />
 						<small class="text-muted">
-							<app-time-ago :date="achievedIndexed[trophy.id].logged_on" />
+							<AppTimeAgo :date="achievedIndexed[trophy.id].logged_on" />
 						</small>
 					</template>
 				</div>
@@ -53,9 +91,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 $trophy-list-thumbnail-size-xs = 70px
 $trophy-list-thumbnail-size = 100px
 $trophy-list-gutter-xs = ($grid-gutter-width-xs / 2)
@@ -84,5 +119,3 @@ $trophy-list-gutter = ($grid-gutter-width / 2)
 	.trophy-list-item-description
 		margin-bottom: $font-size-base
 </style>
-
-<script lang="ts" src="./list"></script>

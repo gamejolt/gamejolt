@@ -1,6 +1,5 @@
 import { Mark, MarkType, Node } from 'prosemirror-model';
 import { EditorState, Plugin, Transaction } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
 import { ContentEditorController, editorResolveNodePosition } from '../content-editor-controller';
 import { ContentEditorSchema } from '../schemas/content-editor-schema';
 import { UrlDetector } from './url-detector';
@@ -16,22 +15,14 @@ type TextCell = {
 };
 
 export default class UpdateAutolinkPlugin extends Plugin {
-	private view!: EditorView<ContentEditorSchema>;
-
 	constructor(private readonly c: ContentEditorController) {
 		super({});
 
-		this.spec.view = this.viewSetter.bind(this);
 		this.spec.appendTransaction = this.appendTransaction;
 	}
 
 	get capabilities() {
 		return this.c.contextCapabilities;
-	}
-
-	viewSetter(view: EditorView<ContentEditorSchema>) {
-		this.view = view;
-		return {};
 	}
 
 	appendTransaction(
@@ -40,10 +31,11 @@ export default class UpdateAutolinkPlugin extends Plugin {
 		newState: EditorState<ContentEditorSchema>
 	) {
 		const tr = newState.tr;
+		const marks = this.c.view!.state.schema.marks;
 
-		const mentionMarkType = this.view.state.schema.marks.mention;
-		const tagMarkType = this.view.state.schema.marks.tag;
-		const linkMarkType = this.view.state.schema.marks.link;
+		const mentionMarkType = marks.mention;
+		const tagMarkType = marks.tag;
+		const linkMarkType = marks.link;
 
 		const paragraphs = this.getParagraphs(tr.doc);
 
@@ -106,11 +98,8 @@ export default class UpdateAutolinkPlugin extends Plugin {
 	 *  - link
 	 */
 	rangeHasLinks(tr: Transaction<ContentEditorSchema>, from: number, to: number) {
-		const markTypes = [
-			this.view.state.schema.marks.mention,
-			this.view.state.schema.marks.tag,
-			this.view.state.schema.marks.link,
-		];
+		const marks = this.c.view!.state.schema.marks;
+		const markTypes = [marks.mention, marks.tag, marks.link];
 		for (const markType of markTypes) {
 			if (tr.doc.rangeHasMark(from, to, markType)) {
 				return true;

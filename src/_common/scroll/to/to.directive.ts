@@ -1,12 +1,12 @@
-import { DirectiveOptions } from 'vue';
+import { Directive } from 'vue';
 import { Scroll } from '../scroll.service';
 
-export const AppScrollTo: DirectiveOptions = {
-	bind(el, binding) {
+export const AppScrollTo: Directive<HTMLElement, string | undefined> = {
+	beforeMount(el, binding) {
 		el.addEventListener('click', e => {
 			e.preventDefault();
 
-			const to = binding.value || (el.getAttribute('href') || '').substring(1);
+			const to = binding.value ?? (el.getAttribute('href') ?? '').substring(1);
 			if (!to) {
 				console.error(new Error(`Couldn't get scroll to.`));
 			}

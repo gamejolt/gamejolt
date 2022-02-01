@@ -1,10 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeCommunitiesViewEditChannelsCompetitionEntries: RouteConfig = {
+export const routeCommunitiesViewEditChannelsCompetitionEntries: RouteRecordRaw = {
 	name: 'communities.view.edit.channels.competition.entries',
 	path: 'entries',
-	component: () =>
-		import(
-			/* webpackChunkName: "routeCommunitiesViewEditChannelCompetitions" */ './entries.vue'
-		),
+	component: () => import('./entries.vue'),
 };

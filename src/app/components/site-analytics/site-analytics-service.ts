@@ -1,8 +1,8 @@
+import { arrayIndexBy } from '../../../utils/array';
+import { objectPick } from '../../../utils/object';
 import { Api } from '../../../_common/api/api.service';
 import { Graph } from '../../../_common/graph/graph.service';
 import { Translate } from '../../../_common/translate/translate.service';
-import { arrayIndexBy } from '../../../utils/array';
-import { objectPick } from '../../../utils/object';
 
 export type ResourceName = 'Partner' | 'User' | 'Game' | 'Game_Package' | 'Game_Release';
 
@@ -441,7 +441,7 @@ export class SiteAnalytics {
 			sanitizeComplexData: false,
 		});
 
-		let data: any = {};
+		const data: any = {};
 		Object.entries(response).forEach((kv: any) => {
 			const [metricKey, eventData] = kv;
 			let label: string | undefined = undefined;
@@ -479,7 +479,7 @@ export class SiteAnalytics {
 			sanitizeComplexData: false,
 		});
 
-		let data: any = {};
+		const data: any = {};
 		Object.entries(response).forEach((kv: any) => {
 			const [metricKey, eventData] = kv;
 			let amount = eventData.total;
@@ -507,7 +507,7 @@ export class SiteAnalytics {
 		viewAs: number,
 		dates?: DateRange
 	) {
-		let request: { [k: string]: Request } = {};
+		const request: { [k: string]: Request } = {};
 
 		Object.values(metrics).forEach(metric => {
 			let _analyzer = analyzer;

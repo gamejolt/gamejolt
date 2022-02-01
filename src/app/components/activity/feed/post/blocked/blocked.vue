@@ -1,11 +1,21 @@
-<script lang="ts" src="./blocked"></script>
+<script lang="ts">
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+
+@Options({})
+export default class AppActivityFeedPostBlocked extends Vue {
+	@Prop({ type: String, required: true })
+	username!: string;
+
+	@Emit('show') show() {}
+}
+</script>
 
 <template>
 	<div class="alert">
 		<span v-translate="{ username }"> Hidden post by blocked user <b>@%{ username }</b>. </span>
-		<app-button trans @click="show">
-			<translate>Show</translate>
-		</app-button>
+		<AppButton trans @click="show">
+			<AppTranslate>Show</AppTranslate>
+		</AppButton>
 	</div>
 </template>
 

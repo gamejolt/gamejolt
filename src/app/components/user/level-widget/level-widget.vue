@@ -1,3 +1,31 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { formatNumber } from '../../../../_common/filters/number';
+import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { User } from '../../../../_common/user/user.model';
+
+@Options({
+	components: {
+		AppProgressBar,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppUserLevelWidget extends Vue {
+	@Prop(Object) user!: User;
+
+	readonly formatNumber = formatNumber;
+
+	get tooltip() {
+		return this.$gettextInterpolate('%{ percentage }% progress to next level', {
+			percentage: this.user.level_next_percentage,
+		});
+	}
+}
+</script>
+
 <template>
 	<div class="user-level-widget">
 		<div class="user-level-widget-level fill-darkest">
@@ -7,14 +35,14 @@
 		<div class="user-level-widget-experience fill-offset text-right">
 			<div class="stat-big stat-big-smaller">
 				<div class="stat-big-label">Current EXP</div>
-				<div class="stat-big-digit">{{ user.experience | number }} EXP</div>
+				<div class="stat-big-digit">{{ formatNumber(user.experience) }} EXP</div>
 			</div>
 			<div class="stat-big stat-big-smaller">
 				<div class="stat-big-label">Next Level in</div>
-				<div class="stat-big-digit">{{ user.experience_next | number }} EXP</div>
+				<div class="stat-big-digit">{{ formatNumber(user.experience_next) }} EXP</div>
 			</div>
 		</div>
-		<app-progress-bar
+		<AppProgressBar
 			class="user-level-widget-progress"
 			thin
 			:percent="user.level_next_percentage"
@@ -24,9 +52,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .user-level-widget-level
 	float: left
 	padding: 10px 0
@@ -56,5 +81,3 @@
 .user-level-widget-progress
 	margin-top: 5px
 </style>
-
-<script lang="ts" src="./level-widget"></script>

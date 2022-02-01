@@ -1,37 +1,115 @@
-<script lang="ts" src="./edit"></script>
+<script lang="ts">
+import { Inject, Options } from 'vue-property-decorator';
+import { Api } from '../../../../../../../_common/api/api.service';
+import { CommunityChannel } from '../../../../../../../_common/community/channel/channel.model';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../../_common/route/route-component';
+import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import { CommunityCompetitionHeaderModal } from '../../../../../../components/community/competition/header-modal/header-modal.service';
+import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
+import AppPageHeaderControls from '../../../../../../components/page-header/controls/controls.vue';
+import AppPageHeader from '../../../../../../components/page-header/page-header.vue';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../view.store';
+import AppCommunitiesViewPageContainer from '../../../_page-container/page-container.vue';
+
+@Options({
+	name: 'RouteCommunitiesViewEditChannelsEdit',
+	components: {
+		AppPageHeader,
+		AppCommunityPerms,
+		AppCommunitiesViewPageContainer,
+		AppPageHeaderControls,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+@OptionsForRoute({
+	deps: { params: ['id', 'channel'] },
+	resolver: ({ route }) =>
+		Api.sendRequest(
+			'/web/dash/communities/channels/' + route.params.id + '/' + route.params.channel
+		),
+})
+export default class RouteCommunitiesViewEditChannelsEdit extends BaseRouteComponent {
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
+
+	get competition() {
+		return this.routeStore.competition;
+	}
+
+	get channel() {
+		return this.routeStore.channel!;
+	}
+
+	get canEditHeader() {
+		return !!this.competition;
+	}
+
+	get pageHeaderProps() {
+		if (!this.competition) {
+			return {};
+		}
+
+		return {
+			coverMediaItem: this.competition.header,
+			coverMaxHeight: 250,
+			coverEditable: true,
+		};
+	}
+
+	routeResolved($payload: any) {
+		if ($payload.channel) {
+			const channel = new CommunityChannel($payload.channel);
+			if (this.channel) {
+				this.channel.assign(channel);
+			} else if (channel.is_archived) {
+				this.routeStore.archivedChannels.push(channel);
+			}
+		}
+	}
+
+	async onClickEditHeader() {
+		await CommunityCompetitionHeaderModal.show(this.competition!);
+	}
+}
+</script>
 
 <template>
 	<!-- Read comment in routeResolved for why the channel might not exist yet. -->
 	<div v-if="channel">
-		<app-page-header v-bind="pageHeaderProps" should-affix-nav @edit-cover="onClickEditHeader">
+		<AppPageHeader v-bind="pageHeaderProps" should-affix-nav @edit-cover="onClickEditHeader">
 			<template v-if="canEditHeader" #cover-edit-buttons>
-				<translate>Upload Header</translate>
+				<AppTranslate>Upload Header</AppTranslate>
 			</template>
 
 			<template #default>
 				<div class="text-muted small">
 					<span v-if="channel.visibility === 'draft'" class="tag">
-						<translate>Draft</translate>
+						<AppTranslate>Draft</AppTranslate>
 					</span>
 					<span v-else-if="channel.visibility === 'published'" class="tag tag-highlight">
-						<translate>Published</translate>
+						<AppTranslate>Published</AppTranslate>
 					</span>
 
 					<template v-if="competition">
 						<span v-if="competition.period === 'pre-comp'" class="tag">
-							<translate>Future</translate>
+							<AppTranslate>Future</AppTranslate>
 						</span>
 						<span
 							v-else-if="competition.period === 'running'"
 							class="tag tag-highlight"
 						>
-							<translate>Running</translate>
+							<AppTranslate>Running</AppTranslate>
 						</span>
 						<span v-else-if="competition.period === 'voting'" class="tag tag-highlight">
-							<translate>Voting</translate>
+							<AppTranslate>Voting</AppTranslate>
 						</span>
 						<span v-else-if="competition.period === 'post-comp'" class="tag">
-							<translate>Finished</translate>
+							<AppTranslate>Finished</AppTranslate>
 						</span>
 					</template>
 
@@ -42,7 +120,7 @@
 						"
 						class="tag tag-notice"
 					>
-						<translate>Archived</translate>
+						<AppTranslate>Archived</AppTranslate>
 					</span>
 				</div>
 
@@ -64,7 +142,7 @@
 											'communities.view.edit.channels.overview',
 									}"
 								>
-									<translate>Channel</translate>
+									<AppTranslate>Channel</AppTranslate>
 								</router-link>
 							</li>
 							<li v-if="competition">
@@ -74,7 +152,7 @@
 									}"
 									active-class="active"
 								>
-									<translate>Manage Jam</translate>
+									<AppTranslate>Manage Jam</AppTranslate>
 								</router-link>
 							</li>
 						</ul>
@@ -83,20 +161,20 @@
 			</template>
 
 			<template #controls>
-				<app-page-header-controls>
-					<app-button
+				<AppPageHeaderControls>
+					<AppButton
 						:to="{
 							name: 'communities.view.channel',
 						}"
 						block
 						icon="arrow-forward"
 					>
-						<translate v-if="competition">View Jam</translate>
-						<translate v-else>View Channel</translate>
-					</app-button>
-				</app-page-header-controls>
+						<AppTranslate v-if="competition">View Jam</AppTranslate>
+						<AppTranslate v-else>View Channel</AppTranslate>
+					</AppButton>
+				</AppPageHeaderControls>
 			</template>
-		</app-page-header>
+		</AppPageHeader>
 
 		<router-view />
 	</div>

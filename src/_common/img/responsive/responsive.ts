@@ -1,50 +1,45 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { h, nextTick } from 'vue';
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { sleep } from '../../../utils/utils';
 import { Ruler } from '../../ruler/ruler-service';
-import { Screen } from '../../screen/screen-service';
-import { EventSubscription } from '../../system/event/event-topic';
+import { onScreenResize, Screen } from '../../screen/screen-service';
+import { useEventSubscription } from '../../system/event/event-topic';
 import { ImgHelper } from '../helper/helper-service';
 
 const WIDTH_HEIGHT_REGEX = /\/(\d+)x(\d+)\//;
 const WIDTH_REGEX = /\/(\d+)\//;
 
-@Component({})
+@Options({})
 export class AppImgResponsive extends Vue {
 	@Prop(String) src!: string;
 
 	private initialized = false;
 	private processedSrc = '';
-	private resize$: EventSubscription | undefined;
+
+	@Emit('imgloadchange')
+	emitChange(_isLoaded: boolean) {}
+
+	declare $el: HTMLElement;
 
 	created() {
-		if (GJ_IS_SSR) {
+		if (import.meta.env.SSR) {
 			this.processedSrc = this.src;
 		}
+
+		useEventSubscription(onScreenResize, () => this.updateSrc());
 	}
 
 	async mounted() {
-		this.resize$ = Screen.resizeChanges.subscribe(() => this.updateSrc());
-
 		// Make sure the view is compiled.
-		await this.$nextTick();
+		await nextTick();
 		this.updateSrc();
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('img', {
-			staticClass: 'img-responsive',
-			domProps: {
-				src: this.processedSrc,
-			},
+			class: 'img-responsive',
+			src: this.processedSrc,
 		});
-	}
-
-	destroyed() {
-		if (this.resize$) {
-			this.resize$.unsubscribe();
-			this.resize$ = undefined;
-		}
 	}
 
 	@Watch('src')
@@ -56,8 +51,13 @@ export class AppImgResponsive extends Vue {
 		// Try waiting for any resizes and breakpoint changes to happen before getting the container information.
 		await sleep(0);
 
-		const containerWidth = Ruler.width(this.$el.parentNode as HTMLElement);
-		const containerHeight = Ruler.height(this.$el.parentNode as HTMLElement);
+		const parent = this.$el.parentElement;
+		if (!parent) {
+			return;
+		}
+
+		const containerWidth = Ruler.width(parent);
+		const containerHeight = Ruler.height(parent);
 
 		// Make sure we never do a 0 width, just in case.
 		// Seems to happen in some situations.
@@ -91,9 +91,9 @@ export class AppImgResponsive extends Vue {
 			this.initialized = true;
 
 			// Keep the isLoaded state up to date?
-			this.$emit('imgloadchange', false);
+			this.emitChange(false);
 			await ImgHelper.loaded(newSrc);
-			this.$emit('imgloadchange', true);
+			this.emitChange(true);
 		}
 	}
 }

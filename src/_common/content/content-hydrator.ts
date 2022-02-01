@@ -67,7 +67,7 @@ export class ContentHydrator {
 		if (!this.hydrationRequests.has(requestKey)) {
 			const hydrationRequest = new ContentHydrationRequest();
 
-			if (!GJ_IS_APP) {
+			if (!GJ_IS_MOBILE_APP) {
 				// Calling the setData will finalize the hydration request.
 				Api.sendRequest(`/web/content/hydrate`, postData, {
 					noErrorRedirect: true,

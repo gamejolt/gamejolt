@@ -1,7 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDashAccountMobileNav: RouteConfig = {
+export const routeDashAccountMobileNav: RouteRecordRaw = {
 	name: 'dash.account-mobile-nav',
 	path: 'account/nav',
-	component: () => import(/* webpackChunkName: "routeDashAccountMobileNav" */ './mobile-nav.vue'),
+	component: () => import('./mobile-nav.vue'),
 };

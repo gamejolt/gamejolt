@@ -1,14 +1,11 @@
-import { asyncComponentLoader } from '../../../../utils/utils';
-import { Modal } from '../../../../_common/modal/modal.service';
+import { defineAsyncComponent } from 'vue';
+import { showModal } from '../../../../_common/modal/modal.service';
 
 export class UserAvatarModal {
 	static async show() {
-		return await Modal.show<void>({
+		return await showModal<void>({
 			modalId: 'UserAvatar',
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "UserAvatarModal" */ './avatar-modal.vue')
-				),
+			component: defineAsyncComponent(() => import('./avatar-modal.vue')),
 			size: 'sm',
 			noBackdropClose: true,
 		});

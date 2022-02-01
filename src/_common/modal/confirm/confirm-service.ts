@@ -1,15 +1,12 @@
-import { asyncComponentLoader } from '../../../utils/utils';
-import { Modal } from '../modal.service';
+import { defineAsyncComponent } from 'vue';
+import { showModal } from '../modal.service';
 
 export class ModalConfirm {
 	static async show(message: string, title = 'Confirm...', buttonType: 'ok' | 'yes' = 'yes') {
-		return await Modal.show<boolean>({
+		return await showModal<boolean>({
 			modalId: 'Confirm',
 			size: 'sm',
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "ModalConfirm" */ './confirm.vue')
-				),
+			component: defineAsyncComponent(() => import('./confirm.vue')),
 			props: { message, title, buttonType },
 		});
 	}

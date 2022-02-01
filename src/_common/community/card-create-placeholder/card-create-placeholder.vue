@@ -1,22 +1,29 @@
-<script lang="ts" src="./card-create-placeholder"></script>
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+import AppCommunityAddWidget from '../add-widget/add-widget.vue';
+
+@Options({
+	components: {
+		AppCommunityAddWidget,
+	},
+})
+export default class AppCommunityCardCreatePlaceholder extends Vue {}
+</script>
 
 <template>
 	<div class="community-card-create-placeholder sheet">
 		<div class="-text">
-			<translate>Create a Community</translate>
+			<AppTranslate>Create a Community</AppTranslate>
 		</div>
 		<div class="-widget">
 			<div class="-widget-button">
-				<app-community-add-widget />
+				<AppCommunityAddWidget />
 			</div>
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .community-card-create-placeholder
 	width: 100%
 	max-width: 250px

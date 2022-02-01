@@ -1,4 +1,49 @@
-<script lang="ts" src="./footer"></script>
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+import { shouldShowAppPromotion } from '../../../../utils/mobile-app';
+import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
+import AppAppButtons from '../../../../_common/app-buttons/app-buttons.vue';
+import AppContactLink from '../../../../_common/contact-link/contact-link.vue';
+import { formatDate } from '../../../../_common/filters/date';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
+import AppTranslateLangSelector from '../../../../_common/translate/lang-selector/lang-selector.vue';
+import { imageJolt } from '../../../img/images';
+
+const ClientSystemReportModal = GJ_IS_DESKTOP_APP
+	? (await import('../../client/system-report-modal/system-report-modal.service'))
+			.ClientSystemReportModal
+	: undefined;
+
+@Options({
+	components: {
+		AppAppButtons,
+		AppTranslateLangSelector,
+		AppThemeSvg,
+		AppContactLink,
+	},
+})
+export default class AppShellFooter extends Vue {
+	curDate = new Date();
+
+	readonly Screen = Screen;
+	readonly formatDate = formatDate;
+	readonly trackAppPromotionClick = trackAppPromotionClick;
+	readonly imageJolt = imageJolt;
+
+	get clientVersion() {
+		return GJ_VERSION;
+	}
+
+	get shouldShowAppPromotion() {
+		return shouldShowAppPromotion(this.$route);
+	}
+
+	async showSystemReport() {
+		ClientSystemReportModal?.show();
+	}
+}
+</script>
 
 <template>
 	<footer id="footer" class="section">
@@ -10,7 +55,7 @@
 						<br class="visible-xs" />
 						Test the beta version of the Game Jolt app.
 					</p>
-					<app-app-buttons source="footer" />
+					<AppAppButtons source="footer" />
 				</div>
 
 				<br />
@@ -24,22 +69,35 @@
 								<li v-if="shouldShowAppPromotion">
 									<router-link
 										:to="{ name: 'landing.app' }"
-										@click.native="trackAppPromotionClick({ source: 'footer' })"
+										@click="
+											trackAppPromotionClick({
+												source: 'footer',
+												platform: 'mobile',
+											})
+										"
 									>
-										<translate>Mobile App</translate>
+										<AppTranslate>Mobile App</AppTranslate>
+									</router-link>
+								</li>
+								<li v-if="!GJ_IS_DESKTOP_APP">
+									<router-link
+										:to="{ name: 'landing.client' }"
+										@click="
+											trackAppPromotionClick({
+												source: 'footer',
+												platform: 'desktop',
+											})
+										"
+									>
+										<AppTranslate>Desktop App</AppTranslate>
 									</router-link>
 								</li>
 								<li>
-									<router-link :to="{ name: 'landing.client' }">
-										<translate>Client</translate>
-									</router-link>
-								</li>
-								<li>
-									<app-link-external
+									<AppLinkExternal
 										href="https://www.redbubble.com/people/gamejolt/shop"
 									>
-										<translate>Merch</translate>
-									</app-link-external>
+										<AppTranslate>Merch</AppTranslate>
+									</AppLinkExternal>
 								</li>
 							</ol>
 						</div>
@@ -53,7 +111,7 @@
 											params: { path: 'guidelines' },
 										}"
 									>
-										<translate>Site Guidelines</translate>
+										<AppTranslate>Site Guidelines</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -63,12 +121,12 @@
 											params: { path: 'support' },
 										}"
 									>
-										<translate>Support</translate>
+										<AppTranslate>Support</AppTranslate>
 									</router-link>
 								</li>
 								<li>
 									<router-link :to="{ name: 'landing.about' }">
-										<translate>About</translate>
+										<AppTranslate>About</AppTranslate>
 									</router-link>
 								</li>
 							</ol>
@@ -77,17 +135,17 @@
 							<ol class="list-unstyled footer-link-list">
 								<li>
 									<router-link :to="{ name: 'legal.terms' }">
-										<translate>legal.terms</translate>
+										<AppTranslate>Terms</AppTranslate>
 									</router-link>
 								</li>
 								<li>
 									<router-link :to="{ name: 'legal.privacy' }">
-										<translate>legal.privacy</translate>
+										<AppTranslate>Privacy</AppTranslate>
 									</router-link>
 								</li>
-								<li v-if="!GJ_IS_CLIENT">
+								<li v-if="!GJ_IS_DESKTOP_APP">
 									<router-link :to="{ name: 'legal.cookies' }">
-										<translate>Cookie Policy</translate>
+										<AppTranslate>Cookie Policy</AppTranslate>
 									</router-link>
 								</li>
 							</ol>
@@ -96,24 +154,24 @@
 							<div class="text-muted" style="margin-bottom: 4px">
 								<small>
 									<strong>
-										<translate>For Developers</translate>
+										<AppTranslate>For Developers</AppTranslate>
 									</strong>
 								</small>
 							</div>
 							<ol class="list-unstyled footer-link-list">
 								<li>
 									<router-link :to="{ name: 'landing.game-api' }">
-										<translate>Game API</translate>
+										<AppTranslate>Game API</AppTranslate>
 									</router-link>
 								</li>
 								<li>
 									<router-link :to="{ name: 'landing.marketplace' }">
-										<translate>Marketplace</translate>
+										<AppTranslate>Marketplace</AppTranslate>
 									</router-link>
 								</li>
 								<li>
 									<router-link :to="{ name: 'landing.partners' }">
-										<translate>Partner Program</translate>
+										<AppTranslate>Partner Program</AppTranslate>
 									</router-link>
 								</li>
 							</ol>
@@ -127,25 +185,19 @@
 			<div class="clearfix">
 				<div v-if="!Screen.isXs" class="footer-jolt">
 					<router-link :to="{ name: 'home' }">
-						<app-theme-svg
-							src="~img/jolt.svg"
-							alt=""
-							width="68"
-							height="72"
-							strict-colors
-						/>
+						<AppThemeSvg :src="imageJolt" alt="" width="68" height="72" strict-colors />
 					</router-link>
 				</div>
 				<div class="footer-meta">
 					<p>
-						<app-button
+						<AppButton
 							trans
 							circle
 							icon="twitter-bird"
 							href="https://twitter.com/gamejolt"
 							target="_blank"
 						/>
-						<app-button
+						<AppButton
 							trans
 							circle
 							icon="facebook"
@@ -154,11 +206,11 @@
 						/>
 					</p>
 
-					<p class="tiny">&copy; {{ date(curDate, 'yyyy') }} Game Jolt Inc.</p>
+					<p class="tiny">&copy; {{ formatDate(curDate, 'yyyy') }} Game Jolt Inc.</p>
 
-					<p v-if="GJ_IS_CLIENT" class="tiny text-muted">
+					<p v-if="GJ_IS_DESKTOP_APP" class="tiny text-muted">
 						<a class="link-muted" @click="showSystemReport">
-							<translate>footer.send_system_report</translate>
+							<AppTranslate>Send System Report</AppTranslate>
 						</a>
 						<span class="dot-separator" />
 						v{{ clientVersion }}
@@ -166,17 +218,13 @@
 				</div>
 				<div class="footer-translations">
 					<div>
-						<app-translate-lang-selector />
+						<AppTranslateLangSelector />
 					</div>
 
 					<br class="hidden-xs" />
 
 					<p class="small text-muted">
-						<translate>footer.translations</translate>
-						<!-- <br />
-						<app-link-external href="https://poeditor.com/join/project/B4nWT6EgnD">
-							<translate>footer.translations_help</translate>
-						</app-link-external> -->
+						<AppTranslate>Translations are a community project.</AppTranslate>
 					</p>
 				</div>
 			</div>
@@ -185,9 +233,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 #footer
 	change-bg('darkest')
 	padding-top: $grid-gutter-width * 0.5

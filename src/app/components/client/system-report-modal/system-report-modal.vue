@@ -1,32 +1,56 @@
+<script lang="ts">
+import { mixins, Options } from 'vue-property-decorator';
+import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
+import { BaseModal } from '../../../../_common/modal/base';
+import { Translate } from '../../../../_common/translate/translate.service';
+import FormClientSystemReport from './system-report-form.vue';
+
+@Options({
+	components: {
+		FormClientSystemReport,
+	},
+})
+export default class AppClientSystemReportModal extends mixins(BaseModal) {
+	onSubmit() {
+		showSuccessGrowl(
+			Translate.$gettext('Your system report has been sent.'),
+			Translate.$gettext('Report Sent')
+		);
+		this.modal.dismiss();
+	}
+}
+</script>
+
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<translate>system_report.send.heading</translate>
+				<AppTranslate>Send System Report</AppTranslate>
 			</h2>
 		</div>
 
 		<div class="modal-body">
 			<p class="text-muted small">
-				<translate>system_report.send.help</translate>
+				<AppTranslate>
+					This will send a system report to us with details about your device and client
+					log. We don't collect personal information through this.
+				</AppTranslate>
 			</p>
 
 			<p class="text-muted small" v-translate>
 				If you experienced a bug, please report it first on our
-				<app-link-external href="https://github.com/gamejolt/issue-tracker" target-self>
+				<AppLinkExternal href="https://github.com/gamejolt/issue-tracker" target-self>
 					issue tracker
-				</app-link-external>
+				</AppLinkExternal>
 			</p>
 
-			<form-client-system-report @submit="onSubmit" />
+			<FormClientSystemReport @submit="onSubmit" />
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
-
-<script lang="ts" src="./system-report-modal"></script>

@@ -1,9 +1,9 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeFireside: RouteConfig = {
+export const routeFireside: RouteRecordRaw = {
 	name: 'fireside',
 	path: '/fireside/:hash',
-	component: () => import(/* webpackChunkName: "routeFireside" */ './fireside.vue'),
+	component: () => import('./fireside.vue'),
 	meta: {
 		noFooter: true,
 	},

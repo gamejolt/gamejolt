@@ -1,7 +1,7 @@
 import { Model } from '../model/model.service';
+import { OrderAddress } from './address/address.model';
 import { OrderItem } from './item/item.model';
 import { OrderPayment } from './payment/payment.model';
-import { OrderAddress } from './address/address.model';
 
 export class Order extends Model {
 	is_gift!: boolean;
@@ -34,17 +34,11 @@ export class Order extends Model {
 	}
 
 	get billing_address() {
-		if (!this.addresses) {
-			return [];
-		}
-		return this.addresses.find(item => item.type === OrderAddress.TYPE_BILLING);
+		return this.addresses?.find(item => item.type === OrderAddress.TYPE_BILLING);
 	}
 
 	get shipping_address() {
-		if (!this.addresses) {
-			return [];
-		}
-		return this.addresses.find(item => item.type === OrderAddress.TYPE_SHIPPING);
+		return this.addresses?.find(item => item.type === OrderAddress.TYPE_SHIPPING);
 	}
 
 	get _is_refunded() {

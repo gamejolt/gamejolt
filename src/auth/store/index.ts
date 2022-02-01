@@ -1,58 +1,41 @@
-import { VuexAction, VuexModule, VuexMutation, VuexStore } from '../../utils/vuex';
-import { Api } from '../../_common/api/api.service';
+import { inject, InjectionKey, ref } from 'vue';
 import { Game } from '../../_common/game/game.model';
 import { MediaItem } from '../../_common/media-item/media-item-model';
-import {
-	Actions as AppActions,
-	AppStore,
-	appStore,
-	Mutations as AppMutations,
-} from '../../_common/store/app-store';
 
-export type Actions = AppActions & {
-	bootstrap: undefined;
-};
+export const AuthStoreKey: InjectionKey<AuthStore> = Symbol('auth-store');
 
-export type Mutations = AppMutations & {
-	showCoverImage: undefined;
-	hideCoverImage: undefined;
-	processPayload: any;
-};
+export type AuthStore = ReturnType<typeof createAuthStore>;
 
-@VuexModule({
-	store: true,
-	modules: {
-		app: appStore,
-	},
-})
-export class Store extends VuexStore<Store, Actions, Mutations> {
-	app!: AppStore;
-
-	shouldShowCoverImage = true;
-	coverMediaItem?: MediaItem = undefined;
-	coverGame?: Game = undefined;
-
-	@VuexAction
-	async bootstrap() {
-		const payload = await Api.sendRequest('/web/auth/get-customized-page');
-		this.processPayload(payload);
-	}
-
-	@VuexMutation
-	showCoverImage() {
-		this.shouldShowCoverImage = true;
-	}
-
-	@VuexMutation
-	hideCoverImage() {
-		this.shouldShowCoverImage = false;
-	}
-
-	@VuexMutation
-	processPayload(payload: Mutations['processPayload']) {
-		this.coverMediaItem = payload.mediaItem && new MediaItem(payload.mediaItem);
-		this.coverGame = payload.game && new Game(payload.game);
-	}
+export function useAuthStore() {
+	return inject(AuthStoreKey)!;
 }
 
-export const store = new Store();
+export function createAuthStore() {
+	const shouldShowCoverImage = ref(true);
+	const coverMediaItem = ref<MediaItem>();
+	const coverGame = ref<Game>();
+
+	function bootstrap(payload: any) {
+		coverMediaItem.value = payload.mediaItem && new MediaItem(payload.mediaItem);
+		coverGame.value = payload.game && new Game(payload.game);
+	}
+
+	function showCoverImage() {
+		shouldShowCoverImage.value = true;
+	}
+
+	function hideCoverImage() {
+		shouldShowCoverImage.value = false;
+	}
+
+	return {
+		shouldShowCoverImage,
+		coverMediaItem,
+		coverGame,
+		bootstrap,
+		showCoverImage,
+		hideCoverImage,
+	};
+}
+
+export const authStore = createAuthStore();

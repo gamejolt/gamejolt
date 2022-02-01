@@ -1,6 +1,4 @@
 const gulp = require('gulp');
-const shell = require('gulp-shell');
-const path = require('path');
 
 const config = {
 	staticCdn: 'https://s.gjcdn.net',

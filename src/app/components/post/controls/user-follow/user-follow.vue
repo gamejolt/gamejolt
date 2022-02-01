@@ -1,15 +1,45 @@
-<script lang="ts" src="./user-follow"></script>
+<script lang="ts">
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
+
+@Options({
+	components: {
+		AppUserFollowWidget,
+	},
+})
+export default class AppPostControlsUserFollow extends Vue {
+	@Prop({ type: Object, required: true })
+	post!: FiresidePost;
+
+	@Prop({ type: Boolean, required: false, default: false })
+	shouldShow!: boolean;
+
+	readonly Screen = Screen;
+
+	@Emit('close') emitClose() {}
+
+	get user() {
+		if (this.post.game && this.post.as_game_owner) {
+			return this.post.game.developer;
+		}
+
+		return this.post.user;
+	}
+}
+</script>
 
 <template>
 	<transition>
 		<div v-if="shouldShow" class="-user-follow anim-fade-enter alert">
 			<div class="-content">
 				<p class="-flex-auto small">
-					<translate>Would you also like to follow this user?</translate>
+					<AppTranslate>Would you also like to follow this user?</AppTranslate>
 					<br />
-					<translate>You will get notified when they post new stuff.</translate>
+					<AppTranslate>You will get notified when they post new stuff.</AppTranslate>
 				</p>
-				<app-user-follow-widget
+				<AppUserFollowWidget
 					class="-flex-none"
 					:sm="Screen.isXs"
 					:user="user"
@@ -17,15 +47,13 @@
 				/>
 			</div>
 			<div class="-cancel">
-				<app-button class="-cancel" circle trans icon="remove" @click="emitClose()" />
+				<AppButton class="-cancel" circle trans icon="remove" @click="emitClose()" />
 			</div>
 		</div>
 	</transition>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-user-follow
 	display: flex
 	margin-top: $grid-gutter-width * 0.5

@@ -1,42 +1,95 @@
+<script lang="ts">
+import type { IClientOSInfo } from 'client-voodoo';
+import { mixins, Options } from 'vue-property-decorator';
+import { Api } from '../../../../_common/api/api.service';
+import { ClientLogger } from '../../../../_common/client/logger/logger.service';
+import AppEmoji from '../../../../_common/emoji/AppEmoji.vue';
+import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
+// import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
+import { LocalDbGame } from '../local-db/game/game.model';
+import { LocalDbPackage } from '../local-db/package/package.model';
+
+interface FormModel {
+	description: string;
+	log_lines: string;
+	os_info: IClientOSInfo;
+	localdb_games: { [id: number]: LocalDbGame };
+	localdb_packages: { [id: number]: LocalDbPackage };
+}
+
+class Wrapper extends BaseForm<FormModel> {}
+
+@Options({
+	components: {
+		AppEmoji,
+	},
+})
+export default class FormClientSystemReport extends mixins(Wrapper) implements FormOnSubmit {
+	// @ClientLibraryState
+	// games!: ClientLibraryStore['gamesById'];
+	games!: any;
+
+	// @ClientLibraryState
+	// packages!: ClientLibraryStore['packagesById'];
+	packages!: any;
+
+	onSubmit() {
+		const log = ClientLogger.getLogInfo();
+
+		this.setField('log_lines', log.logLines.join('\n'));
+		this.setField('os_info', log.osInfo);
+		this.setField('localdb_games', this.games);
+		this.setField('localdb_packages', this.packages);
+
+		return Api.sendRequest('/web/client/logs/submit', this.formModel, {
+			allowComplexData: ['os_info', 'localdb_games', 'localdb_packages'],
+		});
+	}
+}
+</script>
+
 <template>
-	<app-form name="systemReportForm">
-		<app-form-group name="issue_tracker_url" optional :label="$gettext('Issue Tracker Link')">
+	<AppForm :controller="form">
+		<AppFormGroup name="issue_tracker_url" optional :label="$gettext('Issue Tracker Link')">
 			<p class="help-block">
-				<translate>
-					Paste the link to your ticket here. It's optional, but without it we can't get back to you
-					if we need more info to solve it.
-				</translate>
-				<span class="emoji emoji-huh" />
+				<AppTranslate>
+					Paste the link to your ticket here. It's optional, but without it we can't get
+					back to you if we need more info to solve it.
+				</AppTranslate>
+				<AppEmoji emoji="huh" />
 			</p>
 
-			<app-form-control
+			<AppFormControl
 				type="text"
 				placeholder="https://github.com/gamejolt/issue-tracker/issues/1313"
-				:rules="{
-					max: 255,
-					pattern: /^(?:https?:\/\/)?github.com\/gamejolt\/issue-tracker\/issues\/\d+/,
-				}"
+				:validators="[
+					validateMaxLength(255),
+					validatePattern(
+						/^(?:https?:\/\/)?github.com\/gamejolt\/issue-tracker\/issues\/\d+/
+					),
+				]"
 			/>
-			<app-form-control-errors :label="$gettext('link')">
-				<app-form-control-error
+			<AppFormControlErrors :label="$gettext('link')">
+				<AppFormControlError
 					when="pattern"
-					:message="$gettext(`This doesn't look like a valid issue link`)"
+					:message="$gettext(`This doesn't look like a valid issue link.`)"
 				/>
-			</app-form-control-errors>
-		</app-form-group>
+			</AppFormControlErrors>
+		</AppFormGroup>
 
-		<app-form-group name="description" :label="$gettext('system_report.form.description_label')">
+		<AppFormGroup
+			name="description"
+			:label="$gettext('Description')"
+		>
 			<p class="help-block">
-				<translate>system_report.form.description_help</translate>
+				<AppTranslate>Describe what this system report is about, any bugs you may have encountered, and how you can reproduce.</AppTranslate>
 			</p>
-			<app-form-control-textarea maxlength="1000" rows="5" />
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlTextarea maxlength="1000" rows="5" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-button :disabled="!valid">
-			<translate>system_report.form.submit_button</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton :disabled="!valid">
+			<AppTranslate>Submit Bug Report</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>
-
-<script lang="ts" src="./system-report-form"></script>

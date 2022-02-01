@@ -1,39 +1,27 @@
-import { AsyncComponentFactory } from 'vue/types/options';
+import { defineAsyncComponent } from '@vue/runtime-core';
+import { lazyImportNoSSR } from '../../_common/code-splitting';
 import AppActivityFeedPlaceholder from './activity/feed/placeholder/placeholder.vue';
 
-export async function GridClientLazy() {
-	return (await import(/* webpackChunkName: "grid" */ './grid/client.service')).GridClient;
-}
+export const GridClientLazy = lazyImportNoSSR(() => import('./grid/client.service'));
+export const ChatClientLazy = lazyImportNoSSR(() => import('./chat/client'));
 
-export async function AppAuthJoinLazy() {
-	// Don't lazy load in SSR.
-	// If we do, it'll be loaded as an async chunk and included in the page as a prefetch and styling will not apply.
-	return GJ_IS_SSR
-		? require('../../_common/auth/join/join.vue')
-		: await import(/* webpackChunkName: "authJoin" */ '../../_common/auth/join/join.vue');
-}
+export const AppAuthJoinLazy = defineAsyncComponent(
+	() => import('../../_common/auth/join/join.vue')
+);
 
-export async function AppCommentWidgetLazy() {
-	return await import(
-		/* webpackChunkName: "commentWidget" */ '../../_common/comment/widget/widget.vue'
-	);
-}
+export const AppCommentWidgetLazy = defineAsyncComponent(
+	() => import('../../_common/comment/widget/widget.vue')
+);
 
-export async function FormCommentLazy() {
-	return await import(
-		/* webpackChunkName: "commentWidget" */ '../../_common/comment/add/add.vue'
-	);
-}
+export const FormCommentLazy = defineAsyncComponent(
+	() => import('../../_common/comment/add/add.vue')
+);
 
-export const AppActivityFeedLazy: AsyncComponentFactory = () => ({
-	component: import(/* webpackChunkName: "activityFeed" */ './activity/feed/feed.vue') as any,
-	loading: AppActivityFeedPlaceholder,
+export const AppActivityFeedLazy = defineAsyncComponent({
+	loader: () => import('./activity/feed/feed.vue'),
+	loadingComponent: AppActivityFeedPlaceholder,
 });
 
-export async function ChatClientLazy() {
-	return await import(/* webpackChunkName: "chat" */ './chat/client');
-}
-
-export async function AppVideoPlayerShakaLazy() {
-	return await import(/* webpackChunkName: "video" */ '../../_common/video/player/shaka.vue');
-}
+export const AppVideoPlayerShakaLazy = defineAsyncComponent(
+	lazyImportNoSSR(() => import('../../_common/video/player/shaka.vue'))
+);

@@ -1,7 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeLegalDeletion: RouteConfig = {
+export const routeLegalDeletion: RouteRecordRaw = {
 	name: 'legal.deletion',
 	path: '/account-deletion',
-	component: () => import(/* webpackChunkName: "routeLegalDeletion" */ './deletion'),
+	component: () => import('./deletion'),
 };

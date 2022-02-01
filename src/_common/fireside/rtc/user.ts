@@ -1,10 +1,11 @@
-import type {
+import {
 	IAgoraRTCRemoteUser,
 	ILocalAudioTrack,
 	ILocalVideoTrack,
 	IRemoteAudioTrack,
 	IRemoteVideoTrack,
 } from 'agora-rtc-sdk-ng';
+import { markRaw, reactive, toRaw } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
 import { updateTrackPlaybackDevice } from './producer';
@@ -21,7 +22,10 @@ export class FiresideVideoPlayStateStopped {
 
 export type FiresideVideoPlayState = FiresideVideoPlayStatePlaying | FiresideVideoPlayStateStopped;
 
-function _comparePlayState(a: FiresideVideoPlayState, b: FiresideVideoPlayState) {
+function _comparePlayState(a_: FiresideVideoPlayState, b_: FiresideVideoPlayState) {
+	const a = toRaw(a_);
+	const b = toRaw(b_);
+
 	if (a === b) {
 		return true;
 	}
@@ -67,6 +71,10 @@ export class FiresideRTCUser {
 	get userModel() {
 		return this.rtc.hosts.find(host => host.uids.indexOf(this.uid) !== -1)?.user ?? null;
 	}
+}
+
+export function createFiresideRTCUser(rtc: FiresideRTC, uid: number) {
+	return reactive(new FiresideRTCUser(rtc, uid)) as FiresideRTCUser;
 }
 
 function _userIdForLog(user: FiresideRTCUser) {
@@ -176,9 +184,8 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 		try {
 			// If they're a remote user, we need to subscribe to their video first.
 			if (user.remoteVideoUser) {
-				user._videoTrack = await rtc.videoChannel.agoraClient.subscribe(
-					user.remoteVideoUser,
-					'video'
+				user._videoTrack = markRaw(
+					await rtc.videoChannel.agoraClient.subscribe(user.remoteVideoUser, 'video')
 				);
 			}
 
@@ -265,9 +272,8 @@ export async function startDesktopAudioPlayback(user: FiresideRTCUser) {
 	try {
 		// Only subscribe for remote users.
 		if (user.remoteVideoUser) {
-			user._desktopAudioTrack = await rtc.videoChannel.agoraClient.subscribe(
-				user.remoteVideoUser,
-				'audio'
+			user._desktopAudioTrack = markRaw(
+				await rtc.videoChannel.agoraClient.subscribe(user.remoteVideoUser, 'audio')
 			);
 
 			// Make sure the track is using their playback device if they have
@@ -335,9 +341,8 @@ export async function startAudioPlayback(user: FiresideRTCUser) {
 	}
 
 	try {
-		user._micAudioTrack = await rtc.chatChannel.agoraClient.subscribe(
-			user.remoteChatUser,
-			'audio'
+		user._micAudioTrack = markRaw(
+			await rtc.chatChannel.agoraClient.subscribe(user.remoteChatUser, 'audio')
 		);
 
 		// Make sure the track is using their playback device if they have

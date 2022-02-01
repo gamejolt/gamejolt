@@ -1,30 +1,39 @@
+import { h, ref } from 'vue';
+import { setup } from 'vue-class-component';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Perm } from '../../../../_common/collaborator/collaboratable';
 import { Game } from '../../../../_common/game/game.model';
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
-import { RouteStore, RouteStoreName } from '../../../views/dashboard/games/manage/manage.store';
+import { useGameDashRouteController } from '../../../views/dashboard/games/manage/manage.store';
 
-@Component({})
+@Options({})
 export class AppGamePerms extends Vue {
-	@Prop(Game) game?: Game;
+	@Prop(Object)
+	game?: Game;
+
 	@Prop({ type: String, default: '' })
 	required!: string;
-	@Prop(Boolean) either?: boolean;
+
+	@Prop(Boolean)
+	either?: boolean;
+
 	@Prop({ type: String, default: 'span' })
 	tag!: string;
-	@Prop(Boolean) debug?: boolean;
+
+	@Prop(Boolean)
+	debug?: boolean;
+
+	gameRouteStore = setup(() => ref(useGameDashRouteController()));
 
 	get targetGame() {
 		if (this.game) {
 			return this.game;
 		}
 
-		const store: RouteStore | null = this.$store.state[RouteStoreName];
-		if (store) {
-			return store.game;
+		if (this.gameRouteStore) {
+			return this.gameRouteStore.game;
 		}
 
-		return null;
+		return undefined;
 	}
 
 	get hasPerms() {
@@ -43,12 +52,15 @@ export class AppGamePerms extends Vue {
 			throw new Error(`Target game doesn't exist for app-game-perms component.`);
 		}
 
-		return this.targetGame.hasPerms(perms.filter(perm => !!perm), this.either);
+		return this.targetGame.hasPerms(
+			perms.filter(perm => !!perm),
+			this.either
+		);
 	}
 
-	render(h: CreateElement) {
+	render() {
 		if (this.hasPerms) {
-			return h(this.tag, this.$slots.default);
+			return h(this.tag, {}, this.$slots.default?.());
 		}
 	}
 }

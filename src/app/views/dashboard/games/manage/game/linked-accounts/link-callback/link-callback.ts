@@ -1,26 +1,30 @@
+import { h } from 'vue';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../../../../_common/api/api.service';
-import { Growls } from '../../../../../../../../_common/growls/growls.service';
+import {
+	showErrorGrowl,
+	showSuccessGrowl,
+} from '../../../../../../../../_common/growls/growls.service';
 import {
 	getLinkedAccountProviderDisplayName,
 	LinkedAccount,
 } from '../../../../../../../../_common/linked-account/linked-account.model';
 import {
 	BaseRouteComponent,
-	RouteResolver,
+	OptionsForRoute,
 } from '../../../../../../../../_common/route/route-component';
-import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
-import { Route } from 'vue-router';
-import { RouteStore, RouteStoreModule } from '../../../manage.store';
+import { useGameDashRouteController } from '../../../manage.store';
 
-@Component({
+@Options({
 	name: 'RouteDashGamesManageGameLinkedAccountsLinkCallback',
 })
-@RouteResolver({
+@OptionsForRoute({
 	resolver({ route }) {
 		const url = RouteDashGamesManageGameLinkedAccountsLinkCallback.constructUrl(
 			'/web/dash/linked-accounts/link-callback/',
-			parseInt(route.params.id, 10),
+			parseInt(route.params.id as string, 10),
 			route
 		);
 
@@ -28,10 +32,13 @@ import { RouteStore, RouteStoreModule } from '../../../manage.store';
 	},
 })
 export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends BaseRouteComponent {
-	@RouteStoreModule.State
-	game!: RouteStore['game'];
+	routeStore = setup(() => useGameDashRouteController()!);
 
-	private static constructUrl(baseUrl: string, gameId: number, route: Route) {
+	get game() {
+		return this.routeStore.game!;
+	}
+
+	private static constructUrl(baseUrl: string, gameId: number, route: RouteLocationNormalized) {
 		let url = baseUrl + route.params.provider;
 		let firstParam = true;
 
@@ -53,10 +60,10 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 			return;
 		}
 
-		const provider = this.$route.params.provider;
+		const provider = this.$route.params.provider as string;
 		const providerName = getLinkedAccountProviderDisplayName(provider);
 		if (!$payload.success || !$payload.account) {
-			Growls.error(
+			showErrorGrowl(
 				this.$gettextInterpolate('Unable to link your %{ provider } account to %{ game }', {
 					provider: providerName,
 					game: this.game.title,
@@ -67,7 +74,7 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 
 			switch (provider) {
 				case LinkedAccount.PROVIDER_TWITTER:
-					Growls.success(
+					showSuccessGrowl(
 						this.$gettextInterpolate(
 							'Your %{ provider } account (@%{ name }) has been linked to %{ game }',
 							{
@@ -83,7 +90,7 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 				case LinkedAccount.PROVIDER_GOOGLE:
 				case LinkedAccount.PROVIDER_TWITCH:
 				case LinkedAccount.PROVIDER_TUMBLR:
-					Growls.success(
+					showSuccessGrowl(
 						this.$gettextInterpolate(
 							'Your %{ provider } account (%{ name }) has been linked to %{ game }',
 							{
@@ -103,7 +110,7 @@ export default class RouteDashGamesManageGameLinkedAccountsLinkCallback extends 
 		});
 	}
 
-	render(h: CreateElement) {
+	render() {
 		return h('div');
 	}
 }

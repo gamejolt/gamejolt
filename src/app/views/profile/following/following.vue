@@ -1,10 +1,59 @@
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import { RouteLocationNormalized } from 'vue-router';
+import { Api } from '../../../../_common/api/api.service';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import { User } from '../../../../_common/user/user.model';
+import AppFollowerList from '../../../components/follower/list/list.vue';
+import { useProfileRouteController } from '../profile.vue';
+
+function getFetchUrl(route: RouteLocationNormalized) {
+	return `/web/profile/following/@${route.params.username}`;
+}
+
+@Options({
+	name: 'RouteProfileFollowing',
+	components: {
+		AppFollowerList,
+	},
+})
+@OptionsForRoute({
+	deps: {},
+	resolver: ({ route }) => Api.sendRequest(getFetchUrl(route)),
+})
+export default class RouteProfileFollowing extends BaseRouteComponent {
+	routeStore = setup(() => useProfileRouteController()!);
+
+	users: User[] = [];
+
+	get routeTitle() {
+		return this.user
+			? `People followed by ${this.user.display_name} (@${this.user.username})`
+			: null;
+	}
+
+	get user() {
+		return this.routeStore.user;
+	}
+
+	get loadUrl() {
+		return getFetchUrl(this.$route);
+	}
+
+	routeResolved(payload: any) {
+		this.users = User.populate(payload.users);
+	}
+}
+</script>
+
 <template>
 	<section class="section fill-backdrop">
 		<div class="container">
-			<div class="alert alert-info" v-if="!user.following_count">
-				<translate>This person isn't following anyone yet.</translate>
+			<div v-if="!user?.following_count" class="alert alert-info">
+				<AppTranslate>This person isn't following anyone yet.</AppTranslate>
 			</div>
-			<app-follower-list
+			<AppFollowerList
 				v-else
 				:url="loadUrl"
 				:initial-users="users"
@@ -13,5 +62,3 @@
 		</div>
 	</section>
 </template>
-
-<script lang="ts" src="./following"></script>

@@ -1,20 +1,19 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { ContentObject } from '../../content-object';
-import { ContentOwner } from '../../content-owner';
 import { renderChildren } from './base-component';
 
-@Component({})
+@Options({})
 export class AppContentViewerHeading extends Vue {
-	@Prop(ContentObject)
-	data!: ContentObject;
-	@Prop(Object)
-	owner!: ContentOwner;
+	@Prop({ type: ContentObject })
+	contentData!: ContentObject;
 
-	render(h: CreateElement) {
+	render() {
 		return h(
-			'h' + (this.data.attrs.level + 2), // We do this because we want users to only be able to add H3s and H4s (SEO).
-			renderChildren(h, this.owner, this.data.content)
+			// We do this because we want users to only be able to add H3s and H4s (SEO).
+			'h' + (this.contentData.attrs.level + 2),
+			{},
+			renderChildren(this.contentData.content)
 		);
 	}
 }

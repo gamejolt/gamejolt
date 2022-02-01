@@ -1,22 +1,46 @@
-<script lang="ts" src="./add"></script>
+<script lang="ts">
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
+import { Community } from '../../../../../../_common/community/community.model';
+import AppPill from '../../../../../../_common/pill/pill.vue';
+import AppFormsCommunityPillSelector from '../selector/selector.vue';
+
+@Options({
+	components: {
+		AppFormsCommunityPillSelector,
+		AppPill,
+	},
+})
+export default class AppFormsCommunityPillAdd extends Vue {
+	@Prop({ type: Array, required: true })
+	communities!: Community[];
+
+	@Prop({ type: Boolean, default: true })
+	withChannel!: boolean;
+
+	@Emit('add') emitAdd(_community: Community, _channel: CommunityChannel) {}
+	@Emit('add-community') emitAddCommunity(_community: Community) {}
+}
+</script>
 
 <template>
-	<app-forms-community-pill-selector
+	<AppFormsCommunityPillSelector
 		:communities="communities"
 		:with-channel="withChannel"
 		@select="emitAdd"
 		@select-community="emitAddCommunity"
 	>
-		<app-pill class="-add">
-			<app-jolticon slot="img" icon="add" />
-			<translate>Add Community</translate>
-		</app-pill>
-	</app-forms-community-pill-selector>
+		<AppPill class="-add">
+			<template #img>
+				<AppJolticon icon="add" />
+			</template>
+			<AppTranslate>Add Community</AppTranslate>
+		</AppPill>
+	</AppFormsCommunityPillSelector>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '../variables.styl'
+@import '../variables'
 
 .-add
 	cursor: pointer

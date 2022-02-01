@@ -1,16 +1,13 @@
-import { Modal } from '../../../../_common/modal/modal.service';
-import { asyncComponentLoader } from '../../../../utils/utils';
+import { defineAsyncComponent } from 'vue';
+import { showModal } from '../../../../_common/modal/modal.service';
 import { ChatRoom } from '../room';
 
 export class ChatRoomDetailsModal {
 	static async show(room: ChatRoom) {
-		return await Modal.show({
+		return await showModal({
 			modalId: 'ChatRoomDetails',
 			size: 'sm',
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "ChatRoomDetailsModal" */ './room-details-modal.vue')
-				),
+			component: defineAsyncComponent(() => import('./room-details-modal.vue')),
 			props: { room },
 		});
 	}

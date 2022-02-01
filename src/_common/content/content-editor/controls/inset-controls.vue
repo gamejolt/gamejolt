@@ -1,4 +1,45 @@
-<script lang="ts" src="./inset-controls"></script>
+<script lang="ts">
+import { Options, setup, Vue } from 'vue-class-component';
+import { useContentEditorController } from '../content-editor-controller';
+
+@Options({})
+export default class AppContentEditorInsetControls extends Vue {
+	controller = setup(() => useContentEditorController()!);
+
+	private oldTop = 0;
+
+	declare $refs: {
+		container: HTMLDivElement;
+	};
+
+	get shouldShow() {
+		return !!this.view && !this.isOverflowing;
+	}
+
+	get view() {
+		return this.controller.view;
+	}
+
+	get isOverflowing() {
+		return this.top <= -8 || this.controller.window.height - this.top <= 12;
+	}
+
+	get top() {
+		const {
+			scope: { cursorStartHeight, isFocused },
+			relativeCursorTop,
+		} = this.controller;
+
+		// Helps to smooth animations when focus changes.
+		if (!isFocused) {
+			return this.oldTop;
+		}
+
+		this.oldTop = relativeCursorTop - cursorStartHeight / 2;
+		return this.oldTop;
+	}
+}
+</script>
 
 <template>
 	<div ref="container" class="inset-controls-container" :style="{ top: top + 'px' }">
@@ -7,8 +48,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .inset-controls-container
 	position: absolute
 	display: flex
@@ -16,8 +55,7 @@
 	// Offset for the '.form-control' padding
 	right: $padding-base-horizontal
 
-	& >>> .inset-container-controls
+	& ::v-deep(.inset-container-controls)
 		display: block
 		margin-left: 8px
 </style>
-

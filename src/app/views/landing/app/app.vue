@@ -1,4 +1,30 @@
-<script lang="ts" src="./app"></script>
+<script lang="ts">
+import { Options } from 'vue-property-decorator';
+import AppAppButtons from '../../../../_common/app-buttons/app-buttons.vue';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import phonesImage from './phones.png';
+
+@Options({
+	name: 'RouteLandingApp',
+	components: {
+		AppAppButtons,
+	},
+})
+@OptionsForRoute({
+	cache: true,
+	lazy: true,
+	deps: {},
+})
+export default class RouteLandingApp extends BaseRouteComponent {
+	disableRouteTitleSuffix = true;
+
+	readonly phonesImage = phonesImage;
+
+	get routeTitle() {
+		return `Game Jolt Mobile App`;
+	}
+}
+</script>
 
 <template>
 	<div class="route-landing-app">
@@ -11,7 +37,7 @@
 					phone!
 				</p>
 
-				<app-app-buttons source="landing" />
+				<AppAppButtons source="landing" />
 			</div>
 		</section>
 
@@ -27,7 +53,7 @@
 
 		<section class="section">
 			<div class="container text-center">
-				<img class="-phones" src="./phones.png" width="385" height="300" alt="" />
+				<img class="-phones" :src="phonesImage" width="385" height="300" alt="" />
 			</div>
 		</section>
 
@@ -35,7 +61,7 @@
 			<div class="container text-center">
 				<h1 class="section-header">Get the Game Jolt App!</h1>
 
-				<app-app-buttons source="landing" />
+				<AppAppButtons source="landing" />
 
 				<br />
 				<br />
@@ -51,9 +77,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .route-landing-app
 	.-header
 		position: relative

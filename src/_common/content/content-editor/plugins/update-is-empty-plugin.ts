@@ -1,22 +1,15 @@
-import { EditorState } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
-import AppContentEditor from '../content-editor';
-import { ContentEditorSchema } from '../schemas/content-editor-schema';
+import type { EditorState } from 'prosemirror-state';
+import type { EditorView } from 'prosemirror-view';
+import { editorUpdateIsEmpty, type ContentEditorController } from '../content-editor-controller';
+import type { ContentEditorSchema } from '../schemas/content-editor-schema';
 
 export class UpdateIsEmptyPlugin {
-	appEditor: AppContentEditor;
-
-	constructor(appEditor: AppContentEditor) {
-		this.appEditor = appEditor;
-	}
+	constructor(private readonly c: ContentEditorController) {}
 
 	update(
-		view: EditorView<ContentEditorSchema>,
+		{ state }: EditorView<ContentEditorSchema>,
 		_lastState: EditorState<ContentEditorSchema> | null
 	) {
-		const state = view.state;
-
-		// Set the content editor is empty state here.
-		this.appEditor.updateIsEmpty(state);
+		editorUpdateIsEmpty(this.c, state);
 	}
 }

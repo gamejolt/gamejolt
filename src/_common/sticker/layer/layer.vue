@@ -1,9 +1,83 @@
-<script lang="ts" src="./layer"></script>
+<script lang="ts">
+import { defineAsyncComponent } from '@vue/runtime-core';
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../utils/vue';
+import {
+	ContentFocus,
+	registerContentFocusWatcher,
+} from '../../content-focus/content-focus.service';
+import {
+	registerStickerLayer,
+	unregisterStickerLayer,
+	useDrawerStore,
+} from '../../drawer/drawer-store';
+import { useScroller } from '../../scroll/AppScrollScroller.vue';
+import {
+	createStickerLayerController,
+	provideStickerLayer,
+	StickerLayerController,
+} from './layer-controller';
+
+@Options({
+	components: {
+		// Lazy load all of this since we only need it when the drawer is showing.
+		AppStickerLayerPlacementMask: defineAsyncComponent(() => import('./placement-mask.vue')),
+	},
+})
+export default class AppStickerLayer extends Vue {
+	@Prop({ type: Boolean, default: false }) hasFixedParent!: boolean;
+
+	drawer = shallowSetup(() => useDrawerStore());
+
+	layer!: StickerLayerController;
+
+	scroller = shallowSetup(() => useScroller());
+
+	private focusWatcherDeregister!: () => void;
+
+	get isDragging() {
+		return this.drawer.isDragging.value;
+	}
+
+	get isShowingDrawer() {
+		return this.layer.isShowingDrawer.value;
+	}
+
+	created() {
+		this.layer = createStickerLayerController(this.drawer);
+		provideStickerLayer(this.layer);
+		registerStickerLayer(this.drawer, this.layer);
+	}
+
+	mounted() {
+		this.layer.scroller.value = this.scroller;
+
+		// We tell the ContentFocus service that content is unfocused when the
+		// mask is active.
+		this.focusWatcherDeregister = registerContentFocusWatcher(
+			ContentFocus,
+			() => !this.isShowingDrawer
+		);
+	}
+
+	beforeUnmount() {
+		unregisterStickerLayer(this.drawer, this.layer);
+		this.focusWatcherDeregister();
+	}
+
+	onContextMenu(e: MouseEvent) {
+		if (!this.isShowingDrawer) {
+			return;
+		}
+		e.preventDefault();
+	}
+}
+</script>
 
 <template>
-	<div class="-layer" :class="{ '-dragging': drawer.isDragging }" @contextmenu="onContextMenu">
-		<app-sticker-layer-placement-mask
-			v-if="layer.isShowingDrawer"
+	<div class="-layer" :class="{ '-dragging': isDragging }" @contextmenu="onContextMenu">
+		<AppStickerLayerPlacementMask
+			v-if="isShowingDrawer"
 			class="-placement-mask"
 			:layer="layer"
 		/>
@@ -18,8 +92,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .-placement-mask
 	z-index: $zindex-sticker-layer
 </style>

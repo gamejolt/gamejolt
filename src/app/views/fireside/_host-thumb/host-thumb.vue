@@ -1,22 +1,99 @@
-<script lang="ts" src="./host-thumb"></script>
+<script lang="ts">
+import { toRaw } from 'vue';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../utils/vue';
+import { FiresideRTCUser, setAudioPlayback } from '../../../../_common/fireside/rtc/user';
+import AppPopper from '../../../../_common/popper/popper.vue';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
+import { useFiresideController } from '../../../components/fireside/controller/controller';
+import AppFiresideStreamVideo from '../../../components/fireside/stream/video/video.vue';
+import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';
+
+@Options({
+	components: {
+		AppUserAvatarImg,
+		AppFiresideHostThumbIndicator,
+		AppPopper,
+		AppFiresideStreamVideo,
+		AppUserCardHover,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppFiresideHostThumb extends Vue {
+	@Prop({ type: Object, required: true })
+	host!: FiresideRTCUser;
+
+	@Prop({ type: Boolean, required: false, default: false })
+	hideOptions!: boolean;
+
+	c = shallowSetup(() => useFiresideController()!);
+
+	@Emit('show-popper') emitShowPopper() {}
+	@Emit('hide-popper') emitHidePopper() {}
+
+	get isFocused() {
+		return toRaw(this.c.rtc.value?.focusedUser) === toRaw(this.host);
+	}
+
+	get isMe() {
+		return toRaw(this.c.rtc.value?.localUser) === toRaw(this.host);
+	}
+
+	get showingVideoThumb() {
+		return !this.isFocused && this.host.hasVideo;
+	}
+
+	get tooltip() {
+		return '@' + this.host.userModel?.username;
+	}
+
+	onClick() {
+		if (this.isFocused || !this.c.rtc.value) {
+			return;
+		}
+
+		this.c.rtc.value.focusedUser = this.host;
+	}
+
+	mute() {
+		setAudioPlayback(this.host, false);
+	}
+
+	unmute() {
+		setAudioPlayback(this.host, true);
+	}
+
+	onUserCardShow() {
+		this.c.isShowingOverlayPopper.value = true;
+	}
+
+	onUserCardHide() {
+		this.c.isShowingOverlayPopper.value = false;
+	}
+}
+</script>
 
 <template>
 	<div class="-thumb">
-		<app-user-card-hover :user="host.userModel" :hover-delay="0" no-stats>
+		<AppUserCardHover :user="host.userModel" :hover-delay="0" no-stats>
 			<div class="-click-capture" @click="onClick">
 				<div class="-display-thumb" :class="{ '-hidden': !showingVideoThumb }">
 					<template v-if="showingVideoThumb">
-						<app-fireside-stream-video
-							v-if="c.rtc && !c.rtc.videoPaused"
+						<AppFiresideStreamVideo
+							v-if="c.rtc.value && !c.rtc.value.videoPaused"
 							:rtc-user="host"
 							low-bitrate
 						/>
-						<app-jolticon v-else icon="camera" class="-display-thumb-icon" />
+						<AppJolticon v-else icon="camera" class="-display-thumb-icon" />
 					</template>
 				</div>
 
 				<div class="-avatar-wrap" :class="{ '-full': !showingVideoThumb }">
-					<app-fireside-host-thumb-indicator :host="host" />
+					<AppFiresideHostThumbIndicator :host="host" />
 				</div>
 
 				<div class="-spacer" />
@@ -30,42 +107,39 @@
 						v-app-tooltip="$gettext(`Muted`)"
 						class="-option -option-warn anim-fade-enter-enlarge anim-fade-leave-shrink"
 					>
-						<app-jolticon icon="audio-mute" />
+						<AppJolticon icon="audio-mute" />
 					</span>
 				</transition>
 
 				<div class="-options-spacer" />
 
-				<app-popper
+				<AppPopper
 					v-if="!hideOptions"
 					placement="top"
 					@show="emitShowPopper"
 					@hide="emitHidePopper"
 				>
 					<a v-app-tooltip="$gettext('Options')" class="-option -option-show-hover">
-						<app-jolticon icon="cog" />
+						<AppJolticon icon="cog" />
 					</a>
 
 					<template #popover>
 						<div class="list-group">
 							<a v-if="!host.micAudioMuted" class="list-group-item" @click="mute()">
-								<translate>Mute</translate>
+								<AppTranslate>Mute</AppTranslate>
 							</a>
 							<a v-else class="list-group-item" @click="unmute()">
-								<translate>Unmute</translate>
+								<AppTranslate>Unmute</AppTranslate>
 							</a>
 						</div>
 					</template>
-				</app-popper>
+				</AppPopper>
 			</div>
-		</app-user-card-hover>
+		</AppUserCardHover>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-thumb
 .-click-capture
 	position: relative

@@ -1,4 +1,4 @@
-import { RawLocation } from 'vue-router';
+import { RouteLocationRaw } from 'vue-router';
 import { Api } from '../api/api.service';
 import { Collaboratable } from '../collaborator/collaboratable';
 import { Community } from '../community/community.model';
@@ -50,6 +50,10 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 	static readonly DEVELOPMENT_STATUS_WIP = 2;
 	static readonly DEVELOPMENT_STATUS_CANCELED = 3;
 	static readonly DEVELOPMENT_STATUS_DEVLOG = 4;
+
+	static readonly LOCKED_STATUS_UNLOCKED = 0;
+	static readonly LOCKED_STATUS_DMCA = 1;
+	static readonly LOCKED_STATUS_ADULT = 3;
 
 	developer!: User;
 	thumbnail_media_item?: MediaItem;
@@ -119,6 +123,7 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 	has_active_builds?: boolean;
 	is_listable?: boolean;
 	is_locked?: boolean;
+	locked_status?: number;
 
 	// Sites settings
 	site?: Site;
@@ -216,7 +221,7 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 		return false;
 	}
 
-	get routeLocation(): RawLocation {
+	get routeLocation(): RouteLocationRaw {
 		return {
 			name: 'discover.games.view.overview',
 			params: this.getSrefParams(),

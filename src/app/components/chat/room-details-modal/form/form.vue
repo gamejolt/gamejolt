@@ -1,30 +1,64 @@
-<script lang="ts" src="./form"></script>
+<script lang="ts">
+import { Emit, mixins, Options } from 'vue-property-decorator';
+import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
+
+export type FormModel = {
+	title: string;
+};
+
+class Wrapper extends BaseForm<FormModel> {}
+
+@Options({})
+export default class FormRoomDetails extends mixins(Wrapper) implements FormOnLoad {
+	@Emit('submit')
+	emitSubmit(_model: FormModel) {}
+
+	titleMinLength = 3;
+	titleMaxLength = 50;
+
+	get loadUrl() {
+		return `/web/chat/rooms/room-edit`;
+	}
+
+	onLoad($payload: any) {
+		this.titleMinLength = $payload.titleMinLength;
+		this.titleMaxLength = $payload.titleMaxLength;
+	}
+
+	onRename() {
+		this.emitSubmit(this.formModel);
+	}
+}
+</script>
 
 <template>
-	<app-form name="roomDetailsForm">
+	<AppForm :controller="form">
 		<div class="-form">
-			<app-form-group
+			<AppFormGroup
 				name="title"
 				class="-form-input"
 				:label="$gettext(`Title`)"
 				hide-label
 				optional
 			>
-				<app-form-control
+				<AppFormControl
 					type="text"
-					:rules="{ min: titleMinLength, max: titleMaxLength }"
-					:validate-on="['blur']"
+					:validators="[
+						validateMinLength(titleMinLength),
+						validateMaxLength(titleMaxLength),
+					]"
+					validate-on-blur
 					:placeholder="$gettext(`Empty group title`)"
 				/>
 
-				<app-form-control-errors />
-			</app-form-group>
+				<AppFormControlErrors />
+			</AppFormGroup>
 
-			<app-button solid primary :disabled="!valid" @click="onRename">
-				<translate>Rename</translate>
-			</app-button>
+			<AppButton solid primary :disabled="!valid" @click="onRename">
+				<AppTranslate>Rename</AppTranslate>
+			</AppButton>
 		</div>
-	</app-form>
+	</AppForm>
 </template>
 
 <style lang="stylus" scoped>

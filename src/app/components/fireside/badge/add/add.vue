@@ -1,7 +1,58 @@
-<script lang="ts" src="./add"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Community } from '../../../../../_common/community/community.model';
+import { Fireside } from '../../../../../_common/fireside/fireside.model';
+import { useCommonStore } from '../../../../../_common/store/common-store';
+import AppTheme from '../../../../../_common/theme/AppTheme.vue';
+import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { FiresideAddModal } from '../../add-modal/add-modal.service';
+
+@Options({
+	components: {
+		AppTheme,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppFiresideBadgeAdd extends Vue {
+	@Prop({ type: Object, default: undefined })
+	community!: Community | undefined;
+
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
+
+	get theme() {
+		return this.user?.theme;
+	}
+
+	get isCommunity() {
+		return this.community !== undefined;
+	}
+
+	get isDisabled() {
+		return !!this.community && !this.community.is_member;
+	}
+
+	declare $refs: {
+		header: HTMLDivElement;
+	};
+
+	async onClickBadge() {
+		const fireside = await FiresideAddModal.show({ community: this.community });
+		if (fireside instanceof Fireside) {
+			this.$router.push(fireside.location);
+		}
+	}
+}
+</script>
 
 <template>
-	<app-theme
+	<AppTheme
 		v-app-tooltip.touchable="
 			!community || community.is_member
 				? null
@@ -20,25 +71,22 @@
 			<div class="-content">
 				<h4 class="sans-margin -title">
 					<small class="-subtitle">
-						<translate>Stoke the flames</translate>
+						<AppTranslate>Stoke the flames</AppTranslate>
 					</small>
 					<br />
 					<template v-if="isCommunity">
-						<translate>Start a fireside in this community!</translate>
+						<AppTranslate>Start a fireside in this community!</AppTranslate>
 					</template>
 					<template v-else>
-						<translate>Start a fireside!</translate>
+						<AppTranslate>Start a fireside!</AppTranslate>
 					</template>
 				</h4>
 			</div>
 		</div>
-	</app-theme>
+	</AppTheme>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-disabled
 	cursor: not-allowed
 

@@ -1,23 +1,72 @@
-<script lang="ts" src="./banner"></script>
+<script lang="ts">
+import { Options, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../utils/vue';
+import AppExpand from '../../../../_common/expand/AppExpand.vue';
+import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
+import {
+	extendFireside,
+	useFiresideController,
+} from '../../../components/fireside/controller/controller';
+
+@Options({
+	components: {
+		AppExpand,
+		AppProgressBar,
+	},
+})
+export default class AppFiresideBanner extends Vue {
+	c = shallowSetup(() => useFiresideController()!);
+
+	private isLoading = false;
+
+	get shouldShowBanner() {
+		return this.isExpiring;
+	}
+
+	get isExpiring() {
+		return (
+			this.c.status.value === 'joined' &&
+			this.c.hasExpiryWarning.value &&
+			this.c.canExtend.value &&
+			!this.c.isStreaming.value &&
+			!this.isLoading
+		);
+	}
+
+	onClickBanner() {
+		this.extendFireside();
+	}
+
+	private async extendFireside() {
+		if (this.isLoading) {
+			return;
+		}
+
+		try {
+			this.isLoading = true;
+			await extendFireside(this.c);
+		} finally {
+			this.isLoading = false;
+		}
+	}
+}
+</script>
 
 <template>
-	<app-expand class="fireside-banner" :when="shouldShowBanner">
+	<AppExpand class="fireside-banner" :when="shouldShowBanner">
 		<div class="-inner fill-notice" @click="onClickBanner()">
 			<div class="-message">
-				<translate>
+				<AppTranslate>
 					Your fireside is expiring soon. Click here to stoke the flames!
-				</translate>
+				</AppTranslate>
 			</div>
 		</div>
 
-		<app-progress-bar class="-progress" :percent="c.expiresProgressValue" thin />
-	</app-expand>
+		<AppProgressBar class="-progress" :percent="c.expiresProgressValue.value" thin />
+	</AppExpand>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $-padding = ($grid-gutter-width / 2)
 $-padding-xs = ($grid-gutter-width-xs / 2)
 
@@ -43,4 +92,3 @@ $-padding-xs = ($grid-gutter-width-xs / 2)
 .-progress
 	margin-bottom: 0
 </style>
-

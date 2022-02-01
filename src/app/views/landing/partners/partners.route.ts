@@ -1,7 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeLandingPartners: RouteConfig = {
+export const routeLandingPartners: RouteRecordRaw = {
 	name: 'landing.partners',
 	path: '/partners',
-	component: () => import(/* webpackChunkName: "routeLandingPartners" */ './partners.vue'),
+	component: () => import('./partners.vue'),
 };

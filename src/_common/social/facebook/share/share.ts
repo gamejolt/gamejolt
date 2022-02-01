@@ -1,20 +1,17 @@
-import Vue, { CreateElement } from 'vue';
-import { Component, Prop, Watch } from 'vue-property-decorator';
+import { h } from 'vue';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import '../../social.styl';
-
 import { FacebookSdk } from '../sdk/sdk.service';
 
-@Component({})
+@Options({})
 export class AppSocialFacebookShare extends Vue {
 	@Prop(String) url!: string;
 
-	render(h: CreateElement) {
+	render() {
 		return h('div', {
-			staticClass: 'fb-share-button',
-			attrs: {
-				'data-href': this.url,
-				'data-layout': 'button',
-			},
+			class: 'fb-share-button',
+			'data-href': this.url,
+			'data-layout': 'button',
 		});
 	}
 

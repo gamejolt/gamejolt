@@ -1,7 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDashAnalytics: RouteConfig = {
+export const routeDashAnalytics: RouteRecordRaw = {
 	name: 'dash.analytics',
 	path: 'analytics/:resource/:resourceId/:metricKey?',
-	component: () => import(/* webpackChunkName: "routeDashAnalytics" */ './analytics.vue'),
+	component: () => import('./analytics.vue'),
 };

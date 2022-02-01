@@ -8,7 +8,7 @@ export abstract class BaseTrophy extends Model {
 	static readonly DIFFICULTY_GOLD = 3;
 	static readonly DIFFICULTY_PLATINUM = 4;
 
-	static readonly difficulties = [
+	static readonly difficulties = <TrophyDifficulty[]>[
 		BaseTrophy.DIFFICULTY_BRONZE,
 		BaseTrophy.DIFFICULTY_SILVER,
 		BaseTrophy.DIFFICULTY_GOLD,

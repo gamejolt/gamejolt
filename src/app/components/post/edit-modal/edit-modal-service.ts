@@ -1,8 +1,8 @@
-import { asyncComponentLoader } from '../../../../utils/utils';
+import { defineAsyncComponent } from 'vue';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
-import { Modal } from '../../../../_common/modal/modal.service';
+import { showModal } from '../../../../_common/modal/modal.service';
 
 export type PostEditModalOptions = {
 	community?: Community;
@@ -15,12 +15,9 @@ export class PostEditModal {
 		options: PostEditModalOptions = {}
 	) {
 		options = options || {};
-		return await Modal.show<FiresidePost>({
+		return await showModal<FiresidePost>({
 			modalId: 'PostEdit',
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "PostEditModal" */ './edit-modal.vue')
-				),
+			component: defineAsyncComponent(() => import('./edit-modal.vue')),
 			noBackdropClose: true,
 			noEscClose: true,
 			size: 'sm',

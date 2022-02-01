@@ -1,12 +1,15 @@
-import Vue, { AsyncComponent } from 'vue';
+import { Component, inject, markRaw, reactive } from 'vue';
 import { arrayRemove } from '../../utils/array';
-import { makeObservableService } from '../../utils/vue';
 import { Popper } from '../popper/popper.service';
 
-type ModalComponent = typeof Vue | AsyncComponent<Vue>;
+export const ModalKey = Symbol('modal-key');
+
+export function useModal<T>() {
+	return inject(ModalKey, null) as Modal<T> | null;
+}
 
 export interface ModalOptions {
-	component: ModalComponent;
+	component: Component;
 	modalId: string;
 	size?: 'sm' | 'lg' | 'full' | undefined;
 	props?: any;
@@ -15,51 +18,22 @@ export interface ModalOptions {
 	noEscClose?: boolean;
 }
 
-export class Modal {
-	static modals: Modal[] = [];
-	static incrementer = 0;
-
+export class Modal<T = any> {
 	size: 'sm' | 'lg' | 'full' | undefined;
-	component: ModalComponent;
+	component: Component;
 	modalId: string;
 	props?: any;
 	noBackdrop?: boolean;
 	noBackdropClose?: boolean;
 	noEscClose?: boolean;
 
-	get index() {
-		return Modal.modals.findIndex(i => i === this);
+	get index(): number {
+		return Modals.modals.findIndex(i => i === this);
 	}
 
-	static canAddToStack(id: string | undefined) {
-		if (id) {
-			return !this.modals.some(i => i.modalId === id);
-		}
-		return true;
-	}
-
-	static show<T>(options: ModalOptions) {
-		return new Promise<T | undefined>(resolve => {
-			if (this.canAddToStack(options.modalId)) {
-				Popper.hideAll();
-				++this.incrementer;
-				const modal = new Modal(this.incrementer, resolve, options);
-				this.modals.push(modal);
-			}
-		});
-	}
-
-	static remove(modal: Modal) {
-		arrayRemove(Modal.modals, item => item.id === modal.id);
-	}
-
-	static findByModalId(modalId: string) {
-		return this.modals.filter(modal => modal.modalId === modalId);
-	}
-
-	constructor(public id: number, private _resolve: Function, options: ModalOptions) {
+	constructor(public id: number, private _resolve: (value?: T) => void, options: ModalOptions) {
 		this.size = options.size;
-		this.component = options.component;
+		this.component = markRaw(options.component);
 		this.props = options.props;
 		this.noBackdrop = options.noBackdrop;
 		this.noBackdropClose = options.noBackdropClose;
@@ -67,15 +41,56 @@ export class Modal {
 		this.modalId = options.modalId;
 	}
 
-	resolve(val?: any) {
-		Modal.remove(this);
+	resolve(val?: T) {
+		_removeModal(this);
 		this._resolve(val);
 	}
 
 	dismiss() {
-		Modal.remove(this);
+		_removeModal(this);
 		this._resolve(undefined);
 	}
 }
 
-makeObservableService(Modal);
+class ModalsService {
+	modals: Modal[] = [];
+	incrementer = 0;
+
+	/**
+	 * Can be set within a section to define a wrapping component for all modal
+	 * bodies.
+	 */
+	modalBodyWrapper?: Component;
+}
+
+export const Modals = reactive(new ModalsService()) as ModalsService;
+
+function _canAddToStack(id: string | undefined) {
+	if (id) {
+		return !Modals.modals.some(i => i.modalId === id);
+	}
+	return true;
+}
+
+export function showModal<T>(options: ModalOptions) {
+	return new Promise<T | undefined>(resolve => {
+		if (_canAddToStack(options.modalId)) {
+			Popper.hideAll();
+			++Modals.incrementer;
+			const modal = new Modal(Modals.incrementer, resolve, options);
+			Modals.modals.push(modal);
+		}
+	});
+}
+
+export function findModalById(modalId: string) {
+	return Modals.modals.filter(i => i.modalId === modalId);
+}
+
+function _removeModal(modal: Modal) {
+	arrayRemove(Modals.modals, i => i.id === modal.id);
+}
+
+export function setModalBodyWrapper(component: Component) {
+	Modals.modalBodyWrapper = markRaw(component);
+}

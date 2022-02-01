@@ -1,4 +1,163 @@
-<script lang="ts" src="./login-form"></script>
+<script lang="ts">
+import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
+import AppGrecaptchaWidget from '../../../auth/components/grecaptcha/widget/widget.vue';
+import { trackLoginCaptcha } from '../../analytics/analytics.service';
+import { Api } from '../../api/api.service';
+import { Connection } from '../../connection/connection-service';
+import { Environment } from '../../environment/environment.service';
+import { BaseForm, FormOnLoad, FormOnSubmit, FormOnSubmitError } from '../../form-vue/form.service';
+import { validateUsername } from '../../form-vue/validators';
+import { Provider } from '../../linked-account/linked-account.model';
+import { LinkedAccounts } from '../../linked-account/linked-accounts.service';
+import AppLoading from '../../loading/loading.vue';
+import { AppTooltip } from '../../tooltip/tooltip-directive';
+import googleImage from '../google-icon.svg';
+
+class Wrapper extends BaseForm<any> {}
+
+@Options({
+	components: {
+		AppLoading,
+		AppGrecaptchaWidget,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppAuthLoginForm
+	extends mixins(Wrapper)
+	implements FormOnSubmit, FormOnSubmitError, FormOnLoad
+{
+	@Prop(Boolean)
+	overlay?: boolean;
+
+	captchaToken: string | null = null;
+	captchaResponse: string | null = null;
+	captchaCounter = 0;
+	/** How many attempts the user has until they get blocked. */
+	attempts = 5;
+
+	// Errors
+	invalidLogin = false;
+	blockedLogin = false;
+	invalidCaptcha = false;
+	approvedLoginRejected = false;
+	tryAgain = false;
+
+	@Emit('needs-approved-login')
+	emitNeedsApprovedLogin(_token: string) {}
+
+	get loadUrl() {
+		return `/web/auth/login`;
+	}
+
+	get showForm() {
+		return this.captchaToken === null;
+	}
+
+	readonly Connection = Connection;
+	readonly Environment = Environment;
+	readonly validateUsername = validateUsername;
+	readonly googleImage = googleImage;
+
+	created() {
+		this.form.warnOnDiscard = false;
+	}
+
+	onChanged() {
+		this.resetErrors();
+	}
+
+	resetErrors() {
+		this.invalidLogin = false;
+		this.blockedLogin = false;
+		this.invalidCaptcha = false;
+		this.approvedLoginRejected = false;
+		this.tryAgain = false;
+	}
+
+	onLoad($payload: any) {
+		this.attempts = $payload.attempts;
+	}
+
+	async onSubmit() {
+		this.resetErrors();
+
+		let response;
+
+		if (this.captchaToken) {
+			// Try to solve the captcha.
+			response = await Api.sendRequest(
+				`/web/auth/login`,
+				{
+					token: this.captchaToken,
+					captcha: this.captchaResponse,
+				},
+				{
+					detach: true,
+				}
+			);
+
+			if (response.success === true) {
+				trackLoginCaptcha(this.formModel.username, 'solved', this.captchaCounter);
+			}
+		} else {
+			response = await Api.sendRequest('/web/auth/login', this.formModel);
+
+			// If we got a token with the response, the server requests us to solve a captcha.
+			if (response.token) {
+				this.captchaToken = response.token;
+				this.captchaCounter++;
+				trackLoginCaptcha(this.formModel.username, 'presented', this.captchaCounter);
+			}
+		}
+
+		// Handle custom errors.
+		if (response.success === false) {
+			if (response.reason) {
+				switch (response.reason) {
+					case 'invalid-login':
+						this.invalidLogin = true;
+						break;
+					case 'blocked':
+						this.blockedLogin = true;
+						break;
+					case 'captcha':
+					case 'token': // Technically the session expired, but it's a captcha error.
+						this.invalidCaptcha = true;
+						trackLoginCaptcha(this.formModel.username, 'failed', this.captchaCounter);
+						break;
+					case 'approve-login':
+						this.emitNeedsApprovedLogin(response.loginPollingToken);
+						break;
+					case 'approve-login-rejected':
+						this.approvedLoginRejected = true;
+						break;
+					case 'try-again':
+						this.tryAgain = true;
+						break;
+				}
+			}
+		}
+
+		return response;
+	}
+
+	onRecaptchaResponse(captchaResponse: string) {
+		this.captchaResponse = captchaResponse;
+		this.form.submit();
+	}
+
+	onSubmitError() {
+		// Any error resets this component to show the form again.
+		this.captchaToken = null;
+	}
+
+	linkedChoose(provider: Provider) {
+		LinkedAccounts.login(this.$router, provider);
+	}
+}
+</script>
 
 <template>
 	<div
@@ -7,51 +166,44 @@
 		}"
 	>
 		<div v-show="showForm" class="auth-form-container">
-			<app-form ref="form" class="auth-form" name="loginForm">
-				<fieldset :disabled="Connection.isClientOffline">
-					<!-- Min not needed since the login will fail if incorrect
-					anyway. -->
-					<app-form-group
-						name="username"
-						:label="$gettext('Username')"
-						:hide-label="true"
-					>
-						<app-form-control
+			<AppForm class="auth-form" :controller="form">
+				<fieldset :disabled="Connection.isClientOffline ? 'true' : undefined">
+					<AppFormGroup name="username" :label="$gettext('Username')" hide-label>
+						<!-- Min not needed since the login will fail if incorrect anyway. -->
+						<AppFormControl
 							type="text"
 							:placeholder="$gettext('Username')"
-							:rules="{ max: 30, pattern: 'username' }"
+							:validators="[validateMaxLength(30), validateUsername()]"
 							@changed="onChanged"
 						/>
 
-						<app-form-control-errors />
-					</app-form-group>
+						<AppFormControlErrors />
+					</AppFormGroup>
 
-					<app-form-group
-						name="password"
-						:label="$gettext('Password')"
-						:hide-label="true"
-					>
-						<app-form-control
+					<AppFormGroup name="password" :label="$gettext('Password')" hide-label>
+						<AppFormControl
 							type="password"
 							:placeholder="$gettext('Password')"
-							:rules="{ max: 300 }"
+							:validators="[validateMaxLength(300)]"
 							@changed="onChanged"
 						/>
 
-						<app-form-control-errors />
-					</app-form-group>
+						<AppFormControlErrors />
+					</AppFormGroup>
 
 					<div
 						v-if="tryAgain"
 						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
 					>
 						<p>
-							<translate>
+							<AppTranslate>
 								Something went wrong on our end while trying to log you in.
-							</translate>
+							</AppTranslate>
 						</p>
 						<p>
-							<translate>Try again in a few minutes, sorry about that!</translate>
+							<AppTranslate>
+								Try again in a few minutes, sorry about that!
+							</AppTranslate>
 						</p>
 					</div>
 
@@ -59,18 +211,18 @@
 						v-if="invalidLogin"
 						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
 					>
-						<p><translate>Incorrect username or password.</translate></p>
+						<p><AppTranslate>Incorrect username or password.</AppTranslate></p>
 						<p>
-							<translate :translate-params="{ attempts }">
+							<AppTranslate :translate-params="{ attempts }">
 								Please note, after %{ attempts } incorrect login attempts you will
 								be locked out of your account for 1 hour.
-							</translate>
+							</AppTranslate>
 						</p>
 						<p>
-							<translate>
+							<AppTranslate>
 								If you've forgotten your username or password, you can retrieve them
 								below.
-							</translate>
+							</AppTranslate>
 						</p>
 					</div>
 
@@ -79,10 +231,10 @@
 						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
 					>
 						<p>
-							<translate>
+							<AppTranslate>
 								Whoa, there! You've tried to log in too many times and just straight
 								up failed. You'll have to cool down a bit before trying again.
-							</translate>
+							</AppTranslate>
 						</p>
 					</div>
 
@@ -91,9 +243,9 @@
 						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
 					>
 						<p>
-							<translate>
+							<AppTranslate>
 								Oh no, your captcha couldn't be validated. Please try again.
-							</translate>
+							</AppTranslate>
 						</p>
 					</div>
 
@@ -102,51 +254,51 @@
 						class="alert alert-notice anim-fade-in-enlarge no-animate-leave"
 					>
 						<p>
-							<translate>
+							<AppTranslate>
 								The device you're logging in from has been blocked.
-							</translate>
+							</AppTranslate>
 						</p>
 						<p>
-							<translate :translate-params="{ email: 'contact@gamejolt.com' }">
+							<AppTranslate :translate-params="{ email: 'contact@gamejolt.com' }">
 								If you did not do this, or blocked the login by mistake, contact us
 								at %{ email } right away. Your account may be compromised.
-							</translate>
+							</AppTranslate>
 						</p>
 					</div>
 
-					<app-loading
-						v-if="state.isProcessing"
+					<AppLoading
+						v-if="form.isProcessing"
 						:label="$gettext('Figuring this all out...')"
 						:centered="true"
 					/>
 
 					<div class="form-group">
-						<app-form-button block>
-							<translate>Log In</translate>
-						</app-form-button>
+						<AppFormButton block>
+							<AppTranslate>Log In</AppTranslate>
+						</AppFormButton>
 					</div>
 				</fieldset>
-			</app-form>
+			</AppForm>
 
 			<div class="auth-line-thru">
-				<translate>or</translate>
+				<AppTranslate>or</AppTranslate>
 			</div>
 
 			<div class="anim-fade-in">
-				<app-button
+				<AppButton
 					class="-google"
 					solid
 					block
 					:disabled="Connection.isClientOffline"
 					@click="linkedChoose('google')"
 				>
-					<img src="../google-icon.svg" alt="" />
-					<span><translate>Sign in with Google</translate></span>
-				</app-button>
+					<img :src="googleImage" alt="" />
+					<span><AppTranslate>Sign in with Google</AppTranslate></span>
+				</AppButton>
 			</div>
 		</div>
 		<div v-if="!showForm">
-			<app-grecaptcha-widget @response="onRecaptchaResponse" />
+			<AppGrecaptchaWidget @response="onRecaptchaResponse" />
 		</div>
 	</div>
 </template>

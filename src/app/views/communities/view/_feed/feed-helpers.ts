@@ -1,4 +1,4 @@
-import { Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import {
 	Community,
@@ -11,7 +11,7 @@ import { getChannelPathFromRoute } from '../view.store';
 /**
  * Use in the route resolvers for feed channels to do the API call.
  */
-export function doFeedChannelPayload(route: Route) {
+export function doFeedChannelPayload(route: RouteLocationNormalized) {
 	const channel = getChannelPathFromRoute(route);
 	const sort = getFeedChannelSort(route);
 	const apiOverviewUrl = `/web/communities/overview/${route.params.path}/${channel}?sort=${sort}`;
@@ -25,7 +25,7 @@ export function doFeedChannelPayload(route: Route) {
 export function resolveFeedChannelPayload(
 	feed: null | ActivityFeedView,
 	mainCommunity: Community,
-	route: Route,
+	route: RouteLocationNormalized,
 	payload: any,
 	fromCache: boolean
 ) {
@@ -63,11 +63,11 @@ export function resolveFeedChannelPayload(
 	);
 }
 
-export function getFeedChannelSort(route: Route) {
+export function getFeedChannelSort(route: RouteLocationNormalized) {
 	return (route.query.sort || 'new').toString();
 }
 
-export function getFeedChannelFetchUrl(route: Route) {
+export function getFeedChannelFetchUrl(route: RouteLocationNormalized) {
 	const channel = getChannelPathFromRoute(route)!;
 	const sort = getFeedChannelSort(route);
 	const channels: string[] = [sort];

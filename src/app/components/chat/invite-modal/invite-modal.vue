@@ -1,17 +1,88 @@
-<script lang="ts" src="./invite-modal"></script>
+<script lang="ts">
+import { Inject, mixins, Options, Prop } from 'vue-property-decorator';
+import { fuzzysearch } from '../../../../utils/string';
+import { BaseModal } from '../../../../_common/modal/base';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
+import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
+import { ChatStore, ChatStoreKey } from '../chat-store';
+import { addGroupMembers, addGroupRoom } from '../client';
+import { ChatRoom } from '../room';
+import { ChatUser } from '../user';
+
+@Options({
+	components: {
+		AppScrollScroller,
+		AppUserAvatarImg,
+		AppUserAvatarList,
+	},
+})
+export default class AppChatInviteModal extends mixins(BaseModal) {
+	@Prop({ type: Object, required: true }) room!: ChatRoom;
+	@Prop({ type: Array, required: true }) friends!: ChatUser[];
+	@Prop({ type: Object, default: null }) initialUser!: ChatUser | null;
+
+	@Inject({ from: ChatStoreKey })
+	chatStore!: ChatStore;
+
+	filterQuery = '';
+	selectedUsers: ChatUser[] = this.initialUser ? [this.initialUser] : [];
+
+	get chat() {
+		return this.chatStore.chat!;
+	}
+
+	get filteredUsers() {
+		if (!this.filterQuery) {
+			return this.friends;
+		}
+
+		const filter = this.filterQuery.toLowerCase();
+		return this.friends.filter(
+			i =>
+				fuzzysearch(filter, i.display_name.toLowerCase()) ||
+				fuzzysearch(filter, i.username.toLowerCase())
+		);
+	}
+
+	invite() {
+		const selectedUsers = this.selectedUsers.map(chatUser => chatUser.id);
+
+		if (this.room.isPmRoom) {
+			addGroupRoom(this.chat, selectedUsers);
+		} else {
+			addGroupMembers(this.chat, this.room.id, selectedUsers);
+		}
+		this.modal.dismiss();
+	}
+
+	toggle(user: ChatUser) {
+		const index = this.selectedUsers.findIndex(chatUser => chatUser.id === user.id);
+		if (index !== -1) {
+			this.selectedUsers.splice(index, 1);
+		} else {
+			this.selectedUsers.push(user);
+		}
+	}
+
+	selected(user: ChatUser) {
+		return this.selectedUsers.some(chatUser => chatUser.id === user.id);
+	}
+}
+</script>
 
 <template>
-	<app-modal>
+	<AppModal>
 		<template #default>
 			<div class="modal-controls">
-				<app-button @click="modal.dismiss()">
-					<translate>Close</translate>
-				</app-button>
+				<AppButton @click="modal.dismiss()">
+					<AppTranslate>Close</AppTranslate>
+				</AppButton>
 			</div>
 
 			<div class="modal-header">
 				<h2 class="modal-title">
-					<translate>Choose Friends</translate>
+					<AppTranslate>Choose Friends</AppTranslate>
 				</h2>
 			</div>
 
@@ -23,7 +94,7 @@
 						placeholder="Filter..."
 					/>
 
-					<app-scroll-scroller>
+					<AppScrollScroller>
 						<div class="-user-list">
 							<div
 								v-for="user of filteredUsers"
@@ -32,7 +103,7 @@
 								@click="toggle(user)"
 							>
 								<div class="-avatar">
-									<app-user-avatar-img :user="user" />
+									<AppUserAvatarImg :user="user" />
 								</div>
 
 								<div class="-label">
@@ -42,43 +113,40 @@
 									<div class="-username">@{{ user.username }}</div>
 								</div>
 								<div class="-radio" :class="{ '-active': selected(user) }">
-									<app-jolticon
+									<AppJolticon
 										:icon="selected(user) ? 'checkbox' : 'box-empty'"
 									/>
 								</div>
 							</div>
 						</div>
-					</app-scroll-scroller>
+					</AppScrollScroller>
 				</div>
 			</div>
 		</template>
 
 		<template #footer>
 			<div class="-bottom">
-				<app-user-avatar-list
+				<AppUserAvatarList
 					v-if="selectedUsers.length > 0"
 					class="-selected-users"
 					:users="selectedUsers"
 					sm
 				/>
 
-				<app-button primary block :disabled="selectedUsers.length < 1" @click="invite">
+				<AppButton primary block :disabled="selectedUsers.length < 1" @click="invite">
 					<template v-if="room.isPmRoom">
-						<translate>Create Group</translate>
+						<AppTranslate>Create Group</AppTranslate>
 					</template>
 					<template v-else>
-						<translate>Add To Group</translate>
+						<AppTranslate>Add To Group</AppTranslate>
 					</template>
-				</app-button>
+				</AppButton>
 			</div>
 		</template>
-	</app-modal>
+	</AppModal>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $-v-padding = 15px
 $-h-padding = 20px
 $-height = 40px

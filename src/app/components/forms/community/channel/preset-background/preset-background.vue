@@ -1,8 +1,112 @@
-<script lang="ts" src="./preset-background"></script>
+<script lang="ts">
+import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
+import {
+	Community,
+	CommunityPresetChannelType,
+	getCommunityChannelBackground,
+} from '../../../../../../_common/community/community.model';
+import AppFormControlCrop from '../../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
+import AppFormControlUpload from '../../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import {
+	BaseForm,
+	FormOnBeforeSubmit,
+	FormOnLoad,
+	FormOnSubmit,
+} from '../../../../../../_common/form-vue/form.service';
+import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
+
+type FormModel = Community & {
+	background_crop: any;
+};
+
+class Wrapper extends BaseForm<FormModel> {}
+
+@Options({
+	components: {
+		AppFormControlUpload,
+		AppFormControlCrop,
+	},
+})
+export default class FormCommunityChannelPresetBackground
+	extends mixins(Wrapper)
+	implements FormOnLoad, FormOnBeforeSubmit, FormOnSubmit
+{
+	@Prop({ type: String, required: true }) presetType!: CommunityPresetChannelType;
+
+	modelClass = Community as any;
+
+	maxFilesize = 0;
+	aspectRatio = 0;
+	minWidth = 0;
+	minHeight = 0;
+	maxWidth = 0;
+	maxHeight = 0;
+
+	get loadUrl() {
+		return `/web/dash/communities/channels/save-preset-background/${this.formModel.id}`;
+	}
+
+	get background() {
+		return getCommunityChannelBackground(this.formModel, this.presetType);
+	}
+
+	get crop() {
+		return this.background ? this.background.getCrop() : undefined;
+	}
+
+	@Watch('crop')
+	onCropChange() {
+		this.setField('background_crop', this.crop);
+	}
+
+	onLoad(payload: any) {
+		this.maxFilesize = payload.maxFilesize;
+		this.aspectRatio = payload.aspectRatio;
+		this.minWidth = payload.minWidth;
+		this.maxWidth = payload.maxWidth;
+		this.minHeight = payload.minHeight;
+		this.maxHeight = payload.maxHeight;
+	}
+
+	onBeforeSubmit() {
+		// Backend expects this field.
+		this.setField('crop' as any, this.formModel.background_crop);
+	}
+
+	async onSubmit() {
+		const response = await this.formModel.$savePresetChannelBackground(this.presetType);
+		if (this.model) {
+			Object.assign(this.model, this.formModel);
+		}
+
+		return response;
+	}
+
+	backgroundSelected() {
+		if (this.formModel.file) {
+			this.form.submit();
+		}
+	}
+
+	async clearBackground() {
+		const result = await ModalConfirm.show(
+			this.$gettext(`Are you sure you want to remove this channel's background?`)
+		);
+
+		if (!result) {
+			return;
+		}
+
+		const payload = await this.formModel.$clearPresetChannelBackground(this.presetType);
+
+		this.model?.assign(payload.community);
+	}
+}
+</script>
 
 <template>
-	<app-form ref="form" name="presetBackgroundForm">
-		<app-form-group
+	<AppForm :controller="form">
+		<AppFormGroup
 			name="file"
 			:label="
 				!background
@@ -12,11 +116,11 @@
 			:optional="!!background"
 		>
 			<p class="help-block">
-				<translate>
+				<AppTranslate>
 					Channel images are backgrounds for your community channels. They give a viewer
 					an easy way to identify what kind of content can be found in the channel. Text
 					can be overlayed, so make sure no important information is on this image.
-				</translate>
+				</AppTranslate>
 			</p>
 
 			<p v-translate class="help-block">
@@ -39,25 +143,25 @@
 				<code>%{dimensions}</code>.
 			</p>
 
-			<app-form-control-upload
-				:rules="{
-					filesize: maxFilesize,
-					max_img_dimensions: [maxWidth, maxHeight],
-				}"
+			<AppFormControlUpload
+				:validators="[
+					validateFilesize(maxFilesize),
+					validateImageMaxDimensions({ width: maxWidth, height: maxHeight }),
+				]"
 				accept=".png,.jpg,.jpeg,.webp"
 				@changed="backgroundSelected()"
 			/>
 
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-group
+		<AppFormGroup
 			v-if="background && !formModel.file"
 			name="background_crop"
 			:label="$gettext(`Crop Current Background`)"
 		>
 			<div class="form-control-static">
-				<app-form-control-crop
+				<AppFormControlCrop
 					:src="background.img_url"
 					:min-width="minWidth"
 					:min-height="minHeight"
@@ -67,19 +171,19 @@
 					:max-aspect-ratio="aspectRatio"
 				/>
 
-				<app-form-control-errors />
+				<AppFormControlErrors />
 			</div>
-		</app-form-group>
+		</AppFormGroup>
 
 		<template v-if="background">
-			<app-form-button>
-				<translate>Save</translate>
-			</app-form-button>
-			<app-button trans @click="clearBackground()">
-				<translate>Remove Background</translate>
-			</app-button>
+			<AppFormButton>
+				<AppTranslate>Save</AppTranslate>
+			</AppFormButton>
+			<AppButton trans @click="clearBackground()">
+				<AppTranslate>Remove Background</AppTranslate>
+			</AppButton>
 		</template>
-	</app-form>
+	</AppForm>
 </template>
 
 <style lang="stylus" scoped></style>

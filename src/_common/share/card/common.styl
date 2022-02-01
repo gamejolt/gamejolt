@@ -1,6 +1,3 @@
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 $-tile-anim-duration = 300ms
 $-base-padding = 8px
 $-border = $border-width-base solid var(--theme-bg-subtle)
@@ -26,10 +23,10 @@ $-icon-size-dense = ceil($-icon-size * ($-font-size-dense / $-font-size))
 			width: $-icon-size-dense * 1.25
 			height: @width
 
-		>>> .jolticon
+		::v-deep(.jolticon)
 			font-size: $-icon-size-dense
 
-	>>> .jolticon
+	::v-deep(.jolticon)
 		margin: 0
 		font-size: $-icon-size
 

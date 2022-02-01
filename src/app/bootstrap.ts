@@ -1,27 +1,38 @@
-import Vue from 'vue';
-import '../utils/polyfills';
-import { AdStore } from '../_common/ad/ad-store';
 import { bootstrapCommon } from '../_common/bootstrap';
 import { GamePlayModal } from '../_common/game/play-modal/play-modal.service';
 import { Registry } from '../_common/registry/registry.service';
-import App from './app.vue';
+import { createSidebarStore, SidebarStoreKey } from '../_common/sidebar/sidebar.store';
+import AppMain from './AppMain.vue';
 import './main.styl';
-import { store } from './store/index';
+import { BannerStoreKey, createBannerStore } from './store/banner';
+import { AppStoreKey, createAppStore } from './store/index';
+import { createLibraryStore, LibraryStoreKey } from './store/library';
 import { router } from './views/index';
 
-const _createApp = bootstrapCommon(App, store, router);
-export function createApp() {
-	return { app: _createApp(), store, router };
+export async function createApp() {
+	const { app, commonStore } = bootstrapCommon(AppMain, router);
+
+	const sidebarStore = createSidebarStore();
+	const libraryStore = createLibraryStore({ router });
+	const bannerStore = createBannerStore({ commonStore, router });
+	const appStore = createAppStore({ router, commonStore, sidebarStore, libraryStore });
+
+	// Section stores.
+	app.provide(BannerStoreKey, bannerStore);
+	app.provide(SidebarStoreKey, sidebarStore);
+	app.provide(LibraryStoreKey, libraryStore);
+	app.provide(AppStoreKey, appStore);
+
+	if (GJ_IS_DESKTOP_APP) {
+		const { bootstrapClient } = await import('./bootstrap-client');
+		bootstrapClient({ commonStore });
+	}
+
+	GamePlayModal.init({ canMinimize: true });
+
+	Registry.setConfig('Game', { maxItems: 100 });
+	Registry.setConfig('User', { maxItems: 150 });
+	Registry.setConfig('FiresidePost', { maxItems: 50 });
+
+	return { app, router };
 }
-
-Vue.use(AdStore);
-
-if (GJ_IS_CLIENT) {
-	require('./bootstrap-client');
-}
-
-GamePlayModal.init({ canMinimize: true });
-
-Registry.setConfig('Game', { maxItems: 100 });
-Registry.setConfig('User', { maxItems: 150 });
-Registry.setConfig('FiresidePost', { maxItems: 50 });

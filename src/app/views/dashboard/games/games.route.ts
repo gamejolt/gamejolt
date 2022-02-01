@@ -1,9 +1,9 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 import { routeDashGamesAdd } from './add/add.route';
 import { routeDashGamesManage } from './manage/manage.route';
 
-export const routeDashGames: RouteConfig = {
+export const routeDashGames: RouteRecordRaw = {
 	path: 'games',
-	component: () => import(/* webpackChunkName: "routeDashGames" */ './games'),
+	component: () => import('./games'),
 	children: [routeDashGamesAdd, routeDashGamesManage],
 };

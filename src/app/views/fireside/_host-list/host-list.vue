@@ -1,19 +1,72 @@
-<script lang="ts" src="./host-list"></script>
+<script lang="ts">
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../utils/vue';
+import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import { setDrawerOpen, useDrawerStore } from '../../../../_common/drawer/drawer-store';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
+import { useFiresideController } from '../../../components/fireside/controller/controller';
+import AppFiresideCohostManage from '../cohost/manage/manage.vue';
+import AppFiresideHostThumb from '../_host-thumb/host-thumb.vue';
+import AppFiresideStreamOptions from '../_stream-options/stream-options.vue';
+import AppFiresideStreamPlayback from '../_stream-playback/stream-playback.vue';
+import AppFiresideHostListStickerButton from './sticker-button/sticker-button.vue';
+
+@Options({
+	components: {
+		AppFiresideHostThumb,
+		AppScrollScroller,
+		AppFiresideStreamOptions,
+		AppFiresideCohostManage,
+		AppFiresideHostListStickerButton,
+		AppFiresideStreamPlayback,
+	},
+	directives: {
+		AppAuthRequired,
+	},
+})
+export default class AppFiresideHostList extends Vue {
+	@Prop({ type: Boolean })
+	hideThumbOptions!: boolean;
+
+	@Prop({ type: Boolean })
+	showPlayback!: boolean;
+
+	c = shallowSetup(() => useFiresideController()!);
+
+	drawerStore = shallowSetup(() => useDrawerStore());
+
+	@Emit('show-popper') emitShowPopper() {}
+	@Emit('hide-popper') emitHidePopper() {}
+
+	get canPlaceStickers() {
+		return !!this.c.user.value && !Screen.isMobile;
+	}
+
+	get canManageCohosts() {
+		return this.c.canManageCohosts.value;
+	}
+
+	onClickStickerButton() {
+		setDrawerOpen(this.drawerStore, true);
+	}
+}
+</script>
 
 <template>
-	<app-scroll-scroller v-if="c.rtc" class="-fireside-hosts" horizontal>
+	<AppScrollScroller v-if="c.rtc.value" class="-fireside-hosts" horizontal>
 		<div class="-fireside-hosts-inner">
-			<app-fireside-stream-playback v-if="showPlayback" />
+			<AppFiresideStreamPlayback v-if="showPlayback" />
 
-			<app-fireside-stream-options
+			<AppFiresideStreamOptions
 				@show-popper="emitShowPopper"
 				@hide-popper="emitHidePopper"
 			/>
 
-			<app-fireside-cohost-manage v-if="canManageCohosts" />
+			<AppFiresideCohostManage v-if="canManageCohosts" />
 
-			<app-fireside-host-thumb
-				v-for="host of c.rtc.users"
+			<AppFiresideHostThumb
+				v-for="host of c.rtc.value.users"
 				:key="host.uid"
 				class="-host-thumb"
 				:host="host"
@@ -22,19 +75,16 @@
 				@hide-popper="emitHidePopper"
 			/>
 
-			<app-fireside-host-list-sticker-button
+			<AppFiresideHostListStickerButton
 				v-if="canPlaceStickers"
 				v-app-auth-required
-				@click.native="onClickStickerButton"
+				@click="onClickStickerButton"
 			/>
 		</div>
-	</app-scroll-scroller>
+	</AppScrollScroller>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-fireside-hosts
 	--fireside-host-size: 100px
 	--fireside-host-gap: 8px

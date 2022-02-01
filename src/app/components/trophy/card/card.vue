@@ -1,3 +1,66 @@
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
+import { Game } from '../../../../_common/game/game.model';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import { UserGameTrophy } from '../../../../_common/user/trophy/game-trophy.model';
+import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
+import { TrophyModal } from '../modal/modal.service';
+import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
+
+@Options({
+	components: {
+		AppTrophyThumbnail,
+		AppFadeCollapse,
+	},
+})
+export default class AppTrophyCard extends Vue {
+	@Prop(Object)
+	userTrophy!: UserBaseTrophy;
+
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
+
+	get trophy() {
+		return this.userTrophy.trophy!;
+	}
+
+	get isNew() {
+		if (this.app.user) {
+			return !this.userTrophy.viewed_on && this.userTrophy.user_id === this.app.user!.id;
+		}
+		return false;
+	}
+
+	get bgClass() {
+		return '-trophy-difficulty-' + this.trophy.difficulty;
+	}
+
+	get isGame() {
+		return this.userTrophy instanceof UserGameTrophy && !!this.userTrophy.game;
+	}
+
+	get gameTitle() {
+		if (this.userTrophy instanceof UserGameTrophy && this.userTrophy.game instanceof Game) {
+			return this.userTrophy.game.title;
+		}
+		return this.$gettext(`Game Trophy`);
+	}
+
+	get loggedInUserUnlocked() {
+		return this.app.user && this.userTrophy.user_id === this.app.user.id;
+	}
+
+	onClick() {
+		TrophyModal.show(this.userTrophy);
+	}
+}
+</script>
+
 <template>
 	<div class="-container">
 		<div
@@ -14,26 +77,26 @@
 				<div class="-subline">
 					<small class="text-muted">
 						<span v-if="isGame" class="-game-title">
-							<app-jolticon icon="game" />
+							<AppJolticon icon="game" />
 							<span>
 								{{ gameTitle }}
 							</span>
 						</span>
 						<template v-else>
-							<app-jolticon icon="gamejolt" />
+							<AppJolticon icon="gamejolt" />
 							<span>
-								<translate>Game Jolt Trophy</translate>
+								<AppTranslate>Game Jolt Trophy</AppTranslate>
 							</span>
 						</template>
 					</small>
 				</div>
 				<div class="-thumbnail">
-					<app-trophy-thumbnail :trophy="trophy" no-tooltip :no-highlight="loggedInUserUnlocked" />
+					<AppTrophyThumbnail :trophy="trophy" no-tooltip :no-highlight="loggedInUserUnlocked" />
 				</div>
 				<div class="-description">
-					<app-fade-collapse :collapse-height="64">
+					<AppFadeCollapse :collapse-height="64">
 						<small class="text-muted">{{ trophy.description }}</small>
-					</app-fade-collapse>
+					</AppFadeCollapse>
 				</div>
 			</div>
 		</div>
@@ -41,5 +104,3 @@
 </template>
 
 <style lang="stylus" src="./card.styl" scoped></style>
-
-<script lang="ts" src="./card"></script>

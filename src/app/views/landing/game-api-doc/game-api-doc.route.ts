@@ -1,14 +1,13 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-const routeLandingGameApiDocContent: RouteConfig = {
+const routeLandingGameApiDocContent: RouteRecordRaw = {
 	name: 'landing.game-api-doc',
 	path: ':path*',
-	component: () =>
-		import(/* webpackChunkName: "routeLandingGameApiDoc" */ './game-api-doc-content'),
+	component: () => import('./game-api-doc-content'),
 };
 
-export const routeLandingGameApiDoc: RouteConfig = {
+export const routeLandingGameApiDoc: RouteRecordRaw = {
 	path: '/game-api/doc',
-	component: () => import(/* webpackChunkName: "routeLandingGameApiDoc" */ './game-api-doc.vue'),
+	component: () => import('./game-api-doc.vue'),
 	children: [routeLandingGameApiDocContent],
 };

@@ -1,19 +1,51 @@
-<script lang="ts" src="./gif"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
+import { AppTooltip } from '../../../../tooltip/tooltip-directive';
+import { editorInsertGif, useContentEditorController } from '../../content-editor-controller';
+import { ContentEditorGifModal } from '../../modals/gif/gif-modal.service';
+
+@Options({
+	directives: {
+		AppTooltip,
+	},
+})
+export default class AppContentEditorControlsGif extends Vue {
+	controller = setup(() => useContentEditorController()!);
+
+	get view() {
+		return this.controller.view!;
+	}
+
+	get visible() {
+		return this.controller.scope.isFocused && this.controller.capabilities.gif;
+	}
+
+	async openGifModal() {
+		const gif = await ContentEditorGifModal.show();
+		if (gif === undefined) {
+			return;
+		}
+
+		editorInsertGif(this.controller, gif);
+	}
+}
+</script>
 
 <template>
 	<transition name="fade">
-		<app-jolticon
+		<AppJolticon
 			v-if="visible"
 			v-app-tooltip="$gettext('Insert Gif')"
-			class="emoji-button inset-container-controls"
+			class="gif-button inset-container-controls"
 			icon="gif"
-			@click.native.prevent="openGifModal"
+			@click.prevent="openGifModal"
 		/>
 	</transition>
 </template>
 
 <style lang="stylus" scoped>
-.emoji-button
+.gif-button
 	font-size: 20px
 	transition: filter 0.15s, transform 0.2s ease
 	cursor: pointer

@@ -1,6 +1,6 @@
 import * as fs from 'fs-extra';
-import { Properties } from '../../../../utils/utils';
 import * as writeFileAtomic from 'write-file-atomic';
+import { Primitives, Properties } from '../../../../utils/utils';
 import { LocalDbModel } from './model.service';
 
 type Data<T> = {
@@ -9,9 +9,14 @@ type Data<T> = {
 	groups: DataGroups<T>;
 };
 
+// Collection objects indexed by id.
 type DataObjects<T> = { [id: number]: Partial<T> };
 
-type GroupableFields<T> = Pick<T, Properties<T, Number>>;
+// Primitive fields of objects can be used to group objects with similar values together.
+// For example, all packages for a specific game.
+type GroupableFields<T> = Pick<T, Properties<T, Primitives>>;
+
+// { field name: { field value: object ids }}
 type DataGroups<T> = {
 	[field in keyof GroupableFields<T>]?: {
 		[id: number]: number[];
@@ -49,7 +54,7 @@ export class Collection<T extends LocalDbModel<T>> {
 		}
 
 		console.log(`reading ${this.file}`);
-		let data = await fs.readJson(this.file);
+		const data = await fs.readJson(this.file);
 
 		let version = 0;
 		if (typeof data !== 'object' || !('version' in data)) {
@@ -110,7 +115,7 @@ export class Collection<T extends LocalDbModel<T>> {
 	reindexGroups() {
 		this.data.groups = {};
 
-		for (let field of this.groupFields) {
+		for (const field of this.groupFields) {
 			this.reindexGroup(field);
 		}
 	}
@@ -118,7 +123,7 @@ export class Collection<T extends LocalDbModel<T>> {
 	private reindexGroup(field: keyof DataGroups<T>) {
 		const newGroup: { [id: number]: number[] } = {};
 		this.data.groups[field] = newGroup;
-		for (let id in this.data.objects) {
+		for (const id in this.data.objects) {
 			const dataObj = this.data.objects[id];
 
 			// Need the any cast here because TS cannot assert that dataObj[field] will always be a number.
@@ -148,7 +153,7 @@ export class Collection<T extends LocalDbModel<T>> {
 		}
 
 		const emptyGroups: DataGroups<T> = {};
-		for (let field in this.data.groups) {
+		for (const field in this.data.groups) {
 			emptyGroups[field] = {};
 		}
 		this.data = { version: this.data.version, objects: {}, groups: emptyGroups };
@@ -157,7 +162,7 @@ export class Collection<T extends LocalDbModel<T>> {
 	all(): T[] {
 		const result: T[] = [];
 
-		for (let id in this.data.objects) {
+		for (const id in this.data.objects) {
 			const model = this.get(parseInt(id, 10));
 			result.push(model!);
 		}
@@ -188,8 +193,8 @@ export class Collection<T extends LocalDbModel<T>> {
 		}
 
 		const instance = new this.ctor();
-		for (let field in dataObj) {
-			if (instance.hasOwnProperty(field)) {
+		for (const field in dataObj) {
+			if (Object.prototype.hasOwnProperty.call(instance, field)) {
 				try {
 					(instance as any)[field] = dataObj[field];
 				} catch (_) {}
@@ -203,7 +208,7 @@ export class Collection<T extends LocalDbModel<T>> {
 	put(model: T) {
 		this.data.objects[model.id] = JSON.parse(JSON.stringify(model));
 
-		for (let field of this.groupFields) {
+		for (const field of this.groupFields) {
 			if (!(field in this.data.groups)) {
 				this.data.groups[field] = {};
 			}
@@ -230,7 +235,7 @@ export class Collection<T extends LocalDbModel<T>> {
 		const model = this.data.objects[id];
 		delete this.data.objects[id];
 
-		for (let field of this.groupFields) {
+		for (const field of this.groupFields) {
 			if (!(field in this.data.groups)) {
 				continue;
 			}

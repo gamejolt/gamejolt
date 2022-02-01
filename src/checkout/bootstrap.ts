@@ -1,15 +1,17 @@
-import '../utils/polyfills';
 import { bootstrapCommon } from '../_common/bootstrap';
-import App from './app.vue';
+import App from './AppMain.vue';
 import './main.styl';
-import { store } from './store/index';
 import { router } from './views/index';
 
-const _createApp = bootstrapCommon(App, store, router);
 export function createApp() {
-	return { app: _createApp(), store, router };
-}
+	const { app } = bootstrapCommon(App, router);
 
-if (GJ_IS_CLIENT) {
-	require('./bootstrap-client');
+	// TODO(vue3): gotta make createApp async to support this
+	if (GJ_IS_DESKTOP_APP) {
+		// import('../_common/client/bootstrap').then(({ bootstrapCommonClient }) => {
+		// 	bootstrapCommonClient({ commonStore });
+		// });
+	}
+
+	return { app, router };
 }

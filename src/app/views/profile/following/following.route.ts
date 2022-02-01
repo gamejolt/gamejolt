@@ -1,8 +1,8 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeProfileFollowing: RouteConfig = {
+export const routeProfileFollowing: RouteRecordRaw = {
 	name: 'profile.following',
 	path: 'following',
 	// Put all the "follow" routes in same chunk.
-	component: () => import(/* webpackChunkName: "routeProfileFollowList" */ './following.vue'),
+	component: () => import('./following.vue'),
 };

@@ -1,21 +1,41 @@
+<script lang="ts">
+import { mixins, Options } from 'vue-property-decorator';
+import { Api } from '../../../../_common/api/api.service';
+import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
+
+class Wrapper extends BaseForm<any> {}
+
+@Options({})
+export default class FormSetPassword extends mixins(Wrapper) implements FormOnSubmit {
+	created() {
+		this.form.warnOnDiscard = false;
+	}
+
+	onInit() {
+		this.setField('password', '');
+	}
+
+	onSubmit() {
+		return Api.sendRequest('/web/dash/account/set-password', {
+			password: this.formModel.password,
+		});
+	}
+}
+</script>
+
 <template>
-	<app-form name="setPasswordForm">
-		<app-form-group name="password">
-			<app-form-control
+	<AppForm :controller="form">
+		<AppFormGroup name="password">
+			<AppFormControl
 				type="password"
-				:rules="{
-					min: 4,
-					max: 30,
-				}"
-				:validate-on="['blur']"
+				:validators="[validateMinLength(4), validateMaxLength(30)]"
+				validate-on-blur
 			/>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-button>
-			<translate>Set Account Password</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton>
+			<AppTranslate>Set Account Password</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>
-
-<script lang="ts" src="./set-password"></script>

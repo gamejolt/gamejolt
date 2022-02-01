@@ -1,6 +1,6 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeProfilePostView: RouteConfig = {
+export const routeProfilePostView: RouteRecordRaw = {
 	name: 'profile.post.view',
 	path: 'post/:slug',
 	redirect: '/p/:slug',

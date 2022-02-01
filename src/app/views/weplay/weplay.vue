@@ -1,3 +1,35 @@
+<script lang="ts">
+import { Options } from 'vue-property-decorator';
+import AppCard from '../../../_common/card/AppCard.vue';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
+import { Screen } from '../../../_common/screen/screen-service';
+import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
+import { User } from '../../../_common/user/user.model';
+import AppWeplayLogo from '../../components/weplay/logo/AppWeplayLogo.vue';
+
+@Options({
+	name: 'RouteWeplay',
+	components: {
+		AppCard,
+		AppWeplayLogo,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+@OptionsForRoute({
+	deps: {},
+	resolver: () => User.touch(),
+})
+export default class RouteWeplay extends BaseRouteComponent {
+	readonly Screen = Screen;
+
+	get routeTitle() {
+		return 'Stajoltia';
+	}
+}
+</script>
+
 <template>
 	<div class="fill-dark">
 		<section class="section">
@@ -5,22 +37,21 @@
 				<div class="header-content">
 					<div class="title">
 						<div class="logo">
-							<app-weplay-logo />
+							<AppWeplayLogo />
 						</div>
 						<h1>STAJOLTIA</h1>
 						<p class="lead">
 							<strong>
-								<em>
-									The future of gaming is we.
-								</em>
+								<em>The future of gaming is we.</em>
 							</strong>
 						</p>
 						<p class="lead">
-							Introducing Stajoltia, a new gaming platform from Game Jolt for playing video games
-							across all kinds of screens.
+							Introducing Stajoltia, a new gaming platform from Game Jolt for playing
+							video games across all kinds of screens.
 						</p>
 						<span class="text-muted">
-							(phone screens, watch screens, computer screens, window screens and more!)
+							(phone screens, watch screens, computer screens, window screens and
+							more!)
 						</span>
 					</div>
 				</div>
@@ -49,7 +80,9 @@
 					<div class="player-info">
 						<span class="text-muted">
 							Currently playing:
-							<a href="https://gamejolt.com/games/eggnogg/42742" target="_blank">EGGNOGG+</a>
+							<a href="https://gamejolt.com/games/eggnogg/42742" target="_blank">
+								EGGNOGG+
+							</a>
 						</span>
 						<div class="controller-wire" />
 						<div />
@@ -59,42 +92,42 @@
 						<table class="control-table">
 							<tr>
 								<td>
-									<app-button
+									<AppButton
+										v-app-tooltip="$gettext('Jump Left')"
 										class="control-up-left"
 										circle
 										icon="chevron-up"
 										disabled
-										v-app-tooltip="$gettext('Jump Left')"
 									/>
 								</td>
 								<td>
-									<app-button circle solid icon="chevron-up" disabled />
+									<AppButton circle solid icon="chevron-up" disabled />
 								</td>
 								<td>
-									<app-button
+									<AppButton
+										v-app-tooltip="$gettext('Jump Right')"
 										class="control-up-right"
 										circle
 										icon="chevron-up"
 										disabled
-										v-app-tooltip="$gettext('Jump Right')"
 									/>
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<app-button circle solid icon="chevron-left" disabled />
+									<AppButton circle solid icon="chevron-left" disabled />
 								</td>
 								<td>
-									<app-button
+									<AppButton
+										v-app-tooltip.bottom="$gettext('Pickup')"
 										circle
 										solid
 										icon="chevron-down"
 										disabled
-										v-app-tooltip.bottom="$gettext('Pickup')"
 									/>
 								</td>
 								<td>
-									<app-button circle solid icon="chevron-right" disabled />
+									<AppButton circle solid icon="chevron-right" disabled />
 								</td>
 							</tr>
 						</table>
@@ -110,16 +143,16 @@
 							<tr>
 								<td />
 								<td>
-									<app-button solid disabled v-app-tooltip="$gettext('Jump')">
+									<AppButton v-app-tooltip="$gettext('Jump')" solid disabled>
 										A
-									</app-button>
+									</AppButton>
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<app-button solid disabled v-app-tooltip="$gettext('Attack')">
+									<AppButton v-app-tooltip="$gettext('Attack')" solid disabled>
 										B
-									</app-button>
+									</AppButton>
 								</td>
 							</tr>
 						</table>
@@ -139,27 +172,29 @@
 					<div class="description">
 						<div class="well desc-item">
 							<h2>
-								<app-jolticon class="-icon" icon="game" highlight />
+								<AppJolticon class="-icon" icon="game" highlight />
 								Game where you want, when you want.
 							</h2>
 							<p>
-								Play across multiple devices including laptops, desktops, and select phones and
-								tablets.
+								Play across multiple devices including laptops, desktops, and select
+								phones and tablets.
 							</p>
 							<p class="help-block">
-								*High speed internet connection and a phat stack of disposable income required.
+								*High speed internet connection and a phat stack of disposable
+								income required.
 								<br />
-								**If you don't have either, don't worry we'll sell your personal data in exchange!
+								**If you don't have either, don't worry we'll sell your personal
+								data in exchange!
 							</p>
 						</div>
 						<div class="well desc-item">
 							<h2>
-								<app-jolticon class="-icon" icon="video" highlight />
+								<AppJolticon class="-icon" icon="video" highlight />
 								Up to 4K HDR at 60 FPS. PSYCHE!
 							</h2>
 							<p>
-								Enjoy gaming the way you love, with beautiful 4K HDR graphics and smooth frame
-								rates. Passing G.A.S. to you at 60 FPS.
+								Enjoy gaming the way you love, with beautiful 4K HDR graphics and
+								smooth frame rates. Passing G.A.S. to you at 60 FPS.
 							</p>
 							<p class="help-block">
 								* Gameplay experience may vary because this is not possible.
@@ -167,43 +202,40 @@
 						</div>
 						<div class="well desc-item">
 							<h2>
-								<app-jolticon class="-icon" icon="twitch" highlight />
+								<AppJolticon class="-icon" icon="twitch" highlight />
 								New ways to play through Twitch and beyond.
 							</h2>
 							<p>
-								Go from watching someone in a video to playing someone else's game in seconds, with
-								even more innovative experiences to come.
+								Go from watching someone in a video to playing someone else's game
+								in seconds, with even more innovative experiences to come.
 							</p>
-							<p class="help-block">
-								* For select--but only one--game(s).
-							</p>
+							<p class="help-block">* For select--but only one--game(s).</p>
 						</div>
 						<div class="well desc-item">
 							<h2>
-								<app-jolticon class="-icon" icon="bolt-unfilled" highlight />
+								<AppJolticon class="-icon" icon="bolt-unfilled" highlight />
 								Play instaJOLTly.
 							</h2>
-							<p>
-								No updates, no downloads. Jump right into the game.
-							</p>
+							<p>No updates, no downloads. Jump right into the game.</p>
 						</div>
 						<div class="well desc-item">
 							<h2>
-								<app-jolticon class="-icon" icon="token" highlight />
+								<AppJolticon class="-icon" icon="token" highlight />
 								Money? Never heard of it.
 							</h2>
 							<p>
-								Subscriptions and paying for games is of the past! Stajoltia is completely free!
+								Subscriptions and paying for games is of the past! Stajoltia is
+								completely free!
 							</p>
 						</div>
 						<div class="well desc-item">
 							<h2>
-								<app-jolticon class="-icon" icon="chart" highlight />
+								<AppJolticon class="-icon" icon="chart" highlight />
 								Always getting better.
 							</h2>
 							<p>
-								Stajoltia's G.A.S. streaming infrastructure evolves to meet the demands of players,
-								developers, and internet trolls.
+								Stajoltia's G.A.S. streaming infrastructure evolves to meet the
+								demands of players, developers, and internet trolls.
 							</p>
 						</div>
 					</div>
@@ -215,8 +247,8 @@
 			<div class="container">
 				<div class="content">
 					<div class="footer-desc lead">
-						We are redefining how you play games by converting to a cutting edge G.A.S. based
-						infrastructure. Step away from the cloud and smell the future of we.
+						We are redefining how you play games by converting to a cutting edge G.A.S.
+						based infrastructure. Step away from the cloud and smell the future of we.
 						<br />
 						<br />
 						Play with trillions of earth's inhabitants at once using any web browser!
@@ -228,9 +260,6 @@
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 @keyframes logopulse {
   0% {
 	filter: drop-shadow(0 0 20px var(--theme-notice));
@@ -380,7 +409,4 @@
 .footer-desc
 	text-align: center
 	max-width: 650px
-
 </style>
-
-<script lang="ts" src="./weplay"></script>

@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { ChatClient, isUserOnline } from './client';
 import { ChatRoom } from './room';
@@ -48,9 +47,9 @@ export class ChatUserCollection {
 	}
 
 	private indexUser(user: ChatUser) {
-		Vue.set(this.byId_, user.id, user);
+		this.byId_[user.id] = user;
 		if (user.room_id !== 0) {
-			Vue.set(this.byRoomId_, user.room_id, user);
+			this.byRoomId_[user.room_id] = user;
 		}
 	}
 
@@ -95,9 +94,9 @@ export class ChatUserCollection {
 		}
 
 		arrayRemove(this.collection_, i => i === user);
-		Vue.delete(this.byId_, user.id);
+		delete this.byId_[user.id];
 		if (user.room_id !== 0) {
-			Vue.delete(this.byRoomId_, user.room_id);
+			delete this.byRoomId_[user.room_id];
 		}
 
 		if (user.isOnline) {

@@ -1,16 +1,58 @@
+<script lang="ts">
+import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Popper } from '../../popper/popper.service';
+import AppPopper from '../../popper/popper.vue';
+import { SiteTemplate } from '../../site/template/template-model';
+
+@Options({
+	components: {
+		AppPopper,
+	},
+})
+export default class AppThemeSelector extends Vue {
+	@Prop(Array)
+	templates!: SiteTemplate[];
+
+	@Prop(Number)
+	currentTemplate!: number;
+
+	current: SiteTemplate | null = null;
+
+	@Emit('change')
+	emitChange(_id: number) {}
+
+	@Watch('currentTemplate')
+	onTemplateChange() {
+		this.current = this.templates.find(t => t.id === this.currentTemplate) || null;
+	}
+
+	created() {
+		if (this.currentTemplate) {
+			this.onTemplateChange();
+		}
+	}
+
+	select(id: number) {
+		this.emitChange(id);
+		Popper.hideAll();
+	}
+}
+</script>
+
 <template>
 	<div>
-		<div class="list-group" id="theme-selector-selection">
-			<app-popper block track-trigger-width>
+		<div id="theme-selector-selection" class="list-group">
+			<AppPopper block track-trigger-width>
 				<a class="list-group-item has-icon">
 					<template v-if="!current">
-						<app-jolticon icon="chevron-down" class="list-group-item-icon" />
-						<em><translate>Please choose a theme...</translate></em>
+						<AppJolticon icon="chevron-down" class="list-group-item-icon" />
+						<em><AppTranslate>Please choose a theme...</AppTranslate></em>
 					</template>
 					<template v-else>
 						<div class="list-group-item-heading">
-							<app-jolticon icon="chevron-down" class="list-group-item-icon" />
+							<AppJolticon icon="chevron-down" class="list-group-item-icon" />
 							<strong>{{ current.name }}</strong>
+							{{ ' ' }}
 							<small class="text-muted">by @{{ current.user.username }}</small>
 						</div>
 						<p class="list-group-item-text">
@@ -19,25 +61,26 @@
 					</template>
 				</a>
 
-				<div slot="popover" class="list-group">
-					<a
-						class="list-group-item"
-						v-for="template of templates"
-						:key="template.id"
-						@click="select(template.id)"
-					>
-						<div class="list-group-item-heading">
-							<strong>{{ template.name }}</strong>
-							<small class="text-muted">by @{{ template.user.username }}</small>
-						</div>
-						<p class="list-group-item-text">
-							{{ template.description }}
-						</p>
-					</a>
-				</div>
-			</app-popper>
+				<template #popover>
+					<div class="list-group">
+						<a
+							v-for="template of templates"
+							:key="template.id"
+							class="list-group-item"
+							@click="select(template.id)"
+						>
+							<div class="list-group-item-heading">
+								<strong>{{ template.name }}</strong>
+								{{ ' ' }}
+								<small class="text-muted">by @{{ template.user.username }}</small>
+							</div>
+							<p class="list-group-item-text">
+								{{ template.description }}
+							</p>
+						</a>
+					</div>
+				</template>
+			</AppPopper>
 		</div>
 	</div>
 </template>
-
-<script lang="ts" src="./selector"></script>

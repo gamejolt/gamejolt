@@ -1,4 +1,3 @@
-@require '~styles/variables'
 
 .list-group
 	rounded-corners-lg()
@@ -28,7 +27,8 @@
 	a&
 		user-select: none
 
-	a&:hover, &.active
+	a&:hover
+	&.active
 		change-bg('bg-offset')
 
 	// Disabled styling.
@@ -58,7 +58,8 @@
 		margin-right: $list-group-item-padding
 
 	// Notice tags are notifications and should be floated right.
-	.tag-notice, .tag-highlight
+	.tag-notice
+	.tag-highlight
 		margin-right: 0
 		margin-left: $list-group-item-padding
 		float: right
@@ -69,7 +70,9 @@
 
 		// There is some extra spacing on the right from the browser adding spacing in between inline items.
 		// That's why we have to subtract 1px and 2px. It ends up being around 3px of extra spacing we have to subtract.
-		> .jolticon, > .list-group-item-heading > .jolticon, .list-group-item-icon
+		> .jolticon
+		> .list-group-item-heading > .jolticon
+		.list-group-item-icon
 			position: relative
 			top: 2px // Arbitrary
 			margin-right: -2px
@@ -125,7 +128,8 @@
 
 // When a list-group is inside a popover.
 // Remove the borders.
-.popper .list-group, .popper-content .list-group
+.popper .list-group
+.popper-content .list-group
 	margin-bottom: $list-group-item-padding
 	border: 0
 	border-radius: 0
@@ -156,7 +160,8 @@
 				change-bg('darkest')
 				theme-prop('color', 'gray', true)
 
-		> .jolticon, > .list-group-item-heading > .jolticon
+		> .jolticon
+		> .list-group-item-heading > .jolticon
 			theme-prop('color', 'light')
 
 	.list-group-item-heading
@@ -177,9 +182,11 @@
 			margin-top: -(@height / 2)
 			overflow: hidden
 
-	a.list-group-item:hover, .list-group-item.active
+	a.list-group-item:hover
+	.list-group-item.active
 		change-bg('darker')
 		color: $white !important
 
-		> .jolticon, > .list-group-item-heading > .jolticon
+		> .jolticon
+		> .list-group-item-heading > .jolticon
 			theme-prop('color', 'lightest')

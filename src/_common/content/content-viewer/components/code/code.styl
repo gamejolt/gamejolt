@@ -1,12 +1,10 @@
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 // Override code styling to always have the default code block background color
 .content-viewer-code-block
 	change-bg('darkest', true)
 	position: relative
 	font-size: $font-size-small !important
 	border-radius: $border-radius-large !important
+	white-space: pre-wrap
 
 	& *::selection
 		theme-prop('background', 'gray', true)
@@ -27,6 +25,3 @@
 		all: initial
 		font-family: inherit
 		font-size: inherit
-
-.content-viewer-nocode
-	white-space: pre-wrap

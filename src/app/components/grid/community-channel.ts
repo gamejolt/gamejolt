@@ -1,13 +1,20 @@
-import { Community } from '../../../_common/community/community.model';
 import { Channel, Socket } from 'phoenix';
+import { markRaw } from 'vue';
+import { Community } from '../../../_common/community/community.model';
 
-export class CommunityChannel extends Channel {
-	community: Community;
+export class CommunityChannel {
+	constructor(
+		public readonly community: Community,
+		public readonly socket: Socket,
+		params?: object
+	) {
+		this.socketChannel = markRaw(new Channel('community:' + community.id, params, socket));
+		(socket as any).channels.push(this.socketChannel);
+	}
 
-	constructor(community: Community, socket: Socket, params?: object) {
-		super('community:' + community.id, params, socket);
-		(socket as any).channels.push(this);
+	readonly socketChannel: Channel;
 
-		this.community = community;
+	init() {
+		// Nothing to do, but keeping for any event setup in future.
 	}
 }

@@ -1,14 +1,147 @@
-<script lang="ts" src="./overview"></script>
+<script lang="ts">
+import { Inject, Options } from 'vue-property-decorator';
+import { arrayRemove } from '../../../../../../../../utils/array';
+import { CommunityChannel } from '../../../../../../../../_common/community/channel/channel.model';
+import {
+	showErrorGrowl,
+	showSuccessGrowl,
+} from '../../../../../../../../_common/growls/growls.service';
+import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
+import {
+	BaseRouteComponent,
+	OptionsForRoute,
+} from '../../../../../../../../_common/route/route-component';
+import { Screen } from '../../../../../../../../_common/screen/screen-service';
+import { Scroll } from '../../../../../../../../_common/scroll/scroll.service';
+import FormCommunityChannelDescription from '../../../../../../../components/forms/community/channel/description/description.vue';
+import FormCommunityChannelEdit from '../../../../../../../components/forms/community/channel/edit/edit.vue';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.store';
+import AppCommunitiesViewPageContainer from '../../../../_page-container/page-container.vue';
+
+@Options({
+	name: 'RouteCommunitiesViewEditChannelsOverview',
+	components: {
+		FormCommunityChannelEdit,
+		AppCommunitiesViewPageContainer,
+		FormCommunityChannelDescription,
+	},
+})
+@OptionsForRoute()
+export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteComponent {
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
+
+	readonly Screen = Screen;
+
+	get community() {
+		return this.routeStore.community;
+	}
+
+	get channel() {
+		return this.routeStore.channel!;
+	}
+
+	get canEditDescription() {
+		return this.channel.type === 'competition';
+	}
+
+	get canArchive() {
+		return (
+			!this.channel.is_archived &&
+			this.channel.visibility === 'published' &&
+			this.community.canRemoveChannel
+		);
+	}
+
+	get shouldShowArchiveOptions() {
+		return (
+			this.channel.visibility === 'published' && this.community.hasPerms('community-channels')
+		);
+	}
+
+	onSubmit(model: CommunityChannel) {
+		// After submitting the form, redirect to the edit page with the new title if it changed.
+		// The title of the channel is part of the URL.
+		if (model.title !== this.$route.params.channel) {
+			this.$router.push({ params: { channel: model.title } });
+		}
+	}
+
+	onBackgroundChange(model: CommunityChannel) {
+		Object.assign(this.channel, model);
+	}
+
+	async onClickArchive() {
+		if (!this.canArchive) {
+			return;
+		}
+
+		const result = await ModalConfirm.show(
+			this.$gettextInterpolate(`Are you sure you want to archive the channel %{ channel }?`, {
+				channel: this.channel.displayTitle,
+			})
+		);
+
+		if (result) {
+			const payload = await this.channel.$archive();
+			if (payload.success) {
+				this.routeStore.archivedChannels.push(this.channel);
+				arrayRemove(this.community.channels!, i => i.id === this.channel.id);
+				this.community.has_archived_channels = true;
+
+				showSuccessGrowl(this.$gettext(`Channel is now archived.`));
+				Scroll.to(0);
+			}
+		}
+	}
+
+	async onClickUnarchive() {
+		const result = await ModalConfirm.show(
+			this.$gettextInterpolate(
+				`Are you sure you want to restore the channel %{ channel } from the archive?`,
+				{
+					channel: this.channel.displayTitle,
+				}
+			)
+		);
+
+		if (result) {
+			try {
+				await this.channel.$unarchive();
+				this.community.channels!.push(this.channel);
+				arrayRemove(this.routeStore.archivedChannels, i => i.id === this.channel.id);
+
+				if (this.routeStore.archivedChannels.length === 0) {
+					this.community.has_archived_channels = false;
+				}
+
+				showSuccessGrowl(this.$gettext(`Channel was restored from the archive.`));
+				Scroll.to(0);
+			} catch (payload) {
+				if (payload.errors) {
+					if (payload.errors['too_many_channels']) {
+						showErrorGrowl(
+							this.$gettext(
+								`There are too many public channels in this community. Remove or archive another channel before restoring this one.`
+							)
+						);
+					}
+				}
+			}
+		}
+	}
+}
+</script>
 
 <template>
-	<app-communities-view-page-container full>
+	<AppCommunitiesViewPageContainer full>
 		<div class="row">
 			<div class="col-md-8">
 				<h2 class="section-header">
-					<translate>Details</translate>
+					<AppTranslate>Details</AppTranslate>
 				</h2>
 
-				<form-community-channel-edit
+				<FormCommunityChannelEdit
 					:community="community"
 					:model="channel"
 					@submit="onSubmit"
@@ -17,9 +150,9 @@
 
 				<template v-if="canEditDescription">
 					<h2>
-						<translate>Edit Description</translate>
+						<AppTranslate>Edit Description</AppTranslate>
 					</h2>
-					<form-community-channel-description :model="channel" />
+					<FormCommunityChannelDescription :model="channel" />
 				</template>
 			</div>
 		</div>
@@ -30,53 +163,53 @@
 						<div class="well fill-offset">
 							<template v-if="!channel.is_archived">
 								<h4 class="section-header">
-									<translate>Archive Channel</translate>
+									<AppTranslate>Archive Channel</AppTranslate>
 								</h4>
 
 								<div class="page-help">
 									<p>
-										<translate>
+										<AppTranslate>
 											Archiving a channel will hide it from the community's
 											channel list and sets it to read-only for all users. Any
 											existing posts in the channel will remain there, and the
 											channel can still be viewed.
-										</translate>
+										</AppTranslate>
 									</p>
 								</div>
 
-								<app-button :disabled="!canArchive" @click="onClickArchive">
-									<translate>Archive Channel</translate>
-								</app-button>
+								<AppButton :disabled="!canArchive" @click="onClickArchive">
+									<AppTranslate>Archive Channel</AppTranslate>
+								</AppButton>
 
 								<p v-if="!canArchive" class="help-block sans-margin-bottom">
-									<translate>
+									<AppTranslate>
 										The last public channel cannot be archived.
-									</translate>
+									</AppTranslate>
 								</p>
 							</template>
 
 							<template v-else>
 								<h4 class="sans-margin-top">
-									<translate>Restore Channel</translate>
+									<AppTranslate>Restore Channel</AppTranslate>
 								</h4>
 
 								<div class="page-help">
 									<p>
-										<translate>
+										<AppTranslate>
 											Restoring a channel will remove it from the archive and
 											make it publicly visible again.
-										</translate>
+										</AppTranslate>
 									</p>
 								</div>
 
-								<app-button @click="onClickUnarchive">
-									<translate>Restore Channel</translate>
-								</app-button>
+								<AppButton @click="onClickUnarchive">
+									<AppTranslate>Restore Channel</AppTranslate>
+								</AppButton>
 							</template>
 						</div>
 					</div>
 				</div>
 			</section>
 		</template>
-	</app-communities-view-page-container>
+	</AppCommunitiesViewPageContainer>
 </template>

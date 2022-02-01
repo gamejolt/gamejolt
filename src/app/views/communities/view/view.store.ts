@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
 import { numberSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
@@ -103,7 +102,10 @@ function _updateChannels(store: CommunityRouteStore) {
 	});
 }
 
-export function setChannelPathFromRoute(store: CommunityRouteStore, route: Route) {
+export function setChannelPathFromRoute(
+	store: CommunityRouteStore,
+	route: RouteLocationNormalized
+) {
 	store.channelPath = getChannelPathFromRoute(route);
 }
 
@@ -124,10 +126,8 @@ export async function acceptCollaboration(store: CommunityRouteStore, currentUse
 	// community. To avoid sending the api request needlessly we update the
 	// community model before calling joinCommunity.
 
-	// Also, using Vue.set because perms and is_member are not initialized
-	// in the model.
-	Vue.set(community, 'perms', invite.perms);
-	Vue.set(community, 'is_member', true);
+	community.perms = invite.perms;
+	community.is_member = true;
 
 	// Add the user to the list of collaborators.
 	if (currentUser && sidebarData) {
@@ -151,11 +151,11 @@ export async function declineCollaboration(store: CommunityRouteStore) {
 	store.collaborator = null;
 }
 
-export function getChannelPathFromRoute(route: Route) {
+export function getChannelPathFromRoute(route: RouteLocationNormalized) {
 	if (route.name === routeCommunitiesViewOverview.name) {
 		return CommunityPresetChannelType.FEATURED;
 	}
-	return route.params.channel || null;
+	return (route.params.channel as string) || null;
 }
 
 /**

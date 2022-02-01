@@ -1,15 +1,41 @@
+<script lang="ts">
+import { mixins, Options, Prop } from 'vue-property-decorator';
+import { Community } from '../../../../../_common/community/community.model';
+import { BaseModal } from '../../../../../_common/modal/base';
+import { CommunitySidebarData } from '../sidebar-data';
+import AppCommunitySidebar from '../sidebar.vue';
+
+@Options({
+	components: {
+		AppCommunitySidebar,
+	},
+})
+export default class AppCommunitySidebarModal extends mixins(BaseModal) {
+	@Prop({ type: Boolean, required: true })
+	isEditing!: boolean;
+
+	@Prop({ type: Object, required: true })
+	sidebarData!: CommunitySidebarData;
+
+	@Prop({ type: Object, required: true })
+	community!: Community;
+}
+</script>
+
 <template>
-	<app-modal>
+	<AppModal>
 		<div class="modal-controls">
-			<app-button @click="modal.dismiss()">
-				<translate>Close</translate>
-			</app-button>
+			<AppButton @click="modal.dismiss()">
+				<AppTranslate>Close</AppTranslate>
+			</AppButton>
 		</div>
 
 		<div class="modal-body">
-			<app-community-sidebar :is-editing="isEditing" :community="community" :data="data" />
+			<AppCommunitySidebar
+				:is-editing="isEditing"
+				:community="community"
+				:sidebar-data="sidebarData"
+			/>
 		</div>
-	</app-modal>
+	</AppModal>
 </template>
-
-<script lang="ts" src="./modal"></script>

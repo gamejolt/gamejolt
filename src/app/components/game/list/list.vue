@@ -1,6 +1,25 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Game } from '../../../../_common/game/game.model';
+import AppGameListItem from './item/item.vue';
+
+@Options({
+	components: {
+		AppGameListItem,
+	},
+})
+export default class AppGameList extends Vue {
+	@Prop(Array)
+	games!: Game[];
+
+	@Prop(String)
+	eventLabel?: string;
+}
+</script>
+
 <template>
 	<div class="game-list">
-		<app-game-list-item
+		<AppGameListItem
 			v-for="game of games"
 			:key="game.id"
 			:game="game"
@@ -8,5 +27,3 @@
 		/>
 	</div>
 </template>
-
-<script lang="ts" src="./list"></script>

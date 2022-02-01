@@ -1,36 +1,115 @@
-<script lang="ts" src="./firesides"></script>
+<script lang="ts">
+import { Inject, Options } from 'vue-property-decorator';
+import { RouteLocationNormalized } from 'vue-router';
+import { Api } from '../../../../../_common/api/api.service';
+import { Fireside } from '../../../../../_common/fireside/fireside.model';
+import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
+import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import AppFiresideAvatar from '../../../../components/fireside/avatar/avatar.vue';
+import AppFiresideAvatarBase from '../../../../components/fireside/avatar/_base/base.vue';
+import { illNoComments } from '../../../../img/ill/illustrations';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
+import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
+
+function getFetchUrl(route: RouteLocationNormalized) {
+	return `/web/communities/firesides/${route.params.path}`;
+}
+
+@Options({
+	name: 'RouteCommunitiesViewFiresides',
+	components: {
+		AppCommunitiesViewPageContainer,
+		AppIllustration,
+		AppFiresideAvatar,
+		AppFiresideAvatarBase,
+	},
+})
+@OptionsForRoute({
+	cache: true,
+	lazy: true,
+	deps: {
+		params: ['path'],
+	},
+	resolver: ({ route }) => Api.sendRequest(getFetchUrl(route)),
+})
+export default class RouteCommunitiesViewFiresides extends BaseRouteComponent {
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
+
+	firesides: Fireside[] = [];
+
+	readonly Screen = Screen;
+	readonly illNoComments = illNoComments;
+
+	get community() {
+		return this.routeStore.community;
+	}
+
+	get routeTitle() {
+		return this.community ? `Firesides in the ${this.community.name} Community` : null;
+	}
+
+	get placeholderCount() {
+		// 2 rows for all breakpoints
+		return this.gridColumns * 2;
+	}
+
+	get gridStyling() {
+		return {
+			display: 'grid',
+			gridTemplateColumns: `repeat(${this.gridColumns}, 1fr)`,
+			gridGap: '16px',
+		};
+	}
+
+	get gridColumns() {
+		if (Screen.isXs) {
+			return 4;
+		} else if (Screen.isSm) {
+			return 5;
+		}
+
+		return 6;
+	}
+
+	routeResolved($payload: any) {
+		this.firesides = Fireside.populate($payload.firesides);
+	}
+}
+</script>
 
 <template>
-	<app-communities-view-page-container full>
+	<AppCommunitiesViewPageContainer full>
 		<h1 class="section-header" :class="{ 'h2 -text-overflow': Screen.isMobile }">
-			<translate>Active Firesides</translate>
+			<AppTranslate>Active Firesides</AppTranslate>
 			<small v-if="Screen.isDesktop">in {{ community.name }}</small>
 		</h1>
 		<br />
 
-		<app-illustration v-if="!community.allow_firesides" src="~img/ill/no-comments.svg">
+		<AppIllustration v-if="!community.allow_firesides" :src="illNoComments">
 			<p>
-				<translate>This community doesn't allow firesides.</translate>
+				<AppTranslate>This community doesn't allow firesides.</AppTranslate>
 			</p>
-		</app-illustration>
-		<app-illustration
+		</AppIllustration>
+		<AppIllustration
 			v-else-if="isRouteBootstrapped && firesides.length === 0"
-			src="~img/ill/no-comments.svg"
+			:src="illNoComments"
 		>
 			<p>
-				<translate>There are no active firesides in this community yet.</translate>
+				<AppTranslate>There are no active firesides in this community yet.</AppTranslate>
 			</p>
-		</app-illustration>
+		</AppIllustration>
 		<div v-else :style="gridStyling">
 			<template v-if="!firesides.length">
-				<app-fireside-avatar-base
+				<AppFiresideAvatarBase
 					v-for="i of placeholderCount"
 					:key="`placeholder-${i}`"
 					:is-placeholder="true"
 				/>
 			</template>
 			<template v-else>
-				<app-fireside-avatar
+				<AppFiresideAvatar
 					v-for="fireside of firesides"
 					:key="fireside.id"
 					:fireside="fireside"
@@ -38,5 +117,5 @@
 				/>
 			</template>
 		</div>
-	</app-communities-view-page-container>
+	</AppCommunitiesViewPageContainer>
 </template>

@@ -1,8 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDiscoverGamesViewTrophiesList: RouteConfig = {
+export const routeDiscoverGamesViewTrophiesList: RouteRecordRaw = {
 	name: 'discover.games.view.trophies.list',
 	path: 'trophies',
-	component: () =>
-		import(/* webpackChunkName: "routeDiscoverGamesViewAchievements" */ './list.vue'),
+	component: () => import('./list.vue'),
 };

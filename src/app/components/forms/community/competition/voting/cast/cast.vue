@@ -1,7 +1,192 @@
-<script lang="ts" src="./cast"></script>
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { numberSort } from '../../../../../../../utils/array';
+import { Api } from '../../../../../../../_common/api/api.service';
+import { CommunityCompetition } from '../../../../../../../_common/community/competition/competition.model';
+import { CommunityCompetitionEntry } from '../../../../../../../_common/community/competition/entry/entry.model';
+import { CommunityCompetitionEntryVote } from '../../../../../../../_common/community/competition/entry/vote/vote.model';
+import { CommunityCompetitionVotingCategory } from '../../../../../../../_common/community/competition/voting-category/voting-category.model';
+import { formatNumber } from '../../../../../../../_common/filters/number';
+import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
+import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.vue';
+import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+
+@Options({
+	components: {
+		AppLoadingFade,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class FormCommunityCompetitionVotingCast extends Vue {
+	@Prop({ type: Object, required: true }) entry!: CommunityCompetitionEntry;
+	@Prop({ type: Object, required: true }) competition!: CommunityCompetition;
+
+	@Prop({ type: Array, default: () => [] })
+	votingCategories!: CommunityCompetitionVotingCategory[];
+
+	@Prop({ type: Array, default: () => [] })
+	initialVotes!: CommunityCompetitionEntryVote[];
+
+	votes: CommunityCompetitionEntryVote[] = [];
+	hoveredRatings: number[] = [];
+	hasVoted = false;
+	isSaving = false;
+
+	readonly formatNumber = formatNumber;
+
+	get overallRating() {
+		// With overall rating type, there is only 1 vote, which is also the overall.
+		if (this.competition.voting_type === 'overall') {
+			return this.votes[0].rating;
+		}
+
+		const validVoteCount = this.votes.filter(i => i.rating > 0).length;
+		if (validVoteCount === 0) {
+			return 0;
+		}
+		const sum = this.votes.reduce((a, b) => a + b.rating, 0);
+		return sum / validVoteCount;
+	}
+
+	get isSaveButtonEnabled() {
+		return this.overallRating > 0 && !this.isSaving;
+	}
+
+	get sortedVotingCategories() {
+		return this.votingCategories.sort((a, b) => numberSort(a.sort, b.sort));
+	}
+
+	created() {
+		this.hasVoted = this.initialVotes.length > 0;
+		this.votes.push(...this.initialVotes);
+
+		this.fillVotes();
+	}
+
+	fillVotes() {
+		if (this.competition.voting_type === 'categories') {
+			for (const votingCategory of this.votingCategories) {
+				if (
+					!this.votes.some(
+						i => i.community_competition_voting_category_id === votingCategory.id
+					)
+				) {
+					const vote = new CommunityCompetitionEntryVote({
+						community_competition_voting_category_id: votingCategory.id,
+						community_competition_entry_id: this.entry.id,
+						rating: 0,
+					});
+					this.votes.push(vote);
+				}
+
+				this.hoveredRatings.push(0);
+			}
+		} else {
+			if (this.votes.length === 0) {
+				this.votes.push(
+					new CommunityCompetitionEntryVote({
+						community_competition_voting_category_id: null,
+						community_competition_entry_id: this.entry.id,
+						rating: 0,
+					})
+				);
+			}
+			this.hoveredRatings.push(0);
+		}
+	}
+
+	isCategoryVote(votingCategory: CommunityCompetitionVotingCategory | null, i: number) {
+		const votingCategoryId = votingCategory?.id || null;
+		const vote = this.votes.find(
+			i => i.community_competition_voting_category_id === votingCategoryId
+		);
+		if (!vote) {
+			return false;
+		}
+
+		return vote.rating >= i;
+	}
+
+	isCategoryNA(votingCategory: CommunityCompetitionVotingCategory) {
+		const vote = this.votes.find(
+			i => i.community_competition_voting_category_id === votingCategory.id
+		);
+		return !vote || vote.rating === 0;
+	}
+
+	onRatingMouseEnter(votingCategory: CommunityCompetitionVotingCategory | null, i: number) {
+		if (votingCategory === null) {
+			this.hoveredRatings[0] = i;
+		} else {
+			const index = this.votingCategories.indexOf(votingCategory);
+			this.hoveredRatings[index] = i;
+		}
+	}
+
+	onRatingMouseLeave(votingCategory: CommunityCompetitionVotingCategory | null) {
+		if (votingCategory === null) {
+			this.hoveredRatings[0] = 0;
+		} else {
+			const index = this.votingCategories.indexOf(votingCategory);
+			this.hoveredRatings[index] = 0;
+		}
+	}
+
+	isCategoryRatingHovered(votingCategory: CommunityCompetitionVotingCategory | null, i: number) {
+		const index = votingCategory === null ? 0 : this.votingCategories.indexOf(votingCategory);
+		return this.hoveredRatings[index] >= i;
+	}
+
+	onClickRating(votingCategory: CommunityCompetitionVotingCategory | null, i: number) {
+		const votingCategoryId = votingCategory?.id || null;
+		const vote = this.votes.find(
+			i => i.community_competition_voting_category_id === votingCategoryId
+		);
+		vote!.rating = i;
+	}
+
+	async onClickSave() {
+		this.isSaving = true;
+
+		const data = {} as any;
+		if (this.competition.voting_type === 'categories') {
+			for (const vote of this.votes) {
+				data['vote_' + vote.community_competition_voting_category_id] = vote.rating;
+			}
+		} else {
+			data['vote'] = this.votes[0].rating;
+		}
+
+		const payload = await Api.sendRequest(
+			`/web/communities/competitions/voting/cast/${this.entry.id}`,
+			data
+		);
+		this.votes = CommunityCompetitionEntryVote.populate(payload.votes);
+		this.fillVotes();
+		this.hasVoted = true;
+
+		this.isSaving = false;
+
+		showSuccessGrowl(this.$gettext(`Your vote for this entry was cast!`));
+	}
+
+	async onClickClear() {
+		this.isSaving = true;
+
+		await Api.sendRequest(`/web/communities/competitions/voting/clear/${this.entry.id}`, {});
+		this.votes = [];
+		this.fillVotes();
+		this.hasVoted = false;
+
+		this.isSaving = false;
+	}
+}
+</script>
 
 <template>
-	<app-loading-fade :is-loading="isSaving">
+	<AppLoadingFade :is-loading="isSaving">
 		<template v-if="competition.voting_type === 'categories'">
 			<div
 				v-for="votingCategory of sortedVotingCategories"
@@ -10,7 +195,7 @@
 			>
 				<label class="col-sm-4 -category-label" control-label>
 					{{ votingCategory.name }}
-					<app-jolticon
+					<AppJolticon
 						v-if="votingCategory.description"
 						v-app-tooltip.touchable="votingCategory.description"
 						class="text-muted"
@@ -27,7 +212,7 @@
 							:class="{ '-rating-na-active': isCategoryNA(votingCategory) }"
 							@click="onClickRating(votingCategory, 0)"
 						>
-							<b><translate>n/a</translate></b>
+							<b><AppTranslate>n/a</AppTranslate></b>
 						</div>
 					</div>
 					<div
@@ -43,7 +228,7 @@
 							@mouseleave="onRatingMouseLeave(votingCategory)"
 							@click="onClickRating(votingCategory, i)"
 						>
-							<app-jolticon
+							<AppJolticon
 								:icon="
 									isCategoryVote(votingCategory, i)
 										? 'bolt-filled'
@@ -63,34 +248,34 @@
 			</div>
 			<div class="row">
 				<label class="col-sm-4 -overall-label" control-label>
-					<translate>Your Overall</translate>
+					<AppTranslate>Your Overall</AppTranslate>
 					<div class="text-muted">
-						<i><translate>(calculated)</translate></i>
+						<i><AppTranslate>(calculated)</AppTranslate></i>
 					</div>
 				</label>
 				<div class="col-sm-8">
 					<div class="-overall-rating">
 						<b>
 							<template v-if="overallRating === 0">
-								<translate>n/a</translate>
+								<AppTranslate>n/a</AppTranslate>
 							</template>
 							<template v-else>
-								{{ number(overallRating, { maximumFractionDigits: 2 }) }}
+								{{ formatNumber(overallRating, { maximumFractionDigits: 2 }) }}
 							</template>
 						</b>
 					</div>
 					<div class="-controls">
-						<app-button
+						<AppButton
 							icon="chevron-right"
 							primary
 							:disabled="!isSaveButtonEnabled"
 							@click="onClickSave"
 						>
-							<translate>Save Vote</translate>
-						</app-button>
-						<app-button v-if="hasVoted" icon="remove" @click="onClickClear">
-							<translate>Clear Vote</translate>
-						</app-button>
+							<AppTranslate>Save Vote</AppTranslate>
+						</AppButton>
+						<AppButton v-if="hasVoted" icon="remove" @click="onClickClear">
+							<AppTranslate>Clear Vote</AppTranslate>
+						</AppButton>
 					</div>
 				</div>
 			</div>
@@ -98,7 +283,7 @@
 		<template v-else>
 			<div>
 				<div>
-					<b><translate>Your Rating:</translate></b>
+					<b><AppTranslate>Your Rating:</AppTranslate></b>
 				</div>
 			</div>
 			<div class="-overall-rating-container">
@@ -112,7 +297,7 @@
 						@mouseleave="onRatingMouseLeave(null)"
 						@click="onClickRating(null, i)"
 					>
-						<app-jolticon
+						<AppJolticon
 							:icon="isCategoryVote(null, i) ? 'bolt-filled' : 'bolt-unfilled'"
 							:class="{
 								'-rating-bolt-hovered': isCategoryRatingHovered(null, i),
@@ -126,26 +311,23 @@
 				</span>
 			</div>
 			<div class="-controls">
-				<app-button
+				<AppButton
 					icon="chevron-right"
 					primary
 					:disabled="!isSaveButtonEnabled"
 					@click="onClickSave"
 				>
-					<translate>Save Vote</translate>
-				</app-button>
-				<app-button v-if="hasVoted" icon="remove" @click="onClickClear">
-					<translate>Clear Vote</translate>
-				</app-button>
+					<AppTranslate>Save Vote</AppTranslate>
+				</AppButton>
+				<AppButton v-if="hasVoted" icon="remove" @click="onClickClear">
+					<AppTranslate>Clear Vote</AppTranslate>
+				</AppButton>
 			</div>
 		</template>
-	</app-loading-fade>
+	</AppLoadingFade>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .-category-label
 	padding-top: 16px
 	text-align: right
@@ -180,20 +362,18 @@
 	&-bolt
 		opacity: 0.75
 
-		>>>
-			.jolticon
-				transition: transform 0.1s ease
-				transform: scale(0.8)
-				font-size: 24px !important
+		::v-deep(.jolticon)
+			transition: transform 0.1s ease
+			transform: scale(0.8)
+			font-size: 24px !important
 
 		&-active
 		&-hovered
 			color: var(--theme-bi-bg)
 			opacity: 1
 
-			>>>
-				.jolticon
-					transform: none
+			::v-deep(.jolticon)
+				transform: none
 
 .-overall-label
 	text-align: right

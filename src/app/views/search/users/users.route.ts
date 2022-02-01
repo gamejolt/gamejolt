@@ -1,7 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeSearchUsers: RouteConfig = {
+export const routeSearchUsers: RouteRecordRaw = {
 	name: 'search.users',
 	path: 'users',
-	component: () => import(/* webpackChunkName: "routeSearch" */ './users.vue'),
+	component: () => import('./RouteSearchUsers.vue'),
 };

@@ -1,27 +1,24 @@
-import { asyncComponentLoader } from '../../../../../utils/utils';
+import { defineAsyncComponent } from 'vue';
 import { Community } from '../../../../../_common/community/community.model';
-import { Modal } from '../../../../../_common/modal/modal.service';
+import { showModal } from '../../../../../_common/modal/modal.service';
 import { CommunitySidebarData } from '../sidebar-data';
 
 interface Options {
 	isEditing: boolean;
-	data: CommunitySidebarData;
+	sidebarData: CommunitySidebarData;
 	community: Community;
 }
 
 export class CommunitySidebarModal {
 	static async show(options: Options) {
-		const { isEditing, community, data } = options;
+		const { isEditing, community, sidebarData } = options;
 
-		return await Modal.show<void>({
+		return await showModal<void>({
 			modalId: 'CommunitySidebarModal-' + community.id,
-			component: () =>
-				asyncComponentLoader(
-					import(/* webpackChunkName: "CommunitySidebarModal" */ './modal.vue')
-				),
+			component: defineAsyncComponent(() => import('./modal.vue')),
 			props: {
 				isEditing,
-				data,
+				sidebarData,
 				community,
 			},
 			size: 'sm',

@@ -1,5 +1,5 @@
 import { ContentDocument } from '../../../../_common/content/content-document';
-import { Growls } from '../../../../_common/growls/growls.service';
+import { showInfoGrowl } from '../../../../_common/growls/growls.service';
 import { ChatClient, enterChatRoom, isInChatRoom } from '../client';
 import { ChatMessage } from '../message';
 import { ChatRoom, getChatRoomTitle } from '../room';
@@ -25,8 +25,8 @@ export class ChatNotificationGrowl {
 			title += ` (@${message.user.username})`;
 		}
 
-		Growls.info({
-			onclick: () => enterChatRoom(chat, message.room_id),
+		showInfoGrowl({
+			onClick: () => enterChatRoom(chat, message.room_id),
 			system,
 
 			title,

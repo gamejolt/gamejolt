@@ -1,13 +1,13 @@
 import { Api } from '../../api/api.service';
-import { Growls } from '../../growls/growls.service';
-import { appStore } from '../../store/app-store';
+import { showInfoGrowl } from '../../growls/growls.service';
+import { commonStore } from '../../store/common-store';
 import { Game } from '../game.model';
 import AppGameRatingGrowl from './rating-growl.vue';
 
 export class GameRatingGrowl {
 	static async show(game: Game) {
 		// Don't show when not logged in.
-		if (!appStore.state.user) {
+		if (!commonStore.user.value) {
 			return;
 		}
 
@@ -32,7 +32,7 @@ export class GameRatingGrowl {
 			return;
 		}
 
-		Growls.info({
+		showInfoGrowl({
 			sticky: true,
 			component: AppGameRatingGrowl,
 			props: { game },

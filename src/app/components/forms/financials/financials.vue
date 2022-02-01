@@ -1,68 +1,210 @@
-<script lang="ts" src="./financials"></script>
+<script lang="ts">
+import { mixins, Options } from 'vue-property-decorator';
+import { Api } from '../../../../_common/api/api.service';
+import AppExpand from '../../../../_common/expand/AppExpand.vue';
+import { formatCurrency } from '../../../../_common/filters/currency';
+import {
+	BaseForm,
+	FormOnLoad,
+	FormOnSubmit,
+	FormOnSubmitError,
+} from '../../../../_common/form-vue/form.service';
+import { showErrorGrowl } from '../../../../_common/growls/growls.service';
+import { Navigate } from '../../../../_common/navigate/navigate.service';
+import { ReferralEntry } from '../../../../_common/referral-entry/referral-entry.model';
+import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { UserStripeManagedAccount } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
+import { User } from '../../../../_common/user/user.model';
+import AppDeveloperTerms from './developer-terms/developer-terms.vue';
+import FormFinancialsManagedAccount from './managed-account/managed-account.vue';
+import AppPartnerTerms from './partner-terms/partner-terms.vue';
+
+interface FormModel {
+	tos_type?: 'partner' | 'developer';
+	wallet_maximum: number;
+	payout_minimum: number;
+	percentage_split: number;
+}
+
+class Wrapper extends BaseForm<FormModel> {}
+
+@Options({
+	components: {
+		AppExpand,
+		AppPartnerTerms,
+		AppDeveloperTerms,
+		FormFinancialsManagedAccount,
+	},
+	directives: {
+		AppTooltip,
+	},
+})
+export default class FormFinancials
+	extends mixins(Wrapper)
+	implements FormOnSubmit, FormOnLoad, FormOnSubmitError
+{
+	// We will set this to which agreement we should show them depending on
+	// their account type.
+	whichAgreement: 'developer' | 'partner' = null as any;
+	account: UserStripeManagedAccount | null = null;
+
+	// We store the user again instead of using the one from app store because this one would have financials data in it.
+	user: User = null as any;
+	partner: ReferralEntry | null = null;
+
+	maxWallet = 0;
+	maxPayout = 0;
+	minWithdraw = 0;
+
+	readonly formatCurrency = formatCurrency;
+
+	get loadUrl() {
+		return `/web/dash/financials/save`;
+	}
+
+	get hasSignedAgreement() {
+		if (!this.account) {
+			return false;
+		}
+
+		return this.account.tos_signed_developer || this.account.tos_signed_partner;
+	}
+
+	get isVerified() {
+		return this.account && this.account.is_verified;
+	}
+
+	created() {
+		this.form.reloadOnSubmit = true;
+	}
+
+	onInit() {
+		this.setField('tos_type', undefined);
+	}
+
+	onLoad(payload: any) {
+		this.user = new User(payload.user);
+		this.account = payload.account ? new UserStripeManagedAccount(payload.account) : null;
+		this.partner = payload.partner ? new ReferralEntry(payload.partner) : null;
+
+		this.maxWallet = payload.maxWallet;
+		this.maxPayout = payload.maxPayout;
+		this.minWithdraw = payload.minWithdraw;
+
+		// These user fields should be populated because the user object in this form's url payload should pull financial fields.
+		this.setField('wallet_maximum', this.user.revenue_wallet_maximum! / 100);
+		this.setField('payout_minimum', this.user.revenue_payout_minimum! / 100);
+		this.setField('percentage_split', 100 - this.user.revenue_percentage!);
+
+		if (this.account) {
+			if (this.account.tos_signed_developer) {
+				this.whichAgreement = 'developer';
+			} else if (this.account.tos_signed_partner) {
+				this.whichAgreement = 'partner';
+			}
+		}
+
+		// We don't show them the partner agreement if they can't be a partner.
+		if (!this.partner && !this.whichAgreement) {
+			this.whichAgreement = 'developer';
+		}
+	}
+
+	async acceptTerms(type: 'partner' | 'developer') {
+		this.setField('tos_type', type);
+		this.form.submit();
+	}
+
+	onSubmit() {
+		return Api.sendRequest('/web/dash/financials/save', this.formModel);
+	}
+
+	onSubmitError() {
+		showErrorGrowl(this.$gettext('Something went wrong.'));
+	}
+
+	async linkPayPal() {
+		try {
+			const response = await Api.sendRequest('/web/dash/financials/get-paypal-auth', null, {
+				detach: true,
+			});
+
+			if (!response || !response.authUrl) {
+				throw new Error(`Response does not have an 'authUrl' field`);
+			}
+
+			Navigate.gotoExternal(response.authUrl);
+		} catch (err) {
+			console.error(err);
+			showErrorGrowl(this.$gettext('Could not get PayPal redirect URL.'));
+		}
+	}
+}
+</script>
 
 <template>
-	<app-form ref="form" name="financialsForm" class="form-dashboard-financials">
+	<AppForm :controller="form" class="form-dashboard-financials">
 		<template v-if="!isVerified">
 			<div class="alert">
-				<translate>
+				<AppTranslate>
 					Before you can use the Marketplace, we'll need to gather some details from you.
 					This will ensure that your account is completely set up and ready to run
 					smoothly on the Game Jolt Marketplace.
-				</translate>
+				</AppTranslate>
 			</div>
 
 			<!-- If they haven't accepted any terms yet. -->
 			<fieldset v-if="!hasSignedAgreement && partner">
 				<legend>
-					<translate>To start, which type of account would you like to set up?</translate>
+					<AppTranslate>To start, which type of account would you like to set up?</AppTranslate>
 				</legend>
 
 				<div class="row">
 					<div class="col-xs-6">
-						<app-button
+						<AppButton
 							block
 							:solid="whichAgreement === 'developer'"
 							@click="whichAgreement = 'developer'"
 						>
-							<translate>I'm a game developer</translate>
-						</app-button>
+							<AppTranslate>I'm a game developer</AppTranslate>
+						</AppButton>
 					</div>
 					<div class="col-xs-6">
-						<app-button
+						<AppButton
 							block
 							:solid="whichAgreement === 'partner'"
 							@click="whichAgreement = 'partner'"
 						>
-							<translate>I'm a partner</translate>
-						</app-button>
+							<AppTranslate>I'm a partner</AppTranslate>
+						</AppButton>
 					</div>
 				</div>
 			</fieldset>
 		</template>
 
 		<div v-if="isVerified" class="alert">
-			<app-jolticon icon="check" />
-			<translate>
+			<AppJolticon icon="check" />
+			<AppTranslate>
 				Your account is ready for the Game Jolt Marketplace! You can set additional options
 				below.
-			</translate>
+			</AppTranslate>
 		</div>
 		<br />
 
 		<!-- First step is to sign an agreement. -->
-		<app-expand :when="!!whichAgreement || hasSignedAgreement">
-			<app-developer-terms
+		<AppExpand :when="!!whichAgreement || hasSignedAgreement">
+			<AppDeveloperTerms
 				v-if="whichAgreement === 'developer' || hasSignedAgreement"
 				:account="account"
 				@accepted="acceptTerms('developer')"
 			/>
 
-			<app-partner-terms
+			<AppPartnerTerms
 				v-if="partner && (whichAgreement === 'partner' || hasSignedAgreement)"
 				:account="account"
 				@accepted="acceptTerms('partner')"
 			/>
-		</app-expand>
+		</AppExpand>
 
 		<!-- PayPal is required. -->
 		<fieldset v-if="account">
@@ -72,35 +214,35 @@
 					v-app-tooltip="$gettext(`You have completed this section.`)"
 					class="pull-right done-icon"
 				>
-					<app-jolticon icon="check" big />
+					<AppJolticon icon="check" big />
 				</span>
-				<translate>PayPal Account</translate>
+				<AppTranslate>PayPal Account</AppTranslate>
 			</legend>
 
 			<div class="form-group">
 				<p class="small">
-					<translate>
+					<AppTranslate>
 						We currently use PayPal for automatic monthly deposits. You will also be
 						able to withdraw your revenue at any time through this linked account.
-					</translate>
+					</AppTranslate>
 				</p>
 
 				<div v-if="user.paypal_id">
 					<label class="control-label">
-						<translate>Current PayPal Account</translate>
+						<AppTranslate>Current PayPal Account</AppTranslate>
 					</label>
 					<div class="form-static">{{ user.paypal_email_address }}</div>
 					<br />
 				</div>
 
-				<app-button @click="linkPayPal()">
+				<AppButton @click="linkPayPal()">
 					<template v-if="!user.paypal_id">
-						<translate>Link PayPal Account</translate>
+						<AppTranslate>Link PayPal Account</AppTranslate>
 					</template>
 					<template v-else>
-						<translate>Change PayPal Account</translate>
+						<AppTranslate>Change PayPal Account</AppTranslate>
 					</template>
-				</app-button>
+				</AppButton>
 			</div>
 		</fieldset>
 
@@ -112,23 +254,23 @@
 					v-app-tooltip="$gettext(`You have completed this section.`)"
 					class="pull-right done-icon"
 				>
-					<app-jolticon icon="check" big />
+					<AppJolticon icon="check" big />
 				</span>
-				<translate>Marketplace Account</translate>
+				<AppTranslate>Marketplace Account</AppTranslate>
 			</legend>
 
-			<form-financials-managed-account v-if="!account.skip_stripe" />
+			<FormFinancialsManagedAccount v-if="!account.skip_stripe" />
 
 			<div v-if="account.skip_stripe" class="alert">
 				<p>
-					<translate>You've been manually approved for the Marketplace.</translate>
+					<AppTranslate>You've been manually approved for the Marketplace.</AppTranslate>
 				</p>
 			</div>
 		</fieldset>
 
 		<!-- Only allow them to change percentage split if they are signed up as a dev. -->
 		<fieldset v-if="isVerified && account.tos_signed_developer">
-			<legend><translate>Percentage Split</translate></legend>
+			<legend><AppTranslate>Percentage Split</AppTranslate></legend>
 
 			<p v-translate class="small">
 				You decide what percentage of your sale revenue to give to Game Jolt.
@@ -136,127 +278,118 @@
 				because we'd rather have you support other developers by buying their games.
 			</p>
 
-			<app-form-group name="percentage_split" :hide-label="true">
-				<app-form-control
+			<AppFormGroup name="percentage_split" :hide-label="true">
+				<AppFormControl
 					type="number"
 					step="1"
 					max="10"
 					min="0"
-					:rules="{
-						pattern: /^\d+$/,
-						max_value: 10,
-						min_value: 0,
-					}"
+					:validators="[
+						validatePattern(/^\d+$/),
+						validateMaxValue(10),
+						validateMinValue(0),
+					]"
 				/>
-				<app-form-control-errors
+				<AppFormControlErrors
 					label="percentage"
 					when="pattern"
 					:message="$gettext('Please enter a value between 0 and 10.')"
 				/>
-			</app-form-group>
+			</AppFormGroup>
 		</fieldset>
 
 		<fieldset v-if="isVerified">
-			<legend><translate>Wallet</translate></legend>
+			<legend><AppTranslate>Wallet</AppTranslate></legend>
 
 			<p class="small">
-				<translate>
+				<AppTranslate>
 					Your Wallet is where your earnings will be stored for you to buy games on Game
 					Jolt or withdraw into your PayPal account.
-				</translate>
+				</AppTranslate>
 			</p>
 
 			<p class="small">
-				<translate>
+				<AppTranslate>
 					We never take a cut of games you buy when you pay with your Wallet, and there
 					are no payment processing fees. The money goes directly to the developer.
-				</translate>
+				</AppTranslate>
 			</p>
 
-			<app-form-group
+			<AppFormGroup
 				name="wallet_maximum"
 				:label="$gettext(`Set an amount you would like to keep in your wallet`)"
 			>
 				<p class="help-block">
-					<translate>
+					<AppTranslate>
 						We'll keep this amount in your Wallet when doing automatic pay outs. This
 						way you always have some money to buy other games on the site through your
 						Wallet.
-					</translate>
+					</AppTranslate>
 					<br />
-					<translate>
+					<AppTranslate>
 						To send all your money when doing automatic pay outs set this to $0.
-					</translate>
+					</AppTranslate>
 				</p>
 
 				<div class="input-group">
 					<span class="input-group-addon">$</span>
-					<app-form-control
+					<AppFormControl
 						type="currency"
 						step="1"
-						:rules="{
-							min_value: 0,
-							max_value: maxWallet / 100,
-						}"
+						:validators="[validateMinValue(0), validateMaxValue(maxWallet / 100)]"
 					/>
 				</div>
-				<app-form-control-errors :label="$gettext('sum to keep in your wallet')" />
-			</app-form-group>
+				<AppFormControlErrors :label="$gettext('sum to keep in your wallet')" />
+			</AppFormGroup>
 		</fieldset>
 
 		<fieldset v-if="isVerified">
-			<legend><translate>Minimum Payout</translate></legend>
+			<legend><AppTranslate>Minimum Payout</AppTranslate></legend>
 
 			<p class="small">
-				<translate>
+				<AppTranslate>
 					If you'd like, you can set an amount below, and we will not make monthly
 					deposits into your PayPal account until your revenue reaches this amount. This
 					can help to maintain cleaner accounting on your end.
-				</translate>
+				</AppTranslate>
 			</p>
 
-			<app-form-group name="payout_minimum" :label="$gettext('Min. Payout Amount')">
+			<AppFormGroup name="payout_minimum" :label="$gettext('Min. Payout Amount')">
 				<p class="help-block">
-					<translate
+					<AppTranslate
 						:translate-params="{
-							max: currency(maxPayout),
+							max: formatCurrency(maxPayout),
 						}"
 					>
 						The max you can set this to is %{ max } USD.
-					</translate>
+					</AppTranslate>
 					<br />
-					<translate>For no minimum, set this to $0.</translate>
+					<AppTranslate>For no minimum, set this to $0.</AppTranslate>
 				</p>
 
 				<div class="input-group">
 					<span class="input-group-addon">$</span>
-					<app-form-control
+					<AppFormControl
 						type="currency"
-						:rules="{
-							min_value: 0,
-							max_value: maxPayout / 100,
-						}"
+						:validators="[validateMinValue(0), validateMaxValue(maxPayout / 100)]"
 					/>
 				</div>
-				<app-form-control-errors :label="$gettext('minimum payout')" />
-			</app-form-group>
+				<AppFormControlErrors :label="$gettext('minimum payout')" />
+			</AppFormGroup>
 		</fieldset>
 
-		<app-form-button v-if="isVerified">
-			<translate>Save</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton v-if="isVerified">
+			<AppTranslate>Save</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-@import '~styles-lib/mixins'
-
 .form-dashboard-financials
-	>>> .done-icon
+	::v-deep(.done-icon)
 		theme-prop('color', 'link')
 
-	>>> .tos-scroller
+	::v-deep(.tos-scroller)
 		scrollable()
 		theme-prop('border-color', 'bg-offset')
 		padding: 10px

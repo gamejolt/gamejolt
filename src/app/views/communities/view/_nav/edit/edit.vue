@@ -1,4 +1,28 @@
-<script lang="ts" src="./edit"></script>
+<script lang="ts">
+import { Emit, Inject, Options, Vue } from 'vue-property-decorator';
+import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
+
+@Options({
+	components: {
+		AppCommunityPerms,
+	},
+})
+export default class AppNavEdit extends Vue {
+	@Inject({ from: CommunityRouteStoreKey })
+	routeStore!: CommunityRouteStore;
+
+	@Emit('change-section') emitChangeSection(_path: string) {}
+
+	get community() {
+		return this.routeStore.community;
+	}
+
+	onChangeSection(path: string) {
+		this.emitChangeSection(path);
+	}
+}
+</script>
 
 <template>
 	<nav class="platform-list">
@@ -11,18 +35,17 @@
 							id: community.id,
 						},
 					}"
-					active-class="active"
-					exact
+					exact-active-class="active"
 				>
-					<translate>Details</translate>
+					<AppTranslate>Details</AppTranslate>
 				</router-link>
 			</li>
-			<app-community-perms
+			<AppCommunityPerms
 				tag="li"
 				:community="community"
 				required="community-channels,community-competitions"
 				either
-				@click.native.capture="onChangeSection('communities.view.edit.channels.list')"
+				@click.capture="onChangeSection('communities.view.edit.channels.list')"
 			>
 				<router-link
 					:to="{
@@ -33,14 +56,14 @@
 					}"
 					active-class="active"
 				>
-					<translate>Channels</translate>
+					<AppTranslate>Channels</AppTranslate>
 				</router-link>
-			</app-community-perms>
-			<app-community-perms
+			</AppCommunityPerms>
+			<AppCommunityPerms
 				tag="li"
 				:community="community"
 				required="community-games"
-				@click.native.capture="onChangeSection('communities.view.edit.games')"
+				@click.capture="onChangeSection('communities.view.edit.games')"
 			>
 				<router-link
 					:to="{
@@ -51,14 +74,14 @@
 					}"
 					active-class="active"
 				>
-					<translate>Games</translate>
+					<AppTranslate>Games</AppTranslate>
 				</router-link>
-			</app-community-perms>
-			<app-community-perms
+			</AppCommunityPerms>
+			<AppCommunityPerms
 				tag="li"
 				:community="community"
 				required="community-moderators"
-				@click.native.capture="onChangeSection('communities.view.edit.moderators')"
+				@click.capture="onChangeSection('communities.view.edit.moderators')"
 			>
 				<router-link
 					:to="{
@@ -69,14 +92,14 @@
 					}"
 					active-class="active"
 				>
-					<translate>Collaborators</translate>
+					<AppTranslate>Collaborators</AppTranslate>
 				</router-link>
-			</app-community-perms>
-			<app-community-perms
+			</AppCommunityPerms>
+			<AppCommunityPerms
 				tag="li"
 				:community="community"
 				required="community-blocks"
-				@click.native.capture="onChangeSection('communities.view.edit.blocks')"
+				@click.capture="onChangeSection('communities.view.edit.blocks')"
 			>
 				<router-link
 					:to="{
@@ -87,10 +110,10 @@
 					}"
 					active-class="active"
 				>
-					<translate>Blocked Users</translate>
+					<AppTranslate>Blocked Users</AppTranslate>
 				</router-link>
-			</app-community-perms>
-			<app-community-perms tag="li" :community="community" required="community-activity">
+			</AppCommunityPerms>
+			<AppCommunityPerms tag="li" :community="community" required="community-activity">
 				<router-link
 					:to="{
 						name: 'communities.view.edit.activity',
@@ -99,18 +122,16 @@
 						},
 					}"
 					active-class="active"
-					@click.native.capture="onChangeSection('communities.view.edit.blocks')"
+					@click.capture="onChangeSection('communities.view.edit.blocks')"
 				>
-					<translate>Audit Log</translate>
+					<AppTranslate>Audit Log</AppTranslate>
 				</router-link>
-			</app-community-perms>
+			</AppCommunityPerms>
 		</ul>
 	</nav>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 .platform-list
 	margin-left: 12px
 </style>

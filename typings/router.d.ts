@@ -1,17 +1,7 @@
-import Vue from 'vue';
-import {
-	RouteResolverOptions,
-	RouteStoreResolveCallback,
-} from '../../components/route/route-component';
-import { RouteStoreOptions } from '../../components/route/route-store';
+import { AppRouteOptionsInternal } from '../src/_common/route/route-component';
 
-declare module 'vue/types/options' {
-	interface ComponentOptions<V extends Vue> {
-		__RESOLVER__?: any;
-		routeResolverOptions?: RouteResolverOptions & {
-			hasResolver?: boolean;
-			resolveStore?: RouteStoreResolveCallback;
-		};
-		routeStoreOptions?: RouteStoreOptions;
+declare module '@vue/runtime-core' {
+	interface ComponentCustomOptions {
+		appRouteOptions?: AppRouteOptionsInternal;
 	}
 }

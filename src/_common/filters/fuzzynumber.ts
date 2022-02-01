@@ -1,4 +1,4 @@
-export function fuzzynumber(num: number) {
+export function formatFuzzynumber(num: number) {
 	// For testing.
 	// number = 2900;
 	// number = 2090;

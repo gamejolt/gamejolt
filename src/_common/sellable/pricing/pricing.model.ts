@@ -12,7 +12,7 @@ export class SellablePricing extends Model {
 	timezone?: string;
 
 	static getOriginalPricing(pricings: SellablePricing[]) {
-		if (Array.isArray(pricings)) {
+		if (Array.isArray(pricings) && pricings.length > 0) {
 			if (pricings[0].promotional) {
 				return pricings[1];
 			}
@@ -22,7 +22,7 @@ export class SellablePricing extends Model {
 	}
 
 	static getPromotionalPricing(pricings: SellablePricing[]) {
-		if (Array.isArray(pricings) && pricings[0].promotional) {
+		if (Array.isArray(pricings) && pricings.length > 0 && pricings[0].promotional) {
 			return pricings[0];
 		}
 		return undefined;

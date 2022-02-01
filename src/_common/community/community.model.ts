@@ -1,4 +1,5 @@
-import type { Location, Route } from 'vue-router';
+import { RouteLocationNormalized } from 'vue-router';
+import { RouteLocationDefinition } from '../../utils/router';
 import { assertNever } from '../../utils/utils';
 import { CommunityJoinLocation, trackCommunityJoin } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
@@ -9,6 +10,7 @@ import { Model } from '../model/model.service';
 import { Theme } from '../theme/theme.model';
 import { UserBlock } from '../user/block/block.model';
 import { CommunityChannel } from './channel/channel.model';
+import noThumbImage from './no-thumb.png';
 
 export class Community extends Collaboratable(Model) {
 	name!: string;
@@ -74,10 +76,10 @@ export class Community extends Collaboratable(Model) {
 		if (this.thumbnail instanceof MediaItem) {
 			return this.thumbnail.mediaserver_url;
 		}
-		return require('./no-thumb.png');
+		return noThumbImage;
 	}
 
-	get routeLocation(): Location {
+	get routeLocation(): RouteLocationDefinition {
 		return {
 			name: 'communities.view.overview',
 			params: {
@@ -86,7 +88,7 @@ export class Community extends Collaboratable(Model) {
 		};
 	}
 
-	get routeEditLocation(): Location {
+	get routeEditLocation(): RouteLocationDefinition {
 		return {
 			name: 'communities.view.edit.details',
 			params: {
@@ -118,14 +120,14 @@ export class Community extends Collaboratable(Model) {
 		return this.channels.filter(i => i.visibility === 'published').length > 1;
 	}
 
-	channelRouteLocation(channel: CommunityChannel): Location {
+	channelRouteLocation(channel: CommunityChannel): RouteLocationDefinition {
 		return {
 			name: 'communities.view.channel',
 			params: {
 				path: this.path,
 				channel: channel.title,
 			},
-		} as Location;
+		};
 	}
 
 	$save() {
@@ -267,8 +269,8 @@ export const enum CommunityPresetChannelType {
 	ALL = 'all',
 }
 
-export function isEditingCommunity(route: Route) {
-	return !!route.name && route.name.startsWith('communities.view.edit.');
+export function isEditingCommunity(route: RouteLocationNormalized) {
+	return typeof route.name === 'string' && route.name.startsWith('communities.view.edit.');
 }
 
 export function getCommunityChannelBackground(
@@ -285,12 +287,11 @@ export function getCommunityChannelBackground(
 	}
 }
 
-export function canCommunityFeatureFireside(community: Community) {
-	// DISABLED_ALLOW_FIRESIDES
-	// Allows us to hide all feature/unfeature options since all Firesides are
-	// currently always featured.
+/**
+ * @deprecated we always auto-feature now
+ */
+export function canCommunityFeatureFireside(_community: Community) {
 	return false;
-	return !!community.hasPerms(['community-firesides', 'community-features']);
 }
 
 export function canCommunityEjectFireside(community: Community) {

@@ -1,45 +1,213 @@
-<script lang="ts" src="./download"></script>
+<script lang="ts">
+import { setup } from 'vue-class-component';
+import { Inject, Options } from 'vue-property-decorator';
+import {
+	AppPromotionStore,
+	AppPromotionStoreKey,
+	setAppPromotionCohort,
+} from '../../../utils/mobile-app';
+import { sleep } from '../../../utils/utils';
+import {
+	AdSettingsContainer,
+	releasePageAdsSettings,
+	setPageAdsSettings,
+	useAdsController,
+} from '../../../_common/ad/ad-store';
+import AppAdWidget from '../../../_common/ad/widget/widget.vue';
+import { Api } from '../../../_common/api/api.service';
+import { GameBuild } from '../../../_common/game/build/build.model';
+import { Game } from '../../../_common/game/game.model';
+import { GameSong } from '../../../_common/game/song/song.model';
+import AppGameThumbnail from '../../../_common/game/thumbnail/AppGameThumbnail.vue';
+import { HistoryTick } from '../../../_common/history-tick/history-tick-service';
+import AppLoading from '../../../_common/loading/loading.vue';
+import { Navigate } from '../../../_common/navigate/navigate.service';
+import { PayloadError } from '../../../_common/payload/payload-service';
+import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
+import { Screen } from '../../../_common/screen/screen-service';
+import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
+import AppGameBadge from '../../components/game/badge/badge.vue';
+import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
+
+const DownloadDelay = 3000;
+
+@Options({
+	name: 'RouteDownload',
+	components: {
+		AppPageContainer,
+		AppGameBadge,
+		AppAdWidget,
+		AppGameThumbnail,
+		AppLoading,
+		AppScrollAffix,
+	},
+})
+@OptionsForRoute({
+	deps: { params: ['type'], query: ['game_id', 'build_id'] },
+	async resolver({ route }) {
+		const getQuery = (name: string) =>
+			typeof route.query[name] != 'string' || !route.query[name]
+				? null
+				: parseInt(route.query[name] as string);
+
+		const gameId = getQuery('game');
+		if (!gameId) {
+			return PayloadError.fromHttpError(404);
+		}
+
+		const query: string[] = [];
+		if (route.params.type === 'build') {
+			const buildId = getQuery('build');
+			if (!buildId) {
+				return PayloadError.fromHttpError(404);
+			}
+
+			HistoryTick.sendBeacon('game-build', buildId, {
+				sourceResource: 'Game',
+				sourceResourceId: gameId,
+			});
+
+			query.push(`build=${buildId}`);
+		}
+
+		return Api.sendRequest(`/web/download/info/${gameId}?${query.join('&')}`);
+	},
+})
+export default class RouteDownload extends BaseRouteComponent {
+	@Inject({ from: AppPromotionStoreKey })
+	appPromotion!: AppPromotionStore;
+
+	ads = setup(() => useAdsController());
+
+	started = false;
+	game: Game = null as any;
+	build: null | GameBuild = null;
+	ownerGames: Game[] = [];
+	recommendedGames: Game[] = [];
+
+	readonly Screen = Screen;
+
+	get type() {
+		return this.$route.params['type'] as 'build' | 'soundtrack';
+	}
+
+	get games() {
+		// Put the first two games as the dev's games, and then fill the rest
+		// with recommended.
+		return [...this.ownerGames.slice(0, 2), ...this.recommendedGames].slice(0, 6);
+	}
+
+	get routeTitle() {
+		if (this.game) {
+			return this.type === 'build'
+				? this.$gettextInterpolate(`Downloading %{ game }`, {
+						game: this.game.title,
+				  })
+				: this.$gettextInterpolate(`Downloading soundtrack for %{ game }`, {
+						game: this.game.title,
+				  });
+		}
+		return null;
+	}
+
+	routeCreated() {
+		setAppPromotionCohort(this.appPromotion, 'store');
+	}
+
+	async routeResolved($payload: any) {
+		this.game = new Game($payload.game);
+		this.build = $payload.build ? new GameBuild($payload.build) : null;
+		this.started = false;
+
+		this.ownerGames = Game.populate($payload.ownerGames);
+		this.recommendedGames = Game.populate($payload.recommendedGames);
+		this._setAdSettings();
+
+		// Don't download on SSR.
+		if (import.meta.env.SSR) {
+			return;
+		}
+
+		// We do it like this so that we start getting the download URL right
+		// away while still waiting for the timeout.
+		const [data] = await Promise.all<any>([
+			this.type === 'build'
+				? this.build!.getDownloadUrl({
+						forceDownload: true,
+				  })
+				: GameSong.getSoundtrackDownloadUrl(this.game.id),
+
+			// Wait at least this long before spawning the download.
+			sleep(DownloadDelay),
+		]);
+
+		this.started = true;
+		if (GJ_BUILD_TYPE === 'production') {
+			Navigate.goto(data.url);
+		}
+	}
+
+	routeDestroyed() {
+		this._releaseAdSettings();
+	}
+
+	private _setAdSettings() {
+		if (!this.game) {
+			return;
+		}
+
+		const settings = new AdSettingsContainer();
+		settings.resource = this.game;
+		settings.isPageDisabled =
+			this.game.has_adult_content || this.game.isOwned || this.game.is_paid_game;
+
+		setPageAdsSettings(this.ads, settings);
+	}
+
+	private _releaseAdSettings() {
+		releasePageAdsSettings(this.ads);
+	}
+}
+</script>
 
 <template>
 	<section v-if="isRouteBootstrapped" class="-section section">
-		<app-ad-widget
+		<AppAdWidget
 			v-if="!Screen.isMobile"
 			class="-leaderboard-ad"
 			size="leaderboard"
 			placement="top"
 		/>
 
-		<app-page-container xl>
+		<AppPageContainer xl>
 			<template v-if="Screen.isDesktop" #left>
-				<app-scroll-affix>
-					<app-ad-widget size="rectangle" placement="side" />
-				</app-scroll-affix>
+				<AppScrollAffix>
+					<AppAdWidget size="rectangle" placement="side" />
+				</AppScrollAffix>
 			</template>
 			<template v-if="Screen.isLg" #right>
-				<app-scroll-affix>
-					<app-ad-widget size="rectangle" placement="side" />
-				</app-scroll-affix>
+				<AppScrollAffix>
+					<AppAdWidget size="rectangle" placement="side" />
+				</AppScrollAffix>
 			</template>
 			<template #default>
-				<app-game-badge :game="game" full-bleed />
+				<AppGameBadge :game="game" full-bleed />
 
 				<h2 class="section-header">
 					<template v-if="type === 'build'">
-						<translate :translate-params="{ game: game.title }">
+						<AppTranslate :translate-params="{ game: game.title }">
 							Downloading %{ game }...
-						</translate>
+						</AppTranslate>
 					</template>
 					<template v-else-if="type === 'soundtrack'">
-						<translate :translate-params="{ game: game.title }">
+						<AppTranslate :translate-params="{ game: game.title }">
 							Downloading soundtrack for %{ game }...
-						</translate>
+						</AppTranslate>
 					</template>
 				</h2>
 
 				<p class="small text-muted">
-					<translate>
-						Your download will begin in just a moment...
-					</translate>
+					<AppTranslate> Your download will begin in just a moment... </AppTranslate>
 				</p>
 
 				<!--
@@ -48,14 +216,14 @@
 				something.
 				-->
 				<div :style="{ visibility: started ? 'hidden' : undefined }">
-					<app-loading :hide-label="true" />
+					<AppLoading :hide-label="true" />
 					<br />
 				</div>
 
-				<app-ad-widget size="video" placement="content" />
+				<AppAdWidget size="video" placement="content" />
 
 				<h2>
-					<translate>game.download.game.recommended_heading</translate>
+					<AppTranslate>You May Also Like</AppTranslate>
 				</h2>
 
 				<div class="scrollable-grid-xs">
@@ -65,7 +233,7 @@
 							:key="game.id"
 							class="scrollable-grid-item col-xs-10 col-sm-6"
 						>
-							<app-game-thumbnail
+							<AppGameThumbnail
 								v-app-track-event="'recommended-games:click:download'"
 								:game="game"
 							/>
@@ -73,13 +241,11 @@
 					</div>
 				</div>
 			</template>
-		</app-page-container>
+		</AppPageContainer>
 	</section>
 </template>
 
 <style lang="stylus" scoped>
-@import '~styles/variables'
-
 // We want to keep the top part as thin as possible.
 .-section
 	padding-top: $line-height-computed

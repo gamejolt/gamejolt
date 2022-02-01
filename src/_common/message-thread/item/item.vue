@@ -1,21 +1,56 @@
+<script lang="ts">
+import { Options, Prop, Vue } from 'vue-property-decorator';
+import { formatDate } from '../../filters/date';
+import { AppTimeAgo } from '../../time/ago/ago';
+import AppTimelineListItem from '../../timeline-list/item/item.vue';
+import AppUserCardHover from '../../user/card/hover/hover.vue';
+import AppUserAvatar from '../../user/user-avatar/user-avatar.vue';
+import { User } from '../../user/user.model';
+import AppUserVerifiedTick from '../../user/verified-tick/verified-tick.vue';
+
+@Options({
+	components: {
+		AppTimelineListItem,
+		AppUserCardHover,
+		AppUserAvatar,
+		AppTimeAgo,
+		AppUserVerifiedTick,
+	},
+})
+export default class AppMessageThreadItem extends Vue {
+	@Prop({ type: Object, required: true }) user!: User;
+	@Prop(Object) repliedTo?: User;
+	@Prop({ type: Number, required: true }) date!: number;
+	@Prop(String) id?: string;
+	@Prop({ type: Boolean, default: false }) isActive!: boolean;
+	@Prop({ type: Boolean, default: false }) isNew!: boolean;
+	@Prop({ type: Boolean, default: false }) isReply!: boolean;
+	@Prop({ type: Boolean, default: false }) isLast!: boolean;
+	@Prop({ type: Boolean, default: false }) isShowingReplies!: boolean;
+	@Prop({ type: Boolean, default: false }) isBlocked!: boolean;
+
+	readonly formatDate = formatDate;
+}
+</script>
+
 <template>
-	<div class="message-thread-item" :id="id" :class="{ '-blocked': isBlocked }">
-		<app-timeline-list-item
+	<div :id="id" class="message-thread-item" :class="{ '-blocked': isBlocked }">
+		<AppTimelineListItem
 			:is-active="isActive"
 			:is-new="isNew"
 			:is-thread="isShowingReplies || isReply"
 			:is-last="isLast"
 		>
+			<template v-if="!isBlocked && user" #bubble>
+				<AppUserCardHover :user="user">
+					<AppUserAvatar :user="user" />
+				</AppUserCardHover>
+			</template>
+
 			<slot v-if="isBlocked" name="blocked" />
 			<template v-else>
-				<div slot="bubble" v-if="user">
-					<app-user-card-hover :user="user">
-						<app-user-avatar :user="user" />
-					</app-user-card-hover>
-				</div>
-
 				<div class="timeline-list-item-details">
-					<div class="-meta clearfix" v-if="user">
+					<div v-if="user" class="-meta clearfix">
 						<div class="-byline">
 							<span class="-author">
 								<router-link
@@ -26,14 +61,14 @@
 									class="link-unstyled"
 								>
 									{{ user.display_name }}
-									<app-user-verified-tick :user="user" />
+									<AppUserVerifiedTick :user="user" />
 								</router-link>
 
 								<small class="text-muted">@{{ user.username }}</small>
 							</span>
 
 							<template v-if="repliedTo">
-								<app-jolticon icon="arrow-forward" />
+								<AppJolticon icon="arrow-forward" />
 
 								<span class="-author tiny">
 									<router-link
@@ -59,8 +94,8 @@
 						</div>
 
 						<div class="-meta-sub">
-							<small class="text-muted" :title="dateFilter(date, 'medium')">
-								<app-time-ago :date="date" />
+							<small class="text-muted" :title="formatDate(date, 'medium')">
+								<AppTimeAgo :date="date" />
 							</small>
 						</div>
 					</div>
@@ -72,20 +107,17 @@
 					</div>
 				</div>
 			</template>
-		</app-timeline-list-item>
+		</AppTimelineListItem>
 
-		<div class="-replies" v-if="isShowingReplies && !isBlocked">
+		<div v-if="isShowingReplies && !isBlocked" class="-replies">
 			<slot name="replies" />
 		</div>
 
-		<div class="timeline-list-item-split" v-if="!isReply" />
+		<div v-if="!isReply" class="timeline-list-item-split" />
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@require '~styles/variables'
-@require '~styles-lib/mixins'
-
 .-meta
 	margin-bottom: 1em
 
@@ -111,11 +143,9 @@
 	display: inline-flex
 	margin-left: 5px
 
-	>>> .tag
+	::v-deep(.tag)
 		vertical-align: middle
 
-.-blocked >>> .timeline-list-item-main
+.-blocked ::v-deep(.timeline-list-item-main)
 	padding-left: 0
 </style>
-
-<script lang="ts" src="./item"></script>

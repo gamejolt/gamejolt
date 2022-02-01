@@ -1,52 +1,100 @@
-<template>
-	<app-form name="withdrawFundsForm">
-		<div class="alert"><translate>dash.funds.withdraw.form_help_html</translate></div>
+<script lang="ts">
+import { mixins, Options, Prop } from 'vue-property-decorator';
+import { Api } from '../../../../_common/api/api.service';
+import { formatCurrency } from '../../../../_common/filters/currency';
+import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
+import { User } from '../../../../_common/user/user.model';
 
-		<app-form-group
+interface WithdrawFundsFormModel {
+	email_address: string;
+	amount: number;
+}
+
+class Wrapper extends BaseForm<WithdrawFundsFormModel> {}
+
+@Options({})
+export default class FormWithdrawFunds extends mixins(Wrapper) implements FormOnSubmit {
+	@Prop(Object) user!: User;
+	@Prop(String) paypalEmail!: string;
+	@Prop(Number) minAmount!: number;
+	@Prop(Number) withdrawableAmount!: number;
+
+	readonly formatCurrency = formatCurrency;
+
+	created() {
+		this.form.warnOnDiscard = false;
+	}
+
+	onInit() {
+		this.setField('email_address', this.paypalEmail);
+		this.setField('amount', this.withdrawableAmount);
+	}
+
+	onSubmit() {
+		return Api.sendRequest('/web/dash/funds/withdraw', this.formModel);
+	}
+}
+</script>
+
+<template>
+	<AppForm :controller="form">
+		<div class="alert">
+			<AppTranslate>
+				Make sure that the information you enter below is correct. You will not get a chance
+				to change it after you submit.
+			</AppTranslate>
+		</div>
+
+		<AppFormGroup
 			v-if="!user.paypal_id"
 			name="email_address"
-			:label="$gettext(`dash.funds.withdraw.email_label`)"
+			:label="$gettext(`PayPal Email Address`)"
 		>
-			<p class="help-block above"><translate>dash.funds.withdraw.email_help</translate></p>
-			<app-form-control :type="email" />
-			<app-form-control-errors />
-		</app-form-group>
+			<p class="help-block above">
+				<AppTranslate>
+					This must be a valid email address attached to a PayPal account.
+				</AppTranslate>
+			</p>
+			<AppFormControl type="email" />
+			<AppFormControlErrors />
+		</AppFormGroup>
 
 		<div v-else class="form-group">
-			<label class="control-label"><translate>Current PayPal Account</translate></label>
+			<label class="control-label"><AppTranslate>Current PayPal Account</AppTranslate></label>
 			<div class="form-static">{{ user.paypal_email_address }}</div>
 			<p class="help-block">
-				<translate>You can link a different PayPal account in your payment setup.</translate>
+				<AppTranslate>
+					You can link a different PayPal account in your payment setup.
+				</AppTranslate>
+				{{ ' ' }}
 				<router-link :to="{ name: 'dash.account.financials' }">
-					<translate>Go to your financials page.</translate>
+					<AppTranslate>Go to your financials page.</AppTranslate>
 				</router-link>
 			</p>
 		</div>
 
-		<app-form-group name="amount" :label="$gettext(`dash.funds.withdraw.amount_label`)">
+		<AppFormGroup name="amount" :label="$gettext(`Amount to Withdraw`)">
 			<p class="help-block above">
-				<translate :translate-params="{ amount: currency(minAmount * 100) }">
+				<AppTranslate :translate-params="{ amount: formatCurrency(minAmount * 100) }">
 					The minimum amount you can withdraw at this time is %{ amount }.
-				</translate>
+				</AppTranslate>
 			</p>
 			<div class="input-group">
 				<span class="input-group-addon">$</span>
-				<app-form-control
+				<AppFormControl
 					type="currency"
 					step="1"
-					:rules="{
-						min_value: minAmount,
-						max_value: withdrawableAmount,
-					}"
+					:validators="[
+						validateMinValue(minAmount),
+						validateMaxValue(withdrawableAmount),
+					]"
 				/>
 			</div>
-			<app-form-control-errors />
-		</app-form-group>
+			<AppFormControlErrors />
+		</AppFormGroup>
 
-		<app-form-button>
-			<translate>dash.funds.withdraw.submit_button</translate>
-		</app-form-button>
-	</app-form>
+		<AppFormButton>
+			<AppTranslate>Send Withdrawal Request</AppTranslate>
+		</AppFormButton>
+	</AppForm>
 </template>
-
-<script lang="ts" src="./withdraw-funds"></script>

@@ -1,9 +1,9 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeDashGamesManageGameMusic: RouteConfig = {
+export const routeDashGamesManageGameMusic: RouteRecordRaw = {
 	name: 'dash.games.manage.game.music',
 	path: 'music',
-	component: () => import(/* webpackChunkName: "routeDashGamesManageGameMusic" */ './music.vue'),
+	component: () => import('./music.vue'),
 	children: [
 		{
 			path: '/dashboard/developer/games/soundtracks/:id(\\d+)/',

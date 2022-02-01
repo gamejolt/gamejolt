@@ -1,7 +1,7 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeLegalCookies: RouteConfig = {
+export const routeLegalCookies: RouteRecordRaw = {
 	name: 'legal.cookies',
 	path: '/cookies',
-	component: () => import(/* webpackChunkName: "routeLegalCookies" */ './cookies.vue'),
+	component: () => import('./cookies.vue'),
 };
