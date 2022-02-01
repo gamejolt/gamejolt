@@ -13,7 +13,7 @@ export class ShareModal {
 
 		return await showModal<void>({
 			modalId: 'Share',
-			component: defineAsyncComponent(() => import('./modal.vue')),
+			component: defineAsyncComponent(() => import('./AppShareCardModal.vue')),
 			props: {
 				resource,
 				url,

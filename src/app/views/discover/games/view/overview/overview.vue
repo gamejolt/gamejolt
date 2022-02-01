@@ -38,7 +38,7 @@ import {
 	OptionsForRoute,
 } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
-import AppShareCard from '../../../../../../_common/share/card/card.vue';
+import AppShareCard from '../../../../../../_common/share/card/AppShareCard.vue';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';

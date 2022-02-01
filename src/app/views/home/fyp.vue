@@ -5,7 +5,7 @@ import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/rout
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { AppActivityFeedLazy } from '../../components/lazy';
-import { RouteActivityFeedController } from './feed';
+import { RouteActivityFeedController } from './feed.vue';
 
 @Options({
 	name: 'RouteHomeFYP',
@@ -34,7 +34,7 @@ export default class RouteHomeFYP extends BaseRouteComponent {
 
 	routeResolved($payload: any, fromCache: boolean) {
 		this.controller.feed = ActivityFeedService.routed(
-			this.feed,
+			this.controller.feed,
 			{
 				type: 'EventItem',
 				name: 'fyp',

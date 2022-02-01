@@ -1,34 +1,37 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
-import { BaseModal } from '../../../modal/base';
+<script lang="ts" setup>
+import { PropType } from 'vue';
+import AppModal from '../../../modal/AppModal.vue';
+import { useModal } from '../../../modal/modal.service';
 import { copyShareLink, ShareProvider, ShareResource } from '../../share.service';
-import AppShareCardTile from '../_tile/tile.vue';
+import AppShareCardTile from '../AppShareCardTile.vue';
+import AppButton from '../../../button/AppButton.vue';
+import AppTranslate from '../../../translate/AppTranslate.vue';
 
-@Options({
-	components: {
-		AppShareCardTile,
+const props = defineProps({
+	resource: {
+		type: String as PropType<ShareResource>,
+		required: true,
 	},
-})
-export default class AppShareCardModal extends mixins(BaseModal) {
-	@Prop({ type: String, required: true })
-	resource!: ShareResource;
+	url: {
+		type: String,
+		required: true,
+	},
+});
 
-	@Prop({ type: String, required: true })
-	url!: string;
+const modal = useModal<void>()!;
 
-	readonly providers: ShareProvider[] = [
-		'facebook',
-		'twitter',
-		'reddit',
-		'whatsapp',
-		'fb_messenger',
-		'email',
-		'sms',
-	];
+const providers: ShareProvider[] = [
+	'facebook',
+	'twitter',
+	'reddit',
+	'whatsapp',
+	'fb_messenger',
+	'email',
+	'sms',
+];
 
-	copyLink() {
-		copyShareLink(this.url, this.resource);
-	}
+function copyLink() {
+	copyShareLink(props.url, props.resource);
 }
 </script>
 

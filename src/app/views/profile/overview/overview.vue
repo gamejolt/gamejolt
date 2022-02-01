@@ -36,7 +36,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
-import AppShareCard from '../../../../_common/share/card/card.vue';
+import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
@@ -758,10 +758,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 										:key="community.id"
 										v-app-tooltip.bottom="community.name"
 										class="-community-item link-unstyled"
-										:to="{
-											name: 'communities.view.overview',
-											params: { path: community.path },
-										}"
+										:to="community.routeLocation"
 									>
 										<AppCommunityThumbnailImg
 											class="-community-thumb"
