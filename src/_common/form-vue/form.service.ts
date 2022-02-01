@@ -18,10 +18,6 @@ import {
 	validatePattern,
 } from './validators';
 
-export interface FormOnInit {
-	onInit(): void;
-}
-
 export interface FormOnBeforeSubmit {
 	onBeforeSubmit(): void;
 }
