@@ -1,6 +1,6 @@
-import Vue, { computed, toRef } from 'vue';
+import { computed, toRef } from 'vue';
 import { setup } from 'vue-class-component';
-import { Emit, Options, Prop } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { ModelClassType } from '../model/model.service';
 import { createForm } from './AppForm.vue';
 import { CommonFormComponents } from './form-common';
