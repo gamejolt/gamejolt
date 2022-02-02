@@ -4,8 +4,8 @@ import { CommunityChannel } from '../../../../../_common/community/channel/chann
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
 import AppCommunityVerifiedTick from '../../../../../_common/community/verified-tick/verified-tick.vue';
-import AppPillBi from '../../../../../_common/pill/bi/bi.vue';
-import AppPill from '../../../../../_common/pill/pill.vue';
+import AppPill from '../../../../../_common/pill/AppPill.vue';
+import AppPillBi from '../../../../../_common/pill/AppPillBi.vue';
 
 @Options({
 	components: {

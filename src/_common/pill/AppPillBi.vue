@@ -1,4 +1,67 @@
+<script lang="ts" setup>
+import { computed, PropType, useSlots } from 'vue';
+import { RouteLocationRaw, RouterLink } from 'vue-router';
 
+const props = defineProps({
+	leftTo: {
+		type: Object as PropType<RouteLocationRaw>,
+		default: undefined,
+	},
+	rightTo: {
+		type: Object as PropType<RouteLocationRaw>,
+		default: undefined,
+	},
+	noHover: {
+		type: Boolean,
+		default: false,
+	},
+});
+
+const slots = useSlots();
+
+const leftComponent = computed(() => (props.leftTo ? RouterLink : 'span'));
+const rightComponent = computed(() => (props.rightTo ? RouterLink : 'span'));
+
+const hasImg = computed(() => !!slots.img);
+</script>
+
+<template>
+	<span class="pill-bi">
+		<component :is="leftComponent" class="-left" :class="{ '-no-hover': noHover }" :to="leftTo">
+			<span class="-content">
+				<span v-if="hasImg" class="-img">
+					<slot name="img" />
+				</span>
+				<slot name="left" />
+			</span>
+
+			<span class="-sep">
+				<span class="-container">
+					<svg
+						class="-svg"
+						xmlns="http://www.w3.org/2000/svg"
+						version="1.1"
+						viewBox="0 0 100 100"
+						preserveAspectRatio="none"
+					>
+						<polygon points="0,0 100,0 0,100" />
+					</svg>
+				</span>
+			</span>
+		</component>
+
+		<component
+			:is="rightComponent"
+			class="-right"
+			:class="{ '-no-hover': noHover }"
+			:to="rightTo"
+		>
+			<slot name="right" />
+		</component>
+	</span>
+</template>
+
+<style lang="stylus" scoped>
 $-separator-width = 20px
 // It looks a bit better if the right bit slightly overlaps
 // with the separator.
@@ -86,3 +149,4 @@ $-separator-overlap = 2px
 	margin-right: 6px
 	width: 16px
 	height: 16px
+</style>
