@@ -11,16 +11,16 @@ const props = defineProps({
 	},
 });
 
-const backgroundImage = computed(() => `url('${props.banner.bannerMedia?.mediaserver_url}')`);
+const backgroundImage = computed(() => `url('${props.banner.banner_media?.mediaserver_url}')`);
 </script>
 
 <template>
 	<a
 		class="-banner"
 		:href="banner.url"
-		@click="trackBannerClick({ type: 'store', label: banner.eventLabel })"
+		@click="trackBannerClick({ type: 'store', label: banner.event_label })"
 	>
-		<template v-if="banner.bannerMedia">
+		<template v-if="banner.banner_media">
 			<div class="-image-spacer" />
 			<div class="-image" />
 		</template>

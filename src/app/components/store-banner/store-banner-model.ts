@@ -6,15 +6,15 @@ export class StoreBanner extends Model {
 		super(data);
 
 		if (data.bannerMedia) {
-			this.bannerMedia = new MediaItem(data.bannerMedia);
+			this.banner_media = new MediaItem(data.banner_media);
 		}
 	}
 
 	text!: string;
 	button!: string;
 	url!: string;
-	eventLabel!: string;
-	bannerMedia?: MediaItem;
+	event_label!: string;
+	banner_media?: MediaItem;
 }
 
 Model.create(StoreBanner);
