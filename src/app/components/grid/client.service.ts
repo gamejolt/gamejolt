@@ -35,9 +35,7 @@ import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
 import { CommunityChannel } from './community-channel';
 import { FiresideChannel } from './fireside-channel';
 
-const TabLeaderLazy = importNoSSR(
-	async () => (await import('../../../utils/tab-leader')).TabLeader
-);
+const TabLeaderLazy = importNoSSR(async () => await import('../../../utils/tab-leader'));
 
 export const onFiresideStart = new EventTopic<Model>();
 export const onNewStickers = new EventTopic<string[]>();
@@ -435,7 +433,9 @@ export class GridClient {
 
 			// After successfully connecting to the socket, elect leader.
 			if (this.tabLeader !== null) {
-				await this.tabLeader.kill();
+				const oldTabLeader = this.tabLeader;
+				this.tabLeader = null;
+				await oldTabLeader.kill();
 
 				if (cancelToken.isCanceled) {
 					console.log('[Grid] Aborted connection (5)');
@@ -443,8 +443,8 @@ export class GridClient {
 				}
 			}
 
-			const TabLeaderActual = await TabLeaderLazy;
-			this.tabLeader = new TabLeaderActual('grid_notification_channel_' + user.id);
+			const { TabLeader } = await TabLeaderLazy;
+			this.tabLeader = new TabLeader('grid_notification_channel_' + user.id);
 			this.tabLeader.init();
 
 			channel.on('new-notification', (payload: NewNotificationPayload) => {
@@ -990,7 +990,9 @@ export class GridClient {
 		}
 
 		if (this.tabLeader !== null) {
-			await this.tabLeader.kill();
+			const oldTabLeader = this.tabLeader;
+			this.tabLeader = null;
+			await oldTabLeader.kill();
 		}
 	}
 

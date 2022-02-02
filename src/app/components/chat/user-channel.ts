@@ -17,9 +17,7 @@ import { ChatNotificationGrowl } from './notification-growl/notification-growl.s
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
 
-const TabLeaderLazy = importNoSSR(
-	async () => (await import('../../../utils/tab-leader')).TabLeader
-);
+const TabLeaderLazy = importNoSSR(async () => await import('../../../utils/tab-leader'));
 
 interface UserPresence {
 	metas: { phx_ref: string }[];
@@ -58,7 +56,7 @@ export class ChatUserChannel {
 
 	init() {
 		this._tabLeader = null;
-		TabLeaderLazy.then(TabLeader => {
+		TabLeaderLazy.then(({ TabLeader }) => {
 			this._tabLeader = new TabLeader('chat_notification_channel');
 			this._tabLeader.init();
 		});
