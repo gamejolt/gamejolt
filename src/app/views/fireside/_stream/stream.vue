@@ -88,6 +88,7 @@ export default class AppFiresideStream extends Vue {
 		return !!(
 			(this.hasVideo && this.videoPaused) ||
 			this.c.isShowingOverlayPopper.value ||
+			this.showMutedIndicator ||
 			this.isHovered ||
 			this._hideUITimer
 		);
@@ -109,6 +110,10 @@ export default class AppFiresideStream extends Vue {
 
 	get videoPaused() {
 		return this.c.rtc.value?.videoPaused === true;
+	}
+
+	get showMutedIndicator() {
+		return this.c.rtc.value?.shouldShowMutedIndicator === true;
 	}
 
 	get hasVideo() {
@@ -324,13 +329,16 @@ export default class AppFiresideStream extends Vue {
 			@click.capture="onOverlayTap"
 		>
 			<template v-if="shouldShowUI">
-				<template v-if="videoPaused">
+				<template v-if="videoPaused || showMutedIndicator">
 					<transition>
 						<div
 							ref="paused"
 							class="-paused-indicator -click-target anim-fade-leave-shrink"
 						>
-							<AppJolticon class="-paused-indicator-icon" icon="play" />
+							<AppJolticon
+								class="-paused-indicator-icon"
+								:icon="showMutedIndicator ? 'audio-mute' : 'play'"
+							/>
 						</div>
 					</transition>
 				</template>
@@ -533,6 +541,7 @@ $-z-combo = 2
 	&-icon
 		font-size: 60px
 		pointer-events: none
+		color: white
 
 .-video-controls
 	display: flex
