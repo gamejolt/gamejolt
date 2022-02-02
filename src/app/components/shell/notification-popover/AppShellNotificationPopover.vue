@@ -92,13 +92,13 @@ async function onShow() {
 		// If the feed isn't bootstrapped with data, then we have to do the
 		// first bootstrapping call to get data into it.
 		if (!feed.value.isBootstrapped) {
-			const $payload = await Api.sendRequest('/web/dash/activity/notifications');
+			const payload = await Api.sendRequest('/web/dash/activity/notifications');
 
-			const items = Notification.populate($payload.items);
+			const items = Notification.populate(payload.items);
 			feed.value.append(items);
 
-			if ($payload.perPage) {
-				feed.value.itemsPerPage = $payload.perPage;
+			if (payload.perPage) {
+				feed.value.itemsPerPage = payload.perPage;
 			}
 		}
 		// If it is already bootstrapped, we just want to load new items if
