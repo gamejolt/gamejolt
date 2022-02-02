@@ -2,7 +2,7 @@
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { AppVideoPlayerShakaLazy } from '../../../app/components/lazy';
 import { formatNumber } from '../../filters/number';
-import { AppImgResponsive } from '../../img/responsive/responsive';
+import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppLoading from '../../loading/loading.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../media-item/media-item-model';

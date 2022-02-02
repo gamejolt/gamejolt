@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, PropType, ref, toRefs } from 'vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
+import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
 import {
 	createVideoPlayerController,
 	getVideoPlayerFromSources,

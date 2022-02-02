@@ -15,7 +15,7 @@ import {
 	FiresidePostVideo,
 } from '../../../../_common/fireside/post/video/video-model';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
+import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
 import { createLightbox } from '../../../../_common/lightbox/lightbox-helpers';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';

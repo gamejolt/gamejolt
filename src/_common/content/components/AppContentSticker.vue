@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { AppImgResponsive } from '../../img/responsive/responsive';
+import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppLoading from '../../loading/loading.vue';
 import { Sticker } from '../../sticker/sticker.model';
 import AppTranslate from '../../translate/AppTranslate.vue';

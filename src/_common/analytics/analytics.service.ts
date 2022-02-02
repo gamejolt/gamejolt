@@ -34,6 +34,7 @@ export type UserFollowLocation =
 	| 'gameFollow';
 export type GameFollowLocation = 'thumbnail' | 'gamePage' | 'badge' | 'homeBanner' | 'library';
 export type CommunityJoinLocation = 'onboarding' | 'card' | 'communityPage' | 'homeBanner' | 'cbar';
+export type BannerType = 'store';
 
 /**
  * How long we wait (in ms) before we track another experiment engagement for
@@ -378,6 +379,10 @@ export function trackLoginCaptcha(
 		status,
 		counter,
 	});
+}
+
+export function trackBannerClick(params: { type: BannerType; label?: string }) {
+	_trackEvent('banner_click', params);
 }
 
 /**

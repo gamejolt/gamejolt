@@ -210,11 +210,21 @@ export function getAbsoluteLink(router: Router, location: RouteLocationRaw) {
 
 /**
  * Returns a query parameter from a route as either a string or null. If the
- * query was in an array format, it will try pulling the first time.
+ * query was in an array format, it will try pulling the first item.
  */
 export function getQuery(route: RouteLocationNormalized, key: string) {
-	const val = route.query[key];
+	return _getRouteParamString(route.query[key]);
+}
 
+/**
+ * Returns a route parameter as either a string or null. If the param was in an
+ * array format, it will try pulling the first item.
+ */
+export function getParam(route: RouteLocationNormalized, key: string) {
+	return _getRouteParamString(route.params[key]);
+}
+
+function _getRouteParamString(val: string | null | (string | null)[]) {
 	if (!val) {
 		return null;
 	}

@@ -7,7 +7,7 @@ import AppContentViewer from '../../../content/content-viewer/content-viewer.vue
 import { Environment } from '../../../environment/environment.service';
 import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
 import { formatFuzzynumber } from '../../../filters/fuzzynumber';
-import { AppImgResponsive } from '../../../img/responsive/responsive';
+import AppImgResponsive from '../../../img/AppImgResponsive.vue';
 import AppLoading from '../../../loading/loading.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../../media-item/media-item-model';
