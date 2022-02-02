@@ -15,7 +15,7 @@ import { FiresidePostCommunity } from '../../../../../_common/fireside/post/comm
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
-import AppPill from '../../../../../_common/pill/pill.vue';
+import AppPill from '../../../../../_common/pill/AppPill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
@@ -23,9 +23,9 @@ import AppStickerControlsOverlay from '../../../../../_common/sticker/controls-o
 import { canPlaceStickerOnFiresidePost } from '../../../../../_common/sticker/placement/placement.model';
 import AppStickerReactions from '../../../../../_common/sticker/reactions/reactions.vue';
 import {
-createStickerTargetController,
-provideStickerTargerController,
-StickerTargetController
+	createStickerTargetController,
+	provideStickerTargerController,
+	StickerTargetController,
 } from '../../../../../_common/sticker/target/target-controller';
 import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
@@ -485,11 +485,7 @@ export default class AppActivityFeedPost extends Vue {
 			<a v-if="canToggleLead" class="hidden-text-expander" @click="toggleLead()" />
 
 			<AppStickerControlsOverlay>
-				<AppFiresidePostEmbed
-					v-for="embed of post.embeds"
-					:key="embed.id"
-					:embed="embed"
-				/>
+				<AppFiresidePostEmbed v-for="embed of post.embeds" :key="embed.id" :embed="embed" />
 
 				<AppActivityFeedPostText v-if="post.has_article" :item="item" :post="post" />
 

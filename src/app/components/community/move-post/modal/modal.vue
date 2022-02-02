@@ -1,16 +1,15 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { mixins, Options, Prop } from 'vue-property-decorator';
+import AppCommunityChannelSelect from '../../../../../_common/community/channel/AppCommunityChannelSelect.vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
-import AppCommunityChannelSelect from '../../../../../_common/community/channel/select/select.vue';
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { REASON_OTHER } from '../../../../../_common/user/action-reasons';
-import { FormModel } from '../form/form';
-import FormCommunityMovePost from '../form/form.vue';
+import FormCommunityMovePost, { FormModel } from '../form/form.vue';
 import { CommunityMovePostModalResult } from './modal.service';
 
 @Options({
