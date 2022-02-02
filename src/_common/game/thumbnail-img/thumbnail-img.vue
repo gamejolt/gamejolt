@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, ref } from 'vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
-import { AppImgResponsive } from '../../img/responsive/responsive';
+import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { Screen } from '../../screen/screen-service';
 import { getVideoPlayerFromSources } from '../../video/player/controller';

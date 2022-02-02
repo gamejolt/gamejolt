@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { AppImgResponsive } from '../../img/responsive/responsive';
+import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { createLightbox } from '../../lightbox/lightbox-helpers';
 import AppLinkExternal from '../../link/AppLinkExternal.vue';

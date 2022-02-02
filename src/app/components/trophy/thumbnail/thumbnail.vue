@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { GameTrophy } from '../../../../_common/game/trophy/trophy.model';
-import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
+import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { BaseTrophy } from '../../../../_common/trophy/base-trophy.model';
 import bronzeSecretImage from './bronze-secret.png';

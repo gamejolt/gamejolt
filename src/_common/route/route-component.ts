@@ -90,17 +90,17 @@ export function createAppRoute({
 	 * Called to initialize the route either at the first route to this
 	 * component or after the $route object changes with params.
 	 */
-	onInit?: () => void;
+	onInit?: (this: undefined) => void;
 
 	/**
 	 * Called after the resolver resolves with data.
 	 */
-	onResolved?: (options: { payload: any; fromCache: boolean }) => void;
+	onResolved?: (this: undefined, options: { payload: any; fromCache: boolean }) => void;
 
 	/**
 	 * Called when the route component is completely destroyed.
 	 */
-	onDestroyed?: () => void;
+	onDestroyed?: (this: undefined) => void;
 }) {
 	const { setError, redirect } = useCommonStore();
 	const router = useRouter();

@@ -2,7 +2,7 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../utils/vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
-import { AppImgResponsive } from '../../img/responsive/responsive';
+import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import {
 	AppResponsiveDimensions,
 	AppResponsiveDimensionsChangeEvent,

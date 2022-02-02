@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { AppImgResponsive } from '../../../../../../_common/img/responsive/responsive';
+import AppImgResponsive from '../../../../../../_common/img/AppImgResponsive.vue';
 import { MediaItem } from '../../../../../../_common/media-item/media-item-model';
 
 @Options({

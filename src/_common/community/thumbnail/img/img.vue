@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { AppImgResponsive } from '../../../img/responsive/responsive';
+import AppImgResponsive from '../../../img/AppImgResponsive.vue';
 import { Community } from '../../community.model';
 
 @Options({

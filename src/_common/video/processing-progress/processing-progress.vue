@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { FiresidePost } from '../../fireside/post/post-model';
-import { AppImgResponsive } from '../../img/responsive/responsive';
+import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppProgressBar from '../../progress/bar/bar.vue';
 import { AppProgressPoller } from '../../progress/poller/poller';
 import { AppResponsiveDimensions } from '../../responsive-dimensions/responsive-dimensions';
@@ -81,20 +81,16 @@ export default class AppVideoProcessingProgress extends Vue {
 		</AppResponsiveDimensions>
 
 		<br />
-		<AppProgressBar
-			:percent="progress"
-			:indeterminate="isIndeterminate"
-			thin
-			animate
-			active
-		/>
+		<AppProgressBar :percent="progress" :indeterminate="isIndeterminate" thin animate active />
 
 		<div>
 			<AppTranslate>
 				Your video is currently being processed. This could take some time depending on the
 				size of your video.
 			</AppTranslate>
-			<AppTranslate v-if="post.isActive"> We will publish your post once it's ready. </AppTranslate>
+			<AppTranslate v-if="post.isActive">
+				We will publish your post once it's ready.
+			</AppTranslate>
 		</div>
 	</div>
 </template>
