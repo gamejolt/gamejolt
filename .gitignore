@@ -2,6 +2,7 @@
 /npm-debug.log
 /build
 /debug.log
+/client.log
 .DS_Store
 .cache
 yarn-error.log

@@ -11,5 +11,8 @@ const AppClientShell = GJ_IS_DESKTOP_APP ? (await import('./AppClientShell.vue')
 const AppClientStatusBar = GJ_IS_DESKTOP_APP
 	? (await import('./status-bar/status-bar.vue')).default
 	: AppNoop;
+const LocalDbGameMod = GJ_IS_DESKTOP_APP
+	? (await import('./local-db/game/game.model')).LocalDbGame
+	: null;
 
-export { AppClientStatusBar, AppClientShell };
+export { AppClientStatusBar, AppClientShell, LocalDbGameMod };

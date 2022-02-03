@@ -6,6 +6,7 @@
 	"emmet.syntaxProfiles": {
 		"vue-html": "html"
 	},
+	"files.autoSave": "off",
 	"editor.formatOnSave": true,
 	"editor.codeActionsOnSave": {
 		"source.organizeImports": true

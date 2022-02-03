@@ -1,11 +1,12 @@
 <script lang="ts">
 import type { IClientOSInfo } from 'client-voodoo';
 import { mixins, Options } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import { ClientLogger } from '../../../../_common/client/logger/logger.service';
 import AppEmoji from '../../../../_common/emoji/AppEmoji.vue';
 import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
-// import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
+import { useClientLibraryStore } from '../../../store/client-library/index';
 import { LocalDbGame } from '../local-db/game/game.model';
 import { LocalDbPackage } from '../local-db/package/package.model';
 
@@ -25,21 +26,16 @@ class Wrapper extends BaseForm<FormModel> {}
 	},
 })
 export default class FormClientSystemReport extends mixins(Wrapper) implements FormOnSubmit {
-	// @ClientLibraryState
-	// games!: ClientLibraryStore['gamesById'];
-	games!: any;
-
-	// @ClientLibraryState
-	// packages!: ClientLibraryStore['packagesById'];
-	packages!: any;
+	readonly clientLibrary = shallowSetup(() => useClientLibraryStore());
 
 	onSubmit() {
 		const log = ClientLogger.getLogInfo();
 
 		this.setField('log_lines', log.logLines.join('\n'));
 		this.setField('os_info', log.osInfo);
-		this.setField('localdb_games', this.games);
-		this.setField('localdb_packages', this.packages);
+		// TODO(vue3) might want to stringify these to make a clone.
+		this.setField('localdb_games', this.clientLibrary.games.value);
+		this.setField('localdb_packages', this.clientLibrary.packages.value);
 
 		return Api.sendRequest('/web/client/logs/submit', this.formModel, {
 			allowComplexData: ['os_info', 'localdb_games', 'localdb_packages'],
@@ -77,12 +73,12 @@ export default class FormClientSystemReport extends mixins(Wrapper) implements F
 			</AppFormControlErrors>
 		</AppFormGroup>
 
-		<AppFormGroup
-			name="description"
-			:label="$gettext('Description')"
-		>
+		<AppFormGroup name="description" :label="$gettext('Description')">
 			<p class="help-block">
-				<AppTranslate>Describe what this system report is about, any bugs you may have encountered, and how you can reproduce.</AppTranslate>
+				<AppTranslate
+					>Describe what this system report is about, any bugs you may have encountered,
+					and how you can reproduce.</AppTranslate
+				>
 			</p>
 			<AppFormControlTextarea maxlength="1000" rows="5" />
 			<AppFormControlErrors />

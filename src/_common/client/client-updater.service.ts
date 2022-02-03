@@ -1,9 +1,10 @@
 import { reactive } from '@vue/reactivity';
 import type { MsgProgress, SelfUpdaterInstance } from 'client-voodoo';
-import * as path from 'path';
 import { Navigate } from '../navigate/navigate.service';
 import { Logger, PatcherState, SelfUpdater } from './client-voodoo-imports';
 import { Client } from './client.service';
+
+const path = require('path') as typeof import('path');
 
 export type ClientUpdateStatus = 'checking' | 'none' | 'fetching' | 'ready' | 'error';
 
@@ -98,7 +99,7 @@ class ClientUpdaterService {
 				// the check if its already in progress. Something weird is going on.
 				//
 				// Either way, this is an error we should be able to tolerate and just try syncing with joltron's state again.
-				if (err.message === 'Already running an update') {
+				if (err && err.message === 'Already running an update') {
 					await this.queryUpdaterState(updaterInstance);
 				} else {
 					throw err;

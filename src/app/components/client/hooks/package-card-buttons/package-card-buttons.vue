@@ -1,7 +1,6 @@
 <script lang="ts">
-import * as fs from 'fs';
-import * as path from 'path';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../../utils/vue';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { getDeviceArch, getDeviceOS } from '../../../../../_common/device/device.service';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
@@ -14,11 +13,7 @@ import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-// import {
-// 	ClientLibraryAction,
-// 	ClientLibraryState,
-// 	ClientLibraryStore,
-// } from '../../../../store/client-library';
+import { useClientLibraryStore } from '../../../../store/client-library/index';
 import AppClientInstallProgress from '../../install-progress/install-progress.vue';
 import {
 	LocalDbPackage,
@@ -47,29 +42,7 @@ export default class AppClientPackageCardButtons extends Vue {
 	@Prop(Object)
 	card!: GamePackageCardModel;
 
-	// @ClientLibraryState
-	// packagesById!: ClientLibraryStore['packagesById'];
-	packagesById!: any;
-
-	// @ClientLibraryAction
-	// private packageInstall!: ClientLibraryStore['packageInstall'];
-	packageInstall!: any;
-
-	// @ClientLibraryAction
-	// private packageUninstall!: ClientLibraryStore['packageUninstall'];
-	packageUninstall!: any;
-
-	// @ClientLibraryAction
-	// private installerPause!: ClientLibraryStore['installerPause'];
-	installerPause!: any;
-
-	// @ClientLibraryAction
-	// private installerResume!: ClientLibraryStore['installerResume'];
-	installerResume!: any;
-
-	// @ClientLibraryAction
-	// private installerRetry!: ClientLibraryStore['installerRetry'];
-	installerRetry!: any;
+	readonly clientLibrary = shallowSetup(() => useClientLibraryStore());
 
 	// @ClientLibraryAction
 	// private launcherLaunch!: ClientLibraryStore['launcherLaunch'];
@@ -99,7 +72,7 @@ export default class AppClientPackageCardButtons extends Vue {
 	}
 
 	get localPackage(): LocalDbPackage | undefined {
-		return this.packagesById[this.package.id];
+		return this.clientLibrary.packagesById.value[this.package.id];
 	}
 
 	created() {
@@ -166,13 +139,13 @@ export default class AppClientPackageCardButtons extends Vue {
 	startInstall(build: GameBuild) {
 		Analytics.trackEvent('game-package-card', 'install');
 
-		this.packageInstall([
+		this.clientLibrary.packageInstall(
 			this.game,
 			build._package!,
 			build._release!,
 			build,
-			build._launch_options!,
-		]);
+			build._launch_options!
+		);
 	}
 
 	pauseInstall() {
@@ -181,7 +154,7 @@ export default class AppClientPackageCardButtons extends Vue {
 		}
 
 		Analytics.trackEvent('game-package-card', 'pause-install');
-		this.installerPause(this.localPackage);
+		this.clientLibrary.installerPause(this.localPackage);
 	}
 
 	resumeInstall() {
@@ -190,7 +163,7 @@ export default class AppClientPackageCardButtons extends Vue {
 		}
 
 		Analytics.trackEvent('game-package-card', 'resume-install');
-		this.installerResume(this.localPackage);
+		this.clientLibrary.installerResume(this.localPackage);
 	}
 
 	cancelInstall() {
@@ -199,7 +172,7 @@ export default class AppClientPackageCardButtons extends Vue {
 		}
 
 		Analytics.trackEvent('game-package-card', 'cancel-install');
-		this.packageUninstall([this.localPackage]);
+		this.clientLibrary.packageUninstall(this.localPackage);
 	}
 
 	retryInstall() {
@@ -208,7 +181,7 @@ export default class AppClientPackageCardButtons extends Vue {
 		}
 
 		Analytics.trackEvent('game-package-card', 'retry-install');
-		this.installerRetry(this.localPackage);
+		this.clientLibrary.installerRetry(this.localPackage);
 	}
 
 	launchPackage() {
@@ -224,6 +197,9 @@ export default class AppClientPackageCardButtons extends Vue {
 		if (!this.localPackage) {
 			throw new Error(`Local package isn't set`);
 		}
+
+		const fs = require('fs') as typeof import('fs');
+		const path = require('path') as typeof import('path');
 
 		fs.readdir(path.resolve(this.localPackage.install_dir), (err, files) => {
 			if (err) {
@@ -245,7 +221,7 @@ export default class AppClientPackageCardButtons extends Vue {
 		Analytics.trackEvent('game-package-card', 'uninstall');
 		Popper.hideAll();
 
-		this.packageUninstall([this.localPackage]);
+		this.clientLibrary.packageUninstall(this.localPackage);
 	}
 
 	retryUninstall() {
@@ -256,7 +232,7 @@ export default class AppClientPackageCardButtons extends Vue {
 		Analytics.trackEvent('game-package-card', 'retry-uninstall');
 		Popper.hideAll();
 
-		this.packageUninstall([this.localPackage]);
+		this.clientLibrary.packageUninstall(this.localPackage);
 	}
 }
 </script>
