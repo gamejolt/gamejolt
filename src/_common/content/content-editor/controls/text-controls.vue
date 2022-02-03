@@ -3,7 +3,7 @@ import { nextTick } from 'vue';
 import { setup } from 'vue-class-component';
 import { Options, Vue, Watch } from 'vue-property-decorator';
 import { Screen } from '../../../screen/screen-service';
-import { AppTooltip } from '../../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import {
 	editorGetSelectedText,
 	editorLink,
@@ -16,7 +16,7 @@ import { ContentEditorLinkModal } from '../modals/link/link-modal.service';
 
 @Options({
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppContentEditorTextControls extends Vue {

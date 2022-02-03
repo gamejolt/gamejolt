@@ -6,7 +6,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
-import { AppTooltip as vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { ChatStore, ChatStoreKey } from '../chat-store';
 import { isUserOnline, tryGetRoomRole } from '../client';
 import { ChatRoom } from '../room';

@@ -9,7 +9,7 @@ import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppCommunitySidebar from '../../../../components/community/sidebar/sidebar.vue';
@@ -41,7 +41,7 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 		AppLoadingFade,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

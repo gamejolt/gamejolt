@@ -14,7 +14,7 @@ import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
-import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
+import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppPill from '../../../../../_common/pill/AppPill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
@@ -70,7 +70,7 @@ import AppActivityFeedPostTime from './time/time.vue';
 		AppFiresidePostEmbed,
 	},
 	directives: {
-		AppObserveDimensions,
+		AppObserveDimensions: vAppObserveDimensions,
 	},
 })
 export default class AppActivityFeedPost extends Vue {

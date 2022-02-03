@@ -2,13 +2,13 @@
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { PostControlsLocation, trackPostLike } from '../../../../analytics/analytics.service';
-import { AppAuthRequired } from '../../../../auth/auth-required-directive';
+import { vAppAuthRequired } from '../../../../auth/auth-required-directive';
 import { formatFuzzynumber } from '../../../../filters/fuzzynumber';
 import { showErrorGrowl } from '../../../../growls/growls.service';
 import { LikersModal } from '../../../../likers/modal.service';
 import { Screen } from '../../../../screen/screen-service';
 import { useCommonStore } from '../../../../store/common-store';
-import { AppTooltip } from '../../../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../tooltip/tooltip-directive';
 import AppUserFollowWidget from '../../../../user/follow/widget.vue';
 import { FiresidePost } from '../../post-model';
 import { FiresidePostLike, removeFiresidePostLike, saveFiresidePostLike } from '../like-model';
@@ -18,8 +18,8 @@ import { FiresidePostLike, removeFiresidePostLike, saveFiresidePostLike } from '
 		AppUserFollowWidget,
 	},
 	directives: {
-		AppAuthRequired,
-		AppTooltip,
+		AppAuthRequired: vAppAuthRequired,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppFiresidePostLikeWidget extends Vue {

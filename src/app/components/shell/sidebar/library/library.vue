@@ -12,7 +12,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
 import AppShortkey from '../../../../../_common/shortkey/shortkey.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { useAppStore } from '../../../../store/index';
 import { libraryNewPlaylist, useLibraryStore } from '../../../../store/library';
 import AppShellSidebarCollectionList from './AppShellSidebarCollectionList.vue';
@@ -25,7 +25,7 @@ import AppShellSidebarCollectionList from './AppShellSidebarCollectionList.vue';
 		AppShortkey,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppShellSidebarLibrary extends Vue {

@@ -1,15 +1,15 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
+import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import { formatFuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
 @Options({
 	directives: {
-		AppAuthRequired,
-		AppTooltip,
+		AppAuthRequired: vAppAuthRequired,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppForumTopicUpvoteWidget extends Vue {

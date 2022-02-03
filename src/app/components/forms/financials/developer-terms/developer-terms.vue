@@ -2,12 +2,12 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { html } from '../../../../../lib/terms/distribution-agreement/global.md';
 import { formatDate } from '../../../../../_common/filters/date';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { UserStripeManagedAccount } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
 
 @Options({
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppDeveloperTerms extends Vue {

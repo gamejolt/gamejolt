@@ -9,7 +9,7 @@ import { createPopper, Instance, Options as PopperOptions } from '@popperjs/core
 import { nextTick } from 'vue';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
-import { AppObserveDimensions } from '../observe-dimensions/observe-dimensions.directive';
+import { vAppObserveDimensions } from '../observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../screen/screen-service';
 import AppScrollScroller from '../scroll/AppScrollScroller.vue';
 import { Popper } from './popper.service';
@@ -65,7 +65,7 @@ const modifiers = [
 		AppScrollScroller,
 	},
 	directives: {
-		AppObserveDimensions,
+		AppObserveDimensions: vAppObserveDimensions,
 	},
 })
 export default class AppPopper extends Vue {

@@ -16,7 +16,7 @@ import { validateContentMaxLength } from '../../../../../../_common/form-vue/val
 import { FormValidatorContentNoMediaUpload } from '../../../../../../_common/form-vue/validators/content_no_media_upload';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShortkey from '../../../../../../_common/shortkey/shortkey.vue';
-import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { ChatStore, ChatStoreKey } from '../../../chat-store';
 import { setMessageEditing, startTyping, stopTyping, tryGetRoomRole } from '../../../client';
 import { ChatMessage, CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../../message';
@@ -37,7 +37,7 @@ class Wrapper extends BaseForm<FormModel> {}
 		AppShortkey,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppChatWindowSendForm extends mixins(Wrapper) {

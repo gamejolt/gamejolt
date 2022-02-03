@@ -2,7 +2,7 @@ import { Component, createApp, createSSRApp } from 'vue';
 import { Router } from 'vue-router';
 import { hijackLinks } from '../utils/router';
 import { initAnalytics, initAnalyticsRouter } from './analytics/analytics.service';
-import { AppTrackEvent } from './analytics/track-event.directive';
+import { vAppTrackEvent } from './analytics/track-event.directive';
 import AppButton from './button/AppButton.vue';
 import { ensureConfig } from './config/config.service';
 import { initConnectionService } from './connection/connection-service';
@@ -53,7 +53,7 @@ export function bootstrapCommon(appComponent: Component, router?: Router) {
 	app.component('AppJolticon', AppJolticon);
 	app.component('AppLinkExternal', AppLinkExternal);
 	app.component('AppLinkHelp', AppLinkHelp);
-	app.directive('AppTrackEvent', AppTrackEvent);
+	app.directive('AppTrackEvent', vAppTrackEvent);
 
 	// We want our "env" constants to be available in vue templates.
 	app.config.globalProperties.GJ_SECTION = GJ_SECTION;

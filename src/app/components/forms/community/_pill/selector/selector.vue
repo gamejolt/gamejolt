@@ -6,7 +6,7 @@ import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbn
 import AppCommunityVerifiedTick from '../../../../../../_common/community/verified-tick/verified-tick.vue';
 import { Popper } from '../../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../../_common/popper/popper.vue';
-import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { AppScrollHelper } from './scroll-helper/scroll-helper';
 
 @Options({
@@ -17,7 +17,7 @@ import { AppScrollHelper } from './scroll-helper/scroll-helper';
 		AppScrollHelper,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppFormsCommunityPillSelector extends Vue {
@@ -112,10 +112,7 @@ export default class AppFormsCommunityPillSelector extends Vue {
 						class="-community-item list-group-item"
 						@click="selectCommunity(community)"
 					>
-						<AppCommunityThumbnailImg
-							class="-community-img"
-							:community="community"
-						/>
+						<AppCommunityThumbnailImg class="-community-img" :community="community" />
 
 						<span class="-text">
 							{{ community.name }}

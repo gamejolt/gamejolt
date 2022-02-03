@@ -3,7 +3,7 @@ import { Options, Prop, Vue } from 'vue-property-decorator';
 import { FiresidePostCommunity } from '../../fireside/post/community/community.model';
 import AppPill from '../../pill/AppPill.vue';
 import AppPillBi from '../../pill/AppPillBi.vue';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppCommunityThumbnailImg from '../thumbnail/img/img.vue';
 import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 
@@ -15,7 +15,7 @@ import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 		AppCommunityVerifiedTick,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppCommunityPill extends Vue {

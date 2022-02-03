@@ -16,9 +16,9 @@ import {
 	BaseRouteComponent,
 	OptionsForRoute,
 } from '../../../../../../../../../_common/route/route-component';
-import { AppNoAutoscroll } from '../../../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
+import { vAppNoAutoscroll } from '../../../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import { AppTimeAgo } from '../../../../../../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../../../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarImg from '../../../../../../../../../_common/user/user-avatar/img/img.vue';
 import AppUserVerifiedTick from '../../../../../../../../../_common/user/verified-tick/verified-tick.vue';
@@ -84,8 +84,8 @@ function getValidSortDirectionQueryParam(route: RouteLocationNormalized) {
 		AppPagination,
 	},
 	directives: {
-		AppTooltip,
-		AppNoAutoscroll,
+		AppTooltip: vAppTooltip,
+		AppNoAutoscroll: vAppNoAutoscroll,
 	},
 })
 @OptionsForRoute({

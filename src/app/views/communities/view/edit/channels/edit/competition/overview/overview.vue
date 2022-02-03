@@ -11,7 +11,7 @@ import {
 	OptionsForRoute,
 } from '../../../../../../../../../_common/route/route-component';
 import { AppTimeAgo } from '../../../../../../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view.store';
 
@@ -22,7 +22,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view
 		AppCommunityCompetitionDate,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

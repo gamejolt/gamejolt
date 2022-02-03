@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Inject, Options, Watch } from 'vue-property-decorator';
 import { shallowSetup } from '../../../utils/vue';
 import { Api } from '../../../_common/api/api.service';
-import { AppAuthRequired } from '../../../_common/auth/auth-required-directive';
+import { vAppAuthRequired } from '../../../_common/auth/auth-required-directive';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
 import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/img/img.vue';
 import { useDrawerStore } from '../../../_common/drawer/drawer-store';
@@ -16,7 +16,7 @@ import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import AppLoading from '../../../_common/loading/loading.vue';
 import { Meta } from '../../../_common/meta/meta-service';
 import { Navigate } from '../../../_common/navigate/navigate.service';
-import { AppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
+import { vAppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Popper } from '../../../_common/popper/popper.service';
 import AppPopper from '../../../_common/popper/popper.vue';
 import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
@@ -27,7 +27,7 @@ import AppStickerReactions from '../../../_common/sticker/reactions/reactions.vu
 import AppStickerTarget from '../../../_common/sticker/target/target.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
-import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
 import { ChatStore, ChatStoreKey } from '../../components/chat/chat-store';
@@ -85,9 +85,9 @@ const FiresideThemeKey = 'fireside';
 		AppFadeCollapse,
 	},
 	directives: {
-		AppTooltip,
-		AppObserveDimensions,
-		AppAuthRequired,
+		AppTooltip: vAppTooltip,
+		AppObserveDimensions: vAppObserveDimensions,
+		AppAuthRequired: vAppAuthRequired,
 	},
 })
 @OptionsForRoute({

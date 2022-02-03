@@ -1,7 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarImg from '../../../../../../../_common/user/user-avatar/img/img.vue';
 import { User } from '../../../../../../../_common/user/user.model';
@@ -14,7 +14,7 @@ import { useGameRouteController } from '../../view.vue';
 		AppUserCardHover,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppDiscoverGamesViewOverviewSupporters extends Vue {

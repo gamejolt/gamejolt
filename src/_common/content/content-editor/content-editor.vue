@@ -5,7 +5,7 @@ import { computed, nextTick, provide } from 'vue';
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { FocusToken } from '../../../utils/focus-token';
-import { AppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
+import { vAppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
 import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
 import { ContentContext } from '../content-context';
 import { ContentDocument } from '../content-document';
@@ -49,7 +49,7 @@ export interface AppContentEditorInterface {
 		AppScrollScroller,
 	},
 	directives: {
-		AppObserveDimensions,
+		AppObserveDimensions: vAppObserveDimensions,
 	},
 })
 export default class AppContentEditor extends Vue {

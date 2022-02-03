@@ -4,9 +4,9 @@ import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
-import { AppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
+import { vAppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppFiresideStreamPreview from '../stream/preview/preview.vue';
 
@@ -19,8 +19,8 @@ import AppFiresideStreamPreview from '../stream/preview/preview.vue';
 		AppExpand,
 	},
 	directives: {
-		AppTooltip,
-		AppObserveDimensions,
+		AppTooltip: vAppTooltip,
+		AppObserveDimensions: vAppObserveDimensions,
 	},
 })
 export default class AppFiresideBadge extends Vue {

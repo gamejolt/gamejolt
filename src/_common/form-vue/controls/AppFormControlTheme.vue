@@ -13,7 +13,7 @@ import {
 	makeThemeFromPreset,
 	Theme,
 } from '../../theme/theme.model';
-import { AppTooltip as vAppTooltip } from '../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import {
 	createFormControl,

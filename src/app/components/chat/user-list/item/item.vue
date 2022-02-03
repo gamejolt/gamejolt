@@ -7,7 +7,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ChatStore, ChatStoreKey } from '../../chat-store';
 import { enterChatRoom, isUserOnline, leaveGroupRoom } from '../../client';
 import AppChatNotificationSettings from '../../notification-settings/notification-settings.vue';
@@ -25,7 +25,7 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` }
 		AppChatNotificationSettings,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppChatUserListItem extends Vue {

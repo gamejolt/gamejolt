@@ -2,10 +2,10 @@
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../../../utils/vue';
-import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
+import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import {
 	libraryFollowCollection,
 	libraryUnfollowCollection,
@@ -15,8 +15,8 @@ import { GameCollection } from '../collection.model';
 
 @Options({
 	directives: {
-		AppTooltip,
-		AppAuthRequired,
+		AppTooltip: vAppTooltip,
+		AppAuthRequired: vAppAuthRequired,
 	},
 })
 export default class AppGameCollectionFollowWidget extends Vue {
@@ -80,8 +80,12 @@ export default class AppGameCollectionFollowWidget extends Vue {
 		}
 
 		return this.isFollowing
-			? this.$gettext('Unfollow this playlist to remove it from your library and stop receiving notifications.')
-			: this.$gettext('Follow this playlist to add it to your library and be notified when new games are added.');
+			? this.$gettext(
+					'Unfollow this playlist to remove it from your library and stop receiving notifications.'
+			  )
+			: this.$gettext(
+					'Follow this playlist to add it to your library and be notified when new games are added.'
+			  );
 	}
 
 	get icon() {

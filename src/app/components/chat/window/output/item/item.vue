@@ -11,7 +11,7 @@ import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { DefaultTheme } from '../../../../../../_common/theme/theme.model';
 import { useThemeStore } from '../../../../../../_common/theme/theme.store';
-import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { ChatStore, ChatStoreKey } from '../../../chat-store';
 import {
 	removeMessage,
@@ -34,7 +34,7 @@ export interface ChatMessageEditEvent {
 		AppChatUserPopover,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppChatWindowOutputItem extends Vue {

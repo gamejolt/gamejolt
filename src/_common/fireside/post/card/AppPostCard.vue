@@ -11,7 +11,7 @@ import AppImgResponsive from '../../../img/AppImgResponsive.vue';
 import AppLoading from '../../../loading/loading.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../../media-item/media-item-model';
-import { AppObserveDimensions } from '../../../observe-dimensions/observe-dimensions.directive';
+import { vAppObserveDimensions } from '../../../observe-dimensions/observe-dimensions.directive';
 import { AppResponsiveDimensions } from '../../../responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../../screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../../scroll/inview/AppScrollInview.vue';
@@ -42,7 +42,7 @@ export const AppPostCardAspectRatio = 10 / 16;
 		AppFadeCollapse,
 	},
 	directives: {
-		AppObserveDimensions,
+		AppObserveDimensions: vAppObserveDimensions,
 	},
 })
 export default class AppPostCard extends Vue {

@@ -2,7 +2,7 @@ import { Directive } from 'vue';
 import { commonStore } from '../store/common-store';
 import { AuthModal } from './auth-modal.service';
 
-export const AppAuthRequired: Directive<HTMLElement, void> = {
+export const vAppAuthRequired: Directive<HTMLElement, void> = {
 	beforeMount(el) {
 		el.addEventListener(
 			'click',

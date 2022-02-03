@@ -7,7 +7,7 @@ import {
 	PostControlsLocation,
 	trackPostPublish,
 } from '../../../../_common/analytics/analytics.service';
-import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import {
 	CommentStoreManager,
 	CommentStoreManagerKey,
@@ -27,7 +27,7 @@ import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerControlsOverlay from '../../../../_common/sticker/controls-overlay/controls-overlay.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion.service';
 import { User } from '../../../../_common/user/user.model';
 import { ActivityFeedItem } from '../../activity/feed/item-service';
@@ -50,8 +50,8 @@ import AppPostControlsUserFollow from './user-follow/user-follow.vue';
 		AppFiresidePostLikeWidget,
 	},
 	directives: {
-		AppTooltip,
-		AppAuthRequired,
+		AppTooltip: vAppTooltip,
+		AppAuthRequired: vAppAuthRequired,
 	},
 })
 export default class AppPostControls extends Vue {

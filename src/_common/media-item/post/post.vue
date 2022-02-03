@@ -14,7 +14,7 @@ import {
 	useStickerTargetController,
 } from '../../sticker/target/target-controller';
 import AppStickerTarget from '../../sticker/target/target.vue';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppVideo from '../../video/video.vue';
 import AppMediaItemBackdrop from '../backdrop/AppMediaItemBackdrop.vue';
@@ -29,7 +29,7 @@ import { MediaItem } from '../media-item-model';
 		AppStickerTarget,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppMediaItemPost extends Vue {

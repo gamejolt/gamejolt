@@ -12,7 +12,7 @@ import { LinkedKey } from '../../../linked-key/linked-key.model';
 import { SellablePricing } from '../../../sellable/pricing/pricing.model';
 import { Sellable } from '../../../sellable/sellable.model';
 import { AppTimeAgo } from '../../../time/ago/ago';
-import { AppTooltip } from '../../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import { User } from '../../../user/user.model';
 import { GameBuild } from '../../build/build.model';
 import { GameDownloader } from '../../downloader/downloader.service';
@@ -33,7 +33,7 @@ import { GamePackageCardModel } from './card.model';
 		AppCountdown,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppGamePackageCard extends Vue {

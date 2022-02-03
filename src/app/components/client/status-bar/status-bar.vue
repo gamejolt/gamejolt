@@ -4,7 +4,7 @@ import { shallowSetup } from '../../../../utils/vue';
 import { ClientUpdater } from '../../../../_common/client/client-updater.service';
 import { Client } from '../../../../_common/client/client.service';
 import { formatNumber } from '../../../../_common/filters/number';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { useClientLibraryStore } from '../../../store/client-library/index';
 import AppClientStatusBarPatchItem from './patch-item/patch-item.vue';
 
@@ -13,7 +13,7 @@ import AppClientStatusBarPatchItem from './patch-item/patch-item.vue';
 		AppClientStatusBarPatchItem,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppClientStatusBar extends Vue {
@@ -47,7 +47,7 @@ export default class AppClientStatusBar extends Vue {
 
 	get currentlyPlayingList() {
 		return this.currentlyPlaying
-			.map(i => this.clientLibrary.gamesById.value[i.game_id].title)
+			.map(i => this.clientLibrary.gamesById.value[i.game_id]?.title ?? 'game')
 			.join(', ');
 	}
 

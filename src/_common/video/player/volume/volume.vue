@@ -7,7 +7,7 @@ import {
 	SettingVideoPlayerMuted,
 } from '../../../settings/settings.service';
 import AppSlider, { ScrubberCallback } from '../../../slider/slider.vue';
-import { AppTooltip } from '../../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import {
 	scrubVideoVolume,
 	setVideoMuted,
@@ -21,7 +21,7 @@ import {
 		AppSlider,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppPlayerVolume extends Vue {

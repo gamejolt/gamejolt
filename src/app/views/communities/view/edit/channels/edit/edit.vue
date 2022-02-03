@@ -6,7 +6,7 @@ import {
 	BaseRouteComponent,
 	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
-import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { CommunityCompetitionHeaderModal } from '../../../../../../components/community/competition/header-modal/header-modal.service';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
 import AppPageHeaderControls from '../../../../../../components/page-header/controls/controls.vue';
@@ -23,7 +23,7 @@ import AppCommunitiesViewPageContainer from '../../../_page-container/page-conta
 		AppPageHeaderControls,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

@@ -23,7 +23,7 @@ import {
 } from '../../../../../../../../_common/route/route-component';
 import { Sellable } from '../../../../../../../../_common/sellable/sellable.model';
 import { AppTimeAgo } from '../../../../../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import FormGamePackage from '../../../../../../../components/forms/game/package/package.vue';
 import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
 import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
@@ -45,7 +45,7 @@ import { useGameDashRouteController } from '../../../manage.store';
 		AppGamePerms,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

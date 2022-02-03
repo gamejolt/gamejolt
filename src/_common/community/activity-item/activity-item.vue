@@ -7,7 +7,7 @@ import { FiresidePost } from '../../fireside/post/post-model';
 import { Game } from '../../game/game.model';
 import { Screen } from '../../screen/screen-service';
 import { AppTimeAgo } from '../../time/ago/ago';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { getSingleReasonText } from '../../user/action-reasons';
 import { UserBlock } from '../../user/block/block.model';
 import AppUserAvatar from '../../user/user-avatar/user-avatar.vue';
@@ -23,7 +23,7 @@ import { CommunityActivityItem } from './activity-item.model';
 		AppUserAvatar,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppCommunityActivityItem extends Vue {

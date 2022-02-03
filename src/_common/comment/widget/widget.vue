@@ -1,19 +1,19 @@
 <script lang="ts">
 import {
-computed,
-inject,
-InjectionKey,
-onUnmounted,
-PropType,
-provide,
-reactive,
-ref,
-toRefs,
-watch
+	computed,
+	inject,
+	InjectionKey,
+	onUnmounted,
+	PropType,
+	provide,
+	reactive,
+	ref,
+	toRefs,
+	watch,
 } from 'vue';
 import { useRoute } from 'vue-router';
 import { illNoComments } from '../../../app/img/ill/illustrations';
-import { AppAuthRequired as vAppAuthRequired } from '../../auth/auth-required-directive';
+import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import { Collaborator } from '../../collaborator/collaborator.model';
 import { Environment } from '../../environment/environment.service';
 import { formatNumber } from '../../filters/number';
@@ -28,22 +28,22 @@ import { User } from '../../user/user.model';
 import FormComment from '../add/add.vue';
 import { canCommentOnModel, Comment, getCommentModelResourceName } from '../comment-model';
 import {
-CommentStoreManagerKey,
-CommentStoreModel,
-fetchCommentThread,
-fetchStoreComments,
-lockCommentStore,
-onCommentAdd as onCommentStoreAdd,
-onCommentEdit as onCommentStoreEdit,
-onCommentRemove as onCommentStoreRemove,
-pinComment as pinStoreComment,
-releaseCommentStore,
-setCommentSort
+	CommentStoreManagerKey,
+	CommentStoreModel,
+	fetchCommentThread,
+	fetchStoreComments,
+	lockCommentStore,
+	onCommentAdd as onCommentStoreAdd,
+	onCommentEdit as onCommentStoreEdit,
+	onCommentRemove as onCommentStoreRemove,
+	pinComment as pinStoreComment,
+	releaseCommentStore,
+	setCommentSort,
 } from '../comment-store';
 import {
-CommentStoreSliceView,
-CommentStoreThreadView,
-CommentStoreView
+	CommentStoreSliceView,
+	CommentStoreThreadView,
+	CommentStoreView,
 } from '../comment-store-view';
 import { DisplayMode } from '../modal/modal.service';
 import AppCommentWidgetComment from './comment/comment.vue';
@@ -109,7 +109,6 @@ export function createCommentWidget($props: typeof props, $emit: typeof emit) {
 		}
 		return showAdd.value;
 	});
-
 
 	const shouldShowTabs = computed(() => {
 		if (!showTabs.value) {

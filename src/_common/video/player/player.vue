@@ -11,7 +11,7 @@ import {
 	AppResponsiveDimensionsChangeEvent,
 } from '../../responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../screen/screen-service';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { VideoSourceArray } from '../video.vue';
 import AppPlayerFullscreen from './AppVideoPlayerFullscreen.vue';
 import AppPlayerPlayback from './AppVideoPlayerPlayback.vue';
@@ -93,7 +93,7 @@ export function createReadableTimestamp(time: number) {
 		AppMediaItemBackdrop,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppVideoPlayer extends Vue {
