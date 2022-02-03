@@ -101,8 +101,6 @@ function _createInviewConfig() {
 	const margin =
 		anchor.value === 'top' ? `-${offset}px 0px 10000px 0px` : `10000px 0px -${offset}px 0px`;
 
-	console.log('margin', margin);
-
 	return new ScrollInviewConfig({ margin, emitsOn: 'full-overlap' });
 }
 </script>

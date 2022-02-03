@@ -10,7 +10,7 @@ import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
-import AppShortkey from '../../../../../_common/shortkey/shortkey.vue';
+import AppShortkey from '../../../../../_common/shortkey/AppShortkey.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { useAppStore } from '../../../../store/index';
