@@ -16,7 +16,7 @@ import AppCommunityVerifiedTick from '../../../../_common/community/verified-tic
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../components/activity/feed/view';
 import AppActivityFeed from '../../../components/activity/feed/feed.vue';
-import AppScrollAffix from '../../../../_common/scroll/affix/affix.vue';
+import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -45,7 +45,7 @@ const shareLink = computed(() =>
 	realm.value ? getAbsoluteLink(router, realm.value.routeLocation) : undefined
 );
 
-const shownCommunities = computed(() => realm.value?.communities ?? []);
+const shownCommunities = computed(() => realm.value?.communities.map(i => i.community) ?? []);
 
 createAppRoute({
 	routeTitle: computed(() =>
@@ -96,25 +96,19 @@ createAppRoute({
 
 						<div class="-communities">
 							<!-- <template v-if="!isOverviewLoaded || isLoadingAllCommunities">
-							<div
-								v-for="i in previewCommunityCount"
-								:key="i"
-								class="-community-item -community-thumb-placeholder"
-							/>
-						</template>
-						<template v-else> -->
-							<!-- <RouterLink
-							v-for="community of shownCommunities"
-							:key="community.id"
-							v-app-tooltip.bottom="community.name"
-							class="-community-item link-unstyled"
-							:to="community.routeLocation"
-						> -->
-							<div
+								<div
+									v-for="i in previewCommunityCount"
+									:key="i"
+									class="-community-item -community-thumb-placeholder"
+								/>
+							</template>
+							<template v-else> -->
+							<RouterLink
 								v-for="community of shownCommunities"
 								:key="community.id"
 								v-app-tooltip.bottom="community.name"
 								class="-community-item link-unstyled"
+								:to="community.routeLocation"
 							>
 								<AppCommunityThumbnailImg
 									class="-community-thumb"
@@ -125,8 +119,7 @@ createAppRoute({
 									:community="community"
 									no-tooltip
 								/>
-							</div>
-							<!-- </RouterLink> -->
+							</RouterLink>
 							<!-- </template> -->
 						</div>
 

@@ -1,7 +1,8 @@
 import { RouteLocationDefinition } from '../../utils/router';
-import { Community } from '../community/community.model';
+import { Api } from '../api/api.service';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
+import { RealmCommunity } from './realm-community-model';
 
 export class Realm extends Model {
 	constructor(data: any = {}) {
@@ -15,17 +16,20 @@ export class Realm extends Model {
 			this.cover = new MediaItem(data.header);
 		}
 
-		this.communities = Community.populate(data.communities);
+		this.communities = RealmCommunity.populate(data.communities);
 	}
 
-	name!: string;
-	path!: string;
-	added_on!: number;
+	declare name: string;
+	declare path: string;
+	declare added_on: number;
 
-	cover!: MediaItem;
-	header!: MediaItem;
+	declare cover: MediaItem;
+	declare header: MediaItem;
 
-	communities!: Community[];
+	declare is_following: boolean;
+	declare follower_count: number;
+
+	declare communities: RealmCommunity[];
 
 	get routeLocation(): RouteLocationDefinition {
 		return {
@@ -38,3 +42,45 @@ export class Realm extends Model {
 }
 
 Model.create(Realm);
+
+export async function followRealm(realm: Realm) {
+	realm.is_following = true;
+	++realm.follower_count;
+
+	try {
+		const response = await Api.sendRequest(
+			`/web/realms/follow/${realm.path}`,
+			{},
+			{ detach: true }
+		);
+
+		if (!response.success) {
+			throw new Error(`Couldn't follow.`);
+		}
+	} catch (e) {
+		realm.is_following = false;
+		--realm.follower_count;
+		throw e;
+	}
+}
+
+export async function unfollowRealm(realm: Realm) {
+	realm.is_following = false;
+	--realm.follower_count;
+
+	try {
+		const response = await Api.sendRequest(
+			`/web/realms/unfollow/${realm.path}`,
+			{},
+			{ detach: true }
+		);
+
+		if (!response.success) {
+			throw new Error(`Couldn't unfollow.`);
+		}
+	} catch (e) {
+		realm.is_following = true;
+		++realm.follower_count;
+		throw e;
+	}
+}

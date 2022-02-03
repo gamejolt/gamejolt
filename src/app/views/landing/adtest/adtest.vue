@@ -6,7 +6,7 @@ import { AdPlaywireAdapter } from '../../../../_common/ad/playwire/playwire-adap
 import { AdProperAdapter } from '../../../../_common/ad/proper/proper-adapter';
 import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
-import AppScrollAffix from '../../../../_common/scroll/affix/affix.vue';
+import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 
 @Options({
 	name: 'RouteLandingAdtest',

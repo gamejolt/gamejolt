@@ -19,7 +19,7 @@ import AppPopper from '../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../_common/report/modal/modal.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../../../_common/scroll/affix/affix.vue';
+import AppScrollAffix from '../../../../../_common/scroll/AppScrollAffix.vue';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { AppScrollTo } from '../../../../../_common/scroll/to/to.directive';
 import { useCommonStore } from '../../../../../_common/store/common-store';

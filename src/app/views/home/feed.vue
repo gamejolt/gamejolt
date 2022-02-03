@@ -19,7 +19,7 @@ import {
 	OptionsForRoute,
 } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
+import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { EventSubscription } from '../../../_common/system/event/event-topic';
 import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';

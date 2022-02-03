@@ -9,16 +9,16 @@ watch(
 	() => unref(hasBanner),
 	isShowing => {
 		if (isShowing) {
-			Scroll.setOffsetTop(50 * 2);
+			Scroll.setOffsetTop(56 * 2);
 		} else {
-			Scroll.setOffsetTop(50);
+			Scroll.setOffsetTop(56);
 		}
 	},
 	{ immediate: true }
 );
 
 onUnmounted(() => {
-	Scroll.setOffsetTop(50);
+	Scroll.setOffsetTop(56);
 });
 </script>
 

@@ -11,7 +11,7 @@ import {
 	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../../../../../_common/scroll/affix/affix.vue';
+import AppScrollAffix from '../../../../../../../_common/scroll/AppScrollAffix.vue';
 import { AppNoAutoscroll } from '../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';

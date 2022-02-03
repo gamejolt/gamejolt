@@ -4,7 +4,7 @@ import { Options, Vue } from 'vue-property-decorator';
 import { useAdsController } from '../../../../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../../../../_common/ad/widget/widget.vue';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../../../../../_common/scroll/affix/affix.vue';
+import AppScrollAffix from '../../../../../../../_common/scroll/AppScrollAffix.vue';
 import AppGameList from '../../../../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../../../../components/game/list/placeholder/placeholder.vue';
 import { useGameRouteController } from '../../view.vue';
