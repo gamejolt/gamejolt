@@ -4,7 +4,7 @@ import { shallowSetup } from '../../../../utils/vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import { StreamSetupModal } from '../../../components/fireside/stream/setup/setup-modal.service';
@@ -18,7 +18,7 @@ import AppFiresideSettingsPopper from '../_settings-popper/settings-popper.vue';
 		AppFiresideSettingsPopper,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppFiresideHeader extends Vue {

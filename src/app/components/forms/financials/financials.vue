@@ -12,7 +12,7 @@ import {
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import { Navigate } from '../../../../_common/navigate/navigate.service';
 import { ReferralEntry } from '../../../../_common/referral-entry/referral-entry.model';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserStripeManagedAccount } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
 import { User } from '../../../../_common/user/user.model';
 import AppDeveloperTerms from './developer-terms/developer-terms.vue';
@@ -36,7 +36,7 @@ class Wrapper extends BaseForm<FormModel> {}
 		FormFinancialsManagedAccount,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class FormFinancials
@@ -156,7 +156,9 @@ export default class FormFinancials
 			<!-- If they haven't accepted any terms yet. -->
 			<fieldset v-if="!hasSignedAgreement && partner">
 				<legend>
-					<AppTranslate>To start, which type of account would you like to set up?</AppTranslate>
+					<AppTranslate
+						>To start, which type of account would you like to set up?</AppTranslate
+					>
 				</legend>
 
 				<div class="row">

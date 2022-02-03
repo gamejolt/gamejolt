@@ -2,7 +2,7 @@
 import { defineAsyncComponent } from 'vue';
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { AppAuthRequired } from '../../../auth/auth-required-directive';
+import { vAppAuthRequired } from '../../../auth/auth-required-directive';
 import { Clipboard } from '../../../clipboard/clipboard-service';
 import { Collaborator } from '../../../collaborator/collaborator.model';
 import { Environment } from '../../../environment/environment.service';
@@ -19,7 +19,7 @@ import { ReportModal } from '../../../report/modal/modal.service';
 import { canPlaceStickerOnComment } from '../../../sticker/placement/placement.model';
 import { useCommonStore } from '../../../store/common-store';
 import AppTimelineListItem from '../../../timeline-list/item/item.vue';
-import { AppTooltip } from '../../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import FormComment from '../../add/add.vue';
 import AppCommentContent from '../../AppCommentContent.vue';
 import { Comment, getCommentBlockReason } from '../../comment-model';
@@ -49,8 +49,8 @@ let CommentNum = 0;
 		}),
 	},
 	directives: {
-		AppTooltip,
-		AppAuthRequired,
+		AppTooltip: vAppTooltip,
+		AppAuthRequired: vAppAuthRequired,
 	},
 })
 export default class AppCommentWidgetComment extends Vue {

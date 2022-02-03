@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import { Environment } from '../../_common/environment/environment.service';
 import AppJolticon from '../../_common/jolticon/AppJolticon.vue';
 import { Sellable } from '../../_common/sellable/sellable.model';
-import { AppTooltip as vAppTooltip } from '../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../_common/tooltip/tooltip-directive';
 import { useWidgetPackageStore } from '../store/index';
 import AppIncludedItems from './AppIncludedItems.vue';
 import AppModal from './AppModal.vue';

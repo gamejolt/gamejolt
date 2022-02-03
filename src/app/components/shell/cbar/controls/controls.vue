@@ -5,7 +5,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { DefaultTheme } from '../../../../../_common/theme/theme.model';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { useAppStore } from '../../../../store/index';
 import { ChatStore, ChatStoreKey } from '../../../chat/chat-store';
 import AppShellCbarItem from '../item/item.vue';
@@ -15,7 +15,7 @@ import AppShellCbarItem from '../item/item.vue';
 		AppShellCbarItem,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppShellCbarControls extends Vue {

@@ -3,7 +3,7 @@ import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Game } from '../../../../_common/game/game.model';
 import AppNavTabList from '../../../../_common/nav/tab-list/tab-list.vue';
 import { Site } from '../../../../_common/site/site-model';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppSitesManagePageDomain from './domain.vue';
 import AppSitesManagePageStatic from './static.vue';
 import AppSitesManagePageTemplate from './template.vue';
@@ -16,7 +16,7 @@ import AppSitesManagePageTemplate from './template.vue';
 		AppSitesManagePageDomain,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppSitesManagePage extends Vue {

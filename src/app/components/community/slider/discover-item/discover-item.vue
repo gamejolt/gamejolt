@@ -1,14 +1,14 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-property-decorator';
 import AppCommunityDiscoverWidget from '../../../../../_common/community/discover-widget/discover-widget.vue';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
 @Options({
 	components: {
 		AppCommunityDiscoverWidget,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppCommunitySliderDiscoverItem extends Vue {}

@@ -22,7 +22,7 @@ import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { EventSubscription } from '../../../_common/system/event/event-topic';
-import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppUserCard from '../../../_common/user/card/card.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../components/activity/feed/view';
@@ -67,7 +67,7 @@ export class RouteActivityFeedController {
 		RouteHomeFyp: defineAsyncComponent(() => asyncRouteLoader(router, import('./fyp.vue'))),
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

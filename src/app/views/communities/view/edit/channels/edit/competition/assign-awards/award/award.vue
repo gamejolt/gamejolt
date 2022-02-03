@@ -14,7 +14,7 @@ import {
 	BaseRouteComponent,
 	OptionsForRoute,
 } from '../../../../../../../../../../_common/route/route-component';
-import { AppTooltip } from '../../../../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../../../../_common/tooltip/tooltip-directive';
 import { CommunityCompetitionEntryModal } from '../../../../../../../../../components/community/competition/entry/modal/modal.service';
 
 type Payload = {
@@ -51,7 +51,7 @@ function makeRequest(route: RouteLocationNormalized, page = 1, filterValue = '')
 		AppPagination,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

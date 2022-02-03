@@ -13,7 +13,7 @@ import {
 	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
-import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
 import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector.vue';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
@@ -31,7 +31,7 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppCommunityPerms,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

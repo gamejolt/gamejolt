@@ -15,7 +15,7 @@ import {
 	OptionsForRoute,
 } from '../../../../../../../../_common/route/route-component';
 import { Sellable } from '../../../../../../../../_common/sellable/sellable.model';
-import { AppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
 import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
 import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
@@ -31,7 +31,7 @@ import { useGameDashRouteController } from '../../../manage.store';
 		AppCardListDraggable,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

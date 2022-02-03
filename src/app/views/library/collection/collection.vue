@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import { enforceLocation } from '../../../../utils/router';
 import { shallowSetup } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
-import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { formatNumber } from '../../../../_common/filters/number';
 import { GameBundle } from '../../../../_common/game-bundle/game-bundle.model';
 import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
@@ -17,7 +17,7 @@ import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/r
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { User } from '../../../../_common/user/user.model';
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import AppGameCollectionFollowWidget from '../../../components/game/collection/follow-widget/follow-widget.vue';
@@ -55,8 +55,8 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 		AppLoadingFade,
 	},
 	directives: {
-		AppTooltip,
-		AppAuthRequired,
+		AppTooltip: vAppTooltip,
+		AppAuthRequired: vAppAuthRequired,
 	},
 })
 @OptionsForRoute({

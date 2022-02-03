@@ -8,13 +8,13 @@ import {
 	BaseRouteComponent,
 	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
-import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { useGameDashRouteController } from '../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageApiOverview',
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

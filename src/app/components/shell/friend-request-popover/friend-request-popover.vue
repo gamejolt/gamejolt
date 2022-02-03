@@ -6,7 +6,7 @@ import { Connection } from '../../../../_common/connection/connection-service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
 import { useAppStore } from '../../../store';
 import { UserFriendshipHelper } from '../../user/friendships-helper/friendship-helper.service';
@@ -21,7 +21,7 @@ type Tab = 'requests' | 'pending';
 		AppShellFriendRequestPopoverItem,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppShellFriendRequestPopover extends Vue {

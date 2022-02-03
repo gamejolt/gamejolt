@@ -2,14 +2,14 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
 @Options({
 	components: {
 		AppTimelineListItem,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppShellNotificationPopoverStickerNavItem extends Vue {

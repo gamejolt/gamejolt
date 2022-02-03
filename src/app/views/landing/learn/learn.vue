@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { imageJolt } from '../../../img/images';
 
@@ -15,7 +15,7 @@ import { imageJolt } from '../../../img/images';
 		AppThemeSvg,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute()

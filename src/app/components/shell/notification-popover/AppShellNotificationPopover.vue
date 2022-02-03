@@ -9,7 +9,7 @@ import { Notification } from '../../../../_common/notification/notification-mode
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useEventSubscription } from '../../../../_common/system/event/event-topic';
-import { AppTooltip as vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { useAppStore } from '../../../store';
 import { ActivityFeedView } from '../../activity/feed/view';
 import { onNewStickers } from '../../grid/client.service';

@@ -4,7 +4,7 @@ import { Emit, Options, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../../utils/vue';
 import { stopStreaming } from '../../../../_common/fireside/rtc/producer';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import { StreamSetupModal } from '../../../components/fireside/stream/setup/setup-modal.service';
 import AppFiresideSettingsPopper from '../_settings-popper/settings-popper.vue';
@@ -14,7 +14,7 @@ import AppFiresideSettingsPopper from '../_settings-popper/settings-popper.vue';
 		AppFiresideSettingsPopper,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppFiresideStreamOptions extends Vue {

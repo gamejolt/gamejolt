@@ -12,7 +12,7 @@ import AppPopper from '../../../../../_common/popper/popper.vue';
 import { useSidebarStore } from '../../../../../_common/sidebar/sidebar.store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { useAppStore } from '../../../../store';
 import { AppCommunityPerms } from '../../../community/perms/perms';
 import AppShellCbarItem from '../item/item.vue';
@@ -26,7 +26,7 @@ import AppShellCbarItem from '../item/item.vue';
 		AppMediaItemBackdrop,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppShellCbarCommunity extends Vue {

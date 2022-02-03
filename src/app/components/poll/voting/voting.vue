@@ -1,7 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
 import { PollItem } from '../../../../_common/poll/item/item.model';
@@ -17,7 +17,7 @@ import { User } from '../../../../_common/user/user.model';
 		AppTimeAgo,
 	},
 	directives: {
-		AppAuthRequired,
+		AppAuthRequired: vAppAuthRequired,
 	},
 })
 export default class AppPollVoting extends Vue {

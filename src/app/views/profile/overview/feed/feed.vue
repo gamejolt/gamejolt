@@ -9,7 +9,7 @@ import AppIllustration from '../../../../../_common/illustration/AppIllustration
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import AppActivityFeedPlaceholder from '../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
@@ -40,7 +40,7 @@ function getFetchUrl(route: RouteLocationNormalized) {
 		AppIllustration,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

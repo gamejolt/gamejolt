@@ -3,17 +3,17 @@ import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { useAppStore } from '../../../app/store';
 import { CommunityJoinLocation } from '../../analytics/analytics.service';
-import { AppAuthRequired } from '../../auth/auth-required-directive';
+import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import { formatNumber } from '../../filters/number';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { useCommonStore } from '../../store/common-store';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { Community } from '../community.model';
 
 @Options({
 	directives: {
-		AppAuthRequired,
-		AppTooltip,
+		AppAuthRequired: vAppAuthRequired,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppCommunityJoinWidget extends Vue {

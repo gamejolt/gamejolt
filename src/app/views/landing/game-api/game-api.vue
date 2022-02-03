@@ -4,7 +4,7 @@ import { Api } from '../../../../_common/api/api.service';
 import { formatNumber } from '../../../../_common/filters/number';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { imageJolt } from '../../../img/images';
 
 @Options({
@@ -13,7 +13,7 @@ import { imageJolt } from '../../../img/images';
 		AppThemeSvg,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

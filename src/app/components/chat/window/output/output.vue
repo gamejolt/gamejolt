@@ -6,7 +6,7 @@ import { shallowSetup } from '../../../../../utils/vue';
 import { formatDate } from '../../../../../_common/filters/date';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
-import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
+import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppScrollScroller, {
 	createScroller,
 } from '../../../../../_common/scroll/AppScrollScroller.vue';
@@ -27,7 +27,7 @@ import AppChatWindowOutputItem from './item/item.vue';
 		AppIllustration,
 	},
 	directives: {
-		AppObserveDimensions,
+		AppObserveDimensions: vAppObserveDimensions,
 	},
 })
 export default class AppChatWindowOutput extends Vue {

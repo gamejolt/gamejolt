@@ -4,7 +4,7 @@ import { Analytics } from '../../../analytics/analytics.service';
 import AppCard from '../../../card/AppCard.vue';
 import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
 import { Navigate } from '../../../navigate/navigate.service';
-import { AppTooltip } from '../../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import { GameBuild } from '../../build/build.model';
 import { GameExternalPackage } from '../external-package.model';
 
@@ -14,7 +14,7 @@ import { GameExternalPackage } from '../external-package.model';
 		AppFadeCollapse,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppGameExternalPackageCard extends Vue {

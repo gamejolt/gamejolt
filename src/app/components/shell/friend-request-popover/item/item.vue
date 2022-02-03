@@ -7,7 +7,7 @@ import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../../_common/user/friendship/friendship.model';
 import AppUserAvatarImg from '../../../../../_common/user/user-avatar/img/img.vue';
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
@@ -22,7 +22,7 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` }
 		AppUserVerifiedTick,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppShellFriendRequestPopoverItem extends Vue {

@@ -14,7 +14,7 @@ import { HistoryTick } from '../../../../_common/history-tick/history-tick-servi
 import { Navigate } from '../../../../_common/navigate/navigate.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { AppScrollTo } from '../../../../_common/scroll/to/to.directive';
+import { vAppScrollTo } from '../../../../_common/scroll/to/to.directive';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { imageJolt } from '../../../img/images';
 
@@ -24,7 +24,7 @@ import { imageJolt } from '../../../img/images';
 		AppThemeSvg,
 	},
 	directives: {
-		AppScrollTo,
+		AppScrollTo: vAppScrollTo,
 	},
 })
 @OptionsForRoute({

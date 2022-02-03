@@ -12,10 +12,10 @@ import { GamePackagePayloadModel } from '../../../../_common/game/package/packag
 import { GamePackagePurchaseModal } from '../../../../_common/game/package/purchase-modal/purchase-modal.service';
 import { Popper } from '../../../../_common/popper/popper.service';
 import AppPopper from '../../../../_common/popper/popper.vue';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import {
-findPackageToRepresentGameStatus,
-useClientLibraryStore
+	findPackageToRepresentGameStatus,
+	useClientLibraryStore,
 } from '../../../store/client-library';
 // import {
 // 	ClientLibraryAction,
@@ -32,7 +32,7 @@ import { LocalDbPackage } from '../local-db/package/package.model';
 		AppClientInstallProgress,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppClientGameButtons extends Vue {
@@ -378,14 +378,7 @@ export default class AppClientGameButtons extends Vue {
 					@show="emitShowLaunchOptions()"
 					@hide="emitHideLaunchOptions()"
 				>
-					<AppButton
-						primary
-						solid
-						icon="play"
-						:overlay="overlay"
-						:sm="small"
-						:lg="large"
-					>
+					<AppButton primary solid icon="play" :overlay="overlay" :sm="small" :lg="large">
 						<AppTranslate>Launch</AppTranslate>
 					</AppButton>
 

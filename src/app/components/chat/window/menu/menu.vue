@@ -3,7 +3,7 @@ import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ChatStore, ChatStoreKey } from '../../chat-store';
 import { leaveGroupRoom } from '../../client';
 import AppChatNotificationSettings from '../../notification-settings/notification-settings.vue';
@@ -17,7 +17,7 @@ import { ChatRoomDetailsModal } from '../../room-details-modal/room-details-moda
 		AppChatNotificationSettings,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppChatWindowMenu extends Vue {
@@ -82,10 +82,7 @@ export default class AppChatWindowMenu extends Vue {
 						<hr />
 					</template>
 
-					<AppChatNotificationSettings
-						:room-id="room.id"
-						:is-pm-room="room.isPmRoom"
-					/>
+					<AppChatNotificationSettings :room-id="room.id" :is-pm-room="room.isPmRoom" />
 
 					<template v-if="shouldShowLeave">
 						<hr />

@@ -6,8 +6,8 @@ import {
 } from '../../../../../_common/community/community.model';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../../../../_common/media-item/media-item-model';
-import { AppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
 // Sync up with the './variables' file.
 const CARD_WIDTH = 270;
@@ -18,8 +18,8 @@ const CARD_HEIGHT = 70;
 		AppMediaItemBackdrop,
 	},
 	directives: {
-		AppTooltip,
-		AppObserveDimensions,
+		AppTooltip: vAppTooltip,
+		AppObserveDimensions: vAppObserveDimensions,
 	},
 })
 export default class AppCommunityChannelCard extends Vue {

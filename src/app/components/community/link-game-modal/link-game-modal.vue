@@ -7,7 +7,7 @@ import AppGameThumbnailImg from '../../../../_common/game/thumbnail-img/thumbnai
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../_common/modal/base';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 
 @Options({
 	components: {
@@ -15,7 +15,7 @@ import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 		AppGameThumbnailImg,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppCommunityLinkGameModal extends mixins(BaseModal) {

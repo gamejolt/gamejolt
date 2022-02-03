@@ -4,7 +4,7 @@ import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../../utils/vue';
 import { FiresideRTCUser, setAudioPlayback } from '../../../../_common/fireside/rtc/user';
 import AppPopper from '../../../../_common/popper/popper.vue';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
@@ -20,7 +20,7 @@ import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';
 		AppUserCardHover,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppFiresideHostThumb extends Vue {

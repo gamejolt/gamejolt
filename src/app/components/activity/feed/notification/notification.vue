@@ -14,7 +14,7 @@ import { NotificationText } from '../../../../../_common/notification/notificati
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { BaseTrophy } from '../../../../../_common/trophy/base-trophy.model';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
@@ -35,7 +35,7 @@ import { ActivityFeedKey, ActivityFeedView } from '../view';
 		AppCommunityThumbnailImg,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppActivityFeedNotification extends Vue {
@@ -180,9 +180,7 @@ export default class AppActivityFeedNotification extends Vue {
 							<div class="-container">
 								<div class="-main">
 									<div
-										class="
-											timeline-list-item-title timeline-list-item-title-small
-										"
+										class="timeline-list-item-title timeline-list-item-title-small"
 										v-html="titleText"
 									/>
 
@@ -268,10 +266,7 @@ export default class AppActivityFeedNotification extends Vue {
 				</div>
 				<div v-if="isNew" class="-actions">
 					<a @click.stop.prevent="onMarkRead">
-						<AppJolticon
-							v-app-tooltip="$gettext(`Mark as Read`)"
-							icon="radio-circle"
-						/>
+						<AppJolticon v-app-tooltip="$gettext(`Mark as Read`)" icon="radio-circle" />
 					</a>
 				</div>
 			</div>
