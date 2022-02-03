@@ -21,10 +21,16 @@ defineProps({
 .-thumb
 	img-circle()
 	change-bg('bg-offset')
+	position: relative
+	height: 0
+	padding-top: 100%
 	overflow: hidden
 
 .-img
-	object-fit: cover
+	position: absolute
+	top: 0
+	left: 0
 	width: 100%
 	height: 100%
+	object-fit: cover
 </style>
