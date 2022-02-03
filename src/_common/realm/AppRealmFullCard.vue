@@ -22,7 +22,7 @@ defineProps({
 		</div>
 
 		<div class="-content">
-			<AppRealmFollowButton :realm="realm" block primary />
+			<AppRealmFollowButton :realm="realm" block />
 		</div>
 	</div>
 </template>

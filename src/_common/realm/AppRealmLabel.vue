@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { Realm } from './realm-model';
-import AppImgResponsive from '../img/AppImgResponsive.vue';
+import AppRealmThumbnail from './AppRealmThumbnail.vue';
 
 defineProps({
 	realm: {
@@ -14,7 +14,7 @@ defineProps({
 <template>
 	<div class="-label">
 		<div class="-avatar">
-			<AppImgResponsive :src="realm.cover.mediaserver_url" alt="" />
+			<AppRealmThumbnail :realm="realm" />
 		</div>
 		<div class="-content">{{ realm.name }}</div>
 	</div>

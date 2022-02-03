@@ -4,7 +4,6 @@ import { Api } from '../../../../_common/api/api.service';
 import { Realm } from '../../../../_common/realm/realm-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
-import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { getAbsoluteLink } from '../../../../utils/router';
@@ -18,6 +17,11 @@ import { ActivityFeedView } from '../../../components/activity/feed/view';
 import AppActivityFeed from '../../../components/activity/feed/feed.vue';
 import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 import { User } from '../../../../_common/user/user.model';
+import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppRealmThumbnail from '../../../../_common/realm/AppRealmThumbnail.vue';
+import AppRealmFollowButton from '../../../../_common/realm/AppRealmFollowButton.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -36,7 +40,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 const router = useRouter();
 const route = useRoute();
 
@@ -82,31 +85,45 @@ createAppRoute({
 
 <template>
 	<div class="fill-backdrop">
-		<section class="section">
-			<AppPageContainer v-if="realm" xl>
-				<template #default>
-					<AppActivityFeed v-if="feed?.isBootstrapped" :feed="feed" />
-				</template>
+		<section v-if="realm" class="section">
+			<div class="container-xl">
+				<div class="row">
+					<div class="col-lg-3">
+						<AppScrollAffix :disabled="!Screen.isLg">
+							<AppRealmFullCard v-if="Screen.isLg" :realm="realm" />
+							<template v-else>
+								<h1 class="-heading">
+									<AppRealmThumbnail class="-thumb" :realm="realm" />
+									<span class="-heading-text">{{ realm.name }}</span>
+									<AppButton
+										class="-more"
+										icon="ellipsis-h"
+										sparse
+										circle
+										trans
+									/>
+								</h1>
 
-				<template #left>
-					<AppScrollAffix>
-						<AppRealmFullCard :realm="realm" />
+								<AppRealmFollowButton class="-follow" :realm="realm" block />
+							</template>
 
-						<AppUserKnownFollowers
-							:users="knownFollowers"
-							:count="knownFollowerCount"
-						/>
-					</AppScrollAffix>
-				</template>
+							<div class="-followers">
+								<AppUserKnownFollowers
+									:users="knownFollowers"
+									:count="knownFollowerCount"
+								/>
+							</div>
+						</AppScrollAffix>
+					</div>
 
-				<template #right>
-					<AppScrollAffix>
-						<h4 class="sans-margin-top">
-							<AppTranslate>Top Contributing Communities</AppTranslate>
-						</h4>
+					<div class="col-lg-3 col-lg-push-6">
+						<AppScrollAffix :disabled="!Screen.isLg">
+							<h5 class="-communities-header sans-margin-top">
+								<AppTranslate>Top Contributing Communities</AppTranslate>
+							</h5>
 
-						<div class="-communities">
-							<!-- <template v-if="!isOverviewLoaded || isLoadingAllCommunities">
+							<div class="-communities">
+								<!-- <template v-if="!isOverviewLoaded || isLoadingAllCommunities">
 								<div
 									v-for="i in previewCommunityCount"
 									:key="i"
@@ -114,40 +131,93 @@ createAppRoute({
 								/>
 							</template>
 							<template v-else> -->
-							<RouterLink
-								v-for="community of shownCommunities"
-								:key="community.id"
-								v-app-tooltip.bottom="community.name"
-								class="-community-item link-unstyled"
-								:to="community.routeLocation"
-							>
-								<AppCommunityThumbnailImg
-									class="-community-thumb"
-									:community="community"
-								/>
-								<AppCommunityVerifiedTick
-									class="-community-verified-tick"
-									:community="community"
-									no-tooltip
-								/>
-							</RouterLink>
-							<!-- </template> -->
-						</div>
+								<RouterLink
+									v-for="community of shownCommunities"
+									:key="community.id"
+									v-app-tooltip.bottom="community.name"
+									class="-community-item link-unstyled"
+									:to="community.routeLocation"
+								>
+									<AppCommunityThumbnailImg
+										class="-community-thumb"
+										:community="community"
+									/>
+									<AppCommunityVerifiedTick
+										class="-community-verified-tick"
+										:community="community"
+										no-tooltip
+									/>
+								</RouterLink>
+								<!-- </template> -->
+							</div>
 
-						<AppShareCard v-if="shareLink" resource="realm" :url="shareLink" />
-					</AppScrollAffix>
-				</template>
-			</AppPageContainer>
+							<AppShareCard
+								v-if="shareLink && Screen.isLg"
+								resource="realm"
+								:url="shareLink"
+							/>
+						</AppScrollAffix>
+					</div>
+
+					<div class="col-lg-6 col-lg-pull-3">
+						<AppActivityFeed v-if="feed?.isBootstrapped" :feed="feed" />
+					</div>
+				</div>
+			</div>
 		</section>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
+.-heading
+	display: flex
+	flex-direction: row
+	align-items: center
+	font-size: 18px
+	height: 48px
+	margin: 0
+	margin-bottom: 8px
+
+.-thumb
+	flex: none
+	width: 24px
+	height: 24px
+	margin-right: 8px
+
+.-heading-text
+	text-overflow()
+	flex: auto
+
+.-more
+	flex: none
+
+.-follow
+	margin-bottom: 8px
+
+.-followers
+	display: flex
+	align-items: center
+	justify-content: center
+
+	@media $media-lg-up
+		display: block
+
+.-communities-header
+	margin-top: 32px
+	font-size: $font-size-small
+
+	@media $media-lg-up
+		margin-top: 0
+		font-size: $font-size-base
+
 .-communities
 	display: grid
-	grid-template-columns: repeat(5, minmax(55px, 1fr))
+	grid-template-columns: repeat(10, minmax(24px, 1fr))
 	grid-gap: 8px
 	margin-bottom: 54px
+
+	@media $media-lg-up
+		grid-template-columns: repeat(5, minmax(55px, 1fr))
 
 .-community-item
 	pressy()

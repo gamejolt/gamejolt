@@ -60,6 +60,7 @@ async function onClick() {
 <template>
 	<AppButton
 		v-app-auth-required
+		primary
 		:block="block"
 		:solid="realm.is_following"
 		:disabled="isProcessing"
