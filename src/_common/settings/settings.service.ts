@@ -1,5 +1,3 @@
-import type * as nodePath from 'path';
-
 const STORAGE_PREFIX = 'settings.';
 
 type SettingType = string | number | boolean;
@@ -68,7 +66,7 @@ class BooleanSetting extends SettingBase<boolean> {
 export const SettingThemeDark = new BooleanSetting('theme-dark', true);
 export const SettingThemeAlwaysOurs = new BooleanSetting('theme-always-ours', false);
 export const SettingGameInstallDir = new StringSetting('game-install-dir', () => {
-	const path = require('path') as typeof nodePath;
+	const path = require('path') as typeof import('path');
 	const dataPath = nw.App.dataPath;
 
 	return path.join(dataPath, 'Games');

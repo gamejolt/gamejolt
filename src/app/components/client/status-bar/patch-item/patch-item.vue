@@ -1,7 +1,8 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../../utils/vue';
 import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
-// import { ClientLibraryState, ClientLibraryStore } from '../../../../store/client-library';
+import { useClientLibraryStore } from '../../../../store/client-library/index';
 
 @Options({
 	components: {
@@ -11,28 +12,25 @@ import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
 export default class AppClientStatusBarPatchItem extends Vue {
 	@Prop(Number) packageId!: number;
 
-	// @ClientLibraryState packages!: ClientLibraryStore['packages'];
-	packages!: any;
-	// @ClientLibraryState numPatching!: ClientLibraryStore['numPatching'];
-	numPatching!: any;
+	readonly clientLibrary = shallowSetup(() => useClientLibraryStore());
 
 	get pkg() {
-		return this.packages.find(i => i.id === this.packageId);
+		return this.clientLibrary.packagesById.value[this.packageId];
 	}
 
 	get width() {
-		return (1 / this.numPatching) * 100.0 + '%';
+		return (1 / this.clientLibrary.numPatching.value) * 100.0 + '%';
 	}
 }
 </script>
 
 <template>
 	<AppProgressBar
-		:percent="(pkg.patchProgress || 0) * 100"
+		:percent="(pkg?.patchProgress || 0) * 100"
 		thin
 		:style="{ width }"
-		:active="pkg.isUnpacking"
-		:indeterminate="pkg.isUnpacking"
+		:active="pkg?.isUnpacking ?? false"
+		:indeterminate="pkg?.isUnpacking ?? false"
 	/>
 </template>
 

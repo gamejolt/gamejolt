@@ -1,10 +1,11 @@
 <script lang="ts">
 import { Options, Vue, Watch } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../utils/vue';
 import { ClientUpdater } from '../../../../_common/client/client-updater.service';
 import { Client } from '../../../../_common/client/client.service';
 import { formatNumber } from '../../../../_common/filters/number';
 import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-// import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
+import { useClientLibraryStore } from '../../../store/client-library/index';
 import AppClientStatusBarPatchItem from './patch-item/patch-item.vue';
 
 @Options({
@@ -16,25 +17,15 @@ import AppClientStatusBarPatchItem from './patch-item/patch-item.vue';
 	},
 })
 export default class AppClientStatusBar extends Vue {
-	// @ClientLibraryState
-	// gamesById!: ClientLibraryStore['gamesById'];
-	gamesById: any = {};
+	readonly clientLibrary = shallowSetup(() => useClientLibraryStore());
 
 	// @ClientLibraryState
 	// numPlaying!: ClientLibraryStore['numPlaying'];
 	numPlaying: any = 0;
 
 	// @ClientLibraryState
-	// numPatching!: ClientLibraryStore['numPatching'];
-	numPatching: any = 0;
-
-	// @ClientLibraryState
 	// currentlyPlaying!: ClientLibraryStore['currentlyPlaying'];
 	currentlyPlaying: any = [];
-
-	// @ClientLibraryState
-	// currentlyPatching!: ClientLibraryStore['currentlyPatching'];
-	currentlyPatching: any = {};
 
 	updaterWarningDismissed = false;
 
@@ -50,12 +41,18 @@ export default class AppClientStatusBar extends Vue {
 		);
 	}
 
+	get numPatching() {
+		return this.clientLibrary.numPatching.value;
+	}
+
 	get currentlyPlayingList() {
-		return this.currentlyPlaying.map(i => this.gamesById[i.game_id].title).join(', ');
+		return this.currentlyPlaying
+			.map(i => this.clientLibrary.gamesById.value[i.game_id].title)
+			.join(', ');
 	}
 
 	get currentlyPatchingIds() {
-		return Object.keys(this.currentlyPatching).map(i => parseInt(i, 10));
+		return Object.keys(this.clientLibrary.currentlyPatching.value).map(i => parseInt(i, 10));
 	}
 
 	get hasUpdate() {

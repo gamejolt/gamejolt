@@ -1,15 +1,15 @@
 import { h } from 'vue';
 import { Options, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../utils/vue';
 import { Client } from '../../../../_common/client/client.service';
-// import { ClientLibraryState, ClientLibraryStore } from '../../../store/client-library';
+import { useClientLibraryStore } from '../../../store/client-library/index';
 
 @Options({})
 export class AppClientSystemProgress extends Vue {
-	// @ClientLibraryState totalPatchProgress!: ClientLibraryStore['totalPatchProgress'];
-	totalPatchProgress: any = 0;
+	readonly clientLibrary = shallowSetup(() => useClientLibraryStore());
 
 	render() {
-		const progress = this.totalPatchProgress;
+		const progress = this.clientLibrary.totalPatchProgress.value;
 		if (progress === null) {
 			Client.clearProgressBar();
 		} else {

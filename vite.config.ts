@@ -1,10 +1,10 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
-import * as path from 'path';
 import { defineConfig, UserConfig as ViteUserConfigActual } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
 import viteHtmlResolve from './scripts/build/vite-html-resolve';
 import { parseAndInferOptionsFromEnv } from './scripts/build/vite-options';
 
+const path = require('path') as typeof import('path');
 const fs = require('fs-extra') as typeof import('fs-extra');
 
 type ViteUserConfig = ViteUserConfigActual & {

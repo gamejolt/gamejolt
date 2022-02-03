@@ -1,9 +1,10 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../../utils/vue';
 import AppGameThumbnail from '../../../../../_common/game/thumbnail/AppGameThumbnail.vue';
 import AppClientGameButtons from '../../../../components/client/game-buttons/game-buttons.vue';
 import { LocalDbGame } from '../../../../components/client/local-db/game/game.model';
-// import { ClientLibraryState, ClientLibraryStore } from '../../../../store/client-library';
+import { useClientLibraryStore } from '../../../../store/client-library/index';
 
 @Options({
 	components: {
@@ -15,34 +16,30 @@ export default class AppLibraryInstalledGame extends Vue {
 	@Prop(Object)
 	game!: LocalDbGame;
 
-	// @ClientLibraryState
-	// packagesByGameId!: ClientLibraryStore['packagesByGameId'];
-	packagesByGameId!: any;
-
-	// @ClientLibraryState
-	// packages!: ClientLibraryStore['packages'];
-	packages!: any;
+	readonly clientLibrary = shallowSetup(() => useClientLibraryStore());
 
 	isHovering = false;
 	isShowingOptions = false;
 	isShowingLaunchOptions = false;
 
 	get hasMultiplePackages() {
-		return this.packagesByGameId[this.game.id].length > 1;
+		const len = this.clientLibrary.packagesByGameId.value[this.game.id]?.length ?? 0;
+		return len > 1;
 	}
 
 	get packageVersion() {
-		return this.packagesByGameId[this.game.id][0].release.version_number;
+		const firstPackage = this.clientLibrary.packagesByGameId.value[this.game.id]?.[0] ?? null;
+		return firstPackage?.release.version_number ?? '0.0.0';
 	}
 
 	get isInstalling() {
-		return this.packages.some(i => {
+		return this.clientLibrary.packages.value.some(i => {
 			return !!i.install_state && i.game_id === this.game.id;
 		});
 	}
 
 	get isUpdating() {
-		return this.packages.some(i => {
+		return this.clientLibrary.packages.value.some(i => {
 			return !!i.update_state && i.game_id === this.game.id;
 		});
 	}
