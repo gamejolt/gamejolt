@@ -8,7 +8,7 @@ import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
 import AppFormControlUpload, {
 	AppFormControlUploadInterface,
 } from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
-import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
+import { vAppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
 import {
 	BaseForm,
 	FormOnLoad,
@@ -54,7 +54,7 @@ class Wrapper extends BaseForm<FormModel> {}
 		AppVideoProcessingProgress,
 	},
 	directives: {
-		AppFocusWhen,
+		AppFocusWhen: vAppFocusWhen,
 	},
 })
 export default class AppFormPostVideo

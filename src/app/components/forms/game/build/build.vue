@@ -20,7 +20,7 @@ import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
 import { AppProgressPoller } from '../../../../../_common/progress/poller/poller';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { useFormGameRelease } from '../release/release.vue';
 import { ArchiveFileSelectorModal } from './archive-file-selector-modal.service';
 
@@ -52,7 +52,7 @@ class Wrapper extends BaseForm<GameBuildFormModel> {}
 		AppFormControlToggle,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad {
@@ -734,11 +734,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 
 											<span class="input-group-addon">
 												<a
-													v-app-tooltip="
-														$gettext(
-															`Browse file list.`
-														)
-													"
+													v-app-tooltip="$gettext(`Browse file list.`)"
 													class="link-unstyled"
 													@click="openFileSelector(platform.key)"
 												>
@@ -749,11 +745,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 
 										<AppFormControlErrors
 											:ignore-dirty="true"
-											:label="
-												$gettext(
-													`path to the executable file`
-												)
-											"
+											:label="$gettext(`path to the executable file`)"
 										/>
 									</div>
 								</AppFormGroup>
@@ -880,7 +872,8 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 						>
 							<p class="help-block">
 								<AppTranslate>
-									This allows you to disable right mouse click behavior. Only enable this if your game needs to intercept right clicks.
+									This allows you to disable right mouse click behavior. Only
+									enable this if your game needs to intercept right clicks.
 								</AppTranslate>
 							</p>
 							<AppFormControlToggle @changed="onBuildFieldChanged" />

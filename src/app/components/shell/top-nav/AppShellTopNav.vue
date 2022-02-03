@@ -6,12 +6,12 @@ import { AppClientHistoryNavigator } from '../../../../_common/client/safe-expor
 import { AppConfigLoaded } from '../../../../_common/config/loaded';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { Environment } from '../../../../_common/environment/environment.service';
-import { AppObserveDimensions as vAppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
+import { vAppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
-import { AppTooltip as vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { imageGameJoltLogo, imageJolt } from '../../../img/images';
 import { useAppStore } from '../../../store/index';
 import { ChatStoreKey } from '../../chat/chat-store';

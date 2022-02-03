@@ -8,7 +8,7 @@ import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import {
 	extendFireside,
 	publishFireside,
@@ -27,7 +27,7 @@ import AppFiresideShare from '../_share/share.vue';
 		AppFiresideShare,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppFiresideStats extends Vue {

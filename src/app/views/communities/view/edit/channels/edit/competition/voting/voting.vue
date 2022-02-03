@@ -20,7 +20,7 @@ import {
 } from '../../../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../../../_common/scroll/scroll.service';
 import { AppTimeAgo } from '../../../../../../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';
 import FormCommunityCompetitionAward from '../../../../../../../../components/forms/community/competition/award/award.vue';
 import FormCommunityCompetitionVotingCategory from '../../../../../../../../components/forms/community/competition/voting/category/category.vue';
@@ -44,7 +44,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view
 		AppCardListDraggable,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

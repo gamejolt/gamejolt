@@ -1,13 +1,7 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-property-decorator';
-import { AppAuthRequired } from '../../auth/auth-required-directive';
-
-@Options({
-	directives: {
-		AppAuthRequired,
-	},
-})
-export default class AppGameAddBanner extends Vue {}
+<script lang="ts" setup>
+import { vAppAuthRequired } from '../../auth/auth-required-directive';
+import AppButton from '../../button/AppButton.vue';
+import AppTranslate from '../../translate/AppTranslate.vue';
 </script>
 
 <template>
@@ -24,7 +18,6 @@ export default class AppGameAddBanner extends Vue {}
 				</AppButton>
 			</div>
 		</div>
-		<hr />
 	</div>
 </template>
 
@@ -34,7 +27,8 @@ export default class AppGameAddBanner extends Vue {}
 		display: flex
 		align-items: center
 		flex-direction: row
-		padding-top: $line-height-computed
+		padding-top: 24px
+		padding-bottom: 24px
 
 	.-message
 		flex: auto

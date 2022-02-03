@@ -12,7 +12,7 @@ import {
 } from '../../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../../../_common/scroll/AppScrollAffix.vue';
-import { AppNoAutoscroll } from '../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
+import { vAppNoAutoscroll } from '../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import { UserGameScore } from '../../../../../../../_common/user/game-score/game-score.model';
@@ -30,7 +30,7 @@ import { useGameRouteController } from '../../view.vue';
 		AppLoadingFade,
 	},
 	directives: {
-		AppNoAutoscroll,
+		AppNoAutoscroll: vAppNoAutoscroll,
 	},
 })
 @OptionsForRoute({
@@ -196,9 +196,9 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 
 						<div v-if="!scores.length" class="alert alert-notice full-bleed-xs">
 							<template v-if="type === 'best'">
-								<AppTranslate
-									>There are no scores on this scoreboard yet.</AppTranslate
-								>
+								<AppTranslate>
+									There are no scores on this scoreboard yet.
+								</AppTranslate>
 							</template>
 							<template v-else-if="type === 'user'">
 								<AppTranslate>You don't have any scores here yet!</AppTranslate>

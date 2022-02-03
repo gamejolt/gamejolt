@@ -8,7 +8,7 @@ import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail-img/th
 import { showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
-import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { CommunityCompetitionEntryModal } from '../modal/modal.service';
 
 @Options({
@@ -16,7 +16,7 @@ import { CommunityCompetitionEntryModal } from '../modal/modal.service';
 		AppGameThumbnailImg,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppCommunityCompetitionEntryThumbnail extends Vue {

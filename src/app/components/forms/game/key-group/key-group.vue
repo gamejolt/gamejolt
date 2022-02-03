@@ -6,7 +6,7 @@ import { BaseForm, FormOnSubmitSuccess } from '../../../../../_common/form-vue/f
 import { Game } from '../../../../../_common/game/game.model';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { KeyGroup } from '../../../../../_common/key-group/key-group.model';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
 class Wrapper extends BaseForm<KeyGroup> {}
 
@@ -15,7 +15,7 @@ class Wrapper extends BaseForm<KeyGroup> {}
 		AppExpand,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnSubmitSuccess {
@@ -134,7 +134,9 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 			:label="$gettext(`Email Addresses`)"
 		>
 			<p class="help-block">
-				<AppTranslate>Paste one email address per line, or separate them by commas.</AppTranslate>
+				<AppTranslate
+					>Paste one email address per line, or separate them by commas.</AppTranslate
+				>
 			</p>
 			<AppFormControlTextarea rows="10" :validators="[validateMaxLength(25000)]" />
 			<AppFormControlErrors />
@@ -146,7 +148,9 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 			:label="$gettext(`Usernames`)"
 		>
 			<p class="help-block">
-				<AppTranslate>Paste one username per line, or separate them by commas.</AppTranslate>
+				<AppTranslate
+					>Paste one username per line, or separate them by commas.</AppTranslate
+				>
 			</p>
 			<AppFormControlTextarea rows="10" :validators="[validateMaxLength(25000)]" />
 			<AppFormControlErrors />

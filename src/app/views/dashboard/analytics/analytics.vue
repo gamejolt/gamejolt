@@ -15,7 +15,7 @@ import AppLoading from '../../../../_common/loading/loading.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
-import { AppScrollTo } from '../../../../_common/scroll/to/to.directive';
+import { vAppScrollTo } from '../../../../_common/scroll/to/to.directive';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { User } from '../../../../_common/user/user.model';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
@@ -64,7 +64,7 @@ import {
 		AppAnalyticsReportTopCompositionValue,
 	},
 	directives: {
-		AppScrollTo,
+		AppScrollTo: vAppScrollTo,
 	},
 })
 @OptionsForRoute({

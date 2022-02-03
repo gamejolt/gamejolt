@@ -12,7 +12,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import { SettingThemeDark } from '../../../../_common/settings/settings.service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { useAppStore } from '../../../store';
 import { UserTokenModal } from '../../user/token-modal/token-modal.service';
@@ -25,7 +25,7 @@ import AppShellUserBox from '../user-box/user-box.vue';
 		AppShellUserBox,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppShellAccountPopover extends Vue {

@@ -6,7 +6,7 @@ import { formatNumber } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { SettingChatGroupShowMembers } from '../../../../_common/settings/settings.service';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import { useAppStore } from '../../../store/index';
 import { ChatStore, ChatStoreKey } from '../chat-store';
@@ -32,7 +32,7 @@ import AppChatWindowSend from './send/send.vue';
 		AppUserVerifiedTick,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppChatWindow extends Vue {
@@ -179,12 +179,7 @@ export default class AppChatWindow extends Vue {
 						<div :key="room.id" class="chat-window-header-content">
 							<span
 								v-if="!room.isPmRoom"
-								class="
-									chat-window-header-avatar
-									avatar
-									anim-fade-in-enlarge
-									no-animate-xs
-								"
+								class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
 							>
 								<div class="-icon">
 									<AppJolticon icon="users" />
@@ -192,12 +187,7 @@ export default class AppChatWindow extends Vue {
 							</span>
 							<router-link
 								v-else-if="room.user"
-								class="
-									chat-window-header-avatar
-									avatar
-									anim-fade-in-enlarge
-									no-animate-xs
-								"
+								class="chat-window-header-avatar avatar anim-fade-in-enlarge no-animate-xs"
 								:to="room.user.url"
 							>
 								<img class="-icon" :src="room.user.img_avatar" alt="" />

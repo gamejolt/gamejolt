@@ -9,7 +9,7 @@ import AppIllustration from '../../../../../_common/illustration/AppIllustration
 import AppPagination from '../../../../../_common/pagination/pagination.vue';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
-import { AppNoAutoscroll } from '../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
+import { vAppNoAutoscroll } from '../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/grid.vue';
 import {
@@ -139,7 +139,7 @@ function makeRequest(route: RouteLocationNormalized) {
 		AppIllustration,
 	},
 	directives: {
-		AppNoAutoscroll,
+		AppNoAutoscroll: vAppNoAutoscroll,
 	},
 })
 @OptionsForRoute({

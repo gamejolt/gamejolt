@@ -19,7 +19,7 @@ import AppFormControlContent from '../../../../_common/form-vue/controls/AppForm
 import AppFormControlDate from '../../../../_common/form-vue/controls/AppFormControlDate.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
-import { AppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
+import { vAppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
 import {
 	BaseForm,
 	FormOnLoad,
@@ -41,10 +41,10 @@ import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import { AppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
+import { vAppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.service';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
 import AppFormsCommunityPillAdd from '../community/_pill/add/add.vue';
@@ -101,9 +101,9 @@ class Wrapper extends BaseForm<FormPostModel> {}
 		AppExpand,
 	},
 	directives: {
-		AppFocusWhen,
-		AppScrollWhen,
-		AppTooltip,
+		AppFocusWhen: vAppFocusWhen,
+		AppScrollWhen: vAppScrollWhen,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class FormPost
@@ -1159,7 +1159,9 @@ export default class FormPost
 
 				<AppFormGroup name="scheduled_for_timezone" :label="$gettext(`Timezone`)">
 					<p class="help-block">
-						<AppTranslate>All time selection below will use this timezone.</AppTranslate>
+						<AppTranslate
+							>All time selection below will use this timezone.</AppTranslate
+						>
 					</p>
 
 					<p class="help-block">
@@ -1296,9 +1298,7 @@ export default class FormPost
 							</div>
 
 							<div class="-linked-account-toggle">
-								<AppFormControlToggle
-									@changed="changeLinkedAccount(account.id)"
-								/>
+								<AppFormControlToggle @changed="changeLinkedAccount(account.id)" />
 							</div>
 						</div>
 					</AppFormGroup>

@@ -13,7 +13,7 @@ import { GamePackageCardModel } from '../../../../../_common/game/package/card/c
 import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 // import {
 // 	ClientLibraryAction,
 // 	ClientLibraryState,
@@ -34,7 +34,7 @@ import {
 		AppGamePackageCardMoreOptions,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppClientPackageCardButtons extends Vue {

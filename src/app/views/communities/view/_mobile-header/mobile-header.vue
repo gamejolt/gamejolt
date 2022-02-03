@@ -13,7 +13,7 @@ import { copyShareLink } from '../../../../../_common/share/share.service';
 import { useSidebarStore } from '../../../../../_common/sidebar/sidebar.store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTheme from '../../../../../_common/theme/AppTheme.vue';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { CommunitySidebarModal } from '../../../../components/community/sidebar/modal/modal.service';
 import { useAppStore } from '../../../../store';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
@@ -28,7 +28,7 @@ import AppEditableThumbnail from '../_editable-thumbnail/editable-thumbnail.vue'
 		AppCommunityJoinWidget,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppMobileHeader extends Vue {

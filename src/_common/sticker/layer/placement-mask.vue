@@ -3,7 +3,7 @@ import { Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { setDrawerOpen, useDrawerStore } from '../../drawer/drawer-store';
-import { AppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
+import { vAppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
 import { useScroller } from '../../scroll/AppScrollScroller.vue';
 import { Scroll } from '../../scroll/scroll.service';
 import AppStickerLayerDrawer from './drawer.vue';
@@ -20,7 +20,7 @@ import AppStickerLayerPlacementMaskTarget from './placement-mask-target.vue';
 		AppStickerLayerDrawer,
 	},
 	directives: {
-		AppObserveDimensions,
+		AppObserveDimensions: vAppObserveDimensions,
 	},
 })
 export default class AppStickerLayerPlacementMask extends Vue {

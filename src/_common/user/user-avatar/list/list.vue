@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { AppTooltip } from '../../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import { User } from '../../user.model';
 import AppUserVerifiedTick from '../../verified-tick/verified-tick.vue';
 import AppUserAvatar from '../user-avatar.vue';
@@ -11,7 +11,7 @@ import AppUserAvatar from '../user-avatar.vue';
 		AppUserVerifiedTick,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppUserAvatarList extends Vue {

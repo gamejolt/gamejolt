@@ -7,7 +7,7 @@ import AppLoading from '../../../../_common/loading/loading.vue';
 import AppNavTabList from '../../../../_common/nav/tab-list/tab-list.vue';
 import AppPagination from '../../../../_common/pagination/pagination.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { AppNoAutoscroll } from '../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
+import { vAppNoAutoscroll } from '../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
@@ -30,7 +30,7 @@ import { GameListingContainer } from './listing-container-service';
 		AppLoading,
 	},
 	directives: {
-		AppNoAutoscroll,
+		AppNoAutoscroll: vAppNoAutoscroll,
 	},
 })
 export default class AppGameListing extends Vue {

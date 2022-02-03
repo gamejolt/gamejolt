@@ -15,7 +15,7 @@ import {
 	FiresidePostVideo,
 } from '../../../../_common/fireside/post/video/video-model';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
+import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
 import { createLightbox } from '../../../../_common/lightbox/lightbox-helpers';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
@@ -34,7 +34,7 @@ import {
 import AppStickerTarget from '../../../../_common/sticker/target/target.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
 import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
@@ -83,7 +83,7 @@ import AppPostPageRecommendations from './recommendations/recommendations.vue';
 		AppShareCard,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppPostPage extends Vue {

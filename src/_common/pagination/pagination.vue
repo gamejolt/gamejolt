@@ -1,13 +1,13 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Screen } from '../screen/screen-service';
-import { AppNoAutoscroll } from '../scroll/auto-scroll/no-autoscroll.directive';
+import { vAppNoAutoscroll } from '../scroll/auto-scroll/no-autoscroll.directive';
 
 const MaxPagesShown = 5;
 
 @Options({
 	directives: {
-		AppNoAutoscroll,
+		AppNoAutoscroll: vAppNoAutoscroll,
 	},
 })
 export default class AppPagination extends Vue {

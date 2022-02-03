@@ -12,7 +12,7 @@ const state = new WeakMap<HTMLElement, TooltipController>();
  * Never attach a 'touchable' modifier to a link.
  * It will stop the link from working.
  */
-export const AppTooltip: Directive<HTMLElement, TooltipDirectiveValue> = {
+export const vAppTooltip: Directive<HTMLElement, TooltipDirectiveValue> = {
 	beforeMount(el, binding) {
 		const tooltip = makeTooltipController(el, binding);
 		state.set(el, tooltip);

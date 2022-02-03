@@ -9,7 +9,7 @@ import { Notification } from '../../../../_common/notification/notification-mode
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useEventSubscription } from '../../../../_common/system/event/event-topic';
-import { AppTooltip as vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { useAppStore } from '../../../store';
 import { ActivityFeedView } from '../../activity/feed/view';
 import { onNewStickers } from '../../grid/client.service';
@@ -92,13 +92,13 @@ async function onShow() {
 		// If the feed isn't bootstrapped with data, then we have to do the
 		// first bootstrapping call to get data into it.
 		if (!feed.value.isBootstrapped) {
-			const $payload = await Api.sendRequest('/web/dash/activity/notifications');
+			const payload = await Api.sendRequest('/web/dash/activity/notifications');
 
-			const items = Notification.populate($payload.items);
+			const items = Notification.populate(payload.items);
 			feed.value.append(items);
 
-			if ($payload.perPage) {
-				feed.value.itemsPerPage = $payload.perPage;
+			if (payload.perPage) {
+				feed.value.itemsPerPage = payload.perPage;
 			}
 		}
 		// If it is already bootstrapped, we just want to load new items if

@@ -1,13 +1,13 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../../../utils/vue';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { useFiresideController } from '../../../../components/fireside/controller/controller';
 import { CohostManageModal } from './manage-modal.service';
 
 @Options({
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppFiresideCohostManage extends Vue {

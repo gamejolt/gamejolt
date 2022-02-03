@@ -6,7 +6,7 @@ import { formatNumber } from '../../filters/number';
 import AppLoading from '../../loading/loading.vue';
 import { useCommonStore } from '../../store/common-store';
 import AppTheme from '../../theme/AppTheme.vue';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppUserFollowWidget from '../follow/widget.vue';
 import AppUserAvatarImg from '../user-avatar/img/img.vue';
 import { User } from '../user.model';
@@ -21,7 +21,7 @@ import AppUserVerifiedTick from '../verified-tick/verified-tick.vue';
 		AppUserVerifiedTick,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppUserCard extends Vue {

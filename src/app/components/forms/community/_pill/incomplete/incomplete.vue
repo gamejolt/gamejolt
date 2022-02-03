@@ -4,7 +4,7 @@ import { CommunityChannel } from '../../../../../../_common/community/channel/ch
 import { Community } from '../../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
 import AppCommunityVerifiedTick from '../../../../../../_common/community/verified-tick/verified-tick.vue';
-import AppPillBi from '../../../../../../_common/pill/bi/bi.vue';
+import AppPillBi from '../../../../../../_common/pill/AppPillBi.vue';
 import AppFormsCommunityPillSelector from '../selector/selector.vue';
 
 @Options({

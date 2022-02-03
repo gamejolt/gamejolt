@@ -2,7 +2,7 @@
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { AppVideoPlayerShakaLazy } from '../../../app/components/lazy';
 import { formatNumber } from '../../filters/number';
-import { AppImgResponsive } from '../../img/responsive/responsive';
+import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppLoading from '../../loading/loading.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../media-item/media-item-model';
@@ -11,7 +11,7 @@ import {
 	AppResponsiveDimensionsChangeEvent,
 } from '../../responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../screen/screen-service';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { VideoSourceArray } from '../video.vue';
 import AppPlayerFullscreen from './AppVideoPlayerFullscreen.vue';
 import AppPlayerPlayback from './AppVideoPlayerPlayback.vue';
@@ -93,7 +93,7 @@ export function createReadableTimestamp(time: number) {
 		AppMediaItemBackdrop,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppVideoPlayer extends Vue {

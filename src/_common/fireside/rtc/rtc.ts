@@ -64,6 +64,13 @@ export class FiresideRTC {
 
 	generation = new CancelToken();
 
+	/**
+	 *  Safari keeps [AgoraRTC.onAudioAutoplayFailed] looping, so I'm assigning
+	 *  to this to ensure we only trigger the failure callback once.
+	 */
+	_handledAutoplayError = false;
+	shouldShowMutedIndicator = false;
+
 	// These channels will get created immediately in the setup.
 	videoChannel!: FiresideRTCChannel;
 	chatChannel!: FiresideRTCChannel;
@@ -326,6 +333,40 @@ async function _createChannels(rtc: FiresideRTC) {
 
 	const AgoraRTC = await AgoraRTCLazy;
 	(AgoraRTC as any)?.setParameter('AUDIO_SOURCE_VOLUME_UPDATE_INTERVAL', 100);
+
+	// If we fail to autoplay with desktop audio, pause the stream so we have to
+	// interact with the DOM to play it.
+	AgoraRTC.onAudioAutoplayFailed = async () => {
+		// Pause the video if this is our first time doing this.
+		if (!rtc._handledAutoplayError) {
+			rtc._handledAutoplayError = true;
+			rtc.videoPaused = true;
+			return;
+		}
+
+		// If this was triggered a second time, we should indicate that the
+		// video is currently playing in a muted state.
+		//
+		// We need to do this because Safari doesn't always accept our
+		// click-to-play interaction as enough to autoplay audio.
+		rtc.shouldShowMutedIndicator = true;
+
+		// Any document interaction seems sufficient to cause the audio to play
+		// once all the stream subscriptions are active.
+		window.document.addEventListener(
+			'mousedown',
+			() => {
+				rtc._handledAutoplayError = false;
+				rtc.shouldShowMutedIndicator = false;
+			},
+			{
+				once: true,
+				capture: true,
+				passive: true,
+			}
+		);
+	};
+
 	rtc.volumeLevelInterval = setInterval(() => _updateVolumeLevels(rtc), 100);
 
 	rtc.videoChannel = await createFiresideRTCChannel(rtc, rtc.videoChannelName, rtc.videoToken, {

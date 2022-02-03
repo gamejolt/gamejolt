@@ -12,7 +12,7 @@ import {
 	BaseRouteComponent,
 	OptionsForRoute,
 } from '../../../../../../_common/route/route-component';
-import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { CommunityLinkGameModal } from '../../../../../components/community/link-game-modal/link-game-modal.service';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
@@ -30,7 +30,7 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 		AppGameThumbnailImg,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

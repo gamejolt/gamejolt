@@ -4,14 +4,14 @@ import { Options, Vue } from 'vue-property-decorator';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 
 @Options({
 	components: {
 		AppProgressBar,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppShellUserBox extends Vue {

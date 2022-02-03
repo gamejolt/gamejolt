@@ -5,7 +5,7 @@ import { formatFuzzynumber } from '../../../../../../../_common/filters/fuzzynum
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import { AppLazyPlaceholder } from '../../../../../../../_common/lazy/placeholder/placeholder';
 import { LikersModal } from '../../../../../../../_common/likers/modal.service';
-import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import AppRatingWidget from '../../../../../../components/rating/widget/widget.vue';
 import { useGameRouteController } from '../../view.vue';
 
@@ -15,7 +15,7 @@ import { useGameRouteController } from '../../view.vue';
 		AppRatingWidget,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppDiscoverGamesViewOverviewStatbar extends Vue {

@@ -21,10 +21,10 @@ import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/rout
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../_common/scroll/AppScrollAffix.vue';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import { AppScrollTo } from '../../../../../_common/scroll/to/to.directive';
+import { vAppScrollTo } from '../../../../../_common/scroll/to/to.directive';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
@@ -58,8 +58,8 @@ import AppPageHeader from '../../../../components/page-header/page-header.vue';
 		AppUserVerifiedTick,
 	},
 	directives: {
-		AppTooltip,
-		AppScrollTo,
+		AppTooltip: vAppTooltip,
+		AppScrollTo: vAppScrollTo,
 	},
 })
 @OptionsForRoute({

@@ -10,7 +10,7 @@ import { HistoryTick } from '../../_common/history-tick/history-tick-service';
 import AppJolticon from '../../_common/jolticon/AppJolticon.vue';
 import { Sellable } from '../../_common/sellable/sellable.model';
 import { useCommonStore } from '../../_common/store/common-store';
-import { AppTooltip as vAppTooltip } from '../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../_common/tooltip/tooltip-directive';
 import AppFadeCollapse from '../components/AppFadeCollapse.vue';
 import AppModal from '../components/AppModal.vue';
 import { useWidgetPackageStore } from '../store/index';

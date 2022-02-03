@@ -1,9 +1,9 @@
 <script lang="ts">
 import { nextTick } from 'vue';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { AppObserveDimensions } from '../observe-dimensions/observe-dimensions.directive';
+import { vAppObserveDimensions } from '../observe-dimensions/observe-dimensions.directive';
 import { Ruler } from '../ruler/ruler-service';
-import { AppTooltip } from '../tooltip/tooltip-directive';
+import { vAppTooltip } from '../tooltip/tooltip-directive';
 
 export type ScrubberStage = 'start' | 'scrub' | 'end';
 
@@ -18,8 +18,8 @@ export type ScrubberCallback = {
 
 @Options({
 	directives: {
-		AppTooltip,
-		AppObserveDimensions,
+		AppTooltip: vAppTooltip,
+		AppObserveDimensions: vAppObserveDimensions,
 	},
 })
 export default class AppSlider extends Vue {

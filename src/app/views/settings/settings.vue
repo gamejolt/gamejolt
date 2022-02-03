@@ -4,7 +4,7 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
-import { AppScrollTo } from '../../../_common/scroll/to/to.directive';
+import { vAppScrollTo } from '../../../_common/scroll/to/to.directive';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { User } from '../../../_common/user/user.model';
 import FormSettings from '../../components/forms/settings/settings.vue';
@@ -21,7 +21,7 @@ import AppPageHeader from '../../components/page-header/page-header.vue';
 		),
 	},
 	directives: {
-		AppScrollTo,
+		AppScrollTo: vAppScrollTo,
 	},
 })
 @OptionsForRoute({

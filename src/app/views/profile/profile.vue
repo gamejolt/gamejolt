@@ -16,7 +16,7 @@ import { copyShareLink } from '../../../_common/share/share.service';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../_common/translate/translate.service';
 import AppUserFollowWidget from '../../../_common/user/follow/widget.vue';
 import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
@@ -203,7 +203,7 @@ const ProfileThemeKey = 'profile';
 		AppUserBlockOverlay,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

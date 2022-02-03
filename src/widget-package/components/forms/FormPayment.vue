@@ -10,7 +10,7 @@ import AppFormGroup from '../../../_common/form-vue/AppFormGroup.vue';
 import { validateMinValue } from '../../../_common/form-vue/validators';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
-import { AppTooltip as vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
 import { PaymentData, useWidgetPackageStore } from '../../store/index';
 import AppModal from '../AppModal.vue';

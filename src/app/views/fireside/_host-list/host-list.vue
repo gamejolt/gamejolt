@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../../utils/vue';
-import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { setDrawerOpen, useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
@@ -22,7 +22,7 @@ import AppFiresideHostListStickerButton from './sticker-button/sticker-button.vu
 		AppFiresideStreamPlayback,
 	},
 	directives: {
-		AppAuthRequired,
+		AppAuthRequired: vAppAuthRequired,
 	},
 })
 export default class AppFiresideHostList extends Vue {
@@ -58,10 +58,7 @@ export default class AppFiresideHostList extends Vue {
 		<div class="-fireside-hosts-inner">
 			<AppFiresideStreamPlayback v-if="showPlayback" />
 
-			<AppFiresideStreamOptions
-				@show-popper="emitShowPopper"
-				@hide-popper="emitHidePopper"
-			/>
+			<AppFiresideStreamOptions @show-popper="emitShowPopper" @hide-popper="emitHidePopper" />
 
 			<AppFiresideCohostManage v-if="canManageCohosts" />
 

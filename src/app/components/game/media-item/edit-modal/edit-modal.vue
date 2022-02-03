@@ -5,7 +5,7 @@ import { Environment } from '../../../../../_common/environment/environment.serv
 import { Game } from '../../../../../_common/game/game.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Media } from '../../../../views/dashboard/games/manage/manage.store';
 import FormGameImage from '../../../forms/game/image/image.vue';
 import FormGameSketchfab from '../../../forms/game/sketchfab/sketchfab.vue';
@@ -19,7 +19,7 @@ import { GameMediaItemEditModalRemoveCallback } from './edit-modal.service';
 		FormGameSketchfab,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppGameMediaItemEditModal extends mixins(BaseModal) {
