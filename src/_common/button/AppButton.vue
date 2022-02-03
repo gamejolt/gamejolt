@@ -2,6 +2,7 @@
 import { computed, PropType, useAttrs } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
 import AppJolticon from '../jolticon/AppJolticon.vue';
+import { Jolticon } from '../jolticon/AppJolticon.vue';
 
 const props = defineProps({
 	tag: {
@@ -42,7 +43,7 @@ const props = defineProps({
 		type: Boolean,
 	},
 	icon: {
-		type: String,
+		type: String as PropType<Jolticon>,
 		default: undefined,
 	},
 	badge: {
