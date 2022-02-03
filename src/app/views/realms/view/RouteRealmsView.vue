@@ -17,6 +17,7 @@ import { ActivityFeedService } from '../../../components/activity/feed/feed-serv
 import { ActivityFeedView } from '../../../components/activity/feed/view';
 import AppActivityFeed from '../../../components/activity/feed/feed.vue';
 import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
+import { User } from '../../../../_common/user/user.model';
 
 export default {
 	...defineAppRouteOptions({
@@ -35,10 +36,13 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 const router = useRouter();
 const route = useRoute();
 
 const realm = ref<Realm>();
+const knownFollowers = ref<User[]>([]);
+const knownFollowerCount = ref(0);
 const feed = ref(null) as Ref<ActivityFeedView | null>;
 
 const shareLink = computed(() =>
@@ -56,6 +60,8 @@ createAppRoute({
 	},
 	onResolved({ payload: [payload, feedPayload], fromCache }) {
 		realm.value = new Realm(payload.realm);
+		knownFollowers.value = User.populate(payload.knownFollowers);
+		knownFollowerCount.value = payload.knownFollowerCount || 0;
 
 		feed.value = ActivityFeedService.routed(
 			feed.value,
@@ -85,6 +91,11 @@ createAppRoute({
 				<template #left>
 					<AppScrollAffix>
 						<AppRealmFullCard :realm="realm" />
+
+						<AppUserKnownFollowers
+							:users="knownFollowers"
+							:count="knownFollowerCount"
+						/>
 					</AppScrollAffix>
 				</template>
 

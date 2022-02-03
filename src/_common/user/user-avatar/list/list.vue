@@ -52,7 +52,7 @@ export default class AppUserAvatarList extends Vue {
 <style lang="stylus" scoped>
 $-size = 40px
 $-spacing = 4px
-$-size-sm = 24px
+$-size-sm = 16px
 
 .-list
 	display: grid

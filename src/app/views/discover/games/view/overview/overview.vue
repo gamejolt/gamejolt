@@ -50,7 +50,7 @@ import { AppActivityFeedLazy } from '../../../../../components/lazy';
 import AppPageContainer from '../../../../../components/page-container/AppPageContainer.vue';
 import AppPostAddButton from '../../../../../components/post/add-button/add-button.vue';
 import AppRatingWidget from '../../../../../components/rating/widget/widget.vue';
-import AppUserKnownFollowers from '../../../../../components/user/known-followers/known-followers.vue';
+import AppUserKnownFollowers from '../../../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useGameRouteController } from '../view.vue';
 import AppDiscoverGamesViewOverviewDetails from './_details/details.vue';
 import AppDiscoverGamesViewOverviewRecommended from './_recommended/recommended.vue';
