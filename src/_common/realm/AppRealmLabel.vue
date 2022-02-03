@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { Realm } from './realm-model';
-import { AppImgResponsive } from '../img/responsive/responsive';
+import AppImgResponsive from '../img/AppImgResponsive.vue';
 
 defineProps({
 	realm: {

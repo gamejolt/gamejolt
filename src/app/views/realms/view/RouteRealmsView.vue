@@ -10,7 +10,7 @@ import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { getAbsoluteLink } from '../../../../utils/router';
 import { useRouter, RouterLink, useRoute } from 'vue-router';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { AppTooltip as vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';

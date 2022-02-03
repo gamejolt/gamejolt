@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { Realm } from './realm-model';
-import { AppImgResponsive } from '../img/responsive/responsive';
-import AppButton from '../button/AppButton.vue';
+import AppImgResponsive from '../img/AppImgResponsive.vue';
 import AppRealmLabel from './AppRealmLabel.vue';
+import AppRealmFollowButton from './AppRealmFollowButton.vue';
 
 defineProps({
 	realm: {
@@ -22,7 +22,7 @@ defineProps({
 		</div>
 
 		<div class="-content">
-			<AppButton block primary>Follow</AppButton>
+			<AppRealmFollowButton :realm="realm" block primary />
 		</div>
 	</div>
 </template>
