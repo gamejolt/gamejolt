@@ -15,4 +15,8 @@ const LocalDbGameMod = GJ_IS_DESKTOP_APP
 	? (await import('./local-db/game/game.model')).LocalDbGame
 	: null;
 
-export { AppClientStatusBar, AppClientShell, LocalDbGameMod };
+const AppClientPackageCardButtons = GJ_IS_DESKTOP_APP
+	? (await import('./hooks/package-card-buttons/package-card-buttons.vue')).default
+	: null;
+
+export { AppClientStatusBar, AppClientShell, LocalDbGameMod, AppClientPackageCardButtons };

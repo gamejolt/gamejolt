@@ -112,13 +112,11 @@ export default class ClientLibrarySyncOperations {
 			throw new Error('Game is not set in localdb.');
 		}
 
-		const pkg = (data.packages as GamePackage[]).find(a => a.id === localPackage.id);
-		const release = (data.releases as GameRelease[]).find(
-			a => a.id === localPackage.release.id
-		);
-		const build = (data.builds as GameBuild[]).find(a => a.id === localPackage.build.id);
+		const pkg = (data.packages as GamePackage[]).find(a => a.id == localPackage.id);
+		const release = (data.releases as GameRelease[]).find(a => a.id == localPackage.release.id);
+		const build = (data.builds as GameBuild[]).find(a => a.id == localPackage.build.id);
 		const launchOptions = (data.launchOptions as GameBuildLaunchOption[]).filter(
-			a => a.game_build_id === localPackage.build.id
+			a => a.game_build_id == localPackage.build.id
 		);
 
 		// If those are not set then this package is not even valid.

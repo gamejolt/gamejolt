@@ -53,9 +53,9 @@ export function createClientLibraryStore() {
 		localPackage.set(data);
 
 		const isInsert = db.packages.put(localPackage);
+		console.log('set package data. is insert: ' + (isInsert ? 'yes' : 'no'));
 		if (isInsert) {
 			packages.value.push(localPackage);
-			// triggerRef(packages);
 		}
 
 		await db.packages.save();
@@ -65,31 +65,41 @@ export function createClientLibraryStore() {
 		const db = _db ?? (await _getDb());
 
 		// Remove the package from localdb collection and our runtime state.
+		console.log('unsetting package (id: ' + localPackage.id + ')');
+		console.log(JSON.stringify(packages.value));
+
+		console.log('deleting package from db package collection');
 		db.packages.delete(localPackage.id);
-		arrayRemove(packages.value, p => p.id === localPackage.id);
+		console.log('removing from runtime packages');
+		arrayRemove(packages.value, p => p.id == localPackage.id);
 
 		// Get the number of packages left in the game.
 		const gameId = localPackage.game_id;
 		const packagesLeft = db.packages.countInGroup('game_id', gameId);
+		console.log('packages left for game', packagesLeft);
 
 		// Note that some times a game is removed before the package (really weird cases).
 		// We still want the remove to go through, so be sure to skip this situation.
 		// If this is the last package for the game, remove the game since we no longer need it.
 		let gamesNeedSaving;
 		if (packagesLeft <= 1) {
+			console.log('deleting game from db game collection');
 			db.games.delete(gameId);
-			arrayRemove(games.value, g => g.id === gameId);
+			console.log('removing from runtime games');
+			arrayRemove(games.value, g => g.id == gameId);
 			gamesNeedSaving = true;
 		} else {
 			gamesNeedSaving = false;
 		}
 
+		console.log('saving db');
 		const saveOps = [db.packages.save()];
 		if (gamesNeedSaving) {
 			saveOps.push(db.games.save());
 		}
 
 		await Promise.all(saveOps);
+		console.log('saved db');
 	}
 
 	async function setGameData(localGame: LocalDbGame, data: Partial<LocalDbGame>) {
@@ -106,7 +116,12 @@ export function createClientLibraryStore() {
 		await db.games.save();
 	}
 
-	const packagesById = computed(() => arrayIndexBy(packages.value, 'id')) as ComputedRef<{
+	const packagesById = computed(() => {
+		console.log('reevaluating packagesById');
+		const myPackages = arrayIndexBy(packages.value, 'id');
+		console.log(JSON.stringify(myPackages));
+		return myPackages;
+	}) as ComputedRef<{
 		[packageId: number]: LocalDbPackage | undefined;
 	}>;
 	const gamesById = computed(() => arrayIndexBy(games.value, 'id')) as ComputedRef<{

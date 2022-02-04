@@ -1,3 +1,4 @@
+import { reactive } from 'vue';
 import { Primitives, Properties } from '../../../../utils/utils';
 import { LocalDbModel } from './model.service';
 
@@ -193,7 +194,7 @@ export class Collection<T extends LocalDbModel<T>> {
 			return null;
 		}
 
-		const instance = new this.ctor();
+		const instance = reactive(new this.ctor());
 		for (const field in dataObj) {
 			if (Object.prototype.hasOwnProperty.call(instance, field)) {
 				try {
@@ -210,7 +211,7 @@ export class Collection<T extends LocalDbModel<T>> {
 	 * Returns true if a new model was inserted, false if an existing model was updated.
 	 */
 	put(model: T) {
-		const isInsert = Object.prototype.hasOwnProperty.call(this.data.objects, model.id);
+		const isInsert = !Object.prototype.hasOwnProperty.call(this.data.objects, model.id);
 
 		this.data.objects[model.id] = JSON.parse(JSON.stringify(model));
 
