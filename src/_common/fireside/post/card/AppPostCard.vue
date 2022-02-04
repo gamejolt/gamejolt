@@ -1,5 +1,6 @@
 <script lang="ts">
-import { computed, nextTick, onMounted, PropType, ref, toRefs, watch } from 'vue';
+import { computed, nextTick, onMounted, PropType, ref, toRefs, useSlots, watch } from 'vue';
+import { RouterLink } from 'vue-router';
 import { PostOpenSource, trackPostOpen } from '../../../analytics/analytics.service';
 import { ContentFocus } from '../../../content-focus/content-focus.service';
 import AppContentViewer from '../../../content/content-viewer/content-viewer.vue';
@@ -48,6 +49,7 @@ const props = defineProps({
 });
 
 const { post, source, videoContext, withUser } = toRefs(props);
+const slots = useSlots();
 
 const root = ref<HTMLElement>();
 const cardElem = ref<HTMLElement>();
@@ -68,6 +70,7 @@ const leadHeight = ref(0);
 const isBootstrapped = ref(import.meta.env.SSR);
 const isHydrated = ref(import.meta.env.SSR);
 
+const hasOverlayContent = computed(() => !!slots.overlay);
 const shouldPlayVideo = computed(() => isHydrated.value && ContentFocus.hasFocus);
 
 onMounted(() => calcData());
@@ -225,7 +228,17 @@ function _initVideoController() {
 				@inview="inView"
 				@outview="outView"
 			>
-				<div ref="cardElem" class="-inner">
+				<RouterLink
+					class="-link"
+					:to="post.routeLocation"
+					@click="trackPostOpen({ source })"
+				/>
+
+				<div class="-overlay">
+					<slot name="overlay" />
+				</div>
+
+				<div ref="cardElem" class="-inner" :class="{ '-blur': hasOverlayContent }">
 					<template v-if="!!mediaItem">
 						<div class="-inner-media">
 							<AppMediaItemBackdrop class="-backdrop" :media-item="mediaItem">
@@ -266,12 +279,6 @@ function _initVideoController() {
 							<AppContentViewer :source="post.lead_content" />
 						</AppFadeCollapse>
 					</template>
-
-					<router-link
-						class="-link"
-						:to="post.routeLocation"
-						@click="trackPostOpen({ source })"
-					/>
 
 					<div class="-details" :class="{ '-light': !!mediaItem }">
 						<template v-if="withUser">
@@ -315,6 +322,28 @@ function _initVideoController() {
 $-base-width = 200px
 $-padding = 8px
 
+.post-card
+	cursor: pointer
+
+	&:hover
+		elevate-2()
+
+		.-link
+			border-color: var(--theme-link)
+			// This will immediately show the border and then transition out.
+			transition: none !important
+
+.-link
+	rounded-corners-lg()
+	position: absolute
+	left: 0
+	top: 0
+	right: 0
+	bottom: 0
+	border: solid $border-width-base transparent
+	transition: border-color 200ms ease !important
+	z-index: 2
+
 .-inner
 	&
 	&-media
@@ -355,15 +384,6 @@ $-padding = 8px
 .-voted
 .-liked
 	color: $gj-overlay-notice !important
-
-.-link
-	rounded-corners-lg()
-	position: absolute
-	left: 0
-	top: 0
-	right: 0
-	bottom: 0
-	border: solid $border-width-base transparent
 
 .-details
 	position: absolute
@@ -421,4 +441,21 @@ $-padding = 8px
 	::v-deep(> video)
 		height: 100% !important
 		width: 100% !important
+
+.-overlay
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	display: flex
+	align-items: center
+	justify-content: center
+	font-size: $font-size-tiny
+	font-weight: 700
+	color: white
+	text-align: center
+
+.-blur
+	filter: blur(4px)
 </style>

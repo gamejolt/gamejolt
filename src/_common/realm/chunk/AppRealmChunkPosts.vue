@@ -5,6 +5,7 @@ import { Realm } from '../realm-model';
 import AppSpacer from '../../spacer/AppSpacer.vue';
 import AppPostCard from '../../fireside/post/card/AppPostCard.vue';
 import { Api } from '../../api/api.service';
+import AppTranslate from '../../translate/AppTranslate.vue';
 
 const props = defineProps({
 	realm: {
@@ -39,7 +40,13 @@ async function _fetchFeed() {
 
 			<div class="-card">
 				<template v-if="items[num - 1]">
-					<AppPostCard :post="items[num - 1].action" source="realmChunk" with-user />
+					<AppPostCard :post="items[num - 1].action" source="realmChunk" with-user>
+						<template v-if="num === items.length" #overlay>
+							<div class="-overlay">
+								<AppTranslate>See more in this realm</AppTranslate>
+							</div>
+						</template>
+					</AppPostCard>
 				</template>
 			</div>
 		</template>
@@ -47,3 +54,8 @@ async function _fetchFeed() {
 </template>
 
 <style lang="stylus" src="./common.styl" scoped></style>
+
+<style lang="stylus" scoped>
+.-overlay
+	width: 75px
+</style>
