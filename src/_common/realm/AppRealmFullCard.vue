@@ -32,8 +32,9 @@ defineProps({
 	position: relative
 	overflow: hidden
 
+// TODO
 .-header
-	aspect-ratio: 300 / 175
+	aspect-ratio: 3 / 4
 
 	&-img
 		width: 100%
@@ -41,7 +42,7 @@ defineProps({
 		object-fit: cover
 
 .-content
-	padding: 16px 10px 14px
+	padding: 16px
 
 .-label
 	position: absolute

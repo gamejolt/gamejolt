@@ -11,7 +11,7 @@ import { Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
 import { Community } from '../community.model';
 import AppCommunityJoinWidget from '../join-widget/join-widget.vue';
-import AppCommunityThumbnailImg from '../thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../thumbnail/AppCommunityThumbnailImg.vue';
 import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 
 @Options({
@@ -43,7 +43,9 @@ export default class AppCommunityChunk extends Vue {
 	private async fetchFeed() {
 		const sort = 'hot';
 		const payload = await Api.sendRequest(
-			`/web/communities/overview/${this.community.path}/featured?sort=${sort}&perPage=10`
+			`/web/communities/overview/${this.community.path}/featured?sort=${sort}&perPage=10`,
+			{},
+			{ detach: true }
 		);
 		this.items = EventItem.populate(payload.items);
 		this.isLoadingPosts = false;

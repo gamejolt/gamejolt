@@ -10,18 +10,21 @@ import { Community } from '../../../../../_common/community/community.model';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 
-const EmphasizedCommunityIDs = [
-	// Minecraft
-	15,
-	// Pokemon
-	7,
-	// Arts n' Crafts
-	1462,
-	// Game Dev
-	57,
-	// 3D Art
-	4269,
-];
+const EmphasizedCommunityIDs =
+	GJ_ENVIRONMENT === 'development'
+		? [2, 3, 9]
+		: [
+				// Minecraft
+				15,
+				// Pokemon
+				7,
+				// Arts n' Crafts
+				1462,
+				// Game Dev
+				57,
+				// 3D Art
+				4269,
+		  ];
 
 @Options({
 	components: {

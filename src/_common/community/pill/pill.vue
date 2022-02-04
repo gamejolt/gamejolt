@@ -4,7 +4,7 @@ import { FiresidePostCommunity } from '../../fireside/post/community/community.m
 import AppPill from '../../pill/AppPill.vue';
 import AppPillBi from '../../pill/AppPillBi.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import AppCommunityThumbnailImg from '../thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../thumbnail/AppCommunityThumbnailImg.vue';
 import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 
 @Options({

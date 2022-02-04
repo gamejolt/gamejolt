@@ -1,0 +1,9 @@
+.-posts
+	display: flex
+
+	.-card
+		flex: auto
+		min-width: 0
+
+		@media $media-xs
+			min-width: 'calc(min(40vw - %s, 60vh * (10 / 16)))' % $-card-spacing !important

@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
 import { enforceLocation } from '../../../../../../utils/router';
 import AppAlertDismissable from '../../../../../../_common/alert/dismissable/dismissable.vue';
-import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppEditableOverlay from '../../../../../../_common/editable-overlay/editable-overlay.vue';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';

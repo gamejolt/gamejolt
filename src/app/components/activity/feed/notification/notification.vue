@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import '../../../../../_common/comment/comment.styl';
-import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import {
 	CommunityUserNotification,
 	NotificationType,

@@ -10,7 +10,7 @@ import { getAbsoluteLink } from '../../../../utils/router';
 import { useRouter, RouterLink, useRoute } from 'vue-router';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../components/activity/feed/view';
@@ -19,9 +19,9 @@ import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 import { User } from '../../../../_common/user/user.model';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppRealmThumbnail from '../../../../_common/realm/AppRealmThumbnail.vue';
 import AppRealmFollowButton from '../../../../_common/realm/AppRealmFollowButton.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
+import { ShareModal } from '../../../../_common/share/card/_modal/modal.service';
 
 export default {
 	...defineAppRouteOptions({
@@ -81,6 +81,13 @@ createAppRoute({
 		);
 	},
 });
+
+function onShareClick() {
+	if (!shareLink.value) {
+		return;
+	}
+	ShareModal.show({ resource: 'realm', url: shareLink.value });
+}
 </script>
 
 <template>
@@ -93,14 +100,14 @@ createAppRoute({
 							<AppRealmFullCard v-if="Screen.isLg" :realm="realm" />
 							<template v-else>
 								<h1 class="-heading">
-									<AppRealmThumbnail class="-thumb" :realm="realm" />
 									<span class="-heading-text">{{ realm.name }}</span>
 									<AppButton
 										class="-more"
-										icon="ellipsis-h"
+										icon="arrow-forward"
 										sparse
 										circle
 										trans
+										@click="onShareClick"
 									/>
 								</h1>
 
@@ -178,14 +185,7 @@ createAppRoute({
 	margin: 0
 	margin-bottom: 8px
 
-.-thumb
-	flex: none
-	width: 24px
-	height: 24px
-	margin-right: 8px
-
 .-heading-text
-	text-overflow()
 	flex: auto
 
 .-more

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, provide, reactive, watch } from '@vue/runtime-core';
-import { RouterView } from 'vue-router';
+import { RouterView, useRouter } from 'vue-router';
 import { AppPromotionStore, AppPromotionStoreKey } from '../utils/mobile-app';
 import { createAdsController } from '../_common/ad/ad-store';
 import { CommentStoreManager, CommentStoreManagerKey } from '../_common/comment/comment-store';
@@ -13,6 +13,7 @@ import { loadCurrentLanguage } from '../_common/translate/translate.service';
 import { ChatStore, ChatStoreKey, clearChat, loadChat } from './components/chat/chat-store';
 import AppShell from './components/shell/shell.vue';
 import { useAppStore } from './store';
+import { useShortkey } from '../_common/shortkey/shortkey-service';
 
 const appStore = useAppStore();
 const { bootstrap, loadGrid, loadNotificationState, clear, clearGrid, clearNotificationState } =
@@ -29,6 +30,12 @@ provide(ChatStoreKey, chatStore);
 
 if (!import.meta.env.SSR) {
 	performance.measure('gj-shell-init', 'gj-start');
+}
+
+if (GJ_BUILD_TYPE === 'development' && GJ_IS_DESKTOP_APP) {
+	const router = useRouter();
+	useShortkey('r', () => window.location.reload());
+	useShortkey('x', () => router.push({ name: 'realms.view', params: { path: 'minecraft' } }));
 }
 
 onMounted(() => {

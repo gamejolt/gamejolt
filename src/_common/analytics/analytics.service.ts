@@ -22,7 +22,7 @@ export const SOCIAL_ACTION_TWEET = 'tweet';
 export const SOCIAL_ACTION_FOLLOW = 'follow';
 
 export type CommunityOpenSource = 'communityChunk' | 'card' | 'cbar' | 'thumbnail';
-export type PostOpenSource = 'communityChunk' | 'postRecommendation' | 'feed';
+export type PostOpenSource = 'realmChunk' | 'communityChunk' | 'postRecommendation' | 'feed';
 export type PostControlsLocation = 'feed' | 'broadcast' | 'postPage';
 export type UserFollowLocation =
 	| 'feed'

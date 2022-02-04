@@ -6,7 +6,7 @@ import {
 	canCommunityFeatureFireside,
 	Community,
 } from '../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { FiresideCommunity } from '../../../../_common/fireside/community/community.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';

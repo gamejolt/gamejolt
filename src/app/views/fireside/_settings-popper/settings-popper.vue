@@ -2,7 +2,7 @@
 import { Emit, Options, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import { FiresideCommunity } from '../../../../_common/fireside/community/community.model';
 import { stopStreaming } from '../../../../_common/fireside/rtc/producer';
 import { setAudioPlayback } from '../../../../_common/fireside/rtc/user';

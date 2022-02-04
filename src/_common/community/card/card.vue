@@ -4,7 +4,7 @@ import { trackGotoCommunity } from '../../analytics/analytics.service';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import AppCommunityCardBase from '../card-base/card-base.vue';
 import { Community } from '../community.model';
-import AppCommunityThumbnailImg from '../thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../thumbnail/AppCommunityThumbnailImg.vue';
 
 @Options({
 	components: {

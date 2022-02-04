@@ -2,7 +2,7 @@
 import { computed, Ref, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { getQuery } from '../../../../utils/router';
-import AppCommunityThumbnail from '../../../../_common/community/thumbnail/thumbnail.vue';
+import AppCommunityThumbnail from '../../../../_common/community/thumbnail/AppCommunityThumbnail.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';

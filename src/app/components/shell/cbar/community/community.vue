@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { trackGotoCommunity } from '../../../../../_common/analytics/analytics.service';
 import { Community } from '../../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
