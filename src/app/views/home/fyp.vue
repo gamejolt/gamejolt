@@ -29,7 +29,7 @@ export default class RouteHomeFYP extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		this.controller.feed = ActivityFeedService.routeInit(this);
+		this.controller.feed = ActivityFeedService.routeInit(this.isRouteBootstrapped);
 	}
 
 	routeResolved($payload: any, fromCache: boolean) {

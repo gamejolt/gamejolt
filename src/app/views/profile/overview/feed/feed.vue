@@ -100,7 +100,7 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		this.feed = ActivityFeedService.routeInit(this);
+		this.feed = ActivityFeedService.routeInit(this.isRouteBootstrapped);
 	}
 
 	routeResolved(payload: any, fromCache: boolean) {

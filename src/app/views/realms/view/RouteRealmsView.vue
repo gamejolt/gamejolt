@@ -52,6 +52,7 @@ const knownFollowers = ref<User[]>([]);
 const knownFollowerCount = ref(0);
 const realmCommunities = ref<RealmCommunity[]>([]);
 const feed = ref(null) as Ref<ActivityFeedView | null>;
+const isBootstrapped = ref(false);
 
 const shareLink = computed(() =>
 	realm.value ? getAbsoluteLink(router, realm.value.routeLocation) : undefined
@@ -59,7 +60,7 @@ const shareLink = computed(() =>
 
 const shownCommunities = computed(() => realmCommunities.value.map(i => i.community) ?? []);
 
-const { isBootstrapped } = createAppRoute({
+createAppRoute({
 	routeTitle: computed(() =>
 		realm.value
 			? $gettextInterpolate(`%{ realm } Realm - Art, videos, guides, polls and more`, {
@@ -68,9 +69,11 @@ const { isBootstrapped } = createAppRoute({
 			: null
 	),
 	onInit() {
-		feed.value = ActivityFeedService.routeInitComposition(false);
+		feed.value = ActivityFeedService.routeInit(isBootstrapped.value);
 	},
 	onResolved({ payload: [payload, feedPayload], fromCache }) {
+		isBootstrapped.value = true;
+
 		realm.value = new Realm(payload.realm);
 		realmCommunities.value = RealmCommunity.populate(payload.communities);
 		knownFollowers.value = User.populate(payload.knownFollowers);
@@ -122,7 +125,12 @@ function onShareClick() {
 							</AppButton>
 						</h1>
 
-						<AppRealmFollowButton class="-follow" :realm="realm" block />
+						<AppRealmFollowButton
+							class="-follow"
+							:realm="realm"
+							source="realmHeader"
+							block
+						/>
 					</template>
 
 					<div class="-followers">
