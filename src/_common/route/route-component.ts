@@ -90,17 +90,17 @@ export function createAppRoute({
 	 * Called to initialize the route either at the first route to this
 	 * component or after the $route object changes with params.
 	 */
-	onInit?: (this: undefined) => void;
+	onInit?: (this: void) => void;
 
 	/**
 	 * Called after the resolver resolves with data.
 	 */
-	onResolved?: (this: undefined, options: { payload: any; fromCache: boolean }) => void;
+	onResolved?: (this: void, options: { payload: any; fromCache: boolean }) => void;
 
 	/**
 	 * Called when the route component is completely destroyed.
 	 */
-	onDestroyed?: (this: undefined) => void;
+	onDestroyed?: (this: void) => void;
 }) {
 	const { setError, redirect } = useCommonStore();
 	const router = useRouter();
@@ -327,15 +327,16 @@ export async function asyncRouteLoader(router: Router, loader: Promise<any>) {
 		return loader;
 	}
 
-	const component = (await loader).default;
+	const mod = await loader;
+	const component = mod.default as ComponentOptions;
 
 	// Basically copy the flow of the beforeRouteEnter for SSR.
-	const resolver = new Resolver(component, router.currentRoute.value, {
+	const resolver = new Resolver(component.appRouteOptions!, router.currentRoute.value, {
 		useCache: false,
 	});
 	await resolver.resolvePayload();
 
-	return loader;
+	return mod;
 }
 
 class Resolver {
