@@ -35,7 +35,7 @@ export type UserFollowLocation =
 	| 'gameFollow';
 export type GameFollowLocation = 'thumbnail' | 'gamePage' | 'badge' | 'homeBanner' | 'library';
 export type RealmOpenSource = 'realmChunk' | 'realmChunkPost';
-export type RealmFollowSource = 'realmChunk' | 'fullCard';
+export type RealmFollowSource = 'realmChunk' | 'fullCard' | 'realmHeader';
 export type BannerType = 'store';
 
 /**
