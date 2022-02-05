@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
-import { AppResponsiveDimensions } from '../../responsive-dimensions/responsive-dimensions';
 import { Screen } from '../../screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/AppScrollInview.vue';
 import { getVideoPlayerFromSources } from '../../video/player/controller';
@@ -9,6 +8,7 @@ import AppVideo from '../../video/video.vue';
 import { defineEditableNodeViewProps } from '../content-editor/node-views/base';
 import { useContentOwnerController } from '../content-owner';
 import AppBaseContentComponent from './AppBaseContentComponent.vue';
+import AppResponsiveDimensions from '../../responsive-dimensions/AppResponsiveDimensions.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.25}px` });
 

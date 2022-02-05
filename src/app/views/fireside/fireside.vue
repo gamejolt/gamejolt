@@ -19,7 +19,6 @@ import { Navigate } from '../../../_common/navigate/navigate.service';
 import { vAppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Popper } from '../../../_common/popper/popper.service';
 import AppPopper from '../../../_common/popper/popper.vue';
-import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../_common/scroll/AppScrollScroller.vue';
@@ -70,7 +69,6 @@ const FiresideThemeKey = 'fireside';
 		AppFiresideChatMembers,
 		AppFiresideStats,
 		AppCommunityThumbnailImg,
-		AppResponsiveDimensions,
 		AppFiresideStream,
 		AppScrollScroller,
 		AppFiresideHostList,

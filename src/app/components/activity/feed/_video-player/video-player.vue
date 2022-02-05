@@ -6,10 +6,9 @@ import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../../../../_common/media-item/media-item-model';
-import {
-	AppResponsiveDimensions,
+import AppResponsiveDimensions, {
 	AppResponsiveDimensionsChangeEvent,
-} from '../../../../../_common/responsive-dimensions/responsive-dimensions';
+} from '../../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	createScrollInview,

@@ -4,6 +4,8 @@ import { Realm } from './realm-model';
 import AppImgResponsive from '../img/AppImgResponsive.vue';
 import AppRealmLabel from './AppRealmLabel.vue';
 import AppRealmFollowButton from './AppRealmFollowButton.vue';
+import AppResponsiveDimensions from '../responsive-dimensions/AppResponsiveDimensions.vue';
+import AppMediaItemBackdrop from '../media-item/backdrop/AppMediaItemBackdrop.vue';
 
 defineProps({
 	realm: {
@@ -17,9 +19,11 @@ defineProps({
 	<div class="-card sheet sheet-full sheet-elevate">
 		<AppRealmLabel class="-label" :realm="realm" />
 
-		<div class="-cover">
-			<AppImgResponsive class="-cover-img" :src="realm.cover.mediaserver_url" alt="" />
-		</div>
+		<AppResponsiveDimensions :ratio="3 / 4">
+			<AppMediaItemBackdrop :media-item="realm.cover">
+				<AppImgResponsive class="-cover-img" :src="realm.cover.mediaserver_url" alt="" />
+			</AppMediaItemBackdrop>
+		</AppResponsiveDimensions>
 
 		<div class="-content">
 			<AppRealmFollowButton :realm="realm" block />
@@ -32,14 +36,10 @@ defineProps({
 	position: relative
 	overflow: hidden
 
-// TODO
-.-cover
-	aspect-ratio: 3 / 4
-
-	&-img
-		width: 100%
-		height: 100%
-		object-fit: cover
+.-cover-img
+	width: 100%
+	height: 100%
+	object-fit: cover
 
 .-content
 	padding: 16px

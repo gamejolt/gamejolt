@@ -6,7 +6,7 @@ import {
 	TYPE_YOUTUBE,
 } from '../../../../../_common/fireside/post/embed/embed.model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
-import { AppResponsiveDimensions } from '../../../../../_common/responsive-dimensions/responsive-dimensions';
+import AppResponsiveDimensions from '../../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,

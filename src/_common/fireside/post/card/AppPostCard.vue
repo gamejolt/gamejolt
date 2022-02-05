@@ -11,7 +11,7 @@ import AppImgResponsive from '../../../img/AppImgResponsive.vue';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../../media-item/media-item-model';
-import { AppResponsiveDimensions } from '../../../responsive-dimensions/responsive-dimensions';
+import AppResponsiveDimensions from '../../../responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../../screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../../scroll/inview/AppScrollInview.vue';
 import AppUserAvatar from '../../../user/user-avatar/user-avatar.vue';
