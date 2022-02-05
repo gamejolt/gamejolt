@@ -2,6 +2,7 @@
 import { PropType } from 'vue';
 import { Realm } from './realm-model';
 import AppImgResponsive from '../img/AppImgResponsive.vue';
+import AppResponsiveDimensions from '../responsive-dimensions/AppResponsiveDimensions.vue';
 
 defineProps({
 	realm: {
@@ -12,25 +13,17 @@ defineProps({
 </script>
 
 <template>
-	<div class="-thumb">
+	<AppResponsiveDimensions class="-thumb" :ratio="1">
 		<AppImgResponsive class="-img" :src="realm.cover.mediaserver_url" alt="" />
-	</div>
+	</AppResponsiveDimensions>
 </template>
 
 <style lang="stylus" scoped>
 .-thumb
 	img-circle()
 	change-bg('bg-offset')
-	position: relative
-	height: 0
-	padding-top: 100%
 	overflow: hidden
 
 .-img
-	position: absolute
-	top: 0
-	left: 0
-	width: 100%
-	height: 100%
 	object-fit: cover
 </style>

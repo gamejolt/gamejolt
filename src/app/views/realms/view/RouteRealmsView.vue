@@ -83,9 +83,7 @@ const { isBootstrapped } = createAppRoute({
 				name: 'realm',
 				url: `/web/posts/fetch/realm/${route.params.path}`,
 				shouldShowFollow: true,
-				// TODO: why is this not here?
-				// itemsPerPage: payload.perPage,
-				itemsPerPage: 15,
+				itemsPerPage: feedPayload.perPage,
 			},
 			feedPayload.items,
 			fromCache
