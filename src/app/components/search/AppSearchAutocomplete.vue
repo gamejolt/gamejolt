@@ -300,22 +300,4 @@ function selectLibraryGame(localGame: LocalDbGame) {
 
 .-game .-thumb
 	width: 36px
-
-// .search-game-thumbnail
-// .-community-thumb
-// 	float: left
-// 	margin-right: 10px
-// 	background-color: $dark-theme-bg-offset
-// 	border: 0
-
-// .search-game-thumbnail
-// 	&
-// 	& > img
-// 		height: 20px
-// 		width: @height * (16 / 9)
-
-// .search-user-avatar
-// 	width: 20px
-// 	height: 20px
-// 	border-radius: 50%
 </style>
