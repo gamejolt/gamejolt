@@ -23,6 +23,7 @@ import AppRealmFollowButton from '../../../../_common/realm/AppRealmFollowButton
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { ShareModal } from '../../../../_common/share/card/_modal/modal.service';
 import { RealmCommunity } from '../../../../_common/realm/realm-community-model';
+import AppResponsiveDimensions from '../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -56,7 +57,7 @@ const shareLink = computed(() =>
 
 const shownCommunities = computed(() => realmCommunities.value.map(i => i.community) ?? []);
 
-createAppRoute({
+const { isBootstrapped } = createAppRoute({
 	routeTitle: computed(() =>
 		realm.value ? $gettextInterpolate(`%{ realm } Realm`, { realm: realm.value.name }) : ''
 	),
@@ -133,32 +134,34 @@ function onShareClick() {
 							</h5>
 
 							<div class="-communities">
-								<!-- <template v-if="!isOverviewLoaded || isLoadingAllCommunities">
-								<div
-									v-for="i in previewCommunityCount"
-									:key="i"
-									class="-community-item -community-thumb-placeholder"
-								/>
-							</template>
-							<template v-else> -->
-								<RouterLink
-									v-for="community of shownCommunities"
-									:key="community.id"
-									v-app-tooltip.bottom="community.name"
-									class="-community-item link-unstyled"
-									:to="community.routeLocation"
-								>
-									<AppCommunityThumbnailImg
-										class="-community-thumb"
-										:community="community"
-									/>
-									<AppCommunityVerifiedTick
-										class="-community-verified-tick"
-										:community="community"
-										no-tooltip
-									/>
-								</RouterLink>
-								<!-- </template> -->
+								<template v-if="!isBootstrapped">
+									<div
+										v-for="i in 3"
+										:key="i"
+										class="-community-item -community-thumb-placeholder"
+									>
+										<AppResponsiveDimensions :ratio="1" />
+									</div>
+								</template>
+								<template v-else>
+									<RouterLink
+										v-for="community of shownCommunities"
+										:key="community.id"
+										v-app-tooltip.bottom="community.name"
+										class="-community-item link-unstyled"
+										:to="community.routeLocation"
+									>
+										<AppCommunityThumbnailImg
+											class="-community-thumb"
+											:community="community"
+										/>
+										<AppCommunityVerifiedTick
+											class="-community-verified-tick"
+											:community="community"
+											no-tooltip
+										/>
+									</RouterLink>
+								</template>
 							</div>
 
 							<AppShareCard
@@ -226,17 +229,12 @@ function onShareClick() {
 	pressy()
 	display: inline-block
 	position: relative
-	outline: 0
 	width: 100%
 	height: auto
 
 .-community-thumb-placeholder
 	img-circle()
 	change-bg('bg-subtle')
-	// Setting 'padding-top' with a percentage goes off the elements width,
-	// rather than the height. This will allow us to use a 1:1 aspect ratio
-	// for the loading placeholders, matching them up with our thumbnails.
-	padding-top: 100%
 
 .-community-verified-tick
 	position: absolute

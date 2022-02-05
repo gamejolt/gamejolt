@@ -735,6 +735,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 										@click="toggleShowAllCommunities"
 									>
 										<AppTranslate>View All</AppTranslate>
+										{{ ' ' }}
 										<small>({{ formatNumber(communitiesCount) }})</small>
 									</AppButton>
 								</div>
@@ -785,6 +786,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 										}"
 									>
 										<AppTranslate>View All</AppTranslate>
+										{{ ' ' }}
 										<small>({{ formatNumber(gamesCount) }})</small>
 									</AppButton>
 								</div>
