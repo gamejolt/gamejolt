@@ -235,7 +235,7 @@ function _initVideoController() {
 			>
 				<RouterLink class="-link" :to="routeLocation" @click="trackPostOpen({ source })" />
 
-				<div class="-overlay">
+				<div v-if="hasOverlayContent" class="-overlay">
 					<slot name="overlay" />
 				</div>
 
@@ -345,6 +345,26 @@ $-padding = 8px
 	transition: border-color 200ms ease !important
 	z-index: 2
 
+.-overlay
+	overlay-text-shadow()
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	display: flex
+	align-items: center
+	justify-content: center
+	font-size: $font-size-tiny
+	font-weight: 700
+	color: white
+	text-align: center
+	background-color: rgba(black, 0.5)
+	z-index: 1
+
+.-blur
+	filter: blur(4px)
+
 .-inner
 	&
 	&-media
@@ -442,21 +462,4 @@ $-padding = 8px
 	::v-deep(> video)
 		height: 100% !important
 		width: 100% !important
-
-.-overlay
-	position: absolute
-	top: 0
-	right: 0
-	bottom: 0
-	left: 0
-	display: flex
-	align-items: center
-	justify-content: center
-	font-size: $font-size-tiny
-	font-weight: 700
-	color: white
-	text-align: center
-
-.-blur
-	filter: blur(4px)
 </style>
