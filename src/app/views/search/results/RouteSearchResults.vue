@@ -18,6 +18,7 @@ import { useSearchRouteController } from '../RouteSearch.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppRealmChunk from '../../../../_common/realm/chunk/AppRealmChunk.vue';
+import { configRealms } from '../../../../_common/config/config.service';
 
 export default {
 	...defineAppRouteOptions({
@@ -65,7 +66,7 @@ const slicedCommunities = computed(() => searchPayload.value.communities.slice(0
 
 <template>
 	<section v-if="hasSearch">
-		<template v-if="searchPayload.realm">
+		<template v-if="configRealms.value && searchPayload.realm">
 			<section class="section section-thin">
 				<div class="container">
 					<AppRealmChunk :realm="searchPayload.realm" />
