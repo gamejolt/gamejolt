@@ -24,6 +24,7 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import { ShareModal } from '../../../../_common/share/card/_modal/modal.service';
 import { RealmCommunity } from '../../../../_common/realm/realm-community-model';
 import AppResponsiveDimensions from '../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
+import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -77,6 +78,7 @@ const { isBootstrapped } = createAppRoute({
 				name: 'realm',
 				url: `/web/posts/fetch/realm/${route.params.path}`,
 				shouldShowFollow: true,
+				// TODO: why is this not here?
 				// itemsPerPage: payload.perPage,
 				itemsPerPage: 15,
 			},
@@ -95,90 +97,84 @@ function onShareClick() {
 </script>
 
 <template>
-	<div class="fill-backdrop">
-		<section v-if="realm" class="section">
-			<div class="container-xl">
-				<div class="row">
-					<div class="col-lg-3">
-						<AppScrollAffix :disabled="!Screen.isLg">
-							<AppRealmFullCard v-if="Screen.isLg" :realm="realm" />
-							<template v-else>
-								<h1 class="-heading">
-									<span class="-heading-text">{{ realm.name }}</span>
-									<AppButton
-										class="-more"
-										icon="arrow-forward"
-										sparse
-										circle
-										trans
-										@click="onShareClick"
-									/>
-								</h1>
+	<section v-if="realm" class="section fill-backdrop">
+		<AppPageContainer xl>
+			<template #left>
+				<AppScrollAffix :disabled="!Screen.isLg">
+					<AppRealmFullCard v-if="Screen.isDesktop" :realm="realm" />
+					<template v-else>
+						<h1 class="-heading">
+							<span class="-heading-text">{{ realm.name }}</span>
+							<AppButton
+								class="-more"
+								icon="share-airplane"
+								trans
+								@click="onShareClick"
+							>
+								<AppTranslate>Share</AppTranslate>
+							</AppButton>
+						</h1>
 
-								<AppRealmFollowButton class="-follow" :realm="realm" block />
-							</template>
+						<AppRealmFollowButton class="-follow" :realm="realm" block />
+					</template>
 
-							<div class="-followers">
-								<AppUserKnownFollowers
-									:users="knownFollowers"
-									:count="knownFollowerCount"
+					<div class="-followers">
+						<AppUserKnownFollowers
+							:users="knownFollowers"
+							:count="knownFollowerCount"
+						/>
+					</div>
+				</AppScrollAffix>
+			</template>
+			<template #right>
+				<AppScrollAffix :disabled="!Screen.isLg">
+					<h5 class="-communities-header sans-margin-top">
+						<AppTranslate>Top Contributing Communities</AppTranslate>
+					</h5>
+
+					<div class="-communities">
+						<template v-if="!isBootstrapped">
+							<div
+								v-for="i in 3"
+								:key="i"
+								class="-community-item -community-thumb-placeholder"
+							>
+								<AppResponsiveDimensions :ratio="1" />
+							</div>
+						</template>
+						<template v-else>
+							<RouterLink
+								v-for="community of shownCommunities"
+								:key="community.id"
+								v-app-tooltip.bottom="community.name"
+								class="-community-item link-unstyled"
+								:to="community.routeLocation"
+							>
+								<AppCommunityThumbnailImg
+									class="-community-thumb"
+									:community="community"
 								/>
-							</div>
-						</AppScrollAffix>
+								<AppCommunityVerifiedTick
+									class="-community-verified-tick"
+									:community="community"
+									no-tooltip
+								/>
+							</RouterLink>
+						</template>
 					</div>
 
-					<div class="col-lg-3 col-lg-push-6">
-						<AppScrollAffix :disabled="!Screen.isLg">
-							<h5 class="-communities-header sans-margin-top">
-								<AppTranslate>Top Contributing Communities</AppTranslate>
-							</h5>
-
-							<div class="-communities">
-								<template v-if="!isBootstrapped">
-									<div
-										v-for="i in 3"
-										:key="i"
-										class="-community-item -community-thumb-placeholder"
-									>
-										<AppResponsiveDimensions :ratio="1" />
-									</div>
-								</template>
-								<template v-else>
-									<RouterLink
-										v-for="community of shownCommunities"
-										:key="community.id"
-										v-app-tooltip.bottom="community.name"
-										class="-community-item link-unstyled"
-										:to="community.routeLocation"
-									>
-										<AppCommunityThumbnailImg
-											class="-community-thumb"
-											:community="community"
-										/>
-										<AppCommunityVerifiedTick
-											class="-community-verified-tick"
-											:community="community"
-											no-tooltip
-										/>
-									</RouterLink>
-								</template>
-							</div>
-
-							<AppShareCard
-								v-if="shareLink && Screen.isLg"
-								resource="realm"
-								:url="shareLink"
-							/>
-						</AppScrollAffix>
-					</div>
-
-					<div class="col-lg-6 col-lg-pull-3">
-						<AppActivityFeed v-if="feed?.isBootstrapped" :feed="feed" />
-					</div>
-				</div>
-			</div>
-		</section>
-	</div>
+					<AppShareCard
+						v-if="shareLink && Screen.isDesktop"
+						resource="realm"
+						:url="shareLink"
+					/>
+				</AppScrollAffix>
+			</template>
+			<template #default>
+				<AppActivityFeed v-if="feed?.isBootstrapped" :feed="feed" />
+			</template>
+		</AppPageContainer>
+	</section>
 </template>
 
 <style lang="stylus" scoped>
