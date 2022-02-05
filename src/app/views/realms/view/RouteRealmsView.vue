@@ -25,6 +25,7 @@ import { ShareModal } from '../../../../_common/share/card/_modal/modal.service'
 import { RealmCommunity } from '../../../../_common/realm/realm-community-model';
 import AppResponsiveDimensions from '../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
+import { Meta } from '../../../../_common/meta/meta-service';
 
 export default {
 	...defineAppRouteOptions({
@@ -60,7 +61,11 @@ const shownCommunities = computed(() => realmCommunities.value.map(i => i.commun
 
 const { isBootstrapped } = createAppRoute({
 	routeTitle: computed(() =>
-		realm.value ? $gettextInterpolate(`%{ realm } Realm`, { realm: realm.value.name }) : ''
+		realm.value
+			? $gettextInterpolate(`%{ realm } Realm - Art, videos, guides, polls and more`, {
+					realm: realm.value.name,
+			  })
+			: null
 	),
 	onInit() {
 		feed.value = ActivityFeedService.routeInitComposition(false);
@@ -85,6 +90,10 @@ const { isBootstrapped } = createAppRoute({
 			feedPayload.items,
 			fromCache
 		);
+
+		Meta.description = payload.metaDescription;
+		Meta.fb = payload.fb;
+		Meta.twitter = payload.twitter;
 	},
 });
 
