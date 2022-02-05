@@ -9,7 +9,8 @@ import AppTranslate from '../../translate/AppTranslate.vue';
 import { Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
 import { HistoryCache } from '../../history/cache/cache.service';
-import { useRoute } from 'vue-router';
+import { useRoute, RouterLink } from 'vue-router';
+import { trackGotoRealm } from '../../analytics/analytics.service';
 
 const props = defineProps({
 	realm: {
@@ -62,9 +63,20 @@ const items = ref(EventItem.populate<EventItem>(payload.items));
 							:link-to="num === items.length ? realm.routeLocation : undefined"
 						>
 							<template v-if="num === items.length" #overlay>
-								<div class="-overlay">
-									<AppTranslate>See more in this realm</AppTranslate>
-								</div>
+								<RouterLink
+									class="-overlay"
+									:to="realm.routeLocation"
+									@click="
+										trackGotoRealm({
+											path: realm.path,
+											source: 'realmChunkPost',
+										})
+									"
+								>
+									<div class="-overlay-inner">
+										<AppTranslate>See more in this realm</AppTranslate>
+									</div>
+								</RouterLink>
 							</template>
 						</AppPostCard>
 					</template>
@@ -84,5 +96,20 @@ const items = ref(EventItem.populate<EventItem>(payload.items));
 	margin-right: -($grid-gutter-width-xs * 0.5)
 
 .-overlay
+	overlay-text-shadow()
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	display: flex
+	align-items: center
+	justify-content: center
+	font-size: $font-size-tiny
+	font-weight: 700
+	color: white
+	text-align: center
+
+.-overlay-inner
 	width: 75px
 </style>

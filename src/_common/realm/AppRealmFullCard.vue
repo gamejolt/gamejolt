@@ -26,7 +26,7 @@ defineProps({
 		</AppResponsiveDimensions>
 
 		<div class="-content">
-			<AppRealmFollowButton :realm="realm" block />
+			<AppRealmFollowButton :realm="realm" source="fullCard" block />
 		</div>
 	</div>
 </template>

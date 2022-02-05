@@ -1,6 +1,6 @@
 <script lang="ts">
 import { computed, nextTick, onMounted, PropType, ref, toRefs, useSlots, watch } from 'vue';
-import { RouteLocationRaw, RouterLink } from 'vue-router';
+import { RouterLink } from 'vue-router';
 import { PostOpenSource, trackPostOpen } from '../../../analytics/analytics.service';
 import { ContentFocus } from '../../../content-focus/content-focus.service';
 import AppContentViewer from '../../../content/content-viewer/content-viewer.vue';
@@ -46,13 +46,9 @@ const props = defineProps({
 	withUser: {
 		type: Boolean,
 	},
-	linkTo: {
-		type: Object as PropType<RouteLocationRaw>,
-		default: undefined,
-	},
 });
 
-const { post, source, videoContext, withUser, linkTo } = toRefs(props);
+const { post, source, videoContext, withUser } = toRefs(props);
 const slots = useSlots();
 
 const root = ref<HTMLElement>();
@@ -115,7 +111,6 @@ const likedPost = computed(() => {
 	return false;
 });
 
-const routeLocation = computed(() => linkTo?.value ?? post.value.routeLocation);
 const userLink = computed(() => Environment.wttfBaseUrl + post.value?.user.url);
 
 async function calcData() {
@@ -233,11 +228,15 @@ function _initVideoController() {
 				@inview="inView"
 				@outview="outView"
 			>
-				<RouterLink class="-link" :to="routeLocation" @click="trackPostOpen({ source })" />
-
 				<div v-if="hasOverlayContent" class="-overlay">
 					<slot name="overlay" />
 				</div>
+
+				<RouterLink
+					class="-link"
+					:to="post.routeLocation"
+					@click="trackPostOpen({ source })"
+				/>
 
 				<div ref="cardElem" class="-inner" :class="{ '-blur': hasOverlayContent }">
 					<template v-if="!!mediaItem">
@@ -325,14 +324,14 @@ $-padding = 8px
 
 .post-card
 	cursor: pointer
+	outline: solid $border-width-base transparent
+	transition: outline-color 200ms ease !important
 
 	&:hover
 		elevate-2()
-
-		.-link
-			border-color: var(--theme-link)
-			// This will immediately show the border and then transition out.
-			transition: none !important
+		outline-color: var(--theme-link)
+		// This will immediately show the border and then transition out.
+		transition: none !important
 
 .-link
 	rounded-corners-lg()
@@ -341,26 +340,16 @@ $-padding = 8px
 	top: 0
 	right: 0
 	bottom: 0
-	border: solid $border-width-base transparent
-	transition: border-color 200ms ease !important
-	z-index: 2
+	z-index: 1
 
 .-overlay
-	overlay-text-shadow()
 	position: absolute
 	top: 0
 	right: 0
 	bottom: 0
 	left: 0
-	display: flex
-	align-items: center
-	justify-content: center
-	font-size: $font-size-tiny
-	font-weight: 700
-	color: white
-	text-align: center
 	background-color: rgba(black, 0.5)
-	z-index: 1
+	z-index: 2
 
 .-blur
 	filter: blur(4px)

@@ -7,6 +7,7 @@ import AppSpacer from '../../spacer/AppSpacer.vue';
 import { RouterLink } from 'vue-router';
 import AppRealmChunkPosts from './AppRealmChunkPosts.vue';
 import AppRealmChunkPostsPlaceholder from './AppRealmChunkPostsPlaceholder.vue';
+import { trackGotoRealm } from '../../analytics/analytics.service';
 
 const CardsPerRow = 5;
 
@@ -18,20 +19,16 @@ const props = defineProps({
 });
 
 const { realm } = toRefs(props);
-
-// trackGotoCommunity() {
-// 	trackGotoCommunity({
-// 		source: 'communityChunk',
-// 		id: this.community.id,
-// 		path: this.community.path,
-// 	});
-// }
 </script>
 
 <template>
 	<div class="-chunk">
 		<div class="-header">
-			<RouterLink class="-header-link" :to="realm.routeLocation">
+			<RouterLink
+				class="-header-link"
+				:to="realm.routeLocation"
+				@click="trackGotoRealm({ path: realm.path, source: 'realmChunk' })"
+			>
 				<div class="-thumb">
 					<AppRealmThumbnail :realm="realm" />
 				</div>
@@ -46,7 +43,7 @@ const { realm } = toRefs(props);
 			<AppSpacer horizontal :scale="3" />
 
 			<div class="-follow" :style="{ width: `calc(${100 / CardsPerRow}% - 12px)` }">
-				<AppRealmFollowButton :realm="realm" block />
+				<AppRealmFollowButton :realm="realm" source="realmChunk" block />
 			</div>
 		</div>
 

@@ -8,10 +8,15 @@ import { showErrorGrowl } from '../growls/growls.service';
 import { $gettext } from '../translate/translate.service';
 import { vAppAuthRequired } from '../auth/auth-required-directive';
 import { ModalConfirm } from '../modal/confirm/confirm-service';
+import { RealmFollowSource, trackRealmFollow } from '../analytics/analytics.service';
 
 const props = defineProps({
 	realm: {
 		type: Object as PropType<Realm>,
+		required: true,
+	},
+	source: {
+		type: String as PropType<RealmFollowSource>,
 		required: true,
 	},
 	block: {
@@ -19,7 +24,7 @@ const props = defineProps({
 	},
 });
 
-const { realm } = toRefs(props);
+const { realm, source } = toRefs(props);
 const { user } = useCommonStore();
 
 const isProcessing = ref(false);
@@ -34,9 +39,11 @@ async function onClick() {
 	if (!realm.value.is_following) {
 		try {
 			await followRealm(realm.value);
+			trackRealmFollow(true, { source: source.value });
 		} catch (e) {
 			console.error(e);
 			showErrorGrowl($gettext(`Failed to follow realm.`));
+			trackRealmFollow(true, { failed: true, source: source.value });
 		}
 	} else {
 		try {
@@ -47,9 +54,11 @@ async function onClick() {
 
 			if (result) {
 				await unfollowRealm(realm.value);
+				trackRealmFollow(false, { source: source.value });
 			}
 		} catch (e) {
 			showErrorGrowl($gettext(`Error while trying to unfollow realm.`));
+			trackRealmFollow(false, { failed: true, source: source.value });
 		}
 	}
 

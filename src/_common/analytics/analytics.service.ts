@@ -22,6 +22,7 @@ export const SOCIAL_ACTION_TWEET = 'tweet';
 export const SOCIAL_ACTION_FOLLOW = 'follow';
 
 export type CommunityOpenSource = 'communityChunk' | 'card' | 'cbar' | 'thumbnail';
+export type CommunityJoinLocation = 'onboarding' | 'card' | 'communityPage' | 'homeBanner' | 'cbar';
 export type PostOpenSource = 'realmChunk' | 'communityChunk' | 'postRecommendation' | 'feed';
 export type PostControlsLocation = 'feed' | 'broadcast' | 'postPage';
 export type UserFollowLocation =
@@ -33,7 +34,8 @@ export type UserFollowLocation =
 	| 'userList'
 	| 'gameFollow';
 export type GameFollowLocation = 'thumbnail' | 'gamePage' | 'badge' | 'homeBanner' | 'library';
-export type CommunityJoinLocation = 'onboarding' | 'card' | 'communityPage' | 'homeBanner' | 'cbar';
+export type RealmOpenSource = 'realmChunk' | 'realmChunkPost';
+export type RealmFollowSource = 'realmChunk' | 'fullCard';
 export type BannerType = 'store';
 
 /**
@@ -267,6 +269,10 @@ export function trackGotoCommunity(params: {
 	_trackEvent('goto_community', params);
 }
 
+export function trackGotoRealm(params: { path: string; source: RealmOpenSource }) {
+	_trackEvent('goto_realm', params);
+}
+
 export function trackPostOpen(params: { source: PostOpenSource }) {
 	_trackEvent('post_open', params);
 }
@@ -344,6 +350,20 @@ export function trackCommunityJoin(
 	}
 
 	_trackEvent(`community_${type}`, { location });
+}
+
+export function trackRealmFollow(
+	followed: boolean,
+	params: { failed?: boolean; source: RealmFollowSource }
+) {
+	const { failed, source } = params;
+
+	let type = followed ? 'follow' : 'unfollow';
+	if (failed) {
+		type += '_fail';
+	}
+
+	_trackEvent(`realm_${type}`, { source });
 }
 
 export function trackCommentAdd() {
