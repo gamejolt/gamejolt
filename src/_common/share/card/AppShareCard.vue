@@ -1,42 +1,43 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType } from 'vue';
 import { copyShareLink, ShareProvider, ShareResource } from '../share.service';
 import { ShareModal } from './_modal/modal.service';
-import AppShareCardTile from './_tile/tile.vue';
+import AppShareCardTile from './AppShareCardTile.vue';
+import AppTranslate from '../../translate/AppTranslate.vue';
+import AppButton from '../../button/AppButton.vue';
+import AppJolticon from '../../jolticon/AppJolticon.vue';
 
-@Options({
-	components: {
-		AppShareCardTile,
+const props = defineProps({
+	resource: {
+		type: String as PropType<ShareResource>,
+		required: true,
 	},
-})
-export default class AppShareCard extends Vue {
-	@Prop({ type: String, required: true })
-	resource!: ShareResource;
+	url: {
+		type: String,
+		required: true,
+	},
+	hideHeading: {
+		type: Boolean,
+	},
+	bleedPadding: {
+		type: Boolean,
+	},
+	offsetColor: {
+		type: Boolean,
+	},
+});
 
-	@Prop({ type: String, required: true })
-	url!: string;
+const providers: ShareProvider[] = ['facebook', 'twitter'];
 
-	@Prop({ type: Boolean })
-	hideHeading!: boolean;
+function openShareModal() {
+	ShareModal.show({
+		resource: props.resource,
+		url: props.url,
+	});
+}
 
-	@Prop({ type: Boolean })
-	bleedPadding!: boolean;
-
-	@Prop({ type: Boolean })
-	offsetColor!: boolean;
-
-	readonly providers: ShareProvider[] = ['facebook', 'twitter'];
-
-	openShareModal() {
-		ShareModal.show({
-			resource: this.resource,
-			url: this.url,
-		});
-	}
-
-	copyLink() {
-		copyShareLink(this.url, this.resource);
-	}
+function copyLink() {
+	copyShareLink(props.url, props.resource);
 }
 </script>
 

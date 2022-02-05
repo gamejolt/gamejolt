@@ -18,7 +18,7 @@ import {
 	CommentThreadModalPermalinkDeregister,
 } from '../../../../_common/comment/thread/modal.service';
 import { Community } from '../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
@@ -36,7 +36,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
-import AppShareCard from '../../../../_common/share/card/card.vue';
+import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
@@ -51,7 +51,7 @@ import AppGameListPlaceholder from '../../../components/game/list/placeholder/pl
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import { TrophyModal } from '../../../components/trophy/modal/modal.service';
 import AppTrophyThumbnail from '../../../components/trophy/thumbnail/thumbnail.vue';
-import AppUserKnownFollowers from '../../../components/user/known-followers/known-followers.vue';
+import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useAppStore } from '../../../store/index';
 import { useProfileRouteController } from '../profile.vue';
 
@@ -735,6 +735,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 										@click="toggleShowAllCommunities"
 									>
 										<AppTranslate>View All</AppTranslate>
+										{{ ' ' }}
 										<small>({{ formatNumber(communitiesCount) }})</small>
 									</AppButton>
 								</div>
@@ -758,15 +759,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 										:key="community.id"
 										v-app-tooltip.bottom="community.name"
 										class="-community-item link-unstyled"
-										:to="{
-											name: 'communities.view.overview',
-											params: { path: community.path },
-										}"
+										:to="community.routeLocation"
 									>
-										<AppCommunityThumbnailImg
-											class="-community-thumb"
-											:community="community"
-										/>
+										<AppCommunityThumbnailImg :community="community" />
 										<AppCommunityVerifiedTick
 											class="-community-verified-tick"
 											:community="community"
@@ -791,6 +786,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 										}"
 									>
 										<AppTranslate>View All</AppTranslate>
+										{{ ' ' }}
 										<small>({{ formatNumber(gamesCount) }})</small>
 									</AppButton>
 								</div>
@@ -943,16 +939,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	outline: 0
 	width: 100%
 	height: auto
-
-.-community-thumb
-	img-circle()
-	change-bg('dark')
-	width: 100%
-	height: 100%
-
-	::v-deep(img)
-		width: calc(100% - 2px)
-		height: calc(100% - 2px)
 
 .-community-thumb-placeholder
 	img-circle()

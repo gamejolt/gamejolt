@@ -228,7 +228,7 @@ const { isLoading } = createAppRoute({
 			filtering.value.isPersistent = true;
 
 			// A stub listing to show before we load.
-			listing.value = HistoryCache.get(route, listingKey)?.data ?? new GameListingContainer();
+			listing.value = HistoryCache.get(route, listingKey) ?? new GameListingContainer();
 		}
 
 		filtering.value.init(route);
@@ -238,8 +238,8 @@ const { isLoading } = createAppRoute({
 		filtering.value!.init(route);
 
 		const cachedListing = HistoryCache.get(route, listingKey);
-		if (cachedListing?.data) {
-			listing.value = cachedListing.data;
+		if (cachedListing) {
+			listing.value = cachedListing;
 		} else {
 			listing.value = new GameListingContainer();
 			listing.value.processPayload(route, payload);

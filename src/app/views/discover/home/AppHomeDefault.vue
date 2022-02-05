@@ -9,6 +9,9 @@ import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import AppDiscoverHomeBanner from './_home-default/AppDiscoverHomeBanner.vue';
 import AppDiscoverHomeCommunities from './_home-default/AppDiscoverHomeCommunities.vue';
+import { Realm } from '../../../../_common/realm/realm-model';
+import AppDiscoverHomeRealms from './_home-default/AppDiscoverHomeRealms.vue';
+import { configRealms } from '../../../../_common/config/config.service';
 
 defineProps({
 	isBootstrapped: {
@@ -25,6 +28,10 @@ defineProps({
 	featuredFireside: {
 		type: Object as PropType<Fireside>,
 		default: null,
+	},
+	featuredRealms: {
+		type: Array as PropType<Realm[]>,
+		default: () => [],
 	},
 });
 
@@ -59,6 +66,12 @@ const { user } = useCommonStore();
 
 				<br />
 			</template>
+
+			<AppDiscoverHomeRealms
+				v-if="configRealms.value"
+				:is-loading="!isBootstrapped"
+				:realms="featuredRealms"
+			/>
 
 			<AppDiscoverHomeCommunities
 				:is-loading="!isBootstrapped"

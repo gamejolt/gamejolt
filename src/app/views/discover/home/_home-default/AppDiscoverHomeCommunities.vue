@@ -1,76 +1,23 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Prop, Vue } from 'vue-property-decorator';
-import { numberSort } from '../../../../../utils/array';
+<script lang="ts" setup>
+import { computed, PropType } from 'vue';
 import AppCommunityCardPlaceholder from '../../../../../_common/community/card-placeholder/card-placeholder.vue';
 import AppCommunityCard from '../../../../../_common/community/card/card.vue';
-import AppCommunityChunkPlaceholder from '../../../../../_common/community/chunk/AppCommunityChunkPlaceholder.vue';
-import AppCommunityChunk from '../../../../../_common/community/chunk/chunk.vue';
 import { Community } from '../../../../../_common/community/community.model';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { useCommonStore } from '../../../../../_common/store/common-store';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 
-const EmphasizedCommunityIDs = [
-	// Minecraft
-	15,
-	// Pokemon
-	7,
-	// Arts n' Crafts
-	1462,
-	// Game Dev
-	57,
-	// 3D Art
-	4269,
-];
-
-@Options({
-	components: {
-		AppCommunityCard,
-		AppCommunityCardPlaceholder,
-		AppCommunityChunkPlaceholder,
-		AppCommunityChunk,
+const props = defineProps({
+	communities: {
+		type: Array as PropType<Community[]>,
+		required: true,
 	},
-})
-export default class AppDiscoverHomeCommunities extends Vue {
-	@Prop({ type: Array, required: true }) communities!: Community[];
-	@Prop({ type: Boolean, default: false }) isLoading!: boolean;
+	isLoading: {
+		type: Boolean,
+	},
+});
 
-	commonStore = setup(() => useCommonStore());
-
-	get app() {
-		return this.commonStore;
-	}
-
-	get filteredCommunities() {
-		const localCommunities = this.communities.map(i => i);
-		const emphasizedCommunities: Community[] = [];
-		const normalCommunities: Community[] = [];
-
-		localCommunities.forEach(i => {
-			const index = EmphasizedCommunityIDs.indexOf(i.id);
-			if (index === -1) {
-				normalCommunities.push(i);
-			} else {
-				emphasizedCommunities.push(i);
-			}
-		});
-
-		emphasizedCommunities.sort((a, b) => {
-			const indexA = EmphasizedCommunityIDs.indexOf(a.id);
-			const indexB = EmphasizedCommunityIDs.indexOf(b.id);
-			return numberSort(indexA, indexB);
-		});
-
-		return {
-			top: emphasizedCommunities,
-			other: normalCommunities,
-		};
-	}
-
-	get slicedCommunities() {
-		return this.filteredCommunities.other.slice(0, Screen.isMobile ? 18 : 24);
-	}
-}
+const slicedCommunities = computed(() => props.communities.slice(0, Screen.isMobile ? 18 : 24));
 </script>
 
 <template>
@@ -96,16 +43,6 @@ export default class AppDiscoverHomeCommunities extends Vue {
 			</div>
 		</div>
 		<template v-else>
-			<template v-if="filteredCommunities.top.length > 0">
-				<div class="row">
-					<template v-for="community of filteredCommunities.top" :key="community.id">
-						<AppCommunityChunk class="-chunk" :community="community" />
-					</template>
-				</div>
-			</template>
-
-			<br />
-
 			<div class="row">
 				<div
 					v-for="community of slicedCommunities"
@@ -134,8 +71,3 @@ export default class AppDiscoverHomeCommunities extends Vue {
 		</div>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.-chunk
-	margin-bottom: $grid-gutter-width
-</style>

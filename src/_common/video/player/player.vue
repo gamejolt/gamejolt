@@ -6,10 +6,9 @@ import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppLoading from '../../loading/loading.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../media-item/media-item-model';
-import {
-	AppResponsiveDimensions,
+import AppResponsiveDimensions, {
 	AppResponsiveDimensionsChangeEvent,
-} from '../../responsive-dimensions/responsive-dimensions';
+} from '../../responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../screen/screen-service';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { VideoSourceArray } from '../video.vue';

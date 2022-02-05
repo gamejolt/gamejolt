@@ -5,7 +5,7 @@ import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
 import { useDrawerStore } from '../drawer/drawer-store';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import { Screen } from '../screen/screen-service';
-import AppScrollAffix from '../scroll/affix/affix.vue';
+import AppScrollAffix from '../scroll/AppScrollAffix.vue';
 import AppScrollScroller, { createScroller } from '../scroll/AppScrollScroller.vue';
 import AppTheme from '../theme/AppTheme.vue';
 import { Theme } from '../theme/theme.model';
@@ -148,7 +148,7 @@ function scrollTo(offsetY: number) {
 				>
 					<slot />
 
-					<AppScrollAffix v-if="hasFooter" anchor="bottom">
+					<AppScrollAffix v-if="hasFooter" anchor="bottom" :padding="0">
 						<div class="-footer fill-offset">
 							<slot name="footer" />
 						</div>

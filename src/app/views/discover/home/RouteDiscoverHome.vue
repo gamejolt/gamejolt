@@ -9,6 +9,7 @@ import { Environment } from '../../../../_common/environment/environment.service
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Meta } from '../../../../_common/meta/meta-service';
+import { Realm } from '../../../../_common/realm/realm-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -34,6 +35,7 @@ const { user, userBootstrapped } = useCommonStore();
 const featuredItem = ref<FeaturedItem>();
 const featuredCommunities = ref<Community[]>([]);
 const featuredFireside = ref<Fireside>();
+const featuredRealms = ref<Realm[]>([]);
 const heroPosts = ref<FiresidePost[]>([]);
 const split = ref<'default' | 'hero'>();
 
@@ -74,6 +76,7 @@ const { isBootstrapped } = createAppRoute({
 		featuredFireside.value = payload.featuredFireside
 			? new Fireside(payload.featuredFireside)
 			: undefined;
+		featuredRealms.value = Realm.populate(payload.featuredRealms);
 
 		heroPosts.value = FiresidePost.populate<FiresidePost>(payload.heroPosts).filter(
 			i => i.hasMedia || i.hasVideo
@@ -116,6 +119,7 @@ watch(
 		:featured-item="featuredItem"
 		:featured-communities="featuredCommunities"
 		:featured-fireside="featuredFireside"
+		:featured-realms="featuredRealms"
 	/>
 	<AppHomeSlider v-else-if="split === 'hero'" :posts="heroPosts" />
 </template>

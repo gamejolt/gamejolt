@@ -8,7 +8,7 @@ import {
 	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../../../../../_common/scroll/affix/affix.vue';
+import AppScrollAffix from '../../../../../../../_common/scroll/AppScrollAffix.vue';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import FormGameMaturity from '../../../../../../components/forms/game/maturity/maturity.vue';
 import AppGameOgrs from '../../../../../../components/game/ogrs/ogrs.vue';
@@ -61,7 +61,7 @@ export default class RouteDashGamesManageGameMaturity extends BaseRouteComponent
 <template>
 	<div class="row">
 		<div class="col-sm-5 col-sm-push-7">
-			<AppScrollAffix v-if="current" :disabled="!Screen.isDesktop" :scroll-offset="15">
+			<AppScrollAffix v-if="current" :disabled="!Screen.isDesktop">
 				<div v-if="current.tigrs_age" class="anim-fade-enter anim-fade-leave">
 					<AppGameOgrs :game="current" />
 				</div>

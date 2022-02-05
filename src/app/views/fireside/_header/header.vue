@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../../utils/vue';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';

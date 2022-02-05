@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Inject, Options, Vue } from 'vue-property-decorator';
 import { isEditingCommunity } from '../../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppEditableOverlay from '../../../../../_common/editable-overlay/editable-overlay.vue';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { CommunityThumbnailModal } from '../../../../components/forms/community/thumbnail/modal/modal.service';

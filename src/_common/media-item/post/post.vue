@@ -3,10 +3,9 @@ import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../utils/vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
-import {
-	AppResponsiveDimensions,
+import AppResponsiveDimensions, {
 	AppResponsiveDimensionsChangeEvent,
-} from '../../responsive-dimensions/responsive-dimensions';
+} from '../../responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../screen/screen-service';
 import {
 	createStickerTargetController,

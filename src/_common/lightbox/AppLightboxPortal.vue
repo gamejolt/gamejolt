@@ -3,7 +3,7 @@ import { computed, nextTick, ref, watch } from 'vue';
 import { Analytics } from '../analytics/analytics.service';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import { onScreenResize, Screen } from '../screen/screen-service';
-import AppShortkey from '../shortkey/shortkey.vue';
+import AppShortkey from '../shortkey/AppShortkey.vue';
 import { EventSubscription } from '../system/event/event-topic';
 import AppTouch, { AppTouchInput } from '../touch/AppTouch.vue';
 import AppLightboxItem from './item/item.vue';

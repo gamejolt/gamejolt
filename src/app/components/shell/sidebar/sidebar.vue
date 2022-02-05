@@ -4,7 +4,7 @@ import { setup } from 'vue-class-component';
 import { Options, Vue, Watch } from 'vue-property-decorator';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import AppShortkey from '../../../../_common/shortkey/shortkey.vue';
+import AppShortkey from '../../../../_common/shortkey/AppShortkey.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { useAppStore } from '../../../store';
 import AppShellSidebarContext from './context/context.vue';

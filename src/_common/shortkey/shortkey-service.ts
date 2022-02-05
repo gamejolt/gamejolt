@@ -1,6 +1,7 @@
+import { onMounted, onUnmounted } from 'vue';
 import { arrayRemove } from '../../utils/array';
 
-type ShortkeyCallback = (e: Event) => void;
+type ShortkeyCallback = (e: KeyboardEvent) => void;
 
 export class Shortkeys {
 	public static enabled = true;
@@ -36,16 +37,19 @@ export class Shortkeys {
 			return;
 		}
 		const activeElement = document.activeElement;
-		const tagName = activeElement.tagName.toLowerCase();
-		// Don't fire for these elements ever.
-		// Adding a `data-prevent-shortkey` attribute to an element will prevent shortkeys from firing when that element is focused.
-		if (
-			tagName === 'input' ||
-			tagName === 'textarea' ||
-			tagName === 'select' ||
-			activeElement.hasAttribute('data-prevent-shortkey')
-		) {
-			return;
+		if (activeElement) {
+			const tagName = activeElement.tagName.toLowerCase();
+
+			// Don't fire for these elements ever.
+			// Adding a `data-prevent-shortkey` attribute to an element will prevent shortkeys from firing when that element is focused.
+			if (
+				tagName === 'input' ||
+				tagName === 'textarea' ||
+				tagName === 'select' ||
+				activeElement.hasAttribute('data-prevent-shortkey')
+			) {
+				return;
+			}
 		}
 
 		const handlers = this._handlers[e.key.toLowerCase()];
@@ -56,4 +60,27 @@ export class Shortkeys {
 			e.preventDefault();
 		}
 	}
+}
+
+export function useShortkey(key: string, callback: ShortkeyCallback) {
+	let _isRegistered = false;
+
+	onMounted(() => {
+		Shortkeys.register(key, callback);
+		_isRegistered = true;
+	});
+
+	onUnmounted(unregister);
+
+	function unregister() {
+		if (!_isRegistered) {
+			return;
+		}
+		Shortkeys.unregister(key, callback);
+		_isRegistered = false;
+	}
+
+	return {
+		unregister,
+	};
 }

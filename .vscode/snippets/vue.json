@@ -6,7 +6,9 @@
 	"Vue component": {
 		"prefix": "vue-component",
 		"body": [
-			"<script lang=\"ts\" setup></script>",
+			"<script lang=\"ts\" setup>",
+			"const props = defineProps({});",
+			"</script>",
 			"",
 			"<template></template>",
 			"",

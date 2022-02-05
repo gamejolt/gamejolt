@@ -5,7 +5,7 @@ import AppJolticonsStyleguide from '../../../_common/jolticons/jolticons-stylegu
 import AppListGroupStyleguide from '../../../_common/list-group/list-group-styleguide.vue';
 import AppProgressBarStyleguide from '../../../_common/progress/bar/bar-styleguide.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
-import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
+import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
 import { vAppScrollTo } from '../../../_common/scroll/to/to.directive';
 import AppThemeSvgStyleguide from '../../../_common/theme/svg/svg-styleguide.vue';
 import { User } from '../../../_common/user/user.model';

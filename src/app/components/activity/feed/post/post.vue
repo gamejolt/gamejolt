@@ -438,6 +438,7 @@ export default class AppActivityFeedPost extends Vue {
 							<AppJolticon icon="thumbtack" />
 							<AppTranslate>Pinned</AppTranslate>
 						</span>
+						{{ ' ' }}
 						<AppActivityFeedPostTime
 							v-if="shouldShowDate"
 							:post="post"
