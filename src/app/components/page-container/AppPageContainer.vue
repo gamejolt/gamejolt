@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, toRefs, useSlots } from 'vue';
+import { computed, toRefs } from 'vue';
 import { Screen } from '../../../_common/screen/screen-service';
 
 const validOrder = ['main', 'left', 'right'];
@@ -28,7 +28,6 @@ const props = defineProps({
 });
 
 const { xl, noLeft, noRight, order } = toRefs(props);
-useSlots();
 
 const hasLeftColumn = computed(() => !noLeft.value && Screen.isLg);
 const hasRightColumn = computed(() => !noRight.value);
