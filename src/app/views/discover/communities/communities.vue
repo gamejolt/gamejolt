@@ -79,8 +79,8 @@ export default class RouteDiscoverCommunities extends BaseRouteComponent {
 	routeCreated() {
 		const cachedData = HistoryCache.get<CacheData>(this.$route, cacheKey);
 
-		this.communities = cachedData?.data?.communities ?? [];
-		this.page = cachedData?.data?.page ?? 1;
+		this.communities = cachedData?.communities ?? [];
+		this.page = cachedData?.page ?? 1;
 		this.isLoading = false;
 		this.hasMore = true;
 
@@ -89,9 +89,9 @@ export default class RouteDiscoverCommunities extends BaseRouteComponent {
 
 	routeResolved(payload: any) {
 		const cachedData = HistoryCache.get<CacheData>(this.$route, cacheKey);
-		if (cachedData?.data) {
-			this.communities = cachedData.data.communities;
-			this.page = cachedData.data.page;
+		if (cachedData) {
+			this.communities = cachedData.communities;
+			this.page = cachedData.page;
 		} else {
 			this.processPayload(payload);
 		}

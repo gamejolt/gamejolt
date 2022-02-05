@@ -8,6 +8,8 @@ import { Api } from '../../api/api.service';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
+import { HistoryCache } from '../../history/cache/cache.service';
+import { useRoute } from 'vue-router';
 
 const props = defineProps({
 	realm: {
@@ -21,13 +23,19 @@ const props = defineProps({
 });
 
 const { realm } = toRefs(props);
+const route = useRoute();
 
-// TODO: cache this data when going back to the page
-const payload = await Api.sendRequest(
-	`/web/posts/fetch/realm/${realm.value.path}?perPage=5`,
-	{},
-	{ detach: true }
-);
+const cacheKey = `realm-chunk-${realm.value.id}`;
+
+const payload =
+	HistoryCache.get(route, cacheKey) ??
+	(await Api.sendRequest(
+		`/web/posts/fetch/realm/${realm.value.path}?perPage=5`,
+		{},
+		{ detach: true }
+	));
+
+HistoryCache.store(route, payload, cacheKey);
 
 const items = ref(EventItem.populate<EventItem>(payload.items));
 </script>

@@ -1,7 +1,7 @@
 import { HistoryState, RouteLocationNormalized } from 'vue-router';
 import { arrayRemove } from '../../../utils/array';
 
-const MAX_ITEMS = 10;
+const MAX_ITEMS = 20;
 
 interface HistoryCacheState<T = any> {
 	tag: string | symbol | undefined;
@@ -28,14 +28,7 @@ export class HistoryCache {
 	}
 
 	static get<T = any>(route: RouteLocationNormalized, tag?: string | symbol) {
-		const historyState = this.getHistoryState();
-		if (!historyState) {
-			return null;
-		}
-
-		const state: HistoryCacheState<T> | undefined = this.states.find(
-			i => i.url === route.fullPath && i.tag === tag
-		);
+		const state = this._get<T>(route, tag);
 
 		if (state) {
 			// We have to put the state back on top so that it was just
@@ -43,14 +36,25 @@ export class HistoryCache {
 			arrayRemove(this.states, i => i === state);
 			this.states.push(state);
 
-			return state;
+			return state.data;
 		}
 
-		return null;
+		return undefined;
 	}
 
 	static has(route: RouteLocationNormalized, tag?: string | symbol) {
-		return !!this.get(route, tag);
+		return !!this._get(route, tag);
+	}
+
+	private static _get<T = any>(route: RouteLocationNormalized, tag?: string | symbol) {
+		const historyState = this.getHistoryState();
+		if (!historyState) {
+			return undefined;
+		}
+
+		return this.states.find(i => i.url === route.fullPath && i.tag === tag) as
+			| HistoryCacheState<T>
+			| undefined;
 	}
 
 	static store<T = any>(route: RouteLocationNormalized, data: T, tag?: string | symbol) {
