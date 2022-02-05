@@ -1,6 +1,6 @@
 <script lang="ts">
 import { computed, nextTick, onMounted, PropType, ref, toRefs, useSlots, watch } from 'vue';
-import { RouterLink } from 'vue-router';
+import { RouteLocationRaw, RouterLink } from 'vue-router';
 import { PostOpenSource, trackPostOpen } from '../../../analytics/analytics.service';
 import { ContentFocus } from '../../../content-focus/content-focus.service';
 import AppContentViewer from '../../../content/content-viewer/content-viewer.vue';
@@ -46,9 +46,13 @@ const props = defineProps({
 	withUser: {
 		type: Boolean,
 	},
+	linkTo: {
+		type: Object as PropType<RouteLocationRaw>,
+		default: undefined,
+	},
 });
 
-const { post, source, videoContext, withUser } = toRefs(props);
+const { post, source, videoContext, withUser, linkTo } = toRefs(props);
 const slots = useSlots();
 
 const root = ref<HTMLElement>();
@@ -111,6 +115,7 @@ const likedPost = computed(() => {
 	return false;
 });
 
+const routeLocation = computed(() => linkTo?.value ?? post.value.routeLocation);
 const userLink = computed(() => Environment.wttfBaseUrl + post.value?.user.url);
 
 async function calcData() {
@@ -228,11 +233,7 @@ function _initVideoController() {
 				@inview="inView"
 				@outview="outView"
 			>
-				<RouterLink
-					class="-link"
-					:to="post.routeLocation"
-					@click="trackPostOpen({ source })"
-				/>
+				<RouterLink class="-link" :to="routeLocation" @click="trackPostOpen({ source })" />
 
 				<div class="-overlay">
 					<slot name="overlay" />

@@ -1,9 +1,14 @@
+$-card-spacing = 4px * 4
+
+.-scroller
+	padding-bottom: 12px
+
 .-posts
 	display: flex
 
-	.-card
-		flex: auto
-		min-width: 0
+.-card
+	flex: auto
+	min-width: 0
 
-		@media $media-xs
-			min-width: 'calc(min(40vw - %s, 60vh * (10 / 16)))' % $-card-spacing !important
+	@media $media-xs
+		min-width: 'calc(min(40vw - %s, 60vh * (10 / 16)))' % $-card-spacing !important

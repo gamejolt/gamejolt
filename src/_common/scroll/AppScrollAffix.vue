@@ -6,9 +6,6 @@ import { useEventSubscription } from '../system/event/event-topic';
 import AppScrollInview, { ScrollInviewConfig } from './inview/AppScrollInview.vue';
 import { Scroll } from './scroll.service';
 
-// Sync up with the $scroll-affixed-spacing stylus variable.
-const ScrollAffixSpacing = 24;
-
 const props = defineProps({
 	className: {
 		type: String,
@@ -18,9 +15,9 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
-	scrollOffset: {
+	padding: {
 		type: Number,
-		default: 0,
+		default: 24,
 	},
 	anchor: {
 		type: String as PropType<'top' | 'bottom'>,
@@ -29,7 +26,7 @@ const props = defineProps({
 	},
 });
 
-const { className, disabled, scrollOffset, anchor } = toRefs(props);
+const { className, disabled, padding, anchor } = toRefs(props);
 
 const container = ref<HTMLElement>();
 const placeholder = ref<HTMLElement>();
@@ -72,6 +69,10 @@ const cssClasses = computed(() => {
 	return classes;
 });
 
+const cssPadding = computed(() => (isAffixed.value ? `${padding.value}px` : undefined));
+const cssPaddingTop = computed(() => (anchor.value === 'top' ? cssPadding.value : undefined));
+const cssPaddingBottom = computed(() => (anchor.value === 'bottom' ? cssPadding.value : undefined));
+
 function outview() {
 	if (shouldAffix.value) {
 		return;
@@ -91,7 +92,7 @@ function inview() {
 }
 
 function _createInviewConfig() {
-	let offset = scrollOffset.value + ScrollAffixSpacing;
+	let offset = padding.value;
 	if (anchor.value === 'top') {
 		offset += Scroll.offsetTop;
 	}
@@ -117,7 +118,11 @@ function _createInviewConfig() {
 		<div
 			ref="container"
 			class="scroll-affix-container"
-			:style="{ width: isAffixed ? `${width}px` : undefined }"
+			:style="{
+				width: isAffixed ? `${width}px` : undefined,
+				'padding-top': cssPaddingTop,
+				'padding-bottom': cssPaddingBottom,
+			}"
 			:class="cssClasses"
 		>
 			<slot />
@@ -130,8 +135,8 @@ function _createInviewConfig() {
 	position: fixed
 
 .-anchor-top
-	top: $scroll-affixed-spacing
+	top: 0
 
 .-anchor-bottom
-	bottom: $scroll-affixed-spacing
+	bottom: 0
 </style>

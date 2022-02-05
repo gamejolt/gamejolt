@@ -136,23 +136,23 @@ export default class AppPageHeader extends Vue {
 					<svg class="page-header-cover-buttons-edge -left" viewBox="0 0 10 10">
 						<path
 							d="
-						M0,0
-						L10,0
-						L10,10
-						C5,10 5,0 0,0
-						z
-					"
+								M0,0
+								L10,0
+								L10,10
+								C5,10 5,0 0,0
+								z
+							"
 						/>
 					</svg>
 					<svg class="page-header-cover-buttons-edge -right" viewBox="0 0 10 10">
 						<path
 							d="
-						M10,0
-						L0,0
-						L0,10
-						C5,10 5,0 10,0
-						z
-					"
+								M10,0
+								L0,0
+								L0,10
+								C5,10 5,0 10,0
+								z
+							"
 						/>
 					</svg>
 
@@ -184,7 +184,10 @@ export default class AppPageHeader extends Vue {
 			:anchor-key="autoscrollAnchorKey"
 			:disabled="disableAutoscrollAnchor"
 		>
-			<AppScrollAffix :disabled="!(shouldAffixNav && Screen.isLg && Screen.height > 750)">
+			<AppScrollAffix
+				:disabled="!(shouldAffixNav && Screen.isLg && Screen.height > 750)"
+				:padding="0"
+			>
 				<section class="section page-header-nav">
 					<div class="container">
 						<div class="row">

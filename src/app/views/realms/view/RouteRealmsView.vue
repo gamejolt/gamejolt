@@ -22,6 +22,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppRealmFollowButton from '../../../../_common/realm/AppRealmFollowButton.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { ShareModal } from '../../../../_common/share/card/_modal/modal.service';
+import { RealmCommunity } from '../../../../_common/realm/realm-community-model';
 
 export default {
 	...defineAppRouteOptions({
@@ -46,13 +47,14 @@ const route = useRoute();
 const realm = ref<Realm>();
 const knownFollowers = ref<User[]>([]);
 const knownFollowerCount = ref(0);
+const realmCommunities = ref<RealmCommunity[]>([]);
 const feed = ref(null) as Ref<ActivityFeedView | null>;
 
 const shareLink = computed(() =>
 	realm.value ? getAbsoluteLink(router, realm.value.routeLocation) : undefined
 );
 
-const shownCommunities = computed(() => realm.value?.communities.map(i => i.community) ?? []);
+const shownCommunities = computed(() => realmCommunities.value.map(i => i.community) ?? []);
 
 createAppRoute({
 	routeTitle: computed(() =>
@@ -63,6 +65,7 @@ createAppRoute({
 	},
 	onResolved({ payload: [payload, feedPayload], fromCache }) {
 		realm.value = new Realm(payload.realm);
+		realmCommunities.value = RealmCommunity.populate(payload.communities);
 		knownFollowers.value = User.populate(payload.knownFollowers);
 		knownFollowerCount.value = payload.knownFollowerCount || 0;
 
@@ -226,16 +229,6 @@ function onShareClick() {
 	outline: 0
 	width: 100%
 	height: auto
-
-.-community-thumb
-	img-circle()
-	change-bg('dark')
-	width: 100%
-	height: 100%
-
-	::v-deep(img)
-		width: calc(100% - 2px)
-		height: calc(100% - 2px)
 
 .-community-thumb-placeholder
 	img-circle()

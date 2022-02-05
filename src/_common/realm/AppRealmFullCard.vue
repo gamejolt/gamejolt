@@ -17,8 +17,8 @@ defineProps({
 	<div class="-card sheet sheet-full sheet-elevate">
 		<AppRealmLabel class="-label" :realm="realm" />
 
-		<div class="-header">
-			<AppImgResponsive class="-header-img" :src="realm.header.mediaserver_url" alt="" />
+		<div class="-cover">
+			<AppImgResponsive class="-cover-img" :src="realm.cover.mediaserver_url" alt="" />
 		</div>
 
 		<div class="-content">
@@ -33,7 +33,7 @@ defineProps({
 	overflow: hidden
 
 // TODO
-.-header
+.-cover
 	aspect-ratio: 3 / 4
 
 	&-img

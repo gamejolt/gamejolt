@@ -760,10 +760,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 										class="-community-item link-unstyled"
 										:to="community.routeLocation"
 									>
-										<AppCommunityThumbnailImg
-											class="-community-thumb"
-											:community="community"
-										/>
+										<AppCommunityThumbnailImg :community="community" />
 										<AppCommunityVerifiedTick
 											class="-community-verified-tick"
 											:community="community"
@@ -940,16 +937,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	outline: 0
 	width: 100%
 	height: auto
-
-.-community-thumb
-	img-circle()
-	change-bg('dark')
-	width: 100%
-	height: 100%
-
-	::v-deep(img)
-		width: calc(100% - 2px)
-		height: calc(100% - 2px)
 
 .-community-thumb-placeholder
 	img-circle()

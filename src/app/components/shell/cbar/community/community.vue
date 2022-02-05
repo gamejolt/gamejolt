@@ -154,13 +154,7 @@ export default class AppShellCbarCommunity extends Vue {
 							}"
 							@click="onGotoCommunity"
 						>
-							<AppMediaItemBackdrop
-								class="-backdrop"
-								:media-item="community.thumbnail"
-								radius="full"
-							>
-								<AppCommunityThumbnailImg class="-thumb" :community="community" />
-							</AppMediaItemBackdrop>
+							<AppCommunityThumbnailImg class="-thumb" :community="community" />
 						</router-link>
 					</AppShellCbarItem>
 				</div>
@@ -217,14 +211,6 @@ export default class AppShellCbarCommunity extends Vue {
 
 .-backdrop
 	change-bg('dark')
-
-.-thumb
-	width: 100%
-	height: 100%
-
-	::v-deep(img)
-		width: calc(100% - 2px)
-		height: calc(100% - 2px)
 
 .-notice
 	theme-prop('color', 'notice')

@@ -44,6 +44,8 @@ import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import AppCommentOverview from '../../../../../components/comment/overview/overview.vue';
 import AppGameCommunityBadge from '../../../../../components/game/community-badge/community-badge.vue';
+import AppGameList from '../../../../../components/game/list/list.vue';
+import AppGameListPlaceholder from '../../../../../components/game/list/placeholder/placeholder.vue';
 import AppGameOgrs from '../../../../../components/game/ogrs/ogrs.vue';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { AppActivityFeedLazy } from '../../../../../components/lazy';
@@ -53,7 +55,6 @@ import AppRatingWidget from '../../../../../components/rating/widget/widget.vue'
 import AppUserKnownFollowers from '../../../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useGameRouteController } from '../view.vue';
 import AppDiscoverGamesViewOverviewDetails from './_details/details.vue';
-import AppDiscoverGamesViewOverviewRecommended from './_recommended/recommended.vue';
 import AppDiscoverGamesViewOverviewStatbar from './_statbar/statbar.vue';
 import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue';
 
@@ -62,7 +63,6 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 	components: {
 		AppPageContainer,
 		AppDiscoverGamesViewOverviewDetails,
-		AppDiscoverGamesViewOverviewRecommended,
 		AppDiscoverGamesViewOverviewSupporters,
 		AppDiscoverGamesViewOverviewStatbar,
 		AppGameCommunityBadge,
@@ -85,6 +85,8 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 		AppContentViewer,
 		AppUserKnownFollowers,
 		AppShareCard,
+		AppGameListPlaceholder,
+		AppGameList,
 	},
 })
 @OptionsForRoute({
@@ -249,6 +251,10 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		return 0;
 	}
 
+	get recommendedGames() {
+		return this.routeStore.recommendedGames;
+	}
+
 	get shouldShowAds() {
 		return this.ads.shouldShow;
 	}
@@ -408,7 +414,8 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 							<AppTranslate>Recommended</AppTranslate>
 						</h4>
 
-						<AppDiscoverGamesViewOverviewRecommended />
+						<AppGameListPlaceholder v-if="!isOverviewLoaded" :num="5" />
+						<AppGameList v-else :games="recommendedGames" event-label="recommended" />
 					</template>
 				</template>
 

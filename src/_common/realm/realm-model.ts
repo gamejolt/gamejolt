@@ -2,7 +2,6 @@ import { RouteLocationDefinition } from '../../utils/router';
 import { Api } from '../api/api.service';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
-import { RealmCommunity } from './realm-community-model';
 
 export class Realm extends Model {
 	constructor(data: any = {}) {
@@ -13,10 +12,8 @@ export class Realm extends Model {
 		}
 
 		if (data.header) {
-			this.cover = new MediaItem(data.header);
+			this.header = new MediaItem(data.header);
 		}
-
-		this.communities = RealmCommunity.populate(data.communities);
 	}
 
 	declare name: string;
@@ -28,8 +25,6 @@ export class Realm extends Model {
 
 	declare is_following: boolean;
 	declare follower_count: number;
-
-	declare communities: RealmCommunity[];
 
 	get routeLocation(): RouteLocationDefinition {
 		return {

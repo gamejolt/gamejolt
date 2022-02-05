@@ -138,7 +138,6 @@ export default class AppActivityFeedNotification extends Vue {
 								>
 									<div class="-community-thumb">
 										<AppCommunityThumbnailImg
-											class="img-circle"
 											:community="notification.from_model"
 										/>
 									</div>
@@ -161,7 +160,6 @@ export default class AppActivityFeedNotification extends Vue {
 								>
 									<div class="-community-thumb">
 										<AppCommunityThumbnailImg
-											class="img-circle"
 											:community="notification.action_model.community"
 										/>
 									</div>
@@ -312,10 +310,6 @@ export default class AppActivityFeedNotification extends Vue {
 	height: 100%
 	top: 0
 	left: 0
-
-	> img
-		width: 100%
-		height: 100%
 
 .-trophy-img
 	display: block

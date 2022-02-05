@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
 import { MediaItem } from '../media-item-model';
 
 const props = defineProps({
@@ -11,22 +11,36 @@ const props = defineProps({
 		type: String as PropType<'sm' | 'md' | 'lg' | 'full'>,
 		default: undefined,
 	},
+	/**
+	 * If no color on the media item, will use this fallback color. You can use
+	 * the theme variables in this prop like `var(--theme-bg-offset)`
+	 */
+	fallbackColor: {
+		type: String,
+		default: '',
+	},
 });
 
+const { mediaItem, radius, fallbackColor } = toRefs(props);
+
 const radiusClass = computed(() => {
-	if (!props.radius) {
+	if (!radius?.value) {
 		return;
 	}
 
-	return '-' + props.radius;
+	return '-' + radius?.value;
 });
 
 const wrapperStyling = computed(() => {
-	if (!props.mediaItem?.avg_img_color || props.mediaItem.img_has_transparency) {
+	if (!mediaItem?.value?.avg_img_color || mediaItem?.value.img_has_transparency) {
+		if (fallbackColor.value) {
+			return { backgroundColor: fallbackColor.value };
+		}
+
 		return;
 	}
 
-	return { backgroundColor: '#' + props.mediaItem.avg_img_color };
+	return { backgroundColor: '#' + mediaItem.value.avg_img_color };
 });
 </script>
 

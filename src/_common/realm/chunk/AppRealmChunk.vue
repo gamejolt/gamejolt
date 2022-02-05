@@ -4,8 +4,6 @@ import { Realm } from '../realm-model';
 import AppRealmThumbnail from '../AppRealmThumbnail.vue';
 import AppRealmFollowButton from '../AppRealmFollowButton.vue';
 import AppSpacer from '../../spacer/AppSpacer.vue';
-import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
-import { Screen } from '../../screen/screen-service';
 import { RouterLink } from 'vue-router';
 import AppRealmChunkPosts from './AppRealmChunkPosts.vue';
 import AppRealmChunkPostsPlaceholder from './AppRealmChunkPostsPlaceholder.vue';
@@ -54,20 +52,14 @@ const { realm } = toRefs(props);
 
 		<AppSpacer vertical :scale="4" />
 
-		<component
-			:is="Screen.isXs ? AppScrollScroller : 'div'"
-			:horizontal="Screen.isXs"
-			:thin="Screen.isXs"
-		>
-			<Suspense>
-				<template #default>
-					<AppRealmChunkPosts :realm="realm" :cards-per-row="CardsPerRow" />
-				</template>
-				<template #fallback>
-					<AppRealmChunkPostsPlaceholder :cards-per-row="CardsPerRow" />
-				</template>
-			</Suspense>
-		</component>
+		<Suspense>
+			<template #default>
+				<AppRealmChunkPosts :realm="realm" :cards-per-row="CardsPerRow" />
+			</template>
+			<template #fallback>
+				<AppRealmChunkPostsPlaceholder :cards-per-row="CardsPerRow" />
+			</template>
+		</Suspense>
 	</div>
 </template>
 

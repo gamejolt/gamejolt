@@ -7,6 +7,7 @@ import { Screen } from '../../screen/screen-service';
 import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppVideo from '../../video/video.vue';
 import { Game } from '../game.model';
+import AppJolticon from '../../jolticon/AppJolticon.vue';
 
 const props = defineProps({
 	game: {
@@ -15,11 +16,16 @@ const props = defineProps({
 	},
 	hideMedia: {
 		type: Boolean,
-		default: false,
+	},
+	hideJolticon: {
+		type: Boolean,
 	},
 	animate: {
 		type: Boolean,
-		default: false,
+	},
+	radius: {
+		type: String as PropType<'md' | 'lg' | 'sm'>,
+		default: 'lg',
 	},
 });
 
@@ -58,8 +64,12 @@ function imgLoadChange(isLoaded: boolean) {
 		}"
 	>
 		<div class="-inner">
-			<AppMediaItemBackdrop :media-item="mediaItem" radius="lg">
-				<AppJolticon class="-icon" icon="game" />
+			<AppMediaItemBackdrop
+				:media-item="mediaItem"
+				:radius="radius"
+				fallback-color="var(--theme-bg-offset)"
+			>
+				<AppJolticon v-if="!hideJolticon" class="-icon" icon="game" />
 
 				<div v-if="mediaItem && !hideMedia" class="-media">
 					<AppImgResponsive
@@ -83,8 +93,6 @@ function imgLoadChange(isLoaded: boolean) {
 
 <style lang="stylus" scoped>
 .game-thumbnail-img
-	rounded-corners-lg()
-	change-bg('bg-offset')
 	position: relative
 	height: 0
 	padding-top: 56.25% // HD 16:9

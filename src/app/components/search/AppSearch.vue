@@ -20,7 +20,7 @@ import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppSearchInput from './AppSearchInput.vue';
 import { Search } from './search-service';
 
-const AppSearchAutocomplete = defineAsyncComponent(() => import('./autocomplete/autocomplete.vue'));
+const AppSearchAutocomplete = defineAsyncComponent(() => import('./AppSearchAutocomplete.vue'));
 
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;

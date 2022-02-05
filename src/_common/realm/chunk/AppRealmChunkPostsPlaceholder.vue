@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import AppSpacer from '../../spacer/AppSpacer.vue';
 import AppPostCardPlaceholder from '../../fireside/post/card/AppPostCardPlaceholder.vue';
+import { Screen } from '../../screen/screen-service';
+import AppSpacer from '../../spacer/AppSpacer.vue';
 
 defineProps({
 	cardsPerRow: {
@@ -11,14 +12,16 @@ defineProps({
 </script>
 
 <template>
-	<div class="-posts">
-		<template v-for="num of cardsPerRow" :key="num">
-			<AppSpacer v-if="num > 1" horizontal :scale="4" />
+	<div :class="{ '-scroller': Screen.isXs }">
+		<div class="-posts">
+			<template v-for="num of cardsPerRow" :key="num">
+				<AppSpacer v-if="num > 1" horizontal :scale="4" />
 
-			<div class="-card">
-				<AppPostCardPlaceholder />
-			</div>
-		</template>
+				<div class="-card">
+					<AppPostCardPlaceholder />
+				</div>
+			</template>
+		</div>
 	</div>
 </template>
 

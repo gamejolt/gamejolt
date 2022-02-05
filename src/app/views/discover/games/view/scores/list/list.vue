@@ -213,7 +213,7 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 						<!--
 							We put some extra spacing in here because of the affixed game header.
 						-->
-						<AppScrollAffix :scroll-offset="80">
+						<AppScrollAffix :padding="80">
 							<div class="-score-selector-nav">
 								<AppScoreboardSelector
 									:current-table="scoreTable"
@@ -228,9 +228,3 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 		</section>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-// Put some extra spacing in here because of the affixed game header.
-.gj-scroll-affixed .-score-selector-nav
-	margin-top: $shell-top-nav-height + 10px !important
-</style>

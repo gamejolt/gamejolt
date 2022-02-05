@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { trackGotoCommunity } from '../../analytics/analytics.service';
-import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { Community } from '../community.model';
 import AppCommunityThumbnailImg from './AppCommunityThumbnailImg.vue';
 
@@ -32,13 +31,7 @@ function onGotoCommunity() {
 		@click="onGotoCommunity"
 	>
 		<div class="-thumb">
-			<AppMediaItemBackdrop
-				class="-thumb-inner"
-				:media-item="community.thumbnail"
-				radius="full"
-			>
-				<AppCommunityThumbnailImg class="-thumb-img" :community="community" />
-			</AppMediaItemBackdrop>
+			<AppCommunityThumbnailImg class="-thumb-inner" :community="community" />
 		</div>
 
 		<div class="-label">
@@ -49,12 +42,9 @@ function onGotoCommunity() {
 
 <style lang="stylus" scoped>
 .-thumb
-	img-circle()
-	change-bg('bg-offset')
 	position: relative
 	height: 0
 	padding-top: 100%
-	overflow: hidden
 
 	&-inner
 		position: absolute

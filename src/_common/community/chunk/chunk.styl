@@ -29,10 +29,6 @@ $-card-spacing = 8px
 	flex: none
 
 	&-inner
-		img-circle()
-		padding: $border-width-large
-		background-color: var(--theme-fg)
-		overflow: hidden
 		width: $-avatar-size
 		height: $-avatar-size
 
@@ -45,9 +41,10 @@ $-card-spacing = 8px
 		position: absolute
 		right: 0
 		bottom: 0
+		padding: 1px
+		color: var(--theme-fg)
+		background-color: var(--theme-bg)
 		z-index: 1
-		color: var(--theme-bg)
-		background-color: var(--theme-fg)
 
 .-header
 	display: flex

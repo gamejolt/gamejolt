@@ -61,7 +61,7 @@ export default class RouteDashGamesManageGameMaturity extends BaseRouteComponent
 <template>
 	<div class="row">
 		<div class="col-sm-5 col-sm-push-7">
-			<AppScrollAffix v-if="current" :disabled="!Screen.isDesktop" :scroll-offset="15">
+			<AppScrollAffix v-if="current" :disabled="!Screen.isDesktop">
 				<div v-if="current.tigrs_age" class="anim-fade-enter anim-fade-leave">
 					<AppGameOgrs :game="current" />
 				</div>

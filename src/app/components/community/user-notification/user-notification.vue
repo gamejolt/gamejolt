@@ -121,7 +121,6 @@ export default class AppCommunityUserNotification extends Vue {
 
 .-community
 	&-img
-		border-radius: 50%
 		width: 20px
 		display: inline-block
 		vertical-align: middle

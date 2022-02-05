@@ -2,7 +2,11 @@
 defineProps({
 	scale: {
 		type: Number,
-		required: true,
+		default: 0,
+	},
+	scaleXs: {
+		type: Number,
+		default: 0,
 	},
 	horizontal: {
 		type: Boolean,
@@ -16,39 +20,67 @@ defineProps({
 <template>
 	<div
 		class="-spacer"
-		:class="[`-scale-${scale}`, { '-horizontal': horizontal, '-vertical': vertical }]"
+		:class="[`-s${scale}`, `-s${scaleXs}-xs`, { '-h': horizontal, '-v': vertical }]"
 	/>
 </template>
 
 <style lang="stylus" scoped>
-$-multiplier = 4px
+$-base = 4px
 
 .-spacer
 	flex: none
 
-.-horizontal
-	&.-scale-1
-		width: 1 * $-multiplier
+// Keep the classnames short so that we don't have a huge CSS file.
+.-h
+	&.-s1
+		width: 1 * $-base
 
-	&.-scale-2
-		width: 2 * $-multiplier
+	&.-s2
+		width: 2 * $-base
 
-	&.-scale-3
-		width: 3 * $-multiplier
+	&.-s3
+		width: 3 * $-base
 
-	&.-scale-4
-		width: 4 * $-multiplier
+	&.-s4
+		width: 4 * $-base
 
-.-vertical
-	&.-scale-1
-		height: 1 * $-multiplier
+.-v
+	&.-s1
+		height: 1 * $-base
 
-	&.-scale-2
-		height: 2 * $-multiplier
+	&.-s2
+		height: 2 * $-base
 
-	&.-scale-3
-		height: 3 * $-multiplier
+	&.-s3
+		height: 3 * $-base
 
-	&.-scale-4
-		height: 4 * $-multiplier
+	&.-s4
+		height: 4 * $-base
+
+@media $media-xs
+	.-h
+		&.-s1-xs
+			width: 1 * $-base
+
+		&.-s2-xs
+			width: 2 * $-base
+
+		&.-s3-xs
+			width: 3 * $-base
+
+		&.-s4-xs
+			width: 4 * $-base
+
+	.-v
+		&.-s1-xs
+			height: 1 * $-base
+
+		&.-s2-xs
+			height: 2 * $-base
+
+		&.-s3-xs
+			height: 3 * $-base
+
+		&.-s4-xs
+			height: 4 * $-base
 </style>

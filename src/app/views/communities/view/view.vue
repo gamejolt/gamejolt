@@ -12,7 +12,6 @@ import { Api } from '../../../../_common/api/api.service';
 import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
 import { Community, isEditingCommunity } from '../../../../_common/community/community.model';
 import AppCommunityJoinWidget from '../../../../_common/community/join-widget/join-widget.vue';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
 import AppEditableOverlay from '../../../../_common/editable-overlay/editable-overlay.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
@@ -52,7 +51,6 @@ export const CommunityThemeKey = 'community';
 		AppShellContentWithSidebar,
 		AppPageHeader,
 		AppPageHeaderControls,
-		AppCommunityThumbnailImg,
 		AppCommunityJoinWidget,
 		AppCommunityPerms,
 		AppPopper,

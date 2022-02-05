@@ -2,6 +2,7 @@
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import { Community } from '../community.model';
 import { PropType } from 'vue';
+import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 
 defineProps({
 	community: {
@@ -12,5 +13,11 @@ defineProps({
 </script>
 
 <template>
-	<AppImgResponsive :src="community.img_thumbnail" class="community-thumbnail-img" alt="" />
+	<AppMediaItemBackdrop
+		:media-item="community.thumbnail"
+		radius="full"
+		fallback-color="var(--theme-bg-offset)"
+	>
+		<AppImgResponsive :src="community.img_thumbnail" alt="" />
+	</AppMediaItemBackdrop>
 </template>

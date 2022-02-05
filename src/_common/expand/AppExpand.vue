@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { nextTick, onMounted, ref, watch } from 'vue';
+import { nextTick, onMounted, ref, toRefs, watch } from 'vue';
 
 const props = defineProps({
 	when: {
@@ -10,33 +10,39 @@ const props = defineProps({
 	},
 });
 
-const root = ref<HTMLElement>();
-const inDom = ref(props.when);
+const { when, animateInitial } = toRefs(props);
 
-watch(() => props.when, onWhenWatch);
+const root = ref<HTMLElement>();
+const inDom = ref(false);
 
 onMounted(async () => {
+	inDom.value = when.value;
+
 	if (inDom.value && root.value) {
 		root.value.style.height = 'auto';
 
 		// This simulates having it closed and then showing immediately to
 		// slide it out.
-		if (props.animateInitial) {
+		if (animateInitial.value) {
 			root.value.style.height = '0';
 			inDom.value = false;
 			await nextTick();
 			onWhenWatch();
 		}
 	}
+
+	watch(when, onWhenWatch);
 });
 
 async function onWhenWatch() {
+	await nextTick();
+
 	const elem = root.value;
 	if (!elem) {
 		return;
 	}
 
-	if (props.when) {
+	if (when.value) {
 		// Show in DOM as soon as possible.
 		// This will get the correct height to expand out to.
 		inDom.value = true;
@@ -71,10 +77,10 @@ function afterTransition() {
 		return;
 	}
 
-	if (props.when) {
+	if (when.value) {
 		elem.classList.remove('-transition');
 		elem.style.height = 'auto';
-	} else if (!props.when) {
+	} else if (!when.value) {
 		elem.classList.remove('-transition');
 		inDom.value = false;
 	}
