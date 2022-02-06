@@ -31,11 +31,7 @@ export class HistoryCache {
 		const state = this._get<T>(route, tag);
 
 		if (state) {
-			// We have to put the state back on top so that it was just
-			// accessed. We don't want it being cleaned up.
-			arrayRemove(this.states, i => i === state);
-			this.states.push(state);
-
+			this._touchState(state);
 			return state.data;
 		}
 
@@ -44,6 +40,26 @@ export class HistoryCache {
 
 	static has(route: RouteLocationNormalized, tag?: string | symbol) {
 		return !!this._get(route, tag);
+	}
+
+	static store<T = any>(route: RouteLocationNormalized, data: T, tag?: string | symbol) {
+		const state = this._get(route, tag);
+
+		if (state) {
+			state.data = data;
+			this._touchState(state);
+		} else {
+			const url = route.fullPath;
+
+			this.states.push({
+				tag,
+				url,
+				data,
+			});
+
+			// Prune the cache data to a certain number of states.
+			this.states = this.states.slice(-MAX_ITEMS);
+		}
 	}
 
 	private static _get<T = any>(route: RouteLocationNormalized, tag?: string | symbol) {
@@ -57,22 +73,12 @@ export class HistoryCache {
 			| undefined;
 	}
 
-	static store<T = any>(route: RouteLocationNormalized, data: T, tag?: string | symbol) {
-		const state = this.get(route, tag);
-
-		if (state) {
-			state.data = data;
-		} else {
-			const url = route.fullPath;
-
-			this.states.push({
-				tag,
-				url,
-				data,
-			});
-
-			// Prune the cache data to a certain number of states.
-			this.states = this.states.slice(-MAX_ITEMS);
-		}
+	/**
+	 * Call this to put the state back on top of the states array so that it
+	 * doesn't get cleaned up.
+	 */
+	private static _touchState(state: HistoryCacheState) {
+		arrayRemove(this.states, i => i === state);
+		this.states.push(state);
 	}
 }
