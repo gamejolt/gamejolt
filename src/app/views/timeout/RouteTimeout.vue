@@ -1,129 +1,108 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
-import { RouteLocationRedirect } from '../../../utils/router';
+import { computed, onMounted, ref } from 'vue';
 import { Api } from '../../../_common/api/api.service';
 import AppContactLink from '../../../_common/contact-link/contact-link.vue';
 import { showErrorGrowl, showInfoGrowl } from '../../../_common/growls/growls.service';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import AppLinkHelp from '../../../_common/link/AppLinkHelp.vue';
 import { Navigate } from '../../../_common/navigate/navigate.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
-import { Screen } from '../../../_common/screen/screen-service';
+import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { commonStore, useCommonStore } from '../../../_common/store/common-store';
 import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
-import { AppTimeAgo } from '../../../_common/time/ago/ago';
+import { $gettext } from '../../../_common/translate/translate.service';
 import { UserTimeout } from '../../../_common/user/timeout/timeout.model';
-import AppTimeoutCountdown from '../../components/timeout/countdown/countdown.vue';
+import AppTimeoutCountdown from '../../components/timeout/AppTimeoutCountdown.vue';
 import { illTimeOut } from '../../img/ill/illustrations';
 import { imageGameJoltLogo } from '../../img/images';
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../_common/button/AppButton.vue';
+import { RouteLocationRedirect } from '../../../utils/router';
 
-@Options({
-	name: 'RouteTimeout',
-	components: {
-		AppThemeSvg,
-		AppTimeAgo,
-		AppLinkHelp,
-		AppContactLink,
-		AppIllustration,
-		AppTimeoutCountdown,
-	},
-})
-@OptionsForRoute({
-	resolver: async () => {
-		const payload = await Api.sendRequest('/web/touch');
+export default {
+	...defineAppRouteOptions({
+		resolver: async () => {
+			const payload = await Api.sendRequest('/web/touch');
 
-		// Redirect to home for guests or users without active timeouts.
-		if (!!commonStore.user.value || !commonStore.isUserTimedOut.value) {
-			return new RouteLocationRedirect({
-				name: 'home',
-			});
-		}
+			// Redirect to home for guests or users without active timeouts.
+			if (!commonStore.user.value || !commonStore.isUserTimedOut.value) {
+				return new RouteLocationRedirect({
+					name: 'home',
+				});
+			}
 
-		return payload;
-	},
-})
-export default class RouteTimeout extends BaseRouteComponent {
-	commonStore = setup(() => useCommonStore());
+			return payload;
+		},
+	}),
+};
+</script>
 
-	get timeout() {
-		return this.commonStore.timeout;
+<script lang="ts" setup>
+const { timeout, setTimeout } = useCommonStore();
+
+const isExpired = ref(false);
+const updateTimer = ref<NodeJS.Timer>();
+const isClearingResource = ref(false);
+
+createAppRoute({
+	routeTitle: computed(() => $gettext(`You've been put in time-out.`)),
+});
+
+onMounted(() => {
+	updateTimer.value = setInterval(_updateExpired, 1000);
+});
+
+const reasonText = computed(() => {
+	const reasons: string[] = [];
+	if (timeout.value?.reason_template) {
+		reasons.push(timeout.value.reason_template);
+	}
+	if (timeout.value?.reason) {
+		reasons.push(timeout.value.reason);
 	}
 
-	isExpired = false;
-	updateTimer?: NodeJS.Timer;
-	isClearingResource = false;
-
-	readonly imageGameJoltLogo = imageGameJoltLogo;
-	readonly illTimeOut = illTimeOut;
-
-	get routeTitle() {
-		return this.$gettext(`You've been put in time-out.`);
+	if (!reasons.length) {
+		return null;
 	}
 
-	get isActive() {
-		return this.timeout?.getIsActive();
+	return reasons.join('\n---\n');
+});
+
+const reasonLines = computed(() => reasonText.value?.split('\n').map(i => i.trim()) ?? []);
+const contentLines = computed(
+	() => timeout.value?.resource_content?.split('\n').map(i => i.trim()) ?? []
+);
+
+function _updateExpired() {
+	if (timeout.value) {
+		isExpired.value = timeout.value.getIsExpired();
+	} else {
+		isExpired.value = true;
+	}
+}
+
+async function onClickClearResource() {
+	if (isClearingResource.value) {
+		return;
 	}
 
-	get reasonText() {
-		const reasons: string[] = [];
-		if (this.timeout?.reason_template) {
-			reasons.push(this.timeout.reason_template);
-		}
-		if (this.timeout?.reason) {
-			reasons.push(this.timeout.reason);
-		}
+	isClearingResource.value = true;
 
-		if (!reasons.length) {
-			return null;
-		}
+	const payload = await Api.sendRequest('/web/dash/timeout/clear-resource', {});
+	if (payload && payload.success) {
+		const newTimeout = new UserTimeout(payload.timeout);
+		setTimeout(newTimeout);
 
-		return reasons.join('\n---\n');
+		_updateExpired();
+		showInfoGrowl($gettext(`The content has been removed.`));
+	} else {
+		showErrorGrowl($gettext(`Failed to remove content.`));
 	}
 
-	get logoScale() {
-		if (Screen.isSm || Screen.isXs) {
-			return 1;
-		}
-		return 2;
-	}
+	isClearingResource.value = false;
+}
 
-	mounted() {
-		this.updateTimer = setInterval(this.updateExpired, 100);
-	}
-
-	updateExpired() {
-		if (this.timeout) {
-			this.isExpired = this.timeout.getIsExpired();
-		} else {
-			this.isExpired = true;
-		}
-	}
-
-	async onClickClearResource() {
-		if (this.isClearingResource) {
-			return;
-		}
-
-		this.isClearingResource = true;
-
-		const payload = await Api.sendRequest('/web/dash/timeout/clear-resource', {});
-		if (payload && payload.success) {
-			const newTimeout = new UserTimeout(payload.timeout);
-			this.commonStore.setTimeout(newTimeout);
-
-			this.updateExpired();
-			showInfoGrowl(this.$gettext(`The content has been removed.`));
-		} else {
-			showErrorGrowl(this.$gettext(`Failed to remove content.`));
-		}
-
-		this.isClearingResource = false;
-	}
-
-	onClickLeave() {
-		Navigate.reload();
-	}
+function onClickLeave() {
+	Navigate.reload();
 }
 </script>
 
@@ -135,8 +114,8 @@ export default class RouteTimeout extends BaseRouteComponent {
 					<AppThemeSvg
 						:src="imageGameJoltLogo"
 						alt="Game Jolt"
-						:width="164 * logoScale"
-						:height="18 * logoScale"
+						:width="164 * 2"
+						:height="18 * 2"
 						strict-colors
 					/>
 				</div>
@@ -170,7 +149,11 @@ export default class RouteTimeout extends BaseRouteComponent {
 							<AppTranslate>Reason</AppTranslate>
 						</h3>
 
-						<pre>{{ reasonText }}</pre>
+						<div v-for="(reasonLine, i) of reasonLines" :key="i">
+							{{ reasonLine || '&nbsp;' }}
+						</div>
+
+						<br />
 					</template>
 
 					<p>
@@ -189,7 +172,11 @@ export default class RouteTimeout extends BaseRouteComponent {
 								</AppTranslate>
 							</p>
 
-							<pre>{{ timeout.resource_content }}</pre>
+							<blockquote>
+								<div v-for="(contentLine, i) of contentLines" :key="i">
+									{{ contentLine || '&nbsp;' }}
+								</div>
+							</blockquote>
 
 							<p>
 								<AppTranslate>
@@ -199,7 +186,7 @@ export default class RouteTimeout extends BaseRouteComponent {
 							</p>
 
 							<AppButton solid @click="onClickClearResource">
-								<AppTranslate>Delete Content</AppTranslate>
+								<AppTranslate>Delete content</AppTranslate>
 							</AppButton>
 						</div>
 					</template>
@@ -214,7 +201,7 @@ export default class RouteTimeout extends BaseRouteComponent {
 				<template v-else>
 					<div class="text-center">
 						<p>You're no longer in time-out, yay!</p>
-						<AppButton @click="onClickLeave">Go To Game Jolt</AppButton>
+						<AppButton @click="onClickLeave">Go to Game Jolt</AppButton>
 					</div>
 				</template>
 			</div>
