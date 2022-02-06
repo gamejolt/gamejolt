@@ -423,6 +423,7 @@ export default class FormGamePackagePayment
 					You've accessed this game through a Game Jolt Partner link! A percentage of this
 					sale will go to %{ user }.
 				</span>
+				{{ ' ' }}
 				<router-link class="link-help" :to="{ name: 'landing.partners' }" target="_blank">
 					<AppTranslate>Learn more about the Game Jolt Partner system.</AppTranslate>
 				</router-link>
