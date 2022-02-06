@@ -37,7 +37,7 @@ const props = defineProps({
 	},
 	href: {
 		type: String,
-		required: true,
+		default: '',
 	},
 	isEditing: {
 		type: Boolean,
@@ -206,7 +206,7 @@ function onItemFullscreen() {
 				ref="container"
 				class="media-item-container"
 				:class="{ '-zoomable': canFullscreenItem }"
-				:ratio="mediaItem ? mediaItem.width / mediaItem.height : null"
+				:ratio="mediaItem ? mediaItem.width / mediaItem.height : 16 / 9"
 				:max-height="maxHeight"
 				:max-width="maxWidth"
 			>
