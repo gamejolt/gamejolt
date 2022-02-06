@@ -48,4 +48,5 @@ defineProps({
 	position: absolute
 	left: 8px
 	top: 8px
+	z-index: 1
 </style>
