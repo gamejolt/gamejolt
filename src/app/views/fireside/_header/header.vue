@@ -95,7 +95,7 @@ export default class AppFiresideHeader extends Vue {
 						<template v-if="fireside.community">
 							{{ ' ' }}
 							<span>in </span>
-							<div class="-avatar -community-avatar">
+							<div class="-avatar">
 								<AppCommunityThumbnailImg :community="fireside.community" />
 							</div>
 							{{ ' ' }}
@@ -201,10 +201,6 @@ export default class AppFiresideHeader extends Vue {
 	height: 16px
 	display: inline-block
 
-.-community-avatar
-	overflow: hidden
-	border-radius: 50%
-
 .-stats-btn
 	display: inline-block
 	position: relative
@@ -220,24 +216,4 @@ export default class AppFiresideHeader extends Vue {
 
 .-tag
 	margin-left: 4px
-
-.-extras-header
-	font-family: $font-family-heading
-	font-size: $font-size-tiny
-	font-weight: normal
-	letter-spacing: 0.1em
-	line-height: 1
-	text-transform: uppercase
-	margin-top: 0
-	margin-bottom: 0
-
-	img
-		width: $list-group-icon-width * 0.8
-		height: $list-group-icon-width * 0.8
-		border-radius: 50%
-		display: inline-block
-		position: relative
-		left: -($list-group-icon-width - 1px)
-		top: -2px
-		margin-right: -($list-group-icon-width - 5px)
 </style>

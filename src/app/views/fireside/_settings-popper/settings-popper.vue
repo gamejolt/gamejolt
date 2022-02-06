@@ -268,10 +268,12 @@ export default class AppFiresideSettingsPopper extends Vue {
 					<div v-for="i in manageableCommunities" :key="i.id">
 						<hr />
 
-						<h5 class="-extras-header list-group-item has-icon">
-							<AppCommunityThumbnailImg :community="i.community" />
+						<div class="-extras-header">
+							<div class="-extras-header-img">
+								<AppCommunityThumbnailImg :community="i.community" />
+							</div>
 							{{ i.community.name }}
-						</h5>
+						</div>
 
 						<!-- DISABLED_ALLOW_FIRESIDES -->
 						<!-- <a class="list-group-item has-icon" @click="toggleFeatured(i)">
@@ -295,22 +297,20 @@ export default class AppFiresideSettingsPopper extends Vue {
 
 <style lang="stylus" scoped>
 .-extras-header
+	display: flex
+	align-items: center
 	font-family: $font-family-heading
 	font-size: $font-size-tiny
 	font-weight: normal
 	letter-spacing: 0.1em
 	line-height: 1
 	text-transform: uppercase
-	margin-top: 0
-	margin-bottom: 0
+	padding: $list-group-item-padding
+	padding-left: 0
 
-	img
-		width: $list-group-icon-width * 0.8
-		height: $list-group-icon-width * 0.8
-		border-radius: 50%
-		display: inline-block
-		position: relative
-		left: -($list-group-icon-width - 1px)
-		top: -2px
-		margin-right: -($list-group-icon-width - 5px)
+.-extras-header-img
+	width: 20px
+	height: 20px
+	margin-left: $list-group-item-padding
+	margin-right: $list-group-item-padding
 </style>

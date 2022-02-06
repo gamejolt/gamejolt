@@ -5,7 +5,6 @@ import { shallowSetup } from '../../../utils/vue';
 import { Api } from '../../../_common/api/api.service';
 import { vAppAuthRequired } from '../../../_common/auth/auth-required-directive';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
-import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import { useDrawerStore } from '../../../_common/drawer/drawer-store';
 import { Environment } from '../../../_common/environment/environment.service';
 import AppExpand from '../../../_common/expand/AppExpand.vue';
@@ -68,7 +67,6 @@ const FiresideThemeKey = 'fireside';
 		AppAuthJoin,
 		AppFiresideChatMembers,
 		AppFiresideStats,
-		AppCommunityThumbnailImg,
 		AppFiresideStream,
 		AppScrollScroller,
 		AppFiresideHostList,

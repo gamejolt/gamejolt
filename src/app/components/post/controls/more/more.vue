@@ -304,10 +304,12 @@ export default class AppPostControlsMore extends Vue {
 				<template v-if="shouldShowManageCommunities">
 					<div v-for="i of post.manageableCommunities" :key="i.id">
 						<hr />
-						<h5 class="-header list-group-item has-icon">
-							<AppCommunityThumbnailImg :community="i.community" />
+						<div class="-header">
+							<div class="-header-img">
+								<AppCommunityThumbnailImg :community="i.community" />
+							</div>
 							{{ i.community.name }}
-						</h5>
+						</div>
 						<AppCommunityPerms :community="i.community" required="community-features">
 							<a class="list-group-item has-icon" @click.stop="toggleFeatured(i)">
 								<AppJolticon icon="star" />
@@ -370,22 +372,20 @@ export default class AppPostControlsMore extends Vue {
 
 <style lang="stylus" scoped>
 .-header
+	display: flex
+	align-items: center
 	font-family: $font-family-heading
 	font-size: $font-size-tiny
 	font-weight: normal
 	letter-spacing: 0.1em
 	line-height: 1
 	text-transform: uppercase
-	margin-top: 0
-	margin-bottom: 0
+	padding: $list-group-item-padding
+	padding-left: 0
 
-	img
-		width: $list-group-icon-width * 0.8
-		height: $list-group-icon-width * 0.8
-		border-radius: 50%
-		display: inline-block
-		position: relative
-		left: -($list-group-icon-width - 1px)
-		top: -2px
-		margin-right: -($list-group-icon-width - 5px)
+.-header-img
+	width: 20px
+	height: 20px
+	margin-left: $list-group-item-padding
+	margin-right: $list-group-item-padding
 </style>
