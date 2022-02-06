@@ -15,7 +15,7 @@ defineProps({
 	<div :class="{ '-scroller': Screen.isXs }">
 		<div class="-posts">
 			<template v-for="num of cardsPerRow" :key="num">
-				<AppSpacer v-if="num > 1" horizontal :scale="4" />
+				<AppSpacer v-if="num > 1" horizontal :scale="4" :scale-xs="2" />
 
 				<div class="-card">
 					<AppPostCardPlaceholder />

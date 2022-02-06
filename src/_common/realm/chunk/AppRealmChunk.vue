@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
 import { Realm } from '../realm-model';
 import AppRealmThumbnail from '../AppRealmThumbnail.vue';
 import AppRealmFollowButton from '../AppRealmFollowButton.vue';
@@ -19,6 +19,9 @@ const props = defineProps({
 });
 
 const { realm } = toRefs(props);
+
+// @ts-expect-error unused variable
+const followWidth = computed(() => `${100 / CardsPerRow}%`);
 </script>
 
 <template>
@@ -42,7 +45,7 @@ const { realm } = toRefs(props);
 
 			<AppSpacer horizontal :scale="3" />
 
-			<div class="-follow" :style="{ width: `calc(${100 / CardsPerRow}% - 12px)` }">
+			<div class="-follow">
 				<AppRealmFollowButton :realm="realm" source="realmChunk" block />
 			</div>
 		</div>
@@ -83,13 +86,6 @@ const { realm } = toRefs(props);
 .-follow
 	flex: none
 
-.-posts
-	display: flex
-
-	.-card
-		flex: auto
-		min-width: 0
-
-		@media $media-xs
-			min-width: 'calc(min(40vw - %s, 60vh * (10 / 16)))' % $-card-spacing !important
+	@media $media-sm-up
+		width: calc(v-bind('followWidth') - 12px)
 </style>

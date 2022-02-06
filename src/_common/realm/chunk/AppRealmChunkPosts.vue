@@ -52,7 +52,7 @@ const items = ref(EventItem.populate<EventItem>(payload.items));
 			<AppSpacer horizontal :scale-xs="4" />
 
 			<template v-for="num of cardsPerRow" :key="num">
-				<AppSpacer v-if="num > 1" horizontal :scale="4" />
+				<AppSpacer v-if="num > 1" horizontal :scale="4" :scale-xs="2" />
 
 				<div class="-card">
 					<template v-if="items[num - 1]">

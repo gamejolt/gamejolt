@@ -1,5 +1,3 @@
-$-card-spacing = 4px * 4
-
 .-scroller
 	padding-bottom: 12px
 
@@ -11,4 +9,6 @@ $-card-spacing = 4px * 4
 	min-width: 0
 
 	@media $media-xs
-		min-width: 'calc(min(40vw - %s, 60vh * (10 / 16)))' % $-card-spacing !important
+		// 16px for the margin on the left of .container for XS size and 4px
+		// which is half of the spacing between each card.
+		min-width: calc(50vw - 20px) !important
