@@ -26,6 +26,7 @@ import { RealmCommunity } from '../../../../_common/realm/realm-community-model'
 import AppResponsiveDimensions from '../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
+import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -107,7 +108,9 @@ function onShareClick() {
 </script>
 
 <template>
-	<section v-if="realm" class="section fill-backdrop">
+	<div v-if="realm" class="fill-backdrop">
+		<AppSpacer vertical :scale="10" :scale-sm="5" :scale-xs="5" />
+
 		<AppPageContainer xl>
 			<template #left>
 				<AppScrollAffix :disabled="!Screen.isLg">
@@ -189,7 +192,9 @@ function onShareClick() {
 				<AppActivityFeed v-if="feed?.isBootstrapped" :feed="feed" />
 			</template>
 		</AppPageContainer>
-	</section>
+
+		<AppSpacer vertical :scale="10" :scale-sm="5" :scale-xs="5" />
+	</div>
 </template>
 
 <style lang="stylus" scoped>

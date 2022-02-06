@@ -4,6 +4,10 @@ defineProps({
 		type: Number,
 		default: 0,
 	},
+	scaleSm: {
+		type: Number,
+		default: 0,
+	},
 	scaleXs: {
 		type: Number,
 		default: 0,
@@ -20,7 +24,12 @@ defineProps({
 <template>
 	<div
 		class="-spacer"
-		:class="[`-s${scale}`, `-s${scaleXs}-xs`, { '-h': horizontal, '-v': vertical }]"
+		:class="[
+			`-s${scale}`,
+			`-s${scaleXs}-xs`,
+			`-s${scaleXs}-sm`,
+			{ '-h': horizontal, '-v': vertical },
+		]"
 	/>
 </template>
 
@@ -32,55 +41,34 @@ $-base = 4px
 
 // Keep the classnames short so that we don't have a huge CSS file.
 .-h
-	&.-s1
-		width: 1 * $-base
-
-	&.-s2
-		width: 2 * $-base
-
-	&.-s3
-		width: 3 * $-base
-
-	&.-s4
-		width: 4 * $-base
+	for i in 1..10
+		&.-s{i}
+			width: i * $-base
 
 .-v
-	&.-s1
-		height: 1 * $-base
+	for i in 1..10
+		&.-s{i}
+			height: i * $-base
 
-	&.-s2
-		height: 2 * $-base
+@media $media-sm
+	.-h
+		for i in 1..10
+			&.-s{i}-sm
+				width: i * $-base
 
-	&.-s3
-		height: 3 * $-base
-
-	&.-s4
-		height: 4 * $-base
+	.-v
+		for i in 1..10
+			&.-s{i}-sm
+				height: i * $-base
 
 @media $media-xs
 	.-h
-		&.-s1-xs
-			width: 1 * $-base
-
-		&.-s2-xs
-			width: 2 * $-base
-
-		&.-s3-xs
-			width: 3 * $-base
-
-		&.-s4-xs
-			width: 4 * $-base
+		for i in 1..10
+			&.-s{i}-xs
+				width: i * $-base
 
 	.-v
-		&.-s1-xs
-			height: 1 * $-base
-
-		&.-s2-xs
-			height: 2 * $-base
-
-		&.-s3-xs
-			height: 3 * $-base
-
-		&.-s4-xs
-			height: 4 * $-base
+		for i in 1..10
+			&.-s{i}-xs
+				height: i * $-base
 </style>
