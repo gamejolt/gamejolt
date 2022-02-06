@@ -60,6 +60,7 @@ const items = ref(EventItem.populate<EventItem>(payload.items));
 							:post="items[num - 1].action"
 							source="realmChunk"
 							with-user
+							video-context="gif"
 							:link-to="num === items.length ? realm.routeLocation : undefined"
 						>
 							<template v-if="num === items.length" #overlay>
