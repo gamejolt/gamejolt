@@ -39,6 +39,7 @@ export default defineConfig(async configEnv => {
 	const notInSSR = emptyUnless(() => gjOpts.platform !== 'ssr');
 	const isInDocker = !!process.env['GAMEJOLT_IN_DOCKER'];
 	const onlyInDocker = emptyUnless(() => isInDocker);
+	const notInDocker = emptyUnless(() => !isInDocker);
 	const onlyInDesktopApp = emptyUnless(() => gjOpts.platform === 'desktop');
 	const onlyInProdBuilds = emptyUnless(() => gjOpts.buildType === 'production');
 
@@ -264,10 +265,26 @@ export default defineConfig(async configEnv => {
 		})(),
 
 		server: {
-			port: 8080,
 			strictPort: true,
 
+			// When running outside docker we still need to be able to access
+			// the frontend through a secure connection (and to be able to access .gamejolt.com cookies)
+			// For this reason enable https using a self signed certificate for development.gamejolt.com
+			...notInDocker({
+				port: 443,
+
+				https: {
+					pfx: path.resolve(__dirname, 'development.gamejolt.com.pfx'),
+					passphrase: 'yame yolt',
+				},
+			}),
+
+			// In docker, there may be more than just the frontend being accessible on development.gamejolt.com,
+			// so we avoid doing https here. Instead, we assume we're operating behind some reverse proxy that
+			// does ssl termination for us.
 			...onlyInDocker({
+				port: 8080,
+
 				// Allows remote connections.
 				// This is needed when running from within docker
 				// to allow other containers to access it.
@@ -335,9 +352,6 @@ export default defineConfig(async configEnv => {
 				__dirname,
 				gjOpts.platform === 'ssr' ? path.join('build', 'server') : path.join('build', 'web')
 			),
-
-			// TODO(david) document why this was set to 'terser'.
-			minify: 'terser',
 
 			// The SSR manifest is used to keep track of which static assets are
 			// needed by which component. This lets us choose an optimal set of

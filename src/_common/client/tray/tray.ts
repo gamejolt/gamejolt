@@ -1,4 +1,5 @@
 import { h } from 'vue';
+import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 // import { Navigate } from '../../navigate/navigate.service';
 // import { Screen } from '../../screen/screen-service';
