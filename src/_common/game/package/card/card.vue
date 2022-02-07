@@ -1,7 +1,6 @@
 <script lang="ts">
-import { App, Component, inject, InjectionKey } from 'vue';
+import { Component, Ref, ref } from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { shallowSetup } from '../../../../utils/vue';
 import { Analytics } from '../../../analytics/analytics.service';
 import AppCard from '../../../card/AppCard.vue';
 import { Clipboard } from '../../../clipboard/clipboard-service';
@@ -26,16 +25,7 @@ import { GamePackagePurchaseModal } from '../purchase-modal/purchase-modal.servi
 import AppGamePackageCardButtons from './AppGamePackageCardButtons.vue';
 import { GamePackageCardModel } from './card.model';
 
-type ClientComponents = {
-	buttons: Component;
-};
-
-export const ClientComponentsKey: InjectionKey<ClientComponents> = Symbol(
-	'AppGamePackageCard:client-components'
-);
-export function provideClientComponents(app: App, components: ClientComponents) {
-	app.provide(ClientComponentsKey, components);
-}
+export const ClientComponents = ref({}) as Ref<{ buttons?: Component }>;
 
 @Options({
 	components: {
@@ -77,8 +67,6 @@ export default class AppGamePackageCard extends Vue {
 	@Prop(Object)
 	partner?: User;
 
-	readonly clientComponents = shallowSetup(() => inject(ClientComponentsKey));
-
 	static hook = {
 		meta: undefined as typeof Vue | undefined,
 		// buttons: undefined as typeof Vue | undefined,
@@ -106,7 +94,7 @@ export default class AppGamePackageCard extends Vue {
 	}
 
 	get buttonsComponent() {
-		return this.clientComponents?.buttons ?? AppGamePackageCardButtons;
+		return ClientComponents.value.buttons ?? AppGamePackageCardButtons;
 	}
 
 	get card() {
