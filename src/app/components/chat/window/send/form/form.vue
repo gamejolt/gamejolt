@@ -394,6 +394,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 		>
 			<div class="-input">
 				<AppFormControlContent
+					:key="room.id"
 					ref="editor"
 					:content-context="room.messagesContentContext"
 					:temp-resource-context-data="contentEditorTempResourceContextData"
