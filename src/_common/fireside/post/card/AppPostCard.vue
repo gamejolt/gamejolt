@@ -324,14 +324,9 @@ $-padding = 8px
 
 .post-card
 	cursor: pointer
-	outline: solid $border-width-base transparent
-	transition: outline-color 200ms ease !important
 
 	&:hover
 		elevate-2()
-		outline-color: var(--theme-link)
-		// This will immediately show the border and then transition out.
-		transition: none !important
 
 .-link
 	rounded-corners-lg()
