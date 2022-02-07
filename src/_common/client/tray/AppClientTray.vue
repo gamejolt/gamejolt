@@ -1,3 +1,12 @@
+<script lang="ts">
+type MenuBuilderHook = (menu: nw.Menu) => void;
+let menuBuilderHook: MenuBuilderHook | undefined;
+
+export function setMenuBuilderHook(newHook: MenuBuilderHook) {
+	menuBuilderHook = newHook;
+}
+</script>
+
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, Ref, ref } from 'vue';
 import { Navigate } from '../../navigate/navigate.service';
@@ -6,6 +15,7 @@ import { $gettext } from '../../translate/translate.service';
 import { Client } from '../client.service';
 
 const trayIcons = import.meta.globEager('./icon*.png');
+console.log('tray icons', trayIcons);
 
 const isFocused = ref(false);
 const isMinimized = ref(false);
@@ -58,7 +68,8 @@ function createTray() {
 		title: 'Game Jolt Client',
 		// This has to be a relative path, hence the removal of the first /.
 		// TODO(vue3): check to make sure this still works
-		icon: trayIcons[`./icon${Screen.isHiDpi ? '-2x' : ''}.png`].default.substr(1),
+		// Its be broken when building since no src directory (might be assets)
+		icon: 'src/' + trayIcons[`./icon${Screen.isHiDpi ? '-2x' : ''}.png`].default.substr(1),
 	});
 
 	Navigate.registerDestructor(() => {
@@ -69,10 +80,9 @@ function createTray() {
 
 	const menu = new nw.Menu();
 
-	// TODO(vue3)
-	// if (AppClientTray.hook.menuBuilder) {
-	// 	AppClientTray.hook.menuBuilder(menu);
-	// }
+	if (menuBuilderHook) {
+		menuBuilderHook(menu);
+	}
 
 	const quitItem = new nw.MenuItem({
 		label: $gettext('Quit'),

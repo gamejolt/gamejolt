@@ -36,7 +36,7 @@ export class Client {
 	 * Just hides the window. Mostly useful on Mac to hide on soft quit.
 	 */
 	static hide() {
-		if (GJ_BUILD_TYPE === 'development') {
+		if (GJ_IS_WATCHING) {
 			sessionStorage.setItem('__vite-window-visible', '0');
 		}
 
@@ -53,7 +53,7 @@ export class Client {
 		// popping back up and stealing focus. To make things worse, there doesn't seem
 		// to be a way to check if a window instance is already visible,
 		// so in order to avoid calling show() on it, we just check session storage.
-		if (GJ_BUILD_TYPE === 'development') {
+		if (GJ_IS_WATCHING) {
 			if (sessionStorage.getItem('__vite-window-visible')) {
 				console.log('Not showing the window because it should be visible atm');
 				return;

@@ -18,12 +18,15 @@ export class Navigate {
 			throw new Error('Attempted to use Navigate.currentClientSection outside of client');
 		}
 
-		// TODO(vue3) not sure this is the correct way to do this.
-		if (GJ_BUILD_TYPE === 'development') {
+		// At the time of writing, we only support watching one section at a time,
+		// and its not always possible to infer the section purely from the url.
+		// A bit ugly but this works for now.
+		if (GJ_IS_WATCHING) {
 			return GJ_SECTION;
 		}
 
 		// TODO(vue3) Environment urls changed, update this.
+		console.error(window.location.href);
 		throw new Error('vue3 todo');
 
 		if (window.location.href.startsWith(Environment.wttfBaseUrl)) {

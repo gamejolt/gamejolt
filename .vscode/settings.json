@@ -26,13 +26,6 @@
 	"[vue]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
-	"vetur.experimental.templateInterpolationService": true,
-	"vetur.format.options.useTabs": true,
-	"vetur.format.options.tabSize": 4,
-	"vetur.format.defaultFormatter.html": "prettier",
-	"vetur.format.defaultFormatter.js": "prettier",
-	"vetur.format.defaultFormatter.ts": "prettier",
-	"vetur.format.defaultFormatter.stylus": "stylus-supremacy",
 	"stylusSupremacy.alwaysUseAtBlock": false,
 	"stylusSupremacy.insertBraces": false,
 	"stylusSupremacy.insertColons": true,

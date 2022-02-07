@@ -1,5 +1,6 @@
 import { reactive } from '@vue/reactivity';
 import { Api } from '../../../_common/api/api.service';
+import type { ClientLibraryStore } from '../../store/client-library';
 import { SearchPayload } from './payload-service';
 
 export interface SearchOptions {
@@ -12,6 +13,12 @@ class SearchService {
 }
 
 export const Search = reactive(new SearchService()) as SearchService;
+
+let clientLibraryStore: ClientLibraryStore | undefined;
+
+export function setClientLibraryStore(newClientLibraryStore: ClientLibraryStore) {
+	clientLibraryStore = newClientLibraryStore;
+}
 
 export async function sendSearch(query: string, options: SearchOptions = { type: 'all' }) {
 	const searchPromises: Promise<any>[] = [];
@@ -62,6 +69,5 @@ async function _searchSite(query: string, options: SearchOptions = { type: 'all'
 }
 
 async function _findInstalledGamesByTitle(query: string) {
-	// TODO(vue3): Yariv, this should get the client library injected somehow, yeah?
-	// return appStore.clientLibrary.findInstalledGamesByTitle(query, 3);
+	return clientLibraryStore?.findInstalledGamesByTitle(query, 3) || [];
 }

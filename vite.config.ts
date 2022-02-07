@@ -405,6 +405,7 @@ export default defineConfig(async configEnv => {
 			GJ_VERSION: JSON.stringify(gjOpts.version),
 			GJ_WITH_UPDATER: JSON.stringify(gjOpts.withUpdater),
 			GJ_HAS_ROUTER: JSON.stringify(gjOpts.currentSectionConfig.hasRouter),
+			GJ_IS_WATCHING: JSON.stringify(command === 'serve'),
 
 			// Disable redirecting between section during serve.
 			// This is because as of time of writing we only support watching

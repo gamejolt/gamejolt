@@ -10,10 +10,10 @@ export function setDownloadPackageHook(newHook: DownloadPackageHook) {
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
-import AppModal from '../../../../widget-package/components/AppModal.vue';
 import { Analytics } from '../../../analytics/analytics.service';
 import AppButton from '../../../button/AppButton.vue';
 import { showSuccessGrowl } from '../../../growls/growls.service';
+import AppModal from '../../../modal/AppModal.vue';
 import { useModal } from '../../../modal/modal.service';
 import AppTranslate from '../../../translate/AppTranslate.vue';
 import { $gettext, $gettextInterpolate } from '../../../translate/translate.service';
@@ -52,14 +52,14 @@ const props = defineProps({
 	},
 });
 
-const { game, package: pkg, build, fromExtraSection } = toRefs(props);
+const { game, package: gamePackage, build, fromExtraSection } = toRefs(props);
 
-const sellable = pkg.value._sellable!;
+const sellable = gamePackage.value._sellable!;
 
 const modal = useModal()!;
 const router = useRouter();
 
-const operation = computed(() => {
+const packageOperation = computed(() => {
 	if (!build.value) {
 		return 'download';
 	}
@@ -96,14 +96,14 @@ function skipPayment() {
 		throw new Error(`Build isn't set`);
 	}
 
-	const thisOperation = operation.value;
+	const thisOperation = packageOperation.value;
 	console.log(`${thisOperation}ing build`);
 
 	if (thisOperation === 'play') {
 		_showBrowserModal(build.value);
 	} else if (thisOperation === 'download') {
-		if (false) {
-			// ClientComponents.value.downloadPackage(game.value, build.value);
+		if (downloadPackageHook) {
+			downloadPackageHook(game.value, build.value);
 		} else {
 			_download(build.value);
 		}
@@ -132,19 +132,19 @@ function _showBrowserModal(gameBuild: GameBuild) {
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				{{ pkg.title || game.title }}
+				{{ gamePackage.title || game.title }}
 			</h2>
 		</div>
 
 		<div class="modal-body">
 			<FormGamePackagePayment
 				:game="game"
-				:package="package"
+				:package="gamePackage"
 				:build="build"
 				:sellable="sellable"
 				:partner-key="partnerKey"
 				:partner="partner"
-				:operation="operation"
+				:operation="packageOperation"
 				@bought="bought"
 				@skip="skipPayment"
 			/>

@@ -16,9 +16,9 @@ import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { useClientLibraryStore } from '../../../../store/client-library/index';
 import AppClientInstallProgress from '../../install-progress/install-progress.vue';
 import {
-	LocalDbPackage,
-	LocalDbPackagePatchState,
-	LocalDbPackageRemoveState,
+LocalDbPackage,
+LocalDbPackagePatchState,
+LocalDbPackageRemoveState
 } from '../../local-db/package/package.model';
 
 @Options({
@@ -401,6 +401,7 @@ export default class AppClientPackageCardButtons extends Vue {
 		>
 			<AppButton
 				v-app-track-event="`game-package-card:more-options`"
+				class="more-client-options-btn"
 				circle
 				icon="ellipsis-v"
 				trans
@@ -458,6 +459,9 @@ export default class AppClientPackageCardButtons extends Vue {
 </template>
 
 <style lang="stylus" scoped>
+.more-client-options-btn
+	margin-left: 4px
+
 .more-client-options
 	margin-bottom: 0
 </style>
