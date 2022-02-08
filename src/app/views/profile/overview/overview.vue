@@ -761,12 +761,17 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 										class="-community-item link-unstyled"
 										:to="community.routeLocation"
 									>
-										<AppCommunityThumbnailImg :community="community" />
-										<AppCommunityVerifiedTick
-											class="-community-verified-tick"
-											:community="community"
-											no-tooltip
-										/>
+										<div class="-community-item-align">
+											<AppCommunityThumbnailImg
+												class="-community-thumb"
+												:community="community"
+											/>
+											<AppCommunityVerifiedTick
+												class="-community-verified-tick"
+												:community="community"
+												no-tooltip
+											/>
+										</div>
 									</router-link>
 								</template>
 							</span>
@@ -938,15 +943,21 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	position: relative
 	outline: 0
 	width: 100%
-	height: auto
-
-.-community-thumb-placeholder
-	img-circle()
-	change-bg('bg-subtle')
 	// Setting 'padding-top' with a percentage goes off the elements width,
 	// rather than the height. This will allow us to use a 1:1 aspect ratio
 	// for the loading placeholders, matching them up with our thumbnails.
 	padding-top: 100%
+
+.-community-item-align
+	position: absolute
+	left: 0
+	top: 0
+	right: 0
+	bottom: 0
+
+.-community-thumb-placeholder
+	img-circle()
+	change-bg('bg-subtle')
 
 .-community-verified-tick
 	position: absolute
