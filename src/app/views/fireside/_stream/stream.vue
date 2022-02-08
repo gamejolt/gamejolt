@@ -11,9 +11,9 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppSlider, { ScrubberCallback } from '../../../../_common/slider/slider.vue';
 import AppSticker from '../../../../_common/sticker/sticker.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
-import AppFiresideDesktopAudio from '../../../components/fireside/stream/desktop-audio/desktop-audio.vue';
+import AppFiresideDesktopAudio from '../../../components/fireside/stream/AppFiresideDesktopAudio.vue';
+import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';
 import AppFiresideVideoStats from '../../../components/fireside/stream/video-stats/video-stats.vue';
-import AppFiresideVideo from '../../../components/fireside/stream/video/video.vue';
 import AppFiresideHeader from '../_header/header.vue';
 import AppFiresideHostList from '../_host-list/host-list.vue';
 import AppFiresideHostThumbIndicator from '../_host-thumb/host-thumb-indicator.vue';
@@ -28,7 +28,7 @@ const UITransitionTime = 200;
 		AppFiresideHeader,
 		AppFiresideHostList,
 		AppFiresideHostThumbIndicator,
-		AppFiresideVideo,
+		AppFiresideStreamVideo,
 		AppFiresideVideoStats,
 		AppLoading,
 		AppSlider,
@@ -304,7 +304,7 @@ export default class AppFiresideStream extends Vue {
 			</template>
 			<template v-else>
 				<div :key="rtcUser.uid" :style="{ width: '100%', height: '100%' }">
-					<AppFiresideVideo
+					<AppFiresideStreamVideo
 						v-if="shouldShowVideo"
 						class="-video-player -click-target"
 						:rtc-user="rtcUser"

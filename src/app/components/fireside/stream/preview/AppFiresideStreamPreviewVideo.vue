@@ -6,7 +6,7 @@ import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list
 import { User } from '../../../../../_common/user/user.model';
 import { AppFiresideContainer } from '../../container/container';
 import { createFiresideController } from '../../controller/controller';
-import AppFiresideStreamVideo from '../video/video.vue';
+import AppFiresideStreamVideo from '../AppFiresideStreamVideo.vue';
 
 const props = defineProps({
 	fireside: {
