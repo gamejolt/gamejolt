@@ -268,12 +268,9 @@ export async function startChannelStreaming(channel: FiresideRTCChannel) {
 
 export async function stopChannelStreaming(channel: FiresideRTCChannel) {
 	const { agoraClient, rtc } = channel;
-	const generation = channel.rtc.generation;
 
 	rtc.log(`Stopping stream.`);
 	channel._isPublished = false;
-
-	// TODO: We used to stop playback, do we still need to do that?
 
 	const tracksToUnpublish = [channel._localAudioTrack!, channel._localVideoTrack!].filter(
 		i => i !== null && _isTrackPublished(channel, i)
@@ -284,12 +281,10 @@ export async function stopChannelStreaming(channel: FiresideRTCChannel) {
 		rtc.log(`Unpublishing local tracks: ${trackIds.join(', ')}.`);
 
 		await agoraClient.unpublish(tracksToUnpublish);
-		generation.assert();
 	}
 
 	rtc.log(`Setting client role back to audience.`);
 	await agoraClient.setClientRole('audience', { level: DefaultAudienceLevel });
-	generation.assert();
 
 	rtc.log(`Stopped streaming.`);
 }
