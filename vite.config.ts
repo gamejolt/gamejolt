@@ -336,9 +336,6 @@ export default defineConfig(async configEnv => {
 				gjOpts.platform === 'ssr' ? path.join('build', 'server') : path.join('build', 'web')
 			),
 
-			// TODO(david) document why this was set to 'terser'.
-			minify: 'terser',
-
 			// The SSR manifest is used to keep track of which static assets are
 			// needed by which component. This lets us choose an optimal set of
 			// assets that we should preload/prefetch when serving requests by looking
