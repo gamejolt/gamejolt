@@ -18,7 +18,7 @@ const shouldScroll = computed(() => Screen.isXs);
 </script>
 
 <template>
-	<div class="post-page-recommendations">
+	<div>
 		<h4>
 			<AppTranslate>Next up</AppTranslate>
 		</h4>
@@ -50,20 +50,16 @@ const shouldScroll = computed(() => Screen.isXs);
 <style lang="stylus" scoped>
 $-grid-gap = 16px
 
-.post-page-recommendations
-	@media $media-lg-up
-		margin-left: 50px
+.-posts
+	display: grid
 
-	.-posts
-		display: grid
+	@media $media-sm
+		grid-template-columns: repeat(4, 1fr)
+		grid-gap: $-grid-gap
 
-		@media $media-sm
-			grid-template-columns: repeat(4, 1fr)
-			grid-gap: $-grid-gap
-
-		@media $media-md-up
-			grid-template-columns: 'repeat(auto-fill, minmax(calc(max(50% - %s, 110px)), 1fr))' % $-grid-gap
-			grid-gap: $-grid-gap
+	@media $media-md-up
+		grid-template-columns: 'repeat(auto-fill, minmax(calc(max(50% - %s, 110px)), 1fr))' % $-grid-gap
+		grid-gap: $-grid-gap
 
 .-scrollable
 	full-bleed-xs()

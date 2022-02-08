@@ -6,6 +6,7 @@ import { RouteLocationRaw } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
+import { configPostShareSide } from '../../../../_common/config/config.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -138,6 +139,10 @@ export default class AppPostPage extends Vue {
 
 	get video(): null | FiresidePostVideo {
 		return this.post.videos[0] ?? null;
+	}
+
+	get shareCardOnSide() {
+		return configPostShareSide.value;
 	}
 
 	created() {
@@ -396,7 +401,7 @@ export default class AppPostPage extends Vue {
 					@sticker="scrollToStickers()"
 				/>
 
-				<div class="-share">
+				<div v-if="!shareCardOnSide" class="-share">
 					<AppShareCard resource="post" :url="post.url" offset-color />
 				</div>
 
@@ -410,7 +415,12 @@ export default class AppPostPage extends Vue {
 			</template>
 
 			<template v-if="!Screen.isMobile" #right>
-				<AppPostPageRecommendations :key="post.id" :post="post" />
+				<div class="-side-col">
+					<div v-if="shareCardOnSide" class="-share">
+						<AppShareCard resource="post" :url="post.url" offset-color />
+					</div>
+					<AppPostPageRecommendations :key="post.id" :post="post" />
+				</div>
 			</template>
 		</AppPageContainer>
 	</section>
@@ -483,6 +493,10 @@ export default class AppPostPage extends Vue {
 
 .-communities
 	white-space: nowrap
+
+.-side-col
+	@media $media-lg-up
+		margin-left: 50px
 
 .-share
 	margin-top: $line-height-computed * 1.5
