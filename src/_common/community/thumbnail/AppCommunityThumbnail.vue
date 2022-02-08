@@ -3,6 +3,7 @@ import { PropType } from 'vue';
 import { trackGotoCommunity } from '../../analytics/analytics.service';
 import { Community } from '../community.model';
 import AppCommunityThumbnailImg from './AppCommunityThumbnailImg.vue';
+import { RouterLink } from 'vue-router';
 
 const props = defineProps({
 	community: {
@@ -21,7 +22,7 @@ function onGotoCommunity() {
 </script>
 
 <template>
-	<router-link
+	<RouterLink
 		class="-item"
 		:to="{
 			name: 'communities.view.overview',
@@ -30,29 +31,15 @@ function onGotoCommunity() {
 		:title="community.name"
 		@click="onGotoCommunity"
 	>
-		<div class="-thumb">
-			<AppCommunityThumbnailImg class="-thumb-inner" :community="community" />
-		</div>
+		<AppCommunityThumbnailImg :community="community" />
 
 		<div class="-label">
 			{{ community.name }}
 		</div>
-	</router-link>
+	</RouterLink>
 </template>
 
 <style lang="stylus" scoped>
-.-thumb
-	position: relative
-	height: 0
-	padding-top: 100%
-
-	&-inner
-		position: absolute
-		top: 0
-		left: 0
-		width: 100%
-		height: 100%
-
 .-label
 	text-overflow()
 	theme-prop('color', 'fg')

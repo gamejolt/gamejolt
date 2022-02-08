@@ -6,7 +6,7 @@ import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.v
 import AppCardListDraggable from '../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem.vue';
 import { Game } from '../../../../../../_common/game/game.model';
-import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
+import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
 import {
 	BaseRouteComponent,

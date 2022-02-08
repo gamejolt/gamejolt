@@ -2,7 +2,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Environment } from '../../environment/environment.service';
 import { Game } from '../../game/game.model';
-import AppGameThumbnailImg from '../../game/thumbnail-img/thumbnail-img.vue';
+import AppGameThumbnailImg from '../../game/thumbnail/AppGameThumbnailImg.vue';
 import { WidgetCompiler } from '../widget-compiler.service';
 
 @Options({

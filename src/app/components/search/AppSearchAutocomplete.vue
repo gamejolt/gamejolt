@@ -3,7 +3,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { debounce } from '../../../utils/utils';
 import { Game } from '../../../_common/game/game.model';
-import AppGameThumbnailImg from '../../../_common/game/thumbnail-img/thumbnail-img.vue';
+import AppGameThumbnailImg from '../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { User } from '../../../_common/user/user.model';
 import AppUserVerifiedTick from '../../../_common/user/verified-tick/verified-tick.vue';
 import type { LocalDbGame } from '../client/local-db/game/game.model';

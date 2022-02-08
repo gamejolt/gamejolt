@@ -2,6 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
+import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
 import { Comment } from '../../../../_common/comment/comment-model';
 import {
@@ -78,6 +79,7 @@ const FiresideScrollInviewConfig = new ScrollInviewConfig({
 		AppFiresideBadge,
 		AppShareCard,
 		AppScrollInview,
+		AppAspectRatio,
 	},
 	directives: {
 		AppTooltip: vAppTooltip,
@@ -751,7 +753,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 										v-for="i in previewCommunityCount"
 										:key="i"
 										class="-community-item -community-thumb-placeholder"
-									/>
+									>
+										<AppAspectRatio :ratio="1" />
+									</div>
 								</template>
 								<template v-else>
 									<router-link
@@ -943,17 +947,6 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	position: relative
 	outline: 0
 	width: 100%
-	// Setting 'padding-top' with a percentage goes off the elements width,
-	// rather than the height. This will allow us to use a 1:1 aspect ratio
-	// for the loading placeholders, matching them up with our thumbnails.
-	padding-top: 100%
-
-.-community-item-align
-	position: absolute
-	left: 0
-	top: 0
-	right: 0
-	bottom: 0
 
 .-community-thumb-placeholder
 	img-circle()

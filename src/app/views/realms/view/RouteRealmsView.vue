@@ -23,7 +23,6 @@ import AppRealmFollowButton from '../../../../_common/realm/AppRealmFollowButton
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { ShareModal } from '../../../../_common/share/card/_modal/modal.service';
 import { RealmCommunity } from '../../../../_common/realm/realm-community-model';
-import AppResponsiveDimensions from '../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
@@ -45,6 +44,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 const router = useRouter();
 const route = useRoute();
 
@@ -157,7 +157,7 @@ function onShareClick() {
 								:key="i"
 								class="-community-item -community-thumb-placeholder"
 							>
-								<AppResponsiveDimensions :ratio="1" />
+								<AppAspectRatio :ratio="1" />
 							</div>
 						</template>
 						<template v-else>

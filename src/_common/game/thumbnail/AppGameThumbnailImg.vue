@@ -8,6 +8,7 @@ import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppVideo from '../../video/video.vue';
 import { Game } from '../game.model';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
+import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 
 const props = defineProps({
 	game: {
@@ -57,54 +58,39 @@ function imgLoadChange(isLoaded: boolean) {
 </script>
 
 <template>
-	<div
-		class="game-thumbnail-img"
+	<AppAspectRatio
 		:class="{
 			'-loaded': isThumbnailLoaded,
 		}"
+		:ratio="16 / 9"
 	>
-		<div class="-inner">
-			<AppMediaItemBackdrop
-				:media-item="mediaItem"
-				:radius="radius"
-				fallback-color="var(--theme-bg-offset)"
-			>
-				<AppJolticon v-if="!hideJolticon" class="-icon" icon="game" />
+		<AppMediaItemBackdrop
+			:media-item="mediaItem"
+			:radius="radius"
+			fallback-color="var(--theme-bg-offset)"
+		>
+			<AppJolticon v-if="!hideJolticon" class="-icon" icon="game" />
 
-				<div v-if="mediaItem && !hideMedia" class="-media">
-					<AppImgResponsive
-						class="-img"
-						:src="mediaItem.mediaserver_url"
-						alt=""
-						@imgloadchange="imgLoadChange"
-					/>
+			<div v-if="mediaItem && !hideMedia" class="-media">
+				<AppImgResponsive
+					class="-img"
+					:src="mediaItem.mediaserver_url"
+					alt=""
+					@imgloadchange="imgLoadChange"
+				/>
 
-					<AppVideo
-						v-if="hasVideo && videoController"
-						class="-video"
-						:player="videoController"
-						:should-play="shouldPlayVideo"
-					/>
-				</div>
-			</AppMediaItemBackdrop>
-		</div>
-	</div>
+				<AppVideo
+					v-if="hasVideo && videoController"
+					class="-video"
+					:player="videoController"
+					:should-play="shouldPlayVideo"
+				/>
+			</div>
+		</AppMediaItemBackdrop>
+	</AppAspectRatio>
 </template>
 
 <style lang="stylus" scoped>
-.game-thumbnail-img
-	position: relative
-	height: 0
-	padding-top: 56.25% // HD 16:9
-	overflow: hidden
-
-.-inner
-	position: absolute
-	top: 0
-	left: 0
-	width: 100%
-	height: 100%
-
 .-icon
 	color: white
 	opacity: 0.4
