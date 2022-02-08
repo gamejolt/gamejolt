@@ -93,8 +93,8 @@ export default class AppFormsCommunityPillSelector extends Vue {
 			>
 				<div class="-community-img">
 					<AppCommunityThumbnailImg :community="selectedCommunity" />
-					<AppJolticon v-if="!isInitial" class="-back" icon="arrow-left" />
 				</div>
+				<AppJolticon v-if="!isInitial" class="-back" icon="arrow-left" />
 				<span class="-text">
 					{{ selectedCommunity.name }}
 				</span>
@@ -112,7 +112,9 @@ export default class AppFormsCommunityPillSelector extends Vue {
 						class="-community-item list-group-item"
 						@click="selectCommunity(community)"
 					>
-						<AppCommunityThumbnailImg class="-community-img" :community="community" />
+						<div class="-community-img">
+							<AppCommunityThumbnailImg :community="community" />
+						</div>
 
 						<span class="-text">
 							{{ community.name }}
