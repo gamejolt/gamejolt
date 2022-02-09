@@ -288,7 +288,9 @@ export default class AppFiresideAvatar extends Vue {
 
 						<div v-if="community" class="-tooltip-row -tooltip-community">
 							<AppTranslate>in</AppTranslate>
-							<AppCommunityThumbnailImg class="-tooltip-img" :community="community" />
+							<div class="-tooltip-img">
+								<AppCommunityThumbnailImg :community="community" />
+							</div>
 							{{ community.name }}
 						</div>
 					</div>
