@@ -93,7 +93,7 @@ export default class AppChatWindowOutputItem extends Vue {
 	/** The background-color for chat items that are being edited. */
 	get isEditingColor() {
 		if (!this.isEditing) {
-			return null;
+			return undefined;
 		}
 
 		const highlight = '#' + this.actualTheme.highlight_;
