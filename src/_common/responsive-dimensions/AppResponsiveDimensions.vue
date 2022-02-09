@@ -1,5 +1,7 @@
 <script lang="ts">
 import { onMounted, ref, toRefs, watch } from 'vue';
+import { useResizeObserver } from '../../utils/resize-observer';
+import { debounce } from '../../utils/utils';
 import { Ruler } from '../ruler/ruler-service';
 import { onScreenResize } from '../screen/screen-service';
 import { useEventSubscription } from '../system/event/event-topic';
@@ -39,7 +41,20 @@ watch([ratio, maxWidth, maxHeight], _updateDimensions);
 
 useEventSubscription(onScreenResize, () => _updateDimensions());
 
-onMounted(() => _updateDimensions());
+onMounted(() => {
+	if (root.value?.parentNode) {
+		// If the parent's dimensions change, we want to recalculate, just in case
+		// the page shifted around.
+		useResizeObserver({
+			target: root.value!.parentNode as HTMLElement,
+			// This can trigger a lot when someone is resizing the window, so let's
+			// debounce it to something reasonable.
+			callback: debounce(_updateDimensions, 500),
+		});
+	}
+
+	_updateDimensions();
+});
 
 function _updateDimensions() {
 	if (!root.value) {
