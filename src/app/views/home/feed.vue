@@ -58,9 +58,11 @@ export class RouteActivityFeedController {
 		AppHomeFireside,
 		AppConfigLoaded,
 		RouteHomeActivity: defineAsyncComponent(() =>
-			asyncRouteLoader(router, import('./activity.vue'))
+			asyncRouteLoader(router, import('./RouteHomeActivity.vue'))
 		),
-		RouteHomeFyp: defineAsyncComponent(() => asyncRouteLoader(router, import('./fyp.vue'))),
+		RouteHomeFyp: defineAsyncComponent(() =>
+			asyncRouteLoader(router, import('./RouteHomeFYP.vue'))
+		),
 	},
 	directives: {
 		AppTooltip: vAppTooltip,
