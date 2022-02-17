@@ -4,6 +4,7 @@ import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { RouteLocationRaw } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
+import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
 import { configPostShareSide } from '../../../../_common/config/config.service';
@@ -142,6 +143,7 @@ export default class AppPostPage extends Vue {
 	}
 
 	get shareCardOnSide() {
+		trackExperimentEngagement(configPostShareSide);
 		return configPostShareSide.value;
 	}
 
@@ -429,6 +431,7 @@ export default class AppPostPage extends Vue {
 <style lang="stylus" scoped>
 @import '../variables'
 @import '../common'
+import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 
 .-controls-spacing
 	padding-bottom: $-controls-spacing-xs
