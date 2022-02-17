@@ -10,6 +10,8 @@ import { $gettext } from '../../../_common/translate/translate.service';
 import FormOnboardingFollows from '../../components/forms/onboarding/FormOnboardingFollows.vue';
 import FormOnboardingProfile from '../../components/forms/onboarding/FormOnboardingProfile.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import { User } from '../../../_common/user/user.model';
+import { showUserInviteFollowGrowl } from '../../../_common/user/invite/modal/modal.service';
 
 export default {
 	...defineAppRouteOptions({
@@ -24,8 +26,9 @@ const router = useRouter();
 
 const steps = [markRaw(FormOnboardingProfile), markRaw(FormOnboardingFollows)];
 
-const isSocialRegistration = ref(false);
 const currentStep = ref(0);
+const isSocialRegistration = ref(false);
+const inviteUser = ref<User>();
 
 const stepComponent = computed(() => steps[currentStep.value]);
 
@@ -33,11 +36,6 @@ createAppRoute({
 	routeTitle: computed(() => $gettext(`Welcome to Game Jolt!`)),
 	onInit() {
 		Onboarding.start();
-
-		if (!Onboarding.isOnboarding) {
-			router.push({ name: 'home' });
-			return;
-		}
 	},
 	onResolved({ payload }) {
 		if (!user.value) {
@@ -46,12 +44,18 @@ createAppRoute({
 		}
 
 		isSocialRegistration.value = payload.isSocialRegistration || false;
+		inviteUser.value = payload.inviteUser && new User(payload.inviteUser);
 	},
 });
 
 function onNextStep() {
 	if (currentStep.value === steps.length - 1) {
 		Onboarding.end();
+
+		if (inviteUser.value) {
+			showUserInviteFollowGrowl(inviteUser.value);
+		}
+
 		router.push({ name: 'home' });
 		return;
 	}

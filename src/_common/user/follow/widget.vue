@@ -68,7 +68,7 @@ export default class AppUserFollowWidget extends Vue {
 
 	get tooltip() {
 		return !this.user.is_following
-			? this.$gettext(`Follow this user to get their games, videos, and posts in your feed!`)
+			? this.$gettext(`Follow this user to get their posts in your feed!`)
 			: undefined;
 	}
 

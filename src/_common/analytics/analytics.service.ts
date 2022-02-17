@@ -31,6 +31,7 @@ export type UserFollowLocation =
 	| 'postLike'
 	| 'card'
 	| 'profilePage'
+	| 'inviteFollow'
 	| 'userList'
 	| 'gameFollow';
 export type GameFollowLocation = 'thumbnail' | 'gamePage' | 'badge' | 'homeBanner' | 'library';
