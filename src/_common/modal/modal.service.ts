@@ -11,7 +11,7 @@ export function useModal<T>() {
 export interface ModalOptions {
 	component: Component;
 	modalId: string;
-	size?: 'sm' | 'lg' | 'full' | undefined;
+	size?: 'xs' | 'sm' | 'lg' | 'full' | undefined;
 	props?: any;
 	noBackdrop?: boolean;
 	noBackdropClose?: boolean;
@@ -19,7 +19,7 @@ export interface ModalOptions {
 }
 
 export class Modal<T = any> {
-	size: 'sm' | 'lg' | 'full' | undefined;
+	size: 'xs' | 'sm' | 'lg' | 'full' | undefined;
 	component: Component;
 	modalId: string;
 	props?: any;

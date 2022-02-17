@@ -146,9 +146,9 @@ export default class AppAuthJoinForm
 				</fieldset>
 
 				<div v-if="blocked" class="alert alert-notice -blocked-message">
-					<AppTranslate
-						>You must wait 15 minutes before creating another account.</AppTranslate
-					>
+					<AppTranslate>
+						You must wait 15 minutes before creating another account.
+					</AppTranslate>
 				</div>
 			</AppForm>
 

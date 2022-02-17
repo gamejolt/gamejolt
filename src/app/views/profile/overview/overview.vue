@@ -1,6 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
+import { removeQuery } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
@@ -41,6 +42,7 @@ import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
+import { showUserInviteFollowModal } from '../../../../_common/user/invite/modal/modal.service';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 import { unfollowUser, User } from '../../../../_common/user/user.model';
 import { ChatStore, ChatStoreKey } from '../../../components/chat/chat-store';
@@ -378,6 +380,15 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 			// Initialize a CommentStore lock for profile shouts.
 			this.commentStore = lockCommentStore(this.commentManager, 'User', this.user.id);
 			setCommentCount(this.commentStore, this.user.comment_count);
+
+			if (this.$route.query['invite'] !== undefined) {
+				// Only show the modal if they're not following yet.
+				if (!this.user.is_following) {
+					showUserInviteFollowModal(this.user);
+				}
+
+				removeQuery(this.$router, 'invite');
+			}
 		}
 
 		if (payload.knownFollowers) {
