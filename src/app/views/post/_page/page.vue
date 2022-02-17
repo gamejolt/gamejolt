@@ -431,7 +431,6 @@ export default class AppPostPage extends Vue {
 <style lang="stylus" scoped>
 @import '../variables'
 @import '../common'
-import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 
 .-controls-spacing
 	padding-bottom: $-controls-spacing-xs
