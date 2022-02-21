@@ -178,6 +178,9 @@ export const Jolticons = [
 	'communities-3x3',
 	'whatsapp',
 	'facebook-messenger',
+	'portal',
+	'quest-log',
+	'exclamation',
 ] as const;
 </script>
 
