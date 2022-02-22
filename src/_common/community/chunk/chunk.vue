@@ -6,18 +6,16 @@ import { EventItem } from '../../event-item/event-item.model';
 import { formatNumber } from '../../filters/number';
 import AppPostCard from '../../fireside/post/card/AppPostCard.vue';
 import AppPostCardPlaceholder from '../../fireside/post/card/AppPostCardPlaceholder.vue';
-import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
 import { Community } from '../community.model';
 import AppCommunityJoinWidget from '../join-widget/join-widget.vue';
-import AppCommunityThumbnailImg from '../thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../thumbnail/AppCommunityThumbnailImg.vue';
 import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 
 @Options({
 	components: {
 		AppCommunityThumbnailImg,
-		AppMediaItemBackdrop,
 		AppCommunityJoinWidget,
 		AppCommunityVerifiedTick,
 		AppPostCard,
@@ -43,7 +41,9 @@ export default class AppCommunityChunk extends Vue {
 	private async fetchFeed() {
 		const sort = 'hot';
 		const payload = await Api.sendRequest(
-			`/web/communities/overview/${this.community.path}/featured?sort=${sort}&perPage=10`
+			`/web/communities/overview/${this.community.path}/featured?sort=${sort}&perPage=10`,
+			{},
+			{ detach: true }
 		);
 		this.items = EventItem.populate(payload.items);
 		this.isLoadingPosts = false;
@@ -69,9 +69,7 @@ export default class AppCommunityChunk extends Vue {
 			>
 				<div class="-thumbnail">
 					<div class="-thumbnail-inner">
-						<AppMediaItemBackdrop :media-item="community.thumbnail" radius="full">
-							<AppCommunityThumbnailImg :community="community" />
-						</AppMediaItemBackdrop>
+						<AppCommunityThumbnailImg :community="community" />
 					</div>
 
 					<AppCommunityVerifiedTick

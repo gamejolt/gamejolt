@@ -92,10 +92,6 @@ export default class AppChatWindowOutput extends Vue {
 		return this._introEmoji;
 	}
 
-	get hasNewMessages() {
-		return this.chat.notifications[this.room.id] > 0;
-	}
-
 	created() {
 		useEventSubscription(onNewChatMessage, async message => {
 			// When the user sent a message, we want the chat to scroll all
@@ -285,14 +281,6 @@ export default class AppChatWindowOutput extends Vue {
 					/>
 				</div>
 			</div>
-
-			<transition name="fade">
-				<div
-					v-if="!shouldScroll"
-					class="-container-scroll-down-indicator"
-					:class="{ '-container-scroll-down-indicator-new': hasNewMessages }"
-				/>
-			</transition>
 		</div>
 	</AppScrollScroller>
 </template>

@@ -209,6 +209,7 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 	try {
 		await Promise.all([destroyChannel(videoChannel), destroyChannel(chatChannel)]);
 	} catch (e) {
+		rtc.logError(`Failed to destroy the Fireside RTC. Reloading...`, e);
 		// reload the page, anything we do now is no longer reliable.
 		Navigate.reload();
 		return;

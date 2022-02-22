@@ -2,7 +2,7 @@
 import { computed, Ref, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { getQuery } from '../../../../utils/router';
-import AppCommunityThumbnail from '../../../../_common/community/thumbnail/thumbnail.vue';
+import AppCommunityThumbnail from '../../../../_common/community/thumbnail/AppCommunityThumbnail.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -17,6 +17,8 @@ import { sendSearch } from '../../../components/search/search-service';
 import { useSearchRouteController } from '../RouteSearch.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppRealmChunk from '../../../../_common/realm/chunk/AppRealmChunk.vue';
+import { configRealms } from '../../../../_common/config/config.service';
 
 export default {
 	...defineAppRouteOptions({
@@ -55,17 +57,23 @@ createAppRoute({
 	},
 });
 
-const slicedUsers = computed(() => {
-	return Screen.isXs ? searchPayload.value.users : searchPayload.value.users.slice(0, 2);
-});
+const slicedUsers = computed(() =>
+	Screen.isXs ? searchPayload.value.users : searchPayload.value.users.slice(0, 2)
+);
 
-const slicedCommunities = computed(() => {
-	return searchPayload.value.communities.slice(0, 6);
-});
+const slicedCommunities = computed(() => searchPayload.value.communities.slice(0, 6));
 </script>
 
 <template>
 	<section v-if="hasSearch">
+		<template v-if="configRealms.value && searchPayload.realm">
+			<section class="section section-thin">
+				<div class="container">
+					<AppRealmChunk :realm="searchPayload.realm" />
+				</div>
+			</section>
+		</template>
+
 		<!-- Communities -->
 		<template v-if="searchPayload.communities.length">
 			<section class="section section-thin">
@@ -85,6 +93,7 @@ const slicedCommunities = computed(() => {
 						>
 							<AppTranslate>Communities</AppTranslate>
 						</RouterLink>
+						{{ ' ' }}
 						<small>({{ formatNumber(searchPayload.communitiesCount) }})</small>
 					</h3>
 
@@ -121,6 +130,7 @@ const slicedCommunities = computed(() => {
 					>
 						<AppTranslate>Games</AppTranslate>
 					</RouterLink>
+					{{ ' ' }}
 					<small>({{ formatNumber(searchPayload.gamesCount) }})</small>
 				</h3>
 
@@ -163,6 +173,7 @@ const slicedCommunities = computed(() => {
 					>
 						<AppTranslate>Users</AppTranslate>
 					</RouterLink>
+					{{ ' ' }}
 					<small>({{ formatNumber(searchPayload.usersCount) }})</small>
 				</h3>
 

@@ -13,7 +13,7 @@ import { useCommonStore } from '../../../_common/store/common-store';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
 import { PaymentData, useWidgetPackageStore } from '../../store/index';
-import AppModal from '../AppModal.vue';
+import AppWidgetModal from '../AppWidgetModal.vue';
 import FormAddress from './FormAddress.vue';
 
 interface FormModel {
@@ -151,9 +151,9 @@ function submit(method: PaymentData['method']) {
 	</AppForm>
 
 	<transition>
-		<AppModal v-if="isShowingAddress" @close="isShowingAddress = false">
+		<AppWidgetModal v-if="isShowingAddress" @close="isShowingAddress = false">
 			<FormAddress />
-		</AppModal>
+		</AppWidgetModal>
 	</transition>
 </template>
 

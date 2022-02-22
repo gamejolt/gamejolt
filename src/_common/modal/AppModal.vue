@@ -5,7 +5,7 @@ import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
 import { useDrawerStore } from '../drawer/drawer-store';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import { Screen } from '../screen/screen-service';
-import AppScrollAffix from '../scroll/affix/affix.vue';
+import AppScrollAffix from '../scroll/AppScrollAffix.vue';
 import AppScrollScroller, { createScroller } from '../scroll/AppScrollScroller.vue';
 import AppTheme from '../theme/AppTheme.vue';
 import { Theme } from '../theme/theme.model';
@@ -130,6 +130,7 @@ function scrollTo(offsetY: number) {
 			:controller="scroller"
 			class="modal"
 			:class="{
+				'modal-xs': modal.size === 'xs',
 				'modal-sm': modal.size === 'sm',
 				'modal-lg': modal.size === 'lg',
 				'modal-full': modal.size === 'full',
@@ -148,7 +149,7 @@ function scrollTo(offsetY: number) {
 				>
 					<slot />
 
-					<AppScrollAffix v-if="hasFooter" anchor="bottom">
+					<AppScrollAffix v-if="hasFooter" anchor="bottom" :padding="0">
 						<div class="-footer fill-offset">
 							<slot name="footer" />
 						</div>
@@ -204,6 +205,18 @@ function scrollTo(offsetY: number) {
 	@media $media-sm-up
 		rounded-corners-lg()
 		margin: 0 auto
+
+.modal-xs
+	.modal-layer
+		display: flex
+		align-items: center
+		justify-content: center
+
+	.modal-content
+		rounded-corners-lg()
+		width: calc(100% - 32px)
+		max-width: 360px
+		min-height: auto !important
 
 @media $media-sm-up
 	.modal-sm

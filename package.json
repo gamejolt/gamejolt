@@ -52,7 +52,7 @@
 		"agora-rtc-sdk-ng": "4.5.0",
 		"autoprefixer": "10.4.2",
 		"autosize": "5.0.1",
-		"broadcast-channel": "4.9.0",
+		"broadcast-channel": "3.1.0",
 		"chart.js": "3.7.0",
 		"cropperjs": "1.5.5",
 		"cross-env": "7.0.3",

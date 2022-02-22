@@ -5,7 +5,7 @@ import AppEditableOverlay from '../../../../../_common/editable-overlay/editable
 import AppFormControlTheme from '../../../../../_common/form-vue/controls/AppFormControlTheme.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
-import AppGameThumbnailImg from '../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
+import AppGameThumbnailImg from '../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { DefaultTheme } from '../../../../../_common/theme/theme.model';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { GameThumbnailModal } from '../../../game/thumbnail-modal/thumbnail-modal.service';
@@ -82,7 +82,9 @@ export default class FormGameDesign extends mixins(Wrapper) {
 					</p>
 					<p>
 						<AppLinkHelp page="dev-thumbnails" class="link-help">
-							<AppTranslate>What are the thumbnail requirements and guidelines?</AppTranslate>
+							<AppTranslate>
+								What are the thumbnail requirements and guidelines?
+							</AppTranslate>
 						</AppLinkHelp>
 					</p>
 				</div>

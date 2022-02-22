@@ -163,6 +163,7 @@ export default class FormAvatar extends mixins(Wrapper) implements FormOnLoad, F
 					By default we fallback to using Gravatar if you have one. If you would like to
 					disable the Gravatar fallback, you can toggle this on.
 				</AppTranslate>
+				{{ ' ' }}
 				<AppLinkExternal href="https://gravatar.com" class="link-help">
 					<AppTranslate>What is Gravatar?</AppTranslate>
 				</AppLinkExternal>

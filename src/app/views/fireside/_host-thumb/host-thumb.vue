@@ -8,7 +8,7 @@ import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
-import AppFiresideStreamVideo from '../../../components/fireside/stream/video/video.vue';
+import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';
 import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';
 
 @Options({

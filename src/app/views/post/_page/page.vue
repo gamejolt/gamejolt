@@ -4,9 +4,10 @@ import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { RouteLocationRaw } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
-import { Api } from '../../../../_common/api/api.service';
+import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
+import { configPostShareSide } from '../../../../_common/config/config.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -23,7 +24,7 @@ import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
-import AppShareCard from '../../../../_common/share/card/card.vue';
+import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import AppStickerControlsOverlay from '../../../../_common/sticker/controls-overlay/controls-overlay.vue';
 import AppStickerReactions from '../../../../_common/sticker/reactions/reactions.vue';
 import {
@@ -50,7 +51,7 @@ import { AppCommentWidgetLazy } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppPollVoting from '../../../components/poll/voting/voting.vue';
 import AppPostControls from '../../../components/post/controls/controls.vue';
-import AppPostPageRecommendations from './recommendations/recommendations.vue';
+import AppPostPageRecommendations from './recommendations/AppPostPageRecommendations.vue';
 
 @Options({
 	components: {
@@ -141,6 +142,11 @@ export default class AppPostPage extends Vue {
 		return this.post.videos[0] ?? null;
 	}
 
+	get shareCardOnSide() {
+		trackExperimentEngagement(configPostShareSide);
+		return configPostShareSide.value;
+	}
+
 	created() {
 		this.stickerTargetController = createStickerTargetController(this.post);
 		provideStickerTargerController(this.stickerTargetController);
@@ -165,26 +171,9 @@ export default class AppPostPage extends Vue {
 		}
 	}
 
-	mounted() {
-		this.fetchRecommendedPosts();
-	}
-
 	@Watch('post.id')
 	onPostChange() {
 		this.stickerTargetController = createStickerTargetController(this.post);
-		this.fetchRecommendedPosts();
-	}
-
-	async fetchRecommendedPosts() {
-		this.recommendedPosts = [];
-
-		const payload = await Api.sendRequest(
-			`/web/posts/recommendations/${this.post.id}`,
-			undefined,
-			{ detach: true }
-		);
-
-		this.recommendedPosts = FiresidePost.populate(payload.posts);
 	}
 
 	onVideoProcessingComplete(payload: any) {
@@ -414,12 +403,12 @@ export default class AppPostPage extends Vue {
 					@sticker="scrollToStickers()"
 				/>
 
-				<div class="-share">
+				<div v-if="!shareCardOnSide" class="-share">
 					<AppShareCard resource="post" :url="post.url" offset-color />
 				</div>
 
 				<div v-if="Screen.isMobile">
-					<AppPostPageRecommendations :posts="recommendedPosts" />
+					<AppPostPageRecommendations :key="post.id" :post="post" />
 				</div>
 
 				<br />
@@ -428,7 +417,12 @@ export default class AppPostPage extends Vue {
 			</template>
 
 			<template v-if="!Screen.isMobile" #right>
-				<AppPostPageRecommendations :posts="recommendedPosts" />
+				<div class="-side-col">
+					<div v-if="shareCardOnSide" class="-share">
+						<AppShareCard resource="post" :url="post.url" offset-color />
+					</div>
+					<AppPostPageRecommendations :key="post.id" :post="post" />
+				</div>
 			</template>
 		</AppPageContainer>
 	</section>
@@ -501,6 +495,10 @@ export default class AppPostPage extends Vue {
 
 .-communities
 	white-space: nowrap
+
+.-side-col
+	@media $media-lg-up
+		margin-left: 50px
 
 .-share
 	margin-top: $line-height-computed * 1.5

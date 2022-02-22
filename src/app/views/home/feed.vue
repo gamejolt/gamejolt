@@ -19,15 +19,13 @@ import {
 	OptionsForRoute,
 } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
+import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { EventSubscription } from '../../../_common/system/event/event-topic';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppUserCard from '../../../_common/user/card/card.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../components/activity/feed/view';
-import AppCommunitySliderPlaceholder from '../../components/community/slider/placeholder/placeholder.vue';
-import AppCommunitySlider from '../../components/community/slider/slider.vue';
 import { onFiresideStart } from '../../components/grid/client.service';
 import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
@@ -53,8 +51,6 @@ export class RouteActivityFeedController {
 	name: 'RouteActivityFeed',
 	components: {
 		AppPageContainer,
-		AppCommunitySlider,
-		AppCommunitySliderPlaceholder,
 		AppPostAddButton,
 		AppUserCard,
 		AppScrollAffix,
@@ -62,9 +58,11 @@ export class RouteActivityFeedController {
 		AppHomeFireside,
 		AppConfigLoaded,
 		RouteHomeActivity: defineAsyncComponent(() =>
-			asyncRouteLoader(router, import('./activity.vue'))
+			asyncRouteLoader(router, import('./RouteHomeActivity.vue'))
 		),
-		RouteHomeFyp: defineAsyncComponent(() => asyncRouteLoader(router, import('./fyp.vue'))),
+		RouteHomeFyp: defineAsyncComponent(() =>
+			asyncRouteLoader(router, import('./RouteHomeFYP.vue'))
+		),
 	},
 	directives: {
 		AppTooltip: vAppTooltip,
@@ -362,15 +360,6 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			</template>
 
 			<AppPostAddButton @add="onPostAdded" />
-
-			<template v-if="Screen.isXs">
-				<h6 class="-feed-heading">
-					<AppTranslate>Communities</AppTranslate>
-				</h6>
-
-				<AppCommunitySliderPlaceholder v-if="!isRouteBootstrapped" :num="1" />
-				<AppCommunitySlider v-else :communities="communities" with-add-button />
-			</template>
 
 			<AppHomeFireside
 				v-if="Screen.isMobile"

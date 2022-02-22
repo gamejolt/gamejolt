@@ -25,7 +25,7 @@ import { Navigate } from '../../../_common/navigate/navigate.service';
 import { PayloadError } from '../../../_common/payload/payload-service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
+import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
 import AppGameBadge from '../../components/game/badge/badge.vue';
 import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
 

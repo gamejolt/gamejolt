@@ -22,6 +22,7 @@ defineProps({
 	<div class="-chat-members">
 		<h3 class="sans-margin-top">
 			<AppTranslate>Members</AppTranslate>
+			{{ ' ' }}
 			<span class="badge">{{ chatUsers.count }}</span>
 		</h3>
 		<AppScrollScroller class="-chat-members-scroller">

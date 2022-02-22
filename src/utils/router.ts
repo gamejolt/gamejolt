@@ -199,6 +199,23 @@ export function enforceLocation(route: RouteLocationNormalized, params: any, que
 }
 
 /**
+ * Will replace the current route but without the query passed in. Can be used
+ * to get rid of query params that were only there to trigger certain things to
+ * happen, that you don't want to happen again on refresh.
+ */
+export function removeQuery(router: Router, key: string) {
+	const route = router.currentRoute.value;
+
+	router.replace({
+		...route,
+		query: {
+			...route.query,
+			[key]: undefined,
+		},
+	});
+}
+
+/**
  * Will generate a link from a route location.
  */
 export function getAbsoluteLink(router: Router, location: RouteLocationRaw) {

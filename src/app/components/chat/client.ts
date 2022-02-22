@@ -131,22 +131,7 @@ export class ChatClient {
 	}
 
 	get roomNotificationsCount() {
-		let count = 0;
-
-		for (const roomId in this.notifications) {
-			const channel = this.roomChannels[roomId];
-
-			if (
-				// Only count for non-instanced channels.
-				(channel === undefined || !channel.instanced) &&
-				Object.prototype.hasOwnProperty.call(this.notifications, roomId)
-			) {
-				const roomCount = this.notifications[roomId];
-				count += roomCount || 0;
-			}
-		}
-
-		return count;
+		return Object.values(this.notifications).reduce((total, roomCount) => total + roomCount, 0);
 	}
 }
 
@@ -497,7 +482,13 @@ export function setChatRoom(chat: ChatClient, newRoom: ChatRoom | undefined) {
 }
 
 export function newChatNotification(chat: ChatClient, roomId: number) {
+	// Don't shows if they're focused in the room.
 	if (isInChatRoom(chat, roomId) && chat.isFocused) {
+		return;
+	}
+
+	// Only store for non-instanced channels.
+	if (isRoomInstanced(chat, roomId)) {
 		return;
 	}
 

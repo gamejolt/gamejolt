@@ -141,7 +141,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		this.feed = ActivityFeedService.routeInit(this);
+		this.feed = ActivityFeedService.routeInit(this.isRouteBootstrapped);
 		this.finishedLoading = false;
 	}
 

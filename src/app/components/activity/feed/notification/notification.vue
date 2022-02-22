@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import '../../../../../_common/comment/comment.styl';
-import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import {
 	CommunityUserNotification,
 	NotificationType,
@@ -138,7 +138,6 @@ export default class AppActivityFeedNotification extends Vue {
 								>
 									<div class="-community-thumb">
 										<AppCommunityThumbnailImg
-											class="img-circle"
 											:community="notification.from_model"
 										/>
 									</div>
@@ -161,7 +160,6 @@ export default class AppActivityFeedNotification extends Vue {
 								>
 									<div class="-community-thumb">
 										<AppCommunityThumbnailImg
-											class="img-circle"
 											:community="notification.action_model.community"
 										/>
 									</div>
@@ -312,10 +310,6 @@ export default class AppActivityFeedNotification extends Vue {
 	height: 100%
 	top: 0
 	left: 0
-
-	> img
-		width: 100%
-		height: 100%
 
 .-trophy-img
 	display: block

@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import { formatNumber } from '../../../_common/filters/number';
-import AppGameThumbnailImg from '../../../_common/game/thumbnail-img/thumbnail-img.vue';
+import AppGameThumbnailImg from '../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { useAuthStore } from '../../store/index';
 
 @Options({
@@ -24,10 +24,10 @@ export default class AppGameCoverCredits extends Vue {
 <template>
 	<router-link
 		v-if="coverGame"
+		v-app-track-event="`auth-game-cover-credits:click`"
 		class="game-cover-credits link-unstyled"
 		:to="coverGame.getUrl()"
 		:title="coverGame.title"
-		v-app-track-event="`auth-game-cover-credits:click`"
 		target="_blank"
 	>
 		<div class="-container">

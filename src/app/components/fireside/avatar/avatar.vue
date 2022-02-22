@@ -6,12 +6,11 @@ import {
 	canCommunityFeatureFireside,
 	Community,
 } from '../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { FiresideCommunity } from '../../../../_common/fireside/community/community.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
@@ -28,7 +27,6 @@ export interface FiresideAvatarEvent {
 	components: {
 		AppUserAvatarImg,
 		AppPopper,
-		AppMediaItemBackdrop,
 		AppCommunityThumbnailImg,
 		AppFiresideAvatarBase,
 		AppChatUserOnlineStatus,
@@ -290,7 +288,9 @@ export default class AppFiresideAvatar extends Vue {
 
 						<div v-if="community" class="-tooltip-row -tooltip-community">
 							<AppTranslate>in</AppTranslate>
-							<AppCommunityThumbnailImg class="-tooltip-img" :community="community" />
+							<div class="-tooltip-img">
+								<AppCommunityThumbnailImg :community="community" />
+							</div>
 							{{ community.name }}
 						</div>
 					</div>

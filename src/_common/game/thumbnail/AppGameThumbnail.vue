@@ -11,7 +11,7 @@ import AppUserAvatarImg from '../../user/user-avatar/img/img.vue';
 import AppUserVerifiedTick from '../../user/verified-tick/verified-tick.vue';
 import AppGameCompatIcons from '../compat-icons/compat-icons.vue';
 import { Game } from '../game.model';
-import AppGameThumbnailImg from '../thumbnail-img/thumbnail-img.vue';
+import AppGameThumbnailImg from './AppGameThumbnailImg.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 

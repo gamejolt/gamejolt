@@ -17,8 +17,7 @@ import { Scroll } from '../../../_common/scroll/scroll.service';
 import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
 import AppPageHeader from '../../components/page-header/page-header.vue';
 import AppSearch from '../../components/search/AppSearch.vue';
-import { SearchPayload } from '../../components/search/payload-service';
-import { Search } from '../../components/search/search-service';
+import { Search, SearchPayload } from '../../components/search/search-service';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { getQuery } from '../../../utils/router';
@@ -33,6 +32,8 @@ export function useSearchRouteController() {
 
 function createController() {
 	const route = useRoute();
+
+	const isBootstrapped = ref(false);
 
 	// We store our own version of the search query and sync back to it on
 	// form submission.
@@ -59,6 +60,7 @@ function createController() {
 		// We sync the query to the search service so that all places get
 		// updated with the new query.
 		Search.query = query.value;
+		isBootstrapped.value = true;
 	}
 
 	return {
@@ -66,6 +68,7 @@ function createController() {
 		searchPayload,
 		hasSearch,
 		processPayload,
+		isBootstrapped,
 	};
 }
 
@@ -81,7 +84,7 @@ const ads = useAdsController();
 const c = createController();
 provide(Key, c);
 
-const { hasSearch, query, searchPayload } = c;
+const { isBootstrapped, hasSearch, query, searchPayload } = c;
 
 createAppRoute({
 	routeTitle: computed(() => {
@@ -106,10 +109,13 @@ createAppRoute({
 
 const noResults = computed(() => {
 	return (
+		isBootstrapped.value &&
 		hasSearch.value &&
 		!searchPayload.value.gamesCount &&
 		!searchPayload.value.usersCount &&
-		!searchPayload.value.postsCount
+		!searchPayload.value.postsCount &&
+		!searchPayload.value.communitiesCount &&
+		!searchPayload.value.realm
 	);
 });
 </script>

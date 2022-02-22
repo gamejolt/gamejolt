@@ -7,12 +7,12 @@ import AppLinkExternal from '../../link/AppLinkExternal.vue';
 import AppLoading from '../../loading/loading.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../media-item/media-item-model';
-import { AppResponsiveDimensions } from '../../responsive-dimensions/responsive-dimensions';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { ContentEditorLinkModal } from '../content-editor/modals/link/link-modal.service';
 import { defineEditableNodeViewProps } from '../content-editor/node-views/base';
 import { useContentOwnerController } from '../content-owner';
 import AppBaseContentComponent from './AppBaseContentComponent.vue';
+import AppResponsiveDimensions from '../../responsive-dimensions/AppResponsiveDimensions.vue';
 
 const props = defineProps({
 	mediaItemId: {
@@ -37,7 +37,7 @@ const props = defineProps({
 	},
 	href: {
 		type: String,
-		required: true,
+		default: '',
 	},
 	isEditing: {
 		type: Boolean,
@@ -206,7 +206,7 @@ function onItemFullscreen() {
 				ref="container"
 				class="media-item-container"
 				:class="{ '-zoomable': canFullscreenItem }"
-				:ratio="mediaItem ? mediaItem.width / mediaItem.height : null"
+				:ratio="mediaItem ? mediaItem.width / mediaItem.height : 16 / 9"
 				:max-height="maxHeight"
 				:max-width="maxWidth"
 			>

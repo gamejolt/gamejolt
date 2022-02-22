@@ -83,8 +83,6 @@ function onClick(e: MouseEvent) {
 			theme-prop('color', 'bi-fg')
 
 .-img
-	img-circle()
-	overflow: hidden
 	margin-right: 5px
 	width: 18px
 	height: 18px

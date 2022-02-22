@@ -144,8 +144,6 @@ $-separator-overlap = 2px
 			color: var(--theme-bi-fg)
 
 .-img
-	img-circle()
-	overflow: hidden
 	margin-right: 6px
 	width: 16px
 	height: 16px

@@ -1,7 +1,9 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
+import { removeQuery } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
+import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
 import { Comment } from '../../../../_common/comment/comment-model';
 import {
@@ -18,7 +20,7 @@ import {
 	CommentThreadModalPermalinkDeregister,
 } from '../../../../_common/comment/thread/modal.service';
 import { Community } from '../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
@@ -36,10 +38,11 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
-import AppShareCard from '../../../../_common/share/card/card.vue';
+import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
+import { showUserInviteFollowModal } from '../../../../_common/user/invite/modal/modal.service';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 import { unfollowUser, User } from '../../../../_common/user/user.model';
 import { ChatStore, ChatStoreKey } from '../../../components/chat/chat-store';
@@ -51,7 +54,7 @@ import AppGameListPlaceholder from '../../../components/game/list/placeholder/pl
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import { TrophyModal } from '../../../components/trophy/modal/modal.service';
 import AppTrophyThumbnail from '../../../components/trophy/thumbnail/thumbnail.vue';
-import AppUserKnownFollowers from '../../../components/user/known-followers/known-followers.vue';
+import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useAppStore } from '../../../store/index';
 import { useProfileRouteController } from '../profile.vue';
 
@@ -78,6 +81,7 @@ const FiresideScrollInviewConfig = new ScrollInviewConfig({
 		AppFiresideBadge,
 		AppShareCard,
 		AppScrollInview,
+		AppAspectRatio,
 	},
 	directives: {
 		AppTooltip: vAppTooltip,
@@ -376,6 +380,15 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 			// Initialize a CommentStore lock for profile shouts.
 			this.commentStore = lockCommentStore(this.commentManager, 'User', this.user.id);
 			setCommentCount(this.commentStore, this.user.comment_count);
+
+			if (this.$route.query['invite'] !== undefined) {
+				// Only show the modal if they're not following yet.
+				if (!this.user.is_following) {
+					showUserInviteFollowModal(this.user);
+				}
+
+				removeQuery(this.$router, 'invite');
+			}
 		}
 
 		if (payload.knownFollowers) {
@@ -735,6 +748,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 										@click="toggleShowAllCommunities"
 									>
 										<AppTranslate>View All</AppTranslate>
+										{{ ' ' }}
 										<small>({{ formatNumber(communitiesCount) }})</small>
 									</AppButton>
 								</div>
@@ -750,7 +764,9 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 										v-for="i in previewCommunityCount"
 										:key="i"
 										class="-community-item -community-thumb-placeholder"
-									/>
+									>
+										<AppAspectRatio :ratio="1" />
+									</div>
 								</template>
 								<template v-else>
 									<router-link
@@ -758,20 +774,19 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 										:key="community.id"
 										v-app-tooltip.bottom="community.name"
 										class="-community-item link-unstyled"
-										:to="{
-											name: 'communities.view.overview',
-											params: { path: community.path },
-										}"
+										:to="community.routeLocation"
 									>
-										<AppCommunityThumbnailImg
-											class="-community-thumb"
-											:community="community"
-										/>
-										<AppCommunityVerifiedTick
-											class="-community-verified-tick"
-											:community="community"
-											no-tooltip
-										/>
+										<div class="-community-item-align">
+											<AppCommunityThumbnailImg
+												class="-community-thumb"
+												:community="community"
+											/>
+											<AppCommunityVerifiedTick
+												class="-community-verified-tick"
+												:community="community"
+												no-tooltip
+											/>
+										</div>
 									</router-link>
 								</template>
 							</span>
@@ -791,6 +806,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 										}"
 									>
 										<AppTranslate>View All</AppTranslate>
+										{{ ' ' }}
 										<small>({{ formatNumber(gamesCount) }})</small>
 									</AppButton>
 								</div>
@@ -942,25 +958,10 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	position: relative
 	outline: 0
 	width: 100%
-	height: auto
-
-.-community-thumb
-	img-circle()
-	change-bg('dark')
-	width: 100%
-	height: 100%
-
-	::v-deep(img)
-		width: calc(100% - 2px)
-		height: calc(100% - 2px)
 
 .-community-thumb-placeholder
 	img-circle()
 	change-bg('bg-subtle')
-	// Setting 'padding-top' with a percentage goes off the elements width,
-	// rather than the height. This will allow us to use a 1:1 aspect ratio
-	// for the loading placeholders, matching them up with our thumbnails.
-	padding-top: 100%
 
 .-community-verified-tick
 	position: absolute

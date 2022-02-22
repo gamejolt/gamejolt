@@ -1,5 +1,6 @@
 import { arrayUnique } from '../../../../utils/array';
 import { getDeviceArch, getDeviceOS } from '../../../device/device.service';
+import { Jolticon } from '../../../jolticon/AppJolticon.vue';
 import { LinkedKey } from '../../../linked-key/linked-key.model';
 import { Sellable } from '../../../sellable/sellable.model';
 import { GameBuild } from '../../build/build.model';
@@ -7,7 +8,7 @@ import { GameRelease } from '../../release/release.model';
 
 interface ExtraBuild {
 	type: string;
-	icon: string;
+	icon: Jolticon;
 	build: GameBuild;
 	platform: string;
 	arch: string | null;

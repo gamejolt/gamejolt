@@ -5,7 +5,6 @@ import { shallowSetup } from '../../../utils/vue';
 import { Api } from '../../../_common/api/api.service';
 import { vAppAuthRequired } from '../../../_common/auth/auth-required-directive';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
-import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/img/img.vue';
 import { useDrawerStore } from '../../../_common/drawer/drawer-store';
 import { Environment } from '../../../_common/environment/environment.service';
 import AppExpand from '../../../_common/expand/AppExpand.vue';
@@ -19,7 +18,6 @@ import { Navigate } from '../../../_common/navigate/navigate.service';
 import { vAppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Popper } from '../../../_common/popper/popper.service';
 import AppPopper from '../../../_common/popper/popper.vue';
-import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../_common/scroll/AppScrollScroller.vue';
@@ -69,8 +67,6 @@ const FiresideThemeKey = 'fireside';
 		AppAuthJoin,
 		AppFiresideChatMembers,
 		AppFiresideStats,
-		AppCommunityThumbnailImg,
-		AppResponsiveDimensions,
 		AppFiresideStream,
 		AppScrollScroller,
 		AppFiresideHostList,

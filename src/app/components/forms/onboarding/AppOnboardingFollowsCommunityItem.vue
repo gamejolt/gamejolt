@@ -2,7 +2,7 @@
 import { computed, PropType, toRefs } from 'vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Community } from '../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
 import { useAppStore } from '../../../store';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';

@@ -7,7 +7,7 @@ import { $viewPostVideo } from '../../../_common/fireside/post/video/video-model
 import AppImgResponsive from '../../../_common/img/AppImgResponsive.vue';
 import { MediaItem } from '../../../_common/media-item/media-item-model';
 import { BaseModal } from '../../../_common/modal/base';
-import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
+import AppResponsiveDimensions from '../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
 import {
 	createStickerTargetController,
 	StickerTargetController,

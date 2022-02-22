@@ -1,6 +1,7 @@
 import { bootstrapCommon } from '../_common/bootstrap';
 import { GamePlayModal } from '../_common/game/play-modal/play-modal.service';
 import { Registry } from '../_common/registry/registry.service';
+import { Scroll } from '../_common/scroll/scroll.service';
 import { createSidebarStore, SidebarStoreKey } from '../_common/sidebar/sidebar.store';
 import AppMain from './AppMain.vue';
 import './main.styl';
@@ -33,6 +34,9 @@ export async function createApp() {
 	Registry.setConfig('Game', { maxItems: 100 });
 	Registry.setConfig('User', { maxItems: 150 });
 	Registry.setConfig('FiresidePost', { maxItems: 50 });
+
+	// The height of the top nav bar.
+	Scroll.setOffsetTop(56);
 
 	return { app, router };
 }

@@ -378,9 +378,8 @@ class Resolver {
 		const resolverFunc = this.resolverOptions.resolver || (() => Promise.resolve());
 
 		if (!import.meta.env.SSR && this.useCache) {
-			const cache = HistoryCache.get(this.route, this.routeKey);
-			if (cache) {
-				this._resolveWith(cache.data, true);
+			if (HistoryCache.has(this.route, this.routeKey)) {
+				this._resolveWith(HistoryCache.get(this.route, this.routeKey), true);
 				return;
 			}
 		}

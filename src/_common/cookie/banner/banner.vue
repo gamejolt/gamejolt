@@ -24,12 +24,13 @@ export default class AppCookieBanner extends Vue {
 </script>
 
 <template>
-	<div class="cookie-banner fill-darker" v-if="shouldShow">
+	<div v-if="shouldShow" class="cookie-banner fill-darker">
 		<p>
 			<AppTranslate>
 				We use cookies to ensure you get the best personalized experience on our website as
 				well as keeping you signed into your account.
 			</AppTranslate>
+			{{ ' ' }}
 			<a class="link-help" :href="Environment.baseUrl + '/cookies'" @click="close()">
 				<AppTranslate>Learn more</AppTranslate>
 			</a>

@@ -15,7 +15,7 @@ import { BaseForm } from '../../../../../../_common/form-vue/form.service';
 import { validateContentMaxLength } from '../../../../../../_common/form-vue/validators';
 import { FormValidatorContentNoMediaUpload } from '../../../../../../_common/form-vue/validators/content_no_media_upload';
 import { Screen } from '../../../../../../_common/screen/screen-service';
-import AppShortkey from '../../../../../../_common/shortkey/shortkey.vue';
+import AppShortkey from '../../../../../../_common/shortkey/AppShortkey.vue';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { ChatStore, ChatStoreKey } from '../../../chat-store';
 import { setMessageEditing, startTyping, stopTyping, tryGetRoomRole } from '../../../client';
@@ -394,6 +394,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 		>
 			<div class="-input">
 				<AppFormControlContent
+					:key="room.id"
 					ref="editor"
 					:content-context="room.messagesContentContext"
 					:temp-resource-context-data="contentEditorTempResourceContextData"
