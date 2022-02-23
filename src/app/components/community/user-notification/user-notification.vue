@@ -71,7 +71,9 @@ export default class AppCommunityUserNotification extends Vue {
 		@dismiss="onDismiss"
 	>
 		<div class="-community">
-			<AppCommunityThumbnailImg :community="notification.community" class="-community-img" />
+			<div class="-community-img">
+				<AppCommunityThumbnailImg :community="notification.community" />
+			</div>
 			<span class="-community-title">{{ notification.community.name }}</span>
 			<span class="dot-separator" />
 			<AppTimeAgo :date="notification.added_on" class="-community-date" />
@@ -124,6 +126,7 @@ export default class AppCommunityUserNotification extends Vue {
 		width: 20px
 		display: inline-block
 		vertical-align: middle
+		margin-right: 8px
 
 	&-title
 		font-size: $font-size-base
