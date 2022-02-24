@@ -126,7 +126,9 @@ function onPostLoaded(post: FiresidePost) {
 						<a :href="Environment.authBaseUrl + '/join'">
 							<AppTranslate>Sign up</AppTranslate>
 						</a>
+						{{ ' ' }}
 						<AppTranslate>or</AppTranslate>
+						{{ ' ' }}
 						<a :href="Environment.authBaseUrl + '/login'">
 							<AppTranslate>Log in</AppTranslate>
 						</a>
