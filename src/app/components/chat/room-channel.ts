@@ -144,9 +144,7 @@ export class ChatRoomChannel {
 		}
 
 		if (recalculateMessageMeta) {
-			this.onRemoveMsg({
-				id: this.client.messages[this.roomId][0].id,
-			});
+			setTimeSplit(this.client, this.roomId, this.client.messages[this.roomId][0]);
 		}
 	}
 
