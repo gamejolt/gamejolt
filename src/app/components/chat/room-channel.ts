@@ -58,6 +58,8 @@ export class ChatRoomChannel {
 	readonly socketChannel: Channel;
 
 	room!: ChatRoom;
+	private _freezeMessageLimitRemovals = false;
+	private _queuedMessageLimit?: number;
 
 	/**
 	 * An instanced room channel is for a room that can be opened anywhere on
@@ -136,15 +138,42 @@ export class ChatRoomChannel {
 		processNewChatOutput(this.client, this.roomId, [message], false);
 		updateChatRoomLastMessageOn(this.client, message);
 
-		let recalculateMessageMeta = false;
+		if (this.room.isFiresideRoom) {
+			this.queueMessageLimitRemoval(100);
+		}
+	}
 
-		while (this.room.isFiresideRoom && this.client.messages[this.roomId].length > 100) {
-			this.client.messages[this.roomId].shift();
-			recalculateMessageMeta = true;
+	freezeMessageLimitRemovals() {
+		this._freezeMessageLimitRemovals = true;
+	}
+
+	unfreezeMessageLimitRemovals() {
+		this._freezeMessageLimitRemovals = false;
+		if (this._queuedMessageLimit != null) {
+			this.removeMessagesPastLimit(this._queuedMessageLimit!);
+			this._queuedMessageLimit = undefined;
+		}
+	}
+
+	private queueMessageLimitRemoval(maxMessages: number) {
+		if (this._freezeMessageLimitRemovals) {
+			this._queuedMessageLimit = maxMessages;
+		} else {
+			this.removeMessagesPastLimit(maxMessages);
+			this._queuedMessageLimit = undefined;
+		}
+	}
+
+	private removeMessagesPastLimit(maxMessages: number) {
+		const messages = this.client.messages[this.roomId];
+		const removalCount = messages.length - maxMessages;
+		if (removalCount <= 0) {
+			return;
 		}
 
-		if (recalculateMessageMeta) {
-			setTimeSplit(this.client, this.roomId, this.client.messages[this.roomId][0]);
+		messages.splice(0, removalCount);
+		if (messages.length > 0) {
+			setTimeSplit(this.client, this.roomId, messages[0]);
 		}
 	}
 
