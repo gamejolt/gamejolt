@@ -136,8 +136,17 @@ export class ChatRoomChannel {
 		processNewChatOutput(this.client, this.roomId, [message], false);
 		updateChatRoomLastMessageOn(this.client, message);
 
+		let recalculateMessageMeta = false;
+
 		while (this.room.isFiresideRoom && this.client.messages[this.roomId].length > 100) {
 			this.client.messages[this.roomId].shift();
+			recalculateMessageMeta = true;
+		}
+
+		if (recalculateMessageMeta) {
+			this.onRemoveMsg({
+				id: this.client.messages[this.roomId][0].id,
+			});
 		}
 	}
 

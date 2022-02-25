@@ -55,6 +55,9 @@ export default class AppChatWindowOutput extends Vue {
 	private isAutoscrolling = false;
 	private isOnScrollQueued = false;
 
+	private _lastScrollMessageId?: number;
+	private _lastAutoscrollOffset?: number;
+
 	readonly formatDate = formatDate;
 	readonly illNoChat = illNoChat;
 
@@ -105,6 +108,9 @@ export default class AppChatWindowOutput extends Vue {
 
 	mounted() {
 		this.checkQueuedTimeout = setInterval(this.updateVisibleQueuedMessages, 1000);
+		if (this.messages.length > 0) {
+			this._lastScrollMessageId = this.messages[0].id;
+		}
 	}
 
 	unmounted() {
@@ -199,7 +205,31 @@ export default class AppChatWindowOutput extends Vue {
 			return;
 		}
 
-		if (el.scrollHeight - (el.scrollTop + el.offsetHeight) > 10) {
+		const getOffsetFromBottom = () => {
+			const { scrollHeight, scrollTop, offsetHeight } = el;
+			return scrollHeight - (scrollTop + offsetHeight);
+		};
+
+		const offset = getOffsetFromBottom();
+		const threshold = 10;
+
+		if (this.room.isFiresideRoom) {
+			const _lastOffset = this._lastAutoscrollOffset ?? 0;
+			const _lastId = this._lastScrollMessageId;
+
+			this._lastAutoscrollOffset = offset;
+			this._lastScrollMessageId = this.messages[0].id;
+
+			// Check if our oldest message was automatically removed. Use our
+			// old scroll offset to check if we were at the bottom of the screen.
+			if (_lastOffset <= threshold && _lastId !== this._lastScrollMessageId) {
+				this.autoscroll();
+				this._lastAutoscrollOffset = getOffsetFromBottom();
+				return;
+			}
+		}
+
+		if (offset > threshold) {
 			this.shouldScroll = false;
 		} else {
 			this.shouldScroll = true;
