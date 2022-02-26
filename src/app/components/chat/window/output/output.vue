@@ -55,6 +55,11 @@ export default class AppChatWindowOutput extends Vue {
 	private isAutoscrolling = false;
 	private isOnScrollQueued = false;
 
+	private _lastScrollMessageId?: number;
+	private _lastAutoscrollOffset?: number;
+
+	latestFrozenTimestamp: Date | null = null;
+
 	readonly formatDate = formatDate;
 	readonly illNoChat = illNoChat;
 
@@ -73,6 +78,14 @@ export default class AppChatWindowOutput extends Vue {
 
 	get shouldShowIntro() {
 		return this.allMessages.length === 0;
+	}
+
+	get shouldShowNewMessagesButton() {
+		if (!this.latestFrozenTimestamp) {
+			return false;
+		}
+
+		return this.messages[this.messages.length - 1].logged_on > this.latestFrozenTimestamp;
 	}
 
 	get introEmoji() {
@@ -105,6 +118,9 @@ export default class AppChatWindowOutput extends Vue {
 
 	mounted() {
 		this.checkQueuedTimeout = setInterval(this.updateVisibleQueuedMessages, 1000);
+		if (this.messages.length > 0) {
+			this._lastScrollMessageId = this.messages[0].id;
+		}
 	}
 
 	unmounted() {
@@ -199,10 +215,40 @@ export default class AppChatWindowOutput extends Vue {
 			return;
 		}
 
-		if (el.scrollHeight - (el.scrollTop + el.offsetHeight) > 10) {
+		const getOffsetFromBottom = () => {
+			const { scrollHeight, scrollTop, offsetHeight } = el;
+			return scrollHeight - (scrollTop + offsetHeight);
+		};
+
+		const offset = getOffsetFromBottom();
+		const threshold = 10;
+
+		if (this.room.isFiresideRoom) {
+			const _lastOffset = this._lastAutoscrollOffset ?? 0;
+			const _lastId = this._lastScrollMessageId;
+
+			this._lastAutoscrollOffset = offset;
+			this._lastScrollMessageId = this.messages[0].id;
+
+			// Check if our oldest message was automatically removed. Use our
+			// old scroll offset to check if we were at the bottom of the screen.
+			if (_lastOffset <= threshold && _lastId !== this._lastScrollMessageId) {
+				this.autoscroll();
+				this._lastAutoscrollOffset = getOffsetFromBottom();
+				return;
+			}
+		}
+
+		const roomChannel = this.chat.roomChannels[this.room.id];
+
+		if (offset > threshold) {
+			roomChannel.freezeMessageLimitRemovals();
+			this.latestFrozenTimestamp ??= this.messages[this.messages.length - 1].logged_on;
 			this.shouldScroll = false;
 		} else {
 			this.shouldScroll = true;
+			this.latestFrozenTimestamp = null;
+			roomChannel.unfreezeMessageLimitRemovals();
 		}
 	}
 
@@ -218,6 +264,11 @@ export default class AppChatWindowOutput extends Vue {
 		// triggered by us.
 		this.isAutoscrolling = true;
 		this.scroller.scrollTo(this.scroller.element.value!.scrollHeight + 10000);
+
+		// Reset state
+		this.shouldScroll = true;
+		this.latestFrozenTimestamp = null;
+		this.chat.roomChannels[this.room.id].unfreezeMessageLimitRemovals();
 	}
 
 	isNewMessage(message: ChatMessage) {
@@ -230,6 +281,10 @@ export default class AppChatWindowOutput extends Vue {
 		const position = this.messages.indexOf(message);
 		return this.messages.length - position === newCount;
 	}
+
+	onClickNewMessages() {
+		this.autoscroll();
+	}
 }
 </script>
 
@@ -239,50 +294,142 @@ export default class AppChatWindowOutput extends Vue {
 	trigger when the send box changes size or when the window changes--and we
 	need to autoscroll if the content changes within the scroller.
 	-->
-	<AppScrollScroller
-		v-app-observe-dimensions="tryAutoscroll"
-		:controller="scroller"
-		@scroll="queueOnScroll"
-	>
-		<div
+	<div class="-scroll-container">
+		<AppScrollScroller
 			v-app-observe-dimensions="tryAutoscroll"
-			class="-container anim-fade-in no-animate-leave"
+			:controller="scroller"
+			class="-scroller"
+			@scroll="queueOnScroll"
 		>
-			<div v-if="shouldShowIntro" class="-intro">
-				<AppIllustration :src="illNoChat">
-					<AppTranslate v-if="room.isPmRoom">
-						Your friend is still loading. Encourage them with a message!
-					</AppTranslate>
-					<AppTranslate v-else-if="room.isFiresideRoom">
-						Waiting for folks to load in. Spark the discussion with a message!
-					</AppTranslate>
-					<AppTranslate v-else>
-						Waiting for friends to load in. Encourage them with a message!
-					</AppTranslate>
-				</AppIllustration>
-			</div>
+			<div
+				v-app-observe-dimensions="tryAutoscroll"
+				class="-container anim-fade-in no-animate-leave"
+			>
+				<div v-if="shouldShowIntro" class="-intro">
+					<AppIllustration :src="illNoChat">
+						<AppTranslate v-if="room.isPmRoom">
+							Your friend is still loading. Encourage them with a message!
+						</AppTranslate>
+						<AppTranslate v-else-if="room.isFiresideRoom">
+							Waiting for folks to load in. Spark the discussion with a message!
+						</AppTranslate>
+						<AppTranslate v-else>
+							Waiting for friends to load in. Encourage them with a message!
+						</AppTranslate>
+					</AppIllustration>
+				</div>
 
-			<AppLoading v-if="isLoadingOlder" class="loading-centered" />
+				<AppLoading v-if="isLoadingOlder" class="loading-centered" />
 
-			<div v-app-observe-dimensions="tryAutoscroll">
-				<div v-for="message of allMessages" :key="message.id">
-					<div v-if="message.dateSplit" class="-date-split">
-						<span class="-inner">{{
-							formatDate(message.logged_on, 'mediumDate')
-						}}</span>
+				<div v-app-observe-dimensions="tryAutoscroll">
+					<div v-for="message of allMessages" :key="message.id">
+						<div v-if="message.dateSplit" class="-date-split">
+							<span class="-inner">{{
+								formatDate(message.logged_on, 'mediumDate')
+							}}</span>
+						</div>
+
+						<hr v-if="!message.dateSplit && !message.combine" class="-hr" />
+
+						<AppChatWindowOutputItem
+							:message="message"
+							:room="room"
+							:is-new="isNewMessage(message)"
+						/>
 					</div>
+				</div>
+			</div>
+		</AppScrollScroller>
 
-					<hr v-if="!message.dateSplit && !message.combine" class="-hr" />
-
-					<AppChatWindowOutputItem
-						:message="message"
-						:room="room"
-						:is-new="isNewMessage(message)"
-					/>
+		<div v-if="shouldShowNewMessagesButton" class="-new-messages">
+			<div class="-new-messages-tap-target" @click.stop="onClickNewMessages">
+				<div class="-new-messages-button">
+					<AppTranslate>New Messages</AppTranslate>
 				</div>
 			</div>
 		</div>
-	</AppScrollScroller>
+	</div>
 </template>
 
-<style lang="stylus" src="./output.styl" scoped></style>
+<style lang="stylus" scoped>
+.-scroll-container
+	position: relative
+	height: 100%
+	width: 100%
+
+.-scroller
+	position: absolute
+	left: 0
+	top: 0
+	right: 0
+	bottom: 0
+
+.-new-messages
+	position: absolute
+	bottom: 0
+	left: 0
+	right: 0
+	display: inline-flex
+	justify-content: center
+
+.-new-messages-tap-target
+	padding: 8px
+
+.-new-messages-button
+	rounded-corners()
+	cursor: pointer
+	padding: 2px 4px
+	font-size: 11px
+	background-color: var(--theme-bi-bg)
+	color: var(--theme-bi-fg)
+
+.-container
+	padding: $chat-room-window-padding
+	padding-left: 0
+	position: relative
+
+.-date-split
+	position: relative
+	display: block
+	margin-top: $line-height-computed
+	margin-bottom: $line-height-computed
+	width: 100%
+	text-align: center
+	cursor: default
+
+	&::before
+		border-bottom-color: var(--theme-bg-offset)
+		content: ''
+		position: absolute
+		left: 0
+		right: 0
+		top: 50%
+		margin-top: 0
+		height: 0
+		border-bottom-width: $border-width-large
+		border-bottom-style: solid
+		z-index: 0
+
+	& > .-inner
+		change-bg('bg-offset')
+		color: var(--theme-fg-muted)
+		position: relative
+		padding-left: 8px
+		padding-right: 8px
+		font-weight: bold
+		font-size: $font-size-small
+		z-index: 1
+		rounded-corners()
+
+.-hr
+	margin-top: 0
+	margin-bottom: 0
+	border: none
+	height: $line-height-computed * 0.5
+
+.-intro
+	display: flex
+	align-items: center
+	justify-content: center
+	padding-left: $chat-room-window-padding
+</style>
