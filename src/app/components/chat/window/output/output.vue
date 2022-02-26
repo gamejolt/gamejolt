@@ -19,6 +19,8 @@ import { ChatMessage, TIMEOUT_CONSIDER_QUEUED } from '../../message';
 import { ChatRoom } from '../../room';
 import AppChatWindowOutputItem from './item/item.vue';
 
+const AUTOSCROLL_THRESHOLD = 10;
+
 @Options({
 	components: {
 		AppLoading,
@@ -215,13 +217,7 @@ export default class AppChatWindowOutput extends Vue {
 			return;
 		}
 
-		const getOffsetFromBottom = () => {
-			const { scrollHeight, scrollTop, offsetHeight } = el;
-			return scrollHeight - (scrollTop + offsetHeight);
-		};
-
-		const offset = getOffsetFromBottom();
-		const threshold = 10;
+		const offset = this.getOffsetFromBottom();
 
 		if (this.room.isFiresideRoom) {
 			const _lastOffset = this._lastAutoscrollOffset ?? 0;
@@ -232,16 +228,16 @@ export default class AppChatWindowOutput extends Vue {
 
 			// Check if our oldest message was automatically removed. Use our
 			// old scroll offset to check if we were at the bottom of the screen.
-			if (_lastOffset <= threshold && _lastId !== this._lastScrollMessageId) {
+			if (_lastOffset <= AUTOSCROLL_THRESHOLD && _lastId !== this._lastScrollMessageId) {
 				this.autoscroll();
-				this._lastAutoscrollOffset = getOffsetFromBottom();
+				this._lastAutoscrollOffset = this.getOffsetFromBottom();
 				return;
 			}
 		}
 
 		const roomChannel = this.chat.roomChannels[this.room.id];
 
-		if (offset > threshold) {
+		if (offset > AUTOSCROLL_THRESHOLD) {
 			roomChannel.freezeMessageLimitRemovals();
 			this.latestFrozenTimestamp ??= this.messages[this.messages.length - 1].logged_on;
 			this.shouldScroll = false;
@@ -252,13 +248,21 @@ export default class AppChatWindowOutput extends Vue {
 		}
 	}
 
+	getOffsetFromBottom() {
+		const el = this.scroller.element.value;
+		if (!el) {
+			return 0;
+		}
+		return el.scrollHeight - (el.scrollTop + el.offsetHeight);
+	}
+
 	public async tryAutoscroll() {
 		if (this.shouldScroll) {
 			this.autoscroll();
 		}
 	}
 
-	private autoscroll() {
+	private async autoscroll() {
 		// We set that we've done an autoscroll. We'll check this variable in
 		// the "scroll handler" and ignore the scroll event since it was
 		// triggered by us.
@@ -266,7 +270,6 @@ export default class AppChatWindowOutput extends Vue {
 		this.scroller.scrollTo(this.scroller.element.value!.scrollHeight + 10000);
 
 		// Reset state
-		this.shouldScroll = true;
 		this.latestFrozenTimestamp = null;
 		this.chat.roomChannels[this.room.id].unfreezeMessageLimitRemovals();
 	}
@@ -282,8 +285,12 @@ export default class AppChatWindowOutput extends Vue {
 		return this.messages.length - position === newCount;
 	}
 
-	onClickNewMessages() {
+	async onClickNewMessages() {
 		this.autoscroll();
+		await this.$nextTick();
+		if (this.getOffsetFromBottom() < AUTOSCROLL_THRESHOLD) {
+			this.shouldScroll = true;
+		}
 	}
 }
 </script>
