@@ -47,12 +47,10 @@ const playStoreUrl = computed(() => getAppUrl(appPromotion));
 			target="_blank"
 			@click="trackAppPromotionClick({ source: 'landing', platform: 'mobile' })"
 		>
-			<div class="alert alert-highlight alert-well sans-margin">
+			<div class="-alert-banner sans-margin">
 				<div class="container text-center">
-					<p>
-						The Game Jolt App is live!
-						<b>Get it now!</b>
-					</p>
+					The Game Jolt mobile app is live!
+					<strong>Get it now!</strong>
 				</div>
 			</div>
 		</a>
@@ -126,4 +124,15 @@ const playStoreUrl = computed(() => getAppUrl(appPromotion));
 	.-phones
 		max-width: 100%
 		height: auto
+
+	.-alert-banner
+		padding-top: 24px
+		padding-bottom: 24px
+		font-size: $font-size-base
+		background-color: var(--theme-highlight)
+		color: var(--theme-highlight-fg)
+
+		strong
+			color: var(--theme-backlight)
+			text-decoration: underline
 </style>
