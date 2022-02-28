@@ -1,29 +1,23 @@
 <script lang="ts">
-import { Options } from 'vue-property-decorator';
-import AppAppButtons from '../../../../_common/app-buttons/app-buttons.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import AppMobileAppButtons from '../../../../_common/mobile-app/AppMobileAppButtons.vue';
+import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import phonesImage from './phones.png';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 
-@Options({
-	name: 'RouteLandingApp',
-	components: {
-		AppAppButtons,
-	},
-})
-@OptionsForRoute({
-	cache: true,
-	lazy: true,
-	deps: {},
-})
-export default class RouteLandingApp extends BaseRouteComponent {
-	disableRouteTitleSuffix = true;
+export default {
+	...defineAppRouteOptions({
+		cache: true,
+		lazy: true,
+		deps: {},
+	}),
+};
+</script>
 
-	readonly phonesImage = phonesImage;
-
-	get routeTitle() {
-		return `Game Jolt Mobile App`;
-	}
-}
+<script lang="ts" setup>
+createAppRoute({
+	routeTitle: `Get the Game Jolt mobile app`,
+	disableTitleSuffix: true,
+});
 </script>
 
 <template>
@@ -37,35 +31,17 @@ export default class RouteLandingApp extends BaseRouteComponent {
 					phone!
 				</p>
 
-				<AppAppButtons source="landing" />
-			</div>
-		</section>
-
-		<div class="alert alert-notice alert-well sans-margin">
-			<div class="container text-center">
-				<p>
-					The mobile app is currently in
-					<strong>open beta</strong>. Constructive feedback and ideas are welcome to help
-					shape the best experience ever.
-				</p>
-			</div>
-		</div>
-
-		<section class="section">
-			<div class="container text-center">
-				<img class="-phones" :src="phonesImage" width="385" height="300" alt="" />
+				<AppMobileAppButtons source="landing" />
 			</div>
 		</section>
 
 		<section class="section">
 			<div class="container text-center">
-				<h1 class="section-header">Get the Game Jolt App!</h1>
+				<div>
+					<img class="-phones" :src="phonesImage" width="385" height="300" alt="" />
+				</div>
 
-				<AppAppButtons source="landing" />
-
-				<br />
-				<br />
-				<br />
+				<AppSpacer vertical :scale="8" />
 
 				<p>
 					Need help? Email us at

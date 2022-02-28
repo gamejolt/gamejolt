@@ -9,6 +9,7 @@ import { ContentFocus } from '../../../_common/content-focus/content-focus.servi
 import { setDrawerOpen, useDrawerStore } from '../../../_common/drawer/drawer-store';
 import { Meta } from '../../../_common/meta/meta-service';
 import AppMinbar from '../../../_common/minbar/minbar.vue';
+import AppMobileAppPromotionBanner from '../../../_common/mobile-app/AppMobileAppPromotionBanner.vue';
 import { Screen, triggerOnScreenResize } from '../../../_common/screen/screen-service';
 import { useSidebarStore } from '../../../_common/sidebar/sidebar.store';
 import AppStickerLayer from '../../../_common/sticker/layer/layer.vue';
@@ -39,6 +40,7 @@ import AppShellTopNav from './top-nav/AppShellTopNav.vue';
 		AppClientBase,
 		AppClientShell,
 		AppClientStatusBar,
+		AppMobileAppPromotionBanner,
 	},
 })
 export default class AppShell extends Vue {
@@ -200,6 +202,8 @@ export default class AppShell extends Vue {
 			<AppClientBase />
 			<AppClientShell />
 		</div>
+
+		<AppMobileAppPromotionBanner />
 
 		<AppShellHotBottom>
 			<AppMinbar v-show="!visibleRightPane" />

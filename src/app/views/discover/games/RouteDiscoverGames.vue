@@ -1,10 +1,7 @@
 <script lang="ts">
-import { Inject, Options } from 'vue-property-decorator';
-import {
-	AppPromotionStore,
-	AppPromotionStoreKey,
-	setAppPromotionCohort,
-} from '../../../../utils/mobile-app';
+import { Options } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../utils/vue';
+import { setAppPromotionCohort, useAppPromotionStore } from '../../../../_common/mobile-app/store';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 
 @Options({
@@ -12,8 +9,7 @@ import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/r
 })
 @OptionsForRoute()
 export default class RouteDiscoverGames extends BaseRouteComponent {
-	@Inject({ from: AppPromotionStoreKey })
-	appPromotion!: AppPromotionStore;
+	appPromotionStore = shallowSetup(() => useAppPromotionStore());
 
 	/**
 	 * Because game listings reuse the component with different route names, it
@@ -26,7 +22,7 @@ export default class RouteDiscoverGames extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		setAppPromotionCohort(this.appPromotion, 'store');
+		setAppPromotionCohort(this.appPromotionStore, 'store');
 	}
 }
 </script>

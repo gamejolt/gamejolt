@@ -1,17 +1,14 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
-import { Inject, Options } from 'vue-property-decorator';
-import {
-	AppPromotionStore,
-	AppPromotionStoreKey,
-	setAppPromotionCohort,
-} from '../../../../utils/mobile-app';
+import { Options } from 'vue-property-decorator';
+import { shallowSetup } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommunityCardCreatePlaceholder from '../../../../_common/community/card-create-placeholder/card-create-placeholder.vue';
 import AppCommunityCard from '../../../../_common/community/card/card.vue';
 import { Community } from '../../../../_common/community/community.model';
 import { HistoryCache } from '../../../../_common/history/cache/cache.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
+import { setAppPromotionCohort, useAppPromotionStore } from '../../../../_common/mobile-app/store';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, {
@@ -45,13 +42,11 @@ interface CacheData {
 })
 export default class RouteDiscoverCommunities extends BaseRouteComponent {
 	commonStore = setup(() => useCommonStore());
+	appPromotionStore = shallowSetup(() => useAppPromotionStore());
 
 	get app() {
 		return this.commonStore;
 	}
-
-	@Inject({ from: AppPromotionStoreKey })
-	appPromotion!: AppPromotionStore;
 
 	communities: Community[] = [];
 	page = 1;
@@ -84,7 +79,7 @@ export default class RouteDiscoverCommunities extends BaseRouteComponent {
 		this.isLoading = false;
 		this.hasMore = true;
 
-		setAppPromotionCohort(this.appPromotion, 'community');
+		setAppPromotionCohort(this.appPromotionStore, 'community');
 	}
 
 	routeResolved(payload: any) {

@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, provide, reactive, watch } from '@vue/runtime-core';
 import { RouterView } from 'vue-router';
-import { AppPromotionStore, AppPromotionStoreKey } from '../utils/mobile-app';
 import { createAdsController } from '../_common/ad/ad-store';
 import { CommentStoreManager, CommentStoreManagerKey } from '../_common/comment/comment-store';
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
@@ -13,6 +12,7 @@ import { loadCurrentLanguage } from '../_common/translate/translate.service';
 import { ChatStore, ChatStoreKey, clearChat, loadChat } from './components/chat/chat-store';
 import AppShell from './components/shell/shell.vue';
 import { useAppStore } from './store';
+import { createAppPromotionStore } from '../_common/mobile-app/store';
 
 const appStore = useAppStore();
 const { bootstrap, loadGrid, loadNotificationState, clear, clearGrid, clearNotificationState } =
@@ -21,8 +21,8 @@ const { user } = useCommonStore();
 
 createAdsController();
 createDrawerStore();
+createAppPromotionStore();
 provide(CommentStoreManagerKey, reactive(new CommentStoreManager()));
-provide(AppPromotionStoreKey, reactive(new AppPromotionStore()));
 
 const chatStore = reactive(new ChatStore()) as ChatStore;
 provide(ChatStoreKey, chatStore);
