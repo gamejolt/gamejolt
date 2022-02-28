@@ -3,6 +3,9 @@ import AppMobileAppButtons from '../../../../_common/mobile-app/AppMobileAppButt
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import phonesImage from './phones.png';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { computed } from 'vue';
+import { getAppUrl, useAppPromotionStore } from '../../../../_common/mobile-app/store';
+import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
 
 export default {
 	...defineAppRouteOptions({
@@ -14,10 +17,14 @@ export default {
 </script>
 
 <script lang="ts" setup>
+const appPromotion = useAppPromotionStore();
+
 createAppRoute({
 	routeTitle: `Get the Game Jolt mobile app`,
 	disableTitleSuffix: true,
 });
+
+const playStoreUrl = computed(() => getAppUrl(appPromotion));
 </script>
 
 <template>
@@ -35,10 +42,31 @@ createAppRoute({
 			</div>
 		</section>
 
+		<a
+			:href="playStoreUrl"
+			target="_blank"
+			@click="trackAppPromotionClick({ source: 'landing', platform: 'mobile' })"
+		>
+			<div class="alert alert-highlight alert-well sans-margin">
+				<div class="container text-center">
+					<p>
+						The Game Jolt App is live!
+						<b>Get it now!</b>
+					</p>
+				</div>
+			</div>
+		</a>
+
 		<section class="section">
 			<div class="container text-center">
 				<div>
-					<img class="-phones" :src="phonesImage" width="385" height="300" alt="" />
+					<a
+						:href="playStoreUrl"
+						target="_blank"
+						@click="trackAppPromotionClick({ source: 'landing', platform: 'mobile' })"
+					>
+						<img class="-phones" :src="phonesImage" width="385" height="300" alt="" />
+					</a>
 				</div>
 
 				<AppSpacer vertical :scale="8" />
