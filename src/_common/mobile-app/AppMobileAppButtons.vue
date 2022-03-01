@@ -1,36 +1,30 @@
-<script lang="ts">
-import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import {
-	AppPromotionSource,
-	AppPromotionStore,
-	AppPromotionStoreKey,
-} from '../../utils/mobile-app';
+<script lang="ts" setup>
 import { trackAppPromotionClick } from '../analytics/analytics.service';
 import appStoreImage from './button-app-store.svg';
 import playStoreImage from './button-play-store.png';
+import { PropType, computed } from 'vue';
+import { AppPromotionSource, getAppUrl, useAppPromotionStore } from './store';
 
-@Options({})
-export default class AppAppButtons extends Vue {
-	@Prop({ type: String, required: true })
-	source!: AppPromotionSource;
+defineProps({
+	source: {
+		type: String as PropType<AppPromotionSource>,
+		required: true,
+	},
+	justified: {
+		type: Boolean,
+	},
+});
 
-	@Prop({ type: Boolean })
-	justified!: boolean;
-
-	@Inject({ from: AppPromotionStoreKey })
-	appPromotion!: AppPromotionStore;
-
-	readonly trackAppPromotionClick = trackAppPromotionClick;
-	readonly playStoreImage = playStoreImage;
-	readonly appStoreImage = appStoreImage;
-}
+const appPromotion = useAppPromotionStore();
+const playStoreUrl = computed(() => getAppUrl(appPromotion, { targetStore: 'play' }));
+const appStoreUrl = computed(() => getAppUrl(appPromotion, { targetStore: 'app' }));
 </script>
 
 <template>
 	<div class="app-buttons" :class="{ '-justified': justified }">
 		<a
 			class="-button"
-			:href="appPromotion.playStoreUrl"
+			:href="playStoreUrl"
 			target="_blank"
 			@click="trackAppPromotionClick({ source, platform: 'mobile' })"
 		>
@@ -43,7 +37,7 @@ export default class AppAppButtons extends Vue {
 		</a>
 		<a
 			class="-button"
-			:href="appPromotion.appStoreUrl"
+			:href="appStoreUrl"
 			target="_blank"
 			@click="trackAppPromotionClick({ source, platform: 'mobile' })"
 		>

@@ -2,7 +2,6 @@
 import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import { stringSort } from '../../../../../utils/array';
-import { shouldShowAppPromotion } from '../../../../../utils/mobile-app';
 import { shallowSetup } from '../../../../../utils/vue';
 import { trackAppPromotionClick } from '../../../../../_common/analytics/analytics.service';
 import { Environment } from '../../../../../_common/environment/environment.service';
@@ -84,10 +83,6 @@ export default class AppShellSidebarLibrary extends Vue {
 
 	get playlistFoldersToDisplay() {
 		return Object.keys(this.playlistFolders).filter(folder => folder !== 'main');
-	}
-
-	get shouldShowAppPromotion() {
-		return shouldShowAppPromotion(this.$route);
 	}
 
 	get mainPlaylists() {
@@ -226,8 +221,8 @@ export default class AppShellSidebarLibrary extends Vue {
 			</li>
 		</ul>
 
-		<ul v-if="Screen.isSm && shouldShowAppPromotion" class="shell-nav">
-			<li class="offline-disable">
+		<ul v-if="!GJ_IS_DESKTOP_APP" class="shell-nav">
+			<li v-if="Screen.isMobile" class="offline-disable">
 				<router-link
 					:to="{ name: 'landing.app' }"
 					@click="
@@ -245,9 +240,7 @@ export default class AppShellSidebarLibrary extends Vue {
 					</span>
 				</router-link>
 			</li>
-		</ul>
-		<ul v-else-if="!GJ_IS_DESKTOP_APP && Screen.isDesktop" class="shell-nav">
-			<li class="offline-disable">
+			<li v-else class="offline-disable">
 				<router-link
 					:to="{ name: 'landing.client' }"
 					@click="

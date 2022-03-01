@@ -3,12 +3,12 @@ import { initializeAnalytics, logEvent, setCurrentScreen, setUserId } from 'fire
 import { unref, watch } from 'vue';
 import { Router } from 'vue-router';
 import { arrayRemove } from '../../utils/array';
-import { AppPromotionSource } from '../../utils/mobile-app';
 import { AuthMethod } from '../auth/auth.service';
 import { CommentVote } from '../comment/vote/vote-model';
 import { ConfigOption } from '../config/config.service';
 import { DeviceArch, DeviceOs } from '../device/device.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
+import { AppPromotionSource } from '../mobile-app/store';
 import { onRouteChangeAfter } from '../route/route-component';
 import { ShareProvider, ShareResource } from '../share/share.service';
 import { CommonStore } from '../store/common-store';
@@ -410,7 +410,7 @@ export function trackBannerClick(params: { type: BannerType; label?: string }) {
  * @deprecated This is left here so that old code doesn't break.
  */
 export class Analytics {
-	static trackEvent(category: string, action: string, label?: string, value?: string) {
+	static trackEvent(_category: string, _action: string, _label?: string, _value?: string) {
 		return;
 
 		// if (!this.shouldTrack) {
@@ -432,7 +432,7 @@ export class Analytics {
 		// }
 	}
 
-	static trackSocial(network: string, action: string, target: string) {
+	static trackSocial(_network: string, _action: string, _target: string) {
 		return;
 
 		// if (!this.shouldTrack) {
@@ -449,7 +449,7 @@ export class Analytics {
 		// }
 	}
 
-	static trackTiming(category: string, timingVar: string, value: number, label?: string) {
+	static trackTiming(_category: string, _timingVar: string, _value: number, _label?: string) {
 		return;
 
 		// if (!this.shouldTrack) {

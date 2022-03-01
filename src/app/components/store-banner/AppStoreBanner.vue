@@ -11,6 +11,7 @@ const props = defineProps({
 	},
 });
 
+// @ts-expect-error unused variable
 const backgroundImage = computed(() => `url('${props.banner.banner_media?.mediaserver_url}')`);
 </script>
 

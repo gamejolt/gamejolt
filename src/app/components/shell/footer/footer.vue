@@ -1,10 +1,9 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-property-decorator';
-import { shouldShowAppPromotion } from '../../../../utils/mobile-app';
 import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
-import AppAppButtons from '../../../../_common/app-buttons/app-buttons.vue';
 import AppContactLink from '../../../../_common/contact-link/contact-link.vue';
 import { formatDate } from '../../../../_common/filters/date';
+import AppMobileAppButtons from '../../../../_common/mobile-app/AppMobileAppButtons.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import AppTranslateLangSelector from '../../../../_common/translate/lang-selector/lang-selector.vue';
@@ -17,7 +16,7 @@ const ClientSystemReportModal = GJ_IS_DESKTOP_APP
 
 @Options({
 	components: {
-		AppAppButtons,
+		AppMobileAppButtons,
 		AppTranslateLangSelector,
 		AppThemeSvg,
 		AppContactLink,
@@ -35,10 +34,6 @@ export default class AppShellFooter extends Vue {
 		return GJ_VERSION;
 	}
 
-	get shouldShowAppPromotion() {
-		return shouldShowAppPromotion(this.$route);
-	}
-
 	async showSystemReport() {
 		ClientSystemReportModal?.show();
 	}
@@ -48,14 +43,9 @@ export default class AppShellFooter extends Vue {
 <template>
 	<footer id="footer" class="section">
 		<div class="container">
-			<template v-if="shouldShowAppPromotion">
+			<template v-if="!GJ_IS_DESKTOP_APP">
 				<div class="text-center">
-					<p>
-						<strong>Be the first!</strong>
-						<br class="visible-xs" />
-						Test the beta version of the Game Jolt app.
-					</p>
-					<AppAppButtons source="footer" />
+					<AppMobileAppButtons source="footer" />
 				</div>
 
 				<br />
@@ -66,7 +56,7 @@ export default class AppShellFooter extends Vue {
 					<div class="row">
 						<div class="col-xs-4 col-sm-3">
 							<ol class="list-unstyled footer-link-list">
-								<li v-if="shouldShowAppPromotion">
+								<li>
 									<router-link
 										:to="{ name: 'landing.app' }"
 										@click="
