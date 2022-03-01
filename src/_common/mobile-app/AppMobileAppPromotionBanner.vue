@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import AppButton from '../button/AppButton.vue';
-import AppTheme from '../theme/AppTheme.vue';
-import AppSpacer from '../spacer/AppSpacer.vue';
-import { illMobileKikkerstein } from '../../app/img/ill/illustrations';
-import AppThemeSvg from '../theme/svg/AppThemeSvg.vue';
 import { computed, ref } from 'vue';
-import AppTranslate from '../translate/AppTranslate.vue';
-import { trackAppPromotionClick } from '../analytics/analytics.service';
-import { Screen } from '../screen/screen-service';
 import { useRoute } from 'vue-router';
+import { illMobileKikkerstein } from '../../app/img/ill/illustrations';
+import { trackAppPromotionClick } from '../analytics/analytics.service';
+import AppButton from '../button/AppButton.vue';
+import { Screen } from '../screen/screen-service';
+import AppSpacer from '../spacer/AppSpacer.vue';
 import { useCommonStore } from '../store/common-store';
+import AppTheme from '../theme/AppTheme.vue';
+import AppThemeSvg from '../theme/svg/AppThemeSvg.vue';
+import AppTranslate from '../translate/AppTranslate.vue';
 import { getAppUrl, useAppPromotionStore } from './store';
 
 const StorageKey = 'banner:app-promo';
@@ -131,6 +131,7 @@ function close() {
 	font-size: 19px
 	max-width: 230px
 	text-align: center
+	color: var(--theme-fg)
 
 .-ill
 	position: absolute
