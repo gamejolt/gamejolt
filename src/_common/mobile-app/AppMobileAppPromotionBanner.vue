@@ -39,7 +39,7 @@ const shouldShow = computed(() => {
 		routeName.startsWith('communities.') ||
 		routeName.startsWith('realms.') ||
 		routeName.startsWith('profile.') ||
-		(!commonUser && routeName === 'home') ||
+		(commonUser.value && routeName === 'home') ||
 		routeName === 'discover.communities' ||
 		routeName === 'post'
 	);
