@@ -1,11 +1,13 @@
 <script lang="ts">
+import { computed } from 'vue';
+import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
+import { Meta } from '../../../../_common/meta/meta-service';
 import AppMobileAppButtons from '../../../../_common/mobile-app/AppMobileAppButtons.vue';
+import { getAppUrl, useAppPromotionStore } from '../../../../_common/mobile-app/store';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import phonesImage from './phones.png';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { computed } from 'vue';
-import { getAppUrl, useAppPromotionStore } from '../../../../_common/mobile-app/store';
-import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
+import socialImage from './social.jpg';
 
 export default {
 	...defineAppRouteOptions({
@@ -19,9 +21,28 @@ export default {
 <script lang="ts" setup>
 const appPromotion = useAppPromotionStore();
 
+const routeTitle = computed(() => `Get the Game Jolt mobile app`);
+
 createAppRoute({
-	routeTitle: `Get the Game Jolt mobile app`,
+	routeTitle: routeTitle.value,
 	disableTitleSuffix: true,
+	onInit() {
+		Meta.description = `Game Jolt is the social app for the next generation of gamers. Browse and share your fan art, gaming videos or find friends to stream with across Game Jolt communities!`;
+
+		Meta.fb = {
+			type: 'website',
+			title: routeTitle.value,
+			description: Meta.description,
+		};
+
+		Meta.twitter = {
+			card: 'summary_large_image',
+			title: routeTitle.value,
+			description: Meta.description,
+		};
+
+		Meta.fb.image = Meta.twitter.image = socialImage;
+	},
 });
 
 const playStoreUrl = computed(() => getAppUrl(appPromotion));
