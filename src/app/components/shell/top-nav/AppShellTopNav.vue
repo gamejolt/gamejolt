@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { defineAsyncComponent } from '@vue/runtime-core';
-import { shouldShowAppPromotion } from '../../../../utils/mobile-app';
 import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
 import { AppClientHistoryNavigator } from '../../../../_common/client/safe-exports';
 import { AppConfigLoaded } from '../../../../_common/config/loaded';
@@ -239,35 +238,37 @@ function _checkColWidths() {
 			class="navbar-right"
 			:style="{ 'min-width': minColWidth }"
 		>
-			<template v-if="Screen.isSm && shouldShowAppPromotion($route)">
-				<div class="-button">
-					<AppButton
-						:to="{ name: 'landing.app' }"
-						@click="
-							trackAppPromotionClick({
-								source: 'top-nav',
-								platform: 'mobile',
-							})
-						"
-					>
-						<AppTranslate>Get App</AppTranslate>
-					</AppButton>
-				</div>
-			</template>
-			<template v-else-if="!GJ_IS_DESKTOP_APP && Screen.isDesktop">
-				<div class="-button">
-					<AppButton
-						:to="{ name: 'landing.client' }"
-						@click="
-							trackAppPromotionClick({
-								source: 'top-nav',
-								platform: 'desktop',
-							})
-						"
-					>
-						<AppTranslate>Get App</AppTranslate>
-					</AppButton>
-				</div>
+			<template v-if="!GJ_IS_DESKTOP_APP">
+				<template v-if="Screen.isSm">
+					<div class="-button">
+						<AppButton
+							:to="{ name: 'landing.app' }"
+							@click="
+								trackAppPromotionClick({
+									source: 'top-nav',
+									platform: 'mobile',
+								})
+							"
+						>
+							<AppTranslate>Get App</AppTranslate>
+						</AppButton>
+					</div>
+				</template>
+				<template v-else-if="Screen.isDesktop">
+					<div class="-button">
+						<AppButton
+							:to="{ name: 'landing.client' }"
+							@click="
+								trackAppPromotionClick({
+									source: 'top-nav',
+									platform: 'desktop',
+								})
+							"
+						>
+							<AppTranslate>Get App</AppTranslate>
+						</AppButton>
+					</div>
+				</template>
 			</template>
 
 			<div v-app-observe-dimensions="_checkColWidths" class="-col">

@@ -1,13 +1,9 @@
 <script lang="ts">
 import { ref } from 'vue';
 import { setup } from 'vue-class-component';
-import { Inject, Options, Provide, Watch } from 'vue-property-decorator';
-import {
-	AppPromotionStore,
-	AppPromotionStoreKey,
-	setAppPromotionCohort,
-} from '../../../../utils/mobile-app';
+import { Options, Provide, Watch } from 'vue-property-decorator';
 import { enforceLocation, getAbsoluteLink } from '../../../../utils/router';
+import { shallowSetup } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
 import { Community, isEditingCommunity } from '../../../../_common/community/community.model';
@@ -17,6 +13,7 @@ import AppEditableOverlay from '../../../../_common/editable-overlay/editable-ov
 import { Environment } from '../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
+import { setAppPromotionCohort, useAppPromotionStore } from '../../../../_common/mobile-app/store';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -88,9 +85,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 	commonStore = setup(() => useCommonStore());
 	themeStore = setup(() => useThemeStore());
 	sidebarStore = setup(() => useSidebarStore());
-
-	@Inject({ from: AppPromotionStoreKey })
-	appPromotion!: AppPromotionStore;
+	appPromotionStore = shallowSetup(() => useAppPromotionStore());
 
 	get user() {
 		return this.commonStore.user;
@@ -186,7 +181,7 @@ export default class RouteCommunitiesView extends BaseRouteComponent {
 			this.contextPane.props = { routeStore: this.routeStore };
 		}
 
-		setAppPromotionCohort(this.appPromotion, 'community');
+		setAppPromotionCohort(this.appPromotionStore, 'community');
 	}
 
 	routeResolved($payload: any) {

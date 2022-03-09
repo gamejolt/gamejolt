@@ -122,18 +122,9 @@ export class ConfigOptionString<T extends string = string> extends ConfigOption<
 	}
 }
 
-export const configDiscoverCommunityChunks = new ConfigOptionBoolean(
-	'discover_community_chunks',
-	false
-);
-
 export const configHomeNav = new ConfigOptionString('home_nav', 'default', {
 	validValues: ['default', 'simple'],
 	conditions: { join: true },
-});
-
-export const configGuestHome = new ConfigOptionString('web_guest_home', 'default', {
-	validValues: ['default', 'hero'],
 });
 
 export const configClientAllowStreaming = new ConfigOptionBoolean('client_allow_streaming', false);

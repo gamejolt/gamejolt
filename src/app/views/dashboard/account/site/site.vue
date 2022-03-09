@@ -54,6 +54,7 @@ export default class RouteDashAccountSite extends BaseRouteComponent {
 						games!
 					</AppTranslate>
 				</strong>
+				{{ ' ' }}
 				<AppTranslate>
 					You can use a customizable template, or simply upload your own static site.
 				</AppTranslate>

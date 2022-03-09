@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs, watch } from 'vue';
 import { arrayShuffle } from '../../../../utils/array';
-import AppAppButtons from '../../../../_common/app-buttons/app-buttons.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -11,6 +10,7 @@ import { AppAuthJoinLazy } from '../../../components/lazy';
 import { imageGameJoltLogo } from '../../../img/images';
 import AppHomeFsPost from './_home-slider/AppHomeFsPost.vue';
 import AppHomeFsPostMeta from './_home-slider/AppHomeFsPostMeta.vue';
+import AppMobileAppButtons from '../../../../_common/mobile-app/AppMobileAppButtons.vue';
 
 const props = defineProps({
 	posts: {
@@ -31,6 +31,7 @@ const shouldTransitionPosts = ref(false);
 const transitioningPosts = ref(false);
 
 const height = ref(0);
+// @ts-expect-error unused variable
 const cssHeight = computed(() => height.value + 'px');
 
 const bylinePost = computed(() => {
@@ -112,21 +113,22 @@ function onPostLoaded(post: FiresidePost) {
 			/>
 
 			<div class="-hero-text -text-shadow">
-				Discover gaming communities filled with millions of videos, art and discussions on
-				Game Jolt
+				Discover gaming communities filled with millions of videos, art and discussions
 			</div>
 
 			<div class="-auth-island">
 				<template v-if="Screen.isXs">
 					<div class="-app-buttons">
-						<AppAppButtons justified source="home-hero" />
+						<AppMobileAppButtons justified source="home-hero" />
 					</div>
 
 					<div class="-links -text-shadow">
 						<a :href="Environment.authBaseUrl + '/join'">
 							<AppTranslate>Sign up</AppTranslate>
 						</a>
+						{{ ' ' }}
 						<AppTranslate>or</AppTranslate>
+						{{ ' ' }}
 						<a :href="Environment.authBaseUrl + '/login'">
 							<AppTranslate>Log in</AppTranslate>
 						</a>
@@ -146,7 +148,7 @@ function onPostLoaded(post: FiresidePost) {
 					</div>
 
 					<div class="-app-buttons">
-						<AppAppButtons justified source="home-hero" />
+						<AppMobileAppButtons justified source="home-hero" />
 					</div>
 				</template>
 			</div>

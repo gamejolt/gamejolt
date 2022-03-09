@@ -770,7 +770,7 @@ export function loadOlderChatMessages(chat: ChatClient, roomId: number) {
 				// We have to clear out all messages and add them again so that we
 				// calculate proper date splits and what not.
 				chat.messages[roomId] = [];
-				processNewChatOutput(chat, roomId, messages, false);
+				processNewChatOutput(chat, roomId, messages, true);
 			}
 
 			resolve();
