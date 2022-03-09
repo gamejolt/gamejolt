@@ -22,3 +22,8 @@ yarn-error.log
 gamejoltCA.crt
 development.gamejolt.com.crt
 development.gamejolt.com.pfx
+
+# Prebuilt ffmpeg binaries while serving client locally
+/ffmpeg.dll
+/libffmpeg.dylib
+/libffmpeg.so

@@ -96,6 +96,10 @@ export async function inferAndValidateFromParsedOptions(opts: ParsedOptions) {
 		await readFile(path.resolve(__dirname, '..', '..', 'package.json'), 'utf-8')
 	);
 	const version: string = process.env['GJ_VERSION'] ?? packageJson.version;
+	const nwjsVersion: string = process.env['GJ_NWJS_VERSION'] ?? packageJson.nwjsVersion ?? '';
+	if (!nwjsVersion) {
+		throw new Error(`Could not infer nwjs version`);
+	}
 
 	// TODO(vue3): infer this from other properties.
 	// I'm not sure if we want to keep the same logic we did before,
@@ -115,6 +119,7 @@ export async function inferAndValidateFromParsedOptions(opts: ParsedOptions) {
 	return {
 		...opts,
 		version,
+		nwjsVersion,
 		withUpdater,
 		currentSectionConfig,
 	};

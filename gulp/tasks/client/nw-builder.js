@@ -11,7 +11,7 @@ const {
 	runShell,
 } = require('../build-utils');
 
-const NWJS_VERSION = '0.55.0';
+const NWJS_VERSION = '0.60.0';
 
 class NwBuilder {
 	constructor(buildConfig, packageJson) {

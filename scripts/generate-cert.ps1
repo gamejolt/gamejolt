@@ -10,7 +10,6 @@ if (Get-ChildItem -Path "Cert:\CurrentUser\My" | Where-Object { $_.DnsNameList -
 	Write-Output "'development.gamejolt.com' certificate already installed. Aborting"
 	Exit
 }
-Exit
 
 $projectDir = (Join-Path -Path $PSScriptRoot -ChildPath ".." | Resolve-Path).Path
 

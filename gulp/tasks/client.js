@@ -59,7 +59,7 @@ module.exports = config => {
 			gjGameInstallerPackageId = 428840;
 		}
 	}
-	const nwjsVersion = '0.55.0';
+	const nwjsVersion = '0.60.0';
 
 	let gjpushExecutable = '';
 	switch (config.platform) {

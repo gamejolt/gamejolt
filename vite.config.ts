@@ -1,6 +1,7 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
 import { defineConfig, UserConfig as ViteUserConfigActual } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
+import { acquirePrebuiltFFmpeg } from './scripts/build/ffmpeg-prebuilt';
 import viteHtmlResolve from './scripts/build/vite-html-resolve';
 import { parseAndInferOptionsFromEnv } from './scripts/build/vite-options';
 
@@ -23,6 +24,15 @@ type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'
 export default defineConfig(async configEnv => {
 	const { command } = configEnv;
 	const gjOpts = await parseAndInferOptionsFromEnv();
+
+	// When serving the client locally, we need to acquire the ffmpeg binaries.
+	if (gjOpts.platform === 'desktop' && command === 'serve') {
+		await acquirePrebuiltFFmpeg({
+			outDir: __dirname,
+			cacheDir: path.resolve(__dirname, 'build', '.cache', 'ffmpeg-prebuilt'),
+			nwjsVersion: gjOpts.nwjsVersion,
+		});
+	}
 
 	type EmptyObject = { [k in any]: never };
 	type GetValueOrEmpty = <T>(value: T) => T | EmptyObject;
