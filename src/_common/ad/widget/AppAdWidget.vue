@@ -2,7 +2,7 @@
 import { computed, PropType, ref, watch } from 'vue';
 import { AdSlot, AdSlotMeta, AdSlotPlacement, AdSlotSize } from '../ad-slot-info';
 import { useAdsController } from '../ad-store';
-import AppAdWidgetInner from './inner.vue';
+import AppAdWidgetInner from './AppAdWidgetInner.vue';
 
 const props = defineProps({
 	size: {

@@ -54,6 +54,7 @@ const resourceInfo = computed(() => {
 });
 
 const adapter = computed(() => chooseAdAdapterForSlot(adsController, props.adSlot));
+const adComponent = computed(() => adapter.value.component(props.adSlot));
 
 /**
  * The [AdsController] will call into this to display the ad when needed (when
@@ -88,6 +89,6 @@ function _sendBeacon(event: string) {
 	<div v-if="slotId" :key="slotId" class="ad-widget-inner">
 		<!-- We completely regenerate it when the slot ID changes -->
 		<!-- Load the ad component for the currently running ad adapter -->
-		<component :is="adapter.component(adSlot)" :ad-slot="adSlot" :adapter="adapter" />
+		<component :is="adComponent" :ad-slot="adSlot" :adapter="adapter" />
 	</div>
 </template>
