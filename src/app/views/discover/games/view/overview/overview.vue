@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
 import { getAbsoluteLink } from '../../../../../../utils/router';
 import { useAdsController } from '../../../../../../_common/ad/ad-store';
-import AppAdWidget from '../../../../../../_common/ad/widget/widget.vue';
+import AppAdWidget from '../../../../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../_common/card/AppCard.vue';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';

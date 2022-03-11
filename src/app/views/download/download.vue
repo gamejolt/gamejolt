@@ -9,7 +9,7 @@ import {
 	setPageAdsSettings,
 	useAdsController,
 } from '../../../_common/ad/ad-store';
-import AppAdWidget from '../../../_common/ad/widget/widget.vue';
+import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../_common/api/api.service';
 import { GameBuild } from '../../../_common/game/build/build.model';
 import { Game } from '../../../_common/game/game.model';
