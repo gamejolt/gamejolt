@@ -9,14 +9,14 @@ import AppNoop from '../../../_common/AppNoop.vue';
 
 const AppClientShell = GJ_IS_DESKTOP_APP ? (await import('./AppClientShell.vue')).default : AppNoop;
 const AppClientStatusBar = GJ_IS_DESKTOP_APP
-	? (await import('./status-bar/status-bar.vue')).default
+	? (await import('./status-bar/AppClientStatusBar.vue')).default
 	: AppNoop;
 const LocalDbGameMod = GJ_IS_DESKTOP_APP
 	? (await import('./local-db/game/game.model')).LocalDbGame
 	: null;
 
 const AppClientPackageCardButtons = GJ_IS_DESKTOP_APP
-	? (await import('./hooks/package-card-buttons/package-card-buttons.vue')).default
+	? (await import('./hooks/AppClientPackageCardButtons.vue')).default
 	: null;
 
 export { AppClientStatusBar, AppClientShell, LocalDbGameMod, AppClientPackageCardButtons };

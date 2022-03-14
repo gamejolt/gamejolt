@@ -13,7 +13,7 @@ import AppPopper from '../../../../_common/popper/popper.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { useClientLibraryStore } from '../../../store/client-library';
 import { ClientInstallPackageModal } from '../install-package-modal/install-package-modal.service';
-import AppClientInstallProgress from '../install-progress/install-progress.vue';
+import AppClientInstallProgress from '../AppClientInstallProgress.vue';
 import { LocalDbPackage } from '../local-db/package/package.model';
 
 @Options({
