@@ -172,7 +172,7 @@ export default class RouteWeplay extends BaseRouteComponent {
 					<div class="description">
 						<div class="well desc-item">
 							<h2>
-								<AppJolticon class="-icon" icon="game" highlight />
+								<AppJolticon class="-icon" icon="gamepad" highlight />
 								Game where you want, when you want.
 							</h2>
 							<p>

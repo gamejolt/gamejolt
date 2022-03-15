@@ -400,7 +400,7 @@ export default class AppClientGameButtons extends Vue {
 								},
 							}"
 						>
-							<AppJolticon icon="game" />
+							<AppJolticon icon="gamepad" />
 							<AppTranslate>View Game</AppTranslate>
 						</router-link>
 						<a

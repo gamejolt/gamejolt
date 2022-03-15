@@ -74,7 +74,7 @@ export default class AppCommunitiesEditCompetitionNav extends Vue {
 				}"
 				active-class="active"
 			>
-				<AppJolticon icon="game" />
+				<AppJolticon icon="gamepad" />
 				<AppTranslate>Entries</AppTranslate>
 				&nbsp;
 				<span class="tag">

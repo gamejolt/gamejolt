@@ -76,7 +76,6 @@ export const Jolticons = [
 	'friend-remove-2',
 	'friend-requests',
 	'friends',
-	'game',
 	'gamejolt',
 	'gif',
 	'google',
@@ -174,13 +173,17 @@ export const Jolticons = [
 	'phone',
 	'bell-filled',
 	'bell-unfilled',
-	'communities-2x2',
-	'communities-3x3',
+	'communities',
 	'whatsapp',
 	'facebook-messenger',
 	'portal',
 	'quest-log',
 	'exclamation',
+	'paintbrush',
+	'sparkles',
+	'gamepad',
+	'wand',
+	'megaphone',
 ] as const;
 </script>
 

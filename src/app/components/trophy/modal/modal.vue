@@ -153,7 +153,7 @@ export default class AppTrophyModal extends mixins(BaseModal) {
 								class="-subtitle-link link-unstyled"
 								v-app-tooltip="game.title"
 							>
-								<AppJolticon icon="game" />
+								<AppJolticon icon="gamepad" />
 								<span v-translate="{ title: game.title }">
 									Game Trophy of
 									<b>%{ title }</b>

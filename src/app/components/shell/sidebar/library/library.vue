@@ -135,7 +135,7 @@ export default class AppShellSidebarLibrary extends Vue {
 					:class="{ active: ($route.name || '').startsWith('discover.games.') }"
 				>
 					<span class="shell-nav-icon">
-						<AppJolticon icon="game" />
+						<AppJolticon icon="gamepad" />
 					</span>
 					<span class="shell-nav-label">
 						<AppTranslate>Store</AppTranslate>

@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed, PropType, ref } from 'vue';
+import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
+import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { Screen } from '../../screen/screen-service';
 import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppVideo from '../../video/video.vue';
 import { Game } from '../game.model';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 
 const props = defineProps({
 	game: {
@@ -69,7 +69,7 @@ function imgLoadChange(isLoaded: boolean) {
 			:radius="radius"
 			fallback-color="var(--theme-bg-offset)"
 		>
-			<AppJolticon v-if="!hideJolticon" class="-icon" icon="game" />
+			<AppJolticon v-if="!hideJolticon" class="-icon" icon="gamepad" />
 
 			<div v-if="mediaItem && !hideMedia" class="-media">
 				<AppImgResponsive
