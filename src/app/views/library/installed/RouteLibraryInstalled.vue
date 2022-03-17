@@ -1,39 +1,32 @@
 <script lang="ts">
-import { Options } from 'vue-property-decorator';
-import { shallowSetup } from '../../../../utils/vue';
+import { computed } from 'vue';
+import { RouterLink } from 'vue-router';
 import AppAlertDismissable from '../../../../_common/alert/dismissable/dismissable.vue';
-import { Meta } from '../../../../_common/meta/meta-service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { useClientLibraryStore } from '../../../store/client-library/index';
-import AppLibraryInstalledGame from './_game/game.vue';
+import AppLibraryInstalledGame from './AppLibraryInstalledGame.vue';
 
-@Options({
-	name: 'RouteLibraryInstalled',
-	components: {
-		AppAlertDismissable,
-		AppPageHeader,
-		AppLibraryInstalledGame,
-	},
-})
-@OptionsForRoute()
-export default class RouteLibraryInstalled extends BaseRouteComponent {
-	readonly clientLibrary = shallowSetup(() => useClientLibraryStore());
+export default {
+	...defineAppRouteOptions({}),
+};
+</script>
 
-	get games() {
-		return this.clientLibrary.games.value;
-	}
+<script lang="ts" setup>
+const { games } = useClientLibraryStore();
 
-	get gamesByTitle() {
-		return this.games.sort((a, b) => {
-			return a.title.toLowerCase().localeCompare(b.title.toLowerCase());
-		});
-	}
+const gamesByTitle = computed(() => {
+	return [...games.value].sort((a, b) =>
+		a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+	);
+});
 
-	routeCreated() {
-		Meta.title = this.$gettext('Installed Games');
-	}
-}
+createAppRoute({
+	routeTitle: computed(() => $gettext(`Installed Games`)),
+});
 </script>
 
 <template>
@@ -46,16 +39,18 @@ export default class RouteLibraryInstalled extends BaseRouteComponent {
 		<section class="section">
 			<div class="container">
 				<AppAlertDismissable alert-type="info" dismiss-key="library.install-location-msg">
-					<AppJolticon icon="info-circle" />
+					<AppJolticon icon="info-circle" middle />
+					{{ ' ' }}
 					<AppTranslate
 						translate-comment="Short message to remind them that they can change install location at any time in their settings."
 					>
 						You can change the location where games are installed at any time in your
 						settings.
 					</AppTranslate>
-					<router-link :to="{ name: 'settings' }">
+					{{ ' ' }}
+					<RouterLink :to="{ name: 'settings' }">
 						<AppTranslate>Go to Settings?</AppTranslate>
-					</router-link>
+					</RouterLink>
 				</AppAlertDismissable>
 
 				<div v-if="!games.length" class="alert alert-notice">

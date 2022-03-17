@@ -1,97 +1,74 @@
-<script lang="ts">
-import { Options, Vue, Watch } from 'vue-property-decorator';
-import { shallowSetup } from '../../../../utils/vue';
+<script lang="ts" setup>
+import { computed, onMounted, ref, watch } from 'vue';
+import { RouterLink } from 'vue-router';
 import { ClientUpdater } from '../../../../_common/client/client-updater.service';
 import { Client } from '../../../../_common/client/client.service';
 import { formatNumber } from '../../../../_common/filters/number';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { useClientLibraryStore } from '../../../store/client-library/index';
-import AppClientStatusBarPatchItem from './patch-item/patch-item.vue';
+import AppClientStatusBarPatchItem from './AppClientStatusBarPatchItem.vue';
 
-@Options({
-	components: {
-		AppClientStatusBarPatchItem,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppClientStatusBar extends Vue {
-	readonly clientLibrary = shallowSetup(() => useClientLibraryStore());
+const { gamesById, numPatching, currentlyPatching } = useClientLibraryStore();
 
-	// @ClientLibraryState
-	// numPlaying!: ClientLibraryStore['numPlaying'];
-	numPlaying: any = 0;
+const updaterWarningDismissed = ref(false);
 
-	// @ClientLibraryState
-	// currentlyPlaying!: ClientLibraryStore['currentlyPlaying'];
-	currentlyPlaying: any = [];
+// TODO(vue3): these values were pulled from the client library before... where is the data?
+const numPlaying = computed(() => 0);
+const currentlyPlaying = computed(() => [] as any[]);
 
-	updaterWarningDismissed = false;
+const clientUpdateStatus = computed(() => ClientUpdater.clientUpdateStatus);
 
-	readonly formatNumber = formatNumber;
+const currentlyPlayingList = computed(() =>
+	currentlyPlaying.value.map(i => gamesById.value[i.game_id]?.title ?? 'game').join(', ')
+);
 
-	get clientUpdateStatus() {
-		return ClientUpdater.clientUpdateStatus;
-	}
+const currentlyPatchingIds = computed(() =>
+	Object.keys(currentlyPatching.value).map(i => parseInt(i, 10))
+);
 
-	get isShowing() {
-		return (
-			this.numPatching > 0 || this.numPlaying > 0 || this.hasUpdate || this.showUpdaterIssue
-		);
-	}
+const hasUpdate = computed(() => clientUpdateStatus.value === 'ready');
 
-	get numPatching() {
-		return this.clientLibrary.numPatching.value;
-	}
+const showUpdaterIssue = computed(
+	() => clientUpdateStatus.value === 'error' && !updaterWarningDismissed.value
+);
 
-	get currentlyPlayingList() {
-		return this.currentlyPlaying
-			.map(i => this.clientLibrary.gamesById.value[i.game_id]?.title ?? 'game')
-			.join(', ');
-	}
+const isShowing = computed(
+	() => numPatching.value > 0 || numPlaying.value > 0 || hasUpdate.value || showUpdaterIssue.value
+);
 
-	get currentlyPatchingIds() {
-		return Object.keys(this.clientLibrary.currentlyPatching.value).map(i => parseInt(i, 10));
-	}
+function dismissUpdaterWarning() {
+	updaterWarningDismissed.value = true;
+}
 
-	get hasUpdate() {
-		return this.clientUpdateStatus === 'ready';
-	}
+async function updateClient() {
+	await ClientUpdater.updateClient();
+}
 
-	get showUpdaterIssue() {
-		return this.clientUpdateStatus === 'error' && !this.updaterWarningDismissed;
-	}
+function updateApply() {
+	updateClient();
+}
 
-	dismissUpdaterWarning() {
-		this.updaterWarningDismissed = true;
-	}
+function quitClient() {
+	Client.quit();
+}
 
-	async updateClient() {
-		await ClientUpdater.updateClient();
-	}
+onMounted(() => {
+	document.body.classList.remove('has-hot-bottom');
+});
 
-	@Watch('isShowing', { immediate: true })
-	onIsShowingChanged() {
-		if (this.isShowing) {
+watch(
+	isShowing,
+	isShowing => {
+		if (isShowing) {
 			document.body.classList.add('has-hot-bottom');
 		} else {
 			document.body.classList.remove('has-hot-bottom');
 		}
-	}
-
-	unmounted() {
-		document.body.classList.remove('has-hot-bottom');
-	}
-
-	updateApply() {
-		this.updateClient();
-	}
-
-	quitClient() {
-		Client.quit();
-	}
-}
+	},
+	{ immediate: true }
+);
 </script>
 
 <template>
@@ -110,7 +87,7 @@ export default class AppClientStatusBar extends Vue {
 				</strong>
 			</div>
 
-			<router-link
+			<RouterLink
 				v-if="numPatching > 0"
 				v-app-tooltip="$gettext(`View Downloads`)"
 				class="-item link-unstyled"
@@ -131,7 +108,7 @@ export default class AppClientStatusBar extends Vue {
 						:package-id="packageId"
 					/>
 				</div>
-			</router-link>
+			</RouterLink>
 		</div>
 
 		<div class="pull-right">
