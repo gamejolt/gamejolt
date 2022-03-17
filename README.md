@@ -8,6 +8,8 @@ We wanted to make it open source so everyone can get visibility into what we are
 
 Translations are done by the community. If you want to participate, feel free to join at https://poeditor.com/join/project/B4nWT6EgnD.
 
+![](src/_common/loading/loading.gif)
+
 ### Building
 
 - Install NodeJS v6+
@@ -19,3 +21,43 @@ Translations are done by the community. If you want to participate, feel free to
 	- `yarn run dev`
 
 That should set up a tiny server that hosts the website for you on your computer at http://localhost:8080. Open that URL up in a web browser and you should have Game Jolt running!
+
+### Directories in source
+
+/src
+
+↓
+
+//widget-package ← widget embeddable in other webpages 
+
+//utils ← miscellaneous scripts making page more accessible (for example for mobiles) 
+
+//site-editor ← custom blog/portfolio/game pages engine 
+
+//lib ← docs, ToS and all the papers 
+
+//gameserver ← engine for adding and using html games from imported files
+
+//editor ← editors for posts, game descriptions and all the rest
+
+//client ← scripts for making installed clients up and running
+
+//claim ← moderation pages
+
+//checkout ← some temporary bug fixes
+
+//auth ← login and account management (backend)
+
+//app ← source powering all frontent for gamejolt
+
+//\_styles ← layout and colors for gamejolt
+
+//\_common ← graphics and other common files
+
+![](src/_common/loading/loading-stationary.gif)
+
+### License 
+
+look at [here](./LICENSE)
+
+<!--- dont ask CROS who PR'ed, yes im evil --->
