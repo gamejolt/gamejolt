@@ -224,6 +224,7 @@ export default class ClientLibraryPackageInstallOperations {
 					}
 				}
 			} catch (err) {
+				console.error(err);
 				await this.pkgDataOps.setPackageRemoveState(
 					localPackage,
 					LocalDbPackageRemoveState.REMOVE_FAILED
@@ -389,7 +390,7 @@ export default class ClientLibraryPackageInstallOperations {
 						'paused',
 						(listeners.paused = queued => {
 							console.log(
-								'Pause received in gamejolt repo. From queue: ' +
+								'Handling client-voodoo paused event. From queue: ' +
 									(queued ? 'yes' : 'no')
 							);
 
@@ -404,7 +405,7 @@ export default class ClientLibraryPackageInstallOperations {
 						'resumed',
 						(listeners.resumed = unqueued => {
 							console.log(
-								'Resume received in gamejolt repo. From queue: ' +
+								'Hnadling client-voodoo resumed event. From queue: ' +
 									(unqueued ? 'yes' : 'no')
 							);
 
@@ -418,6 +419,10 @@ export default class ClientLibraryPackageInstallOperations {
 					.on(
 						'updateFailed',
 						(listeners.updateFailed = reason => {
+							console.log(
+								'Handling client-voodoo updateFailed event with reason: ' + reason
+							);
+
 							cleanupListeners();
 
 							// If the update was canceled the 'context canceled' will be emitted as the updateFailed reason.
@@ -430,6 +435,7 @@ export default class ClientLibraryPackageInstallOperations {
 					.on(
 						'updateFinished',
 						(listeners.updateFinished = () => {
+							console.log('Handling client-voodoo updateFinished event');
 							cleanupListeners();
 							resolve(false);
 						})
@@ -437,11 +443,11 @@ export default class ClientLibraryPackageInstallOperations {
 					.on(
 						'fatal',
 						(listeners.fatal = err => {
-							cleanupListeners();
-
 							console.log(
-								'Received fatal error in patcher in gamejolt repo: ' + err.message
+								'Handling client-voodoo fatal event with err: ' + err.message
 							);
+
+							cleanupListeners();
 							reject(err);
 						})
 					);

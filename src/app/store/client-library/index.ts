@@ -194,6 +194,9 @@ export function createClientLibraryStore() {
 		_bootstrapPromise = new Promise<void>(resolve => (_bootstrapResolve = resolve));
 
 		console.log('Bootstrapping client library');
+
+		await Config.setClientMutex();
+
 		_db = await _getDb();
 		console.log('LocalDB ready');
 
@@ -314,5 +317,3 @@ export function createClientLibraryStore() {
 		installerResume: pkgInstallOps.installerResume.bind(pkgInstallOps),
 	};
 }
-
-export const clientLibraryStore = createClientLibraryStore();
