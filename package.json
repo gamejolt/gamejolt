@@ -11,7 +11,7 @@
 		"dev": "vite",
 		"devd": "cross-env GJ_ENVIRONMENT=development yarn run dev",
 		"build": "vite build",
-		"app:build": "gulp --production --app",
+		"app:editor": "cross-env GJ_PLATFORM=web GJ_BUILD_TYPE=production GJ_SECTION=editor yarn run build",
 		"client:dev": "cross-env GJ_PLATFORM=desktop yarn run dev",
 		"client:devd": "cross-env GJ_PLATFORM=desktop yarn run devd",
 		"client": "nw use 0.55.0-sdk && nw .",
