@@ -50,10 +50,8 @@ const {
 	installerPause,
 	installerResume,
 	installerRetry,
+	launcherLaunch,
 } = useClientLibraryStore();
-
-// TODO(vue3): get this working from the library store
-const launcherLaunch = null as any;
 
 const build = ref<GameBuild>();
 const downloadableUnsupported = ref(false);

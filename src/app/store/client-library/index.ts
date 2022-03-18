@@ -16,7 +16,11 @@ import { LocalDbPackage } from '../../components/client/local-db/package/package
 import ClientLibraryGameDataMutations from './game-data-mutations';
 import ClientLibraryPackageDataMutations from './package-data-mutations';
 import ClientLibraryPackageInstallOperations from './package-install-operations';
+import ClientLibraryPackageLaunchOperations from './package-launch-operations';
 import ClientLibrarySyncOperations from './sync-operations';
+
+const path = require('path') as typeof import('path');
+const fs = require('fs') as typeof import('fs');
 
 type ClientLibraryStoreInternal = ReturnType<typeof createClientLibraryStore>;
 export type ClientLibraryStore = HidePrivateKeys<ClientLibraryStoreInternal>;
@@ -161,6 +165,9 @@ export function createClientLibraryStore() {
 		return amount ? currentProgress / amount : null;
 	});
 
+	const isLauncherReady = ref(false);
+	const currentlyPlaying = ref([]) as Ref<LocalDbPackage[]>;
+
 	const gameDataOps = new ClientLibraryGameDataMutations(setGameData);
 	const pkgDataOps = new ClientLibraryPackageDataMutations(setPackageData, unsetPackage);
 	const pkgInstallOps = new ClientLibraryPackageInstallOperations(
@@ -179,6 +186,8 @@ export function createClientLibraryStore() {
 		pkgDataOps,
 		pkgInstallOps
 	);
+
+	const pkgLaunchOps = new ClientLibraryPackageLaunchOperations(currentlyPlaying, pkgDataOps);
 
 	if (GJ_ENVIRONMENT === 'development') {
 		Config.env = 'development';
@@ -205,6 +214,7 @@ export function createClientLibraryStore() {
 
 		await ClientUpdater.init();
 		installerInit();
+		launcherInit();
 
 		syncOps.syncCheck();
 		setInterval(() => syncOps.syncCheck(), 60 * 60 * 1000); // 1hr currently
@@ -256,6 +266,69 @@ export function createClientLibraryStore() {
 		}
 
 		return Promise.resolve(promises);
+	}
+
+	async function launcherInit() {
+		const pidDir = path.resolve(nw.App.dataPath, 'game-pids');
+		Config.setPidDir(pidDir);
+
+		try {
+			await Config.ensurePidDir();
+
+			// Get all running packages by looking at the old launcher's game pid directory.
+			// This finds games that were started outside the client as well.
+			const runningPackageIds = fs
+				.readdirSync(pidDir)
+				.map(filename => {
+					// Pid files are named after the package ids they are currently running.
+					try {
+						return parseInt(path.basename(filename), 10);
+					} catch (err) {
+						return 0;
+					}
+				})
+				.filter(packageId => !!packageId && !isNaN(packageId));
+
+			console.log(`Running package ids by game pid file: [${runningPackageIds.join(',')}]`);
+
+			// For all the packages that have a game pid file and aren't marked as running in the
+			// localdb - mark as running before attaching. This will mark them as running using the
+			// old client launcher's running format.
+			for (const runningPackageId of runningPackageIds) {
+				const localPackage = packagesById.value[runningPackageId];
+				if (localPackage && !localPackage.isRunning) {
+					try {
+						await pkgDataOps.setPackageRunningPid(localPackage, {
+							wrapperId: localPackage.id.toString(),
+						});
+					} catch (e) {
+						console.warn(`Could not mark package as running: ${localPackage.id}`);
+						console.warn(e);
+					}
+				}
+			}
+
+			// Reattach all running games after a restart.
+			for (const localPackage of packages.value) {
+				if (localPackage.isRunning) {
+					try {
+						await pkgLaunchOps.launcherReattach(localPackage);
+					} catch (e) {
+						console.warn(e);
+					}
+				}
+			}
+
+			// We only mark the launcher as loaded once it at least finished reattaching to the
+			// currently running instances.
+			console.log('Launcher loaded and ready');
+
+			isLauncherReady.value = true;
+		} catch (err) {
+			console.error('Failed to initialize everything for launcher');
+			console.error(err);
+			isLauncherReady.value = false;
+		}
 	}
 
 	/**
@@ -315,5 +388,6 @@ export function createClientLibraryStore() {
 		installerRetry: pkgInstallOps.installerRetry.bind(pkgInstallOps),
 		installerPause: pkgInstallOps.installerPause.bind(pkgInstallOps),
 		installerResume: pkgInstallOps.installerResume.bind(pkgInstallOps),
+		launcherLaunch: pkgLaunchOps.launcherLaunch.bind(pkgLaunchOps),
 	};
 }
