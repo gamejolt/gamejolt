@@ -18,8 +18,9 @@ import { setBuildButtonsComponent } from './components/game/cover-buttons/cover-
 import { setClientLibraryStore } from './components/search/search-service';
 import { ClientLibraryStoreKey, createClientLibraryStore } from './store/client-library';
 import { router } from './views/index';
+import { AppStore } from './store';
 
-export function bootstrapClient(app: App, commonStore: CommonStore) {
+export function bootstrapClient(app: App, appStore: AppStore, commonStore: CommonStore) {
 	bootstrapCommonClient({ commonStore });
 
 	const clientLibraryStore = createClientLibraryStore();
@@ -31,7 +32,7 @@ export function bootstrapClient(app: App, commonStore: CommonStore) {
 	setPackageCardButtonsComponent(AppClientPackageCardButtons);
 	setMetaComponent(AppClientPackageCardMeta);
 	setDownloadPackageHook(makeDownloadPackageHook(clientLibraryStore));
-	setMenuBuilderHook(createClientTrayMenuBuilder(router));
+	setMenuBuilderHook(createClientTrayMenuBuilder(router, appStore));
 	setClientLibraryStore(clientLibraryStore);
 	setBuildButtonsComponent(AppClientGameCoverButtons);
 }

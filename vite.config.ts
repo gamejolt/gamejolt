@@ -1,7 +1,7 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
 import { defineConfig, UserConfig as ViteUserConfigActual } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
-import { acquirePrebuiltFFmpeg } from './scripts/build/ffmpeg-prebuilt';
+import { acquirePrebuiltFFmpeg } from './scripts/build/desktop-app/ffmpeg-prebuilt';
 import viteHtmlResolve from './scripts/build/vite-html-resolve';
 import { parseAndInferOptionsFromEnv } from './scripts/build/vite-options';
 
@@ -360,7 +360,15 @@ export default defineConfig(async configEnv => {
 			// Write to build/web normally and to build/server for ssr.
 			outDir: path.resolve(
 				__dirname,
-				gjOpts.platform === 'ssr' ? path.join('build', 'server') : path.join('build', 'web')
+				path.join(
+					'build',
+					{
+						ssr: 'ssr',
+						desktop: 'desktop-app',
+						web: 'web',
+						mobile: 'mobile',
+					}[gjOpts.platform]
+				)
 			),
 
 			// The SSR manifest is used to keep track of which static assets are

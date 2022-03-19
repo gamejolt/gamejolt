@@ -6,6 +6,8 @@ const os = require('os') as typeof import('os');
 
 import * as fs from 'fs-extra';
 
+export const packageJson = require('../../package.json');
+
 export function sleep(ms: number) {
 	return new Promise<void>(resolve => {
 		setTimeout(resolve, ms);
@@ -159,6 +161,7 @@ export function isObject(item) {
 
 /**
  * Deep merge to plain javascript objects, returning a new one.
+ * It does not support merging arrays.
  */
 export function mergeDeep(target, source) {
 	if (!isObject(target) || !isObject(source)) {
@@ -173,10 +176,24 @@ export function mergeDeep(target, source) {
 				ret[key] = {};
 			}
 			ret[key] = mergeDeep(ret[key], source[key]);
+		} else if (Array.isArray(source[key])) {
+			throw new Error('Merging arrays is not supported');
 		} else {
 			ret[key] = source[key];
 		}
 	}
 
 	return ret;
+}
+
+export function isWindows() {
+	return os.type() === 'Windows_NT';
+}
+
+export function isLinux() {
+	return os.type() === 'Linux';
+}
+
+export function isMac() {
+	return os.type() === 'Darwin';
 }

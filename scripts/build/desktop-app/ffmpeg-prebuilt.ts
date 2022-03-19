@@ -1,7 +1,7 @@
 const path = require('path') as typeof import('path');
 const os = require('os') as typeof import('os');
 import * as fs from 'fs-extra';
-import { downloadFile, unzip } from './build-utils';
+import { downloadFile, unzip } from '../utils';
 
 type AcquireOptions = {
 	cacheDir: string;
@@ -39,7 +39,7 @@ export async function acquirePrebuiltFFmpeg(opts: AcquireOptions) {
 	}
 
 	const arch = os.arch();
-	if (arch !== 'ia32' && arch !== 'x64') {
+	if (arch !== 'x64') {
 		throw new Error(`Unsupported arch '${arch}'`);
 	}
 
@@ -67,4 +67,5 @@ export async function acquirePrebuiltFFmpeg(opts: AcquireOptions) {
 		`Installing ffmpeg-prebuilt to the build dir: ${path.resolve(cachePath, filename)} -> ${to}`
 	);
 	await fs.copy(path.resolve(cachePath, filename), to);
+	return to;
 }
