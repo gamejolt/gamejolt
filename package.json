@@ -13,8 +13,8 @@
 		"app:build": "gulp --production --app",
 		"client:dev": "cross-env GJ_PLATFORM=desktop yarn run dev",
 		"client:devd": "cross-env GJ_PLATFORM=desktop yarn run devd",
-		"client:build": "cross-env GJ_PLATFORM=desktop yarn run build",
-		"client:package": "ts-node -P scripts/script.tsconfig.json scripts/build/desktop-app/index.ts",
+		"client:build": "ts-node -P scripts/script.tsconfig.json scripts/build/desktop-app/index.ts --build",
+		"client:package": "ts-node -P scripts/script.tsconfig.json scripts/build/desktop-app/index.ts --package",
 		"client": "nw use 0.60.0-sdk && nw .",
 		"ssr:client": "cross-env GJ_PLATFORM=web yarn run build",
 		"ssr:server": "cross-env GJ_PLATFORM=ssr yarn run build",
@@ -120,7 +120,7 @@
 	},
 	"dependencies": {
 		"axios": "0.25.0",
-		"client-voodoo": "2.5.3",
+		"client-voodoo": "2.7.0",
 		"fs-extra": "7.0.0",
 		"write-file-atomic": "2.3.0"
 	},

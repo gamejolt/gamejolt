@@ -51,7 +51,6 @@ export default defineConfig(async configEnv => {
 	const onlyInDocker = emptyUnless(() => isInDocker);
 	const notInDocker = emptyUnless(() => !isInDocker);
 	const onlyInDesktopApp = emptyUnless(() => gjOpts.platform === 'desktop');
-	const onlyInProdBuilds = emptyUnless(() => gjOpts.buildType === 'production');
 
 	// These will be imported in all styl files.
 	const stylusOptions = {
@@ -327,18 +326,26 @@ export default defineConfig(async configEnv => {
 				target: 'esnext',
 			}),
 
+			minify: false,
+
 			rollupOptions: {
-				...onlyInProdBuilds<RollupOptions>({
+				...(() => {
 					// By default vite outputs filenames with their chunks,
 					// but some ad blockers are outrageously aggressive with their
 					// filter lists, for example blocking any file that contains the
 					// string 'follow-widget'. It'd ridiculous.
-					// For this reason, do not output filenames in prod builds.
-					output: {
-						chunkFileNames: 'assets/[hash].js',
-						assetFileNames: 'assets/[hash].[ext]',
-					},
-				}),
+					// For this reason, do not output filenames in prod web-based builds.
+					if (gjOpts.buildType === 'production' && gjOpts.platform in ['web', 'ssr']) {
+						return <RollupOptions>{
+							output: {
+								chunkFileNames: 'assets/[hash].js',
+								assetFileNames: 'assets/[hash].[ext]',
+							},
+						};
+					}
+
+					return {};
+				})(),
 
 				...notInSSR<RollupOptions>({
 					// When building for ssr the entrypoint is specified in build.ssr,
@@ -347,7 +354,7 @@ export default defineConfig(async configEnv => {
 				}),
 
 				...onlyInDesktopApp<RollupOptions>({
-					external: ['client-voodoo', 'axios'],
+					external: ['client-voodoo'],
 				}),
 			},
 
@@ -357,19 +364,8 @@ export default defineConfig(async configEnv => {
 			// while developing
 			emptyOutDir: gjOpts.emptyOutDir,
 
-			// Write to build/web normally and to build/server for ssr.
-			outDir: path.resolve(
-				__dirname,
-				path.join(
-					'build',
-					{
-						ssr: 'ssr',
-						desktop: 'desktop-app',
-						web: 'web',
-						mobile: 'mobile',
-					}[gjOpts.platform]
-				)
-			),
+			// Write to build/{platform}.
+			outDir: path.resolve(__dirname, path.join('build', gjOpts.platform)),
 
 			// The SSR manifest is used to keep track of which static assets are
 			// needed by which component. This lets us choose an optimal set of

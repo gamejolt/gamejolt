@@ -39,6 +39,7 @@ export class NwBuilder {
 	constructor(readonly config: NwBuilderOptions) {
 		const jsonOverrides = {
 			main: 'chrome-extension://game-jolt-client/package/index.html#/',
+			domain: 'game-jolt-client',
 			window: {
 				icon: 'package/static-assets/client/icon-256x256.png',
 			},
@@ -50,6 +51,7 @@ export class NwBuilder {
 		const packageJson = mergeDeep(this.config.packageJson, jsonOverrides);
 
 		// We don't need these bundled in.
+		delete packageJson['node-remote'];
 		delete packageJson.devDependencies;
 		delete packageJson.optionalDependencies;
 		delete packageJson.scripts;

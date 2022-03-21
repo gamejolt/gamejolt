@@ -11,6 +11,7 @@ yarn-error.log
 # vite build for our html templates
 /src/auth.html
 /src/claim.html
+/src/client.html
 /src/checkout.html
 /src/site-editor.html
 /src/gameserver.html

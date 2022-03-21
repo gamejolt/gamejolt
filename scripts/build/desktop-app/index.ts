@@ -1,3 +1,10 @@
-import { buildClient } from './build';
+import { buildClient, packageClient } from './build';
 
-buildClient({ useSdkVersion: true });
+(async () => {
+	if (process.argv.includes('--build')) {
+		await buildClient({ buildType: 'production' });
+	}
+	if (process.argv.includes('--package')) {
+		await packageClient({ useSdkVersion: true });
+	}
+})();
