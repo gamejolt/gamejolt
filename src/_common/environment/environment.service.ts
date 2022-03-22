@@ -77,9 +77,10 @@ if (GJ_ENVIRONMENT === 'development') {
 	Environment.recaptchaSiteKey = '6LcwTkEUAAAAAHTT67TB8gkM0ft5hUzz_r_tFFaT';
 }
 
-// TODO(vue3) fix this. no longer using chrome-extension, at least in dev?
 if (GJ_IS_DESKTOP_APP && !GJ_IS_WATCHING) {
 	// When it gets packaged up for production, the URL changes.
+	// TODO(vue3) when do we not package it up under package/ nowadays?
+	// I think we should always do the urls with package/
 	if (window.location.href.search(/^chrome-extension:\/\/game-jolt-client\/package\//) !== -1) {
 		Environment.wttfBaseUrl = 'chrome-extension://game-jolt-client/package/index.html#';
 		Environment.authBaseUrl = 'chrome-extension://game-jolt-client/package/auth.html#';

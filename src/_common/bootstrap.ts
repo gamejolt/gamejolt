@@ -4,6 +4,7 @@ import { hijackLinks } from '../utils/router';
 import { initAnalytics, initAnalyticsRouter } from './analytics/analytics.service';
 import { vAppTrackEvent } from './analytics/track-event.directive';
 import AppButton from './button/AppButton.vue';
+import { initSafeExportsForClient } from './client/safe-exports';
 import { ensureConfig } from './config/config.service';
 import { initConnectionService } from './connection/connection-service';
 import AppJolticon from './jolticon/AppJolticon.vue';
@@ -20,12 +21,16 @@ import { initTranslations } from './translate/translate.service';
  * Bootstraps common services and returns a "createApp" function that our entry
  * point can call to get what it needs.
  */
-export function bootstrapCommon(appComponent: Component, router?: Router) {
+export async function bootstrapCommon(appComponent: Component, router?: Router) {
 	// Check to make sure our build config is correct.
 	if (GJ_BUILD_TYPE === 'development' && GJ_HAS_ROUTER !== !!router) {
 		throw new Error(
 			`Invalid vite config. Section router config is wrong. GJ_HAS_ROUTER: ${GJ_HAS_ROUTER}, router: ${!!router}`
 		);
+	}
+
+	if (GJ_IS_DESKTOP_APP) {
+		await initSafeExportsForClient();
 	}
 
 	const app = import.meta.env.SSR ? createSSRApp(appComponent) : createApp(appComponent);

@@ -25,10 +25,6 @@ export class Navigate {
 			return GJ_SECTION;
 		}
 
-		// TODO(vue3) Environment urls changed, update this.
-		console.error(window.location.href);
-		throw new Error('vue3 todo');
-
 		if (window.location.href.startsWith(Environment.wttfBaseUrl)) {
 			return 'app';
 		} else if (window.location.href.startsWith(Environment.authBaseUrl)) {

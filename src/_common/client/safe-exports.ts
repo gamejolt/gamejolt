@@ -6,30 +6,35 @@
  */
 
 import { defineAsyncComponent } from 'vue';
-import AppNoop from '../AppNoop.vue';
-import { lazyImportOnlyDesktopApp } from '../code-splitting';
+import type AppClientHistoryNavigatorType from './history-navigator/history-navigator.vue';
+import type AppClientBaseType from './base/base.vue';
+import type { Client as ClientType } from './client.service';
+import type { ClientHistoryNavigator as ClientHistoryNavigatorType } from './history-navigator/history-navigator.service';
+import type { ClientAutoStart as ClientAutoStartType } from './autostart/autostart.service';
 
-const Client = GJ_IS_DESKTOP_APP ? (await import('./client.service')).Client : null;
-const ClientHistoryNavigator = GJ_IS_DESKTOP_APP
-	? (await import('./history-navigator/history-navigator.service')).ClientHistoryNavigator
-	: null;
-const ClientAutoStart = GJ_IS_DESKTOP_APP
-	? (await import('./autostart/autostart.service')).ClientAutoStart
-	: null;
-const AppClientHistoryNavigator = GJ_IS_DESKTOP_APP
-	? (await import('./history-navigator/history-navigator.vue')).default
-	: AppNoop;
-const AppClientBase = defineAsyncComponent(
-	lazyImportOnlyDesktopApp(async () => {
-		const { default: imported } = await import('./base/base.vue');
-		return imported;
-	})
-);
+// Vue components
+export let AppClientHistoryNavigator: typeof AppClientHistoryNavigatorType = null as any;
+export let AppClientBase: typeof AppClientBaseType = null as any;
 
-export {
-	Client,
-	ClientHistoryNavigator,
-	ClientAutoStart,
-	AppClientHistoryNavigator,
-	AppClientBase,
-};
+// Misc
+export let Client: typeof ClientType = null as any;
+export let ClientHistoryNavigator: typeof ClientHistoryNavigatorType = null as any;
+export let ClientAutoStart: typeof ClientAutoStartType = null as any;
+
+export async function initSafeExportsForClient() {
+	if (!GJ_IS_DESKTOP_APP) {
+		return;
+	}
+
+	// Vue components
+	AppClientHistoryNavigator = defineAsyncComponent(
+		async () => (await import('./history-navigator/history-navigator.vue')).default
+	);
+	AppClientBase = defineAsyncComponent(async () => (await import('./base/base.vue')).default);
+
+	// Misc
+	Client = (await import('./client.service')).Client;
+	ClientHistoryNavigator = (await import('./history-navigator/history-navigator.service'))
+		.ClientHistoryNavigator;
+	ClientAutoStart = (await import('./autostart/autostart.service')).ClientAutoStart;
+}

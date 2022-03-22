@@ -379,6 +379,7 @@ export function createClientLibraryStore() {
 		currentlyUninstalling,
 		numPatching,
 		totalPatchProgress,
+		currentlyPlaying,
 		findPackageToRepresentGameStatus,
 		findInstalledGamesByTitle,
 		checkQueueSettings,

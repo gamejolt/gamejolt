@@ -161,10 +161,7 @@ export default class FormSettings extends mixins(Wrapper) {
 				<AppTranslate>Client</AppTranslate>
 			</legend>
 
-			<AppFormGroup
-				name="game_install_dir"
-				:label="$gettext('Installed Games Directory')"
-			>
+			<AppFormGroup name="game_install_dir" :label="$gettext('Installed Games Directory')">
 				<div class="pull-right">
 					<AppButton sm @click="changeLocation('game-install-dir')">
 						<AppTranslate>Change Location</AppTranslate>
@@ -176,7 +173,10 @@ export default class FormSettings extends mixins(Wrapper) {
 				</div>
 
 				<p class="help-block">
-					<AppTranslate>This is the directory on your computer that games will install into.</AppTranslate>
+					<AppTranslate
+						>This is the directory on your computer that games will install
+						into.</AppTranslate
+					>
 				</p>
 
 				<input
@@ -207,7 +207,10 @@ export default class FormSettings extends mixins(Wrapper) {
 			>
 				<AppFormControl type="number" :validators="[validateMinValue(1)]" />
 				<p class="help-block">
-					<AppTranslate>If you have more than this number, downloads will be queued up.</AppTranslate>
+					<AppTranslate
+						>If you have more than this number, downloads will be queued
+						up.</AppTranslate
+					>
 				</p>
 				<AppFormControlErrors />
 			</AppFormGroup>
@@ -219,7 +222,10 @@ export default class FormSettings extends mixins(Wrapper) {
 			>
 				<AppFormControlToggle class="pull-right" />
 				<p class="help-block">
-					<AppTranslate>An extraction is when the game is unpacked and installed after downloading.</AppTranslate>
+					<AppTranslate
+						>An extraction is when the game is unpacked and installed after
+						downloading.</AppTranslate
+					>
 				</p>
 			</AppFormGroup>
 			<br v-if="formModel.limit_downloads" />
@@ -232,15 +238,15 @@ export default class FormSettings extends mixins(Wrapper) {
 			>
 				<AppFormControl type="number" :validators="[validateMinValue(1)]" />
 				<p class="help-block">
-					<AppTranslate>If you have more than this number, extractions will be queued up.</AppTranslate>
+					<AppTranslate
+						>If you have more than this number, extractions will be queued
+						up.</AppTranslate
+					>
 				</p>
 				<AppFormControlErrors />
 			</AppFormGroup>
 
-			<AppFormGroup
-				name="queue_when_playing"
-				:label="$gettext('Pause when playing?')"
-			>
+			<AppFormGroup name="queue_when_playing" :label="$gettext('Pause when playing?')">
 				<AppFormControlToggle class="pull-right" />
 				<p class="help-block">
 					<AppTranslate>

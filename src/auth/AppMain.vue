@@ -20,6 +20,8 @@ onMounted(() => {
 			</AppErrorPage>
 		</div>
 
-		<AppClientBase v-if="GJ_IS_DESKTOP_APP" />
+		<template v-if="GJ_IS_DESKTOP_APP">
+			<AppClientBase />
+		</template>
 	</AppCommonShell>
 </template>

@@ -10,13 +10,11 @@ import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { useClientLibraryStore } from '../../../store/client-library/index';
 import AppClientStatusBarPatchItem from './AppClientStatusBarPatchItem.vue';
 
-const { gamesById, numPatching, currentlyPatching } = useClientLibraryStore();
+const { gamesById, numPatching, currentlyPatching, currentlyPlaying } = useClientLibraryStore();
 
 const updaterWarningDismissed = ref(false);
 
-// TODO(vue3): these values were pulled from the client library before... where is the data?
-const numPlaying = computed(() => 0);
-const currentlyPlaying = computed(() => [] as any[]);
+const numPlaying = computed(() => currentlyPlaying.value.length);
 
 const clientUpdateStatus = computed(() => ClientUpdater.clientUpdateStatus);
 

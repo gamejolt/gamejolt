@@ -11,7 +11,7 @@ import { createLibraryStore, LibraryStoreKey } from './store/library';
 import { router } from './views/index';
 
 export async function createApp() {
-	const { app, commonStore } = bootstrapCommon(AppMain, router);
+	const { app, commonStore } = await bootstrapCommon(AppMain, router);
 
 	const sidebarStore = createSidebarStore();
 	const libraryStore = createLibraryStore({ router });
@@ -26,7 +26,7 @@ export async function createApp() {
 
 	if (GJ_IS_DESKTOP_APP) {
 		const { bootstrapClient } = await import('./bootstrap-client');
-		bootstrapClient(app, appStore, commonStore);
+		await bootstrapClient(app, appStore, commonStore);
 	}
 
 	GamePlayModal.init({ canMinimize: true });

@@ -5,7 +5,7 @@ import { authStore, AuthStoreKey } from './store';
 import { router } from './views/index';
 
 export async function createApp() {
-	const { app } = bootstrapCommon(AppMain, router);
+	const { app } = await bootstrapCommon(AppMain, router);
 
 	app.provide(AuthStoreKey, authStore);
 

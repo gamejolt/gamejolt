@@ -2,18 +2,18 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { debounce } from '../../../utils/utils';
-import { Game } from '../../../_common/game/game.model';
-import AppGameThumbnailImg from '../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
-import { User } from '../../../_common/user/user.model';
-import AppUserVerifiedTick from '../../../_common/user/verified-tick/verified-tick.vue';
-import type { LocalDbGame } from '../client/local-db/game/game.model';
-import { LocalDbGameMod } from '../client/safe-exports';
-import { SearchKeydownSpy, useSearchController } from './AppSearch.vue';
-import { sendSearch } from './search-service';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { Community } from '../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import { Game } from '../../../_common/game/game.model';
+import AppGameThumbnailImg from '../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
+import { User } from '../../../_common/user/user.model';
+import AppUserVerifiedTick from '../../../_common/user/verified-tick/verified-tick.vue';
+import type { LocalDbGame as LocalDbGameType } from '../client/local-db/game/game.model';
+import { LocalDbGame } from '../client/safe-exports';
+import { SearchKeydownSpy, useSearchController } from './AppSearch.vue';
+import { sendSearch } from './search-service';
 
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;
@@ -26,7 +26,7 @@ const selected = ref(0);
 const communities = ref<Community[]>([]);
 const games = ref<Game[]>([]);
 const users = ref<User[]>([]);
-const libraryGames = ref<LocalDbGame[]>([]);
+const libraryGames = ref<LocalDbGameType[]>([]);
 
 const isHidden = computed(() => isEmpty.value);
 
@@ -116,8 +116,8 @@ function selectActive() {
 			selectGame(item);
 		} else if (item instanceof User) {
 			selectUser(item);
-		} else if (LocalDbGameMod) {
-			if (item instanceof LocalDbGameMod) {
+		} else if (LocalDbGame) {
+			if (item instanceof LocalDbGame) {
 				selectLibraryGame(item);
 			}
 		}
@@ -151,7 +151,7 @@ function selectUser(user: User) {
 	});
 }
 
-function selectLibraryGame(localGame: LocalDbGame) {
+function selectLibraryGame(localGame: LocalDbGameType) {
 	router.push({
 		name: 'discover.games.view.overview',
 		params: { slug: localGame.slug, id: localGame.id + '' },

@@ -319,13 +319,6 @@ export default defineConfig(async configEnv => {
 			}),
 		},
 		build: {
-			...onlyInDesktopApp<Partial<ViteUserConfig['build']>>({
-				// This lets us use top-level awaits which allows us
-				// to use our conditional imports as if they were imported
-				// syncronously.
-				target: 'esnext',
-			}),
-
 			minify: false,
 
 			rollupOptions: {
