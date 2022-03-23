@@ -19,11 +19,9 @@ import { setClientLibraryStore } from './components/search/search-service';
 import { ClientLibraryStoreKey, createClientLibraryStore } from './store/client-library';
 import { router } from './views/index';
 import { AppStore } from './store';
-import { initSafeExportsForClient } from './components/client/safe-exports';
 
 export async function bootstrapClient(app: App, appStore: AppStore, commonStore: CommonStore) {
 	bootstrapCommonClient({ commonStore });
-	await initSafeExportsForClient(router);
 
 	const clientLibraryStore = createClientLibraryStore();
 	app.provide(ClientLibraryStoreKey, clientLibraryStore);

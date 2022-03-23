@@ -3,7 +3,7 @@ import { GamePlayModal } from '../_common/game/play-modal/play-modal.service';
 import { Registry } from '../_common/registry/registry.service';
 import { Scroll } from '../_common/scroll/scroll.service';
 import { createSidebarStore, SidebarStoreKey } from '../_common/sidebar/sidebar.store';
-import AppMain from './AppMain.vue';
+import { initSafeExportsForClient } from './components/client/safe-exports';
 import './main.styl';
 import { BannerStoreKey, createBannerStore } from './store/banner';
 import { AppStoreKey, createAppStore } from './store/index';
@@ -11,7 +11,11 @@ import { createLibraryStore, LibraryStoreKey } from './store/library';
 import { router } from './views/index';
 
 export async function createApp() {
-	const { app, commonStore } = await bootstrapCommon(AppMain, router);
+	const { app, commonStore } = await bootstrapCommon({
+		appComponentLoader: async () => (await import('./AppMain.vue')).default,
+		initSectionSafeExportsForClient: initSafeExportsForClient,
+		router,
+	});
 
 	const sidebarStore = createSidebarStore();
 	const libraryStore = createLibraryStore({ router });

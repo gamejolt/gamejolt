@@ -1,10 +1,11 @@
 import { bootstrapCommon } from '../_common/bootstrap';
-import App from './AppMain.vue';
 import './main.styl';
 import { createWidgetPackageStore, WidgetPackageStoreKey } from './store';
 
 export async function createApp() {
-	const { app } = await bootstrapCommon(App);
+	const { app } = await bootstrapCommon({
+		appComponentLoader: async () => (await import('./AppMain.vue')).default,
+	});
 
 	app.provide(WidgetPackageStoreKey, createWidgetPackageStore());
 

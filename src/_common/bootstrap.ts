@@ -1,10 +1,10 @@
-import { Component, createApp, createSSRApp } from 'vue';
+import { AsyncComponentLoader, Component, createApp, createSSRApp } from 'vue';
 import { Router } from 'vue-router';
 import { hijackLinks } from '../utils/router';
 import { initAnalytics, initAnalyticsRouter } from './analytics/analytics.service';
 import { vAppTrackEvent } from './analytics/track-event.directive';
 import AppButton from './button/AppButton.vue';
-import { initSafeExportsForClient } from './client/safe-exports';
+import { initSafeExportsForClient as initCommonSafeExportsForClient } from './client/safe-exports';
 import { ensureConfig } from './config/config.service';
 import { initConnectionService } from './connection/connection-service';
 import AppJolticon from './jolticon/AppJolticon.vue';
@@ -17,11 +17,19 @@ import { commonStore, CommonStoreKey } from './store/common-store';
 import { createThemeStore, ThemeStoreKey } from './theme/theme.store';
 import { initTranslations } from './translate/translate.service';
 
+export type BootstrapOptions<T = Component> = {
+	appComponentLoader: AsyncComponentLoader<T>;
+	initSectionSafeExportsForClient?: (router?: Router) => Promise<void>;
+	router?: Router;
+};
+
 /**
  * Bootstraps common services and returns a "createApp" function that our entry
  * point can call to get what it needs.
  */
-export async function bootstrapCommon(appComponent: Component, router?: Router) {
+export async function bootstrapCommon(options: BootstrapOptions) {
+	const router = options.router ?? null;
+
 	// Check to make sure our build config is correct.
 	if (GJ_BUILD_TYPE === 'development' && GJ_HAS_ROUTER !== !!router) {
 		throw new Error(
@@ -29,10 +37,19 @@ export async function bootstrapCommon(appComponent: Component, router?: Router) 
 		);
 	}
 
+	// Client safe exports have to be initialized before the app component is imported in,
+	// otherwise some components and services will not be available when building client.
+	// For this reason we HAVE TO lazily import the main app component. If we didn't, the main app
+	// component will get bundled into the main index.js chunk, and since imports are hoisted to the top,
+	// it means it'll attempt to use client export modules before they were actually initialized.
+	// Annoyingly enough, we cant conditionally import anything syncronously, which means
+	// we have to asyncronously import the main app component even in non client builds.
 	if (GJ_IS_DESKTOP_APP) {
-		await initSafeExportsForClient();
+		await initCommonSafeExportsForClient();
+		await options.initSectionSafeExportsForClient?.(options.router);
 	}
 
+	const appComponent = await options.appComponentLoader();
 	const app = import.meta.env.SSR ? createSSRApp(appComponent) : createApp(appComponent);
 
 	// Our global stores.
