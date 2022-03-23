@@ -24,6 +24,7 @@ import { FiresidePostCommunity } from './community/community.model';
 import { FiresidePostEmbed } from './embed/embed.model';
 import { FiresidePostLike } from './like/like-model';
 import { FiresidePostVideo } from './video/video-model';
+import { Background } from '../../background/background.model';
 
 interface FiresidePostPublishedPlatform {
 	created_resource_provider: string;
@@ -94,6 +95,8 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	// The feed no longer works with posts directly - we need the event item.
 	event_item?: EventItem;
 
+	background?: Background;
+
 	constructor(data: any = {}) {
 		super(data);
 
@@ -144,6 +147,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 		if (data.embeds) {
 			this.embeds = FiresidePostEmbed.populate(data.embeds);
+		}
+
+		if (data.background) {
+			this.background = new Background(data.background);
 		}
 
 		Registry.store('FiresidePost', this);

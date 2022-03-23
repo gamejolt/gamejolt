@@ -27,6 +27,7 @@ import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerControlsOverlay from '../../../../_common/sticker/controls-overlay/controls-overlay.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
+import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion.service';
 import { User } from '../../../../_common/user/user.model';
@@ -48,6 +49,7 @@ import AppPostControlsUserFollow from './user-follow/user-follow.vue';
 		AppStickerControlsOverlay,
 		AppCommentWidget: AppCommentWidgetLazy,
 		AppFiresidePostLikeWidget,
+		AppTheme,
 	},
 	directives: {
 		AppTooltip: vAppTooltip,
@@ -72,6 +74,9 @@ export default class AppPostControls extends Vue {
 
 	@Prop({ type: Boolean, required: false, default: false })
 	showComments!: boolean;
+
+	@Prop({ type: Boolean, required: false, default: false })
+	overlay!: boolean;
 
 	@Prop({ type: String, required: false, default: '' })
 	eventLabel!: string;
@@ -250,15 +255,16 @@ export default class AppPostControls extends Vue {
 </script>
 
 <template>
-	<div>
-		<AppStickerControlsOverlay end>
+	<AppTheme :force-dark="overlay">
+		<AppStickerControlsOverlay end :hide="overlay">
 			<div class="post-controls">
 				<div class="-row">
-					<div v-if="showUserControls" class="-row">
+					<div v-if="showUserControls" class="-row" :class="{ '-overlay-text': overlay }">
 						<AppFiresidePostLikeWidget
 							v-if="shouldShowLike"
 							:post="post"
 							:location="location"
+							:overlay="overlay"
 							trans
 							@change="setUserFollow"
 						/>
@@ -301,12 +307,17 @@ export default class AppPostControls extends Vue {
 							<AppButton
 								v-if="canPublish"
 								class="-inline-button"
+								:overlay="overlay"
 								primary
 								@click="publish()"
 							>
 								<AppTranslate>Publish</AppTranslate>
 							</AppButton>
-							<AppButton class="-inline-button" @click="openEdit()">
+							<AppButton
+								class="-inline-button"
+								:overlay="overlay"
+								@click="openEdit()"
+							>
 								<AppTranslate>Edit</AppTranslate>
 							</AppButton>
 
@@ -315,6 +326,7 @@ export default class AppPostControls extends Vue {
 
 						<AppPostControlsMore
 							:post="post"
+							:overlay="overlay"
 							@remove="emitPostRemove"
 							@feature="emitPostFeature"
 							@unfeature="emitPostUnfeature"
@@ -330,18 +342,24 @@ export default class AppPostControls extends Vue {
 					class="-row small"
 					:class="{ '-spacing-top': shouldShowEdit, tiny: Screen.isXs }"
 				>
-					<AppPostControlsStats :key="'stats'" class="text-muted" :post="post" />
+					<AppPostControlsStats
+						:key="'stats'"
+						:class="{ 'text-muted': !overlay }"
+						:overlay="overlay"
+						:post="post"
+					/>
 
 					<span v-if="shouldShowEdit && showUserControls" class="-extra">
 						<AppButton
 							v-if="canPublish"
 							class="-inline-button"
+							:overlay="overlay"
 							primary
 							@click="publish()"
 						>
 							<AppTranslate>Publish</AppTranslate>
 						</AppButton>
-						<AppButton class="-inline-button" @click="openEdit()">
+						<AppButton class="-inline-button" :overlay="overlay" @click="openEdit()">
 							<AppTranslate>Edit</AppTranslate>
 						</AppButton>
 					</span>
@@ -354,7 +372,7 @@ export default class AppPostControls extends Vue {
 			:should-show="isShowingFollow"
 			@close="onUserFollowDismissal"
 		/>
-	</div>
+	</AppTheme>
 </template>
 
 <style lang="stylus" scoped>
@@ -388,4 +406,9 @@ export default class AppPostControls extends Vue {
 
 		&-right
 			margin-right: 8px
+
+.-overlay-text
+	::v-deep(*)
+		color: white
+		text-shadow: black 1px 1px 4px
 </style>

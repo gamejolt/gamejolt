@@ -6,12 +6,14 @@ export default class AppStickerControlsOverlay extends Vue {
 	// Extends the overlay 4px past the content on the bottom,
 	// rather than being inset 4px on the bottom.
 	@Prop({ type: Boolean, default: false }) end!: boolean;
+
+	@Prop({ type: Boolean, default: false }) hide!: boolean;
 }
 </script>
 
 <template>
 	<div class="sticker-controls-overlay">
-		<div class="-overlay" :class="{ '-end': end }" />
+		<div v-if="!hide" class="-overlay" :class="{ '-end': end }" />
 		<slot />
 	</div>
 </template>

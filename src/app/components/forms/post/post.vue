@@ -21,16 +21,16 @@ import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormC
 import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { vAppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
 import {
-	BaseForm,
-	FormOnLoad,
-	FormOnSubmit,
-	FormOnSubmitError,
-	FormOnSubmitSuccess,
+BaseForm,
+FormOnLoad,
+FormOnSubmit,
+FormOnSubmitError,
+FormOnSubmitSuccess
 } from '../../../../_common/form-vue/form.service';
 import {
-	validateContentMaxLength,
-	validateContentNoActiveUploads,
-	validateContentRequired,
+validateContentMaxLength,
+validateContentNoActiveUploads,
+validateContentRequired
 } from '../../../../_common/form-vue/validators';
 import { GameVideo } from '../../../../_common/game/video/video.model';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
@@ -1696,4 +1696,5 @@ export default class FormPost
 
 			&-button
 				display: inline-block
+
 </style>
