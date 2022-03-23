@@ -41,7 +41,8 @@ export class NwBuilder {
 			main: 'chrome-extension://game-jolt-client/package/index.html#/',
 			domain: 'game-jolt-client',
 			window: {
-				icon: 'package/static-assets/client/icon-256x256.png',
+				// TODO(vue3) this path is probably wrong.
+				icon: 'package/client/icon-256x256.png',
 			},
 			// Needed on mac, and should only be done during actual build.
 			product_string: 'Game Jolt Client',

@@ -14,8 +14,7 @@ import { Screen } from '../../screen/screen-service';
 import { $gettext } from '../../translate/translate.service';
 import { Client } from '../client.service';
 
-const trayIcons = import.meta.globEager('./icon*.png');
-console.log('tray icons', trayIcons);
+const path = require('path') as typeof import('path');
 
 const isFocused = ref(false);
 const isMinimized = ref(false);
@@ -66,10 +65,11 @@ function createTray() {
 
 	tray.value = new nw.Tray({
 		title: 'Game Jolt Client',
-		// This has to be a relative path, hence the removal of the first /.
-		// TODO(vue3): check to make sure this still works
-		// Its be broken when building since no src directory (might be assets)
-		icon: 'src/' + trayIcons[`./icon${Screen.isHiDpi ? '-2x' : ''}.png`].default.substr(1),
+		icon: path.resolve(
+			Client.nwStaticAssetsDir,
+			'client',
+			`tray-icon${Screen.isHiDpi ? '-2x' : ''}.png`
+		),
 	});
 
 	Navigate.registerDestructor(() => {

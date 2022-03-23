@@ -82,6 +82,35 @@ export class Client {
 		win.setProgressBar(-1);
 	}
 
+	// Get the directory nwjs is running from.
+	static get nwPackageDir() {
+		// nwPackageDir even makes sense while watching,
+		// there are no output files being written out.
+		if (GJ_IS_WATCHING) {
+			return null;
+		}
+
+		// Path on darwin is different. same case as in joltronDir.
+		// I'll do this when i set up the mac vm again.
+		if (os.type() === 'Darwin') {
+			throw new Error('vue3 todo forget me not');
+		}
+
+		return (nw.App as any).startPath as string;
+	}
+
+	static get nwStaticAssetsDir() {
+		if (GJ_IS_WATCHING) {
+			return path.resolve(process.cwd(), 'src', 'static-assets');
+		}
+
+		const dir = this.nwPackageDir;
+		if (dir === null) {
+			throw new Error('nwPackageDir is null');
+		}
+		return dir;
+	}
+
 	// Gets the directory the joltron binary is running from.
 	static get joltronDir() {
 		if (os.type() === 'Darwin') {
