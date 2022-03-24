@@ -149,7 +149,7 @@
 		"min_width": 400,
 		"position": "center",
 		"frame": true,
-		"icon": "src/static-assets/client/icon-256x256.png"
+		"icon": "src/static-assets/client-icon-256x256.png"
 	},
 	"webkit": {
 		"plugin": true

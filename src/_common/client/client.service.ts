@@ -83,7 +83,7 @@ export class Client {
 	}
 
 	// Get the directory nwjs is running from.
-	static get nwPackageDir() {
+	static get nwRootDir() {
 		// nwPackageDir even makes sense while watching,
 		// there are no output files being written out.
 		if (GJ_IS_WATCHING) {
@@ -96,7 +96,18 @@ export class Client {
 			throw new Error('vue3 todo forget me not');
 		}
 
-		return (nw.App as any).startPath as string;
+		// NW documentation straight up lies. startPath is the directory from which you launched the app,
+		// not the directory where the app is in/starts from.
+		// e.g. starting it up as ./build/GameJoltClient.exe will return . (the parent folder of build) instead of ./build.
+		// return (nw.App as any).startPath as string;
+
+		// In the same place where the docs lied about startPath, they also mention:
+		// "The application will change the current directory to where the package files reside after start."
+		// Its unclear whether they mean the package.nw files or the directory that contains the main nw executable.
+		// It looks like cwd does indeed change tho, so whatever the hell nwjs is doing it should at least
+		// be stable.
+
+		return path.resolve(process.cwd());
 	}
 
 	static get nwStaticAssetsDir() {
@@ -104,14 +115,15 @@ export class Client {
 			return path.resolve(process.cwd(), 'src', 'static-assets');
 		}
 
-		const dir = this.nwPackageDir;
+		const dir = this.nwRootDir;
 		if (dir === null) {
 			throw new Error('nwPackageDir is null');
 		}
-		return dir;
+		return path.join(dir, 'package');
 	}
 
 	// Gets the directory the joltron binary is running from.
+	// TODO(vue3) probably broken nw.App.startPath is a lie.
 	static get joltronDir() {
 		if (os.type() === 'Darwin') {
 			// On mac nw.App.startPath is apparantly unreliable, but process.cwd() always changes to app.nw folder.

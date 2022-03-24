@@ -63,12 +63,14 @@ function createTray() {
 		return;
 	}
 
+	console.log(Client.nwStaticAssetsDir);
+	console.log('tray icons');
+
 	tray.value = new nw.Tray({
 		title: 'Game Jolt Client',
 		icon: path.resolve(
 			Client.nwStaticAssetsDir,
-			'client',
-			`tray-icon${Screen.isHiDpi ? '-2x' : ''}.png`
+			`client-tray-icon${Screen.isHiDpi ? '-2x' : ''}.png`
 		),
 	});
 

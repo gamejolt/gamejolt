@@ -20,7 +20,7 @@ export class ClientShortcut {
 
 		return Shortcut.create(
 			path.join(Client.joltronDir, 'game-jolt-client'),
-			path.resolve(Client.nwStaticAssetsDir, 'client', 'icon-256x256.png')
+			path.resolve(Client.nwStaticAssetsDir, 'client-icon-256x256.png')
 		);
 	}
 
