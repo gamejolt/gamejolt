@@ -255,55 +255,106 @@ export default class AppPostControls extends Vue {
 </script>
 
 <template>
-	<AppTheme :force-dark="overlay">
-		<AppStickerControlsOverlay end :hide="overlay">
-			<div class="post-controls">
-				<div class="-row">
-					<div v-if="showUserControls" class="-row" :class="{ '-overlay-text': overlay }">
-						<AppFiresidePostLikeWidget
-							v-if="shouldShowLike"
-							:post="post"
-							:location="location"
-							:overlay="overlay"
-							trans
-							@change="setUserFollow"
-						/>
-
-						<div v-if="shouldShowCommentsButton" class="-inline-button">
-							<AppButton
-								v-app-tooltip="$gettext('View Comments')"
-								icon="comment"
-								circle
+	<div>
+		<AppTheme :force-dark="overlay">
+			<AppStickerControlsOverlay end :hide="overlay">
+				<div class="post-controls">
+					<div class="-row">
+						<div
+							v-if="showUserControls"
+							class="-row"
+							:class="{ '-overlay-text': overlay }"
+						>
+							<AppFiresidePostLikeWidget
+								v-if="shouldShowLike"
+								:post="post"
+								:location="location"
+								:overlay="!!post.user_like && overlay"
 								trans
-								@click="openComments()"
+								@change="setUserFollow"
 							/>
 
-							<a
-								v-if="commentsCount > 0"
-								class="blip"
-								:class="{ mobile: Screen.isXs }"
-								@click="openComments()"
-							>
-								{{ formatFuzzynumber(commentsCount) }}
-							</a>
-							<span v-else class="blip-missing" />
-						</div>
+							<div v-if="shouldShowCommentsButton" class="-inline-button">
+								<AppButton
+									v-app-tooltip="$gettext('View Comments')"
+									icon="comment-filled"
+									circle
+									trans
+									@click="openComments()"
+								/>
 
-						<AppButton
-							v-if="shouldShowStickersButton"
-							v-app-tooltip="$gettext('Place Sticker')"
-							v-app-auth-required
-							icon="sticker"
-							circle
-							trans
-							@click="placeSticker()"
+								<a
+									v-if="commentsCount > 0"
+									class="blip"
+									:class="{ mobile: Screen.isXs }"
+									@click="openComments()"
+								>
+									{{ formatFuzzynumber(commentsCount) }}
+								</a>
+								<span v-else class="blip-missing" />
+							</div>
+
+							<AppButton
+								v-if="shouldShowStickersButton"
+								v-app-tooltip="$gettext('Place Sticker')"
+								v-app-auth-required
+								icon="sticker-filled"
+								circle
+								trans
+								@click="placeSticker()"
+							/>
+						</div>
+						<div v-else-if="post.is_processing" class="-row fill-offset -processing">
+							<AppPostControlsSaveProgress :post="post" />
+						</div>
+						<span v-if="shouldShowExtra" class="-extra">
+							<span v-if="shouldShowEdit && !showUserControls" class="-extra">
+								<AppButton
+									v-if="canPublish"
+									class="-inline-button"
+									:overlay="overlay"
+									primary
+									@click="publish()"
+								>
+									<AppTranslate>Publish</AppTranslate>
+								</AppButton>
+								<AppButton
+									class="-inline-button"
+									:overlay="overlay"
+									@click="openEdit()"
+								>
+									<AppTranslate>Edit</AppTranslate>
+								</AppButton>
+
+								<span class="-spacing-right" />
+							</span>
+
+							<AppPostControlsMore
+								:post="post"
+								:overlay="overlay"
+								@remove="emitPostRemove"
+								@feature="emitPostFeature"
+								@unfeature="emitPostUnfeature"
+								@move-channel="emitPostMoveChannel"
+								@reject="emitPostReject"
+								@pin="emitPostPin"
+								@unpin="emitPostUnpin"
+							/>
+						</span>
+					</div>
+
+					<div
+						class="-row small"
+						:class="{ '-spacing-top': shouldShowEdit, tiny: Screen.isXs }"
+					>
+						<AppPostControlsStats
+							:key="'stats'"
+							:class="{ 'text-muted': !overlay }"
+							:overlay="overlay"
+							:post="post"
 						/>
-					</div>
-					<div v-else-if="post.is_processing" class="-row fill-offset -processing">
-						<AppPostControlsSaveProgress :post="post" />
-					</div>
-					<span v-if="shouldShowExtra" class="-extra">
-						<span v-if="shouldShowEdit && !showUserControls" class="-extra">
+
+						<span v-if="shouldShowEdit && showUserControls" class="-extra">
 							<AppButton
 								v-if="canPublish"
 								class="-inline-button"
@@ -320,59 +371,19 @@ export default class AppPostControls extends Vue {
 							>
 								<AppTranslate>Edit</AppTranslate>
 							</AppButton>
-
-							<span class="-spacing-right" />
 						</span>
-
-						<AppPostControlsMore
-							:post="post"
-							:overlay="overlay"
-							@remove="emitPostRemove"
-							@feature="emitPostFeature"
-							@unfeature="emitPostUnfeature"
-							@move-channel="emitPostMoveChannel"
-							@reject="emitPostReject"
-							@pin="emitPostPin"
-							@unpin="emitPostUnpin"
-						/>
-					</span>
+					</div>
 				</div>
-
-				<div
-					class="-row small"
-					:class="{ '-spacing-top': shouldShowEdit, tiny: Screen.isXs }"
-				>
-					<AppPostControlsStats
-						:key="'stats'"
-						:class="{ 'text-muted': !overlay }"
-						:overlay="overlay"
-						:post="post"
-					/>
-
-					<span v-if="shouldShowEdit && showUserControls" class="-extra">
-						<AppButton
-							v-if="canPublish"
-							class="-inline-button"
-							:overlay="overlay"
-							primary
-							@click="publish()"
-						>
-							<AppTranslate>Publish</AppTranslate>
-						</AppButton>
-						<AppButton class="-inline-button" :overlay="overlay" @click="openEdit()">
-							<AppTranslate>Edit</AppTranslate>
-						</AppButton>
-					</span>
-				</div>
-			</div>
-		</AppStickerControlsOverlay>
+			</AppStickerControlsOverlay>
+		</AppTheme>
 
 		<AppPostControlsUserFollow
+			:class="{ '-overlay-box': overlay }"
 			:post="post"
 			:should-show="isShowingFollow"
 			@close="onUserFollowDismissal"
 		/>
-	</AppTheme>
+	</div>
 </template>
 
 <style lang="stylus" scoped>
@@ -411,4 +422,7 @@ export default class AppPostControls extends Vue {
 	::v-deep(*)
 		color: white
 		text-shadow: black 1px 1px 4px
+
+.-overlay-box
+	elevate-1()
 </style>

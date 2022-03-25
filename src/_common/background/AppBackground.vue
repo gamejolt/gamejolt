@@ -6,8 +6,9 @@ import { Background } from './background.model';
 
 const props = defineProps({
 	background: {
-		required: true,
-		type: Object as PropType<Background | null>,
+		required: false,
+		default: null,
+		type: Object as PropType<Background>,
 	},
 	darken: {
 		default: false,
@@ -17,30 +18,12 @@ const props = defineProps({
 		default: false,
 		type: Boolean,
 	},
-	parallax: {
-		default: false,
-		type: Boolean,
-	},
 });
 
 const mediaItem = computed(() => props.background?.media_item);
 const hasMedia = computed(() => !!mediaItem.value);
 
 const isLoaded = ref(false);
-const backgroundImage = computed(() => {
-	if (!props.background) {
-		return '';
-	}
-
-	let result: string[] = [];
-	if (props.darken) {
-		result.push('linear-gradient(to bottom, rgba(0,0,0,0.025), rgba(0,0,0,0.05))');
-	}
-	if (props.background.backgroundImage) {
-		result.push(props.background.backgroundImage);
-	}
-	return result.join();
-});
 
 if (!import.meta.env.SSR) {
 	watch(
@@ -64,18 +47,19 @@ if (!import.meta.env.SSR) {
 			v-if="hasMedia"
 			:media-item="mediaItem"
 			class="-backdrop"
-			:class="{ '-bleed': bleed, '-bleed-parallax': parallax }"
+			:class="{ '-bleed': bleed }"
 		>
 			<template v-if="background">
 				<div
-					class="-image anim-fade-in"
+					class="-stretch anim-fade-in"
 					:style="{
-						'background-image': backgroundImage,
+						'background-image': background.backgroundImage,
 						'background-repeat': background.backgroundRepeat,
 						'background-size': background.backgroundSize,
+						'background-position': background.backgroundPosition,
 					}"
 				/>
-				<div :style="{ background: 'rgba(0, 0, 0, 0.15)' }" />
+				<div v-if="darken" class="-stretch -fade anim-fade-in" />
 			</template>
 		</AppMediaItemBackdrop>
 
@@ -88,7 +72,6 @@ if (!import.meta.env.SSR) {
 <style lang="stylus" scoped>
 .-background
 	position: relative
-
 
 .-backdrop
 	--background-pos: 0
@@ -107,12 +90,18 @@ if (!import.meta.env.SSR) {
 	@media $media-md-up
 		--background-pos: -($grid-gutter-width / 2 + $border-width-base)
 
-.-image
+.-stretch
 	position: absolute
 	left: 0
 	top: 0
 	right: 0
 	bottom: 0
+
+.-fade
+	background-image: linear-gradient(to bottom, rgba(0,0,0,0.025), rgba(0,0,0,0.15))
+	background-repeat: no-repeat
+	background-size: cover
+	background-position: center
 
 .-inner
 	z-index: 1

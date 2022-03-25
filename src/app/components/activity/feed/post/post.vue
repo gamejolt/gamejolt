@@ -12,6 +12,7 @@ import AppContentViewer from '../../../../../_common/content/content-viewer/cont
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
+import AppPostCard from '../../../../../_common/fireside/post/card/AppPostCard.vue';
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
@@ -72,7 +73,7 @@ import AppActivityFeedPostTime from './time/time.vue';
 		AppFiresidePostEmbed,
 		AppMediaItemBackdrop,
 		AppBackground,
-		// AppTheme,
+		AppPostCard,
 	},
 	directives: {
 		AppObserveDimensions: vAppObserveDimensions,
@@ -385,7 +386,7 @@ export default class AppActivityFeedPost extends Vue {
 			@click.capture="onClickCapture"
 			@click="onClick"
 		>
-			<AppBackground :background="post.background" bleed :darken="overlay">
+			<AppBackground :background="post.background" :darken="overlay" bleed>
 				<div v-if="user" class="-header">
 					<div class="-header-content">
 						<AppUserCardHover :user="user" :disabled="!feed.shouldShowUserCards">
@@ -478,7 +479,7 @@ export default class AppActivityFeedPost extends Vue {
 
 				<div ref="sticker-scroll" />
 
-				<div :class="{ '-post-lead-card': overlay }">
+				<div :class="{ '-overlay-post-lead': overlay }">
 					<AppStickerTarget
 						:controller="stickerTargetController"
 						:disabled="!canPlaceSticker"
@@ -500,27 +501,30 @@ export default class AppActivityFeedPost extends Vue {
 							/>
 						</AppFadeCollapse>
 					</AppStickerTarget>
+
+					<a v-if="canToggleLead" class="hidden-text-expander" @click="toggleLead()" />
+
+					<AppStickerControlsOverlay>
+						<AppFiresidePostEmbed
+							v-for="embed of post.embeds"
+							:key="embed.id"
+							:embed="embed"
+						/>
+
+						<AppActivityFeedPostText
+							v-if="post.has_article"
+							:item="item"
+							:post="post"
+						/>
+
+						<div v-if="post.hasPoll" class="-poll" @click.stop>
+							<AppPollVoting :poll="post.poll" :game="post.game" :user="post.user" />
+						</div>
+					</AppStickerControlsOverlay>
 				</div>
 
-				<a v-if="canToggleLead" class="hidden-text-expander" @click="toggleLead()" />
-
+				<!-- TODO(backgrounds) -->
 				<AppStickerControlsOverlay :hide="!!post.background">
-					<!-- TODO(backgrounds) -->
-					<AppFiresidePostEmbed
-						v-for="embed of post.embeds"
-						:key="embed.id"
-						:embed="embed"
-					/>
-
-					<!-- TODO(backgrounds) -->
-					<AppActivityFeedPostText v-if="post.has_article" :item="item" :post="post" />
-
-					<!-- TODO(backgrounds) -->
-					<div v-if="post.hasPoll" class="-poll" @click.stop>
-						<AppPollVoting :poll="post.poll" :game="post.game" :user="post.user" />
-					</div>
-
-					<!-- TODO(backgrounds) -->
 					<div
 						v-if="post.sticker_counts.length"
 						class="-reactions-container -controls-buffer"
@@ -573,24 +577,27 @@ export default class AppActivityFeedPost extends Vue {
 
 <style lang="stylus" src="./post.styl" scoped></style>
 <style lang="stylus" scoped>
+.-container
+	--overlay-lead-padding: ($grid-gutter-width-xs / 2)
+
+	@media $media-md-up
+		--overlay-lead-padding: ($grid-gutter-width / 2)
+
 .-overlay-text
 	color: white
 	text-shadow: black 1px 1px 4px
 
 .-overlay-box > *
-	elevate-1();
+	elevate-1()
 	// box-shadow: black 1px 1px 4px
 
-.-post-lead-card
-	--lead-card-padding: ($grid-gutter-width-xs / 2)
 
-	@media $media-md-up
-		--lead-card-padding: ($grid-gutter-width / 2)
 
+.-overlay-post-lead
 	rounded-corners-lg()
 	change-bg('bg')
 	elevate-1()
 	overflow: hidden
-	padding: 0 var(--lead-card-padding)
-	margin: var(--lead-card-padding) 0
+	padding: 0 var(--overlay-lead-padding)
+	margin: var(--overlay-lead-padding) 0
 </style>
