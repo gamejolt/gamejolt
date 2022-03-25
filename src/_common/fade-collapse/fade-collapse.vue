@@ -29,6 +29,9 @@ export default class AppFadeCollapse extends Vue {
 	@Prop({ type: Boolean, default: false, required: false })
 	ignoreThreshold!: boolean;
 
+	@Prop({ type: Boolean, default: false, required: false })
+	asMask!: boolean;
+
 	@Emit('require-change')
 	emitRequireChange(_isRequired: boolean) {}
 
@@ -159,10 +162,11 @@ export default class AppFadeCollapse extends Vue {
 			'-sm': size === 'sm',
 			'-animate': animate,
 			'fade-collapse-collapsed': isCollapsed,
+			'-fade-mask': isCollapsed && asMask,
 		}"
 		@transitionend="afterTransition"
 	>
-		<div class="-fade" @click="fadeClick($event)" />
+		<div class="-fade" :class="{ '-fade-color': !asMask }" @click="fadeClick($event)" />
 		<slot />
 	</div>
 </template>

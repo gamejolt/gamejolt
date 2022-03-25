@@ -2,6 +2,7 @@
 import { computed, nextTick, onMounted, PropType, ref, toRefs, useSlots, watch } from 'vue';
 import { RouterLink } from 'vue-router';
 import { PostOpenSource, trackPostOpen } from '../../../analytics/analytics.service';
+import AppBackground from '../../../background/AppBackground.vue';
 import { ContentFocus } from '../../../content-focus/content-focus.service';
 import AppContentViewer from '../../../content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../environment/environment.service';
@@ -52,6 +53,7 @@ const { post, source, videoContext, withUser } = toRefs(props);
 const slots = useSlots();
 
 const root = ref<HTMLElement>();
+const message = ref<HTMLElement | undefined>();
 const cardElem = ref<HTMLElement>();
 
 const videoController = ref<VideoPlayerController>();
@@ -94,6 +96,12 @@ const video = computed(() => {
 	return post.value?.videos[0].media.find(i => i.type == MediaItem.TYPE_TRANSCODED_VIDEO_CARD);
 });
 
+const background = computed(() => {
+	return post.value.background;
+});
+
+const overlay = computed(() => !!background.value || !!mediaItem.value);
+
 const votedOnPoll = computed(() => {
 	const poll = post.value?.poll;
 	for (let i = 0; i < (poll?.items.length ?? 0); i++) {
@@ -128,8 +136,13 @@ async function calcData() {
 	cardWidth.value = newCardWidth + 'px';
 	cardHeight.value = newCardHeight + 'px';
 
+	let messageHeight = message.value?.offsetHeight;
+	if (messageHeight && overlay.value) {
+		messageHeight -= 16;
+	}
+
 	// Add in some space for the details on the bottom.
-	leadHeight.value = newCardHeight - 40;
+	leadHeight.value = messageHeight ?? newCardHeight - 40;
 
 	const media = mediaItem.value;
 	if (!media) {
@@ -238,7 +251,12 @@ function _initVideoController() {
 					@click="trackPostOpen({ source })"
 				/>
 
-				<div ref="cardElem" class="-inner" :class="{ '-blur': hasOverlayContent }">
+				<AppBackground
+					ref="cardElem"
+					class="-background"
+					:class="{ '-blur': hasOverlayContent }"
+					:background="background"
+				>
 					<template v-if="!!mediaItem">
 						<div class="-inner-media">
 							<AppMediaItemBackdrop class="-backdrop" :media-item="mediaItem">
@@ -266,21 +284,26 @@ function _initVideoController() {
 								/>
 							</template>
 						</div>
-						<div class="-inner-gradient" />
+						<div v-if="!!mediaItem" class="-inner-gradient" />
 					</template>
 
 					<template v-else>
-						<AppFadeCollapse
-							class="-inner-message"
-							:collapse-height="leadHeight"
-							ignore-threshold
-							size="sm"
-						>
-							<AppContentViewer :source="post.lead_content" />
-						</AppFadeCollapse>
+						<div v-if="!!background" class="-inner-gradient" />
+						<div ref="message" class="-inner-message">
+							<div :class="{ '-overlay-message': overlay }">
+								<AppFadeCollapse
+									:collapse-height="leadHeight"
+									ignore-threshold
+									size="lg"
+									as-mask
+								>
+									<AppContentViewer :source="post.lead_content" />
+								</AppFadeCollapse>
+							</div>
+						</div>
 					</template>
 
-					<div class="-details" :class="{ '-light': !!mediaItem }">
+					<div class="-details" :class="{ '-light': overlay }">
 						<template v-if="withUser">
 							<AppUserAvatar class="-details-user-avatar" :user="post.user" />
 							<a class="-details-user-name" :href="userLink">
@@ -310,7 +333,7 @@ function _initVideoController() {
 							{{ formatFuzzynumber(post.like_count) }}
 						</span>
 					</div>
-				</div>
+				</AppBackground>
 			</AppScrollInview>
 		</AppResponsiveDimensions>
 	</div>
@@ -349,6 +372,11 @@ $-padding = 8px
 .-blur
 	filter: blur(4px)
 
+.-background
+	width: 100%
+	height: 100%
+	position: relative
+
 .-inner
 	&
 	&-media
@@ -375,10 +403,22 @@ $-padding = 8px
 		left: $-padding
 		top: $-padding
 		right: $-padding
-		bottom: $-padding
+		bottom: ($-padding * 2) + 20
 
 		::v-deep(.fireside-post-lead-content)
-			font-size: ceil($font-size-base * 1.1)
+			font-size: ceil($font-size-small * 1.1)
+
+.-overlay-message
+	change-bg('bg')
+	elevate-1()
+	border-radius: 8px
+	padding: $-padding
+	max-height: 100%
+
+
+	::v-deep(.fireside-post-lead-content)
+		color: var(--theme-fg)
+		font-size: $font-size-small
 
 .-light
 	&
