@@ -101,7 +101,7 @@ if (!import.meta.env.SSR) {
 	background-image: linear-gradient(to bottom, rgba(0,0,0,0.025), rgba(0,0,0,0.15))
 	background-repeat: no-repeat
 	background-size: cover
-	background-position: center
+	background-position: top
 
 .-inner
 	z-index: 1

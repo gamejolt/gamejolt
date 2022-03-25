@@ -63,7 +63,7 @@ export class Background extends Model {
 	}
 
 	get backgroundPosition() {
-		return 'center';
+		return 'top';
 	}
 }
 
