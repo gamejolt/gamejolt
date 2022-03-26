@@ -42,7 +42,7 @@ const gameUrl = computed(() => game.value?.getUrl());
 
 const shouldShowFollow = computed(() => {
 	// Don't show follow for game posts. Only for user posts.
-	if (!feed.value?.shouldShowFollow || props.post.game) {
+	if ((feed.value && !feed.value.shouldShowFollow) || props.post.game) {
 		return false;
 	}
 

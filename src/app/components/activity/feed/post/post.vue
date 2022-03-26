@@ -435,7 +435,6 @@ export default class AppActivityFeedPost extends Vue {
 					</AppStickerControlsOverlay>
 				</AppActivityFeedPostContent>
 
-				<!-- TODO(backgrounds) -->
 				<AppStickerControlsOverlay :hide="!!post.background">
 					<div
 						v-if="post.sticker_counts.length"
@@ -448,7 +447,6 @@ export default class AppActivityFeedPost extends Vue {
 						/>
 					</div>
 
-					<!-- TODO(backgrounds) -->
 					<AppScrollScroller
 						v-if="shouldShowCommunities"
 						class="-communities -controls-buffer"

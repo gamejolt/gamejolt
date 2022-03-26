@@ -154,10 +154,6 @@ export default class AppPostPage extends Vue {
 		return this.post.background;
 	}
 
-	get overlay() {
-		return !!this.background;
-	}
-
 	get shareCardOnSide() {
 		trackExperimentEngagement(configPostShareSide);
 		return configPostShareSide.value;
@@ -242,47 +238,45 @@ export default class AppPostPage extends Vue {
 		class="-section section-thin"
 		:class="{ '-sans-padding-top': !!background }"
 	>
-		<template v-if="overlay">
-			<div v-if="video" class="container-xl">
-				<div class="full-bleed-xs">
-					<template v-if="video.provider === 'gamejolt'">
-						<AppVideoPlayer
-							v-if="!video.is_processing && video.posterMediaItem"
-							context="page"
-							:media-item="video.posterMediaItem"
-							:manifests="video.manifestSources"
-							:view-count="video.view_count"
-							:start-time="videoStartTime"
-							autoplay
-							show-video-stats
-							@play="onVideoPlay"
-						/>
-						<template v-else>
-							<AppVideoProcessingProgress
-								:post="post"
-								@complete="onVideoProcessingComplete"
-							/>
-						</template>
-					</template>
-				</div>
-			</div>
-			<AppBackground
-				v-else-if="background"
-				class="-background-wrapper"
-				:background="background"
-				darken
-			>
-				<AppPageContainer xl>
-					<AppSpacer :scale="4" vertical />
-
-					<AppActivityFeedPostHeader :post="post" show-date />
-					<AppActivityFeedPostContent
-						:post="post"
-						:sticker-target-controller="stickerTargetController"
+		<div v-if="video" class="container-xl">
+			<div class="full-bleed-xs">
+				<template v-if="video.provider === 'gamejolt'">
+					<AppVideoPlayer
+						v-if="!video.is_processing && video.posterMediaItem"
+						context="page"
+						:media-item="video.posterMediaItem"
+						:manifests="video.manifestSources"
+						:view-count="video.view_count"
+						:start-time="videoStartTime"
+						autoplay
+						show-video-stats
+						@play="onVideoPlay"
 					/>
-				</AppPageContainer>
-			</AppBackground>
-		</template>
+					<template v-else>
+						<AppVideoProcessingProgress
+							:post="post"
+							@complete="onVideoProcessingComplete"
+						/>
+					</template>
+				</template>
+			</div>
+		</div>
+		<AppBackground
+			v-else-if="background"
+			class="-background-wrapper"
+			:background="background"
+			darken
+		>
+			<AppPageContainer xl>
+				<AppSpacer :scale="4" vertical />
+
+				<AppActivityFeedPostHeader :post="post" show-date />
+				<AppActivityFeedPostContent
+					:post="post"
+					:sticker-target-controller="stickerTargetController"
+				/>
+			</AppPageContainer>
+		</AppBackground>
 
 		<AppPageContainer xl>
 			<template #default>
