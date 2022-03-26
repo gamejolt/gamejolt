@@ -26,7 +26,7 @@
 
 .-header
 	display: flex
-	align-items: flex-start
+	align-items: center
 
 	&-avatar
 		change-bg('bg-subtle')
@@ -69,16 +69,14 @@
 	&-meta
 		flex: none
 		display: flex
-		align-items: flex-end
-		flex-direction: column
+		align-items: flex-center
+		flex-direction: row
+		grid-gap: 8px
 		margin-left: $-item-padding-xs
 		line-height: $line-height-computed
 
 		@media $media-sm-up
 			margin-left: $-item-padding
-
-		&-follow
-			margin-bottom: 5px
 
 .fireside-post-lead
 	margin-top: $-item-padding-xs-v
@@ -96,3 +94,24 @@
 
 .-communities
 	white-space: nowrap
+
+.-container-theme
+	--overlay-lead-padding: ($grid-gutter-width-xs / 2)
+
+	@media $media-md-up
+		--overlay-lead-padding: ($grid-gutter-width / 2)
+
+.-overlay-text
+	color: white
+	text-shadow: black 1px 1px 4px
+
+.-overlay-box > *
+	elevate-1()
+
+.-overlay-post-lead
+	rounded-corners-lg()
+	change-bg('bg')
+	elevate-1()
+	overflow: hidden
+	padding: 0 var(--overlay-lead-padding)
+	margin: var(--overlay-lead-padding) 0

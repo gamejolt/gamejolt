@@ -46,6 +46,8 @@ import AppActivityFeedPostMedia from '../post/media/media.vue';
 import AppActivityFeedPostText from '../post/text/text.vue';
 import AppActivityFeedPostVideo from '../post/video/video.vue';
 import { ActivityFeedInterfaceKey, ActivityFeedKey, ActivityFeedView } from '../view';
+import AppActivityFeedPostContent from './AppActivityFeedPostContent.vue';
+import AppActivityFeedPostHeader from './AppActivityFeedPostHeader.vue';
 import AppActivityFeedPostBlocked from './blocked/blocked.vue';
 import AppActivityFeedPostTime from './time/time.vue';
 
@@ -74,6 +76,8 @@ import AppActivityFeedPostTime from './time/time.vue';
 		AppMediaItemBackdrop,
 		AppBackground,
 		AppPostCard,
+		AppActivityFeedPostHeader,
+		AppActivityFeedPostContent,
 	},
 	directives: {
 		AppObserveDimensions: vAppObserveDimensions,
@@ -371,7 +375,7 @@ export default class AppActivityFeedPost extends Vue {
 </script>
 
 <template>
-	<div v-app-observe-dimensions="onResize" class="-container">
+	<div v-app-observe-dimensions="onResize" class="-container -container-theme">
 		<AppActivityFeedPostBlocked
 			v-if="shouldBlock"
 			:username="user.username"
@@ -387,81 +391,13 @@ export default class AppActivityFeedPost extends Vue {
 			@click="onClick"
 		>
 			<AppBackground :background="post.background" :darken="overlay" bleed>
-				<div v-if="user" class="-header">
-					<div class="-header-content">
-						<AppUserCardHover :user="user" :disabled="!feed.shouldShowUserCards">
-							<div class="-header-avatar">
-								<div class="-header-avatar-inner">
-									<AppUserAvatar :user="user" />
-								</div>
-							</div>
-						</AppUserCardHover>
-
-						<div class="-header-byline">
-							<div class="-header-byline-name">
-								<strong>
-									<router-link
-										class="link-unstyled"
-										:class="{ '-overlay-text': overlay }"
-										:to="{
-											name: 'profile.overview',
-											params: { username: user.username },
-										}"
-									>
-										{{ user.display_name }}
-										<AppUserVerifiedTick :user="user" />
-									</router-link>
-								</strong>
-
-								<small class="text-muted" :class="{ '-overlay-text': overlay }">
-									<router-link
-										class="link-unstyled"
-										:to="{
-											name: 'profile.overview',
-											params: { username: user.username },
-										}"
-									>
-										@{{ user.username }}
-									</router-link>
-								</small>
-							</div>
-
-							<div v-if="game && !feed.hideGameInfo" class="-header-byline-game">
-								<strong class="text-muted" :class="{ '-overlay-text': overlay }">
-									<router-link :to="gameUrl" class="link-unstyled">
-										{{ game.title }}
-									</router-link>
-								</strong>
-							</div>
-						</div>
-					</div>
-					<div
-						class="-header-meta small text-muted"
-						:class="{ '-overlay-text': overlay }"
-					>
-						<AppUserFollowWidget
-							v-if="shouldShowFollow"
-							class="-header-meta-follow"
-							:user="user"
-							:sm="Screen.isXs"
-							hide-count
-							location="feed"
-						/>
-
-						<span>
-							<span v-if="shouldShowIsPinned" class="tag">
-								<AppJolticon icon="thumbtack" />
-								<AppTranslate>Pinned</AppTranslate>
-							</span>
-							{{ ' ' }}
-							<AppActivityFeedPostTime
-								v-if="shouldShowDate"
-								:post="post"
-								:link="linkResolved"
-							/>
-						</span>
-					</div>
-				</div>
+				<AppActivityFeedPostHeader
+					:post="post"
+					:feed="feed"
+					:show-pinned="shouldShowIsPinned"
+					:show-date="shouldShowDate"
+					:date-link="linkResolved"
+				/>
 
 				<AppActivityFeedPostVideo
 					v-if="post.hasVideo"
@@ -477,33 +413,11 @@ export default class AppActivityFeedPost extends Vue {
 					:can-place-sticker="canPlaceSticker"
 				/>
 
-				<div ref="sticker-scroll" />
-
-				<div :class="{ '-overlay-post-lead': overlay }">
-					<AppStickerTarget
-						:controller="stickerTargetController"
-						:disabled="!canPlaceSticker"
-					>
-						<!--
-					This shouldn't ever really show a collapser. It's for the jokers that think it would
-					be fun to make a post with a bunch of new lines.
-					-->
-						<AppFadeCollapse
-							:collapse-height="400"
-							:is-open="isLeadOpen"
-							:animate="false"
-							@require-change="canToggleLeadChanged"
-						>
-							<AppContentViewer
-								class="fireside-post-lead"
-								:source="post.lead_content"
-								:display-rules="displayRules"
-							/>
-						</AppFadeCollapse>
-					</AppStickerTarget>
-
-					<a v-if="canToggleLead" class="hidden-text-expander" @click="toggleLead()" />
-
+				<AppActivityFeedPostContent
+					:post="post"
+					:sticker-target-controller="stickerTargetController"
+					truncate-links
+				>
 					<AppStickerControlsOverlay>
 						<AppFiresidePostEmbed
 							v-for="embed of post.embeds"
@@ -521,7 +435,7 @@ export default class AppActivityFeedPost extends Vue {
 							<AppPollVoting :poll="post.poll" :game="post.game" :user="post.user" />
 						</div>
 					</AppStickerControlsOverlay>
-				</div>
+				</AppActivityFeedPostContent>
 
 				<!-- TODO(backgrounds) -->
 				<AppStickerControlsOverlay :hide="!!post.background">
@@ -576,28 +490,3 @@ export default class AppActivityFeedPost extends Vue {
 </template>
 
 <style lang="stylus" src="./post.styl" scoped></style>
-<style lang="stylus" scoped>
-.-container
-	--overlay-lead-padding: ($grid-gutter-width-xs / 2)
-
-	@media $media-md-up
-		--overlay-lead-padding: ($grid-gutter-width / 2)
-
-.-overlay-text
-	color: white
-	text-shadow: black 1px 1px 4px
-
-.-overlay-box > *
-	elevate-1()
-	// box-shadow: black 1px 1px 4px
-
-
-
-.-overlay-post-lead
-	rounded-corners-lg()
-	change-bg('bg')
-	elevate-1()
-	overflow: hidden
-	padding: 0 var(--overlay-lead-padding)
-	margin: var(--overlay-lead-padding) 0
-</style>

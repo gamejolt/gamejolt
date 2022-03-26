@@ -1,0 +1,78 @@
+<script lang="ts" setup>
+import { ref } from '@vue/reactivity';
+import { computed, PropType } from 'vue';
+import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
+import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
+import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
+import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { canPlaceStickerOnFiresidePost } from '../../../../../_common/sticker/placement/placement.model';
+import { StickerTargetController } from '../../../../../_common/sticker/target/target-controller';
+import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
+
+const props = defineProps({
+	post: {
+		required: true,
+		type: Object as PropType<FiresidePost>,
+	},
+	stickerTargetController: {
+		required: true,
+		type: Object as PropType<StickerTargetController>,
+	},
+	truncateLinks: {
+		default: false,
+		type: Boolean,
+	},
+});
+
+// For feeds we want to truncate links, the full links can be seen:
+// - on the post page
+// - when hovering (html title) or on navigation
+
+const isLeadOpen = ref(false);
+const canToggleLead = ref(false);
+
+const displayRules = computed(() => new ContentRules({ truncateLinks: props.truncateLinks }));
+const overlay = computed(() => !!props.post.background);
+const canPlaceSticker = computed(() => canPlaceStickerOnFiresidePost(props.post));
+
+function canToggleLeadChanged(canToggle: boolean) {
+	canToggleLead.value = canToggle;
+}
+
+function toggleLead() {
+	isLeadOpen.value = !isLeadOpen.value;
+}
+</script>
+
+<template>
+	<div class="-container-theme">
+		<div ref="sticker-scroll" />
+
+		<div :class="{ '-overlay-post-lead': overlay }">
+			<AppStickerTarget :controller="stickerTargetController" :disabled="!canPlaceSticker">
+				<!--
+					This shouldn't ever really show a collapser. It's for the jokers that think it would
+					be fun to make a post with a bunch of new lines.
+					-->
+				<AppFadeCollapse
+					:collapse-height="400"
+					:is-open="isLeadOpen"
+					:animate="false"
+					@require-change="canToggleLeadChanged"
+				>
+					<AppContentViewer
+						class="fireside-post-lead"
+						:source="post.lead_content"
+						:display-rules="displayRules"
+					/>
+				</AppFadeCollapse>
+			</AppStickerTarget>
+
+			<a v-if="canToggleLead" class="hidden-text-expander" @click="toggleLead()" />
+
+			<slot />
+		</div>
+	</div>
+</template>
+
+<style lang="stylus" src="./post.styl" scoped></style>
