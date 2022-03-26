@@ -12,7 +12,6 @@ import AppContentViewer from '../../../../../_common/content/content-viewer/cont
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
-import AppPostCard from '../../../../../_common/fireside/post/card/AppPostCard.vue';
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
@@ -75,7 +74,6 @@ import AppActivityFeedPostTime from './time/time.vue';
 		AppFiresidePostEmbed,
 		AppMediaItemBackdrop,
 		AppBackground,
-		AppPostCard,
 		AppActivityFeedPostHeader,
 		AppActivityFeedPostContent,
 	},
