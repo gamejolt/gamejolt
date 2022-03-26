@@ -5,6 +5,6 @@ import { buildClient, packageClient } from './build';
 		await buildClient({ buildType: 'production' });
 	}
 	if (process.argv.includes('--package')) {
-		await packageClient({ useSdkVersion: true });
+		await packageClient({ environment: 'development', staging: false, pushBuild: true });
 	}
 })();

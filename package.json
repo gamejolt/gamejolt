@@ -156,6 +156,7 @@
 	},
 	"nwjsVersion": "0.60.0",
 	"joltronVersion": "v2.2.9-beta.1.loader",
+	"gjpushVersion": "v0.5.0",
 	"chromium-args": "--ignore-gpu-blocklist --auto-open-devtools-for-tabs",
 	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"
 }

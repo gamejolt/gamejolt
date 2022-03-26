@@ -23,13 +23,13 @@ export type NwBuilderOptions = {
 	packageJson: any;
 
 	/** Where to keep cache related to building the client itself */
-	clientBuildCacheDir: string;
+	cacheDir: string;
 
 	/** Where to build the client in */
 	clientBuildDir: string;
 
 	/** Where the frontend is being built */
-	buildDir: string;
+	frontendBuildDir: string;
 
 	/** True if to use the sdk version for nwjs (enables devtools and debugging features) */
 	useSdkVersion: boolean;
@@ -62,14 +62,14 @@ export class NwBuilder {
 
 	async build() {
 		// Ensure our cache dir.
-		await fs.mkdirp(path.resolve(this.config.clientBuildCacheDir));
+		await fs.mkdirp(path.resolve(this.config.cacheDir));
 
 		await this._setupNwjs();
 
 		await acquirePrebuiltFFmpeg({
 			nwjsVersion: NWJS_VERSION,
-			cacheDir: this.config.clientBuildCacheDir,
-			outDir: isMac() ? this._macFrameworkDir : this._buildDir,
+			cacheDir: this.config.cacheDir,
+			outDir: isMac() ? this._macFrameworkDir : this.buildDir,
 		});
 		// await this._setupPrebuiltFFmpeg();
 
@@ -82,7 +82,7 @@ export class NwBuilder {
 		await this._packageApp();
 	}
 
-	get _platformName() {
+	get platformName() {
 		if (isWindows()) {
 			return 'win';
 		}
@@ -98,19 +98,15 @@ export class NwBuilder {
 		throw new Error('Unsupported OS');
 	}
 
-	get _buildDir() {
+	get buildDir() {
 		return path.resolve(this.config.clientBuildDir, 'build');
-	}
-
-	get _packagedFile() {
-		return path.resolve(this.config.clientBuildDir, `${this._platformName}64-package.tar.gz`);
 	}
 
 	/**
 	 * This is the main directory that all the files are in for nwjs.
 	 */
 	get _macAppDir() {
-		return path.resolve(this._buildDir, 'nwjs.app');
+		return path.resolve(this.buildDir, 'nwjs.app');
 	}
 
 	/**
@@ -152,14 +148,14 @@ export class NwBuilder {
 		const folder = [
 			this.config.useSdkVersion ? 'nwjs-sdk' : 'nwjs',
 			nwVersion,
-			this._platformName,
+			this.platformName,
 			'x64',
 		].join('-');
 
-		const cachePath = path.resolve(this.config.clientBuildCacheDir, folder);
+		const cachePath = path.resolve(this.config.cacheDir, folder);
 
 		const filename = folder + (isLinux() ? '.tar.gz' : '.zip');
-		const cachePathArchive = path.resolve(this.config.clientBuildCacheDir, filename);
+		const cachePathArchive = path.resolve(this.config.cacheDir, filename);
 
 		// If we don't have it in cache yet, get it.
 		if (!(await fs.pathExists(cachePath))) {
@@ -169,7 +165,7 @@ export class NwBuilder {
 			await downloadFile(url, cachePathArchive);
 
 			if (cachePathArchive.endsWith('.zip')) {
-				await unzip(cachePathArchive, this.config.clientBuildCacheDir);
+				await unzip(cachePathArchive, this.config.cacheDir);
 			} else {
 				await extractTarGz(cachePathArchive, cachePath);
 			}
@@ -177,57 +173,14 @@ export class NwBuilder {
 			console.log(`Using cached NW.js binary: ${filename}`);
 		}
 
-		console.log(`Copying NW.js to the build dir: ${this._buildDir}`);
+		console.log(`Copying NW.js to the build dir: ${this.buildDir}`);
 
-		await fs.copy(cachePath, this._buildDir);
+		await fs.copy(cachePath, this.buildDir);
 	}
-
-	// /**
-	//  * Gets the prebuilt ffmpeg library and installs it into the package.
-	//  */
-	// async _setupPrebuiltFFmpeg() {
-	// 	const cachePath = path.resolve(
-	// 		this.config.clientBuildCacheDir,
-	// 		`ffmpeg-prebuilt-${NWJS_VERSION}-${this._platformName}64`
-	// 	);
-
-	// 	// If we don't have it in cache yet, get it.
-	// 	if (!(await fs.pathExists(cachePath))) {
-	// 		let url = `https://github.com/iteufel/nwjs-ffmpeg-prebuilt/releases/download/${NWJS_VERSION}/${NWJS_VERSION}`;
-	// 		url += `-${this._platformName}`;
-	// 		url += `-x64.zip`;
-	// 		console.log(`Downloading ffmpeg-prebuilt for NW.js: ${url}`);
-
-	// 		const cachePathZip = cachePath + '.zip';
-
-	// 		await downloadFile(url, cachePathZip);
-	// 		await unzip(cachePathZip, cachePath);
-	// 	}
-
-	// 	let to, filename;
-	// 	if (isWindows()) {
-	// 		filename = 'ffmpeg.dll';
-	// 		to = path.resolve(this._buildDir, filename);
-	// 	} else if (isMac()) {
-	// 		filename = 'libffmpeg.dylib';
-	// 		to = path.resolve(this._macFrameworkDir, filename);
-	// 	} else if (isLinux()) {
-	// 		filename = 'libffmpeg.so';
-	// 		to = path.resolve(this._buildDir, 'lib', filename);
-	// 	}
-
-	// 	console.log(
-	// 		`Installing ffmpeg-prebuilt to the output dir: ${path.resolve(
-	// 			cachePath,
-	// 			filename
-	// 		)} -> ${to}`
-	// 	);
-	// 	await fs.copy(path.resolve(cachePath, filename), to);
-	// }
 
 	async _buildWindows() {
 		const rcedit = require('rcedit');
-		const outputExe = path.resolve(this._buildDir, 'nw.exe');
+		const outputExe = path.resolve(this.buildDir, 'nw.exe');
 		const winIco = path.resolve(__dirname, 'icons/winico.ico');
 
 		console.log(`Modifying nw.exe with rcedit.`);
@@ -337,9 +290,9 @@ export class NwBuilder {
 	}
 
 	async _packageApp() {
-		let appDir = path.resolve(this._buildDir);
+		let appDir = path.resolve(this.buildDir);
 		if (isMac()) {
-			appDir = path.resolve(this._buildDir, 'nwjs.app', 'Contents', 'Resources', 'app.nw');
+			appDir = path.resolve(this.buildDir, 'nwjs.app', 'Contents', 'Resources', 'app.nw');
 		}
 		const packageDir = path.resolve(appDir, 'package');
 
@@ -347,7 +300,7 @@ export class NwBuilder {
 			to = '';
 
 		// Copy our app build files into a new folder to start packaging things up.
-		from = this.config.buildDir;
+		from = this.config.frontendBuildDir;
 		to = packageDir;
 		console.log(`Copying app files: ${from} -> ${to}`);
 		await fs.copy(from, to);
@@ -387,20 +340,17 @@ export class NwBuilder {
 
 		// We need to rename the executable file to our app name.
 		if (isLinux()) {
-			from = path.resolve(this._buildDir, 'nw');
-			to = path.resolve(this._buildDir, this._appName);
+			from = path.resolve(this.buildDir, 'nw');
+			to = path.resolve(this.buildDir, this._appName);
 		} else if (isMac()) {
-			from = path.resolve(this._buildDir, 'nwjs.app');
-			to = path.resolve(this._buildDir, `${this._appName}.app`);
+			from = path.resolve(this.buildDir, 'nwjs.app');
+			to = path.resolve(this.buildDir, `${this._appName}.app`);
 		} else if (isWindows()) {
-			from = path.resolve(this._buildDir, 'nw.exe');
-			to = path.resolve(this._buildDir, `${this._appName}.exe`);
+			from = path.resolve(this.buildDir, 'nw.exe');
+			to = path.resolve(this.buildDir, `${this._appName}.exe`);
 		}
 
 		console.log(`Renaming executable to our app name: ${from} -> ${to}`);
 		await fs.move(from, to);
-
-		console.log(`Zipping up our package: ${this._packagedFile}`);
-		await createTarGz(this._buildDir, this._packagedFile);
 	}
 }

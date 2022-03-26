@@ -21,6 +21,7 @@ const joltronExecutableFilepath =
 /**
  * Ensures the joltron repo is cloned locally.
  * This function does not check out the specific joltron version commit on existing repos.
+ * This allows us to make changes to joltron and test them out in dev.
  */
 export async function ensureJoltronCloned() {
 	console.log('Getting joltron');

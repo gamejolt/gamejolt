@@ -1,7 +1,9 @@
 import * as fs from 'fs-extra';
 import { gjSectionConfigs, GjSectionName } from '../section-config';
-import { packageJson, runShell } from '../utils';
+import { createTarGz, packageJson, runShell } from '../utils';
 import { Options } from '../vite-options';
+import { Gjpush } from './gjpush';
+import { buildJoltron, ensureJoltronCloned } from './joltron';
 import { NwBuilder } from './nwjs-builder';
 
 const path = require('path') as typeof import('path');
@@ -17,11 +19,11 @@ export type ClientBuildOptions = {
 };
 
 export async function buildClient(config: ClientBuildOptions) {
-	const buildDir = path.join(rootDir, 'build', 'desktop');
+	const frontendBuildDir = path.join(rootDir, 'build', 'desktop');
 
 	// Clean the build folder to start fresh.
 	console.log('Cleaning up old client build dir');
-	await fs.remove(buildDir);
+	await fs.remove(frontendBuildDir);
 
 	for (const section of clientSections) {
 		await buildSection(section, config);
@@ -48,14 +50,42 @@ async function buildSection(section: GjSectionName, config: ClientBuildOptions) 
 }
 
 export type ClientPackageOptions = {
-	/** True if to use the sdk version for nwjs (enables devtools and debugging features) */
-	useSdkVersion: boolean;
+	environment: 'production' | 'development';
+
+	/** Whether to produce a staging build. */
+	staging: boolean;
+
+	/** True if to push the build to Game Jolt */
+	pushBuild: boolean;
 };
 
 export async function packageClient(config: ClientPackageOptions) {
-	const buildDir = path.join(rootDir, 'build', 'desktop');
-	const clientBuildDir = `${buildDir}-nwjs`;
-	const clientBuildCacheDir = `${clientBuildDir}-cache`;
+	// const gameId = config.environment === 'development' ? 1000 : 362412;
+	// let packageId: number;
+	// let installerPackageId: number;
+
+	// if (config.environment === 'development') {
+	// 	if (!config.staging) {
+	// 		packageId = 1001;
+	// 		installerPackageId = 1000;
+	// 	} else {
+	// 		packageId = 1004;
+	// 		installerPackageId = 1003;
+	// 	}
+	// } else {
+	// 	if (!config.staging) {
+	// 		packageId = 376715;
+	// 		installerPackageId = 376713;
+	// 	} else {
+	// 		packageId = 428842;
+	// 		installerPackageId = 428840;
+	// 	}
+	// }
+
+	const buildDir = path.join(rootDir, 'build');
+	const cacheDir = path.join(buildDir, '.cache');
+	const frontendBuildDir = path.join(buildDir, 'desktop');
+	const clientBuildDir = path.join(buildDir, 'desktop-app');
 
 	// Clean the build folder to start fresh.
 	console.log('Cleaning up old nwjs build dir');
@@ -64,20 +94,34 @@ export async function packageClient(config: ClientPackageOptions) {
 	console.log('Building NW.js');
 	const nwBuilder = new NwBuilder({
 		packageJson,
-		buildDir,
+		frontendBuildDir,
 		clientBuildDir,
-		clientBuildCacheDir,
-		useSdkVersion: config.useSdkVersion,
+		cacheDir,
+		useSdkVersion: config.environment === 'development' || config.staging,
 	});
 
 	await nwBuilder.build();
 
-	// if (config.pushBuild) {
-	// 	await getPushTools();
-	// 	await pushPackage();
-	// }
+	const gjpush = new Gjpush({
+		cacheDir,
+	});
 
-	// await getJoltron();
+	if (config.pushBuild) {
+		await gjpush.ensureDownloaded();
+
+		console.log('Creating archive for package');
+		const packageArchive = path.join(
+			clientBuildDir,
+			`${nwBuilder.platformName}64-package.tar.gz`
+		);
+		await createTarGz(nwBuilder.buildDir, packageArchive);
+
+		// await gjpush.push(gameId, packageId, packageArchive);
+	}
+
+	await ensureJoltronCloned();
+	await buildJoltron();
+
 	// await setupJoltron();
 	// await createInstaller();
 
