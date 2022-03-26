@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../../../utils/vue';
-import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
+import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
 import { useClientLibraryStore } from '../../../../store/client-library/index';
 
 @Options({

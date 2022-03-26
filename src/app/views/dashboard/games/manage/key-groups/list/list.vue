@@ -8,7 +8,7 @@ import AppCardListItem from '../../../../../../../_common/card/list/AppCardListI
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import { GamePackage } from '../../../../../../../_common/game/package/package.model';
 import { KeyGroup } from '../../../../../../../_common/key-group/key-group.model';
-import AppProgressBar from '../../../../../../../_common/progress/bar/bar.vue';
+import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
 import {
 	BaseRouteComponent,
 	OptionsForRoute,

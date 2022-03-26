@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { formatDuration } from '../../../../_common/filters/duration';
-import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
+import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
 import { LocalDbPackage, LocalDbPackagePatchState } from '../local-db/package/package.model';
 
 @Options({
@@ -64,7 +64,9 @@ export default class AppClientInstallProgress extends Vue {
 
 <template>
 	<div class="client-install-progress" v-if="packageProgress">
-		<p class="client-install-progress-info client-install-progress-info-percent text-center small">
+		<p
+			class="client-install-progress-info client-install-progress-info-percent text-center small"
+		>
 			<strong>{{ ((packageProgress.progress || 0) * 100.0).toFixed(0) }}%</strong>
 		</p>
 
