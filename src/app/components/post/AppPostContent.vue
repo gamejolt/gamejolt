@@ -75,4 +75,36 @@ function toggleLead() {
 	</div>
 </template>
 
-<style lang="stylus" src="./post.styl" scoped></style>
+<style lang="stylus" scoped>
+@import './common'
+
+.fireside-post-lead
+	margin-top: $-item-padding-xs-v
+
+	@media $media-sm-up
+		margin-top: $-item-padding-v
+
+.-manage
+.fireside-post-lead
+	margin-bottom: $-item-padding-xs-v
+
+	@media $media-sm-up
+		margin-bottom: $-item-padding-v
+
+.-communities
+	white-space: nowrap
+
+.-container-theme
+	--overlay-lead-padding: ($-item-padding-xs / 2)
+
+	@media $media-md-up
+		--overlay-lead-padding: ($-item-padding / 2)
+
+.-overlay-post-lead
+	rounded-corners-lg()
+	change-bg('bg')
+	elevate-1()
+	overflow: hidden
+	padding: 0 var(--overlay-lead-padding)
+	margin: var(--overlay-lead-padding) 0
+</style>

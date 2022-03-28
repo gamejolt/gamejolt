@@ -275,6 +275,7 @@ export default class AppPostPage extends Vue {
 					:post="post"
 					:sticker-target-controller="stickerTargetController"
 				/>
+				<AppSpacer :scale="2" vertical />
 			</AppPageContainer>
 		</AppBackground>
 
@@ -380,7 +381,7 @@ export default class AppPostPage extends Vue {
 					/>
 
 					<div v-if="post.has_article">
-						<div v-if="!background" class="page-cut" />
+						<div v-if="!background || post.embeds.length > 0" class="page-cut" />
 
 						<template v-if="!post.hasArticleContent">
 							<span class="lazy-placeholder" />

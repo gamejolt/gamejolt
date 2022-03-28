@@ -373,21 +373,13 @@ export default class AppActivityFeedPost extends Vue {
 </script>
 
 <template>
-	<div v-app-observe-dimensions="onResize" class="-container -container-theme">
+	<div v-app-observe-dimensions="onResize" class="-container">
 		<AppActivityFeedPostBlocked
 			v-if="shouldBlock"
 			:username="user.username"
 			@show="onUnhideBlock"
 		/>
-		<div
-			v-else
-			class="-item"
-			:class="{
-				'-new': isNew,
-			}"
-			@click.capture="onClickCapture"
-			@click="onClick"
-		>
+		<div v-else class="-item" @click.capture="onClickCapture" @click="onClick">
 			<AppBackground :background="post.background" :darken="overlay" bleed>
 				<AppPostHeader
 					:post="post"
@@ -395,6 +387,7 @@ export default class AppActivityFeedPost extends Vue {
 					:show-pinned="shouldShowIsPinned"
 					:show-date="shouldShowDate"
 					:date-link="linkResolved"
+					:is-new="isNew"
 				/>
 
 				<AppActivityFeedPostVideo

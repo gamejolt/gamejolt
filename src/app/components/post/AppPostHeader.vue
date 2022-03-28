@@ -1,8 +1,11 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+import { RouterLink } from 'vue-router';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppUserCardHover from '../../../_common/user/card/hover/hover.vue';
 import AppUserFollowWidget from '../../../_common/user/follow/widget.vue';
 import AppUserAvatar from '../../../_common/user/user-avatar/user-avatar.vue';
@@ -28,6 +31,9 @@ const props = defineProps({
 	dateLink: {
 		type: String as PropType<string>,
 		default: undefined,
+	},
+	isNew: {
+		type: Boolean,
 	},
 });
 
@@ -59,10 +65,10 @@ const shouldShowFollow = computed(() => {
 </script>
 
 <template>
-	<div v-if="user" class="-container-theme -header">
+	<div v-if="user" class="-header">
 		<div class="-header-content">
 			<AppUserCardHover :user="user" :disabled="feed && feed.shouldShowUserCards">
-				<div class="-header-avatar">
+				<div class="-header-avatar" :class="{ '-new': isNew }">
 					<div class="-header-avatar-inner">
 						<AppUserAvatar :user="user" />
 					</div>
@@ -72,7 +78,7 @@ const shouldShowFollow = computed(() => {
 			<div class="-header-byline">
 				<div class="-header-byline-name" :class="{ '-overlay-text': overlay }">
 					<strong>
-						<router-link
+						<RouterLink
 							class="link-unstyled"
 							:class="{ '-overlay-text': overlay }"
 							:to="{
@@ -82,11 +88,11 @@ const shouldShowFollow = computed(() => {
 						>
 							{{ user.display_name }}
 							<AppUserVerifiedTick :user="user" />
-						</router-link>
+						</RouterLink>
 					</strong>
 
 					<small class="text-muted" :class="{ '-overlay-text': overlay }">
-						<router-link
+						<RouterLink
 							class="link-unstyled"
 							:to="{
 								name: 'profile.overview',
@@ -94,15 +100,19 @@ const shouldShowFollow = computed(() => {
 							}"
 						>
 							@{{ user.username }}
-						</router-link>
+						</RouterLink>
 					</small>
 				</div>
 
-				<div v-if="game && !feed?.hideGameInfo" class="-header-byline-game">
+				<div v-if="game && (!feed || feed.hideGameInfo)" class="-header-byline-game">
 					<strong class="text-muted" :class="{ '-overlay-text': overlay }">
-						<router-link :to="gameUrl" class="link-unstyled">
+						<component
+							:is="!!gameUrl ? RouterLink : 'span'"
+							:to="gameUrl"
+							class="link-unstyled"
+						>
 							{{ game.title }}
-						</router-link>
+						</component>
 					</strong>
 				</div>
 			</div>
@@ -131,4 +141,62 @@ const shouldShowFollow = computed(() => {
 	</div>
 </template>
 
-<style lang="stylus" src="./post.styl" scoped></style>
+<style lang="stylus" scoped>
+@import './common'
+
+$-avatar-size = 40px
+
+.-header
+	display: flex
+	align-items: center
+
+.-header-avatar
+	change-bg('bg-subtle')
+	img-circle()
+	flex: none
+	overflow: hidden
+	margin-right: $-item-padding-xs
+	width: $-avatar-size
+	height: $-avatar-size
+	line-height: $-avatar-size
+
+	&.-new
+		theme-prop('border-color', 'notice')
+		border-width: $border-width-large
+		border-style: solid
+
+		.-header-avatar-inner
+			change-bg('bg')
+			img-circle()
+			padding: $border-width-large
+
+	@media $media-sm-up
+		margin-right: $-item-padding
+
+.-header-content
+	flex: auto
+	display: flex
+	align-items: center
+	overflow: hidden
+
+.-header-byline
+	display: flex
+	flex-direction: column
+	overflow: hidden
+
+.-header-name
+.-header-game
+	text-overflow()
+
+.-header-meta
+	flex: none
+	display: flex
+	align-items: flex-center
+	flex-direction: row
+	grid-gap: 8px
+	margin-left: $-item-padding-xs
+	line-height: $line-height-computed
+
+	@media $media-sm-up
+		margin-left: $-item-padding
+</style>
