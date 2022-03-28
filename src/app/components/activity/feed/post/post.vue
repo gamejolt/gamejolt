@@ -37,6 +37,8 @@ import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.v
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
 import AppFiresidePostEmbed from '../../../fireside/post/embed/embed.vue';
 import AppPollVoting from '../../../poll/voting/voting.vue';
+import AppPostContent from '../../../post/AppPostContent.vue';
+import AppPostHeader from '../../../post/AppPostHeader.vue';
 import AppPostControls from '../../../post/controls/controls.vue';
 import { feedShouldBlockPost } from '../feed-service';
 import type { ActivityFeedInterface } from '../feed.vue';
@@ -45,8 +47,6 @@ import AppActivityFeedPostMedia from '../post/media/media.vue';
 import AppActivityFeedPostText from '../post/text/text.vue';
 import AppActivityFeedPostVideo from '../post/video/video.vue';
 import { ActivityFeedInterfaceKey, ActivityFeedKey, ActivityFeedView } from '../view';
-import AppActivityFeedPostContent from './AppActivityFeedPostContent.vue';
-import AppActivityFeedPostHeader from './AppActivityFeedPostHeader.vue';
 import AppActivityFeedPostBlocked from './blocked/blocked.vue';
 import AppActivityFeedPostTime from './time/time.vue';
 
@@ -74,8 +74,8 @@ import AppActivityFeedPostTime from './time/time.vue';
 		AppFiresidePostEmbed,
 		AppMediaItemBackdrop,
 		AppBackground,
-		AppActivityFeedPostHeader,
-		AppActivityFeedPostContent,
+		AppPostHeader,
+		AppPostContent,
 	},
 	directives: {
 		AppObserveDimensions: vAppObserveDimensions,
@@ -389,7 +389,7 @@ export default class AppActivityFeedPost extends Vue {
 			@click="onClick"
 		>
 			<AppBackground :background="post.background" :darken="overlay" bleed>
-				<AppActivityFeedPostHeader
+				<AppPostHeader
 					:post="post"
 					:feed="feed"
 					:show-pinned="shouldShowIsPinned"
@@ -411,7 +411,7 @@ export default class AppActivityFeedPost extends Vue {
 					:can-place-sticker="canPlaceSticker"
 				/>
 
-				<AppActivityFeedPostContent
+				<AppPostContent
 					:post="post"
 					:sticker-target-controller="stickerTargetController"
 					truncate-links
@@ -433,7 +433,7 @@ export default class AppActivityFeedPost extends Vue {
 							<AppPollVoting :poll="post.poll" :game="post.game" :user="post.user" />
 						</div>
 					</AppStickerControlsOverlay>
-				</AppActivityFeedPostContent>
+				</AppPostContent>
 
 				<AppStickerControlsOverlay :hide="!!post.background">
 					<div

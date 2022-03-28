@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { ref } from '@vue/reactivity';
 import { computed, PropType } from 'vue';
-import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
-import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
-import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import { canPlaceStickerOnFiresidePost } from '../../../../../_common/sticker/placement/placement.model';
-import { StickerTargetController } from '../../../../../_common/sticker/target/target-controller';
-import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
+import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
+import { ContentRules } from '../../../_common/content/content-editor/content-rules';
+import AppContentViewer from '../../../_common/content/content-viewer/content-viewer.vue';
+import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { canPlaceStickerOnFiresidePost } from '../../../_common/sticker/placement/placement.model';
+import { StickerTargetController } from '../../../_common/sticker/target/target-controller';
+import AppStickerTarget from '../../../_common/sticker/target/target.vue';
 
 const props = defineProps({
 	post: {
@@ -50,9 +50,10 @@ function toggleLead() {
 		<div :class="{ '-overlay-post-lead': overlay }">
 			<AppStickerTarget :controller="stickerTargetController" :disabled="!canPlaceSticker">
 				<!--
-					This shouldn't ever really show a collapser. It's for the jokers that think it would
-					be fun to make a post with a bunch of new lines.
-					-->
+					This shouldn't ever really show a collapser. It's for the
+					jokers that think it would be fun to make a post with a
+					bunch of new lines.
+				-->
 				<AppFadeCollapse
 					:collapse-height="400"
 					:is-open="isLeadOpen"

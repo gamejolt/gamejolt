@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
-import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
-import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
-import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
-import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
-import { ActivityFeedView } from '../view';
-import AppActivityFeedPostTime from './time/time.vue';
+import { computed, PropType, toRefs } from 'vue';
+import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { Screen } from '../../../_common/screen/screen-service';
+import { AppTimeAgo } from '../../../_common/time/ago/ago';
+import AppUserCardHover from '../../../_common/user/card/hover/hover.vue';
+import AppUserFollowWidget from '../../../_common/user/follow/widget.vue';
+import AppUserAvatar from '../../../_common/user/user-avatar/user-avatar.vue';
+import AppUserVerifiedTick from '../../../_common/user/verified-tick/verified-tick.vue';
+import AppActivityFeedPostTime from '../activity/feed/post/time/time.vue';
+import { ActivityFeedView } from '../activity/feed/view';
 
 const props = defineProps({
 	post: {
@@ -31,16 +31,17 @@ const props = defineProps({
 	},
 });
 
-const user = computed(() => props.post.displayUser);
-const overlay = computed(() => !!props.post.background);
-const feed = computed(() => props.feed);
+const { post, feed, showPinned, showDate, dateLink } = toRefs(props);
 
-const game = computed(() => props.post.game);
+const user = computed(() => post.value.displayUser);
+const overlay = computed(() => !!post.value.background);
+
+const game = computed(() => post.value.game);
 const gameUrl = computed(() => game.value?.getUrl());
 
 const shouldShowFollow = computed(() => {
 	// Don't show follow for game posts. Only for user posts.
-	if ((feed.value && !feed.value.shouldShowFollow) || props.post.game) {
+	if ((feed && feed.value && !feed.value.shouldShowFollow) || post.value.game) {
 		return false;
 	}
 

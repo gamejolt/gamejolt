@@ -45,8 +45,6 @@ import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified
 import AppVideoPlayer from '../../../../_common/video/player/player.vue';
 import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/processing-progress.vue';
 import AppVideo from '../../../../_common/video/video.vue';
-import AppActivityFeedPostContent from '../../../components/activity/feed/post/AppActivityFeedPostContent.vue';
-import AppActivityFeedPostHeader from '../../../components/activity/feed/post/AppActivityFeedPostHeader.vue';
 import AppCommunityUserNotification from '../../../components/community/user-notification/user-notification.vue';
 import AppFiresidePostEmbed from '../../../components/fireside/post/embed/embed.vue';
 import AppGameBadge from '../../../components/game/badge/badge.vue';
@@ -54,6 +52,8 @@ import AppGameListItem from '../../../components/game/list/item/item.vue';
 import { AppCommentWidgetLazy } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppPollVoting from '../../../components/poll/voting/voting.vue';
+import AppActivityFeedPostContent from '../../../components/post/AppPostContent.vue';
+import AppPostHeader from '../../../components/post/AppPostHeader.vue';
 import AppPostControls from '../../../components/post/controls/controls.vue';
 import AppPostPageRecommendations from './recommendations/AppPostPageRecommendations.vue';
 
@@ -87,7 +87,7 @@ import AppPostPageRecommendations from './recommendations/AppPostPageRecommendat
 		AppPostPageRecommendations,
 		AppShareCard,
 		AppBackground,
-		AppActivityFeedPostHeader,
+		AppPostHeader,
 		AppActivityFeedPostContent,
 		AppSpacer,
 	},
@@ -270,7 +270,7 @@ export default class AppPostPage extends Vue {
 			<AppPageContainer xl>
 				<AppSpacer :scale="4" vertical />
 
-				<AppActivityFeedPostHeader :post="post" show-date />
+				<AppPostHeader :post="post" show-date />
 				<AppActivityFeedPostContent
 					:post="post"
 					:sticker-target-controller="stickerTargetController"
