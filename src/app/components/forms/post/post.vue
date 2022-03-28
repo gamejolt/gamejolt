@@ -973,6 +973,7 @@ export default class FormPost
 			</AppButton>
 
 			<AppButton
+				v-if="backgrounds.length > 0"
 				trans
 				:primary="false"
 				:solid="false"
