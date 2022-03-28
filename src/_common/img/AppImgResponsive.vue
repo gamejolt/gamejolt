@@ -1,13 +1,11 @@
 <script lang="ts" setup>
 import { nextTick, onMounted, ref, toRefs, watch } from 'vue';
+import { getMediaserverUrlForBounds } from '../../utils/image';
 import { sleep } from '../../utils/utils';
 import { Ruler } from '../ruler/ruler-service';
-import { onScreenResize, Screen } from '../screen/screen-service';
+import { onScreenResize } from '../screen/screen-service';
 import { useEventSubscription } from '../system/event/event-topic';
 import { ImgHelper } from './helper/helper-service';
-
-const WIDTH_HEIGHT_REGEX = /\/(\d+)x(\d+)\//;
-const WIDTH_REGEX = /\/(\d+)\//;
 
 const props = defineProps({
 	src: {
@@ -55,23 +53,11 @@ async function _updateSrc() {
 		return;
 	}
 
-	// Update width in the URL. We keep width within 100px increment bounds.
-	let newSrc = src.value;
-	let largerDimension = Math.max(containerWidth, containerHeight);
-
-	if (Screen.isHiDpi) {
-		// For high dpi, double the width.
-		largerDimension = largerDimension * 2;
-		largerDimension = Math.ceil(largerDimension / 100) * 100;
-	} else {
-		largerDimension = Math.ceil(largerDimension / 100) * 100;
-	}
-
-	if (newSrc.search(WIDTH_HEIGHT_REGEX) !== -1) {
-		newSrc = newSrc.replace(WIDTH_HEIGHT_REGEX, '/' + largerDimension + 'x2000/');
-	} else {
-		newSrc = newSrc.replace(WIDTH_REGEX, '/' + largerDimension + '/');
-	}
+	const newSrc = getMediaserverUrlForBounds({
+		src: src.value,
+		maxWidth: containerWidth,
+		maxHeight: containerHeight,
+	});
 
 	// Only if the src changed from previous runs. They may be the same if the
 	// user resized the window but image container didn't change dimensions.

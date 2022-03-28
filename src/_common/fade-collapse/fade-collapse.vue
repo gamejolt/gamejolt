@@ -171,4 +171,35 @@ export default class AppFadeCollapse extends Vue {
 	</div>
 </template>
 
-<style lang="stylus" src="./fade-collapse.styl" scoped></style>
+<style lang="stylus" scoped>
+.fade-collapse
+	position: relative
+	overflow: hidden
+	--fade-height: 100px
+
+	&.-sm
+		--fade-height: 30px
+
+	@media $media-sm-up
+		&.-animate
+			transition: max-height 600ms $strong-ease-out
+
+.-fade
+	position: absolute
+	display: none
+	bottom: 0
+	left: 0
+	right: 0
+	height: var(--fade-height)
+	z-index: 1
+
+	// We need this full name since it's targeted in other components to change the styling.
+	.fade-collapse-collapsed &
+		display: block
+
+.-fade-color
+	background-image: linear-gradient(to bottom, var(--theme-bg-actual-trans) 0, var(--theme-bg-actual) 100%)
+
+.-fade-mask
+	mask-image: linear-gradient(to top, transparent 0, black var(--fade-height), black 100%)
+</style>

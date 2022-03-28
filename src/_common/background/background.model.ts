@@ -1,8 +1,7 @@
 import { Model } from '../model/model.service';
 import { MediaItem } from '../media-item/media-item-model';
-import { Screen } from '../screen/screen-service';
+import { getMediaserverUrlForBounds } from '../../utils/image';
 
-const WidthRegex = /\/(\d+)\//;
 const ScalingStretch = 'stretch';
 const ScalingTile = 'tile';
 const DefaultScale = 2.0;
@@ -33,12 +32,13 @@ export class Background extends Model {
 
 		let url = this.media_item.mediaserver_url;
 		if (this.scaling === ScalingTile) {
-			const dpiScale = Screen.isHiDpi ? 2 : 1;
-			const mediaWidth = this.media_item.width;
-			const tileWidth = mediaWidth / this.scale;
+			const { width, height, mediaserver_url: src } = this.media_item;
 
-			const width = Math.min(mediaWidth, tileWidth * dpiScale);
-			url = url.replace(WidthRegex, `/${width}/`);
+			url = getMediaserverUrlForBounds({
+				src,
+				maxWidth: width / this.scale,
+				maxHeight: height / this.scale,
+			});
 		}
 
 		return `url(${url})`;
