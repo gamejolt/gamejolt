@@ -103,11 +103,7 @@ export default class AppPostEditModal extends mixins(BaseModal) {
 <style lang="stylus" scoped>
 .-background
 	@media $media-xs
-		position: absolute
-		left: 0
-		top: 0
-		right: 0
-		bottom: 0
+		min-height: 100vh
 
 	@media $media-sm-up
 		rounded-corners-lg()
