@@ -1,7 +1,9 @@
-import { isWindows, packageJson, runShell, shellEscape } from '../utils';
+import { isLinux, isMac, isWindows, packageJson, runShell, shellEscape } from '../utils';
 import * as fs from 'fs-extra';
+import * as readdirp from 'readdirp';
 
 const path = require('path') as typeof import('path');
+const os = require('os') as typeof import('os');
 
 // The loader variant version looks like `${version}.loader`, but git's release version is simply `${version}` so we gotta transform it.
 export const joltronVersion = (packageJson.joltronVersion as string).replace(/\.loader$/, '');
@@ -9,7 +11,7 @@ export const joltronVersion = (packageJson.joltronVersion as string).replace(/\.
 // Path to the where we clone and build joltron.
 const joltronRepoDir =
 	'GOPATH' in process.env
-		? path.resolve(process.env.GOPATH, 'src', 'github.com', 'gamejolt', 'joltron')
+		? path.resolve(process.env.GOPATH!, 'src', 'github.com', 'gamejolt', 'joltron')
 		: null;
 
 const joltronExecutableBasename = isWindows() ? 'joltron.exe' : 'joltron';
@@ -141,138 +143,250 @@ export async function buildJoltron() {
 	}
 }
 
+export async function restructureProject(options: {
+	packageDir: string;
+	packageId: number;
+	packageBuildId: number;
+	environment: 'production' | 'development';
+}) {
+	if (joltronExecutableFilepath === null) {
+		throw new Error('GOPATH is not set, cannot provide joltron executable to project');
+	}
+
+	const installerDir = path.resolve(options.packageDir, '..', 'installer');
+
+	await fs.mkdirp(installerDir);
+
+	console.log('Copying main executable to root of installation directory');
+	// Joltron should be placed next to the client build's data folder. On
+	// windows joltron will be linked to and executed directly, so call it
+	// GameJoltClient.exe to avoid confusion. On linux we call the
+	// executable game-jolt-client, so we can rename joltron to that. On mac
+	// we can also rename it to game-jolt-client for consistency. the
+	// executable is contained in the app directory anyways.
+	const joltronDest = path.join(
+		installerDir,
+		isWindows() ? 'GameJoltClient.exe' : 'game-jolt-client'
+	);
+
+	await fs.copy(joltronExecutableFilepath!, joltronDest);
+
+	// Make sure it is executable.
+	await fs.chmod(joltronDest, '0755');
+
+	console.log('Moving package files to installer data folder');
+	// This is joltron's data directory for this client installer build
+	const newPackageDir = path.join(
+		installerDir,
+		`data-${options.packageId}-${options.packageBuildId}`
+	);
+
+	// Rename our build folder (which is the contents of our package zip)
+	await fs.rename(options.packageDir, newPackageDir);
+
+	console.log('Generating joltron manifest for installer package');
+	// Some more info is required for joltron's manifest. The correct host
+	// is needed for the platformURL - this tells joltron where to look for updates.
+	const hostname =
+		options.environment === 'development' ? 'development.gamejolt.com' : 'gamejolt.com';
+
+	// The executable tells joltron what is the executable file within this
+	// client build's data folder.
+	let executable = '';
+	// Joltron expects the platform field to be either windows/mac/linux.
+	let platform = '';
+	if (isWindows()) {
+		executable = 'GameJoltClient.exe';
+		platform = 'windows';
+	} else if (isMac()) {
+		executable = 'Game Jolt Client.app/Contents/MacOS/Game Jolt Client';
+		platform = 'mac';
+	} else if (isLinux()) {
+		executable = 'game-jolt-client';
+		platform = 'linux';
+	} else {
+		throw new Error('Unsupported OS');
+	}
+
+	// Figure out the archive file list.
+	const archiveFiles = (await readdirp.promise(newPackageDir))
+		.map(i => './' + i.path.replace(/\\/g, '/'))
+		.sort();
+
+	// Finally create joltron's manifest file
+	await fs.writeFile(
+		path.join(installerDir, '.manifest'),
+		JSON.stringify({
+			version: 2,
+			autoRun: true,
+			gameInfo: {
+				dir: path.basename(newPackageDir),
+				uid: `${options.packageId}-${options.packageBuildId}`,
+				archiveFiles: archiveFiles,
+				platformUrl: `https://${hostname}/x/updater/check-for-updates`,
+				declaredImplementations: {
+					presence: true,
+					badUpdateRecovery: true,
+				},
+			},
+			launchOptions: { executable: executable },
+			os: platform,
+			arch: '64',
+			isFirstInstall: false,
+		}),
+		'utf8'
+	);
+
+	return installerDir;
+}
+
 // /**
-//  * Structure the build folder with joltron, as if it was installed by it.
-//  * This is what we want our installer to unpack.
+//  * Packages up the client build as an installer.
+//  *
+//  * This takes the joltron folder structure we generated in the previous
+//  * steps and packages it up as an installer for easier distribution
 //  */
-// async function setupJoltron() {
-// 	console.log('Setting up Joltron');
+// async function createInstaller() {
+// 	console.log('Creating installer');
 
-// 	// If we want to skip gjpush to test the packaging we need to provide
-// 	// the build ID ourselves because we won't be hitting service-api to get
-// 	// it.
-// 	let buildId = 739828;
+// 	if (os.type() === 'Darwin') {
+// 		// On mac we need to create an app that when run will execute joltron.
+// 		// We have a template app we use that contains the minimal setup
+// 		// required.
+// 		const appTemplate = path.resolve(__dirname, 'Game Jolt Client.app');
+// 		const clientApp = path.resolve(config.clientBuildDir, 'Game Jolt Client.app');
 
-// 	// We need to know our build ID for the package zip we just uploaded,
-// 	// because the build id is part of the game UID ("packageId-buildId)"
-// 	// which we need for joltron's manifest file. So we can use the service
-// 	// API to query it!
-// 	if (config.pushBuild) {
-// 		// First step is getting the release ID matching the version we just
-// 		// uploaded.
-// 		const releasePayload = await sendApiRequest(
-// 			'/releases/by-version/' + gjGamePackageId + '/' + packageJson.version
-// 		);
+// 		// We copy it over to the build dir.
+// 		await fs.copy(appTemplate, clientApp);
 
-// 		// Then find the builds for that version.
-// 		const buildPayload = await sendApiRequest(
-// 			'/releases/builds/' +
-// 				releasePayload.release.id +
-// 				'?game_id=' +
-// 				gjGameId +
-// 				'&package_id=' +
-// 				gjGamePackageId
-// 		);
+// 		// We copy the entire joltron folder we generated in the previous
+// 		// step into the app's Contents/Resources/app folder.
+// 		const buildDir = path.resolve(config.clientBuildDir, 'dist');
+// 		const appDir = path.resolve(clientApp, 'Contents', 'Resources', 'app');
 
-// 		// The build matching the filename we just uploaded is the build ID
-// 		// we're after.
-// 		const build = buildPayload.builds.data.find(i => {
-// 			return i && i.file && i.file.filename === config.platformArch + '-package.tar.gz';
-// 		});
-// 		if (!build) {
-// 			throw new Error('Could not get build');
-// 		}
+// 		// TODO: check to make sure it copies the hidden dot files too
+// 		await fs.copy(buildDir, appDir);
 
-// 		buildId = build.id;
-// 	}
+// 		// // The . after the build dir makes it also copy hidden dot files
+// 		// cp.execSync('cp -a "' + path.join(buildDir, '.') + '" "' + appDir + '"');
 
-// 	await fs.mkdirp(path.resolve(config.clientBuildDir, 'dist'));
+// 		// TODO: use simple-plist
+// 		// The info plist in our template has placeholder we need to replace
+// 		// with this build's version.
+// 		const infoPlistFile = path.join(clientApp, 'Contents', 'Info.plist');
+// 		const infoPlist = fs
+// 			.readFileSync(infoPlistFile, {
+// 				encoding: 'utf8',
+// 			})
+// 			.replace(/\{\{APP_VERSION\}\}/g, packageJson.version);
 
-// 	// This is joltron's data directory for this client build
-// 	const buildDir = path.resolve(
-// 		config.clientBuildDir,
-// 		'dist',
-// 		'data-' + gjGamePackageId + '-' + buildId
-// 	);
+// 		await fs.writeFile(infoPlistFile, infoPlist, { encoding: 'utf8' });
 
-// 	// Rename our build folder (which is the contents of our package zip)
-// 	await fs.rename(path.resolve(config.clientBuildDir, 'build'), buildDir);
+// 		const _createDmg = () => {
+// 			const appdmg = require('appdmg');
 
-// 	// Next up we want to fetch the same joltron version as the client build
-// 	// is using, even if there is a newer version of joltron released. This
-// 	// ensures the client and joltron can communicate without issues.
-
-// 	// Joltron should be placed next to the client build's data folder. On
-// 	// windows joltron will be linked to and executed directly, so call it
-// 	// GameJoltClient.exe to avoid confusion. On linux we call the
-// 	// executable game-jolt-client, so we can rename joltron to that. On mac
-// 	// we can also rename it to game-jolt-client for consistency. the
-// 	// executable is contained in the app directory anyways.
-// 	const joltronDest = path.resolve(
-// 		buildDir,
-// 		'..',
-// 		isWindows() ? 'GameJoltClient.exe' : 'game-jolt-client'
-// 	);
-
-// 	// Some more info is required for joltron's manifest. The correct host
-// 	// is needed for the platformURL - this tells joltron where to look for
-// 	// updates.
-// 	const gjHost = config.developmentEnv
-// 		? 'http://development.gamejolt.com'
-// 		: 'https://gamejolt.com';
-
-// 	// The executable tells joltron what is the executable file within this
-// 	// client build's data folder.
-// 	let executable = '';
-// 	if (isWindows()) {
-// 		executable = 'GameJoltClient.exe';
-// 	} else if (config.platform === 'osx') {
-// 		executable = 'Game Jolt Client.app/Contents/MacOS/Game Jolt Client';
-// 	} else {
-// 		executable = 'game-jolt-client';
-// 	}
-
-// 	// Joltron expects the platform field to be either windows/mac/linux.
-// 	let platform = '';
-// 	if (isWindows()) {
-// 		platform = 'windows';
-// 	} else if (config.platform === 'osx') {
-// 		platform = 'mac';
-// 	} else {
-// 		platform = 'linux';
-// 	}
-
-// 	// Figure out the archive file list.
-// 	const archiveFiles = (await readdirp.promise(buildDir))
-// 		.map(i => './' + i.path.replace(/\\/g, '/'))
-// 		.sort();
-
-// 	await fs.copy(joltronSrc, joltronDest);
-
-// 	// Make sure it is executable.
-// 	await fs.chmod(joltronDest, '0755');
-
-// 	// Finally create joltron's manifest file
-// 	await fs.writeFile(
-// 		path.resolve(buildDir, '..', '.manifest'),
-// 		JSON.stringify({
-// 			version: 2,
-// 			autoRun: true,
-// 			gameInfo: {
-// 				dir: path.basename(buildDir),
-// 				uid: gjGamePackageId + '-' + buildId,
-// 				archiveFiles: archiveFiles,
-// 				platformUrl: gjHost + '/x/updater/check-for-updates',
-// 				declaredImplementations: {
-// 					presence: true,
-// 					badUpdateRecovery: true,
+// 			const dmg = appdmg({
+// 				target: path.resolve(config.clientBuildDir, 'GameJoltClient.dmg'),
+// 				basepath: config.projectBase,
+// 				specification: {
+// 					// DO NOT ADD ANY SPACES (or chinese characters) - the background will disappear apparently
+// 					title: 'GameJolt',
+// 					icon: path.resolve(__dirname, 'client/icons/mac.icns'),
+// 					background: path.resolve(__dirname, 'client/icons/dmg-background.png'),
+// 					'icon-size': 80,
+// 					contents: [
+// 						{
+// 							x: 195,
+// 							y: 370,
+// 							type: 'file',
+// 							path: clientApp,
+// 						},
+// 						{ x: 429, y: 370, type: 'link', path: '/Applications' },
+// 					],
 // 				},
-// 			},
-// 			launchOptions: { executable: executable },
-// 			os: platform,
-// 			arch: config.arch + '',
-// 			isFirstInstall: false,
-// 		}),
-// 		'utf8'
-// 	);
+// 			});
+
+// 			return new Promise((resolve, reject) => {
+// 				dmg.on('progress', info => {
+// 					console.log(info);
+// 				});
+
+// 				dmg.on('finish', () => {
+// 					console.log('Finished building DMG.');
+// 					resolve();
+// 				});
+
+// 				dmg.on('error', err => {
+// 					console.error(err);
+// 					reject(err);
+// 				});
+// 			});
+// 		};
+
+// 		// Finally, create a dmg out of the entire app.
+// 		await _createDmg();
+// 	} else if (config.platform === 'win') {
+// 		const manifest = JSON.parse(
+// 			await fs.readFile(path.resolve(config.clientBuildDir, 'dist', '.manifest'), {
+// 				encoding: 'utf8',
+// 			})
+// 		);
+
+// 		const certFile = config.production
+// 			? path.resolve(__dirname, 'client/certs/cert.pfx')
+// 			: path.resolve(__dirname, 'client/vendor/cert.pfx');
+// 		const certPw = config.production ? process.env['GJ_CERT_PASS'] : 'GJ123456';
+
+// 		await buildInnoSetup(
+// 			path.resolve(config.clientBuildDir, 'dist'),
+// 			path.resolve(config.clientBuildDir),
+// 			packageJson.version,
+// 			manifest.gameInfo.uid,
+// 			certFile,
+// 			certPw.trim()
+// 		);
+// 	} else {
+// 		await createTarGz(
+// 			path.join(config.clientBuildDir, 'dist'),
+// 			path.join(config.clientBuildDir, 'GameJoltClient.tar.gz')
+// 		);
+// 	}
+// }
+
+// /**
+//  * Pushes the installer to GJ.
+//  */
+// async function pushInstaller() {
+// 	console.log('Pushing installer to Game Jolt');
+
+// 	let installerFile = '';
+// 	switch (config.platform) {
+// 		case 'win':
+// 			installerFile = 'GameJoltClientSetup.exe';
+// 			break;
+// 		case 'osx':
+// 			installerFile = 'GameJoltClient.dmg';
+// 			break;
+// 		default:
+// 			installerFile = 'GameJoltClient.tar.gz';
+// 			break;
+// 	}
+// 	installerFile = path.resolve(config.clientBuildDir, installerFile);
+
+// 	const gjPush = () =>
+// 		runShell(gjpushExecutable, {
+// 			args: [
+// 				'--no-resume',
+// 				'-g',
+// 				gjGameId,
+// 				'-p',
+// 				gjGameInstallerPackageId,
+// 				'-r',
+// 				packageJson.version,
+// 				installerFile,
+// 			],
+// 		});
+
+// 	// Let's try to be resilient to network failures by trying a few times.
+// 	await tryWithBackoff(gjPush, 3);
 // }

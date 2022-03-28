@@ -25,6 +25,9 @@ export type NwBuilderOptions = {
 	/** Where to keep cache related to building the client itself */
 	cacheDir: string;
 
+	/** True if to avoid using the cached version of nwjs */
+	noCache?: boolean;
+
 	/** Where to build the client in */
 	clientBuildDir: string;
 
@@ -70,6 +73,7 @@ export class NwBuilder {
 			nwjsVersion: NWJS_VERSION,
 			cacheDir: this.config.cacheDir,
 			outDir: isMac() ? this._macFrameworkDir : this.buildDir,
+			noCache: this.config.noCache,
 		});
 		// await this._setupPrebuiltFFmpeg();
 
@@ -158,7 +162,8 @@ export class NwBuilder {
 		const cachePathArchive = path.resolve(this.config.cacheDir, filename);
 
 		// If we don't have it in cache yet, get it.
-		if (!(await fs.pathExists(cachePath))) {
+		const exists = await fs.pathExists(cachePath);
+		if (!exists || (this.config.noCache ?? false)) {
 			const url = `https://dl.nwjs.io/${nwVersion}/${filename}`;
 			console.log(`Downloading NW.js binary: ${url}`);
 

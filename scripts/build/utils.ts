@@ -53,7 +53,7 @@ export type RunShellOptions = Partial<{
 }>;
 
 export function runShell(command: string, options: RunShellOptions = {}) {
-	const cwd = options.cwd || null;
+	const cwd = options.cwd;
 	const args = options.args || [];
 
 	if (args.length > 0) {
@@ -85,7 +85,7 @@ export type ExecShellOptions = RunShellOptions;
  * Throws if stuff's logged in stderr.
  */
 export function execShell(command: string, options: ExecShellOptions = {}) {
-	const cwd = options.cwd || null;
+	const cwd = options.cwd;
 	const args = options.args || [];
 
 	if (args.length > 0) {

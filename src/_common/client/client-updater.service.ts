@@ -170,6 +170,7 @@ class ClientUpdaterService {
 						nw.Window.get().close(true);
 					})
 					.on('openRequested', () => {
+						console.log('received open request');
 						Client.show();
 					})
 					.on('progress', (progress: MsgProgress) => {
@@ -193,6 +194,7 @@ class ClientUpdaterService {
 
 				return thisInstance;
 			} catch (err) {
+				console.error(err);
 				try {
 					this.setClientUpdateStatus('error');
 					if (thisInstance) {

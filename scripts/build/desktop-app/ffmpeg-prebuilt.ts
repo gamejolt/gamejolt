@@ -7,6 +7,7 @@ type AcquireOptions = {
 	cacheDir: string;
 	outDir: string;
 	nwjsVersion: string;
+	noCache?: boolean;
 };
 
 /**
@@ -51,7 +52,8 @@ export async function acquirePrebuiltFFmpeg(opts: AcquireOptions) {
 	);
 
 	// If we don't have it in cache yet, get it.
-	if (!(await fs.pathExists(cachePath))) {
+	const exists = await fs.pathExists(cachePath);
+	if (!exists || (opts.noCache ?? false)) {
 		let url = `https://github.com/iteufel/nwjs-ffmpeg-prebuilt/releases/download/${opts.nwjsVersion}/${opts.nwjsVersion}`;
 		url += `-${platformShortname}`;
 		url += `-${arch}.zip`;

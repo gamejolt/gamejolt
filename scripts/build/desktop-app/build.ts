@@ -1,9 +1,9 @@
 import * as fs from 'fs-extra';
 import { gjSectionConfigs, GjSectionName } from '../section-config';
-import { createTarGz, packageJson, runShell } from '../utils';
+import { createTarGz, isWindows, packageJson, runShell } from '../utils';
 import { Options } from '../vite-options';
 import { Gjpush } from './gjpush';
-import { buildJoltron, ensureJoltronCloned } from './joltron';
+import { buildJoltron, ensureJoltronCloned, restructureProject } from './joltron';
 import { NwBuilder } from './nwjs-builder';
 
 const path = require('path') as typeof import('path');
@@ -15,6 +15,7 @@ const clientSections = Object.entries(gjSectionConfigs)
 	.map(([k, v]) => k as GjSectionName);
 
 export type ClientBuildOptions = {
+	environment: Options['environment'];
 	buildType: Options['buildType'];
 };
 
@@ -38,6 +39,7 @@ async function buildSection(section: GjSectionName, config: ClientBuildOptions) 
 		// This lets us build multiple sections in the same dir.
 		GJ_EMPTY_OUTDIR: 0,
 
+		GJ_ENVIRONMENT: config.environment,
 		GJ_BUILD_TYPE: config.buildType,
 		GJ_PLATFORM: 'desktop',
 		GJ_SECTION: section,
@@ -50,37 +52,40 @@ async function buildSection(section: GjSectionName, config: ClientBuildOptions) 
 }
 
 export type ClientPackageOptions = {
-	environment: 'production' | 'development';
+	environment: Options['environment'];
 
 	/** Whether to produce a staging build. */
 	staging: boolean;
 
 	/** True if to push the build to Game Jolt */
 	pushBuild: boolean;
+
+	/** True if to disable using cache for some things. False by default. */
+	noCache?: boolean;
 };
 
 export async function packageClient(config: ClientPackageOptions) {
-	// const gameId = config.environment === 'development' ? 1000 : 362412;
-	// let packageId: number;
-	// let installerPackageId: number;
+	const gameId = config.environment === 'development' ? 1000 : 362412;
+	let packageId: number;
+	let installerPackageId: number;
 
-	// if (config.environment === 'development') {
-	// 	if (!config.staging) {
-	// 		packageId = 1001;
-	// 		installerPackageId = 1000;
-	// 	} else {
-	// 		packageId = 1004;
-	// 		installerPackageId = 1003;
-	// 	}
-	// } else {
-	// 	if (!config.staging) {
-	// 		packageId = 376715;
-	// 		installerPackageId = 376713;
-	// 	} else {
-	// 		packageId = 428842;
-	// 		installerPackageId = 428840;
-	// 	}
-	// }
+	if (config.environment === 'development') {
+		if (!config.staging) {
+			packageId = 1001;
+			installerPackageId = 1000;
+		} else {
+			packageId = 1004;
+			installerPackageId = 1003;
+		}
+	} else {
+		if (!config.staging) {
+			packageId = 376715;
+			installerPackageId = 376713;
+		} else {
+			packageId = 428842;
+			installerPackageId = 428840;
+		}
+	}
 
 	const buildDir = path.join(rootDir, 'build');
 	const cacheDir = path.join(buildDir, '.cache');
@@ -98,31 +103,38 @@ export async function packageClient(config: ClientPackageOptions) {
 		clientBuildDir,
 		cacheDir,
 		useSdkVersion: config.environment === 'development' || config.staging,
+		noCache: config.noCache,
 	});
 
 	await nwBuilder.build();
 
 	const gjpush = new Gjpush({
+		environment: config.environment,
 		cacheDir,
+		noCache: config.noCache,
 	});
 
+	let packageBuildId = 0;
 	if (config.pushBuild) {
-		await gjpush.ensureDownloaded();
+		await gjpush.ensureGjpush();
 
 		console.log('Creating archive for package');
-		const packageArchive = path.join(
-			clientBuildDir,
-			`${nwBuilder.platformName}64-package.tar.gz`
-		);
-		await createTarGz(nwBuilder.buildDir, packageArchive);
+		const archiveBasename = `${nwBuilder.platformName}64-package.tar.gz`;
+		const archiveFilepath = path.join(clientBuildDir, archiveBasename);
+		await createTarGz(nwBuilder.buildDir, archiveFilepath);
 
-		// await gjpush.push(gameId, packageId, packageArchive);
+		packageBuildId = await gjpush.push({ gameId, packageId, filepath: archiveFilepath });
 	}
 
 	await ensureJoltronCloned();
 	await buildJoltron();
+	const installerDir = await restructureProject({
+		packageDir: nwBuilder.buildDir,
+		packageId,
+		packageBuildId,
+		environment: config.environment,
+	});
 
-	// await setupJoltron();
 	// await createInstaller();
 
 	// if (config.pushBuild) {

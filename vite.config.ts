@@ -23,7 +23,7 @@ type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'
 // https://vitejs.dev/config/
 export default defineConfig(async configEnv => {
 	const { command } = configEnv;
-	const gjOpts = await parseAndInferOptionsFromEnv();
+	const gjOpts = await parseAndInferOptionsFromEnv(configEnv);
 
 	// When serving the client locally, we need to acquire the ffmpeg binaries.
 	if (gjOpts.platform === 'desktop' && command === 'serve') {
@@ -323,7 +323,8 @@ export default defineConfig(async configEnv => {
 		},
 
 		build: {
-			minify: false,
+			// Only minify in production so we can debug our stuff.
+			minify: gjOpts.environment === 'production',
 
 			rollupOptions: {
 				...(() => {
@@ -332,7 +333,10 @@ export default defineConfig(async configEnv => {
 					// filter lists, for example blocking any file that contains the
 					// string 'follow-widget'. It'd ridiculous.
 					// For this reason, do not output filenames in prod web-based builds.
-					if (gjOpts.buildType === 'production' && gjOpts.platform in ['web', 'ssr']) {
+					if (
+						gjOpts.buildType === 'production' &&
+						['web', 'ssr'].includes(gjOpts.platform)
+					) {
 						return <RollupOptions>{
 							output: {
 								chunkFileNames: 'assets/[hash].js',
