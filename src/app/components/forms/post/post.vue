@@ -975,9 +975,10 @@ export default class FormPost
 			<AppButton
 				v-if="backgrounds.length > 0"
 				trans
-				:primary="false"
-				:solid="false"
+				:primary="enabledBackground"
+				:solid="enabledBackground"
 				:overlay="overlay"
+				:disabled="formModel.hasMedia || formModel.hasVideo"
 				icon="paintbrush"
 				@click="enableBackground()"
 			>
