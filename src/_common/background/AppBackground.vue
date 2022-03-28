@@ -50,10 +50,10 @@ if (!import.meta.env.SSR) {
 				<div
 					class="-stretch anim-fade-in"
 					:style="{
-						'background-image': background.backgroundImage,
-						'background-repeat': background.backgroundRepeat,
-						'background-size': background.backgroundSize,
-						'background-position': background.backgroundPosition,
+						'background-image': background.cssBackgroundImage,
+						'background-repeat': background.cssBackgroundRepeat,
+						'background-size': background.cssBackgroundSize,
+						'background-position': background.cssBackgroundPosition,
 					}"
 				/>
 				<div v-if="darken" class="-stretch -fade anim-fade-in" />

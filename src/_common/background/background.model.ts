@@ -26,7 +26,7 @@ export class Background extends Model {
 	declare media_item: MediaItem;
 	declare scale: number;
 
-	get backgroundImage() {
+	get cssBackgroundImage() {
 		if (!this.media_item) {
 			return;
 		}
@@ -44,7 +44,7 @@ export class Background extends Model {
 		return `url(${url})`;
 	}
 
-	get backgroundSize() {
+	get cssBackgroundSize() {
 		if (this.scaling === ScalingTile) {
 			const width = this.media_item.width / this.scale;
 			const height = this.media_item.height / this.scale;
@@ -55,14 +55,14 @@ export class Background extends Model {
 		return 'cover';
 	}
 
-	get backgroundRepeat() {
+	get cssBackgroundRepeat() {
 		if (this.scaling === ScalingTile) {
 			return 'repeat';
 		}
 		return 'no-repeat';
 	}
 
-	get backgroundPosition() {
+	get cssBackgroundPosition() {
 		return 'top';
 	}
 }
