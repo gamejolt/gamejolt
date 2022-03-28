@@ -21,7 +21,7 @@ import AppPill from '../../../../../_common/pill/AppPill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import AppStickerControlsOverlay from '../../../../../_common/sticker/controls-overlay/controls-overlay.vue';
+import AppStickerControlsOverlay from '../../../../../_common/sticker/AppStickerControlsOverlay.vue';
 import { canPlaceStickerOnFiresidePost } from '../../../../../_common/sticker/placement/placement.model';
 import AppStickerReactions from '../../../../../_common/sticker/reactions/reactions.vue';
 import {

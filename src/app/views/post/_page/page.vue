@@ -27,7 +27,7 @@ import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue'
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import AppStickerControlsOverlay from '../../../../_common/sticker/controls-overlay/controls-overlay.vue';
+import AppStickerControlsOverlay from '../../../../_common/sticker/AppStickerControlsOverlay.vue';
 import AppStickerReactions from '../../../../_common/sticker/reactions/reactions.vue';
 import {
 	createStickerTargetController,

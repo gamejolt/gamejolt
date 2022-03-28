@@ -3,7 +3,7 @@ import { PropType, ref } from 'vue';
 import AppFadeCollapse from '../AppFadeCollapse.vue';
 import AppContentViewer from '../content/content-viewer/content-viewer.vue';
 import { formatDate } from '../filters/date';
-import AppStickerControlsOverlay from '../sticker/controls-overlay/controls-overlay.vue';
+import AppStickerControlsOverlay from '../sticker/AppStickerControlsOverlay.vue';
 import AppStickerReactions from '../sticker/reactions/reactions.vue';
 import { createStickerTargetController } from '../sticker/target/target-controller';
 import AppStickerTarget from '../sticker/target/target.vue';

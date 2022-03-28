@@ -25,7 +25,7 @@ import { formatNumber } from '../../../../_common/filters/number';
 import AppFiresidePostLikeWidget from '../../../../_common/fireside/post/like/widget/widget.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppStickerControlsOverlay from '../../../../_common/sticker/controls-overlay/controls-overlay.vue';
+import AppStickerControlsOverlay from '../../../../_common/sticker/AppStickerControlsOverlay.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
