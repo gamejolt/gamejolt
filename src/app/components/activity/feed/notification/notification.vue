@@ -1,5 +1,6 @@
 <script lang="ts">
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
 import '../../../../../_common/comment/comment.styl';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import {
@@ -7,7 +8,6 @@ import {
 	NotificationType,
 } from '../../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
-import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import { Mention } from '../../../../../_common/mention/mention.model';
 import { Notification } from '../../../../../_common/notification/notification-model';
 import { NotificationText } from '../../../../../_common/notification/notification-text.service';

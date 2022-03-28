@@ -1,5 +1,6 @@
 <script lang="ts">
 import { Emit, Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import {
 	Comment,
 	getCommentBlockReason,
@@ -14,7 +15,6 @@ import {
 import { DisplayMode } from '../../../../_common/comment/modal/modal.service';
 import { CommentThreadModal } from '../../../../_common/comment/thread/modal.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
-import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { Model } from '../../../../_common/model/model.service';
 import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';

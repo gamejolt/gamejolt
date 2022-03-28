@@ -2,11 +2,11 @@
 import { computed, nextTick, onMounted, PropType, ref, toRefs, useSlots, watch } from 'vue';
 import { RouterLink } from 'vue-router';
 import { PostOpenSource, trackPostOpen } from '../../../analytics/analytics.service';
+import AppFadeCollapse from '../../../AppFadeCollapse.vue';
 import AppBackground from '../../../background/AppBackground.vue';
 import { ContentFocus } from '../../../content-focus/content-focus.service';
 import AppContentViewer from '../../../content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../environment/environment.service';
-import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
 import { formatFuzzynumber } from '../../../filters/fuzzynumber';
 import AppImgResponsive from '../../../img/AppImgResponsive.vue';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';

@@ -1,8 +1,8 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
+import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import { Community } from '../../../../_common/community/community.model';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
-import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 
 @Options({
 	components: {
@@ -36,6 +36,10 @@ export default class AppCommunityDescription extends Vue {
 			<AppContentViewer :source="community.description_content" />
 		</AppFadeCollapse>
 
-		<a class="hidden-text-expander" v-if="canToggleDescription" @click="toggleDescription()"></a>
+		<a
+			class="hidden-text-expander"
+			v-if="canToggleDescription"
+			@click="toggleDescription()"
+		></a>
 	</div>
 </template>

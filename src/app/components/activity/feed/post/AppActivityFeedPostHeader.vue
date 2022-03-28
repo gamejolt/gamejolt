@@ -12,24 +12,22 @@ import AppActivityFeedPostTime from './time/time.vue';
 
 const props = defineProps({
 	post: {
-		required: true,
 		type: Object as PropType<FiresidePost>,
+		required: true,
 	},
 	feed: {
-		default: null,
-		type: (null || Object) as PropType<ActivityFeedView | null>,
+		type: Object as PropType<ActivityFeedView>,
+		default: undefined,
 	},
 	showPinned: {
-		default: false,
 		type: Boolean,
 	},
 	showDate: {
-		default: false,
 		type: Boolean,
 	},
 	dateLink: {
-		default: null,
-		type: String as PropType<string | null>,
+		type: String as PropType<string>,
+		default: undefined,
 	},
 });
 

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { ref } from '@vue/reactivity';
 import { computed, PropType } from 'vue';
+import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
 import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
-import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { canPlaceStickerOnFiresidePost } from '../../../../../_common/sticker/placement/placement.model';
 import { StickerTargetController } from '../../../../../_common/sticker/target/target-controller';
@@ -11,15 +11,14 @@ import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
 
 const props = defineProps({
 	post: {
-		required: true,
 		type: Object as PropType<FiresidePost>,
+		required: true,
 	},
 	stickerTargetController: {
-		required: true,
 		type: Object as PropType<StickerTargetController>,
+		required: true,
 	},
 	truncateLinks: {
-		default: false,
 		type: Boolean,
 	},
 });

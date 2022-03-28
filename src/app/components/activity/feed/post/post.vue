@@ -3,6 +3,7 @@ import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { RouteLocationDefinition } from '../../../../../utils/router';
 import { trackPostOpen } from '../../../../../_common/analytics/analytics.service';
+import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
@@ -11,7 +12,6 @@ import { ContentRules } from '../../../../../_common/content/content-editor/cont
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
-import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
