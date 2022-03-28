@@ -1455,7 +1455,11 @@ export default class FormPost
 		</div>
 
 		<!-- Author options -->
-		<template v-if="shouldShowAuthorOptions">
+		<AppTheme
+			v-if="shouldShowAuthorOptions"
+			:class="{ '-overlay-text': overlay }"
+			:force-dark="overlay"
+		>
 			<fieldset>
 				<!-- Post to profile -->
 				<AppFormGroup
@@ -1465,7 +1469,7 @@ export default class FormPost
 					:label="$gettext(`Post to Profile`)"
 				>
 					<AppFormControlToggle class="pull-right" />
-					<p class="help-block sans-margin-top">
+					<p class="help-block sans-margin-top" :class="{ '-text-white': overlay }">
 						This will post to your profile as well as the game page.
 					</p>
 				</AppFormGroup>
@@ -1487,7 +1491,7 @@ export default class FormPost
 					>
 						<AppUserAvatarImg :user="model.game.developer" />
 					</div>
-					<p class="help-block sans-margin-top">
+					<p class="help-block sans-margin-top" :class="{ '-text-white': overlay }">
 						<AppTranslate
 							:translate-params="{
 								owner: `@${model.game.developer.username}`,
@@ -1499,7 +1503,7 @@ export default class FormPost
 					</p>
 				</AppFormGroup>
 			</fieldset>
-		</template>
+		</AppTheme>
 
 		<!-- Controls -->
 		<div class="-controls">
@@ -1779,6 +1783,9 @@ export default class FormPost
 	& > *
 		text-shadow: black 1px 1px 4px
 		color: white
+
+.-text-white
+	color: white !important
 
 .-overlay-box
 	elevate-1()

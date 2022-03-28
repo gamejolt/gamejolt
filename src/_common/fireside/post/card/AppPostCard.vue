@@ -96,10 +96,7 @@ const video = computed(() => {
 	return post.value?.videos[0].media.find(i => i.type == MediaItem.TYPE_TRANSCODED_VIDEO_CARD);
 });
 
-const background = computed(() => {
-	return post.value.background;
-});
-
+const background = computed(() => post.value.background);
 const overlay = computed(() => !!background.value || !!mediaItem.value);
 
 const votedOnPoll = computed(() => {
@@ -245,12 +242,6 @@ function _initVideoController() {
 					<slot name="overlay" />
 				</div>
 
-				<RouterLink
-					class="-link"
-					:to="post.routeLocation"
-					@click="trackPostOpen({ source })"
-				/>
-
 				<AppBackground
 					ref="cardElem"
 					class="-background"
@@ -333,6 +324,12 @@ function _initVideoController() {
 							{{ formatFuzzynumber(post.like_count) }}
 						</span>
 					</div>
+
+					<RouterLink
+						class="-link"
+						:to="post.routeLocation"
+						@click="trackPostOpen({ source })"
+					/>
 				</AppBackground>
 			</AppScrollInview>
 		</AppResponsiveDimensions>

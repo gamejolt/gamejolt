@@ -380,7 +380,7 @@ export default class AppPostPage extends Vue {
 					/>
 
 					<div v-if="post.has_article">
-						<div class="page-cut" />
+						<div v-if="!background" class="page-cut" />
 
 						<template v-if="!post.hasArticleContent">
 							<span class="lazy-placeholder" />

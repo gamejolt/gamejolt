@@ -6,16 +6,13 @@ import { Background } from './background.model';
 
 const props = defineProps({
 	background: {
-		required: false,
-		default: null,
 		type: Object as PropType<Background>,
+		default: undefined,
 	},
 	darken: {
-		default: false,
 		type: Boolean,
 	},
 	bleed: {
-		default: false,
 		type: Boolean,
 	},
 });

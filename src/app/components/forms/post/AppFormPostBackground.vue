@@ -76,9 +76,7 @@ $-border-width = $border-width-large
 	transition: border 0.1s ease
 
 	&:hover
-		theme-prop('border-color', 'link')
-		border-style: solid
-
 	&.-active
+		theme-prop('border-color', 'link')
 		border-style: solid
 </style>
