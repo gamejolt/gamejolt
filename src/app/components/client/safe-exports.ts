@@ -15,9 +15,14 @@ import type { LocalDbGame as LocalDbGameType } from './local-db/game/game.model'
 import { Router } from 'vue-router';
 
 // Vue components
-export let AppClientShell: typeof AppClientShellType = null as any;
-export let AppClientStatusBar: typeof AppClientStatusBarType = null as any;
-export let AppClientPackageCardButtons: typeof AppClientPackageCardButtonsType = null as any;
+const AppNoopLoader = defineAsyncComponent(
+	async () => (await import('../../../_common/AppNoop.vue')).default
+);
+
+export let AppClientShell: typeof AppClientShellType = AppNoopLoader as any;
+export let AppClientStatusBar: typeof AppClientStatusBarType = AppNoopLoader as any;
+export let AppClientPackageCardButtons: typeof AppClientPackageCardButtonsType =
+	AppNoopLoader as any;
 
 // Vue routes
 export let routeLibraryInstalled: typeof routeLibraryInstalledType = null as any;

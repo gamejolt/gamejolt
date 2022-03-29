@@ -13,8 +13,9 @@ import type { ClientHistoryNavigator as ClientHistoryNavigatorType } from './his
 import type { ClientAutoStart as ClientAutoStartType } from './autostart/autostart.service';
 
 // Vue components
-export let AppClientHistoryNavigator: typeof AppClientHistoryNavigatorType = null as any;
-export let AppClientBase: typeof AppClientBaseType = null as any;
+const AppNoopLoader = defineAsyncComponent(async () => (await import('../AppNoop.vue')).default);
+export let AppClientHistoryNavigator: typeof AppClientHistoryNavigatorType = AppNoopLoader as any;
+export let AppClientBase: typeof AppClientBaseType = AppNoopLoader as any;
 
 // Misc
 export let Client: typeof ClientType = null as any;
