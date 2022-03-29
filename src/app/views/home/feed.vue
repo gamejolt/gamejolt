@@ -271,7 +271,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 											:to="developerCollection.routeLocation"
 											active-class="active"
 										>
-											<AppJolticon class="-menu-icon" icon="game" />
+											<AppJolticon class="-menu-icon" icon="gamepad" />
 											<AppTranslate>Your Games</AppTranslate>
 										</router-link>
 									</li>

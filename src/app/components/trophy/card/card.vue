@@ -77,7 +77,7 @@ export default class AppTrophyCard extends Vue {
 				<div class="-subline">
 					<small class="text-muted">
 						<span v-if="isGame" class="-game-title">
-							<AppJolticon icon="game" />
+							<AppJolticon icon="gamepad" />
 							<span>
 								{{ gameTitle }}
 							</span>
@@ -91,7 +91,11 @@ export default class AppTrophyCard extends Vue {
 					</small>
 				</div>
 				<div class="-thumbnail">
-					<AppTrophyThumbnail :trophy="trophy" no-tooltip :no-highlight="loggedInUserUnlocked" />
+					<AppTrophyThumbnail
+						:trophy="trophy"
+						no-tooltip
+						:no-highlight="loggedInUserUnlocked"
+					/>
 				</div>
 				<div class="-description">
 					<AppFadeCollapse :collapse-height="64">

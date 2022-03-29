@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   id="SVGRoot"
+   version="1.1"
+   viewBox="0 0 16.0 16.0"
+   height="16.0px"
+   width="16.0px">
+  <defs
+     id="defs6696" />
+  <metadata
+     id="metadata6699">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="g75493"
+     style="display:inline">
+    <g
+       transform="translate(26.25,-8.8125001)"
+       style="display:none"
+       id="g75481">
+      <path
+         id="path75479"
+         d="M 2,2 V 3 H 1 v 8 h 1 v 2 h 1 v 1 h 2 v -4 h 6 v 4 h 2 v -1 h 1 v -2 h 1 V 3 H 14 V 2 H 10 V 3 H 6 V 2 Z M 3,4 H 4 V 5 H 5 V 6 H 4 V 7 H 3 V 6 H 2 V 5 h 1 z m 9,0 h 1 v 1 h 1 V 6 H 13 V 7 H 12 V 6 H 11 V 5 h 1 z m 0,1 v 1 h 1 V 5 Z M 6,7 H 7 V 8 H 6 Z m 3,0 h 1 V 8 H 9 Z"
+         style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8;marker:none;enable-background:accumulate" />
+    </g>
+    <path
+       d="m 2.5,1 c -0.554,0 -1,0.446 -1,1 V 2.5 H 1 c -0.55399997,0 -1,0.446 -1,1 v 6 0.027344 c 0,0.58456 2.7939e-4,1.360428 0.33398438,2.333984 C 0.66768936,12.834884 1.3326284,14.000367 2,14.583984 2.6673716,15.167602 3.3345827,15.168023 3.8339844,14.390625 4.2280801,13.777152 4.518251,12.677395 4.7871094,11.476562 4.9077587,10.937693 5.4477153,10.5 6,10.5 h 4 c 0.552285,0 1.092225,0.437623 1.212891,0.976562 0.268861,1.200839 0.559075,2.300769 0.953125,2.914063 0.499358,0.777194 1.166612,0.776977 1.833984,0.193359 0.667372,-0.583617 1.332311,-1.7491 1.666016,-2.722656 C 15.99972,10.887772 16,10.111904 16,9.5273438 V 9.5 3.5 c 0,-0.554 -0.446,-1 -1,-1 H 14.5 V 2 c 0,-0.554 -0.446,-1 -1,-1 h -2 c -0.554,0 -1,0.446 -1,1 v 0.5 h -5 V 2 C 5.5,1.446 5.054,1 4.5,1 Z"
+       style="vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect75483" />
+  </g>
+</svg>

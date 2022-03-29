@@ -434,7 +434,6 @@ export default class RouteFireside extends BaseRouteComponent {
 					</div>
 				</div>
 			</template>
-
 			<template v-else-if="c.status.value === 'unauthorized'">
 				<div key="unauthorized" class="-message-wrapper">
 					<div class="-message">
@@ -455,7 +454,6 @@ export default class RouteFireside extends BaseRouteComponent {
 					</div>
 				</div>
 			</template>
-
 			<template v-else-if="c.status.value === 'expired'">
 				<div key="expired" class="-message-wrapper">
 					<div class="-message">
@@ -472,7 +470,6 @@ export default class RouteFireside extends BaseRouteComponent {
 					</div>
 				</div>
 			</template>
-
 			<template v-else-if="c.status.value === 'setup-failed'">
 				<div key="setup-failed" class="-message-wrapper">
 					<div class="-message">
@@ -491,7 +488,6 @@ export default class RouteFireside extends BaseRouteComponent {
 					</div>
 				</div>
 			</template>
-
 			<template v-else-if="c.status.value === 'disconnected'">
 				<div key="disconnected" class="-message-wrapper">
 					<div class="-message">
@@ -513,7 +509,6 @@ export default class RouteFireside extends BaseRouteComponent {
 					</div>
 				</div>
 			</template>
-
 			<template v-else-if="c.status.value === 'blocked'">
 				<div key="blocked" class="-message-wrapper">
 					<div class="-message">
@@ -584,6 +579,7 @@ export default class RouteFireside extends BaseRouteComponent {
 					</div>
 				</div>
 			</div>
+
 			<div v-if="shouldShowChatMembers" class="-trailing">
 				<div class="-chat-members">
 					<AppFiresideChatMembers
