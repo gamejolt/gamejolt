@@ -25,7 +25,6 @@ const props = defineProps({
 	},
 	size: {
 		type: String,
-		required: false,
 		default: undefined,
 		validator: val => !val || val === 'sm',
 	},
@@ -45,9 +44,10 @@ const emit = defineEmits({
 });
 
 const isCollapsed = ref(false);
-const isPrimed = ref(false); // private
-const frameRequestHandle = ref<number | undefined>(); // private
-const isRequired = ref(false); // private
+const frameRequestHandle = ref<number | undefined>();
+
+let isRequired = false;
+let isPrimed = false;
 
 const root = ref<HTMLDivElement>();
 
@@ -64,12 +64,12 @@ onMounted(async () => {
 		!ignoreThreshold.value && collapseHeight.value > Threshold * 2 ? Threshold : 0;
 
 	if (collapseHeight.value && root.value.scrollHeight - threshold > collapseHeight.value) {
-		isRequired.value = true;
+		isRequired = true;
 	}
 
-	emit('requireChange', isRequired.value);
+	emit('requireChange', isRequired);
 
-	if (isRequired.value && !isOpen.value) {
+	if (isRequired && !isOpen.value) {
 		collapse();
 	}
 });
@@ -77,7 +77,7 @@ onMounted(async () => {
 watch(
 	() => isOpen.value,
 	() => {
-		if (!isRequired.value) {
+		if (!isRequired) {
 			return;
 		}
 
@@ -87,7 +87,7 @@ watch(
 			collapse();
 		}
 
-		isPrimed.value = true;
+		isPrimed = true;
 	}
 );
 
@@ -114,7 +114,7 @@ function collapse() {
 	isCollapsed.value = true;
 	root.value.style.maxHeight = collapseHeight.value + 'px';
 
-	if (isPrimed.value) {
+	if (isPrimed) {
 		// We will scroll to the bottom of the element minus some extra padding.
 		// This keeps the element in view a bit.
 		const scrollTo =
@@ -140,8 +140,6 @@ function setupScrollAnim() {
 	// Start the loop.
 	frameRequestHandle.value = window.requestAnimationFrame(() => animStep());
 }
-
-// private
 
 function animStep() {
 	if (!root.value) {
