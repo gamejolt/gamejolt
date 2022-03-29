@@ -1,8 +1,8 @@
 <script lang="ts">
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../../../../_common/analytics/analytics.service';
+import AppFadeCollapse from '../../../../../../_common/AppFadeCollapse.vue';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
-import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
 import {
 	FiresidePost,
 	loadArticleIntoPost,

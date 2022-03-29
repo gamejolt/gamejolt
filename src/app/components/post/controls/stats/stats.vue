@@ -15,6 +15,9 @@ export default class AppPostControlsStats extends Vue {
 	@Prop({ type: Object, required: true })
 	post!: FiresidePost;
 
+	@Prop({ type: Boolean, default: false })
+	overlay!: boolean;
+
 	commonStore = setup(() => useCommonStore());
 
 	get user() {
@@ -39,6 +42,7 @@ export default class AppPostControlsStats extends Vue {
 <template>
 	<div v-if="shouldShowStats">
 		<AppTranslate
+			:class="{ '-overlay-text': overlay }"
 			:translate-n="post.view_count || 0"
 			:translate-params="{ count: formatNumber(post.view_count || 0) }"
 			translate-plural="%{ count } views"
@@ -47,3 +51,9 @@ export default class AppPostControlsStats extends Vue {
 		</AppTranslate>
 	</div>
 </template>
+
+<style lang="stylus" scoped>
+.-overlay-text
+	color: white
+	text-shadow: black 1px 1px 4px
+</style>

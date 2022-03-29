@@ -1,17 +1,17 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
-
-@Options({})
-export default class AppStickerControlsOverlay extends Vue {
-	// Extends the overlay 4px past the content on the bottom,
-	// rather than being inset 4px on the bottom.
-	@Prop({ type: Boolean, default: false }) end!: boolean;
-}
+<script lang="ts" setup>
+defineProps({
+	/**
+	 * Extends the overlay 4px past the content on the bottom, rather than being
+	 * inset 4px on the bottom.
+	 */
+	end: { type: Boolean },
+	hide: { type: Boolean },
+});
 </script>
 
 <template>
 	<div class="sticker-controls-overlay">
-		<div class="-overlay" :class="{ '-end': end }" />
+		<div v-if="!hide" class="-overlay" :class="{ '-end': end }" />
 		<slot />
 	</div>
 </template>

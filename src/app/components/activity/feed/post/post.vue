@@ -3,6 +3,8 @@ import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { RouteLocationDefinition } from '../../../../../utils/router';
 import { trackPostOpen } from '../../../../../_common/analytics/analytics.service';
+import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
+import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../../_common/community/pill/pill.vue';
@@ -10,16 +12,16 @@ import { ContentRules } from '../../../../../_common/content/content-editor/cont
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
-import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppPill from '../../../../../_common/pill/AppPill.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import AppStickerControlsOverlay from '../../../../../_common/sticker/controls-overlay/controls-overlay.vue';
+import AppStickerControlsOverlay from '../../../../../_common/sticker/AppStickerControlsOverlay.vue';
 import { canPlaceStickerOnFiresidePost } from '../../../../../_common/sticker/placement/placement.model';
 import AppStickerReactions from '../../../../../_common/sticker/reactions/reactions.vue';
 import {
@@ -35,6 +37,8 @@ import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.v
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
 import AppFiresidePostEmbed from '../../../fireside/post/embed/embed.vue';
 import AppPollVoting from '../../../poll/voting/voting.vue';
+import AppPostContent from '../../../post/AppPostContent.vue';
+import AppPostHeader from '../../../post/AppPostHeader.vue';
 import AppPostControls from '../../../post/controls/controls.vue';
 import { feedShouldBlockPost } from '../feed-service';
 import type { ActivityFeedInterface } from '../feed.vue';
@@ -68,6 +72,10 @@ import AppActivityFeedPostTime from './time/time.vue';
 		AppStickerReactions,
 		AppScrollScroller,
 		AppFiresidePostEmbed,
+		AppMediaItemBackdrop,
+		AppBackground,
+		AppPostHeader,
+		AppPostContent,
 	},
 	directives: {
 		AppObserveDimensions: vAppObserveDimensions,
@@ -225,6 +233,10 @@ export default class AppActivityFeedPost extends Vue {
 		return new ContentRules({ truncateLinks: true });
 	}
 
+	get overlay() {
+		return !!this.post.background?.media_item;
+	}
+
 	created() {
 		if (this.post) {
 			this.stickerTargetController = createStickerTargetController(this.post);
@@ -367,176 +379,101 @@ export default class AppActivityFeedPost extends Vue {
 			:username="user.username"
 			@show="onUnhideBlock"
 		/>
-		<div
-			v-else
-			class="-item"
-			:class="{
-				'-new': isNew,
-			}"
-			@click.capture="onClickCapture"
-			@click="onClick"
-		>
-			<div v-if="user" class="-header">
-				<div class="-header-content">
-					<AppUserCardHover :user="user" :disabled="!feed.shouldShowUserCards">
-						<div class="-header-avatar">
-							<div class="-header-avatar-inner">
-								<AppUserAvatar :user="user" />
-							</div>
-						</div>
-					</AppUserCardHover>
+		<div v-else class="-item" @click.capture="onClickCapture" @click="onClick">
+			<AppBackground :background="post.background" :darken="overlay" bleed>
+				<AppPostHeader
+					:post="post"
+					:feed="feed"
+					:show-pinned="shouldShowIsPinned"
+					:show-date="shouldShowDate"
+					:date-link="linkResolved"
+					:is-new="isNew"
+				/>
 
-					<div class="-header-byline">
-						<div class="-header-byline-name">
-							<strong>
-								<router-link
-									class="link-unstyled"
-									:to="{
-										name: 'profile.overview',
-										params: { username: user.username },
-									}"
-								>
-									{{ user.display_name }}
-									<AppUserVerifiedTick :user="user" />
-								</router-link>
-							</strong>
+				<AppActivityFeedPostVideo
+					v-if="post.hasVideo"
+					:item="item"
+					:post="post"
+					@query-param="onQueryParam"
+				/>
 
-							<small class="text-muted">
-								<router-link
-									class="link-unstyled"
-									:to="{
-										name: 'profile.overview',
-										params: { username: user.username },
-									}"
-								>
-									@{{ user.username }}
-								</router-link>
-							</small>
-						</div>
+				<AppActivityFeedPostMedia
+					v-if="post.hasMedia"
+					:item="item"
+					:post="post"
+					:can-place-sticker="canPlaceSticker"
+				/>
 
-						<div v-if="game && !feed.hideGameInfo" class="-header-byline-game">
-							<strong class="text-muted">
-								<router-link :to="gameUrl" class="link-unstyled">
-									{{ game.title }}
-								</router-link>
-							</strong>
-						</div>
-					</div>
-				</div>
-				<div class="-header-meta small text-muted">
-					<AppUserFollowWidget
-						v-if="shouldShowFollow"
-						class="-header-meta-follow"
-						:user="user"
-						:sm="Screen.isXs"
-						hide-count
-						location="feed"
-					/>
-
-					<span>
-						<span v-if="shouldShowIsPinned" class="tag">
-							<AppJolticon icon="thumbtack" />
-							<AppTranslate>Pinned</AppTranslate>
-						</span>
-						{{ ' ' }}
-						<AppActivityFeedPostTime
-							v-if="shouldShowDate"
-							:post="post"
-							:link="linkResolved"
+				<AppPostContent
+					:post="post"
+					:sticker-target-controller="stickerTargetController"
+					truncate-links
+				>
+					<AppStickerControlsOverlay>
+						<AppFiresidePostEmbed
+							v-for="embed of post.embeds"
+							:key="embed.id"
+							:embed="embed"
 						/>
-					</span>
-				</div>
-			</div>
 
-			<AppActivityFeedPostVideo
-				v-if="post.hasVideo"
-				:item="item"
-				:post="post"
-				@query-param="onQueryParam"
-			/>
+						<AppActivityFeedPostText
+							v-if="post.has_article"
+							:item="item"
+							:post="post"
+						/>
 
-			<AppActivityFeedPostMedia
-				v-if="post.hasMedia"
-				:item="item"
-				:post="post"
-				:can-place-sticker="canPlaceSticker"
-			/>
+						<div v-if="post.hasPoll" class="-poll" @click.stop>
+							<AppPollVoting :poll="post.poll" :game="post.game" :user="post.user" />
+						</div>
+					</AppStickerControlsOverlay>
+				</AppPostContent>
 
-			<div ref="sticker-scroll" />
+				<AppStickerControlsOverlay :hide="!!post.background">
+					<div
+						v-if="post.sticker_counts.length"
+						class="-reactions-container -controls-buffer"
+						@click.stop
+					>
+						<AppStickerReactions
+							:controller="stickerTargetController"
+							@show="scrollToStickers()"
+						/>
+					</div>
 
-			<AppStickerTarget :controller="stickerTargetController" :disabled="!canPlaceSticker">
-				<!--
-					This shouldn't ever really show a collapser. It's for the jokers that think it would
-					be fun to make a post with a bunch of new lines.
-					-->
-				<AppFadeCollapse
-					:collapse-height="400"
-					:is-open="isLeadOpen"
-					:animate="false"
-					@require-change="canToggleLeadChanged"
-				>
-					<AppContentViewer
-						class="fireside-post-lead"
-						:source="post.lead_content"
-						:display-rules="displayRules"
-					/>
-				</AppFadeCollapse>
-			</AppStickerTarget>
+					<AppScrollScroller
+						v-if="shouldShowCommunities"
+						class="-communities -controls-buffer"
+						horizontal
+					>
+						<AppCommunityPill
+							v-for="postCommunity of communities"
+							:key="postCommunity.id"
+							:community-link="postCommunity"
+						/>
+					</AppScrollScroller>
+				</AppStickerControlsOverlay>
 
-			<a v-if="canToggleLead" class="hidden-text-expander" @click="toggleLead()" />
-
-			<AppStickerControlsOverlay>
-				<AppFiresidePostEmbed v-for="embed of post.embeds" :key="embed.id" :embed="embed" />
-
-				<AppActivityFeedPostText v-if="post.has_article" :item="item" :post="post" />
-
-				<div v-if="post.hasPoll" class="-poll" @click.stop>
-					<AppPollVoting :poll="post.poll" :game="post.game" :user="post.user" />
-				</div>
-
-				<div
-					v-if="post.sticker_counts.length"
-					class="-reactions-container -controls-buffer"
-					@click.stop
-				>
-					<AppStickerReactions
-						:controller="stickerTargetController"
-						@show="scrollToStickers()"
-					/>
-				</div>
-
-				<AppScrollScroller
-					v-if="shouldShowCommunities"
-					class="-communities -controls-buffer"
-					horizontal
-				>
-					<AppCommunityPill
-						v-for="postCommunity of communities"
-						:key="postCommunity.id"
-						:community-link="postCommunity"
-					/>
-				</AppScrollScroller>
-			</AppStickerControlsOverlay>
-
-			<AppPostControls
-				class="-controls"
-				:post="post"
-				:feed="feed"
-				:item="item"
-				show-comments
-				location="feed"
-				event-label="feed"
-				@post-edit="onPostEdited(eventItem)"
-				@post-publish="onPostPublished(eventItem)"
-				@post-remove="onPostRemoved(eventItem)"
-				@post-feature="onPostFeatured(eventItem, $event)"
-				@post-unfeature="onPostUnfeatured(eventItem, $event)"
-				@post-move-channel="onPostMovedChannel(eventItem, $event)"
-				@post-reject="onPostRejected(eventItem, $event)"
-				@post-pin="onPostPinned(eventItem)"
-				@post-unpin="onPostUnpinned(eventItem)"
-				@sticker="scrollToStickers()"
-			/>
+				<AppPostControls
+					class="-controls"
+					:post="post"
+					:feed="feed"
+					:item="item"
+					:overlay="overlay"
+					show-comments
+					location="feed"
+					event-label="feed"
+					@post-edit="onPostEdited(eventItem)"
+					@post-publish="onPostPublished(eventItem)"
+					@post-remove="onPostRemoved(eventItem)"
+					@post-feature="onPostFeatured(eventItem, $event)"
+					@post-unfeature="onPostUnfeatured(eventItem, $event)"
+					@post-move-channel="onPostMovedChannel(eventItem, $event)"
+					@post-reject="onPostRejected(eventItem, $event)"
+					@post-pin="onPostPinned(eventItem)"
+					@post-unpin="onPostUnpinned(eventItem)"
+					@sticker="scrollToStickers()"
+				/>
+			</AppBackground>
 		</div>
 	</div>
 </template>

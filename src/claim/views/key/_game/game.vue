@@ -1,9 +1,9 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
-import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import { GameBundle } from '../../../../_common/game-bundle/game-bundle.model';
 import { CustomMessage as CustomGameMessage, Game } from '../../../../_common/game/game.model';
 import AppGamePackageCard from '../../../../_common/game/package/card/card.vue';
@@ -105,10 +105,7 @@ export default class AppKeyGame extends Vue {
 <template>
 	<div>
 		<div class="game-cover">
-			<AppMediaItemCover
-				v-if="game.header_media_item"
-				:media-item="game.header_media_item"
-			/>
+			<AppMediaItemCover v-if="game.header_media_item" :media-item="game.header_media_item" />
 		</div>
 
 		<!-- If this game is in a bundle, show a back button. -->

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
+import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';

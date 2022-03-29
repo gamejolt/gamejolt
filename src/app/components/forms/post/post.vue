@@ -7,6 +7,7 @@ import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../utils/array';
 import { trackPostPublish } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
+import { Background } from '../../../../_common/background/background.model';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
@@ -43,6 +44,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { vAppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
 import { useCommonStore } from '../../../../_common/store/common-store';
+import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
@@ -50,6 +52,7 @@ import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
 import AppFormsCommunityPillAdd from '../community/_pill/add/add.vue';
 import AppFormsCommunityPill from '../community/_pill/community-pill.vue';
 import AppFormsCommunityPillIncomplete from '../community/_pill/incomplete/incomplete.vue';
+import AppFormPostBackground from './AppFormPostBackground.vue';
 import AppFormPostMedia from './_media/media.vue';
 import AppFormPostVideo, { VideoStatus } from './_video/video.vue';
 
@@ -59,6 +62,7 @@ type FormPostModel = FiresidePost & {
 	key_group_ids: number[];
 	video_id: number;
 	attached_communities: { community_id: number; channel_id: number }[];
+	background_id: number | null;
 
 	poll_item_count: number;
 	poll_duration: number;
@@ -99,6 +103,8 @@ class Wrapper extends BaseForm<FormPostModel> {}
 		AppScrollScroller,
 		AppFormPostVideo,
 		AppExpand,
+		AppFormPostBackground,
+		AppTheme,
 	},
 	directives: {
 		AppFocusWhen: vAppFocusWhen,
@@ -115,6 +121,9 @@ export default class FormPost
 
 	@Prop({ type: Object, default: null })
 	defaultChannel!: CommunityChannel | null;
+
+	@Prop({ type: Boolean, default: false })
+	overlay!: boolean;
 
 	modelClass = FiresidePost as any;
 
@@ -150,6 +159,7 @@ export default class FormPost
 	maxCommunities = 0;
 	attachedCommunities: { community: Community; channel: CommunityChannel }[] = [];
 	targetableCommunities: Community[] = [];
+	backgrounds: Background[] = [];
 	scrollingKey = 1;
 	uploadingVideoStatus = VideoStatus.IDLE;
 	videoProvider = FiresidePostVideo.PROVIDER_GAMEJOLT;
@@ -163,6 +173,9 @@ export default class FormPost
 
 	@Emit('video-upload-status-change')
 	emitVideoUploadStatusChange(_status: VideoStatus) {}
+
+	@Emit('background-change')
+	emitBackgroundChange(_background?: Background) {}
 
 	get loadUrl() {
 		return `/web/posts/manage/save/${this.model!.id}`;
@@ -190,6 +203,10 @@ export default class FormPost
 
 	get enabledVideo() {
 		return this.enabledAttachments && this.attachmentType === FiresidePost.TYPE_VIDEO;
+	}
+
+	get enabledBackground() {
+		return this.enabledAttachments && this.attachmentType === FiresidePost.TYPE_BACKGROUND;
 	}
 
 	get hasOptionalData() {
@@ -380,6 +397,8 @@ export default class FormPost
 			this.enableVideo();
 		} else if (model.hasMedia) {
 			this.enableImages();
+		} else if (model.hasBackground) {
+			this.enableBackground();
 		} else if (this.attachmentType !== '') {
 			this.enabledAttachments = true;
 		}
@@ -429,6 +448,8 @@ export default class FormPost
 		this.leadLengthLimit = payload.leadLengthLimit;
 		this.articleLengthLimit = payload.articleLengthLimit;
 		this.maxCommunities = payload.maxCommunities;
+
+		this.backgrounds = Background.populate(payload.backgrounds);
 
 		if (payload.attachedCommunities) {
 			this.attachedCommunities = FiresidePostCommunity.populate(
@@ -573,6 +594,13 @@ export default class FormPost
 		this.setField('publishToPlatforms', this.publishToPlatforms);
 
 		this.setField('poll_duration', this.pollDuration * 60); // site-api expects duration in seconds.
+
+		if (this.formModel.background && this.enabledBackground) {
+			this.setField('background_id', this.formModel.background.id);
+		} else {
+			this.setField('background_id', null);
+		}
+
 		return this.formModel.$save();
 	}
 
@@ -641,12 +669,18 @@ export default class FormPost
 		this.attachmentType = FiresidePost.TYPE_VIDEO;
 	}
 
+	enableBackground() {
+		this.enabledAttachments = true;
+		this.attachmentType = FiresidePost.TYPE_BACKGROUND;
+	}
+
 	disableAttachments() {
 		this.enabledAttachments = false;
 		this.attachmentType = '';
 
 		this.setField('media', []);
 		this.setField('videos', []);
+		this.onBackgroundChanged();
 	}
 
 	toggleLong() {
@@ -902,6 +936,11 @@ export default class FormPost
 	onDisableVideoAttachment() {
 		this.disableAttachments();
 	}
+
+	onBackgroundChanged(background?: Background) {
+		this.setField('background', background);
+		this.emitBackgroundChange(background);
+	}
 }
 </script>
 
@@ -913,6 +952,8 @@ export default class FormPost
 				trans
 				:primary="enabledImages"
 				:solid="enabledImages"
+				:overlay="overlay"
+				:disabled="formModel.hasBackground"
 				icon="screenshot"
 				@click="enableImages()"
 			>
@@ -923,10 +964,25 @@ export default class FormPost
 				trans
 				:primary="enabledVideo"
 				:solid="enabledVideo"
+				:overlay="overlay"
+				:disabled="formModel.hasBackground"
 				icon="video"
 				@click="enableVideo()"
 			>
 				<AppTranslate>Video</AppTranslate>
+			</AppButton>
+
+			<AppButton
+				v-if="backgrounds.length > 0"
+				trans
+				:primary="enabledBackground"
+				:solid="enabledBackground"
+				:overlay="overlay"
+				:disabled="formModel.hasMedia || formModel.hasVideo"
+				icon="paintbrush"
+				@click="enableBackground()"
+			>
+				<AppTranslate>Background</AppTranslate>
 			</AppButton>
 		</div>
 		<div v-else class="well fill-offset full-bleed">
@@ -960,6 +1016,18 @@ export default class FormPost
 				@video-status-change="onUploadingVideoStatusChanged"
 				@video-provider-change="onVideoProviderChanged"
 			/>
+
+			<template v-else-if="enabledBackground">
+				<AppFormLegend compact deletable @delete="disableAttachments()">
+					<AppTranslate>Select background</AppTranslate>
+				</AppFormLegend>
+
+				<AppFormPostBackground
+					:backgrounds="backgrounds"
+					:post="formModel"
+					@background-change="onBackgroundChanged"
+				/>
+			</template>
 		</div>
 
 		<!-- Post title (short) -->
@@ -983,15 +1051,22 @@ export default class FormPost
 				@paste="onPaste"
 			/>
 
-			<div class="-hp">
-				<div class="-hp-label">HP</div>
-				<div class="-hp-bar">
-					<AppProgressBar thin :percent="leadLengthPercent" :animate="false" />
+			<AppTheme :force-dark="overlay">
+				<div class="-hp" :class="{ '-overlay-text': overlay }">
+					<div class="-hp-label" :class="{ '-overlay': overlay }">HP</div>
+					<div class="-hp-bar">
+						<AppProgressBar
+							thin
+							:percent="leadLengthPercent"
+							:animate="false"
+							:class="{ '-overlay-box': overlay }"
+						/>
+					</div>
+					<div v-if="leadLengthPercent <= 10" class="-hp-count">
+						{{ leadLengthLimit - formModel.leadLength }}
+					</div>
 				</div>
-				<div v-if="leadLengthPercent <= 10" class="-hp-count">
-					{{ leadLengthLimit - formModel.leadLength }}
-				</div>
-			</div>
+			</AppTheme>
 
 			<AppFormControlErrors />
 		</AppFormGroup>
@@ -1159,9 +1234,9 @@ export default class FormPost
 
 				<AppFormGroup name="scheduled_for_timezone" :label="$gettext(`Timezone`)">
 					<p class="help-block">
-						<AppTranslate
-							>All time selection below will use this timezone.</AppTranslate
-						>
+						<AppTranslate>
+							All time selection below will use this timezone.
+						</AppTranslate>
 					</p>
 
 					<p class="help-block">
@@ -1174,15 +1249,11 @@ export default class FormPost
 
 					<AppFormControlSelect>
 						<optgroup
-							v-for="(timezones, region) of timezones"
+							v-for="(item, region) of timezones"
 							:key="region"
-							:label="region"
+							:label="`${region}`"
 						>
-							<option
-								v-for="timezone of timezones"
-								:key="timezone.i"
-								:value="timezone.i"
-							>
+							<option v-for="timezone of item" :key="timezone.i" :value="timezone.i">
 								{{ timezone.label }}
 							</option>
 						</optgroup>
@@ -1268,6 +1339,7 @@ export default class FormPost
 
 				<div v-if="!linkedAccounts.length" class="alert">
 					<AppTranslate>You can publish this post to other platforms!</AppTranslate>
+					{{ ' ' }}
 					<AppTranslate v-if="!model.game">
 						Set up your linked accounts in your user account.
 					</AppTranslate>
@@ -1384,7 +1456,11 @@ export default class FormPost
 		</div>
 
 		<!-- Author options -->
-		<template v-if="shouldShowAuthorOptions">
+		<AppTheme
+			v-if="shouldShowAuthorOptions"
+			:class="{ '-overlay-text': overlay }"
+			:force-dark="overlay"
+		>
 			<fieldset>
 				<!-- Post to profile -->
 				<AppFormGroup
@@ -1394,14 +1470,14 @@ export default class FormPost
 					:label="$gettext(`Post to Profile`)"
 				>
 					<AppFormControlToggle class="pull-right" />
-					<p class="help-block sans-margin-top">
+					<p class="help-block sans-margin-top" :class="{ '-text-white': overlay }">
 						This will post to your profile as well as the game page.
 					</p>
 				</AppFormGroup>
 
 				<!-- Post as game owner -->
 				<AppFormGroup
-					v-if="model.user.id != model.game.developer.id"
+					v-if="model.game && model.user.id != model.game.developer.id"
 					name="as_game_owner"
 					:label="$gettext(`Post as Game Owner`)"
 				>
@@ -1416,7 +1492,7 @@ export default class FormPost
 					>
 						<AppUserAvatarImg :user="model.game.developer" />
 					</div>
-					<p class="help-block sans-margin-top">
+					<p class="help-block sans-margin-top" :class="{ '-text-white': overlay }">
 						<AppTranslate
 							:translate-params="{
 								owner: `@${model.game.developer.username}`,
@@ -1428,11 +1504,11 @@ export default class FormPost
 					</p>
 				</AppFormGroup>
 			</fieldset>
-		</template>
+		</AppTheme>
 
 		<!-- Controls -->
 		<div class="-controls">
-			<div class="-controls-attachments">
+			<div class="-controls-attachments" :class="{ '-overlay-text': overlay }">
 				<AppButton
 					v-if="!longEnabled"
 					v-app-tooltip="$gettext(`Add Article`)"
@@ -1484,7 +1560,7 @@ export default class FormPost
 				/>
 			</div>
 
-			<div class="-controls-submit">
+			<AppTheme :force-dark="overlay" class="-controls-submit">
 				<div class="-controls-submit-button">
 					<AppFormButton
 						v-if="!wasPublished && !isScheduling"
@@ -1493,6 +1569,7 @@ export default class FormPost
 						:primary="false"
 						trans
 						:block="Screen.isXs"
+						:overlay="overlay"
 						@before-submit="onDraftSubmit()"
 					>
 						<AppTranslate>Save Draft</AppTranslate>
@@ -1505,12 +1582,13 @@ export default class FormPost
 						primary
 						solid
 						:block="Screen.isXs"
+						:overlay="overlay"
 						@before-submit="onPublishSubmit()"
 					>
 						{{ mainActionText }}
 					</AppFormButton>
 				</div>
-			</div>
+			</AppTheme>
 		</div>
 	</AppForm>
 </template>
@@ -1546,6 +1624,10 @@ export default class FormPost
 		margin-right: 10px
 		font-size: $font-size-small
 		font-weight: bold
+
+		&.-overlay
+			theme-prop('color', 'fg')
+
 
 	&-bar
 		flex: auto
@@ -1696,4 +1778,16 @@ export default class FormPost
 
 			&-button
 				display: inline-block
+
+.-overlay-text
+	&
+	& > *
+		text-shadow: black 1px 1px 4px
+		color: white
+
+.-text-white
+	color: white !important
+
+.-overlay-box
+	elevate-1()
 </style>

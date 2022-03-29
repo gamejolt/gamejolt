@@ -34,6 +34,9 @@ export default class AppPostControlsMore extends Vue {
 	@Prop({ type: Object, required: true })
 	post!: FiresidePost;
 
+	@Prop({ type: Boolean, default: false })
+	overlay!: boolean;
+
 	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 
@@ -234,7 +237,20 @@ export default class AppPostControlsMore extends Vue {
 
 <template>
 	<AppPopper popover-class="fill-darkest">
-		<AppButton sparse circle trans icon="ellipsis-v" />
+		<AppButton
+			sparse
+			circle
+			trans
+			icon="ellipsis-v"
+			:style="
+				overlay
+					? {
+							color: 'white',
+							'text-shadow': 'black 1px 1px 4px',
+					  }
+					: {}
+			"
+		/>
 
 		<template #popover>
 			<div class="list-group list-group-dark">
