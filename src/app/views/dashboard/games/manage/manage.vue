@@ -170,7 +170,7 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 								<AppTranslate>Unlisted</AppTranslate>
 							</span>
 
-							<template v-if="game.isVisible">
+							<template v-if="game.isVisible && game.published_on">
 								<span class="tag tag-highlight">
 									<AppTranslate>Published</AppTranslate>
 								</span>
