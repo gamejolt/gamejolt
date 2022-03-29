@@ -4,6 +4,7 @@ const tar = require('tar');
 const path = require('path') as typeof import('path');
 const os = require('os') as typeof import('os');
 
+import { SpawnOptions } from 'child_process';
 import * as fs from 'fs-extra';
 
 export const packageJson = require('../../package.json');
@@ -50,10 +51,10 @@ export function shellEscape(str: string) {
 export type RunShellOptions = Partial<{
 	cwd: string;
 	args: string[];
+	env?: SpawnOptions['env'];
 }>;
 
 export function runShell(command: string, options: RunShellOptions = {}) {
-	const cwd = options.cwd;
 	const args = options.args || [];
 
 	if (args.length > 0) {
@@ -61,9 +62,10 @@ export function runShell(command: string, options: RunShellOptions = {}) {
 	}
 
 	const child = spawn(command, {
-		cwd,
+		cwd: options.cwd,
 		shell: true,
 		stdio: 'inherit',
+		env: options.env,
 	});
 
 	return new Promise<void>((resolve, reject) => {
@@ -85,7 +87,6 @@ export type ExecShellOptions = RunShellOptions;
  * Throws if stuff's logged in stderr.
  */
 export function execShell(command: string, options: ExecShellOptions = {}) {
-	const cwd = options.cwd;
 	const args = options.args || [];
 
 	if (args.length > 0) {
@@ -93,7 +94,7 @@ export function execShell(command: string, options: ExecShellOptions = {}) {
 	}
 
 	return new Promise((resolve, reject) => {
-		exec(command, { cwd }, (error, stdout, stderr) => {
+		exec(command, { cwd: options.cwd, env: options.env }, (error, stdout, stderr) => {
 			if (error) {
 				return reject(error);
 			}

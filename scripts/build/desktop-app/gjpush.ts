@@ -111,6 +111,10 @@ export class Gjpush {
 			commands.push(
 				{
 					command: 'go',
+					args: ['version'],
+				},
+				{
+					command: 'go',
 					args: ['get', './...'],
 				},
 				{
@@ -123,6 +127,10 @@ export class Gjpush {
 			);
 		} else {
 			commands.push(
+				{
+					command: 'go',
+					args: ['version'],
+				},
 				{
 					command: 'go',
 					args: ['get', './...'],
