@@ -51,7 +51,7 @@ const shouldShowFollow = computed(() => {
 		return false;
 	}
 
-	if (props.post.user.blocked_you) {
+	if (post.value.user.blocked_you) {
 		return false;
 	}
 

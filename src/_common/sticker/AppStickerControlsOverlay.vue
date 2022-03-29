@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 defineProps({
-	// Extends the overlay 4px past the content on the bottom, rather than being
-	// inset 4px on the bottom.
+	/**
+	 * Extends the overlay 4px past the content on the bottom, rather than being
+	 * inset 4px on the bottom.
+	 */
 	end: { type: Boolean },
 	hide: { type: Boolean },
 });
