@@ -383,6 +383,7 @@ export default class AppActivityFeedPost extends Vue {
 			<AppBackground :background="post.background" :darken="overlay" bleed>
 				<AppPostHeader
 					:post="post"
+					follow-location="feed"
 					:feed="feed"
 					:show-pinned="shouldShowIsPinned"
 					:show-date="shouldShowDate"

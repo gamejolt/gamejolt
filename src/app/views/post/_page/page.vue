@@ -57,6 +57,8 @@ import AppPostHeader from '../../../components/post/AppPostHeader.vue';
 import AppPostControls from '../../../components/post/controls/controls.vue';
 import AppPostPageRecommendations from './recommendations/AppPostPageRecommendations.vue';
 
+const UserFollowLocation = 'postPage';
+
 @Options({
 	components: {
 		AppPageContainer,
@@ -123,6 +125,7 @@ export default class AppPostPage extends Vue {
 
 	readonly Screen = Screen;
 	readonly formatNumber = formatNumber;
+	readonly UserFollowLocation = UserFollowLocation;
 
 	declare $refs: {
 		'sticker-scroll': HTMLDivElement;
@@ -270,7 +273,7 @@ export default class AppPostPage extends Vue {
 			<AppPageContainer xl>
 				<AppSpacer :scale="4" vertical />
 
-				<AppPostHeader :post="post" show-date />
+				<AppPostHeader :post="post" :follow-location="UserFollowLocation" show-date />
 				<AppActivityFeedPostContent
 					:post="post"
 					:sticker-target-controller="stickerTargetController"
@@ -324,7 +327,7 @@ export default class AppPostPage extends Vue {
 										v-if="!user || displayUser.id !== user.id"
 										:user="displayUser"
 										hide-count
-										location="postPage"
+										:location="UserFollowLocation"
 									/>
 								</div>
 							</div>

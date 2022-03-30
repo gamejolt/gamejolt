@@ -18,6 +18,10 @@ const props = defineProps({
 		type: Object as PropType<FiresidePost>,
 		required: true,
 	},
+	followLocation: {
+		type: String,
+		required: true,
+	},
 	feed: {
 		type: Object as PropType<ActivityFeedView>,
 		default: undefined,
@@ -47,7 +51,7 @@ const gameUrl = computed(() => game.value?.getUrl());
 
 const shouldShowFollow = computed(() => {
 	// Don't show follow for game posts. Only for user posts.
-	if ((feed && feed.value && !feed.value.shouldShowFollow) || post.value.game) {
+	if (!feed?.value?.shouldShowFollow || post.value.game) {
 		return false;
 	}
 
@@ -67,7 +71,7 @@ const shouldShowFollow = computed(() => {
 <template>
 	<div v-if="user" class="-header">
 		<div class="-header-content">
-			<AppUserCardHover :user="user" :disabled="feed && feed.shouldShowUserCards">
+			<AppUserCardHover :user="user" :disabled="feed && !feed.shouldShowUserCards">
 				<div class="-header-avatar" :class="{ '-new': isNew }">
 					<div class="-header-avatar-inner">
 						<AppUserAvatar :user="user" />
@@ -104,7 +108,7 @@ const shouldShowFollow = computed(() => {
 					</small>
 				</div>
 
-				<div v-if="game && (!feed || feed.hideGameInfo)" class="-header-byline-game">
+				<div v-if="game && !feed?.hideGameInfo" class="-header-byline-game">
 					<strong class="text-muted" :class="{ '-overlay-text': overlay }">
 						<component
 							:is="!!gameUrl ? RouterLink : 'span'"
@@ -135,7 +139,7 @@ const shouldShowFollow = computed(() => {
 				:user="user"
 				:sm="Screen.isXs"
 				hide-count
-				location="feed"
+				:location="followLocation"
 			/>
 		</div>
 	</div>
@@ -184,14 +188,14 @@ $-avatar-size = 40px
 	flex-direction: column
 	overflow: hidden
 
-.-header-name
-.-header-game
+.-header-byline-name
+.-header-byline-game
 	text-overflow()
 
 .-header-meta
 	flex: none
 	display: flex
-	align-items: flex-center
+	align-items: center
 	flex-direction: row
 	grid-gap: 8px
 	margin-left: $-item-padding-xs
