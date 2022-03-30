@@ -18,6 +18,10 @@ const props = defineProps({
 		type: Object as PropType<FiresidePost>,
 		required: true,
 	},
+	followLocation: {
+		type: String,
+		required: true,
+	},
 	feed: {
 		type: Object as PropType<ActivityFeedView>,
 		default: undefined,
@@ -67,7 +71,7 @@ const shouldShowFollow = computed(() => {
 <template>
 	<div v-if="user" class="-header">
 		<div class="-header-content">
-			<AppUserCardHover :user="user" :disabled="feed && feed.shouldShowUserCards">
+			<AppUserCardHover :user="user" :disabled="feed && !feed.shouldShowUserCards">
 				<div class="-header-avatar" :class="{ '-new': isNew }">
 					<div class="-header-avatar-inner">
 						<AppUserAvatar :user="user" />
@@ -135,7 +139,7 @@ const shouldShowFollow = computed(() => {
 				:user="user"
 				:sm="Screen.isXs"
 				hide-count
-				location="feed"
+				:location="followLocation"
 			/>
 		</div>
 	</div>
