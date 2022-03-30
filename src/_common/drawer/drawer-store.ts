@@ -137,19 +137,32 @@ async function _initializeDrawerContent(store: DrawerStore) {
 
 	store.stickerCost.value = payload.stickerCost;
 	store.stickerCurrency.value = payload.balance;
-	store.drawerItems.value = payload.stickerCounts.map((stickerCountPayload: any) => {
+
+	const eventStickers: StickerStack[] = [];
+	const generalStickers: StickerStack[] = [];
+
+	payload.stickerCounts.forEach((stickerCountPayload: any) => {
 		const stickerData = payload.stickers.find(
 			(i: Sticker) => i.id === stickerCountPayload.sticker_id
 		);
 
-		return {
+		const stickerCount = {
 			count: stickerCountPayload.count,
 			sticker_id: stickerCountPayload.sticker_id,
 			sticker: new Sticker(stickerData),
 		} as StickerStack;
+
+		if (stickerCount.sticker.is_event) {
+			eventStickers.push(stickerCount);
+		} else {
+			generalStickers.push(stickerCount);
+		}
 	});
 
-	store.drawerItems.value.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));
+	const lists = [eventStickers, generalStickers];
+	lists.forEach(i => i.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity)));
+
+	store.drawerItems.value = lists.flat();
 	store.isLoading.value = false;
 	store.hasLoaded.value = true;
 }
