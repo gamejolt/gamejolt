@@ -24,8 +24,8 @@ import AppGameCollectionFollowWidget from '../../../components/game/collection/f
 import AppGameCollectionThumbnail from '../../../components/game/collection/thumbnail/thumbnail.vue';
 import { GameFilteringContainer } from '../../../components/game/filtering/container';
 import AppGameGrid from '../../../components/game/grid/grid.vue';
+import AppGameListing from '../../../components/game/listing/AppGameListing.vue';
 import { GameListingContainer } from '../../../components/game/listing/listing-container-service';
-import AppGameListing from '../../../components/game/listing/listing.vue';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { useAppStore } from '../../../store/index';
@@ -202,7 +202,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 		if (!this.listing || !this.filtering) {
 			this.filtering = new GameFilteringContainer(this.$route);
-			this.listing = new GameListingContainer();
+			this.listing = new GameListingContainer({ loadInfinitely: false });
 		}
 
 		this.filtering.init(this.$route);
@@ -491,9 +491,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 										<AppTranslate>Your Owned Games</AppTranslate>
 									</h1>
 									<p class="text-muted small">
-										<AppTranslate
-											>These are all the games you own.</AppTranslate
-										>
+										<AppTranslate>
+											These are all the games you own.
+										</AppTranslate>
 									</p>
 								</template>
 								<template v-else-if="user">
