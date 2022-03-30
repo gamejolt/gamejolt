@@ -58,6 +58,14 @@ export class QuestObjective extends Model {
 	get hasProgressDisplay() {
 		return this.max_progress_ticks >= 2;
 	}
+
+	get isPercent() {
+		return this.progress_visualization_type === QuestObjectiveMilestoneType.continuous;
+	}
+
+	get isSegmented() {
+		return this.progress_visualization_type === QuestObjectiveMilestoneType.segmented;
+	}
 }
 
 Model.create(QuestObjective);

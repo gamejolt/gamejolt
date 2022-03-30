@@ -1,26 +1,68 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
 import AppImgResponsive from '../img/AppImgResponsive.vue';
+import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
 import AppQuestFrame from './AppQuestFrame.vue';
 import { Quest } from './quest-model';
 
-defineProps({
+const props = defineProps({
 	quest: {
 		type: Object as PropType<Quest>,
 		required: true,
 	},
 });
+
+const { quest } = toRefs(props);
+
+const metaData = computed<{ text?: string; icon?: Jolticon } | undefined>(() => {
+	const q = quest.value;
+	if (q.isExpired) {
+		return;
+	}
+
+	if (q.is_new) {
+		return { text: 'NEW!' };
+	} else if (q.has_activity) {
+		return { icon: 'other-os' };
+	} else if (q.isAllComplete) {
+		return { icon: 'star' };
+	} else if (q.isComplete) {
+		return { icon: 'check' };
+	}
+
+	return;
+});
 </script>
 
 <template>
-	<AppQuestFrame>
-		<AppImgResponsive class="-img" :src="quest.avatar.mediaserver_url" alt="Quest Image" />
-	</AppQuestFrame>
+	<div class="-frame">
+		<AppQuestFrame>
+			<AppImgResponsive class="-img" :src="quest.avatar.mediaserver_url" alt="Quest Image" />
+		</AppQuestFrame>
+
+		<div v-if="metaData" class="-meta">
+			<AppJolticon v-if="metaData.icon" :icon="metaData.icon" />
+			<span v-else-if="metaData.text">{{ metaData.text }}</span>
+		</div>
+	</div>
 </template>
 
 <style lang="stylus" scoped>
+.-frame
+	position: relative
+
 .-img
 	width: 100%
 	height: 100%
 	object-fit: cover
+
+.-meta
+	position: absolute
+	top: ($font-size-tiny / 2)
+	right: ($font-size-tiny / 2)
+	color: var(--theme-link)
+	font-weight: bold
+	text-shadow: 0 0 4px var(--theme-link)
+	font-size: $font-size-tiny
+	z-index: 1
 </style>

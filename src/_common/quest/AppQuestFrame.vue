@@ -18,59 +18,65 @@ const uniqueId = uuidv4();
 </script>
 
 <template>
-	<AppAspectRatio :ratio="1" show-overflow>
-		<div class="-container">
-			<div class="-above">
-				<slot name="above" />
-			</div>
+	<div style="position: relative">
+		<AppAspectRatio :ratio="1" show-overflow>
+			<div class="-container -rotate">
+				<div class="-above">
+					<slot name="above" />
+				</div>
 
-			<div
-				class="-content"
-				:style="{
-					'clip-path': `url(#path-${uniqueId})`,
-				}"
-			>
-				<slot />
-			</div>
-
-			<svg
-				class="-border"
-				:viewBox="`0 0 ${viewboxWidth} ${viewboxHeight}`"
-				fill="none"
-				:filter="active ? `url(#glow-${uniqueId})` : undefined"
-			>
-				<path class="-border-path" :class="{ '-active': active }" :d="path" />
-			</svg>
-		</div>
-
-		<!--
-		We have to scale the path data to the size of the viewport. We do that
-		through the transform.
-		http://meyerweb.com/eric/thoughts/2017/02/24/scaling-svg-clipping-paths-for-css-use/
-		-->
-		<svg height="0" width="0" :viewBox="`0 0 ${viewboxWidth} ${viewboxHeight}`">
-			<defs>
-				<clipPath
-					:id="`path-${uniqueId}`"
-					clipPathUnits="objectBoundingBox"
-					:transform="`scale(${1 / 101} ${1 / 96})`"
+				<div
+					class="-content"
+					:style="{
+						'clip-path': `url(#path-${uniqueId})`,
+						overflow: 'hidden',
+					}"
 				>
-					<path :d="path" />
-				</clipPath>
+					<slot />
+				</div>
 
-				<filter :id="`glow-${uniqueId}`">
-					<feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
-					<feMerge>
-						<feMergeNode in="coloredBlur" />
-						<feMergeNode in="SourceGraphic" />
-					</feMerge>
-				</filter>
-			</defs>
-		</svg>
-	</AppAspectRatio>
+				<svg
+					class="-border"
+					:viewBox="`0 0 ${viewboxWidth} ${viewboxHeight}`"
+					fill="none"
+					:filter="active ? `url(#glow-${uniqueId})` : undefined"
+				>
+					<path class="-border-path" :class="{ '-active': active }" :d="path" />
+				</svg>
+			</div>
+
+			<!--
+			We have to scale the path data to the size of the viewport. We do that
+			through the transform.
+			http://meyerweb.com/eric/thoughts/2017/02/24/scaling-svg-clipping-paths-for-css-use/
+			-->
+			<svg height="0" width="0" :viewBox="`0 0 ${viewboxWidth} ${viewboxHeight}`">
+				<defs>
+					<clipPath
+						:id="`path-${uniqueId}`"
+						clipPathUnits="objectBoundingBox"
+						:transform="`scale(${1 / 101} ${1 / 96})`"
+					>
+						<path :d="path" />
+					</clipPath>
+
+					<filter :id="`glow-${uniqueId}`">
+						<feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
+						<feMerge>
+							<feMergeNode in="coloredBlur" />
+							<feMergeNode in="SourceGraphic" />
+						</feMerge>
+					</filter>
+				</defs>
+			</svg>
+		</AppAspectRatio>
+	</div>
 </template>
 
 <style lang="stylus" scoped>
+$-rotate-value = -6.2deg
+$-rotate = rotate($-rotate-value)
+
 .-container
 	position: relative
 	width: 100%
@@ -78,7 +84,9 @@ const uniqueId = uuidv4();
 	display: flex
 	align-items: center
 	justify-content: center
-	transform: rotate(-6.2deg)
+
+.-rotate
+	transform: $-rotate
 
 .-above
 	position: absolute

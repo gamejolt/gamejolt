@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
+import { PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
-import AppProgressBar from '../progress/AppProgressBar.vue';
 import AppSpacer from '../spacer/AppSpacer.vue';
+import AppQuestProgress from './AppQuestProgress.vue';
 import AppQuestThumbnail from './AppQuestThumbnail.vue';
 import { Quest } from './quest-model';
 
-defineProps({
+const props = defineProps({
 	quest: {
 		type: Object as PropType<Quest>,
 		required: true,
@@ -15,6 +15,16 @@ defineProps({
 		type: Boolean,
 	},
 });
+
+const { quest } = toRefs(props);
+
+const emit = defineEmits({
+	goto: (_id: number) => true,
+});
+
+function onSelect() {
+	emit('goto', quest.value.id);
+}
 </script>
 
 <template>
@@ -22,6 +32,7 @@ defineProps({
 		class="-item"
 		:class="{ '-active': active }"
 		:to="{ name: 'quests.view', params: { id: quest.id } }"
+		@click="onSelect"
 	>
 		<div class="-thumb">
 			<AppQuestThumbnail :quest="quest" />
@@ -30,12 +41,16 @@ defineProps({
 		<AppSpacer horizontal :scale="4" />
 
 		<div class="-details">
-			<div class="-type">World Event / Daily</div>
+			<div class="-type">{{ quest.questType }}</div>
 			<div class="-title">{{ quest.title }}</div>
 
 			<AppSpacer vertical :scale="3" />
 
-			<AppProgressBar class="sans-margin" :percent="20" glow thin />
+			<AppQuestProgress
+				:progress="quest.progress_percent"
+				:max-progress-ticks="100"
+				:is-percent="true"
+			/>
 		</div>
 	</RouterLink>
 </template>

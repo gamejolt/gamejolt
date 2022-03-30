@@ -1,5 +1,5 @@
-import { Model } from '../model/model.service';
 import { MediaItem } from '../media-item/media-item-model';
+import { Model } from '../model/model.service';
 import { QuestObjective } from './quest-objective-model';
 
 export const QuestStatus = {
@@ -16,6 +16,15 @@ export const QuestCompletionState = {
 	complete: 1,
 	/** Every objective complete, including optional */
 	allComplete: 2,
+} as const;
+
+export const QuestRepeatType = {
+	/** Single-use quest, not repeatable. */
+	single: 'single',
+	/** Valid for 24 hours */
+	daily: 'daily',
+	/** Valid for 7 days */
+	weekly: 'weekly',
 } as const;
 
 export class Quest extends Model {
@@ -42,7 +51,10 @@ export class Quest extends Model {
 	declare description: string;
 	declare description_content: string;
 	declare title: string;
-	declare quest_type?: string;
+	// declare quest_type?: string;
+	declare series?: string;
+	declare repeat_type: string;
+	declare expires_on: number;
 	declare ends_on: number;
 	declare completion_state: number;
 	declare progress_percent: number;
@@ -63,7 +75,12 @@ export class Quest extends Model {
 			return true;
 		}
 
-		return this.ends_on && this.ends_on < Date.now();
+		if (!this.ends_on && !this.expires_on) {
+			return false;
+		}
+
+		const now = Date.now();
+		return (this.ends_on && this.ends_on < now) || (this.expires_on && this.expires_on < now);
 	}
 
 	get isIncomplete() {
@@ -88,6 +105,10 @@ export class Quest extends Model {
 		}
 
 		return this.completion_state === QuestCompletionState.allComplete;
+	}
+
+	get questType() {
+		return (this.series ?? 'World Event / Daily').toUpperCase();
 	}
 }
 

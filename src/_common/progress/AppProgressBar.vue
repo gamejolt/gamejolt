@@ -20,21 +20,32 @@ defineProps({
 		type: Boolean,
 		default: true,
 	},
+	hideZero: {
+		type: Boolean,
+	},
+	bgSubtle: {
+		type: Boolean,
+	},
 });
 </script>
 
 <template>
 	<div
 		class="progress"
-		:class="[
-			thin ? '-thin' : undefined,
-			indeterminate ? 'progress-striped' : undefined,
-			active ? '-active' : undefined,
-			glow ? '-glow' : undefined,
-			animate ? '-animate' : undefined,
-		]"
+		:class="{
+			'-thin': thin,
+			'progress-striped': indeterminate,
+			'-active': active,
+			'-glow': glow,
+			'-animate': animate,
+			'-subtle': bgSubtle,
+		}"
 	>
-		<div class="progress-bar" :style="{ width: Math.max(0, Math.min(100, percent)) + '%' }" />
+		<div
+			v-if="percent > 0 || !hideZero"
+			class="progress-bar"
+			:style="{ width: Math.max(0, Math.min(100, percent)) + '%' }"
+		/>
 		<div class="-text">
 			<slot />
 		</div>
@@ -57,6 +68,9 @@ defineProps({
 	line-height: $line-height-computed
 	margin-bottom: $line-height-computed
 
+	&.-subtle
+		change-bg('bg-subtle')
+
 .-text
 	text-overflow()
 	position: relative
@@ -75,6 +89,9 @@ defineProps({
 	width: 0
 	min-width: 5px
 	height: 100%
+
+	&.-hide-zero
+		min-width: 0
 
 	.progress.-animate &
 		transition: width 600ms ease
