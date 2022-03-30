@@ -1838,10 +1838,10 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-client-voodoo@2.7.1:
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/client-voodoo/-/client-voodoo-2.7.1.tgz#7393eadefae9b905828a945688c0bfe9ae6394ac"
-  integrity sha512-2W0ssyFo9EZ8CUp8CW666LyaqOKLErCMbB8WVptlSdtepSGC+B+C1M7AqaY8dvsy3mUCLqIM1XN8KdaY3zyIXA==
+client-voodoo@2.7.2:
+  version "2.7.2"
+  resolved "https://registry.yarnpkg.com/client-voodoo/-/client-voodoo-2.7.2.tgz#361be34811dbba53fd41034ccaea4bb1ce09284d"
+  integrity sha512-3WZRP9yB+Frg7t0ZdHar2rUFkmBqFwLWnGWfc6AiZhkQbc1X4auqZ/YwqzOLcCY5R2tAHwqqA+Xh6+XlwwFPsg==
   dependencies:
     JSONStream "github:gamejolt/JSONStream#no-shebang"
     follow-redirects "1.7.0"
