@@ -10,8 +10,10 @@ import { vAppObserveDimensions } from '../../../_common/observe-dimensions/obser
 import AppQuestLogItem from '../../../_common/quest/AppQuestLogItem.vue';
 import { Quest } from '../../../_common/quest/quest-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
+import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import { useAppStore } from '../../store/index';
 
 export default {
 	...defineAppRouteOptions({
@@ -35,15 +37,13 @@ const ShellTopNavHeight = 56;
 
 <script lang="ts" setup>
 const route = useRoute();
+const appStore = useAppStore();
 
 const quests = ref<Quest[]>([]);
-// const root = ref<HTMLElement>();
 const body = ref<HTMLElement>();
 const sidebar = ref<HTMLElement>();
 const sidebarInner = ref<HTMLElement>();
 const questList = ref<HTMLElement>();
-
-// const questListHeight = ref(`'calc(100vh - %s)' % $shell-top-nav-height`);
 
 const activeQuestId = computed(() => {
 	const questId = getParam(route, 'id');
@@ -54,6 +54,7 @@ const hasActiveQuest = computed(() => !!activeQuestId.value);
 const isRouting = ref(false);
 
 const showBody = computed(() => isRouting.value || hasActiveQuest.value);
+const showSidebar = computed(() => !Screen.isMobile || !showBody.value);
 
 watch(
 	() => activeQuestId.value,
@@ -91,13 +92,38 @@ createAppRoute({
 	routeTitle: `My Quests`,
 	onResolved({ payload }) {
 		quests.value = Quest.populate(payload.quests);
+		clearUnknownWatermarks();
 	},
 });
+
+function clearUnknownWatermarks() {
+	const c = appStore;
+
+	const _newIds = { ...c.newQuestIds.value };
+	const _activityIds = { ...c.questActivityIds.value };
+	const _currentQuestIds: typeof c.newQuestIds.value = {};
+	quests.value.forEach(i => (_currentQuestIds[i.id] = true));
+
+	for (const id of Object.keys(_newIds)) {
+		const questId = parseInt(id, 10);
+		if (_currentQuestIds[questId] !== true) {
+			c.clearNewQuestIds([questId], { pushView: false });
+		}
+	}
+
+	for (const id of Object.keys(_activityIds)) {
+		const questId = parseInt(id, 10);
+		if (_currentQuestIds[questId] !== true) {
+			c.clearQuestActivityIds([questId], { pushView: false });
+		}
+	}
+}
 </script>
 
 <template>
 	<div class="-page">
 		<div
+			v-if="showSidebar"
 			ref="sidebar"
 			v-app-observe-dimensions="onSidebarChange"
 			class="-sidebar"

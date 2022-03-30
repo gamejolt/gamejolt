@@ -25,6 +25,7 @@ import { Mention } from '../mention/mention.model';
 import { Model } from '../model/model.service';
 import { Navigate } from '../navigate/navigate.service';
 import { OrderItem } from '../order/item/item.model';
+import { QuestNotification } from '../quest/quest-notification-model';
 import { Sellable } from '../sellable/sellable.model';
 import { Subscription } from '../subscription/subscription.model';
 import { Translate } from '../translate/translate.service';
@@ -35,7 +36,7 @@ import { UserBaseTrophy } from '../user/trophy/user-base-trophy.model';
 import { User } from '../user/user.model';
 
 function getRouteLocationForModel(
-	model: Game | User | FiresidePost | Community | Fireside
+	model: Game | User | FiresidePost | Community | Fireside | QuestNotification
 ): RouteLocationRaw {
 	if (model instanceof User) {
 		return model.url;
@@ -47,6 +48,8 @@ function getRouteLocationForModel(
 		return model.routeLocation;
 	} else if (model instanceof Fireside) {
 		return model.location;
+	} else if (model instanceof QuestNotification) {
+		return model.routeLocation;
 	}
 	return '';
 }
@@ -73,6 +76,8 @@ export class Notification extends Model {
 	static TYPE_FIRESIDE_STREAM_NOTIFICATION = 'fireside-stream-notification';
 	static TYPE_FIRESIDE_FEATURED_IN_COMMUNITY = 'fireside-featured-in-community';
 
+	static TYPE_QUEST_NOTIFICATION = 'quest-notification';
+
 	static ACTIVITY_FEED_TYPES = [EventItem.TYPE_POST_ADD];
 
 	static NOTIFICATION_FEED_TYPES = [
@@ -91,6 +96,8 @@ export class Notification extends Model {
 		Notification.TYPE_SITE_TROPHY_ACHIEVED,
 		Notification.TYPE_COMMUNITY_USER_NOTIFICATION,
 		Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY,
+		// TODO(quests) notification feed types?
+		Notification.TYPE_QUEST_NOTIFICATION,
 	];
 
 	user_id!: number;
@@ -121,7 +128,8 @@ export class Notification extends Model {
 		| CommunityUserNotification
 		| Fireside
 		| FiresideStreamNotification
-		| FiresideCommunity;
+		| FiresideCommunity
+		| QuestNotification;
 
 	to_resource!: string | null;
 	to_resource_id!: number | null;
@@ -223,6 +231,8 @@ export class Notification extends Model {
 			this.action_model = new FiresideStreamNotification(data.action_resource_model);
 		} else if (this.type === Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY) {
 			this.action_model = new FiresideCommunity(data.action_resource_model);
+		} else if (this.type === Notification.TYPE_QUEST_NOTIFICATION) {
+			this.action_model = new QuestNotification(data.action_resource_model);
 		}
 
 		// Keep memory clean after bootstrapping the models (the super
@@ -311,6 +321,9 @@ export class Notification extends Model {
 
 			case Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY:
 				return getRouteLocationForModel(this.to_model as Fireside);
+
+			case Notification.TYPE_QUEST_NOTIFICATION:
+				return getRouteLocationForModel(this.action_model as QuestNotification);
 		}
 
 		// Must pull asynchronously when they click on the notification.

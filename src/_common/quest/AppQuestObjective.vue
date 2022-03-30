@@ -55,7 +55,9 @@ function onClickSubtitle() {
 		<AppSpacer horizontal :scale="5" />
 		<div class="-details">
 			<div class="-title">
-				{{ objective.title }}
+				<span>
+					{{ objective.title }}
+				</span>
 
 				<span v-if="objective.is_optional" class="-fade">
 					({{ $gettext('optional') }})
@@ -121,6 +123,8 @@ function onClickSubtitle() {
 
 .-title
 	font-size: $font-size-small
+	display: inline-flex
+	grid-gap: 8px
 
 .-subtitle
 	display: inline-flex

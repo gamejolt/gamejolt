@@ -70,6 +70,8 @@ interface BootstrapPayload {
 		unreadFeaturedCommunities: { [communityId: number]: number };
 		unreadCommunities: number[];
 		hasNewUnlockedStickers: boolean;
+		newQuestIds: number[];
+		questActivityIds: number[];
 	};
 }
 
@@ -95,7 +97,11 @@ type ClearNotificationsType =
 	| 'community-channel'
 	| 'friend-requests'
 	// For the user's unviewed automatically unlocked stickers.
-	| 'stickers';
+	| 'stickers'
+	// A quest became available and is ready to be accepted.
+	| 'new-quest'
+	// A quest has updated progress or rewards available to claim.
+	| 'quest-activity';
 
 interface ClearNotificationsPayload {
 	type: ClearNotificationsType;
@@ -106,6 +112,7 @@ interface ClearNotificationsPayload {
 interface ClearNotificationsData {
 	channelId?: number;
 	communityId?: number;
+	questId?: number;
 }
 
 interface StickerUnlockPayload {
@@ -174,6 +181,22 @@ function clearNotifications(
 			break;
 		case 'stickers':
 			appStore.setHasNewUnlockedStickers(false);
+			break;
+		case 'new-quest':
+			{
+				const questId = data.questId ?? -1;
+				if (questId !== -1) {
+					appStore.clearNewQuestIds([questId], { pushView: false });
+				}
+			}
+			break;
+		case 'quest-activity':
+			{
+				const questId = data.questId ?? -1;
+				if (questId !== -1) {
+					appStore.clearQuestActivityIds([questId], { pushView: false });
+				}
+			}
 			break;
 	}
 }
@@ -447,6 +470,14 @@ export class GridClient {
 			this.tabLeader = new TabLeader('grid_notification_channel_' + user.id);
 			this.tabLeader.init();
 
+			channel.on('new-quest-notification', (payload: NewNotificationPayload) => {
+				if (cancelToken.isCanceled) {
+					return;
+				}
+
+				this.handleNotification(payload);
+			});
+
 			channel.on('new-notification', (payload: NewNotificationPayload) => {
 				if (cancelToken.isCanceled) {
 					return;
@@ -576,6 +607,9 @@ export class GridClient {
 
 			appStore.setHasNewFriendRequests(payload.body.hasNewFriendRequests);
 			appStore.setHasNewUnlockedStickers(payload.body.hasNewUnlockedStickers);
+			appStore.setHasNewUnlockedStickers(payload.body.hasNewUnlockedStickers);
+			appStore.addNewQuestIds(payload.body.newQuestIds);
+			appStore.addQuestActivityIds(payload.body.questActivityIds);
 			this.bootstrapTimestamp = payload.body.lastNotificationTime;
 
 			this.bootstrapReceived = true;

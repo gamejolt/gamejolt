@@ -37,6 +37,8 @@ import { LibraryStore } from './library';
 type UnreadItemType = 'activity' | 'notifications';
 type TogglableLeftPane = '' | 'chat' | 'context' | 'library';
 
+type QuestIdMap = { [id: number]: boolean };
+
 export const AppStoreKey: InjectionKey<AppStore> = Symbol('app-store');
 
 export type AppStore = ReturnType<typeof createAppStore>;
@@ -75,6 +77,8 @@ export function createAppStore({
 	const unreadNotificationsCount = ref(0);
 	const hasNewFriendRequests = ref(false);
 	const hasNewUnlockedStickers = ref(false);
+	const newQuestIds = ref<QuestIdMap>({});
+	const questActivityIds = ref<QuestIdMap>({});
 	const notificationState = ref<ActivityFeedState>();
 
 	const mobileCbarShowing = ref(false);
@@ -378,6 +382,45 @@ export function createAppStore({
 		hasNewUnlockedStickers.value = has;
 	}
 
+	function _addQuestIds(list: Ref<QuestIdMap>, ids: number[]) {
+		for (const id of ids) {
+			list.value[id] = true;
+		}
+	}
+
+	function addNewQuestIds(ids: number[]) {
+		_addQuestIds(newQuestIds, ids);
+	}
+
+	function addQuestActivityIds(ids: number[]) {
+		_addQuestIds(questActivityIds, ids);
+	}
+
+	function _clearQuestIds(
+		list: Ref<QuestIdMap>,
+		ids: number[] | 'all',
+		{ type, pushView }: { type: 'new-quest' | 'quest-activity'; pushView: boolean }
+	) {
+		const clearIds = ids === 'all' ? Object.keys(list.value).map(i => parseInt(i, 10)) : ids;
+
+		for (const questId of clearIds) {
+			delete list.value[questId];
+			if (pushView) {
+				grid.value?.pushViewNotifications(type, {
+					questId,
+				});
+			}
+		}
+	}
+
+	function clearNewQuestIds(ids: number[] | 'all', { pushView }: { pushView: boolean }) {
+		_clearQuestIds(newQuestIds, ids, { type: 'new-quest', pushView });
+	}
+
+	function clearQuestActivityIds(ids: number[] | 'all', { pushView }: { pushView: boolean }) {
+		_clearQuestIds(questActivityIds, ids, { type: 'quest-activity', pushView });
+	}
+
 	function _setBootstrapped() {
 		isBootstrapped.value = true;
 		_bootstrapResolver.value?.();
@@ -635,6 +678,12 @@ export function createAppStore({
 		setNotificationCount,
 		setHasNewFriendRequests,
 		setHasNewUnlockedStickers,
+		newQuestIds,
+		questActivityIds,
+		addNewQuestIds,
+		addQuestActivityIds,
+		clearNewQuestIds,
+		clearQuestActivityIds,
 		joinCommunity,
 		leaveCommunity,
 		setActiveCommunity,

@@ -2,16 +2,21 @@
 import { computed, ref } from 'vue';
 import { numberSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
 import AppQuestObjective from '../../../../_common/quest/AppQuestObjective.vue';
 import AppProgressBarQuest from '../../../../_common/quest/AppQuestProgress.vue';
 import { Quest } from '../../../../_common/quest/quest-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext, $gettextInterpolate } from '../../../../_common/translate/translate.service';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../_common/user/user.model';
+import { useAppStore } from '../../../store/index';
 
 export default {
 	...defineAppRouteOptions({
@@ -38,6 +43,8 @@ export default {
 </script>
 
 <script lang="ts" setup>
+const c = useAppStore();
+
 const quest = ref<Quest>();
 const participatingFriends = ref<User[]>([]);
 const participatingFriendCount = ref(0);
@@ -57,47 +64,54 @@ createAppRoute({
 		quest.value = new Quest(payload.quest);
 		participatingFriends.value = User.populate(payload.participatingFriends);
 		participatingFriendCount.value = payload.participatingFriendCount;
+
+		const q = quest.value;
+		if (!q.is_new) {
+			c.clearNewQuestIds([q.id], { pushView: true });
+		}
+		if (!q.has_activity) {
+			c.clearQuestActivityIds([q.id], { pushView: true });
+		}
+
 		isLoading.value = false;
 	},
 });
 
 const friendsText = computed(() => {
 	const count = participatingFriendCount.value;
-	// Not followed by anyone you follow
-	if (count === 0) {
-		return $gettext(`Not followed by anyone you follow`);
+	if (count <= 0) {
+		return $gettext(`None of your friends have started this quest`);
 	}
 
 	const users = participatingFriends.value;
 
-	// Followed by name1
 	if (users.length === 1) {
-		return $gettextInterpolate(`Followed by %{ name1 }`, {
+		return $gettextInterpolate(`%{ name1 } has started this quest!`, {
 			name1: users[0].display_name,
 		});
 	}
 
-	// Followed by name1 and name2
 	if (users.length === 2) {
-		return $gettextInterpolate(`Followed by %{ name1 } and %{ name2 }`, {
+		return $gettextInterpolate(`%{ name1 } and %{ name2 } have started this quest!`, {
 			name1: users[0].display_name,
 			name2: users[1].display_name,
 		});
 	}
 
-	// Followed by name1, name2 and name3
 	if (users.length >= 3 && count === 3) {
-		return $gettextInterpolate(`Followed by %{ name1 }, %{ name2 } and %{ name3 }`, {
-			name1: users[0].display_name,
-			name2: users[1].display_name,
-			name3: users[2].display_name,
-		});
+		return $gettextInterpolate(
+			`%{ name1 }, %{ name2 } and %{ name3 } have started this quest!`,
+			{
+				name1: users[0].display_name,
+				name2: users[1].display_name,
+				name3: users[2].display_name,
+			}
+		);
 	}
 
-	// Followed by name1, name2, name3 and 1 other you follow
 	if (users.length >= 3 && count === 4) {
 		return $gettextInterpolate(
-			`Followed by %{ name1 }, %{ name2 }, %{ name3 } and 1 other you follow`,
+			`%{ name1 }, %{ name2 }, %{ name3 } and 1 other friend have started this quest!`,
 			{
 				name1: users[0].display_name,
 				name2: users[1].display_name,
@@ -108,7 +122,7 @@ const friendsText = computed(() => {
 
 	if (users.length >= 3 && count > 4) {
 		return $gettextInterpolate(
-			`Followed by %{ name1 }, %{ name2 }, %{ name3 } and %{ num } others you follow`,
+			`%{ name1 }, %{ name2 }, %{ name3 } and %{ num } other friends have started this quest!`,
 			{
 				name1: users[0].display_name,
 				name2: users[1].display_name,
@@ -118,7 +132,6 @@ const friendsText = computed(() => {
 		);
 	}
 
-	// Should not happen...
 	if (GJ_BUILD_TYPE === 'development') {
 		console.log(
 			'Encountered known followers unknown user number for text. Users:',
@@ -129,11 +142,28 @@ const friendsText = computed(() => {
 	}
 	return '';
 });
+
+function onBack() {
+	// TODO(quests) navigate back to quest list on mobile
+}
 </script>
 
 <template>
 	<template v-if="quest">
-		<AppMediaItemCover :media-item="quest.header" :max-height="250" />
+		<div style="position: relative">
+			<AppMediaItemCover :media-item="quest.header" :max-height="250" />
+
+			<template v-if="Screen.isMobile">
+				<div class="-header-shadow" />
+				<a class="-back" @click="onBack">
+					<AppJolticon icon="chevron-left" />
+					<AppSpacer horizontal :scale="1" />
+					<AppTranslate :translate-params="{ screen: 'My Quests' }">
+						Back to %{ screen }
+					</AppTranslate>
+				</a>
+			</template>
+		</div>
 
 		<div class="container">
 			<section class="section section-thin">
@@ -177,7 +207,7 @@ const friendsText = computed(() => {
 			</section>
 
 			<section class="section">
-				<div>Objectives</div>
+				<div class="-objectives-header">Objectives</div>
 
 				<div class="-objectives">
 					<template v-for="objective of objectives" :key="objective.id">
@@ -190,6 +220,14 @@ const friendsText = computed(() => {
 						/>
 					</template>
 				</div>
+
+				<template v-if="quest.canAccept || objectives.some(i => i.has_unclaimed_rewards)">
+					<AppSpacer vertical :scale="4" />
+					<AppButton primary solid block>
+						<!-- TODO(quests) claim rewards, accept quest -->
+						<AppTranslate> Claim rewards </AppTranslate>
+					</AppButton>
+				</template>
 			</section>
 		</div>
 	</template>
@@ -252,6 +290,27 @@ $-font-size = $font-size-small
 	justify-content: center
 	align-items: center
 
+.-header-shadow
+	background-image: linear-gradient(to bottom, rgba(black, 0.5), transparent 50%)
+	position: absolute
+	left: 0
+	top: 0
+	right: 0
+	bottom: 0
+
+.-back
+	overlay-text-shadow()
+	position: absolute
+	left: 8px
+	top: 8px
+	display: inline-flex
+	align-items: center
+	color: white
+	font-size: $font-size-large
+
+	.jolticon
+		font-size: 24px
+
 .-quest-title
 	font-family: 'Germania'
 	font-size: 28px
@@ -271,6 +330,12 @@ $-font-size = $font-size-small
 
 .-friends-list
 	margin-right: 16px
+
+.-objectives-header
+	text-transform: uppercase
+	color: var(--theme-fg-muted)
+	font-size: $font-size-tiny
+	font-weight: 600
 
 .-objectives
 	display: flex
