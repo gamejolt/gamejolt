@@ -47,7 +47,7 @@ const gameUrl = computed(() => game.value?.getUrl());
 
 const shouldShowFollow = computed(() => {
 	// Don't show follow for game posts. Only for user posts.
-	if ((feed && feed.value && !feed.value.shouldShowFollow) || post.value.game) {
+	if (!feed?.value?.shouldShowFollow || post.value.game) {
 		return false;
 	}
 
@@ -104,7 +104,7 @@ const shouldShowFollow = computed(() => {
 					</small>
 				</div>
 
-				<div v-if="game && (!feed || feed.hideGameInfo)" class="-header-byline-game">
+				<div v-if="game && !feed?.hideGameInfo" class="-header-byline-game">
 					<strong class="text-muted" :class="{ '-overlay-text': overlay }">
 						<component
 							:is="!!gameUrl ? RouterLink : 'span'"
@@ -184,14 +184,14 @@ $-avatar-size = 40px
 	flex-direction: column
 	overflow: hidden
 
-.-header-name
-.-header-game
+.-header-byline-name
+.-header-byline-game
 	text-overflow()
 
 .-header-meta
 	flex: none
 	display: flex
-	align-items: flex-center
+	align-items: center
 	flex-direction: row
 	grid-gap: 8px
 	margin-left: $-item-padding-xs
