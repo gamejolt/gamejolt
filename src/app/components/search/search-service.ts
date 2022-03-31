@@ -5,6 +5,7 @@ import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Game } from '../../../_common/game/game.model';
 import { Realm } from '../../../_common/realm/realm-model';
 import { User } from '../../../_common/user/user.model';
+import type { ClientLibraryStore } from '../../store/client-library';
 import type { LocalDbGame } from '../client/local-db/game/game.model';
 
 export interface SearchOptions {
@@ -17,6 +18,12 @@ class SearchService {
 }
 
 export const Search = reactive(new SearchService()) as SearchService;
+
+let clientLibraryStore: ClientLibraryStore | undefined;
+
+export function setClientLibraryStore(newClientLibraryStore: ClientLibraryStore) {
+	clientLibraryStore = newClientLibraryStore;
+}
 
 export async function sendSearch(query: string, options: SearchOptions = { type: 'all' }) {
 	const searchPromises: Promise<any>[] = [];
@@ -67,8 +74,7 @@ async function _searchSite(query: string, options: SearchOptions = { type: 'all'
 }
 
 async function _findInstalledGamesByTitle(query: string) {
-	// TODO(vue3): Yariv, this should get the client library injected somehow, yeah?
-	// return appStore.clientLibrary.findInstalledGamesByTitle(query, 3);
+	return clientLibraryStore?.findInstalledGamesByTitle(query, 3) || [];
 }
 
 export class SearchPayload {

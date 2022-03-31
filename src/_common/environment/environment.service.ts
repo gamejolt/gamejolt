@@ -51,15 +51,12 @@ export class Environment {
 	static firebaseMeasurementId = 'G-ZV3SVDN43D';
 }
 
-// TODO(vue3): fix this up, or remove it
-const GJ_TUNNELS = {} as any;
-
 if (GJ_ENVIRONMENT === 'development') {
-	Environment.baseUrl = GJ_TUNNELS.frontend || 'https://development.gamejolt.com';
-	Environment.baseUrlInsecure = GJ_TUNNELS.frontend || 'https://development.gamejolt.com';
-	Environment.wttfBaseUrl = GJ_TUNNELS.frontend || 'https://development.gamejolt.com';
-	Environment.authBaseUrl = GJ_TUNNELS.frontend || 'https://development.gamejolt.com';
-	Environment.checkoutBaseUrl = GJ_TUNNELS.frontend || 'https://development.gamejolt.com';
+	Environment.baseUrl = 'https://development.gamejolt.com';
+	Environment.baseUrlInsecure = 'https://development.gamejolt.com';
+	Environment.wttfBaseUrl = 'https://development.gamejolt.com';
+	Environment.authBaseUrl = 'https://development.gamejolt.com';
+	Environment.checkoutBaseUrl = 'https://development.gamejolt.com';
 	Environment.helpBaseUrl = 'https://development.gamejolt.com/help';
 
 	Environment.jamsBaseUrl = 'https://jams.development.gamejolt.com';
@@ -70,7 +67,7 @@ if (GJ_ENVIRONMENT === 'development') {
 	Environment.mediaserverUrl = 'https://media.development.gamejolt.com';
 	Environment.staticCdnUrl = 'https://development.gamejolt.com';
 
-	Environment.apiHost = GJ_TUNNELS.backend || 'https://development.gamejolt.com';
+	Environment.apiHost = 'https://development.gamejolt.com';
 	Environment.uploadHost = Environment.apiHost;
 	Environment.gameserverApiHost = 'https://development.gamejolt.com';
 	Environment.activityStreamHost = 'https://activity.development.gamejolt.com';
@@ -80,22 +77,23 @@ if (GJ_ENVIRONMENT === 'development') {
 	Environment.recaptchaSiteKey = '6LcwTkEUAAAAAHTT67TB8gkM0ft5hUzz_r_tFFaT';
 }
 
-// TODO(vue3) fix this. no longer using chrome-extension, at least in dev?
-// if (GJ_IS_DESKTOP_APP) {
-// 	// When it gets packaged up for production, the URL changes.
-// 	if (window.location.href.search(/^chrome-extension:\/\/game-jolt-client\/package\//) !== -1) {
-// 		Environment.wttfBaseUrl = 'chrome-extension://game-jolt-client/package/index.html#';
-// 		Environment.authBaseUrl = 'chrome-extension://game-jolt-client/package/auth.html#';
-// 		Environment.checkoutBaseUrl = 'chrome-extension://game-jolt-client/package/checkout.html#';
-// 		Environment.clientSectionUrl = 'chrome-extension://game-jolt-client/package/client.html#';
-// 	} else {
-// 		Environment.wttfBaseUrl = 'chrome-extension://game-jolt-client/index.html#';
-// 		Environment.authBaseUrl = 'chrome-extension://game-jolt-client/auth.html#';
-// 		Environment.checkoutBaseUrl = 'chrome-extension://game-jolt-client/checkout.html#';
-// 		Environment.clientSectionUrl = 'chrome-extension://game-jolt-client/client.html#';
-// 	}
+if (GJ_IS_DESKTOP_APP && !GJ_IS_WATCHING) {
+	// When it gets packaged up for production, the URL changes.
+	// TODO(vue3) when do we not package it up under package/ nowadays?
+	// I think we should always do the urls with package/
+	if (window.location.href.search(/^chrome-extension:\/\/game-jolt-client\/package\//) !== -1) {
+		Environment.wttfBaseUrl = 'chrome-extension://game-jolt-client/package/index.html#';
+		Environment.authBaseUrl = 'chrome-extension://game-jolt-client/package/auth.html#';
+		Environment.checkoutBaseUrl = 'chrome-extension://game-jolt-client/package/checkout.html#';
+		Environment.clientSectionUrl = 'chrome-extension://game-jolt-client/package/client.html#';
+	} else {
+		Environment.wttfBaseUrl = 'chrome-extension://game-jolt-client/index.html#';
+		Environment.authBaseUrl = 'chrome-extension://game-jolt-client/auth.html#';
+		Environment.checkoutBaseUrl = 'chrome-extension://game-jolt-client/checkout.html#';
+		Environment.clientSectionUrl = 'chrome-extension://game-jolt-client/client.html#';
+	}
 
-// 	// We have different firebase app for Client.
-// 	Environment.firebaseAppId = '1:1065321331780:web:b58ac57b00c1d538d3d011';
-// 	Environment.firebaseMeasurementId = 'G-PJSN27C1K6';
-// }
+	// We have different firebase app for Client.
+	Environment.firebaseAppId = '1:1065321331780:web:b58ac57b00c1d538d3d011';
+	Environment.firebaseMeasurementId = 'G-PJSN27C1K6';
+}

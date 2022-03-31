@@ -1,6 +1,7 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
 import { defineConfig, UserConfig as ViteUserConfigActual } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
+import { acquirePrebuiltFFmpeg } from './scripts/build/desktop-app/ffmpeg-prebuilt';
 import viteHtmlResolve from './scripts/build/vite-html-resolve';
 import { parseAndInferOptionsFromEnv } from './scripts/build/vite-options';
 
@@ -22,7 +23,16 @@ type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'
 // https://vitejs.dev/config/
 export default defineConfig(async configEnv => {
 	const { command } = configEnv;
-	const gjOpts = await parseAndInferOptionsFromEnv();
+	const gjOpts = await parseAndInferOptionsFromEnv(configEnv);
+
+	// When serving the client locally, we need to acquire the ffmpeg binaries.
+	if (gjOpts.platform === 'desktop' && command === 'serve') {
+		await acquirePrebuiltFFmpeg({
+			outDir: __dirname,
+			cacheDir: path.resolve(__dirname, 'build', '.cache', 'ffmpeg-prebuilt'),
+			nwjsVersion: gjOpts.nwjsVersion,
+		});
+	}
 
 	type EmptyObject = { [k in any]: never };
 	type GetValueOrEmpty = <T>(value: T) => T | EmptyObject;
@@ -39,8 +49,8 @@ export default defineConfig(async configEnv => {
 	const notInSSR = emptyUnless(() => gjOpts.platform !== 'ssr');
 	const isInDocker = !!process.env['GAMEJOLT_IN_DOCKER'];
 	const onlyInDocker = emptyUnless(() => isInDocker);
+	const notInDocker = emptyUnless(() => !isInDocker);
 	const onlyInDesktopApp = emptyUnless(() => gjOpts.platform === 'desktop');
-	const onlyInProdBuilds = emptyUnless(() => gjOpts.buildType === 'production');
 
 	// These will be imported in all styl files.
 	const stylusOptions = {
@@ -263,11 +273,29 @@ export default defineConfig(async configEnv => {
 			return '/';
 		})(),
 
+		publicDir: 'static-assets',
+
 		server: {
-			port: 8080,
 			strictPort: true,
 
+			// When running outside docker we still need to be able to access
+			// the frontend through a secure connection (and to be able to access .gamejolt.com cookies)
+			// For this reason enable https using a self signed certificate for development.gamejolt.com
+			...notInDocker({
+				port: 443,
+
+				https: {
+					pfx: path.resolve(__dirname, 'development.gamejolt.com.pfx'),
+					passphrase: 'yame yolt',
+				},
+			}),
+
+			// In docker, there may be more than just the frontend being accessible on development.gamejolt.com,
+			// so we avoid doing https here. Instead, we assume we're operating behind some reverse proxy that
+			// does ssl termination for us.
 			...onlyInDocker({
+				port: 8080,
+
 				// Allows remote connections.
 				// This is needed when running from within docker
 				// to allow other containers to access it.
@@ -292,26 +320,32 @@ export default defineConfig(async configEnv => {
 				},
 			}),
 		},
+
 		build: {
-			...onlyInDesktopApp<Partial<ViteUserConfig['build']>>({
-				// This lets us use top-level awaits which allows us
-				// to use our conditional imports as if they were imported
-				// syncronously.
-				target: 'esnext',
-			}),
+			// Only minify in production so we can debug our stuff.
+			minify: gjOpts.environment === 'production',
 
 			rollupOptions: {
-				...onlyInProdBuilds<RollupOptions>({
+				...(() => {
 					// By default vite outputs filenames with their chunks,
 					// but some ad blockers are outrageously aggressive with their
 					// filter lists, for example blocking any file that contains the
 					// string 'follow-widget'. It'd ridiculous.
-					// For this reason, do not output filenames in prod builds.
-					output: {
-						chunkFileNames: 'assets/[hash].js',
-						assetFileNames: 'assets/[hash].[ext]',
-					},
-				}),
+					// For this reason, do not output filenames in prod web-based builds.
+					if (
+						gjOpts.buildType === 'production' &&
+						['web', 'ssr'].includes(gjOpts.platform)
+					) {
+						return <RollupOptions>{
+							output: {
+								chunkFileNames: 'assets/[hash].js',
+								assetFileNames: 'assets/[hash].[ext]',
+							},
+						};
+					}
+
+					return {};
+				})(),
 
 				...notInSSR<RollupOptions>({
 					// When building for ssr the entrypoint is specified in build.ssr,
@@ -320,7 +354,7 @@ export default defineConfig(async configEnv => {
 				}),
 
 				...onlyInDesktopApp<RollupOptions>({
-					external: ['client-voodoo', 'axios'],
+					external: ['client-voodoo'],
 				}),
 			},
 
@@ -330,11 +364,8 @@ export default defineConfig(async configEnv => {
 			// while developing
 			emptyOutDir: gjOpts.emptyOutDir,
 
-			// Write to build/web normally and to build/server for ssr.
-			outDir: path.resolve(
-				__dirname,
-				gjOpts.platform === 'ssr' ? path.join('build', 'server') : path.join('build', 'web')
-			),
+			// Write to build/{platform}.
+			outDir: path.resolve(__dirname, path.join('build', gjOpts.platform)),
 
 			// The SSR manifest is used to keep track of which static assets are
 			// needed by which component. This lets us choose an optimal set of
@@ -388,6 +419,7 @@ export default defineConfig(async configEnv => {
 			GJ_VERSION: JSON.stringify(gjOpts.version),
 			GJ_WITH_UPDATER: JSON.stringify(gjOpts.withUpdater),
 			GJ_HAS_ROUTER: JSON.stringify(gjOpts.currentSectionConfig.hasRouter),
+			GJ_IS_WATCHING: JSON.stringify(command === 'serve'),
 
 			// Disable redirecting between section during serve.
 			// This is because as of time of writing we only support watching

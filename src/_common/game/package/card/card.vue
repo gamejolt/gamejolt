@@ -1,4 +1,5 @@
 <script lang="ts">
+import { Component } from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../analytics/analytics.service';
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
@@ -23,6 +24,17 @@ import { GamePackage } from '../package.model';
 import { GamePackagePurchaseModal } from '../purchase-modal/purchase-modal.service';
 import AppGamePackageCardButtons from './AppGamePackageCardButtons.vue';
 import { GamePackageCardModel } from './card.model';
+
+let buttonsComponent: Component | undefined;
+let metaComponent: Component | undefined;
+
+export function setButtonsComponent(component: Component) {
+	buttonsComponent = component;
+}
+
+export function setMetaComponent(component: Component) {
+	metaComponent = component;
+}
 
 @Options({
 	components: {
@@ -64,11 +76,6 @@ export default class AppGamePackageCard extends Vue {
 	@Prop(Object)
 	partner?: User;
 
-	static hook = {
-		meta: undefined as typeof Vue | undefined,
-		buttons: undefined as typeof Vue | undefined,
-	};
-
 	showFullDescription = false;
 	canToggleDescription = false;
 
@@ -87,11 +94,11 @@ export default class AppGamePackageCard extends Vue {
 	readonly formatFilesize = formatFilesize;
 
 	get metaComponent() {
-		return AppGamePackageCard.hook.meta;
+		return metaComponent;
 	}
 
 	get buttonsComponent() {
-		return AppGamePackageCard.hook.buttons || AppGamePackageCardButtons;
+		return buttonsComponent ?? AppGamePackageCardButtons;
 	}
 
 	get card() {
@@ -250,13 +257,9 @@ export default class AppGamePackageCard extends Vue {
 		</div>
 
 		<div class="card-meta card-meta-sm">
-			<component
-				:is="metaComponent"
-				v-if="metaComponent"
-				:game="game"
-				:package="package"
-				:card="card"
-			/>
+			<template v-if="metaComponent">
+				<component :is="metaComponent" :game="game" :package="package" :card="card" />
+			</template>
 
 			<AppJolticon
 				v-for="supportKey of card.platformSupport"

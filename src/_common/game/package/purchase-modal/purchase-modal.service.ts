@@ -19,7 +19,7 @@ export class GamePackagePurchaseModal {
 	static async show(options: GamePackagePurchaseModalOptions) {
 		return await showModal<void>({
 			modalId: 'GamePackagePurchase',
-			component: defineAsyncComponent(() => import('./purchase-modal.vue')),
+			component: defineAsyncComponent(() => import('./AppGamePackagePurchaseModal.vue')),
 			size: 'sm',
 			props: options,
 		});

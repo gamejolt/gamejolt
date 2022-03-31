@@ -108,7 +108,9 @@ function _checkColWidths() {
 				</a>
 
 				<!-- History Navigator (for desktop app) -->
-				<AppClientHistoryNavigator />
+				<template v-if="GJ_IS_DESKTOP_APP">
+					<AppClientHistoryNavigator />
+				</template>
 
 				<RouterLink
 					v-app-track-event="`top-nav:main-menu:home`"

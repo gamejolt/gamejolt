@@ -3,6 +3,7 @@ import type { MsgProgress, SelfUpdaterInstance } from 'client-voodoo';
 import { Navigate } from '../navigate/navigate.service';
 import { Logger, PatcherState, SelfUpdater } from './client-voodoo-imports';
 import { Client } from './client.service';
+import { markRaw } from 'vue';
 
 const path = require('path') as typeof import('path');
 
@@ -147,7 +148,7 @@ class ClientUpdaterService {
 				const manifestPath = path.resolve(Client.joltronDir, '.manifest');
 				console.log('Attaching selfupdater instance for manifest ' + manifestPath);
 
-				thisInstance = await SelfUpdater.attach(manifestPath);
+				thisInstance = markRaw(await SelfUpdater.attach(manifestPath));
 				Navigate.registerDestructor(() => this.disposeUpdaterInstance(thisInstance!));
 
 				thisInstance
@@ -170,6 +171,7 @@ class ClientUpdaterService {
 						nw.Window.get().close(true);
 					})
 					.on('openRequested', () => {
+						console.log('received open request');
 						Client.show();
 					})
 					.on('progress', (progress: MsgProgress) => {
@@ -193,6 +195,7 @@ class ClientUpdaterService {
 
 				return thisInstance;
 			} catch (err) {
+				console.error(err);
 				try {
 					this.setClientUpdateStatus('error');
 					if (thisInstance) {

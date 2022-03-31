@@ -11,7 +11,7 @@ const {
 	runShell,
 } = require('../build-utils');
 
-const NWJS_VERSION = '0.55.0';
+const NWJS_VERSION = '0.60.0';
 
 class NwBuilder {
 	constructor(buildConfig, packageJson) {
@@ -20,7 +20,7 @@ class NwBuilder {
 		const jsonOverrides = {
 			main: 'chrome-extension://game-jolt-client/package/index.html#/',
 			window: {
-				icon: 'package/static-assets/client/icon-256x256.png',
+				icon: 'package/client/icon-256x256.png',
 			},
 			// Needed on mac, and should only be done during actual build.
 			product_string: 'Game Jolt Client',

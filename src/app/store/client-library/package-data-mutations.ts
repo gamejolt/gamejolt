@@ -18,36 +18,36 @@ export default class ClientLibraryPackageDataMutations {
 		readonly unsetPackage: (pkg: LocalDbPackage) => Promise<void>
 	) {}
 
-	async setPackageInstallDir(localPackage: LocalDbPackage, dir: string) {
-		await this.setPackageData(localPackage, { install_dir: dir });
+	setPackageInstallDir(localPackage: LocalDbPackage, dir: string) {
+		return this.setPackageData(localPackage, { install_dir: dir });
 	}
 
-	async setPackageInstallState(localPackage: LocalDbPackage, state: LocalDbPackagePatchState) {
-		await this.setPackageData(localPackage, { install_state: state });
+	setPackageInstallState(localPackage: LocalDbPackage, state: LocalDbPackagePatchState) {
+		return this.setPackageData(localPackage, { install_state: state });
 	}
 
-	async setPackagePatchPaused(localPackage: LocalDbPackage) {
-		await this.setPackageData(localPackage, { patch_paused: true });
+	setPackagePatchPaused(localPackage: LocalDbPackage) {
+		return this.setPackageData(localPackage, { patch_paused: true });
 	}
 
-	async setPackagePatchResumed(localPackage: LocalDbPackage) {
-		await this.setPackageData(localPackage, { patch_paused: false });
+	setPackagePatchResumed(localPackage: LocalDbPackage) {
+		return this.setPackageData(localPackage, { patch_paused: false });
 	}
 
-	async setPackagePatchQueued(localPackage: LocalDbPackage) {
-		await this.setPackageData(localPackage, { patch_queued: true });
+	setPackagePatchQueued(localPackage: LocalDbPackage) {
+		return this.setPackageData(localPackage, { patch_queued: true });
 	}
 
-	async setPackagePatchUnqueued(localPackage: LocalDbPackage) {
-		await this.setPackageData(localPackage, { patch_queued: false });
+	setPackagePatchUnqueued(localPackage: LocalDbPackage) {
+		return this.setPackageData(localPackage, { patch_queued: false });
 	}
 
-	async setPackageUpdateData(localPackage: LocalDbPackage, update: LocalDbPackage) {
-		await this.setPackageData(localPackage, { update });
+	setPackageUpdateData(localPackage: LocalDbPackage, update: LocalDbPackage) {
+		return this.setPackageData(localPackage, { update });
 	}
 
-	async setPackageUpdateState(localPackage: LocalDbPackage, state: LocalDbPackagePatchState) {
-		await this.setPackageData(localPackage, { update_state: state });
+	setPackageUpdateState(localPackage: LocalDbPackage, state: LocalDbPackagePatchState) {
+		return this.setPackageData(localPackage, { update_state: state });
 	}
 
 	async setPackageUpdateComplete(localPackage: LocalDbPackage) {
@@ -70,26 +70,26 @@ export default class ClientLibraryPackageDataMutations {
 		});
 	}
 
-	async setPackageDownloadProgress(
+	setPackageDownloadProgress(
 		localPackage: LocalDbPackage,
 		progress: LocalDbPackageProgress | null
 	) {
-		await this.setPackageData(localPackage, { download_progress: progress });
+		return this.setPackageData(localPackage, { download_progress: progress });
 	}
 
-	async setPackageUnpackProgress(
+	setPackageUnpackProgress(
 		localPackage: LocalDbPackage,
 		progress: LocalDbPackageProgress | null
 	) {
-		await this.setPackageData(localPackage, { unpack_progress: progress });
+		return this.setPackageData(localPackage, { unpack_progress: progress });
 	}
 
 	/**
 	 * Clears any state information contained in the package to a clean slate. Can be used after
 	 * operations complete or fail.
 	 */
-	async clearPackageOperations(localPackage: LocalDbPackage) {
-		await this.setPackageData(localPackage, {
+	clearPackageOperations(localPackage: LocalDbPackage) {
+		return this.setPackageData(localPackage, {
 			update: null,
 			install_state: null,
 			update_state: null,
@@ -103,25 +103,25 @@ export default class ClientLibraryPackageDataMutations {
 		});
 	}
 
-	async setPackageLaunching(localPackage: LocalDbPackage) {
-		await this.setPackageData(localPackage, { run_state: LocalDbPackageRunState.LAUNCHING });
+	setPackageLaunching(localPackage: LocalDbPackage) {
+		return this.setPackageData(localPackage, { run_state: LocalDbPackageRunState.LAUNCHING });
 	}
 
-	async setPackageRunningPid(localPackage: LocalDbPackage, pid: LocalDbPackagePid) {
-		await this.setPackageData(localPackage, {
+	setPackageRunningPid(localPackage: LocalDbPackage, pid: LocalDbPackagePid) {
+		return this.setPackageData(localPackage, {
 			run_state: LocalDbPackageRunState.RUNNING,
 			running_pid: pid,
 		});
 	}
 
-	async clearPackageRunningPid(localPackage: LocalDbPackage) {
-		await this.setPackageData(localPackage, {
+	clearPackageRunningPid(localPackage: LocalDbPackage) {
+		return this.setPackageData(localPackage, {
 			run_state: null,
 			running_pid: null,
 		});
 	}
 
-	async setPackageRemoveState(localPackage: LocalDbPackage, state: LocalDbPackageRemoveState) {
-		await this.setPackageData(localPackage, { remove_state: state });
+	setPackageRemoveState(localPackage: LocalDbPackage, state: LocalDbPackageRemoveState) {
+		return this.setPackageData(localPackage, { remove_state: state });
 	}
 }

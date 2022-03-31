@@ -240,7 +240,9 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 	}
 
 	async function removeGame() {
-		const result = await ModalConfirm.show($gettext('Are you sure you want to permanently remove your game?'));
+		const result = await ModalConfirm.show(
+			$gettext('Are you sure you want to permanently remove your game?')
+		);
 
 		if (!result) {
 			return;
@@ -249,7 +251,9 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 		await game.value!.$remove();
 
 		showInfoGrowl(
-			$gettext('Your game has been removed from the site. Maybe a phoenix will rise in its place one day.'),
+			$gettext(
+				'Your game has been removed from the site. Maybe a phoenix will rise in its place one day.'
+			),
 			$gettext('Game Removed')
 		);
 

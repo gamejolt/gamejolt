@@ -1,5 +1,4 @@
 const path = require('path') as typeof import('path');
-import iconPath from '../../../static-assets/client/icon-256x256.png';
 import { getDeviceOS } from '../../device/device.service';
 import { Shortcut } from '../client-voodoo-imports';
 import { Client } from '../client.service';
@@ -21,9 +20,7 @@ export class ClientShortcut {
 
 		return Shortcut.create(
 			path.join(Client.joltronDir, 'game-jolt-client'),
-			// TODO(vue3): we need to make sure this still works
-			// Path is absolute, so we make it relative to get the resolve working.
-			path.resolve(iconPath.substr(1))
+			path.resolve(Client.nwStaticAssetsDir, 'client-icon-256x256.png')
 		);
 	}
 
