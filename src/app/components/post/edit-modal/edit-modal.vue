@@ -7,6 +7,7 @@ import { Community } from '../../../../_common/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { BaseModal } from '../../../../_common/modal/base';
+import { Screen } from '../../../../_common/screen/screen-service';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import FormPost from '../../forms/post/post.vue';
 import { VideoStatus } from '../../forms/post/_video/video.vue';
@@ -34,6 +35,8 @@ export default class AppPostEditModal extends mixins(BaseModal) {
 	post: FiresidePost | null = null;
 	videoUploadStatus: VideoStatus = VideoStatus.IDLE;
 	background: Background | null = null;
+
+	readonly Screen = Screen;
 
 	get closeButtonDisabled() {
 		return this.videoUploadStatus === VideoStatus.UPLOADING;
@@ -70,7 +73,19 @@ export default class AppPostEditModal extends mixins(BaseModal) {
 
 <template>
 	<AppModal>
-		<AppBackground class="-background" :background="background" :darken="overlay">
+		<AppBackground
+			class="-background"
+			:background="background"
+			:darken="overlay"
+			:background-style="
+				Screen.isXs
+					? undefined
+					: {
+							overflow: 'hidden',
+							'border-radius': '12px',
+					  }
+			"
+		>
 			<AppTheme class="modal-controls" :force-dark="overlay">
 				<AppButton
 					:disabled="closeButtonDisabled"
@@ -104,8 +119,4 @@ export default class AppPostEditModal extends mixins(BaseModal) {
 .-background
 	@media $media-xs
 		min-height: 100vh
-
-	@media $media-sm-up
-		rounded-corners-lg()
-		overflow: hidden
 </style>
