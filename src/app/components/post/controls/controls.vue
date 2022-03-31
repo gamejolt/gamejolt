@@ -260,21 +260,21 @@ export default class AppPostControls extends Vue {
 			<AppStickerControlsOverlay end :hide="overlay">
 				<div class="post-controls">
 					<div class="-row">
-						<div
-							v-if="showUserControls"
-							class="-row"
-							:class="{ '-overlay-text': overlay }"
-						>
+						<div v-if="showUserControls" class="-row">
 							<AppFiresidePostLikeWidget
 								v-if="shouldShowLike"
 								:post="post"
 								:location="location"
-								:overlay="!!post.user_like && overlay"
+								:overlay="overlay"
 								trans
 								@change="setUserFollow"
 							/>
 
-							<div v-if="shouldShowCommentsButton" class="-inline-button">
+							<div
+								v-if="shouldShowCommentsButton"
+								class="-inline-button"
+								:class="{ '-overlay-text': overlay }"
+							>
 								<AppButton
 									v-app-tooltip="$gettext('View Comments')"
 									icon="comment-filled"
@@ -298,6 +298,7 @@ export default class AppPostControls extends Vue {
 								v-if="shouldShowStickersButton"
 								v-app-tooltip="$gettext('Place Sticker')"
 								v-app-auth-required
+								:class="{ '-overlay-text': overlay }"
 								icon="sticker-filled"
 								circle
 								trans
