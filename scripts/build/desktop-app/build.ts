@@ -143,9 +143,9 @@ export async function packageClient(options: ClientPackageOptions) {
 		staging: options.staging,
 	});
 
-	// if (config.pushBuild) {
-	// 	await gjpush.push({ gameId, packageId: installerPackageId, filepath: installerFilepath });
-	// }
+	if (options.pushBuild) {
+		await gjpush.push({ gameId, packageId: installerPackageId, filepath: installerFilepath });
+	}
 
 	console.log('Done with client build.');
 }

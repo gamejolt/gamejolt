@@ -372,7 +372,7 @@ export async function createInstaller(options: {
 			certPw,
 		});
 
-		return path.join(options.outDir, 'GameJoltClient.exe');
+		return path.join(options.outDir, 'GameJoltClientSetup.exe');
 	} else if (isLinux()) {
 		const installerFilepath = path.join(options.outDir, 'GameJoltClient.tar.gz');
 		await createTarGz(options.installerDir, installerFilepath);
