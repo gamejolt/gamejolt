@@ -3,7 +3,7 @@ name: Build Client
 on:
   push:
     tags:
-      - 'release/**'
+      - 'release-TEMPDISABLED/**'
 
 jobs:
   build-frontend:
