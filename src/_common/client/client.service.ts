@@ -92,8 +92,8 @@ export class Client {
 
 		// Path on darwin is different. same case as in joltronDir.
 		// I'll do this when i set up the mac vm again.
-		if (os.type() === 'Darwin') {
-			throw new Error('vue3 todo forget me not');
+		if (os.type() === 'Darwin' || os.type() === 'Linux') {
+			throw new Error('TODO(vue3) forget me not');
 		}
 
 		// NW documentation straight up lies. startPath is the directory from which you launched the app,
@@ -123,8 +123,10 @@ export class Client {
 	}
 
 	// Gets the directory the joltron binary is running from.
-	// TODO(vue3) probably broken nw.App.startPath is a lie.
 	static get joltronDir() {
+		// TODO(vue3) check Darwin and Linux.
+		// Darwin should be the same, but Linux used to use nw.App.startPath which
+		// straight up does not work anaymore.
 		if (os.type() === 'Darwin') {
 			// On mac nw.App.startPath is apparantly unreliable, but process.cwd() always changes to app.nw folder.
 			// Need to traverse up this path.

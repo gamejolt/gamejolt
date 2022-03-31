@@ -12,6 +12,8 @@ watch(totalPatchProgress, progress => {
 		Client.setProgressBar(progress);
 	}
 });
-
-// TODO(vue3) david bro wheres the render function
 </script>
+
+<template>
+	<div />
+</template>

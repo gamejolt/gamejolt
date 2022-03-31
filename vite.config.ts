@@ -273,7 +273,6 @@ export default defineConfig(async configEnv => {
 			return '/';
 		})(),
 
-		// TODO(vue3) this does not work when building. Where are the damn static assets written to???
 		publicDir: 'static-assets',
 
 		server: {

@@ -170,7 +170,6 @@ export default class ClientLibraryPackageInstallOperations {
 				}
 
 				// We refetch from db because if canceling a first installation it might remove the local game from the db.
-				// TODO(vue3) WHY??!?!?!
 				const dbInst = await this._getDb();
 				localGame = dbInst.games.get(localPackage.game_id)!;
 

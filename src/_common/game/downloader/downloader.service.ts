@@ -53,8 +53,7 @@ export class GameDownloader {
 				},
 			}).href;
 
-			// TODO(vue3) this doesnt happen when watching. The comment below may be outdated.
-			// The client prepends urls with hashtag (#) that needs to be trimmed when going to external site.
+			// When built, the client prepends urls with hashtag (#) that needs to be trimmed when going to external site.
 			urlPath = urlPath.replace(/^#/, '');
 
 			Navigate.gotoExternal(`${Environment.baseUrl}${urlPath}`);
