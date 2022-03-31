@@ -1,25 +1,25 @@
 <script lang="ts" setup>
 import { defineAsyncComponent } from '@vue/runtime-core';
+import { computed, inject, ref } from 'vue';
+import { RouterLink } from 'vue-router';
 import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { AppClientHistoryNavigator } from '../../../../_common/client/safe-exports';
 import { AppConfigLoaded } from '../../../../_common/config/loaded';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { Environment } from '../../../../_common/environment/environment.service';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { vAppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { imageGameJoltLogo, imageJolt } from '../../../img/images';
 import { useAppStore } from '../../../store/index';
 import { ChatStoreKey } from '../../chat/chat-store';
 import AppSearch from '../../search/AppSearch.vue';
-import { ref, inject, computed } from 'vue';
-import { RouterLink } from 'vue-router';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
 
 const AppShellAccountPopover = defineAsyncComponent(
 	() => import('../account-popover/account-popover.vue')
@@ -117,7 +117,7 @@ function _checkColWidths() {
 						active: $route.name === 'home',
 						'-small-home': Screen.isSm,
 					}"
-					:to="{ name: 'home' }"
+					to="/"
 				>
 					<AppThemeSvg
 						v-if="!Screen.isMobile"
