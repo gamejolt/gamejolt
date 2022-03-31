@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, watch } from 'vue';
+import { computed, PropType, ref, StyleValue, watch } from 'vue';
 import { ImgHelper } from '../img/helper/helper-service';
 import AppMediaItemBackdrop from '../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { Background } from './background.model';
@@ -14,6 +14,10 @@ const props = defineProps({
 	},
 	bleed: {
 		type: Boolean,
+	},
+	backgroundStyle: {
+		type: Object as PropType<StyleValue>,
+		default: undefined,
 	},
 });
 
@@ -45,10 +49,11 @@ if (!import.meta.env.SSR) {
 			:media-item="mediaItem"
 			class="-backdrop"
 			:class="{ '-bleed': bleed }"
+			:style="backgroundStyle"
 		>
-			<template v-if="background">
+			<div v-if="background" class="-stretch anim-fade-in">
 				<div
-					class="-stretch anim-fade-in"
+					class="-stretch"
 					:style="{
 						'background-image': background.cssBackgroundImage,
 						'background-repeat': background.cssBackgroundRepeat,
@@ -56,8 +61,8 @@ if (!import.meta.env.SSR) {
 						'background-position': background.cssBackgroundPosition,
 					}"
 				/>
-				<div v-if="darken" class="-stretch -fade anim-fade-in" />
-			</template>
+				<div v-if="darken" class="-stretch -fade" />
+			</div>
 		</AppMediaItemBackdrop>
 
 		<div class="-inner" :class="{ '-active': hasMedia }">
