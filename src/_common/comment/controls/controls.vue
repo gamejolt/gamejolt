@@ -94,6 +94,7 @@ export default class AppCommentControls extends Vue {
 
 	onReplyClick(autofocus: boolean) {
 		CommentThreadModal.show({
+			router: this.$router,
 			model: this.model,
 			commentId: this.comment.id,
 			displayMode: 'comments',

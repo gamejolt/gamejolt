@@ -119,7 +119,7 @@ function _checkColWidths() {
 						active: $route.name === 'home',
 						'-small-home': Screen.isSm,
 					}"
-					:to="{ name: 'home' }"
+					to="/"
 				>
 					<AppThemeSvg
 						v-if="!Screen.isMobile"

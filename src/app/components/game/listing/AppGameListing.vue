@@ -1,62 +1,50 @@
-<script lang="ts">
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { Environment } from '../../../../_common/environment/environment.service';
-import { formatNumber } from '../../../../_common/filters/number';
+<script lang="ts" setup>
+import { PropType } from 'vue';
+import { RouterLink } from 'vue-router';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import AppNavTabList from '../../../../_common/nav/tab-list/tab-list.vue';
 import AppPagination from '../../../../_common/pagination/pagination.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
 import { vAppNoAutoscroll } from '../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppGameFilteringTags from '../filtering/AppGameFilteringTags.vue';
 import { GameFilteringContainer } from '../filtering/container';
 import AppGameFilteringWidget from '../filtering/widget.vue';
 import AppGameGridPlaceholder from '../grid/placeholder/placeholder.vue';
 import { GameListingContainer } from './listing-container-service';
 
-@Options({
-	components: {
-		AppPagination,
-		AppLoadingFade,
-		AppGameFilteringWidget,
-		AppGameFilteringTags,
-		AppGameGridPlaceholder,
-		AppNavTabList,
-		AppScrollInview,
-		AppLoading,
+defineProps({
+	listing: {
+		type: Object as PropType<GameListingContainer>,
+		required: true,
 	},
-	directives: {
-		AppNoAutoscroll: vAppNoAutoscroll,
+	filtering: {
+		type: Object as PropType<GameFilteringContainer>,
+		required: true,
 	},
-})
-export default class AppGameListing extends Vue {
-	@Prop({ type: Object, required: true }) listing!: GameListingContainer;
-	@Prop({ type: Object, required: true }) filtering!: GameFilteringContainer;
-	@Prop({ type: Boolean, default: false }) hideFilters!: boolean;
-	@Prop({ type: Boolean, default: false }) hideSectionNav!: boolean;
-	@Prop({ type: Boolean, default: false }) includeFeaturedSection!: boolean;
-	@Prop({ type: Boolean, default: false }) isLoading!: boolean;
+	hideFilters: {
+		type: Boolean,
+	},
+	hideSectionNav: {
+		type: Boolean,
+	},
+	includeFeaturedSection: {
+		type: Boolean,
+	},
+	isLoading: {
+		type: Boolean,
+	},
+});
 
-	/**
-	 * If it's infinite, it won't show pagination controls and will instead emit
-	 * a `load` event when scrolling down.
-	 */
-	@Prop({ type: Boolean, default: false }) infinite!: boolean;
+const emit = defineEmits({
+	load: () => true,
+});
 
-	inviewConfig = new ScrollInviewConfig();
-
-	readonly formatNumber = formatNumber;
-	readonly Environment = Environment;
-	readonly Screen = Screen;
-	readonly Scroll = Scroll;
-
-	@Emit('load')
-	emitLoad() {}
-}
+const InviewConfig = new ScrollInviewConfig();
 </script>
 
 <template>
@@ -66,44 +54,44 @@ export default class AppGameListing extends Vue {
 				<AppNavTabList v-if="!hideSectionNav">
 					<ul>
 						<li v-if="includeFeaturedSection">
-							<router-link
+							<RouterLink
 								v-app-no-autoscroll
 								v-app-track-event="`game-list:section-selector:featured`"
-								:to="{ name: $route.name, params: { section: null } }"
+								:to="{ name: $route.name!, params: { section: null } }"
 								:class="{ active: !$route.params.section }"
 							>
 								<AppTranslate>Featured</AppTranslate>
-							</router-link>
+							</RouterLink>
 						</li>
 						<li>
-							<router-link
+							<RouterLink
 								v-app-no-autoscroll
 								v-app-track-event="`game-list:section-selector:hot`"
-								:to="{ name: $route.name, params: { section: 'hot' } }"
+								:to="{ name: $route.name!, params: { section: 'hot' } }"
 								:class="{ active: $route.params.section === 'hot' }"
 							>
 								<AppTranslate>Hot</AppTranslate>
-							</router-link>
+							</RouterLink>
 						</li>
 						<li>
-							<router-link
+							<RouterLink
 								v-app-no-autoscroll
 								v-app-track-event="`game-list:section-selector:best`"
-								:to="{ name: $route.name, params: { section: 'best' } }"
+								:to="{ name: $route.name!, params: { section: 'best' } }"
 								:class="{ active: $route.params.section === 'best' }"
 							>
 								<AppTranslate>Best</AppTranslate>
-							</router-link>
+							</RouterLink>
 						</li>
 						<li>
-							<router-link
+							<RouterLink
 								v-app-no-autoscroll
 								v-app-track-event="`game-list:section-selector:new`"
-								:to="{ name: $route.name, params: { section: 'new' } }"
+								:to="{ name: $route.name!, params: { section: 'new' } }"
 								:class="{ active: $route.params.section === 'new' }"
 							>
 								<AppTranslate>New</AppTranslate>
-							</router-link>
+							</RouterLink>
 						</li>
 					</ul>
 				</AppNavTabList>
@@ -125,7 +113,7 @@ export default class AppGameListing extends Vue {
 							<slot />
 						</AppLoadingFade>
 
-						<template v-if="!infinite || GJ_IS_SSR">
+						<template v-if="!listing.loadInfinitely || GJ_IS_SSR">
 							<AppPagination
 								class="text-center"
 								:items-per-page="listing.perPage"
@@ -137,8 +125,8 @@ export default class AppGameListing extends Vue {
 						<template v-else-if="!listing.reachedEnd">
 							<AppScrollInview
 								v-if="!listing.isLoadingMore"
-								:config="inviewConfig"
-								@inview="emitLoad"
+								:config="InviewConfig"
+								@inview="emit('load')"
 							/>
 							<AppLoading v-else centered />
 						</template>

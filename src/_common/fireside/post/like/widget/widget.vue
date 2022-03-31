@@ -129,11 +129,11 @@ export default class AppFiresidePostLikeWidget extends Vue {
 				v-app-track-event="`fireside-post-like-widget:click`"
 				v-app-auth-required
 				class="-like-button"
-				:icon="!liked ? 'heart' : 'heart-filled'"
+				icon="heart-filled"
 				circle
 				:trans="trans"
-				:overlay="overlay"
 				:block="block"
+				:overlay="overlay"
 				:primary="liked"
 				:solid="liked"
 				@click="toggleLike"

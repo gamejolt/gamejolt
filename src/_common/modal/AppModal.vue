@@ -9,7 +9,7 @@ import AppScrollAffix from '../scroll/AppScrollAffix.vue';
 import AppScrollScroller, { createScroller } from '../scroll/AppScrollScroller.vue';
 import AppTheme from '../theme/AppTheme.vue';
 import { Theme } from '../theme/theme.model';
-import { Modals, useModal } from './modal.service';
+import { ModalDismissReason, Modals, useModal } from './modal.service';
 
 export interface AppModalInterface {
 	scrollTo: (offsetY: number) => void;
@@ -82,7 +82,7 @@ onUnmounted(() => {
 });
 
 function _dismissRouteChange() {
-	dismiss();
+	dismiss('route-change');
 }
 
 function dismissEsc() {
@@ -90,7 +90,7 @@ function dismissEsc() {
 		return;
 	}
 
-	dismiss();
+	dismiss('esc');
 }
 
 function dismissBackdrop() {
@@ -102,12 +102,12 @@ function dismissBackdrop() {
 	) {
 		return;
 	}
-	dismiss();
+	dismiss('backdrop');
 }
 
-function dismiss() {
+function dismiss(reason: ModalDismissReason) {
 	emit('close');
-	modal.dismiss();
+	modal.dismiss(reason);
 }
 
 function scrollTo(offsetY: number) {

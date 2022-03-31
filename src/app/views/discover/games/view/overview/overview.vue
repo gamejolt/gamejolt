@@ -5,6 +5,7 @@ import { getAbsoluteLink } from '../../../../../../utils/router';
 import { useAdsController } from '../../../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../../../../_common/api/api.service';
+import AppFadeCollapse from '../../../../../../_common/AppFadeCollapse.vue';
 import AppCard from '../../../../../../_common/card/AppCard.vue';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
 import AppCommentAddButton from '../../../../../../_common/comment/add-button/add-button.vue';
@@ -21,7 +22,6 @@ import {
 } from '../../../../../../_common/comment/thread/modal.service';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../../_common/environment/environment.service';
-import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
 import { formatNumber } from '../../../../../../_common/filters/number';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import AppGameExternalPackageCard from '../../../../../../_common/game/external-package/card/card.vue';
@@ -309,7 +309,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		);
 	}
 
-	unmounted() {
+	routeDestroyed() {
 		if (this.permalinkWatchDeregister) {
 			this.permalinkWatchDeregister();
 			this.permalinkWatchDeregister = undefined;

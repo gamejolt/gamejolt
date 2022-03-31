@@ -1,7 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
+import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import { Game } from '../../../../_common/game/game.model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { UserGameTrophy } from '../../../../_common/user/trophy/game-trophy.model';

@@ -2,11 +2,11 @@
 import { Component } from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../analytics/analytics.service';
+import AppFadeCollapse from '../../../AppFadeCollapse.vue';
 import AppCard from '../../../card/AppCard.vue';
 import { Clipboard } from '../../../clipboard/clipboard-service';
 import { AppCountdown } from '../../../countdown/countdown';
 import AppExpand from '../../../expand/AppExpand.vue';
-import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
 import { formatCurrency } from '../../../filters/currency';
 import { formatFilesize } from '../../../filters/filesize';
 import { LinkedKey } from '../../../linked-key/linked-key.model';
