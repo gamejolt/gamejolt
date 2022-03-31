@@ -309,7 +309,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		);
 	}
 
-	unmounted() {
+	routeDestroyed() {
 		if (this.permalinkWatchDeregister) {
 			this.permalinkWatchDeregister();
 			this.permalinkWatchDeregister = undefined;

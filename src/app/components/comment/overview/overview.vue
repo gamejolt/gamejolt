@@ -97,6 +97,7 @@ export default class AppCommentOverview extends Vue {
 
 	open(comment: Comment) {
 		CommentThreadModal.show({
+			router: this.$router,
 			model: this.model,
 			commentId: comment.id,
 			displayMode: this.displayMode,
