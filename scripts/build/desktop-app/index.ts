@@ -7,7 +7,7 @@ import { buildClient, packageClient } from './build';
 		: 'production';
 
 	const indexOfBuildType = process.argv.indexOf('--buildType');
-	const buildType: 'production' | 'development' =
+	const buildType: Options['buildType'] =
 		indexOfBuildType != -1 ? (process.argv[indexOfBuildType + 1] as any) : 'production';
 	if (buildType !== 'production' && buildType !== 'development') {
 		throw new Error('Invalid value for --buildType. Expected production or development');

@@ -9,6 +9,7 @@ import {
 } from '../utils';
 import * as fs from 'fs-extra';
 import fetch from 'node-fetch';
+import { Options } from '../vite-options';
 
 const path = require('path') as typeof import('path');
 const os = require('os') as typeof import('os');
@@ -28,7 +29,7 @@ const gjpushExecutableFilepath =
 		: null;
 
 export type GjpushOptions = {
-	environment: 'production' | 'development';
+	environment: Options['environment'];
 
 	/** Where to cache the push tools in */
 	cacheDir: string;

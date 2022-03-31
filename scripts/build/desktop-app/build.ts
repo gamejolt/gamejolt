@@ -1,9 +1,9 @@
 import * as fs from 'fs-extra';
 import { gjSectionConfigs, GjSectionName } from '../section-config';
-import { createTarGz, isWindows, packageJson, runShell } from '../utils';
+import { createTarGz, packageJson, runShell } from '../utils';
 import { Options } from '../vite-options';
 import { Gjpush } from './gjpush';
-import { buildJoltron, ensureJoltronCloned, restructureProject } from './joltron';
+import { buildJoltron, createInstaller, ensureJoltronCloned, restructureProject } from './joltron';
 import { NwBuilder } from './nwjs-builder';
 
 const path = require('path') as typeof import('path');
@@ -19,7 +19,7 @@ export type ClientBuildOptions = {
 	buildType: Options['buildType'];
 };
 
-export async function buildClient(config: ClientBuildOptions) {
+export async function buildClient(options: ClientBuildOptions) {
 	const frontendBuildDir = path.join(rootDir, 'build', 'desktop');
 
 	// Clean the build folder to start fresh.
@@ -27,11 +27,11 @@ export async function buildClient(config: ClientBuildOptions) {
 	await fs.remove(frontendBuildDir);
 
 	for (const section of clientSections) {
-		await buildSection(section, config);
+		await buildSection(section, options);
 	}
 }
 
-async function buildSection(section: GjSectionName, config: ClientBuildOptions) {
+async function buildSection(section: GjSectionName, options: ClientBuildOptions) {
 	const crossEnvCmd = path.resolve(rootDir, 'node_modules', '.bin', 'cross-env');
 
 	const envVars = Object.entries({
@@ -39,8 +39,8 @@ async function buildSection(section: GjSectionName, config: ClientBuildOptions) 
 		// This lets us build multiple sections in the same dir.
 		GJ_EMPTY_OUTDIR: 0,
 
-		GJ_ENVIRONMENT: config.environment,
-		GJ_BUILD_TYPE: config.buildType,
+		GJ_ENVIRONMENT: options.environment,
+		GJ_BUILD_TYPE: options.buildType,
 		GJ_PLATFORM: 'desktop',
 		GJ_SECTION: section,
 	})
@@ -64,13 +64,13 @@ export type ClientPackageOptions = {
 	noCache?: boolean;
 };
 
-export async function packageClient(config: ClientPackageOptions) {
-	const gameId = config.environment === 'development' ? 1000 : 362412;
+export async function packageClient(options: ClientPackageOptions) {
+	const gameId = options.environment === 'development' ? 1000 : 362412;
 	let packageId: number;
 	let installerPackageId: number;
 
-	if (config.environment === 'development') {
-		if (!config.staging) {
+	if (options.environment === 'development') {
+		if (!options.staging) {
 			packageId = 1001;
 			installerPackageId = 1000;
 		} else {
@@ -78,7 +78,7 @@ export async function packageClient(config: ClientPackageOptions) {
 			installerPackageId = 1003;
 		}
 	} else {
-		if (!config.staging) {
+		if (!options.staging) {
 			packageId = 376715;
 			installerPackageId = 376713;
 		} else {
@@ -102,20 +102,20 @@ export async function packageClient(config: ClientPackageOptions) {
 		frontendBuildDir,
 		clientBuildDir,
 		cacheDir,
-		useSdkVersion: config.environment === 'development' || config.staging,
-		noCache: config.noCache,
+		useSdkVersion: options.environment === 'development' || options.staging,
+		noCache: options.noCache,
 	});
 
 	await nwBuilder.build();
 
 	const gjpush = new Gjpush({
-		environment: config.environment,
+		environment: options.environment,
 		cacheDir,
-		noCache: config.noCache,
+		noCache: options.noCache,
 	});
 
 	let packageBuildId = 0;
-	if (config.pushBuild) {
+	if (options.pushBuild) {
 		await gjpush.ensureGjpush();
 
 		console.log('Creating archive for package');
@@ -127,19 +127,25 @@ export async function packageClient(config: ClientPackageOptions) {
 	}
 
 	await ensureJoltronCloned();
-	await buildJoltron();
+	await buildJoltron({ environment: options.environment });
+
 	const installerDir = await restructureProject({
 		packageDir: nwBuilder.buildDir,
 		packageId,
 		packageBuildId,
-		environment: config.environment,
+		environment: options.environment,
 	});
 
-	// await createInstaller();
+	const installerFilepath = await createInstaller({
+		installerDir,
+		outDir: clientBuildDir,
+		environment: options.environment,
+		staging: options.staging,
+	});
 
 	// if (config.pushBuild) {
-	// 	await pushInstaller();
+	// 	await gjpush.push({ gameId, packageId: installerPackageId, filepath: installerFilepath });
 	// }
 
-	// console.log('Done with client build.');
+	console.log('Done with client build.');
 }

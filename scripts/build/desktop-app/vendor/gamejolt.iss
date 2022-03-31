@@ -6,6 +6,7 @@
 #define MyAppPublisher "Game Jolt Inc."
 #define MyAppURL "https://gamejolt.com/"
 #define MyAppExeName "GameJoltClient.exe"
+#define MyInstallerVersion "{{INSTALLER_VERSION}}"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -20,6 +21,7 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 AppMutex=game-jolt-client
+VersionInfoVersion={#MyInstallerVersion}
 DefaultDirName={localappdata}\GameJoltClient
 DefaultGroupName=Game Jolt
 DisableProgramGroupPage=yes

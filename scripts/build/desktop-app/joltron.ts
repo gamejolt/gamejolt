@@ -1,6 +1,16 @@
-import { isLinux, isMac, isWindows, packageJson, runShell, shellEscape } from '../utils';
+import {
+	createTarGz,
+	isLinux,
+	isMac,
+	isWindows,
+	packageJson,
+	runShell,
+	shellEscape,
+} from '../utils';
 import * as fs from 'fs-extra';
 import * as readdirp from 'readdirp';
+import { buildInnoSetup } from './inno-setup';
+import { Options } from '../vite-options';
 
 const path = require('path') as typeof import('path');
 const os = require('os') as typeof import('os');
@@ -45,7 +55,7 @@ export async function ensureJoltronCloned() {
 	await runShell(`${gitStatus} || ${gitClone}`);
 }
 
-export async function buildJoltron() {
+export async function buildJoltron(options: { environment: Options['environment'] }) {
 	console.log('Building Joltron');
 	if (joltronRepoDir === null) {
 		throw new Error('GOPATH is not set, cannot build joltron');
@@ -111,7 +121,7 @@ export async function buildJoltron() {
 		);
 	}
 
-	const isDevelopment = process.env.GJ_ENVIRONMENT === 'development';
+	const isDevelopment = options.environment === 'development';
 
 	const commands: { command: string; args: string[] }[] = [];
 	if (isWindows()) {
@@ -147,7 +157,7 @@ export async function restructureProject(options: {
 	packageDir: string;
 	packageId: number;
 	packageBuildId: number;
-	environment: 'production' | 'development';
+	environment: Options['environment'];
 }) {
 	if (joltronExecutableFilepath === null) {
 		throw new Error('GOPATH is not set, cannot provide joltron executable to project');
@@ -240,153 +250,134 @@ export async function restructureProject(options: {
 	return installerDir;
 }
 
-// /**
-//  * Packages up the client build as an installer.
-//  *
-//  * This takes the joltron folder structure we generated in the previous
-//  * steps and packages it up as an installer for easier distribution
-//  */
-// async function createInstaller() {
-// 	console.log('Creating installer');
+/**
+ * Packages up the client build as an installer.
+ *
+ * This takes the joltron folder structure we generated in the previous
+ * steps and packages it up as an installer for easier distribution
+ */
+export async function createInstaller(options: {
+	installerDir: string;
+	outDir: string;
+	environment: Options['environment'];
+	staging: boolean;
+}) {
+	console.log('Creating installer');
 
-// 	if (os.type() === 'Darwin') {
-// 		// On mac we need to create an app that when run will execute joltron.
-// 		// We have a template app we use that contains the minimal setup
-// 		// required.
-// 		const appTemplate = path.resolve(__dirname, 'Game Jolt Client.app');
-// 		const clientApp = path.resolve(config.clientBuildDir, 'Game Jolt Client.app');
+	if (isMac()) {
+		throw new Error('Not implemented');
 
-// 		// We copy it over to the build dir.
-// 		await fs.copy(appTemplate, clientApp);
+		// // On mac we need to create an app that when run will execute joltron.
+		// // We have a template app we use that contains the minimal setup
+		// // required.
+		// const appTemplate = path.resolve(__dirname, 'Game Jolt Client.app');
+		// const clientApp = path.resolve(config.clientBuildDir, 'Game Jolt Client.app');
 
-// 		// We copy the entire joltron folder we generated in the previous
-// 		// step into the app's Contents/Resources/app folder.
-// 		const buildDir = path.resolve(config.clientBuildDir, 'dist');
-// 		const appDir = path.resolve(clientApp, 'Contents', 'Resources', 'app');
+		// // We copy it over to the build dir.
+		// await fs.copy(appTemplate, clientApp);
 
-// 		// TODO: check to make sure it copies the hidden dot files too
-// 		await fs.copy(buildDir, appDir);
+		// // We copy the entire joltron folder we generated in the previous
+		// // step into the app's Contents/Resources/app folder.
+		// const buildDir = path.resolve(config.clientBuildDir, 'dist');
+		// const appDir = path.resolve(clientApp, 'Contents', 'Resources', 'app');
 
-// 		// // The . after the build dir makes it also copy hidden dot files
-// 		// cp.execSync('cp -a "' + path.join(buildDir, '.') + '" "' + appDir + '"');
+		// // TODO: check to make sure it copies the hidden dot files too
+		// await fs.copy(buildDir, appDir);
 
-// 		// TODO: use simple-plist
-// 		// The info plist in our template has placeholder we need to replace
-// 		// with this build's version.
-// 		const infoPlistFile = path.join(clientApp, 'Contents', 'Info.plist');
-// 		const infoPlist = fs
-// 			.readFileSync(infoPlistFile, {
-// 				encoding: 'utf8',
-// 			})
-// 			.replace(/\{\{APP_VERSION\}\}/g, packageJson.version);
+		// // // The . after the build dir makes it also copy hidden dot files
+		// // cp.execSync('cp -a "' + path.join(buildDir, '.') + '" "' + appDir + '"');
 
-// 		await fs.writeFile(infoPlistFile, infoPlist, { encoding: 'utf8' });
+		// // TODO: use simple-plist
+		// // The info plist in our template has placeholder we need to replace
+		// // with this build's version.
+		// const infoPlistFile = path.join(clientApp, 'Contents', 'Info.plist');
+		// const infoPlist = fs
+		// 	.readFileSync(infoPlistFile, {
+		// 		encoding: 'utf8',
+		// 	})
+		// 	.replace(/\{\{APP_VERSION\}\}/g, packageJson.version);
 
-// 		const _createDmg = () => {
-// 			const appdmg = require('appdmg');
+		// await fs.writeFile(infoPlistFile, infoPlist, { encoding: 'utf8' });
 
-// 			const dmg = appdmg({
-// 				target: path.resolve(config.clientBuildDir, 'GameJoltClient.dmg'),
-// 				basepath: config.projectBase,
-// 				specification: {
-// 					// DO NOT ADD ANY SPACES (or chinese characters) - the background will disappear apparently
-// 					title: 'GameJolt',
-// 					icon: path.resolve(__dirname, 'client/icons/mac.icns'),
-// 					background: path.resolve(__dirname, 'client/icons/dmg-background.png'),
-// 					'icon-size': 80,
-// 					contents: [
-// 						{
-// 							x: 195,
-// 							y: 370,
-// 							type: 'file',
-// 							path: clientApp,
-// 						},
-// 						{ x: 429, y: 370, type: 'link', path: '/Applications' },
-// 					],
-// 				},
-// 			});
+		// const _createDmg = () => {
+		// 	const appdmg = require('appdmg');
 
-// 			return new Promise((resolve, reject) => {
-// 				dmg.on('progress', info => {
-// 					console.log(info);
-// 				});
+		// 	const dmg = appdmg({
+		// 		target: path.resolve(config.clientBuildDir, 'GameJoltClient.dmg'),
+		// 		basepath: config.projectBase,
+		// 		specification: {
+		// 			// DO NOT ADD ANY SPACES (or chinese characters) - the background will disappear apparently
+		// 			title: 'GameJolt',
+		// 			icon: path.resolve(__dirname, 'client/icons/mac.icns'),
+		// 			background: path.resolve(__dirname, 'client/icons/dmg-background.png'),
+		// 			'icon-size': 80,
+		// 			contents: [
+		// 				{
+		// 					x: 195,
+		// 					y: 370,
+		// 					type: 'file',
+		// 					path: clientApp,
+		// 				},
+		// 				{ x: 429, y: 370, type: 'link', path: '/Applications' },
+		// 			],
+		// 		},
+		// 	});
 
-// 				dmg.on('finish', () => {
-// 					console.log('Finished building DMG.');
-// 					resolve();
-// 				});
+		// 	return new Promise((resolve, reject) => {
+		// 		dmg.on('progress', info => {
+		// 			console.log(info);
+		// 		});
 
-// 				dmg.on('error', err => {
-// 					console.error(err);
-// 					reject(err);
-// 				});
-// 			});
-// 		};
+		// 		dmg.on('finish', () => {
+		// 			console.log('Finished building DMG.');
+		// 			resolve();
+		// 		});
 
-// 		// Finally, create a dmg out of the entire app.
-// 		await _createDmg();
-// 	} else if (config.platform === 'win') {
-// 		const manifest = JSON.parse(
-// 			await fs.readFile(path.resolve(config.clientBuildDir, 'dist', '.manifest'), {
-// 				encoding: 'utf8',
-// 			})
-// 		);
+		// 		dmg.on('error', err => {
+		// 			console.error(err);
+		// 			reject(err);
+		// 		});
+		// 	});
+		// };
 
-// 		const certFile = config.production
-// 			? path.resolve(__dirname, 'client/certs/cert.pfx')
-// 			: path.resolve(__dirname, 'client/vendor/cert.pfx');
-// 		const certPw = config.production ? process.env['GJ_CERT_PASS'] : 'GJ123456';
+		// // Finally, create a dmg out of the entire app.
+		// await _createDmg();
+	} else if (isWindows()) {
+		const manifest = JSON.parse(
+			await fs.readFile(path.join(options.installerDir, '.manifest'), {
+				encoding: 'utf8',
+			})
+		);
 
-// 		await buildInnoSetup(
-// 			path.resolve(config.clientBuildDir, 'dist'),
-// 			path.resolve(config.clientBuildDir),
-// 			packageJson.version,
-// 			manifest.gameInfo.uid,
-// 			certFile,
-// 			certPw.trim()
-// 		);
-// 	} else {
-// 		await createTarGz(
-// 			path.join(config.clientBuildDir, 'dist'),
-// 			path.join(config.clientBuildDir, 'GameJoltClient.tar.gz')
-// 		);
-// 	}
-// }
+		const useProdCert = options.environment === 'production' && !options.staging;
 
-// /**
-//  * Pushes the installer to GJ.
-//  */
-// async function pushInstaller() {
-// 	console.log('Pushing installer to Game Jolt');
+		const certFile = useProdCert
+			? path.resolve(__dirname, 'certs', 'cert.pfx')
+			: path.resolve(__dirname, 'vendor', 'cert.pfx');
 
-// 	let installerFile = '';
-// 	switch (config.platform) {
-// 		case 'win':
-// 			installerFile = 'GameJoltClientSetup.exe';
-// 			break;
-// 		case 'osx':
-// 			installerFile = 'GameJoltClient.dmg';
-// 			break;
-// 		default:
-// 			installerFile = 'GameJoltClient.tar.gz';
-// 			break;
-// 	}
-// 	installerFile = path.resolve(config.clientBuildDir, installerFile);
+		const certPw = (useProdCert ? process.env['GJ_CERT_PASS'] : 'GJ123456')?.trim();
 
-// 	const gjPush = () =>
-// 		runShell(gjpushExecutable, {
-// 			args: [
-// 				'--no-resume',
-// 				'-g',
-// 				gjGameId,
-// 				'-p',
-// 				gjGameInstallerPackageId,
-// 				'-r',
-// 				packageJson.version,
-// 				installerFile,
-// 			],
-// 		});
+		if (!certPw) {
+			throw new Error(
+				'Code signing cert password not specified. Expecting to have GJ_CERT_PASS environment variable.'
+			);
+		}
 
-// 	// Let's try to be resilient to network failures by trying a few times.
-// 	await tryWithBackoff(gjPush, 3);
-// }
+		await buildInnoSetup({
+			installerDir: options.installerDir,
+			outDir: options.outDir,
+			version: packageJson.version,
+			gameUID: manifest.gameInfo.uid,
+			certFile,
+			certPw,
+		});
+
+		return path.join(options.outDir, 'GameJoltClient.exe');
+	} else if (isLinux()) {
+		const installerFilepath = path.join(options.outDir, 'GameJoltClient.tar.gz');
+		await createTarGz(options.installerDir, installerFilepath);
+		return installerFilepath;
+	}
+
+	throw new Error('Unsupported OS');
+}
