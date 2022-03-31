@@ -349,7 +349,7 @@ export async function createInstaller(options: {
 			})
 		);
 
-		const useProdCert = options.environment === 'production' && !options.staging;
+		const useProdCert = options.environment === 'production';
 
 		const certFile = useProdCert
 			? path.resolve(__dirname, 'certs', 'cert.pfx')
