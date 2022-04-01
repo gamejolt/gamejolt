@@ -21,6 +21,7 @@ import { showInfoGrowl } from '../../../_common/growls/growls.service';
 import { Model } from '../../../_common/model/model.service';
 import { Notification } from '../../../_common/notification/notification-model';
 import { NotificationText } from '../../../_common/notification/notification-text.service';
+import { QuestNotification } from '../../../_common/quest/quest-notification-model';
 import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
 import { SiteTrophy } from '../../../_common/site/trophy/trophy.model';
 import { commonStore } from '../../../_common/store/common-store';
@@ -575,6 +576,24 @@ export class GridClient {
 							onFiresideStart.next(notification.action_model);
 							this.spawnNotification(notification);
 							break;
+
+						case Notification.TYPE_QUEST_NOTIFICATION: {
+							if (!(notification.action_model instanceof QuestNotification)) {
+								break;
+							}
+
+							const c = this._getAppStore();
+							const model = notification.action_model;
+							if (model.is_new) {
+								c.addNewQuestIds([model.quest_id]);
+							}
+
+							if (model.has_activity) {
+								c.addQuestActivityIds([model.quest_id]);
+							}
+							this.spawnNotification(notification);
+							break;
+						}
 
 						default:
 							this.spawnNotification(notification);

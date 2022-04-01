@@ -30,7 +30,7 @@ const props = defineProps({
 
 const { progress, maxProgressTicks, showEndDisplay, icon, isPercent, isSegmented } = toRefs(props);
 
-const percent = computed(() => progress.value);
+const percent = computed(() => (progress.value / maxProgressTicks.value) * 100);
 const barCount = computed(() => {
 	if (isSegmented.value) {
 		return maxProgressTicks.value;
@@ -41,7 +41,7 @@ const barCount = computed(() => {
 
 <template>
 	<div class="-bar-container">
-		<template v-for="i in barCount" :key="i">
+		<template v-for="i of barCount" :key="i">
 			<AppProgressBar
 				class="-bar"
 				:percent="isPercent ? percent : i < progress ? 100 : 0"
