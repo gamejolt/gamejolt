@@ -51,7 +51,7 @@ export class QuestObjective extends Model {
 
 	get isDisabled() {
 		return this.status === QuestObjectiveStatus.locked
-			? this.type === QuestObjectiveType.questStart
+			? this.type !== QuestObjectiveType.questStart
 			: false;
 	}
 

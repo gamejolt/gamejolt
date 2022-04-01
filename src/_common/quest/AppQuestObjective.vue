@@ -59,7 +59,7 @@ function onClickSubtitle() {
 </script>
 
 <template>
-	<div class="-quest-objective">
+	<div class="-quest-objective" :class="{ '-disabled': objective.isDisabled }">
 		<div class="-icon" :class="iconData.classes">
 			<AppJolticon :icon="iconData.icon" />
 		</div>
@@ -70,7 +70,7 @@ function onClickSubtitle() {
 					{{ objective.title }}
 				</span>
 
-				<span v-if="objective.is_optional" class="-fade">
+				<span v-if="objective.is_optional" class="text-muted">
 					({{ $gettext('optional') }})
 				</span>
 			</div>
@@ -109,6 +109,9 @@ function onClickSubtitle() {
 .-quest-objective
 	display: flex
 
+	&.-disabled
+		opacity: 0.3
+
 .-icon
 	position: relative
 	display: flex
@@ -127,8 +130,6 @@ function onClickSubtitle() {
 	&:hover
 		color: var(--theme-link-hover)
 
-.-fade
-	color: var(--theme-fg-muted)
 
 .-details
 	width: 100%

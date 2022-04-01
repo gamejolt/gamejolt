@@ -188,7 +188,6 @@ function onNewQuest(data: Quest) {
 		</div>
 
 		<div ref="body" class="-body">
-			<!-- TODO(quests) should we show placeholders here or in the RouterView? -->
 			<RouterView @new-quest="onNewQuest" />
 			<div
 				v-if="!hasActiveQuest"

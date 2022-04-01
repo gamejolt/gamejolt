@@ -81,6 +81,7 @@ const barCount = computed(() => {
 	font-weight: bold
 	font-size: $font-size-tiny
 	color: var(--theme-fg-muted)
+	white-space: nowrap
 
 	&.-icon
 		color: var(--theme-link)
