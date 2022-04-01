@@ -10,6 +10,10 @@ const props = defineProps({
 		type: Object as PropType<Quest>,
 		required: true,
 	},
+	iconSize: {
+		type: String as PropType<'sm' | 'base'>,
+		default: 'base',
+	},
 });
 
 const { quest } = toRefs(props);
@@ -42,7 +46,7 @@ const metaData = computed<{ text?: string; icon?: Jolticon; bubble?: boolean } |
 		</AppQuestFrame>
 
 		<div v-if="metaData" class="-meta" :class="{ '-bubble': metaData.bubble }">
-			<AppJolticon v-if="metaData.icon" class="-icon" :icon="metaData.icon" />
+			<AppJolticon v-if="metaData.icon" :class="`-icon-${iconSize}`" :icon="metaData.icon" />
 			<span v-else-if="metaData.text">{{ metaData.text }}</span>
 		</div>
 	</div>
@@ -81,4 +85,11 @@ const metaData = computed<{ text?: string; icon?: Jolticon; bubble?: boolean } |
 		display: flex
 		align-items: center
 		justify-content: center
+
+.-icon
+	&-sm
+		font-size: $font-size-small
+
+	&-base
+		font-size: $font-size-base
 </style>

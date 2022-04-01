@@ -159,6 +159,7 @@ function onNewQuest(data: Quest) {
 
 					<AppSpacer vertical :scale="10" />
 
+					<!-- TODO(quests) daily, weekly, other quests -->
 					<template v-if="quests.length > 0">
 						<div class="-subheading">
 							<AppTranslate>Active Quests</AppTranslate>
