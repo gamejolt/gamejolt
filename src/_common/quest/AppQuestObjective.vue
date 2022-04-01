@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
+import { InviteFriendModal } from '../modal/friend-invite/modal.service';
 import AppSpacer from '../spacer/AppSpacer.vue';
+import { useCommonStore } from '../store/common-store';
 import { $gettext } from '../translate/translate.service';
 import AppQuestProgress from './AppQuestProgress.vue';
 import { Quest, QuestStatus } from './quest-model';
@@ -19,6 +21,7 @@ const props = defineProps({
 });
 
 const { quest, objective } = toRefs(props);
+const { user } = useCommonStore();
 
 const iconData = computed<{ icon: Jolticon; classes: string[] }>(() => {
 	const i = objective.value;
@@ -43,7 +46,15 @@ const subtitleData = computed<{ text: string; icon: Jolticon } | undefined>(() =
 });
 
 function onClickSubtitle() {
-	// TODO(quests) friend invite modal
+	if (!user.value) {
+		return;
+	}
+
+	if (isFriendInvite.value) {
+		InviteFriendModal.show({
+			user: user.value,
+		});
+	}
 }
 </script>
 
@@ -68,6 +79,7 @@ function onClickSubtitle() {
 				<AppSpacer vertical :scale="isFriendInvite ? 2 : 1" />
 				<component
 					:is="isFriendInvite ? 'a' : 'span'"
+					:v-app-auth-required="isFriendInvite"
 					class="-subtitle"
 					:class="{ '-link': isFriendInvite }"
 					@click="onClickSubtitle"

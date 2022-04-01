@@ -2,13 +2,14 @@
 import { computed, ref } from 'vue';
 import { numberSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
+import AppQuestActionButton from '../../../../_common/quest/AppQuestActionButton.vue';
 import AppQuestObjective from '../../../../_common/quest/AppQuestObjective.vue';
 import AppProgressBarQuest from '../../../../_common/quest/AppQuestProgress.vue';
 import { Quest } from '../../../../_common/quest/quest-model';
+import { QuestObjectiveType } from '../../../../_common/quest/quest-objective-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
@@ -17,10 +18,12 @@ import { $gettext, $gettextInterpolate } from '../../../../_common/translate/tra
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../_common/user/user.model';
 import { useAppStore } from '../../../store/index';
+import { router } from '../../index';
 
 export default {
 	...defineAppRouteOptions({
 		cache: true,
+		lazy: true,
 		deps: {
 			params: ['id'],
 		},
@@ -45,6 +48,10 @@ export default {
 <script lang="ts" setup>
 const c = useAppStore();
 
+const emit = defineEmits({
+	newQuest: (_data: Quest) => true,
+});
+
 const quest = ref<Quest>();
 const participatingFriends = ref<User[]>([]);
 const participatingFriendCount = ref(0);
@@ -59,22 +66,45 @@ const objectives = computed(() => {
 });
 
 createAppRoute({
+	// TODO(quests) route title
 	routeTitle: computed(() => ``),
 	onResolved({ payload }) {
-		quest.value = new Quest(payload.quest);
 		participatingFriends.value = User.populate(payload.participatingFriends);
 		participatingFriendCount.value = payload.participatingFriendCount;
-
-		const q = quest.value;
-		if (!q.is_new) {
-			c.clearNewQuestIds([q.id], { pushView: true });
-		}
-		if (!q.has_activity) {
-			c.clearQuestActivityIds([q.id], { pushView: true });
-		}
-
+		console.log(payload);
+		updateQuest(new Quest(payload.quest));
 		isLoading.value = false;
 	},
+});
+
+const actionButtonData = computed<{ isAccept: boolean } | undefined>(() => {
+	const q = quest.value;
+	if (!q || q.isExpired) {
+		return;
+	}
+
+	let mustAccept = false;
+	let canRedeem = false;
+	for (const objective of objectives.value) {
+		if (mustAccept || canRedeem) {
+			break;
+		}
+
+		if (q.canAccept && objective.type == QuestObjectiveType.questStart) {
+			mustAccept = true;
+			break;
+		}
+
+		if (objective.has_unclaimed_rewards) {
+			canRedeem = true;
+			break;
+		}
+	}
+
+	if (!mustAccept && !canRedeem) {
+		return;
+	}
+	return { isAccept: mustAccept };
 });
 
 const friendsText = computed(() => {
@@ -144,11 +174,31 @@ const friendsText = computed(() => {
 });
 
 function onBack() {
-	// TODO(quests) navigate back to quest list on mobile
+	// TODO(quests) make sure this works properly
+	router.push({
+		name: 'quests',
+	});
+}
+
+function updateQuest(data: Quest) {
+	quest.value = data;
+
+	if (!data.is_new) {
+		c.clearNewQuestIds([data.id], { pushView: true });
+	}
+	if (!data.has_activity) {
+		c.clearQuestActivityIds([data.id], { pushView: true });
+	}
+}
+
+function onNewQuest(data: Quest) {
+	emit('newQuest', data);
+	updateQuest(data);
 }
 </script>
 
 <template>
+	<!-- TODO(quests) not-found state? -->
 	<template v-if="quest">
 		<div style="position: relative">
 			<AppMediaItemCover :media-item="quest.header" :max-height="250" />
@@ -159,7 +209,7 @@ function onBack() {
 					<AppJolticon icon="chevron-left" />
 					<AppSpacer horizontal :scale="1" />
 					<AppTranslate :translate-params="{ screen: 'My Quests' }">
-						Back to %{ screen }
+						View %{ screen }
 					</AppTranslate>
 				</a>
 			</template>
@@ -221,13 +271,13 @@ function onBack() {
 					</template>
 				</div>
 
-				<template v-if="quest.canAccept || objectives.some(i => i.has_unclaimed_rewards)">
-					<AppSpacer vertical :scale="4" />
-					<AppButton primary solid block>
-						<!-- TODO(quests) claim rewards, accept quest -->
-						<AppTranslate> Claim rewards </AppTranslate>
-					</AppButton>
-				</template>
+				<AppSpacer vertical :scale="4" />
+				<AppQuestActionButton
+					:quest="quest"
+					:show="!!actionButtonData"
+					:is-accept="!!actionButtonData?.isAccept"
+					@new-quest="onNewQuest"
+				/>
 			</section>
 		</div>
 	</template>

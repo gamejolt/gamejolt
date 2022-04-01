@@ -26,6 +26,9 @@ defineProps({
 	bgSubtle: {
 		type: Boolean,
 	},
+	primary: {
+		type: Boolean,
+	},
 });
 </script>
 
@@ -39,6 +42,7 @@ defineProps({
 			'-glow': glow,
 			'-animate': animate,
 			'-subtle': bgSubtle,
+			'-primary': primary,
 		}"
 	>
 		<div
@@ -61,6 +65,7 @@ defineProps({
 		background-position: 0 0
 
 .progress
+	--progress-fill: var(--theme-highlight)
 	rounded-corners()
 	change-bg('fg-muted')
 	position: relative
@@ -70,6 +75,10 @@ defineProps({
 
 	&.-subtle
 		change-bg('bg-subtle')
+
+	&.-primary
+		--progress-fill: var(--theme-link)
+
 
 .-text
 	text-overflow()
@@ -93,6 +102,9 @@ defineProps({
 	&.-hide-zero
 		min-width: 0
 
+	.progress.-primary &
+		change-bg('link')
+
 	.progress.-animate &
 		transition: width 600ms ease
 		will-change: width
@@ -115,5 +127,5 @@ defineProps({
 	animation: progress-bar-stripes 2s linear infinite
 
 .progress.-glow .progress-bar
-	box-shadow: 0px 0px 4px var(--theme-highlight)
+	box-shadow: 0px 0px 4px var(--progress-fill)
 </style>

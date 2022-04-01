@@ -49,6 +49,7 @@ const barCount = computed(() => {
 				thin
 				hide-zero
 				bg-subtle
+				primary
 			/>
 			<AppSpacer v-if="i < barCount" horizontal :scale="1" />
 		</template>
