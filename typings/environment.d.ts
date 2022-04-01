@@ -5,9 +5,6 @@ declare const GJ_IS_DESKTOP_APP: boolean;
 declare const GJ_IS_MOBILE_APP: boolean;
 declare const GJ_VERSION: string;
 declare const GJ_WITH_UPDATER: boolean;
-declare const GJ_TUNNELS: {
-	backend?: string;
-	frontend?: string;
-};
 declare const GJ_HAS_ROUTER: boolean;
+declare const GJ_IS_WATCHING: boolean;
 declare const GJ_DISABLE_SECTION_REDIRECTS: boolean;

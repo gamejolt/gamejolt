@@ -27,12 +27,6 @@ import { GridClientLazy } from '../components/lazy';
 import { CommunityStates } from './community-state';
 import { LibraryStore } from './library';
 
-// TODO(vue3)
-// if (GJ_IS_DESKTOP_APP) {
-// 	const mod = await import('./client-library');
-// 	modules.clientLibrary = reactive(new mod.ClientLibraryStore());
-// }
-
 // the two types an event notification can assume, either "activity" for the post activity feed or "notifications"
 type UnreadItemType = 'activity' | 'notifications';
 type TogglableLeftPane = '' | 'chat' | 'context' | 'library';

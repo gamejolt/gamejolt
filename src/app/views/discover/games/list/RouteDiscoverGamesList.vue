@@ -1,8 +1,8 @@
 <script lang="ts">
-import { ref, computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { arrayShuffle } from '../../../../../utils/array';
-import { RouteLocationRedirect, getParam } from '../../../../../utils/router';
+import { getParam, RouteLocationRedirect } from '../../../../../utils/router';
 import { titleCase } from '../../../../../utils/string';
 import { Api } from '../../../../../_common/api/api.service';
 import { formatDate } from '../../../../../_common/filters/date';
@@ -15,19 +15,19 @@ import {
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
 import {
 	checkGameFilteringRoute,
 	GameFilteringContainer,
 } from '../../../../components/game/filtering/container';
 import AppGameGrid from '../../../../components/game/grid/grid.vue';
+import AppGameListing from '../../../../components/game/listing/AppGameListing.vue';
 import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
-import AppGameListing from '../../../../components/game/listing/listing.vue';
+import AppStoreBanner from '../../../../components/store-banner/AppStoreBanner.vue';
+import { StoreBanner } from '../../../../components/store-banner/store-banner-model';
 import AppTagList from '../../../../components/tag/list/list.vue';
 import { TagsInfo } from '../../../../components/tag/tags-info.service';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { StoreBanner } from '../../../../components/store-banner/store-banner-model';
-import AppStoreBanner from '../../../../components/store-banner/AppStoreBanner.vue';
 
 const listingKey = 'CachedListing';
 
@@ -303,13 +303,12 @@ async function loadMore() {
 		</div>
 
 		<AppGameListing
-			v-if="listing"
+			v-if="listing && filtering"
 			:listing="listing"
 			:filtering="filtering"
 			include-featured-section
 			:hide-section-nav="section === 'by-date'"
 			:is-loading="isLoading"
-			infinite
 			@load="loadMore"
 		>
 			<div v-if="section === 'new'" class="alert alert-info anim-fade-in-enlarge">

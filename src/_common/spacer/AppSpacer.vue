@@ -27,7 +27,7 @@ defineProps({
 		:class="[
 			`-s${scale}`,
 			`-s${scaleXs}-xs`,
-			`-s${scaleXs}-sm`,
+			`-s${scaleSm}-sm`,
 			{ '-h': horizontal, '-v': vertical },
 		]"
 	/>

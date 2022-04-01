@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import { PropType, ref } from 'vue';
+import AppFadeCollapse from '../AppFadeCollapse.vue';
 import AppContentViewer from '../content/content-viewer/content-viewer.vue';
-import AppFadeCollapse from '../fade-collapse/fade-collapse.vue';
 import { formatDate } from '../filters/date';
-import AppStickerControlsOverlay from '../sticker/controls-overlay/controls-overlay.vue';
+import AppStickerControlsOverlay from '../sticker/AppStickerControlsOverlay.vue';
 import AppStickerReactions from '../sticker/reactions/reactions.vue';
 import { createStickerTargetController } from '../sticker/target/target-controller';
 import AppStickerTarget from '../sticker/target/target.vue';
+import AppTranslate from '../translate/AppTranslate.vue';
 import { Comment } from './comment-model';
 import './comment.styl';
-import AppTranslate from '../translate/AppTranslate.vue';
 
 const props = defineProps({
 	comment: {

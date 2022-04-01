@@ -1,5 +1,5 @@
 import type { PatchEvents, PatchInstance } from 'client-voodoo';
-import type { ComputedRef, Ref } from 'vue';
+import { ComputedRef, markRaw, reactive, Ref } from 'vue';
 import { Api } from '../../../_common/api/api.service';
 import {
 	Patcher,
@@ -60,8 +60,8 @@ export default class ClientLibraryPackageInstallOperations {
 			sourceResourceId: game.id,
 		});
 
-		const localGame = new LocalDbGame();
-		const localPackage = new LocalDbPackage();
+		const localGame = reactive(new LocalDbGame()) as LocalDbGame;
+		const localPackage = reactive(new LocalDbPackage()) as LocalDbPackage;
 
 		await this.gameDataOps.setGameData(localGame, game);
 		await this.pkgDataOps.setPackageData(localPackage, {
@@ -170,7 +170,6 @@ export default class ClientLibraryPackageInstallOperations {
 				}
 
 				// We refetch from db because if canceling a first installation it might remove the local game from the db.
-				// TODO(vue3) WHY??!?!?!
 				const dbInst = await this._getDb();
 				localGame = dbInst.games.get(localPackage.game_id)!;
 
@@ -186,13 +185,17 @@ export default class ClientLibraryPackageInstallOperations {
 
 				// Skip removing the package if we don't want to actually uninstall from disk.
 				if (!dbOnly) {
+					console.log('doing uninstall');
 					await this.doUninstall(
 						localPackage,
 						packageTitle,
 						withNotifications,
 						wasInstalling
 					);
+					console.log('uninstall done');
 				}
+
+				console.log('unsetting package');
 
 				// This will also unset the game if it was the last package.
 				await this.pkgDataOps.unsetPackage(localPackage);
@@ -220,11 +223,13 @@ export default class ClientLibraryPackageInstallOperations {
 					}
 				}
 			} catch (err) {
+				console.error(err);
 				await this.pkgDataOps.setPackageRemoveState(
 					localPackage,
 					LocalDbPackageRemoveState.REMOVE_FAILED
 				);
 			} finally {
+				console.log('deleting from currentlyUninstalling');
 				delete this.currentlyUninstalling.value[localPackage.id];
 			}
 		})();
@@ -280,9 +285,11 @@ export default class ClientLibraryPackageInstallOperations {
 				await this.pkgDataOps.setPackagePatchResumed(localPackage);
 			}
 
-			const patchInstance = await Patcher.patch(localPackage as any, authTokenGetter, {
-				authToken,
-			});
+			const patchInstance = markRaw(
+				await Patcher.patch(localPackage as any, authTokenGetter, {
+					authToken,
+				})
+			);
 
 			patchBegun = true;
 			trackClientVoodooOperation(
@@ -382,7 +389,7 @@ export default class ClientLibraryPackageInstallOperations {
 						'paused',
 						(listeners.paused = queued => {
 							console.log(
-								'Pause received in gamejolt repo. From queue: ' +
+								'Handling client-voodoo paused event. From queue: ' +
 									(queued ? 'yes' : 'no')
 							);
 
@@ -397,7 +404,7 @@ export default class ClientLibraryPackageInstallOperations {
 						'resumed',
 						(listeners.resumed = unqueued => {
 							console.log(
-								'Resume received in gamejolt repo. From queue: ' +
+								'Hnadling client-voodoo resumed event. From queue: ' +
 									(unqueued ? 'yes' : 'no')
 							);
 
@@ -411,6 +418,10 @@ export default class ClientLibraryPackageInstallOperations {
 					.on(
 						'updateFailed',
 						(listeners.updateFailed = reason => {
+							console.log(
+								'Handling client-voodoo updateFailed event with reason: ' + reason
+							);
+
 							cleanupListeners();
 
 							// If the update was canceled the 'context canceled' will be emitted as the updateFailed reason.
@@ -423,6 +434,7 @@ export default class ClientLibraryPackageInstallOperations {
 					.on(
 						'updateFinished',
 						(listeners.updateFinished = () => {
+							console.log('Handling client-voodoo updateFinished event');
 							cleanupListeners();
 							resolve(false);
 						})
@@ -430,11 +442,11 @@ export default class ClientLibraryPackageInstallOperations {
 					.on(
 						'fatal',
 						(listeners.fatal = err => {
-							cleanupListeners();
-
 							console.log(
-								'Received fatal error in patcher in gamejolt repo: ' + err.message
+								'Handling client-voodoo fatal event with err: ' + err.message
 							);
+
+							cleanupListeners();
 							reject(err);
 						})
 					);
@@ -576,7 +588,7 @@ export default class ClientLibraryPackageInstallOperations {
 		let uninstallBegun = false;
 
 		try {
-			const uninstallInstance = await Uninstaller.uninstall(localPackage as any);
+			const uninstallInstance = markRaw(await Uninstaller.uninstall(localPackage as any));
 			uninstallBegun = true;
 			trackClientVoodooOperation('uninstall-begin', true);
 
@@ -710,7 +722,7 @@ export default class ClientLibraryPackageInstallOperations {
 		let abortBegun = false;
 
 		try {
-			const rollbackInstance = await Rollbacker.rollback(localPackage as any);
+			const rollbackInstance = markRaw(await Rollbacker.rollback(localPackage as any));
 			abortBegun = true;
 			trackClientVoodooOperation('patch-abort-begin', true);
 

@@ -3,6 +3,7 @@ import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
 import { removeQuery } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
+import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
 import { Comment } from '../../../../_common/comment/comment-model';
@@ -25,7 +26,6 @@ import AppCommunityVerifiedTick from '../../../../_common/community/verified-tic
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { Game } from '../../../../_common/game/game.model';
@@ -404,7 +404,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 		this.routeStore.overviewPayload(payload);
 	}
 
-	unmounted() {
+	routeDestroyed() {
 		this.clearCommentStore();
 		if (this.permalinkWatchDeregister) {
 			this.permalinkWatchDeregister();

@@ -12,8 +12,8 @@ import { Popper } from '../../../../_common/popper/popper.service';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { useClientLibraryStore } from '../../../store/client-library';
+import AppClientInstallProgress from '../AppClientInstallProgress.vue';
 import { ClientInstallPackageModal } from '../install-package-modal/install-package-modal.service';
-import AppClientInstallProgress from '../install-progress/install-progress.vue';
 import { LocalDbPackage } from '../local-db/package/package.model';
 
 @Options({
@@ -27,10 +27,6 @@ import { LocalDbPackage } from '../local-db/package/package.model';
 })
 export default class AppClientGameButtons extends Vue {
 	readonly clientLibrary = shallowSetup(() => useClientLibraryStore());
-
-	// @ClientLibraryAction
-	// private launcherLaunch!: ClientLibraryStore['launcherLaunch'];
-	private launcherLaunch!: any;
 
 	@Prop(Object)
 	game!: Game;
@@ -200,7 +196,7 @@ export default class AppClientGameButtons extends Vue {
 
 		Analytics.trackEvent('client-game-buttons', 'launch');
 		Popper.hideAll();
-		return this.launcherLaunch(localPackage);
+		return this.clientLibrary.launcherLaunch(localPackage);
 	}
 
 	openFolder(localPackage: LocalDbPackage) {
@@ -337,7 +333,7 @@ export default class AppClientGameButtons extends Vue {
 						:overlay="overlay"
 						:sm="small"
 						:lg="large"
-						@click.stop="launch(localPackage)"
+						@click.stop="launch(localPackage!)"
 					>
 						<AppTranslate>Launch</AppTranslate>
 					</AppButton>

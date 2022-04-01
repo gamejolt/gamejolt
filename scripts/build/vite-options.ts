@@ -1,4 +1,5 @@
 import { readFile } from 'fs-extra';
+import { ConfigEnv } from 'vite';
 import { gjSectionConfigs, gjSectionNames } from './section-config';
 
 const path = require('path') as typeof import('path');
@@ -41,6 +42,17 @@ export async function parseOptionsFromEnv() {
 		return arg as any;
 	}
 
+	function parseYesNoOption(arg: string | undefined, argNameHuman: string) {
+		const opt = parseOption(
+			arg,
+			argNameHuman,
+			['y', 'n', 'yes', 'no', 'true', 'false', 'on', 'off', '1', '0', null] as const,
+			null
+		);
+
+		return opt === null ? null : ['y', 'yes', 'true', 'on', '1'].includes(opt);
+	}
+
 	// Which section to build.
 	const section = parseOption(process.env['GJ_SECTION'], 'Section', gjSectionNames, 'app');
 
@@ -70,13 +82,16 @@ export async function parseOptionsFromEnv() {
 		'development'
 	);
 
-	const emptyOutDirStr = parseOption(
-		process.env['GJ_EMPTY_OUTDIR'],
-		'Empty output directory before building',
-		['y', 'n', 'yes', 'no', 'true', 'false', 'on', 'off', '1', '0'] as const,
-		'y'
+	const emptyOutDir =
+		parseYesNoOption(
+			process.env['GJ_EMPTY_OUTDIR'],
+			'Empty output directory before building'
+		) ?? true;
+
+	const withUpdater = parseYesNoOption(
+		process.env['GJ_WITH_UPDATER'],
+		'Enable self updater / connectivity to parent Joltron process'
 	);
-	const emptyOutDir = ['y', 'yes', 'true', 'on', '1'].includes(emptyOutDirStr) ? true : false;
 
 	return {
 		section,
@@ -84,10 +99,14 @@ export async function parseOptionsFromEnv() {
 		environment,
 		buildType,
 		emptyOutDir,
+		withUpdater,
 	};
 }
 
-export async function inferAndValidateFromParsedOptions(opts: ParsedOptions) {
+export async function inferAndValidateFromParsedOptions(
+	opts: ParsedOptions,
+	viteConfigEnv: ConfigEnv
+) {
 	// The version we report to the backend.
 	// Defaults to the version specified in package.json.
 	// Overriding this makes sense only in development, and is usually
@@ -96,11 +115,13 @@ export async function inferAndValidateFromParsedOptions(opts: ParsedOptions) {
 		await readFile(path.resolve(__dirname, '..', '..', 'package.json'), 'utf-8')
 	);
 	const version: string = process.env['GJ_VERSION'] ?? packageJson.version;
+	const nwjsVersion: string = process.env['GJ_NWJS_VERSION'] ?? packageJson.nwjsVersion ?? '';
+	if (!nwjsVersion) {
+		throw new Error(`Could not infer nwjs version`);
+	}
 
-	// TODO(vue3): infer this from other properties.
-	// I'm not sure if we want to keep the same logic we did before,
-	// it depends on how packaging up the client works with vite once I get that working.
-	const withUpdater = false;
+	// Self updater only makes sense when doing a build, but can be enabled or disabled explicitly.
+	const withUpdater = opts.withUpdater ?? viteConfigEnv.command === 'build';
 
 	// Merge current section config with defaults.
 	const currentSectionConfig = gjSectionConfigs[opts.section];
@@ -115,14 +136,15 @@ export async function inferAndValidateFromParsedOptions(opts: ParsedOptions) {
 	return {
 		...opts,
 		version,
+		nwjsVersion,
 		withUpdater,
 		currentSectionConfig,
 	};
 }
 
-export async function parseAndInferOptionsFromEnv() {
+export async function parseAndInferOptionsFromEnv(viteConfigEnv: ConfigEnv) {
 	const parsedOpts = await parseOptionsFromEnv();
-	return await inferAndValidateFromParsedOptions(parsedOpts);
+	return await inferAndValidateFromParsedOptions(parsedOpts, viteConfigEnv);
 }
 
 export function getSectionNamesForPlatform(platform: Options['platform']) {

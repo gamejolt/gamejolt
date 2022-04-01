@@ -1,11 +1,13 @@
 import { bootstrapCommon } from '../_common/bootstrap';
-import AppMain from './AppMain.vue';
 import './main.styl';
 import { authStore, AuthStoreKey } from './store';
 import { router } from './views/index';
 
 export async function createApp() {
-	const { app } = bootstrapCommon(AppMain, router);
+	const { app } = await bootstrapCommon({
+		appComponentLoader: async () => (await import('./AppMain.vue')).default,
+		router,
+	});
 
 	app.provide(AuthStoreKey, authStore);
 

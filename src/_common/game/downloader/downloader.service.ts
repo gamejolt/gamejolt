@@ -53,8 +53,8 @@ export class GameDownloader {
 				},
 			}).href;
 
-			// The client prepends urls with hashtag (#) that needs to be trimmed when going to external site.
-			urlPath = urlPath.slice(1);
+			// When built, the client prepends urls with hashtag (#) that needs to be trimmed when going to external site.
+			urlPath = urlPath.replace(/^#/, '');
 
 			Navigate.gotoExternal(`${Environment.baseUrl}${urlPath}`);
 		} else if (

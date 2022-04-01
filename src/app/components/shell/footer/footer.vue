@@ -8,11 +8,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import AppTranslateLangSelector from '../../../../_common/translate/lang-selector/lang-selector.vue';
 import { imageJolt } from '../../../img/images';
-
-const ClientSystemReportModal = GJ_IS_DESKTOP_APP
-	? (await import('../../client/system-report-modal/system-report-modal.service'))
-			.ClientSystemReportModal
-	: undefined;
+import { ClientSystemReportModal } from '../../client/safe-exports';
 
 @Options({
 	components: {
@@ -34,7 +30,7 @@ export default class AppShellFooter extends Vue {
 		return GJ_VERSION;
 	}
 
-	async showSystemReport() {
+	showSystemReport() {
 		ClientSystemReportModal?.show();
 	}
 }

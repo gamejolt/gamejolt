@@ -1,9 +1,8 @@
 {
 	"name": "game-jolt-client",
-	"version": "1.1.1",
+	"version": "1.2.1-stage",
 	"scripts": {
 		"translations": "gulp translations:compile",
-		"client-package": "gulp package-client --production --client",
 		"client-release": "node scripts/client-release.js",
 		"check": "tsc --noEmit",
 		"analyze-bundle": "gulp --analyze-bundle",
@@ -15,6 +14,8 @@
 		"app:editor": "cross-env GJ_PLATFORM=web GJ_BUILD_TYPE=production GJ_SECTION=editor yarn run build",
 		"client:dev": "cross-env GJ_PLATFORM=desktop yarn run dev",
 		"client:devd": "cross-env GJ_PLATFORM=desktop yarn run devd",
+		"client:build": "ts-node -P scripts/script.tsconfig.json scripts/build/desktop-app/index.ts --build",
+		"client:package": "ts-node -P scripts/script.tsconfig.json scripts/build/desktop-app/index.ts --package",
 		"client": "nw use 0.55.0-sdk && nw .",
 		"ssr:client": "cross-env GJ_PLATFORM=web yarn run build",
 		"ssr:server": "cross-env GJ_PLATFORM=ssr yarn run build",
@@ -75,6 +76,7 @@
 		"jquery": "3.6.0",
 		"jstimezonedetect": "1.0.7",
 		"minimist": "1.2.0",
+		"node-fetch": "2.6.7",
 		"phoenix": "1.5.1",
 		"polished": "4.1.4",
 		"prettier": "2.5.1",
@@ -100,6 +102,7 @@
 		"tar": "6.1.11",
 		"text-mask-addons": "3.8.0",
 		"text-mask-core": "5.1.2",
+		"ts-node": "10.7.0",
 		"tslib": "2.3.1",
 		"twitter-text": "3.0.0",
 		"typescript": "4.5.5",
@@ -119,7 +122,7 @@
 	},
 	"dependencies": {
 		"axios": "0.25.0",
-		"client-voodoo": "2.5.3",
+		"client-voodoo": "2.7.3",
 		"fs-extra": "7.0.0",
 		"write-file-atomic": "2.3.0"
 	},
@@ -148,12 +151,14 @@
 		"min_width": 400,
 		"position": "center",
 		"frame": true,
-		"icon": "static-assets/client/icon-256x256.png"
+		"icon": "src/static-assets/client-icon-256x256.png"
 	},
 	"webkit": {
 		"plugin": true
 	},
-	"joltronVersion": "v2.2.8-beta.1.loader",
-	"chromium-args": "--ignore-gpu-blocklist --auto-open-devtools-for-tabs",
+	"nwjsVersion": "0.55.0",
+	"joltronVersion": "v2.2.9-beta.2.loader",
+	"gjpushVersion": "v0.5.0",
+	"chromium-args": "--ignore-gpu-blocklist",
 	"user-agent": "GJClient %ver (+http://gamejolt.com) - Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"
 }

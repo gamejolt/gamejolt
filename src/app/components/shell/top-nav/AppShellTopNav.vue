@@ -109,7 +109,9 @@ function _checkColWidths() {
 				</a>
 
 				<!-- History Navigator (for desktop app) -->
-				<AppClientHistoryNavigator />
+				<template v-if="GJ_IS_DESKTOP_APP">
+					<AppClientHistoryNavigator />
+				</template>
 
 				<RouterLink
 					v-app-track-event="`top-nav:main-menu:home`"
@@ -118,7 +120,7 @@ function _checkColWidths() {
 						active: $route.name === 'home',
 						'-small-home': Screen.isSm,
 					}"
-					:to="{ name: 'home' }"
+					to="/"
 				>
 					<AppThemeSvg
 						v-if="!Screen.isMobile"

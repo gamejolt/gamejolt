@@ -16,7 +16,11 @@ import { LocalDbPackage } from '../../components/client/local-db/package/package
 import ClientLibraryGameDataMutations from './game-data-mutations';
 import ClientLibraryPackageDataMutations from './package-data-mutations';
 import ClientLibraryPackageInstallOperations from './package-install-operations';
+import ClientLibraryPackageLaunchOperations from './package-launch-operations';
 import ClientLibrarySyncOperations from './sync-operations';
+
+const path = require('path') as typeof import('path');
+const fs = require('fs') as typeof import('fs');
 
 type ClientLibraryStoreInternal = ReturnType<typeof createClientLibraryStore>;
 export type ClientLibraryStore = HidePrivateKeys<ClientLibraryStoreInternal>;
@@ -53,9 +57,9 @@ export function createClientLibraryStore() {
 		localPackage.set(data);
 
 		const isInsert = db.packages.put(localPackage);
+		console.log('set package data. is insert: ' + (isInsert ? 'yes' : 'no'));
 		if (isInsert) {
 			packages.value.push(localPackage);
-			// triggerRef(packages);
 		}
 
 		await db.packages.save();
@@ -65,31 +69,41 @@ export function createClientLibraryStore() {
 		const db = _db ?? (await _getDb());
 
 		// Remove the package from localdb collection and our runtime state.
+		console.log('unsetting package (id: ' + localPackage.id + ')');
+		console.log(JSON.stringify(packages.value));
+
+		console.log('deleting package from db package collection');
 		db.packages.delete(localPackage.id);
-		arrayRemove(packages.value, p => p.id === localPackage.id);
+		console.log('removing from runtime packages');
+		arrayRemove(packages.value, p => p.id == localPackage.id);
 
 		// Get the number of packages left in the game.
 		const gameId = localPackage.game_id;
 		const packagesLeft = db.packages.countInGroup('game_id', gameId);
+		console.log('packages left for game', packagesLeft);
 
 		// Note that some times a game is removed before the package (really weird cases).
 		// We still want the remove to go through, so be sure to skip this situation.
 		// If this is the last package for the game, remove the game since we no longer need it.
 		let gamesNeedSaving;
 		if (packagesLeft <= 1) {
+			console.log('deleting game from db game collection');
 			db.games.delete(gameId);
-			arrayRemove(games.value, g => g.id === gameId);
+			console.log('removing from runtime games');
+			arrayRemove(games.value, g => g.id == gameId);
 			gamesNeedSaving = true;
 		} else {
 			gamesNeedSaving = false;
 		}
 
+		console.log('saving db');
 		const saveOps = [db.packages.save()];
 		if (gamesNeedSaving) {
 			saveOps.push(db.games.save());
 		}
 
 		await Promise.all(saveOps);
+		console.log('saved db');
 	}
 
 	async function setGameData(localGame: LocalDbGame, data: Partial<LocalDbGame>) {
@@ -106,7 +120,12 @@ export function createClientLibraryStore() {
 		await db.games.save();
 	}
 
-	const packagesById = computed(() => arrayIndexBy(packages.value, 'id')) as ComputedRef<{
+	const packagesById = computed(() => {
+		console.log('reevaluating packagesById');
+		const myPackages = arrayIndexBy(packages.value, 'id');
+		console.log(JSON.stringify(myPackages));
+		return myPackages;
+	}) as ComputedRef<{
 		[packageId: number]: LocalDbPackage | undefined;
 	}>;
 	const gamesById = computed(() => arrayIndexBy(games.value, 'id')) as ComputedRef<{
@@ -146,6 +165,9 @@ export function createClientLibraryStore() {
 		return amount ? currentProgress / amount : null;
 	});
 
+	const isLauncherReady = ref(false);
+	const currentlyPlaying = ref([]) as Ref<LocalDbPackage[]>;
+
 	const gameDataOps = new ClientLibraryGameDataMutations(setGameData);
 	const pkgDataOps = new ClientLibraryPackageDataMutations(setPackageData, unsetPackage);
 	const pkgInstallOps = new ClientLibraryPackageInstallOperations(
@@ -165,6 +187,8 @@ export function createClientLibraryStore() {
 		pkgInstallOps
 	);
 
+	const pkgLaunchOps = new ClientLibraryPackageLaunchOperations(currentlyPlaying, pkgDataOps);
+
 	if (GJ_ENVIRONMENT === 'development') {
 		Config.env = 'development';
 	}
@@ -179,6 +203,9 @@ export function createClientLibraryStore() {
 		_bootstrapPromise = new Promise<void>(resolve => (_bootstrapResolve = resolve));
 
 		console.log('Bootstrapping client library');
+
+		await Config.setClientMutex();
+
 		_db = await _getDb();
 		console.log('LocalDB ready');
 
@@ -187,6 +214,7 @@ export function createClientLibraryStore() {
 
 		await ClientUpdater.init();
 		installerInit();
+		launcherInit();
 
 		syncOps.syncCheck();
 		setInterval(() => syncOps.syncCheck(), 60 * 60 * 1000); // 1hr currently
@@ -240,6 +268,69 @@ export function createClientLibraryStore() {
 		return Promise.resolve(promises);
 	}
 
+	async function launcherInit() {
+		const pidDir = path.resolve(nw.App.dataPath, 'game-pids');
+		Config.setPidDir(pidDir);
+
+		try {
+			await Config.ensurePidDir();
+
+			// Get all running packages by looking at the old launcher's game pid directory.
+			// This finds games that were started outside the client as well.
+			const runningPackageIds = fs
+				.readdirSync(pidDir)
+				.map(filename => {
+					// Pid files are named after the package ids they are currently running.
+					try {
+						return parseInt(path.basename(filename), 10);
+					} catch (err) {
+						return 0;
+					}
+				})
+				.filter(packageId => !!packageId && !isNaN(packageId));
+
+			console.log(`Running package ids by game pid file: [${runningPackageIds.join(',')}]`);
+
+			// For all the packages that have a game pid file and aren't marked as running in the
+			// localdb - mark as running before attaching. This will mark them as running using the
+			// old client launcher's running format.
+			for (const runningPackageId of runningPackageIds) {
+				const localPackage = packagesById.value[runningPackageId];
+				if (localPackage && !localPackage.isRunning) {
+					try {
+						await pkgDataOps.setPackageRunningPid(localPackage, {
+							wrapperId: localPackage.id.toString(),
+						});
+					} catch (e) {
+						console.warn(`Could not mark package as running: ${localPackage.id}`);
+						console.warn(e);
+					}
+				}
+			}
+
+			// Reattach all running games after a restart.
+			for (const localPackage of packages.value) {
+				if (localPackage.isRunning) {
+					try {
+						await pkgLaunchOps.launcherReattach(localPackage);
+					} catch (e) {
+						console.warn(e);
+					}
+				}
+			}
+
+			// We only mark the launcher as loaded once it at least finished reattaching to the
+			// currently running instances.
+			console.log('Launcher loaded and ready');
+
+			isLauncherReady.value = true;
+		} catch (err) {
+			console.error('Failed to initialize everything for launcher');
+			console.error(err);
+			isLauncherReady.value = false;
+		}
+	}
+
 	/**
 	 * Returns an installed package that is most representative of this game's current state.
 	 * It chooses which package to return according to its status: running > installing/patching > idle.
@@ -288,6 +379,7 @@ export function createClientLibraryStore() {
 		currentlyUninstalling,
 		numPatching,
 		totalPatchProgress,
+		currentlyPlaying,
 		findPackageToRepresentGameStatus,
 		findInstalledGamesByTitle,
 		checkQueueSettings,
@@ -297,7 +389,6 @@ export function createClientLibraryStore() {
 		installerRetry: pkgInstallOps.installerRetry.bind(pkgInstallOps),
 		installerPause: pkgInstallOps.installerPause.bind(pkgInstallOps),
 		installerResume: pkgInstallOps.installerResume.bind(pkgInstallOps),
+		launcherLaunch: pkgLaunchOps.launcherLaunch.bind(pkgLaunchOps),
 	};
 }
-
-export const clientLibraryStore = createClientLibraryStore();

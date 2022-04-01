@@ -207,7 +207,9 @@ export default class AppShell extends Vue {
 
 		<AppShellHotBottom>
 			<AppMinbar v-show="!visibleRightPane" />
-			<AppClientStatusBar v-if="GJ_IS_DESKTOP_APP" key="shell-client-status-bar" />
+			<template v-if="GJ_IS_DESKTOP_APP">
+				<AppClientStatusBar key="shell-client-status-bar" />
+			</template>
 		</AppShellHotBottom>
 	</div>
 </template>
