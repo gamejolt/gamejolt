@@ -92,7 +92,7 @@ export class Client {
 
 		// Path on darwin is different. same case as in joltronDir.
 		// I'll do this when i set up the mac vm again.
-		if (os.type() === 'Darwin' || os.type() === 'Linux') {
+		if (os.type() === 'Darwin') {
 			throw new Error('TODO(vue3) forget me not');
 		}
 
