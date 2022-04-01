@@ -49,26 +49,30 @@ const sidebarInner = ref<HTMLElement>();
 const questList = ref<HTMLElement>();
 
 const activeQuestId = computed(() => {
+	if (routingToId.value !== undefined) {
+		return routingToId.value;
+	}
+
 	const questId = getParam(route, 'id');
 	return questId ? parseInt(questId, 10) : null;
 });
 
 const hasActiveQuest = computed(() => !!activeQuestId.value);
-const isRouting = ref(false);
+const routingToId = ref<number>();
 
-const showBody = computed(() => isRouting.value || hasActiveQuest.value);
+const showBody = computed(() => routingToId.value || hasActiveQuest.value);
 const showSidebar = computed(() => !Screen.isMobile || !showBody.value);
 
 watch(
 	() => activeQuestId.value,
-	() => (isRouting.value = false)
+	() => (routingToId.value = undefined)
 );
 
 function onSelect(id: number) {
 	if (activeQuestId.value == id) {
 		return;
 	}
-	isRouting.value = true;
+	routingToId.value = id;
 }
 
 async function onSidebarChange() {

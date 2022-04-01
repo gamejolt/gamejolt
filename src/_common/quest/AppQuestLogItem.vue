@@ -36,6 +36,9 @@ const thumbnailIconSize = computed(() => {
 	return undefined;
 });
 
+const showProgress = computed(() => !quest.value.isExpired && !compact.value);
+const showType = computed(() => !quest.value.isExpired && !compactStack.value);
+
 const emit = defineEmits({
 	goto: (_id: number) => true,
 });
@@ -48,7 +51,12 @@ function onSelect() {
 <template>
 	<RouterLink
 		class="-item"
-		:class="{ '-active': active, '-compact': compact, '-compact-stack': compactStack }"
+		:class="{
+			'-active': active,
+			'-compact': compact,
+			'-compact-stack': compactStack,
+			'-expired': quest.isExpired && !quest.has_activity,
+		}"
 		:to="{ name: 'quests.view', params: { id: quest.id } }"
 		@click="onSelect"
 	>
@@ -59,11 +67,11 @@ function onSelect() {
 		<AppSpacer :horizontal="!compactStack" :vertical="compactStack" :scale="4" />
 
 		<div class="-details">
-			<div v-if="!compact && !compactStack" class="-type">{{ quest.questType }}</div>
+			<div v-if="showType" class="-type">{{ quest.questType }}</div>
 
 			<div class="-title">{{ quest.title }}</div>
 
-			<template v-if="!compact">
+			<template v-if="showProgress">
 				<AppSpacer vertical :scale="3" />
 
 				<AppQuestProgress
@@ -87,9 +95,15 @@ function onSelect() {
 	&:hover
 		background-color: unquote('rgba(var(--theme-bg-rgb), 0.5)')
 
+	&.-expired
+		.-title
+			color: var(--theme-fg-muted)
+
 	&.-active
 		background-color: var(--theme-bg)
 
+		.-title
+			color: var(--theme-fg)
 
 	&.-compact
 		.-thumb
@@ -123,6 +137,7 @@ function onSelect() {
 	font-family: 'Germania'
 	font-size: 24px
 	color: var(--theme-fg)
+	transition: color 300ms $weak-ease-out
 
 .-type
 	font-size: $font-size-small

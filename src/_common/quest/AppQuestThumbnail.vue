@@ -20,22 +20,23 @@ const { quest } = toRefs(props);
 
 const metaData = computed<{ text?: string; icon?: Jolticon; bubble?: boolean } | undefined>(() => {
 	const q = quest.value;
-	if (q.isExpired) {
-		return;
-	}
 
-	if (q.is_new) {
+	if (q.is_new && !q.isExpired) {
 		return { text: 'NEW!' };
 	} else if (q.has_activity) {
 		// TODO(quests) present jolticon
 		return { icon: 'other-os' };
-	} else if (q.isAllComplete) {
+	}
+
+	if (q.isExpired) {
+		return;
+	}
+
+	if (q.isAllComplete) {
 		return { icon: 'star', bubble: true };
 	} else if (q.isComplete) {
 		return { icon: 'check', bubble: true };
 	}
-
-	return;
 });
 </script>
 
