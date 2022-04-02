@@ -6,13 +6,15 @@ import { getParam } from '../../../utils/router';
 import { sleep } from '../../../utils/utils';
 import { Api } from '../../../_common/api/api.service';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
+import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../_common/loading/loading.vue';
 import { vAppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppQuestLogItem from '../../../_common/quest/AppQuestLogItem.vue';
-import { Quest } from '../../../_common/quest/quest-model';
+import { Quest, QuestRepeatType } from '../../../_common/quest/quest-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
+import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { illNoComments, illNoCommentsSmall } from '../../img/ill/illustrations';
 import { useAppStore } from '../../store/index';
@@ -20,6 +22,7 @@ import { useAppStore } from '../../store/index';
 export default {
 	...defineAppRouteOptions({
 		deps: {},
+		lazy: true,
 		resolver: async () =>
 			Api.sendRequest(
 				'/mobile/quest',
@@ -42,6 +45,8 @@ const ShellTopNavHeight = 56;
 const route = useRoute();
 const appStore = useAppStore();
 
+// TODO(quests) questStore
+const isBootstrapped = ref(false);
 const quests = ref<Quest[]>([]);
 const body = ref<HTMLElement>();
 const sidebar = ref<HTMLElement>();
@@ -62,6 +67,18 @@ const routingToId = ref<number>();
 
 const showBody = computed(() => routingToId.value || hasActiveQuest.value);
 const showSidebar = computed(() => !Screen.isMobile || !showBody.value);
+
+// TODO(quests) daily, active, expired quests
+const dailyQuests = computed(() => quests.value);
+const activeQuests = computed(() => quests.value);
+const completedQuests = computed(() => quests.value);
+const hasDailyQuests = computed(() => false && dailyQuests.value.length > 0);
+const hasActiveQuests = computed(() => activeQuests.value.length > 0);
+const hasCompletedQuests = computed(() => false && completedQuests.value.length > 0);
+
+const hasQuests = computed(
+	() => hasDailyQuests.value || hasActiveQuests.value || hasCompletedQuests.value
+);
 
 watch(
 	() => activeQuestId.value,
@@ -105,6 +122,7 @@ createAppRoute({
 	onResolved({ payload }) {
 		quests.value = Quest.populate(payload.quests);
 		clearUnknownWatermarks();
+		isBootstrapped.value = true;
 	},
 });
 
@@ -163,31 +181,118 @@ function onNewQuest(data: Quest) {
 
 					<AppSpacer vertical :scale="10" />
 
-					<!-- TODO(quests) daily, weekly, other quests -->
-					<template v-if="quests.length > 0">
-						<div class="-subheading">
-							<AppTranslate>Active Quests</AppTranslate>
-						</div>
+					<div class="-sections">
+						<template v-if="!isBootstrapped">
+							<div>
+								<div class="-placeholder -placeholder-subheading" />
+								<AppSpacer vertical :scale="4" />
+								<div class="-grid">
+									<div
+										v-for="i of 3"
+										:key="i"
+										class="-placeholder -placeholder-daily"
+									/>
+								</div>
+							</div>
 
-						<AppSpacer vertical :scale="4" />
+							<div>
+								<div class="-placeholder -placeholder-subheading" />
+								<AppSpacer vertical :scale="4" />
+								<div class="-col">
+									<div
+										v-for="i of 1"
+										:key="i"
+										class="-placeholder -placeholder-tile"
+									/>
+								</div>
+							</div>
+						</template>
+						<template v-else-if="!hasQuests">
+							<div class="-empty">
+								<AppIllustration
+									:src="Screen.isXs ? illNoCommentsSmall : illNoComments"
+								>
+									<AppTranslate> You have no active quests </AppTranslate>
+								</AppIllustration>
+							</div>
+						</template>
+						<template v-else>
+							<!-- TODO(quests) daily, weekly, other quests -->
+							<div v-if="hasDailyQuests">
+								<div class="-subheading -row">
+									<AppTranslate>Daily Quests</AppTranslate>
+									<div
+										style="
+											margin-left: auto;
+											display: inline-flex;
+											align-items: center;
+										"
+									>
+										<!-- TODO(quests) clock jolticon -->
+										<AppJolticon icon="radio-circle" />
+										<!-- TODO(quests) daily quests, AppTimeAgo -->
+										<AppTimeAgo
+											v-if="
+												dailyQuests[0].repeat_type === QuestRepeatType.daily
+											"
+											:date="dailyQuests[0].ends_on"
+											is-future
+										/>
+									</div>
+								</div>
 
-						<AppQuestLogItem
-							v-for="quest of quests"
-							:key="quest.id"
-							:quest="quest"
-							:active="activeQuestId === quest.id"
-							@goto="onSelect"
-						/>
-					</template>
-					<template v-else>
-						<div class="-empty">
-							<AppIllustration
-								:src="Screen.isXs ? illNoCommentsSmall : illNoComments"
-							>
-								<AppTranslate> You have no active quests </AppTranslate>
-							</AppIllustration>
-						</div>
-					</template>
+								<AppSpacer vertical :scale="4" />
+
+								<div class="-grid">
+									<AppQuestLogItem
+										v-for="quest of quests"
+										:key="quest.id"
+										:quest="quest"
+										:active="activeQuestId === quest.id"
+										compact-stack
+										@goto="onSelect"
+									/>
+								</div>
+							</div>
+
+							<div v-if="hasActiveQuests">
+								<div class="-subheading">
+									<AppTranslate>Active Quests</AppTranslate>
+								</div>
+
+								<AppSpacer vertical :scale="4" />
+
+								<div class="-col">
+									<AppQuestLogItem
+										v-for="quest of activeQuests"
+										:key="quest.id"
+										:quest="quest"
+										:active="activeQuestId === quest.id"
+										@goto="onSelect"
+									/>
+								</div>
+							</div>
+
+							<div v-if="hasCompletedQuests">
+								<div class="-subheading">
+									<AppTranslate>Completed Quests</AppTranslate>
+								</div>
+
+								<AppSpacer vertical :scale="4" />
+
+								<div class="-col">
+									<AppQuestLogItem
+										v-for="quest of completedQuests"
+										:key="quest.id"
+										:quest="quest"
+										:active="activeQuestId === quest.id"
+										compact
+										@goto="onSelect"
+									/>
+								</div>
+							</div>
+						</template>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -212,6 +317,8 @@ function onNewQuest(data: Quest) {
 </template>
 
 <style lang="stylus" scoped>
+$-font-size-subheading = $font-size-small
+
 .-page
 	position: relative
 	display: flex
@@ -285,9 +392,50 @@ function onNewQuest(data: Quest) {
 	text-align: center
 	transition: min-width 500ms $weak-ease-out
 
+.-sections
+	display: flex
+	flex-direction: column
+	grid-gap: 40px
 
 .-subheading
-	font-size: $font-size-small
+	font-size: $-font-size-subheading
 	text-transform: uppercase
 	color: var(--theme-fg-muted)
+
+.-placeholder
+	background-color: var(--theme-bg-subtle)
+	rounded-corners-lg()
+
+.-placeholder-subheading
+	width: 120px
+	height: floor($-font-size-subheading * $line-height-base)
+
+
+.-grid
+.-row
+.-col
+	grid-gap: 8px 16px
+
+.-grid
+	display: grid
+	grid-template-columns: repeat(3, minmax(0, 1fr))
+
+.-row
+.-col
+	display: flex
+
+.-row
+	flex-direction: row
+
+.-col
+	flex-direction: column
+
+.-placeholder-daily
+	display: flex
+	height: 150px
+	flex: auto
+
+.-placeholder-tile
+	width: 100%
+	height: 120px
 </style>

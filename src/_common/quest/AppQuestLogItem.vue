@@ -37,7 +37,7 @@ const thumbnailIconSize = computed(() => {
 });
 
 const showProgress = computed(() => !quest.value.isExpired && !compact.value);
-const showType = computed(() => !quest.value.isExpired && !compactStack.value);
+const showType = computed(() => !(compact.value || compactStack.value));
 
 const emit = defineEmits({
 	goto: (_id: number) => true,
@@ -122,6 +122,7 @@ function onSelect() {
 
 		.-title
 			font-size: $font-size-base
+			text-align: center
 
 .-thumb
 	width: 30%
