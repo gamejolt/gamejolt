@@ -6,13 +6,14 @@ import { CommentStoreManager, CommentStoreManagerKey } from '../_common/comment/
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
 import { createDrawerStore } from '../_common/drawer/drawer-store';
 import AppErrorPage from '../_common/error/page/page.vue';
+import { createAppPromotionStore } from '../_common/mobile-app/store';
+import { createQuestStore } from '../_common/quest/quest-store';
 import AppCommonShell from '../_common/shell/AppCommonShell.vue';
 import { useCommonStore } from '../_common/store/common-store';
 import { loadCurrentLanguage } from '../_common/translate/translate.service';
 import { ChatStore, ChatStoreKey, clearChat, loadChat } from './components/chat/chat-store';
 import AppShell from './components/shell/shell.vue';
 import { useAppStore } from './store';
-import { createAppPromotionStore } from '../_common/mobile-app/store';
 
 const appStore = useAppStore();
 const { bootstrap, loadGrid, loadNotificationState, clear, clearGrid, clearNotificationState } =
@@ -23,6 +24,7 @@ createAdsController();
 createDrawerStore();
 createAppPromotionStore();
 provide(CommentStoreManagerKey, reactive(new CommentStoreManager()));
+createQuestStore(user);
 
 const chatStore = reactive(new ChatStore()) as ChatStore;
 provide(ChatStoreKey, chatStore);

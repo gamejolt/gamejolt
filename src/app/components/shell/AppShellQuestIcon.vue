@@ -6,10 +6,12 @@ import AppQuestFrame from '../../../_common/quest/AppQuestFrame.vue';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { useAppStore } from '../../store/index';
 
-const appStore = useAppStore();
+const { newQuestIds, questActivityIds } = useAppStore();
 
-const hasNew = computed(() => Object.keys(appStore.newQuestIds.value).length > 0);
-const hasActivity = computed(() => Object.keys(appStore.questActivityIds.value).length > 0);
+// TODO(quests) fetch daily quests on mounted
+// TODO(quests) throttle daily quest fetching between different sources
+const hasNew = computed(() => Object.keys(newQuestIds.value).length > 0);
+const hasActivity = computed(() => Object.keys(questActivityIds.value).length > 0);
 </script>
 
 <template>

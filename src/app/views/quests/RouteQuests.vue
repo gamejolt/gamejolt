@@ -11,6 +11,7 @@ import AppLoading from '../../../_common/loading/loading.vue';
 import { vAppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppQuestLogItem from '../../../_common/quest/AppQuestLogItem.vue';
 import { Quest, QuestRepeatType } from '../../../_common/quest/quest-model';
+import { useQuestStore } from '../../../_common/quest/quest-store';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
@@ -44,14 +45,16 @@ const ShellTopNavHeight = 56;
 <script lang="ts" setup>
 const route = useRoute();
 const appStore = useAppStore();
+const { isLoading, hasLoaded, addQuests, dailyQuests, activeQuests, completedQuests } =
+	useQuestStore();
 
-// TODO(quests) questStore
-const isBootstrapped = ref(false);
 const quests = ref<Quest[]>([]);
 const body = ref<HTMLElement>();
 const sidebar = ref<HTMLElement>();
 const sidebarInner = ref<HTMLElement>();
 const questList = ref<HTMLElement>();
+
+const showLoading = computed(() => !hasLoaded.value && isLoading.value);
 
 const activeQuestId = computed(() => {
 	if (routingToId.value !== undefined) {
@@ -68,13 +71,9 @@ const routingToId = ref<number>();
 const showBody = computed(() => routingToId.value || hasActiveQuest.value);
 const showSidebar = computed(() => !Screen.isMobile || !showBody.value);
 
-// TODO(quests) daily, active, expired quests
-const dailyQuests = computed(() => quests.value);
-const activeQuests = computed(() => quests.value);
-const completedQuests = computed(() => quests.value);
-const hasDailyQuests = computed(() => false && dailyQuests.value.length > 0);
+const hasDailyQuests = computed(() => dailyQuests.value.length > 0);
 const hasActiveQuests = computed(() => activeQuests.value.length > 0);
-const hasCompletedQuests = computed(() => false && completedQuests.value.length > 0);
+const hasCompletedQuests = computed(() => completedQuests.value.length > 0);
 
 const hasQuests = computed(
 	() => hasDailyQuests.value || hasActiveQuests.value || hasCompletedQuests.value
@@ -97,7 +96,7 @@ async function onSidebarChange() {
 		return;
 	}
 
-	// TODO(quests) I'm trying to remove the sidebar transition while the browser is resizing.
+	// Remove the sidebar transition while the browser is resizing.
 	sidebarInner.value.style.transition = 'unset';
 	sidebarInner.value.style.maxWidth = sidebar.value.offsetWidth + 'px';
 	await sleep(0);
@@ -120,9 +119,10 @@ function onQuestListChange() {
 createAppRoute({
 	routeTitle: `My Quests`,
 	onResolved({ payload }) {
-		quests.value = Quest.populate(payload.quests);
+		addQuests(Quest.populate(payload['quests']), { overwrite: true });
+		isLoading.value = false;
+		hasLoaded.value = true;
 		clearUnknownWatermarks();
-		isBootstrapped.value = true;
 	},
 });
 
@@ -182,7 +182,7 @@ function onNewQuest(data: Quest) {
 					<AppSpacer vertical :scale="10" />
 
 					<div class="-sections">
-						<template v-if="!isBootstrapped">
+						<template v-if="showLoading">
 							<div>
 								<div class="-placeholder -placeholder-subheading" />
 								<AppSpacer vertical :scale="4" />

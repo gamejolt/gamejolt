@@ -136,6 +136,18 @@ export function createAppStore({
 		() => !overlayedLeftPane.value && !overlayedRightPane.value
 	);
 
+	// Clear out quest ids when we lose our user so our shell quest icon doesn't
+	// show incorrect data.
+	watch(
+		() => commonStore.user,
+		user => {
+			if (!user) {
+				clearNewQuestIds('all', { pushView: false });
+				clearQuestActivityIds('all', { pushView: false });
+			}
+		}
+	);
+
 	// If we were offline, but we're online now, make sure our library is
 	// bootstrapped. Remember we always have an app user even if we were
 	// offline.
