@@ -27,6 +27,25 @@ export const QuestRepeatType = {
 	weekly: 'weekly',
 } as const;
 
+export const QuestSeries = {
+	/** Generic series for all World Event quests. */
+	worldEvent: 'world-event',
+	/** Series that contains all daily quests. */
+	dailyQuest: 'daily-quest',
+	/** Series that contains all weekly quests. */
+	weeklyQuest: 'weekly-quest',
+	/** Contains introductory quests for new users. */
+	helloWorld: 'hello-world',
+} as const;
+
+const QuestSeriesMap = new Map([
+	[QuestSeries.worldEvent, 'World Event'],
+	[QuestSeries.dailyQuest, 'Daily'],
+	[QuestSeries.weeklyQuest, 'Weekly'],
+	[QuestSeries.helloWorld, 'Hello World'],
+	['', undefined],
+]);
+
 export class Quest extends Model {
 	constructor(data: any = {}) {
 		super(data);
@@ -53,6 +72,7 @@ export class Quest extends Model {
 	declare title: string;
 	// declare quest_type?: string;
 	declare series?: string;
+	declare fallback_series?: string;
 	declare repeat_type: string;
 	declare ends_on?: number;
 	declare completion_state: number;
@@ -102,7 +122,7 @@ export class Quest extends Model {
 	}
 
 	get questType() {
-		return (this.series ?? 'World Event / Daily').toUpperCase();
+		return (QuestSeriesMap.get(this.series ?? '') ?? this.fallback_series)?.toUpperCase();
 	}
 }
 

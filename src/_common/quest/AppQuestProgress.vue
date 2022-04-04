@@ -74,9 +74,15 @@ const barCount = computed(() => (isSegmented.value ? maxProgressTicks.value : 1)
 
 .-end
 	font-weight: bold
-	font-size: $font-size-tiny
 	color: var(--theme-fg-muted)
 	white-space: nowrap
+
+	&
+	.jolticon
+		font-size: $font-size-tiny
+
+	.jolticon
+		vertical-align: middle
 
 	&.-icon
 		color: var(--theme-link)

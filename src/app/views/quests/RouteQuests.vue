@@ -53,11 +53,11 @@ const sidebarInner = ref<HTMLElement>();
 const questList = ref<HTMLElement>();
 
 const dailyQuests = computed(() =>
-	quests.value.filter(i => i.repeat_type === QuestRepeatType.daily && (i.isActive || i.canAccept))
+	quests.value.filter(i => i.repeat_type === QuestRepeatType.daily)
 );
 
 const activeQuests = computed(() =>
-	quests.value.filter(i => i.repeat_type !== QuestRepeatType.daily && (i.isActive || i.canAccept))
+	quests.value.filter(i => i.repeat_type !== QuestRepeatType.daily)
 );
 
 const showLoading = computed(() => !hasLoaded.value && isLoading.value);
