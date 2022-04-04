@@ -250,10 +250,13 @@ export class Gjpush {
 			`/releases/builds/${releasePayload.release.id}?game_id=${gameId}&package_id=${packageId}`
 		);
 
+		console.log(buildPayload);
+
 		// The build matching the filename we just uploaded is the build ID
 		// we're after.
 		const build = buildPayload.builds.data.find(i => {
-			return i && i.file && i.file.filename === expectedBasename;
+			const filename = (i?.file?.filename ?? '') as string;
+			return filename.toLowerCase() === expectedBasename.toLowerCase();
 		});
 
 		if (!build) {
