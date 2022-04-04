@@ -13,14 +13,27 @@ We wanted to make it open source so everyone can get visibility into what we are
 	- `yarn`
 - Setup local development certificates.
   - __Windows:__
-    1. Run `scripts\generate-certs.ps1`.
+    1. Run `scripts\certs\generate-cert.ps1`.
     2. Open `gamejoltCA.crt` file it generated.
     3. Press "Install certificate" button.
     4. For "Store Location" leave it as "Current User" and hit "Next".
     5. Choose "Place all certificates in the following store" and hit "Browse"
     6. Choose "Trusted Root Certification Authorities" and hit "Ok"
     7. Restart your browser for changes to take effect.
-  - __Linux/Mac:__ TODO
+  - __Linux:__
+    1. Run `./scripts/certs/generate-cert.sh`
+    2. Add the cert to the local trust
+        - _On Ubuntu_:
+          ```
+          sudo cp gamejoltCA.crt /usr/local/share/ca-certificates/gamejoltCA.crt
+          sudo update-ca-certificates
+          ```
+        - _On Fedora_:
+          ```
+          sudo cp gamejoltCA.crt /etc/pki/ca-trust/source/anchors/gamejoltCA.crt
+          sudo update-ca-trust extract
+          ```
+  - __Mac:__ TODO
 
 ### Running
 - __Website__
