@@ -54,6 +54,8 @@ const metaData = computed<{ text?: string; icon?: Jolticon; bubble?: boolean } |
 </template>
 
 <style lang="stylus" scoped>
+$-meta-font-size = 9px
+
 .-frame
 	position: relative
 
@@ -64,12 +66,12 @@ const metaData = computed<{ text?: string; icon?: Jolticon; bubble?: boolean } |
 
 .-meta
 	position: absolute
-	top: ($font-size-tiny / 2)
-	right: ($font-size-tiny / 2)
+	top: 0
+	right: 0
 	font-weight: bold
 	color: var(--theme-link)
 	text-shadow: 0 0 4px var(--theme-link)
-	font-size: $font-size-tiny
+	font-size: $-meta-font-size
 	z-index: 1
 
 	.jolticon

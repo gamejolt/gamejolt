@@ -1,8 +1,8 @@
 import { provide, watch } from '@vue/runtime-core';
-import { inject, InjectionKey, ref, Ref, shallowRef } from 'vue';
+import { inject, InjectionKey, ref, Ref } from 'vue';
 import { Api } from '../api/api.service';
 import { User } from '../user/user.model';
-import { Quest, QuestRepeatType } from './quest-model';
+import { Quest } from './quest-model';
 
 export type QuestStore = ReturnType<typeof createQuestStore>;
 
@@ -16,18 +16,13 @@ export function createQuestStore(user: Ref<User | null>) {
 		() => user.value,
 		user => {
 			if (!user) {
-				clearQuests();
+				_clearQuests();
 				hasLoaded.value = false;
 			}
 		}
 	);
 
-	const dailyQuests = shallowRef<Quest[]>([]);
-	const activeQuests = shallowRef<Quest[]>([]);
-	const completedQuests = shallowRef<Quest[]>([]);
-	// TODO(quests) check what types of quests we want to display and how we
-	// want to display them.
-	const miscQuests = shallowRef<Quest[]>([]);
+	const quests = ref<Quest[]>([]);
 
 	// TODO(quests) daily, active, expired quests
 	async function fetchQuests(
@@ -53,50 +48,24 @@ export function createQuestStore(user: Ref<User | null>) {
 		}
 	}
 
-	function addQuests(quests: Quest[], { overwrite: assign }: { overwrite?: boolean } = {}) {
-		const newDaily: Quest[] = [];
-		const newActive: Quest[] = [];
-		const newCompleted: Quest[] = [];
-		const newMisc: Quest[] = [];
-
-		for (const quest of quests) {
-			if (quest.repeat_type === QuestRepeatType.daily) {
-				newDaily.push(quest);
-			} else if (quest.isActive) {
-				newActive.push(quest);
-			} else if (quest.isComplete) {
-				newCompleted.push(quest);
-			} else {
-				newMisc.push(quest);
-			}
-		}
-
+	function addQuests(newQuests: Quest[], { overwrite: assign }: { overwrite?: boolean } = {}) {
 		if (assign) {
-			dailyQuests.value = newDaily;
-			activeQuests.value = newActive;
-			completedQuests.value = newCompleted;
-			miscQuests.value = newMisc;
+			quests.value = newQuests;
 		} else {
-			dailyQuests.value.push(...newDaily);
-			activeQuests.value.push(...newActive);
-			completedQuests.value.push(...newCompleted);
-			miscQuests.value.push(...newMisc);
+			quests.value.push(...newQuests);
 		}
 	}
 
-	function clearQuests() {
+	function _clearQuests() {
 		addQuests([], { overwrite: true });
 	}
 
 	const c = {
 		isLoading,
 		hasLoaded,
-		dailyQuests,
-		activeQuests,
-		completedQuests,
+		quests,
 		fetchQuests,
 		addQuests,
-		// clearQuests,
 	};
 	provide(QuestStoreKey, c);
 	return c;

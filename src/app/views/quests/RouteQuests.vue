@@ -45,14 +45,20 @@ const ShellTopNavHeight = 56;
 <script lang="ts" setup>
 const route = useRoute();
 const appStore = useAppStore();
-const { isLoading, hasLoaded, addQuests, dailyQuests, activeQuests, completedQuests } =
-	useQuestStore();
+const { isLoading, hasLoaded, addQuests, quests } = useQuestStore();
 
-const quests = ref<Quest[]>([]);
 const body = ref<HTMLElement>();
 const sidebar = ref<HTMLElement>();
 const sidebarInner = ref<HTMLElement>();
 const questList = ref<HTMLElement>();
+
+const dailyQuests = computed(() =>
+	quests.value.filter(i => i.repeat_type === QuestRepeatType.daily && (i.isActive || i.canAccept))
+);
+
+const activeQuests = computed(() =>
+	quests.value.filter(i => i.repeat_type !== QuestRepeatType.daily && (i.isActive || i.canAccept))
+);
 
 const showLoading = computed(() => !hasLoaded.value && isLoading.value);
 
@@ -73,11 +79,8 @@ const showSidebar = computed(() => !Screen.isMobile || !showBody.value);
 
 const hasDailyQuests = computed(() => dailyQuests.value.length > 0);
 const hasActiveQuests = computed(() => activeQuests.value.length > 0);
-const hasCompletedQuests = computed(() => completedQuests.value.length > 0);
 
-const hasQuests = computed(
-	() => hasDailyQuests.value || hasActiveQuests.value || hasCompletedQuests.value
-);
+const hasQuests = computed(() => hasDailyQuests.value || hasActiveQuests.value);
 
 watch(
 	() => activeQuestId.value,
@@ -129,30 +132,28 @@ createAppRoute({
 function clearUnknownWatermarks() {
 	const c = appStore;
 
-	const _newIds = { ...c.newQuestIds.value };
-	const _activityIds = { ...c.questActivityIds.value };
-	const _currentQuestIds: typeof c.newQuestIds.value = {};
-	quests.value.forEach(i => (_currentQuestIds[i.id] = true));
+	const _newIds = [...c.newQuestIds.value.values()];
+	const _activityIds = [...c.questActivityIds.value.values()];
+	const _currentQuestIds = new Set(quests.value.map(i => i.id));
 
-	for (const id of Object.keys(_newIds)) {
-		const questId = parseInt(id, 10);
-		if (_currentQuestIds[questId] !== true) {
-			c.clearNewQuestIds([questId], { pushView: false });
+	for (const id of _newIds) {
+		if (!_currentQuestIds.has(id)) {
+			c.clearNewQuestIds([id], { pushView: false });
 		}
 	}
 
-	for (const id of Object.keys(_activityIds)) {
-		const questId = parseInt(id, 10);
-		if (_currentQuestIds[questId] !== true) {
-			c.clearQuestActivityIds([questId], { pushView: false });
+	for (const id of _activityIds) {
+		if (!_currentQuestIds.has(id)) {
+			c.clearQuestActivityIds([id], { pushView: false });
 		}
 	}
+
+	_currentQuestIds.clear();
 }
 
 function onNewQuest(data: Quest) {
 	const index = quests.value.findIndex(i => i.id === data.id);
 	if (index === -1) {
-		illNoComments;
 		return;
 	}
 	quests.value.splice(index, 1, data);
@@ -222,6 +223,7 @@ function onNewQuest(data: Quest) {
 								<div class="-subheading -row">
 									<AppTranslate>Daily Quests</AppTranslate>
 									<div
+										v-if="dailyQuests[0].ends_on"
 										style="
 											margin-left: auto;
 											display: inline-flex;
@@ -230,14 +232,8 @@ function onNewQuest(data: Quest) {
 									>
 										<!-- TODO(quests) clock jolticon -->
 										<AppJolticon icon="radio-circle" />
-										<!-- TODO(quests) daily quests, AppTimeAgo -->
-										<AppTimeAgo
-											v-if="
-												dailyQuests[0].repeat_type === QuestRepeatType.daily
-											"
-											:date="dailyQuests[0].ends_on"
-											is-future
-										/>
+										<!-- TODO(quests) daily quests, AppTimeAgo, better countdown timer -->
+										<AppTimeAgo :date="dailyQuests[0].ends_on" is-future />
 									</div>
 								</div>
 
@@ -245,7 +241,7 @@ function onNewQuest(data: Quest) {
 
 								<div class="-grid">
 									<AppQuestLogItem
-										v-for="quest of quests"
+										v-for="quest of dailyQuests"
 										:key="quest.id"
 										:quest="quest"
 										:active="activeQuestId === quest.id"
@@ -273,7 +269,7 @@ function onNewQuest(data: Quest) {
 								</div>
 							</div>
 
-							<div v-if="hasCompletedQuests">
+							<!-- <div v-if="hasCompletedQuests">
 								<div class="-subheading">
 									<AppTranslate>Completed Quests</AppTranslate>
 								</div>
@@ -290,7 +286,7 @@ function onNewQuest(data: Quest) {
 										@goto="onSelect"
 									/>
 								</div>
-							</div>
+							</div> -->
 						</template>
 					</div>
 				</div>

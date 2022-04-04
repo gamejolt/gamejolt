@@ -71,8 +71,9 @@ createAppRoute({
 	onResolved({ payload }) {
 		participatingFriends.value = User.populate(payload.participatingFriends);
 		participatingFriendCount.value = payload.participatingFriendCount;
-		console.log(payload);
-		updateQuest(new Quest(payload.quest));
+		if (payload.quest) {
+			onNewQuest(new Quest(payload.quest));
+		}
 		isLoading.value = false;
 	},
 });

@@ -67,6 +67,7 @@ function onSelect() {
 		<AppSpacer :horizontal="!compactStack" :vertical="compactStack" :scale="4" />
 
 		<div class="-details">
+			<!-- // TODO(quests) check `series` mapping, check `fallbackSeries` or whatever we'll call it, display nothing if we don't get anything. -->
 			<div v-if="showType" class="-type">{{ quest.questType }}</div>
 
 			<div class="-title">{{ quest.title }}</div>
@@ -75,6 +76,7 @@ function onSelect() {
 				<AppSpacer vertical :scale="3" />
 
 				<AppQuestProgress
+					class="-progress"
 					:progress="quest.progress_percent"
 					:max-progress-ticks="100"
 					:is-percent="true"
@@ -88,8 +90,6 @@ function onSelect() {
 .-item
 	display: flex
 	padding: 8px 16px 8px 8px
-	margin-left: -8px
-	margin-right: -16px
 	border-radius: $border-radius-large
 
 	&:hover
@@ -115,6 +115,10 @@ function onSelect() {
 	&.-compact-stack
 		flex-direction: column
 		align-items: center
+		padding-right: 8px
+
+		.-progress
+			padding: 0 8px
 
 		.-thumb
 			width: 100%
@@ -133,6 +137,7 @@ function onSelect() {
 	display: flex
 	flex-direction: column
 	justify-content: center
+	width: 100%
 
 .-title
 	font-family: 'Germania'

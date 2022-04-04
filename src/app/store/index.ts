@@ -31,7 +31,7 @@ import { LibraryStore } from './library';
 type UnreadItemType = 'activity' | 'notifications';
 type TogglableLeftPane = '' | 'chat' | 'context' | 'library';
 
-type QuestIdMap = { [id: number]: boolean };
+type QuestIdSet = Set<number>;
 
 export const AppStoreKey: InjectionKey<AppStore> = Symbol('app-store');
 
@@ -71,8 +71,8 @@ export function createAppStore({
 	const unreadNotificationsCount = ref(0);
 	const hasNewFriendRequests = ref(false);
 	const hasNewUnlockedStickers = ref(false);
-	const newQuestIds = ref<QuestIdMap>({});
-	const questActivityIds = ref<QuestIdMap>({});
+	const newQuestIds = ref<QuestIdSet>(new Set());
+	const questActivityIds = ref<QuestIdSet>(new Set());
 	const notificationState = ref<ActivityFeedState>();
 
 	const mobileCbarShowing = ref(false);
@@ -388,9 +388,9 @@ export function createAppStore({
 		hasNewUnlockedStickers.value = has;
 	}
 
-	function _addQuestIds(list: Ref<QuestIdMap>, ids: number[]) {
+	function _addQuestIds(list: Ref<QuestIdSet>, ids: number[]) {
 		for (const id of ids) {
-			list.value[id] = true;
+			list.value.add(id);
 		}
 	}
 
@@ -403,14 +403,14 @@ export function createAppStore({
 	}
 
 	function _clearQuestIds(
-		list: Ref<QuestIdMap>,
+		list: Ref<QuestIdSet>,
 		ids: number[] | 'all',
 		{ type, pushView }: { type: 'new-quest' | 'quest-activity'; pushView: boolean }
 	) {
-		const clearIds = ids === 'all' ? Object.keys(list.value).map(i => parseInt(i, 10)) : ids;
+		const clearIds = ids === 'all' ? list.value.values() : ids;
 
 		for (const questId of clearIds) {
-			delete list.value[questId];
+			list.value.delete(questId);
 			if (pushView) {
 				grid.value?.pushViewNotifications(type, {
 					questId,

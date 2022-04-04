@@ -54,8 +54,7 @@ export class Quest extends Model {
 	// declare quest_type?: string;
 	declare series?: string;
 	declare repeat_type: string;
-	declare expires_on: number;
-	declare ends_on: number;
+	declare ends_on?: number;
 	declare completion_state: number;
 	declare progress_percent: number;
 	declare is_new: boolean;
@@ -75,12 +74,7 @@ export class Quest extends Model {
 			return true;
 		}
 
-		if (!this.ends_on && !this.expires_on) {
-			return false;
-		}
-
-		const now = Date.now();
-		return (this.ends_on && this.ends_on < now) || (this.expires_on && this.expires_on < now);
+		return !!this.ends_on && this.ends_on < Date.now();
 	}
 
 	get isIncomplete() {

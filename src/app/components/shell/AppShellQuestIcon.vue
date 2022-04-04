@@ -10,8 +10,8 @@ const { newQuestIds, questActivityIds } = useAppStore();
 
 // TODO(quests) fetch daily quests on mounted
 // TODO(quests) throttle daily quest fetching between different sources
-const hasNew = computed(() => Object.keys(newQuestIds.value).length > 0);
-const hasActivity = computed(() => Object.keys(questActivityIds.value).length > 0);
+const hasNew = computed(() => newQuestIds.value.size > 0);
+const hasActivity = computed(() => questActivityIds.value.size > 0);
 </script>
 
 <template>

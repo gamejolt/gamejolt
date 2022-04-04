@@ -30,13 +30,8 @@ const props = defineProps({
 
 const { progress, maxProgressTicks, showEndDisplay, icon, isPercent, isSegmented } = toRefs(props);
 
-const percent = computed(() => (progress.value / maxProgressTicks.value) * 100);
-const barCount = computed(() => {
-	if (isSegmented.value) {
-		return maxProgressTicks.value;
-	}
-	return 1;
-});
+const percent = computed(() => Math.round((progress.value / maxProgressTicks.value) * 100));
+const barCount = computed(() => (isSegmented.value ? maxProgressTicks.value : 1));
 </script>
 
 <template>
