@@ -6,6 +6,7 @@ const QuestRewardTypes = {
 	exp: 0,
 	sticker: 1,
 	siteTrophy: 2,
+	randomSticker: 3,
 } as const;
 
 export class QuestObjectiveReward extends Model {
@@ -33,7 +34,9 @@ export class QuestObjectiveReward extends Model {
 	}
 
 	get isSticker() {
-		return this.type === QuestRewardTypes.sticker;
+		return (
+			this.type === QuestRewardTypes.sticker || this.type === QuestRewardTypes.randomSticker
+		);
 	}
 
 	get isTrophy() {

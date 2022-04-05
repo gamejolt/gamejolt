@@ -46,6 +46,8 @@ const DurationBackpackEnter = 1_000;
 const DurationBackpackOpen = 250;
 const DurationBackpackClose = 500;
 const DelayBackpackOpen = 375;
+
+const DurationThumbnail = 3_000;
 </script>
 
 <script lang="ts" setup>
@@ -119,7 +121,7 @@ async function startBackpackFlow() {
 }
 
 async function startAvatarFlow() {
-	await sleep(3_000);
+	await sleep(DurationThumbnail);
 }
 
 function openBackpack() {
@@ -243,27 +245,20 @@ function onAnimationEnd(id: number) {
 					/>
 				</div>
 			</template>
-			<div v-else class="-avatar">
-				<AppQuestThumbnail :quest="quest" />
+			<div
+				v-else
+				class="-thumbnail"
+				:style="{
+					animationDuration: DurationThumbnail + 'ms',
+				}"
+			>
+				<AppQuestThumbnail class="-thumbnail-inner" :quest="quest" active />
 			</div>
 		</div>
 	</AppModal>
 </template>
 
 <style lang="stylus" scoped>
-
-.-test
-	position: fixed
-	left: 0
-	top: 0
-	width: 100%
-	height: 100%
-
-	> path
-		stroke-width: 1
-		stroke: yellow
-		fill: none
-
 .-quest-rewards-modal
 	background-color: rgba(black, 0.37)
 
@@ -354,31 +349,60 @@ function onAnimationEnd(id: number) {
 	bottom: 0
 	z-index: 2
 
+.-thumbnail
+	width: calc(min(300px, 60vw, 40vh))
+	z-index: 1
+	height: @width
+	position: absolute
+	bottom: calc(40px + 25vh)
+	animation-name: anim-thumbnail-wiggle
+	animation-timing-function: ease-in-out
+	animation-iteration-count: infinite
+
+.-thumbnail-inner
+	animation-name: anim-thumbnail-scale
+	animation-timing-function: ease-in-out
+	animation-duration: 1200ms
+	animation-iteration-count: infinite
+
+
 @keyframes anim-fade-out
 	0%
 		opacity: 1
-
 	100%
 		opacity: 0
 
 @keyframes anim-backpack-enter
 	0%
 		transform: translateY(37.5%)
-
 	50%
 		transform: translateY(12.5%)
 
 @keyframes anim-backpack-leave
 	0%
 		transform: translateY(75%)
-
 	50%
 		transform: translateY(18.75%)
 
 @keyframes anim-backpack-open
 	0%
 		opacity: 0
-
 	100%
 		opacity: 1
+
+@keyframes anim-thumbnail-wiggle
+	0%
+		transform: rotateZ(-15deg)
+	50%
+		transform: rotateZ(15deg)
+	100%
+		transform: rotateZ(-15deg)
+
+@keyframes anim-thumbnail-scale
+	0%
+		transform: scale(0.95)
+	50%
+		transform: scale(1.05)
+	100%
+		transform: scale(0.95)
 </style>

@@ -53,10 +53,11 @@ async function onActionPressed() {
 			return;
 		}
 
-		const objectiveRewards: QuestObjectiveReward[] = QuestObjectiveReward.populate(
-			payload.rewards
-		);
-		const compactRewards: { [key: string]: QuestReward } = {};
+		const objectiveRewards: QuestObjectiveReward[] = payload.rewards
+			? QuestObjectiveReward.populate(payload.rewards)
+			: [];
+
+		const compactRewards = new Map<string, QuestReward>();
 
 		const addOrUpdateReward = function (options: {
 			key: string;
@@ -65,10 +66,10 @@ async function onActionPressed() {
 			name: string;
 		}) {
 			const { key, amount } = options;
-			if (compactRewards[key]) {
-				compactRewards[key].amount += amount;
+			if (compactRewards.has(key)) {
+				compactRewards.get(key)!.amount += amount;
 			} else {
-				compactRewards[key] = new QuestReward(options);
+				compactRewards.set(key, new QuestReward(options));
 			}
 		};
 
@@ -108,7 +109,7 @@ async function onActionPressed() {
 			} */
 		}
 
-		const rewards = Object.values(compactRewards);
+		const rewards = [...compactRewards.values()];
 		if (rewards.length === 0 && !isAccept.value) {
 			return;
 		}

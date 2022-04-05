@@ -17,9 +17,14 @@ const props = defineProps({
 	hideMeta: {
 		type: Boolean,
 	},
+	active: {
+		type: Boolean,
+	},
 });
 
-const { quest, hideMeta } = toRefs(props);
+const { quest, hideMeta, active } = toRefs(props);
+
+const isActive = computed(() => active.value || quest.value.is_new);
 
 const metaData = computed<{ text?: string; icon?: Jolticon; bubble?: boolean } | undefined>(() => {
 	if (hideMeta.value) {
@@ -42,7 +47,7 @@ const metaData = computed<{ text?: string; icon?: Jolticon; bubble?: boolean } |
 
 <template>
 	<div class="-frame">
-		<AppQuestFrame>
+		<AppQuestFrame :active="isActive">
 			<AppImgResponsive class="-img" :src="quest.avatar.mediaserver_url" alt="Quest Image" />
 		</AppQuestFrame>
 
