@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router';
 import { getParam } from '../../../utils/router';
 import { sleep } from '../../../utils/utils';
 import { Api } from '../../../_common/api/api.service';
+import { AppCountdown } from '../../../_common/countdown/countdown';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../_common/loading/loading.vue';
@@ -15,7 +16,6 @@ import { useQuestStore } from '../../../_common/quest/quest-store';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { illNoComments, illNoCommentsSmall } from '../../img/ill/illustrations';
 import { useAppStore } from '../../store/index';
@@ -102,6 +102,9 @@ async function onSidebarChange() {
 	// Remove the sidebar transition while the browser is resizing.
 	sidebarInner.value.style.transition = 'unset';
 	sidebarInner.value.style.maxWidth = sidebar.value.offsetWidth + 'px';
+	if (questList.value) {
+		questList.value.style.maxWidth = sidebar.value.offsetWidth + 'px';
+	}
 	await sleep(0);
 	sidebarInner.value.style.transition = '';
 }
@@ -122,7 +125,11 @@ function onQuestListChange() {
 createAppRoute({
 	routeTitle: `My Quests`,
 	onResolved({ payload }) {
-		addQuests(Quest.populate(payload['quests']), { overwrite: true });
+		const newQuests = [
+			...Quest.populate(payload['dailyQuests']),
+			...Quest.populate(payload['quests']),
+		];
+		addQuests(newQuests, { overwrite: true });
 		isLoading.value = false;
 		hasLoaded.value = true;
 		clearUnknownWatermarks();
@@ -222,18 +229,11 @@ function onNewQuest(data: Quest) {
 							<div v-if="hasDailyQuests">
 								<div class="-subheading -row">
 									<AppTranslate>Daily Quests</AppTranslate>
-									<div
-										v-if="dailyQuests[0].ends_on"
-										style="
-											margin-left: auto;
-											display: inline-flex;
-											align-items: center;
-										"
-									>
+									<div v-if="dailyQuests[0].ends_on" class="-countdown">
 										<!-- TODO(quests) clock jolticon -->
 										<AppJolticon icon="radio-circle" />
 										<!-- TODO(quests) daily quests, AppTimeAgo, better countdown timer -->
-										<AppTimeAgo :date="dailyQuests[0].ends_on" is-future />
+										<AppCountdown :end="dailyQuests[0].ends_on" />
 									</div>
 								</div>
 
@@ -332,7 +332,6 @@ $-font-size-subheading = $font-size-small
 
 .-sidebar
 .-sidebar-inner
-.-quest-list
 	transition: max-width 500ms $weak-ease-out
 
 .-quest-list-observer
@@ -354,11 +353,11 @@ $-font-size-subheading = $font-size-small
 		.-sidebar-inner
 			max-width: 100% !important
 
+		.-quest-list
+			max-width: 650px !important
+
 		.-quest-list-heading-text
 			min-width: 100%
-
-		.-quest-list
-			max-width: 650px
 
 .-quest-list
 	position: relative
@@ -397,6 +396,15 @@ $-font-size-subheading = $font-size-small
 	font-size: $-font-size-subheading
 	text-transform: uppercase
 	color: var(--theme-fg-muted)
+
+.-countdown
+	margin-left: auto
+	display: inline-flex
+	align-items: center
+
+	&
+	.jolticon
+		font-size: $font-size-tiny
 
 .-placeholder
 	background-color: var(--theme-bg-subtle)
