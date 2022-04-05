@@ -139,7 +139,7 @@ async function onActionPressed() {
 		<AppButton v-if="show" primary outline block @click="onActionPressed">
 			<AppLoading v-if="isProcessingAction" class="-loading" hide-label stationary centered />
 			<AppTranslate v-else>
-				{{ isAccept ? 'Accept quest' : 'Collect rewards' }}
+				{{ isAccept ? 'Accept quest' : 'Claim rewards' }}
 			</AppTranslate>
 		</AppButton>
 	</div>
