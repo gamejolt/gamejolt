@@ -125,10 +125,14 @@ function onQuestListChange() {
 createAppRoute({
 	routeTitle: `My Quests`,
 	onResolved({ payload }) {
-		const newQuests = [
-			...Quest.populate(payload['dailyQuests']),
-			...Quest.populate(payload['quests']),
-		];
+		const newQuests: Quest[] = [];
+		if (payload.dailyQuests) {
+			newQuests.push(...Quest.populate(payload.dailyQuests));
+		}
+		if (payload.quests) {
+			newQuests.push(...Quest.populate(payload.quests));
+		}
+
 		addQuests(newQuests, { overwrite: true });
 		isLoading.value = false;
 		hasLoaded.value = true;

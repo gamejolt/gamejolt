@@ -14,15 +14,22 @@ const props = defineProps({
 		type: String as PropType<'sm' | 'base'>,
 		default: 'base',
 	},
+	hideMeta: {
+		type: Boolean,
+	},
 });
 
-const { quest } = toRefs(props);
+const { quest, hideMeta } = toRefs(props);
 
 const metaData = computed<{ text?: string; icon?: Jolticon; bubble?: boolean } | undefined>(() => {
+	if (hideMeta.value) {
+		return;
+	}
+
 	const q = quest.value;
 	if (q.has_activity) {
 		// TODO(quests) present jolticon
-		return { icon: 'other-os' };
+		return { bubble: true };
 	} else if (q.isAllComplete) {
 		return { icon: 'star', bubble: true };
 	} else if (q.isComplete) {
@@ -81,6 +88,8 @@ $-meta-font-size = 9px
 		display: flex
 		align-items: center
 		justify-content: center
+		min-width: $font-size-base
+		min-height: $font-size-base
 
 .-icon
 	&-sm

@@ -1,6 +1,5 @@
 import { provide, watch } from '@vue/runtime-core';
 import { inject, InjectionKey, ref, Ref } from 'vue';
-import { Api } from '../api/api.service';
 import { User } from '../user/user.model';
 import { Quest } from './quest-model';
 
@@ -17,6 +16,7 @@ export function createQuestStore(user: Ref<User | null>) {
 		user => {
 			if (!user) {
 				_clearQuests();
+				isLoading.value = true;
 				hasLoaded.value = false;
 			}
 		}
@@ -24,47 +24,25 @@ export function createQuestStore(user: Ref<User | null>) {
 
 	const quests = ref<Quest[]>([]);
 
-	// TODO(quests) daily, active, expired quests
-	async function fetchQuests(
-		options: { daily?: boolean; active?: boolean; completed?: boolean } = {}
-	) {
-		isLoading.value = true;
-		try {
-			const payload = await Api.sendRequest(
-				'/mobile/quest',
-				{
-					_fields: {
-						quests: true,
-					},
-				},
-				{
-					sanitizeComplexData: false,
-				}
-			);
-			addQuests(Quest.populate(payload['quests']), { overwrite: true });
-			hasLoaded.value = true;
-		} finally {
-			isLoading.value = false;
-		}
-	}
-
 	function addQuests(newQuests: Quest[], { overwrite: assign }: { overwrite?: boolean } = {}) {
 		if (assign) {
 			quests.value = newQuests;
 		} else {
 			quests.value.push(...newQuests);
 		}
+		hasLoaded.value = true;
 	}
 
 	function _clearQuests() {
 		addQuests([], { overwrite: true });
+		hasLoaded.value = false;
 	}
 
 	const c = {
 		isLoading,
 		hasLoaded,
 		quests,
-		fetchQuests,
+		// fetchQuests,
 		addQuests,
 	};
 	provide(QuestStoreKey, c);

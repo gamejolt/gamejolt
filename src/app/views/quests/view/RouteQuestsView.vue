@@ -18,7 +18,6 @@ import { $gettext, $gettextInterpolate } from '../../../../_common/translate/tra
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../_common/user/user.model';
 import { useAppStore } from '../../../store/index';
-import { router } from '../../index';
 
 export default {
 	...defineAppRouteOptions({
@@ -67,7 +66,7 @@ const objectives = computed(() => {
 
 createAppRoute({
 	// TODO(quests) route title
-	routeTitle: computed(() => ``),
+	routeTitle: computed(() => quest.value?.title ?? ''),
 	onResolved({ payload }) {
 		participatingFriends.value = User.populate(payload.participatingFriends);
 		participatingFriendCount.value = payload.participatingFriendCount;
@@ -174,13 +173,6 @@ const friendsText = computed(() => {
 	return '';
 });
 
-function onBack() {
-	// TODO(quests) make sure this works properly
-	router.push({
-		name: 'quests',
-	});
-}
-
 function updateQuest(data: Quest) {
 	quest.value = data;
 
@@ -206,13 +198,18 @@ function onNewQuest(data: Quest) {
 
 			<template v-if="Screen.isMobile">
 				<div class="-header-shadow" />
-				<a class="-back" @click="onBack">
+				<RouterLink
+					class="-back"
+					:to="{
+						name: 'quests',
+					}"
+				>
 					<AppJolticon icon="chevron-left" />
 					<AppSpacer horizontal :scale="1" />
 					<AppTranslate :translate-params="{ screen: 'My Quests' }">
 						View %{ screen }
 					</AppTranslate>
-				</a>
+				</RouterLink>
 			</template>
 		</div>
 

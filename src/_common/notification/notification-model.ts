@@ -96,7 +96,6 @@ export class Notification extends Model {
 		Notification.TYPE_SITE_TROPHY_ACHIEVED,
 		Notification.TYPE_COMMUNITY_USER_NOTIFICATION,
 		Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY,
-		// TODO(quests) notification feed types?
 		Notification.TYPE_QUEST_NOTIFICATION,
 	];
 

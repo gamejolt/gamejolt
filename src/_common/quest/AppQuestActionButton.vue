@@ -73,7 +73,7 @@ async function onActionPressed() {
 		};
 
 		for (const reward of objectiveRewards) {
-			if (reward.isExp) {
+			/* if (reward.isExp) {
 				// TODO(quests) experience rewards
 				addOrUpdateReward({
 					key: 'exp',
@@ -81,7 +81,7 @@ async function onActionPressed() {
 					img_url: reward.fallback_media?.mediaserver_url,
 					name: reward.name,
 				});
-			} else if (reward.isSticker) {
+			} else */ if (reward.isSticker) {
 				for (const { amount, sticker } of reward.stickers) {
 					addOrUpdateReward({
 						key: `sticker-${sticker.id}`,
@@ -90,7 +90,7 @@ async function onActionPressed() {
 						name: reward.name,
 					});
 				}
-			} else if (reward.isTrophy) {
+			} /* else if (reward.isTrophy) {
 				// TODO(quests) trophy rewards
 				addOrUpdateReward({
 					key: `trophy-${reward.id}`,
@@ -99,14 +99,13 @@ async function onActionPressed() {
 					name: reward.name,
 				});
 			} else {
-				// TODO(quests) unknown rewards
 				addOrUpdateReward({
 					key: `${reward.name}-${reward.id}`,
 					amount: reward.fallback_amount,
 					img_url: reward.fallback_media?.mediaserver_url,
 					name: reward.name,
 				});
-			}
+			} */
 		}
 
 		const rewards = Object.values(compactRewards);
@@ -117,15 +116,13 @@ async function onActionPressed() {
 
 		showModal({
 			modalId: 'QuestRewards',
-			component: defineAsyncComponent(() => import('./AppQuestRewardModal.vue')),
+			component: defineAsyncComponent(() => import('./reward/AppQuestRewardModal.vue')),
 			props: {
 				quest: quest.value,
 				title,
 				rewards,
 			},
-			noBackdrop: true,
 			noBackdropClose: true,
-			noEscClose: true,
 			size: 'full',
 		});
 	} catch (e) {
@@ -138,7 +135,7 @@ async function onActionPressed() {
 
 <template>
 	<div ref="root">
-		<AppButton v-if="show" primary solid block @click="onActionPressed">
+		<AppButton v-if="show" primary outline block @click="onActionPressed">
 			<AppLoading v-if="isProcessingAction" class="-loading" hide-label stationary centered />
 			<AppTranslate v-else>
 				{{ isAccept ? 'Accept quest' : 'Collect rewards' }}

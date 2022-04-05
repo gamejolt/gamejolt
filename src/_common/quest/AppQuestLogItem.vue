@@ -37,7 +37,7 @@ const thumbnailIconSize = computed(() => {
 });
 
 const showProgress = computed(() => !quest.value.isExpired && !compact.value);
-const showType = computed(() => !(compact.value || compactStack.value));
+const showType = computed(() => !(compact.value || compactStack.value) && !!quest.value.questType);
 
 const emit = defineEmits({
 	goto: (_id: number) => true,
@@ -67,7 +67,6 @@ function onSelect() {
 		<AppSpacer :horizontal="!compactStack" :vertical="compactStack" :scale="4" />
 
 		<div class="-details">
-			<!-- // TODO(quests) check `series` mapping, check `fallbackSeries` or whatever we'll call it, display nothing if we don't get anything. -->
 			<div v-if="showType" class="-type">{{ quest.questType }}</div>
 
 			<div class="-title">{{ quest.title }}</div>
