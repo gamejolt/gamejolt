@@ -65,8 +65,7 @@ const objectives = computed(() => {
 });
 
 createAppRoute({
-	// TODO(quests) route title
-	routeTitle: computed(() => quest.value?.title ?? ''),
+	// routeTitle is handled through the parent route.
 	onResolved({ payload }) {
 		participatingFriends.value = User.populate(payload.participatingFriends);
 		participatingFriendCount.value = payload.participatingFriendCount;

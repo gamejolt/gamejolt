@@ -8,7 +8,6 @@ import { Api } from '../../../_common/api/api.service';
 import { AppCountdown } from '../../../_common/countdown/countdown';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../_common/loading/loading.vue';
 import { vAppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppQuestLogItem from '../../../_common/quest/AppQuestLogItem.vue';
 import { Quest, QuestRepeatType } from '../../../_common/quest/quest-model';
@@ -122,8 +121,16 @@ function onQuestListChange() {
 	}
 }
 
+const routeTitle = computed(() => {
+	const baseTitle = 'My Quests';
+	if (hasActiveQuest.value) {
+		return quests.value.find(i => i.id === activeQuestId.value)?.title || baseTitle;
+	}
+	return baseTitle;
+});
+
 createAppRoute({
-	routeTitle: `My Quests`,
+	routeTitle,
 	onResolved({ payload }) {
 		const newQuests: Quest[] = [];
 		if (payload.dailyQuests) {
@@ -272,25 +279,6 @@ function onNewQuest(data: Quest) {
 									/>
 								</div>
 							</div>
-
-							<!-- <div v-if="hasCompletedQuests">
-								<div class="-subheading">
-									<AppTranslate>Completed Quests</AppTranslate>
-								</div>
-
-								<AppSpacer vertical :scale="4" />
-
-								<div class="-col">
-									<AppQuestLogItem
-										v-for="quest of completedQuests"
-										:key="quest.id"
-										:quest="quest"
-										:active="activeQuestId === quest.id"
-										compact
-										@goto="onSelect"
-									/>
-								</div>
-							</div> -->
 						</template>
 					</div>
 				</div>
@@ -299,19 +287,6 @@ function onNewQuest(data: Quest) {
 
 		<div ref="body" class="-body">
 			<RouterView @new-quest="onNewQuest" />
-			<div
-				v-if="!hasActiveQuest"
-				style="
-					position: absolute;
-					height: 100%;
-					width: 100%;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-				"
-			>
-				<AppLoading centered hide-label />
-			</div>
 		</div>
 	</div>
 </template>
