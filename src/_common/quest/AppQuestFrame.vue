@@ -109,7 +109,7 @@ $-rotate = rotate($-rotate-value)
 		stroke-width: 6px
 
 		&.-active
-			stroke: var(--theme-highlight)
+			stroke: var(--theme-link)
 
 .-content
 	display: flex
