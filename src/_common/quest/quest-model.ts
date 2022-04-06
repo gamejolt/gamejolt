@@ -38,14 +38,6 @@ export const QuestSeries = {
 	helloWorld: 'hello-world',
 } as const;
 
-const QuestSeriesMap = new Map([
-	[QuestSeries.worldEvent, 'World Event'],
-	[QuestSeries.dailyQuest, 'Daily'],
-	[QuestSeries.weeklyQuest, 'Weekly'],
-	[QuestSeries.helloWorld, 'Hello World'],
-	['', undefined],
-]);
-
 export class Quest extends Model {
 	constructor(data: any = {}) {
 		super(data);
@@ -70,8 +62,8 @@ export class Quest extends Model {
 	declare description: string;
 	declare description_content: string;
 	declare title: string;
-	declare series?: string;
-	declare fallback_series?: string;
+	declare series: string;
+	declare series_display_name: string;
 	declare repeat_type: string;
 	declare ends_on?: number;
 	declare completion_state: number;
@@ -121,7 +113,7 @@ export class Quest extends Model {
 	}
 
 	get questType() {
-		return (QuestSeriesMap.get(this.series ?? '') ?? this.fallback_series)?.toUpperCase();
+		return this.series_display_name.toUpperCase();
 	}
 }
 
