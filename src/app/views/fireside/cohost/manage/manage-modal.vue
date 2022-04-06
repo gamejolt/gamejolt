@@ -32,6 +32,8 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 	commonStore = setup(() => useCommonStore());
 
 	get user() {
+		// TODO(big-pp-event) should we just fetch the user from the controller?
+		// this way we don't have to fetch from common store.
 		return this.commonStore.user;
 	}
 
@@ -73,6 +75,8 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 	}
 
 	get filteredUsers() {
+		// TODO(big-pp-event) filter out unlisted users, except ones the current user can list.
+		// EDIT: might not need to do this at all actually, this is the manage modal after all.
 		if (!this.filterQuery) {
 			return this.users;
 		}

@@ -64,6 +64,7 @@ export default class AppFiresideAvatar extends Vue {
 	}
 
 	get isLive() {
+		// TODO(big-pp-event) this does not take into account unlisted streaming hosts
 		return this.fireside.is_streaming;
 	}
 

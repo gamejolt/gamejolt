@@ -60,12 +60,15 @@ export default class AppFiresideSettingsPopper extends Vue {
 		if (!this.c.rtc.value) {
 			return false;
 		}
-		// Accessing `_users` here instead of `users` so we don't count
-		// ourselves.
-		return this.c.rtc.value._users.length > 0;
+
+		// We only want to show mute controls for remote streaming users.
+		const remoteUsers = this.c.rtc.value.users.filter(
+			rtcUser => rtcUser.remoteVideoUser || rtcUser.remoteChatUser
+		);
+		return remoteUsers.length > 0;
 	}
 
-	get isStreaming() {
+	get isPersonallyStreaming() {
 		return this.c.isPersonallyStreaming.value;
 	}
 
@@ -229,7 +232,7 @@ export default class AppFiresideSettingsPopper extends Vue {
 				<template v-if="shouldShowStreamSettings">
 					<a class="list-group-item has-icon" @click="onClickEditStream">
 						<AppJolticon icon="broadcast" />
-						<AppTranslate v-if="isStreaming">Stream Settings</AppTranslate>
+						<AppTranslate v-if="isPersonallyStreaming">Stream Settings</AppTranslate>
 						<AppTranslate v-else>Start Stream / Voice Chat</AppTranslate>
 					</a>
 				</template>
@@ -242,11 +245,11 @@ export default class AppFiresideSettingsPopper extends Vue {
 					</a>
 				</template>
 
-				<template v-if="isStreaming || c.canExtinguish.value">
+				<template v-if="isPersonallyStreaming || c.canExtinguish.value">
 					<hr />
 
 					<a
-						v-if="isStreaming"
+						v-if="isPersonallyStreaming"
 						class="list-group-item has-icon"
 						@click="onClickStopStreaming"
 					>

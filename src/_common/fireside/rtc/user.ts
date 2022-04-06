@@ -69,7 +69,35 @@ export class FiresideRTCUser {
 	volumeLevel = 0;
 
 	get userModel() {
-		return this.rtc.hosts.find(host => host.uids.indexOf(this.uid) !== -1)?.user ?? null;
+		return this.rtc.hosts.find(host => host.uids.includes(this.uid))?.user ?? null;
+	}
+
+	get isUnlisted() {
+		const host = this.userModel;
+
+		// Treat unknown hosts as unlistable.
+		if (!host) {
+			return true;
+		}
+
+		// Our own user is never unlisted.
+		if (host.id === this.rtc.userId) {
+			return false;
+		}
+
+		// If the host is explicitly unlistable, return.
+		if (this.rtc.hostListability.unlistableHostIds.includes(host.id)) {
+			return true;
+		}
+
+		// If the host isn't explicitly listable, we want to treat it as if
+		// they were unlistable to avoid showing a stream for a host we simply
+		// did not receive the listability for in time.
+		if (!this.rtc.hostListability.listableHostIds.includes(host.id)) {
+			return true;
+		}
+
+		return false;
 	}
 }
 
@@ -181,6 +209,15 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 	rtc.log('Setting new play state.', { ...newState });
 
 	if (newState instanceof FiresideVideoPlayStatePlaying) {
+		if (user.isUnlisted) {
+			const err = new Error('Attempted to start video playback for unlisted user');
+			rtc.logError(err.message);
+			console.error(err);
+
+			setVideoPlayback(user, new FiresideVideoPlayStateStopped());
+			return;
+		}
+
 		try {
 			// If they're a remote user, we need to subscribe to their video first.
 			if (user.remoteVideoUser) {
@@ -269,6 +306,13 @@ export async function startDesktopAudioPlayback(user: FiresideRTCUser) {
 
 	rtc.log(`${_userIdForLog(user)} -> startDesktopAudioPlayback`);
 
+	if (user.isUnlisted) {
+		const err = new Error('Attempted to start desktop audio playback for unlisted user');
+		rtc.logError(err.message);
+		console.error(err);
+		return;
+	}
+
 	try {
 		// Only subscribe for remote users.
 		if (user.remoteVideoUser) {
@@ -337,6 +381,13 @@ export async function startAudioPlayback(user: FiresideRTCUser) {
 	rtc.log(`${_userIdForLog(user)} -> startAudioPlayback`);
 
 	if (!user.remoteChatUser) {
+		return;
+	}
+
+	if (user.isUnlisted) {
+		const err = new Error('Attempted to start audio playback for unlisted user');
+		rtc.logError(err.message);
+		console.error(err);
 		return;
 	}
 

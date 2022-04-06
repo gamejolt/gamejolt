@@ -44,7 +44,7 @@ export default class AppFiresideHostThumb extends Vue {
 	}
 
 	get showingVideoThumb() {
-		return !this.isFocused && this.host.hasVideo;
+		return !this.isFocused && this.host.hasVideo && !this.host.isUnlisted;
 	}
 
 	get tooltip() {

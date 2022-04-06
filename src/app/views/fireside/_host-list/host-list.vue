@@ -47,6 +47,10 @@ export default class AppFiresideHostList extends Vue {
 		return this.c.canManageCohosts.value;
 	}
 
+	get listableUsers() {
+		return (this.c.rtc.value?.users ?? []).filter(rtcUser => !rtcUser.isUnlisted);
+	}
+
 	onClickStickerButton() {
 		setDrawerOpen(this.drawerStore, true);
 	}
@@ -63,7 +67,7 @@ export default class AppFiresideHostList extends Vue {
 			<AppFiresideCohostManage v-if="canManageCohosts" />
 
 			<AppFiresideHostThumb
-				v-for="host of c.rtc.value.users"
+				v-for="host of listableUsers"
 				:key="host.uid"
 				class="-host-thumb"
 				:host="host"

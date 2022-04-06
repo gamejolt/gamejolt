@@ -39,7 +39,13 @@ export const FiresideRTCKey = Symbol();
 
 export interface FiresideRTCHost {
 	user: User;
+	isUnlisted: boolean;
 	uids: number[];
+}
+
+export interface FiresideRTCHostListability {
+	listableHostIds: number[];
+	unlistableHostIds: number[];
 }
 
 type Options = { isMuted?: boolean };
@@ -55,6 +61,7 @@ export class FiresideRTC {
 		public readonly chatChannelName: string,
 		public chatToken: string,
 		public readonly hosts: FiresideRTCHost[],
+		public readonly hostListability: FiresideRTCHostListability,
 		{ isMuted }: Options
 	) {
 		this.isMuted = isMuted ?? false;
@@ -116,6 +123,12 @@ export class FiresideRTC {
 
 	get users() {
 		// We put the local user first if they're currently streaming.
+
+		// TODO: we have a bug here. we might already have a remote user with the uid of the local user.
+		// what happens if you try to start streaming when youre already streaming in a different tab?
+		// it'll add the local user anyways and then we'll have two users for yourself.
+		// Also - is the comment above outdated? we don't seem to check if the localUser is streaming,
+		// but from what I can tell it IS being initialized even during preview.
 		return Object.freeze([...(this.localUser ? [this.localUser] : []), ...this._users]);
 	}
 
@@ -123,7 +136,7 @@ export class FiresideRTC {
 	 * If the current user is currently streaming in this fireside. This will
 	 * only return valid data once everything gets subscribed to.
 	 */
-	get isStreaming() {
+	get isPersonallyStreaming() {
 		return this.localUser !== null;
 	}
 
@@ -154,6 +167,7 @@ export function createFiresideRTC(
 	chatChannelName: string,
 	chatToken: string,
 	hosts: FiresideRTCHost[],
+	hostListability: FiresideRTCHostListability,
 	options: Options = {}
 ) {
 	const rtc = reactive(
@@ -167,6 +181,7 @@ export function createFiresideRTC(
 			chatChannelName,
 			chatToken,
 			hosts,
+			hostListability,
 			options
 		)
 	) as FiresideRTC;
@@ -477,6 +492,11 @@ export function chooseFocusedRTCUser(rtc: FiresideRTC) {
 	let bestScore = -1;
 
 	for (const user of rtc.users) {
+		// Do not consider unlisted users.
+		if (user.isUnlisted) {
+			continue;
+		}
+
 		const score =
 			(user.hasVideo ? 4 : 0) + (user.hasMicAudio ? 2 : 0) + (user.hasDesktopAudio ? 1 : 0);
 		if (score > bestScore) {
@@ -494,6 +514,7 @@ function _findOrAddUser(rtc: FiresideRTC, remoteUser: IAgoraRTCRemoteUser) {
 		return null;
 	}
 
+	// This will find the local user as well as remote users.
 	let user = rtc.users.find(i => i.uid === remoteUser.uid);
 
 	if (!user) {

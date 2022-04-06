@@ -18,6 +18,7 @@ import {
 	stopStreaming,
 } from '../../../../_common/fireside/rtc/producer';
 import {
+	chooseFocusedRTCUser,
 	createFiresideRTC,
 	destroyFiresideRTC,
 	FiresideRTCHost,
@@ -33,6 +34,7 @@ import { ChatStore, ChatStoreKey, clearChat, loadChat } from '../../chat/chat-st
 import { joinInstancedRoomChannel, leaveChatRoom, setGuestChatToken } from '../../chat/client';
 import {
 	createFiresideChannel,
+	EVENT_HOST_LISTABILITY,
 	EVENT_STICKER_PLACEMENT,
 	EVENT_STREAMING_UID,
 	EVENT_UPDATE,
@@ -301,19 +303,58 @@ export class AppFiresideContainer extends Vue {
 			return;
 		}
 
+		// --- Join Grid DM channel.
+
+		if (this.user) {
+			const dmChannel = createFiresideChannel({
+				fireside: c.fireside,
+				topic: `fireside-dm:${c.fireside.hash}:${this.user.id}`,
+				socket: this.grid.socket,
+				user: this.user,
+				authToken,
+			});
+
+			// Subscribe to the host listability event.
+			dmChannel.socketChannel.on(
+				EVENT_HOST_LISTABILITY,
+				this.onGridHostListability.bind(this)
+			);
+
+			try {
+				await new Promise<void>((resolve, reject) => {
+					dmChannel.socketChannel
+						.join()
+						.receive('error', reject)
+						.receive('ok', () => {
+							c.gridDMChannel.value = dmChannel;
+							this.grid!.firesideChannels.push(dmChannel);
+							resolve();
+						});
+				});
+			} catch (error: any) {
+				console.debug(`[FIRESIDE] Setup failure 4.`, error);
+				if (error && error.reason === 'blocked') {
+					c.status.value = 'blocked';
+				} else {
+					c.status.value = 'setup-failed';
+				}
+				return;
+			}
+		}
+
 		// Now join the chat's room channel.
 		try {
 			const chatChannel = await joinInstancedRoomChannel(this.chat, c.fireside.chat_room_id);
 
 			if (!chatChannel) {
-				console.debug(`[FIRESIDE] Setup failure 4.`);
+				console.debug(`[FIRESIDE] Setup failure 5.`);
 				c.status.value = 'setup-failed';
 				return;
 			}
 
 			c.chatChannel.value = chatChannel;
 		} catch (error) {
-			console.debug(`[FIRESIDE] Setup failure 5.`, error);
+			console.debug(`[FIRESIDE] Setup failure 6.`, error);
 			c.status.value = 'setup-failed';
 			return;
 		}
@@ -360,6 +401,12 @@ export class AppFiresideContainer extends Vue {
 
 			c.fireside.assign(payload.fireside);
 
+			console.log(payload.hostListability);
+			c.hostListability.value = {
+				listableHostIds: payload.hostListability?.listableHostIds ?? [],
+				unlistableHostIds: payload.hostListability?.unlistableHostIds ?? [],
+			};
+
 			// If they have a host role, or if this fireside is actively
 			// streaming, we'll get streaming tokens from the fetch payload. In
 			// that case, we want to set up the RTC stuff.
@@ -400,10 +447,11 @@ export class AppFiresideContainer extends Vue {
 		console.debug(`[FIRESIDE] Disconnecting from fireside.`);
 		c.status.value = 'disconnected';
 
-		if (this.grid?.connected && c.gridChannel.value) {
+		if (this.grid?.connected && (c.gridChannel.value || c.gridDMChannel.value)) {
 			this.grid.leaveFireside(c.fireside);
 		}
 		c.gridChannel.value = undefined;
+		c.gridDMChannel.value = undefined;
 
 		if (this.chat?.connected && c.chatChannel.value) {
 			leaveChatRoom(this.chat, c.chatChannel.value.room);
@@ -472,6 +520,17 @@ export class AppFiresideContainer extends Vue {
 		}
 
 		if (!c.rtc.value) {
+			if (!c.hostListability.value) {
+				console.warn(
+					'[FIRESIDE] Expected host listability to be set by the time Fireside RTC is initialized'
+				);
+
+				c.hostListability.value = {
+					listableHostIds: [],
+					unlistableHostIds: [],
+				};
+			}
+
 			c.rtc.value = createFiresideRTC(
 				c.fireside,
 				this.user?.id ?? null,
@@ -482,6 +541,7 @@ export class AppFiresideContainer extends Vue {
 				payload.chatChannelName,
 				payload.chatToken,
 				hosts ?? this.getHostsFromStreamingInfo(payload) ?? [],
+				c.hostListability.value,
 				{ isMuted: c.isMuted }
 			);
 		} else if (!c.rtc.value.producer) {
@@ -490,18 +550,28 @@ export class AppFiresideContainer extends Vue {
 	}
 
 	private getHostsFromStreamingInfo(streamingInfo: any) {
-		if (!streamingInfo.hosts) {
-			return;
+		const result: FiresideRTCHost[] = [];
+
+		for (const field of ['hosts', 'unlistedHosts']) {
+			const isUnlisted = field === 'unlistedHosts';
+			if (!streamingInfo[field]) {
+				continue;
+			}
+
+			const streamingUids = streamingInfo.streamingUids ?? [];
+			const hostUsers = User.populate(streamingInfo[field] ?? []) as User[];
+			const hosts = hostUsers.map(user => {
+				return {
+					user,
+					isUnlisted,
+					uids: streamingUids[user.id] ?? [],
+				} as FiresideRTCHost;
+			});
+
+			result.push(...hosts);
 		}
 
-		const streamingUids = streamingInfo.streamingUids ?? [];
-		const hosts: FiresideRTCHost[] = (User.populate(streamingInfo.hosts ?? []) as User[]).map(
-			user => ({
-				user,
-				uids: streamingUids[user.id] ?? [],
-			})
-		);
-		return hosts;
+		return result.length == 0 ? undefined : result;
 	}
 
 	private destroyRtc() {
@@ -548,8 +618,11 @@ export class AppFiresideContainer extends Vue {
 				'title',
 				'expires_on',
 				'is_expired',
+				// TODO(big-pp-event) is_streaming can't be sent through fireside-updated
+				// event since this should be specific to the user now that we have unlisted hosts.
 				'is_streaming',
 				'is_draft',
+				// TODO(big-pp-event) same issue as with is_streaming applies here as well.
 				'member_count',
 				'community_links',
 			])
@@ -652,6 +725,7 @@ export class AppFiresideContainer extends Vue {
 			return;
 		}
 
+		// TODO(big-pp-event) does is_streaming here have to be true only if listable hosts are streaming for the current user?
 		if (c.fireside.is_streaming && payload.streaming_info) {
 			this.upsertRtc(payload.streaming_info, { hosts: newHosts });
 		} else {
@@ -677,6 +751,7 @@ export class AppFiresideContainer extends Vue {
 		} else {
 			c.rtc.value.hosts.push({
 				user: user,
+				isUnlisted: payload.is_unlisted,
 				uids: [payload.streaming_uid],
 			});
 		}
@@ -694,6 +769,23 @@ export class AppFiresideContainer extends Vue {
 		if (payload.user_id !== this.user?.id) {
 			addStickerToTarget(c.stickerTargetController, placement);
 			c.fireside.addStickerToCount(placement.sticker);
+		}
+	}
+
+	onGridHostListability(payload: {
+		listable_host_ids?: number[];
+		unlistable_host_ids?: number[];
+	}) {
+		console.debug('[FIRESIDE] Grid host listability.', payload);
+		const c = this.controller;
+
+		c.hostListability.value = {
+			listableHostIds: payload.listable_host_ids ?? [],
+			unlistableHostIds: payload.unlistable_host_ids ?? [],
+		};
+
+		if (c.rtc.value) {
+			chooseFocusedRTCUser(c.rtc.value);
 		}
 	}
 }

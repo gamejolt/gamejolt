@@ -12,7 +12,7 @@ import { configClientAllowStreaming } from '../../../../_common/config/config.se
 import { getDeviceBrowser } from '../../../../_common/device/device.service';
 import { formatDuration } from '../../../../_common/filters/duration';
 import { Fireside, FIRESIDE_EXPIRY_THRESHOLD } from '../../../../_common/fireside/fireside.model';
-import { FiresideRTC } from '../../../../_common/fireside/rtc/rtc';
+import { FiresideRTC, FiresideRTCHostListability } from '../../../../_common/fireside/rtc/rtc';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -53,10 +53,14 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 	const chat = ref<ChatClient>();
 
 	const gridChannel = ref<FiresideChannel>();
+	const gridDMChannel = ref<FiresideChannel>();
 	const chatChannel = ref<ChatRoomChannel>();
 	const expiryInterval = ref<NodeJS.Timer>();
 	const chatPreviousConnectedState = ref<boolean>();
 	const gridPreviousConnectedState = ref<boolean>();
+
+	// Keeps track of which hosts in the fireside are listable by the current user.
+	const hostListability = ref<FiresideRTCHostListability>();
 
 	/**
 	 * Visually shows a warning to the owner when the fireside's time is running
@@ -87,9 +91,10 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 
 	const isDraft = computed(() => fireside?.is_draft ?? true);
 	const isStreaming = computed(
+		// TODO(big-pp-event) consider checking against listable hosts as well here.
 		() => !!(fireside?.is_streaming && rtc.value && rtc.value.users.length > 0)
 	);
-	const isPersonallyStreaming = computed(() => rtc.value?.isStreaming ?? false);
+	const isPersonallyStreaming = computed(() => rtc.value?.isPersonallyStreaming ?? false);
 
 	const isStreamingElsewhere = computed(() => {
 		if (!rtc.value?.userId) {
@@ -182,10 +187,12 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		onRetry,
 		chat,
 		gridChannel,
+		gridDMChannel,
 		chatChannel,
 		expiryInterval,
 		chatPreviousConnectedState,
 		gridPreviousConnectedState,
+		hostListability,
 		hasExpiryWarning,
 		isShowingStreamOverlay,
 		isShowingOverlayPopper,

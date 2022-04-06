@@ -117,7 +117,7 @@ export default class AppFiresideStream extends Vue {
 	}
 
 	get hasVideo() {
-		return this.rtcUser.hasVideo;
+		return this.rtcUser.hasVideo && !this.rtcUser.isUnlisted;
 	}
 
 	get isLoadingVideo() {

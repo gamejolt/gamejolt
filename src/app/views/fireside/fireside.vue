@@ -582,6 +582,7 @@ export default class RouteFireside extends BaseRouteComponent {
 
 			<div v-if="shouldShowChatMembers" class="-trailing">
 				<div class="-chat-members">
+					<!-- TODO(big-pp-event) might want to filter out chat-users to exclude unlisted hosts here -->
 					<AppFiresideChatMembers
 						:chat-users="c.chatUsers.value"
 						:chat-room="c.chatRoom.value"
