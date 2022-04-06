@@ -42,7 +42,6 @@ export function createQuestStore(user: Ref<User | null>) {
 		isLoading,
 		hasLoaded,
 		quests,
-		// fetchQuests,
 		addQuests,
 	};
 	provide(QuestStoreKey, c);

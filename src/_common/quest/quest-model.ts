@@ -70,7 +70,6 @@ export class Quest extends Model {
 	declare description: string;
 	declare description_content: string;
 	declare title: string;
-	// declare quest_type?: string;
 	declare series?: string;
 	declare fallback_series?: string;
 	declare repeat_type: string;

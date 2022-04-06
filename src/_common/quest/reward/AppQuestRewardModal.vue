@@ -201,20 +201,18 @@ function onAnimationEnd(id: number) {
 						:key="i"
 						class="-quest-title-header"
 					>
-						<!-- TODO(quests) don't show the 'x' for exp rewards -->
 						{{ amount + 'x ' }}
 
+						<!-- TODO(quests) present jolticon -->
 						<template v-if="img_url">
 							<img :src="img_url" />
 						</template>
-						<!-- TODO(quests) present jolticon -->
 
 						<span>{{ ' ' + name }}</span>
 					</div>
 				</template>
 			</div>
 
-			<!-- TODO(quests) reward animations -->
 			<template v-if="rewards.length > 0">
 				<div class="-backpack">
 					<div

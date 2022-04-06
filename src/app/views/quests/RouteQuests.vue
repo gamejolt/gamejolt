@@ -5,9 +5,7 @@ import { useRoute } from 'vue-router';
 import { getParam } from '../../../utils/router';
 import { sleep } from '../../../utils/utils';
 import { Api } from '../../../_common/api/api.service';
-import { AppCountdown } from '../../../_common/countdown/countdown';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { vAppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppQuestLogItem from '../../../_common/quest/AppQuestLogItem.vue';
 import { Quest, QuestRepeatType } from '../../../_common/quest/quest-model';
@@ -236,14 +234,12 @@ function onNewQuest(data: Quest) {
 							</div>
 						</template>
 						<template v-else>
-							<!-- TODO(quests) daily, weekly, other quests -->
 							<div v-if="hasDailyQuests">
 								<div class="-subheading -row">
 									<AppTranslate>Daily Quests</AppTranslate>
 									<div v-if="dailyQuests[0].ends_on" class="-countdown">
 										<!-- TODO(quests) clock jolticon -->
-										<AppJolticon icon="radio-circle" />
-										<!-- TODO(quests) daily quests, AppTimeAgo, better countdown timer -->
+										<!-- <AppJolticon icon="radio-circle" /> -->
 										<AppCountdown :end="dailyQuests[0].ends_on" />
 									</div>
 								</div>

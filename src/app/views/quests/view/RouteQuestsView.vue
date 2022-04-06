@@ -190,7 +190,6 @@ function onNewQuest(data: Quest) {
 </script>
 
 <template>
-	<!-- TODO(quests) not-found state? -->
 	<template v-if="quest">
 		<div style="position: relative">
 			<AppMediaItemCover :media-item="quest.header" :max-height="250" />
