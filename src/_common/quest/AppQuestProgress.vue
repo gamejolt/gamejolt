@@ -39,7 +39,7 @@ const barCount = computed(() => (isSegmented.value ? maxProgressTicks.value : 1)
 		<template v-for="i of barCount" :key="i">
 			<AppProgressBar
 				class="-bar"
-				:percent="isPercent ? percent : i < progress ? 100 : 0"
+				:percent="isPercent ? percent : i <= progress ? 100 : 0"
 				:glow="isPercent || i <= progress"
 				thin
 				hide-zero
