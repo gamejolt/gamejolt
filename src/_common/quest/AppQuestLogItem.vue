@@ -2,6 +2,7 @@
 import { computed, PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppSpacer from '../spacer/AppSpacer.vue';
+import AppTranslate from '../translate/AppTranslate.vue';
 import AppQuestProgress from './AppQuestProgress.vue';
 import AppQuestThumbnail from './AppQuestThumbnail.vue';
 import { Quest } from './quest-model';
@@ -37,7 +38,12 @@ const thumbnailIconSize = computed(() => {
 });
 
 const showProgress = computed(() => !quest.value.isExpired && !compact.value);
-const showType = computed(() => !(compact.value || compactStack.value) && !!quest.value.questType);
+
+const showType = computed(
+	() =>
+		!(compact.value || compactStack.value) &&
+		!!(quest.value.translatableQuestType || quest.value.questType)
+);
 
 const emit = defineEmits({
 	goto: (_id: number) => true,
@@ -67,7 +73,16 @@ function onSelect() {
 		<AppSpacer :horizontal="!compactStack" :vertical="compactStack" :scale="4" />
 
 		<div class="-details">
-			<div v-if="showType" class="-type">{{ quest.questType }}</div>
+			<div v-if="showType" class="-type">
+				<template v-if="!!quest.translatableQuestType">
+					<AppTranslate>
+						{{ quest.translatableQuestType }}
+					</AppTranslate>
+				</template>
+				<template v-else>
+					{{ quest.questType }}
+				</template>
+			</div>
 
 			<div class="-title">{{ quest.title }}</div>
 

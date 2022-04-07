@@ -38,6 +38,13 @@ export const QuestSeries = {
 	helloWorld: 'hello-world',
 } as const;
 
+const QuestSeriesDisplayNameMap = new Map<string, string>([
+	[QuestSeries.worldEvent, 'World Event'],
+	[QuestSeries.dailyQuest, 'Daily'],
+	[QuestSeries.weeklyQuest, 'Weekly'],
+	[QuestSeries.helloWorld, 'Hello World'],
+]);
+
 export class Quest extends Model {
 	constructor(data: any = {}) {
 		super(data);
@@ -110,6 +117,10 @@ export class Quest extends Model {
 		}
 
 		return this.completion_state === QuestCompletionState.allComplete;
+	}
+
+	get translatableQuestType() {
+		return QuestSeriesDisplayNameMap.get(this.series)?.toUpperCase();
 	}
 
 	get questType() {
