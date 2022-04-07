@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router';
 import { getParam } from '../../../utils/router';
 import { sleep } from '../../../utils/utils';
 import { Api } from '../../../_common/api/api.service';
+import { AppCountdown } from '../../../_common/countdown/countdown';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import { vAppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppQuestLogItem from '../../../_common/quest/AppQuestLogItem.vue';

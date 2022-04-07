@@ -471,14 +471,6 @@ export class GridClient {
 			this.tabLeader = new TabLeader('grid_notification_channel_' + user.id);
 			this.tabLeader.init();
 
-			channel.on('new-quest-notification', (payload: NewNotificationPayload) => {
-				if (cancelToken.isCanceled) {
-					return;
-				}
-
-				this.handleNotification(payload);
-			});
-
 			channel.on('new-notification', (payload: NewNotificationPayload) => {
 				if (cancelToken.isCanceled) {
 					return;
