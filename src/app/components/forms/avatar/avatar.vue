@@ -157,7 +157,10 @@ export default class FormAvatar extends mixins(Wrapper) implements FormOnLoad, F
 		</template>
 
 		<AppFormGroup name="disable_gravatar" :label="$gettext(`Disable Gravatar?`)">
-			<AppFormControlToggle class="pull-right" @changed="gravatarToggled()" />
+			<template #inline-control>
+				<AppFormControlToggle @changed="gravatarToggled()" />
+			</template>
+
 			<p class="help-block">
 				<AppTranslate>
 					By default we fallback to using Gravatar if you have one. If you would like to

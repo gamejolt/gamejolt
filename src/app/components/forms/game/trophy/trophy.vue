@@ -172,10 +172,10 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 
 		<AppFormGroup name="secret" :label="$gettext(`Secret`)">
 			<p class="help-block">
-				<AppTranslate
-					>Secret trophies hide everything but their titles from players until they are
-					achieved.</AppTranslate
-				>
+				<AppTranslate>
+					Secret trophies hide everything but their titles from players until they are
+					achieved.
+				</AppTranslate>
 			</p>
 			<AppFormControlToggle />
 		</AppFormGroup>

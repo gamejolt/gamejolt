@@ -97,6 +97,8 @@ export default class RouteSettings extends BaseRouteComponent {
 						<FormSettings />
 
 						<template v-if="hasDev">
+							<hr class="fieldset-divider" />
+							
 							<FormSettingsDev />
 						</template>
 					</div>

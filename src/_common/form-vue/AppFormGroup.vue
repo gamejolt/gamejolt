@@ -9,6 +9,7 @@ import {
 	ref,
 	shallowRef,
 	toRefs,
+	useSlots,
 } from 'vue';
 import { CancelToken } from '../../utils/cancel-token';
 import { titleCase } from '../../utils/string';
@@ -141,12 +142,15 @@ const props = defineProps({
 });
 
 const form = useForm()!;
+const slots = useSlots();
 
 const c = createFormGroup(toRefs(props));
 provide(Key, c);
 
 const { humanLabel } = c;
 const labelClasses = computed(() => [props.labelClass, { 'sr-only': props.hideLabel }]);
+
+const hasInlineControl = computed(() => !!slots['inline-control']);
 </script>
 
 <template>
@@ -156,10 +160,31 @@ const labelClasses = computed(() => [props.labelClass, { 'sr-only': props.hideLa
 			optional,
 		}"
 	>
-		<label class="control-label" :class="labelClasses" :for="`${form.name}-${name}`">
-			<slot name="label">{{ humanLabel }}</slot>
-		</label>
+		<template v-if="!hasInlineControl">
+			<label class="control-label" :class="labelClasses" :for="`${form.name}-${name}`">
+				<slot name="label">{{ humanLabel }}</slot>
+			</label>
+		</template>
+		<template v-else>
+			<div class="-inline-control-wrapper">
+				<label class="control-label" :class="labelClasses" :for="`${form.name}-${name}`">
+					<slot name="label">{{ humanLabel }}</slot>
+				</label>
+				<slot name="inline-control" />
+			</div>
+		</template>
 
 		<slot />
 	</div>
 </template>
+
+<style lang="stylus" scoped>
+.-inline-control-wrapper
+	display: flex
+	margin-bottom: $form-common-spacing
+	justify-content: space-between
+	align-items: center
+
+	.control-label
+		margin-bottom: 0
+</style>
