@@ -322,7 +322,7 @@ export default class AppStickerLayerDrawer extends Vue {
 		);
 	}
 
-	@Watch('isLoading')
+	@Watch('isLoading', { immediate: true })
 	async onIsLoadingChange() {
 		await nextTick();
 
