@@ -135,8 +135,8 @@ function _createInviewConfig() {
 	position: fixed
 
 .-anchor-top
-	top: 0
+	top: var(--scroll-affix-top, 0)
 
 .-anchor-bottom
-	bottom: 0
+	bottom: var(--scroll-affix-bottom, 0)
 </style>
