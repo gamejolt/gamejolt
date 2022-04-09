@@ -1,19 +1,24 @@
-<script lang="ts" setup>
-import { defineAsyncComponent, PropType, ref, toRefs } from 'vue';
+<script lang="ts">
+import { watch } from '@vue/runtime-core';
+import { computed, defineAsyncComponent, PropType, ref, toRefs } from 'vue';
 import { Api } from '../api/api.service';
 import AppButton from '../button/AppButton.vue';
 import AppLoading from '../loading/loading.vue';
 import { showModal } from '../modal/modal.service';
 import { Quest } from './quest-model';
 import { QuestObjectiveReward } from './quest-objective-reward-model';
-import { QuestReward } from './quest-reward';
+import { QuestReward } from './reward/AppQuestRewardModal.vue';
+</script>
 
+<script lang="ts" setup>
 const props = defineProps({
 	quest: {
 		type: Object as PropType<Quest>,
 		required: true,
 	},
-	show: { type: Boolean },
+	show: {
+		type: Boolean,
+	},
 	isAccept: {
 		type: Boolean,
 	},
@@ -27,6 +32,14 @@ const emit = defineEmits({
 
 const root = ref<HTMLElement>();
 const isProcessingAction = ref(false);
+const hasError = ref(false);
+
+watch(quest, _ => {
+	// Reset our error state of the quest was updated from something.
+	hasError.value = false;
+});
+
+const shouldShow = computed(() => show.value && !hasError.value);
 
 async function onActionPressed() {
 	if (isProcessingAction.value) {
@@ -43,7 +56,13 @@ async function onActionPressed() {
 	}
 
 	try {
-		const payload = await Api.sendRequest(url, {});
+		const payload = await Api.sendRequest(
+			url,
+			{},
+			{
+				detach: true,
+			}
+		);
 
 		if (payload.quest) {
 			emit('newQuest', new Quest(payload.quest));
@@ -59,30 +78,17 @@ async function onActionPressed() {
 
 		const compactRewards = new Map<string, QuestReward>();
 
-		const addOrUpdateReward = function (options: {
-			key: string;
-			img_url?: string;
-			amount: number;
-			name: string;
-		}) {
+		const addOrUpdateReward = (options: QuestReward & { key: string }) => {
 			const { key, amount } = options;
 			if (compactRewards.has(key)) {
 				compactRewards.get(key)!.amount += amount;
 			} else {
-				compactRewards.set(key, new QuestReward(options));
+				compactRewards.set(key, options);
 			}
 		};
 
 		for (const reward of objectiveRewards) {
-			/* if (reward.isExp) {
-				// TODO(quests) experience rewards
-				addOrUpdateReward({
-					key: 'exp',
-					amount: reward.fallback_amount,
-					img_url: reward.fallback_media?.mediaserver_url,
-					name: reward.name,
-				});
-			} else */ if (reward.isSticker) {
+			if (reward.isSticker) {
 				for (const { amount, sticker } of reward.stickers) {
 					addOrUpdateReward({
 						key: `sticker-${sticker.id}`,
@@ -91,22 +97,35 @@ async function onActionPressed() {
 						name: reward.name,
 					});
 				}
-			} /* else if (reward.isTrophy) {
-				// TODO(quests) trophy rewards
+			} else if (reward.isExp) {
+				// TODO(quests) experience rewards
 				addOrUpdateReward({
-					key: `trophy-${reward.id}`,
+					// Combine all exp rewards into 1 listing
+					key: 'exp',
 					amount: reward.fallback_amount,
 					img_url: reward.fallback_media?.mediaserver_url,
 					name: reward.name,
+					icon: 'exp',
+					isExp: true,
 				});
+			} else if (reward.isTrophy) {
+				for (const trophy of reward.trophies) {
+					addOrUpdateReward({
+						key: `trophy-${trophy.id}`,
+						amount: 1,
+						img_url: trophy.img_thumbnail,
+						name: reward.name,
+						icon: 'trophy',
+					});
+				}
 			} else {
 				addOrUpdateReward({
-					key: `${reward.name}-${reward.id}`,
+					key: `unknown-${reward.name}-${reward.id}`,
 					amount: reward.fallback_amount,
 					img_url: reward.fallback_media?.mediaserver_url,
 					name: reward.name,
 				});
-			} */
+			}
 		}
 
 		const rewards = [...compactRewards.values()];
@@ -127,6 +146,8 @@ async function onActionPressed() {
 			size: 'full',
 		});
 	} catch (e) {
+		// Mark this component as having an error, hiding the action button from other inputs.
+		hasError.value = true;
 		console.error(e);
 	} finally {
 		isProcessingAction.value = false;
@@ -136,7 +157,7 @@ async function onActionPressed() {
 
 <template>
 	<div ref="root">
-		<AppButton v-if="show" primary outline block @click="onActionPressed">
+		<AppButton v-if="shouldShow" primary outline block @click="onActionPressed">
 			<AppLoading v-if="isProcessingAction" class="-loading" hide-label stationary centered />
 			<AppTranslate v-else>
 				{{ isAccept ? 'Accept quest' : 'Claim rewards' }}

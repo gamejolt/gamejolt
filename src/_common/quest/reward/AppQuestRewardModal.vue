@@ -1,6 +1,6 @@
 <script lang="ts">
 import { nextTick, onMounted, PropType, ref, Ref, toRefs } from 'vue';
-import { Jolticon } from '../../jolticon/AppJolticon.vue';
+import AppJolticon, { Jolticon } from '../../jolticon/AppJolticon.vue';
 import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
 import AppSpacer from '../../spacer/AppSpacer.vue';
@@ -10,8 +10,15 @@ import AppQuestThumbnail from '../AppQuestThumbnail.vue';
 import illBackpackClosed from '../ill/backpack-closed.svg';
 import illBackpackOpen from '../ill/backpack-open.svg';
 import { Quest } from '../quest-model';
-import { QuestReward } from '../quest-reward';
 import AppQuestRewardItem from './AppQuestRewardItem.vue';
+
+export interface QuestReward {
+	amount: number;
+	name: string;
+	img_url: undefined | string;
+	icon?: Jolticon;
+	isExp?: boolean;
+}
 
 export interface QuestRewardData {
 	/**
@@ -29,16 +36,15 @@ export interface QuestRewardData {
 	 */
 	icon?: Jolticon;
 
-	// /** The offset-path trajectory of this reward item */
-	// path: string;
-
-	// /**
-	//  * If the offset-path is starting from the right side of the backpack asset.
-	//  * Determines our rotation animation direction.
-	//  */
-	// fromRight: boolean;
-
+	/**
+	 * Used so {@link AppQuestRewardItem} can create its trajectory path.
+	 */
 	random: number;
+
+	/**
+	 * Exp rewards shouldn't show an 'x' after their count.
+	 */
+	isExp: boolean;
 }
 
 export const DurationBackpackItem = 1_500;
@@ -101,11 +107,13 @@ async function startBackpackFlow() {
 	await sleep(DurationBackpackItem + DurationBackpackOpen);
 
 	let id = 0;
-	for (const { amount, img_url } of rewards.value) {
+	for (const { amount, img_url, icon, isExp } of rewards.value) {
 		for (let i = 0; i < amount; i++) {
 			rewardElements.value.push({
 				id,
 				img_url,
+				icon,
+				isExp: isExp === true,
 				random: Math.random(),
 			});
 			++id;
@@ -197,16 +205,15 @@ function onAnimationEnd(id: number) {
 					</span>
 
 					<div
-						v-for="({ img_url, name, amount }, i) of rewards"
+						v-for="({ img_url, name, amount, icon, isExp }, i) of rewards"
 						:key="i"
 						class="-quest-title-header"
 					>
-						{{ amount + 'x ' }}
+						{{ amount + (isExp ? ' ' : 'x ') }}
 
+						<img v-if="img_url" class="-reward-img" :src="img_url" alt="" />
 						<!-- TODO(quests) present jolticon -->
-						<template v-if="img_url">
-							<img :src="img_url" />
-						</template>
+						<AppJolticon v-else :icon="icon || 'other-os'" />
 
 						<span>{{ ' ' + name }}</span>
 					</div>
@@ -257,6 +264,10 @@ function onAnimationEnd(id: number) {
 </template>
 
 <style lang="stylus" scoped>
+$-z-title = 3
+$-z-rewards = 2
+$-z-backpack = 1
+
 .-quest-rewards-modal
 	background-color: rgba(black, 0.37)
 
@@ -292,7 +303,7 @@ function onAnimationEnd(id: number) {
 
 .-quest-title
 	position: relative
-	z-index: 3
+	z-index: $-z-title
 	font-size: calc(min(16px, 1.5vh))
 
 .-quest-title-header
@@ -303,8 +314,11 @@ function onAnimationEnd(id: number) {
 		height: calc(min(32px, 3vh))
 		width: @height
 
+.-reward-img
+	rounded-corners()
+
 .-backpack
-	z-index: 1
+	z-index: $-z-backpack
 	position: absolute
 	bottom: 0
 	pointer-events: none
@@ -345,11 +359,11 @@ function onAnimationEnd(id: number) {
 	top: 0
 	right: 0
 	bottom: 0
-	z-index: 2
+	z-index: $-z-rewards
 
 .-thumbnail
 	width: calc(min(300px, 60vw, 40vh))
-	z-index: 1
+	z-index: $-z-backpack
 	height: @width
 	position: absolute
 	bottom: calc(40px + 25vh)

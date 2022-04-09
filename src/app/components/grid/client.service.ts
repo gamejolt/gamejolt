@@ -73,6 +73,7 @@ interface BootstrapPayload {
 		hasNewUnlockedStickers: boolean;
 		newQuestIds: number[];
 		questActivityIds: number[];
+		questResetHour: number;
 	};
 }
 
@@ -621,6 +622,9 @@ export class GridClient {
 			appStore.setHasNewUnlockedStickers(payload.body.hasNewUnlockedStickers);
 			appStore.addNewQuestIds(payload.body.newQuestIds);
 			appStore.addQuestActivityIds(payload.body.questActivityIds);
+			if (payload.body.questResetHour) {
+				appStore.setQuestStoreResetHour(payload.body.questResetHour);
+			}
 			this.bootstrapTimestamp = payload.body.lastNotificationTime;
 
 			this.bootstrapReceived = true;

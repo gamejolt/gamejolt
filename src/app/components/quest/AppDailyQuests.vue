@@ -1,0 +1,154 @@
+<script lang="ts">
+import { computed, toRefs } from 'vue';
+import { AppCountdown } from '../../../_common/countdown/countdown';
+import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
+import AppLoadingFade from '../../../_common/loading/AppLoadingFade.vue';
+import AppQuestLogItem from '../../../_common/quest/AppQuestLogItem.vue';
+import { Screen } from '../../../_common/screen/screen-service';
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import { illNoCommentsSmall } from '../../img/ill/illustrations';
+import { useQuestStore } from '../../store/quest';
+</script>
+
+<script lang="ts" setup>
+const props = defineProps({
+	/**
+	 * Prevents the quest items from being clicked when we determine them to be
+	 * stale.
+	 */
+	disableOnExpiry: {
+		type: Boolean,
+	},
+	/**
+	 * Slices the list of quests to display only 1 row.
+	 */
+	singleRow: {
+		type: Boolean,
+	},
+	activeQuestId: {
+		type: Number,
+		default: undefined,
+	},
+});
+
+const { disableOnExpiry, singleRow } = toRefs(props);
+
+const { dailyQuests, fetchDailyQuests, isLoading, isDailyStale, dailyResetDate } = useQuestStore();
+
+const disableItems = computed(() => disableOnExpiry.value && isDailyStale.value);
+
+const displayQuests = computed(() => {
+	const limit = singleRow.value ? 3 : undefined;
+	return dailyQuests.value.slice(0, limit);
+});
+
+const showPlaceholders = computed(() => {
+	if (isLoading.value) {
+		return displayQuests.value.length === 0;
+	}
+	return false;
+});
+
+function onListClick() {
+	if (!disableItems.value || isLoading.value) {
+		return;
+	}
+
+	fetchDailyQuests();
+}
+</script>
+
+<template>
+	<AppLoadingFade :is-loading="isLoading">
+		<div class="-header">
+			<slot name="header">
+				<h4 class="section-header" :class="{ h6: Screen.isXs }">
+					<AppTranslate>Daily Quests</AppTranslate>
+				</h4>
+			</slot>
+
+			<span class="help-inline">
+				<a class="link-unstyled" @click="fetchDailyQuests">
+					<AppTranslate
+						v-if="isDailyStale || (dailyResetDate && dailyResetDate < Date.now())"
+					>
+						Refresh
+					</AppTranslate>
+					<template v-else-if="dailyResetDate">
+						<!-- TODO(quests) clock jolticon -->
+						<!-- <AppJolticon icon="clock" /> -->
+						<AppCountdown :end="dailyResetDate" />
+					</template>
+				</a>
+			</span>
+		</div>
+
+		<div class="-list">
+			<template v-if="showPlaceholders || displayQuests.length > 0">
+				<div
+					class="-list-grid"
+					:class="{
+						'-expired': disableItems,
+					}"
+					@click="onListClick"
+				>
+					<template v-if="showPlaceholders">
+						<div v-for="i of 3" :key="'p-' + i" class="-placeholder-daily" />
+					</template>
+					<template v-else>
+						<AppQuestLogItem
+							v-for="(quest, i) of displayQuests"
+							:key="i"
+							:quest="quest"
+							:active="activeQuestId === quest.id"
+							:is-disabled="disableItems"
+							compact-stack
+						/>
+					</template>
+				</div>
+			</template>
+			<template v-else>
+				<AppIllustration class="-no-quests" :src="illNoCommentsSmall">
+					<AppTranslate> You have no daily quests. Check for more later! </AppTranslate>
+				</AppIllustration>
+			</template>
+		</div>
+	</AppLoadingFade>
+</template>
+
+<style lang="stylus" scoped>
+$-placeholder-height = 150px
+
+.-header
+	display: flex
+	justify-content: space-between
+	align-items: center
+	margin-bottom: ($line-height-computed / 2)
+
+	h4
+		margin-bottom: 0
+
+.-list
+	margin-bottom: $line-height-computed
+
+.-list-grid
+	display: grid
+	grid-gap: 16px
+	grid-template-columns: repeat(3, minmax(0, 1fr))
+
+.-expired
+	opacity: 0.6
+
+	&:hover
+		cursor: pointer
+
+.-placeholder-daily
+	background-color: var(--theme-bg-subtle)
+	rounded-corners-lg()
+	display: flex
+	height: $-placeholder-height
+	flex: auto
+
+.-no-quests
+	min-height: $-placeholder-height
+</style>

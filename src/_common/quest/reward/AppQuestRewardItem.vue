@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { Screen } from '../../screen/screen-service';
 import { DurationBackpackItem, QuestRewardData } from './AppQuestRewardModal.vue';
 
@@ -47,9 +48,9 @@ const pathData = computed(() => {
 			animationDuration: DurationBackpackItem + 'ms',
 		}"
 	>
-		<img v-if="data.img_url" :src="data.img_url" alt="" />
+		<img v-if="data.img_url" class="-img" :src="data.img_url" alt="" />
 		<!-- TODO(quests) present jolticon -->
-		<!-- <AppJolticon v-else :icon="data.icon || 'other-os'" /> -->
+		<AppJolticon v-else :icon="data.icon || 'other-os'" />
 	</div>
 </template>
 
@@ -73,6 +74,9 @@ $-backpack-item-size = 64px
 		font-size: $-backpack-item-size * 0.75
 		width: $-backpack-item-size
 		height: $-backpack-item-size
+
+.-img
+	rounded-corners()
 
 @keyframes anim-item-flight
 	0%

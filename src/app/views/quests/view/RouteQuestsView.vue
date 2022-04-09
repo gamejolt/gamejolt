@@ -18,6 +18,7 @@ import { $gettext, $gettextInterpolate } from '../../../../_common/translate/tra
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../_common/user/user.model';
 import { useAppStore } from '../../../store/index';
+import { useQuestStore } from '../../../store/quest';
 
 export default {
 	...defineAppRouteOptions({
@@ -46,10 +47,7 @@ export default {
 
 <script lang="ts" setup>
 const c = useAppStore();
-
-const emit = defineEmits({
-	newQuest: (_data: Quest) => true,
-});
+const { updateQuest } = useQuestStore();
 
 const quest = ref<Quest>();
 const participatingFriends = ref<User[]>([]);
@@ -172,7 +170,7 @@ const friendsText = computed(() => {
 	return '';
 });
 
-function updateQuest(data: Quest) {
+function onNewQuest(data: Quest) {
 	quest.value = data;
 
 	if (!data.is_new) {
@@ -181,10 +179,7 @@ function updateQuest(data: Quest) {
 	if (!data.has_activity) {
 		c.clearQuestActivityIds([data.id], { pushView: true });
 	}
-}
 
-function onNewQuest(data: Quest) {
-	emit('newQuest', data);
 	updateQuest(data);
 }
 </script>
@@ -337,7 +332,7 @@ $-font-size = $font-size-small
 	align-items: center
 
 .-header-shadow
-	background-image: linear-gradient(to bottom, rgba(black, 0.5), transparent 50%)
+	background-image: linear-gradient(to bottom, rgba(black, 0.5), transparent)
 	position: absolute
 	left: 0
 	top: 0
@@ -353,6 +348,7 @@ $-font-size = $font-size-small
 	align-items: center
 	color: white
 	font-size: $font-size-large
+	font-weight: 700
 
 	.jolticon
 		font-size: 24px

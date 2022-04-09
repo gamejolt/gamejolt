@@ -26,9 +26,22 @@ const props = defineProps({
 	compactStack: {
 		type: Boolean,
 	},
+	/**
+	 * If we should handle this quest as if it were expired.
+	 *
+	 * Used so we can manually invalidate daily quests when we consider them to
+	 * be stale.
+	 */
+	isDisabled: {
+		type: Boolean,
+	},
 });
 
-const { quest, active, compact, compactStack } = toRefs(props);
+const { quest, active, compact, compactStack, isDisabled } = toRefs(props);
+
+const emit = defineEmits({
+	goto: (_id: number) => true,
+});
 
 const thumbnailIconSize = computed(() => {
 	if (compact.value) {
@@ -39,15 +52,19 @@ const thumbnailIconSize = computed(() => {
 
 const showProgress = computed(() => !quest.value.isExpired && !compact.value);
 
+const asExpired = computed(
+	() => isDisabled.value || (quest.value.isExpired && !quest.value.has_activity)
+);
+
 const showType = computed(
 	() =>
 		!(compact.value || compactStack.value) &&
 		!!(quest.value.translatableQuestType || quest.value.questType)
 );
 
-const emit = defineEmits({
-	goto: (_id: number) => true,
-});
+const location = computed(() =>
+	isDisabled.value ? undefined : { name: 'quests.view', params: { id: quest.value.id } }
+);
 
 function onSelect() {
 	emit('goto', quest.value.id);
@@ -55,15 +72,17 @@ function onSelect() {
 </script>
 
 <template>
-	<RouterLink
+	<component
+		:is="isDisabled ? 'div' : RouterLink"
 		class="-item"
 		:class="{
 			'-active': active,
 			'-compact': compact,
 			'-compact-stack': compactStack,
-			'-expired': quest.isExpired && !quest.has_activity,
+			'-expired': asExpired,
+			'-hoverable': !isDisabled,
 		}"
-		:to="{ name: 'quests.view', params: { id: quest.id } }"
+		:to="location"
 		@click="onSelect"
 	>
 		<div class="-thumb">
@@ -97,7 +116,7 @@ function onSelect() {
 				/>
 			</template>
 		</div>
-	</RouterLink>
+	</component>
 </template>
 
 <style lang="stylus" scoped>
@@ -106,8 +125,9 @@ function onSelect() {
 	padding: 8px 16px 8px 8px
 	border-radius: $border-radius-large
 
-	&:hover
-		background-color: unquote('rgba(var(--theme-bg-rgb), 0.5)')
+	&.-hoverable
+		&:hover
+			background-color: unquote('rgba(var(--theme-bg-rgb), 0.5)')
 
 	&.-expired
 		.-title
@@ -139,8 +159,13 @@ function onSelect() {
 			max-width: 80px
 
 		.-title
-			font-size: $font-size-base
+			font-size: $font-size-small
 			text-align: center
+			height: 100%
+			display: flex
+			flex-direction: column
+			justify-content: center
+			align-items: center
 
 .-thumb
 	width: 30%

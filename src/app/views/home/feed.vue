@@ -29,8 +29,10 @@ import { ActivityFeedView } from '../../components/activity/feed/view';
 import { onFiresideStart } from '../../components/grid/client.service';
 import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
+import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
 import { useAppStore } from '../../store';
 import { useLibraryStore } from '../../store/library';
+import { useQuestStore } from '../../store/quest';
 import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
 import AppHomeFireside from './_fireside/AppHomeFireside.vue';
 
@@ -56,6 +58,7 @@ export class RouteActivityFeedController {
 		AppScrollAffix,
 		AppNavTabList,
 		AppHomeFireside,
+		AppDailyQuests,
 		AppConfigLoaded,
 		RouteHomeActivity: defineAsyncComponent(() =>
 			asyncRouteLoader(router, import('./RouteHomeActivity.vue'))
@@ -76,6 +79,7 @@ export class RouteActivityFeedController {
 export default class RouteActivityFeed extends BaseRouteComponent {
 	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
+	questStore = setup(() => useQuestStore());
 	libraryStore = shallowSetup(() => useLibraryStore());
 
 	get user() {
@@ -184,6 +188,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			.reverse();
 
 		this.refreshFiresides();
+		this.refreshQuests();
 		this.firesideStart$ = onFiresideStart.subscribe(() => this.refreshFiresides());
 
 		if (payload.eventFireside) {
@@ -221,6 +226,14 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		}
 		this.isLoadingFiresides = false;
 		this.isFiresidesBootstrapped = true;
+	}
+
+	async refreshQuests() {
+		if (!this.user) {
+			return;
+		}
+
+		return this.questStore.fetchDailyQuests();
 	}
 }
 </script>
@@ -349,6 +362,8 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			</template>
 
 			<template v-if="!Screen.isMobile" #right>
+				<AppDailyQuests v-if="user" disable-on-expiry single-row />
+
 				<AppHomeFireside
 					:featured-fireside="featuredFireside"
 					:user-fireside="userFireside"

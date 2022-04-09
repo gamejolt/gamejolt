@@ -26,6 +26,7 @@ import type { GridClient } from '../components/grid/client.service';
 import { GridClientLazy } from '../components/lazy';
 import { CommunityStates } from './community-state';
 import { LibraryStore } from './library';
+import { QuestStore } from './quest';
 
 // the two types an event notification can assume, either "activity" for the post activity feed or "notifications"
 type UnreadItemType = 'activity' | 'notifications';
@@ -46,11 +47,13 @@ export function createAppStore({
 	commonStore,
 	sidebarStore,
 	libraryStore,
+	questStore,
 }: {
 	router: Router;
 	commonStore: CommonStore;
 	sidebarStore: SidebarStore;
 	libraryStore: LibraryStore;
+	questStore: QuestStore;
 }) {
 	const grid = ref<GridClient>();
 	let _wantsGrid = false;
@@ -141,10 +144,12 @@ export function createAppStore({
 	watch(
 		() => commonStore.user,
 		user => {
-			if (!user) {
-				clearNewQuestIds('all', { pushView: false });
-				clearQuestActivityIds('all', { pushView: false });
+			if (user) {
+				return;
 			}
+
+			clearNewQuestIds('all', { pushView: false });
+			clearQuestActivityIds('all', { pushView: false });
 		}
 	);
 
@@ -396,10 +401,20 @@ export function createAppStore({
 
 	function addNewQuestIds(ids: number[]) {
 		_addQuestIds(newQuestIds, ids);
+		for (const quest of questStore.quests.value) {
+			if (ids.includes(quest.id)) {
+				quest.is_new = true;
+			}
+		}
 	}
 
 	function addQuestActivityIds(ids: number[]) {
 		_addQuestIds(questActivityIds, ids);
+		for (const quest of questStore.quests.value) {
+			if (ids.includes(quest.id)) {
+				quest.has_activity = true;
+			}
+		}
 	}
 
 	function _clearQuestIds(
@@ -425,6 +440,10 @@ export function createAppStore({
 
 	function clearQuestActivityIds(ids: number[] | 'all', { pushView }: { pushView: boolean }) {
 		_clearQuestIds(questActivityIds, ids, { type: 'quest-activity', pushView });
+	}
+
+	function setQuestStoreResetHour(hour: number) {
+		questStore.setDailyResetHour(hour);
 	}
 
 	function _setBootstrapped() {
@@ -690,6 +709,7 @@ export function createAppStore({
 		addQuestActivityIds,
 		clearNewQuestIds,
 		clearQuestActivityIds,
+		setQuestStoreResetHour,
 		joinCommunity,
 		leaveCommunity,
 		setActiveCommunity,

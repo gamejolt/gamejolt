@@ -8,6 +8,7 @@ import './main.styl';
 import { BannerStoreKey, createBannerStore } from './store/banner';
 import { AppStoreKey, createAppStore } from './store/index';
 import { createLibraryStore, LibraryStoreKey } from './store/library';
+import { createQuestStore, QuestStoreKey } from './store/quest';
 import { router } from './views/index';
 
 export async function createApp() {
@@ -20,12 +21,21 @@ export async function createApp() {
 	const sidebarStore = createSidebarStore();
 	const libraryStore = createLibraryStore({ router });
 	const bannerStore = createBannerStore({ commonStore, router });
-	const appStore = createAppStore({ router, commonStore, sidebarStore, libraryStore });
+	const questStore = createQuestStore({ user: commonStore.user });
+
+	const appStore = createAppStore({
+		router,
+		commonStore,
+		sidebarStore,
+		libraryStore,
+		questStore,
+	});
 
 	// Section stores.
 	app.provide(BannerStoreKey, bannerStore);
 	app.provide(SidebarStoreKey, sidebarStore);
 	app.provide(LibraryStoreKey, libraryStore);
+	app.provide(QuestStoreKey, questStore);
 	app.provide(AppStoreKey, appStore);
 
 	if (GJ_IS_DESKTOP_APP) {

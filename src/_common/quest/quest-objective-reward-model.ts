@@ -1,6 +1,8 @@
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { StickerReward } from '../sticker/sticker-reward-model';
+import { BaseTrophy } from '../trophy/base-trophy.model';
+import { UserSiteTrophy } from '../user/trophy/site-trophy.model';
 
 const QuestRewardTypes = {
 	exp: 0,
@@ -16,6 +18,10 @@ export class QuestObjectiveReward extends Model {
 		if (data.stickers) {
 			this.stickers = StickerReward.populate(data.stickers);
 		}
+
+		if (data.trophies) {
+			this.trophies = UserSiteTrophy.populate(data.trophies);
+		}
 	}
 
 	declare objective_id: number;
@@ -24,19 +30,20 @@ export class QuestObjectiveReward extends Model {
 
 	declare type: number;
 	declare stickers: StickerReward[];
+	declare trophies: BaseTrophy[];
 
 	declare fallback_name: string;
 	declare fallback_amount: number;
 	declare fallback_media?: MediaItem;
 
-	get isExp() {
-		return this.type === QuestRewardTypes.exp;
-	}
-
 	get isSticker() {
 		return (
 			this.type === QuestRewardTypes.sticker || this.type === QuestRewardTypes.randomSticker
 		);
+	}
+
+	get isExp() {
+		return this.type === QuestRewardTypes.exp;
 	}
 
 	get isTrophy() {
@@ -46,16 +53,16 @@ export class QuestObjectiveReward extends Model {
 	get name() {
 		let result = this.fallback_name;
 		switch (this.type) {
+			case QuestRewardTypes.sticker:
+				result = 'Sticker';
+				break;
+
 			case QuestRewardTypes.exp:
 				result = 'Experience';
 				break;
 
-			case QuestRewardTypes.sticker:
-				result = 'Stickers';
-				break;
-
 			case QuestRewardTypes.siteTrophy:
-				result = 'Trophies';
+				result = 'Trophy';
 				break;
 		}
 

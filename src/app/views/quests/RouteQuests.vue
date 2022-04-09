@@ -5,18 +5,18 @@ import { useRoute } from 'vue-router';
 import { getParam } from '../../../utils/router';
 import { sleep } from '../../../utils/utils';
 import { Api } from '../../../_common/api/api.service';
-import { AppCountdown } from '../../../_common/countdown/countdown';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import { vAppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppQuestLogItem from '../../../_common/quest/AppQuestLogItem.vue';
-import { Quest, QuestRepeatType } from '../../../_common/quest/quest-model';
-import { useQuestStore } from '../../../_common/quest/quest-store';
+import { Quest } from '../../../_common/quest/quest-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
 import { illNoComments, illNoCommentsSmall } from '../../img/ill/illustrations';
 import { useAppStore } from '../../store/index';
+import { useQuestStore } from '../../store/quest';
 
 export default {
 	...defineAppRouteOptions({
@@ -43,20 +43,12 @@ const ShellTopNavHeight = 56;
 <script lang="ts" setup>
 const route = useRoute();
 const appStore = useAppStore();
-const { isLoading, hasLoaded, addQuests, quests } = useQuestStore();
+const { isLoading, hasLoaded, addQuests, dailyQuests, quests } = useQuestStore();
 
 const body = ref<HTMLElement>();
 const sidebar = ref<HTMLElement>();
 const sidebarInner = ref<HTMLElement>();
 const questList = ref<HTMLElement>();
-
-const dailyQuests = computed(() =>
-	quests.value.filter(i => i.repeat_type === QuestRepeatType.daily)
-);
-
-const activeQuests = computed(() =>
-	quests.value.filter(i => i.repeat_type !== QuestRepeatType.daily)
-);
 
 const showLoading = computed(() => !hasLoaded.value && isLoading.value);
 
@@ -66,7 +58,9 @@ const activeQuestId = computed(() => {
 	}
 
 	const questId = getParam(route, 'id');
-	return questId ? parseInt(questId, 10) : null;
+	if (questId) {
+		return parseInt(questId, 10);
+	}
 });
 
 const hasActiveQuest = computed(() => !!activeQuestId.value);
@@ -75,10 +69,7 @@ const routingToId = ref<number>();
 const showBody = computed(() => routingToId.value || hasActiveQuest.value);
 const showSidebar = computed(() => !Screen.isMobile || !showBody.value);
 
-const hasDailyQuests = computed(() => dailyQuests.value.length > 0);
-const hasActiveQuests = computed(() => activeQuests.value.length > 0);
-
-const hasQuests = computed(() => hasDailyQuests.value || hasActiveQuests.value);
+const hasQuests = computed(() => dailyQuests.value.length > 0 || quests.value.length > 0);
 
 watch(
 	() => activeQuestId.value,
@@ -167,14 +158,6 @@ function clearUnknownWatermarks() {
 
 	_currentQuestIds.clear();
 }
-
-function onNewQuest(data: Quest) {
-	const index = quests.value.findIndex(i => i.id === data.id);
-	if (index === -1) {
-		return;
-	}
-	quests.value.splice(index, 1, data);
-}
 </script>
 
 <template>
@@ -200,22 +183,24 @@ function onNewQuest(data: Quest) {
 					<AppSpacer vertical :scale="10" />
 
 					<div class="-sections">
-						<template v-if="showLoading">
-							<div>
-								<div class="-placeholder -placeholder-subheading" />
-								<AppSpacer vertical :scale="4" />
-								<div class="-grid">
-									<div
-										v-for="i of 3"
-										:key="i"
-										class="-placeholder -placeholder-daily"
-									/>
+						<AppDailyQuests
+							v-if="showLoading || dailyQuests.length > 0"
+							:active-quest-id="activeQuestId"
+						>
+							<template #header>
+								<div class="-subheading">
+									<AppTranslate>Daily Quests</AppTranslate>
 								</div>
-							</div>
+							</template>
+						</AppDailyQuests>
 
+						<template v-if="showLoading">
+							<!-- Active Quests -->
 							<div>
 								<div class="-placeholder -placeholder-subheading" />
+
 								<AppSpacer vertical :scale="4" />
+
 								<div class="-col">
 									<div
 										v-for="i of 1"
@@ -235,31 +220,8 @@ function onNewQuest(data: Quest) {
 							</div>
 						</template>
 						<template v-else>
-							<div v-if="hasDailyQuests">
-								<div class="-subheading -row">
-									<AppTranslate>Daily Quests</AppTranslate>
-									<div v-if="dailyQuests[0].ends_on" class="-countdown">
-										<!-- TODO(quests) clock jolticon -->
-										<!-- <AppJolticon icon="radio-circle" /> -->
-										<AppCountdown :end="dailyQuests[0].ends_on" />
-									</div>
-								</div>
-
-								<AppSpacer vertical :scale="4" />
-
-								<div class="-grid">
-									<AppQuestLogItem
-										v-for="quest of dailyQuests"
-										:key="quest.id"
-										:quest="quest"
-										:active="activeQuestId === quest.id"
-										compact-stack
-										@goto="onSelect"
-									/>
-								</div>
-							</div>
-
-							<div v-if="hasActiveQuests">
+							<!-- Active Quests -->
+							<div v-if="quests.length > 0">
 								<div class="-subheading">
 									<AppTranslate>Active Quests</AppTranslate>
 								</div>
@@ -268,7 +230,7 @@ function onNewQuest(data: Quest) {
 
 								<div class="-col">
 									<AppQuestLogItem
-										v-for="quest of activeQuests"
+										v-for="quest of quests"
 										:key="quest.id"
 										:quest="quest"
 										:active="activeQuestId === quest.id"
@@ -283,7 +245,7 @@ function onNewQuest(data: Quest) {
 		</div>
 
 		<div ref="body" class="-body">
-			<RouterView @new-quest="onNewQuest" />
+			<RouterView />
 		</div>
 	</div>
 </template>
@@ -389,7 +351,6 @@ $-font-size-subheading = $font-size-small
 .-placeholder-subheading
 	width: 120px
 	height: floor($-font-size-subheading * $line-height-base)
-
 
 .-grid
 .-row
