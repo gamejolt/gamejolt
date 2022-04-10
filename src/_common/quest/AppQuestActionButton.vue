@@ -108,16 +108,15 @@ async function onActionPressed() {
 					icon: 'exp',
 					isExp: true,
 				});
-			} else if (reward.isTrophy) {
-				for (const trophy of reward.trophies) {
-					addOrUpdateReward({
-						key: `trophy-${trophy.id}`,
-						amount: 1,
-						img_url: trophy.img_thumbnail,
-						name: reward.name,
-						icon: 'trophy',
-					});
-				}
+			} else if (reward.isTrophy && !!reward.trophy) {
+				const { id, img_thumbnail } = reward.trophy;
+				addOrUpdateReward({
+					key: `trophy-${id}`,
+					amount: 1,
+					img_url: img_thumbnail,
+					name: reward.name,
+					icon: 'trophy',
+				});
 			} else {
 				addOrUpdateReward({
 					key: `unknown-${reward.name}-${reward.id}`,

@@ -32,8 +32,6 @@ import { QuestStore } from './quest';
 type UnreadItemType = 'activity' | 'notifications';
 type TogglableLeftPane = '' | 'chat' | 'context' | 'library';
 
-type QuestIdSet = Set<number>;
-
 export const AppStoreKey: InjectionKey<AppStore> = Symbol('app-store');
 
 export type AppStore = ReturnType<typeof createAppStore>;
@@ -47,13 +45,13 @@ export function createAppStore({
 	commonStore,
 	sidebarStore,
 	libraryStore,
-	questStore,
+	getQuestStore,
 }: {
 	router: Router;
 	commonStore: CommonStore;
 	sidebarStore: SidebarStore;
 	libraryStore: LibraryStore;
-	questStore: QuestStore;
+	getQuestStore: () => QuestStore;
 }) {
 	const grid = ref<GridClient>();
 	let _wantsGrid = false;
@@ -74,8 +72,7 @@ export function createAppStore({
 	const unreadNotificationsCount = ref(0);
 	const hasNewFriendRequests = ref(false);
 	const hasNewUnlockedStickers = ref(false);
-	const newQuestIds = ref<QuestIdSet>(new Set());
-	const questActivityIds = ref<QuestIdSet>(new Set());
+
 	const notificationState = ref<ActivityFeedState>();
 
 	const mobileCbarShowing = ref(false);
@@ -137,20 +134,6 @@ export function createAppStore({
 		// the page without overlaying. Example is that context panes show
 		// in-page on large displays.
 		() => !overlayedLeftPane.value && !overlayedRightPane.value
-	);
-
-	// Clear out quest ids when we lose our user so our shell quest icon doesn't
-	// show incorrect data.
-	watch(
-		() => commonStore.user,
-		user => {
-			if (user) {
-				return;
-			}
-
-			clearNewQuestIds('all', { pushView: false });
-			clearQuestActivityIds('all', { pushView: false });
-		}
 	);
 
 	// If we were offline, but we're online now, make sure our library is
@@ -391,59 +374,6 @@ export function createAppStore({
 
 	function setHasNewUnlockedStickers(has: boolean) {
 		hasNewUnlockedStickers.value = has;
-	}
-
-	function _addQuestIds(list: Ref<QuestIdSet>, ids: number[]) {
-		for (const id of ids) {
-			list.value.add(id);
-		}
-	}
-
-	function addNewQuestIds(ids: number[]) {
-		_addQuestIds(newQuestIds, ids);
-		for (const quest of questStore.quests.value) {
-			if (ids.includes(quest.id)) {
-				quest.is_new = true;
-			}
-		}
-	}
-
-	function addQuestActivityIds(ids: number[]) {
-		_addQuestIds(questActivityIds, ids);
-		for (const quest of questStore.quests.value) {
-			if (ids.includes(quest.id)) {
-				quest.has_activity = true;
-			}
-		}
-	}
-
-	function _clearQuestIds(
-		list: Ref<QuestIdSet>,
-		ids: number[] | 'all',
-		{ type, pushView }: { type: 'new-quest' | 'quest-activity'; pushView: boolean }
-	) {
-		const clearIds = ids === 'all' ? list.value.values() : ids;
-
-		for (const questId of clearIds) {
-			list.value.delete(questId);
-			if (pushView) {
-				grid.value?.pushViewNotifications(type, {
-					questId,
-				});
-			}
-		}
-	}
-
-	function clearNewQuestIds(ids: number[] | 'all', { pushView }: { pushView: boolean }) {
-		_clearQuestIds(newQuestIds, ids, { type: 'new-quest', pushView });
-	}
-
-	function clearQuestActivityIds(ids: number[] | 'all', { pushView }: { pushView: boolean }) {
-		_clearQuestIds(questActivityIds, ids, { type: 'quest-activity', pushView });
-	}
-
-	function setQuestStoreResetHour(hour: number) {
-		questStore.setDailyResetHour(hour);
 	}
 
 	function _setBootstrapped() {
@@ -703,13 +633,6 @@ export function createAppStore({
 		setNotificationCount,
 		setHasNewFriendRequests,
 		setHasNewUnlockedStickers,
-		newQuestIds,
-		questActivityIds,
-		addNewQuestIds,
-		addQuestActivityIds,
-		clearNewQuestIds,
-		clearQuestActivityIds,
-		setQuestStoreResetHour,
 		joinCommunity,
 		leaveCommunity,
 		setActiveCommunity,
@@ -717,6 +640,7 @@ export function createAppStore({
 		viewCommunity,
 		featuredPost,
 		tillGridBootstrapped,
+		getQuestStore,
 	};
 
 	return c;

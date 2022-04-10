@@ -1,8 +1,7 @@
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
+import { SiteTrophy } from '../site/trophy/trophy.model';
 import { StickerReward } from '../sticker/sticker-reward-model';
-import { BaseTrophy } from '../trophy/base-trophy.model';
-import { UserSiteTrophy } from '../user/trophy/site-trophy.model';
 
 const QuestRewardTypes = {
 	exp: 0,
@@ -19,8 +18,8 @@ export class QuestObjectiveReward extends Model {
 			this.stickers = StickerReward.populate(data.stickers);
 		}
 
-		if (data.trophies) {
-			this.trophies = UserSiteTrophy.populate(data.trophies);
+		if (data.trophy) {
+			this.trophy = new SiteTrophy(data.trophy);
 		}
 	}
 
@@ -30,7 +29,7 @@ export class QuestObjectiveReward extends Model {
 
 	declare type: number;
 	declare stickers: StickerReward[];
-	declare trophies: BaseTrophy[];
+	declare trophy?: SiteTrophy;
 
 	declare fallback_name: string;
 	declare fallback_amount: number;

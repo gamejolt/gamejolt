@@ -21,15 +21,18 @@ export async function createApp() {
 	const sidebarStore = createSidebarStore();
 	const libraryStore = createLibraryStore({ router });
 	const bannerStore = createBannerStore({ commonStore, router });
-	const questStore = createQuestStore({ user: commonStore.user });
 
 	const appStore = createAppStore({
 		router,
 		commonStore,
 		sidebarStore,
 		libraryStore,
-		questStore,
+		getQuestStore() {
+			return questStore;
+		},
 	});
+
+	const questStore = createQuestStore({ user: commonStore.user, grid: appStore.grid });
 
 	// Section stores.
 	app.provide(BannerStoreKey, bannerStore);

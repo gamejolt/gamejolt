@@ -17,7 +17,6 @@ import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext, $gettextInterpolate } from '../../../../_common/translate/translate.service';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../_common/user/user.model';
-import { useAppStore } from '../../../store/index';
 import { useQuestStore } from '../../../store/quest';
 
 export default {
@@ -46,8 +45,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const c = useAppStore();
-const { updateQuest } = useQuestStore();
+const { updateQuest, clearNewQuestIds, clearQuestActivityIds } = useQuestStore();
 
 const quest = ref<Quest>();
 const participatingFriends = ref<User[]>([]);
@@ -174,10 +172,10 @@ function onNewQuest(data: Quest) {
 	quest.value = data;
 
 	if (!data.is_new) {
-		c.clearNewQuestIds([data.id], { pushView: true });
+		clearNewQuestIds([data.id], { pushView: true });
 	}
 	if (!data.has_activity) {
-		c.clearQuestActivityIds([data.id], { pushView: true });
+		clearQuestActivityIds([data.id], { pushView: true });
 	}
 
 	updateQuest(data);

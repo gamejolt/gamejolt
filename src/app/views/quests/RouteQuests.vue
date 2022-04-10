@@ -15,7 +15,6 @@ import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
 import { illNoComments, illNoCommentsSmall } from '../../img/ill/illustrations';
-import { useAppStore } from '../../store/index';
 import { useQuestStore } from '../../store/quest';
 
 export default {
@@ -42,8 +41,18 @@ const ShellTopNavHeight = 56;
 
 <script lang="ts" setup>
 const route = useRoute();
-const appStore = useAppStore();
-const { isLoading, hasLoaded, addQuests, dailyQuests, quests } = useQuestStore();
+const {
+	isLoading,
+	hasLoaded,
+	addQuests,
+	dailyQuests,
+	quests,
+	allQuests,
+	newQuestIds,
+	questActivityIds,
+	clearNewQuestIds,
+	clearQuestActivityIds,
+} = useQuestStore();
 
 const body = ref<HTMLElement>();
 const sidebar = ref<HTMLElement>();
@@ -138,21 +147,19 @@ createAppRoute({
 });
 
 function clearUnknownWatermarks() {
-	const c = appStore;
-
-	const _newIds = [...c.newQuestIds.value.values()];
-	const _activityIds = [...c.questActivityIds.value.values()];
-	const _currentQuestIds = new Set(quests.value.map(i => i.id));
+	const _newIds = [...newQuestIds.value.values()];
+	const _activityIds = [...questActivityIds.value.values()];
+	const _currentQuestIds = new Set(allQuests.value.map(i => i.id));
 
 	for (const id of _newIds) {
 		if (!_currentQuestIds.has(id)) {
-			c.clearNewQuestIds([id], { pushView: false });
+			clearNewQuestIds([id], { pushView: false });
 		}
 	}
 
 	for (const id of _activityIds) {
 		if (!_currentQuestIds.has(id)) {
-			c.clearQuestActivityIds([id], { pushView: false });
+			clearQuestActivityIds([id], { pushView: false });
 		}
 	}
 

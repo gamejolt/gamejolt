@@ -3,15 +3,26 @@ import { getCurrentServerTime } from '../../utils/server-time';
 import { Api } from '../../_common/api/api.service';
 import { Quest, QuestRepeatType } from '../../_common/quest/quest-model';
 import { User } from '../../_common/user/user.model';
+import { GridClient } from '../components/grid/client.service';
 
 export type QuestStore = ReturnType<typeof createQuestStore>;
+type QuestIdSet = Set<number>;
 
 export const QuestStoreKey: InjectionKey<QuestStore> = Symbol('quest-store');
 
-export function createQuestStore({ user }: { user: Ref<User | null> }) {
+export function createQuestStore({
+	user,
+	grid,
+}: {
+	user: Ref<User | null>;
+	grid: Ref<GridClient | undefined>;
+}) {
 	const isLoading = ref(true);
 	const hasLoaded = ref(false);
 	const _isLoadingDailyQuests = ref(false);
+
+	const newQuestIds = ref<QuestIdSet>(new Set());
+	const questActivityIds = ref<QuestIdSet>(new Set());
 
 	const dailyResetDate = ref<number>();
 	const isDailyStale = ref(false);
@@ -44,14 +55,27 @@ export function createQuestStore({ user }: { user: Ref<User | null> }) {
 				return;
 			}
 
-			_clearQuests();
+			isDailyStale.value = false;
+			if (_dailyQuestExpiryTicker) {
+				window.clearInterval(_dailyQuestExpiryTicker);
+			}
+
+			addQuests([], { overwrite: true });
+			clearNewQuestIds('all', { pushView: false });
+			clearQuestActivityIds('all', { pushView: false });
 			isLoading.value = true;
 			hasLoaded.value = false;
 			_isLoadingDailyQuests.value = false;
-			isDailyStale.value = false;
+		}
+	);
 
-			if (_dailyQuestExpiryTicker) {
-				window.clearInterval(_dailyQuestExpiryTicker);
+	watch(
+		() => isDailyStale.value,
+		isStale => {
+			if (isStale) {
+				addNewQuestIds([-1]);
+			} else {
+				clearNewQuestIds([-1], { pushView: false });
 			}
 		}
 	);
@@ -140,11 +164,6 @@ export function createQuestStore({ user }: { user: Ref<User | null> }) {
 		hasLoaded.value = true;
 	}
 
-	function _clearQuests() {
-		addQuests([], { overwrite: true });
-		hasLoaded.value = false;
-	}
-
 	function updateQuest(data: Quest) {
 		_allQuests.value.find(i => i.id === data.id)?.assign(data);
 	}
@@ -177,6 +196,55 @@ export function createQuestStore({ user }: { user: Ref<User | null> }) {
 		dailyResetDate.value = utcExpiry.getTime();
 	}
 
+	function addNewQuestIds(ids: number[]) {
+		_addQuestIds(newQuestIds, ids);
+		for (const quest of _allQuests.value) {
+			if (ids.includes(quest.id)) {
+				quest.is_new = true;
+			}
+		}
+	}
+
+	function addQuestActivityIds(ids: number[]) {
+		_addQuestIds(questActivityIds, ids);
+		for (const quest of _allQuests.value) {
+			if (ids.includes(quest.id)) {
+				quest.has_activity = true;
+			}
+		}
+	}
+
+	function clearNewQuestIds(ids: number[] | 'all', { pushView }: { pushView: boolean }) {
+		_clearQuestIds(newQuestIds, ids, { type: 'new-quest', pushView });
+	}
+
+	function clearQuestActivityIds(ids: number[] | 'all', { pushView }: { pushView: boolean }) {
+		_clearQuestIds(questActivityIds, ids, { type: 'quest-activity', pushView });
+	}
+
+	function _addQuestIds(list: Ref<QuestIdSet>, ids: number[]) {
+		for (const id of ids) {
+			list.value.add(id);
+		}
+	}
+
+	function _clearQuestIds(
+		list: Ref<QuestIdSet>,
+		ids: number[] | 'all',
+		{ type, pushView }: { type: 'new-quest' | 'quest-activity'; pushView: boolean }
+	) {
+		const clearIds = ids === 'all' ? list.value.values() : ids;
+
+		for (const questId of clearIds) {
+			list.value.delete(questId);
+			if (pushView) {
+				grid.value?.pushViewNotifications(type, {
+					questId,
+				});
+			}
+		}
+	}
+
 	const c = {
 		isLoading,
 		hasLoaded,
@@ -184,6 +252,7 @@ export function createQuestStore({ user }: { user: Ref<User | null> }) {
 		dailyQuests,
 		/** All quests, other than {@link QuestRepeatType.daily} */
 		quests,
+		allQuests: computed(() => _allQuests.value),
 		addQuests,
 		fetchDailyQuests,
 		/**
@@ -194,6 +263,12 @@ export function createQuestStore({ user }: { user: Ref<User | null> }) {
 		setDailyResetHour,
 		dailyResetDate,
 		isDailyStale,
+		addNewQuestIds,
+		addQuestActivityIds,
+		clearNewQuestIds,
+		clearQuestActivityIds,
+		newQuestIds,
+		questActivityIds,
 	};
 	return c;
 }

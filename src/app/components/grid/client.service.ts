@@ -188,7 +188,7 @@ function clearNotifications(
 			{
 				const questId = data.questId ?? -1;
 				if (questId !== -1) {
-					appStore.clearNewQuestIds([questId], { pushView: false });
+					appStore.getQuestStore().clearNewQuestIds([questId], { pushView: false });
 				}
 			}
 			break;
@@ -196,7 +196,7 @@ function clearNotifications(
 			{
 				const questId = data.questId ?? -1;
 				if (questId !== -1) {
-					appStore.clearQuestActivityIds([questId], { pushView: false });
+					appStore.getQuestStore().clearQuestActivityIds([questId], { pushView: false });
 				}
 			}
 			break;
@@ -575,7 +575,7 @@ export class GridClient {
 								break;
 							}
 
-							const c = this._getAppStore();
+							const c = this._getAppStore().getQuestStore();
 							const model = notification.action_model;
 							if (model.is_new) {
 								c.addNewQuestIds([model.quest_id]);
@@ -620,11 +620,14 @@ export class GridClient {
 			appStore.setHasNewFriendRequests(payload.body.hasNewFriendRequests);
 			appStore.setHasNewUnlockedStickers(payload.body.hasNewUnlockedStickers);
 			appStore.setHasNewUnlockedStickers(payload.body.hasNewUnlockedStickers);
-			appStore.addNewQuestIds(payload.body.newQuestIds);
-			appStore.addQuestActivityIds(payload.body.questActivityIds);
+
+			const questStore = appStore.getQuestStore();
+			questStore.addNewQuestIds(payload.body.newQuestIds);
+			questStore.addQuestActivityIds(payload.body.questActivityIds);
 			if (payload.body.questResetHour) {
-				appStore.setQuestStoreResetHour(payload.body.questResetHour);
+				questStore.setDailyResetHour(payload.body.questResetHour);
 			}
+
 			this.bootstrapTimestamp = payload.body.lastNotificationTime;
 
 			this.bootstrapReceived = true;

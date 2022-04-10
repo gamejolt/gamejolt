@@ -4,9 +4,9 @@ import { RouterLink } from 'vue-router';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppQuestFrame from '../../../_common/quest/AppQuestFrame.vue';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import { useAppStore } from '../../store/index';
+import { useQuestStore } from '../../store/quest';
 
-const { newQuestIds, questActivityIds } = useAppStore();
+const { newQuestIds, questActivityIds } = useQuestStore();
 
 const hasNew = computed(() => newQuestIds.value.size > 0);
 const hasActivity = computed(() => questActivityIds.value.size > 0);
