@@ -184,6 +184,8 @@ export const Jolticons = [
 	'gamepad',
 	'wand',
 	'megaphone',
+	'gift',
+	'clock',
 ] as const;
 </script>
 
