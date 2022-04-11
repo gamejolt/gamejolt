@@ -7,6 +7,7 @@ import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormStickySubmit from '../../../../_common/form-vue/AppFormStickySubmit.vue';
 import AppFormControlContent from '../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import AppFormControlSelect from '../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import AppFormControlTheme from '../../../../_common/form-vue/controls/AppFormControlTheme.vue';
@@ -199,7 +200,10 @@ function onThemeChanged() {
 			<AppFormControlErrors />
 
 			<p class="help-block">
-				<AppTranslate>You can select multiple pronouns.</AppTranslate>
+				<AppTranslate>
+					You can select multiple pronouns. Multiple pronouns will show in the order you
+					select them.
+				</AppTranslate>
 			</p>
 		</AppFormGroup>
 
@@ -286,8 +290,10 @@ function onThemeChanged() {
 			</p>
 		</AppFormGroup>
 
-		<AppFormButton>
-			<AppTranslate>Save Profile</AppTranslate>
-		</AppFormButton>
+		<AppFormStickySubmit>
+			<AppFormButton>
+				<AppTranslate>Save Profile</AppTranslate>
+			</AppFormButton>
+		</AppFormStickySubmit>
 	</AppForm>
 </template>

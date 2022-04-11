@@ -75,4 +75,9 @@ function toggle() {
 .-toggle-button
 	width: 100%
 	text-align: center
+	// We need to modify this button styling. We want the options to have more
+	// room to squish into one line.
+	margin-left: 0 !important
+	padding-left: 4px !important
+	padding-right: 4px !important
 </style>
