@@ -13,7 +13,8 @@ export type ContentContext =
 	| 'community-description'
 	| 'chat-message'
 	| 'community-channel-description'
-	| 'fireside-chat-message';
+	| 'fireside-chat-message'
+	| 'quest-stage-description';
 
 enum ContextCapabilityType {
 	TextBold,
@@ -270,6 +271,29 @@ export class ContextCapabilities {
 					ContextCapabilityType.Gif,
 					ContextCapabilityType.Media,
 					ContextCapabilityType.Sticker,
+				]);
+			case 'quest-stage-description':
+				return new ContextCapabilities([
+					ContextCapabilityType.TextBold,
+					ContextCapabilityType.TextItalic,
+					ContextCapabilityType.TextLink,
+					ContextCapabilityType.TextCode,
+					ContextCapabilityType.TextStrike,
+					ContextCapabilityType.CustomLink,
+					ContextCapabilityType.Media,
+					ContextCapabilityType.EmbedVideo,
+					ContextCapabilityType.EmbedMusic,
+					ContextCapabilityType.EmbedModel,
+					ContextCapabilityType.CodeBlock,
+					ContextCapabilityType.Blockquote,
+					ContextCapabilityType.Emoji,
+					ContextCapabilityType.List,
+					ContextCapabilityType.HorizontalRule,
+					ContextCapabilityType.Spoiler,
+					ContextCapabilityType.Tag,
+					ContextCapabilityType.Heading,
+					ContextCapabilityType.Mention,
+					ContextCapabilityType.Gif,
 				]);
 
 			default:
