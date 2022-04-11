@@ -98,7 +98,6 @@ async function onActionPressed() {
 					});
 				}
 			} else if (reward.isExp) {
-				// TODO(quests) experience rewards
 				addOrUpdateReward({
 					// Combine all exp rewards into 1 listing
 					key: 'exp',

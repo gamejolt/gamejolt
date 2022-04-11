@@ -68,18 +68,14 @@ function onListClick() {
 			</slot>
 
 			<span class="help-inline">
-				<a class="link-unstyled" @click="fetchDailyQuests">
-					<AppTranslate
-						v-if="isDailyStale || (dailyResetDate && dailyResetDate < Date.now())"
-					>
-						Refresh
-					</AppTranslate>
-					<template v-else-if="dailyResetDate">
-						<!-- TODO(quests) clock jolticon -->
-						<!-- <AppJolticon icon="clock" /> -->
-						<AppCountdown :end="dailyResetDate" />
-					</template>
+				<a v-if="isDailyStale" class="link-unstyled" @click="fetchDailyQuests">
+					<AppTranslate> Refresh </AppTranslate>
 				</a>
+				<template v-else-if="dailyResetDate">
+					<!-- TODO(quests) clock jolticon -->
+					<!-- <AppJolticon icon="clock" /> -->
+					<AppCountdown class="text-muted" :end="dailyResetDate" />
+				</template>
 			</span>
 		</div>
 

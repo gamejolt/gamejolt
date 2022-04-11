@@ -624,9 +624,7 @@ export class GridClient {
 			const questStore = appStore.getQuestStore();
 			questStore.addNewQuestIds(payload.body.newQuestIds);
 			questStore.addQuestActivityIds(payload.body.questActivityIds);
-			if (payload.body.questResetHour) {
-				questStore.setDailyResetHour(payload.body.questResetHour);
-			}
+			questStore.setDailyResetHour(payload.body.questResetHour);
 
 			this.bootstrapTimestamp = payload.body.lastNotificationTime;
 

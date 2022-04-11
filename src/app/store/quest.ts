@@ -136,18 +136,25 @@ export function createQuestStore({
 	// TODO(quests) check this works
 	function _checkDailyQuestExpiry() {
 		const questEndsOn = dailyQuests.value.find(i => !!i.ends_on)?.ends_on;
-		if (!questEndsOn) {
-			isDailyStale.value = true;
-			return;
+		const hasQuestExpiry = questEndsOn !== undefined;
+
+		let hour = _questResetHour ?? 9;
+		if (hasQuestExpiry) {
+			const d = new Date(questEndsOn);
+			hour = d.getUTCHours();
+			hour += d.getUTCMinutes() / 60;
+			hour += d.getUTCSeconds() / 60 / 60;
 		}
 
 		if (_questResetHour === undefined) {
-			setDailyResetHour(new Date(questEndsOn).getUTCHours());
+			setDailyResetHour(hour);
 		}
 
 		const resetTime = dailyResetDate.value ?? getCurrentServerTime();
-		if (questEndsOn > resetTime) {
-			isDailyStale.value = false;
+		isDailyStale.value = hasQuestExpiry && questEndsOn < resetTime;
+
+		if (!isDailyStale.value) {
+			setDailyResetHour(hour);
 		}
 	}
 
