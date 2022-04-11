@@ -8,6 +8,8 @@ import { showModal } from '../modal/modal.service';
 import { Quest } from './quest-model';
 import { QuestObjectiveReward } from './quest-objective-reward-model';
 import { QuestReward } from './reward/AppQuestRewardModal.vue';
+import { getMediaserverUrlForBounds } from '../../utils/image';
+import { getAbsoluteLink } from '../../utils/router';
 </script>
 
 <script lang="ts" setup>
@@ -35,7 +37,7 @@ const isProcessingAction = ref(false);
 const hasError = ref(false);
 
 watch(quest, _ => {
-	// Reset our error state of the quest was updated from something.
+	// Reset our error state if the quest was updated from something.
 	hasError.value = false;
 });
 
@@ -87,6 +89,16 @@ async function onActionPressed() {
 			}
 		};
 
+		const processMediaserverUrl = (url: string | undefined) => {
+			if (url) {
+				return getMediaserverUrlForBounds({
+					src,
+					maxWidth: 100,
+					maxHeight: 100,
+				});
+			}
+		};
+
 		for (const reward of objectiveRewards) {
 			if (reward.isSticker) {
 				for (const { amount, sticker } of reward.stickers) {
@@ -102,7 +114,7 @@ async function onActionPressed() {
 					// Combine all exp rewards into 1 listing
 					key: 'exp',
 					amount: reward.fallback_amount,
-					img_url: reward.fallback_media?.mediaserver_url,
+					img_url: processMediaserverUrl(reward.fallback_media?.mediaserver_url),
 					name: reward.name,
 					icon: 'exp',
 					isExp: true,
@@ -120,7 +132,7 @@ async function onActionPressed() {
 				addOrUpdateReward({
 					key: `unknown-${reward.name}-${reward.id}`,
 					amount: reward.fallback_amount,
-					img_url: reward.fallback_media?.mediaserver_url,
+					img_url: processMediaserverUrl(reward.fallback_media?.mediaserver_url),
 					name: reward.name,
 				});
 			}

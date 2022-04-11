@@ -377,7 +377,6 @@ $-z-backpack = 1
 	animation-duration: 1200ms
 	animation-iteration-count: infinite
 
-
 @keyframes anim-fade-out
 	0%
 		opacity: 1
