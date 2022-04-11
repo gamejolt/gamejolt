@@ -133,7 +133,6 @@ export function createQuestStore({
 		}
 	}
 
-	// TODO(quests) check this works
 	function _checkDailyQuestExpiry() {
 		const questEndsOn = dailyQuests.value.find(i => !!i.ends_on)?.ends_on;
 		const hasQuestExpiry = questEndsOn !== undefined;

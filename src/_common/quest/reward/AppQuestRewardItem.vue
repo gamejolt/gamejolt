@@ -49,8 +49,7 @@ const pathData = computed(() => {
 		}"
 	>
 		<img v-if="data.img_url" class="-img" :src="data.img_url" alt="" />
-		<!-- TODO(quests) present jolticon -->
-		<AppJolticon v-else :icon="data.icon || 'other-os'" />
+		<AppJolticon v-else :icon="data.icon" />
 	</div>
 </template>
 

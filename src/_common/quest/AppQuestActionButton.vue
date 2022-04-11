@@ -1,15 +1,15 @@
 <script lang="ts">
 import { watch } from '@vue/runtime-core';
 import { computed, defineAsyncComponent, PropType, ref, toRefs } from 'vue';
+import { getMediaserverUrlForBounds } from '../../utils/image';
 import { Api } from '../api/api.service';
 import AppButton from '../button/AppButton.vue';
+import { Jolticon } from '../jolticon/AppJolticon.vue';
 import AppLoading from '../loading/loading.vue';
 import { showModal } from '../modal/modal.service';
 import { Quest } from './quest-model';
 import { QuestObjectiveReward } from './quest-objective-reward-model';
 import { QuestReward } from './reward/AppQuestRewardModal.vue';
-import { getMediaserverUrlForBounds } from '../../utils/image';
-import { getAbsoluteLink } from '../../utils/router';
 </script>
 
 <script lang="ts" setup>
@@ -85,12 +85,13 @@ async function onActionPressed() {
 			if (compactRewards.has(key)) {
 				compactRewards.get(key)!.amount += amount;
 			} else {
+				options.icon ??= 'gift';
 				compactRewards.set(key, options);
 			}
 		};
 
-		const processMediaserverUrl = (url: string | undefined) => {
-			if (url) {
+		const processMediaserverUrl = (src: string | undefined) => {
+			if (src) {
 				return getMediaserverUrlForBounds({
 					src,
 					maxWidth: 100,
@@ -98,6 +99,7 @@ async function onActionPressed() {
 				});
 			}
 		};
+		const fallbackIcon: Jolticon = 'gift';
 
 		for (const reward of objectiveRewards) {
 			if (reward.isSticker) {
@@ -107,6 +109,7 @@ async function onActionPressed() {
 						amount,
 						img_url: sticker.img_url,
 						name: reward.name,
+						icon: fallbackIcon,
 					});
 				}
 			} else if (reward.isExp) {
@@ -134,6 +137,7 @@ async function onActionPressed() {
 					amount: reward.fallback_amount,
 					img_url: processMediaserverUrl(reward.fallback_media?.mediaserver_url),
 					name: reward.name,
+					icon: fallbackIcon,
 				});
 			}
 		}

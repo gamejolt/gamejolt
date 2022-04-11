@@ -16,7 +16,7 @@ export interface QuestReward {
 	amount: number;
 	name: string;
 	img_url: undefined | string;
-	icon?: Jolticon;
+	icon: Jolticon;
 	isExp?: boolean;
 }
 
@@ -212,8 +212,7 @@ function onAnimationEnd(id: number) {
 						{{ amount + (isExp ? ' ' : 'x ') }}
 
 						<img v-if="img_url" class="-reward-img" :src="img_url" alt="" />
-						<!-- TODO(quests) present jolticon -->
-						<AppJolticon v-else :icon="icon || 'other-os'" />
+						<AppJolticon v-else :icon="icon" />
 
 						<span>{{ ' ' + name }}</span>
 					</div>

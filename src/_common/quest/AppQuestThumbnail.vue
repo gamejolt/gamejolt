@@ -33,7 +33,6 @@ const metaData = computed<{ text?: string; icon?: Jolticon; bubble?: boolean } |
 
 	const q = quest.value;
 	if (q.has_activity) {
-		// TODO(quests) present jolticon
 		return { bubble: true };
 	} else if (q.isAllComplete) {
 		return { icon: 'star', bubble: true };

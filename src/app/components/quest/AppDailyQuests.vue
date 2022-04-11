@@ -6,6 +6,7 @@ import AppLoadingFade from '../../../_common/loading/AppLoadingFade.vue';
 import AppQuestLogItem from '../../../_common/quest/AppQuestLogItem.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { illNoCommentsSmall } from '../../img/ill/illustrations';
 import { useQuestStore } from '../../store/quest';
 </script>
@@ -72,8 +73,8 @@ function onListClick() {
 					<AppTranslate> Refresh </AppTranslate>
 				</a>
 				<template v-else-if="dailyResetDate">
-					<!-- TODO(quests) clock jolticon -->
-					<!-- <AppJolticon icon="clock" /> -->
+					<AppJolticon class="small" icon="clock" />
+					{{ ' ' }}
 					<AppCountdown class="text-muted" :end="dailyResetDate" />
 				</template>
 			</span>
