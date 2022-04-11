@@ -135,20 +135,18 @@ export function createQuestStore({
 
 	// TODO(quests) check this works
 	function _checkDailyQuestExpiry() {
-		const data = dailyQuests.value.find(i => !!i.ends_on);
-		if (!data || !data.ends_on) {
+		const questEndsOn = dailyQuests.value.find(i => !!i.ends_on)?.ends_on;
+		if (!questEndsOn) {
 			isDailyStale.value = true;
 			return;
 		}
 
 		if (_questResetHour === undefined) {
-			const hour = new Date(data.ends_on).getUTCHours();
-			setDailyResetHour(hour);
-			getCurrentServerTime;
+			setDailyResetHour(new Date(questEndsOn).getUTCHours());
 		}
 
-		const endsOn = dailyResetDate.value ?? getCurrentServerTime();
-		if (data.ends_on > endsOn) {
+		const resetTime = dailyResetDate.value ?? getCurrentServerTime();
+		if (questEndsOn > resetTime) {
 			isDailyStale.value = false;
 		}
 	}
@@ -169,31 +167,35 @@ export function createQuestStore({
 	}
 
 	function setDailyResetHour(newHour: number) {
-		const prev = _questResetHour;
+		const prevResetHour = _questResetHour;
 		_questResetHour = newHour;
 
-		const utcExpiry = new Date();
-		const utcNowHours = utcExpiry.getUTCHours();
-		// Immediately set our daily quests as expired if we get a new quest
-		// reset hour that's before our current time.
-		if (prev && utcNowHours < prev && newHour < utcNowHours) {
-			isDailyStale.value = true;
-		}
+		const date = new Date(getCurrentServerTime());
+		let utcNowHours = date.getUTCHours();
+		utcNowHours += date.getUTCMinutes() / 60;
+		utcNowHours += date.getUTCSeconds() / 60 / 60;
 
-		let additionalDays = 0;
-		// Set the expiry date to tomorrow if we're already past the hour.
-		if (newHour < utcNowHours) {
-			++additionalDays;
-		}
-		utcExpiry.setUTCDate(utcExpiry.getUTCDate() + additionalDays);
-
-		const hours = Math.floor(newHour);
-		const min = (newHour % 1) * 60;
+		const resetHour = _questResetHour!;
+		const min = (resetHour % 1) * 60;
 		const sec = (min % 1) * 60;
 		const ms = (sec % 1) * 1000;
-		utcExpiry.setUTCHours(hours, min, sec, ms);
+		date.setUTCHours(Math.floor(resetHour), min, sec, ms);
 
-		dailyResetDate.value = utcExpiry.getTime();
+		// Set the expiry date to tomorrow if we're already past our reset time.
+		if (date.getTime() < getCurrentServerTime()) {
+			// Set our daily quests as stale if the new reset hour is now before
+			// our current hour.
+			if (
+				prevResetHour !== undefined &&
+				resetHour < utcNowHours &&
+				utcNowHours < prevResetHour
+			) {
+				isDailyStale.value = true;
+			}
+			date.setUTCDate(date.getUTCDate() + 1);
+		}
+
+		dailyResetDate.value = date.getTime();
 	}
 
 	function addNewQuestIds(ids: number[]) {
