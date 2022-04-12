@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
+import AppJolticon from '../jolticon/AppJolticon.vue';
 import AppSpacer from '../spacer/AppSpacer.vue';
 import AppTranslate from '../translate/AppTranslate.vue';
 import AppQuestProgress from './AppQuestProgress.vue';
@@ -101,6 +102,8 @@ function onSelect() {
 				<template v-else>
 					{{ quest.questType }}
 				</template>
+
+				<AppJolticon v-if="quest.ends_on" icon="clock" />
 			</div>
 
 			<div class="-title">{{ quest.title }}</div>
@@ -188,4 +191,10 @@ function onSelect() {
 	font-size: $font-size-small
 	text-transform: uppercase
 	color: var(--theme-fg-muted)
+	display: inline-flex
+	align-items: center
+	justify-content: space-between
+
+	.jolticon
+		font-size: $font-size-small
 </style>

@@ -1,14 +1,13 @@
 <script lang="ts">
 import { computed, toRefs } from 'vue';
-import { AppCountdown } from '../../../_common/countdown/countdown';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import AppLoadingFade from '../../../_common/loading/AppLoadingFade.vue';
 import AppQuestLogItem from '../../../_common/quest/AppQuestLogItem.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { illNoCommentsSmall } from '../../img/ill/illustrations';
 import { useQuestStore } from '../../store/quest';
+import AppQuestTimer from './AppQuestTimer.vue';
 </script>
 
 <script lang="ts" setup>
@@ -69,14 +68,13 @@ function onListClick() {
 			</slot>
 
 			<span class="help-inline">
-				<a v-if="isDailyStale" class="link-unstyled" @click="fetchDailyQuests">
-					<AppTranslate> Refresh </AppTranslate>
-				</a>
-				<template v-else-if="dailyResetDate">
-					<AppJolticon class="small" icon="clock" />
-					{{ ' ' }}
-					<AppCountdown class="text-muted" :end="dailyResetDate" />
-				</template>
+				<AppQuestTimer :date="dailyResetDate" :ended="isDailyStale">
+					<template #ended>
+						<a class="link-unstyled" @click="fetchDailyQuests">
+							<AppTranslate> Refresh </AppTranslate>
+						</a>
+					</template>
+				</AppQuestTimer>
 			</span>
 		</div>
 
