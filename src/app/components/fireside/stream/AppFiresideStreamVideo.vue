@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, PropType, ref, toRefs, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, PropType, ref, toRefs, watch } from 'vue';
 import {
 	FiresideRTCUser,
 	FiresideVideoLock,
@@ -42,6 +42,12 @@ onMounted(() => {
 	_onFrameDataChange();
 });
 
+onBeforeUnmount(() => {
+	// rtcUser.value should still be the old focused user in before unmount lifecycle hook,
+	// so it should be ok to call _releaseLocks here.
+	_releaseLocks();
+});
+
 watch(pausedFrameData, _onFrameDataChange);
 watch(shouldPlayVideo, _onShouldPlayVideoChange);
 
@@ -56,9 +62,13 @@ function _getLocks() {
 function _releaseLocks() {
 	// We want to give a new lock some time to get acquired before shutting
 	// the stream down.
+	// Capture the current rtc user in case it changes somehow
+	// (switching hosts, updates to listable hosts etc)
+	const oldUser = rtcUser.value;
+
 	setTimeout(() => {
 		if (_videoLock) {
-			releaseVideoLock(rtcUser.value, _videoLock);
+			releaseVideoLock(oldUser, _videoLock);
 		}
 	}, 0);
 }

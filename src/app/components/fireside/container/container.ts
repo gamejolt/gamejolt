@@ -34,7 +34,7 @@ import { ChatStore, ChatStoreKey, clearChat, loadChat } from '../../chat/chat-st
 import { joinInstancedRoomChannel, leaveChatRoom, setGuestChatToken } from '../../chat/client';
 import {
 	createFiresideChannel,
-	EVENT_HOST_LISTABILITY,
+	EVENT_LISTABLE_HOSTS,
 	EVENT_STICKER_PLACEMENT,
 	EVENT_STREAMING_UID,
 	EVENT_UPDATE,
@@ -314,11 +314,8 @@ export class AppFiresideContainer extends Vue {
 				authToken,
 			});
 
-			// Subscribe to the host listability event.
-			dmChannel.socketChannel.on(
-				EVENT_HOST_LISTABILITY,
-				this.onGridHostListability.bind(this)
-			);
+			// Subscribe to the listable hosts event.
+			dmChannel.socketChannel.on(EVENT_LISTABLE_HOSTS, this.onGridListableHosts.bind(this));
 
 			try {
 				await new Promise<void>((resolve, reject) => {
@@ -401,11 +398,7 @@ export class AppFiresideContainer extends Vue {
 
 			c.fireside.assign(payload.fireside);
 
-			console.log(payload.hostListability);
-			c.hostListability.value = {
-				listableHostIds: payload.hostListability?.listableHostIds ?? [],
-				unlistableHostIds: payload.hostListability?.unlistableHostIds ?? [],
-			};
+			c.listableHostIds.value = payload.listableHostIds ?? [];
 
 			// If they have a host role, or if this fireside is actively
 			// streaming, we'll get streaming tokens from the fetch payload. In
@@ -503,11 +496,12 @@ export class AppFiresideContainer extends Vue {
 		options: {
 			checkJoined?: boolean;
 			hosts?: FiresideRTCHost[];
+			listableHostIds?: number[];
 		} = {
 			checkJoined: true,
 		}
 	) {
-		const { checkJoined = true, hosts } = options;
+		const { checkJoined = true } = options;
 		const c = this.controller;
 		if (!c || !c.fireside || (checkJoined && c.status.value !== 'joined')) {
 			return;
@@ -520,16 +514,15 @@ export class AppFiresideContainer extends Vue {
 		}
 
 		if (!c.rtc.value) {
-			if (!c.hostListability.value) {
-				console.warn(
-					'[FIRESIDE] Expected host listability to be set by the time Fireside RTC is initialized'
-				);
+			const hosts = options.hosts ?? this.getHostsFromStreamingInfo(payload) ?? [];
 
-				c.hostListability.value = {
-					listableHostIds: [],
-					unlistableHostIds: [],
-				};
+			const listableHostIds = options.listableHostIds ?? c.listableHostIds.value;
+			if (!listableHostIds) {
+				throw new Error(
+					'Expected listable hosts to be set by the time Fireside RTC is initialized'
+				);
 			}
+			c.listableHostIds.value = listableHostIds;
 
 			c.rtc.value = createFiresideRTC(
 				c.fireside,
@@ -540,8 +533,8 @@ export class AppFiresideContainer extends Vue {
 				payload.videoToken,
 				payload.chatChannelName,
 				payload.chatToken,
-				hosts ?? this.getHostsFromStreamingInfo(payload) ?? [],
-				c.hostListability.value,
+				hosts,
+				listableHostIds,
 				{ isMuted: c.isMuted }
 			);
 		} else if (!c.rtc.value.producer) {
@@ -590,6 +583,9 @@ export class AppFiresideContainer extends Vue {
 	}
 
 	async onGridUpdateFireside(payload: any) {
+		console.log('Fireside update message:');
+		console.log(payload);
+
 		const c = this.controller;
 		if (!c.fireside || !payload.fireside) {
 			return;
@@ -726,6 +722,9 @@ export class AppFiresideContainer extends Vue {
 		}
 
 		// TODO(big-pp-event) does is_streaming here have to be true only if listable hosts are streaming for the current user?
+		// TODO(big-pp-event) if this fireside updated event would end up creating the RTC, we need to make sure
+		// to fetch the user listable hosts set before actually creating it. Otherwise, we will get events from agora before
+		// we know which hosts are listable, which would end up creating everyone as muted.
 		if (c.fireside.is_streaming && payload.streaming_info) {
 			this.upsertRtc(payload.streaming_info, { hosts: newHosts });
 		} else {
@@ -772,19 +771,15 @@ export class AppFiresideContainer extends Vue {
 		}
 	}
 
-	onGridHostListability(payload: {
-		listable_host_ids?: number[];
-		unlistable_host_ids?: number[];
-	}) {
-		console.debug('[FIRESIDE] Grid host listability.', payload);
+	onGridListableHosts(payload: { listable_host_ids?: number[] }) {
+		console.debug('[FIRESIDE] Grid listable hosts.', payload);
 		const c = this.controller;
 
-		c.hostListability.value = {
-			listableHostIds: payload.listable_host_ids ?? [],
-			unlistableHostIds: payload.unlistable_host_ids ?? [],
-		};
+		c.listableHostIds.value = payload.listable_host_ids ?? [];
 
 		if (c.rtc.value) {
+			// TODO(big-pp-event) need to unfocus the current user if they are no longer listable.
+			// This is not strictly needed for the event, but if its simple to implement why not eh?
 			chooseFocusedRTCUser(c.rtc.value);
 		}
 	}

@@ -12,7 +12,7 @@ export default class AppFiresideVideoStats extends Vue {
 
 	get stats() {
 		const stats: Record<string, any> = {
-			[`Members`]: this.c.rtc.value?.users.length ?? 0,
+			[`Members`]: this.c.rtc.value?.listableUsers.length ?? 0,
 		};
 
 		const focusedId = this.c.rtc.value?.focusedUser?.uid;

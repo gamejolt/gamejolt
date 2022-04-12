@@ -43,11 +43,6 @@ export interface FiresideRTCHost {
 	uids: number[];
 }
 
-export interface FiresideRTCHostListability {
-	listableHostIds: number[];
-	unlistableHostIds: number[];
-}
-
 type Options = { isMuted?: boolean };
 
 export class FiresideRTC {
@@ -61,7 +56,7 @@ export class FiresideRTC {
 		public readonly chatChannelName: string,
 		public chatToken: string,
 		public readonly hosts: FiresideRTCHost[],
-		public readonly hostListability: FiresideRTCHostListability,
+		public readonly listableHostIds: number[],
 		{ isMuted }: Options
 	) {
 		this.isMuted = isMuted ?? false;
@@ -124,12 +119,21 @@ export class FiresideRTC {
 	get users() {
 		// We put the local user first if they're currently streaming.
 
-		// TODO: we have a bug here. we might already have a remote user with the uid of the local user.
+		// TODO(big-pp-event): we have a bug here. we might already have a remote user represeting our local user.
 		// what happens if you try to start streaming when youre already streaming in a different tab?
-		// it'll add the local user anyways and then we'll have two users for yourself.
+		// it'll add the local user anyways and then we'll have two users for yourself (one with the remote uid and one local)
 		// Also - is the comment above outdated? we don't seem to check if the localUser is streaming,
 		// but from what I can tell it IS being initialized even during preview.
 		return Object.freeze([...(this.localUser ? [this.localUser] : []), ...this._users]);
+	}
+
+	get listableUsers() {
+		return this.users.filter(user => !user.isUnlisted);
+	}
+
+	get isEveryRemoteListableUsersMuted() {
+		// Check against _users because we want to exclude the local user from this check.
+		return this._users.every(rtcUser => rtcUser.isUnlisted || rtcUser.micAudioMuted);
 	}
 
 	/**
@@ -167,7 +171,7 @@ export function createFiresideRTC(
 	chatChannelName: string,
 	chatToken: string,
 	hosts: FiresideRTCHost[],
-	hostListability: FiresideRTCHostListability,
+	listableHostIds: number[],
 	options: Options = {}
 ) {
 	const rtc = reactive(
@@ -181,7 +185,7 @@ export function createFiresideRTC(
 			chatChannelName,
 			chatToken,
 			hosts,
-			hostListability,
+			listableHostIds,
 			options
 		)
 	) as FiresideRTC;
@@ -491,12 +495,7 @@ export function chooseFocusedRTCUser(rtc: FiresideRTC) {
 	let bestUser: FiresideRTCUser | null = null;
 	let bestScore = -1;
 
-	for (const user of rtc.users) {
-		// Do not consider unlisted users.
-		if (user.isUnlisted) {
-			continue;
-		}
-
+	for (const user of rtc.listableUsers) {
 		const score =
 			(user.hasVideo ? 4 : 0) + (user.hasMicAudio ? 2 : 0) + (user.hasDesktopAudio ? 1 : 0);
 		if (score > bestScore) {

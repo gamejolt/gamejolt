@@ -7,7 +7,7 @@ import { User } from '../../../_common/user/user.model';
 export const EVENT_UPDATE = 'update';
 export const EVENT_STREAMING_UID = 'streaming-uid';
 export const EVENT_STICKER_PLACEMENT = 'sticker-placement';
-export const EVENT_HOST_LISTABILITY = 'host-listability';
+export const EVENT_LISTABLE_HOSTS = 'listable-hosts';
 
 interface FiresideChannelConfig {
 	fireside: Fireside;

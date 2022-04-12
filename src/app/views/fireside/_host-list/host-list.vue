@@ -48,7 +48,7 @@ export default class AppFiresideHostList extends Vue {
 	}
 
 	get listableUsers() {
-		return (this.c.rtc.value?.users ?? []).filter(rtcUser => !rtcUser.isUnlisted);
+		return this.c.rtc.value?.listableUsers ?? [];
 	}
 
 	onClickStickerButton() {

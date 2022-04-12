@@ -61,8 +61,8 @@ export default class AppFiresideSettingsPopper extends Vue {
 			return false;
 		}
 
-		// We only want to show mute controls for remote streaming users.
-		const remoteUsers = this.c.rtc.value.users.filter(
+		// We only want to show mute controls for remote listable streaming users.
+		const remoteUsers = this.c.rtc.value.listableUsers.filter(
 			rtcUser => rtcUser.remoteVideoUser || rtcUser.remoteChatUser
 		);
 		return remoteUsers.length > 0;
@@ -72,16 +72,16 @@ export default class AppFiresideSettingsPopper extends Vue {
 		return this.c.isPersonallyStreaming.value;
 	}
 
-	get shouldMute() {
-		return this.c.rtc.value?.users.some(i => !i.micAudioMuted) ?? false;
+	get shouldShowMuteAll() {
+		return this.c.rtc.value?.listableUsers.some(i => !i.micAudioMuted) ?? false;
 	}
 
 	muteAll() {
-		return this.c.rtc.value?.users.forEach(i => setAudioPlayback(i, false));
+		return this.c.rtc.value?.listableUsers.forEach(i => setAudioPlayback(i, false));
 	}
 
 	unmuteAll() {
-		return this.c.rtc.value?.users.forEach(i => setAudioPlayback(i, true));
+		return this.c.rtc.value?.listableUsers.forEach(i => setAudioPlayback(i, true));
 	}
 
 	onClickShowChatMembers() {
@@ -195,7 +195,7 @@ export default class AppFiresideSettingsPopper extends Vue {
 				</a>
 
 				<template v-if="hasMuteControls">
-					<a v-if="shouldMute" class="list-group-item" @click="muteAll()">
+					<a v-if="shouldShowMuteAll" class="list-group-item" @click="muteAll()">
 						<AppJolticon icon="audio-mute" />
 						<AppTranslate>Mute All Users</AppTranslate>
 					</a>

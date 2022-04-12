@@ -44,8 +44,7 @@ export class FiresideVideoLock {
 export class FiresideRTCUser {
 	constructor(public readonly rtc: FiresideRTC, public readonly uid: number) {
 		// If everyone is currently muted, add new users as muted.
-		this.micAudioMuted =
-			rtc.isMuted || (rtc.users.length > 0 ? rtc.users.every(i => i.micAudioMuted) : false);
+		this.micAudioMuted = rtc.isMuted || rtc.isEveryRemoteListableUsersMuted;
 	}
 
 	// These won't be assigned if this is the local user.
@@ -68,32 +67,36 @@ export class FiresideRTCUser {
 	micAudioMuted = false;
 	volumeLevel = 0;
 
+	get _rtcHost() {
+		return this.rtc.hosts.find(host => host.uids.includes(this.uid));
+	}
+
 	get userModel() {
-		return this.rtc.hosts.find(host => host.uids.includes(this.uid))?.user ?? null;
+		return this._rtcHost?.user ?? null;
 	}
 
 	get isUnlisted() {
-		const host = this.userModel;
+		const host = this._rtcHost;
 
 		// Treat unknown hosts as unlistable.
 		if (!host) {
 			return true;
 		}
 
-		// Our own user is never unlisted.
-		if (host.id === this.rtc.userId) {
+		// If the host is not unlisted at all we can early out.
+		if (!host.isUnlisted) {
 			return false;
 		}
 
-		// If the host is explicitly unlistable, return.
-		if (this.rtc.hostListability.unlistableHostIds.includes(host.id)) {
-			return true;
+		// Our own user is never unlisted.
+		if (host.user.id === this.rtc.userId) {
+			return false;
 		}
 
 		// If the host isn't explicitly listable, we want to treat it as if
 		// they were unlistable to avoid showing a stream for a host we simply
-		// did not receive the listability for in time.
-		if (!this.rtc.hostListability.listableHostIds.includes(host.id)) {
+		// did not receive the listable hosts for in time.
+		if (!this.rtc.listableHostIds.includes(host.user.id)) {
 			return true;
 		}
 
