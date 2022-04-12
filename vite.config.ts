@@ -322,6 +322,9 @@ export default defineConfig(async configEnv => {
 		},
 
 		build: {
+			// Never inline stuff.
+			assetsInlineLimit: 0,
+
 			// Only minify in production so we can debug our stuff.
 			minify: gjOpts.environment === 'production',
 
