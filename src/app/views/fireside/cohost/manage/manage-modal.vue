@@ -1,5 +1,4 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { stringSort } from '../../../../../utils/array';
 import { fuzzysearch } from '../../../../../utils/string';
@@ -10,7 +9,6 @@ import {
 } from '../../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { BaseModal } from '../../../../../_common/modal/base';
-import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppUserAvatarImg from '../../../../../_common/user/user-avatar/img/img.vue';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../../_common/user/user.model';
@@ -28,14 +26,6 @@ import { illNoCommentsSmall } from '../../../../img/ill/illustrations';
 export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 	@Prop({ type: Object, required: true })
 	controller!: FiresideController;
-
-	commonStore = setup(() => useCommonStore());
-
-	get user() {
-		// TODO(big-pp-event) should we just fetch the user from the controller?
-		// this way we don't have to fetch from common store.
-		return this.commonStore.user;
-	}
 
 	filterQuery = '';
 	usersProcessing: (ChatUser | User)[] = [];
@@ -60,16 +50,14 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 		);
 	}
 
-	get unhostableUsers() {
-		if (!this.rtc) {
-			return [];
-		}
-
-		return this.rtc.hosts.map(i => i.user).filter(i => i.id !== this.user?.id);
+	get listableCohosts(): User[] {
+		return (this.rtc?.listableUsers ?? [])
+			.map(i => i.userModel)
+			.filter(i => i && i.id !== this.controller.user.value?.id) as User[];
 	}
 
 	get users() {
-		return [...this.hostableChatUsers, ...this.unhostableUsers].sort((a, b) =>
+		return [...this.hostableChatUsers, ...this.listableCohosts].sort((a, b) =>
 			stringSort(a.display_name, b.display_name)
 		);
 	}
@@ -98,10 +86,13 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 	}
 
 	isUserStreaming(user: ChatUser | User) {
-		return this.isHost(user) && this.rtc?.users.some(i => i.userModel?.id === user.id) === true;
+		return (
+			this.isHost(user) &&
+			this.rtc?.listableUsers.some(i => i.userModel?.id === user.id) === true
+		);
 	}
 
-	isHost(user: ChatUser | User) {
+	isHost(user: ChatUser | User): user is User {
 		return user instanceof User;
 	}
 
@@ -122,7 +113,7 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 
 			// We will get a grid message that will update the RTC host list.
 			while (
-				(wasHost && this.unhostableUsers.includes(user as User)) ||
+				(wasHost && this.listableCohosts.includes(user as User)) ||
 				(!wasHost && this.hostableChatUsers.includes(user as ChatUser))
 			) {
 				if (!this.isOpen) {

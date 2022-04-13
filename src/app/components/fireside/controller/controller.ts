@@ -100,7 +100,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 			return false;
 		}
 
-		const user = rtc.value.users.find(i => i.userModel?.id === rtc.value?.userId);
+		const user = rtc.value.listableUsers.find(i => i.userModel?.id === rtc.value?.userId);
 		if (!user) {
 			return false;
 		}

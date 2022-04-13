@@ -213,6 +213,8 @@ async function _renewTokens(producer: FiresideRTCProducer) {
 	producer._areTokensRenewing = true;
 
 	async function _updateHostTokens() {
+		rtc.log(`Renewing streaming tokens.`);
+
 		const response = await Api.sendRequest(
 			'/web/dash/fireside/generate-streaming-tokens/' + fireside.id,
 			{ streaming_uid: rtc.streamingUid },
@@ -238,6 +240,8 @@ async function _renewTokens(producer: FiresideRTCProducer) {
 			return;
 		}
 
+		rtc.log(`Renewing audience tokens.`);
+
 		const response = await _updateSetIsStreaming(producer);
 
 		if (response?.success !== true) {
@@ -248,7 +252,6 @@ async function _renewTokens(producer: FiresideRTCProducer) {
 	}
 
 	try {
-		rtc.log(`Renewing streaming tokens.`);
 		await Promise.all([_updateHostTokens(), _updateAudienceTokens()]);
 	} catch (e) {
 		rtc.logWarning(`Got error while renewing tokens.`, e);

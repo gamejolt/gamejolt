@@ -33,19 +33,21 @@ const c = createFiresideController(props.fireside, {
 
 const { rtc, isShowingStreamSetup, isStreaming } = c;
 
-const rtcUsers = computed(() => {
-	if (!rtc.value) {
-		return [];
+const cohosts = computed(() => {
+	const result: User[] = [];
+
+	for (const rtcUser of rtc.value?.listableUsers ?? []) {
+		// Since we're iterating over listable users they will always have their userModel.
+		const userModel = rtcUser.userModel!;
+
+		// Filter out creator of the fireside.
+		// TODO(big-pp-event) why are we doing this?
+		if (userModel !== props.fireside.user) {
+			result.push(userModel);
+		}
 	}
 
-	const users: User[] = [];
-	rtc.value.users.forEach(i => {
-		if (!i.userModel || i.userModel === props.fireside.user) {
-			return;
-		}
-		users.push(i.userModel);
-	});
-	return users;
+	return result;
 });
 
 const focusedUser = computed(() => rtc.value?.focusedUser);
@@ -75,7 +77,7 @@ watch([isStreaming, hasVideo], () => {
 					</div>
 				</div>
 				<div v-if="showLiveUsers" class="-live-users">
-					<AppUserAvatarList :users="rtcUsers" sm inline />
+					<AppUserAvatarList :users="cohosts" sm inline />
 				</div>
 			</div>
 		</div>

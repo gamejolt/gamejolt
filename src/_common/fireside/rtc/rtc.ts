@@ -77,7 +77,10 @@ export class FiresideRTC {
 	videoChannel!: FiresideRTCChannel;
 	chatChannel!: FiresideRTCChannel;
 
-	readonly _users: FiresideRTCUser[] = [];
+	/**
+	 * The list of FiresideRTCUsers that currently have an agora stream published.
+	 */
+	readonly _remoteUsers: FiresideRTCUser[] = [];
 	focusedUser: FiresideRTCUser | null = null;
 
 	videoPaused = false;
@@ -116,24 +119,25 @@ export class FiresideRTC {
 		return this.fireside.role;
 	}
 
-	get users() {
-		// We put the local user first if they're currently streaming.
-
-		// TODO(big-pp-event): we have a bug here. we might already have a remote user represeting our local user.
+	/**
+	 * Remote users + the local user prepended if it is set.
+	 * Note: the local user is set if they are currently streaming.
+	 */
+	get _allUsers() {
+		// TODO(big-pp-event): we might have a bug here. we might already have a remote user represeting our local user.
 		// what happens if you try to start streaming when youre already streaming in a different tab?
 		// it'll add the local user anyways and then we'll have two users for yourself (one with the remote uid and one local)
-		// Also - is the comment above outdated? we don't seem to check if the localUser is streaming,
-		// but from what I can tell it IS being initialized even during preview.
-		return Object.freeze([...(this.localUser ? [this.localUser] : []), ...this._users]);
+		// Is this intentional?
+		return Object.freeze([...(this.localUser ? [this.localUser] : []), ...this._remoteUsers]);
 	}
 
 	get listableUsers() {
-		return this.users.filter(user => !user.isUnlisted);
+		return this._allUsers.filter(rtcUser => !rtcUser.isUnlisted);
 	}
 
 	get isEveryRemoteListableUsersMuted() {
-		// Check against _users because we want to exclude the local user from this check.
-		return this._users.every(rtcUser => rtcUser.isUnlisted || rtcUser.micAudioMuted);
+		// Check against _remoteUsers because we want to exclude the local user from this check.
+		return this._remoteUsers.every(rtcUser => rtcUser.isUnlisted || rtcUser.micAudioMuted);
 	}
 
 	/**
@@ -210,7 +214,7 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 
 	try {
 		await Promise.all(
-			rtc.users.map(user =>
+			rtc._allUsers.map(user =>
 				Promise.all([
 					setVideoPlayback(user, new FiresideVideoPlayStateStopped()),
 					stopDesktopAudioPlayback(user),
@@ -399,6 +403,9 @@ async function _createChannels(rtc: FiresideRTC) {
 				return;
 			}
 
+			// TODO(big-pp-event) the comment on remoteVideoUser says these wont be set
+			// if we're dealing with a local user, but _findOrAddUser may return the local user.
+			// Is the comment outdated or is this a bug?
 			user.remoteVideoUser = markRaw(remoteUser);
 
 			if (mediaType === 'video') {
@@ -412,7 +419,9 @@ async function _createChannels(rtc: FiresideRTC) {
 		onTrackUnpublish(remoteUser, mediaType) {
 			rtc.log('Got user unpublished (video channel)');
 
-			const user = rtc.users.find(i => i.uid === remoteUser.uid);
+			// TODO(big-pp-event) why are we checking allUsers here?
+			// are we supposed to be checking the local user here?
+			const user = rtc._allUsers.find(i => i.uid === remoteUser.uid);
 			if (!user) {
 				rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
 				return;
@@ -457,7 +466,9 @@ async function _createChannels(rtc: FiresideRTC) {
 				return;
 			}
 
-			const user = rtc.users.find(i => i.uid === remoteUser.uid);
+			// TODO(big-pp-event) why are we checking allUsers here?
+			// are we supposed to be checking the local user here?
+			const user = rtc._allUsers.find(i => i.uid === remoteUser.uid);
 			if (!user) {
 				rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
 				return;
@@ -513,12 +524,16 @@ function _findOrAddUser(rtc: FiresideRTC, remoteUser: IAgoraRTCRemoteUser) {
 		return null;
 	}
 
-	// This will find the local user as well as remote users.
-	let user = rtc.users.find(i => i.uid === remoteUser.uid);
+	// TODO(big-pp-event) why are we checking allUsers here?
+	// are we supposed to be checking the local user here?
+	// EDIT: if we don't use _allUsers we'll end up inserting the local user
+	// into _remoteUsers. we definitely don't want that so it does seem intentional,
+	// but this causes issues in other places (see comments in onTrackPublish)
+	let user = rtc._allUsers.find(i => i.uid === remoteUser.uid);
 
 	if (!user) {
 		user = new FiresideRTCUser(rtc, remoteUser.uid);
-		rtc._users.push(user);
+		rtc._remoteUsers.push(user);
 	}
 
 	return user;
@@ -533,7 +548,7 @@ function _removeUserIfNeeded(rtc: FiresideRTC, user: FiresideRTCUser) {
 	user.remoteVideoUser = null;
 	user.remoteChatUser = null;
 
-	arrayRemove(rtc._users, i => i === user);
+	arrayRemove(rtc._remoteUsers, i => i === user);
 
 	if (toRaw(rtc.focusedUser) === toRaw(user)) {
 		rtc.focusedUser = null;
@@ -542,7 +557,9 @@ function _removeUserIfNeeded(rtc: FiresideRTC, user: FiresideRTCUser) {
 }
 
 function _updateVolumeLevels(rtc: FiresideRTC) {
-	for (const user of rtc.users) {
+	// TODO(big-pp-event) why are we checking allUsers here?
+	// are we supposed to be checking the local user here?
+	for (const user of rtc._allUsers) {
 		updateVolumeLevel(user);
 	}
 }
