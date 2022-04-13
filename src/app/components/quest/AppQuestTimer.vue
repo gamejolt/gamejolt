@@ -1,7 +1,7 @@
 <script lang="ts">
 import { computed, onMounted, onUnmounted, ref, toRefs } from 'vue';
 import { getCurrentServerTime } from '../../../utils/server-time';
-import { AppCountdown } from '../../../_common/countdown/countdown';
+import { shorthandReadableTime } from '../../../_common/filters/duration';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 </script>
@@ -21,15 +21,12 @@ const props = defineProps({
 const { date, ended } = toRefs(props);
 
 const currentTime = ref(getCurrentServerTime());
+const readableTime = ref(getReadableTime());
 let interval: NodeJS.Timer | null = null;
-
-const remaining = computed(() => {
-	return date.value - currentTime.value;
-});
 
 const hasEnded = computed(() => {
 	if (ended?.value === undefined) {
-		return remaining.value <= 0;
+		return date.value - currentTime.value <= 0;
 	}
 	return ended.value;
 });
@@ -46,11 +43,18 @@ onUnmounted(() => {
 	}
 });
 
+function getReadableTime() {
+	return shorthandReadableTime(date.value, {
+		allowFuture: true,
+		precision: 'quest',
+		joiner: ', ',
+		nowText: 'now',
+	});
+}
+
 function updateTimer() {
-	if (hasEnded.value) {
-		return;
-	}
 	currentTime.value = getCurrentServerTime();
+	readableTime.value = getReadableTime();
 }
 </script>
 
@@ -62,7 +66,8 @@ function updateTimer() {
 	</span>
 	<span v-else-if="date">
 		<AppJolticon class="small text-muted" icon="clock" />
-		{{ ' ' }}
-		<AppCountdown class="text-muted" :end="date" />
+		<span class="text-muted">
+			{{ ' ' + readableTime }}
+		</span>
 	</span>
 </template>

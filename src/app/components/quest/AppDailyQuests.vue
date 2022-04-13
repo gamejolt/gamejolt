@@ -68,7 +68,7 @@ function onListClick() {
 			</slot>
 
 			<span class="help-inline">
-				<AppQuestTimer :date="dailyResetDate" :ended="isDailyStale">
+				<AppQuestTimer v-if="dailyResetDate" :date="dailyResetDate" :ended="isDailyStale">
 					<template #ended>
 						<a class="link-unstyled" @click="fetchDailyQuests">
 							<AppTranslate> Refresh </AppTranslate>
