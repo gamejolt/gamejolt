@@ -62,7 +62,7 @@ export default class AppFiresideSettingsPopper extends Vue {
 		}
 
 		// We only want to show mute controls for remote listable streaming users.
-		const remoteUsers = this.c.rtc.value.listableUsers.filter(
+		const remoteUsers = this.c.rtc.value.listableStreamingUsers.filter(
 			rtcUser => rtcUser.remoteVideoUser || rtcUser.remoteChatUser
 		);
 		return remoteUsers.length > 0;
@@ -73,15 +73,15 @@ export default class AppFiresideSettingsPopper extends Vue {
 	}
 
 	get shouldShowMuteAll() {
-		return this.c.rtc.value?.listableUsers.some(i => !i.micAudioMuted) ?? false;
+		return this.c.rtc.value?.listableStreamingUsers.some(i => !i.micAudioMuted) ?? false;
 	}
 
 	muteAll() {
-		return this.c.rtc.value?.listableUsers.forEach(i => setAudioPlayback(i, false));
+		return this.c.rtc.value?.listableStreamingUsers.forEach(i => setAudioPlayback(i, false));
 	}
 
 	unmuteAll() {
-		return this.c.rtc.value?.listableUsers.forEach(i => setAudioPlayback(i, true));
+		return this.c.rtc.value?.listableStreamingUsers.forEach(i => setAudioPlayback(i, true));
 	}
 
 	onClickShowChatMembers() {

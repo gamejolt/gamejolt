@@ -47,8 +47,8 @@ export default class AppFiresideHostList extends Vue {
 		return this.c.canManageCohosts.value;
 	}
 
-	get listableUsers() {
-		return this.c.rtc.value?.listableUsers ?? [];
+	get listableStreamingUsers() {
+		return this.c.rtc.value?.listableStreamingUsers ?? [];
 	}
 
 	onClickStickerButton() {
@@ -67,7 +67,7 @@ export default class AppFiresideHostList extends Vue {
 			<AppFiresideCohostManage v-if="canManageCohosts" />
 
 			<AppFiresideHostThumb
-				v-for="host of listableUsers"
+				v-for="host of listableStreamingUsers"
 				:key="host.uid"
 				class="-host-thumb"
 				:host="host"

@@ -91,7 +91,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 
 	const isDraft = computed(() => fireside?.is_draft ?? true);
 	const isStreaming = computed(
-		() => !!(fireside?.is_streaming && rtc.value && rtc.value.listableUsers.length > 0)
+		() => !!(fireside?.is_streaming && rtc.value && rtc.value.listableStreamingUsers.length > 0)
 	);
 	const isPersonallyStreaming = computed(() => rtc.value?.isPersonallyStreaming ?? false);
 
@@ -100,7 +100,9 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 			return false;
 		}
 
-		const user = rtc.value.listableUsers.find(i => i.userModel?.id === rtc.value?.userId);
+		const user = rtc.value.listableStreamingUsers.find(
+			i => i.userModel?.id === rtc.value?.userId
+		);
 		if (!user) {
 			return false;
 		}

@@ -36,7 +36,7 @@ const { rtc, isShowingStreamSetup, isStreaming } = c;
 const cohosts = computed(() => {
 	const result: User[] = [];
 
-	for (const rtcUser of rtc.value?.listableUsers ?? []) {
+	for (const rtcUser of rtc.value?.listableStreamingUsers ?? []) {
 		// Since we're iterating over listable users they will always have their userModel.
 		const userModel = rtcUser.userModel!;
 

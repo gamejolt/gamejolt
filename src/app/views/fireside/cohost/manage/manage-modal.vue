@@ -51,26 +51,27 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 	}
 
 	get listableCohosts(): User[] {
-		return (this.rtc?.listableUsers ?? [])
-			.map(i => i.userModel)
-			.filter(i => i && i.id !== this.controller.user.value?.id) as User[];
+		const hosts = this.rtc?.hosts ?? [];
+
+		return hosts // formatting
+			.filter(i => !i.isUnlisted || this.rtc?.listableHostIds.includes(i.user.id))
+			.map(i => i.user)
+			.filter(i => i.id !== this.controller.user.value?.id);
 	}
 
-	get users() {
+	get manageableUsers() {
 		return [...this.hostableChatUsers, ...this.listableCohosts].sort((a, b) =>
 			stringSort(a.display_name, b.display_name)
 		);
 	}
 
 	get filteredUsers() {
-		// TODO(big-pp-event) filter out unlisted users, except ones the current user can list.
-		// EDIT: might not need to do this at all actually, this is the manage modal after all.
 		if (!this.filterQuery) {
-			return this.users;
+			return this.manageableUsers;
 		}
 
 		const filter = this.filterQuery.toLowerCase();
-		return this.users.filter(
+		return this.manageableUsers.filter(
 			i =>
 				fuzzysearch(filter, i.display_name.toLowerCase()) ||
 				fuzzysearch(filter, i.username.toLowerCase())
@@ -88,7 +89,7 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 	isUserStreaming(user: ChatUser | User) {
 		return (
 			this.isHost(user) &&
-			this.rtc?.listableUsers.some(i => i.userModel?.id === user.id) === true
+			this.rtc?.listableStreamingUsers.some(i => i.userModel?.id === user.id) === true
 		);
 	}
 

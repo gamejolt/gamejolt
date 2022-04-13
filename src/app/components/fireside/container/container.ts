@@ -552,11 +552,13 @@ export class AppFiresideContainer extends Vue {
 			}
 
 			const streamingUids = streamingInfo.streamingUids ?? [];
+			const streamingHostIds = streamingInfo.streamingHostIds ?? {};
 			const hostUsers = User.populate(streamingInfo[field] ?? []) as User[];
 			const hosts = hostUsers.map(user => {
 				return {
 					user,
 					isUnlisted,
+					isLive: streamingHostIds.includes(user.id),
 					uids: streamingUids[user.id] ?? [],
 				} as FiresideRTCHost;
 			});
@@ -616,10 +618,10 @@ export class AppFiresideContainer extends Vue {
 				'is_expired',
 				// TODO(big-pp-event) is_streaming can't be sent through fireside-updated
 				// event since this should be specific to the user now that we have unlisted hosts.
-				'is_streaming',
+				// 'is_streaming',
 				'is_draft',
-				// TODO(big-pp-event) same issue as with is_streaming applies here as well.
-				'member_count',
+				// TODO(big-pp-event) same issue as above.
+				// 'member_count',
 				'community_links',
 			])
 		);
@@ -722,6 +724,7 @@ export class AppFiresideContainer extends Vue {
 		}
 
 		// TODO(big-pp-event) does is_streaming here have to be true only if listable hosts are streaming for the current user?
+		// EDIT: yes.
 		// TODO(big-pp-event) if this fireside updated event would end up creating the RTC, we need to make sure
 		// to fetch the user listable hosts set before actually creating it. Otherwise, we will get events from agora before
 		// we know which hosts are listable, which would end up creating everyone as muted.
@@ -776,6 +779,8 @@ export class AppFiresideContainer extends Vue {
 		const c = this.controller;
 
 		c.listableHostIds.value = payload.listable_host_ids ?? [];
+
+		// TODO(big-pp-event) upsert fireside rtc here.
 
 		if (c.rtc.value) {
 			// TODO(big-pp-event) need to unfocus the current user if they are no longer listable.

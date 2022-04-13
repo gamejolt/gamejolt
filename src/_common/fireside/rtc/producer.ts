@@ -9,7 +9,7 @@ import {
 	SettingStreamProducerDesktopAudio,
 	SettingStreamProducerGroupAudio,
 	SettingStreamProducerMic,
-	SettingStreamProducerWebcam,
+	SettingStreamProducerWebcam
 } from '../../settings/settings.service';
 import { Translate } from '../../translate/translate.service';
 import {
@@ -17,14 +17,14 @@ import {
 	setChannelAudioTrack,
 	setChannelVideoTrack,
 	startChannelStreaming,
-	stopChannelStreaming,
+	stopChannelStreaming
 } from './channel';
-import { chooseFocusedRTCUser, FiresideRTC, renewRTCTokens } from './rtc';
+import { applyRTCTokens, chooseFocusedRTCUser, FiresideRTC } from './rtc';
 import {
-	createFiresideRTCUser,
+	createLocalFiresideRTCUser,
 	setUserHasDesktopAudio,
 	setUserHasMicAudio,
-	setUserHasVideo,
+	setUserHasVideo
 } from './user';
 
 const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
@@ -231,7 +231,7 @@ async function _renewTokens(producer: FiresideRTCProducer) {
 		}
 
 		const { videoToken, chatToken } = response;
-		await renewRTCTokens(rtc, videoToken, chatToken);
+		await applyRTCTokens(rtc, videoToken, chatToken);
 	}
 
 	async function _updateAudienceTokens() {
@@ -826,7 +826,7 @@ function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
 	const hadDesktopAudio = user?.hasDesktopAudio === true;
 	const hadMicAudio = user?.hasMicAudio === true;
 
-	user ??= createFiresideRTCUser(rtc, streamingUid);
+	user ??= createLocalFiresideRTCUser(rtc, streamingUid);
 	user._videoTrack = videoChannel._localVideoTrack
 		? markRaw(videoChannel._localVideoTrack)
 		: null;

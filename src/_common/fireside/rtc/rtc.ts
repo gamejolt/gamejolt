@@ -1,5 +1,5 @@
 import type { IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
-import { markRaw, reactive, toRaw } from 'vue';
+import { markRaw, reactive } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
 import { debounce, sleep } from '../../../utils/utils';
@@ -21,6 +21,7 @@ import {
 	FiresideRTCProducer,
 } from './producer';
 import {
+	createRemoteFiresideRTCUser,
 	FiresideRTCUser,
 	FiresideVideoPlayStateStopped,
 	setUserDesktopAudioVolume,
@@ -39,7 +40,9 @@ export const FiresideRTCKey = Symbol();
 
 export interface FiresideRTCHost {
 	user: User;
+	// TODO(big-pp-event) rename this to something that indicates you need permission to view them.
 	isUnlisted: boolean;
+	isLive: boolean;
 	uids: number[];
 }
 
@@ -55,6 +58,8 @@ export class FiresideRTC {
 		public videoToken: string,
 		public readonly chatChannelName: string,
 		public chatToken: string,
+		// TODO(big-pp-event) i want these to be refs that are defined on controller.
+		// i want container to modify the controller's data.
 		public readonly hosts: FiresideRTCHost[],
 		public readonly listableHostIds: number[],
 		{ isMuted }: Options
@@ -80,7 +85,7 @@ export class FiresideRTC {
 	/**
 	 * The list of FiresideRTCUsers that currently have an agora stream published.
 	 */
-	readonly _remoteUsers: FiresideRTCUser[] = [];
+	readonly _remoteStreamingUsers: FiresideRTCUser[] = [];
 	focusedUser: FiresideRTCUser | null = null;
 
 	videoPaused = false;
@@ -123,21 +128,24 @@ export class FiresideRTC {
 	 * Remote users + the local user prepended if it is set.
 	 * Note: the local user is set if they are currently streaming.
 	 */
-	get _allUsers() {
-		// TODO(big-pp-event): we might have a bug here. we might already have a remote user represeting our local user.
-		// what happens if you try to start streaming when youre already streaming in a different tab?
-		// it'll add the local user anyways and then we'll have two users for yourself (one with the remote uid and one local)
-		// Is this intentional?
-		return Object.freeze([...(this.localUser ? [this.localUser] : []), ...this._remoteUsers]);
+	get _allStreamingUsers() {
+		// If we are streaming from a different tab then we will already have a remote user
+		// correlating to the same gj user our local user correlates to.
+		// This is apparently intended, but i don't know why.
+		return this.localUser // formatting
+			? [this.localUser, ...this._remoteStreamingUsers]
+			: [...this._remoteStreamingUsers];
 	}
 
-	get listableUsers() {
-		return this._allUsers.filter(rtcUser => !rtcUser.isUnlisted);
+	get listableStreamingUsers() {
+		return this._allStreamingUsers.filter(rtcUser => !rtcUser.isUnlisted);
 	}
 
 	get isEveryRemoteListableUsersMuted() {
-		// Check against _remoteUsers because we want to exclude the local user from this check.
-		return this._remoteUsers.every(rtcUser => rtcUser.isUnlisted || rtcUser.micAudioMuted);
+		// Check against _remoteStreamingUsers because we want to exclude the local user from this check.
+		return this._remoteStreamingUsers.every(
+			rtcUser => rtcUser.isUnlisted || rtcUser.micAudioMuted
+		);
 	}
 
 	/**
@@ -157,7 +165,7 @@ export class FiresideRTC {
 	}
 
 	get isFocusingMe() {
-		return this.focusedUser === this.localUser;
+		return this.focusedUser && this.localUser && this.focusedUser.uid === this.localUser.uid;
 	}
 
 	get isPoorNetworkQuality() {
@@ -214,7 +222,7 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 
 	try {
 		await Promise.all(
-			rtc._allUsers.map(user =>
+			rtc._allStreamingUsers.map(user =>
 				Promise.all([
 					setVideoPlayback(user, new FiresideVideoPlayStateStopped()),
 					stopDesktopAudioPlayback(user),
@@ -266,10 +274,13 @@ export async function renewRTCAudienceTokens(
 		return;
 	}
 
-	return await renewRTCTokens(rtc, videoToken, chatToken);
+	return await applyRTCTokens(rtc, videoToken, chatToken);
 }
 
-export async function renewRTCTokens(rtc: FiresideRTC, videoToken: string, chatToken: string) {
+/**
+ * These tokens may either be audience tokens or host streaming tokens.
+ */
+export async function applyRTCTokens(rtc: FiresideRTC, videoToken: string, chatToken: string) {
 	rtc.log('Trace(renewToken)');
 
 	rtc.log(`Renewing tokens.`);
@@ -397,15 +408,12 @@ async function _createChannels(rtc: FiresideRTC) {
 		onTrackPublish(remoteUser, mediaType) {
 			rtc.log('Got user published (video channel)');
 
-			const user = _findOrAddUser(rtc, remoteUser);
+			const user = _findOrAddRemoteUser(rtc, remoteUser);
 			if (!user) {
 				rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
 				return;
 			}
 
-			// TODO(big-pp-event) the comment on remoteVideoUser says these wont be set
-			// if we're dealing with a local user, but _findOrAddUser may return the local user.
-			// Is the comment outdated or is this a bug?
 			user.remoteVideoUser = markRaw(remoteUser);
 
 			if (mediaType === 'video') {
@@ -419,12 +427,18 @@ async function _createChannels(rtc: FiresideRTC) {
 		onTrackUnpublish(remoteUser, mediaType) {
 			rtc.log('Got user unpublished (video channel)');
 
-			// TODO(big-pp-event) why are we checking allUsers here?
-			// are we supposed to be checking the local user here?
-			const user = rtc._allUsers.find(i => i.uid === remoteUser.uid);
+			// Ideally we'd like to check _remoteStreamingUsers but I don't trust Agora
+			// to actually emit these events only for remote users.
+			// If it gets emitted for a local user we'll throw.
+			const user = rtc._allStreamingUsers.find(i => i.uid === remoteUser.uid);
 			if (!user) {
 				rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
 				return;
+			}
+
+			// Safeguard against Agora emitting these events for local users.
+			if (user.isLocal) {
+				throw new Error('Expected to be handling remote users here');
 			}
 
 			if (mediaType === 'video') {
@@ -446,7 +460,7 @@ async function _createChannels(rtc: FiresideRTC) {
 				return;
 			}
 
-			const user = _findOrAddUser(rtc, remoteUser);
+			const user = _findOrAddRemoteUser(rtc, remoteUser);
 			if (!user) {
 				rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
 				return;
@@ -466,12 +480,18 @@ async function _createChannels(rtc: FiresideRTC) {
 				return;
 			}
 
-			// TODO(big-pp-event) why are we checking allUsers here?
-			// are we supposed to be checking the local user here?
-			const user = rtc._allUsers.find(i => i.uid === remoteUser.uid);
+			// Ideally we'd like to check _remoteStreamingUsers but I don't trust Agora
+			// to actually emit these events only for remote users.
+			// If it gets emitted for a local user we'll throw.
+			const user = rtc._allStreamingUsers.find(i => i.uid === remoteUser.uid);
 			if (!user) {
 				rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
 				return;
+			}
+
+			// Safeguard against Agora emitting these events for local users.
+			if (user.isLocal) {
+				throw new Error('Expected to be handling remote users here');
 			}
 
 			setUserHasMicAudio(user, false);
@@ -498,15 +518,20 @@ async function _join(rtc: FiresideRTC) {
 }
 
 export function chooseFocusedRTCUser(rtc: FiresideRTC) {
-	// We only choose a new focused user if there isn't one currently set.
+	// We only choose a new focused user if the current one is unset or is unlisted.
 	if (rtc.focusedUser) {
-		return;
+		// Unfocus an unlisted focused user.
+		if (rtc.focusedUser.isUnlisted) {
+			rtc.focusedUser = null;
+		} else {
+			return;
+		}
 	}
 
 	let bestUser: FiresideRTCUser | null = null;
 	let bestScore = -1;
 
-	for (const user of rtc.listableUsers) {
+	for (const user of rtc.listableStreamingUsers) {
 		const score =
 			(user.hasVideo ? 4 : 0) + (user.hasMicAudio ? 2 : 0) + (user.hasDesktopAudio ? 1 : 0);
 		if (score > bestScore) {
@@ -518,22 +543,22 @@ export function chooseFocusedRTCUser(rtc: FiresideRTC) {
 	rtc.focusedUser = bestUser;
 }
 
-function _findOrAddUser(rtc: FiresideRTC, remoteUser: IAgoraRTCRemoteUser) {
+function _findOrAddRemoteUser(rtc: FiresideRTC, remoteUser: IAgoraRTCRemoteUser) {
 	if (typeof remoteUser.uid !== 'number') {
 		rtc.logWarning('Expected remote user uid to be numeric');
 		return null;
 	}
 
-	// TODO(big-pp-event) why are we checking allUsers here?
-	// are we supposed to be checking the local user here?
-	// EDIT: if we don't use _allUsers we'll end up inserting the local user
-	// into _remoteUsers. we definitely don't want that so it does seem intentional,
-	// but this causes issues in other places (see comments in onTrackPublish)
-	let user = rtc._allUsers.find(i => i.uid === remoteUser.uid);
+	// We are checking _allStreamingUsers here just as a safeguard against Agora.
+	// if we don't use _allStreamingUsers we'll end up inserting the local user
+	// into _remoteStreamingUsers.
+	let user = rtc._allStreamingUsers.find(i => i.uid === remoteUser.uid);
 
 	if (!user) {
-		user = new FiresideRTCUser(rtc, remoteUser.uid);
-		rtc._remoteUsers.push(user);
+		user = createRemoteFiresideRTCUser(rtc, remoteUser.uid);
+		rtc._remoteStreamingUsers.push(user);
+	} else if (user.isLocal) {
+		throw new Error('Expected to be handling remote users here');
 	}
 
 	return user;
@@ -548,18 +573,17 @@ function _removeUserIfNeeded(rtc: FiresideRTC, user: FiresideRTCUser) {
 	user.remoteVideoUser = null;
 	user.remoteChatUser = null;
 
-	arrayRemove(rtc._remoteUsers, i => i === user);
+	arrayRemove(rtc._remoteStreamingUsers, i => i === user);
 
-	if (toRaw(rtc.focusedUser) === toRaw(user)) {
+	if (rtc.focusedUser?.uid === user.uid) {
 		rtc.focusedUser = null;
 		chooseFocusedRTCUser(rtc);
 	}
 }
 
 function _updateVolumeLevels(rtc: FiresideRTC) {
-	// TODO(big-pp-event) why are we checking allUsers here?
-	// are we supposed to be checking the local user here?
-	for (const user of rtc._allUsers) {
+	// Checking against _allStreamingUsers allows us to update the local user's audio levels as well.
+	for (const user of rtc._allStreamingUsers) {
 		updateVolumeLevel(user);
 	}
 }

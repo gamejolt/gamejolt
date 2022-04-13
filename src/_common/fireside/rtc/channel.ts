@@ -1,5 +1,6 @@
 import type {
 	AudienceLatencyLevelType,
+	ConnectionState,
 	IAgoraRTCClient,
 	IAgoraRTCRemoteUser,
 	ILocalAudioTrack,
@@ -29,6 +30,7 @@ export class FiresideRTCChannel {
 	_localVideoTrack: ILocalVideoTrack | null = null;
 	_localAudioTrack: ILocalAudioTrack | null = null;
 	_networkQuality: NetworkQuality | null = null;
+	_connectionState: ConnectionState | null = null;
 
 	/**
 	 * Whether or not we have a track published in this channel. This will
@@ -37,11 +39,11 @@ export class FiresideRTCChannel {
 	_isPublished = false;
 
 	get isDisconnected() {
-		return this.agoraClient.connectionState === 'DISCONNECTED';
+		return this._connectionState === 'DISCONNECTED';
 	}
 
 	get isConnected() {
-		return this.agoraClient.connectionState === 'CONNECTED';
+		return this._connectionState === 'CONNECTED';
 	}
 
 	get isPoorNetworkQuality() {
@@ -90,6 +92,10 @@ export async function createFiresideRTCChannel(
 
 	c.agoraClient.on('network-quality', stats => {
 		c._networkQuality = markRaw(stats);
+	});
+
+	c.agoraClient.on('connection-state-change', newState => {
+		c._connectionState = newState;
 	});
 
 	return c;
