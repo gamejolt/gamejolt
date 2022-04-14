@@ -14,11 +14,12 @@ import { AppActivityFeedLazy } from '../../components/lazy';
 import { illNoComments } from '../../img/ill/illustrations';
 import { useAppStore } from '../../store/index';
 import { RouteActivityFeedController } from './feed.vue';
-import { HOME_FEED_FYP } from './home-feed.service';
+import { HOME_FEED_ACTIVITY } from './home-feed.service';
 
 function getFetchUrl() {
 	let url = '/web/dash/activity/activity';
-	if (configHomeDefaultFeed.value === HOME_FEED_FYP) {
+	// If our home feed is not the activity feed, we only want to include the actual followed content in the feed.
+	if (configHomeDefaultFeed.value !== HOME_FEED_ACTIVITY) {
 		url += '?only-followed=1';
 	}
 	return url;
