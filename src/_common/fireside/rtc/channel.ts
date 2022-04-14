@@ -134,6 +134,8 @@ export async function destroyChannel(channel: FiresideRTCChannel) {
 }
 
 export async function setChannelToken(channel: FiresideRTCChannel, token: string) {
+	// TODO(big-pp-event) any reason we're not setting the token on the channel instance here?...
+	// channel.token = token;
 	await channel.agoraClient.renewToken(token);
 }
 

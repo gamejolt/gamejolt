@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, watch } from 'vue';
+import { computed, onBeforeUnmount, PropType, watch } from 'vue';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
@@ -63,6 +63,8 @@ const shouldShowVideo = computed(() => {
 watch([isStreaming, hasVideo], () => {
 	emit('changed', hasVideo.value, isStreaming.value);
 });
+
+onBeforeUnmount(() => c.cleanup());
 </script>
 
 <template>

@@ -1,7 +1,6 @@
 import { h } from 'vue';
 import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { arrayUnique } from '../../../../utils/array';
 import { objectPick } from '../../../../utils/object';
 import { updateServerTimeOffset } from '../../../../utils/server-time';
 import { sleep } from '../../../../utils/utils';
@@ -13,16 +12,10 @@ import { setStickerStreak, useDrawerStore } from '../../../../_common/drawer/dra
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../../_common/fireside/role/role.model';
 import {
-	createFiresideRTCProducer,
-	destroyFiresideRTCProducer,
-	stopStreaming,
-} from '../../../../_common/fireside/rtc/producer';
-import {
 	chooseFocusedRTCUser,
-	createFiresideRTC,
 	destroyFiresideRTC,
 	FiresideRTCHost,
-	renewRTCAudienceTokens,
+	AgoraStreamingInfo,
 } from '../../../../_common/fireside/rtc/rtc';
 import { showInfoGrowl } from '../../../../_common/growls/growls.service';
 import { StickerPlacement } from '../../../../_common/sticker/placement/placement.model';
@@ -116,6 +109,9 @@ export class AppFiresideContainer extends Vue {
 		}
 
 		// Set up watchers to initiate connection once one of them boots up.
+		// Both chat/grid reported connected when they are actually fully connected.
+		// When a connection is dropped or any other error on the socket they immediately
+		// become disconnected and then queue up for restarting.
 		this.$watch('chat.connected', () => this.watchChat());
 		this.$watch('grid.connected', () => this.watchGrid());
 
@@ -137,6 +133,11 @@ export class AppFiresideContainer extends Vue {
 	}
 
 	watchChat() {
+		console.debug(
+			'[FIRESIDE] chat.connected watcher triggered: ' +
+				(this.chat?.connected ? 'connected' : 'disconnected')
+		);
+
 		const c = this.controller;
 		if (this.chat?.connected) {
 			this.tryJoin();
@@ -153,6 +154,11 @@ export class AppFiresideContainer extends Vue {
 	}
 
 	watchGrid() {
+		console.debug(
+			'[FIRESIDE] grid.connected watcher triggered: ' +
+				(this.grid?.connected ? 'connected' : 'disconnected')
+		);
+
 		const c = this.controller;
 		if (this.grid?.connected) {
 			this.tryJoin();
@@ -241,6 +247,10 @@ export class AppFiresideContainer extends Vue {
 		if (!canProceed) {
 			return;
 		}
+
+		// TODO(big-pp-event) at this point the rtc used to get initialized through _fetchForStreaming -> upsertRTC,
+		// since it was called with { checkJoined: false }.
+		// Why is that? what is this check joined solving?
 
 		// Maybe they are blocked now?
 		if (c.fireside.blocked) {
@@ -397,13 +407,14 @@ export class AppFiresideContainer extends Vue {
 			}
 
 			c.fireside.assign(payload.fireside);
-
+			c.agoraStreamingInfo.value = this.getAgoraStreamingInfoFromStreamingInfo(payload);
+			c.hosts.value = this.getHostsFromStreamingInfo(payload);
 			c.listableHostIds.value = payload.listableHostIds ?? [];
 
 			// If they have a host role, or if this fireside is actively
 			// streaming, we'll get streaming tokens from the fetch payload. In
 			// that case, we want to set up the RTC stuff.
-			this.upsertRtc(payload, { checkJoined: false });
+			// this.upsertRtc(payload, { checkJoined: false });
 		} catch (error) {
 			console.debug(`[FIRESIDE] Setup failure 2.`, error);
 			if (assignRouteStatus) {
@@ -491,55 +502,68 @@ export class AppFiresideContainer extends Vue {
 		c.updateInterval.value = setInterval(() => updateFiresideExpiryValues(c), 1000);
 	}
 
-	private async upsertRtc(
-		payload: any,
-		options: {
-			checkJoined?: boolean;
-			hosts?: FiresideRTCHost[];
-			listableHostIds?: number[];
-		} = {
-			checkJoined: true,
-		}
-	) {
-		const { checkJoined = true } = options;
-		const c = this.controller;
-		if (!c || !c.fireside || (checkJoined && c.status.value !== 'joined')) {
-			return;
-		}
+	// private async upsertRtc(
+	// 	payload: any,
+	// 	options: {
+	// 		checkJoined?: boolean;
+	// 		hosts?: FiresideRTCHost[];
+	// 		listableHostIds?: number[];
+	// 	} = {
+	// 		checkJoined: true,
+	// 	}
+	// ) {
+	// 	const { checkJoined = true } = options;
+	// 	const c = this.controller;
+	// 	// TODO(big-pp-event) what is the checkJoined solving?
+	// 	if (!c || !c.fireside || (checkJoined && c.status.value !== 'joined')) {
+	// 		return;
+	// 	}
 
-		// If they don't have tokens yet, then they don't need to set up the RTC
-		// stuff.
-		if (!payload.videoToken || !payload.chatToken) {
-			return;
-		}
+	// 	// If they don't have tokens yet, then they don't need to set up the RTC
+	// 	// stuff.
+	// 	if (!payload.videoToken || !payload.chatToken) {
+	// 		return;
+	// 	}
 
-		if (!c.rtc.value) {
-			const hosts = options.hosts ?? this.getHostsFromStreamingInfo(payload) ?? [];
+	// 	if (!c.rtc.value) {
+	// 		const hosts = options.hosts ?? this.getHostsFromStreamingInfo(payload) ?? [];
 
-			const listableHostIds = options.listableHostIds ?? c.listableHostIds.value;
-			if (!listableHostIds) {
-				throw new Error(
-					'Expected listable hosts to be set by the time Fireside RTC is initialized'
-				);
-			}
-			c.listableHostIds.value = listableHostIds;
+	// 		const listableHostIds = options.listableHostIds ?? c.listableHostIds.value;
+	// 		if (!listableHostIds) {
+	// 			throw new Error(
+	// 				'Expected listable hosts to be set by the time Fireside RTC is initialized'
+	// 			);
+	// 		}
+	// 		c.listableHostIds.value = listableHostIds;
 
-			c.rtc.value = createFiresideRTC(
-				c.fireside,
-				this.user?.id ?? null,
-				payload.streamingAppId,
-				payload.streamingUid,
-				payload.videoChannelName,
-				payload.videoToken,
-				payload.chatChannelName,
-				payload.chatToken,
-				hosts,
-				listableHostIds,
-				{ isMuted: c.isMuted }
-			);
-		} else if (!c.rtc.value.producer) {
-			renewRTCAudienceTokens(c.rtc.value, payload.videoToken, payload.chatToken);
-		}
+	// 		c.rtc.value = createFiresideRTC(
+	// 			c.fireside,
+	// 			this.user?.id ?? null,
+	// 			payload.streamingAppId,
+	// 			payload.streamingUid,
+	// 			payload.videoChannelName,
+	// 			payload.videoToken,
+	// 			payload.chatChannelName,
+	// 			payload.chatToken,
+	// 			hosts,
+	// 			listableHostIds,
+	// 			{ isMuted: c.isMuted }
+	// 		);
+	// 	} else if (!c.rtc.value.producer) {
+	// 		// TODO(big-pp-event) need to call this when tokens change
+	// 		applyAudienceRTCTokens(c.rtc.value, payload.videoToken, payload.chatToken);
+	// 	}
+	// }
+
+	private getAgoraStreamingInfoFromStreamingInfo(streamingInfo: any) {
+		return {
+			appId: streamingInfo.streamingAppId,
+			streamingUid: streamingInfo.streamingUid,
+			videoChannelName: streamingInfo.videoChannelName,
+			videoToken: streamingInfo.videoToken,
+			chatChannelName: streamingInfo.chatChannelName,
+			chatToken: streamingInfo.chatToken,
+		} as AgoraStreamingInfo;
 	}
 
 	private getHostsFromStreamingInfo(streamingInfo: any) {
@@ -566,9 +590,10 @@ export class AppFiresideContainer extends Vue {
 			result.push(...hosts);
 		}
 
-		return result.length == 0 ? undefined : result;
+		return result;
 	}
 
+	// TODO(big-pp-event) move this into controller somehow
 	private destroyRtc() {
 		const c = this.controller;
 		if (!c.rtc.value) {
@@ -616,123 +641,263 @@ export class AppFiresideContainer extends Vue {
 				'title',
 				'expires_on',
 				'is_expired',
-				// TODO(big-pp-event) is_streaming can't be sent through fireside-updated
-				// event since this should be specific to the user now that we have unlisted hosts.
+				// is_streaming can't be sent through fireside-updated event
+				// since this should be specific to the user now that we have
+				// unlisted hosts.
 				// 'is_streaming',
 				'is_draft',
-				// TODO(big-pp-event) same issue as above.
+				// can't updated member_count here for the same reason
+				// we want update is_streaming.
 				// 'member_count',
 				'community_links',
 			])
 		);
 
-		const priorHosts = c.rtc.value?.hosts ?? [];
-		const newHosts = this.getHostsFromStreamingInfo(payload.streaming_info)?.map(newHost => {
-			const priorHost = priorHosts.find(i => i.user.id === newHost.user.id);
-			if (priorHost) {
-				// Transfer over all previously assigned uids to the new host.
-				newHost.uids.push(...priorHost.uids);
-				arrayUnique(newHost.uids);
-			}
-			return newHost;
-		});
+		const wasHost = c.hosts.value.some(host => host.user.id === this.user?.id);
 
-		if (newHosts) {
-			const wasHost = priorHosts.some(host => host.user.id === this.user?.id);
-			const isHost = newHosts.some(host => host.user.id === this.user?.id);
+		// TODO(big-pp-event) check if this breaks reactivity.
+		// I'm afraid of replacing an array instead of splicing and reinserting.
+		c.hosts.value = this.getHostsFromStreamingInfo(payload.streaming_info);
 
-			if (c.rtc.value && newHosts.length > 0) {
-				// If we have an RTC, replace our old hosts with the new ones we
-				// just got.
-				c.rtc.value.hosts.splice(0, c.rtc.value.hosts.length);
-				c.rtc.value.hosts.push(...newHosts);
+		// After updating hosts need to check if we trasitioned into or out of being a host.
+		const isHost = c.hosts.value.some(host => host.user.id === this.user?.id);
+
+		// If our host state changed, we need to update anything else
+		// depending on streaming.
+		if (isHost !== wasHost) {
+			// If we don't actually have an RTC created yet, take us through
+			// the normal Host initialization.
+			if (!c.rtc.value) {
+				await this._fetchForStreaming({ assignRouteStatus: false });
+				this.expiryCheck();
+				return;
 			}
 
-			// If our host state changed, we need to update anything else
-			// depending on streaming.
-			if (isHost !== wasHost) {
-				// If we don't actually have an RTC created yet, take us through
-				// the normal Host initialization.
-				if (!c.rtc.value) {
-					await this._fetchForStreaming({ assignRouteStatus: false });
-					this.expiryCheck();
-					return;
+			try {
+				// Validate our streamingUid. If this fails, we're unable to stream.
+				const response = await Api.sendRequest(
+					'/web/dash/fireside/generate-streaming-tokens/' + c.fireside.id,
+					{ streaming_uid: c.rtc.value.streamingUid },
+					{ detach: true }
+				);
+
+				if (response?.success !== true) {
+					throw new Error(response);
 				}
 
-				try {
-					// Validate our streamingUid. If this fails, we're unable to
-					// stream.
-					const response = await Api.sendRequest(
-						'/web/dash/fireside/generate-streaming-tokens/' + c.fireside.id,
-						{ streaming_uid: c.rtc.value.streamingUid },
-						{ detach: true }
-					);
-
-					if (response?.success !== true) {
-						throw new Error(response);
-					}
-
-					// Manually update our role to something where we can stream.
-					if (c.fireside.role) {
-						c.fireside.role.role = 'cohost';
-						c.fireside.role.can_stream_audio = true;
-						c.fireside.role.can_stream_video = true;
-					}
-				} catch (_) {
-					// If our host state changed, downgrade ourselves to an audience member.
-					if (!isHost && wasHost && c.fireside.role) {
-						c.fireside.role.role = 'audience';
-						c.fireside.role.can_stream_audio = false;
-						c.fireside.role.can_stream_video = false;
-					}
+				// Manually update our role to something where we can stream.
+				if (c.fireside.role) {
+					c.fireside.role.role = 'cohost';
+					c.fireside.role.can_stream_audio = true;
+					c.fireside.role.can_stream_video = true;
 				}
-
-				if (c.fireside.role?.canStream === true) {
-					// Grab a producer if we don't have one and we're now able
-					// to stream.
-					c.rtc.value.producer ??= createFiresideRTCProducer(c.rtc.value);
-
-					showInfoGrowl(
-						this.$gettext(
-							`You've been added as a host to this fireside. Hop into the stream!`
-						)
-					);
-				} else if (c.rtc.value.producer) {
-					// If our role doesn't allow us to stream and we have a
-					// producer, tear it down and clean it up.
-					await stopStreaming(c.rtc.value.producer);
-					destroyFiresideRTCProducer(c.rtc.value.producer);
-					c.rtc.value.producer = null;
-
-					// TODO: If this Fireside was a draft, we may need to
-					// re-initialize this component to see if they still have
-					// permissions to view it.
-
-					showInfoGrowl(
-						this.$gettext(`You've been removed as a host for this fireside.`)
-					);
+			} catch (_) {
+				// If our host state changed, downgrade ourselves to an audience member.
+				if (!isHost && wasHost && c.fireside.role) {
+					c.fireside.role.role = 'audience';
+					c.fireside.role.can_stream_audio = false;
+					c.fireside.role.can_stream_video = false;
 				}
 			}
+
+			// TODO(big-pp-event) creating and destroying the producer is now done through
+			// controller. We need a way to react to the producer being initialized and destroyed
+			// in order to spawn the notification growls.
+			// if (c.fireside.role?.canStream === true) {
+			// 	// Grab a producer if we don't have one and we're now able
+			// 	// to stream.
+			// 	c.rtc.value.producer ??= createFiresideRTCProducer(c.rtc.value);
+			// 	showInfoGrowl(
+			// 		this.$gettext(
+			// 			`You've been added as a host to this fireside. Hop into the stream!`
+			// 		)
+			// 	);
+			// } else if (c.rtc.value.producer) {
+			// 	// If our role doesn't allow us to stream and we have a
+			// 	// producer, tear it down and clean it up.
+			// 	await stopStreaming(c.rtc.value.producer);
+			// 	destroyFiresideRTCProducer(c.rtc.value.producer);
+			// 	c.rtc.value.producer = null;
+
+			// 	// TODO: If this Fireside was a draft, we may need to
+			// 	// re-initialize this component to see if they still have
+			// 	// permissions to view it.
+
+			// 	showInfoGrowl(this.$gettext(`You've been removed as a host for this fireside.`));
+			// }
 		}
 
 		this.expiryCheck();
 
-		// We don't update host streaming info through this. Only the audience
-		// streaming info is done through Grid.
-		if (c.fireside.role?.canStream === true) {
-			return;
-		}
+		// // We don't update host streaming info through this. Only the audience
+		// // streaming info is done through Grid.
+		// // TODO(big-pp-event) why? then what causes the fireside RTC to self destruct for audience when there are no more hosts?
+		// if (c.fireside.role?.canStream === true) {
+		// 	return;
+		// }
 
-		// TODO(big-pp-event) does is_streaming here have to be true only if listable hosts are streaming for the current user?
-		// EDIT: yes.
-		// TODO(big-pp-event) if this fireside updated event would end up creating the RTC, we need to make sure
-		// to fetch the user listable hosts set before actually creating it. Otherwise, we will get events from agora before
-		// we know which hosts are listable, which would end up creating everyone as muted.
-		if (c.fireside.is_streaming && payload.streaming_info) {
-			this.upsertRtc(payload.streaming_info, { hosts: newHosts });
-		} else {
-			this.destroyRtc();
-		}
+		// // TODO(big-pp-event) does is_streaming here have to be true only if listable hosts are streaming for the current user?
+		// // EDIT: yes.
+		// // TODO(big-pp-event) if this fireside updated event would end up creating the RTC, we need to make sure
+		// // to fetch the user listable hosts set before actually creating it. Otherwise, we will get events from agora before
+		// // we know which hosts are listable, which would end up creating everyone as muted.
+		// if (c.fireside.is_streaming && payload.streaming_info) {
+		// 	this.upsertRtc(payload.streaming_info, { hosts: newHosts });
+		// } else {
+		// 	this.destroyRtc();
+		// }
+
+		// OLD IMPLEMENTATION BELOW
+
+		// console.log('Fireside update message:');
+		// console.log(payload);
+
+		// const c = this.controller;
+		// if (!c.fireside || !payload.fireside) {
+		// 	return;
+		// }
+
+		// const updatedFireside = new Fireside(payload.fireside);
+		// const oldCommunityLinks = c.fireside.community_links;
+
+		// for (const updatedLink of updatedFireside.community_links) {
+		// 	const oldLink = oldCommunityLinks.find(
+		// 		i => i.community.id === updatedLink.community.id
+		// 	);
+		// 	if (!oldLink) {
+		// 		continue;
+		// 	}
+		// 	// Preserve the old Community model from the link, otherwise we will
+		// 	// overwrite perms.
+		// 	Object.assign(updatedLink, objectPick(oldLink, ['community']));
+		// }
+
+		// Object.assign(
+		// 	c.fireside,
+		// 	objectPick(updatedFireside, [
+		// 		'user',
+		// 		'header_media_item',
+		// 		'title',
+		// 		'expires_on',
+		// 		'is_expired',
+		// 		// TODO(big-pp-event) is_streaming can't be sent through fireside-updated
+		// 		// event since this should be specific to the user now that we have unlisted hosts.
+		// 		// 'is_streaming',
+		// 		'is_draft',
+		// 		// TODO(big-pp-event) same issue as above.
+		// 		// 'member_count',
+		// 		'community_links',
+		// 	])
+		// );
+
+		// const priorHosts = c.rtc.value?.hosts ?? [];
+		// const newHosts = this.getHostsFromStreamingInfo(payload.streaming_info)?.map(newHost => {
+		// 	const priorHost = priorHosts.find(i => i.user.id === newHost.user.id);
+		// 	if (priorHost) {
+		// 		// Transfer over all previously assigned uids to the new host.
+		// 		newHost.uids.push(...priorHost.uids);
+		// 		arrayUnique(newHost.uids);
+		// 	}
+		// 	return newHost;
+		// });
+
+		// if (newHosts) {
+		// 	const wasHost = priorHosts.some(host => host.user.id === this.user?.id);
+		// 	const isHost = newHosts.some(host => host.user.id === this.user?.id);
+
+		// 	if (c.rtc.value && newHosts.length > 0) {
+		// 		// If we have an RTC, replace our old hosts with the new ones we
+		// 		// just got.
+		// 		c.rtc.value.hosts.splice(0, c.rtc.value.hosts.length);
+		// 		c.rtc.value.hosts.push(...newHosts);
+		// 	}
+
+		// 	// If our host state changed, we need to update anything else
+		// 	// depending on streaming.
+		// 	if (isHost !== wasHost) {
+		// 		// If we don't actually have an RTC created yet, take us through
+		// 		// the normal Host initialization.
+		// 		if (!c.rtc.value) {
+		// 			await this._fetchForStreaming({ assignRouteStatus: false });
+		// 			this.expiryCheck();
+		// 			return;
+		// 		}
+
+		// 		try {
+		// 			// Validate our streamingUid. If this fails, we're unable to
+		// 			// stream.
+		// 			const response = await Api.sendRequest(
+		// 				'/web/dash/fireside/generate-streaming-tokens/' + c.fireside.id,
+		// 				{ streaming_uid: c.rtc.value.streamingUid },
+		// 				{ detach: true }
+		// 			);
+
+		// 			if (response?.success !== true) {
+		// 				throw new Error(response);
+		// 			}
+
+		// 			// Manually update our role to something where we can stream.
+		// 			if (c.fireside.role) {
+		// 				c.fireside.role.role = 'cohost';
+		// 				c.fireside.role.can_stream_audio = true;
+		// 				c.fireside.role.can_stream_video = true;
+		// 			}
+		// 		} catch (_) {
+		// 			// If our host state changed, downgrade ourselves to an audience member.
+		// 			if (!isHost && wasHost && c.fireside.role) {
+		// 				c.fireside.role.role = 'audience';
+		// 				c.fireside.role.can_stream_audio = false;
+		// 				c.fireside.role.can_stream_video = false;
+		// 			}
+		// 		}
+
+		// 		if (c.fireside.role?.canStream === true) {
+		// 			// Grab a producer if we don't have one and we're now able
+		// 			// to stream.
+		// 			c.rtc.value.producer ??= createFiresideRTCProducer(c.rtc.value);
+
+		// 			showInfoGrowl(
+		// 				this.$gettext(
+		// 					`You've been added as a host to this fireside. Hop into the stream!`
+		// 				)
+		// 			);
+		// 		} else if (c.rtc.value.producer) {
+		// 			// If our role doesn't allow us to stream and we have a
+		// 			// producer, tear it down and clean it up.
+		// 			await stopStreaming(c.rtc.value.producer);
+		// 			destroyFiresideRTCProducer(c.rtc.value.producer);
+		// 			c.rtc.value.producer = null;
+
+		// 			// TODO: If this Fireside was a draft, we may need to
+		// 			// re-initialize this component to see if they still have
+		// 			// permissions to view it.
+
+		// 			showInfoGrowl(
+		// 				this.$gettext(`You've been removed as a host for this fireside.`)
+		// 			);
+		// 		}
+		// 	}
+		// }
+
+		// this.expiryCheck();
+
+		// // We don't update host streaming info through this. Only the audience
+		// // streaming info is done through Grid.
+		// // TODO(big-pp-event) why? then what causes the fireside RTC to self destruct for audience when there are no more hosts?
+		// if (c.fireside.role?.canStream === true) {
+		// 	return;
+		// }
+
+		// // TODO(big-pp-event) does is_streaming here have to be true only if listable hosts are streaming for the current user?
+		// // EDIT: yes.
+		// // TODO(big-pp-event) if this fireside updated event would end up creating the RTC, we need to make sure
+		// // to fetch the user listable hosts set before actually creating it. Otherwise, we will get events from agora before
+		// // we know which hosts are listable, which would end up creating everyone as muted.
+		// if (c.fireside.is_streaming && payload.streaming_info) {
+		// 	this.upsertRtc(payload.streaming_info, { hosts: newHosts });
+		// } else {
+		// 	this.destroyRtc();
+		// }
 	}
 
 	onGridStreamingUidAdded(payload: any) {
@@ -754,6 +919,8 @@ export class AppFiresideContainer extends Vue {
 			c.rtc.value.hosts.push({
 				user: user,
 				isUnlisted: payload.is_unlisted,
+				// TODO(big-pp-event) get this from the payload.
+				isLive: false,
 				uids: [payload.streaming_uid],
 			});
 		}

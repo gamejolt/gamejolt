@@ -222,6 +222,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	routeDestroyed() {
+		this.c?.cleanup();
 		this.themeStore.clearPageTheme(FiresideThemeKey);
 
 		this.beforeEachDeregister?.();

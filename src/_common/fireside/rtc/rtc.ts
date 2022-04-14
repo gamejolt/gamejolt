@@ -1,6 +1,6 @@
 import type { IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
 import { markRaw, reactive } from 'vue';
-import { arrayRemove } from '../../../utils/array';
+import { arrayRemove, arrayUnique } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
 import { debounce, sleep } from '../../../utils/utils';
 import { importNoSSR } from '../../code-splitting';
@@ -46,6 +46,18 @@ export interface FiresideRTCHost {
 	uids: number[];
 }
 
+/**
+ * Credentials needed to connect and interact with Agora.
+ */
+export interface AgoraStreamingInfo {
+	appId: string;
+	streamingUid: number;
+	videoChannelName: string;
+	videoToken: string;
+	chatChannelName: string;
+	chatToken: string;
+}
+
 type Options = { isMuted?: boolean };
 
 export class FiresideRTC {
@@ -58,8 +70,6 @@ export class FiresideRTC {
 		public videoToken: string,
 		public readonly chatChannelName: string,
 		public chatToken: string,
-		// TODO(big-pp-event) i want these to be refs that are defined on controller.
-		// i want container to modify the controller's data.
 		public readonly hosts: FiresideRTCHost[],
 		public readonly listableHostIds: number[],
 		{ isMuted }: Options
@@ -176,12 +186,7 @@ export class FiresideRTC {
 export function createFiresideRTC(
 	fireside: Fireside,
 	userId: number | null,
-	appId: string,
-	streamingUid: number,
-	videoChannelName: string,
-	videoToken: string,
-	chatChannelName: string,
-	chatToken: string,
+	agoraStreamingInfo: AgoraStreamingInfo,
 	hosts: FiresideRTCHost[],
 	listableHostIds: number[],
 	options: Options = {}
@@ -190,12 +195,12 @@ export function createFiresideRTC(
 		new FiresideRTC(
 			fireside,
 			userId,
-			appId,
-			streamingUid,
-			videoChannelName,
-			videoToken,
-			chatChannelName,
-			chatToken,
+			agoraStreamingInfo.appId,
+			agoraStreamingInfo.streamingUid,
+			agoraStreamingInfo.videoChannelName,
+			agoraStreamingInfo.videoToken,
+			agoraStreamingInfo.videoToken,
+			agoraStreamingInfo.chatToken,
 			hosts,
 			listableHostIds,
 			options
@@ -216,6 +221,9 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 	rtc.generation.cancel();
 
 	if (rtc.producer) {
+		// TODO(big-pp-event) we don't stop streaming here. is this intentional?
+		// EDIT: looks like this is done in destroyChannel calls below.
+		// TODO(big-pp-event) This won't call set-is-streaming to false tho.
 		destroyFiresideRTCProducer(rtc.producer);
 		rtc.producer = null;
 	}
@@ -257,15 +265,27 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 
 export async function recreateFiresideRTC(rtc: FiresideRTC) {
 	rtc.log('Trace(recreate)');
+	// TODO(big-pp-event) this will not end up calling set-is-streaming false,
+	// and will not start streaming again. Is this a bug?
 	await destroyFiresideRTC(rtc);
 	return _setup(rtc);
+}
+
+export function setHosts(rtc: FiresideRTC, newHosts: FiresideRTCHost[]) {
+	rtc.hosts.splice(0);
+	rtc.hosts.push(...newHosts);
+}
+
+export function setListableHostIds(rtc: FiresideRTC, listableHostIds: number[]) {
+	rtc.listableHostIds.splice(0);
+	rtc.listableHostIds.push(...listableHostIds);
 }
 
 /**
  * Renews specifically for audience tokens. If they're a host, this will
  * essentially be ignored.
  */
-export async function renewRTCAudienceTokens(
+export async function applyAudienceRTCTokens(
 	rtc: FiresideRTC,
 	videoToken: string,
 	chatToken: string

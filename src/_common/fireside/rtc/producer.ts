@@ -9,7 +9,7 @@ import {
 	SettingStreamProducerDesktopAudio,
 	SettingStreamProducerGroupAudio,
 	SettingStreamProducerMic,
-	SettingStreamProducerWebcam
+	SettingStreamProducerWebcam,
 } from '../../settings/settings.service';
 import { Translate } from '../../translate/translate.service';
 import {
@@ -17,14 +17,14 @@ import {
 	setChannelAudioTrack,
 	setChannelVideoTrack,
 	startChannelStreaming,
-	stopChannelStreaming
+	stopChannelStreaming,
 } from './channel';
 import { applyRTCTokens, chooseFocusedRTCUser, FiresideRTC } from './rtc';
 import {
 	createLocalFiresideRTCUser,
 	setUserHasDesktopAudio,
 	setUserHasMicAudio,
-	setUserHasVideo
+	setUserHasVideo,
 } from './user';
 
 const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
@@ -757,13 +757,8 @@ async function _stopStreaming(producer: FiresideRTCProducer, becomeBusy: boolean
 			rtc: { videoChannel, chatChannel },
 		} = producer;
 
-		// This just sets the backend to know that they stopped streaming
-		// immediately. We don't need to refresh or anything if it fails.
-		const response = await _updateSetIsStreaming(producer);
-
-		if (response?.success !== true) {
-			throw new Error(`API did not return success.`);
-		}
+		/// No need to await on this. its not essential.
+		_updateSetIsStreaming(producer);
 
 		// Failure here should end up forcing the app to reload to make
 		// absolutely sure they aren't streaming by accident.
