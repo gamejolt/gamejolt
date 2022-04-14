@@ -1,25 +1,35 @@
 <script lang="ts">
 import { computed, inject, ref, watch } from 'vue';
+import { RouterLink } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
+import AppButton from '../../../_common/button/AppButton.vue';
+import { configHomeDefaultFeed } from '../../../_common/config/config.service';
+import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
+import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
+import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
+import { AppActivityFeedLazy } from '../../components/lazy';
+import { illNoComments } from '../../img/ill/illustrations';
 import { useAppStore } from '../../store/index';
 import { RouteActivityFeedController } from './feed.vue';
-import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
-import { illNoComments } from '../../img/ill/illustrations';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
-import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import { RouterLink } from 'vue-router';
-import { AppActivityFeedLazy } from '../../components/lazy';
-import AppButton from '../../../_common/button/AppButton.vue';
+import { HOME_FEED_FYP } from './home-feed.service';
+
+function getFetchUrl() {
+	let url = '/web/dash/activity/activity';
+	if (configHomeDefaultFeed.value === HOME_FEED_FYP) {
+		url += '?only-followed=1';
+	}
+	return url;
+}
 
 export default {
 	...defineAppRouteOptions({
 		cache: true,
 		lazy: true,
 		resolver: ({ route }) =>
-			Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/activity')),
+			Api.sendRequest(ActivityFeedService.makeFeedUrl(route, getFetchUrl())),
 	}),
 };
 </script>
