@@ -9,6 +9,7 @@ import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import { importNoSSR } from '../../../_common/code-splitting';
 import { Community } from '../../../_common/community/community.model';
+import { configHomeDefaultFeed } from '../../../_common/config/config.service';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { Fireside } from '../../../_common/fireside/fireside.model';
@@ -31,6 +32,7 @@ import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
 import { User } from '../../../_common/user/user.model';
 import { AppStore } from '../../store/index';
 import { router } from '../../views';
+import { HOME_FEED_ACTIVITY } from '../../views/home/home-feed.service';
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
 import { CommunityChannel } from './community-channel';
 import { FiresideChannel } from './fireside-channel';
@@ -904,7 +906,11 @@ export class GridClient {
 		const communityState = appStore.communityStates.value.getCommunityState(communityId);
 		communityState.hasUnreadFeaturedPosts = true;
 
-		appStore.incrementNotificationCount({ count: 1, type: 'activity' });
+		// Only increment when we use the activity feed as the home feed, as it includes
+		// the community items only at that point.
+		if (configHomeDefaultFeed.value === HOME_FEED_ACTIVITY) {
+			appStore.incrementNotificationCount({ count: 1, type: 'activity' });
+		}
 	}
 
 	handleCommunityFeatureFireside(_communityId: number, payload: CommunityFeatureFiresidePayload) {
