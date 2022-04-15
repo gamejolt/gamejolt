@@ -230,9 +230,6 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 			updateSetIsStreaming(rtc.producer, { isStreaming: false });
 		}
 
-		// TODO(big-pp-event) we don't stop streaming here. is this intentional?
-		// EDIT: looks like this is done in destroyChannel calls below.
-		// TODO(big-pp-event) This won't call set-is-streaming to false tho.
 		cleanupFiresideRTCProducer(rtc.producer);
 		rtc.producer = null;
 	}
@@ -273,8 +270,6 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 
 export async function recreateFiresideRTC(rtc: FiresideRTC) {
 	rtc.log('Trace(recreate)');
-	// TODO(big-pp-event) this will not end up calling set-is-streaming false,
-	// and will not start streaming again. Is this a bug?
 	await destroyFiresideRTC(rtc);
 	return _setup(rtc);
 }

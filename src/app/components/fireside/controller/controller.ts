@@ -115,9 +115,10 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 
 	const isDraft = computed(() => fireside?.is_draft ?? true);
 	const isStreaming = computed(
-		// TODO(big-pp-event) need a better way. is_streaming does not cut it anymore.
-		// () => !!(fireside?.is_streaming && rtc.value && rtc.value.listableStreamingUsers.length > 0)
-		() => rtc.value && rtc.value.listableStreamingUsers.length > 0
+		// TODO(big-pp-event) rtc.value goes away if our state isn't joined.
+		// This means disconnections from grid and chat would cause you to stop streaming.
+		// I'm not sure if this is an issue or intended behaviour lol.
+		() => !!rtc.value && rtc.value.listableStreamingUsers.length > 0
 	);
 	const isPersonallyStreaming = computed(() => rtc.value?.isPersonallyStreaming ?? false);
 
@@ -346,11 +347,9 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 	});
 
 	const cleanup = async () => {
-		// TODO(big-pp-event) we use these watchers to figure out
+		// These watchers are used to figure out
 		// when we need to destroy rtc and rtc producer. we want
-		// to make sure these are still destroyed even if the watchers are disposed.
-		// EDIT: I think for now its fine to simply try to destroy everything AFTER unwatching.
-		unwatchWantsRTC();
+		// to make sure these are still destroyed even if the watchers are disposed.		unwatchWantsRTC();
 		unwatchWantsRTCProducer();
 		unwatchHostsChanged();
 		unwatchListableHostIdsChanged();
