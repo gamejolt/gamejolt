@@ -15,7 +15,7 @@
 		"client:devd": "cross-env GJ_PLATFORM=desktop yarn run devd",
 		"client:build": "ts-node -P scripts/script.tsconfig.json scripts/build/desktop-app/index.ts --build",
 		"client:package": "ts-node -P scripts/script.tsconfig.json scripts/build/desktop-app/index.ts --package",
-		"client": "nw use 0.55.0-sdk && nw .",
+		"client": "nw use 0.62.2-sdk && nw .",
 		"ssr:client": "cross-env GJ_PLATFORM=web yarn run build",
 		"ssr:server": "cross-env GJ_PLATFORM=ssr yarn run build",
 		"ssr": "node ssr/server.js"
@@ -155,7 +155,7 @@
 	"webkit": {
 		"plugin": true
 	},
-	"nwjsVersion": "0.55.0",
+	"nwjsVersion": "0.62.2",
 	"joltronVersion": "v2.2.9-beta.2.loader",
 	"gjpushVersion": "v0.5.0",
 	"chromium-args": "--ignore-gpu-blocklist",
