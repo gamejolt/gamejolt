@@ -87,11 +87,6 @@ export class AppFiresideContainer extends Vue {
 		const c = this.controller;
 		c.chat.value = this.chat;
 
-		// TODO: Do we want to do this?
-		if (c.status.value === 'joined') {
-			this.disconnect();
-		}
-
 		c.hasExpiryWarning.value = false;
 
 		if (c.fireside.blocked) {
@@ -247,10 +242,6 @@ export class AppFiresideContainer extends Vue {
 		if (!canProceed) {
 			return;
 		}
-
-		// TODO(big-pp-event) at this point the rtc used to get initialized through _fetchForStreaming -> upsertRTC,
-		// since it was called with { checkJoined: false }.
-		// Why is that? what is this check joined solving?
 
 		// Maybe they are blocked now?
 		if (c.fireside.blocked) {
@@ -445,11 +436,11 @@ export class AppFiresideContainer extends Vue {
 			return;
 		}
 
-		this.clearExpiryCheck();
-		this.destroyExpiryInfoInterval();
-
 		console.debug(`[FIRESIDE] Disconnecting from fireside.`);
 		c.status.value = 'disconnected';
+
+		this.clearExpiryCheck();
+		this.destroyExpiryInfoInterval();
 
 		if (this.grid?.connected && (c.gridChannel.value || c.gridDMChannel.value)) {
 			this.grid.leaveFireside(c.fireside);
@@ -463,6 +454,7 @@ export class AppFiresideContainer extends Vue {
 		c.chatChannel.value = undefined;
 
 		StreamSetupModal.close();
+		// TODO(big-pp-event) this needs to be managed through controller.
 		this.destroyRtc();
 
 		console.debug(`[FIRESIDE] Disconnected from fireside.`);
@@ -502,58 +494,58 @@ export class AppFiresideContainer extends Vue {
 		c.updateInterval.value = setInterval(() => updateFiresideExpiryValues(c), 1000);
 	}
 
-	// private async upsertRtc(
-	// 	payload: any,
-	// 	options: {
-	// 		checkJoined?: boolean;
-	// 		hosts?: FiresideRTCHost[];
-	// 		listableHostIds?: number[];
-	// 	} = {
-	// 		checkJoined: true,
-	// 	}
-	// ) {
-	// 	const { checkJoined = true } = options;
-	// 	const c = this.controller;
-	// 	// TODO(big-pp-event) what is the checkJoined solving?
-	// 	if (!c || !c.fireside || (checkJoined && c.status.value !== 'joined')) {
-	// 		return;
-	// 	}
+	private async upsertRtc(
+		payload: any,
+		options: {
+			checkJoined?: boolean;
+			hosts?: FiresideRTCHost[];
+			listableHostIds?: number[];
+		} = {
+			checkJoined: true,
+		}
+	) {
+		const { checkJoined = true } = options;
+		const c = this.controller;
+		// TODO(big-pp-event) what is the checkJoined solving?
+		if (!c || !c.fireside || (checkJoined && c.status.value !== 'joined')) {
+			return;
+		}
 
-	// 	// If they don't have tokens yet, then they don't need to set up the RTC
-	// 	// stuff.
-	// 	if (!payload.videoToken || !payload.chatToken) {
-	// 		return;
-	// 	}
+		// If they don't have tokens yet, then they don't need to set up the RTC
+		// stuff.
+		if (!payload.videoToken || !payload.chatToken) {
+			return;
+		}
 
-	// 	if (!c.rtc.value) {
-	// 		const hosts = options.hosts ?? this.getHostsFromStreamingInfo(payload) ?? [];
+		if (!c.rtc.value) {
+			const hosts = options.hosts ?? this.getHostsFromStreamingInfo(payload) ?? [];
 
-	// 		const listableHostIds = options.listableHostIds ?? c.listableHostIds.value;
-	// 		if (!listableHostIds) {
-	// 			throw new Error(
-	// 				'Expected listable hosts to be set by the time Fireside RTC is initialized'
-	// 			);
-	// 		}
-	// 		c.listableHostIds.value = listableHostIds;
+			const listableHostIds = options.listableHostIds ?? c.listableHostIds.value;
+			if (!listableHostIds) {
+				throw new Error(
+					'Expected listable hosts to be set by the time Fireside RTC is initialized'
+				);
+			}
+			c.listableHostIds.value = listableHostIds;
 
-	// 		c.rtc.value = createFiresideRTC(
-	// 			c.fireside,
-	// 			this.user?.id ?? null,
-	// 			payload.streamingAppId,
-	// 			payload.streamingUid,
-	// 			payload.videoChannelName,
-	// 			payload.videoToken,
-	// 			payload.chatChannelName,
-	// 			payload.chatToken,
-	// 			hosts,
-	// 			listableHostIds,
-	// 			{ isMuted: c.isMuted }
-	// 		);
-	// 	} else if (!c.rtc.value.producer) {
-	// 		// TODO(big-pp-event) need to call this when tokens change
-	// 		applyAudienceRTCTokens(c.rtc.value, payload.videoToken, payload.chatToken);
-	// 	}
-	// }
+			c.rtc.value = createFiresideRTC(
+				c.fireside,
+				this.user?.id ?? null,
+				payload.streamingAppId,
+				payload.streamingUid,
+				payload.videoChannelName,
+				payload.videoToken,
+				payload.chatChannelName,
+				payload.chatToken,
+				hosts,
+				listableHostIds,
+				{ isMuted: c.isMuted }
+			);
+		} else if (!c.rtc.value.producer) {
+			// TODO(big-pp-event) need to call this when tokens change
+			applyAudienceRTCTokens(c.rtc.value, payload.videoToken, payload.chatToken);
+		}
+	}
 
 	private getAgoraStreamingInfoFromStreamingInfo(streamingInfo: any) {
 		return {
@@ -716,7 +708,7 @@ export class AppFiresideContainer extends Vue {
 			// 	// If our role doesn't allow us to stream and we have a
 			// 	// producer, tear it down and clean it up.
 			// 	await stopStreaming(c.rtc.value.producer);
-			// 	destroyFiresideRTCProducer(c.rtc.value.producer);
+			// 	cleanupFiresideRTCProducer(c.rtc.value.producer);
 			// 	c.rtc.value.producer = null;
 
 			// 	// TODO: If this Fireside was a draft, we may need to
@@ -865,7 +857,7 @@ export class AppFiresideContainer extends Vue {
 		// 			// If our role doesn't allow us to stream and we have a
 		// 			// producer, tear it down and clean it up.
 		// 			await stopStreaming(c.rtc.value.producer);
-		// 			destroyFiresideRTCProducer(c.rtc.value.producer);
+		// 			cleanupFiresideRTCProducer(c.rtc.value.producer);
 		// 			c.rtc.value.producer = null;
 
 		// 			// TODO: If this Fireside was a draft, we may need to

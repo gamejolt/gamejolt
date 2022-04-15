@@ -64,6 +64,7 @@ watch([isStreaming, hasVideo], () => {
 	emit('changed', hasVideo.value, isStreaming.value);
 });
 
+// TODO(big-pp-event) should we use onUnmounted here?
 onBeforeUnmount(() => c.cleanup());
 </script>
 

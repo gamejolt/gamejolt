@@ -98,7 +98,14 @@ export function createFiresideRTCProducer(rtc: FiresideRTC) {
 	return producer;
 }
 
-export function destroyFiresideRTCProducer(producer: FiresideRTCProducer) {
+/**
+ * Cleans up watchers and intervals that may be used by the producer.
+ * This does NOT stop streaming or close channels. It's is meant to be used
+ * to cleanup the producer instance after we no longer need it.
+ */
+export function cleanupFiresideRTCProducer(producer: FiresideRTCProducer) {
+	// TODO(big-pp-event) theres nothing to prevent a queued up startStream
+	// to get executed after cleanup is called..
 	producer._isStreaming = false;
 
 	if (producer._tokenRenewInterval) {
@@ -242,7 +249,7 @@ async function _renewTokens(producer: FiresideRTCProducer) {
 
 		rtc.log(`Renewing audience tokens.`);
 
-		const response = await _updateSetIsStreaming(producer);
+		const response = await updateSetIsStreaming(producer);
 
 		if (response?.success !== true) {
 			throw new Error(response);
@@ -442,7 +449,7 @@ function _updateWebcamDevice(producer: FiresideRTCProducer) {
 		});
 
 		// No need to await on this. its not essential.
-		_updateSetIsStreaming(producer);
+		updateSetIsStreaming(producer);
 
 		if (producer._videoPreviewElement) {
 			previewChannelVideo(videoChannel, producer._videoPreviewElement);
@@ -450,8 +457,20 @@ function _updateWebcamDevice(producer: FiresideRTCProducer) {
 	});
 }
 
-async function _updateSetIsStreaming(producer: FiresideRTCProducer) {
+export interface SetIsStreamingOptions {
+	isStreaming?: boolean;
+}
+
+export async function updateSetIsStreaming(
+	producer: FiresideRTCProducer,
+	options?: SetIsStreamingOptions
+) {
 	const { rtc } = producer;
+
+	// We want to be able to bypass the producer's _isStreaming setting
+	// because during cleanup we may call this before the producer has actually
+	// disposed of their streams and we don't want to wait on that.
+	const isStreaming = options?.isStreaming ?? producer._isStreaming;
 
 	let response: any = null;
 
@@ -459,7 +478,7 @@ async function _updateSetIsStreaming(producer: FiresideRTCProducer) {
 		response = await Api.sendRequest(
 			'/web/dash/fireside/set-is-streaming/' + rtc.fireside.id,
 			{
-				is_streaming: producer._isStreaming,
+				is_streaming: isStreaming,
 				streaming_uid: rtc.streamingUid,
 				has_video:
 					producer.selectedWebcamDeviceId !== PRODUCER_UNSET_DEVICE &&
@@ -526,7 +545,7 @@ function _updateDesktopAudioDevice(producer: FiresideRTCProducer) {
 		});
 
 		// No need to await on this. its not essential.
-		_updateSetIsStreaming(producer);
+		updateSetIsStreaming(producer);
 	});
 }
 
@@ -568,7 +587,7 @@ function _updateMicDevice(producer: FiresideRTCProducer) {
 		});
 
 		// No need to await on this. its not essential.
-		_updateSetIsStreaming(producer);
+		updateSetIsStreaming(producer);
 	});
 }
 
@@ -712,7 +731,7 @@ export async function startStreaming(producer: FiresideRTCProducer) {
 		} = producer;
 		const generation = rtc.generation;
 
-		const response = await _updateSetIsStreaming(producer);
+		const response = await updateSetIsStreaming(producer);
 
 		if (response?.success !== true || generation.isCanceled) {
 			rtc.logWarning(`Couldn't start streaming.`, response);
@@ -757,8 +776,8 @@ async function _stopStreaming(producer: FiresideRTCProducer, becomeBusy: boolean
 			rtc: { videoChannel, chatChannel },
 		} = producer;
 
-		/// No need to await on this. its not essential.
-		_updateSetIsStreaming(producer);
+		// No need to await on this. its not essential.
+		updateSetIsStreaming(producer);
 
 		// Failure here should end up forcing the app to reload to make
 		// absolutely sure they aren't streaming by accident.
@@ -768,6 +787,10 @@ async function _stopStreaming(producer: FiresideRTCProducer, becomeBusy: boolean
 				stopChannelStreaming(chatChannel),
 			]);
 
+			// TODO(big-pp-event) I don't fully understand what this is supposed to do
+			// and why we want to call this after the streams are stopped.
+			// It looks like this unsets the recording devices which indirectly stops
+			// the stream anyways?
 			clearSelectedRecordingDevices(producer);
 		} catch (err) {
 			rtc.logError(`Failed to stop one or more agora channels. Force reloading...`, err);

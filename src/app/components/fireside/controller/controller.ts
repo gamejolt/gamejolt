@@ -34,8 +34,8 @@ import { FiresidePublishModal } from '../publish-modal/publish-modal.service';
 import { setHosts, setListableHostIds } from '../../../../_common/fireside/rtc/rtc';
 import {
 	createFiresideRTCProducer,
+	cleanupFiresideRTCProducer,
 	stopStreaming,
-	destroyFiresideRTCProducer,
 } from '../../../../_common/fireside/rtc/producer';
 import { arrayUnique } from '../../../../utils/array';
 
@@ -115,7 +115,9 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 
 	const isDraft = computed(() => fireside?.is_draft ?? true);
 	const isStreaming = computed(
-		() => !!(fireside?.is_streaming && rtc.value && rtc.value.listableStreamingUsers.length > 0)
+		// TODO(big-pp-event) need a better way. is_streaming does not cut it anymore.
+		// () => !!(fireside?.is_streaming && rtc.value && rtc.value.listableStreamingUsers.length > 0)
+		() => rtc.value && rtc.value.listableStreamingUsers.length > 0
 	);
 	const isPersonallyStreaming = computed(() => rtc.value?.isPersonallyStreaming ?? false);
 
@@ -225,18 +227,12 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 			return false;
 		}
 
+		if (fireside.role?.canStream) {
+			return true;
+		}
+
 		// A listable host must be streaming.
-		return hosts.value.some(i => {
-			if (!i.isLive) {
-				return false;
-			}
-
-			if (!i.isUnlisted) {
-				return true;
-			}
-
-			return listableHostIds.value?.includes(i.user.id);
-		});
+		return isListableHostStreaming(hosts.value, listableHostIds.value);
 	});
 
 	const wantsRTCProducer = computed(() => {
@@ -269,7 +265,8 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 			// It's a bit of a meme, but the way the producer gets destroyed in
 			// this case is through the destroyFiresideRTC above.
 			// TODO(big-pp-event) this way of destroying the producer will not end
-			// up calling set-is-streaming api endpoint..
+			// up calling set-is-streaming api endpoint, and will not clear recording devices.
+			// this is because it does not call stopStreaming..
 			rtc.value = undefined;
 		} else {
 			console.debug('[FIRESIDE] rtc was not set, nothing to do');
@@ -300,11 +297,14 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 				// to be considered "torn down" immediately. It simplifies logic for handling it.
 				// We can't avoid awaiting here tho because if the producer instance
 				// is in a busy state at the moment we want do dispose it, it'll queue up stopping
-				// the streams, then destroyFiresideRTCProducer gets called which sets _isStreaming
+				// the streams, then cleanupFiresideRTCProducer gets called which sets _isStreaming
 				// to false, and THEN when the streams actually attempt to stop it'd think they
 				// already stopped, and will not run the teardown logic for them..
 				await stopStreaming(prevProducer);
-				destroyFiresideRTCProducer(prevProducer);
+				// TODO(big-pp-event) is there a way to make absolutely sure nothing keeps a reference
+				// to producer past this point? theres nothing in the producer class that prevents attempting
+				// to start streaming from a cleanup-up instance of producer.
+				cleanupFiresideRTCProducer(prevProducer);
 			} else {
 				console.debug('[FIRESIDE] rtc.producer was not set, nothing to do');
 			}
@@ -314,6 +314,10 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 	});
 
 	const unwatchHostsChanged = watch(hosts, (newHosts, prevHosts) => {
+		// TODO(big-pp-event) consider changing fireside.is_streaming here?
+		// we might want this because some components that don't have anything to do
+		// with RTC might want to know if a fireside is streaming, for instance fireside avatar bubble.
+
 		if (rtc.value) {
 			console.debug('[FIRESIDE] settings hosts', newHosts);
 
@@ -341,14 +345,40 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		}
 	});
 
-	const cleanup = () => {
+	const cleanup = async () => {
 		// TODO(big-pp-event) we use these watchers to figure out
 		// when we need to destroy rtc and rtc producer. we want
 		// to make sure these are still destroyed even if the watchers are disposed.
+		// EDIT: I think for now its fine to simply try to destroy everything AFTER unwatching.
 		unwatchWantsRTC();
 		unwatchWantsRTCProducer();
 		unwatchHostsChanged();
 		unwatchListableHostIdsChanged();
+
+		if (rtc.value) {
+			// The code below should now be handled by destroyFiresideRTC.
+			// Need to check this!!!
+
+			// // I'm a bit hesitant to destroy the producer like this since technically
+			// // destroyFiresideRTC should do it. Problem is it currently doesnt do it correctly..
+			// // See comments on that function for more info.
+			// if (rtc.value.producer) {
+			// 	// We should be fine awaiting here because we don't care to immediately reuse
+			// 	// the same rtc instance since the controller is being disposed.
+			// 	// There might be an issue if we're trying to instantiate a new controller
+			// 	// before stopStreaming finishes.
+			// 	try {
+			// 		await stopStreaming(rtc.value.producer);
+			// 	} catch (e) {
+			// 		console.error(
+			// 			'Failed to stop streaming while destroying fireside controller',
+			// 			e
+			// 		);
+			// 	}
+			// }
+
+			destroyFiresideRTC(rtc.value);
+		}
 	};
 
 	return shallowReactive({
@@ -529,4 +559,18 @@ export function updateFiresideExpiryValues(c: FiresideController) {
 	} else {
 		c.expiresDurationText.value = undefined;
 	}
+}
+
+function isListableHostStreaming(hosts: FiresideRTCHost[], listableHostIds: number[]): boolean {
+	return hosts.some(i => {
+		if (!i.isLive) {
+			return false;
+		}
+
+		if (!i.isUnlisted) {
+			return true;
+		}
+
+		return listableHostIds?.includes(i.user.id);
+	});
 }

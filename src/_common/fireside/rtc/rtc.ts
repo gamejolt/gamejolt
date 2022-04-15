@@ -17,8 +17,9 @@ import {
 } from './channel';
 import {
 	createFiresideRTCProducer,
-	destroyFiresideRTCProducer,
+	cleanupFiresideRTCProducer,
 	FiresideRTCProducer,
+	updateSetIsStreaming,
 } from './producer';
 import {
 	createRemoteFiresideRTCUser,
@@ -199,7 +200,7 @@ export function createFiresideRTC(
 			agoraStreamingInfo.streamingUid,
 			agoraStreamingInfo.videoChannelName,
 			agoraStreamingInfo.videoToken,
-			agoraStreamingInfo.videoToken,
+			agoraStreamingInfo.chatChannelName,
 			agoraStreamingInfo.chatToken,
 			hosts,
 			listableHostIds,
@@ -220,11 +221,19 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 	// Don't assign a new one so that we stay in a canceled state.
 	rtc.generation.cancel();
 
+	const wasStreaming = !!rtc.producer?.isStreaming;
 	if (rtc.producer) {
+		if (wasStreaming) {
+			// cleanupFiresideRTCProducer does not call stopStreaming,
+			// so some teardown logic needs to be done here.
+			// The actual streams are closed and destroyed later in this function.
+			updateSetIsStreaming(rtc.producer, { isStreaming: false });
+		}
+
 		// TODO(big-pp-event) we don't stop streaming here. is this intentional?
 		// EDIT: looks like this is done in destroyChannel calls below.
 		// TODO(big-pp-event) This won't call set-is-streaming to false tho.
-		destroyFiresideRTCProducer(rtc.producer);
+		cleanupFiresideRTCProducer(rtc.producer);
 		rtc.producer = null;
 	}
 
@@ -244,7 +253,6 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 	}
 
 	const { videoChannel, chatChannel } = rtc;
-
 	try {
 		await Promise.all([destroyChannel(videoChannel), destroyChannel(chatChannel)]);
 	} catch (e) {
@@ -602,8 +610,10 @@ function _removeUserIfNeeded(rtc: FiresideRTC, user: FiresideRTCUser) {
 }
 
 function _updateVolumeLevels(rtc: FiresideRTC) {
-	// Checking against _allStreamingUsers allows us to update the local user's audio levels as well.
-	for (const user of rtc._allStreamingUsers) {
+	// Checking against _remoteStreamingUsers and not _allStremaingUsers which includes
+	// the local user because we don't play the local user's stream (it would cause echo)
+	// so we don't get volume data.
+	for (const user of rtc._remoteStreamingUsers) {
 		updateVolumeLevel(user);
 	}
 }
