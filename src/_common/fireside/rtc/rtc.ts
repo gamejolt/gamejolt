@@ -1,6 +1,6 @@
 import type { IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
 import { markRaw, reactive } from 'vue';
-import { arrayRemove, arrayUnique } from '../../../utils/array';
+import { arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
 import { debounce, sleep } from '../../../utils/utils';
 import { importNoSSR } from '../../code-splitting';
@@ -54,8 +54,10 @@ export interface AgoraStreamingInfo {
 	appId: string;
 	streamingUid: number;
 	videoChannelName: string;
+	// The video token may either be the audience token or the cohost token
 	videoToken: string;
 	chatChannelName: string;
+	// The chat token may either be the audience token or the cohost token
 	chatToken: string;
 }
 

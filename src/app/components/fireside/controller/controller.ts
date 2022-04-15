@@ -1,5 +1,15 @@
-import { InjectionKey, provide } from '@vue/runtime-core';
-import { computed, inject, reactive, ref, shallowReactive, watch } from 'vue';
+import {
+	InjectionKey,
+	provide,
+	computed,
+	inject,
+	reactive,
+	ref,
+	shallowReactive,
+	watch,
+	watchEffect,
+	getCurrentScope,
+} from 'vue';
 import { Router } from 'vue-router';
 import { getAbsoluteLink } from '../../../../utils/router';
 import { getCurrentServerTime } from '../../../../utils/server-time';
@@ -120,6 +130,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		// I'm not sure if this is an issue or intended behaviour lol.
 		() => !!rtc.value && rtc.value.listableStreamingUsers.length > 0
 	);
+
 	const isPersonallyStreaming = computed(() => rtc.value?.isPersonallyStreaming ?? false);
 
 	const isStreamingElsewhere = computed(() => {
@@ -206,7 +217,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 	// Can't broadcast - incapable of dual streams
 	const _isSafari = computed(() => _browser.value.indexOf('safari') !== -1);
 
-	const wantsRTC = computed(() => {
+	const _wantsRTC = computed(() => {
 		// If the controller doesnt want to initialize RTC (chat only mode or preview mode where we only show the hosts, etc)
 		if (!withRTC) {
 			return false;
@@ -236,7 +247,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		return isListableHostStreaming(hosts.value, listableHostIds.value);
 	});
 
-	const wantsRTCProducer = computed(() => {
+	const _wantsRTCProducer = computed(() => {
 		if (!rtc.value) {
 			return false;
 		}
@@ -244,7 +255,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		return !!fireside.role?.canStream;
 	});
 
-	const unwatchWantsRTC = watch(wantsRTC, newWantsRTC => {
+	const _unwatchWantsRTC = watch(_wantsRTC, newWantsRTC => {
 		console.debug('[FIRESIDE] wantsRTC changed to ' + (newWantsRTC ? 'true' : 'false'));
 
 		if (newWantsRTC) {
@@ -274,7 +285,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		}
 	});
 
-	const unwatchWantsRTCProducer = watch(wantsRTCProducer, async newWantsRTCProducer => {
+	const _unwatchWantsRTCProducer = watch(_wantsRTCProducer, async newWantsRTCProducer => {
 		console.debug(
 			'[FIRESIDE] wantsRTCProducer changed to ' + (newWantsRTCProducer ? 'true' : 'false')
 		);
@@ -314,7 +325,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		}
 	});
 
-	const unwatchHostsChanged = watch(hosts, (newHosts, prevHosts) => {
+	const _unwatchHostsChanged = watch(hosts, (newHosts, prevHosts) => {
 		// TODO(big-pp-event) consider changing fireside.is_streaming here?
 		// we might want this because some components that don't have anything to do
 		// with RTC might want to know if a fireside is streaming, for instance fireside avatar bubble.
@@ -339,7 +350,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		}
 	});
 
-	const unwatchListableHostIdsChanged = watch(listableHostIds, newListableHostIds => {
+	const _unwatchListableHostIdsChanged = watch(listableHostIds, newListableHostIds => {
 		if (rtc.value) {
 			console.debug('[FIRESIDE] setting listableHostIds', newListableHostIds);
 			setListableHostIds(rtc.value, newListableHostIds);
@@ -349,10 +360,11 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 	const cleanup = async () => {
 		// These watchers are used to figure out
 		// when we need to destroy rtc and rtc producer. we want
-		// to make sure these are still destroyed even if the watchers are disposed.		unwatchWantsRTC();
-		unwatchWantsRTCProducer();
-		unwatchHostsChanged();
-		unwatchListableHostIdsChanged();
+		// to make sure these are still destroyed even if the watchers are disposed.
+		_unwatchWantsRTC();
+		_unwatchWantsRTCProducer();
+		_unwatchHostsChanged();
+		_unwatchListableHostIdsChanged();
 
 		if (rtc.value) {
 			// The code below should now be handled by destroyFiresideRTC.

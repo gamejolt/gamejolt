@@ -31,7 +31,7 @@ const c = createFiresideController(props.fireside, {
 	isMuted: true,
 });
 
-const { rtc, isShowingStreamSetup, isStreaming } = c;
+const { rtc, isShowingStreamSetup, isStreaming, cleanup: cleanupController } = c;
 
 const cohosts = computed(() => {
 	const result: User[] = [];
@@ -65,7 +65,7 @@ watch([isStreaming, hasVideo], () => {
 });
 
 // TODO(big-pp-event) should we use onUnmounted here?
-onBeforeUnmount(() => c.cleanup());
+onBeforeUnmount(() => cleanupController());
 </script>
 
 <template>
