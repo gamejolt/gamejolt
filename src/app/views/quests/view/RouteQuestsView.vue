@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
+import { RouterLink } from 'vue-router';
 import { numberSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
@@ -9,7 +10,6 @@ import AppQuestActionButton from '../../../../_common/quest/AppQuestActionButton
 import AppQuestObjective from '../../../../_common/quest/AppQuestObjective.vue';
 import AppProgressBarQuest from '../../../../_common/quest/AppQuestProgress.vue';
 import { Quest } from '../../../../_common/quest/quest-model';
-import { QuestObjectiveType } from '../../../../_common/quest/quest-objective-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
@@ -73,35 +73,18 @@ createAppRoute({
 	},
 });
 
-const actionButtonData = computed<{ isAccept: boolean } | undefined>(() => {
+/** If the QuestActionButton will be accepting the quest or not. */
+const isQuestAcceptAction = computed(() => {
 	const q = quest.value;
 	if (!q || q.isExpired) {
-		return;
+		return false;
 	}
-
-	let mustAccept = false;
-	let canRedeem = false;
-	for (const objective of objectives.value) {
-		if (mustAccept || canRedeem) {
-			break;
-		}
-
-		if (q.canAccept && objective.type == QuestObjectiveType.questStart) {
-			mustAccept = true;
-			break;
-		}
-
-		if (objective.has_unclaimed_rewards) {
-			canRedeem = true;
-			break;
-		}
-	}
-
-	if (!mustAccept && !canRedeem) {
-		return;
-	}
-	return { isAccept: mustAccept };
+	return q.canAccept;
 });
+
+const shouldShowActionButton = computed(
+	() => isQuestAcceptAction.value || objectives.value.some(i => i.has_unclaimed_rewards)
+);
 
 const friendsText = computed(() => {
 	const count = participatingFriendCount.value;
@@ -267,8 +250,8 @@ function onNewQuest(data: Quest) {
 				<AppSpacer vertical :scale="4" />
 				<AppQuestActionButton
 					:quest="quest"
-					:show="!!actionButtonData"
-					:is-accept="!!actionButtonData?.isAccept"
+					:show="shouldShowActionButton"
+					:is-accept="isQuestAcceptAction"
 					@new-quest="onNewQuest"
 				/>
 			</section>
