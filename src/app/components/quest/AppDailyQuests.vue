@@ -1,11 +1,9 @@
 <script lang="ts">
 import { computed, toRefs } from 'vue';
-import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import AppLoadingFade from '../../../_common/loading/AppLoadingFade.vue';
 import AppQuestLogItem from '../../../_common/quest/AppQuestLogItem.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import { illNoCommentsSmall } from '../../img/ill/illustrations';
 import { useQuestStore } from '../../store/quest';
 import AppQuestTimer from './AppQuestTimer.vue';
 </script>
@@ -29,13 +27,24 @@ const props = defineProps({
 		type: Number,
 		default: undefined,
 	},
+	forceLoading: {
+		type: Boolean,
+	},
 });
 
-const { disableOnExpiry, singleRow } = toRefs(props);
+const { disableOnExpiry, singleRow, forceLoading } = toRefs(props);
 
-const { dailyQuests, fetchDailyQuests, isLoading, isDailyStale, dailyResetDate } = useQuestStore();
+const {
+	dailyQuests,
+	fetchDailyQuests,
+	isLoading: isQuestStoreLoading,
+	isDailyStale,
+	dailyResetDate,
+} = useQuestStore();
 
 const disableItems = computed(() => disableOnExpiry.value && isDailyStale.value);
+const isLoading = computed(() => isQuestStoreLoading.value || forceLoading.value);
+const hasQuests = computed(() => displayQuests.value.length > 0);
 
 const displayQuests = computed(() => {
 	const limit = singleRow.value ? 3 : undefined;
@@ -59,7 +68,7 @@ function onListClick() {
 </script>
 
 <template>
-	<AppLoadingFade :is-loading="isLoading">
+	<AppLoadingFade v-if="showPlaceholders || hasQuests" :is-loading="isLoading">
 		<div class="-header">
 			<slot name="header">
 				<h4 class="section-header" :class="{ h6: Screen.isXs }">
@@ -79,34 +88,27 @@ function onListClick() {
 		</div>
 
 		<div class="-list">
-			<template v-if="showPlaceholders || displayQuests.length > 0">
-				<div
-					class="-list-grid"
-					:class="{
-						'-expired': disableItems,
-					}"
-					@click="onListClick"
-				>
-					<template v-if="showPlaceholders">
-						<div v-for="i of 3" :key="'p-' + i" class="-placeholder-daily" />
-					</template>
-					<template v-else>
-						<AppQuestLogItem
-							v-for="(quest, i) of displayQuests"
-							:key="i"
-							:quest="quest"
-							:active="activeQuestId === quest.id"
-							:is-disabled="disableItems"
-							compact-stack
-						/>
-					</template>
-				</div>
-			</template>
-			<template v-else>
-				<AppIllustration class="-no-quests" :src="illNoCommentsSmall">
-					<AppTranslate> You have no daily quests. Check for more later! </AppTranslate>
-				</AppIllustration>
-			</template>
+			<div
+				class="-list-grid"
+				:class="{
+					'-expired': disableItems,
+				}"
+				@click="onListClick"
+			>
+				<template v-if="showPlaceholders">
+					<div v-for="i of 3" :key="'p-' + i" class="-placeholder-daily" />
+				</template>
+				<template v-else>
+					<AppQuestLogItem
+						v-for="(quest, i) of displayQuests"
+						:key="i"
+						:quest="quest"
+						:active="activeQuestId === quest.id"
+						:is-disabled="disableItems"
+						compact-stack
+					/>
+				</template>
+			</div>
 		</div>
 	</AppLoadingFade>
 </template>

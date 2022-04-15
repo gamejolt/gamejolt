@@ -60,7 +60,7 @@ export function createQuestStore({
 				window.clearInterval(_dailyQuestExpiryTicker);
 			}
 
-			addQuests([], { overwrite: true });
+			assignQuests([]);
 			clearNewQuestIds('all', { pushView: false });
 			clearQuestActivityIds('all', { pushView: false });
 			isLoading.value = true;
@@ -157,13 +157,8 @@ export function createQuestStore({
 		}
 	}
 
-	function addQuests(newQuests: Quest[], { overwrite }: { overwrite?: boolean } = {}) {
-		if (overwrite) {
-			_allQuests.value = newQuests;
-		} else {
-			_allQuests.value.push(...newQuests);
-		}
-
+	function assignQuests(newQuests: Quest[]) {
+		_allQuests.value = newQuests;
 		_checkDailyQuestExpiry();
 		hasLoaded.value = true;
 	}
@@ -261,7 +256,8 @@ export function createQuestStore({
 		/** All quests, other than {@link QuestRepeatType.daily} */
 		quests,
 		allQuests: computed(() => _allQuests.value),
-		addQuests,
+		/** Overwrites our existing {@link _allQuests} before checking any expiry data */
+		assignQuests,
 		fetchDailyQuests,
 		/**
 		 * Finds any existing quest with a matching id and assigns new data to

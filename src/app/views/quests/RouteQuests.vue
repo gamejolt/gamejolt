@@ -27,6 +27,7 @@ export default {
 				{
 					_fields: {
 						quests: true,
+						dailyQuests: true,
 					},
 				},
 				{
@@ -44,7 +45,7 @@ const route = useRoute();
 const {
 	isLoading,
 	hasLoaded,
-	addQuests,
+	assignQuests,
 	dailyQuests,
 	quests,
 	allQuests,
@@ -58,8 +59,6 @@ const body = ref<HTMLElement>();
 const sidebar = ref<HTMLElement>();
 const sidebarInner = ref<HTMLElement>();
 const questList = ref<HTMLElement>();
-
-const showLoading = computed(() => !hasLoaded.value && isLoading.value);
 
 const activeQuestId = computed(() => {
 	if (routingToId.value !== undefined) {
@@ -128,18 +127,29 @@ const routeTitle = computed(() => {
 	return baseTitle;
 });
 
-createAppRoute({
+const { isBootstrapped } = createAppRoute({
 	routeTitle,
 	onResolved({ payload }) {
 		const newQuests: Quest[] = [];
-		if (payload.dailyQuests) {
-			newQuests.push(...Quest.populate(payload.dailyQuests));
-		}
 		if (payload.quests) {
-			newQuests.push(...Quest.populate(payload.quests));
+			newQuests.push(
+				...Quest.populate(payload.quests).filter((i: Quest) => {
+					// We may get both daily quests and other quests when
+					// requesting `quests`, but that may not include daily
+					// quests that are in a completed state.
+					//
+					// Filter out any daily quests from here and insert the
+					// result from the `dailyQuests` field instead.
+					return !i.isDaily;
+				})
+			);
+		}
+		if (payload.dailyQuests) {
+			// Insert the daily quests to the front of our new quests.
+			newQuests.unshift(...Quest.populate(payload.dailyQuests));
 		}
 
-		addQuests(newQuests, { overwrite: true });
+		assignQuests(newQuests);
 		isLoading.value = false;
 		hasLoaded.value = true;
 		clearUnknownWatermarks();
@@ -191,7 +201,7 @@ function clearUnknownWatermarks() {
 
 					<div class="-sections">
 						<AppDailyQuests
-							v-if="showLoading || dailyQuests.length > 0"
+							v-if="!isBootstrapped || dailyQuests.length > 0"
 							:active-quest-id="activeQuestId"
 						>
 							<template #header>
@@ -201,7 +211,7 @@ function clearUnknownWatermarks() {
 							</template>
 						</AppDailyQuests>
 
-						<template v-if="showLoading">
+						<template v-if="!isBootstrapped">
 							<!-- Active Quests -->
 							<div>
 								<div class="-placeholder -placeholder-subheading" />

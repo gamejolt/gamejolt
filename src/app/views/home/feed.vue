@@ -99,6 +99,7 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 	gameFilterQuery = '';
 	isShowingAllGames = false;
 
+	isLoadingQuests = true;
 	isLoadingFiresides = true;
 	isFiresidesBootstrapped = false;
 	featuredFireside: Fireside | null = null;
@@ -232,8 +233,9 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 		if (!this.user) {
 			return;
 		}
-
-		return this.questStore.fetchDailyQuests();
+		this.isLoadingQuests = true;
+		await this.questStore.fetchDailyQuests();
+		this.isLoadingQuests = false;
 	}
 }
 </script>
@@ -362,7 +364,12 @@ export default class RouteActivityFeed extends BaseRouteComponent {
 			</template>
 
 			<template v-if="!Screen.isMobile" #right>
-				<AppDailyQuests v-if="user" disable-on-expiry single-row />
+				<AppDailyQuests
+					v-if="user"
+					disable-on-expiry
+					single-row
+					:force-loading="isLoadingQuests"
+				/>
 
 				<AppHomeFireside
 					:featured-fireside="featuredFireside"

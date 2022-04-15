@@ -81,7 +81,6 @@ export function shorthandReadableTime(
 		s: Math.floor(seconds % 60),
 	};
 
-	console.warn('hello???');
 	switch (precision) {
 		case 'exact':
 			// Use existing data as-is.

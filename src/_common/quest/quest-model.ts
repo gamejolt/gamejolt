@@ -126,6 +126,10 @@ export class Quest extends Model {
 	get questType() {
 		return this.series_display_name.toUpperCase();
 	}
+
+	get isDaily() {
+		return this.repeat_type === QuestRepeatType.daily;
+	}
 }
 
 Model.create(Quest);
