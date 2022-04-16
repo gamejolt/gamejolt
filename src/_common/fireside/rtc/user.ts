@@ -197,11 +197,18 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 		return;
 	}
 
-	const wasQueued = user.queuedVideoPlayState !== null;
-	user.queuedVideoPlayState = newState;
-
-	if (wasQueued) {
+	const isBusy = user.queuedVideoPlayState !== null;
+	if (isBusy) {
 		rtc.log('Queue up new video play state change, we are already busy.', { ...newState });
+		return;
+	}
+
+	if (user.isUnlisted) {
+		const err = new Error('Attempted to start video playback for unlisted user');
+		rtc.logError(err.message);
+		console.error(err);
+
+		setVideoPlayback(user, new FiresideVideoPlayStateStopped());
 		return;
 	}
 
@@ -211,27 +218,13 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 			newState: { ...newState },
 			existingState: { ...user.videoPlayState },
 		});
-
-		// If our play state is what we wanted and a new one hasn't been
-		// assigned, clear out the queued state.
-		if (user.queuedVideoPlayState === newState) {
-			user.queuedVideoPlayState = null;
-		}
 		return;
 	}
 
+	user.queuedVideoPlayState = newState;
 	rtc.log('Setting new play state.', { ...newState });
 
 	if (newState instanceof FiresideVideoPlayStatePlaying) {
-		if (user.isUnlisted) {
-			const err = new Error('Attempted to start video playback for unlisted user');
-			rtc.logError(err.message);
-			console.error(err);
-
-			setVideoPlayback(user, new FiresideVideoPlayStateStopped());
-			return;
-		}
-
 		try {
 			// If they're a remote user, we need to subscribe to their video first.
 			if (user.remoteVideoUser) {

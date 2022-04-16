@@ -12,6 +12,7 @@ export default class AppFiresideVideoStats extends Vue {
 
 	get stats() {
 		const stats: Record<string, any> = {
+			// TODO(big-pp-event) include counting local user here if they are streaming.
 			[`Members`]: this.c.rtc.value?.listableStreamingUsers.length ?? 0,
 		};
 

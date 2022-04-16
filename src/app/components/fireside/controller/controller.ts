@@ -7,7 +7,6 @@ import {
 	ref,
 	shallowReactive,
 	watch,
-	watchEffect,
 	getCurrentScope,
 } from 'vue';
 import { Router } from 'vue-router';
@@ -60,7 +59,7 @@ export type RouteStatus =
 	| 'blocked'; // Blocked from joining the fireside (user blocked).
 
 const FiresideControllerKey: InjectionKey<FiresideController> = Symbol('fireside-controller');
-type Options = { withRTC?: boolean; isMuted?: boolean };
+type Options = { isMuted?: boolean };
 
 export type FiresideController = ReturnType<typeof createFiresideController>;
 
@@ -81,7 +80,6 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 
 	const stickerTargetController = createStickerTargetController(fireside, undefined, true);
 	const isMuted = options.isMuted ?? false;
-	const withRTC = options.withRTC ?? true;
 
 	const rtc = ref<FiresideRTC>();
 	const status = ref<RouteStatus>('initial');
@@ -218,32 +216,34 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 	const _isSafari = computed(() => _browser.value.indexOf('safari') !== -1);
 
 	const _wantsRTC = computed(() => {
-		// If the controller doesnt want to initialize RTC (chat only mode or preview mode where we only show the hosts, etc)
-		if (!withRTC) {
-			return false;
-		}
+		console.log('recomputing wantsRTC');
 
 		// Only initialize RTC when we are fully connected.
 		if (status.value !== 'joined') {
+			console.log('status not joined');
 			return false;
 		}
 
 		// We have to have valid looking agora streaming credentials.
 		const info = agoraStreamingInfo.value;
 		if (!info || !info.videoToken || !info.chatToken) {
+			console.log('agora streaming value sucks');
 			return false;
 		}
 
 		// If we don't have hosts, we shouldnt initialize RTC.
 		if (!hosts.value || hosts.value.length === 0) {
+			console.log('no hosts gtfo');
 			return false;
 		}
 
 		if (fireside.role?.canStream) {
+			console.log('not streaming fuck you');
 			return true;
 		}
 
 		// A listable host must be streaming.
+		console.log('checking listable host ids');
 		return isListableHostStreaming(hosts.value, listableHostIds.value);
 	});
 
@@ -342,7 +342,12 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 				if (prevHost) {
 					// Transfer over all previously assigned uids to the new host.
 					newHost.uids.push(...prevHost.uids);
-					arrayUnique(newHost.uids);
+
+					// TODO(big-pp-event) arrayUnique does not unique in place,
+					// do we need to do this then?
+					const newUids = arrayUnique(newHost.uids);
+					newHost.uids.splice(0);
+					newHost.uids.push(...newUids);
 				}
 			}
 

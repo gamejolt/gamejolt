@@ -406,6 +406,8 @@ export class AppFiresideContainer extends Vue {
 			c.hosts.value = this.getHostsFromStreamingInfo(payload);
 			c.listableHostIds.value = payload.listableHostIds ?? [];
 
+			// TODO(big-pp-event) need to renew audience tokens here somewhere?
+
 			// If they have a host role, or if this fireside is actively
 			// streaming, we'll get streaming tokens from the fetch payload. In
 			// that case, we want to set up the RTC stuff.
@@ -560,6 +562,7 @@ export class AppFiresideContainer extends Vue {
 		} as AgoraStreamingInfo;
 	}
 
+	// TODO(big-pp-event) make type for payload stuffs.
 	private getHostsFromStreamingInfo(streamingInfo: any) {
 		const result: FiresideRTCHost[] = [];
 
@@ -569,8 +572,8 @@ export class AppFiresideContainer extends Vue {
 				continue;
 			}
 
-			const streamingUids = streamingInfo.streamingUids ?? [];
-			const streamingHostIds = streamingInfo.streamingHostIds ?? {};
+			const streamingUids = streamingInfo.streamingUids ?? {};
+			const streamingHostIds = streamingInfo.streamingHostIds ?? [];
 			const hostUsers = User.populate(streamingInfo[field] ?? []) as User[];
 			const hosts = hostUsers.map(user => {
 				return {
@@ -649,66 +652,31 @@ export class AppFiresideContainer extends Vue {
 		// If our host state changed, we need to update anything else
 		// depending on streaming.
 		if (isHost !== wasHost) {
-			// If we don't actually have an RTC created yet, take us through
-			// the normal Host initialization.
-			if (!c.rtc.value) {
-				await this._fetchForStreaming({ assignRouteStatus: false });
-				this.expiryCheck();
-				return;
-			}
+			// TODO(big-pp-event) if you become a host, we need to refetch which
+			// hosts you are able to see, because cohosts can see all unlisted hosts.
+			// For that we need to call fetchForStreaming, so the code below seems wrong
+			// because we want to call fetchForStreaming even if you DO have an rtc.
 
-			try {
-				// Validate our streamingUid. If this fails, we're unable to stream.
-				const response = await Api.sendRequest(
-					'/web/dash/fireside/generate-streaming-tokens/' + c.fireside.id,
-					{ streaming_uid: c.rtc.value.streamingUid },
-					{ detach: true }
+			// Fetch for streaming returns stream enabled tokens if you are a cohost.
+			// It also returns the new fireside information with the new role included,
+			// which can be used to see if we've received audience tokens or host tokens.
+			// This means we don't need to call generate-streaming-tokens here,
+			// and that fireside RTC instance would be upserted correctly.
+			await this._fetchForStreaming({ assignRouteStatus: false });
+
+			// Note: the fireside role is updated through _fetchForStreaming above.
+			if (c.fireside.role?.canStream === true) {
+				showInfoGrowl(
+					this.$gettext(
+						`You've been added as a host to this fireside. Hop into the stream!`
+					)
 				);
-
-				if (response?.success !== true) {
-					throw new Error(response);
-				}
-
-				// Manually update our role to something where we can stream.
-				if (c.fireside.role) {
-					c.fireside.role.role = 'cohost';
-					c.fireside.role.can_stream_audio = true;
-					c.fireside.role.can_stream_video = true;
-				}
-			} catch (_) {
-				// If our host state changed, downgrade ourselves to an audience member.
-				if (!isHost && wasHost && c.fireside.role) {
-					c.fireside.role.role = 'audience';
-					c.fireside.role.can_stream_audio = false;
-					c.fireside.role.can_stream_video = false;
-				}
+			} else {
+				// TODO: If this Fireside was a draft, we may need to
+				// re-initialize this component to see if they still have
+				// permissions to view it.
+				showInfoGrowl(this.$gettext(`You've been removed as a host for this fireside.`));
 			}
-
-			// TODO(big-pp-event) creating and destroying the producer is now done through
-			// controller. We need a way to react to the producer being initialized and destroyed
-			// in order to spawn the notification growls.
-			// if (c.fireside.role?.canStream === true) {
-			// 	// Grab a producer if we don't have one and we're now able
-			// 	// to stream.
-			// 	c.rtc.value.producer ??= createFiresideRTCProducer(c.rtc.value);
-			// 	showInfoGrowl(
-			// 		this.$gettext(
-			// 			`You've been added as a host to this fireside. Hop into the stream!`
-			// 		)
-			// 	);
-			// } else if (c.rtc.value.producer) {
-			// 	// If our role doesn't allow us to stream and we have a
-			// 	// producer, tear it down and clean it up.
-			// 	await stopStreaming(c.rtc.value.producer);
-			// 	cleanupFiresideRTCProducer(c.rtc.value.producer);
-			// 	c.rtc.value.producer = null;
-
-			// 	// TODO: If this Fireside was a draft, we may need to
-			// 	// re-initialize this component to see if they still have
-			// 	// permissions to view it.
-
-			// 	showInfoGrowl(this.$gettext(`You've been removed as a host for this fireside.`));
-			// }
 		}
 
 		this.expiryCheck();
@@ -935,7 +903,8 @@ export class AppFiresideContainer extends Vue {
 
 		c.listableHostIds.value = payload.listable_host_ids ?? [];
 
-		// TODO(big-pp-event) upsert fireside rtc here.
+		// TODO(big-pp-event) making a user listable did not start their stream.
+		// looks like the hosts didnt have the streaming uids???
 
 		if (c.rtc.value) {
 			// TODO(big-pp-event) need to unfocus the current user if they are no longer listable.

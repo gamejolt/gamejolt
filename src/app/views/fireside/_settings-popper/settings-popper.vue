@@ -73,7 +73,11 @@ export default class AppFiresideSettingsPopper extends Vue {
 	}
 
 	get shouldShowMuteAll() {
-		return this.c.rtc.value?.listableStreamingUsers.some(i => !i.micAudioMuted) ?? false;
+		if (!this.c.rtc.value) {
+			return false;
+		}
+
+		return !this.c.rtc.value.isEveryRemoteListableUsersMuted;
 	}
 
 	muteAll() {

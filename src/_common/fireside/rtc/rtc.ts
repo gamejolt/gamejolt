@@ -156,9 +156,11 @@ export class FiresideRTC {
 
 	get isEveryRemoteListableUsersMuted() {
 		// Check against _remoteStreamingUsers because we want to exclude the local user from this check.
-		return this._remoteStreamingUsers.every(
-			rtcUser => rtcUser.isUnlisted || rtcUser.micAudioMuted
-		);
+		const users = this._remoteStreamingUsers.filter(i => !i.isUnlisted);
+		if (users.length === 0) {
+			return false;
+		}
+		return users.every(i => i.micAudioMuted);
 	}
 
 	/**
