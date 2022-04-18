@@ -7,7 +7,7 @@ import {
 	ref,
 	shallowReactive,
 	watch,
-	getCurrentScope,
+	triggerRef,
 } from 'vue';
 import { Router } from 'vue-router';
 import { getAbsoluteLink } from '../../../../utils/router';
@@ -46,7 +46,7 @@ import {
 	cleanupFiresideRTCProducer,
 	stopStreaming,
 } from '../../../../_common/fireside/rtc/producer';
-import { arrayUnique } from '../../../../utils/array';
+import { arrayUnique, arrayAssignAll } from '../../../../utils/array';
 
 export type RouteStatus =
 	| 'initial' // Initial status when route loads.
@@ -218,34 +218,44 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 	const _wantsRTC = computed(() => {
 		console.log('recomputing wantsRTC');
 
+		const myStatus = status.value;
+		const agoraInfo = agoraStreamingInfo.value;
+		const myHosts = hosts.value;
+		const myRoleCanStream = fireside.role?.canStream;
+		const myListableHostIds = listableHostIds.value;
+
 		// Only initialize RTC when we are fully connected.
-		if (status.value !== 'joined') {
+		if (myStatus !== 'joined') {
 			console.log('status not joined');
 			return false;
 		}
 
 		// We have to have valid looking agora streaming credentials.
-		const info = agoraStreamingInfo.value;
-		if (!info || !info.videoToken || !info.chatToken) {
+		if (!agoraInfo || !agoraInfo.videoToken || !agoraInfo.chatToken) {
 			console.log('agora streaming value sucks');
 			return false;
 		}
 
 		// If we don't have hosts, we shouldnt initialize RTC.
-		if (!hosts.value || hosts.value.length === 0) {
+		if (!myHosts || myHosts.length === 0) {
 			console.log('no hosts gtfo');
 			return false;
 		}
 
-		if (fireside.role?.canStream) {
-			console.log('not streaming fuck you');
+		if (myRoleCanStream) {
+			console.log('i can stream, so create rtc ahead of time');
 			return true;
 		}
 
 		// A listable host must be streaming.
 		console.log('checking listable host ids');
-		return isListableHostStreaming(hosts.value, listableHostIds.value);
+		return isListableHostStreaming(myHosts, myListableHostIds);
 	});
+
+	// Used to force _wantsRTC to check itself before it wreck itself
+	const recheckWantsRTC = () => {
+		triggerRef(_wantsRTC);
+	};
 
 	const _wantsRTCProducer = computed(() => {
 		if (!rtc.value) {
@@ -325,13 +335,16 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		}
 	});
 
-	const _unwatchHostsChanged = watch(hosts, (newHosts, prevHosts) => {
-		// TODO(big-pp-event) consider changing fireside.is_streaming here?
-		// we might want this because some components that don't have anything to do
-		// with RTC might want to know if a fireside is streaming, for instance fireside avatar bubble.
+	const _unwatchHostsChanged = watch(
+		hosts,
+		(newHosts, prevHosts) => {
+			// TODO(big-pp-event) consider changing fireside.is_streaming here?
+			// we might want this because some components that don't have anything to do
+			// with RTC might want to know if a fireside is streaming, for instance fireside avatar bubble.
 
-		if (rtc.value) {
-			console.debug('[FIRESIDE] settings hosts', newHosts);
+			console.debug('[FIRESIDE] updating hosts in controller');
+			console.debug(JSON.stringify(prevHosts));
+			console.debug(JSON.stringify(newHosts));
 
 			// We want to merge the streaming uids of our existing hosts with the new ones.
 			// Note: I'm not 100% sure why we want that. My guess is because we freeze the
@@ -340,27 +353,38 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 			for (const newHost of newHosts) {
 				const prevHost = prevHosts.find(i => i.user.id === newHost.user.id);
 				if (prevHost) {
-					// Transfer over all previously assigned uids to the new host.
-					newHost.uids.push(...prevHost.uids);
+					console.debug(`[FIRESIDE] merging streaming uids of host ${newHost.user.id}`, {
+						prevUids: prevHost.uids,
+						newUids: newHost.uids,
+					});
 
-					// TODO(big-pp-event) arrayUnique does not unique in place,
-					// do we need to do this then?
-					const newUids = arrayUnique(newHost.uids);
-					newHost.uids.splice(0);
-					newHost.uids.push(...newUids);
+					// Transfer over all previously assigned uids to the new host.
+					const newUids = arrayUnique([...prevHost.uids, ...newHost.uids]);
+					arrayAssignAll(newHost.uids, newUids);
 				}
 			}
 
-			setHosts(rtc.value, newHosts);
-		}
-	});
+			console.debug('[FIRESIDE] result of merging streaming uids');
+			console.debug(JSON.stringify(newHosts));
 
-	const _unwatchListableHostIdsChanged = watch(listableHostIds, newListableHostIds => {
-		if (rtc.value) {
-			console.debug('[FIRESIDE] setting listableHostIds', newListableHostIds);
-			setListableHostIds(rtc.value, newListableHostIds);
-		}
-	});
+			if (rtc.value) {
+				console.debug('[FIRESIDE] updating hosts in rtc');
+				setHosts(rtc.value, newHosts);
+			}
+		},
+		{ deep: true }
+	);
+
+	const _unwatchListableHostIdsChanged = watch(
+		listableHostIds,
+		newListableHostIds => {
+			if (rtc.value) {
+				console.debug('[FIRESIDE] setting listableHostIds', newListableHostIds);
+				setListableHostIds(rtc.value, newListableHostIds);
+			}
+		},
+		{ deep: true }
+	);
 
 	const cleanup = async () => {
 		// These watchers are used to figure out
@@ -405,6 +429,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		stickerTargetController,
 		isMuted,
 		rtc,
+		recheckWantsRTC,
 		status,
 		onRetry,
 		chat,

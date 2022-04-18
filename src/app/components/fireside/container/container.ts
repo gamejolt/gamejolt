@@ -1,4 +1,4 @@
-import { h } from 'vue';
+import { h, triggerRef } from 'vue';
 import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { objectPick } from '../../../../utils/object';
@@ -15,6 +15,7 @@ import {
 	chooseFocusedRTCUser,
 	FiresideRTCHost,
 	AgoraStreamingInfo,
+	applyAudienceRTCTokens,
 } from '../../../../_common/fireside/rtc/rtc';
 import { showInfoGrowl } from '../../../../_common/growls/growls.service';
 import { StickerPlacement } from '../../../../_common/sticker/placement/placement.model';
@@ -42,6 +43,43 @@ interface GridStickerPlacementPayload {
 	user_id: number;
 	streak: number;
 	sticker_placement: Partial<StickerPlacement>;
+}
+
+interface StreamingInfoPayload {
+	streamingAppId: string;
+	videoChannelName: string;
+	videoToken: string;
+	chatChannelName: string;
+	chatToken: string;
+	hosts?: unknown[];
+	unlistedHosts?: unknown[];
+	streamingHostIds?: number[];
+	streamingUid?: number;
+	streamingUids?: Record<number, number[]>;
+}
+
+interface FetchForStreamingPayload extends StreamingInfoPayload {
+	streamingUid: number;
+	fireside: unknown;
+	serverTime: number;
+	listableHostIds?: number[];
+}
+
+interface GridFiresideUpdatedPayload {
+	fireside: unknown;
+	// For optimization reasons streamingUids is not being sent for fireside-updated messages.
+	streaming_info: Omit<StreamingInfoPayload, 'streamingUids'>;
+}
+
+interface GridStreamingUidAddedPayload {
+	streaming_uid: number;
+	user: unknown;
+	is_live: boolean;
+	is_unlisted: boolean;
+}
+
+interface GridListableHostsPayload {
+	listable_host_ids?: number[];
 }
 
 @Options({})
@@ -378,11 +416,13 @@ export class AppFiresideContainer extends Vue {
 	private async _fetchForStreaming({ assignRouteStatus = true }) {
 		const c = this.controller;
 		try {
-			const payload = await Api.sendRequest(
+			const payload = (await Api.sendRequest(
 				`/web/fireside/fetch-for-streaming/${c.fireside.hash}`,
 				undefined,
 				{ detach: true }
-			);
+			)) as FetchForStreamingPayload;
+
+			console.debug('[FIRESIDE] fetch-for-streaming payload received', payload);
 
 			if (!payload.fireside) {
 				console.debug(`[FIRESIDE] Trying to load fireside, but it was not found.`);
@@ -400,13 +440,15 @@ export class AppFiresideContainer extends Vue {
 
 			// Note: the video/chat tokens returned here may be either the audience or cohost tokens,
 			// depending on which role you have when you call fetch-for-streaming.
-			const agoraStreamingInfo = this.getAgoraStreamingInfoFromStreamingInfo(payload);
+			const agoraStreamingInfo = this.getAgoraStreamingInfoFromPayload(payload);
+			agoraStreamingInfo.streamingUid = payload.streamingUid;
 			c.agoraStreamingInfo.value = agoraStreamingInfo;
 
 			c.hosts.value = this.getHostsFromStreamingInfo(payload);
 			c.listableHostIds.value = payload.listableHostIds ?? [];
 
 			// TODO(big-pp-event) need to renew audience tokens here somewhere?
+			// EDIT: we might not need to. this is done implicitly through setting agoraStreamingInfo.
 
 			// If they have a host role, or if this fireside is actively
 			// streaming, we'll get streaming tokens from the fetch payload. In
@@ -551,22 +593,23 @@ export class AppFiresideContainer extends Vue {
 	// 	}
 	// }
 
-	private getAgoraStreamingInfoFromStreamingInfo(streamingInfo: any) {
+	private getAgoraStreamingInfoFromPayload(
+		streamingInfo: FetchForStreamingPayload | GridFiresideUpdatedPayload['streaming_info']
+	): AgoraStreamingInfo {
 		return {
 			appId: streamingInfo.streamingAppId,
-			streamingUid: streamingInfo.streamingUid,
+			streamingUid: streamingInfo.streamingUid ?? 0,
 			videoChannelName: streamingInfo.videoChannelName,
 			videoToken: streamingInfo.videoToken,
 			chatChannelName: streamingInfo.chatChannelName,
 			chatToken: streamingInfo.chatToken,
-		} as AgoraStreamingInfo;
+		};
 	}
 
-	// TODO(big-pp-event) make type for payload stuffs.
-	private getHostsFromStreamingInfo(streamingInfo: any) {
+	private getHostsFromStreamingInfo(streamingInfo: StreamingInfoPayload) {
 		const result: FiresideRTCHost[] = [];
 
-		for (const field of ['hosts', 'unlistedHosts']) {
+		for (const field of ['hosts', 'unlistedHosts'] as const) {
 			const isUnlisted = field === 'unlistedHosts';
 			if (!streamingInfo[field]) {
 				continue;
@@ -576,11 +619,14 @@ export class AppFiresideContainer extends Vue {
 			const streamingHostIds = streamingInfo.streamingHostIds ?? [];
 			const hostUsers = User.populate(streamingInfo[field] ?? []) as User[];
 			const hosts = hostUsers.map(user => {
+				const isLive = streamingHostIds.includes(user.id);
+				const uids = streamingUids[user.id] ?? [];
+
 				return {
 					user,
 					isUnlisted,
-					isLive: streamingHostIds.includes(user.id),
-					uids: streamingUids[user.id] ?? [],
+					isLive,
+					uids,
 				} as FiresideRTCHost;
 			});
 
@@ -595,7 +641,7 @@ export class AppFiresideContainer extends Vue {
 		this.tryJoin();
 	}
 
-	async onGridUpdateFireside(payload: any) {
+	async onGridUpdateFireside(payload: GridFiresideUpdatedPayload) {
 		console.log('Fireside update message:');
 		console.log(payload);
 
@@ -633,8 +679,8 @@ export class AppFiresideContainer extends Vue {
 				// unlisted hosts.
 				// 'is_streaming',
 				'is_draft',
-				// can't updated member_count here for the same reason
-				// we want update is_streaming.
+				// can't update member_count here for the same reason
+				// we can't update is_streaming.
 				// 'member_count',
 				'community_links',
 			])
@@ -652,11 +698,6 @@ export class AppFiresideContainer extends Vue {
 		// If our host state changed, we need to update anything else
 		// depending on streaming.
 		if (isHost !== wasHost) {
-			// TODO(big-pp-event) if you become a host, we need to refetch which
-			// hosts you are able to see, because cohosts can see all unlisted hosts.
-			// For that we need to call fetchForStreaming, so the code below seems wrong
-			// because we want to call fetchForStreaming even if you DO have an rtc.
-
 			// Fetch for streaming returns stream enabled tokens if you are a cohost.
 			// It also returns the new fireside information with the new role included,
 			// which can be used to see if we've received audience tokens or host tokens.
@@ -676,6 +717,58 @@ export class AppFiresideContainer extends Vue {
 				// re-initialize this component to see if they still have
 				// permissions to view it.
 				showInfoGrowl(this.$gettext(`You've been removed as a host for this fireside.`));
+			}
+		} else {
+			// It's possible that we get a fireside-updated grid event before finishing bootstrapping -
+			// specifically before fetch-for-streaming returns. when this happens we won't have a streaming uid,
+			// which would make it impossible to initialize rtc.
+			// We could either wait for the previous fetch-for-streaming request to return, or send a new one.
+			// I think its safer to fetch again since the previous request may have data that is already out of
+			// sync with the data this event contains.
+			const streamingUid = c.agoraStreamingInfo.value?.streamingUid;
+			if (!streamingUid) {
+				console.debug(
+					'[FIRESIDE] Got fireside-updated grid event before fully bootstrapped'
+				);
+				await this._fetchForStreaming({ assignRouteStatus: false });
+			} else if (!c.fireside.role?.canStream) {
+				// Otherwise, if our host state did not change and we are a viewer then this event
+				// has the new audience tokens.
+				const agoraStreamingInfo = this.getAgoraStreamingInfoFromPayload(
+					payload.streaming_info
+				);
+
+				// The payload in this event is not user specific, so it does not contain
+				// our streaming uid. to avoid overwriting it with undefined we set it to our
+				// existing value here.
+				agoraStreamingInfo.streamingUid = streamingUid;
+
+				// Finally, setting the agora streaming info on controller will either upsert
+				// the rtc instance, or refresh the audience tokens on the existing one.
+				const hadRTC = !!c.rtc.value;
+				c.agoraStreamingInfo.value = agoraStreamingInfo;
+
+				// TODO(big-pp-event) instead of doing this, make a function on
+				// controller that upserts or tears down rtc. This function
+				// should be used by both the watcher and this piece of code to
+				// syncronously mutate c.rtc
+				//
+				// Forces wantsRTC to reevaluate. This is needed in order to
+				// avoid applying audience tokens if the RTC instance gets torn
+				// down after setting the agora streaming info. If i don't do
+				// this, the _wantsRTC will only reevaluate on next tick, which
+				// happens after c.rtc.value is evaluated in the if block below.
+				c.recheckWantsRTC();
+
+				// If this change did not end up upserting an RTC instance and we had an existing
+				// instance, we need to tell it to apply the new audience tokens we've received.
+				if (hadRTC && c.rtc.value) {
+					applyAudienceRTCTokens(
+						c.rtc.value,
+						c.agoraStreamingInfo.value.videoToken,
+						c.agoraStreamingInfo.value.chatToken
+					);
+				}
 			}
 		}
 
@@ -856,30 +949,39 @@ export class AppFiresideContainer extends Vue {
 		// }
 	}
 
-	onGridStreamingUidAdded(payload: any) {
+	onGridStreamingUidAdded(payload: GridStreamingUidAddedPayload) {
 		console.debug('[FIRESIDE] Grid streaming uid added.', payload);
 
-		const c = this.controller;
-		if (!c.rtc.value || !payload.streaming_uid || !payload.user) {
+		const { hosts } = this.controller;
+		if (!payload.streaming_uid || !payload.user) {
 			return;
 		}
 
 		const user = new User(payload.user);
-		const host = c.rtc.value.hosts.find(host => host.user.id === user.id);
+		const host = hosts.value.find(host => host.user.id === user.id);
 		if (host) {
+			console.debug('[FIRESIDE] Adding streaming uid to existing host');
+
 			host.user = user;
+			host.isUnlisted = payload.is_unlisted;
+			host.isLive = payload.is_live;
 			if (host.uids.indexOf(payload.streaming_uid) === -1) {
 				host.uids.push(payload.streaming_uid);
 			}
 		} else {
-			c.rtc.value.hosts.push({
+			console.debug('[FIRESIDE] Adding streaming uid to new host');
+			hosts.value.push({
 				user: user,
 				isUnlisted: payload.is_unlisted,
-				// TODO(big-pp-event) get this from the payload.
-				isLive: false,
+				isLive: payload.is_live,
 				uids: [payload.streaming_uid],
-			});
+			} as FiresideRTCHost);
 		}
+
+		// Vue does not pick up the change to uids for existing hosts, and I
+		// can't be assed to figure out what in the world i need to wrap in
+		// a reactive() to make it work.
+		triggerRef(hosts);
 	}
 
 	onGridStickerPlacement(payload: GridStickerPlacementPayload) {
@@ -897,7 +999,7 @@ export class AppFiresideContainer extends Vue {
 		}
 	}
 
-	onGridListableHosts(payload: { listable_host_ids?: number[] }) {
+	onGridListableHosts(payload: GridListableHostsPayload) {
 		console.debug('[FIRESIDE] Grid listable hosts.', payload);
 		const c = this.controller;
 

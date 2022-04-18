@@ -1,6 +1,7 @@
 import type {
 	AudienceLatencyLevelType,
 	ConnectionState,
+	IAgoraRTC,
 	IAgoraRTCClient,
 	IAgoraRTCRemoteUser,
 	ILocalAudioTrack,
@@ -9,10 +10,7 @@ import type {
 	NetworkQuality,
 } from 'agora-rtc-sdk-ng';
 import { markRaw, reactive } from 'vue';
-import { importNoSSR } from '../../code-splitting';
 import { FiresideRTC } from './rtc';
-
-const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
 
 type OnTrackPublish = (remoteUser: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => void;
 type OnTrackUnpublish = (remoteUser: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => void;
@@ -60,10 +58,11 @@ export class FiresideRTCChannel {
 }
 
 /// Wraps a [FiresideRTCChannel] in [reactive] after initializing it.
-export async function createFiresideRTCChannel(
+export function createFiresideRTCChannel(
 	rtc: FiresideRTC,
 	channel: string,
 	token: string,
+	AgoraRTC: IAgoraRTC,
 	{
 		onTrackPublish,
 		onTrackUnpublish,
@@ -77,7 +76,6 @@ export async function createFiresideRTCChannel(
 	const c = reactive(new FiresideRTCChannel(rtc, channel)) as FiresideRTCChannel;
 	c.token = token;
 
-	const AgoraRTC = await AgoraRTCLazy;
 	c.agoraClient = markRaw(AgoraRTC.createClient({ mode: 'live', codec: 'h264' }));
 
 	c.agoraClient.on('user-published', (...args) => {
