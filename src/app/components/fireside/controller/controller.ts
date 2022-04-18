@@ -122,12 +122,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 	});
 
 	const isDraft = computed(() => fireside?.is_draft ?? true);
-	const isStreaming = computed(
-		// TODO(big-pp-event) rtc.value goes away if our state isn't joined.
-		// This means disconnections from grid and chat would cause you to stop streaming.
-		// I'm not sure if this is an issue or intended behaviour lol.
-		() => !!rtc.value && rtc.value.listableStreamingUsers.length > 0
-	);
+	const isStreaming = computed(() => !!rtc.value && rtc.value.listableStreamingUsers.length > 0);
 
 	const isPersonallyStreaming = computed(() => rtc.value?.isPersonallyStreaming ?? false);
 
@@ -282,13 +277,14 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 
 			destroyFiresideRTC(rtc.value);
 
-			// Note: this would trigger the wantsRTCProducer watcher, but
-			// it won't actually run the cleanup since rtc.value got unset.
-			// It's a bit of a meme, but the way the producer gets destroyed in
-			// this case is through the destroyFiresideRTC above.
-			// TODO(big-pp-event) this way of destroying the producer will not end
-			// up calling set-is-streaming api endpoint, and will not clear recording devices.
-			// this is because it does not call stopStreaming..
+			// Note: this would trigger the wantsRTCProducer watcher, but it
+			// won't actually run the cleanup since rtc.value got unset. It's a
+			// bit of a meme, but the way the producer gets destroyed in this
+			// case is through the destroyFiresideRTC above.
+			//
+			// TODO(big-pp-event) this way of destroying the producer will not
+			// end up clearing recording devices. this is because it does not
+			// call stopStreaming..
 			rtc.value = undefined;
 		} else {
 			console.debug('[FIRESIDE] rtc was not set, nothing to do');
@@ -338,10 +334,6 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 	const _unwatchHostsChanged = watch(
 		hosts,
 		(newHosts, prevHosts) => {
-			// TODO(big-pp-event) consider changing fireside.is_streaming here?
-			// we might want this because some components that don't have anything to do
-			// with RTC might want to know if a fireside is streaming, for instance fireside avatar bubble.
-
 			console.debug('[FIRESIDE] updating hosts in controller');
 			console.debug(JSON.stringify(prevHosts));
 			console.debug(JSON.stringify(newHosts));

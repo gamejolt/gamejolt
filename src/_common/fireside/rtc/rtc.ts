@@ -566,6 +566,7 @@ export function chooseFocusedRTCUser(rtc: FiresideRTC) {
 	// We only choose a new focused user if the current one is unset or is unlisted.
 	if (rtc.focusedUser) {
 		// Unfocus an unlisted focused user.
+		// TODO(big-pp-event) check that this works.
 		if (rtc.focusedUser.isUnlisted) {
 			rtc.focusedUser = null;
 		} else {

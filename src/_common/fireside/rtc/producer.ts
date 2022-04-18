@@ -105,7 +105,7 @@ export function createFiresideRTCProducer(rtc: FiresideRTC) {
  */
 export function cleanupFiresideRTCProducer(producer: FiresideRTCProducer) {
 	// TODO(big-pp-event) theres nothing to prevent a queued up startStream
-	// to get executed after cleanup is called..
+	// to get executed after cleanup is called on the same instance.
 	producer._isStreaming = false;
 
 	if (producer._tokenRenewInterval) {
@@ -787,10 +787,10 @@ async function _stopStreaming(producer: FiresideRTCProducer, becomeBusy: boolean
 				stopChannelStreaming(chatChannel),
 			]);
 
-			// TODO(big-pp-event) I don't fully understand what this is supposed to do
-			// and why we want to call this after the streams are stopped.
-			// It looks like this unsets the recording devices which indirectly stops
-			// the stream anyways?
+			// TODO(big-pp-event) I don't fully understand what this is supposed
+			// to do and why we want to call this after the streams are stopped.
+			// It looks like this unsets the recording devices which indirectly
+			// stops the stream anyways?
 			clearSelectedRecordingDevices(producer);
 		} catch (err) {
 			rtc.logError(`Failed to stop one or more agora channels. Force reloading...`, err);
