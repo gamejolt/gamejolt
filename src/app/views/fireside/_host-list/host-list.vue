@@ -48,7 +48,6 @@ export default class AppFiresideHostList extends Vue {
 	}
 
 	get listableStreamingUsers() {
-		// TODO(big-pp-event) we should not exclude local user here
 		return this.c.rtc.value?.listableStreamingUsers ?? [];
 	}
 

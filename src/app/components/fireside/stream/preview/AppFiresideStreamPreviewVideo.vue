@@ -41,7 +41,11 @@ const cohosts = computed(() => {
 		const userModel = rtcUser.userModel!;
 
 		// Filter out creator of the fireside.
+		//
 		// TODO(big-pp-event) why are we doing this?
+		//
+		// Note: this would probably not exclude the remote instance of the
+		// creator of the fireside. Intentional?
 		if (userModel !== props.fireside.user) {
 			result.push(userModel);
 		}

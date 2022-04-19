@@ -579,7 +579,7 @@ export class AppFiresideContainer extends Vue {
 
 				return {
 					user,
-					isUnlisted,
+					needsPermissionToView: isUnlisted,
 					isLive,
 					uids,
 				} as FiresideRTCHost;
@@ -705,23 +705,19 @@ export class AppFiresideContainer extends Vue {
 				const hadRTC = !!c.rtc.value;
 				c.agoraStreamingInfo.value = agoraStreamingInfo;
 
-				// TODO(big-pp-event) instead of doing this, make a function on
-				// controller that upserts or tears down rtc. This function
-				// should be used by both the watcher and this piece of code to
-				// syncronously mutate c.rtc
-				//
-				// Forces wantsRTC to reevaluate. This is needed in order to
-				// avoid applying audience tokens if the RTC instance gets torn
-				// down after setting the agora streaming info. If i don't do
-				// this, the _wantsRTC will only reevaluate on next tick, which
-				// happens after c.rtc.value is evaluated in the if block below.
-				c.recheckWantsRTC();
+				// Forces immediate revalidation of RTC. This is needed in order
+				// to avoid applying audience tokens if the RTC instance gets
+				// torn down after setting the agora streaming info. If i don't
+				// do this, the _wantsRTC will only reevaluate on next tick,
+				// which happens after the if block below.
+				const rtcInstance = c.revalidateRTC();
+				const hasRTC = !!rtcInstance;
 
 				// If this change did not end up upserting an RTC instance and we had an existing
 				// instance, we need to tell it to apply the new audience tokens we've received.
-				if (hadRTC && c.rtc.value) {
+				if (hadRTC && hasRTC) {
 					applyAudienceRTCTokens(
-						c.rtc.value,
+						rtcInstance,
 						c.agoraStreamingInfo.value.videoToken,
 						c.agoraStreamingInfo.value.chatToken
 					);
@@ -746,7 +742,7 @@ export class AppFiresideContainer extends Vue {
 			console.debug('[FIRESIDE] Adding streaming uid to existing host');
 
 			host.user = user;
-			host.isUnlisted = payload.is_unlisted;
+			host.needsPermissionToView = payload.is_unlisted;
 			host.isLive = payload.is_live;
 			if (host.uids.indexOf(payload.streaming_uid) === -1) {
 				host.uids.push(payload.streaming_uid);
@@ -755,7 +751,7 @@ export class AppFiresideContainer extends Vue {
 			console.debug('[FIRESIDE] Adding streaming uid to new host');
 			hosts.value.push({
 				user: user,
-				isUnlisted: payload.is_unlisted,
+				needsPermissionToView: payload.is_unlisted,
 				isLive: payload.is_live,
 				uids: [payload.streaming_uid],
 			} as FiresideRTCHost);
@@ -789,8 +785,6 @@ export class AppFiresideContainer extends Vue {
 		c.listableHostIds.value = payload.listable_host_ids ?? [];
 
 		if (c.rtc.value) {
-			// TODO(big-pp-event) need to unfocus the current user if they are no longer listable.
-			// This is not strictly needed for the event, but if its simple to implement why not eh?
 			chooseFocusedRTCUser(c.rtc.value);
 		}
 	}

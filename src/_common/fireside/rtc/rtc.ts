@@ -46,8 +46,7 @@ export const FiresideRTCKey = Symbol();
 
 export interface FiresideRTCHost {
 	user: User;
-	// TODO(big-pp-event) rename this to something that indicates you need permission to view them.
-	isUnlisted: boolean;
+	needsPermissionToView: boolean;
 	isLive: boolean;
 	uids: number[];
 }
@@ -156,12 +155,12 @@ export class FiresideRTC {
 	}
 
 	get listableStreamingUsers() {
-		return this._allStreamingUsers.filter(rtcUser => !rtcUser.isUnlisted);
+		return this._allStreamingUsers.filter(rtcUser => rtcUser.isListed);
 	}
 
 	get isEveryRemoteListableUsersMuted() {
 		// Check against _remoteStreamingUsers because we want to exclude the local user from this check.
-		const users = this._remoteStreamingUsers.filter(i => !i.isUnlisted);
+		const users = this._remoteStreamingUsers.filter(i => i.isListed);
 		if (users.length === 0) {
 			return false;
 		}
@@ -567,7 +566,7 @@ export function chooseFocusedRTCUser(rtc: FiresideRTC) {
 	if (rtc.focusedUser) {
 		// Unfocus an unlisted focused user.
 		// TODO(big-pp-event) check that this works.
-		if (rtc.focusedUser.isUnlisted) {
+		if (!rtc.focusedUser.isListed) {
 			rtc.focusedUser = null;
 		} else {
 			return;

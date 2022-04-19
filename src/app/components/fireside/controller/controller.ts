@@ -132,7 +132,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		}
 
 		const user = rtc.value.listableStreamingUsers.find(
-			i => i.userModel?.id === rtc.value?.userId
+			i => !i.isLocal && i.userModel?.id === rtc.value?.userId
 		);
 		if (!user) {
 			return false;
@@ -247,11 +247,6 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		return isListableHostStreaming(myHosts, myListableHostIds);
 	});
 
-	// Used to force _wantsRTC to check itself before it wreck itself
-	const recheckWantsRTC = () => {
-		triggerRef(_wantsRTC);
-	};
-
 	const _wantsRTCProducer = computed(() => {
 		if (!rtc.value) {
 			return false;
@@ -260,10 +255,10 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		return !!fireside.role?.canStream;
 	});
 
-	const _unwatchWantsRTC = watch(_wantsRTC, newWantsRTC => {
-		console.debug('[FIRESIDE] wantsRTC changed to ' + (newWantsRTC ? 'true' : 'false'));
+	const revalidateRTC = () => {
+		console.debug('[FIRESIDE] wantsRTC changed to ' + (_wantsRTC.value ? 'true' : 'false'));
 
-		if (newWantsRTC) {
+		if (_wantsRTC.value) {
 			rtc.value = createFiresideRTC(
 				fireside,
 				user.value?.id ?? null,
@@ -289,7 +284,11 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		} else {
 			console.debug('[FIRESIDE] rtc was not set, nothing to do');
 		}
-	});
+
+		return rtc.value;
+	};
+
+	const _unwatchWantsRTC = watch(_wantsRTC, revalidateRTC);
 
 	const _unwatchWantsRTCProducer = watch(_wantsRTCProducer, async newWantsRTCProducer => {
 		console.debug(
@@ -421,7 +420,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		stickerTargetController,
 		isMuted,
 		rtc,
-		recheckWantsRTC,
+		revalidateRTC,
 		status,
 		onRetry,
 		chat,
@@ -600,7 +599,7 @@ function isListableHostStreaming(hosts: FiresideRTCHost[], listableHostIds: numb
 			return false;
 		}
 
-		if (!i.isUnlisted) {
+		if (!i.needsPermissionToView) {
 			return true;
 		}
 

@@ -85,8 +85,7 @@ export class FiresideRTCUser {
 		return this._rtcHost?.user ?? null;
 	}
 
-	// TODO(big-pp-event) invert this so we can do .isListed
-	get isUnlisted() {
+	get isListed() {
 		const host = this._rtcHost;
 
 		// Treat unknown hosts as unlistable.
@@ -95,7 +94,7 @@ export class FiresideRTCUser {
 		}
 
 		// If the host is not unlisted at all we can early out.
-		if (!host.isUnlisted) {
+		if (!host.needsPermissionToView) {
 			return false;
 		}
 
@@ -203,7 +202,7 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 		return;
 	}
 
-	if (user.isUnlisted) {
+	if (!user.isListed) {
 		const err = new Error('Attempted to start video playback for unlisted user');
 		rtc.logError(err.message);
 		console.error(err);
@@ -313,7 +312,7 @@ export async function startDesktopAudioPlayback(user: FiresideRTCUser) {
 
 	rtc.log(`${_userIdForLog(user)} -> startDesktopAudioPlayback`);
 
-	if (user.isUnlisted) {
+	if (!user.isListed) {
 		const err = new Error('Attempted to start desktop audio playback for unlisted user');
 		rtc.logError(err.message);
 		console.error(err);
@@ -391,7 +390,7 @@ export async function startAudioPlayback(user: FiresideRTCUser) {
 		return;
 	}
 
-	if (user.isUnlisted) {
+	if (!user.isListed) {
 		const err = new Error('Attempted to start audio playback for unlisted user');
 		rtc.logError(err.message);
 		console.error(err);

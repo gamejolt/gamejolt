@@ -63,7 +63,7 @@ export default class AppFiresideSettingsPopper extends Vue {
 
 		// We only want to show mute controls for remote listable streaming users.
 		const remoteUsers = this.c.rtc.value.listableStreamingUsers.filter(
-			rtcUser => rtcUser.remoteVideoUser || rtcUser.remoteChatUser
+			rtcUser => !rtcUser.isLocal && (rtcUser.remoteVideoUser || rtcUser.remoteChatUser)
 		);
 		return remoteUsers.length > 0;
 	}

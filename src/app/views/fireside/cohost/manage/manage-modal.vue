@@ -4,8 +4,8 @@ import { stringSort } from '../../../../../utils/array';
 import { fuzzysearch } from '../../../../../utils/string';
 import { sleep } from '../../../../../utils/utils';
 import {
-	inviteFiresideHost,
-	removeFiresideHost,
+inviteFiresideHost,
+removeFiresideHost
 } from '../../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { BaseModal } from '../../../../../_common/modal/base';
@@ -54,7 +54,7 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 		const hosts = this.rtc?.hosts ?? [];
 
 		return hosts // formatting
-			.filter(i => !i.isUnlisted || this.rtc?.listableHostIds.includes(i.user.id))
+			.filter(i => !i.needsPermissionToView || this.rtc?.listableHostIds.includes(i.user.id))
 			.map(i => i.user)
 			.filter(i => i.id !== this.controller.user.value?.id);
 	}
@@ -89,7 +89,7 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 	isUserStreaming(user: ChatUser | User) {
 		return (
 			this.isHost(user) &&
-			this.rtc?.listableStreamingUsers.some(i => i.userModel?.id === user.id) === true
+			this.rtc?.listableStreamingUsers.some(i => i.userModel?.id === user.id)
 		);
 	}
 
