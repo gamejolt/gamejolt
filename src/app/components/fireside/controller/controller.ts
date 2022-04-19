@@ -7,7 +7,6 @@ import {
 	ref,
 	shallowReactive,
 	watch,
-	triggerRef,
 } from 'vue';
 import { Router } from 'vue-router';
 import { getAbsoluteLink } from '../../../../utils/router';
@@ -259,7 +258,9 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		console.debug('[FIRESIDE] wantsRTC changed to ' + (_wantsRTC.value ? 'true' : 'false'));
 
 		if (_wantsRTC.value) {
-			rtc.value = createFiresideRTC(
+			// Note: since revalidateRTC may be called outside of watcher flow,
+			// we need to avoid recreating rtc if it already exists.
+			rtc.value ??= createFiresideRTC(
 				fireside,
 				user.value?.id ?? null,
 				agoraStreamingInfo.value!,

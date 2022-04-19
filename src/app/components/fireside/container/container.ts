@@ -780,12 +780,12 @@ export class AppFiresideContainer extends Vue {
 
 	onGridListableHosts(payload: GridListableHostsPayload) {
 		console.debug('[FIRESIDE] Grid listable hosts.', payload);
-		const c = this.controller;
+		const { listableHostIds, rtc } = this.controller;
 
-		c.listableHostIds.value = payload.listable_host_ids ?? [];
+		listableHostIds.value = payload.listable_host_ids ?? [];
 
-		if (c.rtc.value) {
-			chooseFocusedRTCUser(c.rtc.value);
+		if (rtc.value) {
+			chooseFocusedRTCUser(rtc.value);
 		}
 	}
 }
