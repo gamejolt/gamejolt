@@ -5,7 +5,7 @@ import {
 	IRemoteAudioTrack,
 	IRemoteVideoTrack,
 } from 'agora-rtc-sdk-ng';
-import { markRaw, reactive, toRaw } from 'vue';
+import { markRaw, reactive, toRaw, watch, WatchStopHandle } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
 import { updateTrackPlaybackDevice } from './producer';
@@ -77,6 +77,8 @@ export class FiresideRTCUser {
 	micAudioMuted = false;
 	volumeLevel = 0;
 
+	_unwatchIsListed: WatchStopHandle | null = null;
+
 	get _rtcHost() {
 		return this.rtc.hosts.find(host => host.uids.includes(this.uid));
 	}
@@ -86,36 +88,71 @@ export class FiresideRTCUser {
 	}
 
 	get isListed() {
-		const host = this._rtcHost;
+		// Local user is always listable.
+		if (this.isLocal) {
+			return true;
+		}
 
 		// Treat unknown hosts as unlistable.
+		const host = this._rtcHost;
 		if (!host) {
-			return true;
+			return false;
 		}
 
 		// If the host is not unlisted at all we can early out.
 		if (!host.needsPermissionToView) {
-			return false;
+			return true;
 		}
 
 		// Our own user is never unlisted.
 		if (host.user.id === this.rtc.userId) {
-			return false;
+			return true;
 		}
 
-		// If the host isn't explicitly listable, we want to treat it as if
-		// they were unlistable to avoid showing a stream for a host we simply
-		// did not receive the listable hosts for in time.
-		return !this.rtc.listableHostIds.includes(host.user.id);
+		// If the host isn't explicitly listable, we want to treat it as if they
+		// were unlistable to avoid showing a stream for a host we simply did
+		// not receive the listable hosts for in time.
+		return this.rtc.listableHostIds.includes(host.user.id);
 	}
 }
 
 export function createRemoteFiresideRTCUser(rtc: FiresideRTC, uid: number) {
-	return reactive(new FiresideRTCUser(rtc, uid, false)) as FiresideRTCUser;
+	const user = reactive(new FiresideRTCUser(rtc, uid, false)) as FiresideRTCUser;
+
+	user._unwatchIsListed = watch(
+		() => user.isListed,
+		(isListed, wasListed) => {
+			rtc.log(
+				`${_userIdForLog(user)} -> isListed transitioned from ${
+					wasListed ? 'true' : 'false'
+				} to ${isListed ? 'true' : 'false'}`
+			);
+
+			if (isListed === wasListed) {
+				return;
+			}
+
+			if (isListed) {
+				startAudioPlayback(user);
+			} else {
+				stopAudioPlayback(user);
+			}
+		}
+	);
+
+	return user;
 }
 
 export function createLocalFiresideRTCUser(rtc: FiresideRTC, uid: number) {
 	return reactive(new FiresideRTCUser(rtc, uid, true)) as FiresideRTCUser;
+}
+
+export function cleanupFiresideRTCUser(user: FiresideRTCUser) {
+	user.remoteVideoUser = null;
+	user.remoteChatUser = null;
+
+	user._unwatchIsListed?.();
+	user._unwatchIsListed = null;
 }
 
 function _userIdForLog(user: FiresideRTCUser) {
@@ -391,9 +428,9 @@ export async function startAudioPlayback(user: FiresideRTCUser) {
 	}
 
 	if (!user.isListed) {
-		const err = new Error('Attempted to start audio playback for unlisted user');
-		rtc.logError(err.message);
-		console.error(err);
+		const err = new Error('Attempted to start mic audio playback for unlisted user');
+		rtc.logWarning(err.message);
+		console.warn(err);
 		return;
 	}
 

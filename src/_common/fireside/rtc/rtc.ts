@@ -8,6 +8,7 @@ import { Navigate } from '../../navigate/navigate.service';
 import { SettingStreamDesktopVolume } from '../../settings/settings.service';
 import { User } from '../../user/user.model';
 import { Fireside } from '../fireside.model';
+import { cleanupFiresideRTCUser } from './user';
 import {
 	createFiresideRTCChannel,
 	destroyChannel,
@@ -386,6 +387,11 @@ function _finalizeSetup(rtc: FiresideRTC) {
 	}
 
 	rtc.finalizeSetupFn ??= debounce(() => {
+		// We dont want side effects from canceled rtc instances.
+		if (rtc.generation.isCanceled) {
+			return;
+		}
+
 		chooseFocusedRTCUser(rtc);
 
 		if (!rtc.setupFinalized) {
@@ -615,8 +621,7 @@ function _removeUserIfNeeded(rtc: FiresideRTC, user: FiresideRTCUser) {
 		return;
 	}
 
-	user.remoteVideoUser = null;
-	user.remoteChatUser = null;
+	cleanupFiresideRTCUser(user);
 
 	arrayRemove(rtc._remoteStreamingUsers, i => i === user);
 
