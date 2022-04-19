@@ -335,8 +335,6 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		hosts,
 		(newHosts, prevHosts) => {
 			console.debug('[FIRESIDE] updating hosts in controller');
-			console.debug(JSON.stringify(prevHosts));
-			console.debug(JSON.stringify(newHosts));
 
 			// We want to merge the streaming uids of our existing hosts with the new ones.
 			// Note: I'm not 100% sure why we want that. My guess is because we freeze the
@@ -345,10 +343,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 			for (const newHost of newHosts) {
 				const prevHost = prevHosts.find(i => i.user.id === newHost.user.id);
 				if (prevHost) {
-					console.debug(`[FIRESIDE] merging streaming uids of host ${newHost.user.id}`, {
-						prevUids: prevHost.uids,
-						newUids: newHost.uids,
-					});
+					console.debug(`[FIRESIDE] merging streaming uids of host ${newHost.user.id}`);
 
 					// Transfer over all previously assigned uids to the new host.
 					const newUids = arrayUnique([...prevHost.uids, ...newHost.uids]);
@@ -356,8 +351,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 				}
 			}
 
-			console.debug('[FIRESIDE] result of merging streaming uids');
-			console.debug(JSON.stringify(newHosts));
+			console.debug('[FIRESIDE] new hosts after merging uids', JSON.stringify(newHosts));
 
 			if (rtc.value) {
 				console.debug('[FIRESIDE] updating hosts in rtc');
@@ -371,7 +365,10 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		listableHostIds,
 		newListableHostIds => {
 			if (rtc.value) {
-				console.debug('[FIRESIDE] setting listableHostIds', newListableHostIds);
+				console.debug(
+					'[FIRESIDE] setting listableHostIds',
+					JSON.stringify(newListableHostIds)
+				);
 				setListableHostIds(rtc.value, newListableHostIds);
 			}
 		},
