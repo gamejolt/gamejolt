@@ -3,7 +3,6 @@ import { computed, PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppJolticon from '../jolticon/AppJolticon.vue';
 import AppSpacer from '../spacer/AppSpacer.vue';
-import AppTranslate from '../translate/AppTranslate.vue';
 import AppQuestProgress from './AppQuestProgress.vue';
 import AppQuestThumbnail from './AppQuestThumbnail.vue';
 import { Quest } from './quest-model';
@@ -57,11 +56,7 @@ const asExpired = computed(
 	() => isDisabled.value || (quest.value.isExpired && !quest.value.has_activity)
 );
 
-const showType = computed(
-	() =>
-		!(compact.value || compactStack.value) &&
-		!!(quest.value.translatableQuestType || quest.value.questType)
-);
+const showType = computed(() => !(compact.value || compactStack.value) && !!quest.value.questType);
 
 const location = computed(() =>
 	isDisabled.value ? undefined : { name: 'quests.view', params: { id: quest.value.id } }
@@ -94,14 +89,7 @@ function onSelect() {
 
 		<div class="-details">
 			<div v-if="showType" class="-type">
-				<template v-if="!!quest.translatableQuestType">
-					<AppTranslate>
-						{{ quest.translatableQuestType }}
-					</AppTranslate>
-				</template>
-				<template v-else>
-					{{ quest.questType }}
-				</template>
+				{{ quest.questType }}
 
 				<AppJolticon v-if="quest.ends_on" icon="clock" />
 			</div>
