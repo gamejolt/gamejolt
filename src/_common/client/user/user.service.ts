@@ -12,18 +12,16 @@ export class ClientUser {
 		if (localUser) {
 			setUser(JSON.parse(localUser));
 		} else if (Navigate.currentClientSection !== 'auth') {
-			if (!GJ_DISABLE_SECTION_REDIRECTS) {
-				// Must be logged in to use client.
-				this.authRedirect();
-			} else {
-				Api.sendRequest('/web/touch', null, { detach: true, processPayload: false }).then(
-					response => {
-						if (!response || !response.data || !response.data.user) {
-							this.authRedirect();
-						}
-					}
-				);
-			}
+			// Must be logged in to use client.
+			this.authRedirect();
+
+			// Api.sendRequest('/web/touch', null, { detach: true, processPayload: false }).then(
+			// 	response => {
+			// 		if (!response || !response.data || !response.data.user) {
+			// 			this.authRedirect();
+			// 		}
+			// 	}
+			// );
 		}
 
 		// When the app user changes in the store, freeze it into local storage
@@ -45,6 +43,11 @@ export class ClientUser {
 	}
 
 	private static authRedirect() {
+		if (GJ_IS_WATCHING) {
+			console.log('aborting auth redirect');
+			return;
+		}
+
 		console.log('redirecting to auth');
 
 		// TODO: This hacks prevents redirecting to auth section from the client sections.
