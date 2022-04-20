@@ -52,6 +52,12 @@ watch(pausedFrameData, _onFrameDataChange);
 watch(shouldPlayVideo, _onShouldPlayVideoChange);
 
 function _getLocks() {
+	// Just in case this is called when we already have a lock, queue it up for
+	// release before grabbing a new video lock.
+	if (_videoLock) {
+		_releaseLocks();
+	}
+
 	_videoLock = getVideoLock(rtcUser.value);
 	setVideoPlayback(
 		rtcUser.value,
@@ -60,15 +66,18 @@ function _getLocks() {
 }
 
 function _releaseLocks() {
-	// We want to give a new lock some time to get acquired before shutting
-	// the stream down.
-	// Capture the current rtc user in case it changes somehow
-	// (switching hosts, updates to listable hosts etc)
+	// We want to give a new lock some time to get acquired before shutting the
+	// stream down.
+	//
+	// Capture the current rtc user and video lock in case they change somehow
+	// (switching hosts, updates to listable hosts, _getLocks, etc)
 	const oldUser = rtcUser.value;
+	const lock = _videoLock;
+	_videoLock = null;
 
 	setTimeout(() => {
-		if (_videoLock) {
-			releaseVideoLock(oldUser, _videoLock);
+		if (lock) {
+			releaseVideoLock(oldUser, lock);
 		}
 	}, 0);
 }

@@ -212,7 +212,15 @@ export function releaseVideoLock(user: FiresideRTCUser, lock: FiresideVideoLock)
 	}
 
 	lock.released = true;
-	arrayRemove(user.videoLocks, i => i === lock);
+	arrayRemove(user.videoLocks, i => {
+		// [FiresideRTCUser] instances may be wrapped in a [reactive] or [ref],
+		// which would cause triple-equals to fail (equality on the proxy vs.
+		// the raw value).
+		//
+		// Make sure we call [toRaw] on these so that we always compare the
+		// actual raw class value for equality.
+		return toRaw(i) === toRaw(lock);
+	});
 
 	// When there's no more locks, stop the video.
 	if (!user.videoLocks.length) {

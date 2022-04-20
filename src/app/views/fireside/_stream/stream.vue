@@ -274,11 +274,6 @@ export default class AppFiresideStream extends Vue {
 		this.c.rtc.value!.videoPaused = true;
 	}
 
-	@Watch('shouldShowUI', { immediate: true })
-	onShouldShowUIChanged() {
-		this.c.isShowingStreamOverlay.value = this.shouldShowUI;
-	}
-
 	@Watch('stickerStreak')
 	onStreakCountChanged() {
 		if (this.stickerStreak) {

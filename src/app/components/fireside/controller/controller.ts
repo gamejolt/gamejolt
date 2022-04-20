@@ -1,31 +1,33 @@
 import {
-	InjectionKey,
-	provide,
-	computed,
-	inject,
-	reactive,
-	ref,
-	shallowReactive,
-	watch,
+computed,
+inject, InjectionKey,
+provide, reactive,
+ref,
+shallowReactive,
+watch
 } from 'vue';
 import { Router } from 'vue-router';
+import { arrayAssignAll, arrayUnique } from '../../../../utils/array';
 import { getAbsoluteLink } from '../../../../utils/router';
 import { getCurrentServerTime } from '../../../../utils/server-time';
 import { Api } from '../../../../_common/api/api.service';
 import {
-	canCommunityEjectFireside,
-	canCommunityFeatureFireside,
+canCommunityEjectFireside,
+canCommunityFeatureFireside
 } from '../../../../_common/community/community.model';
 import { configClientAllowStreaming } from '../../../../_common/config/config.service';
 import { getDeviceBrowser } from '../../../../_common/device/device.service';
 import { formatDuration } from '../../../../_common/filters/duration';
 import { Fireside, FIRESIDE_EXPIRY_THRESHOLD } from '../../../../_common/fireside/fireside.model';
 import {
-	AgoraStreamingInfo,
-	createFiresideRTC,
-	destroyFiresideRTC,
-	FiresideRTC,
-	FiresideRTCHost,
+cleanupFiresideRTCProducer, createFiresideRTCProducer, stopStreaming
+} from '../../../../_common/fireside/rtc/producer';
+import {
+AgoraStreamingInfo,
+createFiresideRTC,
+destroyFiresideRTC,
+FiresideRTC,
+FiresideRTCHost, setHosts, setListableHostIds
 } from '../../../../_common/fireside/rtc/rtc';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
@@ -39,13 +41,6 @@ import { ChatRoomChannel } from '../../chat/room-channel';
 import { ChatUserCollection } from '../../chat/user-collection';
 import { FiresideChannel } from '../../grid/fireside-channel';
 import { FiresidePublishModal } from '../publish-modal/publish-modal.service';
-import { setHosts, setListableHostIds } from '../../../../_common/fireside/rtc/rtc';
-import {
-	createFiresideRTCProducer,
-	cleanupFiresideRTCProducer,
-	stopStreaming,
-} from '../../../../_common/fireside/rtc/producer';
-import { arrayUnique, arrayAssignAll } from '../../../../utils/array';
 
 export type RouteStatus =
 	| 'initial' // Initial status when route loads.
@@ -99,7 +94,6 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 	 */
 	const hasExpiryWarning = ref(false);
 
-	const isShowingStreamOverlay = ref(false);
 	const isShowingOverlayPopper = ref(false);
 	const isShowingStreamSetup = ref(false);
 
@@ -429,7 +423,6 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		chatPreviousConnectedState,
 		gridPreviousConnectedState,
 		hasExpiryWarning,
-		isShowingStreamOverlay,
 		isShowingOverlayPopper,
 		isShowingStreamSetup,
 		updateInterval,

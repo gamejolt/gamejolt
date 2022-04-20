@@ -1,5 +1,4 @@
 <script lang="ts">
-import { toRaw } from 'vue';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../../utils/vue';
 import { FiresideRTCUser, setAudioPlayback } from '../../../../_common/fireside/rtc/user';
@@ -36,11 +35,11 @@ export default class AppFiresideHostThumb extends Vue {
 	@Emit('hide-popper') emitHidePopper() {}
 
 	get isFocused() {
-		return toRaw(this.c.rtc.value?.focusedUser) === toRaw(this.host);
+		return this.c.rtc.value?.focusedUser?.uid === this.host.uid;
 	}
 
 	get isMe() {
-		return toRaw(this.c.rtc.value?.localUser) === toRaw(this.host);
+		return this.c.rtc.value?.localUser?.uid === this.host.uid;
 	}
 
 	get showingVideoThumb() {

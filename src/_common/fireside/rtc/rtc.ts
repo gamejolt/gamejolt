@@ -1,6 +1,6 @@
 import type { IAgoraRTC, IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
 import { markRaw, reactive } from 'vue';
-import { arrayRemove, arrayAssignAll } from '../../../utils/array';
+import { arrayAssignAll, arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
 import { debounce, sleep } from '../../../utils/utils';
 import { importNoSSR } from '../../code-splitting';
@@ -8,7 +8,6 @@ import { Navigate } from '../../navigate/navigate.service';
 import { SettingStreamDesktopVolume } from '../../settings/settings.service';
 import { User } from '../../user/user.model';
 import { Fireside } from '../fireside.model';
-import { cleanupFiresideRTCUser } from './user';
 import {
 	createFiresideRTCChannel,
 	destroyChannel,
@@ -17,12 +16,13 @@ import {
 	setChannelToken,
 } from './channel';
 import {
-	createFiresideRTCProducer,
 	cleanupFiresideRTCProducer,
+	createFiresideRTCProducer,
 	FiresideRTCProducer,
 	updateSetIsStreaming,
 } from './producer';
 import {
+	cleanupFiresideRTCUser,
 	createRemoteFiresideRTCUser,
 	FiresideRTCUser,
 	FiresideVideoPlayStateStopped,
@@ -623,7 +623,12 @@ function _removeUserIfNeeded(rtc: FiresideRTC, user: FiresideRTCUser) {
 
 	cleanupFiresideRTCUser(user);
 
-	arrayRemove(rtc._remoteStreamingUsers, i => i === user);
+	arrayRemove(rtc._remoteStreamingUsers, i => {
+		// NOTE: Always compare something like [uid] or wrap objects in [toRaw]
+		// when checking equality. If we don't we may end up comparing a proxy
+		// of the object to the raw object, failing the quality check.
+		return i.uid === user.uid;
+	});
 
 	if (rtc.focusedUser?.uid === user.uid) {
 		rtc.focusedUser = null;
