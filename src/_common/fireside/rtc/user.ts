@@ -137,14 +137,25 @@ export function createRemoteFiresideRTCUser(rtc: FiresideRTC, uid: number) {
 				} to ${isListed ? 'true' : 'false'}`
 			);
 
-			if (isListed === wasListed) {
+			if (!isListed) {
+				stopAudioPlayback(user);
 				return;
 			}
 
-			if (isListed) {
+			// Find all other remote users.
+			const otherUsers = rtc.listableStreamingUsers.filter(i => !i.isLocal && i.uid !== uid);
+			const isOnlyUser = otherUsers.length === 0;
+
+			if (isOnlyUser) {
+				// If this is the only user, we can safely start our playback.
 				startAudioPlayback(user);
-			} else {
+			} else if (otherUsers.every(i => i.micAudioMuted)) {
+				// Mute this user if all other listed users are muted.
 				stopAudioPlayback(user);
+			} else {
+				// If any listed users are unmuted, unmute ourselves when
+				// becoming listed.
+				startAudioPlayback(user);
 			}
 		}
 	);
