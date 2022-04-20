@@ -15,12 +15,7 @@ import {
 	joinChannel,
 	setChannelToken,
 } from './channel';
-import {
-	cleanupFiresideRTCProducer,
-	createFiresideRTCProducer,
-	FiresideRTCProducer,
-	updateSetIsStreaming,
-} from './producer';
+import { cleanupFiresideRTCProducer, FiresideRTCProducer, updateSetIsStreaming } from './producer';
 import {
 	cleanupFiresideRTCUser,
 	createRemoteFiresideRTCUser,
@@ -352,10 +347,7 @@ async function _setup(rtc: FiresideRTC) {
 	await AgoraRTCLoader;
 	gen.assert();
 
-	await _createChannels(rtc);
-	gen.assert();
-
-	_createProducer(rtc);
+	_createChannels(rtc);
 
 	for (let i = 0; i < 5; i++) {
 		try {
@@ -548,14 +540,6 @@ function _createChannels(rtc: FiresideRTC) {
 			_removeUserIfNeeded(rtc, user);
 		},
 	});
-}
-
-function _createProducer(rtc: FiresideRTC) {
-	if (rtc.role?.canStream !== true) {
-		return;
-	}
-
-	rtc.producer = createFiresideRTCProducer(rtc);
 }
 
 async function _join(rtc: FiresideRTC) {

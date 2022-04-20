@@ -291,14 +291,9 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		);
 
 		if (newWantsRTCProducer) {
-			// TODO(big-pp-event) The old code used to to rtc.value.producer ??= createFiresideRTCProducer,
-			// but I think it should be an error if the producer exists when newWnatsRTCProducer becomes true.
-			// If the error below never gets logged, just clean this if up.
-			if (rtc.value!.producer) {
-				throw new Error('Attempted to create a producer when one was already created');
-			}
-
-			rtc.value!.producer = createFiresideRTCProducer(rtc.value!);
+			// Do not create the producer if it already exists.
+			// This should never happen normally.
+			rtc.value!.producer ??= createFiresideRTCProducer(rtc.value!);
 		} else if (rtc.value) {
 			const prevProducer = rtc.value.producer;
 			rtc.value.producer = null;
@@ -370,6 +365,8 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 	);
 
 	const cleanup = async () => {
+		console.debug('[FIRESIDE] controller cleanup called');
+
 		// These watchers are used to figure out
 		// when we need to destroy rtc and rtc producer. we want
 		// to make sure these are still destroyed even if the watchers are disposed.

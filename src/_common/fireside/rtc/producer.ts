@@ -89,6 +89,7 @@ export class FiresideRTCProducer {
 }
 
 export function createFiresideRTCProducer(rtc: FiresideRTC) {
+	rtc.log('Trace(createFiresideRTCProducer)');
 	const producer = reactive(new FiresideRTCProducer(rtc)) as FiresideRTCProducer;
 
 	MediaDeviceService.detectDevices({ prompt: false });
@@ -104,6 +105,8 @@ export function createFiresideRTCProducer(rtc: FiresideRTC) {
  * to cleanup the producer instance after we no longer need it.
  */
 export function cleanupFiresideRTCProducer(producer: FiresideRTCProducer) {
+	console.log('[FIRESIDE-RTC] Trace(cleanupFiresideRTCProducer)');
+
 	// TODO(big-pp-event) theres nothing to prevent a queued up startStream
 	// to get executed after cleanup is called on the same instance.
 	producer._isStreaming = false;

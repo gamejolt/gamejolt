@@ -93,6 +93,15 @@ export class FiresideRTCUser {
 			return true;
 		}
 
+		// If you're able to stream you should be able to see the other
+		// streamers always.
+		//
+		// TODO(unlisted-fireside-hosts) its better to solve this in backend by
+		// syncing listable host ids.
+		if (this.rtc.fireside.role?.canStream) {
+			return true;
+		}
+
 		// Treat unknown hosts as unlistable.
 		const host = this._rtcHost;
 		if (!host) {
