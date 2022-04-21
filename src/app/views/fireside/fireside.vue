@@ -33,10 +33,10 @@ import AppChatWindowOutput from '../../components/chat/window/output/output.vue'
 import AppChatWindowSend from '../../components/chat/window/send/send.vue';
 import { AppFiresideContainer } from '../../components/fireside/container/container';
 import {
-createFiresideController,
-FiresideController,
-getFiresideLink,
-toggleStreamVideoStats
+	createFiresideController,
+	FiresideController,
+	getFiresideLink,
+	toggleStreamVideoStats,
 } from '../../components/fireside/controller/controller';
 import { illEndOfFeed, illMaintenance, illNoCommentsSmall } from '../../img/ill/illustrations';
 import AppFiresideBanner from './_banner/banner.vue';
