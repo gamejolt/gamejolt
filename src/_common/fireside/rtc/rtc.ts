@@ -88,7 +88,7 @@ export class FiresideRTC {
 	 *  Safari keeps [AgoraRTC.onAudioAutoplayFailed] looping, so I'm assigning
 	 *  to this to ensure we only trigger the failure callback once.
 	 */
-	_handledAutoplayError = false;
+	_hasAutoplayError = false;
 	shouldShowMutedIndicator = false;
 
 	// These channels will get created immediately during _setup.
@@ -405,30 +405,36 @@ function _createChannels(rtc: FiresideRTC) {
 
 	(AgoraRTC as any).setParameter('AUDIO_SOURCE_VOLUME_UPDATE_INTERVAL', 100);
 
-	// If we fail to autoplay with desktop audio, pause the stream so we have to
-	// interact with the DOM to play it.
+	// If we fail to autoplay, pause the stream so we have to interact with the
+	// DOM to play it.
 	AgoraRTC.onAudioAutoplayFailed = async () => {
-		// Pause the video if this is our first time doing this.
-		if (!rtc._handledAutoplayError) {
-			rtc._handledAutoplayError = true;
-			rtc.videoPaused = true;
+		if (rtc._hasAutoplayError) {
 			return;
 		}
+		rtc._hasAutoplayError = true;
 
-		// If this was triggered a second time, we should indicate that the
-		// video is currently playing in a muted state.
-		//
-		// We need to do this because Safari doesn't always accept our
-		// click-to-play interaction as enough to autoplay audio.
+		// Pause videos and indicate that the video is currently playing in a
+		// muted state.
+		const wasPaused = rtc.videoPaused;
+		rtc.videoPaused = true;
 		rtc.shouldShowMutedIndicator = true;
 
 		// Any document interaction seems sufficient to cause the audio to play
 		// once all the stream subscriptions are active.
 		window.document.addEventListener(
-			'mousedown',
-			() => {
-				rtc._handledAutoplayError = false;
+			'click',
+			async () => {
+				rtc._hasAutoplayError = false;
 				rtc.shouldShowMutedIndicator = false;
+
+				// Wait a moment in case the way they triggered this way by
+				// clicking the play button.
+				await sleep(0);
+				// Set [videoPaused] to its previous state if we're still
+				// paused.
+				if (rtc.videoPaused) {
+					rtc.videoPaused = wasPaused;
+				}
 			},
 			{
 				once: true,

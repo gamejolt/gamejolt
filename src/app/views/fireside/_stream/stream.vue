@@ -318,7 +318,7 @@ export default class AppFiresideStream extends Vue {
 		</template>
 
 		<div
-			v-if="hasOverlayItems"
+			v-if="hasOverlayItems || showMutedIndicator"
 			class="-overlay"
 			:class="{ '-darken': shouldDarkenAll }"
 			@click.capture="onOverlayTap"

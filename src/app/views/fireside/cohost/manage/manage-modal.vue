@@ -4,17 +4,25 @@ import { stringSort } from '../../../../../utils/array';
 import { fuzzysearch } from '../../../../../utils/string';
 import { sleep } from '../../../../../utils/utils';
 import {
-inviteFiresideHost,
-removeFiresideHost
+	inviteFiresideHost,
+	removeFiresideHost,
 } from '../../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { BaseModal } from '../../../../../_common/modal/base';
 import AppUserAvatarImg from '../../../../../_common/user/user-avatar/img/img.vue';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../../_common/user/user.model';
+import { useChatStore } from '../../../../components/chat/chat-store';
 import { ChatUser } from '../../../../components/chat/user';
 import { FiresideController } from '../../../../components/fireside/controller/controller';
 import { illNoCommentsSmall } from '../../../../img/ill/illustrations';
+
+type ListTitle = 'Chat Users' | 'Friends';
+
+const ListTitles: ListTitle[] = [
+	'Chat Users', // formatting
+	'Friends',
+];
 
 @Options({
 	components: {
@@ -27,42 +35,61 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 	@Prop({ type: Object, required: true })
 	controller!: FiresideController;
 
+	chatStore = useChatStore()!;
+
 	filterQuery = '';
 	usersProcessing: (ChatUser | User)[] = [];
 	isOpen = true;
 
+	activeList: ListTitle = 'Chat Users';
+
 	readonly illNoCommentsSmall = illNoCommentsSmall;
+	readonly ListTitles = ListTitles;
 
 	get rtc() {
 		return this.controller.rtc.value;
 	}
 
-	get hostableChatUsers() {
+	get users() {
+		switch (this.activeList) {
+			case 'Chat Users':
+				return this.controller.chatUsers.value?.collection || [];
+
+			case 'Friends':
+				return this.chatStore.chat?.friendsList.collection || [];
+
+			default:
+				return [];
+		}
+	}
+
+	get hostableUsers() {
 		if (!this.rtc) {
 			return [];
 		}
 
 		const currentHosts = this.rtc.hosts;
-		return (
-			this.controller.chatUsers.value?.collection.filter(
-				i => !currentHosts.some(host => host.user.id === i.id)
-			) ?? []
-		);
+		return this.users
+			.filter(i => !currentHosts.some(host => host.user.id === i.id))
+			.sort((a, b) => stringSort(a.display_name, b.display_name));
 	}
 
-	get listableCohosts(): User[] {
+	get currentCohosts(): User[] {
 		const hosts = this.rtc?.hosts ?? [];
-
+		const myUserId = this.controller.user.value?.id;
 		return hosts // formatting
-			.filter(i => !i.needsPermissionToView || this.rtc?.listableHostIds.includes(i.user.id))
+			.filter(i => {
+				if (i.user.id === myUserId) {
+					return false;
+				}
+				return !i.needsPermissionToView || this.rtc?.listableHostIds.includes(i.user.id);
+			})
 			.map(i => i.user)
-			.filter(i => i.id !== this.controller.user.value?.id);
+			.sort((a, b) => stringSort(a.display_name, b.display_name));
 	}
 
 	get manageableUsers() {
-		return [...this.hostableChatUsers, ...this.listableCohosts].sort((a, b) =>
-			stringSort(a.display_name, b.display_name)
-		);
+		return [...this.currentCohosts, ...this.hostableUsers];
 	}
 
 	get filteredUsers() {
@@ -114,8 +141,8 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 
 			// We will get a grid message that will update the RTC host list.
 			while (
-				(wasHost && this.listableCohosts.includes(user as User)) ||
-				(!wasHost && this.hostableChatUsers.includes(user as ChatUser))
+				(wasHost && this.currentCohosts.includes(user as User)) ||
+				(!wasHost && this.hostableUsers.includes(user as ChatUser))
 			) {
 				if (!this.isOpen) {
 					break;
@@ -148,12 +175,19 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 			</div>
 
 			<div class="modal-body">
-				<div class="friend-select-widget">
-					<input
-						v-model="filterQuery"
-						class="-filter form-control"
-						placeholder="Filter..."
-					/>
+				<div>
+					<div class="-list-selectors">
+						<AppButton
+							v-for="title of ListTitles"
+							:key="title"
+							:primary="activeList === title"
+							:solid="activeList === title"
+							block
+							@click="activeList = title"
+						>
+							{{ title }}
+						</AppButton>
+					</div>
 
 					<AppIllustration v-if="filteredUsers.length === 0" :src="illNoCommentsSmall">
 						<p>
@@ -190,6 +224,12 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 							</div>
 						</div>
 					</div>
+
+					<input
+						v-model="filterQuery"
+						class="-filter form-control"
+						placeholder="Filter..."
+					/>
 				</div>
 			</div>
 		</template>
@@ -202,7 +242,15 @@ $-h-padding = 20px
 $-height = 40px
 
 .-filter
+	margin: 8px 0
+
+.-list-selectors
+	display: flex
+	grid-gap: 16px
 	margin-bottom: 8px
+
+	> *
+		margin: 0 !important
 
 .-user-list-item
 	theme-prop('border-bottom-color', 'bg-subtle')

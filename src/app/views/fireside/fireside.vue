@@ -33,10 +33,10 @@ import AppChatWindowOutput from '../../components/chat/window/output/output.vue'
 import AppChatWindowSend from '../../components/chat/window/send/send.vue';
 import { AppFiresideContainer } from '../../components/fireside/container/container';
 import {
-	createFiresideController,
-	FiresideController,
-	getFiresideLink,
-	toggleStreamVideoStats,
+createFiresideController,
+FiresideController,
+getFiresideLink,
+toggleStreamVideoStats
 } from '../../components/fireside/controller/controller';
 import { illEndOfFeed, illMaintenance, illNoCommentsSmall } from '../../img/ill/illustrations';
 import AppFiresideBanner from './_banner/banner.vue';
@@ -332,7 +332,7 @@ export default class RouteFireside extends BaseRouteComponent {
 </script>
 
 <template>
-	<AppFiresideContainer v-if="c" :controller="c" class="-fireside">
+	<AppFiresideContainer v-if="c" :controller="c" class="-fireside" allow-route-changes>
 		<AppFiresideBanner />
 
 		<template v-if="!shouldShowHeaderInBody">

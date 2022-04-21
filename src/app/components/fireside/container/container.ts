@@ -12,10 +12,11 @@ import { setStickerStreak, useDrawerStore } from '../../../../_common/drawer/dra
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../../_common/fireside/role/role.model';
 import {
-	chooseFocusedRTCUser,
-	FiresideRTCHost,
 	AgoraStreamingInfo,
 	applyAudienceRTCTokens,
+	chooseFocusedRTCUser,
+	destroyFiresideRTC,
+	FiresideRTCHost,
 } from '../../../../_common/fireside/rtc/rtc';
 import { showInfoGrowl } from '../../../../_common/growls/growls.service';
 import { StickerPlacement } from '../../../../_common/sticker/placement/placement.model';
@@ -86,6 +87,14 @@ interface GridListableHostsPayload {
 export class AppFiresideContainer extends Vue {
 	@Prop({ type: Object, required: true })
 	controller!: FiresideController;
+
+	/**
+	 * Allows this component to modify the route when we encounter failures,
+	 * such as losing streaming permissions and becoming ineligible to view the
+	 * fireside.
+	 */
+	@Prop({ type: Boolean })
+	allowRouteChanges!: boolean;
 
 	store = setup(() => useAppStore());
 	storeRaw = shallowSetup(() => useAppStore());
@@ -413,6 +422,9 @@ export class AppFiresideContainer extends Vue {
 		updateFiresideExpiryValues(c);
 	}
 
+	/**
+	 * Returns [false] if there was an error, [true] if not.
+	 */
 	private async _fetchForStreaming({ assignRouteStatus = true }) {
 		const c = this.controller;
 		try {
@@ -654,25 +666,44 @@ export class AppFiresideContainer extends Vue {
 		// If our host state changed, we need to update anything else
 		// depending on streaming.
 		if (isHost !== wasHost) {
-			// Fetch for streaming returns stream enabled tokens if you are a cohost.
-			// It also returns the new fireside information with the new role included,
-			// which can be used to see if we've received audience tokens or host tokens.
-			// This means we don't need to call generate-streaming-tokens here,
-			// and that fireside RTC instance would be upserted correctly.
-			await this._fetchForStreaming({ assignRouteStatus: false });
+			// Fetch for streaming returns stream enabled tokens if you are a
+			// cohost. It also returns the new fireside information with the new
+			// role included, which can be used to see if we've received
+			// audience tokens or host tokens. This means we don't need to call
+			// generate-streaming-tokens here, and that fireside RTC instance
+			// would be upserted correctly.
+			const success = await this._fetchForStreaming({ assignRouteStatus: false });
 
-			// Note: the fireside role is updated through _fetchForStreaming above.
-			if (c.fireside.role?.canStream === true) {
+			// Let them know they became a host if [_fetchForStreaming] assigned
+			// a new role to them and didn't return a failure.
+			//
+			// If [_fetchForStreaming] failed, it's probably because they don't
+			// have permissions to view this fireside anymore. This can happen
+			// if they were removed as a host while the fireside was in a draft.
+			if (success && c.fireside.role?.canStream === true) {
 				showInfoGrowl(
 					this.$gettext(
 						`You've been added as a host to this fireside. Hop into the stream!`
 					)
 				);
 			} else {
-				// TODO: If this Fireside was a draft, we may need to
-				// re-initialize this component to see if they still have
-				// permissions to view it.
+				// Let them know they were removed as a host.
 				showInfoGrowl(this.$gettext(`You've been removed as a host for this fireside.`));
+
+				if (!success) {
+					if (c.rtc.value) {
+						// Destroy the RTC if it was already initialized.
+						destroyFiresideRTC(c.rtc.value);
+					}
+					c.cleanup();
+
+					if (this.allowRouteChanges) {
+						// If this component is allowed to control route
+						// changes, replace our current view with a 404.
+						this.commonStore.setError(404);
+					}
+					c.status.value = 'setup-failed';
+				}
 			}
 		} else {
 			// It's possible that we get a fireside-updated grid event before

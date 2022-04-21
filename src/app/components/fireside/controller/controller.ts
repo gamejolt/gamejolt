@@ -1,10 +1,12 @@
 import {
-computed,
-inject, InjectionKey,
-provide, reactive,
-ref,
-shallowReactive,
-watch
+	computed,
+	inject,
+	InjectionKey,
+	provide,
+	reactive,
+	ref,
+	shallowReactive,
+	watch,
 } from 'vue';
 import { Router } from 'vue-router';
 import { arrayAssignAll, arrayUnique } from '../../../../utils/array';
@@ -12,22 +14,26 @@ import { getAbsoluteLink } from '../../../../utils/router';
 import { getCurrentServerTime } from '../../../../utils/server-time';
 import { Api } from '../../../../_common/api/api.service';
 import {
-canCommunityEjectFireside,
-canCommunityFeatureFireside
+	canCommunityEjectFireside,
+	canCommunityFeatureFireside,
 } from '../../../../_common/community/community.model';
 import { configClientAllowStreaming } from '../../../../_common/config/config.service';
 import { getDeviceBrowser } from '../../../../_common/device/device.service';
 import { formatDuration } from '../../../../_common/filters/duration';
 import { Fireside, FIRESIDE_EXPIRY_THRESHOLD } from '../../../../_common/fireside/fireside.model';
 import {
-cleanupFiresideRTCProducer, createFiresideRTCProducer, stopStreaming
+	cleanupFiresideRTCProducer,
+	createFiresideRTCProducer,
+	stopStreaming,
 } from '../../../../_common/fireside/rtc/producer';
 import {
-AgoraStreamingInfo,
-createFiresideRTC,
-destroyFiresideRTC,
-FiresideRTC,
-FiresideRTCHost, setHosts, setListableHostIds
+	AgoraStreamingInfo,
+	createFiresideRTC,
+	destroyFiresideRTC,
+	FiresideRTC,
+	FiresideRTCHost,
+	setHosts,
+	setListableHostIds,
 } from '../../../../_common/fireside/rtc/rtc';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
