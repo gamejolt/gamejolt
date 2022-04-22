@@ -17,10 +17,10 @@ import { ChatUser } from '../../../../components/chat/user';
 import { FiresideController } from '../../../../components/fireside/controller/controller';
 import { illNoCommentsSmall } from '../../../../img/ill/illustrations';
 
-type ListTitle = 'Chat Users' | 'Friends';
+type ListTitle = 'Chat' | 'Friends';
 
 const ListTitles: ListTitle[] = [
-	'Chat Users', // formatting
+	'Chat', // formatting
 	'Friends',
 ];
 
@@ -29,6 +29,7 @@ const ListTitles: ListTitle[] = [
 		AppUserAvatarImg,
 		AppUserAvatarList,
 		AppIllustration,
+		AppNavTabList,
 	},
 })
 export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
@@ -41,7 +42,7 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 	usersProcessing: (ChatUser | User)[] = [];
 	isOpen = true;
 
-	activeList: ListTitle = 'Chat Users';
+	activeList: ListTitle = 'Chat';
 
 	readonly illNoCommentsSmall = illNoCommentsSmall;
 	readonly ListTitles = ListTitles;
@@ -52,7 +53,7 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 
 	get users() {
 		switch (this.activeList) {
-			case 'Chat Users':
+			case 'Chat':
 				return this.controller.chatUsers.value?.collection || [];
 
 			case 'Friends':
@@ -177,17 +178,28 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 			<div class="modal-body">
 				<div>
 					<div class="-list-selectors">
-						<AppButton
-							v-for="title of ListTitles"
-							:key="title"
-							:primary="activeList === title"
-							:solid="activeList === title"
-							block
-							@click="activeList = title"
-						>
-							{{ title }}
-						</AppButton>
+						<div class="-inline-menu tab-list">
+							<ul>
+								<li v-for="title of ListTitles" :key="title" class="-tab-item">
+									<a
+										class="-tab-item-inner"
+										:class="{
+											active: activeList === title,
+										}"
+										@click="activeList = title"
+									>
+										{{ title }}
+									</a>
+								</li>
+							</ul>
+						</div>
 					</div>
+
+					<input
+						v-model="filterQuery"
+						class="-filter form-control"
+						placeholder="Filter..."
+					/>
 
 					<AppIllustration v-if="filteredUsers.length === 0" :src="illNoCommentsSmall">
 						<p>
@@ -224,12 +236,6 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 							</div>
 						</div>
 					</div>
-
-					<input
-						v-model="filterQuery"
-						class="-filter form-control"
-						placeholder="Filter..."
-					/>
 				</div>
 			</div>
 		</template>
@@ -244,13 +250,51 @@ $-height = 40px
 .-filter
 	margin: 8px 0
 
-.-list-selectors
-	display: flex
-	grid-gap: 16px
-	margin-bottom: 8px
+.modal-body
+	padding-top: 0
 
-	> *
-		margin: 0 !important
+.tab-list
+	text-align: start
+	padding: 0
+	margin: 0
+
+	&::after
+		display: none
+
+.-tab-item
+	margin-right: 24px
+
+	&:last-of-type
+		margin-right: 0
+
+.-tab-item-inner
+	rounded-corners()
+	position: relative
+	border: 0
+	margin-bottom: 8px
+	padding-left: 0
+	padding-right: 0
+	padding-top: 0
+	color: var(--theme-fg-muted)
+	transition: color 100ms $weak-ease-out
+
+	&:hover
+		background-color: unset
+
+	&.active::after
+		opacity: 1
+
+	&::after
+		change-bg('link')
+		rounded-corners()
+		content: ''
+		position: absolute
+		bottom: 2px
+		left: 0
+		right: 0
+		height: 2px
+		opacity: 0
+		transition: opacity 100ms $weak-ease-out
 
 .-user-list-item
 	theme-prop('border-bottom-color', 'bg-subtle')
