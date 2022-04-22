@@ -30,6 +30,18 @@ provide(ChatStoreKey, chatStore);
 
 if (!import.meta.env.SSR) {
 	performance.measure('gj-shell-init', 'gj-start');
+
+	// We allow users to access the onboarding flow even after they've gone
+	// through onboarding.
+	//
+	// In case they did that, or didn't fully complete their onboarding, clear
+	// out their onboarding-start timestamp now so they're no longer considered
+	// to be onboarding.
+	//
+	// NOTE: This can't be done for SSR. It also can't be done within
+	// [onMounted], otherwise it gets called after [Onboarding] sets the new
+	// token.
+	Onboarding.clearOnboardingStartTimestamp();
 }
 
 onMounted(() => {
@@ -40,16 +52,6 @@ onMounted(() => {
 	});
 
 	loadCurrentLanguage();
-
-	// We allow users to access the onboarding flow even after they've gone through
-	// onboarding.
-	//
-	// In case they did that, or didn't fully complete their onboarding, clear out
-	// their onboarding-start timestamp now so they're no longer considered to be
-	// onboarding.
-	//
-	// TODO(quests) test this
-	Onboarding.clearOnboardingStartTimestamp();
 });
 
 // When the user changes, we need to change our global app state.
