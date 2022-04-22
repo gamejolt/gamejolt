@@ -66,6 +66,8 @@ function onClickSubtitle() {
 		<AppSpacer horizontal :scale="5" />
 		<div class="-details">
 			<div class="-title">
+				<!-- TODO(quest) inline-sticker support -->
+
 				<span>
 					{{ objective.title }}
 				</span>
