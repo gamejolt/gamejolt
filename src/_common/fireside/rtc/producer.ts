@@ -48,10 +48,9 @@ const registry = new FinalizationRegistry((id: number) => {
 
 class ASGComponent {
 	constructor() {
+		registry.register(this, 1);
 		this.generator = new MediaStreamTrackGenerator({ kind: 'audio' });
 		this.emitter = new EventEmitter();
-		this.isStreamOpen = true;
-		registry.register(this, 1);
 		this.writer = this.generator.writable.getWriter();
 		this.writer.closed.then(() => {
 			console.log('ASG: Track write stream is closed');
@@ -63,6 +62,10 @@ class ASGComponent {
 				console.log('Status update: ' + text, true);
 				if (text == 'Recording ends') {
 					this.generator.writable.getWriter().close();
+				}
+				if (text == 'Recording starts') {
+					console.log('ASG: Recording Starts');
+					this.isStreamOpen = true;
 				}
 			})
 			.on('error', (text: string) => {
@@ -90,22 +93,30 @@ class ASGComponent {
 
 	startASG() {
 		try {
-			if (this.isCapturing) {
-				//this.endASG();
-				//new assignment
-				//this.generator = new MediaStreamTrackGenerator({ kind: 'audio' });
-				//& the writer gets updated
+			//if (this.isCapturing) {
+			if (this.isStreamOpen) {
+				// if stream is active, close current track and open a new one.
+				console.log('ASG: Swapping to new track.');
+				// testing to see if this track gets closed within setChannelAudioTrack()
+				//this.generator.writable.close();
+				this.generator = new MediaStreamTrackGenerator({ kind: 'audio' });
+				this.writer = this.generator.writable.getWriter();
+
+				if (!this.isStreamOpen) {
+					console.log('ASG: Testing if stream flag is changed to false.');
+					this.isStreamOpen = true;
+				}
+
 				return;
 			}
 
-			if (this.writer && !this.writer.closed) {
-				//this.writer.write(audioData);
+			if (this.writer && this.isStreamOpen) {
 				console.log('ASG: STREAM FIRST ENCOUNTER AND WORKING');
-			} else console.log('ASG: STREAM FIRST ENCOUNTER AND NOTT NOT NOT WORKING');
+			} else console.log('ASG: STREAM FIRST ENCOUNTER AND NOT WORKING');
 
 			console.log('ASG: Excluded PID : ' + pid);
 			asg.startCapture(pid, this.emitter.emit.bind(this.emitter));
-			this.isCapturing = true;
+			//this.isCapturing = true;
 		} catch (error) {
 			console.log(error);
 			this.emitter.removeAllListeners();
