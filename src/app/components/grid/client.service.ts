@@ -21,6 +21,7 @@ import { showInfoGrowl } from '../../../_common/growls/growls.service';
 import { Model } from '../../../_common/model/model.service';
 import { Notification } from '../../../_common/notification/notification-model';
 import { NotificationText } from '../../../_common/notification/notification-text.service';
+import Onboarding from '../../../_common/onboarding/onboarding.service';
 import { QuestNotification } from '../../../_common/quest/quest-notification-model';
 import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
 import { SiteTrophy } from '../../../_common/site/trophy/trophy.model';
@@ -732,6 +733,11 @@ export class GridClient {
 		// On site we only use it to disable native browser notifications, but still try to show in
 		// the Growl.
 		if (GJ_IS_DESKTOP_APP && !SettingFeedNotifications.get()) {
+			return;
+		}
+
+		// Don't show Notification growls if the user is still in onboarding.
+		if (Onboarding.isOnboarding) {
 			return;
 		}
 

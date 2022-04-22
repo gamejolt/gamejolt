@@ -7,6 +7,7 @@ import AppCookieBanner from '../_common/cookie/banner/banner.vue';
 import { createDrawerStore } from '../_common/drawer/drawer-store';
 import AppErrorPage from '../_common/error/page/page.vue';
 import { createAppPromotionStore } from '../_common/mobile-app/store';
+import Onboarding from '../_common/onboarding/onboarding.service';
 import AppCommonShell from '../_common/shell/AppCommonShell.vue';
 import { useCommonStore } from '../_common/store/common-store';
 import { loadCurrentLanguage } from '../_common/translate/translate.service';
@@ -30,6 +31,16 @@ provide(ChatStoreKey, chatStore);
 if (!import.meta.env.SSR) {
 	performance.measure('gj-shell-init', 'gj-start');
 }
+
+// We allow users to access the onboarding flow even after they've gone through
+// onboarding.
+//
+// In case they did that, or didn't fully complete their onboarding, clear out
+// their onboarding-start timestamp now so they're no longer considered to be
+// onboarding.
+//
+// TODO(quests) test this
+Onboarding.clearOnboardingStartTimestamp();
 
 onMounted(() => {
 	// Let it finish doing all the initial rendering junk and track after
