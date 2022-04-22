@@ -24,6 +24,7 @@
 		"@ckpack/vue-color": "1.1.5",
 		"@popperjs/core": "2.4.0",
 		"@types/autosize": "3.0.6",
+		"@types/dom-mediacapture-transform": "^0.1.2",
 		"@types/express": "4.17.13",
 		"@types/fs-extra": "5.0.4",
 		"@types/grecaptcha": "2.0.35",

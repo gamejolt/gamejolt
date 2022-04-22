@@ -188,17 +188,21 @@ export async function setChannelAudioTrack(
 		rtc.log(`Local audio track already exists.`);
 
 		const localTrack = channel._localAudioTrack;
-		channel._localAudioTrack = null;
+		//channel._localAudioTrack = null;
 
 		const isPublished = _isTrackPublished(channel, localTrack);
-		if (isPublished) {
-			rtc.log(`Local audio is already published. Unpublishing first.`);
-			await agoraClient.unpublish(localTrack);
+		if (!isPublished) {
+			//rtc.log(`Local audio is already published. Unpublishing first.`);
+			//await agoraClient.unpublish(localTrack);
+			//channel._localAudioTrack = track ? markRaw(track) : null;
+
+			rtc.log(`Local audio is not published. Publishing first.`);
+			await agoraClient.publish(channel._localAudioTrack);
 			generation.assert();
 		}
-
-		rtc.log(`Closing previous local audio track.`);
-		localTrack.close();
+		return;
+		//rtc.log(`Closing previous local audio track.`);
+		//localTrack.close();
 	}
 
 	rtc.log(`Getting new audio track.`);
