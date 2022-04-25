@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
 import { ClientUpdater } from '../../../_common/client/client-updater.service';
-import AppProgressBar from '../../../_common/progress/bar/bar.vue';
+import AppProgressBar from '../../../_common/progress/AppProgressBar.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 
 @Options({

@@ -3,7 +3,7 @@ import { Options } from 'vue-property-decorator';
 import AppButtonStyleguide from '../../../_common/button/button-styleguide.vue';
 import AppJolticonsStyleguide from '../../../_common/jolticons/jolticons-styleguide.vue';
 import AppListGroupStyleguide from '../../../_common/list-group/list-group-styleguide.vue';
-import AppProgressBarStyleguide from '../../../_common/progress/bar/bar-styleguide.vue';
+import AppProgressBarStyleguide from '../../../_common/progress/AppProgressBarStyleguide.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
 import { vAppScrollTo } from '../../../_common/scroll/to/to.directive';

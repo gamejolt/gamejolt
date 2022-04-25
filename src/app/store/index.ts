@@ -26,6 +26,7 @@ import type { GridClient } from '../components/grid/client.service';
 import { GridClientLazy } from '../components/lazy';
 import { CommunityStates } from './community-state';
 import { LibraryStore } from './library';
+import { QuestStore } from './quest';
 
 // the two types an event notification can assume, either "activity" for the post activity feed or "notifications"
 type UnreadItemType = 'activity' | 'notifications';
@@ -44,11 +45,13 @@ export function createAppStore({
 	commonStore,
 	sidebarStore,
 	libraryStore,
+	getQuestStore,
 }: {
 	router: Router;
 	commonStore: CommonStore;
 	sidebarStore: SidebarStore;
 	libraryStore: LibraryStore;
+	getQuestStore: () => QuestStore;
 }) {
 	const grid = ref<GridClient>();
 	let _wantsGrid = false;
@@ -69,6 +72,7 @@ export function createAppStore({
 	const unreadNotificationsCount = ref(0);
 	const hasNewFriendRequests = ref(false);
 	const hasNewUnlockedStickers = ref(false);
+
 	const notificationState = ref<ActivityFeedState>();
 
 	const mobileCbarShowing = ref(false);
@@ -636,6 +640,7 @@ export function createAppStore({
 		viewCommunity,
 		featuredPost,
 		tillGridBootstrapped,
+		getQuestStore,
 	};
 
 	return c;

@@ -9,6 +9,7 @@
 		"lint": "eslint --ext .js,.vue src",
 		"dev": "vite",
 		"devd": "cross-env GJ_ENVIRONMENT=development yarn run dev",
+		"devd-z": "cross-env GJ_ENVIRONMENT=development GJ_SECTION=z yarn run dev",
 		"build": "vite build",
 		"app:editor": "cross-env GJ_PLATFORM=web GJ_BUILD_TYPE=production GJ_SECTION=editor yarn run build",
 		"client:dev": "cross-env GJ_PLATFORM=desktop yarn run dev",
