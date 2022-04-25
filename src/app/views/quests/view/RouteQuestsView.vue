@@ -235,7 +235,7 @@ function onNewQuest(data: Quest) {
 			<section class="section">
 				<div class="-objectives-header">Objectives</div>
 
-				<div class="-objectives">
+				<div :key="quest.id" class="-objectives">
 					<template v-for="objective of objectives" :key="objective.id">
 						<AppSpacer vertical :scale="4" />
 
@@ -249,6 +249,7 @@ function onNewQuest(data: Quest) {
 
 				<AppSpacer vertical :scale="4" />
 				<AppQuestActionButton
+					:key="quest.id"
 					:quest="quest"
 					:show="shouldShowActionButton"
 					:is-accept="isQuestAcceptAction"
