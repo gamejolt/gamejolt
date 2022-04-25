@@ -167,7 +167,7 @@ function onNewQuest(data: Quest) {
 </script>
 
 <template>
-	<template v-if="quest">
+	<div v-if="quest" class="-view">
 		<div style="position: relative">
 			<AppMediaItemCover :media-item="quest.header" :max-height="250" />
 
@@ -246,18 +246,19 @@ function onNewQuest(data: Quest) {
 						/>
 					</template>
 				</div>
-
-				<AppSpacer vertical :scale="4" />
-				<AppQuestActionButton
-					:key="quest.id"
-					:quest="quest"
-					:show="shouldShowActionButton"
-					:is-accept="isQuestAcceptAction"
-					@new-quest="onNewQuest"
-				/>
 			</section>
 		</div>
-	</template>
+
+		<div class="-action-button container">
+			<AppQuestActionButton
+				:key="quest.id"
+				:quest="quest"
+				:show="shouldShowActionButton"
+				:is-accept="isQuestAcceptAction"
+				@new-quest="onNewQuest"
+			/>
+		</div>
+	</div>
 	<template v-else-if="isLoading">
 		<div class="-placeholder-header" />
 
@@ -316,6 +317,15 @@ $-font-size = $font-size-small
 	flex-direction: column
 	justify-content: center
 	align-items: center
+
+.-view
+	display: flex
+	flex-direction: column
+	height: 100%
+
+.-action-button
+	margin-top: auto
+	margin-bottom: $grid-gutter-width * 0.5
 
 .-header-shadow
 	background-image: linear-gradient(to bottom, rgba(black, 0.5), transparent)
