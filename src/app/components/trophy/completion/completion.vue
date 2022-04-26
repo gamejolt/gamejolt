@@ -2,7 +2,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppCard from '../../../../_common/card/AppCard.vue';
 import { formatNumber } from '../../../../_common/filters/number';
-import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
+import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
 
 @Options({
 	components: {

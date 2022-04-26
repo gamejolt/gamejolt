@@ -15,7 +15,7 @@ import {
 import { KeyGroup } from '../../../../../../../_common/key-group/key-group.model';
 import { Key } from '../../../../../../../_common/key/key-model';
 import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
-import AppProgressBar from '../../../../../../../_common/progress/bar/bar.vue';
+import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
 import {
 	BaseRouteComponent,
 	OptionsForRoute,

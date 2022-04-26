@@ -1,4 +1,5 @@
 import humanizeDuration from 'humanize-duration';
+import { getCurrentServerTime } from '../../utils/server-time';
 
 const humanizer = humanizeDuration.humanizer({
 	language: 'shortEn',
@@ -36,4 +37,83 @@ export function formatDuration(time: number, language = 'shortEn'): string {
 	} else {
 		return '';
 	}
+}
+
+type ShorthandTimePrecision = 'exact' | 'quest';
+
+interface ShorthandTimeOptions {
+	allowFuture: boolean;
+	precision: ShorthandTimePrecision;
+	joiner: string;
+	nowText: string;
+}
+
+export function shorthandReadableTime(
+	date: number,
+	{ allowFuture, precision, joiner, nowText }: ShorthandTimeOptions = {
+		allowFuture: false,
+		precision: 'exact',
+		joiner: ', ',
+		nowText: 'now',
+	}
+): string {
+	const now = getCurrentServerTime();
+	let duration = now - date;
+	if (allowFuture) {
+		duration = Math.abs(duration);
+	}
+
+	const seconds = duration / 1000;
+	const minutes = seconds / 60;
+	const hours = minutes / 60;
+	const days = hours / 24;
+	const weeks = days / 7;
+	const months = days / 30;
+	const years = months / 12;
+
+	let data: Record<string, number> = {
+		Y: Math.floor(years),
+		M: Math.floor(months % 12),
+		w: Math.floor(weeks % 7),
+		d: Math.floor(days % 7),
+		h: Math.floor(hours % 24),
+		m: Math.floor(minutes % 60),
+		s: Math.floor(seconds % 60),
+	};
+
+	switch (precision) {
+		case 'exact':
+			// Use existing data as-is.
+			break;
+
+		case 'quest': {
+			const newData: Record<string, number> = {};
+			for (const [key, value] of Object.entries(data)) {
+				if (value <= 0) {
+					continue;
+				}
+				Object.assign(newData, { [key]: value });
+				if (key === 'm' && value < 10) {
+					Object.assign(newData, { s: data.s });
+				}
+				break;
+			}
+
+			data = newData;
+			break;
+		}
+	}
+
+	const strings: string[] = [];
+	for (const [key, value] of Object.entries(data)) {
+		if (value > 0 || (key == 's' && strings.length > 0)) {
+			strings.push(`${value}${key}`);
+		}
+	}
+
+	if (strings.length === 0) {
+		return nowText;
+	}
+
+	return strings.join(joiner);
 }
