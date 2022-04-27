@@ -1,4 +1,13 @@
-import { computed, inject, InjectionKey, provide, ref, shallowRef, toRaw } from 'vue';
+import {
+	computed,
+	inject,
+	InjectionKey,
+	provide,
+	ref,
+	shallowReactive,
+	shallowRef,
+	toRaw,
+} from 'vue';
 import { arrayRemove, numberSort } from '../../utils/array';
 import { Analytics } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
@@ -28,7 +37,7 @@ interface StickerStreak {
 export type DrawerStore = ReturnType<typeof createDrawerStore>;
 
 export function createDrawerStore() {
-	const layers = shallowRef<StickerLayerController[]>([]);
+	const layers = shallowReactive<StickerLayerController[]>([]);
 	const targetController = shallowRef<StickerTargetController | null>(null);
 
 	const drawerItems = shallowRef<StickerStack[]>([]);
@@ -57,7 +66,7 @@ export function createDrawerStore() {
 	>(null);
 
 	const activeLayer = computed(() => {
-		return layers.value[layers.value.length - 1];
+		return layers[layers.length - 1];
 	});
 
 	// Set up modals to have the sticker layer as their layer element.
@@ -190,11 +199,11 @@ function _resetDrawerStore(store: DrawerStore) {
 }
 
 export function registerStickerLayer(store: DrawerStore, layer: StickerLayerController) {
-	store.layers.value.push(layer);
+	store.layers.push(layer);
 }
 
 export function unregisterStickerLayer(store: DrawerStore, layer: StickerLayerController) {
-	arrayRemove(store.layers.value, i => toRaw(i) === toRaw(layer));
+	arrayRemove(store.layers, i => toRaw(i) === toRaw(layer));
 }
 
 export function setDrawerStoreHeight(store: DrawerStore, height: number) {
