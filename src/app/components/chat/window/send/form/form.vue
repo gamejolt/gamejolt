@@ -554,8 +554,8 @@ $-button-spacing-xs = $-button-height
 	width: 'calc(100% - %s)' % $-button-spacing-xs
 
 	@media $media-sm-up
-		margin-left: $left-gutter-size + $avatar-size
-		width: 'calc(100% - %s)' % ($left-gutter-size + $avatar-size + $-button-spacing)
+		margin-left: $left-gutter-size
+		width: 'calc(100% - %s)' % ($left-gutter-size + $-button-spacing)
 
 .-send-button
 	display: flex

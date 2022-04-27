@@ -29,8 +29,8 @@ import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
 import { ChatStore, ChatStoreKey } from '../../components/chat/chat-store';
-import AppChatWindowOutput from '../../components/chat/window/output/output.vue';
-import AppChatWindowSend from '../../components/chat/window/send/send.vue';
+import AppChatWindowOutput from '../../components/chat/window/output/AppChatWindowOutput.vue';
+import AppChatWindowSend from '../../components/chat/window/send/AppChatWindowSend.vue';
 import { AppFiresideContainer } from '../../components/fireside/container/container';
 import {
 	createFiresideController,
@@ -557,8 +557,6 @@ export default class RouteFireside extends BaseRouteComponent {
 							ref="output"
 							class="-chat-window-output fill-backdrop"
 							:room="c.chatRoom.value"
-							:messages="chatMessages"
-							:queued-messages="chatQueuedMessages"
 						/>
 
 						<div v-if="!user" class="-login fill-backdrop">

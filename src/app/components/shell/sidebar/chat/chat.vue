@@ -12,12 +12,10 @@ import { ChatStore, ChatStoreKey } from '../../../chat/chat-store';
 import { enterChatRoom, leaveChatRoom } from '../../../chat/client';
 import { sortByLastMessageOn } from '../../../chat/user-collection';
 import AppChatUserList from '../../../chat/user-list/user-list.vue';
-import AppChatWindows from '../../../chat/windows/windows.vue';
 
 @Options({
 	components: {
 		AppChatUserList,
-		AppChatWindows,
 		AppIllustration,
 		AppLoading,
 	},

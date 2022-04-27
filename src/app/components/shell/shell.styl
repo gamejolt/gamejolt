@@ -36,15 +36,15 @@ body
 .growl-container
 	bottom: 10px
 
-.chat-window-wrap
+.chat-window
 	top: 0
 	left: 0
 	right: 0
 	bottom: 0
 
 	@media $media-sm-up
-		top: $shell-top-nav-height + 10px
-		left: $shell-content-sidebar-width + $shell-cbar-width + 10px
+		top: $shell-top-nav-height
+		left: $shell-content-sidebar-width + $shell-cbar-width
 
 //
 // And now for the long list of positioning shell elements.
@@ -74,8 +74,8 @@ body
 			padding-top: $shell-top-nav-height * 2
 
 		@media $media-sm-up
-			.chat-window-wrap
-				top: $shell-top-nav-height * 2 + 10px
+			.chat-window
+				top: $shell-top-nav-height * 2
 
 		--scroll-affix-top: $shell-top-nav-height * 2
 

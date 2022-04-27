@@ -1,0 +1,397 @@
+<script lang="ts" setup>
+import { computed, inject, PropType, ref, toRefs } from 'vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import { formatNumber } from '../../../../_common/filters/number';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
+import { SettingChatGroupShowMembers } from '../../../../_common/settings/settings.service';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
+import { useAppStore } from '../../../store/index';
+import { ChatStoreKey } from '../chat-store';
+import { leaveChatRoom } from '../client';
+import FormChatEditRoom from '../FormChatEditRoom.vue';
+import { ChatInviteModal } from '../invite-modal/invite-modal.service';
+import AppChatMemberList from '../member-list/AppChatMemberList.vue';
+import { ChatRoom, getChatRoomTitle } from '../room';
+import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
+import AppChatWindowOutput from './output/AppChatWindowOutput.vue';
+import AppChatWindowSend from './send/AppChatWindowSend.vue';
+
+type SidebarTab = 'settings' | 'members';
+
+const props = defineProps({
+	room: {
+		type: Object as PropType<ChatRoom>,
+		required: true,
+	},
+});
+
+const emit = defineEmits({
+	'focus-change': (_focused: boolean) => true,
+});
+
+const { room } = toRefs(props);
+const { toggleLeftPane } = useAppStore();
+const chatStore = inject(ChatStoreKey)!;
+
+const isShowingUsers = ref(Screen.isXs ? false : SettingChatGroupShowMembers.get());
+const friendAddJolticonVersion = ref(1);
+const sidebar = ref<SidebarTab>();
+
+const chat = computed(() => chatStore.chat!);
+const users = computed(() => chat.value.roomMembers[room.value.id]);
+const membersCount = computed(() => formatNumber(room.value.members.length));
+
+const roomTitle = computed(() =>
+	room.value.isGroupRoom
+		? getChatRoomTitle(room.value, chat.value)
+		: room.value.user?.display_name
+);
+
+function addGroup() {
+	// When creating a group from a PM window,
+	// we want to put the room user at the top of the list
+	const initialUser = room.value.user;
+	const invitableUsers = chat.value.friendsList.collection.filter(
+		friend => friend.id !== initialUser?.id
+	);
+
+	if (initialUser) {
+		invitableUsers.unshift(initialUser);
+	}
+
+	// Give the InviteModal the initialUser so it can set them as invited by default
+	ChatInviteModal.show(room.value, invitableUsers, initialUser);
+}
+
+function addMembers() {
+	// Filter out the room members as we don't want to add them again.
+	const members = room.value.members.map(member => member.id);
+	const invitableUsers = chat.value.friendsList.collection.filter(
+		({ id }) => !members.includes(id)
+	);
+	ChatInviteModal.show(room.value, invitableUsers);
+}
+
+function toggleSidebar(val: SidebarTab) {
+	sidebar.value = sidebar.value === val ? undefined : val;
+}
+
+function close() {
+	// xs size needs to show the friends list when closing the room.
+	// any other size can close the whole chat instead
+	if (Screen.isXs) {
+		leaveChatRoom(chat.value);
+	} else {
+		toggleLeftPane();
+	}
+}
+
+function toggleUsers() {
+	isShowingUsers.value = !isShowingUsers.value;
+
+	if (!Screen.isXs) {
+		SettingChatGroupShowMembers.set(isShowingUsers.value);
+	}
+}
+</script>
+
+<template>
+	<div class="chat-window">
+		<!-- We sadly need the chat close thing twice. It takes up the empty
+		background space so you can click that to close chat. -->
+		<div class="-close" @click="close" />
+		<div class="-window">
+			<div class="-close" @click="close" />
+
+			<div class="-window-main">
+				<!-- Window Header -->
+				<div class="-header">
+					<!-- Animation scope. -->
+					<div :key="room.id" class="-header-content">
+						<span
+							v-if="!room.isPmRoom"
+							class="-header-avatar anim-fade-in-enlarge no-animate-xs"
+						>
+							<div class="-icon">
+								<AppJolticon icon="users" />
+							</div>
+						</span>
+						<router-link
+							v-else-if="room.user"
+							class="-header-avatar anim-fade-in-enlarge no-animate-xs"
+							:to="room.user.url"
+						>
+							<img class="-icon" :src="room.user.img_avatar" alt="" />
+							<AppChatUserOnlineStatus :is-online="room.user.isOnline" :size="16" />
+						</router-link>
+
+						<div
+							v-if="!room.isPmRoom"
+							class="-header-name anim-fade-in-right no-animate-xs"
+						>
+							{{ roomTitle }}
+						</div>
+						<div
+							v-else-if="room.user"
+							class="-header-name anim-fade-in-right no-animate-xs"
+							:title="`${room.user.display_name} (@${room.user.username})`"
+						>
+							<router-link class="link-unstyled" :to="room.user.url">
+								{{ roomTitle }}
+							</router-link>
+							<AppUserVerifiedTick :user="room.user" />
+							<br />
+							<small>@{{ room.user.username }}</small>
+						</div>
+					</div>
+
+					<div class="-header-controls">
+						<!-- <AppChatWindowMenu :room="room" /> -->
+
+						<AppButton
+							v-app-tooltip="$gettext(`Settings`)"
+							circle
+							sparse
+							trans
+							icon="ellipsis-h"
+							@click="toggleSidebar('settings')"
+						/>
+
+						<AppButton
+							v-app-tooltip="
+								room.isPmRoom
+									? $gettext('Create group chat')
+									: $gettext('Add friends')
+							"
+							class="-header-control anim-fade-in"
+							circle
+							trans
+							:icon="'friend-add-' + friendAddJolticonVersion"
+							@mouseenter="friendAddJolticonVersion = 2"
+							@mouseleave="friendAddJolticonVersion = 1"
+							@click="room.isPmRoom ? addGroup() : addMembers()"
+						/>
+
+						<AppButton
+							v-if="!room.isPmRoom"
+							v-app-tooltip="
+								isShowingUsers ? $gettext('Hide members') : $gettext('Show members')
+							"
+							circle
+							trans
+							icon="users"
+							class="-header-control anim-fade-in"
+							@click="toggleSidebar('members')"
+						/>
+
+						<AppButton
+							v-app-tooltip="$gettext('Close')"
+							class="-header-control"
+							circle
+							trans
+							icon="remove"
+							@click="close"
+						/>
+					</div>
+				</div>
+
+				<div class="-body">
+					<div class="-chatting-section">
+						<div
+							class="-output"
+							:style="{
+								backgroundImage: `url('https://m.gjcdn.net/background/800/21-zz9n7nfu-v4.webp')`,
+								backgroundSize: `400px 400px`,
+							}"
+						>
+							<AppChatWindowOutput
+								:key="room.id"
+								class="-output-inner"
+								:room="room"
+							/>
+						</div>
+
+						<div v-if="chat.currentUser" class="-send-container">
+							<AppChatWindowSend
+								:room="room"
+								@focus-change="emit('focus-change', $event)"
+							/>
+						</div>
+					</div>
+
+					<div v-if="!room.isPmRoom && sidebar" class="-sidebar">
+						<div v-if="!Screen.isXs" class="-sidebar-shadow" />
+
+						<AppScrollScroller class="-sidebar-scroller">
+							<!-- <template v-if="Screen.isXs">
+								<br />
+								<div class="nav-controls">
+									<AppButton block icon="chevron-left" @click="toggleUsers">
+										<AppTranslate>Back to Chat</AppTranslate>
+									</AppButton>
+								</div>
+							</template> -->
+
+							<template v-if="sidebar === 'settings'">
+								<FormChatEditRoom :room="room" />
+							</template>
+							<template v-else-if="sidebar === 'members'">
+								<div class="nav-heading">
+									<AppTranslate>Members</AppTranslate>
+									<span class="badge badge-subtle">
+										{{ membersCount }}
+									</span>
+								</div>
+
+								<AppChatMemberList
+									v-if="users"
+									:users="users.collection"
+									:room="room"
+								/>
+							</template>
+						</AppScrollScroller>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<style lang="stylus" scoped>
+.chat-window
+	position: fixed
+	display: flex
+	justify-content: center
+	align-items: flex-start
+	z-index: $zindex-chat-window
+	padding: 16px 20px 16px 16px
+
+.-close
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	background: transparent
+	z-index: 0
+
+.-window
+	rounded-corners-lg()
+	change-bg(bg)
+	position: relative
+	display: flex
+	flex: auto
+	justify-content: center
+	width: 100%
+	height: 100%
+	z-index: 1
+	overflow: hidden
+
+	@media $media-xs
+		position: fixed
+		top: 0
+		right: 0
+		left: 0
+		bottom: 0
+		height: auto !important
+		width: auto !important
+
+.-window-main
+	position: relative
+	flex: auto
+	display: flex
+	flex-direction: column
+	min-width: 0
+	z-index: 1
+
+.-header
+	position: relative
+	flex: none
+	width: 100%
+	padding: 12px 16px
+	display: flex
+	align-items: center
+	box-shadow: 0px 1px 8px 4px rgba(0, 0, 0, 0.25)
+	z-index: 2
+
+.-header-content
+	display: flex
+	align-items: center
+	margin-right: auto
+	min-width: 0
+
+.-header-avatar
+	margin-right: 16px
+
+	.-icon
+		img-circle()
+		display: flex
+		align-items: center
+		justify-content: center
+		width: 40px
+		height: 40px
+		background-color: var(--theme-backlight)
+
+		.jolticon
+			color: var(--theme-backlight-fg)
+
+.-header-name
+	text-overflow()
+
+.-header-controls
+	flex: none
+
+.-header-control
+	position: relative
+	vertical-align: top
+	margin-left: 4px
+
+.-body
+	display: flex
+	flex: auto
+
+.-chatting-section
+	display: flex
+	flex-direction: column
+	flex: auto
+
+.-sidebar
+	position: relative
+	width: 320px
+	flex: none
+
+.-sidebar-shadow
+	position: absolute
+	top: 0
+	bottom: 0
+	left: 0
+	width: 8px
+	background: linear-gradient(to right, rgba($black, 0.2), transparent)
+	z-index: 1
+
+.-output
+	change-bg(bg-offset)
+	position: relative
+	flex: auto
+	display: flex
+	height: 100%
+
+.-sidebar-scroller
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+
+.-output-inner
+	// Allows the scroll bar some breathing room
+	margin-right: 4px
+
+.-send-container
+	width: 100%
+	flex: none
+</style>
