@@ -8,7 +8,7 @@ import { setRTCDesktopVolume } from '../../../../_common/fireside/rtc/rtc';
 import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppSlider, { ScrubberCallback } from '../../../../_common/slider/slider.vue';
+import AppSlider, { ScrubberCallback } from '../../../../_common/slider/AppSlider.vue';
 import AppSticker from '../../../../_common/sticker/sticker.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideDesktopAudio from '../../../components/fireside/stream/AppFiresideDesktopAudio.vue';

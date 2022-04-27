@@ -8,6 +8,7 @@ import {
 import { markRaw, reactive, toRaw, watch, WatchStopHandle } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
+import { configFiresideMicVolume } from '../../config/config.service';
 import { updateTrackPlaybackDevice } from './producer';
 import { chooseFocusedRTCUser, FiresideRTC } from './rtc';
 
@@ -75,7 +76,21 @@ export class FiresideRTCUser {
 
 	hasMicAudio = false;
 	micAudioMuted = false;
+
+	/**
+	 * Scaled from 0 to 1, this is the volume level data that we're receiving
+	 * from the user.
+	 *
+	 * Used so we can display a ring around the user avatar while they're
+	 * speaking.
+	 */
 	volumeLevel = 0;
+
+	/**
+	 * Scaled from 0 to 1, this is the volume percent we want to receive from
+	 * the user.
+	 */
+	playbackVolumeLevel = 1;
 
 	_unwatchIsListed: WatchStopHandle | null = null;
 
@@ -473,6 +488,9 @@ export async function startAudioPlayback(user: FiresideRTCUser) {
 			updateTrackPlaybackDevice(rtc.producer, user._micAudioTrack);
 		}
 
+		// Set their mic volume to our preference before playing.
+		setUserMicrophoneAudioVolume(user, user.playbackVolumeLevel);
+
 		user._micAudioTrack.play();
 	} catch (e) {
 		rtc.logError('Failed to start video playback, attempting to gracefully stop.', e);
@@ -517,6 +535,15 @@ export function updateVolumeLevel(user: FiresideRTCUser) {
 	}
 
 	user.volumeLevel = user._micAudioTrack.getVolumeLevel();
+}
+
+/** Expects a value from 0 to 1 */
+export function setUserMicrophoneAudioVolume(user: FiresideRTCUser, percent: number) {
+	if (!configFiresideMicVolume.value) {
+		return;
+	}
+	user._micAudioTrack?.setVolume(Math.round(percent * 100));
+	user.playbackVolumeLevel = percent;
 }
 
 /** Expects a value from 0 to 1 */

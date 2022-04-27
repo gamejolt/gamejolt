@@ -7,7 +7,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideCohostManage from '../cohost/manage/manage.vue';
-import AppFiresideHostThumb from '../_host-thumb/host-thumb.vue';
+import AppFiresideHostThumb from '../_host-thumb/AppFiresideHostThumb.vue';
 import AppFiresideStreamOptions from '../_stream-options/stream-options.vue';
 import AppFiresideStreamPlayback from '../_stream-playback/stream-playback.vue';
 import AppFiresideHostListStickerButton from './sticker-button/sticker-button.vue';
