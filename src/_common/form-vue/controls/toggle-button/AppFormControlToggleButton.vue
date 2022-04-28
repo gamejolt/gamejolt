@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, toRef } from 'vue';
+import { computed, toRefs } from 'vue';
 import { arrayRemove } from '../../../../utils/array';
 import AppButton from '../../../button/AppButton.vue';
 import { useForm } from '../../AppForm.vue';
@@ -22,6 +22,8 @@ const props = defineProps({
 	},
 });
 
+const { disabled, validators, value } = toRefs(props);
+
 const emit = defineEmits({
 	...defineFormControlEmits(),
 });
@@ -31,7 +33,7 @@ const { name } = useFormGroup()!;
 
 const { applyValue } = createFormControl<any[]>({
 	initialValue: [],
-	validators: toRef(props, 'validators'),
+	validators,
 	// eslint-disable-next-line vue/require-explicit-emits
 	onChange: val => emit('changed', val),
 	multi: true,
@@ -40,19 +42,20 @@ const { applyValue } = createFormControl<any[]>({
 
 const currentSelection = computed(() => form.formModel[name.value] ?? []);
 
-const isSelected = computed(() => currentSelection.value.includes(props.value));
+const isSelected = computed(() => currentSelection.value.includes(value.value));
 
 function toggle() {
-	if (props.disabled) {
+	if (disabled.value) {
 		return;
 	}
 
 	const selected = [...currentSelection.value];
+	const currentValue = value.value;
 
 	if (!isSelected.value) {
-		selected.push(props.value);
+		selected.push(currentValue);
 	} else {
-		arrayRemove(selected, i => i === props.value);
+		arrayRemove(selected, i => i === currentValue);
 	}
 
 	applyValue(selected);

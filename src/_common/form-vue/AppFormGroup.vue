@@ -144,11 +144,14 @@ const props = defineProps({
 const form = useForm()!;
 const slots = useSlots();
 
-const c = createFormGroup(toRefs(props));
+const propsRefs = toRefs(props);
+const { labelClass, hideLabel } = propsRefs;
+
+const c = createFormGroup(propsRefs);
 provide(Key, c);
 
 const { humanLabel } = c;
-const labelClasses = computed(() => [props.labelClass, { 'sr-only': props.hideLabel }]);
+const labelClasses = computed(() => [labelClass?.value, { 'sr-only': hideLabel.value }]);
 
 const hasInlineControl = computed(() => !!slots['inline-control']);
 </script>

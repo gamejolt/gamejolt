@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { formatDistanceToNow } from 'date-fns';
-import { computed, onUnmounted, PropType, ref, toRef } from 'vue';
+import { computed, onUnmounted, PropType, ref, shallowReactive, toRefs } from 'vue';
+import { Dogtag, DogtagType } from '../../../../_common/dogtag/dogtag-model';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
@@ -27,7 +28,9 @@ import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
 
-type FormModel = User;
+type FormModel = User & {
+	pronoun_dogtags: number[];
+};
 
 const props = defineProps({
 	user: {
@@ -35,6 +38,8 @@ const props = defineProps({
 		required: true,
 	},
 });
+
+const { user } = toRefs(props);
 
 const emit = defineEmits({
 	submit: (_model: User) => true,
@@ -47,6 +52,8 @@ const usernameTimeLeft = ref(0);
 const usernameDuration = ref('');
 const isBioLocked = ref(false);
 const bioLengthLimit = ref(5_000);
+
+const pronounDogtags = shallowReactive<Dogtag[]>([]);
 
 const mentionsSettingOptions = computed(() => {
 	return [
@@ -67,12 +74,50 @@ const mentionsSettingOptions = computed(() => {
 
 const form: FormController<FormModel> = createForm({
 	modelClass: User,
-	model: toRef(props, 'user'),
+	model: user,
 	loadUrl: '/web/dash/profile/save',
 	reloadOnSubmit: true,
 	onLoad(payload) {
 		usernameChangedOn.value = payload.usernameChangedOn;
 		usernameTimeLeft.value = payload.usernameTimeLeft;
+
+		// Backend doesn't always return our dogtags, so our initial User may
+		// not have had any assigned. Just assign the up-to-date user data to
+		// our form model.
+		if (payload.user) {
+			form.formModel.assign(payload.user);
+		}
+
+		pronounDogtags.splice(
+			0,
+			pronounDogtags.length,
+			...Dogtag.populate(payload['dogtags']).filter(
+				(i: Dogtag) => i.type === DogtagType.pronoun
+			)
+		);
+
+		const selectedPronounTagIds = form.formModel.dogtags
+			.flatMap(tag => {
+				// Backend just gives us basic strings to display instead of
+				// models that we combine ourselves, so we need to try
+				// separating any combined pronouns to find their "root" tag
+				// value.
+				return tag.split('/').map(text => text.trim().toLowerCase());
+			})
+			.reduce<number[]>((result, splitTag) => {
+				// Now that we have what is hopefully the start of the pronoun
+				// foo/bar text, try finding any pronoun dogtags that may match
+				// that text.
+				const foundTag = pronounDogtags.find(pronoun =>
+					pronoun.text.toLowerCase().startsWith(splitTag)
+				);
+				if (foundTag) {
+					result.push(foundTag.id);
+				}
+				return result;
+			}, []);
+
+		form.formModel.pronoun_dogtags = selectedPronounTagIds;
 
 		if (usernameTimeLeft.value) {
 			usernameDuration.value = formatDistanceToNow(Date.now() + usernameTimeLeft.value);
@@ -98,6 +143,11 @@ onUnmounted(() => {
 function onThemeChanged() {
 	// Default would be the default theme for site.
 	setFormTheme(form.formModel.theme ?? DefaultTheme);
+}
+
+function getDisplayTextForPronounDogtag(tag: Dogtag) {
+	const items = tag.text.split('/');
+	return items.join(' / ');
 }
 </script>
 
@@ -189,12 +239,21 @@ function onThemeChanged() {
 			</p>
 		</AppFormGroup>
 
-		<AppFormGroup name="pronouns" :label="$gettext(`Pronouns`)" optional>
+		<AppFormGroup
+			v-if="pronounDogtags.length > 0"
+			name="pronoun_dogtags"
+			:label="$gettext(`Pronouns`)"
+			optional
+		>
 			<AppFormControlToggleButtonGroup>
-				<AppFormControlToggleButton value="she">She / Her</AppFormControlToggleButton>
-				<AppFormControlToggleButton value="he">He / Him</AppFormControlToggleButton>
-				<AppFormControlToggleButton value="they">They / Them</AppFormControlToggleButton>
-				<AppFormControlToggleButton value="it">It / Its</AppFormControlToggleButton>
+				<AppFormControlToggleButton
+					v-for="tag of pronounDogtags"
+					:key="tag.text"
+					:value="tag.id"
+					style="text-transform: capitalize"
+				>
+					{{ getDisplayTextForPronounDogtag(tag) }}
+				</AppFormControlToggleButton>
 			</AppFormControlToggleButtonGroup>
 
 			<AppFormControlErrors />

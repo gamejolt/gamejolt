@@ -20,6 +20,7 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 	slug!: string;
 	img_avatar!: string;
 	dogtag!: string;
+	dogtags!: string[];
 	shouts_enabled!: boolean;
 
 	status!: number;
@@ -170,7 +171,7 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 	$save() {
 		// You can only save yourself, so we don't pass in an ID to the endpoint.
 		return this.$_save('/web/dash/profile/save', 'user', {
-			allowComplexData: ['theme'],
+			allowComplexData: ['theme', 'dogtags', 'pronoun_dogtags'],
 		});
 	}
 

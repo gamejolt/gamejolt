@@ -30,8 +30,8 @@ import { isUserOnline } from '../../components/chat/client';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPageHeaderControls from '../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../components/page-header/page-header.vue';
+import AppUserDogtag from '../../components/user/AppUserDogtag.vue';
 import AppUserBlockOverlay from '../../components/user/block-overlay/block-overlay.vue';
-import AppUserDogtag from '../../components/user/dogtag/dogtag.vue';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
 
 const Key: InjectionKey<Controller> = Symbol('profile-route');
@@ -427,8 +427,8 @@ export default class RouteProfile extends BaseRouteComponent {
 						<template v-if="isRouteBootstrapped">
 							<span class="dot-separator" />
 
-							<!-- Dogtag -->
-							<AppUserDogtag :type="user.dogtag" />
+							<!-- Dogtags -->
+							<AppUserDogtag v-for="tag of user.dogtags" :key="tag" :type="tag" />
 
 							<!-- Friend status -->
 							<span
