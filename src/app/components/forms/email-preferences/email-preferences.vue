@@ -1,5 +1,7 @@
 <script lang="ts">
 import { mixins, Options } from 'vue-property-decorator';
+import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
+import AppFormStickySubmit from '../../../../_common/form-vue/AppFormStickySubmit.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm, FormOnBeforeSubmit } from '../../../../_common/form-vue/form.service';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
@@ -16,6 +18,8 @@ class Wrapper extends BaseForm<FormModel> {}
 	components: {
 		AppFormControlToggle,
 		AppLoadingFade,
+		AppFormStickySubmit,
+		AppFormButton,
 	},
 })
 export default class FormEmailPreferences extends mixins(Wrapper) implements FormOnBeforeSubmit {
@@ -213,12 +217,10 @@ export default class FormEmailPreferences extends mixins(Wrapper) implements For
 			</fieldset>
 		</AppLoadingFade>
 
-		<div class="row">
-			<div class="col-sm-8 col-sm-offset-4">
-				<AppFormButton>
-					<AppTranslate>Save Preferences</AppTranslate>
-				</AppFormButton>
-			</div>
-		</div>
+		<AppFormStickySubmit>
+			<AppFormButton>
+				<AppTranslate>Save Profile</AppTranslate>
+			</AppFormButton>
+		</AppFormStickySubmit>
 	</AppForm>
 </template>
