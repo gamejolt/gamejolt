@@ -7,7 +7,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideCohostManage from '../cohost/manage/manage.vue';
-import AppFiresideHostThumb from '../_host-thumb/AppFiresideHostThumb.vue';
+import AppFiresideHostThumb from '../_host-thumb/host-thumb.vue';
 import AppFiresideStreamOptions from '../_stream-options/stream-options.vue';
 import AppFiresideStreamPlayback from '../_stream-playback/stream-playback.vue';
 import AppFiresideHostListStickerButton from './sticker-button/sticker-button.vue';
@@ -47,10 +47,6 @@ export default class AppFiresideHostList extends Vue {
 		return this.c.canManageCohosts.value;
 	}
 
-	get listableStreamingUsers() {
-		return this.c.rtc.value?.listableStreamingUsers ?? [];
-	}
-
 	onClickStickerButton() {
 		setDrawerOpen(this.drawerStore, true);
 	}
@@ -67,7 +63,7 @@ export default class AppFiresideHostList extends Vue {
 			<AppFiresideCohostManage v-if="canManageCohosts" />
 
 			<AppFiresideHostThumb
-				v-for="host of listableStreamingUsers"
+				v-for="host of c.rtc.value.users"
 				:key="host.uid"
 				class="-host-thumb"
 				:host="host"

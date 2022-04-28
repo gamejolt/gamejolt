@@ -1,7 +1,5 @@
 import type {
 	AudienceLatencyLevelType,
-	ConnectionState,
-	IAgoraRTC,
 	IAgoraRTCClient,
 	IAgoraRTCRemoteUser,
 	ILocalAudioTrack,
@@ -10,7 +8,10 @@ import type {
 	NetworkQuality,
 } from 'agora-rtc-sdk-ng';
 import { markRaw, reactive } from 'vue';
+import { importNoSSR } from '../../code-splitting';
 import { FiresideRTC } from './rtc';
+
+const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
 
 type OnTrackPublish = (remoteUser: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => void;
 type OnTrackUnpublish = (remoteUser: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => void;
@@ -28,7 +29,6 @@ export class FiresideRTCChannel {
 	_localVideoTrack: ILocalVideoTrack | null = null;
 	_localAudioTrack: ILocalAudioTrack | null = null;
 	_networkQuality: NetworkQuality | null = null;
-	_connectionState: ConnectionState | null = null;
 
 	/**
 	 * Whether or not we have a track published in this channel. This will
@@ -37,11 +37,11 @@ export class FiresideRTCChannel {
 	_isPublished = false;
 
 	get isDisconnected() {
-		return this._connectionState === 'DISCONNECTED';
+		return this.agoraClient.connectionState === 'DISCONNECTED';
 	}
 
 	get isConnected() {
-		return this._connectionState === 'CONNECTED';
+		return this.agoraClient.connectionState === 'CONNECTED';
 	}
 
 	get isPoorNetworkQuality() {
@@ -58,11 +58,10 @@ export class FiresideRTCChannel {
 }
 
 /// Wraps a [FiresideRTCChannel] in [reactive] after initializing it.
-export function createFiresideRTCChannel(
+export async function createFiresideRTCChannel(
 	rtc: FiresideRTC,
 	channel: string,
 	token: string,
-	AgoraRTC: IAgoraRTC,
 	{
 		onTrackPublish,
 		onTrackUnpublish,
@@ -76,6 +75,7 @@ export function createFiresideRTCChannel(
 	const c = reactive(new FiresideRTCChannel(rtc, channel)) as FiresideRTCChannel;
 	c.token = token;
 
+	const AgoraRTC = await AgoraRTCLazy;
 	c.agoraClient = markRaw(AgoraRTC.createClient({ mode: 'live', codec: 'h264' }));
 
 	c.agoraClient.on('user-published', (...args) => {
@@ -90,10 +90,6 @@ export function createFiresideRTCChannel(
 
 	c.agoraClient.on('network-quality', stats => {
 		c._networkQuality = markRaw(stats);
-	});
-
-	c.agoraClient.on('connection-state-change', newState => {
-		c._connectionState = newState;
 	});
 
 	return c;
@@ -132,7 +128,6 @@ export async function destroyChannel(channel: FiresideRTCChannel) {
 }
 
 export async function setChannelToken(channel: FiresideRTCChannel, token: string) {
-	channel.token = token;
 	await channel.agoraClient.renewToken(token);
 }
 

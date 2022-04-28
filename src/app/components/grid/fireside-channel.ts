@@ -7,11 +7,9 @@ import { User } from '../../../_common/user/user.model';
 export const EVENT_UPDATE = 'update';
 export const EVENT_STREAMING_UID = 'streaming-uid';
 export const EVENT_STICKER_PLACEMENT = 'sticker-placement';
-export const EVENT_LISTABLE_HOSTS = 'listable-hosts';
 
 interface FiresideChannelConfig {
 	fireside: Fireside;
-	topic?: string;
 	socket: Socket;
 	user: User | null;
 	authToken: string;
@@ -31,7 +29,6 @@ export abstract class FiresideChannel extends FiresideChannelInternal {}
 
 export function createFiresideChannel({
 	fireside,
-	topic,
 	socket,
 	user,
 	authToken,
@@ -42,7 +39,8 @@ export function createFiresideChannel({
 		? { auth_token: authToken, user_id: user.id.toString() }
 		: { auth_token: authToken };
 
-	channel._socketChannel = markRaw(socket.channel(topic ?? `fireside:${fireside.hash}`, params));
+	channel._socketChannel = markRaw(new Channel('fireside:' + fireside.hash, params, socket));
+	(socket as any).channels.push(channel.socketChannel);
 
 	return channel;
 }

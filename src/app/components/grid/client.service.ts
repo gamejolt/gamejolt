@@ -940,8 +940,8 @@ export class GridClient {
 	}
 
 	async leaveFireside(fireside: Fireside) {
-		const channels = this.firesideChannels.filter(i => i.fireside.id === fireside.id);
-		for (const channel of channels) {
+		const channel = this.firesideChannels.find(i => i.fireside.id === fireside.id);
+		if (channel) {
 			this._leaveSocketChannel(channel.socketChannel);
 			arrayRemove(this.firesideChannels, i => i === channel);
 		}

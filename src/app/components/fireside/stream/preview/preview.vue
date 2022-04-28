@@ -38,7 +38,6 @@ export default class AppFiresideStreamPreview extends Vue {
 			<div class="-video-wrapper">
 				<div class="-video-inner">
 					<AppFiresideStreamPreviewVideo
-						:key="fireside.id"
 						:fireside="fireside"
 						:show-live="showLive"
 						:show-live-users="showLiveUsers"

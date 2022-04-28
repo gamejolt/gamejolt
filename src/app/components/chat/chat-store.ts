@@ -1,4 +1,4 @@
-import { inject, InjectionKey } from 'vue';
+import { InjectionKey } from 'vue';
 import { AppStore } from '../../store';
 import { ChatClientLazy } from '../lazy';
 import { ChatClient as ChatClientType } from './client';
@@ -9,10 +9,6 @@ export class ChatStore {
 
 	_wantsChat = false;
 	_loadPromise: Promise<void> | null = null;
-}
-
-export function useChatStore() {
-	return inject(ChatStoreKey);
 }
 
 export async function loadChat(store: ChatStore, appStore: AppStore) {

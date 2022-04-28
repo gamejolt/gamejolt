@@ -134,9 +134,6 @@ export const configRealms = new ConfigOptionBoolean('web_realms', false);
 /** Whether or not we show the post share card on the side or inline */
 export const configPostShareSide = new ConfigOptionBoolean('web_post_share_side', false);
 
-/** Whether or not we show a mic volume slider for RTC users */
-export const configFiresideMicVolume = new ConfigOptionBoolean('fireside_mic_volume', false);
-
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
 }

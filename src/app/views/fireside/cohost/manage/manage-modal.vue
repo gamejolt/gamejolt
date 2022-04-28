@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { stringSort } from '../../../../../utils/array';
 import { fuzzysearch } from '../../../../../utils/string';
@@ -9,97 +10,75 @@ import {
 } from '../../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { BaseModal } from '../../../../../_common/modal/base';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppUserAvatarImg from '../../../../../_common/user/user-avatar/img/img.vue';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../../_common/user/user.model';
-import { useChatStore } from '../../../../components/chat/chat-store';
 import { ChatUser } from '../../../../components/chat/user';
 import { FiresideController } from '../../../../components/fireside/controller/controller';
 import { illNoCommentsSmall } from '../../../../img/ill/illustrations';
-
-type ListTitle = 'Chat' | 'Friends';
-
-const ListTitles: ListTitle[] = [
-	'Chat', // formatting
-	'Friends',
-];
 
 @Options({
 	components: {
 		AppUserAvatarImg,
 		AppUserAvatarList,
 		AppIllustration,
-		AppNavTabList,
 	},
 })
 export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 	@Prop({ type: Object, required: true })
 	controller!: FiresideController;
 
-	chatStore = useChatStore()!;
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	filterQuery = '';
 	usersProcessing: (ChatUser | User)[] = [];
 	isOpen = true;
 
-	activeList: ListTitle = 'Chat';
-
 	readonly illNoCommentsSmall = illNoCommentsSmall;
-	readonly ListTitles = ListTitles;
 
 	get rtc() {
 		return this.controller.rtc.value;
 	}
 
-	get users() {
-		switch (this.activeList) {
-			case 'Chat':
-				return this.controller.chatUsers.value?.collection || [];
-
-			case 'Friends':
-				return this.chatStore.chat?.friendsList.collection || [];
-
-			default:
-				return [];
-		}
-	}
-
-	get hostableUsers() {
+	get hostableChatUsers() {
 		if (!this.rtc) {
 			return [];
 		}
 
 		const currentHosts = this.rtc.hosts;
-		return this.users
-			.filter(i => !currentHosts.some(host => host.user.id === i.id))
-			.sort((a, b) => stringSort(a.display_name, b.display_name));
+		return (
+			this.controller.chatUsers.value?.collection.filter(
+				i => !currentHosts.some(host => host.user.id === i.id)
+			) ?? []
+		);
 	}
 
-	get currentCohosts(): User[] {
-		const hosts = this.rtc?.hosts ?? [];
-		const myUserId = this.controller.user.value?.id;
-		return hosts // formatting
-			.filter(i => {
-				if (i.user.id === myUserId) {
-					return false;
-				}
-				return !i.needsPermissionToView || this.rtc?.listableHostIds.includes(i.user.id);
-			})
-			.map(i => i.user)
-			.sort((a, b) => stringSort(a.display_name, b.display_name));
+	get unhostableUsers() {
+		if (!this.rtc) {
+			return [];
+		}
+
+		return this.rtc.hosts.map(i => i.user).filter(i => i.id !== this.user?.id);
 	}
 
-	get manageableUsers() {
-		return [...this.currentCohosts, ...this.hostableUsers];
+	get users() {
+		return [...this.hostableChatUsers, ...this.unhostableUsers].sort((a, b) =>
+			stringSort(a.display_name, b.display_name)
+		);
 	}
 
 	get filteredUsers() {
 		if (!this.filterQuery) {
-			return this.manageableUsers;
+			return this.users;
 		}
 
 		const filter = this.filterQuery.toLowerCase();
-		return this.manageableUsers.filter(
+		return this.users.filter(
 			i =>
 				fuzzysearch(filter, i.display_name.toLowerCase()) ||
 				fuzzysearch(filter, i.username.toLowerCase())
@@ -115,13 +94,10 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 	}
 
 	isUserStreaming(user: ChatUser | User) {
-		return (
-			this.isHost(user) &&
-			this.rtc?.listableStreamingUsers.some(i => i.userModel?.id === user.id)
-		);
+		return this.isHost(user) && this.rtc?.users.some(i => i.userModel?.id === user.id) === true;
 	}
 
-	isHost(user: ChatUser | User): user is User {
+	isHost(user: ChatUser | User) {
 		return user instanceof User;
 	}
 
@@ -142,8 +118,8 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 
 			// We will get a grid message that will update the RTC host list.
 			while (
-				(wasHost && this.currentCohosts.includes(user as User)) ||
-				(!wasHost && this.hostableUsers.includes(user as ChatUser))
+				(wasHost && this.unhostableUsers.includes(user as User)) ||
+				(!wasHost && this.hostableChatUsers.includes(user as ChatUser))
 			) {
 				if (!this.isOpen) {
 					break;
@@ -176,25 +152,7 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 			</div>
 
 			<div class="modal-body">
-				<div>
-					<div class="-list-selectors">
-						<div class="-inline-menu tab-list">
-							<ul>
-								<li v-for="title of ListTitles" :key="title" class="-tab-item">
-									<a
-										class="-tab-item-inner"
-										:class="{
-											active: activeList === title,
-										}"
-										@click="activeList = title"
-									>
-										{{ title }}
-									</a>
-								</li>
-							</ul>
-						</div>
-					</div>
-
+				<div class="friend-select-widget">
 					<input
 						v-model="filterQuery"
 						class="-filter form-control"
@@ -248,53 +206,7 @@ $-h-padding = 20px
 $-height = 40px
 
 .-filter
-	margin: 8px 0
-
-.modal-body
-	padding-top: 0
-
-.tab-list
-	text-align: start
-	padding: 0
-	margin: 0
-
-	&::after
-		display: none
-
-.-tab-item
-	margin-right: 24px
-
-	&:last-of-type
-		margin-right: 0
-
-.-tab-item-inner
-	rounded-corners()
-	position: relative
-	border: 0
 	margin-bottom: 8px
-	padding-left: 0
-	padding-right: 0
-	padding-top: 0
-	color: var(--theme-fg-muted)
-	transition: color 100ms $weak-ease-out
-
-	&:hover
-		background-color: unset
-
-	&.active::after
-		opacity: 1
-
-	&::after
-		change-bg('link')
-		rounded-corners()
-		content: ''
-		position: absolute
-		bottom: 2px
-		left: 0
-		right: 0
-		height: 2px
-		opacity: 0
-		transition: opacity 100ms $weak-ease-out
 
 .-user-list-item
 	theme-prop('border-bottom-color', 'bg-subtle')

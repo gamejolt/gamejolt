@@ -121,14 +121,14 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 	unmounted() {
 		// If we're not streaming or about to, clear the selected device ids so
 		// that the browser doesn't think we're still recording.
-		if (!(this.isPersonallyStreaming || this.isStarting)) {
+		if (!(this.isStreaming || this.isStarting)) {
 			clearSelectedRecordingDevices(this._producer);
 		}
 
 		this.c.isShowingStreamSetup.value = false;
 	}
 
-	get isPersonallyStreaming() {
+	get isStreaming() {
 		return this.producer?.isStreaming === true;
 	}
 
@@ -229,7 +229,7 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 	}
 
 	get canToggleAdvanced() {
-		if (!this.isPersonallyStreaming) {
+		if (!this.isStreaming) {
 			return true;
 		}
 
@@ -254,7 +254,7 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 	}
 
 	get canSwapAudioInputs() {
-		if (!this.isPersonallyStreaming) {
+		if (!this.isStreaming) {
 			return true;
 		}
 
@@ -283,7 +283,7 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 	}
 
 	wouldInvalidateIfRemoved(fieldToRemove: string) {
-		if (!this.isPersonallyStreaming) {
+		if (!this.isStreaming) {
 			return false;
 		}
 
@@ -371,7 +371,7 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 		// giving it a chance to resolve itself.
 		await sleep(0);
 
-		if (this.isInvalidConfig && this.isPersonallyStreaming) {
+		if (this.isInvalidConfig && this.isStreaming) {
 			stopStreaming(this.producer);
 		}
 	}
@@ -425,7 +425,7 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 	@Watch('formModel.selectedGroupAudioDeviceId')
 	onSelectedDevicesChanged() {
 		// When streaming, only apply changes to selected devices if the config is valid.
-		if ((this.isInvalidConfig && this.isPersonallyStreaming) || !this._didDetectDevices) {
+		if ((this.isInvalidConfig && this.isStreaming) || !this._didDetectDevices) {
 			// TODO: show error status on the form model values that do not match with whats set on firesideHostRtc.
 			return;
 		}
@@ -455,9 +455,7 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 	<AppLoadingFade :is-loading="isStarting">
 		<a class="-intro" href="https://gamejolt.com/p/qewgmbtc" @click="openHelpLink">
 			<div class="-intro-subtitle">
-				<AppTranslate
-					>Voice chat and livestream on Game Jolt with your friends!</AppTranslate
-				>
+				<AppTranslate>Voice chat and livestream on Game Jolt with your friends!</AppTranslate>
 			</div>
 			<div class="-intro-title">
 				<AppTranslate>Read the setup guide to get started</AppTranslate>
@@ -676,9 +674,7 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 							<br />
 
 							<a href="https://gamejolt.com/p/qewgmbtc" @click="openHelpLink">
-								<AppTranslate
-									>Learn how to stream your gameplay or screen</AppTranslate
-								>
+								<AppTranslate>Learn how to stream your gameplay or screen</AppTranslate>
 							</a>
 						</p>
 
@@ -796,7 +792,7 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 				</AppExpand>
 			</fieldset>
 
-			<div v-if="!isPersonallyStreaming" class="-actions">
+			<div v-if="!isStreaming" class="-actions">
 				<AppButton trans @click="onClickCancel()">
 					<AppTranslate>Cancel</AppTranslate>
 				</AppButton>

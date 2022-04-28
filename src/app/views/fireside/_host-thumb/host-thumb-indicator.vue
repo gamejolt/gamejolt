@@ -1,4 +1,5 @@
 <script lang="ts">
+import { toRaw } from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../../utils/vue';
 import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
@@ -31,7 +32,7 @@ export default class AppFiresideHostThumbIndicator extends Vue {
 	}
 
 	get isActive() {
-		return !!this.c.rtc.value && this.c.rtc.value.focusedUser?.uid === this.host.uid;
+		return !!this.c.rtc.value && toRaw(this.c.rtc.value.focusedUser) === toRaw(this.host);
 	}
 }
 </script>

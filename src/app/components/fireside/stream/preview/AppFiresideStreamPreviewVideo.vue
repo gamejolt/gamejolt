@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, PropType, watch } from 'vue';
+import { computed, PropType, watch } from 'vue';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
@@ -31,27 +31,21 @@ const c = createFiresideController(props.fireside, {
 	isMuted: true,
 });
 
-const { rtc, isShowingStreamSetup, isStreaming, cleanup: cleanupController } = c;
+const { rtc, isShowingStreamSetup, isStreaming } = c;
 
-const cohosts = computed(() => {
-	const result: User[] = [];
-
-	for (const rtcUser of rtc.value?.listableStreamingUsers ?? []) {
-		// Since we're iterating over listable users they will always have their userModel.
-		const userModel = rtcUser.userModel!;
-
-		// Filter out creator of the fireside.
-		//
-		// TODO(big-pp-event) why are we doing this?
-		//
-		// Note: this would probably not exclude the remote instance of the
-		// creator of the fireside. Intentional?
-		if (userModel !== props.fireside.user) {
-			result.push(userModel);
-		}
+const rtcUsers = computed(() => {
+	if (!rtc.value) {
+		return [];
 	}
 
-	return result;
+	const users: User[] = [];
+	rtc.value.users.forEach(i => {
+		if (!i.userModel || i.userModel === props.fireside.user) {
+			return;
+		}
+		users.push(i.userModel);
+	});
+	return users;
 });
 
 const focusedUser = computed(() => rtc.value?.focusedUser);
@@ -67,9 +61,6 @@ const shouldShowVideo = computed(() => {
 watch([isStreaming, hasVideo], () => {
 	emit('changed', hasVideo.value, isStreaming.value);
 });
-
-// TODO(big-pp-event) should we use onUnmounted here?
-onBeforeUnmount(() => cleanupController());
 </script>
 
 <template>
@@ -84,7 +75,7 @@ onBeforeUnmount(() => cleanupController());
 					</div>
 				</div>
 				<div v-if="showLiveUsers" class="-live-users">
-					<AppUserAvatarList :users="cohosts" sm inline />
+					<AppUserAvatarList :users="rtcUsers" sm inline />
 				</div>
 			</div>
 		</div>
