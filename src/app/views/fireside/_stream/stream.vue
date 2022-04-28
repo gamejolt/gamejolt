@@ -8,7 +8,7 @@ import { setRTCDesktopVolume } from '../../../../_common/fireside/rtc/rtc';
 import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppSlider, { ScrubberCallback } from '../../../../_common/slider/slider.vue';
+import AppSlider, { ScrubberCallback } from '../../../../_common/slider/AppSlider.vue';
 import AppSticker from '../../../../_common/sticker/sticker.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideDesktopAudio from '../../../components/fireside/stream/AppFiresideDesktopAudio.vue';
@@ -117,7 +117,7 @@ export default class AppFiresideStream extends Vue {
 	}
 
 	get hasVideo() {
-		return this.rtcUser.hasVideo;
+		return this.rtcUser.hasVideo && this.rtcUser.isListed;
 	}
 
 	get isLoadingVideo() {
@@ -274,11 +274,6 @@ export default class AppFiresideStream extends Vue {
 		this.c.rtc.value!.videoPaused = true;
 	}
 
-	@Watch('shouldShowUI', { immediate: true })
-	onShouldShowUIChanged() {
-		this.c.isShowingStreamOverlay.value = this.shouldShowUI;
-	}
-
 	@Watch('stickerStreak')
 	onStreakCountChanged() {
 		if (this.stickerStreak) {
@@ -323,7 +318,7 @@ export default class AppFiresideStream extends Vue {
 		</template>
 
 		<div
-			v-if="hasOverlayItems"
+			v-if="hasOverlayItems || showMutedIndicator"
 			class="-overlay"
 			:class="{ '-darken': shouldDarkenAll }"
 			@click.capture="onOverlayTap"
