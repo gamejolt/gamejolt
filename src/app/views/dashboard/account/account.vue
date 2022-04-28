@@ -144,6 +144,14 @@ export default class RouteDashAccount extends BaseRouteComponent {
 								</li>
 								<li>
 									<router-link
+										:to="{ name: 'dash.account.device-settings' }"
+										active-class="active"
+									>
+										<AppTranslate>Device Settings</AppTranslate>
+									</router-link>
+								</li>
+								<li>
+									<router-link
 										:to="{ name: 'dash.account.blocks' }"
 										active-class="active"
 									>

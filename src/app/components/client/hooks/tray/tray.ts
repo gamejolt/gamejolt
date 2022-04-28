@@ -86,8 +86,11 @@ export function createClientTrayMenuBuilder(router: Router, appStore: AppStore) 
 
 		menu.append(
 			new nw.MenuItem({
-				label: $gettext(`Settings`),
-				click: () => go({ name: 'settings' }),
+				// TODO(pronouns): make sure this works. Are we able to have it
+				// nested within this new route while still being able to use it
+				// offline?
+				label: $gettext(`Device Settings`),
+				click: () => go({ name: 'dash.account.device-settings' }),
 			})
 		);
 
