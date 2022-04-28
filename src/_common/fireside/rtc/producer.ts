@@ -31,10 +31,7 @@ import {
 const path = require('path') as typeof import('path');
 const { EventEmitter } = require('events') as typeof import('events');
 const asg = require(path.join(Client.nwStaticAssetsDir, 'asg.node'));
-//const { generator } =	require('MediaStreamTrackGenerator') as typeof import('MediaStreamTrackGenerator');
-//const { mediaStream } = require('MediaStream') as typeof import('MediaStream');
-const { pid } = require('process') as typeof import('process');
-
+const { ppid } = require('process') as typeof import('process');
 const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
 
 const RENEW_TOKEN_INTERVAL = 60_000;
@@ -114,8 +111,8 @@ class ASGComponent {
 				console.log('ASG: STREAM FIRST ENCOUNTER AND WORKING');
 			} else console.log('ASG: STREAM FIRST ENCOUNTER AND NOT WORKING');
 
-			console.log('ASG: Excluded PID : ' + pid);
-			asg.startCapture(pid, this.emitter.emit.bind(this.emitter));
+			console.log('ASG: Excluded PID : ' + ppid);
+			asg.startCapture(ppid, this.emitter.emit.bind(this.emitter));
 			//this.isCapturing = true;
 		} catch (error) {
 			console.log(error);
@@ -421,7 +418,7 @@ export function setSelectedMicDeviceId(
 	}
 
 	if (micChanged) {
-		_updateMicDevice(producer);
+		_updateMicDevice2(producer);
 	}
 }
 
@@ -586,6 +583,70 @@ async function _updateSetIsStreaming(producer: FiresideRTCProducer) {
 }
 
 function _updateDesktopAudioDevice(producer: FiresideRTCProducer) {
+	return _doBusyWork(producer, async () => {
+		const {
+			_selectedDesktopAudioDeviceId,
+			rtc,
+			rtc: { videoChannel },
+		} = producer;
+
+		let deviceId: string | null;
+		if (
+			_selectedDesktopAudioDeviceId === '' ||
+			_selectedDesktopAudioDeviceId === PRODUCER_UNSET_DEVICE
+		) {
+			deviceId = null;
+		} else {
+			const deviceExists = !!MediaDeviceService.mics.find(
+				mic => mic.deviceId === _selectedDesktopAudioDeviceId
+			);
+			deviceId = deviceExists ? _selectedDesktopAudioDeviceId : null;
+		}
+
+		rtc.log(`Setting desktop audio device to ${deviceId}`);
+		producer._streamingDesktopAudioDeviceId = deviceId;
+
+		await setChannelAudioTrack(videoChannel, async () => {
+			if (!deviceId) {
+				return null;
+			}
+
+			if (!producer.asgComponent) {
+				producer.asgComponent = new ASGComponent();
+				rtc.log(`Starting ASG`);
+			}
+			producer.asgComponent.startASG();
+			console.log('ASG: CREATE CUSTOM');
+			const AgoraRTC = await AgoraRTCLazy;
+			const track = await AgoraRTC.createCustomAudioTrack({
+				mediaStreamTrack: producer.asgComponent.getMediaStreamTrack(),
+				encoderConfig: 'high_quality_stereo',
+				//AEC: false,
+				//AGC: false,
+				//ANS: false,
+			});
+
+			//const track = await AgoraRTC.createMicrophoneAudioTrack({
+			//	microphoneId: deviceId,
+			//	// We disable all this so that it doesn't affect the desktop audio in any way.
+			//	AEC: false,
+			//	AGC: false,
+			//	ANS: false,
+			//	encoderConfig: 'high_quality_stereo',
+			//});
+			track.setVolume(100);
+
+			rtc.log(`Desktop audio track ID: ${track.getTrackId()}`);
+
+			return track;
+		});
+
+		// No need to await on this. its not essential.
+		_updateSetIsStreaming(producer);
+	});
+}
+
+function _updateDesktopAudioDevice2(producer: FiresideRTCProducer) {
 	return _doBusyWork(producer, async () => {
 		const {
 			_selectedDesktopAudioDeviceId,
