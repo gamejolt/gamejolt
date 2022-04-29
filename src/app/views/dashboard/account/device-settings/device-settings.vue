@@ -6,7 +6,6 @@ import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/rout
 import AppScrollAffix from '../../../../../_common/scroll/AppScrollAffix.vue';
 import { vAppScrollTo } from '../../../../../_common/scroll/to/to.directive';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { $gettext } from '../../../../../_common/translate/translate.service';
 import { User } from '../../../../../_common/user/user.model';
 import FormSettings from '../../../../components/forms/settings/settings.vue';
 import AppPageHeader from '../../../../components/page-header/page-header.vue';
@@ -35,7 +34,7 @@ export default class RouteDashAccountDeviceSettings extends BaseRouteComponent {
 	commonStore = setup(() => useCommonStore());
 
 	routeCreated() {
-		this.routeStore.heading = $gettext(`Device Settings`);
+		this.routeStore.heading = this.$gettext(`Device Settings`);
 	}
 
 	get user() {
