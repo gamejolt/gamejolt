@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { formatDistanceToNow } from 'date-fns';
 import { computed, onUnmounted, PropType, ref, shallowReactive, toRefs } from 'vue';
+import { arrayUnique } from '../../../../utils/array';
 import { Dogtag, DogtagType } from '../../../../_common/dogtag/dogtag-model';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
@@ -117,7 +118,7 @@ const form: FormController<FormModel> = createForm({
 				return result;
 			}, []);
 
-		form.formModel.pronoun_dogtags = selectedPronounTagIds;
+		form.formModel.pronoun_dogtags = arrayUnique(selectedPronounTagIds);
 
 		if (usernameTimeLeft.value) {
 			usernameDuration.value = formatDistanceToNow(Date.now() + usernameTimeLeft.value);
