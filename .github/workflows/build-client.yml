@@ -50,7 +50,9 @@ jobs:
 
       - name: Install code signing cert
         run: |
-          Set-Content scripts\build\desktop-app\certs\cert.pfx.b64 ${{ secrets.GJ_CERT }}
+          Set-Content scripts\build\desktop-app\certs\cert.pfx.b64 @'
+          ${{ secrets.GJ_CERT }}
+          '@
           CertUtil -Decode scripts\build\desktop-app\certs\cert.pfx.b64 scripts\build\desktop-app\certs\cert.pfx
 
       - uses: actions/setup-node@v3
