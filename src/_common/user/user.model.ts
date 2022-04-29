@@ -6,6 +6,7 @@ import { MediaItem } from '../media-item/media-item-model';
 import { CommentableModel, Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
 import { Theme } from '../theme/theme.model';
+import { DogtagData } from '../dogtag/dogtag-data';
 
 export class User extends Model implements ContentContainerModel, CommentableModel {
 	static readonly TYPE_GAMER = 'User';
@@ -19,8 +20,7 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 	url!: string;
 	slug!: string;
 	img_avatar!: string;
-	// TODO(pronouns): Check typing
-	dogtags!: string[];
+	dogtags!: DogtagData[];
 	shouts_enabled!: boolean;
 
 	status!: number;
@@ -148,6 +148,10 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 
 		if (data.theme) {
 			this.theme = new Theme(data.theme);
+		}
+
+		if (data.dogtags) {
+			this.dogtags = DogtagData.populate(data.dogtags);
 		}
 
 		Registry.store('User', this);

@@ -98,12 +98,11 @@ const form: FormController<FormModel> = createForm({
 		);
 
 		const selectedPronounTagIds = form.formModel.dogtags
-			.flatMap(tag => {
-				// Backend just gives us basic strings to display instead of
-				// models that we combine ourselves, so we need to try
-				// separating any combined pronouns to find their "root" tag
-				// value.
-				return tag.split('/').map(text => text.trim().toLowerCase());
+			.flatMap(({ text }) => {
+				// [dogtags] and [pronounDogtags] don't have the exact same
+				// data. Try separating any combined pronouns to find the "root"
+				// text value we can use to find matching pronouns.
+				return text.split('/').map(splitText => splitText.trim().toLowerCase());
 			})
 			.reduce<number[]>((result, splitTag) => {
 				// Now that we have what is hopefully the start of the pronoun

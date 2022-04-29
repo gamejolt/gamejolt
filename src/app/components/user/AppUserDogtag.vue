@@ -1,27 +1,30 @@
 <script lang="ts">
-import { computed, StyleValue, toRefs } from 'vue';
+import { computed, PropType, StyleValue, toRefs } from 'vue';
+import { DogtagData } from '../../../_common/dogtag/dogtag-data';
 </script>
 
 <script lang="ts" setup>
 const props = defineProps({
-	type: {
-		type: String,
+	tag: {
+		type: Object as PropType<DogtagData>,
 		required: true,
 	},
 });
 
-const { type } = toRefs(props);
+const { tag } = toRefs(props);
 
-const displayType = computed(() => {
+const text = computed(() => tag.value.text);
+
+const displayText = computed(() => {
 	// Maintain consistency between single pronoun selections and combined ones.
-	return type.value
+	return text.value
 		.split('/')
 		.map(i => i.trim())
 		.join(' / ');
 });
 
 const classes = computed(() => {
-	if (type.value.toLowerCase() === 'guy') {
+	if (text.value.toLowerCase() === 'guy') {
 		return ['user-dogtag-guy'];
 	} else {
 		return ['tag-highlight'];
@@ -29,7 +32,7 @@ const classes = computed(() => {
 });
 
 const styles = computed<StyleValue>(() => {
-	const match = type.value.match(/[/ ]/);
+	const match = text.value.match(/[/ ]/);
 	if (match && match.length > 0) {
 		return { 'text-transform': 'capitalize' };
 	}
@@ -39,7 +42,7 @@ const styles = computed<StyleValue>(() => {
 
 <template>
 	<span class="user-dogtag tag" :class="classes" :style="styles">
-		{{ displayType }}
+		{{ displayText }}
 	</span>
 </template>
 

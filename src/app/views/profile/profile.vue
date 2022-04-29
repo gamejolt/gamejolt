@@ -428,7 +428,7 @@ export default class RouteProfile extends BaseRouteComponent {
 							<span class="dot-separator" />
 
 							<!-- Dogtags -->
-							<AppUserDogtag v-for="tag of user.dogtags" :key="tag" :type="tag" />
+							<AppUserDogtag v-for="tag of user.dogtags" :key="tag.text" :tag="tag" />
 
 							<!-- Friend status -->
 							<span
