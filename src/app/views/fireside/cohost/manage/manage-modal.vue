@@ -29,7 +29,6 @@ const ListTitles: ListTitle[] = [
 		AppUserAvatarImg,
 		AppUserAvatarList,
 		AppIllustration,
-		AppNavTabList,
 	},
 })
 export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
