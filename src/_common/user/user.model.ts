@@ -19,7 +19,7 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 	url!: string;
 	slug!: string;
 	img_avatar!: string;
-	dogtag!: string;
+	// TODO(pronouns): Check typing
 	dogtags!: string[];
 	shouts_enabled!: boolean;
 
