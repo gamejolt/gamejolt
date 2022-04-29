@@ -106,14 +106,14 @@ function _onShouldPlayVideoChange() {
 </script>
 
 <template>
-	<div class="-video-player">
+	<div class="-stream-video">
 		<div ref="videoElem" />
 		<canvas v-show="!shouldPlayVideo" ref="canvasElem" />
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-.-video-player
+.-stream-video
 	position: relative
 
 	&
