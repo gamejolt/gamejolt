@@ -2,9 +2,8 @@ name: Build Desktop App
 
 on:
   push:
-    branches: client-build
     tags:
-      - 'release-TEMPDISABLED/**'
+      - 'release/**'
 
 jobs:
   build-frontend:
@@ -82,12 +81,13 @@ jobs:
 
       - run: yarn install
 
-      # # Production release
-      # - run: yarn run client:package --push
-      #   if: ${{ !endsWith(github.ref_name, '-stage') }}
+      # Production release
+      - run: yarn run client:package --push
+        if: ${{ !endsWith(github.ref_name, '-stage') }}
+
       # Stage release
       - run: yarn run client:package --push --staging
-        # if: ${{ endsWith(github.ref_name, '-stage') }}
+        if: ${{ endsWith(github.ref_name, '-stage') }}
 
       - uses: actions/upload-artifact@v3
         with:
@@ -141,12 +141,13 @@ jobs:
 
       - run: yarn install
 
-      # # Production release
-      # - run: yarn run client:package --push
-      #   if: ${{ !endsWith(github.ref_name, '-stage') }}
+      # Production release
+      - run: yarn run client:package --push
+        if: ${{ !endsWith(github.ref_name, '-stage') }}
+
       # Stage release
       - run: yarn run client:package --push --staging
-        # if: ${{ endsWith(github.ref_name, '-stage') }}
+        if: ${{ endsWith(github.ref_name, '-stage') }}
 
       - uses: actions/upload-artifact@v3
         with:
