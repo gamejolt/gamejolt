@@ -73,9 +73,9 @@ onBeforeUnmount(() => cleanupController());
 </script>
 
 <template>
-	<AppFiresideContainer class="-stream theme-dark" :controller="c">
+	<AppFiresideContainer class="-stream-preview-video theme-dark" :controller="c">
 		<div v-if="focusedUser && shouldShowVideo" :key="focusedUser.uid">
-			<AppFiresideStreamVideo class="-video-player" :rtc-user="focusedUser" />
+			<AppFiresideStreamVideo class="-stream-preview-video-inner" :rtc-user="focusedUser" />
 
 			<div class="-overlay">
 				<div v-if="showLive" class="-center">
@@ -93,10 +93,10 @@ onBeforeUnmount(() => cleanupController());
 </template>
 
 <style lang="stylus" scoped>
-.-stream
-.-video-player
+.-stream-preview-video
+.-stream-preview-video-inner
 .-overlay
-	position: absolute
+	position: absolute !important
 	top: 0
 	right: 0
 	bottom: 0
