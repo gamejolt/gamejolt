@@ -32,7 +32,7 @@ import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
 import { User } from '../../../_common/user/user.model';
 import { AppStore } from '../../store/index';
 import { router } from '../../views';
-import { HOME_FEED_ACTIVITY } from '../../views/home/home-feed.service';
+import { HOME_FEED_ACTIVITY, HOME_FEED_FYP } from '../../views/home/home-feed.service';
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
 import { CommunityChannel } from './community-channel';
 import { FiresideChannel } from './fireside-channel';
@@ -68,6 +68,7 @@ interface BootstrapPayload {
 		lastNotificationTime: number;
 		notificationCount: number;
 		activityUnreadCount: number;
+		activityUnreadCounts: { [countId: string]: number };
 		notificationUnreadCount: number;
 		unreadFeaturedCommunities: { [communityId: number]: number };
 		unreadCommunities: number[];
@@ -567,9 +568,16 @@ export class GridClient {
 				this.restart(0);
 			});
 
+			let activityUnreadCount = payload.body.activityUnreadCount;
+			// If the FYP feed is the default feed, community feature items will not be returned in the home feed.
+			// Only show new-counts from posts of sources the user follows.
+			if (configHomeDefaultFeed.value === HOME_FEED_FYP) {
+				activityUnreadCount = payload.body.activityUnreadCounts['following'];
+			}
+
 			appStore.setNotificationCount({
 				type: 'activity',
-				count: payload.body.activityUnreadCount,
+				count: activityUnreadCount,
 			});
 			appStore.setNotificationCount({
 				type: 'notifications',
