@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, PropType, ref, toRefs, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, PropType, ref, toRefs, watch } from 'vue';
 import {
 	FiresideRTCUser,
 	FiresideVideoLock,
@@ -42,10 +42,22 @@ onMounted(() => {
 	_onFrameDataChange();
 });
 
+onBeforeUnmount(() => {
+	// rtcUser.value should still be the old focused user in before unmount lifecycle hook,
+	// so it should be ok to call _releaseLocks here.
+	_releaseLocks();
+});
+
 watch(pausedFrameData, _onFrameDataChange);
 watch(shouldPlayVideo, _onShouldPlayVideoChange);
 
 function _getLocks() {
+	// Just in case this is called when we already have a lock, queue it up for
+	// release before grabbing a new video lock.
+	if (_videoLock) {
+		_releaseLocks();
+	}
+
 	_videoLock = getVideoLock(rtcUser.value);
 	setVideoPlayback(
 		rtcUser.value,
@@ -54,11 +66,18 @@ function _getLocks() {
 }
 
 function _releaseLocks() {
-	// We want to give a new lock some time to get acquired before shutting
-	// the stream down.
+	// We want to give a new lock some time to get acquired before shutting the
+	// stream down.
+	//
+	// Capture the current rtc user and video lock in case they change somehow
+	// (switching hosts, updates to listable hosts, _getLocks, etc)
+	const oldUser = rtcUser.value;
+	const lock = _videoLock;
+	_videoLock = null;
+
 	setTimeout(() => {
-		if (_videoLock) {
-			releaseVideoLock(rtcUser.value, _videoLock);
+		if (lock) {
+			releaseVideoLock(oldUser, lock);
 		}
 	}, 0);
 }
@@ -87,14 +106,14 @@ function _onShouldPlayVideoChange() {
 </script>
 
 <template>
-	<div class="-video-player">
+	<div class="-stream-video">
 		<div ref="videoElem" />
 		<canvas v-show="!shouldPlayVideo" ref="canvasElem" />
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-.-video-player
+.-stream-video
 	position: relative
 
 	&

@@ -219,7 +219,7 @@ export function createAppRoute({
 
 		// We do a cache refresh if the cache was used for this route.
 		if (fromCache === undefined) {
-			fromCache = HistoryCache.has(route, routeKey);
+			fromCache = resolver.fromCache || false;
 		}
 
 		// If we are no longer resolving this resolver, let's early out.

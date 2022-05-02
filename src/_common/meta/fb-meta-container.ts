@@ -1,4 +1,5 @@
 import { MetaContainer } from './meta-container';
+import fallbackImageUrl from '../../app/img/meta-default-image.png';
 
 export class FbMetaContainer extends MetaContainer {
 	_attr = 'property';
@@ -32,7 +33,8 @@ export class FbMetaContainer extends MetaContainer {
 	}
 
 	set image(value: string | null) {
-		this.set('og:image', value);
+		// Default to the fallback.
+		this.set('og:image', value ?? fallbackImageUrl);
 	}
 	get image() {
 		return this.get('og:image');

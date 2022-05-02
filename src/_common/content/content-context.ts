@@ -208,6 +208,7 @@ export class ContextCapabilities {
 					ContextCapabilityType.TextBold,
 					ContextCapabilityType.TextItalic,
 					ContextCapabilityType.TextLink,
+
 					ContextCapabilityType.TextCode,
 					ContextCapabilityType.TextStrike,
 					ContextCapabilityType.CustomLink,
