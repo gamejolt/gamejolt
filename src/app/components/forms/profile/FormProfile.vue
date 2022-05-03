@@ -97,25 +97,15 @@ const form: FormController<FormModel> = createForm({
 			)
 		);
 
-		const selectedPronounTagIds = form.formModel.dogtags
-			.flatMap(({ text }) => {
-				// [dogtags] and [pronounDogtags] don't have the exact same
-				// data. Try separating any combined pronouns to find the "root"
-				// text value we can use to find matching pronouns.
-				return text.split('/').map(splitText => splitText.trim().toLowerCase());
-			})
-			.reduce<number[]>((result, splitTag) => {
-				// Now that we have what is hopefully the start of the pronoun
-				// foo/bar text, try finding any pronoun dogtags that may match
-				// that text.
-				const foundTag = pronounDogtags.find(pronoun =>
-					pronoun.text.toLowerCase().startsWith(splitTag)
-				);
-				if (foundTag) {
-					result.push(foundTag.id);
+		const selectedPronounTagIds: number[] = [];
+
+		for (const tag of user.value.dogtags) {
+			for (const id of tag.ids) {
+				if (pronounDogtags.some(i => i.id == id)) {
+					selectedPronounTagIds.push(id);
 				}
-				return result;
-			}, []);
+			}
+		}
 
 		form.formModel.pronoun_dogtags = arrayUnique(selectedPronounTagIds);
 
@@ -143,11 +133,6 @@ onUnmounted(() => {
 function onThemeChanged() {
 	// Default would be the default theme for site.
 	setFormTheme(form.formModel.theme ?? DefaultTheme);
-}
-
-function getDisplayTextForPronounDogtag(tag: Dogtag) {
-	const items = tag.text.split('/');
-	return items.join(' / ');
 }
 </script>
 
@@ -250,9 +235,8 @@ function getDisplayTextForPronounDogtag(tag: Dogtag) {
 					v-for="tag of pronounDogtags"
 					:key="tag.text"
 					:value="tag.id"
-					style="text-transform: capitalize"
 				>
-					{{ getDisplayTextForPronounDogtag(tag) }}
+					{{ tag.text }}
 				</AppFormControlToggleButton>
 			</AppFormControlToggleButtonGroup>
 

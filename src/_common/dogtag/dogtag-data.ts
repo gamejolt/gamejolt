@@ -3,6 +3,7 @@ export class DogtagData {
 		Object.assign(this, data);
 	}
 
+	declare ids: number[];
 	declare text: string;
 
 	static populate(rows: any[]): any[] {
