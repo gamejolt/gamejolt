@@ -25,7 +25,9 @@ import {
 	getStickerModelResourceName,
 	StickerTargetController,
 } from '../sticker/target/target-controller';
-import { Translate } from '../translate/translate.service';
+import { $gettext } from '../translate/translate.service';
+import { ValidStickerResource } from '../sticker/target/target.vue';
+import { EventTopic } from '../system/event/event-topic';
 
 const DrawerStoreKey: InjectionKey<DrawerStore> = Symbol('drawer-store');
 
@@ -259,6 +261,19 @@ export function assignDrawerStoreItem(
 	store.targetController.value = controller;
 }
 
+interface StickerPlacementPayloadData {
+	stickerId: number;
+	positionX: number;
+	positionY: number;
+	rotation: number;
+	resource: ValidStickerResource;
+	resourceId: number;
+}
+
+export type CustomStickerPlacementRequest = (data: StickerPlacementPayloadData) => Promise<any>;
+
+export const onFiresideStickerPlaced = new EventTopic<StickerPlacement>();
+
 export async function commitDrawerStoreItemPlacement(store: DrawerStore) {
 	if (!store.placedItem.value || !store.targetController.value) {
 		return;
@@ -271,21 +286,24 @@ export async function commitDrawerStoreItemPlacement(store: DrawerStore) {
 
 	Analytics.trackEvent('stickers', 'place-sticker');
 
-	const { model } = store.targetController.value;
+	const targetController = store.targetController.value;
+	const { model } = targetController;
 	const resourceType = getStickerModelResourceName(model);
 
-	const { success, resource, parent, stickerPlacement } = await Api.sendRequest(
-		'/web/stickers/place',
-		{
-			stickerId: sticker.sticker.id,
-			positionX: sticker.position_x,
-			positionY: sticker.position_y,
-			rotation: sticker.rotation,
-			resource: resourceType,
-			resourceId: model.id,
-		},
-		{ detach: true }
-	);
+	const body = {
+		stickerId: sticker.sticker.id,
+		positionX: sticker.position_x,
+		positionY: sticker.position_y,
+		rotation: sticker.rotation,
+		resource: resourceType,
+		resourceId: model.id,
+	};
+
+	const promise = targetController.placeStickerCallback
+		? targetController.placeStickerCallback(body)
+		: Api.sendRequest('/web/stickers/place', body, { detach: true });
+
+	const { success, resource, parent, stickerPlacement } = await promise;
 
 	if (success) {
 		addStickerToTarget(store.targetController.value, new StickerPlacement(stickerPlacement));
@@ -297,7 +315,7 @@ export async function commitDrawerStoreItemPlacement(store: DrawerStore) {
 
 		setDrawerOpen(store, false);
 	} else {
-		showErrorGrowl(Translate.$gettext(`Failed to place sticker.`));
+		showErrorGrowl($gettext(`Failed to place sticker.`));
 	}
 }
 

@@ -78,7 +78,51 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 	 */
 	const listableHostIds = ref([] as number[]);
 
-	const stickerTargetController = createStickerTargetController(fireside, undefined, true);
+	const stickerTargetController = createStickerTargetController(fireside, undefined, {
+		isLive: true,
+		placeStickerCallback: async data => {
+			const roomChannel = chatChannel.value?.socketChannel;
+			const targetUserId = rtc.value?.focusedUser?.userModel?.id;
+			const errorResponse = { success: false };
+
+			if (!roomChannel || !targetUserId) {
+				// Tried placing a sticker while disconnected from chat or
+				// without a focused user.
+				return errorResponse;
+			}
+
+			const body = {} as any;
+			for (const item in data) {
+				if (Object.prototype.hasOwnProperty.call(data, item)) {
+					const element = (data as any)[item];
+					body[item.replace(/[A-Z]/, val => '_' + val.toLowerCase())] = element;
+				}
+			}
+			body['host_user_id'] = targetUserId;
+
+			return new Promise(resolve => {
+				roomChannel
+
+					.push(
+						'place_sticker',
+						body,
+						// Just in case they get disconnected (or bad data
+						// causes it to error out)
+						5_000
+					)
+					// TODO(live-fireside-stickers) Remove the `success: true`?
+					.receive('ok', result => resolve({ ...result, success: true }))
+					.receive('error', () => resolve(errorResponse))
+					.receive('timeout', () => {
+						// Only show a timeout error if they're still connected
+						// to the socket.
+						if (chatChannel.value?.socketChannel) {
+							resolve(errorResponse);
+						}
+					});
+			});
+		},
+	});
 	const isMuted = options.isMuted ?? false;
 
 	const rtc = ref<FiresideRTC>();

@@ -1,6 +1,7 @@
 <script lang="ts">
-import { computed, PropType, shallowReactive, toRefs } from 'vue';
+import { computed, PropType, ref, shallowReactive, toRefs } from 'vue';
 import { configFiresideMicVolume } from '../../../../_common/config/config.service';
+import { onFiresideStickerPlaced } from '../../../../_common/drawer/drawer-store';
 import {
 	FiresideRTCUser,
 	setAudioPlayback,
@@ -9,6 +10,8 @@ import {
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import AppSlider, { ScrubberCallback } from '../../../../_common/slider/AppSlider.vue';
+import { StickerPlacement } from '../../../../_common/sticker/placement/placement.model';
+import { useEventSubscription } from '../../../../_common/system/event/event-topic';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
@@ -33,14 +36,16 @@ const emit = defineEmits({
 	hidePopper: () => true,
 });
 
+useEventSubscription(onFiresideStickerPlaced, onStickerPlaced);
+
 const { host, hideOptions } = toRefs(props);
 
 const c = shallowReactive(useFiresideController()!);
 
+const liveStickers = ref<StickerPlacement[]>([]);
+
 const isFocused = computed(() => c.rtc.value?.focusedUser?.uid === host.value.uid);
-
 const isMe = computed(() => c.rtc.value?.localUser?.uid === host.value.uid);
-
 const showingVideoThumb = computed(() => !isFocused.value && host.value.hasVideo);
 
 function onClick() {
@@ -62,6 +67,29 @@ function unmute() {
 function onMicAudioScrub({ percent }: ScrubberCallback) {
 	setUserMicrophoneAudioVolume(host.value, percent);
 }
+
+async function onStickerPlaced(placement: StickerPlacement) {
+	const myId = host.value.userModel?.id;
+	const targetId = placement.target_data.host_user_id;
+	// Don't animate stickers if we weren't the target.
+	if (!targetId || myId !== targetId) {
+		return;
+	}
+
+	// We display stickers on the stream for focused users. Don't animate if
+	// we're focused.
+	if (isFocused.value) {
+		return;
+	}
+
+	liveStickers.value.push(placement);
+	setTimeout(() => {
+		const index = liveStickers.value.findIndex(i => i.id === placement.id);
+		if (index !== -1) {
+			liveStickers.value.splice(index, 1);
+		}
+	}, 2_500);
+}
 </script>
 
 <template>
@@ -81,6 +109,16 @@ function onMicAudioScrub({ percent }: ScrubberCallback) {
 
 				<div class="-avatar-wrap" :class="{ '-full': !showingVideoThumb }">
 					<AppFiresideHostThumbIndicator :host="host" />
+					<div class="-avatar-stickers">
+						<img
+							v-for="sticker of liveStickers"
+							:key="sticker.id"
+							class="-avatar-sticker-item"
+							:src="sticker.sticker.img_url"
+							alt=""
+							draggable="false"
+						/>
+					</div>
 				</div>
 
 				<div class="-spacer" />
@@ -202,6 +240,28 @@ function onMicAudioScrub({ percent }: ScrubberCallback) {
 		height: calc(var(--fireside-host-size) - 12px)
 		bottom: 12px
 
+.-avatar-stickers
+	position: absolute
+	left: 0
+	top: 0
+	width: calc(max(33%, 24px))
+	height: @width
+	display: flex
+	align-items: center
+	justify-content: center
+	z-index: 1
+
+.-avatar-sticker-item
+	position: absolute
+	width: 100%
+	height: 100%
+	animation-name: anim-sticker
+	animation-duration: 2s
+	animation-timing-function: $ease-in-out-back
+	animation-iteration-count: 1
+	transform: rotate(0) scale(1)
+	opacity: 0
+
 .-spacer
 	flex: none
 	height: calc(var(--fireside-host-size) * 0.3)
@@ -263,4 +323,41 @@ function onMicAudioScrub({ percent }: ScrubberCallback) {
 	.-option-show-hover
 		visibility: visible
 		display: flex
+
+// Copied from AppStickerReactionsItem
+@keyframes anim-sticker
+	0%
+		transform: rotate(0) scale(1)
+		opacity: 0
+
+	25%
+		opacity: 1
+
+	// Slide to the left
+	30%
+		transform: rotate(-30deg) scale(1.2)
+
+	33%
+		transform: rotate(-20deg) scale(1.2)
+
+	36%
+		transform: rotate(-25deg) scale(1.2)
+
+	// Slide to the right
+	63%
+		transform: rotate(30deg) scale(1.2)
+
+	66%
+		transform: rotate(20deg) scale(1.2)
+
+	69%
+		transform: rotate(25deg) scale(1.2)
+
+	75%
+		opacity: 1
+
+	// Criss cross
+	100%
+		transform: rotate(0deg) scale(1)
+		opacity: 0
 </style>

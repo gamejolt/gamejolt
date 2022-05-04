@@ -8,7 +8,11 @@ import { uuidv4 } from '../../../../utils/uuid';
 import { shallowSetup } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import { getCookie } from '../../../../_common/cookie/cookie.service';
-import { setStickerStreak, useDrawerStore } from '../../../../_common/drawer/drawer-store';
+import {
+	setStickerStreak,
+	useDrawerStore,
+	onFiresideStickerPlaced,
+} from '../../../../_common/drawer/drawer-store';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../../_common/fireside/role/role.model';
 import {
@@ -801,12 +805,30 @@ export class AppFiresideContainer extends Vue {
 
 		setStickerStreak(this.drawerStore, placement.sticker, payload.streak);
 
-		// This happens automatically when we're placing our own sticker. Ignore
-		// it here so we don't do it twice.
-		if (payload.user_id !== this.user?.id) {
-			addStickerToTarget(c.stickerTargetController, placement);
-			c.fireside.addStickerToCount(placement.sticker);
+		const wasMyPlacement = payload.user_id === this.user?.id;
+
+		// Stickers and counts get added automatically when we place them
+		// ourselves. Return early so we don't do it twice.
+		if (wasMyPlacement) {
+			return;
 		}
+
+		const focusedUserId = this.controller.rtc.value?.focusedUser?.userModel?.id;
+		const targetUserId = placement.target_data.host_user_id;
+
+		// TODO(live-fireside-stickers) Do we want the first two checks here?
+		// should it always show if you don't have a focused user? always show
+		// if there was no target host somehow?
+		if (focusedUserId === targetUserId) {
+			// Display the live sticker only if we're watching the target host.
+			addStickerToTarget(c.stickerTargetController, placement);
+		} else {
+			// TODO(live-fireside-stickers) eventbus stuff, wiggle target user
+			// avatars or popcorn stickers near them in the host list.
+			onFiresideStickerPlaced.next(placement);
+		}
+
+		c.fireside.addStickerToCount(placement.sticker);
 	}
 
 	onGridListableHosts(payload: GridListableHostsPayload) {

@@ -10,11 +10,17 @@ export class StickerPlacement extends Model {
 
 	sticker!: Sticker;
 
+	target_data!: PlacementTargetData;
+
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.sticker) {
 			this.sticker = new Sticker(data.sticker);
+		}
+
+		if (data.target_data === '') {
+			this.target_data = {};
 		}
 	}
 }
@@ -38,4 +44,8 @@ export function canPlaceStickerOnFiresidePost(post: FiresidePost) {
 	}
 
 	return !post.user.blocked_you && !post.user.is_blocked;
+}
+
+interface PlacementTargetData {
+	host_user_id?: number;
 }
