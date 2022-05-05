@@ -282,7 +282,9 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 		return;
 	}
 
-	if (!user.isListed) {
+	// If the user isn't listed and we're not trying to stop the video, stop the
+	// operation and attempt to stop playback.
+	if (!user.isListed && !_comparePlayState(newState, new FiresideVideoPlayStateStopped())) {
 		const err = new Error('Attempted to start video playback for unlisted user');
 		rtc.logError(err.message);
 		console.error(err);
