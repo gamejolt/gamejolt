@@ -22,8 +22,6 @@ const props = defineProps({
 const data = toRef(props, 'kernelData');
 const c = usePopcornKettleController()!;
 
-const root = ref<HTMLDivElement>();
-
 const startTime = Date.now();
 const endTime = startTime + data.value.duration;
 
@@ -97,10 +95,9 @@ function calcData() {
 
 <template>
 	<div
-		ref="root"
 		class="-popcorn-kernel"
 		:style="{
-			transform: `scale(${styleData.scale}) translateX(${styleData.offsetX}px) translateY(${styleData.offsetY}px)`,
+			transform: `translate3d(${styleData.offsetX}px, ${styleData.offsetY}px, 0) scale(${styleData.scale})`,
 		}"
 	>
 		<img
@@ -121,7 +118,6 @@ function calcData() {
 .-popcorn-kernel
 	opacity: 0
 	animation: anim-opacity 200ms both
-	filter: drop-shadow(2px 2px 2.5px black)
 
 @keyframes anim-opacity
 	0%
