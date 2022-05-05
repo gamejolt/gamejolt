@@ -328,6 +328,14 @@ export default class RouteFireside extends BaseRouteComponent {
 			this.beforeEachDeregister = null;
 		}
 	}
+
+	@Watch('c.rtc.value.focusedUser.userModel.id')
+	onFocusedUserChanged() {
+		const { stickers, newStickers } = this.c?.stickerTargetController ?? {};
+		// Clear any current live stickers when changing the focused user.
+		stickers?.value.splice(0, stickers.value.length);
+		newStickers?.value.splice(0, newStickers.value.length);
+	}
 }
 </script>
 

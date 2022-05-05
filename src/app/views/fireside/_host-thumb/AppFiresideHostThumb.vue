@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, PropType, ref, shallowReactive, toRefs } from 'vue';
+import { computed, PropType, shallowReactive, toRefs } from 'vue';
 import { configFiresideMicVolume } from '../../../../_common/config/config.service';
 import { onFiresideStickerPlaced } from '../../../../_common/drawer/drawer-store';
 import {
@@ -8,6 +8,8 @@ import {
 	setUserMicrophoneAudioVolume,
 } from '../../../../_common/fireside/rtc/user';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import AppPopcornKettle from '../../../../_common/popcorn/AppPopcornKettle.vue';
+import { createPopcornKettleController } from '../../../../_common/popcorn/popcorn-kettle-controller';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import AppSlider, { ScrubberCallback } from '../../../../_common/slider/AppSlider.vue';
 import { StickerPlacement } from '../../../../_common/sticker/placement/placement.model';
@@ -41,8 +43,7 @@ useEventSubscription(onFiresideStickerPlaced, onStickerPlaced);
 const { host, hideOptions } = toRefs(props);
 
 const c = shallowReactive(useFiresideController()!);
-
-const liveStickers = ref<StickerPlacement[]>([]);
+const kettleController = createPopcornKettleController();
 
 const isFocused = computed(() => c.rtc.value?.focusedUser?.uid === host.value.uid);
 const isMe = computed(() => c.rtc.value?.localUser?.uid === host.value.uid);
@@ -82,13 +83,11 @@ async function onStickerPlaced(placement: StickerPlacement) {
 		return;
 	}
 
-	liveStickers.value.push(placement);
-	setTimeout(() => {
-		const index = liveStickers.value.findIndex(i => i.id === placement.id);
-		if (index !== -1) {
-			liveStickers.value.splice(index, 1);
-		}
-	}, 2_500);
+	kettleController.addKernel(placement.sticker.img_url, {
+		duration: 2_000,
+		baseSize: 48,
+		velocity: 25,
+	});
 }
 </script>
 
@@ -109,16 +108,8 @@ async function onStickerPlaced(placement: StickerPlacement) {
 
 				<div class="-avatar-wrap" :class="{ '-full': !showingVideoThumb }">
 					<AppFiresideHostThumbIndicator :host="host" />
-					<div class="-avatar-stickers">
-						<img
-							v-for="sticker of liveStickers"
-							:key="sticker.id"
-							class="-avatar-sticker-item"
-							:src="sticker.sticker.img_url"
-							alt=""
-							draggable="false"
-						/>
-					</div>
+
+					<AppPopcornKettle :controller="kettleController" />
 				</div>
 
 				<div class="-spacer" />
