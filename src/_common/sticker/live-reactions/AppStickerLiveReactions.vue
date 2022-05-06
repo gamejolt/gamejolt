@@ -1,16 +1,23 @@
 <script lang="ts">
-import { PropType, ref, toRefs } from 'vue';
-import { numberSort } from '../../../utils/array';
+import { PropType, ref, shallowReactive, StyleValue, toRefs } from 'vue';
+import { arrayRemove, numberSort } from '../../../utils/array';
 import { onFiresideStickerPlaced } from '../../drawer/drawer-store';
 import AppPopcornKettle from '../../popcorn/AppPopcornKettle.vue';
 import {
 	createPopcornKettleController,
 	KernelRecipe,
+	PopcornKettleController,
 } from '../../popcorn/popcorn-kettle-controller';
 import { useEventSubscription } from '../../system/event/event-topic';
 import { StickerPlacement } from '../placement/placement.model';
 import { StickerTargetController } from '../target/target-controller';
 import AppStickerLiveReactionsItem from './AppStickerLiveReactionsItem.vue';
+
+interface TempKettle {
+	key: string;
+	style: StyleValue;
+	controller: PopcornKettleController;
+}
 </script>
 
 <script lang="ts" setup>
@@ -37,6 +44,16 @@ const { controller, maxCount } = toRefs(props);
 const leadingKettle = createPopcornKettleController();
 const trailingKettle = createPopcornKettleController();
 
+/**
+ * Used so that we can spawn a temporary kettle/kernel pair that will animate
+ * the kernel to its final destination.
+ *
+ * If we don't do this, kernels from {@link leadingKettle} will change their
+ * position mid-air if {@link props.reverse} is `true` and we're not at our
+ * {@link maxCount} yet.
+ */
+const tempLeadingKettles = shallowReactive<TempKettle[]>([]);
+
 useEventSubscription(onFiresideStickerPlaced, onStickerPlaced);
 
 const kernelDuration = 1_000;
@@ -59,17 +76,49 @@ const stickers = ref(
 		.map((i, index) => ({ key: `${Date.now()}-${index}`, img_url: i.imgUrl }))
 );
 
+const tempAnimatingKernels = ref(0);
+
 function onStickerPlaced(placement: StickerPlacement) {
 	const { img_url } = placement.sticker;
 
 	const key = Date.now().toString();
 
-	leadingKettle.addKernel(img_url, {
+	let kettle: PopcornKettleController;
+	let tempKettle: TempKettle | null = null;
+
+	if (stickers.value.length < maxCount.value) {
+		++tempAnimatingKernels.value;
+		kettle = createPopcornKettleController();
+		tempKettle = {
+			key,
+			controller: kettle,
+			style: {
+				right:
+					20 *
+						Math.min(
+							stickers.value.length + tempAnimatingKernels.value,
+							maxCount.value
+						) +
+					'px',
+			},
+		};
+		tempLeadingKettles.push(tempKettle);
+	} else {
+		kettle = leadingKettle;
+	}
+
+	kettle.addKernel(img_url, {
 		...baseKernelOptions,
 		popAngle,
 		reverse: true,
 		reverseFadeOut: false,
+		zIndexInvert: true,
 		onDispose: () => {
+			if (tempKettle) {
+				arrayRemove(tempLeadingKettles, i => i.key === tempKettle?.key);
+				--tempAnimatingKernels.value;
+			}
+
 			stickers.value.unshift({ key, img_url });
 			if (isPopping) {
 				return;
@@ -96,8 +145,9 @@ function onStickerPlaced(placement: StickerPlacement) {
 		<div class="-reaction-items">
 			<div
 				:style="{
-					width: 20 * (stickers.length + 1) + 'px',
-					transition: reverse ? `width 150ms linear` : undefined,
+					width:
+						20 * (Math.min(stickers.length + tempAnimatingKernels, maxCount) + 1) +
+						'px',
 					height: '100%',
 					filter: 'drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.15)) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.15))',
 				}"
@@ -139,6 +189,15 @@ function onStickerPlaced(placement: StickerPlacement) {
 			</div>
 
 			<div
+				v-for="kettle of tempLeadingKettles"
+				:key="kettle.key"
+				class="-kettle-lead-temp"
+				:style="kettle.style"
+			>
+				<AppPopcornKettle :controller="kettle.controller" />
+			</div>
+
+			<div
 				class="-kettle-trail"
 				:style="{
 					zIndex: -maxCount,
@@ -168,18 +227,26 @@ function onStickerPlaced(placement: StickerPlacement) {
 .-item
 	position: absolute
 	left: -20px
-	transition: left 200ms
+	transition-property: left
+	transition-duration: 200ms
+	transition-timing-function: $weak-ease-out
 
 	&.-reverse
 		left: unset
 		right: 0
-		transition: right 200ms
+		transition-property: right
 
 .-kettle-lead
 	position: absolute
 	left: 20px
 	z-index: 1
-	transition: left 200ms
+	transition-property: left
+	transition-duration: 200ms
+	transition-timing-function: $strong-ease-out
+
+.-kettle-lead-temp
+	position: absolute
+	z-index: 1
 
 .-kettle-trail
 	position: absolute

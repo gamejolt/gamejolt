@@ -18,6 +18,8 @@ export interface KernelRecipeBase {
 	baseSize: number;
 	/** Default: `false` */
 	reverse: boolean;
+	/** Default: `false` */
+	zIndexInvert: boolean;
 	/** Default: `true` */
 	reverseFadeOut: boolean;
 	/** Default: `true` */
@@ -59,6 +61,7 @@ export function createPopcornKettleController() {
 			velocity = 20.0,
 			baseSize = 32.0,
 			reverse = false,
+			zIndexInvert = false,
 			reverseFadeOut = true,
 			forwardFadeIn = true,
 			popAngleVariance = 45.0,
@@ -78,14 +81,16 @@ export function createPopcornKettleController() {
 			velocity,
 			baseSize,
 			reverse,
+			zIndexInvert,
 			reverseFadeOut,
 			forwardFadeIn,
 			kernelImage,
 			rotationVelocity: _randomizeRotation({ range: rotationVelocityVariance }),
 		};
 
-		// Insert reversed kernels so they layer a little better.
-		if (reverse) {
+		// Layer the stickers based on kernel recipe
+		const shouldInvertIndex = reverse ? !zIndexInvert : zIndexInvert;
+		if (shouldInvertIndex) {
 			kernels.value.unshift(_kernelData);
 		} else {
 			kernels.value.push(_kernelData);
