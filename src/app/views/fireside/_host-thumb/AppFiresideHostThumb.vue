@@ -88,6 +88,7 @@ async function onStickerPlaced(placement: StickerPlacement) {
 		baseSize: 48,
 		velocity: 20,
 		downwardGravityStrength: 1.5,
+		forwardFadeIn: true,
 	});
 }
 </script>
