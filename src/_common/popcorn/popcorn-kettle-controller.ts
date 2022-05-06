@@ -22,7 +22,7 @@ export interface KernelRecipeBase {
 	zIndexInvert: boolean;
 	/** Default: `true` */
 	reverseFadeOut: boolean;
-	/** Default: `true` */
+	/** Default: `false` */
 	forwardFadeIn: boolean;
 }
 
@@ -63,7 +63,7 @@ export function createPopcornKettleController() {
 			reverse = false,
 			zIndexInvert = false,
 			reverseFadeOut = true,
-			forwardFadeIn = true,
+			forwardFadeIn = false,
 			popAngleVariance = 45.0,
 			rotationVelocityVariance = 10.0,
 			onDispose,

@@ -130,7 +130,6 @@ function onStickerPlaced(placement: StickerPlacement) {
 					trailingKettle.addKernel(stickers.value.pop()!.img_url, {
 						...baseKernelOptions,
 						popAngle: -popAngle,
-						forwardFadeIn: false,
 					});
 				}
 				isPopping = false;
