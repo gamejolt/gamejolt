@@ -9,9 +9,9 @@ import { shallowSetup } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import { getCookie } from '../../../../_common/cookie/cookie.service';
 import {
+	onFiresideStickerPlaced,
 	setStickerStreak,
 	useDrawerStore,
-	onFiresideStickerPlaced,
 } from '../../../../_common/drawer/drawer-store';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../../_common/fireside/role/role.model';
@@ -816,15 +816,10 @@ export class AppFiresideContainer extends Vue {
 		const focusedUserId = this.controller.rtc.value?.focusedUser?.userModel?.id;
 		const targetUserId = placement.target_data.host_user_id;
 
-		// TODO(live-fireside-stickers) Do we want the first two checks here?
-		// should it always show if you don't have a focused user? always show
-		// if there was no target host somehow?
 		if (focusedUserId === targetUserId) {
 			// Display the live sticker only if we're watching the target host.
 			addStickerToTarget(c.stickerTargetController, placement);
 		} else {
-			// TODO(live-fireside-stickers) eventbus stuff, wiggle target user
-			// avatars or popcorn stickers near them in the host list.
 			onFiresideStickerPlaced.next(placement);
 		}
 
