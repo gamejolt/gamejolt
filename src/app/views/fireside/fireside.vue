@@ -3,7 +3,6 @@ import { setup } from 'vue-class-component';
 import { Inject, Options, Watch } from 'vue-property-decorator';
 import { shallowSetup } from '../../../utils/vue';
 import { Api } from '../../../_common/api/api.service';
-import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
 import { vAppAuthRequired } from '../../../_common/auth/auth-required-directive';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
 import { useDrawerStore } from '../../../_common/drawer/drawer-store';
@@ -21,7 +20,7 @@ import AppPopper from '../../../_common/popper/popper.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../_common/scroll/AppScrollScroller.vue';
-import AppStickerReactions from '../../../_common/sticker/reactions/reactions.vue';
+import AppStickerLiveReactions from '../../../_common/sticker/live-reactions/AppStickerLiveReactions.vue';
 import AppStickerTarget from '../../../_common/sticker/target/target.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
@@ -41,7 +40,7 @@ import {
 import { illEndOfFeed, illMaintenance, illNoCommentsSmall } from '../../img/ill/illustrations';
 import AppFiresideBanner from './_banner/banner.vue';
 import AppFiresideChatMembers from './_chat-members/AppFiresideChatMembers.vue';
-import AppFiresideHeader from './_header/header.vue';
+import AppFiresideHeader from './_header/AppFiresideHeader.vue';
 import AppFiresideHostList from './_host-list/host-list.vue';
 import AppFiresideShare from './_share/share.vue';
 import AppFiresideStats from './_stats/stats.vue';
@@ -77,8 +76,7 @@ const FiresideThemeKey = 'fireside';
 		AppFiresideContainer,
 		AppFiresideBanner,
 		AppStickerTarget,
-		AppStickerReactions,
-		AppFadeCollapse,
+		AppStickerLiveReactions,
 	},
 	directives: {
 		AppTooltip: vAppTooltip,
@@ -545,14 +543,6 @@ export default class RouteFireside extends BaseRouteComponent {
 				class="-chat"
 				:class="{ '-trailing': c.isStreaming.value }"
 			>
-				<AppFadeCollapse
-					v-if="shouldShowReactions"
-					class="-reactions"
-					:collapse-height="100"
-				>
-					<AppStickerReactions :controller="c.stickerTargetController" />
-				</AppFadeCollapse>
-
 				<AppExpand v-if="!shouldShowDesktopHosts" :when="shouldShowMobileHosts">
 					<div class="-mobile-hosts">
 						<AppFiresideHostList hide-thumb-options />
@@ -804,14 +794,8 @@ export default class RouteFireside extends BaseRouteComponent {
 	height: 100%
 
 .-body-column
-	.-reactions
-		margin-top: 0
-		margin-bottom: 0
-
-.-body-column
 .-is-streaming
 	.-chat-wrapper
-	.-reactions
 		margin-left: -($grid-gutter-width-xs / 2)
 		margin-right: -($grid-gutter-width-xs / 2)
 

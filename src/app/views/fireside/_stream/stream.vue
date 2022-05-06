@@ -14,7 +14,7 @@ import { useFiresideController } from '../../../components/fireside/controller/c
 import AppFiresideDesktopAudio from '../../../components/fireside/stream/AppFiresideDesktopAudio.vue';
 import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';
 import AppFiresideVideoStats from '../../../components/fireside/stream/video-stats/video-stats.vue';
-import AppFiresideHeader from '../_header/header.vue';
+import AppFiresideHeader from '../_header/AppFiresideHeader.vue';
 import AppFiresideHostList from '../_host-list/host-list.vue';
 import AppFiresideHostThumbIndicator from '../_host-thumb/host-thumb-indicator.vue';
 

@@ -42,7 +42,10 @@ function calcData() {
 
 	const now = Date.now();
 	const dateVal = (now - startTime) / (endTime - startTime);
-	const animLerp = Math.max(0, Math.min(1, dateVal));
+	let animLerp = Math.max(0, Math.min(1, dateVal));
+	if (data.value.reverse) {
+		animLerp = 1 - animLerp;
+	}
 
 	const _gravity = downwardGravityStrength;
 	const _timeAdjusted = animLerp * velocity;
@@ -61,7 +64,7 @@ function calcData() {
 
 	if (data.value.reverse) {
 		const _fadeInStop = 0.7;
-		const _fadeOutStart = 0.2;
+		const _fadeOutStart = data.value.reverseFadeOut ? 0.2 : 0;
 		var val = animLerp;
 
 		if (_fadeInStop < val) {
@@ -95,7 +98,8 @@ function calcData() {
 
 <template>
 	<div
-		class="-popcorn-kernel"
+		class="popcorn-kernel"
+		:class="{ '-kernel-forward': !data.reverse && data.forwardFadeIn }"
 		:style="{
 			transform: `translate3d(${styleData.offsetX}px, ${styleData.offsetY}px, 0) scale(${styleData.scale})`,
 		}"
@@ -115,9 +119,10 @@ function calcData() {
 </template>
 
 <style lang="stylus" scoped>
-.-popcorn-kernel
-	opacity: 0
-	animation: anim-opacity 200ms both
+.popcorn-kernel
+	&.-kernel-forward
+		opacity: 0
+		animation: anim-opacity 200ms both
 
 @keyframes anim-opacity
 	0%

@@ -1,30 +1,33 @@
-import { PopcornKernelData } from './AppPopcornKernel.vue';
-
 import { inject, InjectionKey, provide, ref, watch } from 'vue';
+import { PopcornKernelData } from './AppPopcornKernel.vue';
 
 const PopcornKettleControllerKey: InjectionKey<PopcornKettleController> = Symbol('popcorn-kettle');
 
 export type PopcornKettleController = ReturnType<typeof createPopcornKettleController>;
 
 export interface KernelRecipeBase {
-	/** 1_000 */
+	/** Default: `1_000` */
 	duration: number;
-	/** 0 */
+	/** Default: `0` */
 	popAngle: number;
-	/** 2.0 */
+	/** Default: `2.0` */
 	downwardGravityStrength: number;
-	/** 20.0 */
+	/** Default: `20.0` */
 	velocity: number;
-	/** 32.0 */
+	/** Default: `32.0` */
 	baseSize: number;
-	/** false */
+	/** Default: `false` */
 	reverse: boolean;
+	/** Default: `true` */
+	reverseFadeOut: boolean;
+	/** Default: `true` */
+	forwardFadeIn: boolean;
 }
 
-type KernelRecipe = KernelRecipeBase & {
-	/** 45.0 */
+export type KernelRecipe = KernelRecipeBase & {
+	/** Default: `45.0` */
 	popAngleVariance: number;
-	/** 10.0 */
+	/** Default: `10.0` */
 	rotationVelocityVariance: number;
 	/** Called when the kernel is finished animating and gets removed. */
 	onDispose?: () => void;
@@ -56,6 +59,8 @@ export function createPopcornKettleController() {
 			velocity = 20.0,
 			baseSize = 32.0,
 			reverse = false,
+			reverseFadeOut = true,
+			forwardFadeIn = true,
 			popAngleVariance = 45.0,
 			rotationVelocityVariance = 10.0,
 			onDispose,
@@ -73,6 +78,8 @@ export function createPopcornKettleController() {
 			velocity,
 			baseSize,
 			reverse,
+			reverseFadeOut,
+			forwardFadeIn,
 			kernelImage,
 			rotationVelocity: _randomizeRotation({ range: rotationVelocityVariance }),
 		};
