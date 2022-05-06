@@ -141,7 +141,7 @@ function onStickerPlaced(placement: StickerPlacement) {
 </script>
 
 <template>
-	<div class="sticker-live-reactions" @click="stickers = []">
+	<div class="sticker-live-reactions">
 		<div class="-reaction-items">
 			<div
 				:style="{
