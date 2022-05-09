@@ -61,7 +61,11 @@ if (!import.meta.env.SSR) {
 						'background-position': background.cssBackgroundPosition,
 					}"
 				/>
-				<div v-if="darken" class="-stretch -fade" />
+				<template v-if="darken">
+					<div class="-fade-top" />
+					<div class="-stretch -fade" />
+					<div class="-fade-bottom" />
+				</template>
 			</div>
 		</AppMediaItemBackdrop>
 
@@ -100,10 +104,26 @@ if (!import.meta.env.SSR) {
 	bottom: 0
 
 .-fade
-	background-image: linear-gradient(to bottom, rgba(0,0,0,0.025), rgba(0,0,0,0.15))
+	background-color: rgba(0, 0, 0, 0.05)
+
+.-fade-top
+.-fade-bottom
+	position: absolute
+	left: 0
+	right: 0
+	height: calc(min(80px, 50%))
 	background-repeat: no-repeat
 	background-size: cover
+
+.-fade-top
+	top: 0
+	background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.25),  rgba(0, 0, 0, 0))
 	background-position: top
+
+.-fade-bottom
+	bottom: 0
+	background-image: linear-gradient(to top, rgba(0, 0, 0, 0.25),  rgba(0, 0, 0, 0))
+	background-position: bottom
 
 .-inner
 	z-index: 1
