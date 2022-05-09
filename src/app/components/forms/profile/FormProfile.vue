@@ -99,7 +99,8 @@ const form: FormController<FormModel> = createForm({
 
 		const selectedPronounTagIds: number[] = [];
 
-		for (const tag of user.value.dogtags) {
+		// Check formModel for existing pronoun dogtags we have selected.
+		for (const tag of form.formModel.dogtags) {
 			for (const id of tag.ids) {
 				if (pronounDogtags.some(i => i.id == id)) {
 					selectedPronounTagIds.push(id);
