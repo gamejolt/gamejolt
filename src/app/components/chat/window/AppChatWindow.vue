@@ -201,13 +201,7 @@ function toggleUsers() {
 
 				<div class="-body">
 					<div class="-chatting-section">
-						<div
-							class="-output"
-							:style="{
-								backgroundImage: `url('https://m.gjcdn.net/background/800/21-zz9n7nfu-v4.webp')`,
-								backgroundSize: `400px 400px`,
-							}"
-						>
+						<div class="-output">
 							<AppChatWindowOutput
 								:key="room.id"
 								class="-output-inner"

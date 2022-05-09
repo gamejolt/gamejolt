@@ -10,6 +10,8 @@ import {
 	toRefs,
 	watch,
 } from 'vue';
+import AppBackground from '../../../../../_common/background/AppBackground.vue';
+import { Background } from '../../../../../_common/background/background.model';
 import { formatDate } from '../../../../../_common/filters/date';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
@@ -261,6 +263,41 @@ async function onClickNewMessages() {
 		_shouldScroll = true;
 	}
 }
+
+const debugBackground = new Background({
+	id: 1,
+	scaling: 'tile',
+	media_item: {
+		file: null,
+		_removed: false,
+		_progress: null,
+		id: 37,
+		type: 'background',
+		parent_id: 1,
+		hash: 'ibybqnq3',
+		filename: '0-ibybqnq3.png',
+		filetype: 'image/png',
+		is_animated: false,
+		width: 100,
+		height: 100,
+		filesize: 1215,
+		crop_start_x: null,
+		crop_start_y: null,
+		crop_end_x: null,
+		crop_end_y: null,
+		avg_img_color: null,
+		img_has_transparency: false,
+		added_on: 1652120450000,
+		status: 'active',
+		img_url: 'https://m.gjcdn.net/background/800/21-zz9n7nfu-v4.webp',
+		mediaserver_url: 'https://m.gjcdn.net/background/800/21-zz9n7nfu-v4.webp',
+		mediaserver_url_webm: null,
+		mediaserver_url_mp4: null,
+		video_card_url_mp4: null,
+		sticker_counts: [],
+	},
+	scale: 2,
+});
 </script>
 
 <template>
@@ -269,7 +306,8 @@ async function onClickNewMessages() {
 	trigger when the send box changes size or when the window changes--and we
 	need to autoscroll if the content changes within the scroller.
 	-->
-	<div class="-scroll-container">
+	<!-- TODO(chat-backgrounds) Should we darken here? Maybe all but the top gradient? -->
+	<AppBackground class="-scroll-container" :background="debugBackground" darken>
 		<AppScrollScroller
 			v-app-observe-dimensions="tryAutoscroll"
 			:controller="scroller"
@@ -281,7 +319,10 @@ async function onClickNewMessages() {
 				class="-container anim-fade-in no-animate-leave"
 			>
 				<div v-if="shouldShowIntro" class="-intro">
-					<AppIllustration :src="illNoChat">
+					<AppIllustration
+						:src="illNoChat"
+						:class="{ '-illustration-overlay': !!debugBackground }"
+					>
 						<AppTranslate v-if="room.isPmRoom">
 							Your friend is still loading. Encourage them with a message!
 						</AppTranslate>
@@ -326,7 +367,7 @@ async function onClickNewMessages() {
 				</div>
 			</div>
 		</div>
-	</div>
+	</AppBackground>
 </template>
 
 <style lang="stylus" scoped>
@@ -408,4 +449,12 @@ async function onClickNewMessages() {
 	align-items: center
 	justify-content: center
 	padding-left: $chat-room-window-padding
+
+.-illustration-overlay
+	font-weight: bold
+
+	&
+	*
+		overlay-text-shadow()
+		color: white
 </style>
