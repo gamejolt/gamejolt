@@ -119,7 +119,7 @@
 	},
 	"optionalDependencies": {
 		"appdmg": "argv-minus-one/node-appdmg#node-12-temporary-fix",
-		"asg-prebuilt": "0.1.2",
+		"asg-prebuilt": "0.1.3",
 		"rcedit": "3.0.1"
 	},
 	"dependencies": {
