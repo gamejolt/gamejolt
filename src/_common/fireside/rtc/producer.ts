@@ -30,7 +30,7 @@ import {
 
 const path = require('path') as typeof import('path');
 const { EventEmitter } = require('events') as typeof import('events');
-const asg = require(path.join(Client.nwStaticAssetsDir, 'asg.node'));
+const { asg } = require(path.join(Client.nwStaticAssetsDir, 'asg.node'));
 const { ppid } = require('process') as typeof import('process');
 const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
 
@@ -46,13 +46,7 @@ const registry = new FinalizationRegistry((id: number) => {
 class ASGComponent {
 	constructor() {
 		registry.register(this, 1);
-		this.generator = new MediaStreamTrackGenerator({ kind: 'audio' });
 		this.emitter = new EventEmitter();
-		this.writer = this.generator.writable.getWriter();
-		this.writer.closed.then(() => {
-			console.log('ASG: Track write stream is closed');
-			this.isStreamOpen = false;
-		});
 
 		this.emitter
 			.on('status_update', (text: string) => {
@@ -62,58 +56,54 @@ class ASGComponent {
 				}
 				if (text == 'Recording starts') {
 					console.log('ASG: Recording Starts');
-					this.isStreamOpen = true;
 				}
 			})
 			.on('error', (text: string) => {
 				console.log('Caught error: ' + text, true);
+				this.endASG();
 			})
 			.on('data', (data: Float32Array) => {
-				//console.log(data);
-				const currTimeLength = (data.length * 1000000) / 44100;
+				const stereoFrameCount = data.length / 2;
+				const currTimeLength = (stereoFrameCount * 1000000) / 44100;
 				this.nextTimestamp += currTimeLength;
 				const audioData = new AudioData({
 					format: 'f32',
-					numberOfChannels: 1,
-					numberOfFrames: data.length,
+					numberOfChannels: 2,
+					numberOfFrames: stereoFrameCount,
 					timestamp: this.nextTimestamp,
 					sampleRate: 44100,
 					data: data,
 				});
 
-				if (this.writer && this.isStreamOpen) {
+				if (this.writer) {
 					this.writer.write(audioData);
 					console.log('ASG: WRITER IS VALID');
 				} else console.log('ASG: WRITER IS NOT VALID');
 			});
 	}
+	startCapture() {
+		this.endCapture();
+		console.log('ASG: Excluded PID : ' + ppid);
+		asg.startCapture(ppid, this.emitter.emit.bind(this.emitter));
+		this.isCapturing = true;
+	}
 
-	startASG() {
+	endCapture() {
+		if (this.isCapturing) {
+			console.log('ASG: Ending Capture ');
+			asg.endCapture();
+			this.isCapturing = false;
+		}
+	}
+	async startASG() {
 		try {
-			//if (this.isCapturing) {
-			if (this.isStreamOpen) {
-				// if stream is active, close current track and open a new one.
-				console.log('ASG: Swapping to new track.');
-				// testing to see if this track gets closed within setChannelAudioTrack()
-				//this.generator.writable.close();
-				this.generator = new MediaStreamTrackGenerator({ kind: 'audio' });
-				this.writer = this.generator.writable.getWriter();
-
-				if (!this.isStreamOpen) {
-					console.log('ASG: Testing if stream flag is changed to false.');
-					this.isStreamOpen = true;
-				}
-
-				return;
-			}
-
-			if (this.writer && this.isStreamOpen) {
-				console.log('ASG: STREAM FIRST ENCOUNTER AND WORKING');
-			} else console.log('ASG: STREAM FIRST ENCOUNTER AND NOT WORKING');
-
-			console.log('ASG: Excluded PID : ' + ppid);
-			asg.startCapture(ppid, this.emitter.emit.bind(this.emitter));
-			//this.isCapturing = true;
+			this.startCapture();
+			console.log('ASG: Swapping to new track.');
+			this.generator = new MediaStreamTrackGenerator({ kind: 'audio' });
+			this.writer = this.generator.writable.getWriter();
+			this.writer.closed.then(() => {
+				console.log('ASG: Track write stream is closed');
+			});
 		} catch (error) {
 			console.log(error);
 			this.emitter.removeAllListeners();
@@ -132,11 +122,10 @@ class ASGComponent {
 		} else console.log('ASG: Invalid call! CHECK CALLER');
 	}
 
-	generator: MediaStreamTrackGenerator<AudioData>;
+	generator: MediaStreamTrackGenerator<AudioData> | any;
 	nextTimestamp = 0;
 	emitter: any;
 	writer: any;
-	isStreamOpen = false;
 	isCapturing = false;
 }
 export class FiresideRTCProducer {
@@ -613,10 +602,10 @@ function _updateDesktopAudioDevice(producer: FiresideRTCProducer) {
 
 			if (!producer.asgComponent) {
 				producer.asgComponent = new ASGComponent();
-				rtc.log(`Starting ASG`);
+				rtc.log(`Starting ASG component`);
 			}
-			producer.asgComponent.startASG();
 			console.log('ASG: CREATE CUSTOM');
+			await producer.asgComponent.startASG();
 			const AgoraRTC = await AgoraRTCLazy;
 			const track = await AgoraRTC.createCustomAudioTrack({
 				mediaStreamTrack: producer.asgComponent.getMediaStreamTrack(),
