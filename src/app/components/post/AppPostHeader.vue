@@ -138,6 +138,7 @@ const shouldShowFollow = computed(() => {
 				v-if="shouldShowFollow"
 				:user="user"
 				:sm="Screen.isXs"
+				:overlay="overlay"
 				hide-count
 				:location="followLocation"
 			/>

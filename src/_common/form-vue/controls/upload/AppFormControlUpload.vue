@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { formatNumber } from '../../../filters/number';
-import AppProgressBar from '../../../progress/bar/bar.vue';
+import AppJolticon from '../../../jolticon/AppJolticon.vue';
+import AppProgressBar from '../../../progress/AppProgressBar.vue';
 import AppTranslate from '../../../translate/AppTranslate.vue';
 import { useForm } from '../../AppForm.vue';
 import {
@@ -14,7 +15,6 @@ import { FormValidator, validateFileAccept } from '../../validators';
 import AppFormControlUploadFile, {
 	AppFormControlUploadFileInterface,
 } from './AppFormControlUploadFile.vue';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
 
 export interface AppFormControlUploadInterface {
 	showFileSelect: () => void;

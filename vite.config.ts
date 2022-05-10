@@ -424,7 +424,7 @@ export default defineConfig(async configEnv => {
 			GJ_HAS_ROUTER: JSON.stringify(gjOpts.currentSectionConfig.hasRouter),
 			GJ_IS_WATCHING: JSON.stringify(command === 'serve'),
 
-			// Disable redirecting between section during serve.
+			// Disable redirecting between sections during serve.
 			// This is because as of time of writing we only support watching
 			// one section at a time. This makes it easier to test auth section
 			// when you're already logged in.

@@ -1,23 +1,43 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, PropType, toRefs } from 'vue';
+import AppQuestFrame from '../../quest/AppQuestFrame.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
+import { $gettext } from '../../translate/translate.service';
 import { Sticker } from '../sticker.model';
 
-@Options({
-	directives: {
-		AppTooltip: vAppTooltip,
+const props = defineProps({
+	sticker: {
+		type: Object as PropType<Sticker>,
+		required: true,
 	},
-})
-export default class AppStickerCard extends Vue {
-	@Prop({ type: Object, required: true }) sticker!: Sticker;
-	@Prop({ type: String, default: undefined }) label?: string;
-	@Prop({ type: Boolean, default: false }) isNew!: boolean;
-}
+	label: {
+		type: String,
+		default: undefined,
+	},
+	isNew: {
+		type: Boolean,
+	},
+});
+
+const { sticker } = toRefs(props);
+
+const slotName = computed(() => {
+	if (sticker.value.is_event) {
+		return 'above';
+	}
+	return 'default';
+});
 </script>
 
 <template>
 	<div class="-card">
-		<img class="-img" :src="sticker.img_url" />
+		<div class="-img-wrapper">
+			<component :is="sticker.is_event ? AppQuestFrame : 'div'">
+				<template #[slotName]>
+					<img class="-img" :src="sticker.img_url" />
+				</template>
+			</component>
+		</div>
 		<div v-if="label" class="-pocket fill-darkest">
 			<div
 				class="-rarity"
@@ -49,11 +69,16 @@ export default class AppStickerCard extends Vue {
 	overflow: hidden
 	elevate-hover-1()
 
-.-img
-	display: block
+.-img-wrapper
 	margin: 12px
 	width: 126px
 	height: 126px
+
+.-img
+	display: block
+	padding: 12px
+	width: 100%
+	height: 100%
 
 .-pocket
 	padding: 12px

@@ -6,7 +6,7 @@ import AppExpand from '../../../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import { Game } from '../../../../../../../_common/game/game.model';
 import AppGraphWidget from '../../../../../../../_common/graph/widget/widget.vue';
-import AppProgressBar from '../../../../../../../_common/progress/bar/bar.vue';
+import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
 import { AppProgressPoller } from '../../../../../../../_common/progress/poller/poller';
 import {
 	BaseRouteComponent,

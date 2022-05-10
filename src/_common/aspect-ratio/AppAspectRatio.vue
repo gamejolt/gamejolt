@@ -12,11 +12,20 @@ defineProps({
 		type: Number,
 		required: true,
 	},
+	showOverflow: {
+		type: Boolean,
+	},
 });
 </script>
 
 <template>
-	<div class="-outer" :style="{ 'padding-top': `${100 / ratio}%` }">
+	<div
+		class="-outer"
+		:style="{
+			'padding-top': `${100 / ratio}%`,
+			overflow: !showOverflow ? 'hidden' : undefined,
+		}"
+	>
 		<div class="-inner">
 			<slot />
 		</div>
@@ -27,7 +36,6 @@ defineProps({
 .-outer
 	position: relative
 	height: 0
-	overflow: hidden
 
 .-inner
 	position: absolute
