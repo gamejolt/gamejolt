@@ -4,8 +4,8 @@ export const routeDashAccountDeviceSettings: RouteRecordRaw = {
 	name: 'dash.account.device-settings',
 	path: '/settings',
 	component: () => import('./device-settings.vue'),
-	// TODO(pronouns): This component itself is technically able to be offline,
-	// but it's now nested within a route that requires a connection.
+	// This component itself is technically able to be offline, but it's now
+	// nested within a route that requires a connection.
 	meta: {
 		availableOffline: true,
 	},
