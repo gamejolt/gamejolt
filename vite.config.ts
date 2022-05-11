@@ -357,7 +357,7 @@ export default defineConfig(async configEnv => {
 				}),
 
 				...onlyInDesktopApp<RollupOptions>({
-					external: ['client-voodoo'],
+					external: ['client-voodoo', 'asg-prebuilt'],
 				}),
 			},
 
@@ -386,7 +386,7 @@ export default defineConfig(async configEnv => {
 			}),
 		},
 		optimizeDeps: {
-			exclude: ['client-voodoo'],
+			exclude: ['client-voodoo', 'asg-prebuilt'],
 		},
 		resolve: {
 			alias: {

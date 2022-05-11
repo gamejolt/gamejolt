@@ -6,16 +6,21 @@
  */
 
 import { defineAsyncComponent } from 'vue';
-import type AppClientHistoryNavigatorType from './history-navigator/history-navigator.vue';
+import type { startCapture as startCaptureType, stopCapture as stopCaptureType } from './asg/asg';
+import type { ClientAutoStart as ClientAutoStartType } from './autostart/autostart.service';
 import type AppClientBaseType from './base/base.vue';
 import type { Client as ClientType } from './client.service';
 import type { ClientHistoryNavigator as ClientHistoryNavigatorType } from './history-navigator/history-navigator.service';
-import type { ClientAutoStart as ClientAutoStartType } from './autostart/autostart.service';
+import type AppClientHistoryNavigatorType from './history-navigator/history-navigator.vue';
 
 // Vue components
 const AppNoopLoader = defineAsyncComponent(async () => (await import('../AppNoop.vue')).default);
 export let AppClientHistoryNavigator: typeof AppClientHistoryNavigatorType = AppNoopLoader as any;
 export let AppClientBase: typeof AppClientBaseType = AppNoopLoader as any;
+
+// ASG
+export let startCapture: typeof startCaptureType = null as any;
+export let stopCapture: typeof stopCaptureType = null as any;
 
 // Misc
 export let Client: typeof ClientType = null as any;
@@ -32,6 +37,11 @@ export async function initSafeExportsForClient() {
 		async () => (await import('./history-navigator/history-navigator.vue')).default
 	);
 	AppClientBase = defineAsyncComponent(async () => (await import('./base/base.vue')).default);
+
+	// ASG
+	const asg = await import('./asg/asg');
+	startCapture = asg.startCapture;
+	stopCapture = asg.stopCapture;
 
 	// Misc
 	Client = (await import('./client.service')).Client;

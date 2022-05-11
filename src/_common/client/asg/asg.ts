@@ -83,7 +83,7 @@ export async function stopCapture(asg: ASGInstance): Promise<void> {
 	}
 
 	asg._status = 'stopping';
-	await asgNative.endCapture();
+	await asgNative.endCapture(asg._uid);
 	asg._status = 'stopped';
 
 	cleanup(asg);
