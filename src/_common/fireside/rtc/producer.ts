@@ -56,14 +56,15 @@ export const PRODUCER_DEFAULT_GROUP_AUDIO = 'default';
 // 				console.log('Status update: ' + text, true);
 // 				if (text == 'Recording ends') {
 // 					this.generator.writable.getWriter().close();
-// 				}
-// 				if (text == 'Recording starts') {
+// 				} else if (text == 'Recording starts') {
 // 					console.log('ASG: Recording Starts');
+// 				} else if (text == 'Starting capturer') {
+// 					console.log('ASG: Starting capasasdasdturer');
 // 				}
 // 			})
 // 			.on('error', (text: string) => {
 // 				console.log('Caught error: ' + text, true);
-// 				this.endASG();
+// 				this.endCapture();
 // 			})
 // 			.on('data', (data: Float32Array) => {
 // 				const stereoFrameCount = data.length / 2;
@@ -84,9 +85,11 @@ export const PRODUCER_DEFAULT_GROUP_AUDIO = 'default';
 // 				} else console.log('ASG: WRITER IS NOT VALID');
 // 			});
 // 	}
+
 // 	startCapture() {
+// 		if (this.isCapturing) return; // crashes without this
 // 		this.endCapture();
-// 		console.log('ASG: Excluded PID : ' + ppid);
+// 		console.log('ASG: Excluded PPID : ' + ppid);
 // 		asg.startCapture(ppid, this.emitter.emit.bind(this.emitter));
 // 		this.isCapturing = true;
 // 	}
@@ -98,6 +101,7 @@ export const PRODUCER_DEFAULT_GROUP_AUDIO = 'default';
 // 			this.isCapturing = false;
 // 		}
 // 	}
+
 // 	async startASG() {
 // 		try {
 // 			this.startCapture();
