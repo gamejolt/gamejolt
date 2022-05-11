@@ -44,7 +44,6 @@ const form: FormController<FormModel> = createForm({
 				notifications.push(i.key);
 			}
 		}
-		console.warn('notifications:', notifications, form.formModel);
 		form.formModel.notifications = notifications;
 	},
 	onBeforeSubmit() {
