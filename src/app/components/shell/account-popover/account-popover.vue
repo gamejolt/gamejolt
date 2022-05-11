@@ -146,7 +146,7 @@ export default class AppShellAccountPopover extends Vue {
 					<router-link
 						v-app-track-event="`account-popover:settings`"
 						class="list-group-item"
-						:to="{ name: 'settings' }"
+						:to="{ name: 'dash.account.device-settings' }"
 					>
 						<AppTranslate>Settings</AppTranslate>
 					</router-link>

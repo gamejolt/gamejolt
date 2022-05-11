@@ -1,7 +1,6 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
-import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { validateDomain } from '../../../../../_common/form-vue/validators';
 import { Game } from '../../../../../_common/game/game.model';
@@ -16,7 +15,6 @@ class Wrapper extends BaseForm<FormModel> {}
 
 @Options({
 	components: {
-		AppFormControlToggle,
 		AppExpand,
 	},
 })
@@ -56,13 +54,13 @@ export default class FormSiteDomain extends mixins(Wrapper) {
 			<div class="radio">
 				<label>
 					<AppFormControlRadio value="io" />
-					<span v-html="ioUrl"></span>
+					<span v-html="ioUrl" />
 				</label>
 			</div>
 			<div class="radio">
 				<label>
 					<AppFormControlRadio value="af" />
-					<span v-html="afUrl"></span>
+					<span v-html="afUrl" />
 					&mdash;
 					<router-link
 						:to="{ name: 'landing.indieaf' }"

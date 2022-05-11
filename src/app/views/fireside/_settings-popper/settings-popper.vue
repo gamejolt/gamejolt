@@ -60,25 +60,32 @@ export default class AppFiresideSettingsPopper extends Vue {
 		if (!this.c.rtc.value) {
 			return false;
 		}
-		// Accessing `_users` here instead of `users` so we don't count
-		// ourselves.
-		return this.c.rtc.value._users.length > 0;
+
+		// We only want to show mute controls for remote listable streaming users.
+		const remoteUsers = this.c.rtc.value.listableStreamingUsers.filter(
+			rtcUser => !rtcUser.isLocal && (rtcUser.remoteVideoUser || rtcUser.remoteChatUser)
+		);
+		return remoteUsers.length > 0;
 	}
 
-	get isStreaming() {
+	get isPersonallyStreaming() {
 		return this.c.isPersonallyStreaming.value;
 	}
 
-	get shouldMute() {
-		return this.c.rtc.value?.users.some(i => !i.micAudioMuted) ?? false;
+	get shouldShowMuteAll() {
+		if (!this.c.rtc.value) {
+			return false;
+		}
+
+		return !this.c.rtc.value.isEveryRemoteListableUsersMuted;
 	}
 
 	muteAll() {
-		return this.c.rtc.value?.users.forEach(i => setAudioPlayback(i, false));
+		return this.c.rtc.value?.listableStreamingUsers.forEach(i => setAudioPlayback(i, false));
 	}
 
 	unmuteAll() {
-		return this.c.rtc.value?.users.forEach(i => setAudioPlayback(i, true));
+		return this.c.rtc.value?.listableStreamingUsers.forEach(i => setAudioPlayback(i, true));
 	}
 
 	onClickShowChatMembers() {
@@ -192,7 +199,7 @@ export default class AppFiresideSettingsPopper extends Vue {
 				</a>
 
 				<template v-if="hasMuteControls">
-					<a v-if="shouldMute" class="list-group-item" @click="muteAll()">
+					<a v-if="shouldShowMuteAll" class="list-group-item" @click="muteAll()">
 						<AppJolticon icon="audio-mute" />
 						<AppTranslate>Mute All Users</AppTranslate>
 					</a>
@@ -229,7 +236,7 @@ export default class AppFiresideSettingsPopper extends Vue {
 				<template v-if="shouldShowStreamSettings">
 					<a class="list-group-item has-icon" @click="onClickEditStream">
 						<AppJolticon icon="broadcast" />
-						<AppTranslate v-if="isStreaming">Stream Settings</AppTranslate>
+						<AppTranslate v-if="isPersonallyStreaming">Stream Settings</AppTranslate>
 						<AppTranslate v-else>Start Stream / Voice Chat</AppTranslate>
 					</a>
 				</template>
@@ -242,11 +249,11 @@ export default class AppFiresideSettingsPopper extends Vue {
 					</a>
 				</template>
 
-				<template v-if="isStreaming || c.canExtinguish.value">
+				<template v-if="isPersonallyStreaming || c.canExtinguish.value">
 					<hr />
 
 					<a
-						v-if="isStreaming"
+						v-if="isPersonallyStreaming"
 						class="list-group-item has-icon"
 						@click="onClickStopStreaming"
 					>

@@ -63,7 +63,7 @@ function onChange() {
 		applyValue(root.value.checked);
 	} else {
 		// Multiple checkboxes with values.
-		const options = currentOptions.value as string[];
+		const options: any[] = [...currentOptions.value];
 
 		if (root.value.checked) {
 			options.push(props.value);
@@ -74,7 +74,7 @@ function onChange() {
 			}
 		}
 
-		applyValue(currentOptions);
+		applyValue(options);
 	}
 }
 </script>

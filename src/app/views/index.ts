@@ -17,7 +17,6 @@ import { routeProfile } from './profile/profile.route';
 import { routeQuests } from './quests/quests.route';
 import { routeRealmsView } from './realms/view/view.route';
 import { routeSearch } from './search/search.route';
-import { routeSettings } from './settings/settings.route';
 import { routeStyleguide } from './styleguide/styleguide.route';
 import { routeTimeout } from './timeout/timeout.route';
 import { routeWelcome } from './welcome/welcome.route';
@@ -35,7 +34,6 @@ const routes = [
 	routeLibrary,
 	routeDash,
 	routeNotifications,
-	routeSettings,
 	routeForums,
 	routeStyleguide,
 	routeLegal,

@@ -222,6 +222,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	}
 
 	routeDestroyed() {
+		this.c?.cleanup();
 		this.themeStore.clearPageTheme(FiresideThemeKey);
 
 		this.beforeEachDeregister?.();
@@ -331,7 +332,7 @@ export default class RouteFireside extends BaseRouteComponent {
 </script>
 
 <template>
-	<AppFiresideContainer v-if="c" :controller="c" class="-fireside">
+	<AppFiresideContainer v-if="c" :controller="c" class="-fireside" allow-route-changes>
 		<AppFiresideBanner />
 
 		<template v-if="!shouldShowHeaderInBody">
@@ -580,6 +581,7 @@ export default class RouteFireside extends BaseRouteComponent {
 
 			<div v-if="shouldShowChatMembers" class="-trailing">
 				<div class="-chat-members">
+					<!-- TODO(big-pp-event) might want to filter out chat-users to exclude unlisted hosts here -->
 					<AppFiresideChatMembers
 						:chat-users="c.chatUsers.value"
 						:chat-room="c.chatRoom.value"
