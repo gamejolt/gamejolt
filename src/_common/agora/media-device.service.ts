@@ -141,14 +141,20 @@ class _MediaDeviceService {
 		try {
 			const AgoraRTC = await AgoraRTCLazy;
 			const mics = await AgoraRTC.getMicrophones(!effectiveOptions.prompt);
-			this.p_mics = Object.freeze(
-				mics
+			this.p_mics = Object.freeze([
+				...mics
 					.filter(
 						// Only get devices if we managed to fetch info for them.
 						deviceInfo => deviceInfo.deviceId && deviceInfo.label && deviceInfo.kind
 					)
-					.map(deviceInfo => Object.freeze(deviceInfo.toJSON()))
-			);
+					.map(deviceInfo => Object.freeze(deviceInfo.toJSON())),
+				{
+					deviceId: 'fake-desktop-audio',
+					groupId: 'fake-desktop-audio',
+					kind: 'audioinput',
+					label: 'Desktop Audio',
+				},
+			]);
 			this.p_micsPermissionError = false;
 			console.log('Got mics: ', this.p_mics);
 		} catch (e) {

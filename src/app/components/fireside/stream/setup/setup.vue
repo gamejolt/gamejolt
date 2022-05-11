@@ -695,8 +695,8 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 
 			<!-- Only show this section if they've given mic permissions -->
 			<fieldset v-if="canStreamAudio && hasMicPermissions">
+				<!-- v-if="shouldShowAdvanced || !isInvalidConfig" -->
 				<AppFormLegend
-					v-if="shouldShowAdvanced || !isInvalidConfig"
 					compact
 					:expandable="!hasDesktopAudio"
 					:expanded="shouldShowAdvanced"
