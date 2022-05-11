@@ -30,7 +30,7 @@ import {
 
 const path = require('path') as typeof import('path');
 const { EventEmitter } = require('events') as typeof import('events');
-const { asg } = require(path.join(Client.nwStaticAssetsDir, 'asg.node'));
+const asg = require(path.join(Client.nwStaticAssetsDir, 'asg.node'));
 const { ppid } = require('process') as typeof import('process');
 const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
 
@@ -53,14 +53,15 @@ class ASGComponent {
 				console.log('Status update: ' + text, true);
 				if (text == 'Recording ends') {
 					this.generator.writable.getWriter().close();
-				}
-				if (text == 'Recording starts') {
+				} else if (text == 'Recording starts') {
 					console.log('ASG: Recording Starts');
+				} else if (text == 'Starting capturer') {
+					console.log('ASG: Starting capasasdasdturer');
 				}
 			})
 			.on('error', (text: string) => {
 				console.log('Caught error: ' + text, true);
-				this.endASG();
+				this.endCapture();
 			})
 			.on('data', (data: Float32Array) => {
 				const stereoFrameCount = data.length / 2;
@@ -81,9 +82,11 @@ class ASGComponent {
 				} else console.log('ASG: WRITER IS NOT VALID');
 			});
 	}
+
 	startCapture() {
+		if (this.isCapturing) return; // crashes without this
 		this.endCapture();
-		console.log('ASG: Excluded PID : ' + ppid);
+		console.log('ASG: Excluded PPID : ' + ppid);
 		asg.startCapture(ppid, this.emitter.emit.bind(this.emitter));
 		this.isCapturing = true;
 	}
@@ -95,6 +98,7 @@ class ASGComponent {
 			this.isCapturing = false;
 		}
 	}
+
 	async startASG() {
 		try {
 			this.startCapture();
@@ -113,13 +117,6 @@ class ASGComponent {
 	getMediaStreamTrack() {
 		if (!this.generator) console.log('ASG Generator invalid!');
 		return this.generator;
-	}
-
-	endASG() {
-		if (this.isCapturing) {
-			asg.endCapture();
-			this.isCapturing = false;
-		} else console.log('ASG: Invalid call! CHECK CALLER');
 	}
 
 	generator: MediaStreamTrackGenerator<AudioData> | any;
