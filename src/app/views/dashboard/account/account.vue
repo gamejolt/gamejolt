@@ -144,10 +144,10 @@ export default class RouteDashAccount extends BaseRouteComponent {
 								</li>
 								<li>
 									<router-link
-										:to="{ name: 'dash.account.site' }"
+										:to="{ name: 'dash.account.device-settings' }"
 										active-class="active"
 									>
-										<AppTranslate>Portfolio Site</AppTranslate>
+										<AppTranslate>Device Settings</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -229,6 +229,14 @@ export default class RouteDashAccount extends BaseRouteComponent {
 										active-class="active"
 									>
 										<AppTranslate>Revenue</AppTranslate>
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										:to="{ name: 'dash.account.site' }"
+										active-class="active"
+									>
+										<AppTranslate>Portfolio Site</AppTranslate>
 									</router-link>
 								</li>
 							</ul>

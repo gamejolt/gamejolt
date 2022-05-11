@@ -29,10 +29,10 @@ export default class RouteDashAccountMobileNav extends Vue {}
 				</router-link>
 				<router-link
 					class="list-group-item"
-					:to="{ name: 'dash.account.site' }"
+					:to="{ name: 'dash.account.device-settings' }"
 					active-class="active"
 				>
-					<AppTranslate>Portfolio Site</AppTranslate>
+					<AppTranslate>Device Settings</AppTranslate>
 				</router-link>
 				<router-link
 					class="list-group-item"
@@ -96,6 +96,13 @@ export default class RouteDashAccountMobileNav extends Vue {}
 					active-class="active"
 				>
 					<AppTranslate>Revenue</AppTranslate>
+				</router-link>
+				<router-link
+					class="list-group-item"
+					:to="{ name: 'dash.account.site' }"
+					active-class="active"
+				>
+					<AppTranslate>Portfolio Site</AppTranslate>
 				</router-link>
 			</div>
 		</nav>

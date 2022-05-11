@@ -12,6 +12,7 @@ import { routeDashAccountPurchasesList } from './purchases/list/list.route';
 import { routeDashAccountPurchasesView } from './purchases/view/view.route';
 import { routeDashAccountSite } from './site/site.route';
 import { routeDashAccountWithdrawFunds } from './withdraw-funds/withdraw-funds.route';
+import { routeDashAccountDeviceSettings } from './device-settings/device-settings.route';
 
 export const routeDashAccount: RouteRecordRaw = {
 	path: '',
@@ -30,5 +31,6 @@ export const routeDashAccount: RouteRecordRaw = {
 		routeDashAccountSite,
 		routeDashAccountWithdrawFunds,
 		routeDashAccountBlocks,
+		routeDashAccountDeviceSettings,
 	],
 };
