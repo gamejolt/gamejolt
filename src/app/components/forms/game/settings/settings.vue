@@ -34,16 +34,17 @@ export default class FormGameSettings extends mixins(Wrapper) implements FormOnL
 
 <template>
 	<AppForm :controller="form">
-		<AppFormGroup
-			v-if="!hasPackagesForSale"
-			name="ads_enabled"
-			:label="$gettext(`Show ads?`)"
-		>
-			<AppFormControlToggle class="pull-right" />
+		<AppFormGroup v-if="!hasPackagesForSale" name="ads_enabled" :label="$gettext(`Show ads?`)">
+			<template #inline-control>
+				<AppFormControlToggle />
+			</template>
+
 			<div class="help-block">
 				<p>
 					<strong>
-						<AppTranslate>Turning this off will remove all ads for this game.</AppTranslate>
+						<AppTranslate>
+							Turning this off will remove all ads for this game.
+						</AppTranslate>
 					</strong>
 				</p>
 				<p>
@@ -65,11 +66,11 @@ export default class FormGameSettings extends mixins(Wrapper) implements FormOnL
 			</div>
 		</div>
 
-		<AppFormGroup
-			name="comments_enabled"
-			:label="$gettext(`Allow comments?`)"
-		>
-			<AppFormControlToggle class="pull-right" />
+		<AppFormGroup name="comments_enabled" :label="$gettext(`Allow comments?`)">
+			<template #inline-control>
+				<AppFormControlToggle />
+			</template>
+
 			<div class="help-block">
 				<p>
 					<strong>
@@ -99,7 +100,9 @@ export default class FormGameSettings extends mixins(Wrapper) implements FormOnL
 		</AppFormGroup>
 
 		<AppFormGroup name="ratings_enabled" :label="$gettext('Allow ratings?')">
-			<AppFormControlToggle class="pull-right" />
+			<template #inline-control>
+				<AppFormControlToggle />
+			</template>
 
 			<div class="help-block">
 				<p>

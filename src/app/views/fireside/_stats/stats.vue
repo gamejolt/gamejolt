@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import { shallowSetup } from '../../../../utils/vue';
 import AppCard from '../../../../_common/card/AppCard.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
-import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
+import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';

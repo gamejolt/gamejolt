@@ -117,6 +117,7 @@ export default class RouteDashAccountBlocks extends BaseRouteComponent {
 					When you block someone, that user won't be able to follow you, send you a friend
 					request, or reply to your posts and comments.
 				</AppTranslate>
+				{{ ' ' }}
 				<AppLinkHelp page="blocking-users" class="link-help">
 					<AppTranslate>Learn more about what happens when you block a user</AppTranslate>
 				</AppLinkHelp>

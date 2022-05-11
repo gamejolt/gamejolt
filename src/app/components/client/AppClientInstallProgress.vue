@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { formatDuration } from '../../../_common/filters/duration';
-import AppProgressBar from '../../../_common/progress/bar/bar.vue';
+import AppProgressBar from '../../../_common/progress/AppProgressBar.vue';
 import { LocalDbPackage, LocalDbPackagePatchState } from './local-db/package/package.model';
 
 const props = defineProps({

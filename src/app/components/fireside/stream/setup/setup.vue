@@ -19,7 +19,6 @@ import {
 	stopStreaming,
 } from '../../../../../_common/fireside/rtc/producer';
 import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
-import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
@@ -43,7 +42,6 @@ class Wrapper extends BaseForm<FormModel> {}
 	components: {
 		AppExpand,
 		AppVolumeMeter,
-		AppFormControlToggle,
 		AppFormLegend,
 		AppLoadingFade,
 	},
@@ -121,14 +119,14 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 	unmounted() {
 		// If we're not streaming or about to, clear the selected device ids so
 		// that the browser doesn't think we're still recording.
-		if (!(this.isStreaming || this.isStarting)) {
+		if (!(this.isPersonallyStreaming || this.isStarting)) {
 			clearSelectedRecordingDevices(this._producer);
 		}
 
 		this.c.isShowingStreamSetup.value = false;
 	}
 
-	get isStreaming() {
+	get isPersonallyStreaming() {
 		return this.producer?.isStreaming === true;
 	}
 
@@ -229,7 +227,7 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 	}
 
 	get canToggleAdvanced() {
-		if (!this.isStreaming) {
+		if (!this.isPersonallyStreaming) {
 			return true;
 		}
 
@@ -254,7 +252,7 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 	}
 
 	get canSwapAudioInputs() {
-		if (!this.isStreaming) {
+		if (!this.isPersonallyStreaming) {
 			return true;
 		}
 
@@ -283,7 +281,7 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 	}
 
 	wouldInvalidateIfRemoved(fieldToRemove: string) {
-		if (!this.isStreaming) {
+		if (!this.isPersonallyStreaming) {
 			return false;
 		}
 
@@ -371,7 +369,7 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 		// giving it a chance to resolve itself.
 		await sleep(0);
 
-		if (this.isInvalidConfig && this.isStreaming) {
+		if (this.isInvalidConfig && this.isPersonallyStreaming) {
 			stopStreaming(this.producer);
 		}
 	}
@@ -425,7 +423,7 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 	@Watch('formModel.selectedGroupAudioDeviceId')
 	onSelectedDevicesChanged() {
 		// When streaming, only apply changes to selected devices if the config is valid.
-		if ((this.isInvalidConfig && this.isStreaming) || !this._didDetectDevices) {
+		if ((this.isInvalidConfig && this.isPersonallyStreaming) || !this._didDetectDevices) {
 			// TODO: show error status on the form model values that do not match with whats set on firesideHostRtc.
 			return;
 		}
@@ -455,7 +453,9 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 	<AppLoadingFade :is-loading="isStarting">
 		<a class="-intro" href="https://gamejolt.com/p/qewgmbtc" @click="openHelpLink">
 			<div class="-intro-subtitle">
-				<AppTranslate>Voice chat and livestream on Game Jolt with your friends!</AppTranslate>
+				<AppTranslate>
+					Voice chat and livestream on Game Jolt with your friends!
+				</AppTranslate>
 			</div>
 			<div class="-intro-title">
 				<AppTranslate>Read the setup guide to get started</AppTranslate>
@@ -674,7 +674,9 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 							<br />
 
 							<a href="https://gamejolt.com/p/qewgmbtc" @click="openHelpLink">
-								<AppTranslate>Learn how to stream your gameplay or screen</AppTranslate>
+								<AppTranslate>
+									Learn how to stream your gameplay or screen
+								</AppTranslate>
 							</a>
 						</p>
 
@@ -792,7 +794,7 @@ export default class AppStreamSetup extends mixins(Wrapper) {
 				</AppExpand>
 			</fieldset>
 
-			<div v-if="!isStreaming" class="-actions">
+			<div v-if="!isPersonallyStreaming" class="-actions">
 				<AppButton trans @click="onClickCancel()">
 					<AppTranslate>Cancel</AppTranslate>
 				</AppButton>

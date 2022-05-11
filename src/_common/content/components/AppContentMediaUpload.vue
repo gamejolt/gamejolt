@@ -5,7 +5,7 @@ import { Api } from '../../api/api.service';
 import { showErrorGrowl } from '../../growls/growls.service';
 import AppLoading from '../../loading/loading.vue';
 import { MediaItem } from '../../media-item/media-item-model';
-import AppProgressBar from '../../progress/bar/bar.vue';
+import AppProgressBar from '../../progress/AppProgressBar.vue';
 import { $gettext } from '../../translate/translate.service';
 import { getMediaItemTypeForContext } from '../content-context';
 import {

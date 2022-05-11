@@ -20,7 +20,7 @@ import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Payload } from '../../../../../_common/payload/payload-service';
-import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
+import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
 import AppVideoPlayer from '../../../../../_common/video/player/player.vue';
 import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/processing-progress.vue';

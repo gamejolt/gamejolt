@@ -144,6 +144,9 @@ export const configHomeDefaultFeed = new ConfigOptionString(
 	}
 );
 
+/** Whether or not we show a mic volume slider for RTC users */
+export const configFiresideMicVolume = new ConfigOptionBoolean('fireside_mic_volume', false);
+
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
 }

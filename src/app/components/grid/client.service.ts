@@ -22,6 +22,8 @@ import { showInfoGrowl } from '../../../_common/growls/growls.service';
 import { Model } from '../../../_common/model/model.service';
 import { Notification } from '../../../_common/notification/notification-model';
 import { NotificationText } from '../../../_common/notification/notification-text.service';
+import Onboarding from '../../../_common/onboarding/onboarding.service';
+import { QuestNotification } from '../../../_common/quest/quest-notification-model';
 import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
 import { SiteTrophy } from '../../../_common/site/trophy/trophy.model';
 import { commonStore } from '../../../_common/store/common-store';
@@ -73,6 +75,9 @@ interface BootstrapPayload {
 		unreadFeaturedCommunities: { [communityId: number]: number };
 		unreadCommunities: number[];
 		hasNewUnlockedStickers: boolean;
+		newQuestIds: number[];
+		questActivityIds: number[];
+		questResetHour: number;
 	};
 }
 
@@ -98,7 +103,11 @@ type ClearNotificationsType =
 	| 'community-channel'
 	| 'friend-requests'
 	// For the user's unviewed automatically unlocked stickers.
-	| 'stickers';
+	| 'stickers'
+	// A quest became available and is ready to be accepted.
+	| 'new-quest'
+	// A quest has updated progress or rewards available to claim.
+	| 'quest-activity';
 
 interface ClearNotificationsPayload {
 	type: ClearNotificationsType;
@@ -109,6 +118,7 @@ interface ClearNotificationsPayload {
 interface ClearNotificationsData {
 	channelId?: number;
 	communityId?: number;
+	questId?: number;
 }
 
 interface StickerUnlockPayload {
@@ -177,6 +187,22 @@ function clearNotifications(
 			break;
 		case 'stickers':
 			appStore.setHasNewUnlockedStickers(false);
+			break;
+		case 'new-quest':
+			{
+				const questId = data.questId ?? -1;
+				if (questId !== -1) {
+					appStore.getQuestStore().clearNewQuestIds([questId], { pushView: false });
+				}
+			}
+			break;
+		case 'quest-activity':
+			{
+				const questId = data.questId ?? -1;
+				if (questId !== -1) {
+					appStore.getQuestStore().clearQuestActivityIds([questId], { pushView: false });
+				}
+			}
 			break;
 	}
 }
@@ -548,6 +574,24 @@ export class GridClient {
 							this.spawnNotification(notification);
 							break;
 
+						case Notification.TYPE_QUEST_NOTIFICATION: {
+							if (!(notification.action_model instanceof QuestNotification)) {
+								break;
+							}
+
+							const c = this._getAppStore().getQuestStore();
+							const model = notification.action_model;
+							if (model.is_new) {
+								c.addNewQuestIds([model.quest_id]);
+							}
+
+							if (model.has_activity) {
+								c.addQuestActivityIds([model.quest_id]);
+							}
+							this.spawnNotification(notification);
+							break;
+						}
+
 						default:
 							this.spawnNotification(notification);
 							break;
@@ -586,6 +630,13 @@ export class GridClient {
 
 			appStore.setHasNewFriendRequests(payload.body.hasNewFriendRequests);
 			appStore.setHasNewUnlockedStickers(payload.body.hasNewUnlockedStickers);
+			appStore.setHasNewUnlockedStickers(payload.body.hasNewUnlockedStickers);
+
+			const questStore = appStore.getQuestStore();
+			questStore.addNewQuestIds(payload.body.newQuestIds);
+			questStore.addQuestActivityIds(payload.body.questActivityIds);
+			questStore.setDailyResetHour(payload.body.questResetHour);
+
 			this.bootstrapTimestamp = payload.body.lastNotificationTime;
 
 			this.bootstrapReceived = true;
@@ -692,6 +743,11 @@ export class GridClient {
 		// On site we only use it to disable native browser notifications, but still try to show in
 		// the Growl.
 		if (GJ_IS_DESKTOP_APP && !SettingFeedNotifications.get()) {
+			return;
+		}
+
+		// Don't show Notification growls if the user is still in onboarding.
+		if (Onboarding.isOnboarding) {
 			return;
 		}
 
@@ -894,8 +950,8 @@ export class GridClient {
 	}
 
 	async leaveFireside(fireside: Fireside) {
-		const channel = this.firesideChannels.find(i => i.fireside.id === fireside.id);
-		if (channel) {
+		const channels = this.firesideChannels.filter(i => i.fireside.id === fireside.id);
+		for (const channel of channels) {
 			this._leaveSocketChannel(channel.socketChannel);
 			arrayRemove(this.firesideChannels, i => i === channel);
 		}

@@ -20,6 +20,7 @@ import { imageGameJoltLogo, imageJolt } from '../../../img/images';
 import { useAppStore } from '../../../store/index';
 import { ChatStoreKey } from '../../chat/chat-store';
 import AppSearch from '../../search/AppSearch.vue';
+import AppShellQuestIcon from '../AppShellQuestIcon.vue';
 
 const AppShellAccountPopover = defineAsyncComponent(
 	() => import('../account-popover/account-popover.vue')
@@ -275,6 +276,8 @@ function _checkColWidths() {
 
 			<div v-app-observe-dimensions="_checkColWidths" class="-col">
 				<template v-if="user">
+					<AppShellQuestIcon />
+
 					<!-- Notifications -->
 					<AppShellNotificationPopover />
 

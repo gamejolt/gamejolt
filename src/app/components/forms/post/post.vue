@@ -39,7 +39,7 @@ import { KeyGroup } from '../../../../_common/key-group/key-group.model';
 import { LinkedAccount } from '../../../../_common/linked-account/linked-account.model';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
-import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
+import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { vAppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
@@ -973,7 +973,6 @@ export default class FormPost
 			</AppButton>
 
 			<AppButton
-				v-if="backgrounds.length > 0"
 				trans
 				:primary="enabledBackground"
 				:solid="enabledBackground"
@@ -1214,7 +1213,10 @@ export default class FormPost
 
 				<div v-show="isShowingMorePollOptions">
 					<AppFormGroup name="poll_is_private" :label="$gettext(`Private results?`)">
-						<AppFormControlToggle class="pull-right" />
+						<template #inline-control>
+							<AppFormControlToggle />
+						</template>
+
 						<p class="help-block sans-margin-top">
 							<AppTranslate>
 								The poll's results will be kept hidden if this is turned on.
@@ -1469,7 +1471,10 @@ export default class FormPost
 					class="sans-margin-bottom"
 					:label="$gettext(`Post to Profile`)"
 				>
-					<AppFormControlToggle class="pull-right" />
+					<template #inline-control>
+						<AppFormControlToggle />
+					</template>
+
 					<p class="help-block sans-margin-top" :class="{ '-text-white': overlay }">
 						This will post to your profile as well as the game page.
 					</p>
@@ -1481,7 +1486,10 @@ export default class FormPost
 					name="as_game_owner"
 					:label="$gettext(`Post as Game Owner`)"
 				>
-					<AppFormControlToggle class="pull-right" />
+					<template #inline-control>
+						<AppFormControlToggle />
+					</template>
+
 					<div
 						v-if="formModel.as_game_owner"
 						v-app-tooltip.touchable="

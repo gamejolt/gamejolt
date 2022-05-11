@@ -382,7 +382,10 @@ export default class FormGamePackage
 				name="partner_visibility"
 				:label="$gettext(`Partner Visibility`)"
 			>
-				<AppFormControlToggle class="pull-right" :disabled="!hasSalesPerms" />
+				<template #inline-control>
+					<AppFormControlToggle :disabled="!hasSalesPerms" />
+				</template>
+
 				<p class="help-block">
 					<AppTranslate>
 						Enabling this will allow partners to access this package even if it's marked
@@ -447,7 +450,9 @@ export default class FormGamePackage
 						<AppTranslate>Free</AppTranslate>
 						&mdash;
 						<span class="help-inline">
-							<AppTranslate>Completely free with no option to pay at all.</AppTranslate>
+							<AppTranslate>
+								Completely free with no option to pay at all.
+							</AppTranslate>
 						</span>
 					</label>
 				</div>
@@ -511,7 +516,7 @@ export default class FormGamePackage
 			>
 				<div class="row">
 					<div class="col-sm-3">
-						<AppFormGroup name="has_suggested_price" :hide-label="true">
+						<AppFormGroup name="has_suggested_price" hide-label>
 							<AppFormControlToggle :disabled="!hasSalesPerms" />
 						</AppFormGroup>
 						<br class="visible-xs" />
@@ -688,7 +693,9 @@ export default class FormGamePackage
 							<td>
 								{{ promotionalPricing.timezone }}
 								<div class="text-muted small">
-									<AppTranslate>All times are based off this timezone.</AppTranslate>
+									<AppTranslate>
+										All times are based off this timezone.
+									</AppTranslate>
 								</div>
 							</td>
 						</tr>
@@ -757,9 +764,7 @@ export default class FormGamePackage
 				</p>
 				<div class="checkbox">
 					<label>
-						<AppFormControlCheckbox
-							:disabled="startedPrimary || !hasPrimarySellable"
-						/>
+						<AppFormControlCheckbox :disabled="startedPrimary || !hasPrimarySellable" />
 
 						<template v-if="!hasPrimarySellable">
 							<strong>
@@ -782,9 +787,7 @@ export default class FormGamePackage
 			</AppFormGroup>
 
 			<AppFormButton>
-				<AppTranslate v-if="method === 'add'">
-					Add Package
-				</AppTranslate>
+				<AppTranslate v-if="method === 'add'">Add Package</AppTranslate>
 				<AppTranslate v-else-if="method === 'edit'">Save Package</AppTranslate>
 			</AppFormButton>
 		</AppLoadingFade>

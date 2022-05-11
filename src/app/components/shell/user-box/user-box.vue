@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import { formatNumber } from '../../../../_common/filters/number';
-import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
+import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 
@@ -50,10 +50,6 @@ export default class AppShellUserBox extends Vue {
 				:percent="app.user.level_next_percentage"
 				v-app-tooltip="`${app.user.level_next_percentage}% progress to next level`"
 			/>
-			<!-- <div class="progress progress-thin progress-green"
-			>
-			<div class="progress-bar" :style="{ width: app.user.level_next_percentage + '%' }"></div>
-		</div> -->
 		</div>
 	</div>
 </template>

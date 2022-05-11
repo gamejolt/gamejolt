@@ -6,19 +6,26 @@ export default abstract class Onboarding {
 	private static _currentStepStartedOn = 0;
 
 	static get isOnboarding() {
-		return localStorage.getItem('onboarding-start') !== null;
+		return sessionStorage.getItem('onboarding-start') !== null;
 	}
 
 	static start() {
-		localStorage.setItem('onboarding-start', Date.now().toString());
+		sessionStorage.setItem('onboarding-start', Date.now().toString());
 	}
 
 	static end() {
-		const onboardStartedOn = parseInt(localStorage.getItem('onboarding-start') || '0', 10);
+		const onboardStartedOn = parseInt(sessionStorage.getItem('onboarding-start') || '0', 10);
 		if (onboardStartedOn) {
 			this.trackTiming('flow-all-took', Date.now() - onboardStartedOn);
-			localStorage.removeItem('onboarding-start');
+			this.clearOnboardingStartTimestamp();
 		}
+	}
+
+	static clearOnboardingStartTimestamp() {
+		sessionStorage.removeItem('onboarding-start');
+		// We previously used [localStorage]. Clear out old entries now that
+		// they're no longer relevant.
+		localStorage.removeItem('onboarding-start');
 	}
 
 	static startStep(step: OnboardingStep) {

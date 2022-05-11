@@ -1,7 +1,6 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Community } from '../../../../../_common/community/community.model';
-import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import AppFormsCommunityPillAdd from '../../community/_pill/add/add.vue';
 import AppFormsCommunityPill from '../../community/_pill/community-pill.vue';
@@ -20,7 +19,6 @@ class Wrapper extends BaseForm<FormModel> {}
 	components: {
 		AppFormsCommunityPillAdd,
 		AppFormsCommunityPill,
-		AppFormControlToggle,
 	},
 })
 export default class FormFiresideAdd extends mixins(Wrapper) {
