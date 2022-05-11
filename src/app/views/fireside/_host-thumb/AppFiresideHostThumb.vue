@@ -1,79 +1,66 @@
 <script lang="ts">
-import { toRaw } from 'vue';
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { shallowSetup } from '../../../../utils/vue';
-import { FiresideRTCUser, setAudioPlayback } from '../../../../_common/fireside/rtc/user';
+import { computed, PropType, shallowReactive, toRefs } from 'vue';
+import { configFiresideMicVolume } from '../../../../_common/config/config.service';
+import {
+	FiresideRTCUser,
+	setAudioPlayback,
+	setUserMicrophoneAudioVolume,
+} from '../../../../_common/fireside/rtc/user';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../_common/popper/popper.vue';
+import AppSlider, { ScrubberCallback } from '../../../../_common/slider/AppSlider.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';
 import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';
+</script>
 
-@Options({
-	components: {
-		AppUserAvatarImg,
-		AppFiresideHostThumbIndicator,
-		AppPopper,
-		AppFiresideStreamVideo,
-		AppUserCardHover,
+<script lang="ts" setup>
+const props = defineProps({
+	host: {
+		type: Object as PropType<FiresideRTCUser>,
+		required: true,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
+	hideOptions: {
+		type: Boolean,
 	},
-})
-export default class AppFiresideHostThumb extends Vue {
-	@Prop({ type: Object, required: true })
-	host!: FiresideRTCUser;
+});
 
-	@Prop({ type: Boolean, required: false, default: false })
-	hideOptions!: boolean;
+const emit = defineEmits({
+	showPopper: () => true,
+	hidePopper: () => true,
+});
 
-	c = shallowSetup(() => useFiresideController()!);
+const { host, hideOptions } = toRefs(props);
 
-	@Emit('show-popper') emitShowPopper() {}
-	@Emit('hide-popper') emitHidePopper() {}
+const c = shallowReactive(useFiresideController()!);
 
-	get isFocused() {
-		return toRaw(this.c.rtc.value?.focusedUser) === toRaw(this.host);
+const isFocused = computed(() => c.rtc.value?.focusedUser?.uid === host.value.uid);
+
+const isMe = computed(() => c.rtc.value?.localUser?.uid === host.value.uid);
+
+const showingVideoThumb = computed(() => !isFocused.value && host.value.hasVideo);
+
+function onClick() {
+	if (isFocused.value || !c.rtc.value) {
+		return;
 	}
 
-	get isMe() {
-		return toRaw(this.c.rtc.value?.localUser) === toRaw(this.host);
-	}
+	c.rtc.value.focusedUser = host.value;
+}
 
-	get showingVideoThumb() {
-		return !this.isFocused && this.host.hasVideo;
-	}
+function mute() {
+	setAudioPlayback(host.value, false);
+}
 
-	get tooltip() {
-		return '@' + this.host.userModel?.username;
-	}
+function unmute() {
+	setAudioPlayback(host.value, true);
+}
 
-	onClick() {
-		if (this.isFocused || !this.c.rtc.value) {
-			return;
-		}
-
-		this.c.rtc.value.focusedUser = this.host;
-	}
-
-	mute() {
-		setAudioPlayback(this.host, false);
-	}
-
-	unmute() {
-		setAudioPlayback(this.host, true);
-	}
-
-	onUserCardShow() {
-		this.c.isShowingOverlayPopper.value = true;
-	}
-
-	onUserCardHide() {
-		this.c.isShowingOverlayPopper.value = false;
-	}
+function onMicAudioScrub({ percent }: ScrubberCallback) {
+	setUserMicrophoneAudioVolume(host.value, percent);
 }
 </script>
 
@@ -103,11 +90,34 @@ export default class AppFiresideHostThumb extends Vue {
 			<div v-if="!isMe" class="-options">
 				<transition>
 					<span
-						v-if="host.micAudioMuted"
-						v-app-tooltip="$gettext(`Muted`)"
-						class="-option -option-warn anim-fade-enter-enlarge anim-fade-leave-shrink"
+						v-if="host.micAudioMuted || host.playbackVolumeLevel < 1"
+						class="-option anim-fade-enter-enlarge anim-fade-leave-shrink"
+						:class="{
+							'-option-warn': host.micAudioMuted || host.playbackVolumeLevel <= 0,
+						}"
+						:style="{
+							flex: host.micAudioMuted ? 'none' : 'auto',
+						}"
 					>
-						<AppJolticon icon="audio-mute" />
+						<AppJolticon
+							v-if="host.micAudioMuted"
+							v-app-tooltip="$gettext(`Muted`)"
+							icon="audio-mute"
+						/>
+						<template v-else-if="host.playbackVolumeLevel < 1">
+							<AppJolticon
+								:icon="host.playbackVolumeLevel <= 0 ? 'audio-mute' : 'audio'"
+							/>
+							<strong class="tiny">
+								{{
+									' ' +
+									Math.min(
+										100,
+										Math.max(0, Math.round(host.playbackVolumeLevel * 100))
+									)
+								}}
+							</strong>
+						</template>
 					</span>
 				</transition>
 
@@ -116,8 +126,8 @@ export default class AppFiresideHostThumb extends Vue {
 				<AppPopper
 					v-if="!hideOptions"
 					placement="top"
-					@show="emitShowPopper"
-					@hide="emitHidePopper"
+					@show="() => emit('showPopper')"
+					@hide="() => emit('hidePopper')"
 				>
 					<a v-app-tooltip="$gettext('Options')" class="-option -option-show-hover">
 						<AppJolticon icon="cog" />
@@ -125,10 +135,20 @@ export default class AppFiresideHostThumb extends Vue {
 
 					<template #popover>
 						<div class="list-group">
-							<a v-if="!host.micAudioMuted" class="list-group-item" @click="mute()">
+							<div v-if="configFiresideMicVolume.value" class="list-group-item">
+								<div class="list-group-item-heading">
+									<AppTranslate> Microphone Volume </AppTranslate>
+								</div>
+								<AppSlider
+									:percent="host.playbackVolumeLevel"
+									@scrub="onMicAudioScrub"
+								/>
+							</div>
+
+							<a v-if="!host.micAudioMuted" class="list-group-item" @click="mute">
 								<AppTranslate>Mute</AppTranslate>
 							</a>
-							<a v-else class="list-group-item" @click="unmute()">
+							<a v-else class="list-group-item" @click="unmute">
 								<AppTranslate>Unmute</AppTranslate>
 							</a>
 						</div>
@@ -214,12 +234,12 @@ export default class AppFiresideHostThumb extends Vue {
 		flex: auto
 
 .-option
-	flex: none
+	flex: 1
 	elevate-1()
-	img-circle()
 	display: flex
 	width: 24px
 	height: 24px
+	border-radius: (@height / 2)
 	background-color: var(--theme-bg)
 	align-items: center
 	justify-content: center
@@ -237,9 +257,10 @@ export default class AppFiresideHostThumb extends Vue {
 		color: var(--theme-notice)
 
 .-option-show-hover
-	display: none
+	visibility: hidden
 
 .-thumb:hover
 	.-option-show-hover
+		visibility: visible
 		display: flex
 </style>

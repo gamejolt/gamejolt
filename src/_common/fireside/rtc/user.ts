@@ -5,9 +5,10 @@ import {
 	IRemoteAudioTrack,
 	IRemoteVideoTrack,
 } from 'agora-rtc-sdk-ng';
-import { markRaw, reactive, toRaw } from 'vue';
+import { markRaw, reactive, toRaw, watch, WatchStopHandle } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
+import { configFiresideMicVolume } from '../../config/config.service';
 import { updateTrackPlaybackDevice } from './producer';
 import { chooseFocusedRTCUser, FiresideRTC } from './rtc';
 
@@ -42,10 +43,19 @@ export class FiresideVideoLock {
 }
 
 export class FiresideRTCUser {
-	constructor(public readonly rtc: FiresideRTC, public readonly uid: number) {
+	constructor(
+		public readonly rtc: FiresideRTC,
+		public readonly uid: number,
+		public readonly isLocal: boolean
+	) {
 		// If everyone is currently muted, add new users as muted.
-		this.micAudioMuted =
-			rtc.isMuted || (rtc.users.length > 0 ? rtc.users.every(i => i.micAudioMuted) : false);
+		// TODO(big-pp-event) when this user becomes listable we may need to unmute their mic.
+		// This is because at the time this unlisted user started streaming the viewer had everyone
+		// muted, which would cause this instance to get initialized with micAudioMuted = true,
+		// but since then the viewer may have unmuted some users and THEN this user become listable.
+		// in this case it should act as if it was just now initialized and spawn in "unmuted".
+		// we basically need to rerun the published callbacks in rtc for this user.
+		this.micAudioMuted = rtc.isMuted || rtc.isEveryRemoteListableUsersMuted;
 	}
 
 	// These won't be assigned if this is the local user.
@@ -66,15 +76,118 @@ export class FiresideRTCUser {
 
 	hasMicAudio = false;
 	micAudioMuted = false;
+
+	/**
+	 * Scaled from 0 to 1, this is the volume level data that we're receiving
+	 * from the user.
+	 *
+	 * Used so we can display a ring around the user avatar while they're
+	 * speaking.
+	 */
 	volumeLevel = 0;
 
+	/**
+	 * Scaled from 0 to 1, this is the volume percent we want to receive from
+	 * the user.
+	 */
+	playbackVolumeLevel = 1;
+
+	_unwatchIsListed: WatchStopHandle | null = null;
+
+	get _rtcHost() {
+		return this.rtc.hosts.find(host => host.uids.includes(this.uid));
+	}
+
 	get userModel() {
-		return this.rtc.hosts.find(host => host.uids.indexOf(this.uid) !== -1)?.user ?? null;
+		return this._rtcHost?.user ?? null;
+	}
+
+	get isListed() {
+		// Local user is always listable.
+		if (this.isLocal) {
+			return true;
+		}
+
+		// If you're able to stream you should be able to see the other
+		// streamers always.
+		//
+		// TODO(unlisted-fireside-hosts) its better to solve this in backend by
+		// syncing listable host ids.
+		if (this.rtc.fireside.role?.canStream) {
+			return true;
+		}
+
+		// Treat unknown hosts as unlistable.
+		const host = this._rtcHost;
+		if (!host) {
+			return false;
+		}
+
+		// If the host is not unlisted at all we can early out.
+		if (!host.needsPermissionToView) {
+			return true;
+		}
+
+		// Our own user is never unlisted.
+		if (host.user.id === this.rtc.userId) {
+			return true;
+		}
+
+		// If the host isn't explicitly listable, we want to treat it as if they
+		// were unlistable to avoid showing a stream for a host we simply did
+		// not receive the listable hosts for in time.
+		return this.rtc.listableHostIds.includes(host.user.id);
 	}
 }
 
-export function createFiresideRTCUser(rtc: FiresideRTC, uid: number) {
-	return reactive(new FiresideRTCUser(rtc, uid)) as FiresideRTCUser;
+export function createRemoteFiresideRTCUser(rtc: FiresideRTC, uid: number) {
+	const user = reactive(new FiresideRTCUser(rtc, uid, false)) as FiresideRTCUser;
+
+	user._unwatchIsListed = watch(
+		() => user.isListed,
+		(isListed, wasListed) => {
+			rtc.log(
+				`${_userIdForLog(user)} -> isListed transitioned from ${
+					wasListed ? 'true' : 'false'
+				} to ${isListed ? 'true' : 'false'}`
+			);
+
+			if (!isListed) {
+				stopAudioPlayback(user);
+				return;
+			}
+
+			// Find all other remote users.
+			const otherUsers = rtc.listableStreamingUsers.filter(i => !i.isLocal && i.uid !== uid);
+			const isOnlyUser = otherUsers.length === 0;
+
+			if (isOnlyUser) {
+				// If this is the only user, we can safely start our playback.
+				startAudioPlayback(user);
+			} else if (otherUsers.every(i => i.micAudioMuted)) {
+				// Mute this user if all other listed users are muted.
+				stopAudioPlayback(user);
+			} else {
+				// If any listed users are unmuted, unmute ourselves when
+				// becoming listed.
+				startAudioPlayback(user);
+			}
+		}
+	);
+
+	return user;
+}
+
+export function createLocalFiresideRTCUser(rtc: FiresideRTC, uid: number) {
+	return reactive(new FiresideRTCUser(rtc, uid, true)) as FiresideRTCUser;
+}
+
+export function cleanupFiresideRTCUser(user: FiresideRTCUser) {
+	user.remoteVideoUser = null;
+	user.remoteChatUser = null;
+
+	user._unwatchIsListed?.();
+	user._unwatchIsListed = null;
 }
 
 function _userIdForLog(user: FiresideRTCUser) {
@@ -134,7 +247,15 @@ export function releaseVideoLock(user: FiresideRTCUser, lock: FiresideVideoLock)
 	}
 
 	lock.released = true;
-	arrayRemove(user.videoLocks, i => i === lock);
+	arrayRemove(user.videoLocks, i => {
+		// [FiresideRTCUser] instances may be wrapped in a [reactive] or [ref],
+		// which would cause triple-equals to fail (equality on the proxy vs.
+		// the raw value).
+		//
+		// Make sure we call [toRaw] on these so that we always compare the
+		// actual raw class value for equality.
+		return toRaw(i) === toRaw(lock);
+	});
 
 	// When there's no more locks, stop the video.
 	if (!user.videoLocks.length) {
@@ -155,11 +276,20 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 		return;
 	}
 
-	const wasQueued = user.queuedVideoPlayState !== null;
-	user.queuedVideoPlayState = newState;
-
-	if (wasQueued) {
+	const isBusy = user.queuedVideoPlayState !== null;
+	if (isBusy) {
 		rtc.log('Queue up new video play state change, we are already busy.', { ...newState });
+		return;
+	}
+
+	// If the user isn't listed and we're not trying to stop the video, stop the
+	// operation and attempt to stop playback.
+	if (!user.isListed && !_comparePlayState(newState, new FiresideVideoPlayStateStopped())) {
+		const err = new Error('Attempted to start video playback for unlisted user');
+		rtc.logError(err.message);
+		console.error(err);
+
+		setVideoPlayback(user, new FiresideVideoPlayStateStopped());
 		return;
 	}
 
@@ -169,15 +299,10 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 			newState: { ...newState },
 			existingState: { ...user.videoPlayState },
 		});
-
-		// If our play state is what we wanted and a new one hasn't been
-		// assigned, clear out the queued state.
-		if (user.queuedVideoPlayState === newState) {
-			user.queuedVideoPlayState = null;
-		}
 		return;
 	}
 
+	user.queuedVideoPlayState = newState;
 	rtc.log('Setting new play state.', { ...newState });
 
 	if (newState instanceof FiresideVideoPlayStatePlaying) {
@@ -269,6 +394,13 @@ export async function startDesktopAudioPlayback(user: FiresideRTCUser) {
 
 	rtc.log(`${_userIdForLog(user)} -> startDesktopAudioPlayback`);
 
+	if (!user.isListed) {
+		const err = new Error('Attempted to start desktop audio playback for unlisted user');
+		rtc.logError(err.message);
+		console.error(err);
+		return;
+	}
+
 	try {
 		// Only subscribe for remote users.
 		if (user.remoteVideoUser) {
@@ -340,6 +472,13 @@ export async function startAudioPlayback(user: FiresideRTCUser) {
 		return;
 	}
 
+	if (!user.isListed) {
+		const err = new Error('Attempted to start mic audio playback for unlisted user');
+		rtc.logWarning(err.message);
+		console.warn(err);
+		return;
+	}
+
 	try {
 		user._micAudioTrack = markRaw(
 			await rtc.chatChannel.agoraClient.subscribe(user.remoteChatUser, 'audio')
@@ -350,6 +489,9 @@ export async function startAudioPlayback(user: FiresideRTCUser) {
 		if (rtc.producer) {
 			updateTrackPlaybackDevice(rtc.producer, user._micAudioTrack);
 		}
+
+		// Set their mic volume to our preference before playing.
+		setUserMicrophoneAudioVolume(user, user.playbackVolumeLevel);
 
 		user._micAudioTrack.play();
 	} catch (e) {
@@ -389,12 +531,21 @@ export async function stopAudioPlayback(user: FiresideRTCUser) {
 }
 
 export function updateVolumeLevel(user: FiresideRTCUser) {
-	if (!user.remoteChatUser || user._micAudioTrack?.isPlaying !== true) {
+	if (user._micAudioTrack?.isPlaying !== true) {
 		user.volumeLevel = 0;
 		return;
 	}
 
 	user.volumeLevel = user._micAudioTrack.getVolumeLevel();
+}
+
+/** Expects a value from 0 to 1 */
+export function setUserMicrophoneAudioVolume(user: FiresideRTCUser, percent: number) {
+	if (!configFiresideMicVolume.value) {
+		return;
+	}
+	user._micAudioTrack?.setVolume(Math.round(percent * 100));
+	user.playbackVolumeLevel = percent;
 }
 
 /** Expects a value from 0 to 1 */

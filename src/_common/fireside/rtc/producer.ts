@@ -20,9 +20,9 @@ import {
 	startChannelStreaming,
 	stopChannelStreaming,
 } from './channel';
-import { chooseFocusedRTCUser, FiresideRTC, renewRTCTokens } from './rtc';
+import { applyRTCTokens, chooseFocusedRTCUser, FiresideRTC } from './rtc';
 import {
-	createFiresideRTCUser,
+	createLocalFiresideRTCUser,
 	setUserHasDesktopAudio,
 	setUserHasMicAudio,
 	setUserHasVideo,
@@ -180,6 +180,7 @@ export class FiresideRTCProducer {
 }
 
 export function createFiresideRTCProducer(rtc: FiresideRTC) {
+	rtc.log('Trace(createFiresideRTCProducer)');
 	const producer = reactive(new FiresideRTCProducer(rtc)) as FiresideRTCProducer;
 
 	MediaDeviceService.detectDevices({ prompt: false });
@@ -189,7 +190,16 @@ export function createFiresideRTCProducer(rtc: FiresideRTC) {
 	return producer;
 }
 
-export function destroyFiresideRTCProducer(producer: FiresideRTCProducer) {
+/**
+ * Cleans up watchers and intervals that may be used by the producer.
+ * This does NOT stop streaming or close channels. It's is meant to be used
+ * to cleanup the producer instance after we no longer need it.
+ */
+export function cleanupFiresideRTCProducer(producer: FiresideRTCProducer) {
+	console.log('[FIRESIDE-RTC] Trace(cleanupFiresideRTCProducer)');
+
+	// TODO(big-pp-event) theres nothing to prevent a queued up startStream
+	// to get executed after cleanup is called on the same instance.
 	producer._isStreaming = false;
 
 	if (producer._tokenRenewInterval) {
@@ -304,6 +314,8 @@ async function _renewTokens(producer: FiresideRTCProducer) {
 	producer._areTokensRenewing = true;
 
 	async function _updateHostTokens() {
+		rtc.log(`Renewing streaming tokens.`);
+
 		const response = await Api.sendRequest(
 			'/web/dash/fireside/generate-streaming-tokens/' + fireside.id,
 			{ streaming_uid: rtc.streamingUid },
@@ -320,7 +332,7 @@ async function _renewTokens(producer: FiresideRTCProducer) {
 		}
 
 		const { videoToken, chatToken } = response;
-		await renewRTCTokens(rtc, videoToken, chatToken);
+		await applyRTCTokens(rtc, videoToken, chatToken);
 	}
 
 	async function _updateAudienceTokens() {
@@ -329,7 +341,9 @@ async function _renewTokens(producer: FiresideRTCProducer) {
 			return;
 		}
 
-		const response = await _updateSetIsStreaming(producer);
+		rtc.log(`Renewing audience tokens.`);
+
+		const response = await updateSetIsStreaming(producer);
 
 		if (response?.success !== true) {
 			throw new Error(response);
@@ -339,7 +353,6 @@ async function _renewTokens(producer: FiresideRTCProducer) {
 	}
 
 	try {
-		rtc.log(`Renewing streaming tokens.`);
 		await Promise.all([_updateHostTokens(), _updateAudienceTokens()]);
 	} catch (e) {
 		rtc.logWarning(`Got error while renewing tokens.`, e);
@@ -530,7 +543,7 @@ function _updateWebcamDevice(producer: FiresideRTCProducer) {
 		});
 
 		// No need to await on this. its not essential.
-		_updateSetIsStreaming(producer);
+		updateSetIsStreaming(producer);
 
 		if (producer._videoPreviewElement) {
 			previewChannelVideo(videoChannel, producer._videoPreviewElement);
@@ -538,8 +551,20 @@ function _updateWebcamDevice(producer: FiresideRTCProducer) {
 	});
 }
 
-async function _updateSetIsStreaming(producer: FiresideRTCProducer) {
+export interface SetIsStreamingOptions {
+	isStreaming?: boolean;
+}
+
+export async function updateSetIsStreaming(
+	producer: FiresideRTCProducer,
+	options?: SetIsStreamingOptions
+) {
 	const { rtc } = producer;
+
+	// We want to be able to bypass the producer's _isStreaming setting
+	// because during cleanup we may call this before the producer has actually
+	// disposed of their streams and we don't want to wait on that.
+	const isStreaming = options?.isStreaming ?? producer._isStreaming;
 
 	let response: any = null;
 
@@ -547,7 +572,7 @@ async function _updateSetIsStreaming(producer: FiresideRTCProducer) {
 		response = await Api.sendRequest(
 			'/web/dash/fireside/set-is-streaming/' + rtc.fireside.id,
 			{
-				is_streaming: producer._isStreaming,
+				is_streaming: isStreaming,
 				streaming_uid: rtc.streamingUid,
 				has_video:
 					producer.selectedWebcamDeviceId !== PRODUCER_UNSET_DEVICE &&
@@ -678,7 +703,7 @@ function _updateDesktopAudioDevice2(producer: FiresideRTCProducer) {
 		});
 
 		// No need to await on this. its not essential.
-		_updateSetIsStreaming(producer);
+		updateSetIsStreaming(producer);
 	});
 }
 
@@ -773,7 +798,7 @@ function _updateMicDevice(producer: FiresideRTCProducer) {
 		});
 
 		// No need to await on this. its not essential.
-		_updateSetIsStreaming(producer);
+		updateSetIsStreaming(producer);
 	});
 }
 
@@ -917,7 +942,7 @@ export async function startStreaming(producer: FiresideRTCProducer) {
 		} = producer;
 		const generation = rtc.generation;
 
-		const response = await _updateSetIsStreaming(producer);
+		const response = await updateSetIsStreaming(producer);
 
 		if (response?.success !== true || generation.isCanceled) {
 			rtc.logWarning(`Couldn't start streaming.`, response);
@@ -962,13 +987,8 @@ async function _stopStreaming(producer: FiresideRTCProducer, becomeBusy: boolean
 			rtc: { videoChannel, chatChannel },
 		} = producer;
 
-		// This just sets the backend to know that they stopped streaming
-		// immediately. We don't need to refresh or anything if it fails.
-		const response = await _updateSetIsStreaming(producer);
-
-		if (response?.success !== true) {
-			throw new Error(`API did not return success.`);
-		}
+		// No need to await on this. its not essential.
+		updateSetIsStreaming(producer);
 
 		// Failure here should end up forcing the app to reload to make
 		// absolutely sure they aren't streaming by accident.
@@ -978,6 +998,10 @@ async function _stopStreaming(producer: FiresideRTCProducer, becomeBusy: boolean
 				stopChannelStreaming(chatChannel),
 			]);
 
+			// TODO(big-pp-event) I don't fully understand what this is supposed
+			// to do and why we want to call this after the streams are stopped.
+			// It looks like this unsets the recording devices which indirectly
+			// stops the stream anyways?
 			clearSelectedRecordingDevices(producer);
 		} catch (err) {
 			rtc.logError(`Failed to stop one or more agora channels. Force reloading...`, err);
@@ -1031,7 +1055,7 @@ function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
 	const hadDesktopAudio = user?.hasDesktopAudio === true;
 	const hadMicAudio = user?.hasMicAudio === true;
 
-	user ??= createFiresideRTCUser(rtc, streamingUid);
+	user ??= createLocalFiresideRTCUser(rtc, streamingUid);
 	user._videoTrack = videoChannel._localVideoTrack
 		? markRaw(videoChannel._localVideoTrack)
 		: null;

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, watch } from 'vue';
+import { computed, onBeforeUnmount, PropType, watch } from 'vue';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
@@ -31,21 +31,27 @@ const c = createFiresideController(props.fireside, {
 	isMuted: true,
 });
 
-const { rtc, isShowingStreamSetup, isStreaming } = c;
+const { rtc, isShowingStreamSetup, isStreaming, cleanup: cleanupController } = c;
 
-const rtcUsers = computed(() => {
-	if (!rtc.value) {
-		return [];
+const cohosts = computed(() => {
+	const result: User[] = [];
+
+	for (const rtcUser of rtc.value?.listableStreamingUsers ?? []) {
+		// Since we're iterating over listable users they will always have their userModel.
+		const userModel = rtcUser.userModel!;
+
+		// Filter out creator of the fireside.
+		//
+		// TODO(big-pp-event) why are we doing this?
+		//
+		// Note: this would probably not exclude the remote instance of the
+		// creator of the fireside. Intentional?
+		if (userModel !== props.fireside.user) {
+			result.push(userModel);
+		}
 	}
 
-	const users: User[] = [];
-	rtc.value.users.forEach(i => {
-		if (!i.userModel || i.userModel === props.fireside.user) {
-			return;
-		}
-		users.push(i.userModel);
-	});
-	return users;
+	return result;
 });
 
 const focusedUser = computed(() => rtc.value?.focusedUser);
@@ -61,12 +67,15 @@ const shouldShowVideo = computed(() => {
 watch([isStreaming, hasVideo], () => {
 	emit('changed', hasVideo.value, isStreaming.value);
 });
+
+// TODO(big-pp-event) should we use onUnmounted here?
+onBeforeUnmount(() => cleanupController());
 </script>
 
 <template>
-	<AppFiresideContainer class="-stream theme-dark" :controller="c">
+	<AppFiresideContainer class="-stream-preview-video theme-dark" :controller="c">
 		<div v-if="focusedUser && shouldShowVideo" :key="focusedUser.uid">
-			<AppFiresideStreamVideo class="-video-player" :rtc-user="focusedUser" />
+			<AppFiresideStreamVideo class="-stream-preview-video-inner" :rtc-user="focusedUser" />
 
 			<div class="-overlay">
 				<div v-if="showLive" class="-center">
@@ -75,7 +84,7 @@ watch([isStreaming, hasVideo], () => {
 					</div>
 				</div>
 				<div v-if="showLiveUsers" class="-live-users">
-					<AppUserAvatarList :users="rtcUsers" sm inline />
+					<AppUserAvatarList :users="cohosts" sm inline />
 				</div>
 			</div>
 		</div>
@@ -84,10 +93,10 @@ watch([isStreaming, hasVideo], () => {
 </template>
 
 <style lang="stylus" scoped>
-.-stream
-.-video-player
+.-stream-preview-video
+.-stream-preview-video-inner
 .-overlay
-	position: absolute
+	position: absolute !important
 	top: 0
 	right: 0
 	bottom: 0
