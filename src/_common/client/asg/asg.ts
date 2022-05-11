@@ -24,7 +24,7 @@ export function startCapture(pid: number, writer: WritableStream<AudioData>): AS
 	const asgInst = reactive({
 		pid,
 		_writer: markRaw(writer.getWriter()),
-		_emitter: emitter,
+		_emitter: markRaw(emitter),
 		_uid: '',
 		_status: 'starting',
 	} as ASGInstance);
@@ -60,16 +60,15 @@ export function startCapture(pid: number, writer: WritableStream<AudioData>): AS
 			asgInst._writer.write(audioData);
 		});
 
-	asgNative
-		.startCapture(pid, emitter.emit.bind(emitter))
-		.then((uid: string) => {
-			asgInst._uid = uid;
-			asgInst._status = 'started';
-		})
-		.catch((error: Error) => {
-			console.error('Got error while starting ASG capture', error);
-			cleanup(asgInst);
-		});
+	// TODO make startCapture a promise.
+	try {
+		const uid = asgNative.startCapture(pid, emitter.emit.bind(emitter));
+		asgInst._uid = uid;
+		asgInst._status = 'started';
+	} catch (error) {
+		console.error('Got error while starting ASG capture', error);
+		cleanup(asgInst);
+	}
 
 	return asgInst;
 }
@@ -83,7 +82,8 @@ export async function stopCapture(asg: ASGInstance): Promise<void> {
 	}
 
 	asg._status = 'stopping';
-	await asgNative.endCapture(asg._uid);
+	// TODO make this a promise, and await on it.
+	asgNative.endCapture(asg._uid);
 	asg._status = 'stopped';
 
 	cleanup(asg);

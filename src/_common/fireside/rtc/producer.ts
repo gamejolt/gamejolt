@@ -2,7 +2,7 @@ import type { IAgoraRTCRemoteUser, ILocalAudioTrack, IRemoteAudioTrack } from 'a
 import { markRaw, reactive } from 'vue';
 import { MediaDeviceService } from '../../agora/media-device.service';
 import { Api } from '../../api/api.service';
-import { Client } from '../../client/safe-exports';
+import { startCapture, stopCapture } from '../../client/safe-exports';
 import { importNoSSR } from '../../code-splitting';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { Navigate } from '../../navigate/navigate.service';
@@ -28,9 +28,12 @@ import {
 	setUserHasVideo,
 } from './user';
 
-const path = require('path') as typeof import('path');
-const { EventEmitter } = require('events') as typeof import('events');
-const { asg } = require(path.join(Client.nwStaticAssetsDir, 'asg.node'));
+console.log(startCapture);
+console.log(stopCapture);
+
+// const { EventEmitter } = require('events') as typeof import('events');
+// const { asg } = require(path.join(Client.nwStaticAssetsDir, 'asg.node'));
+// const asg = require('asg-prebuilt');
 const { ppid } = require('process') as typeof import('process');
 const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
 
@@ -39,98 +42,99 @@ const RENEW_TOKEN_INTERVAL = 60_000;
 export const PRODUCER_UNSET_DEVICE = 'unset';
 export const PRODUCER_DEFAULT_GROUP_AUDIO = 'default';
 
-const registry = new FinalizationRegistry((id: number) => {
-	asg.endCapture();
-});
+// const registry = new FinalizationRegistry((id: number) => {
+// 	asg.endCapture();
+// });
 
-class ASGComponent {
-	constructor() {
-		registry.register(this, 1);
-		this.emitter = new EventEmitter();
+// class ASGComponent {
+// 	constructor() {
+// 		registry.register(this, 1);
+// 		this.emitter = new EventEmitter();
 
-		this.emitter
-			.on('status_update', (text: string) => {
-				console.log('Status update: ' + text, true);
-				if (text == 'Recording ends') {
-					this.generator.writable.getWriter().close();
-				}
-				if (text == 'Recording starts') {
-					console.log('ASG: Recording Starts');
-				}
-			})
-			.on('error', (text: string) => {
-				console.log('Caught error: ' + text, true);
-				this.endASG();
-			})
-			.on('data', (data: Float32Array) => {
-				const stereoFrameCount = data.length / 2;
-				const currTimeLength = (stereoFrameCount * 1000000) / 44100;
-				this.nextTimestamp += currTimeLength;
-				const audioData = new AudioData({
-					format: 'f32',
-					numberOfChannels: 2,
-					numberOfFrames: stereoFrameCount,
-					timestamp: this.nextTimestamp,
-					sampleRate: 44100,
-					data: data,
-				});
+// 		this.emitter
+// 			.on('status_update', (text: string) => {
+// 				console.log('Status update: ' + text, true);
+// 				if (text == 'Recording ends') {
+// 					this.generator.writable.getWriter().close();
+// 				}
+// 				if (text == 'Recording starts') {
+// 					console.log('ASG: Recording Starts');
+// 				}
+// 			})
+// 			.on('error', (text: string) => {
+// 				console.log('Caught error: ' + text, true);
+// 				this.endASG();
+// 			})
+// 			.on('data', (data: Float32Array) => {
+// 				const stereoFrameCount = data.length / 2;
+// 				const currTimeLength = (stereoFrameCount * 1000000) / 44100;
+// 				this.nextTimestamp += currTimeLength;
+// 				const audioData = new AudioData({
+// 					format: 'f32',
+// 					numberOfChannels: 2,
+// 					numberOfFrames: stereoFrameCount,
+// 					timestamp: this.nextTimestamp,
+// 					sampleRate: 44100,
+// 					data: data,
+// 				});
 
-				if (this.writer) {
-					this.writer.write(audioData);
-					console.log('ASG: WRITER IS VALID');
-				} else console.log('ASG: WRITER IS NOT VALID');
-			});
-	}
-	startCapture() {
-		this.endCapture();
-		console.log('ASG: Excluded PID : ' + ppid);
-		asg.startCapture(ppid, this.emitter.emit.bind(this.emitter));
-		this.isCapturing = true;
-	}
+// 				if (this.writer) {
+// 					this.writer.write(audioData);
+// 					console.log('ASG: WRITER IS VALID');
+// 				} else console.log('ASG: WRITER IS NOT VALID');
+// 			});
+// 	}
+// 	startCapture() {
+// 		this.endCapture();
+// 		console.log('ASG: Excluded PID : ' + ppid);
+// 		asg.startCapture(ppid, this.emitter.emit.bind(this.emitter));
+// 		this.isCapturing = true;
+// 	}
 
-	endCapture() {
-		if (this.isCapturing) {
-			console.log('ASG: Ending Capture ');
-			asg.endCapture();
-			this.isCapturing = false;
-		}
-	}
-	async startASG() {
-		try {
-			this.startCapture();
-			console.log('ASG: Swapping to new track.');
-			this.generator = new MediaStreamTrackGenerator({ kind: 'audio' });
-			this.writer = this.generator.writable.getWriter();
-			this.writer.closed.then(() => {
-				console.log('ASG: Track write stream is closed');
-			});
-		} catch (error) {
-			console.log(error);
-			this.emitter.removeAllListeners();
-		}
-	}
+// 	endCapture() {
+// 		if (this.isCapturing) {
+// 			console.log('ASG: Ending Capture ');
+// 			asg.endCapture();
+// 			this.isCapturing = false;
+// 		}
+// 	}
+// 	async startASG() {
+// 		try {
+// 			this.startCapture();
+// 			console.log('ASG: Swapping to new track.');
+// 			this.generator = new MediaStreamTrackGenerator({ kind: 'audio' });
+// 			this.writer = this.generator.writable.getWriter();
+// 			this.writer.closed.then(() => {
+// 				console.log('ASG: Track write stream is closed');
+// 			});
+// 		} catch (error) {
+// 			console.log(error);
+// 			this.emitter.removeAllListeners();
+// 		}
+// 	}
 
-	getMediaStreamTrack() {
-		if (!this.generator) console.log('ASG Generator invalid!');
-		return this.generator;
-	}
+// 	getMediaStreamTrack() {
+// 		if (!this.generator) console.log('ASG Generator invalid!');
+// 		return this.generator;
+// 	}
 
-	endASG() {
-		if (this.isCapturing) {
-			asg.endCapture();
-			this.isCapturing = false;
-		} else console.log('ASG: Invalid call! CHECK CALLER');
-	}
+// 	endASG() {
+// 		if (this.isCapturing) {
+// 			asg.endCapture();
+// 			this.isCapturing = false;
+// 		} else console.log('ASG: Invalid call! CHECK CALLER');
+// 	}
 
-	generator: MediaStreamTrackGenerator<AudioData> | any;
-	nextTimestamp = 0;
-	emitter: any;
-	writer: any;
-	isCapturing = false;
-}
+// 	generator: MediaStreamTrackGenerator<AudioData> | any;
+// 	nextTimestamp = 0;
+// 	emitter: any;
+// 	writer: any;
+// 	isCapturing = false;
+// }
+
 export class FiresideRTCProducer {
 	constructor(public readonly rtc: FiresideRTC) {}
-	asgComponent: ASGComponent | null = null;
+	// asgComponent: ASGComponent | null = null;
 	// The target device IDs we want to be streaming with.
 	_selectedWebcamDeviceId = '';
 	_selectedMicDeviceId = '';
@@ -420,7 +424,7 @@ export function setSelectedMicDeviceId(
 	}
 
 	if (micChanged) {
-		_updateMicDevice2(producer);
+		_updateMicDevice(producer);
 	}
 }
 
@@ -625,15 +629,18 @@ function _updateDesktopAudioDevice(producer: FiresideRTCProducer) {
 				return null;
 			}
 
-			if (!producer.asgComponent) {
-				producer.asgComponent = new ASGComponent();
-				rtc.log(`Starting ASG component`);
-			}
-			console.log('ASG: CREATE CUSTOM');
-			await producer.asgComponent.startASG();
+			const generator = new MediaStreamTrackGenerator({ kind: 'audio' });
+			const asgInstance = startCapture(ppid, generator.writable);
+			// TODO asgInstance is what youd use to stop this later like so: stopCapture(asgInstance)
+			console.log(asgInstance);
+
+			// console.log('ASG: CREATE CUSTOM');
+			// await producer.asgComponent.startASG();
+
 			const AgoraRTC = await AgoraRTCLazy;
 			const track = await AgoraRTC.createCustomAudioTrack({
-				mediaStreamTrack: producer.asgComponent.getMediaStreamTrack(),
+				// mediaStreamTrack: producer.asgComponent.getMediaStreamTrack(),
+				mediaStreamTrack: generator,
 				encoderConfig: 'high_quality_stereo',
 				//AEC: false,
 				//AGC: false,
@@ -656,99 +663,7 @@ function _updateDesktopAudioDevice(producer: FiresideRTCProducer) {
 		});
 
 		// No need to await on this. its not essential.
-		_updateSetIsStreaming(producer);
-	});
-}
-
-function _updateDesktopAudioDevice2(producer: FiresideRTCProducer) {
-	return _doBusyWork(producer, async () => {
-		const {
-			_selectedDesktopAudioDeviceId,
-			rtc,
-			rtc: { videoChannel },
-		} = producer;
-
-		let deviceId: string | null;
-		if (
-			_selectedDesktopAudioDeviceId === '' ||
-			_selectedDesktopAudioDeviceId === PRODUCER_UNSET_DEVICE
-		) {
-			deviceId = null;
-		} else {
-			const deviceExists = !!MediaDeviceService.mics.find(
-				mic => mic.deviceId === _selectedDesktopAudioDeviceId
-			);
-			deviceId = deviceExists ? _selectedDesktopAudioDeviceId : null;
-		}
-
-		rtc.log(`Setting desktop audio device to ${deviceId}`);
-		producer._streamingDesktopAudioDeviceId = deviceId;
-
-		await setChannelAudioTrack(videoChannel, async () => {
-			if (!deviceId) {
-				return null;
-			}
-
-			const AgoraRTC = await AgoraRTCLazy;
-			const track = await AgoraRTC.createMicrophoneAudioTrack({
-				microphoneId: deviceId,
-				// We disable all this so that it doesn't affect the desktop audio in any way.
-				AEC: false,
-				AGC: false,
-				ANS: false,
-				encoderConfig: 'high_quality_stereo',
-			});
-			track.setVolume(100);
-
-			rtc.log(`Desktop audio track ID: ${track.getTrackId()}`);
-
-			return track;
-		});
-
-		// No need to await on this. its not essential.
 		updateSetIsStreaming(producer);
-	});
-}
-
-function _updateMicDevice2(producer: FiresideRTCProducer) {
-	return _doBusyWork(producer, async () => {
-		const {
-			_selectedMicDeviceId,
-			rtc,
-			rtc: { chatChannel },
-		} = producer;
-
-		let deviceId: string | null;
-		if (_selectedMicDeviceId === '' || _selectedMicDeviceId === PRODUCER_UNSET_DEVICE) {
-			deviceId = null;
-		} else {
-			const deviceExists = !!MediaDeviceService.mics.find(
-				mic => mic.deviceId === _selectedMicDeviceId
-			);
-			deviceId = deviceExists ? _selectedMicDeviceId : null;
-		}
-
-		rtc.log(`Setting mic device to ${deviceId}`);
-		producer._streamingMicDeviceId = deviceId;
-
-		await setChannelAudioTrack(chatChannel, async () => {
-			if (!deviceId) {
-				return null;
-			}
-
-			const AgoraRTC = await AgoraRTCLazy;
-			const track = await AgoraRTC.createMicrophoneAudioTrack({
-				microphoneId: deviceId,
-			});
-			track.setVolume(100);
-
-			rtc.log(`Mic track ID: ${track.getTrackId()}`);
-
-			return track;
-		});
-
-		// No need to await on this. its not essential.
-		_updateSetIsStreaming(producer);
 	});
 }
 
@@ -778,25 +693,14 @@ function _updateMicDevice(producer: FiresideRTCProducer) {
 				return null;
 			}
 
-			if (!producer.asgComponent) {
-				producer.asgComponent = new ASGComponent();
-				rtc.log(`Starting ASG`);
-			}
-			producer.asgComponent.startASG();
-
 			const AgoraRTC = await AgoraRTCLazy;
-
-			//uncomment to switch back to using actual Mic
-			//const track = await AgoraRTC.createMicrophoneAudioTrack({
-			//	microphoneId: deviceId,
-			//});
-			console.log('ASG: CREATE CUSTOM');
-			const track = await AgoraRTC.createCustomAudioTrack({
-				mediaStreamTrack: producer.asgComponent.getMediaStreamTrack(),
+			const track = await AgoraRTC.createMicrophoneAudioTrack({
+				microphoneId: deviceId,
 			});
 			track.setVolume(100);
 
 			rtc.log(`Mic track ID: ${track.getTrackId()}`);
+
 			return track;
 		});
 
