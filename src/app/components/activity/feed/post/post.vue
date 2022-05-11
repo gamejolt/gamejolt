@@ -31,7 +31,7 @@ import {
 } from '../../../../../_common/sticker/target/target-controller';
 import AppStickerTarget from '../../../../../_common/sticker/target/target.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
+import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';

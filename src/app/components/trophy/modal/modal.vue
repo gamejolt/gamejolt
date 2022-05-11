@@ -8,7 +8,7 @@ import { SiteTrophy } from '../../../../_common/site/trophy/trophy.model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
+import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import { UserGameTrophy } from '../../../../_common/user/trophy/game-trophy.model';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
