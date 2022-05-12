@@ -17,12 +17,13 @@ import { $gettext } from '../../../../../_common/translate/translate.service';
 import { ChatStore, ChatStoreKey } from '../../chat-store';
 import {
 	removeMessage as chatRemoveMessage,
-	retryFailedQueuedMessage,
 	setMessageEditing,
 	userCanModerateOtherUser,
 } from '../../client';
 import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
+import AppChatUserPopover from '../../user-popover/user-popover.vue';
+import AppChatWindowOutputItemDetails from './AppChatWindowOutputItemDetails.vue';
 
 export interface ChatMessageEditEvent {
 	message: ChatMessage;
@@ -37,13 +38,9 @@ const props = defineProps({
 		type: Object as PropType<ChatRoom>,
 		required: true,
 	},
-	isNew: {
-		type: Boolean,
-		required: true,
-	},
 });
 
-const { message, room, isNew } = toRefs(props);
+const { message, room } = toRefs(props);
 
 const chatStore = inject<ChatStore>(ChatStoreKey)!;
 const { theme, isDark } = useThemeStore();
@@ -51,8 +48,6 @@ const { theme, isDark } = useThemeStore();
 const displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
 
 const root = ref<HTMLElement>();
-const headerData = ref<HTMLElement>();
-const floatingData = ref<HTMLElement>();
 
 const messageOptionsVisible = ref(false);
 
@@ -60,17 +55,6 @@ const chat = computed(() => chatStore.chat!);
 
 // Use the form/page/user theme, or the default theme if none exist.
 const actualTheme = computed(() => theme.value ?? DefaultTheme);
-
-const loggedOn = computed(() => {
-	if (!room.value.shouldShowTimestamp) {
-		return null;
-	}
-
-	return {
-		template: formatDate(message.value.logged_on, 'shortTime'),
-		tooltip: formatDate(message.value.logged_on, 'medium'),
-	};
-});
 
 const isEditing = computed(() => chat.value.messageEditing === message.value);
 
@@ -147,10 +131,6 @@ function startEdit() {
 	Popper.hideAll();
 }
 
-function onClickResend() {
-	retryFailedQueuedMessage(chat.value, message.value);
-}
-
 async function removeMessage() {
 	Popper.hideAll();
 
@@ -172,39 +152,24 @@ async function removeMessage() {
 		ref="root"
 		class="chat-window-output-item"
 		:class="{
-			'-message-new': isNew,
 			'-message-queued': message._showAsQueued,
 			'-options-visible': messageOptionsVisible,
 		}"
 	>
-		<!--
-		    Teleports to either the header content or a display-on-hover flyout
-			display
-		-->
-		<Teleport v-if="headerData || floatingData" :to="headerData || floatingData">
-			<div class="-message-details">
-				<template v-if="!message._showAsQueued">
-					<span
-						v-if="loggedOn !== null"
-						v-app-tooltip="loggedOn.tooltip"
-						:style="headerData ? { marginLeft: '8px' } : undefined"
-					>
-						{{ loggedOn.template }}
-					</span>
+		<a v-if="message.showAvatar" class="-avatar">
+			<AppPopper placement="right">
+				<img
+					class="-avatar-img img-responsive"
+					:src="message.user.img_avatar"
+					alt=""
+					draggable="false"
+				/>
+
+				<template #popover>
+					<AppChatUserPopover :user="message.user" :room="room" />
 				</template>
-				<span
-					v-else-if="message._error"
-					v-app-tooltip="$gettext(`Failed to send. Press to retry`)"
-					class="-byline-error"
-					@click="onClickResend"
-				>
-					<AppJolticon icon="notice" notice />
-				</span>
-				<span v-else v-app-tooltip="$gettext(`Sending...`)" class="-byline-notice">
-					<AppJolticon icon="broadcast" />
-				</span>
-			</div>
-		</Teleport>
+			</AppPopper>
+		</a>
 
 		<div class="-item-container-wrapper">
 			<div
@@ -220,8 +185,12 @@ async function removeMessage() {
 						{{ message.user.display_name }}
 					</RouterLink>
 					<span class="-username"> @{{ message.user.username }} </span>
-					<span ref="headerData">
-						<!-- Teleport target -->
+					<span>
+						<AppChatWindowOutputItemDetails
+							:message="message"
+							:room="room"
+							:timestamp-margin-left="8"
+						/>
 					</span>
 				</div>
 
@@ -242,8 +211,12 @@ async function removeMessage() {
 				</span>
 			</div>
 
-			<div ref="floatingData" class="-floating-data">
-				<!-- Teleport target -->
+			<div class="-floating-data">
+				<AppChatWindowOutputItemDetails
+					v-if="!message.showMeta"
+					:message="message"
+					:room="room"
+				/>
 
 				<AppPopper
 					v-if="shouldShowMessageOptions"
@@ -314,6 +287,18 @@ async function removeMessage() {
 			theme-prop('background', 'darker', true)
 			max-height: 4px !important
 
+.-avatar
+	position: absolute
+	left: $chat-room-window-padding
+	bottom: 0
+	width: $avatar-size
+	height: $avatar-size
+	z-index: 1
+
+	.-avatar-img
+		img-circle()
+		elevate-1()
+
 .-item-container-wrapper
 	display: flex
 	align-items: flex-start
@@ -333,13 +318,6 @@ async function removeMessage() {
 	@media $media-xs
 		// On small screens, reduce the left side margin to make more space for the actual messages.
 		margin-left: $avatar-size + 12px
-
-.-byline-error
-	cursor: pointer
-	vertical-align: middle
-
-.-byline-notice
-	vertical-align: middle
 
 .-item-byline
 	display: flex
@@ -374,24 +352,6 @@ async function removeMessage() {
 
 	::v-deep(.content-gif)
 		filter: grayscale(0.75) brightness(0.9)
-
-.-message-new
-	border-top-color: var(--theme-notice)
-
-	&::before
-		content: 'NEW'
-		position: absolute
-		z-index: 2
-		right: 0
-		top: -7px
-		font-size: 9px
-		font-weight: bolder
-		change-bg('notice')
-		color: var(--theme-white)
-		padding-left: 4px
-		padding-right: 4px
-		rounded-corners()
-		line-height: 14px
 
 .-edited
 	font-size: $font-size-tiny
