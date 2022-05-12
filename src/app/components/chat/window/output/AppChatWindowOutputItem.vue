@@ -49,8 +49,6 @@ const displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 
 
 const root = ref<HTMLElement>();
 
-const messageOptionsVisible = ref(false);
-
 const chat = computed(() => chatStore.chat!);
 
 // Use the form/page/user theme, or the default theme if none exist.
@@ -153,7 +151,6 @@ async function removeMessage() {
 		class="chat-window-output-item"
 		:class="{
 			'-message-queued': message._showAsQueued,
-			'-options-visible': messageOptionsVisible,
 		}"
 	>
 		<a v-if="message.showAvatar" class="-avatar">
@@ -211,49 +208,30 @@ async function removeMessage() {
 					<AppTranslate>{{ editingState.display }}</AppTranslate>
 				</span>
 
-				<div class="-floating-data-left">
-					<AppChatWindowOutputItemDetails
-						v-if="!message.showMeta"
-						:message="message"
-						:room="room"
-					/>
+				<div v-if="!message.showMeta" class="-floating-data-left">
+					<AppChatWindowOutputItemDetails :message="message" :room="room" />
 				</div>
 			</div>
 
-			<div class="-floating-data-right">
-				<AppPopper
-					v-if="shouldShowMessageOptions"
-					@show="messageOptionsVisible = true"
-					@hide="messageOptionsVisible = false"
-				>
-					<template #default>
-						<a v-app-tooltip="$gettext('More Options')" class="link-muted">
-							<AppJolticon icon="ellipsis-v" class="middle" />
-						</a>
-					</template>
+			<div v-if="shouldShowMessageOptions" class="-floating-data-right">
+				<div class="-message-actions">
+					<a
+						v-if="canEditMessage"
+						class="-message-actions-item link-unstyled"
+						@click="startEdit"
+					>
+						<AppJolticon icon="edit" />
+					</a>
 
-					<template #popover>
-						<div class="list-group">
-							<a
-								v-if="canEditMessage"
-								class="list-group-item has-icon"
-								@click="startEdit"
-							>
-								<AppJolticon icon="edit" />
-								<AppTranslate>Edit Message</AppTranslate>
-							</a>
-
-							<a
-								v-if="canRemoveMessage"
-								class="list-group-item has-icon"
-								@click="removeMessage"
-							>
-								<AppJolticon icon="remove" notice />
-								<AppTranslate>Remove Message</AppTranslate>
-							</a>
-						</div>
-					</template>
-				</AppPopper>
+					<a
+						v-if="canRemoveMessage"
+						class="-message-actions-item link-unstyled"
+						@click="removeMessage"
+					>
+						<!-- TODO(chat-backgrounds) trash jolticon -->
+						<AppJolticon icon="remove" />
+					</a>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -359,7 +337,7 @@ async function removeMessage() {
 
 .-floating-data-left
 .-floating-data-right
-	top: 2px
+	top: 0
 	white-space: nowrap
 	opacity: 0
 	z-index: 0
@@ -367,25 +345,48 @@ async function removeMessage() {
 	flex-direction: row
 	gap: 8px
 	align-items: center
-	transition-property: opacity, transform
+	transition-property: opacity, transform, visibility
 	transition-duration: 200ms
 	transition-timing-function: $weak-ease-out
+	visibility: hidden
 
 .-floating-data-left
 	position: absolute
 	right: 100%
-	transform: translateX(100%)
+	transform: translateX(50%)
 	width: $left-gutter-size - $chat-room-window-padding
 
 .-floating-data-right
 	position: relative
 	left: -6px
 	padding: 0 4px 0 14px
-	transform: translateX(-100%)
+	transform: translateX(-50%)
+
+.-message-actions
+	rounded-corners()
+	change-bg(bg-backdrop)
+	elevate-1()
+	overflow: hidden
+	display: inline-flex
+	flex-wrap: nowrap
+	grid-template-columns: repeat(auto-fit, 1fr)
+
+.-message-actions-item
+	border-right: 1px solid var(--theme-bg-subtle)
+
+	&:hover
+		background-color: unquote('rgba(var(--theme-fg-rgb), 0.1)')
+
+	&:last-child
+		border-right: none
+
+	::v-deep(.jolticon)
+		padding: 8.5px 12px
+		font-size: 16px
+		margin: 0
 
 .-item-container:hover
 .-item-container-wrapper:hover
-.-options-visible
 .-message-queued
 	.-message-details
 		visibility: visible
@@ -394,6 +395,7 @@ async function removeMessage() {
 	.-floating-data-right
 		opacity: 1
 		transform: translateX(0%)
+		visibility: visible
 
 		::v-deep(.jolticon)
 			margin: 0
