@@ -190,6 +190,7 @@ async function removeMessage() {
 							:message="message"
 							:room="room"
 							:timestamp-margin-left="8"
+							show-am-pm
 						/>
 					</span>
 				</div>
@@ -209,21 +210,19 @@ async function removeMessage() {
 				>
 					<AppTranslate>{{ editingState.display }}</AppTranslate>
 				</span>
+
+				<div class="-floating-data-left">
+					<AppChatWindowOutputItemDetails
+						v-if="!message.showMeta"
+						:message="message"
+						:room="room"
+					/>
+				</div>
 			</div>
 
-			<div class="-floating-data">
-				<AppChatWindowOutputItemDetails
-					v-if="!message.showMeta"
-					:message="message"
-					:room="room"
-				/>
-
+			<div class="-floating-data-right">
 				<AppPopper
 					v-if="shouldShowMessageOptions"
-					:style="{
-						// Place this before teleported elements
-						order: -1,
-					}"
 					@show="messageOptionsVisible = true"
 					@hide="messageOptionsVisible = false"
 				>
@@ -313,7 +312,7 @@ async function removeMessage() {
 	background-color: var(--theme-bg)
 	max-width: calc(100% - 24px)
 	z-index: 1
-	min-width: 50px
+	min-width: 24px
 
 	@media $media-xs
 		// On small screens, reduce the left side margin to make more space for the actual messages.
@@ -358,10 +357,9 @@ async function removeMessage() {
 	cursor: default
 	user-select: none
 
-.-floating-data
-	position: relative
-	top: 4px
-	left: -6px
+.-floating-data-left
+.-floating-data-right
+	top: 2px
 	white-space: nowrap
 	opacity: 0
 	z-index: 0
@@ -369,11 +367,21 @@ async function removeMessage() {
 	flex-direction: row
 	gap: 8px
 	align-items: center
-	transform: translateX(-100%)
-	padding: 0 4px 0 14px
 	transition-property: opacity, transform
 	transition-duration: 200ms
 	transition-timing-function: $weak-ease-out
+
+.-floating-data-left
+	position: absolute
+	right: 100%
+	transform: translateX(100%)
+	width: $left-gutter-size - $chat-room-window-padding
+
+.-floating-data-right
+	position: relative
+	left: -6px
+	padding: 0 4px 0 14px
+	transform: translateX(-100%)
 
 .-item-container:hover
 .-item-container-wrapper:hover
@@ -382,7 +390,8 @@ async function removeMessage() {
 	.-message-details
 		visibility: visible
 
-	.-floating-data
+	.-floating-data-left
+	.-floating-data-right
 		opacity: 1
 		transform: translateX(0%)
 

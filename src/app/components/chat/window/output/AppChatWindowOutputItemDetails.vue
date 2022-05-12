@@ -21,9 +21,12 @@ const props = defineProps({
 		type: Number,
 		default: 0,
 	},
+	showAmPm: {
+		type: Boolean,
+	},
 });
 
-const { message, room } = toRefs(props);
+const { message, room, showAmPm } = toRefs(props);
 
 const chatStore = useChatStore();
 
@@ -32,10 +35,15 @@ const loggedOn = computed(() => {
 		return null;
 	}
 
-	return {
+	const result = {
 		template: formatDate(message.value.logged_on, 'shortTime'),
 		tooltip: formatDate(message.value.logged_on, 'medium'),
 	};
+
+	if (!showAmPm.value) {
+		result.template = result.template.replace(/( )?(am|pm)/i, '');
+	}
+	return result;
 });
 
 function onClickResend() {
