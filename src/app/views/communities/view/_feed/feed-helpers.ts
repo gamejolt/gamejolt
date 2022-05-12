@@ -4,6 +4,7 @@ import {
 	Community,
 	CommunityPresetChannelType,
 } from '../../../../../_common/community/community.model';
+import { configCommunityFrontpageFeedType } from '../../../../../_common/config/config.service';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { getChannelPathFromRoute } from '../view.store';
@@ -14,7 +15,10 @@ import { getChannelPathFromRoute } from '../view.store';
 export function doFeedChannelPayload(route: RouteLocationNormalized) {
 	const channel = getChannelPathFromRoute(route);
 	const sort = getFeedChannelSort(route);
-	const apiOverviewUrl = `/web/communities/overview/${route.params.path}/${channel}?sort=${sort}`;
+	let apiOverviewUrl = `/web/communities/overview/${route.params.path}/${channel}?sort=${sort}`;
+	if (channel === CommunityPresetChannelType.FEATURED) {
+		apiOverviewUrl += '&frontpage-feed-type=' + configCommunityFrontpageFeedType.value;
+	}
 
 	return Api.sendRequest(ActivityFeedService.makeFeedUrl(route, apiOverviewUrl));
 }
@@ -77,8 +81,22 @@ export function getFeedChannelFetchUrl(route: RouteLocationNormalized) {
 	}
 
 	let url = `/web/posts/fetch/community/${route.params.path}`;
+
+	const urlParams = [];
 	if (channels.length) {
-		url += '?' + channels.map(name => `channels[]=` + encodeURIComponent(name)).join('&');
+		urlParams.push(...channels.map(name => `channels[]=` + encodeURIComponent(name)));
 	}
+	if (channel === CommunityPresetChannelType.FEATURED) {
+		urlParams.push(
+			'frontpage-feed-type=' + encodeURIComponent(configCommunityFrontpageFeedType.value)
+		);
+	}
+	if (urlParams.length > 0) {
+		url += '?';
+		url += urlParams.join('&');
+	}
+
+	console.log(urlParams, url);
+
 	return url;
 }

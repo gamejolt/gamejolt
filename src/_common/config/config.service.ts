@@ -137,6 +137,15 @@ export const configPostShareSide = new ConfigOptionBoolean('web_post_share_side'
 /** Whether or not we show a mic volume slider for RTC users */
 export const configFiresideMicVolume = new ConfigOptionBoolean('fireside_mic_volume', false);
 
+export const configCommunityFrontpageFeedType = new ConfigOptionString(
+	'community_frontpage_feed_type',
+	'featured',
+	{
+		validValues: ['featured', 'featured-hot'],
+		conditions: { join: true },
+	}
+);
+
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
 }
