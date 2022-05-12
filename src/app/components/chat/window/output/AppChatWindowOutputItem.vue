@@ -248,8 +248,8 @@ async function removeMessage() {
 				<AppPopper
 					v-if="shouldShowMessageOptions"
 					:style="{
-						// Place this below teleported elements
-						order: 1,
+						// Place this before teleported elements
+						order: -1,
 					}"
 					@show="messageOptionsVisible = true"
 					@hide="messageOptionsVisible = false"
@@ -406,7 +406,9 @@ async function removeMessage() {
 	opacity: 0
 	z-index: 0
 	display: inline-flex
-	flex-direction: column
+	flex-direction: row
+	gap: 8px
+	align-items: center
 	transform: translateX(-100%)
 	padding: 0 4px 0 14px
 	transition-property: opacity, transform
