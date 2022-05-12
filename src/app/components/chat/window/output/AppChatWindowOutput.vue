@@ -329,9 +329,11 @@ const debugBackground = new Background({
 				<div v-app-observe-dimensions="tryAutoscroll">
 					<div v-for="message of allMessages" :key="message.id">
 						<div v-if="message.dateSplit" class="-date-split">
-							<span class="-inner">
+							<span class="-bar" />
+							<span class="-message">
 								{{ formatDate(message.logged_on, 'mediumDate') }}
 							</span>
+							<span class="-bar" />
 						</div>
 
 						<!-- TODO(chat-backgrounds) do we even need to check `showMeta` here? -->
@@ -390,39 +392,32 @@ const debugBackground = new Background({
 
 .-container
 	padding: $chat-room-window-padding
-	padding-left: 0
 	position: relative
 
 .-date-split
 	position: relative
-	display: block
+	display: flex
+	align-items: center
 	margin-top: $line-height-computed
 	margin-bottom: $line-height-computed
 	width: 100%
 	text-align: center
 	cursor: default
 
-	&::before
-		border-bottom-color: var(--theme-bg-offset)
-		content: ''
-		position: absolute
-		left: 0
-		right: 0
-		top: 50%
-		margin-top: 0
-		height: 0
-		border-bottom-width: $border-width-base
-		border-bottom-style: solid
-		z-index: 0
+	& > .-bar
+		background-color: rgba($black, 0.5)
+		flex: auto
+		height: $border-width-base
 
-	& > .-inner
-		change-bg('bg-offset')
+	& > .-message
+		rounded-corners()
+		background-color: rgba($black, 0.5)
+		color: white
 		position: relative
 		padding: 8px 12px
 		font-weight: bold
 		font-size: 13px
 		z-index: 1
-		rounded-corners()
 
 .-new-user-spacing
 	margin-top: 0

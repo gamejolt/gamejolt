@@ -243,7 +243,6 @@ async function removeMessage() {
 .chat-window-output-item
 	position: relative
 	margin-bottom: 8px
-	padding-left: $chat-room-window-padding
 	// This is so no height change occurs when the "NEW" indicator line appears
 	border-top-width: 1px
 	border-top-style: solid
@@ -266,7 +265,7 @@ async function removeMessage() {
 
 .-avatar
 	position: absolute
-	left: $chat-room-window-padding
+	left: 0
 	bottom: 0
 	width: $avatar-size
 	height: $avatar-size
