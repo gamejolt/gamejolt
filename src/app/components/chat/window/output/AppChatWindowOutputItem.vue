@@ -9,7 +9,6 @@ import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
-import { Screen } from '../../../../../_common/screen/screen-service';
 import { DefaultTheme } from '../../../../../_common/theme/theme.model';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -24,7 +23,6 @@ import {
 } from '../../client';
 import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
-import AppChatUserPopover from '../../user-popover/user-popover.vue';
 
 export interface ChatMessageEditEvent {
 	message: ChatMessage;
@@ -52,24 +50,16 @@ const { theme, isDark } = useThemeStore();
 
 const displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
 
-const singleLineMode = ref(true);
+const root = ref<HTMLElement>();
+const headerData = ref<HTMLElement>();
+const floatingData = ref<HTMLElement>();
+
 const messageOptionsVisible = ref(false);
 
 const chat = computed(() => chatStore.chat!);
 
 // Use the form/page/user theme, or the default theme if none exist.
 const actualTheme = computed(() => theme.value ?? DefaultTheme);
-
-const isSingleLineMode = computed(() => {
-	// We always want to be in multiline mode for phones:
-	// It's expected behavior to create a new line with the "Enter" key on the virtual keyboard,
-	// and send the message with a "send message" button.
-	if (Screen.isMobile) {
-		return false;
-	}
-
-	return singleLineMode.value;
-});
 
 const loggedOn = computed(() => {
 	if (!room.value.shouldShowTimestamp) {
@@ -94,7 +84,7 @@ const isEditingColor = computed(() => {
 	const backlight = '#' + actualTheme.value.backlight_;
 
 	const tintColor = isDark.value ? highlight : backlight;
-	return transparentize(0.85, tintColor);
+	return transparentize(0.65, tintColor);
 });
 
 const editingState = computed(() => {
@@ -161,10 +151,6 @@ function onClickResend() {
 	retryFailedQueuedMessage(chat.value, message.value);
 }
 
-function onSingleLineModeChanged(newVal: boolean) {
-	singleLineMode.value = newVal;
-}
-
 async function removeMessage() {
 	Popper.hideAll();
 
@@ -183,66 +169,88 @@ async function removeMessage() {
 
 <template>
 	<div
-		class="chat-window-message"
+		ref="root"
+		class="chat-window-output-item"
 		:class="{
-			'chat-window-message-not-combined': !message.combine,
-			'chat-window-message-combined': message.combine,
-			'chat-window-message-editing': isEditing,
-			'-chat-message-queued': message._showAsQueued,
-			'-chat-message-new': isNew,
-			'chat-window-message-options-visible': messageOptionsVisible,
+			'-message-new': isNew,
+			'-message-queued': message._showAsQueued,
+			'-options-visible': messageOptionsVisible,
 		}"
-		:style="{ 'background-color': isEditingColor }"
 	>
-		<a v-if="!message.combine" class="chat-window-message-avatar">
-			<AppPopper placement="right">
-				<img
-					class="img-responsive -chat-window-message-avatar-img"
-					:src="message.user.img_avatar"
-					alt=""
-				/>
-				<template #popover>
-					<AppChatUserPopover :user="message.user" :room="room" />
+		<!--
+		    Teleports to either the header content or a display-on-hover flyout
+			display
+		-->
+		<Teleport v-if="headerData || floatingData" :to="headerData || floatingData">
+			<div class="-message-details">
+				<template v-if="!message._showAsQueued">
+					<span
+						v-if="loggedOn !== null"
+						v-app-tooltip="loggedOn.tooltip"
+						:style="headerData ? { marginLeft: '8px' } : undefined"
+					>
+						{{ loggedOn.template }}
+					</span>
 				</template>
-			</AppPopper>
-		</a>
+				<span
+					v-else-if="message._error"
+					v-app-tooltip="$gettext(`Failed to send. Press to retry`)"
+					class="-byline-error"
+					@click="onClickResend"
+				>
+					<AppJolticon icon="notice" notice />
+				</span>
+				<span v-else v-app-tooltip="$gettext(`Sending...`)" class="-byline-notice">
+					<AppJolticon icon="broadcast" />
+				</span>
+			</div>
+		</Teleport>
 
-		<div class="chat-window-message-container">
-			<div v-if="!message.combine" class="chat-window-message-byline">
-				<RouterLink class="chat-window-message-user link-unstyled" :to="message.user.url">
-					{{ message.user.display_name }}
-				</RouterLink>
-				<span class="chat-window-message-username"> @{{ message.user.username }} </span>
-				<span class="chat-window-message-time">
-					<template v-if="!message._showAsQueued">
-						<span v-if="loggedOn !== null" v-app-tooltip="loggedOn.tooltip">
-							{{ loggedOn.template }}
-						</span>
-					</template>
-					<span
-						v-else-if="message._error"
-						v-app-tooltip="$gettext(`Failed to send. Press to retry`)"
-						class="chat-window-message-byline-error"
-						@click="onClickResend"
-					>
-						<AppJolticon icon="notice" notice />
+		<div class="-item-container-wrapper">
+			<div
+				class="-item-container"
+				:style="{
+					'background-image': isEditingColor
+						? `linear-gradient(${isEditingColor}, ${isEditingColor}`
+						: undefined,
+				}"
+			>
+				<div v-if="message.showMeta" class="-item-byline">
+					<RouterLink class="-user link-unstyled" :to="message.user.url">
+						{{ message.user.display_name }}
+					</RouterLink>
+					<span class="-username"> @{{ message.user.username }} </span>
+					<span ref="headerData">
+						<!-- Teleport target -->
 					</span>
-					<span
-						v-else
-						v-app-tooltip="$gettext(`Sending...`)"
-						class="chat-window-message-byline-notice"
-					>
-						<AppJolticon icon="broadcast" />
-					</span>
+				</div>
+
+				<!-- TODO(chat-backgrounds) sizing is really jank with images
+				and videos. They need to have an (almost) unrestricted width
+				they can build to while still only taking up as much space as
+				they need. Random issues with AppResponsiveDimensions not
+				rebuilding when already at its parent bounds. -->
+				<AppContentViewer :source="message.content" :display-rules="displayRules" />
+
+				<span
+					v-if="editingState"
+					v-app-tooltip.touchable="editingState.tooltip"
+					class="-edited"
+					:class="{ 'text-muted': !isEditing }"
+				>
+					<AppTranslate>{{ editingState.display }}</AppTranslate>
 				</span>
 			</div>
 
-			<div
-				v-if="shouldShowMessageOptions"
-				class="chat-window-message-options"
-				:class="{ 'chat-window-message-options-open': messageOptionsVisible }"
-			>
+			<div ref="floatingData" class="-floating-data">
+				<!-- Teleport target -->
+
 				<AppPopper
+					v-if="shouldShowMessageOptions"
+					:style="{
+						// Place this below teleported elements
+						order: 1,
+					}"
 					@show="messageOptionsVisible = true"
 					@hide="messageOptionsVisible = false"
 				>
@@ -275,46 +283,6 @@ async function removeMessage() {
 					</template>
 				</AppPopper>
 			</div>
-
-			<div class="chat-window-message-content-wrap">
-				<template v-if="message.combine">
-					<template v-if="!message._showAsQueued">
-						<span
-							v-if="loggedOn !== null"
-							v-app-tooltip="loggedOn.tooltip"
-							class="chat-window-message-small-time"
-						>
-							{{ loggedOn.template }}
-						</span>
-					</template>
-					<span
-						v-else-if="message._error"
-						v-app-tooltip="$gettext(`Failed to send. Press to retry`)"
-						class="chat-window-message-queue-error"
-						@click="onClickResend"
-					>
-						<AppJolticon icon="notice" notice />
-					</span>
-					<span
-						v-else
-						v-app-tooltip="$gettext(`Sending...`)"
-						class="chat-window-message-queue-notice"
-					>
-						<AppJolticon icon="broadcast" />
-					</span>
-				</template>
-
-				<AppContentViewer :source="message.content" :display-rules="displayRules" />
-
-				<span
-					v-if="editingState"
-					v-app-tooltip.touchable="editingState.tooltip"
-					class="-edited"
-					:class="{ 'text-muted': !isEditing }"
-				>
-					<AppTranslate>{{ editingState.display }}</AppTranslate>
-				</span>
-			</div>
 		</div>
 	</div>
 </template>
@@ -322,7 +290,7 @@ async function removeMessage() {
 <style lang="stylus" scoped>
 @import '../variables'
 
-.chat-window-message
+.chat-window-output-item
 	position: relative
 	margin-bottom: 8px
 	padding-left: $chat-room-window-padding
@@ -335,95 +303,8 @@ async function removeMessage() {
 		font-size: $font-size-small
 		line-height: $font-size-small * 1.25
 
-	&-avatar
-		position: absolute
-		left: $chat-room-window-padding
-		bottom: 0
-		width: $avatar-size
-		height: $avatar-size
-		z-index: 1
-
-		& .-chat-window-message-avatar-img
-			img-circle()
-			elevate-1()
-
-	&-container
-		rounded-corners-lg()
-		elevate-1()
-		display: inline-block
-		margin-left: $left-gutter-size - $chat-room-window-padding
-		position: relative
-		padding: 12px
-		background-color: var(--theme-bg)
-
-		@media $media-xs
-			// On small screens, reduce the left side margin to make more space for the actual messages.
-			margin-left: $avatar-size + 12px
-
-	&-small-time
-		position: absolute
-		left: -($avatar-size) - ($left-gutter-size * 0.75)
-		top: 6px
-		font-size: $font-size-tiny
-		theme-prop('color', 'fg-muted')
-		opacity: 0
-		user-select: none
-
-		// Never show this on small devices. It's probably a phone anyway, and touch can't activate this.
-		@media $media-xs
-			display: none
-
-	&-byline-error
-		cursor: pointer
-		vertical-align: middle
-
-	&-byline-notice
-		vertical-align: middle
-
-	&-queue-error
-		position: absolute
-		left: -($avatar-size) - ($left-gutter-size * 0.5)
-		top: 6px
-		user-select: none
-		cursor: pointer
-
-		@media $media-xs
-			left: -($left-gutter-size)
-
-	&-queue-notice
-		position: absolute
-		left: -($avatar-size) - ($left-gutter-size * 0.5)
-		top: 6px
-		user-select: none
-
-		@media $media-xs
-			left: -($left-gutter-size)
-
-	&-byline
-		display: flex
-		align-items: center
-		margin-bottom: 4px
-
-	&-user
-		text-overflow()
-		max-width: 200px
-		font-weight: bold
-		font-size: 13px
-
-	&-username
-		theme-prop('color', 'fg-muted')
-		font-size: 11px
-		margin-left: 4px
-		cursor: default
-
-	&-time
-		theme-prop('color', 'fg-muted')
-		margin-left: 8px
-		font-size: 11px
-		cursor: default
-
 	// Some different styling for the fade collapse.
-	.fade-collapse-collapsed
+	::v-deep(.fade-collapse-collapsed)
 		theme-prop('border-bottom-color', 'light')
 		margin-bottom: 4px
 		border-bottom-width: $border-width-base
@@ -433,38 +314,57 @@ async function removeMessage() {
 			theme-prop('background', 'darker', true)
 			max-height: 4px !important
 
-	&-options
-		visibility: hidden
-		position: absolute
-		top: 0
-		right: 0
-		padding: 4px
-		z-index: 2
+.-item-container-wrapper
+	display: flex
+	align-items: flex-start
 
-		../:hover &
-		.chat-window-message-editing &
-		&-open
-			visibility: visible
+.-item-container
+	rounded-corners-lg()
+	elevate-1()
+	display: inline-block
+	margin-left: $left-gutter-size - $chat-room-window-padding
+	position: relative
+	padding: 12px
+	background-color: var(--theme-bg)
+	max-width: calc(100% - 24px)
+	z-index: 1
+	min-width: 50px
 
-	&-retry
-		font-size: $font-size-tiny
+	@media $media-xs
+		// On small screens, reduce the left side margin to make more space for the actual messages.
+		margin-left: $avatar-size + 12px
 
-	&-content
-		display: block
-		// If we don't break words then it can make the window too large to try
-		// to fit in the text. We also try to hyphenate.
-		// Note: hyphens only works on Chrome in Mac and Android.
-		// Luckily this is mostly where it matters.
-		word-wrap: break-word
-		hyphens: auto
-		// Try to limit the effects of what zalgo text can do to chat.
-		overflow: hidden
+.-byline-error
+	cursor: pointer
+	vertical-align: middle
 
-.-chat-message-queued
+.-byline-notice
+	vertical-align: middle
+
+.-item-byline
+	display: flex
+	align-items: center
+	margin-bottom: 4px
+
+.-user
+	text-overflow()
+	max-width: 200px
+	font-weight: bold
+	font-size: 13px
+
+.-username
+	theme-prop('color', 'fg-muted')
+	font-size: 11px
+	margin-left: 4px
+	cursor: default
+
+.-message-details
+	theme-prop('color', 'fg-muted')
+	font-size: 11px
+	cursor: default
+
+.-message-queued
 	color: var(--theme-fg-muted)
-
-	.chat-window-message-avatar
-		filter: grayscale(0.75) brightness(0.9)
 
 	::v-deep(.content-image)
 		filter: grayscale(0.75) brightness(0.9)
@@ -475,7 +375,7 @@ async function removeMessage() {
 	::v-deep(.content-gif)
 		filter: grayscale(0.75) brightness(0.9)
 
-.-chat-message-new
+.-message-new
 	border-top-color: var(--theme-notice)
 
 	&::before
@@ -497,4 +397,34 @@ async function removeMessage() {
 	font-size: $font-size-tiny
 	cursor: default
 	user-select: none
+
+.-floating-data
+	position: relative
+	top: 4px
+	left: -6px
+	white-space: nowrap
+	opacity: 0
+	z-index: 0
+	display: inline-flex
+	flex-direction: column
+	transform: translateX(-100%)
+	padding: 0 4px 0 14px
+	transition-property: opacity, transform
+	transition-duration: 200ms
+	transition-timing-function: $weak-ease-out
+
+.-item-container:hover
+.-item-container-wrapper:hover
+.-options-visible
+.-message-queued
+	.-message-details
+		visibility: visible
+
+	.-floating-data
+		opacity: 1
+		transform: translateX(0%)
+
+		::v-deep(.jolticon)
+			margin: 0
+			overlay-text-shadow()
 </style>

@@ -140,6 +140,7 @@ export default class AppShellSidebarChat extends Vue {
 
 <style lang="stylus" scoped>
 #shell-chat-pane
+	change-bg('bg')
 	padding-top: 20px
 
 .-no-chat

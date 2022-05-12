@@ -53,7 +53,7 @@ if (!import.meta.env.SSR) {
 		>
 			<div v-if="background" class="-stretch anim-fade-in">
 				<div
-					class="-stretch"
+					class="-stretch -bg-image"
 					:style="{
 						'background-image': background.cssBackgroundImage,
 						'background-repeat': background.cssBackgroundRepeat,
@@ -102,6 +102,9 @@ if (!import.meta.env.SSR) {
 	top: 0
 	right: 0
 	bottom: 0
+
+.-bg-image
+	transition: background 200ms $weak-ease-out
 
 .-fade
 	background-color: rgba(0, 0, 0, 0.05)

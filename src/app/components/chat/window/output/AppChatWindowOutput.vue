@@ -16,6 +16,7 @@ import { formatDate } from '../../../../../_common/filters/date';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
 import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
+import AppPopper from '../../../../../_common/popper/popper.vue';
 import AppScrollScroller, {
 	createScroller,
 } from '../../../../../_common/scroll/AppScrollScroller.vue';
@@ -27,9 +28,12 @@ import { ChatStoreKey } from '../../chat-store';
 import { loadOlderChatMessages, onNewChatMessage } from '../../client';
 import { ChatMessage, TIMEOUT_CONSIDER_QUEUED } from '../../message';
 import { ChatRoom } from '../../room';
+import AppChatUserPopover from '../../user-popover/user-popover.vue';
+import AppChatWindowOutputAvatarAffix from './AppChatWindowOutputAvatarAffix.vue';
 import AppChatWindowOutputItem from './AppChatWindowOutputItem.vue';
 
 const AUTOSCROLL_THRESHOLD = 10;
+const AVATAR_SIZE = 24;
 
 const props = defineProps({
 	room: {
@@ -63,6 +67,25 @@ const queuedMessages = computed(() =>
 );
 
 const allMessages = computed(() => [...messages.value, ...queuedMessages.value]);
+
+/**
+ * "Chunks" user messages together that should share a sticker user avatar.
+ */
+const chunkedMessages = computed(() =>
+	allMessages.value.reduce<ChatMessage[][]>((prev, message) => {
+		if (prev.length === 0 || prev[prev.length - 1][0].user.id !== message.user.id) {
+			// Initialize chunks, or add a new chunk if this is a different user.
+			prev.push([]);
+		} else if (message.dateSplit || message.showMeta) {
+			// New chunk if we're inserting the date split, or showing user and
+			// timestamp info in the header area of teh chat bubble.
+			prev.push([]);
+		}
+
+		prev[prev.length - 1].push(message);
+		return prev;
+	}, [])
+);
 
 // Fireside rooms delete older messages as newer ones arrive, so they can't load
 // older.
@@ -307,7 +330,7 @@ const debugBackground = new Background({
 	need to autoscroll if the content changes within the scroller.
 	-->
 	<!-- TODO(chat-backgrounds) Should we darken here? Maybe all but the top gradient? -->
-	<AppBackground class="-scroll-container" :background="debugBackground" darken>
+	<AppBackground class="-scroll-container" :background="room.background" darken>
 		<AppScrollScroller
 			v-app-observe-dimensions="tryAutoscroll"
 			:controller="scroller"
@@ -338,23 +361,57 @@ const debugBackground = new Background({
 				<AppLoading v-if="isLoadingOlder" centered stationary hide-label />
 
 				<div v-app-observe-dimensions="tryAutoscroll">
-					<div v-for="message of allMessages" :key="message.id">
-						<div v-if="message.dateSplit" class="-date-split">
-							<span class="-inner">{{
-								formatDate(message.logged_on, 'mediumDate')
-							}}</span>
+					<div v-for="(chunk, index) of chunkedMessages" :key="`chunk-${chunk[0].id}`">
+						<div v-if="chunk[0].dateSplit" class="-date-split">
+							<span class="-inner">
+								{{ formatDate(chunk[0].logged_on, 'mediumDate') }}
+							</span>
 						</div>
 
+						<!-- TODO(chat-backgrounds) do we even need to check `showMeta` here? -->
 						<hr
-							v-if="!message.dateSplit && !message.combine"
+							v-if="!chunk[0].dateSplit && chunk[0].showMeta"
 							class="-new-user-spacing"
 						/>
 
-						<AppChatWindowOutputItem
-							:message="message"
-							:room="room"
-							:is-new="isNewMessage(message)"
-						/>
+						<div class="-message-chunk">
+							<div class="-avatar-scroller">
+								<AppChatWindowOutputAvatarAffix
+									anchor="bottom"
+									:avatar-size="AVATAR_SIZE"
+									:parent="scroller"
+								>
+									<a class="-avatar">
+										<AppPopper placement="right">
+											<img
+												class="-avatar-img img-responsive"
+												:src="chunk[0].user.img_avatar"
+												alt=""
+												draggable="false"
+												:style="{
+													width: AVATAR_SIZE + 'px',
+													height: AVATAR_SIZE + 'px',
+												}"
+											/>
+											<template #popover>
+												<AppChatUserPopover
+													:user="chunk[0].user"
+													:room="room"
+												/>
+											</template>
+										</AppPopper>
+									</a>
+								</AppChatWindowOutputAvatarAffix>
+							</div>
+
+							<template v-for="message of chunk" :key="message.id">
+								<AppChatWindowOutputItem
+									:message="message"
+									:room="room"
+									:is-new="isNewMessage(message)"
+								/>
+							</template>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -457,4 +514,27 @@ const debugBackground = new Background({
 	*
 		overlay-text-shadow()
 		color: white
+
+.-message-chunk
+	position: relative
+
+.-avatar-scroller
+	position: absolute
+	left: 0
+	top: 0
+	bottom: 0
+	width: 48px
+	display: flex
+	justify-content: center
+	z-index: 4
+
+.-avatar
+	display: flex
+	align-items: center
+	justify-content: center
+
+.-avatar-img
+	z-index: 1
+	img-circle()
+	elevate-1()
 </style>

@@ -583,7 +583,8 @@ export function queueChatMessage(
 }
 
 export function setTimeSplit(chat: ChatClient, roomId: number, message: ChatMessage) {
-	message.combine = false;
+	message.showAvatar = false;
+	message.showMeta = true;
 	message.dateSplit = false;
 
 	let messages = chat.messages[roomId];
@@ -601,26 +602,43 @@ export function setTimeSplit(chat: ChatClient, roomId: number, message: ChatMess
 		messageIndex = messages.length;
 	}
 
+	let previousMessage: ChatMessage | null = null;
+
 	if (messageIndex > 0) {
-		const previousMessage = messages[messageIndex - 1];
+		previousMessage = messages[messageIndex - 1];
+		const nextMessage = messages[messageIndex + 1];
+
+		if (!nextMessage) {
+			message.showAvatar = true;
+		} else {
+			message.showAvatar = nextMessage.user.id !== message.user.id;
+		}
 
 		// Combine if the same user and within 5 minutes of their previous message.
-		if (
-			message.user.id === previousMessage.user.id &&
-			message.logged_on.getTime() - previousMessage.logged_on.getTime() <= 5 * 60 * 1000
-		) {
-			message.combine = true;
+		if (message.user.id === previousMessage.user.id) {
+			if (
+				message.logged_on.getTime() - previousMessage.logged_on.getTime() <=
+				5 * 60 * 1000
+			) {
+				message.showMeta = false;
+			}
 		}
 
 		// If the date is different than the date for the previous
 		// message, we want to split it in the view.
 		if (message.logged_on.toDateString() !== previousMessage.logged_on.toDateString()) {
 			message.dateSplit = true;
-			message.combine = false;
+			message.showAvatar = true;
+			message.showMeta = true;
 		}
 	} else {
 		// First message should show date.
 		message.dateSplit = true;
+		message.showAvatar = true;
+	}
+
+	if (!message.showMeta && previousMessage) {
+		previousMessage.showAvatar = false;
 	}
 }
 

@@ -369,11 +369,13 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 	<AppForm :controller="form">
 		<AppShortkey shortkey="tab" @press="onTabKeyPressed" />
 
-		<div class="-top-indicators">
-			<span v-if="Screen.isXs && !!typingText" class="-typing">
-				{{ typingText }}
-			</span>
-		</div>
+		<transition name="fade">
+			<div v-if="!!typingText" class="-top-indicators">
+				<span class="-typing">
+					{{ typingText }}
+				</span>
+			</div>
+		</transition>
 
 		<div v-if="isEditing" class="-editing-message">
 			<AppJolticon icon="edit" />
@@ -393,6 +395,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 			}"
 		>
 			<div class="-input">
+				<!-- TODO(chat-backgrounds) text-overflow() on the placeholder text -->
 				<AppFormControlContent
 					:key="room.id"
 					ref="editor"
@@ -432,14 +435,10 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 			/>
 		</AppFormGroup>
 
-		<div v-if="!Screen.isXs" class="-bottom-indicators anim-fade-in no-animate-leave">
-			<transition name="fade">
-				<span v-if="!Screen.isXs && !!typingText" class="-typing">
-					{{ typingText }}
-				</span>
-			</transition>
-
-			<span v-if="showMultiLineNotice" class="-multi-line">
+		<!-- TODO(chat-backgrounds) is this currently broken? I've never been able to trigger it. -->
+		<!-- TODO(chat-backgrounds) Might want to do an AppExpand here? How often is this displayed? should we display it alongside the typing indicator instead? -->
+		<div v-if="!Screen.isXs" class="-bottom-indicators">
+			<span v-if="showMultiLineNotice" class="-multi-line anim-fade-in no-animate-leave">
 				<AppJolticon icon="notice" />
 				<span v-if="isMac" v-translate>
 					You are in multi-line editing mode. Press
@@ -471,34 +470,56 @@ $-button-spacing-xs = $-button-height
 	margin-bottom: 0
 
 	@media $media-xs
-		margin-top: 4px
+		padding-top: 5px
 		border-top: $border-width-base solid var(--theme-bg-subtle)
-		padding-top: 1px
 
 	@media $media-sm-up
-		margin-top: 8px
+		padding-top: 8px
 
 	&-shifted
 		margin-bottom: 52px
 
 	&.-editing
-		margin-top: 0
 		padding-top: 1px
 		border-top: none
 
 .-bottom-indicators
 .-editing-message
-	height: 28px
 	color: var(--theme-light)
 	padding: 4px 0
+
+.-bottom-indicators
+	min-height: 8px
+
+.-editing-message
+	height: 28px
 
 .-top-indicators
 .-bottom-indicators
 	display: flex
 
 .-top-indicators
-	padding: 4px 4px 0 4px
-	color: var(--theme-light)
+	overlay-text-shadow()
+	color: white
+	padding: 4px 16px
+	background-image: linear-gradient(to top, rgba($black, 0.25), rgba($black, 0))
+	z-index: 1
+	font-size: $font-size-tiny
+	pointer-events: none
+	position: absolute
+	left: 0
+	bottom: 100%
+	right: 0
+	transition-property: opacity
+	transition-duration: 500ms
+	transition-timing-function: $strong-ease-out
+
+	&.fade-leave-active
+		transition-duration: 250ms
+
+	&.fade-enter-from
+	&.fade-leave-to
+		opacity: 0
 
 .-bottom-indicators
 	align-items: center
@@ -513,20 +534,6 @@ $-button-spacing-xs = $-button-height
 
 .-typing
 	text-overflow()
-	margin-right: auto
-	transition-property: opacity
-	transition-duration: 500ms
-	transition-timing-function: $strong-ease-out
-
-	@media $media-sm-up
-		padding-right: 24px
-
-	&.fade-leave-active
-		transition-duration: 250ms
-
-	&.fade-enter-from
-	&.fade-leave-to
-		opacity: 0
 
 .-multi-line
 	flex: none

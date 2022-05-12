@@ -49,10 +49,10 @@ import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.se
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
+import AppFormBackground from '../background/AppFormBackground.vue';
 import AppFormsCommunityPillAdd from '../community/_pill/add/add.vue';
 import AppFormsCommunityPill from '../community/_pill/community-pill.vue';
 import AppFormsCommunityPillIncomplete from '../community/_pill/incomplete/incomplete.vue';
-import AppFormPostBackground from './AppFormPostBackground.vue';
 import AppFormPostMedia from './_media/media.vue';
 import AppFormPostVideo, { VideoStatus } from './_video/video.vue';
 
@@ -103,7 +103,7 @@ class Wrapper extends BaseForm<FormPostModel> {}
 		AppScrollScroller,
 		AppFormPostVideo,
 		AppExpand,
-		AppFormPostBackground,
+		AppFormBackground,
 		AppTheme,
 	},
 	directives: {
@@ -1021,11 +1021,19 @@ export default class FormPost
 					<AppTranslate>Select background</AppTranslate>
 				</AppFormLegend>
 
-				<AppFormPostBackground
-					:backgrounds="backgrounds"
-					:post="formModel"
-					@background-change="onBackgroundChanged"
-				/>
+				<AppFormGroup
+					name="background"
+					class="sans-margin-bottom"
+					hide-label
+					optional
+					:label="$gettext(`Background`)"
+				>
+					<AppFormBackground
+						:backgrounds="backgrounds"
+						:background="formModel.background"
+						@background-change="onBackgroundChanged"
+					/>
+				</AppFormGroup>
 			</template>
 		</div>
 

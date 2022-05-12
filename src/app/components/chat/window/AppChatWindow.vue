@@ -1,8 +1,9 @@
-<script lang="ts" setup>
-import { computed, inject, PropType, ref, toRefs } from 'vue';
+<script lang="ts">
+import { computed, inject, PropType, ref, toRefs, watch } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import AppMobileAppBar from '../../../../_common/mobile-app/AppMobileAppBar.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { SettingChatGroupShowMembers } from '../../../../_common/settings/settings.service';
@@ -21,7 +22,9 @@ import AppChatWindowOutput from './output/AppChatWindowOutput.vue';
 import AppChatWindowSend from './send/AppChatWindowSend.vue';
 
 type SidebarTab = 'settings' | 'members';
+</script>
 
+<script lang="ts" setup>
 const props = defineProps({
 	room: {
 		type: Object as PropType<ChatRoom>,
@@ -37,9 +40,12 @@ const { room } = toRefs(props);
 const { toggleLeftPane } = useAppStore();
 const chatStore = inject(ChatStoreKey)!;
 
-const isShowingUsers = ref(Screen.isXs ? false : SettingChatGroupShowMembers.get());
 const friendAddJolticonVersion = ref(1);
-const sidebar = ref<SidebarTab>();
+const sidebar = ref<SidebarTab | undefined>(
+	!Screen.isXs && SettingChatGroupShowMembers.get() ? 'members' : undefined
+);
+
+const isShowingUsers = computed(() => sidebar.value === 'members');
 
 const chat = computed(() => chatStore.chat!);
 const users = computed(() => chat.value.roomMembers[room.value.id]);
@@ -50,6 +56,10 @@ const roomTitle = computed(() =>
 		? getChatRoomTitle(room.value, chat.value)
 		: room.value.user?.display_name
 );
+
+const showMembersViewButton = computed(() => !room.value.isPmRoom && !Screen.isXs);
+
+watch(isShowingUsers, () => SettingChatGroupShowMembers.set(isShowingUsers.value));
 
 function addGroup() {
 	// When creating a group from a PM window,
@@ -89,14 +99,6 @@ function close() {
 		toggleLeftPane();
 	}
 }
-
-function toggleUsers() {
-	isShowingUsers.value = !isShowingUsers.value;
-
-	if (!Screen.isXs) {
-		SettingChatGroupShowMembers.set(isShowingUsers.value);
-	}
-}
 </script>
 
 <template>
@@ -107,7 +109,7 @@ function toggleUsers() {
 		<div class="-window">
 			<div class="-close" @click="close" />
 
-			<div class="-window-main">
+			<div :key="room.id" class="-window-main">
 				<!-- Window Header -->
 				<div class="-header">
 					<!-- Animation scope. -->
@@ -150,17 +152,6 @@ function toggleUsers() {
 					</div>
 
 					<div class="-header-controls">
-						<!-- <AppChatWindowMenu :room="room" /> -->
-
-						<AppButton
-							v-app-tooltip="$gettext(`Settings`)"
-							circle
-							sparse
-							trans
-							icon="ellipsis-h"
-							@click="toggleSidebar('settings')"
-						/>
-
 						<AppButton
 							v-app-tooltip="
 								room.isPmRoom
@@ -177,7 +168,7 @@ function toggleUsers() {
 						/>
 
 						<AppButton
-							v-if="!room.isPmRoom"
+							v-if="showMembersViewButton"
 							v-app-tooltip="
 								isShowingUsers ? $gettext('Hide members') : $gettext('Show members')
 							"
@@ -186,6 +177,15 @@ function toggleUsers() {
 							icon="users"
 							class="-header-control anim-fade-in"
 							@click="toggleSidebar('members')"
+						/>
+
+						<AppButton
+							v-app-tooltip="$gettext(`Settings`)"
+							circle
+							sparse
+							trans
+							icon="ellipsis-h"
+							@click="toggleSidebar('settings')"
 						/>
 
 						<AppButton
@@ -217,7 +217,7 @@ function toggleUsers() {
 						</div>
 					</div>
 
-					<div v-if="!room.isPmRoom && sidebar" class="-sidebar">
+					<div v-if="sidebar" class="-sidebar">
 						<div v-if="!Screen.isXs" class="-sidebar-shadow" />
 
 						<AppScrollScroller class="-sidebar-scroller">
@@ -230,8 +230,55 @@ function toggleUsers() {
 								</div>
 							</template> -->
 
+							<AppMobileAppBar v-if="Screen.isXs">
+								<template #leading>
+									<AppButton
+										icon="chevron-left"
+										trans
+										sparse
+										circle
+										@click="sidebar = undefined"
+									/>
+								</template>
+
+								<template #title>
+									<template v-if="sidebar === 'settings'">
+										<template v-if="room.isGroupRoom">
+											<AppTranslate>Group Settings</AppTranslate>
+										</template>
+										<template v-else>
+											<AppTranslate>Chat Settings</AppTranslate>
+										</template>
+									</template>
+									<template v-else>
+										<AppTranslate>Group Members</AppTranslate>
+									</template>
+								</template>
+
+								<template #actions>
+									<AppButton
+										v-if="!room.isGroupRoom || sidebar === 'members'"
+										v-app-tooltip="$gettext('Add friends')"
+										class="-header-control"
+										circle
+										trans
+										:icon="'friend-add-' + friendAddJolticonVersion"
+										@mouseenter="friendAddJolticonVersion = 2"
+										@mouseleave="friendAddJolticonVersion = 1"
+										@click="room.isPmRoom ? addGroup() : addMembers()"
+									/>
+								</template>
+							</AppMobileAppBar>
+
 							<template v-if="sidebar === 'settings'">
-								<FormChatEditRoom :room="room" />
+								<FormChatEditRoom
+									:room="room"
+									:show-members-preview="!showMembersViewButton"
+									:style="{
+										paddingTop: Screen.isXs ? '16px' : undefined,
+									}"
+									@view-members="sidebar = 'members'"
+								/>
 							</template>
 							<template v-else-if="sidebar === 'members'">
 								<div class="nav-heading">
@@ -274,7 +321,6 @@ function toggleUsers() {
 	z-index: 0
 
 .-window
-	rounded-corners-lg()
 	change-bg(bg)
 	position: relative
 	display: flex
@@ -293,6 +339,9 @@ function toggleUsers() {
 		bottom: 0
 		height: auto !important
 		width: auto !important
+
+	@media $media-sm-up
+		rounded-corners-lg()
 
 .-window-main
 	position: relative
@@ -357,6 +406,16 @@ function toggleUsers() {
 	position: relative
 	width: 320px
 	flex: none
+
+	@media $media-xs
+		position: fixed
+		z-index: 2
+		left: 0
+		top: 0
+		right: 0
+		bottom: 0
+		change-bg(bg)
+		width: unset
 
 .-sidebar-shadow
 	position: absolute
