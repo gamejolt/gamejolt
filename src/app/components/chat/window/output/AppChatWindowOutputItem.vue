@@ -48,6 +48,7 @@ const { theme, isDark } = useThemeStore();
 const displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
 
 const root = ref<HTMLElement>();
+const itemWrapper = ref<HTMLElement>();
 
 const chat = computed(() => chatStore.chat!);
 
@@ -143,6 +144,26 @@ async function removeMessage() {
 	setMessageEditing(chat.value, null);
 	chatRemoveMessage(chat.value, room.value, message.value.id);
 }
+
+let canClearFocus = false;
+let isFocused = false;
+
+async function onFocusItem() {
+	isFocused = true;
+	// Allow a second click to blur only after ~1/2 of our animations play.
+	setTimeout(() => (canClearFocus = isFocused), 100);
+}
+
+function onBlurItem() {
+	isFocused = false;
+	canClearFocus = false;
+}
+
+async function onClickItem() {
+	if (isFocused && canClearFocus) {
+		itemWrapper.value?.blur();
+	}
+}
 </script>
 
 <template>
@@ -168,7 +189,14 @@ async function removeMessage() {
 			</AppPopper>
 		</a>
 
-		<div class="-item-container-wrapper">
+		<div
+			ref="itemWrapper"
+			class="-item-container-wrapper"
+			tabindex="-1"
+			@focus="onFocusItem"
+			@blur="onBlurItem"
+			@click.capture="onClickItem"
+		>
 			<div
 				class="-item-container"
 				:style="{
@@ -384,19 +412,39 @@ async function removeMessage() {
 		font-size: 16px
 		margin: 0
 
-.-item-container:hover
-.-item-container-wrapper:hover
-.-message-queued
-	.-message-details
-		visibility: visible
+// Desktop (mouse)
+@media not screen and (pointer: coarse)
+	.-item-container:hover
+	.-item-container-wrapper:hover
+	.-message-queued
+		.-message-details
+			visibility: visible
 
-	.-floating-data-left
-	.-floating-data-right
-		opacity: 1
-		transform: translateX(0%)
-		visibility: visible
+		.-floating-data-left
+		.-floating-data-right
+			opacity: 1
+			transform: translateX(0%)
+			visibility: visible
 
-		::v-deep(.jolticon)
-			margin: 0
-			overlay-text-shadow()
+			::v-deep(.jolticon)
+				margin: 0
+				overlay-text-shadow()
+
+// Mobile (touch)
+@media screen and (pointer: coarse)
+	.-item-container:focus-within
+	.-item-container-wrapper:focus-within
+	.-message-queued
+		.-message-details
+			visibility: visible
+
+		.-floating-data-left
+		.-floating-data-right
+			opacity: 1
+			transform: translateX(0%)
+			visibility: visible
+
+			::v-deep(.jolticon)
+				margin: 0
+				overlay-text-shadow()
 </style>
