@@ -40,10 +40,23 @@ const { room } = toRefs(props);
 const { toggleLeftPane } = useAppStore();
 const chatStore = inject(ChatStoreKey)!;
 
+let showSettingsOnMembersBack = false;
+
 const friendAddJolticonVersion = ref(1);
 const sidebar = ref<SidebarTab | undefined>(
 	!Screen.isXs && SettingChatGroupShowMembers.get() ? 'members' : undefined
 );
+
+watch(sidebar, (value, oldValue) => {
+	if (!value) {
+		showSettingsOnMembersBack = false;
+		return;
+	}
+
+	if (value === 'members') {
+		showSettingsOnMembersBack = oldValue === 'settings';
+	}
+});
 
 const isShowingUsers = computed(() => sidebar.value === 'members');
 
@@ -97,6 +110,15 @@ function close() {
 		leaveChatRoom(chat.value);
 	} else {
 		toggleLeftPane();
+	}
+}
+
+function onMobileAppBarBack() {
+	if (showSettingsOnMembersBack) {
+		sidebar.value = 'settings';
+		showSettingsOnMembersBack = false;
+	} else {
+		sidebar.value = undefined;
 	}
 }
 </script>
@@ -221,15 +243,6 @@ function close() {
 						<div v-if="!Screen.isXs" class="-sidebar-shadow" />
 
 						<AppScrollScroller class="-sidebar-scroller">
-							<!-- <template v-if="Screen.isXs">
-								<br />
-								<div class="nav-controls">
-									<AppButton block icon="chevron-left" @click="toggleUsers">
-										<AppTranslate>Back to Chat</AppTranslate>
-									</AppButton>
-								</div>
-							</template> -->
-
 							<AppMobileAppBar v-if="Screen.isXs">
 								<template #leading>
 									<AppButton
@@ -237,7 +250,7 @@ function close() {
 										trans
 										sparse
 										circle
-										@click="sidebar = undefined"
+										@click="onMobileAppBarBack"
 									/>
 								</template>
 
