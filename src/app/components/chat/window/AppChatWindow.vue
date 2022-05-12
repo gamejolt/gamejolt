@@ -286,7 +286,7 @@ function onMobileAppBarBack() {
 							<template v-if="sidebar === 'settings'">
 								<FormChatEditRoom
 									:room="room"
-									:show-members-preview="!showMembersViewButton"
+									:show-members-preview="!showMembersViewButton && room.isGroupRoom"
 									:style="{
 										paddingTop: Screen.isXs ? '16px' : undefined,
 									}"

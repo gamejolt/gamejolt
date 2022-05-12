@@ -318,7 +318,7 @@ hr
 
 .-button-stack
 	> *
-		margin: 0 !important
+		margin: 0
 
 	> .-button-first
 		border-bottom-left-radius: 0
@@ -330,4 +330,8 @@ hr
 	> .-button-last
 		border-top-left-radius: 0
 		border-top-right-radius: 0
+
+	> .-button-middle
+	> .-button-last
+		margin-top: -($border-width-base)
 </style>
