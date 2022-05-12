@@ -4,6 +4,7 @@
 /debug.log
 /client.log
 /client1.log
+/asg.log
 .DS_Store
 .cache
 yarn-error.log

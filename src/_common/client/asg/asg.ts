@@ -5,7 +5,7 @@ const { EventEmitter } = require('events') as typeof import('events');
 const asgNative = require('asg-prebuilt');
 
 const sampleRate = 44100;
-const numChannels = 2;
+const numChannels = 1;
 const format: AudioSampleFormat = 'f32';
 
 export type ASGInstanceStatus = 'starting' | 'started' | 'stopping' | 'stopped';
@@ -42,22 +42,26 @@ export function startCapture(pid: number, writer: WritableStream<AudioData>): AS
 			// TODO abort the stream and dispose of resources
 		})
 		.on('data', (data: Float32Array) => {
-			if (asgInst._status !== 'started') {
-				return;
+			try {
+				if (asgInst._status !== 'started') {
+					return;
+				}
+
+				const currTimeLength = (data.length * 1000000) / sampleRate;
+				nextTimestamp += currTimeLength;
+				const audioData = new AudioData({
+					format: format,
+					numberOfChannels: numChannels,
+					numberOfFrames: data.length,
+					timestamp: nextTimestamp,
+					sampleRate: sampleRate,
+					data: data,
+				});
+
+				asgInst._writer.write(audioData);
+			} catch (err) {
+				console.error(err);
 			}
-
-			const currTimeLength = (data.length * 1000000) / sampleRate;
-			nextTimestamp += currTimeLength;
-			const audioData = new AudioData({
-				format: format,
-				numberOfChannels: numChannels,
-				numberOfFrames: data.length,
-				timestamp: nextTimestamp,
-				sampleRate: sampleRate,
-				data: data,
-			});
-
-			asgInst._writer.write(audioData);
 		});
 
 	// TODO make startCapture a promise.
