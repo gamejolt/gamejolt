@@ -19,7 +19,7 @@ import {
 import { vAppNoAutoscroll } from '../../../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import { AppTimeAgo } from '../../../../../../../../../_common/time/ago/ago';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
-import AppUserCardHover from '../../../../../../../../../_common/user/card/hover/hover.vue';
+import AppUserCardHover from '../../../../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../../../../../../../../_common/user/user-avatar/img/img.vue';
 import AppUserVerifiedTick from '../../../../../../../../../_common/user/verified-tick/verified-tick.vue';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';

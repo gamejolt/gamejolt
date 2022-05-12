@@ -23,7 +23,7 @@ import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { EventSubscription } from '../../../_common/system/event/event-topic';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import AppUserCard from '../../../_common/user/card/card.vue';
+import AppUserCard from '../../../_common/user/card/AppUserCard.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import { onFiresideStart } from '../../components/grid/client.service';
