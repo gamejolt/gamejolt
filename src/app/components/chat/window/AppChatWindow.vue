@@ -286,7 +286,9 @@ function onMobileAppBarBack() {
 							<template v-if="sidebar === 'settings'">
 								<FormChatEditRoom
 									:room="room"
-									:show-members-preview="!showMembersViewButton && room.isGroupRoom"
+									:show-members-preview="
+										!showMembersViewButton && room.isGroupRoom
+									"
 									:style="{
 										paddingTop: Screen.isXs ? '16px' : undefined,
 									}"
@@ -440,7 +442,6 @@ function onMobileAppBarBack() {
 	z-index: 1
 
 .-output
-	change-bg(bg-offset)
 	position: relative
 	flex: auto
 	display: flex

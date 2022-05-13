@@ -11,7 +11,6 @@ import {
 	watch,
 } from 'vue';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
-import { Background } from '../../../../../_common/background/background.model';
 import { formatDate } from '../../../../../_common/filters/date';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
@@ -252,41 +251,6 @@ async function onClickNewMessages() {
 		_shouldScroll = true;
 	}
 }
-
-const debugBackground = new Background({
-	id: 1,
-	scaling: 'tile',
-	media_item: {
-		file: null,
-		_removed: false,
-		_progress: null,
-		id: 37,
-		type: 'background',
-		parent_id: 1,
-		hash: 'ibybqnq3',
-		filename: '0-ibybqnq3.png',
-		filetype: 'image/png',
-		is_animated: false,
-		width: 100,
-		height: 100,
-		filesize: 1215,
-		crop_start_x: null,
-		crop_start_y: null,
-		crop_end_x: null,
-		crop_end_y: null,
-		avg_img_color: null,
-		img_has_transparency: false,
-		added_on: 1652120450000,
-		status: 'active',
-		img_url: 'https://m.gjcdn.net/background/800/21-zz9n7nfu-v4.webp',
-		mediaserver_url: 'https://m.gjcdn.net/background/800/21-zz9n7nfu-v4.webp',
-		mediaserver_url_webm: null,
-		mediaserver_url_mp4: null,
-		video_card_url_mp4: null,
-		sticker_counts: [],
-	},
-	scale: 2,
-});
 </script>
 
 <template>
@@ -296,7 +260,7 @@ const debugBackground = new Background({
 	need to autoscroll if the content changes within the scroller.
 	-->
 	<!-- TODO(chat-backgrounds) Should we darken here? Maybe all but the top gradient? -->
-	<AppBackground class="-scroll-container" :background="room.background" darken>
+	<AppBackground class="chat-window-output" :background="room.background" darken>
 		<AppScrollScroller
 			v-app-observe-dimensions="tryAutoscroll"
 			:controller="scroller"
@@ -310,7 +274,7 @@ const debugBackground = new Background({
 				<div v-if="shouldShowIntro" class="-intro">
 					<AppIllustration
 						:src="illNoChat"
-						:class="{ '-illustration-overlay': !!debugBackground }"
+						:class="{ '-illustration-overlay': !!room.background }"
 					>
 						<AppTranslate v-if="room.isPmRoom">
 							Your friend is still loading. Encourage them with a message!
@@ -359,7 +323,8 @@ const debugBackground = new Background({
 </template>
 
 <style lang="stylus" scoped>
-.-scroll-container
+.chat-window-output
+	change-bg(bg-offset)
 	position: relative
 	height: 100%
 	width: 100%
@@ -423,13 +388,12 @@ const debugBackground = new Background({
 	margin-top: 0
 	margin-bottom: 0
 	border: none
-	height: (24px - 8px) * 0.5
+	height: 8px
 
 .-intro
 	display: flex
 	align-items: center
 	justify-content: center
-	padding-left: $chat-room-window-padding
 
 .-illustration-overlay
 	font-weight: bold

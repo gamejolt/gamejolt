@@ -130,6 +130,11 @@ function startEdit() {
 	Popper.hideAll();
 }
 
+function stopEdit() {
+	setMessageEditing(chat.value, null);
+	Popper.hideAll();
+}
+
 async function removeMessage() {
 	Popper.hideAll();
 
@@ -172,6 +177,7 @@ async function onClickItem() {
 		class="chat-window-output-item"
 		:class="{
 			'-message-queued': message._showAsQueued,
+			'-message-editing': isEditing,
 		}"
 	>
 		<a v-if="message.showAvatar" class="-avatar">
@@ -243,22 +249,35 @@ async function onClickItem() {
 
 			<div v-if="shouldShowMessageOptions" class="-floating-data-right">
 				<div class="-message-actions">
-					<a
-						v-if="canEditMessage"
-						class="-message-actions-item link-unstyled"
-						@click="startEdit"
-					>
-						<AppJolticon icon="edit" />
-					</a>
+					<template v-if="isEditing">
+						<a
+							v-app-tooltip="$gettext('Cancel edit')"
+							class="-message-actions-item link-unstyled"
+							@click="stopEdit"
+						>
+							<AppJolticon icon="remove" />
+						</a>
+					</template>
+					<template v-else>
+						<a
+							v-if="canEditMessage"
+							v-app-tooltip="$gettext('Edit message')"
+							class="-message-actions-item link-unstyled"
+							@click="startEdit"
+						>
+							<AppJolticon icon="edit" />
+						</a>
 
-					<a
-						v-if="canRemoveMessage"
-						class="-message-actions-item link-unstyled"
-						@click="removeMessage"
-					>
-						<!-- TODO(chat-backgrounds) trash jolticon -->
-						<AppJolticon icon="remove" />
-					</a>
+						<a
+							v-if="canRemoveMessage"
+							v-app-tooltip="$gettext('Remove message')"
+							class="-message-actions-item link-unstyled"
+							@click="removeMessage"
+						>
+							<!-- TODO(chat-backgrounds) trash jolticon -->
+							<AppJolticon icon="remove" />
+						</a>
+					</template>
 				</div>
 			</div>
 		</div>
@@ -270,7 +289,7 @@ async function onClickItem() {
 
 .chat-window-output-item
 	position: relative
-	margin-bottom: 8px
+	margin-bottom: 4px
 	// This is so no height change occurs when the "NEW" indicator line appears
 	border-top-width: 1px
 	border-top-style: solid
@@ -311,7 +330,7 @@ async function onClickItem() {
 	rounded-corners-lg()
 	elevate-1()
 	display: inline-block
-	margin-left: $left-gutter-size - $chat-room-window-padding
+	margin-left: $left-gutter-size
 	position: relative
 	padding: 12px
 	background-color: var(--theme-bg)
@@ -381,7 +400,9 @@ async function onClickItem() {
 	position: absolute
 	right: 100%
 	transform: translateX(50%)
-	width: $left-gutter-size - $chat-room-window-padding
+	width: $left-gutter-size + $chat-room-window-padding-h
+	display: flex
+	justify-content: center
 
 .-floating-data-right
 	position: relative
@@ -417,6 +438,7 @@ async function onClickItem() {
 	.-item-container:hover
 	.-item-container-wrapper:hover
 	.-message-queued
+	.-message-editing
 		.-message-details
 			visibility: visible
 
@@ -435,6 +457,7 @@ async function onClickItem() {
 	.-item-container:focus-within
 	.-item-container-wrapper:focus-within
 	.-message-queued
+	.-message-editing
 		.-message-details
 			visibility: visible
 

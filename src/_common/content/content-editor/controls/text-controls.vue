@@ -280,6 +280,7 @@ export default class AppContentEditorTextControls extends Vue {
 	z-index: $zindex-content-editor
 
 .controls-mobile
+	change-bg('bg')
 	position: fixed
 	bottom: 0 !important
 	left: 0 !important
@@ -289,8 +290,6 @@ export default class AppContentEditorTextControls extends Vue {
 		display: flex
 		justify-content: center
 		align-items: center
-		change-bg('bg-offset')
-		theme-prop('border-color', 'bg-subtle')
 		padding-left: 4px
 		padding-right: 4px
 

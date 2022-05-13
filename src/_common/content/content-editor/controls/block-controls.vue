@@ -366,6 +366,7 @@ export default class AppContentEditorBlockControls extends Vue {
 	margin: 0 4px
 
 .-controls-mobile
+	change-bg('bg')
 	position: fixed
 	top: auto !important
 	bottom: 0 !important
@@ -376,8 +377,6 @@ export default class AppContentEditorBlockControls extends Vue {
 		display: flex
 		justify-content: center
 		align-items: center
-		change-bg('bg-offset')
-		theme-prop('border-color', 'bg-subtle')
 		padding-left: 4px
 		padding-right: 4px
 

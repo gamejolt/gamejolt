@@ -1,5 +1,6 @@
 <script lang="ts">
 import { nextTick } from 'vue';
+import { setup } from 'vue-class-component';
 import { Emit, Inject, mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { createFocusToken } from '../../../../../../utils/focus-token';
 import { isMac } from '../../../../../../utils/utils';
@@ -16,6 +17,7 @@ import { validateContentMaxLength } from '../../../../../../_common/form-vue/val
 import { FormValidatorContentNoMediaUpload } from '../../../../../../_common/form-vue/validators/content_no_media_upload';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShortkey from '../../../../../../_common/shortkey/AppShortkey.vue';
+import { useThemeStore } from '../../../../../../_common/theme/theme.store';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { ChatStore, ChatStoreKey } from '../../../chat-store';
 import { setMessageEditing, startTyping, stopTyping, tryGetRoomRole } from '../../../client';
@@ -53,6 +55,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 	isEditorFocused = false;
 	typing = false;
 	focusToken = shallowSetup(() => createFocusToken());
+	themeStore = setup(() => useThemeStore());
 
 	private nextMessageTimeout: NodeJS.Timer | null = null;
 	private escapeCallback?: EscapeStackCallback;
@@ -76,14 +79,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 	}
 
 	get placeholder() {
-		if (this.chat && this.room) {
-			if (this.room.isPmRoom && this.room.user) {
-				return this.$gettextInterpolate('Message @%{ username }', {
-					username: this.room.user.username,
-				});
-			}
-		}
-		return this.$gettext('Send a message...');
+		return this.$gettext('Send a message');
 	}
 
 	get shouldShiftEditor() {
@@ -180,6 +176,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 				EscapeStack.deregister(this.escapeCallback);
 				this.escapeCallback = undefined;
 			}
+			this.cancelEditing();
 		}
 	}
 
@@ -356,20 +353,22 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 		<AppShortkey shortkey="tab" @press="onTabKeyPressed" />
 
 		<transition name="fade">
-			<div v-if="!!typingText" class="-top-indicators">
-				<span class="-typing">
+			<div
+				v-if="!!typingText || isEditing"
+				class="-top-indicators"
+				:class="{
+					'-light-mode': !themeStore.isDark,
+				}"
+			>
+				<div v-if="typingText">
 					{{ typingText }}
-				</span>
+				</div>
+
+				<div v-if="isEditing" class="-editing">
+					<AppTranslate>Editing...</AppTranslate>
+				</div>
 			</div>
 		</transition>
-
-		<div v-if="isEditing" class="-editing-message">
-			<AppJolticon icon="edit" />
-			<AppTranslate>Editing Message</AppTranslate>
-			<a class="-editing-message-cancel" @click="cancelEditing">
-				<AppTranslate>Cancel</AppTranslate>
-			</a>
-		</div>
 
 		<AppFormGroup
 			name="content"
@@ -381,7 +380,6 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 			}"
 		>
 			<div class="-input">
-				<!-- TODO(chat-backgrounds) text-overflow() on the placeholder text -->
 				<AppFormControlContent
 					:key="room.id"
 					ref="editor"
@@ -392,7 +390,6 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 					:validators="[validateContentMaxLength(maxContentLength)]"
 					:max-height="160"
 					:display-rules="displayRules"
-					:compact="Screen.isXs"
 					:autofocus="!Screen.isMobile"
 					:model-id="editorModelId"
 					:focus-token="focusToken"
@@ -407,17 +404,19 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 				<AppFormControlErrors label="message" />
 			</div>
 
-			<AppButton
-				v-app-tooltip="isEditing ? $gettext(`Edit message`) : $gettext(`Send message`)"
-				:disabled="isSendButtonDisabled"
-				class="-send-button"
-				sparse
-				:icon="isEditing ? 'check' : 'share-airplane'"
-				:primary="hasContent"
-				:trans="!hasContent"
-				:solid="hasContent"
-				@click="onSubmit"
-			/>
+			<div class="-send-button-container">
+				<AppButton
+					v-app-tooltip="isEditing ? $gettext(`Edit message`) : $gettext(`Send message`)"
+					:disabled="isSendButtonDisabled"
+					class="-send-button"
+					sparse
+					:icon="isEditing ? 'check' : 'share-airplane'"
+					:primary="hasContent"
+					:trans="!hasContent"
+					:solid="hasContent"
+					@click="onSubmit"
+				/>
+			</div>
 		</AppFormGroup>
 	</AppForm>
 </template>
@@ -425,47 +424,36 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 <style lang="stylus" scoped>
 @import '../../variables'
 
-$-button-height = 48px
 $-button-width = 40px
-$-button-margin = 4px
-$-button-spacing = $-button-width + ($-button-margin * 3)
-$-button-spacing-xs = $-button-height
+$-button-height = 40px
 
 .-form
-	display: flex
 	position: relative
 	margin-bottom: 0
+	padding: 12px
+	display: flex
+	gap: 8px
+	align-items: stretch
+
+	::v-deep(.content-editor-form-control)
+		change-bg(bg-offset)
+		border: 0
 
 	@media $media-xs
-		padding-top: 5px
-		border-top: $border-width-base solid var(--theme-bg-subtle)
+		border-bottom: 1px solid var(--theme-bg-offset)
 
-	@media $media-sm-up
-		padding-top: 8px
-		padding-bottom: 8px
-
-	&-shifted
+.-form-shifted
 		margin-bottom: 52px
 
-	&.-editing
-		padding-top: 1px
-		border-top: none
-
-.-editing-message
-	color: var(--theme-light)
-	padding: 4px 0
-
-.-editing-message
-	height: 28px
-
 .-top-indicators
-	display: flex
 	overlay-text-shadow()
+	display: flex
+	gap: 24px
 	color: white
+	font-weight: 600
 	padding: 4px 16px
 	background-image: linear-gradient(to top, rgba($black, 0.25), rgba($black, 0))
 	z-index: 1
-	font-size: $font-size-tiny
 	pointer-events: none
 	position: absolute
 	left: 0
@@ -475,6 +463,16 @@ $-button-spacing-xs = $-button-height
 	transition-duration: 500ms
 	transition-timing-function: $strong-ease-out
 
+	&.-light-mode
+		background-image: linear-gradient(to top, rgba($black, 0.6), rgba($black, 0))
+
+	> *
+		text-overflow()
+
+	&
+	&::v-deep(.jolticon)
+		font-size: $font-size-tiny
+
 	&.fade-leave-active
 		transition-duration: 250ms
 
@@ -482,61 +480,27 @@ $-button-spacing-xs = $-button-height
 	&.fade-leave-to
 		opacity: 0
 
-.-bottom-indicators
-	align-items: center
-	margin-left: $left-gutter-size + $avatar-size
-	margin-right: $-button-spacing
-
-.-typing
-	&
-	.jolticon
-		font-size: $font-size-tiny
-
-.-typing
-	text-overflow()
-
-.-editing-message
-	position: relative
-
-	@media $media-xs
-		padding-left: 4px
-		border-top: $border-width-base solid var(--theme-bg-subtle)
-
-	@media $media-sm-up
-		margin-left: $left-gutter-size + $avatar-size
-		margin-right: $-button-spacing
-
-	&-cancel
-		position: absolute
-		right: 0
-
-		@media $media-xs
-			right: $-button-spacing-xs + 4px
+.-editing
+	margin-left: auto
+	flex: none
 
 .-input
-	width: 'calc(100% - %s)' % $-button-spacing-xs
+	flex: auto
 
 	@media $media-sm-up
 		margin-left: $left-gutter-size
-		width: 'calc(100% - %s)' % ($left-gutter-size + $-button-spacing)
+
+.-send-button-container
+	display: flex
+	flex: none
+	flex-direction: column-reverse
 
 .-send-button
-	display: flex
-	align-items: center
-	justify-content: center
-	height: $-button-height
+	width: $-button-width
+	max-height: $-button-height
+	flex: auto
 	margin: 0
-	flex: none
-	align-self: flex-end
 	transition: color 0.3s, background-color 0.3s
-
-	@media $media-xs
-		width: $-button-spacing-xs
-		border-radius: 0
-
-	@media $media-sm-up
-		width: $-button-width
-		margin: 0 ($-button-margin * 2) 0 $-button-margin
 
 	&.-disabled
 		&:hover
