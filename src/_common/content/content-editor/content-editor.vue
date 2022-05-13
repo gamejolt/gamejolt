@@ -145,9 +145,6 @@ export default class AppContentEditor extends Vue {
 	@Emit('submit')
 	emitSubmit() {}
 
-	@Emit('insert-block-node')
-	emitInsertBlockNode(_nodeType: string) {}
-
 	@Emit('input')
 	emitInput(_source: string) {}
 

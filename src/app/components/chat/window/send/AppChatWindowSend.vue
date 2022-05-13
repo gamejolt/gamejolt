@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { computed, inject, PropType, ref, toRefs, watch } from 'vue';
+import { computed, inject, PropType, toRefs, watch } from 'vue';
 import { ContentDocument } from '../../../../../_common/content/content-document';
-import { Screen } from '../../../../../_common/screen/screen-service';
 import { ChatStoreKey } from '../../chat-store';
 import { editMessage as chatEditMessage, queueChatMessage, setMessageEditing } from '../../client';
 import { ChatMessage } from '../../message';
@@ -22,20 +21,7 @@ const emit = defineEmits({
 const { room } = toRefs(props);
 const chatStore = inject(ChatStoreKey)!;
 
-const singleLineMode = ref(true);
-
 const chat = computed(() => chatStore.chat!);
-
-const isSingleLineMode = computed(() => {
-	// We always want to be in multiline mode for phones:
-	// It's expected behavior to create a new line with the "Enter" key on the virtual keyboard,
-	// and send the message with a "send message" button.
-	if (Screen.isMobile) {
-		return false;
-	}
-
-	return singleLineMode.value;
-});
 
 watch(() => room.value.id, onRoomChanged);
 
@@ -65,16 +51,10 @@ function submit(message: ChatMessage) {
 	} else {
 		sendMessage(message);
 	}
-
-	singleLineMode.value = true;
 }
 
 function onFormCancel() {
 	setMessageEditing(chat.value, null);
-}
-
-function onSingleLineModeChanged(newMode: boolean) {
-	singleLineMode.value = newMode;
 }
 
 async function onRoomChanged() {
@@ -87,10 +67,8 @@ async function onRoomChanged() {
 		<div class="-container">
 			<AppChatWindowSendForm
 				:room="room"
-				:single-line-mode="isSingleLineMode"
 				@submit="submit($event)"
 				@cancel="onFormCancel"
-				@single-line-mode-change="onSingleLineModeChanged($event)"
 				@focus-change="emit('focus-change', $event)"
 			/>
 		</div>

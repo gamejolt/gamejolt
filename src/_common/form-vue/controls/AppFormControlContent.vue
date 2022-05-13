@@ -64,7 +64,6 @@ const emit = defineEmits({
 	focus: () => true,
 	blur: () => true,
 	submit: () => true,
-	'insert-block-node': (_nodeType: string) => true,
 });
 
 const { name } = useFormGroup()!;
@@ -109,7 +108,6 @@ function onChange(value: string) {
 			@editor-focus="emit('focus')"
 			@editor-blur="emit('blur')"
 			@submit="emit('submit')"
-			@insert-block-node="emit('insert-block-node', $event)"
 		/>
 	</div>
 </template>

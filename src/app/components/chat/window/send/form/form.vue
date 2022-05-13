@@ -41,7 +41,6 @@ class Wrapper extends BaseForm<FormModel> {}
 	},
 })
 export default class AppChatWindowSendForm extends mixins(Wrapper) {
-	@Prop({ type: Boolean, required: true }) singleLineMode!: boolean;
 	@Prop({ type: Object, required: true }) room!: ChatRoom;
 
 	@Inject({ from: ChatStoreKey })
@@ -63,7 +62,6 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 
 	@Emit('submit') emitSubmit(_content: FormModel) {}
 	@Emit('cancel') emitCancel() {}
-	@Emit('single-line-mode-change') emitSingleLineModeChange(_singleLine: boolean) {}
 	@Emit('focus-change') emitFocusChange(_focused: boolean) {}
 
 	get chat() {
@@ -103,10 +101,6 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 
 	get isMac() {
 		return isMac();
-	}
-
-	get showMultiLineNotice() {
-		return !this.singleLineMode && !Screen.isMobile;
 	}
 
 	get maxContentLength() {
@@ -229,10 +223,6 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 
 			this.emitSubmit(submit);
 			this.clearMsg();
-		} else {
-			// When the user tried to submit an empty doc and is in multi line mode, reset to single line.
-			// They are probably trying to exit that mode, since submitting an empty message is nonsense.
-			this.emitSingleLineModeChange(true);
 		}
 	}
 
@@ -295,10 +285,6 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 			clearTimeout(this.typingTimeout);
 		}
 		this.typingTimeout = setTimeout(this.disableTypingTimeout, TYPING_TIMEOUT_INTERVAL);
-	}
-
-	onEditorInsertBlockNode(_nodeType: string) {
-		this.emitSingleLineModeChange(false);
 	}
 
 	onFocusEditor() {
@@ -402,7 +388,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 					:content-context="room.messagesContentContext"
 					:temp-resource-context-data="contentEditorTempResourceContextData"
 					:placeholder="placeholder"
-					:single-line-mode="singleLineMode"
+					:single-line-mode="Screen.isDesktop"
 					:validators="[validateContentMaxLength(maxContentLength)]"
 					:max-height="160"
 					:display-rules="displayRules"
@@ -412,7 +398,6 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 					:focus-token="focusToken"
 					focus-end
 					@submit="onSubmit"
-					@insert-block-node="onEditorInsertBlockNode"
 					@focus="onFocusEditor"
 					@blur="onBlurEditor"
 					@keydown.up="onUpKeyPressed($event)"
@@ -434,24 +419,6 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 				@click="onSubmit"
 			/>
 		</AppFormGroup>
-
-		<!-- TODO(chat-backgrounds) is this currently broken? I've never been able to trigger it. -->
-		<!-- TODO(chat-backgrounds) Might want to do an AppExpand here? How often is this displayed? should we display it alongside the typing indicator instead? -->
-		<div v-if="!Screen.isXs" class="-bottom-indicators">
-			<span v-if="showMultiLineNotice" class="-multi-line anim-fade-in no-animate-leave">
-				<AppJolticon icon="notice" />
-				<span v-if="isMac" v-translate>
-					You are in multi-line editing mode. Press
-					<code>cmd+enter</code>
-					to send.
-				</span>
-				<span v-else v-translate>
-					You are in multi-line editing mode. Press
-					<code>ctrl+enter</code>
-					to send.
-				</span>
-			</span>
-		</div>
 	</AppForm>
 </template>
 
@@ -475,6 +442,7 @@ $-button-spacing-xs = $-button-height
 
 	@media $media-sm-up
 		padding-top: 8px
+		padding-bottom: 8px
 
 	&-shifted
 		margin-bottom: 52px
@@ -483,22 +451,15 @@ $-button-spacing-xs = $-button-height
 		padding-top: 1px
 		border-top: none
 
-.-bottom-indicators
 .-editing-message
 	color: var(--theme-light)
 	padding: 4px 0
-
-.-bottom-indicators
-	min-height: 8px
 
 .-editing-message
 	height: 28px
 
 .-top-indicators
-.-bottom-indicators
 	display: flex
-
-.-top-indicators
 	overlay-text-shadow()
 	color: white
 	padding: 4px 16px
@@ -527,17 +488,12 @@ $-button-spacing-xs = $-button-height
 	margin-right: $-button-spacing
 
 .-typing
-.-multi-line
 	&
 	.jolticon
 		font-size: $font-size-tiny
 
 .-typing
 	text-overflow()
-
-.-multi-line
-	flex: none
-	margin-left: auto
 
 .-editing-message
 	position: relative
