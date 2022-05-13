@@ -1,11 +1,13 @@
-import { arrayRemove } from '../../../utils/array';
+import { arrayRemove, numberSort, stringSort } from '../../../utils/array';
 import { ChatClient, isUserOnline } from './client';
+import { CHAT_ROLES } from './role';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
 
 export class ChatUserCollection {
 	static readonly TYPE_FRIEND = 'friend';
 	static readonly TYPE_ROOM = 'room';
+	static readonly TYPE_FIRESIDE = 'fireside';
 
 	chat: ChatClient | null = null;
 	onlineCount = 0;
@@ -24,7 +26,11 @@ export class ChatUserCollection {
 		return this.collection_;
 	}
 
-	constructor(public type: 'friend' | 'room', users: any[] = [], chatClient?: ChatClient) {
+	constructor(
+		public type: 'friend' | 'room' | 'fireside',
+		users: any[] = [],
+		chatClient?: ChatClient
+	) {
 		if (users && users.length) {
 			for (const user of users) {
 				const userModel = new ChatUser(user);
@@ -160,6 +166,8 @@ export class ChatUserCollection {
 
 		if (this.type === ChatUserCollection.TYPE_FRIEND) {
 			sortCollection(this.chat, this.collection_, 'lastMessage');
+		} else if (this.type === ChatUserCollection.TYPE_FIRESIDE) {
+			sortCollection(this.chat, this.collection_, 'role');
 		} else {
 			sortCollection(this.chat, this.collection_, 'title');
 		}
@@ -182,12 +190,50 @@ export class ChatUserCollection {
 	}
 }
 
-function sortCollection(
+export function sortCollection(
 	chat: ChatClient | null,
 	collection: ChatUser[],
-	mode: 'lastMessage' | 'title'
+	mode: 'lastMessage' | 'title' | 'role'
 ) {
 	switch (mode) {
+		case 'role':
+			{
+				const roles: (CHAT_ROLES | 'staff')[] = [
+					'owner', // formatting
+					'moderator',
+					'staff',
+					'user',
+				];
+
+				collection.sort((a, b) => {
+					const aChattable = a;
+					const bChattable = b;
+					if (!(aChattable instanceof ChatUser) || !(bChattable instanceof ChatUser)) {
+						return 0;
+					}
+
+					const aRole = roles.indexOf(
+						aChattable.isStaff ? 'staff' : getRoleSort(aChattable)
+					);
+					const bRole = roles.indexOf(
+						bChattable.isStaff ? 'staff' : getRoleSort(bChattable)
+					);
+					const roleDiff = numberSort(aRole, bRole);
+					if (roleDiff !== 0) {
+						return roleDiff;
+					}
+
+					const aFriend = !!chat?.friendsList.get(aChattable);
+					const bFriend = !!chat?.friendsList.get(bChattable);
+					if (aFriend != bFriend) {
+						return aFriend ? -1 : 1;
+					}
+
+					return stringSort(aChattable.display_name, bChattable.display_name);
+				});
+			}
+			break;
+
 		case 'lastMessage':
 			sortByLastMessageOn(collection);
 			break;
@@ -204,18 +250,22 @@ function sortCollection(
 					}
 				}
 
-				const aName = a.display_name.toLowerCase();
-				const bName = b.display_name.toLowerCase();
-				if (aName > bName) {
-					return 1;
-				} else if (aName < bName) {
-					return -1;
-				}
-
-				return 0;
+				return stringSort(a.display_name, b.display_name);
 			});
 			break;
 	}
+}
+
+function getRoleSort(user: ChatUser | null | undefined): CHAT_ROLES {
+	if (!user) {
+		return 'user';
+	}
+
+	if (user.role === 'owner') {
+		return 'owner';
+	}
+
+	return user.role ?? 'user';
 }
 
 function getSortVal(chat: ChatClient, user: ChatUser) {

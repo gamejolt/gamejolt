@@ -678,7 +678,7 @@ function setupRoom(chat: ChatClient, room: ChatRoom, messages: ChatMessage[]) {
 		// Set the room info
 		chat.messages[room.id] = [];
 		chat.roomMembers[room.id] = new ChatUserCollection(
-			ChatUserCollection.TYPE_ROOM,
+			room.isFiresideRoom ? ChatUserCollection.TYPE_FIRESIDE : ChatUserCollection.TYPE_ROOM,
 			room.members || [],
 			chat
 		);

@@ -22,6 +22,7 @@ import { ChatStoreKey } from './chat-store';
 import { leaveGroupRoom } from './client';
 import AppChatMemberListItem from './member-list/AppChatMemberListItem.vue';
 import { ChatRoom } from './room';
+import { sortCollection } from './user-collection';
 
 type FormModel = ChatRoom;
 </script>
@@ -95,7 +96,9 @@ const shouldShowLeave = computed(() => {
 
 const membersPreview = computed(() => {
 	if (showMembersPreview.value) {
-		return room.value.members.slice(0, 5);
+		const members = room.value.members.concat();
+		sortCollection(chat.value, members, 'role');
+		return members.slice(0, 5);
 	}
 	return [];
 });

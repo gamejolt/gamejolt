@@ -80,21 +80,26 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 				</div>
 
 				<div class="shell-nav-label">
-					<span class="-row-icon">
-						<span v-if="isOwner" v-app-tooltip="$gettext(`Room Owner`)">
-							<AppJolticon icon="crown" />
+					<div class="-label">
+						<div class="-name">
+							{{ ' ' }}
+							<span>{{ user.display_name }}</span>
+							{{ ' ' }}
+							<span class="tiny text-muted">@{{ user.username }}</span>
+						</div>
+
+						<span class="-row-icon">
+							<span v-if="isOwner" v-app-tooltip="$gettext(`Room Owner`)">
+								<AppJolticon icon="crown" />
+							</span>
+							<span v-else-if="isStaff" v-app-tooltip="$gettext(`Game Jolt Staff`)">
+								<AppJolticon icon="gamejolt" />
+							</span>
+							<span v-else-if="isModerator" v-app-tooltip="$gettext(`Moderator`)">
+								<AppJolticon icon="star" />
+							</span>
 						</span>
-						<span v-else-if="isStaff" v-app-tooltip="$gettext(`Game Jolt Staff`)">
-							<AppJolticon icon="gamejolt" />
-						</span>
-						<span v-else-if="isModerator" v-app-tooltip="$gettext(`Moderator`)">
-							<AppJolticon icon="star" />
-						</span>
-					</span>
-					{{ ' ' }}
-					<span>{{ user.display_name }}</span>
-					{{ ' ' }}
-					<span class="tiny text-muted">@{{ user.username }}</span>
+					</div>
 				</div>
 			</a>
 
@@ -111,8 +116,17 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 	overflow: hidden
 	rounded-corners()
 
+.-label
+	display: flex
+	gap: 4px
+	align-items: center
+
+.-name
+	text-overflow()
+
 .-row-icon
 	vertical-align: middle
+	margin-left: auto
 
 .-avatar
 	position: relative

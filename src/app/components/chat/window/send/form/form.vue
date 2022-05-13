@@ -439,6 +439,10 @@ $-button-height = 40px
 		change-bg(bg-offset)
 		border: 0
 
+	::v-deep(.content-placeholder)
+		text-overflow()
+		max-width: 100%
+
 	@media $media-xs
 		border-bottom: 1px solid var(--theme-bg-offset)
 

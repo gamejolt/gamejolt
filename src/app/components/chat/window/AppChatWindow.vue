@@ -17,6 +17,7 @@ import FormChatEditRoom from '../FormChatEditRoom.vue';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
 import AppChatMemberList from '../member-list/AppChatMemberList.vue';
 import { ChatRoom, getChatRoomTitle } from '../room';
+import { sortCollection } from '../user-collection';
 import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
 import AppChatWindowOutput from './output/AppChatWindowOutput.vue';
 import AppChatWindowSend from './send/AppChatWindowSend.vue';
@@ -61,7 +62,11 @@ watch(sidebar, (value, oldValue) => {
 const isShowingUsers = computed(() => sidebar.value === 'members');
 
 const chat = computed(() => chatStore.chat!);
-const users = computed(() => chat.value.roomMembers[room.value.id]);
+const users = computed(() => {
+	const members = room.value.members.concat();
+	sortCollection(chat.value, members, sort.value);
+	return members;
+});
 const membersCount = computed(() => formatNumber(room.value.members.length));
 
 const roomTitle = computed(() =>
@@ -240,10 +245,10 @@ function onMobileAppBarBack() {
 					</div>
 
 					<div v-if="sidebar" class="-sidebar">
-						<div v-if="!Screen.isXs" class="-sidebar-shadow" />
+						<div v-if="Screen.isDesktop" class="-sidebar-shadow" />
 
 						<AppScrollScroller class="-sidebar-scroller">
-							<AppMobileAppBar v-if="Screen.isXs">
+							<AppMobileAppBar v-if="Screen.isMobile">
 								<template #leading>
 									<AppButton
 										icon="chevron-left"
@@ -303,11 +308,7 @@ function onMobileAppBarBack() {
 									</span>
 								</div>
 
-								<AppChatMemberList
-									v-if="users"
-									:users="users.collection"
-									:room="room"
-								/>
+								<AppChatMemberList v-if="users" :users="users" :room="room" />
 							</template>
 						</AppScrollScroller>
 					</div>
@@ -422,7 +423,7 @@ function onMobileAppBarBack() {
 	width: 320px
 	flex: none
 
-	@media $media-xs
+	@media $media-mobile
 		position: fixed
 		z-index: 2
 		left: 0
