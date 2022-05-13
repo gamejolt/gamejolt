@@ -22,7 +22,7 @@ import { ChatStoreKey } from './chat-store';
 import { leaveGroupRoom } from './client';
 import AppChatMemberListItem from './member-list/AppChatMemberListItem.vue';
 import { ChatRoom } from './room';
-import { sortCollection } from './user-collection';
+import { ChatUser } from './user';
 
 type FormModel = ChatRoom;
 </script>
@@ -36,6 +36,10 @@ const props = defineProps({
 	showMembersPreview: {
 		type: Boolean,
 	},
+	members: {
+		type: Array as PropType<ChatUser[]>,
+		default: () => [] as ChatUser[],
+	},
 });
 
 const emit = defineEmits({
@@ -43,7 +47,7 @@ const emit = defineEmits({
 	viewMembers: () => true,
 });
 
-const { room, showMembersPreview } = toRefs(props);
+const { room, showMembersPreview, members } = toRefs(props);
 
 let initialBackground = room.value.background;
 
@@ -96,9 +100,7 @@ const shouldShowLeave = computed(() => {
 
 const membersPreview = computed(() => {
 	if (showMembersPreview.value) {
-		const members = room.value.members.concat();
-		sortCollection(chat.value, members, 'role');
-		return members.slice(0, 5);
+		return members.value.slice(0, 5);
 	}
 	return [];
 });

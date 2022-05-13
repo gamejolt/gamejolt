@@ -206,30 +206,21 @@ export function sortCollection(
 				];
 
 				collection.sort((a, b) => {
-					const aChattable = a;
-					const bChattable = b;
-					if (!(aChattable instanceof ChatUser) || !(bChattable instanceof ChatUser)) {
-						return 0;
-					}
-
-					const aRole = roles.indexOf(
-						aChattable.isStaff ? 'staff' : getRoleSort(aChattable)
-					);
-					const bRole = roles.indexOf(
-						bChattable.isStaff ? 'staff' : getRoleSort(bChattable)
-					);
+					const aRole = roles.indexOf(a.isStaff ? 'staff' : getRoleSort(a));
+					const bRole = roles.indexOf(b.isStaff ? 'staff' : getRoleSort(b));
 					const roleDiff = numberSort(aRole, bRole);
 					if (roleDiff !== 0) {
 						return roleDiff;
 					}
 
-					const aFriend = !!chat?.friendsList.get(aChattable);
-					const bFriend = !!chat?.friendsList.get(bChattable);
+					const aFriend = !!chat?.friendsList.get(a.id);
+					const bFriend = !!chat?.friendsList.get(b.id);
+
 					if (aFriend != bFriend) {
 						return aFriend ? -1 : 1;
 					}
 
-					return stringSort(aChattable.display_name, bChattable.display_name);
+					return stringSort(a.display_name, b.display_name);
 				});
 			}
 			break;
