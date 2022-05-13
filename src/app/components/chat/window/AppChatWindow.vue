@@ -64,7 +64,7 @@ const isShowingUsers = computed(() => sidebar.value === 'members');
 const chat = computed(() => chatStore.chat!);
 const users = computed(() => {
 	const members = room.value.members.concat();
-	sortCollection(chat.value, members, sort.value);
+	sortCollection(chat.value, members, 'role');
 	return members;
 });
 const membersCount = computed(() => formatNumber(room.value.members.length));
