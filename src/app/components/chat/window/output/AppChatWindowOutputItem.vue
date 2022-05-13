@@ -92,6 +92,23 @@ const editingState = computed(() => {
 
 const shouldShowMessageOptions = computed(() => canRemoveMessage.value || canEditMessage.value);
 
+const dataAnchorWidth = computed(() => {
+	const itemWidth = 40;
+	if (isEditing.value) {
+		return itemWidth;
+	}
+
+	let itemCount = 0;
+	if (canRemoveMessage.value) {
+		++itemCount;
+	}
+	if (canEditMessage.value) {
+		++itemCount;
+	}
+
+	return itemWidth * itemCount + (itemCount - 1);
+});
+
 const canRemoveMessage = computed(() => {
 	if (!chat.value.currentUser) {
 		return false;
@@ -203,81 +220,90 @@ async function onClickItem() {
 			@blur="onBlurItem"
 			@click.capture="onClickItem"
 		>
-			<div
-				class="-item-container"
-				:style="{
-					'background-image': isEditingColor
-						? `linear-gradient(${isEditingColor}, ${isEditingColor}`
-						: undefined,
-				}"
-			>
-				<div v-if="message.showMeta" class="-item-byline">
-					<RouterLink class="-user link-unstyled" :to="message.user.url">
-						{{ message.user.display_name }}
-					</RouterLink>
-					<span class="-username"> @{{ message.user.username }} </span>
-					<span>
-						<AppChatWindowOutputItemDetails
-							:message="message"
-							:room="room"
-							:timestamp-margin-left="8"
-							show-am-pm
-						/>
-					</span>
-				</div>
+			<div class="-item-container">
+				<div
+					class="-item-decorator"
+					:style="{
+						'background-image': isEditingColor
+							? `linear-gradient(${isEditingColor}, ${isEditingColor}`
+							: undefined,
+					}"
+				>
+					<div v-if="message.showMeta" class="-item-byline">
+						<RouterLink class="-user link-unstyled" :to="message.user.url">
+							{{ message.user.display_name }}
+						</RouterLink>
+						<span class="-username"> @{{ message.user.username }} </span>
+						<span>
+							<AppChatWindowOutputItemDetails
+								:message="message"
+								:room="room"
+								:timestamp-margin-left="8"
+								show-am-pm
+							/>
+						</span>
+					</div>
 
-				<!-- TODO(chat-backgrounds) sizing is really jank with images
+					<!-- TODO(chat-backgrounds) sizing is really jank with images
 				and videos. They need to have an (almost) unrestricted width
 				they can build to while still only taking up as much space as
 				they need. Random issues with AppResponsiveDimensions not
 				rebuilding when already at its parent bounds. -->
-				<AppContentViewer :source="message.content" :display-rules="displayRules" />
+					<AppContentViewer :source="message.content" :display-rules="displayRules" />
 
-				<span
-					v-if="editingState"
-					v-app-tooltip.touchable="editingState.tooltip"
-					class="-edited"
-					:class="{ 'text-muted': !isEditing }"
-				>
-					<AppTranslate>{{ editingState.display }}</AppTranslate>
-				</span>
+					<span
+						v-if="editingState"
+						v-app-tooltip.touchable="editingState.tooltip"
+						class="-edited"
+						:class="{ 'text-muted': !isEditing }"
+					>
+						<AppTranslate>{{ editingState.display }}</AppTranslate>
+					</span>
+				</div>
 
 				<div v-if="!message.showMeta" class="-floating-data-left">
 					<AppChatWindowOutputItemDetails :message="message" :room="room" />
 				</div>
-			</div>
 
-			<div v-if="shouldShowMessageOptions" class="-floating-data-right">
-				<div class="-message-actions">
-					<template v-if="isEditing">
-						<a
-							v-app-tooltip="$gettext('Cancel edit')"
-							class="-message-actions-item link-unstyled"
-							@click="stopEdit"
-						>
-							<AppJolticon icon="remove" />
-						</a>
-					</template>
-					<template v-else>
-						<a
-							v-if="canEditMessage"
-							v-app-tooltip="$gettext('Edit message')"
-							class="-message-actions-item link-unstyled"
-							@click="startEdit"
-						>
-							<AppJolticon icon="edit" />
-						</a>
+				<div
+					class="-floating-data-anchor"
+					:style="{
+						width: dataAnchorWidth + 'px',
+					}"
+				>
+					<div v-if="shouldShowMessageOptions" class="-floating-data-right">
+						<div class="-message-actions">
+							<template v-if="isEditing">
+								<a
+									v-app-tooltip="$gettext('Cancel edit')"
+									class="-message-actions-item link-unstyled"
+									@click="stopEdit"
+								>
+									<AppJolticon icon="remove" />
+								</a>
+							</template>
+							<template v-else>
+								<a
+									v-if="canEditMessage"
+									v-app-tooltip="$gettext('Edit message')"
+									class="-message-actions-item link-unstyled"
+									@click="startEdit"
+								>
+									<AppJolticon icon="edit" />
+								</a>
 
-						<a
-							v-if="canRemoveMessage"
-							v-app-tooltip="$gettext('Remove message')"
-							class="-message-actions-item link-unstyled"
-							@click="removeMessage"
-						>
-							<!-- TODO(chat-backgrounds) trash jolticon -->
-							<AppJolticon icon="remove" />
-						</a>
-					</template>
+								<a
+									v-if="canRemoveMessage"
+									v-app-tooltip="$gettext('Remove message')"
+									class="-message-actions-item link-unstyled"
+									@click="removeMessage"
+								>
+									<!-- TODO(chat-backgrounds) trash jolticon -->
+									<AppJolticon icon="remove" />
+								</a>
+							</template>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -286,6 +312,8 @@ async function onClickItem() {
 
 <style lang="stylus" scoped>
 @import '../variables'
+
+$-min-item-width = 24px
 
 .chat-window-output-item
 	position: relative
@@ -325,22 +353,32 @@ async function onClickItem() {
 .-item-container-wrapper
 	display: flex
 	align-items: flex-start
-
-.-item-container
-	rounded-corners-lg()
-	elevate-1()
-	display: inline-block
+	outline: 0
 	margin-left: $left-gutter-size
-	position: relative
-	padding: 12px
-	background-color: var(--theme-bg)
-	max-width: calc(100% - 24px)
-	z-index: 1
-	min-width: 24px
+	flex: auto
+	min-width: 0
 
 	@media $media-xs
 		// On small screens, reduce the left side margin to make more space for the actual messages.
 		margin-left: $avatar-size + 12px
+
+.-item-container
+	position: relative
+	display: inline-flex
+	min-width: $-min-item-width
+
+.-item-decorator
+	rounded-corners-lg()
+	elevate-1()
+	display: inline-block
+	padding: 12px
+	background-color: var(--theme-bg)
+	z-index: 1
+
+.-floating-data-anchor
+	position: relative
+	flex: 1 1 0px
+	z-index: 2
 
 .-item-byline
 	display: flex
@@ -405,10 +443,10 @@ async function onClickItem() {
 	justify-content: center
 
 .-floating-data-right
-	position: relative
-	left: -6px
-	padding: 0 4px 0 14px
-	transform: translateX(-50%)
+	position: absolute
+	top: -2px
+	right: -4px
+	transform: translateX(50%)
 
 .-message-actions
 	rounded-corners()
@@ -444,8 +482,8 @@ async function onClickItem() {
 
 		.-floating-data-left
 		.-floating-data-right
-			opacity: 1
 			transform: translateX(0%)
+			opacity: 1
 			visibility: visible
 
 			::v-deep(.jolticon)
@@ -463,8 +501,8 @@ async function onClickItem() {
 
 		.-floating-data-left
 		.-floating-data-right
-			opacity: 1
 			transform: translateX(0%)
+			opacity: 1
 			visibility: visible
 
 			::v-deep(.jolticon)
