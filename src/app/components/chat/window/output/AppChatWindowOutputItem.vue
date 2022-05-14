@@ -1,12 +1,14 @@
-<script lang="ts" setup>
+<script lang="ts">
 import { transparentize } from 'polished';
-import { computed, inject, PropType, ref, toRefs } from 'vue';
+import { computed, inject, PropType, reactive, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
+import { ContentOwnerParentBounds } from '../../../../../_common/content/content-owner';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { formatDate } from '../../../../../_common/filters/date';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { DefaultTheme } from '../../../../../_common/theme/theme.model';
@@ -28,7 +30,9 @@ import AppChatWindowOutputItemDetails from './AppChatWindowOutputItemDetails.vue
 export interface ChatMessageEditEvent {
 	message: ChatMessage;
 }
+</script>
 
+<script lang="ts" setup>
 const props = defineProps({
 	message: {
 		type: Object as PropType<ChatMessage>,
@@ -49,6 +53,10 @@ const displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 
 
 const root = ref<HTMLElement>();
 const itemWrapper = ref<HTMLElement>();
+
+const contentViewerBounds: ContentOwnerParentBounds = reactive({
+	width: ref(200),
+});
 
 const chat = computed(() => chatStore.chat!);
 
@@ -186,6 +194,15 @@ async function onClickItem() {
 		itemWrapper.value?.blur();
 	}
 }
+
+function onItemWrapperResize() {
+	if (!itemWrapper.value) {
+		return;
+	}
+
+	const { offsetWidth } = itemWrapper.value;
+	contentViewerBounds.width = Math.max(offsetWidth - 32 - 12 * 2, 100);
+}
 </script>
 
 <template>
@@ -214,6 +231,7 @@ async function onClickItem() {
 
 		<div
 			ref="itemWrapper"
+			v-app-observe-dimensions="onItemWrapperResize"
 			class="-item-container-wrapper"
 			tabindex="-1"
 			@focus="onFocusItem"
@@ -244,12 +262,11 @@ async function onClickItem() {
 						</span>
 					</div>
 
-					<!-- TODO(chat-backgrounds) sizing is really jank with images
-				and videos. They need to have an (almost) unrestricted width
-				they can build to while still only taking up as much space as
-				they need. Random issues with AppResponsiveDimensions not
-				rebuilding when already at its parent bounds. -->
-					<AppContentViewer :source="message.content" :display-rules="displayRules" />
+					<AppContentViewer
+						:source="message.content"
+						:display-rules="displayRules"
+						:parent-bounds="contentViewerBounds"
+					/>
 
 					<span
 						v-if="editingState"

@@ -25,19 +25,24 @@ const props = defineProps({
 		type: Number,
 		default: 0,
 	},
+	parentWidth: {
+		type: Number,
+		default: undefined,
+	},
 });
 
 const emit = defineEmits({
 	change: (_event: AppResponsiveDimensionsChangeEvent) => true,
 });
 
-const { ratio, maxWidth, maxHeight } = toRefs(props);
+const { ratio, maxWidth, maxHeight, parentWidth } = toRefs(props);
 
 const root = ref<HTMLElement>();
 const width = ref<string>();
 const height = ref('auto');
 
 watch([ratio, maxWidth, maxHeight], _updateDimensions);
+watch(() => parentWidth?.value, _updateDimensions);
 
 useEventSubscription(onScreenResize, () => _updateDimensions());
 
@@ -62,7 +67,7 @@ function _updateDimensions() {
 	}
 
 	let isFilled = true;
-	let newWidth = Ruler.width(root.value.parentNode as HTMLElement);
+	let newWidth = parentWidth?.value ?? Ruler.width(root.value.parentNode as HTMLElement);
 
 	if (maxWidth.value && newWidth > maxWidth.value) {
 		newWidth = maxWidth.value;
