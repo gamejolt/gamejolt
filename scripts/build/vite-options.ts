@@ -6,11 +6,11 @@ const path = require('path') as typeof import('path');
 
 type UnwrapPromise<T> = T extends Promise<infer U> ? U : never;
 
-export type ParsedOptions = UnwrapPromise<ReturnType<typeof parseOptionsFromEnv>>;
+export type ParsedOptions = ReturnType<typeof parseOptionsFromEnv>;
 
 export type Options = UnwrapPromise<ReturnType<typeof inferAndValidateFromParsedOptions>>;
 
-export async function parseOptionsFromEnv() {
+export function parseOptionsFromEnv() {
 	function isExpectedValue<T>(
 		value: any,
 		expectedValues: readonly T[]
@@ -143,7 +143,7 @@ export async function inferAndValidateFromParsedOptions(
 }
 
 export async function parseAndInferOptionsFromEnv(viteConfigEnv: ConfigEnv) {
-	const parsedOpts = await parseOptionsFromEnv();
+	const parsedOpts = parseOptionsFromEnv();
 	return await inferAndValidateFromParsedOptions(parsedOpts, viteConfigEnv);
 }
 

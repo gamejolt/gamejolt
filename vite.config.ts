@@ -23,6 +23,10 @@ type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'
 // https://vitejs.dev/config/
 export default defineConfig(async configEnv => {
 	const { command } = configEnv;
+
+	const isWatching =
+		command === 'serve' || process.argv.includes('--watch') || process.argv.includes('-w');
+
 	const gjOpts = await parseAndInferOptionsFromEnv(configEnv);
 
 	// When serving the client locally, we need to acquire the ffmpeg binaries.
@@ -245,16 +249,16 @@ export default defineConfig(async configEnv => {
 		})(),
 
 		base: (() => {
-			// When watching simply return root.
-			// This is a vite default.
-			if (command === 'serve') {
-				return '/';
+			// Desktop app assets are bundled into /package/ in prod,
+			// and in dev they are build and watched into /build/desktop
+			if (gjOpts.platform === 'desktop') {
+				return isWatching ? '/build/desktop/' : '/package/';
 			}
 
-			// Desktop app assets are bundled into /package/
-			// TODO: this is problably not correct. check this.
-			if (gjOpts.platform === 'desktop') {
-				return '/package/';
+			// When watching simply return root.
+			// This is a vite default.
+			if (isWatching) {
+				return '/';
 			}
 
 			// Mobile app assets are expected to always resolve
@@ -288,6 +292,8 @@ export default defineConfig(async configEnv => {
 					pfx: path.resolve(__dirname, 'development.gamejolt.com.pfx'),
 					passphrase: 'yame yolt',
 				},
+
+				hmr: false,
 			}),
 
 			// In docker, there may be more than just the frontend being accessible on development.gamejolt.com,
@@ -422,13 +428,13 @@ export default defineConfig(async configEnv => {
 			GJ_VERSION: JSON.stringify(gjOpts.version),
 			GJ_WITH_UPDATER: JSON.stringify(gjOpts.withUpdater),
 			GJ_HAS_ROUTER: JSON.stringify(gjOpts.currentSectionConfig.hasRouter),
-			GJ_IS_WATCHING: JSON.stringify(command === 'serve'),
+			GJ_IS_WATCHING: JSON.stringify(isWatching),
 
 			// Disable redirecting between sections during serve.
 			// This is because as of time of writing we only support watching
 			// one section at a time. This makes it easier to test auth section
 			// when you're already logged in.
-			GJ_DISABLE_SECTION_REDIRECTS: JSON.stringify(command === 'serve'),
+			GJ_DISABLE_SECTION_REDIRECTS: isWatching,
 		},
 
 		...onlyInSSR<ViteUserConfig>({
