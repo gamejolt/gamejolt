@@ -20,7 +20,7 @@ export function initRouter(appRoutes: RouteRecordRaw[]) {
 	const routes = [...appRoutes, routeError404];
 
 	let history: RouterHistory;
-	if (GJ_IS_DESKTOP_APP && !GJ_IS_WATCHING) {
+	if (GJ_IS_DESKTOP_APP) {
 		history = createWebHashHistory();
 	} else if (import.meta.env.SSR) {
 		history = createMemoryHistory();

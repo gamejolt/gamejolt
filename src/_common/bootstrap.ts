@@ -45,8 +45,6 @@ export async function bootstrapCommon(options: BootstrapOptions) {
 	// Annoyingly enough, we cant conditionally import anything syncronously, which means
 	// we have to asyncronously import the main app component even in non client builds.
 	if (GJ_IS_DESKTOP_APP) {
-		window.alert(window.location.href);
-		options.router?.replace('/');
 		await initCommonSafeExportsForClient();
 		await options.initSectionSafeExportsForClient?.(options.router);
 	}
