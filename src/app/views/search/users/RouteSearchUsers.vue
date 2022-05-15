@@ -1,7 +1,7 @@
 <script lang="ts">
 import { getQuery } from '../../../../utils/router';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import AppUserCard from '../../../../_common/user/card/card.vue';
+import AppUserCard from '../../../../_common/user/card/AppUserCard.vue';
 import { sendSearch } from '../../../components/search/search-service';
 import { useSearchRouteController } from '../RouteSearch.vue';
 

@@ -17,7 +17,7 @@ import { CommentThreadModal } from '../../../../_common/comment/thread/modal.ser
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { Model } from '../../../../_common/model/model.service';
-import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
+import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import { illNoCommentsSmall } from '../../../img/ill/illustrations';

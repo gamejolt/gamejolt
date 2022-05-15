@@ -20,7 +20,7 @@ import { useCommonStore } from '../../../_common/store/common-store';
 import { EventSubscription } from '../../../_common/system/event/event-topic';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppUserCard from '../../../_common/user/card/card.vue';
+import AppUserCard from '../../../_common/user/card/AppUserCard.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import { onFiresideStart } from '../../components/grid/client.service';
@@ -199,7 +199,7 @@ async function refreshQuests() {
 	<section class="section fill-backdrop">
 		<AppPageContainer xl>
 			<template #left>
-				<AppUserCard v-if="Screen.isDesktop" :user="user" />
+				<AppUserCard v-if="Screen.isDesktop" :user="user!" />
 
 				<template v-if="hasGamesSection">
 					<div class="clearfix">

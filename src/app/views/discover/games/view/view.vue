@@ -43,7 +43,7 @@ import { EventSubscription } from '../../../../../_common/system/event/event-top
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
+import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import { User } from '../../../../../_common/user/user.model';
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';

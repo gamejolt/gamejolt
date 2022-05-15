@@ -17,7 +17,7 @@ import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { BaseTrophy } from '../../../../../_common/trophy/base-trophy.model';
-import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
+import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import { User } from '../../../../../_common/user/user.model';
