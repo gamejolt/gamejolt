@@ -184,7 +184,13 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	onPostAdded(post: FiresidePost) {
-		ActivityFeedService.onPostAdded(this.feed!, post, this);
+		ActivityFeedService.onPostAdded({
+			feed: this.feed!,
+			post,
+			appRoute: this.appRoute_,
+			route: this.$route,
+			router: this.$router,
+		});
 	}
 
 	async acceptCollaboration() {
@@ -216,9 +222,9 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			<div class="container text-center">
 				<p>
 					<b>
-						<AppTranslate
-							>You've been invited to collaborate on this community.</AppTranslate
-						>
+						<AppTranslate>
+							You've been invited to collaborate on this community.
+						</AppTranslate>
 					</b>
 				</p>
 				<AppButton

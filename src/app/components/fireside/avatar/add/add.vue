@@ -61,13 +61,13 @@ export default class AppFiresideAvatarAdd extends Vue {
 </script>
 
 <template>
-	<AppFiresideAvatarBase :class="{ '-disabled': isDisabled }" border-style="dashed">
+	<AppFiresideAvatarBase :class="{ '-disabled': isDisabled }" border-highlight>
 		<template #avatar>
 			<AppJolticon icon="add" />
 		</template>
 
-		<template #tag>
-			<AppTranslate class="-start">START</AppTranslate>
+		<template #title>
+			<AppTranslate>Start a Fireside</AppTranslate>
 		</template>
 
 		<template #link>
@@ -91,6 +91,7 @@ export default class AppFiresideAvatarAdd extends Vue {
 	a
 		cursor: not-allowed
 
-.jolticon
-	font-size: $jolticon-size * 2
+@media $media-sm-up
+	.jolticon
+		font-size: $jolticon-size * 2
 </style>
