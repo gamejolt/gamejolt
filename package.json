@@ -147,7 +147,7 @@
 	"node-remote": "https://development.gamejolt.com",
 	"domain": "game-jolt-client",
 	"window": {
-		"show": true,
+		"show": false,
 		"width": 1250,
 		"height": 700,
 		"min_height": 400,
