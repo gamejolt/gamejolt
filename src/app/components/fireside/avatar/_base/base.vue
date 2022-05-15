@@ -24,8 +24,8 @@ export default class AppFiresideAvatarBase extends Vue {
 	@Prop({ type: Object, default: null })
 	community!: Community | null;
 
-	@Prop({ type: String, default: null })
-	borderStyle!: 'dashed' | null;
+	@Prop({ type: Boolean })
+	borderHighlight!: boolean;
 
 	get hasTag() {
 		if (this.isPlaceholder) {
@@ -57,7 +57,7 @@ export default class AppFiresideAvatarBase extends Vue {
 				<div class="-avatar-inner">
 					<AppMediaItemBackdrop
 						class="-avatar-img"
-						:class="{ '-dashed': borderStyle === 'dashed' }"
+						:class="{ '-highlight': borderHighlight }"
 						:media-item="avatarMediaItem"
 					>
 						<slot v-if="!isPlaceholder" name="avatar" />
@@ -102,9 +102,8 @@ export default class AppFiresideAvatarBase extends Vue {
 	background-color: var(--theme-bg-subtle)
 	border-color: var(--theme-bg-subtle)
 
-.-dashed
-	border-style: dashed
-	border-color: var(--theme-fg-muted)
+.-highlight
+	border-color: var(--theme-link)
 
 .-base-link
 	::v-deep(> *)

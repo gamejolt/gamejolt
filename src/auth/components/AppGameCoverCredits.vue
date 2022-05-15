@@ -1,24 +1,10 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Vue } from 'vue-property-decorator';
-import { formatNumber } from '../../../_common/filters/number';
-import AppGameThumbnailImg from '../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
-import { useAuthStore } from '../../store/index';
+<script lang="ts" setup>
+import { formatNumber } from '../../_common/filters/number';
+import AppGameThumbnailImg from '../../_common/game/thumbnail/AppGameThumbnailImg.vue';
+import AppTranslate from '../../_common/translate/AppTranslate.vue';
+import { useAuthStore } from '../store/index';
 
-@Options({
-	components: {
-		AppGameThumbnailImg,
-	},
-})
-export default class AppGameCoverCredits extends Vue {
-	store = setup(() => useAuthStore());
-
-	get coverGame() {
-		return this.store.coverGame;
-	}
-
-	readonly formatNumber = formatNumber;
-}
+const { coverGame } = useAuthStore();
 </script>
 
 <template>
@@ -37,6 +23,7 @@ export default class AppGameCoverCredits extends Vue {
 				</div>
 				<div class="-dev text-muted">
 					<AppTranslate>by</AppTranslate>
+					{{ ' ' }}
 					<strong>{{ coverGame.developer.display_name }}</strong>
 				</div>
 				<div class="-followers text-muted">

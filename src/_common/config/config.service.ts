@@ -123,11 +123,6 @@ export class ConfigOptionString<T extends string = string> extends ConfigOption<
 	}
 }
 
-export const configHomeNav = new ConfigOptionString('home_nav', 'default', {
-	validValues: ['default', 'simple'],
-	conditions: { join: true },
-});
-
 export const configClientAllowStreaming = new ConfigOptionBoolean('client_allow_streaming', false);
 
 export const configRealms = new ConfigOptionBoolean('web_realms', false);
@@ -135,6 +130,7 @@ export const configRealms = new ConfigOptionBoolean('web_realms', false);
 /** Whether or not we show the post share card on the side or inline */
 export const configPostShareSide = new ConfigOptionBoolean('web_post_share_side', false);
 
+/** Which feed do we default to for home */
 export const configHomeDefaultFeed = new ConfigOptionString(
 	'home_default_feed',
 	HOME_FEED_ACTIVITY,

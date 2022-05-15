@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, inject, ref, watch } from 'vue';
+import { inject, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
@@ -13,8 +13,8 @@ import AppActivityFeedPlaceholder from '../../components/activity/feed/placehold
 import { AppActivityFeedLazy } from '../../components/lazy';
 import { illNoComments } from '../../img/ill/illustrations';
 import { useAppStore } from '../../store/index';
-import { RouteActivityFeedController } from './feed.vue';
 import { HOME_FEED_ACTIVITY } from './home-feed.service';
+import { RouteActivityFeedController } from './RouteHomeFeed.vue';
 
 function getFetchUrl() {
 	let url = '/web/dash/activity/activity';
@@ -37,11 +37,9 @@ export default {
 
 <script lang="ts" setup>
 const { grid, unreadActivityCount } = useAppStore();
-const controller = inject<RouteActivityFeedController>('route-activity-feed')!;
+const { feed } = inject<RouteActivityFeedController>('route-activity-feed')!;
 
 const isBootstrapped = ref(false);
-
-const feed = computed(() => controller.feed);
 
 watch(
 	unreadActivityCount,
@@ -55,12 +53,12 @@ watch(
 
 createAppRoute({
 	onInit() {
-		controller.feed = ActivityFeedService.routeInit(isBootstrapped.value);
+		feed.value = ActivityFeedService.routeInit(isBootstrapped.value);
 	},
 	onResolved({ payload, fromCache }) {
 		isBootstrapped.value = true;
 
-		controller.feed = ActivityFeedService.routed(
+		feed.value = ActivityFeedService.routed(
 			feed.value,
 			{
 				type: 'EventItem',
