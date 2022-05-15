@@ -16,6 +16,8 @@
  *              By default this is 127.0.0.1 which only allows local connections.
  */
 
+import { parseOptionsFromEnv } from './build/vite-options';
+
 const express = require('express') as typeof import('express');
 const path = require('path') as typeof import('path');
 const fs = require('fs') as typeof import('fs');
@@ -50,6 +52,9 @@ function initializeHttpServer(aborter: AbortController) {
 	const buildDir = path.join(projectRoot, 'build');
 	const webBuildPath = path.join(buildDir, 'web');
 
+	const gjOpts = parseOptionsFromEnv();
+	const sectionFilename = gjOpts.section === 'app' ? 'index' : gjOpts.section;
+
 	console.log(`serving from ${webBuildPath} on ${useHttps ? 'https' : 'http'}://${host}:${port}`);
 
 	const app = express();
@@ -66,7 +71,7 @@ function initializeHttpServer(aborter: AbortController) {
 
 	app.get('*', (request, response) => {
 		console.log(`${request.method} ${request.url}`);
-		response.sendFile(path.join(webBuildPath, 'index.html'));
+		response.sendFile(path.join(webBuildPath, `${sectionFilename}.html`));
 	});
 
 	const server = useHttps

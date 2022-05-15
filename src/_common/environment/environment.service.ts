@@ -82,6 +82,8 @@ if (GJ_IS_DESKTOP_APP) {
 	const baseUrl =
 		GJ_BUILD_TYPE === 'build'
 			? 'chrome-extension://game-jolt-client/package'
+			: GJ_BUILD_TYPE === 'serve-build'
+			? 'chrome-extension://game-jolt-client/build/desktop'
 			: 'chrome-extension://game-jolt-client';
 
 	Environment.wttfBaseUrl = `${baseUrl}/index.html#`;

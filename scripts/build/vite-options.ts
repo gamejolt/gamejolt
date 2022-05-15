@@ -101,7 +101,7 @@ export function parseOptionsFromEnv() {
 						// enables hot module reloading.
 						'serve-hmr',
 					] as const,
-					'build'
+					'serve-hmr'
 				);
 
 			case 'desktop':
@@ -126,7 +126,7 @@ export function parseOptionsFromEnv() {
 						// enables hot module reloading.
 						'serve-hmr',
 					] as const,
-					'build'
+					'serve-hmr'
 				);
 
 			case 'mobile':

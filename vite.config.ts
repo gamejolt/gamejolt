@@ -38,9 +38,11 @@ export default defineConfig(async () => {
 	}
 
 	// TODO(vite-no-devserver) we might need to rewrite package.json in the
-	// project root if building the desktop app with build type serve-build to
-	// change the main entry point to be:
-	// chrome-extension://game-jolt-client/build/desktop/index.html#/
+	// project root if building the desktop app with build type serve-build as
+	// such:
+	// - remove node-remote key.
+	// - change the main to be:
+	//   chrome-extension://game-jolt-client/build/desktop/index.html#/
 
 	type EmptyObject = { [k in any]: never };
 	type GetValueOrEmpty = <T>(value: T) => T | EmptyObject;

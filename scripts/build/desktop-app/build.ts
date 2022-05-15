@@ -16,7 +16,12 @@ const clientSections = Object.entries(gjSectionConfigs)
 
 export type ClientBuildOptions = {
 	environment: Options['environment'];
-	buildType: Options['buildType'];
+
+	/** The build type to do */
+	buildType: 'build' | 'serve-build';
+
+	/** Whether to produce a staging build. */
+	staging: boolean;
 };
 
 export async function buildClient(options: ClientBuildOptions) {

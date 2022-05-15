@@ -50,6 +50,8 @@ We wanted to make it open source so everyone can get visibility into what we are
 
   In another terminal run `yarn client`.
 
+>Note: First time running these will take longer than usual and the website/desktop may refresh multiple times.
+
 ### Translations
 
 Translations are done by the community. If you want to participate, feel free to join at https://poeditor.com/join/project/B4nWT6EgnD.
