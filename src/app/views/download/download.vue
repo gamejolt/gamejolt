@@ -137,9 +137,10 @@ export default class RouteDownload extends BaseRouteComponent {
 		]);
 
 		this.started = true;
-		// TODO(vue3) why are we checking build type here?
+		// TODO(vue3) TODO(vite-no-devserver) this used to check if GJ_BUILD_TYPE === 'production',
+		// but i don't fully understand the reasoning behind that.
 		// was this meant to check if we're in serve or build mode?
-		if (GJ_BUILD_TYPE === 'production') {
+		if (GJ_ENVIRONMENT === 'production' && GJ_BUILD_TYPE === 'build') {
 			Navigate.goto(data.url);
 		}
 	}

@@ -1,5 +1,4 @@
 import { readFile } from 'fs-extra';
-import { ConfigEnv } from 'vite';
 import { gjSectionConfigs, gjSectionNames } from './section-config';
 
 const path = require('path') as typeof import('path');
@@ -73,14 +72,80 @@ export function parseOptionsFromEnv() {
 		'production'
 	);
 
-	// Some features behave differently between development
-	// and production (for example we do not create shortcuts for the desktop app in development).
-	const buildType = parseOption(
-		process.env['GJ_BUILD_TYPE'],
-		'Build type',
-		['production', 'development'] as const,
-		'development'
-	);
+	// Whether to treat the build as staging. In production a staging build is
+	// commonly used to enable debugging and be more verbose with its output. In
+	// development a staging build is used to test features that would normally
+	// only run in production (e.g. self updating the desktop app).
+	const isStaging = parseYesNoOption(process.env['GJ_IS_STAGING'], 'Staging build') ?? false;
+
+	// Which build to do.
+	// Depending on which platform we're building for this may support different options.
+	const buildType = (() => {
+		switch (platform) {
+			case 'web':
+				return parseOption(
+					process.env['GJ_BUILD_TYPE'],
+					'Build type',
+					[
+						// Builds to filesystem for the purpose of being
+						// deployed to our web servers.
+						//
+						// 'build' is similar to 'serve-build' only when
+						// targetting the production environment it expects the
+						// static assets to be served from the prod cdn.
+						'build',
+						// Builds to filesystem for the purpose of being served
+						// locally as a dev build.
+						'serve-build',
+						// Builds for usage with a devserver. This build type
+						// enables hot module reloading.
+						'serve-hmr',
+					] as const,
+					'build'
+				);
+
+			case 'desktop':
+				return parseOption(
+					process.env['GJ_BUILD_TYPE'],
+					'Build type',
+					[
+						// Builds to filesystem for the purpose of being
+						// distributed.
+						//
+						// 'build' is similar to 'serve-build' only it expects to
+						// be further restructured as an actual nwjs
+						// application. this means for example that some paths
+						// need to change, for instance the location of the
+						// source files relative to where nwjs executable runs
+						// from.
+						'build',
+						// Builds to filesystem for the purpose of being served
+						// locally as a dev build.
+						'serve-build',
+						// Builds for usage with a devserver. This build type
+						// enables hot module reloading.
+						'serve-hmr',
+					] as const,
+					'build'
+				);
+
+			case 'mobile':
+			case 'ssr':
+				return parseOption(
+					process.env['GJ_BUILD_TYPE'],
+					'Build type',
+					[
+						// Builds to filesystem for the purpose of being
+						// distributed.
+						'build',
+					] as const,
+					'build'
+				);
+
+			default:
+				throw new Error(`Unknown platform '${platform}'`);
+		}
+	})();
 
 	const emptyOutDir =
 		parseYesNoOption(
@@ -97,16 +162,14 @@ export function parseOptionsFromEnv() {
 		section,
 		platform,
 		environment,
+		isStaging,
 		buildType,
 		emptyOutDir,
 		withUpdater,
 	};
 }
 
-export async function inferAndValidateFromParsedOptions(
-	opts: ParsedOptions,
-	viteConfigEnv: ConfigEnv
-) {
+export async function inferAndValidateFromParsedOptions(opts: ParsedOptions) {
 	// The version we report to the backend.
 	// Defaults to the version specified in package.json.
 	// Overriding this makes sense only in development, and is usually
@@ -120,8 +183,9 @@ export async function inferAndValidateFromParsedOptions(
 		throw new Error(`Could not infer nwjs version`);
 	}
 
-	// Self updater only makes sense when doing a build, but can be enabled or disabled explicitly.
-	const withUpdater = opts.withUpdater ?? viteConfigEnv.command === 'build';
+	// Self updater only makes sense when doing an actual build, but can be enabled or disabled explicitly.
+	const withUpdater =
+		opts.withUpdater ?? (opts.platform === 'desktop' && opts.buildType === 'build');
 
 	// Merge current section config with defaults.
 	const currentSectionConfig = gjSectionConfigs[opts.section];
@@ -142,9 +206,9 @@ export async function inferAndValidateFromParsedOptions(
 	};
 }
 
-export async function parseAndInferOptionsFromEnv(viteConfigEnv: ConfigEnv) {
+export async function parseAndInferOptionsFromEnv() {
 	const parsedOpts = parseOptionsFromEnv();
-	return await inferAndValidateFromParsedOptions(parsedOpts, viteConfigEnv);
+	return await inferAndValidateFromParsedOptions(parsedOpts);
 }
 
 export function getSectionNamesForPlatform(platform: Options['platform']) {

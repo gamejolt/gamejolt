@@ -79,9 +79,10 @@ if (GJ_ENVIRONMENT === 'development') {
 
 if (GJ_IS_DESKTOP_APP) {
 	// When it gets packaged up for production, the URL changes.
-	const baseUrl = !GJ_IS_WATCHING
-		? 'chrome-extension://game-jolt-client/package'
-		: 'chrome-extension://game-jolt-client/build/desktop';
+	const baseUrl =
+		GJ_BUILD_TYPE === 'build'
+			? 'chrome-extension://game-jolt-client/package'
+			: 'chrome-extension://game-jolt-client';
 
 	Environment.wttfBaseUrl = `${baseUrl}/index.html#`;
 	Environment.authBaseUrl = `${baseUrl}/auth.html#`;

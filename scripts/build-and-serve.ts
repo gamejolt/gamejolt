@@ -1,8 +1,8 @@
 /**
  * This script does 3 things:
- * 1. Builds the frontend.
+ * 1. Builds the web frontend.
  * 2. Watches for changes to the code and rebuilds as needed.
- * 3. If building for web, runs a tiny http/s server to serve the frontend from.
+ * 3. Runs a tiny http/s server to serve the web frontend from.
  *
  * The build process and http server are made to stop each other whenever one of them dies.
  *
@@ -15,8 +15,6 @@
  *     --host   Specifies the host address to bind to.
  *              By default this is 127.0.0.1 which only allows local connections.
  */
-
-import { parseOptionsFromEnv } from './build/vite-options';
 
 const express = require('express') as typeof import('express');
 const path = require('path') as typeof import('path');
@@ -104,6 +102,10 @@ function runViteBuild(aborter: AbortController) {
 		.spawn(pathToVite, ['build', '--watch'], {
 			cwd: path.resolve(__filename, '..', '..'),
 			stdio: ['ignore', 'inherit', 'inherit'],
+			env: Object.assign({}, process.env, {
+				GJ_PLATFORM: 'web',
+				GJ_BUILD_TYPE: 'serve-build',
+			}),
 		})
 		.on('close', () => {
 			console.log('vite process closed');
@@ -130,9 +132,5 @@ function runViteBuild(aborter: AbortController) {
 
 const aborter = new AbortController();
 
-const gjOpts = parseOptionsFromEnv();
-if (gjOpts.platform === 'web') {
-	initializeHttpServer(aborter);
-}
-
+initializeHttpServer(aborter);
 runViteBuild(aborter);

@@ -45,10 +45,8 @@ export class Model {
 				try {
 					this[k] = newObj[k];
 				} catch (e) {
-					if (GJ_BUILD_TYPE === 'development') {
-						console.warn(`Got an error when setting a model value in assign().`);
-						console.warn(e);
-					}
+					console.warn(`Got an error when setting a model value (key ${k}) in assign().`);
+					console.warn(e);
 				}
 			}
 		};

@@ -140,7 +140,7 @@ export default class AppAuthJoinForm
 
 					<div class="form-group">
 						<AppFormButton block :disabled="blocked">
-							<AppTranslate>Sign Up</AppTranslate>
+							<AppTranslate>MEMES</AppTranslate>
 						</AppFormButton>
 					</div>
 				</fieldset>

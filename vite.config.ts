@@ -21,22 +21,26 @@ type ViteUserConfig = ViteUserConfigActual & {
 type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'];
 
 // https://vitejs.dev/config/
-export default defineConfig(async configEnv => {
-	const { command } = configEnv;
-
-	const isWatching =
-		command === 'serve' || process.argv.includes('--watch') || process.argv.includes('-w');
-
-	const gjOpts = await parseAndInferOptionsFromEnv(configEnv);
+export default defineConfig(async () => {
+	const gjOpts = await parseAndInferOptionsFromEnv();
+	console.log(gjOpts);
 
 	// When serving the client locally, we need to acquire the ffmpeg binaries.
-	if (gjOpts.platform === 'desktop' && command === 'serve') {
+	if (
+		gjOpts.platform === 'desktop' &&
+		(gjOpts.buildType === 'serve-hmr' || gjOpts.buildType === 'serve-build')
+	) {
 		await acquirePrebuiltFFmpeg({
 			outDir: __dirname,
 			cacheDir: path.resolve(__dirname, 'build', '.cache', 'ffmpeg-prebuilt'),
 			nwjsVersion: gjOpts.nwjsVersion,
 		});
 	}
+
+	// TODO(vite-no-devserver) we might need to rewrite package.json in the
+	// project root if building the desktop app with build type serve-build to
+	// change the main entry point to be:
+	// chrome-extension://game-jolt-client/build/desktop/index.html#/
 
 	type EmptyObject = { [k in any]: never };
 	type GetValueOrEmpty = <T>(value: T) => T | EmptyObject;
@@ -51,9 +55,6 @@ export default defineConfig(async configEnv => {
 
 	const onlyInSSR = emptyUnless(() => gjOpts.platform === 'ssr');
 	const notInSSR = emptyUnless(() => gjOpts.platform !== 'ssr');
-	const isInDocker = !!process.env['GAMEJOLT_IN_DOCKER'];
-	const onlyInDocker = emptyUnless(() => isInDocker);
-	const notInDocker = emptyUnless(() => !isInDocker);
 	const onlyInDesktopApp = emptyUnless(() => gjOpts.platform === 'desktop');
 
 	// These will be imported in all styl files.
@@ -78,7 +79,7 @@ export default defineConfig(async configEnv => {
 	// (app section remains index.html since it is our 'main' section. Purely semantics)
 	const indexHtml = path.resolve(__dirname, 'src', 'index.html');
 	let inputHtmlFile = indexHtml;
-	if (command === 'build' && gjOpts.section !== 'app') {
+	if (gjOpts.buildType !== 'serve-hmr' && gjOpts.section !== 'app') {
 		inputHtmlFile = path.resolve(indexHtml, '..', `${gjOpts.section}.html`);
 		fs.copyFileSync(indexHtml, inputHtmlFile);
 	}
@@ -241,24 +242,22 @@ export default defineConfig(async configEnv => {
 				dir += `.vite-${gjOpts.platform}`;
 			}
 
-			if (isInDocker) {
-				dir += '-docker';
-			}
+			dir += `-${gjOpts.buildType}`;
 
 			return dir;
 		})(),
 
 		base: (() => {
+			// When watching simply return root.
+			// This is a vite default.
+			if (gjOpts.buildType === 'serve-hmr') {
+				return '/';
+			}
+
 			// Desktop app assets are bundled into /package/ in prod,
 			// and in dev they are build and watched into /build/desktop
 			if (gjOpts.platform === 'desktop') {
-				return isWatching ? '/build/desktop/' : '/package/';
-			}
-
-			// When watching simply return root.
-			// This is a vite default.
-			if (isWatching) {
-				return '/';
+				return gjOpts.buildType === 'serve-build' ? '/build/desktop/' : '/package/';
 			}
 
 			// Mobile app assets are expected to always resolve
@@ -269,7 +268,7 @@ export default defineConfig(async configEnv => {
 
 			// In production builds we serve all assets from the cdn.
 			// For desktop and mobile apps we serve from the locally bundled assets.
-			if (gjOpts.buildType === 'production') {
+			if (gjOpts.environment === 'production' && gjOpts.buildType === 'build') {
 				return 'https://s.gjcdn.net/';
 			}
 
@@ -282,49 +281,65 @@ export default defineConfig(async configEnv => {
 		server: {
 			strictPort: true,
 
-			// When running outside docker we still need to be able to access
-			// the frontend through a secure connection (and to be able to access .gamejolt.com cookies)
-			// For this reason enable https using a self signed certificate for development.gamejolt.com
-			...notInDocker({
-				port: 443,
+			...((): Partial<ViteUserConfig['server']> => {
+				// For both development and production environments we need to access the frontend
+				// through https://development.gamejolt.com so we can access the cookies, local storage, etc.
+				// We have different ways of achieving this for development and production.
 
-				https: {
-					pfx: path.resolve(__dirname, 'development.gamejolt.com.pfx'),
-					passphrase: 'yame yolt',
-				},
+				if (gjOpts.environment === 'production') {
+					// When hitting production we expect to hit the devserver
+					// from our browser directly, so we enable https using a self
+					// signed certificate.
+					return {
+						port: 443,
 
-				hmr: false,
-			}),
+						https: {
+							pfx: path.resolve(__dirname, 'development.gamejolt.com.pfx'),
+							passphrase: 'yame yolt',
+						},
+					};
+				} else {
+					// The development configuration is a bit more involved. We
+					// have multiple services that need to be accessible from
+					// development.gamejolt.com and its subdomains. For this
+					// reason we use a reverse proxy to do the routing and ssl
+					// termination for us.
+					//
+					// When hitting https://development.gamejolt.com we'll be
+					// hitting the reverse proxy first, and route traffic back
+					// to the devserver as needed.
+					return {
+						// The reverse proxy will try to reach the devserver on port 8080.
+						port: 8080,
 
-			// In docker, there may be more than just the frontend being accessible on development.gamejolt.com,
-			// so we avoid doing https here. Instead, we assume we're operating behind some reverse proxy that
-			// does ssl termination for us.
-			...onlyInDocker({
-				port: 8080,
+						// Allows remote connections.
+						//
+						// This is needed to allow the reverse proxy to access
+						// the devserver thats running on our host.
+						//
+						// TODO: this will bind the frontend to 0.0.0.0. find a
+						// way to scope this down to an interface thats only
+						// reachable locally.
+						host: true,
 
-				// Allows remote connections.
-				// This is needed when running from within docker
-				// to allow other containers to access it.
-				host: true,
+						// The devserver runs locally on port 8080, but is
+						// served from https://development.gamejolt.com. This
+						// will cause requests to the HMR endpoint to get
+						// blocked by the browser's security policy.
+						hmr: {
+							// Secure traffic is allowed only on port 443.
+							// If we don't specify the port, vite will try
+							// connecting to wss://development.gamejolt.com:8080
+							clientPort: 443,
 
-				// This is specific to our docker setup.
-				// We do ssl termination in a different container
-				// and forward the traffic to the frontend container.
-				//
-				// This lets us access the site from https://development.gamejolt.com
-				// In order to get HMR working we need to set some options.
-				hmr: {
-					// Secure traffic is allowed only port 443.
-					// If we don't specify the port, vite will try
-					// connecting to wss://development.gamejolt.com:8080
-					clientPort: 443,
-
-					// This is optional but makes it easier to differentiate
-					// between issues with connecting to the HMR components
-					// vs the serving component of vite's dev server.
-					host: 'hmr.development.gamejolt.com',
-				},
-			}),
+							// This is optional but makes it easier to differentiate
+							// between issues with connecting to the HMR components
+							// vs the serving component of vite's dev server.
+							host: 'hmr.development.gamejolt.com',
+						},
+					};
+				}
+			})(),
 		},
 
 		build: {
@@ -332,17 +347,18 @@ export default defineConfig(async configEnv => {
 			assetsInlineLimit: 0,
 
 			// Only minify in production so we can debug our stuff.
-			minify: gjOpts.environment === 'production',
+			minify: gjOpts.environment === 'production' && gjOpts.buildType === 'build',
 
 			rollupOptions: {
 				...(() => {
-					// By default vite outputs filenames with their chunks,
-					// but some ad blockers are outrageously aggressive with their
-					// filter lists, for example blocking any file that contains the
-					// string 'follow-widget'. It'd ridiculous.
-					// For this reason, do not output filenames in prod web-based builds.
+					// By default vite outputs filenames with their chunks, but
+					// some ad blockers are outrageously aggressive with their
+					// filter lists, for example blocking any file that contains
+					// the string 'follow-widget'. It'd ridiculous. For this
+					// reason, do not output filenames in prod web-based builds.
 					if (
-						gjOpts.buildType === 'production' &&
+						gjOpts.environment === 'production' &&
+						gjOpts.buildType === 'build' &&
 						['web', 'ssr'].includes(gjOpts.platform)
 					) {
 						return <RollupOptions>{
@@ -424,17 +440,11 @@ export default defineConfig(async configEnv => {
 			GJ_IS_DESKTOP_APP: JSON.stringify(gjOpts.platform === 'desktop'),
 			GJ_IS_MOBILE_APP: JSON.stringify(gjOpts.platform === 'mobile'),
 			GJ_ENVIRONMENT: JSON.stringify(gjOpts.environment),
+			GJ_IS_STAGING: JSON.stringify(gjOpts.isStaging),
 			GJ_BUILD_TYPE: JSON.stringify(gjOpts.buildType),
 			GJ_VERSION: JSON.stringify(gjOpts.version),
 			GJ_WITH_UPDATER: JSON.stringify(gjOpts.withUpdater),
 			GJ_HAS_ROUTER: JSON.stringify(gjOpts.currentSectionConfig.hasRouter),
-			GJ_IS_WATCHING: JSON.stringify(isWatching),
-
-			// Disable redirecting between sections during serve.
-			// This is because as of time of writing we only support watching
-			// one section at a time. This makes it easier to test auth section
-			// when you're already logged in.
-			GJ_DISABLE_SECTION_REDIRECTS: isWatching,
 		},
 
 		...onlyInSSR<ViteUserConfig>({

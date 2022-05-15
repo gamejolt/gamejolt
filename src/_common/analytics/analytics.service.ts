@@ -62,7 +62,13 @@ function _shouldTrack() {
 	const user = _getStoreUser();
 
 	// If they're not a normal user, don't track.
-	if (GJ_BUILD_TYPE === 'production' && user && user.permission_level > 0) {
+	//
+	// TODO(vite-no-devserver) the intent is to check true prod build. we don't
+	// want to run this while developing, even if developing on prod. This
+	// conditional might be wrong, as this will log ticks for our staff users
+	// while developing. whats the point?
+	// if (GJ_BUILD_TYPE === 'production' && user && user.permission_level > 0) {
+	if (GJ_ENVIRONMENT === 'production' && user && user.permission_level > 0) {
 		return false;
 	}
 
@@ -145,7 +151,9 @@ function _trackPageview(path?: string) {
 		const analytics = _getFirebaseAnalytics();
 
 		// Now track the page view.
-		if (GJ_BUILD_TYPE === 'development') {
+		//
+		// Avoid tracking page views while developing.
+		if (GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE === 'serve-build') {
 			console.log(`Track page view: ${path}`);
 		} else {
 			// We have to manually log the page_view event. Setting the current
