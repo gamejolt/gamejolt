@@ -5,7 +5,7 @@ import {
 	IRemoteAudioTrack,
 	IRemoteVideoTrack,
 } from 'agora-rtc-sdk-ng';
-import { markRaw, reactive, toRaw, watch, WatchStopHandle } from 'vue';
+import { markRaw, reactive, toRaw, unref, watch, WatchStopHandle } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
 import { configFiresideMicVolume } from '../../config/config.service';
@@ -95,7 +95,7 @@ export class FiresideRTCUser {
 	_unwatchIsListed: WatchStopHandle | null = null;
 
 	get _rtcHost() {
-		return this.rtc.hosts.find(host => host.uids.includes(this.uid));
+		return unref(this.rtc.hosts).find(host => host.uids.includes(this.uid));
 	}
 
 	get userModel() {
@@ -136,7 +136,7 @@ export class FiresideRTCUser {
 		// If the host isn't explicitly listable, we want to treat it as if they
 		// were unlistable to avoid showing a stream for a host we simply did
 		// not receive the listable hosts for in time.
-		return this.rtc.listableHostIds.includes(host.user.id);
+		return unref(this.rtc.listableHostIds).includes(host.user.id);
 	}
 }
 

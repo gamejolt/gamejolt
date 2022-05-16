@@ -70,8 +70,8 @@ function onMicAudioScrub({ percent }: ScrubberCallback) {
 }
 
 async function onStickerPlaced(placement: StickerPlacement) {
-	const myId = host.value.userModel?.id;
-	const targetId = placement.target_data.host_user_id;
+	const myId = host.value.userModel?.id.toString();
+	const targetId = placement.target_data.host_user_id?.toString();
 	// Don't animate stickers if we weren't the target.
 	if (!targetId || myId !== targetId) {
 		return;

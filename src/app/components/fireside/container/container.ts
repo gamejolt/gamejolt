@@ -813,15 +813,14 @@ export class AppFiresideContainer extends Vue {
 			return;
 		}
 
-		const focusedUserId = this.controller.rtc.value?.focusedUser?.userModel?.id;
-		const targetUserId = placement.target_data.host_user_id;
+		const focusedUserId = this.controller.rtc.value?.focusedUser?.userModel?.id.toString();
+		const targetUserId = placement.target_data.host_user_id?.toString();
 
 		if (focusedUserId === targetUserId) {
 			// Display the live sticker only if we're watching the target host.
 			addStickerToTarget(c.stickerTargetController, placement);
-		} else {
-			onFiresideStickerPlaced.next(placement);
 		}
+		onFiresideStickerPlaced.next(placement);
 
 		c.fireside.addStickerToCount(placement.sticker);
 	}

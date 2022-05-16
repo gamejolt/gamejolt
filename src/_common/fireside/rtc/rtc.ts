@@ -1,8 +1,9 @@
 import type { IAgoraRTC, IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
-import { markRaw, reactive } from 'vue';
+import { markRaw, reactive, unref } from 'vue';
 import { arrayAssignAll, arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
 import { debounce, sleep } from '../../../utils/utils';
+import { MaybeRef } from '../../../utils/vue';
 import { importNoSSR } from '../../code-splitting';
 import { Navigate } from '../../navigate/navigate.service';
 import { SettingStreamDesktopVolume } from '../../settings/settings.service';
@@ -73,8 +74,8 @@ export class FiresideRTC {
 		public videoToken: string,
 		public readonly chatChannelName: string,
 		public chatToken: string,
-		public readonly hosts: FiresideRTCHost[],
-		public readonly listableHostIds: number[],
+		public readonly hosts: MaybeRef<FiresideRTCHost[]>,
+		public readonly listableHostIds: MaybeRef<number[]>,
 		{ isMuted }: Options
 	) {
 		this.isMuted = isMuted ?? false;
@@ -192,8 +193,8 @@ export function createFiresideRTC(
 	fireside: Fireside,
 	userId: number | null,
 	agoraStreamingInfo: AgoraStreamingInfo,
-	hosts: FiresideRTCHost[],
-	listableHostIds: number[],
+	hosts: MaybeRef<FiresideRTCHost[]>,
+	listableHostIds: MaybeRef<number[]>,
 	options: Options = {}
 ) {
 	const rtc = reactive(
@@ -269,7 +270,7 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 	}
 
 	rtc.focusedUser = null;
-	rtc.hosts.splice(0);
+	unref(rtc.hosts).splice(0);
 }
 
 async function _recreateFiresideRTC(rtc: FiresideRTC) {
@@ -279,11 +280,11 @@ async function _recreateFiresideRTC(rtc: FiresideRTC) {
 }
 
 export function setHosts(rtc: FiresideRTC, newHosts: FiresideRTCHost[]) {
-	arrayAssignAll(rtc.hosts, newHosts);
+	arrayAssignAll(unref(rtc.hosts), newHosts);
 }
 
 export function setListableHostIds(rtc: FiresideRTC, listableHostIds: number[]) {
-	arrayAssignAll(rtc.listableHostIds, listableHostIds);
+	arrayAssignAll(unref(rtc.listableHostIds), listableHostIds);
 }
 
 /**

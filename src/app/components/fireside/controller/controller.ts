@@ -19,6 +19,7 @@ import {
 } from '../../../../_common/community/community.model';
 import { configClientAllowStreaming } from '../../../../_common/config/config.service';
 import { getDeviceBrowser } from '../../../../_common/device/device.service';
+import { onFiresideStickerPlaced } from '../../../../_common/drawer/drawer-store';
 import { formatDuration } from '../../../../_common/filters/duration';
 import { Fireside, FIRESIDE_EXPIRY_THRESHOLD } from '../../../../_common/fireside/fireside.model';
 import {
@@ -102,7 +103,6 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 
 			return new Promise(resolve => {
 				roomChannel
-
 					.push(
 						'place_sticker',
 						body,
@@ -110,8 +110,13 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 						// causes it to error out)
 						5_000
 					)
-					// TODO(live-fireside-stickers) Remove the `success: true`?
-					.receive('ok', result => resolve({ ...result, success: true }))
+					.receive('ok', result => {
+						const placement = result.stickerPlacement || result.sticker_placement;
+						if (placement) {
+							onFiresideStickerPlaced.next(placement);
+						}
+						return resolve({ ...result, success: true });
+					})
 					.receive('error', () => resolve(errorResponse))
 					.receive('timeout', () => {
 						// Only show a timeout error if they're still connected
@@ -308,8 +313,8 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 				fireside,
 				user.value?.id ?? null,
 				agoraStreamingInfo.value!,
-				hosts.value,
-				listableHostIds.value,
+				hosts,
+				listableHostIds,
 				{ isMuted }
 			);
 		} else if (rtc.value) {

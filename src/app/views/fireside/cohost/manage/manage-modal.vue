@@ -1,4 +1,5 @@
 <script lang="ts">
+import { unref } from 'vue';
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { stringSort } from '../../../../../utils/array';
 import { fuzzysearch } from '../../../../../utils/string';
@@ -68,7 +69,7 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 			return [];
 		}
 
-		const currentHosts = this.rtc.hosts;
+		const currentHosts = unref(this.rtc.hosts);
 		return this.users
 			.filter(i => !currentHosts.some(host => host.user.id === i.id))
 			.sort((a, b) => stringSort(a.display_name, b.display_name));
@@ -77,12 +78,15 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 	get currentCohosts(): User[] {
 		const hosts = this.rtc?.hosts ?? [];
 		const myUserId = this.controller.user.value?.id;
-		return hosts // formatting
+		return unref(hosts) // formatting
 			.filter(i => {
 				if (i.user.id === myUserId) {
 					return false;
 				}
-				return !i.needsPermissionToView || this.rtc?.listableHostIds.includes(i.user.id);
+				return (
+					!i.needsPermissionToView ||
+					unref(this.rtc?.listableHostIds)?.includes(i.user.id)
+				);
 			})
 			.map(i => i.user)
 			.sort((a, b) => stringSort(a.display_name, b.display_name));
