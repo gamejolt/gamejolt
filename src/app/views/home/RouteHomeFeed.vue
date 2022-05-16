@@ -16,6 +16,7 @@ import {
 	defineAppRouteOptions,
 } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
+import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { EventSubscription } from '../../../_common/system/event/event-topic';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
@@ -271,6 +272,8 @@ async function refreshQuests() {
 					single-row
 					:force-loading="isLoadingQuests"
 				/>
+
+				<AppSpacer vertical :scale="12" />
 
 				<AppHomeFireside
 					:featured-fireside="featuredFireside"

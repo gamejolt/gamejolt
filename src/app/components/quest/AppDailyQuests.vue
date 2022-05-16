@@ -125,9 +125,6 @@ $-placeholder-height = 150px
 	h4
 		margin-bottom: 0
 
-.-list
-	margin-bottom: $line-height-computed
-
 .-list-grid
 	display: grid
 	grid-gap: 16px
