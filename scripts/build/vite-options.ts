@@ -4,23 +4,31 @@ import { gjSectionConfigs, gjSectionNames } from './section-config';
 const path = require('path') as typeof import('path');
 
 type UnwrapPromise<T> = T extends Promise<infer U> ? U : never;
+type ParsedOptions = ReturnType<typeof parseOptionsFromCommandlineArgs>;
 
-export type ParsedOptions = ReturnType<typeof parseOptionsFromCommandlineArgs>;
+type OptionPrimitive = string | number | boolean;
+type MinimistArgument = OptionPrimitive | OptionPrimitive[] | undefined;
+type MinimistParsedArguments = {
+	_: string[];
+	[key: string]: MinimistArgument;
+};
 
-export type Options = UnwrapPromise<ReturnType<typeof inferAndValidateFromParsedOptions>>;
+export type Options = UnwrapPromise<ReturnType<typeof parseAndInferOptionsFromCommandline>>;
 
-function isExpectedValue<T>(
+export async function parseAndInferOptionsFromCommandline(args: MinimistParsedArguments) {
+	const parsedOpts = parseOptionsFromCommandlineArgs(args);
+	return await inferAndValidateFromParsedOptions(parsedOpts);
+}
+
+function isExpectedValue<T extends string | null>(
 	value: any,
 	expectedValues: readonly T[]
 ): value is typeof expectedValues[number] {
 	return expectedValues.includes(value);
 }
 
-type OptionPrimitive = string | number | boolean | undefined;
-type MinimistOption = OptionPrimitive | OptionPrimitive[];
-
-function parseOption<T>(
-	arg: MinimistOption,
+function parseOption<T extends string | null>(
+	arg: MinimistArgument,
 	argNameHuman: string,
 	validValues: readonly T[],
 	defaultValue: typeof validValues[number]
@@ -29,8 +37,9 @@ function parseOption<T>(
 		return defaultValue;
 	}
 
-	// If array passed take the last element.
-	// This basically chooses the value of the last time an option was specified.
+	// If array passed take the last element. This basically chooses the value
+	// of the last time an option was specified. Also coerce the argument to a
+	// string. This makes matching against the expected values simpler.
 	let arg2 = Array.isArray(arg) ? arg[arg.length - 1] : arg;
 	switch (typeof arg2) {
 		case 'string':
@@ -64,7 +73,7 @@ function parseOption<T>(
 	return arg2 as any;
 }
 
-function parseYesNoOption(arg: MinimistOption, argNameHuman: string) {
+function parseYesNoOption(arg: MinimistArgument, argNameHuman: string) {
 	const opt = parseOption(
 		arg,
 		argNameHuman,
@@ -75,7 +84,30 @@ function parseYesNoOption(arg: MinimistOption, argNameHuman: string) {
 	return opt === null ? null : ['y', 'yes', 'true', 'on', '1'].includes(opt);
 }
 
-export function parseOptionsFromCommandlineArgs(args: Record<string, MinimistOption>) {
+/**
+ * This function parses the output of minimist, checks for invalid options and
+ * returns an object of sanitized options that control how vite runs / builds
+ * the frontend.
+ *
+ * Valid command line arguments:
+ * ```
+ *   --platform <platform>
+ *   --envrionment <environment>
+ *   --staging, --no-staging
+ *   --build-type <type>
+ *   --empty-outdir, --no-empty-outdir
+ *   --with-updater, --no-with-updater
+ *   --gj-version <version>
+ *   --nwjs-version <version>
+ * ```
+ *
+ * Overriding previous command lines that control the same setting is possible.
+ * for example: `--platform web --platform desktop` will be result in `platform`
+ * being parsed as `desktop`.
+ *
+ * Read the comments in the function for more info on each parameter.
+ */
+function parseOptionsFromCommandlineArgs(args: MinimistParsedArguments) {
 	// Which section to build.
 	const section = parseOption(args.section, 'Section', gjSectionNames, 'app');
 
@@ -105,10 +137,12 @@ export function parseOptionsFromCommandlineArgs(args: Record<string, MinimistOpt
 	// Which build to do.
 	// Depending on which platform we're building for this may support different options.
 	const buildType = (() => {
+		const buildTypeArg = args['build-type'];
+
 		switch (platform) {
 			case 'web':
 				return parseOption(
-					args['build-type'],
+					buildTypeArg,
 					'Build type',
 					[
 						// Builds to filesystem for the purpose of being
@@ -130,7 +164,7 @@ export function parseOptionsFromCommandlineArgs(args: Record<string, MinimistOpt
 
 			case 'desktop':
 				return parseOption(
-					args['build-type'],
+					buildTypeArg,
 					'Build type',
 					[
 						// Builds to filesystem for the purpose of being
@@ -156,7 +190,7 @@ export function parseOptionsFromCommandlineArgs(args: Record<string, MinimistOpt
 			case 'mobile':
 			case 'ssr':
 				return parseOption(
-					args['build-type'],
+					buildTypeArg,
 					'Build type',
 					[
 						// Builds to filesystem for the purpose of being
@@ -195,7 +229,7 @@ export function parseOptionsFromCommandlineArgs(args: Record<string, MinimistOpt
 	};
 }
 
-export async function inferAndValidateFromParsedOptions(opts: ParsedOptions) {
+async function inferAndValidateFromParsedOptions(opts: ParsedOptions) {
 	// The version we report to the backend.
 	// Defaults to the version specified in package.json.
 	// Overriding this makes sense only in development, and is usually
@@ -232,12 +266,7 @@ export async function inferAndValidateFromParsedOptions(opts: ParsedOptions) {
 	};
 }
 
-export async function parseAndInferOptionsFromCommandline(args: Record<string, MinimistOption>) {
-	const parsedOpts = parseOptionsFromCommandlineArgs(args);
-	return await inferAndValidateFromParsedOptions(parsedOpts);
-}
-
-export function getSectionNamesForPlatform(platform: Options['platform']) {
+function getSectionNamesForPlatform(platform: Options['platform']) {
 	let fieldToCheck: 'desktopApp' | 'ssr' | 'mobileApp';
 	switch (platform) {
 		case 'desktop':
