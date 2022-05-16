@@ -259,7 +259,6 @@ async function onClickNewMessages() {
 	trigger when the send box changes size or when the window changes--and we
 	need to autoscroll if the content changes within the scroller.
 	-->
-	<!-- TODO(chat-backgrounds) Should we darken here? Maybe all but the top gradient? -->
 	<AppBackground class="chat-window-output" :background="room.background" darken>
 		<AppScrollScroller
 			v-app-observe-dimensions="tryAutoscroll"
@@ -300,7 +299,6 @@ async function onClickNewMessages() {
 							<span class="-bar" />
 						</div>
 
-						<!-- TODO(chat-backgrounds) do we even need to check `showMeta` here? -->
 						<hr
 							v-if="!message.dateSplit && message.showMeta"
 							class="-new-user-spacing"

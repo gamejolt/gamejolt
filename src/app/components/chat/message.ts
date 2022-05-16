@@ -16,7 +16,6 @@ export class ChatMessage {
 	type!: ChatMessageType;
 
 	showMeta?: boolean;
-	// TODO(chat-backgrounds) remove if keeping sticky avatar styling
 	showAvatar?: boolean;
 	dateSplit?: boolean;
 
