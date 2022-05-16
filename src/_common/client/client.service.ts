@@ -54,7 +54,7 @@ export class Client {
 		// to be a way to check if a window instance is already visible,
 		// so in order to avoid calling show() on it, we just check session storage.
 		if (GJ_BUILD_TYPE === 'serve-hmr') {
-			if (sessionStorage.getItem('__vite-window-visible') ?? '0' === '0') {
+			if ((sessionStorage.getItem('__vite-window-visible') ?? '0') === '1') {
 				console.log('Not showing the window because it should be visible atm');
 				return;
 			}

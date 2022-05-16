@@ -16,8 +16,10 @@
  *              By default this is 127.0.0.1 which only allows local connections.
  */
 
-import { parseOptionsFromEnv } from './build/vite-options';
+import { Options, parseAndInferOptionsFromCommandline } from './build/vite-options';
+import { runVite } from './build/vite-runner';
 
+const minimist = require('minimist');
 const express = require('express') as typeof import('express');
 const path = require('path') as typeof import('path');
 const fs = require('fs') as typeof import('fs');
@@ -27,7 +29,7 @@ const cp = require('child_process') as typeof import('child_process');
 const os = require('os') as typeof import('os');
 const treekill = require('tree-kill') as typeof import('tree-kill');
 
-function initializeHttpServer(aborter: AbortController) {
+function initializeHttpServer(gjOpts: Options, aborter: AbortController) {
 	// Avoid doing anything if already aborted.
 	if (aborter.signal.aborted) {
 		return;
@@ -52,7 +54,6 @@ function initializeHttpServer(aborter: AbortController) {
 	const buildDir = path.join(projectRoot, 'build');
 	const webBuildPath = path.join(buildDir, 'web');
 
-	const gjOpts = parseOptionsFromEnv();
 	const sectionFilename = gjOpts.section === 'app' ? 'index' : gjOpts.section;
 
 	console.log(`serving from ${webBuildPath} on ${useHttps ? 'https' : 'http'}://${host}:${port}`);
@@ -96,46 +97,28 @@ function initializeHttpServer(aborter: AbortController) {
 	return server;
 }
 
-function runViteBuild(aborter: AbortController) {
-	const gamejoltDir = path.resolve(__filename, '..', '..');
-	const viteExec = os.type() === 'Windows_NT' ? 'vite.cmd' : 'vite';
-	const pathToVite = path.join(gamejoltDir, 'node_modules', '.bin', viteExec);
+function runViteBuild(gjOpts: Options, aborter: AbortController) {
+	const viteProcess = runVite({ command: 'build', watch: true }, gjOpts, {
+		signal: aborter.signal,
+	});
 
-	let killedVite = false;
-
-	const viteProcess = cp
-		.spawn(pathToVite, ['build', '--watch'], {
-			cwd: path.resolve(__filename, '..', '..'),
-			stdio: ['ignore', 'inherit', 'inherit'],
-			env: Object.assign({}, process.env, {
-				GJ_PLATFORM: 'web',
-				GJ_BUILD_TYPE: 'serve-build',
-			}),
-		})
-		.on('close', () => {
-			console.log('vite process closed');
-			killedVite = true;
-			if (!aborter.signal.aborted) {
-				aborter.abort();
-			}
-		});
-
-	aborter.signal.addEventListener('abort', () => {
-		if (killedVite) {
-			return;
-		}
-		killedVite = true;
-
-		if (viteProcess.pid) {
-			console.log('killing vite process');
-			treekill(viteProcess.pid, 'SIGINT');
+	viteProcess.on('close', () => {
+		if (!aborter.signal.aborted) {
+			aborter.abort();
 		}
 	});
 
 	return viteProcess;
 }
 
-const aborter = new AbortController();
+(async () => {
+	const args = minimist(process.argv.splice(2));
+	const gjOpts = await parseAndInferOptionsFromCommandline(args);
 
-initializeHttpServer(aborter);
-runViteBuild(aborter);
+	const aborter = new AbortController();
+	const server = initializeHttpServer(gjOpts, aborter);
+	runViteBuild(gjOpts, aborter);
+
+	// await sleep(5000);
+	// server?.close();
+})();

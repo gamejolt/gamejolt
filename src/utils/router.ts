@@ -1,13 +1,13 @@
 import {
-	createMemoryHistory,
-	createRouter,
-	createWebHashHistory,
-	createWebHistory,
-	RouteLocationNormalized,
-	RouteLocationRaw,
-	Router,
-	RouteRecordRaw,
-	RouterHistory,
+createMemoryHistory,
+createRouter,
+createWebHashHistory,
+createWebHistory,
+RouteLocationNormalized,
+RouteLocationRaw,
+Router,
+RouteRecordRaw,
+RouterHistory
 } from 'vue-router';
 import { Environment } from '../_common/environment/environment.service';
 import { routeError404 } from '../_common/error/page/page.route';
@@ -20,7 +20,7 @@ export function initRouter(appRoutes: RouteRecordRaw[]) {
 	const routes = [...appRoutes, routeError404];
 
 	let history: RouterHistory;
-	if (GJ_IS_DESKTOP_APP) {
+	if (GJ_IS_DESKTOP_APP && GJ_BUILD_TYPE !== 'serve-hmr') {
 		history = createWebHashHistory();
 	} else if (import.meta.env.SSR) {
 		history = createMemoryHistory();

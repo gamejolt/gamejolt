@@ -5,59 +5,83 @@ const path = require('path') as typeof import('path');
 
 type UnwrapPromise<T> = T extends Promise<infer U> ? U : never;
 
-export type ParsedOptions = ReturnType<typeof parseOptionsFromEnv>;
+export type ParsedOptions = ReturnType<typeof parseOptionsFromCommandlineArgs>;
 
 export type Options = UnwrapPromise<ReturnType<typeof inferAndValidateFromParsedOptions>>;
 
-export function parseOptionsFromEnv() {
-	function isExpectedValue<T>(
-		value: any,
-		expectedValues: readonly T[]
-	): value is typeof expectedValues[number] {
-		return expectedValues.includes(value);
+function isExpectedValue<T>(
+	value: any,
+	expectedValues: readonly T[]
+): value is typeof expectedValues[number] {
+	return expectedValues.includes(value);
+}
+
+type OptionPrimitive = string | number | boolean | undefined;
+type MinimistOption = OptionPrimitive | OptionPrimitive[];
+
+function parseOption<T>(
+	arg: MinimistOption,
+	argNameHuman: string,
+	validValues: readonly T[],
+	defaultValue: typeof validValues[number]
+): typeof validValues[number] {
+	if (arg === undefined) {
+		return defaultValue;
 	}
 
-	function parseOption<T>(
-		arg: string | undefined,
-		argNameHuman: string,
-		validValues: readonly T[],
-		defaultValue: typeof validValues[number]
-	): typeof validValues[number] {
-		if (arg === undefined) {
-			return defaultValue;
-		}
+	// If array passed take the last element.
+	// This basically chooses the value of the last time an option was specified.
+	let arg2 = Array.isArray(arg) ? arg[arg.length - 1] : arg;
+	switch (typeof arg2) {
+		case 'string':
+			arg2 = (arg as string).toLowerCase().trim();
+			break;
 
-		const arg2 = arg.toLowerCase().trim();
-		if (arg2 === '') {
-			return defaultValue;
-		}
+		case 'number':
+			arg2 = (arg as number).toString();
+			break;
 
-		if (!isExpectedValue(arg2, validValues)) {
+		case 'boolean':
+			arg2 = arg ? 'true' : 'false';
+			break;
+
+		default:
 			throw new Error(
-				`${argNameHuman} must be one of '${validValues.join("', '")}'. Got: '${arg}'`
+				`Expected type of argument to be string, number or boolean, got: ${typeof arg2} for argument ${argNameHuman}`
 			);
-		}
-
-		return arg as any;
 	}
 
-	function parseYesNoOption(arg: string | undefined, argNameHuman: string) {
-		const opt = parseOption(
-			arg,
-			argNameHuman,
-			['y', 'n', 'yes', 'no', 'true', 'false', 'on', 'off', '1', '0', null] as const,
-			null
+	if (arg2 === '') {
+		return defaultValue;
+	}
+
+	if (!isExpectedValue(arg2, validValues)) {
+		throw new Error(
+			`${argNameHuman} must be one of '${validValues.join("', '")}'. Got: '${arg}'`
 		);
-
-		return opt === null ? null : ['y', 'yes', 'true', 'on', '1'].includes(opt);
 	}
 
+	return arg2 as any;
+}
+
+function parseYesNoOption(arg: MinimistOption, argNameHuman: string) {
+	const opt = parseOption(
+		arg,
+		argNameHuman,
+		['y', 'n', 'yes', 'no', 'true', 'false', 'on', 'off', '1', '0', null] as const,
+		null
+	);
+
+	return opt === null ? null : ['y', 'yes', 'true', 'on', '1'].includes(opt);
+}
+
+export function parseOptionsFromCommandlineArgs(args: Record<string, MinimistOption>) {
 	// Which section to build.
-	const section = parseOption(process.env['GJ_SECTION'], 'Section', gjSectionNames, 'app');
+	const section = parseOption(args.section, 'Section', gjSectionNames, 'app');
 
 	// Which platform to build for.
 	const platform = parseOption(
-		process.env['GJ_PLATFORM'],
+		args.platform,
 		'Target platform',
 		['web', 'desktop', 'mobile', 'ssr'] as const,
 		'web'
@@ -66,7 +90,7 @@ export function parseOptionsFromEnv() {
 	// Which environment to target.
 	// Controls where to send API requests and where some urls point to.
 	const environment = parseOption(
-		process.env['GJ_ENVIRONMENT'],
+		args.environment,
 		'Target environment',
 		['production', 'development'] as const,
 		'production'
@@ -76,7 +100,7 @@ export function parseOptionsFromEnv() {
 	// commonly used to enable debugging and be more verbose with its output. In
 	// development a staging build is used to test features that would normally
 	// only run in production (e.g. self updating the desktop app).
-	const isStaging = parseYesNoOption(process.env['GJ_IS_STAGING'], 'Staging build') ?? false;
+	const isStaging = parseYesNoOption(args.staging, 'Staging build') ?? false;
 
 	// Which build to do.
 	// Depending on which platform we're building for this may support different options.
@@ -84,7 +108,7 @@ export function parseOptionsFromEnv() {
 		switch (platform) {
 			case 'web':
 				return parseOption(
-					process.env['GJ_BUILD_TYPE'],
+					args['build-type'],
 					'Build type',
 					[
 						// Builds to filesystem for the purpose of being
@@ -106,7 +130,7 @@ export function parseOptionsFromEnv() {
 
 			case 'desktop':
 				return parseOption(
-					process.env['GJ_BUILD_TYPE'],
+					args['build-type'],
 					'Build type',
 					[
 						// Builds to filesystem for the purpose of being
@@ -132,7 +156,7 @@ export function parseOptionsFromEnv() {
 			case 'mobile':
 			case 'ssr':
 				return parseOption(
-					process.env['GJ_BUILD_TYPE'],
+					args['build-type'],
 					'Build type',
 					[
 						// Builds to filesystem for the purpose of being
@@ -148,15 +172,15 @@ export function parseOptionsFromEnv() {
 	})();
 
 	const emptyOutDir =
-		parseYesNoOption(
-			process.env['GJ_EMPTY_OUTDIR'],
-			'Empty output directory before building'
-		) ?? true;
+		parseYesNoOption(args['empty-outdir'], 'Empty output directory before building') ?? true;
 
 	const withUpdater = parseYesNoOption(
-		process.env['GJ_WITH_UPDATER'],
+		args['with-updater'],
 		'Enable self updater / connectivity to parent Joltron process'
 	);
+
+	const version = args['gj-version'];
+	const nwjsVersion = args['nwjs-version'];
 
 	return {
 		section,
@@ -166,6 +190,8 @@ export function parseOptionsFromEnv() {
 		buildType,
 		emptyOutDir,
 		withUpdater,
+		version,
+		nwjsVersion,
 	};
 }
 
@@ -177,8 +203,8 @@ export async function inferAndValidateFromParsedOptions(opts: ParsedOptions) {
 	const packageJson = JSON.parse(
 		await readFile(path.resolve(__dirname, '..', '..', 'package.json'), 'utf-8')
 	);
-	const version: string = process.env['GJ_VERSION'] ?? packageJson.version;
-	const nwjsVersion: string = process.env['GJ_NWJS_VERSION'] ?? packageJson.nwjsVersion ?? '';
+	const version: string = (opts.version ?? false) || packageJson.version;
+	const nwjsVersion: string = (opts.nwjsVersion ?? false) || packageJson.nwjsVersion || '';
 	if (!nwjsVersion) {
 		throw new Error(`Could not infer nwjs version`);
 	}
@@ -206,8 +232,8 @@ export async function inferAndValidateFromParsedOptions(opts: ParsedOptions) {
 	};
 }
 
-export async function parseAndInferOptionsFromEnv() {
-	const parsedOpts = parseOptionsFromEnv();
+export async function parseAndInferOptionsFromCommandline(args: Record<string, MinimistOption>) {
+	const parsedOpts = parseOptionsFromCommandlineArgs(args);
 	return await inferAndValidateFromParsedOptions(parsedOpts);
 }
 

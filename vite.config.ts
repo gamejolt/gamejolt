@@ -3,7 +3,7 @@ import { defineConfig, UserConfig as ViteUserConfigActual } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
 import { acquirePrebuiltFFmpeg } from './scripts/build/desktop-app/ffmpeg-prebuilt';
 import viteHtmlResolve from './scripts/build/vite-html-resolve';
-import { parseAndInferOptionsFromEnv } from './scripts/build/vite-options';
+import { readFromViteEnv } from './scripts/build/vite-runner';
 
 const path = require('path') as typeof import('path');
 const fs = require('fs-extra') as typeof import('fs-extra');
@@ -22,8 +22,7 @@ type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => {
-	const gjOpts = await parseAndInferOptionsFromEnv();
-	console.log(gjOpts);
+	const gjOpts = readFromViteEnv(process.env);
 
 	// When serving the client locally, we need to acquire the ffmpeg binaries.
 	if (
