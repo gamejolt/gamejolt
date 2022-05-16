@@ -5,9 +5,9 @@ import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppFiresideAvatarAdd from '../../../components/fireside/avatar/add/add.vue';
-import AppFiresideAvatar from '../../../components/fireside/avatar/avatar.vue';
-import AppFiresideAvatarBase from '../../../components/fireside/avatar/_base/base.vue';
+import AppFiresideAvatar from '../../../components/fireside/avatar/AppFiresideAvatar.vue';
+import AppFiresideAvatarAdd from '../../../components/fireside/avatar/AppFiresideAvatarAdd.vue';
+import AppFiresideAvatarBase from '../../../components/fireside/avatar/AppFiresideAvatarBase.vue';
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 
 const props = defineProps({

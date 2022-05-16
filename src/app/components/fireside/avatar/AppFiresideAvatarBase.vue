@@ -1,53 +1,57 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
-import { Community } from '../../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
-import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
-import { MediaItem } from '../../../../../_common/media-item/media-item-model';
+<script lang="ts" setup>
+import { computed, PropType, toRefs, useSlots } from 'vue';
+import { Community } from '../../../../_common/community/community.model';
+import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { MediaItem } from '../../../../_common/media-item/media-item-model';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 
-@Options({
-	components: {
-		AppMediaItemBackdrop,
-		AppCommunityThumbnailImg,
+const props = defineProps({
+	isPlaceholder: {
+		type: Boolean,
 	},
-})
-export default class AppFiresideAvatarBase extends Vue {
-	@Prop({ type: Boolean })
-	isPlaceholder!: boolean;
+	isLive: {
+		type: Boolean,
+	},
+	avatarMediaItem: {
+		type: Object as PropType<MediaItem>,
+		default: undefined,
+	},
+	community: {
+		type: Object as PropType<Community>,
+		default: undefined,
+	},
+	borderHighlight: {
+		type: Boolean,
+	},
+	borderDashed: {
+		type: Boolean,
+	},
+});
 
-	@Prop({ type: Boolean })
-	isLive!: boolean;
+const { isPlaceholder } = toRefs(props);
+const slots = useSlots();
 
-	@Prop({ type: Object, default: null })
-	avatarMediaItem!: MediaItem | null;
-
-	@Prop({ type: Object, default: null })
-	community!: Community | null;
-
-	@Prop({ type: Boolean })
-	borderHighlight!: boolean;
-
-	get hasTag() {
-		if (this.isPlaceholder) {
-			return true;
-		}
-		return !!this.$slots.tag;
+const hasTag = computed(() => {
+	if (isPlaceholder.value) {
+		return true;
 	}
+	return !!slots.tag;
+});
 
-	get hasTitle() {
-		if (this.isPlaceholder) {
-			return true;
-		}
-		return !!this.$slots.title;
+const hasTitle = computed(() => {
+	if (isPlaceholder.value) {
+		return true;
 	}
+	return !!slots.title;
+});
 
-	get hasLink() {
-		if (this.isPlaceholder) {
-			return false;
-		}
-		return !!this.$slots.link;
+const hasLink = computed(() => {
+	if (isPlaceholder.value) {
+		return false;
 	}
-}
+	return !!slots.link;
+});
 </script>
 
 <template>
@@ -57,8 +61,9 @@ export default class AppFiresideAvatarBase extends Vue {
 				<div class="-avatar-inner">
 					<AppMediaItemBackdrop
 						class="-avatar-img"
-						:class="{ '-highlight': borderHighlight }"
+						:class="{ '-highlight': borderHighlight, '-dashed': borderDashed }"
 						:media-item="avatarMediaItem"
+						fallback-color="var(--theme-bg-offset)"
 					>
 						<slot v-if="!isPlaceholder" name="avatar" />
 					</AppMediaItemBackdrop>
@@ -92,7 +97,7 @@ export default class AppFiresideAvatarBase extends Vue {
 </template>
 
 <style lang="stylus" scoped>
-@import '../common'
+@import './common'
 
 .fireside-avatar
 	&:not(.-placeholder)
@@ -104,6 +109,9 @@ export default class AppFiresideAvatarBase extends Vue {
 
 .-highlight
 	border-color: var(--theme-link)
+
+.-dashed
+	border-style: dashed
 
 .-base-link
 	::v-deep(> *)
