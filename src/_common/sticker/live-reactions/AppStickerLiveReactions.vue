@@ -56,6 +56,7 @@ const tempLeadingKettles = shallowReactive<TempKettle[]>([]);
 
 useEventSubscription(onFiresideStickerPlaced, onStickerPlaced);
 
+const animDuration = 300;
 const kernelDuration = 1_000;
 const popAngle = -60;
 
@@ -68,6 +69,9 @@ const baseKernelOptions: Partial<KernelRecipe> = {
 };
 
 let isPopping = false;
+let lastImgUrl = '';
+
+const itemContainer = ref<HTMLElement>();
 
 const stickers = ref(
 	controller.value.model.sticker_counts
@@ -80,6 +84,38 @@ const tempAnimatingKernels = ref(0);
 
 function onStickerPlaced(placement: StickerPlacement) {
 	const { img_url } = placement.sticker;
+
+	if (lastImgUrl === img_url) {
+		const element = itemContainer.value?.firstElementChild as HTMLElement | undefined;
+		// Do nothing if the current lead sticker is different than the one we
+		// just got. This can happen a sticker is mid-air and the same sticker
+		// is placed.
+		if (!element || img_url !== stickers.value[0].img_url) {
+			return;
+		}
+
+		const lockClass = '--lock';
+		const animClass = '-animate';
+		if (element.classList.contains(animClass)) {
+			element.classList.add(lockClass);
+			return;
+		}
+		element.classList.add(animClass);
+
+		const queueAnimationEnd = () =>
+			setTimeout(() => {
+				if (element.classList.contains(lockClass)) {
+					element.classList.remove(lockClass);
+					queueAnimationEnd();
+					return;
+				}
+				return element.classList.remove(animClass);
+			}, animDuration);
+
+		queueAnimationEnd();
+		return;
+	}
+	lastImgUrl = img_url;
 
 	const key = Date.now().toString();
 
@@ -143,6 +179,7 @@ function onStickerPlaced(placement: StickerPlacement) {
 	<div class="sticker-live-reactions">
 		<div class="-reaction-items">
 			<div
+				ref="itemContainer"
 				:style="{
 					width:
 						20 * (Math.min(stickers.length + tempAnimatingKernels, maxCount) + 1) +
@@ -152,7 +189,7 @@ function onStickerPlaced(placement: StickerPlacement) {
 				}"
 			>
 				<div
-					v-for="({ key, img_url: url }, index) of stickers"
+					v-for="({ key, img_url }, index) of stickers"
 					:key="key"
 					class="-item"
 					:class="{
@@ -160,6 +197,7 @@ function onStickerPlaced(placement: StickerPlacement) {
 					}"
 					:style="{
 						zIndex: -index,
+						animationDuration: animDuration + 'ms',
 						...(reverse
 							? {
 									right: 20 * (stickers.length - 1 - index) + 'px',
@@ -170,7 +208,7 @@ function onStickerPlaced(placement: StickerPlacement) {
 					}"
 				>
 					<AppStickerLiveReactionsItem
-						:img-url="url"
+						:img-url="img_url"
 						:style="{
 							width: '40px',
 						}"
@@ -226,6 +264,7 @@ function onStickerPlaced(placement: StickerPlacement) {
 .-item
 	position: absolute
 	left: -20px
+	transform: scale(1)
 	transition-property: left
 	transition-duration: 200ms
 	transition-timing-function: $weak-ease-out
@@ -234,6 +273,11 @@ function onStickerPlaced(placement: StickerPlacement) {
 		left: unset
 		right: 0
 		transition-property: right
+
+	&.-animate
+		animation-name: anim-item-add
+		animation-iteration-count: infinite
+		animation-duration: 200ms
 
 .-kettle-lead
 	position: absolute
@@ -250,4 +294,12 @@ function onStickerPlaced(placement: StickerPlacement) {
 .-kettle-trail
 	position: absolute
 	right: 20px
+
+@keyframes anim-item-add
+	0%
+		transform: scale(1)
+	50%
+		transform: scale(1.1)
+	100%
+		transform: scale(1)
 </style>
