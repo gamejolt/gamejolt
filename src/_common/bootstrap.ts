@@ -31,10 +31,10 @@ export async function bootstrapCommon(options: BootstrapOptions) {
 	const router = options.router ?? null;
 
 	// Check to make sure our build config is correct.
-	// TODO(vite-no-devserver) what is this supposed to be? when is this supposed to throw, in human words pls.
-	// if (GJ_BUILD_TYPE === 'development' && GJ_HAS_ROUTER !== !!router) {
-	const isServingLocally = GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE === 'serve-build';
-	if (isServingLocally && GJ_HAS_ROUTER !== !!router) {
+	// We only want to throw this while developing as it is not a critical error at the time of writing.
+	const isDevelopmentBuild =
+		GJ_BUILD_TYPE !== 'build' || GJ_ENVIRONMENT !== 'production' || GJ_IS_STAGING;
+	if (isDevelopmentBuild && GJ_HAS_ROUTER !== !!router) {
 		throw new Error(
 			`Invalid vite config. Section router config is wrong. GJ_HAS_ROUTER: ${GJ_HAS_ROUTER}, router: ${!!router}`
 		);

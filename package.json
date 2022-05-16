@@ -5,7 +5,6 @@
 		"translations": "gulp translations:compile",
 		"client-release": "node scripts/client-release.js",
 		"check": "tsc --noEmit",
-		"analyze-bundle": "gulp --analyze-bundle",
 		"lint": "eslint --ext .js,.vue src",
 		"tsscript": "ts-node -P scripts/script.tsconfig.json",
 		"vite": "yarn tsscript scripts/build/vite-wrapper.ts",
