@@ -1,5 +1,5 @@
 <script lang="ts">
-import { PropType, ref, shallowReactive, StyleValue, toRefs } from 'vue';
+import { onMounted, PropType, ref, shallowReactive, StyleValue, toRefs } from 'vue';
 import { arrayRemove, numberSort } from '../../../utils/array';
 import { onFiresideStickerPlaced } from '../../drawer/drawer-store';
 import AppPopcornKettle from '../../popcorn/AppPopcornKettle.vue';
@@ -81,6 +81,12 @@ const stickers = ref(
 );
 
 const tempAnimatingKernels = ref(0);
+
+onMounted(() => {
+	if (stickers.value.length > 0) {
+		lastImgUrl = stickers.value[0].img_url;
+	}
+});
 
 function onStickerPlaced(placement: StickerPlacement) {
 	const { img_url } = placement.sticker;
