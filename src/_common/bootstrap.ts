@@ -83,6 +83,7 @@ export async function bootstrapCommon(options: BootstrapOptions) {
 	// We want our "env" constants to be available in vue templates.
 	app.config.globalProperties.GJ_SECTION = GJ_SECTION;
 	app.config.globalProperties.GJ_ENVIRONMENT = GJ_ENVIRONMENT;
+	app.config.globalProperties.GJ_IS_STAGING = GJ_IS_STAGING;
 	app.config.globalProperties.GJ_BUILD_TYPE = GJ_BUILD_TYPE;
 	app.config.globalProperties.GJ_IS_DESKTOP_APP = GJ_IS_DESKTOP_APP;
 	app.config.globalProperties.GJ_IS_MOBILE_APP = GJ_IS_MOBILE_APP;

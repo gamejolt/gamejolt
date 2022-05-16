@@ -61,15 +61,13 @@ function _getStoreUser() {
 function _shouldTrack() {
 	const user = _getStoreUser();
 
-	// If they're not a normal user, don't track.
-	//
-	// TODO(vite-no-devserver) the intent is to check true prod build. we don't
-	// want to run this while developing, even if developing on prod. This
-	// conditional might be wrong, as this will log ticks for our staff users
-	// while developing. whats the point?
-	// if (GJ_BUILD_TYPE === 'production' && user && user.permission_level > 0) {
-	if (GJ_ENVIRONMENT === 'production' && user && user.permission_level > 0) {
-		return false;
+	// Usually we don't want our staff accounts to count in analytics. That
+	// said, we need to allow tracking staff account while developing so we can
+	// actually test this.
+	const isStaffUser = user && user.permission_level > 0;
+	if (isStaffUser) {
+		// Allow staff users to get tracked in development or when making a staging build.
+		return GJ_ENVIRONMENT === 'development' || GJ_IS_STAGING;
 	}
 
 	return true;

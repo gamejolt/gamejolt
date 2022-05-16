@@ -111,20 +111,28 @@ export class Client {
 	}
 
 	static get nwStaticAssetsDir() {
-		// TODO(vite-no-devserver) not sure about serve-build here. the source
-		// files are written to build/desktop but im not sure where nwjs will be
-		// running from. It might be more correct to get it to return
-		// build/desktop here since the static assets are written to that
-		// directory directly.
-		if (GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE === 'serve-build') {
-			return path.resolve(process.cwd(), 'src', 'static-assets');
-		}
+		switch (GJ_BUILD_TYPE) {
+			// nwjs is executed at the root of the gamejolt dir.
+			case 'serve-hmr':
+				return path.resolve(process.cwd(), 'src', 'static-assets');
 
-		const dir = this.nwRootDir;
-		if (dir === null) {
-			throw new Error('nwRootDir is null');
+			// nwjs is executed at the root of the gamejolt dir here too, but
+			// the static assets are copied over to build/desktop. it is more
+			// correct to check there since its closer to what an actual build
+			// will do.
+			case 'serve-build':
+				return path.resolve(process.cwd(), 'build', 'desktop');
+
+			// static assets are copied to the root of the package/ folder when
+			// doing a full build.
+			case 'build': {
+				const dir = this.nwRootDir;
+				if (dir === null) {
+					throw new Error('nwRootDir is null');
+				}
+				return path.join(dir, 'package');
+			}
 		}
-		return path.join(dir, 'package');
 	}
 
 	// Gets the directory the joltron binary is running from.
