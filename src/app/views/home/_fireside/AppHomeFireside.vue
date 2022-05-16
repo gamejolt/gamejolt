@@ -82,7 +82,7 @@ function onFiresideExpired() {
 			<AppFiresideBadge :fireside="featuredFireside" show-preview />
 		</template>
 
-		<div v-if="displayFiresides.length || isLoading" class="-list">
+		<div class="-list">
 			<component
 				:is="shouldDisplaySingleRow ? AppScrollScroller : 'div'"
 				:class="{ '-scroller': shouldDisplaySingleRow }"
