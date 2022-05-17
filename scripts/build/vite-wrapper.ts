@@ -29,5 +29,5 @@ const minimist = require('minimist');
 
 	const gjOpts = await parseAndInferOptionsFromCommandline(args);
 	console.log(gjOpts);
-	runVite({ command }, gjOpts);
+	runVite({ command, watch: args.watch ?? false }, gjOpts);
 })();
