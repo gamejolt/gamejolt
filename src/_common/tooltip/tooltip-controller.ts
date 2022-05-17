@@ -79,7 +79,10 @@ export function makeTooltipController(el: HTMLElement, binding: TooltipDirective
 			state.el.removeEventListener('pointerleave', _onMouseLeave);
 			state.el.removeEventListener('click', _onClick);
 			state.el.removeEventListener('focusout', _onFocusOut);
-			state.isActive = false;
+			if (state.isActive) {
+				state.isActive = false;
+				_assignActiveTooltip(null);
+			}
 		},
 	});
 
@@ -142,7 +145,7 @@ export function makeTooltipController(el: HTMLElement, binding: TooltipDirective
 
 const _activeTooltip = ref<null | TooltipController>(null);
 
-function _assignActiveTooltip(tooltip: TooltipController) {
+function _assignActiveTooltip(tooltip: TooltipController | null) {
 	_activeTooltip.value = tooltip;
 }
 
