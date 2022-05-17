@@ -193,11 +193,11 @@ export default class FormCommunityBlock extends mixins(Wrapper) implements FormO
 			<AppFormControlErrors />
 		</AppFormGroup>
 
-		<AppFormGroup
-			name="ejectPosts"
-			:label="$gettext(`Eject user's posts from the community?`)"
-		>
-			<AppFormControlToggle class="pull-right" />
+		<AppFormGroup name="ejectPosts" :label="$gettext(`Eject user's posts from the community?`)">
+			<template #inline-control>
+				<AppFormControlToggle />
+			</template>
+
 			<p class="help-block">
 				<AppTranslate>
 					Once the user is blocked, all their posts will be ejected from the community.

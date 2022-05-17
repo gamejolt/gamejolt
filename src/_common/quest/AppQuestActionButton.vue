@@ -131,6 +131,15 @@ async function onActionPressed() {
 					name: reward.name,
 					icon: 'trophy',
 				});
+			} else if (reward.isBackground && !!reward.background) {
+				const { id } = reward.background;
+				addOrUpdateReward({
+					key: `background-${id}`,
+					amount: 1,
+					img_url: processMediaserverUrl(reward.background.media_item.mediaserver_url),
+					name: reward.name,
+					icon: 'paintbrush',
+				});
 			} else {
 				addOrUpdateReward({
 					key: `unknown-${reward.name}-${reward.id}`,

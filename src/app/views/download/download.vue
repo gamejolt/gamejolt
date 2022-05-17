@@ -137,9 +137,9 @@ export default class RouteDownload extends BaseRouteComponent {
 		]);
 
 		this.started = true;
-		// TODO(vue3) why are we checking build type here?
-		// was this meant to check if we're in serve or build mode?
-		if (GJ_BUILD_TYPE === 'production') {
+
+		// While developing we often don't want to be downloading files every time the page reloads.
+		if (GJ_ENVIRONMENT === 'production' && GJ_BUILD_TYPE === 'build') {
 			Navigate.goto(data.url);
 		}
 	}

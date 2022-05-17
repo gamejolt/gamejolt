@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
-import AppUserCardHover from '../../../../../../../_common/user/card/hover/hover.vue';
+import AppUserCardHover from '../../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../../../../../../_common/user/user-avatar/img/img.vue';
 import { User } from '../../../../../../../_common/user/user.model';
 import { GameSupportersModal } from '../../../../../../components/game/supporters/modal/modal.service';

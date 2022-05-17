@@ -1,13 +1,5 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-property-decorator';
-import AppButtonPlaceholder from '../../../button/AppButtonPlaceholder.vue';
-
-@Options({
-	components: {
-		AppButtonPlaceholder,
-	},
-})
-export default class AppUserCardPlaceholder extends Vue {}
+<script lang="ts" setup>
+import AppButtonPlaceholder from '../../button/AppButtonPlaceholder.vue';
 </script>
 
 <template>
@@ -43,7 +35,7 @@ export default class AppUserCardPlaceholder extends Vue {}
 </template>
 
 <style lang="stylus" scoped>
-@import '../card'
+@import './common'
 
 .-avatar
 	change-bg('bg-subtle')

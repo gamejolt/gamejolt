@@ -4,7 +4,6 @@ import { mixins, Options } from 'vue-property-decorator';
 import { Community } from '../../../../_common/community/community.model';
 import AppFormControlPrefix from '../../../../_common/form-vue/AppFormControlPrefix.vue';
 import AppFormControlTheme from '../../../../_common/form-vue/controls/AppFormControlTheme.vue';
-import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm, FormOnSubmitSuccess } from '../../../../_common/form-vue/form.service';
 import { validateUrlPath } from '../../../../_common/form-vue/validators';
 import { DefaultTheme } from '../../../../_common/theme/theme.model';
@@ -18,7 +17,6 @@ class Wrapper extends BaseForm<Community> {}
 	components: {
 		AppPostAddButtonFormControl,
 		AppFormControlTheme,
-		AppFormControlToggle,
 		AppFormControlPrefix,
 	},
 })
@@ -127,7 +125,10 @@ export default class FormCommunity extends mixins(Wrapper) implements FormOnSubm
 
 		<!-- Color Theme - only show this in the edit part, not creation -->
 		<AppFormGroup v-if="method !== 'add'" name="theme" :label="$gettext(`Color Theme`)">
-			<AppFormControlTheme class="pull-right" @changed="onThemeChanged()" />
+			<template #inline-control>
+				<AppFormControlTheme @changed="onThemeChanged()" />
+			</template>
+
 			<p class="help-block">
 				<AppTranslate>
 					Give your page a splash of color! When people view this community, they'll be
@@ -135,24 +136,6 @@ export default class FormCommunity extends mixins(Wrapper) implements FormOnSubm
 				</AppTranslate>
 			</p>
 		</AppFormGroup>
-
-		<!-- DISABLED_ALLOW_FIRESIDES -->
-		<!-- Temporarely disabled -->
-		<!-- <AppFormGroup name="allow_firesides" :label="$gettext(`Allow community firesides?`)">
-			<AppFormControlToggle class="pull-right" />
-
-			<p class="help-block">
-				<AppTranslate>
-					Will allow any member of the community to start a fireside in this community.
-				</AppTranslate>
-			</p>
-			<p class="help-block">
-				<AppTranslate>
-					You are able to eject firesides at any time, and blocked users will not be able
-					to create any firesides in your community.
-				</AppTranslate>
-			</p>
-		</AppFormGroup> -->
 
 		<AppFormButton show-when-valid>
 			<AppTranslate v-if="method === 'add'">Create</AppTranslate>

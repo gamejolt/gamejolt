@@ -5,7 +5,8 @@ import { Client } from '../client.service';
 
 export class ClientShortcut {
 	static get supportsShortcuts() {
-		if (GJ_BUILD_TYPE === 'development') {
+		// Installing shortcuts is only viable when doing a full build
+		if (GJ_BUILD_TYPE !== 'build') {
 			return false;
 		}
 		// We just make ".desktop" entries for linux at the moment.

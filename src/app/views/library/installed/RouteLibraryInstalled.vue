@@ -48,7 +48,7 @@ createAppRoute({
 						settings.
 					</AppTranslate>
 					{{ ' ' }}
-					<RouterLink :to="{ name: 'settings' }">
+					<RouterLink :to="{ name: 'dash.account.device-settings' }">
 						<AppTranslate>Go to Settings?</AppTranslate>
 					</RouterLink>
 				</AppAlertDismissable>

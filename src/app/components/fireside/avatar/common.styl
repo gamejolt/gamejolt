@@ -1,6 +1,6 @@
 $-avatar-size = 80px
-$-tag-font-size = $font-size-tiny
-$-tag-padding-vertical = 2px
+$-tag-font-size = 9px
+$-tag-padding-vertical = 3px
 $-tag-padding-horizontal = 6px
 $-tag-offset = ($-tag-font-size * 0.5) + ($-tag-padding-vertical * 2)
 $-anim-size = 8px
@@ -119,11 +119,9 @@ $-zindex-popper = 4
 
 .-tag
 	rounded-corners()
-	elevate-1()
 	padding: $-tag-padding-vertical $-tag-padding-horizontal
+	background-color: var(--theme-bg-subtle)
 	font-weight: 700
-	letter-spacing: 1px
-	background-color: var(--theme-bg-offset)
 	font-size: $-tag-font-size
 	white-space: nowrap
 	position: absolute
@@ -142,9 +140,12 @@ $-zindex-popper = 4
 	line-clamp(2)
 	width: 100%
 	font-weight: 700
-	font-size: $font-size-tiny
+	font-size: 11px
 	text-align: center
 	color: var(--theme-fg)
+
+	@media $media-xs
+		font-size: 9px
 
 .-tooltip
 	padding: 8px

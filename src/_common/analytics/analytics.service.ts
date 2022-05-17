@@ -61,9 +61,13 @@ function _getStoreUser() {
 function _shouldTrack() {
 	const user = _getStoreUser();
 
-	// If they're not a normal user, don't track.
-	if (GJ_BUILD_TYPE === 'production' && user && user.permission_level > 0) {
-		return false;
+	// Usually we don't want our staff accounts to count in analytics. That
+	// said, we need to allow tracking staff account while developing so we can
+	// actually test this.
+	const isStaffUser = user && user.permission_level > 0;
+	if (isStaffUser) {
+		// Allow staff users to get tracked in development or when making a staging build.
+		return GJ_ENVIRONMENT === 'development' || GJ_IS_STAGING;
 	}
 
 	return true;
@@ -145,7 +149,9 @@ function _trackPageview(path?: string) {
 		const analytics = _getFirebaseAnalytics();
 
 		// Now track the page view.
-		if (GJ_BUILD_TYPE === 'development') {
+		//
+		// Avoid tracking page views while developing.
+		if (GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE === 'serve-build') {
 			console.log(`Track page view: ${path}`);
 		} else {
 			// We have to manually log the page_view event. Setting the current

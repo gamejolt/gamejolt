@@ -41,34 +41,34 @@ $-base = 4px
 
 // Keep the classnames short so that we don't have a huge CSS file.
 .-h
-	for i in 1..10
+	for i in 1..12
 		&.-s{i}
 			width: i * $-base
 
 .-v
-	for i in 1..10
+	for i in 1..12
 		&.-s{i}
 			height: i * $-base
 
 @media $media-sm
 	.-h
-		for i in 1..10
+		for i in 1..12
 			&.-s{i}-sm
 				width: i * $-base
 
 	.-v
-		for i in 1..10
+		for i in 1..12
 			&.-s{i}-sm
 				height: i * $-base
 
 @media $media-xs
 	.-h
-		for i in 1..10
+		for i in 1..12
 			&.-s{i}-xs
 				width: i * $-base
 
 	.-v
-		for i in 1..10
+		for i in 1..12
 			&.-s{i}-xs
 				height: i * $-base
 </style>
