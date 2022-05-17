@@ -43,15 +43,15 @@ function parseOption<T extends string | null>(
 	let arg2 = Array.isArray(arg) ? arg[arg.length - 1] : arg;
 	switch (typeof arg2) {
 		case 'string':
-			arg2 = (arg as string).toLowerCase().trim();
+			arg2 = (arg2 as string).toLowerCase().trim();
 			break;
 
 		case 'number':
-			arg2 = (arg as number).toString();
+			arg2 = (arg2 as number).toString();
 			break;
 
 		case 'boolean':
-			arg2 = arg ? 'true' : 'false';
+			arg2 = arg2 ? 'true' : 'false';
 			break;
 
 		default:
