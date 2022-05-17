@@ -11,6 +11,7 @@ We wanted to make it open source so everyone can get visibility into what we are
 	- `git submodule init`
 	- `git submodule update`
 	- `yarn`
+- Add `127.0.0.1 development.gamejolt.com` to your `/etc/hosts` (or `C:\\Windows\\System32\\drivers\\etc\\hosts` on Windows)
 - Setup local development certificates.
   - __Windows:__
     1. Run `scripts\certs\generate-cert.ps1`.
@@ -23,12 +24,12 @@ We wanted to make it open source so everyone can get visibility into what we are
   - __Linux:__
     1. Run `./scripts/certs/generate-cert.sh`
     2. Add the cert to the local trust
-        - _On Ubuntu_:
+        - _On Ubuntu/Debian_:
           ```
           sudo cp gamejoltCA.crt /usr/local/share/ca-certificates/gamejoltCA.crt
           sudo update-ca-certificates
           ```
-        - _On Fedora_:
+        - _On RHEL/Centos/Fedora_:
           ```
           sudo cp gamejoltCA.crt /etc/pki/ca-trust/source/anchors/gamejoltCA.crt
           sudo update-ca-trust extract
@@ -49,7 +50,9 @@ We wanted to make it open source so everyone can get visibility into what we are
 
   In another terminal run `yarn client`.
 
->Note: First time running these will take longer than usual.
+>Note: First time running these will take longer than usual and the website/desktop may refresh multiple times.
+
+For more commands see [COMMANDS.md](COMMANDS.md).
 
 ### Translations
 

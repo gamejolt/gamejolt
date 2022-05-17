@@ -172,7 +172,9 @@ async function _init() {
 			fetchTimeoutMillis: 3_000,
 			// The fallback is the default value (12 hours).
 			minimumFetchIntervalMillis:
-				GJ_BUILD_TYPE === 'development' ? 10 * 60 * 1_000 : 4_320_0000,
+				GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE === 'serve-build'
+					? 10 * 60 * 1_000
+					: 4_320_0000,
 		};
 
 		// Pull from the defaults that were set up before calling this function.

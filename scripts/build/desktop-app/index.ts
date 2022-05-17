@@ -6,15 +6,12 @@ import { buildClient, packageClient } from './build';
 		? 'development'
 		: 'production';
 
-	const indexOfBuildType = process.argv.indexOf('--buildType');
-	const buildType: Options['buildType'] =
-		indexOfBuildType != -1 ? (process.argv[indexOfBuildType + 1] as any) : 'production';
-	if (buildType !== 'production' && buildType !== 'development') {
-		throw new Error('Invalid value for --buildType. Expected production or development');
-	}
-
 	if (process.argv.includes('--build')) {
-		await buildClient({ environment, buildType });
+		await buildClient({
+			environment,
+			buildType: process.argv.includes('--serve') ? 'serve-build' : 'build',
+			staging: process.argv.includes('--staging'),
+		});
 	}
 	if (process.argv.includes('--package')) {
 		await packageClient({

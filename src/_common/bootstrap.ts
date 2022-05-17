@@ -31,7 +31,10 @@ export async function bootstrapCommon(options: BootstrapOptions) {
 	const router = options.router ?? null;
 
 	// Check to make sure our build config is correct.
-	if (GJ_BUILD_TYPE === 'development' && GJ_HAS_ROUTER !== !!router) {
+	// We only want to throw this while developing as it is not a critical error at the time of writing.
+	const isDevelopmentBuild =
+		GJ_BUILD_TYPE !== 'build' || GJ_ENVIRONMENT !== 'production' || GJ_IS_STAGING;
+	if (isDevelopmentBuild && GJ_HAS_ROUTER !== !!router) {
 		throw new Error(
 			`Invalid vite config. Section router config is wrong. GJ_HAS_ROUTER: ${GJ_HAS_ROUTER}, router: ${!!router}`
 		);
@@ -80,6 +83,7 @@ export async function bootstrapCommon(options: BootstrapOptions) {
 	// We want our "env" constants to be available in vue templates.
 	app.config.globalProperties.GJ_SECTION = GJ_SECTION;
 	app.config.globalProperties.GJ_ENVIRONMENT = GJ_ENVIRONMENT;
+	app.config.globalProperties.GJ_IS_STAGING = GJ_IS_STAGING;
 	app.config.globalProperties.GJ_BUILD_TYPE = GJ_BUILD_TYPE;
 	app.config.globalProperties.GJ_IS_DESKTOP_APP = GJ_IS_DESKTOP_APP;
 	app.config.globalProperties.GJ_IS_MOBILE_APP = GJ_IS_MOBILE_APP;

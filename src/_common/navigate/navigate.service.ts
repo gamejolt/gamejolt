@@ -18,10 +18,11 @@ export class Navigate {
 			throw new Error('Attempted to use Navigate.currentClientSection outside of client');
 		}
 
-		// At the time of writing, we only support watching one section at a time,
-		// and its not always possible to infer the section purely from the url.
-		// A bit ugly but this works for now.
-		if (GJ_IS_WATCHING) {
+		// At the time of writing, when serving the client with HMR we only
+		// support watching one section at a time, and its not always possible
+		// to infer the section purely from the url. A bit ugly but this works
+		// for now.
+		if (GJ_BUILD_TYPE === 'serve-hmr') {
 			return GJ_SECTION;
 		}
 

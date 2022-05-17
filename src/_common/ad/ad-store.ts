@@ -13,7 +13,7 @@ import { AdProperAdapter } from './proper/proper-adapter';
 export const AdsControllerKey: InjectionKey<AdsController> = Symbol('ads');
 
 // To show ads on the page for dev, just change this to false.
-export const AdsDisabledDev = GJ_BUILD_TYPE === 'development';
+export const AdsDisabledDev = GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE === 'serve-build';
 // export const AdsDisabledDev = false;
 
 /**
@@ -204,7 +204,7 @@ export async function sendAdBeacon(
 		path += `/log/${type}`;
 	}
 
-	if (GJ_BUILD_TYPE === 'development') {
+	if (AdsDisabledDev) {
 		console.log('Sending ad beacon.', { event, type, resource, resourceId });
 	}
 
