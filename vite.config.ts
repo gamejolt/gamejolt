@@ -292,7 +292,11 @@ export default defineConfig(async () => {
 					// from our browser directly, so we enable https using a self
 					// signed certificate.
 					return {
-						port: 443,
+						// On mac I couldn't find a way to easily listen on port
+						// 443 without root, so bind to port 8443, and forward
+						// traffic from port 443 to 8443 in a separate process.
+						// Example of using socat for that is in the README.md
+						port: process.platform === 'darwin' ? 8443 : 443,
 
 						https: {
 							pfx: path.resolve(__dirname, 'development.gamejolt.com.pfx'),

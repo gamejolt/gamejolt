@@ -25,9 +25,7 @@ const path = require('path') as typeof import('path');
 const fs = require('fs') as typeof import('fs');
 const http = require('http') as typeof import('http');
 const https = require('https') as typeof import('https');
-const cp = require('child_process') as typeof import('child_process');
 const os = require('os') as typeof import('os');
-const treekill = require('tree-kill') as typeof import('tree-kill');
 
 function initializeHttpServer(
 	args: Record<string, any>,
@@ -40,7 +38,18 @@ function initializeHttpServer(
 	}
 
 	const useHttps = !args.http;
-	const defaultPort = useHttps ? 443 : 80;
+
+	let defaultPort;
+	if (os.type() === 'Darwin') {
+		// On mac you need sudo to listen on privileged ports (any port < 1024).
+		// To avoid this, listen on higher ports and use a different rooted
+		// process to only do the port forwarding locally. There is an example
+		// command of using socat in README.md
+		defaultPort = useHttps ? 8443 : 8080;
+	} else {
+		defaultPort = useHttps ? 443 : 80;
+	}
+
 	const host: string = args.host ?? '127.0.0.1';
 	const port: number = args.port ?? defaultPort;
 
