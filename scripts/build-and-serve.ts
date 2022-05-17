@@ -29,26 +29,20 @@ const cp = require('child_process') as typeof import('child_process');
 const os = require('os') as typeof import('os');
 const treekill = require('tree-kill') as typeof import('tree-kill');
 
-function initializeHttpServer(gjOpts: Options, aborter: AbortController) {
+function initializeHttpServer(
+	args: Record<string, any>,
+	gjOpts: Options,
+	aborter: AbortController
+) {
 	// Avoid doing anything if already aborted.
 	if (aborter.signal.aborted) {
 		return;
 	}
 
-	const useHttps = !process.argv.includes('--http');
+	const useHttps = !args.http;
 	const defaultPort = useHttps ? 443 : 80;
-
-	const hostArgIdx = process.argv.indexOf('--host');
-	const host =
-		hostArgIdx > 1 && hostArgIdx < process.argv.length - 1
-			? process.argv[hostArgIdx + 1]
-			: '127.0.0.1';
-
-	const portArgIdx = process.argv.indexOf('--port');
-	const port =
-		portArgIdx > 1 && portArgIdx < process.argv.length - 1
-			? parseInt(process.argv[portArgIdx + 1])
-			: defaultPort;
+	const host: string = args.host ?? '127.0.0.1';
+	const port: number = args.port ?? defaultPort;
 
 	const projectRoot = path.resolve(__dirname, '..');
 	const buildDir = path.join(projectRoot, 'build');
@@ -114,9 +108,11 @@ function runViteBuild(gjOpts: Options, aborter: AbortController) {
 (async () => {
 	const args = minimist(process.argv.splice(2));
 	const gjOpts = await parseAndInferOptionsFromCommandline(args);
+	gjOpts.platform = 'web';
+	gjOpts.buildType = 'serve-build';
 
 	const aborter = new AbortController();
-	const server = initializeHttpServer(gjOpts, aborter);
+	const server = initializeHttpServer(args, gjOpts, aborter);
 	runViteBuild(gjOpts, aborter);
 
 	// await sleep(5000);
