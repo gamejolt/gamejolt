@@ -76,19 +76,31 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 	}
 
 	onPostAdded(post: FiresidePost) {
-		ActivityFeedService.onPostAdded(this.feed!, post, this);
+		ActivityFeedService.onPostAdded({
+			feed: this.feed!,
+			post,
+			appRoute: this.appRoute_,
+			route: this.$route,
+			router: this.$router,
+		});
 	}
 
 	onPostEdited(eventItem: EventItem) {
-		ActivityFeedService.onPostEdited(eventItem, this);
+		ActivityFeedService.onPostEdited({
+			eventItem,
+			appRoute: this.appRoute_,
+			route: this.$route,
+			router: this.$router,
+		});
 	}
 
 	onPostPublished(eventItem: EventItem) {
-		ActivityFeedService.onPostPublished(eventItem, this);
-	}
-
-	onPostRemoved(eventItem: EventItem) {
-		ActivityFeedService.onPostRemoved(eventItem, this);
+		ActivityFeedService.onPostPublished({
+			eventItem,
+			appRoute: this.appRoute_,
+			route: this.$route,
+			router: this.$router,
+		});
 	}
 }
 </script>
@@ -158,14 +170,13 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 								:feed="feed"
 								@edit-post="onPostEdited"
 								@publish-post="onPostPublished"
-								@remove-post="onPostRemoved"
 							/>
 							<div v-else class="alert">
 								<template v-if="tab === 'active'">
 									<p>
-										<AppTranslate
-											>You haven't published any posts yet.</AppTranslate
-										>
+										<AppTranslate>
+											You haven't published any posts yet.
+										</AppTranslate>
 									</p>
 								</template>
 								<template v-else-if="tab === 'draft'">
@@ -175,9 +186,9 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 								</template>
 								<template v-else-if="tab === 'scheduled'">
 									<p>
-										<AppTranslate
-											>You don't have any scheduled posts.</AppTranslate
-										>
+										<AppTranslate>
+											You don't have any scheduled posts.
+										</AppTranslate>
 									</p>
 								</template>
 							</div>

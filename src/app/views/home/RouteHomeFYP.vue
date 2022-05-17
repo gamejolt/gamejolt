@@ -1,16 +1,16 @@
 <script lang="ts">
-import { computed, inject, ref } from 'vue';
+import { inject, ref } from 'vue';
 import { Api } from '../../../_common/api/api.service';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { ActivityFeedService } from '../../components/activity/feed/feed-service';
-import { illNoComments } from '../../img/ill/illustrations';
-import { RouteActivityFeedController } from './feed.vue';
-import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
+import AppButton from '../../../_common/button/AppButton.vue';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
+import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import { ActivityFeedService } from '../../components/activity/feed/feed-service';
+import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { AppActivityFeedLazy } from '../../components/lazy';
-import AppButton from '../../../_common/button/AppButton.vue';
+import { illNoComments } from '../../img/ill/illustrations';
+import { RouteActivityFeedController } from './RouteHomeFeed.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -23,20 +23,18 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const controller = inject<RouteActivityFeedController>('route-activity-feed')!;
+const { feed } = inject<RouteActivityFeedController>('route-activity-feed')!;
 
 const isBootstrapped = ref(false);
 
-const feed = computed(() => controller.feed);
-
 createAppRoute({
 	onInit() {
-		controller.feed = ActivityFeedService.routeInit(isBootstrapped.value);
+		feed.value = ActivityFeedService.routeInit(isBootstrapped.value);
 	},
 	onResolved({ payload, fromCache }) {
 		isBootstrapped.value = true;
 
-		controller.feed = ActivityFeedService.routed(
+		feed.value = ActivityFeedService.routed(
 			feed.value,
 			{
 				type: 'EventItem',

@@ -587,7 +587,11 @@ export class BaseRouteComponent extends Vue {
 
 	disableRouteTitleSuffix = false;
 
-	private appRoute_!: AppRoute;
+	/**
+	 * This is the AppRoute that backs this component. Only reach into this
+	 * direclty if absolutely required.
+	 */
+	protected appRoute_!: AppRoute;
 
 	get routeTitle(): null | string {
 		return null;

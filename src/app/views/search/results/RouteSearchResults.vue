@@ -2,11 +2,15 @@
 import { computed, Ref, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { getQuery } from '../../../../utils/router';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCommunityThumbnail from '../../../../_common/community/thumbnail/AppCommunityThumbnail.vue';
+import { configRealms } from '../../../../_common/config/config.service';
 import { formatNumber } from '../../../../_common/filters/number';
+import AppRealmChunk from '../../../../_common/realm/chunk/AppRealmChunk.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppUserCard from '../../../../_common/user/card/card.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppUserCard from '../../../../_common/user/card/AppUserCard.vue';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../components/activity/feed/view';
 import AppGameGrid from '../../../components/game/grid/grid.vue';
@@ -15,10 +19,6 @@ import { AppActivityFeedLazy as AppActivityFeed } from '../../../components/lazy
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import { sendSearch } from '../../../components/search/search-service';
 import { useSearchRouteController } from '../RouteSearch.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppRealmChunk from '../../../../_common/realm/chunk/AppRealmChunk.vue';
-import { configRealms } from '../../../../_common/config/config.service';
 
 export default {
 	...defineAppRouteOptions({

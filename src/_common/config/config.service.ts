@@ -1,5 +1,6 @@
 import { fetchAndActivate, getRemoteConfig, getValue } from 'firebase/remote-config';
 import { reactive } from 'vue';
+import { HOME_FEED_ACTIVITY, HOME_FEED_FYP } from '../../app/views/home/home-feed.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
 
 const ConfigService_ = {
@@ -122,17 +123,22 @@ export class ConfigOptionString<T extends string = string> extends ConfigOption<
 	}
 }
 
-export const configHomeNav = new ConfigOptionString('home_nav', 'default', {
-	validValues: ['default', 'simple'],
-	conditions: { join: true },
-});
-
 export const configClientAllowStreaming = new ConfigOptionBoolean('client_allow_streaming', false);
 
 export const configRealms = new ConfigOptionBoolean('web_realms', false);
 
 /** Whether or not we show the post share card on the side or inline */
 export const configPostShareSide = new ConfigOptionBoolean('web_post_share_side', false);
+
+/** Which feed do we default to for home */
+export const configHomeDefaultFeed = new ConfigOptionString(
+	'home_default_feed',
+	HOME_FEED_ACTIVITY,
+	{
+		validValues: [HOME_FEED_ACTIVITY, HOME_FEED_FYP],
+		conditions: { join: true },
+	}
+);
 
 /** Whether or not we show a mic volume slider for RTC users */
 export const configFiresideMicVolume = new ConfigOptionBoolean('fireside_mic_volume', false);
