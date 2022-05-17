@@ -142,6 +142,7 @@ export default class AppShellSidebarChat extends Vue {
 #shell-chat-pane
 	change-bg('bg')
 	padding-top: 20px
+	min-height: 100%
 
 .-no-chat
 	margin-left: 12px
