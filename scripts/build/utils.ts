@@ -61,6 +61,8 @@ export function runShell(command: string, options: RunShellOptions = {}) {
 		command += ' ' + args.map(i => shellEscape(i)).join(' ');
 	}
 
+	console.log('Executing: ' + command);
+
 	const child = spawn(command, {
 		cwd: options.cwd,
 		shell: true,

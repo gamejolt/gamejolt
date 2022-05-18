@@ -1,3 +1,6 @@
+import * as fs from 'fs-extra';
+import type { RequestInit } from 'node-fetch';
+import fetch from 'node-fetch';
 import {
 	downloadFile,
 	isWindows,
@@ -7,12 +10,11 @@ import {
 	tryWithBackoff,
 	unzip,
 } from '../utils';
-import * as fs from 'fs-extra';
-import fetch from 'node-fetch';
 import { Options } from '../vite-options';
 
 const path = require('path') as typeof import('path');
 const os = require('os') as typeof import('os');
+const https = require('https') as typeof import('https');
 
 export const gjpushVersion = packageJson.gjpushVersion as string;
 
@@ -279,13 +281,26 @@ export class Gjpush {
 		const hostname =
 			this.config.environment === 'development' ? 'development.gamejolt.com' : 'gamejolt.com';
 
-		const response = await fetch(`https://${hostname}/service-api/push${endpoint}`, {
+		const requestOpts: RequestInit = {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
 				Authorization: gjpushToken,
 			},
-		});
+		};
+
+		// Use self signed certificat when uploading to dev.
+		if (this.config.environment === 'development') {
+			const ca = await fs.readFile(
+				path.resolve(__dirname, '..', '..', '..', 'gamejoltCA.crt')
+			);
+			requestOpts.agent = new https.Agent({ ca });
+		}
+
+		const response = await fetch(
+			`https://${hostname}/service-api/push${endpoint}`,
+			requestOpts
+		);
 
 		if (!response.ok) {
 			throw new Error('Service api request failed');
