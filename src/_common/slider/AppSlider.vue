@@ -25,6 +25,9 @@ const props = defineProps({
 	vertical: {
 		type: Boolean,
 	},
+	themeAffected: {
+		type: Boolean,
+	},
 });
 
 const emit = defineEmits({
@@ -208,7 +211,12 @@ watch(percent, () => {
 </script>
 
 <template>
-	<div class="-slider">
+	<div
+		class="-slider"
+		:class="{
+			'-theme-affected': themeAffected,
+		}"
+	>
 		<div class="-mask" @mousedown="onMouseDown" @touchstart="onMouseDown" />
 
 		<div
@@ -233,10 +241,14 @@ watch(percent, () => {
 
 <style lang="stylus" scoped>
 .-slider
+	--slider-color: 255,255,255
 	user-select: none
 	position: relative
 	padding: 8px
 	display: flex
+
+	&.-theme-affected
+		 --slider-color: var(--theme-fg-rgb)
 
 // Stretch out an invisible div while we're dragging to hopefully capture events properly
 .-mask
@@ -252,21 +264,21 @@ watch(percent, () => {
 	border-radius: $border-radius-small
 	position: relative
 	margin: auto
-	background-color: rgba($white, 0.5)
+	background-color: 'rgba(%s, 0.5)' % var(--slider-color)
 	display: flex
 	justify-content: center
 	align-items: center
 	flex: auto
 
-	&-filled
-		position: absolute
-		background-color: $white
-		border-radius: $border-radius-small
+.-inner-filled
+	position: absolute
+	background-color: 'rgb(%s)' % var(--slider-color)
+	border-radius: $border-radius-small
 
 .-inner-thumb
 	position: absolute
 	border-radius: 50%
-	background-color: $white
+	background-color: 'rgb(%s)' % var(--slider-color)
 	z-index: 2
 	cursor: pointer
 

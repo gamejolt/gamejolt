@@ -141,6 +141,7 @@ function onMicAudioScrub({ percent }: ScrubberCallback) {
 								</div>
 								<AppSlider
 									:percent="host.playbackVolumeLevel"
+									theme-affected
 									@scrub="onMicAudioScrub"
 								/>
 							</div>
