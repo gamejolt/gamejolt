@@ -893,13 +893,47 @@ export function editMessage(chat: ChatClient, room: ChatRoom, message: ChatMessa
 	});
 }
 
-export function editChatRoomTitle(chat: ChatClient, title: string) {
-	const room = chat.room;
-	if (room) {
-		chat.roomChannels[room.id].socketChannel.push('update_title', {
-			title,
-		});
-	}
+export function editChatRoomTitle(chat: ChatClient, room: ChatRoom, title: string) {
+	chat.roomChannels[room.id].socketChannel.push('update_title', {
+		title,
+	});
+}
+
+export async function editChatRoomBackground(
+	chat: ChatClient,
+	room: ChatRoom,
+	backgroundId: number | undefined
+): Promise<void> {
+	// TODO(chat-backgrounds) cleanup
+	const result = new Promise<void>((resolve, reject) => {
+		// TODO(chat-backgrounds) remove?
+		const _reject = (event: any) => {
+			if (import.meta.env.DEV) {
+				console.debug('Error when calling [editChatRoomBackground]', event);
+			}
+			reject();
+		};
+
+		const _resolve = (event: any) => {
+			if (import.meta.env.DEV) {
+				console.debug('Got response from [editChatRoomBackground]', event);
+			}
+			resolve();
+		};
+
+		chat.roomChannels[room.id].socketChannel
+			.push(
+				'update_background',
+				{
+					background_id: backgroundId,
+				}
+				// 5_000
+			)
+			.receive('ok', _resolve)
+			.receive('error', _reject);
+		// .receive('timeout', _reject);
+	});
+	return result;
 }
 
 export function startTyping(chat: ChatClient, room: ChatRoom) {

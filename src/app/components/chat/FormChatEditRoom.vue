@@ -1,7 +1,7 @@
 <script lang="ts">
 import { computed } from '@vue/reactivity';
 import { onMounted } from '@vue/runtime-core';
-import { inject, onBeforeUnmount, PropType, ref, toRefs } from 'vue';
+import { inject, PropType, ref, toRefs } from 'vue';
 import { Api } from '../../../_common/api/api.service';
 import { Background } from '../../../_common/background/background.model';
 import AppButton from '../../../_common/button/AppButton.vue';
@@ -10,7 +10,6 @@ import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../_common/form-vue/AppFormGroup.vue';
-import AppFormStickySubmit from '../../../_common/form-vue/AppFormStickySubmit.vue';
 import { validateMaxLength, validateMinLength } from '../../../_common/form-vue/validators';
 import AppLoadingFade from '../../../_common/loading/AppLoadingFade.vue';
 import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
@@ -19,7 +18,7 @@ import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
 import AppFormBackground from '../forms/background/AppFormBackground.vue';
 import { ChatStoreKey } from './chat-store';
-import { leaveGroupRoom } from './client';
+import { editChatRoomBackground, editChatRoomTitle, leaveGroupRoom } from './client';
 import AppChatMemberListItem from './member-list/AppChatMemberListItem.vue';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
@@ -49,17 +48,19 @@ const emit = defineEmits({
 
 const { room, showMembersPreview, members } = toRefs(props);
 
-let initialBackground = room.value.background;
-
 const chatStore = inject(ChatStoreKey)!;
 
 const titleMinLength = ref<number>();
 const titleMaxLength = ref<number>();
 
-const backgrounds = ref<Background[]>([]);
-
 const isLoadingNotificationSettings = ref(false);
+const isBootstrapped = ref(false);
+const isLoadingBackgrounds = ref(false);
+
+const isSettingBackground = ref(false);
+
 const notificationLevel = ref('');
+const backgrounds = ref<Background[]>([]);
 
 const form: FormController<FormModel> = createForm<ChatRoom>({
 	modelClass: ChatRoom,
@@ -68,13 +69,9 @@ const form: FormController<FormModel> = createForm<ChatRoom>({
 	onLoad(payload) {
 		titleMinLength.value = payload.titleMinLength;
 		titleMaxLength.value = payload.titleMaxLength;
-
-		if (payload.backgrounds) {
-			backgrounds.value = Background.populate(payload.backgrounds);
-		}
 	},
-	onSubmitSuccess() {
-		initialBackground = room.value.background;
+	onSubmit: async () => {
+		editChatRoomTitle(chat.value, room.value, form.formModel.title);
 	},
 });
 
@@ -106,6 +103,11 @@ const membersPreview = computed(() => {
 });
 
 onMounted(async () => {
+	getNotificationSettings();
+	getBackgrounds();
+});
+
+async function getNotificationSettings() {
 	isLoadingNotificationSettings.value = true;
 
 	const payload = await Api.sendRequest(
@@ -114,18 +116,20 @@ onMounted(async () => {
 		{ detach: true }
 	);
 	notificationLevel.value = payload.level;
-
 	isLoadingNotificationSettings.value = false;
-});
+}
 
-onBeforeUnmount(() => {
-	// We've been updating the background on the actual model itself in addition
-	// to the formModel so that we can see the backgrounds before submitting the
-	// form. Reset to our actual background model if it doesn't match.
-	if (room.value.background !== initialBackground) {
-		room.value.background = initialBackground;
-	}
-});
+async function getBackgrounds() {
+	isLoadingBackgrounds.value = true;
+
+	const payload = await Api.sendRequest(
+		`/web/chat/rooms/backgrounds/${room.value.id}`,
+		undefined,
+		{ detach: true }
+	);
+	backgrounds.value = Background.populate(payload.backgrounds);
+	isLoadingBackgrounds.value = false;
+}
 
 async function leaveRoom() {
 	const result = await ModalConfirm.show(
@@ -173,9 +177,24 @@ async function onClickSetNotificationLevel(level: string) {
 	notificationLevel.value = payload.level;
 }
 
-function onBackgroundChanged(bg?: Background) {
+async function onBackgroundChanged(bg?: Background) {
+	if (isSettingBackground.value) {
+		return;
+	}
+	isSettingBackground.value = true;
+
+	const oldBg = room.value.background;
 	room.value.background = bg;
-	form.formModel.background = bg;
+
+	try {
+		await editChatRoomBackground(chat.value, room.value, bg?.id);
+	} catch (_) {
+		if (room.value.background === bg) {
+			room.value.background = oldBg;
+		}
+	} finally {
+		isSettingBackground.value = false;
+	}
 }
 </script>
 
@@ -186,8 +205,17 @@ function onBackgroundChanged(bg?: Background) {
 				name="title"
 				class="-pad sans-margin-bottom"
 				:label="$gettext('Group Name')"
+				hide-label
 				optional
 			>
+				<!-- TODO(chat-backgrounds) make better -->
+				<div class="-header">
+					<AppTranslate> Group Name </AppTranslate>
+				</div>
+				<template #inline-control>
+					<AppFormButton icon="check" sparse circle />
+				</template>
+
 				<AppFormControl
 					type="text"
 					:validators="[validateMinLength(titleMinLength!), validateMaxLength(titleMaxLength!)]"
@@ -204,32 +232,27 @@ function onBackgroundChanged(bg?: Background) {
 			<div class="-header">
 				<AppTranslate> Background </AppTranslate>
 			</div>
-			<AppFormGroup
-				name="background"
-				class="-pad sans-margin-bottom"
-				hide-label
-				optional
-				:label="$gettext(`Background`)"
-			>
-				<AppFormBackground
-					:backgrounds="backgrounds"
-					:background="room.background"
-					:tile-size="40"
-					@background-change="onBackgroundChanged"
-				/>
-			</AppFormGroup>
+			<AppLoadingFade :is-loading="isSettingBackground">
+				<AppFormGroup
+					name="background"
+					class="-pad sans-margin-bottom"
+					hide-label
+					optional
+					:label="$gettext(`Background`)"
+				>
+					<AppFormBackground
+						:backgrounds="backgrounds"
+						:background="room.background"
+						:tile-size="40"
+						@background-change="onBackgroundChanged"
+					/>
+				</AppFormGroup>
+			</AppLoadingFade>
 
 			<AppSpacer vertical :scale="6" />
 		</template>
 
-		<AppFormStickySubmit class="-pad">
-			<AppFormButton>
-				<AppTranslate>Save</AppTranslate>
-			</AppFormButton>
-		</AppFormStickySubmit>
-
 		<template v-if="canEditTitle || canEditBackground">
-			<AppSpacer vertical :scale="2" />
 			<hr />
 			<AppSpacer vertical :scale="6" />
 		</template>

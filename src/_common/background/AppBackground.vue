@@ -19,6 +19,11 @@ const props = defineProps({
 		type: Object as PropType<StyleValue>,
 		default: undefined,
 	},
+	// TODO(chat-backgrounds) allow custom fade opacity
+	// fadeOpacity: {
+	// 	type: Number,
+	// 	default: 0.05,
+	// },
 });
 
 const mediaItem = computed(() => props.background?.media_item);

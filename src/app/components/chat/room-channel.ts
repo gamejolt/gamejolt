@@ -1,6 +1,7 @@
 import { Channel, Presence, Socket } from 'phoenix';
 import { markRaw } from 'vue';
 import { arrayRemove } from '../../../utils/array';
+import { Background } from '../../../_common/background/background.model';
 import { ContentDocument } from '../../../_common/content/content-document';
 import { ContentObject } from '../../../_common/content/content-object';
 import { MarkObject } from '../../../_common/content/mark-object';
@@ -35,10 +36,6 @@ interface MemberKickedPayload {
 
 interface OwnerSyncPayload {
 	owner_id: number;
-}
-
-interface UpdateTitlePayload {
-	title: string;
 }
 
 export class ChatRoomChannel {
@@ -78,7 +75,7 @@ export class ChatRoomChannel {
 		this.socketChannel.on('member_leave', this.onMemberLeave.bind(this));
 		this.socketChannel.on('owner_sync', this.onOwnerSync.bind(this));
 		this.socketChannel.on('member_add', this.onMemberAdd.bind(this));
-		this.socketChannel.on('update_title', this.onUpdateTitle.bind(this));
+		this.socketChannel.on('room_update', this.onRoomUpdate.bind(this));
 		this.socketChannel.on('kick_member', this.onMemberKicked.bind(this));
 
 		this.socketChannel.onClose(() => {
@@ -294,8 +291,17 @@ export class ChatRoomChannel {
 		}
 	}
 
-	private onUpdateTitle(data: UpdateTitlePayload) {
-		this.room.title = data.title;
+	private onRoomUpdate(json: Partial<ChatRoom>) {
+		// TODO(chat-backgrounds) remove
+		if (import.meta.env.DEV) {
+			console.debug(json);
+		}
+		const { title, background } = json;
+		if (title) {
+			this.room.title = title;
+		}
+
+		this.room.background = background ? new Background(background) : undefined;
 	}
 
 	private onOwnerSync(data: OwnerSyncPayload) {

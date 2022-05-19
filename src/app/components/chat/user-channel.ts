@@ -2,6 +2,7 @@ import { Channel, Presence, Socket } from 'phoenix';
 import { markRaw } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import type { TabLeaderInterface } from '../../../utils/tab-leader';
+import { Background } from '../../../_common/background/background.model';
 import { importNoSSR } from '../../../_common/code-splitting';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
 import {
@@ -71,7 +72,10 @@ export class ChatUserChannel {
 		this.socketChannel.on('clear_notifications', this.onClearNotifications.bind(this));
 		this.socketChannel.on('group_add', this.onGroupAdd.bind(this));
 		this.socketChannel.on('group_leave', this.onRoomLeave.bind(this));
+
+		// TODO(chat-backgrounds) change events?
 		this.socketChannel.on('update_title', this.onUpdateTitle.bind(this));
+		this.socketChannel.on('update_background', this.onUpdateBackground.bind(this));
 		this.socketChannel.onClose(() => {
 			if (!this._tabLeader) {
 				return;
@@ -196,6 +200,17 @@ export class ChatUserChannel {
 
 		if (index !== -1) {
 			this.client.groupRooms[index].title = data.title;
+		}
+	}
+
+	// TODO(chat-backgrounds) test this
+	private onUpdateBackground(data: RoomIdPayload & { background?: any }) {
+		const index = this.client.groupRooms.findIndex(room => room.id === data.room_id);
+
+		if (index !== -1) {
+			this.client.groupRooms[index].background = data.background
+				? new Background(data.background)
+				: undefined;
 		}
 	}
 }
