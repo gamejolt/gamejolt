@@ -335,10 +335,6 @@ $-min-item-width = 24px
 .chat-window-output-item
 	position: relative
 	margin-bottom: 4px
-	// This is so no height change occurs when the "NEW" indicator line appears
-	border-top-width: 1px
-	border-top-style: solid
-	border-top-color: transparent
 
 	@media $media-xs
 		font-size: $font-size-small

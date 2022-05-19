@@ -458,7 +458,7 @@ function onMobileAppBarBack() {
 
 .-output-inner
 	// Allows the scroll bar some breathing room
-	margin-right: 4px
+	padding-right: 4px
 
 .-send-container
 	width: 100%
