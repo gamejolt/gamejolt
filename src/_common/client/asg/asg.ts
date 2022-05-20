@@ -26,7 +26,7 @@ export function startDesktopAudioCapture(writableStream: WritableStream<AudioDat
 	emitter
 		.on('status_update', (text: string) => {
 			console.log('Status update: ' + text);
-			if (text == 'Recording ends') {
+			if (text === 'Recording ends') {
 				// TODO close the stream and dispose of resources
 			}
 		})
@@ -40,7 +40,7 @@ export function startDesktopAudioCapture(writableStream: WritableStream<AudioDat
 					return;
 				}
 
-				const currTimeLength = (data.length * 1000000) / SampleRate;
+				const currTimeLength = (data.length * 1_000_000) / SampleRate;
 				nextTimestamp += currTimeLength;
 				const audioData = new AudioData({
 					format: Format,

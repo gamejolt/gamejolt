@@ -5,17 +5,18 @@ import { MediaDeviceService } from '../../../../../_common/agora/media-device.se
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import {
-assignPreferredProducerDevices,
-clearSelectedRecordingDevices,
-FiresideRTCProducer,
-PRODUCER_DEFAULT_GROUP_AUDIO,
-PRODUCER_UNSET_DEVICE,
-setSelectedGroupAudioDeviceId,
-setSelectedMicDeviceId,
-setSelectedWebcamDeviceId,
-setShouldStreamDesktopAudio,
-startStreaming,
-stopStreaming
+	assignPreferredProducerDevices,
+	clearSelectedRecordingDevices,
+	FiresideRTCProducer,
+	PRODUCER_DEFAULT_GROUP_AUDIO,
+	PRODUCER_UNSET_DEVICE,
+	setSelectedGroupAudioDeviceId,
+	setSelectedMicDeviceId,
+	setSelectedWebcamDeviceId,
+	setShouldStreamDesktopAudio,
+	setVideoPreviewElement,
+	startStreaming,
+	stopStreaming,
 } from '../../../../../_common/fireside/rtc/producer';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
@@ -183,6 +184,18 @@ onUnmounted(() => {
 
 	isShowingStreamSetup.value = false;
 });
+
+watch(
+	[canStreamVideo, videoPreviewElem],
+	([canStreamVideo, videoPreviewElem]) => {
+		if (!videoPreviewElem) {
+			return;
+		}
+
+		setVideoPreviewElement(producer.value, canStreamVideo ? videoPreviewElem ?? null : null);
+	},
+	{ immediate: true }
+);
 
 watch(producer, producer => {
 	// The only way this should trigger is if we get removed as a cohost while
@@ -621,7 +634,9 @@ async function _detectDevices() {
 			</template>
 
 			<!-- Only show this section if they've given mic permissions -->
-			<fieldset v-if="canStreamAudio && hasMicPermissions && form.formModel.streamDesktopAudio">
+			<fieldset
+				v-if="canStreamAudio && hasMicPermissions && form.formModel.streamDesktopAudio"
+			>
 				<AppFormLegend
 					compact
 					:expandable="!hasDesktopAudio"
