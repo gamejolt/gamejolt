@@ -341,17 +341,22 @@ export class NwBuilder {
 					'postinstall',
 				],
 			},
-			// Run asg-prebuilt's post install to get the asg binaries in.
-			{
-				command: 'yarn',
-				args: [
-					'--cwd',
-					path.resolve(appDir, 'node_modules/asg-prebuilt'),
-					'run',
-					'postinstall',
-				],
-			},
 		];
+
+		if (isWindows()) {
+			commands.push(
+				// Run asg-prebuilt's post install to get the asg binaries in.
+				{
+					command: 'yarn',
+					args: [
+						'--cwd',
+						path.resolve(appDir, 'node_modules/asg-prebuilt'),
+						'run',
+						'postinstall',
+					],
+				}
+			);
+		}
 
 		for (const { command, args } of commands) {
 			await runShell(command, { args });
