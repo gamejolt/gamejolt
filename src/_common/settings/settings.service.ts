@@ -94,8 +94,12 @@ export const SettingStreamDesktopVolume = new NumberSetting('stream-desktop-volu
 // Stream Setup
 export const SettingStreamProducerWebcam = new StringSetting('stream-producer-webcam', '');
 export const SettingStreamProducerMic = new StringSetting('stream-producer-mic', '');
-export const SettingStreamProducerDesktopAudio = new StringSetting(
-	'stream-producer-desktop-audio',
+export const SettingStreamProducerShouldStreamDesktopAudio = new BooleanSetting(
+	'stream-producer-should-stream-desktop-audio',
+	true
+);
+export const SettingStreamProducerDesktopAudioDevice = new StringSetting(
+	'stream-producer-desktop-audio-device',
 	''
 );
 export const SettingStreamProducerGroupAudio = new StringSetting('stream-producer-group-audio', '');

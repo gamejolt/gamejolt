@@ -1,33 +1,26 @@
-import type { EventEmitter as TypeofEventEmitter } from 'events';
-import { markRaw, reactive } from 'vue';
+import { computed, markRaw, ref } from 'vue';
 const { EventEmitter } = require('events') as typeof import('events');
 
 const asgNative = require('asg-prebuilt');
+const process = require('process') as typeof import('process');
 
-const sampleRate = 44100;
-const numChannels = 1;
-const format: AudioSampleFormat = 'f32';
+const SampleRate = 44100;
+const NumChannels = 1;
+const Format: AudioSampleFormat = 'f32';
 
-export type ASGInstanceStatus = 'starting' | 'started' | 'stopping' | 'stopped';
+export type ASGControllerStatus = 'starting' | 'started' | 'stopping' | 'stopped';
 
-export type ASGInstance = {
-	readonly pid: number;
-	_writer: WritableStreamDefaultWriter<AudioData>;
-	_uid: string;
-	_emitter: TypeofEventEmitter;
-	_status: ASGInstanceStatus;
-};
+export type ASGController = ReturnType<typeof startDesktopAudioCapture>;
 
-export function startCapture(pid: number, writer: WritableStream<AudioData>): ASGInstance {
-	const emitter = new EventEmitter();
+export function startDesktopAudioCapture(writableStream: WritableStream<AudioData>) {
+	// We get the parent process's pid since it would also contain all the child
+	// pids under it then.
+	const appPid = process.ppid;
 
-	const asgInst = reactive({
-		pid,
-		_writer: markRaw(writer.getWriter()),
-		_emitter: markRaw(emitter),
-		_uid: '',
-		_status: 'starting',
-	} as ASGInstance);
+	const writer = markRaw(writableStream.getWriter());
+	const emitter = markRaw(new EventEmitter());
+	const uid = ref('');
+	const status = ref<ASGControllerStatus>('starting');
 
 	let nextTimestamp = 0;
 	emitter
@@ -43,61 +36,68 @@ export function startCapture(pid: number, writer: WritableStream<AudioData>): AS
 		})
 		.on('data', (data: Float32Array) => {
 			try {
-				if (asgInst._status !== 'started') {
+				if (status.value !== 'started') {
 					return;
 				}
 
-				const currTimeLength = (data.length * 1000000) / sampleRate;
+				const currTimeLength = (data.length * 1000000) / SampleRate;
 				nextTimestamp += currTimeLength;
 				const audioData = new AudioData({
-					format: format,
-					numberOfChannels: numChannels,
+					format: Format,
+					numberOfChannels: NumChannels,
 					numberOfFrames: data.length,
 					timestamp: nextTimestamp,
-					sampleRate: sampleRate,
-					data: data,
+					sampleRate: SampleRate,
+					data,
 				});
 
-				asgInst._writer.write(audioData);
+				writer.write(audioData);
 			} catch (err) {
 				console.error(err);
 			}
 		});
 
-	// TODO make startCapture a promise.
 	try {
-		const uid = asgNative.startCapture(pid, emitter.emit.bind(emitter));
-		asgInst._uid = uid;
-		asgInst._status = 'started';
+		uid.value = asgNative.startCapture(appPid, emitter.emit.bind(emitter));
+		status.value = 'started';
 	} catch (error) {
 		console.error('Got error while starting ASG capture', error);
-		cleanup(asgInst);
+		_cleanup();
 	}
 
-	return asgInst;
-}
+	async function stop() {
+		// TODO if the state is still starting we need to either abort the
+		// startCapture or wait until its done before continuing.
 
-export async function stopCapture(asg: ASGInstance): Promise<void> {
-	// TODO if the state is still starting we need to either abort the
-	// startCapture or wait until its done before continuing.
+		if (status.value === 'stopping' || status.value === 'stopped') {
+			return;
+		}
 
-	if (asg._status === 'stopping' || asg._status === 'stopped') {
-		return;
+		status.value = 'stopping';
+		// TODO make this a promise, and await on it.
+		asgNative.endCapture(uid.value);
+		status.value = 'stopped';
+
+		_cleanup();
 	}
 
-	asg._status = 'stopping';
-	// TODO make this a promise, and await on it.
-	asgNative.endCapture(asg._uid);
-	asg._status = 'stopped';
+	function _cleanup() {
+		emitter.removeAllListeners();
 
-	cleanup(asg);
-}
+		// TODO make sure this behaves if you call it multiple times.
+		// We want to be able to call cleanup on the instance whenever.
+		// Also, this is a promise, should we be returning this or handling rejections here?
+		writer.close();
+	}
 
-function cleanup(asg: ASGInstance) {
-	asg._emitter.removeAllListeners();
+	return {
+		// readonly
+		pid: computed(() => appPid),
+		writer,
+		emitter,
+		uid,
+		status,
 
-	// TODO make sure this behaves if you call it multiple times.
-	// We want to be able to call cleanup on the instance whenever.
-	// Also, this is a promise, should we be returning this or handling rejections here?
-	asg._writer.close();
+		stop,
+	};
 }

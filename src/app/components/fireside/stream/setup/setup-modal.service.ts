@@ -13,7 +13,9 @@ export class StreamSetupModal {
 
 		return await showModal<void>({
 			modalId: ModalId,
-			component: defineAsyncComponent(lazyImportNoSSR(() => import('./setup-modal.vue'))),
+			component: defineAsyncComponent(
+				lazyImportNoSSR(() => import('./AppFiresideStreamSetupModal.vue'))
+			),
 			props: {
 				c,
 			},

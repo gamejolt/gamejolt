@@ -2,14 +2,16 @@ import type { IAgoraRTCRemoteUser, ILocalAudioTrack, IRemoteAudioTrack } from 'a
 import { markRaw, reactive } from 'vue';
 import { MediaDeviceService } from '../../agora/media-device.service';
 import { Api } from '../../api/api.service';
-import { startCapture, stopCapture } from '../../client/safe-exports';
+import type { ASGController } from '../../client/asg/asg';
+import { startDesktopAudioCapture } from '../../client/safe-exports';
 import { importNoSSR } from '../../code-splitting';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { Navigate } from '../../navigate/navigate.service';
 import {
-	SettingStreamProducerDesktopAudio,
+	SettingStreamProducerDesktopAudioDevice,
 	SettingStreamProducerGroupAudio,
 	SettingStreamProducerMic,
+	SettingStreamProducerShouldStreamDesktopAudio,
 	SettingStreamProducerWebcam,
 } from '../../settings/settings.service';
 import { Translate } from '../../translate/translate.service';
@@ -28,13 +30,6 @@ import {
 	setUserHasVideo,
 } from './user';
 
-console.log(startCapture);
-console.log(stopCapture);
-
-// const { EventEmitter } = require('events') as typeof import('events');
-// const { asg } = require(path.join(Client.nwStaticAssetsDir, 'asg.node'));
-// const asg = require('asg-prebuilt');
-const { ppid } = require('process') as typeof import('process');
 const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
 
 const RENEW_TOKEN_INTERVAL = 60_000;
@@ -140,18 +135,21 @@ export class FiresideRTCProducer {
 	constructor(public readonly rtc: FiresideRTC) {}
 	// asgComponent: ASGComponent | null = null;
 	// The target device IDs we want to be streaming with.
-	_selectedWebcamDeviceId = '';
-	_selectedMicDeviceId = '';
-	_selectedDesktopAudioDeviceId = '';
-	_selectedGroupAudioDeviceId = '';
+	selectedWebcamDeviceId = '';
+	selectedMicDeviceId = '';
+	selectedDesktopAudioDeviceId = '';
+	selectedGroupAudioDeviceId = '';
+
+	shouldStreamDesktopAudio = false;
 
 	// The device IDs we are streaming with.
-	_streamingWebcamDeviceId: string | null = null;
-	_streamingMicDeviceId: string | null = null;
-	_streamingDesktopAudioDeviceId: string | null = null;
-	_streamingChatPlaybackDeviceId: string | null = null;
+	streamingWebcamDeviceId: string | null = null;
+	streamingMicDeviceId: string | null = null;
+	streamingDesktopAudioDeviceId: string | null = null;
+	streamingChatPlaybackDeviceId: string | null = null;
+	streamingASG: ASGController | null = null;
 
-	_isStreaming = false;
+	isStreaming = false;
 
 	_videoPreviewElement: HTMLDivElement | null = null;
 
@@ -167,26 +165,6 @@ export class FiresideRTCProducer {
 
 	get canStreamAudio() {
 		return this.rtc.role?.can_stream_audio === true;
-	}
-
-	get isStreaming() {
-		return this._isStreaming;
-	}
-
-	get selectedWebcamDeviceId() {
-		return this._selectedWebcamDeviceId;
-	}
-
-	get selectedMicDeviceId() {
-		return this._selectedMicDeviceId;
-	}
-
-	get selectedDesktopAudioDeviceId() {
-		return this._selectedDesktopAudioDeviceId;
-	}
-
-	get selectedGroupAudioDeviceId() {
-		return this._selectedGroupAudioDeviceId;
 	}
 }
 
@@ -211,7 +189,7 @@ export function cleanupFiresideRTCProducer(producer: FiresideRTCProducer) {
 
 	// TODO(big-pp-event) theres nothing to prevent a queued up startStream
 	// to get executed after cleanup is called on the same instance.
-	producer._isStreaming = false;
+	producer.isStreaming = false;
 
 	if (producer._tokenRenewInterval) {
 		clearInterval(producer._tokenRenewInterval);
@@ -224,7 +202,7 @@ export function assignPreferredProducerDevices(producer: FiresideRTCProducer) {
 
 	const selectedWebcam = SettingStreamProducerWebcam.get();
 	const selectedMic = SettingStreamProducerMic.get();
-	const selectedDesktop = SettingStreamProducerDesktopAudio.get();
+	const selectedDesktop = SettingStreamProducerDesktopAudioDevice.get();
 	const selectedGroup = SettingStreamProducerGroupAudio.get();
 
 	const isWebcamUnset = selectedWebcam === PRODUCER_UNSET_DEVICE;
@@ -241,7 +219,7 @@ export function assignPreferredProducerDevices(producer: FiresideRTCProducer) {
 	let fallbackDesktop: MediaDeviceInfo | null = null;
 	let fallbackGroup: MediaDeviceInfo | null = null;
 
-	for (const device of webcams) {
+	for (const device of webcams.value) {
 		if (isWebcamUnset) {
 			break;
 		}
@@ -259,7 +237,7 @@ export function assignPreferredProducerDevices(producer: FiresideRTCProducer) {
 		}
 	}
 
-	for (const device of mics) {
+	for (const device of mics.value) {
 		if (!isMicUnset && device.deviceId === selectedMic) {
 			preferredMic = device;
 		} else if (!isDesktopUnset && device.deviceId === selectedDesktop) {
@@ -278,7 +256,7 @@ export function assignPreferredProducerDevices(producer: FiresideRTCProducer) {
 		}
 	}
 
-	for (const device of speakers) {
+	for (const device of speakers.value) {
 		if (isGroupUnset) {
 			break;
 		}
@@ -302,10 +280,11 @@ export function assignPreferredProducerDevices(producer: FiresideRTCProducer) {
 		producer,
 		(preferredMic ?? fallbackMic)?.deviceId ?? PRODUCER_UNSET_DEVICE
 	);
-	setSelectedDesktopAudioDeviceId(
-		producer,
-		(preferredDesktop ?? fallbackDesktop)?.deviceId ?? PRODUCER_UNSET_DEVICE
-	);
+	// setSelectedDesktopAudioDeviceId(
+	// 	producer,
+	// 	(preferredDesktop ?? fallbackDesktop)?.deviceId ?? PRODUCER_UNSET_DEVICE
+	// );
+	setShouldStreamDesktopAudio(producer, true);
 	setSelectedGroupAudioDeviceId(
 		producer,
 		(preferredGroup ?? fallbackGroup)?.deviceId ?? PRODUCER_DEFAULT_GROUP_AUDIO
@@ -348,7 +327,7 @@ async function _renewTokens(producer: FiresideRTCProducer) {
 
 	async function _updateAudienceTokens() {
 		// We only do this if we're currently streaming.
-		if (!producer._isStreaming) {
+		if (!producer.isStreaming) {
 			return;
 		}
 
@@ -401,10 +380,11 @@ export function setSelectedWebcamDeviceId(
 	newWebcamDeviceId: string,
 	savePref = true
 ) {
-	const videoDeviceChanged = newWebcamDeviceId !== producer._selectedWebcamDeviceId;
-	producer._selectedWebcamDeviceId = newWebcamDeviceId;
+	const { webcams } = MediaDeviceService;
+	const videoDeviceChanged = newWebcamDeviceId !== producer.selectedWebcamDeviceId;
+	producer.selectedWebcamDeviceId = newWebcamDeviceId;
 
-	if (MediaDeviceService.webcams.length > 0 && savePref) {
+	if (webcams.value.length > 0 && savePref) {
 		// Only assign the device setting when we actually have devices.
 		SettingStreamProducerWebcam.set(newWebcamDeviceId);
 	}
@@ -419,10 +399,11 @@ export function setSelectedMicDeviceId(
 	newMicId: string,
 	savePref = true
 ) {
-	const micChanged = newMicId !== producer._selectedMicDeviceId;
-	producer._selectedMicDeviceId = newMicId;
+	const { mics } = MediaDeviceService;
+	const micChanged = newMicId !== producer.selectedMicDeviceId;
+	producer.selectedMicDeviceId = newMicId;
 
-	if (MediaDeviceService.mics.length > 0 && savePref) {
+	if (mics.value.length > 0 && savePref) {
 		// Only assign the device setting when we actually have devices.
 		SettingStreamProducerMic.set(newMicId);
 	}
@@ -432,17 +413,35 @@ export function setSelectedMicDeviceId(
 	}
 }
 
+export function setShouldStreamDesktopAudio(
+	producer: FiresideRTCProducer,
+	shouldStream: boolean,
+	savePref = true
+) {
+	const changed = shouldStream !== producer.shouldStreamDesktopAudio;
+	producer.shouldStreamDesktopAudio = shouldStream;
+
+	if (savePref) {
+		SettingStreamProducerShouldStreamDesktopAudio.set(shouldStream);
+	}
+
+	if (changed) {
+		_updateDesktopAudioDevice(producer);
+	}
+}
+
 export function setSelectedDesktopAudioDeviceId(
 	producer: FiresideRTCProducer,
 	newSpeakerId: string,
 	savePref = true
 ) {
-	const speakerChanged = newSpeakerId !== producer._selectedDesktopAudioDeviceId;
-	producer._selectedDesktopAudioDeviceId = newSpeakerId;
+	const { mics } = MediaDeviceService;
+	const speakerChanged = newSpeakerId !== producer.selectedDesktopAudioDeviceId;
+	producer.selectedDesktopAudioDeviceId = newSpeakerId;
 
-	if (MediaDeviceService.mics.length > 0 && savePref) {
+	if (mics.value.length > 0 && savePref) {
 		// Only assign the device setting when we actually have devices.
-		SettingStreamProducerDesktopAudio.set(newSpeakerId);
+		SettingStreamProducerDesktopAudioDevice.set(newSpeakerId);
 	}
 
 	if (speakerChanged) {
@@ -455,10 +454,11 @@ export function setSelectedGroupAudioDeviceId(
 	newSpeakerId: string,
 	savePref = true
 ) {
-	const speakerChanged = newSpeakerId !== producer._selectedGroupAudioDeviceId;
-	producer._selectedGroupAudioDeviceId = newSpeakerId;
+	const { speakers } = MediaDeviceService;
+	const speakerChanged = newSpeakerId !== producer.selectedGroupAudioDeviceId;
+	producer.selectedGroupAudioDeviceId = newSpeakerId;
 
-	if (MediaDeviceService.speakers.length > 0 && savePref) {
+	if (speakers.value.length > 0 && savePref) {
 		// Only assign the device setting when we actually have devices.
 		SettingStreamProducerGroupAudio.set(newSpeakerId);
 	}
@@ -477,80 +477,140 @@ export function clearSelectedRecordingDevices(producer: FiresideRTCProducer) {
 function _updateWebcamDevice(producer: FiresideRTCProducer) {
 	return _doBusyWork(producer, async () => {
 		const {
-			_selectedWebcamDeviceId,
+			selectedWebcamDeviceId,
 			rtc,
 			rtc: { videoChannel },
 		} = producer;
+		const { webcams } = MediaDeviceService;
 
 		let deviceId: string | null;
-		if (_selectedWebcamDeviceId === '' || _selectedWebcamDeviceId === PRODUCER_UNSET_DEVICE) {
+		if (selectedWebcamDeviceId === '' || selectedWebcamDeviceId === PRODUCER_UNSET_DEVICE) {
 			deviceId = null;
 		} else {
-			const deviceExists = !!MediaDeviceService.webcams.find(
-				webcam => webcam.deviceId === _selectedWebcamDeviceId
-			);
-			deviceId = deviceExists ? _selectedWebcamDeviceId : null;
+			const deviceExists = !!webcams.value.find(i => i.deviceId === selectedWebcamDeviceId);
+			deviceId = deviceExists ? selectedWebcamDeviceId : null;
 		}
 
 		rtc.log(`Setting video device to ${deviceId}`);
-		producer._streamingWebcamDeviceId = deviceId;
+		producer.streamingWebcamDeviceId = deviceId;
 
-		await setChannelVideoTrack(videoChannel, async () => {
-			if (!deviceId) {
-				return null;
-			}
-
-			let width = 1280;
-			let height = 720;
-			let fps = 30;
-			let bitrate = 5_000;
-			let mode = 'motion' as 'motion' | 'detail';
-			const parts = window.location.search.replace('?', '').split('&');
-
-			const _parseInt = (value: string, defaultValue: number) => {
-				const intValue = parseInt(value);
-				return !intValue || isNaN(intValue) ? defaultValue : intValue;
-			};
-
-			for (const part of parts) {
-				const [key, value] = part.split('=');
-				if (!key || !value) {
-					continue;
+		await setChannelVideoTrack(videoChannel, {
+			async trackBuilder() {
+				if (!deviceId) {
+					return null;
 				}
 
-				if (key === 'width') {
-					width = _parseInt(value, width);
-					rtc.log(`Override width: ${width}`);
-				} else if (key === 'height') {
-					height = _parseInt(value, height);
-					rtc.log(`Override height: ${height}`);
-				} else if (key === 'fps') {
-					fps = _parseInt(value, fps);
-					rtc.log(`Override fps: ${fps}`);
-				} else if (key === 'bitrate') {
-					bitrate = _parseInt(value, bitrate);
-					rtc.log(`Override bitrate: ${bitrate}`);
-				} else if (key === 'mode' && (value === 'motion' || value === 'detail')) {
-					mode = value;
-					rtc.log(`Override mode: ${mode}`);
+				let width = 1280;
+				let height = 720;
+				let fps = 30;
+				let bitrate = 5_000;
+				let mode = 'motion' as 'motion' | 'detail';
+				const parts = window.location.search.replace('?', '').split('&');
+
+				const _parseInt = (value: string, defaultValue: number) => {
+					const intValue = parseInt(value);
+					return !intValue || isNaN(intValue) ? defaultValue : intValue;
+				};
+
+				for (const part of parts) {
+					const [key, value] = part.split('=');
+					if (!key || !value) {
+						continue;
+					}
+
+					if (key === 'width') {
+						width = _parseInt(value, width);
+						rtc.log(`Override width: ${width}`);
+					} else if (key === 'height') {
+						height = _parseInt(value, height);
+						rtc.log(`Override height: ${height}`);
+					} else if (key === 'fps') {
+						fps = _parseInt(value, fps);
+						rtc.log(`Override fps: ${fps}`);
+					} else if (key === 'bitrate') {
+						bitrate = _parseInt(value, bitrate);
+						rtc.log(`Override bitrate: ${bitrate}`);
+					} else if (key === 'mode' && (value === 'motion' || value === 'detail')) {
+						mode = value;
+						rtc.log(`Override mode: ${mode}`);
+					}
 				}
-			}
 
-			const AgoraRTC = await AgoraRTCLazy;
-			const track = await AgoraRTC.createCameraVideoTrack({
-				cameraId: deviceId,
-				optimizationMode: mode,
-				encoderConfig: {
-					bitrateMax: bitrate,
-					width: { max: width, ideal: width },
-					height: { max: height, ideal: height },
-					frameRate: { max: fps },
-				},
-			});
+				const AgoraRTC = await AgoraRTCLazy;
 
-			rtc.log(`Video webcam track ID: ${track.getTrackId()}`);
+				// Test code below.
 
-			return track;
+				// nw.Screen.Init();
+
+				// const track = await new Promise<ILocalVideoTrack>((resolve, reject) => {
+				// 	nw.Screen.chooseDesktopMedia(['window', 'screen'], function (streamId) {
+				// 		navigator.webkitGetUserMedia(
+				// 			{
+				// 				audio: false,
+				// 				video: {
+				// 					mandatory: {
+				// 						chromeMediaSource: 'desktop',
+				// 						chromeMediaSourceId: streamId,
+				// 						maxWidth: 1920,
+				// 						maxHeight: 1080,
+				// 					},
+				// 					optional: [],
+				// 				},
+				// 			},
+				// 			(stream: MediaStream) => {
+				// 				const track = AgoraRTC.createCustomVideoTrack({
+				// 					optimizationMode: mode,
+				// 					// encoderConfig: {
+				// 					// 	bitrateMax: bitrate,
+				// 					// 	width: { max: width, ideal: width },
+				// 					// 	height: { max: height, ideal: height },
+				// 					// 	frameRate: { max: fps },
+				// 					// },
+				// 					bitrateMax: bitrate,
+				// 					mediaStreamTrack: stream.getVideoTracks()[0],
+				// 				});
+
+				// 				resolve(track);
+				// 			},
+				// 			() => {
+				// 				console.error('nope');
+				// 				reject();
+				// 			}
+				// 		);
+				// 	});
+				// });
+
+				// const stream = await navigator.mediaDevices.getDisplayMedia({
+				// 	audio: false,
+				// 	video: {
+				// 		width: { max: width, ideal: width },
+				// 		height: { max: height, ideal: height },
+				// 		frameRate: { max: fps, ideal: fps },
+				// 		resizeMode: 'crop-and-scale',
+				// 	},
+				// });
+
+				// const track = AgoraRTC.createCustomVideoTrack({
+				// 	optimizationMode: mode,
+				// 	bitrateMax: bitrate,
+				// 	mediaStreamTrack: stream.getVideoTracks()[0],
+				// });
+
+				const track = await AgoraRTC.createCameraVideoTrack({
+					cameraId: deviceId,
+					optimizationMode: mode,
+					encoderConfig: {
+						bitrateMax: bitrate,
+						width: { max: width, ideal: width },
+						height: { max: height, ideal: height },
+						frameRate: { max: fps },
+					},
+				});
+
+				rtc.log(`Video webcam track ID: ${track.getTrackId()}`);
+
+				return track;
+			},
 		});
 
 		// No need to await on this. its not essential.
@@ -575,7 +635,7 @@ export async function updateSetIsStreaming(
 	// We want to be able to bypass the producer's _isStreaming setting
 	// because during cleanup we may call this before the producer has actually
 	// disposed of their streams and we don't want to wait on that.
-	const isStreaming = options?.isStreaming ?? producer._isStreaming;
+	const isStreaming = options?.isStreaming ?? producer.isStreaming;
 
 	let response: any = null;
 
@@ -592,7 +652,8 @@ export async function updateSetIsStreaming(
 					producer.selectedMicDeviceId !== PRODUCER_UNSET_DEVICE &&
 					rtc.chatChannel._localAudioTrack !== null,
 				has_desktop_audio:
-					producer.selectedDesktopAudioDeviceId !== PRODUCER_UNSET_DEVICE &&
+					producer.shouldStreamDesktopAudio &&
+					// producer.selectedDesktopAudioDeviceId !== PRODUCER_UNSET_DEVICE &&
 					rtc.videoChannel._localAudioTrack !== null,
 			},
 			{ detach: true }
@@ -607,63 +668,113 @@ export async function updateSetIsStreaming(
 function _updateDesktopAudioDevice(producer: FiresideRTCProducer) {
 	return _doBusyWork(producer, async () => {
 		const {
-			_selectedDesktopAudioDeviceId,
+			selectedDesktopAudioDeviceId,
+			shouldStreamDesktopAudio,
 			rtc,
 			rtc: { videoChannel },
 		} = producer;
+		const { mics } = MediaDeviceService;
 
 		let deviceId: string | null;
 		if (
-			_selectedDesktopAudioDeviceId === '' ||
-			_selectedDesktopAudioDeviceId === PRODUCER_UNSET_DEVICE
+			selectedDesktopAudioDeviceId === '' ||
+			selectedDesktopAudioDeviceId === PRODUCER_UNSET_DEVICE
 		) {
 			deviceId = null;
 		} else {
-			const deviceExists = !!MediaDeviceService.mics.find(
-				mic => mic.deviceId === _selectedDesktopAudioDeviceId
+			const deviceExists = !!mics.value.find(
+				i => i.deviceId === selectedDesktopAudioDeviceId
 			);
-			deviceId = deviceExists ? _selectedDesktopAudioDeviceId : null;
+			deviceId = deviceExists ? selectedDesktopAudioDeviceId : null;
 		}
 
 		rtc.log(`Setting desktop audio device to ${deviceId}`);
-		producer._streamingDesktopAudioDeviceId = deviceId;
+		producer.streamingDesktopAudioDeviceId = deviceId;
 
-		await setChannelAudioTrack(videoChannel, async () => {
-			if (!deviceId) {
-				return null;
-			}
+		await setChannelAudioTrack(videoChannel, {
+			async trackBuilder() {
+				if (!shouldStreamDesktopAudio) {
+					return null;
+				}
 
-			const generator = new MediaStreamTrackGenerator({ kind: 'audio' });
-			const asgInstance = startCapture(ppid, generator.writable);
-			// TODO asgInstance is what youd use to stop this later like so: stopCapture(asgInstance)
-			console.log(asgInstance);
+				const AgoraRTC = await AgoraRTCLazy;
+				let track: ILocalAudioTrack | undefined;
 
-			// console.log('ASG: CREATE CUSTOM');
-			// await producer.asgComponent.startASG();
+				// If a device was set for streaming, we want to use that
+				// instead of using ASG.
+				if (deviceId) {
+					rtc.log(`Creating desktop audio track from microphone source.`);
 
-			const AgoraRTC = await AgoraRTCLazy;
-			const track = await AgoraRTC.createCustomAudioTrack({
-				// mediaStreamTrack: producer.asgComponent.getMediaStreamTrack(),
-				mediaStreamTrack: generator,
-				encoderConfig: 'high_quality_stereo',
-				//AEC: false,
-				//AGC: false,
-				//ANS: false,
-			});
+					track = await AgoraRTC.createMicrophoneAudioTrack({
+						microphoneId: deviceId,
+						// We disable all this so that it doesn't affect the desktop audio in any way.
+						AEC: false,
+						AGC: false,
+						ANS: false,
+						encoderConfig: 'high_quality_stereo',
+					});
+				} else {
+					rtc.log(`Creating desktop audio track from ASG.`);
 
-			//const track = await AgoraRTC.createMicrophoneAudioTrack({
-			//	microphoneId: deviceId,
-			//	// We disable all this so that it doesn't affect the desktop audio in any way.
-			//	AEC: false,
-			//	AGC: false,
-			//	ANS: false,
-			//	encoderConfig: 'high_quality_stereo',
-			//});
-			track.setVolume(100);
+					const generator = new MediaStreamTrackGenerator({ kind: 'audio' });
+					producer.streamingASG = startDesktopAudioCapture(generator.writable);
 
-			rtc.log(`Desktop audio track ID: ${track.getTrackId()}`);
+					track = AgoraRTC.createCustomAudioTrack({
+						mediaStreamTrack: generator,
+						encoderConfig: 'high_quality_stereo',
+					});
+				}
 
-			return track;
+				// if (!deviceId) {
+				// 	return null;
+				// }
+
+				// const generator = new MediaStreamTrackGenerator({ kind: 'audio' });
+				// const asgInstance = startDesktopAudioCapture(generator.writable);
+				// // TODO asgInstance is what youd use to stop this later like so: stopCapture(asgInstance)
+				// console.log(asgInstance);
+
+				// // console.log('ASG: CREATE CUSTOM');
+				// // await producer.asgComponent.startASG();
+
+				// const AgoraRTC = await AgoraRTCLazy;
+				// const track = await AgoraRTC.createCustomAudioTrack({
+				// 	// mediaStreamTrack: producer.asgComponent.getMediaStreamTrack(),
+				// 	mediaStreamTrack: generator,
+				// 	encoderConfig: 'high_quality_stereo',
+				// 	//AEC: false,
+				// 	//AGC: false,
+				// 	//ANS: false,
+				// });
+
+				//const track = await AgoraRTC.createMicrophoneAudioTrack({
+				//	microphoneId: deviceId,
+				//	// We disable all this so that it doesn't affect the desktop audio in any way.
+				//	AEC: false,
+				//	AGC: false,
+				//	ANS: false,
+				//	encoderConfig: 'high_quality_stereo',
+				//});
+				track.setVolume(100);
+
+				rtc.log(`Desktop audio track ID: ${track.getTrackId()}`);
+
+				return track;
+			},
+			async onTrackClose() {
+				// Only need to close the track if we're streaming the desktop
+				// audio with ASG.
+				if (!producer.streamingASG) {
+					return;
+				}
+
+				rtc.log(`Stop streaming desktop audio through ASG.`);
+
+				await producer.streamingASG.stop();
+				producer.streamingASG = null;
+
+				rtc.log(`Stopped streaming desktop audio ASG.`);
+			},
 		});
 
 		// No need to await on this. its not essential.
@@ -674,38 +785,39 @@ function _updateDesktopAudioDevice(producer: FiresideRTCProducer) {
 function _updateMicDevice(producer: FiresideRTCProducer) {
 	return _doBusyWork(producer, async () => {
 		const {
-			_selectedMicDeviceId,
+			selectedMicDeviceId,
 			rtc,
 			rtc: { chatChannel },
 		} = producer;
+		const { mics } = MediaDeviceService;
 
 		let deviceId: string | null;
-		if (_selectedMicDeviceId === '' || _selectedMicDeviceId === PRODUCER_UNSET_DEVICE) {
+		if (selectedMicDeviceId === '' || selectedMicDeviceId === PRODUCER_UNSET_DEVICE) {
 			deviceId = null;
 		} else {
-			const deviceExists = !!MediaDeviceService.mics.find(
-				mic => mic.deviceId === _selectedMicDeviceId
-			);
-			deviceId = deviceExists ? _selectedMicDeviceId : null;
+			const deviceExists = !!mics.value.find(i => i.deviceId === selectedMicDeviceId);
+			deviceId = deviceExists ? selectedMicDeviceId : null;
 		}
 
 		rtc.log(`Setting mic device to ${deviceId}`);
-		producer._streamingMicDeviceId = deviceId;
+		producer.streamingMicDeviceId = deviceId;
 
-		await setChannelAudioTrack(chatChannel, async () => {
-			if (!deviceId) {
-				return null;
-			}
+		await setChannelAudioTrack(chatChannel, {
+			async trackBuilder() {
+				if (!deviceId) {
+					return null;
+				}
 
-			const AgoraRTC = await AgoraRTCLazy;
-			const track = await AgoraRTC.createMicrophoneAudioTrack({
-				microphoneId: deviceId,
-			});
-			track.setVolume(100);
+				const AgoraRTC = await AgoraRTCLazy;
+				const track = await AgoraRTC.createMicrophoneAudioTrack({
+					microphoneId: deviceId,
+				});
+				track.setVolume(100);
 
-			rtc.log(`Mic track ID: ${track.getTrackId()}`);
+				rtc.log(`Mic track ID: ${track.getTrackId()}`);
 
-			return track;
+				return track;
+			},
 		});
 
 		// No need to await on this. its not essential.
@@ -716,19 +828,18 @@ function _updateMicDevice(producer: FiresideRTCProducer) {
 function _updateGroupAudioDevice(producer: FiresideRTCProducer) {
 	return _doBusyWork(producer, async () => {
 		const {
-			_selectedGroupAudioDeviceId,
+			selectedGroupAudioDeviceId,
 			rtc,
 			rtc: { chatChannel, videoChannel },
 		} = producer;
+		const { speakers } = MediaDeviceService;
 
-		const deviceExists = !!MediaDeviceService.speakers.find(
-			speaker => speaker.deviceId === _selectedGroupAudioDeviceId
-		);
+		const deviceExists = !!speakers.value.find(i => i.deviceId === selectedGroupAudioDeviceId);
 
-		const deviceId = deviceExists ? _selectedGroupAudioDeviceId : PRODUCER_DEFAULT_GROUP_AUDIO;
+		const deviceId = deviceExists ? selectedGroupAudioDeviceId : PRODUCER_DEFAULT_GROUP_AUDIO;
 
 		rtc.log(`Setting speaker device to ${deviceId}`);
-		producer._streamingChatPlaybackDeviceId = deviceId;
+		producer.streamingChatPlaybackDeviceId = deviceId;
 
 		rtc.log(`Applying new audio playback device to all remote audio streams.`);
 
@@ -772,7 +883,7 @@ function _updateRemoteUserPlaybackDevice(
 	producer: FiresideRTCProducer,
 	remoteUser: IAgoraRTCRemoteUser
 ) {
-	const { rtc, _streamingChatPlaybackDeviceId } = producer;
+	const { rtc, streamingChatPlaybackDeviceId } = producer;
 
 	const audioTrack = remoteUser.audioTrack;
 	if (!audioTrack) {
@@ -780,7 +891,7 @@ function _updateRemoteUserPlaybackDevice(
 		return;
 	}
 
-	if (_streamingChatPlaybackDeviceId !== null) {
+	if (streamingChatPlaybackDeviceId !== null) {
 		rtc.log(`- applying new audio track for user ${remoteUser.uid}`);
 		return updateTrackPlaybackDevice(producer, audioTrack);
 	}
@@ -794,7 +905,7 @@ export async function updateTrackPlaybackDevice(
 	producer: FiresideRTCProducer,
 	track: ILocalAudioTrack | IRemoteAudioTrack
 ) {
-	const deviceId = producer._streamingChatPlaybackDeviceId;
+	const deviceId = producer.streamingChatPlaybackDeviceId;
 	if (deviceId !== null) {
 		try {
 			// This will throw an error if they're not on Chrome.
@@ -842,10 +953,10 @@ export function getOwnMicAudioVolume({ rtc: { chatChannel, generation } }: Fires
 
 export async function startStreaming(producer: FiresideRTCProducer) {
 	await _doBusyWork(producer, async () => {
-		if (producer._isStreaming) {
+		if (producer.isStreaming) {
 			return;
 		}
-		producer._isStreaming = true;
+		producer.isStreaming = true;
 
 		const {
 			rtc,
@@ -863,7 +974,7 @@ export async function startStreaming(producer: FiresideRTCProducer) {
 					`Couldn't start streaming. Either fireside has ended, your permissions to stream have been revoked or you have a running stream elsewhere.`
 				)
 			);
-			producer._isStreaming = false;
+			producer.isStreaming = false;
 			return;
 		}
 
@@ -888,10 +999,10 @@ export function stopStreaming(producer: FiresideRTCProducer) {
 
 async function _stopStreaming(producer: FiresideRTCProducer, becomeBusy: boolean) {
 	const busyWork = async () => {
-		if (!producer._isStreaming) {
+		if (!producer.isStreaming) {
 			return;
 		}
-		producer._isStreaming = false;
+		producer.isStreaming = false;
 
 		const {
 			rtc,
@@ -940,7 +1051,7 @@ function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
 	let user = rtc.localUser;
 	const hadUser = !!user;
 
-	if (!producer._isStreaming) {
+	if (!producer.isStreaming) {
 		if (user) {
 			rtc.log(`Destroying local RTC user since we're no longer streaming.`);
 
