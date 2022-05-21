@@ -3,7 +3,7 @@ import { markRaw, reactive } from 'vue';
 import { MediaDeviceService } from '../../agora/media-device.service';
 import { Api } from '../../api/api.service';
 import type { ASGController } from '../../client/asg/asg';
-import { startDesktopAudioCapture } from '../../client/safe-exports';
+import { initDesktopAudioCapture } from '../../client/safe-exports';
 import { importNoSSR } from '../../code-splitting';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { Navigate } from '../../navigate/navigate.service';
@@ -29,8 +29,7 @@ import {
 	setUserHasMicAudio,
 	setUserHasVideo,
 } from './user';
-
-const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
+SR(async () => (await import('agora-rtc-sdk-ng')).default);
 
 const RENEW_TOKEN_INTERVAL = 60_000;
 
@@ -717,7 +716,10 @@ function _updateDesktopAudioDevice(producer: FiresideRTCProducer) {
 					rtc.log(`Creating desktop audio track from ASG.`);
 
 					const generator = new MediaStreamTrackGenerator({ kind: 'audio' });
-					producer.streamingASG = startDesktopAudioCapture(generator.writable);
+					const streamingAsg = initDesktopAudioCapture(generator.writable);
+					await streamingAsg.start();
+					rtc.log(`ASG started successfully`);
+					producer.streamingASG = streamingAsg;
 
 					track = AgoraRTC.createCustomAudioTrack({
 						mediaStreamTrack: generator,
@@ -730,7 +732,7 @@ function _updateDesktopAudioDevice(producer: FiresideRTCProducer) {
 				// }
 
 				// const generator = new MediaStreamTrackGenerator({ kind: 'audio' });
-				// const asgInstance = startDesktopAudioCapture(generator.writable);
+				// const asgInstance = initDesktopAudioCapture(generator.writable);
 				// // TODO asgInstance is what youd use to stop this later like so: stopCapture(asgInstance)
 				// console.log(asgInstance);
 
@@ -765,10 +767,13 @@ function _updateDesktopAudioDevice(producer: FiresideRTCProducer) {
 				// Only need to close the track if we're streaming the desktop
 				// audio with ASG.
 				if (!producer.streamingASG) {
+					rtc.logWarning(
+						`Attempted to stop streaming desktop audio through ASG, but ASG was not initialized`
+					);
 					return;
 				}
 
-				rtc.log(`Stop streaming desktop audio through ASG.`);
+				rtc.log(`Stopping streaming desktop audio through ASG.`);
 
 				await producer.streamingASG.stop();
 				producer.streamingASG = null;

@@ -6,7 +6,7 @@
  */
 
 import { defineAsyncComponent } from 'vue';
-import type { startDesktopAudioCapture as startDesktopAudioCaptureType } from './asg/asg';
+import type { initDesktopAudioCapture as initDesktopAudioCaptureType } from './asg/asg';
 import type { ClientAutoStart as ClientAutoStartType } from './autostart/autostart.service';
 import type AppClientBaseType from './base/base.vue';
 import type { Client as ClientType } from './client.service';
@@ -19,7 +19,7 @@ export let AppClientHistoryNavigator: typeof AppClientHistoryNavigatorType = App
 export let AppClientBase: typeof AppClientBaseType = AppNoopLoader as any;
 
 // ASG
-export let startDesktopAudioCapture: typeof startDesktopAudioCaptureType = null as any;
+export let initDesktopAudioCapture: typeof initDesktopAudioCaptureType = null as any;
 
 // Misc
 export let Client: typeof ClientType = null as any;
@@ -39,7 +39,7 @@ export async function initSafeExportsForClient() {
 
 	// ASG
 	const asg = await import('./asg/asg');
-	startDesktopAudioCapture = asg.startDesktopAudioCapture;
+	initDesktopAudioCapture = asg.initDesktopAudioCapture;
 
 	// Misc
 	Client = (await import('./client.service')).Client;

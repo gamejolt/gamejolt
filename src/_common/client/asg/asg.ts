@@ -8,18 +8,17 @@ const SampleRate = 44100;
 const NumChannels = 1;
 const Format: AudioSampleFormat = 'f32';
 
-export type ASGControllerStatus = 'starting' | 'started' | 'stopping' | 'stopped';
+export type ASGControllerStatus = 'starting' | 'started' | 'stopping' | 'stopped' | 'error';
 
-export type ASGController = ReturnType<typeof startDesktopAudioCapture>;
+export type ASGController = ReturnType<typeof initDesktopAudioCapture>;
 
-export function startDesktopAudioCapture(writableStream: WritableStream<AudioData>) {
+export function initDesktopAudioCapture(writableStream: WritableStream<AudioData>) {
 	// We get the parent process's pid since it would also contain all the child
 	// pids under it then.
 	const appPid = process.ppid;
 
 	const writer = markRaw(writableStream.getWriter());
 	const emitter = markRaw(new EventEmitter());
-	const uid = ref('');
 	const status = ref<ASGControllerStatus>('starting');
 
 	let nextTimestamp = 0;
@@ -57,12 +56,17 @@ export function startDesktopAudioCapture(writableStream: WritableStream<AudioDat
 			}
 		});
 
-	try {
-		uid.value = asgNative.startCapture(appPid, emitter.emit.bind(emitter));
-		status.value = 'started';
-	} catch (error) {
-		console.error('Got error while starting ASG capture', error);
-		_cleanup();
+	async function start() {
+		try {
+			await asgNative.startCapture(appPid, emitter.emit.bind(emitter));
+			status.value = 'started';
+		} catch (error) {
+			console.error('Got error while starting ASG capture', error);
+			_cleanup();
+
+			status.value = 'error';
+			// TODO I think we should rethrow here.
+		}
 	}
 
 	async function stop() {
@@ -70,12 +74,12 @@ export function startDesktopAudioCapture(writableStream: WritableStream<AudioDat
 		// startCapture or wait until its done before continuing.
 
 		if (status.value === 'stopping' || status.value === 'stopped') {
+			console.log('already stopped or stopping');
 			return;
 		}
 
 		status.value = 'stopping';
-		// TODO make this a promise, and await on it.
-		asgNative.endCapture(uid.value);
+		await asgNative.endCapture();
 		status.value = 'stopped';
 
 		_cleanup();
@@ -95,9 +99,9 @@ export function startDesktopAudioCapture(writableStream: WritableStream<AudioDat
 		pid: computed(() => appPid),
 		writer,
 		emitter,
-		uid,
 		status,
 
+		start,
 		stop,
 	};
 }
