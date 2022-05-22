@@ -29,7 +29,8 @@ import {
 	setUserHasMicAudio,
 	setUserHasVideo,
 } from './user';
-SR(async () => (await import('agora-rtc-sdk-ng')).default);
+
+const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
 
 const RENEW_TOKEN_INTERVAL = 60_000;
 
