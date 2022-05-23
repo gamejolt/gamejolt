@@ -11,7 +11,7 @@ import AppPopper from '../../../../_common/popper/popper.vue';
 import AppSlider, { ScrubberCallback } from '../../../../_common/slider/AppSlider.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
+import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';
 import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';

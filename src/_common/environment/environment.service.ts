@@ -77,21 +77,19 @@ if (GJ_ENVIRONMENT === 'development') {
 	Environment.recaptchaSiteKey = '6LcwTkEUAAAAAHTT67TB8gkM0ft5hUzz_r_tFFaT';
 }
 
-if (GJ_IS_DESKTOP_APP && !GJ_IS_WATCHING) {
+if (GJ_IS_DESKTOP_APP) {
 	// When it gets packaged up for production, the URL changes.
-	// TODO(vue3) when do we not package it up under package/ nowadays?
-	// I think we should always do the urls with package/
-	if (window.location.href.search(/^chrome-extension:\/\/game-jolt-client\/package\//) !== -1) {
-		Environment.wttfBaseUrl = 'chrome-extension://game-jolt-client/package/index.html#';
-		Environment.authBaseUrl = 'chrome-extension://game-jolt-client/package/auth.html#';
-		Environment.checkoutBaseUrl = 'chrome-extension://game-jolt-client/package/checkout.html#';
-		Environment.clientSectionUrl = 'chrome-extension://game-jolt-client/package/client.html#';
-	} else {
-		Environment.wttfBaseUrl = 'chrome-extension://game-jolt-client/index.html#';
-		Environment.authBaseUrl = 'chrome-extension://game-jolt-client/auth.html#';
-		Environment.checkoutBaseUrl = 'chrome-extension://game-jolt-client/checkout.html#';
-		Environment.clientSectionUrl = 'chrome-extension://game-jolt-client/client.html#';
-	}
+	const baseUrl =
+		GJ_BUILD_TYPE === 'build'
+			? 'chrome-extension://game-jolt-client/package'
+			: GJ_BUILD_TYPE === 'serve-build'
+			? 'chrome-extension://game-jolt-client/build/desktop'
+			: 'chrome-extension://game-jolt-client';
+
+	Environment.wttfBaseUrl = `${baseUrl}/index.html#`;
+	Environment.authBaseUrl = `${baseUrl}/auth.html#`;
+	Environment.checkoutBaseUrl = `${baseUrl}/checkout.html#`;
+	Environment.clientSectionUrl = `${baseUrl}/client.html#`;
 
 	// We have different firebase app for Client.
 	Environment.firebaseAppId = '1:1065321331780:web:b58ac57b00c1d538d3d011';

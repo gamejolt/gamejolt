@@ -2,11 +2,11 @@ import { Api } from '../api/api.service';
 import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
 import { ContentSetCacheService } from '../content/content-set-cache';
+import { DogtagData } from '../dogtag/dogtag-data';
 import { MediaItem } from '../media-item/media-item-model';
 import { CommentableModel, Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
 import { Theme } from '../theme/theme.model';
-import { DogtagData } from '../dogtag/dogtag-data';
 
 export class User extends Model implements ContentContainerModel, CommentableModel {
 	static readonly TYPE_GAMER = 'User';
@@ -20,7 +20,7 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 	url!: string;
 	slug!: string;
 	img_avatar!: string;
-	dogtags!: DogtagData[];
+	dogtags?: DogtagData[];
 	shouts_enabled!: boolean;
 
 	status!: number;

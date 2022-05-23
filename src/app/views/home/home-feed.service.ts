@@ -1,11 +1,12 @@
 import { RouteLocationNormalized } from 'vue-router';
+import { configHomeDefaultFeed } from '../../../_common/config/config.service';
 
 export const HOME_FEED_FYP = 'fyp';
 export const HOME_FEED_ACTIVITY = 'activity';
 
 export class HomeFeedService {
 	public static getDefault() {
-		return HOME_FEED_ACTIVITY;
+		return configHomeDefaultFeed.value;
 	}
 
 	public static get fypTab() {
@@ -23,12 +24,15 @@ export class HomeFeedService {
 	}
 
 	public static getRouteFeedTab(route: RouteLocationNormalized) {
+		// When no tab value is given, use the default tab.
+		if (!route.params?.tab) {
+			return this.getDefault();
+		}
+
 		switch (route.params?.tab) {
 			case HOME_FEED_FYP:
-			case this.fypTab:
 				return HOME_FEED_FYP;
 			case HOME_FEED_ACTIVITY:
-			case this.activityTab:
 				return HOME_FEED_ACTIVITY;
 		}
 

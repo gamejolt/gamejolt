@@ -1,82 +1,79 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { computed, PropType, ref, toRefs } from 'vue';
+import AppUserDogtag from '../../../app/components/user/AppUserDogtag.vue';
+import { getMediaserverUrlForBounds } from '../../../utils/image';
+import AppButton from '../../button/AppButton.vue';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
 import { formatNumber } from '../../filters/number';
 import AppLoading from '../../loading/loading.vue';
 import { useCommonStore } from '../../store/common-store';
 import AppTheme from '../../theme/AppTheme.vue';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
+import AppTranslate from '../../translate/AppTranslate.vue';
 import AppUserFollowWidget from '../follow/widget.vue';
 import AppUserAvatarImg from '../user-avatar/img/img.vue';
 import { User } from '../user.model';
 import AppUserVerifiedTick from '../verified-tick/verified-tick.vue';
+</script>
 
-@Options({
-	components: {
-		AppUserAvatarImg,
-		AppUserFollowWidget,
-		AppTheme,
-		AppLoading,
-		AppUserVerifiedTick,
+<script lang="ts" setup>
+const props = defineProps({
+	user: {
+		type: Object as PropType<User>,
+		required: true,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
+	isLoading: {
+		type: Boolean,
 	},
-})
-export default class AppUserCard extends Vue {
-	@Prop({ type: Object, required: true }) user!: User;
-	@Prop({ type: Boolean, default: false }) isLoading!: boolean;
-	@Prop({ type: Boolean, default: false }) elevate!: boolean;
+	elevate: {
+		type: Boolean,
+	},
+	noStats: {
+		type: Boolean,
+	},
+});
 
-	@Prop({ type: Boolean })
-	noStats!: boolean;
+const { user, isLoading, elevate, noStats } = toRefs(props);
 
-	commonStore = setup(() => useCommonStore());
+const headerElement = ref<HTMLElement>();
 
-	get app() {
-		return this.commonStore;
+const commonStore = useCommonStore();
+
+const appUser = computed(() => commonStore.user.value);
+
+const followerCount = computed(() => user.value.follower_count || 0);
+const followingCount = computed(() => user.value.following_count || 0);
+const postCount = computed(() => user.value.post_count || 0);
+const gameCount = computed(() => user.value.game_count || 0);
+const likeCount = computed(() => user.value.like_count || 0);
+const theme = computed(() => (user.value.theme ? user.value.theme : undefined));
+
+const headerBackgroundImage = computed(() => {
+	let src = user.value.header_media_item?.mediaserver_url;
+	if (src) {
+		const { offsetWidth, offsetHeight } = headerElement.value || {};
+		src = getMediaserverUrlForBounds({
+			src,
+			maxWidth: offsetWidth || 400,
+			maxHeight: offsetHeight || 100,
+		});
+		return `url('${src}')`;
 	}
+	return undefined;
+});
 
-	readonly formatNumber = formatNumber;
-	readonly formatFuzzynumber = formatFuzzynumber;
-
-	get followerCount() {
-		return this.user.follower_count || 0;
-	}
-
-	get followingCount() {
-		return this.user.following_count || 0;
-	}
-
-	get postCount() {
-		return this.user.post_count || 0;
-	}
-
-	get gameCount() {
-		return this.user.game_count || 0;
-	}
-
-	get likeCount() {
-		return this.user.like_count || 0;
-	}
-
-	get headerBackgroundImage() {
-		return this.user.header_media_item
-			? `url('${this.user.header_media_item.mediaserver_url}')`
-			: undefined;
-	}
-}
+const dogtags = computed(() => user.value.dogtags || []);
+const showTags = computed(() => !!user.value.follows_you || dogtags.value.length > 0);
 </script>
 
 <template>
 	<AppTheme
 		class="user-card sheet sheet-full sheet-no-full-bleed"
 		:class="{ 'sheet-elevate': elevate }"
-		:theme="user.theme"
+		:theme="theme"
 	>
 		<div class="-user-info">
 			<div
+				ref="headerElement"
 				class="-header"
 				:style="{
 					'background-image': headerBackgroundImage,
@@ -88,8 +85,10 @@ export default class AppUserCard extends Vue {
 			</router-link>
 
 			<div class="-well fill-bg">
-				<div v-if="user.follows_you" class="-follows-you">
-					<span class="tag">
+				<div v-if="showTags" class="-tags">
+					<AppUserDogtag v-for="tag of dogtags" :key="tag.text" :tag="tag" />
+
+					<span v-if="user.follows_you" class="tag tag-highlight">
 						<AppTranslate>Follows You</AppTranslate>
 					</span>
 				</div>
@@ -135,9 +134,9 @@ export default class AppUserCard extends Vue {
 					</router-link>
 				</div>
 
-				<div v-if="app.user" class="-follow">
+				<div v-if="appUser" class="-follow">
 					<AppUserFollowWidget
-						v-if="user.id !== app.user.id"
+						v-if="user.id !== appUser.id"
 						:user="user"
 						location="card"
 						block
@@ -147,7 +146,7 @@ export default class AppUserCard extends Vue {
 						v-else
 						:to="{
 							name: 'profile.overview',
-							params: { username: app.user.username },
+							params: { username: appUser.username },
 						}"
 						block
 					>
@@ -213,4 +212,4 @@ export default class AppUserCard extends Vue {
 	</AppTheme>
 </template>
 
-<style lang="stylus" src="./card.styl" scoped></style>
+<style lang="stylus" src="./common.styl" scoped></style>
