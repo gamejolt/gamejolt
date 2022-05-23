@@ -10,8 +10,10 @@ import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../_common/form-vue/AppFormGroup.vue';
+import AppFormStickySubmit from '../../../_common/form-vue/AppFormStickySubmit.vue';
 import { validateMaxLength, validateMinLength } from '../../../_common/form-vue/validators';
 import AppLoadingFade from '../../../_common/loading/AppLoadingFade.vue';
+import AppLoading from '../../../_common/loading/loading.vue';
 import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
@@ -22,8 +24,6 @@ import { editChatRoomBackground, editChatRoomTitle, leaveGroupRoom } from './cli
 import AppChatMemberListItem from './member-list/AppChatMemberListItem.vue';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
-
-type FormModel = ChatRoom;
 </script>
 
 <script lang="ts" setup>
@@ -54,16 +54,12 @@ const titleMinLength = ref<number>();
 const titleMaxLength = ref<number>();
 
 const isLoadingNotificationSettings = ref(false);
-const isBootstrapped = ref(false);
-const isLoadingBackgrounds = ref(false);
-
 const isSettingBackground = ref(false);
 
 const notificationLevel = ref('');
 const backgrounds = ref<Background[]>([]);
 
-const form: FormController<FormModel> = createForm<ChatRoom>({
-	modelClass: ChatRoom,
+const form: FormController = createForm({
 	model: room,
 	loadUrl: `/web/chat/rooms/room-edit`,
 	onLoad(payload) {
@@ -71,7 +67,15 @@ const form: FormController<FormModel> = createForm<ChatRoom>({
 		titleMaxLength.value = payload.titleMaxLength;
 	},
 	onSubmit: async () => {
-		editChatRoomTitle(chat.value, room.value, form.formModel.title);
+		return editChatRoomTitle(chat.value, room.value, form.formModel.title);
+	},
+});
+
+const backgroundForm = createForm({
+	model: room,
+	loadUrl: `/web/chat/rooms/backgrounds/${room.value.id}`,
+	onLoad(payload) {
+		backgrounds.value = Background.populate(payload.backgrounds);
 	},
 });
 
@@ -95,6 +99,8 @@ const shouldShowLeave = computed(() => {
 	return !room.value.isPmRoom;
 });
 
+const hasLoadedBackgrounds = computed(() => backgroundForm.isLoadedBootstrapped);
+
 const membersPreview = computed(() => {
 	if (showMembersPreview.value) {
 		return members.value.slice(0, 5);
@@ -102,10 +108,7 @@ const membersPreview = computed(() => {
 	return [];
 });
 
-onMounted(async () => {
-	getNotificationSettings();
-	getBackgrounds();
-});
+onMounted(() => getNotificationSettings());
 
 async function getNotificationSettings() {
 	isLoadingNotificationSettings.value = true;
@@ -117,18 +120,6 @@ async function getNotificationSettings() {
 	);
 	notificationLevel.value = payload.level;
 	isLoadingNotificationSettings.value = false;
-}
-
-async function getBackgrounds() {
-	isLoadingBackgrounds.value = true;
-
-	const payload = await Api.sendRequest(
-		`/web/chat/rooms/backgrounds/${room.value.id}`,
-		undefined,
-		{ detach: true }
-	);
-	backgrounds.value = Background.populate(payload.backgrounds);
-	isLoadingBackgrounds.value = false;
 }
 
 async function leaveRoom() {
@@ -199,126 +190,136 @@ async function onBackgroundChanged(bg?: Background) {
 </script>
 
 <template>
-	<AppForm :controller="form" class="form-chat-edit-room">
-		<template v-if="canEditTitle">
-			<AppFormGroup
-				name="title"
-				class="-pad sans-margin-bottom"
-				:label="$gettext('Group Name')"
-				hide-label
-				optional
-			>
-				<!-- TODO(chat-backgrounds) make better -->
-				<div class="-header">
-					<AppTranslate> Group Name </AppTranslate>
-				</div>
-				<template #inline-control>
-					<AppFormButton icon="check" sparse circle />
+	<div class="form-chat-edit-room">
+		<div
+			:style="{
+				visibility: hasLoadedBackgrounds ? 'visible' : 'hidden',
+				width: '100%',
+			}"
+		>
+			<template v-if="canEditTitle">
+				<AppForm :controller="form">
+					<AppFormGroup
+						name="title"
+						class="-pad sans-margin-bottom"
+						:label="$gettext('Group Name')"
+						optional
+					>
+						<AppFormControl
+							type="text"
+							:validators="[validateMinLength(titleMinLength!), validateMaxLength(titleMaxLength!)]"
+							validate-on-blur
+						/>
+
+						<AppFormControlErrors />
+					</AppFormGroup>
+
+					<AppSpacer vertical :scale="6" />
+
+					<AppFormStickySubmit class="-pad">
+						<AppFormButton>
+							<AppTranslate>Save</AppTranslate>
+						</AppFormButton>
+					</AppFormStickySubmit>
+				</AppForm>
+			</template>
+
+			<AppForm :controller="backgroundForm" hide-loading>
+				<template v-if="canEditBackground">
+					<AppFormGroup
+						name="background"
+						class="-pad sans-margin-bottom"
+						optional
+						:label="$gettext(`Background`)"
+					>
+						<AppFormBackground
+							:backgrounds="backgrounds"
+							:background="room.background"
+							:tile-size="40"
+							@background-change="onBackgroundChanged"
+						/>
+					</AppFormGroup>
+
+					<AppSpacer vertical :scale="6" />
 				</template>
+			</AppForm>
 
-				<AppFormControl
-					type="text"
-					:validators="[validateMinLength(titleMinLength!), validateMaxLength(titleMaxLength!)]"
-					validate-on-blur
-				/>
+			<template v-if="canEditTitle || canEditBackground">
+				<hr />
+				<AppSpacer vertical :scale="6" />
+			</template>
 
-				<AppFormControlErrors />
-			</AppFormGroup>
-
-			<AppSpacer vertical :scale="6" />
-		</template>
-
-		<template v-if="canEditBackground">
-			<div class="-header">
-				<AppTranslate> Background </AppTranslate>
-			</div>
-			<AppLoadingFade :is-loading="isSettingBackground">
-				<AppFormGroup
-					name="background"
-					class="-pad sans-margin-bottom"
-					hide-label
-					optional
-					:label="$gettext(`Background`)"
-				>
-					<AppFormBackground
-						:backgrounds="backgrounds"
-						:background="room.background"
-						:tile-size="40"
-						@background-change="onBackgroundChanged"
-					/>
-				</AppFormGroup>
-			</AppLoadingFade>
-
-			<AppSpacer vertical :scale="6" />
-		</template>
-
-		<template v-if="canEditTitle || canEditBackground">
-			<hr />
-			<AppSpacer vertical :scale="6" />
-		</template>
-
-		<AppLoadingFade :is-loading="isLoadingNotificationSettings">
-			<div class="-header">
-				<AppTranslate> Notifications </AppTranslate>
-			</div>
-			<div class="-pad -button-stack">
-				<!-- TODO(chat-backgrounds) make into an actual form control -->
-				<AppButton
-					v-for="({ text, level }, index) of notificationSettings"
-					:key="level"
-					:class="
-						notificationSettings.length > 0
-							? {
-									'-button-first': index === 0,
-									'-button-middle':
-										0 < index && index < notificationSettings.length - 1,
-									'-button-last': index === notificationSettings.length - 1,
-							  }
-							: undefined
-					"
-					:primary="level === notificationLevel"
-					:solid="level === notificationLevel"
-					block
-					@click="onClickSetNotificationLevel(level)"
-				>
-					{{ text }}
-				</AppButton>
-			</div>
-		</AppLoadingFade>
-
-		<template v-if="showMembersPreview && membersPreview.length > 0">
-			<AppSpacer vertical :scale="6" />
-			<hr />
-			<AppSpacer vertical :scale="6" />
-
-			<ul class="shell-nav">
-				<AppChatMemberListItem
-					v-for="user of membersPreview"
-					:key="user.id"
-					:user="user"
-					:room="room"
-				/>
-
-				<div class="-pad">
-					<AppSpacer vertical :scale="4" />
-					<AppButton block @click="emit('viewMembers')">
-						<AppTranslate>View all members</AppTranslate>
+			<AppLoadingFade :is-loading="isLoadingNotificationSettings">
+				<div class="-header">
+					<AppTranslate> Notifications </AppTranslate>
+				</div>
+				<div class="-pad -button-stack">
+					<!-- TODO(chat-backgrounds) make into an actual form control -->
+					<AppButton
+						v-for="({ text, level }, index) of notificationSettings"
+						:key="level"
+						:class="
+							notificationSettings.length > 0
+								? {
+										'-button-first': index === 0,
+										'-button-middle':
+											0 < index && index < notificationSettings.length - 1,
+										'-button-last': index === notificationSettings.length - 1,
+								  }
+								: undefined
+						"
+						:primary="level === notificationLevel"
+						:solid="level === notificationLevel"
+						block
+						@click="onClickSetNotificationLevel(level)"
+					>
+						{{ text }}
 					</AppButton>
 				</div>
-			</ul>
-		</template>
+			</AppLoadingFade>
 
-		<template v-if="shouldShowLeave">
-			<AppSpacer vertical :scale="6" />
-			<hr />
+			<template v-if="showMembersPreview && membersPreview.length > 0">
+				<AppSpacer vertical :scale="6" />
+				<hr />
+				<AppSpacer vertical :scale="6" />
 
-			<a @click="leaveRoom">
-				<div class="-pad -leave">
-					<AppTranslate> Leave group </AppTranslate>
-				</div>
-			</a>
-		</template>
-	</AppForm>
+				<ul class="shell-nav">
+					<AppChatMemberListItem
+						v-for="user of membersPreview"
+						:key="user.id"
+						:user="user"
+						:room="room"
+					/>
+
+					<div class="-pad">
+						<AppSpacer vertical :scale="4" />
+						<AppButton block @click="emit('viewMembers')">
+							<AppTranslate>View all members</AppTranslate>
+						</AppButton>
+					</div>
+				</ul>
+			</template>
+
+			<template v-if="shouldShowLeave">
+				<AppSpacer vertical :scale="6" />
+				<hr />
+
+				<a @click="leaveRoom">
+					<div class="-pad -leave">
+						<AppTranslate> Leave group </AppTranslate>
+					</div>
+				</a>
+			</template>
+		</div>
+
+		<AppLoading
+			v-if="!hasLoadedBackgrounds"
+			centered
+			hide-label
+			stationary
+			:style="{ position: 'absolute' }"
+		/>
+	</div>
 </template>
 
 <style lang="stylus" scoped>
@@ -327,6 +328,10 @@ $-padding-v = 24px
 
 .form-chat-edit-room
 	padding: $-padding-v 0
+	position: relative
+	display: flex
+	align-items: center
+	justify-content: center
 
 .-pad
 	padding: 0 $-padding

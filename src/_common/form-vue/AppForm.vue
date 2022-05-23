@@ -411,6 +411,9 @@ const props = defineProps({
 		type: Object as PropType<FormController>,
 		required: true,
 	},
+	hideLoading: {
+		type: Boolean,
+	},
 });
 
 const emit = defineEmits({
@@ -439,9 +442,14 @@ const isLoadedBootstrapped = computed(() => controller.value.isLoadedBootstrappe
 		do the loading fade so that the form doesn't completely disappear when
 		loading subsequent.
 		-->
-		<AppLoading v-if="!isLoadedBootstrapped" />
-		<AppLoadingFade v-else :is-loading="!isLoaded">
+		<template v-if="hideLoading">
 			<slot />
-		</AppLoadingFade>
+		</template>
+		<template v-else>
+			<AppLoading v-if="!isLoadedBootstrapped" />
+			<AppLoadingFade v-else :is-loading="!isLoaded">
+				<slot />
+			</AppLoadingFade>
+		</template>
 	</form>
 </template>
