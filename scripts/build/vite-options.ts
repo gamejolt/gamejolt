@@ -66,7 +66,7 @@ function parseOption<T extends string | null>(
 
 	if (!isExpectedValue(arg2, validValues)) {
 		throw new Error(
-			`${argNameHuman} must be one of '${validValues.join("', '")}'. Got: '${arg}'`
+			`${argNameHuman} must be one of '${validValues.join("', '")}'. Got: '${arg2}'`
 		);
 	}
 
