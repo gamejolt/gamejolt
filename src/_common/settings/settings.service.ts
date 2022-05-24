@@ -1,3 +1,5 @@
+import { hasDesktopAudioCaptureSupport } from '../fireside/rtc/device-capabilities';
+
 const STORAGE_PREFIX = 'settings.';
 
 type SettingType = string | number | boolean;
@@ -96,7 +98,7 @@ export const SettingStreamProducerWebcam = new StringSetting('stream-producer-we
 export const SettingStreamProducerMic = new StringSetting('stream-producer-mic', '');
 export const SettingStreamProducerShouldStreamDesktopAudio = new BooleanSetting(
 	'stream-producer-should-stream-desktop-audio',
-	true
+	hasDesktopAudioCaptureSupport
 );
 export const SettingStreamProducerDesktopAudioDevice = new StringSetting(
 	'stream-producer-desktop-audio-device',

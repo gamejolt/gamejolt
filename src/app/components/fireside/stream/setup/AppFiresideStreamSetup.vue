@@ -1,19 +1,19 @@
 <script lang="ts" setup>
-import { computed, onMounted, onUnmounted, PropType, ref, watch } from 'vue';
+import { computed, onUnmounted, PropType, ref, watch } from 'vue';
 import { sleep } from '../../../../../utils/utils';
 import { MediaDeviceService } from '../../../../../_common/agora/media-device.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
+import { hasDesktopAudioCaptureSupport } from '../../../../../_common/fireside/rtc/device-capabilities';
 import {
-	assignPreferredProducerDevices,
 	clearSelectedRecordingDevices,
 	FiresideRTCProducer,
 	PRODUCER_DEFAULT_GROUP_AUDIO,
 	PRODUCER_UNSET_DEVICE,
+	setSelectedDesktopAudioStreaming,
 	setSelectedGroupAudioDeviceId,
 	setSelectedMicDeviceId,
 	setSelectedWebcamDeviceId,
-	setShouldStreamDesktopAudio,
 	setVideoPreviewElement,
 	startStreaming,
 	stopStreaming,
@@ -25,6 +25,13 @@ import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFo
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
+import {
+	SettingStreamProducerDesktopAudioDevice,
+	SettingStreamProducerGroupAudio,
+	SettingStreamProducerMic,
+	SettingStreamProducerShouldStreamDesktopAudio,
+	SettingStreamProducerWebcam,
+} from '../../../../../_common/settings/settings.service';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { FiresideController } from '../../controller/controller';
 import AppFiresideStreamSetupVolumeMeter from './AppFiresideStreamSetupVolumeMeter.vue';
@@ -36,11 +43,10 @@ type FormModel = {
 	selectedDesktopAudioDeviceId: string;
 	selectedGroupAudioDeviceId: string;
 
-	streamDesktopAudio: boolean;
+	tempSelectedMicDeviceId: string | undefined;
+	tempSelectedDesktopAudioDeviceId: string | undefined;
 
-	tempSelectedMicDeviceId: string | null;
-	tempSelectedDesktopAudioDeviceId: string | null;
-	tempSelectedGroupAudioDeviceId: string;
+	streamDesktopAudio: boolean;
 };
 
 const props = defineProps({
@@ -70,28 +76,33 @@ const {
 
 // This could potentially get cleared out if the user loses their hosting
 // permissions in the middle of streaming.
-const producer = computed(() => rtc.value!.producer!);
+const producer = computed(() => rtc.value?.producer ?? undefined);
 
+const isInitialized = ref(false);
 const isStarting = ref(false);
 const shouldShowAdvanced = ref(false);
 let _didDetectDevices = false;
-let _producer: FiresideRTCProducer;
-
 const videoPreviewElem = ref<HTMLDivElement>();
 
-const isPersonallyStreaming = computed(() => producer.value?.isStreaming === true);
+// Store the producer locally and work off of this instance. We will close the
+// modal if the producer changes.
+let localProducer = producer.value!;
 
-const hasMicAudio = computed(
+const isPersonallyStreaming = computed(() => localProducer.isStreaming === true);
+
+const hasMicDevice = computed(
 	() => (form.formModel.selectedMicDeviceId ?? PRODUCER_UNSET_DEVICE) !== PRODUCER_UNSET_DEVICE
 );
 
-const hasDesktopAudio = computed(
+const hasDesktopAudio = computed(() => form.formModel.streamDesktopAudio);
+
+const hasDesktopAudioDevice = computed(
 	() =>
 		(form.formModel.selectedDesktopAudioDeviceId ?? PRODUCER_UNSET_DEVICE) !==
 		PRODUCER_UNSET_DEVICE
 );
 
-const hasWebcam = computed(
+const hasWebcamDevice = computed(
 	() => (form.formModel.selectedWebcamDeviceId ?? PRODUCER_UNSET_DEVICE) !== PRODUCER_UNSET_DEVICE
 );
 
@@ -103,8 +114,9 @@ const selectedDesktopAudioGroupId = computed(
 	() => _getDeviceFromId(form.formModel.selectedDesktopAudioDeviceId, 'mic')?.groupId
 );
 
-const canStreamVideo = computed(() => producer.value.canStreamVideo);
-const canStreamAudio = computed(() => producer.value.canStreamAudio);
+const canStreamVideo = computed(() => localProducer.canStreamVideo === true);
+const canStreamAudio = computed(() => localProducer.canStreamAudio === true);
+const canStreamDesktopAudio = computed(() => canStreamAudio.value && hasDesktopAudioCaptureSupport);
 
 const isInvalidMicConfig = computed(() => {
 	return (
@@ -164,22 +176,116 @@ const isInvalidConfig = computed(() => {
 });
 
 const form: FormController<FormModel> = createForm({
-	onInit() {
-		_initForm();
+	async onInit() {
+		isShowingStreamSetup.value = true;
+
+		_initFromProducer(localProducer);
+		isInitialized.value = true;
+
+		// Now try to detect devices and initialize preferred settings based on that.
+		try {
+			await MediaDeviceService.detectDevices({ prompt: true, skipIfPrompted: false });
+		} finally {
+			_initFromSettings();
+			_didDetectDevices = true;
+		}
 	},
 });
 
-onMounted(() => {
-	// If we don't prompt here, the user can end up denying permissions and
-	// then opening this form again to an empty device list.
-	_detectDevices();
-});
+function _initFormModel(from: {
+	webcamDeviceId?: string;
+	micDeviceId?: string;
+	desktopAudioDeviceId?: string;
+	groupAudioDeviceId?: string;
+	shouldStreamDesktopAudio: boolean;
+}) {
+	const webcamId = _getDeviceFromId(from.webcamDeviceId, 'webcam')?.deviceId;
+	const micId = _getDeviceFromId(from.micDeviceId, 'mic')?.deviceId;
+	const desktopId = _getDeviceFromId(from.desktopAudioDeviceId, 'mic')?.deviceId;
+	const groupId = _getDeviceFromId(from.groupAudioDeviceId, 'speaker')?.deviceId;
+
+	form.formModel.selectedWebcamDeviceId = webcamId ?? PRODUCER_UNSET_DEVICE;
+	form.formModel.tempSelectedMicDeviceId = micId ?? PRODUCER_UNSET_DEVICE;
+	form.formModel.tempSelectedDesktopAudioDeviceId = desktopId ?? PRODUCER_UNSET_DEVICE;
+	form.formModel.selectedGroupAudioDeviceId = groupId ?? PRODUCER_DEFAULT_GROUP_AUDIO;
+	form.formModel.streamDesktopAudio = from.shouldStreamDesktopAudio;
+}
+
+function _initFromProducer(producer: FiresideRTCProducer) {
+	_initFormModel({
+		webcamDeviceId: producer.selectedWebcamDeviceId,
+		micDeviceId: producer.selectedMicDeviceId,
+		desktopAudioDeviceId: producer.selectedDesktopAudioDeviceId,
+		groupAudioDeviceId: producer.selectedGroupAudioDeviceId,
+		shouldStreamDesktopAudio: producer.shouldStreamDesktopAudio,
+	});
+}
+
+function _initFromSettings() {
+	const { webcams, mics, speakers } = MediaDeviceService;
+
+	const selectedWebcam = SettingStreamProducerWebcam.get();
+	const selectedMic = SettingStreamProducerMic.get();
+	const shouldStreamDesktopAudio = hasDesktopAudioCaptureSupport
+		? SettingStreamProducerShouldStreamDesktopAudio.get()
+		: false;
+	const selectedDesktopAudio = SettingStreamProducerDesktopAudioDevice.get();
+	const selectedSpeaker = SettingStreamProducerGroupAudio.get();
+
+	const chooseDeviceId = (
+		devices: readonly MediaDeviceInfo[],
+		selectedDeviceId: string,
+		fallbacks: string[]
+	) => {
+		// If the selected option was to unset it, we want to make sure it's
+		// kept off without the fallback logic.
+		if (selectedDeviceId === PRODUCER_UNSET_DEVICE) {
+			return undefined;
+		}
+
+		const preferredDevice = devices.find(i => i.deviceId === selectedDeviceId);
+
+		let fallbackDevice: MediaDeviceInfo | undefined;
+		if (!preferredDevice) {
+			for (const checkLabel of fallbacks) {
+				if (!fallbackDevice) {
+					fallbackDevice = devices.find(i => i.label.toLowerCase().includes(checkLabel));
+				}
+			}
+		}
+
+		return (preferredDevice ?? fallbackDevice)?.deviceId;
+	};
+
+	const webcamDeviceId = chooseDeviceId(webcams.value, selectedWebcam, [
+		'obs virtual camera',
+		'obs',
+	]);
+
+	let workingMics = [...mics.value];
+	const micDeviceId = chooseDeviceId(workingMics, selectedMic, ['default']);
+
+	// Filter out any selection for the mic so that we don't choose it for the
+	// desktop input device.
+	workingMics = workingMics.filter(i => i.deviceId !== micDeviceId);
+
+	const desktopAudioDeviceId = chooseDeviceId(workingMics, selectedDesktopAudio, []);
+	const groupAudioDeviceId = chooseDeviceId(speakers.value, selectedSpeaker, []);
+
+	_initFormModel({
+		webcamDeviceId,
+		micDeviceId,
+		desktopAudioDeviceId,
+		groupAudioDeviceId,
+		shouldStreamDesktopAudio,
+	});
+}
 
 onUnmounted(() => {
 	// If we're not streaming or about to, clear the selected device ids so
 	// that the browser doesn't think we're still recording.
 	if (!(isPersonallyStreaming.value || isStarting.value)) {
-		clearSelectedRecordingDevices(_producer);
+		clearSelectedRecordingDevices(localProducer);
 	}
 
 	isShowingStreamSetup.value = false;
@@ -192,7 +298,7 @@ watch(
 			return;
 		}
 
-		setVideoPreviewElement(producer.value, canStreamVideo ? videoPreviewElem ?? null : null);
+		setVideoPreviewElement(localProducer, canStreamVideo ? videoPreviewElem ?? null : null);
 	},
 	{ immediate: true }
 );
@@ -212,7 +318,7 @@ watch(isInvalidConfig, async () => {
 	await sleep(0);
 
 	if (isInvalidConfig.value && isPersonallyStreaming.value) {
-		stopStreaming(producer.value);
+		stopStreaming(localProducer);
 	}
 });
 
@@ -248,14 +354,6 @@ watch(
 );
 
 watch(
-	() => form.formModel.tempSelectedGroupAudioDeviceId,
-	() => {
-		form.formModel.selectedGroupAudioDeviceId =
-			form.formModel.tempSelectedGroupAudioDeviceId ?? PRODUCER_DEFAULT_GROUP_AUDIO;
-	}
-);
-
-watch(
 	[
 		() => form.formModel.selectedWebcamDeviceId,
 		() => form.formModel.selectedMicDeviceId,
@@ -264,6 +362,8 @@ watch(
 		() => form.formModel.streamDesktopAudio,
 	],
 	() => {
+		console.debug('test', { ...form.formModel });
+
 		// When streaming, only apply changes to selected devices if the config
 		// is valid.
 		if ((isInvalidConfig.value && isPersonallyStreaming.value) || !_didDetectDevices) {
@@ -272,37 +372,39 @@ watch(
 			return;
 		}
 
-		setSelectedWebcamDeviceId(producer.value, form.formModel.selectedWebcamDeviceId);
-		setSelectedMicDeviceId(producer.value, form.formModel.selectedMicDeviceId);
-		setShouldStreamDesktopAudio(producer.value, form.formModel.streamDesktopAudio);
-		// setSelectedDesktopAudioDeviceId(
-		// 	producer.value,
-		// 	form.formModel.selectedDesktopAudioDeviceId
-		// );
-		setSelectedGroupAudioDeviceId(producer.value, form.formModel.selectedGroupAudioDeviceId);
-	}
+		// Save their currently selected settings.
+		_saveSettings();
+
+		// Now set up the producer with correct values.
+		setSelectedWebcamDeviceId(localProducer, form.formModel.selectedWebcamDeviceId);
+		setSelectedMicDeviceId(localProducer, form.formModel.selectedMicDeviceId);
+		setSelectedGroupAudioDeviceId(localProducer, form.formModel.selectedGroupAudioDeviceId);
+
+		// Can only stream desktop audio when there's a webcam.
+		if (hasWebcamDevice.value) {
+			setSelectedDesktopAudioStreaming(localProducer, {
+				shouldStream: form.formModel.streamDesktopAudio,
+				deviceId: form.formModel.selectedDesktopAudioDeviceId,
+			});
+		} else {
+			setSelectedDesktopAudioStreaming(localProducer, {
+				shouldStream: false,
+				deviceId: PRODUCER_UNSET_DEVICE,
+			});
+		}
+	},
+	{ flush: 'post' }
 );
 
-function _initForm() {
-	_producer = producer.value;
-	isShowingStreamSetup.value = true;
-
-	const webcamId = _getDeviceFromId(producer.value.selectedWebcamDeviceId, 'webcam')?.deviceId;
-	const micId = _getDeviceFromId(producer.value.selectedMicDeviceId, 'mic')?.deviceId;
-	const desktopId = _getDeviceFromId(
-		producer.value.selectedDesktopAudioDeviceId,
-		'mic'
-	)?.deviceId;
-	const groupId = _getDeviceFromId(
-		producer.value.selectedGroupAudioDeviceId,
-		'speaker'
-	)?.deviceId;
-
-	form.formModel.selectedWebcamDeviceId = webcamId ?? PRODUCER_UNSET_DEVICE;
-	form.formModel.tempSelectedMicDeviceId = micId ?? PRODUCER_UNSET_DEVICE;
-	form.formModel.tempSelectedDesktopAudioDeviceId = desktopId ?? PRODUCER_UNSET_DEVICE;
-	form.formModel.tempSelectedGroupAudioDeviceId = groupId ?? PRODUCER_DEFAULT_GROUP_AUDIO;
-	form.formModel.streamDesktopAudio = producer.value.shouldStreamDesktopAudio;
+/**
+ * Saves the form's model into their user settings.
+ */
+function _saveSettings() {
+	SettingStreamProducerWebcam.set(form.formModel.selectedWebcamDeviceId);
+	SettingStreamProducerMic.set(form.formModel.selectedMicDeviceId);
+	SettingStreamProducerShouldStreamDesktopAudio.set(form.formModel.streamDesktopAudio);
+	SettingStreamProducerDesktopAudioDevice.set(form.formModel.selectedDesktopAudioDeviceId);
+	SettingStreamProducerGroupAudio.set(form.formModel.selectedGroupAudioDeviceId);
 }
 
 function onClickPromptWebcamPermissions() {
@@ -350,47 +452,35 @@ async function onClickStartStreaming() {
 	isStarting.value = true;
 
 	try {
-		await startStreaming(producer.value);
+		await startStreaming(localProducer);
 	} catch {}
 
 	isStarting.value = false;
 
 	// Only close the modal if we were able to start streaming.
-	if (producer.value.isStreaming) {
+	if (localProducer.isStreaming) {
 		emit('close');
 	}
 }
 
-function _getDeviceFromId(id: string | null, deviceType: 'mic' | 'webcam' | 'speaker') {
-	if (id === null) {
+function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' | 'speaker') {
+	if (id === undefined) {
 		return;
 	}
 
 	switch (deviceType) {
 		case 'mic':
-			return mics.value.find(i => i.deviceId == id);
+			return mics.value.find(i => i.deviceId === id);
 		case 'speaker':
-			return speakers.value.find(i => i.deviceId == id);
+			return speakers.value.find(i => i.deviceId === id);
 		case 'webcam':
-			return webcams.value.find(i => i.deviceId == id);
-	}
-}
-
-async function _detectDevices() {
-	try {
-		await MediaDeviceService.detectDevices({ prompt: true, skipIfPrompted: false });
-	} finally {
-		assignPreferredProducerDevices(producer.value);
-		_didDetectDevices = true;
-
-		// Reinitialize so that the form fields match with our producer.
-		_initForm();
+			return webcams.value.find(i => i.deviceId === id);
 	}
 }
 </script>
 
 <template>
-	<AppLoadingFade :is-loading="isStarting">
+	<AppLoadingFade v-if="isInitialized" :is-loading="isStarting">
 		<a class="-intro" href="https://gamejolt.com/p/qewgmbtc" @click="openHelpLink">
 			<div class="-intro-subtitle">
 				<AppTranslate>
@@ -403,10 +493,6 @@ async function _detectDevices() {
 		</a>
 
 		<AppForm :controller="form">
-			<!-- <AppFormLegend compact>
-					<AppTranslate>Voice Chat</AppTranslate>
-				</AppFormLegend> -->
-
 			<template v-if="canStreamAudio">
 				<AppFormGroup name="tempSelectedMicDeviceId" :label="$gettext('Microphone')">
 					<template v-if="!hasMicPermissions">
@@ -440,9 +526,9 @@ async function _detectDevices() {
 						</div>
 
 						<AppFormControlSelect
-							:disabled="producer.isBusy"
+							:disabled="localProducer.isBusy"
 							class="-mic-input"
-							:class="{ '-hide-indicator': !hasMicAudio }"
+							:class="{ '-hide-indicator': !hasMicDevice }"
 						>
 							<option
 								:value="PRODUCER_UNSET_DEVICE"
@@ -477,13 +563,13 @@ async function _detectDevices() {
 						</AppFormControlSelect>
 
 						<AppFiresideStreamSetupVolumeMeter
-							v-if="hasMicAudio"
+							v-if="hasMicDevice"
 							class="-volume-meter"
-							:producer="producer"
+							:producer="localProducer"
 							type="mic"
 						/>
 
-						<AppExpand :when="hasMicAudio">
+						<AppExpand :when="hasMicDevice">
 							<p class="help-block">
 								<AppTranslate>
 									The volume meter should only move when you're speaking. If it's
@@ -496,7 +582,7 @@ async function _detectDevices() {
 				</AppFormGroup>
 
 				<AppFormGroup
-					name="tempSelectedGroupAudioDeviceId"
+					name="selectedGroupAudioDeviceId"
 					:label="$gettext('Audio Output Device')"
 				>
 					<template v-if="!hasSpeakerPermissions">
@@ -527,7 +613,7 @@ async function _detectDevices() {
 						</div>
 					</template>
 					<template v-else>
-						<AppFormControlSelect :disabled="producer.isBusy">
+						<AppFormControlSelect :disabled="localProducer.isBusy">
 							<option
 								v-for="speaker of speakers"
 								:key="speaker.deviceId"
@@ -575,7 +661,7 @@ async function _detectDevices() {
 							</p>
 						</div>
 
-						<AppFormControlSelect :disabled="producer.isBusy">
+						<AppFormControlSelect :disabled="localProducer.isBusy">
 							<option
 								:value="PRODUCER_UNSET_DEVICE"
 								:disabled="
@@ -615,49 +701,44 @@ async function _detectDevices() {
 							ref="videoPreviewElem"
 							class="-video-preview"
 							:class="{
-								'-hidden': !hasWebcam,
+								'-hidden': !hasWebcamDevice,
 							}"
 						/>
 					</template>
 				</AppFormGroup>
-
-				<template v-if="hasWebcam && canStreamAudio">
-					<AppFormGroup
-						name="streamDesktopAudio"
-						:label="$gettext(`Stream desktop audio`)"
-					>
-						<template #inline-control>
-							<AppFormControlToggle />
-						</template>
-					</AppFormGroup>
-				</template>
 			</template>
 
-			<!-- Only show this section if they've given mic permissions -->
-			<fieldset
-				v-if="canStreamAudio && hasMicPermissions && form.formModel.streamDesktopAudio"
-			>
+			<template v-if="hasWebcamDevice && canStreamDesktopAudio">
+				<AppFormGroup name="streamDesktopAudio" :label="$gettext(`Stream desktop audio`)">
+					<template #inline-control>
+						<AppFormControlToggle />
+					</template>
+				</AppFormGroup>
+			</template>
+
+			<!-- Only show this section if they've given mic permissions and are not streaming desktop audio -->
+			<fieldset v-if="hasWebcamDevice && hasMicPermissions && !hasDesktopAudio">
 				<AppFormLegend
 					compact
-					:expandable="!hasDesktopAudio"
+					:expandable="!hasDesktopAudioDevice"
 					:expanded="shouldShowAdvanced"
 					@click="onToggleAdvanced"
 				>
 					<AppTranslate>Advanced Settings</AppTranslate>
 				</AppFormLegend>
 
-				<AppExpand :when="shouldShowAdvanced || hasDesktopAudio" class="full-bleed">
+				<AppExpand :when="shouldShowAdvanced || hasDesktopAudioDevice" class="full-bleed">
 					<div class="-desktop-well well sans-rounded fill-offset">
 						<AppFormGroup
 							name="tempSelectedDesktopAudioDeviceId"
 							class="sans-margin-bottom"
-							:label="$gettext('Desktop Audio')"
+							:label="$gettext('Advanced Desktop Audio')"
 						>
 							<p class="help-block">
 								<AppTranslate>
-									Streaming desktop audio requires the set up of a virtual audio
-									cable in order to split the audio of your game/desktop from the
-									audio of the other people in the stream.
+									This option is for advanced use cases. It requires the setup of
+									a virtual audio cable in order to split the audio of your
+									game/desktop from the audio of the other people in the stream.
 								</AppTranslate>
 
 								<br />
@@ -670,9 +751,9 @@ async function _detectDevices() {
 							</p>
 
 							<AppFormControlSelect
-								:disabled="producer.isBusy"
+								:disabled="localProducer.isBusy"
 								class="-mic-input"
-								:class="{ '-hide-indicator': !hasDesktopAudio }"
+								:class="{ '-hide-indicator': !hasDesktopAudioDevice }"
 							>
 								<option
 									:value="PRODUCER_UNSET_DEVICE"
@@ -707,13 +788,13 @@ async function _detectDevices() {
 							</AppFormControlSelect>
 
 							<AppFiresideStreamSetupVolumeMeter
-								v-if="hasDesktopAudio"
+								v-if="hasDesktopAudioDevice"
 								class="-volume-meter"
-								:producer="producer"
+								:producer="localProducer"
 								type="desktop-audio"
 							/>
 
-							<AppExpand :when="hasDesktopAudio">
+							<AppExpand :when="hasDesktopAudioDevice">
 								<p class="help-block">
 									<AppTranslate>
 										The volume meter should only move when you hear audio from
@@ -745,7 +826,7 @@ async function _detectDevices() {
 				<AppButton
 					primary
 					solid
-					:disabled="producer.isBusy || isInvalidConfig"
+					:disabled="localProducer.isBusy || isInvalidConfig"
 					@click="onClickStartStreaming()"
 				>
 					<AppTranslate>Start</AppTranslate>

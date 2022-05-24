@@ -1,6 +1,5 @@
-import { computed, ref } from 'vue';
+import { computed, ref, Ref } from 'vue';
 import { importNoSSR } from '../code-splitting';
-import { getDeviceOS } from '../device/device.service';
 
 const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
 
@@ -30,18 +29,16 @@ const DefaultDetectionOptions = <DetectionOptions>{
 
 function createMediaDeviceService() {
 	const webcamsWasPrompted = ref(false);
-	const webcams = ref<readonly MediaDeviceInfo[]>([]);
+	const webcams = ref([]) as Ref<readonly MediaDeviceInfo[]>;
 	const webcamsPermissionError = ref(false);
 
 	const micsWasPrompted = ref(false);
-	const mics = ref<readonly MediaDeviceInfo[]>([]);
+	const mics = ref([]) as Ref<readonly MediaDeviceInfo[]>;
 	const micsPermissionError = ref(false);
 
 	const speakersWasPrompted = ref(false);
-	const speakers = ref<readonly MediaDeviceInfo[]>([]);
+	const speakers = ref([]) as Ref<readonly MediaDeviceInfo[]>;
 	const speakersPermissionError = ref(false);
-
-	const hasDesktopAudioSupport = computed(() => GJ_IS_DESKTOP_APP && getDeviceOS() === 'windows');
 
 	const hasWebcamPermissions = computed(
 		() =>
@@ -156,12 +153,6 @@ function createMediaDeviceService() {
 						deviceInfo => deviceInfo.deviceId && deviceInfo.label && deviceInfo.kind
 					)
 					.map(deviceInfo => Object.freeze(deviceInfo.toJSON())),
-				{
-					deviceId: 'fake-desktop-audio',
-					groupId: 'fake-desktop-audio',
-					kind: 'audioinput',
-					label: 'Desktop Audio',
-				},
 			]);
 			micsPermissionError.value = false;
 			console.log('Got mics: ', mics.value);
@@ -235,8 +226,6 @@ function createMediaDeviceService() {
 		speakersWasPrompted: computed(() => speakersWasPrompted.value),
 		speakers: computed(() => speakers.value),
 		speakersPermissionError: computed(() => speakersPermissionError.value),
-
-		hasDesktopAudioSupport,
 
 		hasWebcamPermissions,
 		hasMicPermissions,
