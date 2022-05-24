@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onUnmounted, PropType, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, PropType, ref, watch } from 'vue';
 import { sleep } from '../../../../../utils/utils';
 import { MediaDeviceService } from '../../../../../_common/agora/media-device.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
@@ -7,7 +7,6 @@ import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { hasDesktopAudioCaptureSupport } from '../../../../../_common/fireside/rtc/device-capabilities';
 import {
 	clearSelectedRecordingDevices,
-	FiresideRTCProducer,
 	PRODUCER_DEFAULT_GROUP_AUDIO,
 	PRODUCER_UNSET_DEVICE,
 	setSelectedDesktopAudioStreaming,
@@ -78,7 +77,6 @@ const {
 // permissions in the middle of streaming.
 const producer = computed(() => rtc.value?.producer ?? undefined);
 
-const isInitialized = ref(false);
 const isStarting = ref(false);
 const shouldShowAdvanced = ref(false);
 let _didDetectDevices = false;
@@ -87,6 +85,9 @@ const videoPreviewElem = ref<HTMLDivElement>();
 // Store the producer locally and work off of this instance. We will close the
 // modal if the producer changes.
 let localProducer = producer.value!;
+
+// Tell the producer that we're showing the stream setup.
+isShowingStreamSetup.value = true;
 
 const isPersonallyStreaming = computed(() => localProducer.isStreaming === true);
 
@@ -175,21 +176,37 @@ const isInvalidConfig = computed(() => {
 	);
 });
 
-const form: FormController<FormModel> = createForm({
-	async onInit() {
-		isShowingStreamSetup.value = true;
+const form: FormController<FormModel> = createForm({});
 
-		_initFromProducer(localProducer);
-		isInitialized.value = true;
+// We initialize from what the producer's values currently are first and then
+// try to set it up after. This ensures that when we load this form again, it
+// has the values they are running with.
+_initFormModel({
+	webcamDeviceId: localProducer.selectedWebcamDeviceId,
+	micDeviceId: localProducer.selectedMicDeviceId,
+	desktopAudioDeviceId: localProducer.selectedDesktopAudioDeviceId,
+	groupAudioDeviceId: localProducer.selectedGroupAudioDeviceId,
+	shouldStreamDesktopAudio: localProducer.shouldStreamDesktopAudio,
+});
 
-		// Now try to detect devices and initialize preferred settings based on that.
-		try {
-			await MediaDeviceService.detectDevices({ prompt: true, skipIfPrompted: false });
-		} finally {
-			_initFromSettings();
-			_didDetectDevices = true;
-		}
-	},
+onMounted(async () => {
+	// Now try to detect devices and initialize preferred settings based on that.
+	try {
+		await MediaDeviceService.detectDevices({ prompt: true, skipIfPrompted: false });
+	} finally {
+		_initFromSettings();
+		_didDetectDevices = true;
+	}
+});
+
+onUnmounted(() => {
+	// If we're not streaming or about to, clear the selected device ids so
+	// that the browser doesn't think we're still recording.
+	if (!(isPersonallyStreaming.value || isStarting.value)) {
+		clearSelectedRecordingDevices(localProducer);
+	}
+
+	isShowingStreamSetup.value = false;
 });
 
 function _initFormModel(from: {
@@ -209,16 +226,6 @@ function _initFormModel(from: {
 	form.formModel.tempSelectedDesktopAudioDeviceId = desktopId ?? PRODUCER_UNSET_DEVICE;
 	form.formModel.selectedGroupAudioDeviceId = groupId ?? PRODUCER_DEFAULT_GROUP_AUDIO;
 	form.formModel.streamDesktopAudio = from.shouldStreamDesktopAudio;
-}
-
-function _initFromProducer(producer: FiresideRTCProducer) {
-	_initFormModel({
-		webcamDeviceId: producer.selectedWebcamDeviceId,
-		micDeviceId: producer.selectedMicDeviceId,
-		desktopAudioDeviceId: producer.selectedDesktopAudioDeviceId,
-		groupAudioDeviceId: producer.selectedGroupAudioDeviceId,
-		shouldStreamDesktopAudio: producer.shouldStreamDesktopAudio,
-	});
 }
 
 function _initFromSettings() {
@@ -280,16 +287,6 @@ function _initFromSettings() {
 		shouldStreamDesktopAudio,
 	});
 }
-
-onUnmounted(() => {
-	// If we're not streaming or about to, clear the selected device ids so
-	// that the browser doesn't think we're still recording.
-	if (!(isPersonallyStreaming.value || isStarting.value)) {
-		clearSelectedRecordingDevices(localProducer);
-	}
-
-	isShowingStreamSetup.value = false;
-});
 
 watch(
 	[canStreamVideo, videoPreviewElem],
@@ -480,7 +477,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 </script>
 
 <template>
-	<AppLoadingFade v-if="isInitialized" :is-loading="isStarting">
+	<AppLoadingFade :is-loading="isStarting">
 		<a class="-intro" href="https://gamejolt.com/p/qewgmbtc" @click="openHelpLink">
 			<div class="-intro-subtitle">
 				<AppTranslate>
