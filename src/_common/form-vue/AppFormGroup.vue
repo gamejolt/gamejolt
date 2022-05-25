@@ -4,6 +4,7 @@ import {
 	inject,
 	InjectionKey,
 	onUnmounted,
+	PropType,
 	provide,
 	Ref,
 	ref,
@@ -13,8 +14,10 @@ import {
 } from 'vue';
 import { CancelToken } from '../../utils/cancel-token';
 import { titleCase } from '../../utils/string';
+import { Jolticon } from '../jolticon/AppJolticon.vue';
 import { useForm } from './AppForm.vue';
 import { FormControlController } from './AppFormControl.vue';
+import AppFormControlLabel from './AppFormControlLabel.vue';
 import { FormValidatorError } from './validators';
 
 export type FormGroupController = ReturnType<typeof createFormGroup>;
@@ -139,40 +142,50 @@ const props = defineProps({
 		type: String,
 		default: undefined,
 	},
+	icon: {
+		type: String as PropType<Jolticon>,
+		default: undefined,
+	},
+	small: {
+		type: Boolean,
+	},
 });
 
-const form = useForm()!;
 const slots = useSlots();
 
 const propsRefs = toRefs(props);
-const { labelClass, hideLabel } = propsRefs;
+const { labelClass, hideLabel, small } = propsRefs;
 
 const c = createFormGroup(propsRefs);
 provide(Key, c);
 
 const { humanLabel } = c;
-const labelClasses = computed(() => [labelClass?.value, { 'sr-only': hideLabel.value }]);
 
 const hasInlineControl = computed(() => !!slots['inline-control']);
 </script>
 
 <template>
-	<div
-		class="form-group"
-		:class="{
-			optional,
-		}"
-	>
+	<div class="form-group">
 		<template v-if="!hasInlineControl">
-			<label class="control-label" :class="labelClasses" :for="`${form.name}-${name}`">
+			<AppFormControlLabel
+				:hide-label="hideLabel"
+				:label-class="labelClass"
+				:icon="icon"
+				:small="small"
+			>
 				<slot name="label">{{ humanLabel }}</slot>
-			</label>
+			</AppFormControlLabel>
 		</template>
 		<template v-else>
 			<div class="-inline-control-wrapper">
-				<label class="control-label" :class="labelClasses" :for="`${form.name}-${name}`">
+				<AppFormControlLabel
+					:hide-label="hideLabel"
+					:label-class="labelClass"
+					:icon="icon"
+					:small="small"
+				>
 					<slot name="label">{{ humanLabel }}</slot>
-				</label>
+				</AppFormControlLabel>
 				<slot name="inline-control" />
 			</div>
 		</template>
@@ -188,6 +201,6 @@ const hasInlineControl = computed(() => !!slots['inline-control']);
 	justify-content: space-between
 	align-items: center
 
-	.control-label
+	::v-deep(.control-label)
 		margin-bottom: 0
 </style>
