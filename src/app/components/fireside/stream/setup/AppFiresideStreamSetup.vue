@@ -390,8 +390,7 @@ watch(
 				deviceId: PRODUCER_UNSET_DEVICE,
 			});
 		}
-	},
-	{ flush: 'post' }
+	}
 );
 
 /**
