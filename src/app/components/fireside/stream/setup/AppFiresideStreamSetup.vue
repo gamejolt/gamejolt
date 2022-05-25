@@ -31,6 +31,7 @@ import {
 	SettingStreamProducerShouldStreamDesktopAudio,
 	SettingStreamProducerWebcam,
 } from '../../../../../_common/settings/settings.service';
+import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { FiresideController } from '../../controller/controller';
 import AppFiresideStreamSetupVolumeMeter from './AppFiresideStreamSetupVolumeMeter.vue';
@@ -478,7 +479,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 
 <template>
 	<AppLoadingFade :is-loading="isStarting">
-		<a class="-intro" href="https://gamejolt.com/p/qewgmbtc" @click="openHelpLink">
+		<!-- <a class="-intro" href="https://gamejolt.com/p/qewgmbtc" @click="openHelpLink">
 			<div class="-intro-subtitle">
 				<AppTranslate>
 					Voice chat and livestream on Game Jolt with your friends!
@@ -487,11 +488,17 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 			<div class="-intro-title">
 				<AppTranslate>Read the setup guide to get started</AppTranslate>
 			</div>
-		</a>
+		</a> -->
 
 		<AppForm :controller="form">
 			<template v-if="canStreamAudio">
-				<AppFormGroup name="tempSelectedMicDeviceId" :label="$gettext('Microphone')">
+				<AppFormGroup
+					name="tempSelectedMicDeviceId"
+					:label="$gettext('Microphone')"
+					icon="microphone"
+					small
+					optional
+				>
 					<template v-if="!hasMicPermissions">
 						<div class="alert" :class="{ 'alert-notice': micsWasPrompted }">
 							<p>
@@ -514,14 +521,6 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 						</div>
 					</template>
 					<template v-else>
-						<div class="alert">
-							<p>
-								<AppTranslate>
-									Microphone is optional if you don't want people to hear you.
-								</AppTranslate>
-							</p>
-						</div>
-
 						<AppFormControlSelect
 							:disabled="localProducer.isBusy"
 							class="-mic-input"
@@ -535,7 +534,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 										: undefined
 								"
 							>
-								<AppTranslate>Not Set</AppTranslate>
+								<AppTranslate>Not set</AppTranslate>
 							</option>
 
 							<option
@@ -565,22 +564,14 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 							:producer="localProducer"
 							type="mic"
 						/>
-
-						<AppExpand :when="hasMicDevice">
-							<p class="help-block">
-								<AppTranslate>
-									The volume meter should only move when you're speaking. If it's
-									moving with the sounds your device is making, you've chosen the
-									wrong input.
-								</AppTranslate>
-							</p>
-						</AppExpand>
 					</template>
 				</AppFormGroup>
 
 				<AppFormGroup
 					name="selectedGroupAudioDeviceId"
-					:label="$gettext('Audio Output Device')"
+					:label="$gettext('Audio output')"
+					icon="audio"
+					small
 				>
 					<template v-if="!hasSpeakerPermissions">
 						<div class="alert" :class="{ 'alert-notice': speakersWasPrompted }">
@@ -624,7 +615,15 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 			</template>
 
 			<template v-if="canStreamVideo">
-				<AppFormGroup name="selectedWebcamDeviceId" :label="$gettext('Video Source')">
+				<hr class="-split" />
+
+				<AppFormGroup
+					name="selectedWebcamDeviceId"
+					:label="$gettext('Video')"
+					icon="video-camera"
+					small
+					optional
+				>
 					<template v-if="!hasWebcamPermissions">
 						<div class="alert" :class="{ 'alert-notice': webcamsWasPrompted }">
 							<p>
@@ -650,14 +649,6 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 						</div>
 					</template>
 					<template v-else>
-						<div class="alert">
-							<p>
-								<AppTranslate>
-									Video source is optional if you just want to voice chat.
-								</AppTranslate>
-							</p>
-						</div>
-
 						<AppFormControlSelect :disabled="localProducer.isBusy">
 							<option
 								:value="PRODUCER_UNSET_DEVICE"
@@ -679,34 +670,33 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 							</option>
 						</AppFormControlSelect>
 
+						<AppSpacer vertical :scale="2" />
+
+						<div class="-video-preview">
+							<div ref="videoPreviewElem" class="-video-preview-portal" />
+							<div v-if="!hasWebcamDevice" class="-video-preview-text">
+								<span>
+									<AppTranslate>No video source selected</AppTranslate>
+								</span>
+							</div>
+						</div>
+
 						<p class="help-block">
 							<AppTranslate>
-								You can use the virtual camera in OBS or Streamlabs to capture your
-								gameplay and make it available for streaming on Game Jolt.
+								If you use OBS or Streamlabs to capture your gameplay, you can set
+								the virtual camera as your video feed.
 							</AppTranslate>
-
-							<br />
-
-							<a href="https://gamejolt.com/p/qewgmbtc" @click="openHelpLink">
-								<AppTranslate>
-									Learn how to stream your gameplay or screen
-								</AppTranslate>
-							</a>
 						</p>
-
-						<div
-							ref="videoPreviewElem"
-							class="-video-preview"
-							:class="{
-								'-hidden': !hasWebcamDevice,
-							}"
-						/>
 					</template>
 				</AppFormGroup>
 			</template>
 
 			<template v-if="hasWebcamDevice && canStreamDesktopAudio">
-				<AppFormGroup name="streamDesktopAudio" :label="$gettext(`Stream desktop audio`)">
+				<AppFormGroup
+					name="streamDesktopAudio"
+					:label="$gettext(`Stream desktop audio`)"
+					small
+				>
 					<template #inline-control>
 						<AppFormControlToggle />
 					</template>
@@ -729,7 +719,9 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 						<AppFormGroup
 							name="tempSelectedDesktopAudioDeviceId"
 							class="sans-margin-bottom"
-							:label="$gettext('Advanced Desktop Audio')"
+							:label="$gettext('Advanced desktop audio')"
+							small
+							optional
 						>
 							<p class="help-block">
 								<AppTranslate>
@@ -760,7 +752,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 											: undefined
 									"
 								>
-									<AppTranslate>Not Set</AppTranslate>
+									<AppTranslate>Not set</AppTranslate>
 								</option>
 
 								<option
@@ -834,16 +826,40 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 </template>
 
 <style lang="stylus" scoped>
+::v-deep(.form-group)
+	margin-bottom: 24px
+
+.-split
+	margin-top: 24px
+	margin-bottom: 24px
+
 .-video-preview
+	position: relative
+	rounded-corners()
 	height: 300px
 	margin: auto
+	overflow: hidden
+	background-color: var(--theme-darkest)
+
+.-video-preview-portal
+	height: 100%
 
 	::v-deep(> div)
 		// Unset agora background color nobody asked for
 		background-color: transparent !important
 
-	&.-hidden
-		display: none
+.-video-preview-text
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	display: flex
+	align-items: center
+	justify-content: center
+	font-weight: 700
+	font-size: 13px
+	z-index: 1
 
 .-mic-input
 	&:not(.-hide-indicator)
