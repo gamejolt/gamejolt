@@ -215,11 +215,25 @@ export function createForm<T>({
 		_load();
 	}
 
+	async function _getLoadPayload() {
+		if (!loadUrl.value) {
+			return {};
+		}
+
+		return await Api.sendRequest(loadUrl.value, loadData.value || undefined, {
+			detach: true,
+		});
+	}
+
 	async function _load() {
 		if (isLoaded.value && !reloadOnSubmit.value) {
 			return;
 		}
 
+		await reload();
+	}
+
+	async function reload() {
 		isLoaded.value = null;
 		if (!loadUrl.value) {
 			return;
@@ -227,9 +241,7 @@ export function createForm<T>({
 
 		isLoaded.value = false;
 
-		const payload = await Api.sendRequest(loadUrl.value, loadData.value || undefined, {
-			detach: true,
-		});
+		const payload = await _getLoadPayload();
 
 		isLoaded.value = true;
 		isLoadedBootstrapped.value = true;
@@ -360,6 +372,7 @@ export function createForm<T>({
 		valid,
 		invalid,
 		submit,
+		reload,
 		clearErrors,
 		setCustomError,
 		clearCustomError,
@@ -392,6 +405,7 @@ export interface FormController<T = any> {
 	readonly valid: boolean;
 	readonly invalid: boolean;
 	submit: () => Promise<boolean>;
+	reload: () => Promise<void>;
 	clearErrors: () => void;
 	setCustomError: (error: string) => void;
 	clearCustomError: (error: string) => void;

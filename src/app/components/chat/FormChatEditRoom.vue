@@ -1,7 +1,5 @@
 <script lang="ts">
-import { computed } from '@vue/reactivity';
-import { onMounted } from '@vue/runtime-core';
-import { inject, PropType, ref, toRefs } from 'vue';
+import { computed, inject, onMounted, PropType, ref, toRefs, watch } from 'vue';
 import { Api } from '../../../_common/api/api.service';
 import { Background } from '../../../_common/background/background.model';
 import AppButton from '../../../_common/button/AppButton.vue';
@@ -54,10 +52,23 @@ const titleMinLength = ref<number>();
 const titleMaxLength = ref<number>();
 
 const isLoadingNotificationSettings = ref(false);
+const isLoadingBackgrounds = ref(false);
 const isSettingBackground = ref(false);
 
 const notificationLevel = ref('');
 const backgrounds = ref<Background[]>([]);
+const roomBackgroundId = ref(room.value.background?.id || null);
+
+watch(
+	() => room.value.background,
+	async () => {
+		if (isLoadingBackgrounds.value) {
+			return;
+		}
+
+		reloadBackgroundForm(true);
+	}
+);
 
 const form: FormController = createForm({
 	model: room,
@@ -76,6 +87,7 @@ const backgroundForm = createForm({
 	loadUrl: `/web/chat/rooms/backgrounds/${room.value.id}`,
 	onLoad(payload) {
 		backgrounds.value = Background.populate(payload.backgrounds);
+		roomBackgroundId.value = payload.roomBackgroundId || null;
 	},
 });
 
@@ -109,6 +121,33 @@ const membersPreview = computed(() => {
 });
 
 onMounted(() => getNotificationSettings());
+
+async function reloadBackgroundForm(retryOnDesync: boolean) {
+	try {
+		isLoadingBackgrounds.value = true;
+		await backgroundForm.reload();
+	} finally {
+		const currentBgId = room.value.background?.id || null;
+		const expectedBgId = roomBackgroundId.value;
+
+		if (currentBgId === expectedBgId) {
+			// If our current background is set to whatever backend tells us is
+			// correct, set our loading state to false.
+			isLoadingBackgrounds.value = false;
+		} else if (retryOnDesync) {
+			// Call this function one more time if our expected id doesn't match
+			// our current room background.
+			await reloadBackgroundForm(false);
+		} else {
+			// If we're still out of sync after fetching a second time, find the
+			// expected background in our list of backgrounds and manually
+			// assign that to our room.
+			const background = backgrounds.value.find(i => i.id === expectedBgId);
+			room.value.background = background;
+			isLoadingBackgrounds.value = false;
+		}
+	}
+}
 
 async function getNotificationSettings() {
 	isLoadingNotificationSettings.value = true;
@@ -168,21 +207,14 @@ async function onClickSetNotificationLevel(level: string) {
 	notificationLevel.value = payload.level;
 }
 
-async function onBackgroundChanged(bg?: Background) {
+async function setBackground(bg?: Background) {
 	if (isSettingBackground.value) {
 		return;
 	}
 	isSettingBackground.value = true;
 
-	const oldBg = room.value.background;
-	room.value.background = bg;
-
 	try {
-		await editChatRoomBackground(chat.value, room.value, bg?.id);
-	} catch (_) {
-		if (room.value.background === bg) {
-			room.value.background = oldBg;
-		}
+		await editChatRoomBackground(chat.value, room.value, bg?.id || null);
 	} finally {
 		isSettingBackground.value = false;
 	}
@@ -225,23 +257,25 @@ async function onBackgroundChanged(bg?: Background) {
 			</template>
 
 			<AppForm :controller="backgroundForm" hide-loading>
-				<template v-if="canEditBackground">
-					<AppFormGroup
-						name="background"
-						class="-pad sans-margin-bottom"
-						optional
-						:label="$gettext(`Background`)"
-					>
-						<AppFormBackground
-							:backgrounds="backgrounds"
-							:background="room.background"
-							:tile-size="40"
-							@background-change="onBackgroundChanged"
-						/>
-					</AppFormGroup>
+				<AppLoadingFade :is-loading="isSettingBackground || isLoadingBackgrounds">
+					<template v-if="canEditBackground">
+						<AppFormGroup
+							name="background"
+							class="-pad sans-margin-bottom"
+							optional
+							:label="$gettext(`Background`)"
+						>
+							<AppFormBackground
+								:backgrounds="backgrounds"
+								:background="room.background"
+								:tile-size="40"
+								@background-change="setBackground"
+							/>
+						</AppFormGroup>
 
-					<AppSpacer vertical :scale="6" />
-				</template>
+						<AppSpacer vertical :scale="6" />
+					</template>
+				</AppLoadingFade>
 			</AppForm>
 
 			<template v-if="canEditTitle || canEditBackground">

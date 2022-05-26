@@ -902,36 +902,20 @@ export function editChatRoomTitle(chat: ChatClient, room: ChatRoom, title: strin
 export async function editChatRoomBackground(
 	chat: ChatClient,
 	room: ChatRoom,
-	backgroundId: number | undefined
+	backgroundId: number | null
 ): Promise<void> {
-	// TODO(chat-backgrounds) cleanup
 	const result = new Promise<void>((resolve, reject) => {
-		// TODO(chat-backgrounds) remove?
-		const _reject = (event: any) => {
-			if (import.meta.env.DEV) {
-				console.debug('Error when calling [editChatRoomBackground]', event);
-			}
-			reject();
-		};
-
-		const _resolve = (event: any) => {
-			if (import.meta.env.DEV) {
-				console.debug('Got response from [editChatRoomBackground]', event);
-			}
-			resolve();
-		};
-
 		chat.roomChannels[room.id].socketChannel
 			.push(
 				'update_background',
 				{
 					background_id: backgroundId,
-				}
-				// 5_000
+				},
+				5_000
 			)
-			.receive('ok', _resolve)
-			.receive('error', _reject);
-		// .receive('timeout', _reject);
+			.receive('ok', resolve)
+			.receive('error', reject)
+			.receive('timeout', reject);
 	});
 	return result;
 }
