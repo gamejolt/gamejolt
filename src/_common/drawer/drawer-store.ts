@@ -25,9 +25,9 @@ import {
 	getStickerModelResourceName,
 	StickerTargetController,
 } from '../sticker/target/target-controller';
-import { $gettext } from '../translate/translate.service';
 import { ValidStickerResource } from '../sticker/target/target.vue';
 import { EventTopic } from '../system/event/event-topic';
+import { $gettext } from '../translate/translate.service';
 
 const DrawerStoreKey: InjectionKey<DrawerStore> = Symbol('drawer-store');
 
@@ -275,19 +275,18 @@ export type CustomStickerPlacementRequest = (data: StickerPlacementPayloadData) 
 export const onFiresideStickerPlaced = new EventTopic<StickerPlacement>();
 
 export async function commitDrawerStoreItemPlacement(store: DrawerStore) {
-	if (!store.placedItem.value || !store.targetController.value) {
-		return;
-	}
+	const {
+		placedItem: { value: sticker },
+		targetController,
+	} = store;
 
-	const sticker = store.placedItem.value;
-	if (!sticker) {
+	if (!sticker || !targetController.value) {
 		return;
 	}
 
 	Analytics.trackEvent('stickers', 'place-sticker');
 
-	const targetController = store.targetController.value;
-	const { model } = targetController;
+	const { model, placeStickerCallback } = targetController.value;
 	const resourceType = getStickerModelResourceName(model);
 
 	const body = {
@@ -299,18 +298,20 @@ export async function commitDrawerStoreItemPlacement(store: DrawerStore) {
 		resourceId: model.id,
 	};
 
-	const promise = targetController.placeStickerCallback
-		? targetController.placeStickerCallback(body)
+	const promise = placeStickerCallback
+		? placeStickerCallback(body)
 		: Api.sendRequest('/web/stickers/place', body, { detach: true });
 
-	const { success, resource, parent, stickerPlacement } = await promise;
+	const { success, resource, parent: payloadParent, stickerPlacement } = await promise;
 
 	if (success) {
-		addStickerToTarget(store.targetController.value, new StickerPlacement(stickerPlacement));
+		addStickerToTarget(targetController.value, new StickerPlacement(stickerPlacement));
 
 		model.assign(resource);
-		if (parent && store.targetController.value.parent) {
-			store.targetController.value.parent.model.assign(parent);
+		const { parent } = targetController.value;
+
+		if (payloadParent && parent) {
+			parent.model.assign(payloadParent);
 		}
 
 		setDrawerOpen(store, false);

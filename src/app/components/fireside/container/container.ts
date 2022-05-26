@@ -800,10 +800,14 @@ export class AppFiresideContainer extends Vue {
 
 	onGridStickerPlacement(payload: GridStickerPlacementPayload) {
 		console.debug('[FIRESIDE] Grid sticker placement received.', payload, payload.streak);
-		const c = this.controller;
+		const { rtc, stickerTargetController, fireside } = this.controller;
 		const placement = new StickerPlacement(payload.sticker_placement);
+		const {
+			sticker,
+			target_data: { host_user_id },
+		} = placement;
 
-		setStickerStreak(this.drawerStore, placement.sticker, payload.streak);
+		setStickerStreak(this.drawerStore, sticker, payload.streak);
 
 		const wasMyPlacement = payload.user_id === this.user?.id;
 
@@ -813,16 +817,15 @@ export class AppFiresideContainer extends Vue {
 			return;
 		}
 
-		const focusedUserId = this.controller.rtc.value?.focusedUser?.userModel?.id.toString();
-		const targetUserId = placement.target_data.host_user_id?.toString();
+		const focusedUserId = rtc.value?.focusedUser?.userModel?.id;
 
-		if (focusedUserId === targetUserId) {
+		if (focusedUserId === host_user_id) {
 			// Display the live sticker only if we're watching the target host.
-			addStickerToTarget(c.stickerTargetController, placement);
+			addStickerToTarget(stickerTargetController, placement);
 		}
 		onFiresideStickerPlaced.next(placement);
 
-		c.fireside.addStickerToCount(placement.sticker);
+		fireside.addStickerToCount(sticker);
 	}
 
 	onGridListableHosts(payload: GridListableHostsPayload) {

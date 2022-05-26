@@ -1,14 +1,7 @@
 <script lang="ts">
-import { onMounted } from '@vue/runtime-core';
-import { onBeforeUnmount, PropType, ref, toRaw, toRef } from 'vue';
+import { onBeforeUnmount, onMounted, PropType, ref, toRaw, toRefs } from 'vue';
 import { arrayRemove } from '../../utils/array';
-import { KernelRecipeBase, usePopcornKettleController } from './popcorn-kettle-controller';
-
-export type PopcornKernelData = KernelRecipeBase & {
-	key: any;
-	kernelImage: string;
-	rotationVelocity: number;
-};
+import { PopcornKernelData, usePopcornKettleController } from './popcorn-kettle-controller';
 </script>
 
 <script lang="ts" setup>
@@ -19,11 +12,11 @@ const props = defineProps({
 	},
 });
 
-const data = toRef(props, 'kernelData');
-const c = usePopcornKettleController()!;
+const { kernelData } = toRefs(props);
+const { kernelFrameCallbacks } = usePopcornKettleController()!;
 
 const startTime = Date.now();
-const endTime = startTime + data.value.duration;
+const endTime = startTime + kernelData.value.duration;
 
 const styleData = ref({
 	opacity: 0,
@@ -33,17 +26,24 @@ const styleData = ref({
 	offsetY: 0,
 });
 
-onMounted(() => c.kernelFrameCallbacks.value.push(calcData));
+onMounted(() => kernelFrameCallbacks.value.push(calcData));
 
-onBeforeUnmount(() => arrayRemove(c.kernelFrameCallbacks.value, i => toRaw(i) === toRaw(calcData)));
+onBeforeUnmount(() => arrayRemove(kernelFrameCallbacks.value, i => toRaw(i) === toRaw(calcData)));
 
 function calcData() {
-	const { downwardGravityStrength, velocity, popAngle, rotationVelocity } = data.value;
+	const {
+		downwardGravityStrength,
+		velocity,
+		popAngle,
+		rotationVelocity,
+		reverse,
+		reverseFadeOut,
+	} = kernelData.value;
 
 	const now = Date.now();
 	const dateVal = (now - startTime) / (endTime - startTime);
 	let animLerp = Math.max(0, Math.min(1, dateVal));
-	if (data.value.reverse) {
+	if (reverse) {
 		animLerp = 1 - animLerp;
 	}
 
@@ -62,9 +62,9 @@ function calcData() {
 
 	let { opacity, scale, rotation, offsetX, offsetY } = styleData.value;
 
-	if (data.value.reverse) {
+	if (reverse) {
 		const _fadeInStop = 0.7;
-		const _fadeOutStart = data.value.reverseFadeOut ? 0.2 : 0;
+		const _fadeOutStart = reverseFadeOut ? 0.2 : 0;
 		var val = animLerp;
 
 		if (_fadeInStop < val) {
@@ -99,18 +99,18 @@ function calcData() {
 <template>
 	<div
 		class="popcorn-kernel"
-		:class="{ '-kernel-forward': !data.reverse && data.forwardFadeIn }"
+		:class="{ '-kernel-forward': !kernelData.reverse && kernelData.forwardFadeIn }"
 		:style="{
 			transform: `translate3d(${styleData.offsetX}px, ${styleData.offsetY}px, 0) scale(${styleData.scale})`,
 		}"
 	>
 		<img
-			:src="data.kernelImage"
+			:src="kernelData.kernelImage"
 			alt=""
 			draggable="false"
 			:style="{
-				width: data.baseSize + 'px',
-				height: data.baseSize + 'px',
+				width: kernelData.baseSize + 'px',
+				height: kernelData.baseSize + 'px',
 				opacity: styleData.opacity,
 				transform: `rotate(${styleData.rotation}deg)`,
 			}"

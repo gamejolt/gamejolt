@@ -1,5 +1,4 @@
 <script lang="ts">
-import { unref } from 'vue';
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { stringSort } from '../../../../../utils/array';
 import { fuzzysearch } from '../../../../../utils/string';
@@ -10,6 +9,7 @@ import {
 } from '../../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { BaseModal } from '../../../../../_common/modal/base';
+import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import AppUserAvatarImg from '../../../../../_common/user/user-avatar/img/img.vue';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../../_common/user/user.model';
@@ -30,6 +30,7 @@ const ListTitles: ListTitle[] = [
 		AppUserAvatarImg,
 		AppUserAvatarList,
 		AppIllustration,
+		AppNavTabList,
 	},
 })
 export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
@@ -69,24 +70,23 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 			return [];
 		}
 
-		const currentHosts = unref(this.rtc.hosts);
+		const currentHosts = this.rtc.hosts;
 		return this.users
 			.filter(i => !currentHosts.some(host => host.user.id === i.id))
 			.sort((a, b) => stringSort(a.display_name, b.display_name));
 	}
 
 	get currentCohosts(): User[] {
-		const hosts = this.rtc?.hosts ?? [];
+		const hosts = this.rtc?.hosts || [];
+		const listableHostIds = this.rtc?.listableHostIds || [];
 		const myUserId = this.controller.user.value?.id;
-		return unref(hosts) // formatting
+
+		return hosts // formatting
 			.filter(i => {
 				if (i.user.id === myUserId) {
 					return false;
 				}
-				return (
-					!i.needsPermissionToView ||
-					unref(this.rtc?.listableHostIds)?.includes(i.user.id)
-				);
+				return !i.needsPermissionToView || listableHostIds.includes(i.user.id);
 			})
 			.map(i => i.user)
 			.sort((a, b) => stringSort(a.display_name, b.display_name));
@@ -180,23 +180,21 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 
 			<div class="modal-body">
 				<div>
-					<div class="-list-selectors">
-						<div class="-inline-menu tab-list">
-							<ul>
-								<li v-for="title of ListTitles" :key="title" class="-tab-item">
-									<a
-										class="-tab-item-inner"
-										:class="{
-											active: activeList === title,
-										}"
-										@click="activeList = title"
-									>
-										{{ title }}
-									</a>
-								</li>
-							</ul>
-						</div>
-					</div>
+					<AppNavTabList class="-inline-menu">
+						<ul>
+							<li v-for="title of ListTitles" :key="title" class="-tab-item">
+								<a
+									class="-tab-item-inner"
+									:class="{
+										active: activeList === title,
+									}"
+									@click="activeList = title"
+								>
+									{{ title }}
+								</a>
+							</li>
+						</ul>
+					</AppNavTabList>
 
 					<input
 						v-model="filterQuery"
@@ -256,7 +254,7 @@ $-height = 40px
 .modal-body
 	padding-top: 0
 
-.tab-list
+.-inline-menu::v-deep(.tab-list)
 	text-align: start
 	padding: 0
 	margin: 0
@@ -278,6 +276,7 @@ $-height = 40px
 	padding-left: 0
 	padding-right: 0
 	padding-top: 0
+	margin: 0
 	color: var(--theme-fg-muted)
 	transition: color 100ms $weak-ease-out
 

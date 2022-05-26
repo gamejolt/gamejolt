@@ -1,5 +1,4 @@
 import { inject, InjectionKey, provide, ref, watch } from 'vue';
-import { PopcornKernelData } from './AppPopcornKernel.vue';
 
 const PopcornKettleControllerKey: InjectionKey<PopcornKettleController> = Symbol('popcorn-kettle');
 
@@ -25,6 +24,12 @@ export interface KernelRecipeBase {
 	/** Default: `false` */
 	forwardFadeIn: boolean;
 }
+
+export type PopcornKernelData = KernelRecipeBase & {
+	key: any;
+	kernelImage: string;
+	rotationVelocity: number;
+};
 
 export type KernelRecipe = KernelRecipeBase & {
 	/** Default: `45.0` */
@@ -141,10 +146,10 @@ export function createPopcornKettleController() {
 	};
 }
 
-export function providePopcornKettleController(controller?: PopcornKettleController | null) {
+export function providePopcornKettleController(controller: PopcornKettleController) {
 	provide(PopcornKettleControllerKey, controller);
 }
 
 export function usePopcornKettleController() {
-	return inject(PopcornKettleControllerKey) || null;
+	return inject(PopcornKettleControllerKey);
 }

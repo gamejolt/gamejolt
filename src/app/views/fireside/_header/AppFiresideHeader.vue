@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, toRefs } from 'vue';
+import { toRefs } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import { formatNumber } from '../../../../_common/filters/number';
@@ -30,15 +30,23 @@ const props = defineProps({
 const { showControls, hasChatStats, isOverlay } = toRefs(props);
 
 const c = useFiresideController()!;
-
-const fireside = computed(() => c.fireside);
+const {
+	fireside,
+	chatUsers,
+	chatRoom,
+	isShowingOverlayPopper,
+	isDraft,
+	isPersonallyStreaming,
+	stickerTargetController,
+	shouldShowStreamingOptions,
+} = c;
 
 function onClickShowChatMembers() {
-	if (!c.chatUsers.value || !c.chatRoom.value) {
+	if (!chatUsers.value || !chatRoom.value) {
 		return;
 	}
 
-	FiresideChatMembersModal.show(c.chatUsers.value, c.chatRoom.value);
+	FiresideChatMembersModal.show(chatUsers.value, chatRoom.value);
 }
 
 function onClickEditStream() {
@@ -47,12 +55,12 @@ function onClickEditStream() {
 
 function onShowPopper() {
 	if (isOverlay) {
-		c.isShowingOverlayPopper.value = true;
+		isShowingOverlayPopper.value = true;
 	}
 }
 
 function onHidePopper() {
-	c.isShowingOverlayPopper.value = false;
+	isShowingOverlayPopper.value = false;
 }
 </script>
 
@@ -89,7 +97,7 @@ function onHidePopper() {
 							</router-link>
 						</template>
 
-						<span v-if="c.isDraft.value" class="-tag tag">
+						<span v-if="isDraft" class="-tag tag">
 							<AppTranslate>Draft</AppTranslate>
 						</span>
 
@@ -109,16 +117,16 @@ function onHidePopper() {
 				</h2>
 
 				<div v-if="!Screen.isXs" class="-live-reactions">
-					<AppStickerLiveReactions :controller="c.stickerTargetController" reverse />
+					<AppStickerLiveReactions :controller="stickerTargetController" reverse />
 				</div>
 
-				<div v-if="hasChatStats && c.chatUsers.value" class="-fireside-title-member-stats">
+				<div v-if="hasChatStats && chatUsers" class="-fireside-title-member-stats">
 					<ul class="stat-list">
 						<a @click="onClickShowChatMembers">
 							<li class="stat-big stat-big-smaller">
 								<div class="stat-big-label">Members</div>
 								<div class="stat-big-digit">
-									{{ formatNumber(c.chatUsers.value.count) }}
+									{{ formatNumber(chatUsers.count) }}
 								</div>
 							</li>
 						</a>
@@ -126,7 +134,7 @@ function onHidePopper() {
 				</div>
 				<div v-if="showControls" class="-fireside-title-controls">
 					<div
-						v-if="c.shouldShowStreamingOptions.value && !c.isPersonallyStreaming.value"
+						v-if="shouldShowStreamingOptions && !isPersonallyStreaming"
 						class="-stats-btn"
 					>
 						<AppButton

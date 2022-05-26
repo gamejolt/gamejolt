@@ -10,7 +10,7 @@ defineProps({
 <template>
 	<div class="live-reaction-item">
 		<span class="-sticker">
-			<img :src="imgUrl" alt="" draggable="false" />
+			<img class="-sticker-img" :src="imgUrl" alt="" draggable="false" />
 		</span>
 	</div>
 </template>
@@ -23,8 +23,8 @@ defineProps({
 	width: 20px
 	height: 20px
 
-	& > img
-		display: block
-		width: 100%
-		height: 100%
+.-sticker-img
+	display: block
+	width: 100%
+	height: 100%
 </style>

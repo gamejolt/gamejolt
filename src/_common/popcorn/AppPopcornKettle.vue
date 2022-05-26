@@ -17,6 +17,8 @@ const props = defineProps({
 });
 
 const c = toRef(props, 'controller').value ?? createPopcornKettleController();
+const { kernels } = c;
+
 providePopcornKettleController(c);
 
 const slots = useSlots();
@@ -28,7 +30,7 @@ const isWrappingComponent = computed(() => !!slots['default']);
 	<div class="-popcorn-kettle" :class="isWrappingComponent ? {} : ['-fill', '-ignore']">
 		<slot />
 		<div class="-kernels -fill -ignore">
-			<template v-for="data of c.kernels.value" :key="data.key">
+			<template v-for="data of kernels" :key="data.key">
 				<AppPopcornKernel class="-kernel" :kernel-data="data" />
 			</template>
 		</div>

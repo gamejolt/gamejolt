@@ -1,9 +1,8 @@
 import type { IAgoraRTC, IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
-import { markRaw, reactive, unref } from 'vue';
+import { markRaw, reactive, Ref } from 'vue';
 import { arrayAssignAll, arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
 import { debounce, sleep } from '../../../utils/utils';
-import { MaybeRef } from '../../../utils/vue';
 import { importNoSSR } from '../../code-splitting';
 import { Navigate } from '../../navigate/navigate.service';
 import { SettingStreamDesktopVolume } from '../../settings/settings.service';
@@ -74,8 +73,11 @@ export class FiresideRTC {
 		public videoToken: string,
 		public readonly chatChannelName: string,
 		public chatToken: string,
-		public readonly hosts: MaybeRef<FiresideRTCHost[]>,
-		public readonly listableHostIds: MaybeRef<number[]>,
+		// NOTE: These may be wrapped in Refs if accessing inside the
+		// constructor. Check createFiresideRTC for the actual typing before
+		// `reactive` unwraps it.
+		public readonly hosts: FiresideRTCHost[],
+		public readonly listableHostIds: number[],
 		{ isMuted }: Options
 	) {
 		this.isMuted = isMuted ?? false;
@@ -193,8 +195,8 @@ export function createFiresideRTC(
 	fireside: Fireside,
 	userId: number | null,
 	agoraStreamingInfo: AgoraStreamingInfo,
-	hosts: MaybeRef<FiresideRTCHost[]>,
-	listableHostIds: MaybeRef<number[]>,
+	hosts: Ref<FiresideRTCHost[]>,
+	listableHostIds: Ref<number[]>,
 	options: Options = {}
 ) {
 	const rtc = reactive(
@@ -207,8 +209,13 @@ export function createFiresideRTC(
 			agoraStreamingInfo.videoToken,
 			agoraStreamingInfo.chatChannelName,
 			agoraStreamingInfo.chatToken,
-			hosts,
-			listableHostIds,
+			// Stop typescript from complaining about Vue types.
+			//
+			// `reactive` will unwrap refs, but the type is still technically
+			// wrong until the class is constructed and `reactive` can unwrap
+			// the fields.
+			hosts as unknown as FiresideRTCHost[],
+			listableHostIds as unknown as number[],
 			options
 		)
 	) as FiresideRTC;
@@ -270,7 +277,7 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 	}
 
 	rtc.focusedUser = null;
-	unref(rtc.hosts).splice(0);
+	rtc.hosts.splice(0);
 }
 
 async function _recreateFiresideRTC(rtc: FiresideRTC) {
@@ -280,11 +287,11 @@ async function _recreateFiresideRTC(rtc: FiresideRTC) {
 }
 
 export function setHosts(rtc: FiresideRTC, newHosts: FiresideRTCHost[]) {
-	arrayAssignAll(unref(rtc.hosts), newHosts);
+	arrayAssignAll(rtc.hosts, newHosts);
 }
 
 export function setListableHostIds(rtc: FiresideRTC, listableHostIds: number[]) {
-	arrayAssignAll(unref(rtc.listableHostIds), listableHostIds);
+	arrayAssignAll(rtc.listableHostIds, listableHostIds);
 }
 
 /**

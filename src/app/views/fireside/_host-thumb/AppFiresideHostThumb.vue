@@ -70,10 +70,14 @@ function onMicAudioScrub({ percent }: ScrubberCallback) {
 }
 
 async function onStickerPlaced(placement: StickerPlacement) {
-	const myId = host.value.userModel?.id.toString();
-	const targetId = placement.target_data.host_user_id?.toString();
+	const myId = host.value.userModel?.id;
+	const {
+		target_data: { host_user_id },
+		sticker: { img_url },
+	} = placement;
+
 	// Don't animate stickers if we weren't the target.
-	if (!targetId || myId !== targetId) {
+	if (!host_user_id || myId !== host_user_id) {
 		return;
 	}
 
@@ -83,7 +87,7 @@ async function onStickerPlaced(placement: StickerPlacement) {
 		return;
 	}
 
-	kettleController.addKernel(placement.sticker.img_url, {
+	kettleController.addKernel(img_url, {
 		duration: 1_000,
 		baseSize: 48,
 		velocity: 20,
@@ -95,7 +99,7 @@ async function onStickerPlaced(placement: StickerPlacement) {
 
 <template>
 	<div class="-thumb">
-		<AppUserCardHover :user="host.userModel" :hover-delay="0" no-stats>
+		<AppUserCardHover :user="host.userModel || undefined" :hover-delay="0" no-stats>
 			<div class="-click-capture" @click="onClick">
 				<div class="-display-thumb" :class="{ '-hidden': !showingVideoThumb }">
 					<template v-if="showingVideoThumb">
