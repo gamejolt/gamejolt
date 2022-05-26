@@ -1327,10 +1327,10 @@ array-unique@^0.3.2:
   resolved "https://registry.yarnpkg.com/array-unique/-/array-unique-0.3.2.tgz#a894b75d4bc4f6cd679ef3244a9fd8f46ae2d428"
   integrity sha1-qJS3XUvE9s1nnvMkSp/Y9Gri1Cg=
 
-asg-prebuilt@0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/asg-prebuilt/-/asg-prebuilt-0.1.4.tgz#7d0776b61d59bb50e06ec4085ab5acb9fe910cbe"
-  integrity sha512-l8I76EfT+BP2HxecTjMKqUYd/izoY7OThpZFplHbx0Sd6V6/5qtuVau1v+Al2EFBgxlUKryBL4SL58ick2SV4w==
+asg-prebuilt@0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/asg-prebuilt/-/asg-prebuilt-0.1.5.tgz#30c695c249843ef6dbb9846736bc2db857dac28b"
+  integrity sha512-cLx7YTd0YuowNc2ZX0p6q/pQxZU600s1z1Q3+eAe8HkcpTgi+CFtFQDRm99e7cTKdVAN13C5Qz/RqQMEQ9FKlw==
   dependencies:
     prebuild-install "7.1.0"
 
