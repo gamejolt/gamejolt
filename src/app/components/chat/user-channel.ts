@@ -73,7 +73,6 @@ export class ChatUserChannel {
 		this.socketChannel.on('group_add', this.onGroupAdd.bind(this));
 		this.socketChannel.on('group_leave', this.onRoomLeave.bind(this));
 
-		// TODO(chat-backgrounds) change events?
 		this.socketChannel.on('update_title', this.onUpdateTitle.bind(this));
 		this.socketChannel.on('update_background', this.onUpdateBackground.bind(this));
 		this.socketChannel.onClose(() => {
@@ -203,7 +202,6 @@ export class ChatUserChannel {
 		}
 	}
 
-	// TODO(chat-backgrounds) test this
 	private onUpdateBackground(data: RoomIdPayload & { background?: any }) {
 		const index = this.client.groupRooms.findIndex(room => room.id === data.room_id);
 

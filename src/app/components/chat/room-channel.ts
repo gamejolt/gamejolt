@@ -292,10 +292,6 @@ export class ChatRoomChannel {
 	}
 
 	private onRoomUpdate(json: Partial<ChatRoom>) {
-		// TODO(chat-backgrounds) remove
-		if (import.meta.env.DEV) {
-			console.debug(json);
-		}
 		const { title, background } = json;
 		if (title) {
 			this.room.title = title;
