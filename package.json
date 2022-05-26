@@ -1,6 +1,6 @@
 {
 	"name": "game-jolt-client",
-	"version": "1.6.4-stage",
+	"version": "1.6.5-stage",
 	"scripts": {
 		"translations": "gulp translations:compile",
 		"client-release": "node scripts/client-release.js",
