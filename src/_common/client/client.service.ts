@@ -36,7 +36,7 @@ export class Client {
 	 * Just hides the window. Mostly useful on Mac to hide on soft quit.
 	 */
 	static hide() {
-		if (GJ_IS_WATCHING) {
+		if (GJ_BUILD_TYPE === 'serve-hmr') {
 			sessionStorage.setItem('__vite-window-visible', '0');
 		}
 
@@ -53,8 +53,8 @@ export class Client {
 		// popping back up and stealing focus. To make things worse, there doesn't seem
 		// to be a way to check if a window instance is already visible,
 		// so in order to avoid calling show() on it, we just check session storage.
-		if (GJ_IS_WATCHING) {
-			if (sessionStorage.getItem('__vite-window-visible')) {
+		if (GJ_BUILD_TYPE === 'serve-hmr') {
+			if ((sessionStorage.getItem('__vite-window-visible') ?? '0') === '1') {
 				console.log('Not showing the window because it should be visible atm');
 				return;
 			}
@@ -84,9 +84,9 @@ export class Client {
 
 	// Get the directory nwjs is running from.
 	static get nwRootDir() {
-		// nwPackageDir even makes sense while watching,
+		// nwRootDir does not makes sense while watching,
 		// there are no output files being written out.
-		if (GJ_IS_WATCHING) {
+		if (GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE === 'serve-build') {
 			return null;
 		}
 
@@ -111,15 +111,28 @@ export class Client {
 	}
 
 	static get nwStaticAssetsDir() {
-		if (GJ_IS_WATCHING) {
-			return path.resolve(process.cwd(), 'src', 'static-assets');
-		}
+		switch (GJ_BUILD_TYPE) {
+			// nwjs is executed at the root of the gamejolt dir.
+			case 'serve-hmr':
+				return path.resolve(process.cwd(), 'src', 'static-assets');
 
-		const dir = this.nwRootDir;
-		if (dir === null) {
-			throw new Error('nwPackageDir is null');
+			// nwjs is executed at the root of the gamejolt dir here too, but
+			// the static assets are copied over to build/desktop. it is more
+			// correct to check there since its closer to what an actual build
+			// will do.
+			case 'serve-build':
+				return path.resolve(process.cwd(), 'build', 'desktop');
+
+			// static assets are copied to the root of the package/ folder when
+			// doing a full build.
+			case 'build': {
+				const dir = this.nwRootDir;
+				if (dir === null) {
+					throw new Error('nwRootDir is null');
+				}
+				return path.join(dir, 'package');
+			}
 		}
-		return path.join(dir, 'package');
 	}
 
 	// Gets the directory the joltron binary is running from.

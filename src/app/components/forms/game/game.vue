@@ -227,7 +227,9 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 						name="referrals_enabled"
 						:label="$gettext(`Add to partner system?`)"
 					>
-						<AppFormControlToggle class="pull-right" />
+						<template #inline-control>
+							<AppFormControlToggle />
+						</template>
 
 						<div class="help-block">
 							<div>

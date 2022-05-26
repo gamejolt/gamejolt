@@ -6,7 +6,7 @@ import { Screen } from '../../screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/AppScrollInview.vue';
 import { SettingAnimatedThumbnails } from '../../settings/settings.service';
 import AppTranslate from '../../translate/AppTranslate.vue';
-import AppUserCardHover from '../../user/card/hover/hover.vue';
+import AppUserCardHover from '../../user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../user/user-avatar/img/img.vue';
 import AppUserVerifiedTick from '../../user/verified-tick/verified-tick.vue';
 import AppGameCompatIcons from '../compat-icons/compat-icons.vue';

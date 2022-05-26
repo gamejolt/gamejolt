@@ -13,7 +13,8 @@ export class ClientAutoStart {
 	}
 
 	static get canAutoStart() {
-		if (GJ_IS_WATCHING || GJ_BUILD_TYPE === 'development') {
+		// Autostarting is only viable when doing a full build.
+		if (GJ_BUILD_TYPE !== 'build') {
 			return false;
 		}
 

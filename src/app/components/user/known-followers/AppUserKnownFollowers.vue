@@ -74,7 +74,7 @@ const text = computed(() => {
 	}
 
 	// Should not happen...
-	if (GJ_BUILD_TYPE === 'development') {
+	if (GJ_ENVIRONMENT === 'development' || GJ_IS_STAGING) {
 		console.log(
 			'Encountered known followers unknown user number for text. Users:',
 			users.value.length,

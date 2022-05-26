@@ -86,8 +86,8 @@ export function createClientTrayMenuBuilder(router: Router, appStore: AppStore) 
 
 		menu.append(
 			new nw.MenuItem({
-				label: $gettext(`Settings`),
-				click: () => go({ name: 'settings' }),
+				label: $gettext(`Device Settings`),
+				click: () => go({ name: 'dash.account.device-settings' }),
 			})
 		);
 

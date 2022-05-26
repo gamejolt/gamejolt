@@ -111,7 +111,10 @@ export default class FormGameDesign extends mixins(Wrapper) {
 		<hr />
 
 		<AppFormGroup name="theme" :label="$gettext(`Color Theme`)">
-			<AppFormControlTheme class="pull-right" @changed="onThemeChanged()" />
+			<template #inline-control>
+				<AppFormControlTheme @changed="onThemeChanged()" />
+			</template>
+
 			<p class="help-block">
 				<AppTranslate>
 					Give your page a splash of color! When people view your game page, they'll be

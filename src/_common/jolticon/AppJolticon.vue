@@ -186,6 +186,14 @@ export const Jolticons = [
 	'megaphone',
 	'gift',
 	'clock',
+	'microphone',
+	'microphone-off',
+	'video-camera',
+	'video-camera-off',
+	'screenshare',
+	'screenshare-off',
+	'star-ten-pointed',
+	'expand',
 ] as const;
 </script>
 
