@@ -111,7 +111,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 						5_000
 					)
 					.receive('ok', result => {
-						const placement = result.stickerPlacement || result.sticker_placement;
+						const placement = result.stickerPlacement;
 						if (placement) {
 							onFiresideStickerPlaced.next(placement);
 						}
