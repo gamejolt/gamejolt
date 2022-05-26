@@ -86,11 +86,12 @@ const videoPreviewElem = ref<HTMLDivElement>();
 // Store the producer locally and work off of this instance. We will close the
 // modal if the producer changes.
 let localProducer = producer.value!;
+const { isBusy: isProducerBusy, isStreaming, canStreamVideo, canStreamAudio } = localProducer;
 
 // Tell the producer that we're showing the stream setup.
 isShowingStreamSetup.value = true;
 
-const isPersonallyStreaming = computed(() => localProducer.isStreaming === true);
+const isPersonallyStreaming = computed(() => isStreaming.value === true);
 
 const hasMicDevice = computed(
 	() => (form.formModel.selectedMicDeviceId ?? PRODUCER_UNSET_DEVICE) !== PRODUCER_UNSET_DEVICE
@@ -116,8 +117,6 @@ const selectedDesktopAudioGroupId = computed(
 	() => _getDeviceFromId(form.formModel.selectedDesktopAudioDeviceId, 'mic')?.groupId
 );
 
-const canStreamVideo = computed(() => localProducer.canStreamVideo === true);
-const canStreamAudio = computed(() => localProducer.canStreamAudio === true);
 const canStreamDesktopAudio = computed(() => canStreamAudio.value && hasDesktopAudioCaptureSupport);
 
 const isInvalidMicConfig = computed(() => {
@@ -183,11 +182,11 @@ const form: FormController<FormModel> = createForm({});
 // try to set it up after. This ensures that when we load this form again, it
 // has the values they are running with.
 _initFormModel({
-	webcamDeviceId: localProducer.selectedWebcamDeviceId,
-	micDeviceId: localProducer.selectedMicDeviceId,
-	desktopAudioDeviceId: localProducer.selectedDesktopAudioDeviceId,
-	groupAudioDeviceId: localProducer.selectedGroupAudioDeviceId,
-	shouldStreamDesktopAudio: localProducer.shouldStreamDesktopAudio,
+	webcamDeviceId: localProducer.selectedWebcamDeviceId.value,
+	micDeviceId: localProducer.selectedMicDeviceId.value,
+	desktopAudioDeviceId: localProducer.selectedDesktopAudioDeviceId.value,
+	groupAudioDeviceId: localProducer.selectedGroupAudioDeviceId.value,
+	shouldStreamDesktopAudio: localProducer.shouldStreamDesktopAudio.value,
 });
 
 onMounted(async () => {
@@ -455,7 +454,7 @@ async function onClickStartStreaming() {
 	isStarting.value = false;
 
 	// Only close the modal if we were able to start streaming.
-	if (localProducer.isStreaming) {
+	if (isStreaming.value) {
 		emit('close');
 	}
 }
@@ -521,7 +520,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 					</template>
 					<template v-else>
 						<AppFormControlSelect
-							:disabled="localProducer.isBusy"
+							:disabled="isProducerBusy"
 							class="-mic-input"
 							:class="{ '-hide-indicator': !hasMicDevice }"
 						>
@@ -600,7 +599,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 						</div>
 					</template>
 					<template v-else>
-						<AppFormControlSelect :disabled="localProducer.isBusy">
+						<AppFormControlSelect :disabled="isProducerBusy">
 							<option
 								v-for="speaker of speakers"
 								:key="speaker.deviceId"
@@ -648,7 +647,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 						</div>
 					</template>
 					<template v-else>
-						<AppFormControlSelect :disabled="localProducer.isBusy">
+						<AppFormControlSelect :disabled="isProducerBusy">
 							<option
 								:value="PRODUCER_UNSET_DEVICE"
 								:disabled="
@@ -697,7 +696,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 					small
 				>
 					<template #inline-control>
-						<AppFormControlToggle />
+						<AppFormControlToggle :disabled="isProducerBusy" />
 					</template>
 				</AppFormGroup>
 			</template>
@@ -739,7 +738,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 							</p>
 
 							<AppFormControlSelect
-								:disabled="localProducer.isBusy"
+								:disabled="isProducerBusy"
 								class="-mic-input"
 								:class="{ '-hide-indicator': !hasDesktopAudioDevice }"
 							>
@@ -814,7 +813,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 				<AppButton
 					primary
 					solid
-					:disabled="localProducer.isBusy || isInvalidConfig"
+					:disabled="isProducerBusy || isInvalidConfig"
 					@click="onClickStartStreaming()"
 				>
 					<AppTranslate>Start</AppTranslate>

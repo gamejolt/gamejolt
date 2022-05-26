@@ -22,7 +22,6 @@ export function startDesktopAudioCapture(writableStream: WritableStream<AudioDat
 	const uid = ref('');
 	const status = ref<ASGControllerStatus>('starting');
 
-	let nextTimestamp = 0;
 	emitter
 		.on('status_update', (text: string) => {
 			console.log('Status update: ' + text);
@@ -34,19 +33,17 @@ export function startDesktopAudioCapture(writableStream: WritableStream<AudioDat
 			console.log('Caught error: ' + text);
 			// TODO abort the stream and dispose of resources
 		})
-		.on('data', (data: Float32Array) => {
+		.on('data', (data: Float32Array, timestamp: number) => {
 			try {
 				if (status.value !== 'started') {
 					return;
 				}
 
-				const currTimeLength = (data.length * 1_000_000) / SampleRate;
-				nextTimestamp += currTimeLength;
 				const audioData = new AudioData({
 					format: Format,
 					numberOfChannels: NumChannels,
 					numberOfFrames: data.length,
-					timestamp: nextTimestamp,
+					timestamp,
 					sampleRate: SampleRate,
 					data,
 				});

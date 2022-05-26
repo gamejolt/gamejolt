@@ -2,6 +2,7 @@ import {
 	computed,
 	inject,
 	InjectionKey,
+	markRaw,
 	provide,
 	reactive,
 	ref,
@@ -299,7 +300,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		if (newWantsRTCProducer) {
 			// Do not create the producer if it already exists.
 			// This should never happen normally.
-			rtc.value!.producer ??= createFiresideRTCProducer(rtc.value!);
+			rtc.value!.producer ??= markRaw(createFiresideRTCProducer(rtc.value!));
 		} else if (rtc.value) {
 			const prevProducer = rtc.value.producer;
 			rtc.value.producer = null;

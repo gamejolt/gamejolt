@@ -1,5 +1,5 @@
 import type { IAgoraRTCRemoteUser, ILocalAudioTrack, IRemoteAudioTrack } from 'agora-rtc-sdk-ng';
-import { markRaw, reactive } from 'vue';
+import { computed, markRaw, ref, shallowRef } from 'vue';
 import { MediaDeviceService } from '../../agora/media-device.service';
 import { Api } from '../../api/api.service';
 import type { ASGController } from '../../client/asg/asg';
@@ -7,14 +7,7 @@ import { startDesktopAudioCapture } from '../../client/safe-exports';
 import { importNoSSR } from '../../code-splitting';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { Navigate } from '../../navigate/navigate.service';
-import {
-	SettingStreamProducerDesktopAudioDevice,
-	SettingStreamProducerGroupAudio,
-	SettingStreamProducerMic,
-	SettingStreamProducerShouldStreamDesktopAudio,
-	SettingStreamProducerWebcam,
-} from '../../settings/settings.service';
-import { Translate } from '../../translate/translate.service';
+import { $gettext, Translate } from '../../translate/translate.service';
 import {
 	previewChannelVideo,
 	setChannelAudioTrack,
@@ -22,7 +15,6 @@ import {
 	startChannelStreaming,
 	stopChannelStreaming,
 } from './channel';
-import { hasDesktopAudioCaptureSupport } from './device-capabilities';
 import { applyRTCTokens, chooseFocusedRTCUser, FiresideRTC } from './rtc';
 import {
 	createLocalFiresideRTCUser,
@@ -38,69 +30,85 @@ const RENEW_TOKEN_INTERVAL = 60_000;
 export const PRODUCER_UNSET_DEVICE = 'unset';
 export const PRODUCER_DEFAULT_GROUP_AUDIO = 'default';
 
-export class FiresideRTCProducer {
-	constructor(public readonly rtc: FiresideRTC) {}
-	// The target device IDs we want to be streaming with.
-	selectedWebcamDeviceId = '';
-	selectedMicDeviceId = '';
-	selectedDesktopAudioDeviceId = '';
-	selectedGroupAudioDeviceId = '';
-
-	shouldStreamDesktopAudio = false;
-
-	// The device IDs we are streaming with.
-	streamingWebcamDeviceId: string | null = null;
-	streamingMicDeviceId: string | null = null;
-	streamingDesktopAudioDeviceId: string | null = null;
-	streamingChatPlaybackDeviceId: string | null = null;
-	streamingASG: ASGController | null = null;
-
-	isStreaming = false;
-
-	_videoPreviewElement: HTMLDivElement | null = null;
-
-	isBusy = false;
-	_busyPromise: Promise<any> = Promise.resolve();
-
-	_tokenRenewInterval: NodeJS.Timer | null = null;
-	_areTokensRenewing = false;
-
-	get canStreamVideo() {
-		return this.rtc.role?.can_stream_video === true;
-	}
-
-	get canStreamAudio() {
-		return this.rtc.role?.can_stream_audio === true;
-	}
-
-	get hasWebcamDevice() {
-		return (
-			this.selectedWebcamDeviceId !== '' &&
-			this.selectedWebcamDeviceId !== PRODUCER_UNSET_DEVICE
-		);
-	}
-
-	get hasMicDevice() {
-		return (
-			this.selectedMicDeviceId !== '' && this.selectedMicDeviceId !== PRODUCER_UNSET_DEVICE
-		);
-	}
-
-	get hasDesktopAudioDevice() {
-		return (
-			this.selectedDesktopAudioDeviceId !== '' &&
-			this.selectedDesktopAudioDeviceId !== PRODUCER_UNSET_DEVICE
-		);
-	}
-}
+export type FiresideRTCProducer = ReturnType<typeof createFiresideRTCProducer>;
 
 export function createFiresideRTCProducer(rtc: FiresideRTC) {
 	rtc.log('Trace(createFiresideRTCProducer)');
-	const producer = reactive(new FiresideRTCProducer(rtc)) as FiresideRTCProducer;
+
+	// The target device IDs we want to be streaming with.
+	const selectedWebcamDeviceId = ref('');
+	const selectedMicDeviceId = ref('');
+	const selectedDesktopAudioDeviceId = ref('');
+	const selectedGroupAudioDeviceId = ref('');
+
+	const shouldStreamDesktopAudio = ref(false);
+
+	// The device IDs we are streaming with.
+	const streamingWebcamDeviceId = ref<string | null>(null);
+	const streamingMicDeviceId = ref<string | null>(null);
+	const streamingDesktopAudioDeviceId = ref<string | null>(null);
+	const streamingChatPlaybackDeviceId = ref<string | null>(null);
+	const streamingASG = shallowRef<ASGController | null>(null);
+
+	const isStreaming = ref(false);
+
+	const _videoPreviewElement = shallowRef<HTMLDivElement | null>(null);
+
+	const isBusy = ref(false);
+	const _busyPromise = shallowRef<Promise<any>>(Promise.resolve());
+
+	const _tokenRenewInterval = shallowRef<NodeJS.Timer | null>(null);
+	const _areTokensRenewing = ref(false);
+
+	const canStreamVideo = computed(() => rtc.role?.can_stream_video === true);
+	const canStreamAudio = computed(() => rtc.role?.can_stream_audio === true);
+
+	const hasWebcamDevice = computed(
+		() =>
+			selectedWebcamDeviceId.value !== '' &&
+			selectedWebcamDeviceId.value !== PRODUCER_UNSET_DEVICE
+	);
+
+	const hasMicDevice = computed(
+		() =>
+			selectedMicDeviceId.value !== '' && selectedMicDeviceId.value !== PRODUCER_UNSET_DEVICE
+	);
+
+	const hasDesktopAudioDevice = computed(
+		() =>
+			selectedDesktopAudioDeviceId.value !== '' &&
+			selectedDesktopAudioDeviceId.value !== PRODUCER_UNSET_DEVICE
+	);
 
 	MediaDeviceService.detectDevices({ prompt: false });
 
-	producer._tokenRenewInterval = setInterval(() => _renewTokens(producer), RENEW_TOKEN_INTERVAL);
+	const producer = {
+		rtc,
+		selectedWebcamDeviceId,
+		selectedMicDeviceId,
+		selectedDesktopAudioDeviceId,
+		selectedGroupAudioDeviceId,
+		shouldStreamDesktopAudio,
+		streamingWebcamDeviceId,
+		streamingMicDeviceId,
+		streamingDesktopAudioDeviceId,
+		streamingChatPlaybackDeviceId,
+		streamingASG,
+		isStreaming,
+		isBusy,
+		canStreamVideo,
+		canStreamAudio,
+		hasWebcamDevice,
+		hasMicDevice,
+		hasDesktopAudioDevice,
+
+		_videoPreviewElement,
+		_busyPromise,
+		_tokenRenewInterval,
+		_areTokensRenewing,
+	};
+
+	_tokenRenewInterval.value = setInterval(() => _renewTokens(producer), RENEW_TOKEN_INTERVAL);
 
 	return producer;
 }
@@ -110,90 +118,35 @@ export function createFiresideRTCProducer(rtc: FiresideRTC) {
  * This does NOT stop streaming or close channels. It's is meant to be used
  * to cleanup the producer instance after we no longer need it.
  */
-export function cleanupFiresideRTCProducer(producer: FiresideRTCProducer) {
+export function cleanupFiresideRTCProducer({
+	isStreaming,
+	_tokenRenewInterval,
+}: FiresideRTCProducer) {
 	console.log('[FIRESIDE-RTC] Trace(cleanupFiresideRTCProducer)');
 
 	// TODO(big-pp-event) theres nothing to prevent a queued up startStream
 	// to get executed after cleanup is called on the same instance.
-	producer.isStreaming = false;
+	isStreaming.value = false;
 
-	if (producer._tokenRenewInterval) {
-		clearInterval(producer._tokenRenewInterval);
-		producer._tokenRenewInterval = null;
+	if (_tokenRenewInterval.value) {
+		clearInterval(_tokenRenewInterval.value);
+		_tokenRenewInterval.value = null;
 	}
 }
 
-// export function initPreferredProducerDevices(producer: FiresideRTCProducer) {
-// 	const { webcams, mics, speakers } = MediaDeviceService;
-
-// 	const selectedWebcam = SettingStreamProducerWebcam.get();
-// 	const selectedMic = SettingStreamProducerMic.get();
-// 	const shouldStreamDesktopAudio = hasDesktopAudioCaptureSupport
-// 		? SettingStreamProducerShouldStreamDesktopAudio.get()
-// 		: false;
-// 	const selectedDesktopAudio = SettingStreamProducerDesktopAudioDevice.get();
-// 	const selectedSpeaker = SettingStreamProducerGroupAudio.get();
-
-// 	const chooseDeviceId = (
-// 		devices: readonly MediaDeviceInfo[],
-// 		selectedDeviceId: string,
-// 		fallbacks: string[]
-// 	) => {
-// 		// If the selected option was to unset it, we want to make sure it's
-// 		// kept off without the fallback logic.
-// 		if (selectedDeviceId === PRODUCER_UNSET_DEVICE) {
-// 			return undefined;
-// 		}
-
-// 		const preferredDevice = devices.find(i => i.deviceId === selectedDeviceId);
-
-// 		let fallbackDevice: MediaDeviceInfo | undefined;
-// 		if (!preferredDevice) {
-// 			for (const checkLabel of fallbacks) {
-// 				if (!fallbackDevice) {
-// 					fallbackDevice = devices.find(i => i.label.toLowerCase().includes(checkLabel));
-// 				}
-// 			}
-// 		}
-
-// 		return (preferredDevice ?? fallbackDevice)?.deviceId;
-// 	};
-
-// 	const webcamDeviceId = chooseDeviceId(webcams.value, selectedWebcam, [
-// 		'obs virtual camera',
-// 		'obs',
-// 	]);
-// 	setSelectedWebcamDeviceId(producer, webcamDeviceId ?? PRODUCER_UNSET_DEVICE);
-
-// 	let workingMics = [...mics.value];
-// 	const micDeviceId = chooseDeviceId(workingMics, selectedMic, ['default']);
-// 	setSelectedMicDeviceId(producer, micDeviceId ?? PRODUCER_UNSET_DEVICE);
-
-// 	// Filter out any selection for the mic so that we don't choose it for the
-// 	// desktop input device.
-// 	workingMics = workingMics.filter(i => i.deviceId !== micDeviceId);
-
-// 	const desktopAudioDeviceId = chooseDeviceId(workingMics, selectedDesktopAudio, []);
-// 	setSelectedDesktopAudioStreaming(producer, {
-// 		shouldStream: shouldStreamDesktopAudio,
-// 		deviceId: desktopAudioDeviceId ?? PRODUCER_UNSET_DEVICE,
-// 	});
-
-// 	const speakerDeviceId = chooseDeviceId(speakers.value, selectedSpeaker, []);
-// 	setSelectedGroupAudioDeviceId(producer, speakerDeviceId ?? PRODUCER_DEFAULT_GROUP_AUDIO);
-// }
-
 async function _renewTokens(producer: FiresideRTCProducer) {
-	if (producer._areTokensRenewing) {
-		return;
-	}
-
 	const {
+		_areTokensRenewing,
+		isStreaming,
 		rtc,
 		rtc: { fireside, generation },
 	} = producer;
 
-	producer._areTokensRenewing = true;
+	if (_areTokensRenewing.value) {
+		return;
+	}
+
+	_areTokensRenewing.value = true;
 
 	async function _updateHostTokens() {
 		rtc.log(`Renewing streaming tokens.`);
@@ -219,7 +172,7 @@ async function _renewTokens(producer: FiresideRTCProducer) {
 
 	async function _updateAudienceTokens() {
 		// We only do this if we're currently streaming.
-		if (!producer.isStreaming) {
+		if (!isStreaming.value) {
 			return;
 		}
 
@@ -239,17 +192,19 @@ async function _renewTokens(producer: FiresideRTCProducer) {
 	} catch (e) {
 		rtc.logWarning(`Got error while renewing tokens.`, e);
 	} finally {
-		producer._areTokensRenewing = false;
+		_areTokensRenewing.value = false;
 	}
 }
 
 // Does some work serially.
 function _doBusyWork<T>(producer: FiresideRTCProducer, work: () => Promise<T>) {
+	const { _busyPromise, isBusy } = producer;
+
 	const p = (async () => {
 		// Wait for any previous work to finish first.
-		await producer._busyPromise;
+		await _busyPromise.value;
 
-		producer.isBusy = true;
+		isBusy.value = true;
 		try {
 			const ret = await work();
 
@@ -259,11 +214,11 @@ function _doBusyWork<T>(producer: FiresideRTCProducer, work: () => Promise<T>) {
 
 			return ret;
 		} finally {
-			producer.isBusy = false;
+			isBusy.value = false;
 		}
 	})();
 
-	producer._busyPromise = p;
+	_busyPromise.value = p;
 	return p;
 }
 
@@ -271,11 +226,12 @@ export function setSelectedWebcamDeviceId(
 	producer: FiresideRTCProducer,
 	newWebcamDeviceId: string
 ) {
-	if (newWebcamDeviceId === producer.selectedWebcamDeviceId) {
+	const { selectedWebcamDeviceId } = producer;
+	if (newWebcamDeviceId === selectedWebcamDeviceId.value) {
 		return;
 	}
 
-	producer.selectedWebcamDeviceId = newWebcamDeviceId;
+	selectedWebcamDeviceId.value = newWebcamDeviceId;
 	_updateWebcamTrack(producer);
 }
 
@@ -285,18 +241,21 @@ function _updateWebcamTrack(producer: FiresideRTCProducer) {
 			selectedWebcamDeviceId,
 			streamingWebcamDeviceId,
 			hasWebcamDevice,
+			_videoPreviewElement,
 			rtc,
 			rtc: { videoChannel },
 		} = producer;
 		const { webcams } = MediaDeviceService;
 
 		let deviceId: string | null = null;
-		if (hasWebcamDevice) {
-			const deviceExists = !!webcams.value.find(i => i.deviceId === selectedWebcamDeviceId);
-			deviceId = deviceExists ? selectedWebcamDeviceId : null;
+		if (hasWebcamDevice.value) {
+			const deviceExists = !!webcams.value.find(
+				i => i.deviceId === selectedWebcamDeviceId.value
+			);
+			deviceId = deviceExists ? selectedWebcamDeviceId.value : null;
 		}
 
-		if (deviceId === streamingWebcamDeviceId) {
+		if (deviceId === streamingWebcamDeviceId.value) {
 			rtc.log(`Video device is already set to ${deviceId}, skipping.`);
 			return;
 		}
@@ -347,6 +306,63 @@ function _updateWebcamTrack(producer: FiresideRTCProducer) {
 
 				const AgoraRTC = await AgoraRTCLazy;
 
+				// Test code below.
+
+				// nw.Screen.Init();
+
+				// const track = await new Promise<ILocalVideoTrack>((resolve, reject) => {
+				// 	nw.Screen.chooseDesktopMedia(['window', 'screen'], function (streamId) {
+				// 		navigator.webkitGetUserMedia(
+				// 			{
+				// 				audio: false,
+				// 				video: {
+				// 					mandatory: {
+				// 						chromeMediaSource: 'desktop',
+				// 						chromeMediaSourceId: streamId,
+				// 						maxWidth: 1920,
+				// 						maxHeight: 1080,
+				// 					},
+				// 					optional: [],
+				// 				},
+				// 			},
+				// 			(stream: MediaStream) => {
+				// 				const track = AgoraRTC.createCustomVideoTrack({
+				// 					optimizationMode: mode,
+				// 					// encoderConfig: {
+				// 					// 	bitrateMax: bitrate,
+				// 					// 	width: { max: width, ideal: width },
+				// 					// 	height: { max: height, ideal: height },
+				// 					// 	frameRate: { max: fps },
+				// 					// },
+				// 					bitrateMax: bitrate,
+				// 					mediaStreamTrack: stream.getVideoTracks()[0],
+				// 				});
+
+				// 				resolve(track);
+				// 			},
+				// 			() => {
+				// 				console.error('nope');
+				// 				reject();
+				// 			}
+				// 		);
+				// 	});
+				// });
+
+				// const stream = await navigator.mediaDevices.getDisplayMedia({
+				// 	audio: false,
+				// 	video: {
+				// 		width: { max: width, ideal: width },
+				// 		height: { max: height, ideal: height },
+				// 		frameRate: { max: fps, ideal: fps },
+				// 	},
+				// });
+
+				// const track = AgoraRTC.createCustomVideoTrack({
+				// 	optimizationMode: mode,
+				// 	bitrateMax: bitrate,
+				// 	mediaStreamTrack: stream.getVideoTracks()[0],
+				// });
+
 				const track = await AgoraRTC.createCameraVideoTrack({
 					cameraId: deviceId,
 					optimizationMode: mode,
@@ -364,23 +380,24 @@ function _updateWebcamTrack(producer: FiresideRTCProducer) {
 			},
 		});
 
-		producer.streamingWebcamDeviceId = deviceId;
+		streamingWebcamDeviceId.value = deviceId;
 
 		// No need to await on this. its not essential.
 		updateSetIsStreaming(producer);
 
-		if (producer._videoPreviewElement) {
-			previewChannelVideo(videoChannel, producer._videoPreviewElement);
+		if (_videoPreviewElement.value) {
+			previewChannelVideo(videoChannel, _videoPreviewElement.value);
 		}
 	});
 }
 
 export function setSelectedMicDeviceId(producer: FiresideRTCProducer, newMicId: string) {
-	if (newMicId === producer.selectedMicDeviceId) {
+	const { selectedMicDeviceId } = producer;
+	if (newMicId === selectedMicDeviceId.value) {
 		return;
 	}
 
-	producer.selectedMicDeviceId = newMicId;
+	selectedMicDeviceId.value = newMicId;
 	_updateMicTrack(producer);
 }
 
@@ -396,12 +413,12 @@ function _updateMicTrack(producer: FiresideRTCProducer) {
 		const { mics } = MediaDeviceService;
 
 		let deviceId: string | null = null;
-		if (hasMicDevice) {
-			const deviceExists = !!mics.value.find(i => i.deviceId === selectedMicDeviceId);
-			deviceId = deviceExists ? selectedMicDeviceId : null;
+		if (hasMicDevice.value) {
+			const deviceExists = !!mics.value.find(i => i.deviceId === selectedMicDeviceId.value);
+			deviceId = deviceExists ? selectedMicDeviceId.value : null;
 		}
 
-		if (deviceId === streamingMicDeviceId) {
+		if (deviceId === streamingMicDeviceId.value) {
 			rtc.log(`Mic device is already set to ${deviceId}, skipping.`);
 			return;
 		}
@@ -429,7 +446,7 @@ function _updateMicTrack(producer: FiresideRTCProducer) {
 		// No need to await on this. its not essential.
 		updateSetIsStreaming(producer);
 
-		producer.streamingMicDeviceId = deviceId;
+		streamingMicDeviceId.value = deviceId;
 	});
 }
 
@@ -437,15 +454,16 @@ export function setSelectedDesktopAudioStreaming(
 	producer: FiresideRTCProducer,
 	{ shouldStream, deviceId }: { shouldStream: boolean; deviceId: string }
 ) {
+	const { shouldStreamDesktopAudio, selectedDesktopAudioDeviceId } = producer;
 	if (
-		shouldStream === producer.shouldStreamDesktopAudio &&
-		deviceId === producer.selectedDesktopAudioDeviceId
+		shouldStream === shouldStreamDesktopAudio.value &&
+		deviceId === selectedDesktopAudioDeviceId.value
 	) {
 		return;
 	}
 
-	producer.shouldStreamDesktopAudio = shouldStream;
-	producer.selectedDesktopAudioDeviceId = deviceId;
+	shouldStreamDesktopAudio.value = shouldStream;
+	selectedDesktopAudioDeviceId.value = deviceId;
 	_updateDesktopAudioTrack(producer);
 }
 
@@ -456,32 +474,39 @@ function _updateDesktopAudioTrack(producer: FiresideRTCProducer) {
 			shouldStreamDesktopAudio,
 			selectedDesktopAudioDeviceId,
 			streamingDesktopAudioDeviceId,
+			streamingASG,
 			rtc,
 			rtc: { videoChannel },
 		} = producer;
 		const { mics } = MediaDeviceService;
 
 		let deviceId: string | null = null;
-		if (hasDesktopAudioDevice) {
+		if (hasDesktopAudioDevice.value) {
 			const deviceExists = !!mics.value.find(
-				i => i.deviceId === selectedDesktopAudioDeviceId
+				i => i.deviceId === selectedDesktopAudioDeviceId.value
 			);
-			deviceId = deviceExists ? selectedDesktopAudioDeviceId : null;
+			deviceId = deviceExists ? selectedDesktopAudioDeviceId.value : null;
 		}
 
+		// Freeze the state we want to be in.
+		const shouldStream = shouldStreamDesktopAudio.value;
+
 		if (
-			shouldStreamDesktopAudio === !!producer.streamingASG &&
-			deviceId === streamingDesktopAudioDeviceId
+			shouldStream === !!streamingASG.value &&
+			deviceId === streamingDesktopAudioDeviceId.value
 		) {
 			rtc.log(`Desktop audio already set up properly, skipping.`);
 			return;
 		}
 
-		rtc.log(`Setting desktop audio device.`, { shouldStreamDesktopAudio, deviceId });
+		rtc.log(`Setting desktop audio device.`, {
+			shouldStream,
+			deviceId,
+		});
 
 		await setChannelAudioTrack(videoChannel, {
 			async trackBuilder() {
-				if (!shouldStreamDesktopAudio && !deviceId) {
+				if (!shouldStream && !deviceId) {
 					return null;
 				}
 
@@ -490,11 +515,11 @@ function _updateDesktopAudioTrack(producer: FiresideRTCProducer) {
 
 				// If a device was set for streaming, we want to use that
 				// instead of using ASG.
-				if (shouldStreamDesktopAudio) {
+				if (shouldStream) {
 					rtc.log(`Creating desktop audio track from ASG.`);
 
 					const generator = new MediaStreamTrackGenerator({ kind: 'audio' });
-					producer.streamingASG = startDesktopAudioCapture(generator.writable);
+					streamingASG.value = startDesktopAudioCapture(generator.writable);
 
 					track = AgoraRTC.createCustomAudioTrack({
 						mediaStreamTrack: generator,
@@ -525,14 +550,14 @@ function _updateDesktopAudioTrack(producer: FiresideRTCProducer) {
 			async onTrackClose() {
 				// Only need to close the track if we're streaming the desktop
 				// audio with ASG.
-				if (!producer.streamingASG) {
+				if (!streamingASG.value) {
 					return;
 				}
 
 				rtc.log(`Stop streaming desktop audio through ASG.`);
 
-				await producer.streamingASG.stop();
-				producer.streamingASG = null;
+				await streamingASG.value.stop();
+				streamingASG.value = null;
 
 				rtc.log(`Stopped streaming desktop audio ASG.`);
 			},
@@ -541,16 +566,17 @@ function _updateDesktopAudioTrack(producer: FiresideRTCProducer) {
 		// No need to await on this. its not essential.
 		updateSetIsStreaming(producer);
 
-		producer.streamingDesktopAudioDeviceId = deviceId;
+		streamingDesktopAudioDeviceId.value = deviceId;
 	});
 }
 
 export function setSelectedGroupAudioDeviceId(producer: FiresideRTCProducer, newSpeakerId: string) {
-	if (newSpeakerId === producer.selectedGroupAudioDeviceId) {
+	const { selectedGroupAudioDeviceId } = producer;
+	if (newSpeakerId === selectedGroupAudioDeviceId.value) {
 		return;
 	}
 
-	producer.selectedGroupAudioDeviceId = newSpeakerId;
+	selectedGroupAudioDeviceId.value = newSpeakerId;
 	_updateGroupAudioTrack(producer);
 }
 
@@ -564,10 +590,14 @@ function _updateGroupAudioTrack(producer: FiresideRTCProducer) {
 		} = producer;
 		const { speakers } = MediaDeviceService;
 
-		const deviceExists = !!speakers.value.find(i => i.deviceId === selectedGroupAudioDeviceId);
-		const deviceId = deviceExists ? selectedGroupAudioDeviceId : PRODUCER_DEFAULT_GROUP_AUDIO;
+		const deviceExists = !!speakers.value.find(
+			i => i.deviceId === selectedGroupAudioDeviceId.value
+		);
+		const deviceId = deviceExists
+			? selectedGroupAudioDeviceId.value
+			: PRODUCER_DEFAULT_GROUP_AUDIO;
 
-		if (deviceId === streamingChatPlaybackDeviceId) {
+		if (deviceId === streamingChatPlaybackDeviceId.value) {
 			rtc.log(`Mic device is already set to ${deviceId}, skipping.`);
 			return;
 		}
@@ -609,7 +639,7 @@ function _updateGroupAudioTrack(producer: FiresideRTCProducer) {
 			}),
 		]);
 
-		producer.streamingChatPlaybackDeviceId = deviceId;
+		streamingChatPlaybackDeviceId.value = deviceId;
 	});
 }
 
@@ -625,7 +655,7 @@ function _updateRemoteUserPlaybackDevice(
 		return;
 	}
 
-	if (streamingChatPlaybackDeviceId !== null) {
+	if (streamingChatPlaybackDeviceId.value !== null) {
 		rtc.log(`- applying new audio track for user ${remoteUser.uid}`);
 		return updateTrackPlaybackDevice(producer, audioTrack);
 	}
@@ -639,11 +669,11 @@ export async function updateTrackPlaybackDevice(
 	producer: FiresideRTCProducer,
 	track: ILocalAudioTrack | IRemoteAudioTrack
 ) {
-	const deviceId = producer.streamingChatPlaybackDeviceId;
-	if (deviceId !== null) {
+	const { streamingChatPlaybackDeviceId: deviceId } = producer;
+	if (deviceId.value !== null) {
 		try {
 			// This will throw an error if they're not on Chrome.
-			return track.setPlaybackDevice(deviceId);
+			return track.setPlaybackDevice(deviceId.value);
 		} catch {}
 	}
 }
@@ -665,12 +695,18 @@ export async function updateSetIsStreaming(
 	producer: FiresideRTCProducer,
 	options?: SetIsStreamingOptions
 ) {
-	const { rtc } = producer;
+	const {
+		rtc,
+		selectedWebcamDeviceId,
+		selectedMicDeviceId,
+		shouldStreamDesktopAudio,
+		selectedDesktopAudioDeviceId,
+	} = producer;
 
 	// We want to be able to bypass the producer's _isStreaming setting
 	// because during cleanup we may call this before the producer has actually
 	// disposed of their streams and we don't want to wait on that.
-	const isStreaming = options?.isStreaming ?? producer.isStreaming;
+	const isStreaming = options?.isStreaming ?? producer.isStreaming.value;
 
 	let response: any = null;
 
@@ -681,14 +717,14 @@ export async function updateSetIsStreaming(
 				is_streaming: isStreaming,
 				streaming_uid: rtc.streamingUid,
 				has_video:
-					producer.selectedWebcamDeviceId !== PRODUCER_UNSET_DEVICE &&
+					selectedWebcamDeviceId.value !== PRODUCER_UNSET_DEVICE &&
 					rtc.videoChannel._localVideoTrack !== null,
 				has_mic_audio:
-					producer.selectedMicDeviceId !== PRODUCER_UNSET_DEVICE &&
+					selectedMicDeviceId.value !== PRODUCER_UNSET_DEVICE &&
 					rtc.chatChannel._localAudioTrack !== null,
 				has_desktop_audio:
-					(producer.shouldStreamDesktopAudio ||
-						producer.selectedDesktopAudioDeviceId !== PRODUCER_UNSET_DEVICE) &&
+					(shouldStreamDesktopAudio.value ||
+						selectedDesktopAudioDeviceId.value !== PRODUCER_UNSET_DEVICE) &&
 					rtc.videoChannel._localAudioTrack !== null,
 			},
 			{ detach: true }
@@ -709,11 +745,11 @@ export function setVideoPreviewElement(
 		rtc: { videoChannel },
 	} = producer;
 
-	if (_videoPreviewElement && _videoPreviewElement !== element) {
-		_videoPreviewElement.innerHTML = '';
+	if (_videoPreviewElement.value && _videoPreviewElement.value !== element) {
+		_videoPreviewElement.value.innerHTML = '';
 	}
 
-	producer._videoPreviewElement = element ? markRaw(element) : null;
+	producer._videoPreviewElement.value = element;
 	if (element) {
 		previewChannelVideo(videoChannel, element);
 	}
@@ -739,16 +775,16 @@ export function getOwnMicAudioVolume({ rtc: { chatChannel, generation } }: Fires
 
 export async function startStreaming(producer: FiresideRTCProducer) {
 	await _doBusyWork(producer, async () => {
-		if (producer.isStreaming) {
+		const {
+			isStreaming,
+			rtc,
+			rtc: { videoChannel, chatChannel, generation },
+		} = producer;
+
+		if (isStreaming.value) {
 			return;
 		}
-		producer.isStreaming = true;
-
-		const {
-			rtc,
-			rtc: { videoChannel, chatChannel },
-		} = producer;
-		const generation = rtc.generation;
+		isStreaming.value = true;
 
 		const response = await updateSetIsStreaming(producer);
 
@@ -756,11 +792,11 @@ export async function startStreaming(producer: FiresideRTCProducer) {
 			rtc.logWarning(`Couldn't start streaming.`, response);
 
 			showErrorGrowl(
-				Translate.$gettext(
+				$gettext(
 					`Couldn't start streaming. Either fireside has ended, your permissions to stream have been revoked or you have a running stream elsewhere.`
 				)
 			);
-			producer.isStreaming = false;
+			isStreaming.value = false;
 			return;
 		}
 
@@ -785,15 +821,16 @@ export function stopStreaming(producer: FiresideRTCProducer) {
 
 async function _stopStreaming(producer: FiresideRTCProducer, becomeBusy: boolean) {
 	const busyWork = async () => {
-		if (!producer.isStreaming) {
-			return;
-		}
-		producer.isStreaming = false;
-
 		const {
+			isStreaming,
 			rtc,
 			rtc: { videoChannel, chatChannel },
 		} = producer;
+
+		if (!isStreaming.value) {
+			return;
+		}
+		isStreaming.value = false;
 
 		// No need to await on this. its not essential.
 		updateSetIsStreaming(producer);
@@ -829,6 +866,7 @@ async function _stopStreaming(producer: FiresideRTCProducer, becomeBusy: boolean
  */
 function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
 	const {
+		isStreaming,
 		rtc,
 		rtc: { streamingUid, videoChannel, chatChannel },
 	} = producer;
@@ -837,7 +875,7 @@ function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
 	let user = rtc.localUser;
 	const hadUser = !!user;
 
-	if (!producer.isStreaming) {
+	if (!isStreaming.value) {
 		if (user) {
 			rtc.log(`Destroying local RTC user since we're no longer streaming.`);
 
