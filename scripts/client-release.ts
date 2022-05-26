@@ -1,8 +1,8 @@
-const { runShell, execShell } = require('../gulp/tasks/build-utils');
-const { version } = require('../package.json');
-const path = require('path');
-const { readFile, writeFile } = require('fs-extra');
+import { readFile, writeFile } from 'fs-extra';
+import * as path from 'path';
+import { execShell, runShell } from './build/utils';
 
+const { version } = require('../package.json');
 const argv = process.argv;
 
 main();
