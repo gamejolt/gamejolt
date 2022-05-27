@@ -490,6 +490,7 @@ $-button-height = 40px
 
 .-input
 	flex: auto
+	min-width: 0
 
 	@media $media-sm-up
 		margin-left: $left-gutter-size

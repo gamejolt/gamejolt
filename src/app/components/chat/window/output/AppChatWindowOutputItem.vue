@@ -201,7 +201,8 @@ function onItemWrapperResize() {
 	}
 
 	const { offsetWidth } = itemWrapper.value;
-	contentViewerBounds.width = Math.max(offsetWidth - 32 - 12 * 2, 100);
+	const decoratorPadding = 12 * 2;
+	contentViewerBounds.width = Math.max(offsetWidth - decoratorPadding, 100);
 }
 </script>
 
@@ -387,6 +388,7 @@ $-min-item-width = 24px
 	padding: 12px
 	background-color: var(--theme-bg)
 	z-index: 1
+	max-width: 100%
 
 .-floating-data-anchor
 	position: relative
@@ -458,7 +460,7 @@ $-min-item-width = 24px
 .-floating-data-right
 	position: absolute
 	top: -2px
-	right: -4px
+	right: -8px
 	transform: translateX(50%)
 
 .-message-actions

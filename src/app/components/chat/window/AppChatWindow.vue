@@ -418,11 +418,13 @@ function onMobileAppBarBack() {
 	display: flex
 	flex-direction: column
 	flex: auto
+	min-width: 0
+	flex-basis: 480px
 
 .-sidebar
 	position: relative
 	width: 320px
-	flex: none
+	flex: 0 1 320px
 
 	@media $media-mobile
 		position: fixed
