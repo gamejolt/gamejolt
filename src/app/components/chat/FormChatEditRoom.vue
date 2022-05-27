@@ -61,7 +61,14 @@ const roomBackgroundId = ref(room.value.background?.id || null);
 
 watch(
 	() => room.value.background,
-	async () => {
+	() => {
+		// If we don't have any backgrounds available to us (none unlocked or no
+		// permissions to set a background), don't bother fetching new
+		// backgrounds.
+		if (backgrounds.value.length === 0) {
+			return;
+		}
+
 		if (isLoadingBackgrounds.value) {
 			return;
 		}
