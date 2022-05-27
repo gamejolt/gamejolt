@@ -460,7 +460,7 @@ $-min-item-width = 24px
 .-floating-data-right
 	position: absolute
 	top: -2px
-	right: -8px
+	right: -4px
 	transform: translateX(50%)
 
 .-message-actions
@@ -474,15 +474,20 @@ $-min-item-width = 24px
 
 .-message-actions-item
 	border-right: 1px solid var(--theme-bg-subtle)
+	width: 41px
+	display: inline-flex
+	align-items: center
+	justify-content: center
+	padding: 8.5px 0
 
 	&:hover
 		background-color: unquote('rgba(var(--theme-fg-rgb), 0.1)')
 
 	&:last-child
 		border-right: none
+		width: 40px
 
 	::v-deep(.jolticon)
-		padding: 8.5px 12px
 		font-size: 16px
 		margin: 0
 
