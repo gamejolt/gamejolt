@@ -20,9 +20,13 @@ export interface KernelRecipeBase {
 	/** Default: `false` */
 	zIndexInvert: boolean;
 	/** Default: `true` */
-	reverseFadeOut: boolean;
+	fadeOut: boolean;
+	/** Default: `0.3` when {@link reverse}, `0` otherwise */
+	fadeInStop: number;
+	/** Default: `0.8` when {@link fadeOut}, `0` otherwise */
+	fadeOutStart: number;
 	/** Default: `false` */
-	forwardFadeIn: boolean;
+	useClassFadeIn: boolean;
 }
 
 export type PopcornKernelData = KernelRecipeBase & {
@@ -67,10 +71,12 @@ export function createPopcornKettleController() {
 			baseSize = 32.0,
 			reverse = false,
 			zIndexInvert = false,
-			reverseFadeOut = true,
-			forwardFadeIn = false,
-			popAngleVariance = 45.0,
+			fadeOut = true,
+			useClassFadeIn = false,
+			fadeInStop = reverse ? 0.3 : 0,
+			fadeOutStart = fadeOut ? 0.8 : 0,
 			rotationVelocityVariance = 10.0,
+			popAngleVariance = 45.0,
 			onDispose,
 		}: Partial<KernelRecipe> = {}
 	) {
@@ -80,16 +86,18 @@ export function createPopcornKettleController() {
 
 		const _kernelData: PopcornKernelData = {
 			key: Date.now(),
-			downwardGravityStrength,
+			kernelImage,
 			duration,
 			popAngle: _randomizePopAngle(popAngle, { range: popAngleVariance }),
+			downwardGravityStrength,
 			velocity,
 			baseSize,
 			reverse,
 			zIndexInvert,
-			reverseFadeOut,
-			forwardFadeIn,
-			kernelImage,
+			fadeOut,
+			useClassFadeIn,
+			fadeInStop,
+			fadeOutStart,
 			rotationVelocity: _randomizeRotation({ range: rotationVelocityVariance }),
 		};
 

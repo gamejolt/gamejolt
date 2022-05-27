@@ -88,11 +88,15 @@ async function onStickerPlaced(placement: StickerPlacement) {
 	}
 
 	kettleController.addKernel(img_url, {
-		duration: 1_000,
+		duration: 2_500,
 		baseSize: 48,
-		velocity: 20,
-		downwardGravityStrength: 1.5,
-		forwardFadeIn: true,
+		velocity: 22.5,
+		downwardGravityStrength: 2,
+		popAngleVariance: 20,
+		useClassFadeIn: true,
+		fadeInStop: 0,
+		fadeOutStart: 0.8,
+		fadeOut: true,
 	});
 }
 </script>

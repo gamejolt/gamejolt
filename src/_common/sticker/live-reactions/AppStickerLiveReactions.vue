@@ -153,7 +153,7 @@ function onStickerPlaced(placement: StickerPlacement) {
 		...baseKernelOptions,
 		popAngle,
 		reverse: true,
-		reverseFadeOut: false,
+		fadeOut: false,
 		zIndexInvert: true,
 		onDispose: () => {
 			if (tempKettle) {

@@ -30,6 +30,14 @@ onMounted(() => kernelFrameCallbacks.value.push(calcData));
 
 onBeforeUnmount(() => arrayRemove(kernelFrameCallbacks.value, i => toRaw(i) === toRaw(calcData)));
 
+function lerp(a: number, b: number, t: number) {
+	return a * (1.0 - t) + b * t;
+}
+
+function inverseLerp(a: number, b: number, val: number) {
+	return (val - a) / (b - a);
+}
+
 function calcData() {
 	const {
 		downwardGravityStrength,
@@ -37,18 +45,21 @@ function calcData() {
 		popAngle,
 		rotationVelocity,
 		reverse,
-		reverseFadeOut,
+		fadeInStop,
+		fadeOutStart,
+		fadeOut,
 	} = kernelData.value;
 
 	const now = Date.now();
 	const dateVal = (now - startTime) / (endTime - startTime);
-	let animLerp = Math.max(0, Math.min(1, dateVal));
+	let animVal = Math.max(0, Math.min(1, dateVal));
+	var opacityVal = animVal;
 	if (reverse) {
-		animLerp = 1 - animLerp;
+		animVal = 1 - animVal;
 	}
 
 	const _gravity = downwardGravityStrength;
-	const _timeAdjusted = animLerp * velocity;
+	const _timeAdjusted = animVal * velocity;
 	const _velocity = velocity;
 	const _angle = popAngle;
 
@@ -62,25 +73,18 @@ function calcData() {
 
 	let { opacity, scale, rotation, offsetX, offsetY } = styleData.value;
 
-	if (reverse) {
-		const _fadeInStop = 0.7;
-		const _fadeOutStart = reverseFadeOut ? 0.2 : 0;
-		var val = animLerp;
-
-		if (_fadeInStop < val) {
-			val = (-_fadeInStop + val) / (1 - _fadeInStop);
-		} else if (val < _fadeOutStart) {
-			val = (_fadeOutStart - val) / _fadeOutStart;
-		} else {
-			val = 0;
-		}
-
-		opacity = Math.max(0, Math.min(1, 1 * (1 - val) + 0 * val));
+	if (fadeInStop > opacityVal) {
+		opacityVal = opacityVal / fadeInStop;
+	} else if (fadeOut && opacityVal > fadeOutStart) {
+		opacityVal = Math.abs(1 - inverseLerp(fadeOutStart, 1, opacityVal));
 	} else {
-		opacity = 1 - animLerp;
+		opacityVal = 1;
 	}
-	scale = Math.max(0, Math.min(1, 1 * (1 - animLerp) + 0.5 * animLerp));
-	rotation = rotationVelocity * animLerp;
+
+	opacity = Math.max(0, Math.min(1, opacityVal));
+
+	scale = Math.max(0, Math.min(1, lerp(1, 0.5, animVal)));
+	rotation = rotationVelocity * animVal;
 	rotation = (rotation * 180) / Math.PI;
 
 	offsetY = _verticalPosition;
@@ -99,7 +103,7 @@ function calcData() {
 <template>
 	<div
 		class="popcorn-kernel"
-		:class="{ '-kernel-forward': !kernelData.reverse && kernelData.forwardFadeIn }"
+		:class="{ '-kernel-forward': kernelData.useClassFadeIn }"
 		:style="{
 			transform: `translate3d(${styleData.offsetX}px, ${styleData.offsetY}px, 0) scale(${styleData.scale})`,
 		}"
