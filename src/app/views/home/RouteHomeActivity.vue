@@ -1,36 +1,45 @@
 <script lang="ts">
-import { computed, inject, ref, watch } from 'vue';
-import { Api } from '../../../_common/api/api.service';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { ActivityFeedService } from '../../components/activity/feed/feed-service';
-import { useAppStore } from '../../store/index';
-import { RouteActivityFeedController } from './feed.vue';
-import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
-import { illNoComments } from '../../img/ill/illustrations';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
-import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
+import { inject, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
-import { AppActivityFeedLazy } from '../../components/lazy';
+import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
+import { configHomeDefaultFeed } from '../../../_common/config/config.service';
+import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
+import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
+import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import { ActivityFeedService } from '../../components/activity/feed/feed-service';
+import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
+import { AppActivityFeedLazy } from '../../components/lazy';
+import { illNoComments } from '../../img/ill/illustrations';
+import { useAppStore } from '../../store/index';
+import { HOME_FEED_ACTIVITY } from './home-feed.service';
+import { RouteActivityFeedController } from './RouteHomeFeed.vue';
+
+function getFetchUrl() {
+	let url = '/web/dash/activity/activity';
+	// If our home feed is not the activity feed, we only want to include the actual followed content in the feed.
+	if (configHomeDefaultFeed.value !== HOME_FEED_ACTIVITY) {
+		url += '?only-followed=1';
+	}
+	return url;
+}
 
 export default {
 	...defineAppRouteOptions({
 		cache: true,
 		lazy: true,
 		resolver: ({ route }) =>
-			Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/activity')),
+			Api.sendRequest(ActivityFeedService.makeFeedUrl(route, getFetchUrl())),
 	}),
 };
 </script>
 
 <script lang="ts" setup>
 const { grid, unreadActivityCount } = useAppStore();
-const controller = inject<RouteActivityFeedController>('route-activity-feed')!;
+const { feed } = inject<RouteActivityFeedController>('route-activity-feed')!;
 
 const isBootstrapped = ref(false);
-
-const feed = computed(() => controller.feed);
 
 watch(
 	unreadActivityCount,
@@ -44,12 +53,12 @@ watch(
 
 createAppRoute({
 	onInit() {
-		controller.feed = ActivityFeedService.routeInit(isBootstrapped.value);
+		feed.value = ActivityFeedService.routeInit(isBootstrapped.value);
 	},
 	onResolved({ payload, fromCache }) {
 		isBootstrapped.value = true;
 
-		controller.feed = ActivityFeedService.routed(
+		feed.value = ActivityFeedService.routed(
 			feed.value,
 			{
 				type: 'EventItem',

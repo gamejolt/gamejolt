@@ -5,7 +5,7 @@ import { ForumTopic } from '../../../../_common/forum/topic/topic.model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
+import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import AppForumTopicUpvoteWidget from '../topic/upvote-widget/upvote-widget.vue';

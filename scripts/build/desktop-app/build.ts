@@ -16,7 +16,12 @@ const clientSections = Object.entries(gjSectionConfigs)
 
 export type ClientBuildOptions = {
 	environment: Options['environment'];
-	buildType: Options['buildType'];
+
+	/** The build type to do */
+	buildType: 'build' | 'serve-build';
+
+	/** Whether to produce a staging build. */
+	staging: boolean;
 };
 
 export async function buildClient(options: ClientBuildOptions) {
@@ -32,23 +37,13 @@ export async function buildClient(options: ClientBuildOptions) {
 }
 
 async function buildSection(section: GjSectionName, options: ClientBuildOptions) {
-	const crossEnvCmd = path.resolve(rootDir, 'node_modules', '.bin', 'cross-env');
-
-	const envVars = Object.entries({
-		// Avoid cleaning up the target build directory.
-		// This lets us build multiple sections in the same dir.
-		GJ_EMPTY_OUTDIR: 0,
-
-		GJ_ENVIRONMENT: options.environment,
-		GJ_BUILD_TYPE: options.buildType,
-		GJ_PLATFORM: 'desktop',
-		GJ_SECTION: section,
-	})
-		.map(([k, v]) => `${k}=${v}`)
-		.join(' ');
-
 	console.log(`Building ${section} section`);
-	await runShell(`${crossEnvCmd} ${envVars} yarn run build`);
+	await runShell(
+		`yarn build --no-empty-outdir --platform desktop` +
+			` --environment ${options.environment}` +
+			` --build-type ${options.buildType}` +
+			` --section ${section}`
+	);
 }
 
 export type ClientPackageOptions = {

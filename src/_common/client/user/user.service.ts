@@ -1,5 +1,4 @@
 import { unref, watch } from 'vue';
-import { Api } from '../../api/api.service';
 import { Environment } from '../../environment/environment.service';
 import { Navigate } from '../../navigate/navigate.service';
 import type { CommonStore } from '../../store/common-store';
@@ -43,7 +42,7 @@ export class ClientUser {
 	}
 
 	private static authRedirect() {
-		if (GJ_IS_WATCHING) {
+		if (GJ_BUILD_TYPE === 'serve-hmr') {
 			console.log('aborting auth redirect');
 			return;
 		}

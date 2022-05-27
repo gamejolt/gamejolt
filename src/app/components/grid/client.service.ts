@@ -9,6 +9,7 @@ import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import { importNoSSR } from '../../../_common/code-splitting';
 import { Community } from '../../../_common/community/community.model';
+import { configHomeDefaultFeed, ensureConfig } from '../../../_common/config/config.service';
 import { getCookie } from '../../../_common/cookie/cookie.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { Fireside } from '../../../_common/fireside/fireside.model';
@@ -33,6 +34,7 @@ import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
 import { User } from '../../../_common/user/user.model';
 import { AppStore } from '../../store/index';
 import { router } from '../../views';
+import { HOME_FEED_ACTIVITY, HOME_FEED_FYP } from '../../views/home/home-feed.service';
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
 import { CommunityChannel } from './community-channel';
 import { FiresideChannel } from './fireside-channel';
@@ -68,6 +70,7 @@ interface BootstrapPayload {
 		lastNotificationTime: number;
 		notificationCount: number;
 		activityUnreadCount: number;
+		activityUnreadCounts: { [countId: string]: number };
 		notificationUnreadCount: number;
 		unreadFeaturedCommunities: { [communityId: number]: number };
 		unreadCommunities: number[];
@@ -400,6 +403,11 @@ export class GridClient {
 			socketAny.reconnectTimer = { scheduleTimeout: () => {}, reset: () => {} };
 		}
 
+		// Make sure their remote config is setup before connecting fully to
+		// grid. We might end up handling things differently depending on their
+		// split tests.
+		await ensureConfig();
+
 		await pollRequest(
 			'Connect to socket',
 			cancelToken,
@@ -609,9 +617,18 @@ export class GridClient {
 				this.restart(0);
 			});
 
+			let activityUnreadCount = payload.body.activityUnreadCount;
+
+			// If the FYP feed is the default feed, community feature items will
+			// not be returned in the home feed. Only show new-counts from posts
+			// of sources the user follows.
+			if (configHomeDefaultFeed.value === HOME_FEED_FYP) {
+				activityUnreadCount = payload.body.activityUnreadCounts['following'];
+			}
+
 			appStore.setNotificationCount({
 				type: 'activity',
-				count: payload.body.activityUnreadCount,
+				count: activityUnreadCount,
 			});
 			appStore.setNotificationCount({
 				type: 'notifications',
@@ -960,7 +977,11 @@ export class GridClient {
 		const communityState = appStore.communityStates.value.getCommunityState(communityId);
 		communityState.hasUnreadFeaturedPosts = true;
 
-		appStore.incrementNotificationCount({ count: 1, type: 'activity' });
+		// Only increment when we use the activity feed as the home feed, as it includes
+		// the community items only at that point.
+		if (configHomeDefaultFeed.value === HOME_FEED_ACTIVITY) {
+			appStore.incrementNotificationCount({ count: 1, type: 'activity' });
+		}
 	}
 
 	handleCommunityFeatureFireside(_communityId: number, payload: CommunityFeatureFiresidePayload) {

@@ -61,6 +61,8 @@ export function runShell(command: string, options: RunShellOptions = {}) {
 		command += ' ' + args.map(i => shellEscape(i)).join(' ');
 	}
 
+	console.log('Executing: ' + command);
+
 	const child = spawn(command, {
 		cwd: options.cwd,
 		shell: true,
@@ -93,7 +95,7 @@ export function execShell(command: string, options: ExecShellOptions = {}) {
 		command += ' ' + args.map(i => shellEscape(i)).join(' ');
 	}
 
-	return new Promise((resolve, reject) => {
+	return new Promise<string>((resolve, reject) => {
 		exec(command, { cwd: options.cwd, env: options.env }, (error, stdout, stderr) => {
 			if (error) {
 				return reject(error);

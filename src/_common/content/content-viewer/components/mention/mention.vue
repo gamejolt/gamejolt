@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import AppUserCardHover from '../../../../user/card/hover/hover.vue';
+import AppUserCardHover from '../../../../user/card/AppUserCardHover.vue';
 import { User } from '../../../../user/user.model';
 import { ContentOwnerController, ContentOwnerControllerKey } from '../../../content-owner';
 
