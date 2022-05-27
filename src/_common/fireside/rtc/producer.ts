@@ -1,5 +1,6 @@
+import { reactive } from '@vue/runtime-core';
 import type { IAgoraRTCRemoteUser, ILocalAudioTrack, IRemoteAudioTrack } from 'agora-rtc-sdk-ng';
-import { markRaw, reactive } from 'vue';
+import { markRaw } from 'vue';
 import { MediaDeviceService } from '../../agora/media-device.service';
 import { Api } from '../../api/api.service';
 import { importNoSSR } from '../../code-splitting';
