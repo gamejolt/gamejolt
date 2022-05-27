@@ -194,6 +194,7 @@ export const Jolticons = [
 	'screenshare-off',
 	'star-ten-pointed',
 	'expand',
+	'trash-can',
 ] as const;
 </script>
 
