@@ -316,8 +316,7 @@ function onItemWrapperResize() {
 									class="-message-actions-item link-unstyled"
 									@click="removeMessage"
 								>
-									<!-- TODO(chat-backgrounds) trash jolticon -->
-									<AppJolticon icon="remove" />
+									<AppJolticon icon="trash-can" />
 								</a>
 							</template>
 						</div>
