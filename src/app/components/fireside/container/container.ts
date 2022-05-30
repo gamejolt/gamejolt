@@ -8,7 +8,11 @@ import { uuidv4 } from '../../../../utils/uuid';
 import { shallowSetup } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import { getCookie } from '../../../../_common/cookie/cookie.service';
-import { setStickerStreak, useDrawerStore } from '../../../../_common/drawer/drawer-store';
+import {
+	onFiresideStickerPlaced,
+	setStickerStreak,
+	useDrawerStore,
+} from '../../../../_common/drawer/drawer-store';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../../_common/fireside/role/role.model';
 import {
@@ -796,17 +800,32 @@ export class AppFiresideContainer extends Vue {
 
 	onGridStickerPlacement(payload: GridStickerPlacementPayload) {
 		console.debug('[FIRESIDE] Grid sticker placement received.', payload, payload.streak);
-		const c = this.controller;
+		const { rtc, stickerTargetController, fireside } = this.controller;
 		const placement = new StickerPlacement(payload.sticker_placement);
+		const {
+			sticker,
+			target_data: { host_user_id },
+		} = placement;
 
-		setStickerStreak(this.drawerStore, placement.sticker, payload.streak);
+		setStickerStreak(this.drawerStore, sticker, payload.streak);
 
-		// This happens automatically when we're placing our own sticker. Ignore
-		// it here so we don't do it twice.
-		if (payload.user_id !== this.user?.id) {
-			addStickerToTarget(c.stickerTargetController, placement);
-			c.fireside.addStickerToCount(placement.sticker);
+		const wasMyPlacement = payload.user_id === this.user?.id;
+
+		// Stickers and counts get added automatically when we place them
+		// ourselves. Return early so we don't do it twice.
+		if (wasMyPlacement) {
+			return;
 		}
+
+		const focusedUserId = rtc.value?.focusedUser?.userModel?.id;
+
+		if (focusedUserId === host_user_id) {
+			// Display the live sticker only if we're watching the target host.
+			addStickerToTarget(stickerTargetController, placement);
+		}
+		onFiresideStickerPlaced.next(placement);
+
+		fireside.addStickerToCount(sticker);
 	}
 
 	onGridListableHosts(payload: GridListableHostsPayload) {
