@@ -60,6 +60,7 @@ const emit = defineEmits({
 	close: () => true,
 });
 
+// The controller will never change.
 // eslint-disable-next-line vue/no-setup-props-destructure
 const { rtc, isShowingStreamSetup } = props.c;
 const {
@@ -477,17 +478,6 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 
 <template>
 	<AppLoadingFade :is-loading="isStarting">
-		<!-- <a class="-intro" href="https://gamejolt.com/p/qewgmbtc" @click="openHelpLink">
-			<div class="-intro-subtitle">
-				<AppTranslate>
-					Voice chat and livestream on Game Jolt with your friends!
-				</AppTranslate>
-			</div>
-			<div class="-intro-title">
-				<AppTranslate>Read the setup guide to get started</AppTranslate>
-			</div>
-		</a> -->
-
 		<AppForm :controller="form">
 			<template v-if="canStreamAudio">
 				<AppFormGroup
@@ -505,7 +495,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 								</AppTranslate>
 							</p>
 							<AppButton v-if="!micsWasPrompted" @click="onClickPromptMicPermissions">
-								<AppTranslate>Request Permission</AppTranslate>
+								<AppTranslate>Request permission</AppTranslate>
 							</AppButton>
 							<p v-else>
 								<strong>
@@ -585,7 +575,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 								v-if="!speakersWasPrompted"
 								@click="onClickPromptSpeakerPermissions"
 							>
-								<AppTranslate>Request Permission</AppTranslate>
+								<AppTranslate>Request permission</AppTranslate>
 							</AppButton>
 							<p v-else>
 								<strong>
@@ -633,7 +623,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 								v-if="!webcamsWasPrompted"
 								@click="onClickPromptWebcamPermissions"
 							>
-								<AppTranslate>Request Permission</AppTranslate>
+								<AppTranslate>Request permission</AppTranslate>
 							</AppButton>
 							<p v-else>
 								<strong>

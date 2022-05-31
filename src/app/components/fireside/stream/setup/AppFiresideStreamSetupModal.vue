@@ -16,6 +16,7 @@ const props = defineProps({
 	},
 });
 
+// The controller will never change.
 // eslint-disable-next-line vue/no-setup-props-destructure
 const { canBrowserStream, isStreamingElsewhere } = props.c;
 
