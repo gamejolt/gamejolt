@@ -57,6 +57,7 @@ defineProps({
 	align-items: center
 	padding-top: 8px
 	padding-bottom: 8px
+	color: var(--theme-fg)
 
 	&.-hovered
 	&:hover
@@ -89,52 +90,8 @@ defineProps({
 	align-items: baseline
 	padding-left: 16px
 	gap: 8px
-	color: var(--theme-fg)
 
 .-trailing
 	flex: none
 	margin-left: auto
-
-// .-container
-// 	height: 50px
-// 	overflow: hidden
-// 	rounded-corners()
-
-// .-label
-// 	display: flex
-// 	gap: 4px
-// 	align-items: center
-
-// .-name
-// 	text-overflow()
-
-// .-row-icon
-// 	vertical-align: middle
-// 	margin-left: auto
-
-// .-avatar
-// 	position: relative
-
-// 	img
-// 		img-circle()
-// 		display: inline-block
-// 		width: 24px
-// 		vertical-align: middle
-
-// 	.-group-icon
-// 		img-circle()
-// 		display: inline-flex
-// 		align-items: center
-// 		justify-content: center
-// 		vertical-align: middle
-// 		width: 32px
-// 		height: 32px
-// 		background-color: var(--theme-backlight)
-
-// 		.jolticon
-// 			color: var(--theme-backlight-fg) !important
-
-// 	&-status
-// 		right: 12px
-// 		bottom: 10px
 </style>

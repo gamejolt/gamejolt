@@ -339,7 +339,7 @@ async function leaveRoom() {
 
 <style lang="stylus" scoped>
 $-padding = 16px
-$-padding-v = 24px
+$-padding-v = 16px
 
 .form-chat-edit-room
 	padding: $-padding-v 0
