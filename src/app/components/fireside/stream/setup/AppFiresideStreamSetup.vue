@@ -23,7 +23,6 @@ import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
 import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
-import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import {
 	SettingStreamProducerDesktopAudioDevice,
 	SettingStreamProducerGroupAudio,
@@ -416,14 +415,6 @@ function onClickPromptSpeakerPermissions() {
 	MediaDeviceService.detectSpeakers({ prompt: true, skipIfPrompted: false });
 }
 
-function openHelpLink(event: Event) {
-	if (event.currentTarget instanceof HTMLAnchorElement) {
-		Navigate.newWindow(event.currentTarget.href!);
-		event.stopPropagation();
-		event.preventDefault();
-	}
-}
-
 function wouldInvalidateIfRemoved(fieldToRemove: string) {
 	if (!isPersonallyStreaming.value) {
 		return false;
@@ -671,9 +662,15 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 
 						<p class="help-block">
 							<AppTranslate>
-								If you use OBS or Streamlabs to capture your gameplay, you can set
-								the virtual camera as your video feed.
+								You can use OBS or Streamlabs to stream your gameplay.
 							</AppTranslate>
+							{{ ' ' }}
+							<a
+								href="https://gamejolt.com/p/setup-your-computer-to-stream-video-using-obs-or-streamlabs-3pt3kxnn"
+								target="_blank"
+							>
+								<AppTranslate>Learn how to stream video using OBS</AppTranslate>
+							</a>
 						</p>
 					</template>
 				</AppFormGroup>
@@ -720,7 +717,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 
 								<br />
 
-								<a href="https://gamejolt.com/p/qewgmbtc" @click="openHelpLink">
+								<a href="https://gamejolt.com/p/qewgmbtc" target="_blank">
 									<AppTranslate>
 										Learn how to stream your desktop/game audio
 									</AppTranslate>
