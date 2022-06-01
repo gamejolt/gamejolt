@@ -5,7 +5,7 @@ import { ChatStoreKey } from '../../chat-store';
 import { editMessage as chatEditMessage, queueChatMessage, setMessageEditing } from '../../client';
 import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
-import AppChatWindowSendForm from './form/form.vue';
+import AppChatWindowSendForm from './form/AppChatWindowSendForm.vue';
 
 const props = defineProps({
 	room: {

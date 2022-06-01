@@ -13,7 +13,7 @@ import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified
 import { useAppStore } from '../../../store/index';
 import { ChatStoreKey } from '../chat-store';
 import { leaveChatRoom } from '../client';
-import FormChatEditRoom from '../FormChatEditRoom.vue';
+import FormChatRoomSettings from '../FormChatRoomSettings.vue';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
 import AppChatMemberList from '../member-list/AppChatMemberList.vue';
 import { ChatRoom, getChatRoomTitle } from '../room';
@@ -299,7 +299,7 @@ function onMobileAppBarBack() {
 							</AppMobileAppBar>
 
 							<template v-if="sidebar === 'settings'">
-								<FormChatEditRoom
+								<FormChatRoomSettings
 									:room="room"
 									:show-members-preview="
 										(!showMembersViewButton || Screen.isMobile) &&
