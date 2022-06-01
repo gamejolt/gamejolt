@@ -22,6 +22,7 @@ import { createLightbox } from '../../../../_common/lightbox/lightbox-helpers';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
+import AppResponsiveDimensions from '../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
@@ -92,6 +93,7 @@ const UserFollowLocation = 'postPage';
 		AppPostHeader,
 		AppActivityFeedPostContent,
 		AppSpacer,
+		AppResponsiveDimensions,
 	},
 	directives: {
 		AppTooltip: vAppTooltip,
@@ -118,6 +120,8 @@ export default class AppPostPage extends Vue {
 	recommendedPosts: FiresidePost[] = [];
 	videoStartTime = 0;
 	isPlayerFilled = false;
+	hasVideoProcessingError = false;
+	videoProcessingErrorMsg = '';
 
 	private lightbox = setup(() => {
 		return createLightbox(computed(() => (this.$props as this).post.media));
@@ -197,6 +201,16 @@ export default class AppPostPage extends Vue {
 		}
 	}
 
+	onVideoProcessingError(err: string | Error) {
+		if (typeof err === 'string') {
+			this.hasVideoProcessingError = true;
+			this.videoProcessingErrorMsg = err;
+		} else {
+			// The only cases where an actual error is emitted is on network error during polling.
+			// This does not necessarily mean an actual error during processing, so noop.
+		}
+	}
+
 	onPostRemoved() {
 		this.$router.replace({ name: 'home' });
 		showInfoGrowl(this.$gettext('Your post has been removed'));
@@ -244,22 +258,34 @@ export default class AppPostPage extends Vue {
 		<div v-if="video" class="container-xl">
 			<div class="full-bleed-xs">
 				<template v-if="video.provider === 'gamejolt'">
-					<AppVideoPlayer
-						v-if="!video.is_processing && video.posterMediaItem"
-						context="page"
-						:media-item="video.posterMediaItem"
-						:manifests="video.manifestSources"
-						:view-count="video.view_count"
-						:start-time="videoStartTime"
-						autoplay
-						show-video-stats
-						@play="onVideoPlay"
-					/>
-					<template v-else>
-						<AppVideoProcessingProgress
-							:post="post"
-							@complete="onVideoProcessingComplete"
+					<template v-if="!hasVideoProcessingError">
+						<AppVideoPlayer
+							v-if="!video.is_processing && video.posterMediaItem"
+							context="page"
+							:media-item="video.posterMediaItem"
+							:manifests="video.manifestSources"
+							:view-count="video.view_count"
+							:start-time="videoStartTime"
+							autoplay
+							show-video-stats
+							@play="onVideoPlay"
 						/>
+						<template v-else>
+							<AppVideoProcessingProgress
+								:post="post"
+								@complete="onVideoProcessingComplete"
+								@error="onVideoProcessingError"
+							/>
+						</template>
+					</template>
+					<template v-else>
+						<AppResponsiveDimensions :ratio="16 / 9">
+							<div class="-video-preview">
+								<AppJolticon icon="video" big class="-video-preview-icon" />
+							</div>
+						</AppResponsiveDimensions>
+						<br />
+						<div class="alert alert-notice">{{ videoProcessingErrorMsg }}</div>
 					</template>
 				</template>
 			</div>
@@ -547,4 +573,17 @@ export default class AppPostPage extends Vue {
 
 .-sans-padding-top
 	padding-top: 0
+
+.-video-preview
+	change-bg('bg-offset')
+	rounded-corners-lg()
+	overflow: hidden
+	position: relative
+	height: 100%
+	display: flex
+	justify-content: center
+	align-items: center
+
+.-video-preview-icon
+	filter: drop-shadow(0 0 5px rgba(0, 0, 0, 1))
 </style>

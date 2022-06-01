@@ -21,6 +21,7 @@ import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Payload } from '../../../../../_common/payload/payload-service';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
+import { createTranslatableStringFromPayload } from '../../../../../_common/translation/translatable-string';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
 import AppVideoPlayer from '../../../../../_common/video/player/player.vue';
 import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/processing-progress.vue';
@@ -39,6 +40,8 @@ export const enum VideoStatus {
 	PROCESSING = 'processing',
 	/** The video upload and processing is completed and the video can be viewed */
 	COMPLETE = 'complete',
+	/** The video upload encountered some error */
+	ERROR = 'error',
 }
 
 class Wrapper extends BaseForm<FormModel> {}
@@ -74,6 +77,8 @@ export default class AppFormPostVideo
 	videoProvider = FiresidePostVideo.PROVIDER_GAMEJOLT;
 	isDropActive = false;
 	uploadCancelToken: AbortController | null = null;
+	hasVideoProcessingError = false;
+	videoProcessingErrorMsg = '';
 
 	readonly FiresidePostVideo = FiresidePostVideo;
 	readonly formatNumber = formatNumber;
@@ -138,9 +143,14 @@ export default class AppFormPostVideo
 
 	get videoStatus() {
 		if (this.uploadedVideo) {
+			if (this.hasVideoProcessingError) {
+				return VideoStatus.ERROR;
+			}
+
 			if (this.uploadedVideo.is_processing) {
 				return VideoStatus.PROCESSING;
 			}
+
 			return VideoStatus.COMPLETE;
 		}
 
@@ -173,6 +183,24 @@ export default class AppFormPostVideo
 		this.maxAspect = $payload.maxAspect;
 		this.minAspect = $payload.minAspect;
 		this.allowedFiletypes = $payload.allowedFiletypes;
+
+		const progress = $payload.progress;
+		console.log(progress);
+		if (progress && progress.status === 'error') {
+			this.hasVideoProcessingError = true;
+			if (progress.translatableError) {
+				console.log('Loading error message');
+				this.videoProcessingErrorMsg = this.$gettext('Loading...');
+				createTranslatableStringFromPayload(progress.translatableError).then(tstring => {
+					console.log(tstring);
+					this.videoProcessingErrorMsg = tstring.value;
+				});
+			} else {
+				this.videoProcessingErrorMsg = this.$gettext(
+					'We could not process your video for some reason. Try again later.'
+				);
+			}
+		}
 	}
 
 	async onSubmit() {
@@ -282,23 +310,17 @@ export default class AppFormPostVideo
 		this.emitVideoChange(new FiresidePostVideo(video));
 	}
 
-	onProcessingError(payload: any) {
-		if (payload.reason) {
-			showErrorGrowl(
-				this.$gettextInterpolate(
-					'The server was unable to finish processing your video. Status: %{ reason }',
-					{ reason: (payload.reason as string).toUpperCase().replace('-', '_') }
-				)
-			);
-		} else {
-			showErrorGrowl(
-				this.$gettext(
-					'The server was unable to finish processing your video. Status: GENERIC_FAILURE'
-				)
-			);
-		}
+	onProcessingError(err: string | Error) {
+		if (typeof err === 'string') {
+			this.hasVideoProcessingError = true;
+			this.videoProcessingErrorMsg = err;
 
-		this.cancelUpload();
+			showErrorGrowl(this.$gettext('The server was unable to finish processing your video.'));
+			this.cancelUpload();
+		} else {
+			// The only cases where an actual error is emitted is on network error during polling.
+			// This does not necessarily mean an actual error during processing, so noop.
+		}
 	}
 
 	cancelUpload() {
@@ -439,6 +461,9 @@ export default class AppFormPostVideo
 					@complete="onProcessingComplete"
 					@error="onProcessingError"
 				/>
+			</template>
+			<template v-else-if="videoStatus === 'error'">
+				<div class="alert alert-notice">{{ videoProcessingErrorMsg }}</div>
 			</template>
 			<template v-else-if="videoStatus === 'complete'">
 				<AppVideoPlayer
