@@ -18,7 +18,6 @@ import {
 	canCommunityEjectFireside,
 	canCommunityFeatureFireside,
 } from '../../../../_common/community/community.model';
-import { configClientAllowStreaming } from '../../../../_common/config/config.service';
 import { getDeviceBrowser } from '../../../../_common/device/device.service';
 import { onFiresideStickerPlaced } from '../../../../_common/drawer/drawer-store';
 import { formatDuration } from '../../../../_common/filters/duration';
@@ -245,7 +244,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 	 */
 	const canBrowserStream = computed(() => {
 		if (GJ_IS_DESKTOP_APP) {
-			return configClientAllowStreaming.value;
+			return true;
 		}
 
 		return !(_isFirefox.value || _isSafari.value);
