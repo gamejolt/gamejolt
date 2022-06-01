@@ -1,13 +1,13 @@
 import {
-createMemoryHistory,
-createRouter,
-createWebHashHistory,
-createWebHistory,
-RouteLocationNormalized,
-RouteLocationRaw,
-Router,
-RouteRecordRaw,
-RouterHistory
+	createMemoryHistory,
+	createRouter,
+	createWebHashHistory,
+	createWebHistory,
+	RouteLocationNormalized,
+	RouteLocationRaw,
+	Router,
+	RouteRecordRaw,
+	RouterHistory,
 } from 'vue-router';
 import { Environment } from '../_common/environment/environment.service';
 import { routeError404 } from '../_common/error/page/page.route';
@@ -131,9 +131,10 @@ function guardHijackEvent(elem: HTMLElement, e: any): 'passthrough' | 'window' |
 
 	// don't redirect with control keys
 	if (ke.metaKey || ke.altKey || ke.ctrlKey || ke.shiftKey) {
+		// If in client, we should pop open a new window. Gotta make sure that
+		// if it's a client-relative link, we need to replace with the correct
+		// host.
 		if (GJ_IS_DESKTOP_APP) {
-			// If in client, we should pop open a new window. Gotta make sure that if it's a
-			// client-relative link, we need to replace with the correct host.
 			return 'window';
 		}
 
@@ -149,7 +150,11 @@ function guardHijackEvent(elem: HTMLElement, e: any): 'passthrough' | 'window' |
 	if (elem.getAttribute) {
 		const target = elem.getAttribute('target');
 		if (target && /\b_blank\b/i.test(target)) {
-			// Client handles target="_blank" correctly.
+			// Client doesn't handle target="_blank" correctly.
+			if (GJ_IS_DESKTOP_APP) {
+				return 'window';
+			}
+
 			return 'passthrough';
 		}
 	}
