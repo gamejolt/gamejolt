@@ -30,6 +30,7 @@ defineProps({
 				v-if="chatUsers"
 				:users="chatUsers.collection"
 				:room="chatRoom"
+				:horizontal-padding="0"
 				hide-filter
 			/>
 		</AppScrollScroller>

@@ -18,7 +18,7 @@ import AppPopper from '../../../../_common/popper/popper.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
-import AppChatUserOnlineStatus from '../../chat/user-online-status/user-online-status.vue';
+import AppChatUserOnlineStatus from '../../chat/user-online-status/AppChatUserOnlineStatus.vue';
 import { CommunityEjectFiresideModal } from '../../community/eject-fireside/modal/modal.service';
 import AppFiresideAvatarBase from './AppFiresideAvatarBase.vue';
 

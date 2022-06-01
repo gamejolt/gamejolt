@@ -32,6 +32,11 @@ change-bg($var, $important = false)
 	--theme-bg-actual-trans: var(unquote('--theme-' + $var + '-trans'))
 	theme-prop('background-color', $var, $important)
 
+change-bg-rgba($rgb, $opacity, $important = false)
+	--theme-bg-actual: unquote('rgba(' + $rgb + ', ' + $opacity + ')')
+	--theme-bg-actual-trans: unquote('rgba(' + $rgb + ', 0)')
+	background-color: var(--theme-bg-actual)
+
 rounded-corners-sm()
 	border-radius: $border-radius-small
 

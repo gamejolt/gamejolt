@@ -269,7 +269,6 @@ async function onClickNewMessages() {
 }
 
 function onChatOutputResize(entries: ResizeObserverEntry[]) {
-	console.warn('resized, getting new content bounds');
 	if (entries.length === 0) {
 		return;
 	}

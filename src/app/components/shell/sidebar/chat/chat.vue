@@ -11,7 +11,7 @@ import { useAppStore } from '../../../../store';
 import { ChatStore, ChatStoreKey } from '../../../chat/chat-store';
 import { enterChatRoom, leaveChatRoom } from '../../../chat/client';
 import { sortByLastMessageOn } from '../../../chat/user-collection';
-import AppChatUserList from '../../../chat/user-list/user-list.vue';
+import AppChatUserList from '../../../chat/user-list/AppChatUserList.vue';
 
 @Options({
 	components: {

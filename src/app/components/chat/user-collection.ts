@@ -211,17 +211,14 @@ export function sortCollection(
 	switch (mode) {
 		case 'role':
 			{
-				const dataMap = collection.reduce(
-					(data, i) =>
-						(data[i.id] ??= {
-							role: roleSorts[i.isStaff ? 'staff' : getRoleSort(i)],
-							isFriend: !!chat?.friendsList.get(i.id),
-							lowercaseDisplayName: i.display_name.toLowerCase(),
-						}),
-					{} as {
-						[id: number]: RoleSortData;
-					}
-				);
+				const dataMap: Record<number, RoleSortData> = {};
+				for (const user of collection) {
+					dataMap[user.id] ??= {
+						role: roleSorts[user.isStaff ? 'staff' : getRoleSort(user)],
+						isFriend: !!chat?.friendsList.get(user.id),
+						lowercaseDisplayName: user.display_name.toLowerCase(),
+					};
+				}
 
 				collection.sort((a, b) => {
 					const aData: RoleSortData = dataMap[a.id];

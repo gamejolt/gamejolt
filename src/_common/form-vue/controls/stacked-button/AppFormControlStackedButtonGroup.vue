@@ -35,7 +35,7 @@ const form = useForm()!;
 const { name } = useFormGroup()!;
 
 const { applyValue } = createFormControl<any>({
-	initialValue: 'asdf',
+	initialValue: '',
 	validators,
 	onChange: val => emit('changed', val),
 });

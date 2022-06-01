@@ -11,8 +11,9 @@ import { ChatStore, ChatStoreKey } from '../chat-store';
 import { isUserOnline, tryGetRoomRole } from '../client';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
-import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
+import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
 import AppChatUserPopover from '../user-popover/user-popover.vue';
+import AppChatListItem from '../_list/AppChatListItem.vue';
 
 const props = defineProps({
 	user: {
@@ -22,6 +23,10 @@ const props = defineProps({
 	room: {
 		type: Object as PropType<ChatRoom>,
 		required: true,
+	},
+	horizontalPadding: {
+		type: Number,
+		default: undefined,
 	},
 });
 
@@ -54,7 +59,6 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 
 <template>
 	<AppScrollInview
-		tag="li"
 		class="-container"
 		:config="InviewConfig"
 		@inview="isInview = true"
@@ -66,42 +70,43 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 			block
 			:placement="Screen.isMobile ? 'bottom' : 'left'"
 		>
-			<a>
-				<div class="shell-nav-icon">
-					<div class="-avatar">
-						<img :src="user.img_avatar" />
+			<template #default>
+				<AppChatListItem :horizontal-padding="horizontalPadding">
+					<template #leading>
+						<div class="-member-avatar">
+							<img class="-member-avatar-img" :src="user.img_avatar" />
+						</div>
+					</template>
+
+					<template #leadingFloat>
 						<AppChatUserOnlineStatus
 							v-if="isOnline !== null"
 							class="-avatar-status"
 							:is-online="isOnline"
+							:absolute="false"
 							:size="12"
+							background-color-base="bg"
 						/>
-					</div>
-				</div>
+					</template>
 
-				<div class="shell-nav-label">
-					<div class="-label">
-						<div class="-name">
-							{{ ' ' }}
-							<span>{{ user.display_name }}</span>
-							{{ ' ' }}
-							<span class="tiny text-muted">@{{ user.username }}</span>
-						</div>
+					<template #title>
+						<span>{{ user.display_name }}</span>
+						<span class="tiny text-muted">@{{ user.username }}</span>
+					</template>
 
-						<span class="-row-icon">
-							<span v-if="isOwner" v-app-tooltip="$gettext(`Room Owner`)">
-								<AppJolticon icon="crown" />
-							</span>
-							<span v-else-if="isStaff" v-app-tooltip="$gettext(`Game Jolt Staff`)">
-								<AppJolticon icon="gamejolt" />
-							</span>
-							<span v-else-if="isModerator" v-app-tooltip="$gettext(`Moderator`)">
-								<AppJolticon icon="star" />
-							</span>
+					<template #trailing>
+						<span v-if="isOwner" v-app-tooltip="$gettext(`Room Owner`)">
+							<AppJolticon icon="crown" />
 						</span>
-					</div>
-				</div>
-			</a>
+						<span v-else-if="isStaff" v-app-tooltip="$gettext(`Game Jolt Staff`)">
+							<AppJolticon icon="gamejolt" />
+						</span>
+						<span v-else-if="isModerator" v-app-tooltip="$gettext(`Moderator`)">
+							<AppJolticon icon="star" />
+						</span>
+					</template>
+				</AppChatListItem>
+			</template>
 
 			<template #popover>
 				<AppChatUserPopover :user="user" :room="room" />
@@ -111,46 +116,18 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 </template>
 
 <style lang="stylus" scoped>
-.-container
-	height: 50px
-	overflow: hidden
-	rounded-corners()
+.-member-avatar
+.-member-avatar-img
+	width: 100%
+	height: 100%
 
-.-label
-	display: flex
-	gap: 4px
+.-group-icon
+	display: inline-flex
 	align-items: center
-
-.-name
-	text-overflow()
-
-.-row-icon
+	justify-content: center
 	vertical-align: middle
-	margin-left: auto
+	background-color: var(--theme-backlight)
 
-.-avatar
-	position: relative
-
-	img
-		img-circle()
-		display: inline-block
-		width: 24px
-		vertical-align: middle
-
-	.-group-icon
-		img-circle()
-		display: inline-flex
-		align-items: center
-		justify-content: center
-		vertical-align: middle
-		width: 32px
-		height: 32px
-		background-color: var(--theme-backlight)
-
-		.jolticon
-			color: var(--theme-backlight-fg) !important
-
-	&-status
-		right: 12px
-		bottom: 10px
+	.jolticon
+		color: var(--theme-backlight-fg) !important
 </style>

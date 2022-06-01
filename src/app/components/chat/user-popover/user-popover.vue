@@ -18,7 +18,7 @@ import {
 } from '../client';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
-import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
+import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
 
 @Options({
 	components: {

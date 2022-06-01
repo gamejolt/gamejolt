@@ -17,7 +17,7 @@ import FormChatRoomSettings from '../FormChatRoomSettings.vue';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
 import AppChatMemberList from '../member-list/AppChatMemberList.vue';
 import { ChatRoom, getChatRoomTitle } from '../room';
-import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
+import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
 import AppChatWindowOutput from './output/AppChatWindowOutput.vue';
 import AppChatWindowSend from './send/AppChatWindowSend.vue';
 
