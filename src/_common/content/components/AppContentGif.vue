@@ -44,7 +44,7 @@ const props = defineProps({
 	...defineEditableNodeViewProps(),
 });
 
-const { gifId, width, height, service, media, isEditing, isDisabled } = toRefs(props);
+const { width, height, media, isEditing, isDisabled } = toRefs(props);
 
 const owner = useContentOwnerController()!;
 const isInview = ref(false);

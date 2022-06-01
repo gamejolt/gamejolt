@@ -1,12 +1,11 @@
 <script lang="ts">
-import { transparentize } from 'polished';
 import { computed, inject, PropType, reactive, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
 import { ContentOwnerParentBounds } from '../../../../../_common/content/content-owner';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import { formatDate } from '../../../../../_common/filters/date';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
+import AppJolticon, { Jolticon } from '../../../../../_common/jolticon/AppJolticon.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Popper } from '../../../../../_common/popper/popper.service';
@@ -19,13 +18,14 @@ import { $gettext } from '../../../../../_common/translate/translate.service';
 import { ChatStore, ChatStoreKey } from '../../chat-store';
 import {
 	removeMessage as chatRemoveMessage,
+	retryFailedQueuedMessage,
 	setMessageEditing,
 	userCanModerateOtherUser,
 } from '../../client';
 import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
 import AppChatUserPopover from '../../user-popover/user-popover.vue';
-import AppChatWindowOutputItemDetails from './AppChatWindowOutputItemDetails.vue';
+import AppChatWindowOutputItemTime from './AppChatWindowOutputItemTime.vue';
 
 export interface ChatMessageEditEvent {
 	message: ChatMessage;
@@ -63,9 +63,7 @@ const chat = computed(() => chatStore.chat!);
 // Use the form/page/user theme, or the default theme if none exist.
 const actualTheme = computed(() => theme.value ?? DefaultTheme);
 
-const isEditing = computed(() => chat.value.messageEditing === message.value);
-
-/** The background-color for chat items that are being edited. */
+/** The border-color for chat items that are being edited. */
 const isEditingColor = computed(() => {
 	if (!isEditing.value) {
 		return undefined;
@@ -74,23 +72,39 @@ const isEditingColor = computed(() => {
 	const highlight = '#' + actualTheme.value.highlight_;
 	const backlight = '#' + actualTheme.value.backlight_;
 
-	const tintColor = isDark.value ? highlight : backlight;
-	return transparentize(0.65, tintColor);
+	return isDark.value ? highlight : backlight;
 });
 
-const editingState = computed(() => {
+const showAsQueued = computed(() => message.value._showAsQueued);
+const hasError = computed(() => !!message.value._error);
+const isEditing = computed(() => chat.value.messageEditing === message.value);
+
+const messageState = computed<{ icon?: Jolticon; display: string; tooltip?: string } | null>(() => {
+	const wrap = (text: string) => `(${text})`;
+
+	if (showAsQueued.value) {
+		return {
+			icon: 'broadcast',
+			display: wrap($gettext('sending...')),
+		};
+	}
+
+	if (hasError.value) {
+		return {
+			icon: 'notice',
+			display: $gettext('Failed to send. Press to retry'),
+		};
+	}
+
 	if (isEditing.value) {
 		return {
-			/** The text to display in the comment */
-			display: '(editing...)',
-			/** The tooltip to display on hover or tap */
-			tooltip: '',
+			display: wrap($gettext('editing...')),
 		};
 	}
 
 	if (message.value.edited_on) {
 		return {
-			display: '(edited)',
+			display: wrap($gettext('edited')),
 			tooltip: formatDate(message.value.edited_on!, 'medium'),
 		};
 	}
@@ -189,9 +203,15 @@ function onBlurItem() {
 	canClearFocus = false;
 }
 
-async function onClickItem() {
+function onRowClick() {
 	if (isFocused && canClearFocus) {
 		itemWrapper.value?.blur();
+	}
+}
+
+async function onMessageClick() {
+	if (hasError.value) {
+		retryFailedQueuedMessage(chatStore!.chat!, message.value);
 	}
 }
 
@@ -211,7 +231,7 @@ function onItemWrapperResize() {
 		ref="root"
 		class="chat-window-output-item"
 		:class="{
-			'-message-queued': message._showAsQueued,
+			'-message-queued': showAsQueued,
 			'-message-editing': isEditing,
 		}"
 	>
@@ -237,24 +257,31 @@ function onItemWrapperResize() {
 			tabindex="-1"
 			@focus="onFocusItem"
 			@blur="onBlurItem"
-			@click.capture="onClickItem"
+			@click.capture="onRowClick"
 		>
 			<div class="-item-container">
 				<div
 					class="-item-decorator"
 					:style="{
-						'background-image': isEditingColor
-							? `linear-gradient(${isEditingColor}, ${isEditingColor}`
-							: undefined,
+						opacity: showAsQueued ? 0.7 : 1,
+						cursor: hasError ? 'pointer' : undefined,
 					}"
+					@click="onMessageClick"
 				>
+					<div
+						class="-item-decorator-border"
+						:style="{
+							borderColor: isEditingColor,
+						}"
+					/>
+
 					<div v-if="message.showMeta" class="-item-byline">
 						<RouterLink class="-user link-unstyled" :to="message.user.url">
 							{{ message.user.display_name }}
 						</RouterLink>
 						<span class="-username"> @{{ message.user.username }} </span>
 						<span>
-							<AppChatWindowOutputItemDetails
+							<AppChatWindowOutputItemTime
 								:message="message"
 								:room="room"
 								:timestamp-margin-left="8"
@@ -270,17 +297,22 @@ function onItemWrapperResize() {
 					/>
 
 					<span
-						v-if="editingState"
-						v-app-tooltip.touchable="editingState.tooltip"
-						class="-edited"
+						v-if="messageState"
+						v-app-tooltip.touchable="messageState.tooltip"
+						class="-message-state"
 						:class="{ 'text-muted': !isEditing }"
 					>
-						<AppTranslate>{{ editingState.display }}</AppTranslate>
+						<AppJolticon v-if="messageState.icon" :icon="messageState.icon" />
+						<AppTranslate>{{ messageState.display }}</AppTranslate>
 					</span>
 				</div>
 
 				<div v-if="!message.showMeta" class="-floating-data-left">
-					<AppChatWindowOutputItemDetails :message="message" :room="room" />
+					<AppChatWindowOutputItemTime
+						:class="{ '-overlay-text': !!room.background }"
+						:message="message"
+						:room="room"
+					/>
 				</div>
 
 				<div
@@ -294,7 +326,7 @@ function onItemWrapperResize() {
 							<template v-if="isEditing">
 								<a
 									v-app-tooltip="$gettext('Cancel edit')"
-									class="-message-actions-item link-unstyled"
+									class="-message-actions-item"
 									@click="stopEdit"
 								>
 									<AppJolticon icon="remove" />
@@ -304,7 +336,7 @@ function onItemWrapperResize() {
 								<a
 									v-if="canEditMessage"
 									v-app-tooltip="$gettext('Edit message')"
-									class="-message-actions-item link-unstyled"
+									class="-message-actions-item"
 									@click="startEdit"
 								>
 									<AppJolticon icon="edit" />
@@ -313,7 +345,7 @@ function onItemWrapperResize() {
 								<a
 									v-if="canRemoveMessage"
 									v-app-tooltip="$gettext('Remove message')"
-									class="-message-actions-item link-unstyled"
+									class="-message-actions-item"
 									@click="removeMessage"
 								>
 									<AppJolticon icon="trash-can" />
@@ -384,10 +416,23 @@ $-min-item-width = 24px
 	rounded-corners-lg()
 	elevate-1()
 	display: inline-block
+	position: relative
 	padding: 12px
 	background-color: var(--theme-bg)
 	z-index: 1
 	max-width: 100%
+
+.-item-decorator-border
+	position: absolute
+	border-radius: inherit
+	left: -1px
+	top: @left
+	right: @left
+	bottom: @left
+	border-width: $border-width-large
+	border-style: solid
+	border-color: transparent
+	z-index: 1
 
 .-floating-data-anchor
 	position: relative
@@ -411,11 +456,6 @@ $-min-item-width = 24px
 	margin-left: 4px
 	cursor: default
 
-.-message-details
-	theme-prop('color', 'fg-muted')
-	font-size: 11px
-	cursor: default
-
 .-message-queued
 	color: var(--theme-fg-muted)
 
@@ -428,10 +468,16 @@ $-min-item-width = 24px
 	::v-deep(.content-gif)
 		filter: grayscale(0.75) brightness(0.9)
 
-.-edited
-	font-size: $font-size-tiny
+.-message-state
 	cursor: default
 	user-select: none
+
+	::v-deep(.jolticon)
+		margin-right: 4px
+
+	&
+	::v-deep(.jolticon)
+		font-size: $font-size-tiny
 
 .-floating-data-left
 .-floating-data-right
@@ -478,6 +524,8 @@ $-min-item-width = 24px
 	align-items: center
 	justify-content: center
 	padding: 8.5px 0
+	color: var(--theme-fg)
+	text-decoration: none
 
 	&:hover
 		background-color: unquote('rgba(var(--theme-fg-rgb), 0.1)')
@@ -490,15 +538,15 @@ $-min-item-width = 24px
 		font-size: 16px
 		margin: 0
 
+.-overlay-text
+	color: white
+	overlay-text-shadow()
+
 // Desktop (mouse)
 @media not screen and (pointer: coarse)
 	.-item-container:hover
 	.-item-container-wrapper:hover
-	.-message-queued
 	.-message-editing
-		.-message-details
-			visibility: visible
-
 		.-floating-data-left
 		.-floating-data-right
 			transform: translateX(0%)
@@ -513,11 +561,7 @@ $-min-item-width = 24px
 @media screen and (pointer: coarse)
 	.-item-container:focus-within
 	.-item-container-wrapper:focus-within
-	.-message-queued
 	.-message-editing
-		.-message-details
-			visibility: visible
-
 		.-floating-data-left
 		.-floating-data-right
 			transform: translateX(0%)

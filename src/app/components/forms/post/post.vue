@@ -595,9 +595,7 @@ export default class FormPost
 
 		this.setField('poll_duration', this.pollDuration * 60); // site-api expects duration in seconds.
 
-		if (this.formModel.background && this.enabledBackground) {
-			this.setField('background_id', this.formModel.background.id);
-		} else {
+		if (!this.enabledBackground) {
 			this.setField('background_id', null);
 		}
 
@@ -680,7 +678,7 @@ export default class FormPost
 
 		this.setField('media', []);
 		this.setField('videos', []);
-		this.onBackgroundChanged();
+		this.onBackgroundChanged(null);
 	}
 
 	toggleLong() {
@@ -937,8 +935,11 @@ export default class FormPost
 		this.disableAttachments();
 	}
 
-	onBackgroundChanged(background?: Background) {
-		this.setField('background', background);
+	onBackgroundChanged(backgroundId: number | null) {
+		this.setField('background_id', backgroundId);
+		const background = backgroundId
+			? this.backgrounds.find(i => i.id === backgroundId)
+			: undefined;
 		this.emitBackgroundChange(background);
 	}
 }
@@ -1022,7 +1023,7 @@ export default class FormPost
 				</AppFormLegend>
 
 				<AppFormGroup
-					name="background"
+					name="background_id"
 					class="sans-margin-bottom"
 					hide-label
 					optional
@@ -1031,7 +1032,7 @@ export default class FormPost
 					<AppFormBackground
 						:backgrounds="backgrounds"
 						:background="formModel.background"
-						@background-change="onBackgroundChanged"
+						@changed="onBackgroundChanged"
 					/>
 				</AppFormGroup>
 			</template>

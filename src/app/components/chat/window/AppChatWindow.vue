@@ -3,7 +3,7 @@ import { computed, inject, PropType, ref, toRefs, watch } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppMobileAppBar from '../../../../_common/mobile-app/AppMobileAppBar.vue';
+import AppMobileAppBar from '../../../../_common/mobile/AppMobileAppBar.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { SettingChatGroupShowMembers } from '../../../../_common/settings/settings.service';
@@ -136,6 +136,16 @@ function onMobileAppBarBack() {
 				<div class="-header">
 					<!-- Animation scope. -->
 					<div :key="room.id" class="-header-content">
+						<AppButton
+							v-if="Screen.isXs"
+							v-app-tooltip="$gettext('Close')"
+							circle
+							trans
+							icon="remove"
+							style="margin-right: 4px"
+							@click="close"
+						/>
+
 						<span
 							v-if="!room.isPmRoom"
 							class="-header-avatar anim-fade-in-enlarge no-animate-xs"
@@ -198,6 +208,8 @@ function onMobileAppBarBack() {
 							trans
 							icon="users"
 							class="-header-control anim-fade-in"
+							:primary="sidebar === 'members'"
+							:solid="sidebar === 'members'"
 							@click="toggleSidebar('members')"
 						/>
 
@@ -207,10 +219,13 @@ function onMobileAppBarBack() {
 							sparse
 							trans
 							icon="ellipsis-h"
+							:primary="sidebar === 'settings'"
+							:solid="sidebar === 'settings'"
 							@click="toggleSidebar('settings')"
 						/>
 
 						<AppButton
+							v-if="!Screen.isXs"
 							v-app-tooltip="$gettext('Close')"
 							class="-header-control"
 							circle
@@ -243,7 +258,7 @@ function onMobileAppBarBack() {
 						<div v-if="Screen.isDesktop" class="-sidebar-shadow" />
 
 						<AppScrollScroller class="-sidebar-scroller">
-							<AppMobileAppBar v-if="Screen.isMobile">
+							<AppMobileAppBar v-if="Screen.isMobile" center-title>
 								<template #leading>
 									<AppButton
 										icon="chevron-left"
@@ -298,11 +313,9 @@ function onMobileAppBarBack() {
 								/>
 							</template>
 							<template v-else-if="sidebar === 'members'">
-								<div class="nav-heading">
+								<div v-if="Screen.isDesktop" class="-header-members">
 									<AppTranslate>Members</AppTranslate>
-									<span class="badge badge-subtle">
-										{{ membersCount }}
-									</span>
+									<span> ({{ membersCount }}) </span>
 								</div>
 
 								<AppChatMemberList
@@ -372,7 +385,7 @@ function onMobileAppBarBack() {
 	position: relative
 	flex: none
 	width: 100%
-	padding: 12px 16px
+	padding: 12px 8px
 	display: flex
 	align-items: center
 	box-shadow: 0px 1px 8px 4px rgba(0, 0, 0, 0.25)
@@ -409,6 +422,12 @@ function onMobileAppBarBack() {
 	position: relative
 	vertical-align: top
 	margin-left: 4px
+
+.-header-members
+	font-family: $font-family-heading
+	font-size: $font-size-base
+	font-weight: 800
+	padding: 24px 16px 16px
 
 .-body
 	display: flex

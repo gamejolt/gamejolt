@@ -18,6 +18,8 @@ const ShortcutFormats = {
 	shortDate: 'L/d/yy',
 	mediumTime: 'h:mm:ss a',
 	shortTime: 'h:mm a',
+	mediumTimeNoMeridiem: 'h:mm:ss',
+	shortTimeNoMeridiem: 'h:mm',
 };
 
 export function formatDate(now: Date | number, formatTo = ShortcutFormats.medium) {

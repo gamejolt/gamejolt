@@ -109,6 +109,10 @@ const shouldShrinkActions = computed(
 		justify-content: space-between
 
 		.-leading
+		.-actions
+			flex: 1
+
+		.-leading
 			margin-right: 0
 
 		.-title
@@ -128,6 +132,7 @@ const shouldShrinkActions = computed(
 .-title
 	font-size: 20px
 	font-family: $font-family-heading
+	font-weight: 800
 
 .-shrink
 	flex-basis: 0

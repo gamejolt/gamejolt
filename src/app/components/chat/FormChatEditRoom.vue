@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, inject, onMounted, PropType, ref, toRefs, watch } from 'vue';
+import { computed, inject, PropType, ref, toRefs, watch } from 'vue';
 import { Api } from '../../../_common/api/api.service';
 import { Background } from '../../../_common/background/background.model';
 import AppButton from '../../../_common/button/AppButton.vue';
@@ -9,8 +9,10 @@ import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../_common/form-vue/AppFormGroup.vue';
 import AppFormStickySubmit from '../../../_common/form-vue/AppFormStickySubmit.vue';
+import AppFormControlStackedButtonGroup, {
+	StackedButtonOption,
+} from '../../../_common/form-vue/controls/stacked-button/AppFormControlStackedButtonGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../_common/form-vue/validators';
-import AppLoadingFade from '../../../_common/loading/AppLoadingFade.vue';
 import AppLoading from '../../../_common/loading/loading.vue';
 import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
@@ -22,6 +24,14 @@ import { editChatRoomBackground, editChatRoomTitle, leaveGroupRoom } from './cli
 import AppChatMemberListItem from './member-list/AppChatMemberListItem.vue';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
+
+type FormBackground = {
+	background_id: number | null;
+};
+
+type FormNotificationLevel = {
+	level: string;
+};
 </script>
 
 <script lang="ts" setup>
@@ -51,7 +61,6 @@ const chatStore = inject(ChatStoreKey)!;
 const titleMinLength = ref<number>();
 const titleMaxLength = ref<number>();
 
-const isLoadingNotificationSettings = ref(false);
 const isLoadingBackgrounds = ref(false);
 const isSettingBackground = ref(false);
 
@@ -77,46 +86,59 @@ watch(
 	}
 );
 
-const form: FormController = createForm({
+const form: FormController<ChatRoom> = createForm({
 	model: room,
 	loadUrl: `/web/chat/rooms/room-edit`,
 	onLoad(payload) {
 		titleMinLength.value = payload.titleMinLength;
 		titleMaxLength.value = payload.titleMaxLength;
 	},
-	onSubmit: async () => {
-		return editChatRoomTitle(chat.value, room.value, form.formModel.title);
-	},
+	onSubmit: async () => editChatRoomTitle(chat.value, room.value, form.formModel.title),
 });
 
-const backgroundForm = createForm({
-	model: room,
+const backgroundForm: FormController<FormBackground> = createForm({
 	loadUrl: `/web/chat/rooms/backgrounds/${room.value.id}`,
 	onLoad(payload) {
 		backgrounds.value = Background.populate(payload.backgrounds);
 		roomBackgroundId.value = payload.roomBackgroundId || null;
+		backgroundForm.formModel.background_id = roomBackgroundId.value;
+	},
+	onSubmit: async () =>
+		editChatRoomBackground(
+			chat.value,
+			room.value,
+			backgroundForm.formModel.background_id || null
+		),
+});
+
+const notificationLevelForm: FormController<FormNotificationLevel> = createForm({
+	loadUrl: `/web/chat/rooms/get-notification-settings/${room.value.id}`,
+	onLoad(payload) {
+		notificationLevel.value = payload.level;
+		notificationLevelForm.formModel.level = payload.level;
+	},
+	onSubmit: async () => {
+		const payload = await Api.sendRequest(
+			`/web/chat/rooms/set-notification-settings/${room.value.id}`,
+			{ level: notificationLevelForm.formModel.level },
+			{ detach: true }
+		);
+		notificationLevelForm.formModel.level = payload.level;
 	},
 });
 
-const chat = computed(() => {
-	return chatStore.chat!;
-});
+const chat = computed(() => chatStore.chat!);
 
-const isOwner = computed(() => {
-	return (
+const isOwner = computed(
+	() =>
 		room.value && !!chat.value.currentUser && room.value.owner_id === chat.value.currentUser.id
-	);
-});
+);
 
-const canEditTitle = computed(() => {
-	return !room.value.isPmRoom && isOwner.value;
-});
+const canEditTitle = computed(() => !room.value.isPmRoom && isOwner.value);
 
 const canEditBackground = computed(() => backgrounds.value.length > 0);
 
-const shouldShowLeave = computed(() => {
-	return !room.value.isPmRoom;
-});
+const shouldShowLeave = computed(() => !room.value.isPmRoom);
 
 const hasLoadedBackgrounds = computed(() => backgroundForm.isLoadedBootstrapped);
 
@@ -127,7 +149,26 @@ const membersPreview = computed(() => {
 	return [];
 });
 
-onMounted(() => getNotificationSettings());
+const notificationSettings = computed<StackedButtonOption[]>(() => {
+	const settings = [];
+
+	settings.push({
+		label: $gettext(`All Messages`),
+		value: 'all',
+	});
+	if (!room.value.isPmRoom) {
+		settings.push({
+			label: $gettext(`Only @mentions`),
+			value: 'mentions',
+		});
+	}
+	settings.push({
+		label: $gettext(`Nothing`),
+		value: 'off',
+	});
+
+	return settings;
+});
 
 async function reloadBackgroundForm(retryOnDesync: boolean) {
 	try {
@@ -156,18 +197,6 @@ async function reloadBackgroundForm(retryOnDesync: boolean) {
 	}
 }
 
-async function getNotificationSettings() {
-	isLoadingNotificationSettings.value = true;
-
-	const payload = await Api.sendRequest(
-		`/web/chat/rooms/get-notification-settings/${room.value.id}`,
-		undefined,
-		{ detach: true }
-	);
-	notificationLevel.value = payload.level;
-	isLoadingNotificationSettings.value = false;
-}
-
 async function leaveRoom() {
 	const result = await ModalConfirm.show(
 		$gettext(`Are you sure you want to leave the group chat?`)
@@ -178,53 +207,6 @@ async function leaveRoom() {
 	}
 
 	leaveGroupRoom(chat.value, room.value);
-}
-
-const notificationSettings = computed<{ text: string; level: string }[]>(() => {
-	const settings = [];
-
-	settings.push({
-		text: $gettext(`All Messages`),
-		level: 'all',
-	});
-	if (!room.value.isPmRoom) {
-		settings.push({
-			text: $gettext(`Only @mentions`),
-			level: 'mentions',
-		});
-	}
-	settings.push({
-		text: $gettext(`Nothing`),
-		level: 'off',
-	});
-
-	return settings;
-});
-
-async function onClickSetNotificationLevel(level: string) {
-	// Set it right away for immediate feedback.
-	notificationLevel.value = level;
-
-	const payload = await Api.sendRequest(
-		`/web/chat/rooms/set-notification-settings/${room.value.id}`,
-		{ level },
-		{ detach: true }
-	);
-	// Just make sure we assign the level that was actually returned.
-	notificationLevel.value = payload.level;
-}
-
-async function setBackground(bg?: Background) {
-	if (isSettingBackground.value) {
-		return;
-	}
-	isSettingBackground.value = true;
-
-	try {
-		await editChatRoomBackground(chat.value, room.value, bg?.id || null);
-	} finally {
-		isSettingBackground.value = false;
-	}
 }
 </script>
 
@@ -242,6 +224,7 @@ async function setBackground(bg?: Background) {
 						name="title"
 						class="-pad sans-margin-bottom"
 						:label="$gettext('Group Name')"
+						small
 						optional
 					>
 						<AppFormControl
@@ -263,26 +246,24 @@ async function setBackground(bg?: Background) {
 				</AppForm>
 			</template>
 
-			<AppForm :controller="backgroundForm" hide-loading>
-				<AppLoadingFade :is-loading="isSettingBackground || isLoadingBackgrounds">
-					<template v-if="canEditBackground">
-						<AppFormGroup
-							name="background"
-							class="-pad sans-margin-bottom"
-							optional
-							:label="$gettext(`Background`)"
-						>
-							<AppFormBackground
-								:backgrounds="backgrounds"
-								:background="room.background"
-								:tile-size="40"
-								@background-change="setBackground"
-							/>
-						</AppFormGroup>
+			<AppForm
+				:controller="backgroundForm"
+				:forced-is-loading="isSettingBackground || isLoadingBackgrounds"
+				@changed="backgroundForm.submit"
+			>
+				<template v-if="canEditBackground">
+					<AppFormGroup
+						name="background_id"
+						class="-pad sans-margin-bottom"
+						:label="$gettext(`Background`)"
+						optional
+						small
+					>
+						<AppFormBackground :backgrounds="backgrounds" :tile-size="40" />
+					</AppFormGroup>
 
-						<AppSpacer vertical :scale="6" />
-					</template>
-				</AppLoadingFade>
+					<AppSpacer vertical :scale="6" />
+				</template>
 			</AppForm>
 
 			<template v-if="canEditTitle || canEditBackground">
@@ -290,34 +271,20 @@ async function setBackground(bg?: Background) {
 				<AppSpacer vertical :scale="6" />
 			</template>
 
-			<AppLoadingFade :is-loading="isLoadingNotificationSettings">
-				<div class="-header">
-					<AppTranslate> Notifications </AppTranslate>
-				</div>
-				<div class="-pad -button-stack">
-					<!-- TODO(chat-backgrounds) make into an actual form control -->
-					<AppButton
-						v-for="({ text, level }, index) of notificationSettings"
-						:key="level"
-						:class="
-							notificationSettings.length > 0
-								? {
-										'-button-first': index === 0,
-										'-button-middle':
-											0 < index && index < notificationSettings.length - 1,
-										'-button-last': index === notificationSettings.length - 1,
-								  }
-								: undefined
-						"
-						:primary="level === notificationLevel"
-						:solid="level === notificationLevel"
-						block
-						@click="onClickSetNotificationLevel(level)"
-					>
-						{{ text }}
-					</AppButton>
-				</div>
-			</AppLoadingFade>
+			<AppForm
+				:controller="notificationLevelForm"
+				:forced-is-loading="notificationLevelForm.isProcessing ? true : undefined"
+				@changed="notificationLevelForm.submit"
+			>
+				<AppFormGroup
+					name="level"
+					class="-pad sans-margin-bottom"
+					:label="$gettext(`Notifications`)"
+					small
+				>
+					<AppFormControlStackedButtonGroup :options="notificationSettings" />
+				</AppFormGroup>
+			</AppForm>
 
 			<template v-if="showMembersPreview && membersPreview.length > 0">
 				<AppSpacer vertical :scale="6" />
@@ -389,23 +356,4 @@ hr
 	margin-bottom: 8px
 	font-weight: 400
 	font-size: 13px
-
-.-button-stack
-	> *
-		margin: 0
-
-	> .-button-first
-		border-bottom-left-radius: 0
-		border-bottom-right-radius: 0
-
-	> .-button-middle
-		border-radius: 0
-
-	> .-button-last
-		border-top-left-radius: 0
-		border-top-right-radius: 0
-
-	> .-button-middle
-	> .-button-last
-		margin-top: -($border-width-base)
 </style>

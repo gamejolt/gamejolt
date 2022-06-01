@@ -444,7 +444,7 @@ $-button-height = 40px
 		max-width: 100%
 
 	@media $media-xs
-		border-bottom: 1px solid var(--theme-bg-offset)
+		border-bottom: 1px solid var(--theme-bg-subtle)
 
 .-form-shifted
 		margin-bottom: 52px
