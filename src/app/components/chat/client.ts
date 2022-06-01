@@ -884,11 +884,12 @@ export function removeMessage(chat: ChatClient, room: ChatRoom, msgId: number) {
 	chat.roomChannels[room.id].socketChannel.push('message_remove', { id: msgId });
 }
 
-export function editMessage(chat: ChatClient, room: ChatRoom, message: ChatMessage) {
-	chat.roomChannels[room.id].socketChannel.push('message_update', {
-		content: message.content,
-		id: message.id,
-	});
+export function editMessage(
+	chat: ChatClient,
+	room: ChatRoom,
+	{ content, id }: { content: string; id: number }
+) {
+	chat.roomChannels[room.id].socketChannel.push('message_update', { content, id });
 }
 
 export function editChatRoomTitle(chat: ChatClient, room: ChatRoom, title: string) {

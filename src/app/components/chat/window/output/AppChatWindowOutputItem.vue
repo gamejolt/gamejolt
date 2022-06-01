@@ -9,8 +9,6 @@ import AppJolticon, { Jolticon } from '../../../../../_common/jolticon/AppJoltic
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
-import { DefaultTheme } from '../../../../../_common/theme/theme.model';
-import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
@@ -54,7 +52,6 @@ const props = defineProps({
 const { message, room, maxContentWidth } = toRefs(props);
 
 const chatStore = inject<ChatStore>(ChatStoreKey)!;
-const { theme, isDark } = useThemeStore();
 
 const displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
 
@@ -66,21 +63,6 @@ const contentViewerBounds: ContentOwnerParentBounds = reactive({
 });
 
 const chat = computed(() => chatStore.chat!);
-
-// Use the form/page/user theme, or the default theme if none exist.
-const actualTheme = computed(() => theme.value ?? DefaultTheme);
-
-/** The border-color for chat items that are being edited. */
-const isEditingColor = computed(() => {
-	if (!isEditing.value) {
-		return undefined;
-	}
-
-	const highlight = '#' + actualTheme.value.highlight_;
-	const backlight = '#' + actualTheme.value.backlight_;
-
-	return isDark.value ? highlight : backlight;
-});
 
 const showAsQueued = computed(() => message.value._showAsQueued);
 const hasError = computed(() => !!message.value._error);
@@ -275,8 +257,8 @@ async function onMessageClick() {
 				>
 					<div
 						class="-item-decorator-border"
-						:style="{
-							borderColor: isEditingColor,
+						:class="{
+							'-primary-border': isEditing,
 						}"
 					/>
 
@@ -439,6 +421,9 @@ $-min-item-width = 24px
 	z-index: 1
 	pointer-events: none
 
+.-primary-border
+	border-color: var(--theme-primary)
+
 .-floating-data-anchor
 	position: relative
 	flex: 1 1 0px
@@ -502,7 +487,7 @@ $-min-item-width = 24px
 .-floating-data-left
 	position: absolute
 	right: 100%
-	transform: translateX(50%)
+	transform: translate3d(-50%, 0, 0)
 	width: $left-gutter-size + $chat-room-window-padding-h
 	display: flex
 	justify-content: center
@@ -511,7 +496,7 @@ $-min-item-width = 24px
 	position: absolute
 	top: -2px
 	right: -4px
-	transform: translateX(50%)
+	transform: translate3d(50%, 0, 0)
 
 .-message-actions
 	rounded-corners()
@@ -554,7 +539,7 @@ $-min-item-width = 24px
 	.-message-editing
 		.-floating-data-left
 		.-floating-data-right
-			transform: translateX(0%)
+			transform: translate3d(0, 0, 0)
 			opacity: 1
 			visibility: visible
 
@@ -569,7 +554,7 @@ $-min-item-width = 24px
 	.-message-editing
 		.-floating-data-left
 		.-floating-data-right
-			transform: translateX(0%)
+			transform: translate3d(0, 0, 0)
 			opacity: 1
 			visibility: visible
 

@@ -3,9 +3,8 @@ import { computed, inject, PropType, toRefs, watch } from 'vue';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import { ChatStoreKey } from '../../chat-store';
 import { editMessage as chatEditMessage, queueChatMessage, setMessageEditing } from '../../client';
-import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
-import AppChatWindowSendForm from './form/AppChatWindowSendForm.vue';
+import AppChatWindowSendForm, { FormModel } from './form/AppChatWindowSendForm.vue';
 
 const props = defineProps({
 	room: {
@@ -25,27 +24,31 @@ const chat = computed(() => chatStore.chat!);
 
 watch(() => room.value.id, onRoomChanged);
 
-function editMessage(message: ChatMessage) {
+function editMessage({ content, id }: FormModel) {
 	setMessageEditing(chat.value, null);
-
-	const doc = ContentDocument.fromJson(message.content);
-	if (doc instanceof ContentDocument) {
-		const contentJson = doc.toJson();
-		message.content = contentJson;
+	// This shouldn't happen, but typescript complains without this.
+	if (!id) {
+		return;
 	}
 
-	chatEditMessage(chat.value, room.value, message);
+	const doc = ContentDocument.fromJson(content);
+	if (doc instanceof ContentDocument) {
+		const contentJson = doc.toJson();
+		content = contentJson;
+	}
+
+	chatEditMessage(chat.value, room.value, { content, id });
 }
 
-function sendMessage(message: ChatMessage) {
-	const doc = ContentDocument.fromJson(message.content);
+function sendMessage({ content }: FormModel) {
+	const doc = ContentDocument.fromJson(content);
 	if (doc instanceof ContentDocument) {
 		const contentJson = doc.toJson();
 		queueChatMessage(chat.value, 'content', contentJson, room.value.id);
 	}
 }
 
-function submit(message: ChatMessage) {
+function submit(message: FormModel) {
 	if (chat.value.messageEditing) {
 		editMessage(message);
 	} else {

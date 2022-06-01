@@ -366,7 +366,6 @@ export default class AppContentEditorBlockControls extends Vue {
 	margin: 0 4px
 
 .-controls-mobile
-	change-bg('bg')
 	position: fixed
 	top: auto !important
 	bottom: 0 !important
