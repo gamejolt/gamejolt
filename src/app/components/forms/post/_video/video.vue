@@ -185,14 +185,11 @@ export default class AppFormPostVideo
 		this.allowedFiletypes = $payload.allowedFiletypes;
 
 		const progress = $payload.progress;
-		console.log(progress);
 		if (progress && progress.status === 'error') {
 			this.hasVideoProcessingError = true;
 			if (progress.translatableError) {
-				console.log('Loading error message');
 				this.videoProcessingErrorMsg = this.$gettext('Loading...');
 				createTranslatableStringFromPayload(progress.translatableError).then(tstring => {
-					console.log(tstring);
 					this.videoProcessingErrorMsg = tstring.value;
 				});
 			} else {

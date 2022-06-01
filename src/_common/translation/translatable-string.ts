@@ -25,9 +25,7 @@ export async function createTranslatableStringFromPayload(
 ): Promise<TranslatableString> {
 	const tstring = new TranslatableString();
 	for (const k in payload) {
-		console.log(k);
 		if (Object.prototype.hasOwnProperty.call(tstring, k)) {
-			console.log('setting');
 			(tstring as any)[k] = payload[k];
 		}
 	}
