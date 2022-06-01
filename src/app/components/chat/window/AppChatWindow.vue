@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, inject, PropType, ref, toRefs, watch } from 'vue';
+import { computed, inject, PropType, ref, toRefs, watch, watchEffect } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -72,7 +72,7 @@ const roomTitle = computed(() =>
 
 const showMembersViewButton = computed(() => !room.value.isPmRoom && !Screen.isXs);
 
-watch(isShowingUsers, () => SettingChatGroupShowMembers.set(isShowingUsers.value));
+watchEffect(() => SettingChatGroupShowMembers.set(isShowingUsers.value));
 
 function addGroup() {
 	// When creating a group from a PM window,

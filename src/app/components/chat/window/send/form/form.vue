@@ -78,10 +78,6 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 		return undefined;
 	}
 
-	get placeholder() {
-		return this.$gettext('Send a message');
-	}
-
 	get shouldShiftEditor() {
 		return Screen.isXs && this.isEditorFocused;
 	}
@@ -385,7 +381,7 @@ export default class AppChatWindowSendForm extends mixins(Wrapper) {
 					ref="editor"
 					:content-context="room.messagesContentContext"
 					:temp-resource-context-data="contentEditorTempResourceContextData"
-					:placeholder="placeholder"
+					:placeholder="$gettext('Send a message')"
 					:single-line-mode="Screen.isDesktop"
 					:validators="[validateContentMaxLength(maxContentLength)]"
 					:max-height="160"

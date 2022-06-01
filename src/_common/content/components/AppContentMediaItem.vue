@@ -140,11 +140,11 @@ const shouldUseMediaserver = computed(() => {
 const maxWidth = computed(() => {
 	const maxOwnerWidth = owner.contentRules.maxMediaWidth;
 	if (maxOwnerWidth !== null) {
-		return Math.min(
-			maxOwnerWidth,
-			parentWidth?.value ??
-				(container.value?.$el ? container.value.$el.clientWidth : mediaItemWidth.value)
-		);
+		const sizes = [maxOwnerWidth, mediaItemWidth.value];
+		if (parentWidth.value) {
+			sizes.push(parentWidth.value);
+		}
+		return Math.min(...sizes);
 	}
 
 	return mediaItemWidth.value;

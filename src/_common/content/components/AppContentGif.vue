@@ -48,7 +48,6 @@ const { width, height, media, isEditing, isDisabled } = toRefs(props);
 
 const owner = useContentOwnerController()!;
 const isInview = ref(false);
-const container = ref<InstanceType<typeof AppResponsiveDimensions>>();
 
 const shouldPlay = computed(() => {
 	return ContentFocus.isWindowFocused;
@@ -72,11 +71,11 @@ const parentWidth = computed(() => unref(owner.parentBounds?.width));
 const maxWidth = computed(() => {
 	const maxOwnerWidth = owner.contentRules.maxMediaWidth;
 	if (maxOwnerWidth !== null) {
-		return Math.min(
-			maxOwnerWidth,
-			parentWidth.value ??
-				(container.value?.$el ? container.value.$el.clientWidth : width.value)
-		);
+		const sizes = [maxOwnerWidth, width.value];
+		if (parentWidth.value) {
+			sizes.push(parentWidth.value);
+		}
+		return Math.min(...sizes);
 	}
 
 	return width.value;
@@ -104,7 +103,6 @@ function onInviewChange(inview: boolean) {
 	>
 		<div class="-outer content-gif">
 			<AppResponsiveDimensions
-				ref="container"
 				class="-container"
 				:ratio="width / height"
 				:max-width="maxWidth"

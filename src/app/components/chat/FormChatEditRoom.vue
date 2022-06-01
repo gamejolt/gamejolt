@@ -68,6 +68,13 @@ const notificationLevel = ref('');
 const backgrounds = ref<Background[]>([]);
 const roomBackgroundId = ref(room.value.background?.id || null);
 
+// When a user selects a background in this form, it sends a Chat message to
+// everyone notifying them the room changed and updating the model. This also
+// happens when you change the background yourself.
+//
+// If the background changes, we need to fetch new backgrounds so that our
+// background list is never displaying old content, like backgrounds we don't
+// own and can't set.
 watch(
 	() => room.value.background,
 	() => {

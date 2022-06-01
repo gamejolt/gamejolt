@@ -293,10 +293,7 @@ export class ChatRoomChannel {
 
 	private onRoomUpdate(json: Partial<ChatRoom>) {
 		const { title, background } = json;
-		if (title) {
-			this.room.title = title;
-		}
-
+		this.room.title = title || '';
 		this.room.background = background ? new Background(background) : undefined;
 	}
 

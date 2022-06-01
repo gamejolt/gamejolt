@@ -6,8 +6,10 @@ import { ContentDocument } from '../content-document';
 import { ContentRules } from '../content-editor/content-rules';
 import { ContentHydrator } from '../content-hydrator';
 import {
-ContentOwnerController,
-ContentOwnerControllerKey, ContentOwnerParentBounds, createContentOwnerController
+	ContentOwnerController,
+	ContentOwnerControllerKey,
+	ContentOwnerParentBounds,
+	createContentOwnerController,
 } from '../content-owner';
 import { AppContentViewerBaseComponent } from './components/base-component';
 

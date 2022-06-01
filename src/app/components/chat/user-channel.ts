@@ -195,20 +195,18 @@ export class ChatUserChannel {
 	}
 
 	private onUpdateTitle(data: UpdateGroupTitlePayload) {
-		const index = this.client.groupRooms.findIndex(room => room.id === data.room_id);
+		const room = this.client.groupRooms.find(i => i.id === data.room_id);
 
-		if (index !== -1) {
-			this.client.groupRooms[index].title = data.title;
+		if (room) {
+			room.title = data.title;
 		}
 	}
 
 	private onUpdateBackground(data: RoomIdPayload & { background?: any }) {
-		const index = this.client.groupRooms.findIndex(room => room.id === data.room_id);
+		const room = this.client.groupRooms.find(i => i.id === data.room_id);
 
-		if (index !== -1) {
-			this.client.groupRooms[index].background = data.background
-				? new Background(data.background)
-				: undefined;
+		if (room) {
+			room.background = data.background ? new Background(data.background) : undefined;
 		}
 	}
 }

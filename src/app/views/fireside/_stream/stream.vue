@@ -382,6 +382,7 @@ export default class AppFiresideStream extends Vue {
 									<AppSlider
 										class="-volume-slider"
 										:percent="desktopVolume"
+										overlay
 										@scrub="onVolumeScrub"
 									/>
 								</div>

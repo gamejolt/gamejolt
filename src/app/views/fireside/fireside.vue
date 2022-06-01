@@ -831,7 +831,7 @@ export default class RouteFireside extends BaseRouteComponent {
 	flex: auto
 
 .-chat-window-input
-	background-color: 'rgba(%s, 0.45)' % var(--theme-bg-subtle-rgb)
+	background-color: unquote('rgba(var(--theme-bg-subtle-rgb), 0.45)')
 
 .-chat-members
 	display: flex

@@ -15,9 +15,10 @@ export function arrayAssignAll<T>(arr: T[], newArray: T[]): void {
 }
 
 export function stringSort(a: string, b: string) {
-	a = a.toLowerCase();
-	b = b.toLowerCase();
+	return stringSortRaw(a.toLowerCase(), b.toLowerCase());
+}
 
+export function stringSortRaw(a: string, b: string) {
 	if (a < b) {
 		return -1;
 	} else if (a > b) {

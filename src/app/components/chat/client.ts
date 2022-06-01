@@ -615,13 +615,11 @@ export function setTimeSplit(chat: ChatClient, roomId: number, message: ChatMess
 		}
 
 		// Combine if the same user and within 5 minutes of their previous message.
-		if (message.user.id === previousMessage.user.id) {
-			if (
-				message.logged_on.getTime() - previousMessage.logged_on.getTime() <=
-				5 * 60 * 1000
-			) {
-				message.showMeta = false;
-			}
+		if (
+			message.user.id === previousMessage.user.id &&
+			message.logged_on.getTime() - previousMessage.logged_on.getTime() <= 5 * 60 * 1000
+		) {
+			message.showMeta = false;
 		}
 
 		// If the date is different than the date for the previous
@@ -903,8 +901,8 @@ export async function editChatRoomBackground(
 	chat: ChatClient,
 	room: ChatRoom,
 	backgroundId: number | null
-): Promise<void> {
-	const result = new Promise<void>((resolve, reject) => {
+) {
+	return new Promise((resolve, reject) => {
 		chat.roomChannels[room.id].socketChannel
 			.push(
 				'update_background',
@@ -917,7 +915,6 @@ export async function editChatRoomBackground(
 			.receive('error', reject)
 			.receive('timeout', reject);
 	});
-	return result;
 }
 
 export function startTyping(chat: ChatClient, room: ChatRoom) {

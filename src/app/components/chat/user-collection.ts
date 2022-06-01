@@ -1,4 +1,4 @@
-import { arrayRemove, numberSort, stringSort } from '../../../utils/array';
+import { arrayRemove, numberSort, stringSort, stringSortRaw } from '../../../utils/array';
 import { ChatClient, isUserOnline } from './client';
 import { CHAT_ROLES } from './role';
 import { ChatRoom } from './room';
@@ -190,6 +190,19 @@ export class ChatUserCollection {
 	}
 }
 
+type RoleSortData = {
+	role: number;
+	isFriend: boolean;
+	lowercaseDisplayName: string;
+};
+
+const roleSorts = {
+	owner: 0,
+	moderator: 1,
+	staff: 2,
+	user: 3,
+} as const;
+
 export function sortCollection(
 	chat: ChatClient | null,
 	collection: ChatUser[],
@@ -198,29 +211,31 @@ export function sortCollection(
 	switch (mode) {
 		case 'role':
 			{
-				const roles: (CHAT_ROLES | 'staff')[] = [
-					'owner', // formatting
-					'moderator',
-					'staff',
-					'user',
-				];
+				const dataMap = collection.reduce(
+					(data, i) =>
+						(data[i.id] ??= {
+							role: roleSorts[i.isStaff ? 'staff' : getRoleSort(i)],
+							isFriend: !!chat?.friendsList.get(i.id),
+							lowercaseDisplayName: i.display_name.toLowerCase(),
+						}),
+					{} as {
+						[id: number]: RoleSortData;
+					}
+				);
 
 				collection.sort((a, b) => {
-					const aRole = roles.indexOf(a.isStaff ? 'staff' : getRoleSort(a));
-					const bRole = roles.indexOf(b.isStaff ? 'staff' : getRoleSort(b));
-					const roleDiff = numberSort(aRole, bRole);
+					const aData: RoleSortData = dataMap[a.id];
+					const bData: RoleSortData = dataMap[b.id];
+					const roleDiff = numberSort(aData.role, bData.role);
 					if (roleDiff !== 0) {
 						return roleDiff;
 					}
 
-					const aFriend = !!chat?.friendsList.get(a.id);
-					const bFriend = !!chat?.friendsList.get(b.id);
-
-					if (aFriend != bFriend) {
-						return aFriend ? -1 : 1;
+					if (aData.isFriend !== bData.isFriend) {
+						return aData.isFriend ? -1 : 1;
 					}
 
-					return stringSort(a.display_name, b.display_name);
+					return stringSortRaw(aData.lowercaseDisplayName, bData.lowercaseDisplayName);
 				});
 			}
 			break;

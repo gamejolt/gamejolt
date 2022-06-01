@@ -25,7 +25,7 @@ const props = defineProps({
 	vertical: {
 		type: Boolean,
 	},
-	themeAffected: {
+	overlay: {
 		type: Boolean,
 	},
 });
@@ -214,7 +214,7 @@ watch(percent, () => {
 	<div
 		class="-slider"
 		:class="{
-			'-theme-affected': themeAffected,
+			'-overlay': overlay,
 		}"
 	>
 		<div class="-mask" @mousedown="onMouseDown" @touchstart="onMouseDown" />
@@ -241,14 +241,14 @@ watch(percent, () => {
 
 <style lang="stylus" scoped>
 .-slider
-	--slider-color: 255,255,255
+	--slider-color: var(--theme-fg-rgb)
 	user-select: none
 	position: relative
 	padding: 8px
 	display: flex
 
-	&.-theme-affected
-		 --slider-color: var(--theme-fg-rgb)
+	&.-overlay
+		 --slider-color: 255,255,255
 
 // Stretch out an invisible div while we're dragging to hopefully capture events properly
 .-mask

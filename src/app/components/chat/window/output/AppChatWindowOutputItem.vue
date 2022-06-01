@@ -7,7 +7,6 @@ import AppContentViewer from '../../../../../_common/content/content-viewer/cont
 import { formatDate } from '../../../../../_common/filters/date';
 import AppJolticon, { Jolticon } from '../../../../../_common/jolticon/AppJolticon.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppPopper from '../../../../../_common/popper/popper.vue';
 import { DefaultTheme } from '../../../../../_common/theme/theme.model';
@@ -42,9 +41,17 @@ const props = defineProps({
 		type: Object as PropType<ChatRoom>,
 		required: true,
 	},
+	messagePadding: {
+		type: Number,
+		default: 12,
+	},
+	maxContentWidth: {
+		type: Number,
+		default: 100,
+	},
 });
 
-const { message, room } = toRefs(props);
+const { message, room, maxContentWidth } = toRefs(props);
 
 const chatStore = inject<ChatStore>(ChatStoreKey)!;
 const { theme, isDark } = useThemeStore();
@@ -55,7 +62,7 @@ const root = ref<HTMLElement>();
 const itemWrapper = ref<HTMLElement>();
 
 const contentViewerBounds: ContentOwnerParentBounds = reactive({
-	width: ref(200),
+	width: maxContentWidth,
 });
 
 const chat = computed(() => chatStore.chat!);
@@ -116,6 +123,9 @@ const shouldShowMessageOptions = computed(() => canRemoveMessage.value || canEdi
 
 const dataAnchorWidth = computed(() => {
 	const itemWidth = 40;
+	/** The border and spacing added between items. */
+	const itemSpacerWidth = 1;
+
 	if (isEditing.value) {
 		return itemWidth;
 	}
@@ -127,8 +137,13 @@ const dataAnchorWidth = computed(() => {
 	if (canEditMessage.value) {
 		++itemCount;
 	}
+	if (!itemCount) {
+		return 0;
+	}
 
-	return itemWidth * itemCount + (itemCount - 1);
+	const itemWidthTotal = itemWidth * itemCount;
+	const spacerWidthTotal = itemSpacerWidth * (itemCount - 1);
+	return itemWidthTotal + spacerWidthTotal;
 });
 
 const canRemoveMessage = computed(() => {
@@ -214,16 +229,6 @@ async function onMessageClick() {
 		retryFailedQueuedMessage(chatStore!.chat!, message.value);
 	}
 }
-
-function onItemWrapperResize() {
-	if (!itemWrapper.value) {
-		return;
-	}
-
-	const { offsetWidth } = itemWrapper.value;
-	const decoratorPadding = 12 * 2;
-	contentViewerBounds.width = Math.max(offsetWidth - decoratorPadding, 100);
-}
 </script>
 
 <template>
@@ -252,7 +257,6 @@ function onItemWrapperResize() {
 
 		<div
 			ref="itemWrapper"
-			v-app-observe-dimensions="onItemWrapperResize"
 			class="-item-container-wrapper"
 			tabindex="-1"
 			@focus="onFocusItem"
@@ -265,6 +269,7 @@ function onItemWrapperResize() {
 					:style="{
 						opacity: showAsQueued ? 0.7 : 1,
 						cursor: hasError ? 'pointer' : undefined,
+						padding: messagePadding + 'px',
 					}"
 					@click="onMessageClick"
 				>
@@ -417,7 +422,6 @@ $-min-item-width = 24px
 	elevate-1()
 	display: inline-block
 	position: relative
-	padding: 12px
 	background-color: var(--theme-bg)
 	z-index: 1
 	max-width: 100%
@@ -433,6 +437,7 @@ $-min-item-width = 24px
 	border-style: solid
 	border-color: transparent
 	z-index: 1
+	pointer-events: none
 
 .-floating-data-anchor
 	position: relative

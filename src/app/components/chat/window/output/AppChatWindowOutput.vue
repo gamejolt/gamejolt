@@ -10,6 +10,8 @@ import {
 	toRefs,
 	watch,
 } from 'vue';
+import { useResizeObserver } from '../../../../../utils/resize-observer';
+import { debounce } from '../../../../../utils/utils';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { formatDate } from '../../../../../_common/filters/date';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
@@ -29,6 +31,8 @@ import { ChatRoom } from '../../room';
 import AppChatWindowOutputItem from './AppChatWindowOutputItem.vue';
 
 const AUTOSCROLL_THRESHOLD = 10;
+const AVATAR_MARGIN = 32;
+const MESSAGE_PADDING = 12;
 
 const props = defineProps({
 	room: {
@@ -41,10 +45,13 @@ const { room } = toRefs(props);
 const { user } = useCommonStore();
 const chatStore = inject(ChatStoreKey)!;
 
+const widthWatcher = ref<HTMLDivElement>();
+
 /** Whether or not we reached the end of the historical messages. */
 const reachedEnd = ref(false);
 const isLoadingOlder = ref(false);
 const latestFrozenTimestamp = ref<Date>();
+const maxContentWidth = ref(500);
 const scroller = createScroller();
 
 let _shouldScroll = true;
@@ -94,6 +101,15 @@ onMounted(() => {
 	_checkQueuedTimeout = setInterval(updateVisibleQueuedMessages, 1000);
 	if (messages.value.length > 0) {
 		_lastScrollMessageId = messages.value[0].id;
+	}
+
+	useResizeObserver({
+		target: widthWatcher,
+		callback: debounce(onChatOutputResize, 500),
+	});
+
+	if (widthWatcher.value) {
+		_updateMaxContentWidth(widthWatcher.value.clientWidth);
 	}
 });
 
@@ -251,6 +267,25 @@ async function onClickNewMessages() {
 		_shouldScroll = true;
 	}
 }
+
+function onChatOutputResize(entries: ResizeObserverEntry[]) {
+	console.warn('resized, getting new content bounds');
+	if (entries.length === 0) {
+		return;
+	}
+
+	_updateMaxContentWidth(entries[0].contentRect.width);
+}
+
+function _updateMaxContentWidth(width: number) {
+	const chatInnerPadding = 12 * 2;
+	const messageInnerPadding = MESSAGE_PADDING * 2;
+
+	maxContentWidth.value = Math.max(
+		width - (chatInnerPadding + AVATAR_MARGIN + messageInnerPadding),
+		100
+	);
+}
 </script>
 
 <template>
@@ -260,6 +295,8 @@ async function onClickNewMessages() {
 	need to autoscroll if the content changes within the scroller.
 	-->
 	<AppBackground class="chat-window-output" :background="room.background" darken>
+		<div ref="widthWatcher" class="-width-watcher" />
+
 		<AppScrollScroller
 			v-app-observe-dimensions="tryAutoscroll"
 			:controller="scroller"
@@ -304,7 +341,12 @@ async function onClickNewMessages() {
 							class="-new-user-spacing"
 						/>
 
-						<AppChatWindowOutputItem :message="message" :room="room" />
+						<AppChatWindowOutputItem
+							:message="message"
+							:room="room"
+							:message-padding="MESSAGE_PADDING"
+							:max-content-width="maxContentWidth"
+						/>
 					</div>
 				</div>
 			</div>
@@ -326,6 +368,12 @@ async function onClickNewMessages() {
 	position: relative
 	height: 100%
 	width: 100%
+
+.-width-watcher
+	position: absolute
+	left: 0
+	right: 0
+	z-index: -1
 
 .-scroller
 	position: absolute
