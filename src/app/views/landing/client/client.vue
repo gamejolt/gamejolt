@@ -73,17 +73,15 @@ export default class RouteLandingClient extends BaseRouteComponent {
 			return true;
 		}
 
-		// All Windows platforms are supported.
-		if (this.platform === 'windows') {
-			return false;
-		}
-
-		// On Linux and macOS only 64 bit is supported.
+		// We only support making 64 bit versions across the board.
 		return this.arch === '32';
 	}
 
 	get shouldOfferWindows() {
-		return this.isDetectedPlatformIncompatible || this.platform === 'windows';
+		return (
+			this.isDetectedPlatformIncompatible ||
+			(this.platform === 'windows' && this.arch === '64')
+		);
 	}
 
 	get shouldOfferMac() {
@@ -202,7 +200,7 @@ export default class RouteLandingClient extends BaseRouteComponent {
 							v-if="shouldOfferWindows"
 							primary
 							lg
-							@click="download(platform, '32')"
+							@click="download(platform, '64')"
 						>
 							<AppJolticon icon="download" />
 							Download for Windows
