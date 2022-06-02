@@ -185,7 +185,6 @@ export default class AppFormPostVideo
 
 		const progress = $payload.progress;
 		if (progress && progress.status === 'error') {
-			console.log('1', progress);
 			this.hasVideoProcessingError = true;
 			this.videoProcessingErrorMsg =
 				progress.reason ||
@@ -302,7 +301,6 @@ export default class AppFormPostVideo
 
 	onProcessingError(err: string | Error) {
 		if (typeof err === 'string') {
-			console.log('2', err);
 			this.hasVideoProcessingError = true;
 			this.videoProcessingErrorMsg = err;
 
