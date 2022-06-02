@@ -114,17 +114,19 @@ watch(
 				<b>
 					<template v-if="hasUpdate">
 						<AppTranslate>New Client version available!</AppTranslate>
+						{{ ' ' }}
 						<a @click="updateApply()">
 							<AppTranslate>Update now</AppTranslate>
 						</a>
 					</template>
 					<template v-else>
 						<AppTranslate>Uh oh, client has trouble updating!</AppTranslate>
+						{{ ' ' }}
 						<a class="-notice" @click="quitClient()">
 							<AppJolticon notice icon="notice" />
 							<AppTranslate>Try restarting</AppTranslate>
 						</a>
-						&nbsp;
+						{{ ' ' }}
 						<a class="-dismiss" @click="dismissUpdaterWarning()">
 							<AppJolticon class="-dismiss" icon="remove" />
 						</a>

@@ -233,7 +233,7 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 	// Don't assign a new one so that we stay in a canceled state.
 	rtc.generation.cancel();
 
-	const wasStreaming = !!rtc.producer?.isStreaming;
+	const wasStreaming = !!rtc.producer?.isStreaming.value;
 	if (rtc.producer) {
 		if (wasStreaming) {
 			// cleanupFiresideRTCProducer does not call stopStreaming,

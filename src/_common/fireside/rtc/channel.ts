@@ -138,7 +138,13 @@ export async function setChannelToken(channel: FiresideRTCChannel, token: string
 
 export async function setChannelVideoTrack(
 	channel: FiresideRTCChannel,
-	trackBuilder: () => Promise<ILocalVideoTrack | null>
+	{
+		trackBuilder,
+		onTrackClose,
+	}: {
+		trackBuilder: () => Promise<ILocalVideoTrack | null>;
+		onTrackClose?: () => Promise<void>;
+	}
 ) {
 	const { agoraClient, rtc } = channel;
 	const generation = channel.rtc.generation;
@@ -158,6 +164,8 @@ export async function setChannelVideoTrack(
 
 		rtc.log(`Closing previous local video track.`);
 		localTrack.close();
+
+		await onTrackClose?.();
 	}
 
 	rtc.log(`Getting new video track.`);
@@ -184,7 +192,13 @@ export function previewChannelVideo(channel: FiresideRTCChannel, element: HTMLDi
 
 export async function setChannelAudioTrack(
 	channel: FiresideRTCChannel,
-	trackBuilder: () => Promise<ILocalAudioTrack | null>
+	{
+		trackBuilder,
+		onTrackClose,
+	}: {
+		trackBuilder: () => Promise<ILocalAudioTrack | null>;
+		onTrackClose?: () => Promise<void>;
+	}
 ) {
 	const { agoraClient, rtc } = channel;
 	const generation = channel.rtc.generation;
@@ -204,6 +218,8 @@ export async function setChannelAudioTrack(
 
 		rtc.log(`Closing previous local audio track.`);
 		localTrack.close();
+
+		await onTrackClose?.();
 	}
 
 	rtc.log(`Getting new audio track.`);

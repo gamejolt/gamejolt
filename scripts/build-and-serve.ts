@@ -117,13 +117,14 @@ function runViteBuild(gjOpts: Options, aborter: AbortController) {
 (async () => {
 	const args = minimist(process.argv.splice(2));
 	const gjOpts = await parseAndInferOptionsFromCommandline(args);
-	gjOpts.platform = 'web';
 	gjOpts.buildType = 'serve-build';
 
 	const aborter = new AbortController();
-	const server = initializeHttpServer(args, gjOpts, aborter);
-	runViteBuild(gjOpts, aborter);
 
-	// await sleep(5000);
-	// server?.close();
+	// Only initialize the http server when serving web.
+	if (gjOpts.platform === 'web') {
+		initializeHttpServer(args, gjOpts, aborter);
+	}
+
+	runViteBuild(gjOpts, aborter);
 })();
