@@ -367,7 +367,6 @@ export default class AppFormPostVideo
 
 <template>
 	<AppLoadingFade :is-loading="!isLoaded">
-		{{ videoStatus }}
 		<template v-if="shouldShowFormPlaceholder">
 			<AppFormLegend compact :deletable="canRemoveUploadingVideo">
 				<span class="-placeholder-text" style="width: 60px" />
