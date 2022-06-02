@@ -5,7 +5,6 @@ import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppProgressBar from '../../progress/AppProgressBar.vue';
 import { AppProgressPoller } from '../../progress/poller/poller';
 import AppResponsiveDimensions from '../../responsive-dimensions/AppResponsiveDimensions.vue';
-import { createTranslatableStringFromPayload } from '../../translation/translatable-string';
 
 @Options({
 	components: {
@@ -56,9 +55,9 @@ export default class AppVideoProcessingProgress extends Vue {
 			return;
 		}
 
-		const errorMsg = input.translatableError
-			? (await createTranslatableStringFromPayload(input.translatableError)).value
-			: this.$gettext('We could not process your video for some reason. Try again later.');
+		const errorMsg =
+			input.reason ||
+			this.$gettext('We could not process your video for some reason. Try again later.');
 
 		this.emitError(errorMsg);
 	}

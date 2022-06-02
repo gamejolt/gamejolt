@@ -1,6 +1,7 @@
 import { RouteLocationNormalized } from 'vue-router';
 import { RouteLocationDefinition } from '../../../utils/router';
 import { Api } from '../../api/api.service';
+import { Background } from '../../background/background.model';
 import { Perm } from '../../collaborator/collaboratable';
 import { CommunityChannel } from '../../community/channel/channel.model';
 import { Community } from '../../community/community.model';
@@ -24,7 +25,6 @@ import { FiresidePostCommunity } from './community/community.model';
 import { FiresidePostEmbed } from './embed/embed.model';
 import { FiresidePostLike } from './like/like-model';
 import { FiresidePostVideo } from './video/video-model';
-import { Background } from '../../background/background.model';
 
 interface FiresidePostPublishedPlatform {
 	created_resource_provider: string;
@@ -499,6 +499,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			`/web/posts/manage/toggle-pin/${this.id}/${targetModel}/${targetId}`,
 			'post'
 		);
+	}
+
+	$removeVideo() {
+		return Api.sendRequest(`/web/posts/manage/remove-video/${this.id}`, {});
 	}
 
 	async remove() {

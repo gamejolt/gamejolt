@@ -21,7 +21,6 @@ import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Payload } from '../../../../../_common/payload/payload-service';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
-import { createTranslatableStringFromPayload } from '../../../../../_common/translation/translatable-string';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
 import AppVideoPlayer from '../../../../../_common/video/player/player.vue';
 import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/processing-progress.vue';
@@ -186,17 +185,11 @@ export default class AppFormPostVideo
 
 		const progress = $payload.progress;
 		if (progress && progress.status === 'error') {
+			console.log('1', progress);
 			this.hasVideoProcessingError = true;
-			if (progress.translatableError) {
-				this.videoProcessingErrorMsg = this.$gettext('Loading...');
-				createTranslatableStringFromPayload(progress.translatableError).then(tstring => {
-					this.videoProcessingErrorMsg = tstring.value;
-				});
-			} else {
-				this.videoProcessingErrorMsg = this.$gettext(
-					'We could not process your video for some reason. Try again later.'
-				);
-			}
+			this.videoProcessingErrorMsg =
+				progress.reason ||
+				this.$gettext('We could not process your video for some reason. Try again later.');
 		}
 	}
 
@@ -309,6 +302,7 @@ export default class AppFormPostVideo
 
 	onProcessingError(err: string | Error) {
 		if (typeof err === 'string') {
+			console.log('2', err);
 			this.hasVideoProcessingError = true;
 			this.videoProcessingErrorMsg = err;
 
@@ -350,6 +344,21 @@ export default class AppFormPostVideo
 			}
 		}
 
+		// We need to tell the backend to remove the video even before saving,
+		// because otherwise when you click to add a new video, it'd still think
+		// the old video with the error exists - and would report the error
+		// status during this form's loadUrl.
+		//
+		// Normally we don't want to apply changes until the form is saved but
+		// in this case specifically I think it makes sense since the video is
+		// unpublishable anyways.
+		if (this.videoStatus === VideoStatus.ERROR) {
+			await this.post.$removeVideo();
+		}
+
+		this.hasVideoProcessingError = false;
+		this.videoProcessingErrorMsg = '';
+
 		this.cancelUpload();
 		this.emitDelete();
 	}
@@ -358,6 +367,7 @@ export default class AppFormPostVideo
 
 <template>
 	<AppLoadingFade :is-loading="!isLoaded">
+		{{ videoStatus }}
 		<template v-if="shouldShowFormPlaceholder">
 			<AppFormLegend compact :deletable="canRemoveUploadingVideo">
 				<span class="-placeholder-text" style="width: 60px" />
