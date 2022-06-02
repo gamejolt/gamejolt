@@ -45,7 +45,7 @@ export function hijackLinks(router: Router, host: string) {
 		return;
 	}
 
-	document.body.addEventListener('click', e => {
+	function handleClick(e: MouseEvent) {
 		let elem: HTMLElement | null = e.target as any;
 		while (elem && !(elem instanceof HTMLAnchorElement)) {
 			elem = elem?.parentNode as HTMLElement | null;
@@ -115,7 +115,15 @@ export function hijackLinks(router: Router, host: string) {
 		}
 
 		// Let it direct to the URL by doing nothing.
-	});
+	}
+
+	document.body.addEventListener('click', handleClick);
+
+	// auxclick is middle mouse button. We only want to hijack this stuff in
+	// desktop app since it creates its own weird secondary window.
+	if (GJ_IS_DESKTOP_APP) {
+		document.body.addEventListener('auxclick', handleClick);
+	}
 }
 
 // Basically taken from vue-router router-link. Decides if we should do any
@@ -130,7 +138,8 @@ function guardHijackEvent(elem: HTMLElement, e: any): 'passthrough' | 'window' |
 	}
 
 	// don't redirect with control keys
-	if (ke.metaKey || ke.altKey || ke.ctrlKey || ke.shiftKey) {
+	// button 1 is the middle click
+	if (ke.metaKey || ke.altKey || ke.ctrlKey || ke.shiftKey || me.button === 1) {
 		// If in client, we should pop open a new window. Gotta make sure that
 		// if it's a client-relative link, we need to replace with the correct
 		// host.
