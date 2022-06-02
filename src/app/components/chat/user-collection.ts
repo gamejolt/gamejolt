@@ -1,3 +1,4 @@
+import { toRaw } from 'vue';
 import { arrayRemove, numberSort, stringSortRaw } from '../../../utils/array';
 import { ChatClient, isUserOnline } from './client';
 import { CHAT_ROLES } from './role';
@@ -197,7 +198,7 @@ export function sortCollection(
 ) {
 	switch (mode) {
 		case 'role': {
-			return collection
+			return toRaw(collection)
 				.map(user => ({
 					user,
 					role: RoleSorts[user.isStaff ? 'staff' : getRoleSort(user)],
@@ -223,7 +224,7 @@ export function sortCollection(
 			return sortByLastMessageOn([...collection]);
 
 		case 'title':
-			return collection
+			return toRaw(collection)
 				.map(user => ({
 					user,
 					sort: getSortVal(chat, user),
