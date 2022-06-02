@@ -1,73 +1,66 @@
 <script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
-import { shallowSetup } from '../../../../utils/vue';
+import { toRefs } from 'vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
+import AppStickerLiveReactions from '../../../../_common/sticker/live-reactions/AppStickerLiveReactions.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import { StreamSetupModal } from '../../../components/fireside/stream/setup/setup-modal.service';
 import { FiresideChatMembersModal } from '../_chat-members/modal/modal.service';
 import AppFiresideSettingsPopper from '../_settings-popper/settings-popper.vue';
+</script>
 
-@Options({
-	components: {
-		AppCommunityThumbnailImg,
-		AppUserAvatarImg,
-		AppFiresideSettingsPopper,
+<script lang="ts" setup>
+const props = defineProps({
+	showControls: {
+		type: Boolean,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
+	hasChatStats: {
+		type: Boolean,
 	},
-})
-export default class AppFiresideHeader extends Vue {
-	@Prop({ type: Boolean })
-	showControls!: boolean;
+	isOverlay: {
+		type: Boolean,
+	},
+});
 
-	@Prop({ type: Boolean })
-	hasChat!: boolean;
+const { showControls, hasChatStats, isOverlay } = toRefs(props);
 
-	@Prop({ type: Boolean })
-	hasChatStats!: boolean;
+const c = useFiresideController()!;
+const {
+	fireside,
+	chatUsers,
+	chatRoom,
+	isShowingOverlayPopper,
+	isDraft,
+	isPersonallyStreaming,
+	stickerTargetController,
+	shouldShowStreamingOptions,
+} = c;
 
-	@Prop({ type: Boolean })
-	isOverlay!: boolean;
-
-	c = shallowSetup(() => useFiresideController()!);
-
-	readonly formatNumber = formatNumber;
-	readonly Screen = Screen;
-
-	get fireside() {
-		return this.c.fireside;
+function onClickShowChatMembers() {
+	if (!chatUsers.value || !chatRoom.value) {
+		return;
 	}
 
-	get memberCount() {
-		return this.c.chatRoom.value?.members.length ?? 1;
-	}
+	FiresideChatMembersModal.show(chatUsers.value, chatRoom.value);
+}
 
-	onClickShowChatMembers() {
-		if (!this.c.chatUsers.value || !this.c.chatRoom.value) {
-			return;
-		}
+function onClickEditStream() {
+	StreamSetupModal.show(c);
+}
 
-		FiresideChatMembersModal.show(this.c.chatUsers.value, this.c.chatRoom.value);
+function onShowPopper() {
+	if (isOverlay) {
+		isShowingOverlayPopper.value = true;
 	}
+}
 
-	onClickEditStream() {
-		StreamSetupModal.show(this.c);
-	}
-
-	onShowPopper() {
-		if (this.isOverlay) {
-			this.c.isShowingOverlayPopper.value = true;
-		}
-	}
-
-	onHidePopper() {
-		this.c.isShowingOverlayPopper.value = false;
-	}
+function onHidePopper() {
+	isShowingOverlayPopper.value = false;
 }
 </script>
 
@@ -104,7 +97,7 @@ export default class AppFiresideHeader extends Vue {
 							</router-link>
 						</template>
 
-						<span v-if="c.isDraft.value" class="-tag tag">
+						<span v-if="isDraft" class="-tag tag">
 							<AppTranslate>Draft</AppTranslate>
 						</span>
 
@@ -122,13 +115,18 @@ export default class AppFiresideHeader extends Vue {
 						{{ fireside.title }}
 					</div>
 				</h2>
-				<div v-if="hasChatStats && c.chatUsers.value" class="-fireside-title-member-stats">
+
+				<div v-if="!Screen.isXs" class="-live-reactions">
+					<AppStickerLiveReactions :controller="stickerTargetController" reverse />
+				</div>
+
+				<div v-if="hasChatStats && chatUsers" class="-fireside-title-member-stats">
 					<ul class="stat-list">
 						<a @click="onClickShowChatMembers">
 							<li class="stat-big stat-big-smaller">
 								<div class="stat-big-label">Members</div>
 								<div class="stat-big-digit">
-									{{ formatNumber(c.chatUsers.value.count) }}
+									{{ formatNumber(chatUsers.count) }}
 								</div>
 							</li>
 						</a>
@@ -136,7 +134,7 @@ export default class AppFiresideHeader extends Vue {
 				</div>
 				<div v-if="showControls" class="-fireside-title-controls">
 					<div
-						v-if="c.shouldShowStreamingOptions.value && !c.isPersonallyStreaming.value"
+						v-if="shouldShowStreamingOptions && !isPersonallyStreaming"
 						class="-stats-btn"
 					>
 						<AppButton
@@ -216,4 +214,7 @@ export default class AppFiresideHeader extends Vue {
 
 .-tag
 	margin-left: 4px
+
+.-live-reactions
+	padding: 0 16px
 </style>

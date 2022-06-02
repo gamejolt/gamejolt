@@ -29,5 +29,18 @@ const minimist = require('minimist');
 
 	const gjOpts = await parseAndInferOptionsFromCommandline(args);
 	console.log(gjOpts);
-	runVite({ command }, gjOpts);
+
+	const viteProcess = runVite({ command, watch: args.watch ?? false }, gjOpts);
+
+	await new Promise<void>((resolve, reject) => {
+		viteProcess.on('exit', code => {
+			process.exitCode = code ?? -1;
+
+			if (code === 0) {
+				return resolve();
+			}
+
+			reject(`Vite ended with exit code ${code}`);
+		});
+	});
 })();

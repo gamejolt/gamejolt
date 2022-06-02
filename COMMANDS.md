@@ -19,16 +19,16 @@ For common tasks like running the frontend or building the desktop app we have p
 
 - `yarn client` - Runs the client. Use this while running `yarn client:dev` or `yarn client:devd`.
 
-### __Common issue with logging in (sorry)__
-To improve load time our code is split into sections. The most common sections are `app` which is most of the website/desktop  and `auth` which is the pages related to logging in / registering.
+  ### __Common issue with logging in (sorry)__
+  To improve load time our code is split into sections. The most common sections are `app` which is most of the website/desktop  and `auth` which is the pages related to logging in / registering.
 
-When running the desktop app, if you are not logged in you will be redirected to the auth section. This bit will fail. You will either get redirected to a page that does not exist or the login page will open in your browser instead of in the client.
+  When running the desktop app, if you are not logged in you will be redirected to the auth section. This bit will fail. You will either get redirected to a page that does not exist or the login page will open in your browser instead of in the client.
 
-Due to technical limitations we only support running one section at a time. If you are running the `app` section while not logged in, the client will attempt to redirect you to the `auth` section and fail.
+  Due to technical limitations we only support running one section at a time. If you are running the `app` section while not logged in, the client will attempt to redirect you to the `auth` section and fail.
 
-__The workaround:__
+  __The workaround:__
 
-Edit `package.json` file and change the `main` field to `https://development.gamejolt.com/login` and then run the client using the `auth` section. Then after logging in, close the client, revert the change to `package.json` back to `https://development.gamejolt.com/` and run the `app` section normally.
+  Edit `package.json` file and change the `main` field to `https://development.gamejolt.com/login` and then run the client using the `auth` section. Then after logging in, close the client, revert the change to `package.json` back to `https://development.gamejolt.com/` and run the `app` section normally.
 
 ## Desktop App - Building
 Run `yarn client:build` and then `yarn client:package` to produce a fully desktop app build.
@@ -50,6 +50,12 @@ Run `yarn ssr:client` and `yarn ssr:server` and after both are done run `yarn ss
 - `yarn build` - Builds the frontend repo to disk. Builds go to `/build/<platform>`, for example when building web, files will go to `/build/web`, and when building the desktop app they will go to `/build/desktop`.
 
 - `yarn build:dev` - Similar to `yarn build` only for the purpose of serving this build locally instead of being deployed to a server (or further bundled into a complete desktop app build). This command runs the frontend without using a devserver. This means a smaller memory footprint but no HMR (no live reloads when you make changes in the code). Every time you make a change to the code the frontend will be fully rebuilt. See comments on `scripts/build-and-serve.ts` for more info.
+  - __For `web` platform (the default):__ It'll run a tiny http server that serves the web frontend on https://development.gamejolt.com.
+  - __For `desktop` platform:__ It'll build to disk. Use `yarn client` to run it.
+
+    > Sorry for the hassle, but in this build mode manual modifications to package.json are necessary:
+    > - Change `main` to `chrome-extension://game-jolt-client/build/desktop/index.html#/` (or other section.html, e.g. auth.html)
+    > - Remove `node-remote` key
 
 - `yarn build:devd` - Same as `yarn build:dev` only targetting the development environment.
 

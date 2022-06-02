@@ -123,8 +123,6 @@ export class ConfigOptionString<T extends string = string> extends ConfigOption<
 	}
 }
 
-export const configClientAllowStreaming = new ConfigOptionBoolean('client_allow_streaming', false);
-
 export const configRealms = new ConfigOptionBoolean('web_realms', false);
 
 /** Whether or not we show the post share card on the side or inline */

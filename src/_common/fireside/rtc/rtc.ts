@@ -1,5 +1,5 @@
 import type { IAgoraRTC, IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
-import { markRaw, reactive } from 'vue';
+import { markRaw, reactive, Ref } from 'vue';
 import { arrayAssignAll, arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
 import { debounce, sleep } from '../../../utils/utils';
@@ -73,6 +73,9 @@ export class FiresideRTC {
 		public videoToken: string,
 		public readonly chatChannelName: string,
 		public chatToken: string,
+		// NOTE: These may be wrapped in Refs if accessing inside the
+		// constructor. Check createFiresideRTC for the actual typing before
+		// `reactive` unwraps it.
 		public readonly hosts: FiresideRTCHost[],
 		public readonly listableHostIds: number[],
 		{ isMuted }: Options
@@ -192,8 +195,8 @@ export function createFiresideRTC(
 	fireside: Fireside,
 	userId: number | null,
 	agoraStreamingInfo: AgoraStreamingInfo,
-	hosts: FiresideRTCHost[],
-	listableHostIds: number[],
+	hosts: Ref<FiresideRTCHost[]>,
+	listableHostIds: Ref<number[]>,
 	options: Options = {}
 ) {
 	const rtc = reactive(
@@ -206,8 +209,13 @@ export function createFiresideRTC(
 			agoraStreamingInfo.videoToken,
 			agoraStreamingInfo.chatChannelName,
 			agoraStreamingInfo.chatToken,
-			hosts,
-			listableHostIds,
+			// Stop typescript from complaining about Vue types.
+			//
+			// `reactive` will unwrap refs, but the type is still technically
+			// wrong until the class is constructed and `reactive` can unwrap
+			// the fields.
+			hosts as unknown as FiresideRTCHost[],
+			listableHostIds as unknown as number[],
 			options
 		)
 	) as FiresideRTC;
@@ -225,7 +233,7 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 	// Don't assign a new one so that we stay in a canceled state.
 	rtc.generation.cancel();
 
-	const wasStreaming = !!rtc.producer?.isStreaming;
+	const wasStreaming = !!rtc.producer?.isStreaming.value;
 	if (rtc.producer) {
 		if (wasStreaming) {
 			// cleanupFiresideRTCProducer does not call stopStreaming,

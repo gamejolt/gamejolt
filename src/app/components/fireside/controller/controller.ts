@@ -2,6 +2,7 @@ import {
 	computed,
 	inject,
 	InjectionKey,
+	markRaw,
 	provide,
 	reactive,
 	ref,
@@ -17,8 +18,8 @@ import {
 	canCommunityEjectFireside,
 	canCommunityFeatureFireside,
 } from '../../../../_common/community/community.model';
-import { configClientAllowStreaming } from '../../../../_common/config/config.service';
 import { getDeviceBrowser } from '../../../../_common/device/device.service';
+import { onFiresideStickerPlaced } from '../../../../_common/drawer/drawer-store';
 import { formatDuration } from '../../../../_common/filters/duration';
 import { Fireside, FIRESIDE_EXPIRY_THRESHOLD } from '../../../../_common/fireside/fireside.model';
 import {
@@ -78,7 +79,55 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 	 */
 	const listableHostIds = ref([] as number[]);
 
-	const stickerTargetController = createStickerTargetController(fireside, undefined, true);
+	const stickerTargetController = createStickerTargetController(fireside, undefined, {
+		isLive: true,
+		placeStickerCallback: async data => {
+			const roomChannel = chatChannel.value?.socketChannel;
+			const targetUserId = rtc.value?.focusedUser?.userModel?.id;
+			const errorResponse = { success: false };
+
+			if (!roomChannel || !targetUserId) {
+				// Tried placing a sticker while disconnected from chat or
+				// without a focused user.
+				return errorResponse;
+			}
+
+			const body = {} as any;
+			for (const item in data) {
+				if (Object.prototype.hasOwnProperty.call(data, item)) {
+					const element = (data as any)[item];
+					body[item.replace(/[A-Z]/, val => '_' + val.toLowerCase())] = element;
+				}
+			}
+			body['host_user_id'] = targetUserId;
+
+			return new Promise(resolve => {
+				roomChannel
+					.push(
+						'place_sticker',
+						body,
+						// Just in case they get disconnected (or bad data
+						// causes it to error out)
+						5_000
+					)
+					.receive('ok', result => {
+						const placement = result.stickerPlacement;
+						if (placement) {
+							onFiresideStickerPlaced.next(placement);
+						}
+						return resolve({ ...result, success: true });
+					})
+					.receive('error', () => resolve(errorResponse))
+					.receive('timeout', () => {
+						// Only show a timeout error if they're still connected
+						// to the socket.
+						if (chatChannel.value?.socketChannel) {
+							resolve(errorResponse);
+						}
+					});
+			});
+		},
+	});
 	const isMuted = options.isMuted ?? false;
 
 	const rtc = ref<FiresideRTC>();
@@ -195,7 +244,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 	 */
 	const canBrowserStream = computed(() => {
 		if (GJ_IS_DESKTOP_APP) {
-			return configClientAllowStreaming.value;
+			return true;
 		}
 
 		return !(_isFirefox.value || _isSafari.value);
@@ -264,8 +313,8 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 				fireside,
 				user.value?.id ?? null,
 				agoraStreamingInfo.value!,
-				hosts.value,
-				listableHostIds.value,
+				hosts,
+				listableHostIds,
 				{ isMuted }
 			);
 		} else if (rtc.value) {
@@ -299,7 +348,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		if (newWantsRTCProducer) {
 			// Do not create the producer if it already exists.
 			// This should never happen normally.
-			rtc.value!.producer ??= createFiresideRTCProducer(rtc.value!);
+			rtc.value!.producer ??= markRaw(createFiresideRTCProducer(rtc.value!));
 		} else if (rtc.value) {
 			const prevProducer = rtc.value.producer;
 			rtc.value.producer = null;
