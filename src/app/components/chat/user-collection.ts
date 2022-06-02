@@ -16,8 +16,8 @@ export class ChatUserCollection {
 	offlineCount = 0;
 
 	private collection_: ChatUser[] = [];
-	private byId_: Record<number, ChatUser> = {};
-	private byRoomId_: Record<number, ChatUser> = {};
+	private byId_ = new Map<number, ChatUser>();
+	private byRoomId_ = new Map<number, ChatUser>();
 	private doingWork_ = false;
 
 	get count() {
@@ -47,24 +47,25 @@ export class ChatUserCollection {
 	}
 
 	private indexUser(user: ChatUser) {
-		this.byId_[user.id] = user;
+		this.byId_.set(user.id, user);
 		if (user.room_id !== 0) {
-			this.byRoomId_[user.room_id] = user;
+			this.byRoomId_.set(user.room_id, user);
 		}
 	}
 
 	get(input: number | ChatUser): ChatUser | undefined {
 		const userId = typeof input === 'number' ? input : input.id;
-		return this.byId_[userId];
+		return this.byId_.get(userId);
+	}
+
+	has(input: number | ChatUser) {
+		const userId = typeof input === 'number' ? input : input.id;
+		return this.byId_.has(userId);
 	}
 
 	getByRoom(input: number | ChatRoom): ChatUser | undefined {
 		const roomId = typeof input === 'number' ? input : input.id;
-		return this.byRoomId_[roomId];
-	}
-
-	has(input: number | ChatUser) {
-		return !!this.get(input);
+		return this.byRoomId_.get(roomId);
 	}
 
 	add(user: ChatUser) {
@@ -94,9 +95,9 @@ export class ChatUserCollection {
 		}
 
 		arrayRemove(this.collection_, i => i === user);
-		delete this.byId_[user.id];
+		this.byId_.delete(user.id);
 		if (user.room_id !== 0) {
-			delete this.byRoomId_[user.room_id];
+			this.byRoomId_.delete(user.room_id);
 		}
 
 		if (user.isOnline) {
@@ -202,7 +203,7 @@ export function sortCollection(
 				.map(user => ({
 					user,
 					role: RoleSorts[user.isStaff ? 'staff' : getRoleSort(user)],
-					isFriend: !!chat.friendsList.get(user.id),
+					isFriend: chat.friendsList.has(user.id),
 					lowercaseDisplayName: user.display_name.toLowerCase(),
 				}))
 				.sort((a, b) => {
