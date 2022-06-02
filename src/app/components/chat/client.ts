@@ -145,7 +145,7 @@ export function initChatClient(chat: ChatClient) {
 function reset(chat: ChatClient) {
 	chat.connected = false;
 	chat.currentUser = null;
-	chat.friendsList = new ChatUserCollection(ChatUserCollection.TYPE_FRIEND);
+	chat.friendsList = new ChatUserCollection(chat, ChatUserCollection.TYPE_FRIEND, []);
 	chat.populated = false;
 	chat.pollingRoomId = -1;
 
@@ -367,6 +367,7 @@ async function joinUserChannel(chat: ChatClient, userId: number) {
 
 						chat.currentUser = new ChatUser(response.user);
 						chat.friendsList = new ChatUserCollection(
+							chat,
 							ChatUserCollection.TYPE_FRIEND,
 							response.friends || []
 						);
@@ -676,9 +677,9 @@ function setupRoom(chat: ChatClient, room: ChatRoom, messages: ChatMessage[]) {
 		// Set the room info
 		chat.messages[room.id] = [];
 		chat.roomMembers[room.id] = new ChatUserCollection(
+			chat,
 			room.isFiresideRoom ? ChatUserCollection.TYPE_FIRESIDE : ChatUserCollection.TYPE_ROOM,
-			room.members || [],
-			chat
+			room.members || []
 		);
 
 		// Only set the room as "the" active room when it's not instanced.

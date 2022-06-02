@@ -1,15 +1,16 @@
-import { arrayRemove, numberSort, stringSort, stringSortRaw } from '../../../utils/array';
+import { arrayRemove, numberSort, stringSortRaw } from '../../../utils/array';
 import { ChatClient, isUserOnline } from './client';
 import { CHAT_ROLES } from './role';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
+
+type RoomType = 'friend' | 'room' | 'fireside';
 
 export class ChatUserCollection {
 	static readonly TYPE_FRIEND = 'friend';
 	static readonly TYPE_ROOM = 'room';
 	static readonly TYPE_FIRESIDE = 'fireside';
 
-	chat: ChatClient | null = null;
 	onlineCount = 0;
 	offlineCount = 0;
 
@@ -26,11 +27,7 @@ export class ChatUserCollection {
 		return this.collection_;
 	}
 
-	constructor(
-		public type: 'friend' | 'room' | 'fireside',
-		users: any[] = [],
-		chatClient?: ChatClient
-	) {
+	constructor(public chat: ChatClient, public type: RoomType, users: any[] = []) {
 		if (users && users.length) {
 			for (const user of users) {
 				const userModel = new ChatUser(user);
@@ -45,10 +42,6 @@ export class ChatUserCollection {
 			}
 
 			this.recollect();
-		}
-
-		if (chatClient) {
-			this.chat = chatClient;
 		}
 	}
 
@@ -165,11 +158,11 @@ export class ChatUserCollection {
 		}
 
 		if (this.type === ChatUserCollection.TYPE_FRIEND) {
-			sortCollection(this.chat, this.collection_, 'lastMessage');
+			this.collection_ = sortCollection(this.chat, this.collection_, 'lastMessage');
 		} else if (this.type === ChatUserCollection.TYPE_FIRESIDE) {
-			sortCollection(this.chat, this.collection_, 'role');
+			this.collection_ = sortCollection(this.chat, this.collection_, 'role');
 		} else {
-			sortCollection(this.chat, this.collection_, 'title');
+			this.collection_ = sortCollection(this.chat, this.collection_, 'title');
 		}
 	}
 
@@ -190,13 +183,7 @@ export class ChatUserCollection {
 	}
 }
 
-type RoleSortData = {
-	role: number;
-	isFriend: boolean;
-	lowercaseDisplayName: string;
-};
-
-const roleSorts = {
+const RoleSorts = {
 	owner: 0,
 	moderator: 1,
 	staff: 2,
@@ -204,58 +191,45 @@ const roleSorts = {
 } as const;
 
 export function sortCollection(
-	chat: ChatClient | null,
+	chat: ChatClient,
 	collection: ChatUser[],
 	mode: 'lastMessage' | 'title' | 'role'
 ) {
 	switch (mode) {
-		case 'role':
-			{
-				const dataMap: Record<number, RoleSortData> = {};
-				for (const user of collection) {
-					dataMap[user.id] ??= {
-						role: roleSorts[user.isStaff ? 'staff' : getRoleSort(user)],
-						isFriend: !!chat?.friendsList.get(user.id),
-						lowercaseDisplayName: user.display_name.toLowerCase(),
-					};
-				}
-
-				collection.sort((a, b) => {
-					const aData: RoleSortData = dataMap[a.id];
-					const bData: RoleSortData = dataMap[b.id];
-					const roleDiff = numberSort(aData.role, bData.role);
+		case 'role': {
+			return collection
+				.map(user => ({
+					user,
+					role: RoleSorts[user.isStaff ? 'staff' : getRoleSort(user)],
+					isFriend: !!chat.friendsList.get(user.id),
+					lowercaseDisplayName: user.display_name.toLowerCase(),
+				}))
+				.sort((a, b) => {
+					const roleDiff = numberSort(a.role, b.role);
 					if (roleDiff !== 0) {
 						return roleDiff;
 					}
 
-					if (aData.isFriend !== bData.isFriend) {
-						return aData.isFriend ? -1 : 1;
+					if (a.isFriend !== b.isFriend) {
+						return a.isFriend ? -1 : 1;
 					}
 
-					return stringSortRaw(aData.lowercaseDisplayName, bData.lowercaseDisplayName);
-				});
-			}
-			break;
+					return stringSortRaw(a.lowercaseDisplayName, b.lowercaseDisplayName);
+				})
+				.map(i => i.user);
+		}
 
 		case 'lastMessage':
-			sortByLastMessageOn(collection);
-			break;
+			return sortByLastMessageOn([...collection]);
 
 		case 'title':
-			collection.sort((a, b) => {
-				if (chat) {
-					const aSort = getSortVal(chat, a);
-					const bSort = getSortVal(chat, b);
-					if (aSort > bSort) {
-						return 1;
-					} else if (aSort < bSort) {
-						return -1;
-					}
-				}
-
-				return stringSort(a.display_name, b.display_name);
-			});
-			break;
+			return collection
+				.map(user => ({
+					user,
+					sort: getSortVal(chat, user),
+				}))
+				.sort((a, b) => a.sort - b.sort)
+				.map(i => i.user);
 	}
 }
 
