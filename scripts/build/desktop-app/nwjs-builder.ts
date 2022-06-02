@@ -1,5 +1,5 @@
+import * as fs from 'fs-extra';
 import {
-	createTarGz,
 	downloadFile,
 	extractTarGz,
 	isLinux,
@@ -11,7 +11,6 @@ import {
 	unzip,
 } from '../utils';
 import { acquirePrebuiltFFmpeg } from './ffmpeg-prebuilt';
-import * as fs from 'fs-extra';
 const path = require('path') as typeof import('path');
 const plist = require('simple-plist') as typeof import('simple-plist');
 const readdirp = require('readdirp') as typeof import('readdirp');
@@ -52,6 +51,12 @@ export class NwBuilder {
 
 		console.log(`Overriding package.json for client build.`, jsonOverrides);
 		const packageJson = mergeDeep(this.config.packageJson, jsonOverrides);
+
+		if (isWindows()) {
+			// ASG is not optional on windows.
+			packageJson.dependencies['asg-prebuilt'] =
+				packageJson.optionalDependencies['asg-prebuilt'];
+		}
 
 		// We don't need these bundled in.
 		delete packageJson['node-remote'];
@@ -326,8 +331,7 @@ export class NwBuilder {
 				command: 'yarn',
 				args: ['--cwd', appDir, '--production', '--ignore-scripts'],
 			},
-			// We have to run client-voodoo's post install to get the joltron
-			// binaries in.
+			// Run client-voodoo's post install to get the joltron binaries in.
 			{
 				command: 'yarn',
 				args: [
@@ -338,6 +342,21 @@ export class NwBuilder {
 				],
 			},
 		];
+
+		if (isWindows()) {
+			commands.push(
+				// Run asg-prebuilt's post install to get the asg binaries in.
+				{
+					command: 'yarn',
+					args: [
+						'--cwd',
+						path.resolve(appDir, 'node_modules/asg-prebuilt'),
+						'run',
+						'postinstall',
+					],
+				}
+			);
+		}
 
 		for (const { command, args } of commands) {
 			await runShell(command, { args });

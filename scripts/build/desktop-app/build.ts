@@ -42,7 +42,8 @@ async function buildSection(section: GjSectionName, options: ClientBuildOptions)
 		`yarn build --no-empty-outdir --platform desktop` +
 			` --environment ${options.environment}` +
 			` --build-type ${options.buildType}` +
-			` --section ${section}`
+			` --section ${section}` +
+			`${options.staging ? ' --staging' : ''}`
 	);
 }
 

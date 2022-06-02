@@ -6,13 +6,13 @@
  */
 
 import { defineAsyncComponent } from 'vue';
-import type AppClientShellType from './AppClientShell.vue';
-import type AppClientStatusBarType from './status-bar/AppClientStatusBar.vue';
-import type AppClientPackageCardButtonsType from './hooks/AppClientPackageCardButtons.vue';
-import type { routeLibraryInstalled as routeLibraryInstalledType } from '../../views/library/installed/installed.route';
-import type { ClientSystemReportModal as ClientSystemReportModalType } from './system-report-modal/system-report-modal.service';
-import type { LocalDbGame as LocalDbGameType } from './local-db/game/game.model';
 import { Router } from 'vue-router';
+import type { routeLibraryInstalled as routeLibraryInstalledType } from '../../views/library/installed/installed.route';
+import type AppClientShellType from './AppClientShell.vue';
+import type AppClientPackageCardButtonsType from './hooks/AppClientPackageCardButtons.vue';
+import type { LocalDbGame as LocalDbGameType } from './local-db/game/game.model';
+import type AppClientStatusBarType from './status-bar/AppClientStatusBar.vue';
+import type { ClientSystemReportModal as ClientSystemReportModalType } from './system-report-modal/system-report-modal.service';
 
 // Vue components
 const AppNoopLoader = defineAsyncComponent(
