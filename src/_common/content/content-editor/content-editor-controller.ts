@@ -14,7 +14,7 @@ import { ContentHydrator } from '../content-hydrator';
 import { ContentEditorAppAdapterMessage, editorGetAppAdapter } from './app-adapter';
 import { ContentEditorService } from './content-editor.service';
 import buildEditorEvents from './events/build-events';
-import { MediaUploadTask } from './media-upload-task';
+import { createMediaUploadTask, MediaUploadTask } from './media-upload-task';
 import { SearchResult } from './modals/gif/gif-modal.service';
 import { NodeViewRenderData } from './node-views/base';
 import { buildEditorNodeViews } from './node-views/node-view-builder';
@@ -706,19 +706,7 @@ export function editorUploadImageFile(c: ContentEditorController, file: File | n
 		return false;
 	}
 
-	// Only preview the image if it's smaller than 5 Mb.
-	let thumbnail: string | undefined;
-	if (file.size < 5000000) {
-		const reader = new FileReader();
-		reader.onloadend = () => {
-			if (reader.result !== null) {
-				thumbnail = reader.result.toString();
-			}
-		};
-		reader.readAsDataURL(file);
-	}
-
-	const uploadTask = new MediaUploadTask(c, uuidv4(), thumbnail).withFile(file);
+	const uploadTask = createMediaUploadTask(c, uuidv4(), { file });
 	editorMediaUploadInsert(c, uploadTask);
 	return true;
 }
@@ -960,7 +948,7 @@ export function editorMediaUploadInsert(c: ContentEditorController, uploadTask: 
 
 	// The media upload node will use the uploadId to find the task in this
 	// object.
-	ContentEditorService.UploadTaskCache[uploadTask.uploadId] = uploadTask;
+	ContentEditorService.UploadTaskCache[uploadTask.uploadId] = markRaw(uploadTask);
 
 	// TODO: This might need to insert an inline node.
 	_insertNewBlockNode(c, schema =>
