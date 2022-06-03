@@ -1,8 +1,6 @@
 <script lang="ts">
 import { computed, inject, PropType, toRefs } from 'vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppPopper from '../../../../_common/popper/popper.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { ChatStore, ChatStoreKey } from '../chat-store';
 import { isUserOnline, tryGetRoomRole } from '../client';
@@ -53,49 +51,45 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 </script>
 
 <template>
-	<AppPopper popover-class="fill-darkest" block :placement="Screen.isMobile ? 'bottom' : 'left'">
-		<template #default>
-			<AppChatListItem :horizontal-padding="horizontalPadding">
-				<template #leading>
-					<div class="-member-avatar">
-						<img class="-member-avatar-img" :src="user.img_avatar" />
-					</div>
-				</template>
+	<AppChatListItem :horizontal-padding="horizontalPadding">
+		<template #leading>
+			<div class="-member-avatar">
+				<img class="-member-avatar-img" :src="user.img_avatar" />
+			</div>
+		</template>
 
-				<template #leadingFloat>
-					<AppChatUserOnlineStatus
-						v-if="isOnline !== null"
-						class="-avatar-status"
-						:is-online="isOnline"
-						:absolute="false"
-						:size="8"
-						background-color-base="bg"
-					/>
-				</template>
+		<template #leadingFloat>
+			<AppChatUserOnlineStatus
+				v-if="isOnline !== null"
+				class="-avatar-status"
+				:is-online="isOnline"
+				:absolute="false"
+				:size="8"
+				background-color-base="bg"
+			/>
+		</template>
 
-				<template #title>
-					<span>{{ user.display_name }}</span>
-					<span class="tiny text-muted">@{{ user.username }}</span>
-				</template>
+		<template #title>
+			<span>{{ user.display_name }}</span>
+			<span class="tiny text-muted">@{{ user.username }}</span>
+		</template>
 
-				<template #trailing>
-					<span v-if="isOwner" v-app-tooltip="$gettext(`Room Owner`)">
-						<AppJolticon icon="crown" />
-					</span>
-					<span v-else-if="isStaff" v-app-tooltip="$gettext(`Game Jolt Staff`)">
-						<AppJolticon icon="gamejolt" />
-					</span>
-					<span v-else-if="isModerator" v-app-tooltip="$gettext(`Moderator`)">
-						<AppJolticon icon="star" />
-					</span>
-				</template>
-			</AppChatListItem>
+		<template #trailing>
+			<span v-if="isOwner" v-app-tooltip="$gettext(`Room Owner`)">
+				<AppJolticon icon="crown" />
+			</span>
+			<span v-else-if="isStaff" v-app-tooltip="$gettext(`Game Jolt Staff`)">
+				<AppJolticon icon="gamejolt" />
+			</span>
+			<span v-else-if="isModerator" v-app-tooltip="$gettext(`Moderator`)">
+				<AppJolticon icon="star" />
+			</span>
 		</template>
 
 		<template #popover>
 			<AppChatUserPopover :user="user" :room="room" />
 		</template>
-	</AppPopper>
+	</AppChatListItem>
 </template>
 
 <style lang="stylus" scoped>

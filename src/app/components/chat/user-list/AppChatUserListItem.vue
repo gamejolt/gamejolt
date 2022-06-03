@@ -3,7 +3,6 @@ import { computed, PropType, toRefs } from 'vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import AppPopper from '../../../../_common/popper/popper.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { useChatStore } from '../chat-store';
@@ -92,49 +91,38 @@ async function leaveRoom() {
 </script>
 
 <template>
-	<AppPopper
-		popover-class="fill-darkest"
-		trigger="right-click"
-		placement="bottom"
-		block
-		fixed
-		hide-on-state-change
+	<AppChatListItem
+		:title="hoverTitle"
+		:horizontal-padding="16"
+		:force-hover="isActive"
+		@click="onClick"
 	>
-		<template #default>
-			<AppChatListItem
-				:title="hoverTitle"
-				:horizontal-padding="16"
-				:force-hover="isActive"
-				@click="onClick"
-			>
-				<template #leading>
-					<img v-if="user" :src="user.img_avatar" />
-					<div v-else class="-group-icon">
-						<AppJolticon icon="users" />
-					</div>
-				</template>
+		<template #leading>
+			<img v-if="user" :src="user.img_avatar" />
+			<div v-else class="-group-icon">
+				<AppJolticon icon="users" />
+			</div>
+		</template>
 
-				<template #leadingFloat>
-					<AppChatUserOnlineStatus
-						v-if="isOnline !== null"
-						:is-online="isOnline"
-						:size="8"
-						:absolute="false"
-						background-color-base="bg"
-					/>
-				</template>
+		<template #leadingFloat>
+			<AppChatUserOnlineStatus
+				v-if="isOnline !== null"
+				:is-online="isOnline"
+				:size="8"
+				:absolute="false"
+				background-color-base="bg"
+			/>
+		</template>
 
-				<template #title>
-					{{ title }}
-					<span v-if="meta" class="tiny text-muted">{{ meta }}</span>
-				</template>
+		<template #title>
+			{{ title }}
+			<span v-if="meta" class="tiny text-muted">{{ meta }}</span>
+		</template>
 
-				<template v-if="notificationsCount" #trailing>
-					<span class="badge badge-overlay-notice">
-						{{ formatNumber(notificationsCount) }}
-					</span>
-				</template>
-			</AppChatListItem>
+		<template v-if="notificationsCount" #trailing>
+			<span class="badge badge-overlay-notice">
+				{{ formatNumber(notificationsCount) }}
+			</span>
 		</template>
 
 		<template #popover>
@@ -152,7 +140,7 @@ async function leaveRoom() {
 				</div>
 			</div>
 		</template>
-	</AppPopper>
+	</AppChatListItem>
 </template>
 
 <style lang="stylus" scoped>

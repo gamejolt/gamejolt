@@ -2,6 +2,7 @@
 import { ref } from '@vue/runtime-core';
 import { computed, useSlots } from 'vue';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
+import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
@@ -47,42 +48,56 @@ const hasTrailing = computed(() => !!slots['trailing']);
 		@inview="isInview = true"
 		@outview="isInview = false"
 	>
-		<a
+		<AppPopper
 			v-if="isInview"
-			class="chat-list-item"
-			:class="{
-				'-hovered': forceHover,
-			}"
-			:style="{
-				padding: `${verticalPadding}px ${horizontalPadding}px`,
-			}"
+			popover-class="fill-darkest"
+			trigger="right-click"
+			block
+			fixed
+			hide-on-state-change
 		>
-			<div
-				v-if="hasLeading"
-				class="-leading"
-				:style="{
-					width: avatarSize + 'px',
-				}"
-			>
-				<AppAspectRatio :ratio="1" show-overflow>
-					<div class="-leading-inner">
-						<slot name="leading" />
+			<template #popover>
+				<slot name="popover" />
+			</template>
+
+			<template #default>
+				<a
+					class="chat-list-item"
+					:class="{
+						'-hovered': forceHover,
+					}"
+					:style="{
+						padding: `${verticalPadding}px ${horizontalPadding}px`,
+					}"
+				>
+					<div
+						v-if="hasLeading"
+						class="-leading"
+						:style="{
+							width: avatarSize + 'px',
+						}"
+					>
+						<AppAspectRatio :ratio="1" show-overflow>
+							<div class="-leading-inner">
+								<slot name="leading" />
+							</div>
+
+							<div class="-leading-float">
+								<slot name="leadingFloat" />
+							</div>
+						</AppAspectRatio>
 					</div>
 
-					<div class="-leading-float">
-						<slot name="leadingFloat" />
+					<div v-if="hasTitle" class="-title">
+						<slot name="title" />
 					</div>
-				</AppAspectRatio>
-			</div>
 
-			<div v-if="hasTitle" class="-title">
-				<slot name="title" />
-			</div>
-
-			<div v-if="hasTrailing" class="-trailing">
-				<slot name="trailing" />
-			</div>
-		</a>
+					<div v-if="hasTrailing" class="-trailing">
+						<slot name="trailing" />
+					</div>
+				</a>
+			</template>
+		</AppPopper>
 	</AppScrollInview>
 </template>
 
