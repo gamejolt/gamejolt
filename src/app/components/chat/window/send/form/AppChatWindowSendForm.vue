@@ -60,7 +60,7 @@ const emit = defineEmits({
 });
 
 const chatStore = useChatStore()!;
-const themeStore = useThemeStore();
+const { isDark } = useThemeStore();
 
 const focusToken = createFocusToken();
 
@@ -176,12 +176,12 @@ async function onRoomChanged() {
 	focusToken.focus();
 }
 
-const form: FormController<FormModel> = createForm({});
-
-if (!import.meta.env.SSR) {
-	form.warnOnDiscard = false;
-	form.formModel.content = '';
-}
+const form: FormController<FormModel> = createForm({
+	warnOnDiscard: false,
+	onInit() {
+		form.formModel.content = '';
+	},
+});
 
 onUnmounted(() => {
 	if (typingTimeout) {
@@ -345,7 +345,7 @@ function disableTypingTimeout() {
 				v-if="!!typingText || isEditing"
 				class="-top-indicators"
 				:class="{
-					'-light-mode': !themeStore.isDark,
+					'-light-mode': !isDark,
 				}"
 			>
 				<div v-if="typingText">
