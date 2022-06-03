@@ -250,10 +250,10 @@ function onNewQuest(data: Quest) {
 			</section>
 		</div>
 
-		<AppScrollAffix class="container" anchor="bottom">
+		<AppScrollAffix class="-action-button-container" anchor="bottom" :padding="0">
 			<AppQuestActionButton
 				:key="quest.id"
-				class="-action-button"
+				class="-action-button container"
 				:quest="quest"
 				:show="shouldShowActionButton"
 				:is-accept="isQuestAcceptAction"
@@ -325,17 +325,21 @@ $-font-size = $font-size-small
 	flex-direction: column
 	height: 100%
 
-.-action-button
+.-action-button-container
 	background-color: var(--theme-bg-actual)
+	margin-top: auto
+
+.-action-button
 	padding: 12px
+	box-shadow: none
+	transition: box-shadow 250ms $weak-ease-out
 
 	@media $media-sm-up
 		padding: 16px
 
 	::v-deep(.gj-scroll-affixed) &
-		rounded-corners()
-		background-color: var(--theme-bg-offset)
-		elevate-2()
+		background-color: var(--theme-bg-actual)
+		box-shadow: 0px 1px 8px rgba($black, 0.8)
 
 
 .-header-shadow

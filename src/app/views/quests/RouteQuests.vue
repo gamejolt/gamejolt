@@ -1,7 +1,7 @@
 <script lang="ts">
 import { watch } from '@vue/runtime-core';
 import { computed, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { RouterView, useRoute } from 'vue-router';
 import { getParam } from '../../../utils/router';
 import { sleep } from '../../../utils/utils';
 import { Api } from '../../../_common/api/api.service';
@@ -11,6 +11,7 @@ import AppQuestLogItem from '../../../_common/quest/AppQuestLogItem.vue';
 import { Quest } from '../../../_common/quest/quest-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
+import AppScrollScroller from '../../../_common/scroll/AppScrollScroller.vue';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
@@ -74,7 +75,7 @@ const activeQuestId = computed(() => {
 const hasActiveQuest = computed(() => !!activeQuestId.value);
 const routingToId = ref<number>();
 
-const showBody = computed(() => routingToId.value || hasActiveQuest.value);
+const showBody = computed(() => !!routingToId.value || hasActiveQuest.value);
 const showSidebar = computed(() => !Screen.isMobile || !showBody.value);
 
 const hasQuests = computed(() => dailyQuests.value.length > 0 || quests.value.length > 0);
@@ -104,19 +105,6 @@ async function onSidebarChange() {
 	}
 	await sleep(0);
 	sidebarInner.value.style.transition = '';
-}
-
-function onQuestListChange() {
-	if (!body.value) {
-		return;
-	}
-
-	const sidebarHeight = questList.value?.offsetHeight ?? 0;
-	if (Screen.height - ShellTopNavHeight > sidebarHeight) {
-		body.value.style.minHeight = `calc(100vh - ${ShellTopNavHeight}px)`;
-	} else {
-		body.value.style.minHeight = `calc(max(100vh - ${ShellTopNavHeight}px, ${sidebarHeight}px))`;
-	}
 }
 
 const routeTitle = computed(() => {
@@ -187,77 +175,77 @@ function clearUnknownWatermarks() {
 			:class="{ '-expanded': !showBody }"
 		>
 			<div ref="sidebarInner" class="-sidebar-inner">
-				<div ref="questList" class="-quest-list">
-					<div
-						v-app-observe-dimensions="onQuestListChange"
-						class="-quest-list-observer"
-					/>
+				<div class="-sections-fade-top" />
 
-					<div class="-quest-list-heading">
-						<AppTranslate class="-quest-list-heading-text">My Quests</AppTranslate>
-					</div>
+				<AppScrollScroller class="-sections-scroller -pad-top" :thin="showBody">
+					<div ref="questList" class="-quest-list">
+						<div class="-quest-list-heading -pad-h">
+							<AppTranslate class="-quest-list-heading-text">My Quests</AppTranslate>
+						</div>
 
-					<AppSpacer vertical :scale="10" />
+						<AppSpacer vertical :scale="10" />
 
-					<div class="-sections">
-						<AppDailyQuests
-							v-if="!isBootstrapped || dailyQuests.length > 0"
-							:active-quest-id="activeQuestId"
-						>
-							<template #header>
-								<div class="-subheading">
-									<AppTranslate>Daily Quests</AppTranslate>
+						<div class="-sections -pad-h -pad-bottom">
+							<AppDailyQuests
+								v-if="!isBootstrapped || dailyQuests.length > 0"
+								:active-quest-id="activeQuestId"
+							>
+								<template #header>
+									<div class="-subheading">
+										<AppTranslate>Daily Quests</AppTranslate>
+									</div>
+								</template>
+							</AppDailyQuests>
+
+							<template v-if="!isBootstrapped">
+								<!-- Active Quests -->
+								<div>
+									<div class="-placeholder -placeholder-subheading" />
+
+									<AppSpacer vertical :scale="4" />
+
+									<div class="-col">
+										<div
+											v-for="i of 1"
+											:key="i"
+											class="-placeholder -placeholder-tile"
+										/>
+									</div>
 								</div>
 							</template>
-						</AppDailyQuests>
-
-						<template v-if="!isBootstrapped">
-							<!-- Active Quests -->
-							<div>
-								<div class="-placeholder -placeholder-subheading" />
-
-								<AppSpacer vertical :scale="4" />
-
-								<div class="-col">
-									<div
-										v-for="i of 1"
-										:key="i"
-										class="-placeholder -placeholder-tile"
-									/>
+							<template v-else-if="!hasQuests">
+								<div class="-empty">
+									<AppIllustration
+										:src="Screen.isXs ? illNoCommentsSmall : illNoComments"
+									>
+										<AppTranslate> You have no active quests </AppTranslate>
+									</AppIllustration>
 								</div>
-							</div>
-						</template>
-						<template v-else-if="!hasQuests">
-							<div class="-empty">
-								<AppIllustration
-									:src="Screen.isXs ? illNoCommentsSmall : illNoComments"
-								>
-									<AppTranslate> You have no active quests </AppTranslate>
-								</AppIllustration>
-							</div>
-						</template>
-						<template v-else>
-							<!-- Active Quests -->
-							<div v-if="quests.length > 0">
-								<div class="-subheading">
-									<AppTranslate>Active Quests</AppTranslate>
-								</div>
+							</template>
+							<template v-else>
+								<!-- Active Quests -->
+								<div v-if="quests.length > 0">
+									<div class="-subheading">
+										<AppTranslate>Active Quests</AppTranslate>
+									</div>
 
-								<AppSpacer vertical :scale="4" />
+									<AppSpacer vertical :scale="4" />
 
-								<div class="-col">
-									<AppQuestLogItem
-										v-for="quest of quests"
-										:key="quest.id"
-										:quest="quest"
-										:active="activeQuestId === quest.id"
-										@goto="onSelect"
-									/>
+									<div class="-col">
+										<AppQuestLogItem
+											v-for="quest of quests"
+											:key="quest.id"
+											:quest="quest"
+											:active="activeQuestId === quest.id"
+											@goto="onSelect"
+										/>
+									</div>
 								</div>
-							</div>
-						</template>
+							</template>
+						</div>
 					</div>
-				</div>
+				</AppScrollScroller>
+				<div class="-sections-fade-bottom" />
 			</div>
 		</div>
 
@@ -269,18 +257,19 @@ function clearUnknownWatermarks() {
 
 <style lang="stylus" scoped>
 $-font-size-subheading = $font-size-small
+$-padding = 40px
 
 .-page
 	position: relative
 	display: flex
 
 .-sidebar-inner
-	position: absolute
-	left: 0
-	top: 0
+	change-bg(bg-offset)
+	position: fixed
+	left: $shell-cbar-width
+	top: $shell-top-nav-height
 	bottom: 0
-	width: 100%
-	background-color: var(--theme-bg-offset)
+	width: 'calc(100% - %s)' % $shell-cbar-width
 	display: flex
 	justify-content: center
 	z-index: 1
@@ -288,14 +277,6 @@ $-font-size-subheading = $font-size-small
 .-sidebar
 .-sidebar-inner
 	transition: max-width 500ms $weak-ease-out
-
-.-quest-list-observer
-	position: absolute
-	left: 0
-	top: 0
-	height: 100%
-	width: 0px
-	flex: none
 
 .-sidebar
 .-quest-list
@@ -316,15 +297,27 @@ $-font-size-subheading = $font-size-small
 
 .-quest-list
 	position: relative
-	padding: 40px
+	height: 100%
 	flex: auto
+	display: flex
+	flex-direction: column
 	height: fit-content
 
+.-pad-h
+	padding-left: $-padding
+	padding-right: $-padding
+
+.-pad-top
+	padding-top: $-padding
+
+.-pad-bottom
+	padding-bottom: $-padding
+
 .-empty
-	min-height: 'calc(70vh - %s - 40px)' % $shell-top-nav-height
 	display: flex
 	flex-direction: column
 	justify-content: center
+	min-height: 'calc(70vh - %s - 40px)' % $shell-top-nav-height
 
 .-body
 	position: relative
@@ -341,6 +334,28 @@ $-font-size-subheading = $font-size-small
 	min-width: 80px
 	text-align: center
 	transition: min-width 500ms $weak-ease-out
+
+.-sections-scroller
+	flex: auto
+	display: flex
+	justify-content: center
+	max-height: 'calc(100vh - %s)' % $shell-top-nav-height
+
+.-sections-fade-top
+.-sections-fade-bottom
+	position: absolute
+	left: 0
+	right: 0
+	z-index: 1
+	height: 16px
+
+.-sections-fade-top
+	top: 0
+	background-image: unquote('linear-gradient(to top, transparent, rgba(var(--theme-bg-offset-rgb), 0.5))')
+
+.-sections-fade-bottom
+	bottom: 0
+	background-image: unquote('linear-gradient(to bottom, transparent, rgba(var(--theme-bg-offset-rgb), 0.5))')
 
 .-sections
 	display: flex
