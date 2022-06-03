@@ -10,9 +10,9 @@ const Format: AudioSampleFormat = 'f32';
 
 export type ASGControllerStatus = 'starting' | 'started' | 'stopping' | 'stopped';
 
-export type ASGController = ReturnType<typeof startDesktopAudioCapture>;
+export type ASGController = Awaited<ReturnType<typeof startDesktopAudioCapture>>;
 
-export function startDesktopAudioCapture(writableStream: WritableStream<AudioData>) {
+export async function startDesktopAudioCapture(writableStream: WritableStream<AudioData>) {
 	// We get the parent process's pid since it would also contain all the child
 	// pids under it then.
 	const appPid = process.ppid;
@@ -22,11 +22,20 @@ export function startDesktopAudioCapture(writableStream: WritableStream<AudioDat
 	const uid = ref('');
 	const status = ref<ASGControllerStatus>('starting');
 
+	let _stopResolver: () => void;
+	const _stopPromise = new Promise<void>(resolve => {
+		_stopResolver = resolve;
+	});
+
 	emitter
 		.on('status_update', (text: string) => {
 			console.log('Status update: ' + text);
-			if (text === 'Recording ends') {
-				// TODO close the stream and dispose of resources
+
+			// This will happen when stop() is called and we tell the recording
+			// to end. When ASG finalizes it'll send this status update and we
+			// can finally resolve the stop().
+			if (text === 'end_recording') {
+				setTimeout(() => _stopResolver(), 1_000);
 			}
 		})
 		.on('error', (text: string) => {
@@ -59,32 +68,28 @@ export function startDesktopAudioCapture(writableStream: WritableStream<AudioDat
 		status.value = 'started';
 	} catch (error) {
 		console.error('Got error while starting ASG capture', error);
-		_cleanup();
+		await _cleanup();
 	}
 
 	async function stop() {
-		// TODO if the state is still starting we need to either abort the
-		// startCapture or wait until its done before continuing.
-
 		if (status.value === 'stopping' || status.value === 'stopped') {
 			return;
 		}
 
 		status.value = 'stopping';
-		// TODO make this a promise, and await on it.
 		asgNative.endCapture(uid.value);
 		status.value = 'stopped';
 
-		_cleanup();
+		// We need to wait for ASG to tell us that it's fully finished before
+		// cleaning up and releasing control back to the caller. This will
+		// happen through the event emitter.
+		await _stopPromise;
+		await _cleanup();
 	}
 
-	function _cleanup() {
+	async function _cleanup() {
 		emitter.removeAllListeners();
-
-		// TODO make sure this behaves if you call it multiple times.
-		// We want to be able to call cleanup on the instance whenever.
-		// Also, this is a promise, should we be returning this or handling rejections here?
-		writer.close();
+		await writer.close();
 	}
 
 	return {

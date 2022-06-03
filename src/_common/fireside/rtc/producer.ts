@@ -519,7 +519,7 @@ function _updateDesktopAudioTrack(producer: FiresideRTCProducer) {
 					rtc.log(`Creating desktop audio track from ASG.`);
 
 					const generator = new MediaStreamTrackGenerator({ kind: 'audio' });
-					streamingASG.value = startDesktopAudioCapture(generator.writable);
+					streamingASG.value = await startDesktopAudioCapture(generator.writable);
 
 					track = AgoraRTC.createCustomAudioTrack({
 						mediaStreamTrack: generator,
