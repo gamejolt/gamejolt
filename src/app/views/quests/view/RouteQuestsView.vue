@@ -12,6 +12,7 @@ import AppProgressBarQuest from '../../../../_common/quest/AppQuestProgress.vue'
 import { Quest } from '../../../../_common/quest/quest-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
+import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext, $gettextInterpolate } from '../../../../_common/translate/translate.service';
@@ -249,15 +250,16 @@ function onNewQuest(data: Quest) {
 			</section>
 		</div>
 
-		<div class="-action-button container">
+		<AppScrollAffix class="container" anchor="bottom">
 			<AppQuestActionButton
 				:key="quest.id"
+				class="-action-button"
 				:quest="quest"
 				:show="shouldShowActionButton"
 				:is-accept="isQuestAcceptAction"
 				@new-quest="onNewQuest"
 			/>
-		</div>
+		</AppScrollAffix>
 	</div>
 	<template v-else-if="isLoading">
 		<div class="-placeholder-header" />
@@ -324,8 +326,17 @@ $-font-size = $font-size-small
 	height: 100%
 
 .-action-button
-	margin-top: auto
-	margin-bottom: $grid-gutter-width * 0.5
+	background-color: var(--theme-bg-actual)
+	padding: 12px
+
+	@media $media-sm-up
+		padding: 16px
+
+	::v-deep(.gj-scroll-affixed) &
+		rounded-corners()
+		background-color: var(--theme-bg-offset)
+		elevate-2()
+
 
 .-header-shadow
 	background-image: linear-gradient(to bottom, rgba(black, 0.5), transparent)
