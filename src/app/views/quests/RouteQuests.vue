@@ -37,8 +37,6 @@ export default {
 			),
 	}),
 };
-
-const ShellTopNavHeight = 56;
 </script>
 
 <script lang="ts" setup>
@@ -266,10 +264,10 @@ $-padding = 40px
 .-sidebar-inner
 	change-bg(bg-offset)
 	position: fixed
-	left: $shell-cbar-width
-	top: $shell-top-nav-height
+	left: var(--shell-left)
+	top: var(--shell-top)
+	width: calc(100% - var(--shell-left))
 	bottom: 0
-	width: 'calc(100% - %s)' % $shell-cbar-width
 	display: flex
 	justify-content: center
 	z-index: 1
@@ -317,12 +315,12 @@ $-padding = 40px
 	display: flex
 	flex-direction: column
 	justify-content: center
-	min-height: 'calc(70vh - %s - 40px)' % $shell-top-nav-height
+	min-height: calc(70vh - var(--shell-top) - 40px)
 
 .-body
 	position: relative
 	flex: 2 1
-	min-height: 'calc(100vh - %s)' % $shell-top-nav-height
+	min-height: calc(100vh - var(--shell-top))
 
 .-quest-list-heading
 	font-size: 24px
@@ -339,7 +337,7 @@ $-padding = 40px
 	flex: auto
 	display: flex
 	justify-content: center
-	max-height: 'calc(100vh - %s)' % $shell-top-nav-height
+	max-height: calc(100vh - var(--shell-top))
 
 .-sections-fade-top
 .-sections-fade-bottom

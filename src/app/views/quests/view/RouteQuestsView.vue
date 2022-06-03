@@ -309,7 +309,7 @@ $-font-size = $font-size-small
 .-placeholder-header
 	position: relative
 	width: 100%
-	padding-top: 25%
+	padding-top: 250px
 
 .-placeholder-title
 	height: $line-height-computed * 1.5
