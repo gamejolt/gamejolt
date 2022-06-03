@@ -1148,10 +1148,10 @@ array-union@^2.1.0:
   resolved "https://registry.yarnpkg.com/array-union/-/array-union-2.1.0.tgz#b798420adbeb1de828d84acd8a2e23d3efe85e8d"
   integrity sha512-HGyxoOTYUyCM6stUe6EJgnd4EoewAI7zMdfqO+kGjnlZmBDz/cR5pf8r/cR4Wq60sL/p0IkcjUEEPwS3GFrIyw==
 
-asg-prebuilt@0.1.5:
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/asg-prebuilt/-/asg-prebuilt-0.1.5.tgz#30c695c249843ef6dbb9846736bc2db857dac28b"
-  integrity sha512-cLx7YTd0YuowNc2ZX0p6q/pQxZU600s1z1Q3+eAe8HkcpTgi+CFtFQDRm99e7cTKdVAN13C5Qz/RqQMEQ9FKlw==
+asg-prebuilt@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/asg-prebuilt/-/asg-prebuilt-0.2.0.tgz#4c4ff7c21ccf757d75bfb0b1b5bc7fe7cfb25672"
+  integrity sha512-pWPtuCd+3u4le6TCaYFjkqHeRVH1T/mps8NKt5minRM/Pz9m+cSSkC0MjfzUbmBZBuZyxXSZL0QSjyZaIMNRpQ==
   dependencies:
     prebuild-install "7.1.0"
 

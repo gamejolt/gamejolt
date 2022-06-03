@@ -112,7 +112,7 @@
 	},
 	"optionalDependencies": {
 		"appdmg": "argv-minus-one/node-appdmg#node-12-temporary-fix",
-		"asg-prebuilt": "0.1.5",
+		"asg-prebuilt": "0.2.0",
 		"rcedit": "3.0.1"
 	},
 	"dependencies": {
@@ -136,8 +136,7 @@
 		"@types/prosemirror-state": "1.2.4",
 		"@types/prosemirror-view": "1.11.4"
 	},
-	"main": "https://development.gamejolt.com/",
-	"node-remote": "https://development.gamejolt.com",
+	"main": "chrome-extension://game-jolt-client/build/desktop/index.html#/",
 	"domain": "game-jolt-client",
 	"window": {
 		"show": false,
