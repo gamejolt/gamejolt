@@ -39,7 +39,7 @@ change-bg-rgba($rgb, $opacity = 1, $important = false)
 
 change-bg-hex($hex, $opacity = 1, $important = false)
 	--theme-bg-actual: unquote('rgba(' + red($hex) + ', ' + green($hex) + ', ' + blue($hex) + ', ' + $opacity + ')')
-	--theme-bg-actual-trans: unquote('rgba(' + $hex + ', 0)')
+	--theme-bg-actual-trans: unquote('rgba(' + red($hex) + ', ' + green($hex) + ', ' + blue($hex) + ', 0)')
 	background-color: var(--theme-bg-actual)
 
 rounded-corners-sm()
