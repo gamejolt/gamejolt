@@ -86,6 +86,8 @@ const slotProps = computed<ChatListSlotProps>(() => ({
 .chat-list
 	display: flex
 	flex-direction: column
+	min-height: 0
+	flex: auto
 
 .-input-container
 	padding: 0 16px

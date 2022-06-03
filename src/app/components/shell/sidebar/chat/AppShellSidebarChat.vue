@@ -68,7 +68,7 @@ function hideChatPane() {
 	<div id="shell-chat-pane">
 		<div class="-pane-inner">
 			<template v-if="chat.populated">
-				<AppMobileTabBar>
+				<AppMobileTabBar class="-nav-tabs">
 					<AppMobileTabBarItem
 						v-if="chats.length > 0"
 						:force-hover="tab === 'chats'"
@@ -93,11 +93,7 @@ function hideChatPane() {
 				>
 					<AppTranslate>No friends yet.</AppTranslate>
 				</AppIllustration>
-				<AppChatUserList
-					v-else
-					class="-chat-list"
-					:entries="tab === 'chats' ? chats : friends"
-				/>
+				<AppChatUserList v-else :entries="tab === 'chats' ? chats : friends" />
 			</template>
 			<template v-else-if="chat.connected">
 				<AppLoading centered :label="$gettext(`Loading your chats...`)" />
@@ -117,6 +113,9 @@ function hideChatPane() {
 	change-bg('bg')
 	height: 100%
 
+.-nav-tabs
+	padding: 0 4px
+
 .-pane-inner
 	display: flex
 	flex-direction: column
@@ -129,7 +128,4 @@ function hideChatPane() {
 	@media $media-md-up
 		margin-left: 24px
 		margin-right: 24px
-
-.-chat-list
-	height: 100%
 </style>

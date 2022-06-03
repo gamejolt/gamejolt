@@ -270,7 +270,7 @@ function onMobileAppBarBack() {
 					<div v-if="sidebar" class="-sidebar">
 						<div v-if="Screen.isDesktop" class="-sidebar-shadow" />
 
-						<AppScrollScroller class="-sidebar-scroller">
+						<div class="-sidebar-container">
 							<AppMobileAppBar v-if="Screen.isMobile" center-title>
 								<template #leading>
 									<AppButton
@@ -312,18 +312,20 @@ function onMobileAppBarBack() {
 							</AppMobileAppBar>
 
 							<template v-if="sidebar === 'settings'">
-								<FormChatRoomSettings
-									:room="room"
-									:show-members-preview="
-										(!showMembersViewButton || Screen.isMobile) &&
-										room.isGroupRoom
-									"
-									:members="users.collection"
-									:style="{
-										paddingTop: Screen.isXs ? '16px' : undefined,
-									}"
-									@view-members="sidebar = 'members'"
-								/>
+								<AppScrollScroller>
+									<FormChatRoomSettings
+										:room="room"
+										:show-members-preview="
+											(!showMembersViewButton || Screen.isMobile) &&
+											room.isGroupRoom
+										"
+										:members="users.collection"
+										:style="{
+											paddingTop: Screen.isXs ? '16px' : undefined,
+										}"
+										@view-members="sidebar = 'members'"
+									/>
+								</AppScrollScroller>
 							</template>
 							<template v-else-if="sidebar === 'members'">
 								<div v-if="Screen.isDesktop" class="-header-members">
@@ -337,7 +339,7 @@ function onMobileAppBarBack() {
 									:room="room"
 								/>
 							</template>
-						</AppScrollScroller>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -462,12 +464,14 @@ function onMobileAppBarBack() {
 	display: flex
 	height: 100%
 
-.-sidebar-scroller
+.-sidebar-container
 	position: absolute
 	top: 0
 	right: 0
 	bottom: 0
 	left: 0
+	display: flex
+	flex-direction: column
 
 .-output-inner
 	// Allows the scroll bar some breathing room

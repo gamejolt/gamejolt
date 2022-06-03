@@ -218,7 +218,7 @@ async function leaveRoom() {
 </script>
 
 <template>
-	<div class="form-chat-edit-room">
+	<div class="form-chat-room-settings">
 		<div
 			:style="{
 				visibility: hasLoadedBackgrounds ? 'visible' : 'hidden',
@@ -339,9 +339,9 @@ async function leaveRoom() {
 
 <style lang="stylus" scoped>
 $-padding = 16px
-$-padding-v = 16px
+$-padding-v = 24px
 
-.form-chat-edit-room
+.form-chat-room-settings
 	padding: $-padding-v 0
 	position: relative
 	display: flex

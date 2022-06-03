@@ -18,8 +18,8 @@ defineProps({
 
 <style lang="stylus" scoped>
 .tab-bar-item
-	--text-color: var(--theme-fg)
-	padding: 16px 12px
+	--text-color: var(--theme-fg-muted)
+	padding: 24px 12px 16px
 	color: var(--text-color)
 	font-size: $font-size-base
 	font-weight: 700
