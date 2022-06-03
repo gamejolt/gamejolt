@@ -2,19 +2,13 @@
 import { Options } from 'vue-property-decorator';
 import { trackAppDownload } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
-import {
-	DeviceArch,
-	DeviceOs,
-	getDeviceArch,
-	getDeviceOS,
-} from '../../../../_common/device/device.service';
+import { DeviceArch, DeviceOs } from '../../../../_common/device/device.service';
 import { Game } from '../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import { HistoryTick } from '../../../../_common/history-tick/history-tick-service';
 import { Navigate } from '../../../../_common/navigate/navigate.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { vAppScrollTo } from '../../../../_common/scroll/to/to.directive';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { imageJolt } from '../../../img/images';
 
@@ -22,9 +16,6 @@ import { imageJolt } from '../../../img/images';
 	name: 'RouteLandingClient',
 	components: {
 		AppThemeSvg,
-	},
-	directives: {
-		AppScrollTo: vAppScrollTo,
 	},
 })
 @OptionsForRoute({
@@ -37,8 +28,6 @@ export default class RouteLandingClient extends BaseRouteComponent {
 	private packageData: GamePackagePayloadModel | null = null;
 	private fallbackUrl = 'https://gamejolt.com';
 
-	readonly platform = getDeviceOS();
-	readonly arch = getDeviceArch();
 	readonly Screen = Screen;
 	readonly imageJolt = imageJolt;
 	readonly assetPaths = import.meta.globEager('./*.(jpg|png)');
@@ -52,60 +41,6 @@ export default class RouteLandingClient extends BaseRouteComponent {
 
 	get routeTitle() {
 		return `Game Jolt Desktop App`;
-	}
-
-	get detectedPlatformDisplay() {
-		switch (this.platform) {
-			case 'windows':
-				return 'Windows';
-			case 'mac':
-				return 'macOS';
-			case 'linux':
-				return 'Linux';
-			default:
-				return 'Unknown';
-		}
-	}
-
-	get isDetectedPlatformIncompatible() {
-		// Couldn't detect platform.
-		if (this.platform === 'other') {
-			return true;
-		}
-
-		// We only support making 64 bit versions across the board.
-		return this.arch === '32';
-	}
-
-	get shouldOfferWindows() {
-		return (
-			this.isDetectedPlatformIncompatible ||
-			(this.platform === 'windows' && this.arch === '64')
-		);
-	}
-
-	get shouldOfferMac() {
-		return (
-			this.isDetectedPlatformIncompatible || (this.platform === 'mac' && this.arch === '64')
-		);
-	}
-
-	get shouldOfferLinux() {
-		return (
-			this.isDetectedPlatformIncompatible || (this.platform === 'linux' && this.arch === '64')
-		);
-	}
-
-	get showMascot() {
-		if (Screen.isXs) {
-			return false;
-		}
-
-		if (this.isDetectedPlatformIncompatible) {
-			return Screen.isSm;
-		}
-
-		return true;
 	}
 
 	async download(platform: DeviceOs, arch: DeviceArch) {
@@ -169,80 +104,24 @@ export default class RouteLandingClient extends BaseRouteComponent {
 				<br />
 
 				<div class="row">
-					<div class="col-lg-6 col-centered">
-						<div>
-							<template v-if="isDetectedPlatformIncompatible">
-								<p v-if="platform === 'other'">
-									We could not detect what platform you are on.
-									<br />
-									Download the correct version below:
-								</p>
-								<template v-else>
-									<p>
-										We detected you are running on
-										<strong>{{ detectedPlatformDisplay }} {{ arch }}bit</strong>
-										<br />
-										Oof! looks like the desktop app is incompatible with it.
-									</p>
-
-									<p>Did we get it wrong? Download the correct version below:</p>
-								</template>
-							</template>
-						</div>
-
-						<br />
-					</div>
-				</div>
-
-				<div class="row">
 					<div class="header-download-buttons">
-						<AppButton
-							v-if="shouldOfferWindows"
-							primary
-							lg
-							@click="download(platform, '64')"
-						>
-							<AppJolticon icon="download" />
+						<AppButton primary lg @click="download('windows', '64')">
+							<AppJolticon icon="windows" middle />
 							Download for Windows
 						</AppButton>
 
-						<AppButton
-							v-if="shouldOfferMac"
-							primary
-							lg
-							@click="download(platform, '64')"
-						>
-							<AppJolticon icon="download" />
-							Download for OS X
-						</AppButton>
-
-						<AppButton
-							v-if="shouldOfferLinux"
-							primary
-							lg
-							@click="download(platform, arch)"
-						>
-							<AppJolticon icon="download" />
-							Download for Linux 64bit
+						<AppButton primary lg @click="download('linux', '64')">
+							<AppJolticon icon="linux" middle />
+							Download for Linux
 						</AppButton>
 					</div>
-				</div>
-
-				<!--
-					If we did detect a valid platform, we offer only the matching version
-					in the header. In case we got it wrong, we want to offer alternatives.
-				-->
-				<div v-if="!isDetectedPlatformIncompatible">
-					<br />
-					or download for
-					<a v-app-scroll-to href="#all-downloads">other platforms</a>
 				</div>
 			</div>
 		</section>
 
 		<div class="fill-darker">
 			<section class="client-presentation">
-				<div v-if="showMascot" class="container">
+				<div v-if="!Screen.isMobile" class="container">
 					<img
 						class="client-presentation-mascot"
 						:src="assetPaths['./clyde-video-overlay.png'].default"
@@ -260,59 +139,6 @@ export default class RouteLandingClient extends BaseRouteComponent {
 							:src="assetPaths['./client-presentation.jpg'].default"
 							alt="Game Jolt Client"
 						/>
-					</div>
-				</div>
-			</section>
-
-			<section id="all-downloads" class="download-footer">
-				<div class="container text-center">
-					<div class="row">
-						<div class="col-lg-9 col-centered">
-							<div class="row">
-								<div class="download-footer-col col-sm-4">
-									<p><AppJolticon icon="linux" class="jolticon-4x" /></p>
-									<p>
-										<AppButton
-											v-app-track-event="`client-landing:download:linux`"
-											primary
-											block
-											@click="download('linux', '64')"
-										>
-											<AppJolticon icon="download" />
-											Download Linux 64bit
-										</AppButton>
-									</p>
-								</div>
-								<div class="download-footer-col col-sm-4">
-									<p><AppJolticon icon="mac" class="jolticon-4x" /></p>
-									<p>
-										<AppButton
-											v-app-track-event="`client-landing:download:mac`"
-											primary
-											block
-											@click="download('mac', '64')"
-										>
-											<AppJolticon icon="download" />
-											Download Mac
-										</AppButton>
-									</p>
-								</div>
-								<div class="download-footer-col col-sm-4">
-									<p><AppJolticon icon="windows" class="jolticon-4x" /></p>
-									<p>
-										<AppButton
-											v-app-track-event="`client-landing:download:win`"
-											primary
-											block
-											@click="download('windows', '32')"
-										>
-											<AppJolticon icon="download" />
-											Download Windows
-										</AppButton>
-									</p>
-								</div>
-							</div>
-						</div>
 					</div>
 				</div>
 			</section>
@@ -345,6 +171,7 @@ export default class RouteLandingClient extends BaseRouteComponent {
 
 	section.client-presentation
 		position: relative
+		padding-bottom: 48px
 
 		.container
 			position: relative
@@ -382,37 +209,4 @@ export default class RouteLandingClient extends BaseRouteComponent {
 			border-width: $border-width-large
 			border-style: solid
 			rounded-corners-lg()
-
-	section.download-footer
-		margin-top: 150px
-		margin-bottom: 90px
-		position: relative
-		z-index: 1
-
-		&
-		h5
-			color: $white
-
-		&::before
-			change-bg('darkest')
-			content: ''
-			display: block
-			position: absolute
-			top: -80px
-			bottom: -80px
-			left: -30%
-			width: 160%
-			z-index: 0
-			transform: rotate(8deg)
-
-		.container
-			position: relative
-			z-index: 1
-
-	@media $media-xs
-		.download-footer-col
-			margin-bottom: $grid-gutter-width
-
-			&:last-child
-				margin-bottom: 0
 </style>
