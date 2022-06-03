@@ -366,7 +366,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 				// TODO(big-pp-event) is there a way to make absolutely sure nothing keeps a reference
 				// to producer past this point? theres nothing in the producer class that prevents attempting
 				// to start streaming from a cleanup-up instance of producer.
-				cleanupFiresideRTCProducer(prevProducer);
+				await cleanupFiresideRTCProducer(prevProducer);
 			} else {
 				console.debug('[FIRESIDE] rtc.producer was not set, nothing to do');
 			}

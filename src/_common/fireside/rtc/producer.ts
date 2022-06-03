@@ -118,9 +118,11 @@ export function createFiresideRTCProducer(rtc: FiresideRTC) {
  * This does NOT stop streaming or close channels. It's is meant to be used
  * to cleanup the producer instance after we no longer need it.
  */
-export function cleanupFiresideRTCProducer({
+export async function cleanupFiresideRTCProducer({
 	isStreaming,
 	_tokenRenewInterval,
+	streamingASG,
+	rtc,
 }: FiresideRTCProducer) {
 	console.log('[FIRESIDE-RTC] Trace(cleanupFiresideRTCProducer)');
 
@@ -131,6 +133,13 @@ export function cleanupFiresideRTCProducer({
 	if (_tokenRenewInterval.value) {
 		clearInterval(_tokenRenewInterval.value);
 		_tokenRenewInterval.value = null;
+	}
+
+	// If we were streaming desktop audio, make sure it's closed, since Agora
+	// isn't gonna call this for us.
+	if (streamingASG.value) {
+		rtc.log(`Force stopping desktop audio streaming through ASG.`);
+		await streamingASG.value.stop();
 	}
 }
 
