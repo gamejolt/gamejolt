@@ -2,8 +2,8 @@
 import { computed, inject, PropType, ref, toRefs, watch, watchEffect } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatNumber } from '../../../../_common/filters/number';
+import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppMobileAppBar from '../../../../_common/mobile/AppMobileAppBar.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { SettingChatGroupShowMembers } from '../../../../_common/settings/settings.service';
@@ -142,7 +142,7 @@ function onMobileAppBarBack() {
 
 			<div :key="room.id" class="-window-main">
 				<!-- Window Header -->
-				<AppMobileAppBar :key="room.id" :automatically-imply-leading="false">
+				<AppHeaderBar :key="room.id" :automatically-imply-leading="false">
 					<template #leading>
 						<AppButton
 							v-if="Screen.isXs"
@@ -247,7 +247,7 @@ function onMobileAppBarBack() {
 							@click="close"
 						/>
 					</template>
-				</AppMobileAppBar>
+				</AppHeaderBar>
 
 				<div class="-body">
 					<div class="-chatting-section">
@@ -271,7 +271,7 @@ function onMobileAppBarBack() {
 						<div v-if="Screen.isDesktop" class="-sidebar-shadow" />
 
 						<div class="-sidebar-container">
-							<AppMobileAppBar v-if="Screen.isMobile" center-title>
+							<AppHeaderBar v-if="Screen.isMobile" center-title>
 								<template #leading>
 									<AppButton
 										icon="chevron-left"
@@ -309,7 +309,7 @@ function onMobileAppBarBack() {
 										@click="room.isPmRoom ? addGroup() : addMembers()"
 									/>
 								</template>
-							</AppMobileAppBar>
+							</AppHeaderBar>
 
 							<template v-if="sidebar === 'settings'">
 								<AppScrollScroller>

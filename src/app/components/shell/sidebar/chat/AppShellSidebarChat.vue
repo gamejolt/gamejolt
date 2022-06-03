@@ -5,9 +5,9 @@ import { EscapeStack } from '../../../../../_common/escape-stack/escape-stack.se
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
-import AppMobileTabBar from '../../../../../_common/mobile/tab-bar/AppMobileTabBar.vue';
-import AppMobileTabBarItem from '../../../../../_common/mobile/tab-bar/AppMobileTabBarItem.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import AppTabBar from '../../../../../_common/tab-bar/AppTabBar.vue';
+import AppTabBarItem from '../../../../../_common/tab-bar/AppTabBarItem.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { illMaintenance, illNoCommentsSmall } from '../../../../img/ill/illustrations';
 import { useAppStore } from '../../../../store';
@@ -68,15 +68,15 @@ function hideChatPane() {
 	<div id="shell-chat-pane">
 		<div class="-pane-inner">
 			<template v-if="chat.populated">
-				<AppMobileTabBar class="-nav-tabs">
-					<AppMobileTabBarItem
+				<AppTabBar class="-nav-tabs">
+					<AppTabBarItem
 						v-if="chats.length > 0"
 						:force-hover="tab === 'chats'"
 						@click="tab = 'chats'"
 					>
 						<AppTranslate>Chats</AppTranslate>
-					</AppMobileTabBarItem>
-					<AppMobileTabBarItem
+					</AppTabBarItem>
+					<AppTabBarItem
 						:force-hover="chats.length === 0 || tab === 'friends'"
 						@click="tab = 'friends'"
 					>
@@ -84,8 +84,8 @@ function hideChatPane() {
 						<span class="badge badge-subtle">
 							{{ formatNumber(friendsCount) }}
 						</span>
-					</AppMobileTabBarItem>
-				</AppMobileTabBar>
+					</AppTabBarItem>
+				</AppTabBar>
 
 				<AppIllustration
 					v-if="chats.length === 0 || (tab === 'friends' && !friends.length)"
