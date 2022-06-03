@@ -211,7 +211,7 @@ export default class AppChatUserPopover extends Vue {
 				<AppChatUserOnlineStatus
 					class="-status-bubble"
 					:is-online="isOnline"
-					:size="16"
+					:size="8"
 					:absolute="false"
 				/>
 				<span>{{ isOnline ? $gettext(`Online`) : $gettext(`Offline`) }}</span>

@@ -133,9 +133,8 @@ function onMobileAppBarBack() {
 
 			<div :key="room.id" class="-window-main">
 				<!-- Window Header -->
-				<div class="-header">
-					<!-- Animation scope. -->
-					<div :key="room.id" class="-header-content">
+				<AppMobileAppBar :key="room.id" :automatically-imply-leading="false">
+					<template #leading>
 						<AppButton
 							v-if="Screen.isXs"
 							v-app-tooltip="$gettext('Close')"
@@ -150,19 +149,25 @@ function onMobileAppBarBack() {
 							v-if="!room.isPmRoom"
 							class="-header-avatar anim-fade-in-enlarge no-animate-xs"
 						>
-							<div class="-icon">
+							<div class="-header-icon">
 								<AppJolticon icon="users" />
 							</div>
 						</span>
 						<router-link
 							v-else-if="room.user"
-							class="-header-avatar anim-fade-in-enlarge no-animate-xs"
+							class="anim-fade-in-enlarge no-animate-xs"
 							:to="room.user.url"
 						>
-							<img class="-icon" :src="room.user.img_avatar" alt="" />
-							<AppChatUserOnlineStatus :is-online="room.user.isOnline" :size="16" />
+							<img class="-header-icon" :src="room.user.img_avatar" alt="" />
+							<AppChatUserOnlineStatus
+								:is-online="room.user.isOnline"
+								:size="12"
+								:segment-width="2"
+							/>
 						</router-link>
+					</template>
 
+					<template #title>
 						<div
 							v-if="!room.isPmRoom"
 							class="-header-name anim-fade-in-right no-animate-xs"
@@ -178,12 +183,11 @@ function onMobileAppBarBack() {
 								{{ roomTitle }}
 							</router-link>
 							<AppUserVerifiedTick :user="room.user" />
-							<br />
-							<small>@{{ room.user.username }}</small>
+							<div class="tiny">@{{ room.user.username }}</div>
 						</div>
-					</div>
+					</template>
 
-					<div class="-header-controls">
+					<template #actions>
 						<AppButton
 							v-app-tooltip="
 								room.isPmRoom
@@ -233,8 +237,8 @@ function onMobileAppBarBack() {
 							icon="remove"
 							@click="close"
 						/>
-					</div>
-				</div>
+					</template>
+				</AppMobileAppBar>
 
 				<div class="-body">
 					<div class="-chatting-section">
@@ -381,42 +385,21 @@ function onMobileAppBarBack() {
 	min-width: 0
 	z-index: 1
 
-.-header
-	position: relative
-	flex: none
-	width: 100%
-	padding: 12px 8px
+
+.-header-icon
+	img-circle()
 	display: flex
 	align-items: center
-	box-shadow: 0px 1px 8px 4px rgba(0, 0, 0, 0.25)
-	z-index: 2
+	justify-content: center
+	width: 36px
+	height: 36px
+	background-color: var(--theme-backlight)
 
-.-header-content
-	display: flex
-	align-items: center
-	margin-right: auto
-	min-width: 0
-
-.-header-avatar
-	margin-right: 16px
-
-	.-icon
-		img-circle()
-		display: flex
-		align-items: center
-		justify-content: center
-		width: 40px
-		height: 40px
-		background-color: var(--theme-backlight)
-
-		.jolticon
-			color: var(--theme-backlight-fg)
+	::v-deep(.jolticon)
+		color: var(--theme-backlight-fg)
 
 .-header-name
 	text-overflow()
-
-.-header-controls
-	flex: none
 
 .-header-control
 	position: relative

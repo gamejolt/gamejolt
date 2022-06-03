@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts">
 import { computed, inject, PropType, ref, toRefs } from 'vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../_common/popper/popper.vue';
@@ -15,6 +15,11 @@ import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStat
 import AppChatUserPopover from '../user-popover/user-popover.vue';
 import AppChatListItem from '../_list/AppChatListItem.vue';
 
+const avatarSize = 30;
+const itemPaddingVertical = 8;
+</script>
+
+<script lang="ts" setup>
 const props = defineProps({
 	user: {
 		type: Object as PropType<ChatUser>,
@@ -59,7 +64,9 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 
 <template>
 	<AppScrollInview
-		class="-container"
+		:style="{
+			height: avatarSize + itemPaddingVertical * 2 + 'px',
+		}"
 		:config="InviewConfig"
 		@inview="isInview = true"
 		@outview="isInview = false"
@@ -71,7 +78,11 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 			:placement="Screen.isMobile ? 'bottom' : 'left'"
 		>
 			<template #default>
-				<AppChatListItem :horizontal-padding="horizontalPadding">
+				<AppChatListItem
+					:horizontal-padding="horizontalPadding"
+					:avatar-size="avatarSize"
+					:vertical-padding="itemPaddingVertical"
+				>
 					<template #leading>
 						<div class="-member-avatar">
 							<img class="-member-avatar-img" :src="user.img_avatar" />
@@ -84,7 +95,7 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 							class="-avatar-status"
 							:is-online="isOnline"
 							:absolute="false"
-							:size="12"
+							:size="8"
 							background-color-base="bg"
 						/>
 					</template>

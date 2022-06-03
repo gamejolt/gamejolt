@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, toRefs, useSlots } from 'vue';
+import { Screen } from '../screen/screen-service';
 </script>
 
 <script lang="ts" setup>
@@ -17,19 +18,20 @@ const props = defineProps({
 	},
 	titleSpacing: {
 		type: Number,
-		default: 8,
-		validator: val => typeof val === 'number' && val >= 0,
+		default: undefined,
+		validator: val => (typeof val === 'number' && val >= 0) || typeof val === 'undefined',
 	},
 	edgePadding: {
 		type: Number,
-		default: 8,
-		validator: val => typeof val === 'number' && val >= 0,
+		default: undefined,
+		validator: val => (typeof val === 'number' && val >= 0) || typeof val === 'undefined',
 	},
 });
 
 const slots = useSlots();
 
-const { centerTitle, automaticallyImplyLeading, elevation, titleSpacing } = toRefs(props);
+const { centerTitle, automaticallyImplyLeading, elevation, titleSpacing, edgePadding } =
+	toRefs(props);
 
 const hasLeading = computed(() => !!slots['leading']);
 const hasActions = computed(() => !!slots['actions']);
@@ -39,6 +41,21 @@ const shouldShrinkLeading = computed(() => !automaticallyImplyLeading.value && !
 const shouldShrinkActions = computed(
 	() => !hasActions.value || (shouldShrinkLeading.value && centerTitle.value)
 );
+
+const effectiveTitleSpacing = computed(() => {
+	if (typeof titleSpacing?.value === 'number') {
+		return titleSpacing.value;
+	}
+
+	return Screen.isXs ? 12 : 16;
+});
+const effectiveEdgePadding = computed(() => {
+	if (typeof edgePadding?.value === 'number') {
+		return edgePadding.value;
+	}
+
+	return Screen.isXs ? 0 : 16;
+});
 </script>
 
 <template>
@@ -49,8 +66,8 @@ const shouldShrinkActions = computed(
 				'-center': centerTitle,
 			}"
 			:style="{
-				padding: `0 ${edgePadding}px`,
-				gridGap: titleSpacing + 'px',
+				padding: `0 ${effectiveEdgePadding}px`,
+				gridGap: effectiveTitleSpacing + 'px',
 			}"
 		>
 			<div
@@ -125,14 +142,19 @@ const shouldShrinkActions = computed(
 .-actions
 	flex: none
 	flex-basis: auto
+	display: inline-flex
 
-.-actions
-	margin-left: auto
+.-leading
+	justify-content: flex-start
 
 .-title
 	font-size: 20px
 	font-family: $font-family-heading
 	font-weight: 800
+
+.-actions
+	margin-left: auto
+	justify-content: flex-end
 
 .-shrink
 	flex-basis: 0

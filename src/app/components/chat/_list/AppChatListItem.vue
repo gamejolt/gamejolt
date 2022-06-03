@@ -1,4 +1,5 @@
 <script lang="ts">
+import { computed, useSlots } from 'vue';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 </script>
 
@@ -8,10 +9,24 @@ defineProps({
 		type: Number,
 		default: 16,
 	},
+	verticalPadding: {
+		type: Number,
+		default: 8,
+	},
 	forceHover: {
 		type: Boolean,
 	},
+	avatarSize: {
+		type: Number,
+		default: 30,
+	},
 });
+
+const slots = useSlots();
+
+const hasLeading = computed(() => !!slots['leading']);
+const hasTitle = computed(() => !!slots['title']);
+const hasTrailing = computed(() => !!slots['trailing']);
 </script>
 
 <template>
@@ -21,16 +36,19 @@ defineProps({
 			'-hovered': forceHover,
 		}"
 		:style="{
-			paddingLeft: horizontalPadding + 'px',
-			paddingRight: horizontalPadding + 'px',
+			padding: `${verticalPadding}px ${horizontalPadding}px`,
 		}"
 	>
-		<div class="-leading">
+		<div
+			v-if="hasLeading"
+			class="-leading"
+			:style="{
+				width: avatarSize + 'px',
+			}"
+		>
 			<AppAspectRatio :ratio="1" show-overflow>
 				<div class="-leading-inner">
-					<slot name="leading">
-						<div class="-placeholder-leading" />
-					</slot>
+					<slot name="leading" />
 				</div>
 
 				<div class="-leading-float">
@@ -39,13 +57,11 @@ defineProps({
 			</AppAspectRatio>
 		</div>
 
-		<div class="-title">
-			<slot name="title">
-				<div class="-placeholder-title" />
-			</slot>
+		<div v-if="hasTitle" class="-title">
+			<slot name="title" />
 		</div>
 
-		<div class="-trailing">
+		<div v-if="hasTrailing" class="-trailing">
 			<slot name="trailing" />
 		</div>
 	</a>
@@ -55,9 +71,8 @@ defineProps({
 .chat-list-item
 	display: flex
 	align-items: center
-	padding-top: 8px
-	padding-bottom: 8px
 	color: var(--theme-fg)
+	gap: 16px
 
 	&.-hovered
 	&:hover
@@ -65,7 +80,6 @@ defineProps({
 
 .-leading
 	flex: none
-	width: 30px
 	font-weight: 400
 	font-size: $font-size-base
 
@@ -81,15 +95,19 @@ defineProps({
 
 .-leading-float
 	position: absolute
-	left: 0
-	bottom: -2px
+	right: 0
+	bottom: 0
 
 .-title
 	flex: auto
 	display: inline-flex
 	align-items: baseline
-	padding-left: 16px
 	gap: 8px
+	min-width: 0
+
+	&
+	::v-deep(*)
+		text-overflow()
 
 .-trailing
 	flex: none

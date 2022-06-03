@@ -13,7 +13,7 @@ import AppShellSidebarLibrary from './library/library.vue';
 const components = {
 	AppScrollScroller,
 	AppShortkey,
-	AppShellSidebarChat: defineAsyncComponent(() => import('./chat/chat.vue')),
+	AppShellSidebarChat: defineAsyncComponent(() => import('./chat/AppShellSidebarChat.vue')),
 	AppShellSidebarLibrary,
 	AppShellSidebarContext,
 };
@@ -44,7 +44,16 @@ export default class AppShellSidebar extends Vue {
 </script>
 
 <template>
-	<AppScrollScroller id="shell-sidebar" class="shell-pane shell-pane-left" thin>
+	<!--
+	    Chat handles its scrolling internally. Everything else should be wrapped
+		in [AppScrollScroller].
+	-->
+	<Component
+		:is="visibleLeftPane === 'chat' ? 'div' : 'AppScrollScroller'"
+		id="shell-sidebar"
+		class="shell-pane shell-pane-left"
+		thin
+	>
 		<AppShortkey v-if="user" shortkey="c" @press="store.toggleLeftPane('chat')" />
 		<AppShortkey
 			v-if="user || Screen.isXs"
@@ -56,7 +65,7 @@ export default class AppShellSidebar extends Vue {
 		<AppShellSidebarChat v-if="visibleLeftPane === 'chat'" />
 		<AppShellSidebarLibrary v-if="visibleLeftPane === 'library'" />
 		<AppShellSidebarContext v-if="visibleLeftPane === 'context'" />
-	</AppScrollScroller>
+	</Component>
 </template>
 
 <style lang="stylus" scoped>

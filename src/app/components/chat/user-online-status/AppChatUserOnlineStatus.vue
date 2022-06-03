@@ -1,16 +1,16 @@
 <script lang="ts">
-import { computed, PropType, toRefs } from 'vue';
+import { PropType } from 'vue';
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
+defineProps({
 	isOnline: {
 		type: Boolean,
 		required: true,
 	},
 	size: {
 		type: Number,
-		default: undefined,
+		default: 12,
 	},
 	absolute: {
 		type: Boolean,
@@ -24,25 +24,10 @@ const props = defineProps({
 		type: String as PropType<'bg' | 'bg-offset'>,
 		default: undefined,
 	},
-});
-
-const { size } = toRefs(props);
-
-const outerSize = computed(() => {
-	const inset = 2;
-	if (!size?.value || typeof size.value !== 'number') {
-		return 12 - inset + 'px';
-	}
-
-	return size.value - inset + 'px';
-});
-
-const innerSize = computed(() => {
-	if (!size?.value || typeof size.value !== 'number') {
-		return '4px';
-	}
-
-	return Math.ceil(size.value / 3) + 'px';
+	segmentWidth: {
+		type: Number,
+		default: 1,
+	},
 });
 </script>
 
@@ -53,6 +38,11 @@ const innerSize = computed(() => {
 			[`-change-${backgroundColorBase}`]: !!backgroundColorBase,
 			'-absolute': absolute,
 		}"
+		:style="{
+			width: size + 'px',
+			height: size + 'px',
+			padding: segmentWidth + 'px',
+		}"
 	>
 		<div class="-bg-transparency-helper" />
 
@@ -62,37 +52,21 @@ const innerSize = computed(() => {
 			class="-status-container"
 			:class="{ '-online': isOnline, '-offline': !isOnline }"
 			:style="{
-				width: outerSize,
-				height: outerSize,
-				borderWidth:
-					'calc(' +
-					(isOnline ? `${outerSize} / 2` : `(${outerSize} - ${innerSize}) / 2`) +
-					')',
+				borderWidth: segmentWidth + 'px',
 			}"
-		>
-			<div v-if="!isOnline" class="-inner" :style="{ width: innerSize, height: innerSize }" />
-		</div>
+		/>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
 .user-online-status
 	position: relative
-	padding: $border-width-large
 	overflow: hidden
 
 	&.-absolute
 		position: absolute
-		right: -2px
+		right: 0
 		bottom: @right
-
-.-bg-transparency-helper
-	position: absolute
-	left: 0
-	top: 0
-	right: 0
-	bottom: 0
-	background-color: var(--theme-bg-actual)
 
 .user-online-status
 .-status-container
@@ -103,13 +77,23 @@ const innerSize = computed(() => {
 	display: flex
 	justify-content: center
 	align-items: center
-	border-style: solid
+	width: 100%
+	height: 100%
+	border: solid transparent
 
 	&.-online
-		border-color: var(--theme-link)
+		background-color: var(--theme-link)
 
 	&.-offline
 		border-color: var(--theme-fg-muted)
+
+.-bg-transparency-helper
+	position: absolute
+	left: 0
+	top: 0
+	right: 0
+	bottom: 0
+	background-color: var(--theme-bg-actual)
 
 for color in bg bg-offset
 	.-change-{color}

@@ -19,6 +19,8 @@ import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStat
 import AppChatListItem from '../_list/AppChatListItem.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
+const avatarSize = 30;
+const itemPaddingVertical = 8;
 </script>
 
 <script lang="ts" setup>
@@ -124,7 +126,9 @@ async function leaveRoom() {
 
 <template>
 	<AppScrollInview
-		class="-container"
+		:style="{
+			height: avatarSize + itemPaddingVertical * 2 + 'px',
+		}"
 		:config="InviewConfig"
 		@inview="isInview = true"
 		@outview="isInview = false"
@@ -142,6 +146,8 @@ async function leaveRoom() {
 				<AppChatListItem
 					:title="hoverTitle"
 					:horizontal-padding="16"
+					:avatar-size="avatarSize"
+					:vertical-padding="itemPaddingVertical"
 					:force-hover="isActive"
 					v-on="componentEvents"
 				>
@@ -156,7 +162,7 @@ async function leaveRoom() {
 						<AppChatUserOnlineStatus
 							v-if="isOnline !== null"
 							:is-online="isOnline"
-							:size="12"
+							:size="8"
 							:absolute="false"
 							background-color-base="bg"
 						/>
@@ -167,8 +173,8 @@ async function leaveRoom() {
 						<span v-if="meta" class="tiny text-muted">{{ meta }}</span>
 					</template>
 
-					<template #trailing>
-						<span v-if="notificationsCount" class="tag tag-highlight notifications-tag">
+					<template v-if="notificationsCount" #trailing>
+						<span class="badge badge-overlay-notice">
 							{{ formatNumber(notificationsCount) }}
 						</span>
 					</template>

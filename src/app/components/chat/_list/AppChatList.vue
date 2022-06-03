@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, PropType, ref, toRefs } from 'vue';
 import { fuzzysearch } from '../../../../utils/string';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
 
@@ -63,16 +64,43 @@ const slotProps = computed<ChatListSlotProps>(() => ({
 </script>
 
 <template>
-	<div>
-		<div v-if="!hideFilter" class="nav-controls">
+	<div class="chat-list">
+		<div class="-input-container">
 			<input
+				v-if="!hideFilter"
 				v-model="filterQuery"
 				text="search"
 				class="form-control"
 				:placeholder="$gettext(`Filter...`)"
 			/>
+			<div class="-scroll-fade" />
 		</div>
 
-		<slot v-bind="slotProps" />
+		<AppScrollScroller class="-list-scroller" thin>
+			<slot v-bind="slotProps" />
+		</AppScrollScroller>
 	</div>
 </template>
+
+<style lang="stylus" scoped>
+.chat-list
+	display: flex
+	flex-direction: column
+
+.-input-container
+	padding: 0 16px
+	position: relative
+	z-index: 1
+
+.-scroll-fade
+	position: absolute
+	left: 0
+	top: 100%
+	right: 0
+	height: 16px
+	background-image: unquote('linear-gradient(to bottom, var(--theme-bg-actual), transparent)')
+
+.-list-scroller
+	flex: auto
+	padding-top: 8px
+</style>
