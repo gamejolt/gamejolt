@@ -1,5 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
-import RouteUpgrade from './upgrade.vue';
+import RouteUpgrade from './RouteUpgrade.vue';
 
 export const routeUpgrade: RouteRecordRaw = {
 	path: '/upgrade',
