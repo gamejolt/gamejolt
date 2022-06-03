@@ -140,6 +140,7 @@ export function cleanupFiresideRTCProducer({
 	if (streamingASG.value) {
 		rtc.log(`Force stopping desktop audio streaming through ASG.`);
 		streamingASG.value.stop();
+		streamingASG.value = null;
 	}
 }
 
