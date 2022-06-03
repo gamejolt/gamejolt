@@ -121,6 +121,8 @@ export function createFiresideRTCProducer(rtc: FiresideRTC) {
 export function cleanupFiresideRTCProducer({
 	isStreaming,
 	_tokenRenewInterval,
+	streamingASG,
+	rtc,
 }: FiresideRTCProducer) {
 	console.log('[FIRESIDE-RTC] Trace(cleanupFiresideRTCProducer)');
 
@@ -131,6 +133,13 @@ export function cleanupFiresideRTCProducer({
 	if (_tokenRenewInterval.value) {
 		clearInterval(_tokenRenewInterval.value);
 		_tokenRenewInterval.value = null;
+	}
+
+	// If we were streaming desktop audio, make sure it's closed, since Agora
+	// isn't gonna call this for us.
+	if (streamingASG.value) {
+		rtc.log(`Force stopping desktop audio streaming through ASG.`);
+		streamingASG.value.stop();
 	}
 }
 
@@ -519,7 +528,7 @@ function _updateDesktopAudioTrack(producer: FiresideRTCProducer) {
 					rtc.log(`Creating desktop audio track from ASG.`);
 
 					const generator = new MediaStreamTrackGenerator({ kind: 'audio' });
-					streamingASG.value = startDesktopAudioCapture(generator.writable);
+					streamingASG.value = await startDesktopAudioCapture(generator.writable);
 
 					track = AgoraRTC.createCustomAudioTrack({
 						mediaStreamTrack: generator,
