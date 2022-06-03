@@ -242,7 +242,7 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 			updateSetIsStreaming(rtc.producer, { isStreaming: false });
 		}
 
-		await cleanupFiresideRTCProducer(rtc.producer);
+		cleanupFiresideRTCProducer(rtc.producer);
 		rtc.producer = null;
 	}
 

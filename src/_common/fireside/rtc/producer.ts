@@ -118,7 +118,7 @@ export function createFiresideRTCProducer(rtc: FiresideRTC) {
  * This does NOT stop streaming or close channels. It's is meant to be used
  * to cleanup the producer instance after we no longer need it.
  */
-export async function cleanupFiresideRTCProducer({
+export function cleanupFiresideRTCProducer({
 	isStreaming,
 	_tokenRenewInterval,
 	streamingASG,
@@ -139,7 +139,7 @@ export async function cleanupFiresideRTCProducer({
 	// isn't gonna call this for us.
 	if (streamingASG.value) {
 		rtc.log(`Force stopping desktop audio streaming through ASG.`);
-		await streamingASG.value.stop();
+		streamingASG.value.stop();
 	}
 }
 
