@@ -47,6 +47,15 @@ const sidebar = ref<SidebarTab | undefined>(
 	!Screen.isXs && SettingChatGroupShowMembers.get() ? 'members' : undefined
 );
 
+watch(
+	() => room.value.id,
+	() => {
+		if (sidebar.value === 'members' && room.value.isPmRoom) {
+			sidebar.value = undefined;
+		}
+	}
+);
+
 watch(sidebar, (value, oldValue) => {
 	if (!value) {
 		showSettingsOnMembersBack = false;
