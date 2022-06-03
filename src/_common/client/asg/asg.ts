@@ -35,6 +35,8 @@ export async function startDesktopAudioCapture(writableStream: WritableStream<Au
 			// to end. When ASG finalizes it'll send this status update and we
 			// can finally resolve the stop().
 			if (text === 'end_recording') {
+				// ASG takes a literal second to stop, so we have to mimic it
+				// here. Ugh.
 				setTimeout(() => _stopResolver(), 1_000);
 			}
 		})
