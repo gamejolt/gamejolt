@@ -1,11 +1,8 @@
 <script lang="ts">
-import { computed, inject, PropType, ref, toRefs } from 'vue';
+import { computed, inject, PropType, toRefs } from 'vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '../../../../_common/scroll/inview/AppScrollInview.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { ChatStore, ChatStoreKey } from '../chat-store';
 import { isUserOnline, tryGetRoomRole } from '../client';
@@ -14,9 +11,6 @@ import { ChatUser } from '../user';
 import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
 import AppChatUserPopover from '../user-popover/user-popover.vue';
 import AppChatListItem from '../_list/AppChatListItem.vue';
-
-const avatarSize = 30;
-const itemPaddingVertical = 8;
 </script>
 
 <script lang="ts" setup>
@@ -37,10 +31,6 @@ const props = defineProps({
 
 const { user, room } = toRefs(props);
 const chatStore = inject<ChatStore>(ChatStoreKey)!;
-
-const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
-
-const isInview = ref(false);
 
 const chat = computed(() => chatStore.chat!);
 
@@ -63,67 +53,49 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 </script>
 
 <template>
-	<AppScrollInview
-		:style="{
-			height: avatarSize + itemPaddingVertical * 2 + 'px',
-		}"
-		:config="InviewConfig"
-		@inview="isInview = true"
-		@outview="isInview = false"
-	>
-		<AppPopper
-			v-if="isInview"
-			popover-class="fill-darkest"
-			block
-			:placement="Screen.isMobile ? 'bottom' : 'left'"
-		>
-			<template #default>
-				<AppChatListItem
-					:horizontal-padding="horizontalPadding"
-					:avatar-size="avatarSize"
-					:vertical-padding="itemPaddingVertical"
-				>
-					<template #leading>
-						<div class="-member-avatar">
-							<img class="-member-avatar-img" :src="user.img_avatar" />
-						</div>
-					</template>
+	<AppPopper popover-class="fill-darkest" block :placement="Screen.isMobile ? 'bottom' : 'left'">
+		<template #default>
+			<AppChatListItem :horizontal-padding="horizontalPadding">
+				<template #leading>
+					<div class="-member-avatar">
+						<img class="-member-avatar-img" :src="user.img_avatar" />
+					</div>
+				</template>
 
-					<template #leadingFloat>
-						<AppChatUserOnlineStatus
-							v-if="isOnline !== null"
-							class="-avatar-status"
-							:is-online="isOnline"
-							:absolute="false"
-							:size="8"
-							background-color-base="bg"
-						/>
-					</template>
+				<template #leadingFloat>
+					<AppChatUserOnlineStatus
+						v-if="isOnline !== null"
+						class="-avatar-status"
+						:is-online="isOnline"
+						:absolute="false"
+						:size="8"
+						background-color-base="bg"
+					/>
+				</template>
 
-					<template #title>
-						<span>{{ user.display_name }}</span>
-						<span class="tiny text-muted">@{{ user.username }}</span>
-					</template>
+				<template #title>
+					<span>{{ user.display_name }}</span>
+					<span class="tiny text-muted">@{{ user.username }}</span>
+				</template>
 
-					<template #trailing>
-						<span v-if="isOwner" v-app-tooltip="$gettext(`Room Owner`)">
-							<AppJolticon icon="crown" />
-						</span>
-						<span v-else-if="isStaff" v-app-tooltip="$gettext(`Game Jolt Staff`)">
-							<AppJolticon icon="gamejolt" />
-						</span>
-						<span v-else-if="isModerator" v-app-tooltip="$gettext(`Moderator`)">
-							<AppJolticon icon="star" />
-						</span>
-					</template>
-				</AppChatListItem>
-			</template>
+				<template #trailing>
+					<span v-if="isOwner" v-app-tooltip="$gettext(`Room Owner`)">
+						<AppJolticon icon="crown" />
+					</span>
+					<span v-else-if="isStaff" v-app-tooltip="$gettext(`Game Jolt Staff`)">
+						<AppJolticon icon="gamejolt" />
+					</span>
+					<span v-else-if="isModerator" v-app-tooltip="$gettext(`Moderator`)">
+						<AppJolticon icon="star" />
+					</span>
+				</template>
+			</AppChatListItem>
+		</template>
 
-			<template #popover>
-				<AppChatUserPopover :user="user" :room="room" />
-			</template>
-		</AppPopper>
-	</AppScrollInview>
+		<template #popover>
+			<AppChatUserPopover :user="user" :room="room" />
+		</template>
+	</AppPopper>
 </template>
 
 <style lang="stylus" scoped>

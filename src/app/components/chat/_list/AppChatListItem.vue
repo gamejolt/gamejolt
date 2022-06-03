@@ -1,6 +1,13 @@
 <script lang="ts">
+import { ref } from '@vue/runtime-core';
 import { computed, useSlots } from 'vue';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppScrollInview, {
+	ScrollInviewConfig,
+} from '../../../../_common/scroll/inview/AppScrollInview.vue';
+
+const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
 </script>
 
 <script lang="ts" setup>
@@ -24,47 +31,59 @@ defineProps({
 
 const slots = useSlots();
 
+const isInview = ref(false);
+
 const hasLeading = computed(() => !!slots['leading']);
 const hasTitle = computed(() => !!slots['title']);
 const hasTrailing = computed(() => !!slots['trailing']);
 </script>
 
 <template>
-	<a
-		class="chat-list-item"
-		:class="{
-			'-hovered': forceHover,
-		}"
+	<AppScrollInview
 		:style="{
-			padding: `${verticalPadding}px ${horizontalPadding}px`,
+			height: avatarSize + verticalPadding * 2 + 'px',
 		}"
+		:config="InviewConfig"
+		@inview="isInview = true"
+		@outview="isInview = false"
 	>
-		<div
-			v-if="hasLeading"
-			class="-leading"
+		<a
+			v-if="isInview"
+			class="chat-list-item"
+			:class="{
+				'-hovered': forceHover,
+			}"
 			:style="{
-				width: avatarSize + 'px',
+				padding: `${verticalPadding}px ${horizontalPadding}px`,
 			}"
 		>
-			<AppAspectRatio :ratio="1" show-overflow>
-				<div class="-leading-inner">
-					<slot name="leading" />
-				</div>
+			<div
+				v-if="hasLeading"
+				class="-leading"
+				:style="{
+					width: avatarSize + 'px',
+				}"
+			>
+				<AppAspectRatio :ratio="1" show-overflow>
+					<div class="-leading-inner">
+						<slot name="leading" />
+					</div>
 
-				<div class="-leading-float">
-					<slot name="leadingFloat" />
-				</div>
-			</AppAspectRatio>
-		</div>
+					<div class="-leading-float">
+						<slot name="leadingFloat" />
+					</div>
+				</AppAspectRatio>
+			</div>
 
-		<div v-if="hasTitle" class="-title">
-			<slot name="title" />
-		</div>
+			<div v-if="hasTitle" class="-title">
+				<slot name="title" />
+			</div>
 
-		<div v-if="hasTrailing" class="-trailing">
-			<slot name="trailing" />
-		</div>
-	</a>
+			<div v-if="hasTrailing" class="-trailing">
+				<slot name="trailing" />
+			</div>
+		</a>
+	</AppScrollInview>
 </template>
 
 <style lang="stylus" scoped>
