@@ -88,7 +88,7 @@ export class FiresideRTC {
 	generation = new CancelToken();
 
 	/**
-	 *  Safari keeps [AgoraRTC.onAudioAutoplayFailed] looping, so I'm assigning
+	 *  Safari keeps [AgoraRTC.onAutoplayFailed] looping, so I'm assigning
 	 *  to this to ensure we only trigger the failure callback once.
 	 */
 	_hasAutoplayError = false;
@@ -415,7 +415,7 @@ function _createChannels(rtc: FiresideRTC) {
 
 	// If we fail to autoplay, pause the stream so we have to interact with the
 	// DOM to play it.
-	AgoraRTC.onAudioAutoplayFailed = async () => {
+	AgoraRTC.onAutoplayFailed = async () => {
 		if (rtc._hasAutoplayError) {
 			return;
 		}
