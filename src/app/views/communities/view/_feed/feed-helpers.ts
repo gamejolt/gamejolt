@@ -102,7 +102,5 @@ export function getFeedChannelFetchUrl(route: RouteLocationNormalized) {
 		url += urlParams.join('&');
 	}
 
-	console.log(urlParams, url);
-
 	return url;
 }
