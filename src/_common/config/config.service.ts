@@ -144,10 +144,10 @@ export const configHomeDefaultFeed = new ConfigOptionString(
 export const configFiresideMicVolume = new ConfigOptionBoolean('fireside_mic_volume', false);
 
 export const configCommunityFrontpageFeedType = new ConfigOptionString(
-	'community_frontpage_feed_type',
-	'featured',
+	'web_community_frontpage_feed_type',
+	'default',
 	{
-		validValues: ['featured', 'featured-hot'],
+		validValues: ['default', 'featured', 'featured-hot'],
 		conditions: { join: true },
 	}
 );

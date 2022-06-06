@@ -16,7 +16,10 @@ export function doFeedChannelPayload(route: RouteLocationNormalized) {
 	const channel = getChannelPathFromRoute(route);
 	const sort = getFeedChannelSort(route);
 	let apiOverviewUrl = `/web/communities/overview/${route.params.path}/${channel}?sort=${sort}`;
-	if (channel === CommunityPresetChannelType.FEATURED) {
+	if (
+		channel === CommunityPresetChannelType.FEATURED &&
+		configCommunityFrontpageFeedType.value !== configCommunityFrontpageFeedType.defaultValue
+	) {
 		apiOverviewUrl += '&frontpage-feed-type=' + configCommunityFrontpageFeedType.value;
 	}
 
@@ -86,7 +89,10 @@ export function getFeedChannelFetchUrl(route: RouteLocationNormalized) {
 	if (channels.length) {
 		urlParams.push(...channels.map(name => `channels[]=` + encodeURIComponent(name)));
 	}
-	if (channel === CommunityPresetChannelType.FEATURED) {
+	if (
+		channel === CommunityPresetChannelType.FEATURED &&
+		configCommunityFrontpageFeedType.value !== configCommunityFrontpageFeedType.defaultValue
+	) {
 		urlParams.push(
 			'frontpage-feed-type=' + encodeURIComponent(configCommunityFrontpageFeedType.value)
 		);
