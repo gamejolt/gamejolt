@@ -143,8 +143,8 @@ const hasTrailing = computed(() => !!slots['trailing']);
 
 .-leading-float
 	position: absolute
-	right: 0
-	bottom: 0
+	right: -2px
+	bottom: @right
 
 .-title
 	flex: auto

@@ -68,8 +68,8 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 				v-if="isOnline !== null"
 				class="-avatar-status"
 				:is-online="isOnline"
-				:absolute="false"
-				:size="8"
+				:size="12"
+				:segment-width="1.5"
 				background-color-base="bg"
 			/>
 		</template>

@@ -174,9 +174,10 @@ function onMobileAppBarBack() {
 						>
 							<img class="-header-icon" :src="room.user.img_avatar" alt="" />
 							<AppChatUserOnlineStatus
+								class="-online-status"
 								:is-online="room.user.isOnline"
 								:size="12"
-								:segment-width="2"
+								:segment-width="1.5"
 							/>
 						</router-link>
 					</template>
@@ -415,6 +416,11 @@ function onMobileAppBarBack() {
 
 	::v-deep(.jolticon)
 		color: var(--theme-backlight-fg)
+
+.-online-status
+	position: absolute
+	right: 0
+	bottom: 0
 
 .-header-name
 	text-overflow()

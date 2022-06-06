@@ -10,9 +10,9 @@ defineProps({
 		type: Number,
 		default: 12,
 	},
-	absolute: {
-		type: Boolean,
-		default: true,
+	segmentWidth: {
+		type: Number,
+		default: 1.5,
 	},
 	/**
 	 * The color to be displayed behind the layers of the bubble. Useful when
@@ -22,10 +22,6 @@ defineProps({
 		type: String as PropType<'bg' | 'bg-offset'>,
 		default: undefined,
 	},
-	segmentWidth: {
-		type: Number,
-		default: 1,
-	},
 });
 </script>
 
@@ -34,7 +30,6 @@ defineProps({
 		class="user-online-status"
 		:class="{
 			[`-change-${backgroundColorBase}`]: !!backgroundColorBase,
-			'-absolute': absolute,
 		}"
 		:style="{
 			width: size + 'px',
@@ -60,11 +55,6 @@ defineProps({
 .user-online-status
 	position: relative
 	overflow: hidden
-
-	&.-absolute
-		position: absolute
-		right: 0
-		bottom: @right
 
 .user-online-status
 .-status-container

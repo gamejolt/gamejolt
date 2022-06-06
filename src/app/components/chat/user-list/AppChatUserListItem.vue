@@ -111,8 +111,8 @@ async function leaveRoom() {
 			<AppChatUserOnlineStatus
 				v-if="isOnline !== null"
 				:is-online="isOnline"
-				:size="8"
-				:absolute="false"
+				:size="12"
+				:segment-width="1.5"
 				background-color-base="bg"
 			/>
 		</template>

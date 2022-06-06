@@ -249,7 +249,7 @@ async function ejectFireside(community: FiresideCommunity) {
 				<template #popover>
 					<div class="-tooltip">
 						<div class="-tooltip-row -tooltip-members">
-							<AppChatUserOnlineStatus is-online :absolute="false" :size="8" />
+							<AppChatUserOnlineStatus is-online :size="12" :segment-width="1.5" />
 							<AppTranslate
 								:translate-n="fireside.member_count || 0"
 								:translate-params="{
