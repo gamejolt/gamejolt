@@ -229,8 +229,17 @@ export function sortCollection(
 				.map(user => ({
 					user,
 					sort: getSortVal(chat, user),
+					lowercaseDisplayName: user.display_name.toLowerCase(),
 				}))
-				.sort((a, b) => a.sort - b.sort)
+				.sort((a, b) => {
+					if (a.sort > b.sort) {
+						return 1;
+					} else if (a.sort < b.sort) {
+						return -1;
+					} else {
+						return stringSortRaw(a.lowercaseDisplayName, b.lowercaseDisplayName);
+					}
+				})
 				.map(i => i.user);
 	}
 }
