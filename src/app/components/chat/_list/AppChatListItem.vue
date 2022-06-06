@@ -1,8 +1,10 @@
 <script lang="ts">
-import { ref } from '@vue/runtime-core';
-import { computed, useSlots } from 'vue';
+import { computed, PropType, ref, useSlots } from 'vue';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import AppPopper from '../../../../_common/popper/popper.vue';
+import AppPopper, {
+	PopperPlacementType,
+	PopperTriggerType,
+} from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
@@ -28,6 +30,17 @@ defineProps({
 		type: Number,
 		default: 30,
 	},
+	popperHideOnStateChange: {
+		type: Boolean,
+	},
+	popperTrigger: {
+		type: String as PropType<PopperTriggerType>,
+		default: 'click',
+	},
+	popperPlacement: {
+		type: String as PropType<PopperPlacementType>,
+		default: 'bottom',
+	},
 });
 
 const slots = useSlots();
@@ -51,10 +64,11 @@ const hasTrailing = computed(() => !!slots['trailing']);
 		<AppPopper
 			v-if="isInview"
 			popover-class="fill-darkest"
-			trigger="right-click"
 			block
 			fixed
-			hide-on-state-change
+			:placement="popperPlacement"
+			:trigger="popperTrigger"
+			:hide-on-state-change="popperHideOnStateChange"
 		>
 			<template #popover>
 				<slot name="popover" />

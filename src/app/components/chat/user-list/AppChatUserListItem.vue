@@ -95,6 +95,9 @@ async function leaveRoom() {
 		:title="hoverTitle"
 		:horizontal-padding="16"
 		:force-hover="isActive"
+		popper-placement="bottom"
+		popper-trigger="right-click"
+		popper-hide-on-state-change
 		@click="onClick"
 	>
 		<template #leading>

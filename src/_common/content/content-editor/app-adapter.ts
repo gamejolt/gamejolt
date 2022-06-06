@@ -27,7 +27,7 @@ import {
 	editorUnlink,
 } from './content-editor-controller';
 import { ContentEditorService } from './content-editor.service';
-import { MediaUploadTask } from './media-upload-task';
+import { createMediaUploadTask } from './media-upload-task';
 
 export function createContentEditorAppAdapter({ themeStore }: { themeStore: ThemeStore }) {
 	const c = reactive(new ContentEditorAppAdapter(() => themeStore)) as ContentEditorAppAdapter;
@@ -311,11 +311,9 @@ export class ContentEditorAppAdapterMessage {
 				return editorInsertMention(controller, this.data.username);
 
 			case 'mediaUploadStart': {
-				const uploadTask = new MediaUploadTask(
-					controller,
-					this.data.uploadId,
-					this.data.thumbnail
-				);
+				const uploadTask = createMediaUploadTask(controller, this.data.uploadId, {
+					thumbnail: this.data.thumbnail,
+				});
 				return editorMediaUploadInsert(controller, uploadTask);
 			}
 

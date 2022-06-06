@@ -40,13 +40,26 @@ export default class AppVideoProcessingProgress extends Vue {
 	}
 
 	@Emit('complete') emitComplete(_payload: any) {}
-	@Emit('error') emitError(_payload: any) {}
+	@Emit('error') emitError(_err: string | Error) {}
 
 	onProgress({ videoPosterImgUrl }: any, progress: number, isIndeterminate: boolean) {
 		this.hasData = true;
 		this.videoPosterImgUrl = videoPosterImgUrl;
 		this.isIndeterminate = isIndeterminate;
 		this.progress = progress;
+	}
+
+	async onError(input: any) {
+		if (input instanceof Error) {
+			this.emitError(input);
+			return;
+		}
+
+		const errorMsg =
+			input.reason ||
+			this.$gettext('We could not process your video for some reason. Try again later.');
+
+		this.emitError(errorMsg);
 	}
 }
 </script>
@@ -58,7 +71,7 @@ export default class AppVideoProcessingProgress extends Vue {
 			:interval="3000"
 			@progress="onProgress"
 			@complete="emitComplete"
-			@error="emitError"
+			@error="onError"
 		/>
 
 		<AppResponsiveDimensions :ratio="16 / 9">
