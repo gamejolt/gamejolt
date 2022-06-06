@@ -142,7 +142,12 @@ function onMobileAppBarBack() {
 
 			<div :key="room.id" class="-window-main">
 				<!-- Window Header -->
-				<AppHeaderBar :key="room.id" :automatically-imply-leading="false">
+				<AppHeaderBar
+					:key="room.id"
+					class="-header"
+					:automatically-imply-leading="false"
+					:elevation="2"
+				>
 					<template #leading>
 						<AppButton
 							v-if="Screen.isXs"
@@ -396,6 +401,8 @@ function onMobileAppBarBack() {
 	min-width: 0
 	z-index: 1
 
+.-header
+	z-index: 3
 
 .-header-icon
 	img-circle()
@@ -456,7 +463,7 @@ function onMobileAppBarBack() {
 	left: 0
 	width: 8px
 	background: linear-gradient(to right, rgba($black, 0.2), transparent)
-	z-index: 1
+	z-index: 2
 
 .-output
 	position: relative

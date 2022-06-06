@@ -59,7 +59,7 @@ const effectiveEdgePadding = computed(() => {
 </script>
 
 <template>
-	<div class="mobile-app-bar" :class="`-elevate-${elevation}`">
+	<div class="header-bar" :class="`-elevate-${elevation}`">
 		<div
 			class="-inner-row"
 			:class="{
@@ -105,7 +105,7 @@ const effectiveEdgePadding = computed(() => {
 </template>
 
 <style lang="stylus" scoped>
-.mobile-app-bar
+.header-bar
 	width: 100%
 	display: flex
 	flex-direction: column

@@ -1,13 +1,13 @@
 <script lang="ts" setup></script>
 
 <template>
-	<div class="mobile-tab-bar">
+	<div class="tab-bar">
 		<slot />
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-.mobile-tab-bar
+.tab-bar
 	display: flex
 	align-items: center
 
