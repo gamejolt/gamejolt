@@ -22,6 +22,9 @@ let PopperIndex = 0;
 
 type ActualTrigger = 'click' | 'hover' | 'manual';
 
+export type PopperTriggerType = ActualTrigger | 'right-click';
+export type PopperPlacementType = 'top' | 'right' | 'bottom' | 'left';
+
 const TouchablePointerTypes = ['touch', 'pen'];
 
 const modifiers = [
@@ -70,10 +73,10 @@ const modifiers = [
 })
 export default class AppPopper extends Vue {
 	@Prop({ type: String, default: 'bottom' })
-	placement!: 'top' | 'right' | 'bottom' | 'left';
+	placement!: PopperPlacementType;
 
 	@Prop({ type: String, default: 'click' })
-	trigger!: ActualTrigger | 'right-click';
+	trigger!: PopperTriggerType;
 
 	/**
 	 * Normally we allow the cursor to move over the actual popover element that

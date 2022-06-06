@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, inject, PropType, toRefs } from 'vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import { Screen } from '../../../../_common/screen/screen-service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { ChatStore, ChatStoreKey } from '../chat-store';
 import { isUserOnline, tryGetRoomRole } from '../client';
@@ -51,7 +52,11 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 </script>
 
 <template>
-	<AppChatListItem :horizontal-padding="horizontalPadding">
+	<AppChatListItem
+		:horizontal-padding="horizontalPadding"
+		:popper-placement="Screen.isMobile ? 'bottom' : 'left'"
+		popper-trigger="click"
+	>
 		<template #leading>
 			<div class="-member-avatar">
 				<img class="-member-avatar-img" :src="user.img_avatar" />
