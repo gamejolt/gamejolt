@@ -33,11 +33,18 @@ export class AppProgressPoller extends Vue {
 			return;
 		}
 
+		let response;
+		let hasError = false;
 		try {
-			const response = await Api.sendRequest(this.url, undefined, {
+			response = await Api.sendRequest(this.url, undefined, {
 				detach: true,
 			});
+		} catch (e) {
+			this.emitError(e);
+			hasError = true;
+		}
 
+		if (!hasError) {
 			if (response.status === 'complete' || response.status === 'error') {
 				if (response.status === 'complete') {
 					this.emitComplete(response);
@@ -52,8 +59,6 @@ export class AppProgressPoller extends Vue {
 				const progress = indeterminate ? 100 : response.progress;
 				this.emitProgress(response, progress, indeterminate);
 			}
-		} catch (e) {
-			this.emitError(e);
 		}
 
 		this.setTimeout();
