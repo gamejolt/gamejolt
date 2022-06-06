@@ -2,6 +2,7 @@
 import { computed, inject, PropType, ref, toRefs, watch, watchEffect } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatNumber } from '../../../../_common/filters/number';
+import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
@@ -12,6 +13,7 @@ import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified
 import { useAppStore } from '../../../store/index';
 import { ChatStoreKey } from '../chat-store';
 import { leaveChatRoom } from '../client';
+import FormChatRoomSettings from '../FormChatRoomSettings.vue';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
 import AppChatMemberList from '../member-list/AppChatMemberList.vue';
 import { ChatRoom, getChatRoomTitle } from '../room';
@@ -36,6 +38,9 @@ const props = defineProps({
 	},
 	/** Causes the sidebar content to replace/cover the chat while showing. */
 	fullSidebar: {
+		type: Boolean,
+	},
+	unsetBgColor: {
 		type: Boolean,
 	},
 	overlay: {
@@ -151,7 +156,7 @@ function onMobileAppBarBack() {
 	<div :key="room.id" class="chat-window">
 		<!-- Window Header -->
 		<template v-if="!fullSidebar || !sidebar">
-			<AppMobileAppBar
+			<AppHeaderBar
 				:key="room.id"
 				class="-header"
 				:automatically-imply-leading="!room.isFiresideRoom"
@@ -225,7 +230,9 @@ function onMobileAppBarBack() {
 						@click="toggleSidebar('members')"
 					/>
 
+					<!-- TODO(fireside-redesign) remove condition later -->
 					<AppButton
+						v-if="!room.isFiresideRoom"
 						v-app-tooltip="$gettext(`Settings`)"
 						circle
 						sparse
@@ -244,10 +251,10 @@ function onMobileAppBarBack() {
 						@click="close"
 					/>
 				</template>
-			</AppMobileAppBar>
+			</AppHeaderBar>
 		</template>
 		<template v-else-if="Screen.isDesktop">
-			<AppMobileAppBar class="-header" :elevation="1">
+			<AppHeaderBar class="-header" :elevation="1">
 				<template #leading>
 					<AppButton
 						icon="chevron-left"
@@ -285,12 +292,12 @@ function onMobileAppBarBack() {
 						@click="room.isPmRoom ? addGroup() : addMembers()"
 					/>
 				</template>
-			</AppMobileAppBar>
+			</AppHeaderBar>
 		</template>
 
 		<div class="-body">
-			<div class="-chatting-section">
-				<div class="-output" :class="{ '-overlay': overlay }">
+			<div class="-chatting-section" :class="{ '-hide': !!sidebar }">
+				<div class="-output" :class="{ '-overlay': overlay, '-output-bg': !unsetBgColor }">
 					<AppChatWindowOutput :key="room.id" class="-output-inner" :room="room" />
 				</div>
 
@@ -310,7 +317,7 @@ function onMobileAppBarBack() {
 				<div v-if="Screen.isDesktop && !fullSidebar" class="-sidebar-shadow" />
 
 				<template v-if="Screen.isMobile && sidebar">
-					<AppMobileAppBar class="-header" :elevation="1">
+					<AppHeaderBar class="-header" :elevation="1">
 						<template #leading>
 							<AppButton
 								icon="chevron-left"
@@ -329,6 +336,9 @@ function onMobileAppBarBack() {
 								<template v-else>
 									<AppTranslate>Chat Settings</AppTranslate>
 								</template>
+							</template>
+							<template v-else-if="room.isFiresideRoom">
+								<AppTranslate>Members</AppTranslate>
 							</template>
 							<template v-else>
 								<AppTranslate>Group Members</AppTranslate>
@@ -351,13 +361,13 @@ function onMobileAppBarBack() {
 								@click="room.isPmRoom ? addGroup() : addMembers()"
 							/>
 						</template>
-					</AppMobileAppBar>
+					</AppHeaderBar>
 				</template>
 
 				<div class="-sidebar-container">
 					<AppScrollScroller class="-sidebar-scroller">
 						<template v-if="sidebar === 'settings'">
-							<FormChatEditRoom
+							<FormChatRoomSettings
 								:room="room"
 								:show-members-preview="
 									(!showMembersViewButton || Screen.isMobile) && room.isGroupRoom
@@ -391,9 +401,6 @@ function onMobileAppBarBack() {
 </template>
 
 <style lang="stylus" scoped>
-change-bg-opacity($var)
-	background-color: 'rgba(%s, 0.5)' % var(unquote('--theme-' + $var + '-rgb'))
-
 .chat-window
 	position: relative
 	flex: auto
@@ -465,9 +472,6 @@ change-bg-opacity($var)
 	flex: 0 1 320px
 	change-bg(bg)
 
-	&.-overlay
-		change-bg-rgba(var(--theme-bg-rgb), 0.5)
-
 	&.-full
 		position: absolute
 		width: unset
@@ -499,6 +503,8 @@ change-bg-opacity($var)
 	flex: auto
 	display: flex
 	height: 100%
+
+.-output-bg
 	change-bg(bg-offset)
 
 .-sidebar-container
@@ -520,4 +526,7 @@ change-bg-opacity($var)
 
 .-overlay
 	change-bg-rgba(var(--theme-bg-rgb), 0.5)
+
+.-hide
+	visibility: hidden
 </style>

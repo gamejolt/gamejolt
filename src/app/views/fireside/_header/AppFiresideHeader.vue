@@ -5,13 +5,14 @@ import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/Ap
 import { formatNumber } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerLiveReactions from '../../../../_common/sticker/live-reactions/AppStickerLiveReactions.vue';
+import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import { StreamSetupModal } from '../../../components/fireside/stream/setup/setup-modal.service';
 import { FiresideChatMembersModal } from '../_chat-members/modal/modal.service';
-import AppFiresideSettingsPopper from '../_settings-popper/settings-popper.vue';
+import AppFiresideSettingsPopper from '../_settings-popper/AppFiresideSettingsPopper.vue';
 </script>
 
 <script lang="ts" setup>
@@ -22,12 +23,15 @@ const props = defineProps({
 	hasChatStats: {
 		type: Boolean,
 	},
-	isOverlay: {
+	overlay: {
+		type: Boolean,
+	},
+	dense: {
 		type: Boolean,
 	},
 });
 
-const { showControls, hasChatStats, isOverlay } = toRefs(props);
+const { showControls, hasChatStats, overlay, dense } = toRefs(props);
 
 const c = useFiresideController()!;
 const {
@@ -54,7 +58,7 @@ function onClickEditStream() {
 }
 
 function onShowPopper() {
-	if (isOverlay) {
+	if (overlay) {
 		isShowingOverlayPopper.value = true;
 	}
 }
@@ -65,12 +69,12 @@ function onHidePopper() {
 </script>
 
 <template>
-	<div class="fireside-header" :class="{ '-overlay': isOverlay }">
+	<AppTheme class="fireside-header" :class="{ '-overlay': overlay }" :force-dark="overlay">
 		<template v-if="fireside">
 			<div class="-fireside-title">
 				<h2
 					class="sans-margin-top"
-					:class="{ h3: Screen.isXs, 'sans-margin-bottom': isOverlay }"
+					:class="{ h3: Screen.isXs, 'sans-margin-bottom': dense }"
 				>
 					<small class="-subtitle">
 						<router-link
@@ -148,21 +152,32 @@ function onHidePopper() {
 
 					{{ ' ' }}
 
-					<AppFiresideSettingsPopper @show="onShowPopper" @hide="onHidePopper">
+					<AppFiresideSettingsPopper
+						:overlay="overlay"
+						@show="onShowPopper"
+						@hide="onHidePopper"
+					>
 						<div class="-stats-btn">
-							<AppButton icon="ellipsis-v" circle sparse solid />
+							<AppButton
+								icon="ellipsis-v"
+								circle
+								sparse
+								solid
+								:trans="overlay"
+								:overlay="overlay"
+							/>
 						</div>
 					</AppFiresideSettingsPopper>
 				</div>
 			</div>
 		</template>
-	</div>
+	</AppTheme>
 </template>
 
 <style lang="stylus" scoped>
 .-overlay
 	*
-		text-shadow: 1px 1px 3px rgba($black, 0.5)
+		fireside-overlay-text-shadow()
 
 		&:not(a)
 			color: white

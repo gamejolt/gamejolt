@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import AppFiresideSettingsPopper from './_settings-popper/settings-popper.vue';
+import AppFiresideSettingsPopper from './_settings-popper/AppFiresideSettingsPopper.vue';
 
 const emit = defineEmits({
 	'show-popper': () => true,

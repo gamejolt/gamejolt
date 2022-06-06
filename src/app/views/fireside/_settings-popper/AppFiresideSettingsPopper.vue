@@ -1,15 +1,18 @@
-<script lang="ts">
-import { Emit, Options, Vue } from 'vue-property-decorator';
-import { shallowSetup } from '../../../../utils/vue';
+<script lang="ts" setup>
+import { computed } from '@vue/reactivity';
+import { useRouter } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import { FiresideCommunity } from '../../../../_common/fireside/community/community.model';
 import { stopStreaming } from '../../../../_common/fireside/rtc/producer';
 import { setAudioPlayback } from '../../../../_common/fireside/rtc/user';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
 import AppPopper from '../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../_common/report/modal/modal.service';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { CommunityEjectFiresideModal } from '../../../components/community/eject-fireside/modal/modal.service';
 import {
 	copyFiresideLink,
@@ -22,169 +25,158 @@ import { CohostManageModal } from '../cohost/manage/manage-modal.service';
 import { FiresideChatMembersModal } from '../_chat-members/modal/modal.service';
 import { FiresideEditModal } from '../_edit-modal/edit-modal.service';
 
-@Options({
-	components: {
-		AppPopper,
-		AppCommunityThumbnailImg,
-	},
-})
-export default class AppFiresideSettingsPopper extends Vue {
-	c = shallowSetup(() => useFiresideController()!);
+const emit = defineEmits({
+	show: () => true,
+	hide: () => true,
+});
 
-	@Emit('show') emitShow() {}
-	@Emit('hide') emitHide() {}
+const router = useRouter();
 
-	get fireside() {
-		return this.c.fireside;
+const c = useFiresideController()!;
+const {
+	shouldShowStreamingOptions,
+	rtc,
+	canEdit,
+	isPersonallyStreaming,
+	chatUsers,
+	chatRoom,
+	canReport,
+	canManageCohosts,
+	canPublish,
+	canExtinguish,
+} = c;
+
+const fireside = computed(() => c.fireside);
+
+const manageableCommunities = computed(() =>
+	fireside.value?.community_links.filter(i => i.community.hasPerms('community-firesides') || [])
+);
+
+const hasMuteControls = computed(() => {
+	if (!rtc.value) {
+		return false;
 	}
 
-	get canEdit() {
-		return this.c.canEdit.value;
+	// We only want to show mute controls for remote listable streaming users.
+	const remoteUsers = rtc.value.listableStreamingUsers.filter(
+		rtcUser => !rtcUser.isLocal && (rtcUser.remoteVideoUser || rtcUser.remoteChatUser)
+	);
+	return remoteUsers.length > 0;
+});
+
+const shouldShowMuteAll = computed(() => {
+	if (!rtc.value) {
+		return false;
 	}
 
-	get manageableCommunities() {
-		if (!this.fireside) {
-			return [];
-		}
+	return !rtc.value.isEveryRemoteListableUsersMuted;
+});
 
-		return this.fireside.community_links.filter(i =>
-			i.community.hasPerms('community-firesides')
+function muteAll() {
+	return rtc.value?.listableStreamingUsers.forEach(i => setAudioPlayback(i, false));
+}
+
+function unmuteAll() {
+	return rtc.value?.listableStreamingUsers.forEach(i => setAudioPlayback(i, true));
+}
+
+function onClickShowChatMembers() {
+	if (!chatUsers.value || !chatRoom.value) {
+		return;
+	}
+
+	FiresideChatMembersModal.show(chatUsers.value, chatRoom.value);
+}
+
+function onClickEditStream() {
+	StreamSetupModal.show(c);
+}
+
+function onClickEditFireside() {
+	FiresideEditModal.show(c);
+}
+
+function onClickManageCohosts() {
+	CohostManageModal.show(c);
+}
+
+function onClickPublish() {
+	publishFireside(c);
+}
+
+function onClickCopyLink() {
+	copyFiresideLink(c, router);
+}
+
+function onClickStopStreaming() {
+	if (!rtc.value?.producer) {
+		return;
+	}
+
+	Popper.hideAll();
+	stopStreaming(rtc.value.producer);
+}
+
+function onClickExtinguish() {
+	extinguishFireside(c);
+}
+
+function onClickReport() {
+	ReportModal.show(fireside.value);
+}
+
+// DISABLED_ALLOW_FIRESIDES
+// async function toggleFeatured(community: FiresideCommunity) {
+// 	Popper.hideAll();
+// 	if (!community.community.hasPerms('community-firesides')) {
+// 		return;
+// 	}
+
+// 	const isFeaturing = !community.isFeatured;
+// 	try {
+// 		if (isFeaturing) {
+// 			await fireside.value.$feature();
+// 		} else {
+// 			await fireside.value.$unfeature();
+// 		}
+// 	} catch (_) {
+// 		showErrorGrowl({
+// 			message: isFeaturing
+// 				? $gettext('Something went wrong while featuring this fireside...')
+// 				: $gettext('Something went wrong while unfeaturing this fireside...'),
+// 		});
+// 	}
+// }
+
+async function ejectFireside(community: FiresideCommunity) {
+	Popper.hideAll();
+	if (!community.community.hasPerms('community-firesides')) {
+		return;
+	}
+
+	const result = await CommunityEjectFiresideModal.show(community, fireside.value);
+	if (!result) {
+		return;
+	}
+
+	try {
+		const response = await Api.sendRequest(
+			`/web/communities/manage/eject-fireside/${community.id}`,
+			result
 		);
-	}
-
-	get shouldShowStreamSettings() {
-		return this.c.shouldShowStreamingOptions.value;
-	}
-
-	get hasMuteControls() {
-		if (!this.c.rtc.value) {
-			return false;
+		if (response.fireside) {
+			fireside.value.assign(response.fireside);
 		}
-
-		// We only want to show mute controls for remote listable streaming users.
-		const remoteUsers = this.c.rtc.value.listableStreamingUsers.filter(
-			rtcUser => !rtcUser.isLocal && (rtcUser.remoteVideoUser || rtcUser.remoteChatUser)
-		);
-		return remoteUsers.length > 0;
-	}
-
-	get isPersonallyStreaming() {
-		return this.c.isPersonallyStreaming.value;
-	}
-
-	get shouldShowMuteAll() {
-		if (!this.c.rtc.value) {
-			return false;
-		}
-
-		return !this.c.rtc.value.isEveryRemoteListableUsersMuted;
-	}
-
-	muteAll() {
-		return this.c.rtc.value?.listableStreamingUsers.forEach(i => setAudioPlayback(i, false));
-	}
-
-	unmuteAll() {
-		return this.c.rtc.value?.listableStreamingUsers.forEach(i => setAudioPlayback(i, true));
-	}
-
-	onClickShowChatMembers() {
-		if (!this.c.chatUsers.value || !this.c.chatRoom.value) {
-			return;
-		}
-
-		FiresideChatMembersModal.show(this.c.chatUsers.value, this.c.chatRoom.value);
-	}
-
-	onClickEditStream() {
-		StreamSetupModal.show(this.c);
-	}
-
-	onClickEditFireside() {
-		FiresideEditModal.show(this.c);
-	}
-
-	onClickManageCohosts() {
-		CohostManageModal.show(this.c);
-	}
-
-	onClickPublish() {
-		publishFireside(this.c);
-	}
-
-	onClickCopyLink() {
-		copyFiresideLink(this.c, this.$router);
-	}
-
-	onClickStopStreaming() {
-		if (!this.c.rtc.value?.producer) {
-			return;
-		}
-
-		Popper.hideAll();
-		stopStreaming(this.c.rtc.value.producer);
-	}
-
-	onClickExtinguish() {
-		extinguishFireside(this.c);
-	}
-
-	onClickReport() {
-		ReportModal.show(this.fireside);
-	}
-
-	async toggleFeatured(community: FiresideCommunity) {
-		Popper.hideAll();
-		if (!community.community.hasPerms('community-firesides')) {
-			return;
-		}
-
-		const isFeaturing = !community.isFeatured;
-		try {
-			if (isFeaturing) {
-				await this.fireside.$feature();
-			} else {
-				await this.fireside.$unfeature();
-			}
-		} catch (_) {
-			showErrorGrowl({
-				message: isFeaturing
-					? this.$gettext('Something went wrong while featuring this fireside...')
-					: this.$gettext('Something went wrong while unfeaturing this fireside...'),
-			});
-		}
-	}
-
-	async ejectFireside(community: FiresideCommunity) {
-		Popper.hideAll();
-		if (!community.community.hasPerms('community-firesides')) {
-			return;
-		}
-
-		const result = await CommunityEjectFiresideModal.show(community, this.fireside);
-		if (!result) {
-			return;
-		}
-
-		try {
-			const response = await Api.sendRequest(
-				`/web/communities/manage/eject-fireside/${community.id}`,
-				result
-			);
-			if (response.fireside) {
-				this.fireside.assign(response.fireside);
-			}
-		} catch (_) {
-			showErrorGrowl({
-				message: this.$gettext('Something went wrong while ejecting this fireside...'),
-			});
-		}
+	} catch (_) {
+		showErrorGrowl({
+			message: $gettext('Something went wrong while ejecting this fireside...'),
+		});
 	}
 }
 </script>
 
 <template>
-	<AppPopper popover-class="fill-darkest" @show="emitShow" @hide="emitHide">
+	<AppPopper popover-class="fill-darkest" @show="() => emit('show')" @hide="() => emit('hide')">
 		<slot />
 
 		<template #popover>
@@ -214,7 +206,7 @@ export default class AppFiresideSettingsPopper extends Vue {
 					<AppTranslate>Chat Members</AppTranslate>
 				</a>
 
-				<a v-if="c.canReport.value" class="list-group-item has-icon" @click="onClickReport">
+				<a v-if="canReport" class="list-group-item has-icon" @click="onClickReport">
 					<AppJolticon icon="flag" />
 					<AppTranslate>Report Fireside</AppTranslate>
 				</a>
@@ -225,7 +217,7 @@ export default class AppFiresideSettingsPopper extends Vue {
 				</a>
 
 				<a
-					v-if="c.canManageCohosts.value"
+					v-if="canManageCohosts"
 					class="list-group-item has-icon"
 					@click="onClickManageCohosts"
 				>
@@ -233,7 +225,7 @@ export default class AppFiresideSettingsPopper extends Vue {
 					<AppTranslate>Manage Hosts</AppTranslate>
 				</a>
 
-				<template v-if="shouldShowStreamSettings">
+				<template v-if="shouldShowStreamingOptions">
 					<a class="list-group-item has-icon" @click="onClickEditStream">
 						<AppJolticon icon="broadcast" />
 						<AppTranslate v-if="isPersonallyStreaming">Stream Settings</AppTranslate>
@@ -241,7 +233,7 @@ export default class AppFiresideSettingsPopper extends Vue {
 					</a>
 				</template>
 
-				<template v-if="c.canPublish.value">
+				<template v-if="canPublish">
 					<hr />
 					<a class="list-group-item has-icon" @click="onClickPublish">
 						<AppJolticon icon="notifications" highlight />
@@ -249,7 +241,7 @@ export default class AppFiresideSettingsPopper extends Vue {
 					</a>
 				</template>
 
-				<template v-if="isPersonallyStreaming || c.canExtinguish.value">
+				<template v-if="isPersonallyStreaming || canExtinguish">
 					<hr />
 
 					<a
@@ -262,7 +254,7 @@ export default class AppFiresideSettingsPopper extends Vue {
 					</a>
 
 					<a
-						v-if="c.canExtinguish.value"
+						v-if="canExtinguish"
 						class="list-group-item has-icon"
 						@click="onClickExtinguish"
 					>

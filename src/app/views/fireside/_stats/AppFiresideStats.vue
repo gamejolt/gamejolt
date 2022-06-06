@@ -1,14 +1,10 @@
-<script lang="ts">
-import { setup, Vue } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
-import { shallowSetup } from '../../../../utils/vue';
-import AppCard from '../../../../_common/card/AppCard.vue';
+<script lang="ts" setup>
+import AppButton from '../../../../_common/button/AppButton.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
-import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import {
 	extendFireside,
 	publishFireside,
@@ -17,41 +13,23 @@ import {
 import { illEndOfFeed } from '../../../img/ill/illustrations';
 import AppFiresideShare from '../_share/share.vue';
 
-@Options({
-	components: {
-		AppIllustration,
-		AppProgressBar,
-		AppCard,
-		AppScrollScroller,
-		AppShareCard,
-		AppFiresideShare,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppFiresideStats extends Vue {
-	commonStore = setup(() => useCommonStore());
+const c = useFiresideController()!;
+const {
+	isDraft,
+	isStreaming,
+	expiresProgressValue,
+	totalDurationText,
+	expiresDurationText,
+	canPublish,
+	canExtend,
+} = c;
 
-	c = shallowSetup(() => useFiresideController()!);
+function onClickPublish() {
+	publishFireside(c);
+}
 
-	readonly illEndOfFeed = illEndOfFeed;
-
-	get user() {
-		return this.commonStore.user;
-	}
-
-	get fireside() {
-		return this.c.fireside;
-	}
-
-	onClickPublish() {
-		publishFireside(this.c);
-	}
-
-	onClickExtend() {
-		extendFireside(this.c);
-	}
+function onClickExtend() {
+	extendFireside(c);
 }
 </script>
 
@@ -60,33 +38,30 @@ export default class AppFiresideStats extends Vue {
 		<AppScrollScroller thin>
 			<AppIllustration :src="illEndOfFeed" />
 
-			<template v-if="!c.isDraft.value">
-				<template v-if="!c.isStreaming.value">
-					<div v-if="c.expiresProgressValue.value !== null" class="-burnout-bar">
-						<AppProgressBar :percent="c.expiresProgressValue.value" thin />
+			<template v-if="!isDraft">
+				<template v-if="!isStreaming">
+					<div v-if="expiresProgressValue !== undefined" class="-burnout-bar">
+						<AppProgressBar :percent="expiresProgressValue" thin />
 					</div>
 					<div v-else class="-burnout-bar-placeholder" />
 				</template>
 
-				<div v-if="c.totalDurationText.value" class="text-center">
+				<div v-if="totalDurationText" class="text-center">
 					<span><AppTranslate>Fireside active for:</AppTranslate></span>
 					<span>
-						<b>{{ c.totalDurationText.value }}</b>
+						<b>{{ totalDurationText }}</b>
 					</span>
 				</div>
 
-				<div
-					v-if="!c.isStreaming.value && c.expiresDurationText.value"
-					class="text-center -burnout-timer"
-				>
+				<div v-if="!isStreaming && expiresDurationText" class="text-center -burnout-timer">
 					<span><AppTranslate>Fire burns out in:</AppTranslate></span>
 					<span>
-						<b>{{ c.expiresDurationText.value }}</b>
+						<b>{{ expiresDurationText }}</b>
 					</span>
 				</div>
 			</template>
 
-			<template v-if="c.canPublish.value">
+			<template v-if="canPublish">
 				<AppButton
 					v-app-tooltip.bottom="$gettext(`Make your fireside public`)"
 					block
@@ -105,7 +80,7 @@ export default class AppFiresideStats extends Vue {
 				</p>
 			</template>
 
-			<template v-if="!c.isDraft.value && !c.isStreaming.value && c.canExtend.value">
+			<template v-if="!isDraft && !isStreaming && canExtend">
 				<AppButton
 					v-app-tooltip.bottom="$gettext(`Extend the duration of your fireside`)"
 					block

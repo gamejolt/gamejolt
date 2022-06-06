@@ -104,7 +104,8 @@ const form: FormController<ChatRoom> = createForm({
 });
 
 const backgroundForm: FormController<FormBackground> = createForm({
-	loadUrl: `/web/chat/rooms/backgrounds/${room.value.id}`,
+	// TODO(fireside-redesign) remove condition later
+	loadUrl: room.value.isFiresideRoom ? undefined : `/web/chat/rooms/backgrounds/${room.value.id}`,
 	onLoad(payload) {
 		backgrounds.value = Background.populate(payload.backgrounds);
 		roomBackgroundId.value = payload.roomBackgroundId || null;
@@ -255,7 +256,9 @@ async function leaveRoom() {
 				</AppForm>
 			</template>
 
+			<!-- TODO(fireside-redesign) remove condition later -->
 			<AppForm
+				v-if="!room.isFiresideRoom"
 				:controller="backgroundForm"
 				:forced-is-loading="isSettingBackground || isLoadingBackgrounds"
 				@changed="backgroundForm.submit"

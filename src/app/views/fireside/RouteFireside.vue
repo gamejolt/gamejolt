@@ -11,6 +11,7 @@ import AppExpand from '../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../_common/filters/number';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
+import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../_common/loading/loading.vue';
 import { Meta } from '../../../_common/meta/meta-service';
 import { vAppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
@@ -19,6 +20,7 @@ import AppPopper from '../../../_common/popper/popper.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppStickerTarget from '../../../_common/sticker/target/target.vue';
+import AppTheme from '../../../_common/theme/AppTheme.vue';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
@@ -36,7 +38,7 @@ import AppFiresideChatMembers from './_chat-members/AppFiresideChatMembers.vue';
 import AppFiresideHeader from './_header/AppFiresideHeader.vue';
 import AppFiresideHostList from './_host-list/host-list.vue';
 import AppFiresideShare from './_share/share.vue';
-import AppFiresideStats from './_stats/stats.vue';
+import AppFiresideStats from './_stats/AppFiresideStats.vue';
 import AppFiresideStream from './_stream/stream.vue';
 
 const FiresideThemeKey = 'fireside';
@@ -132,38 +134,41 @@ const shouldShowTitleControls = computed(() => {
 });
 
 // TODO(chat-backgrounds) remove debug code
+const debugBackground = new Background({
+	id: 20,
+	scaling: 'tile',
+	media_item: {
+		id: 12613538,
+		type: 'background',
+		parent_id: 20,
+		hash: 'fpxmwtga',
+		filename: 'tangerine-drop-fpxmwtga.png',
+		filetype: 'image/png',
+		is_animated: false,
+		width: 800,
+		height: 800,
+		filesize: 180391,
+		crop_start_x: null,
+		crop_start_y: null,
+		crop_end_x: null,
+		crop_end_y: null,
+		avg_img_color: 'ffa438',
+		img_has_transparency: false,
+		added_on: 1648832412000,
+		status: 'active',
+		img_url: 'https://i.gjcdn.net/data/backgrounds/20/media/tangerine-drop-fpxmwtga.png',
+		mediaserver_url: 'https://m.gjcdn.net/background/800/20-fpxmwtga-v4.webp',
+		mediaserver_url_webm: null,
+		mediaserver_url_mp4: null,
+		video_card_url_mp4: null,
+	},
+});
+const showDebugBackground = ref(true);
+
 const background = computed(
 	() =>
-		new Background({
-			id: 20,
-			scaling: 'tile',
-			media_item: {
-				id: 12613538,
-				type: 'background',
-				parent_id: 20,
-				hash: 'fpxmwtga',
-				filename: 'tangerine-drop-fpxmwtga.png',
-				filetype: 'image/png',
-				is_animated: false,
-				width: 800,
-				height: 800,
-				filesize: 180391,
-				crop_start_x: null,
-				crop_start_y: null,
-				crop_end_x: null,
-				crop_end_y: null,
-				avg_img_color: 'ffa438',
-				img_has_transparency: false,
-				added_on: 1648832412000,
-				status: 'active',
-				img_url:
-					'https://i.gjcdn.net/data/backgrounds/20/media/tangerine-drop-fpxmwtga.png',
-				mediaserver_url: 'https://m.gjcdn.net/background/800/20-fpxmwtga-v4.webp',
-				mediaserver_url_webm: null,
-				mediaserver_url_mp4: null,
-				video_card_url_mp4: null,
-			},
-		})
+		c.value?.chatRoom.value?.background ||
+		(showDebugBackground.value ? debugBackground : undefined)
 );
 
 const overlayText = computed(() => !!background.value);
@@ -300,6 +305,7 @@ function onIsPersonallyStreamingChanged() {
 					:show-controls="shouldShowTitleControls"
 					:has-chat="!shouldShowChatMembers"
 					:has-chat-stats="false && shouldShowChatMemberStats"
+					:overlay="overlayText"
 				/>
 				<div v-if="!c.isStreaming.value" class="-split" />
 			</template>
@@ -311,7 +317,7 @@ function onIsPersonallyStreamingChanged() {
 				}"
 			>
 				<div v-if="shouldShowFiresideStats" class="-leading">
-					<AppFiresideStats />
+					<AppFiresideStats :overlay="overlayText" />
 				</div>
 
 				<div
@@ -509,7 +515,7 @@ function onIsPersonallyStreamingChanged() {
 					</AppExpand>
 
 					<div v-if="c.status.value === 'joined'" class="-chat-wrapper">
-						<div class="-chat-window">
+						<div class="-chat-window-container">
 							<!-- TODO(fireside-redesign) Add this replacement for the input when there's no authed user. -->
 							<!-- <div v-if="!user" class="-login fill-backdrop">
 								<div class="alert">
@@ -522,11 +528,13 @@ function onIsPersonallyStreamingChanged() {
 							</div> -->
 							<AppChatWindow
 								v-if="c.chatRoom.value"
+								class="-chat-window"
 								:room="c.chatRoom.value"
 								hide-add-members
 								hide-close
 								full-sidebar
 								:overlay="!!background"
+								unset-bg-color
 							>
 								<template #title>
 									<div class="-members">
@@ -547,16 +555,36 @@ function onIsPersonallyStreamingChanged() {
 					v-if="shouldShowChatMembers && c.chatUsers.value && c.chatRoom.value"
 					class="-trailing"
 				>
-					<div class="-chat-members">
-						<!-- TODO(big-pp-event) might want to filter out chat-users to exclude unlisted hosts here -->
-						<AppFiresideChatMembers
-							:chat-users="c.chatUsers.value"
-							:chat-room="c.chatRoom.value"
-						/>
+					<div
+						class="-chat-members"
+						:class="{
+							'-overlay': overlayText,
+						}"
+					>
+						<AppTheme :force-dark="overlayText">
+							<!-- TODO(big-pp-event) might want to filter out chat-users to exclude unlisted hosts here -->
+							<AppFiresideChatMembers
+								:chat-users="c.chatUsers.value"
+								:chat-room="c.chatRoom.value"
+							/>
+						</AppTheme>
 					</div>
 				</div>
 			</div>
 		</AppFiresideContainer>
+
+		<!-- TODO(fireside-redesign) remove debug code -->
+		<div
+			:style="{
+				position: 'absolute',
+				left: '4px',
+				bottom: '4px',
+			}"
+		>
+			<AppButton overlay @click="showDebugBackground = !showDebugBackground">
+				(Toggle Background)
+			</AppButton>
+		</div>
 	</AppBackground>
 </template>
 
@@ -569,6 +597,22 @@ function onIsPersonallyStreamingChanged() {
 	left: var(--shell-left)
 	right: var(--shell-right)
 	z-index: $zindex-shell-pane-under
+
+.-overlay
+	*
+		fireside-overlay-text-shadow()
+
+		&:not(a)
+			color: white
+
+.-chat-window
+	change-bg-rgba(var(--theme-bg-rgb), 0.25)
+
+	::v-deep(.chat-window-send)
+		change-bg(bg)
+
+	::v-deep(.content-editor-form-control)
+		change-bg(bg-offset)
 
 .-fireside
 	width: 100%
@@ -613,9 +657,6 @@ function onIsPersonallyStreamingChanged() {
 	.-chat
 		max-width: unset !important
 
-	.-chat-window
-		border-radius: 0
-
 .-leading
 .-chat
 .-trailing
@@ -651,9 +692,6 @@ function onIsPersonallyStreamingChanged() {
 	flex: 3 0
 	position: relative
 	overflow: visible !important
-
-	::v-deep(.chat-window-send)
-		change-bg(bg)
 
 .-members
 	font-family: $font-family-heading
@@ -792,7 +830,7 @@ function onIsPersonallyStreamingChanged() {
 			margin-left: -($grid-gutter-width / 2)
 			margin-right: -($grid-gutter-width / 2)
 
-.-chat-window
+.-chat-window-container
 	position: absolute
 	top: 0
 	right: 0
@@ -801,15 +839,6 @@ function onIsPersonallyStreamingChanged() {
 	display: flex
 	flex-direction: column
 	overflow: hidden
-
-.-chat-header
-	change-bg('bg-backdrop')
-
-.-chat-window-output
-	flex: auto
-
-.-chat-window-input
-	background-color: unquote('rgba(var(--theme-bg-subtle-rgb), 0.45)')
 
 .-chat-members
 	display: flex
