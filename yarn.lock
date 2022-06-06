@@ -1049,10 +1049,17 @@ acorn@^8.4.1, acorn@^8.7.0:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.7.0.tgz#90951fde0f8f09df93549481e5fc141445b791cf"
   integrity sha512-V/LGr1APy+PXIwKebEWrkZPwoeoF+w1jiOBUmuxuiUIaOHtob8Qc9BTrYo7VuI5fR8tqsy+buA2WFooR5olqvQ==
 
-agora-rtc-sdk-ng@4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/agora-rtc-sdk-ng/-/agora-rtc-sdk-ng-4.5.0.tgz#3d4ea890fe2f18df4d398298424c76ac985c4bd7"
-  integrity sha512-A93m5xkPkqnCx4J768FSj6mcgeaKkDCDUJVi+nnOSANlJ9GN75Bn6SleNwkbEB47PuecBnWqNBwrzuII2fDIkw==
+agora-rtc-sdk-ng@4.11.1:
+  version "4.11.1"
+  resolved "https://registry.yarnpkg.com/agora-rtc-sdk-ng/-/agora-rtc-sdk-ng-4.11.1.tgz#d63accd6a678ea4e17748f431919bc5aa9b1f7f1"
+  integrity sha512-BUr0DK4Uq13lzsULVldp15sJYDTeDfDao9T6thsSQkT2jSTTQvuC01vz2H8/eA32ZGhsAeTaL2UcsULDbCkplg==
+  dependencies:
+    agora-rte-extension "^1.0.22"
+
+agora-rte-extension@^1.0.22:
+  version "1.0.23"
+  resolved "https://registry.yarnpkg.com/agora-rte-extension/-/agora-rte-extension-1.0.23.tgz#54a7215fd2cdcf2553d83570530950054f1e59a6"
+  integrity sha512-X2cGBg+L5ZJIFU91qvMASvRsBfg1HXTktVG3YROw9wxHsILSI7jgF9R9XraLc3fNX/UjovaYAlUW+hiJe0v6Xw==
 
 ajv@^6.10.0, ajv@^6.12.4:
   version "6.12.6"
@@ -1148,10 +1155,10 @@ array-union@^2.1.0:
   resolved "https://registry.yarnpkg.com/array-union/-/array-union-2.1.0.tgz#b798420adbeb1de828d84acd8a2e23d3efe85e8d"
   integrity sha512-HGyxoOTYUyCM6stUe6EJgnd4EoewAI7zMdfqO+kGjnlZmBDz/cR5pf8r/cR4Wq60sL/p0IkcjUEEPwS3GFrIyw==
 
-asg-prebuilt@0.1.5:
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/asg-prebuilt/-/asg-prebuilt-0.1.5.tgz#30c695c249843ef6dbb9846736bc2db857dac28b"
-  integrity sha512-cLx7YTd0YuowNc2ZX0p6q/pQxZU600s1z1Q3+eAe8HkcpTgi+CFtFQDRm99e7cTKdVAN13C5Qz/RqQMEQ9FKlw==
+asg-prebuilt@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/asg-prebuilt/-/asg-prebuilt-0.2.0.tgz#4c4ff7c21ccf757d75bfb0b1b5bc7fe7cfb25672"
+  integrity sha512-pWPtuCd+3u4le6TCaYFjkqHeRVH1T/mps8NKt5minRM/Pz9m+cSSkC0MjfzUbmBZBuZyxXSZL0QSjyZaIMNRpQ==
   dependencies:
     prebuild-install "7.1.0"
 

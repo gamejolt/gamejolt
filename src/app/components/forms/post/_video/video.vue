@@ -39,6 +39,8 @@ export const enum VideoStatus {
 	PROCESSING = 'processing',
 	/** The video upload and processing is completed and the video can be viewed */
 	COMPLETE = 'complete',
+	/** The video upload encountered some error */
+	ERROR = 'error',
 }
 
 class Wrapper extends BaseForm<FormModel> {}
@@ -74,6 +76,8 @@ export default class AppFormPostVideo
 	videoProvider = FiresidePostVideo.PROVIDER_GAMEJOLT;
 	isDropActive = false;
 	uploadCancelToken: AbortController | null = null;
+	hasVideoProcessingError = false;
+	videoProcessingErrorMsg = '';
 
 	readonly FiresidePostVideo = FiresidePostVideo;
 	readonly formatNumber = formatNumber;
@@ -138,9 +142,14 @@ export default class AppFormPostVideo
 
 	get videoStatus() {
 		if (this.uploadedVideo) {
+			if (this.hasVideoProcessingError) {
+				return VideoStatus.ERROR;
+			}
+
 			if (this.uploadedVideo.is_processing) {
 				return VideoStatus.PROCESSING;
 			}
+
 			return VideoStatus.COMPLETE;
 		}
 
@@ -173,6 +182,14 @@ export default class AppFormPostVideo
 		this.maxAspect = $payload.maxAspect;
 		this.minAspect = $payload.minAspect;
 		this.allowedFiletypes = $payload.allowedFiletypes;
+
+		const progress = $payload.progress;
+		if (progress && progress.status === 'error') {
+			this.hasVideoProcessingError = true;
+			this.videoProcessingErrorMsg =
+				progress.reason ||
+				this.$gettext('We could not process your video for some reason. Try again later.');
+		}
 	}
 
 	async onSubmit() {
@@ -282,23 +299,17 @@ export default class AppFormPostVideo
 		this.emitVideoChange(new FiresidePostVideo(video));
 	}
 
-	onProcessingError(payload: any) {
-		if (payload.reason) {
-			showErrorGrowl(
-				this.$gettextInterpolate(
-					'The server was unable to finish processing your video. Status: %{ reason }',
-					{ reason: (payload.reason as string).toUpperCase().replace('-', '_') }
-				)
-			);
-		} else {
-			showErrorGrowl(
-				this.$gettext(
-					'The server was unable to finish processing your video. Status: GENERIC_FAILURE'
-				)
-			);
-		}
+	onProcessingError(err: string | Error) {
+		if (typeof err === 'string') {
+			this.hasVideoProcessingError = true;
+			this.videoProcessingErrorMsg = err;
 
-		this.cancelUpload();
+			showErrorGrowl(this.$gettext('The server was unable to finish processing your video.'));
+			this.cancelUpload();
+		} else {
+			// The only cases where an actual error is emitted is on network error during polling.
+			// This does not necessarily mean an actual error during processing, so noop.
+		}
 	}
 
 	cancelUpload() {
@@ -330,6 +341,21 @@ export default class AppFormPostVideo
 				return;
 			}
 		}
+
+		// We need to tell the backend to remove the video even before saving,
+		// because otherwise when you click to add a new video, it'd still think
+		// the old video with the error exists - and would report the error
+		// status during this form's loadUrl.
+		//
+		// Normally we don't want to apply changes until the form is saved but
+		// in this case specifically I think it makes sense since the video is
+		// unpublishable anyways.
+		if (this.videoStatus === VideoStatus.ERROR) {
+			await this.post.$removeVideo();
+		}
+
+		this.hasVideoProcessingError = false;
+		this.videoProcessingErrorMsg = '';
 
 		this.cancelUpload();
 		this.emitDelete();
@@ -439,6 +465,9 @@ export default class AppFormPostVideo
 					@complete="onProcessingComplete"
 					@error="onProcessingError"
 				/>
+			</template>
+			<template v-else-if="videoStatus === 'error'">
+				<div class="alert alert-notice">{{ videoProcessingErrorMsg }}</div>
 			</template>
 			<template v-else-if="videoStatus === 'complete'">
 				<AppVideoPlayer

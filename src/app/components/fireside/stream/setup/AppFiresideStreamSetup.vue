@@ -503,7 +503,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 						<AppFormControlSelect
 							:disabled="isProducerBusy"
 							class="-mic-input"
-							:class="{ '-hide-indicator': !hasMicDevice }"
+							:class="{ '-control-with-meter': hasMicDevice }"
 						>
 							<option
 								:value="PRODUCER_UNSET_DEVICE"
@@ -542,6 +542,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 							class="-volume-meter"
 							:producer="localProducer"
 							type="mic"
+							attached-to-control
 						/>
 					</template>
 				</AppFormGroup>
@@ -685,6 +686,13 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 					<template #inline-control>
 						<AppFormControlToggle :disabled="isProducerBusy" />
 					</template>
+
+					<AppFiresideStreamSetupVolumeMeter
+						v-if="hasDesktopAudio"
+						class="-volume-meter"
+						:producer="localProducer"
+						type="desktop-audio"
+					/>
 				</AppFormGroup>
 			</template>
 
@@ -727,7 +735,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 							<AppFormControlSelect
 								:disabled="isProducerBusy"
 								class="-mic-input"
-								:class="{ '-hide-indicator': !hasDesktopAudioDevice }"
+								:class="{ '-control-with-meter': hasDesktopAudioDevice }"
 							>
 								<option
 									:value="PRODUCER_UNSET_DEVICE"
@@ -766,6 +774,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 								class="-volume-meter"
 								:producer="localProducer"
 								type="desktop-audio"
+								attached-to-control
 							/>
 
 							<AppExpand :when="hasDesktopAudioDevice">
@@ -846,19 +855,9 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 	font-size: 13px
 	z-index: 1
 
-.-mic-input
-	&:not(.-hide-indicator)
-		border-bottom-left-radius: 0
-		border-bottom-right-radius: 0
-		border-bottom: 0
-
-.-volume-meter
-	theme-prop('border-color', 'bg-subtle')
-	border-width: $border-width-base
-	border-style: solid
-	border-top: 0
-	border-bottom-left-radius: $input-border-radius
-	border-bottom-right-radius: $input-border-radius
+.-control-with-meter
+	border-bottom-left-radius: 0
+	border-bottom-right-radius: 0
 
 .-disabled
 	cursor: not-allowed

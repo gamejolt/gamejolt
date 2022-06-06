@@ -6,6 +6,8 @@ export class Client {
 	static startedSilently = false;
 
 	static init() {
+		this.getStartTime();
+
 		// Whether or not we started "hidden".
 		this.startedSilently = false;
 
@@ -30,6 +32,15 @@ export class Client {
 			console.info('Started explicitly. Force showing the window.');
 			this.show();
 		}
+	}
+
+	static getStartTime() {
+		let result = sessionStorage.getItem('client-start-time');
+		if (result === null) {
+			result = Date.now().toString();
+			sessionStorage.setItem('client-start-time', result);
+		}
+		return parseInt(result);
 	}
 
 	/**
