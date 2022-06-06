@@ -175,20 +175,15 @@ function onHidePopper() {
 	display: flex
 	align-items: center
 
-	&-text
+	.-fireside-title-text
 	h2
 		text-overflow()
 		flex: auto
 
-	&-member-stats
-		flex: none
-		margin-left: 12px
-		margin-right: 24px
-
-	&-controls
-		flex: none
-		margin-left: 12px
-		white-space: nowrap
+.-fireside-title-controls
+	flex: none
+	margin-left: 12px
+	white-space: nowrap
 
 .-subtitle
 	*
@@ -203,14 +198,14 @@ function onHidePopper() {
 	display: inline-block
 	position: relative
 
-	&-warn
-		change-bg('bg-offset')
-		rounded-corners()
-		position: absolute
-		left: -8px
-		top: -8px
-		pointer-events: none
-		padding: 2px
+.-stats-btn-warn
+	change-bg('bg-offset')
+	rounded-corners()
+	position: absolute
+	left: -8px
+	top: -8px
+	pointer-events: none
+	padding: 2px
 
 .-tag
 	margin-left: 4px

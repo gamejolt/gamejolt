@@ -144,9 +144,6 @@ const effectiveEdgePadding = computed(() => {
 	flex-basis: auto
 	display: inline-flex
 
-.-leading
-	justify-content: flex-start
-
 .-title
 	font-size: 20px
 	font-family: $font-family-heading
@@ -156,8 +153,11 @@ const effectiveEdgePadding = computed(() => {
 	margin-left: auto
 	justify-content: flex-end
 
+.-actions
+	margin-left: auto
+
 .-shrink
-	flex-basis: 0
+	flex-basis: 0 !important
 
 for i in 0..3
 	.-elevate-{i}

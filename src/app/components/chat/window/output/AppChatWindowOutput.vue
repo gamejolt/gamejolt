@@ -86,6 +86,14 @@ const shouldShowNewMessagesButton = computed(() => {
 	return messages.value[messages.value.length - 1].logged_on > latestFrozenTimestamp.value;
 });
 
+const background = computed(() => {
+	if (room.value.isFiresideRoom) {
+		// Fireside backgrounds are handled in the fireside route.
+		return undefined;
+	}
+	return room.value.background;
+});
+
 useEventSubscription(onNewChatMessage, async message => {
 	// When the user sent a message, we want the chat to scroll all the way down
 	// to show that message.
@@ -293,7 +301,7 @@ function _updateMaxContentWidth(width: number) {
 	trigger when the send box changes size or when the window changes--and we
 	need to autoscroll if the content changes within the scroller.
 	-->
-	<AppBackground class="chat-window-output" :background="room.background" darken>
+	<AppBackground class="chat-window-output" :background="background" darken>
 		<div ref="widthWatcher" class="-width-watcher" />
 
 		<AppScrollScroller
@@ -309,7 +317,7 @@ function _updateMaxContentWidth(width: number) {
 				<div v-if="shouldShowIntro" class="-intro">
 					<AppIllustration
 						:src="illNoChat"
-						:class="{ '-illustration-overlay': !!room.background }"
+						:class="{ '-illustration-overlay': !!background }"
 					>
 						<AppTranslate v-if="room.isPmRoom">
 							Your friend is still loading. Encourage them with a message!
@@ -363,7 +371,6 @@ function _updateMaxContentWidth(width: number) {
 
 <style lang="stylus" scoped>
 .chat-window-output
-	change-bg(bg-offset)
 	position: relative
 	height: 100%
 	width: 100%

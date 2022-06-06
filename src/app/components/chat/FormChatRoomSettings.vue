@@ -145,9 +145,11 @@ const canEditTitle = computed(() => !room.value.isPmRoom && isOwner.value);
 
 const canEditBackground = computed(() => backgrounds.value.length > 0);
 
-const shouldShowLeave = computed(() => !room.value.isPmRoom);
+const shouldShowLeave = computed(() => !room.value.isPmRoom && !room.value.isFiresideRoom);
 
 const hasLoadedBackgrounds = computed(() => backgroundForm.isLoadedBootstrapped);
+
+const hasNotificationSettings = computed(() => !room.value.isFiresideRoom);
 
 const membersPreview = computed(() => {
 	if (showMembersPreview.value) {
@@ -278,22 +280,26 @@ async function leaveRoom() {
 				<AppSpacer vertical :scale="6" />
 			</template>
 
-			<AppForm
-				:controller="notificationLevelForm"
-				:forced-is-loading="notificationLevelForm.isProcessing ? true : undefined"
-				@changed="notificationLevelForm.submit"
-			>
-				<AppFormGroup
-					name="level"
-					class="-pad sans-margin-bottom"
-					:label="$gettext(`Notifications`)"
-					small
+			<template v-if="hasNotificationSettings">
+				<AppForm
+					:controller="notificationLevelForm"
+					:forced-is-loading="notificationLevelForm.isProcessing ? true : undefined"
+					@changed="notificationLevelForm.submit"
 				>
-					<AppFormControlStackedButtonGroup :options="notificationSettings" />
-				</AppFormGroup>
-			</AppForm>
+					<AppFormGroup
+						name="level"
+						class="-pad sans-margin-bottom"
+						:label="$gettext(`Notifications`)"
+						small
+					>
+						<AppFormControlStackedButtonGroup :options="notificationSettings" />
+					</AppFormGroup>
+				</AppForm>
+			</template>
 
-			<template v-if="showMembersPreview && membersPreview.length > 0">
+			<template
+				v-if="hasNotificationSettings && showMembersPreview && membersPreview.length > 0"
+			>
 				<AppSpacer vertical :scale="6" />
 				<hr />
 				<AppSpacer vertical :scale="6" />

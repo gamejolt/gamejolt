@@ -35,7 +35,9 @@ import AppShellTopNav from './top-nav/AppShellTopNav.vue';
 		AppShellCbar,
 		AppMinbar,
 		AppShellBanner,
-		AppChatWindow: defineAsyncComponent(() => import('../chat/window/AppChatWindow.vue')),
+		AppChatWindowContainer: defineAsyncComponent(
+			() => import('../chat/window/AppChatWindowContainer.vue')
+		),
 		AppStickerLayer,
 		AppClientBase,
 		AppClientShell,
@@ -196,7 +198,10 @@ export default class AppShell extends Vue {
 		<AppShellSidebar v-if="hasSidebar" />
 		<AppShellBanner v-if="!isShellHidden" />
 
-		<AppChatWindow v-if="visibleLeftPane === 'chat' && chat && chat.room" :room="chat.room" />
+		<AppChatWindowContainer
+			v-if="visibleLeftPane === 'chat' && chat && chat.room"
+			:room="chat.room"
+		/>
 
 		<div v-if="GJ_IS_DESKTOP_APP" key="shell-client">
 			<AppClientBase />

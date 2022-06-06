@@ -126,6 +126,7 @@ export class AppFiresideContainer extends Vue {
 		if (!this.$slots.default) {
 			throw Error('AppFiresideContainer requires a default slot.');
 		}
+		console.log('frickinh hello???', this.controller);
 		this.controller.onRetry.value = this.onRetry;
 	}
 
