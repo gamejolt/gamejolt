@@ -22,4 +22,8 @@ export class ChatUser {
 	get url() {
 		return `/@${this.username}`;
 	}
+
+	get isStaff() {
+		return this.permission_level > 0;
+	}
 }

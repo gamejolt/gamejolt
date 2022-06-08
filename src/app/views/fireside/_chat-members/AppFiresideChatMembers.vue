@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppChatMemberList from '../../../components/chat/member-list/AppChatMemberList.vue';
 import { ChatRoom } from '../../../components/chat/room';
@@ -25,14 +24,15 @@ defineProps({
 			{{ ' ' }}
 			<span class="badge">{{ chatUsers.count }}</span>
 		</h3>
-		<AppScrollScroller class="-chat-members-scroller">
+		<div class="-chat-members-container">
 			<AppChatMemberList
 				v-if="chatUsers"
+				class="-chat-members"
 				:users="chatUsers.collection"
 				:room="chatRoom"
 				hide-filter
 			/>
-		</AppScrollScroller>
+		</div>
 	</div>
 </template>
 
@@ -40,8 +40,12 @@ defineProps({
 .-chat-members
 	overflow: hidden
 
-.-chat-members-scroller
-	flex-grow: 1
+.-chat-members-container
+	flex: auto
+	min-height: 0
 	// Scrollbar breathing room
 	padding-right: 4px
+
+.-chat-members
+	height: 100%
 </style>

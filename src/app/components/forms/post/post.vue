@@ -49,10 +49,10 @@ import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.se
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppVideoEmbed from '../../../../_common/video/embed/embed.vue';
+import AppFormBackground from '../background/AppFormBackground.vue';
 import AppFormsCommunityPillAdd from '../community/_pill/add/add.vue';
 import AppFormsCommunityPill from '../community/_pill/community-pill.vue';
 import AppFormsCommunityPillIncomplete from '../community/_pill/incomplete/incomplete.vue';
-import AppFormPostBackground from './AppFormPostBackground.vue';
 import AppFormPostMedia from './_media/media.vue';
 import AppFormPostVideo, { VideoStatus } from './_video/video.vue';
 
@@ -103,7 +103,7 @@ class Wrapper extends BaseForm<FormPostModel> {}
 		AppScrollScroller,
 		AppFormPostVideo,
 		AppExpand,
-		AppFormPostBackground,
+		AppFormBackground,
 		AppTheme,
 	},
 	directives: {
@@ -595,9 +595,7 @@ export default class FormPost
 
 		this.setField('poll_duration', this.pollDuration * 60); // site-api expects duration in seconds.
 
-		if (this.formModel.background && this.enabledBackground) {
-			this.setField('background_id', this.formModel.background.id);
-		} else {
+		if (!this.enabledBackground) {
 			this.setField('background_id', null);
 		}
 
@@ -680,7 +678,7 @@ export default class FormPost
 
 		this.setField('media', []);
 		this.setField('videos', []);
-		this.onBackgroundChanged();
+		this.onBackgroundChanged(null);
 	}
 
 	toggleLong() {
@@ -937,8 +935,11 @@ export default class FormPost
 		this.disableAttachments();
 	}
 
-	onBackgroundChanged(background?: Background) {
-		this.setField('background', background);
+	onBackgroundChanged(backgroundId: number | null) {
+		this.setField('background_id', backgroundId);
+		const background = backgroundId
+			? this.backgrounds.find(i => i.id === backgroundId)
+			: undefined;
 		this.emitBackgroundChange(background);
 	}
 }
@@ -1021,11 +1022,19 @@ export default class FormPost
 					<AppTranslate>Select background</AppTranslate>
 				</AppFormLegend>
 
-				<AppFormPostBackground
-					:backgrounds="backgrounds"
-					:post="formModel"
-					@background-change="onBackgroundChanged"
-				/>
+				<AppFormGroup
+					name="background_id"
+					class="sans-margin-bottom"
+					hide-label
+					optional
+					:label="$gettext(`Background`)"
+				>
+					<AppFormBackground
+						:backgrounds="backgrounds"
+						:background="formModel.background"
+						@changed="onBackgroundChanged"
+					/>
+				</AppFormGroup>
 			</template>
 		</div>
 

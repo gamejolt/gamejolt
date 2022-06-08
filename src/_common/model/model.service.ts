@@ -3,7 +3,7 @@ import { Api, RequestOptions } from '../api/api.service';
 /**
  * Helper type that looks like our model classes.
  */
-export type ModelClassType<T> = { new (data?: T): T };
+export type ModelClassType<T> = { new (data?: any): T };
 
 export type ModelSaveRequestOptions = RequestOptions & { data?: any };
 

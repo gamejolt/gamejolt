@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, StyleValue, watch } from 'vue';
+import { computed, PropType, ref, StyleValue, toRefs, watch } from 'vue';
 import { ImgHelper } from '../img/helper/helper-service';
 import AppMediaItemBackdrop from '../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { Background } from './background.model';
@@ -19,23 +19,36 @@ const props = defineProps({
 		type: Object as PropType<StyleValue>,
 		default: undefined,
 	},
+	fadeOpacity: {
+		type: Number,
+		default: 0.05,
+	},
 });
 
-const mediaItem = computed(() => props.background?.media_item);
+const { background, darken, bleed, backgroundStyle, fadeOpacity } = toRefs(props);
+
+const mediaItem = computed(() => background?.value?.media_item);
 const hasMedia = computed(() => !!mediaItem.value);
 
 const isLoaded = ref(false);
 
-if (!import.meta.env.SSR) {
+const loadedBackground = ref<Background>();
+
+if (import.meta.env.SSR) {
+	loadedBackground.value = background?.value;
+} else {
 	watch(
 		() => mediaItem.value?.mediaserver_url,
 		async imgUrl => {
 			if (!imgUrl) {
+				loadedBackground.value = undefined;
 				return;
 			}
+			const loadingBackground = background?.value;
 			isLoaded.value = false;
 			await ImgHelper.loaded(imgUrl);
 			isLoaded.value = true;
+			loadedBackground.value = loadingBackground;
 		},
 		{ immediate: true }
 	);
@@ -52,16 +65,30 @@ if (!import.meta.env.SSR) {
 			:style="backgroundStyle"
 		>
 			<div v-if="background" class="-stretch anim-fade-in">
-				<div
-					class="-stretch"
-					:style="{
-						'background-image': background.cssBackgroundImage,
-						'background-repeat': background.cssBackgroundRepeat,
-						'background-size': background.cssBackgroundSize,
-						'background-position': background.cssBackgroundPosition,
-					}"
-				/>
-				<div v-if="darken" class="-stretch -fade" />
+				<Transition name="fade">
+					<div
+						v-if="loadedBackground"
+						:key="loadedBackground.id"
+						class="-stretch anim-fade-in"
+						:style="{
+							backgroundImage: loadedBackground.cssBackgroundImage,
+							backgroundRepeat: loadedBackground.cssBackgroundRepeat,
+							backgroundSize: loadedBackground.cssBackgroundSize,
+							backgroundPosition: loadedBackground.cssBackgroundPosition,
+						}"
+					/>
+				</Transition>
+
+				<template v-if="darken">
+					<div class="-fade-top" />
+					<div
+						class="-stretch"
+						:style="{
+							backgroundColor: `rgba(0, 0, 0, ${fadeOpacity})`,
+						}"
+					/>
+					<div class="-fade-bottom" />
+				</template>
 			</div>
 		</AppMediaItemBackdrop>
 
@@ -99,11 +126,24 @@ if (!import.meta.env.SSR) {
 	right: 0
 	bottom: 0
 
-.-fade
-	background-image: linear-gradient(to bottom, rgba(0,0,0,0.025), rgba(0,0,0,0.15))
+.-fade-top
+.-fade-bottom
+	position: absolute
+	left: 0
+	right: 0
+	height: calc(min(80px, 50%))
 	background-repeat: no-repeat
 	background-size: cover
+
+.-fade-top
+	top: 0
+	background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.25),  rgba(0, 0, 0, 0))
 	background-position: top
+
+.-fade-bottom
+	bottom: 0
+	background-image: linear-gradient(to top, rgba(0, 0, 0, 0.25),  rgba(0, 0, 0, 0))
+	background-position: bottom
 
 .-inner
 	z-index: 1

@@ -18,7 +18,7 @@ import {
 } from '../client';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
-import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
+import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
 
 @Options({
 	components: {
@@ -211,8 +211,8 @@ export default class AppChatUserPopover extends Vue {
 				<AppChatUserOnlineStatus
 					class="-status-bubble"
 					:is-online="isOnline"
-					:size="16"
-					:absolute="false"
+					:size="12"
+					:segment-width="1.5"
 				/>
 				<span>{{ isOnline ? $gettext(`Online`) : $gettext(`Offline`) }}</span>
 			</div>
@@ -298,27 +298,27 @@ export default class AppChatUserPopover extends Vue {
 		&:hover
 			filter: brightness(0.6) contrast(1.1)
 
-		&-circle
-			width: 80px
-			height: 80px
-			top: -4px
-			left: -4px
-			position: absolute
-			z-index: 1
-			border-radius: 50%
-			background-color: var(--theme-darkest)
+	.-avatar-circle
+		width: 80px
+		height: 80px
+		top: -4px
+		left: -4px
+		position: absolute
+		z-index: 1
+		border-radius: 50%
+		background-color: var(--theme-darkest)
 
-		&-img
-			position: relative
-			border-radius: 50%
+	.-avatar-img
+		position: relative
+		border-radius: 50%
 
-			&:hover
-				elevate-hover-2()
+		&:hover
+			elevate-hover-2()
 
-		&-container
-			display: flex
-			justify-content: center
-			margin-bottom: 10px
+	.-avatar-container
+		display: flex
+		justify-content: center
+		margin-bottom: 10px
 
 	.-status
 		margin-top: 8px
@@ -327,11 +327,14 @@ export default class AppChatUserPopover extends Vue {
 		font-size: $font-size-tiny
 		font-weight: bold
 		justify-content: center
+		align-items: center
 		user-select: none
+		line-height: 1
 
-		&-icon
-			vertical-align: middle
+	.-status-icon
+		vertical-align: middle
 
-		&-bubble
-			margin-right: 4px
+	.-status-bubble
+		margin-right: 4px
+		height: 100%
 </style>

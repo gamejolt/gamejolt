@@ -28,8 +28,8 @@ import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
 import { ChatStore, ChatStoreKey } from '../../components/chat/chat-store';
-import AppChatWindowOutput from '../../components/chat/window/output/output.vue';
-import AppChatWindowSend from '../../components/chat/window/send/send.vue';
+import AppChatWindowOutput from '../../components/chat/window/output/AppChatWindowOutput.vue';
+import AppChatWindowSend from '../../components/chat/window/send/AppChatWindowSend.vue';
 import { AppFiresideContainer } from '../../components/fireside/container/container';
 import {
 	createFiresideController,
@@ -556,8 +556,6 @@ export default class RouteFireside extends BaseRouteComponent {
 							ref="output"
 							class="-chat-window-output fill-backdrop"
 							:room="c.chatRoom.value"
-							:messages="chatMessages"
-							:queued-messages="chatQueuedMessages"
 						/>
 
 						<div v-if="!user" class="-login fill-backdrop">
@@ -635,17 +633,17 @@ export default class RouteFireside extends BaseRouteComponent {
 	&.-is-streaming
 		max-width: none
 
-	&-column
-		display: grid
-		grid-template-rows: calc(min(33vh, calc((100vw / 1.7777)))) 1fr
-		grid-template-columns: 100%
-		padding: 0
+.-body-column
+	display: grid
+	grid-template-rows: calc(min(33vh, calc((100vw / 1.7777)))) 1fr
+	grid-template-columns: 100%
+	padding: 0
 
-		.-chat
-			max-width: unset !important
+	.-chat
+		max-width: unset !important
 
-		.-chat-window
-			border-radius: 0
+	.-chat-window
+		border-radius: 0
 
 .-leading
 .-chat
@@ -804,6 +802,7 @@ export default class RouteFireside extends BaseRouteComponent {
 			margin-right: -($grid-gutter-width / 2)
 
 .-chat-window
+	elevate-1()
 	position: absolute
 	top: 0
 	right: 0
@@ -820,8 +819,11 @@ export default class RouteFireside extends BaseRouteComponent {
 		border-top-right-radius: 0
 		border-bottom-right-radius: 0
 
-	&-output
-		flex: auto
+.-chat-window-output
+	flex: auto
+
+.-chat-window-input
+	background-color: unquote('rgba(var(--theme-bg-subtle-rgb), 0.45)')
 
 .-chat-members
 	display: flex

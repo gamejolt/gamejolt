@@ -97,6 +97,7 @@ const styles = computed(() => {
 			${copyVar('fg-muted', 'light')}
 			${copyVar('link', 'backlight')}
 			${copyVar('link-hover', 'black')}
+			${copyVar('primary', 'link')}
 
 			${genVar('highlight', _theme.darkHighlight_, true)}
 			${genVar('backlight', _theme.darkBacklight_, true)}
@@ -111,6 +112,7 @@ const styles = computed(() => {
 			${copyVar('fg-muted', 'light', true)}
 			${genVar('link', _theme.darkHighlight_, true)}
 			${copyVar('link-hover', 'white', true)}
+			${copyVar('primary', 'link', true)}
 		}
 	`;
 
@@ -131,6 +133,7 @@ const styles = computed(() => {
 				${darkVar('fg-muted')}
 				${darkVar('link')}
 				${darkVar('link-hover')}
+				${darkVar('primary')}
 			}
 		`;
 	}

@@ -1,19 +1,23 @@
-import { arrayRemove } from '../../../utils/array';
+import { toRaw } from 'vue';
+import { arrayRemove, numberSort, stringSortRaw } from '../../../utils/array';
 import { ChatClient, isUserOnline } from './client';
+import { CHAT_ROLES } from './role';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
+
+type RoomType = 'friend' | 'room' | 'fireside';
 
 export class ChatUserCollection {
 	static readonly TYPE_FRIEND = 'friend';
 	static readonly TYPE_ROOM = 'room';
+	static readonly TYPE_FIRESIDE = 'fireside';
 
-	chat: ChatClient | null = null;
 	onlineCount = 0;
 	offlineCount = 0;
 
 	private collection_: ChatUser[] = [];
-	private byId_: Record<number, ChatUser> = {};
-	private byRoomId_: Record<number, ChatUser> = {};
+	private byId_ = new Map<number, ChatUser>();
+	private byRoomId_ = new Map<number, ChatUser>();
 	private doingWork_ = false;
 
 	get count() {
@@ -24,7 +28,7 @@ export class ChatUserCollection {
 		return this.collection_;
 	}
 
-	constructor(public type: 'friend' | 'room', users: any[] = [], chatClient?: ChatClient) {
+	constructor(public chat: ChatClient, public type: RoomType, users: any[] = []) {
 		if (users && users.length) {
 			for (const user of users) {
 				const userModel = new ChatUser(user);
@@ -40,31 +44,28 @@ export class ChatUserCollection {
 
 			this.recollect();
 		}
-
-		if (chatClient) {
-			this.chat = chatClient;
-		}
 	}
 
 	private indexUser(user: ChatUser) {
-		this.byId_[user.id] = user;
+		this.byId_.set(user.id, user);
 		if (user.room_id !== 0) {
-			this.byRoomId_[user.room_id] = user;
+			this.byRoomId_.set(user.room_id, user);
 		}
 	}
 
 	get(input: number | ChatUser): ChatUser | undefined {
 		const userId = typeof input === 'number' ? input : input.id;
-		return this.byId_[userId];
+		return this.byId_.get(userId);
+	}
+
+	has(input: number | ChatUser) {
+		const userId = typeof input === 'number' ? input : input.id;
+		return this.byId_.has(userId);
 	}
 
 	getByRoom(input: number | ChatRoom): ChatUser | undefined {
 		const roomId = typeof input === 'number' ? input : input.id;
-		return this.byRoomId_[roomId];
-	}
-
-	has(input: number | ChatUser) {
-		return !!this.get(input);
+		return this.byRoomId_.get(roomId);
 	}
 
 	add(user: ChatUser) {
@@ -94,9 +95,9 @@ export class ChatUserCollection {
 		}
 
 		arrayRemove(this.collection_, i => i === user);
-		delete this.byId_[user.id];
+		this.byId_.delete(user.id);
 		if (user.room_id !== 0) {
-			delete this.byRoomId_[user.room_id];
+			this.byRoomId_.delete(user.room_id);
 		}
 
 		if (user.isOnline) {
@@ -159,9 +160,11 @@ export class ChatUserCollection {
 		}
 
 		if (this.type === ChatUserCollection.TYPE_FRIEND) {
-			sortCollection(this.chat, this.collection_, 'lastMessage');
+			this.collection_ = sortCollection(this.chat, this.collection_, 'lastMessage');
+		} else if (this.type === ChatUserCollection.TYPE_FIRESIDE) {
+			this.collection_ = sortCollection(this.chat, this.collection_, 'role');
 		} else {
-			sortCollection(this.chat, this.collection_, 'title');
+			this.collection_ = sortCollection(this.chat, this.collection_, 'title');
 		}
 	}
 
@@ -182,40 +185,75 @@ export class ChatUserCollection {
 	}
 }
 
-function sortCollection(
-	chat: ChatClient | null,
+const RoleSorts = {
+	owner: 0,
+	moderator: 1,
+	staff: 2,
+	user: 3,
+} as const;
+
+export function sortCollection(
+	chat: ChatClient,
 	collection: ChatUser[],
-	mode: 'lastMessage' | 'title'
+	mode: 'lastMessage' | 'title' | 'role'
 ) {
 	switch (mode) {
+		case 'role': {
+			return toRaw(collection)
+				.map(user => ({
+					user,
+					role: RoleSorts[user.isStaff ? 'staff' : getRoleSort(user)],
+					isFriend: chat.friendsList.has(user.id),
+					lowercaseDisplayName: user.display_name.toLowerCase(),
+				}))
+				.sort((a, b) => {
+					const roleDiff = numberSort(a.role, b.role);
+					if (roleDiff !== 0) {
+						return roleDiff;
+					}
+
+					if (a.isFriend !== b.isFriend) {
+						return a.isFriend ? -1 : 1;
+					}
+
+					return stringSortRaw(a.lowercaseDisplayName, b.lowercaseDisplayName);
+				})
+				.map(i => i.user);
+		}
+
 		case 'lastMessage':
-			sortByLastMessageOn(collection);
-			break;
+			return sortByLastMessageOn([...collection]);
 
 		case 'title':
-			collection.sort((a, b) => {
-				if (chat) {
-					const aSort = getSortVal(chat, a);
-					const bSort = getSortVal(chat, b);
-					if (aSort > bSort) {
+			return toRaw(collection)
+				.map(user => ({
+					user,
+					sort: getSortVal(chat, user),
+					lowercaseDisplayName: user.display_name.toLowerCase(),
+				}))
+				.sort((a, b) => {
+					if (a.sort > b.sort) {
 						return 1;
-					} else if (aSort < bSort) {
+					} else if (a.sort < b.sort) {
 						return -1;
+					} else {
+						return stringSortRaw(a.lowercaseDisplayName, b.lowercaseDisplayName);
 					}
-				}
-
-				const aName = a.display_name.toLowerCase();
-				const bName = b.display_name.toLowerCase();
-				if (aName > bName) {
-					return 1;
-				} else if (aName < bName) {
-					return -1;
-				}
-
-				return 0;
-			});
-			break;
+				})
+				.map(i => i.user);
 	}
+}
+
+function getRoleSort(user: ChatUser | null | undefined): CHAT_ROLES {
+	if (!user) {
+		return 'user';
+	}
+
+	if (user.role === 'owner') {
+		return 'owner';
+	}
+
+	return user.role ?? 'user';
 }
 
 function getSortVal(chat: ChatClient, user: ChatUser) {

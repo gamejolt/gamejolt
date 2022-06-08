@@ -145,7 +145,7 @@ export function initChatClient(chat: ChatClient) {
 function reset(chat: ChatClient) {
 	chat.connected = false;
 	chat.currentUser = null;
-	chat.friendsList = new ChatUserCollection(ChatUserCollection.TYPE_FRIEND);
+	chat.friendsList = new ChatUserCollection(chat, ChatUserCollection.TYPE_FRIEND, []);
 	chat.populated = false;
 	chat.pollingRoomId = -1;
 
@@ -367,6 +367,7 @@ async function joinUserChannel(chat: ChatClient, userId: number) {
 
 						chat.currentUser = new ChatUser(response.user);
 						chat.friendsList = new ChatUserCollection(
+							chat,
 							ChatUserCollection.TYPE_FRIEND,
 							response.friends || []
 						);
@@ -583,7 +584,8 @@ export function queueChatMessage(
 }
 
 export function setTimeSplit(chat: ChatClient, roomId: number, message: ChatMessage) {
-	message.combine = false;
+	message.showAvatar = false;
+	message.showMeta = true;
 	message.dateSplit = false;
 
 	let messages = chat.messages[roomId];
@@ -601,26 +603,41 @@ export function setTimeSplit(chat: ChatClient, roomId: number, message: ChatMess
 		messageIndex = messages.length;
 	}
 
+	let previousMessage: ChatMessage | null = null;
+
 	if (messageIndex > 0) {
-		const previousMessage = messages[messageIndex - 1];
+		previousMessage = messages[messageIndex - 1];
+		const nextMessage = messages[messageIndex + 1];
+
+		if (!nextMessage) {
+			message.showAvatar = true;
+		} else {
+			message.showAvatar = nextMessage.user.id !== message.user.id;
+		}
 
 		// Combine if the same user and within 5 minutes of their previous message.
 		if (
 			message.user.id === previousMessage.user.id &&
 			message.logged_on.getTime() - previousMessage.logged_on.getTime() <= 5 * 60 * 1000
 		) {
-			message.combine = true;
+			message.showMeta = false;
 		}
 
 		// If the date is different than the date for the previous
 		// message, we want to split it in the view.
 		if (message.logged_on.toDateString() !== previousMessage.logged_on.toDateString()) {
 			message.dateSplit = true;
-			message.combine = false;
+			message.showAvatar = true;
+			message.showMeta = true;
 		}
 	} else {
 		// First message should show date.
 		message.dateSplit = true;
+		message.showAvatar = true;
+	}
+
+	if (!message.showMeta && previousMessage) {
+		previousMessage.showAvatar = false;
 	}
 }
 
@@ -660,9 +677,9 @@ function setupRoom(chat: ChatClient, room: ChatRoom, messages: ChatMessage[]) {
 		// Set the room info
 		chat.messages[room.id] = [];
 		chat.roomMembers[room.id] = new ChatUserCollection(
-			ChatUserCollection.TYPE_ROOM,
-			room.members || [],
-			chat
+			chat,
+			room.isFiresideRoom ? ChatUserCollection.TYPE_FIRESIDE : ChatUserCollection.TYPE_ROOM,
+			room.members || []
 		);
 
 		// Only set the room as "the" active room when it's not instanced.
@@ -868,20 +885,38 @@ export function removeMessage(chat: ChatClient, room: ChatRoom, msgId: number) {
 	chat.roomChannels[room.id].socketChannel.push('message_remove', { id: msgId });
 }
 
-export function editMessage(chat: ChatClient, room: ChatRoom, message: ChatMessage) {
-	chat.roomChannels[room.id].socketChannel.push('message_update', {
-		content: message.content,
-		id: message.id,
+export function editMessage(
+	chat: ChatClient,
+	room: ChatRoom,
+	{ content, id }: { content: string; id: number }
+) {
+	chat.roomChannels[room.id].socketChannel.push('message_update', { content, id });
+}
+
+export function editChatRoomTitle(chat: ChatClient, room: ChatRoom, title: string) {
+	chat.roomChannels[room.id].socketChannel.push('update_title', {
+		title,
 	});
 }
 
-export function editChatRoomTitle(chat: ChatClient, title: string) {
-	const room = chat.room;
-	if (room) {
-		chat.roomChannels[room.id].socketChannel.push('update_title', {
-			title,
-		});
-	}
+export async function editChatRoomBackground(
+	chat: ChatClient,
+	room: ChatRoom,
+	backgroundId: number | null
+) {
+	return new Promise((resolve, reject) => {
+		chat.roomChannels[room.id].socketChannel
+			.push(
+				'update_background',
+				{
+					background_id: backgroundId,
+				},
+				5_000
+			)
+			.receive('ok', resolve)
+			.receive('error', reject)
+			.receive('timeout', reject);
+	});
 }
 
 export function startTyping(chat: ChatClient, room: ChatRoom) {

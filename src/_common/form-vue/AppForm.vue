@@ -220,16 +220,18 @@ export function createForm<T>({
 			return;
 		}
 
-		isLoaded.value = null;
-		if (!loadUrl.value) {
-			return;
-		}
+		await reload();
+	}
 
+	async function reload() {
+		isLoaded.value = null;
 		isLoaded.value = false;
 
-		const payload = await Api.sendRequest(loadUrl.value, loadData.value || undefined, {
-			detach: true,
-		});
+		const payload = loadUrl.value
+			? await Api.sendRequest(loadUrl.value, loadData.value || undefined, {
+					detach: true,
+			  })
+			: {};
 
 		isLoaded.value = true;
 		isLoadedBootstrapped.value = true;
@@ -360,6 +362,7 @@ export function createForm<T>({
 		valid,
 		invalid,
 		submit,
+		reload,
 		clearErrors,
 		setCustomError,
 		clearCustomError,
@@ -392,6 +395,7 @@ export interface FormController<T = any> {
 	readonly valid: boolean;
 	readonly invalid: boolean;
 	submit: () => Promise<boolean>;
+	reload: () => Promise<void>;
 	clearErrors: () => void;
 	setCustomError: (error: string) => void;
 	clearCustomError: (error: string) => void;
@@ -411,6 +415,11 @@ const props = defineProps({
 		type: Object as PropType<FormController>,
 		required: true,
 	},
+	/** Used to override the normal form loading state. */
+	forcedIsLoading: {
+		type: Boolean,
+		default: undefined,
+	},
 });
 
 const emit = defineEmits({
@@ -418,7 +427,7 @@ const emit = defineEmits({
 	changed: (_formModel: any) => true,
 });
 
-const { controller } = toRefs(props);
+const { controller, forcedIsLoading } = toRefs(props);
 
 // To support old forms.
 controller.value._override({
@@ -427,8 +436,14 @@ controller.value._override({
 
 provide(Key, controller.value);
 
-// Check specifically false so that "null" is correctly shown as loaded.
-const isLoaded = computed(() => controller.value.isLoaded !== false);
+const isLoaded = computed(() => {
+	if (typeof forcedIsLoading?.value === 'boolean') {
+		return !forcedIsLoading.value;
+	}
+
+	// Check specifically false so that "null" is correctly shown as loaded.
+	return controller.value.isLoaded !== false;
+});
 const isLoadedBootstrapped = computed(() => controller.value.isLoadedBootstrapped !== false);
 </script>
 
@@ -439,7 +454,7 @@ const isLoadedBootstrapped = computed(() => controller.value.isLoadedBootstrappe
 		do the loading fade so that the form doesn't completely disappear when
 		loading subsequent.
 		-->
-		<AppLoading v-if="!isLoadedBootstrapped" />
+		<AppLoading v-if="!isLoadedBootstrapped && !forcedIsLoading" />
 		<AppLoadingFade v-else :is-loading="!isLoaded">
 			<slot />
 		</AppLoadingFade>

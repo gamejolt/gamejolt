@@ -15,7 +15,8 @@ export class ChatMessage {
 	edited_on!: Date | null;
 	type!: ChatMessageType;
 
-	combine?: boolean;
+	showMeta?: boolean;
+	showAvatar?: boolean;
 	dateSplit?: boolean;
 
 	// Used for rendering.
@@ -39,6 +40,10 @@ export class ChatMessage {
 
 		if (data.user) {
 			this.user = new ChatUser(data.user);
+		}
+
+		if (this.showMeta === undefined) {
+			this.showMeta = false;
 		}
 	}
 

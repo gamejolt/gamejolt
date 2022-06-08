@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, provide } from 'vue';
+import { computed, PropType, provide } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
@@ -8,6 +8,7 @@ import { ContentHydrator } from '../content-hydrator';
 import {
 	ContentOwnerController,
 	ContentOwnerControllerKey,
+	ContentOwnerParentBounds,
 	createContentOwnerController,
 } from '../content-owner';
 import { AppContentViewerBaseComponent } from './components/base-component';
@@ -21,6 +22,9 @@ export default class AppContentViewer extends Vue {
 	@Prop({ type: String, required: true }) source!: string;
 	@Prop({ type: Boolean, default: false }) disableLightbox!: boolean;
 	@Prop(Object) displayRules?: ContentRules;
+
+	@Prop({ type: Object as PropType<ContentOwnerParentBounds> })
+	parentBounds?: ContentOwnerParentBounds;
 
 	// Gets provided down during [created].
 	controller!: ContentOwnerController;
@@ -49,6 +53,7 @@ export default class AppContentViewer extends Vue {
 			),
 			contentRules: computed(() => this.displayRules),
 			disableLightbox: computed(() => this.disableLightbox === true),
+			parentBounds: computed(() => this.parentBounds),
 		});
 
 		provide(ContentOwnerControllerKey, this.controller);

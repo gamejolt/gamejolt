@@ -70,6 +70,7 @@ export default class AppPlayerVolume extends Vue {
 			v-if="!Screen.isMobile && hasSlider"
 			class="-slider"
 			:percent="player.volume"
+			overlay
 			@scrub="onVolumeScrub"
 		/>
 	</div>
