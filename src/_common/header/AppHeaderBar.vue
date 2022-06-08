@@ -49,6 +49,7 @@ const effectiveTitleSpacing = computed(() => {
 
 	return Screen.isXs ? 12 : 16;
 });
+
 const effectiveEdgePadding = computed(() => {
 	if (typeof edgePadding?.value === 'number') {
 		return edgePadding.value;
@@ -151,6 +152,7 @@ const effectiveEdgePadding = computed(() => {
 	font-size: 20px
 	font-family: $font-family-heading
 	font-weight: 800
+	min-width: 0
 
 .-actions
 	margin-left: auto
