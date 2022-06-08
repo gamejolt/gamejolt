@@ -81,13 +81,13 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 
 		<template #trailing>
 			<span v-if="isOwner" v-app-tooltip="$gettext(`Room Owner`)">
-				<AppJolticon icon="crown" />
+				<AppJolticon class="-indicator-icon" icon="crown" />
 			</span>
 			<span v-else-if="isStaff" v-app-tooltip="$gettext(`Game Jolt Staff`)">
-				<AppJolticon icon="gamejolt" />
+				<AppJolticon class="-indicator-icon" icon="gamejolt" />
 			</span>
 			<span v-else-if="isModerator" v-app-tooltip="$gettext(`Moderator`)">
-				<AppJolticon icon="star" />
+				<AppJolticon class="-indicator-icon" icon="star" />
 			</span>
 		</template>
 
@@ -103,13 +103,6 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 	width: 100%
 	height: 100%
 
-.-group-icon
-	display: inline-flex
-	align-items: center
-	justify-content: center
-	vertical-align: middle
-	background-color: var(--theme-backlight)
-
-	.jolticon
-		color: var(--theme-backlight-fg) !important
+.-indicator-icon
+	color: var(--theme-primary)
 </style>

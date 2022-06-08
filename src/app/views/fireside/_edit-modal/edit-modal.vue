@@ -3,7 +3,7 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import { FiresideController } from '../../../components/fireside/controller/controller';
-import FormFiresideEdit from '../../../components/forms/fireside/edit/edit.vue';
+import FormFiresideEdit from '../../../components/forms/fireside/FormFiresideEdit.vue';
 
 @Options({
 	components: {
@@ -30,7 +30,7 @@ export default class AppFiresideEditModal extends mixins(BaseModal) {
 		</div>
 		<div class="modal-body">
 			<AppLoading v-if="!controller.fireside" />
-			<FormFiresideEdit v-else :model="controller.fireside" @submit="onFormSubmit" />
+			<FormFiresideEdit v-else :fireside="controller.fireside" @submit="onFormSubmit" />
 		</div>
 	</AppModal>
 </template>

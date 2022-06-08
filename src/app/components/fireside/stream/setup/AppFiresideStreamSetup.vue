@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, PropType, ref, watch } from 'vue';
 import { sleep } from '../../../../../utils/utils';
 import { MediaDeviceService } from '../../../../../_common/agora/media-device.service';
+import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { hasDesktopAudioCaptureSupport } from '../../../../../_common/fireside/rtc/device-capabilities';
@@ -652,14 +653,14 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 
 						<AppSpacer vertical :scale="2" />
 
-						<div class="-video-preview">
+						<AppAspectRatio class="-video-preview" :ratio="16 / 9">
 							<div ref="videoPreviewElem" class="-video-preview-portal" />
 							<div v-if="!hasWebcamDevice" class="-video-preview-text">
 								<span>
 									<AppTranslate>No video source selected</AppTranslate>
 								</span>
 							</div>
-						</div>
+						</AppAspectRatio>
 
 						<p class="help-block">
 							<AppTranslate>
@@ -830,7 +831,6 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 .-video-preview
 	position: relative
 	rounded-corners()
-	height: 300px
 	margin: auto
 	overflow: hidden
 	background-color: var(--theme-darkest)
@@ -851,6 +851,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 	display: flex
 	align-items: center
 	justify-content: center
+	color: white
 	font-weight: 700
 	font-size: 13px
 	z-index: 1

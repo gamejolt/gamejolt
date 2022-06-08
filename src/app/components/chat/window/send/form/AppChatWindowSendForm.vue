@@ -435,7 +435,7 @@ $-button-height = 40px
 		border-bottom: 1px solid var(--theme-bg-subtle)
 
 .-form-shifted
-		margin-bottom: 52px
+	margin-bottom: 52px
 
 .-top-indicators
 	overlay-text-shadow()

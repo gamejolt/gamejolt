@@ -1,17 +1,13 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { PropType } from 'vue';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
 import AppChatList from '../_list/AppChatList.vue';
 import AppChatMemberListItem from './AppChatMemberListItem.vue';
-</script>
-
-<script lang="ts" setup>
-type MemberListUsers = ChatUser[];
 
 defineProps({
 	users: {
-		type: Array as PropType<MemberListUsers>,
+		type: Array as PropType<ChatUser[]>,
 		required: true,
 	},
 	room: {
@@ -30,12 +26,10 @@ defineProps({
 
 <template>
 	<AppChatList :entries="users" :hide-filter="hideFilter">
-		<template #default="{ items }: { items: MemberListUsers }">
+		<template #default="{ item }">
 			<AppChatMemberListItem
-				v-for="item of items"
-				:key="item.id"
 				:room="room"
-				:user="item"
+				:user="(item as ChatUser)"
 				:horizontal-padding="horizontalPadding"
 			/>
 		</template>
