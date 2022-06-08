@@ -33,9 +33,7 @@ const roomId = computed(() =>
 );
 
 const user = computed(() => (item.value instanceof ChatUser ? item.value : null));
-
 const isActive = computed(() => chat.value.room?.id === roomId.value);
-
 const notificationsCount = computed(() => chat.value.notifications[roomId.value] ?? 0);
 
 const isOnline = computed(() => {

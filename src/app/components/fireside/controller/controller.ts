@@ -5,8 +5,10 @@ import {
 	markRaw,
 	provide,
 	reactive,
+	Ref,
 	ref,
-	shallowReactive,
+	shallowReadonly,
+	shallowRef,
 	watch,
 } from 'vue';
 import { Router } from 'vue-router';
@@ -72,12 +74,12 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 	/**
 	 * The hosts that are allowed to stream in the fireside.
 	 */
-	const hosts = ref([] as FiresideRTCHost[]);
+	const hosts = ref([]) as Ref<FiresideRTCHost[]>;
 
 	/**
 	 * Which hosts the current user is able to list.
 	 */
-	const listableHostIds = ref([] as number[]);
+	const listableHostIds = ref<number[]>([]);
 
 	const stickerTargetController = createStickerTargetController(fireside, undefined, {
 		isLive: true,
@@ -132,14 +134,14 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 
 	const rtc = ref<FiresideRTC>();
 	const status = ref<RouteStatus>('initial');
-	const onRetry = ref<() => void>();
+	const onRetry = shallowRef<() => void>();
 
 	const chat = ref<ChatClient>();
 
 	const gridChannel = ref<FiresideChannel>();
 	const gridDMChannel = ref<FiresideChannel>();
 	const chatChannel = ref<ChatRoomChannel>();
-	const expiryInterval = ref<NodeJS.Timer>();
+	const expiryInterval = shallowRef<NodeJS.Timer>();
 	const chatPreviousConnectedState = ref<boolean>();
 	const gridPreviousConnectedState = ref<boolean>();
 
@@ -456,7 +458,7 @@ export function createFiresideController(fireside: Fireside, options: Options = 
 		}
 	};
 
-	return shallowReactive({
+	return shallowReadonly({
 		fireside,
 		agoraStreamingInfo,
 		hosts,
