@@ -99,9 +99,11 @@ async function leaveRoom() {
 		@click="onClick"
 	>
 		<template #leading>
-			<img v-if="user" :src="user.img_avatar" />
-			<div v-else class="-group-icon">
-				<AppJolticon icon="users" />
+			<div class="-avatar">
+				<img v-if="user" class="-avatar-img" :src="user.img_avatar" />
+				<div v-else class="-avatar-icon">
+					<AppJolticon icon="users" />
+				</div>
 			</div>
 		</template>
 
@@ -145,9 +147,13 @@ async function leaveRoom() {
 </template>
 
 <style lang="stylus" scoped>
-.-group-icon
+.-avatar
+.-avatar-img
+.-avatar-icon
 	width: 100%
 	height: 100%
+
+.-avatar-icon
 	display: inline-flex
 	align-items: center
 	justify-content: center
