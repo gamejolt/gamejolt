@@ -59,10 +59,11 @@ make-button-size(size)
 	&:hover
 		change-bg('bi-bg', true)
 		theme-prop('border-color', 'bi-bg', true)
-		theme-prop('color', 'bi-fg', true)
 		text-decoration: none
 		cursor: pointer
 
+		&
+		.-icon
 		::v-deep(.jolticon-addon)
 		::v-deep(small)
 			theme-prop('color', 'bi-fg', true)
@@ -105,6 +106,12 @@ make-button-size(size)
 	margin: 0
 	cursor: pointer
 	vertical-align: middle
+
+.-icon-color-primary
+	color: var(--theme-primary)
+
+.-icon-color-notice
+	color: var(--theme-notice)
 
 .-badge
 	theme-prop('color', 'highlight')

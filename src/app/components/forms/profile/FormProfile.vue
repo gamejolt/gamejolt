@@ -100,7 +100,7 @@ const form: FormController<FormModel> = createForm({
 		const selectedPronounTagIds: number[] = [];
 
 		// Check formModel for existing pronoun dogtags we have selected.
-		for (const tag of form.formModel.dogtags) {
+		for (const tag of form.formModel.dogtags ?? []) {
 			for (const id of tag.ids) {
 				if (pronounDogtags.some(i => i.id == id)) {
 					selectedPronounTagIds.push(id);
@@ -231,7 +231,7 @@ function onThemeChanged() {
 			:label="$gettext(`Pronouns`)"
 			optional
 		>
-			<AppFormControlToggleButtonGroup>
+			<AppFormControlToggleButtonGroup multi>
 				<AppFormControlToggleButton
 					v-for="tag of pronounDogtags"
 					:key="tag.text"

@@ -15,8 +15,6 @@ import AppFiresideDesktopAudio from '../../../components/fireside/stream/AppFire
 import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';
 import AppFiresideVideoStats from '../../../components/fireside/stream/video-stats/video-stats.vue';
 import AppFiresideHeader from '../AppFiresideHeader.vue';
-import AppFiresideHostList from '../_host-list/host-list.vue';
-import AppFiresideHostThumbIndicator from '../_host-thumb/host-thumb-indicator.vue';
 
 const UIHideTimeout = 2000;
 const UIHideTimeoutMovement = 2000;
@@ -26,8 +24,6 @@ const UITransitionTime = 200;
 	components: {
 		AppFiresideDesktopAudio,
 		AppFiresideHeader,
-		AppFiresideHostList,
-		AppFiresideHostThumbIndicator,
 		AppFiresideStreamVideo,
 		AppFiresideVideoStats,
 		AppLoading,
@@ -50,12 +46,12 @@ export default class AppFiresideStream extends Vue {
 	drawerStore = shallowSetup(() => useDrawerStore());
 
 	private isHovered = false;
-	private _hideUITimer?: NodeJS.Timer;
 	private _ignorePointerTimer?: NodeJS.Timer;
 
 	readonly Screen = Screen;
 	readonly formatNumber = formatNumber;
 
+	hideUITimer: NodeJS.Timer | null = null;
 	streakTimer: NodeJS.Timer | null = null;
 	hasQueuedStreakAnimation = false;
 	shouldAnimateStreak = false;
@@ -90,7 +86,7 @@ export default class AppFiresideStream extends Vue {
 			this.c.isShowingOverlayPopper.value ||
 			this.showMutedIndicator ||
 			this.isHovered ||
-			this._hideUITimer
+			this.hideUITimer
 		);
 	}
 
@@ -235,19 +231,19 @@ export default class AppFiresideStream extends Vue {
 
 		this.isHovered = true;
 		this.clearHideUITimer();
-		this._hideUITimer = setTimeout(() => {
+		this.hideUITimer = setTimeout(() => {
 			this.isHovered = false;
 			this.clearHideUITimer();
 		}, delay);
 	}
 
 	private clearHideUITimer() {
-		if (!this._hideUITimer) {
+		if (!this.hideUITimer) {
 			return;
 		}
 
-		clearTimeout(this._hideUITimer);
-		this._hideUITimer = undefined;
+		clearTimeout(this.hideUITimer);
+		this.hideUITimer = null;
 	}
 
 	private startIgnoringPointer() {
@@ -312,7 +308,7 @@ export default class AppFiresideStream extends Vue {
 		<template v-else>
 			<div class="-overlay -visible-center">
 				<div class="-host-wrapper">
-					<AppFiresideHostThumbIndicator class="-host" :host="rtcUser" />
+					<!-- <AppFiresideHostThumbIndicator class="-host" :host="rtcUser" /> -->
 				</div>
 			</div>
 		</template>
@@ -388,15 +384,6 @@ export default class AppFiresideStream extends Vue {
 								</div>
 							</div>
 						</div>
-
-						<AppFiresideHostList
-							v-if="hasHosts"
-							class="-hosts"
-							hide-thumb-options
-							:show-playback="hasVideo"
-							@show-popper="onHostOptionsShow"
-							@hide-popper="onHostOptionsHide"
-						/>
 					</div>
 				</div>
 			</template>

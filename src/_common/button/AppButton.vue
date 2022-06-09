@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, useAttrs } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
-import AppJolticon from '../jolticon/AppJolticon.vue';
-import { Jolticon } from '../jolticon/AppJolticon.vue';
+import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
 
 const props = defineProps({
 	tag: {
@@ -44,6 +43,10 @@ const props = defineProps({
 	},
 	icon: {
 		type: String as PropType<Jolticon>,
+		default: undefined,
+	},
+	iconColor: {
+		type: String as PropType<'primary' | 'notice'>,
 		default: undefined,
 	},
 	badge: {
@@ -90,7 +93,13 @@ const ourTag = computed(() => {
 		:disabled="disabled === true ? 'disabled' : null"
 	>
 		<span v-if="badge" class="-badge">{{ badge }}</span>
-		<AppJolticon v-if="icon" class="-icon" :icon="icon" :big="lg" />
+		<AppJolticon
+			v-if="icon"
+			class="-icon"
+			:class="[iconColor ? `-icon-color-${iconColor}` : undefined]"
+			:icon="icon"
+			:big="lg"
+		/>
 		<slot />
 	</component>
 </template>

@@ -7,55 +7,17 @@ import AppStickerLiveReactions from '../../../_common/sticker/live-reactions/App
 import AppTheme from '../../../_common/theme/AppTheme.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { useFiresideController } from '../../components/fireside/controller/controller';
-import { StreamSetupModal } from '../../components/fireside/stream/setup/setup-modal.service';
-import { FiresideChatMembersModal } from './_chat-members/modal/modal.service';
+
 const props = defineProps({
-	showControls: {
-		type: Boolean,
-	},
-	hasChatStats: {
-		type: Boolean,
-	},
 	overlay: {
 		type: Boolean,
 	},
 });
 
-const { showControls, hasChatStats, overlay } = toRefs(props);
+const { overlay } = toRefs(props);
 
 const c = useFiresideController()!;
-const {
-	fireside,
-	chatUsers,
-	chatRoom,
-	isShowingOverlayPopper,
-	isDraft,
-	isPersonallyStreaming,
-	stickerTargetController,
-	shouldShowStreamingOptions,
-} = c;
-
-function onClickShowChatMembers() {
-	if (!chatUsers.value || !chatRoom.value) {
-		return;
-	}
-
-	FiresideChatMembersModal.show(chatUsers.value, chatRoom.value);
-}
-
-function onClickEditStream() {
-	StreamSetupModal.show(c);
-}
-
-function onShowPopper() {
-	if (overlay) {
-		isShowingOverlayPopper.value = true;
-	}
-}
-
-function onHidePopper() {
-	isShowingOverlayPopper.value = false;
-}
+const { fireside, isDraft, stickerTargetController } = c;
 </script>
 
 <template>

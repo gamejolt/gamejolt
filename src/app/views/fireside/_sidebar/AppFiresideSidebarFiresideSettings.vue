@@ -2,8 +2,8 @@
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppFiresideSettings from '../../../components/fireside/AppFiresideSettings.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
-import FormFiresideEdit from '../../../components/forms/fireside/FormFiresideEdit.vue';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 
 const emit = defineEmits({
@@ -12,7 +12,6 @@ const emit = defineEmits({
 });
 
 const c = useFiresideController()!;
-const { fireside, chatRoom } = c;
 </script>
 
 <template>
@@ -37,7 +36,7 @@ const { fireside, chatRoom } = c;
 
 		<template #body>
 			<div class="-pad">
-				<FormFiresideEdit v-if="chatRoom" :fireside="fireside" :room="chatRoom" />
+				<AppFiresideSettings :c="c" />
 			</div>
 		</template>
 	</AppFiresideSidebar>

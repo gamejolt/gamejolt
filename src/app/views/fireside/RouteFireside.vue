@@ -43,8 +43,7 @@ import {
 } from '../../components/fireside/controller/controller';
 import { illEndOfFeed, illMaintenance, illNoCommentsSmall } from '../../img/ill/illustrations';
 import AppFiresideHeader from './AppFiresideHeader.vue';
-import AppFiresideHostList from './_host-list/host-list.vue';
-import AppFiresideShare from './_share/share.vue';
+import AppFiresideBottomBar from './_bottom-bar/AppFiresideBottomBar.vue';
 import AppFiresideSidebarChat from './_sidebar/AppFiresideSidebarChat.vue';
 import AppFiresideSidebarFiresideSettings from './_sidebar/AppFiresideSidebarFiresideSettings.vue';
 import AppFiresideSidebarHosts from './_sidebar/AppFiresideSidebarHosts.vue';
@@ -168,9 +167,9 @@ createAppRoute({
 	onResolved({ payload }) {
 		Meta.description = payload.metaDescription;
 		Meta.fb = payload.fb || {};
-		Meta.fb.title = routeTitle;
+		Meta.fb.title = routeTitle.value;
 		Meta.twitter = payload.twitter || {};
-		Meta.twitter.title = routeTitle;
+		Meta.twitter.title = routeTitle.value;
 
 		const fireside = new Fireside(payload.fireside);
 		c.value ??= createFiresideController(fireside);
@@ -369,12 +368,21 @@ function onIsPersonallyStreamingChanged() {
 						</div>
 					</div>
 
-					<div v-if="c.rtc.value && shouldShowDesktopHosts" class="-hosts-padding">
-						<div class="-hosts">
-							<AppFiresideHostList />
-						</div>
+					<div v-if="c.rtc.value && shouldShowDesktopHosts" class="-bottom-bar-padding">
+						<AppFiresideBottomBar
+							@members="
+								sidebar === 'members' ? (sidebar = 'chat') : (sidebar = 'members')
+							"
+							@fireside-settings="
+								sidebar === 'fireside-settings'
+									? (sidebar = 'chat')
+									: (sidebar = 'fireside-settings')
+							"
+							@stream-settings="sidebar = 'stream-settings'"
+							@test-bg="showDebugBackground = !showDebugBackground"
+						/>
 
-						<AppFiresideShare v-if="!c.isDraft.value" class="-share" hide-heading />
+						<!-- <AppFiresideShare v-if="!c.isDraft.value" class="-share" hide-heading /> -->
 					</div>
 				</div>
 
@@ -509,62 +517,8 @@ function onIsPersonallyStreamingChanged() {
 					v-else-if="sidebar === 'stream-settings'"
 					@back="sidebar = 'chat'"
 				/>
-
-				<!-- <AppExpand v-if="!shouldShowDesktopHosts" :when="shouldShowMobileHosts">
-					<div class="-mobile-hosts">
-						<AppFiresideHostList hide-thumb-options />
-					</div>
-				</AppExpand> -->
-
-				<!-- <div v-if="c.status.value === 'joined'" class="-chat-wrapper"> -->
-				<!-- TODO(fireside-redesign) Add this replacement for the input when there's no authed user. -->
-				<!-- <div v-if="!user" class="-login fill-backdrop">
-								<div class="alert">
-									<p>
-										You must be
-										<a v-app-auth-required :href="loginUrl">logged in</a>
-										to Game Jolt to chat.
-									</p>
-								</div>
-							</div> -->
-				<!-- <AppChatWindow
-								v-if="c.chatRoom.value"
-								class="-chat-window"
-								:room="c.chatRoom.value"
-								hide-add-members
-								hide-close
-								full-sidebar
-								:overlay="!!background"
-								unset-bg-color
-							>
-								<template #title>
-									<div class="-members">
-										<span class="-members-count">
-											{{ formatNumber(c.chatUsers.value?.count ?? 0) }}
-										</span>
-										<span class="-members-text">
-											<AppTranslate> Members </AppTranslate>
-										</span>
-									</div>
-								</template>
-							</AppChatWindow> -->
-				<!-- </div> -->
 			</div>
 		</AppFiresideContainer>
-
-		<!-- TODO(fireside-redesign) remove debug code -->
-		<div
-			:style="{
-				position: 'absolute',
-				left: '4px',
-				bottom: '4px',
-			}"
-		>
-			<AppButton overlay @click="showDebugBackground = !showDebugBackground">
-				Toggle BG
-			</AppButton>
-			<AppButton overlay @click="sidebar = 'fireside-settings'">Settings</AppButton>
-		</div>
 	</AppBackground>
 </template>
 
@@ -728,7 +682,7 @@ function onIsPersonallyStreamingChanged() {
 	.-body-column &
 		border-radius: 0
 
-.-hosts-padding
+.-bottom-bar-padding
 	flex: none
 	width: 100%
 	padding-top: 8px

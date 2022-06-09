@@ -9,12 +9,12 @@ import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../_common/form-vue/AppFormGroup.vue';
 import AppFormStickySubmit from '../../../_common/form-vue/AppFormStickySubmit.vue';
-import AppFormControlStackedButtonGroup, {
-	StackedButtonOption,
-} from '../../../_common/form-vue/controls/stacked-button/AppFormControlStackedButtonGroup.vue';
+import AppFormControlToggleButton from '../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButton.vue';
+import AppFormControlToggleButtonGroup from '../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../_common/form-vue/validators';
 import AppLoading from '../../../_common/loading/loading.vue';
 import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
+import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
@@ -156,7 +156,7 @@ const membersPreview = computed(() => {
 	return [];
 });
 
-const notificationSettings = computed<StackedButtonOption[]>(() => {
+const notificationSettings = computed(() => {
 	const settings = [];
 
 	settings.push({
@@ -289,7 +289,17 @@ async function leaveRoom() {
 					:label="$gettext(`Notifications`)"
 					small
 				>
-					<AppFormControlStackedButtonGroup :options="notificationSettings" />
+					<AppFormControlToggleButtonGroup
+						:direction="Screen.isMobile ? 'row' : 'column'"
+					>
+						<AppFormControlToggleButton
+							v-for="{ label, value } of notificationSettings"
+							:key="label"
+							:value="value"
+						>
+							{{ label }}
+						</AppFormControlToggleButton>
+					</AppFormControlToggleButtonGroup>
 				</AppFormGroup>
 			</AppForm>
 

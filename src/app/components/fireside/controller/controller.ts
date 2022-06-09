@@ -44,12 +44,11 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
 import { createStickerTargetController } from '../../../../_common/sticker/target/target-controller';
 import { commonStore } from '../../../../_common/store/common-store';
-import { Translate } from '../../../../_common/translate/translate.service';
+import { $gettext, Translate } from '../../../../_common/translate/translate.service';
 import { ChatClient } from '../../chat/client';
 import { ChatRoomChannel } from '../../chat/room-channel';
 import { ChatUserCollection } from '../../chat/user-collection';
 import { FiresideChannel } from '../../grid/fireside-channel';
-import { FiresidePublishModal } from '../publish-modal/publish-modal.service';
 
 export type RouteStatus =
 	| 'initial' // Initial status when route loads.
@@ -536,18 +535,19 @@ export function toggleStreamVideoStats(c: FiresideController) {
 	c.rtc.value.shouldShowVideoStats = !c.rtc.value.shouldShowVideoStats;
 }
 
-export async function publishFireside(c: FiresideController) {
-	if (!c.fireside || c.status.value !== 'joined' || !c.isDraft.value) {
+export async function publishFireside({ fireside, status, isDraft }: FiresideController) {
+	if (!fireside || status.value !== 'joined' || !isDraft.value) {
 		return;
 	}
 
-	const { fireside } = c;
-	const ret = await FiresidePublishModal.show({ fireside });
-	if (ret?.doPublish !== true) {
+	const ret = await ModalConfirm.show(
+		$gettext(`Do you want to publish this fireside for the world to see?`)
+	);
+	if (!ret) {
 		return;
 	}
 
-	await c.fireside.$publish({ autoFeature: ret.autoFeature });
+	await fireside.$publish({ autoFeature: true });
 	showSuccessGrowl(Translate.$gettext(`Your fireside is live!`));
 }
 

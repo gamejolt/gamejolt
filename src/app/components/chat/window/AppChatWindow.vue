@@ -146,6 +146,7 @@ function onMobileAppBarBack() {
 				<AppHeaderBar
 					:key="room.id"
 					class="-header"
+					:title-size="Screen.isXs ? 'large' : 'default'"
 					:automatically-imply-leading="false"
 					:elevation="2"
 				>
@@ -280,7 +281,7 @@ function onMobileAppBarBack() {
 						<div v-if="Screen.isDesktop" class="-sidebar-shadow" />
 
 						<div class="-sidebar-container">
-							<AppHeaderBar v-if="Screen.isMobile" center-title>
+							<AppHeaderBar v-if="Screen.isMobile" title-size="large" center-title>
 								<template #leading>
 									<AppButton
 										icon="chevron-left"

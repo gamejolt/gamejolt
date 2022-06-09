@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { computed, PropType, shallowReactive, toRefs } from 'vue';
 import { configFiresideMicVolume } from '../../../../_common/config/config.service';
 import { onFiresideStickerPlaced } from '../../../../_common/drawer/drawer-store';
@@ -19,10 +19,8 @@ import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';
-import AppFiresideHostThumbIndicator from './host-thumb-indicator.vue';
-</script>
+import AppFiresideBottomBarHostAvatar from './AppFiresideBottomBarHostAvatar.vue';
 
-<script lang="ts" setup>
 const props = defineProps({
 	host: {
 		type: Object as PropType<FiresideRTCUser>,
@@ -117,17 +115,16 @@ async function onStickerPlaced(placement: StickerPlacement) {
 				</div>
 
 				<div class="-avatar-wrap" :class="{ '-full': !showingVideoThumb }">
-					<AppFiresideHostThumbIndicator :host="host" />
+					<AppFiresideBottomBarHostAvatar :host="host" />
 
 					<AppPopcornKettle :controller="kettleController" />
 				</div>
 
-				<div class="-spacer" />
 				<div class="-active-indicator" :class="{ '-active': isFocused }" />
 			</div>
 
 			<div v-if="!isMe" class="-options">
-				<transition>
+				<!-- <transition>
 					<span
 						v-if="host.micAudioMuted || host.playbackVolumeLevel < 1"
 						class="-option anim-fade-enter-enlarge anim-fade-leave-shrink"
@@ -158,17 +155,12 @@ async function onStickerPlaced(placement: StickerPlacement) {
 							</strong>
 						</template>
 					</span>
-				</transition>
+				</transition> -->
 
 				<div class="-options-spacer" />
 
-				<AppPopper
-					v-if="!hideOptions"
-					placement="top"
-					@show="() => emit('showPopper')"
-					@hide="() => emit('hidePopper')"
-				>
-					<a v-app-tooltip="$gettext('Options')" class="-option -option-show-hover">
+				<AppPopper v-if="!hideOptions" placement="top">
+					<a v-app-tooltip="$gettext(`Options`)" class="-option -option-show-hover">
 						<AppJolticon icon="cog" />
 					</a>
 
@@ -213,12 +205,14 @@ async function onStickerPlaced(placement: StickerPlacement) {
 	user-select: none
 
 .-display-thumb
-	rounded-corners()
-	flex: auto
+	img-circle()
+	position: absolute
+	top: 0
 	display: flex
 	align-items: center
 	justify-content: center
-	width: 100%
+	width: var(--fireside-host-size)
+	height: var(--fireside-host-size)
 	background-color: var(--theme-bg-subtle)
 	overflow: hidden
 
@@ -231,15 +225,15 @@ async function onStickerPlaced(placement: StickerPlacement) {
 
 .-avatar-wrap
 	position: absolute
-	width: calc(var(--fireside-host-size) * 0.5)
-	height: calc(var(--fireside-host-size) * 0.5)
-	bottom: 0
+	top: 0
+	left: 0
+	width: 24px
+	height: 24px
 	transition: all 250ms $strong-ease-out
 
 	&.-full
-		width: calc(var(--fireside-host-size) - 12px)
-		height: calc(var(--fireside-host-size) - 12px)
-		bottom: 12px
+		width: var(--fireside-host-size)
+		height: var(--fireside-host-size)
 
 .-avatar-stickers
 	position: absolute
@@ -263,21 +257,19 @@ async function onStickerPlaced(placement: StickerPlacement) {
 	transform: rotate(0) scale(1)
 	opacity: 0
 
-.-spacer
-	flex: none
-	height: calc(var(--fireside-host-size) * 0.3)
-
 .-active-indicator
+	position: relative
 	flex: none
 	border-radius: 40%
-	height: 4px
+	height: 16px
 	width: 0
+	bottom: -24px
 	opacity: 0
 	background-color: var(--theme-link)
 	transition: width 400ms $ease-out-back, opacity 250ms
 
 	&.-active
-		width: 30px
+		width: 48px
 		opacity: 1
 
 .-options

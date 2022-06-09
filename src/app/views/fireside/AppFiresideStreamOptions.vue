@@ -1,7 +1,4 @@
 <script lang="ts" setup>
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import AppFiresideSettingsPopper from './AppFiresideSettingsPopper.vue';
-
 const emit = defineEmits({
 	'show-popper': () => true,
 	'hide-popper': () => true,
@@ -10,11 +7,11 @@ const emit = defineEmits({
 
 <template>
 	<div class="-options-wrap">
-		<AppFiresideSettingsPopper @show="emit('show-popper')" @hide="emit('hide-popper')">
+		<!-- <AppFiresideSettingsPopper @show="emit('show-popper')" @hide="emit('hide-popper')">
 			<div class="-options">
 				<AppJolticon class="-icon" icon="ellipsis-v" />
 			</div>
-		</AppFiresideSettingsPopper>
+		</AppFiresideSettingsPopper> -->
 	</div>
 </template>
 
