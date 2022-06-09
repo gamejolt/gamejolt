@@ -354,6 +354,14 @@ function onMobileAppBarBack() {
 </template>
 
 <style lang="stylus" scoped>
+$-zindex-close = 0
+$-zindex-window-inner = 1
+$-zindex-sidebar-shadow = 2
+$-zindex-input = 3
+$-zindex-header = 4
+
+$-zindex-sidebar-mobile = 10
+
 .chat-window
 	position: fixed
 	display: flex
@@ -369,7 +377,7 @@ function onMobileAppBarBack() {
 	bottom: 0
 	left: 0
 	background: transparent
-	z-index: 0
+	z-index: $-zindex-close
 
 .-window
 	change-bg(bg)
@@ -379,7 +387,7 @@ function onMobileAppBarBack() {
 	justify-content: center
 	width: 100%
 	height: 100%
-	z-index: 1
+	z-index: $-zindex-window-inner
 	overflow: hidden
 
 	@media $media-xs
@@ -400,10 +408,10 @@ function onMobileAppBarBack() {
 	display: flex
 	flex-direction: column
 	min-width: 0
-	z-index: 1
+	z-index: $-zindex-window-inner
 
 .-header
-	z-index: 3
+	z-index: $-zindex-header
 
 .-header-icon
 	img-circle()
@@ -454,7 +462,7 @@ function onMobileAppBarBack() {
 
 	@media $media-mobile
 		position: fixed
-		z-index: 10
+		z-index: $-zindex-sidebar-mobile
 		left: 0
 		top: 0
 		right: 0
@@ -469,7 +477,7 @@ function onMobileAppBarBack() {
 	left: 0
 	width: 8px
 	background: linear-gradient(to right, rgba($black, 0.2), transparent)
-	z-index: 2
+	z-index: $-zindex-sidebar-shadow
 
 .-output
 	position: relative
@@ -493,4 +501,5 @@ function onMobileAppBarBack() {
 .-send-container
 	width: 100%
 	flex: none
+	z-index: $-zindex-input
 </style>
