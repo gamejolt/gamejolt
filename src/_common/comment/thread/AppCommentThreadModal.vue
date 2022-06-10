@@ -62,7 +62,7 @@ const parent = computed(() => {
 });
 
 const shouldShowReply = computed(() => {
-	if (!canCommentOnModel(model.value, parent.value)) {
+	if (!canCommentOnModel(model.value, user.value!, parent.value)) {
 		return false;
 	}
 

@@ -2,7 +2,7 @@ import { trackCommentVote } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
 import { ContentDocument } from '../content/content-document';
 import { Environment } from '../environment/environment.service';
-import { FiresidePost } from '../fireside/post/post-model';
+import { canCommentOnPost, FiresidePost } from '../fireside/post/post-model';
 import { Game } from '../game/game.model';
 import { showErrorGrowl } from '../growls/growls.service';
 import { Model } from '../model/model.service';
@@ -161,7 +161,7 @@ export function getCommentModelResourceName(model: Model) {
 	throw new Error('Model cannot contain comments');
 }
 
-export function canCommentOnModel(model: Model, parentComment?: Comment) {
+export function canCommentOnModel(model: Model, user: User, parentComment?: Comment) {
 	if (parentComment && !parentComment.user.canComment) {
 		return false;
 	}
@@ -169,7 +169,8 @@ export function canCommentOnModel(model: Model, parentComment?: Comment) {
 	if (model instanceof User) {
 		return model.canComment;
 	} else if (model instanceof FiresidePost) {
-		return model.canComment;
+		return canCommentOnPost(model, user);
+		// return model.canComment;
 	} else if (model instanceof Game) {
 		return model.canComment;
 	}

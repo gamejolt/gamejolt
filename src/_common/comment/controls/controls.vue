@@ -1,4 +1,5 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
@@ -8,6 +9,7 @@ import { formatFuzzynumber } from '../../filters/fuzzynumber';
 import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
+import { useCommonStore } from '../../store/common-store';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { addCommentVote, canCommentOnModel, Comment, removeCommentVote } from '../comment-model';
 import { CommentThreadModal } from '../thread/modal.service';
@@ -29,6 +31,11 @@ export default class AppCommentControls extends Vue {
 	@Prop({ type: Boolean, default: false }) canPlaceStickers!: boolean;
 
 	drawer = shallowSetup(() => useDrawerStore());
+	commonStore = setup(() => useCommonStore());
+
+	get app() {
+		return this.commonStore;
+	}
 
 	readonly Screen = Screen;
 	readonly formatFuzzynumber = formatFuzzynumber;
@@ -65,7 +72,7 @@ export default class AppCommentControls extends Vue {
 	}
 
 	get canComment() {
-		return canCommentOnModel(this.model, this.parent);
+		return canCommentOnModel(this.model, this.app.user!, this.parent);
 	}
 
 	get hasUpvote() {

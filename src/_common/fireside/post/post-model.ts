@@ -230,12 +230,22 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return this.getManageableCommunities(['community-features', 'community-posts'], true);
 	}
 
+	/**
+	 * @deprecated Import and use `canCommentOnPost` instead.
+	 */
 	get canComment() {
+		// Cannot comment if post author blocked this user.
 		if (this.user.blocked_you || this.user.is_blocked) {
 			return false;
 		}
 
+		// Cannot comment on game post if cannot comment on game.
 		if (this.game && !this.game.canComment) {
+			return false;
+		}
+
+		// Cannot comment on the post if blocked from any of the communities the post is linked to.
+		if (this.communities.length > 0 && this.communities.some(c => c.community.isBlocked)) {
 			return false;
 		}
 
@@ -536,4 +546,15 @@ export async function loadArticleIntoPost(post: FiresidePost) {
 
 export function $viewPost(post: FiresidePost, sourceFeed?: string) {
 	HistoryTick.sendBeacon('fireside-post', post.id, { sourceFeed });
+}
+
+export function canCommentOnPost(post: FiresidePost, user?: User | null) {
+	// Can always comment on their own post.
+	if (user && post.user.id === user.id) {
+		return true;
+	}
+
+	// Note: the passed in user is not considered for this, because this getter uses
+	// gathered data from the models pertaining to the logged in user.
+	return post.canComment;
 }
