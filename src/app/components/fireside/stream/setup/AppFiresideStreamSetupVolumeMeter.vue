@@ -56,7 +56,7 @@ const volumePercent = computed(
 	position: relative
 	height: 5px
 	overflow: hidden
-	background-color: var(--theme-bg-offset)
+	background-color: rgba(0, 0, 0, 0.5)
 	border-radius: $border-radius-base
 
 	.-fill
