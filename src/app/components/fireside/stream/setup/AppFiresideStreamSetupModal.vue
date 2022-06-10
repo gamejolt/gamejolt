@@ -35,15 +35,48 @@ const isShowingAppPromo = ref(shouldPromoteAppForStreaming.value);
 			</AppButton>
 		</div>
 
-		<template v-if="!canBrowserStream">
+		<!-- In the case that their browser can't stream AND we want to show the
+		app promo for their device, do a special message where we tell them they
+		can't stream and they should just use the app -->
+		<template v-if="!canBrowserStream && shouldPromoteAppForStreaming">
 			<div class="modal-body">
 				<AppIllustration :src="illNoCommentsSmall">
-					<p>
+					<p class="-ill-text">
 						<AppTranslate>
 							Your browser either cannot stream, or will have poor performance.
 						</AppTranslate>
 					</p>
-					<p>
+					<p class="-ill-text">
+						<AppTranslate>
+							For the best streaming experience, we recommend using the Game Jolt
+							desktop app.
+						</AppTranslate>
+					</p>
+
+					<AppSpacer vertical :scale="4" />
+
+					<AppButton
+						icon="client"
+						primary
+						solid
+						block
+						:to="{ name: 'landing.client' }"
+						target="_blank"
+					>
+						<AppTranslate>Get the desktop app</AppTranslate>
+					</AppButton>
+				</AppIllustration>
+			</div>
+		</template>
+		<template v-else-if="!canBrowserStream">
+			<div class="modal-body">
+				<AppIllustration :src="illNoCommentsSmall">
+					<p class="-ill-text">
+						<AppTranslate>
+							Your browser either cannot stream, or will have poor performance.
+						</AppTranslate>
+					</p>
+					<p class="-ill-text">
 						<AppTranslate>
 							Please use a different browser, such as Google Chrome or Microsoft Edge,
 							if you want to start a stream.
@@ -55,7 +88,7 @@ const isShowingAppPromo = ref(shouldPromoteAppForStreaming.value);
 		<template v-else-if="isStreamingElsewhere">
 			<div class="modal-body">
 				<AppIllustration :src="illNoCommentsSmall">
-					<p>
+					<p class="-ill-text">
 						<AppTranslate>
 							You're currently streaming on another device. Stop that stream before
 							starting a new one.
@@ -67,15 +100,15 @@ const isShowingAppPromo = ref(shouldPromoteAppForStreaming.value);
 		<template v-else-if="isShowingAppPromo">
 			<div class="-app-promo">
 				<AppIllustration :src="illStreamingJelly">
-					<div class="-app-promo-text">
+					<p class="-ill-text">
 						<AppTranslate>
 							For the best streaming experience, we recommend using the Game Jolt
 							desktop app.
 						</AppTranslate>
-					</div>
+					</p>
 				</AppIllustration>
 
-				<AppSpacer vertical :scale="8" />
+				<AppSpacer vertical :scale="4" />
 
 				<AppButton
 					icon="client"
@@ -105,6 +138,6 @@ const isShowingAppPromo = ref(shouldPromoteAppForStreaming.value);
 .-app-promo
 	padding: 16px
 
-.-app-promo-text
+.-ill-text
 	color: var(--theme-fg)
 </style>
