@@ -24,7 +24,7 @@ const { canBrowserStream, isStreamingElsewhere } = props.c;
 
 const modal = useModal()!;
 
-const isShowingAppPromo = ref(shouldPromoteAppForStreaming);
+const isShowingAppPromo = ref(shouldPromoteAppForStreaming.value);
 </script>
 
 <template>
