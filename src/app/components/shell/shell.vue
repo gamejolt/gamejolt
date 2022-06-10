@@ -20,9 +20,9 @@ import { ChatStore, ChatStoreKey } from '../chat/chat-store';
 import { setChatFocused } from '../chat/client';
 import { AppClientShell, AppClientStatusBar } from '../client/safe-exports';
 import AppShellBanner from './AppShellBanner.vue';
+import AppShellHotBottom from './AppShellHotBottom.vue';
 import AppShellBody from './body/body.vue';
 import AppShellCbar from './cbar/cbar.vue';
-import AppShellHotBottom from './hot-bottom/hot-bottom.vue';
 import AppShellSidebar from './sidebar/sidebar.vue';
 import AppShellTopNav from './top-nav/AppShellTopNav.vue';
 

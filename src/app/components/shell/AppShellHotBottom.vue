@@ -1,13 +1,8 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-property-decorator';
-
-@Options({})
-export default class AppShellHotBottom extends Vue {}
-</script>
+<script lang="ts" setup></script>
 
 <template>
 	<div id="shell-hot-bottom">
-		<slot></slot>
+		<slot />
 	</div>
 </template>
 
