@@ -27,6 +27,9 @@ const listableStreamingUsers = computed(() => rtc.value?.listableStreamingUsers 
 	--fireside-host-size: 64px
 	--fireside-host-gap: 8px
 	width: 100%
+	// This extra padding is so that the shadows of the floating avatars don't
+	// get cut off
+	padding: 4px 4px 0 4px
 
 	&-inner
 		display: inline-flex

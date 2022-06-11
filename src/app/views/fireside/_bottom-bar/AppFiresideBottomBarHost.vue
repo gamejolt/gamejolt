@@ -1,21 +1,19 @@
 <script lang="ts" setup>
 import { computed, PropType, shallowReactive, toRefs } from 'vue';
-import { configFiresideMicVolume } from '../../../../_common/config/config.service';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { onFiresideStickerPlaced } from '../../../../_common/drawer/drawer-store';
 import {
-	FiresideRTCUser,
-	setAudioPlayback,
-	setUserMicrophoneAudioVolume,
+FiresideRTCUser,
+setAudioPlayback,
+setUserMicrophoneAudioVolume
 } from '../../../../_common/fireside/rtc/user';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPopcornKettle from '../../../../_common/popcorn/AppPopcornKettle.vue';
 import { createPopcornKettleController } from '../../../../_common/popcorn/popcorn-kettle-controller';
-import AppPopper from '../../../../_common/popper/popper.vue';
 import AppSlider, { ScrubberCallback } from '../../../../_common/slider/AppSlider.vue';
 import { StickerPlacement } from '../../../../_common/sticker/placement/placement.model';
 import { useEventSubscription } from '../../../../_common/system/event/event-topic';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';
@@ -26,19 +24,11 @@ const props = defineProps({
 		type: Object as PropType<FiresideRTCUser>,
 		required: true,
 	},
-	hideOptions: {
-		type: Boolean,
-	},
-});
-
-const emit = defineEmits({
-	showPopper: () => true,
-	hidePopper: () => true,
 });
 
 useEventSubscription(onFiresideStickerPlaced, onStickerPlaced);
 
-const { host, hideOptions } = toRefs(props);
+const { host } = toRefs(props);
 
 const c = shallowReactive(useFiresideController()!);
 const kettleController = createPopcornKettleController();
@@ -65,6 +55,15 @@ function unmute() {
 
 function onMicAudioScrub({ percent }: ScrubberCallback) {
 	setUserMicrophoneAudioVolume(host.value, percent);
+
+	// TODO
+	// if (percent === 0) {
+	// 	mute();
+	// 	setUserMicrophoneAudioVolume(host.value, 1);
+	// } else {
+	// 	unmute();
+	// 	setUserMicrophoneAudioVolume(host.value, percent);
+	// }
 }
 
 async function onStickerPlaced(placement: StickerPlacement) {
@@ -102,90 +101,69 @@ async function onStickerPlaced(placement: StickerPlacement) {
 <template>
 	<div class="-thumb">
 		<AppUserCardHover :user="host.userModel || undefined" :hover-delay="0" no-stats>
-			<div class="-click-capture" @click="onClick">
-				<div class="-display-thumb" :class="{ '-hidden': !showingVideoThumb }">
-					<template v-if="showingVideoThumb">
-						<AppFiresideStreamVideo
-							v-if="c.rtc.value && !c.rtc.value.videoPaused"
-							:rtc-user="host"
-							low-bitrate
-						/>
-						<AppJolticon v-else icon="camera" class="-display-thumb-icon" />
-					</template>
-				</div>
-
-				<div class="-avatar-wrap" :class="{ '-full': !showingVideoThumb }">
-					<AppFiresideBottomBarHostAvatar :host="host" />
-
-					<AppPopcornKettle :controller="kettleController" />
-				</div>
-
-				<div class="-active-indicator" :class="{ '-active': isFocused }" />
-			</div>
-
-			<div v-if="!isMe" class="-options">
-				<!-- <transition>
-					<span
-						v-if="host.micAudioMuted || host.playbackVolumeLevel < 1"
-						class="-option anim-fade-enter-enlarge anim-fade-leave-shrink"
-						:class="{
-							'-option-warn': host.micAudioMuted || host.playbackVolumeLevel <= 0,
-						}"
-						:style="{
-							flex: host.micAudioMuted ? 'none' : 'auto',
-						}"
-					>
-						<AppJolticon
-							v-if="host.micAudioMuted"
-							v-app-tooltip="$gettext(`Muted`)"
-							icon="audio-mute"
-						/>
-						<template v-else-if="host.playbackVolumeLevel < 1">
-							<AppJolticon
-								:icon="host.playbackVolumeLevel <= 0 ? 'audio-mute' : 'audio'"
+			<template #default>
+				<div class="-click-capture" @click="onClick">
+					<div class="-display-thumb" :class="{ '-hidden': !showingVideoThumb }">
+						<template v-if="showingVideoThumb">
+							<AppFiresideStreamVideo
+								v-if="c.rtc.value && !c.rtc.value.videoPaused"
+								:rtc-user="host"
+								low-bitrate
 							/>
-							<strong class="tiny">
-								{{
-									' ' +
-									Math.min(
-										100,
-										Math.max(0, Math.round(host.playbackVolumeLevel * 100))
-									)
-								}}
-							</strong>
+							<AppJolticon v-else icon="camera" class="-display-thumb-icon" />
 						</template>
-					</span>
-				</transition> -->
+					</div>
 
-				<div class="-options-spacer" />
+					<div class="-avatar-wrap" :class="{ '-full': !showingVideoThumb }">
+						<AppFiresideBottomBarHostAvatar :host="host" />
 
-				<AppPopper v-if="!hideOptions" placement="top">
-					<a v-app-tooltip="$gettext(`Options`)" class="-option -option-show-hover">
-						<AppJolticon icon="cog" />
-					</a>
+						<AppPopcornKettle :controller="kettleController" />
+					</div>
 
-					<template #popover>
-						<div class="list-group">
-							<div v-if="configFiresideMicVolume.value" class="list-group-item">
-								<div class="list-group-item-heading">
-									<AppTranslate> Microphone Volume </AppTranslate>
-								</div>
-								<AppSlider
-									:percent="host.playbackVolumeLevel"
-									@scrub="onMicAudioScrub"
-								/>
-							</div>
+					<div class="-active-indicator" :class="{ '-active': isFocused }" />
+				</div>
 
-							<a v-if="!host.micAudioMuted" class="list-group-item" @click="mute">
-								<AppTranslate>Mute</AppTranslate>
-							</a>
-							<a v-else class="list-group-item" @click="unmute">
-								<AppTranslate>Unmute</AppTranslate>
-							</a>
-						</div>
-					</template>
-				</AppPopper>
-			</div>
+				<div class="-flags">
+					<transition>
+						<span
+							v-if="host.micAudioMuted"
+							class="-flag anim-fade-enter-enlarge anim-fade-leave-shrink"
+							:class="{
+								'-flag-notice': host.micAudioMuted,
+							}"
+						>
+							<AppJolticon
+								v-if="host.micAudioMuted"
+								v-app-tooltip="$gettext(`Muted`)"
+								icon="audio-mute"
+							/>
+						</span>
+					</transition>
+				</div>
+			</template>
+
+			<template v-if="!isMe" #trailing>
+				<div class="-host-controls">
+					<hr />
+
+					<div class="-host-audio">
+						<AppSlider
+							class="-host-audio-slider"
+							:percent="host.playbackVolumeLevel"
+							@scrub="onMicAudioScrub"
+						/>
+
+						<AppButton
+							class="-host-audio-button"
+							sparse
+							circle
+							trans
+							:icon="host.micAudioMuted ? 'audio-mute' : 'audio'"
+							@click="host.micAudioMuted ? unmute() : mute()"
+						/>
+					</div>
+				</div>
+			</template>
 		</AppUserCardHover>
 	</div>
 </template>
@@ -224,16 +202,22 @@ async function onStickerPlaced(placement: StickerPlacement) {
 	height: 100%
 
 .-avatar-wrap
+	elevate-1()
 	position: absolute
-	top: 0
-	left: 0
+	top: -2px
+	left: -2px
 	width: 24px
 	height: 24px
-	transition: all 250ms $strong-ease-out
+	transition: all 350ms $ease-out-back
+	border-radius: 100%
 
 	&.-full
 		width: var(--fireside-host-size)
 		height: var(--fireside-host-size)
+		top: 0
+		left: 0
+		// Get rid of the elevate shadow without ruining our transition
+		box-shadow: none
 
 .-avatar-stickers
 	position: absolute
@@ -258,7 +242,7 @@ async function onStickerPlaced(placement: StickerPlacement) {
 	opacity: 0
 
 .-active-indicator
-	position: relative
+	position: absolute
 	flex: none
 	border-radius: 40%
 	height: 16px
@@ -272,50 +256,51 @@ async function onStickerPlaced(placement: StickerPlacement) {
 		width: 48px
 		opacity: 1
 
-.-options
+.-host-controls
+	margin-top: -10px
+	padding: 10px
+
+	hr
+		margin-left: -10px
+		margin-right: -10px
+
+.-host-audio
+	display: flex
+	gap: 8px
+
+.-host-audio-slider
+	flex: auto
+
+.-host-audio-button
+	flex: none
+
+.-flags
 	position: absolute
 	display: flex
 	flex-direction: row
 	justify-content: flex-end
-	bottom: 8px
-	left: 8px
-	right: 8px
+	bottom: -2px
+	left: -2px
+	right: -2px
 	grid-gap: 4px
 	z-index: 2
 
-	&-spacer
-		flex: auto
-
-.-option
+.-flag
 	flex: 1
 	elevate-1()
+	flex: none
 	display: flex
-	width: 24px
-	height: 24px
-	border-radius: (@height / 2)
-	background-color: var(--theme-bg)
 	align-items: center
 	justify-content: center
+	width: 24px
+	height: 24px
+	border-radius: 100%
+	background-color: var(--theme-bg)
 	color: var(--theme-fg)
 	cursor: default
 
-	a&
-		cursor: pointer
-
-		&:hover
-			color: var(--theme-bi-fg)
-			background-color: var(--theme-bi-bg)
-
-	&-warn
-		color: var(--theme-notice)
-
-.-option-show-hover
-	visibility: hidden
-
-.-thumb:hover
-	.-option-show-hover
-		visibility: visible
-		display: flex
+.-flag-notice
+	color: var(--theme-notice)
 
 // Copied from AppStickerReactionsItem
 @keyframes anim-sticker

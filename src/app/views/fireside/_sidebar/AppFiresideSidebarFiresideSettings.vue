@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
+import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppFiresideSettings from '../../../components/fireside/AppFiresideSettings.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
+import AppFiresideShare from '../AppFiresideShare.vue';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 
 const emit = defineEmits({
@@ -12,6 +14,7 @@ const emit = defineEmits({
 });
 
 const c = useFiresideController()!;
+const { canEdit, isDraft } = c;
 </script>
 
 <template>
@@ -23,11 +26,11 @@ const c = useFiresideController()!;
 				</template>
 
 				<template #title>
-					<AppTranslate>Fireside settings</AppTranslate>
+					<AppTranslate>Options</AppTranslate>
 				</template>
 			</AppHeaderBar>
 
-			<div class="-pad">
+			<div v-if="canEdit" class="-pad">
 				<AppButton block @click="emit('streamSettings')">
 					<AppTranslate>Stream settings</AppTranslate>
 				</AppButton>
@@ -36,7 +39,15 @@ const c = useFiresideController()!;
 
 		<template #body>
 			<div class="-pad">
-				<AppFiresideSettings :c="c" />
+				<AppFiresideSettings v-if="canEdit" :c="c" />
+
+				<AppSpacer vertical :scale="4" />
+
+				<AppFiresideShare v-if="!isDraft" class="-share" />
+
+				<AppButton v-if="!canEdit" icon="flag" trans block>
+					<AppTranslate>Report fireside</AppTranslate>
+				</AppButton>
 			</div>
 		</template>
 	</AppFiresideSidebar>

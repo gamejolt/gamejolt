@@ -15,7 +15,7 @@ const emit = defineEmits({
 });
 
 const c = useFiresideController()!;
-const { rtc, user, canEdit, canStream, isStreaming } = c;
+const { rtc, user, canStream, isStreaming } = c;
 
 const drawerStore = useDrawerStore();
 
@@ -61,11 +61,7 @@ function onClickStickerButton() {
 
 			<AppFiresideBottomBarButton icon="users" @click="emit('members')" />
 
-			<AppFiresideBottomBarButton
-				v-if="canEdit"
-				icon="ellipsis-h"
-				@click="emit('firesideSettings')"
-			/>
+			<AppFiresideBottomBarButton icon="ellipsis-h" @click="emit('firesideSettings')" />
 			<!-- TODO -->
 			<AppFiresideBottomBarButton icon="bolt-unfilled" @click="emit('testBg')" />
 		</div>

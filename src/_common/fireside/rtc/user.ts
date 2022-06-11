@@ -8,7 +8,6 @@ import {
 import { markRaw, reactive, toRaw, watch, WatchStopHandle } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
-import { configFiresideMicVolume } from '../../config/config.service';
 import { updateTrackPlaybackDevice } from './producer';
 import { chooseFocusedRTCUser, FiresideRTC } from './rtc';
 
@@ -541,9 +540,6 @@ export function updateVolumeLevel(user: FiresideRTCUser) {
 
 /** Expects a value from 0 to 1 */
 export function setUserMicrophoneAudioVolume(user: FiresideRTCUser, percent: number) {
-	if (!configFiresideMicVolume.value) {
-		return;
-	}
 	user._micAudioTrack?.setVolume(Math.round(percent * 100));
 	user.playbackVolumeLevel = percent;
 }
