@@ -42,7 +42,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	static readonly TYPE_TEXT = 'text';
 	static readonly TYPE_MEDIA = 'media';
 	static readonly TYPE_VIDEO = 'video';
-	static readonly TYPE_BACKGROUND = 'background';
 
 	static readonly STATUS_DRAFT = 'draft';
 	static readonly STATUS_ACTIVE = 'active';
@@ -176,6 +175,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		}
 
 		return this.as_game_owner ? this.game.developer : this.user;
+	}
+
+	get hasAnyMedia() {
+		return this.hasMedia || this.hasVideo;
 	}
 
 	get hasMedia() {

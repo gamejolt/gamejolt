@@ -9,6 +9,7 @@ import {
 	defineFormControlProps,
 } from '../../../../_common/form-vue/AppFormControl.vue';
 import { useFormGroup } from '../../../../_common/form-vue/AppFormGroup.vue';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 
 const props = defineProps({
 	backgrounds: {
@@ -23,10 +24,14 @@ const props = defineProps({
 	hideEmptyTile: {
 		type: Boolean,
 	},
+	disabledText: {
+		type: String,
+		default: undefined,
+	},
 	...defineFormControlProps(),
 });
 
-const { backgrounds } = toRefs(props);
+const { backgrounds, disabledText, disabled } = toRefs(props);
 
 const form = useForm()!;
 const { name } = useFormGroup()!;
@@ -36,6 +41,8 @@ const { applyValue } = createFormControl<number | undefined>({
 	onChange: val => emit('changed', val),
 	validators: toRef(props, 'validators'),
 });
+
+const isDisabled = computed(() => !!disabledText?.value || disabled.value);
 
 const selectedBackgroundId = computed<number | null>(() => form.formModel[name.value] || null);
 const currentBackground = computed(() => {
@@ -58,33 +65,12 @@ function onSelect(item?: Background) {
 
 <template>
 	<AppBackgroundSelector
+		v-app-tooltip.touchable="disabledText"
 		:backgrounds="backgrounds"
 		:background="currentBackground"
 		:hide-empty-tile="hideEmptyTile"
 		:tile-size="tileSize"
+		:disabled="isDisabled"
 		@background-change="onSelect"
 	/>
 </template>
-
-<style lang="stylus" scoped>
-$-padding = 12px
-$-border-width = $border-width-large
-
-.-items
-	white-space: nowrap
-	height: $-height
-	display: inline-flex
-	grid-gap: $-padding
-
-.-item
-	rounded-corners()
-	overflow: hidden
-	border-width: $-border-width
-	border-style: none
-	transition: border 0.1s ease
-
-	&:hover
-	&.-active
-		theme-prop('border-color', 'link')
-		border-style: solid
-</style>

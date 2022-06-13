@@ -3,6 +3,7 @@ import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
 import { computed, nextTick, PropType, ref, toRefs, watch } from 'vue';
 import { arrayRemove } from '../../../../utils/array';
+import { pluralize } from '../../../../utils/string';
 import { trackPostPublish } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Background } from '../../../../_common/background/background.model';
@@ -88,6 +89,7 @@ type FormPostModel = FiresidePost & {
 const MAX_POLL_ITEMS = 10;
 const MIN_POLL_DURATION = 5;
 const MAX_POLL_DURATION = 20160;
+const POST_BACKGROUND_ID_KEY = 'post-background-id';
 
 const props = defineProps({
 	defaultCommunity: { type: Object as PropType<Community | null>, default: null },
@@ -135,6 +137,7 @@ const maxCommunities = ref(0);
 const scrollingKey = ref(1);
 const uploadingVideoStatus = ref(VideoStatus.IDLE);
 const videoProvider = ref(FiresidePostVideo.PROVIDER_GAMEJOLT);
+const hasChangedBackground = ref(false);
 
 // TODO(post-form-background-tweaks) figure out this typing
 const form: FormController<FormPostModel> = createForm({
@@ -157,10 +160,13 @@ const form: FormController<FormPostModel> = createForm({
 			enableVideo();
 		} else if (_model.hasMedia) {
 			enableImages();
-		} else if (_model.hasBackground) {
-			enableBackground();
 		} else if (attachmentType.value !== '') {
 			enabledAttachments.value = true;
+		} else if (form.formModel.background) {
+			// Assign the background_id directly instead of calling
+			// [assignBackgroundId], otherwise it'll always assign `null` as we
+			// haven't loaded our eligible backgrounds yet.
+			form.formModel.background_id = form.formModel.background.id;
 		}
 
 		if (_model.poll) {
@@ -211,6 +217,11 @@ const form: FormController<FormPostModel> = createForm({
 		maxCommunities.value = payload.maxCommunities;
 
 		backgrounds.value = Background.populate(payload.backgrounds);
+
+		// Use our saved background id if we're not editing.
+		if (!isEditing.value) {
+			assignBackgroundId(_getMatchingBackgroundIdFromPref());
+		}
 
 		if (payload.attachedCommunities) {
 			attachedCommunities.value = FiresidePostCommunity.populate(
@@ -309,20 +320,16 @@ const form: FormController<FormPostModel> = createForm({
 
 		form.formModel.poll_duration = pollDuration.value * 60; // site-api expects duration in seconds.
 
-		if (!enabledBackground.value) {
-			form.formModel.background_id = null;
+		if (form.formModel.hasAnyMedia) {
+			assignBackgroundId(null);
 		}
 
-		// TODO(post-form-background-tweaks) is this correct now?
 		return form.formModel.$save();
 	},
-	// TODO(post-form-background-tweaks) Already done in controller, probably don't need
-	// onSubmitSuccess() {
-	// 	Object.assign(model, form.formModel);
-	// },
+	onSubmitSuccess() {
+		Object.assign(model!.value!, form.formModel);
+	},
 });
-
-const shortLabel = computed(() => $gettext(''));
 
 const mainActionText = computed(() => {
 	if (wasPublished.value) {
@@ -336,6 +343,48 @@ const mainActionText = computed(() => {
 	}
 });
 
+const backgroundsDisabledText = computed(() => {
+	if (!form.formModel.hasAnyMedia) {
+		return undefined;
+	}
+
+	var vidCount = 0;
+	var imgCount = 0;
+	const media = [...form.formModel.media, ...form.formModel.videos];
+	for (const item of media) {
+		if (item instanceof FiresidePostVideo) {
+			++vidCount;
+		} else if (item instanceof MediaItem) {
+			++imgCount;
+		}
+	}
+
+	const disabledTypes: string[] = [];
+	if (vidCount > 0) {
+		disabledTypes.push(
+			pluralize(vidCount, {
+				singular: 'video',
+				plural: 'videos',
+			})
+		);
+	}
+
+	if (imgCount > 0) {
+		disabledTypes.push(
+			pluralize(imgCount, {
+				singular: 'image',
+				plural: 'images',
+			})
+		);
+	}
+
+	return $gettextInterpolate(`Remove your %{ types } to add a background`, {
+		types: disabledTypes.join(' and '),
+	});
+});
+
+const isEditing = computed(() => wasPublished.value || isSavedDraftPost.value);
+
 const enabledImages = computed(
 	() => enabledAttachments.value && attachmentType.value === FiresidePost.TYPE_MEDIA
 );
@@ -343,12 +392,6 @@ const enabledImages = computed(
 const enabledVideo = computed(
 	() => enabledAttachments.value && attachmentType.value === FiresidePost.TYPE_VIDEO
 );
-
-const enabledBackground = computed(
-	() => enabledAttachments.value && attachmentType.value === FiresidePost.TYPE_BACKGROUND
-);
-
-const hasOptionalData = computed(() => longEnabled.value);
 
 const hasPoll = computed(() => {
 	return form.formModel.poll_item_count > 0;
@@ -393,14 +436,6 @@ const isScheduling = computed(() => form.formModel.isScheduled);
 const isPublishingToPlatforms = computed(
 	() => !wasPublished.value && publishToPlatforms.value !== null
 );
-
-const canEditOwnerLinkedAccounts = computed(() => {
-	// only the owner can edit
-	if (user.value) {
-		return form.formModel.user.id === user.value.id;
-	}
-	return undefined;
-});
 
 const hasPublishedToPlatforms = computed(
 	() => wasPublished.value && publishToPlatforms.value !== null
@@ -522,6 +557,31 @@ watch(incompleteDefaultCommunity, () => {
 	}
 });
 
+watch(
+	() => form.formModel.hasAnyMedia,
+	() => {
+		if (!form.isLoaded) {
+			return;
+		}
+
+		let id: number | null = null;
+
+		if (!form.formModel.hasAnyMedia) {
+			// If a post is being edited and already has a background, we should
+			// default back to that unless they specifically changed the
+			// background themselves.
+			const usablePostBackgroundId = hasChangedBackground.value
+				? null
+				: model?.value?.background?.id || null;
+
+			// Use the post background, if applicable, or try finding a
+			// background that matches our Pref.
+			id = usablePostBackgroundId ?? _getMatchingBackgroundIdFromPref();
+		}
+		assignBackgroundId(id);
+	}
+);
+
 function attachIncompleteCommunity(community: Community, channel: CommunityChannel) {
 	attachCommunity(community, channel, false);
 }
@@ -616,18 +676,12 @@ function enableVideo() {
 	attachmentType.value = FiresidePost.TYPE_VIDEO;
 }
 
-function enableBackground() {
-	enabledAttachments.value = true;
-	attachmentType.value = FiresidePost.TYPE_BACKGROUND;
-}
-
 function disableAttachments() {
 	enabledAttachments.value = false;
 	attachmentType.value = '';
 
 	form.formModel.media = [];
 	form.formModel.videos = [];
-	onBackgroundChanged(null);
 }
 
 function toggleLong() {
@@ -701,14 +755,6 @@ function removeSchedule() {
 	form.formModel.scheduled_for_timezone = null;
 	form.formModel.scheduled_for = null;
 	form.changed = true;
-}
-
-function togglePublishingToPlatforms() {
-	if (!isPublishingToPlatforms.value) {
-		addPublishingToPlatforms();
-	} else {
-		removePublishingToPlatforms();
-	}
 }
 
 async function addPublishingToPlatforms() {
@@ -888,12 +934,34 @@ function onDisableVideoAttachment() {
 	disableAttachments();
 }
 
-function onBackgroundChanged(backgroundId: number | null) {
+function assignBackgroundId(backgroundId: number | null) {
 	form.formModel.background_id = backgroundId;
 	const background = backgroundId
 		? backgrounds.value.find(i => i.id === backgroundId)
 		: undefined;
 	emit('backgroundChange', background);
+}
+
+function onBackgroundChanged(backgroundId: number | null) {
+	assignBackgroundId(backgroundId);
+
+	if (!import.meta.env.SSR) {
+		window.localStorage.setItem(POST_BACKGROUND_ID_KEY, (backgroundId ?? -1).toString());
+	}
+}
+
+function _getMatchingBackgroundIdFromPref() {
+	if (backgrounds.value.length === 0 || import.meta.env.SSR) {
+		return null;
+	}
+
+	const prefId = Number.parseInt(window.localStorage.getItem(POST_BACKGROUND_ID_KEY) ?? '-1');
+	if (prefId === -1) {
+		return null;
+	}
+
+	// Use the saved ID only if we have an eligible background.
+	return backgrounds.value.find(i => i.id == prefId)?.id || null;
 }
 </script>
 
@@ -906,7 +974,6 @@ function onBackgroundChanged(backgroundId: number | null) {
 				:primary="enabledImages"
 				:solid="enabledImages"
 				:overlay="overlay"
-				:disabled="form.formModel.hasBackground"
 				icon="screenshot"
 				@click="enableImages()"
 			>
@@ -918,23 +985,10 @@ function onBackgroundChanged(backgroundId: number | null) {
 				:primary="enabledVideo"
 				:solid="enabledVideo"
 				:overlay="overlay"
-				:disabled="form.formModel.hasBackground"
 				icon="video"
 				@click="enableVideo()"
 			>
 				<AppTranslate>Video</AppTranslate>
-			</AppButton>
-
-			<AppButton
-				trans
-				:primary="enabledBackground"
-				:solid="enabledBackground"
-				:overlay="overlay"
-				:disabled="form.formModel.hasMedia || form.formModel.hasVideo"
-				icon="paintbrush"
-				@click="enableBackground()"
-			>
-				<AppTranslate>Background</AppTranslate>
 			</AppButton>
 		</div>
 		<div v-else class="well fill-offset full-bleed">
@@ -968,26 +1022,6 @@ function onBackgroundChanged(backgroundId: number | null) {
 				@video-status-change="onUploadingVideoStatusChanged"
 				@video-provider-change="onVideoProviderChanged"
 			/>
-
-			<template v-else-if="enabledBackground">
-				<AppFormLegend compact deletable @delete="disableAttachments()">
-					<AppTranslate>Select background</AppTranslate>
-				</AppFormLegend>
-
-				<AppFormGroup
-					name="background_id"
-					class="sans-margin-bottom"
-					hide-label
-					optional
-					:label="$gettext(`Background`)"
-				>
-					<AppFormBackground
-						:backgrounds="backgrounds"
-						:background="form.formModel.background"
-						@changed="onBackgroundChanged"
-					/>
-				</AppFormGroup>
-			</template>
 		</div>
 
 		<!-- Post title (short) -->
@@ -1026,6 +1060,22 @@ function onBackgroundChanged(backgroundId: number | null) {
 						{{ leadLengthLimit - form.formModel.leadLength }}
 					</div>
 				</div>
+
+				<AppFormGroup
+					v-if="backgrounds.length > 0"
+					name="background_id"
+					class="-backgrounds"
+					hide-label
+					optional
+					:label="$gettext(`Background`)"
+				>
+					<AppFormBackground
+						:backgrounds="backgrounds"
+						:tile-size="40"
+						:disabled-text="backgroundsDisabledText"
+						@changed="onBackgroundChanged"
+					/>
+				</AppFormGroup>
 			</AppTheme>
 
 			<AppFormControlErrors />
@@ -1611,6 +1661,10 @@ function onBackgroundChanged(backgroundId: number | null) {
 		margin-left: 10px
 		font-size: $font-size-small
 		font-weight: bold
+
+.-backgrounds
+	margin-top: 8px
+	margin-bottom: 16px
 
 .-channels
 	margin-top: 10px
