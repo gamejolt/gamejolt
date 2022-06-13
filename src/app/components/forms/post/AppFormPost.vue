@@ -139,7 +139,6 @@ const uploadingVideoStatus = ref(VideoStatus.IDLE);
 const videoProvider = ref(FiresidePostVideo.PROVIDER_GAMEJOLT);
 const hasChangedBackground = ref(false);
 
-// TODO(post-form-background-tweaks) figure out this typing
 const form: FormController<FormPostModel> = createForm({
 	model,
 	modelClass: FiresidePost,
