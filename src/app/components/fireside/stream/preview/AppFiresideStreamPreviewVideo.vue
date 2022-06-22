@@ -1,11 +1,15 @@
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, PropType, watch } from 'vue';
+import { useRouter } from 'vue-router';
+import { useDrawerStore } from '../../../../../_common/drawer/drawer-store';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../../_common/user/user.model';
-import { AppFiresideContainer } from '../../container/container';
-import { createFiresideController } from '../../controller/controller';
+import { useAppStore } from '../../../../store';
+import { useChatStore } from '../../../chat/chat-store';
+import { createFiresideController, provideFiresideController } from '../../controller/controller';
 import AppFiresideStreamVideo from '../AppFiresideStreamVideo.vue';
 
 const props = defineProps({
@@ -29,7 +33,13 @@ const emit = defineEmits({
 
 const c = createFiresideController(props.fireside, {
 	isMuted: true,
+	appStore: useAppStore(),
+	commonStore: useCommonStore(),
+	drawerStore: useDrawerStore(),
+	chatStore: useChatStore()!,
+	router: useRouter(),
 });
+provideFiresideController(c);
 
 const { rtc, isShowingStreamSetup, isStreaming, cleanup: cleanupController } = c;
 
@@ -73,7 +83,7 @@ onBeforeUnmount(() => cleanupController());
 </script>
 
 <template>
-	<AppFiresideContainer class="-stream-preview-video theme-dark" :controller="c">
+	<div class="-stream-preview-video theme-dark">
 		<div v-if="focusedUser && shouldShowVideo" :key="focusedUser.uid">
 			<AppFiresideStreamVideo class="-stream-preview-video-inner" :rtc-user="focusedUser" />
 
@@ -89,7 +99,7 @@ onBeforeUnmount(() => cleanupController());
 			</div>
 		</div>
 		<div v-else />
-	</AppFiresideContainer>
+	</div>
 </template>
 
 <style lang="stylus" scoped>

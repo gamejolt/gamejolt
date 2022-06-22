@@ -110,7 +110,7 @@ const backgroundForm: FormController<FormBackground> = createForm({
 		roomBackgroundId.value = payload.roomBackgroundId || null;
 		backgroundForm.formModel.background_id = roomBackgroundId.value;
 	},
-	onSubmit: async () =>
+	onSubmit: () =>
 		editChatRoomBackground(
 			chat.value,
 			room.value,

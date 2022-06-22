@@ -15,7 +15,7 @@ export class ChatUser {
 
 	role: CHAT_ROLES | null = null;
 
-	constructor(data: Partial<ChatUser> = {}) {
+	constructor(data: any = {}) {
 		Object.assign(this, data);
 	}
 

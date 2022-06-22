@@ -32,6 +32,9 @@ const { fireside, isDraft, stickerTargetController } = c;
 					<span v-if="isDraft" class="-tag tag">
 						<AppTranslate>Private</AppTranslate>
 					</span>
+					<span v-else class="-tag tag tag-highlight">
+						<AppTranslate>Public</AppTranslate>
+					</span>
 
 					<span v-if="fireside.primaryCommunityLink?.isFeatured" class="-tag tag">
 						<AppTranslate>Featured</AppTranslate>
@@ -91,9 +94,8 @@ const { fireside, isDraft, stickerTargetController } = c;
 
 <style lang="stylus" scoped>
 .-overlay
-	*
-		fireside-overlay-text-shadow()
-		color: white
+	fireside-overlay-text-shadow()
+	color: white
 
 .fireside-header
 	display: flex

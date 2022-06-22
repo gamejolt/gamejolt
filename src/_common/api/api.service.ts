@@ -116,11 +116,11 @@ export class Api {
 	static uploadHost: string = Environment.uploadHost;
 	static apiPath = '/site-api';
 
-	static async sendRequest(
+	static async sendRequest<T = any>(
 		uri: string,
 		postData?: any,
 		options: RequestOptions = {}
-	): Promise<any> {
+	): Promise<T> {
 		options = {
 			...(<RequestOptions>{
 				ignoreLoadingBar: false,

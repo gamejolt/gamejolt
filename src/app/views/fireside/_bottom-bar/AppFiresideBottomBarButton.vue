@@ -110,6 +110,4 @@ const emit = defineEmits({
 .-settings-icon
 	font-size: 13px
 	position: relative
-	left: 0.5px
-	top: 0.5px
 </style>

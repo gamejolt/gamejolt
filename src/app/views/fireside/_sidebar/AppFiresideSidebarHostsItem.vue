@@ -39,7 +39,7 @@ const emit = defineEmits({
 		</template>
 
 		<template #trailing>
-			<AppButton v-if="!isHost" :disabled="isProcessing" solid primary @click="emit('click')">
+			<AppButton v-if="!isHost" :disabled="isProcessing" @click="emit('click')">
 				<AppTranslate>Add</AppTranslate>
 			</AppButton>
 			<AppButton

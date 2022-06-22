@@ -2,6 +2,7 @@
 import { computed, inject, PropType, ref } from 'vue';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { Fireside } from '../../../_common/fireside/fireside.model';
+import { FIRESIDE_ROLES } from '../../../_common/fireside/role/role.model';
 import AppForm, { createForm, FormController } from '../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
@@ -13,6 +14,7 @@ import AppFormControlToggleButtonGroup from '../../../_common/form-vue/controls/
 import { validateMaxLength, validateMinLength } from '../../../_common/form-vue/validators';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../_common/translate/translate.service';
 import { ChatStoreKey } from '../chat/chat-store';
 import { extinguishFireside, FiresideController, publishFireside } from './controller/controller';
 
@@ -30,7 +32,7 @@ const emit = defineEmits({
 // Controller doesn't change.
 // eslint-disable-next-line vue/no-setup-props-destructure
 const c = props.c;
-const { fireside, chatRoom, canPublish, canExtinguish } = c;
+const { fireside, chatRoom, canPublish, canExtinguish, gridChannel } = c;
 
 const chatStore = inject(ChatStoreKey)!;
 const chat = computed(() => chatStore.chat!);
@@ -68,16 +70,34 @@ const form: FormController<Fireside> = createForm({
 // });
 
 type FormModelSettings = {
-	chat_allow_images: 0 | 1 | 2;
-	chat_allow_gifs: 0 | 1 | 2;
+	allow_images: FIRESIDE_ROLES;
+	allow_gifs: FIRESIDE_ROLES;
+	allow_links: FIRESIDE_ROLES;
 };
 
 const settingsForm: FormController<FormModelSettings> = createForm({
 	onInit() {
-		settingsForm.formModel.chat_allow_images = 2;
-		settingsForm.formModel.chat_allow_gifs = 2;
+		// TODO
+		settingsForm.formModel.allow_images = 'audience';
+		settingsForm.formModel.allow_gifs = 'audience';
+		settingsForm.formModel.allow_links = 'host';
 	},
+	// TODO
+	// onSubmit() {
+	// 	const { formModel } = form;
+
+	// 	// %{"fireside_hash" => fireside_hash} = payload,
+	// 	gridChannel.value?.socketChannel.push('update_chat_settings', {
+	// 		fireside_hash: formModel.hash,
+	// 	});
+	// },
 });
+
+const settingsRoleOptions = computed<{ label: string; value: FIRESIDE_ROLES | null }[]>(() => [
+	{ label: $gettext('Only owner'), value: 'host' },
+	{ label: $gettext('Only hosts'), value: 'cohost' },
+	{ label: $gettext('Everyone'), value: 'audience' },
+]);
 
 function onClickPublish() {
 	publishFireside(c);
@@ -139,18 +159,14 @@ function onClickExtinguish() {
 	<AppForm :controller="settingsForm" @changed="settingsForm.submit">
 		<!-- :forced-is-loading="notificationLevelForm.isProcessing ? true : undefined" -->
 		<AppFormGroup
-			name="chat_allow_images"
+			name="allow_images"
 			class="sans-margin-bottom"
 			:label="$gettext(`Allow images in fireside chat`)"
 			small
 		>
 			<AppFormControlToggleButtonGroup>
 				<AppFormControlToggleButton
-					v-for="{ label, value } of [
-						{ label: $gettext('No one'), value: 0 },
-						{ label: $gettext('Only hosts'), value: 1 },
-						{ label: $gettext('Everyone'), value: 2 },
-					]"
+					v-for="{ label, value } of settingsRoleOptions"
 					:key="label"
 					:value="value"
 				>
@@ -162,18 +178,33 @@ function onClickExtinguish() {
 		<AppSpacer vertical :scale="6" />
 
 		<AppFormGroup
-			name="chat_allow_gifs"
+			name="allow_gifs"
 			class="sans-margin-bottom"
 			:label="$gettext(`Allow GIFs in fireside chat`)"
 			small
 		>
 			<AppFormControlToggleButtonGroup>
 				<AppFormControlToggleButton
-					v-for="{ label, value } of [
-						{ label: $gettext('No one'), value: 0 },
-						{ label: $gettext('Only hosts'), value: 1 },
-						{ label: $gettext('Everyone'), value: 2 },
-					]"
+					v-for="{ label, value } of settingsRoleOptions"
+					:key="label"
+					:value="value"
+				>
+					{{ label }}
+				</AppFormControlToggleButton>
+			</AppFormControlToggleButtonGroup>
+		</AppFormGroup>
+
+		<AppSpacer vertical :scale="6" />
+
+		<AppFormGroup
+			name="allow_links"
+			class="sans-margin-bottom"
+			:label="$gettext(`Allow links in fireside chat`)"
+			small
+		>
+			<AppFormControlToggleButtonGroup>
+				<AppFormControlToggleButton
+					v-for="{ label, value } of settingsRoleOptions"
 					:key="label"
 					:value="value"
 				>
