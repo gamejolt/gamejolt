@@ -1,6 +1,6 @@
 <script lang="ts">
 import * as StripeData from 'stripe';
-import { inject, InjectionKey, provide, Ref, ref } from 'vue';
+import { inject, InjectionKey, isRef, provide, Ref, ref } from 'vue';
 import { mixins, Options } from 'vue-property-decorator';
 import { loadScript } from '../../../../../utils/utils';
 import { shallowSetup } from '../../../../../utils/vue';
@@ -97,9 +97,16 @@ function createFormManagedAccount() {
 		const fieldParts = field.split('.');
 		do {
 			field = fieldParts.join('.');
-			if (stripeMeta.value.minimum.indexOf(field) !== -1) {
-				return true;
-			}
+
+			// I don't remember why we check it like this but it seems wrong. if
+			// a field doens't show in requirements its possible it has been
+			// fulfilled but we'll never keep requesting it. we should only have
+			// to collect information that appears in the root or person's
+			// requirements.past_due field.
+			//
+			// if (stripeMeta.value.minimum.indexOf(field) !== -1) { return
+			//  true;
+			// }
 
 			if (requirements.indexOf(field) !== -1) {
 				return true;
@@ -338,16 +345,17 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 				}
 
 				const { uploadDocuments, namePrefix } = ref;
+				const namePrefixValue = isRef(namePrefix) ? namePrefix.value : namePrefix;
 
 				const uploadPromise = uploadDocuments(this.stripePublishableKey).then(
 					([idDocumentUploadId, additionalDocumentUploadId]) => {
 						if (idDocumentUploadId) {
-							data[`${namePrefix.value}.verification.document.front`] =
+							data[`${namePrefixValue}.verification.document.front`] =
 								idDocumentUploadId;
 						}
 
 						if (additionalDocumentUploadId) {
-							data[`${namePrefix.value}.verification.additional_document.front`] =
+							data[`${namePrefixValue}.verification.additional_document.front`] =
 								additionalDocumentUploadId;
 						}
 					}
@@ -548,7 +556,9 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 					<h4><AppTranslate>Your Details</AppTranslate></h4>
 
 					<div v-if="account.status === 'unverified'" class="alert">
-						<p><AppTranslate>Please fill in your personal information.</AppTranslate></p>
+						<p>
+							<AppTranslate>Please fill in your personal information.</AppTranslate>
+						</p>
 					</div>
 
 					<AppFinancialsManagedAccountPerson

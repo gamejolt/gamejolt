@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { useFormManagedAccount } from './managed-account.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { useFormManagedAccount } from './managed-account.vue';
 
 defineProps({
 	namePrefix: {
@@ -24,6 +24,11 @@ for (let i = 1; i <= 31; ++i) {
 const maxYear = new Date().getFullYear() - 13;
 for (let i = maxYear; i > maxYear - 100; --i) {
 	years.push('' + i);
+}
+
+if (GJ_ENVIRONMENT !== 'production') {
+	// Needed to test stripe. They have special cases for DOB for testing.
+	years.push('1902', '1901', '1900');
 }
 </script>
 
