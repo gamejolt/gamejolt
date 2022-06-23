@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { computed, inject, PropType, ref } from 'vue';
+import { computed, inject, PropType, ref, watch } from 'vue';
 import AppButton from '../../../_common/button/AppButton.vue';
+import { FiresideChatSettings } from '../../../_common/fireside/chat-settings/chat-settings.model';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FIRESIDE_ROLES } from '../../../_common/fireside/role/role.model';
 import AppForm, { createForm, FormController } from '../../../_common/form-vue/AppForm.vue';
@@ -32,12 +33,13 @@ const emit = defineEmits({
 // Controller doesn't change.
 // eslint-disable-next-line vue/no-setup-props-destructure
 const c = props.c;
-const { fireside, chatRoom, canPublish, canExtinguish, gridChannel } = c;
+const { fireside, chatSettings, chatRoom, canPublish, canExtinguish, gridChannel } = c;
 
 const chatStore = inject(ChatStoreKey)!;
 const chat = computed(() => chatStore.chat!);
 
 const form: FormController<Fireside> = createForm({
+	warnOnDiscard: false,
 	modelClass: Fireside,
 	// Just wrapping in a ref to make the form happy. It never actually changes.
 	model: ref(fireside),
@@ -55,6 +57,7 @@ const form: FormController<Fireside> = createForm({
 // const hasLoadedBackgrounds = computed(() => backgroundForm.isLoadedBootstrapped);
 
 // const backgroundForm: FormController<FormModelBackground> = createForm({
+//	warnOnDiscard: false,
 // 	loadUrl: `/web/chat/rooms/backgrounds/${chatRoom.value.id}`,
 // 	onLoad(payload) {
 // 		backgrounds.value = Background.populate(payload.backgrounds);
@@ -69,33 +72,36 @@ const form: FormController<Fireside> = createForm({
 // 		),
 // });
 
-type FormModelSettings = {
-	allow_images: FIRESIDE_ROLES;
-	allow_gifs: FIRESIDE_ROLES;
-	allow_links: FIRESIDE_ROLES;
-};
-
-const settingsForm: FormController<FormModelSettings> = createForm({
-	onInit() {
-		// TODO
-		settingsForm.formModel.allow_images = 'audience';
-		settingsForm.formModel.allow_gifs = 'audience';
-		settingsForm.formModel.allow_links = 'host';
+const settingsForm: FormController<FiresideChatSettings> = createForm({
+	warnOnDiscard: false,
+	modelClass: FiresideChatSettings,
+	model: chatSettings,
+	loadUrl: `/web/dash/fireside/chat-settings/${fireside.hash}`,
+	onLoad(payload) {
+		chatSettings.value.assign(payload.settings);
+		settingsForm.formModel.assign(payload.settings);
 	},
-	// TODO
-	// onSubmit() {
-	// 	const { formModel } = form;
-
-	// 	// %{"fireside_hash" => fireside_hash} = payload,
-	// 	gridChannel.value?.socketChannel.push('update_chat_settings', {
-	// 		fireside_hash: formModel.hash,
-	// 	});
-	// },
+	onSubmit: () => gridChannel.value!.pushUpdateChatSettings(settingsForm.formModel),
+	onSubmitSuccess(response) {
+		// Update our form model. The base model will update through a grid
+		// message.
+		settingsForm.formModel.assign(response);
+	},
 });
 
+// If anyone else modifies the chat settings, let's sync it back to our form as
+// well. This should only really occur if they do it in another tab or client.
+watch(
+	chatSettings,
+	() => {
+		settingsForm.formModel.assign(chatSettings.value);
+	},
+	{ deep: true }
+);
+
 const settingsRoleOptions = computed<{ label: string; value: FIRESIDE_ROLES | null }[]>(() => [
-	{ label: $gettext('Only owner'), value: 'host' },
-	{ label: $gettext('Only hosts'), value: 'cohost' },
+	{ label: $gettext('Owner only'), value: 'host' },
+	{ label: $gettext('Hosts only'), value: 'cohost' },
 	{ label: $gettext('Everyone'), value: 'audience' },
 ]);
 
@@ -156,8 +162,11 @@ function onClickExtinguish() {
 	<hr />
 	<AppSpacer vertical :scale="6" />
 
-	<AppForm :controller="settingsForm" @changed="settingsForm.submit">
-		<!-- :forced-is-loading="notificationLevelForm.isProcessing ? true : undefined" -->
+	<AppForm
+		:controller="settingsForm"
+		:forced-is-loading="settingsForm.isProcessing ? true : undefined"
+		@changed="settingsForm.submit"
+	>
 		<AppFormGroup
 			name="allow_images"
 			class="sans-margin-bottom"

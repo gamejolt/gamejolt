@@ -5,14 +5,14 @@ import type { TabLeaderInterface } from '../../../utils/tab-leader';
 import { Background } from '../../../_common/background/background.model';
 import { importNoSSR } from '../../../_common/code-splitting';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
-import { createSocketChannelController } from '../../../_common/socket/socket-channel-controller';
+import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import {
-	ChatClient,
-	isInChatRoom,
-	leaveChatRoom,
-	newChatNotification,
-	recollectChatRoomMembers,
-	updateChatRoomLastMessageOn,
+ChatClient,
+isInChatRoom,
+leaveChatRoom,
+newChatNotification,
+recollectChatRoomMembers,
+updateChatRoomLastMessageOn
 } from './client';
 import { ChatMessage } from './message';
 import { ChatNotificationGrowl } from './notification-growl/notification-growl.service';

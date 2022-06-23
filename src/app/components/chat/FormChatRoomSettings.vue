@@ -24,14 +24,6 @@ import { editChatRoomBackground, editChatRoomTitle, leaveGroupRoom } from './cli
 import AppChatMemberListItem from './member-list/AppChatMemberListItem.vue';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
-
-type FormBackground = {
-	background_id: number | null;
-};
-
-type FormNotificationLevel = {
-	level: string;
-};
 </script>
 
 <script lang="ts" setup>
@@ -100,8 +92,12 @@ const form: FormController<ChatRoom> = createForm({
 		titleMinLength.value = payload.titleMinLength;
 		titleMaxLength.value = payload.titleMaxLength;
 	},
-	onSubmit: async () => editChatRoomTitle(chat.value, room.value, form.formModel.title),
+	onSubmit: () => editChatRoomTitle(chat.value, room.value, form.formModel.title),
 });
+
+type FormBackground = {
+	background_id: number | null;
+};
 
 const backgroundForm: FormController<FormBackground> = createForm({
 	loadUrl: `/web/chat/rooms/backgrounds/${room.value.id}`,
@@ -117,6 +113,10 @@ const backgroundForm: FormController<FormBackground> = createForm({
 			backgroundForm.formModel.background_id || null
 		),
 });
+
+type FormNotificationLevel = {
+	level: string;
+};
 
 const notificationLevelForm: FormController<FormNotificationLevel> = createForm({
 	loadUrl: `/web/chat/rooms/get-notification-settings/${room.value.id}`,

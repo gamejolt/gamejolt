@@ -6,7 +6,7 @@ import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Notification } from '../../../_common/notification/notification-model';
 import { QuestNotification } from '../../../_common/quest/quest-notification-model';
-import { createSocketChannelController } from '../../../_common/socket/socket-channel-controller';
+import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { HOME_FEED_FYP } from '../../views/home/home-feed.service';
 import { GridClient, onFiresideStart, onNewStickers } from './client.service';
 

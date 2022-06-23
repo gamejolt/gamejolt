@@ -4,7 +4,7 @@ import { Analytics } from '../../../_common/analytics/analytics.service';
 import { configHomeDefaultFeed } from '../../../_common/config/config.service';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { showInfoGrowl } from '../../../_common/growls/growls.service';
-import { createSocketChannelController } from '../../../_common/socket/socket-channel-controller';
+import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
 import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
 import { HOME_FEED_ACTIVITY } from '../../views/home/home-feed.service';

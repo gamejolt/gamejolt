@@ -1,14 +1,16 @@
 import { shallowReadonly, triggerRef } from 'vue';
+import { createLogger } from '../../../utils/logging';
 import {
 	DrawerStore,
 	onFiresideStickerPlaced,
 	setStickerStreak,
 } from '../../../_common/drawer/drawer-store';
+import { FiresideChatSettings } from '../../../_common/fireside/chat-settings/chat-settings.model';
 import { FiresideRTCHost } from '../../../_common/fireside/rtc/rtc';
 import {
 	createSocketChannelController,
 	SocketChannelController,
-} from '../../../_common/socket/socket-channel-controller';
+} from '../../../_common/socket/socket-controller';
 import { StickerPlacement } from '../../../_common/sticker/placement/placement.model';
 import { addStickerToTarget } from '../../../_common/sticker/target/target-controller';
 import { User } from '../../../_common/user/user.model';
@@ -19,10 +21,20 @@ import {
 } from '../fireside/controller/controller';
 import { GridClient } from './client.service';
 
+// We need to manually specify since there's a recursive definition.
 export type GridFiresideChannel = Readonly<{
 	channelController: SocketChannelController;
 	firesideHash: string;
+	pushUpdateChatSettings: (
+		chatSettings: FiresideChatSettings
+	) => Promise<UpdateChatSettingsPayload>;
 }>;
+
+interface JoinPayload {
+	server_time: number;
+	chat_settings: unknown;
+	slow_mode_last_message_on: number;
+}
 
 interface StickerPlacementPayload {
 	user_id: number;
@@ -45,13 +57,20 @@ interface StreamingUIDPayload {
 	is_unlisted: boolean;
 }
 
+interface UpdateChatSettingsPayload {
+	settings: unknown;
+}
+
 export async function createGridFiresideChannel(
 	client: GridClient,
 	firesideController: FiresideController,
 	options: { firesideHash: string; drawerStore: DrawerStore }
 ): Promise<GridFiresideChannel> {
 	const { socketController } = client;
+	const { chatSettings } = firesideController;
 	const { firesideHash, drawerStore } = options;
+
+	const logger = createLogger('Fireside');
 
 	const channelController = createSocketChannelController(
 		`fireside:${firesideHash}`,
@@ -65,12 +84,17 @@ export async function createGridFiresideChannel(
 	const c = shallowReadonly({
 		channelController,
 		firesideHash,
+		pushUpdateChatSettings,
 	});
 
-	await channelController.join();
+	await channelController.join({
+		async onJoin(response: JoinPayload) {
+			chatSettings.value.assign(response.chat_settings);
+		},
+	});
 
 	async function _onUpdate(payload: UpdatePayload) {
-		console.log('Fireside update message:', payload);
+		logger.info('Fireside update message:', payload);
 
 		updateFiresideData(firesideController, {
 			fireside: payload.fireside,
@@ -80,7 +104,7 @@ export async function createGridFiresideChannel(
 	}
 
 	function _onStreamingUid(payload: StreamingUIDPayload) {
-		console.debug('[FIRESIDE] Grid streaming uid added.', payload);
+		logger.debug('Grid streaming uid added.', payload);
 
 		const { hosts } = firesideController;
 		if (!payload.streaming_uid || !payload.user) {
@@ -90,7 +114,7 @@ export async function createGridFiresideChannel(
 		const user = new User(payload.user);
 		const host = hosts.value.find(host => host.user.id === user.id);
 		if (host) {
-			console.debug('[FIRESIDE] Adding streaming uid to existing host');
+			logger.debug('Adding streaming uid to existing host');
 
 			host.user = user;
 			host.needsPermissionToView = payload.is_unlisted;
@@ -99,7 +123,7 @@ export async function createGridFiresideChannel(
 				host.uids.push(payload.streaming_uid);
 			}
 		} else {
-			console.debug('[FIRESIDE] Adding streaming uid to new host');
+			logger.debug('Adding streaming uid to new host');
 			hosts.value.push({
 				user: user,
 				needsPermissionToView: payload.is_unlisted,
@@ -115,7 +139,7 @@ export async function createGridFiresideChannel(
 	}
 
 	function _onStickerPlacement(payload: StickerPlacementPayload) {
-		console.debug('[FIRESIDE] Grid sticker placement received.', payload, payload.streak);
+		logger.debug('Grid sticker placement received.', payload, payload.streak);
 
 		const { rtc, stickerTargetController, fireside, user } = firesideController;
 
@@ -144,6 +168,18 @@ export async function createGridFiresideChannel(
 		onFiresideStickerPlaced.next(placement);
 
 		fireside.addStickerToCount(sticker);
+	}
+
+	/**
+	 * Used to change the chat settings for the fireside.
+	 */
+	function pushUpdateChatSettings(chatSettings: FiresideChatSettings) {
+		return channelController.push<UpdateChatSettingsPayload>('update_chat_settings', {
+			fireside_hash: firesideHash,
+			allow_images: chatSettings.allow_images,
+			allow_gifs: chatSettings.allow_gifs,
+			allow_links: chatSettings.allow_links,
+		});
 	}
 
 	return c;

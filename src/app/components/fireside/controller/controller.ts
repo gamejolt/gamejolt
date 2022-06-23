@@ -160,7 +160,7 @@ export function createFiresideController(
 		},
 	});
 
-	const chatSettings = ref<FiresideChatSettings>();
+	const chatSettings = ref(new FiresideChatSettings()) as Ref<FiresideChatSettings>;
 	const rtc = ref<FiresideRTC>();
 	const status = ref<RouteStatus>('initial');
 
@@ -941,7 +941,7 @@ export async function extinguishFireside(c: FiresideController) {
 
 export async function updateFiresideData(
 	c: FiresideController,
-	payload: { fireside: unknown; chatSettings: unknown; streamingInfo: StreamingInfoPayload }
+	payload: { fireside?: unknown; chatSettings?: unknown; streamingInfo?: StreamingInfoPayload }
 ) {
 	const {
 		fireside,
@@ -957,141 +957,151 @@ export async function updateFiresideData(
 		checkExpiry,
 	} = c;
 
-	if (!fireside || !payload.fireside) {
+	if (!fireside) {
 		return;
 	}
 
-	const updatedFireside = new Fireside(payload.fireside);
-	const oldCommunityLinks = fireside.community_links;
+	// This function is used to update various pieces of fireside data, and it
+	// may or may not get any particular data in the payload. We have to be
+	// careful to just update when it's passed through.
 
-	for (const updatedLink of updatedFireside.community_links) {
-		const oldLink = oldCommunityLinks.find(i => i.community.id === updatedLink.community.id);
-		if (!oldLink) {
-			continue;
+	if (payload.fireside) {
+		const updatedFireside = new Fireside(payload.fireside);
+		const oldCommunityLinks = fireside.community_links;
+
+		for (const updatedLink of updatedFireside.community_links) {
+			const oldLink = oldCommunityLinks.find(
+				i => i.community.id === updatedLink.community.id
+			);
+			if (!oldLink) {
+				continue;
+			}
+			// Preserve the old Community model from the link, otherwise we will
+			// overwrite perms.
+			Object.assign(updatedLink, objectPick(oldLink, ['community']));
 		}
-		// Preserve the old Community model from the link, otherwise we will
-		// overwrite perms.
-		Object.assign(updatedLink, objectPick(oldLink, ['community']));
-	}
 
-	Object.assign(
-		fireside,
-		objectPick(updatedFireside, [
-			'user',
-			'header_media_item',
-			'title',
-			'expires_on',
-			'is_expired',
-			// is_streaming can't be sent through fireside-updated event
-			// since this should be specific to the user now that we have
-			// unlisted hosts.
-			//
-			// TODO(big-pp-event) we might want to sync this anyways. It is
-			// currently used by components for minor display only stuff,
-			// for instance the LIVE badge under the fireside bubble.
-			//
-			// 'is_streaming',
-			'is_draft',
-			// can't update member_count here for the same reason
-			// we can't update is_streaming.
-			//
-			// 'member_count',
-			'community_links',
-		])
-	);
+		Object.assign(
+			fireside,
+			objectPick(updatedFireside, [
+				'user',
+				'header_media_item',
+				'title',
+				'expires_on',
+				'is_expired',
+				// is_streaming can't be sent through fireside-updated event
+				// since this should be specific to the user now that we have
+				// unlisted hosts.
+				//
+				// TODO(big-pp-event) we might want to sync this anyways. It is
+				// currently used by components for minor display only stuff,
+				// for instance the LIVE badge under the fireside bubble.
+				//
+				// 'is_streaming',
+				'is_draft',
+				// can't update member_count here for the same reason
+				// we can't update is_streaming.
+				//
+				// 'member_count',
+				'community_links',
+			])
+		);
+	}
 
 	if (payload.chatSettings) {
-		chatSettings.value = new FiresideChatSettings(payload.chatSettings);
+		chatSettings.value.assign(payload.chatSettings);
 	}
 
-	// After updating hosts need to check if we trasitioned into or out of
-	// being a host.
-	const wasHost = hosts.value.some(i => i.user.id === user.value?.id);
-	hosts.value = _getHostsFromStreamingInfo(payload.streamingInfo);
-	const isHost = hosts.value.some(i => i.user.id === user.value?.id);
+	if (payload.streamingInfo) {
+		// After updating hosts need to check if we transitioned into or out of
+		// being a host.
+		const wasHost = hosts.value.some(i => i.user.id === user.value?.id);
+		hosts.value = _getHostsFromStreamingInfo(payload.streamingInfo);
+		const isHost = hosts.value.some(i => i.user.id === user.value?.id);
 
-	// If our host state changed, we need to update anything else depending
-	// on streaming.
-	if (isHost !== wasHost) {
-		// Fetch for streaming returns stream enabled tokens if you are a
-		// cohost. It also returns the new fireside information with the new
-		// role included, which can be used to see if we've received
-		// audience tokens or host tokens. This means we don't need to call
-		// generate-streaming-tokens here, and that fireside RTC instance
-		// would be upserted correctly.
-		const success = await _fetchForFiresideStreaming(c, {
-			assignStatus: false,
-		});
+		// If our host state changed, we need to update anything else depending
+		// on streaming.
+		if (isHost !== wasHost) {
+			// Fetch for streaming returns stream enabled tokens if you are a
+			// cohost. It also returns the new fireside information with the new
+			// role included, which can be used to see if we've received
+			// audience tokens or host tokens. This means we don't need to call
+			// generate-streaming-tokens here, and that fireside RTC instance
+			// would be upserted correctly.
+			const success = await _fetchForFiresideStreaming(c, {
+				assignStatus: false,
+			});
 
-		// Let them know they became a host if [_fetchForStreaming] assigned
-		// a new role to them and didn't return a failure.
-		//
-		// If [_fetchForStreaming] failed, it's probably because they don't
-		// have permissions to view this fireside anymore. This can happen
-		// if they were removed as a host while the fireside was in a draft.
-		if (success && fireside.role?.canStream === true) {
-			showInfoGrowl(
-				$gettext(`You've been added as a host to this fireside. Hop into the stream!`)
-			);
-		} else {
-			// Let them know they were removed as a host.
-			showInfoGrowl($gettext(`You've been removed as a host for this fireside.`));
-
-			if (!success) {
-				if (rtc.value) {
-					// Destroy the RTC if it was already initialized.
-					destroyFiresideRTC(rtc.value);
-				}
-
-				cleanup();
-				status.value = 'setup-failed';
-			}
-		}
-	} else {
-		// It's possible that we get a fireside-updated grid event before
-		// finishing bootstrapping - specifically before fetch-for-streaming
-		// returns. when this happens we won't have a streaming uid, which
-		// would make it impossible to initialize rtc. Also, this event does
-		// not include our listable host ids. If we tried initializing rtc
-		// with an empty list, it'd create everyone as muted, so it's better
-		// to just always call fetch-for-streaming.
-		const streamingUid = agoraStreamingInfo.value?.streamingUid;
-		if (!streamingUid) {
-			logger.debug('Got fireside-updated grid event before fully bootstrapped');
-			await _fetchForFiresideStreaming(c, { assignStatus: false });
-		} else if (!fireside.role?.canStream) {
-			// Otherwise, if our host state did not change and we are a
-			// viewer then this event has the new audience tokens.
-			const newStreamingInfo = _getAgoraStreamingInfoFromPayload(payload.streamingInfo);
-
-			// The payload in this event is not user specific, so it does
-			// not contain our streaming uid. to avoid overwriting it with
-			// undefined we set it to our existing value here.
-			newStreamingInfo.streamingUid = streamingUid;
-
-			// Finally, setting the agora streaming info on controller will
-			// either upsert the rtc instance, or refresh the audience
-			// tokens on the existing one.
-			const hadRTC = !!rtc.value;
-			agoraStreamingInfo.value = newStreamingInfo;
-
-			// Forces immediate revalidation of RTC. This is needed in order
-			// to avoid applying audience tokens if the RTC instance gets
-			// torn down after setting the agora streaming info. If i don't
-			// do this, the _wantsRTC will only reevaluate on next tick,
-			// which happens after the if block below.
-			const rtcInstance = revalidateRTC();
-			const hasRTC = !!rtcInstance;
-
-			// If this change did not end up upserting an RTC instance and
-			// we had an existing instance, we need to tell it to apply the
-			// new audience tokens we've received.
-			if (hadRTC && hasRTC) {
-				applyAudienceRTCTokens(
-					rtcInstance,
-					agoraStreamingInfo.value.videoToken,
-					agoraStreamingInfo.value.chatToken
+			// Let them know they became a host if [_fetchForStreaming] assigned
+			// a new role to them and didn't return a failure.
+			//
+			// If [_fetchForStreaming] failed, it's probably because they don't
+			// have permissions to view this fireside anymore. This can happen
+			// if they were removed as a host while the fireside was in a draft.
+			if (success && fireside.role?.canStream === true) {
+				showInfoGrowl(
+					$gettext(`You've been added as a host to this fireside. Hop into the stream!`)
 				);
+			} else {
+				// Let them know they were removed as a host.
+				showInfoGrowl($gettext(`You've been removed as a host for this fireside.`));
+
+				if (!success) {
+					if (rtc.value) {
+						// Destroy the RTC if it was already initialized.
+						destroyFiresideRTC(rtc.value);
+					}
+
+					cleanup();
+					status.value = 'setup-failed';
+				}
+			}
+		} else {
+			// It's possible that we get a fireside-updated grid event before
+			// finishing bootstrapping - specifically before fetch-for-streaming
+			// returns. when this happens we won't have a streaming uid, which
+			// would make it impossible to initialize rtc. Also, this event does
+			// not include our listable host ids. If we tried initializing rtc
+			// with an empty list, it'd create everyone as muted, so it's better
+			// to just always call fetch-for-streaming.
+			const streamingUid = agoraStreamingInfo.value?.streamingUid;
+			if (!streamingUid) {
+				logger.debug('Got fireside-updated grid event before fully bootstrapped');
+				await _fetchForFiresideStreaming(c, { assignStatus: false });
+			} else if (!fireside.role?.canStream) {
+				// Otherwise, if our host state did not change and we are a
+				// viewer then this event has the new audience tokens.
+				const newStreamingInfo = _getAgoraStreamingInfoFromPayload(payload.streamingInfo);
+
+				// The payload in this event is not user specific, so it does
+				// not contain our streaming uid. to avoid overwriting it with
+				// undefined we set it to our existing value here.
+				newStreamingInfo.streamingUid = streamingUid;
+
+				// Finally, setting the agora streaming info on controller will
+				// either upsert the rtc instance, or refresh the audience
+				// tokens on the existing one.
+				const hadRTC = !!rtc.value;
+				agoraStreamingInfo.value = newStreamingInfo;
+
+				// Forces immediate revalidation of RTC. This is needed in order
+				// to avoid applying audience tokens if the RTC instance gets
+				// torn down after setting the agora streaming info. If i don't
+				// do this, the _wantsRTC will only reevaluate on next tick,
+				// which happens after the if block below.
+				const rtcInstance = revalidateRTC();
+				const hasRTC = !!rtcInstance;
+
+				// If this change did not end up upserting an RTC instance and
+				// we had an existing instance, we need to tell it to apply the
+				// new audience tokens we've received.
+				if (hadRTC && hasRTC) {
+					applyAudienceRTCTokens(
+						rtcInstance,
+						agoraStreamingInfo.value.videoToken,
+						agoraStreamingInfo.value.chatToken
+					);
+				}
 			}
 		}
 	}

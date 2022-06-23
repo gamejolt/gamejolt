@@ -1,9 +1,10 @@
 import { shallowReadonly } from 'vue';
+import { createLogger } from '../../../utils/logging';
 import { chooseFocusedRTCUser } from '../../../_common/fireside/rtc/rtc';
 import {
 	createSocketChannelController,
 	SocketChannelController,
-} from '../../../_common/socket/socket-channel-controller';
+} from '../../../_common/socket/socket-controller';
 import { User } from '../../../_common/user/user.model';
 import { FiresideController } from '../fireside/controller/controller';
 import { GridClient } from './client.service';
@@ -25,6 +26,8 @@ export async function createGridFiresideDMChannel(
 	const { socketController } = client;
 	const { firesideHash, user } = options;
 
+	const logger = createLogger('Fireside');
+
 	const channelController = createSocketChannelController(
 		`fireside-dm:${firesideHash}:${user.id}`,
 		socketController
@@ -40,7 +43,7 @@ export async function createGridFiresideDMChannel(
 	await channelController.join();
 
 	async function _onListableHosts(payload: ListableHostsPayload) {
-		console.debug('[FIRESIDE] Grid listable hosts.', payload);
+		logger.debug('Grid listable hosts.', payload);
 		const { listableHostIds, rtc } = firesideController;
 
 		listableHostIds.value = payload.listable_host_ids ?? [];

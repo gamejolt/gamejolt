@@ -49,7 +49,7 @@ export function useForm<T = any>() {
 	return inject(Key, null) as FormController<T> | null;
 }
 
-interface CreateFormOptions<T> {
+interface CreateFormOptions<T, SubmitResponse = any> {
 	model?: Ref<T | undefined>;
 	modelClass?: ModelClassType<T>;
 	saveMethod?: MaybeRef<keyof T | undefined>;
@@ -61,24 +61,28 @@ interface CreateFormOptions<T> {
 	onInit?: () => void;
 	onLoad?: (response: any) => void;
 	onBeforeSubmit?: () => void;
-	onSubmit?: () => Promise<any>;
-	onSubmitSuccess?: (response: any) => void;
+	onSubmit?: () => Promise<SubmitResponse>;
+	onSubmitSuccess?: (response: SubmitResponse) => void;
 	onSubmitError?: (response: any) => void;
 	onChange?: (formModel: Readonly<T>) => void;
 }
 
-export function createForm<T>({
-	model,
-	modelClass,
-	onInit,
-	onLoad,
-	onBeforeSubmit,
-	onSubmit,
-	onSubmitSuccess,
-	onSubmitError,
-	onChange,
-	...options
-}: CreateFormOptions<T>) {
+export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T, SubmitResponse>) {
+	const { model } = options;
+
+	// These may be redefined below through the overrides. Only needed for
+	// backwards compatibility with old forms.
+	let {
+		modelClass,
+		onInit,
+		onLoad,
+		onBeforeSubmit,
+		onSubmit,
+		onSubmitSuccess,
+		onSubmitError,
+		onChange,
+	} = options;
+
 	const name = uuidv4();
 
 	const formModel = ref(_makeFormModel()) as Ref<T>;
@@ -290,12 +294,12 @@ export function createForm<T>({
 		}
 		isProcessing.value = true;
 
-		let response: any;
+		let response: SubmitResponse;
 		try {
 			onBeforeSubmit?.();
 
 			if (onSubmit) {
-				const _response = await onSubmit();
+				const _response: any = await onSubmit();
 				if (_response?.success === false) {
 					throw _response;
 				}
@@ -308,6 +312,10 @@ export function createForm<T>({
 				if (model?.value) {
 					Object.assign(model.value, formModel.value);
 				}
+			} else {
+				throw new Error(
+					`Either [onSubmit] or [modelClass] is required for form submission.`
+				);
 			}
 
 			onSubmitSuccess?.(response);
