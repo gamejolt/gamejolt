@@ -21,15 +21,22 @@ const props = defineProps({
 	hideEmptyTile: {
 		type: Boolean,
 	},
+	disabled: {
+		type: Boolean,
+	},
 });
 
-const { backgrounds, background, tileSize } = toRefs(props);
+const { backgrounds, background, tileSize, disabled } = toRefs(props);
 
 const emit = defineEmits({
 	backgroundChange: (_item?: Background) => true,
 });
 
 function onSelect(item: Background | undefined) {
+	if (disabled.value) {
+		return;
+	}
+
 	let result = item;
 	if (item?.id === background?.value?.id) {
 		result = undefined;
@@ -44,6 +51,7 @@ function onSelect(item: Background | undefined) {
 			class="-items"
 			:style="{
 				height: tileSize + 'px',
+				opacity: disabled ? 0.3 : 1,
 			}"
 		>
 			<a
@@ -84,6 +92,7 @@ $-border-width = $border-width-large
 	height: $-height
 	display: inline-flex
 	grid-gap: $-padding
+	transition: opacity 300ms
 
 .-item
 	rounded-corners()
@@ -102,6 +111,7 @@ $-border-width = $border-width-large
 .-item-empty
 	position: relative
 	border-color: var(--background-border-color)
+	background-color: var(--theme-bg-offset)
 	border-style: solid
 	transition: none
 
