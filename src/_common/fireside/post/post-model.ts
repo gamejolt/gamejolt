@@ -177,10 +177,12 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return this.as_game_owner ? this.game.developer : this.user;
 	}
 
+	/** Checks if any media or videos are attached. */
 	get hasAnyMedia() {
 		return this.hasMedia || this.hasVideo;
 	}
 
+	/** Has images/gifs. */
 	get hasMedia() {
 		return this.media.length > 0;
 	}
