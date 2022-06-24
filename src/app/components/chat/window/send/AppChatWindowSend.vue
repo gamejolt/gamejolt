@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, inject, PropType, toRefs, watch } from 'vue';
+import { ContextCapabilities } from '../../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import { ChatStoreKey } from '../../chat-store';
 import { editMessage as chatEditMessage, queueChatMessage, setMessageEditing } from '../../client';
@@ -10,6 +11,13 @@ const props = defineProps({
 	room: {
 		type: Object as PropType<ChatRoom>,
 		required: true,
+	},
+	/**
+	 * Optional if needed to do custom overrides (such as firesides with roles).
+	 */
+	contextCapabilities: {
+		type: Object as PropType<ContextCapabilities>,
+		default: undefined,
 	},
 });
 
@@ -70,6 +78,7 @@ async function onRoomChanged() {
 		<div class="-container">
 			<AppChatWindowSendForm
 				:room="room"
+				:context-capabilities="contextCapabilities"
 				@submit="submit($event)"
 				@cancel="onFormCancel"
 				@focus-change="emit('focus-change', $event)"

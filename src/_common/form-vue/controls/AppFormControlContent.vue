@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { PropType, toRef } from 'vue';
 import { FocusToken } from '../../../utils/focus-token';
-import { ContentContext } from '../../content/content-context';
+import { ContentContext, ContextCapabilities } from '../../content/content-context';
 import AppContentEditor from '../../content/content-editor/content-editor.vue';
 import { ContentRules } from '../../content/content-editor/content-rules';
 import {
@@ -16,6 +16,10 @@ const props = defineProps({
 	contentContext: {
 		type: String as PropType<ContentContext>,
 		required: true,
+	},
+	contextCapabilitiesOverride: {
+		type: Object as PropType<ContextCapabilities>,
+		default: undefined,
 	},
 	placeholder: {
 		type: String,
@@ -93,6 +97,7 @@ function onChange(value: string) {
 			:class="{ '-compact': compact }"
 			:name="name"
 			:content-context="contentContext"
+			:context-capabilities-override="contextCapabilitiesOverride"
 			:placeholder="placeholder"
 			:disabled="disabled"
 			:autofocus="autofocus"

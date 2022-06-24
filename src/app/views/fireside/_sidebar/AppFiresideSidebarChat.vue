@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+import { createFiresideChatContextCapabilities } from '../../../../_common/fireside/chat-settings/chat-settings.model';
 import { useChatStore } from '../../../components/chat/chat-store';
 import AppChatWindowOutput from '../../../components/chat/window/output/AppChatWindowOutput.vue';
 import AppChatWindowSend from '../../../components/chat/window/send/AppChatWindowSend.vue';
@@ -12,10 +13,22 @@ const emit = defineEmits({
 });
 
 const c = useFiresideController()!;
-const { chatRoom } = c;
+const { chatRoom, chatSettings, fireside } = c;
 
 const chatStore = useChatStore()!;
 const chat = computed(() => chatStore.chat);
+
+// TODO: this should update based on role changing dynamically
+// TODO: this will remove their content when the room's capabilties change... can we fix that?
+const contextCapabilities = computed(() => ({
+	capabilities: createFiresideChatContextCapabilities(
+		chatSettings.value,
+		fireside.role?.role || 'audience'
+	),
+	// We return a key anytime that we generate a new context capability so that
+	// it can reload the chat input with the new capabilities.
+	key: Math.random(),
+}));
 </script>
 
 <template>
@@ -34,7 +47,12 @@ const chat = computed(() => chatStore.chat);
 		</template>
 
 		<template #footer>
-			<AppChatWindowSend v-if="chat?.currentUser && chatRoom" :room="chatRoom" />
+			<AppChatWindowSend
+				v-if="chat?.currentUser && chatRoom"
+				:key="contextCapabilities.key"
+				:room="chatRoom"
+				:context-capabilities="contextCapabilities.capabilities"
+			/>
 		</template>
 	</AppFiresideSidebar>
 </template>

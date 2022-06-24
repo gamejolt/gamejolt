@@ -37,18 +37,24 @@ type Coordinates = {
 	bottom: number;
 };
 
-export function createContentEditor({
-	contentContext,
-	singleLineMode,
-	disabled,
-}: {
+export function createContentEditor(options: {
 	contentContext: ContentContext;
 	singleLineMode?: MaybeRef<boolean>;
 	disabled?: MaybeRef<boolean>;
+
+	/**
+	 * If this is passed in, we'll use these directly instead of generating from
+	 * the ContentContext.
+	 */
+	contextCapabilities?: ContextCapabilities;
 }): ContentEditorController {
+	const { contentContext, singleLineMode, disabled } = options;
+
 	const c = reactive(new ContentEditorController(contentContext)) as ContentEditorController;
 
-	c.contextCapabilities = markRaw(ContextCapabilities.getForContext(c.contentContext));
+	c.contextCapabilities = markRaw(
+		options.contextCapabilities ?? ContextCapabilities.getForContext(c.contentContext)
+	);
 	c.schema = markRaw(generateEditorSchema(c.contextCapabilities));
 	c.plugins = markRaw(createEditorPlugins(c));
 

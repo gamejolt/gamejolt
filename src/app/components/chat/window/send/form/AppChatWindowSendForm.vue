@@ -2,6 +2,7 @@
 import { computed, nextTick, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
 import { createFocusToken } from '../../../../../../utils/focus-token';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
+import { ContextCapabilities } from '../../../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../../../_common/content/content-document';
 import { ContentRules } from '../../../../../../_common/content/content-editor/content-rules';
 import {
@@ -48,6 +49,13 @@ const props = defineProps({
 	room: {
 		type: Object as PropType<ChatRoom>,
 		required: true,
+	},
+	/**
+	 * Optional if needed to do custom overrides (such as firesides with roles).
+	 */
+	contextCapabilities: {
+		type: Object as PropType<ContextCapabilities>,
+		default: undefined,
 	},
 });
 
@@ -141,41 +149,6 @@ const typingText = computed(() => {
 	return '';
 });
 
-watch(() => chat.value.messageEditing, onMessageEditing);
-
-async function onMessageEditing(message: ChatMessage | null) {
-	if (message) {
-		form.formModel.content = message.content;
-		form.formModel.id = message.id;
-
-		// Wait in case the editor loses focus
-		await nextTick();
-		// Regain focus on the editor
-		focusToken.focus();
-
-		escapeCallback = () => cancelEditing();
-		EscapeStack.register(escapeCallback);
-	} else {
-		if (escapeCallback) {
-			EscapeStack.deregister(escapeCallback);
-			escapeCallback = null;
-		}
-		cancelEditing();
-	}
-}
-
-watch(() => room.value.id, onRoomChanged);
-
-async function onRoomChanged() {
-	if (form.formModel.content !== '') {
-		// Clear out the editor when entering a new room.
-		clearMsg();
-	}
-
-	// Then focus it.
-	focusToken.focus();
-}
-
 const form: FormController<FormModel> = createForm({
 	warnOnDiscard: false,
 	onInit() {
@@ -188,6 +161,43 @@ onUnmounted(() => {
 		clearTimeout(typingTimeout);
 	}
 });
+
+watch(
+	() => chat.value.messageEditing,
+	async (message: ChatMessage | null) => {
+		if (message) {
+			form.formModel.content = message.content;
+			form.formModel.id = message.id;
+
+			// Wait in case the editor loses focus
+			await nextTick();
+			// Regain focus on the editor
+			focusToken.focus();
+
+			escapeCallback = () => cancelEditing();
+			EscapeStack.register(escapeCallback);
+		} else {
+			if (escapeCallback) {
+				EscapeStack.deregister(escapeCallback);
+				escapeCallback = null;
+			}
+			cancelEditing();
+		}
+	}
+);
+
+watch(
+	() => room.value.id,
+	async () => {
+		if (form.formModel.content !== '') {
+			// Clear out the editor when entering a new room.
+			clearMsg();
+		}
+
+		// Then focus it.
+		focusToken.focus();
+	}
+);
 
 async function submitMessage() {
 	let doc;
@@ -372,6 +382,7 @@ function disableTypingTimeout() {
 					:key="room.id"
 					ref="editor"
 					:content-context="room.messagesContentContext"
+					:context-capabilities-override="contextCapabilities"
 					:temp-resource-context-data="contentEditorTempResourceContextData"
 					:placeholder="$gettext('Send a message')"
 					:single-line-mode="Screen.isDesktop"
