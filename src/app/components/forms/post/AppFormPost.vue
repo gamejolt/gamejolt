@@ -3,7 +3,6 @@ import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
 import { computed, nextTick, PropType, ref, toRefs, watch } from 'vue';
 import { arrayRemove } from '../../../../utils/array';
-import { pluralize } from '../../../../utils/string';
 import { trackPostPublish } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Background } from '../../../../_common/background/background.model';
@@ -51,7 +50,11 @@ import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext, $gettextInterpolate } from '../../../../_common/translate/translate.service';
+import {
+	$gettext,
+	$gettextInterpolate,
+	$ngettext,
+} from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppFormBackground from '../background/AppFormBackground.vue';
 import AppFormsCommunityPillAdd from '../community/_pill/add/add.vue';
@@ -353,33 +356,34 @@ const backgroundsDisabledText = computed(() => {
 	for (const item of media) {
 		if (item instanceof FiresidePostVideo) {
 			++vidCount;
+			if (vidCount > 1) {
+				break;
+			}
 		} else if (item instanceof MediaItem) {
 			++imgCount;
+			if (imgCount > 1) {
+				break;
+			}
 		}
 	}
 
-	const disabledTypes: string[] = [];
 	if (vidCount > 0) {
-		disabledTypes.push(
-			pluralize(vidCount, {
-				singular: 'video',
-				plural: 'videos',
-			})
+		return $ngettext(
+			`Remove your video to add a background`,
+			`Remove your videos to add a background`,
+			vidCount
 		);
 	}
 
 	if (imgCount > 0) {
-		disabledTypes.push(
-			pluralize(imgCount, {
-				singular: 'image',
-				plural: 'images',
-			})
+		return $ngettext(
+			`Remove your image to add a background`,
+			`Remove your images to add a background`,
+			vidCount
 		);
 	}
 
-	return $gettextInterpolate(`Remove your %{ types } to add a background`, {
-		types: disabledTypes.join(' and '),
-	});
+	return undefined;
 });
 
 const isEditing = computed(() => wasPublished.value || isSavedDraftPost.value);

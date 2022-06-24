@@ -94,24 +94,3 @@ export function fuzzysearch(query: string, text: string) {
 	}
 	return true;
 }
-
-export function pluralize(
-	count: number | undefined | null,
-	{
-		singular,
-		plural,
-		none,
-	}: {
-		singular: string;
-		plural: string;
-		none?: string;
-	}
-) {
-	if (typeof count !== 'number' || count == 0) {
-		return none ?? plural;
-	}
-	if (count == 1) {
-		return singular;
-	}
-	return plural;
-}
