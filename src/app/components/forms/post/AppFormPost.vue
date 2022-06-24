@@ -23,6 +23,7 @@ import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormLegend from '../../../../_common/form-vue/AppFormLegend.vue';
+import AppFormControlBackground from '../../../../_common/form-vue/controls/AppFormControlBackground.vue';
 import AppFormControlCheckbox from '../../../../_common/form-vue/controls/AppFormControlCheckbox.vue';
 import AppFormControlContent from '../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import AppFormControlDate from '../../../../_common/form-vue/controls/AppFormControlDate.vue';
@@ -57,7 +58,6 @@ import {
 	$ngettext,
 } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
-import AppFormBackground from '../background/AppFormBackground.vue';
 import AppFormsCommunityPillAdd from '../community/_pill/add/add.vue';
 import AppFormsCommunityPill from '../community/_pill/community-pill.vue';
 import AppFormsCommunityPillIncomplete from '../community/_pill/incomplete/incomplete.vue';
@@ -107,8 +107,6 @@ const emit = defineEmits({
 });
 
 const { defaultCommunity, defaultChannel, overlay, model } = toRefs(props);
-
-// modelClass = FiresidePost as any;
 
 const { user } = useCommonStore();
 
@@ -938,10 +936,11 @@ function onDisableVideoAttachment() {
 }
 
 function assignBackgroundId(backgroundId: number | null) {
-	form.formModel.background_id = backgroundId;
 	const background = backgroundId
 		? backgrounds.value.find(i => i.id === backgroundId)
 		: undefined;
+
+	form.formModel.background_id = background?.id || null;
 	emit('backgroundChange', background);
 }
 
@@ -1069,7 +1068,7 @@ function _getMatchingBackgroundIdFromPref() {
 					optional
 					:label="$gettext(`Background`)"
 				>
-					<AppFormBackground
+					<AppFormControlBackground
 						:backgrounds="backgrounds"
 						:tile-size="40"
 						:disabled-text="backgroundsDisabledText"
@@ -1638,28 +1637,28 @@ function _getMatchingBackgroundIdFromPref() {
 	align-items: center
 	margin-top: 5px
 
-	&-label
-		theme-prop('color', 'fg-muted')
-		flex: none
-		margin-right: 10px
-		font-size: $font-size-small
-		font-weight: bold
+.-hp-label
+	theme-prop('color', 'fg-muted')
+	flex: none
+	margin-right: 10px
+	font-size: $font-size-small
+	font-weight: bold
 
-		&.-overlay
-			theme-prop('color', 'fg')
+	&.-overlay
+		theme-prop('color', 'fg')
 
-	&-bar
-		flex: auto
+.-hp-bar
+	flex: auto
 
-		.progress
-			margin-bottom: 0
+	.progress
+		margin-bottom: 0
 
-	&-count
-		theme-prop('color', 'notice')
-		flex: none
-		margin-left: 10px
-		font-size: $font-size-small
-		font-weight: bold
+.-hp-count
+	theme-prop('color', 'notice')
+	flex: none
+	margin-left: 10px
+	font-size: $font-size-small
+	font-weight: bold
 
 .-backgrounds
 	margin-top: 8px
@@ -1694,10 +1693,10 @@ function _getMatchingBackgroundIdFromPref() {
 		flex-grow: 1
 		margin-bottom: ($font-size-base / 2)
 
-	&-remove
-		width: 40px
-		line-height: $input-height-base
-		text-align: center
+.-poll-option-remove
+	width: 40px
+	line-height: $input-height-base
+	text-align: center
 
 .-poll-duration
 	.form-group
@@ -1712,47 +1711,47 @@ function _getMatchingBackgroundIdFromPref() {
 	align-items: center
 	margin-top: 10px
 
-	&-icon
-		flex: none
-		margin-right: 10px
+.-linked-account-icon
+	flex: none
+	margin-right: 10px
 
-	&-label
-		flex: auto
-		margin-right: 10px
+.-linked-account-label
+	flex: auto
+	margin-right: 10px
 
-	&-toggle
-		flex: none
+.-linked-account-toggle
+	flex: none
 
 .-communities
 	margin: 10px 0
 
-	&-list
-		white-space: nowrap
-		display: flex
-		align-items: center
-		margin-bottom: 4px
+.-communities-list
+	white-space: nowrap
+	display: flex
+	align-items: center
+	margin-bottom: 4px
 
-		&-placeholder
-			margin: 10px 0 14px
+	.v-leave-from
+		display: none
+		position: absolute
 
-		.v-leave-from
-			display: none
-			position: absolute
+.-communities-list-placeholder
+	margin: 10px 0 14px
 
 .-community-pill
 	flex-shrink: 0
-
-	&-placeholder
-		change-bg('bg-subtle')
-		rounded-corners()
-		width: 138px
-		height: $pill-height
 
 	// Need to apply to the button inside the pill add component too
 	&
 	::v-deep(.button)
 		height: 28px
 		margin-bottom: 0
+
+.-community-pill-placeholder
+	change-bg('bg-subtle')
+	rounded-corners()
+	width: 138px
+	height: $pill-height
 
 .-author-avatar
 	width: $input-height-base
@@ -1763,44 +1762,44 @@ function _getMatchingBackgroundIdFromPref() {
 		display: flex
 		flex-direction: column
 
-		&-attachments
-			display: flex
-			justify-content: center
-			margin-bottom: $line-height-computed
-			padding: 10px 0
-			border-top: $border-width-base solid var(--theme-bg-subtle)
-			border-bottom: $border-width-base solid var(--theme-bg-subtle)
+	.-controls-attachments
+		display: flex
+		justify-content: center
+		margin-bottom: $line-height-computed
+		padding: 10px 0
+		border-top: $border-width-base solid var(--theme-bg-subtle)
+		border-bottom: $border-width-base solid var(--theme-bg-subtle)
 
-			> :not(:first-child)
-				margin-left: 10px
+		> :not(:first-child)
+			margin-left: 10px
 
-		&-submit
-			display: flex
+	.-controls-submit
+		display: flex
 
-			&-button
-				flex: 1 0
-				margin-right: 10px
-				margin-left: 10px
+	.-controls-submit-button
+		flex: 1 0
+		margin-right: 10px
+		margin-left: 10px
 
-				&:first-of-type
-					margin-left: 0
+		&:first-of-type
+			margin-left: 0
 
-				&:last-of-type
-					margin-right: 0
+		&:last-of-type
+			margin-right: 0
 
 @media $media-sm-up
 	.-controls
 		display: flex
 		flex-direction: row
 
-		&-attachments
-			flex: auto
+	.-controls-attachments
+		flex: auto
 
-		&-submit
-			flex: none
+	.-controls-submit
+		flex: none
 
-			&-button
-				display: inline-block
+	.-controls-submit-button
+		display: inline-block
 
 .-overlay-text
 	&

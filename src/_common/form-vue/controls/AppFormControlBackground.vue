@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import { computed, PropType, toRef, toRefs } from 'vue';
-import AppBackgroundSelector from '../../../../_common/background/AppBackgroundSelector.vue';
-import { Background } from '../../../../_common/background/background.model';
-import { useForm } from '../../../../_common/form-vue/AppForm.vue';
+import AppBackgroundSelector from '../../background/AppBackgroundSelector.vue';
+import { Background } from '../../background/background.model';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
+import { useForm } from '../AppForm.vue';
 import {
 	createFormControl,
 	defineFormControlEmits,
 	defineFormControlProps,
-} from '../../../../_common/form-vue/AppFormControl.vue';
-import { useFormGroup } from '../../../../_common/form-vue/AppFormGroup.vue';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+} from '../AppFormControl.vue';
+import { useFormGroup } from '../AppFormGroup.vue';
 
 const props = defineProps({
 	backgrounds: {
