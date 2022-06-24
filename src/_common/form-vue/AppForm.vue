@@ -29,16 +29,42 @@ import { FormGroupController } from './AppFormGroup.vue';
 
 const Key: InjectionKey<FormController> = Symbol('form');
 
+type RequiredFormProp<T> = {
+	model: {
+		type: PropType<T>;
+		required: true;
+	};
+};
+
+type OptionalFormProp<T> = {
+	model: {
+		type: PropType<T>;
+		default: undefined;
+	};
+};
+
 /**
  * Used to mix in common props used in most forms.
  */
-export function defineFormProps<T>() {
-	return {
-		model: {
-			type: Object as PropType<T | undefined>,
-			default: () => undefined,
-		},
-	};
+export function defineFormProps<T>(required: true): RequiredFormProp<T>;
+export function defineFormProps<T>(required?: false): OptionalFormProp<T>;
+export function defineFormProps<T>(required?: boolean): RequiredFormProp<T> | OptionalFormProp<T>;
+export function defineFormProps<T>(required?: boolean): RequiredFormProp<T> | OptionalFormProp<T> {
+	if (required === true) {
+		return {
+			model: {
+				type: Object as PropType<T>,
+				required: true,
+			},
+		};
+	} else {
+		return {
+			model: {
+				type: Object as PropType<T>,
+				default: undefined,
+			},
+		};
+	}
 }
 
 export function provideForm(form: FormController) {
