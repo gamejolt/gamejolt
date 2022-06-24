@@ -45,6 +45,7 @@ import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { vAppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
+import { SettingPostBackgroundId } from '../../../../_common/settings/settings.service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.service';
@@ -92,7 +93,6 @@ type FormPostModel = FiresidePost & {
 const MAX_POLL_ITEMS = 10;
 const MIN_POLL_DURATION = 5;
 const MAX_POLL_DURATION = 20160;
-const POST_BACKGROUND_ID_KEY = 'post-background-id';
 
 const props = defineProps({
 	defaultCommunity: { type: Object as PropType<Community | null>, default: null },
@@ -947,18 +947,15 @@ function assignBackgroundId(backgroundId: number | null) {
 
 function onBackgroundChanged(backgroundId: number | null) {
 	assignBackgroundId(backgroundId);
-
-	if (!import.meta.env.SSR) {
-		window.localStorage.setItem(POST_BACKGROUND_ID_KEY, (backgroundId ?? -1).toString());
-	}
+	SettingPostBackgroundId.set(backgroundId ?? -1);
 }
 
 function _getMatchingBackgroundIdFromPref() {
-	if (backgrounds.value.length === 0 || import.meta.env.SSR) {
+	if (backgrounds.value.length === 0) {
 		return null;
 	}
 
-	const prefId = Number.parseInt(window.localStorage.getItem(POST_BACKGROUND_ID_KEY) ?? '-1');
+	const prefId = SettingPostBackgroundId.get();
 	if (prefId === -1) {
 		return null;
 	}
@@ -1618,7 +1615,6 @@ function _getMatchingBackgroundIdFromPref() {
 <style lang="stylus" scoped>
 @import '../community/_pill/variables'
 
-
 .form-group:last-child
 	margin-bottom: 10px
 
@@ -1650,7 +1646,6 @@ function _getMatchingBackgroundIdFromPref() {
 
 		&.-overlay
 			theme-prop('color', 'fg')
-
 
 	&-bar
 		flex: auto
