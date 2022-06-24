@@ -146,13 +146,11 @@ export function createSocketController(options: {
 				alertedDisconnect = true;
 				connected.value = false;
 
-				if (ourCancelToken.isCanceled) {
-					resolve(false);
-					return;
+				if (!ourCancelToken.isCanceled) {
+					logger.warn('Got error from socket.', e);
+					onDisconnect();
 				}
-
-				logger.warn('Got error from socket.', e);
-				onDisconnect();
+				resolve(false);
 			});
 
 			newSocket.onClose(() => {
@@ -162,13 +160,11 @@ export function createSocketController(options: {
 				alertedDisconnect = true;
 				connected.value = false;
 
-				if (ourCancelToken.isCanceled) {
-					resolve(false);
-					return;
+				if (!ourCancelToken.isCanceled) {
+					logger.warn('Socket closed unexpectedly.');
+					onDisconnect();
 				}
-
-				logger.warn('Socket closed unexpectedly.');
-				onDisconnect();
+				resolve(false);
 			});
 
 			// This will try to connect and then we'll resolve once the socket
