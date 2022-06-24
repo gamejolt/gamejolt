@@ -1073,6 +1073,7 @@ function _getMatchingBackgroundIdFromPref() {
 						:backgrounds="backgrounds"
 						:tile-size="40"
 						:disabled-text="backgroundsDisabledText"
+						:disabled="!!backgroundsDisabledText"
 						@changed="onBackgroundChanged"
 					/>
 				</AppFormGroup>

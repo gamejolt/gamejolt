@@ -24,6 +24,7 @@ const props = defineProps({
 	hideEmptyTile: {
 		type: Boolean,
 	},
+	/** Only shows when [disabled] is `true`. */
 	disabledText: {
 		type: String,
 		default: undefined,
@@ -42,7 +43,12 @@ const { applyValue } = createFormControl<number | undefined>({
 	validators: toRef(props, 'validators'),
 });
 
-const isDisabled = computed(() => !!disabledText?.value || disabled.value);
+const displayDisabledText = computed(() => {
+	if (!disabled.value) {
+		return undefined;
+	}
+	return disabledText?.value;
+});
 
 const selectedBackgroundId = computed<number | null>(() => form.formModel[name.value] || null);
 const currentBackground = computed(() => {
@@ -65,12 +71,12 @@ function onSelect(item?: Background) {
 
 <template>
 	<AppBackgroundSelector
-		v-app-tooltip.touchable="disabledText"
+		v-app-tooltip.touchable="displayDisabledText"
 		:backgrounds="backgrounds"
 		:background="currentBackground"
 		:hide-empty-tile="hideEmptyTile"
 		:tile-size="tileSize"
-		:disabled="isDisabled"
+		:disabled="disabled"
 		@background-change="onSelect"
 	/>
 </template>
