@@ -104,9 +104,15 @@ function createFormManagedAccount() {
 			// to collect information that appears in the root or person's
 			// requirements.past_due field.
 			//
-			// if (stripeMeta.value.minimum.indexOf(field) !== -1) { return
-			//  true;
-			// }
+			// Update: yup, this is wrong. the reason we did this is because
+			// there are some fields the backend expects us to eagerly fetch
+			// even if they are not marked as required by stripe at this time.
+			// this is because they usually ask for this information at a later
+			// date, and that would increase friction with setting up the
+			// marketplace account.
+			if (stripeMeta.value.minimum.indexOf(field) !== -1) {
+				return true;
+			}
 
 			if (requirements.indexOf(field) !== -1) {
 				return true;
