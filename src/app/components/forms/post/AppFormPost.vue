@@ -517,7 +517,7 @@ const submitButtonsEnabled = computed(
 );
 
 const shouldShowAuthorOptions = computed(() => {
-	if (!model?.value?.game || !user.value) {
+	if (!model.value.game || !user.value) {
 		return false;
 	}
 
@@ -574,7 +574,7 @@ watch(
 			// background themselves.
 			const usablePostBackgroundId = hasChangedBackground.value
 				? null
-				: model?.value?.background?.id || null;
+				: model.value.background?.id || null;
 
 			// Use the post background, if applicable, or try finding a
 			// background that matches our Pref.
