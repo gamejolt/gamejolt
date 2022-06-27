@@ -98,10 +98,11 @@ const props = defineProps({
 	defaultCommunity: { type: Object as PropType<Community | null>, default: null },
 	defaultChannel: { type: Object as PropType<CommunityChannel | null>, default: null },
 	overlay: { type: Boolean, default: false },
-	...defineFormProps<FiresidePost>(),
+	...defineFormProps<FiresidePost>(true),
 });
 
 const emit = defineEmits({
+	submit: (_data: FiresidePost) => true,
 	videoUploadStatusChange: (_status: VideoStatus) => true,
 	backgroundChange: (_background?: Background) => true,
 });
@@ -143,9 +144,9 @@ const hasChangedBackground = ref(false);
 const form: FormController<FormPostModel> = createForm({
 	model,
 	modelClass: FiresidePost,
-	loadUrl: computed(() => `/web/posts/manage/save/${model!.value!.id}`),
+	loadUrl: computed(() => `/web/posts/manage/save/${model.value.id}`),
 	onInit: async () => {
-		const _model = model!.value!;
+		const _model = model.value;
 
 		isNewPost.value = _model.status === FiresidePost.STATUS_TEMP;
 		isSavedDraftPost.value = _model.status === FiresidePost.STATUS_DRAFT;
@@ -204,7 +205,6 @@ const form: FormController<FormPostModel> = createForm({
 	},
 	onLoad(payload) {
 		// Pull any post information that may not already be loaded in.
-		// setField('article_content', payload.post.article_content)
 		form.formModel.article_content = payload.post.article_content;
 
 		keyGroups.value = KeyGroup.populate(payload.keyGroups);
@@ -327,7 +327,8 @@ const form: FormController<FormPostModel> = createForm({
 		return form.formModel.$save();
 	},
 	onSubmitSuccess() {
-		Object.assign(model!.value!, form.formModel);
+		Object.assign(model.value, form.formModel);
+		emit('submit', model.value);
 	},
 });
 
@@ -399,7 +400,7 @@ const hasPoll = computed(() => {
 });
 
 const isPollEditable = computed(() => {
-	const poll = model!.value!.poll;
+	const poll = model.value.poll;
 	if (poll) {
 		return !poll.end_time;
 	}
@@ -516,7 +517,7 @@ const submitButtonsEnabled = computed(
 );
 
 const shouldShowAuthorOptions = computed(() => {
-	if (!model?.value?.game || !user.value) {
+	if (!model.value.game || !user.value) {
 		return false;
 	}
 
@@ -573,7 +574,7 @@ watch(
 			// background themselves.
 			const usablePostBackgroundId = hasChangedBackground.value
 				? null
-				: model?.value?.background?.id || null;
+				: model.value.background?.id || null;
 
 			// Use the post background, if applicable, or try finding a
 			// background that matches our Pref.
