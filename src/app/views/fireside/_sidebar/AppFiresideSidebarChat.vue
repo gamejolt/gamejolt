@@ -18,8 +18,6 @@ const { chatRoom, chatSettings, fireside } = c;
 const chatStore = useChatStore()!;
 const chat = computed(() => chatStore.chat);
 
-// TODO: this should update based on role changing dynamically
-// TODO: this will remove their content when the room's capabilties change... can we fix that?
 const contextCapabilities = computed(() => ({
 	capabilities: createFiresideChatContextCapabilities(
 		chatSettings.value,

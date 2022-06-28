@@ -35,10 +35,6 @@ const { fireside, isDraft, stickerTargetController } = c;
 					<span v-else class="-tag tag tag-highlight">
 						<AppTranslate>Public</AppTranslate>
 					</span>
-
-					<span v-if="fireside.primaryCommunityLink?.isFeatured" class="-tag tag">
-						<AppTranslate>Featured</AppTranslate>
-					</span>
 				</div>
 
 				<div class="-communities">
