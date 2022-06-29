@@ -49,6 +49,10 @@ const props = defineProps({
 		type: String as PropType<'primary' | 'notice'>,
 		default: undefined,
 	},
+	fillColor: {
+		type: String as PropType<'overlay-notice'>,
+		default: undefined,
+	},
 	badge: {
 		type: String,
 		default: undefined,
@@ -56,6 +60,9 @@ const props = defineProps({
 	to: {
 		type: null as unknown as PropType<RouteLocationRaw>,
 		default: undefined,
+	},
+	forceHover: {
+		type: Boolean,
 	},
 });
 
@@ -88,6 +95,8 @@ const ourTag = computed(() => {
 			'-block': block,
 			'-block-xs': blockXs,
 			'-disabled': disabled,
+			'-hover': forceHover,
+			[`-fill-color-${fillColor}`]: !!fillColor,
 		}"
 		:to="to"
 		:disabled="disabled === true ? 'disabled' : null"

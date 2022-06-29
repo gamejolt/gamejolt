@@ -57,6 +57,7 @@ make-button-size(size)
 
 	// Hover state is always the same.
 	&:hover
+	&.-hover
 		change-bg('bi-bg', true)
 		theme-prop('border-color', 'bi-bg', true)
 		text-decoration: none
@@ -112,6 +113,13 @@ make-button-size(size)
 
 .-icon-color-notice
 	color: var(--theme-notice)
+
+.-fill-color-overlay-notice
+	&
+	&:hover
+		change-bg-hex($gj-overlay-notice, 1, true)
+		border-color: $gj-overlay-notice !important
+		color: white !important
 
 .-badge
 	theme-prop('color', 'highlight')
