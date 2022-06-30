@@ -114,6 +114,7 @@ const { fireside, isDraft, stickerTargetController } = c;
 
 .-tag
 	margin-left: 4px
+	text-shadow: none
 
 .-communities
 	display: flex

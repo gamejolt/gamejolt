@@ -9,6 +9,7 @@ import { showErrorGrowl } from '../../growls/growls.service';
 import { Navigate } from '../../navigate/navigate.service';
 import { $gettext, Translate } from '../../translate/translate.service';
 import {
+	FiresideRTCChannel,
 	previewChannelVideo,
 	setChannelAudioTrack,
 	setChannelVideoTrack,
@@ -206,6 +207,44 @@ async function _renewTokens(producer: FiresideRTCProducer) {
 	}
 }
 
+/**
+ * Sets the muted state for a specific broadcasting channel. Toggles if [mute]
+ * is undefined.
+ */
+export function setProducerDeviceMuted(
+	producer: FiresideRTCProducer,
+	deviceType: 'video' | 'mic' | 'desktopAudio',
+	mute?: boolean
+) {
+	const localUser = producer.rtc.localUser;
+	if (!localUser) {
+		return;
+	}
+
+	let shouldMute = mute;
+	let channel: FiresideRTCChannel | null = null;
+
+	if (deviceType === 'mic') {
+		channel = localUser.rtc.chatChannel;
+		shouldMute ??= !localUser.micAudioMuted;
+	} else {
+		channel = localUser.rtc.videoChannel;
+		shouldMute ??= !localUser.videoMuted;
+	}
+
+	if (!channel || shouldMute === undefined) {
+		return;
+	}
+
+	return _doBusyWork(producer, async () => {
+		// Stops publishing the streams while still capturing data.
+		return Promise.all([
+			channel!._localVideoTrack?.setMuted(shouldMute !== false),
+			channel!._localAudioTrack?.setMuted(shouldMute !== false),
+		]);
+	});
+}
+
 // Does some work serially.
 function _doBusyWork<T>(producer: FiresideRTCProducer, work: () => Promise<T>) {
 	const { _busyPromise, isBusy } = producer;
@@ -396,7 +435,7 @@ function _updateWebcamTrack(producer: FiresideRTCProducer) {
 		updateSetIsStreaming(producer);
 
 		if (_videoPreviewElement.value) {
-			previewChannelVideo(videoChannel, _videoPreviewElement.value);
+			previewChannelVideo(producer.rtc.localUser, videoChannel, _videoPreviewElement.value);
 		}
 	});
 }
@@ -761,7 +800,7 @@ export function setVideoPreviewElement(
 
 	producer._videoPreviewElement.value = element;
 	if (element) {
-		previewChannelVideo(videoChannel, element);
+		previewChannelVideo(producer.rtc.localUser, videoChannel, element);
 	}
 }
 
@@ -911,6 +950,10 @@ function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
 	const hadDesktopAudio = user?.hasDesktopAudio === true;
 	const hadMicAudio = user?.hasMicAudio === true;
 
+	const hadVideoMuted = user?.videoMuted === true;
+	const hadDesktopAudioMuted = user?.desktopAudioMuted === true;
+	const hadMicMuted = user?.micAudioMuted === true;
+
 	user ??= createLocalFiresideRTCUser(rtc, streamingUid);
 	user._videoTrack = videoChannel._localVideoTrack
 		? markRaw(videoChannel._localVideoTrack)
@@ -926,6 +969,10 @@ function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
 	const hasDesktopAudio = !!user._desktopAudioTrack;
 	const hasMicAudio = !!user._micAudioTrack;
 
+	const hasVideoMuted = user._videoTrack?.muted === true;
+	const hasDesktopAudioMuted = user._videoTrack?.muted === true;
+	const hasMicMuted = user._micAudioTrack?.muted === true;
+
 	if (hadVideo !== hasVideo) {
 		setUserHasVideo(user, hasVideo);
 	}
@@ -936,6 +983,16 @@ function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
 		setUserHasMicAudio(user, hasMicAudio);
 	}
 
+	if (hadVideoMuted !== hasVideoMuted) {
+		user.videoMuted = hasVideoMuted;
+	}
+	if (hadDesktopAudioMuted !== hasDesktopAudioMuted) {
+		user.desktopAudioMuted = hasDesktopAudioMuted;
+	}
+	if (hadMicMuted !== hasMicMuted) {
+		user.micAudioMuted = hasMicMuted;
+	}
+
 	rtc.localUser = user;
 
 	// If we just started streaming, choose us as the focused user.
@@ -944,12 +1001,23 @@ function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
 		rtc.focusedUser = user;
 	}
 
-	rtc.log(`Synced local user.`, {
-		hasVideo,
-		hasDesktopAudio,
-		hasMicAudio,
-		hadVideo,
-		hadDesktopAudio,
-		hadMicAudio,
-	});
+	rtc.log(
+		`Synced local user.`,
+		{
+			hasVideo,
+			hasDesktopAudio,
+			hasMicAudio,
+			hadVideo,
+			hadDesktopAudio,
+			hadMicAudio,
+		},
+		{
+			hasVideoMuted,
+			hasDesktopAudioMuted,
+			hasMicMuted,
+			hadVideoMuted,
+			hadDesktopAudioMuted,
+			hadMicMuted,
+		}
+	);
 }

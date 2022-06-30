@@ -1,19 +1,23 @@
 <script lang="ts" setup>
-import { computed, PropType, shallowReactive, toRefs } from 'vue';
+import { computed, PropType, Ref, ref, shallowReactive, toRefs } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { onFiresideStickerPlaced } from '../../../../_common/drawer/drawer-store';
 import {
-FiresideRTCUser,
-setAudioPlayback,
-setUserMicrophoneAudioVolume
+	FiresideRTCUser,
+	setDesktopAudioPlayback,
+	setMicAudioPlayback,
+	setUserDesktopAudioVolume,
+	setUserMicrophoneAudioVolume,
 } from '../../../../_common/fireside/rtc/user';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPopcornKettle from '../../../../_common/popcorn/AppPopcornKettle.vue';
 import { createPopcornKettleController } from '../../../../_common/popcorn/popcorn-kettle-controller';
 import AppSlider, { ScrubberCallback } from '../../../../_common/slider/AppSlider.vue';
+import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { StickerPlacement } from '../../../../_common/sticker/placement/placement.model';
 import { useEventSubscription } from '../../../../_common/system/event/event-topic';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';
@@ -33,6 +37,12 @@ const { host } = toRefs(props);
 const c = shallowReactive(useFiresideController()!);
 const kettleController = createPopcornKettleController();
 
+const isScrubbingMic = ref(false);
+const isScrubbingDesktop = ref(false);
+
+const micVolumeBeforeScrub = ref<number>();
+const desktopVolumeBeforeScrub = ref<number>();
+
 const isFocused = computed(() => c.rtc.value?.focusedUser?.uid === host.value.uid);
 const isMe = computed(() => c.rtc.value?.localUser?.uid === host.value.uid);
 const showingVideoThumb = computed(() => !isFocused.value && host.value.hasVideo);
@@ -45,25 +55,83 @@ function onClick() {
 	c.rtc.value.focusedUser = host.value;
 }
 
-function mute() {
-	setAudioPlayback(host.value, false);
+function muteMic() {
+	setMicAudioPlayback(host.value, false);
 }
 
-function unmute() {
-	setAudioPlayback(host.value, true);
+function unmuteMic() {
+	setMicAudioPlayback(host.value, true);
 }
 
-function onMicAudioScrub({ percent }: ScrubberCallback) {
-	setUserMicrophoneAudioVolume(host.value, percent);
+function muteDesktop() {
+	setDesktopAudioPlayback(host.value, false);
+}
 
-	// TODO
-	// if (percent === 0) {
-	// 	mute();
-	// 	setUserMicrophoneAudioVolume(host.value, 1);
-	// } else {
-	// 	unmute();
-	// 	setUserMicrophoneAudioVolume(host.value, percent);
-	// }
+function unmuteDesktop() {
+	setDesktopAudioPlayback(host.value, true);
+}
+
+function _handleScrub(
+	scrubData: ScrubberCallback,
+	data: {
+		isScrubbing: Ref<boolean>;
+		volumeBeforeScrub: Ref<number | undefined>;
+		mute: () => void;
+		unmute: () => void;
+		currentPlaybackVolume: number;
+		setVolume: (user: FiresideRTCUser, volume: number) => void;
+	}
+) {
+	const { percent, stage } = scrubData;
+	const { isScrubbing, volumeBeforeScrub, mute, unmute, currentPlaybackVolume, setVolume } = data;
+
+	if (stage === 'start') {
+		isScrubbing.value = true;
+	}
+
+	if (volumeBeforeScrub.value === undefined) {
+		volumeBeforeScrub.value = currentPlaybackVolume;
+	}
+
+	if (stage === 'start' || stage === 'scrub') {
+		setVolume(host.value, percent);
+		unmute();
+		return;
+	}
+
+	if (stage === 'end') {
+		let volume = isScrubbing.value ? percent : currentPlaybackVolume;
+		if (percent === 0) {
+			mute();
+			volume = volumeBeforeScrub.value ?? 1;
+		}
+		setVolume(host.value, volume);
+		volumeBeforeScrub.value = undefined;
+
+		isScrubbing.value = false;
+	}
+}
+
+function onMicAudioScrub(data: ScrubberCallback) {
+	_handleScrub(data, {
+		currentPlaybackVolume: host.value.micPlaybackVolumeLevel,
+		isScrubbing: isScrubbingMic,
+		mute: muteMic,
+		unmute: unmuteMic,
+		setVolume: setUserMicrophoneAudioVolume,
+		volumeBeforeScrub: micVolumeBeforeScrub,
+	});
+}
+
+function onDesktopAudioScrub(data: ScrubberCallback) {
+	_handleScrub(data, {
+		currentPlaybackVolume: host.value.desktopPlaybackVolumeLevel,
+		isScrubbing: isScrubbingDesktop,
+		mute: muteDesktop,
+		unmute: unmuteDesktop,
+		setVolume: setUserDesktopAudioVolume,
+		volumeBeforeScrub: desktopVolumeBeforeScrub,
+	});
 }
 
 async function onStickerPlaced(placement: StickerPlacement) {
@@ -126,14 +194,14 @@ async function onStickerPlaced(placement: StickerPlacement) {
 				<div class="-flags">
 					<transition>
 						<span
-							v-if="host.micAudioMuted"
+							v-if="host.showMicMuted"
 							class="-flag anim-fade-enter-enlarge anim-fade-leave-shrink"
 							:class="{
-								'-flag-notice': host.micAudioMuted,
+								'-flag-notice': host.showMicMuted,
 							}"
 						>
 							<AppJolticon
-								v-if="host.micAudioMuted"
+								v-if="host.showMicMuted"
 								v-app-tooltip="$gettext(`Muted`)"
 								icon="audio-mute"
 							/>
@@ -147,21 +215,48 @@ async function onStickerPlaced(placement: StickerPlacement) {
 					<hr />
 
 					<div class="-host-audio">
-						<AppSlider
-							class="-host-audio-slider"
-							:percent="host.playbackVolumeLevel"
-							@scrub="onMicAudioScrub"
-						/>
+						<div class="-host-audio-col">
+							<AppTranslate> Microphone </AppTranslate>
+							<AppSlider
+								:percent="host.micAudioMuted ? 0 : host.micPlaybackVolumeLevel"
+								@scrub="onMicAudioScrub"
+							/>
+						</div>
 
 						<AppButton
 							class="-host-audio-button"
 							sparse
-							circle
 							trans
-							:icon="host.micAudioMuted ? 'audio-mute' : 'audio'"
-							@click="host.micAudioMuted ? unmute() : mute()"
+							:icon="host.showMicMuted ? 'microphone-off' : 'microphone'"
+							@click="host.showMicMuted ? unmuteMic() : muteMic()"
 						/>
 					</div>
+
+					<template v-if="host.hasDesktopAudio">
+						<AppSpacer vertical :scale="2" />
+
+						<div class="-host-audio">
+							<div class="-host-audio-col">
+								<AppTranslate> Desktop/Game </AppTranslate>
+								<AppSlider
+									:percent="
+										host.desktopAudioMuted ? 0 : host.desktopPlaybackVolumeLevel
+									"
+									@scrub="onDesktopAudioScrub"
+								/>
+							</div>
+
+							<AppButton
+								class="-host-audio-button"
+								sparse
+								trans
+								:icon="host.showDesktopAudioMuted ? 'audio-mute' : 'audio'"
+								@click="
+									host.showDesktopAudioMuted ? unmuteDesktop() : muteDesktop()
+								"
+							/>
+						</div>
+					</template>
 				</div>
 			</template>
 		</AppUserCardHover>
@@ -268,11 +363,15 @@ async function onStickerPlaced(placement: StickerPlacement) {
 	display: flex
 	gap: 8px
 
-.-host-audio-slider
+.-host-audio-col
 	flex: auto
+	display: flex
+	flex-direction: column
+	font-size: $font-size-small
 
 .-host-audio-button
 	flex: none
+	align-self: end
 
 .-flags
 	position: absolute

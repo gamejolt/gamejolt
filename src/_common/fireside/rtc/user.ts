@@ -11,9 +11,14 @@ import { sleep } from '../../../utils/utils';
 import { updateTrackPlaybackDevice } from './producer';
 import { chooseFocusedRTCUser, FiresideRTC } from './rtc';
 
+export type FiresideVideoFit = 'cover' | 'contain' | 'fill' | undefined;
 export class FiresideVideoPlayStatePlaying {
 	isPlaying = true;
-	constructor(public readonly element: HTMLDivElement, public readonly isLowBitrate: boolean) {}
+	constructor(
+		public readonly element: HTMLDivElement,
+		public readonly isLowBitrate: boolean,
+		public readonly videoFit: FiresideVideoFit
+	) {}
 }
 
 export class FiresideVideoPlayStateStopped {
@@ -31,7 +36,11 @@ function _comparePlayState(a_: FiresideVideoPlayState, b_: FiresideVideoPlayStat
 	}
 
 	if (a instanceof FiresideVideoPlayStatePlaying && b instanceof FiresideVideoPlayStatePlaying) {
-		return a.element === b.element && a.isLowBitrate === b.isLowBitrate;
+		return (
+			a.element === b.element &&
+			a.isLowBitrate === b.isLowBitrate &&
+			a.videoFit === b.videoFit
+		);
 	}
 
 	return a.isPlaying === b.isPlaying;
@@ -71,14 +80,20 @@ export class FiresideRTCUser {
 	readonly videoLocks: FiresideVideoLock[] = [];
 
 	hasDesktopAudio = false;
+	desktopAudioMuted = false;
+
 	pausedFrameData: ImageData | null = null;
+	videoAspectRatio = 16 / 9;
 
 	hasMicAudio = false;
 	micAudioMuted = false;
 
+	/** If we're muting the entire video stream, audio included. */
+	videoMuted = false;
+
 	/**
-	 * Scaled from 0 to 1, this is the volume level data that we're receiving
-	 * from the user.
+	 * Scaled from 0 to 1, this is the mic volume level data that we're
+	 * receiving from the user.
 	 *
 	 * Used so we can display a ring around the user avatar while they're
 	 * speaking.
@@ -86,10 +101,16 @@ export class FiresideRTCUser {
 	volumeLevel = 0;
 
 	/**
-	 * Scaled from 0 to 1, this is the volume percent we want to receive from
-	 * the user.
+	 * Scaled from 0 to 1, this is the mic volume percent we want to receive
+	 * from the user.
 	 */
-	playbackVolumeLevel = 1;
+	micPlaybackVolumeLevel = 1;
+
+	/**
+	 * Scaled from 0 to 1, this is the desktop volume percent we want to receive
+	 * from the user.
+	 */
+	desktopPlaybackVolumeLevel = 0.75;
 
 	_unwatchIsListed: WatchStopHandle | null = null;
 
@@ -99,6 +120,17 @@ export class FiresideRTCUser {
 
 	get userModel() {
 		return this._rtcHost?.user ?? null;
+	}
+
+	get showMicMuted() {
+		return this.micAudioMuted || !this.micPlaybackVolumeLevel;
+	}
+
+	get showDesktopAudioMuted() {
+		if (!this.hasDesktopAudio) {
+			return false;
+		}
+		return this.desktopAudioMuted || !this.desktopPlaybackVolumeLevel;
 	}
 
 	get isListed() {
@@ -152,7 +184,7 @@ export function createRemoteFiresideRTCUser(rtc: FiresideRTC, uid: number) {
 			);
 
 			if (!isListed) {
-				stopAudioPlayback(user);
+				stopMicAudioPlayback(user);
 				return;
 			}
 
@@ -162,14 +194,14 @@ export function createRemoteFiresideRTCUser(rtc: FiresideRTC, uid: number) {
 
 			if (isOnlyUser) {
 				// If this is the only user, we can safely start our playback.
-				startAudioPlayback(user);
+				startMicAudioPlayback(user);
 			} else if (otherUsers.every(i => i.micAudioMuted)) {
 				// Mute this user if all other listed users are muted.
-				stopAudioPlayback(user);
+				stopMicAudioPlayback(user);
 			} else {
 				// If any listed users are unmuted, unmute ourselves when
 				// becoming listed.
-				startAudioPlayback(user);
+				startMicAudioPlayback(user);
 			}
 		}
 	);
@@ -217,10 +249,10 @@ export function setUserHasMicAudio(user: FiresideRTCUser, hasMicAudio: boolean) 
 		user.hasMicAudio = true;
 
 		if (!user.micAudioMuted) {
-			startAudioPlayback(user);
+			startMicAudioPlayback(user);
 		}
 	} else {
-		stopAudioPlayback(user);
+		stopMicAudioPlayback(user);
 		user.hasMicAudio = false;
 		chooseFocusedRTCUser(user.rtc);
 	}
@@ -262,6 +294,26 @@ export function releaseVideoLock(user: FiresideRTCUser, lock: FiresideVideoLock)
 	}
 }
 
+export function setupFiresideVideoElementListeners(element: HTMLElement, user: FiresideRTCUser) {
+	const video = element.querySelector('video');
+
+	if (!import.meta.env.SSR && video instanceof HTMLVideoElement) {
+		// TODO(fireside-redesign-3) any better way to do this? we want to know
+		// when the stream aspect ratio changes so we can rearrange our layout, but
+		// all Agora events seem to be too slow and may provide us no data until
+		// the video has been playing for a while.
+
+		// TODO(fireside-redesign-3) do we need to remove this listener later on?
+		video.addEventListener(
+			'resize',
+			() => (user.videoAspectRatio = video.videoWidth / video.videoHeight),
+			{
+				passive: true,
+			}
+		);
+	}
+}
+
 /**
  * Used to set the new state for video playback for a [FiresideRTCUser]. Make
  * sure to acquire/release the appropriate locks, or things may get out of sync.
@@ -269,7 +321,7 @@ export function releaseVideoLock(user: FiresideRTCUser, lock: FiresideVideoLock)
 export async function setVideoPlayback(user: FiresideRTCUser, newState: FiresideVideoPlayState) {
 	const { rtc } = user;
 
-	// If user doesnt have a video stream to subscribe/unsubscribe to, nothing to do.
+	// If user doesn't have a video stream to subscribe/unsubscribe to, nothing to do.
 	if (!user.hasVideo) {
 		rtc.log('No video or no video client');
 		return;
@@ -320,7 +372,10 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 			user._videoTrack?.play(newState.element, {
 				// Don't mirror any tracks - local or remote.
 				mirror: false,
+				fit: newState.videoFit,
 			});
+
+			setupFiresideVideoElementListeners(newState.element, user);
 
 			// TODO: Test to make sure this doesn't fail if we're trying to set against a local user.
 			rtc.videoChannel.agoraClient.setRemoteVideoStreamType(
@@ -416,7 +471,7 @@ export async function startDesktopAudioPlayback(user: FiresideRTCUser) {
 			user._desktopAudioTrack.play();
 		}
 
-		setUserDesktopAudioVolume(user, rtc.desktopVolume);
+		setUserDesktopAudioVolume(user, user.desktopPlaybackVolumeLevel);
 	} catch (e) {
 		rtc.logError('Failed to start desktop audio playback, attempting to gracefully stop.', e);
 
@@ -452,17 +507,39 @@ export async function stopDesktopAudioPlayback(user: FiresideRTCUser) {
 	}
 }
 
-export function setAudioPlayback(user: FiresideRTCUser, isPlaying: boolean) {
+export function setMicAudioPlayback(user: FiresideRTCUser, isPlaying: boolean) {
+	// This can get called multiple times if we're adjusting with an audio
+	// slider. If there's no change, do nothing.
+	if (user.micAudioMuted === !isPlaying) {
+		return;
+	}
+
 	user.micAudioMuted = !isPlaying;
 
 	if (user.micAudioMuted) {
-		stopAudioPlayback(user);
+		stopMicAudioPlayback(user);
 	} else {
-		startAudioPlayback(user);
+		startMicAudioPlayback(user);
 	}
 }
 
-export async function startAudioPlayback(user: FiresideRTCUser) {
+export function setDesktopAudioPlayback(user: FiresideRTCUser, isPlaying: boolean) {
+	// This can get called multiple times if we're adjusting with an audio
+	// slider. If there's no change, do nothing.
+	if (user.desktopAudioMuted === !isPlaying) {
+		return;
+	}
+
+	user.desktopAudioMuted = !isPlaying;
+
+	if (user.desktopAudioMuted) {
+		stopDesktopAudioPlayback(user);
+	} else {
+		startDesktopAudioPlayback(user);
+	}
+}
+
+export async function startMicAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
 
 	rtc.log(`${_userIdForLog(user)} -> startAudioPlayback`);
@@ -490,18 +567,18 @@ export async function startAudioPlayback(user: FiresideRTCUser) {
 		}
 
 		// Set their mic volume to our preference before playing.
-		setUserMicrophoneAudioVolume(user, user.playbackVolumeLevel);
+		setUserMicrophoneAudioVolume(user, user.micPlaybackVolumeLevel);
 
 		user._micAudioTrack.play();
 	} catch (e) {
 		rtc.logError('Failed to start video playback, attempting to gracefully stop.', e);
 
-		stopAudioPlayback(user);
+		stopMicAudioPlayback(user);
 		throw e;
 	}
 }
 
-export async function stopAudioPlayback(user: FiresideRTCUser) {
+export async function stopMicAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
 
 	rtc.log(`${_userIdForLog(user)} -> stopAudioPlayback`);
@@ -541,10 +618,11 @@ export function updateVolumeLevel(user: FiresideRTCUser) {
 /** Expects a value from 0 to 1 */
 export function setUserMicrophoneAudioVolume(user: FiresideRTCUser, percent: number) {
 	user._micAudioTrack?.setVolume(Math.round(percent * 100));
-	user.playbackVolumeLevel = percent;
+	user.micPlaybackVolumeLevel = percent;
 }
 
 /** Expects a value from 0 to 1 */
 export function setUserDesktopAudioVolume(user: FiresideRTCUser, percent: number) {
 	user._desktopAudioTrack?.setVolume(Math.round(percent * 100));
+	user.desktopPlaybackVolumeLevel = percent;
 }

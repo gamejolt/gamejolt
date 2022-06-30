@@ -12,8 +12,9 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { computed, ref, shallowRef, watch } from 'vue';
+import { computed, ref, shallowRef, toRaw, watch } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
+import { debounce } from '../../../utils/utils';
 import { Api } from '../../../_common/api/api.service';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
 import AppBackground from '../../../_common/background/AppBackground.vue';
@@ -30,7 +31,7 @@ import { vAppObserveDimensions } from '../../../_common/observe-dimensions/obser
 import { Popper } from '../../../_common/popper/popper.service';
 import AppPopper from '../../../_common/popper/popper.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { Screen } from '../../../_common/screen/screen-service';
+import { Ruler } from '../../../_common/ruler/ruler-service';
 import AppStickerTarget from '../../../_common/sticker/target/target.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
@@ -39,14 +40,19 @@ import { $gettext } from '../../../_common/translate/translate.service';
 import { useChatStore } from '../../components/chat/chat-store';
 import AppFiresideProvider from '../../components/fireside/AppFiresideProvider.vue';
 import {
-createFiresideController,
-FiresideController,
-toggleStreamVideoStats
+	createFiresideController,
+	FiresideController,
+	toggleStreamVideoStats,
 } from '../../components/fireside/controller/controller';
-import { illEndOfFeed, illMaintenance, illNoCommentsSmall } from '../../img/ill/illustrations';
+import {
+	illEndOfFeed,
+	illMaintenance,
+	illNoCommentsSmall,
+	illTimeOut,
+} from '../../img/ill/illustrations';
 import { useAppStore } from '../../store';
 import AppFiresideHeader from './AppFiresideHeader.vue';
-import AppFiresideBottomBar from './_bottom-bar/AppFiresideBottomBar.vue';
+import AppFiresideBottomBar, { BottomBarControl } from './_bottom-bar/AppFiresideBottomBar.vue';
 import AppFiresideSidebarChat from './_sidebar/AppFiresideSidebarChat.vue';
 import AppFiresideSidebarFiresideSettings from './_sidebar/AppFiresideSidebarFiresideSettings.vue';
 import AppFiresideSidebarHosts from './_sidebar/AppFiresideSidebarHosts.vue';
@@ -67,15 +73,12 @@ const c = shallowRef<FiresideController | null>(null);
 
 let beforeEachDeregister: (() => void) | null = null;
 
-const videoWrapper = ref<HTMLDivElement>();
+const videoContainer = ref<HTMLDivElement>();
 
-const canShowMobileHosts = ref(true);
 const videoWidth = ref(0);
 const videoHeight = ref(0);
-const isVertical = ref(false);
 const sidebar = ref<'chat' | 'members' | 'hosts' | 'fireside-settings' | 'stream-settings'>('chat');
 
-const chat = computed(() => chatStore.chat);
 const fireside = computed(() => c.value?.fireside);
 
 // TODO(fireside-redesign) use when we have no authed user
@@ -91,22 +94,21 @@ const routeTitle = computed(() => {
 	return fireside.value.title + ' - Fireside';
 });
 
-const shouldFullscreenStream = computed(() => {
-	if (!c.value?.isStreaming.value) {
-		return false;
+const activeBottomBarControl = computed<BottomBarControl | undefined>(() => {
+	switch (sidebar.value) {
+		case 'members':
+			return 'members';
+
+		case 'fireside-settings':
+			return 'settings';
+
+		case 'stream-settings':
+			return 'setup';
+
+		default:
+			return undefined;
 	}
-	return Screen.isXs && !shouldShowChat.value && !isVertical.value;
 });
-
-const shouldShowHeaderInBody = computed(() => isVertical.value && !!c.value?.isStreaming.value);
-
-const shouldShowChat = computed(() => {
-	const mobileCondition = Screen.isMobile && c.value?.isStreaming.value ? isVertical.value : true;
-
-	return Boolean(chat.value?.connected && c.value?.chatRoom.value && mobileCondition);
-});
-
-const shouldShowTitleControls = computed(() => c.value?.status.value === 'joined');
 
 // TODO(chat-backgrounds) remove debug code
 const debugBackground = new Background({
@@ -138,15 +140,23 @@ const debugBackground = new Background({
 		video_card_url_mp4: null,
 	},
 });
-const showDebugBackground = ref(true);
 
-const background = computed(
-	() =>
-		c.value?.chatRoom.value?.background ||
-		(showDebugBackground.value ? debugBackground : undefined)
-);
+function debugToggleBackground() {
+	if (!c.value?.chatRoom.value) {
+		return;
+	}
+
+	const current = toRaw(background.value);
+	c.value.chatRoom.value.background = debugBackground === current ? undefined : debugBackground;
+}
+
+const background = computed(() => c.value?.chatRoom.value?.background);
 
 const overlayText = computed(() => !!background.value);
+
+const focusedUserVideoAspectRatio = computed(
+	() => c.value?.rtc.value?.focusedUser?.videoAspectRatio
+);
 
 // If the fireside's status ever changes to setup-failed, we want to direct to a
 // 404 page.
@@ -188,42 +198,65 @@ createAppRoute({
 	},
 });
 
-function calcIsVertical() {
-	if (Screen.isMobile && !import.meta.env.SSR) {
-		isVertical.value = window.screen.height > window.screen.width;
-	} else {
-		isVertical.value = Screen.height > Screen.width;
-	}
-}
-
+// TODO(fireside-redesign-3) Need to call this (or something similar) when the
+// track changes, or we get some update event from Agora. Check if `onPublsihed`
+// gets called when swapping the video stream, that may work fine enough.
 function onDimensionsChange() {
-	calcIsVertical();
-
-	if (!videoWrapper.value) {
+	if (!videoContainer.value) {
 		return;
 	}
 
-	const wrapperWidth = videoWrapper.value.offsetWidth;
-	const wrapperHeight = videoWrapper.value.offsetHeight;
-	const wrapperRatio = wrapperWidth / wrapperHeight;
+	const rtc = c.value?.rtc.value;
+	const focusedUser = rtc?.focusedUser;
+	if (!rtc) {
+		return;
+	}
+	// const client = rtc.videoChannel.agoraClient;
 
-	const videoStats = c.value?.rtc.value?.videoChannel.agoraClient.getRemoteVideoStats();
-	const receiveWidth = videoStats?.receiveResolutionWidth?.receiveResolutionWidth ?? 16;
-	const receiveHeight = videoStats?.receiveResolutionHeight?.receiveResolutionHeight ?? 9;
-	const receiveRatio = receiveWidth / receiveHeight;
+	const { width, height } = Ruler.offset(videoContainer.value);
+	const containerRatio = width / height;
+
+	let receiveRatio = focusedUser?.videoAspectRatio || 16 / 9;
+
+	// let dataWidth: number | undefined = undefined;
+	// let dataHeight: number | undefined = undefined;
+
+	// if (focusedUser?.isLocal) {
+	// 	const stats = client?.getLocalVideoStats();
+	// 	dataWidth = stats?.sendResolutionWidth;
+	// 	dataHeight = stats?.sendResolutionHeight;
+	// } else if (focusedUser) {
+	// 	const stats = client?.getRemoteVideoStats()[focusedUser.uid];
+	// 	dataWidth = stats?.receiveResolutionWidth;
+	// 	dataHeight = stats?.receiveResolutionHeight;
+	// } else {
+	// 	dataWidth = 16;
+	// 	dataHeight = 9;
+	// }
+
+	// let receiveRatio = 0;
+	// if (!dataWidth || !dataHeight) {
+	// 	receiveRatio = 16 / 9;
+	// } else {
+	const minRatio = 0.5;
+	const maxRatio = 2;
+	receiveRatio = Math.max(minRatio, Math.min(maxRatio, receiveRatio));
+	// }
 
 	// If the video is wider than the containing element...
-	if (receiveRatio > wrapperRatio) {
-		videoWidth.value = wrapperWidth;
-		videoHeight.value = wrapperWidth / receiveRatio;
-	} else if (receiveRatio < wrapperRatio) {
-		videoHeight.value = wrapperHeight;
-		videoWidth.value = wrapperHeight * receiveRatio;
+	if (receiveRatio > containerRatio) {
+		videoWidth.value = width;
+		videoHeight.value = width / receiveRatio;
+	} else if (receiveRatio < containerRatio) {
+		videoHeight.value = height;
+		videoWidth.value = height * receiveRatio;
 	} else {
-		videoWidth.value = wrapperWidth;
-		videoHeight.value = wrapperHeight;
+		videoWidth.value = width;
+		videoHeight.value = height;
 	}
 }
+
+const debounceDimensionsChange = debounce(onDimensionsChange, 500);
 
 function setPageTheme() {
 	const theme = fireside.value?.user?.theme ?? null;
@@ -241,12 +274,9 @@ function onClickRetry() {
 	c.value?.retry();
 }
 
-// TODO(fireside-redesign) add emit to [AppChatWindow] for focus changes
-function onChatEditorFocusChange(isFocused: boolean) {
-	canShowMobileHosts.value = !isFocused;
-}
-
 watch(() => c.value?.isPersonallyStreaming.value, onIsPersonallyStreamingChanged);
+
+watch(focusedUserVideoAspectRatio, onDimensionsChange);
 
 watch(
 	() => c.value?.rtc.value?.focusedUser?.userModel?.id,
@@ -289,13 +319,7 @@ function onIsPersonallyStreamingChanged() {
 			<div class="-fireside">
 				<!-- <AppFiresideBanner /> -->
 
-				<div
-					class="-body"
-					:class="{
-						'-body-column': isVertical && c.isStreaming.value,
-						'-is-streaming': c.isStreaming.value,
-					}"
-				>
+				<div class="-body">
 					<!-- <div v-if="shouldShowFiresideStats" class="-leading">
 					<AppFiresideStats :overlay="overlayText" />
 				</div> -->
@@ -306,19 +330,17 @@ function onIsPersonallyStreamingChanged() {
 						:overlay="overlayText"
 					/>
 
-					<div
-						class="-video-wrapper"
-						:class="{
-							'-vertical': isVertical,
-							'-fullscreen': shouldFullscreenStream,
-							'-has-cbar': !Screen.isXs,
-						}"
-					>
+					<div class="-video-wrapper">
 						<div class="-video-padding">
 							<div
-								v-if="c.isStreaming.value && c.chatRoom.value"
-								ref="videoWrapper"
-								v-app-observe-dimensions="onDimensionsChange"
+								v-if="
+									c.isStreaming.value &&
+									c.chatRoom.value &&
+									c.rtc.value &&
+									c.rtc.value.listableStreamingUsers.length > 0
+								"
+								ref="videoContainer"
+								v-app-observe-dimensions="debounceDimensionsChange"
 								class="-video-container"
 							>
 								<div
@@ -342,11 +364,6 @@ function onIsPersonallyStreamingChanged() {
 											<AppPopper trigger="right-click">
 												<AppFiresideStream
 													:rtc-user="c.rtc.value.focusedUser"
-													:has-header="
-														shouldShowHeaderInBody ||
-														shouldFullscreenStream
-													"
-													:has-hosts="shouldFullscreenStream"
 												/>
 
 												<template #popover>
@@ -366,10 +383,45 @@ function onIsPersonallyStreamingChanged() {
 									</AppStickerTarget>
 								</div>
 							</div>
+							<div v-else class="-video-container">
+								<!-- TODO(fireside-redesign-3) streaming guide, expiry info -->
+								<div
+									v-if="c.canStream.value"
+									class="-center-guide"
+									:class="{ '-overlay': overlayText, '-bold': overlayText }"
+								>
+									<em class="text-muted">
+										TODO(fireside-redesign-3): some kind of text explaining how
+										to start a stream
+									</em>
+
+									<div>
+										Lorem ipsum dolor sit amet consectetur adipisicing elit.
+										Tenetur, aliquam amet doloremque soluta quae maxime
+										reprehenderit debitis assumenda iure dicta, similique, vitae
+										consequatur voluptate corporis provident. Consequatur, quis
+										rem. Reiciendis?
+									</div>
+
+									<div>
+										Lorem ipsum dolor sit amet consectetur adipisicing elit.
+										Architecto mollitia ut sed modi, voluptas vitae esse animi
+										dicta iste laboriosam harum nesciunt exercitationem sint
+										commodi! Magni porro atque autem voluptas!
+									</div>
+								</div>
+								<template v-else>
+									<AppIllustration :src="illTimeOut">
+										<div>TODO(fireside-redesign-3): change illustration</div>
+									</AppIllustration>
+								</template>
+							</div>
 						</div>
 
 						<div class="-bottom-bar-padding">
 							<AppFiresideBottomBar
+								:overlay="overlayText"
+								:active-control="activeBottomBarControl"
 								@members="
 									sidebar === 'members'
 										? (sidebar = 'chat')
@@ -380,8 +432,12 @@ function onIsPersonallyStreamingChanged() {
 										? (sidebar = 'chat')
 										: (sidebar = 'fireside-settings')
 								"
-								@stream-settings="sidebar = 'stream-settings'"
-								@test-bg="showDebugBackground = !showDebugBackground"
+								@stream-settings="
+									sidebar === 'stream-settings'
+										? (sidebar = 'chat')
+										: (sidebar = 'stream-settings')
+								"
+								@test-bg="debugToggleBackground"
 							/>
 
 							<!-- <AppFiresideShare v-if="!c.isDraft.value" class="-share" hide-heading /> -->
@@ -549,15 +605,8 @@ function onIsPersonallyStreamingChanged() {
 
 		&:not(a)
 			color: white
-
-.-chat-window
-	change-bg-rgba(var(--theme-bg-rgb), 0.25)
-
-	::v-deep(.chat-window-send)
-		change-bg(bg)
-
-	::v-deep(.content-editor-form-control)
-		change-bg(bg-offset)
+.-bold
+	font-weight: bold
 
 .-fireside
 	width: 100%
@@ -578,21 +627,6 @@ function onIsPersonallyStreamingChanged() {
 	width: 100%
 	padding: 16px
 
-.-split
-	flex: none
-	height: $border-width-base
-	width: 100%
-	background-color: var(--theme-bg-subtle)
-
-.-body-column
-	display: grid
-	grid-template-rows: calc(min(33vh, calc((100vw / 1.7777)))) 1fr
-	grid-template-columns: 100%
-	padding: 0
-
-	.-chat
-		max-width: unset !important
-
 .-trailing
 	elevate-2()
 	position: relative
@@ -603,17 +637,6 @@ function onIsPersonallyStreamingChanged() {
 	min-width: 350px
 	max-width: 25%
 	height: 100%
-
-.-members
-	font-family: $font-family-heading
-	display: inline-flex
-	flex-wrap: nowrap
-	align-items: center
-	gap: 6px
-
-	&
-	> *
-		text-overflow()
 
 .-message-wrapper
 	position: absolute
@@ -635,18 +658,6 @@ function onIsPersonallyStreamingChanged() {
 	width: 100%
 	max-width: 600px
 
-.-fullscreen
-	position: fixed
-	left: 0
-	top: $shell-top-nav-height
-	right: 0
-	bottom: 0
-	z-index: $zindex-shell-hot-bottom + 1
-	background-color: $black
-
-	&.-has-cbar
-		left: $shell-cbar-width
-
 .-video-wrapper
 .-video-container
 .-video-inner
@@ -659,20 +670,11 @@ function onIsPersonallyStreamingChanged() {
 	flex-direction: column
 	overflow: hidden
 
-	&.-vertical
-		flex-direction: row
-		flex: none
-
 .-video-padding
 	position: relative
 	width: 100%
 	height: 100%
 	padding: 8px
-
-	.-fullscreen &
-	.-body-column &
-		background-color: $black
-		padding: 0
 
 .-video-container
 	min-height: 0
@@ -681,17 +683,23 @@ function onIsPersonallyStreamingChanged() {
 	position: relative
 
 .-video-inner
+	rounded-corners-lg()
+	elevate-2()
 	overflow: hidden
 	position: absolute !important
 	flex-direction: column
-	rounded-corners-lg()
-	elevate-2()
 	background-color: var(--theme-bg-subtle)
 	-webkit-transform: translateZ(0)
+	transition: width 200ms, height 200ms
 
-	.-fullscreen &
-	.-body-column &
-		border-radius: 0
+.-center-guide
+	display: flex
+	flex-direction: column
+	justify-content: center
+	gap: 40px
+	padding: 32px 64px
+	max-width: 650px
+	text-align: center
 
 .-bottom-bar-padding
 	flex: none
@@ -715,44 +723,4 @@ function onIsPersonallyStreamingChanged() {
 	> *
 		margin-top: 0 !important
 		margin-bottom: 0 !important
-
-	.-video-wrapper.-vertical &
-		padding-top: 0
-		padding-right: 8px
-
-.-mobile-hosts
-	padding-top: 6px
-	padding-bottom: 20px
-	display: flex
-	justify-content: center
-
-.-chat-wrapper
-	elevate-1()
-	position: relative
-	height: 100%
-
-.-body-column
-.-is-streaming
-	.-chat-wrapper
-		margin-left: -($grid-gutter-width-xs / 2)
-		margin-right: -($grid-gutter-width-xs / 2)
-
-		@media $media-sm-up
-			margin-left: -($grid-gutter-width / 2)
-			margin-right: -($grid-gutter-width / 2)
-
-.-chat-members
-	display: flex
-	flex-direction: column
-	height: 100%
-	overflow: hidden
-
-.-login
-	padding: ($grid-gutter-width-xs / 2)
-
-	> *
-		margin: 0
-
-	@media $media-sm-up
-		padding: ($grid-gutter-width / 2)
 </style>

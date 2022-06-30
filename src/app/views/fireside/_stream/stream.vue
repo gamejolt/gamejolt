@@ -4,23 +4,27 @@ import { shallowSetup } from '../../../../utils/vue';
 import { useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../_common/filters/number';
-import { setRTCDesktopVolume } from '../../../../_common/fireside/rtc/rtc';
-import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
+import { FiresideRTCUser, setDesktopAudioPlayback } from '../../../../_common/fireside/rtc/user';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppSlider, { ScrubberCallback } from '../../../../_common/slider/AppSlider.vue';
+import AppSlider from '../../../../_common/slider/AppSlider.vue';
 import AppSticker from '../../../../_common/sticker/sticker.vue';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideDesktopAudio from '../../../components/fireside/stream/AppFiresideDesktopAudio.vue';
 import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';
 import AppFiresideVideoStats from '../../../components/fireside/stream/video-stats/video-stats.vue';
 import AppFiresideHeader from '../AppFiresideHeader.vue';
+import AppFiresideBottomBarHostAvatar from '../_bottom-bar/AppFiresideBottomBarHostAvatar.vue';
 
 const UIHideTimeout = 2000;
 const UIHideTimeoutMovement = 2000;
 const UITransitionTime = 200;
 
 @Options({
+	directives: {
+		AppTooltip: vAppTooltip,
+	},
 	components: {
 		AppFiresideDesktopAudio,
 		AppFiresideHeader,
@@ -29,6 +33,7 @@ const UITransitionTime = 200;
 		AppLoading,
 		AppSlider,
 		AppSticker,
+		AppFiresideBottomBarHostAvatar,
 	},
 })
 export default class AppFiresideStream extends Vue {
@@ -66,10 +71,6 @@ export default class AppFiresideStream extends Vue {
 
 	get streakCount() {
 		return formatFuzzynumber(this.stickerStreak?.count ?? 0);
-	}
-
-	get desktopVolume() {
-		return this.c.rtc.value?.desktopVolume ?? 1;
 	}
 
 	get hasVolumeControls() {
@@ -113,7 +114,7 @@ export default class AppFiresideStream extends Vue {
 	}
 
 	get hasVideo() {
-		return this.rtcUser.hasVideo && this.rtcUser.isListed;
+		return this.rtcUser.hasVideo && this.rtcUser.isListed && !this.rtcUser.videoMuted;
 	}
 
 	get isLoadingVideo() {
@@ -189,8 +190,8 @@ export default class AppFiresideStream extends Vue {
 		this.c.isShowingOverlayPopper.value = false;
 	}
 
-	onVolumeScrub({ percent }: ScrubberCallback) {
-		setRTCDesktopVolume(this.c.rtc.value!, percent);
+	unmuteDesktopAudio() {
+		setDesktopAudioPlayback(this.rtcUser, true);
 	}
 
 	private animateStickerStreak() {
@@ -300,6 +301,14 @@ export default class AppFiresideStream extends Vue {
 						class="-video-player -click-target"
 						:rtc-user="rtcUser"
 					/>
+					<div v-else class="-video-sidebar-notice">
+						<strong>
+							<AppTranslate class="text-muted">
+								See video preview in sidebar
+							</AppTranslate>
+						</strong>
+					</div>
+
 					<AppFiresideDesktopAudio v-if="shouldPlayDesktopAudio" :rtc-user="rtcUser" />
 					<AppFiresideVideoStats v-if="shouldShowVideoStats" @click.capture.stop />
 				</div>
@@ -308,7 +317,7 @@ export default class AppFiresideStream extends Vue {
 		<template v-else>
 			<div class="-overlay -visible-center">
 				<div class="-host-wrapper">
-					<!-- <AppFiresideHostThumbIndicator class="-host" :host="rtcUser" /> -->
+					<AppFiresideBottomBarHostAvatar class="-host" :host="rtcUser" />
 				</div>
 			</div>
 		</template>
@@ -373,13 +382,14 @@ export default class AppFiresideStream extends Vue {
 									/>
 								</div>
 
-								<div v-if="hasVolumeControls" class="-volume">
-									<AppJolticon icon="audio" />
-									<AppSlider
-										class="-volume-slider"
-										:percent="desktopVolume"
+								<div v-if="rtcUser.showDesktopAudioMuted">
+									<AppButton
+										v-app-tooltip="$gettext(`Ummute video`)"
+										circle
+										trans
 										overlay
-										@scrub="onVolumeScrub"
+										icon="audio-mute"
+										@click.capture.stop="unmuteDesktopAudio"
 									/>
 								</div>
 							</div>
@@ -447,6 +457,14 @@ $-z-combo = 2
 
 		&.-darken
 			background-color: $-overlay-bg
+
+.-video-sidebar-notice
+	change-bg(bg)
+	width: 100%
+	height: 100%
+	display: flex
+	justify-content: center
+	align-items: center
 
 .-click-target
 	cursor: pointer

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, onUnmounted, PropType, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
 import { sleep } from '../../../../../utils/utils';
 import { MediaDeviceService } from '../../../../../_common/agora/media-device.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
@@ -54,11 +54,20 @@ const props = defineProps({
 		type: Object as PropType<FiresideController>,
 		required: true,
 	},
+	hidePublishControls: {
+		type: Boolean,
+	},
+	showLoading: {
+		type: Boolean,
+	},
 });
 
 const emit = defineEmits({
+	isInvalid: (_invalid: boolean) => true,
 	close: () => true,
 });
+
+const { hidePublishControls, showLoading } = toRefs(props);
 
 // The controller will never change.
 // eslint-disable-next-line vue/no-setup-props-destructure
@@ -80,6 +89,8 @@ const {
 const producer = computed(() => rtc.value?.producer ?? undefined);
 
 const isStarting = ref(false);
+const isLoading = computed(() => isStarting.value || showLoading.value);
+
 const shouldShowAdvanced = ref(false);
 let _didDetectDevices = false;
 const videoPreviewElem = ref<HTMLDivElement>();
@@ -203,7 +214,7 @@ onMounted(async () => {
 onUnmounted(() => {
 	// If we're not streaming or about to, clear the selected device ids so
 	// that the browser doesn't think we're still recording.
-	if (!(isPersonallyStreaming.value || isStarting.value)) {
+	if (!(isPersonallyStreaming.value || isLoading.value)) {
 		clearSelectedRecordingDevices(localProducer);
 	}
 
@@ -288,6 +299,10 @@ function _initFromSettings() {
 		shouldStreamDesktopAudio,
 	});
 }
+
+watch(isInvalidConfig, isInvalid => emit('isInvalid', isInvalid), {
+	immediate: true,
+});
 
 watch(
 	[canStreamVideo, videoPreviewElem],
@@ -469,7 +484,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 </script>
 
 <template>
-	<AppLoadingFade :is-loading="isStarting">
+	<AppLoadingFade :is-loading="isLoading">
 		<AppForm :controller="form">
 			<template v-if="canStreamAudio">
 				<AppFormGroup
@@ -802,7 +817,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 				</AppExpand>
 			</fieldset>
 
-			<div v-if="!isPersonallyStreaming" class="-actions">
+			<div v-if="!hidePublishControls && !isPersonallyStreaming" class="-actions">
 				<AppButton trans @click="onClickCancel()">
 					<AppTranslate>Cancel</AppTranslate>
 				</AppButton>

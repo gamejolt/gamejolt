@@ -1,9 +1,11 @@
 <script lang="ts" setup>
+import { ref } from '@vue/reactivity';
 import { PropType } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { ChatUser } from '../../../components/chat/user';
 import AppChatListItem from '../../../components/chat/_list/AppChatListItem.vue';
+import { useFiresideController } from '../../../components/fireside/controller/controller';
 
 defineProps({
 	user: {
@@ -23,10 +25,21 @@ defineProps({
 const emit = defineEmits({
 	click: () => true,
 });
+
+const c = useFiresideController()!;
+const { canManageCohosts } = c;
+
+const hovered = ref(false);
 </script>
 
 <template>
-	<AppChatListItem :horizontal-padding="16" popper-placement="left" popper-trigger="click">
+	<AppChatListItem
+		:horizontal-padding="16"
+		popper-trigger="manual"
+		@mouseenter="hovered = true"
+		@mouseleave="hovered = false"
+		@click="emit('click')"
+	>
 		<template #leading>
 			<div class="-member-avatar">
 				<img class="-member-avatar-img" :src="user.img_avatar" />
@@ -39,21 +52,31 @@ const emit = defineEmits({
 		</template>
 
 		<template #trailing>
-			<AppButton v-if="!isHost" :disabled="isProcessing" @click="emit('click')">
-				<AppTranslate>Add</AppTranslate>
-			</AppButton>
-			<AppButton
-				v-else
-				:disabled="isProcessing"
-				circle
-				sparse
-				trans
-				icon="remove"
-				@click="emit('click')"
-			/>
+			<template v-if="canManageCohosts">
+				<!-- TODO(fireside-redesign-3) improve the experience with this.
+				takes too long currently due to how we're detecting host state
+				changes. -->
+				<AppButton
+					v-if="!isHost"
+					:class="{ '-button-hover': hovered }"
+					:disabled="isProcessing"
+					:force-hover="hovered"
+					@click="emit('click')"
+				>
+					<AppTranslate>Add</AppTranslate>
+				</AppButton>
+				<AppButton
+					v-else
+					:disabled="isProcessing"
+					circle
+					sparse
+					trans
+					icon="remove"
+					:fill-color="hovered ? 'overlay-notice' : undefined"
+					@click="emit('click')"
+				/>
+			</template>
 		</template>
-
-		<template #popover> TODO </template>
 	</AppChatListItem>
 </template>
 

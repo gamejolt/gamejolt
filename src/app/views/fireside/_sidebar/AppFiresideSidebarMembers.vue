@@ -12,7 +12,7 @@ const emit = defineEmits({
 });
 
 const c = useFiresideController()!;
-const { chatRoom, chatUsers } = c;
+const { chatRoom, chatUsers, canManageCohosts } = c;
 </script>
 
 <template>
@@ -20,7 +20,7 @@ const { chatRoom, chatUsers } = c;
 		<template #header>
 			<AppFiresideSidebarHeading showing-members @members="emit('members')" />
 
-			<div class="-manage-button">
+			<div v-if="canManageCohosts" class="-manage-button">
 				<AppButton block @click="emit('hosts')">
 					<AppTranslate>Manage hosts</AppTranslate>
 				</AppButton>

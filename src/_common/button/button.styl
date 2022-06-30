@@ -121,6 +121,17 @@ make-button-size(size)
 		border-color: $gj-overlay-notice !important
 		color: white !important
 
+	&:hover
+		&
+		.-icon
+		::v-deep(.jolticon-addon)
+		::v-deep(small)
+			color: white !important
+
+		&.-outline
+			.-badge::after
+				border-color: $gj-overlay-notice !important
+
 .-badge
 	theme-prop('color', 'highlight')
 	background-color: $black

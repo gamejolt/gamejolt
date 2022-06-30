@@ -5,7 +5,6 @@ import { CancelToken } from '../../../utils/cancel-token';
 import { debounce, sleep } from '../../../utils/utils';
 import { importNoSSR } from '../../code-splitting';
 import { Navigate } from '../../navigate/navigate.service';
-import { SettingStreamDesktopVolume } from '../../settings/settings.service';
 import { User } from '../../user/user.model';
 import { Fireside } from '../fireside.model';
 import {
@@ -21,13 +20,12 @@ import {
 	createRemoteFiresideRTCUser,
 	FiresideRTCUser,
 	FiresideVideoPlayStateStopped,
-	setUserDesktopAudioVolume,
 	setUserHasDesktopAudio,
 	setUserHasMicAudio,
 	setUserHasVideo,
 	setVideoPlayback,
-	stopAudioPlayback,
 	stopDesktopAudioPlayback,
+	stopMicAudioPlayback,
 	updateVolumeLevel,
 } from './user';
 
@@ -109,12 +107,6 @@ export class FiresideRTC {
 	shouldShowVideoThumbnails = false;
 	shouldShowVideoStats = false;
 	producer: FiresideRTCProducer | null = null;
-
-	_desktopVolume = 1;
-
-	get desktopVolume() {
-		return this._desktopVolume;
-	}
 
 	setupFinalized = false;
 	finalizeSetupFn: (() => void) | null = null;
@@ -220,9 +212,6 @@ export function createFiresideRTC(
 		)
 	) as FiresideRTC;
 
-	// Initialize based on their pref.
-	setRTCDesktopVolume(rtc, SettingStreamDesktopVolume.get());
-
 	_setup(rtc);
 	return rtc;
 }
@@ -252,7 +241,7 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 				Promise.all([
 					setVideoPlayback(user, new FiresideVideoPlayStateStopped()),
 					stopDesktopAudioPlayback(user),
-					stopAudioPlayback(user),
+					stopMicAudioPlayback(user),
 				])
 			)
 		);
@@ -640,16 +629,5 @@ function _updateVolumeLevels(rtc: FiresideRTC) {
 	// so we don't get volume data.
 	for (const user of rtc._remoteStreamingUsers) {
 		updateVolumeLevel(user);
-	}
-}
-
-export function setRTCDesktopVolume(rtc: FiresideRTC, percent: number) {
-	percent = Math.min(1, Math.max(0, percent));
-
-	rtc._desktopVolume = percent;
-	SettingStreamDesktopVolume.set(percent);
-
-	if (rtc.focusedUser) {
-		setUserDesktopAudioVolume(rtc.focusedUser, percent);
 	}
 }

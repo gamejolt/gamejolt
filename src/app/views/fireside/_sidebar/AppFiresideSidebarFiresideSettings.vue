@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppFiresideSettings from '../../../components/fireside/AppFiresideSettings.vue';
@@ -29,31 +30,41 @@ const { canEdit, isDraft } = c;
 					<AppTranslate>Options</AppTranslate>
 				</template>
 			</AppHeaderBar>
-
-			<div v-if="canEdit" class="-pad">
-				<AppButton block @click="emit('streamSettings')">
-					<AppTranslate>Stream settings</AppTranslate>
-				</AppButton>
-			</div>
 		</template>
 
 		<template #body>
-			<div class="-pad">
-				<AppFiresideSettings v-if="canEdit" :c="c" />
+			<!-- TODO(fireside-redesign-3) figure out this padding -->
+			<AppScrollScroller class="-pad-v">
+				<div v-if="canEdit" class="-pad-h">
+					<AppButton block @click="emit('streamSettings')">
+						<AppTranslate>Stream settings</AppTranslate>
+					</AppButton>
 
-				<AppSpacer vertical :scale="4" />
+					<hr />
+				</div>
 
-				<AppFiresideShare v-if="!isDraft" class="-share" />
+				<div class="-pad-h">
+					<AppFiresideSettings v-if="canEdit" :c="c" />
 
-				<AppButton v-if="!canEdit" icon="flag" trans block>
-					<AppTranslate>Report fireside</AppTranslate>
-				</AppButton>
-			</div>
+					<AppSpacer vertical :scale="4" />
+
+					<AppFiresideShare v-if="!isDraft" class="-share" />
+
+					<AppButton v-if="!canEdit" icon="flag" trans block>
+						<AppTranslate>Report fireside</AppTranslate>
+					</AppButton>
+				</div>
+			</AppScrollScroller>
 		</template>
 	</AppFiresideSidebar>
 </template>
 
 <style lang="stylus" scoped>
-.-pad
-	padding: 16px
+.-pad-h
+	padding-left: 16px
+	padding-right: 16px
+
+.-pad-v
+	padding-top: 16px
+	padding-bottom: 16px
 </style>

@@ -50,8 +50,6 @@ const memberCount = computed(() => chatUsers.value?.count || 0);
 				:solid="showingMembers"
 				@click="emit('members')"
 			/>
-
-			<AppButton icon="remove" circle trans />
 		</template>
 	</AppHeaderBar>
 </template>

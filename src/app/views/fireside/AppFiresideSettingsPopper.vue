@@ -5,7 +5,7 @@ import { Api } from '../../../_common/api/api.service';
 import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import { FiresideCommunity } from '../../../_common/fireside/community/community.model';
 import { stopStreaming } from '../../../_common/fireside/rtc/producer';
-import { setAudioPlayback } from '../../../_common/fireside/rtc/user';
+import { setMicAudioPlayback } from '../../../_common/fireside/rtc/user';
 import { showErrorGrowl } from '../../../_common/growls/growls.service';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { Popper } from '../../../_common/popper/popper.service';
@@ -73,11 +73,11 @@ const shouldShowMuteAll = computed(() => {
 });
 
 function muteAll() {
-	return rtc.value?.listableStreamingUsers.forEach(i => setAudioPlayback(i, false));
+	return rtc.value?.listableStreamingUsers.forEach(i => setMicAudioPlayback(i, false));
 }
 
 function unmuteAll() {
-	return rtc.value?.listableStreamingUsers.forEach(i => setAudioPlayback(i, true));
+	return rtc.value?.listableStreamingUsers.forEach(i => setMicAudioPlayback(i, true));
 }
 
 function onClickShowChatMembers() {

@@ -11,6 +11,7 @@ import type {
 } from 'agora-rtc-sdk-ng';
 import { markRaw, reactive } from 'vue';
 import { FiresideRTC } from './rtc';
+import { FiresideRTCUser, setupFiresideVideoElementListeners } from './user';
 
 type OnTrackPublish = (remoteUser: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => void;
 type OnTrackUnpublish = (remoteUser: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => void;
@@ -182,12 +183,20 @@ export async function setChannelVideoTrack(
 	generation.assert();
 }
 
-export function previewChannelVideo(channel: FiresideRTCChannel, element: HTMLDivElement) {
+export function previewChannelVideo(
+	user: FiresideRTCUser | null,
+	channel: FiresideRTCChannel,
+	element: HTMLDivElement
+) {
 	element.innerHTML = '';
 	channel._localVideoTrack?.play(element, {
 		fit: 'contain',
 		mirror: false,
 	});
+
+	if (user) {
+		setupFiresideVideoElementListeners(element, user);
+	}
 }
 
 export async function setChannelAudioTrack(

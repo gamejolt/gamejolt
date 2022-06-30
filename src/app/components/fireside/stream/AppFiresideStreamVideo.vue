@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, PropType, ref, toRefs, watch } from 'vue';
 import {
 	FiresideRTCUser,
+	FiresideVideoFit,
 	FiresideVideoLock,
 	FiresideVideoPlayStatePlaying,
 	getVideoLock,
@@ -18,9 +19,13 @@ const props = defineProps({
 	lowBitrate: {
 		type: Boolean,
 	},
+	videoFit: {
+		type: String as PropType<FiresideVideoFit>,
+		default: 'contain',
+	},
 });
 
-const { rtcUser, lowBitrate } = toRefs(props);
+const { rtcUser, lowBitrate, videoFit } = toRefs(props);
 const { rtc } = useFiresideController()!;
 
 let _videoLock: FiresideVideoLock | null = null;
@@ -61,7 +66,7 @@ function _getLocks() {
 	_videoLock = getVideoLock(rtcUser.value);
 	setVideoPlayback(
 		rtcUser.value,
-		new FiresideVideoPlayStatePlaying(videoElem.value!, lowBitrate.value)
+		new FiresideVideoPlayStatePlaying(videoElem.value!, lowBitrate.value, videoFit.value)
 	);
 }
 
