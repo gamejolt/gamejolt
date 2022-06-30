@@ -178,6 +178,7 @@ function onClickStickerButton() {
 							:active="localUser?.hasMicAudio && !localUser.micAudioMuted"
 							:icon="micIcon"
 							show-settings
+							:disabled="!localUser?._micAudioTrack"
 							@click-settings="emit('streamSettings')"
 							@click="onClickMic"
 						/>
@@ -185,6 +186,7 @@ function onClickStickerButton() {
 							:active="localUser?.hasVideo && !localUser.videoMuted"
 							:icon="videoIcon"
 							show-settings
+							:disabled="!localUser?._videoTrack"
 							@click-settings="emit('streamSettings')"
 							@click="onClickVideo"
 						/>
