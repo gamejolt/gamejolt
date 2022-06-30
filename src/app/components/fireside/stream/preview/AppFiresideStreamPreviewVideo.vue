@@ -2,9 +2,9 @@
 import { computed, onBeforeUnmount, PropType, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useDrawerStore } from '../../../../../_common/drawer/drawer-store';
+import AppFiresideLiveTag from '../../../../../_common/fireside/AppFiresideLiveTag.vue';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../../_common/user/user.model';
 import { useAppStore } from '../../../../store';
@@ -89,9 +89,7 @@ onBeforeUnmount(() => cleanupController());
 
 			<div class="-overlay">
 				<div v-if="showLive" class="-center">
-					<div class="-live">
-						<AppTranslate>LIVE</AppTranslate>
-					</div>
+					<AppFiresideLiveTag size="lg" />
 				</div>
 				<div v-if="showLiveUsers" class="-live-users">
 					<AppUserAvatarList :users="cohosts" sm inline />
@@ -123,19 +121,6 @@ onBeforeUnmount(() => cleanupController());
 	display: flex
 	justify-content: center
 	align-items: center
-
-.-live
-	rounded-corners-lg()
-	margin: 0
-	padding: 4px 8px
-	font-size: $font-size-h1
-	font-weight: 700
-	font-family: $font-family-heading
-	text-shadow: none
-	box-shadow: 1px 1px 3px $black
-	letter-spacing: 2px
-	color: $white
-	background-color: $gj-overlay-notice
 
 .-live-users
 	position: absolute
