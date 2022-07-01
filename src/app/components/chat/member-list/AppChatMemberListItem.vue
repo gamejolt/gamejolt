@@ -42,7 +42,7 @@ const isOnline = computed(() => {
 
 const isOwner = computed(() => room.value.owner_id === user.value.id);
 
-const isLiveFiresideHost = computed(() => user.value.firesideHost?.isLive === true);
+const isLiveFiresideHost = computed(() => user.value.isLive === true);
 const isFiresideHost = computed(() => !!user.value.firesideHost);
 
 const isModerator = computed(
