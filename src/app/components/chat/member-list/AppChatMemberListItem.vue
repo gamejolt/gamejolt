@@ -1,5 +1,6 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { computed, inject, PropType, toRefs } from 'vue';
+import AppFiresideLiveTag from '../../../../_common/fireside/AppFiresideLiveTag.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -10,9 +11,7 @@ import { ChatUser } from '../user';
 import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
 import AppChatUserPopover from '../user-popover/user-popover.vue';
 import AppChatListItem from '../_list/AppChatListItem.vue';
-</script>
 
-<script lang="ts" setup>
 const props = defineProps({
 	user: {
 		type: Object as PropType<ChatUser>,
@@ -42,6 +41,9 @@ const isOnline = computed(() => {
 });
 
 const isOwner = computed(() => room.value.owner_id === user.value.id);
+
+const isLiveFiresideHost = computed(() => user.value.firesideHost?.isLive === true);
+const isFiresideHost = computed(() => !!user.value.firesideHost);
 
 const isModerator = computed(
 	() => tryGetRoomRole(chat.value, room.value, user.value) === 'moderator'
@@ -75,6 +77,13 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 		</template>
 
 		<template #title>
+			<AppFiresideLiveTag
+				v-if="isLiveFiresideHost"
+				class="-nowrap"
+				size="tiny"
+				sans-elevation
+			/>
+
 			<span>{{ user.display_name }}</span>
 			<span class="tiny text-muted">@{{ user.username }}</span>
 		</template>
@@ -83,11 +92,16 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 			<span v-if="isOwner" v-app-tooltip="$gettext(`Room Owner`)">
 				<AppJolticon class="-indicator-icon" icon="crown" />
 			</span>
-			<span v-else-if="isStaff" v-app-tooltip="$gettext(`Game Jolt Staff`)">
-				<AppJolticon class="-indicator-icon" icon="gamejolt" />
+			<span v-else-if="isFiresideHost" v-app-tooltip="$gettext(`Host`)">
+				<AppJolticon class="-indicator-icon" icon="star-ten-pointed" />
 			</span>
-			<span v-else-if="isModerator" v-app-tooltip="$gettext(`Moderator`)">
+
+			<span v-if="isModerator" v-app-tooltip="$gettext(`Chat Moderator`)">
 				<AppJolticon class="-indicator-icon" icon="star" />
+			</span>
+
+			<span v-if="isStaff" v-app-tooltip="$gettext(`Game Jolt Staff`)">
+				<AppJolticon class="-indicator-icon" icon="gamejolt" />
 			</span>
 		</template>
 
@@ -105,4 +119,9 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 
 .-indicator-icon
 	color: var(--theme-primary)
+
+.-nowrap
+	overflow: unset
+	white-space: unset
+	text-overflow: unset
 </style>

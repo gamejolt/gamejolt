@@ -1,3 +1,4 @@
+import { FiresideRTCHost } from '../../../_common/fireside/rtc/rtc';
 import { CHAT_ROLES } from './role';
 
 export class ChatUser {
@@ -14,6 +15,8 @@ export class ChatUser {
 	typing = false;
 
 	role: CHAT_ROLES | null = null;
+
+	firesideHost: FiresideRTCHost | null = null;
 
 	constructor(data: any = {}) {
 		Object.assign(this, data);

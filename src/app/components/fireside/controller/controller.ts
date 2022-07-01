@@ -948,6 +948,7 @@ export async function updateFiresideData(
 		user,
 		status,
 		hosts,
+		chatUsers,
 		chatSettings,
 		rtc,
 		agoraStreamingInfo,
@@ -1017,6 +1018,7 @@ export async function updateFiresideData(
 		// being a host.
 		const wasHost = hosts.value.some(i => i.user.id === user.value?.id);
 		hosts.value = _getHostsFromStreamingInfo(payload.streamingInfo);
+		chatUsers.value?.assignFiresideHostData(hosts.value);
 		const isHost = hosts.value.some(i => i.user.id === user.value?.id);
 
 		// If our host state changed, we need to update anything else depending
@@ -1173,7 +1175,7 @@ function isListableHostStreaming(hosts: FiresideRTCHost[], listableHostIds: numb
  * Returns `false` if there was an error, `true` if not.
  */
 async function _fetchForFiresideStreaming(c: FiresideController, { assignStatus = true }) {
-	const { fireside, status, agoraStreamingInfo, hosts, listableHostIds, logger } = c;
+	const { fireside, status, agoraStreamingInfo, hosts, chatUsers, listableHostIds, logger } = c;
 	try {
 		const payload = await Api.sendRequest<FullStreamingPayload>(
 			`/web/fireside/fetch-for-streaming/${fireside.hash}`,
@@ -1204,6 +1206,8 @@ async function _fetchForFiresideStreaming(c: FiresideController, { assignStatus 
 		agoraStreamingInfo.value = newStreamingInfo;
 
 		hosts.value = _getHostsFromStreamingInfo(payload);
+		chatUsers.value?.assignFiresideHostData(hosts.value);
+
 		listableHostIds.value = payload.listableHostIds ?? [];
 
 		// TODO(big-pp-event) need to renew audience tokens here somewhere?

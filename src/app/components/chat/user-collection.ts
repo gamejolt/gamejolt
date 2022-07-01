@@ -1,7 +1,7 @@
 import { toRaw } from 'vue';
 import { arrayRemove, numberSort, stringSortRaw } from '../../../utils/array';
+import { FiresideRTCHost } from '../../../_common/fireside/rtc/rtc';
 import { ChatClient, isUserOnline } from './client';
-import { CHAT_ROLES } from './role';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
 
@@ -19,6 +19,7 @@ export class ChatUserCollection {
 	private byId_ = new Map<number, ChatUser>();
 	private byRoomId_ = new Map<number, ChatUser>();
 	private doingWork_ = false;
+	private firesideHosts_ = new Map<number, ChatUser>();
 
 	get count() {
 		return this.onlineCount + this.offlineCount;
@@ -109,6 +110,69 @@ export class ChatUserCollection {
 		this.recollect();
 	}
 
+	assignFiresideHostData(data: FiresideRTCHost[]) {
+		let needsRecollect = false;
+
+		// Store our current host ids so we can find chat users that are no
+		// longer hosts.
+		const staleHostIds = new Set(this.firesideHosts_.keys());
+
+		for (const hostData of data) {
+			const freshHostId = hostData.user.id;
+			// User is still a host, but host data may be diffrent. Assign new
+			// host data to the chat user.
+			if (staleHostIds.has(freshHostId)) {
+				// Remove the hostId from our old set.
+				staleHostIds.delete(freshHostId);
+
+				const validHost = this.firesideHosts_.get(freshHostId);
+				if (validHost) {
+					// Mark ourselves as needing a recollect only if the
+					// relevant state doesn't match.
+					if (!needsRecollect) {
+						const oldHostData = validHost.firesideHost;
+						needsRecollect =
+							oldHostData?.isLive !== hostData.isLive &&
+							oldHostData?.needsPermissionToView !== hostData.needsPermissionToView;
+					}
+					validHost.firesideHost = hostData;
+				}
+				continue;
+			}
+
+			const user = this.get(freshHostId);
+			if (!user) {
+				continue;
+			}
+
+			// Got a user that wasn't previously a host. Assign new host data to
+			// the chat user and set them into our list of current hosts.
+			user.firesideHost = hostData;
+			this.firesideHosts_.set(freshHostId, user);
+			needsRecollect = true;
+		}
+
+		if (staleHostIds.size > 0) {
+			needsRecollect = true;
+		}
+
+		// Loop through our (now) invalid host ids. Remove host data from the
+		// chat user and remove the chat user from our list of hosts.
+		for (const invalidHostId of staleHostIds) {
+			const oldHost = this.firesideHosts_.get(invalidHostId);
+			if (oldHost) {
+				oldHost.firesideHost = null;
+			}
+			this.firesideHosts_.delete(invalidHostId);
+		}
+
+		staleHostIds.clear();
+
+		if (needsRecollect) {
+			this.recollect();
+		}
+	}
+
 	update(user: ChatUser) {
 		const curUser = this.get(user);
 		if (curUser) {
@@ -185,11 +249,13 @@ export class ChatUserCollection {
 	}
 }
 
-const RoleSorts = {
+const SortingGroup = {
 	owner: 0,
-	moderator: 1,
-	staff: 2,
-	user: 3,
+	liveFiresideHost: 1,
+	firesideHost: 2,
+	moderator: 3,
+	staff: 4,
+	user: 5,
 } as const;
 
 export function sortCollection(
@@ -200,12 +266,14 @@ export function sortCollection(
 	switch (mode) {
 		case 'role': {
 			return toRaw(collection)
-				.map(user => ({
-					user,
-					role: RoleSorts[user.isStaff ? 'staff' : getRoleSort(user)],
-					isFriend: chat.friendsList.has(user.id),
-					lowercaseDisplayName: user.display_name.toLowerCase(),
-				}))
+				.map(user => {
+					return {
+						user,
+						role: SortingGroup[getSortingGroupIndex(user)],
+						isFriend: chat.friendsList.has(user.id),
+						lowercaseDisplayName: user.display_name.toLowerCase(),
+					};
+				})
 				.sort((a, b) => {
 					const roleDiff = numberSort(a.role, b.role);
 					if (roleDiff !== 0) {
@@ -244,13 +312,21 @@ export function sortCollection(
 	}
 }
 
-function getRoleSort(user: ChatUser | null | undefined): CHAT_ROLES {
+function getSortingGroupIndex(user: ChatUser | null | undefined): keyof typeof SortingGroup {
 	if (!user) {
 		return 'user';
 	}
 
 	if (user.role === 'owner') {
 		return 'owner';
+	}
+
+	if (user.firesideHost) {
+		return user.firesideHost.isLive ? 'liveFiresideHost' : 'firesideHost';
+	}
+
+	if (user.isStaff) {
+		return 'staff';
 	}
 
 	return user.role ?? 'user';
