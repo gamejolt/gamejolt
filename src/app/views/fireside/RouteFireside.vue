@@ -44,12 +44,9 @@ import {
 	FiresideController,
 	toggleStreamVideoStats,
 } from '../../components/fireside/controller/controller';
-import {
-	illEndOfFeed,
-	illMaintenance,
-	illNoCommentsSmall,
-	illTimeOut,
-} from '../../img/ill/illustrations';
+import AppImgSlideshow from '../../components/img/AppImgSlideshow.vue';
+import { illEndOfFeed, illMaintenance, illNoCommentsSmall } from '../../img/ill/illustrations';
+import { sheetFireplace } from '../../img/slideshow/sheets';
 import { useAppStore } from '../../store';
 import AppFiresideHeader from './AppFiresideHeader.vue';
 import AppFiresideBottomBar, { BottomBarControl } from './_bottom-bar/AppFiresideBottomBar.vue';
@@ -316,7 +313,117 @@ function onIsPersonallyStreamingChanged() {
 <template>
 	<AppBackground class="route-fireside" :background="background" darken>
 		<AppFiresideProvider v-if="c" :controller="c">
-			<div class="-fireside">
+			<template v-if="c.status.value === 'loading' || c.status.value === 'initial'">
+				<div key="loading" class="-message-wrapper">
+					<div class="-message">
+						<AppIllustration :src="illEndOfFeed">
+							<AppLoading
+								centered
+								:label="$gettext(`Traveling to the fireside...`)"
+							/>
+						</AppIllustration>
+					</div>
+				</div>
+			</template>
+			<template v-else-if="c.status.value === 'unauthorized'">
+				<div key="unauthorized" class="-message-wrapper">
+					<div class="-message">
+						<h2 class="section-header text-center">
+							<AppTranslate>Join Game Jolt</AppTranslate>
+						</h2>
+
+						<div class="text-center">
+							<p class="lead">
+								<AppTranslate> Do you love games as much as we do? </AppTranslate>
+							</p>
+						</div>
+
+						<hr class="underbar underbar-center" />
+						<br />
+
+						<AppAuthJoin />
+					</div>
+				</div>
+			</template>
+			<template v-else-if="c.status.value === 'expired'">
+				<div key="expired" class="-message-wrapper">
+					<div class="-message">
+						<AppIllustration :src="illNoCommentsSmall">
+							<p>
+								<AppTranslate> This fireside's fire has burned out. </AppTranslate>
+							</p>
+							<p>
+								<RouterLink :to="{ name: 'home' }">
+									<small>
+										<AppTranslate>Everybody go home</AppTranslate>
+									</small>
+								</RouterLink>
+							</p>
+						</AppIllustration>
+					</div>
+				</div>
+			</template>
+			<template v-else-if="c.status.value === 'setup-failed'">
+				<div key="setup-failed" class="-message-wrapper">
+					<div class="-message">
+						<AppIllustration :src="illMaintenance">
+							<p>
+								<AppTranslate>Could not reach this fireside.</AppTranslate>
+								<br />
+								<AppTranslate>Maybe try finding it again?</AppTranslate>
+							</p>
+							&nbsp;
+							<AppButton block @click="onClickRetry">
+								<AppTranslate>Retry</AppTranslate>
+							</AppButton>
+							&nbsp;
+						</AppIllustration>
+					</div>
+				</div>
+			</template>
+			<template v-else-if="c.status.value === 'disconnected'">
+				<div key="disconnected" class="-message-wrapper">
+					<div class="-message">
+						<AppIllustration :src="illNoCommentsSmall">
+							<p>
+								<AppTranslate>
+									You have been disconnected from fireside services.
+								</AppTranslate>
+								<br />
+								<br />
+								<small>
+									<AppTranslate>
+										We are actively trying to reconnect you, but you can also
+										try refreshing the page.
+									</AppTranslate>
+								</small>
+							</p>
+						</AppIllustration>
+					</div>
+				</div>
+			</template>
+			<template v-else-if="c.status.value === 'blocked'">
+				<div key="blocked" class="-message-wrapper">
+					<div class="-message">
+						<div class="text-center">
+							<AppJolticon icon="friend-remove-2" big notice />
+						</div>
+						<div class="text-center">
+							<h3>
+								<AppTranslate>
+									You are blocked from joining this fireside
+								</AppTranslate>
+							</h3>
+							<p>
+								<router-link :to="{ name: 'home' }">
+									<small><AppTranslate>Return home</AppTranslate></small>
+								</router-link>
+							</p>
+						</div>
+					</div>
+				</div>
+			</template>
+			<div v-else class="-fireside">
 				<!-- <AppFiresideBanner /> -->
 
 				<div class="-body">
@@ -411,9 +518,7 @@ function onIsPersonallyStreamingChanged() {
 									</div>
 								</div>
 								<template v-else>
-									<AppIllustration :src="illTimeOut">
-										<div>TODO(fireside-redesign-3): change illustration</div>
-									</AppIllustration>
+									<AppImgSlideshow class="-fireplace" :sheet="sheetFireplace" />
 								</template>
 							</div>
 						</div>
@@ -443,121 +548,6 @@ function onIsPersonallyStreamingChanged() {
 							<!-- <AppFiresideShare v-if="!c.isDraft.value" class="-share" hide-heading /> -->
 						</div>
 					</div>
-
-					<template v-if="c.status.value === 'loading' || c.status.value === 'initial'">
-						<div key="loading" class="-message-wrapper">
-							<div class="-message">
-								<AppIllustration :src="illEndOfFeed">
-									<AppLoading
-										centered
-										:label="$gettext(`Traveling to the fireside...`)"
-									/>
-								</AppIllustration>
-							</div>
-						</div>
-					</template>
-					<template v-else-if="c.status.value === 'unauthorized'">
-						<div key="unauthorized" class="-message-wrapper">
-							<div class="-message">
-								<h2 class="section-header text-center">
-									<AppTranslate>Join Game Jolt</AppTranslate>
-								</h2>
-
-								<div class="text-center">
-									<p class="lead">
-										<AppTranslate>
-											Do you love games as much as we do?
-										</AppTranslate>
-									</p>
-								</div>
-
-								<hr class="underbar underbar-center" />
-								<br />
-
-								<AppAuthJoin />
-							</div>
-						</div>
-					</template>
-					<template v-else-if="c.status.value === 'expired'">
-						<div key="expired" class="-message-wrapper">
-							<div class="-message">
-								<AppIllustration :src="illNoCommentsSmall">
-									<p>
-										<AppTranslate>
-											This fireside's fire has burned out.
-										</AppTranslate>
-									</p>
-									<p>
-										<RouterLink :to="{ name: 'home' }">
-											<small>
-												<AppTranslate>Everybody go home</AppTranslate>
-											</small>
-										</RouterLink>
-									</p>
-								</AppIllustration>
-							</div>
-						</div>
-					</template>
-					<template v-else-if="c.status.value === 'setup-failed'">
-						<div key="setup-failed" class="-message-wrapper">
-							<div class="-message">
-								<AppIllustration :src="illMaintenance">
-									<p>
-										<AppTranslate>Could not reach this fireside.</AppTranslate>
-										<br />
-										<AppTranslate>Maybe try finding it again?</AppTranslate>
-									</p>
-									&nbsp;
-									<AppButton block @click="onClickRetry">
-										<AppTranslate>Retry</AppTranslate>
-									</AppButton>
-									&nbsp;
-								</AppIllustration>
-							</div>
-						</div>
-					</template>
-					<template v-else-if="c.status.value === 'disconnected'">
-						<div key="disconnected" class="-message-wrapper">
-							<div class="-message">
-								<AppIllustration :src="illNoCommentsSmall">
-									<p>
-										<AppTranslate>
-											You have been disconnected from fireside services.
-										</AppTranslate>
-										<br />
-										<br />
-										<small>
-											<AppTranslate>
-												We are actively trying to reconnect you, but you can
-												also try refreshing the page.
-											</AppTranslate>
-										</small>
-									</p>
-								</AppIllustration>
-							</div>
-						</div>
-					</template>
-					<template v-else-if="c.status.value === 'blocked'">
-						<div key="blocked" class="-message-wrapper">
-							<div class="-message">
-								<div class="text-center">
-									<AppJolticon icon="friend-remove-2" big notice />
-								</div>
-								<div class="text-center">
-									<h3>
-										<AppTranslate>
-											You are blocked from joining this fireside
-										</AppTranslate>
-									</h3>
-									<p>
-										<router-link :to="{ name: 'home' }">
-											<small><AppTranslate>Return home</AppTranslate></small>
-										</router-link>
-									</p>
-								</div>
-							</div>
-						</div>
-					</template>
 				</div>
 
 				<div key="sidebar" class="-trailing">
@@ -676,6 +666,7 @@ function onIsPersonallyStreamingChanged() {
 	width: 100%
 	height: 100%
 	padding: 8px
+	min-height: 0
 
 .-video-container
 	min-height: 0
@@ -701,6 +692,10 @@ function onIsPersonallyStreamingChanged() {
 	padding: 32px 64px
 	max-width: 650px
 	text-align: center
+
+.-fireplace
+	width: calc(min(75%, 500px))
+	height: calc(min(75%, 500px))
 
 .-bottom-bar-padding
 	flex: none
