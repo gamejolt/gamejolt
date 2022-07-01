@@ -10,6 +10,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppSlider from '../../../../_common/slider/AppSlider.vue';
 import AppSticker from '../../../../_common/sticker/sticker.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideDesktopAudio from '../../../components/fireside/stream/AppFiresideDesktopAudio.vue';
 import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';
@@ -34,6 +35,7 @@ const UITransitionTime = 200;
 		AppSlider,
 		AppSticker,
 		AppFiresideBottomBarHostAvatar,
+		AppUserAvatar,
 	},
 })
 export default class AppFiresideStream extends Vue {
@@ -392,6 +394,15 @@ export default class AppFiresideStream extends Vue {
 										@click.capture.stop="unmuteDesktopAudio"
 									/>
 								</div>
+
+								<div v-if="rtcUser.userModel" class="-user-tag">
+									<AppUserAvatar
+										class="-user-tag-avatar"
+										:user="rtcUser.userModel"
+										disable-link
+									/>
+									<span>@{{ rtcUser.userModel.username }}</span>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -543,6 +554,20 @@ $-z-combo = 2
 		font-size: 60px
 		pointer-events: none
 		color: white
+
+.-user-tag
+	rounded-corners()
+	display: inline-flex
+	align-items: center
+	padding: 4px 8px
+	gap: 4px
+	background-color: rgba($black, 0.5)
+	font-weight: 700
+	color: white
+
+.-user-tag-avatar
+	width: 16px
+	height: @width
 
 .-video-controls
 	display: flex
