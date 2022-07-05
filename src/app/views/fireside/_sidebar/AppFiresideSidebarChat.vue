@@ -50,6 +50,9 @@ const contextCapabilities = computed(() => ({
 				:key="contextCapabilities.key"
 				:room="chatRoom"
 				:context-capabilities="contextCapabilities.capabilities"
+				:slowmode-duration="
+					chatSettings.slow_mode_enabled ? chatSettings.slow_mode_seconds * 1_000 : 0
+				"
 			/>
 		</template>
 	</AppFiresideSidebar>
