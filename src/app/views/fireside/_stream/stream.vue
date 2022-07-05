@@ -352,7 +352,11 @@ export default class AppFiresideStream extends Vue {
 						:class="{ '-fade-top': !shouldDarkenAll }"
 					>
 						<div style="flex: auto; overflow: hidden">
-							<AppFiresideHeader is-overlay />
+							<AppFiresideHeader
+								:fireside="c.fireside"
+								:sticker-target-controller="c.stickerTargetController"
+								overlay
+							/>
 							<div class="-overlay-members">
 								<AppTranslate
 									:translate-n="memberCount"
