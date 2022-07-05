@@ -63,6 +63,10 @@ const props = defineProps({
 		type: Number,
 		default: 2_000,
 	},
+	maxContentLength: {
+		type: Number,
+		default: CHAT_MESSAGE_MAX_CONTENT_LENGTH,
+	},
 });
 
 const emit = defineEmits({
@@ -461,9 +465,7 @@ function disableTypingTimeout() {
 							:temp-resource-context-data="contentEditorTempResourceContextData"
 							:placeholder="$gettext('Send a message')"
 							:single-line-mode="Screen.isDesktop"
-							:validators="[
-								validateContentMaxLength(CHAT_MESSAGE_MAX_CONTENT_LENGTH),
-							]"
+							:validators="[validateContentMaxLength(maxContentLength)]"
 							:max-height="160"
 							:display-rules="displayRules"
 							:autofocus="!Screen.isMobile"

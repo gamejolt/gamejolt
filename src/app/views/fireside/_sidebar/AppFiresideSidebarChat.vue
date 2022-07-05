@@ -53,6 +53,7 @@ const contextCapabilities = computed(() => ({
 				:slowmode-duration="
 					chatSettings.slow_mode_enabled ? chatSettings.slow_mode_seconds * 1_000 : 0
 				"
+				:max-content-length="chatSettings.max_message_length"
 			/>
 		</template>
 	</AppFiresideSidebar>
