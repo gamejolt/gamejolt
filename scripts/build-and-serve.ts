@@ -101,7 +101,7 @@ function initializeHttpServer(
 }
 
 function runViteBuild(gjOpts: Options, aborter: AbortController) {
-	const viteProcess = runVite({ command: 'build', watch: true }, gjOpts, {
+	const viteProcess = runVite({ command: 'build', watch: true, mode: 'development' }, gjOpts, {
 		signal: aborter.signal,
 	});
 

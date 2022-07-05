@@ -4,8 +4,9 @@ import { RouterLink } from 'vue-router';
 import { numberSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
+import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
+import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import AppQuestActionButton from '../../../../_common/quest/AppQuestActionButton.vue';
 import AppQuestObjective from '../../../../_common/quest/AppQuestObjective.vue';
 import AppProgressBarQuest from '../../../../_common/quest/AppQuestProgress.vue';
@@ -170,7 +171,16 @@ function onNewQuest(data: Quest) {
 <template>
 	<div v-if="quest" class="-view">
 		<div style="position: relative">
-			<AppMediaItemCover :media-item="quest.header" :max-height="250" />
+			<AppMediaItemBackdrop class="-header" :media-item="quest.header">
+				<AppImgResponsive
+					class="-header-img"
+					:src="quest.header.mediaserver_url"
+					:style="{
+						width: `calc(300px / ${quest.header.aspectRatio})`,
+					}"
+					alt=""
+				/>
+			</AppMediaItemBackdrop>
 
 			<template v-if="Screen.isMobile">
 				<div class="-header-shadow" />
@@ -251,14 +261,16 @@ function onNewQuest(data: Quest) {
 		</div>
 
 		<AppScrollAffix class="-action-button-container" anchor="bottom" :padding="0">
-			<AppQuestActionButton
-				:key="quest.id"
-				class="-action-button container"
-				:quest="quest"
-				:show="shouldShowActionButton"
-				:is-accept="isQuestAcceptAction"
-				@new-quest="onNewQuest"
-			/>
+			<div class="-action-button-decorator">
+				<AppQuestActionButton
+					:key="quest.id"
+					class="-action-button container"
+					:quest="quest"
+					:show="shouldShowActionButton"
+					:is-accept="isQuestAcceptAction"
+					@new-quest="onNewQuest"
+				/>
+			</div>
 		</AppScrollAffix>
 	</div>
 	<template v-else-if="isLoading">
@@ -293,6 +305,7 @@ function onNewQuest(data: Quest) {
 </template>
 
 <style lang="stylus" scoped>
+$-header-height = 300px
 $-font-size-title = 28px
 $-font-size = $font-size-small
 
@@ -309,7 +322,7 @@ $-font-size = $font-size-small
 .-placeholder-header
 	position: relative
 	width: 100%
-	padding-top: 250px
+	padding-top: $-header-height
 
 .-placeholder-title
 	height: $line-height-computed * 1.5
@@ -325,22 +338,37 @@ $-font-size = $font-size-small
 	flex-direction: column
 	height: 100%
 
+.-header
+	width: 100%
+	height: $-header-height
+	display: flex
+	justify-content: center
+	align-items: center
+
+.-header-img
+	position: absolute
+	min-width: 100%
+	min-height: 100%
+	object-fit: cover
+	max-width: unset
+
 .-action-button-container
 	background-color: var(--theme-bg-actual)
 	margin-top: auto
 
-.-action-button
-	padding: 12px
+.-action-button-decorator
 	box-shadow: none
 	transition: box-shadow 250ms $weak-ease-out
-
-	@media $media-sm-up
-		padding: 16px
 
 	::v-deep(.gj-scroll-affixed) &
 		background-color: var(--theme-bg-actual)
 		box-shadow: 0px 1px 8px rgba($black, 0.8)
 
+.-action-button
+	padding: 12px
+
+	@media $media-sm-up
+		padding: 16px
 
 .-header-shadow
 	background-image: linear-gradient(to bottom, rgba(black, 0.5), transparent)

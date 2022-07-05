@@ -9,6 +9,7 @@ import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../_common/form-vue/AppFormGroup.vue';
 import AppFormStickySubmit from '../../../_common/form-vue/AppFormStickySubmit.vue';
+import AppFormControlBackground from '../../../_common/form-vue/controls/AppFormControlBackground.vue';
 import AppFormControlToggleButton from '../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButton.vue';
 import AppFormControlToggleButtonGroup from '../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../_common/form-vue/validators';
@@ -18,7 +19,6 @@ import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
-import AppFormBackground from '../forms/background/AppFormBackground.vue';
 import { ChatStoreKey } from './chat-store';
 import { editChatRoomBackground, editChatRoomTitle, leaveGroupRoom } from './client';
 import AppChatMemberListItem from './member-list/AppChatMemberListItem.vue';
@@ -266,7 +266,7 @@ async function leaveRoom() {
 						optional
 						small
 					>
-						<AppFormBackground :backgrounds="backgrounds" :tile-size="40" />
+						<AppFormControlBackground :backgrounds="backgrounds" :tile-size="40" />
 					</AppFormGroup>
 
 					<AppSpacer vertical :scale="6" />

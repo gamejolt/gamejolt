@@ -1,9 +1,18 @@
-import { defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 import { lazyImportNoSSR } from '../../../../../_common/code-splitting';
+import { getDeviceOS } from '../../../../../_common/device/device.service';
 import { findModalById, showModal } from '../../../../../_common/modal/modal.service';
 import { FiresideController } from '../../controller/controller';
 
 const ModalId = 'firesideStreamSetup';
+
+/**
+ * Should we show the app promo, because it will be better on their device?
+ * Note, it's a computed ref so that it calls getDeviceOS only when needed.
+ */
+export const shouldPromoteAppForStreaming = computed(
+	() => !GJ_IS_DESKTOP_APP && getDeviceOS() === 'windows'
+);
 
 export class StreamSetupModal {
 	static async show(c: FiresideController) {

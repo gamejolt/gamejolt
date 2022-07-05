@@ -269,7 +269,10 @@ export function $gettextInterpolate(
 ) {
 	return msgid.replace(InterpolationRegex, (_match, token) => {
 		const key = token.trim();
-		const evaluated = context[key].toString();
+
+		// This is for safety so that even if it's null or undefined we don't
+		// break.
+		const evaluated = (context[key] || '').toString();
 
 		return enableHTMLEscaping
 			? evaluated.replace(/[&<>"']/g, (i: keyof typeof EscapeHTMLMap) => EscapeHTMLMap[i])

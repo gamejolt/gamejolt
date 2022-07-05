@@ -1,14 +1,15 @@
 <script lang="ts" setup>
 import { computed, PropType, toRef, toRefs } from 'vue';
-import AppBackgroundSelector from '../../../../_common/background/AppBackgroundSelector.vue';
-import { Background } from '../../../../_common/background/background.model';
-import { useForm } from '../../../../_common/form-vue/AppForm.vue';
+import AppBackgroundSelector from '../../background/AppBackgroundSelector.vue';
+import { Background } from '../../background/background.model';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
+import { useForm } from '../AppForm.vue';
 import {
 	createFormControl,
 	defineFormControlEmits,
 	defineFormControlProps,
-} from '../../../../_common/form-vue/AppFormControl.vue';
-import { useFormGroup } from '../../../../_common/form-vue/AppFormGroup.vue';
+} from '../AppFormControl.vue';
+import { useFormGroup } from '../AppFormGroup.vue';
 
 const props = defineProps({
 	backgrounds: {
@@ -23,10 +24,15 @@ const props = defineProps({
 	hideEmptyTile: {
 		type: Boolean,
 	},
+	/** Only shows when [disabled] is `true`. */
+	disabledText: {
+		type: String,
+		default: undefined,
+	},
 	...defineFormControlProps(),
 });
 
-const { backgrounds } = toRefs(props);
+const { backgrounds, disabledText, disabled } = toRefs(props);
 
 const form = useForm()!;
 const { name } = useFormGroup()!;
@@ -35,6 +41,13 @@ const { applyValue } = createFormControl<number | undefined>({
 	initialValue: undefined,
 	onChange: val => emit('changed', val),
 	validators: toRef(props, 'validators'),
+});
+
+const displayDisabledText = computed(() => {
+	if (!disabled.value) {
+		return undefined;
+	}
+	return disabledText?.value;
 });
 
 const selectedBackgroundId = computed<number | null>(() => form.formModel[name.value] || null);
@@ -58,33 +71,12 @@ function onSelect(item?: Background) {
 
 <template>
 	<AppBackgroundSelector
+		v-app-tooltip.touchable="displayDisabledText"
 		:backgrounds="backgrounds"
 		:background="currentBackground"
 		:hide-empty-tile="hideEmptyTile"
 		:tile-size="tileSize"
+		:disabled="disabled"
 		@background-change="onSelect"
 	/>
 </template>
-
-<style lang="stylus" scoped>
-$-padding = 12px
-$-border-width = $border-width-large
-
-.-items
-	white-space: nowrap
-	height: $-height
-	display: inline-flex
-	grid-gap: $-padding
-
-.-item
-	rounded-corners()
-	overflow: hidden
-	border-width: $-border-width
-	border-style: none
-	transition: border 0.1s ease
-
-	&:hover
-	&.-active
-		theme-prop('border-color', 'link')
-		border-style: solid
-</style>

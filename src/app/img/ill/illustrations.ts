@@ -4,6 +4,7 @@ import illMobileKikkerstein from './mobile-kikkerstein.svg';
 import illNoChat from './no-chat.svg';
 import illNoCommentsSmall from './no-comments-small.svg';
 import illNoComments from './no-comments.svg';
+import illStreamingJelly from './streaming-jelly.svg';
 import illTimeOut from './time-out.svg';
 
 export {
@@ -14,4 +15,5 @@ export {
 	illNoComments,
 	illTimeOut,
 	illMobileKikkerstein,
+	illStreamingJelly,
 };

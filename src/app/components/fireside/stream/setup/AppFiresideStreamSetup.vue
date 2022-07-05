@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
+import { RouterLink } from 'vue-router';
 import { sleep } from '../../../../../utils/utils';
 import { MediaDeviceService } from '../../../../../_common/agora/media-device.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
@@ -23,6 +24,7 @@ import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
 import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import {
 	SettingStreamProducerDesktopAudioDevice,
@@ -35,7 +37,7 @@ import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { FiresideController } from '../../controller/controller';
 import AppFiresideStreamSetupVolumeMeter from './AppFiresideStreamSetupVolumeMeter.vue';
-import { StreamSetupModal } from './setup-modal.service';
+import { shouldPromoteAppForStreaming, StreamSetupModal } from './setup-modal.service';
 
 type FormModel = {
 	selectedWebcamDeviceId: string;
@@ -110,6 +112,7 @@ const hasMicDevice = computed(
 );
 
 const hasDesktopAudio = computed(() => form.formModel.streamDesktopAudio);
+const canStreamDesktopAudio = computed(() => canStreamAudio.value && hasDesktopAudioCaptureSupport);
 
 const hasDesktopAudioDevice = computed(
 	() =>
@@ -128,8 +131,6 @@ const selectedMicGroupId = computed(
 const selectedDesktopAudioGroupId = computed(
 	() => _getDeviceFromId(form.formModel.selectedDesktopAudioDeviceId, 'mic')?.groupId
 );
-
-const canStreamDesktopAudio = computed(() => canStreamAudio.value && hasDesktopAudioCaptureSupport);
 
 const isInvalidMicConfig = computed(() => {
 	return (
@@ -693,23 +694,46 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 				</AppFormGroup>
 			</template>
 
-			<template v-if="hasWebcamDevice && canStreamDesktopAudio">
+			<template
+				v-if="hasWebcamDevice && (canStreamDesktopAudio || shouldPromoteAppForStreaming)"
+			>
 				<AppFormGroup
 					name="streamDesktopAudio"
 					:label="$gettext(`Stream desktop audio`)"
 					small
+					class="-sans-margin"
+					:class="{ '-label-disabled': !canStreamDesktopAudio }"
 				>
 					<template #inline-control>
-						<AppFormControlToggle :disabled="isProducerBusy" />
+						<AppFormControlToggle
+							:disabled="!canStreamDesktopAudio || isProducerBusy"
+						/>
 					</template>
-
-					<AppFiresideStreamSetupVolumeMeter
-						v-if="hasDesktopAudio"
-						class="-volume-meter"
-						:producer="localProducer"
-						type="desktop-audio"
-					/>
 				</AppFormGroup>
+
+				<template v-if="shouldPromoteAppForStreaming">
+					<RouterLink
+						class="-warning-button"
+						:to="{ name: 'landing.client' }"
+						target="_blank"
+					>
+						<div class="-warning-button-icon">
+							<AppJolticon icon="exclamation-circle" />
+						</div>
+
+						<div>
+							<AppTranslate>
+								You can only stream desktop audio using the Game Jolt desktop app.
+							</AppTranslate>
+							{{ ' ' }}
+							<strong>
+								<AppTranslate>Download the app now</AppTranslate>
+							</strong>
+						</div>
+					</RouterLink>
+
+					<AppSpacer vertical :scale="6" />
+				</template>
 			</template>
 
 			<!-- Only show this section if they've given mic permissions and are not streaming desktop audio -->
@@ -839,6 +863,12 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 ::v-deep(.form-group)
 	margin-bottom: 24px
 
+::v-deep(.form-group.-sans-margin)
+	margin-bottom: 0
+
+.-label-disabled
+	color: var(--theme-fg-muted)
+
 .-split
 	margin-top: 24px
 	margin-bottom: 24px
@@ -849,6 +879,11 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 	margin: auto
 	overflow: hidden
 	background-color: var(--theme-darkest)
+
+// Attach it to the audio indicator
+.-video-preview-with-audio
+	border-bottom-left-radius: 0
+	border-bottom-right-radius: 0
 
 .-video-preview-portal
 	height: 100%
@@ -888,24 +923,23 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 .-desktop-well
 	margin-bottom: 0
 
-.-intro
+.-warning-button
 	rounded-corners()
-	change-bg('bi-bg')
-	elevate-1()
+	change-bg('black')
 	pressy()
-	display: block
-	padding: 8px
-	color: var(--theme-bi-fg)
-	margin-bottom: $line-height-computed
+	display: flex
+	padding: 16px
+	gap: 8px
+	align-items: center
+	color: white
 	cursor: pointer
 	user-select: none
+	font-weight: 700
+	font-size: 13px
 
-	&:hover
-		elevate-hover-2()
+	strong
+		color: var(--theme-highlight)
 
-	&-subtitle
-		font-size: $font-size-small
-
-	&-title
-		font-size: $font-size-large
+.-warning-button-icon
+	color: var(--theme-highlight)
 </style>

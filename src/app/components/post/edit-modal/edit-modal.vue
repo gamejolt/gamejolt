@@ -9,13 +9,13 @@ import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
-import FormPost from '../../forms/post/post.vue';
+import AppFormPost from '../../forms/post/AppFormPost.vue';
 import { VideoStatus } from '../../forms/post/_video/video.vue';
 import AppPostAddPlaceholder from '../add-placeholder/add-placeholder.vue';
 
 @Options({
 	components: {
-		FormPost,
+		AppFormPost,
 		AppPostAddPlaceholder,
 		AppLoadingFade,
 		AppBackground,
@@ -99,7 +99,7 @@ export default class AppPostEditModal extends mixins(BaseModal) {
 			<div class="modal-body">
 				<AppLoadingFade :is-loading="!post">
 					<AppPostAddPlaceholder v-if="!post" />
-					<FormPost
+					<AppFormPost
 						v-else
 						:model="post"
 						:default-community="community"
