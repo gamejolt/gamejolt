@@ -80,7 +80,7 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 
 	get currentCohosts(): User[] {
 		const hosts = this.rtc?.hosts || [];
-		const listableHostIds = this.rtc?.listableHostIds || [];
+		const listableHostIds = this.rtc?.listableHostIds;
 		const myUserId = this.controller.user.value?.id;
 
 		return hosts // formatting
@@ -88,7 +88,7 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 				if (i.user.id === myUserId) {
 					return false;
 				}
-				return !i.needsPermissionToView || listableHostIds.includes(i.user.id);
+				return !i.needsPermissionToView || listableHostIds?.has(i.user.id);
 			})
 			.map(i => i.user)
 			.sort((a, b) => stringSort(a.display_name, b.display_name));

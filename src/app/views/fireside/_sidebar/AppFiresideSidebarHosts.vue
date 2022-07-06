@@ -64,14 +64,14 @@ const hostableUsers = computed(() => {
 
 const currentCohosts = computed(() => {
 	const hosts = rtc.value?.hosts || [];
-	const listableHostIds = rtc.value?.listableHostIds || [];
+	const listableHostIds = rtc.value?.listableHostIds;
 	const myUserId = user.value?.id;
 
 	return hosts
 		.filter(host =>
 			host.user.id === myUserId
 				? false
-				: !host.needsPermissionToView || listableHostIds.includes(host.user.id)
+				: !host.needsPermissionToView || listableHostIds?.has(host.user.id)
 		)
 		.map(i => i.user)
 		.sort((a, b) => stringSort(a.display_name, b.display_name));

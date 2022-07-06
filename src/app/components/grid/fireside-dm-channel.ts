@@ -46,7 +46,7 @@ export async function createGridFiresideDMChannel(
 		logger.debug('Grid listable hosts.', payload);
 		const { listableHostIds, rtc } = firesideController;
 
-		listableHostIds.value = payload.listable_host_ids ?? [];
+		listableHostIds.value = new Set(payload.listable_host_ids ?? []);
 
 		if (rtc.value) {
 			chooseFocusedRTCUser(rtc.value);

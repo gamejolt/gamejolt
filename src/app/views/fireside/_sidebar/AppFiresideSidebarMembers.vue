@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { computed } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppChatMemberList from '../../../components/chat/member-list/AppChatMemberList.vue';
@@ -12,7 +13,16 @@ const emit = defineEmits({
 });
 
 const c = useFiresideController()!;
-const { chatRoom, chatUsers, canManageCohosts } = c;
+const { chatRoom, chatUsers, canManageCohosts, listableHostIds } = c;
+
+const users = computed(() =>
+	chatUsers.value?.collection.filter(i => {
+		if (!i.firesideHost || !i.firesideHost.needsPermissionToView) {
+			return true;
+		}
+		return listableHostIds.value.has(i.id);
+	})
+);
 </script>
 
 <template>
@@ -28,10 +38,9 @@ const { chatRoom, chatUsers, canManageCohosts } = c;
 		</template>
 
 		<template #body>
-			<!-- TODO(big-pp-event) might want to filter out chat-users to exclude unlisted hosts here -->
 			<AppChatMemberList
-				v-if="chatUsers && chatRoom"
-				:users="chatUsers.collection"
+				v-if="users && chatRoom"
+				:users="users"
 				:room="chatRoom"
 				hide-filter
 			/>

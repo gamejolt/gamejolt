@@ -75,7 +75,7 @@ export class FiresideRTC {
 		// constructor. Check createFiresideRTC for the actual typing before
 		// `reactive` unwraps it.
 		public readonly hosts: FiresideRTCHost[],
-		public readonly listableHostIds: number[],
+		public readonly listableHostIds: Set<number>,
 		{ isMuted }: Options
 	) {
 		this.isMuted = isMuted ?? false;
@@ -188,7 +188,7 @@ export function createFiresideRTC(
 	userId: number | null,
 	agoraStreamingInfo: AgoraStreamingInfo,
 	hosts: Ref<FiresideRTCHost[]>,
-	listableHostIds: Ref<number[]>,
+	listableHostIds: Ref<Set<number>>,
 	options: Options = {}
 ) {
 	const rtc = reactive(
@@ -207,7 +207,7 @@ export function createFiresideRTC(
 			// wrong until the class is constructed and `reactive` can unwrap
 			// the fields.
 			hosts as unknown as FiresideRTCHost[],
-			listableHostIds as unknown as number[],
+			listableHostIds as unknown as Set<number>,
 			options
 		)
 	) as FiresideRTC;
@@ -279,8 +279,11 @@ export function setHosts(rtc: FiresideRTC, newHosts: FiresideRTCHost[]) {
 	arrayAssignAll(rtc.hosts, newHosts);
 }
 
-export function setListableHostIds(rtc: FiresideRTC, listableHostIds: number[]) {
-	arrayAssignAll(rtc.listableHostIds, listableHostIds);
+export function setListableHostIds(rtc: FiresideRTC, listableHostIds: Set<number>) {
+	rtc.listableHostIds.clear();
+	for (const id of listableHostIds) {
+		rtc.listableHostIds.add(id);
+	}
 }
 
 /**

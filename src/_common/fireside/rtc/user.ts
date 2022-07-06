@@ -167,7 +167,7 @@ export class FiresideRTCUser {
 		// If the host isn't explicitly listable, we want to treat it as if they
 		// were unlistable to avoid showing a stream for a host we simply did
 		// not receive the listable hosts for in time.
-		return this.rtc.listableHostIds.includes(host.user.id);
+		return this.rtc.listableHostIds.has(host.user.id);
 	}
 }
 

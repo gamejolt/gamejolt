@@ -127,7 +127,7 @@ export function createFiresideController(
 	/**
 	 * Which hosts the current user is able to list.
 	 */
-	const listableHostIds = ref<number[]>([]);
+	const listableHostIds = ref<Set<number>>(new Set());
 
 	const stickerTargetController = createStickerTargetController(fireside, undefined, {
 		isLive: true,
@@ -1157,7 +1157,7 @@ export function updateFiresideExpiryValues(c: FiresideController) {
 	}
 }
 
-function isListableHostStreaming(hosts: FiresideRTCHost[], listableHostIds: number[]): boolean {
+function isListableHostStreaming(hosts: FiresideRTCHost[], listableHostIds: Set<number>): boolean {
 	return hosts.some(i => {
 		if (!i.isLive) {
 			return false;
@@ -1167,7 +1167,7 @@ function isListableHostStreaming(hosts: FiresideRTCHost[], listableHostIds: numb
 			return true;
 		}
 
-		return listableHostIds?.includes(i.user.id);
+		return listableHostIds?.has(i.user.id);
 	});
 }
 
@@ -1208,7 +1208,7 @@ async function _fetchForFiresideStreaming(c: FiresideController, { assignStatus 
 		hosts.value = _getHostsFromStreamingInfo(payload);
 		chatUsers.value?.assignFiresideHostData(hosts.value);
 
-		listableHostIds.value = payload.listableHostIds ?? [];
+		listableHostIds.value = new Set(payload.listableHostIds ?? []);
 
 		// TODO(big-pp-event) need to renew audience tokens here somewhere?
 		//
