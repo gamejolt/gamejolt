@@ -5,6 +5,7 @@ import { startStreaming, stopStreaming } from '../../../../_common/fireside/rtc/
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
+import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -55,6 +56,14 @@ async function onClickStopStreaming() {
 	}
 
 	try {
+		const shouldStop = await ModalConfirm.show(
+			$gettext(`Are you sure you want to stop streaming?`)
+		);
+
+		if (!shouldStop) {
+			return;
+		}
+
 		await stopStreaming(_producer);
 	} catch {
 		showErrorGrowl($gettext(`Something went wrong when stopping your stream.`));
@@ -62,10 +71,6 @@ async function onClickStopStreaming() {
 
 	// Only close the modal if we were able to stop streaming.
 	if (!_producer.isStreaming.value) {
-		// TODO(fireside-redesign-3) there's currently some bugginess if we have
-		// this setup menu remain open when stopping and starting a stream
-		// again. For now I'm having it close the sidebar, but this should be
-		// fixed.
 		emit('back');
 	}
 }
