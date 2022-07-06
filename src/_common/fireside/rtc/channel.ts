@@ -10,6 +10,8 @@ import type {
 	NetworkQuality,
 } from 'agora-rtc-sdk-ng';
 import { markRaw, reactive } from 'vue';
+import { showErrorGrowl } from '../../growls/growls.service';
+import { $gettext } from '../../translate/translate.service';
 import { FiresideRTC } from './rtc';
 import { FiresideRTCUser, setupFiresideVideoElementListeners } from './user';
 
@@ -170,8 +172,17 @@ export async function setChannelVideoTrack(
 	}
 
 	rtc.log(`Getting new video track.`);
-	const track = await trackBuilder();
-	channel._localVideoTrack = track ? markRaw(track) : null;
+	let newTrack: ILocalVideoTrack | null = null;
+	try {
+		newTrack = await trackBuilder();
+	} catch (e) {
+		showErrorGrowl({
+			message: $gettext(`Something went wrong trying to use that video device.`),
+		});
+		channel._localVideoTrack = null;
+		return;
+	}
+	channel._localVideoTrack = newTrack ? markRaw(newTrack) : null;
 	generation.assert();
 
 	// Only publish if we are streaming.
@@ -232,8 +243,17 @@ export async function setChannelAudioTrack(
 	}
 
 	rtc.log(`Getting new audio track.`);
-	const track = await trackBuilder();
-	channel._localAudioTrack = track ? markRaw(track) : null;
+	let newTrack: ILocalAudioTrack | null = null;
+	try {
+		newTrack = await trackBuilder();
+	} catch (e) {
+		showErrorGrowl({
+			message: $gettext(`Something went wrong trying to use that audio device.`),
+		});
+		channel._localAudioTrack = null;
+		return;
+	}
+	channel._localAudioTrack = newTrack ? markRaw(newTrack) : null;
 	generation.assert();
 
 	// Only publish if we are streaming.
