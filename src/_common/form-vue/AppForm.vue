@@ -320,7 +320,7 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 		}
 		isProcessing.value = true;
 
-		let response: SubmitResponse;
+		let response: any;
 		try {
 			onBeforeSubmit?.();
 
@@ -338,7 +338,7 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 				if (model?.value) {
 					Object.assign(model.value, formModel.value);
 				}
-			} else {
+			} else if (import.meta.env.DEV) {
 				throw new Error(
 					`Either [onSubmit] or [modelClass] is required for form submission.`
 				);
