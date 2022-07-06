@@ -1,6 +1,6 @@
 <script lang="ts">
 import * as StripeData from 'stripe';
-import { inject, InjectionKey, isRef, provide, Ref, ref } from 'vue';
+import { inject, InjectionKey, provide, Ref, ref } from 'vue';
 import { mixins, Options } from 'vue-property-decorator';
 import { loadScript } from '../../../../../utils/utils';
 import { shallowSetup } from '../../../../../utils/vue';
@@ -351,17 +351,15 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 				}
 
 				const { uploadDocuments, namePrefix } = ref;
-				const namePrefixValue = isRef(namePrefix) ? namePrefix.value : namePrefix;
 
 				const uploadPromise = uploadDocuments(this.stripePublishableKey).then(
 					([idDocumentUploadId, additionalDocumentUploadId]) => {
 						if (idDocumentUploadId) {
-							data[`${namePrefixValue}.verification.document.front`] =
-								idDocumentUploadId;
+							data[`${namePrefix}.verification.document.front`] = idDocumentUploadId;
 						}
 
 						if (additionalDocumentUploadId) {
-							data[`${namePrefixValue}.verification.additional_document.front`] =
+							data[`${namePrefix}.verification.additional_document.front`] =
 								additionalDocumentUploadId;
 						}
 					}

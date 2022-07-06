@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Ref, ref, toRefs } from 'vue';
+import { ref, toRefs } from 'vue';
 import { useForm } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFinancialsManagedAccountAddress from './AppFinancialsManagedAccountAddress.vue';
 import AppFinancialsManagedAccountContact from './AppFinancialsManagedAccountContact.vue';
@@ -12,7 +12,7 @@ import AppFinancialsManagedAccountSsn from './AppFinancialsManagedAccountSsn.vue
 import { ManagedAccountFormModel } from './managed-account.vue';
 
 export interface AppFinancialsManagedAccountPersonInterface {
-	namePrefix: Ref<string>;
+	namePrefix: string;
 	uploadDocuments: (stripePublishableKey: string) => Promise<[string, string]>;
 }
 
@@ -51,7 +51,7 @@ async function uploadDocuments(stripePublishableKey: string) {
 	return Promise.all([idDocumentRequest, additionalDocumentRequest]);
 }
 
-defineExpose<AppFinancialsManagedAccountPersonInterface>({
+defineExpose({
 	namePrefix,
 	uploadDocuments,
 });
