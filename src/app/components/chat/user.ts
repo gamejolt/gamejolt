@@ -31,8 +31,6 @@ export class ChatUser {
 	}
 
 	get isLive() {
-		// TODO(fireside-redesign-3) We need access to the FiresideRTC so we
-		// know if we have permission to view this host.
 		if (!this.firesideHost || this.firesideHost.needsPermissionToView) {
 			return false;
 		}

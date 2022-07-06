@@ -11,7 +11,7 @@ import {
 	useFiresideController,
 } from '../../components/fireside/controller/controller';
 import { illEndOfFeed } from '../../img/ill/illustrations';
-import AppFiresideShare from './_share/share.vue';
+import AppFiresideShare from './AppFiresideShare.vue';
 
 const c = useFiresideController()!;
 const {

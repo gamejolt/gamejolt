@@ -14,7 +14,7 @@ import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue'
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideDesktopAudio from '../../../components/fireside/stream/AppFiresideDesktopAudio.vue';
 import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';
-import AppFiresideVideoStats from '../../../components/fireside/stream/video-stats/video-stats.vue';
+import AppFiresideVideoStats from '../../../components/fireside/stream/video-stats/AppFiresideVideoStats.vue';
 import AppFiresideHeader from '../AppFiresideHeader.vue';
 import AppFiresideBottomBarHostAvatar from '../_bottom-bar/AppFiresideBottomBarHostAvatar.vue';
 

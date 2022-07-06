@@ -53,9 +53,6 @@ const hovered = ref(false);
 
 		<template #trailing>
 			<template v-if="canManageCohosts">
-				<!-- TODO(fireside-redesign-3) improve the experience with this.
-				takes too long currently due to how we're detecting host state
-				changes. -->
 				<AppButton
 					v-if="!isHost"
 					:class="{ '-button-hover': hovered }"
