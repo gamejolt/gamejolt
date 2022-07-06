@@ -165,32 +165,30 @@ function onClickStickerButton() {
 <template>
 	<AppTheme class="-bottom-bar" :force-dark="overlay">
 		<div class="-bottom-bar-inner">
-			<div class="-group -left">
-				<template v-if="canStream">
+			<div v-if="canStream" class="-group -left">
+				<AppFiresideBottomBarButton
+					v-if="!isPersonallyStreaming"
+					:active="activeControl === 'setup'"
+					icon="broadcast"
+					@click="emit('streamSettings')"
+				/>
+				<template v-else>
 					<AppFiresideBottomBarButton
-						v-if="!isPersonallyStreaming"
-						:active="activeControl === 'setup'"
-						icon="broadcast"
-						@click="emit('streamSettings')"
+						:active="localUser?.hasMicAudio && !localUser.micAudioMuted"
+						:icon="micIcon"
+						show-settings
+						:disabled="!localUser?._micAudioTrack"
+						@click-settings="emit('streamSettings')"
+						@click="onClickMic"
 					/>
-					<template v-else>
-						<AppFiresideBottomBarButton
-							:active="localUser?.hasMicAudio && !localUser.micAudioMuted"
-							:icon="micIcon"
-							show-settings
-							:disabled="!localUser?._micAudioTrack"
-							@click-settings="emit('streamSettings')"
-							@click="onClickMic"
-						/>
-						<AppFiresideBottomBarButton
-							:active="localUser?.hasVideo && !localUser.videoMuted"
-							:icon="videoIcon"
-							show-settings
-							:disabled="!localUser?._videoTrack"
-							@click-settings="emit('streamSettings')"
-							@click="onClickVideo"
-						/>
-					</template>
+					<AppFiresideBottomBarButton
+						:active="localUser?.hasVideo && !localUser.videoMuted"
+						:icon="videoIcon"
+						show-settings
+						:disabled="!localUser?._videoTrack"
+						@click-settings="emit('streamSettings')"
+						@click="onClickVideo"
+					/>
 				</template>
 			</div>
 
@@ -200,7 +198,7 @@ function onClickStickerButton() {
 				</div>
 			</AppScrollScroller>
 
-			<div class="-group -right">
+			<div class="-group -right" :class="{ '-shrink': !canStream }">
 				<AppFiresideBottomBarButton
 					icon="sticker-filled"
 					:badge="stickerCount"
@@ -254,4 +252,7 @@ function onClickStickerButton() {
 
 .-right
 	justify-content: start
+
+.-shrink
+	flex: 0 1
 </style>
