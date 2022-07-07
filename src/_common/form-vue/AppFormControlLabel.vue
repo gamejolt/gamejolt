@@ -20,9 +20,12 @@ const props = defineProps({
 	small: {
 		type: Boolean,
 	},
+	tinyLabelMargin: {
+		type: Boolean,
+	},
 });
 
-const { labelClass, hideLabel, small } = toRefs(props);
+const { labelClass, hideLabel, small, tinyLabelMargin } = toRefs(props);
 
 const form = useForm()!;
 const { name, label, optional } = useFormGroup()!;
@@ -31,6 +34,7 @@ const labelClasses = computed(() => [
 	labelClass?.value,
 	{ 'sr-only': hideLabel.value },
 	small.value ? '-small-label' : undefined,
+	tinyLabelMargin.value ? '-tiny-margin' : undefined,
 ]);
 </script>
 
@@ -65,4 +69,7 @@ const labelClasses = computed(() => [
 
 	.-optional-tag
 		font-size: 11px
+
+.control-label.-tiny-margin
+	margin-bottom: 4px
 </style>
