@@ -170,29 +170,21 @@ function onClickStickerButton() {
 		<div class="-bottom-bar-inner">
 			<div v-if="canStream" class="-group -left">
 				<AppFiresideBottomBarButton
-					v-if="!isPersonallyStreaming"
-					:active="activeControl === 'setup'"
-					icon="broadcast"
-					@click="emit('streamSettings')"
+					:active="localUser?.hasMicAudio && !producerMicMuted"
+					:icon="micIcon"
+					show-settings
+					:disabled="!localUser?._micAudioTrack"
+					@click-settings="emit('streamSettings')"
+					@click="onClickMic"
 				/>
-				<template v-else>
-					<AppFiresideBottomBarButton
-						:active="localUser?.hasMicAudio && !producerMicMuted"
-						:icon="micIcon"
-						show-settings
-						:disabled="!localUser?._micAudioTrack"
-						@click-settings="emit('streamSettings')"
-						@click="onClickMic"
-					/>
-					<AppFiresideBottomBarButton
-						:active="localUser?.hasVideo && !producerVideoMuted"
-						:icon="videoIcon"
-						show-settings
-						:disabled="!localUser?._videoTrack"
-						@click-settings="emit('streamSettings')"
-						@click="onClickVideo"
-					/>
-				</template>
+				<AppFiresideBottomBarButton
+					:active="localUser?.hasVideo && !producerVideoMuted"
+					:icon="videoIcon"
+					show-settings
+					:disabled="!localUser?._videoTrack"
+					@click-settings="emit('streamSettings')"
+					@click="onClickVideo"
+				/>
 			</div>
 
 			<AppScrollScroller v-if="rtc" class="-host-scroller" horizontal>
