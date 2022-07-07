@@ -34,6 +34,7 @@ import AppPopper from '../../../_common/popper/popper.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Ruler } from '../../../_common/ruler/ruler-service';
 import { Screen } from '../../../_common/screen/screen-service';
+import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppStickerTarget from '../../../_common/sticker/target/target.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
@@ -342,6 +343,15 @@ function onIsPersonallyStreamingChanged() {
 								Download the mobile app to watch streams, follow your friends, and
 								place stickers!
 							</AppTranslate>
+
+							<template v-if="Screen.isPointerMouse">
+								<AppSpacer vertical :scale="2" />
+
+								<AppTranslate>
+									If you're on desktop, resize your window larger to watch this
+									fireside.
+								</AppTranslate>
+							</template>
 						</AppIllustration>
 
 						<AppMobileAppButtons source="fireside" />
@@ -523,30 +533,23 @@ function onIsPersonallyStreamingChanged() {
 								</div>
 							</div>
 							<div v-else class="-video-container">
-								<!-- TODO(fireside-redesign-3) streaming guide, expiry info -->
 								<div
 									v-if="c.canStream.value"
 									class="-center-guide"
 									:class="{ '-overlay': overlayText, '-bold': overlayText }"
 								>
-									<em class="text-muted">
-										TODO(fireside-redesign-3): some kind of text explaining how
-										to start a stream
-									</em>
+									<AppImgSlideshow class="-fireplace" :sheet="sheetFireplace" />
 
+									<!-- TODO(fireside-redesign-3) translations -->
 									<div>
-										Lorem ipsum dolor sit amet consectetur adipisicing elit.
-										Tenetur, aliquam amet doloremque soluta quae maxime
-										reprehenderit debitis assumenda iure dicta, similique, vitae
-										consequatur voluptate corporis provident. Consequatur, quis
-										rem. Reiciendis?
+										<div>Start streaming by going to</div>
+										<strong>Fireside settings > Stream settings</strong>
+										<div>using the gear icons below.</div>
 									</div>
 
 									<div>
-										Lorem ipsum dolor sit amet consectetur adipisicing elit.
-										Architecto mollitia ut sed modi, voluptas vitae esse animi
-										dicta iste laboriosam harum nesciunt exercitationem sint
-										commodi! Magni porro atque autem voluptas!
+										Double check your audio and video source in the settings
+										menu, and then click <strong>Start streaming</strong>!
 									</div>
 								</div>
 								<template v-else>
@@ -737,9 +740,9 @@ function onIsPersonallyStreamingChanged() {
 	display: flex
 	flex-direction: column
 	justify-content: center
+	align-items: center
 	gap: 40px
-	padding: 32px 64px
-	max-width: 650px
+	max-width: 400px
 	text-align: center
 
 .-fireplace
