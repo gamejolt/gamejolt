@@ -130,7 +130,7 @@ async function processUser(user: ChatUser | User) {
 				</template>
 
 				<template #title>
-					<AppTranslate>Manage hosts</AppTranslate>
+					<AppTranslate>Manage Hosts</AppTranslate>
 				</template>
 			</AppHeaderBar>
 

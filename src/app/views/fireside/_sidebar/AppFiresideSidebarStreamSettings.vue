@@ -85,7 +85,7 @@ async function onClickStopStreaming() {
 				</template>
 
 				<template #title>
-					<AppTranslate>Stream settings</AppTranslate>
+					<AppTranslate>Stream Settings</AppTranslate>
 				</template>
 			</AppHeaderBar>
 		</template>

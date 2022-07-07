@@ -27,7 +27,7 @@ const { canEdit, isDraft } = c;
 				</template>
 
 				<template #title>
-					<AppTranslate>Options</AppTranslate>
+					<AppTranslate>Fireside Settings</AppTranslate>
 				</template>
 			</AppHeaderBar>
 		</template>

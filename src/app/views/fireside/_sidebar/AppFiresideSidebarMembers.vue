@@ -32,7 +32,7 @@ const users = computed(() =>
 
 			<div v-if="canManageCohosts" class="-manage-button">
 				<AppButton block @click="emit('hosts')">
-					<AppTranslate>Manage hosts</AppTranslate>
+					<AppTranslate>Manage Hosts</AppTranslate>
 				</AppButton>
 			</div>
 		</template>
