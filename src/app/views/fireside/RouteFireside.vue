@@ -64,7 +64,7 @@ import AppFiresideSidebarFiresideSettings from './_sidebar/AppFiresideSidebarFir
 import AppFiresideSidebarHosts from './_sidebar/AppFiresideSidebarHosts.vue';
 import AppFiresideSidebarMembers from './_sidebar/AppFiresideSidebarMembers.vue';
 import AppFiresideSidebarStreamSettings from './_sidebar/AppFiresideSidebarStreamSettings.vue';
-import AppFiresideStream from './_stream/stream.vue';
+import AppFiresideStream from './_stream/AppFiresideStream.vue';
 
 const appStore = useAppStore();
 const commonStore = useCommonStore();

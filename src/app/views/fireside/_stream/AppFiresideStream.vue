@@ -1,15 +1,20 @@
 <script lang="ts">
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { shallowSetup } from '../../../../utils/vue';
+const UIHideTimeout = 2000;
+const UIHideTimeoutMovement = 2000;
+const UITransitionTime = 200;
+</script>
+
+<script lang="ts" setup>
+import { computed, PropType, ref, toRefs, watch } from 'vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../_common/filters/number';
 import { FiresideRTCUser, setDesktopAudioPlayback } from '../../../../_common/fireside/rtc/user';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppSlider from '../../../../_common/slider/AppSlider.vue';
-import AppSticker from '../../../../_common/sticker/sticker.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideDesktopAudio from '../../../components/fireside/stream/AppFiresideDesktopAudio.vue';
@@ -18,266 +23,225 @@ import AppFiresideVideoStats from '../../../components/fireside/stream/video-sta
 import AppFiresideHeader from '../AppFiresideHeader.vue';
 import AppFiresideBottomBarHostAvatar from '../_bottom-bar/AppFiresideBottomBarHostAvatar.vue';
 
-const UIHideTimeout = 2000;
-const UIHideTimeoutMovement = 2000;
-const UITransitionTime = 200;
-
-@Options({
-	directives: {
-		AppTooltip: vAppTooltip,
+const props = defineProps({
+	rtcUser: {
+		type: Object as PropType<FiresideRTCUser>,
+		required: true,
 	},
-	components: {
-		AppFiresideDesktopAudio,
-		AppFiresideHeader,
-		AppFiresideStreamVideo,
-		AppFiresideVideoStats,
-		AppLoading,
-		AppSlider,
-		AppSticker,
-		AppFiresideBottomBarHostAvatar,
-		AppUserAvatar,
+	hasHeader: {
+		type: Boolean,
 	},
-})
-export default class AppFiresideStream extends Vue {
-	@Prop({ type: Object, required: true })
-	rtcUser!: FiresideRTCUser;
+	hasHosts: {
+		type: Boolean,
+	},
+});
 
-	@Prop({ type: Boolean })
-	hasHeader!: boolean;
+const { rtcUser, hasHeader, hasHosts } = toRefs(props);
 
-	@Prop({ type: Boolean })
-	hasHosts!: boolean;
+const c = useFiresideController()!;
 
-	c = shallowSetup(() => useFiresideController()!);
+const drawerStore = useDrawerStore();
 
-	drawerStore = shallowSetup(() => useDrawerStore());
+const _ignorePointerTimer = ref<NodeJS.Timer | null>();
+const hideUITimer = ref<NodeJS.Timer | null>(null);
+const streakTimer = ref<NodeJS.Timer | null>(null);
 
-	private isHovered = false;
-	private _ignorePointerTimer?: NodeJS.Timer;
+const pausedElement = ref<HTMLDivElement>();
 
-	readonly Screen = Screen;
-	readonly formatNumber = formatNumber;
+const isHovered = ref(false);
+const hasQueuedStreakAnimation = ref(false);
+const shouldAnimateStreak = ref(false);
 
-	hideUITimer: NodeJS.Timer | null = null;
-	streakTimer: NodeJS.Timer | null = null;
-	hasQueuedStreakAnimation = false;
-	shouldAnimateStreak = false;
+const stickerStreak = computed(() => drawerStore.streak.value);
 
-	declare $refs: {
-		paused?: HTMLDivElement;
-	};
+const streakCount = computed(() => formatFuzzynumber(stickerStreak.value?.count ?? 0));
 
-	get stickerStreak() {
-		return this.drawerStore.streak.value;
+const hasVolumeControls = computed(() => !!c.rtc.value?.shouldShowVolumeControls);
+
+const shouldShowUI = computed(() => {
+	if (import.meta.env.SSR) {
+		return false;
 	}
 
-	get streakCount() {
-		return formatFuzzynumber(this.stickerStreak?.count ?? 0);
+	return !!(
+		(hasVideo.value && videoPaused.value) ||
+		c.isShowingOverlayPopper.value ||
+		showMutedIndicator.value ||
+		isHovered.value ||
+		hideUITimer.value
+	);
+});
+
+// We can only show local videos in one place at a time. This will
+// re-grab the video feed when it gets rebuilt.
+const shouldShowVideo = computed(
+	() => !(c.isShowingStreamSetup.value && c.rtc.value?.isFocusingMe)
+);
+
+const hasOverlayItems = computed(
+	() => hasVideo.value || hasVolumeControls.value || hasHeader.value
+);
+
+const memberCount = computed(() => c.chatUsers.value?.count ?? 1);
+
+const videoPaused = computed(() => c.rtc.value?.videoPaused === true);
+
+const showMutedIndicator = computed(() => c.rtc.value?.shouldShowMutedIndicator === true);
+
+const hasVideo = computed(() => rtcUser.value.hasVideo && rtcUser.value.isListed);
+
+const isLoadingVideo = computed(
+	() => hasVideo.value && c.rtc.value?.videoChannel.isConnected !== true
+);
+
+// When we want to darken the whole stream overlay instead of only sections.
+const shouldDarkenAll = computed(() => {
+	if (!shouldShowUI.value) {
+		return false;
 	}
 
-	get hasVolumeControls() {
-		return !!this.c.rtc.value?.shouldShowVolumeControls;
+	// If we're displaying any of this large content, or we're paused,
+	// darken the whole overlay instead of individual rows.
+	return videoPaused.value || hasHeader.value || hasHosts.value;
+});
+
+const shouldPlayDesktopAudio = computed(() => {
+	const rtc = c.rtc.value;
+	if (!rtc) {
+		return false;
 	}
 
-	get shouldShowUI() {
-		if (import.meta.env.SSR) {
-			return false;
-		}
+	return (
+		hasVideo.value &&
+		rtc.videoChannel.isConnected &&
+		rtcUser.value.hasDesktopAudio &&
+		!rtc.videoPaused
+	);
+});
 
-		return !!(
-			(this.hasVideo && this.videoPaused) ||
-			this.c.isShowingOverlayPopper.value ||
-			this.showMutedIndicator ||
-			this.isHovered ||
-			this.hideUITimer
-		);
+const shouldShowVideoStats = computed(() => {
+	if (!c.rtc.value) {
+		return false;
+	}
+	return c.rtc.value.shouldShowVideoStats;
+});
+
+watch(stickerStreak, onStreakCountChanged);
+
+function onMouseOut() {
+	scheduleUIHide(UIHideTimeout);
+}
+
+function onMouseMove() {
+	scheduleUIHide(UIHideTimeoutMovement);
+}
+
+function onVideoClick(event: Event) {
+	scheduleUIHide(UIHideTimeout);
+
+	if (event.target === pausedElement.value) {
+		togglePlayback();
+	}
+}
+
+function onOverlayTap(event: Event) {
+	if (_ignorePointerTimer.value) {
+		event.stopImmediatePropagation();
+	}
+}
+
+function togglePlayback() {
+	if (videoPaused.value) {
+		pauseVideo();
+	} else {
+		unpauseVideo();
+	}
+}
+
+function unmuteDesktopAudio() {
+	setDesktopAudioPlayback(rtcUser.value, true);
+}
+
+function animateStickerStreak() {
+	if (!streakCount.value) {
+		clearStreakTimer();
+		return;
 	}
 
-	get shouldShowVideo() {
-		// We can only show local videos in one place at a time. This will
-		// re-grab the video feed when it gets rebuilt.
-		return !(this.c.isShowingStreamSetup.value && this.c.rtc.value?.isFocusingMe);
+	if (streakTimer.value != null) {
+		hasQueuedStreakAnimation.value = true;
+		return;
 	}
 
-	get hasOverlayItems() {
-		return this.hasVideo || this.hasVolumeControls || this.hasHeader;
-	}
-
-	get memberCount() {
-		return this.c.chatUsers.value?.count ?? 1;
-	}
-
-	get videoPaused() {
-		return this.c.rtc.value?.videoPaused === true;
-	}
-
-	get showMutedIndicator() {
-		return this.c.rtc.value?.shouldShowMutedIndicator === true;
-	}
-
-	get hasVideo() {
-		return this.rtcUser.hasVideo && this.rtcUser.isListed;
-	}
-
-	get isLoadingVideo() {
-		return this.hasVideo && this.c.rtc.value?.videoChannel.isConnected !== true;
-	}
-
-	// When we want to darken the whole stream overlay instead of only sections.
-	get shouldDarkenAll() {
-		if (!this.shouldShowUI) {
-			return false;
-		}
-
-		// If we're displaying any of this large content, or we're paused,
-		// darken the whole overlay instead of individual rows.
-		return this.videoPaused || this.hasHeader || this.hasHosts;
-	}
-
-	get shouldPlayDesktopAudio() {
-		if (!this.c.rtc.value) {
-			return false;
-		}
-
-		return (
-			this.hasVideo &&
-			this.c.rtc.value.videoChannel.isConnected &&
-			this.rtcUser.hasDesktopAudio &&
-			!this.c.rtc.value.videoPaused
-		);
-	}
-
-	get shouldShowVideoStats() {
-		if (!this.c.rtc.value) {
-			return false;
-		}
-		return this.c.rtc.value.shouldShowVideoStats;
-	}
-
-	onMouseOut() {
-		this.scheduleUIHide(UIHideTimeout);
-	}
-
-	onMouseMove() {
-		this.scheduleUIHide(UIHideTimeoutMovement);
-	}
-
-	onVideoClick(event: Event) {
-		this.scheduleUIHide(UIHideTimeout);
-
-		if (event.target === this.$refs.paused) {
-			this.togglePlayback();
-		}
-	}
-
-	onOverlayTap(event: Event) {
-		if (this._ignorePointerTimer) {
-			event.stopImmediatePropagation();
-		}
-	}
-
-	togglePlayback() {
-		if (this.videoPaused) {
-			this.pauseVideo();
-		} else {
-			this.unpauseVideo();
-		}
-	}
-
-	onHostOptionsShow() {
-		this.c.isShowingOverlayPopper.value = true;
-	}
-
-	onHostOptionsHide() {
-		this.c.isShowingOverlayPopper.value = false;
-	}
-
-	unmuteDesktopAudio() {
-		setDesktopAudioPlayback(this.rtcUser, true);
-	}
-
-	private animateStickerStreak() {
-		if (!this.streakCount) {
-			this.clearStreakTimer();
+	shouldAnimateStreak.value = true;
+	streakTimer.value = setTimeout(() => {
+		clearStreakTimer();
+		if (hasQueuedStreakAnimation.value) {
+			hasQueuedStreakAnimation.value = false;
+			animateStickerStreak();
 			return;
 		}
 
-		if (this.streakTimer != null) {
-			this.hasQueuedStreakAnimation = true;
-			return;
-		}
+		shouldAnimateStreak.value = false;
+	}, 2_000);
+}
 
-		this.shouldAnimateStreak = true;
-		this.streakTimer = setTimeout(() => {
-			this.clearStreakTimer();
-			if (this.hasQueuedStreakAnimation) {
-				this.hasQueuedStreakAnimation = false;
-				this.animateStickerStreak();
-				return;
-			}
+function clearStreakTimer() {
+	if (streakTimer.value) {
+		clearTimeout(streakTimer.value);
+	}
+	streakTimer.value = null;
+}
 
-			this.shouldAnimateStreak = false;
-		}, 2_000);
+function scheduleUIHide(delay: number) {
+	if (!shouldShowUI.value) {
+		startIgnoringPointer();
 	}
 
-	private clearStreakTimer() {
-		if (this.streakTimer) {
-			clearTimeout(this.streakTimer);
-		}
-		this.streakTimer = null;
+	isHovered.value = true;
+	clearHideUITimer();
+	hideUITimer.value = setTimeout(() => {
+		isHovered.value = false;
+		clearHideUITimer();
+	}, delay);
+}
+
+function clearHideUITimer() {
+	if (!hideUITimer.value) {
+		return;
 	}
 
-	private scheduleUIHide(delay: number) {
-		if (!this.shouldShowUI) {
-			this.startIgnoringPointer();
-		}
+	clearTimeout(hideUITimer.value);
+	hideUITimer.value = null;
+}
 
-		this.isHovered = true;
-		this.clearHideUITimer();
-		this.hideUITimer = setTimeout(() => {
-			this.isHovered = false;
-			this.clearHideUITimer();
-		}, delay);
+function startIgnoringPointer() {
+	clearPointerIgnore();
+	_ignorePointerTimer.value = setTimeout(() => {
+		clearPointerIgnore();
+	}, UITransitionTime);
+}
+
+function clearPointerIgnore() {
+	if (!_ignorePointerTimer.value) {
+		return;
 	}
 
-	private clearHideUITimer() {
-		if (!this.hideUITimer) {
-			return;
-		}
+	clearTimeout(_ignorePointerTimer.value);
+	_ignorePointerTimer.value = null;
+}
 
-		clearTimeout(this.hideUITimer);
-		this.hideUITimer = null;
-	}
+function pauseVideo() {
+	c.rtc.value!.videoPaused = false;
+}
 
-	private startIgnoringPointer() {
-		this.clearPointerIgnore();
-		this._ignorePointerTimer = setTimeout(() => {
-			this.clearPointerIgnore();
-		}, UITransitionTime);
-	}
+function unpauseVideo() {
+	c.rtc.value!.videoPaused = true;
+}
 
-	private clearPointerIgnore() {
-		if (!this._ignorePointerTimer) {
-			return;
-		}
-
-		clearTimeout(this._ignorePointerTimer);
-		this._ignorePointerTimer = undefined;
-	}
-
-	private pauseVideo() {
-		this.c.rtc.value!.videoPaused = false;
-	}
-
-	private unpauseVideo() {
-		this.c.rtc.value!.videoPaused = true;
-	}
-
-	@Watch('stickerStreak')
-	onStreakCountChanged() {
-		if (this.stickerStreak) {
-			this.animateStickerStreak();
-		}
+function onStreakCountChanged() {
+	if (stickerStreak.value) {
+		animateStickerStreak();
 	}
 }
 </script>
@@ -334,7 +298,7 @@ export default class AppFiresideStream extends Vue {
 				<template v-if="videoPaused || showMutedIndicator">
 					<transition>
 						<div
-							ref="paused"
+							ref="pausedElement"
 							class="-paused-indicator -click-target anim-fade-leave-shrink"
 						>
 							<AppJolticon
