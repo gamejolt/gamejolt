@@ -39,6 +39,7 @@ const props = defineProps({
 const { rtcUser, hasHeader, hasHosts } = toRefs(props);
 
 const c = useFiresideController()!;
+const { rtc, isShowingOverlayPopper, isShowingStreamSetup, chatUsers } = c;
 
 const drawerStore = useDrawerStore();
 
@@ -56,7 +57,7 @@ const stickerStreak = computed(() => drawerStore.streak.value);
 
 const streakCount = computed(() => formatFuzzynumber(stickerStreak.value?.count ?? 0));
 
-const hasVolumeControls = computed(() => !!c.rtc.value?.shouldShowVolumeControls);
+const hasVolumeControls = computed(() => !!rtc.value?.shouldShowVolumeControls);
 
 const shouldShowUI = computed(() => {
 	if (import.meta.env.SSR) {
@@ -65,33 +66,48 @@ const shouldShowUI = computed(() => {
 
 	return !!(
 		(hasVideo.value && videoPaused.value) ||
-		c.isShowingOverlayPopper.value ||
+		isShowingOverlayPopper.value ||
 		showMutedIndicator.value ||
 		isHovered.value ||
 		hideUITimer.value
 	);
 });
 
+const producer = computed(() => rtc.value?.producer);
+
 // We can only show local videos in one place at a time. This will
 // re-grab the video feed when it gets rebuilt.
-const shouldShowVideo = computed(
-	() => !(c.isShowingStreamSetup.value && c.rtc.value?.isFocusingMe)
+const shouldShowVideo = computed(() => !(isShowingStreamSetup.value && rtc.value?.isFocusingMe));
+
+// When the stream setup menu is showing its own stream, display a message
+// letting them know they can see their stream in the setup menu instead of
+// here.
+const showVideoPreviewMessage = computed(
+	() => !!rtc.value && rtc.value.isFocusingMe && isShowingStreamSetup.value
 );
 
 const hasOverlayItems = computed(
 	() => hasVideo.value || hasVolumeControls.value || hasHeader.value
 );
 
-const memberCount = computed(() => c.chatUsers.value?.count ?? 1);
+const memberCount = computed(() => chatUsers.value?.count ?? 1);
 
-const videoPaused = computed(() => c.rtc.value?.videoPaused === true);
+const videoPaused = computed(() => rtc.value?.videoPaused === true);
 
-const showMutedIndicator = computed(() => c.rtc.value?.shouldShowMutedIndicator === true);
+const showMutedIndicator = computed(() => rtc.value?.shouldShowMutedIndicator === true);
 
-const hasVideo = computed(() => rtcUser.value.hasVideo && rtcUser.value.isListed);
+const hasVideo = computed(() => {
+	if (!rtcUser.value.hasVideo || !rtcUser.value.isListed) {
+		return false;
+	}
+	if (producer.value) {
+		return !producer.value.videoMuted.value;
+	}
+	return true;
+});
 
 const isLoadingVideo = computed(
-	() => hasVideo.value && c.rtc.value?.videoChannel.isConnected !== true
+	() => hasVideo.value && rtc.value?.videoChannel.isConnected !== true
 );
 
 // When we want to darken the whole stream overlay instead of only sections.
@@ -106,24 +122,23 @@ const shouldDarkenAll = computed(() => {
 });
 
 const shouldPlayDesktopAudio = computed(() => {
-	const rtc = c.rtc.value;
-	if (!rtc) {
+	if (!rtc.value) {
 		return false;
 	}
 
 	return (
 		hasVideo.value &&
-		rtc.videoChannel.isConnected &&
+		rtc.value.videoChannel.isConnected &&
 		rtcUser.value.hasDesktopAudio &&
-		!rtc.videoPaused
+		!rtc.value.videoPaused
 	);
 });
 
 const shouldShowVideoStats = computed(() => {
-	if (!c.rtc.value) {
+	if (!rtc.value) {
 		return false;
 	}
-	return c.rtc.value.shouldShowVideoStats;
+	return rtc.value.shouldShowVideoStats;
 });
 
 watch(stickerStreak, onStreakCountChanged);
@@ -232,11 +247,11 @@ function clearPointerIgnore() {
 }
 
 function pauseVideo() {
-	c.rtc.value!.videoPaused = false;
+	rtc.value!.videoPaused = false;
 }
 
 function unpauseVideo() {
-	c.rtc.value!.videoPaused = true;
+	rtc.value!.videoPaused = true;
 }
 
 function onStreakCountChanged() {
@@ -254,7 +269,14 @@ function onStreakCountChanged() {
 		@touchmove="onMouseMove"
 		@click="onVideoClick"
 	>
-		<template v-if="hasVideo">
+		<template v-if="showVideoPreviewMessage">
+			<div class="-video-sidebar-notice">
+				<strong>
+					<AppTranslate class="text-muted"> See video preview in sidebar </AppTranslate>
+				</strong>
+			</div>
+		</template>
+		<template v-else-if="hasVideo">
 			<template v-if="isLoadingVideo">
 				<div class="-overlay -visible-center">
 					<AppLoading centered stationary no-color hide-label />
@@ -267,13 +289,6 @@ function onStreakCountChanged() {
 						class="-video-player -click-target"
 						:rtc-user="rtcUser"
 					/>
-					<div v-else class="-video-sidebar-notice">
-						<strong>
-							<AppTranslate class="text-muted">
-								See video preview in sidebar
-							</AppTranslate>
-						</strong>
-					</div>
 
 					<AppFiresideDesktopAudio v-if="shouldPlayDesktopAudio" :rtc-user="rtcUser" />
 					<AppFiresideVideoStats v-if="shouldShowVideoStats" @click.capture.stop />

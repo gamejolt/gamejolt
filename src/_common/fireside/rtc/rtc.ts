@@ -175,7 +175,9 @@ export class FiresideRTC {
 	}
 
 	get isFocusingMe() {
-		return this.focusedUser && this.localUser && this.focusedUser.uid === this.localUser.uid;
+		return (
+			!!this.focusedUser && !!this.localUser && this.focusedUser.uid === this.localUser.uid
+		);
 	}
 
 	get isPoorNetworkQuality() {
