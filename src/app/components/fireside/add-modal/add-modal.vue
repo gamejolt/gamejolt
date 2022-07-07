@@ -6,8 +6,7 @@ import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { BaseModal } from '../../../../_common/modal/base';
-import { FormModel } from '../../forms/fireside/add/add';
-import FormFiresideAdd from '../../forms/fireside/add/add.vue';
+import FormFiresideAdd, { FormModel } from '../../forms/fireside/add/add.vue';
 
 @Options({
 	components: {

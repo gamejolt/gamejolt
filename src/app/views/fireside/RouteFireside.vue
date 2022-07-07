@@ -57,6 +57,7 @@ import {
 import { sheetFireplace } from '../../img/slideshow/sheets';
 import { useAppStore } from '../../store';
 import AppFiresideHeader from './AppFiresideHeader.vue';
+import AppFiresideStats from './AppFiresideStats.vue';
 import AppFiresideBottomBar, { BottomBarControl } from './_bottom-bar/AppFiresideBottomBar.vue';
 import AppFiresideSidebarChat from './_sidebar/AppFiresideSidebarChat.vue';
 import AppFiresideSidebarFiresideSettings from './_sidebar/AppFiresideSidebarFiresideSettings.vue';
@@ -314,8 +315,6 @@ function onIsPersonallyStreamingChanged() {
 <template>
 	<AppBackground class="route-fireside" :background="background" darken>
 		<div class="-fireside">
-			<!-- <AppFiresideBanner /> -->
-
 			<div class="-body">
 				<AppFiresideHeader
 					v-if="fireside"
@@ -325,10 +324,6 @@ function onIsPersonallyStreamingChanged() {
 					:sticker-target-controller="c?.stickerTargetController"
 					:overlay="overlayText"
 				/>
-
-				<!-- <div v-if="shouldShowFiresideStats" class="-leading">
-						<AppFiresideStats :overlay="overlayText" />
-					</div> -->
 
 				<template v-if="cannotViewReason === 'get-app'">
 					<div class="-view-blocked">
@@ -534,30 +529,38 @@ function onIsPersonallyStreamingChanged() {
 							</div>
 							<div v-else class="-video-container">
 								<div
-									v-if="c.canStream.value"
 									class="-center-guide"
 									:class="{ '-overlay': overlayText, '-bold': overlayText }"
 								>
-									<AppImgSlideshow class="-fireplace" :sheet="sheetFireplace" />
+									<template v-if="c.canStream.value">
+										<AppImgSlideshow
+											class="-fireplace"
+											:sheet="sheetFireplace"
+										/>
 
-									<!-- TODO(fireside-redesign-3) translations -->
-									<div>
-										<div>Start streaming by going to</div>
-										<span class="-center-guide-link">
-											Fireside settings > Stream settings
-										</span>
-										<div>using the gear icons below.</div>
-									</div>
+										<!-- TODO(fireside-redesign-3) translations -->
+										<div>
+											<div>Start streaming by going to</div>
+											<span class="-center-guide-link">
+												Fireside settings > Stream settings
+											</span>
+											<div>using the gear icons below.</div>
+										</div>
 
-									<div>
-										Double check your audio and video source in the settings
-										menu, and then click
-										<span class="-center-guide-link">Start streaming</span>!
-									</div>
+										<div>
+											Double check your audio and video source in the settings
+											menu, and then click
+											<span class="-center-guide-link">Start streaming</span>!
+										</div>
+									</template>
+									<AppImgSlideshow
+										v-else
+										class="-fireplace"
+										:sheet="sheetFireplace"
+									/>
+
+									<AppFiresideStats />
 								</div>
-								<template v-else>
-									<AppImgSlideshow class="-fireplace" :sheet="sheetFireplace" />
-								</template>
 							</div>
 						</div>
 
@@ -620,6 +623,8 @@ function onIsPersonallyStreamingChanged() {
 </template>
 
 <style lang="stylus" scoped>
+$-center-guide-width = 400px
+
 .route-fireside
 	change-bg('bg-offset')
 	position: fixed
@@ -745,7 +750,8 @@ function onIsPersonallyStreamingChanged() {
 	justify-content: center
 	align-items: center
 	gap: 40px
-	max-width: 400px
+	width: 400px
+	height: 100%
 	text-align: center
 
 .-center-guide-link
@@ -753,8 +759,9 @@ function onIsPersonallyStreamingChanged() {
 	color: var(--theme-link)
 
 .-fireplace
-	width: calc(min(75%, 500px))
-	height: calc(min(75%, 500px))
+	width: 100%
+	max-width: $-center-guide-width
+	flex: 0 1 $-center-guide-width
 
 .-bottom-bar-padding
 	flex: none

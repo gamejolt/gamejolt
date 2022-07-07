@@ -28,7 +28,7 @@ import { getDeviceBrowser } from '../../../../_common/device/device.service';
 import { DrawerStore, onFiresideStickerPlaced } from '../../../../_common/drawer/drawer-store';
 import { formatDuration } from '../../../../_common/filters/duration';
 import { FiresideChatSettings } from '../../../../_common/fireside/chat-settings/chat-settings.model';
-import { Fireside, FIRESIDE_EXPIRY_THRESHOLD } from '../../../../_common/fireside/fireside.model';
+import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../../_common/fireside/role/role.model';
 import {
 	cleanupFiresideRTCProducer,
@@ -171,21 +171,12 @@ export function createFiresideController(
 	const chatPreviousConnectedState = ref<boolean>();
 	const gridPreviousConnectedState = ref<boolean>();
 
-	/**
-	 * Visually shows a warning to the owner when the fireside's time is running
-	 * low.
-	 */
-	const hasExpiryWarning = ref(false);
-
 	const isShowingOverlayPopper = ref(false);
 	const isShowingStreamSetup = ref(false);
 
 	const updateInterval = ref<NodeJS.Timer>();
-	const totalDurationText = ref<string>();
 	const expiresDurationText = ref<string>();
 	const expiresProgressValue = ref<number>();
-
-	const isExtending = ref(false);
 
 	const chat = computed(() => chatStore.chat ?? undefined);
 	const chatRoom = computed(() => chatChannel.value?.room.value);
@@ -247,15 +238,6 @@ export function createFiresideController(
 			(isOwner.value || role === 'host' || role === 'cohost') &&
 			status.value === 'joined' &&
 			isDraft.value
-		);
-	});
-
-	const canExtend = computed(() => {
-		return (
-			status.value === 'joined' &&
-			expiresProgressValue.value !== undefined &&
-			expiresProgressValue.value <= 95 &&
-			fireside.hasPerms('fireside-extend')
 		);
 	});
 
@@ -474,14 +456,11 @@ export function createFiresideController(
 		expiryInterval,
 		chatPreviousConnectedState,
 		gridPreviousConnectedState,
-		hasExpiryWarning,
 		isShowingOverlayPopper,
 		isShowingStreamSetup,
 		updateInterval,
-		totalDurationText,
 		expiresDurationText,
 		expiresProgressValue,
-		isExtending,
 		user,
 		chatRoom,
 		chatUsers,
@@ -497,7 +476,6 @@ export function createFiresideController(
 		canCommunityEject,
 		canEdit,
 		canPublish,
-		canExtend,
 		canExtinguish,
 		canReport,
 		canBrowserStream,
@@ -512,8 +490,6 @@ export function createFiresideController(
 	_init();
 
 	async function _init() {
-		hasExpiryWarning.value = false;
-
 		if (fireside.blocked) {
 			status.value = 'blocked';
 			logger.debug(`Blocked from joining blocked user's fireside.`);
@@ -900,28 +876,6 @@ export async function publishFireside({ fireside, status, isDraft }: FiresideCon
 	showSuccessGrowl($gettext(`Your fireside is live!`));
 }
 
-export async function extendFireside(c: FiresideController, growlOnFail = true) {
-	if (c.status.value !== 'joined' || !c.canExtend.value || !c.fireside) {
-		return;
-	}
-
-	const payload = await Api.sendRequest(
-		`/web/dash/fireside/extend/${c.fireside.hash}`,
-		{},
-		{
-			detach: true,
-		}
-	);
-	if (payload.success && payload.extended) {
-		c.fireside.expires_on = payload.expiresOn;
-		updateFiresideExpiryValues(c);
-	} else if (growlOnFail) {
-		showInfoGrowl(
-			$gettext(`Settle down there. Wait a couple seconds before playing with the fire again.`)
-		);
-	}
-}
-
 export async function extinguishFireside(c: FiresideController) {
 	if (!c.fireside || !c.canExtinguish.value) {
 		return;
@@ -1117,42 +1071,13 @@ export function updateFiresideExpiryValues(c: FiresideController) {
 	}
 
 	const now = getCurrentServerTime();
+	const expiresInS = c.fireside.getExpiryInMs() / 1000;
 
-	c.totalDurationText.value = formatDuration((now - c.fireside.added_on) / 1000);
-
-	if (c.fireside.expires_on > now) {
-		const expiresInS = c.fireside.getExpiryInMs() / 1000;
-
-		c.hasExpiryWarning.value = expiresInS < FIRESIDE_EXPIRY_THRESHOLD;
-
-		// Automatically extend for them if we're in a draft and get within 15
-		// seconds of the expiry warning threshold.
-		if (
-			c.isDraft.value &&
-			!c.isExtending.value &&
-			expiresInS < FIRESIDE_EXPIRY_THRESHOLD + 15
-		) {
-			c.isExtending.value = true;
-			// Don't show growls if this fails.
-			extendFireside(c, false);
-			// Wait 5 seconds before we allow auto-extending again.
-			setTimeout(() => {
-				c.isExtending.value = false;
-			}, 5_000);
-		}
-
-		if (expiresInS > FIRESIDE_EXPIRY_THRESHOLD) {
-			c.expiresDurationText.value = undefined;
-		} else {
-			c.expiresDurationText.value = formatDuration(expiresInS);
-		}
-
-		if (expiresInS > 300) {
-			c.expiresProgressValue.value = undefined;
-		} else {
-			c.expiresProgressValue.value = (expiresInS / 300) * 100;
-		}
+	if (c.fireside.expires_on > now && expiresInS <= 300) {
+		c.expiresDurationText.value = formatDuration(expiresInS);
+		c.expiresProgressValue.value = (expiresInS / 300) * 100;
 	} else {
+		c.expiresDurationText.value = undefined;
 		c.expiresDurationText.value = undefined;
 	}
 }
