@@ -585,8 +585,6 @@ function onIsPersonallyStreamingChanged() {
 								"
 								@test-bg="debugToggleBackground"
 							/>
-
-							<!-- <AppFiresideShare v-if="!c.isDraft.value" class="-share" hide-heading /> -->
 						</div>
 					</div>
 				</AppFiresideProvider>
