@@ -543,13 +543,16 @@ function onIsPersonallyStreamingChanged() {
 									<!-- TODO(fireside-redesign-3) translations -->
 									<div>
 										<div>Start streaming by going to</div>
-										<strong>Fireside settings > Stream settings</strong>
+										<span class="-center-guide-link">
+											Fireside settings > Stream settings
+										</span>
 										<div>using the gear icons below.</div>
 									</div>
 
 									<div>
 										Double check your audio and video source in the settings
-										menu, and then click <strong>Start streaming</strong>!
+										menu, and then click
+										<span class="-center-guide-link">Start streaming</span>!
 									</div>
 								</div>
 								<template v-else>
@@ -744,6 +747,10 @@ function onIsPersonallyStreamingChanged() {
 	gap: 40px
 	max-width: 400px
 	text-align: center
+
+.-center-guide-link
+	font-weight: bold
+	color: var(--theme-link)
 
 .-fireplace
 	width: calc(min(75%, 500px))
