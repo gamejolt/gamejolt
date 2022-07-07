@@ -63,7 +63,9 @@ export class FiresideRTCUser {
 		// but since then the viewer may have unmuted some users and THEN this user become listable.
 		// in this case it should act as if it was just now initialized and spawn in "unmuted".
 		// we basically need to rerun the published callbacks in rtc for this user.
-		this.micAudioMuted = rtc.isMuted || rtc.isEveryRemoteListableUsersMuted;
+		this.remoteMicAudioMuted = isLocal
+			? false
+			: rtc.isMuted || rtc.isEveryRemoteListableUsersMuted;
 	}
 
 	// These won't be assigned if this is the local user.
@@ -74,22 +76,19 @@ export class FiresideRTCUser {
 	_desktopAudioTrack: ILocalAudioTrack | IRemoteAudioTrack | null = null;
 	_micAudioTrack: ILocalAudioTrack | IRemoteAudioTrack | null = null;
 
-	hasVideo = false;
 	videoPlayState: FiresideVideoPlayState = new FiresideVideoPlayStateStopped();
 	queuedVideoPlayState: FiresideVideoPlayState | null = null;
 	readonly videoLocks: FiresideVideoLock[] = [];
 
+	hasMicAudio = false;
+	hasVideo = false;
 	hasDesktopAudio = false;
-	desktopAudioMuted = false;
 
 	pausedFrameData: ImageData | null = null;
 	videoAspectRatio = 16 / 9;
 
-	hasMicAudio = false;
-	micAudioMuted = false;
-
-	/** If we're muting the entire video stream, audio included. */
-	videoMuted = false;
+	remoteMicAudioMuted = false;
+	remoteDesktopAudioMuted = false;
 
 	/**
 	 * Scaled from 0 to 1, this is the mic volume level data that we're
@@ -123,14 +122,14 @@ export class FiresideRTCUser {
 	}
 
 	get showMicMuted() {
-		return this.micAudioMuted || !this.micPlaybackVolumeLevel;
+		return this.remoteMicAudioMuted || !this.micPlaybackVolumeLevel;
 	}
 
 	get showDesktopAudioMuted() {
 		if (!this.hasDesktopAudio) {
 			return false;
 		}
-		return this.desktopAudioMuted || !this.desktopPlaybackVolumeLevel;
+		return this.remoteDesktopAudioMuted || !this.desktopPlaybackVolumeLevel;
 	}
 
 	get isListed() {
@@ -195,7 +194,7 @@ export function createRemoteFiresideRTCUser(rtc: FiresideRTC, uid: number) {
 			if (isOnlyUser) {
 				// If this is the only user, we can safely start our playback.
 				startMicAudioPlayback(user);
-			} else if (otherUsers.every(i => i.micAudioMuted)) {
+			} else if (otherUsers.every(i => i.remoteMicAudioMuted)) {
 				// Mute this user if all other listed users are muted.
 				stopMicAudioPlayback(user);
 			} else {
@@ -248,7 +247,7 @@ export function setUserHasMicAudio(user: FiresideRTCUser, hasMicAudio: boolean) 
 	if (hasMicAudio) {
 		user.hasMicAudio = true;
 
-		if (!user.micAudioMuted) {
+		if (!user.remoteMicAudioMuted) {
 			startMicAudioPlayback(user);
 		}
 	} else {
@@ -510,13 +509,13 @@ export async function stopDesktopAudioPlayback(user: FiresideRTCUser) {
 export function setMicAudioPlayback(user: FiresideRTCUser, isPlaying: boolean) {
 	// This can get called multiple times if we're adjusting with an audio
 	// slider. If there's no change, do nothing.
-	if (user.micAudioMuted === !isPlaying) {
+	if (user.remoteMicAudioMuted === !isPlaying) {
 		return;
 	}
 
-	user.micAudioMuted = !isPlaying;
+	user.remoteMicAudioMuted = !isPlaying;
 
-	if (user.micAudioMuted) {
+	if (user.remoteMicAudioMuted) {
 		stopMicAudioPlayback(user);
 	} else {
 		startMicAudioPlayback(user);
@@ -526,13 +525,13 @@ export function setMicAudioPlayback(user: FiresideRTCUser, isPlaying: boolean) {
 export function setDesktopAudioPlayback(user: FiresideRTCUser, isPlaying: boolean) {
 	// This can get called multiple times if we're adjusting with an audio
 	// slider. If there's no change, do nothing.
-	if (user.desktopAudioMuted === !isPlaying) {
+	if (user.remoteDesktopAudioMuted === !isPlaying) {
 		return;
 	}
 
-	user.desktopAudioMuted = !isPlaying;
+	user.remoteDesktopAudioMuted = !isPlaying;
 
-	if (user.desktopAudioMuted) {
+	if (user.remoteDesktopAudioMuted) {
 		stopDesktopAudioPlayback(user);
 	} else {
 		startDesktopAudioPlayback(user);

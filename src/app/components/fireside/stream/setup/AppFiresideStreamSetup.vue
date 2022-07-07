@@ -100,10 +100,20 @@ const videoPreviewElem = ref<HTMLDivElement>();
 // Store the producer locally and work off of this instance. We will close the
 // modal if the producer changes.
 let localProducer = producer.value!;
-const { isBusy: isProducerBusy, isStreaming, canStreamVideo, canStreamAudio } = localProducer;
+const {
+	isBusy: isProducerBusy,
+	isStreaming,
+	canStreamVideo,
+	canStreamAudio,
+	micMuted,
+	videoMuted,
+} = localProducer;
 
 // Tell the producer that we're showing the stream setup.
 isShowingStreamSetup.value = true;
+
+const showMicMuted = computed(() => micMuted.value && isStreaming.value);
+const showVideoMuted = computed(() => videoMuted.value && isStreaming.value);
 
 const isPersonallyStreaming = computed(() => isStreaming.value === true);
 
@@ -490,8 +500,11 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 			<template v-if="canStreamAudio">
 				<AppFormGroup
 					name="tempSelectedMicDeviceId"
+					:class="{
+						'-jolticon-primary': isStreaming && !showMicMuted && hasMicDevice,
+					}"
 					:label="$gettext('Microphone')"
-					icon="microphone"
+					:icon="showMicMuted ? 'microphone-off' : 'microphone'"
 					small
 					optional
 				>
@@ -616,8 +629,11 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 
 				<AppFormGroup
 					name="selectedWebcamDeviceId"
+					:class="{
+						'-jolticon-primary': isStreaming && !showVideoMuted && hasWebcamDevice,
+					}"
 					:label="$gettext('Video')"
-					icon="video-camera"
+					:icon="showVideoMuted ? 'video-camera-off' : 'video-camera'"
 					small
 					optional
 				>
@@ -752,6 +768,13 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 						<AppFormGroup
 							name="tempSelectedDesktopAudioDeviceId"
 							class="sans-margin-bottom"
+							:class="{
+								'-jolticon-primary':
+									isStreaming &&
+									!showVideoMuted &&
+									(hasDesktopAudio || hasDesktopAudioDevice),
+							}"
+							:icon="showVideoMuted ? 'audio-mute' : 'audio'"
 							:label="$gettext('Advanced desktop audio')"
 							small
 							optional
@@ -865,6 +888,9 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 
 ::v-deep(.form-group.-sans-margin)
 	margin-bottom: 0
+
+.-jolticon-primary::v-deep(.jolticon)
+	color: var(--theme-primary)
 
 .-label-disabled
 	color: var(--theme-fg-muted)

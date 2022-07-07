@@ -218,7 +218,9 @@ async function onStickerPlaced(placement: StickerPlacement) {
 						<div class="-host-audio-col">
 							<AppTranslate> Microphone </AppTranslate>
 							<AppSlider
-								:percent="host.micAudioMuted ? 0 : host.micPlaybackVolumeLevel"
+								:percent="
+									host.remoteMicAudioMuted ? 0 : host.micPlaybackVolumeLevel
+								"
 								@scrub="onMicAudioScrub"
 							/>
 						</div>
@@ -240,7 +242,9 @@ async function onStickerPlaced(placement: StickerPlacement) {
 								<AppTranslate> Desktop/Game </AppTranslate>
 								<AppSlider
 									:percent="
-										host.desktopAudioMuted ? 0 : host.desktopPlaybackVolumeLevel
+										host.remoteDesktopAudioMuted
+											? 0
+											: host.desktopPlaybackVolumeLevel
 									"
 									@scrub="onDesktopAudioScrub"
 								/>

@@ -155,7 +155,7 @@ export class FiresideRTC {
 		if (users.length === 0) {
 			return false;
 		}
-		return users.every(i => i.micAudioMuted);
+		return users.every(i => i.remoteMicAudioMuted);
 	}
 
 	/**

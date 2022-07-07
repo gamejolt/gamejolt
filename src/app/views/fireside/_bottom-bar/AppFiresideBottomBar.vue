@@ -44,6 +44,9 @@ const canPlaceStickers = computed(() => !!user.value && !Screen.isMobile && isSt
 const producer = computed(() => rtc.value?.producer);
 const localUser = computed(() => rtc.value?.localUser);
 
+const producerMicMuted = computed(() => producer.value?.micMuted.value === true);
+const producerVideoMuted = computed(() => producer.value?.videoMuted.value === true);
+
 const stickerCount = computed(() => {
 	const length = c.stickerTargetController.stickers.value.length;
 	if (!length) {
@@ -61,7 +64,7 @@ const micIcon = computed<Jolticon>(() => {
 	}
 
 	const _user = localUser.value;
-	if (!_user || !_user._micAudioTrack || _user.micAudioMuted) {
+	if (!_user || !_user._micAudioTrack || producer.value?.micMuted.value) {
 		return disabled;
 	}
 	return enabled;
@@ -76,7 +79,7 @@ const videoIcon = computed<Jolticon>(() => {
 	}
 
 	const _user = localUser.value;
-	if (!_user || !_user._videoTrack || _user.videoMuted) {
+	if (!_user || !_user._videoTrack || producer.value?.videoMuted.value) {
 		return disabled;
 	}
 	return enabled;
@@ -98,7 +101,7 @@ async function onClickMic() {
 		return;
 	}
 
-	if (!_user.hasVideo || _user.videoMuted) {
+	if (!_user.hasVideo || producerVideoMuted.value) {
 		const shouldStopStreaming = await ModalConfirm.show(
 			$gettext(
 				`Disabling this will stop your current stream. Are you sure you want to stop streaming?`
@@ -136,7 +139,7 @@ async function onClickVideo() {
 		return;
 	}
 
-	if (!_user.hasMicAudio || _user.micAudioMuted) {
+	if (!_user.hasMicAudio || producerMicMuted.value) {
 		const shouldStopStreaming = await ModalConfirm.show(
 			$gettext(
 				`Disabling this will stop your current stream. Are you sure you want to stop streaming?`
@@ -174,7 +177,7 @@ function onClickStickerButton() {
 				/>
 				<template v-else>
 					<AppFiresideBottomBarButton
-						:active="localUser?.hasMicAudio && !localUser.micAudioMuted"
+						:active="localUser?.hasMicAudio && !producerMicMuted"
 						:icon="micIcon"
 						show-settings
 						:disabled="!localUser?._micAudioTrack"
@@ -182,7 +185,7 @@ function onClickStickerButton() {
 						@click="onClickMic"
 					/>
 					<AppFiresideBottomBarButton
-						:active="localUser?.hasVideo && !localUser.videoMuted"
+						:active="localUser?.hasVideo && !producerVideoMuted"
 						:icon="videoIcon"
 						show-settings
 						:disabled="!localUser?._videoTrack"
