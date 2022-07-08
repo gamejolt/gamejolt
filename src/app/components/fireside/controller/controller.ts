@@ -24,7 +24,7 @@ import {
 	canCommunityEjectFireside,
 	canCommunityFeatureFireside,
 } from '../../../../_common/community/community.model';
-import { getDeviceBrowser } from '../../../../_common/device/device.service';
+import { getDeviceBrowser, getDeviceOS } from '../../../../_common/device/device.service';
 import { DrawerStore, onFiresideStickerPlaced } from '../../../../_common/drawer/drawer-store';
 import { formatDuration } from '../../../../_common/filters/duration';
 import { FiresideChatSettings } from '../../../../_common/fireside/chat-settings/chat-settings.model';
@@ -60,7 +60,14 @@ import { ChatRoomChannel, createChatRoomChannel } from '../../chat/room-channel'
 import { ChatUserCollection } from '../../chat/user-collection';
 import { createGridFiresideChannel, GridFiresideChannel } from '../../grid/fireside-channel';
 import { createGridFiresideDMChannel, GridFiresideDMChannel } from '../../grid/fireside-dm-channel';
-import { StreamSetupModal } from '../stream/setup/setup-modal.service';
+
+/**
+ * Should we show the app promo, because it will be better on their device?
+ * Note, it's a computed ref so that it calls getDeviceOS only when needed.
+ */
+export const shouldPromoteAppForStreaming = computed(
+	() => !GJ_IS_DESKTOP_APP && getDeviceOS() === 'windows'
+);
 
 export type RouteStatus =
 	| 'initial' // Initial status when route loads.
@@ -268,15 +275,27 @@ export function createFiresideController(
 			return true;
 		}
 
-		return !(_isFirefox.value || _isSafari.value);
+		// Firefox and Safari each have problems with streaming. See their
+		// comments for reasons.
+		if (_isFirefox.value || _isSafari.value) {
+			return false;
+		}
+
+		return true;
 	});
+
+	const shouldShowDesktopAppPromo = ref(shouldPromoteAppForStreaming.value);
 
 	const _browser = computed(() => getDeviceBrowser().toLowerCase());
 
-	// Can't broadcast properly - incapable of selecting an output device
+	/**
+	 * Can't broadcast properly - incapable of selecting an output device.
+	 */
 	const _isFirefox = computed(() => _browser.value.indexOf('firefox') !== -1);
 
-	// Can't broadcast - incapable of dual streams
+	/**
+	 * Can't broadcast - incapable of dual streams.
+	 */
 	const _isSafari = computed(() => _browser.value.indexOf('safari') !== -1);
 
 	const _wantsRTC = computed(() => {
@@ -472,7 +491,6 @@ export function createFiresideController(
 		updateInterval,
 		expiresDurationText,
 		expiresProgressValue,
-		_isExtending,
 		user,
 		chatRoom,
 		chatUsers,
@@ -488,11 +506,14 @@ export function createFiresideController(
 		canCommunityEject,
 		canEdit,
 		canPublish,
-		_canExtend,
 		canExtinguish,
 		canReport,
 		canBrowserStream,
+		shouldShowDesktopAppPromo,
 		logger,
+
+		_isExtending,
+		_canExtend,
 
 		checkExpiry,
 		cleanup,
@@ -756,8 +777,6 @@ export function createFiresideController(
 			leaveChatRoom(chat.value, chatChannel.value.room.value);
 		}
 		chatChannel.value = undefined;
-
-		StreamSetupModal.close();
 
 		logger.debug(`Disconnected from fireside.`);
 	}

@@ -35,9 +35,8 @@ import {
 } from '../../../../../_common/settings/settings.service';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { FiresideController } from '../../controller/controller';
+import { FiresideController, shouldPromoteAppForStreaming } from '../../controller/controller';
 import AppFiresideStreamSetupVolumeMeter from './AppFiresideStreamSetupVolumeMeter.vue';
-import { shouldPromoteAppForStreaming, StreamSetupModal } from './setup-modal.service';
 
 type FormModel = {
 	selectedWebcamDeviceId: string;
@@ -331,7 +330,7 @@ watch(producer, producer => {
 	// The only way this should trigger is if we get removed as a cohost while
 	// we're creating/modifying a stream setup.
 	if (!producer) {
-		StreamSetupModal.close();
+		emit('close');
 	}
 });
 

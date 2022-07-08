@@ -7,11 +7,15 @@ import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
+import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { useFiresideController } from '../../../components/fireside/controller/controller';
+import {
+	shouldPromoteAppForStreaming,
+	useFiresideController,
+} from '../../../components/fireside/controller/controller';
 import AppFiresideStreamSetup from '../../../components/fireside/stream/setup/AppFiresideStreamSetup.vue';
-import { illNoCommentsSmall } from '../../../img/ill/illustrations';
+import { illNoCommentsSmall, illStreamingJelly } from '../../../img/ill/illustrations';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 
 const emit = defineEmits({
@@ -19,7 +23,13 @@ const emit = defineEmits({
 });
 
 const c = useFiresideController()!;
-const { canBrowserStream, isStreamingElsewhere, isPersonallyStreaming, rtc } = c;
+const {
+	canBrowserStream,
+	isStreamingElsewhere,
+	isPersonallyStreaming,
+	rtc,
+	shouldShowDesktopAppPromo,
+} = c;
 
 const isStartingStream = ref(false);
 const isInvalidConfig = ref(true);
@@ -102,12 +112,64 @@ async function onClickStopStreaming() {
 								</AppTranslate>
 							</p>
 							<p class="-warning-text">
-								<AppTranslate>
-									Please use a different browser, such as Google Chrome or
-									Microsoft Edge, if you want to start a stream.
-								</AppTranslate>
+								<template v-if="shouldPromoteAppForStreaming">
+									<AppTranslate>
+										For the best streaming experience, we recommend using the
+										Game Jolt desktop app.
+									</AppTranslate>
+								</template>
+								<template v-else>
+									<AppTranslate>
+										Please use a different browser, such as Google Chrome or
+										Microsoft Edge, if you want to start a stream.
+									</AppTranslate>
+								</template>
 							</p>
 						</AppIllustration>
+
+						<template v-if="shouldPromoteAppForStreaming">
+							<AppSpacer vertical :scale="4" />
+
+							<AppButton
+								icon="client"
+								primary
+								solid
+								block
+								:to="{ name: 'landing.client' }"
+								target="_blank"
+							>
+								<AppTranslate>Get the desktop app</AppTranslate>
+							</AppButton>
+						</template>
+					</template>
+					<template v-else-if="shouldShowDesktopAppPromo">
+						<div class="-app-promo">
+							<AppIllustration :src="illStreamingJelly">
+								<p class="-ill-text">
+									<AppTranslate>
+										For the best streaming experience, we recommend using the
+										Game Jolt desktop app.
+									</AppTranslate>
+								</p>
+							</AppIllustration>
+
+							<AppSpacer vertical :scale="4" />
+
+							<AppButton
+								icon="client"
+								primary
+								solid
+								block
+								:to="{ name: 'landing.client' }"
+								target="_blank"
+							>
+								<AppTranslate>Get the desktop app</AppTranslate>
+							</AppButton>
+
+							<AppButton trans block @click="shouldShowDesktopAppPromo = false">
+								<AppTranslate>Use web anyway</AppTranslate>
+							</AppButton>
+						</div>
 					</template>
 					<template v-else-if="isStreamingElsewhere">
 						<AppIllustration :src="illNoCommentsSmall">
@@ -132,7 +194,7 @@ async function onClickStopStreaming() {
 		</template>
 
 		<template #footer>
-			<div v-if="canBrowserStream" class="-footer">
+			<div v-if="canBrowserStream && !shouldShowDesktopAppPromo" class="-footer">
 				<AppButton
 					v-if="!isStreamingElsewhere && !isPersonallyStreaming"
 					primary
