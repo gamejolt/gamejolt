@@ -143,8 +143,8 @@
 		"show": false,
 		"width": 1250,
 		"height": 700,
-		"min_height": 400,
-		"min_width": 400,
+		"min_height": 500,
+		"min_width": 992,
 		"position": "center",
 		"frame": true,
 		"icon": "src/static-assets/client-icon-256x256.png"
