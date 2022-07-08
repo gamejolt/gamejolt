@@ -10,8 +10,8 @@ const listableStreamingUsers = computed(() => rtc.value?.listableStreamingUsers 
 </script>
 
 <template>
-	<div class="-hosts">
-		<div class="-hosts-inner">
+	<div class="bottom-bar-hosts">
+		<div class="-hosts">
 			<AppFiresideBottomBarHost
 				v-for="host of listableStreamingUsers"
 				:key="host.uid"
@@ -23,7 +23,7 @@ const listableStreamingUsers = computed(() => rtc.value?.listableStreamingUsers 
 </template>
 
 <style lang="stylus" scoped>
-.-hosts
+.bottom-bar-hosts
 	--fireside-host-size: 64px
 	--fireside-host-gap: 8px
 	width: 100%
@@ -31,11 +31,11 @@ const listableStreamingUsers = computed(() => rtc.value?.listableStreamingUsers 
 	// get cut off
 	padding: 4px 4px 0 4px
 
-	&-inner
-		display: inline-flex
-		justify-content: center
-		grid-gap: var(--fireside-host-gap)
-		height: var(--fireside-host-size)
+.-hosts
+	display: inline-flex
+	justify-content: center
+	grid-gap: var(--fireside-host-gap)
+	height: var(--fireside-host-size)
 
 .-host-thumb
 	flex: none

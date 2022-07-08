@@ -187,11 +187,13 @@ function onClickStickerButton() {
 				/>
 			</div>
 
-			<AppScrollScroller v-if="rtc" class="-host-scroller" horizontal>
-				<div class="-group">
-					<AppFiresideBottomBarHosts />
-				</div>
-			</AppScrollScroller>
+			<div v-if="rtc" class="-hosts">
+				<AppScrollScroller horizontal>
+					<div class="-group">
+						<AppFiresideBottomBarHosts />
+					</div>
+				</AppScrollScroller>
+			</div>
 
 			<div class="-group -right" :class="{ '-shrink': !canStream }">
 				<AppFiresideBottomBarButton
@@ -221,7 +223,6 @@ function onClickStickerButton() {
 
 <style lang="stylus" scoped>
 .-bottom-bar-inner
-.-hosts
 .-group
 	display: flex
 	align-items: center
@@ -231,8 +232,9 @@ function onClickStickerButton() {
 	width: 100%
 	padding: 0 16px
 
-.-host-scroller
+.-hosts
 	margin: 0 20px
+	min-width: 0
 
 .-group
 	gap: 8px
