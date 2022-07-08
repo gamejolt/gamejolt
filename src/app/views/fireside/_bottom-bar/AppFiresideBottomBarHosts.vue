@@ -30,14 +30,12 @@ const listableStreamingUsers = computed(() => rtc.value?.listableStreamingUsers 
 				</a>
 			</div>
 
-			<template v-else>
-				<AppFiresideBottomBarHost
-					v-for="host of listableStreamingUsers"
-					:key="host.uid"
-					class="-host-thumb"
-					:host="host"
-				/>
-			</template>
+			<AppFiresideBottomBarHost
+				v-for="host of listableStreamingUsers"
+				:key="host.uid"
+				class="-host-thumb"
+				:host="host"
+			/>
 		</div>
 	</div>
 </template>
