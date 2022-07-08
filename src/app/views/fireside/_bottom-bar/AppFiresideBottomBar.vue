@@ -190,7 +190,7 @@ function onClickStickerButton() {
 			<div v-if="rtc" class="-hosts">
 				<AppScrollScroller horizontal>
 					<div class="-group">
-						<AppFiresideBottomBarHosts />
+						<AppFiresideBottomBarHosts @stream-settings="emit('streamSettings')" />
 					</div>
 				</AppScrollScroller>
 			</div>

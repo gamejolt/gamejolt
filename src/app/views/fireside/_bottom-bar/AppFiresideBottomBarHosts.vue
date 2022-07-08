@@ -1,10 +1,16 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideBottomBarHost from './AppFiresideBottomBarHost.vue';
+import AppFiresideBottomBarHostAvatar from './AppFiresideBottomBarHostAvatar.vue';
+
+const emit = defineEmits({
+	streamSettings: () => true,
+});
 
 const c = useFiresideController()!;
-const { rtc } = c;
+const { rtc, isPersonallyStreaming, canStream } = c;
 
 const listableStreamingUsers = computed(() => rtc.value?.listableStreamingUsers ?? []);
 </script>
@@ -12,12 +18,26 @@ const listableStreamingUsers = computed(() => rtc.value?.listableStreamingUsers 
 <template>
 	<div class="bottom-bar-hosts">
 		<div class="-hosts">
-			<AppFiresideBottomBarHost
-				v-for="host of listableStreamingUsers"
-				:key="host.uid"
-				class="-host-thumb"
-				:host="host"
-			/>
+			<div v-if="!isPersonallyStreaming && canStream && rtc?.producer">
+				<a
+					v-app-tooltip="$gettext(`Click to open stream settings`)"
+					class="-host-thumb"
+					@click="emit('streamSettings')"
+				>
+					<div class="-host-thumb-producer">
+						<AppFiresideBottomBarHostAvatar :host="rtc.producer" />
+					</div>
+				</a>
+			</div>
+
+			<template v-else>
+				<AppFiresideBottomBarHost
+					v-for="host of listableStreamingUsers"
+					:key="host.uid"
+					class="-host-thumb"
+					:host="host"
+				/>
+			</template>
 		</div>
 	</div>
 </template>
@@ -39,4 +59,10 @@ const listableStreamingUsers = computed(() => rtc.value?.listableStreamingUsers 
 
 .-host-thumb
 	flex: none
+
+.-host-thumb-producer
+	width: var(--fireside-host-size)
+	height: var(--fireside-host-size)
+	filter: grayscale(0.75)
+	opacity: 0.5
 </style>

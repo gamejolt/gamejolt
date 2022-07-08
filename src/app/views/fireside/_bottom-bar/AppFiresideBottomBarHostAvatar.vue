@@ -1,20 +1,27 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+import { FiresideRTCProducer } from '../../../../_common/fireside/rtc/producer';
 import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 
 const props = defineProps({
 	host: {
-		type: Object as PropType<FiresideRTCUser>,
+		type: Object as PropType<FiresideRTCUser | FiresideRTCProducer>,
 		required: true,
 	},
 });
 
 const { host } = toRefs(props);
+const { user } = useCommonStore();
 const { rtc } = useFiresideController()!;
 
 const padding = computed(() => {
+	if (!(host.value instanceof FiresideRTCUser)) {
+		return '';
+	}
+
 	// Make a nice looking curve, have it snap to a small number of positions.
 	const volumeAdjusted =
 		Math.pow(Math.log10(host.value.volumeLevel * 100 + 1), 1.5) /
@@ -28,15 +35,37 @@ const padding = computed(() => {
 	return `calc( max( ${clamped}px, ${clamped}% ))`;
 });
 
-const isActive = computed(() => !!rtc.value && rtc.value.focusedUser?.uid === host.value.uid);
+const uid = computed(() => {
+	if (host.value instanceof FiresideRTCUser) {
+		return host.value.uid;
+	} else {
+		return undefined;
+	}
+});
+
+const userModel = computed(() => {
+	if (host.value instanceof FiresideRTCUser) {
+		return host.value.userModel;
+	} else {
+		return user.value;
+	}
+});
+
+const isActive = computed(() => {
+	if (!rtc.value || !rtc.value.focusedUser) {
+		return false;
+	}
+
+	return rtc.value.focusedUser.uid === uid.value;
+});
 </script>
 
 <template>
 	<div class="-indicator-wrap" :class="{ '-active-hover': isActive }" :style="{ padding }">
 		<div class="-indicator-color" />
 		<div class="-indicator">
-			<template v-if="host.userModel">
-				<AppUserAvatarImg class="-img -help" :user="host.userModel" />
+			<template v-if="userModel">
+				<AppUserAvatarImg class="-img -help" :user="userModel" />
 			</template>
 		</div>
 	</div>
