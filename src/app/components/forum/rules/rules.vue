@@ -15,10 +15,8 @@ export default class AppForumRules extends Vue {
 <template>
 	<div class="alert full-bleed-xs">
 		<p>
-			<AppTranslate>
-				Our forums have been coded up and delivered as a precious gem into your hands. Don't
-				abuse the privilege.
-			</AppTranslate>
+			<!-- TODO -->
+			<AppTranslate>PUT SUNSETTING MESSAGE HERE!</AppTranslate>
 		</p>
 		<p>
 			<a @click="isShowingRules = !isShowingRules">
