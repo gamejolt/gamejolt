@@ -38,6 +38,9 @@ export default class AppUserFollowWidget extends Vue {
 	@Prop({ type: Boolean, required: false, default: false })
 	hideCount!: boolean;
 
+	@Prop({ type: Boolean, required: false, default: false })
+	disabled!: boolean;
+
 	commonStore = setup(() => useCommonStore());
 
 	get app() {
@@ -136,6 +139,7 @@ export default class AppUserFollowWidget extends Vue {
 		:sm="sm"
 		:solid="user.is_following"
 		:badge="badge"
+		:disabled="disabled"
 		@click.stop="onClick"
 	>
 		<template v-if="!circle">

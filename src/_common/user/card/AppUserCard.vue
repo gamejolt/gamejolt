@@ -31,6 +31,9 @@ const props = defineProps({
 	noStats: {
 		type: Boolean,
 	},
+	disableFollowWidget: {
+		type: Boolean,
+	},
 });
 
 const { user, isLoading, elevate } = toRefs(props);
@@ -142,6 +145,7 @@ const showTags = computed(() => !!user.value.follows_you || dogtags.value.length
 						location="card"
 						block
 						hide-count
+						:disabled="disableFollowWidget"
 					/>
 					<AppButton
 						v-else

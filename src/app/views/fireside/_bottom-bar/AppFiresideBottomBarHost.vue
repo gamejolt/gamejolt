@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, Ref, ref, shallowReactive, toRefs } from 'vue';
+import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { onFiresideStickerPlaced } from '../../../../_common/drawer/drawer-store';
 import {
@@ -42,6 +43,8 @@ const isScrubbingDesktop = ref(false);
 
 const micVolumeBeforeScrub = ref<number>();
 const desktopVolumeBeforeScrub = ref<number>();
+
+const isLoadingFollowState = ref(false);
 
 const isFocused = computed(() => c.rtc.value?.focusedUser?.uid === host.value.uid);
 const isMe = computed(() => c.rtc.value?.localUser?.uid === host.value.uid);
@@ -164,11 +167,53 @@ async function onStickerPlaced(placement: StickerPlacement) {
 		fadeOut: true,
 	});
 }
+
+async function onUserCardShow() {
+	const user = host.value.userModel;
+	if (!user) {
+		return;
+	}
+	// Don't fetch for self or if we already have cached following state.
+	if (host.value.isLocal || c.fetchedHostFollowingStates.get(user.id) !== undefined) {
+		return;
+	}
+
+	isLoadingFollowState.value = true;
+	try {
+		const response = await Api.sendRequest(
+			`/mobile/user/${user.id}`,
+			{
+				_fields: {
+					// TODO(fireside-redesign-3) fetch only `is_following` state
+					user: true,
+				},
+			},
+			{
+				sanitizeComplexData: false,
+			}
+		);
+
+		const isFollowing = response.user.is_following === true;
+
+		c.fetchedHostFollowingStates.set(user.id, isFollowing);
+		user.is_following = isFollowing;
+	} catch (e) {
+		console.error('Error fetching following state for user', e);
+	} finally {
+		isLoadingFollowState.value = false;
+	}
+}
 </script>
 
 <template>
 	<div class="-thumb">
-		<AppUserCardHover :user="host.userModel || undefined" :hover-delay="0" no-stats>
+		<AppUserCardHover
+			:user="host.userModel || undefined"
+			:hover-delay="0"
+			no-stats
+			:disable-follow-widget="isLoadingFollowState"
+			@show="onUserCardShow"
+		>
 			<template #default>
 				<div class="-click-capture" @click="onClick">
 					<div class="-display-thumb" :class="{ '-hidden': !showingVideoThumb }">

@@ -132,6 +132,18 @@ export function createFiresideController(
 	const hosts = ref([]) as Ref<FiresideRTCHost[]>;
 
 	/**
+	 * Map of userId to boolean following state of a user.
+	 *
+	 * Anytime we show the user card for a host, we should check this Map to
+	 * determine if we need to request the `is_following` field from backend.
+	 *
+	 * Grid currently doesn't send us the `is_following` state of a host, making
+	 * it default to `false`. The result of this Map should be used to assign to
+	 * the User model anytime we get a new one.
+	 */
+	const fetchedHostFollowingStates = new Map<number, boolean>();
+
+	/**
 	 * Which hosts the current user is able to list.
 	 */
 	const listableHostIds = ref<Set<number>>(new Set());
@@ -483,6 +495,7 @@ export function createFiresideController(
 		fireside,
 		agoraStreamingInfo,
 		hosts,
+		fetchedHostFollowingStates,
 		listableHostIds,
 		stickerTargetController,
 		isMuted,
@@ -1037,7 +1050,10 @@ export async function updateFiresideData(
 		// After updating hosts need to check if we transitioned into or out of
 		// being a host.
 		const wasHost = hosts.value.some(i => i.user.id === user.value?.id);
-		hosts.value = _getHostsFromStreamingInfo(payload.streamingInfo);
+		hosts.value = _assignFollowingStateToHosts(
+			c,
+			_getHostsFromStreamingInfo(payload.streamingInfo)
+		);
 		chatUsers.value?.assignFiresideHostData(hosts.value);
 		const isHost = hosts.value.some(i => i.user.id === user.value?.id);
 
@@ -1214,7 +1230,7 @@ async function _fetchForFiresideStreaming(c: FiresideController, { assignStatus 
 		newStreamingInfo.streamingUid = payload.streamingUid;
 		agoraStreamingInfo.value = newStreamingInfo;
 
-		hosts.value = _getHostsFromStreamingInfo(payload);
+		hosts.value = _assignFollowingStateToHosts(c, _getHostsFromStreamingInfo(payload));
 		chatUsers.value?.assignFiresideHostData(hosts.value);
 
 		listableHostIds.value = new Set(payload.listableHostIds ?? []);
@@ -1285,4 +1301,16 @@ function _getHostsFromStreamingInfo(streamingInfo: StreamingInfoPayload) {
 	}
 
 	return result;
+}
+
+/**
+ * Loops over hosts and sets their `is_following` state to whatever value we've
+ * fetched previously.
+ */
+function _assignFollowingStateToHosts(c: FiresideController, hosts: FiresideRTCHost[]) {
+	hosts.forEach(i => {
+		const cachedFollowingState = c.fetchedHostFollowingStates.get(i.user.id);
+		i.user.is_following = cachedFollowingState === true;
+	});
+	return hosts;
 }
