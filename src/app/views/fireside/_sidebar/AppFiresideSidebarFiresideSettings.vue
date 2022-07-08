@@ -18,7 +18,7 @@ const emit = defineEmits({
 });
 
 const c = useFiresideController()!;
-const { fireside, rtc, isStreaming, canEdit, isOwner, canStream, isDraft } = c;
+const { fireside, rtc, isStreaming, isOwner, isDraft, canEdit, canStream } = c;
 
 const hasMuteControls = computed(() => {
 	if (!rtc.value) {

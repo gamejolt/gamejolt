@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, inject, PropType, ref, watch } from 'vue';
+import { computed, PropType, ref, watch } from 'vue';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { FiresideChatSettings } from '../../../_common/fireside/chat-settings/chat-settings.model';
 import { Fireside } from '../../../_common/fireside/fireside.model';
@@ -14,9 +14,9 @@ import AppFormControlToggleButton from '../../../_common/form-vue/controls/toggl
 import AppFormControlToggleButtonGroup from '../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../_common/form-vue/validators';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
+import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
-import { ChatStoreKey } from '../chat/chat-store';
 import { extinguishFireside, FiresideController, publishFireside } from './controller/controller';
 
 const props = defineProps({
@@ -33,10 +33,7 @@ const emit = defineEmits({
 // Controller doesn't change.
 // eslint-disable-next-line vue/no-setup-props-destructure
 const c = props.c;
-const { fireside, chatSettings, chatRoom, canPublish, canExtinguish, gridChannel } = c;
-
-const chatStore = inject(ChatStoreKey)!;
-const chat = computed(() => chatStore.chat!);
+const { fireside, chatSettings, isStreaming, canPublish, canExtinguish, gridChannel } = c;
 
 const form: FormController<Fireside> = createForm({
 	warnOnDiscard: false,
@@ -228,9 +225,14 @@ function onClickExtinguish() {
 
 	<AppButton
 		v-if="canPublish"
+		v-app-tooltip="
+			isStreaming
+				? undefined
+				: $gettext(`Firesides need someone to be streaming to go public!`)
+		"
 		icon="megaphone"
-		icon-color="primary"
 		block
+		:disabled="!isStreaming"
 		@click="onClickPublish"
 	>
 		<AppTranslate>Make fireside public</AppTranslate>
