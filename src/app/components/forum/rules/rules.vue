@@ -11,7 +11,10 @@ export default class AppForumRules extends Vue {
 	<div class="alert full-bleed-xs">
 		<p>
 			We're archiving the forums and going <code>read only!</code> You'll be able to see old
-			threads, but new topics and replies have been disabled. Visit the
+			threads, but new topics and replies have been disabled.
+		</p>
+		<p>
+			Visit the
 			<RouterLink
 				:to="{
 					name: 'communities.view.overview',
