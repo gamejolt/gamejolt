@@ -19,7 +19,8 @@ export class ChatUserCollection {
 	private byId_ = new Map<number, ChatUser>();
 	private byRoomId_ = new Map<number, ChatUser>();
 	private doingWork_ = false;
-	private firesideHosts_ = new Map<number, ChatUser>();
+	private firesideHostUsers_ = new Map<number, ChatUser>();
+	private firesideHosts_ = new Map<number, FiresideRTCHost>();
 
 	get count() {
 		return this.onlineCount + this.offlineCount;
@@ -77,6 +78,7 @@ export class ChatUserCollection {
 		}
 
 		this.collection_.push(user);
+		this._assignFiresideHostDataToUser(user);
 		this.indexUser(user);
 
 		if (user.isOnline) {
@@ -115,17 +117,25 @@ export class ChatUserCollection {
 
 		// Store our current host ids so we can find chat users that are no
 		// longer hosts.
-		const staleHostIds = new Set(this.firesideHosts_.keys());
+		const staleHostIds = new Set(this.firesideHostUsers_.keys());
+
+		// Clear out our old set of hosts.
+		this.firesideHosts_.clear();
 
 		for (const hostData of data) {
 			const freshHostId = hostData.user.id;
+
+			// Store the new host set so we can use it when chat members get
+			// added or updated.
+			this.firesideHosts_.set(freshHostId, hostData);
+
 			// User is still a host, but host data may be diffrent. Assign new
 			// host data to the chat user.
 			if (staleHostIds.has(freshHostId)) {
 				// Remove the hostId from our old set.
 				staleHostIds.delete(freshHostId);
 
-				const validHost = this.firesideHosts_.get(freshHostId);
+				const validHost = this.firesideHostUsers_.get(freshHostId);
 				if (validHost) {
 					// Mark ourselves as needing a recollect only if the
 					// relevant state doesn't match.
@@ -148,7 +158,7 @@ export class ChatUserCollection {
 			// Got a user that wasn't previously a host. Assign new host data to
 			// the chat user and set them into our list of current hosts.
 			user.firesideHost = hostData;
-			this.firesideHosts_.set(freshHostId, user);
+			this.firesideHostUsers_.set(freshHostId, user);
 			needsRecollect = true;
 		}
 
@@ -159,11 +169,11 @@ export class ChatUserCollection {
 		// Loop through our (now) invalid host ids. Remove host data from the
 		// chat user and remove the chat user from our list of hosts.
 		for (const invalidHostId of staleHostIds) {
-			const oldHost = this.firesideHosts_.get(invalidHostId);
+			const oldHost = this.firesideHostUsers_.get(invalidHostId);
 			if (oldHost) {
 				oldHost.firesideHost = null;
 			}
-			this.firesideHosts_.delete(invalidHostId);
+			this.firesideHostUsers_.delete(invalidHostId);
 		}
 
 		staleHostIds.clear();
@@ -177,6 +187,7 @@ export class ChatUserCollection {
 		const curUser = this.get(user);
 		if (curUser) {
 			Object.assign(curUser, user);
+			this._assignFiresideHostDataToUser(curUser);
 			this.recollect();
 		}
 		return curUser;
@@ -246,6 +257,10 @@ export class ChatUserCollection {
 		}
 
 		this.recollect();
+	}
+
+	private _assignFiresideHostDataToUser(user: ChatUser) {
+		user.firesideHost = this.firesideHosts_.get(user.id) || null;
 	}
 }
 

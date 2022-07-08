@@ -239,7 +239,10 @@ export function createFiresideController(
 	const canCommunityEject = computed(
 		() => !!fireside.community && canCommunityEjectFireside(fireside.community)
 	);
-	const canEdit = computed(() => isOwner.value || fireside.hasPerms('fireside-edit'));
+	const canEdit = computed(() => {
+		console.warn('fireside perms', fireside.perms);
+		return isOwner.value || fireside.hasPerms('fireside-edit');
+	});
 
 	const canPublish = computed(() => {
 		const role = fireside.role?.role;
@@ -377,6 +380,14 @@ export function createFiresideController(
 
 		return rtc.value;
 	};
+
+	function _onChatUsersChanged() {
+		// Assign our fireside host data anytime our chat users change from
+		// unset to set.
+		chatUsers.value?.assignFiresideHostData(hosts.value);
+	}
+
+	const _unwatchChatUsers = watch(chatUsers, _onChatUsersChanged);
 
 	const _unwatchWantsRTC = watch(_wantsRTC, revalidateRTC);
 
@@ -829,6 +840,7 @@ export function createFiresideController(
 		// These watchers are used to figure out
 		// when we need to destroy rtc and rtc producer. we want
 		// to make sure these are still destroyed even if the watchers are disposed.
+		_unwatchChatUsers();
 		_unwatchWantsRTC();
 		_unwatchWantsRTCProducer();
 		_unwatchHostsChanged();
