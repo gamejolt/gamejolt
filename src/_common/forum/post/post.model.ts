@@ -78,11 +78,7 @@ export class ForumPost extends Model {
 			query = '?reply_to=' + this.reply_to;
 		}
 
-		if (!this.id) {
-			return this.$_save(url + query, 'forumPost');
-		} else {
-			return this.$_save(url + '/' + this.id + query, 'forumPost');
-		}
+		return this.$_save(url + '/' + this.id + query, 'forumPost');
 	}
 }
 

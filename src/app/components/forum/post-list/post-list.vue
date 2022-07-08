@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { ForumPost } from '../../../../_common/forum/post/post.model';
 import { ForumTopic } from '../../../../_common/forum/topic/topic.model';
 import AppMessageThread from '../../../../_common/message-thread/message-thread.vue';
@@ -18,14 +18,6 @@ export default class AppForumPostList extends Vue {
 
 	// No longer showing this.
 	@Prop(Object) userPostCounts!: any;
-
-	@Emit('replied')
-	emitReplied(..._args: any[]) {}
-
-	// Bubble it up.
-	onReplied(...args: any[]) {
-		this.emitReplied(...args);
-	}
 }
 </script>
 
@@ -37,7 +29,6 @@ export default class AppForumPostList extends Vue {
 			:topic="topic"
 			:post="post"
 			:user-post-count="userPostCounts[post.user_id]"
-			@replied="onReplied"
 		/>
 	</AppMessageThread>
 </template>
