@@ -18,6 +18,7 @@ import { debounce } from '../../../utils/utils';
 import { Api } from '../../../_common/api/api.service';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
 import AppBackground from '../../../_common/background/AppBackground.vue';
+import { Background } from '../../../_common/background/background.model';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { useDrawerStore } from '../../../_common/drawer/drawer-store';
 import { Fireside } from '../../../_common/fireside/fireside.model';
@@ -119,7 +120,37 @@ const activeBottomBarControl = computed<BottomBarControl | undefined>(() => {
 
 const routeStatus = computed(() => c.value?.status.value);
 
-const background = computed(() => c.value?.chatRoom.value?.background);
+const background = computed(() => debugBackground || c.value?.chatRoom.value?.background);
+// TODO(chat-backgrounds) remove debug code
+const debugBackground = new Background({
+	id: 20,
+	scaling: 'tile',
+	media_item: {
+		id: 12613538,
+		type: 'background',
+		parent_id: 20,
+		hash: 'fpxmwtga',
+		filename: 'tangerine-drop-fpxmwtga.png',
+		filetype: 'image/png',
+		is_animated: false,
+		width: 800,
+		height: 800,
+		filesize: 180391,
+		crop_start_x: null,
+		crop_start_y: null,
+		crop_end_x: null,
+		crop_end_y: null,
+		avg_img_color: 'ffa438',
+		img_has_transparency: false,
+		added_on: 1648832412000,
+		status: 'active',
+		img_url: 'https://i.gjcdn.net/data/backgrounds/20/media/tangerine-drop-fpxmwtga.png',
+		mediaserver_url: 'https://m.gjcdn.net/background/800/20-fpxmwtga-v4.webp',
+		mediaserver_url_webm: null,
+		mediaserver_url_mp4: null,
+		video_card_url_mp4: null,
+	},
+});
 
 const overlayText = computed(() => !!background.value);
 
@@ -490,19 +521,29 @@ function onIsPersonallyStreamingChanged() {
 											:sheet="sheetFireplace"
 										/>
 
-										<!-- TODO(fireside-redesign-3) translations -->
 										<div>
 											<div>Start streaming by going to</div>
-											<span class="-center-guide-link">
-												Fireside settings > Stream settings
-											</span>
+											<a
+												class="-center-guide-link"
+												@click="sidebar = 'stream-settings'"
+											>
+												<span> Fireside settings > Stream settings </span>
+											</a>
 											<div>using the gear icons below.</div>
 										</div>
 
 										<div>
-											Double check your audio and video source in the settings
-											menu, and then click
-											<span class="-center-guide-link">Start streaming</span>!
+											<AppTranslate>
+												Double check your audio and video source in the
+												settings menu, and then click
+											</AppTranslate>
+											{{ ' ' }}
+											<a
+												class="-center-guide-link"
+												@click="sidebar = 'stream-settings'"
+											>
+												<AppTranslate> Start streaming! </AppTranslate>
+											</a>
 										</div>
 									</template>
 									<AppImgSlideshow
