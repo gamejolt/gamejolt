@@ -120,7 +120,12 @@ const settingsRoleOptions = computed<{ label: string; value: FIRESIDE_ROLES | nu
 
 function toggleMuteAll() {
 	const shouldPlay = !shouldShowMuteAll.value;
-	rtc.value?.listableStreamingUsers.forEach(i => setMicAudioPlayback(i, shouldPlay));
+	rtc.value?.listableStreamingUsers.forEach(i => {
+		if (i.isLocal) {
+			return;
+		}
+		setMicAudioPlayback(i, shouldPlay);
+	});
 }
 
 function onClickReport() {
@@ -153,7 +158,7 @@ function onClickExtinguish() {
 		<template #body>
 			<!-- TODO(fireside-redesign-3) figure out this padding -->
 			<AppScrollScroller class="-pad-v">
-				<div v-if="isStreaming || !isDraft" class="-pad-h">
+				<div v-if="canStream || isStreaming || !isDraft" class="-pad-h">
 					<AppButton v-if="canStream" block @click="emit('streamSettings')">
 						<AppTranslate>Stream settings</AppTranslate>
 					</AppButton>
@@ -165,10 +170,10 @@ function onClickExtinguish() {
 						@click="toggleMuteAll()"
 					>
 						<template v-if="shouldShowMuteAll">
-							<AppTranslate>Mute All Users</AppTranslate>
+							<AppTranslate>Mute all hosts</AppTranslate>
 						</template>
 						<template v-else>
-							<AppTranslate>Unmute All Users</AppTranslate>
+							<AppTranslate>Unmute all hosts</AppTranslate>
 						</template>
 					</AppButton>
 
@@ -191,7 +196,7 @@ function onClickExtinguish() {
 							<AppFormGroup
 								name="title"
 								class="sans-margin-bottom"
-								:label="$gettext(`Fireside name`)"
+								:label="$gettext(`Fireside Name`)"
 								small
 							>
 								<AppFormControl
@@ -204,7 +209,7 @@ function onClickExtinguish() {
 								<AppFormControlErrors />
 							</AppFormGroup>
 
-							<AppSpacer vertical :scale="4" />
+							<AppSpacer vertical :scale="6" />
 
 							<AppFormStickySubmit>
 								<AppFormButton>
@@ -213,8 +218,7 @@ function onClickExtinguish() {
 							</AppFormStickySubmit>
 						</AppForm>
 
-						<hr />
-						<AppSpacer vertical :scale="6" />
+						<hr class="sans-margin-top" />
 
 						<AppForm
 							:controller="settingsForm"
@@ -278,7 +282,6 @@ function onClickExtinguish() {
 						</AppForm>
 
 						<hr />
-						<AppSpacer vertical :scale="6" />
 
 						<AppButton
 							v-if="canPublish"
@@ -325,4 +328,8 @@ function onClickExtinguish() {
 .-pad-v
 	padding-top: 16px
 	padding-bottom: 16px
+
+hr
+	margin-top: 24px
+	margin-bottom: 24px
 </style>
