@@ -12,16 +12,14 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { computed, ref, shallowRef, toRaw, watch } from 'vue';
-import { RouterLink, useRoute, useRouter } from 'vue-router';
+import { computed, ref, shallowRef, watch } from 'vue';
+import { RouterLink, useRouter } from 'vue-router';
 import { debounce } from '../../../utils/utils';
 import { Api } from '../../../_common/api/api.service';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
 import AppBackground from '../../../_common/background/AppBackground.vue';
-import { Background } from '../../../_common/background/background.model';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { useDrawerStore } from '../../../_common/drawer/drawer-store';
-import { Environment } from '../../../_common/environment/environment.service';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
@@ -72,7 +70,6 @@ const drawerStore = useDrawerStore();
 const chatStore = useChatStore()!;
 const themeStore = useThemeStore();
 
-const route = useRoute();
 const router = useRouter();
 
 const c = shallowRef<FiresideController | null>(null);
@@ -87,11 +84,6 @@ const sidebar = ref<'chat' | 'members' | 'hosts' | 'fireside-settings' | 'stream
 
 const fireside = computed(() => c.value?.fireside || payloadFireside.value);
 const payloadFireside = ref<Fireside>();
-
-// TODO(fireside-redesign) use when we have no authed user
-const loginUrl = computed(
-	() => Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(route.fullPath)
-);
 
 const routeTitle = computed(() => {
 	if (!fireside.value) {
@@ -124,46 +116,6 @@ const activeBottomBarControl = computed<BottomBarControl | undefined>(() => {
 			return undefined;
 	}
 });
-
-// TODO(chat-backgrounds) remove debug code
-const debugBackground = new Background({
-	id: 20,
-	scaling: 'tile',
-	media_item: {
-		id: 12613538,
-		type: 'background',
-		parent_id: 20,
-		hash: 'fpxmwtga',
-		filename: 'tangerine-drop-fpxmwtga.png',
-		filetype: 'image/png',
-		is_animated: false,
-		width: 800,
-		height: 800,
-		filesize: 180391,
-		crop_start_x: null,
-		crop_start_y: null,
-		crop_end_x: null,
-		crop_end_y: null,
-		avg_img_color: 'ffa438',
-		img_has_transparency: false,
-		added_on: 1648832412000,
-		status: 'active',
-		img_url: 'https://i.gjcdn.net/data/backgrounds/20/media/tangerine-drop-fpxmwtga.png',
-		mediaserver_url: 'https://m.gjcdn.net/background/800/20-fpxmwtga-v4.webp',
-		mediaserver_url_webm: null,
-		mediaserver_url_mp4: null,
-		video_card_url_mp4: null,
-	},
-});
-
-function debugToggleBackground() {
-	if (!c.value?.chatRoom.value) {
-		return;
-	}
-
-	const current = toRaw(background.value);
-	c.value.chatRoom.value.background = debugBackground === current ? undefined : debugBackground;
-}
 
 const routeStatus = computed(() => c.value?.status.value);
 
@@ -583,7 +535,6 @@ function onIsPersonallyStreamingChanged() {
 										? (sidebar = 'chat')
 										: (sidebar = 'stream-settings')
 								"
-								@test-bg="debugToggleBackground"
 							/>
 						</div>
 					</div>

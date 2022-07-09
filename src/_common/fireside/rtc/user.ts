@@ -297,12 +297,6 @@ export function setupFiresideVideoElementListeners(element: HTMLElement, user: F
 	const video = element.querySelector('video');
 
 	if (!import.meta.env.SSR && video instanceof HTMLVideoElement) {
-		// TODO(fireside-redesign-3) any better way to do this? we want to know
-		// when the stream aspect ratio changes so we can rearrange our layout, but
-		// all Agora events seem to be too slow and may provide us no data until
-		// the video has been playing for a while.
-
-		// TODO(fireside-redesign-3) do we need to remove this listener later on?
 		video.addEventListener(
 			'resize',
 			() => (user.videoAspectRatio = video.videoWidth / video.videoHeight),

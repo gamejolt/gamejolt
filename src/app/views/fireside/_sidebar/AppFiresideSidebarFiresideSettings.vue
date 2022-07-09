@@ -156,7 +156,6 @@ function onClickExtinguish() {
 		</template>
 
 		<template #body>
-			<!-- TODO(fireside-redesign-3) figure out this padding -->
 			<AppScrollScroller class="-pad-v">
 				<div v-if="canStream || isStreaming || !isDraft" class="-pad-h">
 					<AppButton v-if="canStream" block @click="emit('streamSettings')">

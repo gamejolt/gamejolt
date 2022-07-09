@@ -47,7 +47,6 @@ async function onClickStartStreaming() {
 	try {
 		await startStreaming(_producer);
 	} catch {
-		// TODO(fireside-redesign-3) finalize error growls - these weren't here previously.
 		showErrorGrowl($gettext(`Something went wrong when starting your stream.`));
 	}
 

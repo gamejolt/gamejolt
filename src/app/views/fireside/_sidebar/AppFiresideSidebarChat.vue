@@ -1,5 +1,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import { Environment } from '../../../../_common/environment/environment.service';
 import { createFiresideChatContextCapabilities } from '../../../../_common/fireside/chat-settings/chat-settings.model';
 import { useChatStore } from '../../../components/chat/chat-store';
 import AppChatWindowOutput from '../../../components/chat/window/output/AppChatWindowOutput.vue';
@@ -15,6 +18,8 @@ const emit = defineEmits({
 const c = useFiresideController()!;
 const { chatRoom, chatSettings, fireside } = c;
 
+const route = useRoute();
+
 const chatStore = useChatStore()!;
 const chat = computed(() => chatStore.chat);
 
@@ -27,6 +32,10 @@ const contextCapabilities = computed(() => ({
 	// it can reload the chat input with the new capabilities.
 	key: Math.random(),
 }));
+
+const loginUrl = computed(
+	() => Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(route.fullPath)
+);
 </script>
 
 <template>
@@ -55,6 +64,26 @@ const contextCapabilities = computed(() => ({
 				"
 				:max-content-length="chatSettings.max_message_length"
 			/>
+			<div v-if="chat && !chat.currentUser" class="-login fill-backdrop">
+				<div class="alert">
+					<p>
+						You must be
+						<a v-app-auth-required :href="loginUrl">logged in</a>
+						to Game Jolt to chat.
+					</p>
+				</div>
+			</div>
 		</template>
 	</AppFiresideSidebar>
 </template>
+
+<style lang="stylus" scoped>
+.-login
+	padding: ($grid-gutter-width-xs / 2)
+
+	> *
+		margin: 0
+
+	@media $media-sm-up
+		padding: ($grid-gutter-width / 2)
+</style>

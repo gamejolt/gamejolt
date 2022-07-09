@@ -31,7 +31,6 @@ const emit = defineEmits({
 	members: () => true,
 	firesideSettings: () => true,
 	streamSettings: () => true,
-	testBg: () => true,
 });
 
 const c = useFiresideController()!;
@@ -214,8 +213,6 @@ function onClickStickerButton() {
 					:active="activeControl === 'settings'"
 					@click="emit('firesideSettings')"
 				/>
-				<!-- TODO(fireside-redesign-3) remove -->
-				<AppFiresideBottomBarButton icon="bolt-unfilled" @click="emit('testBg')" />
 			</div>
 		</div>
 	</AppTheme>
