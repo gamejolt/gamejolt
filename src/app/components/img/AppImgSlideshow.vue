@@ -12,6 +12,9 @@ const props = defineProps({
 		type: Object as PropType<ImgSlideshow>,
 		required: true,
 	},
+	overlay: {
+		type: Boolean,
+	},
 });
 
 const { sheet } = toRefs(props);
@@ -72,14 +75,21 @@ function onDimensionsChanged() {
 				maxWidth: Math.min(size.width, size.height * sheet.frameAspectRatio) + 'px',
 			}"
 		>
-			<AppAspectRatio :ratio="sheet.frameAspectRatio" class="-slideshow">
+			<AppAspectRatio
+				:ratio="sheet.frameAspectRatio"
+				class="-slideshow"
+				:class="{
+					'-shadow': overlay,
+				}"
+			>
 				<img
 					class="-img"
-					draggable="false"
 					:src="sheet.asset"
 					:style="{
 						transform: `translateX(-${offset}%)`,
 					}"
+					draggable="false"
+					alt=""
 				/>
 			</AppAspectRatio>
 		</div>
@@ -113,4 +123,7 @@ function onDimensionsChanged() {
 	top: 0
 	pointer-events: none
 	z-index: -1
+
+.-shadow
+	filter: drop-shadow(0px 4px 8px rgba(black, 0.15)) drop-shadow(0px 4px 8px rgba(black, 0.15)) drop-shadow(0px 1px 16px rgba(black, 0.09))
 </style>
