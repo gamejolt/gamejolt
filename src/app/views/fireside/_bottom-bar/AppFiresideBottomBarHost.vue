@@ -184,8 +184,7 @@ async function onUserCardShow() {
 			`/mobile/user/${user.id}`,
 			{
 				_fields: {
-					// TODO(fireside-redesign-3) fetch only `is_following` state
-					user: true,
+					isFollowing: true,
 				},
 			},
 			{
@@ -193,7 +192,7 @@ async function onUserCardShow() {
 			}
 		);
 
-		const isFollowing = response.user.is_following === true;
+		const isFollowing = response.isFollowing === true;
 
 		c.fetchedHostFollowingStates.set(user.id, isFollowing);
 		user.is_following = isFollowing;
