@@ -43,12 +43,12 @@ const {
 	chatSettings,
 	gridChannel,
 	isStreaming,
-	isOwner,
 	isDraft,
 	canEdit,
 	canStream,
 	canPublish,
 	canExtinguish,
+	canReport,
 } = c;
 
 const form: FormController<Fireside> = createForm({
@@ -310,7 +310,7 @@ function onClickExtinguish() {
 						</AppButton>
 					</template>
 
-					<AppButton v-if="!isOwner" icon="flag" trans block @click="onClickReport()">
+					<AppButton v-if="canReport" icon="flag" trans block @click="onClickReport()">
 						<AppTranslate>Report fireside</AppTranslate>
 					</AppButton>
 				</div>

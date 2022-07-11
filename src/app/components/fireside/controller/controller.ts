@@ -275,9 +275,7 @@ export function createFiresideController(
 	});
 
 	const canExtinguish = computed(() => isOwner.value || fireside.hasPerms('fireside-extinguish'));
-	const canReport = computed(
-		() => !(fireside.hasPerms() || fireside.community?.hasPerms() === true)
-	);
+	const canReport = computed(() => !isOwner.value);
 
 	/**
 	 * Contains a block-list of browsers/clients that can't broadcast.
