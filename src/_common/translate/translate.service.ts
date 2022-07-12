@@ -7,9 +7,10 @@ type LazyLanguageImport = () => Promise<{
 	[key: string]: any;
 }>;
 
-const _translationImports: Record<string, LazyLanguageImport> = import.meta.env.SSR
-	? {}
-	: import.meta.glob('../../translations/*/main.json');
+const _translationImports: Record<string, LazyLanguageImport> =
+	import.meta.env.SSR || GJ_IS_MOBILE_APP
+		? {}
+		: import.meta.glob('../../translations/*/main.json');
 
 const LangStorageKey = 'lang';
 const InterpolationRegex = /%\{((?:.|\n)+?)\}/g;

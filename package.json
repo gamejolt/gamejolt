@@ -13,7 +13,7 @@
 		"devd-z": "yarn devd --section z",
 		"build:dev": "yarn tsscript scripts/build-and-serve.ts",
 		"build:devd": "yarn tsscript scripts/build-and-serve.ts --environment development --http --host 0.0.0.0 --port 8080",
-		"app:editor": "yarn build --platform web --section editor",
+		"app:build": "yarn build --platform mobile --section editor",
 		"client:dev": "yarn dev --platform desktop",
 		"client:devd": "yarn devd --platform desktop",
 		"client:build": "yarn tsscript scripts/build/desktop-app/index.ts --build",
