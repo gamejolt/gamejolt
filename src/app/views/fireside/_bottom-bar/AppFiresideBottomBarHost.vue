@@ -174,7 +174,7 @@ async function onUserCardShow() {
 		return;
 	}
 	// Don't fetch for self or if we already have cached following state.
-	if (host.value.isLocal || c.fetchedHostFollowingStates.get(user.id) !== undefined) {
+	if (host.value.isLocal || c.fetchedHostUserData.get(user.id) !== undefined) {
 		return;
 	}
 
@@ -185,6 +185,7 @@ async function onUserCardShow() {
 			{
 				_fields: {
 					isFollowing: true,
+					dogtags: true,
 				},
 			},
 			{
@@ -192,10 +193,14 @@ async function onUserCardShow() {
 			}
 		);
 
-		const isFollowing = response.isFollowing === true;
+		console.warn('Got fetched user data', response);
 
-		c.fetchedHostFollowingStates.set(user.id, isFollowing);
-		user.is_following = isFollowing;
+		const is_following = response.isFollowing === true;
+		const dogtags = response.dogtags;
+
+		c.fetchedHostUserData.set(user.id, { is_following, dogtags });
+		user.is_following = is_following;
+		user.dogtags = dogtags;
 	} catch (e) {
 		console.error('Error fetching following state for user', e);
 	} finally {

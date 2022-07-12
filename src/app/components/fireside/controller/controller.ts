@@ -25,6 +25,7 @@ import {
 	canCommunityFeatureFireside,
 } from '../../../../_common/community/community.model';
 import { getDeviceBrowser, getDeviceOS } from '../../../../_common/device/device.service';
+import { DogtagData } from '../../../../_common/dogtag/dogtag-data';
 import { DrawerStore, onFiresideStickerPlaced } from '../../../../_common/drawer/drawer-store';
 import { formatDuration } from '../../../../_common/filters/duration';
 import { FiresideChatSettings } from '../../../../_common/fireside/chat-settings/chat-settings.model';
@@ -92,6 +93,11 @@ export interface StreamingInfoPayload {
 	streamingUids?: Record<number, number[]>;
 }
 
+interface FetchedUserData {
+	is_following: boolean;
+	dogtags: DogtagData[];
+}
+
 /**
  * What's returned in the fetch-for-streaming payload.
  */
@@ -132,16 +138,13 @@ export function createFiresideController(
 	const hosts = ref([]) as Ref<FiresideRTCHost[]>;
 
 	/**
-	 * Map of userId to boolean following state of a user.
+	 * Map of userId and data that we specifically requested to supplement
+	 * models from grid notifications.
 	 *
-	 * Anytime we show the user card for a host, we should check this Map to
-	 * determine if we need to request the `is_following` field from backend.
-	 *
-	 * Grid currently doesn't send us the `is_following` state of a host, making
-	 * it default to `false`. The result of this Map should be used to assign to
-	 * the User model anytime we get a new one.
+	 * The result of this Map should be used to assign to the User model anytime
+	 * we get a new model.
 	 */
-	const fetchedHostFollowingStates = new Map<number, boolean>();
+	const fetchedHostUserData = new Map<number, FetchedUserData>();
 
 	/**
 	 * Which hosts the current user is able to list.
@@ -493,7 +496,7 @@ export function createFiresideController(
 		fireside,
 		agoraStreamingInfo,
 		hosts,
-		fetchedHostFollowingStates,
+		fetchedHostUserData,
 		listableHostIds,
 		stickerTargetController,
 		isMuted,
@@ -1307,8 +1310,9 @@ function _getHostsFromStreamingInfo(streamingInfo: StreamingInfoPayload) {
  */
 function _assignFollowingStateToHosts(c: FiresideController, hosts: FiresideRTCHost[]) {
 	hosts.forEach(i => {
-		const cachedFollowingState = c.fetchedHostFollowingStates.get(i.user.id);
-		i.user.is_following = cachedFollowingState === true;
+		const { is_following, dogtags } = c.fetchedHostUserData.get(i.user.id) || {};
+		i.user.is_following = is_following === true;
+		i.user.dogtags = dogtags;
 	});
 	return hosts;
 }
