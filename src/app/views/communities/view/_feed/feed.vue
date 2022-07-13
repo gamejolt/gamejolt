@@ -10,8 +10,8 @@ import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
+import AppActivityFeedPlaceholder from '../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import AppActivityFeedNewButton from '../../../../components/activity/feed/new-button/new-button.vue';
-import AppActivityFeedPlaceholder from '../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../../../components/lazy';
 import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
@@ -225,6 +225,7 @@ export default class AppCommunitiesViewFeed extends Vue {
 			<AppActivityFeed
 				v-if="feed.hasItems"
 				:feed="feed"
+				show-ads
 				@unfeature-post="onPostUnfeatured"
 				@reject-post="onPostRejected"
 				@move-channel-post="onPostMovedChannel"
