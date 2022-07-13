@@ -11,14 +11,14 @@ import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service
 import AppCommentAddButton from '../../../../../../_common/comment/add-button/add-button.vue';
 import { canCommentOnModel, Comment } from '../../../../../../_common/comment/comment-model';
 import {
-	CommentStoreManager,
-	CommentStoreManagerKey,
-	getCommentStore,
+CommentStoreManager,
+CommentStoreManagerKey,
+getCommentStore
 } from '../../../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../../../_common/comment/modal/modal.service';
 import {
-	CommentThreadModal,
-	CommentThreadModalPermalinkDeregister,
+CommentThreadModal,
+CommentThreadModalPermalinkDeregister
 } from '../../../../../../_common/comment/thread/modal.service';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../../_common/environment/environment.service';
@@ -34,13 +34,13 @@ import { AppLazyPlaceholder } from '../../../../../../_common/lazy/placeholder/p
 import { Meta } from '../../../../../../_common/meta/meta-service';
 import { PartnerReferral } from '../../../../../../_common/partner-referral/partner-referral-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
+BaseRouteComponent,
+OptionsForRoute
 } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShareCard from '../../../../../../_common/share/card/AppShareCard.vue';
+import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
-import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import AppCommentOverview from '../../../../../components/comment/overview/overview.vue';
 import AppGameCommunityBadge from '../../../../../components/game/community-badge/community-badge.vue';
@@ -607,7 +607,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 				<AppActivityFeedPlaceholder v-if="!feed || !feed.isBootstrapped" />
 				<template v-else>
-					<AppActivityFeed v-if="feed.hasItems" :feed="feed" />
+					<AppActivityFeed v-if="feed.hasItems" :feed="feed" show-ads />
 					<div v-else class="alert">
 						<AppTranslate>
 							Nothing has been posted to this project page yet. Maybe check back

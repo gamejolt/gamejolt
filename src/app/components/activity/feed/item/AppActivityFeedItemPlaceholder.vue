@@ -1,13 +1,5 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-property-decorator';
-import AppButtonPlaceholder from '../../../../../../_common/button/AppButtonPlaceholder.vue';
-
-@Options({
-	components: {
-		AppButtonPlaceholder,
-	},
-})
-export default class AppActivityFeedItemPlaceholder extends Vue {}
+<script lang="ts" setup>
+import AppButtonPlaceholder from '../../../../../_common/button/AppButtonPlaceholder.vue';
 </script>
 
 <template>
@@ -44,7 +36,7 @@ export default class AppActivityFeedItemPlaceholder extends Vue {}
 </template>
 
 <style lang="stylus" scoped>
-@import '../../post/post'
+@import '../post/post'
 
 // Gotta override the border hover styling of event items.
 .-item
