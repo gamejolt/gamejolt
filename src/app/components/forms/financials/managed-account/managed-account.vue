@@ -72,6 +72,8 @@ function createFormManagedAccount() {
 			return true;
 		}
 
+		let fieldRootObj: StripeData.accounts.IAccount | StripeData.accounts.IPerson =
+			stripe.value.current;
 		let requirements = stripe.value.current.requirements!.past_due!;
 
 		// If the field is a person field, we need to look it up in the person object's
@@ -81,12 +83,14 @@ function createFormManagedAccount() {
 		// account to be satisfied, e.g. relationship.representative and relationship.owner
 		const person = _getPersonFromField(field);
 		if (person) {
+			fieldRootObj = person;
+			requirements = person.requirements.past_due;
+
 			// The requirements listed on the person object don't have the person id
 			// as the start of the field, so we need to trim our provided field to match
 			// against these. The +1 is for the dot that comes after the person id.
 			// person_blah.address.line1 => address.line1
 			field = field.substr(person.id.length + 1);
-			requirements = person.requirements.past_due;
 		}
 
 		// A field is considered required if it, or its parent field is required. For example,
@@ -111,6 +115,13 @@ function createFormManagedAccount() {
 			// date, and that would increase friction with setting up the
 			// marketplace account.
 			if (stripeMeta.value.minimum.indexOf(field) !== -1) {
+				// Temporary workaround - check if the person / account has the field defined on them.
+				// The requirements are specified as paths to properties.
+				const fieldWasProvided = _getNestedField(fieldRootObj, field) !== undefined;
+				if (fieldWasProvided) {
+					return false;
+				}
+
 				return true;
 			}
 
@@ -138,6 +149,10 @@ function createFormManagedAccount() {
 			obj = person as any;
 		}
 
+		return _getNestedField(obj, fieldPath);
+	}
+
+	function _getNestedField(obj: any, fieldPath: string) {
 		// Gotta traverse the object chain.
 		// We should return false if any of the paths don't exist.
 		const pieces = fieldPath.split('.');
