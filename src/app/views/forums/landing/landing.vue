@@ -45,14 +45,6 @@ export default class RouteForumsLanding extends BaseRouteComponent {
 								<AppTranslate>Overview</AppTranslate>
 							</router-link>
 						</li>
-						<li>
-							<router-link
-								:to="{ name: 'forums.landing.active' }"
-								active-class="active"
-							>
-								<AppTranslate>Active Topics</AppTranslate>
-							</router-link>
-						</li>
 					</ul>
 				</nav>
 			</template>

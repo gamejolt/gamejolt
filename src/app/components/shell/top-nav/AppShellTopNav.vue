@@ -208,15 +208,6 @@ function _checkColWidths() {
 								<AppJolticon icon="client" />
 								<AppTranslate>Get the Desktop App</AppTranslate>
 							</RouterLink>
-
-							<RouterLink
-								v-app-track-event="`sidebar:forums`"
-								class="list-group-item has-icon offline-disable"
-								:to="{ name: 'forums.landing.overview' }"
-							>
-								<AppJolticon icon="forums" />
-								<AppTranslate>Forums</AppTranslate>
-							</RouterLink>
 						</div>
 					</template>
 				</AppPopper>

@@ -12,6 +12,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
+import AppForumRules from '../../../../components/forum/rules/rules.vue';
 import AppForumTopicList from '../../../../components/forum/topic-list/topic-list.vue';
 import AppPageHeader from '../../../../components/page-header/page-header.vue';
 
@@ -23,6 +24,7 @@ import AppPageHeader from '../../../../components/page-header/page-header.vue';
 		AppPagination,
 		AppForumBreadcrumbs,
 		AppNavTabList,
+		AppForumRules,
 	},
 })
 @OptionsForRoute({
@@ -102,21 +104,6 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 			</div>
 
 			<div class="clearfix">
-				<div :class="{ 'pull-right': !Screen.isXs }">
-					<div>
-						<AppButton
-							primary
-							:block="Screen.isXs"
-							:to="{
-								name: 'forums.topics.add',
-								params: { channel: channel.name },
-							}"
-						>
-							<AppTranslate>Add Topic</AppTranslate>
-						</AppButton>
-					</div>
-				</div>
-
 				<br class="hidden-sm-up" />
 
 				<ul class="stat-list" :class="Screen.isXs ? 'text-center' : 'pull-left'">
@@ -142,6 +129,9 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 
 		<div class="section">
 			<div id="forum-topics-list" class="container">
+				<AppForumRules />
+				<hr />
+
 				<template v-if="stickyTopics.length">
 					<AppForumTopicList
 						:topics="stickyTopics"
