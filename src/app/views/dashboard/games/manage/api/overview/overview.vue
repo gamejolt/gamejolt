@@ -104,7 +104,7 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 					class="link-help"
 					:to="{
 						name: 'forums.channels.view',
-						params: { name: 'gj-game-api', sort: 'active' },
+						params: { name: 'gj-game-api', sort: 'archived' },
 					}"
 				>
 					<AppTranslate>Find help in the API forums...</AppTranslate>

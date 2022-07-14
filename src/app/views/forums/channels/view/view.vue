@@ -31,7 +31,7 @@ import AppPageHeader from '../../../../components/page-header/page-header.vue';
 	cache: true,
 	deps: { params: ['name', 'sort'], query: ['page'] },
 	resolver({ route }) {
-		const sort = route.params.sort || 'active';
+		const sort = 'archived';
 		return Api.sendRequest(
 			`/web/forums/channels/${route.params.name}/${sort}?page=${route.query.page || 1}`
 		);
@@ -57,7 +57,7 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 	readonly Screen = Screen;
 
 	get sort() {
-		return this.$route.params.sort || 'active';
+		return 'archived';
 	}
 
 	get page() {
@@ -142,57 +142,6 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 				</template>
 
 				<AppNavTabList>
-					<ul>
-						<li>
-							<router-link
-								:to="{
-									name: 'forums.channels.view',
-									params: { name: channel.name, sort: 'active' },
-									query: { page: 1 },
-								}"
-								:class="{ active: sort === 'active' }"
-							>
-								<AppTranslate>Active</AppTranslate>
-							</router-link>
-						</li>
-						<li>
-							<router-link
-								:to="{
-									name: 'forums.channels.view',
-									params: { name: channel.name, sort: 'new' },
-									query: { page: 1 },
-								}"
-								:class="{ active: sort === 'new' }"
-							>
-								<AppTranslate>New</AppTranslate>
-							</router-link>
-						</li>
-						<li>
-							<router-link
-								:to="{
-									name: 'forums.channels.view',
-									params: { name: channel.name, sort: 'top' },
-									query: { page: 1 },
-								}"
-								:class="{ active: sort === 'top' }"
-							>
-								<AppTranslate>Top</AppTranslate>
-							</router-link>
-						</li>
-						<li>
-							<router-link
-								:to="{
-									name: 'forums.channels.view',
-									params: { name: channel.name, sort: 'archived' },
-									query: { page: 1 },
-								}"
-								:class="{ active: sort === 'archived' }"
-							>
-								<AppTranslate>Archived</AppTranslate>
-							</router-link>
-						</li>
-					</ul>
-
 					<template v-if="topics.length" #meta>
 						<span class="text-muted small">
 							<AppTranslate
@@ -229,18 +178,7 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 				</template>
 				<div v-else class="text-center">
 					<p class="lead">
-						<AppTranslate>There aren't any topics here yet!</AppTranslate>
-					</p>
-					<p>
-						<AppButton
-							primary
-							:to="{
-								name: 'forums.topics.add',
-								params: { channel: channel.name },
-							}"
-						>
-							<AppTranslate>Add Topic</AppTranslate>
-						</AppButton>
+						<AppTranslate>There aren't any topics here.</AppTranslate>
 					</p>
 				</div>
 			</div>

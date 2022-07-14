@@ -60,7 +60,7 @@ export default class AppForumChannelList extends Vue {
 						class="link-unstyled"
 						:to="{
 							name: 'forums.channels.view',
-							params: { name: channel.name, sort: 'active' },
+							params: { name: channel.name, sort: 'archived' },
 						}"
 					>
 						#{{ channel.name }}
