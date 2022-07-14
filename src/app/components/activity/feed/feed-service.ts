@@ -206,6 +206,7 @@ export class ActivityFeedService {
 			} else {
 				// Redirect to the correct feed.
 				const location = this.getCorrectManageFeedLocation(post, route);
+				// TODO(desktop-app-fixes) check that location is never external here
 				router.push(location);
 			}
 		} else if (this.isInCorrectGameOverview(post, route)) {
@@ -235,6 +236,7 @@ export class ActivityFeedService {
 			if (!this.isInCorrectManageFeed(post, route)) {
 				// Redirect to the correct feed.
 				const location = this.getCorrectManageFeedLocation(post, route);
+				// TODO(desktop-app-fixes) check that location is never external here
 				router.push(location);
 			} else if (this.isScheduledFeed(route)) {
 				// If we still are in the correct feed, but it's a scheduled feed:
@@ -275,6 +277,7 @@ export class ActivityFeedService {
 		// Redirect to the active posts feed.
 		// A post can only be published from the draft/scheduled feed of the correct route, no need to redirect.
 		const location = this.getCorrectManageFeedLocation(post, route);
+		// TODO(desktop-app-fixes) check that location is never external here
 		router.push(location);
 
 		// Show the publish growl to give them an option to go to the community.

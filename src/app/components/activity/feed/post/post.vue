@@ -295,7 +295,7 @@ export default class AppActivityFeedPost extends Vue {
 		}
 
 		trackPostOpen({ source: 'feed' });
-		if (e.ctrlKey || e.shiftKey) {
+		if (!GJ_IS_DESKTOP_APP && (e.ctrlKey || e.shiftKey)) {
 			Navigate.newWindow(Environment.wttfBaseUrl + this.linkResolved);
 			return;
 		}

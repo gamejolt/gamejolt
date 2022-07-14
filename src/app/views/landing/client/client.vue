@@ -53,6 +53,7 @@ export default class RouteLandingClient extends BaseRouteComponent {
 			return;
 		}
 
+		// TODO(desktop-app-fixes) need to check this works in client.
 		Navigate.goto(downloadUrl);
 	}
 

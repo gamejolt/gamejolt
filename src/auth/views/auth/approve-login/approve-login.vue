@@ -58,6 +58,7 @@ export default class RouteApproveLogin extends BaseRouteComponent {
 
 		const location = getRedirectUrl(this.$route.query.redirect as string);
 		if (location) {
+			// TODO(desktop-app-fixes) can this be an external url?
 			Navigate.goto(location);
 			return;
 		}

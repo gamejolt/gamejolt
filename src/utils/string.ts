@@ -94,3 +94,7 @@ export function fuzzysearch(query: string, text: string) {
 	}
 	return true;
 }
+
+export function escapeRegex(str: string) {
+	return str.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&');
+}

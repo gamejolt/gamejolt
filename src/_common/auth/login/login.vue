@@ -28,6 +28,7 @@ export default class AppAuthLogin extends Vue {
 		// Otherwise, log them in!
 		authOnLogin('email');
 
+		// TODO(desktop-app-fixes) This is probably broken with client. redirects externally.
 		const location = getRedirectUrl(this.redirectTo);
 		if (location) {
 			Navigate.goto(location);

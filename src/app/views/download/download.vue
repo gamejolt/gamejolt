@@ -140,6 +140,8 @@ export default class RouteDownload extends BaseRouteComponent {
 
 		// While developing we often don't want to be downloading files every time the page reloads.
 		if (GJ_ENVIRONMENT === 'production' && GJ_BUILD_TYPE === 'build') {
+			// TODO(desktop-app-fixes) can client do this??
+			// We might want to treat the download link as a non client page.
 			Navigate.goto(data.url);
 		}
 	}

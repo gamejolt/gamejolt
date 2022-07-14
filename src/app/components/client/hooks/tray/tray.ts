@@ -7,6 +7,7 @@ import { UserTokenModal } from '../../../user/token-modal/token-modal.service';
 
 export function createClientTrayMenuBuilder(router: Router, appStore: AppStore) {
 	function go(location: RouteLocationRaw) {
+		// TODO(desktop-app-fixes) check that location is never external here
 		router.push(location);
 		Client.show();
 	}

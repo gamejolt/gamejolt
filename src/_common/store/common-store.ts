@@ -79,6 +79,7 @@ export function createCommonStore() {
 		if (import.meta.env.SSR) {
 			Environment.ssrContext.redirect = location;
 		} else {
+			// TODO(desktop-app-fixes) can this redirect externally? check all references.
 			Navigate.goto(location);
 		}
 	}

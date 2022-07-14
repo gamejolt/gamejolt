@@ -340,6 +340,7 @@ export class Notification extends Model {
 
 	async go(router: Router) {
 		if (this.routeLocation) {
+			// TODO(desktop-app-fixes) check this. can this accidentally redirect externally?
 			router.push(this.routeLocation);
 		} else if (
 			this.type === Notification.TYPE_GAME_TROPHY_ACHIEVED ||
@@ -386,6 +387,8 @@ export class Notification extends Model {
 				const search = Environment.baseUrl;
 				if (url.search(search) === 0) {
 					url = url.replace(search, '');
+					// TODO(desktop-app-fixes) check this. can this accidentally redirect externally?
+					// Yes, seems like it. baseUrl is not transformed to client base url.
 					router.push(url);
 				} else {
 					Navigate.gotoExternal(url);

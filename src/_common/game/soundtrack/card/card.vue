@@ -58,6 +58,7 @@ export default class AppGameSoundtrackCard extends Vue {
 
 		if (GJ_IS_DESKTOP_APP) {
 			// Gotta go past the first char since it's # in client.
+			// TODO(desktop-app-fixes) check this - wouldn't we need to trim everything before the #??
 			Navigate.gotoExternal(
 				Environment.baseUrl + this.$router.resolve(location).href.substr(1)
 			);
