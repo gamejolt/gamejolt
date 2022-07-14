@@ -1,35 +1,16 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
-import {
-	AdSettingsContainer,
-	releasePageAdsSettings,
-	setPageAdsSettings,
-	useAdsController,
-} from '../../../_common/ad/ad-store';
-import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { User } from '../../../_common/user/user.model';
 
-@Options({
-	name: 'RouteLegal',
-})
-@OptionsForRoute({
-	deps: {},
-	resolver: () => User.touch(),
-})
-export default class RouteLegal extends BaseRouteComponent {
-	ads = setup(() => useAdsController());
+export default {
+	...defineAppRouteOptions({
+		resolver: () => User.touch(),
+	}),
+};
+</script>
 
-	routeCreated() {
-		const settings = new AdSettingsContainer();
-		settings.isPageDisabled = true;
-		setPageAdsSettings(this.ads, settings);
-	}
-
-	routeDestroyed() {
-		releasePageAdsSettings(this.ads);
-	}
-}
+<script lang="ts" setup>
+createAppRoute({});
 </script>
 
 <template>
