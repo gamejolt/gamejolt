@@ -57,6 +57,7 @@ export default defineConfig(async () => {
 	const onlyInSSR = emptyUnless(() => gjOpts.platform === 'ssr');
 	const notInSSR = emptyUnless(() => gjOpts.platform !== 'ssr');
 	const onlyInDesktopApp = emptyUnless(() => gjOpts.platform === 'desktop');
+	const onlyInMobileApp = emptyUnless(() => gjOpts.platform === 'mobile');
 
 	// These will be imported in all styl files.
 	const stylusOptions = {
@@ -348,6 +349,11 @@ export default defineConfig(async () => {
 		},
 
 		build: {
+			// We want to target the oldest browsers that vite will let us.
+			...onlyInMobileApp({
+				target: 'es2015',
+			}),
+
 			// Never inline stuff.
 			assetsInlineLimit: 0,
 
