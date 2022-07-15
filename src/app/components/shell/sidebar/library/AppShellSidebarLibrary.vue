@@ -1,108 +1,47 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Vue } from 'vue-property-decorator';
-import { stringSort } from '../../../../../utils/array';
-import { shallowSetup } from '../../../../../utils/vue';
+<script lang="ts" setup>
+import { computed, ref } from 'vue';
+import { RouterLink, useRouter } from 'vue-router';
 import { trackAppPromotionClick } from '../../../../../_common/analytics/analytics.service';
-import { Environment } from '../../../../../_common/environment/environment.service';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../_common/filters/number';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
-import AppShortkey from '../../../../../_common/shortkey/AppShortkey.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { useAppStore } from '../../../../store/index';
 import { libraryNewPlaylist, useLibraryStore } from '../../../../store/library';
 import AppShellSidebarCollectionList from './AppShellSidebarCollectionList.vue';
 
-@Options({
-	components: {
-		AppShellSidebarCollectionList,
-		AppExpand,
-		AppScrollScroller,
-		AppShortkey,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppShellSidebarLibrary extends Vue {
-	store = setup(() => useAppStore());
-	commonStore = setup(() => useCommonStore());
-	libraryStore = shallowSetup(() => useLibraryStore());
+const { isLibraryBootstrapped } = useAppStore();
+const { user } = useCommonStore();
+const libraryStore = useLibraryStore();
+const { developerCollection, followedCollection, ownedCollection, collections, playlistFolders } =
+	libraryStore;
+const router = useRouter();
 
-	get app() {
-		return this.commonStore;
+const playlistFilterQuery = ref('');
+const openFolders = ref<string[]>([]);
+
+const collectionsLength = computed(() => formatNumber(collections.value.length));
+const mainPlaylists = computed(() => playlistFolders.value.main.collections.value);
+const playlistFoldersToDisplay = computed(() =>
+	Object.keys(playlistFolders.value).filter(folder => folder !== 'main')
+);
+
+function toggleFolder(key: string) {
+	const index = openFolders.value.indexOf(key);
+	if (index === -1) {
+		openFolders.value.push(key);
+	} else {
+		openFolders.value.splice(index, 1);
 	}
-	get isLibraryBootstrapped() {
-		return this.store.isLibraryBootstrapped;
-	}
+}
 
-	playlistFilterQuery = '';
-	openFolders: string[] = [];
-
-	readonly Environment = Environment;
-	readonly Screen = Screen;
-	readonly trackAppPromotionClick = trackAppPromotionClick;
-
-	get bundleCollections() {
-		return this.libraryStore.bundleCollections.value;
-	}
-
-	get developerCollection() {
-		return this.libraryStore.developerCollection.value;
-	}
-	get followedCollection() {
-		return this.libraryStore.followedCollection.value;
-	}
-
-	get ownedCollection() {
-		return this.libraryStore.ownedCollection.value;
-	}
-
-	get collections() {
-		return this.libraryStore.collections.value;
-	}
-
-	get playlistFolders() {
-		return this.libraryStore.playlistFolders.value;
-	}
-
-	get collectionsLength() {
-		return formatNumber(this.collections.length);
-	}
-
-	get bundleCollectionsLength() {
-		return formatNumber(this.bundleCollections.length);
-	}
-
-	get filteredBundleCollections() {
-		return this.bundleCollections.sort((a, b) => stringSort(a.name, b.name));
-	}
-
-	get playlistFoldersToDisplay() {
-		return Object.keys(this.playlistFolders).filter(folder => folder !== 'main');
-	}
-
-	get mainPlaylists() {
-		return this.playlistFolders.main.collections.value;
-	}
-
-	toggleFolder(key: string) {
-		const index = this.openFolders.indexOf(key);
-		if (index === -1) {
-			this.openFolders.push(key);
-		} else {
-			this.openFolders.splice(index, 1);
-		}
-	}
-
-	async showAddPlaylistModal() {
-		const collection = await libraryNewPlaylist(this.libraryStore);
-		if (collection) {
-			this.$router.push(collection.routeLocation);
-		}
+async function showAddPlaylistModal() {
+	const collection = await libraryNewPlaylist(libraryStore);
+	if (collection) {
+		router.push(collection.routeLocation);
 	}
 }
 </script>
@@ -111,7 +50,7 @@ export default class AppShellSidebarLibrary extends Vue {
 	<div id="shell-sidebar-library">
 		<ul v-if="Screen.isXs" class="shell-nav">
 			<li class="offline-disable">
-				<router-link
+				<RouterLink
 					v-app-track-event="`sidebar:discover`"
 					:to="{ name: 'discover.home' }"
 					active-class="active"
@@ -122,17 +61,17 @@ export default class AppShellSidebarLibrary extends Vue {
 					<span class="shell-nav-label">
 						<AppTranslate>Explore</AppTranslate>
 					</span>
-				</router-link>
+				</RouterLink>
 			</li>
 
 			<li class="offline-disable">
-				<router-link
+				<RouterLink
 					v-app-track-event="`sidebar:store`"
 					:to="{
 						name: 'discover.games.list._fetch',
 						params: { section: null },
 					}"
-					:class="{ active: ($route.name || '').startsWith('discover.games.') }"
+					:class="{ active: String($route.name).startsWith('discover.games.') }"
 				>
 					<span class="shell-nav-icon">
 						<AppJolticon icon="gamepad" />
@@ -140,14 +79,14 @@ export default class AppShellSidebarLibrary extends Vue {
 					<span class="shell-nav-label">
 						<AppTranslate>Store</AppTranslate>
 					</span>
-				</router-link>
+				</RouterLink>
 			</li>
 
 			<li class="offline-disable">
-				<router-link
+				<RouterLink
 					v-app-track-event="`sidebar:search`"
 					:to="{ name: 'search.results' }"
-					:class="{ active: $route.name && $route.name.indexOf('search') === 0 }"
+					:class="{ active: $route.name && String($route.name).indexOf('search') === 0 }"
 				>
 					<span class="shell-nav-icon">
 						<AppJolticon icon="search" />
@@ -155,13 +94,13 @@ export default class AppShellSidebarLibrary extends Vue {
 					<span class="shell-nav-label">
 						<AppTranslate>Search</AppTranslate>
 					</span>
-				</router-link>
+				</RouterLink>
 			</li>
 		</ul>
 
-		<ul v-if="app.user" class="shell-nav">
+		<ul v-if="user" class="shell-nav">
 			<li v-if="GJ_IS_DESKTOP_APP">
-				<router-link
+				<RouterLink
 					v-app-track-event="`sidebar:collection:installed`"
 					:to="{ name: 'library.installed' }"
 					active-class="active"
@@ -172,11 +111,11 @@ export default class AppShellSidebarLibrary extends Vue {
 					<span class="shell-nav-label">
 						<AppTranslate>Installed Games</AppTranslate>
 					</span>
-				</router-link>
+				</RouterLink>
 			</li>
 
 			<li v-if="developerCollection" class="offline-disable">
-				<router-link
+				<RouterLink
 					v-app-track-event="`sidebar:collection:developer`"
 					:to="developerCollection.routeLocation"
 					active-class="active"
@@ -187,11 +126,11 @@ export default class AppShellSidebarLibrary extends Vue {
 					<span class="shell-nav-label">
 						<AppTranslate>Your Games</AppTranslate>
 					</span>
-				</router-link>
+				</RouterLink>
 			</li>
 
 			<li v-if="followedCollection && !Screen.isXs" class="offline-disable">
-				<router-link
+				<RouterLink
 					v-app-track-event="`sidebar:collection:followed`"
 					:to="followedCollection.routeLocation"
 					active-class="active"
@@ -202,11 +141,11 @@ export default class AppShellSidebarLibrary extends Vue {
 					<span class="shell-nav-label">
 						<AppTranslate>Followed Games</AppTranslate>
 					</span>
-				</router-link>
+				</RouterLink>
 			</li>
 
 			<li v-if="ownedCollection && !Screen.isXs" class="offline-disable">
-				<router-link
+				<RouterLink
 					v-app-track-event="`sidebar:collection:owned`"
 					:to="ownedCollection.routeLocation"
 					active-class="active"
@@ -217,13 +156,13 @@ export default class AppShellSidebarLibrary extends Vue {
 					<span class="shell-nav-label">
 						<AppTranslate>Owned Games</AppTranslate>
 					</span>
-				</router-link>
+				</RouterLink>
 			</li>
 		</ul>
 
 		<ul v-if="!GJ_IS_DESKTOP_APP" class="shell-nav">
 			<li v-if="Screen.isMobile" class="offline-disable">
-				<router-link
+				<RouterLink
 					:to="{ name: 'landing.app' }"
 					@click="
 						trackAppPromotionClick({
@@ -238,10 +177,10 @@ export default class AppShellSidebarLibrary extends Vue {
 					<span class="shell-nav-label">
 						<AppTranslate>Get the Mobile App</AppTranslate>
 					</span>
-				</router-link>
+				</RouterLink>
 			</li>
 			<li v-else class="offline-disable">
-				<router-link
+				<RouterLink
 					:to="{ name: 'landing.client' }"
 					@click="
 						trackAppPromotionClick({
@@ -256,42 +195,11 @@ export default class AppShellSidebarLibrary extends Vue {
 					<span class="shell-nav-label">
 						<AppTranslate>Get the Desktop App</AppTranslate>
 					</span>
-				</router-link>
+				</RouterLink>
 			</li>
 		</ul>
 
-		<template v-if="app.user">
-			<template v-if="bundleCollections.length">
-				<div class="nav-heading">
-					<AppTranslate>Bundles</AppTranslate>
-					<span class="badge">
-						{{ bundleCollectionsLength }}
-					</span>
-				</div>
-
-				<ul class="shell-nav">
-					<li
-						v-for="bundleCollection of filteredBundleCollections"
-						:key="bundleCollection._id"
-						class="offline-disable"
-					>
-						<router-link
-							v-app-track-event="`sidebar:collection:bundle`"
-							:to="bundleCollection.routeLocation"
-							active-class="active"
-							:title="bundleCollection.name"
-						>
-							<span class="shell-nav-icon">
-								<AppJolticon icon="bundle" />
-							</span>
-							<span class="shell-nav-label">
-								{{ bundleCollection.name }}
-							</span>
-						</router-link>
-					</li>
-				</ul>
-			</template>
-
+		<template v-if="user">
 			<!-- Playlists -->
 			<template v-if="isLibraryBootstrapped">
 				<div class="nav-heading" :title="$gettext(`Playlists`)">

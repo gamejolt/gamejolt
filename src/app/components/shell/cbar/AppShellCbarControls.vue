@@ -1,67 +1,30 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Inject, Options, Vue } from 'vue-property-decorator';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { DefaultTheme } from '../../../../../_common/theme/theme.model';
-import { useThemeStore } from '../../../../../_common/theme/theme.store';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { useAppStore } from '../../../../store/index';
-import { ChatStore, ChatStoreKey } from '../../../chat/chat-store';
-import AppShellCbarItem from '../item/item.vue';
+<script lang="ts" setup>
+import { computed } from 'vue';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import { DefaultTheme } from '../../../../_common/theme/theme.model';
+import { useThemeStore } from '../../../../_common/theme/theme.store';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { useAppStore } from '../../../store/index';
+import { useChatStore } from '../../chat/chat-store';
+import AppShellCbarItem from './AppShellCbarItem.vue';
 
-@Options({
-	components: {
-		AppShellCbarItem,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppShellCbarControls extends Vue {
-	store = setup(() => useAppStore());
-	commonStore = setup(() => useCommonStore());
+const { activeCommunity, visibleLeftPane, toggleLeftPane } = useAppStore();
+const { user } = useCommonStore();
+const { theme } = useThemeStore();
+const chatStore = useChatStore()!;
 
-	@Inject({ from: ChatStoreKey })
-	chatStore!: ChatStore;
+const chat = computed(() => chatStore.chat);
 
-	get user() {
-		return this.commonStore.user;
+const highlight = computed(() => {
+	const _theme = activeCommunity.value?.theme ?? theme.value ?? DefaultTheme;
+	if (_theme) {
+		return '#' + _theme.darkHighlight_;
 	}
 
-	get activeCommunity() {
-		return this.store.activeCommunity;
-	}
-
-	get visibleLeftPane() {
-		return this.store.visibleLeftPane;
-	}
-
-	get toggleLeftPane() {
-		return this.store.toggleLeftPane;
-	}
-
-	themeStore = setup(() => useThemeStore());
-
-	declare $refs: {
-		stickerOrigin: HTMLDivElement;
-	};
-
-	readonly Screen = Screen;
-
-	get chat() {
-		return this.chatStore.chat;
-	}
-
-	get highlight() {
-		const theme = this.activeCommunity?.theme ?? this.themeStore.theme ?? DefaultTheme;
-		if (theme) {
-			return '#' + theme.darkHighlight_;
-		}
-
-		return null;
-	}
-}
+	return undefined;
+});
 </script>
 
 <template>
@@ -127,8 +90,8 @@ export default class AppShellCbarControls extends Vue {
 </template>
 
 <style lang="stylus" scoped>
-@import '../variables'
-@import '../common'
+@import './variables'
+@import './common'
 
 .shell-cbar-controls
 	.-control

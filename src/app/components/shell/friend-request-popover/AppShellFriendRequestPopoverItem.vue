@@ -1,58 +1,45 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import AppCard from '../../../../../_common/card/AppCard.vue';
-import { Screen } from '../../../../../_common/screen/screen-service';
+import { computed, PropType, ref, toRefs } from 'vue';
+import { RouterLink } from 'vue-router';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import AppCard from '../../../../_common/card/AppCard.vue';
+import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
-} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { UserFriendship } from '../../../../../_common/user/friendship/friendship.model';
-import AppUserAvatarImg from '../../../../../_common/user/user-avatar/img/img.vue';
-import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
+} from '../../../../_common/scroll/inview/AppScrollInview.vue';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
+import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
+</script>
 
-@Options({
-	components: {
-		AppScrollInview,
-		AppCard,
-		AppUserAvatarImg,
-		AppUserVerifiedTick,
+<script lang="ts" setup>
+const props = defineProps({
+	request: {
+		type: Object as PropType<UserFriendship>,
+		required: true,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppShellFriendRequestPopoverItem extends Vue {
-	@Prop({ type: Object, required: true }) request!: UserFriendship;
+});
 
-	commonStore = setup(() => useCommonStore());
+const emit = defineEmits({
+	cancel: () => true,
+	accept: () => true,
+	reject: () => true,
+});
 
-	get user() {
-		return this.commonStore.user;
-	}
+const { request } = toRefs(props);
+const { user } = useCommonStore();
 
-	isInview = false;
-	readonly InviewConfig = InviewConfig;
-	readonly Screen = Screen;
+const isInview = ref(false);
 
-	get them() {
-		return this.request.getThem(this.user!);
-	}
-
-	/**
-	 * Is it a request we sent?
-	 */
-	get isPending() {
-		return this.request.target_user.id !== this.user!.id;
-	}
-
-	@Emit() cancel() {}
-	@Emit() accept() {}
-	@Emit() reject() {}
-}
+/**
+ * Is it a request we sent?
+ */
+const isPending = computed(() => request.value.target_user.id !== user.value!.id);
+const them = computed(() => request.value.getThem(user.value!));
 </script>
 
 <template>
@@ -62,7 +49,7 @@ export default class AppShellFriendRequestPopoverItem extends Vue {
 		@inview="isInview = true"
 		@outview="isInview = false"
 	>
-		<router-link v-if="isInview" :to="them.url">
+		<RouterLink v-if="isInview" :to="them.url">
 			<AppCard>
 				<div class="shell-card-popover-card-media">
 					<div class="friend-request-popover-avatar">
@@ -84,7 +71,7 @@ export default class AppShellFriendRequestPopoverItem extends Vue {
 								trans
 								circle
 								icon="remove"
-								@click.prevent="cancel"
+								@click.prevent="emit('cancel')"
 							/>
 						</template>
 						<template v-else>
@@ -94,7 +81,7 @@ export default class AppShellFriendRequestPopoverItem extends Vue {
 								primary
 								circle
 								icon="friend-add-2"
-								@click.prevent="accept"
+								@click.prevent="emit('accept')"
 							/>
 							<AppButton
 								v-app-tooltip="
@@ -104,7 +91,7 @@ export default class AppShellFriendRequestPopoverItem extends Vue {
 								trans
 								circle
 								icon="remove"
-								@click.prevent="reject"
+								@click.prevent="emit('reject')"
 							/>
 						</template>
 					</div>
@@ -121,7 +108,7 @@ export default class AppShellFriendRequestPopoverItem extends Vue {
 					</div>
 				</div>
 			</AppCard>
-		</router-link>
+		</RouterLink>
 	</AppScrollInview>
 </template>
 

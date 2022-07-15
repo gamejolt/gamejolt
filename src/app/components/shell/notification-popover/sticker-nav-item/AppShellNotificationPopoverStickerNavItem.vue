@@ -1,28 +1,25 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { RouterLink } from 'vue-router';
 import { formatNumber } from '../../../../../_common/filters/number';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
-@Options({
-	components: {
-		AppTimelineListItem,
+defineProps({
+	stickerCount: {
+		type: Number,
+		required: true,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
+	hasNew: {
+		type: Boolean,
 	},
-})
-export default class AppShellNotificationPopoverStickerNavItem extends Vue {
-	@Prop({ type: Number, required: true }) stickerCount!: number;
-	@Prop({ type: Boolean, required: true }) hasNew!: boolean;
-
-	readonly formatNumber = formatNumber;
-}
+});
 </script>
 
 <template>
 	<div>
-		<router-link :to="{ name: 'dash.stickers' }">
+		<RouterLink :to="{ name: 'dash.stickers' }">
 			<div class="-item">
 				<AppTimelineListItem>
 					<template #bubble>
@@ -46,7 +43,7 @@ export default class AppShellNotificationPopoverStickerNavItem extends Vue {
 					<span v-app-tooltip="$gettext(`View newly unlocked stickers`)" class="-icon" />
 				</div>
 			</div>
-		</router-link>
+		</RouterLink>
 
 		<div class="timeline-list-item-split" />
 	</div>

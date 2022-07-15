@@ -21,11 +21,9 @@ import { ChatStoreKey } from '../chat/chat-store';
 import AppSearch from '../search/AppSearch.vue';
 import AppShellQuestIcon from './AppShellQuestIcon.vue';
 
-const AppShellAccountPopover = defineAsyncComponent(
-	() => import('./account-popover/account-popover.vue')
-);
+const AppShellAccountPopover = defineAsyncComponent(() => import('./AppShellAccountPopover.vue'));
 const AppShellFriendRequestPopover = defineAsyncComponent(
-	() => import('./friend-request-popover/friend-request-popover.vue')
+	() => import('./friend-request-popover/AppShellFriendRequestPopover.vue')
 );
 const AppShellNotificationPopover = defineAsyncComponent(
 	() => import('./notification-popover/AppShellNotificationPopover.vue')

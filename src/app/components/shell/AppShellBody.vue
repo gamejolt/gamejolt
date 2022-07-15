@@ -1,4 +1,19 @@
+<script lang="ts" setup>
+import { useAppStore } from '../../store';
 
+const { hasContentSidebar } = useAppStore();
+</script>
+
+<template>
+	<div id="shell-body" :class="{ 'has-content-sidebar': hasContentSidebar }">
+		<div class="shell-body-main">
+			<slot />
+		</div>
+	</div>
+</template>
+
+<!-- Global -->
+<style lang="stylus">
 #shell-body
 	position: relative
 	background-color: transparent
@@ -17,3 +32,4 @@
 
 .shell-body-main
 	background-color: $white
+</style>

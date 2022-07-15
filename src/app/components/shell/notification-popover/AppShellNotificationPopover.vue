@@ -17,7 +17,7 @@ import { useAppStore } from '../../../store';
 import { ActivityFeedView } from '../../activity/feed/view';
 import { onNewStickers } from '../../grid/client.service';
 import { AppActivityFeedLazy } from '../../lazy';
-import AppShellNotificationPopoverStickerNavItem from './sticker-nav-item/sticker-nav-item.vue';
+import AppShellNotificationPopoverStickerNavItem from './sticker-nav-item/AppShellNotificationPopoverStickerNavItem.vue';
 
 interface StickerAnimationData {
 	key: string;
@@ -173,7 +173,6 @@ function removeStickerAnimation(key: string) {
 			>
 				{{ unreadNotificationsCount }}
 			</span>
-			<div v-if="hasNewUnlockedStickers" class="-new-tag anim-fade-enter anim-fade-leave" />
 			<AppJolticon icon="bell-filled" />
 			<div ref="newStickerAnimContainer" class="-new-sticker-anim-container">
 				<div
@@ -249,21 +248,6 @@ $-new-sticker-size = 32px
 	user-select: none
 	pointer-events: none
 	z-index: 3
-
-.-new-tag
-	border-radius: 50%
-	width: 12px
-	height: 12px
-	display: block
-	change-bg('highlight')
-	position: absolute
-	bottom: 10px
-	right: 4px
-	display: block
-	border-color: var(--theme-darkest)
-	border-width: 2px
-	border-style: solid
-
 
 .-new-sticker
 	position: fixed
