@@ -2,35 +2,35 @@
 import { defineAsyncComponent } from '@vue/runtime-core';
 import { computed, inject, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { AppClientHistoryNavigator } from '../../../../_common/client/safe-exports';
-import { AppConfigLoaded } from '../../../../_common/config/loaded';
-import { Connection } from '../../../../_common/connection/connection-service';
-import { Environment } from '../../../../_common/environment/environment.service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { vAppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
-import AppPopper from '../../../../_common/popper/popper.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { imageGameJoltLogo, imageJolt } from '../../../img/images';
-import { useAppStore } from '../../../store/index';
-import { ChatStoreKey } from '../../chat/chat-store';
-import AppSearch from '../../search/AppSearch.vue';
-import AppShellQuestIcon from '../AppShellQuestIcon.vue';
+import { trackAppPromotionClick } from '../../../_common/analytics/analytics.service';
+import AppButton from '../../../_common/button/AppButton.vue';
+import { AppClientHistoryNavigator } from '../../../_common/client/safe-exports';
+import { AppConfigLoaded } from '../../../_common/config/loaded';
+import { Connection } from '../../../_common/connection/connection-service';
+import { Environment } from '../../../_common/environment/environment.service';
+import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
+import { vAppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
+import { Screen } from '../../../_common/screen/screen-service';
+import { useCommonStore } from '../../../_common/store/common-store';
+import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
+import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import { imageGameJoltLogo, imageJolt } from '../../img/images';
+import { useAppStore } from '../../store/index';
+import { ChatStoreKey } from '../chat/chat-store';
+import AppSearch from '../search/AppSearch.vue';
+import AppShellQuestIcon from './AppShellQuestIcon.vue';
 
 const AppShellAccountPopover = defineAsyncComponent(
-	() => import('../account-popover/account-popover.vue')
+	() => import('./account-popover/account-popover.vue')
 );
 const AppShellFriendRequestPopover = defineAsyncComponent(
-	() => import('../friend-request-popover/friend-request-popover.vue')
+	() => import('./friend-request-popover/friend-request-popover.vue')
 );
 const AppShellNotificationPopover = defineAsyncComponent(
-	() => import('../notification-popover/AppShellNotificationPopover.vue')
+	() => import('./notification-popover/AppShellNotificationPopover.vue')
 );
+const AppShellAltMenuPopover = defineAsyncComponent(() => import('./AppShellAltMenuPopover.vue'));
 
 const { visibleLeftPane, hasCbar, unreadActivityCount, toggleCbarMenu } = useAppStore();
 const { isUserTimedOut, user, userBootstrapped } = useCommonStore();
@@ -38,7 +38,6 @@ const chatStore = inject(ChatStoreKey)!;
 
 const left = ref<HTMLDivElement>();
 const right = ref<HTMLDivElement>();
-const moreMenuShowing = ref(false);
 const baseMinColWidth = ref<number>();
 
 const chat = computed(() => chatStore.chat);
@@ -165,7 +164,9 @@ function _checkColWidths() {
 					</strong>
 				</RouterLink>
 
-				<AppPopper
+				<AppShellAltMenuPopover v-if="shouldShowMoreMenu" />
+
+				<!-- <AppPopper
 					v-if="shouldShowMoreMenu"
 					v-app-track-event="`top-nav:more-menu:toggle`"
 					popover-class="fill-darkest"
@@ -210,7 +211,7 @@ function _checkColWidths() {
 							</RouterLink>
 						</div>
 					</template>
-				</AppPopper>
+				</AppPopper> -->
 			</div>
 		</div>
 

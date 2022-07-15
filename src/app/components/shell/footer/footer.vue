@@ -6,7 +6,7 @@ import { formatDate } from '../../../../_common/filters/date';
 import AppMobileAppButtons from '../../../../_common/mobile-app/AppMobileAppButtons.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
-import AppTranslateLangSelector from '../../../../_common/translate/lang-selector/lang-selector.vue';
+import AppTranslateLangSelector from '../../../../_common/translate/lang-selector/AppTranslateLangSelector.vue';
 import { imageJolt } from '../../../img/images';
 import { ClientSystemReportModal } from '../../client/safe-exports';
 

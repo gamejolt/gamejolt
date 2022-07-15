@@ -10,8 +10,8 @@ import AppGamePackageCardMoreOptions from '../../../../_common/game/package/card
 import { GamePackageCardModel } from '../../../../_common/game/package/card/card.model';
 import { GamePackage } from '../../../../_common/game/package/package.model';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
-import AppPopper from '../../../../_common/popper/popper.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { useClientLibraryStore } from '../../../store/client-library/index';

@@ -1,23 +1,23 @@
 <script lang="ts" setup>
-import { ref, computed, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { sleep } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { Connection } from '../../../../_common/connection/connection-service';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Notification } from '../../../../_common/notification/notification-model';
-import AppPopper from '../../../../_common/popper/popper.vue';
+import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useEventSubscription } from '../../../../_common/system/event/event-topic';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { useAppStore } from '../../../store';
 import { ActivityFeedView } from '../../activity/feed/view';
 import { onNewStickers } from '../../grid/client.service';
 import { AppActivityFeedLazy } from '../../lazy';
 import AppShellNotificationPopoverStickerNavItem from './sticker-nav-item/sticker-nav-item.vue';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
 
 interface StickerAnimationData {
 	key: string;

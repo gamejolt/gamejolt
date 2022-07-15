@@ -7,7 +7,7 @@ import { Client } from '../../../../_common/client/safe-exports';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { formatCurrency } from '../../../../_common/filters/currency';
-import AppPopper from '../../../../_common/popper/popper.vue';
+import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { SettingThemeDark } from '../../../../_common/settings/settings.service';
 import { useCommonStore } from '../../../../_common/store/common-store';

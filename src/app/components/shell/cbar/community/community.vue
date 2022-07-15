@@ -7,8 +7,8 @@ import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail
 import { Environment } from '../../../../../_common/environment/environment.service';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
+import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
-import AppPopper from '../../../../../_common/popper/popper.vue';
 import { useSidebarStore } from '../../../../../_common/sidebar/sidebar.store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';

@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { formatNumber } from '../../../../_common/filters/number';
-import AppPopper from '../../../../_common/popper/popper.vue';
+import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { GameFilteringContainer } from './container';
 

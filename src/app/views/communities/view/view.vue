@@ -14,7 +14,7 @@ import { Environment } from '../../../../_common/environment/environment.service
 import { formatNumber } from '../../../../_common/filters/number';
 import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
 import { setAppPromotionCohort, useAppPromotionStore } from '../../../../_common/mobile-app/store';
-import AppPopper from '../../../../_common/popper/popper.vue';
+import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';

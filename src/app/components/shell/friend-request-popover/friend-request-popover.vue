@@ -4,7 +4,7 @@ import { Options, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { Connection } from '../../../../_common/connection/connection-service';
 import AppLoading from '../../../../_common/loading/loading.vue';
-import AppPopper from '../../../../_common/popper/popper.vue';
+import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
@@ -183,7 +183,7 @@ export default class AppShellFriendRequestPopover extends Vue {
 		popover-class="fill-dark"
 		fixed
 		hide-on-state-change
-		force-max-width
+		width="400px"
 		@show="onShow()"
 		@hide="onHide()"
 	>
