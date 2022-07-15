@@ -283,6 +283,7 @@ export default class AppContentEditor extends Vue {
 		// Attach our editor hooks into the controller so that we can be
 		// controlled through the controller. So much control.
 		this.controller_._editor = {
+			ownerController: () => this.ownerController,
 			getWindowRect: () => this.$refs.editor.getBoundingClientRect(),
 			emitSubmit: () => this.emitSubmit(),
 			emitInput: newSource => this.emitInput(newSource),

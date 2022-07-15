@@ -113,6 +113,18 @@ export class ContentEditorAppAdapter {
 	}
 }
 
+export function editorDebugAppAdapter(message: string, data?: any) {
+	const messageData = {
+		message: `${message}`,
+		data,
+	};
+
+	console.debug(messageData);
+	if (GJ_IS_MOBILE_APP) {
+		editorGetAppAdapter().send(new ContentEditorAppAdapterMessage('debug', messageData));
+	}
+}
+
 /**
  * Returns the currently initialized [ContentEditorAppAdapter]. Will throw if
  * there's not one initialized.
@@ -160,7 +172,8 @@ export class ContentEditorAppAdapterMessage {
 			| 'mediaUploadFinalize'
 			| 'mediaUploadCancel'
 			| 'hydrationRequest'
-			| 'hydrationResponse',
+			| 'hydrationResponse'
+			| 'debug',
 		public readonly data: null | any
 	) {}
 
@@ -351,7 +364,9 @@ export class ContentEditorAppAdapterMessage {
 					return;
 				}
 
-				return controller.hydrator.setData(type, source, hydrationData);
+				return controller._editor
+					?.ownerController()
+					?.hydrator.setData(type, source, hydrationData);
 			}
 
 			case 'initialize':
@@ -362,6 +377,7 @@ export class ContentEditorAppAdapterMessage {
 			case 'window':
 			case 'scope':
 			case 'hydrationRequest':
+			case 'debug':
 				// These are never run locally, only sent to the app.
 				break;
 
