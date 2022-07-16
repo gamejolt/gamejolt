@@ -70,7 +70,6 @@ const settingsForm: FormController<FiresideChatSettings> = createForm({
 		return `/web/dash/fireside/chat-settings/${fireside.hash}`;
 	}),
 	onLoad(payload) {
-		console.warn(payload);
 		chatSettings.value.assign(payload.settings);
 		settingsForm.formModel.assign(payload.settings);
 	},
