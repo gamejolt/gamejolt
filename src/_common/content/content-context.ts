@@ -153,6 +153,19 @@ export class ContextCapabilities {
 		return new ContextCapabilities([]);
 	}
 
+	public static fromStringList(items: string[]) {
+		const data = new Set<ContextCapabilityType>();
+
+		for (const item of items) {
+			const value: any = ContextCapabilityType[item as any];
+			if (value !== undefined) {
+				data.add(value);
+			}
+		}
+
+		return new ContextCapabilities(Array.from(data));
+	}
+
 	public static getForContext(context: ContentContext) {
 		switch (context) {
 			case 'fireside-post-lead':
