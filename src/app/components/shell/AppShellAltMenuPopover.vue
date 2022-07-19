@@ -8,6 +8,8 @@ import AppPopper from '../../../_common/popper/AppPopper.vue';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { ClientSystemReportModal } from '../client/safe-exports';
+import AppShellAltMenuDevelopers from './AppShellAltMenuDevelopers.vue';
+import AppShellAltMenuExtra from './AppShellAltMenuExtra.vue';
 
 const moreMenuShowing = ref(false);
 
