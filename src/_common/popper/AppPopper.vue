@@ -17,6 +17,7 @@ import {
 	ref,
 	toRefs,
 	useSlots,
+	watch,
 } from 'vue';
 import { useRouter } from 'vue-router';
 import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
@@ -178,17 +179,21 @@ const emit = defineEmits({
 });
 
 const {
-	maxHeight,
-	popoverClass,
-	trackTriggerWidth,
-	width,
 	placement,
-	fixed,
-	hideOnStateChange,
 	trigger,
 	noHoverPopover,
+	fixed,
+	hideOnStateChange,
+	trackTriggerWidth,
+	width,
+	maxHeight,
+	manualShow,
+	block,
+	sansArrow,
 	showDelay,
+	popoverClass,
 } = toRefs(props);
+
 const slots = useSlots();
 const router = GJ_HAS_ROUTER ? useRouter() : undefined;
 
@@ -275,6 +280,8 @@ onUnmounted(() => {
 	_removeBackdrop();
 	Popper.deregisterPopper(popperIndex);
 });
+
+watch(manualShow, onManualShow);
 
 function _stateChangeHide() {
 	if (isVisible.value && hideOnStateChange.value) {
@@ -500,6 +507,16 @@ function _clearHideTimeout() {
 		clearTimeout(_hideTimeout);
 		_hideTimeout = undefined;
 	}
+}
+
+function onManualShow() {
+	if (trigger.value !== 'manual') {
+		return;
+	}
+	if (manualShow.value) {
+		return _show();
+	}
+	return _hide();
 }
 </script>
 
