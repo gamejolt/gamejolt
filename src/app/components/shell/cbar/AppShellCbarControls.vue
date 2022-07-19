@@ -29,18 +29,18 @@ const highlight = computed(() => {
 
 <template>
 	<div class="shell-cbar-controls">
-		<!-- Library - Screen.isXs -->
+		<!-- Mobile -->
 		<AppShellCbarItem
 			v-if="Screen.isXs"
 			class="-control"
 			:highlight="highlight"
-			:is-active="visibleLeftPane === 'library'"
+			:is-active="visibleLeftPane === 'mobile'"
 			is-control
 		>
 			<a
 				v-app-track-event="`cbar:menu:toggle`"
 				class="-control-item"
-				@click="toggleLeftPane('library')"
+				@click="toggleLeftPane('mobile')"
 			>
 				<AppJolticon class="-control-icon" icon="gamejolt" />
 			</a>
@@ -66,9 +66,8 @@ const highlight = computed(() => {
 				</a>
 			</AppShellCbarItem>
 
-			<!-- Library - !Screen.isXs -->
+			<!-- Library -->
 			<AppShellCbarItem
-				v-if="!Screen.isXs"
 				class="-control"
 				:highlight="highlight"
 				:is-active="visibleLeftPane === 'library'"

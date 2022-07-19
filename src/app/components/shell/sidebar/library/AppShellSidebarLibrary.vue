@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
-import { trackAppPromotionClick } from '../../../../../_common/analytics/analytics.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../_common/filters/number';
@@ -48,56 +47,6 @@ async function showAddPlaylistModal() {
 
 <template>
 	<div id="shell-sidebar-library">
-		<ul v-if="Screen.isXs" class="shell-nav">
-			<li class="offline-disable">
-				<RouterLink
-					v-app-track-event="`sidebar:discover`"
-					:to="{ name: 'discover.home' }"
-					active-class="active"
-				>
-					<span class="shell-nav-icon">
-						<AppJolticon icon="compass-needle" />
-					</span>
-					<span class="shell-nav-label">
-						<AppTranslate>Explore</AppTranslate>
-					</span>
-				</RouterLink>
-			</li>
-
-			<li class="offline-disable">
-				<RouterLink
-					v-app-track-event="`sidebar:store`"
-					:to="{
-						name: 'discover.games.list._fetch',
-						params: { section: null },
-					}"
-					:class="{ active: String($route.name).startsWith('discover.games.') }"
-				>
-					<span class="shell-nav-icon">
-						<AppJolticon icon="gamepad" />
-					</span>
-					<span class="shell-nav-label">
-						<AppTranslate>Store</AppTranslate>
-					</span>
-				</RouterLink>
-			</li>
-
-			<li class="offline-disable">
-				<RouterLink
-					v-app-track-event="`sidebar:search`"
-					:to="{ name: 'search.results' }"
-					:class="{ active: $route.name && String($route.name).indexOf('search') === 0 }"
-				>
-					<span class="shell-nav-icon">
-						<AppJolticon icon="search" />
-					</span>
-					<span class="shell-nav-label">
-						<AppTranslate>Search</AppTranslate>
-					</span>
-				</RouterLink>
-			</li>
-		</ul>
-
 		<ul v-if="user" class="shell-nav">
 			<li v-if="GJ_IS_DESKTOP_APP">
 				<RouterLink
@@ -155,45 +104,6 @@ async function showAddPlaylistModal() {
 					</span>
 					<span class="shell-nav-label">
 						<AppTranslate>Owned Games</AppTranslate>
-					</span>
-				</RouterLink>
-			</li>
-		</ul>
-
-		<ul v-if="!GJ_IS_DESKTOP_APP" class="shell-nav">
-			<li v-if="Screen.isMobile" class="offline-disable">
-				<RouterLink
-					:to="{ name: 'landing.app' }"
-					@click="
-						trackAppPromotionClick({
-							source: 'sidebar',
-							platform: 'mobile',
-						})
-					"
-				>
-					<span class="shell-nav-icon">
-						<AppJolticon icon="phone" />
-					</span>
-					<span class="shell-nav-label">
-						<AppTranslate>Get the Mobile App</AppTranslate>
-					</span>
-				</RouterLink>
-			</li>
-			<li v-else class="offline-disable">
-				<RouterLink
-					:to="{ name: 'landing.client' }"
-					@click="
-						trackAppPromotionClick({
-							source: 'sidebar',
-							platform: 'desktop',
-						})
-					"
-				>
-					<span class="shell-nav-icon">
-						<AppJolticon icon="client" />
-					</span>
-					<span class="shell-nav-label">
-						<AppTranslate>Get the Desktop App</AppTranslate>
 					</span>
 				</RouterLink>
 			</li>

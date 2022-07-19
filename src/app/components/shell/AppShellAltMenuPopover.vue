@@ -7,14 +7,9 @@ import AppLinkExternal from '../../../_common/link/AppLinkExternal.vue';
 import AppPopper from '../../../_common/popper/AppPopper.vue';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import { TranslateLangSelectorModal } from '../../../_common/translate/lang-selector/lang-selector-modal.service';
 import { ClientSystemReportModal } from '../client/safe-exports';
 
 const moreMenuShowing = ref(false);
-
-function showLangSelector() {
-	TranslateLangSelectorModal.show();
-}
 
 function showSystemReport() {
 	ClientSystemReportModal?.show();
@@ -90,8 +85,7 @@ function showSystemReport() {
 					<RouterLink
 						class="list-group-item has-icon"
 						:to="{
-							name: 'landing.help',
-							params: { path: 'support' },
+							name: 'landing.about',
 						}"
 					>
 						<AppJolticon icon="info-circle" />
@@ -104,56 +98,9 @@ function showSystemReport() {
 				</div>
 
 				<div class="-right">
-					<div class="-small-heading">
-						<AppTranslate>For Developers</AppTranslate>
-					</div>
-
-					<ol class="list-unstyled -link-list">
-						<li>
-							<RouterLink :to="{ name: 'landing.game-api' }">
-								<AppTranslate>Game API</AppTranslate>
-							</RouterLink>
-						</li>
-						<li>
-							<RouterLink :to="{ name: 'landing.marketplace' }">
-								<AppTranslate>Marketplace</AppTranslate>
-							</RouterLink>
-						</li>
-						<li>
-							<RouterLink :to="{ name: 'landing.partners' }">
-								<AppTranslate>Partner Program</AppTranslate>
-							</RouterLink>
-						</li>
-					</ol>
-
+					<AppShellAltMenuDevelopers />
 					<div class="-spacer" />
-
-					<div class="-extra-links">
-						<router-link
-							:to="{
-								name: 'landing.help',
-								params: { path: 'support' },
-							}"
-						>
-							<AppTranslate>Support</AppTranslate>
-						</router-link>
-						<div class="-dot" />
-						<router-link :to="{ name: 'legal.terms' }">
-							<AppTranslate>Terms</AppTranslate>
-						</router-link>
-						<div class="-dot" />
-						<router-link :to="{ name: 'legal.privacy' }">
-							<AppTranslate>Privacy</AppTranslate>
-						</router-link>
-						<div class="-row-break" />
-						<router-link :to="{ name: 'legal.cookies' }">
-							<AppTranslate>Cookie Policy</AppTranslate>
-						</router-link>
-						<div class="-dot" />
-						<a @click="showLangSelector">
-							<AppTranslate>Change Language</AppTranslate>
-						</a>
-					</div>
+					<AppShellAltMenuExtra />
 
 					<template v-if="GJ_IS_DESKTOP_APP">
 						<AppSpacer vertical :scale="2" />
@@ -199,41 +146,4 @@ function showSystemReport() {
 
 .-spacer
 	flex: auto
-
-.-row-break
-	width: 100%
-
-.-small-heading
-	color: var(--theme-fg-muted)
-	margin-bottom: 16px
-
-.-link-list
-	& > li
-		margin-bottom: 6px
-
-	& a
-		color: var(--theme-fg)
-
-		&:hover
-			color: var(--theme-link)
-
-.-extra-links
-	display: flex
-	flex-direction: row
-	align-items: center
-	flex-wrap: wrap
-	color: var(--theme-fg-muted)
-
-	a
-		color: var(--theme-fg-muted)
-
-		&:hover
-			color: var(--theme-link)
-
-	.-dot
-		margin: 0 8px
-		width: 2px
-		height: 2px
-		border-radius: 50%
-		background-color: var(--theme-fg-muted)
 </style>

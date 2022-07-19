@@ -7,6 +7,7 @@ import { useCommonStore } from '../../../../_common/store/common-store';
 import { useAppStore } from '../../../store';
 import AppShellSidebarContext from './context/AppShellSidebarContext.vue';
 import AppShellSidebarLibrary from './library/AppShellSidebarLibrary.vue';
+import AppShellSidebarMobile from './mobile/AppShellSidebarMobile.vue';
 
 const AppShellSidebarChat = defineAsyncComponent(() => import('./chat/AppShellSidebarChat.vue'));
 
@@ -36,12 +37,13 @@ watch(
 		thin
 	>
 		<AppShortkey v-if="user" shortkey="c" @press="toggleLeftPane('chat')" />
-		<AppShortkey v-if="user || Screen.isXs" shortkey="m" @press="toggleLeftPane('library')" />
+		<AppShortkey v-if="user" shortkey="m" @press="toggleLeftPane('library')" />
 		<AppShortkey shortkey="y" @press="toggleLeftPane('context')" />
 
 		<AppShellSidebarChat v-if="visibleLeftPane === 'chat'" />
-		<AppShellSidebarLibrary v-if="visibleLeftPane === 'library'" />
-		<AppShellSidebarContext v-if="visibleLeftPane === 'context'" />
+		<AppShellSidebarLibrary v-else-if="visibleLeftPane === 'library'" />
+		<AppShellSidebarContext v-else-if="visibleLeftPane === 'context'" />
+		<AppShellSidebarMobile v-else-if="visibleLeftPane === 'mobile'" />
 	</Component>
 </template>
 
