@@ -193,8 +193,8 @@ async function showAddPlaylistModal() {
 #shell-sidebar-library
 	padding-top: 16px
 
-	.-no-playlists
-		margin-left: ($grid-gutter-width-xs / 2)
-		margin-right: ($grid-gutter-width-xs / 2)
-		background-color: var(--theme-bg-subtle)
+.-no-playlists
+	margin-left: ($grid-gutter-width-xs / 2)
+	margin-right: ($grid-gutter-width-xs / 2)
+	background-color: var(--theme-bg-subtle)
 </style>

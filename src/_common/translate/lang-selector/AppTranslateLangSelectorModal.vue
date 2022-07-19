@@ -34,5 +34,3 @@ const modal = useModal()!;
 		</div>
 	</AppModal>
 </template>
-
-<style lang="stylus" scoped></style>

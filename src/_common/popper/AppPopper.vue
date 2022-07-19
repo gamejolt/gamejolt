@@ -168,11 +168,11 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-	'trigger-clicked': (_event: MouseEvent) => true,
-	'context-menu': (_event: MouseEvent) => true,
-	'mouse-enter': (_event: MouseEvent) => true,
-	'mouse-leave': (_event: MouseEvent) => true,
-	'click-away': (_event: MouseEvent) => true,
+	triggerClicked: (_event: MouseEvent) => true,
+	contextMenu: (_event: MouseEvent) => true,
+	mouseEnter: (_event: MouseEvent) => true,
+	mouseLeave: (_event: MouseEvent) => true,
+	clickAway: (_event: MouseEvent) => true,
 	show: () => true,
 	hide: () => true,
 });
@@ -289,7 +289,7 @@ function onDimensionsChanged() {
 }
 
 function onTriggerClicked(event: MouseEvent) {
-	emit('trigger-clicked', event);
+	emit('triggerClicked', event);
 
 	// We want to prevent right-click, hover, and manual triggers from showing poppers on left-click.
 	// clickAway() listener will hide poppers when needed, so we only need to show poppers here.
@@ -305,7 +305,7 @@ function onTriggerClicked(event: MouseEvent) {
 }
 
 function onContextMenu(event: MouseEvent) {
-	emit('context-menu', event);
+	emit('contextMenu', event);
 
 	if (trigger.value !== 'right-click') {
 		return;
@@ -341,7 +341,7 @@ function onMouseEnter(event: PointerEvent) {
 		return;
 	}
 
-	emit('mouse-enter', event);
+	emit('mouseEnter', event);
 
 	if (trigger.value !== 'hover') {
 		return;
@@ -370,7 +370,7 @@ function onMouseLeave(event: PointerEvent) {
 		return;
 	}
 
-	emit('mouse-leave', event);
+	emit('mouseLeave', event);
 
 	if (trigger.value !== 'hover') {
 		return;
@@ -396,7 +396,7 @@ function _onClickAway(event: MouseEvent) {
 		return;
 	}
 
-	emit('click-away', event);
+	emit('clickAway', event);
 
 	if (trigger.value === 'click' || trigger.value === 'right-click') {
 		_hide();
@@ -538,7 +538,7 @@ function _clearHideTimeout() {
 					<div class="-header">
 						<slot name="header" />
 					</div>
-					<AppScrollScroller ref="scroller" class="-main" thin>
+					<AppScrollScroller class="-main" thin>
 						<slot name="popover" />
 					</AppScrollScroller>
 					<div class="-footer">
