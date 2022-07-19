@@ -5,7 +5,6 @@ import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { Screen } from '../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { useAppStore } from '../../../../store/index';
@@ -78,7 +77,7 @@ async function showAddPlaylistModal() {
 				</RouterLink>
 			</li>
 
-			<li v-if="followedCollection && !Screen.isXs" class="offline-disable">
+			<li v-if="followedCollection" class="offline-disable">
 				<RouterLink
 					v-app-track-event="`sidebar:collection:followed`"
 					:to="followedCollection.routeLocation"
@@ -93,7 +92,7 @@ async function showAddPlaylistModal() {
 				</RouterLink>
 			</li>
 
-			<li v-if="ownedCollection && !Screen.isXs" class="offline-disable">
+			<li v-if="ownedCollection" class="offline-disable">
 				<RouterLink
 					v-app-track-event="`sidebar:collection:owned`"
 					:to="ownedCollection.routeLocation"
