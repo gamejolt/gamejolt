@@ -15,8 +15,8 @@ import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import AppMessageThreadAdd from '../../../../../_common/message-thread/add/add.vue';
 import AppMessageThreadItem from '../../../../../_common/message-thread/item/item.vue';
 import AppMessageThread from '../../../../../_common/message-thread/message-thread.vue';
+import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
-import AppPopper from '../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../_common/report/modal/modal.service';
 import AppScrollInview, {
 	ScrollInviewConfig,

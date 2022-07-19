@@ -1,4 +1,4 @@
-import { Component, reactive } from 'vue';
+import { Component, markRaw, reactive } from 'vue';
 import { arrayRemove } from '../../utils/array';
 import { Client } from '../client/safe-exports';
 import { Translate } from '../translate/translate.service';
@@ -29,7 +29,7 @@ export class Growl {
 	constructor(public id: number, public type: GrowlType, options: GrowlOptions) {
 		this.title = options.title;
 		this.message = options.message;
-		this.component = options.component;
+		this.component = options.component ? markRaw(options.component) : undefined;
 		this.props = options.props;
 		this.sticky = !!options.sticky;
 		this.icon = options.icon;

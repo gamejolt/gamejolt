@@ -4,7 +4,7 @@ import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue'
 import AppPopper, {
 	PopperPlacementType,
 	PopperTriggerType,
-} from '../../../../_common/popper/popper.vue';
+} from '../../../../_common/popper/AppPopper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,

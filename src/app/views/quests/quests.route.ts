@@ -6,7 +6,4 @@ export const routeQuests: RouteRecordRaw = {
 	path: '/quests',
 	component: () => import('./RouteQuests.vue'),
 	children: [routeQuestsView],
-	meta: {
-		noFooter: true,
-	},
 };

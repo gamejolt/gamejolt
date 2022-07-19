@@ -10,7 +10,7 @@ import {
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPopcornKettle from '../../../../_common/popcorn/AppPopcornKettle.vue';
 import { createPopcornKettleController } from '../../../../_common/popcorn/popcorn-kettle-controller';
-import AppPopper from '../../../../_common/popper/popper.vue';
+import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import AppSlider, { ScrubberCallback } from '../../../../_common/slider/AppSlider.vue';
 import { StickerPlacement } from '../../../../_common/sticker/placement/placement.model';
 import { useEventSubscription } from '../../../../_common/system/event/event-topic';

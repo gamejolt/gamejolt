@@ -1,8 +1,8 @@
 <script lang="ts">
 import { Sketch as VuePicker } from '@ckpack/vue-color';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import AppPopper from '../popper/AppPopper.vue';
 import { Popper } from '../popper/popper.service';
-import AppPopper from '../popper/popper.vue';
 
 type VueTouch = {
 	hex: string | null;

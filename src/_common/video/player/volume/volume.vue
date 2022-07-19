@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import AppPopper from '../../../popper/popper.vue';
+import AppPopper from '../../../popper/AppPopper.vue';
 import { Screen } from '../../../screen/screen-service';
 import {
 	SettingVideoPlayerFeedMuted,
