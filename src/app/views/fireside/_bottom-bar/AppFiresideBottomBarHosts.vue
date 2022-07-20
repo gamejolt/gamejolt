@@ -10,7 +10,7 @@ const emit = defineEmits({
 });
 
 const c = useFiresideController()!;
-const { rtc, isPersonallyStreaming, canStream } = c;
+const { rtc, isPersonallyStreaming, isStreamingElsewhere, canStream } = c;
 
 const listableStreamingUsers = computed(() => rtc.value?.listableStreamingUsers ?? []);
 </script>
@@ -18,7 +18,9 @@ const listableStreamingUsers = computed(() => rtc.value?.listableStreamingUsers 
 <template>
 	<div class="bottom-bar-hosts">
 		<div class="-hosts">
-			<div v-if="!isPersonallyStreaming && canStream && rtc?.producer">
+			<div
+				v-if="!isPersonallyStreaming && !isStreamingElsewhere && canStream && rtc?.producer"
+			>
 				<a
 					v-app-tooltip="$gettext(`Click to open stream settings`)"
 					class="-host-thumb"
