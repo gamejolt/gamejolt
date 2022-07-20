@@ -383,7 +383,7 @@ export default defineConfig(async () => {
 					// For the mobile app build, we currently can't load
 					// cross-origin requests, so we want to essentially make
 					// just one big JS chunk.
-					if (gjOpts.platform) {
+					if (gjOpts.platform === 'mobile') {
 						return <RollupOptions>{
 							output: {
 								// Vite itself sets manualChunks so that it can
