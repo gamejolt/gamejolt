@@ -118,11 +118,8 @@ const activeBottomBarControl = computed<BottomBarControl | undefined>(() => {
 });
 
 const routeStatus = computed(() => c.value?.status.value);
-
 const background = computed(() => c.value?.chatRoom.value?.background);
-
 const overlayText = computed(() => !!background.value);
-
 const focusedUserVideoAspectRatio = computed(
 	() => c.value?.rtc.value?.focusedUser?.videoAspectRatio
 );
@@ -588,12 +585,7 @@ $-center-guide-width = 400px
 
 .route-fireside
 	change-bg('bg-offset')
-	position: fixed
-	top: var(--shell-top)
-	bottom: var(--shell-bottom)
-	left: var(--shell-left)
-	right: var(--shell-right)
-	z-index: $zindex-shell-pane-under
+	height: calc(100vh - var(--shell-top) - var(--shell-bottom))
 
 .-view-blocked
 	display: flex
