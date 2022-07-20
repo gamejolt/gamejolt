@@ -355,10 +355,6 @@ $-min-item-width = 24px
 	position: relative
 	margin-bottom: 4px
 
-	@media $media-xs
-		font-size: $font-size-small
-		line-height: $font-size-small * 1.25
-
 	// Some different styling for the fade collapse.
 	::v-deep(.fade-collapse-collapsed)
 		theme-prop('border-bottom-color', 'light')
