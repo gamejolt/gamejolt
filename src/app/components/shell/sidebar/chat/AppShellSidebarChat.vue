@@ -71,13 +71,13 @@ function hideChatPane() {
 				<AppTabBar class="-nav-tabs">
 					<AppTabBarItem
 						v-if="chats.length > 0"
-						:force-hover="tab === 'chats'"
+						:active="tab === 'chats'"
 						@click="tab = 'chats'"
 					>
 						<AppTranslate>Chats</AppTranslate>
 					</AppTabBarItem>
 					<AppTabBarItem
-						:force-hover="chats.length === 0 || tab === 'friends'"
+						:active="chats.length === 0 || tab === 'friends'"
 						@click="tab = 'friends'"
 					>
 						<AppTranslate>Friends</AppTranslate>

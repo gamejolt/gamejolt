@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, PropType, ref, toRefs } from 'vue';
+import { RouterLink } from 'vue-router';
 import AppUserDogtag from '../../../app/components/user/AppUserDogtag.vue';
 import { getMediaserverUrlForBounds } from '../../../utils/image';
 import AppButton from '../../button/AppButton.vue';
@@ -30,9 +31,12 @@ const props = defineProps({
 	noStats: {
 		type: Boolean,
 	},
+	disableFollowWidget: {
+		type: Boolean,
+	},
 });
 
-const { user, isLoading, elevate, noStats } = toRefs(props);
+const { user, isLoading, elevate } = toRefs(props);
 
 const headerElement = ref<HTMLElement>();
 
@@ -80,9 +84,9 @@ const showTags = computed(() => !!user.value.follows_you || dogtags.value.length
 				}"
 			/>
 
-			<router-link :to="user.url" class="-avatar">
+			<RouterLink :to="user.url" class="-avatar">
 				<AppUserAvatarImg :user="user" />
-			</router-link>
+			</RouterLink>
 
 			<div class="-well fill-bg">
 				<div v-if="showTags" class="-tags">
@@ -94,20 +98,20 @@ const showTags = computed(() => !!user.value.follows_you || dogtags.value.length
 				</div>
 
 				<div class="-display-name">
-					<router-link :to="user.url" class="link-unstyled">
+					<RouterLink :to="user.url" class="link-unstyled">
 						{{ user.display_name }}
 						<AppUserVerifiedTick :user="user" />
-					</router-link>
+					</RouterLink>
 				</div>
 
 				<div class="-username">
-					<router-link :to="user.url" class="link-unstyled">
+					<RouterLink :to="user.url" class="link-unstyled">
 						@{{ user.username }}
-					</router-link>
+					</RouterLink>
 				</div>
 
 				<div class="-follow-counts small">
-					<router-link
+					<RouterLink
 						v-translate="{ count: formatNumber(followingCount || 0) }"
 						:to="{
 							name: 'profile.following',
@@ -118,9 +122,9 @@ const showTags = computed(() => !!user.value.follows_you || dogtags.value.length
 					>
 						<b>1</b>
 						following
-					</router-link>
+					</RouterLink>
 					<span class="dot-separator" />
-					<router-link
+					<RouterLink
 						v-translate="{ count: formatNumber(followerCount) }"
 						:to="{
 							name: 'profile.followers',
@@ -131,7 +135,7 @@ const showTags = computed(() => !!user.value.follows_you || dogtags.value.length
 					>
 						<b>1</b>
 						follower
-					</router-link>
+					</RouterLink>
 				</div>
 
 				<div v-if="appUser" class="-follow">
@@ -141,6 +145,7 @@ const showTags = computed(() => !!user.value.follows_you || dogtags.value.length
 						location="card"
 						block
 						hide-count
+						:disabled="disableFollowWidget"
 					/>
 					<AppButton
 						v-else
@@ -160,7 +165,7 @@ const showTags = computed(() => !!user.value.follows_you || dogtags.value.length
 			<AppLoading v-if="isLoading" class="sans-margin" centered />
 			<ul v-else class="stat-list">
 				<li class="stat-big stat-big-smaller">
-					<router-link
+					<RouterLink
 						class="link-unstyled"
 						:to="{
 							name: 'profile.overview',
@@ -173,10 +178,10 @@ const showTags = computed(() => !!user.value.follows_you || dogtags.value.length
 						<div class="stat-big-digit">
 							{{ formatNumber(postCount) }}
 						</div>
-					</router-link>
+					</RouterLink>
 				</li>
 				<li v-if="gameCount" class="stat-big stat-big-smaller">
-					<router-link
+					<RouterLink
 						class="link-unstyled"
 						:to="{
 							name: 'library.collection.developer',
@@ -189,10 +194,10 @@ const showTags = computed(() => !!user.value.follows_you || dogtags.value.length
 						<div class="stat-big-digit">
 							{{ formatNumber(gameCount) }}
 						</div>
-					</router-link>
+					</RouterLink>
 				</li>
 				<li v-if="likeCount" class="stat-big stat-big-smaller">
-					<router-link
+					<RouterLink
 						class="link-unstyled"
 						:to="{
 							name: 'profile.overview',
@@ -205,10 +210,12 @@ const showTags = computed(() => !!user.value.follows_you || dogtags.value.length
 						<div class="stat-big-digit">
 							{{ formatFuzzynumber(likeCount) }}
 						</div>
-					</router-link>
+					</RouterLink>
 				</li>
 			</ul>
 		</div>
+
+		<slot name="trailing" />
 	</AppTheme>
 </template>
 

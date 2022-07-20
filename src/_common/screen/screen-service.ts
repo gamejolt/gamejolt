@@ -1,5 +1,5 @@
 import { reactive } from '@vue/reactivity';
-import { debounce } from '../../utils/utils';
+import { debounce, run } from '../../utils/utils';
 import { EventTopic } from '../system/event/event-topic';
 
 /**
@@ -76,7 +76,11 @@ class ScreenService {
 
 	isPointerMouse = import.meta.env.SSR
 		? true
-		: window.matchMedia('not screen and (pointer: coarse)').matches;
+		: run(() => {
+				const match = window.matchMedia('not screen and (pointer: coarse)');
+				match.addEventListener('change', e => (Screen.isPointerMouse = e.matches));
+				return match.matches;
+		  });
 }
 
 export const Screen = reactive(new ScreenService()) as ScreenService;

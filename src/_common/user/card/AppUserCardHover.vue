@@ -24,6 +24,9 @@ const props = defineProps({
 	noStats: {
 		type: Boolean,
 	},
+	disableFollowWidget: {
+		type: Boolean,
+	},
 });
 
 const emit = defineEmits({
@@ -104,7 +107,17 @@ watch(() => user?.value?.id, onUserChange);
 		<slot />
 
 		<template v-if="user && isShowing" #popover>
-			<AppUserCard class="-card" :user="user!" :is-loading="!isLoaded" :no-stats="noStats" />
+			<AppUserCard
+				class="-card"
+				:user="user!"
+				:is-loading="!isLoaded"
+				:no-stats="noStats"
+				:disable-follow-widget="disableFollowWidget"
+			>
+				<template v-if="noStats" #trailing>
+					<slot name="trailing" />
+				</template>
+			</AppUserCard>
 		</template>
 	</component>
 </template>

@@ -138,9 +138,6 @@ export const configHomeDefaultFeed = new ConfigOptionString(
 	}
 );
 
-/** Whether or not we show a mic volume slider for RTC users */
-export const configFiresideMicVolume = new ConfigOptionBoolean('fireside_mic_volume', false);
-
 export const configCommunityFrontpageFeedType = new ConfigOptionString(
 	'web_community_frontpage_feed_type',
 	'default',

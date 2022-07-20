@@ -3,6 +3,7 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import { stringSort } from '../../../../../utils/array';
 import { fuzzysearch } from '../../../../../utils/string';
 import { sleep } from '../../../../../utils/utils';
+import AppFiresideLiveTag from '../../../../../_common/fireside/AppFiresideLiveTag.vue';
 import {
 	inviteFiresideHost,
 	removeFiresideHost,
@@ -31,6 +32,7 @@ const ListTitles: ListTitle[] = [
 		AppUserAvatarList,
 		AppIllustration,
 		AppNavTabList,
+		AppFiresideLiveTag,
 	},
 })
 export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
@@ -78,7 +80,7 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 
 	get currentCohosts(): User[] {
 		const hosts = this.rtc?.hosts || [];
-		const listableHostIds = this.rtc?.listableHostIds || [];
+		const listableHostIds = this.rtc?.listableHostIds;
 		const myUserId = this.controller.user.value?.id;
 
 		return hosts // formatting
@@ -86,7 +88,7 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 				if (i.user.id === myUserId) {
 					return false;
 				}
-				return !i.needsPermissionToView || listableHostIds.includes(i.user.id);
+				return !i.needsPermissionToView || listableHostIds?.has(i.user.id);
 			})
 			.map(i => i.user)
 			.sort((a, b) => stringSort(a.display_name, b.display_name));
@@ -221,9 +223,7 @@ export default class AppFiresideCohostManageModal extends mixins(BaseModal) {
 							</div>
 
 							<div class="-action">
-								<div v-if="isUserStreaming(user)" class="-live">
-									<AppTranslate>LIVE</AppTranslate>
-								</div>
+								<AppFiresideLiveTag v-if="isUserStreaming(user)" size="sm" />
 
 								<AppButton
 									:disabled="isUserProcessing(user)"
@@ -335,17 +335,4 @@ $-height = 40px
 	display: inline-flex
 	grid-gap: 12px
 	align-items: center
-
-.-live
-	rounded-corners()
-	margin: 0
-	padding: 4px 8px
-	font-size: $font-size-h3
-	font-weight: 700
-	font-family: $font-family-heading
-	text-shadow: none
-	box-shadow: 1px 1px 3px $black
-	letter-spacing: 2px
-	color: $white
-	background-color: $gj-overlay-notice
 </style>

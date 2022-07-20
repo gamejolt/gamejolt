@@ -10,12 +10,12 @@ import AppFormControlErrors from '../../../_common/form-vue/AppFormControlErrors
 import AppFormGroup from '../../../_common/form-vue/AppFormGroup.vue';
 import AppFormStickySubmit from '../../../_common/form-vue/AppFormStickySubmit.vue';
 import AppFormControlBackground from '../../../_common/form-vue/controls/AppFormControlBackground.vue';
-import AppFormControlStackedButtonGroup, {
-	StackedButtonOption,
-} from '../../../_common/form-vue/controls/stacked-button/AppFormControlStackedButtonGroup.vue';
+import AppFormControlToggleButton from '../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButton.vue';
+import AppFormControlToggleButtonGroup from '../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../_common/form-vue/validators';
 import AppLoading from '../../../_common/loading/loading.vue';
 import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
+import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
@@ -24,14 +24,6 @@ import { editChatRoomBackground, editChatRoomTitle, leaveGroupRoom } from './cli
 import AppChatMemberListItem from './member-list/AppChatMemberListItem.vue';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
-
-type FormBackground = {
-	background_id: number | null;
-};
-
-type FormNotificationLevel = {
-	level: string;
-};
 </script>
 
 <script lang="ts" setup>
@@ -100,8 +92,12 @@ const form: FormController<ChatRoom> = createForm({
 		titleMinLength.value = payload.titleMinLength;
 		titleMaxLength.value = payload.titleMaxLength;
 	},
-	onSubmit: async () => editChatRoomTitle(chat.value, room.value, form.formModel.title),
+	onSubmit: () => editChatRoomTitle(chat.value, room.value, form.formModel.title),
 });
+
+type FormBackground = {
+	background_id: number | null;
+};
 
 const backgroundForm: FormController<FormBackground> = createForm({
 	loadUrl: `/web/chat/rooms/backgrounds/${room.value.id}`,
@@ -110,13 +106,17 @@ const backgroundForm: FormController<FormBackground> = createForm({
 		roomBackgroundId.value = payload.roomBackgroundId || null;
 		backgroundForm.formModel.background_id = roomBackgroundId.value;
 	},
-	onSubmit: async () =>
+	onSubmit: () =>
 		editChatRoomBackground(
 			chat.value,
 			room.value,
 			backgroundForm.formModel.background_id || null
 		),
 });
+
+type FormNotificationLevel = {
+	level: string;
+};
 
 const notificationLevelForm: FormController<FormNotificationLevel> = createForm({
 	loadUrl: `/web/chat/rooms/get-notification-settings/${room.value.id}`,
@@ -156,7 +156,7 @@ const membersPreview = computed(() => {
 	return [];
 });
 
-const notificationSettings = computed<StackedButtonOption[]>(() => {
+const notificationSettings = computed(() => {
 	const settings = [];
 
 	settings.push({
@@ -289,7 +289,17 @@ async function leaveRoom() {
 					:label="$gettext(`Notifications`)"
 					small
 				>
-					<AppFormControlStackedButtonGroup :options="notificationSettings" />
+					<AppFormControlToggleButtonGroup
+						:direction="Screen.isMobile ? 'row' : 'column'"
+					>
+						<AppFormControlToggleButton
+							v-for="{ label, value } of notificationSettings"
+							:key="label"
+							:value="value"
+						>
+							{{ label }}
+						</AppFormControlToggleButton>
+					</AppFormControlToggleButtonGroup>
 				</AppFormGroup>
 			</AppForm>
 

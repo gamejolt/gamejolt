@@ -141,6 +141,7 @@ function parseOptionsFromCommandlineArgs(args: MinimistParsedArguments) {
 
 		switch (platform) {
 			case 'web':
+			case 'mobile':
 				return parseOption(
 					buildTypeArg,
 					'Build type',
@@ -187,7 +188,6 @@ function parseOptionsFromCommandlineArgs(args: MinimistParsedArguments) {
 					'serve-hmr'
 				);
 
-			case 'mobile':
 			case 'ssr':
 				return parseOption(
 					buildTypeArg,

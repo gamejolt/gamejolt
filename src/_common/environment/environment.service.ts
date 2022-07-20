@@ -41,10 +41,9 @@ export class Environment {
 	static apiHost = 'https://gamejolt.com';
 	static uploadHost = 'https://upload.gamejolt.com';
 	static gameserverApiHost = 'https://gamejolt.net';
-	static activityStreamHost = 'https://activity.gamejolt.com';
-	static chat = 'https://chatex.gamejolt.com/chatex';
 	static widgetHost = 'https://widgets.gamejolt.com';
-	static gridHost = 'https://grid.gamejolt.com/grid/host';
+	static chat = 'https://chatex.gamejolt.com/chatex';
+	static grid = 'https://grid.gamejolt.com/grid';
 	static recaptchaSiteKey = '6Led_UAUAAAAAB_ptIOOlAF5DFK9YM7Qi_7z8iKk';
 
 	static firebaseAppId = '1:1065321331780:web:37c4d21c84f1a69ad3d011';
@@ -70,10 +69,9 @@ if (GJ_ENVIRONMENT === 'development') {
 	Environment.apiHost = 'https://development.gamejolt.com';
 	Environment.uploadHost = Environment.apiHost;
 	Environment.gameserverApiHost = 'https://development.gamejolt.com';
-	Environment.activityStreamHost = 'https://activity.development.gamejolt.com';
-	Environment.chat = 'https://chat.development.gamejolt.com/chatex';
 	Environment.widgetHost = 'https://localhost:8086';
-	Environment.gridHost = 'https://grid.development.gamejolt.com/grid/host';
+	Environment.chat = 'https://chat.development.gamejolt.com/chatex';
+	Environment.grid = 'https://grid.development.gamejolt.com/grid';
 	Environment.recaptchaSiteKey = '6LcwTkEUAAAAAHTT67TB8gkM0ft5hUzz_r_tFFaT';
 }
 

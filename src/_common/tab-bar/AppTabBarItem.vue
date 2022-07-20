@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 defineProps({
-	forceHover: {
+	active: {
 		type: Boolean,
 	},
 });
 </script>
 
 <template>
-	<a class="tab-bar-item" :class="{ '-force-hover': forceHover }">
+	<a class="tab-bar-item" :class="{ '-active': active }">
 		<div class="-tab-container">
 			<slot />
 		</div>
@@ -25,7 +25,7 @@ defineProps({
 	font-weight: 700
 	letter-spacing: -0.02em;
 
-	&.-force-hover
+	&.-active
 	&:hover
 		--text-color: var(--theme-primary)
 

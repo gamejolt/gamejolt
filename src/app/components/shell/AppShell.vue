@@ -18,9 +18,9 @@ import { setChatFocused } from '../chat/client';
 import { AppClientShell, AppClientStatusBar } from '../client/safe-exports';
 import AppShellBanner from './AppShellBanner.vue';
 import AppShellBody from './AppShellBody.vue';
+import AppShellHotBottom from './AppShellHotBottom.vue';
 import AppShellTopNav from './AppShellTopNav.vue';
 import AppShellCbar from './cbar/AppShellCbar.vue';
-import AppShellHotBottom from './hot-bottom/hot-bottom.vue';
 import AppShellSidebar from './sidebar/AppShellSidebar.vue';
 
 const AppChatWindow = defineAsyncComponent(() => import('../chat/window/AppChatWindow.vue'));
@@ -255,7 +255,8 @@ body
 			transform: translateX(0)
 
 body.has-hot-bottom
-	--shell-bottom: $status-bar-height
+	#shell
+		--shell-bottom: $status-bar-height
 
 	#shell-body
 		padding-bottom: $status-bar-height

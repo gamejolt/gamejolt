@@ -16,24 +16,29 @@ export default class AppUserAvatar extends Vue {
 	@Prop(String)
 	link?: string;
 
+	@Prop(Boolean)
+	disableLink!: boolean;
+
 	get href() {
-		if (this.user) {
-			if (!this.link) {
-				return Environment.wttfBaseUrl + this.user.url;
-			} else if (this.link === 'dashboard') {
-				return Environment.wttfBaseUrl;
-			} else if (this.link === 'fireside') {
-				return Environment.firesideBaseUrl + '/@' + this.user.username;
-			}
+		if (this.disableLink || !this.user) {
+			return undefined;
+		}
+
+		if (!this.link) {
+			return Environment.wttfBaseUrl + this.user.url;
+		} else if (this.link === 'dashboard') {
+			return Environment.wttfBaseUrl;
+		} else if (this.link === 'fireside') {
+			return Environment.firesideBaseUrl + '/@' + this.user.username;
 		}
 	}
 }
 </script>
 
 <template>
-	<a v-if="user" class="user-avatar" :href="href">
+	<Component :is="href ? 'a' : 'div'" v-if="user" class="user-avatar" :href="href">
 		<AppUserAvatarImg :user="user" />
-	</a>
+	</Component>
 	<AppUserAvatarImg v-else />
 </template>
 

@@ -24,14 +24,15 @@ export class ChatRoom {
 	last_message_on!: number;
 	background?: Background;
 
-	constructor(data: Partial<ChatRoom> = {}) {
+	constructor(data: any = {}) {
 		Object.assign(this, data);
 
-		if (data.members) {
-			this.members = data.members.map(member => new ChatUser(member));
+		if (Array.isArray(data.members)) {
+			this.members = (data.members as unknown[]).map(i => new ChatUser(i));
 		}
-		if (data.roles) {
-			this.roles = data.roles.map(role => new ChatRole(role));
+
+		if (Array.isArray(data.roles)) {
+			this.roles = (data.roles as unknown[]).map(i => new ChatRole(i));
 		}
 
 		if (data.background) {

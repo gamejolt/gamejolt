@@ -9,7 +9,9 @@ export type AppPromotionSource =
 	| 'sidebar'
 	| 'landing'
 	| 'home-hero'
-	| 'banner';
+	| 'banner'
+	| 'fireside';
+
 export type AppPromotionCohort = 'store' | 'community';
 
 export const AppPromotionStoreKey: InjectionKey<AppPromotionStore> = Symbol('app-promotion-store');

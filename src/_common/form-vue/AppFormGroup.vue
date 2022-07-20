@@ -149,6 +149,9 @@ const props = defineProps({
 	small: {
 		type: Boolean,
 	},
+	tinyLabelMargin: {
+		type: Boolean,
+	},
 });
 
 const slots = useSlots();
@@ -172,6 +175,7 @@ const hasInlineControl = computed(() => !!slots['inline-control']);
 				:label-class="labelClass"
 				:icon="icon"
 				:small="small"
+				:tiny-label-margin="tinyLabelMargin"
 			>
 				<slot name="label">{{ humanLabel }}</slot>
 			</AppFormControlLabel>
@@ -183,6 +187,7 @@ const hasInlineControl = computed(() => !!slots['inline-control']);
 					:label-class="labelClass"
 					:icon="icon"
 					:small="small"
+					:tiny-label-margin="tinyLabelMargin"
 				>
 					<slot name="label">{{ humanLabel }}</slot>
 				</AppFormControlLabel>

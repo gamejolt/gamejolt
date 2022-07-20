@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, toRefs, useSlots } from 'vue';
+import { computed, PropType, toRefs, useSlots } from 'vue';
 import { Screen } from '../screen/screen-service';
 </script>
 
@@ -20,6 +20,10 @@ const props = defineProps({
 		type: Number,
 		default: undefined,
 		validator: val => (typeof val === 'number' && val >= 0) || typeof val === 'undefined',
+	},
+	titleSize: {
+		type: String as PropType<'default' | 'large'>,
+		default: 'default',
 	},
 	edgePadding: {
 		type: Number,
@@ -82,9 +86,12 @@ const effectiveEdgePadding = computed(() => {
 
 			<div
 				class="-title"
-				:class="{
-					'-center': centerTitle,
-				}"
+				:class="[
+					{
+						'-center': centerTitle,
+					},
+					`-size-${titleSize}`,
+				]"
 			>
 				<slot name="title" />
 			</div>
@@ -149,10 +156,13 @@ const effectiveEdgePadding = computed(() => {
 	justify-content: flex-start
 
 .-title
-	font-size: 20px
-	font-family: $font-family-heading
 	font-weight: 800
+	font-size: 15px
+	font-family: $font-family-heading
 	min-width: 0
+
+.-size-large
+	font-size: 20px
 
 .-actions
 	margin-left: auto

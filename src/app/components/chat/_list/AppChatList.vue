@@ -18,11 +18,23 @@ function searchEntries(entries: ChatListEntries, query: string): ChatListEntries
 	});
 }
 
-type ChatListEntries = (ChatUser | ChatRoom)[];
+type ChatListEntry = ChatUser | ChatRoom;
+type ChatListEntries = ChatListEntry[];
 
 export type ChatListSlotProps = {
-	items: ChatListEntries;
+	item: ChatListEntry;
 };
+
+function getKeyForEntry(entry: ChatUser | ChatRoom) {
+	let key = '';
+	if (entry instanceof ChatUser) {
+		key = 'chat-user-';
+	} else if (entry instanceof ChatRoom) {
+		key = 'chat-room-';
+	}
+
+	return key + entry.id;
+}
 </script>
 
 <script lang="ts" setup>
@@ -58,49 +70,44 @@ const filteredEntries = computed(() => {
 	});
 });
 
-const slotProps = computed<ChatListSlotProps>(() => ({
-	items: filteredEntries.value,
-}));
+const mappedEntries = computed(() =>
+	filteredEntries.value.map(item => ({ key: getKeyForEntry(item), item }))
+);
 </script>
 
 <template>
 	<div class="chat-list">
-		<div class="-input-container">
+		<div v-if="!hideFilter" class="-input-container">
 			<input
-				v-if="!hideFilter"
 				v-model="filterQuery"
 				text="search"
 				class="form-control"
 				:placeholder="$gettext(`Filter...`)"
 			/>
-			<div class="-scroll-fade" />
 		</div>
 
-		<AppScrollScroller class="-list-scroller" thin>
-			<slot v-bind="slotProps" />
+		<AppScrollScroller v-if="mappedEntries.length" class="-list-scroller" thin>
+			<template v-for="{ key, item } of mappedEntries" :key="key">
+				<slot v-bind="{ item }" />
+			</template>
 		</AppScrollScroller>
+		<div v-else class="-empty">
+			<slot name="empty" />
+		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
 .chat-list
+	flex: auto
 	display: flex
 	flex-direction: column
 	min-height: 0
-	flex: auto
 
 .-input-container
 	padding: 0 16px
 	position: relative
 	z-index: 1
-
-.-scroll-fade
-	position: absolute
-	left: 0
-	top: 100%
-	right: 0
-	height: 16px
-	background-image: unquote('linear-gradient(to bottom, var(--theme-bg-actual), transparent)')
 
 .-list-scroller
 	flex: auto

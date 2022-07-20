@@ -220,7 +220,6 @@ export function createAppStore({
 		}
 
 		_setGrid(createGridClient({ appStore: c }));
-		grid.value?.init();
 	}
 
 	async function clearGrid() {

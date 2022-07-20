@@ -13,6 +13,7 @@ import {
 import { useResizeObserver } from '../../../../../utils/resize-observer';
 import { debounce } from '../../../../../utils/utils';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
+import { Background } from '../../../../../_common/background/background.model';
 import { formatDate } from '../../../../../_common/filters/date';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppLoading from '../../../../../_common/loading/loading.vue';
@@ -39,9 +40,16 @@ const props = defineProps({
 		type: Object as PropType<ChatRoom>,
 		required: true,
 	},
+	background: {
+		type: Object as PropType<Background>,
+		default: undefined,
+	},
+	overlay: {
+		type: Boolean,
+	},
 });
 
-const { room } = toRefs(props);
+const { room, background } = toRefs(props);
 const { user } = useCommonStore();
 const chatStore = inject(ChatStoreKey)!;
 
@@ -293,7 +301,7 @@ function _updateMaxContentWidth(width: number) {
 	trigger when the send box changes size or when the window changes--and we
 	need to autoscroll if the content changes within the scroller.
 	-->
-	<AppBackground class="chat-window-output" :background="room.background" darken>
+	<AppBackground class="chat-window-output" :background="background" darken>
 		<div ref="widthWatcher" class="-width-watcher" />
 
 		<AppScrollScroller
@@ -307,10 +315,7 @@ function _updateMaxContentWidth(width: number) {
 				class="-container anim-fade-in no-animate-leave"
 			>
 				<div v-if="shouldShowIntro" class="-intro">
-					<AppIllustration
-						:src="illNoChat"
-						:class="{ '-illustration-overlay': !!room.background }"
-					>
+					<AppIllustration :src="illNoChat" :class="{ '-illustration-overlay': overlay }">
 						<AppTranslate v-if="room.isPmRoom">
 							Your friend is still loading. Encourage them with a message!
 						</AppTranslate>
@@ -363,7 +368,6 @@ function _updateMaxContentWidth(width: number) {
 
 <style lang="stylus" scoped>
 .chat-window-output
-	change-bg(bg-offset)
 	position: relative
 	height: 100%
 	width: 100%

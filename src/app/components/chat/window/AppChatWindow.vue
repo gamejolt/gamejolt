@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, inject, PropType, ref, toRefs, watch, watchEffect } from 'vue';
+import { RouterLink } from 'vue-router';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
@@ -42,7 +43,7 @@ const chatStore = inject(ChatStoreKey)!;
 
 let showSettingsOnMembersBack = false;
 
-const friendAddJolticonVersion = ref(1);
+const friendAddJolticonVersion = ref<1 | 2>(1);
 const sidebar = ref<SidebarTab | undefined>(
 	!Screen.isXs && SettingChatGroupShowMembers.get() ? 'members' : undefined
 );
@@ -145,6 +146,7 @@ function onMobileAppBarBack() {
 				<AppHeaderBar
 					:key="room.id"
 					class="-header"
+					:title-size="Screen.isXs ? 'large' : 'default'"
 					:automatically-imply-leading="false"
 					:elevation="2"
 				>
@@ -167,7 +169,7 @@ function onMobileAppBarBack() {
 								<AppJolticon icon="users" />
 							</div>
 						</span>
-						<router-link
+						<RouterLink
 							v-else-if="room.user"
 							class="anim-fade-in-enlarge no-animate-xs"
 							:to="room.user.url"
@@ -179,7 +181,7 @@ function onMobileAppBarBack() {
 								:size="12"
 								:segment-width="1.5"
 							/>
-						</router-link>
+						</RouterLink>
 					</template>
 
 					<template #title>
@@ -212,7 +214,7 @@ function onMobileAppBarBack() {
 							class="-header-control anim-fade-in"
 							circle
 							trans
-							:icon="'friend-add-' + friendAddJolticonVersion"
+							:icon="`friend-add-${friendAddJolticonVersion}`"
 							@mouseenter="friendAddJolticonVersion = 2"
 							@mouseleave="friendAddJolticonVersion = 1"
 							@click="room.isPmRoom ? addGroup() : addMembers()"
@@ -262,6 +264,8 @@ function onMobileAppBarBack() {
 								:key="room.id"
 								class="-output-inner"
 								:room="room"
+								:background="room.background"
+								:overlay="!!room.background"
 							/>
 						</div>
 
@@ -277,7 +281,7 @@ function onMobileAppBarBack() {
 						<div v-if="Screen.isDesktop" class="-sidebar-shadow" />
 
 						<div class="-sidebar-container">
-							<AppHeaderBar v-if="Screen.isMobile" center-title>
+							<AppHeaderBar v-if="Screen.isMobile" title-size="large" center-title>
 								<template #leading>
 									<AppButton
 										icon="chevron-left"
@@ -309,7 +313,7 @@ function onMobileAppBarBack() {
 										class="-header-control"
 										circle
 										trans
-										:icon="'friend-add-' + friendAddJolticonVersion"
+										:icon="`friend-add-${friendAddJolticonVersion}`"
 										@mouseenter="friendAddJolticonVersion = 2"
 										@mouseleave="friendAddJolticonVersion = 1"
 										@click="room.isPmRoom ? addGroup() : addMembers()"
@@ -480,6 +484,7 @@ $-zindex-sidebar-mobile = 10
 	z-index: $-zindex-sidebar-shadow
 
 .-output
+	change-bg(bg-offset)
 	position: relative
 	flex: auto
 	display: flex

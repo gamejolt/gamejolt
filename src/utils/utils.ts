@@ -21,6 +21,19 @@ export function sleep(ms: number) {
 	});
 }
 
+/**
+ * Allows you to run a function passed in. Mostly used for running async
+ * functions that will return a promise in a flow.
+ *
+ * Example:
+ * ```
+ * await Promise.all([run(async () => ...), run(async () => ...)]);
+ * ```
+ */
+export function run<T>(fn: () => T) {
+	return fn();
+}
+
 // A function type, because Function is actually an interface and not a true type.
 type FunctionType = (...args: any) => any;
 
