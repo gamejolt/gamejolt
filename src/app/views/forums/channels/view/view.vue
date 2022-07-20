@@ -12,6 +12,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
+import AppForumRules from '../../../../components/forum/rules/rules.vue';
 import AppForumTopicList from '../../../../components/forum/topic-list/topic-list.vue';
 import AppPageHeader from '../../../../components/page-header/page-header.vue';
 
@@ -23,13 +24,14 @@ import AppPageHeader from '../../../../components/page-header/page-header.vue';
 		AppPagination,
 		AppForumBreadcrumbs,
 		AppNavTabList,
+		AppForumRules,
 	},
 })
 @OptionsForRoute({
 	cache: true,
 	deps: { params: ['name', 'sort'], query: ['page'] },
 	resolver({ route }) {
-		const sort = route.params.sort || 'active';
+		const sort = 'archived';
 		return Api.sendRequest(
 			`/web/forums/channels/${route.params.name}/${sort}?page=${route.query.page || 1}`
 		);
@@ -55,7 +57,7 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 	readonly Screen = Screen;
 
 	get sort() {
-		return this.$route.params.sort || 'active';
+		return 'archived';
 	}
 
 	get page() {
@@ -102,21 +104,6 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 			</div>
 
 			<div class="clearfix">
-				<div :class="{ 'pull-right': !Screen.isXs }">
-					<div>
-						<AppButton
-							primary
-							:block="Screen.isXs"
-							:to="{
-								name: 'forums.topics.add',
-								params: { channel: channel.name },
-							}"
-						>
-							<AppTranslate>Add Topic</AppTranslate>
-						</AppButton>
-					</div>
-				</div>
-
 				<br class="hidden-sm-up" />
 
 				<ul class="stat-list" :class="Screen.isXs ? 'text-center' : 'pull-left'">
@@ -142,6 +129,9 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 
 		<div class="section">
 			<div id="forum-topics-list" class="container">
+				<AppForumRules />
+				<hr />
+
 				<template v-if="stickyTopics.length">
 					<AppForumTopicList
 						:topics="stickyTopics"
@@ -152,57 +142,6 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 				</template>
 
 				<AppNavTabList>
-					<ul>
-						<li>
-							<router-link
-								:to="{
-									name: 'forums.channels.view',
-									params: { name: channel.name, sort: 'active' },
-									query: { page: 1 },
-								}"
-								:class="{ active: sort === 'active' }"
-							>
-								<AppTranslate>Active</AppTranslate>
-							</router-link>
-						</li>
-						<li>
-							<router-link
-								:to="{
-									name: 'forums.channels.view',
-									params: { name: channel.name, sort: 'new' },
-									query: { page: 1 },
-								}"
-								:class="{ active: sort === 'new' }"
-							>
-								<AppTranslate>New</AppTranslate>
-							</router-link>
-						</li>
-						<li>
-							<router-link
-								:to="{
-									name: 'forums.channels.view',
-									params: { name: channel.name, sort: 'top' },
-									query: { page: 1 },
-								}"
-								:class="{ active: sort === 'top' }"
-							>
-								<AppTranslate>Top</AppTranslate>
-							</router-link>
-						</li>
-						<li>
-							<router-link
-								:to="{
-									name: 'forums.channels.view',
-									params: { name: channel.name, sort: 'archived' },
-									query: { page: 1 },
-								}"
-								:class="{ active: sort === 'archived' }"
-							>
-								<AppTranslate>Archived</AppTranslate>
-							</router-link>
-						</li>
-					</ul>
-
 					<template v-if="topics.length" #meta>
 						<span class="text-muted small">
 							<AppTranslate
@@ -239,18 +178,7 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 				</template>
 				<div v-else class="text-center">
 					<p class="lead">
-						<AppTranslate>There aren't any topics here yet!</AppTranslate>
-					</p>
-					<p>
-						<AppButton
-							primary
-							:to="{
-								name: 'forums.topics.add',
-								params: { channel: channel.name },
-							}"
-						>
-							<AppTranslate>Add Topic</AppTranslate>
-						</AppButton>
+						<AppTranslate>There aren't any topics here.</AppTranslate>
 					</p>
 				</div>
 			</div>

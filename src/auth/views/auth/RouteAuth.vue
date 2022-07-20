@@ -11,7 +11,7 @@ import { Screen } from '../../../_common/screen/screen-service';
 import { commonStore } from '../../../_common/store/common-store';
 import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppTranslateLangSelector from '../../../_common/translate/lang-selector/lang-selector.vue';
+import AppTranslateLangSelector from '../../../_common/translate/lang-selector/AppTranslateLangSelector.vue';
 import AppCoverImg from '../../components/AppCoverImg.vue';
 import AppGameCoverCredits from '../../components/AppGameCoverCredits.vue';
 import { useAuthStore } from '../../store/index';

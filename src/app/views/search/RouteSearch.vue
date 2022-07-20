@@ -1,26 +1,20 @@
 <script lang="ts">
 import { computed, inject, InjectionKey, provide, ref } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
-import {
-	AdSettingsContainer,
-	releasePageAdsSettings,
-	setPageAdsSettings,
-	useAdsController,
-} from '../../../_common/ad/ad-store';
+import { getQuery } from '../../../utils/router';
 import AppExpand from '../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../_common/filters/number';
+import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { Meta } from '../../../_common/meta/meta-service';
 import AppPagination from '../../../_common/pagination/pagination.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { Scroll } from '../../../_common/scroll/scroll.service';
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
 import AppPageHeader from '../../components/page-header/page-header.vue';
 import AppSearch from '../../components/search/AppSearch.vue';
 import { Search, SearchPayload } from '../../components/search/search-service';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { getQuery } from '../../../utils/router';
 
 const Key: InjectionKey<Controller> = Symbol('search-route');
 
@@ -79,7 +73,6 @@ export default {
 
 <script lang="ts" setup>
 const route = useRoute();
-const ads = useAdsController();
 
 const c = createController();
 provide(Key, c);
@@ -95,16 +88,6 @@ createAppRoute({
 		}
 		return $gettext(`Search Game Jolt`);
 	}),
-	onInit() {
-		// Always disable ads for now, until we get better controls of when
-		// adult content is shown in search.
-		const adSettings = new AdSettingsContainer();
-		adSettings.isPageDisabled = true;
-		setPageAdsSettings(ads, adSettings);
-	},
-	onDestroyed() {
-		releasePageAdsSettings(ads);
-	},
 });
 
 const noResults = computed(() => {

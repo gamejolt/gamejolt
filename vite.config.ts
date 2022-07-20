@@ -244,7 +244,7 @@ export default defineConfig(async () => {
 				dir += `.vite-${gjOpts.platform}`;
 			}
 
-			dir += `-${gjOpts.buildType}`;
+			dir += `-${gjOpts.buildType}-${gjOpts.environment}-${gjOpts.section}`;
 
 			return dir;
 		})(),

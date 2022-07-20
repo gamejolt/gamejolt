@@ -1,7 +1,7 @@
 <script lang="ts">
 import { computed, PropType, ref, toRefs, watch } from 'vue';
 import { Api } from '../../api/api.service';
-import AppPopper from '../../popper/popper.vue';
+import AppPopper from '../../popper/AppPopper.vue';
 import { Screen } from '../../screen/screen-service';
 import { User } from '../user.model';
 import AppUserCard from './AppUserCard.vue';

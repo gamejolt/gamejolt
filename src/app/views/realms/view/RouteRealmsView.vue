@@ -1,31 +1,32 @@
 <script lang="ts">
 import { computed, Ref, ref } from 'vue';
-import { Api } from '../../../../_common/api/api.service';
-import { Realm } from '../../../../_common/realm/realm-model';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
-import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
-import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { getAbsoluteLink } from '../../../../utils/router';
-import { useRouter, RouterLink, useRoute } from 'vue-router';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { Api } from '../../../../_common/api/api.service';
+import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
+import { Meta } from '../../../../_common/meta/meta-service';
+import AppRealmFollowButton from '../../../../_common/realm/AppRealmFollowButton.vue';
+import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
+import { RealmCommunity } from '../../../../_common/realm/realm-community-model';
+import { Realm } from '../../../../_common/realm/realm-model';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
+import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
+import { ShareModal } from '../../../../_common/share/card/_modal/modal.service';
+import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
+import { User } from '../../../../_common/user/user.model';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../components/activity/feed/view';
-import AppActivityFeed from '../../../components/activity/feed/feed.vue';
-import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
-import { User } from '../../../../_common/user/user.model';
-import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppRealmFollowButton from '../../../../_common/realm/AppRealmFollowButton.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { ShareModal } from '../../../../_common/share/card/_modal/modal.service';
-import { RealmCommunity } from '../../../../_common/realm/realm-community-model';
+import { AppActivityFeedLazy } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
-import { Meta } from '../../../../_common/meta/meta-service';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
+import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -44,7 +45,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 const router = useRouter();
 const route = useRoute();
 
@@ -189,7 +189,7 @@ function onShareClick() {
 				</AppScrollAffix>
 			</template>
 			<template #default>
-				<AppActivityFeed v-if="feed?.isBootstrapped" :feed="feed" />
+				<AppActivityFeedLazy v-if="feed?.isBootstrapped" :feed="feed" show-ads />
 			</template>
 		</AppPageContainer>
 

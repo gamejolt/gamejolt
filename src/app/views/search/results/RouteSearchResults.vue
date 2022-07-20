@@ -196,7 +196,7 @@ const slicedCommunities = computed(() => searchPayload.value.communities.slice(0
 					<AppTranslate>Posts</AppTranslate>
 				</h3>
 
-				<AppActivityFeed :feed="feed" />
+				<AppActivityFeed :feed="feed" show-ads />
 			</template>
 		</AppPageContainer>
 	</section>

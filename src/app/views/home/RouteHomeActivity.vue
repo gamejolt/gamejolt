@@ -8,8 +8,8 @@ import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
-import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { AppActivityFeedLazy } from '../../components/lazy';
 import { illNoComments } from '../../img/ill/illustrations';
 import { useAppStore } from '../../store/index';
@@ -108,6 +108,6 @@ function onLoadedNew() {
 				</AppButton>
 			</RouterLink>
 		</div>
-		<AppActivityFeedLazy v-else :feed="feed" @load-new="onLoadedNew" />
+		<AppActivityFeedLazy v-else :feed="feed" show-ads @load-new="onLoadedNew" />
 	</div>
 </template>

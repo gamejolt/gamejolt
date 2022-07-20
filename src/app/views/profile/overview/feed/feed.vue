@@ -10,8 +10,8 @@ import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import AppActivityFeedPlaceholder from '../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
-import AppActivityFeedPlaceholder from '../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../../../components/lazy';
 import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
@@ -231,6 +231,7 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 			<AppActivityFeed
 				v-if="feed.hasItems"
 				:feed="feed"
+				show-ads
 				@edit-post="onPostEdited"
 				@publish-post="onPostPublished"
 			/>

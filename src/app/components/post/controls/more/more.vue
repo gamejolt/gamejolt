@@ -12,7 +12,7 @@ import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../../_common/game/game.model';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import { getLinkedAccountPlatformIcon } from '../../../../../_common/linked-account/linked-account.model';
-import AppPopper from '../../../../../_common/popper/popper.vue';
+import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { ReportModal } from '../../../../../_common/report/modal/modal.service';
 import { copyShareLink } from '../../../../../_common/share/share.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';

@@ -6,8 +6,8 @@ import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
-import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { AppActivityFeedLazy } from '../../components/lazy';
 import { illNoComments } from '../../img/ill/illustrations';
 import { RouteActivityFeedController } from './RouteHomeFeed.vue';
@@ -75,6 +75,6 @@ createAppRoute({
 				</AppButton>
 			</router-link>
 		</div>
-		<AppActivityFeedLazy v-else :feed="feed" />
+		<AppActivityFeedLazy v-else :feed="feed" show-ads />
 	</div>
 </template>

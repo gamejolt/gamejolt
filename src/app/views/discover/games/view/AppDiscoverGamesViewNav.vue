@@ -10,7 +10,7 @@ import { CommentModal } from '../../../../../_common/comment/modal/modal.service
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppGameModLinks from '../../../../../_common/game/mod-links/mod-links.vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppPopper from '../../../../../_common/popper/popper.vue';
+import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { ReportModal } from '../../../../../_common/report/modal/modal.service';
 import { copyShareLink } from '../../../../../_common/share/share.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';

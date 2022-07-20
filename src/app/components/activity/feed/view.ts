@@ -1,11 +1,11 @@
-import { InjectionKey } from 'vue';
+import { inject, InjectionKey } from 'vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
 import { Notification } from '../../../../_common/notification/notification-model';
 import { ScrollInviewConfig } from '../../../../_common/scroll/inview/AppScrollInview.vue';
-import { ActivityFeedInterface } from './feed.vue';
+import { ActivityFeedInterface } from './AppActivityFeed.vue';
 import { ActivityFeedInput, ActivityFeedItem } from './item-service';
 import { ActivityFeedState } from './state';
 
@@ -34,7 +34,11 @@ export interface ActivityFeedViewOptions {
 	shouldShowDates?: boolean;
 }
 
-export const ActivityFeedKey = Symbol('activity-feed');
+export const ActivityFeedKey: InjectionKey<ActivityFeedView> = Symbol('activity-feed');
+
+export function useActivityFeed() {
+	return inject(ActivityFeedKey);
+}
 
 export const ActivityFeedInterfaceKey: InjectionKey<ActivityFeedInterface> =
 	Symbol('activity-feed-interface');
@@ -56,7 +60,6 @@ export class ActivityFeedView {
 	slice: number | null = null;
 	timesLoaded = 0;
 	totalTimesLoaded = 0;
-	scroll = 0;
 	shouldScroll = true;
 	hideGameInfo = false;
 	mainCommunity: Community | null = null;
@@ -153,7 +156,6 @@ export class ActivityFeedView {
 		this.itemStates = {};
 		this.timesLoaded = 0;
 		this.totalTimesLoaded = 0;
-		this.scroll = 0;
 		this.newCount = 0;
 	}
 

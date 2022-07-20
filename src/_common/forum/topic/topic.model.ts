@@ -1,4 +1,3 @@
-import { Api } from '../../api/api.service';
 import { Model } from '../../model/model.service';
 import { User } from '../../user/user.model';
 import { ForumPost } from '../post/post.model';
@@ -49,30 +48,7 @@ export class ForumTopic extends Model {
 
 	$save() {
 		const url = '/web/forums/topics/save/' + this.channel_id;
-
-		if (!this.id) {
-			return this.$_save(url, 'forumTopic');
-		} else {
-			return this.$_save(url + '/' + this.id, 'forumTopic');
-		}
-	}
-
-	$follow() {
-		// Force POST
-		return Api.sendRequest('/web/forums/topics/follow/' + this.id, {});
-	}
-
-	$unfollow() {
-		// Force POST
-		return Api.sendRequest('/web/forums/topics/unfollow/' + this.id, {});
-	}
-
-	$upvote() {
-		return this.$_save(`/web/forums/topics/upvote/${this.id}`, 'topic');
-	}
-
-	$removeUpvote() {
-		return this.$_save(`/web/forums/topics/remove-upvote/${this.id}`, 'topic');
+		return this.$_save(url + '/' + this.id, 'forumTopic');
 	}
 }
 

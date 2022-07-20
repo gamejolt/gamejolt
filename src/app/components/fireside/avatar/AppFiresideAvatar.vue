@@ -13,8 +13,8 @@ import { FiresideCommunity } from '../../../../_common/fireside/community/commun
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
-import AppPopper from '../../../../_common/popper/popper.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';

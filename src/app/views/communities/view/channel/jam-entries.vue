@@ -7,7 +7,7 @@ import { CommunityCompetitionVotingCategory } from '../../../../../_common/commu
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppPagination from '../../../../../_common/pagination/pagination.vue';
-import AppPopper from '../../../../../_common/popper/popper.vue';
+import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { vAppNoAutoscroll } from '../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';

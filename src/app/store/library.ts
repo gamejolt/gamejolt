@@ -38,7 +38,6 @@ export function createLibraryStore({ router }: { router: Router }) {
 	const followedCollection = ref<GameCollection>();
 	const developerCollection = ref<GameCollection>();
 	const ownedCollection = ref<GameCollection>();
-	const bundleCollections = ref<GameCollection[]>([]);
 
 	/**
 	 * These are their followed developer playlists.
@@ -97,7 +96,6 @@ export function createLibraryStore({ router }: { router: Router }) {
 		ownedCollection.value = payload.ownedCollection
 			? new GameCollection(payload.ownedCollection)
 			: undefined;
-		bundleCollections.value = GameCollection.populate(payload.bundleCollections);
 	}
 
 	function clear() {
@@ -105,7 +103,6 @@ export function createLibraryStore({ router }: { router: Router }) {
 		followedCollection.value = undefined;
 		developerCollection.value = undefined;
 		ownedCollection.value = undefined;
-		bundleCollections.value = [];
 	}
 
 	function addCollection(collection: GameCollection) {
@@ -121,7 +118,6 @@ export function createLibraryStore({ router }: { router: Router }) {
 		followedCollection,
 		developerCollection,
 		ownedCollection,
-		bundleCollections,
 		developerPlaylists,
 		jamPlaylists,
 		mainPlaylists,

@@ -10,12 +10,10 @@ import { formatNumber } from '../../../../../_common/filters/number';
 import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
 import { ForumPost } from '../../../../../_common/forum/post/post.model';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
-import { showInfoGrowl } from '../../../../../_common/growls/growls.service';
 import { HistoryTick } from '../../../../../_common/history-tick/history-tick-service';
-import AppMessageThreadAdd from '../../../../../_common/message-thread/add/add.vue';
 import AppMessageThreadPagination from '../../../../../_common/message-thread/pagination/pagination.vue';
+import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
-import AppPopper from '../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../_common/report/modal/modal.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -32,7 +30,7 @@ import FormForumPost from '../../../../components/forms/forum/post/post.vue';
 import FormForumTopic from '../../../../components/forms/forum/topic/topic.vue';
 import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
 import AppForumPostList from '../../../../components/forum/post-list/post-list.vue';
-import AppForumTopicUpvoteWidget from '../../../../components/forum/topic/upvote-widget/upvote-widget.vue';
+import AppForumRules from '../../../../components/forum/rules/rules.vue';
 import AppPageHeaderControls from '../../../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../../../components/page-header/page-header.vue';
 
@@ -49,13 +47,12 @@ import AppPageHeader from '../../../../components/page-header/page-header.vue';
 		AppFadeCollapse,
 		AppForumPostList,
 		AppScrollAffix,
-		AppMessageThreadAdd,
 		AppMessageThreadPagination,
 		FormForumPost,
 		FormForumTopic,
-		AppForumTopicUpvoteWidget,
 		AppContentViewer,
 		AppUserVerifiedTick,
+		AppForumRules,
 	},
 	directives: {
 		AppTooltip: vAppTooltip,
@@ -94,7 +91,6 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 	posts: ForumPost[] = [];
 
 	isEditingTopic = false;
-	isFollowing = false;
 	canToggleDescription = false;
 	showFullDescription = false;
 
@@ -118,10 +114,6 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 		return this.$route.query.sort;
 	}
 
-	get shouldShowVoting() {
-		return this.topic.can_upvote && !this.topic.is_locked;
-	}
-
 	get routeTitle() {
 		if (this.topic) {
 			return this.topic.title;
@@ -136,29 +128,8 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 
 		this.perPage = $payload.perPage;
 		this.currentPage = $payload.page || 1;
-		this.isFollowing = $payload.isFollowing || false;
 		this.followerCount = $payload.followerCount || 0;
 		this.userPostCounts = $payload.userPostCounts || {};
-	}
-
-	async onPostAdded(newPost: ForumPost, response: any) {
-		// If their post was marked as spam, make sure they know.
-		if (newPost.status === ForumPost.STATUS_SPAM) {
-			showInfoGrowl(
-				this.$gettext(
-					`Your post has been marked for review. Please allow some time for it to show on the site.`
-				),
-				this.$gettext(`Post Needs Review`)
-			);
-		}
-
-		// When the new post comes into the DOM the hash will match and it will
-		// scroll to it.
-		this.$router.replace({
-			name: this.$route.name,
-			query: { page: response.page },
-			hash: '#forum-post-' + newPost.id,
-		});
 	}
 
 	editTopic() {
@@ -168,18 +139,6 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 
 	closeEditTopic() {
 		this.isEditingTopic = false;
-	}
-
-	async follow() {
-		await this.topic.$follow();
-		this.isFollowing = true;
-		++this.followerCount;
-	}
-
-	async unfollow() {
-		await this.topic.$unfollow();
-		this.isFollowing = false;
-		--this.followerCount;
 	}
 
 	pageChange() {
@@ -249,28 +208,6 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 
 			<template v-if="app.user" #controls>
 				<AppPageHeaderControls>
-					<AppButton
-						v-if="!isFollowing"
-						v-app-tooltip="$gettext(`Keep track of replies in this topic.`)"
-						primary
-						block
-						@click="follow"
-					>
-						<AppTranslate>Follow</AppTranslate>
-					</AppButton>
-					<AppButton
-						v-else
-						v-app-tooltip="$gettext(`Stop Following`)"
-						primary
-						solid
-						block
-						@click="unfollow"
-						@mouseenter="unfollowHover = true"
-						@mouseleave="unfollowHover = false"
-					>
-						<AppTranslate>Following</AppTranslate>
-					</AppButton>
-
 					<template v-if="app.user" #end>
 						<AppPopper popover-class="fill-darkest">
 							<AppButton circle trans icon="ellipsis-v" />
@@ -280,50 +217,6 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 									<a class="list-group-item has-icon" @click="report">
 										<AppJolticon icon="flag" notice />
 										<AppTranslate>Report Topic</AppTranslate>
-									</a>
-									<a
-										v-if="app.user.permission_level > 0"
-										class="list-group-item"
-										:href="
-											Environment.baseUrl +
-											`/moderate/forums/topics/toggle-sticky/${topic.id}`
-										"
-										target="_blank"
-									>
-										<AppTranslate>Toggle Sticky</AppTranslate>
-									</a>
-									<a
-										v-if="app.user.permission_level > 0"
-										class="list-group-item"
-										:href="
-											Environment.baseUrl +
-											`/moderate/forums/topics/toggle-lock/${topic.id}`
-										"
-										target="_blank"
-									>
-										<AppTranslate>Toggle Lock</AppTranslate>
-									</a>
-									<a
-										v-if="app.user.permission_level > 0"
-										class="list-group-item"
-										:href="
-											Environment.baseUrl +
-											`/moderate/forums/topics/edit/${topic.id}`
-										"
-										target="_blank"
-									>
-										<AppTranslate>Edit Topic</AppTranslate>
-									</a>
-									<a
-										v-if="app.user.permission_level > 0"
-										class="list-group-item"
-										:href="
-											Environment.baseUrl +
-											`/moderate/forums/topics/move/${topic.id}`
-										"
-										target="_blank"
-									>
-										<AppTranslate>Move Topic</AppTranslate>
 									</a>
 									<a
 										v-if="app.user.permission_level > 0"
@@ -357,18 +250,11 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 
 		<section class="section">
 			<div class="container">
+				<AppForumRules />
+
 				<div class="row">
 					<div class="col-sm-3 col-sm-push-9 col-md-offset-1 col-md-push-8">
 						<AppScrollAffix v-if="app.user" :disabled="!Screen.isDesktop">
-							<AppButton
-								v-if="!topic.is_locked"
-								v-app-scroll-to="`add-reply`"
-								primary
-								block
-							>
-								<AppTranslate>Add Reply</AppTranslate>
-							</AppButton>
-
 							<AppButton
 								v-if="topic.user_id === app.user.id && !topic.is_locked"
 								block
@@ -387,8 +273,8 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 							Hide the main post while it's being edited.
 						-->
 						<template v-if="!isEditingTopic">
-							<div :class="shouldShowVoting ? 'row' : ''">
-								<div :class="shouldShowVoting ? 'col-sm-9' : ''">
+							<div>
+								<div>
 									<!--
 										We do a fade collapse for the main post after the first page.
 									-->
@@ -419,16 +305,6 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 										v-if="currentPage <= 1"
 										:source="topic.main_post.text_content"
 									/>
-								</div>
-								<div
-									v-if="shouldShowVoting"
-									class="col-sm-3"
-									:class="{
-										'text-center': Screen.isXs,
-										'text-right': !Screen.isXs,
-									}"
-								>
-									<AppForumTopicUpvoteWidget :topic="topic" />
 								</div>
 							</div>
 						</template>
@@ -463,7 +339,6 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 							:posts="posts"
 							:sort="sort"
 							:user-post-counts="userPostCounts"
-							@replied="onPostAdded"
 						/>
 
 						<AppMessageThreadPagination
@@ -472,37 +347,6 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 							:current-page="currentPage"
 							@pagechange="pageChange"
 						/>
-
-						<hr />
-
-						<template v-if="app.user">
-							<AppMessageThreadAdd v-if="!topic.is_locked">
-								<h4 id="add-reply" class="sans-margin-top">
-									<AppTranslate>Add Reply</AppTranslate>
-								</h4>
-
-								<FormForumPost :topic="topic" @submit="onPostAdded" />
-							</AppMessageThreadAdd>
-
-							<div v-if="topic.is_locked" class="alert full-bleed-xs">
-								<p>
-									<AppJolticon icon="lock" />
-									<AppTranslate>
-										This topic is locked and can no longer be replied to.
-									</AppTranslate>
-								</p>
-							</div>
-						</template>
-						<div v-else class="alert full-bleed-xs">
-							<p>
-								<AppJolticon icon="exclamation-circle" />
-								<a :href="loginUrl">
-									<AppTranslate>
-										You must be logged in to Game Jolt to post replies.
-									</AppTranslate>
-								</a>
-							</p>
-						</div>
 					</div>
 				</div>
 			</div>

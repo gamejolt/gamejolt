@@ -1,7 +1,7 @@
 <script lang="ts">
 import { nextTick } from 'vue';
 import { setup } from 'vue-class-component';
-import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
@@ -15,8 +15,8 @@ import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import AppMessageThreadAdd from '../../../../../_common/message-thread/add/add.vue';
 import AppMessageThreadItem from '../../../../../_common/message-thread/item/item.vue';
 import AppMessageThread from '../../../../../_common/message-thread/message-thread.vue';
+import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
-import AppPopper from '../../../../../_common/popper/popper.vue';
 import { ReportModal } from '../../../../../_common/report/modal/modal.service';
 import AppScrollInview, {
 	ScrollInviewConfig,
@@ -60,7 +60,6 @@ export default class AppForumPostListItem extends Vue {
 	}
 
 	isEditing = false;
-	isReplying = false;
 	isShowingReplies = false;
 
 	showingParent = false;
@@ -72,9 +71,6 @@ export default class AppForumPostListItem extends Vue {
 	readonly formatDate = formatDate;
 	readonly formatNumber = formatNumber;
 	readonly Environment = Environment;
-
-	@Emit('replied')
-	emitReplied(_newPost: ForumPost, _payload: any) {}
 
 	get id() {
 		return (this.isReply ? this.post.parent_post_id + '-' : '') + this.post.id;
@@ -153,25 +149,6 @@ export default class AppForumPostListItem extends Vue {
 		}
 	}
 
-	reply() {
-		this.isReplying = true;
-	}
-
-	closeReply() {
-		this.isReplying = false;
-	}
-
-	onReplied(newPost: ForumPost, response: any) {
-		this.isReplying = false;
-
-		// If the replies list is open, refresh it.
-		if (this.isShowingReplies) {
-			this.loadReplies();
-		}
-
-		this.emitReplied(newPost, response);
-	}
-
 	edit() {
 		this.isEditing = true;
 		Popper.hideAll();
@@ -207,7 +184,7 @@ export default class AppForumPostListItem extends Vue {
 		:date="post.posted_on"
 		:is-active="isActive"
 		:is-new="!!post.notification"
-		:is-showing-replies="isReplying || isShowingReplies"
+		:is-showing-replies="isShowingReplies"
 		:is-reply="isReply"
 		:is-last="isLastInThread"
 	>
@@ -313,15 +290,6 @@ export default class AppForumPostListItem extends Vue {
 							<a
 								class="list-group-item"
 								:href="
-									Environment.baseUrl + `/moderate/forums/posts/edit/${post.id}`
-								"
-								target="_blank"
-							>
-								<AppTranslate>Edit (Mod)</AppTranslate>
-							</a>
-							<a
-								class="list-group-item"
-								:href="
 									Environment.baseUrl + `/moderate/forums/posts/remove/${post.id}`
 								"
 								target="_blank"
@@ -343,17 +311,6 @@ export default class AppForumPostListItem extends Vue {
 
 		<template v-if="!isReply" #controls>
 			<AppButton
-				v-if="!topic.is_locked && app.user"
-				v-app-tooltip="$gettext('Reply')"
-				class="forum-post-reply-button"
-				circle
-				trans
-				icon="reply"
-				:disabled="isEditing"
-				@click="reply"
-			/>
-
-			<AppButton
 				v-if="post.replies_count && !isEditing"
 				type="a"
 				trans
@@ -369,17 +326,7 @@ export default class AppForumPostListItem extends Vue {
 			</AppButton>
 		</template>
 
-		<template v-if="isReplying || isShowingReplies" #replies>
-			<AppMessageThreadAdd v-if="isReplying">
-				<FormForumPost
-					v-if="isReplying"
-					:topic="topic"
-					:reply-to="post"
-					@cancel="closeReply"
-					@submit="onReplied"
-				/>
-			</AppMessageThreadAdd>
-
+		<template v-if="isShowingReplies" #replies>
 			<AppMessageThread v-if="isShowingReplies && replies.length > 0">
 				<AppForumPostListItem
 					v-for="(reply, i) of replies"
@@ -419,7 +366,4 @@ export default class AppForumPostListItem extends Vue {
 		margin-bottom: $line-height-computed
 		padding: 5px 10px
 		font-size: $font-size-small
-
-	&-reply-button
-		margin-right: 8px
 </style>

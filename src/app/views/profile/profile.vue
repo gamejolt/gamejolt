@@ -7,7 +7,7 @@ import { BlockModal } from '../../../_common/block/modal/modal.service';
 import { CommentModal } from '../../../_common/comment/modal/modal.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { formatNumber } from '../../../_common/filters/number';
-import AppPopper from '../../../_common/popper/popper.vue';
+import AppPopper from '../../../_common/popper/AppPopper.vue';
 import { Registry } from '../../../_common/registry/registry.service';
 import { ReportModal } from '../../../_common/report/modal/modal.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';

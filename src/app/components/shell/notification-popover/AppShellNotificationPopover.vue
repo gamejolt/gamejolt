@@ -1,23 +1,23 @@
 <script lang="ts" setup>
-import { ref, computed, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { sleep } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { Connection } from '../../../../_common/connection/connection-service';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../_common/loading/loading.vue';
 import { Notification } from '../../../../_common/notification/notification-model';
-import AppPopper from '../../../../_common/popper/popper.vue';
+import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useEventSubscription } from '../../../../_common/system/event/event-topic';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { useAppStore } from '../../../store';
 import { ActivityFeedView } from '../../activity/feed/view';
 import { onNewStickers } from '../../grid/client.service';
 import { AppActivityFeedLazy } from '../../lazy';
-import AppShellNotificationPopoverStickerNavItem from './sticker-nav-item/sticker-nav-item.vue';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
+import AppShellNotificationPopoverStickerNavItem from './sticker-nav-item/AppShellNotificationPopoverStickerNavItem.vue';
 
 interface StickerAnimationData {
 	key: string;
@@ -173,7 +173,6 @@ function removeStickerAnimation(key: string) {
 			>
 				{{ unreadNotificationsCount }}
 			</span>
-			<div v-if="hasNewUnlockedStickers" class="-new-tag anim-fade-enter anim-fade-leave" />
 			<AppJolticon icon="bell-filled" />
 			<div ref="newStickerAnimContainer" class="-new-sticker-anim-container">
 				<div
@@ -249,21 +248,6 @@ $-new-sticker-size = 32px
 	user-select: none
 	pointer-events: none
 	z-index: 3
-
-.-new-tag
-	border-radius: 50%
-	width: 12px
-	height: 12px
-	display: block
-	change-bg('highlight')
-	position: absolute
-	bottom: 10px
-	right: 4px
-	display: block
-	border-color: var(--theme-darkest)
-	border-width: 2px
-	border-style: solid
-
 
 .-new-sticker
 	position: fixed

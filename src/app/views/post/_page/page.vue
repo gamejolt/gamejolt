@@ -4,6 +4,7 @@ import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { RouteLocationRaw } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
+import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import AppBackground from '../../../../_common/background/AppBackground.vue';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
@@ -94,6 +95,7 @@ const UserFollowLocation = 'postPage';
 		AppActivityFeedPostContent,
 		AppSpacer,
 		AppResponsiveDimensions,
+		AppAdWidget,
 	},
 	directives: {
 		AppTooltip: vAppTooltip,
@@ -359,9 +361,9 @@ export default class AppPostPage extends Vue {
 							</div>
 						</div>
 						<!--
-					Indicates where sticker placements may begin for scrolling when they show
-					stickers.
-					-->
+						Indicates where sticker placements may begin for scrolling when they show
+						stickers.
+						-->
 						<div ref="sticker-scroll" />
 
 						<div v-if="post.hasMedia" class="-media-items">
@@ -489,6 +491,9 @@ export default class AppPostPage extends Vue {
 					<div v-if="shareCardOnSide" class="-share">
 						<AppShareCard resource="post" :url="post.url" offset-color />
 					</div>
+
+					<AppAdWidget size="rectangle" placement="side" />
+
 					<AppPostPageRecommendations :key="post.id" :post="post" />
 				</div>
 			</template>

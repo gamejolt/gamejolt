@@ -5,12 +5,12 @@ import { Api } from '../../../_common/api/api.service';
 import { HistoryCache } from '../../../_common/history/cache/cache.service';
 import { Notification } from '../../../_common/notification/notification-model';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
+import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
-import AppActivityFeedPlaceholder from '../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../components/lazy';
-import AppShellNotificationPopoverStickerNavItemPlaceholder from '../../components/shell/notification-popover/sticker-nav-item/placeholder/placeholder.vue';
-import AppShellNotificationPopoverStickerNavItem from '../../components/shell/notification-popover/sticker-nav-item/sticker-nav-item.vue';
+import AppShellNotificationPopoverStickerNavItem from '../../components/shell/notification-popover/sticker-nav-item/AppShellNotificationPopoverStickerNavItem.vue';
+import AppShellNotificationPopoverStickerNavItemPlaceholder from '../../components/shell/notification-popover/sticker-nav-item/AppShellNotificationPopoverStickerNavItemPlaceholder.vue';
 import { Store, useAppStore } from '../../store';
 
 const HistoryCacheFeedTag = 'notifications-feed';

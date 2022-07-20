@@ -21,7 +21,7 @@ import AppLoadingFade from '../../../loading/AppLoadingFade.vue';
 import AppLoading from '../../../loading/loading.vue';
 import { Navigate } from '../../../navigate/navigate.service';
 import { OrderPayment } from '../../../order/payment/payment.model';
-import AppPopper from '../../../popper/popper.vue';
+import AppPopper from '../../../popper/AppPopper.vue';
 import { Screen } from '../../../screen/screen-service';
 import { Sellable } from '../../../sellable/sellable.model';
 import { useCommonStore } from '../../../store/common-store';
