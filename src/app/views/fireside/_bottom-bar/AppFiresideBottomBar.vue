@@ -235,7 +235,7 @@ function onClickStickerButton() {
 
 .-group
 	gap: 8px
-	padding-bottom: 16px
+	padding-bottom: 8px
 
 .-left
 .-right

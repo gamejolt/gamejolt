@@ -278,42 +278,44 @@ function onClickExtinguish() {
 								</AppFormControlToggleButtonGroup>
 							</AppFormGroup>
 						</AppForm>
-
-						<hr />
-
-						<AppButton
-							v-if="canPublish"
-							v-app-tooltip="
-								isStreaming
-									? undefined
-									: $gettext(
-											`Firesides need someone to be streaming to go public!`
-									  )
-							"
-							icon="megaphone"
-							block
-							:disabled="!isStreaming"
-							@click="onClickPublish"
-						>
-							<AppTranslate>Make fireside public</AppTranslate>
-						</AppButton>
-
-						<AppButton
-							v-if="canExtinguish"
-							icon="remove"
-							icon-color="notice"
-							block
-							@click="onClickExtinguish"
-						>
-							<AppTranslate>Extinguish fireside</AppTranslate>
-						</AppButton>
 					</template>
-
-					<AppButton v-if="canReport" icon="flag" trans block @click="onClickReport()">
-						<AppTranslate>Report fireside</AppTranslate>
-					</AppButton>
 				</div>
 			</AppScrollScroller>
+		</template>
+
+		<template #footer>
+			<div v-if="canPublish || canExtinguish || canReport" class="-pad-h -pad-v">
+				<AppButton
+					v-if="canPublish"
+					v-app-tooltip="
+						isStreaming
+							? undefined
+							: $gettext(`Firesides need someone to be streaming to go public!`)
+					"
+					icon="megaphone"
+					primary
+					solid
+					block
+					:disabled="!isStreaming"
+					@click="onClickPublish"
+				>
+					<AppTranslate>Make fireside public</AppTranslate>
+				</AppButton>
+
+				<AppButton
+					v-if="canExtinguish"
+					icon="remove"
+					icon-color="notice"
+					block
+					@click="onClickExtinguish"
+				>
+					<AppTranslate>Extinguish fireside</AppTranslate>
+				</AppButton>
+
+				<AppButton v-if="canReport" icon="flag" trans block @click="onClickReport()">
+					<AppTranslate>Report fireside</AppTranslate>
+				</AppButton>
+			</div>
 		</template>
 	</AppFiresideSidebar>
 </template>

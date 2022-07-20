@@ -54,7 +54,6 @@ let _expiryCheck: NodeJS.Timer | null = null;
 const isLoading = ref(false);
 
 const community = computed(() => fireside.value.community ?? undefined);
-const isLive = computed(() => fireside.value.is_streaming);
 const title = computed(() => fireside.value.title);
 
 const canModerate = computed(
@@ -184,7 +183,7 @@ async function ejectFireside(community: FiresideCommunity) {
 	<AppFiresideAvatarBase
 		:avatar-media-item="fireside.user.avatar_media_item"
 		:community="hideCommunity ? undefined : community"
-		:is-live="isLive"
+		:is-live="!fireside.is_draft"
 	>
 		<template #extras>
 			<AppPopper v-if="canModerate" class="-extras" popover-class="fill-darkest">
@@ -230,9 +229,8 @@ async function ejectFireside(community: FiresideCommunity) {
 			<div>
 				<AppJolticon v-if="isFeaturedInCommunity" icon="star" />
 
-				<AppTranslate v-if="fireside.is_draft">DRAFT</AppTranslate>
-				<AppTranslate v-else-if="isLive">LIVE</AppTranslate>
-				<AppTranslate v-else>CHAT</AppTranslate>
+				<AppTranslate v-if="fireside.is_draft">PRIVATE</AppTranslate>
+				<AppTranslate v-else>LIVE</AppTranslate>
 			</div>
 		</template>
 
