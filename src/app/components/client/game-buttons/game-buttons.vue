@@ -8,8 +8,8 @@ import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.se
 import { Game } from '../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import { GamePackagePurchaseModal } from '../../../../_common/game/package/purchase-modal/purchase-modal.service';
+import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
-import AppPopper from '../../../../_common/popper/popper.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { useClientLibraryStore } from '../../../store/client-library';
 import AppClientInstallProgress from '../AppClientInstallProgress.vue';

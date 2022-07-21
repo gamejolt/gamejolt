@@ -4,8 +4,8 @@ import { CommunityChannel } from '../../../../../../_common/community/channel/ch
 import { Community } from '../../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppCommunityVerifiedTick from '../../../../../../_common/community/verified-tick/verified-tick.vue';
+import AppPopper from '../../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../../_common/popper/popper.service';
-import AppPopper from '../../../../../../_common/popper/popper.vue';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { AppScrollHelper } from './scroll-helper/scroll-helper';
 
@@ -82,7 +82,12 @@ export default class AppFormsCommunityPillSelector extends Vue {
 </script>
 
 <template>
-	<AppPopper popover-class="fill-bg" height="45vh" hide-on-state-change @hide="resetSelections">
+	<AppPopper
+		popover-class="fill-bg"
+		max-height="45vh"
+		hide-on-state-change
+		@hide="resetSelections"
+	>
 		<slot />
 
 		<template v-if="selectedCommunity && withChannel" #header>

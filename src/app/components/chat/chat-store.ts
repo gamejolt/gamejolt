@@ -23,7 +23,7 @@ export async function loadChat(store: ChatStore, appStore: AppStore) {
 }
 
 async function _doLoadChat(store: ChatStore, appStore: AppStore) {
-	const { createChatClient, initChatClient, destroy } = await ChatClientLazy();
+	const { createChatClient, destroy } = await ChatClientLazy();
 
 	// Abort if by the time we lazy loaded the chat component we requested to
 	// clear it.
@@ -36,7 +36,6 @@ async function _doLoadChat(store: ChatStore, appStore: AppStore) {
 	}
 
 	store.chat = createChatClient({ appStore });
-	initChatClient(store.chat);
 	store._loadPromise = null;
 }
 

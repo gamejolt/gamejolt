@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { Screen } from '../screen/screen-service';
-import AppGrowl from './growl.vue';
+import AppGrowl from './AppGrowl.vue';
 import { Growls } from './growls.service';
 </script>
 

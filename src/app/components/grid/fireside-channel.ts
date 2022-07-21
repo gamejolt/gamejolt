@@ -1,48 +1,186 @@
-import { reactive } from '@vue/runtime-core';
-import { Channel, Socket } from 'phoenix';
-import { markRaw } from 'vue';
-import { Fireside } from '../../../_common/fireside/fireside.model';
+import { shallowReadonly, triggerRef } from 'vue';
+import { createLogger } from '../../../utils/logging';
+import {
+	DrawerStore,
+	onFiresideStickerPlaced,
+	setStickerStreak,
+} from '../../../_common/drawer/drawer-store';
+import { FiresideChatSettings } from '../../../_common/fireside/chat-settings/chat-settings.model';
+import { FiresideRTCHost } from '../../../_common/fireside/rtc/rtc';
+import {
+	createSocketChannelController,
+	SocketChannelController,
+} from '../../../_common/socket/socket-controller';
+import { StickerPlacement } from '../../../_common/sticker/placement/placement.model';
+import { addStickerToTarget } from '../../../_common/sticker/target/target-controller';
 import { User } from '../../../_common/user/user.model';
+import {
+	FiresideController,
+	StreamingInfoPayload,
+	updateFiresideData,
+} from '../fireside/controller/controller';
+import { GridClient } from './client.service';
 
-export const EVENT_UPDATE = 'update';
-export const EVENT_STREAMING_UID = 'streaming-uid';
-export const EVENT_STICKER_PLACEMENT = 'sticker-placement';
-export const EVENT_LISTABLE_HOSTS = 'listable-hosts';
+// We need to manually specify since there's a recursive definition.
+export type GridFiresideChannel = Readonly<{
+	channelController: SocketChannelController;
+	firesideHash: string;
+	pushUpdateChatSettings: (
+		chatSettings: FiresideChatSettings
+	) => Promise<UpdateChatSettingsPayload>;
+}>;
 
-interface FiresideChannelConfig {
-	fireside: Fireside;
-	topic?: string;
-	socket: Socket;
-	user: User | null;
-	authToken: string;
+interface JoinPayload {
+	server_time: number;
+	chat_settings: unknown;
+	slow_mode_last_message_on: number;
 }
 
-class FiresideChannelInternal {
-	constructor(public readonly fireside: Fireside, public readonly socket: Socket) {}
+interface StickerPlacementPayload {
+	user_id: number;
+	streak: number;
+	sticker_placement: Partial<StickerPlacement>;
+}
 
-	_socketChannel!: Channel;
-	get socketChannel() {
-		return this._socketChannel;
+interface UpdatePayload {
+	fireside: unknown;
+	chat_settings: unknown;
+	// For optimization reasons streamingUids is not being sent for
+	// fireside-updated messages.
+	streaming_info: Omit<StreamingInfoPayload, 'streamingUids'>;
+}
+
+interface StreamingUIDPayload {
+	streaming_uid: number;
+	user: unknown;
+	is_live: boolean;
+	is_unlisted: boolean;
+}
+
+interface UpdateChatSettingsPayload {
+	settings: unknown;
+}
+
+export async function createGridFiresideChannel(
+	client: GridClient,
+	firesideController: FiresideController,
+	options: { firesideHash: string; drawerStore: DrawerStore }
+): Promise<GridFiresideChannel> {
+	const { socketController } = client;
+	const { chatSettings } = firesideController;
+	const { firesideHash, drawerStore } = options;
+
+	const logger = createLogger('Fireside');
+
+	const channelController = createSocketChannelController(
+		`fireside:${firesideHash}`,
+		socketController
+	);
+
+	channelController.listenTo('update', _onUpdate);
+	channelController.listenTo('streaming-uid', _onStreamingUid);
+	channelController.listenTo('sticker-placement', _onStickerPlacement);
+
+	const c = shallowReadonly({
+		channelController,
+		firesideHash,
+		pushUpdateChatSettings,
+	});
+
+	await channelController.join({
+		async onJoin(response: JoinPayload) {
+			chatSettings.value.assign(response.chat_settings);
+		},
+	});
+
+	async function _onUpdate(payload: UpdatePayload) {
+		logger.info('Fireside update message:', payload);
+
+		updateFiresideData(firesideController, {
+			fireside: payload.fireside,
+			chatSettings: payload.chat_settings,
+			streamingInfo: payload.streaming_info,
+		});
 	}
-}
 
-/**  Use {@link createFiresideChannel} to construct a new channel. */
-export abstract class FiresideChannel extends FiresideChannelInternal {}
+	function _onStreamingUid(payload: StreamingUIDPayload) {
+		logger.debug('Grid streaming uid added.', payload);
 
-export function createFiresideChannel({
-	fireside,
-	topic,
-	socket,
-	user,
-	authToken,
-}: FiresideChannelConfig) {
-	const channel = reactive(new FiresideChannelInternal(fireside, socket)) as FiresideChannel;
+		const { hosts } = firesideController;
+		if (!payload.streaming_uid || !payload.user) {
+			return;
+		}
 
-	const params = user
-		? { auth_token: authToken, user_id: user.id.toString() }
-		: { auth_token: authToken };
+		const user = new User(payload.user);
+		const host = hosts.value.find(host => host.user.id === user.id);
+		if (host) {
+			logger.debug('Adding streaming uid to existing host');
 
-	channel._socketChannel = markRaw(socket.channel(topic ?? `fireside:${fireside.hash}`, params));
+			host.user = user;
+			host.needsPermissionToView = payload.is_unlisted;
+			host.isLive = payload.is_live;
+			if (host.uids.indexOf(payload.streaming_uid) === -1) {
+				host.uids.push(payload.streaming_uid);
+			}
+		} else {
+			logger.debug('Adding streaming uid to new host');
+			hosts.value.push({
+				user: user,
+				needsPermissionToView: payload.is_unlisted,
+				isLive: payload.is_live,
+				uids: [payload.streaming_uid],
+			} as FiresideRTCHost);
+		}
 
-	return channel;
+		// Vue does not pick up the change to uids for existing hosts, and I
+		// can't be assed to figure out what in the world i need to wrap in a
+		// reactive() to make it work.
+		triggerRef(hosts);
+	}
+
+	function _onStickerPlacement(payload: StickerPlacementPayload) {
+		logger.debug('Grid sticker placement received.', payload, payload.streak);
+
+		const { rtc, stickerTargetController, fireside, user } = firesideController;
+
+		const placement = new StickerPlacement(payload.sticker_placement);
+		const {
+			sticker,
+			target_data: { host_user_id },
+		} = placement;
+
+		setStickerStreak(drawerStore, sticker, payload.streak);
+
+		const wasMyPlacement = payload.user_id === user.value?.id;
+
+		// Stickers and counts get added automatically when we place them
+		// ourselves. Return early so we don't do it twice.
+		if (wasMyPlacement) {
+			return;
+		}
+
+		const focusedUserId = rtc.value?.focusedUser?.userModel?.id;
+
+		if (focusedUserId === host_user_id) {
+			// Display the live sticker only if we're watching the target host.
+			addStickerToTarget(stickerTargetController, placement);
+		}
+		onFiresideStickerPlaced.next(placement);
+
+		fireside.addStickerToCount(sticker);
+	}
+
+	/**
+	 * Used to change the chat settings for the fireside.
+	 */
+	function pushUpdateChatSettings(chatSettings: FiresideChatSettings) {
+		return channelController.push<UpdateChatSettingsPayload>('update_chat_settings', {
+			fireside_hash: firesideHash,
+			allow_images: chatSettings.allow_images,
+			allow_gifs: chatSettings.allow_gifs,
+			allow_links: chatSettings.allow_links,
+		});
+	}
+
+	return c;
 }

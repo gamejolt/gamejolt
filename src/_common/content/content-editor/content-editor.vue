@@ -7,7 +7,7 @@ import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { FocusToken } from '../../../utils/focus-token';
 import { vAppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
 import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
-import { ContentContext } from '../content-context';
+import { ContentContext, ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentFormatAdapter, ProsemirrorEditorFormat } from '../content-format-adapter';
 import {
@@ -58,6 +58,9 @@ export default class AppContentEditor extends Vue {
 
 	@Prop({ type: String, required: true })
 	contentContext!: ContentContext;
+
+	@Prop({ type: Object, default: undefined })
+	contextCapabilitiesOverride?: ContextCapabilities;
 
 	@Prop({ type: String, required: true })
 	value!: string;
@@ -119,6 +122,7 @@ export default class AppContentEditor extends Vue {
 			this.controller ||
 			createContentEditor({
 				contentContext: props.contentContext,
+				contextCapabilities: props.contextCapabilitiesOverride,
 				disabled: computed(() => props.disabled),
 				singleLineMode: computed(() => props.singleLineMode),
 			});
@@ -279,6 +283,7 @@ export default class AppContentEditor extends Vue {
 		// Attach our editor hooks into the controller so that we can be
 		// controlled through the controller. So much control.
 		this.controller_._editor = {
+			ownerController: () => this.ownerController,
 			getWindowRect: () => this.$refs.editor.getBoundingClientRect(),
 			emitSubmit: () => this.emitSubmit(),
 			emitInput: newSource => this.emitInput(newSource),

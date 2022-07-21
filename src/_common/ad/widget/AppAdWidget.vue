@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, watch } from 'vue';
+import { computed, PropType, ref, toRefs, watch } from 'vue';
 import { AdSlot, AdSlotMeta, AdSlotPlacement, AdSlotSize } from '../ad-slot-info';
 import { useAdsController } from '../ad-store';
 import AppAdWidgetInner from './AppAdWidgetInner.vue';
@@ -19,6 +19,8 @@ const props = defineProps({
 	},
 });
 
+const { size, placement, meta } = toRefs(props);
+
 const adsController = useAdsController();
 const adSlot = ref(_makeAdSlot());
 const shouldShow = computed(() => adsController.shouldShow);
@@ -33,7 +35,7 @@ watch(
 );
 
 function _makeAdSlot() {
-	return new AdSlot(props.size, props.placement, props.meta);
+	return new AdSlot(size.value, placement.value, meta.value);
 }
 </script>
 
@@ -43,7 +45,7 @@ function _makeAdSlot() {
 		class="-ad-widget"
 		:class="{
 			'-size-leaderboard': adSlot.size === 'leaderboard',
-			'-size-retangle': adSlot.size === 'rectangle',
+			'-size-rectangle': adSlot.size === 'rectangle',
 		}"
 	>
 		<div class="-content">
@@ -66,7 +68,6 @@ function _makeAdSlot() {
 	> .-inner
 		flex: auto
 
-// We reserve some extra space for the "report ad" link below the ad itself.
 .-size-leaderboard
 	.-content
 		min-height: 115px

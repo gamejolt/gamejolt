@@ -1,4 +1,9 @@
-import type { IAgoraRTCRemoteUser, ILocalAudioTrack, IRemoteAudioTrack } from 'agora-rtc-sdk-ng';
+import type {
+	IAgoraRTCRemoteUser,
+	ILocalAudioTrack,
+	ILocalVideoTrack,
+	IRemoteAudioTrack,
+} from 'agora-rtc-sdk-ng';
 import { computed, markRaw, ref, shallowRef } from 'vue';
 import { MediaDeviceService } from '../../agora/media-device.service';
 import { Api } from '../../api/api.service';
@@ -9,6 +14,7 @@ import { showErrorGrowl } from '../../growls/growls.service';
 import { Navigate } from '../../navigate/navigate.service';
 import { $gettext, Translate } from '../../translate/translate.service';
 import {
+	FiresideRTCChannel,
 	previewChannelVideo,
 	setChannelAudioTrack,
 	setChannelVideoTrack,
@@ -63,6 +69,20 @@ export function createFiresideRTCProducer(rtc: FiresideRTC) {
 	const canStreamVideo = computed(() => rtc.role?.can_stream_video === true);
 	const canStreamAudio = computed(() => rtc.role?.can_stream_audio === true);
 
+	/**
+	 * Indicates that our mic isn't actually broadcasting, and is only displayed
+	 * locally.
+	 */
+	const micMuted = ref(false);
+
+	/**
+	 * Indicates that our video isn't actually broadcasting, and is only
+	 * displayed locally.
+	 *
+	 * Indicates for desktop audio as well.
+	 */
+	const videoMuted = ref(false);
+
 	const hasWebcamDevice = computed(
 		() =>
 			selectedWebcamDeviceId.value !== '' &&
@@ -101,6 +121,9 @@ export function createFiresideRTCProducer(rtc: FiresideRTC) {
 		hasWebcamDevice,
 		hasMicDevice,
 		hasDesktopAudioDevice,
+
+		micMuted,
+		videoMuted,
 
 		_videoPreviewElement,
 		_busyPromise,
@@ -204,6 +227,63 @@ async function _renewTokens(producer: FiresideRTCProducer) {
 	} finally {
 		_areTokensRenewing.value = false;
 	}
+}
+
+/**
+ * Sets the muted state for a specific broadcasting channel. Toggles if [mute]
+ * is undefined.
+ */
+export function setProducerDeviceMuted(
+	producer: FiresideRTCProducer,
+	deviceType: 'video' | 'mic' | 'desktopAudio',
+	mute?: boolean
+) {
+	const localUser = producer.rtc.localUser;
+	if (!localUser) {
+		return;
+	}
+
+	let shouldMute = mute;
+	let channel: FiresideRTCChannel | null = null;
+
+	if (deviceType === 'mic') {
+		channel = localUser.rtc.chatChannel;
+		shouldMute ??= !producer.micMuted.value;
+	} else {
+		channel = localUser.rtc.videoChannel;
+		shouldMute ??= !producer.videoMuted.value;
+	}
+
+	if (!channel || shouldMute === undefined) {
+		return;
+	}
+
+	return _doBusyWork(producer, async () => {
+		const mute = shouldMute!;
+		if (!channel) {
+			return;
+		}
+
+		const client = channel.agoraClient;
+		const video = channel._localVideoTrack || undefined;
+		const audio = channel._localAudioTrack || undefined;
+
+		const tracks: (ILocalVideoTrack | ILocalAudioTrack)[] = [];
+		if (video) {
+			tracks.push(video);
+		}
+		if (audio) {
+			tracks.push(audio);
+		}
+
+		if (deviceType === 'mic') {
+			producer.micMuted.value = mute;
+		} else {
+			producer.videoMuted.value = mute;
+		}
+
+		return mute ? client.unpublish(tracks) : client.publish(tracks);
+	});
 }
 
 // Does some work serially.
@@ -396,7 +476,7 @@ function _updateWebcamTrack(producer: FiresideRTCProducer) {
 		updateSetIsStreaming(producer);
 
 		if (_videoPreviewElement.value) {
-			previewChannelVideo(videoChannel, _videoPreviewElement.value);
+			previewChannelVideo(producer.rtc.localUser, videoChannel, _videoPreviewElement.value);
 		}
 	});
 }
@@ -719,28 +799,31 @@ export async function updateSetIsStreaming(
 	const isStreaming = options?.isStreaming ?? producer.isStreaming.value;
 
 	let response: any = null;
+	let body: any = {};
 
 	try {
+		body = {
+			is_streaming: isStreaming,
+			streaming_uid: rtc.streamingUid,
+			has_video:
+				selectedWebcamDeviceId.value !== PRODUCER_UNSET_DEVICE &&
+				rtc.videoChannel._localVideoTrack !== null,
+			has_mic_audio:
+				selectedMicDeviceId.value !== PRODUCER_UNSET_DEVICE &&
+				rtc.chatChannel._localAudioTrack !== null,
+			has_desktop_audio:
+				(shouldStreamDesktopAudio.value ||
+					selectedDesktopAudioDeviceId.value !== PRODUCER_UNSET_DEVICE) &&
+				rtc.videoChannel._localAudioTrack !== null,
+		};
+
 		response = await Api.sendRequest(
 			'/web/dash/fireside/set-is-streaming/' + rtc.fireside.id,
-			{
-				is_streaming: isStreaming,
-				streaming_uid: rtc.streamingUid,
-				has_video:
-					selectedWebcamDeviceId.value !== PRODUCER_UNSET_DEVICE &&
-					rtc.videoChannel._localVideoTrack !== null,
-				has_mic_audio:
-					selectedMicDeviceId.value !== PRODUCER_UNSET_DEVICE &&
-					rtc.chatChannel._localAudioTrack !== null,
-				has_desktop_audio:
-					(shouldStreamDesktopAudio.value ||
-						selectedDesktopAudioDeviceId.value !== PRODUCER_UNSET_DEVICE) &&
-					rtc.videoChannel._localAudioTrack !== null,
-			},
+			body,
 			{ detach: true }
 		);
 	} catch (e) {
-		rtc.logWarning(`Got error while trying to set what we're streaming.`, e);
+		rtc.logWarning(`Got error while trying to set what we're streaming.`, e, body);
 	}
 
 	return response;
@@ -761,7 +844,7 @@ export function setVideoPreviewElement(
 
 	producer._videoPreviewElement.value = element;
 	if (element) {
-		previewChannelVideo(videoChannel, element);
+		previewChannelVideo(producer.rtc.localUser, videoChannel, element);
 	}
 }
 
@@ -833,6 +916,8 @@ async function _stopStreaming(producer: FiresideRTCProducer, becomeBusy: boolean
 	const busyWork = async () => {
 		const {
 			isStreaming,
+			micMuted,
+			videoMuted,
 			rtc,
 			rtc: { videoChannel, chatChannel },
 		} = producer;
@@ -858,6 +943,8 @@ async function _stopStreaming(producer: FiresideRTCProducer, becomeBusy: boolean
 			// It looks like this unsets the recording devices which indirectly
 			// stops the stream anyways?
 			clearSelectedRecordingDevices(producer);
+			micMuted.value = false;
+			videoMuted.value = false;
 		} catch (err) {
 			rtc.logError(`Failed to stop one or more agora channels. Force reloading...`, err);
 			Navigate.reload();
@@ -928,12 +1015,18 @@ function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
 
 	if (hadVideo !== hasVideo) {
 		setUserHasVideo(user, hasVideo);
+		if (!hasVideo) {
+			producer.videoMuted.value = false;
+		}
 	}
 	if (hadDesktopAudio !== hasDesktopAudio) {
 		setUserHasDesktopAudio(user, hasDesktopAudio);
 	}
 	if (hadMicAudio !== hasMicAudio) {
 		setUserHasMicAudio(user, hasMicAudio);
+		if (!hasMicAudio) {
+			producer.micMuted.value = false;
+		}
 	}
 
 	rtc.localUser = user;

@@ -9,8 +9,8 @@ import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivi
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../components/lazy';
-import AppShellNotificationPopoverStickerNavItemPlaceholder from '../../components/shell/notification-popover/sticker-nav-item/placeholder/placeholder.vue';
-import AppShellNotificationPopoverStickerNavItem from '../../components/shell/notification-popover/sticker-nav-item/sticker-nav-item.vue';
+import AppShellNotificationPopoverStickerNavItem from '../../components/shell/notification-popover/sticker-nav-item/AppShellNotificationPopoverStickerNavItem.vue';
+import AppShellNotificationPopoverStickerNavItemPlaceholder from '../../components/shell/notification-popover/sticker-nav-item/AppShellNotificationPopoverStickerNavItemPlaceholder.vue';
 import { Store, useAppStore } from '../../store';
 
 const HistoryCacheFeedTag = 'notifications-feed';

@@ -5,7 +5,6 @@ import { CancelToken } from '../../../utils/cancel-token';
 import { debounce, sleep } from '../../../utils/utils';
 import { importNoSSR } from '../../code-splitting';
 import { Navigate } from '../../navigate/navigate.service';
-import { SettingStreamDesktopVolume } from '../../settings/settings.service';
 import { User } from '../../user/user.model';
 import { Fireside } from '../fireside.model';
 import {
@@ -21,13 +20,12 @@ import {
 	createRemoteFiresideRTCUser,
 	FiresideRTCUser,
 	FiresideVideoPlayStateStopped,
-	setUserDesktopAudioVolume,
 	setUserHasDesktopAudio,
 	setUserHasMicAudio,
 	setUserHasVideo,
 	setVideoPlayback,
-	stopAudioPlayback,
 	stopDesktopAudioPlayback,
+	stopMicAudioPlayback,
 	updateVolumeLevel,
 } from './user';
 
@@ -77,7 +75,7 @@ export class FiresideRTC {
 		// constructor. Check createFiresideRTC for the actual typing before
 		// `reactive` unwraps it.
 		public readonly hosts: FiresideRTCHost[],
-		public readonly listableHostIds: number[],
+		public readonly listableHostIds: Set<number>,
 		{ isMuted }: Options
 	) {
 		this.isMuted = isMuted ?? false;
@@ -109,12 +107,6 @@ export class FiresideRTC {
 	shouldShowVideoThumbnails = false;
 	shouldShowVideoStats = false;
 	producer: FiresideRTCProducer | null = null;
-
-	_desktopVolume = 1;
-
-	get desktopVolume() {
-		return this._desktopVolume;
-	}
 
 	setupFinalized = false;
 	finalizeSetupFn: (() => void) | null = null;
@@ -163,7 +155,7 @@ export class FiresideRTC {
 		if (users.length === 0) {
 			return false;
 		}
-		return users.every(i => i.micAudioMuted);
+		return users.every(i => i.remoteMicAudioMuted);
 	}
 
 	/**
@@ -183,7 +175,9 @@ export class FiresideRTC {
 	}
 
 	get isFocusingMe() {
-		return this.focusedUser && this.localUser && this.focusedUser.uid === this.localUser.uid;
+		return (
+			!!this.focusedUser && !!this.localUser && this.focusedUser.uid === this.localUser.uid
+		);
 	}
 
 	get isPoorNetworkQuality() {
@@ -196,7 +190,7 @@ export function createFiresideRTC(
 	userId: number | null,
 	agoraStreamingInfo: AgoraStreamingInfo,
 	hosts: Ref<FiresideRTCHost[]>,
-	listableHostIds: Ref<number[]>,
+	listableHostIds: Ref<Set<number>>,
 	options: Options = {}
 ) {
 	const rtc = reactive(
@@ -215,13 +209,10 @@ export function createFiresideRTC(
 			// wrong until the class is constructed and `reactive` can unwrap
 			// the fields.
 			hosts as unknown as FiresideRTCHost[],
-			listableHostIds as unknown as number[],
+			listableHostIds as unknown as Set<number>,
 			options
 		)
 	) as FiresideRTC;
-
-	// Initialize based on their pref.
-	setRTCDesktopVolume(rtc, SettingStreamDesktopVolume.get());
 
 	_setup(rtc);
 	return rtc;
@@ -252,7 +243,7 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 				Promise.all([
 					setVideoPlayback(user, new FiresideVideoPlayStateStopped()),
 					stopDesktopAudioPlayback(user),
-					stopAudioPlayback(user),
+					stopMicAudioPlayback(user),
 				])
 			)
 		);
@@ -290,8 +281,11 @@ export function setHosts(rtc: FiresideRTC, newHosts: FiresideRTCHost[]) {
 	arrayAssignAll(rtc.hosts, newHosts);
 }
 
-export function setListableHostIds(rtc: FiresideRTC, listableHostIds: number[]) {
-	arrayAssignAll(rtc.listableHostIds, listableHostIds);
+export function setListableHostIds(rtc: FiresideRTC, listableHostIds: Set<number>) {
+	rtc.listableHostIds.clear();
+	for (const id of listableHostIds) {
+		rtc.listableHostIds.add(id);
+	}
 }
 
 /**
@@ -640,16 +634,5 @@ function _updateVolumeLevels(rtc: FiresideRTC) {
 	// so we don't get volume data.
 	for (const user of rtc._remoteStreamingUsers) {
 		updateVolumeLevel(user);
-	}
-}
-
-export function setRTCDesktopVolume(rtc: FiresideRTC, percent: number) {
-	percent = Math.min(1, Math.max(0, percent));
-
-	rtc._desktopVolume = percent;
-	SettingStreamDesktopVolume.set(percent);
-
-	if (rtc.focusedUser) {
-		setUserDesktopAudioVolume(rtc.focusedUser, percent);
 	}
 }

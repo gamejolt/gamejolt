@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import { computed, onMounted, onUnmounted, PropType, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
 import { RouterLink } from 'vue-router';
 import { sleep } from '../../../../../utils/utils';
 import { MediaDeviceService } from '../../../../../_common/agora/media-device.service';
+import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { hasDesktopAudioCaptureSupport } from '../../../../../_common/fireside/rtc/device-capabilities';
@@ -34,9 +35,8 @@ import {
 } from '../../../../../_common/settings/settings.service';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { FiresideController } from '../../controller/controller';
+import { FiresideController, shouldPromoteAppForStreaming } from '../../controller/controller';
 import AppFiresideStreamSetupVolumeMeter from './AppFiresideStreamSetupVolumeMeter.vue';
-import { shouldPromoteAppForStreaming, StreamSetupModal } from './setup-modal.service';
 
 type FormModel = {
 	selectedWebcamDeviceId: string;
@@ -55,11 +55,20 @@ const props = defineProps({
 		type: Object as PropType<FiresideController>,
 		required: true,
 	},
+	hidePublishControls: {
+		type: Boolean,
+	},
+	showLoading: {
+		type: Boolean,
+	},
 });
 
 const emit = defineEmits({
+	isInvalid: (_invalid: boolean) => true,
 	close: () => true,
 });
+
+const { hidePublishControls, showLoading } = toRefs(props);
 
 // The controller will never change.
 // eslint-disable-next-line vue/no-setup-props-destructure
@@ -81,6 +90,8 @@ const {
 const producer = computed(() => rtc.value?.producer ?? undefined);
 
 const isStarting = ref(false);
+const isLoading = computed(() => isStarting.value || showLoading.value);
+
 const shouldShowAdvanced = ref(false);
 let _didDetectDevices = false;
 const videoPreviewElem = ref<HTMLDivElement>();
@@ -88,10 +99,20 @@ const videoPreviewElem = ref<HTMLDivElement>();
 // Store the producer locally and work off of this instance. We will close the
 // modal if the producer changes.
 let localProducer = producer.value!;
-const { isBusy: isProducerBusy, isStreaming, canStreamVideo, canStreamAudio } = localProducer;
+const {
+	isBusy: isProducerBusy,
+	isStreaming,
+	canStreamVideo,
+	canStreamAudio,
+	micMuted,
+	videoMuted,
+} = localProducer;
 
 // Tell the producer that we're showing the stream setup.
 isShowingStreamSetup.value = true;
+
+const showMicMuted = computed(() => micMuted.value && isStreaming.value);
+const showVideoMuted = computed(() => videoMuted.value && isStreaming.value);
 
 const isPersonallyStreaming = computed(() => isStreaming.value === true);
 
@@ -203,7 +224,7 @@ onMounted(async () => {
 onUnmounted(() => {
 	// If we're not streaming or about to, clear the selected device ids so
 	// that the browser doesn't think we're still recording.
-	if (!(isPersonallyStreaming.value || isStarting.value)) {
+	if (!(isPersonallyStreaming.value || isLoading.value)) {
 		clearSelectedRecordingDevices(localProducer);
 	}
 
@@ -289,6 +310,10 @@ function _initFromSettings() {
 	});
 }
 
+watch(isInvalidConfig, isInvalid => emit('isInvalid', isInvalid), {
+	immediate: true,
+});
+
 watch(
 	[canStreamVideo, videoPreviewElem],
 	([canStreamVideo, videoPreviewElem]) => {
@@ -305,7 +330,7 @@ watch(producer, producer => {
 	// The only way this should trigger is if we get removed as a cohost while
 	// we're creating/modifying a stream setup.
 	if (!producer) {
-		StreamSetupModal.close();
+		emit('close');
 	}
 });
 
@@ -469,13 +494,16 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 </script>
 
 <template>
-	<AppLoadingFade :is-loading="isStarting">
+	<AppLoadingFade :is-loading="isLoading">
 		<AppForm :controller="form">
 			<template v-if="canStreamAudio">
 				<AppFormGroup
 					name="tempSelectedMicDeviceId"
+					:class="{
+						'-jolticon-primary': isStreaming && !showMicMuted && hasMicDevice,
+					}"
 					:label="$gettext('Microphone')"
-					icon="microphone"
+					:icon="showMicMuted ? 'microphone-off' : 'microphone'"
 					small
 					optional
 				>
@@ -600,8 +628,11 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 
 				<AppFormGroup
 					name="selectedWebcamDeviceId"
+					:class="{
+						'-jolticon-primary': isStreaming && !showVideoMuted && hasWebcamDevice,
+					}"
 					:label="$gettext('Video')"
-					icon="video-camera"
+					:icon="showVideoMuted ? 'video-camera-off' : 'video-camera'"
 					small
 					optional
 				>
@@ -653,24 +684,14 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 
 						<AppSpacer vertical :scale="2" />
 
-						<div
-							class="-video-preview"
-							:class="{ '-video-preview-with-audio': hasDesktopAudio }"
-						>
+						<AppAspectRatio class="-video-preview" :ratio="16 / 9">
 							<div ref="videoPreviewElem" class="-video-preview-portal" />
 							<div v-if="!hasWebcamDevice" class="-video-preview-text">
 								<span>
 									<AppTranslate>No video source selected</AppTranslate>
 								</span>
 							</div>
-						</div>
-						<AppFiresideStreamSetupVolumeMeter
-							v-if="hasDesktopAudio"
-							class="-volume-meter"
-							:producer="localProducer"
-							type="desktop-audio"
-							attached-to-control
-						/>
+						</AppAspectRatio>
 
 						<p class="help-block">
 							<AppTranslate>
@@ -746,6 +767,13 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 						<AppFormGroup
 							name="tempSelectedDesktopAudioDeviceId"
 							class="sans-margin-bottom"
+							:class="{
+								'-jolticon-primary':
+									isStreaming &&
+									!showVideoMuted &&
+									(hasDesktopAudio || hasDesktopAudioDevice),
+							}"
+							:icon="showVideoMuted ? 'audio-mute' : 'audio'"
 							:label="$gettext('Advanced desktop audio')"
 							small
 							optional
@@ -835,7 +863,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 				</AppExpand>
 			</fieldset>
 
-			<div v-if="!isPersonallyStreaming" class="-actions">
+			<div v-if="!hidePublishControls && !isPersonallyStreaming" class="-actions">
 				<AppButton trans @click="onClickCancel()">
 					<AppTranslate>Cancel</AppTranslate>
 				</AppButton>
@@ -860,6 +888,9 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 ::v-deep(.form-group.-sans-margin)
 	margin-bottom: 0
 
+.-jolticon-primary::v-deep(.jolticon)
+	color: var(--theme-primary)
+
 .-label-disabled
 	color: var(--theme-fg-muted)
 
@@ -870,7 +901,6 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 .-video-preview
 	position: relative
 	rounded-corners()
-	height: 300px
 	margin: auto
 	overflow: hidden
 	background-color: var(--theme-darkest)
@@ -896,6 +926,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 	display: flex
 	align-items: center
 	justify-content: center
+	color: white
 	font-weight: 700
 	font-size: 13px
 	z-index: 1

@@ -6,7 +6,7 @@ import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import { formatNumber } from '../../filters/number';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { ModalConfirm } from '../../modal/confirm/confirm-service';
-import AppPopper from '../../popper/popper.vue';
+import AppPopper from '../../popper/AppPopper.vue';
 import { useCommonStore } from '../../store/common-store';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { UserFollowSuggestion } from '../../user/follow/suggestion.service';

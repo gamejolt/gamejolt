@@ -1,3 +1,4 @@
+import { arrayRemove } from '../../utils/array';
 import { assertNever } from '../../utils/utils';
 import { MediaItem } from '../media-item/media-item-model';
 
@@ -16,7 +17,7 @@ export type ContentContext =
 	| 'fireside-chat-message'
 	| 'quest-stage-description';
 
-enum ContextCapabilityType {
+export enum ContextCapabilityType {
 	TextBold,
 	TextItalic,
 	TextLink,
@@ -144,8 +145,25 @@ export class ContextCapabilities {
 		return this.capabilities.includes(capability);
 	}
 
+	removeCapability(capability: ContextCapabilityType) {
+		arrayRemove(this.capabilities, i => i === capability);
+	}
+
 	public static getEmpty() {
 		return new ContextCapabilities([]);
+	}
+
+	public static fromStringList(items: string[]) {
+		const data = new Set<ContextCapabilityType>();
+
+		for (const item of items) {
+			const value: any = ContextCapabilityType[item as any];
+			if (value !== undefined) {
+				data.add(value);
+			}
+		}
+
+		return new ContextCapabilities(Array.from(data));
 	}
 
 	public static getForContext(context: ContentContext) {

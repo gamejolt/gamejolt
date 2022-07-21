@@ -10,9 +10,6 @@ import { User } from '../user/user.model';
 import { FiresideCommunity } from './community/community.model';
 import { FiresideRole } from './role/role.model';
 
-/** The time remaining in seconds when we want to show expiry warnings */
-export const FIRESIDE_EXPIRY_THRESHOLD = 60;
-
 export class Fireside extends Collaboratable(Model) {
 	user!: User;
 	community_links: FiresideCommunity[] = [];

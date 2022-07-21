@@ -30,7 +30,7 @@ import { QuestStore } from './quest';
 
 // the two types an event notification can assume, either "activity" for the post activity feed or "notifications"
 type UnreadItemType = 'activity' | 'notifications';
-type TogglableLeftPane = '' | 'chat' | 'context' | 'library';
+type TogglableLeftPane = '' | 'chat' | 'context' | 'library' | 'mobile';
 
 export const AppStoreKey: InjectionKey<AppStore> = Symbol('app-store');
 
@@ -64,7 +64,6 @@ export function createAppStore({
 	const isLibraryBootstrapped = ref(false);
 	const isShellBootstrapped = ref(false);
 	const isShellHidden = ref(false);
-	const isFooterHidden = ref(false);
 
 	/** Unread items in the activity feed. */
 	const unreadActivityCount = ref(0);
@@ -76,7 +75,9 @@ export function createAppStore({
 	const notificationState = ref<ActivityFeedState>();
 
 	const mobileCbarShowing = ref(false);
-	const lastOpenLeftPane = ref<Exclude<TogglableLeftPane, 'context'>>('library');
+	const lastOpenLeftPane = ref<Exclude<TogglableLeftPane, 'context'>>(
+		Screen.isXs ? 'mobile' : 'library'
+	);
 	const overlayedLeftPane = ref<TogglableLeftPane>('');
 	const overlayedRightPane = ref('');
 	const hasContentSidebar = ref(false);
@@ -90,7 +91,6 @@ export function createAppStore({
 
 	const hasTopBar = computed(() => !isShellHidden.value);
 	const hasSidebar = computed(() => !isShellHidden.value);
-	const hasFooter = computed(() => !isFooterHidden.value);
 
 	const hasCbar = computed(() => {
 		if (isShellHidden.value || commonStore.isUserTimedOut.value) {
@@ -220,7 +220,6 @@ export function createAppStore({
 		}
 
 		_setGrid(createGridClient({ appStore: c }));
-		grid.value?.init();
 	}
 
 	async function clearGrid() {
@@ -331,14 +330,6 @@ export function createAppStore({
 
 	function showShell() {
 		isShellHidden.value = false;
-	}
-
-	function hideFooter() {
-		isFooterHidden.value = true;
-	}
-
-	function showFooter() {
-		isFooterHidden.value = false;
 	}
 
 	function setHasContentSidebar(isShowing: boolean) {
@@ -571,12 +562,6 @@ export function createAppStore({
 			showShell();
 		}
 
-		if (to.matched.some(record => record.meta.noFooter)) {
-			hideFooter();
-		} else {
-			showFooter();
-		}
-
 		next();
 	});
 
@@ -588,7 +573,6 @@ export function createAppStore({
 		isLibraryBootstrapped,
 		isShellBootstrapped,
 		isShellHidden,
-		isFooterHidden,
 		unreadActivityCount,
 		unreadNotificationsCount,
 		hasNewFriendRequests,
@@ -605,7 +589,6 @@ export function createAppStore({
 		hasTopBar,
 		hasSidebar,
 		hasCbar,
-		hasFooter,
 		visibleLeftPane,
 		visibleRightPane,
 		notificationCount,
@@ -626,8 +609,6 @@ export function createAppStore({
 		checkBackdrop,
 		hideShell,
 		showShell,
-		hideFooter,
-		showFooter,
 		setHasContentSidebar,
 		incrementNotificationCount,
 		setNotificationCount,

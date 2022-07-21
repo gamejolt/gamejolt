@@ -36,7 +36,7 @@ class MetaService extends MetaContainer {
 		setMetaTitle(title);
 	}
 
-	get title() {
+	get title(): string {
 		return this._title;
 	}
 
@@ -44,7 +44,7 @@ class MetaService extends MetaContainer {
 		this._base.set('description', value);
 	}
 
-	get description() {
+	get description(): string | null {
 		return this._base.get('description');
 	}
 
@@ -52,7 +52,7 @@ class MetaService extends MetaContainer {
 		Object.assign(this._fb, values);
 	}
 
-	get fb() {
+	get fb(): FbMetaContainer {
 		return this._fb;
 	}
 
@@ -60,7 +60,7 @@ class MetaService extends MetaContainer {
 		Object.assign(this._twitter, values);
 	}
 
-	get twitter() {
+	get twitter(): TwitterMetaContainer {
 		return this._twitter;
 	}
 
@@ -73,7 +73,7 @@ class MetaService extends MetaContainer {
 		this._microdata.set(microdata);
 	}
 
-	get seo() {
+	get seo(): SeoMetaContainer {
 		return this._seo;
 	}
 

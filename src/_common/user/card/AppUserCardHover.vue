@@ -1,7 +1,7 @@
 <script lang="ts">
 import { computed, PropType, ref, toRefs, watch } from 'vue';
 import { Api } from '../../api/api.service';
-import AppPopper from '../../popper/popper.vue';
+import AppPopper from '../../popper/AppPopper.vue';
 import { Screen } from '../../screen/screen-service';
 import { User } from '../user.model';
 import AppUserCard from './AppUserCard.vue';
@@ -22,6 +22,9 @@ const props = defineProps({
 		validator: val => typeof val === 'number' && val >= 0,
 	},
 	noStats: {
+		type: Boolean,
+	},
+	disableFollowWidget: {
 		type: Boolean,
 	},
 });
@@ -104,7 +107,17 @@ watch(() => user?.value?.id, onUserChange);
 		<slot />
 
 		<template v-if="user && isShowing" #popover>
-			<AppUserCard class="-card" :user="user!" :is-loading="!isLoaded" :no-stats="noStats" />
+			<AppUserCard
+				class="-card"
+				:user="user!"
+				:is-loading="!isLoaded"
+				:no-stats="noStats"
+				:disable-follow-widget="disableFollowWidget"
+			>
+				<template v-if="noStats" #trailing>
+					<slot name="trailing" />
+				</template>
+			</AppUserCard>
 		</template>
 	</component>
 </template>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onUnmounted, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
 import { ClientUpdater } from '../../../../_common/client/client-updater.service';
 import { Client } from '../../../../_common/client/client.service';
@@ -15,8 +15,8 @@ const { gamesById, numPatching, currentlyPatching, currentlyPlaying } = useClien
 const updaterWarningDismissed = ref(false);
 
 const numPlaying = computed(() => currentlyPlaying.value.length);
-
 const clientUpdateStatus = computed(() => ClientUpdater.clientUpdateStatus);
+const hasUpdate = computed(() => clientUpdateStatus.value === 'ready');
 
 const currentlyPlayingList = computed(() =>
 	currentlyPlaying.value.map(i => gamesById.value[i.game_id]?.title ?? 'game').join(', ')
@@ -25,8 +25,6 @@ const currentlyPlayingList = computed(() =>
 const currentlyPatchingIds = computed(() =>
 	Object.keys(currentlyPatching.value).map(i => parseInt(i, 10))
 );
-
-const hasUpdate = computed(() => clientUpdateStatus.value === 'ready');
 
 const showUpdaterIssue = computed(
 	() => clientUpdateStatus.value === 'error' && !updaterWarningDismissed.value
@@ -44,18 +42,6 @@ async function updateClient() {
 	await ClientUpdater.updateClient();
 }
 
-function updateApply() {
-	updateClient();
-}
-
-function quitClient() {
-	Client.quit();
-}
-
-onMounted(() => {
-	document.body.classList.remove('has-hot-bottom');
-});
-
 watch(
 	isShowing,
 	isShowing => {
@@ -67,6 +53,10 @@ watch(
 	},
 	{ immediate: true }
 );
+
+onUnmounted(() => {
+	document.body.classList.remove('has-hot-bottom');
+});
 </script>
 
 <template>
@@ -115,14 +105,14 @@ watch(
 					<template v-if="hasUpdate">
 						<AppTranslate>New Client version available!</AppTranslate>
 						{{ ' ' }}
-						<a @click="updateApply()">
+						<a @click="updateClient()">
 							<AppTranslate>Update now</AppTranslate>
 						</a>
 					</template>
 					<template v-else>
 						<AppTranslate>Uh oh, client has trouble updating!</AppTranslate>
 						{{ ' ' }}
-						<a class="-notice" @click="quitClient()">
+						<a class="-notice" @click="Client.quit()">
 							<AppJolticon notice icon="notice" />
 							<AppTranslate>Try restarting</AppTranslate>
 						</a>
@@ -139,15 +129,17 @@ watch(
 
 <style lang="stylus" scoped>
 .status-bar
+	position: absolute
 	padding: 0 10px
 	height: $status-bar-height
 	line-height: @height
 	font-size: $font-size-tiny
-	transform: translateY($status-bar-height)
-	transition: transform 250ms $strong-ease-out
+	bottom: -($status-bar-height)
+	width: 100%
+	transition: bottom 250ms $strong-ease-out
 
 	&.-is-showing
-		transform: translateY(0)
+		bottom: 0
 
 	.jolticon
 		vertical-align: middle

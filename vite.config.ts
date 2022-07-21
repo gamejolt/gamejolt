@@ -57,6 +57,7 @@ export default defineConfig(async () => {
 	const onlyInSSR = emptyUnless(() => gjOpts.platform === 'ssr');
 	const notInSSR = emptyUnless(() => gjOpts.platform !== 'ssr');
 	const onlyInDesktopApp = emptyUnless(() => gjOpts.platform === 'desktop');
+	const onlyInMobileApp = emptyUnless(() => gjOpts.platform === 'mobile');
 
 	// These will be imported in all styl files.
 	const stylusOptions = {
@@ -243,7 +244,7 @@ export default defineConfig(async () => {
 				dir += `.vite-${gjOpts.platform}`;
 			}
 
-			dir += `-${gjOpts.buildType}`;
+			dir += `-${gjOpts.buildType}-${gjOpts.environment}-${gjOpts.section}`;
 
 			return dir;
 		})(),
@@ -348,6 +349,11 @@ export default defineConfig(async () => {
 		},
 
 		build: {
+			// We want to target the oldest browsers that vite will let us.
+			...onlyInMobileApp({
+				target: 'es2015',
+			}),
+
 			// Never inline stuff.
 			assetsInlineLimit: 0,
 
@@ -370,6 +376,24 @@ export default defineConfig(async () => {
 							output: {
 								chunkFileNames: 'assets/[hash].js',
 								assetFileNames: 'assets/[hash].[ext]',
+							},
+						};
+					}
+
+					// For the mobile app build, we currently can't load
+					// cross-origin requests, so we want to essentially make
+					// just one big JS chunk.
+					if (gjOpts.platform === 'mobile') {
+						return <RollupOptions>{
+							output: {
+								// Vite itself sets manualChunks so that it can
+								// pull out the vendor library code into a
+								// chunk. We need to disable that first.
+								manualChunks: undefined,
+								// This option will tell vite to always just
+								// inline the dynamic imports we have in our
+								// codebase.
+								inlineDynamicImports: true,
 							},
 						};
 					}

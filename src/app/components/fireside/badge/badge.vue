@@ -2,6 +2,7 @@
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../_common/filters/number';
+import AppFiresideLiveTag from '../../../../_common/fireside/AppFiresideLiveTag.vue';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { vAppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
@@ -17,6 +18,7 @@ import AppFiresideStreamPreview from '../stream/preview/preview.vue';
 		AppUserAvatarImg,
 		AppFiresideStreamPreview,
 		AppExpand,
+		AppFiresideLiveTag,
 	},
 	directives: {
 		AppTooltip: vAppTooltip,
@@ -211,9 +213,7 @@ export default class AppFiresideBadge extends Vue {
 								</AppTranslate>
 							</div>
 						</div>
-						<div v-if="fireside && isStreaming" class="-live">
-							<AppTranslate>LIVE</AppTranslate>
-						</div>
+						<AppFiresideLiveTag v-if="fireside && isStreaming" class="-live" />
 					</div>
 				</div>
 
@@ -344,15 +344,5 @@ $-zindex-content = 3
 	change-bg('highlight')
 
 .-live
-	rounded-corners-lg()
-	margin: 0 0 0 auto
-	padding: 4px 8px
-	font-size: $font-size-h2
-	font-weight: 700
-	font-family: $font-family-heading
-	text-shadow: none
-	box-shadow: 1px 1px 3px $black
-	letter-spacing: 2px
-	color: $white
-	background-color: $gj-overlay-notice
+	margin-left: auto
 </style>

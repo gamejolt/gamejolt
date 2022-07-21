@@ -1,0 +1,696 @@
+<script lang="ts">
+const UIHideTimeout = 2000;
+const UIHideTimeoutMovement = 2000;
+const UITransitionTime = 200;
+</script>
+
+<script lang="ts" setup>
+import { computed, PropType, ref, toRefs, watch } from 'vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import { useDrawerStore } from '../../../../_common/drawer/drawer-store';
+import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
+import { formatNumber } from '../../../../_common/filters/number';
+import { FiresideRTCUser, setDesktopAudioPlayback } from '../../../../_common/fireside/rtc/user';
+import AppLoading from '../../../../_common/loading/loading.vue';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
+import { useFiresideController } from '../../../components/fireside/controller/controller';
+import AppFiresideDesktopAudio from '../../../components/fireside/stream/AppFiresideDesktopAudio.vue';
+import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';
+import AppFiresideVideoStats from '../../../components/fireside/stream/video-stats/AppFiresideVideoStats.vue';
+import AppFiresideHeader from '../AppFiresideHeader.vue';
+import AppFiresideBottomBarHostAvatar from '../_bottom-bar/AppFiresideBottomBarHostAvatar.vue';
+
+const props = defineProps({
+	rtcUser: {
+		type: Object as PropType<FiresideRTCUser>,
+		required: true,
+	},
+	hasHeader: {
+		type: Boolean,
+	},
+	hasHosts: {
+		type: Boolean,
+	},
+});
+
+const { rtcUser, hasHeader, hasHosts } = toRefs(props);
+
+const c = useFiresideController()!;
+const { rtc, isShowingOverlayPopper, isShowingStreamSetup, chatUsers } = c;
+
+const drawerStore = useDrawerStore();
+
+const _ignorePointerTimer = ref<NodeJS.Timer | null>();
+const hideUITimer = ref<NodeJS.Timer | null>(null);
+const streakTimer = ref<NodeJS.Timer | null>(null);
+
+const pausedElement = ref<HTMLDivElement>();
+
+const isHovered = ref(false);
+const hasQueuedStreakAnimation = ref(false);
+const shouldAnimateStreak = ref(false);
+
+const stickerStreak = computed(() => drawerStore.streak.value);
+
+const streakCount = computed(() => formatFuzzynumber(stickerStreak.value?.count ?? 0));
+
+const hasVolumeControls = computed(() => !!rtc.value?.shouldShowVolumeControls);
+
+const shouldShowUI = computed(() => {
+	if (import.meta.env.SSR) {
+		return false;
+	}
+
+	return !!(
+		(hasVideo.value && videoPaused.value) ||
+		isShowingOverlayPopper.value ||
+		showMutedIndicator.value ||
+		isHovered.value ||
+		hideUITimer.value
+	);
+});
+
+const producer = computed(() => rtc.value?.producer);
+
+// We can only show local videos in one place at a time. This will
+// re-grab the video feed when it gets rebuilt.
+const shouldShowVideo = computed(() => !(isShowingStreamSetup.value && rtc.value?.isFocusingMe));
+
+// When the stream setup menu is showing its own stream, display a message
+// letting them know they can see their stream in the setup menu instead of
+// here.
+const showVideoPreviewMessage = computed(
+	() => !!rtc.value && rtc.value.isFocusingMe && isShowingStreamSetup.value
+);
+
+const hasOverlayItems = computed(
+	() => hasVideo.value || hasVolumeControls.value || hasHeader.value
+);
+
+const memberCount = computed(() => chatUsers.value?.count ?? 1);
+
+const videoPaused = computed(() => rtc.value?.videoPaused === true);
+
+const showMutedIndicator = computed(() => rtc.value?.shouldShowMutedIndicator === true);
+
+const hasVideo = computed(() => {
+	if (!rtcUser.value.hasVideo || !rtcUser.value.isListed) {
+		return false;
+	}
+	if (producer.value) {
+		return !producer.value.videoMuted.value;
+	}
+	return true;
+});
+
+const isLoadingVideo = computed(
+	() => hasVideo.value && rtc.value?.videoChannel.isConnected !== true
+);
+
+// When we want to darken the whole stream overlay instead of only sections.
+const shouldDarkenAll = computed(() => {
+	if (!shouldShowUI.value) {
+		return false;
+	}
+
+	// If we're displaying any of this large content, or we're paused,
+	// darken the whole overlay instead of individual rows.
+	return videoPaused.value || hasHeader.value || hasHosts.value;
+});
+
+const shouldPlayDesktopAudio = computed(() => {
+	if (!rtc.value) {
+		return false;
+	}
+
+	return (
+		hasVideo.value &&
+		rtc.value.videoChannel.isConnected &&
+		rtcUser.value.hasDesktopAudio &&
+		!rtc.value.videoPaused
+	);
+});
+
+const shouldShowVideoStats = computed(() => {
+	if (!rtc.value) {
+		return false;
+	}
+	return rtc.value.shouldShowVideoStats;
+});
+
+watch(stickerStreak, onStreakCountChanged);
+
+function onMouseOut() {
+	scheduleUIHide(UIHideTimeout);
+}
+
+function onMouseMove() {
+	scheduleUIHide(UIHideTimeoutMovement);
+}
+
+function onVideoClick(event: Event) {
+	scheduleUIHide(UIHideTimeout);
+
+	if (event.target === pausedElement.value) {
+		togglePlayback();
+	}
+}
+
+function onOverlayTap(event: Event) {
+	if (_ignorePointerTimer.value) {
+		event.stopImmediatePropagation();
+	}
+}
+
+function togglePlayback() {
+	if (videoPaused.value) {
+		pauseVideo();
+	} else {
+		unpauseVideo();
+	}
+}
+
+function unmuteDesktopAudio() {
+	setDesktopAudioPlayback(rtcUser.value, true);
+}
+
+function animateStickerStreak() {
+	if (!streakCount.value) {
+		clearStreakTimer();
+		return;
+	}
+
+	if (streakTimer.value != null) {
+		hasQueuedStreakAnimation.value = true;
+		return;
+	}
+
+	shouldAnimateStreak.value = true;
+	streakTimer.value = setTimeout(() => {
+		clearStreakTimer();
+		if (hasQueuedStreakAnimation.value) {
+			hasQueuedStreakAnimation.value = false;
+			animateStickerStreak();
+			return;
+		}
+
+		shouldAnimateStreak.value = false;
+	}, 2_000);
+}
+
+function clearStreakTimer() {
+	if (streakTimer.value) {
+		clearTimeout(streakTimer.value);
+	}
+	streakTimer.value = null;
+}
+
+function scheduleUIHide(delay: number) {
+	if (!shouldShowUI.value) {
+		startIgnoringPointer();
+	}
+
+	isHovered.value = true;
+	clearHideUITimer();
+	hideUITimer.value = setTimeout(() => {
+		isHovered.value = false;
+		clearHideUITimer();
+	}, delay);
+}
+
+function clearHideUITimer() {
+	if (!hideUITimer.value) {
+		return;
+	}
+
+	clearTimeout(hideUITimer.value);
+	hideUITimer.value = null;
+}
+
+function startIgnoringPointer() {
+	clearPointerIgnore();
+	_ignorePointerTimer.value = setTimeout(() => {
+		clearPointerIgnore();
+	}, UITransitionTime);
+}
+
+function clearPointerIgnore() {
+	if (!_ignorePointerTimer.value) {
+		return;
+	}
+
+	clearTimeout(_ignorePointerTimer.value);
+	_ignorePointerTimer.value = null;
+}
+
+function pauseVideo() {
+	rtc.value!.videoPaused = false;
+}
+
+function unpauseVideo() {
+	rtc.value!.videoPaused = true;
+}
+
+function onStreakCountChanged() {
+	if (stickerStreak.value) {
+		animateStickerStreak();
+	}
+}
+</script>
+
+<template>
+	<div
+		class="-stream theme-dark"
+		@mouseleave="onMouseOut"
+		@mousemove="onMouseMove"
+		@touchmove="onMouseMove"
+		@click="onVideoClick"
+	>
+		<template v-if="showVideoPreviewMessage">
+			<div class="-video-sidebar-notice">
+				<strong>
+					<AppTranslate class="text-muted"> See video preview in sidebar </AppTranslate>
+				</strong>
+			</div>
+		</template>
+		<template v-else-if="hasVideo">
+			<template v-if="isLoadingVideo">
+				<div class="-overlay -visible-center">
+					<AppLoading centered stationary no-color hide-label />
+				</div>
+			</template>
+			<template v-else>
+				<div :key="rtcUser.uid" :style="{ width: '100%', height: '100%' }">
+					<AppFiresideStreamVideo
+						v-if="shouldShowVideo"
+						class="-video-player -click-target"
+						:rtc-user="rtcUser"
+					/>
+
+					<AppFiresideDesktopAudio v-if="shouldPlayDesktopAudio" :rtc-user="rtcUser" />
+					<AppFiresideVideoStats v-if="shouldShowVideoStats" @click.capture.stop />
+				</div>
+			</template>
+		</template>
+		<template v-else>
+			<div class="-overlay -visible-center">
+				<div class="-host-wrapper">
+					<AppFiresideBottomBarHostAvatar class="-host" :host="rtcUser" />
+				</div>
+			</div>
+		</template>
+
+		<div
+			v-if="hasOverlayItems || showMutedIndicator"
+			class="-overlay"
+			:class="{ '-darken': shouldDarkenAll }"
+			@click.capture="onOverlayTap"
+		>
+			<template v-if="shouldShowUI">
+				<template v-if="videoPaused || showMutedIndicator">
+					<transition>
+						<div
+							ref="pausedElement"
+							class="-paused-indicator -click-target anim-fade-leave-shrink"
+						>
+							<AppJolticon
+								class="-paused-indicator-icon"
+								:icon="showMutedIndicator ? 'audio-mute' : 'play'"
+							/>
+						</div>
+					</transition>
+				</template>
+
+				<div class="-overlay-inner">
+					<div
+						v-if="hasHeader"
+						class="-overlay-top -control"
+						:class="{ '-fade-top': !shouldDarkenAll }"
+					>
+						<div style="flex: auto; overflow: hidden">
+							<AppFiresideHeader
+								:fireside="c.fireside"
+								:sticker-target-controller="c.stickerTargetController"
+								overlay
+							/>
+							<div class="-overlay-members">
+								<AppTranslate
+									:translate-n="memberCount"
+									:translate-params="{ count: formatNumber(memberCount) }"
+									translate-plural="%{ count } members"
+								>
+									%{ count } member
+								</AppTranslate>
+							</div>
+						</div>
+					</div>
+
+					<div class="-flex-spacer" />
+
+					<div
+						:class="{
+							'-fade-bottom': !shouldDarkenAll,
+						}"
+					>
+						<div class="-overlay-bottom -control" @click.stop>
+							<div class="-video-controls">
+								<div v-if="hasVideo && !hasHosts">
+									<AppButton
+										circle
+										trans
+										overlay
+										:icon="videoPaused ? 'play' : 'pause'"
+										@click.capture.stop="togglePlayback"
+									/>
+								</div>
+
+								<div v-if="rtcUser.showDesktopAudioMuted">
+									<AppButton
+										v-app-tooltip="$gettext(`Ummute video`)"
+										circle
+										trans
+										overlay
+										icon="audio-mute"
+										@click.capture.stop="unmuteDesktopAudio"
+									/>
+								</div>
+
+								<div v-if="rtcUser.userModel" class="-user-tag">
+									<AppUserAvatar
+										class="-user-tag-avatar"
+										:user="rtcUser.userModel"
+										disable-link
+									/>
+									<span>@{{ rtcUser.userModel.username }}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</template>
+		</div>
+
+		<div
+			v-if="stickerStreak && stickerStreak.count > 1"
+			class="-combo"
+			:class="{ '-fade': shouldShowUI }"
+		>
+			<div
+				class="badge"
+				:class="{
+					'-hot-streak': stickerStreak.count >= 5,
+					'-super-hot-streak': stickerStreak.count >= 10,
+				}"
+			>
+				<AppTranslate v-if="Screen.isDesktop">STREAK</AppTranslate>
+				x{{ streakCount }}
+			</div>
+
+			<img
+				class="-combo-sticker"
+				:class="{ '-keep-animating': shouldAnimateStreak }"
+				draggable="false"
+				onmousedown="return false"
+				style="user-drag: none"
+				:src="stickerStreak.sticker.img_url"
+			/>
+		</div>
+	</div>
+</template>
+
+<style lang="stylus" scoped>
+$-text-shadow = 1px 1px 3px rgba($black, 0.5)
+$-overlay-bg = rgba($black, 0.5)
+$-base-padding = 8px
+$-z-overlay = 1
+$-z-control = 3
+$-z-combo = 2
+
+.jolticon
+	text-shadow: $-text-shadow
+
+.-stream
+.-video-player
+	&
+	> .-overlay
+		position: absolute
+		top: 0
+		right: 0
+		bottom: 0
+		left: 0
+		color: var(--theme-fg)
+		text-shadow: $-text-shadow
+
+	> .-overlay
+		z-index: $-z-overlay
+		background-color: transparent
+		transition: background-color 200ms $strong-ease-out
+
+		&.-darken
+			background-color: $-overlay-bg
+
+.-video-sidebar-notice
+	change-bg(bg)
+	width: 100%
+	height: 100%
+	display: flex
+	justify-content: center
+	align-items: center
+
+.-click-target
+	cursor: pointer
+
+.-overlay-inner
+	height: 100%
+	width: 100%
+	display: flex
+	flex-direction: column
+	padding: $-base-padding
+
+	> *
+		z-index: $-z-control
+
+.-visible-center
+	opacity: 1 !important
+	display: flex
+	align-items: center
+	justify-content: center
+
+.-host-wrapper
+	width: calc(min(30%, 300px))
+	padding-top: @width
+	position: relative
+
+.-host
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+
+.-overlay-members
+	opacity: 0.75
+	font-weight: bold
+
+.-overlay-top
+	display: flex
+	align-items: flex-start
+
+.-overlay-bottom
+	display: flex
+	align-items: flex-end
+	width: min-content
+
+.-fade-top
+.-fade-bottom
+	position: relative
+	margin: -($-base-padding)
+	padding: $-base-padding
+
+.-fade-top
+	background: linear-gradient(to bottom, rgba($black 0.8), rgba($black 0.35) 60%, rgba($black, 0))
+
+.-fade-bottom
+	background: linear-gradient(to top, rgba($black 0.8), rgba($black 0.35) 60%, rgba($black, 0))
+
+.-control
+	user-select: none
+
+.-flex-spacer
+	margin: auto
+	pointer-events: none
+
+.-paused-indicator
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	display: flex
+	align-items: center
+	justify-content: center
+
+	&-icon
+		font-size: 60px
+		pointer-events: none
+		color: white
+
+.-user-tag
+	rounded-corners()
+	display: inline-flex
+	align-items: center
+	padding: 4px 8px
+	gap: 4px
+	background-color: rgba($black, 0.5)
+	font-weight: 700
+	color: white
+
+.-user-tag-avatar
+	width: 16px
+	height: @width
+
+.-video-controls
+	display: flex
+	align-items: center
+	flex: 1
+	grid-gap: 12px
+
+	.-volume
+		display: inline-flex
+		align-items: center
+		flex: auto
+		grid-gap: 4px
+
+		&-slider
+			max-width: 200px
+
+.-hosts
+	margin-top: 8px
+
+.-combo
+	position: absolute
+	top: 16px
+	right: @top
+	display: inline-flex
+	grid-gap: 4px
+	font-weight: bold
+	color: white
+	align-items: center
+	z-index: $-z-combo
+	transition: opacity 200ms $strong-ease-out
+
+	&.-fade
+		opacity: 0.45
+
+	&
+	> *
+		font-size: $font-size-base
+		user-select: none
+		pointer-events: none
+
+	img
+		width: 56px
+		height: @width
+
+	@media $media-mobile
+		&
+		> *
+			font-size: $font-size-tiny
+
+		img
+			width: 24px
+			height: @width
+
+.-combo-sticker
+	animation-name: new-indicator
+	// Make sure this is the same, or lower, than the TS file.
+	animation-duration: 1s
+	animation-timing-function: $ease-in-out-back
+	animation-iteration-count: 1
+	animation-play-state: paused
+	transform: rotate(0), scale(1)
+
+.-keep-animating
+	animation-play-state: running
+	animation-iteration-count: infinite
+
+.-hot-streak
+	animation-name: hot-streak
+	animation-duration: 1s
+	animation-iteration-count: infinite
+
+.-super-hot-streak
+	animation-name: super-hot-streak-animation
+	animation-iteration-count: infinite
+	animation-duration: 4s
+	animation-direction: alternate
+
+@keyframes hot-streak
+	0%
+		transform: scale(1)
+
+	50%
+		transform: scale(1.1)
+
+@keyframes new-indicator
+	0%
+		transform: rotate(0) scale(1)
+
+	// Slide to the left
+	30%
+		transform: rotate(-25deg) scale(1.1)
+
+	33%
+		transform: rotate(-15deg) scale(1.1)
+
+	36%
+		transform: rotate(-20deg) scale(1.1)
+
+	// Slide to the right
+	63%
+		transform: rotate(25deg) scale(1.1)
+
+	66%
+		transform: rotate(15deg) scale(1.1)
+
+	69%
+		transform: rotate(20deg) scale(1.1)
+
+	// Criss cross
+	100%
+		transform: rotate(0deg) scale(1)
+
+@keyframes super-hot-streak-animation
+	0%
+		background: orange
+		color: black
+		transform: scale(1)
+
+	20%
+		background: violet
+		color: white
+		transform: scale(1.1)
+
+	40%
+		background: blue
+		color: white
+		transform: scale(1)
+
+	60%
+		background: cyan
+		color: black
+		transform: scale(1.1)
+
+	80%
+		background: green
+		color: white
+		transform: scale(1)
+
+	100%
+		background: yellow
+		color: black
+		transform: scale(1.1)
+</style>

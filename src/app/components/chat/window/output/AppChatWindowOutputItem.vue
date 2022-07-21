@@ -7,8 +7,8 @@ import AppContentViewer from '../../../../../_common/content/content-viewer/cont
 import { formatDate } from '../../../../../_common/filters/date';
 import AppJolticon, { Jolticon } from '../../../../../_common/jolticon/AppJolticon.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
-import AppPopper from '../../../../../_common/popper/popper.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
@@ -354,10 +354,6 @@ $-min-item-width = 24px
 .chat-window-output-item
 	position: relative
 	margin-bottom: 4px
-
-	@media $media-xs
-		font-size: $font-size-small
-		line-height: $font-size-small * 1.25
 
 	// Some different styling for the fade collapse.
 	::v-deep(.fade-collapse-collapsed)
