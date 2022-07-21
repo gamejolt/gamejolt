@@ -121,7 +121,7 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 	color: var(--theme-primary)
 
 .-nowrap
-	overflow: unset
-	white-space: unset
-	text-overflow: unset
+	overflow: unset !important
+	white-space: unset !important
+	text-overflow: unset !important
 </style>

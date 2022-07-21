@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-import { computed } from '@vue/reactivity';
-import { ref } from '@vue/runtime-core';
-import { watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { FiresideChatSettings } from '../../../../_common/fireside/chat-settings/chat-settings.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
@@ -43,7 +41,6 @@ const {
 	chatSettings,
 	gridChannel,
 	isStreaming,
-	isDraft,
 	canEdit,
 	canStream,
 	canPublish,
@@ -156,10 +153,20 @@ function onClickExtinguish() {
 
 		<template #body>
 			<AppScrollScroller class="-pad-v">
-				<div v-if="canStream || isStreaming || !isDraft" class="-pad-h">
-					<AppButton v-if="canStream" block @click="emit('streamSettings')">
-						<AppTranslate>Stream settings</AppTranslate>
-					</AppButton>
+				<div class="-pad-h">
+					<template v-if="canStream">
+						<AppButton block @click="emit('streamSettings')">
+							<AppTranslate>Stream settings</AppTranslate>
+						</AppButton>
+					</template>
+
+					<!-- Shown to guests and chat mods (since they can't do anything yet) -->
+					<template v-if="!canStream">
+						<AppFiresideShare class="-share" primary />
+						<AppSpacer vertical :scale="2" />
+					</template>
+
+					<AppSpacer vertical :scale="2" />
 
 					<AppButton
 						v-if="hasMuteControls"
@@ -175,18 +182,13 @@ function onClickExtinguish() {
 						</template>
 					</AppButton>
 
-					<!-- Share card for audience members -->
-					<AppFiresideShare v-if="!isDraft && !canStream" class="-share" />
+					<template v-if="canStream">
+						<hr />
 
-					<hr />
-				</div>
+						<!-- This is where we show the share widget for people that can stream -->
+						<AppFiresideShare class="-share" primary />
 
-				<div class="-pad-h">
-					<!-- Share card for hosts -->
-					<template v-if="!isDraft && canStream">
-						<AppFiresideShare class="-share" />
-
-						<AppSpacer vertical :scale="4" />
+						<AppSpacer vertical :scale="6" />
 					</template>
 
 					<template v-if="canEdit">
@@ -330,6 +332,5 @@ function onClickExtinguish() {
 	padding-bottom: 16px
 
 hr
-	margin-top: 24px
-	margin-bottom: 24px
+	margin: 24px 0
 </style>

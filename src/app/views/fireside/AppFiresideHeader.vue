@@ -71,6 +71,7 @@ const { fireside, stickerTargetController, overlay } = toRefs(props);
 
 .-leading
 	flex: auto
+	max-width: 100%
 
 .-title-wrapper
 	flex: auto
@@ -80,12 +81,11 @@ const { fireside, stickerTargetController, overlay } = toRefs(props);
 
 .-title
 	text-overflow()
-	flex: none
 	font-size: 24px
 	font-weight: 800
 
 .-tag
-	margin-left: 4px
+	flex: none
 	text-shadow: none
 
 .-communities
@@ -101,27 +101,4 @@ const { fireside, stickerTargetController, overlay } = toRefs(props);
 	width: 16px
 	height: 16px
 	margin-right: 4px
-
-// .-member-stats
-// 	flex: none
-// 	margin-left: 12px
-// 	margin-right: 24px
-
-// .-controls
-// 	flex: none
-// 	margin-left: 12px
-// 	white-space: nowrap
-
-// .-stats-btn
-// 	display: inline-block
-// 	position: relative
-
-// .-stats-btn-warn
-// 	change-bg('bg-offset')
-// 	rounded-corners()
-// 	position: absolute
-// 	left: -8px
-// 	top: -8px
-// 	pointer-events: none
-// 	padding: 2px
 </style>

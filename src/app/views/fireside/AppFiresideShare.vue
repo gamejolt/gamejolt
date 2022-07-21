@@ -10,6 +10,12 @@ import {
 	useFiresideController,
 } from '../../components/fireside/controller/controller';
 
+defineProps({
+	primary: {
+		type: Boolean,
+	},
+});
+
 const c = useFiresideController()!;
 
 const router = useRouter();
@@ -38,7 +44,7 @@ function showEllipsisMenu() {
 				<AppTranslate> Share this fireside! </AppTranslate>
 			</div>
 			<div class="-row">
-				<AppButton block @click="copyLink">
+				<AppButton block :primary="primary" :solid="primary" @click="copyLink">
 					<AppTranslate>Copy link</AppTranslate>
 				</AppButton>
 				<AppButton icon="ellipsis-h" sparse @click="showEllipsisMenu" />
