@@ -47,8 +47,11 @@ type OptionalFormProp<T> = {
  * Used to mix in common props used in most forms.
  */
 export function defineFormProps<T>(required: true): RequiredFormProp<T>;
+// eslint-disable-next-line no-redeclare
 export function defineFormProps<T>(required?: false): OptionalFormProp<T>;
+// eslint-disable-next-line no-redeclare
 export function defineFormProps<T>(required?: boolean): RequiredFormProp<T> | OptionalFormProp<T>;
+// eslint-disable-next-line no-redeclare
 export function defineFormProps<T>(required?: boolean): RequiredFormProp<T> | OptionalFormProp<T> {
 	if (required === true) {
 		return {
@@ -147,6 +150,7 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 	function _override(overrides: Partial<CreateFormOptions<T>>) {
 		if (overrides.modelClass) {
 			modelClass = overrides.modelClass;
+			formModel.value = _makeFormModel();
 		}
 		if (overrides.saveMethod) {
 			saveMethod = ref(overrides.saveMethod);
@@ -183,9 +187,6 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 				overrides.onChange?.(formModel);
 			};
 		}
-
-		// Since the modelClass probably changed.
-		formModel.value = _makeFormModel();
 	}
 
 	onMounted(() => {
