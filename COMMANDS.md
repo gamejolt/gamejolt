@@ -51,10 +51,10 @@ Run `yarn ssr:client` and `yarn ssr:server` and after both are done run `yarn ss
 
 - `yarn build:dev` - Similar to `yarn build` only for the purpose of serving this build locally instead of being deployed to a server (or further bundled into a complete desktop app build). This command runs the frontend without using a devserver. This means a smaller memory footprint but no HMR (no live reloads when you make changes in the code). Every time you make a change to the code the frontend will be fully rebuilt. See comments on `scripts/build-and-serve.ts` for more info.
   - __For `web` platform (the default):__ It'll run a tiny http server that serves the web frontend on https://development.gamejolt.com.
-  - __For `desktop` platform:__ It'll build to disk. Use `yarn client` to run it.
+  - __For `desktop` platform:__ It'll build to disk. Use `yarn client` to run it. __Note:__ this builds ALL sections by default. This is very resource intensive. If this is undesired, you can pass in which section to build explicitly with `--section`.
 
     > Sorry for the hassle, but in this build mode manual modifications to package.json are necessary:
-    > - Change `main` to `chrome-extension://game-jolt-client/build/desktop/index.html#/` (or other section.html, e.g. auth.html)
+    > - Change `main` to `chrome-extension://game-jolt-client/build/desktop/index.html#/` (or other section.html, e.g. auth.html if using `--section auth`)
     > - Remove `node-remote` key
 
 - `yarn build:devd` - Same as `yarn build:dev` only targetting the development environment.
