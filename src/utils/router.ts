@@ -109,6 +109,7 @@ export function hijackLinks(router: Router, host: string) {
 				const browsable = nonClientPaths.every(i => i.test(href) === false);
 				if (browsable) {
 					// TODO(desktop-app-fixes) This assumes all these urls are on the app section. isnt this wrong?
+					//
 					// Gotta rewrite the URL to include the correct base URL (to include the #).
 					// Otherwise it'll try to direct to the URL below as the raw URL.
 					Navigate.goto(Environment.wttfBaseUrl + href);
@@ -243,6 +244,25 @@ export function getAbsoluteLink(router: Router, location: RouteLocationRaw) {
 	url = url.replace(/^#/, '');
 
 	return Environment.baseUrl + url;
+}
+
+/**
+ * Returns true if the given `router` can resolve the given `location` to a
+ * known route.
+ *
+ * This function assumes that the given router has a catch-all route as a
+ * fallback that's called 'error.404'. As of time of writing, this is true for
+ * all sections - this is done during src/utils/router.ts:initRouter
+ */
+export function isKnownRoute(router: Router, location: string) {
+	const resolved = router.resolve(location);
+
+	// Unknown routes should match our
+	if ('name' in resolved) {
+		return resolved.name !== 'error.404';
+	}
+
+	return false;
 }
 
 /**

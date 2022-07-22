@@ -1,4 +1,5 @@
-import type { RouteLocationRaw, Router } from 'vue-router';
+import type { Router } from 'vue-router';
+import type { RouteLocationDefinition } from '../../../../../utils/router';
 import { Client } from '../../../../../_common/client/client.service';
 import { commonStore } from '../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../_common/translate/translate.service';
@@ -6,8 +7,7 @@ import { AppStore } from '../../../../store';
 import { UserTokenModal } from '../../../user/token-modal/token-modal.service';
 
 export function createClientTrayMenuBuilder(router: Router, appStore: AppStore) {
-	function go(location: RouteLocationRaw) {
-		// TODO(desktop-app-fixes) check that location is never external here
+	function go(location: RouteLocationDefinition) {
 		router.push(location);
 		Client.show();
 	}

@@ -109,7 +109,7 @@ export default class AppCommunityActivityItem extends Vue {
 				hash: '#entry-' + this.item.action_resource.id,
 			};
 		} else if (this.item.action_resource instanceof Fireside) {
-			return this.item.action_resource.location;
+			return this.item.action_resource.routeLocation;
 		}
 	}
 

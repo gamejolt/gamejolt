@@ -106,7 +106,7 @@ export async function createGridCommunityChannel(
 					'notification-click',
 					'fireside-featured-in-community'
 				);
-				router.push(fireside.location);
+				router.push(fireside.routeLocation);
 			},
 			system: true,
 		});

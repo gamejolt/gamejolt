@@ -1,5 +1,7 @@
-import { RouteLocationRaw, Router } from 'vue-router';
+import { Router } from 'vue-router';
 import { TrophyModal } from '../../app/components/trophy/modal/modal.service';
+import type { RouteLocationDefinition } from '../../utils/router';
+import { isKnownRoute } from '../../utils/router';
 import { assertNever } from '../../utils/utils';
 import { Collaborator } from '../collaborator/collaborator.model';
 import { Comment, getCommentUrl } from '../comment/comment-model';
@@ -37,9 +39,9 @@ import { User } from '../user/user.model';
 
 function getRouteLocationForModel(
 	model: Game | User | FiresidePost | Community | Fireside | QuestNotification
-): RouteLocationRaw {
+): RouteLocationDefinition | '' {
 	if (model instanceof User) {
-		return model.url;
+		return model.routeLocation;
 	} else if (model instanceof Game) {
 		return model.routeLocation;
 	} else if (model instanceof FiresidePost) {
@@ -47,7 +49,7 @@ function getRouteLocationForModel(
 	} else if (model instanceof Community) {
 		return model.routeLocation;
 	} else if (model instanceof Fireside) {
-		return model.location;
+		return model.routeLocation;
 	} else if (model instanceof QuestNotification) {
 		return model.routeLocation;
 	}
@@ -241,7 +243,7 @@ export class Notification extends Model {
 		delete (this as any).to_resource_model;
 	}
 
-	get routeLocation(): RouteLocationRaw {
+	get routeLocation(): RouteLocationDefinition | '' {
 		switch (this.type) {
 			case Notification.TYPE_FRIENDSHIP_REQUEST:
 			case Notification.TYPE_FRIENDSHIP_ACCEPT:
@@ -339,9 +341,9 @@ export class Notification extends Model {
 	}
 
 	async go(router: Router) {
-		if (this.routeLocation) {
-			// TODO(desktop-app-fixes) check this. can this accidentally redirect externally?
-			router.push(this.routeLocation);
+		const gotoLocation = this.routeLocation;
+		if (gotoLocation !== '') {
+			router.push(gotoLocation);
 		} else if (
 			this.type === Notification.TYPE_GAME_TROPHY_ACHIEVED ||
 			this.type === Notification.TYPE_SITE_TROPHY_ACHIEVED
@@ -387,8 +389,13 @@ export class Notification extends Model {
 				const search = Environment.baseUrl;
 				if (url.search(search) === 0) {
 					url = url.replace(search, '');
-					// TODO(desktop-app-fixes) check this. can this accidentally redirect externally?
-					// Yes, seems like it. baseUrl is not transformed to client base url.
+
+					if (!isKnownRoute(router, url)) {
+						throw new Error(
+							`Could not resolve notification url to a vue route. Notification id: ${this.id}, Url: ${url}`
+						);
+					}
+
 					router.push(url);
 				} else {
 					Navigate.gotoExternal(url);

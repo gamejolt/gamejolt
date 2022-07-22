@@ -303,7 +303,6 @@ export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComp
 
 		if (this.$route.query.sort !== 'new' || this.$route.query.page !== undefined) {
 			Scroll.shouldAutoScroll = false;
-			// TODO(desktop-app-fixes) check that location is never external here
 			this.$router.push({
 				query: {
 					sort: 'new',

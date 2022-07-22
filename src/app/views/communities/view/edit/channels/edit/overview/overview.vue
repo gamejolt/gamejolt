@@ -63,7 +63,6 @@ export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteC
 		// After submitting the form, redirect to the edit page with the new title if it changed.
 		// The title of the channel is part of the URL.
 		if (model.title !== this.$route.params.channel) {
-			// TODO(desktop-app-fixes) check that location is never external here
 			this.$router.push({ params: { channel: model.title } });
 		}
 	}

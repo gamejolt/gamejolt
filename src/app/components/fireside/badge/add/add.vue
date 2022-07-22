@@ -45,7 +45,7 @@ export default class AppFiresideBadgeAdd extends Vue {
 	async onClickBadge() {
 		const fireside = await FiresideAddModal.show({ community: this.community });
 		if (fireside instanceof Fireside) {
-			this.$router.push(fireside.location);
+			this.$router.push(fireside.routeLocation);
 		}
 	}
 }

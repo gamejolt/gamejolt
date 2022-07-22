@@ -1,4 +1,5 @@
 <script lang="ts">
+import type { Router } from 'vue-router';
 import { RouterView } from 'vue-router';
 import { imageGameJoltLogo } from '../../../app/img/images';
 import { Api } from '../../../_common/api/api.service';
@@ -17,10 +18,10 @@ import AppGameCoverCredits from '../../components/AppGameCoverCredits.vue';
 import { useAuthStore } from '../../store/index';
 import './auth-content.styl';
 
-export function loggedUserBlock() {
+export function loggedUserBlock(router: Router) {
 	// Redirect right away if they are logged in.
 	if (commonStore.user.value) {
-		redirectToDashboard();
+		redirectToDashboard(router);
 
 		// Never resolve.
 		return new Promise(() => {});

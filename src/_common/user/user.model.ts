@@ -1,3 +1,4 @@
+import type { RouteLocationDefinition } from '../../utils/router';
 import { Api } from '../api/api.service';
 import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
@@ -112,6 +113,13 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 	get hasBio() {
 		const cache = ContentSetCacheService.getCache(this, 'user-bio');
 		return cache.hasContent;
+	}
+
+	get routeLocation(): RouteLocationDefinition {
+		return {
+			name: 'profile.overview',
+			params: { username: this.username },
+		};
 	}
 
 	get canComment() {
