@@ -265,15 +265,11 @@ export async function createGridNotificationChannel(
 
 	async function pushCommunityBootstrap(communityId: number) {
 		interface Payload {
-			status: string;
-			community_id: string;
-			body: {
-				unreadChannels: number[];
-				unreadFeatured: boolean;
-			};
+			unreadFeatured: boolean;
+			unreadChannels: number[];
 		}
 
-		const payload = await channelController.push<Payload>('request-community-bootstrap', {
+		const payload = await channelController.push<Payload>('community-bootstrap', {
 			community_id: communityId.toString(),
 		});
 
@@ -285,8 +281,8 @@ export async function createGridNotificationChannel(
 		communityState.hasUnreadPosts = false;
 		communityState.dataBootstrapped = true;
 
-		communityState.hasUnreadFeaturedPosts = payload.body.unreadFeatured;
-		for (const channelId of payload.body.unreadChannels) {
+		communityState.hasUnreadFeaturedPosts = payload.unreadFeatured;
+		for (const channelId of payload.unreadChannels) {
 			communityState.markChannelUnread(channelId);
 		}
 	}
