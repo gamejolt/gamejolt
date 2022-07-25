@@ -11,7 +11,7 @@ import {
 } from 'vue-router';
 import { Environment } from '../_common/environment/environment.service';
 import { routeError404 } from '../_common/error/page/page.route';
-import { Navigate } from '../_common/navigate/navigate.service';
+import { logger as navigateLogger, Navigate } from '../_common/navigate/navigate.service';
 import { initScrollBehavior } from '../_common/scroll/auto-scroll/autoscroll.service';
 import { escapeRegex } from './string';
 
@@ -31,11 +31,32 @@ export function initRouter(appRoutes: RouteRecordRaw[]) {
 		history = createWebHistory();
 	}
 
-	return createRouter({
+	const router = createRouter({
 		history,
 		routes,
 		scrollBehavior: initScrollBehavior(),
 	});
+
+	router.beforeEach(to => {
+		const logInfo: Record<string, any> = {
+			Name: to.name,
+			Path: to.path,
+			Params: to.params,
+			Query: to.query,
+		};
+
+		if ('href' in to) {
+			logInfo.Href = (to as any).href;
+		}
+
+		const logInfoStr = Object.keys(logInfo)
+			.map(k => `${k}: ${JSON.stringify(logInfo[k])}`)
+			.join('\n\t');
+
+		navigateLogger.info(`Router going to ${to.fullPath}. Route:\n\t${logInfoStr}`);
+	});
+
+	return router;
 }
 
 /**
