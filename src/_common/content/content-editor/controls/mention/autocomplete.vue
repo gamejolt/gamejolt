@@ -233,9 +233,9 @@ export default class AppContentEditorControlsMentionAutocomplete extends Vue {
 						<div v-if="user.is_following" class="-follow-indicator">
 							<small class="text-muted">
 								<AppJolticon icon="user" />
-								<AppTranslate v-if="user.follows_you"
-									>You follow each other</AppTranslate
-								>
+								<AppTranslate v-if="user.follows_you">
+									You follow each other
+								</AppTranslate>
 								<AppTranslate v-else>Following</AppTranslate>
 							</small>
 						</div>
