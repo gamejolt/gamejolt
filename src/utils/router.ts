@@ -106,7 +106,7 @@ export function hijackLinks(router: Router, host: string) {
 
 		// Now try to match it against our routes and see if we got anything. If
 		// we match a 404 it's obviously wrong.
-		// TODO(desktopa-app-fixes) would that ever work for client? how?.. the base url for the router is wrong isnt it??
+		// TODO(desktop-app-fixes) would that ever work for client? how?.. the base url for the router is wrong isnt it??
 		const { matched } = router.resolve(href);
 		if (matched.length > 0 && matched[0].name !== 'error.404') {
 			// We matched a route! Let's go to it and stop the browser from doing
@@ -278,7 +278,7 @@ export function getAbsoluteLink(router: Router, location: RouteLocationRaw) {
 export function isKnownRoute(router: Router, location: string) {
 	const resolved = router.resolve(location);
 
-	// Unknown routes should match our
+	// Unknown routes should match our fallback route name.
 	if ('name' in resolved) {
 		return resolved.name !== 'error.404';
 	}

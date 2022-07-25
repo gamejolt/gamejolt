@@ -32,7 +32,7 @@ export default class AppAuthJoin extends Vue {
 		sessionStorage.setItem('signup-password', formModel.password);
 
 		if (GJ_SECTION !== 'auth') {
-			Navigate.goto(this.$router, `${Environment.authBaseUrl}/join/captcha`);
+			Navigate.goto(`${Environment.authBaseUrl}/join/captcha`);
 		} else {
 			this.$router.push({
 				name: 'auth.join-captcha',
