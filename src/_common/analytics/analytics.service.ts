@@ -32,6 +32,7 @@ export type UserFollowLocation =
 	| 'card'
 	| 'profilePage'
 	| 'inviteFollow'
+	| 'firesideOfflineFollow'
 	| 'userList'
 	| 'gameFollow';
 export type GameFollowLocation = 'thumbnail' | 'gamePage' | 'badge' | 'homeBanner' | 'library';

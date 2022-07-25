@@ -3,7 +3,7 @@ import { mixins, Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppLoading from '../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import { Translate } from '../../../../_common/translate/translate.service';
 import FormToken from '../../forms/token/token.vue';

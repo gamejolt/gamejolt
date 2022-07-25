@@ -23,7 +23,7 @@ import { useDrawerStore } from '../../../_common/drawer/drawer-store';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../_common/loading/loading.vue';
+import AppLoading from '../../../_common/loading/AppLoading.vue';
 import { Meta } from '../../../_common/meta/meta-service';
 import AppMobileAppButtons from '../../../_common/mobile-app/AppMobileAppButtons.vue';
 import { vAppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
@@ -282,7 +282,7 @@ function onIsPersonallyStreamingChanged() {
 							</AppTranslate>
 						</h2>
 
-						<AppIllustration :src="illMobileKikkerstein">
+						<AppIllustration :asset="illMobileKikkerstein">
 							<AppTranslate>
 								Download the mobile app to watch streams, follow your friends, and
 								place stickers!
@@ -307,7 +307,7 @@ function onIsPersonallyStreamingChanged() {
 							<AppTranslate> This window size is unsupported </AppTranslate>
 						</h2>
 
-						<AppIllustration :src="illNoCommentsSmall">
+						<AppIllustration :asset="illNoCommentsSmall">
 							<AppTranslate>
 								Please make your browser larger to be able to view this content.
 							</AppTranslate>
@@ -318,7 +318,7 @@ function onIsPersonallyStreamingChanged() {
 					<template v-if="routeStatus === 'loading' || routeStatus === 'initial'">
 						<div key="loading" class="-message-wrapper">
 							<div class="-message">
-								<AppIllustration :src="illEndOfFeed">
+								<AppIllustration :asset="illEndOfFeed">
 									<AppLoading
 										centered
 										:label="$gettext(`Traveling to the fireside...`)"
@@ -352,7 +352,7 @@ function onIsPersonallyStreamingChanged() {
 					<template v-else-if="routeStatus === 'expired'">
 						<div key="expired" class="-message-wrapper">
 							<div class="-message">
-								<AppIllustration :src="illNoCommentsSmall">
+								<AppIllustration :asset="illNoCommentsSmall">
 									<p>
 										<AppTranslate>
 											This fireside's fire has burned out.
@@ -372,7 +372,7 @@ function onIsPersonallyStreamingChanged() {
 					<template v-else-if="routeStatus === 'setup-failed'">
 						<div key="setup-failed" class="-message-wrapper">
 							<div class="-message">
-								<AppIllustration :src="illMaintenance">
+								<AppIllustration :asset="illMaintenance">
 									<p>
 										<AppTranslate>Could not reach this fireside.</AppTranslate>
 										<br />
@@ -390,7 +390,7 @@ function onIsPersonallyStreamingChanged() {
 					<template v-else-if="routeStatus === 'disconnected'">
 						<div key="disconnected" class="-message-wrapper">
 							<div class="-message">
-								<AppIllustration :src="illNoCommentsSmall">
+								<AppIllustration :asset="illNoCommentsSmall">
 									<p>
 										<AppTranslate>
 											You have been disconnected from fireside services.

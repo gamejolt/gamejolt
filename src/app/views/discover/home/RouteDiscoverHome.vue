@@ -14,7 +14,7 @@ import { FeaturedItem } from '../../../components/featured-item/featured-item.mo
 import socialImage from '../../../img/social/social-share-header.png';
 import AppHomeDefault from './AppHomeDefault.vue';
 import AppHomeSlider from './AppHomeSlider.vue';
-import AppLoading from '../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
 
 export default {
 	...defineAppRouteOptions({

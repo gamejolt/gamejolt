@@ -16,7 +16,7 @@ import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { Background } from '../../../../../_common/background/background.model';
 import { formatDate } from '../../../../../_common/filters/date';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
-import AppLoading from '../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppScrollScroller, {
 	createScroller,
@@ -315,7 +315,10 @@ function _updateMaxContentWidth(width: number) {
 				class="-container anim-fade-in no-animate-leave"
 			>
 				<div v-if="shouldShowIntro" class="-intro">
-					<AppIllustration :src="illNoChat" :class="{ '-illustration-overlay': overlay }">
+					<AppIllustration
+						:asset="illNoChat"
+						:class="{ '-illustration-overlay': overlay }"
+					>
 						<AppTranslate v-if="room.isPmRoom">
 							Your friend is still loading. Encourage them with a message!
 						</AppTranslate>

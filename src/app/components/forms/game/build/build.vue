@@ -17,7 +17,7 @@ import { Game } from '../../../../../_common/game/game.model';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { GameRelease } from '../../../../../_common/game/release/release.model';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
-import AppLoading from '../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
 import { AppProgressPoller } from '../../../../../_common/progress/poller/poller';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';

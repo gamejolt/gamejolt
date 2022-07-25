@@ -4,7 +4,7 @@ import { Api } from '../../../../../../_common/api/api.service';
 import { CommunityActivityItem } from '../../../../../../_common/community/activity-item/activity-item.model';
 import AppCommunityActivityItem from '../../../../../../_common/community/activity-item/activity-item.vue';
 import { formatDate } from '../../../../../../_common/filters/date';
-import AppLoading from '../../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
 import {
 	BaseRouteComponent,
 	OptionsForRoute,

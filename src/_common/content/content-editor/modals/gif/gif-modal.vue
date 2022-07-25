@@ -3,7 +3,7 @@ import { nextTick } from 'vue';
 import { mixins, Options } from 'vue-property-decorator';
 import { shallowSetup } from '../../../../../utils/vue';
 import { Api } from '../../../../api/api.service';
-import AppLoading from '../../../../loading/loading.vue';
+import AppLoading from '../../../../loading/AppLoading.vue';
 import { AppModalInterface } from '../../../../modal/AppModal.vue';
 import { BaseModal } from '../../../../modal/base';
 import { Ruler } from '../../../../ruler/ruler-service';

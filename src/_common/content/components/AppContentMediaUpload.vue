@@ -3,7 +3,7 @@ import { EditorView } from 'prosemirror-view';
 import { computed, onMounted, PropType, toRefs } from 'vue';
 import { Api } from '../../api/api.service';
 import { showErrorGrowl } from '../../growls/growls.service';
-import AppLoading from '../../loading/loading.vue';
+import AppLoading from '../../loading/AppLoading.vue';
 import { MediaItem } from '../../media-item/media-item-model';
 import AppProgressBar from '../../progress/AppProgressBar.vue';
 import { $gettext } from '../../translate/translate.service';

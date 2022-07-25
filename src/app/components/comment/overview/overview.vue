@@ -139,7 +139,7 @@ export default class AppCommentOverview extends Vue {
 			</div>
 		</div>
 	</div>
-	<AppIllustration v-else-if="!hasComments" :src="illNoCommentsSmall" sm>
+	<AppIllustration v-else-if="!hasComments" :asset="illNoCommentsSmall" sm>
 		<AppTranslate v-if="displayMode === 'comments'">No comments yet.</AppTranslate>
 		<AppTranslate v-else-if="displayMode === 'shouts'">No shouts yet.</AppTranslate>
 	</AppIllustration>

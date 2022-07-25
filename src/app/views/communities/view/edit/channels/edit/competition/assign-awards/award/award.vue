@@ -8,7 +8,7 @@ import { CommunityCompetitionEntryAward } from '../../../../../../../../../../_c
 import { CommunityCompetitionEntry } from '../../../../../../../../../../_common/community/competition/entry/entry.model';
 import { showErrorGrowl } from '../../../../../../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../../../../../../_common/loading/AppLoadingFade.vue';
-import AppLoading from '../../../../../../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../../../../../../_common/loading/AppLoading.vue';
 import AppPagination from '../../../../../../../../../../_common/pagination/pagination.vue';
 import {
 	BaseRouteComponent,

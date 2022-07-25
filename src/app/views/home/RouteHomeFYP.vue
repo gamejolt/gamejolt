@@ -56,7 +56,7 @@ createAppRoute({
 	<AppActivityFeedPlaceholder v-if="!feed || !feed.isBootstrapped" />
 	<div v-else>
 		<div v-if="!feed.hasItems">
-			<AppIllustration :src="illNoComments">
+			<AppIllustration :asset="illNoComments">
 				<AppTranslate>
 					You need to join some active communities for us to know your tastes.
 				</AppTranslate>

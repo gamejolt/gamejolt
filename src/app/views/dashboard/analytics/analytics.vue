@@ -11,7 +11,7 @@ import { Game } from '../../../../_common/game/game.model';
 import { GamePackage } from '../../../../_common/game/package/package.model';
 import { GameRelease } from '../../../../_common/game/release/release.model';
 import AppGraph from '../../../../_common/graph/graph.vue';
-import AppLoading from '../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';

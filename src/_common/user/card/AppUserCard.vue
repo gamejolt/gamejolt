@@ -6,7 +6,7 @@ import { getMediaserverUrlForBounds } from '../../../utils/image';
 import AppButton from '../../button/AppButton.vue';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
 import { formatNumber } from '../../filters/number';
-import AppLoading from '../../loading/loading.vue';
+import AppLoading from '../../loading/AppLoading.vue';
 import { useCommonStore } from '../../store/common-store';
 import AppTheme from '../../theme/AppTheme.vue';
 import AppTranslate from '../../translate/AppTranslate.vue';

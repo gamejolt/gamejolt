@@ -103,7 +103,7 @@ async function onClickStopStreaming() {
 			<AppScrollScroller>
 				<div class="-body">
 					<template v-if="!canBrowserStream">
-						<AppIllustration :src="illNoCommentsSmall">
+						<AppIllustration :asset="illNoCommentsSmall">
 							<p class="-warning-text">
 								<AppTranslate>
 									Your browser either cannot stream, or will have poor
@@ -143,7 +143,7 @@ async function onClickStopStreaming() {
 					</template>
 					<template v-else-if="shouldShowDesktopAppPromo">
 						<div class="-app-promo">
-							<AppIllustration :src="illStreamingJelly">
+							<AppIllustration :asset="illStreamingJelly">
 								<p class="-ill-text">
 									<AppTranslate>
 										For the best streaming experience, we recommend using the
@@ -171,7 +171,7 @@ async function onClickStopStreaming() {
 						</div>
 					</template>
 					<template v-else-if="isStreamingElsewhere">
-						<AppIllustration :src="illNoCommentsSmall">
+						<AppIllustration :asset="illNoCommentsSmall">
 							<p class="-warning-text">
 								<AppTranslate>
 									You're currently streaming on another device. Stop that stream

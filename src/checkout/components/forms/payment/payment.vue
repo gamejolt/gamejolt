@@ -12,7 +12,7 @@ import {
 	validateCreditCardExpiration,
 } from '../../../../_common/form-vue/validators';
 import { Geo, Region } from '../../../../_common/geo/geo.service';
-import AppLoading from '../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Order } from '../../../../_common/order/order.model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';

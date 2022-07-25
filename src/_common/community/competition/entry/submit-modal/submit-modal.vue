@@ -5,7 +5,7 @@ import { Game } from '../../../../game/game.model';
 import AppGameThumbnail from '../../../../game/thumbnail/AppGameThumbnail.vue';
 import AppGameThumbnailImg from '../../../../game/thumbnail/AppGameThumbnailImg.vue';
 import { showErrorGrowl } from '../../../../growls/growls.service';
-import AppLoading from '../../../../loading/loading.vue';
+import AppLoading from '../../../../loading/AppLoading.vue';
 import { BaseModal } from '../../../../modal/base';
 import { CommunityCompetition } from '../../competition.model';
 import { CommunityCompetitionEntry } from '../entry.model';

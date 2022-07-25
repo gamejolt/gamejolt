@@ -2,7 +2,7 @@
 import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
-import AppLoading from '../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import AppNavTabList from '../../../../_common/nav/tab-list/tab-list.vue';
 import AppPagination from '../../../../_common/pagination/pagination.vue';
 import { vAppNoAutoscroll } from '../../../../_common/scroll/auto-scroll/no-autoscroll.directive';

@@ -14,7 +14,6 @@ import AppContentViewer from '../../../../../_common/content/content-viewer/cont
 import { formatDate } from '../../../../../_common/filters/date';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
-import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import {
 	asyncRouteLoader,
 	BaseRouteComponent,
@@ -36,7 +35,6 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 @Options({
 	name: 'RouteCommunitiesViewChannelJam',
 	components: {
-		AppIllustration,
 		AppCommunitiesViewPageContainer,
 		AppCommunityCompetitionEntryGrid,
 		AppCommunityCompetitionCountdown,

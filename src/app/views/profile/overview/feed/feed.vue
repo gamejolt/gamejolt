@@ -221,7 +221,7 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 			</ul>
 		</AppNavTabList>
 
-		<AppIllustration v-if="isLikeFeed && isLikeFeedDisabled && !isOwner" :src="illNoComments">
+		<AppIllustration v-if="isLikeFeed && isLikeFeedDisabled && !isOwner" :asset="illNoComments">
 			<p>
 				<AppTranslate>This user has made their liked posts private.</AppTranslate>
 			</p>
@@ -235,7 +235,7 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 				@edit-post="onPostEdited"
 				@publish-post="onPostPublished"
 			/>
-			<AppIllustration v-else :src="illNoComments">
+			<AppIllustration v-else :asset="illNoComments">
 				<p>
 					<template v-if="isOwner">
 						<AppTranslate v-if="isLikeFeed">

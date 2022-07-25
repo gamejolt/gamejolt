@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
-import { useModal } from '../../../modal/modal.service';
-import { User } from '../../user.model';
-import AppModal from '../../../modal/AppModal.vue';
-import AppTranslate from '../../../translate/AppTranslate.vue';
 import AppButton from '../../../button/AppButton.vue';
-import AppUserAvatarImg from '../../user-avatar/img/img.vue';
+import AppModal from '../../../modal/AppModal.vue';
+import { useModal } from '../../../modal/modal.service';
 import AppSpacer from '../../../spacer/AppSpacer.vue';
+import AppTranslate from '../../../translate/AppTranslate.vue';
 import AppUserFollowWidget from '../../follow/widget.vue';
+import AppUserAvatarImg from '../../user-avatar/img/img.vue';
+import { User } from '../../user.model';
 
 defineProps({
 	user: {

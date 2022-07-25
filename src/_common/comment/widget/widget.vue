@@ -18,7 +18,7 @@ import { Collaborator } from '../../collaborator/collaborator.model';
 import { Environment } from '../../environment/environment.service';
 import { formatNumber } from '../../filters/number';
 import AppIllustration from '../../illustration/AppIllustration.vue';
-import AppLoading from '../../loading/loading.vue';
+import AppLoading from '../../loading/AppLoading.vue';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
 import AppMessageThread from '../../message-thread/message-thread.vue';
 import { Model } from '../../model/model.service';
@@ -519,7 +519,7 @@ const {
 
 			<AppLoading v-if="isLoading" class="loading-centered" />
 			<div v-else-if="shouldShowEmptyMessage">
-				<AppIllustration :src="illNoComments">
+				<AppIllustration :asset="illNoComments">
 					<p>
 						<AppTranslate v-if="shouldShowAdd">
 							Everyone else seems to be in sleep mode, why don't you start the

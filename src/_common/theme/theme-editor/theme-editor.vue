@@ -3,7 +3,7 @@ import { nextTick, toRaw, watch } from 'vue';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import AppColorpicker from '../../colorpicker/colorpicker.vue';
-import AppLoading from '../../loading/loading.vue';
+import AppLoading from '../../loading/AppLoading.vue';
 import { SiteTemplate } from '../../site/template/template-model';
 import AppThemeEditorFontSelector from './font-selector.vue';
 import AppThemeEditorImage from './image.vue';

@@ -3,7 +3,7 @@ import { Options } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
 import { ContentDocument } from '../../../_common/content/content-document';
 import AppContentEditor from '../../../_common/content/content-editor/content-editor.vue';
-import AppLoading from '../../../_common/loading/loading.vue';
+import AppLoading from '../../../_common/loading/AppLoading.vue';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';

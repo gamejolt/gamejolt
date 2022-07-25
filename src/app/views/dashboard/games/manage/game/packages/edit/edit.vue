@@ -13,7 +13,7 @@ import {
 	showErrorGrowl,
 	showSuccessGrowl,
 } from '../../../../../../../../_common/growls/growls.service';
-import AppLoading from '../../../../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../../../../_common/loading/AppLoading.vue';
 import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import AppNavTabList from '../../../../../../../../_common/nav/tab-list/tab-list.vue';
 import { AppProgressPoller } from '../../../../../../../../_common/progress/poller/poller';

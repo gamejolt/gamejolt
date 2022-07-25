@@ -6,6 +6,7 @@ import { Api } from '../../../../_common/api/api.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { User } from '../../../../_common/user/user.model';
 import AppFollowerList from '../../../components/follower/list/list.vue';
+import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import { useProfileRouteController } from '../profile.vue';
 
 function getFetchUrl(route: RouteLocationNormalized) {
@@ -16,6 +17,7 @@ function getFetchUrl(route: RouteLocationNormalized) {
 	name: 'RouteProfileFollowing',
 	components: {
 		AppFollowerList,
+		AppShellPageBackdrop,
 	},
 })
 @OptionsForRoute({
@@ -48,17 +50,19 @@ export default class RouteProfileFollowing extends BaseRouteComponent {
 </script>
 
 <template>
-	<section class="section fill-backdrop">
-		<div class="container">
-			<div v-if="!user?.following_count" class="alert alert-info">
-				<AppTranslate>This person isn't following anyone yet.</AppTranslate>
+	<AppShellPageBackdrop>
+		<section class="section">
+			<div class="container">
+				<div v-if="!user?.following_count" class="alert alert-info">
+					<AppTranslate>This person isn't following anyone yet.</AppTranslate>
+				</div>
+				<AppFollowerList
+					v-else
+					:url="loadUrl"
+					:initial-users="users"
+					:count="user.following_count || 0"
+				/>
 			</div>
-			<AppFollowerList
-				v-else
-				:url="loadUrl"
-				:initial-users="users"
-				:count="user.following_count || 0"
-			/>
-		</div>
-	</section>
+		</section>
+	</AppShellPageBackdrop>
 </template>

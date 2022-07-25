@@ -3,7 +3,7 @@ import { Sketch as VuePicker } from '@ckpack/vue-color';
 import { computed, ref, toRef } from 'vue';
 import { Api } from '../../api/api.service';
 import AppButton from '../../button/AppButton.vue';
-import AppLoading from '../../loading/loading.vue';
+import AppLoading from '../../loading/AppLoading.vue';
 import AppPopper from '../../popper/AppPopper.vue';
 import AppThemeBubble from '../../theme/bubble/bubble.vue';
 import { ThemePreset } from '../../theme/preset/preset.model';

@@ -13,7 +13,7 @@ import AppFormControlDate from '../../../../../../../_common/form-vue/controls/A
 import AppFormControlToggle from '../../../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { FormTimezoneService } from '../../../../../../../_common/form-vue/form-timezone.service';
 import { BaseForm } from '../../../../../../../_common/form-vue/form.service';
-import AppLoading from '../../../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../../../_common/loading/AppLoading.vue';
 
 type RadioOption<T> = {
 	radioValue: T;

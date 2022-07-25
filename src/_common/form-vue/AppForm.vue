@@ -21,7 +21,7 @@ import { uuidv4 } from '../../utils/uuid';
 import { MaybeRef } from '../../utils/vue';
 import { Api } from '../api/api.service';
 import AppLoadingFade from '../loading/AppLoadingFade.vue';
-import AppLoading from '../loading/loading.vue';
+import AppLoading from '../loading/AppLoading.vue';
 import { ModelClassType } from '../model/model.service';
 import { PayloadFormErrors } from '../payload/payload-service';
 import { $gettext } from '../translate/translate.service';

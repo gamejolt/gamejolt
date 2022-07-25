@@ -3,7 +3,7 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { Game } from '../../../../../_common/game/game.model';
-import AppLoading from '../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { User } from '../../../../../_common/user/user.model';
 import AppUserList from '../../../user/list/list.vue';

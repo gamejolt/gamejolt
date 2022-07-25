@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { ContentFocus } from '../../../../../_common/content-focus/content-focus.service';
 import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
-import AppLoading from '../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../../../../_common/media-item/media-item-model';
 import AppResponsiveDimensions, {

@@ -4,7 +4,7 @@ import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { createLightbox } from '../../lightbox/lightbox-helpers';
 import AppLinkExternal from '../../link/AppLinkExternal.vue';
-import AppLoading from '../../loading/loading.vue';
+import AppLoading from '../../loading/AppLoading.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../media-item/media-item-model';
 import AppResponsiveDimensions from '../../responsive-dimensions/AppResponsiveDimensions.vue';

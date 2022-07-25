@@ -9,7 +9,7 @@ import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatCurrency } from '../../../../../_common/filters/currency';
 import { BaseForm, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { Geo } from '../../../../../_common/geo/geo.service';
-import AppLoading from '../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import { UserStripeManagedAccount } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
 import { User } from '../../../../../_common/user/user.model';
 import AppFinancialsManagedAccountCompanyDetails from './AppFinancialsManagedAccountCompanyDetails.vue';
@@ -548,7 +548,9 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 					<h4><AppTranslate>Your Details</AppTranslate></h4>
 
 					<div v-if="account.status === 'unverified'" class="alert">
-						<p><AppTranslate>Please fill in your personal information.</AppTranslate></p>
+						<p>
+							<AppTranslate>Please fill in your personal information.</AppTranslate>
+						</p>
 					</div>
 
 					<AppFinancialsManagedAccountPerson
