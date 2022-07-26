@@ -26,6 +26,7 @@ import { ActivityFeedService } from '../../../components/activity/feed/feed-serv
 import { ActivityFeedView } from '../../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
+import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 
 export default {
@@ -108,7 +109,7 @@ function onShareClick() {
 </script>
 
 <template>
-	<div v-if="realm" class="fill-backdrop">
+	<AppShellPageBackdrop v-if="realm">
 		<AppSpacer vertical :scale="10" :scale-sm="5" :scale-xs="5" />
 
 		<AppPageContainer xl>
@@ -194,7 +195,7 @@ function onShareClick() {
 		</AppPageContainer>
 
 		<AppSpacer vertical :scale="10" :scale-sm="5" :scale-xs="5" />
-	</div>
+	</AppShellPageBackdrop>
 </template>
 
 <style lang="stylus" scoped>

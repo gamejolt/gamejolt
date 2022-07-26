@@ -89,7 +89,7 @@ function onLoadedNew() {
 	<AppActivityFeedPlaceholder v-if="!feed || !feed.isBootstrapped" />
 	<div v-else>
 		<div v-if="!feed.hasItems">
-			<AppIllustration :src="illNoComments">
+			<AppIllustration :asset="illNoComments">
 				<AppTranslate>You don't have any activity yet.</AppTranslate>
 				<br />
 				<AppTranslate>Follow your friends, creators, and communities!</AppTranslate>

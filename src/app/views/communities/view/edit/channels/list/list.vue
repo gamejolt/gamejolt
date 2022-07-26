@@ -9,7 +9,7 @@ import {
 	CommunityPresetChannelType,
 } from '../../../../../../../_common/community/community.model';
 import { showErrorGrowl } from '../../../../../../../_common/growls/growls.service';
-import AppLoading from '../../../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../../../_common/loading/AppLoading.vue';
 import {
 	BaseRouteComponent,
 	OptionsForRoute,

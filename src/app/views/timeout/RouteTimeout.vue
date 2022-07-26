@@ -1,6 +1,8 @@
 <script lang="ts">
 import { computed, onMounted, ref } from 'vue';
+import { RouteLocationRedirect } from '../../../utils/router';
 import { Api } from '../../../_common/api/api.service';
+import AppButton from '../../../_common/button/AppButton.vue';
 import AppContactLink from '../../../_common/contact-link/contact-link.vue';
 import { showErrorGrowl, showInfoGrowl } from '../../../_common/growls/growls.service';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
@@ -9,14 +11,12 @@ import { Navigate } from '../../../_common/navigate/navigate.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { commonStore, useCommonStore } from '../../../_common/store/common-store';
 import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { UserTimeout } from '../../../_common/user/timeout/timeout.model';
 import AppTimeoutCountdown from '../../components/timeout/AppTimeoutCountdown.vue';
 import { illTimeOut } from '../../img/ill/illustrations';
 import { imageGameJoltLogo } from '../../img/images';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../_common/button/AppButton.vue';
-import { RouteLocationRedirect } from '../../../utils/router';
 
 export default {
 	...defineAppRouteOptions({
@@ -123,7 +123,7 @@ function onClickLeave() {
 
 				<template v-if="timeout && timeout.getIsActive()">
 					<div class="-centered">
-						<AppIllustration :src="illTimeOut">
+						<AppIllustration :asset="illTimeOut">
 							<p>
 								<AppTranslate>You've been put in time-out.</AppTranslate>
 							</p>

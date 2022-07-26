@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, watch } from 'vue';
 import { useSidebarStore } from '../../../_common/sidebar/sidebar.store';
 import { useAppStore } from '../../store/index';
+import AppShellPageBackdrop from './AppShellPageBackdrop.vue';
 
 const { visibleLeftPane, setHasContentSidebar } = useAppStore();
 const { activeContextPane } = useSidebarStore();
@@ -27,22 +28,23 @@ watch(
 
 <template>
 	<div>
-		<div
-			class="content-with-sidebar--content fill-backdrop"
+		<AppShellPageBackdrop
+			class="content-with-sidebar--content"
 			:class="{ '-context-available': hasContext }"
 		>
 			<slot />
-		</div>
+		</AppShellPageBackdrop>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
 .content-with-sidebar--content
-	// Make it full-size height at least, so that the footer doesn't cut things off weird.
-	min-height: 'calc(100vh - %s)' % $shell-top-nav-height
+	// Make it full-size height at least, so that the sidebar doesn't get cut
+	// off weird.
+	min-height: calc(100vh - var(--theme-top) - var(--theme-bottom))
 
-	// Make room for the sidebar on large screens if the route has context available.
-	// All other breakpoints should instead overlay their content.
+	// Make room for the sidebar on large screens if the route has context
+	// available. All other breakpoints should instead overlay their content.
 	&.-context-available
 		@media $media-lg
 			padding-left: $shell-content-sidebar-width

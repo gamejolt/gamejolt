@@ -4,7 +4,7 @@ import { Options, Vue } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
 import AppContentBlockEditor from '../../../_common/content-block/editor/editor.vue';
 import { showSuccessGrowl } from '../../../_common/growls/growls.service';
-import AppLoading from '../../../_common/loading/loading.vue';
+import AppLoading from '../../../_common/loading/AppLoading.vue';
 import AppThemeSelector from '../../../_common/theme/selector/selector.vue';
 import AppThemeEditor from '../../../_common/theme/theme-editor/theme-editor.vue';
 import { useSiteEditorStore } from '../../store/index';
@@ -153,12 +153,7 @@ export default class AppSiteEditor extends Vue {
 
 				<div
 					v-if="tab === 'theme'"
-					class="
-						site-editor-sidebar
-						fill-dark
-						scrollable
-						anim-fade-enter-left anim-fade-leave-left
-					"
+					class="site-editor-sidebar fill-dark scrollable anim-fade-enter-left anim-fade-leave-left"
 				>
 					<div class="well">
 						<h3 class="sans-margin-top">
@@ -192,12 +187,7 @@ export default class AppSiteEditor extends Vue {
 				</div>
 				<div
 					v-if="tab === 'content'"
-					class="
-						site-editor-bottom
-						fill-dark
-						scrollable
-						anim-fade-enter-up anim-fade-leave-down
-					"
+					class="site-editor-bottom fill-dark scrollable anim-fade-enter-up anim-fade-leave-down"
 				>
 					<div class="well">
 						<AppContentBlockEditor

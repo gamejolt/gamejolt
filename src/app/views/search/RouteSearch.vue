@@ -15,6 +15,7 @@ import { $gettext, $gettextInterpolate } from '../../../_common/translate/transl
 import AppPageHeader from '../../components/page-header/page-header.vue';
 import AppSearch from '../../components/search/AppSearch.vue';
 import { Search, SearchPayload } from '../../components/search/search-service';
+import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
 
 const Key: InjectionKey<Controller> = Symbol('search-route');
 
@@ -196,7 +197,7 @@ const noResults = computed(() => {
 			</section>
 		</AppExpand>
 
-		<div id="search-results" class="fill-backdrop">
+		<AppShellPageBackdrop id="search-results">
 			<RouterView />
 
 			<br />
@@ -209,6 +210,6 @@ const noResults = computed(() => {
 				:current-page="searchPayload.page"
 				@pagechange="Scroll.to('search-results', { animate: false })"
 			/>
-		</div>
+		</AppShellPageBackdrop>
 	</div>
 </template>

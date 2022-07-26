@@ -9,7 +9,7 @@ import { Game } from '../../../../_common/game/game.model';
 import AppGamePackageCard from '../../../../_common/game/package/card/card.vue';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import AppModal from '../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';

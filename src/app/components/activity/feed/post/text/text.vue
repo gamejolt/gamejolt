@@ -7,7 +7,7 @@ import {
 	FiresidePost,
 	loadArticleIntoPost,
 } from '../../../../../../_common/fireside/post/post-model';
-import AppLoading from '../../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../../_common/scroll/scroll.service';
 import { ActivityFeedItem } from '../../item-service';

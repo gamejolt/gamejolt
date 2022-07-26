@@ -237,7 +237,7 @@ export default class AppCommunitiesViewFeed extends Vue {
 					What are you waiting for? %{ message } Make people happy.
 				</div>
 				<div v-else-if="channel.is_archived">
-					<AppIllustration :src="illNoCommentsSmall">
+					<AppIllustration :asset="illNoCommentsSmall">
 						<p>
 							<AppTranslate>Shhh. This channel is archived.</AppTranslate>
 						</p>

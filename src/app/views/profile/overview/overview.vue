@@ -8,17 +8,17 @@ import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue'
 import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
 import { Comment } from '../../../../_common/comment/comment-model';
 import {
-	CommentStoreManager,
-	CommentStoreManagerKey,
-	CommentStoreModel,
-	lockCommentStore,
-	releaseCommentStore,
-	setCommentCount,
+CommentStoreManager,
+CommentStoreManagerKey,
+CommentStoreModel,
+lockCommentStore,
+releaseCommentStore,
+setCommentCount
 } from '../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../_common/comment/modal/modal.service';
 import {
-	CommentThreadModal,
-	CommentThreadModalPermalinkDeregister,
+CommentThreadModal,
+CommentThreadModalPermalinkDeregister
 } from '../../../../_common/comment/thread/modal.service';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
@@ -36,11 +36,12 @@ import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service'
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, {
-	ScrollInviewConfig,
+ScrollInviewConfig
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { showUserFiresideFollowModal } from '../../../../_common/user/fireside/modal/follow-modal.service';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
 import { showUserInviteFollowModal } from '../../../../_common/user/invite/modal/modal.service';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
@@ -52,6 +53,7 @@ import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import AppGameList from '../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
+import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import { TrophyModal } from '../../../components/trophy/modal/modal.service';
 import AppTrophyThumbnail from '../../../components/trophy/thumbnail/thumbnail.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
@@ -82,6 +84,7 @@ const FiresideScrollInviewConfig = new ScrollInviewConfig({
 		AppShareCard,
 		AppScrollInview,
 		AppAspectRatio,
+		AppShellPageBackdrop,
 	},
 	directives: {
 		AppTooltip: vAppTooltip,
@@ -381,6 +384,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 			this.commentStore = lockCommentStore(this.commentManager, 'User', this.user.id);
 			setCommentCount(this.commentStore, this.user.comment_count);
 
+			// They came from an invite link.
 			if (this.$route.query['invite'] !== undefined) {
 				// Only show the modal if they're not following yet.
 				if (!this.user.is_following) {
@@ -388,6 +392,12 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 				}
 
 				removeQuery(this.$router, 'invite');
+			}
+
+			// They came from a /fireside/@user link, but they're not streaming.
+			if (this.$route.query['fireside'] !== undefined) {
+				showUserFiresideFollowModal(this.user);
+				removeQuery(this.$router, 'fireside');
 			}
 		}
 
@@ -576,8 +586,8 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 				</AppExpand>
 			</div>
 		</section>
-		<section v-else class="section fill-backdrop">
-			<div>
+		<AppShellPageBackdrop v-else>
+			<section class="section">
 				<AppPageContainer xl order="left,main,right">
 					<template #left>
 						<!-- Bio -->
@@ -857,89 +867,93 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 						</template>
 					</template>
 
-					<!-- User blocked -->
-					<template v-if="userBlockedYou">
-						<div class="alert">
-							<p>
-								<AppJolticon icon="notice" notice />
-								<b><AppTranslate>This user blocked you.</AppTranslate></b>
-								<AppTranslate>
-									You are unable to shout at them or comment on their posts and
-									games.
-								</AppTranslate>
-							</p>
-						</div>
-					</template>
-
-					<!-- Friend Requests -->
-					<template v-if="userFriendship">
-						<AppExpand
-							:when="userFriendship.state === UserFriendship.STATE_REQUEST_SENT"
-							:animate-initial="true"
-						>
+					<template #default>
+						<!-- User blocked -->
+						<template v-if="userBlockedYou">
 							<div class="alert">
 								<p>
-									<AppTranslate
-										:translate-params="{
-											username: '@' + userFriendship.target_user.username,
-										}"
-									>
-										Friend request to %{ username } pending acceptance.
+									<AppJolticon icon="notice" notice />
+									<b><AppTranslate>This user blocked you.</AppTranslate></b>
+									<AppTranslate>
+										You are unable to shout at them or comment on their posts
+										and games.
 									</AppTranslate>
 								</p>
-								<AppButton @click="routeStore.cancelFriendRequest()">
-									<AppTranslate>Cancel Request</AppTranslate>
-								</AppButton>
 							</div>
-						</AppExpand>
+						</template>
 
-						<AppExpand
-							:when="userFriendship.state === UserFriendship.STATE_REQUEST_RECEIVED"
-							:animate-initial="true"
+						<!-- Friend Requests -->
+						<template v-if="userFriendship">
+							<AppExpand
+								:when="userFriendship.state === UserFriendship.STATE_REQUEST_SENT"
+								:animate-initial="true"
+							>
+								<div class="alert">
+									<p>
+										<AppTranslate
+											:translate-params="{
+												username: '@' + userFriendship.target_user.username,
+											}"
+										>
+											Friend request to %{ username } pending acceptance.
+										</AppTranslate>
+									</p>
+									<AppButton @click="routeStore.cancelFriendRequest()">
+										<AppTranslate>Cancel Request</AppTranslate>
+									</AppButton>
+								</div>
+							</AppExpand>
+
+							<AppExpand
+								:when="
+									userFriendship.state === UserFriendship.STATE_REQUEST_RECEIVED
+								"
+								:animate-initial="true"
+							>
+								<div class="alert">
+									<p>
+										<AppTranslate
+											:translate-params="{
+												username: '@' + userFriendship.user.username,
+											}"
+										>
+											%{ username } would like to be your friend.
+										</AppTranslate>
+									</p>
+									<AppButton primary solid @click="onFriendRequestAccept">
+										<AppTranslate>Add Friend</AppTranslate>
+									</AppButton>
+									<AppButton
+										v-app-tooltip="$gettext('The sender will not be notified.')"
+										trans
+										@click="onFriendRequestReject"
+									>
+										<AppTranslate>Dismiss</AppTranslate>
+									</AppButton>
+								</div>
+							</AppExpand>
+						</template>
+
+						<!-- Fireside -->
+						<AppScrollInview
+							v-if="shouldShowFireside"
+							:config="FiresideScrollInviewConfig"
+							@inview="onFiresideInview"
+							@outview="onFiresideOutview"
 						>
-							<div class="alert">
-								<p>
-									<AppTranslate
-										:translate-params="{
-											username: '@' + userFriendship.user.username,
-										}"
-									>
-										%{ username } would like to be your friend.
-									</AppTranslate>
-								</p>
-								<AppButton primary solid @click="onFriendRequestAccept">
-									<AppTranslate>Add Friend</AppTranslate>
-								</AppButton>
-								<AppButton
-									v-app-tooltip="$gettext('The sender will not be notified.')"
-									trans
-									@click="onFriendRequestReject"
-								>
-									<AppTranslate>Dismiss</AppTranslate>
-								</AppButton>
-							</div>
-						</AppExpand>
+							<AppFiresideBadge
+								:key="fireside"
+								:fireside="fireside"
+								:show-preview="canShowFiresidePreview"
+								@changed="onFiresideBadgeChanged"
+							/>
+						</AppScrollInview>
+
+						<router-view />
 					</template>
-
-					<!-- Fireside -->
-					<AppScrollInview
-						v-if="shouldShowFireside"
-						:config="FiresideScrollInviewConfig"
-						@inview="onFiresideInview"
-						@outview="onFiresideOutview"
-					>
-						<AppFiresideBadge
-							:key="fireside"
-							:fireside="fireside"
-							:show-preview="canShowFiresidePreview"
-							@changed="onFiresideBadgeChanged"
-						/>
-					</AppScrollInview>
-
-					<router-view />
 				</AppPageContainer>
-			</div>
-		</section>
+			</section>
+		</AppShellPageBackdrop>
 	</div>
 </template>
 

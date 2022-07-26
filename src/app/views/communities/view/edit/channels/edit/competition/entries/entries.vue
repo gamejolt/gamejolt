@@ -9,7 +9,7 @@ import {
 import { CommunityCompetitionEntry } from '../../../../../../../../../_common/community/competition/entry/entry.model';
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../../../../../../_common/illustration/AppIllustration.vue';
-import AppLoading from '../../../../../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../../../../../_common/loading/AppLoading.vue';
 import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import AppPagination from '../../../../../../../../../_common/pagination/pagination.vue';
 import {
@@ -267,7 +267,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 		</template>
 		<template v-else>
 			<template v-if="entryCount === 0">
-				<AppIllustration :src="illNoCommentsSmall">
+				<AppIllustration :asset="illNoCommentsSmall">
 					<p>
 						<AppTranslate v-if="competition.periodNum >= CompetitionPeriodVoting">
 							No new entries can be submitted to the jam, and none have been submitted

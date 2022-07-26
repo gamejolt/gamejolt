@@ -6,7 +6,7 @@ import { Api } from '../../../../../_common/api/api.service';
 import AppCardList from '../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../_common/card/list/AppCardListAdd.vue';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
-import AppLoading from '../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';

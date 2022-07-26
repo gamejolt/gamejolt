@@ -5,7 +5,7 @@ import { Community } from '../../../../_common/community/community.model';
 import { Game } from '../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppLoading from '../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 

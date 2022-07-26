@@ -1,7 +1,7 @@
 <script lang="ts">
 import { nextTick } from 'vue';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import AppLoading from '../loading/loading.vue';
+import AppLoading from '../loading/AppLoading.vue';
 import { setVideoMuted, trackVideoPlayerEvent, VideoPlayerController } from './player/controller';
 
 // We have to not use Vue for video embed stuff!

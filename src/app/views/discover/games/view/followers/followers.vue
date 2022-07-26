@@ -9,6 +9,7 @@ import {
 } from '../../../../../../_common/route/route-component';
 import { User } from '../../../../../../_common/user/user.model';
 import AppFollowerList from '../../../../../components/follower/list/list.vue';
+import AppShellPageBackdrop from '../../../../../components/shell/AppShellPageBackdrop.vue';
 import { useGameRouteController } from '../view.vue';
 
 function getFetchUrl(route: RouteLocationNormalized) {
@@ -19,6 +20,7 @@ function getFetchUrl(route: RouteLocationNormalized) {
 	name: 'RouteProfileFollowers',
 	components: {
 		AppFollowerList,
+		AppShellPageBackdrop,
 	},
 })
 @OptionsForRoute({
@@ -51,17 +53,19 @@ export default class RouteProfileFollowers extends BaseRouteComponent {
 </script>
 
 <template>
-	<section class="section fill-backdrop">
-		<div class="container">
-			<div v-if="!game?.follower_count" class="alert alert-info">
-				<AppTranslate>No one is following this game yet.</AppTranslate>
+	<AppShellPageBackdrop>
+		<section class="section">
+			<div class="container">
+				<div v-if="!game?.follower_count" class="alert alert-info">
+					<AppTranslate>No one is following this game yet.</AppTranslate>
+				</div>
+				<AppFollowerList
+					v-else
+					:url="loadUrl"
+					:initial-users="users"
+					:count="game.follower_count || 0"
+				/>
 			</div>
-			<AppFollowerList
-				v-else
-				:url="loadUrl"
-				:initial-users="users"
-				:count="game.follower_count || 0"
-			/>
-		</div>
-	</section>
+		</section>
+	</AppShellPageBackdrop>
 </template>

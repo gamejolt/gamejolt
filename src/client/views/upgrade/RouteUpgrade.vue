@@ -48,7 +48,7 @@ function update() {
 <template>
 	<div class="-wrapper">
 		<div class="-content container">
-			<AppIllustration class="-no-chat" :src="illMaintenance" />
+			<AppIllustration class="-no-chat" :asset="illMaintenance" />
 
 			<AppSpacer vertical :scale="4" />
 

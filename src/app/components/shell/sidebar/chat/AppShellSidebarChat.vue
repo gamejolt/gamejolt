@@ -4,7 +4,7 @@ import { computed, onUnmounted } from 'vue';
 import { EscapeStack } from '../../../../../_common/escape-stack/escape-stack.service';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
-import AppLoading from '../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppTabBar from '../../../../../_common/tab-bar/AppTabBar.vue';
 import AppTabBarItem from '../../../../../_common/tab-bar/AppTabBarItem.vue';
@@ -27,15 +27,10 @@ let escapeCallback: (() => void) | null = null;
 const tab = ref<'chats' | 'friends'>('chats');
 
 const visibleLeftPane = computed(() => store.visibleLeftPane.value);
-
 const chat = computed(() => chatStore.chat!);
-
 const friends = computed(() => chat.value.friendsList.collection);
-
 const groups = computed(() => chat.value.groupRooms);
-
 const chats = computed(() => sortByLastMessageOn([...groups.value, ...friends.value]));
-
 const friendsCount = computed(() => chat.value.friendsList.collection.length);
 
 onMounted(() => {
@@ -89,7 +84,7 @@ function hideChatPane() {
 
 				<AppIllustration
 					v-if="chats.length === 0 || (tab === 'friends' && !friends.length)"
-					:src="illNoCommentsSmall"
+					:asset="illNoCommentsSmall"
 				>
 					<AppTranslate>No friends yet.</AppTranslate>
 				</AppIllustration>
@@ -99,7 +94,7 @@ function hideChatPane() {
 				<AppLoading centered :label="$gettext(`Loading your chats...`)" />
 			</template>
 			<template v-else>
-				<AppIllustration class="-no-chat" :src="illMaintenance">
+				<AppIllustration class="-no-chat" :asset="illMaintenance">
 					<p><AppTranslate>The chat server went away...</AppTranslate></p>
 					<p><AppTranslate>It should be back shortly.</AppTranslate></p>
 				</AppIllustration>

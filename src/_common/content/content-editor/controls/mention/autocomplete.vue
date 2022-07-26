@@ -3,7 +3,7 @@ import { nextTick } from 'vue';
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../api/api.service';
-import AppLoading from '../../../../loading/loading.vue';
+import AppLoading from '../../../../loading/AppLoading.vue';
 import { Screen } from '../../../../screen/screen-service';
 import AppUserAvatarImg from '../../../../user/user-avatar/img/img.vue';
 import { User } from '../../../../user/user.model';
@@ -233,7 +233,9 @@ export default class AppContentEditorControlsMentionAutocomplete extends Vue {
 						<div v-if="user.is_following" class="-follow-indicator">
 							<small class="text-muted">
 								<AppJolticon icon="user" />
-								<AppTranslate v-if="user.follows_you">You follow each other</AppTranslate>
+								<AppTranslate v-if="user.follows_you">
+									You follow each other
+								</AppTranslate>
 								<AppTranslate v-else>Following</AppTranslate>
 							</small>
 						</div>

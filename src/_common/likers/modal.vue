@@ -6,7 +6,7 @@ import { Comment } from '../comment/comment-model';
 import { formatNumber } from '../filters/number';
 import { FiresidePost } from '../fireside/post/post-model';
 import { Game } from '../game/game.model';
-import AppLoading from '../loading/loading.vue';
+import AppLoading from '../loading/AppLoading.vue';
 import { BaseModal } from '../modal/base';
 import { User } from '../user/user.model';
 import { LikersResource } from './modal.service';

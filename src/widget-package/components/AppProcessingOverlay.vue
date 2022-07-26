@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import AppLoading from '../../_common/loading/loading.vue';
+import AppLoading from '../../_common/loading/AppLoading.vue';
 import AppWidgetModal from './AppWidgetModal.vue';
 </script>
 

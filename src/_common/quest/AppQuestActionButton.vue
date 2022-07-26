@@ -5,7 +5,7 @@ import { getMediaserverUrlForBounds } from '../../utils/image';
 import { Api } from '../api/api.service';
 import AppButton from '../button/AppButton.vue';
 import { Jolticon } from '../jolticon/AppJolticon.vue';
-import AppLoading from '../loading/loading.vue';
+import AppLoading from '../loading/AppLoading.vue';
 import { showModal } from '../modal/modal.service';
 import { Quest } from './quest-model';
 import { QuestObjectiveReward } from './quest-objective-reward-model';

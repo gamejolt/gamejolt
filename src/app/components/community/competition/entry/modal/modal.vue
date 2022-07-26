@@ -9,7 +9,7 @@ import { CommunityCompetitionEntry } from '../../../../../../_common/community/c
 import { CommunityCompetitionEntryVote } from '../../../../../../_common/community/competition/entry/vote/vote.model';
 import { CommunityCompetitionVotingCategory } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { formatDate } from '../../../../../../_common/filters/date';
-import AppLoading from '../../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
 import { BaseModal } from '../../../../../../_common/modal/base';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../../_common/store/common-store';

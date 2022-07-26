@@ -16,7 +16,7 @@ import { Game } from '../../../_common/game/game.model';
 import { GameSong } from '../../../_common/game/song/song.model';
 import AppGameThumbnail from '../../../_common/game/thumbnail/AppGameThumbnail.vue';
 import { HistoryTick } from '../../../_common/history-tick/history-tick-service';
-import AppLoading from '../../../_common/loading/loading.vue';
+import AppLoading from '../../../_common/loading/AppLoading.vue';
 import { setAppPromotionCohort, useAppPromotionStore } from '../../../_common/mobile-app/store';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { PayloadError } from '../../../_common/payload/payload-service';

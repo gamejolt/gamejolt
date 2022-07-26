@@ -214,7 +214,7 @@ function clearUnknownWatermarks() {
 							<template v-else-if="!hasQuests">
 								<div class="-empty">
 									<AppIllustration
-										:src="Screen.isXs ? illNoCommentsSmall : illNoComments"
+										:asset="Screen.isXs ? illNoCommentsSmall : illNoComments"
 									>
 										<AppTranslate> You have no active quests </AppTranslate>
 									</AppIllustration>

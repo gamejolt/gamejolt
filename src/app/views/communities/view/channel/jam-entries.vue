@@ -350,7 +350,7 @@ export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComp
 				<AppTranslate>Entries</AppTranslate>
 			</h2>
 
-			<AppIllustration :src="illNoComments">
+			<AppIllustration :asset="illNoComments">
 				<p>
 					<AppTranslate>No entries have been submitted to this jam yet...</AppTranslate>
 				</p>

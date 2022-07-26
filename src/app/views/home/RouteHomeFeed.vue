@@ -28,6 +28,7 @@ import { onFiresideStart } from '../../components/grid/client.service';
 import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
 import AppPostAddButton from '../../components/post/add-button/add-button.vue';
 import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
+import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
 import { useQuestStore } from '../../store/quest';
 import AppHomeFeedMenu from './AppHomeFeedMenu.vue';
 import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
@@ -169,7 +170,7 @@ async function refreshFiresides() {
 	isLoadingFiresides.value = true;
 
 	try {
-		const payload = await Api.sendRequest(`/web/fireside/user-list`, undefined, {
+		const payload = await Api.sendRequest(`/web/fireside/user-list?amount=14`, undefined, {
 			detach: true,
 		});
 		userFireside.value = payload.userFireside ? new Fireside(payload.userFireside) : undefined;
@@ -197,116 +198,119 @@ async function refreshQuests() {
 </script>
 
 <template>
-	<section class="section fill-backdrop">
-		<AppPageContainer xl>
-			<template #left>
-				<AppUserCard v-if="Screen.isDesktop" :user="user!" />
+	<AppShellPageBackdrop>
+		<section class="section">
+			<AppPageContainer xl>
+				<template #left>
+					<AppUserCard v-if="Screen.isDesktop" :user="user!" />
 
-				<template v-if="hasGamesSection">
-					<div class="clearfix">
-						<div class="pull-right">
-							<AppButton
-								v-app-tooltip="$gettext(`Add Game`)"
-								icon="add"
-								circle
-								trans
-								:to="{ name: 'dash.games.add' }"
-							/>
+					<template v-if="hasGamesSection">
+						<div class="clearfix">
+							<div class="pull-right">
+								<AppButton
+									v-app-tooltip="$gettext(`Add Game`)"
+									icon="add"
+									circle
+									trans
+									:to="{ name: 'dash.games.add' }"
+								/>
+							</div>
+							<h4 class="section-header">
+								<AppTranslate>Manage Games</AppTranslate>
+							</h4>
 						</div>
-						<h4 class="section-header">
-							<AppTranslate>Manage Games</AppTranslate>
-						</h4>
-					</div>
 
-					<template v-if="hasGameFilter">
-						<div>
-							<input
-								v-model="gameFilterQuery"
-								type="search"
-								class="form-control"
-								:placeholder="$gettext(`Filter games`)"
-							/>
-						</div>
-						<br />
+						<template v-if="hasGameFilter">
+							<div>
+								<input
+									v-model="gameFilterQuery"
+									type="search"
+									class="form-control"
+									:placeholder="$gettext(`Filter games`)"
+								/>
+							</div>
+							<br />
+						</template>
+
+						<nav class="-game-list platform-list">
+							<ul>
+								<li v-for="game of filteredGames" :key="game.id">
+									<RouterLink
+										v-app-track-event="`activity:quick-game`"
+										:to="{
+											name: 'dash.games.manage.game.overview',
+											params: { id: game.id },
+										}"
+										:title="
+											(game.ownerName ? `@${game.ownerName}/` : '') +
+											game.title
+										"
+									>
+										<template v-if="game.ownerName">
+											<small>@{{ game.ownerName }}</small>
+											/
+										</template>
+										{{ game.title }}
+									</RouterLink>
+								</li>
+							</ul>
+						</nav>
+
+						<p v-if="isShowAllGamesVisible">
+							<a
+								v-app-track-event="`activity:quick-game-all`"
+								class="link-muted"
+								@click="isShowingAllGames = !isShowingAllGames"
+							>
+								<AppTranslate>Show all</AppTranslate>
+							</a>
+						</p>
 					</template>
-
-					<nav class="-game-list platform-list">
-						<ul>
-							<li v-for="game of filteredGames" :key="game.id">
-								<RouterLink
-									v-app-track-event="`activity:quick-game`"
-									:to="{
-										name: 'dash.games.manage.game.overview',
-										params: { id: game.id },
-									}"
-									:title="
-										(game.ownerName ? `@${game.ownerName}/` : '') + game.title
-									"
-								>
-									<template v-if="game.ownerName">
-										<small>@{{ game.ownerName }}</small>
-										/
-									</template>
-									{{ game.title }}
-								</RouterLink>
-							</li>
-						</ul>
-					</nav>
-
-					<p v-if="isShowAllGamesVisible">
-						<a
-							v-app-track-event="`activity:quick-game-all`"
-							class="link-muted"
-							@click="isShowingAllGames = !isShowingAllGames"
-						>
-							<AppTranslate>Show all</AppTranslate>
-						</a>
-					</p>
 				</template>
-			</template>
 
-			<template v-if="!Screen.isMobile" #right>
-				<AppDailyQuests
-					v-if="user"
-					disable-on-expiry
-					single-row
-					:force-loading="isLoadingQuests"
-				/>
+				<template v-if="!Screen.isMobile" #right>
+					<AppDailyQuests
+						v-if="user"
+						disable-on-expiry
+						single-row
+						:force-loading="isLoadingQuests"
+					/>
 
-				<AppSpacer vertical :scale="12" />
+					<AppSpacer vertical :scale="12" />
 
-				<AppHomeFireside
-					:featured-fireside="featuredFireside"
-					:user-fireside="userFireside"
-					:firesides="firesides"
-					:is-loading="isLoadingFiresides"
-					:show-placeholders="!isFiresidesBootstrapped"
-					@request-refresh="refreshFiresides()"
-				/>
-			</template>
+					<AppHomeFireside
+						:featured-fireside="featuredFireside"
+						:user-fireside="userFireside"
+						:firesides="firesides"
+						:is-loading="isLoadingFiresides"
+						:show-placeholders="!isFiresidesBootstrapped"
+						@request-refresh="refreshFiresides()"
+					/>
+				</template>
 
-			<AppHomeFeedMenu v-if="Screen.isDesktop" :tabs="tabs" :feed-tab="feedTab" />
+				<AppHomeFeedMenu v-if="Screen.isDesktop" :tabs="tabs" :feed-tab="feedTab" />
 
-			<AppPostAddButton @add="onPostAdded" />
+				<AppPostAddButton @add="onPostAdded" />
 
-			<template v-if="Screen.isMobile">
-				<AppHomeFireside
-					:user-fireside="userFireside"
-					:firesides="firesides"
-					:is-loading="isLoadingFiresides"
-					:show-placeholders="!isFiresidesBootstrapped"
-					@request-refresh="refreshFiresides()"
-				/>
+				<template v-if="Screen.isMobile">
+					<AppHomeFireside
+						:user-fireside="userFireside"
+						:firesides="firesides"
+						:is-loading="isLoadingFiresides"
+						:show-placeholders="!isFiresidesBootstrapped"
+						@request-refresh="refreshFiresides()"
+					/>
 
-				<hr class="full-bleed" />
+					<hr class="full-bleed" />
 
-				<AppHomeFeedMenu :tabs="tabs" :feed-tab="feedTab" />
-			</template>
+					<AppHomeFeedMenu :tabs="tabs" :feed-tab="feedTab" />
+				</template>
 
-			<RouteHomeActivity v-if="feedTab === 'activity'" />
-			<RouteHomeFyp v-else-if="feedTab === 'fyp'" />
-		</AppPageContainer>
-	</section>
+				<RouteHomeActivity v-if="feedTab === 'activity'" />
+				<RouteHomeFyp v-else-if="feedTab === 'fyp'" />
+			</AppPageContainer>
+		</section>
+	</AppShellPageBackdrop>
 </template>
 
 <style lang="stylus" scoped>

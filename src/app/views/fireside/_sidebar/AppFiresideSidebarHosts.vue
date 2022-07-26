@@ -158,7 +158,7 @@ async function processUser(user: ChatUser | User) {
 				</template>
 
 				<template #empty>
-					<AppIllustration :src="illNoCommentsSmall">
+					<AppIllustration :asset="illNoCommentsSmall">
 						<p>
 							<AppTranslate>There are no people here.</AppTranslate>
 						</p>

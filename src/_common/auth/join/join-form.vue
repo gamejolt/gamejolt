@@ -7,7 +7,7 @@ import { BaseForm, FormOnSubmit, FormOnSubmitSuccess } from '../../form-vue/form
 import { validateUsername } from '../../form-vue/validators';
 import { Provider } from '../../linked-account/linked-account.model';
 import { LinkedAccounts } from '../../linked-account/linked-accounts.service';
-import AppLoading from '../../loading/loading.vue';
+import AppLoading from '../../loading/AppLoading.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import googleImage from '../google-icon.svg';
 

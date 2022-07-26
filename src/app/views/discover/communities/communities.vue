@@ -7,7 +7,7 @@ import AppCommunityCardCreatePlaceholder from '../../../../_common/community/car
 import AppCommunityCard from '../../../../_common/community/card/card.vue';
 import { Community } from '../../../../_common/community/community.model';
 import { HistoryCache } from '../../../../_common/history/cache/cache.service';
-import AppLoading from '../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { setAppPromotionCohort, useAppPromotionStore } from '../../../../_common/mobile-app/store';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -15,6 +15,7 @@ import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
+import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 
 const endpoint = '/web/discover/communities';
 const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height}px` });
@@ -32,6 +33,7 @@ interface CacheData {
 		AppLoading,
 		AppScrollInview,
 		AppCommunityCardCreatePlaceholder,
+		AppShellPageBackdrop,
 	},
 })
 @OptionsForRoute({
@@ -126,48 +128,50 @@ export default class RouteDiscoverCommunities extends BaseRouteComponent {
 </script>
 
 <template>
-	<section class="section fill-backdrop">
-		<div class="container">
-			<h1 class="text-center">
-				<AppTranslate>Browse Communities</AppTranslate>
-			</h1>
+	<AppShellPageBackdrop>
+		<section class="section">
+			<div class="container">
+				<h1 class="text-center">
+					<AppTranslate>Browse Communities</AppTranslate>
+				</h1>
 
-			<br />
-			<br />
+				<br />
+				<br />
 
-			<AppLoading v-if="isLoadingFirst" centered />
-			<template v-else>
-				<div class="row">
-					<div
-						v-for="community of communities"
-						:key="community.id"
-						class="-item col-sm-6 col-md-4 col-lg-3 anim-fade-in"
-					>
-						<AppCommunityCard :community="community" elevate />
+				<AppLoading v-if="isLoadingFirst" centered />
+				<template v-else>
+					<div class="row">
+						<div
+							v-for="community of communities"
+							:key="community.id"
+							class="-item col-sm-6 col-md-4 col-lg-3 anim-fade-in"
+						>
+							<AppCommunityCard :community="community" elevate />
+						</div>
 					</div>
-				</div>
 
-				<template v-if="hasMore">
-					<AppScrollInview
-						v-if="!isLoadingMore"
-						:config="inviewConfig"
-						@inview="loadMore()"
-					/>
-					<AppLoading v-else class="-loading-more" centered />
+					<template v-if="hasMore">
+						<AppScrollInview
+							v-if="!isLoadingMore"
+							:config="inviewConfig"
+							@inview="loadMore()"
+						/>
+						<AppLoading v-else class="-loading-more" centered />
+					</template>
 				</template>
-			</template>
 
-			<div v-if="showCreateCommunity" class="row -create">
-				<div class="page-cut" />
+				<div v-if="showCreateCommunity" class="row -create">
+					<div class="page-cut" />
 
-				<h2 class="-lead text-center">
-					<AppTranslate>Can't find your dream community?</AppTranslate>
-				</h2>
+					<h2 class="-lead text-center">
+						<AppTranslate>Can't find your dream community?</AppTranslate>
+					</h2>
 
-				<AppCommunityCardCreatePlaceholder style="margin: 0 auto" />
+					<AppCommunityCardCreatePlaceholder style="margin: 0 auto" />
+				</div>
 			</div>
-		</div>
-	</section>
+		</section>
+	</AppShellPageBackdrop>
 </template>
 
 <style lang="stylus" scoped>

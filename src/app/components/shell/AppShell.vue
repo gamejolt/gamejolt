@@ -159,13 +159,10 @@ watch([totalChatNotificationsCount, unreadActivityCount, unreadNotificationsCoun
 
 <!-- Global -->
 <style lang="stylus">
-html
+html, body
 	// Firefox uses this color to blank the screen before it renders. It's
 	// better to use this than constantly flicker black while rendering.
-	change-bg('bg')
-
-body
-	change-bg('darkest', true)
+	change-bg('bg', true)
 
 #shell-top-nav
 	top: 0

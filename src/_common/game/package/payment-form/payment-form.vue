@@ -18,7 +18,7 @@ import { Geo, Region } from '../../../geo/geo.service';
 import { showErrorGrowl } from '../../../growls/growls.service';
 import { HistoryTick } from '../../../history-tick/history-tick-service';
 import AppLoadingFade from '../../../loading/AppLoadingFade.vue';
-import AppLoading from '../../../loading/loading.vue';
+import AppLoading from '../../../loading/AppLoading.vue';
 import { Navigate } from '../../../navigate/navigate.service';
 import { OrderPayment } from '../../../order/payment/payment.model';
 import AppPopper from '../../../popper/AppPopper.vue';

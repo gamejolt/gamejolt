@@ -6,7 +6,7 @@ import {
 	getRedirectUrl,
 	redirectToDashboard,
 } from '../../../../_common/auth/auth.service';
-import AppLoading from '../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Navigate } from '../../../../_common/navigate/navigate.service';
 import { AppProgressPoller } from '../../../../_common/progress/poller/poller';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';

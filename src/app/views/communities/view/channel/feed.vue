@@ -217,7 +217,7 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 			</h1>
 
 			<div v-if="channel && channel.visibility === 'draft'">
-				<AppIllustration :src="illNoComments">
+				<AppIllustration :asset="illNoComments">
 					<AppTranslate>
 						This is a draft channel. When it gets published, the post feed will appear
 						here.

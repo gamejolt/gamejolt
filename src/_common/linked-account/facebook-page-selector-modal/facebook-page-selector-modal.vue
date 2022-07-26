@@ -2,7 +2,7 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { stringSort } from '../../../utils/array';
 import { Api } from '../../api/api.service';
-import AppLoading from '../../loading/loading.vue';
+import AppLoading from '../../loading/AppLoading.vue';
 import { BaseModal } from '../../modal/base';
 import { FacebookPage, LinkedAccount } from '../linked-account.model';
 import AppLinkedAccount from '../linked-account.vue';

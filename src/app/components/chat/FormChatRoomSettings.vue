@@ -13,7 +13,7 @@ import AppFormControlBackground from '../../../_common/form-vue/controls/AppForm
 import AppFormControlToggleButton from '../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButton.vue';
 import AppFormControlToggleButtonGroup from '../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../_common/form-vue/validators';
-import AppLoading from '../../../_common/loading/loading.vue';
+import AppLoading from '../../../_common/loading/AppLoading.vue';
 import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';

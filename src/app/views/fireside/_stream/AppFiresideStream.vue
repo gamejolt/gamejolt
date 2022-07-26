@@ -11,7 +11,7 @@ import { useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../_common/filters/number';
 import { FiresideRTCUser, setDesktopAudioPlayback } from '../../../../_common/fireside/rtc/user';
-import AppLoading from '../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';

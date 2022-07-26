@@ -11,14 +11,14 @@ import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service
 import AppCommentAddButton from '../../../../../../_common/comment/add-button/add-button.vue';
 import { canCommentOnModel, Comment } from '../../../../../../_common/comment/comment-model';
 import {
-CommentStoreManager,
-CommentStoreManagerKey,
-getCommentStore
+	CommentStoreManager,
+	CommentStoreManagerKey,
+	getCommentStore,
 } from '../../../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../../../_common/comment/modal/modal.service';
 import {
-CommentThreadModal,
-CommentThreadModalPermalinkDeregister
+	CommentThreadModal,
+	CommentThreadModalPermalinkDeregister,
 } from '../../../../../../_common/comment/thread/modal.service';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../../_common/environment/environment.service';
@@ -34,8 +34,8 @@ import { AppLazyPlaceholder } from '../../../../../../_common/lazy/placeholder/p
 import { Meta } from '../../../../../../_common/meta/meta-service';
 import { PartnerReferral } from '../../../../../../_common/partner-referral/partner-referral-service';
 import {
-BaseRouteComponent,
-OptionsForRoute
+	BaseRouteComponent,
+	OptionsForRoute,
 } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShareCard from '../../../../../../_common/share/card/AppShareCard.vue';
@@ -52,6 +52,7 @@ import { AppActivityFeedLazy } from '../../../../../components/lazy';
 import AppPageContainer from '../../../../../components/page-container/AppPageContainer.vue';
 import AppPostAddButton from '../../../../../components/post/add-button/add-button.vue';
 import AppRatingWidget from '../../../../../components/rating/widget/widget.vue';
+import AppShellPageBackdrop from '../../../../../components/shell/AppShellPageBackdrop.vue';
 import AppUserKnownFollowers from '../../../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useGameRouteController } from '../view.vue';
 import AppDiscoverGamesViewOverviewDetails from './_details/details.vue';
@@ -62,6 +63,7 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 	name: 'RouteDiscoverGamesViewOverview',
 	components: {
 		AppPageContainer,
+		AppShellPageBackdrop,
 		AppDiscoverGamesViewOverviewDetails,
 		AppDiscoverGamesViewOverviewSupporters,
 		AppDiscoverGamesViewOverviewStatbar,
@@ -349,11 +351,11 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 </script>
 
 <template>
-	<div class="route-game-overview">
+	<AppShellPageBackdrop class="route-game-overview">
 		<!-- Media Bar -->
 		<AppGameMediaBar v-if="game?.media_count" :media-items="mediaItems" />
 
-		<section class="section section-thin fill-backdrop">
+		<section class="section section-thin">
 			<AppAdWidget
 				v-if="shouldShowAds && !Screen.isMobile"
 				class="-leaderboard-ad"
@@ -617,7 +619,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 				</template>
 			</AppPageContainer>
 		</section>
-	</div>
+	</AppShellPageBackdrop>
 </template>
 
 <style lang="stylus" scoped>

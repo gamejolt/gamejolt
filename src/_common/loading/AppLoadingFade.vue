@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import AppLoading from './loading.vue';
+import AppLoading from './AppLoading.vue';
 
 defineProps({
 	isLoading: {

@@ -16,6 +16,7 @@ import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { AppActivityFeedLazy } from '../../../../../components/lazy';
 import AppPostAddButton from '../../../../../components/post/add-button/add-button.vue';
+import AppShellPageBackdrop from '../../../../../components/shell/AppShellPageBackdrop.vue';
 import { useGameDashRouteController } from '../manage.store';
 
 function getFetchUrl(route: RouteLocationNormalized) {
@@ -31,6 +32,7 @@ function getFetchUrl(route: RouteLocationNormalized) {
 		AppPostAddButton,
 		AppGamePerms,
 		AppNavTabList,
+		AppShellPageBackdrop,
 	},
 })
 @OptionsForRoute({
@@ -106,8 +108,8 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 </script>
 
 <template>
-	<div v-if="isRouteBootstrapped">
-		<section class="section fill-backdrop">
+	<AppShellPageBackdrop v-if="isRouteBootstrapped">
+		<section class="section">
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
@@ -197,5 +199,5 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 				</div>
 			</div>
 		</section>
-	</div>
+	</AppShellPageBackdrop>
 </template>
