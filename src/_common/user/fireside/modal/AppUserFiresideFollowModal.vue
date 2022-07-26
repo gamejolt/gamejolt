@@ -6,6 +6,7 @@ import AppIllustration from '../../../illustration/AppIllustration.vue';
 import AppModal from '../../../modal/AppModal.vue';
 import { useModal } from '../../../modal/modal.service';
 import AppSpacer from '../../../spacer/AppSpacer.vue';
+import { useCommonStore } from '../../../store/common-store';
 import AppTranslate from '../../../translate/AppTranslate.vue';
 import AppUserFollowWidget from '../../follow/widget.vue';
 import { User } from '../../user.model';
@@ -18,6 +19,7 @@ const props = defineProps({
 });
 
 const modal = useModal<boolean>()!;
+const { user: appUser } = useCommonStore();
 
 // Freeze the value.
 // eslint-disable-next-line vue/no-setup-props-destructure
@@ -38,7 +40,13 @@ const isFollowing = props.user.is_following;
 			<AppSpacer vertical :scale="6" />
 
 			<div class="text-center">
-				<AppTranslate v-if="!isFollowing" :translate-params="{ user: '@' + user.username }">
+				<AppTranslate v-if="appUser?.id === user.id">
+					You're not currently streaming.
+				</AppTranslate>
+				<AppTranslate
+					v-else-if="!isFollowing"
+					:translate-params="{ user: '@' + user.username }"
+				>
 					%{ user } isn't currently streaming. Follow them to be notified when they go
 					live!
 				</AppTranslate>
