@@ -1,8 +1,15 @@
-import type { Analytics as FirebaseAnalytics } from 'firebase/analytics';
-import { initializeAnalytics, logEvent, setCurrentScreen, setUserId } from 'firebase/analytics';
+import {
+	Analytics as FirebaseAnalytics,
+	initializeAnalytics,
+	logEvent,
+	setCurrentScreen,
+	setUserId,
+	setUserProperties,
+} from 'firebase/analytics';
 import { unref, watch } from 'vue';
 import { Router } from 'vue-router';
 import { arrayRemove } from '../../utils/array';
+import { createLogger } from '../../utils/logging';
 import { AuthMethod } from '../auth/auth.service';
 import { CommentVote } from '../comment/vote/vote-model';
 import { ConfigOption } from '../config/config.service';
@@ -10,8 +17,10 @@ import { DeviceArch, DeviceOs } from '../device/device.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
 import { AppPromotionSource } from '../mobile-app/store';
 import { onRouteChangeAfter } from '../route/route-component';
+import { SettingThemeDark } from '../settings/settings.service';
 import { ShareProvider, ShareResource } from '../share/share.service';
 import { CommonStore } from '../store/common-store';
+import { getTranslationLang } from '../translate/translate.service';
 
 export const SOCIAL_NETWORK_FB = 'facebook';
 export const SOCIAL_NETWORK_TWITTER = 'twitter';
@@ -39,6 +48,8 @@ export type GameFollowLocation = 'thumbnail' | 'gamePage' | 'badge' | 'homeBanne
 export type RealmOpenSource = 'realmChunk' | 'realmChunkPost';
 export type RealmFollowSource = 'realmChunk' | 'fullCard' | 'realmHeader';
 export type BannerType = 'store';
+
+const logger = createLogger('Analytics');
 
 /**
  * How long we wait (in ms) before we track another experiment engagement for
@@ -94,6 +105,17 @@ export function initAnalytics({ commonStore }: { commonStore: CommonStore }) {
 			}
 		}
 	);
+
+	watch(
+		() => ({
+			light_mode: SettingThemeDark.get() ? false : true,
+			lang: getTranslationLang(),
+		}),
+		properties => {
+			_trackUserProperties(properties);
+		},
+		{ immediate: true }
+	);
 }
 
 /**
@@ -133,7 +155,7 @@ function _trackPageview(path?: string) {
 	// Gotta make sure the system has a chance to compile the title into the page.
 	window.setTimeout(() => {
 		if (!_shouldTrack()) {
-			console.log('Skip tracking page view since not a normal user.');
+			logger.warn('Skip tracking page view since not a normal user.');
 			return;
 		}
 
@@ -153,7 +175,7 @@ function _trackPageview(path?: string) {
 		//
 		// Avoid tracking page views while developing.
 		if (GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE === 'serve-build') {
-			console.log(`Track page view: ${path}`);
+			logger.info(`Track page view: ${path}`);
 		} else {
 			// We have to manually log the page_view event. Setting the current
 			// screen will set that screen variable for all future events.
@@ -181,6 +203,15 @@ function _untrackUserId() {
 	setUserId(_getFirebaseAnalytics(), '');
 }
 
+function _trackUserProperties(properties: { light_mode: boolean; lang: string }) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
+		return;
+	}
+
+	logger.info(`User properties changed.`, properties);
+	setUserProperties(_getFirebaseAnalytics(), properties);
+}
+
 function _trackEvent(
 	name: string,
 	eventParams: Record<string, string | number | boolean | undefined>
@@ -191,7 +222,7 @@ function _trackEvent(
 
 	// We prefix with `x_` so that we know it is one of our own events.
 	logEvent(_getFirebaseAnalytics(), `x_${name}`, eventParams);
-	console.log(`Track event.`, name, eventParams);
+	logger.info(`Track event.`, name, eventParams);
 }
 
 const _expEngagements: { time: number; configOption: ConfigOption }[] = [];

@@ -62,6 +62,7 @@ export async function bootstrapCommon(options: BootstrapOptions) {
 	// Try to start loading this as soon as possible.
 	ensureConfig();
 
+	initTranslations(app);
 	initAnalytics({ commonStore });
 	Payload.init({ commonStore });
 	initConnectionService({ commonStore });
@@ -90,8 +91,6 @@ export async function bootstrapCommon(options: BootstrapOptions) {
 	app.config.globalProperties.GJ_IS_SSR = import.meta.env.SSR;
 	app.config.globalProperties.GJ_VERSION = GJ_VERSION;
 	app.config.globalProperties.GJ_WITH_UPDATER = GJ_WITH_UPDATER;
-
-	initTranslations(app);
 
 	if (router) {
 		app.use(router);
