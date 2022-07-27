@@ -40,8 +40,8 @@ export const illNoComments: IllustrationAsset = {
 
 export const illNoCommentsSmall: IllustrationAsset = {
 	path: illNoCommentsSmallPath,
-	width: 369,
-	height: 221,
+	width: 277,
+	height: 166,
 };
 
 export const illEndOfFeed: IllustrationAsset = {

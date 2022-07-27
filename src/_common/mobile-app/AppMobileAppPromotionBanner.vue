@@ -8,7 +8,6 @@ import { Screen } from '../screen/screen-service';
 import AppSpacer from '../spacer/AppSpacer.vue';
 import { useCommonStore } from '../store/common-store';
 import AppTheme from '../theme/AppTheme.vue';
-import AppThemeSvg from '../theme/svg/AppThemeSvg.vue';
 import AppTranslate from '../translate/AppTranslate.vue';
 import { getAppUrl, useAppPromotionStore } from './store';
 
@@ -61,7 +60,11 @@ function close() {
 <template>
 	<AppTheme v-if="shouldShow" class="-banner-outer" force-dark>
 		<div class="-ill">
-			<AppThemeSvg :src="illMobileKikkerstein" width="78" height="87" />
+			<img
+				:src="illMobileKikkerstein.path"
+				:width="illMobileKikkerstein.width / 3"
+				:height="illMobileKikkerstein.height / 3"
+			/>
 		</div>
 
 		<div class="-banner">
@@ -137,7 +140,7 @@ function close() {
 	position: absolute
 	left: 0
 	right: 0
-	top: -58px
+	top: -90px
 	display: flex
 	justify-content: center
 	pointer-events: none
