@@ -108,7 +108,7 @@ export function initAnalytics({ commonStore }: { commonStore: CommonStore }) {
 
 	watch(
 		() => ({
-			light_mode: SettingThemeDark.get() ? false : true,
+			theme_brightness: SettingThemeDark.get() ? 'dark' : 'light',
 			lang: getTranslationLang(),
 		}),
 		properties => {
@@ -203,7 +203,7 @@ function _untrackUserId() {
 	setUserId(_getFirebaseAnalytics(), '');
 }
 
-function _trackUserProperties(properties: { light_mode: boolean; lang: string }) {
+function _trackUserProperties(properties: { theme_brightness: string; lang: string }) {
 	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
 		return;
 	}
