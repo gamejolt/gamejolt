@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import draggable from 'vuedraggable';
-import AppEditableOverlay from '../../../../../../../_common/editable-overlay/editable-overlay.vue';
+import AppEditableOverlay from '../../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import { Game } from '../../../../../../../_common/game/game.model';
 import AppGameMediaBarItem, {
 	MediaBarItemMaxHeight,

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import AppEditableOverlay from '../../../../../../_common/editable-overlay/editable-overlay.vue';
+import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
 import { Game } from '../../../../../../_common/game/game.model';
 import AppMediaItemCover from '../../../../../../_common/media-item/cover/cover.vue';

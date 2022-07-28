@@ -1,18 +1,23 @@
-<script lang="ts">
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import AppJolticon from '../jolticon/AppJolticon.vue';
+defineProps({
+	disabled: {
+		type: Boolean,
+	},
+});
 
-@Options({})
-export default class AppEditableOverlay extends Vue {
-	@Prop(Boolean) disabled?: boolean;
-
-	@Emit()
-	click() {}
-}
+const emit = defineEmits({
+	click: () => true,
+});
 </script>
 
 <template>
 	<div class="editable-overlay">
-		<div v-if="!disabled" class="-overlay-container theme-dark" @click.capture.stop="click">
+		<div
+			v-if="!disabled"
+			class="-overlay-container theme-dark"
+			@click.capture.stop="emit('click')"
+		>
 			<div class="-overlay" />
 			<div class="-overlay-content">
 				<AppJolticon class="-icon" icon="edit" />
