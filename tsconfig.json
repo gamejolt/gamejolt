@@ -21,7 +21,6 @@
 	},
 	"exclude": ["build", "node_modules", ".cache"],
 	"vueCompilerOptions": {
-		"experimentalSuppressInvalidJsxElementTypeErrors": false,
-		"experimentalSuppressUnknownJsxPropertyErrors": false
+		"strictTemplates": true
 	}
 }
