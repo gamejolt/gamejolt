@@ -215,7 +215,7 @@ function parseOptionsFromCommandlineArgs(args: MinimistParsedArguments) {
 		'Enable self updater / connectivity to parent Joltron process'
 	);
 
-	const withFfmpeg = parseYesNoOption(args['with-ffmpeg'], 'Acquire ffmpeg binaries') ?? true;
+	const withFfmpeg = parseYesNoOption(args['with-ffmpeg'], 'Acquire ffmpeg binaries');
 
 	const version = args['gj-version'];
 	const nwjsVersion = args['nwjs-version'];
