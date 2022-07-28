@@ -41,7 +41,7 @@ async function onClick() {
 
 	const fireside = await FiresideAddModal.show({ community: community?.value });
 	if (fireside instanceof Fireside) {
-		router.push(fireside.location);
+		router.push(fireside.routeLocation);
 	}
 }
 </script>

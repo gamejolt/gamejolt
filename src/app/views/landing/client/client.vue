@@ -53,7 +53,11 @@ export default class RouteLandingClient extends BaseRouteComponent {
 			return;
 		}
 
-		Navigate.goto(downloadUrl);
+		if (GJ_IS_DESKTOP_APP) {
+			Navigate.gotoExternal(downloadUrl);
+		} else {
+			Navigate.goto(downloadUrl);
+		}
 	}
 
 	private async getDownloadUrl(platform: string, arch: string) {

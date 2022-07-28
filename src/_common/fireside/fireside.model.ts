@@ -36,7 +36,7 @@ export class Fireside extends Collaboratable(Model) {
 		return !!this.user_block || this.user.blocked_you || this.user.is_blocked;
 	}
 
-	get location() {
+	get routeLocation() {
 		return {
 			name: 'fireside',
 			params: {

@@ -54,7 +54,7 @@ export default class AppFiresideBadge extends Vue {
 	}
 
 	get location() {
-		return this.fireside?.location ?? null;
+		return this.fireside?.routeLocation ?? null;
 	}
 
 	get headerMediaItem() {

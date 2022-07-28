@@ -48,6 +48,13 @@ export class Environment {
 
 	static firebaseAppId = '1:1065321331780:web:37c4d21c84f1a69ad3d011';
 	static firebaseMeasurementId = 'G-ZV3SVDN43D';
+
+	static baseUrlDesktopApp =
+		GJ_BUILD_TYPE === 'build'
+			? 'chrome-extension://game-jolt-client/package'
+			: GJ_BUILD_TYPE === 'serve-build'
+			? 'chrome-extension://game-jolt-client/build/desktop'
+			: 'chrome-extension://game-jolt-client';
 }
 
 if (GJ_ENVIRONMENT === 'development') {
@@ -76,18 +83,10 @@ if (GJ_ENVIRONMENT === 'development') {
 }
 
 if (GJ_IS_DESKTOP_APP) {
-	// When it gets packaged up for production, the URL changes.
-	const baseUrl =
-		GJ_BUILD_TYPE === 'build'
-			? 'chrome-extension://game-jolt-client/package'
-			: GJ_BUILD_TYPE === 'serve-build'
-			? 'chrome-extension://game-jolt-client/build/desktop'
-			: 'chrome-extension://game-jolt-client';
-
-	Environment.wttfBaseUrl = `${baseUrl}/index.html#`;
-	Environment.authBaseUrl = `${baseUrl}/auth.html#`;
-	Environment.checkoutBaseUrl = `${baseUrl}/checkout.html#`;
-	Environment.clientSectionUrl = `${baseUrl}/client.html#`;
+	Environment.wttfBaseUrl = `${Environment.baseUrlDesktopApp}/index.html#`;
+	Environment.authBaseUrl = `${Environment.baseUrlDesktopApp}/auth.html#`;
+	Environment.checkoutBaseUrl = `${Environment.baseUrlDesktopApp}/checkout.html#`;
+	Environment.clientSectionUrl = `${Environment.baseUrlDesktopApp}/client.html#`;
 
 	// We have different firebase app for Client.
 	Environment.firebaseAppId = '1:1065321331780:web:b58ac57b00c1d538d3d011';

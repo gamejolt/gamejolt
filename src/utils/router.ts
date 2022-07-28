@@ -11,10 +11,13 @@ import {
 } from 'vue-router';
 import { Environment } from '../_common/environment/environment.service';
 import { routeError404 } from '../_common/error/page/page.route';
-import { Navigate } from '../_common/navigate/navigate.service';
+import { logger as navigateLogger, Navigate } from '../_common/navigate/navigate.service';
 import { initScrollBehavior } from '../_common/scroll/auto-scroll/autoscroll.service';
+import { escapeRegex } from './string';
 
-const ClientBaseRegex = new RegExp('chrome-extension:\\/\\/game\\-jolt\\-client\\/([^.]+)\\.html#');
+const ClientBaseRegex = new RegExp(
+	escapeRegex(Environment.baseUrlDesktopApp) + '\\/([^.]+)\\.html#'
+);
 
 export function initRouter(appRoutes: RouteRecordRaw[]) {
 	const routes = [...appRoutes, routeError404];
@@ -28,11 +31,32 @@ export function initRouter(appRoutes: RouteRecordRaw[]) {
 		history = createWebHistory();
 	}
 
-	return createRouter({
+	const router = createRouter({
 		history,
 		routes,
 		scrollBehavior: initScrollBehavior(),
 	});
+
+	router.beforeEach(to => {
+		const logInfo: Record<string, any> = {
+			Name: to.name,
+			Path: to.path,
+			Params: to.params,
+			Query: to.query,
+		};
+
+		if ('href' in to) {
+			logInfo.Href = (to as any).href;
+		}
+
+		const logInfoStr = Object.keys(logInfo)
+			.map(k => `${k}: ${JSON.stringify(logInfo[k])}`)
+			.join('\n\t');
+
+		navigateLogger.info(`Router going to ${to.fullPath}. Route:\n\t${logInfoStr}`);
+	});
+
+	return router;
 }
 
 /**
@@ -82,6 +106,7 @@ export function hijackLinks(router: Router, host: string) {
 
 		// Now try to match it against our routes and see if we got anything. If
 		// we match a 404 it's obviously wrong.
+		// TODO(desktop-app-fixes) would that ever work for client? how?.. the base url for the router is wrong isnt it??
 		const { matched } = router.resolve(href);
 		if (matched.length > 0 && matched[0].name !== 'error.404') {
 			// We matched a route! Let's go to it and stop the browser from doing
@@ -94,6 +119,7 @@ export function hijackLinks(router: Router, host: string) {
 		if (GJ_IS_DESKTOP_APP) {
 			const isGameJoltPath = /^https?:\/\/gamejolt\./.test(href);
 			if (isGameJoltPath) {
+				// TODO(desktop-app-fixes) is this outdated? how do we check?
 				const nonClientPaths = [
 					/^\/gas(\/.*)?/,
 					/^\/api(\/.*)?/,
@@ -103,6 +129,8 @@ export function hijackLinks(router: Router, host: string) {
 
 				const browsable = nonClientPaths.every(i => i.test(href) === false);
 				if (browsable) {
+					// TODO(desktop-app-fixes) This assumes all these urls are on the app section. isnt this wrong?
+					//
 					// Gotta rewrite the URL to include the correct base URL (to include the #).
 					// Otherwise it'll try to direct to the URL below as the raw URL.
 					Navigate.goto(Environment.wttfBaseUrl + href);
@@ -237,6 +265,25 @@ export function getAbsoluteLink(router: Router, location: RouteLocationRaw) {
 	url = url.replace(/^#/, '');
 
 	return Environment.baseUrl + url;
+}
+
+/**
+ * Returns true if the given `router` can resolve the given `location` to a
+ * known route.
+ *
+ * This function assumes that the given router has a catch-all route as a
+ * fallback that's called 'error.404'. As of time of writing, this is true for
+ * all sections - this is done during src/utils/router.ts:initRouter
+ */
+export function isKnownRoute(router: Router, location: string) {
+	const resolved = router.resolve(location);
+
+	// Unknown routes should match our fallback route name.
+	if ('name' in resolved) {
+		return resolved.name !== 'error.404';
+	}
+
+	return false;
 }
 
 /**

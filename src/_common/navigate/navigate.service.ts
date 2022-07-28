@@ -1,6 +1,9 @@
+import { createLogger } from '../../utils/logging';
 import { Environment } from '../environment/environment.service';
 
 export type DestructorFunc = (href?: string) => void;
+
+export const logger = createLogger('Navigate');
 
 export class Navigate {
 	private static redirecting = false;
@@ -53,6 +56,7 @@ export class Navigate {
 	}
 
 	static reload() {
+		logger.info('Reloading');
 		this.redirecting = true;
 
 		this.callDestructors();
@@ -65,6 +69,8 @@ export class Navigate {
 	}
 
 	public static goto(href: string) {
+		logger.info('Going to ' + href);
+
 		this.redirecting = true;
 
 		this.callDestructors(href);
@@ -72,6 +78,8 @@ export class Navigate {
 	}
 
 	static gotoExternal(href: string) {
+		logger.info('Going to in a new tab ' + href);
+
 		if (GJ_IS_DESKTOP_APP) {
 			nw.Shell.openExternal(href);
 		} else {
@@ -100,6 +108,8 @@ export class Navigate {
 			center?: boolean;
 		}
 	) {
+		logger.info('Going to in a new window ' + url);
+
 		if (GJ_IS_DESKTOP_APP) {
 			Navigate.gotoExternal(url);
 		} else if (!windowOptions) {

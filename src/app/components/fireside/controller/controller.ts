@@ -901,7 +901,7 @@ export function getFiresideLink(c: FiresideController, router: Router) {
 	if (!c.fireside) {
 		return;
 	}
-	return getAbsoluteLink(router, c.fireside.location);
+	return getAbsoluteLink(router, c.fireside.routeLocation);
 }
 
 export function copyFiresideLink(c: FiresideController, router: Router) {

@@ -1,5 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import type { RouteLocationRaw } from 'vue-router';
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
 import AppAudioPlaylistTS from '../../../audio/playlist/playlist';
 import AppAudioPlaylist from '../../../audio/playlist/playlist.vue';
@@ -48,7 +49,7 @@ export default class AppGameSoundtrackCard extends Vue {
 	}
 
 	download() {
-		const location = {
+		const location: RouteLocationRaw = {
 			name: 'download',
 			params: {
 				type: 'soundtrack',

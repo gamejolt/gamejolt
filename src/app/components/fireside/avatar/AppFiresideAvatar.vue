@@ -241,7 +241,7 @@ async function ejectFireside(community: FiresideCommunity) {
 		<template #link>
 			<AppPopper trigger="hover" no-hover-popover>
 				<template #default>
-					<RouterLink class="-link" :to="fireside.location" />
+					<RouterLink class="-link" :to="fireside.routeLocation" />
 				</template>
 
 				<template #popover>

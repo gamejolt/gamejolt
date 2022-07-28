@@ -1,4 +1,4 @@
-import { RouteLocationRaw } from 'vue-router';
+import type { RouteLocationDefinition } from '../../utils/router';
 import { Api } from '../api/api.service';
 import { Collaboratable } from '../collaborator/collaboratable';
 import { Community } from '../community/community.model';
@@ -221,7 +221,7 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 		return false;
 	}
 
-	get routeLocation(): RouteLocationRaw {
+	get routeLocation(): RouteLocationDefinition {
 		return {
 			name: 'discover.games.view.overview',
 			params: this.getSrefParams(),

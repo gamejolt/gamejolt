@@ -16,13 +16,14 @@
  *              By default this is 127.0.0.1 which only allows local connections.
  */
 
+import * as fs from 'fs-extra';
+import { gjSectionConfigs, type GjSectionName } from './build/section-config';
 import { Options, parseAndInferOptionsFromCommandline } from './build/vite-options';
 import { runVite } from './build/vite-runner';
 
 const minimist = require('minimist');
 const express = require('express') as typeof import('express');
 const path = require('path') as typeof import('path');
-const fs = require('fs') as typeof import('fs');
 const http = require('http') as typeof import('http');
 const https = require('https') as typeof import('https');
 const os = require('os') as typeof import('os');
@@ -107,6 +108,7 @@ function runViteBuild(gjOpts: Options, aborter: AbortController) {
 
 	viteProcess.on('close', () => {
 		if (!aborter.signal.aborted) {
+			console.log(`vite process closed (gjOpts: ${JSON.stringify(gjOpts)}`);
 			aborter.abort();
 		}
 	});
@@ -126,5 +128,35 @@ function runViteBuild(gjOpts: Options, aborter: AbortController) {
 		initializeHttpServer(args, gjOpts, aborter);
 	}
 
-	runViteBuild(gjOpts, aborter);
+	// If building for desktop app and section wasnt explicitly given, build all sections.
+	if (gjOpts.platform === 'desktop' && !('section' in args)) {
+		try {
+			const rootDir = path.resolve(__dirname, '..');
+			const frontendBuildDir = path.join(rootDir, 'build', 'desktop');
+
+			// Clean the build folder to start fresh.
+			console.log('Cleaning up old build dir');
+			await fs.remove(frontendBuildDir);
+
+			const desktopAppSectionNames = Object.entries(gjSectionConfigs)
+				.filter(([k, v]) => v.desktopApp)
+				.map(([k, v]) => k as GjSectionName);
+
+			for (const sectionName of desktopAppSectionNames) {
+				const argsForSection = Object.assign({}, args, {
+					section: sectionName,
+					'empty-outdir': false,
+				});
+				const gjOptsForSection = await parseAndInferOptionsFromCommandline(argsForSection);
+				gjOptsForSection.buildType = 'serve-build';
+
+				runViteBuild(gjOptsForSection, aborter);
+			}
+		} catch (e) {
+			console.error(e);
+			aborter.abort();
+		}
+	} else {
+		runViteBuild(gjOpts, aborter);
+	}
 })();

@@ -30,8 +30,14 @@ export default class AppAuthLogin extends Vue {
 
 		const location = getRedirectUrl(this.redirectTo);
 		if (location) {
-			Navigate.goto(location);
-			return;
+			if (!GJ_IS_DESKTOP_APP) {
+				Navigate.goto(location);
+				return;
+			}
+
+			console.error(
+				'Post auth redirects are not supported in client. Will redirect to dashboard instead.'
+			);
 		}
 
 		redirectToDashboard();
