@@ -1,3 +1,4 @@
+import { ref } from 'vue';
 import { hasDesktopAudioCaptureSupport } from '../fireside/rtc/device-capabilities';
 
 const STORAGE_PREFIX = 'settings.';
@@ -10,13 +11,23 @@ abstract class SettingBase<T extends SettingType> {
 	public abstract set(value: T): void;
 	public abstract get(): T;
 
+	/**
+	 * We use this to trigger vue's effect changes (watch and stuff) when
+	 * setting a value.
+	 */
+	private _watcherRef = ref(0);
+
 	protected _set(val: string) {
 		if (!import.meta.env.SSR) {
 			localStorage.setItem(STORAGE_PREFIX + this.key, val);
 		}
+
+		++this._watcherRef.value;
 	}
 
 	protected _get() {
+		this._watcherRef.value;
+
 		if (!import.meta.env.SSR && localStorage.getItem(STORAGE_PREFIX + this.key) !== null) {
 			return localStorage.getItem(STORAGE_PREFIX + this.key);
 		} else {
