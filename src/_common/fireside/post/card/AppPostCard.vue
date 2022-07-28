@@ -285,7 +285,6 @@ function _initVideoController() {
 								<AppFadeCollapse
 									:collapse-height="leadHeight"
 									ignore-threshold
-									size="lg"
 									as-mask
 								>
 									<AppContentViewer :source="post.lead_content" />

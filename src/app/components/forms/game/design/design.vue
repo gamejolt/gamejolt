@@ -1,7 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { mixins, Options, Watch } from 'vue-property-decorator';
-import AppEditableOverlay from '../../../../../_common/editable-overlay/editable-overlay.vue';
+import AppEditableOverlay from '../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppFormControlTheme from '../../../../../_common/form-vue/controls/AppFormControlTheme.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
