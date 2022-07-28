@@ -24,11 +24,9 @@ type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'
 export default defineConfig(async () => {
 	const gjOpts = readFromViteEnv(process.env);
 
-	// When serving the client locally, we need to acquire the ffmpeg binaries.
-	if (
-		gjOpts.platform === 'desktop' &&
-		(gjOpts.buildType === 'serve-hmr' || gjOpts.buildType === 'serve-build')
-	) {
+	// Acquire the ffmpeg prebuilt binaries if needed.
+	// By default this is done when serving the desktop app locally.
+	if (gjOpts.withFfmpeg) {
 		await acquirePrebuiltFFmpeg({
 			outDir: __dirname,
 			cacheDir: path.resolve(__dirname, 'build', '.cache', 'ffmpeg-prebuilt'),

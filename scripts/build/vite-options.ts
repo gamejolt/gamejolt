@@ -97,8 +97,10 @@ function parseYesNoOption(arg: MinimistArgument, argNameHuman: string) {
  *   --build-type <type>
  *   --empty-outdir, --no-empty-outdir
  *   --with-updater, --no-with-updater
+ *   --with-ffmpeg, --no-with-ffmpeg
  *   --gj-version <version>
  *   --nwjs-version <version>
+ *
  * ```
  *
  * Overriding previous command lines that control the same setting is possible.
@@ -213,6 +215,8 @@ function parseOptionsFromCommandlineArgs(args: MinimistParsedArguments) {
 		'Enable self updater / connectivity to parent Joltron process'
 	);
 
+	const withFfmpeg = parseYesNoOption(args['with-ffmpeg'], 'Acquire ffmpeg binaries') ?? true;
+
 	const version = args['gj-version'];
 	const nwjsVersion = args['nwjs-version'];
 
@@ -224,6 +228,7 @@ function parseOptionsFromCommandlineArgs(args: MinimistParsedArguments) {
 		buildType,
 		emptyOutDir,
 		withUpdater,
+		withFfmpeg,
 		version,
 		nwjsVersion,
 	};
@@ -247,6 +252,12 @@ async function inferAndValidateFromParsedOptions(opts: ParsedOptions) {
 	const withUpdater =
 		opts.withUpdater ?? (opts.platform === 'desktop' && opts.buildType === 'build');
 
+	// Ffmpeg binaries are usually only needed when serving the desktop app locally.
+	const withFfmpeg =
+		opts.withFfmpeg ??
+		(opts.platform === 'desktop' &&
+			(opts.buildType === 'serve-hmr' || opts.buildType === 'serve-build'));
+
 	// Merge current section config with defaults.
 	const currentSectionConfig = gjSectionConfigs[opts.section];
 
@@ -262,6 +273,7 @@ async function inferAndValidateFromParsedOptions(opts: ParsedOptions) {
 		version,
 		nwjsVersion,
 		withUpdater,
+		withFfmpeg,
 		currentSectionConfig,
 	};
 }

@@ -68,6 +68,6 @@ export async function acquirePrebuiltFFmpeg(opts: AcquireOptions) {
 	console.log(
 		`Installing ffmpeg-prebuilt to the build dir: ${path.resolve(cachePath, filename)} -> ${to}`
 	);
-	await fs.copy(path.resolve(cachePath, filename), to, { overwrite: false });
+	await fs.copy(path.resolve(cachePath, filename), to);
 	return to;
 }
