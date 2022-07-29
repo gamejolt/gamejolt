@@ -28,6 +28,7 @@ import { getDeviceBrowser, getDeviceOS } from '../../../../_common/device/device
 import { DogtagData } from '../../../../_common/dogtag/dogtag-data';
 import { DrawerStore, onFiresideStickerPlaced } from '../../../../_common/drawer/drawer-store';
 import { formatDuration } from '../../../../_common/filters/duration';
+import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { FiresideChatSettings } from '../../../../_common/fireside/chat-settings/chat-settings.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../../_common/fireside/role/role.model';
@@ -210,6 +211,21 @@ export function createFiresideController(
 			return undefined;
 		}
 		return chat.value?.roomMembers[chatRoom.value.id] as ChatUserCollection;
+	});
+
+	const stickerCount = computed(() => {
+		// StickerTargetController adds/removes from the list of stickers all
+		// the time when in a Live context. Just get the counts from the model
+		// directly.
+		const length = stickerTargetController.model.sticker_counts.reduce(
+			(prev, current) => prev + current.count,
+			0
+		);
+
+		if (!length) {
+			return undefined;
+		}
+		return formatFuzzynumber(length).toString();
 	});
 
 	const isDraft = computed(() => fireside?.is_draft ?? true);
@@ -519,6 +535,7 @@ export function createFiresideController(
 		user,
 		chatRoom,
 		chatUsers,
+		stickerCount,
 		isDraft,
 		isStreaming,
 		isPersonallyStreaming,
