@@ -54,7 +54,7 @@ const { fireside, stickerTargetController, overlay } = toRefs(props);
 			</div>
 		</div>
 
-		<div v-if="!Screen.isXs && stickerTargetController">
+		<div v-if="!Screen.isXs && stickerTargetController" class="-reactions">
 			<AppStickerLiveReactions :controller="stickerTargetController" reverse />
 		</div>
 	</AppTheme>
@@ -72,6 +72,7 @@ const { fireside, stickerTargetController, overlay } = toRefs(props);
 .-leading
 	flex: auto
 	max-width: 100%
+	min-width: 0
 
 .-title-wrapper
 	flex: auto
@@ -101,4 +102,7 @@ const { fireside, stickerTargetController, overlay } = toRefs(props);
 	width: 16px
 	height: 16px
 	margin-right: 4px
+
+.-reactions
+	margin-left: 8px
 </style>
