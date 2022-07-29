@@ -606,7 +606,7 @@ $-center-guide-width = 400px
 .-view-blocked-heading
 	font-size: 21px
 	margin: 0
-	color: white
+	color: var(--theme-fg)
 
 .-overlay
 	*
