@@ -10,6 +10,10 @@ defineProps({
 	sm: {
 		type: Boolean,
 	},
+	maxWidth: {
+		type: Number,
+		default: 0,
+	},
 });
 
 const slots = useSlots();
@@ -19,7 +23,20 @@ const hasContent = computed(() => !!slots.default);
 
 <template>
 	<div class="-container">
-		<img class="-ill" :width="asset.width / 2" :height="asset.height / 2" :src="asset.path" />
+		<img
+			class="-ill"
+			:width="asset.width / 2"
+			:height="asset.height / 2"
+			:style="
+				maxWidth
+					? {
+							maxWidth: `${maxWidth}px`,
+							height: 'auto',
+					  }
+					: undefined
+			"
+			:src="asset.path"
+		/>
 
 		<div v-if="hasContent" class="-text" :class="{ '-sm': sm }">
 			<slot />
@@ -39,7 +56,7 @@ $-font-size = 19px
 	text-align: center
 
 .-ill
-	margin: $line-height-computed 0
+	margin: 24px 0
 	max-width: 100%
 
 .-text

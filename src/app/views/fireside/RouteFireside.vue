@@ -276,20 +276,26 @@ function onIsPersonallyStreamingChanged() {
 
 				<template v-if="cannotViewReason === 'get-app'">
 					<div class="-view-blocked">
-						<h2>
-							<AppTranslate>
-								We want you to have the best fireside experience possible!
-							</AppTranslate>
-						</h2>
+						<AppIllustration :asset="illMobileKikkerstein" :max-width="90">
+							<h2 class="-view-blocked-heading">
+								<AppTranslate>
+									We want you to have the best fireside experience possible!
+								</AppTranslate>
+							</h2>
 
-						<AppIllustration :asset="illMobileKikkerstein">
+							<AppSpacer vertical :scale="6" />
+
+							<AppMobileAppButtons source="fireside" />
+
+							<AppSpacer vertical :scale="6" />
+
 							<AppTranslate>
 								Download the mobile app to watch streams, follow your friends, and
 								place stickers!
 							</AppTranslate>
 
 							<template v-if="Screen.isPointerMouse">
-								<AppSpacer vertical :scale="2" />
+								<AppSpacer vertical :scale="4" />
 
 								<AppTranslate>
 									If you're on desktop, resize your window larger to watch this
@@ -297,17 +303,17 @@ function onIsPersonallyStreamingChanged() {
 								</AppTranslate>
 							</template>
 						</AppIllustration>
-
-						<AppMobileAppButtons source="fireside" />
 					</div>
 				</template>
 				<template v-if="cannotViewReason === 'needs-resize'">
 					<div class="-view-blocked">
-						<h2>
-							<AppTranslate> This window size is unsupported </AppTranslate>
-						</h2>
-
 						<AppIllustration :asset="illNoCommentsSmall">
+							<h2 class="-view-blocked-heading">
+								<AppTranslate> This window size is unsupported </AppTranslate>
+							</h2>
+
+							<AppSpacer vertical :scale="4" />
+
 							<AppTranslate>
 								Please make your browser larger to be able to view this content.
 							</AppTranslate>
@@ -592,11 +598,15 @@ $-center-guide-width = 400px
 	justify-content: center
 	flex-direction: column
 	align-items: center
-	gap: 20px
 	width: 100%
 	height: 100%
-	padding: 16px 32px 80px
+	padding: 16px 32px 116px
 	text-align: center
+
+.-view-blocked-heading
+	font-size: 21px
+	margin: 0
+	color: var(--theme-fg)
 
 .-overlay
 	*
@@ -646,6 +656,7 @@ $-center-guide-width = 400px
 
 .-message-wrapper
 	@extends .-abs-stretch
+	change-bg('bg')
 	position: absolute
 	z-index: 1
 	display: flex
