@@ -17,6 +17,7 @@
  */
 
 import * as fs from 'fs-extra';
+import { acquirePrebuiltFFmpeg } from './build/desktop-app/ffmpeg-prebuilt';
 import { gjSectionConfigs, type GjSectionName } from './build/section-config';
 import { Options, parseAndInferOptionsFromCommandline } from './build/vite-options';
 import { runVite } from './build/vite-runner';
@@ -134,6 +135,12 @@ function runViteBuild(gjOpts: Options, aborter: AbortController) {
 			const rootDir = path.resolve(__dirname, '..');
 			const frontendBuildDir = path.join(rootDir, 'build', 'desktop');
 
+			await acquirePrebuiltFFmpeg({
+				outDir: rootDir,
+				cacheDir: path.resolve(rootDir, 'build', '.cache', 'ffmpeg-prebuilt'),
+				nwjsVersion: gjOpts.nwjsVersion,
+			});
+
 			// Clean the build folder to start fresh.
 			console.log('Cleaning up old build dir');
 			await fs.remove(frontendBuildDir);
@@ -149,6 +156,10 @@ function runViteBuild(gjOpts: Options, aborter: AbortController) {
 				});
 				const gjOptsForSection = await parseAndInferOptionsFromCommandline(argsForSection);
 				gjOptsForSection.buildType = 'serve-build';
+				// Don't acquire ffmpeg during the build because multiple build
+				// processes would try overwriting the same ffmpeg binary. For
+				// this reason we acquire it before any section starts building.
+				gjOptsForSection.withFfmpeg = false;
 
 				runViteBuild(gjOptsForSection, aborter);
 			}

@@ -4,7 +4,6 @@ export type BottomBarControl = 'members' | 'settings' | 'setup';
 
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
-import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { setProducerDeviceMuted, stopStreaming } from '../../../../_common/fireside/rtc/producer';
 import { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
@@ -34,7 +33,7 @@ const emit = defineEmits({
 });
 
 const c = useFiresideController()!;
-const { rtc, user, canStream, isStreaming, isPersonallyStreaming } = c;
+const { rtc, user, stickerCount, canStream, isStreaming, isPersonallyStreaming } = c;
 
 const stickerStore = useStickerStore();
 
@@ -45,14 +44,6 @@ const localUser = computed(() => rtc.value?.localUser);
 
 const producerMicMuted = computed(() => producer.value?.micMuted.value === true);
 const producerVideoMuted = computed(() => producer.value?.videoMuted.value === true);
-
-const stickerCount = computed(() => {
-	const length = c.stickerTargetController.stickers.value.length;
-	if (!length) {
-		return undefined;
-	}
-	return formatFuzzynumber(length).toString();
-});
 
 const micIcon = computed<Jolticon>(() => {
 	const disabled = 'microphone-off';

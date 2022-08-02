@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from '@vue/reactivity';
-import { onMounted, toRefs, watch } from 'vue';
+import { onMounted, PropType, toRefs, watch } from 'vue';
 import { sleep } from '../utils/utils';
 import { Screen } from './screen/screen-service';
 import { Scroll } from './scroll/scroll.service';
@@ -24,7 +24,7 @@ const props = defineProps({
 		type: Boolean,
 	},
 	size: {
-		type: String,
+		type: String as PropType<'sm'>,
 		default: undefined,
 		validator: val => !val || val === 'sm',
 	},
@@ -36,13 +36,12 @@ const props = defineProps({
 	},
 });
 
-const { collapseHeight, isOpen, animate, size, ignoreThreshold, asMask } = toRefs(props);
-
 const emit = defineEmits({
 	requireChange: (_isRequired: boolean) => true,
 	expand: (_e: Event) => true,
 });
 
+const { collapseHeight, isOpen, animate, size, ignoreThreshold, asMask } = toRefs(props);
 const isCollapsed = ref(false);
 const frameRequestHandle = ref<number | undefined>();
 

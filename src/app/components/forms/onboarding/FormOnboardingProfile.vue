@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
 import { ContentDocument } from '../../../../_common/content/content-document';
-import AppEditableOverlay from '../../../../_common/editable-overlay/editable-overlay.vue';
+import AppEditableOverlay from '../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormControlContent from '../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import {

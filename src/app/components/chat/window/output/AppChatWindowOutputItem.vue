@@ -435,12 +435,15 @@ $-min-item-width = 24px
 	max-width: 200px
 	font-weight: bold
 	font-size: 13px
+	flex: 0 1 auto
 
 .-username
+	text-overflow()
 	theme-prop('color', 'fg-muted')
 	font-size: 11px
 	margin-left: 4px
 	cursor: default
+	flex: 0 1 auto
 
 .-message-queued
 	color: var(--theme-fg-muted)
