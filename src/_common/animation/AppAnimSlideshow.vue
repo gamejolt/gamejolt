@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-import { ref } from '@vue/reactivity';
-import { computed, onMounted, onUnmounted, PropType, toRefs, watch } from 'vue';
-import { debounce } from '../../../utils/utils';
-import AppAspectRatio from '../../../_common/aspect-ratio/AppAspectRatio.vue';
-import { vAppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
-import { Ruler } from '../../../_common/ruler/ruler-service';
-import { ImgSlideshow } from '../../img/slideshow/sheets';
+import { computed, onMounted, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
+import { debounce } from '../../utils/utils';
+import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
+import { vAppObserveDimensions } from '../observe-dimensions/observe-dimensions.directive';
+import { Ruler } from '../ruler/ruler-service';
+import { ImgSlideshow } from './slideshow/sheets';
 
 const props = defineProps({
 	sheet: {

@@ -23,7 +23,7 @@ import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import FormComment from '../../add/add.vue';
 import AppCommentContent from '../../AppCommentContent.vue';
 import { Comment, getCommentBlockReason } from '../../comment-model';
-import AppCommentControls from '../../controls/controls.vue';
+import AppCommentControls from '../../controls/AppCommentControls.vue';
 import AppCommentWidgetCommentBlocked from '../comment-blocked/comment-blocked.vue';
 import { useCommentWidget } from '../widget.vue';
 
@@ -398,13 +398,12 @@ export default class AppCommentWidgetComment extends Vue {
 
 		<template #controls>
 			<AppCommentControls
+				:model="model"
 				:comment="comment"
 				:children="children"
-				:parent="parent"
 				:show-reply="showReplies"
 				:can-reply="canReply"
 				:can-place-stickers="canPlaceStickers"
-				:model="model"
 			/>
 		</template>
 

@@ -1,64 +1,72 @@
-<script lang="ts">
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, onMounted, ref, toRefs, watch } from 'vue';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
 
-@Options({})
-export default class AppStickerReactionsItem extends Vue {
-	@Prop({ type: Number, required: true }) count!: number;
-	@Prop({ type: String, required: true }) imgUrl!: string;
-	@Prop({ type: Boolean, default: false }) animate!: boolean;
+const props = defineProps({
+	count: {
+		type: Number,
+		required: true,
+	},
+	imgUrl: {
+		type: String,
+		required: true,
+	},
+	animate: {
+		type: Boolean,
+	},
+});
 
-	timer: NodeJS.Timer | null = null;
+const { count, imgUrl, animate } = toRefs(props);
 
-	hasQueuedTimer = false;
-	shouldAnimate = false;
+let timer: NodeJS.Timer | null = null;
 
-	get displayCount() {
-		return formatFuzzynumber(this.count);
+let hasQueuedTimer = false;
+const shouldAnimate = ref(false);
+
+const displayCount = computed(() => formatFuzzynumber(count.value));
+
+watch(count, onCountChanged);
+
+onMounted(() => {
+	if (animate.value) {
+		_animateItem();
+	}
+});
+
+function _animateItem() {
+	if (!animate.value) {
+		_clearTimer();
+		return;
 	}
 
-	mounted() {
-		if (this.animate) {
-			this.animateItem();
-		}
+	if (timer != null) {
+		hasQueuedTimer = true;
+		return;
 	}
 
-	private animateItem() {
-		if (!this.animate) {
-			this.clearTimer();
+	shouldAnimate.value = true;
+	timer = setTimeout(() => {
+		_clearTimer();
+		if (hasQueuedTimer) {
+			hasQueuedTimer = false;
+			_animateItem();
 			return;
 		}
 
-		if (this.timer != null) {
-			this.hasQueuedTimer = true;
-			return;
-		}
+		shouldAnimate.value = false;
+	}, 2_000);
+}
 
-		this.shouldAnimate = true;
-		this.timer = setTimeout(() => {
-			this.clearTimer();
-			if (this.hasQueuedTimer) {
-				this.hasQueuedTimer = false;
-				this.animateItem();
-				return;
-			}
-
-			this.shouldAnimate = false;
-		}, 2_000);
+function _clearTimer() {
+	if (timer) {
+		clearTimeout(timer);
 	}
+	timer = null;
+}
 
-	private clearTimer() {
-		if (this.timer) {
-			clearTimeout(this.timer);
-		}
-		this.timer = null;
-	}
-
-	@Watch('count')
-	onCountChanged() {
-		if (this.animate) {
-			this.animateItem();
-		}
+function onCountChanged() {
+	if (animate.value) {
+		_animateItem();
 	}
 }
 </script>

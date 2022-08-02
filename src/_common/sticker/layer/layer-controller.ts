@@ -1,44 +1,41 @@
 import { InjectionKey, shallowRef } from '@vue/runtime-core';
-import { computed, ComputedRef, inject, provide, ref, Ref, toRaw } from 'vue';
+import { computed, ComputedRef, inject, provide, ref, Ref, ShallowRef, toRaw } from 'vue';
 import { arrayRemove } from '../../../utils/array';
-import { DrawerStore } from '../../drawer/drawer-store';
 import { ScrollController } from '../../scroll/AppScrollScroller.vue';
-import { StickerTargetController } from '../target/target-controller';
-import AppStickerTarget from '../target/target.vue';
+import { StickerStore } from '../sticker-store';
+import { StickerLayerItem } from './layer-item';
 
 const StickerLayerKey: InjectionKey<StickerLayerController> = Symbol('sticker-layer');
 
 export type StickerLayerController = {
-	scroller: Ref<ScrollController | null>;
+	scroller: ShallowRef<ScrollController | null>;
 
-	targets: Ref<AppStickerTarget[]>;
-	hoveredTarget: Ref<AppStickerTarget | null>;
-	rects: Ref<WeakMap<AppStickerTarget, StickerLayerTargetRect>>;
+	hoveredTarget: ShallowRef<StickerLayerItem | null>;
+	cachedRects: Ref<WeakMap<StickerLayerItem, StickerLayerTargetRect>>;
+	layerItems: ShallowRef<StickerLayerItem[]>;
 
 	isShowingDrawer: ComputedRef<boolean>;
-	drawer: DrawerStore;
+	drawer: StickerStore;
 };
 
-export function createStickerLayerController(drawer: DrawerStore) {
-	const scroller = shallowRef<ScrollController | null>(null);
+export function createStickerLayerController(drawer: StickerStore) {
+	const scroller: StickerLayerController['scroller'] = shallowRef<ScrollController | null>(null);
 
-	const targets = ref<AppStickerTarget[]>([]);
-	const hoveredTarget = ref<AppStickerTarget | null>(null);
-	const rects = ref(new WeakMap<AppStickerTarget, StickerLayerTargetRect>());
+	const hoveredTarget: StickerLayerController['hoveredTarget'] = shallowRef(null);
+	const cachedRects: StickerLayerController['cachedRects'] = ref(new WeakMap());
+	const layerItems: StickerLayerController['layerItems'] = shallowRef([]);
 
-	const _isActive = computed<boolean>(() => {
-		return toRaw(drawer.activeLayer.value) === toRaw(c);
-	});
+	const _isActive = computed(() => toRaw(drawer.activeLayer.value) === toRaw(c));
 
-	const isShowingDrawer = computed(() => {
-		return drawer.isDrawerOpen.value && !drawer.hideDrawer.value && _isActive.value;
-	});
+	const isShowingDrawer = computed(
+		() => drawer.isDrawerOpen.value && !drawer.hideDrawer.value && _isActive.value
+	);
 
 	const c: StickerLayerController = {
 		scroller,
-		targets,
 		hoveredTarget,
-		rects,
+		cachedRects,
+		layerItems,
 		isShowingDrawer,
 		drawer,
 	};
@@ -64,37 +61,35 @@ export class StickerLayerTargetRect {
 
 export function registerStickerTarget(
 	controller: StickerLayerController,
-	target: AppStickerTarget,
-	targetController: StickerTargetController
+	target: StickerLayerItem
 ) {
-	targetController.layer.value = controller;
-	controller.targets.value.push(target);
+	target.controller.layer.value = controller;
+	controller.layerItems.value.push(target);
 }
 
 export function unregisterStickerTarget(
-	controller: StickerLayerController,
-	target: AppStickerTarget,
-	targetController: StickerTargetController
+	layerController: StickerLayerController,
+	target: StickerLayerItem
 ) {
-	const { targets, hoveredTarget } = controller;
+	const { layerItems, hoveredTarget } = layerController;
 	const rawTarget = toRaw(target);
 
-	targetController.layer.value = null;
-	arrayRemove(targets.value, i => toRaw(i) === rawTarget);
-	if (toRaw(hoveredTarget.value) === rawTarget) {
-		controller.hoveredTarget.value = null;
+	target.controller.layer.value = null;
+	arrayRemove(layerItems.value, i => toRaw(i) === rawTarget);
+
+	if (rawTarget === toRaw(hoveredTarget.value)) {
+		hoveredTarget.value = null;
 	}
 }
 
 export function calculateStickerTargetRects(
-	controller: StickerLayerController,
+	layerController: StickerLayerController,
 	scrollLeft: number,
 	scrollTop: number
 ) {
-	controller.rects.value = new WeakMap(
-		controller.targets.value.map(target => {
-			const { x, y, width, height } = target.$el.getBoundingClientRect();
-
+	layerController.cachedRects.value = new WeakMap(
+		layerController.layerItems.value.map(target => {
+			const { x, y, width, height } = target.getRect();
 			// We need to add this scroll distance since getBoundingClientRect()
 			// returns x/y from the left/top of the window instead of the page.
 			// Return as an "entry" so that WeakMap will use target as key and
@@ -108,30 +103,31 @@ export function calculateStickerTargetRects(
 }
 
 export function getRectForStickerTarget(
-	{ rects }: StickerLayerController,
-	target: AppStickerTarget
+	{ cachedRects }: StickerLayerController,
+	target: StickerLayerItem
 ) {
-	return rects.value.get(target);
+	return cachedRects.value.get(target);
 }
 
 export function getCollidingStickerTarget(
-	{ targets, rects }: StickerLayerController,
+	{ layerItems, cachedRects }: StickerLayerController,
 	pointerX: number,
 	pointerY: number
 ) {
-	return targets.value.find(i => {
-		const rect = rects.value.get(i);
+	return layerItems.value.find(i => {
+		const rect = cachedRects.value.get(i);
 		if (!rect) {
 			return false;
 		}
 
 		const { x, y, width, height } = rect;
 
-		return (
-			pointerX! - x < width &&
-			pointerY! - y < height &&
-			pointerX! - x > 0 &&
-			pointerY! - y > 0
-		);
+		const relX = pointerX - x;
+		const relY = pointerY - y;
+
+		const xWithinBounds = 0 <= relX && relX <= width;
+		const yWithinBounds = 0 <= relY && relY <= height;
+
+		return xWithinBounds && yWithinBounds;
 	});
 }

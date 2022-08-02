@@ -8,20 +8,16 @@ defineProps({
 </script>
 
 <template>
-	<div class="live-reaction-item">
-		<span class="-sticker">
+	<div class="sticker-stack-item">
+		<span>
 			<img class="-sticker-img" :src="imgUrl" alt="" draggable="false" />
 		</span>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-.live-reaction-item
+.sticker-stack-item
 	user-select: none
-
-.-sticker
-	width: 20px
-	height: 20px
 
 .-sticker-img
 	display: block

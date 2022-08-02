@@ -1,14 +1,14 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
-
-@Options({})
-export default class AppEventItemMediaIndicator extends Vue {
-	@Prop(Number)
-	count!: number;
-
-	@Prop(Number)
-	current!: number;
-}
+<script lang="ts" setup>
+defineProps({
+	count: {
+		type: Number,
+		required: true,
+	},
+	current: {
+		type: Number,
+		required: true,
+	},
+});
 </script>
 
 <template>

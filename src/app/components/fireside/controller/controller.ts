@@ -26,7 +26,6 @@ import {
 } from '../../../../_common/community/community.model';
 import { getDeviceBrowser, getDeviceOS } from '../../../../_common/device/device.service';
 import { DogtagData } from '../../../../_common/dogtag/dogtag-data';
-import { DrawerStore, onFiresideStickerPlaced } from '../../../../_common/drawer/drawer-store';
 import { formatDuration } from '../../../../_common/filters/duration';
 import { FiresideChatSettings } from '../../../../_common/fireside/chat-settings/chat-settings.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
@@ -50,6 +49,7 @@ import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/grow
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
+import { onFiresideStickerPlaced, StickerStore } from '../../../../_common/sticker/sticker-store';
 import { createStickerTargetController } from '../../../../_common/sticker/target/target-controller';
 import { CommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -117,12 +117,12 @@ export function createFiresideController(
 		isMuted?: boolean;
 		appStore: AppStore;
 		commonStore: CommonStore;
-		drawerStore: DrawerStore;
+		stickerStore: StickerStore;
 		chatStore: ChatStore;
 		router: Router;
 	}
 ) {
-	const { isMuted = false, appStore, commonStore, drawerStore, chatStore, router } = options;
+	const { isMuted = false, appStore, commonStore, stickerStore, chatStore, router } = options;
 	const { user } = commonStore;
 	const { grid, loadGrid } = appStore;
 
@@ -151,8 +151,15 @@ export function createFiresideController(
 	 */
 	const listableHostIds = ref<Set<number>>(new Set());
 
-	const stickerTargetController = createStickerTargetController(fireside, undefined, {
+	const stickerTargetController = createStickerTargetController(fireside, {
 		isLive: true,
+		isCreator: computed(() => {
+			const user = rtc.value?.focusedUser?.userModel;
+			if (!user) {
+				return false;
+			}
+			return user.is_creator;
+		}),
 		placeStickerCallback: async data => {
 			const roomChannel = chatChannel.value;
 			const targetUserId = rtc.value?.focusedUser?.userModel?.id;
@@ -709,7 +716,7 @@ export function createFiresideController(
 
 					const newChannel = await createGridFiresideChannel(grid.value!, controller, {
 						firesideHash: fireside.hash,
-						drawerStore,
+						stickerStore,
 					});
 
 					gridChannel.value = newChannel;
@@ -843,7 +850,7 @@ export function createFiresideController(
 	async function cleanup() {
 		logger.debug('controller cleanup called');
 
-		drawerStore.streak.value = null;
+		stickerStore.streak.value = null;
 
 		_disconnect();
 		grid.value?.unsetGuestToken();

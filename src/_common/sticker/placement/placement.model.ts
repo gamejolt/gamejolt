@@ -11,6 +11,7 @@ export class StickerPlacement extends Model {
 	sticker!: Sticker;
 
 	target_data!: PlacementTargetData;
+	is_charged!: boolean;
 
 	constructor(data: any = {}) {
 		super(data);

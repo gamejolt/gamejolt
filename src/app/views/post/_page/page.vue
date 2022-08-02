@@ -30,13 +30,13 @@ import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppStickerControlsOverlay from '../../../../_common/sticker/AppStickerControlsOverlay.vue';
-import AppStickerReactions from '../../../../_common/sticker/reactions/reactions.vue';
+import AppStickerReactions from '../../../../_common/sticker/reactions/AppStickerReactions.vue';
+import AppStickerTarget from '../../../../_common/sticker/target/AppStickerTarget.vue';
 import {
 	createStickerTargetController,
 	provideStickerTargerController,
 	StickerTargetController,
 } from '../../../../_common/sticker/target/target-controller';
-import AppStickerTarget from '../../../../_common/sticker/target/target.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -56,7 +56,7 @@ import AppPageContainer from '../../../components/page-container/AppPageContaine
 import AppPollVoting from '../../../components/poll/voting/voting.vue';
 import AppActivityFeedPostContent from '../../../components/post/AppPostContent.vue';
 import AppPostHeader from '../../../components/post/AppPostHeader.vue';
-import AppPostControls from '../../../components/post/controls/controls.vue';
+import AppPostControls from '../../../components/post/controls/AppPostControls.vue';
 import AppPostPageRecommendations from './recommendations/AppPostPageRecommendations.vue';
 
 const UserFollowLocation = 'postPage';
@@ -169,7 +169,9 @@ export default class AppPostPage extends Vue {
 	}
 
 	created() {
-		this.stickerTargetController = createStickerTargetController(this.post);
+		this.stickerTargetController = createStickerTargetController(this.post, {
+			isCreator: computed(() => this.post.displayUser.is_creator),
+		});
 		provideStickerTargerController(this.stickerTargetController);
 
 		if (import.meta.env.SSR) {
@@ -194,7 +196,9 @@ export default class AppPostPage extends Vue {
 
 	@Watch('post.id')
 	onPostChange() {
-		this.stickerTargetController = createStickerTargetController(this.post);
+		this.stickerTargetController = createStickerTargetController(this.post, {
+			isCreator: computed(() => this.post.displayUser.is_creator),
+		});
 	}
 
 	onVideoProcessingComplete(payload: any) {

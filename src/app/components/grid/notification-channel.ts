@@ -142,6 +142,8 @@ export async function createGridNotificationChannel(
 			questStore.addQuestActivityIds(payload.questActivityIds);
 			questStore.setDailyResetHour(payload.questResetHour);
 
+			// TODO(charged-stickers) set initial charge values in the StickerStore.
+
 			client.bootstrapTimestamp = payload.lastNotificationTime;
 			client.bootstrapReceived = true;
 

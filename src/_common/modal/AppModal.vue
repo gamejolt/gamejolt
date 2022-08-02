@@ -2,11 +2,11 @@
 import { computed, onMounted, onUnmounted, PropType, ref, useSlots } from 'vue';
 import { useRouter } from 'vue-router';
 import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
-import { useDrawerStore } from '../drawer/drawer-store';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import { Screen } from '../screen/screen-service';
 import AppScrollAffix from '../scroll/AppScrollAffix.vue';
 import AppScrollScroller, { createScroller } from '../scroll/AppScrollScroller.vue';
+import { useStickerStore } from '../sticker/sticker-store';
 import AppTheme from '../theme/AppTheme.vue';
 import { Theme } from '../theme/theme.model';
 import { ModalDismissReason, Modals, useModal } from './modal.service';
@@ -33,7 +33,7 @@ defineExpose<AppModalInterface>({
 const slots = useSlots();
 const router = useRouter();
 const modal = useModal()!;
-const drawer = useDrawerStore();
+const stickerStore = useStickerStore();
 const scroller = createScroller();
 
 const root = ref<HTMLElement>();
@@ -98,7 +98,7 @@ function dismissBackdrop() {
 		Screen.isMobile ||
 		modal.noBackdropClose ||
 		isHoveringContent.value ||
-		drawer.isDrawerOpen.value
+		stickerStore.isDrawerOpen.value
 	) {
 		return;
 	}

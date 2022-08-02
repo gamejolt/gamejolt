@@ -4,13 +4,13 @@ import { useRoute, useRouter } from 'vue-router';
 import { AppClientBase } from '../../../_common/client/safe-exports';
 import { Connection } from '../../../_common/connection/connection-service';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
-import { setDrawerOpen, useDrawerStore } from '../../../_common/drawer/drawer-store';
 import { Meta } from '../../../_common/meta/meta-service';
 import AppMinbar from '../../../_common/minbar/minbar.vue';
 import AppMobileAppPromotionBanner from '../../../_common/mobile-app/AppMobileAppPromotionBanner.vue';
 import { Screen, triggerOnScreenResize } from '../../../_common/screen/screen-service';
 import { useSidebarStore } from '../../../_common/sidebar/sidebar.store';
-import AppStickerLayer from '../../../_common/sticker/layer/layer.vue';
+import AppStickerLayer from '../../../_common/sticker/layer/AppStickerLayer.vue';
+import { setStickerDrawerOpen, useStickerStore } from '../../../_common/sticker/sticker-store';
 import { useBannerStore } from '../../store/banner';
 import { useAppStore } from '../../store/index';
 import { useChatStore } from '../chat/chat-store';
@@ -37,13 +37,16 @@ const {
 	showContextPane,
 	clearPanes,
 } = useAppStore();
+
 const { hasBanner } = useBannerStore();
+
 const {
 	showOnRouteChange: shouldShowSidebarOnRouteChange,
 	hideOnRouteChange: shouldHideSidebarOnRouteChange,
 	showContextOnRouteChange,
 } = useSidebarStore();
-const drawerStore = useDrawerStore();
+
+const stickerStore = useStickerStore();
 const chatStore = useChatStore()!;
 const route = useRoute();
 const router = useRouter();
@@ -70,7 +73,7 @@ onMounted(() => {
 			clearPanes();
 		}
 
-		setDrawerOpen(drawerStore, false);
+		setStickerDrawerOpen(stickerStore, false);
 	});
 });
 
