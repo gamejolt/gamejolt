@@ -156,9 +156,10 @@ function updateGhostPosition(pos: { left: number; top: number }) {
 					[AppAnimElectricity] can have layering issues. -->
 					<div
 						v-if="!canPlaceChargedStickerOnResource"
-						v-app-tooltip.touchable="canChargeSticker
+						v-app-tooltip.touchable="
+							canChargeSticker
 								? $gettext(`Charged stickers can only be placed on creators.`)
-								: $gettext(`You're not able to charge this sticker yet.`),
+								: $gettext(`You're not able to charge this sticker yet.`)
 						"
 						class="-disabled-button-mask"
 					/>
