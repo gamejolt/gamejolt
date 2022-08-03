@@ -8,6 +8,7 @@ import { formatFuzzynumber } from '../../filters/fuzzynumber';
 import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
+import { useStickerLayer } from '../../sticker/layer/layer-controller';
 import { setStickerDrawerOpen, useStickerStore } from '../../sticker/sticker-store';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppTranslate from '../../translate/AppTranslate.vue';
@@ -43,6 +44,7 @@ const props = defineProps({
 const { model, comment, children, showReply, canReply, canPlaceStickers } = toRefs(props);
 
 const stickerStore = useStickerStore();
+const stickerLayer = useStickerLayer();
 const router = useRouter();
 
 const votingTooltip = computed(() => {
@@ -116,7 +118,7 @@ function showLikers() {
 
 async function placeSticker() {
 	Analytics.trackEvent('post-controls', 'sticker-place', 'comments');
-	setStickerDrawerOpen(stickerStore, true);
+	setStickerDrawerOpen(stickerStore, true, stickerLayer);
 }
 </script>
 

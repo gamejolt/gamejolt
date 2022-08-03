@@ -54,7 +54,7 @@ function onDimensionsChange([
 
 function onClickMask() {
 	Analytics.trackEvent('sticker-drawer', 'click-mask-hide');
-	setStickerDrawerOpen(stickerStore, false);
+	setStickerDrawerOpen(stickerStore, false, null);
 }
 </script>
 

@@ -16,6 +16,7 @@ import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.v
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import AppStickerControlsOverlay from '../../../../../_common/sticker/AppStickerControlsOverlay.vue';
+import AppStickerLayer from '../../../../../_common/sticker/layer/AppStickerLayer.vue';
 import { canPlaceStickerOnFiresidePost } from '../../../../../_common/sticker/placement/placement.model';
 import AppStickerStack from '../../../../../_common/sticker/stack/AppStickerStack.vue';
 import {
@@ -240,115 +241,121 @@ function onPostUnpinned(item: EventItem) {
 
 <template>
 	<div ref="root" v-app-observe-dimensions="onResize" class="-container">
-		<AppActivityFeedPostBlocked
-			v-if="shouldBlock"
-			:username="user.username"
-			@show="onUnhideBlock"
-		/>
-		<div v-else class="-item" @click.capture="onClickCapture" @click="onClick">
-			<AppBackground :background="post.background" :darken="overlay" bleed>
-				<AppPostHeader
-					:post="post"
-					follow-location="feed"
-					:feed="feed"
-					:show-pinned="shouldShowIsPinned"
-					:show-date="shouldShowDate"
-					:date-link="linkResolved"
-					:is-new="isNew"
-				/>
+		<AppStickerLayer>
+			<AppActivityFeedPostBlocked
+				v-if="shouldBlock"
+				:username="user.username"
+				@show="onUnhideBlock"
+			/>
+			<div v-else class="-item" @click.capture="onClickCapture" @click="onClick">
+				<AppBackground :background="post.background" :darken="overlay" bleed>
+					<AppPostHeader
+						:post="post"
+						follow-location="feed"
+						:feed="feed"
+						:show-pinned="shouldShowIsPinned"
+						:show-date="shouldShowDate"
+						:date-link="linkResolved"
+						:is-new="isNew"
+					/>
 
-				<AppActivityFeedPostVideo
-					v-if="post.hasVideo"
-					:item="item"
-					:post="post"
-					@query-param="onQueryParam"
-				/>
+					<AppActivityFeedPostVideo
+						v-if="post.hasVideo"
+						:item="item"
+						:post="post"
+						@query-param="onQueryParam"
+					/>
 
-				<AppActivityFeedPostMedia
-					v-if="post.hasMedia"
-					:item="item"
-					:post="post"
-					:can-place-sticker="canPlaceSticker"
-				/>
+					<AppActivityFeedPostMedia
+						v-if="post.hasMedia"
+						:item="item"
+						:post="post"
+						:can-place-sticker="canPlaceSticker"
+					/>
 
-				<div ref="stickerScroll" />
-				<AppPostContent
-					:post="post"
-					:sticker-target-controller="stickerTargetController"
-					truncate-links
-				>
-					<AppStickerControlsOverlay>
-						<AppFiresidePostEmbed
-							v-for="embed of post.embeds"
-							:key="embed.id"
-							:embed="embed"
-						/>
+					<div ref="stickerScroll" />
+					<AppPostContent
+						:post="post"
+						:sticker-target-controller="stickerTargetController"
+						truncate-links
+					>
+						<AppStickerControlsOverlay>
+							<AppFiresidePostEmbed
+								v-for="embed of post.embeds"
+								:key="embed.id"
+								:embed="embed"
+							/>
 
-						<AppActivityFeedPostText
-							v-if="post.has_article"
-							:item="item"
-							:post="post"
-						/>
+							<AppActivityFeedPostText
+								v-if="post.has_article"
+								:item="item"
+								:post="post"
+							/>
 
-						<div v-if="post.hasPoll" class="-poll" @click.stop>
-							<AppPollVoting :poll="post.poll" :game="post.game" :user="post.user" />
+							<div v-if="post.hasPoll" class="-poll" @click.stop>
+								<AppPollVoting
+									:poll="post.poll"
+									:game="post.game"
+									:user="post.user"
+								/>
+							</div>
+						</AppStickerControlsOverlay>
+					</AppPostContent>
+
+					<AppStickerControlsOverlay :hide="!!post.background">
+						<div
+							v-if="post.sticker_counts.length"
+							class="-reactions-container -controls-buffer"
+							@click.stop
+						>
+							<AppStickerStack
+								:controller="stickerTargetController"
+								:max-count="10"
+								disable-popcorn
+								show-overflow-count
+								card
+								:base-size="24"
+								@show="scrollToStickers"
+							/>
+							<AppSpacer vertical :scale="2" />
 						</div>
+
+						<AppScrollScroller
+							v-if="shouldShowCommunities"
+							class="-communities -controls-buffer"
+							horizontal
+						>
+							<AppCommunityPill
+								v-for="postCommunity of communities"
+								:key="postCommunity.id"
+								:community-link="postCommunity"
+							/>
+						</AppScrollScroller>
 					</AppStickerControlsOverlay>
-				</AppPostContent>
 
-				<AppStickerControlsOverlay :hide="!!post.background">
-					<div
-						v-if="post.sticker_counts.length"
-						class="-reactions-container -controls-buffer"
-						@click.stop
-					>
-						<AppStickerStack
-							:controller="stickerTargetController"
-							:max-count="10"
-							disable-popcorn
-							show-overflow-count
-							card
-							:base-size="24"
-							@show="scrollToStickers"
-						/>
-						<AppSpacer vertical :scale="2" />
-					</div>
-
-					<AppScrollScroller
-						v-if="shouldShowCommunities"
-						class="-communities -controls-buffer"
-						horizontal
-					>
-						<AppCommunityPill
-							v-for="postCommunity of communities"
-							:key="postCommunity.id"
-							:community-link="postCommunity"
-						/>
-					</AppScrollScroller>
-				</AppStickerControlsOverlay>
-
-				<AppPostControls
-					class="-controls"
-					:post="post"
-					:feed="feed"
-					:item="item"
-					:overlay="overlay"
-					show-comments
-					location="feed"
-					event-label="feed"
-					@post-edit="onPostEdited(eventItem)"
-					@post-publish="onPostPublished(eventItem)"
-					@post-remove="onPostRemoved(eventItem)"
-					@post-feature="onPostFeatured(eventItem, $event)"
-					@post-unfeature="onPostUnfeatured(eventItem, $event)"
-					@post-move-channel="onPostMovedChannel(eventItem, $event)"
-					@post-reject="onPostRejected(eventItem, $event)"
-					@post-pin="onPostPinned(eventItem)"
-					@post-unpin="onPostUnpinned(eventItem)"
-					@sticker="scrollToStickers()"
-				/>
-			</AppBackground>
-		</div>
+					<AppPostControls
+						class="-controls"
+						:post="post"
+						:feed="feed"
+						:item="item"
+						:overlay="overlay"
+						show-comments
+						location="feed"
+						event-label="feed"
+						@post-edit="onPostEdited(eventItem)"
+						@post-publish="onPostPublished(eventItem)"
+						@post-remove="onPostRemoved(eventItem)"
+						@post-feature="onPostFeatured(eventItem, $event)"
+						@post-unfeature="onPostUnfeatured(eventItem, $event)"
+						@post-move-channel="onPostMovedChannel(eventItem, $event)"
+						@post-reject="onPostRejected(eventItem, $event)"
+						@post-pin="onPostPinned(eventItem)"
+						@post-unpin="onPostUnpinned(eventItem)"
+						@sticker="scrollToStickers()"
+					/>
+				</AppBackground>
+			</div>
+		</AppStickerLayer>
 	</div>
 </template>
 

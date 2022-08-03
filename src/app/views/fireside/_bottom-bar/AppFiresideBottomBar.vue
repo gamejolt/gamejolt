@@ -9,6 +9,7 @@ import { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
+import { useStickerLayer } from '../../../../_common/sticker/layer/layer-controller';
 import { setStickerDrawerOpen, useStickerStore } from '../../../../_common/sticker/sticker-store';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -32,6 +33,7 @@ const emit = defineEmits({
 	streamSettings: () => true,
 });
 
+const stickerLayer = useStickerLayer();
 const c = useFiresideController()!;
 const { rtc, user, stickerCount, canStream, isStreaming, isPersonallyStreaming } = c;
 
@@ -151,7 +153,7 @@ async function onClickVideo() {
 }
 
 function onClickStickerButton() {
-	setStickerDrawerOpen(stickerStore, true);
+	setStickerDrawerOpen(stickerStore, true, stickerLayer);
 }
 </script>
 

@@ -1,7 +1,10 @@
 <script lang="ts" setup>
+import { onUnmounted } from '@vue/runtime-core';
 import { computed, CSSProperties, onMounted, ref } from 'vue';
 import { Analytics } from '../../analytics/analytics.service';
+import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
 import AppButton from '../../button/AppButton.vue';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import {
 	assignStickerStoreGhostCallback,
 	commitStickerStoreItemPlacement,
@@ -17,15 +20,18 @@ const {
 	targetController,
 	canChargeSticker,
 	isChargingSticker,
+	canPlaceChargedStickerOnResource,
 } = stickerStore;
 
 const root = ref<HTMLDivElement>();
 
+let _removeStickerDragCallback: (() => void) | null = null;
 const _isConfirmingPlacement = ref(false);
 
 const sticker = computed(() => stickerStore.sticker.value!);
 
 const shouldShowStickerControls = computed(() => !!placedItem.value);
+const chargeButtonPositionClass = ref<'-charge-left' | '-charge-right'>('-charge-left');
 
 const _itemRotation = computed(() =>
 	placedItem.value ? `rotate(${placedItem.value.rotation * 90 - 45}deg)` : undefined
@@ -61,7 +67,11 @@ const itemClasses = computed(() => {
 });
 
 onMounted(() => {
-	assignStickerStoreGhostCallback(stickerStore, updateGhostPosition);
+	_removeStickerDragCallback = assignStickerStoreGhostCallback(stickerStore, updateGhostPosition);
+});
+
+onUnmounted(() => {
+	_removeStickerDragCallback?.();
 });
 
 async function onConfirmPlacement() {
@@ -83,14 +93,27 @@ function onStartDrag(event: MouseEvent | TouchEvent) {
 }
 
 function updateGhostPosition(pos: { left: number; top: number }) {
+	if (!root.value) {
+		return;
+	}
+
 	const { left, top } = pos;
+	// Move the charge-button to the other side if we're close to the edge of
+	// the screen.
+	chargeButtonPositionClass.value = left < 48 ? '-charge-right' : '-charge-left';
 	root.value!.style.transform = `translate3d(${left}px, ${top}px, 0)`;
 }
 </script>
 
 <template>
 	<div ref="root" class="sticker-ghost" :class="itemClasses" @click.stop @contextmenu.prevent>
-		<div class="-img-outer" @mousedown="onStartDrag" @touchstart="onStartDrag">
+		<AppAnimElectricity
+			class="-img-outer"
+			shock-anim="square"
+			:disabled="!isChargingSticker"
+			@mousedown="onStartDrag"
+			@touchstart="onStartDrag"
+		>
 			<img
 				class="-img-inner"
 				draggable="false"
@@ -99,41 +122,53 @@ function updateGhostPosition(pos: { left: number; top: number }) {
 				:src="sticker.img_url"
 				@dragstart.prevent
 			/>
-		</div>
+		</AppAnimElectricity>
 
 		<transition name="-fade">
 			<div v-if="shouldShowStickerControls" class="-controls" :style="controlsStyling">
-				<!-- TODO(charged-stickers) charge icon -->
-				<AppButton
-					v-if="!isChargingSticker"
-					icon="bolt-filled"
-					solid
-					sparse
-					circle
-					:disabled="!canChargeSticker"
-					@click.capture="isChargingSticker = true"
-				/>
 				<AppButton
 					icon="check"
-					primary
+					:primary="canPlaceChargedStickerOnResource ? isChargingSticker : true"
 					solid
 					sparse
 					circle
 					@click.capture="onConfirmPlacement"
 				/>
+
+				<AppAnimElectricity
+					v-if="!isChargingSticker"
+					:disabled="!canPlaceChargedStickerOnResource"
+					shock-anim="square"
+					class="-charge-button"
+					:class="chargeButtonPositionClass"
+				>
+					<!-- TODO(charged-stickers) charge icon -->
+					<AppButton
+						icon="bolt-filled"
+						:primary="canPlaceChargedStickerOnResource"
+						solid
+						sparse
+						circle
+						:disabled="!canPlaceChargedStickerOnResource"
+						@click.capture="isChargingSticker = true"
+					/>
+					<!-- Attaching a tooltip directly to the button or
+					[AppAnimElectricity] can have layering issues. -->
+					<div
+						v-if="!canPlaceChargedStickerOnResource"
+						v-app-tooltip.touchable="canChargeSticker
+								? $gettext(`Charged stickers can only be placed on creators.`)
+								: $gettext(`You're not able to charge this sticker yet.`),
+						"
+						class="-disabled-button-mask"
+					/>
+				</AppAnimElectricity>
 			</div>
 		</transition>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-.-uncommitted
-	filter: drop-shadow(2px 2px 2.5px black)
-
-.-dragging
-	filter: drop-shadow(4px 4px 5px black)
-	pointer-events: none
-
 .sticker-ghost
 	position: absolute
 	top: 0
@@ -141,8 +176,15 @@ function updateGhostPosition(pos: { left: number; top: number }) {
 	cursor: grab
 	touch-action: none
 
+.-uncommitted
+	filter: drop-shadow(2px 2px 2.5px black)
+
+.-dragging
+	filter: drop-shadow(4px 4px 5px black)
+	pointer-events: none
+
 .-img-outer
-	z-index: 2
+	z-index: 1
 
 .-img-inner
 	display: block
@@ -166,5 +208,24 @@ function updateGhostPosition(pos: { left: number; top: number }) {
 	align-items: center
 	position: absolute
 	top: calc(100% + 8px)
-	z-index: 1
+	z-index: 2
+
+.-charge-button
+	position: absolute
+	bottom: 50%
+
+	&.-charge-left
+		right: 100% + 16px
+
+	&.-charge-right
+		left: 100% + 16px
+
+.-disabled-button-mask
+	img-circle()
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	cursor: not-allowed
 </style>

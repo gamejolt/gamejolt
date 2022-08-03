@@ -140,7 +140,7 @@ watch(isLoading, onIsLoadingChange, { immediate: true });
 onMounted(() => {
 	calculateStickersPerRow();
 
-	_escapeCallback = () => setStickerDrawerOpen(stickerStore, false);
+	_escapeCallback = () => setStickerDrawerOpen(stickerStore, false, null);
 	EscapeStack.register(_escapeCallback);
 });
 
@@ -172,7 +172,7 @@ function _chunkStickers(stickers: StickerStack[]) {
 }
 
 function onClickMargin() {
-	setStickerDrawerOpen(stickerStore, false);
+	setStickerDrawerOpen(stickerStore, false, null);
 }
 
 // VueTouch things - START

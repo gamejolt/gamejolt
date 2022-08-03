@@ -49,7 +49,7 @@ export function createStickerStore() {
 	const stickerCurrency = ref<number | null>(null);
 	const stickerCost = ref<number | null>(null);
 
-	const currentCharge = ref(2);
+	const currentCharge = ref(7);
 	const chargeLimit = ref(7);
 	const isChargingSticker = ref(false);
 
@@ -67,9 +67,7 @@ export function createStickerStore() {
 		((position: { left: number; top: number }) => void) | null
 	>(null);
 
-	const activeLayer = computed(() => {
-		return layers[layers.length - 1];
-	});
+	const activeLayer = shallowRef<StickerLayerController | null>(null);
 
 	const shouldShowCharge = computed(() => isLayerOrTargetCreatorResource.value);
 
@@ -148,13 +146,34 @@ export function setStickerStreak(store: StickerStore, sticker: Sticker, count: n
  * Toggle the shell drawer, initializing the state when opening or resetting it
  * when closing.
  */
-export function setStickerDrawerOpen(store: StickerStore, isOpen: boolean) {
-	if (isOpen === store.isDrawerOpen.value) {
+export function setStickerDrawerOpen(
+	store: StickerStore,
+	shouldOpen: boolean,
+	preferredLayer: StickerLayerController | null
+) {
+	const { isDrawerOpen, layers, activeLayer } = store;
+
+	if (shouldOpen === isDrawerOpen.value) {
 		return;
 	}
 
-	if (isOpen) {
-		store.isDrawerOpen.value = true;
+	if (shouldOpen) {
+		let _chosenLayer = preferredLayer;
+		// In reverse order, check layers and use the first one that marked itself
+		// as active.
+		if (!_chosenLayer && layers.length > 0) {
+			for (let i = layers.length; i > 0; --i) {
+				const layer = layers[i - 1];
+				if (layer.isActive.value) {
+					_chosenLayer = layer;
+					break;
+				}
+			}
+		}
+
+		activeLayer.value = _chosenLayer;
+
+		isDrawerOpen.value = true;
 		_initializeDrawerContent(store);
 	} else {
 		_resetStickerStore(store);
@@ -229,7 +248,11 @@ function _resetStickerStore(store: StickerStore) {
 	store._waitingForFrame.value = false;
 	store._updateGhostPosition.value = null;
 
-	store.activeLayer.value.hoveredTarget.value = null;
+	const { activeLayer } = store;
+	if (activeLayer.value) {
+		activeLayer.value.hoveredTarget.value = null;
+		activeLayer.value = null;
+	}
 }
 
 export function registerStickerLayer(store: StickerStore, layer: StickerLayerController) {
@@ -249,6 +272,15 @@ export function assignStickerStoreGhostCallback(
 	callback: (pos: { left: number; top: number }) => void
 ) {
 	store._updateGhostPosition.value = callback;
+
+	const rawCallback = toRaw(callback);
+	const removeCallback = () => {
+		if (rawCallback === toRaw(store._updateGhostPosition.value)) {
+			store._updateGhostPosition.value = null;
+		}
+	};
+
+	return removeCallback;
 }
 
 /**
@@ -346,7 +378,7 @@ export async function commitStickerStoreItemPlacement(store: StickerStore) {
 			parent.model.assign(payloadParent);
 		}
 
-		setStickerDrawerOpen(store, false);
+		setStickerDrawerOpen(store, false, null);
 	} else {
 		showErrorGrowl($gettext(`Failed to place sticker.`));
 	}
@@ -383,6 +415,7 @@ export function alterStickerStoreItemCount(
  */
 function _removeStickerStoreActiveItem(store: StickerStore) {
 	store.sticker.value = null;
+	store.isChargingSticker.value = false;
 }
 
 /**
@@ -428,6 +461,10 @@ function _onDragItem(store: StickerStore, event: MouseEvent | TouchEvent) {
 	}
 
 	const layer = activeLayer.value;
+	if (!layer) {
+		return;
+	}
+
 	const target = getCollidingStickerTarget(layer, pointer.x, pointer.y);
 	if (target && !isHoveringDrawer.value) {
 		layer.hoveredTarget.value = target;
@@ -467,7 +504,10 @@ const _onPointerUp = (store: StickerStore) => (event: MouseEvent | TouchEvent) =
 		return;
 	}
 
-	const target = getCollidingStickerTarget(activeLayer.value, pointer.x, pointer.y);
+	const target = activeLayer.value
+		? getCollidingStickerTarget(activeLayer.value!, pointer.x, pointer.y)
+		: null;
+
 	if (target) {
 		Analytics.trackEvent('sticker-drawer', 'drop-target');
 		target.onPlaceDrawerSticker(pointer);
@@ -547,6 +587,10 @@ export function getPointerPosition(
 	// document scroll offset from the pointer position as well as the current
 	// scroller's offset. That'll convert it from page X/Y into the layer's X/Y.
 	const layer = store.activeLayer.value;
+	if (!layer) {
+		return null;
+	}
+
 	const scroller = layer.scroller.value;
 
 	let scrollTop = 0;

@@ -16,6 +16,7 @@ import { Model } from '../../../model/model.service';
 import AppPopper from '../../../popper/AppPopper.vue';
 import { Popper } from '../../../popper/popper.service';
 import { ReportModal } from '../../../report/modal/modal.service';
+import AppStickerLayer from '../../../sticker/layer/AppStickerLayer.vue';
 import { canPlaceStickerOnComment } from '../../../sticker/placement/placement.model';
 import { useCommonStore } from '../../../store/common-store';
 import AppTimelineListItem from '../../../timeline-list/item/item.vue';
@@ -47,6 +48,7 @@ let CommentNum = 0;
 		AppCommentWidgetComment: defineAsyncComponent({
 			loader: () => Promise.resolve(AppCommentWidgetComment),
 		}),
+		AppStickerLayer,
 	},
 	directives: {
 		AppTooltip: vAppTooltip,
@@ -272,161 +274,167 @@ export default class AppCommentWidgetComment extends Vue {
 </script>
 
 <template>
-	<AppMessageThreadItem
-		:user="shouldBlock ? null : comment.user"
-		:date="comment.posted_on"
-		:is-showing-replies="shouldShowReplies"
-		:is-reply="!!parent"
-		:is-last="isLastInThread"
-		:is-active="isActive"
-		:is-blocked="shouldBlock"
-	>
-		<template v-if="comment.is_pinned || isOwner || isCollaborator" #tags>
-			<span v-if="comment.is_pinned" class="tag">
-				<AppJolticon icon="thumbtack" />
-				<AppTranslate>Pinned</AppTranslate>
-			</span>
+	<AppStickerLayer>
+		<AppMessageThreadItem
+			:user="shouldBlock ? null : comment.user"
+			:date="comment.posted_on"
+			:is-showing-replies="shouldShowReplies"
+			:is-reply="!!parent"
+			:is-last="isLastInThread"
+			:is-active="isActive"
+			:is-blocked="shouldBlock"
+		>
+			<template v-if="comment.is_pinned || isOwner || isCollaborator" #tags>
+				<span v-if="comment.is_pinned" class="tag">
+					<AppJolticon icon="thumbtack" />
+					<AppTranslate>Pinned</AppTranslate>
+				</span>
 
-			<span v-if="isOwner" class="tag">
-				<AppTranslate>Owner</AppTranslate>
-			</span>
-			<span v-else-if="isCollaborator" class="tag">
-				<AppTranslate>Collaborator</AppTranslate>
-			</span>
-		</template>
+				<span v-if="isOwner" class="tag">
+					<AppTranslate>Owner</AppTranslate>
+				</span>
+				<span v-else-if="isCollaborator" class="tag">
+					<AppTranslate>Collaborator</AppTranslate>
+				</span>
+			</template>
 
-		<template #meta>
-			<AppPopper v-if="user" popover-class="fill-darkest">
-				<a v-app-tooltip="$gettext('More Options')" class="link-muted">
-					<AppJolticon icon="ellipsis-v" class="middle" />
-				</a>
+			<template #meta>
+				<AppPopper v-if="user" popover-class="fill-darkest">
+					<a v-app-tooltip="$gettext('More Options')" class="link-muted">
+						<AppJolticon icon="ellipsis-v" class="middle" />
+					</a>
 
-				<template #popover>
-					<div class="list-group list-group-dark">
-						<a class="list-group-item has-icon" @click="copyPermalink">
-							<AppJolticon icon="link" />
-							<AppTranslate>Copy Link</AppTranslate>
-						</a>
-						<a v-if="canPin" class="list-group-item has-icon" @click="pinComment">
-							<AppJolticon icon="thumbtack" />
-							<AppTranslate v-if="comment.is_pinned">Unpin Comment</AppTranslate>
-							<AppTranslate v-else>Pin Comment</AppTranslate>
-						</a>
-						<a
-							v-if="user.id === comment.user.id"
-							class="list-group-item has-icon"
-							@click="startEdit"
-						>
-							<AppJolticon icon="edit" />
-							<AppTranslate>Edit Comment</AppTranslate>
-						</a>
-						<a
-							v-if="canFollow"
-							v-app-tooltip.left="
-								comment.subscription
-									? $gettext(
-											`You're following this comment thread and will be notified of replies.`
-									  )
-									: $gettext(
-											`Get notifications when people post new replies to this thread.`
-									  )
-							"
-							v-app-track-event="`comment-widget:follow-click`"
-							class="list-group-item has-icon"
-							@click="onFollowClick"
-						>
-							<AppJolticon icon="subscribe" />
-							<AppTranslate v-if="comment.subscription">Following</AppTranslate>
-							<AppTranslate v-else>Follow Thread</AppTranslate>
-						</a>
-						<a v-if="canRemove" class="list-group-item has-icon" @click="removeComment">
-							<AppJolticon icon="remove" notice />
-							<AppTranslate>Remove Comment</AppTranslate>
-						</a>
-						<a
-							v-if="user.id !== comment.user.id"
-							class="list-group-item has-icon"
-							@click="report"
-						>
-							<AppJolticon icon="flag" notice />
-							<AppTranslate>Report Comment</AppTranslate>
-						</a>
-						<a
-							v-if="user.permission_level >= 3"
-							class="list-group-item has-icon"
-							:href="`${Environment.baseUrl}/moderate/comments/remove/${comment.id}`"
-							target="_blank"
-						>
-							<AppJolticon icon="remove" notice />
-							<template v-if="canRemove">
-								<AppTranslate>Remove Comment (Moderate)</AppTranslate>
-							</template>
-							<template v-else>
+					<template #popover>
+						<div class="list-group list-group-dark">
+							<a class="list-group-item has-icon" @click="copyPermalink">
+								<AppJolticon icon="link" />
+								<AppTranslate>Copy Link</AppTranslate>
+							</a>
+							<a v-if="canPin" class="list-group-item has-icon" @click="pinComment">
+								<AppJolticon icon="thumbtack" />
+								<AppTranslate v-if="comment.is_pinned">Unpin Comment</AppTranslate>
+								<AppTranslate v-else>Pin Comment</AppTranslate>
+							</a>
+							<a
+								v-if="user.id === comment.user.id"
+								class="list-group-item has-icon"
+								@click="startEdit"
+							>
+								<AppJolticon icon="edit" />
+								<AppTranslate>Edit Comment</AppTranslate>
+							</a>
+							<a
+								v-if="canFollow"
+								v-app-tooltip.left="
+									comment.subscription
+										? $gettext(
+												`You're following this comment thread and will be notified of replies.`
+										  )
+										: $gettext(
+												`Get notifications when people post new replies to this thread.`
+										  )
+								"
+								v-app-track-event="`comment-widget:follow-click`"
+								class="list-group-item has-icon"
+								@click="onFollowClick"
+							>
+								<AppJolticon icon="subscribe" />
+								<AppTranslate v-if="comment.subscription">Following</AppTranslate>
+								<AppTranslate v-else>Follow Thread</AppTranslate>
+							</a>
+							<a
+								v-if="canRemove"
+								class="list-group-item has-icon"
+								@click="removeComment"
+							>
+								<AppJolticon icon="remove" notice />
 								<AppTranslate>Remove Comment</AppTranslate>
-							</template>
-						</a>
-					</div>
-				</template>
-			</AppPopper>
-		</template>
+							</a>
+							<a
+								v-if="user.id !== comment.user.id"
+								class="list-group-item has-icon"
+								@click="report"
+							>
+								<AppJolticon icon="flag" notice />
+								<AppTranslate>Report Comment</AppTranslate>
+							</a>
+							<a
+								v-if="user.permission_level >= 3"
+								class="list-group-item has-icon"
+								:href="`${Environment.baseUrl}/moderate/comments/remove/${comment.id}`"
+								target="_blank"
+							>
+								<AppJolticon icon="remove" notice />
+								<template v-if="canRemove">
+									<AppTranslate>Remove Comment (Moderate)</AppTranslate>
+								</template>
+								<template v-else>
+									<AppTranslate>Remove Comment</AppTranslate>
+								</template>
+							</a>
+						</div>
+					</template>
+				</AppPopper>
+			</template>
 
-		<template #default>
-			<!--
+			<template #default>
+				<!--
 			When scrolling an active comment into view, we don't want to target
 			the top of the comment. We want to stop the scroll a bit higher in
 			the viewport, so we hack this scroll target into the DOM and place
 			it higher up than the comment itself.
 			-->
-			<div ref="scrollTarget" class="-scroll-target" />
+				<div ref="scrollTarget" class="-scroll-target" />
 
-			<template v-if="!isEditing">
-				<AppCommentContent
+				<template v-if="!isEditing">
+					<AppCommentContent
+						:comment="comment"
+						:content="comment.comment_content"
+						:can-place-stickers="canPlaceStickers"
+					/>
+				</template>
+				<template v-else>
+					<FormComment
+						:model="comment"
+						:comment-model="model"
+						@submit="onCommentEdit"
+						@cancel="isEditing = false"
+					/>
+				</template>
+			</template>
+
+			<template #controls>
+				<AppCommentControls
+					:model="model"
 					:comment="comment"
-					:content="comment.comment_content"
+					:children="children"
+					:show-reply="showReplies"
+					:can-reply="canReply"
 					:can-place-stickers="canPlaceStickers"
 				/>
 			</template>
-			<template v-else>
-				<FormComment
-					:model="comment"
-					:comment-model="model"
-					@submit="onCommentEdit"
-					@cancel="isEditing = false"
+
+			<!-- Child Comments -->
+			<template v-if="shouldShowReplies" #replies>
+				<AppCommentWidgetComment
+					v-for="(child, i) of children"
+					:key="child.id"
+					:model="model"
+					:comment="child"
+					:parent="comment"
+					:is-last-in-thread="i === children.length - 1"
 				/>
 			</template>
-		</template>
 
-		<template #controls>
-			<AppCommentControls
-				:model="model"
-				:comment="comment"
-				:children="children"
-				:show-reply="showReplies"
-				:can-reply="canReply"
-				:can-place-stickers="canPlaceStickers"
-			/>
-		</template>
-
-		<!-- Child Comments -->
-		<template v-if="shouldShowReplies" #replies>
-			<AppCommentWidgetComment
-				v-for="(child, i) of children"
-				:key="child.id"
-				:model="model"
-				:comment="child"
-				:parent="comment"
-				:is-last-in-thread="i === children.length - 1"
-			/>
-		</template>
-
-		<template v-if="shouldBlock" #blocked>
-			<AppCommentWidgetCommentBlocked
-				:comment="comment"
-				:reason="blockReason"
-				@show="onUnhideBlock"
-			/>
-		</template>
-	</AppMessageThreadItem>
+			<template v-if="shouldBlock" #blocked>
+				<AppCommentWidgetCommentBlocked
+					:comment="comment"
+					:reason="blockReason"
+					@show="onUnhideBlock"
+				/>
+			</template>
+		</AppMessageThreadItem>
+	</AppStickerLayer>
 </template>
 
 <style lang="stylus" scoped>

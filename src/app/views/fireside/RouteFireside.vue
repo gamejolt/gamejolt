@@ -34,6 +34,7 @@ import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/ro
 import { Ruler } from '../../../_common/ruler/ruler-service';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
+import AppStickerLayer from '../../../_common/sticker/layer/AppStickerLayer.vue';
 import { useStickerStore } from '../../../_common/sticker/sticker-store';
 import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
@@ -263,7 +264,7 @@ function onIsPersonallyStreamingChanged() {
 
 <template>
 	<AppBackground class="route-fireside" :background="background" darken>
-		<div class="-fireside">
+		<AppStickerLayer class="-fireside">
 			<div class="-body">
 				<AppFiresideHeader
 					v-if="fireside"
@@ -582,7 +583,7 @@ function onIsPersonallyStreamingChanged() {
 					/>
 				</div>
 			</AppFiresideProvider>
-		</div>
+		</AppStickerLayer>
 	</AppBackground>
 </template>
 

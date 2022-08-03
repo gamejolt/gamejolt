@@ -14,30 +14,53 @@ export type StickerLayerController = {
 	cachedRects: Ref<WeakMap<StickerLayerItem, StickerLayerTargetRect>>;
 	layerItems: ShallowRef<StickerLayerItem[]>;
 
+	isActive: Ref<boolean>;
 	isShowingDrawer: ComputedRef<boolean>;
-	drawer: StickerStore;
+	isCreator: ComputedRef<boolean>;
+
+	store: StickerStore;
 };
 
-export function createStickerLayerController(drawer: StickerStore) {
+export function createStickerLayerController(store: StickerStore) {
 	const scroller: StickerLayerController['scroller'] = shallowRef<ScrollController | null>(null);
 
 	const hoveredTarget: StickerLayerController['hoveredTarget'] = shallowRef(null);
 	const cachedRects: StickerLayerController['cachedRects'] = ref(new WeakMap());
 	const layerItems: StickerLayerController['layerItems'] = shallowRef([]);
 
-	const _isActive = computed(() => toRaw(drawer.activeLayer.value) === toRaw(c));
+	/**
+	 * If this layer is eligible to show sticker target cutouts. Allows us to
+	 * "disable" layers under certain conditions so they're not able to be
+	 * automatically selected as the active layer.
+	 */
+	const isActive = ref(true);
+
+	/**
+	 * If this is the layer currently showing sticker target rects.
+	 */
+	const _isActiveLayer = computed(() => toRaw(store.activeLayer.value) === toRaw(c));
 
 	const isShowingDrawer = computed(
-		() => drawer.isDrawerOpen.value && !drawer.hideDrawer.value && _isActive.value
+		() => store.isDrawerOpen.value && !store.hideDrawer.value && _isActiveLayer.value
+	);
+
+	const isCreator = computed(
+		() =>
+			layerItems.value.length > 0 && layerItems.value.every(i => i.controller.isCreator.value)
 	);
 
 	const c: StickerLayerController = {
 		scroller,
+
 		hoveredTarget,
 		cachedRects,
 		layerItems,
+
+		isActive,
 		isShowingDrawer,
-		drawer,
+		isCreator,
+
+		store,
 	};
 	return c;
 }

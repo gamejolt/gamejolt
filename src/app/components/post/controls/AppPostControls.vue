@@ -23,6 +23,7 @@ import AppFiresidePostLikeWidget from '../../../../_common/fireside/post/like/wi
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerControlsOverlay from '../../../../_common/sticker/AppStickerControlsOverlay.vue';
+import { useStickerLayer } from '../../../../_common/sticker/layer/layer-controller';
 import { setStickerDrawerOpen, useStickerStore } from '../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
@@ -87,6 +88,7 @@ const emit = defineEmits({
 });
 
 const commentManager = inject(CommentStoreManagerKey)!;
+const stickerLayer = useStickerLayer();
 
 const { user } = useCommonStore();
 const stickerStore = useStickerStore();
@@ -178,7 +180,7 @@ async function publish() {
 
 async function placeSticker() {
 	Analytics.trackEvent('post-controls', 'sticker-place', eventLabel.value);
-	setStickerDrawerOpen(stickerStore, true);
+	setStickerDrawerOpen(stickerStore, true, stickerLayer);
 	emit('sticker');
 }
 
@@ -257,7 +259,7 @@ function onUserFollowDismissal() {
 								<!-- TODO(charged-stickers) might need to store parentStickerController on the StickerLayer like we do for app. Then we can just provide and inject the controller we need, and we'll easily know if this is a creator we can place a charged sticker on. -->
 								<AppAnimElectricity
 									shock-anim="square"
-									:disabled="!post.displayUser.is_creator || !canChargeSticker"
+									:disabled="!canChargeSticker || !stickerLayer?.isCreator.value"
 									ignore-asset-padding
 								>
 									<AppButton

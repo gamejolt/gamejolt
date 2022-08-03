@@ -30,6 +30,7 @@ import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppStickerControlsOverlay from '../../../../_common/sticker/AppStickerControlsOverlay.vue';
+import AppStickerLayer from '../../../../_common/sticker/layer/AppStickerLayer.vue';
 import AppStickerReactions from '../../../../_common/sticker/reactions/AppStickerReactions.vue';
 import AppStickerTarget from '../../../../_common/sticker/target/AppStickerTarget.vue';
 import {
@@ -96,6 +97,7 @@ const UserFollowLocation = 'postPage';
 		AppSpacer,
 		AppResponsiveDimensions,
 		AppAdWidget,
+		AppStickerLayer,
 	},
 	directives: {
 		AppTooltip: vAppTooltip,
@@ -256,253 +258,265 @@ export default class AppPostPage extends Vue {
 	so key on the post ID so that everything gets recompiled when switching
 	posts.
 	-->
-	<section
-		:key="post.id"
-		class="-section section-thin"
-		:class="{ '-sans-padding-top': !!background }"
-	>
-		<div v-if="video" class="container-xl">
-			<div class="full-bleed-xs">
-				<template v-if="video.provider === 'gamejolt'">
-					<template v-if="!hasVideoProcessingError">
-						<AppVideoPlayer
-							v-if="!video.is_processing && video.posterMediaItem"
-							context="page"
-							:media-item="video.posterMediaItem"
-							:manifests="video.manifestSources"
-							:view-count="video.view_count"
-							:start-time="videoStartTime"
-							autoplay
-							show-video-stats
-							@play="onVideoPlay"
-						/>
-						<template v-else>
-							<AppVideoProcessingProgress
-								:post="post"
-								@complete="onVideoProcessingComplete"
-								@error="onVideoProcessingError"
+	<AppStickerLayer>
+		<section
+			:key="post.id"
+			class="-section section-thin"
+			:class="{ '-sans-padding-top': !!background }"
+		>
+			<div v-if="video" class="container-xl">
+				<div class="full-bleed-xs">
+					<template v-if="video.provider === 'gamejolt'">
+						<template v-if="!hasVideoProcessingError">
+							<AppVideoPlayer
+								v-if="!video.is_processing && video.posterMediaItem"
+								context="page"
+								:media-item="video.posterMediaItem"
+								:manifests="video.manifestSources"
+								:view-count="video.view_count"
+								:start-time="videoStartTime"
+								autoplay
+								show-video-stats
+								@play="onVideoPlay"
 							/>
+							<template v-else>
+								<AppVideoProcessingProgress
+									:post="post"
+									@complete="onVideoProcessingComplete"
+									@error="onVideoProcessingError"
+								/>
+							</template>
+						</template>
+						<template v-else>
+							<AppResponsiveDimensions :ratio="16 / 9">
+								<div class="-video-preview">
+									<AppJolticon icon="video" big class="-video-preview-icon" />
+								</div>
+							</AppResponsiveDimensions>
+							<br />
+							<div class="alert alert-notice">{{ videoProcessingErrorMsg }}</div>
 						</template>
 					</template>
-					<template v-else>
-						<AppResponsiveDimensions :ratio="16 / 9">
-							<div class="-video-preview">
-								<AppJolticon icon="video" big class="-video-preview-icon" />
-							</div>
-						</AppResponsiveDimensions>
-						<br />
-						<div class="alert alert-notice">{{ videoProcessingErrorMsg }}</div>
-					</template>
-				</template>
+				</div>
 			</div>
-		</div>
-		<AppBackground
-			v-else-if="background"
-			class="-background-wrapper"
-			:background="background"
-			darken
-		>
-			<AppPageContainer xl>
-				<AppSpacer :scale="4" vertical />
+			<AppBackground
+				v-else-if="background"
+				class="-background-wrapper"
+				:background="background"
+				darken
+			>
+				<AppPageContainer xl>
+					<AppSpacer :scale="4" vertical />
 
-				<AppPostHeader :post="post" :follow-location="UserFollowLocation" show-date />
-				<AppActivityFeedPostContent
-					:post="post"
-					:sticker-target-controller="stickerTargetController"
-				/>
-				<AppSpacer :scale="2" vertical />
-			</AppPageContainer>
-		</AppBackground>
-
-		<AppPageContainer xl>
-			<template #default>
-				<template v-if="communityNotifications">
-					<AppCommunityUserNotification
-						v-for="communityNotification of communityNotifications"
-						:key="communityNotification.id"
-						:notification="communityNotification"
-						@dismiss="onDismissNotification(communityNotification)"
+					<AppPostHeader :post="post" :follow-location="UserFollowLocation" show-date />
+					<AppActivityFeedPostContent
+						:post="post"
+						:sticker-target-controller="stickerTargetController"
 					/>
-				</template>
+					<AppSpacer :scale="2" vertical />
+				</AppPageContainer>
+			</AppBackground>
 
-				<div class="post-view">
-					<template v-if="background">
-						<AppSpacer :scale="4" vertical />
-					</template>
-					<template v-else>
-						<AppGameBadge
-							v-if="post.game"
-							class="-game-badge"
-							:game="post.game"
-							full-bleed
+			<AppPageContainer xl>
+				<template #default>
+					<template v-if="communityNotifications">
+						<AppCommunityUserNotification
+							v-for="communityNotification of communityNotifications"
+							:key="communityNotification.id"
+							:notification="communityNotification"
+							@dismiss="onDismissNotification(communityNotification)"
 						/>
+					</template>
 
-						<div>
-							<!-- User Info -->
-							<div class="-user-info">
-								<div class="-avatar">
-									<AppUserCardHover :user="displayUser" :disabled="Screen.isXs">
-										<AppUserAvatar class="-circle-img" :user="displayUser" />
-									</AppUserCardHover>
-								</div>
+					<div class="post-view">
+						<template v-if="background">
+							<AppSpacer :scale="4" vertical />
+						</template>
+						<template v-else>
+							<AppGameBadge
+								v-if="post.game"
+								class="-game-badge"
+								:game="post.game"
+								full-bleed
+							/>
 
-								<router-link :to="displayUser.url" class="-name link-unstyled">
-									<span>
-										<strong>{{ displayUser.display_name }}</strong>
-										<AppUserVerifiedTick :user="displayUser" />
-									</span>
-									<span class="tiny text-muted">@{{ displayUser.username }}</span>
-								</router-link>
+							<div>
+								<!-- User Info -->
+								<div class="-user-info">
+									<div class="-avatar">
+										<AppUserCardHover
+											:user="displayUser"
+											:disabled="Screen.isXs"
+										>
+											<AppUserAvatar
+												class="-circle-img"
+												:user="displayUser"
+											/>
+										</AppUserCardHover>
+									</div>
 
-								<div class="-controls">
-									<AppUserFollowWidget
-										v-if="!user || displayUser.id !== user.id"
-										:user="displayUser"
-										hide-count
-										:location="UserFollowLocation"
-									/>
+									<router-link :to="displayUser.url" class="-name link-unstyled">
+										<span>
+											<strong>{{ displayUser.display_name }}</strong>
+											<AppUserVerifiedTick :user="displayUser" />
+										</span>
+										<span class="tiny text-muted"
+											>@{{ displayUser.username }}</span
+										>
+									</router-link>
+
+									<div class="-controls">
+										<AppUserFollowWidget
+											v-if="!user || displayUser.id !== user.id"
+											:user="displayUser"
+											hide-count
+											:location="UserFollowLocation"
+										/>
+									</div>
 								</div>
 							</div>
-						</div>
-						<!--
+							<!--
 						Indicates where sticker placements may begin for scrolling when they show
 						stickers.
 						-->
-						<div ref="sticker-scroll" />
+							<div ref="sticker-scroll" />
 
-						<div v-if="post.hasMedia" class="-media-items">
-							<div v-for="item of post.media" :key="item.id">
-								<AppMediaItemPost
-									class="-media-item"
-									:media-item="item"
-									is-active
-									can-place-sticker
-									@fullscreen="onClickFullscreen"
-								/>
-								<br />
+							<div v-if="post.hasMedia" class="-media-items">
+								<div v-for="item of post.media" :key="item.id">
+									<AppMediaItemPost
+										class="-media-item"
+										:media-item="item"
+										is-active
+										can-place-sticker
+										@fullscreen="onClickFullscreen"
+									/>
+									<br />
+								</div>
 							</div>
-						</div>
 
-						<div class="tiny text-muted">
-							<AppTimeAgo v-if="post.isActive" :date="post.published_on" strict />
-							<template v-else-if="post.isScheduled">
-								<span class="tag" style="vertical-align: middle">
-									<AppJolticon icon="calendar-grid" />
+							<div class="tiny text-muted">
+								<AppTimeAgo v-if="post.isActive" :date="post.published_on" strict />
+								<template v-else-if="post.isScheduled">
+									<span class="tag" style="vertical-align: middle">
+										<AppJolticon icon="calendar-grid" />
+										{{ ' ' }}
+										<AppTranslate>Scheduled</AppTranslate>
+									</span>
 									{{ ' ' }}
-									<AppTranslate>Scheduled</AppTranslate>
+									<AppTimeAgo :date="post.scheduled_for" strict without-suffix />
+								</template>
+								<span
+									v-else-if="post.isDraft"
+									class="tag"
+									style="vertical-align: middle"
+								>
+									<AppTranslate>Draft</AppTranslate>
 								</span>
-								{{ ' ' }}
-								<AppTimeAgo :date="post.scheduled_for" strict without-suffix />
-							</template>
-							<span
-								v-else-if="post.isDraft"
-								class="tag"
-								style="vertical-align: middle"
-							>
-								<AppTranslate>Draft</AppTranslate>
-							</span>
-						</div>
+							</div>
 
-						<AppStickerTarget :controller="stickerTargetController">
-							<AppContentViewer :source="post.lead_content" />
-						</AppStickerTarget>
-					</template>
-
-					<AppFiresidePostEmbed
-						v-for="embed of post.embeds"
-						:key="embed.id"
-						:embed="embed"
-						:hide-outview="false"
-					/>
-
-					<div v-if="post.has_article">
-						<div v-if="!background || post.embeds.length > 0" class="page-cut" />
-
-						<template v-if="!post.hasArticleContent">
-							<span class="lazy-placeholder" />
-							<span class="lazy-placeholder" />
-							<p>
-								<span class="lazy-placeholder" style="width: 70%" />
-							</p>
+							<AppStickerTarget :controller="stickerTargetController">
+								<AppContentViewer :source="post.lead_content" />
+							</AppStickerTarget>
 						</template>
-						<AppContentViewer v-else :source="post.article_content" />
+
+						<AppFiresidePostEmbed
+							v-for="embed of post.embeds"
+							:key="embed.id"
+							:embed="embed"
+							:hide-outview="false"
+						/>
+
+						<div v-if="post.has_article">
+							<div v-if="!background || post.embeds.length > 0" class="page-cut" />
+
+							<template v-if="!post.hasArticleContent">
+								<span class="lazy-placeholder" />
+								<span class="lazy-placeholder" />
+								<p>
+									<span class="lazy-placeholder" style="width: 70%" />
+								</p>
+							</template>
+							<AppContentViewer v-else :source="post.article_content" />
+						</div>
 					</div>
-				</div>
 
-				<AppStickerControlsOverlay v-if="post.hasPoll">
-					<AppPollVoting :poll="post.poll" :game="post.game" :user="post.user" />
+					<AppStickerControlsOverlay v-if="post.hasPoll">
+						<AppPollVoting :poll="post.poll" :game="post.game" :user="post.user" />
 
-					<br />
-				</AppStickerControlsOverlay>
+						<br />
+					</AppStickerControlsOverlay>
 
-				<AppStickerControlsOverlay v-if="communities.length || post.sticker_counts.length">
-					<AppStickerReactions
-						v-if="post.sticker_counts.length"
-						:controller="stickerTargetController"
-						@show="scrollToStickers()"
+					<AppStickerControlsOverlay
+						v-if="communities.length || post.sticker_counts.length"
+					>
+						<AppStickerReactions
+							v-if="post.sticker_counts.length"
+							:controller="stickerTargetController"
+							@show="scrollToStickers()"
+						/>
+
+						<AppScrollScroller class="-communities" horizontal thin>
+							<AppCommunityPill
+								v-for="postCommunity of communities"
+								:key="postCommunity.id"
+								:community-link="postCommunity"
+							/>
+						</AppScrollScroller>
+
+						<template v-if="shouldShowCommunityPublishError">
+							<br />
+							<div class="well fill-offset">
+								<AppJolticon icon="notice" notice />
+								<span>
+									<AppTranslate>
+										You can't publish this post to the selected community
+										channel because you don't have permissions to post into that
+										specific channel. Please select a different channel.
+									</AppTranslate>
+								</span>
+							</div>
+						</template>
+
+						<div class="-controls-spacing" />
+					</AppStickerControlsOverlay>
+
+					<AppPostControls
+						:post="post"
+						should-show-follow
+						location="postPage"
+						event-label="page"
+						@post-remove="onPostRemoved"
+						@post-publish="onPostPublished"
+						@sticker="scrollToStickers()"
 					/>
 
-					<AppScrollScroller class="-communities" horizontal thin>
-						<AppCommunityPill
-							v-for="postCommunity of communities"
-							:key="postCommunity.id"
-							:community-link="postCommunity"
-						/>
-					</AppScrollScroller>
-
-					<template v-if="shouldShowCommunityPublishError">
-						<br />
-						<div class="well fill-offset">
-							<AppJolticon icon="notice" notice />
-							<span>
-								<AppTranslate>
-									You can't publish this post to the selected community channel
-									because you don't have permissions to post into that specific
-									channel. Please select a different channel.
-								</AppTranslate>
-							</span>
-						</div>
-					</template>
-
-					<div class="-controls-spacing" />
-				</AppStickerControlsOverlay>
-
-				<AppPostControls
-					:post="post"
-					should-show-follow
-					location="postPage"
-					event-label="page"
-					@post-remove="onPostRemoved"
-					@post-publish="onPostPublished"
-					@sticker="scrollToStickers()"
-				/>
-
-				<div v-if="!shareCardOnSide" class="-share">
-					<AppShareCard resource="post" :url="post.url" offset-color />
-				</div>
-
-				<div v-if="Screen.isMobile">
-					<AppPostPageRecommendations :key="post.id" :post="post" />
-				</div>
-
-				<br />
-				<br />
-				<AppCommentWidgetLazy :model="post" display-mode="comments" />
-			</template>
-
-			<template v-if="!Screen.isMobile" #right>
-				<div class="-side-col">
-					<div v-if="shareCardOnSide" class="-share">
+					<div v-if="!shareCardOnSide" class="-share">
 						<AppShareCard resource="post" :url="post.url" offset-color />
 					</div>
 
-					<AppAdWidget size="rectangle" placement="side" />
+					<div v-if="Screen.isMobile">
+						<AppPostPageRecommendations :key="post.id" :post="post" />
+					</div>
 
-					<AppPostPageRecommendations :key="post.id" :post="post" />
-				</div>
-			</template>
-		</AppPageContainer>
-	</section>
+					<br />
+					<br />
+					<AppCommentWidgetLazy :model="post" display-mode="comments" />
+				</template>
+
+				<template v-if="!Screen.isMobile" #right>
+					<div class="-side-col">
+						<div v-if="shareCardOnSide" class="-share">
+							<AppShareCard resource="post" :url="post.url" offset-color />
+						</div>
+
+						<AppAdWidget size="rectangle" placement="side" />
+
+						<AppPostPageRecommendations :key="post.id" :post="post" />
+					</div>
+				</template>
+			</AppPageContainer>
+		</section>
+	</AppStickerLayer>
 </template>
 
 <style lang="stylus" scoped>

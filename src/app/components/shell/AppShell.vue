@@ -25,6 +25,11 @@ import AppShellSidebar from './sidebar/AppShellSidebar.vue';
 
 const AppChatWindow = defineAsyncComponent(() => import('../chat/window/AppChatWindow.vue'));
 
+// Lazy load all of this since we only need it when the drawer is showing.
+const AppStickerLayerPlacementMask = defineAsyncComponent(
+	() => import('../../../_common/sticker/layer/AppStickerLayerPlacementMask.vue')
+);
+
 const {
 	isShellHidden,
 	hasTopBar,
@@ -47,6 +52,8 @@ const {
 } = useSidebarStore();
 
 const stickerStore = useStickerStore();
+const { activeLayer } = stickerStore;
+
 const chatStore = useChatStore()!;
 const route = useRoute();
 const router = useRouter();
@@ -73,7 +80,7 @@ onMounted(() => {
 			clearPanes();
 		}
 
-		setStickerDrawerOpen(stickerStore, false);
+		setStickerDrawerOpen(stickerStore, false, null);
 	});
 });
 
@@ -126,6 +133,12 @@ watch([totalChatNotificationsCount, unreadActivityCount, unreadNotificationsCoun
 		}"
 	>
 		<AppStickerLayer>
+			<AppStickerLayerPlacementMask
+				v-if="activeLayer"
+				class="-placement-mask"
+				:layer="activeLayer"
+			/>
+
 			<template v-if="isShellHidden">
 				<slot />
 			</template>
@@ -275,4 +288,7 @@ body.has-hot-bottom
 	&.has-cbar
 		#footer
 			margin-left: $shell-content-sidebar-width + $shell-cbar-width
+
+.-placement-mask
+	z-index: $zindex-sticker-layer
 </style>
