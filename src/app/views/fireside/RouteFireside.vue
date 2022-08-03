@@ -456,11 +456,12 @@ function onIsPersonallyStreamingChanged() {
 										height: videoHeight + 'px',
 									}"
 								>
-									<AppStickerTarget
-										class="-video-inner -abs-stretch"
-										:controller="c.stickerTargetController"
-									>
-										<template v-if="c.rtc.value && c.rtc.value.focusedUser">
+									<template v-if="c.rtc.value && c.rtc.value.focusedUser">
+										<AppStickerTarget
+											:key="c.rtc.value.focusedUser.uid"
+											class="-video-inner -abs-stretch"
+											:controller="c.stickerTargetController"
+										>
 											<AppPopper trigger="right-click">
 												<AppFiresideStream
 													:rtc-user="c.rtc.value.focusedUser"
@@ -479,8 +480,8 @@ function onIsPersonallyStreamingChanged() {
 													</div>
 												</template>
 											</AppPopper>
-										</template>
-									</AppStickerTarget>
+										</AppStickerTarget>
+									</template>
 								</div>
 							</div>
 							<div v-else class="-video-container">

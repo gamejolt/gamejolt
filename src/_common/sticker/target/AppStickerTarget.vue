@@ -3,7 +3,7 @@ export type ValidStickerResource = 'Comment' | 'Fireside_Post' | 'MediaItem' | '
 </script>
 
 <script lang="ts" setup>
-import { computed, nextTick, onBeforeUnmount, PropType, ref, toRefs, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, PropType, ref, toRaw, toRefs, watch } from 'vue';
 import { sleep } from '../../../utils/utils';
 import { Api } from '../../api/api.service';
 import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/AppScrollInview.vue';
@@ -16,7 +16,12 @@ import {
 } from '../layer/layer-controller';
 import { StickerLayerItem } from '../layer/layer-item';
 import { StickerPlacement } from '../placement/placement.model';
-import { assignStickerStoreItem, PointerPosition, useStickerStore } from '../sticker-store';
+import {
+	assignStickerStoreItem,
+	PointerPosition,
+	setStickerDrawerOpen,
+	useStickerStore,
+} from '../sticker-store';
 import { getStickerModelResourceName, StickerTargetController } from './target-controller';
 
 const InviewConfig = new ScrollInviewConfig();
@@ -76,6 +81,16 @@ checkDisabledState();
 
 onBeforeUnmount(() => {
 	unregisterStickerTarget(layer, layerItem);
+
+	const wasAttemptingPlacement =
+		toRaw(stickerStore.targetController.value) === toRaw(controller.value);
+	const hasOtherLayers = (stickerStore.activeLayer.value?.layerItems.value.length || 0) > 0;
+
+	// Close the sticker drawer if the placement (or drawer itself) has become
+	// invalid.
+	if (wasAttemptingPlacement || !hasOtherLayers) {
+		setStickerDrawerOpen(stickerStore, false, null);
+	}
 });
 
 function checkDisabledState() {
