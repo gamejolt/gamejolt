@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed } from 'vue';
+import { useFullscreenHeight } from '../../../../utils/fullscreen';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppBackground from '../../../../_common/background/AppBackground.vue';
 import { Background } from '../../../../_common/background/background.model';
@@ -10,6 +11,7 @@ import { Meta } from '../../../../_common/meta/meta-service';
 import AppMobileAppButtons from '../../../../_common/mobile-app/AppMobileAppButtons.vue';
 import { getAppUrl, useAppPromotionStore } from '../../../../_common/mobile-app/store';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import laptopImage from './laptop.webp';
 import mobileImage from './mobile.webp';
@@ -28,6 +30,7 @@ export default {
 
 <script lang="ts" setup>
 const appPromotion = useAppPromotionStore();
+const fullscreenHeight = useFullscreenHeight();
 
 const routeTitle = computed(() => `Get the Game Jolt mobile app`);
 const playStoreUrl = computed(() => getAppUrl(appPromotion));
@@ -113,7 +116,7 @@ const mobileBackground = new Background({
 	},
 });
 
-const desktopBackground = new Background({
+const laptopBackground = new Background({
 	id: 17,
 	scaling: 'tile',
 	media_item: {
@@ -176,20 +179,26 @@ const bean2ForegroundHeight = 448;
 						</div>
 
 						<div class="-header-buttons">
-							<!-- Sized a bit smaller than the original image so it's sharp on hidpi -->
-							<img
-								:src="qrImage"
-								width="175"
-								height="175"
-								style="display: block"
-								alt="QR Code"
-							/>
+							<template v-if="!Screen.isXs">
+								<!-- Sized a bit smaller than the original image so it's sharp on hidpi -->
+								<img
+									:src="qrImage"
+									width="175"
+									height="175"
+									style="display: block"
+									alt="QR Code"
+								/>
 
-							<AppSpacer vertical :scale="4" />
+								<AppSpacer vertical :scale="4" />
+							</template>
 
 							<AppMobileAppButtons source="landing" />
 						</div>
 					</div>
+				</div>
+
+				<div class="-header-chevron">
+					<AppJolticon class="-header-chevron-icon" icon="chevron-down" />
 				</div>
 			</section>
 		</AppBackground>
@@ -265,26 +274,26 @@ const bean2ForegroundHeight = 448;
 					<div class="-content-col-img">
 						<div
 							:style="{
-								'clip-path': `url(#-bean-1)`,
+								'clip-path': `url(#-bean-2)`,
 								overflow: 'hidden',
 							}"
 						>
-							<AppBackground :background="mobileBackground" scroll>
-								<AppAspectRatio :ratio="bean1Width / bean1Height" />
+							<AppBackground :background="laptopBackground" scroll>
+								<AppAspectRatio :ratio="bean2Width / bean2Height" />
 							</AppBackground>
 						</div>
 						<div
 							class="-bean-img-wrapper"
 							:style="{
-								'clip-path': `url(#-bean-1-fg)`,
+								'clip-path': `url(#-bean-2-fg)`,
 								overflow: 'hidden',
 							}"
 						>
-							<img class="-mobile-img" :src="mobileImage" alt="" />
+							<img class="-laptop-img" :src="laptopImage" alt="" />
 						</div>
 					</div>
 					<div class="-content-col-buttons">
-						<div class="-content-heading">keep it homey</div>
+						<div class="-content-heading">at home</div>
 
 						<AppSpacer vertical :scale="6" />
 
@@ -306,26 +315,26 @@ const bean2ForegroundHeight = 448;
 					<div class="-content-col-img">
 						<div
 							:style="{
-								'clip-path': `url(#-bean-2)`,
+								'clip-path': `url(#-bean-1)`,
 								overflow: 'hidden',
 							}"
 						>
-							<AppBackground :background="desktopBackground" scroll>
-								<AppAspectRatio :ratio="bean2Width / bean2Height" />
+							<AppBackground :background="mobileBackground" scroll>
+								<AppAspectRatio :ratio="bean1Width / bean1Height" />
 							</AppBackground>
 						</div>
 						<div
 							class="-bean-img-wrapper"
 							:style="{
-								'clip-path': `url(#-bean-2-fg)`,
+								'clip-path': `url(#-bean-1-fg)`,
 								overflow: 'hidden',
 							}"
 						>
-							<img class="-laptop-img" :src="laptopImage" alt="" />
+							<img class="-mobile-img" :src="mobileImage" alt="" />
 						</div>
 					</div>
 					<div class="-content-col-buttons">
-						<div class="-content-heading">take it mobile</div>
+						<div class="-content-heading">on the go</div>
 
 						<AppSpacer vertical :scale="6" />
 
@@ -358,37 +367,19 @@ const bean2ForegroundHeight = 448;
 
 			<AppSpacer vertical :scale="10" />
 
-			<img :src="footerImage" width="364" height="200" alt="" />
+			<img class="-footer-img" :src="footerImage" width="364" height="200" alt="" />
 		</div>
-
-		<!-- <section class="section">
-			<div class="container text-center">
-				<div>
-					<a
-						:href="playStoreUrl"
-						target="_blank"
-						@click="trackAppPromotionClick({ source: 'landing', platform: 'mobile' })"
-					>
-						<img class="-phones" :src="phonesImage" width="385" height="300" alt="" />
-					</a>
-				</div>
-
-				<AppSpacer vertical :scale="8" />
-
-				<p>
-					Need help? Email us at
-					<a href="mailto:contact@gamejolt.com">contact@gamejolt.com</a> for support!
-				</p>
-			</div>
-		</section> -->
 	</div>
 </template>
 
 <style lang="stylus" scoped>
 .-header
 	position: relative
-	height: 400px
 	color: var(--theme-fg)
+	height: v-bind('fullscreenHeight')
+
+	@media $media-sm-up
+		height: 400px
 
 .-header-darken
 	position: absolute
@@ -402,63 +393,112 @@ const bean2ForegroundHeight = 448;
 .-header-content
 	position: relative
 	display: flex
-	flex-direction: row
+	flex-direction: column
+	grid-gap: 32px
 	align-items: center
 	justify-content: center
-	grid-gap: 100px
 	width: 100%
-	height: 400px
 	z-index: 1
 
+	@media $media-xs
+		position: absolute
+		left: 0
+		top: 0
+		height: 100%
+		width: 100%
+
+	@media $media-sm-up
+		flex-direction: row
+		grid-gap: 100px
+		height: 400px
+
 .-header-lead
-	flex: 6
 	text-align: center
+	font-family: $font-family-heading
 	font-weight: 800
-	font-size: 22px
+	font-size: 64px
+	line-height: 1
 	text-shadow: 1px 1px 1px rgba($black, 0.5)
 	margin-bottom: 20px
 
 	@media $media-sm-up
+		flex: 6
+
+	@media $media-md-up
 		font-size: 80px
-		line-height: 1
 
 .-header-em
 	color: var(--theme-highlight)
 
 .-header-buttons
-	flex: 4
 	display: flex
 	flex-direction: column
 	align-items: center
+
+	@media $media-sm-up
+		flex: 4
+
+.-header-chevron
+	position: absolute
+	bottom: 24px
+	left: 0
+	width: 100%
+	text-align: center
+
+	@media $media-sm-up
+		display: none
+
+.-header-chevron-icon
+	color: var(--theme-highlight)
+	font-size: 40px
+	animation-name: anim-up-down
+	animation-timing-function: $weak-ease-in-out
+	animation-duration: 3s
+	animation-iteration-count: infinite
 
 .-content-row
 	display: flex
-	flex-direction: row
+	flex-direction: column
+	grid-gap: 24px
 	align-items: center
-	grid-gap: 100px
 	padding: 64px 0
 
+	@media $media-sm-up
+		flex-direction: row
+		grid-gap: 100px
+
 .-content-col-img
+	width: 100%
 	position: relative
-	flex: 6
+
+	@media $media-sm-up
+		flex: 6
 
 .-content-col-buttons
-	flex: 4
 	display: flex
 	flex-direction: column
 	align-items: center
 
+	@media $media-sm-up
+		flex: 4
+
 .-content-heading
+.-footer-heading
+	font-family: $font-family-heading
 	font-size: 48px
 	font-weight: bold
 
 .-footer
-	padding-top: 88px
+	padding-top: 64px
 	text-align: center
 
-.-footer-heading
-	font-size: 48px
-	font-weight: bold
+	@media $media-sm-up
+		padding-top: 88px
+
+.-footer-img
+	@media $media-xs
+		width: 220px
+		height: auto
 
 .-bean-img-wrapper
 	position: absolute
@@ -470,15 +510,22 @@ const bean2ForegroundHeight = 448;
 
 .-mobile-img
 	position: absolute
-	width: 375px
+	width: 60%
 	left: 50%
 	margin-left: -(@width / 2)
-	bottom: -80px
+	bottom: -15%
 
 .-laptop-img
 	position: absolute
-	width: 700px
+	width: 110%
 	left: 50%
 	margin-left: -(@width / 2)
-	bottom: 50px
+	bottom: 10%
+
+@keyframes anim-up-down
+	0%
+		transform: translateY(0)
+
+	50%
+		transform: translateY(-30px)
 </style>

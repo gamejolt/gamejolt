@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs, watch } from 'vue';
 import { arrayShuffle } from '../../../../utils/array';
+import { useFullscreenHeight } from '../../../../utils/fullscreen';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import AppMobileAppButtons from '../../../../_common/mobile-app/AppMobileAppButtons.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
@@ -10,7 +12,6 @@ import { AppAuthJoinLazy } from '../../../components/lazy';
 import { imageGameJoltLogo } from '../../../img/images';
 import AppHomeFsPost from './_home-slider/AppHomeFsPost.vue';
 import AppHomeFsPostMeta from './_home-slider/AppHomeFsPostMeta.vue';
-import AppMobileAppButtons from '../../../../_common/mobile-app/AppMobileAppButtons.vue';
 
 const props = defineProps({
 	posts: {
@@ -20,6 +21,7 @@ const props = defineProps({
 });
 
 const { posts } = toRefs(props);
+const fullscreenHeight = useFullscreenHeight();
 
 const shuffledPosts = ref<FiresidePost[]>([]);
 const currentPostIndex = ref(0);
@@ -29,10 +31,6 @@ const nextPostLoaded = ref(false);
 
 const shouldTransitionPosts = ref(false);
 const transitioningPosts = ref(false);
-
-const height = ref(0);
-// @ts-expect-error unused variable
-const cssHeight = computed(() => height.value + 'px');
 
 const bylinePost = computed(() => {
 	if (!firstPost.value || !secondPost.value) {
@@ -63,20 +61,6 @@ watch(
 	}
 );
 
-watch(
-	() => Screen.height,
-	(screenHeight: number) => {
-		// The mobile address bar takes up space and when they scroll,
-		// it's pretty jarring to have the whole screen shift around.
-		// This only allows any screen shifts if the content area
-		// changed more than 100px.
-		if (Math.abs(screenHeight - height.value) > 100) {
-			height.value = screenHeight;
-		}
-	},
-	{ immediate: true }
-);
-
 function _next() {
 	firstPost.value = shuffledPosts.value[currentPostIndex.value];
 
@@ -100,7 +84,7 @@ function onPostLoaded(post: FiresidePost) {
 </script>
 
 <template>
-	<div class="-fs theme-dark">
+	<div class="-fs theme-dark" :style="{ minHeight: fullscreenHeight }">
 		<div class="container -content">
 			<AppThemeSvg
 				v-if="Screen.isXs"
@@ -181,10 +165,7 @@ function onPostLoaded(post: FiresidePost) {
 	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3)
 
 .-fs
-	--screen-height: v-bind('cssHeight')
-	--fs-height: 'calc(var(--screen-height) - %s)' % $shell-top-nav-height
 	position: relative
-	min-height: var(--fs-height)
 	display: flex
 	align-items: center
 	justify-content: center
