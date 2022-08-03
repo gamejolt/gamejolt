@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
-import AppContactLink from '../../../../_common/contact-link/contact-link.vue';
+import AppContactLink from '../../../../_common/contact-link/AppContactLink.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../_common/game/game.model';
 import { Meta } from '../../../../_common/meta/meta-service';

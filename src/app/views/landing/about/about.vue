@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
-import AppContactLink from '../../../../_common/contact-link/contact-link.vue';
+import AppContactLink from '../../../../_common/contact-link/AppContactLink.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
