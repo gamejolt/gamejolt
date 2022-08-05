@@ -171,8 +171,8 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 							<p>
 								Control who has access to your game's packages through keys. Assign
 								testers to your game, allowing them to get auto-updates through the
-								<router-link :to="{ name: 'landing.client' }">
-									Game Jolt Client
+								<router-link :to="{ name: 'landing.app' }">
+									Game Jolt Desktop App
 								</router-link>
 								. Track press keys, and see when they view your games. Generate keys
 								for prizes, bundles, etc.

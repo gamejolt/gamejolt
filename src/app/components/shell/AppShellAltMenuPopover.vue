@@ -5,6 +5,7 @@ import { trackAppPromotionClick } from '../../../_common/analytics/analytics.ser
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppLinkExternal from '../../../_common/link/AppLinkExternal.vue';
 import AppPopper from '../../../_common/popper/AppPopper.vue';
+import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { ClientSystemReportModal } from '../client/safe-exports';
@@ -42,27 +43,12 @@ function showSystemReport() {
 						@click="
 							trackAppPromotionClick({
 								source: 'top-nav-options',
-								platform: 'mobile',
+								platform: Screen.isDesktop ? 'desktop' : 'mobile',
 							})
 						"
 					>
-						<AppJolticon icon="phone" />
-						<AppTranslate>Get the Mobile App</AppTranslate>
-					</RouterLink>
-
-					<RouterLink
-						v-if="!GJ_IS_DESKTOP_APP"
-						class="list-group-item has-icon"
-						:to="{ name: 'landing.client' }"
-						@click="
-							trackAppPromotionClick({
-								source: 'top-nav-options',
-								platform: 'desktop',
-							})
-						"
-					>
-						<AppJolticon icon="client" />
-						<AppTranslate>Get the Desktop App</AppTranslate>
+						<AppJolticon icon="download-box" />
+						<AppTranslate>Get the App</AppTranslate>
 					</RouterLink>
 
 					<RouterLink

@@ -450,14 +450,12 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 						<div class="col-lg-7 col-centered">
 							<p class="lead">
 								Play and follow games in your
-								<b>browser</b>
-								, on your
-								<router-link :to="{ name: 'landing.client' }">desktop</router-link>
-								, and through the mobile site on your
+								<b>browser</b>, on your
+								<router-link :to="{ name: 'landing.app' }">desktop</router-link>,
+								and through the mobile site on your
 								<b>tablet</b>
 								and
-								<b>phone</b>
-								.
+								<b>phone</b>.
 							</p>
 						</div>
 					</div>
@@ -496,8 +494,8 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 					<br />
 					<br />
 
-					<AppButton solid :to="{ name: 'landing.client' }">
-						<AppTranslate>Get Desktop Client</AppTranslate>
+					<AppButton solid :to="{ name: 'landing.app' }">
+						<AppTranslate>Get the app</AppTranslate>
 					</AppButton>
 				</div>
 			</section>
