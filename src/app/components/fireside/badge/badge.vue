@@ -314,13 +314,13 @@ $-zindex-content = 3
 
 .-title
 	line-clamp(2)
-	font-weight: bolder
-	font-size: $font-size-h4
+	font-family: $font-family-heading
+	font-size: 21px
 	text-shadow: 1px 1px 3px $black
 
 .-avatar
-	width: 50px
-	height: 50px
+	width: 48px
+	height: 48px
 	background-color: var(--theme-white)
 	border-radius: 50%
 	padding: 2px

@@ -390,7 +390,6 @@ export default class AppPostControlsMore extends Vue {
 .-header
 	display: flex
 	align-items: center
-	font-family: $font-family-heading
 	font-size: $font-size-tiny
 	font-weight: normal
 	letter-spacing: 0.1em

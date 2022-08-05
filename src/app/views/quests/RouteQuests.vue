@@ -323,7 +323,7 @@ $-padding = 40px
 	min-height: calc(100vh - var(--shell-top))
 
 .-quest-list-heading
-	font-size: 24px
+	font-size: 27px
 	font-family: $font-family-heading
 	font-weight: bold
 	display: flex

@@ -22,8 +22,8 @@ const props = defineProps({
 		validator: val => (typeof val === 'number' && val >= 0) || typeof val === 'undefined',
 	},
 	titleSize: {
-		type: String as PropType<'default' | 'large'>,
-		default: 'default',
+		type: String as PropType<'md' | 'lg'>,
+		default: 'md',
 	},
 	edgePadding: {
 		type: Number,
@@ -157,12 +157,13 @@ const effectiveEdgePadding = computed(() => {
 
 .-title
 	font-weight: 800
-	font-size: 15px
+	font-size: 19px
 	font-family: $font-family-heading
 	min-width: 0
 
-.-size-large
-	font-size: 20px
+.-size-lg
+	font-size: 24px
+	line-height: 28px
 
 .-actions
 	margin-left: auto

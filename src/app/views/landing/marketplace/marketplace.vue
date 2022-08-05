@@ -64,34 +64,10 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 					<AppThemeSvg class="bolt" :src="imageJolt" alt="" strict-colors />
 					Marketplace
 				</h1>
-
-				<div class="row">
-					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
-						<p class="lead">Sell your games through an indie friendly marketplace!</p>
-					</div>
-				</div>
 			</div>
 		</section>
 
 		<div class="landing-body">
-			<section class="section">
-				<div class="container">
-					<div class="row">
-						<div class="col-sm-10 col-md-8 col-lg-6 col-centered text-center">
-							<p class="lead">
-								Game Jolt has been one of the largest communities focused solely on
-								indies and hobbyists since 2008.
-							</p>
-
-							<p>
-								We set out to create a new kind marketplace, one that is indie
-								focused, where we all care about each other's success.
-							</p>
-						</div>
-					</div>
-				</div>
-			</section>
-
 			<section class="section">
 				<div class="container">
 					<h1 class="section-header text-center">This is how it works...</h1>

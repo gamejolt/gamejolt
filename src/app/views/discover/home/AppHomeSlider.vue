@@ -191,7 +191,7 @@ function onPostLoaded(post: FiresidePost) {
 
 .-hero-text
 	font-size: 36px
-	line-height: 43px
+	line-height: 36px
 	font-family: $font-family-heading
 	font-weight: 700
 	text-align: center
@@ -214,8 +214,8 @@ function onPostLoaded(post: FiresidePost) {
 
 @media $media-xs
 	.-hero-text
-		font-size: 24px
-		line-height: 28px
+		font-size: 23px
+		line-height: 27px
 		margin-bottom: 24px
 
 .-posts
