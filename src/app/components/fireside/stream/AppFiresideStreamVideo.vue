@@ -167,8 +167,6 @@ function onVideoSizeChanged() {
 <style lang="stylus" scoped>
 .-stream-video
 	position: relative
-	// TODO(fullscreen-firesides) check Safari, make sure border-radius is
-	// working properly with this new nesting.
 	-webkit-transform: translateZ(0)
 
 	&
