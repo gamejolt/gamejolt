@@ -1,15 +1,26 @@
 <script lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+import { arrayShuffle } from '../../../../utils/array';
 import { useFullscreenHeight } from '../../../../utils/fullscreen';
+import {
+	trackAppDownload,
+	trackAppPromotionClick,
+} from '../../../../_common/analytics/analytics.service';
+import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppBackground from '../../../../_common/background/AppBackground.vue';
 import { Background } from '../../../../_common/background/background.model';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppContactLink from '../../../../_common/contact-link/AppContactLink.vue';
+import { DeviceArch, DeviceOs, getDeviceOS } from '../../../../_common/device/device.service';
+import { Game } from '../../../../_common/game/game.model';
+import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
+import { HistoryTick } from '../../../../_common/history-tick/history-tick-service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import AppMobileAppButtons from '../../../../_common/mobile-app/AppMobileAppButtons.vue';
 import { getAppUrl, useAppPromotionStore } from '../../../../_common/mobile-app/store';
+import { Navigate } from '../../../../_common/navigate/navigate.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
@@ -24,6 +35,7 @@ export default {
 		cache: true,
 		lazy: true,
 		deps: {},
+		resolver: () => Api.sendRequest('/web/landing/app'),
 	}),
 };
 </script>
@@ -32,8 +44,17 @@ export default {
 const appPromotion = useAppPromotionStore();
 const fullscreenHeight = useFullscreenHeight();
 
-const routeTitle = computed(() => `Get the Game Jolt mobile app`);
-const playStoreUrl = computed(() => getAppUrl(appPromotion));
+const packageData = ref<GamePackagePayloadModel>();
+const fallbackUrl = ref('https://gamejolt.com');
+const headerBackground = ref<Background>();
+const mobileBackground = ref<Background>();
+const laptopBackground = ref<Background>();
+
+const detectedDevice = getDeviceOS();
+
+const routeTitle = computed(() => `Get the Game Jolt app`);
+const playStoreUrl = computed(() => getAppUrl(appPromotion, { targetStore: 'play' }));
+const appStoreUrl = computed(() => getAppUrl(appPromotion, { targetStore: 'app' }));
 
 createAppRoute({
 	routeTitle: routeTitle.value,
@@ -55,93 +76,15 @@ createAppRoute({
 
 		Meta.fb.image = Meta.twitter.image = socialImage;
 	},
-});
+	onResolved({ payload }) {
+		packageData.value = new GamePackagePayloadModel(payload.packageData);
+		fallbackUrl.value = payload.clientGameUrl;
 
-const headerBackground = new Background({
-	id: 21,
-	scaling: 'tile',
-	media_item: {
-		id: 12613508,
-		type: 'background',
-		parent_id: 13,
-		hash: 'zz9n7nfu',
-		filename: '',
-		filetype: 'image/png',
-		is_animated: false,
-		width: 800,
-		height: 800,
-		filesize: 578498,
-		crop_start_x: null,
-		crop_start_y: null,
-		crop_end_x: null,
-		crop_end_y: null,
-		avg_img_color: '2d4660',
-		img_has_transparency: false,
-		added_on: 1648832359000,
-		status: 'active',
-		img_url: 'https://i.gjcdn.net/data/backgrounds/13/media/wacky-tube-man-vhwh8uum.png',
-		mediaserver_url: 'https://m.gjcdn.net/background/800/21-zz9n7nfu-v4.webp',
-		mediaserver_url_webm: null,
-		mediaserver_url_mp4: null,
-		video_card_url_mp4: null,
-	},
-});
+		headerBackground.value = new Background(payload.headerBackground);
 
-const mobileBackground = new Background({
-	id: 1,
-	scaling: 'tile',
-	media_item: {
-		id: 12613508,
-		type: 'background',
-		parent_id: 13,
-		hash: 'rjusnzbf',
-		filename: '',
-		filetype: 'image/png',
-		is_animated: false,
-		width: 800,
-		height: 800,
-		filesize: 578498,
-		crop_start_x: null,
-		crop_start_y: null,
-		crop_end_x: null,
-		crop_end_y: null,
-		avg_img_color: '2d4660',
-		img_has_transparency: false,
-		added_on: 1648832359000,
-		status: 'active',
-		img_url: 'https://i.gjcdn.net/data/backgrounds/13/media/wacky-tube-man-vhwh8uum.png',
-		mediaserver_url: 'https://m.gjcdn.net/background/800/1-rjusnzbf-v4.webp',
-		mediaserver_url_webm: null,
-		mediaserver_url_mp4: null,
-	},
-});
-
-const laptopBackground = new Background({
-	id: 17,
-	scaling: 'tile',
-	media_item: {
-		id: 12613508,
-		type: 'background',
-		parent_id: 17,
-		hash: 'rjusnzbf',
-		filename: '',
-		filetype: 'image/png',
-		is_animated: false,
-		width: 800,
-		height: 800,
-		filesize: 578498,
-		crop_start_x: null,
-		crop_start_y: null,
-		crop_end_x: null,
-		crop_end_y: null,
-		avg_img_color: '2d4660',
-		img_has_transparency: false,
-		added_on: 1648832359000,
-		status: 'active',
-		img_url: 'https://i.gjcdn.net/data/backgrounds/13/media/wacky-tube-man-vhwh8uum.png',
-		mediaserver_url: 'https://m.gjcdn.net/background/800/15-vgdgtzuc-v4.webp',
-		mediaserver_url_webm: null,
-		mediaserver_url_mp4: null,
+		const backgrounds = arrayShuffle(Background.populate<Background>(payload.backgrounds));
+		laptopBackground.value = backgrounds.pop()!;
+		mobileBackground.value = backgrounds.pop()!;
 	},
 });
 
@@ -160,6 +103,50 @@ const bean2Height = 448;
 const bean2ForegroundPath = `M7.03416 0.0752779C7.03407 110 7.03412 180 7.03406 273.382C57.3668 388.811 209.717 353.293 276.309 370.657C357.7 391.881 518.401 481.257 580.36 374.546C593.5 217 593.5 108 593.5 0.0752864C591.061 0.00680137 9.46538 0.0524873 7.03416 0.0752779Z`;
 const bean2ForegroundWidth = 598;
 const bean2ForegroundHeight = 448;
+
+async function downloadDesktopApp(platform: DeviceOs, arch: DeviceArch) {
+	HistoryTick.sendBeacon('client-download');
+	trackAppDownload({ platform, arch });
+
+	const downloadUrl = await _getDownloadUrl(platform, arch);
+	if (downloadUrl === null) {
+		Navigate.gotoExternal(fallbackUrl.value);
+		return;
+	}
+
+	if (GJ_IS_DESKTOP_APP) {
+		Navigate.gotoExternal(downloadUrl);
+	} else {
+		Navigate.goto(downloadUrl);
+	}
+}
+
+async function _getDownloadUrl(platform: string, arch: string) {
+	if (!packageData.value) {
+		return null;
+	}
+
+	const installableBuilds = Game.pluckInstallableBuilds(
+		packageData.value.packages,
+		platform,
+		arch
+	);
+	const bestBuild = Game.chooseBestBuild(installableBuilds, platform, arch);
+	if (!bestBuild) {
+		return null;
+	}
+
+	try {
+		const result = await bestBuild.getDownloadUrl();
+		if (!result || !result.url) {
+			return null;
+		}
+		return result.url;
+	} catch (err) {
+		console.warn(err);
+		return null;
+	}
+}
 </script>
 
 <template>
@@ -270,85 +257,133 @@ const bean2ForegroundHeight = 448;
 					</defs>
 				</svg>
 
-				<div class="-content-row">
-					<div class="-content-col-img">
-						<div
-							:style="{
-								'clip-path': `url(#-bean-2)`,
-								overflow: 'hidden',
-							}"
-						>
-							<AppBackground :background="laptopBackground" scroll>
-								<AppAspectRatio :ratio="bean2Width / bean2Height" />
-							</AppBackground>
+				<div class="-content-rows">
+					<div v-if="!GJ_IS_DESKTOP_APP" class="-desktop-row -content-row">
+						<div class="-content-col-img">
+							<div
+								:style="{
+									'clip-path': `url(#-bean-2)`,
+									overflow: 'hidden',
+								}"
+							>
+								<AppBackground :background="laptopBackground" scroll>
+									<AppAspectRatio :ratio="bean2Width / bean2Height" />
+								</AppBackground>
+							</div>
+							<div
+								class="-bean-img-wrapper"
+								:style="{
+									'clip-path': `url(#-bean-2-fg)`,
+									overflow: 'hidden',
+								}"
+							>
+								<img class="-laptop-img" :src="laptopImage" alt="" />
+							</div>
 						</div>
-						<div
-							class="-bean-img-wrapper"
-							:style="{
-								'clip-path': `url(#-bean-2-fg)`,
-								overflow: 'hidden',
-							}"
-						>
-							<img class="-laptop-img" :src="laptopImage" alt="" />
-						</div>
-					</div>
-					<div class="-content-col-buttons">
-						<div class="-content-heading">at home</div>
+						<div class="-content-col-buttons">
+							<div class="-content-heading">at home</div>
 
-						<AppSpacer vertical :scale="6" />
+							<AppSpacer vertical :scale="6" />
 
-						<AppButton primary block @click="download('windows', '64')">
-							<AppJolticon icon="windows" middle />
-							Download for Windows
-						</AppButton>
+							<div class="-buttons">
+								<AppButton
+									primary
+									block
+									:solid="detectedDevice === 'windows'"
+									@click="downloadDesktopApp('windows', '64')"
+								>
+									<AppJolticon icon="windows" middle />
+									Download for Windows
+								</AppButton>
 
-						<AppSpacer vertical :scale="4" />
-
-						<AppButton primary block @click="download('linux', '64')">
-							<AppJolticon icon="linux" middle />
-							Download for Linux
-						</AppButton>
-					</div>
-				</div>
-
-				<div class="-content-row">
-					<div class="-content-col-img">
-						<div
-							:style="{
-								'clip-path': `url(#-bean-1)`,
-								overflow: 'hidden',
-							}"
-						>
-							<AppBackground :background="mobileBackground" scroll>
-								<AppAspectRatio :ratio="bean1Width / bean1Height" />
-							</AppBackground>
-						</div>
-						<div
-							class="-bean-img-wrapper"
-							:style="{
-								'clip-path': `url(#-bean-1-fg)`,
-								overflow: 'hidden',
-							}"
-						>
-							<img class="-mobile-img" :src="mobileImage" alt="" />
+								<AppButton
+									primary
+									block
+									:solid="detectedDevice === 'linux'"
+									:style="{
+										order: detectedDevice === 'linux' ? -1 : undefined,
+									}"
+									@click="downloadDesktopApp('linux', '64')"
+								>
+									<AppJolticon icon="linux" middle />
+									Download for Linux
+								</AppButton>
+							</div>
 						</div>
 					</div>
-					<div class="-content-col-buttons">
-						<div class="-content-heading">on the go</div>
 
-						<AppSpacer vertical :scale="6" />
+					<div
+						class="-mobile-row -content-row"
+						:style="{
+							order:
+								detectedDevice === 'ios' || detectedDevice === 'android'
+									? -1
+									: undefined,
+						}"
+					>
+						<div class="-content-col-img">
+							<div
+								:style="{
+									'clip-path': `url(#-bean-1)`,
+									overflow: 'hidden',
+								}"
+							>
+								<AppBackground :background="mobileBackground" scroll>
+									<AppAspectRatio :ratio="bean1Width / bean1Height" />
+								</AppBackground>
+							</div>
+							<div
+								class="-bean-img-wrapper"
+								:style="{
+									'clip-path': `url(#-bean-1-fg)`,
+									overflow: 'hidden',
+								}"
+							>
+								<img class="-mobile-img" :src="mobileImage" alt="" />
+							</div>
+						</div>
+						<div class="-content-col-buttons">
+							<div class="-content-heading">on the go</div>
 
-						<AppButton primary block @click="download('windows', '64')">
-							<AppJolticon icon="mac" middle />
-							Download for iPhone / iPad
-						</AppButton>
+							<AppSpacer vertical :scale="6" />
 
-						<AppSpacer vertical :scale="4" />
+							<div class="-buttons">
+								<AppButton
+									primary
+									block
+									:solid="detectedDevice === 'ios'"
+									:to="appStoreUrl"
+									@click="
+										trackAppPromotionClick({
+											source: 'landing',
+											platform: 'mobile',
+										})
+									"
+								>
+									<AppJolticon icon="mac" middle />
+									Download for iPhone / iPad
+								</AppButton>
 
-						<AppButton primary block @click="download('linux', '64')">
-							<!-- <AppJolticon icon="" middle /> -->
-							Download for Android
-						</AppButton>
+								<AppButton
+									primary
+									block
+									:solid="detectedDevice === 'android'"
+									:to="playStoreUrl"
+									:style="{
+										order: detectedDevice === 'android' ? -1 : undefined,
+									}"
+									@click="
+										trackAppPromotionClick({
+											source: 'landing',
+											platform: 'mobile',
+										})
+									"
+								>
+									<AppJolticon icon="android" middle />
+									Download for Android
+								</AppButton>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -456,6 +491,10 @@ const bean2ForegroundHeight = 448;
 	animation-duration: 3s
 	animation-iteration-count: infinite
 
+.-content-rows
+	display: flex
+	flex-direction: column
+
 .-content-row
 	display: flex
 	flex-direction: column
@@ -478,6 +517,7 @@ const bean2ForegroundHeight = 448;
 	display: flex
 	flex-direction: column
 	align-items: center
+	width: 100%
 
 	@media $media-sm-up
 		flex: 4
@@ -521,6 +561,15 @@ const bean2ForegroundHeight = 448;
 	left: 50%
 	margin-left: -(@width / 2)
 	bottom: 10%
+
+.-buttons
+	display: flex
+	flex-direction: column
+	grid-gap: 16px
+	width: 100%
+
+	.button
+		margin: 0
 
 @keyframes anim-up-down
 	0%
