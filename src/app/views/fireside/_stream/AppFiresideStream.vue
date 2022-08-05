@@ -5,14 +5,15 @@ const UITransitionTime = 200;
 </script>
 
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs, watch } from 'vue';
+import { computed, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
-import { formatNumber } from '../../../../_common/filters/number';
 import { FiresideRTCUser, setDesktopAudioPlayback } from '../../../../_common/fireside/rtc/user';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
+import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
@@ -21,6 +22,7 @@ import AppFiresideDesktopAudio from '../../../components/fireside/stream/AppFire
 import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';
 import AppFiresideVideoStats from '../../../components/fireside/stream/video-stats/AppFiresideVideoStats.vue';
 import AppFiresideHeader from '../AppFiresideHeader.vue';
+import AppFiresideBottomBar from '../_bottom-bar/AppFiresideBottomBar.vue';
 import AppFiresideBottomBarHostAvatar from '../_bottom-bar/AppFiresideBottomBarHostAvatar.vue';
 
 const props = defineProps({
@@ -34,12 +36,24 @@ const props = defineProps({
 	hasHosts: {
 		type: Boolean,
 	},
+	sidebarCollapsed: {
+		type: Boolean,
+		required: true,
+	},
 });
 
-const { rtcUser, hasHeader, hasHosts } = toRefs(props);
+const { rtcUser, hasHeader, hasHosts, sidebarCollapsed } = toRefs(props);
 
 const c = useFiresideController()!;
-const { rtc, isShowingOverlayPopper, isShowingStreamSetup, chatUsers } = c;
+const {
+	rtc,
+	isShowingOverlayPopper,
+	isShowingStreamSetup,
+	isFullscreen,
+	canFullscreen,
+	toggleFullscreen,
+	isShowingStreamOverlay,
+} = c;
 
 const drawerStore = useDrawerStore();
 
@@ -59,6 +73,13 @@ const streakCount = computed(() => formatFuzzynumber(stickerStreak.value?.count 
 
 const hasVolumeControls = computed(() => !!rtc.value?.shouldShowVolumeControls);
 
+const chatWidth = computed(() => {
+	if (isFullscreen.value && sidebarCollapsed.value) {
+		return 200;
+	}
+	return 350;
+});
+
 const shouldShowUI = computed(() => {
 	if (import.meta.env.SSR) {
 		return false;
@@ -71,6 +92,14 @@ const shouldShowUI = computed(() => {
 		isHovered.value ||
 		hideUITimer.value
 	);
+});
+
+const overlayPaddingRight = computed(() => {
+	if (!isFullscreen.value || sidebarCollapsed.value) {
+		return undefined;
+	}
+
+	return chatWidth.value + 'px';
 });
 
 const producer = computed(() => rtc.value?.producer);
@@ -89,8 +118,6 @@ const showVideoPreviewMessage = computed(
 const hasOverlayItems = computed(
 	() => hasVideo.value || hasVolumeControls.value || hasHeader.value
 );
-
-const memberCount = computed(() => chatUsers.value?.count ?? 1);
 
 const videoPaused = computed(() => rtc.value?.videoPaused === true);
 
@@ -116,9 +143,7 @@ const shouldDarkenAll = computed(() => {
 		return false;
 	}
 
-	// If we're displaying any of this large content, or we're paused,
-	// darken the whole overlay instead of individual rows.
-	return videoPaused.value || hasHeader.value || hasHosts.value;
+	return videoPaused.value;
 });
 
 const shouldPlayDesktopAudio = computed(() => {
@@ -142,6 +167,20 @@ const shouldShowVideoStats = computed(() => {
 });
 
 watch(stickerStreak, onStreakCountChanged);
+
+watch(
+	shouldShowUI,
+	shouldShow => {
+		isShowingStreamOverlay.value = shouldShow;
+	},
+	{
+		immediate: true,
+	}
+);
+
+onUnmounted(() => {
+	isShowingStreamOverlay.value = false;
+});
 
 function onMouseOut() {
 	scheduleUIHide(UIHideTimeout);
@@ -264,6 +303,10 @@ function onStreakCountChanged() {
 <template>
 	<div
 		class="-stream theme-dark"
+		:class="{
+			'-fullscreen': isFullscreen,
+		}"
+		:style="`--overlay-right: ${overlayPaddingRight || 0}; --chat-width: ${chatWidth}px`"
 		@mouseleave="onMouseOut"
 		@mousemove="onMouseMove"
 		@touchmove="onMouseMove"
@@ -326,25 +369,35 @@ function onStreakCountChanged() {
 
 				<div class="-overlay-inner">
 					<div
-						v-if="hasHeader"
+						v-if="hasHeader || canFullscreen"
 						class="-overlay-top -control"
 						:class="{ '-fade-top': !shouldDarkenAll }"
 					>
-						<div style="flex: auto; overflow: hidden">
+						<div
+							class="-row"
+							:style="{
+								transition: 'padding-right 300ms',
+								paddingRight: overlayPaddingRight,
+							}"
+						>
 							<AppFiresideHeader
+								v-if="hasHeader"
+								class="-header"
 								:fireside="c.fireside"
 								:sticker-target-controller="c.stickerTargetController"
 								overlay
 							/>
-							<div class="-overlay-members">
-								<AppTranslate
-									:translate-n="memberCount"
-									:translate-params="{ count: formatNumber(memberCount) }"
-									translate-plural="%{ count } members"
-								>
-									%{ count } member
-								</AppTranslate>
-							</div>
+							<AppSpacer v-if="hasHeader && canFullscreen" horizontal :scale="2" />
+							<AppButton
+								v-if="canFullscreen"
+								circle
+								sparse
+								overlay
+								trans
+								style="margin-left: auto"
+								icon="fullscreen"
+								@click="toggleFullscreen()"
+							/>
 						</div>
 					</div>
 
@@ -355,37 +408,47 @@ function onStreakCountChanged() {
 							'-fade-bottom': !shouldDarkenAll,
 						}"
 					>
-						<div class="-overlay-bottom -control" @click.stop>
+						<div class="-overlay-bottom -control" style="width: 100%" @click.stop>
 							<div class="-video-controls">
-								<div v-if="hasVideo && !hasHosts">
-									<AppButton
-										circle
-										trans
-										overlay
-										:icon="videoPaused ? 'play' : 'pause'"
-										@click.capture.stop="togglePlayback"
-									/>
+								<div class="-video-controls-left">
+									<div v-if="hasVideo">
+										<AppButton
+											circle
+											trans
+											overlay
+											:icon="videoPaused ? 'play' : 'pause'"
+											@click.capture.stop="togglePlayback"
+										/>
+									</div>
+
+									<div v-if="rtcUser.showDesktopAudioMuted">
+										<AppButton
+											v-app-tooltip="$gettext(`Ummute video`)"
+											circle
+											trans
+											overlay
+											icon="audio-mute"
+											@click.capture.stop="unmuteDesktopAudio"
+										/>
+									</div>
+
+									<div v-if="rtcUser.userModel" class="-user-tag">
+										<AppUserAvatar
+											class="-user-tag-avatar"
+											:user="rtcUser.userModel"
+											disable-link
+										/>
+										<span>@{{ rtcUser.userModel.username }}</span>
+									</div>
 								</div>
 
-								<div v-if="rtcUser.showDesktopAudioMuted">
-									<AppButton
-										v-app-tooltip="$gettext(`Ummute video`)"
-										circle
-										trans
-										overlay
-										icon="audio-mute"
-										@click.capture.stop="unmuteDesktopAudio"
+								<template v-if="hasHosts">
+									<AppFiresideBottomBar class="-hosts" overlay />
+									<div
+										class="-chat-spacer"
+										:class="{ '-chat-spacer-shrink': sidebarCollapsed }"
 									/>
-								</div>
-
-								<div v-if="rtcUser.userModel" class="-user-tag">
-									<AppUserAvatar
-										class="-user-tag-avatar"
-										:user="rtcUser.userModel"
-										disable-link
-									/>
-									<span>@{{ rtcUser.userModel.username }}</span>
-								</div>
+								</template>
 							</div>
 						</div>
 					</div>
@@ -429,14 +492,29 @@ $-z-overlay = 1
 $-z-control = 3
 $-z-combo = 2
 
+.-stream
+	--overlay-right: 0
+	--overlay-position: absolute
+	--chat-width: 350px
+	right: 0 !important
+
+	&.-fullscreen
+		--overlay-position: fixed
+
 .jolticon
 	text-shadow: $-text-shadow
+
+.-row
+	display: flex
+	flex-direction: row
+	width: 100%
+	align-items: center
 
 .-stream
 .-video-player
 	&
 	> .-overlay
-		position: absolute
+		position: var(--overlay-position)
 		top: 0
 		right: 0
 		bottom: 0
@@ -491,6 +569,9 @@ $-z-combo = 2
 	bottom: 0
 	left: 0
 
+.-header
+	flex: auto
+
 .-overlay-members
 	opacity: 0.75
 	font-weight: bold
@@ -498,11 +579,13 @@ $-z-combo = 2
 .-overlay-top
 	display: flex
 	align-items: flex-start
+	min-width: 0
 
 .-overlay-bottom
 	display: flex
 	align-items: flex-end
 	width: min-content
+	min-width: 0
 
 .-fade-top
 .-fade-bottom
@@ -533,10 +616,10 @@ $-z-combo = 2
 	align-items: center
 	justify-content: center
 
-	&-icon
-		font-size: 60px
-		pointer-events: none
-		color: white
+.-paused-indicator-icon
+	font-size: 60px
+	pointer-events: none
+	color: white
 
 .-user-tag
 	rounded-corners()
@@ -554,9 +637,10 @@ $-z-combo = 2
 
 .-video-controls
 	display: flex
-	align-items: center
+	align-items: flex-end
 	flex: 1
 	grid-gap: 12px
+	max-width: 100%
 
 	.-volume
 		display: inline-flex
@@ -564,11 +648,27 @@ $-z-combo = 2
 		flex: auto
 		grid-gap: 4px
 
-		&-slider
-			max-width: 200px
+	.-volume-slider
+		max-width: 200px
+
+.-video-controls-left
+	display: inline-flex
+	align-items: center
+	flex-grow: 1
+	flex-shrink: 1
+	flex-basis: var(--chat-width)
+	grid-gap: 12px
+	transition: flex-basis 300ms
 
 .-hosts
-	margin-top: 8px
+	margin-left: 0
+	margin-right: 0
+	margin-bottom: -($-base-padding)
+
+.-chat-spacer
+	flex: none
+	width: var(--chat-width)
+	transition: width 300ms
 
 .-combo
 	position: absolute

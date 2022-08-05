@@ -1,6 +1,8 @@
 <script lang="ts">
 import { computed, PropType, toRefs, useSlots } from 'vue';
 import { Screen } from '../screen/screen-service';
+
+export type HeaderBarSlots = 'leading' | 'title' | 'actions' | 'bottom';
 </script>
 
 <script lang="ts" setup>
@@ -30,16 +32,41 @@ const props = defineProps({
 		default: undefined,
 		validator: val => (typeof val === 'number' && val >= 0) || typeof val === 'undefined',
 	},
+	/**
+	 * Used to specifically define the slots that should be built. Can be used
+	 * to "remove" slots and prevent flex/grid gaps from being built around
+	 * empty items.
+	 */
+	definedSlots: {
+		type: Array as PropType<HeaderBarSlots[]>,
+		default: undefined,
+	},
 });
 
 const slots = useSlots();
 
-const { centerTitle, automaticallyImplyLeading, elevation, titleSpacing, edgePadding } =
-	toRefs(props);
+const {
+	centerTitle,
+	automaticallyImplyLeading,
+	elevation,
+	titleSpacing,
+	edgePadding,
+	definedSlots,
+} = toRefs(props);
 
-const hasLeading = computed(() => !!slots['leading']);
-const hasActions = computed(() => !!slots['actions']);
-const hasBottom = computed(() => !!slots['bottom']);
+const hasLeading = computed(() =>
+	definedSlots?.value ? definedSlots.value.includes('leading') : !!slots['leading']
+);
+const hasActions = computed(() =>
+	definedSlots?.value ? definedSlots.value.includes('actions') : !!slots['actions']
+);
+const hasBottom = computed(() =>
+	definedSlots?.value ? definedSlots.value.includes('bottom') : !!slots['bottom']
+);
+
+const noLeading = computed(() => definedSlots?.value && !definedSlots.value.includes('leading'));
+const noTitle = computed(() => definedSlots?.value && !definedSlots.value.includes('title'));
+const noActions = computed(() => definedSlots?.value && !definedSlots.value.includes('actions'));
 
 const shouldShrinkLeading = computed(() => !automaticallyImplyLeading.value && !hasLeading.value);
 const shouldShrinkActions = computed(
@@ -76,6 +103,7 @@ const effectiveEdgePadding = computed(() => {
 			}"
 		>
 			<div
+				v-if="!noLeading"
 				class="-leading"
 				:class="{
 					'-shrink': shouldShrinkLeading,
@@ -85,6 +113,7 @@ const effectiveEdgePadding = computed(() => {
 			</div>
 
 			<div
+				v-if="!noTitle"
 				class="-title"
 				:class="[
 					{
@@ -97,6 +126,7 @@ const effectiveEdgePadding = computed(() => {
 			</div>
 
 			<div
+				v-if="!noActions"
 				class="-actions"
 				:class="{
 					'-shrink': shouldShrinkActions,

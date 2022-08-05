@@ -140,7 +140,7 @@ function onClickExtinguish() {
 <template>
 	<AppFiresideSidebar>
 		<template #header>
-			<AppHeaderBar :elevation="2">
+			<AppHeaderBar :elevation="2" :defined-slots="['leading', 'title']">
 				<template #leading>
 					<AppButton circle sparse trans icon="chevron-left" @click="emit('back')" />
 				</template>

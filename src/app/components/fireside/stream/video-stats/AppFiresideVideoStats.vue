@@ -1,10 +1,10 @@
 <script lang="ts" setup>
+import { computed, onMounted, onUnmounted, shallowRef } from 'vue';
 import { useFiresideController } from '../../controller/controller';
-import { computed, onMounted, onUnmounted } from 'vue';
 
 const c = useFiresideController()!;
 
-let videoStats: any = {};
+const videoStats = shallowRef<{ [id: number]: any }>({});
 let statsInterval: NodeJS.Timer | null = null;
 
 const stats = computed(() => {
@@ -13,17 +13,17 @@ const stats = computed(() => {
 	};
 
 	const focusedId = c.rtc.value?.focusedUser?.uid;
-	if (focusedId && videoStats[focusedId]) {
-		Object.assign(stats, videoStats[focusedId]);
+	if (focusedId && videoStats.value[focusedId]) {
+		Object.assign(stats, videoStats.value[focusedId]);
 	}
 
 	return stats;
 });
 
 onMounted(() => {
-	statsInterval = setInterval(() => {
-		videoStats = c.rtc.value?.videoChannel.agoraClient.getRemoteVideoStats() ?? {};
-	}, 3000);
+	statsInterval = setInterval(updateVideoStats, 3000);
+
+	updateVideoStats();
 });
 
 onUnmounted(() => {
@@ -31,6 +31,10 @@ onUnmounted(() => {
 		clearInterval(statsInterval);
 	}
 });
+
+function updateVideoStats() {
+	videoStats.value = c.rtc.value?.videoChannel.agoraClient.getRemoteVideoStats() ?? {};
+}
 </script>
 
 <template>

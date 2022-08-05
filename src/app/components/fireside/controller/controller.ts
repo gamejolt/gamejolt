@@ -9,6 +9,8 @@ import {
 	ref,
 	shallowReadonly,
 	shallowRef,
+	toRaw,
+	unref,
 	watch,
 } from 'vue';
 import { Router } from 'vue-router';
@@ -19,6 +21,7 @@ import { getAbsoluteLink } from '../../../../utils/router';
 import { getCurrentServerTime, updateServerTimeOffset } from '../../../../utils/server-time';
 import { run, sleep } from '../../../../utils/utils';
 import { uuidv4 } from '../../../../utils/uuid';
+import { MaybeRef } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import {
 	canCommunityEjectFireside,
@@ -56,6 +59,7 @@ import { CommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
 import { AppStore } from '../../../store';
+import { BottomBarControl } from '../../../views/fireside/_bottom-bar/AppFiresideBottomBar.vue';
 import { ChatStore, loadChat } from '../../chat/chat-store';
 import { leaveChatRoom, setGuestChatToken, unsetGuestChatToken } from '../../chat/client';
 import { ChatRoomChannel, createChatRoomChannel } from '../../chat/room-channel';
@@ -80,6 +84,13 @@ export type RouteStatus =
 	| 'setup-failed' // Failed to properly join the fireside.
 	| 'joined' // Currently joined to the fireside.
 	| 'blocked'; // Blocked from joining the fireside (user blocked).
+
+export type FiresideSidebar =
+	| 'chat'
+	| 'members'
+	| 'hosts'
+	| 'fireside-settings'
+	| 'stream-settings';
 
 export interface StreamingInfoPayload {
 	streamingAppId: string;
@@ -507,6 +518,77 @@ export function createFiresideController(
 		() => _watchGrid
 	);
 
+	const _isFullscreen = ref(false);
+	const _fullscreenableElement = ref<HTMLElement | null>(null);
+
+	/**
+	 * Assigns the element that we want to be fullscreen-able. Only fullscreens
+	 * the element if we had a different element fullscreen'd.
+	 */
+	const setFullscreenableElement = (target: MaybeRef<HTMLElement | undefined | null>) => {
+		const element = toRaw(unref(target)) || null;
+
+		if (_isFullscreen.value && element && element !== toRaw(_fullscreenableElement.value)) {
+			toggleFullscreen(false);
+			_fullscreenableElement.value = element;
+			toggleFullscreen(true);
+		} else {
+			_fullscreenableElement.value = element;
+		}
+	};
+
+	/**
+	 * Toggles fullscreen on our {@link _fullscreenableElement}. Force-closes
+	 * any fullscreen element if {@link setFullscreenableElement} wasn't called
+	 * previously.
+	 */
+	const toggleFullscreen = (wantsFullscreen?: boolean) => {
+		const element = _fullscreenableElement.value;
+
+		const shouldFullscreen = wantsFullscreen ?? !_isFullscreen.value;
+		const checkIsFullscreen = () => document.fullscreenElement === element;
+
+		if (!element || !shouldFullscreen) {
+			document.exitFullscreen();
+			_isFullscreen.value = false;
+			return;
+		}
+
+		const cb = () => {
+			const current = document.fullscreenElement;
+			if (!current || !checkIsFullscreen()) {
+				_isFullscreen.value = false;
+				element.removeEventListener('fullscreenchange', cb);
+				return;
+			}
+
+			_isFullscreen.value = true;
+		};
+
+		element.addEventListener('fullscreenchange', cb, { passive: true });
+		element.requestFullscreen();
+	};
+
+	const sidebar = ref<FiresideSidebar>('chat');
+
+	const activeBottomBarControl = computed<BottomBarControl | undefined>(() => {
+		switch (sidebar.value) {
+			case 'members':
+				return 'members';
+
+			case 'fireside-settings':
+				return 'settings';
+
+			case 'stream-settings':
+				return 'setup';
+
+			default:
+				return undefined;
+		}
+	});
+
+	const isShowingStreamOverlay = ref(false);
+
 	// We need the controller in our init flow, so create it now.
 	const controller = shallowReadonly({
 		fireside,
@@ -560,6 +642,15 @@ export function createFiresideController(
 		checkExpiry,
 		cleanup,
 		retry,
+
+		isFullscreen: computed(() => _isFullscreen.value),
+		canFullscreen: computed(() => _isFullscreen.value || !!_fullscreenableElement.value),
+		setFullscreenableElement,
+		toggleFullscreen,
+
+		activeBottomBarControl,
+		sidebar,
+		isShowingStreamOverlay,
 	});
 
 	// Let's set ourselves up now!
@@ -882,6 +973,11 @@ export function createFiresideController(
 		if (rtc.value) {
 			destroyFiresideRTC(rtc.value);
 		}
+
+		if (_isFullscreen.value) {
+			toggleFullscreen(false);
+		}
+		_fullscreenableElement.value = null;
 	}
 
 	/**

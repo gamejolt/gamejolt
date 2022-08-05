@@ -47,7 +47,10 @@ const { fireside, stickerTargetController, overlay } = toRefs(props);
 					<div class="-community-avatar">
 						<AppCommunityThumbnailImg :community="fireside.community" />
 					</div>
-					<RouterLink :to="fireside.community.routeLocation">
+					<RouterLink
+						:class="{ '-overlay': overlay }"
+						:to="fireside.community.routeLocation"
+					>
 						{{ fireside.community.name }}
 					</RouterLink>
 				</div>

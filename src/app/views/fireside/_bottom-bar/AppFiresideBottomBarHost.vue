@@ -193,8 +193,6 @@ async function onUserCardShow() {
 			}
 		);
 
-		console.warn('Got fetched user data', response);
-
 		const is_following = response.isFollowing === true;
 		const dogtags = response.dogtags;
 
