@@ -383,10 +383,9 @@ export default class RouteProfile extends BaseRouteComponent {
 		-->
 		<template v-if="!user.status">
 			<AppPageHeader>
-				<h1>
+				<h1 class="-heading">
 					{{ user.display_name }}
-					<br />
-					<small>@{{ user.username }}</small>
+					<small class="-heading-username">@{{ user.username }}</small>
 				</h1>
 
 				<div class="text-muted small">
@@ -406,19 +405,19 @@ export default class RouteProfile extends BaseRouteComponent {
 					should-affix-nav
 					:autoscroll-anchor-key="autoscrollAnchorKey"
 				>
-					<h1>
-						<router-link
-							:to="{
-								name: 'profile.overview',
-								params: { username: user.username },
-							}"
-						>
+					<router-link
+						:to="{
+							name: 'profile.overview',
+							params: { username: user.username },
+						}"
+					>
+						<h1 class="-heading">
 							{{ user.display_name }}
 							<AppUserVerifiedTick :user="user" big />
-							<small>@{{ user.username }}</small>
-						</router-link>
-					</h1>
-					<div class="small text-muted">
+							<span class="-heading-username">@{{ user.username }}</span>
+						</h1>
+					</router-link>
+					<div>
 						<!-- Joined on -->
 						<AppTranslate>Joined</AppTranslate>
 						{{ ' ' }}
@@ -626,3 +625,16 @@ export default class RouteProfile extends BaseRouteComponent {
 		</template>
 	</div>
 </template>
+
+<style lang="stylus" scoped>
+.-heading
+	margin-bottom: 4px
+	display: flex
+	align-items: center
+
+.-heading-username
+	font-size: 19px
+	font-family: $font-family-base
+	font-weight: 700
+	margin-left: 8px
+</style>

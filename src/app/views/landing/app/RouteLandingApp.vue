@@ -280,6 +280,7 @@ async function _getDownloadUrl(platform: string, arch: string) {
 								<img class="-laptop-img" :src="laptopImage" alt="" />
 							</div>
 						</div>
+						<div class="-content-col-spacer" />
 						<div class="-content-col-buttons">
 							<div class="-content-heading">at home</div>
 
@@ -342,6 +343,7 @@ async function _getDownloadUrl(platform: string, arch: string) {
 								<img class="-mobile-img" :src="mobileImage" alt="" />
 							</div>
 						</div>
+						<div class="-content-col-spacer" />
 						<div class="-content-col-buttons">
 							<div class="-content-heading">on the go</div>
 
@@ -449,7 +451,7 @@ async function _getDownloadUrl(platform: string, arch: string) {
 
 .-header-lead
 	text-align: center
-	font-family: $font-family-heading
+	font-family: $font-family-display
 	font-weight: 800
 	font-size: 64px
 	line-height: 1
@@ -460,7 +462,7 @@ async function _getDownloadUrl(platform: string, arch: string) {
 		flex: 6
 
 	@media $media-md-up
-		font-size: 80px
+		font-size: 96px
 
 .-header-em
 	color: var(--theme-highlight)
@@ -504,7 +506,7 @@ async function _getDownloadUrl(platform: string, arch: string) {
 
 	@media $media-sm-up
 		flex-direction: row
-		grid-gap: 100px
+		grid-gap: 24px
 
 .-content-col-img
 	width: 100%
@@ -520,11 +522,16 @@ async function _getDownloadUrl(platform: string, arch: string) {
 	width: 100%
 
 	@media $media-sm-up
-		flex: 4
+		flex: 5
+
+// Acts as an empty column for better spacing on larger screens
+.-content-col-spacer
+	@media $media-sm-up
+		flex: 1
 
 .-content-heading
 .-footer-heading
-	font-family: $font-family-heading
+	font-family: $font-family-display
 	font-size: 48px
 	font-weight: bold
 
