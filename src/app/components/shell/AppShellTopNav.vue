@@ -163,53 +163,6 @@ function _checkColWidths() {
 				</RouterLink>
 
 				<AppShellAltMenuPopover v-if="shouldShowMoreMenu" />
-
-				<!-- <AppPopper
-					v-if="shouldShowMoreMenu"
-					v-app-track-event="`top-nav:more-menu:toggle`"
-					popover-class="fill-darkest"
-					hide-on-state-change
-					fixed
-					@show="moreMenuShowing = true"
-					@hide="moreMenuShowing = false"
-				>
-					<a class="navbar-item" :class="{ active: moreMenuShowing }">
-						<AppJolticon icon="ellipsis-v" />
-					</a>
-
-					<template #popover>
-						<div class="list-group-dark">
-							<RouterLink
-								class="list-group-item has-icon offline-disable"
-								:to="{ name: 'landing.app' }"
-								@click="
-									trackAppPromotionClick({
-										source: 'top-nav-options',
-										platform: 'mobile',
-									})
-								"
-							>
-								<AppJolticon icon="phone" />
-								<AppTranslate>Get the Mobile App</AppTranslate>
-							</RouterLink>
-
-							<RouterLink
-								v-if="!GJ_IS_DESKTOP_APP"
-								class="list-group-item has-icon offline-disable"
-								:to="{ name: 'landing.client' }"
-								@click="
-									trackAppPromotionClick({
-										source: 'top-nav-options',
-										platform: 'desktop',
-									})
-								"
-							>
-								<AppJolticon icon="client" />
-								<AppTranslate>Get the Desktop App</AppTranslate>
-							</RouterLink>
-						</div>
-					</template>
-				</AppPopper> -->
 			</div>
 		</div>
 
@@ -232,36 +185,19 @@ function _checkColWidths() {
 			:style="{ 'min-width': minColWidth }"
 		>
 			<template v-if="!GJ_IS_DESKTOP_APP">
-				<template v-if="Screen.isSm">
-					<div class="-button">
-						<AppButton
-							:to="{ name: 'landing.app' }"
-							@click="
-								trackAppPromotionClick({
-									source: 'top-nav',
-									platform: 'mobile',
-								})
-							"
-						>
-							<AppTranslate>Get App</AppTranslate>
-						</AppButton>
-					</div>
-				</template>
-				<template v-else-if="Screen.isDesktop">
-					<div class="-button">
-						<AppButton
-							:to="{ name: 'landing.client' }"
-							@click="
-								trackAppPromotionClick({
-									source: 'top-nav',
-									platform: 'desktop',
-								})
-							"
-						>
-							<AppTranslate>Get App</AppTranslate>
-						</AppButton>
-					</div>
-				</template>
+				<div class="-button">
+					<AppButton
+						:to="{ name: 'landing.app' }"
+						@click="
+							trackAppPromotionClick({
+								source: 'top-nav',
+								platform: Screen.isDesktop ? 'desktop' : 'mobile',
+							})
+						"
+					>
+						<AppTranslate>Get App</AppTranslate>
+					</AppButton>
+				</div>
 			</template>
 
 			<div v-app-observe-dimensions="_checkColWidths" class="-col">

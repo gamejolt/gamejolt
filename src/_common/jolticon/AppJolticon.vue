@@ -195,6 +195,10 @@ export const Jolticons = [
 	'star-ten-pointed',
 	'expand',
 	'trash-can',
+	'gem',
+	'marketplace',
+	'marketplace-filled',
+	'android',
 ] as const;
 </script>
 

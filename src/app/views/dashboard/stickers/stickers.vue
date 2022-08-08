@@ -213,7 +213,6 @@ export default class RouteDashStickers extends BaseRouteComponent {
 
 .-collection-title
 	text-transform: uppercase
-	font-family: $font-family-heading
 	color: var(--theme-fg-muted)
 	margin-top: $grid-gutter-width
 

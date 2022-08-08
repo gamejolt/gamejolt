@@ -64,7 +64,6 @@ export default class AppUserLevelWidget extends Vue {
 .user-level-widget-level-digit
 	theme-prop('color', 'highlight')
 	padding-top: 15px
-	font-family: $font-family-heading
 	font-weight: 300
 	font-size: $font-size-h2
 

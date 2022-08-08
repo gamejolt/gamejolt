@@ -23,6 +23,12 @@ const props = defineProps({
 		type: Number,
 		default: 0.05,
 	},
+	/**
+	 * Will scroll the background infinitely.
+	 */
+	scroll: {
+		type: Boolean,
+	},
 });
 
 const { background, darken, bleed, backgroundStyle, fadeOpacity } = toRefs(props);
@@ -69,7 +75,12 @@ if (import.meta.env.SSR) {
 					<div
 						v-if="loadedBackground"
 						:key="loadedBackground.id"
-						class="-stretch anim-fade-in"
+						:class="[
+							'-background-img',
+							'-stretch',
+							'anim-fade-in',
+							{ '-scroll': scroll },
+						]"
 						:style="{
 							backgroundImage: loadedBackground.cssBackgroundImage,
 							backgroundRepeat: loadedBackground.cssBackgroundRepeat,
@@ -126,6 +137,12 @@ if (import.meta.env.SSR) {
 	right: 0
 	bottom: 0
 
+.-background-img.-scroll
+	animation-name: anim-scroll
+	animation-timing-function: linear !important
+	animation-duration: 20s
+	animation-iteration-count: infinite
+
 .-fade-top
 .-fade-bottom
 	position: absolute
@@ -150,4 +167,11 @@ if (import.meta.env.SSR) {
 	position: relative
 	width: 100%
 	height: 100%
+
+@keyframes anim-scroll
+	0%
+		background-position: 0 0
+
+	100%
+		background-position: 800px 0
 </style>

@@ -82,7 +82,8 @@ const { fireside, stickerTargetController, overlay } = toRefs(props);
 
 .-title
 	text-overflow()
-	font-size: 24px
+	font-size: 27px
+	font-family: $font-family-heading
 	font-weight: 800
 
 .-tag

@@ -41,7 +41,7 @@ const emit = defineEmits({
 <style lang="stylus" scoped>
 .-compact
 	position: relative
-	font-size: $font-size-base
+	font-size: $font-size-h4
 	border: 0
 
 .-expandable

@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from 'vue';
 import { RouteLocationRedirect } from '../../../utils/router';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
-import AppContactLink from '../../../_common/contact-link/contact-link.vue';
+import AppContactLink from '../../../_common/contact-link/AppContactLink.vue';
 import { showErrorGrowl, showInfoGrowl } from '../../../_common/growls/growls.service';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import AppLinkHelp from '../../../_common/link/AppLinkHelp.vue';

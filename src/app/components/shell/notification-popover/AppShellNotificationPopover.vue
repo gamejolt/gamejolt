@@ -157,6 +157,7 @@ function removeStickerAnimation(key: string) {
 		popover-class="fill-dark"
 		fixed
 		hide-on-state-change
+		width="400px"
 		@show="onShow()"
 		@hide="onHide()"
 	>
@@ -194,7 +195,7 @@ function removeStickerAnimation(key: string) {
 		</template>
 
 		<template v-if="feed && isShowing" #popover>
-			<div class="shell-card-popover">
+			<div class="-wrapper">
 				<template v-if="isLoading">
 					<br />
 					<AppLoading centered />
@@ -234,8 +235,9 @@ $-new-sticker-size = 32px
 	full-bleed()
 
 // The full-bleed would add a scrollbar if we didn't cut it off like this.
-.shell-card-popover
+.-wrapper
 	overflow: hidden
+	padding: 10px
 
 .-header
 	padding: $popover-spacing

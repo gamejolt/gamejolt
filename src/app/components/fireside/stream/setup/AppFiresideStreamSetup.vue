@@ -729,7 +729,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 				<template v-if="shouldPromoteAppForStreaming">
 					<RouterLink
 						class="-warning-button"
-						:to="{ name: 'landing.client' }"
+						:to="{ name: 'landing.app' }"
 						target="_blank"
 					>
 						<div class="-warning-button-icon">

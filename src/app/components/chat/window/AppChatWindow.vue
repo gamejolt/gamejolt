@@ -146,7 +146,7 @@ function onMobileAppBarBack() {
 				<AppHeaderBar
 					:key="room.id"
 					class="-header"
-					:title-size="Screen.isXs ? 'large' : 'default'"
+					title-size="lg"
 					:automatically-imply-leading="false"
 					:elevation="2"
 				>
@@ -196,11 +196,11 @@ function onMobileAppBarBack() {
 							class="-header-name anim-fade-in-right no-animate-xs"
 							:title="`${room.user.display_name} (@${room.user.username})`"
 						>
-							<router-link class="link-unstyled" :to="room.user.url">
+							<RouterLink class="link-unstyled" :to="room.user.url">
 								{{ roomTitle }}
-							</router-link>
+							</RouterLink>
 							<AppUserVerifiedTick :user="room.user" />
-							<div class="tiny">@{{ room.user.username }}</div>
+							<div class="-header-name-username">@{{ room.user.username }}</div>
 						</div>
 					</template>
 
@@ -281,7 +281,7 @@ function onMobileAppBarBack() {
 						<div v-if="Screen.isDesktop" class="-sidebar-shadow" />
 
 						<div class="-sidebar-container">
-							<AppHeaderBar v-if="Screen.isMobile" title-size="large" center-title>
+							<AppHeaderBar v-if="Screen.isMobile" title-size="lg" center-title>
 								<template #leading>
 									<AppButton
 										icon="chevron-left"
@@ -437,6 +437,13 @@ $-zindex-sidebar-mobile = 10
 .-header-name
 	text-overflow()
 
+.-header-name-username
+	font-family: $font-family-base
+	font-size: 13px
+	line-height: 18px
+	font-weight: 400
+	color: var(--theme-fg-muted)
+
 .-header-control
 	position: relative
 	vertical-align: top
@@ -444,7 +451,7 @@ $-zindex-sidebar-mobile = 10
 
 .-header-members
 	font-family: $font-family-heading
-	font-size: $font-size-base
+	font-size: 19px
 	font-weight: 800
 	padding: 24px 16px 16px
 

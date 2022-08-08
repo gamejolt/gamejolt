@@ -198,29 +198,27 @@ function _removeRequest(request: UserFriendship) {
 		</template>
 
 		<template v-if="isShowing" #popover>
-			<div class="shell-card-popover">
-				<div v-if="requests.length">
-					<AppShellFriendRequestPopoverItem
-						v-for="request of requests"
-						:key="request.id"
-						:request="request"
-						@accept="acceptRequest(request)"
-						@reject="rejectRequest(request)"
-						@cancel="cancelRequest(request)"
-					/>
-				</div>
-				<template v-if="isLoading">
-					<br />
-					<AppLoading centered />
-				</template>
-				<div v-else-if="!requests.length" class="alert">
-					<AppTranslate>No friend requests right now.</AppTranslate>
-				</div>
-				<div v-else-if="!isAtEnd" class="page-cut -load-more">
-					<AppButton v-app-track-event="`friend-requests:more`" trans @click="loadMore">
-						<AppTranslate>Load More</AppTranslate>
-					</AppButton>
-				</div>
+			<div v-if="requests.length" class="-pad">
+				<AppShellFriendRequestPopoverItem
+					v-for="request of requests"
+					:key="request.id"
+					:request="request"
+					@accept="acceptRequest(request)"
+					@reject="rejectRequest(request)"
+					@cancel="cancelRequest(request)"
+				/>
+			</div>
+			<template v-if="isLoading">
+				<br />
+				<AppLoading centered />
+			</template>
+			<div v-else-if="!requests.length" class="alert">
+				<AppTranslate>No friend requests right now.</AppTranslate>
+			</div>
+			<div v-else-if="!isAtEnd" class="page-cut -load-more">
+				<AppButton v-app-track-event="`friend-requests:more`" trans @click="loadMore">
+					<AppTranslate>Load More</AppTranslate>
+				</AppButton>
 			</div>
 		</template>
 	</AppPopper>
@@ -230,6 +228,9 @@ function _removeRequest(request: UserFriendship) {
 .-nav
 	margin-bottom: 0
 	padding-top: ($line-height-computed / 2)
+
+.-pad
+	padding: 10px
 
 .-load-more
 	margin-top: 4px
