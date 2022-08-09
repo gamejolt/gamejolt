@@ -184,7 +184,11 @@ function _checkColWidths() {
 			class="navbar-right"
 			:style="{ 'min-width': minColWidth }"
 		>
-			<template v-if="!GJ_IS_DESKTOP_APP">
+			<!--
+			We don't have the space to show the Get App button here on mobile,
+			but we do prompt them in the modal that shows up on mobile web
+			-->
+			<template v-if="!GJ_IS_DESKTOP_APP && !Screen.isXs">
 				<div class="-button">
 					<AppButton
 						:to="{ name: 'landing.app' }"
