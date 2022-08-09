@@ -166,17 +166,6 @@ watch(
 	}
 );
 
-watch(sidebar, value => {
-	if (!value || value === 'chat') {
-		return;
-	}
-	collapseSidebar.value = false;
-
-	if (isFullscreen.value) {
-		document.exitFullscreen();
-	}
-});
-
 watch(isFullscreen, value => {
 	if (value) {
 		sidebar.value = 'chat';
