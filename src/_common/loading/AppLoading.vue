@@ -72,7 +72,6 @@ const img = computed(() => {
 .loading-big
 	font-size: $font-size-large
 	font-weight: bold
-	font-family: $font-family-heading
 
 	img
 		margin-bottom: 10px

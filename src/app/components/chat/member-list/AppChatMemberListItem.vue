@@ -80,7 +80,7 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 			<AppFiresideLiveTag
 				v-if="isLiveFiresideHost"
 				class="-nowrap"
-				size="tiny"
+				size="sm"
 				sans-elevation
 			/>
 

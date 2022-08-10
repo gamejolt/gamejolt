@@ -89,7 +89,7 @@ onBeforeUnmount(() => cleanupController());
 
 			<div class="-overlay">
 				<div v-if="showLive" class="-center">
-					<AppFiresideLiveTag size="lg" />
+					<AppFiresideLiveTag />
 				</div>
 				<div v-if="showLiveUsers" class="-live-users">
 					<AppUserAvatarList :users="cohosts" sm inline />

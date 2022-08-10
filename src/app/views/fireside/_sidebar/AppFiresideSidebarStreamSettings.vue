@@ -134,7 +134,7 @@ async function onClickStopStreaming() {
 								primary
 								solid
 								block
-								:to="{ name: 'landing.client' }"
+								:to="{ name: 'landing.app' }"
 								target="_blank"
 							>
 								<AppTranslate>Get the desktop app</AppTranslate>
@@ -159,7 +159,7 @@ async function onClickStopStreaming() {
 								primary
 								solid
 								block
-								:to="{ name: 'landing.client' }"
+								:to="{ name: 'landing.app' }"
 								target="_blank"
 							>
 								<AppTranslate>Get the desktop app</AppTranslate>

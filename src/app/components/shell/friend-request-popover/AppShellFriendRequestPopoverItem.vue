@@ -51,18 +51,29 @@ const them = computed(() => request.value.getThem(user.value!));
 	>
 		<RouterLink v-if="isInview" :to="them.url">
 			<AppCard>
-				<div class="shell-card-popover-card-media">
-					<div class="friend-request-popover-avatar">
+				<div class="-wrapper">
+					<div class="-media">
 						<AppUserAvatarImg :user="them" />
 					</div>
-				</div>
-				<div class="shell-card-popover-card-body">
-					<div class="shell-card-popover-card-controls">
+
+					<div class="-body">
+						<div>
+							<span class="-display-name -name -name-container">{{
+								them.display_name
+							}}</span>
+							<AppUserVerifiedTick :user="them" />
+						</div>
+
+						<div class="-username -name">@{{ them.username }}</div>
+					</div>
+
+					<div class="-controls">
 						<!--
-							For a tags we need to prevent click events in order to stop navigation.
-							stopping propogation doesn't cut it because all it's doing is stopping
-							the event handlers on the parent elements to fire, but the default beahviour
-							of the elements is only prevented with 'prevent'.
+						For a tags we need to prevent click events in order to stop
+						navigation. stopping propogation doesn't cut it because all
+						it's doing is stopping the event handlers on the parent
+						elements to fire, but the default beahviour of the elements
+						is only prevented with 'prevent'.
 						-->
 						<template v-if="isPending">
 							<AppButton
@@ -95,17 +106,6 @@ const them = computed(() => request.value.getThem(user.value!));
 							/>
 						</template>
 					</div>
-
-					<div class="card-title">
-						<h5>
-							<span class="-name -name-container">{{ them.display_name }}</span>
-							<AppUserVerifiedTick :user="them" />
-						</h5>
-
-						<h5 class="-name">
-							<small>@{{ them.username }}</small>
-						</h5>
-					</div>
 				</div>
 			</AppCard>
 		</RouterLink>
@@ -117,10 +117,33 @@ const them = computed(() => request.value.getThem(user.value!));
 	display: block
 	height: 85px
 
+.-wrapper
+	display: flex
+	align-items: center
+	gap: 16px
+
+.-media
+	width: 48px
+	height: 48px
+	text-align: center
+
+.-body
+	flex: auto
+
+.-controls
+	flex: none
+
+.-display-name
+	font-weight: 700
+
+.-username
+	color: var(--theme-fg-muted)
+
 .-name
 	text-overflow()
+	line-height: 1.2
 
-	&-container
-		max-width: 150px
-		display: inline-block
+.-name-container
+	max-width: 150px
+	display: inline-block
 </style>
