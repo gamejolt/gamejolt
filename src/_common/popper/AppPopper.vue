@@ -166,6 +166,13 @@ const props = defineProps({
 		type: String,
 		default: undefined,
 	},
+	/**
+	 * Query selector that the popper will teleport to. Defaults to `body`.
+	 */
+	to: {
+		type: String,
+		default: 'body',
+	},
 });
 
 const emit = defineEmits({
@@ -533,7 +540,7 @@ function onManualShow() {
 	>
 		<slot />
 
-		<teleport v-if="isVisible" to="body">
+		<teleport v-if="isVisible" :to="to">
 			<div
 				ref="popperElem"
 				v-app-observe-dimensions="onDimensionsChanged"

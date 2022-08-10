@@ -4,7 +4,6 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import { FiresideChatSettings } from '../../../../_common/fireside/chat-settings/chat-settings.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FIRESIDE_ROLES } from '../../../../_common/fireside/role/role.model';
-import { setMicAudioPlayback } from '../../../../_common/fireside/rtc/user';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
@@ -28,16 +27,11 @@ import {
 } from '../../../components/fireside/controller/controller';
 import AppFiresideShare from '../AppFiresideShare.vue';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
-
-const emit = defineEmits({
-	back: () => true,
-	streamSettings: () => true,
-});
+import AppFiresideSidebarHeadingCollapse from './AppFiresideSidebarHeadingCollapse.vue';
 
 const c = useFiresideController()!;
 const {
 	fireside,
-	rtc,
 	chatSettings,
 	gridChannel,
 	isStreaming,
@@ -46,6 +40,7 @@ const {
 	canPublish,
 	canExtinguish,
 	canReport,
+	sidebar,
 } = c;
 
 const form: FormController<Fireside> = createForm({
@@ -88,41 +83,11 @@ watch(canEdit, (value, oldValue) => {
 	}
 });
 
-const hasMuteControls = computed(() => {
-	if (!rtc.value) {
-		return false;
-	}
-
-	// We only want to show mute controls for remote listable streaming users.
-	const remoteUsers = rtc.value.listableStreamingUsers.filter(
-		rtcUser => !rtcUser.isLocal && !!(rtcUser.remoteVideoUser || rtcUser.remoteChatUser)
-	);
-	return remoteUsers.length > 0;
-});
-
-const shouldShowMuteAll = computed(() => {
-	if (!rtc.value) {
-		return false;
-	}
-
-	return !rtc.value.isEveryRemoteListableUsersMuted;
-});
-
 const settingsRoleOptions = computed<{ label: string; value: FIRESIDE_ROLES | null }[]>(() => [
 	{ label: $gettext('Owner only'), value: 'host' },
 	{ label: $gettext('Hosts only'), value: 'cohost' },
 	{ label: $gettext('Everyone'), value: 'audience' },
 ]);
-
-function toggleMuteAll() {
-	const shouldPlay = !shouldShowMuteAll.value;
-	rtc.value?.listableStreamingUsers.forEach(i => {
-		if (i.isLocal) {
-			return;
-		}
-		setMicAudioPlayback(i, shouldPlay);
-	});
-}
 
 function onClickReport() {
 	ReportModal.show(fireside);
@@ -140,13 +105,17 @@ function onClickExtinguish() {
 <template>
 	<AppFiresideSidebar>
 		<template #header>
-			<AppHeaderBar :elevation="2">
+			<AppHeaderBar :elevation="2" :defined-slots="['leading', 'title', 'actions']">
 				<template #leading>
-					<AppButton circle sparse trans icon="chevron-left" @click="emit('back')" />
+					<AppButton circle sparse trans icon="chevron-left" @click="sidebar = 'chat'" />
 				</template>
 
 				<template #title>
 					<AppTranslate>Fireside Settings</AppTranslate>
+				</template>
+
+				<template #actions>
+					<AppFiresideSidebarHeadingCollapse />
 				</template>
 			</AppHeaderBar>
 		</template>
@@ -155,32 +124,13 @@ function onClickExtinguish() {
 			<AppScrollScroller class="-pad-v">
 				<div class="-pad-h">
 					<template v-if="canStream">
-						<AppButton block @click="emit('streamSettings')">
+						<AppButton block @click="sidebar = 'stream-settings'">
 							<AppTranslate>Stream settings</AppTranslate>
 						</AppButton>
 					</template>
 
 					<!-- Shown to guests and chat mods (since they can't do anything yet) -->
-					<template v-if="!canStream">
-						<AppFiresideShare class="-share" primary />
-						<AppSpacer vertical :scale="2" />
-					</template>
-
-					<AppSpacer vertical :scale="2" />
-
-					<AppButton
-						v-if="hasMuteControls"
-						:icon="shouldShowMuteAll ? 'audio-mute' : 'audio'"
-						block
-						@click="toggleMuteAll()"
-					>
-						<template v-if="shouldShowMuteAll">
-							<AppTranslate>Mute all hosts</AppTranslate>
-						</template>
-						<template v-else>
-							<AppTranslate>Unmute all hosts</AppTranslate>
-						</template>
-					</AppButton>
+					<AppFiresideShare v-if="!canStream" class="-share" primary />
 
 					<template v-if="canStream">
 						<hr />

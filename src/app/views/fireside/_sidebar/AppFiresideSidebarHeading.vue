@@ -1,30 +1,58 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed, ref, toRefs, watch } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
+import AppFiresideSidebarHeadingCollapse from './AppFiresideSidebarHeadingCollapse.vue';
 
-defineProps({
+const props = defineProps({
 	showingMembers: {
+		type: Boolean,
+	},
+	collapsed: {
 		type: Boolean,
 	},
 });
 
-const emit = defineEmits({
-	members: () => true,
+const { showingMembers, collapsed } = toRefs(props);
+
+const { chatUsers, isFullscreen, chatRoom, sidebar } = useFiresideController()!;
+
+const messageCount = ref(0);
+
+watch(
+	() => chatRoom.value?.last_message_on,
+	(timestamp, previous) => {
+		if (!collapsed.value || !timestamp || (previous && previous >= timestamp)) {
+			return;
+		}
+
+		++messageCount.value;
+	}
+);
+
+watch(collapsed, () => {
+	messageCount.value = 0;
 });
 
-const c = useFiresideController()!;
-const { chatUsers } = c;
+const shouldCollapse = computed(() => isFullscreen.value && collapsed.value);
 
 const memberCount = computed(() => chatUsers.value?.count || 0);
 </script>
 
 <template>
-	<AppHeaderBar :elevation="2" :automatically-imply-leading="false">
+	<AppHeaderBar
+		class="fireside-sidebar-heading"
+		:class="{
+			'-collapsed': collapsed,
+		}"
+		:elevation="2"
+		:automatically-imply-leading="false"
+		:defined-slots="['title', 'actions']"
+	>
 		<template #title>
 			<span class="-member-count">
 				{{ formatNumber(memberCount) }}
@@ -39,6 +67,7 @@ const memberCount = computed(() => chatUsers.value?.count || 0);
 
 		<template #actions>
 			<AppButton
+				v-if="!shouldCollapse"
 				v-app-tooltip="{
 					placement: 'left',
 					content: $gettext(`Members`),
@@ -48,8 +77,10 @@ const memberCount = computed(() => chatUsers.value?.count || 0);
 				trans
 				:primary="showingMembers"
 				:solid="showingMembers"
-				@click="emit('members')"
+				@click="sidebar === 'members' ? (sidebar = 'chat') : (sidebar = 'members')"
 			/>
+
+			<AppFiresideSidebarHeadingCollapse />
 		</template>
 	</AppHeaderBar>
 </template>
@@ -57,4 +88,7 @@ const memberCount = computed(() => chatUsers.value?.count || 0);
 <style lang="stylus" scoped>
 .-member-count
 	color: var(--theme-primary)
+
+.fireside-sidebar-heading.-collapsed
+	rounded-corners()
 </style>

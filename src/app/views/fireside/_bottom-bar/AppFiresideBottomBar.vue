@@ -3,7 +3,7 @@ export type BottomBarControl = 'members' | 'settings' | 'setup';
 </script>
 
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
+import { computed } from 'vue';
 import { setDrawerOpen, useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { setProducerDeviceMuted, stopStreaming } from '../../../../_common/fireside/rtc/producer';
 import { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
@@ -12,7 +12,10 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { useFiresideController } from '../../../components/fireside/controller/controller';
+import {
+	FiresideSidebar,
+	useFiresideController,
+} from '../../../components/fireside/controller/controller';
 import AppFiresideBottomBarButton from './AppFiresideBottomBarButton.vue';
 import AppFiresideBottomBarHosts from './AppFiresideBottomBarHosts.vue';
 
@@ -20,20 +23,19 @@ defineProps({
 	overlay: {
 		type: Boolean,
 	},
-	activeControl: {
-		type: String as PropType<BottomBarControl>,
-		default: undefined,
-	},
-});
-
-const emit = defineEmits({
-	members: () => true,
-	firesideSettings: () => true,
-	streamSettings: () => true,
 });
 
 const c = useFiresideController()!;
-const { rtc, user, stickerCount, canStream, isStreaming, isPersonallyStreaming } = c;
+const {
+	rtc,
+	user,
+	stickerCount,
+	canStream,
+	isStreaming,
+	isPersonallyStreaming,
+	sidebar,
+	activeBottomBarControl,
+} = c;
 
 const drawerStore = useDrawerStore();
 
@@ -82,7 +84,7 @@ async function onClickMic() {
 	}
 
 	if (!isPersonallyStreaming.value) {
-		emit('streamSettings');
+		toggleStreamSettings();
 		return;
 	}
 
@@ -108,7 +110,7 @@ async function onClickMic() {
 	if (_user.hasMicAudio) {
 		setProducerDeviceMuted(_producer, 'mic');
 	} else {
-		emit('streamSettings');
+		toggleStreamSettings();
 	}
 }
 
@@ -120,7 +122,7 @@ async function onClickVideo() {
 	}
 
 	if (!isPersonallyStreaming.value) {
-		emit('streamSettings');
+		toggleStreamSettings();
 		return;
 	}
 
@@ -146,12 +148,29 @@ async function onClickVideo() {
 	if (_user.hasVideo) {
 		setProducerDeviceMuted(_producer, 'video');
 	} else {
-		emit('streamSettings');
+		toggleStreamSettings();
 	}
 }
 
 function onClickStickerButton() {
 	setDrawerOpen(drawerStore, true);
+}
+
+function toggleStreamSettings() {
+	_toggleSidebar('stream-settings');
+}
+
+function toggleChatMembers() {
+	_toggleSidebar('members');
+}
+
+function toggleFiresideSettings() {
+	_toggleSidebar('fireside-settings');
+}
+
+function _toggleSidebar(value: FiresideSidebar) {
+	const result = sidebar.value === value ? 'chat' : value;
+	sidebar.value = result;
 }
 </script>
 
@@ -164,7 +183,7 @@ function onClickStickerButton() {
 					:icon="micIcon"
 					show-settings
 					:disabled="!localUser?._micAudioTrack"
-					@click-settings="emit('streamSettings')"
+					@click-settings="toggleStreamSettings()"
 					@click="onClickMic"
 				/>
 				<AppFiresideBottomBarButton
@@ -172,7 +191,7 @@ function onClickStickerButton() {
 					:icon="videoIcon"
 					show-settings
 					:disabled="!localUser?._videoTrack"
-					@click-settings="emit('streamSettings')"
+					@click-settings="toggleStreamSettings()"
 					@click="onClickVideo"
 				/>
 			</div>
@@ -180,7 +199,7 @@ function onClickStickerButton() {
 			<div v-if="rtc" class="-hosts">
 				<AppScrollScroller horizontal>
 					<div class="-group">
-						<AppFiresideBottomBarHosts @stream-settings="emit('streamSettings')" />
+						<AppFiresideBottomBarHosts @stream-settings="toggleStreamSettings()" />
 					</div>
 				</AppScrollScroller>
 			</div>
@@ -195,14 +214,14 @@ function onClickStickerButton() {
 
 				<AppFiresideBottomBarButton
 					icon="users"
-					:active="activeControl === 'members'"
-					@click="emit('members')"
+					:active="activeBottomBarControl === 'members'"
+					@click="toggleChatMembers()"
 				/>
 
 				<AppFiresideBottomBarButton
 					icon="ellipsis-h"
-					:active="activeControl === 'settings'"
-					@click="emit('firesideSettings')"
+					:active="activeBottomBarControl === 'settings'"
+					@click="toggleFiresideSettings()"
 				/>
 			</div>
 		</div>

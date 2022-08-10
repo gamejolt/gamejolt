@@ -27,14 +27,24 @@ const props = defineProps({
 	disableFollowWidget: {
 		type: Boolean,
 	},
+	/**
+	 * Query selector that {@link AppPopper} can use to teleport the popover
+	 * content.
+	 */
+	to: {
+		type: String,
+		default: undefined,
+	},
 });
 
 const emit = defineEmits({
 	show: () => true,
 	hide: () => true,
+	hovered: () => true,
+	unhovered: () => true,
 });
 
-const { user, disabled, hoverDelay, noStats } = toRefs(props);
+const { user, disabled, hoverDelay, noStats, to } = toRefs(props);
 
 const isShowing = ref(false);
 const isLoaded = ref(false);
@@ -53,6 +63,7 @@ const componentProps = computed(() => {
 				trigger: 'hover',
 				showDelay: hoverDelay.value,
 				block: true,
+				to: to?.value,
 		  };
 });
 
@@ -62,6 +73,8 @@ const componentOn = computed(() => {
 		: {
 				show: () => onShow(),
 				hide: () => onHide(),
+				mouseEnter: () => onMouseEnter(),
+				mouseLeave: () => onMouseLeave(),
 		  };
 });
 
@@ -82,6 +95,14 @@ function onShow() {
 function onHide() {
 	isShowing.value = false;
 	emit('hide');
+}
+
+function onMouseEnter() {
+	emit('hovered');
+}
+
+function onMouseLeave() {
+	emit('unhovered');
 }
 
 async function fetchCardInfo() {
