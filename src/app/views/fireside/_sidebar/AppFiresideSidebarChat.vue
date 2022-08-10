@@ -1,10 +1,9 @@
 <script lang="ts" setup>
-import { computed, ref, toRefs, watch } from 'vue';
+import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { Environment } from '../../../../_common/environment/environment.service';
 
-import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { createFiresideChatContextCapabilities } from '../../../../_common/fireside/chat-settings/chat-settings.model';
 import { useChatStore } from '../../../components/chat/chat-store';
 import AppChatWindowOutput from '../../../components/chat/window/output/AppChatWindowOutput.vue';
@@ -13,41 +12,11 @@ import { useFiresideController } from '../../../components/fireside/controller/c
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 
-const props = defineProps({
-	collapse: {
-		type: Boolean,
-	},
-});
-
-const { collapse } = toRefs(props);
-
-const emit = defineEmits({
-	members: () => true,
-	setCollapsed: (_collapse: boolean) => true,
-});
-
 const c = useFiresideController()!;
 const { chatRoom, chatSettings, fireside } = c;
 
 const route = useRoute();
 const chatStore = useChatStore()!;
-
-const messageCount = ref(0);
-
-watch(
-	() => chatRoom.value?.last_message_on,
-	(timestamp, previous) => {
-		if (!collapse.value || !timestamp || (previous && previous >= timestamp)) {
-			return;
-		}
-
-		++messageCount.value;
-	}
-);
-
-watch(collapse, () => {
-	messageCount.value = 0;
-});
 
 const chat = computed(() => chatStore.chat);
 
@@ -67,31 +36,9 @@ const loginUrl = computed(
 </script>
 
 <template>
-	<AppFiresideSidebar
-		:collapse="collapse"
-		:opacity="collapse ? 0 : 0.3"
-		@set-collapsed="emit('setCollapsed', $event)"
-	>
+	<AppFiresideSidebar :opacity="0.3">
 		<template #header>
-			<div class="-heading-wrapper">
-				<AppFiresideSidebarHeading
-					class="-heading"
-					:class="{
-						'-collapsed': collapse,
-					}"
-					:sidebar-collapsed="collapse"
-					collapsable
-					@members="emit('members')"
-					@set-collapsed="emit('setCollapsed', $event)"
-				/>
-
-				<div
-					v-if="collapse && messageCount > 0"
-					class="-missed-messages badge badge-overlay-notice"
-				>
-					{{ formatFuzzynumber(messageCount) }}
-				</div>
-			</div>
+			<AppFiresideSidebarHeading />
 		</template>
 
 		<template #body>
@@ -136,21 +83,4 @@ const loginUrl = computed(
 
 	@media $media-sm-up
 		padding: ($grid-gutter-width / 2)
-
-.-heading
-	border-radius: 0
-	transition: border-radius 600ms, border-bottom-left-radius 300ms 400ms, border-bottom-right-radius 300ms 400ms
-
-	&.-collapsed
-		rounded-corners()
-		transition: border-radius 600ms 100ms, border-bottom-left-radius 300ms 400ms, border-bottom-right-radius 300ms 400ms
-
-.-heading-wrapper
-	position: relative
-
-.-missed-messages
-	position: absolute
-	right: 12px
-	top: 4px
-	pointer-events: none
 </style>

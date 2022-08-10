@@ -47,7 +47,7 @@ const { rtcUser, hasHeader, hasHosts, sidebarCollapsed } = toRefs(props);
 const c = useFiresideController()!;
 const {
 	rtc,
-	isShowingOverlayPopper,
+	shownUserCardHover,
 	isShowingStreamSetup,
 	isFullscreen,
 	canFullscreen,
@@ -86,8 +86,8 @@ const shouldShowUI = computed(() => {
 	}
 
 	return !!(
-		(hasVideo.value && videoPaused.value) ||
-		isShowingOverlayPopper.value ||
+		videoPaused.value ||
+		shownUserCardHover.value ||
 		showMutedIndicator.value ||
 		isHovered.value ||
 		hideUITimer.value
@@ -115,9 +115,7 @@ const showVideoPreviewMessage = computed(
 	() => !!rtc.value && rtc.value.isFocusingMe && isShowingStreamSetup.value
 );
 
-const hasOverlayItems = computed(
-	() => hasVideo.value || hasVolumeControls.value || hasHeader.value
-);
+const hasOverlayItems = computed(() => true || hasVolumeControls.value || hasHeader.value);
 
 const videoPaused = computed(() => rtc.value?.videoPaused === true);
 
@@ -376,7 +374,6 @@ function onStreakCountChanged() {
 						<div
 							class="-row"
 							:style="{
-								transition: 'padding-right 300ms',
 								paddingRight: overlayPaddingRight,
 							}"
 						>
@@ -390,12 +387,13 @@ function onStreakCountChanged() {
 							<AppSpacer v-if="hasHeader && canFullscreen" horizontal :scale="2" />
 							<AppButton
 								v-if="canFullscreen"
-								circle
+								class="-button-lg"
 								sparse
+								circle
 								overlay
 								trans
 								style="margin-left: auto"
-								icon="fullscreen"
+								:icon="isFullscreen ? 'unfullscreen' : 'fullscreen'"
 								@click="toggleFullscreen()"
 							/>
 						</div>
@@ -410,21 +408,28 @@ function onStreakCountChanged() {
 					>
 						<div class="-overlay-bottom -control" style="width: 100%" @click.stop>
 							<div class="-video-controls">
-								<div class="-video-controls-left">
-									<div v-if="hasVideo">
-										<AppButton
-											circle
-											trans
-											overlay
-											:icon="videoPaused ? 'play' : 'pause'"
-											@click.capture.stop="togglePlayback"
-										/>
-									</div>
+								<div
+									class="-video-controls-left"
+									:class="{
+										'-fullscreen': isFullscreen,
+									}"
+								>
+									<AppButton
+										class="-button-lg"
+										sparse
+										circle
+										trans
+										overlay
+										:icon="videoPaused ? 'play' : 'pause'"
+										@click.capture.stop="togglePlayback"
+									/>
 
 									<div v-if="rtcUser.showDesktopAudioMuted">
 										<AppButton
 											v-app-tooltip="$gettext(`Ummute video`)"
+											class="-button-lg"
 											circle
+											sparse
 											trans
 											overlay
 											icon="audio-mute"
@@ -438,7 +443,9 @@ function onStreakCountChanged() {
 											:user="rtcUser.userModel"
 											disable-link
 										/>
-										<span>@{{ rtcUser.userModel.username }}</span>
+										<span class="-user-tag-username">
+											@{{ rtcUser.userModel.username }}
+										</span>
 									</div>
 								</div>
 
@@ -503,6 +510,14 @@ $-z-combo = 2
 
 .jolticon
 	text-shadow: $-text-shadow
+
+.-button-lg
+	padding: 12px !important
+	line-height: 24px !important
+
+	::v-deep(.jolticon)
+		font-size: $font-size-large
+		width: 24px
 
 .-row
 	display: flex
@@ -634,41 +649,50 @@ $-z-combo = 2
 .-user-tag-avatar
 	width: 16px
 	height: @width
+	flex: none
+
+.-user-tag-username
+	text-overflow()
+	width: 100%
 
 .-video-controls
 	display: flex
 	align-items: flex-end
 	flex: 1
-	grid-gap: 12px
+	grid-gap: 8px
 	max-width: 100%
 
-	.-volume
-		display: inline-flex
-		align-items: center
-		flex: auto
-		grid-gap: 4px
-
-	.-volume-slider
-		max-width: 200px
-
 .-video-controls-left
+	position: relative
 	display: inline-flex
-	align-items: center
-	flex-grow: 1
-	flex-shrink: 1
+	grid-gap: 8px
+	align-items: flex-end
+	flex-grow: 0
+	flex-shrink: 100
 	flex-basis: var(--chat-width)
-	grid-gap: 12px
-	transition: flex-basis 300ms
+	flex-direction: row
+
+	&.-fullscreen
+		flex-direction: column-reverse
+		align-items: flex-start
+
+		.-user-tag
+			position: absolute
+			max-width: calc(min(33vw, 300px))
+			left: 0
+			bottom: calc(100% + 16px)
 
 .-hosts
 	margin-left: 0
 	margin-right: 0
 	margin-bottom: -($-base-padding)
+	flex: auto
+	width: auto
 
 .-chat-spacer
-	flex: none
-	width: var(--chat-width)
-	transition: width 300ms
+	flex-grow: 0
+	flex-shrink: 0
+	flex-basis: var(--chat-width)
 
 .-combo
 	position: absolute

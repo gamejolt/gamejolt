@@ -28,11 +28,7 @@ import {
 } from '../../../components/fireside/controller/controller';
 import AppFiresideShare from '../AppFiresideShare.vue';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
-
-const emit = defineEmits({
-	back: () => true,
-	streamSettings: () => true,
-});
+import AppFiresideSidebarHeadingCollapse from './AppFiresideSidebarHeadingCollapse.vue';
 
 const c = useFiresideController()!;
 const {
@@ -46,6 +42,7 @@ const {
 	canPublish,
 	canExtinguish,
 	canReport,
+	sidebar,
 } = c;
 
 const form: FormController<Fireside> = createForm({
@@ -140,13 +137,17 @@ function onClickExtinguish() {
 <template>
 	<AppFiresideSidebar>
 		<template #header>
-			<AppHeaderBar :elevation="2" :defined-slots="['leading', 'title']">
+			<AppHeaderBar :elevation="2" :defined-slots="['leading', 'title', 'actions']">
 				<template #leading>
-					<AppButton circle sparse trans icon="chevron-left" @click="emit('back')" />
+					<AppButton circle sparse trans icon="chevron-left" @click="sidebar = 'chat'" />
 				</template>
 
 				<template #title>
 					<AppTranslate>Fireside Settings</AppTranslate>
+				</template>
+
+				<template #actions>
+					<AppFiresideSidebarHeadingCollapse />
 				</template>
 			</AppHeaderBar>
 		</template>
@@ -155,7 +156,7 @@ function onClickExtinguish() {
 			<AppScrollScroller class="-pad-v">
 				<div class="-pad-h">
 					<template v-if="canStream">
-						<AppButton block @click="emit('streamSettings')">
+						<AppButton block @click="sidebar = 'stream-settings'">
 							<AppTranslate>Stream settings</AppTranslate>
 						</AppButton>
 					</template>

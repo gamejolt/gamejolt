@@ -1,5 +1,6 @@
 import {
 	computed,
+	customRef,
 	inject,
 	InjectionKey,
 	markRaw,
@@ -205,7 +206,7 @@ export function createFiresideController(
 	const chatPreviousConnectedState = ref<boolean>();
 	const gridPreviousConnectedState = ref<boolean>();
 
-	const isShowingOverlayPopper = ref(false);
+	const shownUserCardHover = ref<number>();
 	const isShowingStreamSetup = ref(false);
 
 	const updateInterval = ref<NodeJS.Timer>();
@@ -518,6 +519,62 @@ export function createFiresideController(
 		() => _watchGrid
 	);
 
+	let _sidebar: FiresideSidebar = 'chat';
+	const sidebar = customRef<FiresideSidebar>((track, trigger) => ({
+		get: () => {
+			track();
+			return _sidebar;
+		},
+		set: val => {
+			if (val === _sidebar) {
+				return;
+			}
+
+			_sidebar = val;
+			if (val !== 'chat' && _collapseSidebar) {
+				collapseSidebar.value = false;
+			}
+			trigger();
+		},
+	}));
+
+	let _collapseSidebar = false;
+	const collapseSidebar = customRef<boolean>((track, trigger) => ({
+		get: () => {
+			track();
+			return _collapseSidebar;
+		},
+		set: val => {
+			if (val === _collapseSidebar) {
+				return;
+			}
+
+			_collapseSidebar = val;
+			if (val) {
+				sidebar.value = 'chat';
+			}
+			trigger();
+		},
+	}));
+
+	const _unwatchSidebar = watch(
+		() => [sidebar, collapseSidebar],
+		() => {
+			const collapse = collapseSidebar.value;
+			const isChat = sidebar.value === 'chat';
+
+			if (collapse === isChat) {
+				return;
+			}
+
+			if (!isChat) {
+				collapseSidebar.value = false;
+			} else if (collapse) {
+				sidebar.value = 'chat';
+			}
+		}
+	);
+
 	const _isFullscreen = ref(false);
 	const _fullscreenableElement = ref<HTMLElement | null>(null);
 
@@ -569,8 +626,6 @@ export function createFiresideController(
 		element.requestFullscreen();
 	};
 
-	const sidebar = ref<FiresideSidebar>('chat');
-
 	const activeBottomBarControl = computed<BottomBarControl | undefined>(() => {
 		switch (sidebar.value) {
 			case 'members':
@@ -609,7 +664,7 @@ export function createFiresideController(
 		expiryInterval,
 		chatPreviousConnectedState,
 		gridPreviousConnectedState,
-		isShowingOverlayPopper,
+		shownUserCardHover,
 		isShowingStreamSetup,
 		updateInterval,
 		expiresDurationText,
@@ -651,6 +706,8 @@ export function createFiresideController(
 		activeBottomBarControl,
 		sidebar,
 		isShowingStreamOverlay,
+		collapseSidebar,
+		popperTeleportId: computed(() => `fireside-teleport-${fireside.id}`),
 	});
 
 	// Let's set ourselves up now!
@@ -969,6 +1026,7 @@ export function createFiresideController(
 		_unwatchListableHostIdsChanged();
 		_unwatchChatConnection();
 		_unwatchGridConnection();
+		_unwatchSidebar();
 
 		if (rtc.value) {
 			destroyFiresideRTC(rtc.value);

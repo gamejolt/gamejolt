@@ -60,6 +60,7 @@ import AppFiresideStats from './AppFiresideStats.vue';
 import AppFiresideBottomBar from './_bottom-bar/AppFiresideBottomBar.vue';
 import AppFiresideSidebarChat from './_sidebar/AppFiresideSidebarChat.vue';
 import AppFiresideSidebarFiresideSettings from './_sidebar/AppFiresideSidebarFiresideSettings.vue';
+import AppFiresideSidebarHeading from './_sidebar/AppFiresideSidebarHeading.vue';
 import AppFiresideSidebarHosts from './_sidebar/AppFiresideSidebarHosts.vue';
 import AppFiresideSidebarMembers from './_sidebar/AppFiresideSidebarMembers.vue';
 import AppFiresideSidebarStreamSettings from './_sidebar/AppFiresideSidebarStreamSettings.vue';
@@ -83,13 +84,12 @@ const videoContainer = ref<HTMLDivElement>();
 const videoWidth = ref(0);
 const videoHeight = ref(0);
 
-const collapseSidebar = ref(false);
-
 const fireside = computed(() => c.value?.fireside || payloadFireside.value);
 const payloadFireside = ref<Fireside>();
 
 const isFullscreen = computed(() => c.value?.isFullscreen.value === true);
 const isShowingStreamOverlay = computed(() => c.value?.isShowingStreamOverlay.value === true);
+const popperTeleportId = computed(() => c.value?.popperTeleportId.value);
 
 const routeTitle = computed(() => {
 	if (!fireside.value) {
@@ -110,7 +110,7 @@ const cannotViewReason = computed(() => {
 const routeStatus = computed(() => c.value?.status.value);
 const background = computed(() => c.value?.chatRoom.value?.background);
 const overlayText = computed(() => !!background.value || isFullscreen.value);
-const activeBottomBarControl = computed(() => c.value?.activeBottomBarControl.value);
+
 const sidebar = customRef<FiresideSidebar>((track, trigger) => ({
 	get: () => {
 		track();
@@ -121,6 +121,20 @@ const sidebar = customRef<FiresideSidebar>((track, trigger) => ({
 			return;
 		}
 		c.value.sidebar.value = val;
+		trigger();
+	},
+}));
+
+const collapseSidebar = customRef<boolean>((track, trigger) => ({
+	get: () => {
+		track();
+		return c.value?.collapseSidebar.value === true;
+	},
+	set: val => {
+		if (!c.value || c.value.collapseSidebar.value === val) {
+			return;
+		}
+		c.value.collapseSidebar.value = val;
 		trigger();
 	},
 }));
@@ -291,6 +305,7 @@ function onIsPersonallyStreamingChanged() {
 
 <template>
 	<div
+		:id="popperTeleportId"
 		ref="root"
 		class="route-fireside"
 		:class="{ '-video-square': isFullscreen }"
@@ -589,22 +604,10 @@ function onIsPersonallyStreamingChanged() {
 								v-if="!isFullscreen"
 								:style="{
 									width: '100%',
-									paddingRight:
-										sidebar === 'chat' && collapseSidebar
-											? chatWidth + 'px'
-											: undefined,
+									paddingRight: collapseSidebar ? chatWidth + 'px' : undefined,
 								}"
 							>
-								<div
-									class="-bottom-bar-padding"
-									:style="{
-										transition: 'padding-right 300ms',
-										paddingRight:
-											sidebar === 'chat' && collapseSidebar
-												? 16 + 'px'
-												: undefined,
-									}"
-								>
+								<div class="-bottom-bar-padding">
 									<AppFiresideBottomBar :overlay="overlayText" />
 								</div>
 							</div>
@@ -626,29 +629,15 @@ function onIsPersonallyStreamingChanged() {
 								'-fade': isFullscreen && collapseSidebar && !isShowingStreamOverlay,
 							}"
 						>
-							<AppFiresideSidebarChat
-								v-if="sidebar === 'chat'"
-								:collapse="collapseSidebar"
-								@members="sidebar = 'members'"
-								@set-collapsed="collapseSidebar = $event"
-							/>
-							<AppFiresideSidebarMembers
-								v-else-if="sidebar === 'members'"
-								@members="sidebar = 'chat'"
-								@hosts="sidebar = 'hosts'"
-							/>
-							<AppFiresideSidebarHosts
-								v-else-if="sidebar === 'hosts'"
-								@back="sidebar = 'chat'"
-							/>
+							<AppFiresideSidebarHeading v-if="collapseSidebar" collapsed />
+							<AppFiresideSidebarChat v-else-if="sidebar === 'chat'" />
+							<AppFiresideSidebarMembers v-else-if="sidebar === 'members'" />
+							<AppFiresideSidebarHosts v-else-if="sidebar === 'hosts'" />
 							<AppFiresideSidebarFiresideSettings
 								v-else-if="sidebar === 'fireside-settings'"
-								@stream-settings="sidebar = 'stream-settings'"
-								@back="sidebar = 'chat'"
 							/>
 							<AppFiresideSidebarStreamSettings
 								v-else-if="sidebar === 'stream-settings'"
-								@back="sidebar = 'chat'"
 							/>
 						</div>
 					</div>
@@ -742,7 +731,6 @@ $-center-guide-width = 400px
 	overflow: visible !important
 	width: var(--fireside-chat-width)
 	height: 100%
-	transition: bottom 300ms, right 300ms, width 300ms, opacity 200ms $strong-ease-out, visibility 200ms $strong-ease-out
 	bottom: 0
 	right: 0
 	z-index: 2
@@ -758,14 +746,14 @@ $-center-guide-width = 400px
 	bottom: 16px
 	right: 16px
 	height: unset
+	padding-left: 16px
 
 .-trailing-shadow
 	elevate-2()
-	transition: box-shadow 600ms 200ms cubic-bezier(0.4, 0, 0.2, 1) !important
+	transition: none !important
 
 .-trailing-shadow-none
 	elevate-0()
-	transition: none !important
 
 .-message-wrapper
 	@extends .-abs-stretch

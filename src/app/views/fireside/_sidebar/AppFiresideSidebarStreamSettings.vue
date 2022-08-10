@@ -17,10 +17,7 @@ import {
 import AppFiresideStreamSetup from '../../../components/fireside/stream/setup/AppFiresideStreamSetup.vue';
 import { illNoCommentsSmall, illStreamingJelly } from '../../../img/ill/illustrations';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
-
-const emit = defineEmits({
-	back: () => true,
-});
+import AppFiresideSidebarHeadingCollapse from './AppFiresideSidebarHeadingCollapse.vue';
 
 const c = useFiresideController()!;
 const {
@@ -29,6 +26,7 @@ const {
 	isPersonallyStreaming,
 	rtc,
 	shouldShowDesktopAppPromo,
+	sidebar,
 } = c;
 
 const isStartingStream = ref(false);
@@ -54,7 +52,7 @@ async function onClickStartStreaming() {
 
 	// Only close the modal if we were able to start streaming.
 	if (_producer.isStreaming.value) {
-		emit('back');
+		sidebar.value = 'chat';
 	}
 }
 
@@ -80,7 +78,7 @@ async function onClickStopStreaming() {
 
 	// Only close the modal if we were able to stop streaming.
 	if (!_producer.isStreaming.value) {
-		emit('back');
+		sidebar.value = 'chat';
 	}
 }
 </script>
@@ -88,13 +86,17 @@ async function onClickStopStreaming() {
 <template>
 	<AppFiresideSidebar>
 		<template #header>
-			<AppHeaderBar :elevation="2" :defined-slots="['leading', 'title']">
+			<AppHeaderBar :elevation="2" :defined-slots="['leading', 'title', 'actions']">
 				<template #leading>
-					<AppButton circle sparse trans icon="chevron-left" @click="emit('back')" />
+					<AppButton circle sparse trans icon="chevron-left" @click="sidebar = 'chat'" />
 				</template>
 
 				<template #title>
 					<AppTranslate>Stream Settings</AppTranslate>
+				</template>
+
+				<template #actions>
+					<AppFiresideSidebarHeadingCollapse />
 				</template>
 			</AppHeaderBar>
 		</template>
@@ -184,7 +186,7 @@ async function onClickStopStreaming() {
 						<AppFiresideStreamSetup
 							:c="c"
 							hide-publish-controls
-							@close="emit('back')"
+							@close="sidebar = 'chat'"
 							@is-invalid="isInvalidConfig = $event"
 						/>
 					</template>

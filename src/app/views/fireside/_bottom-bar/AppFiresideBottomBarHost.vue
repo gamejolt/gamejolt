@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, Ref, ref, shallowReactive, toRefs } from 'vue';
+import { computed, PropType, Ref, ref, toRefs } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { onFiresideStickerPlaced } from '../../../../_common/drawer/drawer-store';
@@ -35,7 +35,8 @@ useEventSubscription(onFiresideStickerPlaced, onStickerPlaced);
 
 const { host } = toRefs(props);
 
-const c = shallowReactive(useFiresideController()!);
+const { isFullscreen, popperTeleportId, rtc, fetchedHostUserData, shownUserCardHover } =
+	useFiresideController()!;
 const kettleController = createPopcornKettleController();
 
 const isScrubbingMic = ref(false);
@@ -46,16 +47,16 @@ const desktopVolumeBeforeScrub = ref<number>();
 
 const isLoadingFollowState = ref(false);
 
-const isFocused = computed(() => c.rtc.value?.focusedUser?.uid === host.value.uid);
-const isMe = computed(() => c.rtc.value?.localUser?.uid === host.value.uid);
+const isFocused = computed(() => rtc.value?.focusedUser?.uid === host.value.uid);
+const isMe = computed(() => rtc.value?.localUser?.uid === host.value.uid);
 const showingVideoThumb = computed(() => !isFocused.value && host.value.hasVideo);
 
 function onClick() {
-	if (isFocused.value || !c.rtc.value) {
+	if (isFocused.value || !rtc.value) {
 		return;
 	}
 
-	c.rtc.value.focusedUser = host.value;
+	rtc.value.focusedUser = host.value;
 }
 
 function muteMic() {
@@ -173,8 +174,9 @@ async function onUserCardShow() {
 	if (!user) {
 		return;
 	}
+
 	// Don't fetch for self or if we already have cached following state.
-	if (host.value.isLocal || c.fetchedHostUserData.get(user.id) !== undefined) {
+	if (host.value.isLocal || fetchedHostUserData.get(user.id) !== undefined) {
 		return;
 	}
 
@@ -196,13 +198,27 @@ async function onUserCardShow() {
 		const is_following = response.isFollowing === true;
 		const dogtags = response.dogtags;
 
-		c.fetchedHostUserData.set(user.id, { is_following, dogtags });
+		fetchedHostUserData.set(user.id, { is_following, dogtags });
 		user.is_following = is_following;
 		user.dogtags = dogtags;
 	} catch (e) {
 		console.error('Error fetching following state for user', e);
 	} finally {
 		isLoadingFollowState.value = false;
+	}
+}
+
+function onUserCardHovered() {
+	if (!isFullscreen.value || !host.value.userModel) {
+		return;
+	}
+	shownUserCardHover.value = host.value.userModel.id;
+}
+
+function onUserCardUnhovered() {
+	const { id } = host.value.userModel || {};
+	if (!isFullscreen.value || (id !== undefined && shownUserCardHover.value === id)) {
+		shownUserCardHover.value = undefined;
 	}
 }
 </script>
@@ -214,15 +230,19 @@ async function onUserCardShow() {
 			:hover-delay="0"
 			no-stats
 			:disable-follow-widget="isLoadingFollowState"
+			:to="isFullscreen ? `#${popperTeleportId}` : undefined"
 			@show="onUserCardShow"
+			@hovered="onUserCardHovered"
+			@unhovered="onUserCardUnhovered"
 		>
 			<template #default>
 				<div class="-click-capture" @click="onClick">
 					<div class="-display-thumb" :class="{ '-hidden': !showingVideoThumb }">
 						<template v-if="showingVideoThumb">
 							<AppFiresideStreamVideo
-								v-if="c.rtc.value && !c.rtc.value.videoPaused"
+								v-if="rtc && !rtc.videoPaused"
 								:rtc-user="host"
+								video-fit="cover"
 								low-bitrate
 							/>
 							<AppJolticon v-else icon="camera" class="-display-thumb-icon" />

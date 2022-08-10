@@ -7,13 +7,8 @@ import { useFiresideController } from '../../../components/fireside/controller/c
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 
-const emit = defineEmits({
-	members: () => true,
-	hosts: () => true,
-});
-
-const c = useFiresideController()!;
-const { chatRoom, chatUsers, canManageCohosts, listableHostIds } = c;
+const { chatRoom, chatUsers, canManageCohosts, listableHostIds, sidebar } =
+	useFiresideController()!;
 
 const users = computed(() =>
 	chatUsers.value?.collection.filter(i => {
@@ -28,10 +23,10 @@ const users = computed(() =>
 <template>
 	<AppFiresideSidebar>
 		<template #header>
-			<AppFiresideSidebarHeading showing-members @members="emit('members')" />
+			<AppFiresideSidebarHeading showing-members />
 
 			<div v-if="canManageCohosts" class="-manage-button">
-				<AppButton block @click="emit('hosts')">
+				<AppButton block @click="sidebar = 'hosts'">
 					<AppTranslate>Manage Hosts</AppTranslate>
 				</AppButton>
 			</div>
