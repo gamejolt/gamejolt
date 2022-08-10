@@ -121,7 +121,7 @@ const maxHeight = ref(0);
 const now = ref(0);
 
 const keyGroups = ref<KeyGroup[]>([]);
-const timezones = ref<{ [region: string]: (TimezoneData & { label?: string })[] }>({});
+const timezones = ref<{ [region: string]: (TimezoneData & { label?: string })[] } | null>(null);
 const linkedAccounts = ref<LinkedAccount[]>([]);
 const publishToPlatforms = ref<number[] | null>(null);
 const attachedCommunities = ref<{ community: Community; channel: CommunityChannel }[]>([]);
