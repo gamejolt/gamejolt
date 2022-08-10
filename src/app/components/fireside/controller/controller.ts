@@ -206,6 +206,7 @@ export function createFiresideController(
 	const chatPreviousConnectedState = ref<boolean>();
 	const gridPreviousConnectedState = ref<boolean>();
 
+	const isHoveringOverlayControl = ref(false);
 	const shownUserCardHover = ref<number>();
 	const isShowingStreamSetup = ref(false);
 
@@ -664,6 +665,7 @@ export function createFiresideController(
 		expiryInterval,
 		chatPreviousConnectedState,
 		gridPreviousConnectedState,
+		isHoveringOverlayControl,
 		shownUserCardHover,
 		isShowingStreamSetup,
 		updateInterval,

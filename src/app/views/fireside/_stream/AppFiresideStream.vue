@@ -48,6 +48,7 @@ const c = useFiresideController()!;
 const {
 	rtc,
 	shownUserCardHover,
+	isHoveringOverlayControl,
 	isShowingStreamSetup,
 	isFullscreen,
 	canFullscreen,
@@ -88,6 +89,7 @@ const shouldShowUI = computed(() => {
 	return !!(
 		videoPaused.value ||
 		shownUserCardHover.value ||
+		isHoveringOverlayControl.value ||
 		showMutedIndicator.value ||
 		isHovered.value ||
 		hideUITimer.value
@@ -178,6 +180,7 @@ watch(
 
 onUnmounted(() => {
 	isShowingStreamOverlay.value = false;
+	isHoveringOverlayControl.value = false;
 });
 
 function onMouseOut() {
@@ -296,6 +299,14 @@ function onStreakCountChanged() {
 		animateStickerStreak();
 	}
 }
+
+function onMouseEnterControls() {
+	isHoveringOverlayControl.value = true;
+}
+
+function onMouseLeaveControls() {
+	isHoveringOverlayControl.value = false;
+}
 </script>
 
 <template>
@@ -370,6 +381,8 @@ function onStreakCountChanged() {
 						v-if="hasHeader || canFullscreen"
 						class="-overlay-top -control"
 						:class="{ '-fade-top': !shouldDarkenAll }"
+						@mouseenter="onMouseEnterControls"
+						@mouseleave="onMouseLeaveControls"
 					>
 						<div
 							class="-row"
@@ -406,7 +419,13 @@ function onStreakCountChanged() {
 							'-fade-bottom': !shouldDarkenAll,
 						}"
 					>
-						<div class="-overlay-bottom -control" style="width: 100%" @click.stop>
+						<div
+							class="-overlay-bottom -control"
+							style="width: 100%"
+							@click.stop
+							@mouseenter="onMouseEnterControls"
+							@mouseleave="onMouseLeaveControls"
+						>
 							<div class="-video-controls">
 								<div
 									class="-video-controls-left"
@@ -415,27 +434,30 @@ function onStreakCountChanged() {
 									}"
 								>
 									<AppButton
+										v-if="hasVideo || isFullscreen"
 										class="-button-lg"
 										sparse
 										circle
 										trans
 										overlay
 										:icon="videoPaused ? 'play' : 'pause'"
+										:style="{
+											visibility: hasVideo ? 'visible' : 'hidden',
+										}"
 										@click.capture.stop="togglePlayback"
 									/>
 
-									<div v-if="rtcUser.showDesktopAudioMuted">
-										<AppButton
-											v-app-tooltip="$gettext(`Ummute video`)"
-											class="-button-lg"
-											circle
-											sparse
-											trans
-											overlay
-											icon="audio-mute"
-											@click.capture.stop="unmuteDesktopAudio"
-										/>
-									</div>
+									<AppButton
+										v-if="rtcUser.showDesktopAudioMuted"
+										v-app-tooltip="$gettext(`Ummute video`)"
+										class="-button-lg"
+										circle
+										sparse
+										trans
+										overlay
+										icon="audio-mute"
+										@click.capture.stop="unmuteDesktopAudio"
+									/>
 
 									<div v-if="rtcUser.userModel" class="-user-tag">
 										<AppUserAvatar
