@@ -49,7 +49,12 @@ const isLoadingFollowState = ref(false);
 
 const isFocused = computed(() => rtc.value?.focusedUser?.uid === host.value.uid);
 const isMe = computed(() => rtc.value?.localUser?.uid === host.value.uid);
-const showingVideoThumb = computed(() => !isFocused.value && host.value.hasVideo);
+const showingVideoThumb = computed(() => {
+	if (isMe.value && rtc.value?.producer?.videoMuted.value) {
+		return false;
+	}
+	return !isFocused.value && host.value.hasVideo;
+});
 
 function onClick() {
 	if (isFocused.value || !rtc.value) {

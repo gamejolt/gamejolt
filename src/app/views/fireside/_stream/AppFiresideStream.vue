@@ -127,7 +127,7 @@ const hasVideo = computed(() => {
 	if (!rtcUser.value.hasVideo || !rtcUser.value.isListed) {
 		return false;
 	}
-	if (producer.value) {
+	if (rtcUser.value.isLocal && producer.value) {
 		return !producer.value.videoMuted.value;
 	}
 	return true;
