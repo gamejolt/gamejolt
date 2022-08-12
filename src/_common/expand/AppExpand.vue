@@ -8,18 +8,37 @@ const props = defineProps({
 	animateInitial: {
 		type: Boolean,
 	},
+	expandHeight: {
+		type: String,
+		default: undefined,
+	},
 });
 
-const { when, animateInitial } = toRefs(props);
+const { when, animateInitial, expandHeight } = toRefs(props);
 
 const root = ref<HTMLElement>();
 const inDom = ref(false);
+
+watch(
+	() => expandHeight?.value,
+	(value, oldValue) => {
+		if (!root.value) {
+			return;
+		}
+
+		const current = root.value.style.height;
+		const isSame = current === oldValue || current === 'auto';
+		if (isSame) {
+			root.value.style.height = value ?? 'auto';
+		}
+	}
+);
 
 onMounted(async () => {
 	inDom.value = when.value;
 
 	if (inDom.value && root.value) {
-		root.value.style.height = 'auto';
+		root.value.style.height = expandHeight?.value ?? 'auto';
 
 		// This simulates having it closed and then showing immediately to
 		// slide it out.
@@ -35,24 +54,31 @@ onMounted(async () => {
 });
 
 async function onWhenWatch() {
-	await nextTick();
+	if (!expandHeight?.value) {
+		await nextTick();
+	}
 
 	const elem = root.value;
 	if (!elem) {
 		return;
 	}
 
+	const getHeight = () => expandHeight?.value ?? elem.scrollHeight + 'px';
+
 	if (when.value) {
 		// Show in DOM as soon as possible.
 		// This will get the correct height to expand out to.
 		inDom.value = true;
 		elem.classList.add('-transition');
-		await nextTick();
+
+		if (!expandHeight?.value) {
+			await nextTick();
+		}
 
 		// Should be in DOM now so we can pull height.
-		elem.style.height = elem.scrollHeight + 'px';
+		elem.style.height = getHeight();
 	} else {
-		elem.style.height = elem.scrollHeight + 'px';
+		elem.style.height = getHeight();
 
 		// Reading offsetWidth forces a browser reflow.
 		// This way the change from explicit height to 0 is noticed.
@@ -79,7 +105,7 @@ function afterTransition() {
 
 	if (when.value) {
 		elem.classList.remove('-transition');
-		elem.style.height = 'auto';
+		elem.style.height = expandHeight?.value ?? 'auto';
 	} else if (!when.value) {
 		elem.classList.remove('-transition');
 		inDom.value = false;

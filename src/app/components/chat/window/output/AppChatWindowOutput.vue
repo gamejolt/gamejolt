@@ -140,7 +140,10 @@ async function loadOlder() {
 	isLoadingOlder.value = true;
 	await nextTick();
 
-	const el = scroller.element.value!;
+	const el = scroller.element.value;
+	if (!el) {
+		return;
+	}
 
 	// Pulling the height after showing the loading allows us to scroll back
 	// without it looking like it jumps.

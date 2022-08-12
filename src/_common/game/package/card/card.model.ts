@@ -74,7 +74,10 @@ export class GamePackageCardModel {
 			// the front. This is because you'd probably want to see [linux] first if you're
 			// on a linux machine, before windows, etc.
 			// We change the sort for their detected OS to be the first before sorting.
-			this.platformSupportInfo[os].sort = 0;
+			if (this.platformSupportInfo[os]) {
+				this.platformSupportInfo[os].sort = 0;
+			}
+
 			this.platformSupport.sort((a, b) => {
 				return this.platformSupportInfo[a].sort - this.platformSupportInfo[b].sort;
 			});

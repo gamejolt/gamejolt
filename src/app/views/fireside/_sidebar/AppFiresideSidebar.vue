@@ -1,10 +1,14 @@
 <script lang="ts" setup>
-defineProps({
+import { toRefs } from 'vue';
+
+const props = defineProps({
 	opacity: {
 		type: Number,
 		default: 0.9,
 	},
 });
+
+const { opacity } = toRefs(props);
 </script>
 
 <template>
@@ -33,6 +37,7 @@ defineProps({
 	display: flex
 	flex-direction: column
 	height: 100%
+	transition: background-color 600ms 100ms
 
 .-header
 	position: relative

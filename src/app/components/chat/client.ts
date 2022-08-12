@@ -177,7 +177,6 @@ async function connect(chat: ChatClient) {
 
 		chat.userChannel = channel;
 		chat.populated = true;
-
 	}
 }
 
@@ -664,6 +663,17 @@ export function updateChatRoomLastMessageOn(chat: ChatClient, message: ChatMessa
 	const groupRoom = chat.groupRooms.find(i => i.id === message.room_id);
 	if (groupRoom) {
 		groupRoom.last_message_on = time;
+	}
+
+	if (friend || groupRoom) {
+		return;
+	}
+
+	// Firesides aren't part of friends list or group rooms. If we didn't find a
+	// matching room yet, try finding it here and assigning the timestamp data.
+	const roomChannel = chat.roomChannels[message.room_id];
+	if (roomChannel) {
+		roomChannel.room.value.last_message_on = time;
 	}
 }
 

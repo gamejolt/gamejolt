@@ -19,20 +19,17 @@ import AppChatList from '../../../components/chat/_list/AppChatList.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import { illNoCommentsSmall } from '../../../img/ill/illustrations';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
+import AppFiresideSidebarHeadingCollapse from './AppFiresideSidebarHeadingCollapse.vue';
 import AppFiresideSidebarHostsItem from './AppFiresideSidebarHostsItem.vue';
-
-const emit = defineEmits({
-	back: () => true,
-});
 
 const ListTitles = {
 	friends: $gettext(`Friends`),
 	chat: $gettext(`Chat`),
 };
+
 type ListTitle = keyof typeof ListTitles;
 
-const c = useFiresideController()!;
-const { user, fireside, rtc, chat, chatRoom, chatUsers } = c;
+const { user, fireside, rtc, chat, chatRoom, chatUsers, sidebar } = useFiresideController()!;
 
 const usersProcessing = ref<(ChatUser | User)[]>([]);
 const isOpen = ref(true);
@@ -124,13 +121,17 @@ async function processUser(user: ChatUser | User) {
 <template>
 	<AppFiresideSidebar>
 		<template #header>
-			<AppHeaderBar :elevation="2">
+			<AppHeaderBar :elevation="2" :defined-slots="['leading', 'title', 'actions']">
 				<template #leading>
-					<AppButton circle sparse trans icon="chevron-left" @click="emit('back')" />
+					<AppButton circle sparse trans icon="chevron-left" @click="sidebar = 'chat'" />
 				</template>
 
 				<template #title>
 					<AppTranslate>Manage Hosts</AppTranslate>
+				</template>
+
+				<template #actions>
+					<AppFiresideSidebarHeadingCollapse />
 				</template>
 			</AppHeaderBar>
 

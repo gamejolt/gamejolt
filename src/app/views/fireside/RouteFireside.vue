@@ -12,7 +12,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { computed, ref, shallowRef, watch } from 'vue';
+import { computed, customRef, onBeforeUnmount, ref, shallowRef, watch } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import { debounce } from '../../../utils/utils';
 import AppAnimSlideshow from '../../../_common/animation/AppAnimSlideshow.vue';
@@ -46,6 +46,7 @@ import AppFiresideProvider from '../../components/fireside/AppFiresideProvider.v
 import {
 	createFiresideController,
 	FiresideController,
+	FiresideSidebar,
 	toggleStreamVideoStats,
 } from '../../components/fireside/controller/controller';
 import {
@@ -57,9 +58,10 @@ import {
 import { useAppStore } from '../../store';
 import AppFiresideHeader from './AppFiresideHeader.vue';
 import AppFiresideStats from './AppFiresideStats.vue';
-import AppFiresideBottomBar, { BottomBarControl } from './_bottom-bar/AppFiresideBottomBar.vue';
+import AppFiresideBottomBar from './_bottom-bar/AppFiresideBottomBar.vue';
 import AppFiresideSidebarChat from './_sidebar/AppFiresideSidebarChat.vue';
 import AppFiresideSidebarFiresideSettings from './_sidebar/AppFiresideSidebarFiresideSettings.vue';
+import AppFiresideSidebarHeading from './_sidebar/AppFiresideSidebarHeading.vue';
 import AppFiresideSidebarHosts from './_sidebar/AppFiresideSidebarHosts.vue';
 import AppFiresideSidebarMembers from './_sidebar/AppFiresideSidebarMembers.vue';
 import AppFiresideSidebarStreamSettings from './_sidebar/AppFiresideSidebarStreamSettings.vue';
@@ -77,14 +79,18 @@ const c = shallowRef<FiresideController | null>(null);
 
 let beforeEachDeregister: (() => void) | null = null;
 
+const root = ref<HTMLDivElement>();
 const videoContainer = ref<HTMLDivElement>();
 
 const videoWidth = ref(0);
 const videoHeight = ref(0);
-const sidebar = ref<'chat' | 'members' | 'hosts' | 'fireside-settings' | 'stream-settings'>('chat');
 
 const fireside = computed(() => c.value?.fireside || payloadFireside.value);
 const payloadFireside = ref<Fireside>();
+
+const isFullscreen = computed(() => c.value?.isFullscreen.value === true);
+const isShowingStreamOverlay = computed(() => c.value?.isShowingStreamOverlay.value === true);
+const popperTeleportId = computed(() => c.value?.popperTeleportId.value);
 
 const routeTitle = computed(() => {
 	if (!fireside.value) {
@@ -102,28 +108,51 @@ const cannotViewReason = computed(() => {
 	return c.value ? 'needs-resize' : 'get-app';
 });
 
-const activeBottomBarControl = computed<BottomBarControl | undefined>(() => {
-	switch (sidebar.value) {
-		case 'members':
-			return 'members';
-
-		case 'fireside-settings':
-			return 'settings';
-
-		case 'stream-settings':
-			return 'setup';
-
-		default:
-			return undefined;
-	}
-});
-
 const routeStatus = computed(() => c.value?.status.value);
 const background = computed(() => c.value?.chatRoom.value?.background);
-const overlayText = computed(() => !!background.value);
+const overlayText = computed(() => !!background.value || isFullscreen.value);
+
+const sidebar = customRef<FiresideSidebar>((track, trigger) => ({
+	get: () => {
+		track();
+		return c.value?.sidebar.value || 'chat';
+	},
+	set: val => {
+		if (!c.value || c.value.sidebar.value === val) {
+			return;
+		}
+		c.value.sidebar.value = val;
+		trigger();
+	},
+}));
+
+const collapseSidebar = customRef<boolean>((track, trigger) => ({
+	get: () => {
+		track();
+		return c.value?.collapseSidebar.value === true;
+	},
+	set: val => {
+		if (!c.value || c.value.collapseSidebar.value === val) {
+			return;
+		}
+		c.value.collapseSidebar.value = val;
+		trigger();
+	},
+}));
+
+const videoFillColor = computed(() =>
+	!background.value && isFullscreen.value ? 'black' : undefined
+);
 const focusedUserVideoAspectRatio = computed(
 	() => c.value?.rtc.value?.focusedUser?.videoAspectRatio
 );
+
+const chatWidth = computed(() => {
+	if (isFullscreen.value && collapseSidebar.value) {
+		return 200;
+	}
+	return 350;
+});
 
 // If the fireside's status ever changes to setup-failed, we want to direct to a
 // 404 page.
@@ -147,6 +176,8 @@ watch(
 			chatStore,
 			router,
 		});
+
+		c.value.setFullscreenableElement(root);
 	}
 );
 
@@ -237,6 +268,10 @@ watch(
 	}
 );
 
+onBeforeUnmount(() => {
+	c.value?.toggleFullscreen(false);
+});
+
 function onIsPersonallyStreamingChanged() {
 	if (import.meta.env.SSR) {
 		return;
@@ -263,329 +298,372 @@ function onIsPersonallyStreamingChanged() {
 </script>
 
 <template>
-	<AppBackground class="route-fireside" :background="background" darken>
-		<AppStickerLayer class="-fireside">
-			<div class="-body">
-				<AppFiresideHeader
-					v-if="fireside"
-					class="-fireside-header"
-					:class="{ '-overlay': overlayText }"
-					:fireside="fireside"
-					:sticker-target-controller="c?.stickerTargetController"
-					:overlay="overlayText"
-				/>
+	<div
+		:id="popperTeleportId"
+		ref="root"
+		class="route-fireside"
+		:class="{ '-video-square': isFullscreen }"
+		:style="`--fireside-chat-width: ${chatWidth}px`"
+	>
+		<AppStickerLayer
+			:style="{
+				width: '100%',
+				height: '100%',
+			}"
+		>
+			<AppBackground
+				class="-fill"
+				:background="background"
+				darken
+				:fade-opacity="isFullscreen ? 0.85 : undefined"
+			>
+				<div class="-fireside">
+					<div class="-body">
+						<AppFiresideHeader
+							v-if="fireside && !isFullscreen"
+							class="-fireside-header"
+							:class="{ '-overlay': overlayText }"
+							:fireside="fireside"
+							:sticker-target-controller="c?.stickerTargetController"
+							:overlay="overlayText"
+						/>
 
-				<template v-if="cannotViewReason === 'get-app'">
-					<div class="-view-blocked">
-						<AppIllustration :asset="illMobileKikkerstein" :max-width="90">
-							<h2 class="-view-blocked-heading">
-								<AppTranslate>
-									We want you to have the best fireside experience possible!
-								</AppTranslate>
-							</h2>
+						<template v-if="cannotViewReason === 'get-app'">
+							<div class="-view-blocked">
+								<AppIllustration :asset="illMobileKikkerstein" :max-width="90">
+									<h2 class="-view-blocked-heading">
+										<AppTranslate>
+											We want you to have the best fireside experience
+											possible!
+										</AppTranslate>
+									</h2>
 
-							<AppSpacer vertical :scale="6" />
+									<AppSpacer vertical :scale="6" />
 
-							<AppMobileAppButtons source="fireside" />
+									<AppMobileAppButtons source="fireside" />
 
-							<AppSpacer vertical :scale="6" />
+									<AppSpacer vertical :scale="6" />
 
-							<AppTranslate>
-								Download the mobile app to watch streams, follow your friends, and
-								place stickers!
-							</AppTranslate>
+									<AppTranslate>
+										Download the mobile app to watch streams, follow your
+										friends, and place stickers!
+									</AppTranslate>
 
-							<template v-if="Screen.isPointerMouse">
-								<AppSpacer vertical :scale="4" />
+									<template v-if="Screen.isPointerMouse">
+										<AppSpacer vertical :scale="4" />
 
-								<AppTranslate>
-									If you're on desktop, resize your window larger to watch this
-									fireside.
-								</AppTranslate>
+										<AppTranslate>
+											If you're on desktop, resize your window larger to watch
+											this fireside.
+										</AppTranslate>
+									</template>
+								</AppIllustration>
+							</div>
+						</template>
+						<template v-if="cannotViewReason === 'needs-resize'">
+							<div class="-view-blocked">
+								<AppIllustration :asset="illNoCommentsSmall">
+									<h2 class="-view-blocked-heading">
+										<AppTranslate>
+											This window size is unsupported
+										</AppTranslate>
+									</h2>
+
+									<AppSpacer vertical :scale="4" />
+
+									<AppTranslate>
+										Please make your browser larger to be able to view this
+										content.
+									</AppTranslate>
+								</AppIllustration>
+							</div>
+						</template>
+						<AppFiresideProvider v-else-if="c" :controller="c">
+							<template v-if="routeStatus === 'loading' || routeStatus === 'initial'">
+								<div key="loading" class="-message-wrapper">
+									<div class="-message">
+										<AppIllustration :asset="illEndOfFeed">
+											<AppLoading
+												centered
+												:label="$gettext(`Traveling to the fireside...`)"
+											/>
+										</AppIllustration>
+									</div>
+								</div>
 							</template>
-						</AppIllustration>
-					</div>
-				</template>
-				<template v-if="cannotViewReason === 'needs-resize'">
-					<div class="-view-blocked">
-						<AppIllustration :asset="illNoCommentsSmall">
-							<h2 class="-view-blocked-heading">
-								<AppTranslate> This window size is unsupported </AppTranslate>
-							</h2>
+							<template v-else-if="routeStatus === 'unauthorized'">
+								<div key="unauthorized" class="-message-wrapper">
+									<div class="-message">
+										<h2 class="section-header text-center">
+											<AppTranslate>Join Game Jolt</AppTranslate>
+										</h2>
 
-							<AppSpacer vertical :scale="4" />
+										<div class="text-center">
+											<p class="lead">
+												<AppTranslate>
+													Do you love games as much as we do?
+												</AppTranslate>
+											</p>
+										</div>
 
-							<AppTranslate>
-								Please make your browser larger to be able to view this content.
-							</AppTranslate>
-						</AppIllustration>
-					</div>
-				</template>
-				<AppFiresideProvider v-else-if="c" :controller="c">
-					<template v-if="routeStatus === 'loading' || routeStatus === 'initial'">
-						<div key="loading" class="-message-wrapper">
-							<div class="-message">
-								<AppIllustration :asset="illEndOfFeed">
-									<AppLoading
-										centered
-										:label="$gettext(`Traveling to the fireside...`)"
-									/>
-								</AppIllustration>
-							</div>
-						</div>
-					</template>
-					<template v-else-if="routeStatus === 'unauthorized'">
-						<div key="unauthorized" class="-message-wrapper">
-							<div class="-message">
-								<h2 class="section-header text-center">
-									<AppTranslate>Join Game Jolt</AppTranslate>
-								</h2>
-
-								<div class="text-center">
-									<p class="lead">
-										<AppTranslate>
-											Do you love games as much as we do?
-										</AppTranslate>
-									</p>
-								</div>
-
-								<hr class="underbar underbar-center" />
-								<br />
-
-								<AppAuthJoin />
-							</div>
-						</div>
-					</template>
-					<template v-else-if="routeStatus === 'expired'">
-						<div key="expired" class="-message-wrapper">
-							<div class="-message">
-								<AppIllustration :asset="illNoCommentsSmall">
-									<p>
-										<AppTranslate>
-											This fireside's fire has burned out.
-										</AppTranslate>
-									</p>
-									<p>
-										<RouterLink :to="{ name: 'home' }">
-											<small>
-												<AppTranslate>Everybody go home</AppTranslate>
-											</small>
-										</RouterLink>
-									</p>
-								</AppIllustration>
-							</div>
-						</div>
-					</template>
-					<template v-else-if="routeStatus === 'setup-failed'">
-						<div key="setup-failed" class="-message-wrapper">
-							<div class="-message">
-								<AppIllustration :asset="illMaintenance">
-									<p>
-										<AppTranslate>Could not reach this fireside.</AppTranslate>
+										<hr class="underbar underbar-center" />
 										<br />
-										<AppTranslate>Maybe try finding it again?</AppTranslate>
-									</p>
-									&nbsp;
-									<AppButton block @click="onClickRetry">
-										<AppTranslate>Retry</AppTranslate>
-									</AppButton>
-									&nbsp;
-								</AppIllustration>
-							</div>
-						</div>
-					</template>
-					<template v-else-if="routeStatus === 'disconnected'">
-						<div key="disconnected" class="-message-wrapper">
-							<div class="-message">
-								<AppIllustration :asset="illNoCommentsSmall">
-									<p>
-										<AppTranslate>
-											You have been disconnected from fireside services.
-										</AppTranslate>
-										<br />
-										<br />
-										<small>
-											<AppTranslate>
-												We are actively trying to reconnect you, but you can
-												also try refreshing the page.
-											</AppTranslate>
-										</small>
-									</p>
-								</AppIllustration>
-							</div>
-						</div>
-					</template>
-					<template v-else-if="routeStatus === 'blocked'">
-						<div key="blocked" class="-message-wrapper">
-							<div class="-message">
-								<div class="text-center">
-									<AppJolticon icon="friend-remove-2" big notice />
+
+										<AppAuthJoin />
+									</div>
 								</div>
-								<div class="text-center">
-									<h3>
-										<AppTranslate>
-											You are blocked from joining this fireside
-										</AppTranslate>
-									</h3>
-									<p>
-										<router-link :to="{ name: 'home' }">
-											<small><AppTranslate>Return home</AppTranslate></small>
-										</router-link>
-									</p>
+							</template>
+							<template v-else-if="routeStatus === 'expired'">
+								<div key="expired" class="-message-wrapper">
+									<div class="-message">
+										<AppIllustration :asset="illNoCommentsSmall">
+											<p>
+												<AppTranslate>
+													This fireside's fire has burned out.
+												</AppTranslate>
+											</p>
+											<p>
+												<RouterLink :to="{ name: 'home' }">
+													<small>
+														<AppTranslate>
+															Everybody go home
+														</AppTranslate>
+													</small>
+												</RouterLink>
+											</p>
+										</AppIllustration>
+									</div>
 								</div>
-							</div>
-						</div>
-					</template>
-					<div v-else class="-video-wrapper">
-						<div class="-video-padding">
-							<div
-								v-if="
-									c.isStreaming.value &&
-									c.chatRoom.value &&
-									c.rtc.value &&
-									c.rtc.value.listableStreamingUsers.length > 0
-								"
-								ref="videoContainer"
-								v-app-observe-dimensions="debounceDimensionsChange"
-								class="-video-container"
-							>
-								<div
-									class="-video-inner"
-									:style="{
-										width: videoWidth + 'px',
-										height: videoHeight + 'px',
-									}"
-								>
-									<template v-if="c.rtc.value && c.rtc.value.focusedUser">
-										<AppStickerTarget
-											:key="c.rtc.value.focusedUser.uid"
-											class="-video-inner -abs-stretch"
-											:controller="c.stickerTargetController"
+							</template>
+							<template v-else-if="routeStatus === 'setup-failed'">
+								<div key="setup-failed" class="-message-wrapper">
+									<div class="-message">
+										<AppIllustration :asset="illMaintenance">
+											<p>
+												<AppTranslate>
+													Could not reach this fireside.
+												</AppTranslate>
+												<br />
+												<AppTranslate>
+													Maybe try finding it again?
+												</AppTranslate>
+											</p>
+											&nbsp;
+											<AppButton block @click="onClickRetry">
+												<AppTranslate>Retry</AppTranslate>
+											</AppButton>
+											&nbsp;
+										</AppIllustration>
+									</div>
+								</div>
+							</template>
+							<template v-else-if="routeStatus === 'disconnected'">
+								<div key="disconnected" class="-message-wrapper">
+									<div class="-message">
+										<AppIllustration :asset="illNoCommentsSmall">
+											<p>
+												<AppTranslate>
+													You have been disconnected from fireside
+													services.
+												</AppTranslate>
+												<br />
+												<br />
+												<small>
+													<AppTranslate>
+														We are actively trying to reconnect you, but
+														you can also try refreshing the page.
+													</AppTranslate>
+												</small>
+											</p>
+										</AppIllustration>
+									</div>
+								</div>
+							</template>
+							<template v-else-if="routeStatus === 'blocked'">
+								<div key="blocked" class="-message-wrapper">
+									<div class="-message">
+										<div class="text-center">
+											<AppJolticon icon="friend-remove-2" big notice />
+										</div>
+										<div class="text-center">
+											<h3>
+												<AppTranslate>
+													You are blocked from joining this fireside
+												</AppTranslate>
+											</h3>
+											<p>
+												<router-link :to="{ name: 'home' }">
+													<small>
+														<AppTranslate>Return home</AppTranslate>
+													</small>
+												</router-link>
+											</p>
+										</div>
+									</div>
+								</div>
+							</template>
+							<div v-else class="-video-wrapper">
+								<div class="-video-padding">
+									<div
+										v-if="
+											c.isStreaming.value &&
+											c.chatRoom.value &&
+											c.rtc.value &&
+											c.rtc.value.listableStreamingUsers.length > 0
+										"
+										ref="videoContainer"
+										v-app-observe-dimensions="debounceDimensionsChange"
+										class="-video-container"
+										:class="{
+											'-video-fullscreen': isFullscreen,
+										}"
+										:style="{
+											backgroundColor: videoFillColor,
+										}"
+									>
+										<div
+											class="-video-inner"
+											:style="{
+												width: videoWidth + 'px',
+												height: videoHeight + 'px',
+											}"
 										>
-											<AppPopper trigger="right-click">
-												<AppFiresideStream
-													:rtc-user="c.rtc.value.focusedUser"
+											<template v-if="c.rtc.value && c.rtc.value.focusedUser">
+												<AppStickerTarget
+													:key="c.rtc.value.focusedUser?.uid"
+													class="-video-inner -abs-stretch"
+													:controller="c.stickerTargetController"
+												>
+													<AppPopper trigger="right-click">
+														<AppFiresideStream
+															:rtc-user="c.rtc.value.focusedUser"
+															:has-header="isFullscreen"
+															:has-hosts="isFullscreen"
+															:sidebar-collapsed="collapseSidebar"
+														/>
+
+														<template #popover>
+															<div class="list-group">
+																<a
+																	class="list-group-item"
+																	@click="toggleVideoStats()"
+																>
+																	<AppTranslate>
+																		Toggle Video Stats
+																	</AppTranslate>
+																</a>
+															</div>
+														</template>
+													</AppPopper>
+												</AppStickerTarget>
+											</template>
+										</div>
+									</div>
+									<div v-else class="-video-container">
+										<div
+											class="-center-guide"
+											:class="{
+												'-overlay': overlayText,
+												'-bold': overlayText,
+											}"
+										>
+											<template v-if="c.canStream.value">
+												<AppAnimSlideshow
+													class="-fireplace"
+													:sheet="sheetFireplace"
+													:overlay="overlayText"
 												/>
 
-												<template #popover>
-													<div class="list-group">
-														<a
-															class="list-group-item"
-															@click="toggleVideoStats()"
-														>
-															<AppTranslate>
-																Toggle Video Stats
-															</AppTranslate>
-														</a>
-													</div>
-												</template>
-											</AppPopper>
-										</AppStickerTarget>
-									</template>
+												<div>
+													<div>Start streaming by going to</div>
+													<a
+														class="-center-guide-link"
+														@click="sidebar = 'stream-settings'"
+													>
+														<span>
+															Fireside settings > Stream settings
+														</span>
+													</a>
+													<div>using the gear icons below.</div>
+												</div>
+
+												<div>
+													<AppTranslate>
+														Double check your audio and video source in
+														the settings menu, and then click
+													</AppTranslate>
+													{{ ' ' }}
+													<a
+														class="-center-guide-link"
+														@click="sidebar = 'stream-settings'"
+													>
+														<AppTranslate>
+															Start streaming!
+														</AppTranslate>
+													</a>
+												</div>
+											</template>
+											<AppAnimSlideshow
+												v-else
+												class="-fireplace"
+												:sheet="sheetFireplace"
+												:overlay="overlayText"
+											/>
+
+											<AppFiresideStats />
+										</div>
+									</div>
 								</div>
-							</div>
-							<div v-else class="-video-container">
+
 								<div
-									class="-center-guide"
-									:class="{ '-overlay': overlayText, '-bold': overlayText }"
+									v-if="!isFullscreen"
+									:style="{
+										width: '100%',
+										paddingRight: collapseSidebar
+											? chatWidth + 'px'
+											: undefined,
+									}"
 								>
-									<template v-if="c.canStream.value">
-										<AppAnimSlideshow
-											class="-fireplace"
-											:sheet="sheetFireplace"
-											:overlay="overlayText"
-										/>
-
-										<div>
-											<div>Start streaming by going to</div>
-											<a
-												class="-center-guide-link"
-												@click="sidebar = 'stream-settings'"
-											>
-												<span> Fireside settings > Stream settings </span>
-											</a>
-											<div>using the gear icons below.</div>
-										</div>
-
-										<div>
-											<AppTranslate>
-												Double check your audio and video source in the
-												settings menu, and then click
-											</AppTranslate>
-											{{ ' ' }}
-											<a
-												class="-center-guide-link"
-												@click="sidebar = 'stream-settings'"
-											>
-												<AppTranslate> Start streaming! </AppTranslate>
-											</a>
-										</div>
-									</template>
-									<AppAnimSlideshow
-										v-else
-										class="-fireplace"
-										:sheet="sheetFireplace"
-										:overlay="overlayText"
-									/>
-
-									<AppFiresideStats />
+									<div class="-bottom-bar-padding">
+										<AppFiresideBottomBar :overlay="overlayText" />
+									</div>
 								</div>
 							</div>
-						</div>
-
-						<div class="-bottom-bar-padding">
-							<AppFiresideBottomBar
-								:overlay="overlayText"
-								:active-control="activeBottomBarControl"
-								@members="
-									sidebar === 'members'
-										? (sidebar = 'chat')
-										: (sidebar = 'members')
-								"
-								@fireside-settings="
-									sidebar === 'fireside-settings'
-										? (sidebar = 'chat')
-										: (sidebar = 'fireside-settings')
-								"
-								@stream-settings="
-									sidebar === 'stream-settings'
-										? (sidebar = 'chat')
-										: (sidebar = 'stream-settings')
-								"
-							/>
-						</div>
+						</AppFiresideProvider>
 					</div>
-				</AppFiresideProvider>
-			</div>
 
-			<AppFiresideProvider v-if="!cannotViewReason && c" :controller="c">
-				<div v-if="routeStatus === 'joined'" key="sidebar" class="-trailing">
-					<AppFiresideSidebarChat
-						v-if="sidebar === 'chat'"
-						@members="sidebar = 'members'"
-					/>
-					<AppFiresideSidebarMembers
-						v-else-if="sidebar === 'members'"
-						@members="sidebar = 'chat'"
-						@hosts="sidebar = 'hosts'"
-					/>
-					<AppFiresideSidebarHosts
-						v-else-if="sidebar === 'hosts'"
-						@back="sidebar = 'chat'"
-					/>
-					<AppFiresideSidebarFiresideSettings
-						v-else-if="sidebar === 'fireside-settings'"
-						@stream-settings="sidebar = 'stream-settings'"
-						@back="sidebar = 'chat'"
-					/>
-					<AppFiresideSidebarStreamSettings
-						v-else-if="sidebar === 'stream-settings'"
-						@back="sidebar = 'chat'"
-					/>
+					<AppFiresideProvider v-if="!cannotViewReason && c" :controller="c">
+						<div
+							class="-trailing-shadow"
+							:class="{ '-trailing-shadow-none': collapseSidebar }"
+						>
+							<div
+								v-if="routeStatus === 'joined'"
+								key="sidebar"
+								class="-trailing"
+								:class="{
+									'-trailing-float': collapseSidebar,
+									'-fade':
+										isFullscreen && collapseSidebar && !isShowingStreamOverlay,
+								}"
+							>
+								<AppFiresideSidebarHeading v-if="collapseSidebar" collapsed />
+								<AppFiresideSidebarChat v-else-if="sidebar === 'chat'" />
+								<AppFiresideSidebarMembers v-else-if="sidebar === 'members'" />
+								<AppFiresideSidebarHosts v-else-if="sidebar === 'hosts'" />
+								<AppFiresideSidebarFiresideSettings
+									v-else-if="sidebar === 'fireside-settings'"
+								/>
+								<AppFiresideSidebarStreamSettings
+									v-else-if="sidebar === 'stream-settings'"
+								/>
+							</div>
+						</div>
+					</AppFiresideProvider>
 				</div>
-			</AppFiresideProvider>
+			</AppBackground>
 		</AppStickerLayer>
-	</AppBackground>
+	</div>
 </template>
 
 <style lang="stylus" scoped>
@@ -594,6 +672,11 @@ $-center-guide-width = 400px
 .route-fireside
 	change-bg('bg-offset')
 	height: calc(100vh - var(--shell-top) - var(--shell-bottom))
+	--video-radius: 12px
+	--fireside-chat-width: 350px
+
+	&.-video-square
+		--video-radius: 0px
 
 .-view-blocked
 	display: flex
@@ -616,6 +699,19 @@ $-center-guide-width = 400px
 
 		&:not(a)
 			color: white
+
+.-fill
+	width: 100%
+	height: 100%
+
+.-video-fullscreen
+	position: absolute !important
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	z-index: 0
+	padding: ($grid-gutter-width / 2)
 
 .-abs-stretch
 	top: 0
@@ -644,17 +740,39 @@ $-center-guide-width = 400px
 	flex: none
 	width: 100%
 	padding: 16px
+	z-index: 2
 
 .-trailing
-	elevate-2()
 	position: relative
-	flex: 3 0
+	flex: none
 	display: flex
 	flex-direction: column
 	overflow: visible !important
-	min-width: 350px
-	max-width: 25%
+	width: var(--fireside-chat-width)
 	height: 100%
+	bottom: 0
+	right: 0
+	z-index: 2
+	opacity: 3
+	visibility: visible
+
+	&.-fade
+		opacity: 0
+		visibility: hidden
+
+.-trailing-float
+	position: absolute
+	bottom: 16px
+	right: 16px
+	height: unset
+	padding-left: 16px
+
+.-trailing-shadow
+	elevate-2()
+	transition: none !important
+
+.-trailing-shadow-none
+	elevate-0()
 
 .-message-wrapper
 	@extends .-abs-stretch
@@ -688,7 +806,6 @@ $-center-guide-width = 400px
 	overflow: hidden
 
 .-video-padding
-	position: relative
 	width: 100%
 	height: 100%
 	padding: 8px
@@ -701,14 +818,13 @@ $-center-guide-width = 400px
 	position: relative
 
 .-video-inner
-	rounded-corners-lg()
 	elevate-2()
+	border-radius: var(--video-radius)
 	overflow: hidden
 	position: absolute !important
 	flex-direction: column
 	background-color: var(--theme-bg-subtle)
-	-webkit-transform: translateZ(0)
-	transition: width 200ms, height 200ms
+	transition: width 200ms, height 200ms, border-radius 1s
 
 .-center-guide
 	display: flex

@@ -9,6 +9,8 @@ import {
 	releaseVideoLock,
 	setVideoPlayback,
 } from '../../../../_common/fireside/rtc/user';
+import { Ruler } from '../../../../_common/ruler/ruler-service';
+import { Screen } from '../../../../_common/screen/screen-service';
 import { useFiresideController } from '../controller/controller';
 
 const props = defineProps({
@@ -26,12 +28,50 @@ const props = defineProps({
 });
 
 const { rtcUser, lowBitrate, videoFit } = toRefs(props);
-const { rtc } = useFiresideController()!;
+const { rtc, isFullscreen } = useFiresideController()!;
 
 let _videoLock: FiresideVideoLock | null = null;
 
 const videoElem = ref<HTMLDivElement>();
 const canvasElem = ref<HTMLCanvasElement>();
+
+const cachedRatio = ref(16 / 9);
+
+const wrapperSize = ref({
+	width: 1280,
+	height: 720,
+});
+
+const canvasStyle = computed(() => {
+	if (!isFullscreen.value) {
+		return {
+			width: '100%',
+			height: '100%',
+		};
+	}
+
+	const videoRatio = cachedRatio.value;
+	const { width, height } = Screen;
+
+	const screenRatio = width / height;
+	const screenIsWider = screenRatio >= videoRatio;
+
+	if (screenIsWider) {
+		return {
+			width: ((videoRatio * height) / width) * 100 + '%',
+			height: '100%',
+			left: '50%',
+			transform: 'translateX(-50%)',
+		};
+	}
+
+	return {
+		width: '100%',
+		height: (width / videoRatio / height) * 100 + '%',
+		top: '50%',
+		transform: 'translateY(-50%)',
+	};
+});
 
 const pausedFrameData = computed(() => {
 	if (shouldPlayVideo.value) {
@@ -45,6 +85,7 @@ const shouldPlayVideo = computed(() => rtc.value?.videoPaused !== true);
 onMounted(() => {
 	_onShouldPlayVideoChange();
 	_onFrameDataChange();
+	onVideoSizeChanged();
 });
 
 onBeforeUnmount(() => {
@@ -99,6 +140,7 @@ function _onFrameDataChange() {
 	const context = canvasElem.value.getContext('2d')!;
 	context.clearRect(0, 0, width, height);
 	context.putImageData(pausedFrameData.value, 0, 0, 0, 0, width, height);
+	cachedRatio.value = rtcUser.value.videoAspectRatio;
 }
 
 function _onShouldPlayVideoChange() {
@@ -108,18 +150,24 @@ function _onShouldPlayVideoChange() {
 		_releaseLocks();
 	}
 }
+
+function onVideoSizeChanged() {
+	const { width, height } = Ruler.offset(videoElem.value!);
+	wrapperSize.value = { width, height };
+}
 </script>
 
 <template>
 	<div class="-stream-video">
-		<div ref="videoElem" />
-		<canvas v-show="!shouldPlayVideo" ref="canvasElem" />
+		<div ref="videoElem" :class="{ '-bg-trans': isFullscreen }" />
+		<canvas v-show="!shouldPlayVideo" ref="canvasElem" :style="canvasStyle" />
 	</div>
 </template>
 
 <style lang="stylus" scoped>
 .-stream-video
 	position: relative
+	-webkit-transform: translateZ(0)
 
 	&
 	> *
@@ -128,4 +176,7 @@ function _onShouldPlayVideoChange() {
 
 	> *
 		position: absolute
+
+.-bg-trans::v-deep(> *)
+	background-color: transparent !important
 </style>

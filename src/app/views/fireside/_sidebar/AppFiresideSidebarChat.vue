@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { Environment } from '../../../../_common/environment/environment.service';
+
 import { createFiresideChatContextCapabilities } from '../../../../_common/fireside/chat-settings/chat-settings.model';
 import { useChatStore } from '../../../components/chat/chat-store';
 import AppChatWindowOutput from '../../../components/chat/window/output/AppChatWindowOutput.vue';
@@ -11,16 +12,12 @@ import { useFiresideController } from '../../../components/fireside/controller/c
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 
-const emit = defineEmits({
-	members: () => true,
-});
-
 const c = useFiresideController()!;
 const { chatRoom, chatSettings, fireside } = c;
 
 const route = useRoute();
-
 const chatStore = useChatStore()!;
+
 const chat = computed(() => chatStore.chat);
 
 const contextCapabilities = computed(() => ({
@@ -41,7 +38,7 @@ const loginUrl = computed(
 <template>
 	<AppFiresideSidebar :opacity="0.3">
 		<template #header>
-			<AppFiresideSidebarHeading @members="emit('members')" />
+			<AppFiresideSidebarHeading />
 		</template>
 
 		<template #body>
