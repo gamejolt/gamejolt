@@ -7,15 +7,16 @@ import { sheetChargeOrb } from '../../animation/slideshow/sheets';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppTranslate from '../../translate/AppTranslate.vue';
-import { useStickerStore } from '../sticker-store';
+import { setStickerDrawerOpen, useStickerStore } from '../sticker-store';
+import { StickerChargeModal } from './modal/modal.service';
 
 defineProps({
 	elevate: {
 		type: Boolean,
 	},
 });
-
-const { currentCharge, chargeLimit, canChargeSticker } = useStickerStore();
+const stickerStore = useStickerStore();
+const { currentCharge, chargeLimit, canChargeSticker } = stickerStore;
 
 const gridStyling = computed<CSSProperties>(() => {
 	const orbMaxSize = `${28}px`;
@@ -26,15 +27,19 @@ const gridStyling = computed<CSSProperties>(() => {
 		alignContent: 'center',
 	};
 });
+
+function onClick() {
+	StickerChargeModal.show();
+	setStickerDrawerOpen(stickerStore, false, null);
+}
 </script>
 
 <template>
-	<div class="sticker-charge-card" :class="{ '-elevate': elevate }">
+	<div class="sticker-charge-card" :class="{ '-elevate': elevate }" @click="onClick()">
 		<div class="-content">
 			<span class="-charge">
 				<AppTranslate>Charge</AppTranslate>
 
-				<!-- TODO(charged-stickers) show modal explaining what Charge is -->
 				<AppJolticon icon="help-circle" />
 			</span>
 
@@ -59,6 +64,7 @@ const gridStyling = computed<CSSProperties>(() => {
 	rounded-corners()
 	change-bg(bg-backdrop)
 	padding: 16px
+	cursor: pointer
 
 	&.-elevate
 		elevate-2()
