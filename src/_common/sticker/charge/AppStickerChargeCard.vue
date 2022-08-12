@@ -67,7 +67,6 @@ const gridStyling = computed<CSSProperties>(() => {
 	display: inline-flex
 	align-items: center
 
-// TODO(charged-)
 .-charge
 	margin-right: 24px
 	font-family: $font-family-heading

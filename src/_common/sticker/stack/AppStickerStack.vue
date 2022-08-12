@@ -123,14 +123,6 @@ const tempLeadingKettles = shallowReactive<TempKettle[]>([]);
 
 const itemContainer = ref<HTMLElement>();
 
-// TODO(charged-stickers) designs have these displayed in the order that they've
-// been placed, newest on the left. Current data on the `sticker_counts` won't
-// allow us to do this, since we have no timestamp data and stickers are all
-// combined with a `count` instead of a list containing each individual
-// placement.
-//
-// We can get the in-order stickers if we send a request to fetch them - those
-// are in order of placement so we can animate properly.
 const allStickers = ref<StickerAnimation[]>([]);
 const allChargedStickers = ref<StickerAnimation[]>([]);
 initStickers();
@@ -378,9 +370,6 @@ function onClick() {
 				</div>
 			</template>
 
-			<!-- // TODO(charged-stickers) Might need to change where this is
-			placed, need to see how it looks when new stickers are animating in
-			while using a temp kettle. -->
 			<div v-if="stickers.length > 0" class="-reaction-items">
 				<div
 					ref="itemContainer"
@@ -421,10 +410,6 @@ function onClick() {
 						/>
 					</div>
 
-					<!-- TODO(charged-stickers) figure out this component nesting
-				now that we may show counts within this space. Test all combos
-				of reverse, stickers added when we're at our maxCount, before
-				we're at maxCount, etc. -->
 					<div
 						class="-kettle-lead"
 						:style="{
