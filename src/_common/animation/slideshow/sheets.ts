@@ -41,6 +41,7 @@ export const sheetFireplace = new ImgSlideshow({
 	fps: 8,
 });
 
+// TODO(charged-stickers) use new split assets
 export const sheetChargeOrb = new ImgSlideshow({
 	asset: assetChargeOrb,
 	assetWidth: 2500,
@@ -49,6 +50,7 @@ export const sheetChargeOrb = new ImgSlideshow({
 	fps: 6,
 });
 
+// TODO(charged-stickers) use new asset
 export const sheetShockSquare = new ImgSlideshow({
 	asset: assetShockSquare,
 	assetWidth: 1500,

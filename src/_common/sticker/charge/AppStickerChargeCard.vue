@@ -15,6 +15,7 @@ defineProps({
 		type: Boolean,
 	},
 });
+
 const stickerStore = useStickerStore();
 const { currentCharge, chargeLimit, canChargeSticker } = stickerStore;
 
