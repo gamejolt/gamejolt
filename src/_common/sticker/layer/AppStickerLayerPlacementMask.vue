@@ -21,15 +21,19 @@ const props = defineProps({
 
 const { layer } = toRefs(props);
 
+const { isAllCreator } = layer.value;
+
 const parentScroller = useScroller();
 const stickerStore = useStickerStore();
-const { isDragging, sticker } = stickerStore;
+const { isDragging, sticker, targetController } = stickerStore;
 
 const hasCalculated = ref(false);
 const _width = ref(0);
 const _height = ref(0);
 
 const viewbox = computed(() => `0 0 ${_width.value} ${_height.value}`);
+
+const isTargetCreator = computed(() => targetController.value?.isCreator.value);
 
 function onDimensionsChange([
 	{
@@ -109,8 +113,16 @@ function onClickMask() {
 		</div>
 
 		<AppStickerLayerDrawer class="-drawer" />
-		<div class="-charge">
-			<AppStickerChargeCard elevate />
+		<div
+			v-if="isAllCreator || isTargetCreator"
+			class="-charge-wrapper"
+			:class="{
+				'-charge-shift': isDragging,
+			}"
+		>
+			<div class="-charge-card anim-fade-in-down">
+				<AppStickerChargeCard elevate />
+			</div>
 		</div>
 		<AppStickerLayerGhost v-if="sticker" class="-ghost" />
 	</div>
@@ -134,20 +146,27 @@ function onClickMask() {
 .-overlay
 	z-index: 1
 
-.-charge
+.-charge-wrapper
 	z-index: 2
 	position: fixed
 	display: inline-flex
 	justify-content: center
+	top: 0
+	right: 0
+	transition: transform 250ms $strong-ease-out
 
 	@media $media-mobile
-		top: 12px
-		left: 16px
-		right: 16px
+		padding: 12px 16px 0
+		left: 0
 
 	@media $media-md-up
-		top: 32px
-		right: 32px
+		padding: 32px 32px 0 0
+
+.-charge-card
+	transform: translateY(0)
+
+.-charge-shift
+	transform: translateY(calc(12px - 100%))
 
 .-ghost
 	z-index: 3

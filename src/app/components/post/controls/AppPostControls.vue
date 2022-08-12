@@ -165,7 +165,6 @@ function openComments() {
 }
 
 async function openEdit() {
-	// TODO(charged-stickers) fix analytics, use new non-deprecated methods
 	Analytics.trackEvent('post-controls', 'edit', eventLabel.value);
 	if (await PostEditModal.show(post.value)) {
 		emit('postEdit');
@@ -256,10 +255,11 @@ function onUserFollowDismissal() {
 							</div>
 
 							<template v-if="shouldShowStickersButton">
-								<!-- TODO(charged-stickers) might need to store parentStickerController on the StickerLayer like we do for app. Then we can just provide and inject the controller we need, and we'll easily know if this is a creator we can place a charged sticker on. -->
 								<AppAnimElectricity
 									shock-anim="square"
-									:disabled="!canChargeSticker || !stickerLayer?.isCreator.value"
+									:disabled="
+										!canChargeSticker || !stickerLayer?.isAllCreator.value
+									"
 									ignore-asset-padding
 								>
 									<AppButton

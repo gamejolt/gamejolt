@@ -34,7 +34,7 @@ const gridStyling = computed<CSSProperties>(() => {
 			<span class="-charge">
 				<AppTranslate>Charge</AppTranslate>
 
-				<!-- TODO(charged-stickers) redirect to page -->
+				<!-- TODO(charged-stickers) show modal explaining what Charge is -->
 				<AppJolticon icon="help-circle" />
 			</span>
 

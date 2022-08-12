@@ -7,6 +7,7 @@ import AppButton from '../button/AppButton.vue';
 import { Jolticon } from '../jolticon/AppJolticon.vue';
 import AppLoading from '../loading/AppLoading.vue';
 import { showModal } from '../modal/modal.service';
+import { useStickerStore } from '../sticker/sticker-store';
 import { Quest } from './quest-model';
 import { QuestObjectiveReward } from './quest-objective-reward-model';
 import { QuestReward } from './reward/AppQuestRewardModal.vue';
@@ -31,6 +32,8 @@ const { quest, show, isAccept } = toRefs(props);
 const emit = defineEmits({
 	newQuest: (_quest: Quest) => true,
 });
+
+const { setChargeData, currentCharge, chargeLimit } = useStickerStore();
 
 const root = ref<HTMLElement>();
 const isProcessingAction = ref(false);
@@ -140,7 +143,20 @@ async function onActionPressed() {
 					name: reward.name,
 					icon: 'paintbrush',
 				});
+				// TODO(charged-stickers) might need to allow PopcornKettle to
+				// build a Component instead of just taking a straight img_url.
 			} else {
+				if (reward.isCharge) {
+					// Manually alter the sticker charge we have so other UI can
+					// react as needed.
+					setChargeData({
+						charge: Math.min(
+							chargeLimit.value,
+							currentCharge.value + reward.fallback_amount
+						),
+					});
+				}
+
 				addOrUpdateReward({
 					key: `unknown-${reward.name}-${reward.id}`,
 					amount: reward.fallback_amount,

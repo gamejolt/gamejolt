@@ -1,36 +1,30 @@
 <script lang="ts" setup>
 import { onUnmounted } from '@vue/runtime-core';
-import { computed, CSSProperties, onMounted, ref } from 'vue';
+import { computed, CSSProperties, ref } from 'vue';
 import { Analytics } from '../../analytics/analytics.service';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
-import AppButton from '../../button/AppButton.vue';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import {
 	assignStickerStoreGhostCallback,
-	commitStickerStoreItemPlacement,
 	setStickerStoreActiveItem,
 	useStickerStore,
 } from '../sticker-store';
 
 const stickerStore = useStickerStore();
-const {
-	stickerSize,
-	placedItem,
-	isDragging,
-	targetController,
-	canChargeSticker,
-	isChargingSticker,
-	canPlaceChargedStickerOnResource,
-} = stickerStore;
+const { stickerSize, placedItem, isDragging, targetController, isChargingSticker } = stickerStore;
 
 const root = ref<HTMLDivElement>();
 
-let _removeStickerDragCallback: (() => void) | null = null;
-const _isConfirmingPlacement = ref(false);
+/**
+ * Used to hide the sticker until we get the proper positioning data. If we
+ * don't have this, the sticker may appear in the top-left of the screen before
+ * moving to the cursor.
+ */
+const hasData = ref(false);
+
+let _removeStickerDragCallback = assignStickerStoreGhostCallback(stickerStore, updateGhostPosition);
 
 const sticker = computed(() => stickerStore.sticker.value!);
 
-const shouldShowStickerControls = computed(() => !!placedItem.value);
 const chargeButtonPositionClass = ref<'-charge-left' | '-charge-right'>('-charge-left');
 
 const _itemRotation = computed(() =>
@@ -43,17 +37,12 @@ const itemStyling = computed<CSSProperties>(() => ({
 	height: stickerSize.value + 'px',
 }));
 
-const controlsStyling = computed<CSSProperties>(() => {
-	const controlSize = 32;
-	return {
-		left: stickerSize.value / 2 - controlSize / 2 + 'px',
-		width: controlSize + 'px',
-		height: controlSize + 'px',
-	};
-});
-
 const itemClasses = computed(() => {
 	const classes = [];
+
+	if (!hasData.value) {
+		classes.push('-hide');
+	}
 
 	if (isDragging.value) {
 		classes.push('-dragging');
@@ -66,26 +55,9 @@ const itemClasses = computed(() => {
 	return classes;
 });
 
-onMounted(() => {
-	_removeStickerDragCallback = assignStickerStoreGhostCallback(stickerStore, updateGhostPosition);
-});
-
 onUnmounted(() => {
 	_removeStickerDragCallback?.();
 });
-
-async function onConfirmPlacement() {
-	// Only allow 1 placement request through at a time for each sticker
-	// ghost. This component will be v-if'd away after placement if it
-	// doesn't fail.
-	if (_isConfirmingPlacement.value) {
-		return;
-	}
-	_isConfirmingPlacement.value = true;
-	Analytics.trackEvent('sticker-drawer', 'confirm-placement');
-	await commitStickerStoreItemPlacement(stickerStore);
-	_isConfirmingPlacement.value = false;
-}
 
 function onStartDrag(event: MouseEvent | TouchEvent) {
 	Analytics.trackEvent('sticker-drawer', 'start-drag');
@@ -102,6 +74,7 @@ function updateGhostPosition(pos: { left: number; top: number }) {
 	// the screen.
 	chargeButtonPositionClass.value = left < 48 ? '-charge-right' : '-charge-left';
 	root.value!.style.transform = `translate3d(${left}px, ${top}px, 0)`;
+	hasData.value = true;
 }
 </script>
 
@@ -123,49 +96,6 @@ function updateGhostPosition(pos: { left: number; top: number }) {
 				@dragstart.prevent
 			/>
 		</AppAnimElectricity>
-
-		<transition name="-fade">
-			<div v-if="shouldShowStickerControls" class="-controls" :style="controlsStyling">
-				<AppButton
-					icon="check"
-					:primary="canPlaceChargedStickerOnResource ? isChargingSticker : true"
-					solid
-					sparse
-					circle
-					@click.capture="onConfirmPlacement"
-				/>
-
-				<AppAnimElectricity
-					v-if="!isChargingSticker"
-					:disabled="!canPlaceChargedStickerOnResource"
-					shock-anim="square"
-					class="-charge-button"
-					:class="chargeButtonPositionClass"
-				>
-					<!-- TODO(charged-stickers) charge icon -->
-					<AppButton
-						icon="bolt-filled"
-						:primary="canPlaceChargedStickerOnResource"
-						solid
-						sparse
-						circle
-						:disabled="!canPlaceChargedStickerOnResource"
-						@click.capture="isChargingSticker = true"
-					/>
-					<!-- Attaching a tooltip directly to the button or
-					[AppAnimElectricity] can have layering issues. -->
-					<div
-						v-if="!canPlaceChargedStickerOnResource"
-						v-app-tooltip.touchable="
-							canChargeSticker
-								? $gettext(`Charged stickers can only be placed on creators.`)
-								: $gettext(`You're not able to charge this sticker yet.`)
-						"
-						class="-disabled-button-mask"
-					/>
-				</AppAnimElectricity>
-			</div>
-		</transition>
 	</div>
 </template>
 
@@ -201,6 +131,9 @@ function updateGhostPosition(pos: { left: number; top: number }) {
 
 .-fade-enter-to
 	opacity: 1
+
+.-hide
+	visibility: hidden
 
 .-controls
 	rounded-corners()

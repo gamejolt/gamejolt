@@ -2,15 +2,19 @@
 import { computed, CSSProperties, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import AppEventItemMediaIndicator from '../../../app/components/event-item/media-indicator/AppEventItemMediaIndicator.vue';
 import { Analytics } from '../../analytics/analytics.service';
+import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
+import AppButton from '../../button/AppButton.vue';
 import { EscapeStack, EscapeStackCallback } from '../../escape-stack/escape-stack.service';
 import AppLoadingFade from '../../loading/AppLoadingFade.vue';
+import { vAppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
+import { Ruler } from '../../ruler/ruler-service';
 import { onScreenResize, Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
 import { useEventSubscription } from '../../system/event/event-topic';
 import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import {
-	setStickerDrawerHeight,
+	commitStickerStoreItemPlacement,
 	setStickerDrawerOpen,
 	setStickerStoreActiveItem,
 	useStickerStore,
@@ -29,6 +33,10 @@ const {
 	isDragging,
 	isLoading,
 	hasLoaded,
+	placedItem,
+	canPlaceChargedStickerOnResource,
+	isChargingSticker,
+	isLayerOrTargetCreatorResource,
 } = stickerStore;
 
 const _drawerPadding = 8;
@@ -38,12 +46,17 @@ let _touchedSticker: Sticker | null = null;
 let _escapeCallback: EscapeStackCallback | null = null;
 
 const sheetPage = ref(1);
-const isSwiping = ref(false);
+const isSwipingSheets = ref(false);
 const _stickersPerRow = ref(5);
+
+const overflowTopBarText = ref(true);
+const isConfirmingPlacement = ref(false);
 
 const root = ref<HTMLDivElement>();
 const content = ref<HTMLDivElement>();
 const slider = ref<HTMLDivElement>();
+
+const showPlaceButton = computed(() => !!placedItem.value);
 
 const effectiveStickerSize = computed(() => stickerSize.value + _stickerSpacing);
 
@@ -85,7 +98,7 @@ const styleShell = computed<CSSProperties>(() => {
 
 	// Shift the drawer down when there's an item being dragged and the drawer
 	// container is not being hovered.
-	if (storeSticker.value && !isHoveringDrawer.value) {
+	if (storeSticker.value && !isHoveringDrawer.value && !placedItem.value) {
 		result.transform = `translateY(${drawerHeight.value - stickerSize.value / 2}px)`;
 	}
 
@@ -171,6 +184,19 @@ function _chunkStickers(stickers: StickerStack[]) {
 	return sheets;
 }
 
+async function onClickPlace() {
+	// Only allow 1 placement request through at a time for each sticker
+	// ghost. This component will be v-if'd away after placement if it
+	// doesn't fail.
+	if (isConfirmingPlacement.value) {
+		return;
+	}
+	isConfirmingPlacement.value = true;
+	Analytics.trackEvent('sticker-drawer', 'confirm-placement');
+	await commitStickerStoreItemPlacement(stickerStore);
+	isConfirmingPlacement.value = false;
+}
+
 function onClickMargin() {
 	setStickerDrawerOpen(stickerStore, false, null);
 }
@@ -222,7 +248,7 @@ function resetTouchedSticker() {
 function panStart(event: AppTouchInput) {
 	const { deltaX, deltaY } = event;
 	if (Math.abs(deltaX) > Math.abs(deltaY)) {
-		isSwiping.value = true;
+		isSwipingSheets.value = true;
 	} else if (_touchedSticker) {
 		setStickerStoreActiveItem(stickerStore, _touchedSticker, event.pointer);
 	} else {
@@ -232,12 +258,12 @@ function panStart(event: AppTouchInput) {
 
 function pan(event: AppTouchInput) {
 	if (isDragging.value) {
-		isSwiping.value = false;
+		isSwipingSheets.value = false;
 		return;
 	}
 
 	// In case the animation frame was retrieved after we stopped dragging.
-	if (!isSwiping.value) {
+	if (!isSwipingSheets.value) {
 		return;
 	}
 
@@ -245,7 +271,10 @@ function pan(event: AppTouchInput) {
 }
 
 function panEnd(event: AppTouchInput) {
-	isSwiping.value = false;
+	if (!isSwipingSheets.value) {
+		return;
+	}
+	isSwipingSheets.value = false;
 
 	// Make sure we moved at a high enough velocity and/or distance to register the "swipe".
 	const { velocityX, deltaX, distance } = event;
@@ -292,9 +321,17 @@ async function onIsLoadingChange() {
 	await nextTick();
 
 	if (!isLoading.value) {
-		setStickerDrawerHeight(stickerStore, root.value!.offsetHeight);
+		onContentDimensionsChanged();
 		calculateStickersPerRow();
 	}
+}
+
+function onContentDimensionsChanged() {
+	if (showPlaceButton.value || !content.value) {
+		return;
+	}
+
+	drawerHeight.value = Ruler.height(content.value);
 }
 </script>
 
@@ -310,7 +347,57 @@ async function onIsLoadingChange() {
 		@touchend="resetTouchedSticker()"
 	>
 		<div class="-margin" @click="onClickMargin()" />
-		<div ref="content" class="-drawer-outer anim-fade-in-up" :style="styleOuter">
+
+		<template v-if="showPlaceButton">
+			<div class="-drawer-outer -drawer-outer-place" :style="styleOuter">
+				<div
+					v-if="canPlaceChargedStickerOnResource"
+					class="-top-bar"
+					:class="{
+						'-text-overflow': overflowTopBarText,
+					}"
+					@click="overflowTopBarText = !overflowTopBarText"
+				>
+					<AppTranslate class="-top-bar-text">
+						Support your favorite creators with charged stickers!
+					</AppTranslate>
+				</div>
+
+				<AppAnimElectricity
+					shock-anim="wide-rect"
+					:disabled="!isChargingSticker"
+					:style="{
+						width: '100%',
+					}"
+				>
+					<AppButton block primary :solid="isChargingSticker" @click="onClickPlace()">
+						<AppTranslate>Place sticker</AppTranslate>
+					</AppButton>
+				</AppAnimElectricity>
+
+				<AppAnimElectricity
+					v-if="!isChargingSticker && canPlaceChargedStickerOnResource"
+					shock-anim="square"
+					:disabled="!canPlaceChargedStickerOnResource"
+				>
+					<AppButton
+						class="-charge-caret"
+						sparse
+						icon="bolt-unfilled"
+						primary
+						:solid="canPlaceChargedStickerOnResource"
+						@click="isChargingSticker = true"
+					/>
+				</AppAnimElectricity>
+			</div>
+		</template>
+
+		<div
+			ref="content"
+			v-app-observe-dimensions="onContentDimensionsChanged"
+			class="-drawer-outer anim-fade-in-up"
+			:style="{ ...styleOuter, display: !showPlaceButton ? undefined : 'none' }"
+		>
 			<component
 				:is="Screen.isPointerMouse ? AppScrollScroller : 'div'"
 				:style="styleDimensions"
@@ -345,7 +432,7 @@ async function onIsLoadingChange() {
 								</div>
 							</template>
 							<template v-else-if="hasLoaded">
-								<div class="-no-stckers text-center">
+								<div class="text-center">
 									<p class="lead" style="padding: 0 16px">
 										<AppTranslate>
 											Oh no! Looks like you don't have any stickers.
@@ -372,6 +459,7 @@ async function onIsLoadingChange() {
 				</AppLoadingFade>
 			</component>
 		</div>
+
 		<div class="-margin" @click="onClickMargin()" />
 	</div>
 </template>
@@ -380,9 +468,12 @@ async function onIsLoadingChange() {
 .-touch
 	.-drawer-inner
 		white-space: nowrap
+		display: flex
+		flex-wrap: nowrap
 
 	.-sheet
 		display: inline-flex
+		flex: none
 
 .-loading
 	margin: auto
@@ -403,6 +494,15 @@ async function onIsLoadingChange() {
 .-scroller
 	height: 100%
 
+.-text-overflow
+	&
+	> *
+		text-overflow()
+
+.-top-bar-text
+	min-width: 0
+	max-width: 100%
+
 .-drawer-outer
 	elevate-2()
 	change-bg('bg')
@@ -413,9 +513,34 @@ async function onIsLoadingChange() {
 	@media $media-xs
 		width: 100%
 
-	@media $media-sm-up
+.-drawer-outer-place
+	flex: 1 1 100vw
+	overflow: visible
+	display: flex
+	gap: 12px
+	padding: 12px
+	position: relative
+
+@media $media-sm-up
+	.-drawer-outer
+	.-top-bar
 		border-top-left-radius: $border-radius-large
 		border-top-right-radius: $border-radius-large
+
+	.-drawer-outer-place
+		flex: 3
+
+.-top-bar
+	display: flex
+	padding: 8px 12px 24px
+	gap: 12px
+	position: absolute
+	bottom: calc(100% - 16px)
+	z-index: -1
+	left: 0
+	right: 0
+	change-bg('primary')
+	theme-prop('color', 'primary-fg')
 
 .-drawer-inner
 	transition: transform 300ms $strong-ease-out
@@ -424,4 +549,14 @@ async function onIsLoadingChange() {
 	display: flex
 	justify-content: center
 	flex-wrap: wrap
+
+.-place-button-container
+	display: flex
+	gap: 12px
+
+.-charge-caret::before
+	content: ''
+	position: absolute
+	bottom: calc(100% + 2px) !important
+	caret(color: var(--theme-primary), direction: 'down', size: 7px)
 </style>

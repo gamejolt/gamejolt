@@ -22,7 +22,7 @@ import AppSpacer from '../../spacer/AppSpacer.vue';
 import { useEventSubscription } from '../../system/event/event-topic';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { StickerPlacement } from '../placement/placement.model';
-import { isStickerCountCharged, StickerCount } from '../sticker-count';
+import { StickerCount } from '../sticker-count';
 import { onFiresideStickerPlaced } from '../sticker-store';
 import { StickerTargetController, toggleStickersShouldShow } from '../target/target-controller';
 import AppStickerStackItem from './AppStickerStackItem.vue';
@@ -77,6 +77,9 @@ const props = defineProps({
 	card: {
 		type: Boolean,
 	},
+	splitChargedStickers: {
+		type: Boolean,
+	},
 });
 
 const emit = defineEmits({
@@ -95,6 +98,7 @@ const {
 	baseSize,
 	showOverflowCount,
 	card,
+	splitChargedStickers,
 } = toRefs(props);
 
 const leadingKettle = createPopcornKettleController();
@@ -168,10 +172,12 @@ function initStickers() {
 	const newChargedStickers: StickerCount[] = [];
 
 	controller.value.model.sticker_counts.forEach(i => {
-		// TODO(charged-stickers) remove. Figure out the real data and how to use it.
-		if (isStickerCountCharged(i)) {
-			i = Object.assign({}, i);
-			i.chargedCount = 1;
+		if (!splitChargedStickers.value) {
+			newStickers.push({
+				...i,
+				chargedCount: 0,
+			});
+			return;
 		}
 
 		if (i.chargedCount > 0) {
@@ -180,9 +186,12 @@ function initStickers() {
 				count: 0,
 			});
 		}
-		if (i.count > 0) {
+
+		const nonChargedCount = i.count - i.chargedCount;
+		if (nonChargedCount > 0) {
 			newStickers.push({
 				...i,
+				count: nonChargedCount,
 				chargedCount: 0,
 			});
 		}
@@ -215,7 +224,7 @@ function _onFiresideStickerPlaced(placement: StickerPlacement) {
 
 	const { img_url } = placement.sticker;
 
-	if (placement.is_charged) {
+	if (splitChargedStickers.value && placement.is_charged) {
 		const existing = allChargedStickers.value.find(i => i.img_url === img_url);
 		if (!existing) {
 			allChargedStickers.value.push({
@@ -271,27 +280,31 @@ function _onFiresideStickerPlaced(placement: StickerPlacement) {
 			tempAnimatingKernels.value = Math.max(0, tempAnimatingKernels.value - 1);
 		}
 
+		const lengthBeforeInsert = stickers.value.length;
+		const needsPopped = lengthBeforeInsert >= maxCount.value;
 		allStickers.value.unshift({ key, img_url });
-		if (isPopping) {
+
+		if (isPopping || !needsPopped) {
 			return;
 		}
 
-		if (allStickers.value.length > maxCount.value) {
-			isPopping = true;
-			while (allStickers.value.length > maxCount.value) {
-				const sticker = allStickers.value.pop();
-
-				if (disablePopcorn.value) {
-					continue;
-				}
-
-				trailingKettle.addKernel(sticker!.img_url, {
-					...baseKernelOptions,
-					popAngle: -popAngle,
-				});
-			}
-			isPopping = false;
+		let extraCount = lengthBeforeInsert + 1 - maxCount.value;
+		if (disablePopcorn.value || extraCount <= 0) {
+			return;
 		}
+
+		isPopping = true;
+		while (extraCount > 0) {
+			--extraCount;
+
+			const sticker = allStickers.value[stickers.value.length + extraCount];
+
+			trailingKettle.addKernel(sticker!.img_url, {
+				...baseKernelOptions,
+				popAngle: -popAngle,
+			});
+		}
+		isPopping = false;
 	};
 
 	if (allStickers.value.length < maxCount.value) {
@@ -351,22 +364,24 @@ function onClick() {
 		@click="onClick"
 	>
 		<div class="-sections">
-			<div v-for="{ key, img_url } of chargedStickers" :key="key" class="-item-charged">
-				<AppAnimElectricity ignore-asset-padding>
-					<AppStickerStackItem
-						:class="{ '-item-shadow': showStickerShadows }"
-						:img-url="img_url"
-						:style="{
-							width: itemSizeCharged + 'px',
-						}"
-					/>
-				</AppAnimElectricity>
-			</div>
+			<template v-if="splitChargedStickers && chargedStickers.length > 0">
+				<div v-for="{ key, img_url } of chargedStickers" :key="key" class="-item-charged">
+					<AppAnimElectricity ignore-asset-padding>
+						<AppStickerStackItem
+							:class="{ '-item-shadow': showStickerShadows }"
+							:img-url="img_url"
+							:style="{
+								width: itemSizeCharged + 'px',
+							}"
+						/>
+					</AppAnimElectricity>
+				</div>
+			</template>
 
 			<!-- // TODO(charged-stickers) Might need to change where this is
 			placed, need to see how it looks when new stickers are animating in
 			while using a temp kettle. -->
-			<div class="-reaction-items">
+			<div v-if="stickers.length > 0" class="-reaction-items">
 				<div
 					ref="itemContainer"
 					class="-item-container"
@@ -489,6 +504,7 @@ function onClick() {
 	gap: 8px
 
 .-reaction-items
+.-item-container
 	position: relative
 	display: inline-flex
 	flex-wrap: nowrap

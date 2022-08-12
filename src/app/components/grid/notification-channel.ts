@@ -14,6 +14,17 @@ const TabLeaderLazy = importNoSSR(async () => await import('../../../utils/tab-l
 
 export type GridNotificationChannel = Awaited<ReturnType<typeof createGridNotificationChannel>>;
 
+interface ChargeData {
+	charge: number;
+	costs: { [type: string]: number };
+	cycle: {
+		decay: number;
+		length: number;
+		'start-hour': number;
+	};
+	max: number;
+}
+
 interface JoinPayload {
 	hasNewFriendRequests: boolean;
 	lastNotificationTime: number;
@@ -27,6 +38,7 @@ interface JoinPayload {
 	newQuestIds: number[];
 	questActivityIds: number[];
 	questResetHour: number;
+	charge: ChargeData;
 }
 
 interface NewNotificationPayload {
@@ -86,7 +98,7 @@ export async function createGridNotificationChannel(
 ) {
 	const { socketController, appStore } = client;
 	const { userId } = options;
-	const { communityStates } = appStore;
+	const { communityStates, stickerStore } = appStore;
 
 	let _tabLeader: TabLeaderInterface | null = null;
 	const isTabLeader = computed(() => _tabLeader?.isLeader ?? false);
@@ -143,6 +155,17 @@ export async function createGridNotificationChannel(
 			questStore.setDailyResetHour(payload.questResetHour);
 
 			// TODO(charged-stickers) set initial charge values in the StickerStore.
+			const {
+				charge,
+				max,
+				costs: { sticker: cost },
+			} = payload.charge;
+
+			stickerStore.setChargeData({
+				charge,
+				max,
+				cost,
+			});
 
 			client.bootstrapTimestamp = payload.lastNotificationTime;
 			client.bootstrapReceived = true;

@@ -53,30 +53,35 @@ function onClick() {
 </script>
 
 <template>
-	<div
-		v-app-tooltip="controller.isLive ? null : $gettext(`View Stickers`)"
-		class="sticker-reactions"
-		:class="{
-			'-active': showAsActive,
-			'-live': controller.isLive,
-		}"
-		@click.stop="onClick"
-	>
-		<AppStickerReactionsItem
-			v-for="{ stickerId, imgUrl, count } of reactions"
-			:key="stickerId"
-			:img-url="imgUrl"
-			:count="count"
-			:animate="shouldAnimate"
-		/>
+	<div class="sticker-reactions">
+		<div
+			v-app-tooltip="controller.isLive ? null : $gettext(`View stickers`)"
+			class="-content"
+			:class="{
+				'-active': showAsActive,
+				'-live': controller.isLive,
+			}"
+			@click.stop="onClick"
+		>
+			<AppStickerReactionsItem
+				v-for="{ stickerId, imgUrl, count } of reactions"
+				:key="stickerId"
+				:img-url="imgUrl"
+				:count="count"
+				:animate="shouldAnimate"
+			/>
+		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
 .sticker-reactions
+	display: inline-block
+	margin: 4px 0 8px 0
+
+.-content
 	display: inline-flex
 	flex-wrap: wrap
-	margin: 4px 0 8px 0
 	border: $border-width-small solid transparent
 
 	&:not(.-live)

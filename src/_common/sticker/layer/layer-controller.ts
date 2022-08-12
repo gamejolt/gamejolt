@@ -2,7 +2,7 @@ import { InjectionKey, shallowRef } from '@vue/runtime-core';
 import { computed, ComputedRef, inject, provide, ref, Ref, ShallowRef, toRaw } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { ScrollController } from '../../scroll/AppScrollScroller.vue';
-import { StickerStore } from '../sticker-store';
+import { isStickerTargetMine, StickerStore } from '../sticker-store';
 import { StickerLayerItem } from './layer-item';
 
 const StickerLayerKey: InjectionKey<StickerLayerController> = Symbol('sticker-layer');
@@ -16,7 +16,7 @@ export type StickerLayerController = {
 
 	isActive: Ref<boolean>;
 	isShowingDrawer: ComputedRef<boolean>;
-	isCreator: ComputedRef<boolean>;
+	isAllCreator: ComputedRef<boolean>;
 
 	store: StickerStore;
 };
@@ -44,9 +44,16 @@ export function createStickerLayerController(store: StickerStore) {
 		() => store.isDrawerOpen.value && !store.hideDrawer.value && _isActiveLayer.value
 	);
 
-	const isCreator = computed(
+	/**
+	 * Returns true if all sticker targets in the layer belong to a creator and
+	 * none of the targets belong to us.
+	 */
+	const isAllCreator = computed(
 		() =>
-			layerItems.value.length > 0 && layerItems.value.every(i => i.controller.isCreator.value)
+			layerItems.value.length > 0 &&
+			layerItems.value.every(
+				i => !isStickerTargetMine(store, i.controller) && i.controller.isCreator.value
+			)
 	);
 
 	const c: StickerLayerController = {
@@ -58,7 +65,7 @@ export function createStickerLayerController(store: StickerStore) {
 
 		isActive,
 		isShowingDrawer,
-		isCreator,
+		isAllCreator,
 
 		store,
 	};

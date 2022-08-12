@@ -1,20 +1,15 @@
-import {
-	computed,
-	inject,
-	InjectionKey,
-	provide,
-	ref,
-	shallowReactive,
-	shallowRef,
-	toRaw,
-} from 'vue';
+import { computed, inject, InjectionKey, Ref, ref, shallowReactive, shallowRef, toRaw } from 'vue';
 import { arrayRemove, numberSort } from '../../utils/array';
 import { Analytics } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
+import { Comment } from '../comment/comment-model';
+import { Fireside } from '../fireside/fireside.model';
+import { FiresidePost } from '../fireside/post/post-model';
 import { showErrorGrowl } from '../growls/growls.service';
 import { setModalBodyWrapper } from '../modal/modal.service';
 import { EventTopic } from '../system/event/event-topic';
 import { $gettext } from '../translate/translate.service';
+import { User } from '../user/user.model';
 import AppStickerLayer from './layer/AppStickerLayer.vue';
 import { getCollidingStickerTarget, StickerLayerController } from './layer/layer-controller';
 import { StickerPlacement } from './placement/placement.model';
@@ -26,7 +21,7 @@ import {
 	StickerTargetController,
 } from './target/target-controller';
 
-const StickerStoreKey: InjectionKey<StickerStore> = Symbol('sticker-store');
+export const StickerStoreKey: InjectionKey<StickerStore> = Symbol('sticker-store');
 
 interface StickerStreak {
 	sticker: Sticker;
@@ -35,7 +30,8 @@ interface StickerStreak {
 
 export type StickerStore = ReturnType<typeof createStickerStore>;
 
-export function createStickerStore() {
+export function createStickerStore(options: { user: Ref<User | null> }) {
+	const user = computed(() => options.user.value);
 	const layers = shallowReactive<StickerLayerController[]>([]);
 	const targetController = shallowRef<StickerTargetController | null>(null);
 
@@ -49,8 +45,16 @@ export function createStickerStore() {
 	const stickerCurrency = ref<number | null>(null);
 	const stickerCost = ref<number | null>(null);
 
-	const currentCharge = ref(7);
+	const currentCharge = ref(0);
 	const chargeLimit = ref(7);
+
+	/**
+	 * NOTE: If {@link currentCharge} is greater or equal to this, it doesn't
+	 * mean we can charge a sticker. This is only used to change UI while
+	 * placing a charged sticker.
+	 */
+	const chargeCost = ref(2);
+
 	const isChargingSticker = ref(false);
 
 	const isDrawerOpen = ref(false);
@@ -71,28 +75,53 @@ export function createStickerStore() {
 
 	const shouldShowCharge = computed(() => isLayerOrTargetCreatorResource.value);
 
+	function _isTargetMine(controller: StickerTargetController): boolean {
+		return isStickerTargetMine(c, controller);
+	}
+
 	/// Checks the [AppStickerTargetController] of either our [activeLayer] or
 	/// [placedSticker] to determine if we're placing on the resource of a
 	/// [UserModel] that is a creator.
+	///
+	/// Returns `false` if this is our own resource (can't place charged
+	/// stickers on your own content.)
 	const isLayerOrTargetCreatorResource = computed(() => {
 		const layer = activeLayer.value;
 		if (!layer) {
 			return false;
 		}
 
-		const targets = layer.layerItems.value;
+		if (targetController.value) {
+			return targetController.value.isCreator.value && !_isTargetMine(targetController.value);
+		}
 
-		const result =
-			targetController.value?.isCreator.value ??
-			(targets.length > 0 && targets.every(i => i.controller.isCreator.value));
-
-		return result == true;
+		return layer.isAllCreator.value;
 	});
 
 	const canChargeSticker = computed(() => currentCharge.value >= chargeLimit.value);
 	const canPlaceChargedStickerOnResource = computed(
 		() => canChargeSticker.value && isLayerOrTargetCreatorResource.value
 	);
+
+	function setChargeData({
+		charge,
+		max,
+		cost,
+	}: {
+		charge?: number;
+		max?: number;
+		cost?: number;
+	}) {
+		if (charge !== undefined) {
+			currentCharge.value = charge;
+		}
+		if (max !== undefined) {
+			chargeLimit.value = max;
+		}
+		if (cost !== undefined) {
+			chargeCost.value = cost;
+		}
+	}
 
 	// Set up modals to have the sticker layer as their layer element.
 	setModalBodyWrapper(AppStickerLayer);
@@ -109,6 +138,7 @@ export function createStickerStore() {
 		stickerCost,
 		currentCharge,
 		chargeLimit,
+		chargeCost,
 		isChargingSticker,
 		streak,
 		isDrawerOpen,
@@ -126,9 +156,37 @@ export function createStickerStore() {
 		isLayerOrTargetCreatorResource,
 		canChargeSticker,
 		canPlaceChargedStickerOnResource,
+		setChargeData,
+		user,
 	};
-	provide(StickerStoreKey, c);
 	return c;
+}
+
+export function isStickerTargetMine(store: StickerStore, target: StickerTargetController | null) {
+	const { user, placedItem } = store;
+	const myUserId = user.value?.id;
+
+	let tempController = target;
+	let isMine = false;
+
+	do {
+		const model = toRaw(tempController?.model);
+		if (model instanceof FiresidePost) {
+			isMine = model.displayUser.id === myUserId;
+		} else if (model instanceof Fireside) {
+			isMine = placedItem.value?.target_data.host_user_id === myUserId;
+		} else if (model instanceof Comment) {
+			isMine = model.user.id === myUserId;
+		}
+
+		if (isMine) {
+			break;
+		}
+
+		tempController = tempController?.parent || null;
+	} while (tempController?.parent);
+
+	return isMine;
 }
 
 export function useStickerStore() {
@@ -193,13 +251,20 @@ export function setStickerDrawerHidden(store: StickerStore, shouldHide: boolean)
  * Send an API request to get the user stickers.
  */
 async function _initializeDrawerContent(store: StickerStore) {
-	const { isLoading, stickerCost, stickerCurrency, drawerItems, hasLoaded } = store;
+	const { isLoading, stickerCost, stickerCurrency, drawerItems, hasLoaded, setChargeData } =
+		store;
 
 	isLoading.value = true;
 	const payload = await Api.sendRequest('/web/stickers/dash');
 
 	stickerCost.value = payload.stickerCost;
 	stickerCurrency.value = payload.balance;
+
+	setChargeData({
+		charge: payload.currentCharge,
+		max: payload.maxCharge,
+		cost: payload.chargeCost,
+	});
 
 	const eventStickers: StickerStack[] = [];
 	const generalStickers: StickerStack[] = [];
@@ -342,6 +407,10 @@ export async function commitStickerStoreItemPlacement(store: StickerStore) {
 	const {
 		placedItem: { value: sticker },
 		targetController,
+		canPlaceChargedStickerOnResource,
+		currentCharge,
+		chargeCost,
+		isChargingSticker,
 	} = store;
 
 	if (!sticker || !targetController.value) {
@@ -353,6 +422,8 @@ export async function commitStickerStoreItemPlacement(store: StickerStore) {
 	const { model, placeStickerCallback } = targetController.value;
 	const resourceType = getStickerModelResourceName(model);
 
+	const isCharged = canPlaceChargedStickerOnResource.value && isChargingSticker.value;
+
 	const body = {
 		stickerId: sticker.sticker.id,
 		positionX: sticker.position_x,
@@ -360,6 +431,7 @@ export async function commitStickerStoreItemPlacement(store: StickerStore) {
 		rotation: sticker.rotation,
 		resource: resourceType,
 		resourceId: model.id,
+		isCharged,
 	};
 
 	const promise = placeStickerCallback
@@ -379,9 +451,16 @@ export async function commitStickerStoreItemPlacement(store: StickerStore) {
 		}
 
 		setStickerDrawerOpen(store, false, null);
+
+		// Update our sticker charge after a successful placement.
+		if (isCharged) {
+			currentCharge.value = Math.max(0, currentCharge.value - chargeCost.value);
+		}
 	} else {
 		showErrorGrowl($gettext(`Failed to place sticker.`));
 	}
+
+	isChargingSticker.value = false;
 }
 
 /**

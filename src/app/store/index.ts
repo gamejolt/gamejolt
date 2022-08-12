@@ -18,6 +18,7 @@ import { showSuccessGrowl } from '../../_common/growls/growls.service';
 import { ModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../_common/screen/screen-service';
 import { SidebarStore } from '../../_common/sidebar/sidebar.store';
+import { StickerStore } from '../../_common/sticker/sticker-store';
 import { CommonStore } from '../../_common/store/common-store';
 import { $gettext } from '../../_common/translate/translate.service';
 import { ActivityFeedState } from '../components/activity/feed/state';
@@ -46,12 +47,14 @@ export function createAppStore({
 	sidebarStore,
 	libraryStore,
 	getQuestStore,
+	stickerStore,
 }: {
 	router: Router;
 	commonStore: CommonStore;
 	sidebarStore: SidebarStore;
 	libraryStore: LibraryStore;
 	getQuestStore: () => QuestStore;
+	stickerStore: StickerStore;
 }) {
 	const grid = ref<GridClient>();
 	let _wantsGrid = false;
@@ -622,6 +625,7 @@ export function createAppStore({
 		featuredPost,
 		tillGridBootstrapped,
 		getQuestStore,
+		stickerStore,
 	};
 
 	return c;

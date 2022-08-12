@@ -59,16 +59,16 @@ export const sheetShockSquare = new ImgSlideshow({
 
 export const sheetShockRectBL = new ImgSlideshow({
 	asset: assetShockRectBL,
-	assetWidth: 3000,
+	assetWidth: 5000,
 	assetHeight: 200,
-	frames: 3,
-	fps: 3,
+	frames: 5,
+	fps: 6,
 });
 
 export const sheetShockRectTR = new ImgSlideshow({
 	asset: assetShockRectTR,
-	assetWidth: 3000,
+	assetWidth: 5000,
 	assetHeight: 200,
-	frames: 3,
-	fps: 3,
+	frames: 5,
+	fps: 6,
 });

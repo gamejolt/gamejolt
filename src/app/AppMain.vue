@@ -8,7 +8,6 @@ import AppErrorPage from '../_common/error/page/page.vue';
 import { createAppPromotionStore } from '../_common/mobile-app/store';
 import Onboarding from '../_common/onboarding/onboarding.service';
 import AppCommonShell from '../_common/shell/AppCommonShell.vue';
-import { createStickerStore } from '../_common/sticker/sticker-store';
 import { useCommonStore } from '../_common/store/common-store';
 import { loadCurrentLanguage } from '../_common/translate/translate.service';
 import { ChatStore, ChatStoreKey, clearChat, loadChat } from './components/chat/chat-store';
@@ -21,7 +20,6 @@ const { bootstrap, loadGrid, loadNotificationState, clear, clearGrid, clearNotif
 const { user } = useCommonStore();
 
 createAdsController();
-createStickerStore();
 createAppPromotionStore();
 provide(CommentStoreManagerKey, reactive(new CommentStoreManager()));
 

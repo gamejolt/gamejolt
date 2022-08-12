@@ -12,13 +12,15 @@ import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
+import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import AppStickerControlsOverlay from '../../../../../_common/sticker/AppStickerControlsOverlay.vue';
 import AppStickerLayer from '../../../../../_common/sticker/layer/AppStickerLayer.vue';
 import { canPlaceStickerOnFiresidePost } from '../../../../../_common/sticker/placement/placement.model';
-import AppStickerStack from '../../../../../_common/sticker/stack/AppStickerStack.vue';
+import AppStickerReactions from '../../../../../_common/sticker/reactions/AppStickerReactions.vue';
+import AppStickerSupporters from '../../../../../_common/sticker/supporters/AppStickerSupporters.vue';
 import {
 	createStickerTargetController,
 	provideStickerTargerController,
@@ -60,7 +62,7 @@ const eventItem = computed(() => item.value.feedItem as EventItem);
 const post = computed(() => eventItem.value.action as FiresidePost);
 
 const stickerTargetController = createStickerTargetController(post.value, {
-	isCreator: computed(() => user.value.is_creator),
+	isCreator: computed(() => user.value.is_creator === true),
 });
 
 provideStickerTargerController(stickerTargetController);
@@ -304,21 +306,33 @@ function onPostUnpinned(item: EventItem) {
 
 					<AppStickerControlsOverlay :hide="!!post.background">
 						<div
-							v-if="post.sticker_counts.length"
+							v-if="post.sticker_counts.length || post.supporters.length"
 							class="-reactions-container -controls-buffer"
 							@click.stop
 						>
-							<AppStickerStack
+							<AppStickerSupporters
+								v-if="post.supporters.length"
+								class="-supporters"
+								:limit="
+									Screen.isDesktop
+										? 8
+										: Math.max(1, Math.min(8, Math.round(Screen.width / 100)))
+								"
+								:supporters="post.supporters"
+								:style="{
+									marginRight: post.sticker_counts.length ? '12px' : undefined,
+								}"
+							/>
+
+							<AppStickerReactions
+								v-if="post.sticker_counts.length"
+								class="-sticker-reactions"
 								:controller="stickerTargetController"
-								:max-count="10"
-								disable-popcorn
-								show-overflow-count
-								card
-								:base-size="24"
 								@show="scrollToStickers"
 							/>
-							<AppSpacer vertical :scale="2" />
 						</div>
+
+						<AppSpacer vertical :scale="2" />
 
 						<AppScrollScroller
 							v-if="shouldShowCommunities"

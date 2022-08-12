@@ -35,6 +35,7 @@ export class Comment extends Model {
 	is_pinned!: boolean;
 	comment_content!: string;
 	sticker_counts: StickerCount[] = [];
+	supporters: User[] = [];
 
 	isFollowPending = false;
 
@@ -59,6 +60,10 @@ export class Comment extends Model {
 
 		if (data.sticker_counts) {
 			this.sticker_counts = constructStickerCounts(data.sticker_counts);
+		}
+
+		if (data.supporters) {
+			this.supporters = User.populate(data.supporters);
 		}
 	}
 
