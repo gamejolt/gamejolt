@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import { computed, CSSProperties } from 'vue';
 import { illChargeOrbEmpty } from '../../../app/img/ill/illustrations';
+import AppAnimChargeOrb from '../../animation/AppAnimChargeOrb.vue';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
-import AppAnimSlideshow from '../../animation/AppAnimSlideshow.vue';
-import { sheetChargeOrb } from '../../animation/slideshow/sheets';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppTranslate from '../../translate/AppTranslate.vue';
@@ -53,7 +52,7 @@ function onClick() {
 						draggable="false"
 						alt=""
 					/>
-					<AppAnimSlideshow v-else :sheet="sheetChargeOrb" />
+					<AppAnimChargeOrb v-else />
 				</AppAspectRatio>
 			</AppAnimElectricity>
 		</div>

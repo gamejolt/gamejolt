@@ -14,27 +14,44 @@ const props = defineProps({
 	overlay: {
 		type: Boolean,
 	},
+	pause: {
+		type: Boolean,
+	},
 });
 
-const { sheet } = toRefs(props);
+const { sheet, overlay, pause } = toRefs(props);
 
 let timer: NodeJS.Timer | null = null;
 
 const root = ref<HTMLDivElement>();
 
 const frame = ref(0);
-const offset = computed(() => (frame.value / sheet.value.frames) * 100);
+
+const offset = computed(() => {
+	const { frames } = sheet.value;
+
+	return (frame.value / frames) * 100;
+});
 
 const size = ref({ width: 200, height: 200 });
 
-function initAnimator() {
+function initAnimator(fromStart = true) {
+	if (pause.value) {
+		return;
+	}
+
 	if (timer) {
 		clearInterval(timer);
-		frame.value = 0;
+
+		if (fromStart) {
+			frame.value = 0;
+		}
 	}
 
 	timer = setInterval(() => {
-		if (frame.value + 1 >= sheet.value.frames) {
+		const { frames, blankFrames } = sheet.value;
+
+		if (frame.value + 1 >= frames + blankFrames) {
 			frame.value = 0;
 		} else {
 			++frame.value;
@@ -42,7 +59,18 @@ function initAnimator() {
 	}, 1_000 / sheet.value.fps);
 }
 
-watch(sheet, initAnimator);
+watch(sheet, () => initAnimator(true));
+
+watch(pause, shouldPause => {
+	if (shouldPause) {
+		if (timer) {
+			clearInterval(timer);
+			timer = null;
+		}
+	} else if (!timer) {
+		initAnimator(false);
+	}
+});
 
 onMounted(() => {
 	onDimensionsChanged();

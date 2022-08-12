@@ -1,4 +1,5 @@
-import assetChargeOrb from './sheets/charge-orb.png';
+import assetChargeOrbBottom from './sheets/charge-orb-bottom.png';
+import assetChargeOrbTop from './sheets/charge-orb-top.png';
 import assetFireplace from './sheets/fireplace.png';
 import assetShockRectBL from './sheets/shock-rect-bl.png';
 import assetShockRectTR from './sheets/shock-rect-tr.png';
@@ -10,6 +11,7 @@ interface ImgSlideshowOptions {
 	readonly assetHeight: number;
 	readonly frames: number;
 	readonly fps: number;
+	readonly blankFrames?: number;
 }
 
 export class ImgSlideshow {
@@ -21,6 +23,10 @@ export class ImgSlideshow {
 
 	get frames() {
 		return this._options.frames;
+	}
+
+	get blankFrames() {
+		return this._options.blankFrames || 0;
 	}
 
 	get fps() {
@@ -41,22 +47,29 @@ export const sheetFireplace = new ImgSlideshow({
 	fps: 8,
 });
 
-// TODO(charged-stickers) use new split assets
-export const sheetChargeOrb = new ImgSlideshow({
-	asset: assetChargeOrb,
+export const sheetChargeOrbBottom = new ImgSlideshow({
+	asset: assetChargeOrbBottom,
+	assetWidth: 2500,
+	assetHeight: 500,
+	frames: 5,
+	fps: 4,
+});
+
+export const sheetChargeOrbTop = new ImgSlideshow({
+	asset: assetChargeOrbTop,
+	assetWidth: 2000,
+	assetHeight: 500,
+	frames: 4,
+	blankFrames: 2,
+	fps: 6,
+});
+
+export const sheetShockSquare = new ImgSlideshow({
+	asset: assetShockSquare,
 	assetWidth: 2500,
 	assetHeight: 500,
 	frames: 5,
 	fps: 6,
-});
-
-// TODO(charged-stickers) use new asset
-export const sheetShockSquare = new ImgSlideshow({
-	asset: assetShockSquare,
-	assetWidth: 1500,
-	assetHeight: 500,
-	frames: 3,
-	fps: 3,
 });
 
 export const sheetShockRectBL = new ImgSlideshow({

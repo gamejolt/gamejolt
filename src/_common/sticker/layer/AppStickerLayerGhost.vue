@@ -84,6 +84,7 @@ function updateGhostPosition(pos: { left: number; top: number }) {
 			class="-img-outer"
 			shock-anim="square"
 			:disabled="!isChargingSticker"
+			ignore-asset-padding
 			@mousedown="onStartDrag"
 			@touchstart="onStartDrag"
 		>

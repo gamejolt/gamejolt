@@ -4,11 +4,17 @@ import AppLoadingFade from '../../../_common/loading/AppLoadingFade.vue';
 import AppQuestLogItem from '../../../_common/quest/AppQuestLogItem.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import { illChargeOrbEmpty } from '../../img/ill/illustrations';
 import { useQuestStore } from '../../store/quest';
 import AppQuestTimer from './AppQuestTimer.vue';
 </script>
 
 <script lang="ts" setup>
+import AppAnimChargeOrb from '../../../_common/animation/AppAnimChargeOrb.vue';
+import AppAnimElectricity from '../../../_common/animation/AppAnimElectricity.vue';
+import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
+import { StickerChargeModal } from '../../../_common/sticker/charge/modal/modal.service';
+import { useStickerStore } from '../../../_common/sticker/sticker-store';
 const props = defineProps({
 	/**
 	 * Prevents the quest items from being clicked when we determine them to be
@@ -32,7 +38,7 @@ const props = defineProps({
 	},
 });
 
-const { disableOnExpiry, singleRow, forceLoading } = toRefs(props);
+const { disableOnExpiry, singleRow, activeQuestId, forceLoading } = toRefs(props);
 
 const {
 	dailyQuests,
@@ -42,9 +48,27 @@ const {
 	dailyResetDate,
 } = useQuestStore();
 
+const { currentCharge, chargeLimit } = useStickerStore();
+
 const disableItems = computed(() => disableOnExpiry.value && isDailyStale.value);
 const isLoading = computed(() => isQuestStoreLoading.value || forceLoading.value);
 const hasQuests = computed(() => displayQuests.value.length > 0);
+
+const displayCharge = computed(() => {
+	const current = Math.min(currentCharge.value, chargeLimit.value);
+
+	return `${current}/${chargeLimit.value}`;
+});
+
+const chargeOrbStyle = computed(() => {
+	if (!currentCharge.value) {
+		return 'empty';
+	} else if (currentCharge.value < chargeLimit.value) {
+		return 'partial';
+	} else {
+		return 'overcharge';
+	}
+});
 
 const displayQuests = computed(() => {
 	const limit = singleRow.value ? 3 : undefined;
@@ -65,6 +89,10 @@ function onListClick() {
 
 	fetchDailyQuests();
 }
+
+function onClickCharge() {
+	StickerChargeModal.show();
+}
 </script>
 
 <template>
@@ -76,7 +104,38 @@ function onListClick() {
 				</h4>
 			</slot>
 
-			<span class="help-inline">
+			<span class="help-inline -info">
+				<span
+					class="-charge-orb-container"
+					:class="{
+						'-overcharge': chargeOrbStyle === 'overcharge',
+					}"
+					:style="{ marginRight: dailyResetDate ? '12px' : undefined }"
+					@click="onClickCharge"
+				>
+					<div class="-charge-orb">
+						<AppIllustration
+							v-if="chargeOrbStyle === 'empty'"
+							class="-charge-orb-img"
+							:asset="illChargeOrbEmpty"
+							:style="{
+								opacity: 0.3,
+							}"
+						/>
+						<AppAnimElectricity
+							v-else
+							shock-anim="square"
+							:disabled="chargeOrbStyle !== 'overcharge'"
+						>
+							<AppAnimChargeOrb />
+						</AppAnimElectricity>
+					</div>
+
+					<span>
+						{{ ' ' + displayCharge }}
+					</span>
+				</span>
+
 				<AppQuestTimer v-if="dailyResetDate" :date="dailyResetDate" :ended="isDailyStale">
 					<template #ended>
 						<a class="link-unstyled" @click="fetchDailyQuests">
@@ -145,4 +204,27 @@ $-placeholder-height = 150px
 
 .-no-quests
 	min-height: $-placeholder-height
+
+.-info
+	white-space: nowrap
+
+.-charge-orb-container
+	cursor: pointer
+
+	&.-overcharge
+		color: var(--theme-fg)
+
+.-charge-orb
+	flex: none
+	width: $font-size-small
+	height: @width
+	position: relative
+	display: inline-block
+
+.-charge-orb-img
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
 </style>
