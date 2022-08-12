@@ -139,9 +139,6 @@ const debounceDimensionsChanged = debounce(onDimensionsChanged, 500);
 				:style="getStyleForAsset(sheet)"
 				class="-overlay"
 			>
-				<!-- TODO(charged-stickers) different animation component that
-				allows more customization, e.g. custom frame times, random frame
-				selection and timing, etc. -->
 				<AppAnimSlideshow :sheet="sheet" />
 			</div>
 		</template>
