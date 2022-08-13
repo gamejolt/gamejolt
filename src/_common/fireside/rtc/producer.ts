@@ -8,10 +8,14 @@ import { computed, markRaw, ref, shallowRef } from 'vue';
 import { MediaDeviceService } from '../../agora/media-device.service';
 import { Api } from '../../api/api.service';
 import type { ASGController } from '../../client/asg/asg';
-import { startDesktopAudioCapture } from '../../client/safe-exports';
+import {
+	isDesktopAudioCaptureSupported,
+	startDesktopAudioCapture,
+} from '../../client/safe-exports';
 import { importNoSSR } from '../../code-splitting';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { Navigate } from '../../navigate/navigate.service';
+import { SettingStreamProducerShouldStreamDesktopAudio } from '../../settings/settings.service';
 import { $gettext, Translate } from '../../translate/translate.service';
 import {
 	FiresideRTCChannel,
@@ -609,7 +613,9 @@ function _updateDesktopAudioTrack(producer: FiresideRTCProducer) {
 					rtc.log(`Creating desktop audio track from ASG.`);
 
 					const generator = new MediaStreamTrackGenerator({ kind: 'audio' });
-					streamingASG.value = await startDesktopAudioCapture(generator.writable);
+					streamingASG.value = await startDesktopAudioCapture(generator.writable, {
+						onStartCaptureFailed: () => _handleAsgStartCaptureFailure(producer),
+					});
 
 					track = AgoraRTC.createCustomAudioTrack({
 						mediaStreamTrack: generator,
@@ -658,6 +664,33 @@ function _updateDesktopAudioTrack(producer: FiresideRTCProducer) {
 
 		streamingDesktopAudioDeviceId.value = deviceId;
 	});
+}
+
+function _handleAsgStartCaptureFailure(producer: FiresideRTCProducer) {
+	// Unset the device.
+	setSelectedDesktopAudioStreaming(producer, {
+		shouldStream: false,
+		deviceId: PRODUCER_UNSET_DEVICE,
+	});
+
+	// Disable it in settings so it doesn't try every time the stream setup form opens up.
+	SettingStreamProducerShouldStreamDesktopAudio.set(false);
+
+	// TODO: trigger update to the fireside setup form toggle for desktop audio.
+
+	// Show error message.
+	let errMsg: string;
+	if (isDesktopAudioCaptureSupported()) {
+		errMsg = $gettext(
+			`Try again later. If the error continues, please send us a system report.`
+		);
+	} else {
+		errMsg = $gettext(
+			`Desktop audio capture is only supported on Windows 11 and Windows 10 build 19043 and up.`
+		);
+	}
+
+	showErrorGrowl(errMsg, $gettext(`Cannot capture desktop audio`));
 }
 
 export function setSelectedGroupAudioDeviceId(producer: FiresideRTCProducer, newSpeakerId: string) {

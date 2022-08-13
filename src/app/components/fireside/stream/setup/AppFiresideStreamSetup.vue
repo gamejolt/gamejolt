@@ -345,6 +345,10 @@ watch(isInvalidConfig, async () => {
 	}
 });
 
+watch(localProducer.shouldStreamDesktopAudio, shouldStreamDesktopAudio => {
+	form.formModel.streamDesktopAudio = shouldStreamDesktopAudio;
+});
+
 watch(
 	() => form.formModel.tempSelectedMicDeviceId,
 	() => {

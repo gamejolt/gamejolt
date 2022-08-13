@@ -1,8 +1,12 @@
 import { computed, markRaw, ref } from 'vue';
+import { getDeviceArch, getDeviceOS } from '../../device/device.service';
 const { EventEmitter } = require('events') as typeof import('events');
 
-const asgNative = require('asg-prebuilt');
+const os = require('os') as typeof import('os');
 const process = require('process') as typeof import('process');
+
+// Only attempt to require asg-prebuilt on Windows.
+const asgNative = getDeviceOS() === 'windows' ? require('asg-prebuilt') : null;
 
 const SampleRate = 44100;
 const NumChannels = 1;
@@ -12,7 +16,39 @@ export type ASGControllerStatus = 'starting' | 'started' | 'stopping' | 'stopped
 
 export type ASGController = Awaited<ReturnType<typeof startDesktopAudioCapture>>;
 
-export async function startDesktopAudioCapture(writableStream: WritableStream<AudioData>) {
+export function isDesktopAudioCaptureSupported() {
+	if (!GJ_IS_DESKTOP_APP) {
+		return false;
+	}
+
+	if (getDeviceOS() !== 'windows' || getDeviceArch() !== '64') {
+		return false;
+	}
+
+	const releaseInfo = os.release().split('.');
+	if (releaseInfo.length < 2) {
+		return false;
+	}
+
+	let winVer: number | null = null;
+	let buildNum: number | null = null;
+
+	try {
+		winVer = parseInt(releaseInfo[0]);
+		buildNum = parseInt(releaseInfo[releaseInfo.length - 1]);
+	} catch (e) {}
+
+	if (winVer === null || buildNum === null) {
+		return false;
+	}
+
+	return winVer > 10 || (winVer == 10 && buildNum >= 19043);
+}
+
+export async function startDesktopAudioCapture(
+	writableStream: WritableStream<AudioData>,
+	{ onStartCaptureFailed }: { onStartCaptureFailed: () => void }
+) {
 	// We get the parent process's pid since it would also contain all the child
 	// pids under it then.
 	const appPid = process.ppid;
@@ -22,9 +58,13 @@ export async function startDesktopAudioCapture(writableStream: WritableStream<Au
 	const uid = ref('');
 	const status = ref<ASGControllerStatus>('starting');
 
-	let _stopResolver: () => void;
-	const _stopPromise = new Promise<void>(resolve => {
-		_stopResolver = resolve;
+	// Promise that is resolved after the capture has stopped, and the asg
+	// instance has cleaned up. At that point it should be safe to start another
+	// capture.
+	let _cleanupResolver: () => void;
+	let _cleanupCalled = false;
+	const _cleanupPromise = new Promise<void>(resolve => {
+		_cleanupResolver = resolve;
 	});
 
 	emitter
@@ -37,12 +77,21 @@ export async function startDesktopAudioCapture(writableStream: WritableStream<Au
 			if (text === 'end_recording') {
 				// ASG takes a literal second to stop, so we have to mimic it
 				// here. Ugh.
-				setTimeout(() => _stopResolver(), 1_000);
+				setTimeout(() => _cleanup(), 1_000);
 			}
 		})
-		.on('error', (text: string) => {
-			console.log('Caught error: ' + text);
-			// TODO abort the stream and dispose of resources
+		.on('error', (err: string) => {
+			console.log('Caught error: ' + err);
+
+			// if start_capturer_failed was emitted, asg will stop itself, and
+			// eventually call end_recording. we should transition into stopping
+			// status to reflect that.
+			if (err === 'start_capturer_failed') {
+				status.value = 'stopping';
+				// This allows the caller to call .stop() to figure out when asg
+				// has fully stopped and is ready to be activated again.
+				onStartCaptureFailed();
+			}
 		})
 		.on('data', (data: Float32Array, timestamp: number) => {
 			try {
@@ -70,28 +119,40 @@ export async function startDesktopAudioCapture(writableStream: WritableStream<Au
 		status.value = 'started';
 	} catch (error) {
 		console.error('Got error while starting ASG capture', error);
+		status.value = 'stopping';
 		await _cleanup();
 	}
 
 	async function stop() {
-		if (status.value === 'stopping' || status.value === 'stopped') {
-			return;
+		if (status.value === 'stopped' || status.value === 'stopping') {
+			return _cleanupPromise;
 		}
 
 		status.value = 'stopping';
 		asgNative.endCapture(uid.value);
-		status.value = 'stopped';
 
-		// We need to wait for ASG to tell us that it's fully finished before
-		// cleaning up and releasing control back to the caller. This will
-		// happen through the event emitter.
-		await _stopPromise;
-		await _cleanup();
+		await _cleanupPromise;
 	}
 
+	/**
+	 * Finalizes the asg instance.
+	 *
+	 * This MUST be called only when asg native is ready to start capturing again.
+	 *
+	 * - Removes all event listeners.
+	 * - Closes the generator's writable stream.
+	 * - Sets the status of the instance to full stopped.
+	 */
 	async function _cleanup() {
+		if (_cleanupCalled) {
+			return;
+		}
+		_cleanupCalled = true;
+
 		emitter.removeAllListeners();
 		await writer.close();
+		status.value = 'stopped';
+		_cleanupResolver();
 	}
 
 	return {

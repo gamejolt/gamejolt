@@ -7,7 +7,10 @@
 
 import { defineAsyncComponent } from 'vue';
 import { getDeviceOS } from '../device/device.service';
-import type { startDesktopAudioCapture as startDesktopAudioCaptureType } from './asg/asg';
+import type {
+	isDesktopAudioCaptureSupported as isDesktopAudioCaptureSupportedType,
+	startDesktopAudioCapture as startDesktopAudioCaptureType,
+} from './asg/asg';
 import type { ClientAutoStart as ClientAutoStartType } from './autostart/autostart.service';
 import type AppClientBaseType from './base/base.vue';
 import type { Client as ClientType } from './client.service';
@@ -20,6 +23,7 @@ export let AppClientHistoryNavigator: typeof AppClientHistoryNavigatorType = App
 export let AppClientBase: typeof AppClientBaseType = AppNoopLoader as any;
 
 // ASG
+export let isDesktopAudioCaptureSupported: typeof isDesktopAudioCaptureSupportedType = null as any;
 export let startDesktopAudioCapture: typeof startDesktopAudioCaptureType = null as any;
 
 // Misc
@@ -39,8 +43,9 @@ export async function initSafeExportsForClient() {
 	AppClientBase = defineAsyncComponent(async () => (await import('./base/base.vue')).default);
 
 	// ASG
+	const asg = await import('./asg/asg');
+	isDesktopAudioCaptureSupported = asg.isDesktopAudioCaptureSupported;
 	if (getDeviceOS() === 'windows') {
-		const asg = await import('./asg/asg');
 		startDesktopAudioCapture = asg.startDesktopAudioCapture;
 	}
 
