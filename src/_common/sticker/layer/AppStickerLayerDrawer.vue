@@ -36,7 +36,6 @@ const {
 	placedItem,
 	canPlaceChargedStickerOnResource,
 	isChargingSticker,
-	isLayerOrTargetCreatorResource,
 } = stickerStore;
 
 const _drawerPadding = 8;
@@ -371,7 +370,8 @@ function onContentDimensionsChanged() {
 					}"
 				>
 					<AppButton block primary :solid="isChargingSticker" @click="onClickPlace()">
-						<AppTranslate>Place sticker</AppTranslate>
+						<AppTranslate v-if="isChargingSticker">Place charged sticker</AppTranslate>
+						<AppTranslate v-else>Place sticker</AppTranslate>
 					</AppButton>
 				</AppAnimElectricity>
 
