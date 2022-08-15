@@ -10,11 +10,12 @@ import { HistoryTick } from '../../_common/history-tick/history-tick-service';
 import AppJolticon from '../../_common/jolticon/AppJolticon.vue';
 import { Sellable } from '../../_common/sellable/sellable.model';
 import { useCommonStore } from '../../_common/store/common-store';
-import { AppTooltip as vAppTooltip } from '../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../_common/tooltip/tooltip-directive';
 import AppFadeCollapse from '../components/AppFadeCollapse.vue';
-import AppModal from '../components/AppModal.vue';
+import AppWidgetModal from '../components/AppWidgetModal.vue';
 import { useWidgetPackageStore } from '../store/index';
 import FormPayment from './forms/FormPayment.vue';
+import { Jolticon } from '../../_common/jolticon/AppJolticon.vue';
 
 const store = useWidgetPackageStore();
 const { user } = useCommonStore();
@@ -119,7 +120,7 @@ async function buildClick(build?: GameBuild) {
 		<div class="-controls">
 			<AppButton v-if="hasBrowserBuild" primary @click="buildClick(browserBuild)">
 				Play
-				<AppJolticon class="jolticon-addon" :icon="showcasedBrowserIcon" />
+				<AppJolticon class="jolticon-addon" :icon="(showcasedBrowserIcon as Jolticon)" />
 			</AppButton>
 
 			<AppButton
@@ -130,7 +131,7 @@ async function buildClick(build?: GameBuild) {
 				Download
 				<small v-if="platformSupportInfo[showcasedOs].arch === '64'"> 64-bit </small>
 				<small>({{ formatFilesize(downloadableBuild.primary_file.filesize) }})</small>
-				<AppJolticon class="jolticon-addon" :icon="showcasedOsIcon" />
+				<AppJolticon class="jolticon-addon" :icon="(showcasedOsIcon as Jolticon)" />
 			</AppButton>
 
 			<!--
@@ -153,13 +154,13 @@ async function buildClick(build?: GameBuild) {
 		</div>
 
 		<transition>
-			<AppModal v-if="isShowingDescription" @close="isShowingDescription = false">
+			<AppWidgetModal v-if="isShowingDescription" @close="isShowingDescription = false">
 				{{ gamePackage.description }}
-			</AppModal>
+			</AppWidgetModal>
 		</transition>
 
 		<transition>
-			<AppModal v-if="isShowingMoreOptions" @close="isShowingMoreOptions = false">
+			<AppWidgetModal v-if="isShowingMoreOptions" @close="isShowingMoreOptions = false">
 				<div class="row">
 					<div class="col-xs-6 col-centered">
 						<div
@@ -201,11 +202,11 @@ async function buildClick(build?: GameBuild) {
 						</div>
 					</div>
 				</div>
-			</AppModal>
+			</AppWidgetModal>
 		</transition>
 
 		<transition>
-			<AppModal v-if="isShowingPayment" @close="isShowingPayment = false">
+			<AppWidgetModal v-if="isShowingPayment" @close="isShowingPayment = false">
 				<p>
 					<span v-if="!pricing.amount">
 						Show {{ developer.display_name }} some
@@ -223,7 +224,7 @@ async function buildClick(build?: GameBuild) {
 				<a class="link-muted" @click="buildClick(clickedBuild)">
 					No thanks, take me to the game.
 				</a>
-			</AppModal>
+			</AppWidgetModal>
 		</transition>
 	</div>
 </template>

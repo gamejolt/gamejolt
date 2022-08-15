@@ -4,7 +4,7 @@ import { RouterView } from 'vue-router';
 import AppButton from '../_common/button/AppButton.vue';
 import { AppClientBase, ClientHistoryNavigator } from '../_common/client/safe-exports';
 import { Connection } from '../_common/connection/connection-service';
-import AppContactLink from '../_common/contact-link/contact-link.vue';
+import AppContactLink from '../_common/contact-link/AppContactLink.vue';
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
 import { Environment } from '../_common/environment/environment.service';
 import AppErrorPage from '../_common/error/page/page.vue';
@@ -51,7 +51,9 @@ function navigateBack() {
 				</AppErrorPage>
 			</div>
 
-			<AppClientBase v-if="GJ_IS_DESKTOP_APP" />
+			<template v-if="GJ_IS_DESKTOP_APP">
+				<AppClientBase />
+			</template>
 		</div>
 
 		<footer id="footer">

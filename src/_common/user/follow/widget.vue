@@ -2,18 +2,18 @@
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { trackUserFollow, UserFollowLocation } from '../../analytics/analytics.service';
-import { AppAuthRequired } from '../../auth/auth-required-directive';
+import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import { formatNumber } from '../../filters/number';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { ModalConfirm } from '../../modal/confirm/confirm-service';
 import { useCommonStore } from '../../store/common-store';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { followUser, unfollowUser, User } from '../user.model';
 
 @Options({
 	directives: {
-		AppAuthRequired,
-		AppTooltip,
+		AppAuthRequired: vAppAuthRequired,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppUserFollowWidget extends Vue {
@@ -37,6 +37,9 @@ export default class AppUserFollowWidget extends Vue {
 
 	@Prop({ type: Boolean, required: false, default: false })
 	hideCount!: boolean;
+
+	@Prop({ type: Boolean, required: false, default: false })
+	disabled!: boolean;
 
 	commonStore = setup(() => useCommonStore());
 
@@ -68,7 +71,7 @@ export default class AppUserFollowWidget extends Vue {
 
 	get tooltip() {
 		return !this.user.is_following
-			? this.$gettext(`Follow this user to get their games, videos, and posts in your feed!`)
+			? this.$gettext(`Follow this user to get their posts in your feed!`)
 			: undefined;
 	}
 
@@ -136,6 +139,7 @@ export default class AppUserFollowWidget extends Vue {
 		:sm="sm"
 		:solid="user.is_following"
 		:badge="badge"
+		:disabled="disabled"
 		@click.stop="onClick"
 	>
 		<template v-if="!circle">

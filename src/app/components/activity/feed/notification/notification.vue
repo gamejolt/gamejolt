@@ -1,22 +1,23 @@
 <script lang="ts">
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
 import '../../../../../_common/comment/comment.styl';
-import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import {
 	CommunityUserNotification,
 	NotificationType,
 } from '../../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
-import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { Mention } from '../../../../../_common/mention/mention.model';
 import { Notification } from '../../../../../_common/notification/notification-model';
 import { NotificationText } from '../../../../../_common/notification/notification-text.service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { BaseTrophy } from '../../../../../_common/trophy/base-trophy.model';
-import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
+import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import { User } from '../../../../../_common/user/user.model';
@@ -33,9 +34,10 @@ import { ActivityFeedKey, ActivityFeedView } from '../view';
 		AppUserAvatar,
 		AppContentViewer,
 		AppCommunityThumbnailImg,
+		AppJolticon,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppActivityFeedNotification extends Vue {
@@ -92,6 +94,7 @@ export default class AppActivityFeedNotification extends Vue {
 			Notification.TYPE_COMMENT_ADD_OBJECT_OWNER,
 			Notification.TYPE_POST_FEATURED_IN_COMMUNITY,
 			Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY,
+			Notification.TYPE_QUEST_NOTIFICATION,
 			Notification.TYPE_GAME_TROPHY_ACHIEVED,
 			Notification.TYPE_SITE_TROPHY_ACHIEVED,
 		].includes(this.notification.type);
@@ -108,6 +111,10 @@ export default class AppActivityFeedNotification extends Vue {
 
 	get fromIsUser() {
 		return this.notification.from_model instanceof User;
+	}
+
+	get showTime() {
+		return this.notification.type !== Notification.TYPE_QUEST_NOTIFICATION;
 	}
 
 	go() {
@@ -138,7 +145,6 @@ export default class AppActivityFeedNotification extends Vue {
 								>
 									<div class="-community-thumb">
 										<AppCommunityThumbnailImg
-											class="img-circle"
 											:community="notification.from_model"
 										/>
 									</div>
@@ -161,7 +167,6 @@ export default class AppActivityFeedNotification extends Vue {
 								>
 									<div class="-community-thumb">
 										<AppCommunityThumbnailImg
-											class="img-circle"
 											:community="notification.action_model.community"
 										/>
 									</div>
@@ -175,18 +180,25 @@ export default class AppActivityFeedNotification extends Vue {
 								>
 									<img class="img-circle -trophy-img" :src="trophyImg" />
 								</template>
+								<template
+									v-else-if="
+										notification.type === Notification.TYPE_QUEST_NOTIFICATION
+									"
+								>
+									<div class="-avatar-icon">
+										<AppJolticon icon="quest-log" />
+									</div>
+								</template>
 							</template>
 
 							<div class="-container">
 								<div class="-main">
 									<div
-										class="
-											timeline-list-item-title timeline-list-item-title-small
-										"
+										class="timeline-list-item-title timeline-list-item-title-small"
 										v-html="titleText"
 									/>
 
-									<div class="timeline-list-item-meta">
+									<div v-if="showTime" class="timeline-list-item-meta">
 										<AppTimeAgo :date="notification.added_on" />
 									</div>
 
@@ -256,6 +268,15 @@ export default class AppActivityFeedNotification extends Vue {
 														notification.action_model.trophy.description
 													}}
 												</span>
+												<span
+													v-else-if="
+														notification.type ===
+														Notification.TYPE_QUEST_NOTIFICATION
+													"
+													class="tiny text-muted"
+												>
+													{{ notification.action_model.subtitle }}
+												</span>
 											</AppFadeCollapse>
 										</div>
 									</div>
@@ -268,10 +289,7 @@ export default class AppActivityFeedNotification extends Vue {
 				</div>
 				<div v-if="isNew" class="-actions">
 					<a @click.stop.prevent="onMarkRead">
-						<AppJolticon
-							v-app-tooltip="$gettext(`Mark as Read`)"
-							icon="radio-circle"
-						/>
+						<AppJolticon v-app-tooltip="$gettext(`Mark as Read`)" icon="radio-circle" />
 					</a>
 				</div>
 			</div>
@@ -318,12 +336,23 @@ export default class AppActivityFeedNotification extends Vue {
 	top: 0
 	left: 0
 
-	> img
-		width: 100%
-		height: 100%
-
 .-trophy-img
 	display: block
 	width: 100%
 	height: 100%
+
+.-avatar-icon
+	position: absolute
+	width: 100%
+	height: 100%
+	top: 0
+	left: 0
+	display: flex
+	justify-content: center
+	align-items: center
+
+	.jolticon
+		margin: 0
+		padding: 0
+		font-size: 24px
 </style>

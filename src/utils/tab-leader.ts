@@ -4,6 +4,7 @@ import { markRaw } from 'vue';
 export interface TabLeaderConstructor {
 	new (name: string): TabLeaderInterface;
 }
+
 export interface TabLeaderInterface {
 	isLeader: boolean;
 	init: () => void;
@@ -33,7 +34,7 @@ const BrowserTabLeader: TabLeaderConstructor = class BrowserTabLeader implements
 	 * This function begins the process of attemping to become the leader. All
 	 * tabs need this process to be active.
 	 */
-	public init() {
+	init() {
 		// Can only be used when not dead yet.
 		if (this.isDead) {
 			throw new Error('Tried using dead tab leader.');
@@ -45,7 +46,7 @@ const BrowserTabLeader: TabLeaderConstructor = class BrowserTabLeader implements
 		this.elector.awaitLeadership().catch(() => this.init());
 	}
 
-	public async kill() {
+	async kill() {
 		this.isDead = true;
 
 		await this.channel.close();
@@ -56,12 +57,10 @@ const BrowserTabLeader: TabLeaderConstructor = class BrowserTabLeader implements
 const ClientTabLeader: TabLeaderConstructor = class ClientTabLeader implements TabLeaderInterface {
 	readonly isLeader = true;
 
-	constructor(name: string) {}
+	constructor(_name: string) {}
 
 	init() {}
-	kill() {
-		return Promise.resolve();
-	}
+	async kill() {}
 };
 
 export const TabLeader = GJ_IS_DESKTOP_APP ? ClientTabLeader : BrowserTabLeader;

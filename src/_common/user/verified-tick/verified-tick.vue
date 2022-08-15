@@ -1,12 +1,12 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import type { ChatUser } from '../../../app/components/chat/user';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { User } from '../user.model';
 
 @Options({
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppUserVerifiedTick extends Vue {

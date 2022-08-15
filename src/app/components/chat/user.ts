@@ -1,3 +1,4 @@
+import { FiresideRTCHost } from '../../../_common/fireside/rtc/rtc';
 import { CHAT_ROLES } from './role';
 
 export class ChatUser {
@@ -15,11 +16,24 @@ export class ChatUser {
 
 	role: CHAT_ROLES | null = null;
 
-	constructor(data: Partial<ChatUser> = {}) {
+	firesideHost: FiresideRTCHost | null = null;
+
+	constructor(data: any = {}) {
 		Object.assign(this, data);
 	}
 
 	get url() {
 		return `/@${this.username}`;
+	}
+
+	get isStaff() {
+		return this.permission_level > 0;
+	}
+
+	get isLive() {
+		if (!this.firesideHost || this.firesideHost.needsPermissionToView) {
+			return false;
+		}
+		return this.firesideHost.isLive;
 	}
 }

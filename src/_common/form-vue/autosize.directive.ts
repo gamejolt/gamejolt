@@ -10,7 +10,7 @@ export interface AutosizeBootstrap {
 
 type AutosizeValue = (options: AutosizeBootstrap) => void;
 
-export const AppFormAutosize: Directive<HTMLElement, AutosizeValue | void> = {
+export const vAppFormAutosize: Directive<HTMLElement, AutosizeValue | void> = {
 	mounted(el, binding) {
 		autosize(el);
 

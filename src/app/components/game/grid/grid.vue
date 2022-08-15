@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { useAdsController } from '../../../../_common/ad/ad-store';
-import AppAdWidget from '../../../../_common/ad/widget/widget.vue';
+import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/AppGameThumbnail.vue';

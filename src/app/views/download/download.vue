@@ -1,31 +1,28 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
-import { Inject, Options } from 'vue-property-decorator';
-import {
-	AppPromotionStore,
-	AppPromotionStoreKey,
-	setAppPromotionCohort,
-} from '../../../utils/mobile-app';
+import { Options } from 'vue-property-decorator';
 import { sleep } from '../../../utils/utils';
+import { shallowSetup } from '../../../utils/vue';
 import {
 	AdSettingsContainer,
 	releasePageAdsSettings,
 	setPageAdsSettings,
 	useAdsController,
 } from '../../../_common/ad/ad-store';
-import AppAdWidget from '../../../_common/ad/widget/widget.vue';
+import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../_common/api/api.service';
 import { GameBuild } from '../../../_common/game/build/build.model';
 import { Game } from '../../../_common/game/game.model';
 import { GameSong } from '../../../_common/game/song/song.model';
 import AppGameThumbnail from '../../../_common/game/thumbnail/AppGameThumbnail.vue';
 import { HistoryTick } from '../../../_common/history-tick/history-tick-service';
-import AppLoading from '../../../_common/loading/loading.vue';
+import AppLoading from '../../../_common/loading/AppLoading.vue';
+import { setAppPromotionCohort, useAppPromotionStore } from '../../../_common/mobile-app/store';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { PayloadError } from '../../../_common/payload/payload-service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../_common/scroll/affix/affix.vue';
+import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
 import AppGameBadge from '../../components/game/badge/badge.vue';
 import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
 
@@ -74,10 +71,8 @@ const DownloadDelay = 3000;
 	},
 })
 export default class RouteDownload extends BaseRouteComponent {
-	@Inject({ from: AppPromotionStoreKey })
-	appPromotion!: AppPromotionStore;
-
 	ads = setup(() => useAdsController());
+	appPromotionStore = shallowSetup(() => useAppPromotionStore());
 
 	started = false;
 	game: Game = null as any;
@@ -111,7 +106,7 @@ export default class RouteDownload extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		setAppPromotionCohort(this.appPromotion, 'store');
+		setAppPromotionCohort(this.appPromotionStore, 'store');
 	}
 
 	async routeResolved($payload: any) {
@@ -142,8 +137,14 @@ export default class RouteDownload extends BaseRouteComponent {
 		]);
 
 		this.started = true;
-		if (GJ_BUILD_TYPE === 'production') {
-			Navigate.goto(data.url);
+
+		// While developing we often don't want to be downloading files every time the page reloads.
+		if (GJ_ENVIRONMENT === 'production' && GJ_BUILD_TYPE === 'build') {
+			if (GJ_IS_DESKTOP_APP) {
+				Navigate.gotoExternal(data.url);
+			} else {
+				Navigate.goto(data.url);
+			}
 		}
 	}
 

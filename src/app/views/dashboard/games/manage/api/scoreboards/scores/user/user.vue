@@ -9,7 +9,7 @@ import {
 	BaseRouteComponent,
 	OptionsForRoute,
 } from '../../../../../../../../../_common/route/route-component';
-import { AppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
 import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
 import { User } from '../../../../../../../../../_common/user/user.model';
 import { useGameDashRouteController } from '../../../../manage.store';
@@ -21,7 +21,7 @@ import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 		AppManageGameListScores,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

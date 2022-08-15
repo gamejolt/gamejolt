@@ -13,7 +13,7 @@ import {
 	showErrorGrowl,
 	showSuccessGrowl,
 } from '../../../../../../../../_common/growls/growls.service';
-import AppLoading from '../../../../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../../../../_common/loading/AppLoading.vue';
 import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import AppNavTabList from '../../../../../../../../_common/nav/tab-list/tab-list.vue';
 import { AppProgressPoller } from '../../../../../../../../_common/progress/poller/poller';
@@ -23,7 +23,7 @@ import {
 } from '../../../../../../../../_common/route/route-component';
 import { Sellable } from '../../../../../../../../_common/sellable/sellable.model';
 import { AppTimeAgo } from '../../../../../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import FormGamePackage from '../../../../../../../components/forms/game/package/package.vue';
 import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
 import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
@@ -45,7 +45,7 @@ import { useGameDashRouteController } from '../../../manage.store';
 		AppGamePerms,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

@@ -1,11 +1,11 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { mixins, Options, Watch } from 'vue-property-decorator';
-import AppEditableOverlay from '../../../../../_common/editable-overlay/editable-overlay.vue';
+import AppEditableOverlay from '../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppFormControlTheme from '../../../../../_common/form-vue/controls/AppFormControlTheme.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
-import AppGameThumbnailImg from '../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
+import AppGameThumbnailImg from '../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { DefaultTheme } from '../../../../../_common/theme/theme.model';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { GameThumbnailModal } from '../../../game/thumbnail-modal/thumbnail-modal.service';
@@ -82,7 +82,9 @@ export default class FormGameDesign extends mixins(Wrapper) {
 					</p>
 					<p>
 						<AppLinkHelp page="dev-thumbnails" class="link-help">
-							<AppTranslate>What are the thumbnail requirements and guidelines?</AppTranslate>
+							<AppTranslate>
+								What are the thumbnail requirements and guidelines?
+							</AppTranslate>
 						</AppLinkHelp>
 					</p>
 				</div>
@@ -109,7 +111,10 @@ export default class FormGameDesign extends mixins(Wrapper) {
 		<hr />
 
 		<AppFormGroup name="theme" :label="$gettext(`Color Theme`)">
-			<AppFormControlTheme class="pull-right" @changed="onThemeChanged()" />
+			<template #inline-control>
+				<AppFormControlTheme @changed="onThemeChanged()" />
+			</template>
+
 			<p class="help-block">
 				<AppTranslate>
 					Give your page a splash of color! When people view your game page, they'll be

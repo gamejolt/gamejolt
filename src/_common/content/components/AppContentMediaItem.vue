@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
-import { AppImgResponsive } from '../../img/responsive/responsive';
+import { computed, ref, toRefs, unref } from 'vue';
+import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { createLightbox } from '../../lightbox/lightbox-helpers';
 import AppLinkExternal from '../../link/AppLinkExternal.vue';
-import AppLoading from '../../loading/loading.vue';
+import AppLoading from '../../loading/AppLoading.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../media-item/media-item-model';
-import { AppResponsiveDimensions } from '../../responsive-dimensions/responsive-dimensions';
+import AppResponsiveDimensions from '../../responsive-dimensions/AppResponsiveDimensions.vue';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { ContentEditorLinkModal } from '../content-editor/modals/link/link-modal.service';
 import { defineEditableNodeViewProps } from '../content-editor/node-views/base';
@@ -37,7 +37,7 @@ const props = defineProps({
 	},
 	href: {
 		type: String,
-		required: true,
+		default: '',
 	},
 	isEditing: {
 		type: Boolean,
@@ -50,7 +50,19 @@ const props = defineProps({
 
 const owner = useContentOwnerController()!;
 
-const container = ref<HTMLElement>();
+const {
+	mediaItemId,
+	mediaItemWidth,
+	mediaItemHeight,
+	caption,
+	align,
+	href,
+	isEditing,
+	isDisabled,
+	onUpdateAttrs,
+} = toRefs(props);
+
+const container = ref<InstanceType<typeof AppResponsiveDimensions>>();
 const mediaItem = ref<MediaItem>();
 const hasError = ref(false);
 const imageLoaded = ref(false);
@@ -59,7 +71,7 @@ const lightboxItems = computed(() => (mediaItem.value ? [mediaItem.value] : []))
 
 const title = computed(() => {
 	if (mediaItem.value && hasCaption.value) {
-		return props.caption;
+		return caption.value;
 	}
 	if (mediaItem.value && hasLink.value) {
 		return displayHref.value;
@@ -79,10 +91,10 @@ const title = computed(() => {
 	return '';
 });
 
-const hasCaption = computed(() => !!props.caption);
+const hasCaption = computed(() => !!caption.value);
 
 const itemAlignment = computed(() => {
-	switch (props.align) {
+	switch (align.value) {
 		case 'left':
 			return 'flex-start';
 		case 'right':
@@ -92,7 +104,7 @@ const itemAlignment = computed(() => {
 });
 
 const hasLink = computed(() => {
-	return typeof props.href === 'string' && props.href.length > 0;
+	return typeof href.value === 'string' && href.value.length > 0;
 });
 
 const canFullscreenItem = computed(() => {
@@ -104,7 +116,7 @@ const canFullscreenItem = computed(() => {
 });
 
 const displayHref = computed(() => {
-	let text = props.href;
+	let text = href.value;
 	if (text.startsWith('//')) {
 		text = text.substr(2);
 	}
@@ -128,27 +140,30 @@ const shouldUseMediaserver = computed(() => {
 const maxWidth = computed(() => {
 	const maxOwnerWidth = owner.contentRules.maxMediaWidth;
 	if (maxOwnerWidth !== null) {
-		return Math.min(
-			maxOwnerWidth,
-			container.value ? container.value.clientWidth : props.mediaItemWidth
-		);
+		const sizes = [maxOwnerWidth, mediaItemWidth.value];
+		if (parentWidth.value) {
+			sizes.push(parentWidth.value);
+		}
+		return Math.min(...sizes);
 	}
 
-	return props.mediaItemWidth;
+	return mediaItemWidth.value;
 });
 
 const maxHeight = computed(() => {
 	const maxOwnerHeight = owner.contentRules.maxMediaHeight;
 	if (maxOwnerHeight !== null) {
-		return Math.min(maxOwnerHeight, props.mediaItemHeight);
+		return Math.min(maxOwnerHeight, mediaItemHeight.value);
 	}
 
-	return props.mediaItemHeight;
+	return mediaItemHeight.value;
 });
+
+const parentWidth = computed(() => unref(owner.parentBounds?.width));
 
 const lightbox = createLightbox(lightboxItems);
 
-owner.hydrator.useData('media-item-id', props.mediaItemId.toString(), data => {
+owner.hydrator.useData('media-item-id', mediaItemId.value.toString(), data => {
 	if (data) {
 		mediaItem.value = new MediaItem(data);
 	} else {
@@ -160,15 +175,15 @@ async function onEdit() {
 	if (hasLink.value) {
 		removeLink();
 	} else {
-		const result = await ContentEditorLinkModal.show(props.href);
+		const result = await ContentEditorLinkModal.show(href.value);
 		if (result !== undefined) {
-			props.onUpdateAttrs?.({ href: result.href });
+			onUpdateAttrs?.value?.({ href: result.href });
 		}
 	}
 }
 
 function removeLink() {
-	props.onUpdateAttrs?.({ href: '' });
+	onUpdateAttrs?.value?.({ href: '' });
 }
 
 function onImageLoad() {
@@ -206,9 +221,10 @@ function onItemFullscreen() {
 				ref="container"
 				class="media-item-container"
 				:class="{ '-zoomable': canFullscreenItem }"
-				:ratio="mediaItem ? mediaItem.width / mediaItem.height : null"
+				:ratio="mediaItem ? mediaItem.width / mediaItem.height : 16 / 9"
 				:max-height="maxHeight"
 				:max-width="maxWidth"
+				:parent-width="parentWidth"
 			>
 				<AppMediaItemBackdrop
 					:class="{ '-backdrop': shouldShowPlaceholder }"
@@ -234,7 +250,7 @@ function onItemFullscreen() {
 							/>
 							<img
 								v-else
-								class="img-responsive content-image"
+								class="img-responsive content-image egsdega"
 								:src="mediaItem.img_url"
 								:alt="title"
 								:title="title"

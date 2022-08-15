@@ -1,20 +1,20 @@
 <script lang="ts">
+import { RouterView } from 'vue-router';
 import { imageGameJoltLogo } from '../../../app/img/images';
 import { Api } from '../../../_common/api/api.service';
 import { redirectToDashboard } from '../../../_common/auth/auth.service';
 import { Connection } from '../../../_common/connection/connection-service';
 import { Environment } from '../../../_common/environment/environment.service';
+import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { commonStore } from '../../../_common/store/common-store';
 import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
-import AppTranslateLangSelector from '../../../_common/translate/lang-selector/lang-selector.vue';
-import AppCoverImg from '../../components/AppCoverImg.vue';
-import AppGameCoverCredits from '../../components/game-cover-credits/game-cover-credits.vue';
-import { useAuthStore } from '../../store/index';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import { RouterView } from 'vue-router';
+import AppTranslateLangSelector from '../../../_common/translate/lang-selector/AppTranslateLangSelector.vue';
+import AppCoverImg from '../../components/AppCoverImg.vue';
+import AppGameCoverCredits from '../../components/AppGameCoverCredits.vue';
+import { useAuthStore } from '../../store/index';
 import './auth-content.styl';
 
 export function loggedUserBlock() {

@@ -31,7 +31,7 @@ export default function viteHtmlResolve(options?: HtmlResolvePluginOptions) {
 	function makeResolveTag(strToResolve) {
 		let id: number;
 		if (name2Id.has(strToResolve)) {
-			id = name2Id.get(strToResolve);
+			id = name2Id.get(strToResolve)!;
 		} else {
 			id = nextId;
 			nextId++;
@@ -54,7 +54,7 @@ export default function viteHtmlResolve(options?: HtmlResolvePluginOptions) {
 			transformIndexHtml: {
 				enforce: 'pre',
 				transform: html => {
-					const injects = [];
+					const injects: string[] = [];
 
 					for (let entry of resolve) {
 						if (typeof entry === 'string') {
@@ -89,7 +89,7 @@ export default function viteHtmlResolve(options?: HtmlResolvePluginOptions) {
 	}
 
 	function createPostPlugin(cb?: TransformIndexHtmlFunc) {
-		cb ??= (_resolved: any, html: string) => html;
+		const cb2 = cb ?? ((_resolved: any, html: string) => html);
 
 		const postPlugin: Plugin = {
 			name: 'gj:html-resolve:post',
@@ -115,10 +115,10 @@ export default function viteHtmlResolve(options?: HtmlResolvePluginOptions) {
 							continue;
 						}
 
-						resolvePaths.set(id2Name.get(id), resolvedPath);
+						resolvePaths.set(id2Name.get(id)!, resolvedPath);
 					}
 
-					return cb(resolvePaths, html, ctx);
+					return cb2(resolvePaths, html, ctx);
 				},
 			},
 		};

@@ -9,8 +9,8 @@ import {
 	defineFormControlProps,
 } from '../../AppFormControl.vue';
 import { useFormGroup } from '../../AppFormGroup.vue';
-import { AppFormAutosize as vAppFormAutosize } from '../../autosize.directive';
-import { AppFocusWhen as vAppFocusWhen } from '../../focus-when.directive';
+import { vAppFormAutosize } from '../../autosize.directive';
+import { vAppFocusWhen } from '../../focus-when.directive';
 import AppFormControlMarkdownMediaItems from './AppFormControlMarkdownMediaItems.vue';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
 

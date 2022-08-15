@@ -4,22 +4,20 @@ import { formatNumber } from '../../../../_common/filters/number';
 import { ForumTopic } from '../../../../_common/forum/topic/topic.model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
-import AppForumTopicUpvoteWidget from '../topic/upvote-widget/upvote-widget.vue';
 
 @Options({
 	components: {
 		AppTimeAgo,
 		AppUserCardHover,
 		AppUserAvatar,
-		AppForumTopicUpvoteWidget,
 		AppUserVerifiedTick,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppForumTopicList extends Vue {
@@ -43,24 +41,12 @@ export default class AppForumTopicList extends Vue {
 
 		return page;
 	}
-
-	shouldShowVoting(topic: ForumTopic) {
-		return this.useUpvotes && !topic.is_locked;
-	}
 }
 </script>
 
 <template>
 	<div class="forum-topic-list">
-		<div
-			v-for="topic of topics"
-			:key="topic.id"
-			class="forum-topic-list-item"
-			:class="{ '-has-voting': shouldShowVoting(topic) }"
-		>
-			<div v-if="shouldShowVoting(topic)" class="-vote">
-				<AppForumTopicUpvoteWidget :topic="topic" />
-			</div>
+		<div v-for="topic of topics" :key="topic.id" class="forum-topic-list-item">
 			<div class="-main">
 				<div class="row">
 					<div class="col-sm-9 col-md-7">

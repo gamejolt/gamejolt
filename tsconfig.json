@@ -16,7 +16,11 @@
 		"resolveJsonModule": true,
 		"useDefineForClassFields": false,
 		"esModuleInterop": false,
+		"jsx": "preserve",
 		"lib": ["esnext", "dom", "dom.iterable", "scripthost"]
 	},
-	"exclude": ["build", "node_modules", ".cache"]
+	"exclude": ["build", "node_modules", ".cache"],
+	"vueCompilerOptions": {
+		"strictTemplates": true
+	}
 }

@@ -90,17 +90,17 @@ export function createAppRoute({
 	 * Called to initialize the route either at the first route to this
 	 * component or after the $route object changes with params.
 	 */
-	onInit?: () => void;
+	onInit?: (this: void) => void;
 
 	/**
 	 * Called after the resolver resolves with data.
 	 */
-	onResolved?: (options: { payload: any; fromCache: boolean }) => void;
+	onResolved?: (this: void, options: { payload: any; fromCache: boolean }) => void;
 
 	/**
 	 * Called when the route component is completely destroyed.
 	 */
-	onDestroyed?: () => void;
+	onDestroyed?: (this: void) => void;
 }) {
 	const { setError, redirect } = useCommonStore();
 	const router = useRouter();
@@ -219,7 +219,7 @@ export function createAppRoute({
 
 		// We do a cache refresh if the cache was used for this route.
 		if (fromCache === undefined) {
-			fromCache = HistoryCache.has(route, routeKey);
+			fromCache = resolver.fromCache || false;
 		}
 
 		// If we are no longer resolving this resolver, let's early out.
@@ -327,15 +327,16 @@ export async function asyncRouteLoader(router: Router, loader: Promise<any>) {
 		return loader;
 	}
 
-	const component = (await loader).default;
+	const mod = await loader;
+	const component = mod.default as ComponentOptions;
 
 	// Basically copy the flow of the beforeRouteEnter for SSR.
-	const resolver = new Resolver(component, router.currentRoute.value, {
+	const resolver = new Resolver(component.appRouteOptions!, router.currentRoute.value, {
 		useCache: false,
 	});
 	await resolver.resolvePayload();
 
-	return loader;
+	return mod;
 }
 
 class Resolver {
@@ -377,9 +378,8 @@ class Resolver {
 		const resolverFunc = this.resolverOptions.resolver || (() => Promise.resolve());
 
 		if (!import.meta.env.SSR && this.useCache) {
-			const cache = HistoryCache.get(this.route, this.routeKey);
-			if (cache) {
-				this._resolveWith(cache.data, true);
+			if (HistoryCache.has(this.route, this.routeKey)) {
+				this._resolveWith(HistoryCache.get(this.route, this.routeKey), true);
 				return;
 			}
 		}
@@ -587,7 +587,11 @@ export class BaseRouteComponent extends Vue {
 
 	disableRouteTitleSuffix = false;
 
-	private appRoute_!: AppRoute;
+	/**
+	 * This is the AppRoute that backs this component. Only reach into this
+	 * direclty if absolutely required.
+	 */
+	protected appRoute_!: AppRoute;
 
 	get routeTitle(): null | string {
 		return null;

@@ -1,10 +1,10 @@
 <script lang="ts">
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
-import AppLoading from '../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppUserCard from '../../../../_common/user/card/card.vue';
-import AppUserCardPlaceholder from '../../../../_common/user/card/placeholder/placeholder.vue';
+import AppUserCard from '../../../../_common/user/card/AppUserCard.vue';
+import AppUserCardPlaceholder from '../../../../_common/user/card/AppUserCardPlaceholder.vue';
 import { User } from '../../../../_common/user/user.model';
 
 @Options({

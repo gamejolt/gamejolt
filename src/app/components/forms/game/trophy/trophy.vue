@@ -5,7 +5,7 @@ import AppFormControlUpload from '../../../../../_common/form-vue/controls/uploa
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { GameTrophy } from '../../../../../_common/game/trophy/trophy.model';
-import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
+import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 
 class Wrapper extends BaseForm<GameTrophy> {}
@@ -165,17 +165,17 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 			<AppFormControlErrors />
 		</AppFormGroup>
 
-		<AppFormGroup
-			name="description"
-			:label="$gettext(`Description`)"
-		>
+		<AppFormGroup name="description" :label="$gettext(`Description`)">
 			<AppFormControlTextarea rows="3" :validators="[validateMaxLength(1500)]" />
 			<AppFormControlErrors />
 		</AppFormGroup>
 
 		<AppFormGroup name="secret" :label="$gettext(`Secret`)">
 			<p class="help-block">
-				<AppTranslate>Secret trophies hide everything but their titles from players until they are achieved.</AppTranslate>
+				<AppTranslate>
+					Secret trophies hide everything but their titles from players until they are
+					achieved.
+				</AppTranslate>
 			</p>
 			<AppFormControlToggle />
 		</AppFormGroup>

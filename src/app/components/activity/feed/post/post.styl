@@ -10,11 +10,6 @@
 		@media $media-sm-up
 			margin-bottom: $-item-padding-v
 
-.page-cut
-	@media $media-sm-up
-		margin-left: -($-item-padding-container)
-		margin-right: -($-item-padding-container)
-
 .-container
 	padding-bottom: $-item-padding-xs-v
 
@@ -24,71 +19,7 @@
 .-item
 	-activity-feed-item()
 
-.-header
-	display: flex
-	align-items: flex-start
-
-	&-avatar
-		change-bg('bg-subtle')
-		img-circle()
-		flex: none
-		overflow: hidden
-		margin-right: $-item-padding-xs
-		width: $-avatar-size
-		height: $-avatar-size
-		line-height: $-avatar-size
-
-		.-item.-new &
-			theme-prop('border-color', 'notice')
-			border-width: $border-width-large
-			border-style: solid
-
-			.-header-avatar-inner
-				change-bg('bg')
-				img-circle()
-				padding: $border-width-large
-
-		@media $media-sm-up
-			margin-right: $-item-padding
-
-	&-content
-		flex: auto
-		display: flex
-		align-items: center
-		overflow: hidden
-
-	&-byline
-		display: flex
-		flex-direction: column
-		overflow: hidden
-
-		&-name
-		&-game
-			text-overflow()
-
-	&-meta
-		flex: none
-		display: flex
-		align-items: flex-end
-		flex-direction: column
-		margin-left: $-item-padding-xs
-		line-height: $line-height-computed
-
-		@media $media-sm-up
-			margin-left: $-item-padding
-
-		&-follow
-			margin-bottom: 5px
-
-.fireside-post-lead
-	margin-top: $-item-padding-xs-v
-
-	@media $media-sm-up
-		margin-top: $-item-padding-v
-
 .-poll
-.-manage
-.fireside-post-lead
 	margin-bottom: $-item-padding-xs-v
 
 	@media $media-sm-up

@@ -1,4 +1,13 @@
-import { computed, inject, InjectionKey, provide, ref, shallowRef, toRaw } from 'vue';
+import {
+	computed,
+	inject,
+	InjectionKey,
+	provide,
+	ref,
+	shallowReactive,
+	shallowRef,
+	toRaw,
+} from 'vue';
 import { arrayRemove, numberSort } from '../../utils/array';
 import { Analytics } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
@@ -16,7 +25,9 @@ import {
 	getStickerModelResourceName,
 	StickerTargetController,
 } from '../sticker/target/target-controller';
-import { Translate } from '../translate/translate.service';
+import { ValidStickerResource } from '../sticker/target/target.vue';
+import { EventTopic } from '../system/event/event-topic';
+import { $gettext } from '../translate/translate.service';
 
 const DrawerStoreKey: InjectionKey<DrawerStore> = Symbol('drawer-store');
 
@@ -28,7 +39,7 @@ interface StickerStreak {
 export type DrawerStore = ReturnType<typeof createDrawerStore>;
 
 export function createDrawerStore() {
-	const layers = shallowRef<StickerLayerController[]>([]);
+	const layers = shallowReactive<StickerLayerController[]>([]);
 	const targetController = shallowRef<StickerTargetController | null>(null);
 
 	const drawerItems = shallowRef<StickerStack[]>([]);
@@ -57,7 +68,7 @@ export function createDrawerStore() {
 	>(null);
 
 	const activeLayer = computed(() => {
-		return layers.value[layers.value.length - 1];
+		return layers[layers.length - 1];
 	});
 
 	// Set up modals to have the sticker layer as their layer element.
@@ -137,19 +148,32 @@ async function _initializeDrawerContent(store: DrawerStore) {
 
 	store.stickerCost.value = payload.stickerCost;
 	store.stickerCurrency.value = payload.balance;
-	store.drawerItems.value = payload.stickerCounts.map((stickerCountPayload: any) => {
+
+	const eventStickers: StickerStack[] = [];
+	const generalStickers: StickerStack[] = [];
+
+	payload.stickerCounts.forEach((stickerCountPayload: any) => {
 		const stickerData = payload.stickers.find(
 			(i: Sticker) => i.id === stickerCountPayload.sticker_id
 		);
 
-		return {
+		const stickerCount = {
 			count: stickerCountPayload.count,
 			sticker_id: stickerCountPayload.sticker_id,
 			sticker: new Sticker(stickerData),
 		} as StickerStack;
+
+		if (stickerCount.sticker.is_event) {
+			eventStickers.push(stickerCount);
+		} else {
+			generalStickers.push(stickerCount);
+		}
 	});
 
-	store.drawerItems.value.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));
+	const lists = [eventStickers, generalStickers];
+	lists.forEach(i => i.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity)));
+
+	store.drawerItems.value = lists.flat();
 	store.isLoading.value = false;
 	store.hasLoaded.value = true;
 }
@@ -177,11 +201,11 @@ function _resetDrawerStore(store: DrawerStore) {
 }
 
 export function registerStickerLayer(store: DrawerStore, layer: StickerLayerController) {
-	store.layers.value.push(layer);
+	store.layers.push(layer);
 }
 
 export function unregisterStickerLayer(store: DrawerStore, layer: StickerLayerController) {
-	arrayRemove(store.layers.value, i => toRaw(i) === toRaw(layer));
+	arrayRemove(store.layers, i => toRaw(i) === toRaw(layer));
 }
 
 export function setDrawerStoreHeight(store: DrawerStore, height: number) {
@@ -237,45 +261,62 @@ export function assignDrawerStoreItem(
 	store.targetController.value = controller;
 }
 
-export async function commitDrawerStoreItemPlacement(store: DrawerStore) {
-	if (!store.placedItem.value || !store.targetController.value) {
-		return;
-	}
+interface StickerPlacementPayloadData {
+	stickerId: number;
+	positionX: number;
+	positionY: number;
+	rotation: number;
+	resource: ValidStickerResource;
+	resourceId: number;
+}
 
-	const sticker = store.placedItem.value;
-	if (!sticker) {
+export type CustomStickerPlacementRequest = (data: StickerPlacementPayloadData) => Promise<any>;
+
+export const onFiresideStickerPlaced = new EventTopic<StickerPlacement>();
+
+export async function commitDrawerStoreItemPlacement(store: DrawerStore) {
+	const {
+		placedItem: { value: sticker },
+		targetController,
+	} = store;
+
+	if (!sticker || !targetController.value) {
 		return;
 	}
 
 	Analytics.trackEvent('stickers', 'place-sticker');
 
-	const { model } = store.targetController.value;
+	const { model, placeStickerCallback } = targetController.value;
 	const resourceType = getStickerModelResourceName(model);
 
-	const { success, resource, parent, stickerPlacement } = await Api.sendRequest(
-		'/web/stickers/place',
-		{
-			stickerId: sticker.sticker.id,
-			positionX: sticker.position_x,
-			positionY: sticker.position_y,
-			rotation: sticker.rotation,
-			resource: resourceType,
-			resourceId: model.id,
-		},
-		{ detach: true }
-	);
+	const body = {
+		stickerId: sticker.sticker.id,
+		positionX: sticker.position_x,
+		positionY: sticker.position_y,
+		rotation: sticker.rotation,
+		resource: resourceType,
+		resourceId: model.id,
+	};
+
+	const promise = placeStickerCallback
+		? placeStickerCallback(body)
+		: Api.sendRequest('/web/stickers/place', body, { detach: true });
+
+	const { success, resource, parent: payloadParent, stickerPlacement } = await promise;
 
 	if (success) {
-		addStickerToTarget(store.targetController.value, new StickerPlacement(stickerPlacement));
+		addStickerToTarget(targetController.value, new StickerPlacement(stickerPlacement));
 
 		model.assign(resource);
-		if (parent && store.targetController.value.parent) {
-			store.targetController.value.parent.model.assign(parent);
+		const { parent } = targetController.value;
+
+		if (payloadParent && parent) {
+			parent.model.assign(payloadParent);
 		}
 
 		setDrawerOpen(store, false);
 	} else {
-		showErrorGrowl(Translate.$gettext(`Failed to place sticker.`));
+		showErrorGrowl($gettext(`Failed to place sticker.`));
 	}
 }
 

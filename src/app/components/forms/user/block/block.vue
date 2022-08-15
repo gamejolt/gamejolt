@@ -85,7 +85,10 @@ export default class FormUserBlock
 			name="removeComments"
 			:label="$gettext(`Remove the user's comments from your profile and posts?`)"
 		>
-			<AppFormControlToggle class="pull-right" />
+			<template #inline-control>
+				<AppFormControlToggle />
+			</template>
+
 			<p class="help-block">
 				<AppTranslate>
 					All of their shouts on your profile and comments on your posts will be removed.

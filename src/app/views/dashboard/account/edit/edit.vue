@@ -6,7 +6,7 @@ import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/rout
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import FormProfile from '../../../../components/forms/profile/profile.vue';
+import FormProfile from '../../../../components/forms/profile/FormProfile.vue';
 import { useAccountRouteController } from '../account.vue';
 
 @Options({
@@ -42,7 +42,7 @@ export default class RouteDashAccountEdit extends BaseRouteComponent {
 <template>
 	<div class="row">
 		<div class="col-md-9 col-lg-8">
-			<FormProfile :model="app.user" @submit="onProfileSaved" />
+			<FormProfile :user="app.user" @submit="onProfileSaved" />
 		</div>
 	</div>
 </template>

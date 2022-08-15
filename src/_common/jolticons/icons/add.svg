@@ -29,10 +29,10 @@
     </rdf:RDF>
   </metadata>
   <g
-     id="layer2">
+     id="g820">
     <path
-       id="rect815"
-       d="M 7.25,3 C 7.1115,3 7,3.1115 7,3.25 V 7 H 3.25 C 3.1115,7 3,7.1115 3,7.25 v 1.5 C 3,8.8885 3.1115,9 3.25,9 H 7 v 3.75 C 7,12.8885 7.1115,13 7.25,13 h 1.5 C 8.8885,13 9,12.8885 9,12.75 V 9 h 3.75 C 12.8885,9 13,8.8885 13,8.75 V 7.25 C 13,7.1115 12.8885,7 12.75,7 H 9 V 3.25 C 9,3.1115 8.8885,3 8.75,3 Z"
+       id="rect816"
+       d="M 8,2 C 7.446,2 7,2.446 7,3 V 7 H 3 C 2.446,7 2,7.446 2,8 2,8.554 2.446,9 3,9 h 4 v 4 c 0,0.554 0.446,1 1,1 0.554,0 1,-0.446 1,-1 V 9 h 4 C 13.554,9 14,8.554 14,8 14,7.446 13.554,7 13,7 H 9 V 3 C 9,2.446 8.554,2 8,2 Z"
        style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:41.71699905;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate" />
   </g>
 </svg>

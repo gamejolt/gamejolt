@@ -21,6 +21,11 @@ interface ContentOwnerControllerOptions {
 	contentRules?: MaybeRef<ContentRules | undefined>;
 	disableLightbox?: MaybeRef<boolean | undefined>;
 	getModelId?: () => Promise<number>;
+	parentBounds?: MaybeRef<ContentOwnerParentBounds | undefined>;
+}
+
+export interface ContentOwnerParentBounds {
+	width: MaybeRef<number>;
 }
 
 export function createContentOwnerController(options: ContentOwnerControllerOptions) {
@@ -31,6 +36,7 @@ export function createContentOwnerController(options: ContentOwnerControllerOpti
 	const disableLightbox = ref(options.disableLightbox);
 	const context = ref(options.context);
 	const capabilities = ref(options.capabilities);
+	const parentBounds = ref(options.parentBounds);
 
 	const _contentRules = ref(options.contentRules);
 	const contentRules = computed(() => _contentRules.value ?? new ContentRules());
@@ -42,5 +48,6 @@ export function createContentOwnerController(options: ContentOwnerControllerOpti
 		contentRules,
 		disableLightbox,
 		getModelId,
+		parentBounds,
 	});
 }

@@ -4,9 +4,12 @@ import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { RouteLocationRaw } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
-import { Api } from '../../../../_common/api/api.service';
+import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
+import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
+import AppBackground from '../../../../_common/background/AppBackground.vue';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
+import { configPostShareSide } from '../../../../_common/config/config.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -15,16 +18,18 @@ import {
 	FiresidePostVideo,
 } from '../../../../_common/fireside/post/video/video-model';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
+import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
 import { createLightbox } from '../../../../_common/lightbox/lightbox-helpers';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
+import AppResponsiveDimensions from '../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
-import AppShareCard from '../../../../_common/share/card/card.vue';
-import AppStickerControlsOverlay from '../../../../_common/sticker/controls-overlay/controls-overlay.vue';
+import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
+import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
+import AppStickerControlsOverlay from '../../../../_common/sticker/AppStickerControlsOverlay.vue';
 import AppStickerReactions from '../../../../_common/sticker/reactions/reactions.vue';
 import {
 	createStickerTargetController,
@@ -34,8 +39,8 @@ import {
 import AppStickerTarget from '../../../../_common/sticker/target/target.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
@@ -49,8 +54,12 @@ import AppGameListItem from '../../../components/game/list/item/item.vue';
 import { AppCommentWidgetLazy } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppPollVoting from '../../../components/poll/voting/voting.vue';
+import AppActivityFeedPostContent from '../../../components/post/AppPostContent.vue';
+import AppPostHeader from '../../../components/post/AppPostHeader.vue';
 import AppPostControls from '../../../components/post/controls/controls.vue';
-import AppPostPageRecommendations from './recommendations/recommendations.vue';
+import AppPostPageRecommendations from './recommendations/AppPostPageRecommendations.vue';
+
+const UserFollowLocation = 'postPage';
 
 @Options({
 	components: {
@@ -81,9 +90,15 @@ import AppPostPageRecommendations from './recommendations/recommendations.vue';
 		AppFiresidePostEmbed,
 		AppPostPageRecommendations,
 		AppShareCard,
+		AppBackground,
+		AppPostHeader,
+		AppActivityFeedPostContent,
+		AppSpacer,
+		AppResponsiveDimensions,
+		AppAdWidget,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppPostPage extends Vue {
@@ -107,6 +122,8 @@ export default class AppPostPage extends Vue {
 	recommendedPosts: FiresidePost[] = [];
 	videoStartTime = 0;
 	isPlayerFilled = false;
+	hasVideoProcessingError = false;
+	videoProcessingErrorMsg = '';
 
 	private lightbox = setup(() => {
 		return createLightbox(computed(() => (this.$props as this).post.media));
@@ -114,6 +131,7 @@ export default class AppPostPage extends Vue {
 
 	readonly Screen = Screen;
 	readonly formatNumber = formatNumber;
+	readonly UserFollowLocation = UserFollowLocation;
 
 	declare $refs: {
 		'sticker-scroll': HTMLDivElement;
@@ -141,6 +159,15 @@ export default class AppPostPage extends Vue {
 		return this.post.videos[0] ?? null;
 	}
 
+	get background() {
+		return this.post.background;
+	}
+
+	get shareCardOnSide() {
+		trackExperimentEngagement(configPostShareSide);
+		return configPostShareSide.value;
+	}
+
 	created() {
 		this.stickerTargetController = createStickerTargetController(this.post);
 		provideStickerTargerController(this.stickerTargetController);
@@ -165,31 +192,24 @@ export default class AppPostPage extends Vue {
 		}
 	}
 
-	mounted() {
-		this.fetchRecommendedPosts();
-	}
-
 	@Watch('post.id')
 	onPostChange() {
 		this.stickerTargetController = createStickerTargetController(this.post);
-		this.fetchRecommendedPosts();
-	}
-
-	async fetchRecommendedPosts() {
-		this.recommendedPosts = [];
-
-		const payload = await Api.sendRequest(
-			`/web/posts/recommendations/${this.post.id}`,
-			undefined,
-			{ detach: true }
-		);
-
-		this.recommendedPosts = FiresidePost.populate(payload.posts);
 	}
 
 	onVideoProcessingComplete(payload: any) {
 		if (payload.video && this.video) {
 			this.video.assign(payload.video);
+		}
+	}
+
+	onVideoProcessingError(err: string | Error) {
+		if (typeof err === 'string') {
+			this.hasVideoProcessingError = true;
+			this.videoProcessingErrorMsg = err;
+		} else {
+			// The only cases where an actual error is emitted is on network error during polling.
+			// This does not necessarily mean an actual error during processing, so noop.
 		}
 	}
 
@@ -232,11 +252,15 @@ export default class AppPostPage extends Vue {
 	so key on the post ID so that everything gets recompiled when switching
 	posts.
 	-->
-	<section :key="post.id" class="-section section-thin">
-		<template v-if="video">
-			<div class="container-xl">
-				<div class="full-bleed-xs">
-					<template v-if="video.provider === 'gamejolt'">
+	<section
+		:key="post.id"
+		class="-section section-thin"
+		:class="{ '-sans-padding-top': !!background }"
+	>
+		<div v-if="video" class="container-xl">
+			<div class="full-bleed-xs">
+				<template v-if="video.provider === 'gamejolt'">
+					<template v-if="!hasVideoProcessingError">
 						<AppVideoPlayer
 							v-if="!video.is_processing && video.posterMediaItem"
 							context="page"
@@ -252,12 +276,39 @@ export default class AppPostPage extends Vue {
 							<AppVideoProcessingProgress
 								:post="post"
 								@complete="onVideoProcessingComplete"
+								@error="onVideoProcessingError"
 							/>
 						</template>
 					</template>
-				</div>
+					<template v-else>
+						<AppResponsiveDimensions :ratio="16 / 9">
+							<div class="-video-preview">
+								<AppJolticon icon="video" big class="-video-preview-icon" />
+							</div>
+						</AppResponsiveDimensions>
+						<br />
+						<div class="alert alert-notice">{{ videoProcessingErrorMsg }}</div>
+					</template>
+				</template>
 			</div>
-		</template>
+		</div>
+		<AppBackground
+			v-else-if="background"
+			class="-background-wrapper"
+			:background="background"
+			darken
+		>
+			<AppPageContainer xl>
+				<AppSpacer :scale="4" vertical />
+
+				<AppPostHeader :post="post" :follow-location="UserFollowLocation" show-date />
+				<AppActivityFeedPostContent
+					:post="post"
+					:sticker-target-controller="stickerTargetController"
+				/>
+				<AppSpacer :scale="2" vertical />
+			</AppPageContainer>
+		</AppBackground>
 
 		<AppPageContainer xl>
 			<template #default>
@@ -271,79 +322,87 @@ export default class AppPostPage extends Vue {
 				</template>
 
 				<div class="post-view">
-					<AppGameBadge
-						v-if="post.game"
-						class="-game-badge"
-						:game="post.game"
-						full-bleed
-					/>
+					<template v-if="background">
+						<AppSpacer :scale="4" vertical />
+					</template>
+					<template v-else>
+						<AppGameBadge
+							v-if="post.game"
+							class="-game-badge"
+							:game="post.game"
+							full-bleed
+						/>
 
-					<div>
-						<!-- User Info -->
-						<div class="-user-info">
-							<div class="-avatar">
-								<AppUserCardHover :user="displayUser" :disabled="Screen.isXs">
-									<AppUserAvatar class="-circle-img" :user="displayUser" />
-								</AppUserCardHover>
+						<div>
+							<!-- User Info -->
+							<div class="-user-info">
+								<div class="-avatar">
+									<AppUserCardHover :user="displayUser" :disabled="Screen.isXs">
+										<AppUserAvatar class="-circle-img" :user="displayUser" />
+									</AppUserCardHover>
+								</div>
+
+								<router-link :to="displayUser.url" class="-name link-unstyled">
+									<span>
+										<strong>{{ displayUser.display_name }}</strong>
+										<AppUserVerifiedTick :user="displayUser" />
+									</span>
+									<span class="tiny text-muted">@{{ displayUser.username }}</span>
+								</router-link>
+
+								<div class="-controls">
+									<AppUserFollowWidget
+										v-if="!user || displayUser.id !== user.id"
+										:user="displayUser"
+										hide-count
+										:location="UserFollowLocation"
+									/>
+								</div>
 							</div>
+						</div>
+						<!--
+						Indicates where sticker placements may begin for scrolling when they show
+						stickers.
+						-->
+						<div ref="sticker-scroll" />
 
-							<router-link :to="displayUser.url" class="-name link-unstyled">
-								<span>
-									<strong>{{ displayUser.display_name }}</strong>
-									<AppUserVerifiedTick :user="displayUser" />
-								</span>
-								<span class="tiny text-muted">@{{ displayUser.username }}</span>
-							</router-link>
-
-							<div class="-controls">
-								<AppUserFollowWidget
-									v-if="!user || displayUser.id !== user.id"
-									:user="displayUser"
-									hide-count
-									location="postPage"
+						<div v-if="post.hasMedia" class="-media-items">
+							<div v-for="item of post.media" :key="item.id">
+								<AppMediaItemPost
+									class="-media-item"
+									:media-item="item"
+									is-active
+									can-place-sticker
+									@fullscreen="onClickFullscreen"
 								/>
+								<br />
 							</div>
 						</div>
-					</div>
 
-					<!--
-					Indicates where sticker placements may begin for scrolling when they show
-					stickers.
-					-->
-					<div ref="sticker-scroll" />
-
-					<div v-if="post.hasMedia" class="-media-items">
-						<div v-for="item of post.media" :key="item.id">
-							<AppMediaItemPost
-								class="-media-item"
-								:media-item="item"
-								is-active
-								can-place-sticker
-								@fullscreen="onClickFullscreen"
-							/>
-							<br />
-						</div>
-					</div>
-
-					<div class="tiny text-muted">
-						<AppTimeAgo v-if="post.isActive" :date="post.published_on" strict />
-						<template v-else-if="post.isScheduled">
-							<span class="tag" style="vertical-align: middle">
-								<AppJolticon icon="calendar-grid" />
+						<div class="tiny text-muted">
+							<AppTimeAgo v-if="post.isActive" :date="post.published_on" strict />
+							<template v-else-if="post.isScheduled">
+								<span class="tag" style="vertical-align: middle">
+									<AppJolticon icon="calendar-grid" />
+									{{ ' ' }}
+									<AppTranslate>Scheduled</AppTranslate>
+								</span>
 								{{ ' ' }}
-								<AppTranslate>Scheduled</AppTranslate>
+								<AppTimeAgo :date="post.scheduled_for" strict without-suffix />
+							</template>
+							<span
+								v-else-if="post.isDraft"
+								class="tag"
+								style="vertical-align: middle"
+							>
+								<AppTranslate>Draft</AppTranslate>
 							</span>
-							{{ ' ' }}
-							<AppTimeAgo :date="post.scheduled_for" strict without-suffix />
-						</template>
-						<span v-else-if="post.isDraft" class="tag" style="vertical-align: middle">
-							<AppTranslate>Draft</AppTranslate>
-						</span>
-					</div>
+						</div>
 
-					<AppStickerTarget :controller="stickerTargetController">
-						<AppContentViewer :source="post.lead_content" />
-					</AppStickerTarget>
+						<AppStickerTarget :controller="stickerTargetController">
+							<AppContentViewer :source="post.lead_content" />
+						</AppStickerTarget>
+					</template>
 
 					<AppFiresidePostEmbed
 						v-for="embed of post.embeds"
@@ -353,7 +412,7 @@ export default class AppPostPage extends Vue {
 					/>
 
 					<div v-if="post.has_article">
-						<div class="page-cut" />
+						<div v-if="!background || post.embeds.length > 0" class="page-cut" />
 
 						<template v-if="!post.hasArticleContent">
 							<span class="lazy-placeholder" />
@@ -414,12 +473,12 @@ export default class AppPostPage extends Vue {
 					@sticker="scrollToStickers()"
 				/>
 
-				<div class="-share">
+				<div v-if="!shareCardOnSide" class="-share">
 					<AppShareCard resource="post" :url="post.url" offset-color />
 				</div>
 
 				<div v-if="Screen.isMobile">
-					<AppPostPageRecommendations :posts="recommendedPosts" />
+					<AppPostPageRecommendations :key="post.id" :post="post" />
 				</div>
 
 				<br />
@@ -428,7 +487,15 @@ export default class AppPostPage extends Vue {
 			</template>
 
 			<template v-if="!Screen.isMobile" #right>
-				<AppPostPageRecommendations :posts="recommendedPosts" />
+				<div class="-side-col">
+					<div v-if="shareCardOnSide" class="-share">
+						<AppShareCard resource="post" :url="post.url" offset-color />
+					</div>
+
+					<AppAdWidget size="rectangle" placement="side" />
+
+					<AppPostPageRecommendations :key="post.id" :post="post" />
+				</div>
 			</template>
 		</AppPageContainer>
 	</section>
@@ -502,6 +569,26 @@ export default class AppPostPage extends Vue {
 .-communities
 	white-space: nowrap
 
+.-side-col
+	@media $media-lg-up
+		margin-left: 50px
+
 .-share
 	margin-top: $line-height-computed * 1.5
+
+.-sans-padding-top
+	padding-top: 0
+
+.-video-preview
+	change-bg('bg-offset')
+	rounded-corners-lg()
+	overflow: hidden
+	position: relative
+	height: 100%
+	display: flex
+	justify-content: center
+	align-items: center
+
+.-video-preview-icon
+	filter: drop-shadow(0 0 5px rgba(0, 0, 0, 1))
 </style>

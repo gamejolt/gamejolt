@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
-import { fuzzysearch } from '../../../../utils/string';
+import { PropType } from 'vue';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
+import AppChatList from '../_list/AppChatList.vue';
 import AppChatMemberListItem from './AppChatMemberListItem.vue';
 
-const props = defineProps({
+defineProps({
 	users: {
 		type: Array as PropType<ChatUser[]>,
 		required: true,
@@ -17,44 +17,21 @@ const props = defineProps({
 	hideFilter: {
 		type: Boolean,
 	},
-});
-
-const { users } = toRefs(props);
-
-const filterQuery = ref('');
-
-const filteredUsers = computed(() => {
-	if (!filterQuery.value) {
-		return users.value;
-	}
-
-	const query = filterQuery.value.toLowerCase().trim();
-	return users.value.filter(
-		i =>
-			fuzzysearch(query, i.display_name.toLowerCase()) ||
-			fuzzysearch(query, i.username.toLowerCase())
-	);
+	horizontalPadding: {
+		type: Number,
+		default: undefined,
+	},
 });
 </script>
 
 <template>
-	<div class="chat-user-list">
-		<div v-if="!hideFilter" class="nav-controls">
-			<input
-				v-model="filterQuery"
-				text="search"
-				class="form-control"
-				:placeholder="$gettext(`Filter...`)"
-			/>
-		</div>
-
-		<ul v-show="users.length" class="shell-nav">
+	<AppChatList :entries="users" :hide-filter="hideFilter">
+		<template #default="{ item }">
 			<AppChatMemberListItem
-				v-for="user of filteredUsers"
-				:key="user.id"
-				:user="user"
 				:room="room"
+				:user="(item as ChatUser)"
+				:horizontal-padding="horizontalPadding"
 			/>
-		</ul>
-	</div>
+		</template>
+	</AppChatList>
 </template>

@@ -2,11 +2,10 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../utils/vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
-import { AppImgResponsive } from '../../img/responsive/responsive';
-import {
-	AppResponsiveDimensions,
+import AppImgResponsive from '../../img/AppImgResponsive.vue';
+import AppResponsiveDimensions, {
 	AppResponsiveDimensionsChangeEvent,
-} from '../../responsive-dimensions/responsive-dimensions';
+} from '../../responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../screen/screen-service';
 import {
 	createStickerTargetController,
@@ -14,7 +13,7 @@ import {
 	useStickerTargetController,
 } from '../../sticker/target/target-controller';
 import AppStickerTarget from '../../sticker/target/target.vue';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppVideo from '../../video/video.vue';
 import AppMediaItemBackdrop from '../backdrop/AppMediaItemBackdrop.vue';
@@ -29,7 +28,7 @@ import { MediaItem } from '../media-item-model';
 		AppStickerTarget,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppMediaItemPost extends Vue {

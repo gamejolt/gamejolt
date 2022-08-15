@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
+import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
 import AppUserAvatarImg from '../../../../../_common/user/user-avatar/img/img.vue';
 import { User } from '../../../../../_common/user/user.model';

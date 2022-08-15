@@ -1,8 +1,8 @@
 import { loadScript } from '../../../utils/utils';
 import { AdSlot } from '../ad-slot-info';
 import { AdAdapterBase } from '../adapter-base';
-import AppAdPlaywire from './playwire.vue';
-import AppAdPlaywireVideo from './video.vue';
+import AppAdPlaywire from './AppAdPlaywire.vue';
+import AppAdPlaywireVideo from './AppAdPlaywireVideo.vue';
 
 export class AdPlaywireAdapter extends AdAdapterBase {
 	hasVideoSupport = true;

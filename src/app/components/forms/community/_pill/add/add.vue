@@ -2,7 +2,7 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
-import AppPill from '../../../../../../_common/pill/pill.vue';
+import AppPill from '../../../../../../_common/pill/AppPill.vue';
 import AppFormsCommunityPillSelector from '../selector/selector.vue';
 
 @Options({

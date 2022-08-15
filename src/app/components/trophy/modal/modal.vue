@@ -7,8 +7,8 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import { SiteTrophy } from '../../../../_common/site/trophy/trophy.model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import { UserGameTrophy } from '../../../../_common/user/trophy/game-trophy.model';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
@@ -25,7 +25,7 @@ import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
 		AppUserCardHover,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppTrophyModal extends mixins(BaseModal) {
@@ -153,7 +153,7 @@ export default class AppTrophyModal extends mixins(BaseModal) {
 								class="-subtitle-link link-unstyled"
 								v-app-tooltip="game.title"
 							>
-								<AppJolticon icon="game" />
+								<AppJolticon icon="gamepad" />
 								<span v-translate="{ title: game.title }">
 									Game Trophy of
 									<b>%{ title }</b>
@@ -163,7 +163,11 @@ export default class AppTrophyModal extends mixins(BaseModal) {
 						<template v-else>
 							<AppJolticon icon="gamejolt" />
 							<span>Game Jolt Trophy</span>
-							<router-link v-if="artist" :to="artist.url" class="-subtitle-link link-unstyled">
+							<router-link
+								v-if="artist"
+								:to="artist.url"
+								class="-subtitle-link link-unstyled"
+							>
 								<span class="dot-separator" />
 								<AppUserCardHover :user="artist">
 									<span v-translate="{ username: artist.username }">
@@ -189,9 +193,7 @@ export default class AppTrophyModal extends mixins(BaseModal) {
 							/>
 							<div v-if="canReceiveExp" class="-exp text-muted">
 								<AppJolticon icon="exp" />
-								<span v-translate="{ exp: trophy.experience }">
-									%{ exp } EXP
-								</span>
+								<span v-translate="{ exp: trophy.experience }"> %{ exp } EXP </span>
 							</div>
 						</div>
 						<div class="-info">
@@ -204,7 +206,9 @@ export default class AppTrophyModal extends mixins(BaseModal) {
 								<span class="dot-separator small" v-if="Screen.isDesktop" />
 								<br v-else />
 								<span v-if="completionPercentageForDisplay === 1">
-									<AppTranslate>&lt;1% of players achieved this trophy</AppTranslate>
+									<AppTranslate
+										>&lt;1% of players achieved this trophy</AppTranslate
+									>
 								</span>
 								<span v-else-if="completionPercentageForDisplay === 100">
 									<AppTranslate>

@@ -2,8 +2,8 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { Game } from '../../../../../_common/game/game.model';
-import AppGameThumbnailImg from '../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
-import AppUserCardHover from '../../../../../_common/user/card/hover/hover.vue';
+import AppGameThumbnailImg from '../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
+import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
 
 @Options({

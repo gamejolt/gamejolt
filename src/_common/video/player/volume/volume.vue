@@ -1,13 +1,13 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import AppPopper from '../../../popper/popper.vue';
+import AppPopper from '../../../popper/AppPopper.vue';
 import { Screen } from '../../../screen/screen-service';
 import {
 	SettingVideoPlayerFeedMuted,
 	SettingVideoPlayerMuted,
 } from '../../../settings/settings.service';
-import AppSlider, { ScrubberCallback } from '../../../slider/slider.vue';
-import { AppTooltip } from '../../../tooltip/tooltip-directive';
+import AppSlider, { ScrubberCallback } from '../../../slider/AppSlider.vue';
+import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import {
 	scrubVideoVolume,
 	setVideoMuted,
@@ -21,7 +21,7 @@ import {
 		AppSlider,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppPlayerVolume extends Vue {
@@ -70,6 +70,7 @@ export default class AppPlayerVolume extends Vue {
 			v-if="!Screen.isMobile && hasSlider"
 			class="-slider"
 			:percent="player.volume"
+			overlay
 			@scrub="onVolumeScrub"
 		/>
 	</div>

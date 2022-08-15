@@ -1,14 +1,14 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
-import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { Game } from '../../../../_common/game/game.model';
 import { GameRating } from '../../../../_common/game/rating/rating.model';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import { LikersModal } from '../../../../_common/likers/modal.service';
 import { EventTopic } from '../../../../_common/system/event/event-topic';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 
 export const RatingWidgetOnChange = 'GameRating.changed';
 export interface RatingWidgetOnChangePayload {
@@ -20,8 +20,8 @@ export const onRatingWidgetChange = new EventTopic<RatingWidgetOnChangePayload>(
 
 @Options({
 	directives: {
-		AppAuthRequired,
-		AppTooltip,
+		AppAuthRequired: vAppAuthRequired,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppRatingWidget extends Vue {

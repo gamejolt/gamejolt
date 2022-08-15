@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import { showErrorGrowl } from '../../../growls/growls.service';
 import { Screen } from '../../../screen/screen-service';
-import { AppTooltip } from '../../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import {
 	editorInsertBlockquote,
 	editorInsertBulletList,
@@ -19,7 +19,7 @@ import {
 @Options({
 	components: {},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppContentEditorBlockControls extends Vue {
@@ -376,8 +376,6 @@ export default class AppContentEditorBlockControls extends Vue {
 		display: flex
 		justify-content: center
 		align-items: center
-		change-bg('bg-offset')
-		theme-prop('border-color', 'bg-subtle')
 		padding-left: 4px
 		padding-right: 4px
 

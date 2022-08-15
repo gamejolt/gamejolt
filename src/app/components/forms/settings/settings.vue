@@ -156,107 +156,126 @@ export default class FormSettings extends mixins(Wrapper) {
 
 <template>
 	<AppForm :controller="form" @changed="onChange">
-		<fieldset v-if="GJ_IS_DESKTOP_APP" id="settings-client">
-			<legend>
-				<AppTranslate>Client</AppTranslate>
-			</legend>
+		<template v-if="GJ_IS_DESKTOP_APP">
+			<fieldset id="settings-client">
+				<legend>
+					<AppTranslate>Client</AppTranslate>
+				</legend>
 
-			<AppFormGroup
-				name="game_install_dir"
-				:label="$gettext('Installed Games Directory')"
-			>
-				<div class="pull-right">
-					<AppButton sm @click="changeLocation('game-install-dir')">
-						<AppTranslate>Change Location</AppTranslate>
-					</AppButton>
-				</div>
+				<AppFormGroup
+					name="game_install_dir"
+					:label="$gettext('Installed Games Directory')"
+				>
+					<template #inline-control>
+						<AppButton sm @click="changeLocation('game-install-dir')">
+							<AppTranslate>Change Location</AppTranslate>
+						</AppButton>
+					</template>
 
-				<div class="form-static">
-					<code>{{ formModel.game_install_dir }}</code>
-				</div>
+					<div class="form-static">
+						<code>{{ formModel.game_install_dir }}</code>
+					</div>
 
-				<p class="help-block">
-					<AppTranslate>This is the directory on your computer that games will install into.</AppTranslate>
-				</p>
+					<p class="help-block">
+						<AppTranslate>
+							This is the directory on your computer that games will install into.
+						</AppTranslate>
+					</p>
 
-				<input
-					ref="game-install-dir"
-					class="hidden"
-					type="file"
-					nwdirectory
-					@change="onSelectedInstallDir($event.target.value)"
-				/>
+					<input
+						ref="game-install-dir"
+						class="hidden"
+						type="file"
+						nwdirectory
+						@change="onSelectedInstallDir($event.target.value)"
+					/>
 
-				<AppFormControlErrors />
-			</AppFormGroup>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-			<AppFormGroup
-				:class="{ 'sans-margin-bottom': formModel.limit_downloads }"
-				name="limit_downloads"
-				:label="$gettext('Limit simultaneous downloads?')"
-			>
-				<AppFormControlToggle class="pull-right" />
-			</AppFormGroup>
-			<br v-if="formModel.limit_downloads" />
+				<AppFormGroup
+					:class="{ 'sans-margin-bottom': formModel.limit_downloads }"
+					name="limit_downloads"
+					:label="$gettext('Limit simultaneous downloads?')"
+				>
+					<template #inline-control>
+						<AppFormControlToggle />
+					</template>
+				</AppFormGroup>
+				<br v-if="formModel.limit_downloads" />
 
-			<AppFormGroup
-				v-if="formModel.max_download_count !== -1"
-				name="max_download_count"
-				:label="$gettext('Max # of Simultaneous Downloads')"
-				:hide-label="true"
-			>
-				<AppFormControl type="number" :validators="[validateMinValue(1)]" />
-				<p class="help-block">
-					<AppTranslate>If you have more than this number, downloads will be queued up.</AppTranslate>
-				</p>
-				<AppFormControlErrors />
-			</AppFormGroup>
+				<AppFormGroup
+					v-if="formModel.max_download_count !== -1"
+					name="max_download_count"
+					:label="$gettext('Max # of Simultaneous Downloads')"
+					:hide-label="true"
+				>
+					<AppFormControl type="number" :validators="[validateMinValue(1)]" />
+					<p class="help-block">
+						<AppTranslate>
+							If you have more than this number, downloads will be queued up.
+						</AppTranslate>
+					</p>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-			<AppFormGroup
-				:class="{ 'sans-margin-bottom': formModel.limit_downloads }"
-				name="limit_extractions"
-				:label="$gettext('Limit simultaneous extractions?')"
-			>
-				<AppFormControlToggle class="pull-right" />
-				<p class="help-block">
-					<AppTranslate>An extraction is when the game is unpacked and installed after downloading.</AppTranslate>
-				</p>
-			</AppFormGroup>
-			<br v-if="formModel.limit_downloads" />
+				<AppFormGroup
+					:class="{ 'sans-margin-bottom': formModel.limit_downloads }"
+					name="limit_extractions"
+					:label="$gettext('Limit simultaneous extractions?')"
+				>
+					<template #inline-control>
+						<AppFormControlToggle />
+					</template>
+					<p class="help-block">
+						<AppTranslate>
+							An extraction is when the game is unpacked and installed after
+							downloading.
+						</AppTranslate>
+					</p>
+				</AppFormGroup>
+				<br v-if="formModel.limit_downloads" />
 
-			<AppFormGroup
-				v-if="formModel.max_extract_count !== -1"
-				name="max_extract_count"
-				:label="$gettext('Max # of Simultaneous Extractions')"
-				:hide-label="true"
-			>
-				<AppFormControl type="number" :validators="[validateMinValue(1)]" />
-				<p class="help-block">
-					<AppTranslate>If you have more than this number, extractions will be queued up.</AppTranslate>
-				</p>
-				<AppFormControlErrors />
-			</AppFormGroup>
+				<AppFormGroup
+					v-if="formModel.max_extract_count !== -1"
+					name="max_extract_count"
+					:label="$gettext('Max # of Simultaneous Extractions')"
+					:hide-label="true"
+				>
+					<AppFormControl type="number" :validators="[validateMinValue(1)]" />
+					<p class="help-block">
+						<AppTranslate>
+							If you have more than this number, extractions will be queued up.
+						</AppTranslate>
+					</p>
+					<AppFormControlErrors />
+				</AppFormGroup>
 
-			<AppFormGroup
-				name="queue_when_playing"
-				:label="$gettext('Pause when playing?')"
-			>
-				<AppFormControlToggle class="pull-right" />
-				<p class="help-block">
-					<AppTranslate>
-						Should we pause all game installs and updates when you're playing a game?
-					</AppTranslate>
-				</p>
-			</AppFormGroup>
+				<AppFormGroup name="queue_when_playing" :label="$gettext('Pause when playing?')">
+					<template #inline-control>
+						<AppFormControlToggle />
+					</template>
+					<p class="help-block">
+						<AppTranslate>
+							Should we pause all game installs and updates when you're playing a
+							game?
+						</AppTranslate>
+					</p>
+				</AppFormGroup>
 
-			<AppFormGroup
-				v-if="canClientAutostart"
-				name="autostart_client"
-				:label="$gettext('Start when Windows starts?')"
-			>
-				<AppFormControlToggle class="pull-right" />
-			</AppFormGroup>
-		</fieldset>
+				<AppFormGroup
+					v-if="canClientAutostart"
+					name="autostart_client"
+					:label="$gettext('Start when Windows starts?')"
+				>
+					<template #inline-control>
+						<AppFormControlToggle />
+					</template>
+				</AppFormGroup>
+			</fieldset>
+
+			<hr class="fieldset-divider" />
+		</template>
 
 		<fieldset id="settings-site">
 			<legend>
@@ -264,7 +283,9 @@ export default class FormSettings extends mixins(Wrapper) {
 			</legend>
 
 			<AppFormGroup name="animated_thumbnails" :label="$gettext('Animated thumbnails?')">
-				<AppFormControlToggle class="pull-right" />
+				<template #inline-control>
+					<AppFormControlToggle />
+				</template>
 				<p class="help-block">
 					<AppTranslate>
 						Turning this off will show a static image instead of animated thumbnails.
@@ -273,14 +294,18 @@ export default class FormSettings extends mixins(Wrapper) {
 			</AppFormGroup>
 
 			<AppFormGroup name="theme_dark" :label="$gettext('Dark mode?')">
-				<AppFormControlToggle class="pull-right" />
+				<template #inline-control>
+					<AppFormControlToggle />
+				</template>
 				<p class="help-block">
 					<AppTranslate>Give your eyes a rest, come to the dark side!</AppTranslate>
 				</p>
 			</AppFormGroup>
 
 			<AppFormGroup name="theme_always_ours" :label="$gettext('Always use your theme?')">
-				<AppFormControlToggle class="pull-right" />
+				<template #inline-control>
+					<AppFormControlToggle />
+				</template>
 				<p class="help-block">
 					<AppTranslate>
 						Don't switch to other themes when viewing profiles, games or communities.
@@ -289,13 +314,17 @@ export default class FormSettings extends mixins(Wrapper) {
 			</AppFormGroup>
 		</fieldset>
 
+		<hr class="fieldset-divider" />
+
 		<fieldset id="settings-restrictions">
 			<legend>
 				<AppTranslate>Restrictions</AppTranslate>
 			</legend>
 
 			<AppFormGroup name="restricted_browsing" :label="$gettext('Restrict browsing?')">
-				<AppFormControlToggle class="pull-right" />
+				<template #inline-control>
+					<AppFormControlToggle />
+				</template>
 				<p class="help-block">
 					<AppTranslate>
 						This will block games that have a maturity rating of "Mature" and ask if
@@ -305,13 +334,17 @@ export default class FormSettings extends mixins(Wrapper) {
 			</AppFormGroup>
 		</fieldset>
 
+		<hr class="fieldset-divider" />
+
 		<fieldset id="settings-notifications">
 			<legend>
 				<AppTranslate>Notifications</AppTranslate>
 			</legend>
 
 			<AppFormGroup name="feed_notifications" :label="$gettext('Feed notifications?')">
-				<AppFormControlToggle class="pull-right" :disabled="browserNotificationsDisabled" />
+				<template #inline-control>
+					<AppFormControlToggle :disabled="browserNotificationsDisabled" />
+				</template>
 				<p class="help-block">
 					<AppTranslate>
 						We attempt to send you notifications as they happen. You can disable them
@@ -325,7 +358,9 @@ export default class FormSettings extends mixins(Wrapper) {
 			</AppFormGroup>
 
 			<AppFormGroup name="broadcast_modal" :label="$gettext('Show broadcasts?')">
-				<AppFormControlToggle class="pull-right" />
+				<template #inline-control>
+					<AppFormControlToggle />
+				</template>
 				<p class="help-block">
 					<AppTranslate>
 						With this on you will receive notifications of new site features that have

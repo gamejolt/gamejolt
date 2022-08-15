@@ -1,10 +1,11 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
-import * as path from 'path';
 import { defineConfig, UserConfig as ViteUserConfigActual } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
+import { acquirePrebuiltFFmpeg } from './scripts/build/desktop-app/ffmpeg-prebuilt';
 import viteHtmlResolve from './scripts/build/vite-html-resolve';
-import { parseAndInferOptionsFromEnv } from './scripts/build/vite-options';
+import { readFromViteEnv } from './scripts/build/vite-runner';
 
+const path = require('path') as typeof import('path');
 const fs = require('fs-extra') as typeof import('fs-extra');
 
 type ViteUserConfig = ViteUserConfigActual & {
@@ -20,9 +21,25 @@ type ViteUserConfig = ViteUserConfigActual & {
 type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'];
 
 // https://vitejs.dev/config/
-export default defineConfig(async configEnv => {
-	const { command } = configEnv;
-	const gjOpts = await parseAndInferOptionsFromEnv();
+export default defineConfig(async () => {
+	const gjOpts = readFromViteEnv(process.env);
+
+	// Acquire the ffmpeg prebuilt binaries if needed.
+	// By default this is done when serving the desktop app locally.
+	if (gjOpts.withFfmpeg) {
+		await acquirePrebuiltFFmpeg({
+			outDir: __dirname,
+			cacheDir: path.resolve(__dirname, 'build', '.cache', 'ffmpeg-prebuilt'),
+			nwjsVersion: gjOpts.nwjsVersion,
+		});
+	}
+
+	// TODO(vite-no-devserver) we might need to rewrite package.json in the
+	// project root if building the desktop app with build type serve-build as
+	// such:
+	// - remove node-remote key.
+	// - change the main to be:
+	//   chrome-extension://game-jolt-client/build/desktop/index.html#/
 
 	type EmptyObject = { [k in any]: never };
 	type GetValueOrEmpty = <T>(value: T) => T | EmptyObject;
@@ -37,10 +54,8 @@ export default defineConfig(async configEnv => {
 
 	const onlyInSSR = emptyUnless(() => gjOpts.platform === 'ssr');
 	const notInSSR = emptyUnless(() => gjOpts.platform !== 'ssr');
-	const isInDocker = !!process.env['GAMEJOLT_IN_DOCKER'];
-	const onlyInDocker = emptyUnless(() => isInDocker);
 	const onlyInDesktopApp = emptyUnless(() => gjOpts.platform === 'desktop');
-	const onlyInProdBuilds = emptyUnless(() => gjOpts.buildType === 'production');
+	const onlyInMobileApp = emptyUnless(() => gjOpts.platform === 'mobile');
 
 	// These will be imported in all styl files.
 	const stylusOptions = {
@@ -64,7 +79,7 @@ export default defineConfig(async configEnv => {
 	// (app section remains index.html since it is our 'main' section. Purely semantics)
 	const indexHtml = path.resolve(__dirname, 'src', 'index.html');
 	let inputHtmlFile = indexHtml;
-	if (command === 'build' && gjOpts.section !== 'app') {
+	if (gjOpts.buildType !== 'serve-hmr' && gjOpts.section !== 'app') {
 		inputHtmlFile = path.resolve(indexHtml, '..', `${gjOpts.section}.html`);
 		fs.copyFileSync(indexHtml, inputHtmlFile);
 	}
@@ -227,9 +242,7 @@ export default defineConfig(async configEnv => {
 				dir += `.vite-${gjOpts.platform}`;
 			}
 
-			if (isInDocker) {
-				dir += '-docker';
-			}
+			dir += `-${gjOpts.buildType}-${gjOpts.environment}-${gjOpts.section}`;
 
 			return dir;
 		})(),
@@ -237,14 +250,14 @@ export default defineConfig(async configEnv => {
 		base: (() => {
 			// When watching simply return root.
 			// This is a vite default.
-			if (command === 'serve') {
+			if (gjOpts.buildType === 'serve-hmr') {
 				return '/';
 			}
 
-			// Desktop app assets are bundled into /package/
-			// TODO: this is problably not correct. check this.
+			// Desktop app assets are bundled into /package/ in prod,
+			// and in dev they are build and watched into /build/desktop
 			if (gjOpts.platform === 'desktop') {
-				return '/package/';
+				return gjOpts.buildType === 'serve-build' ? '/build/desktop/' : '/package/';
 			}
 
 			// Mobile app assets are expected to always resolve
@@ -255,7 +268,7 @@ export default defineConfig(async configEnv => {
 
 			// In production builds we serve all assets from the cdn.
 			// For desktop and mobile apps we serve from the locally bundled assets.
-			if (gjOpts.buildType === 'production') {
+			if (gjOpts.environment === 'production' && gjOpts.buildType === 'build') {
 				return 'https://s.gjcdn.net/';
 			}
 
@@ -263,55 +276,128 @@ export default defineConfig(async configEnv => {
 			return '/';
 		})(),
 
+		publicDir: 'static-assets',
+
 		server: {
-			port: 8080,
 			strictPort: true,
 
-			...onlyInDocker({
-				// Allows remote connections.
-				// This is needed when running from within docker
-				// to allow other containers to access it.
-				host: true,
+			...((): Partial<ViteUserConfig['server']> => {
+				// For both development and production environments we need to access the frontend
+				// through https://development.gamejolt.com so we can access the cookies, local storage, etc.
+				// We have different ways of achieving this for development and production.
 
-				// This is specific to our docker setup.
-				// We do ssl termination in a different container
-				// and forward the traffic to the frontend container.
-				//
-				// This lets us access the site from https://development.gamejolt.com
-				// In order to get HMR working we need to set some options.
-				hmr: {
-					// Secure traffic is allowed only port 443.
-					// If we don't specify the port, vite will try
-					// connecting to wss://development.gamejolt.com:8080
-					clientPort: 443,
+				if (gjOpts.environment === 'production') {
+					// When hitting production we expect to hit the devserver
+					// from our browser directly, so we enable https using a self
+					// signed certificate.
+					return {
+						// On mac I couldn't find a way to easily listen on port
+						// 443 without root, so bind to port 8443, and forward
+						// traffic from port 443 to 8443 in a separate process.
+						// Example of using socat for that is in the README.md
+						port: process.platform === 'darwin' ? 8443 : 443,
 
-					// This is optional but makes it easier to differentiate
-					// between issues with connecting to the HMR components
-					// vs the serving component of vite's dev server.
-					host: 'hmr.development.gamejolt.com',
-				},
-			}),
+						https: {
+							pfx: path.resolve(__dirname, 'development.gamejolt.com.pfx'),
+							passphrase: 'yame yolt',
+						},
+					};
+				} else {
+					// The development configuration is a bit more involved. We
+					// have multiple services that need to be accessible from
+					// development.gamejolt.com and its subdomains. For this
+					// reason we use a reverse proxy to do the routing and ssl
+					// termination for us.
+					//
+					// When hitting https://development.gamejolt.com we'll be
+					// hitting the reverse proxy first, and route traffic back
+					// to the devserver as needed.
+					return {
+						// The reverse proxy will try to reach the devserver on port 8080.
+						port: 8080,
+
+						// Allows remote connections.
+						//
+						// This is needed to allow the reverse proxy to access
+						// the devserver thats running on our host.
+						//
+						// TODO: this will bind the frontend to 0.0.0.0. find a
+						// way to scope this down to an interface thats only
+						// reachable locally.
+						host: true,
+
+						// The devserver runs locally on port 8080, but is
+						// served from https://development.gamejolt.com. This
+						// will cause requests to the HMR endpoint to get
+						// blocked by the browser's security policy.
+						hmr: {
+							// Secure traffic is allowed only on port 443.
+							// If we don't specify the port, vite will try
+							// connecting to wss://development.gamejolt.com:8080
+							clientPort: 443,
+
+							// This is optional but makes it easier to differentiate
+							// between issues with connecting to the HMR components
+							// vs the serving component of vite's dev server.
+							host: 'hmr.development.gamejolt.com',
+						},
+					};
+				}
+			})(),
 		},
+
 		build: {
-			...onlyInDesktopApp<Partial<ViteUserConfig['build']>>({
-				// This lets us use top-level awaits which allows us
-				// to use our conditional imports as if they were imported
-				// syncronously.
-				target: 'esnext',
+			// We want to target the oldest browsers that vite will let us.
+			...onlyInMobileApp({
+				target: 'es2015',
 			}),
+
+			// Never inline stuff.
+			assetsInlineLimit: 0,
+
+			// Only minify in production so we can debug our stuff.
+			minify: gjOpts.environment === 'production' && gjOpts.buildType === 'build',
 
 			rollupOptions: {
-				...onlyInProdBuilds<RollupOptions>({
-					// By default vite outputs filenames with their chunks,
-					// but some ad blockers are outrageously aggressive with their
-					// filter lists, for example blocking any file that contains the
-					// string 'follow-widget'. It'd ridiculous.
-					// For this reason, do not output filenames in prod builds.
-					output: {
-						chunkFileNames: 'assets/[hash].js',
-						assetFileNames: 'assets/[hash].[ext]',
-					},
-				}),
+				...(() => {
+					// By default vite outputs filenames with their chunks, but
+					// some ad blockers are outrageously aggressive with their
+					// filter lists, for example blocking any file that contains
+					// the string 'follow-widget'. It'd ridiculous. For this
+					// reason, do not output filenames in prod web-based builds.
+					if (
+						gjOpts.environment === 'production' &&
+						gjOpts.buildType === 'build' &&
+						['web', 'ssr'].includes(gjOpts.platform)
+					) {
+						return <RollupOptions>{
+							output: {
+								chunkFileNames: 'assets/[hash].js',
+								assetFileNames: 'assets/[hash].[ext]',
+							},
+						};
+					}
+
+					// For the mobile app build, we currently can't load
+					// cross-origin requests, so we want to essentially make
+					// just one big JS chunk.
+					if (gjOpts.platform === 'mobile') {
+						return <RollupOptions>{
+							output: {
+								// Vite itself sets manualChunks so that it can
+								// pull out the vendor library code into a
+								// chunk. We need to disable that first.
+								manualChunks: undefined,
+								// This option will tell vite to always just
+								// inline the dynamic imports we have in our
+								// codebase.
+								inlineDynamicImports: true,
+							},
+						};
+					}
+
+					return {};
+				})(),
 
 				...notInSSR<RollupOptions>({
 					// When building for ssr the entrypoint is specified in build.ssr,
@@ -320,7 +406,7 @@ export default defineConfig(async configEnv => {
 				}),
 
 				...onlyInDesktopApp<RollupOptions>({
-					external: ['client-voodoo', 'axios'],
+					external: ['client-voodoo', 'asg-prebuilt'],
 				}),
 			},
 
@@ -330,14 +416,8 @@ export default defineConfig(async configEnv => {
 			// while developing
 			emptyOutDir: gjOpts.emptyOutDir,
 
-			// Write to build/web normally and to build/server for ssr.
-			outDir: path.resolve(
-				__dirname,
-				gjOpts.platform === 'ssr' ? path.join('build', 'server') : path.join('build', 'web')
-			),
-
-			// TODO(david) document why this was set to 'terser'.
-			minify: 'terser',
+			// Write to build/{platform}.
+			outDir: path.resolve(__dirname, path.join('build', gjOpts.platform)),
 
 			// The SSR manifest is used to keep track of which static assets are
 			// needed by which component. This lets us choose an optimal set of
@@ -355,7 +435,7 @@ export default defineConfig(async configEnv => {
 			}),
 		},
 		optimizeDeps: {
-			exclude: ['client-voodoo'],
+			exclude: ['client-voodoo', 'asg-prebuilt'],
 		},
 		resolve: {
 			alias: {
@@ -387,16 +467,11 @@ export default defineConfig(async configEnv => {
 			GJ_IS_DESKTOP_APP: JSON.stringify(gjOpts.platform === 'desktop'),
 			GJ_IS_MOBILE_APP: JSON.stringify(gjOpts.platform === 'mobile'),
 			GJ_ENVIRONMENT: JSON.stringify(gjOpts.environment),
+			GJ_IS_STAGING: JSON.stringify(gjOpts.isStaging),
 			GJ_BUILD_TYPE: JSON.stringify(gjOpts.buildType),
 			GJ_VERSION: JSON.stringify(gjOpts.version),
 			GJ_WITH_UPDATER: JSON.stringify(gjOpts.withUpdater),
 			GJ_HAS_ROUTER: JSON.stringify(gjOpts.currentSectionConfig.hasRouter),
-
-			// Disable redirecting between section during serve.
-			// This is because as of time of writing we only support watching
-			// one section at a time. This makes it easier to test auth section
-			// when you're already logged in.
-			GJ_DISABLE_SECTION_REDIRECTS: JSON.stringify(command === 'serve'),
 		},
 
 		...onlyInSSR<ViteUserConfig>({

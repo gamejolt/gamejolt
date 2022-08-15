@@ -1,6 +1,7 @@
 import { RouteLocationNormalized } from 'vue-router';
 import { RouteLocationDefinition } from '../../../utils/router';
 import { Api } from '../../api/api.service';
+import { Background } from '../../background/background.model';
 import { Perm } from '../../collaborator/collaboratable';
 import { CommunityChannel } from '../../community/channel/channel.model';
 import { Community } from '../../community/community.model';
@@ -94,6 +95,8 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	// The feed no longer works with posts directly - we need the event item.
 	event_item?: EventItem;
 
+	background?: Background;
+
 	constructor(data: any = {}) {
 		super(data);
 
@@ -146,6 +149,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			this.embeds = FiresidePostEmbed.populate(data.embeds);
 		}
 
+		if (data.background) {
+			this.background = new Background(data.background);
+		}
+
 		Registry.store('FiresidePost', this);
 	}
 
@@ -170,12 +177,22 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return this.as_game_owner ? this.game.developer : this.user;
 	}
 
+	/** Checks if any media or videos are attached. */
+	get hasAnyMedia() {
+		return this.hasMedia || this.hasVideo;
+	}
+
+	/** Has images/gifs. */
 	get hasMedia() {
 		return this.media.length > 0;
 	}
 
 	get hasVideo() {
 		return this.videos.length > 0;
+	}
+
+	get hasBackground() {
+		return !!this.background;
 	}
 
 	/**
@@ -487,6 +504,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			`/web/posts/manage/toggle-pin/${this.id}/${targetModel}/${targetId}`,
 			'post'
 		);
+	}
+
+	$removeVideo() {
+		return Api.sendRequest(`/web/posts/manage/remove-video/${this.id}`, {});
 	}
 
 	async remove() {

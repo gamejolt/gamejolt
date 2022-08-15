@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+import AppButton from '../../../button/AppButton.vue';
 import { formatFilesize } from '../../../filters/filesize';
-import AppPopper from '../../../popper/popper.vue';
+import AppJolticon from '../../../jolticon/AppJolticon.vue';
+import AppPopper from '../../../popper/AppPopper.vue';
+import AppTranslate from '../../../translate/AppTranslate.vue';
 import { GameBuild } from '../../build/build.model';
 import { GamePackage } from '../package.model';
-import { GamePackageCardModel } from './card.model';
 import AppGamePackageCardMoreOptions from './AppGamePackageCardMoreOptions.vue';
-import AppButton from '../../../button/AppButton.vue';
-import AppTranslate from '../../../translate/AppTranslate.vue';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
+import { GamePackageCardModel } from './card.model';
 
 defineProps({
 	package: {

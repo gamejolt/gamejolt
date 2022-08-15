@@ -16,10 +16,10 @@ import { onScreenResize, Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
 import { useEventSubscription } from '../../system/event/event-topic';
 import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
-import AppStickerCard from '../card/card.vue';
+import AppStickerCard from '../card/AppStickerCard.vue';
 import { Sticker, StickerStack } from '../sticker.model';
 import AppSticker from '../sticker.vue';
-import AppStickerLayerDrawerItem from './drawer-item.vue';
+import AppStickerLayerDrawerItem from './AppStickerLayerDrawerItem.vue';
 
 @Options({
 	components: {
@@ -322,7 +322,7 @@ export default class AppStickerLayerDrawer extends Vue {
 		);
 	}
 
-	@Watch('isLoading')
+	@Watch('isLoading', { immediate: true })
 	async onIsLoadingChange() {
 		await nextTick();
 

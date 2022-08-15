@@ -9,7 +9,7 @@ import {
 	SettingVideoPlayerMuted,
 	SettingVideoPlayerVolume,
 } from '../../settings/settings.service';
-import { ScrubberStage } from '../../slider/slider.vue';
+import { ScrubberStage } from '../../slider/AppSlider.vue';
 import { VideoSourceArray } from '../video.vue';
 
 export type VideoPlayerControllerContext = 'feed' | 'page' | 'gif' | null;

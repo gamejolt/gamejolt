@@ -1,4 +1,4 @@
-export const gjSectionNames = [
+export const gjSectionNames = Object.freeze([
 	'app',
 	'auth',
 	'checkout',
@@ -9,7 +9,7 @@ export const gjSectionNames = [
 	'site-editor',
 	'widget-package',
 	'z',
-] as const;
+] as const);
 
 export type GjSectionName = typeof gjSectionNames[number];
 
@@ -37,7 +37,7 @@ export type GjSectionConfig = {
 	mobileApp: boolean;
 };
 
-const sectionDefaultConfig: GjSectionConfig = {
+const sectionDefaultConfig: GjSectionConfig = Object.freeze({
 	title: 'Game Jolt - Games for the love of it',
 	hasRouter: true,
 	allowCrawlers: false,
@@ -46,9 +46,9 @@ const sectionDefaultConfig: GjSectionConfig = {
 	desktopApp: false,
 	ssr: false,
 	mobileApp: false,
-};
+});
 
-const sectionOverrides: Partial<Record<GjSectionName, Partial<GjSectionConfig>>> = {
+const sectionOverrides: Partial<Record<GjSectionName, Partial<GjSectionConfig>>> = Object.freeze({
 	app: {
 		title: 'Game Jolt - Games for the love of it',
 		allowCrawlers: true,
@@ -94,15 +94,17 @@ const sectionOverrides: Partial<Record<GjSectionName, Partial<GjSectionConfig>>>
 		hasRouter: false,
 		mobileApp: true,
 	},
-};
+});
 
 function mergeSectionConfig(sectionConfig: Partial<GjSectionConfig>): GjSectionConfig {
 	return Object.assign({}, sectionDefaultConfig, sectionConfig);
 }
 
-export const gjSectionConfigs = Object.fromEntries(
-	gjSectionNames.map(name => {
-		const sectionConfig = mergeSectionConfig(sectionOverrides[name] ?? {});
-		return [name, sectionConfig];
-	})
+export const gjSectionConfigs = Object.freeze(
+	Object.fromEntries(
+		gjSectionNames.map(name => {
+			const sectionConfig = mergeSectionConfig(sectionOverrides[name] ?? {});
+			return [name, sectionConfig];
+		})
+	)
 ) as Record<GjSectionName, GjSectionConfig>;

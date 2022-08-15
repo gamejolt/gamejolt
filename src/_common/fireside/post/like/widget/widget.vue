@@ -2,13 +2,13 @@
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { PostControlsLocation, trackPostLike } from '../../../../analytics/analytics.service';
-import { AppAuthRequired } from '../../../../auth/auth-required-directive';
+import { vAppAuthRequired } from '../../../../auth/auth-required-directive';
 import { formatFuzzynumber } from '../../../../filters/fuzzynumber';
 import { showErrorGrowl } from '../../../../growls/growls.service';
 import { LikersModal } from '../../../../likers/modal.service';
 import { Screen } from '../../../../screen/screen-service';
 import { useCommonStore } from '../../../../store/common-store';
-import { AppTooltip } from '../../../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../tooltip/tooltip-directive';
 import AppUserFollowWidget from '../../../../user/follow/widget.vue';
 import { FiresidePost } from '../../post-model';
 import { FiresidePostLike, removeFiresidePostLike, saveFiresidePostLike } from '../like-model';
@@ -18,8 +18,8 @@ import { FiresidePostLike, removeFiresidePostLike, saveFiresidePostLike } from '
 		AppUserFollowWidget,
 	},
 	directives: {
-		AppAuthRequired,
-		AppTooltip,
+		AppAuthRequired: vAppAuthRequired,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppFiresidePostLikeWidget extends Vue {
@@ -129,10 +129,12 @@ export default class AppFiresidePostLikeWidget extends Vue {
 				v-app-track-event="`fireside-post-like-widget:click`"
 				v-app-auth-required
 				class="-like-button"
-				:icon="!liked ? 'heart' : 'heart-filled'"
+				:class="{
+					'-overlay-text': !liked && overlay,
+				}"
+				icon="heart-filled"
 				circle
 				:trans="trans"
-				:overlay="overlay"
 				:block="block"
 				:primary="liked"
 				:solid="liked"
@@ -156,7 +158,12 @@ export default class AppFiresidePostLikeWidget extends Vue {
 			v-if="post.like_count > 0"
 			v-app-tooltip="$gettext(`View all people that liked this post`)"
 			class="blip"
-			:class="{ 'blip-active': liked, mobile: Screen.isXs }"
+			:class="{
+				'blip-active': liked,
+				mobile: Screen.isXs,
+				'-overlay-text': overlay,
+				'-highlight': liked,
+			}"
 			@click="showLikers()"
 		>
 			{{ likeCount }}
@@ -214,6 +221,13 @@ export default class AppFiresidePostLikeWidget extends Vue {
 		&.-right
 			animation-name: dislike-anim-right
 			clip-path: polygon(50% 0%, 50% 100%, 100% 100%, 100% 0%)
+
+.-overlay-text
+	color: white
+	text-shadow: black 1px 1px 4px
+
+.-highlight
+	color: var(--theme-link)
 
 @keyframes like-anim
 	0%

@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { AppAuthJoinLazy } from '../../../components/lazy';
 import { imageJolt } from '../../../img/images';
 
@@ -15,7 +15,7 @@ import { imageJolt } from '../../../img/images';
 		AppThemeSvg,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute()
@@ -450,14 +450,12 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 						<div class="col-lg-7 col-centered">
 							<p class="lead">
 								Play and follow games in your
-								<b>browser</b>
-								, on your
-								<router-link :to="{ name: 'landing.client' }">desktop</router-link>
-								, and through the mobile site on your
+								<b>browser</b>, on your
+								<router-link :to="{ name: 'landing.app' }">desktop</router-link>,
+								and through the mobile site on your
 								<b>tablet</b>
 								and
-								<b>phone</b>
-								.
+								<b>phone</b>.
 							</p>
 						</div>
 					</div>
@@ -496,8 +494,8 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 					<br />
 					<br />
 
-					<AppButton solid :to="{ name: 'landing.client' }">
-						<AppTranslate>Get Desktop Client</AppTranslate>
+					<AppButton solid :to="{ name: 'landing.app' }">
+						<AppTranslate>Get the app</AppTranslate>
 					</AppButton>
 				</div>
 			</section>

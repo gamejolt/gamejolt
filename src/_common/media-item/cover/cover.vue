@@ -1,7 +1,7 @@
 <script lang="ts">
 import ResizeSensor from 'css-element-queries/src/ResizeSensor';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { AppImgResponsive } from '../../img/responsive/responsive';
+import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
 import AppMediaItemBackdrop from '../backdrop/AppMediaItemBackdrop.vue';

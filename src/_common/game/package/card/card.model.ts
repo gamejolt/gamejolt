@@ -1,5 +1,6 @@
 import { arrayUnique } from '../../../../utils/array';
 import { getDeviceArch, getDeviceOS } from '../../../device/device.service';
+import { Jolticon } from '../../../jolticon/AppJolticon.vue';
 import { LinkedKey } from '../../../linked-key/linked-key.model';
 import { Sellable } from '../../../sellable/sellable.model';
 import { GameBuild } from '../../build/build.model';
@@ -7,7 +8,7 @@ import { GameRelease } from '../../release/release.model';
 
 interface ExtraBuild {
 	type: string;
-	icon: string;
+	icon: Jolticon;
 	build: GameBuild;
 	platform: string;
 	arch: string | null;
@@ -73,7 +74,10 @@ export class GamePackageCardModel {
 			// the front. This is because you'd probably want to see [linux] first if you're
 			// on a linux machine, before windows, etc.
 			// We change the sort for their detected OS to be the first before sorting.
-			this.platformSupportInfo[os].sort = 0;
+			if (this.platformSupportInfo[os]) {
+				this.platformSupportInfo[os].sort = 0;
+			}
+
 			this.platformSupport.sort((a, b) => {
 				return this.platformSupportInfo[a].sort - this.platformSupportInfo[b].sort;
 			});

@@ -3,7 +3,7 @@ import { Options } from 'vue-property-decorator';
 import AppCard from '../../../_common/card/AppCard.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
-import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { User } from '../../../_common/user/user.model';
 import AppWeplayLogo from '../../components/weplay/logo/AppWeplayLogo.vue';
 
@@ -14,7 +14,7 @@ import AppWeplayLogo from '../../components/weplay/logo/AppWeplayLogo.vue';
 		AppWeplayLogo,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({
@@ -172,7 +172,7 @@ export default class RouteWeplay extends BaseRouteComponent {
 					<div class="description">
 						<div class="well desc-item">
 							<h2>
-								<AppJolticon class="-icon" icon="game" highlight />
+								<AppJolticon class="-icon" icon="gamepad" highlight />
 								Game where you want, when you want.
 							</h2>
 							<p>

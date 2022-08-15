@@ -4,12 +4,14 @@ import { stringSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
+import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import AppProfileTrophiesNav, { TrophyNavGame } from './_nav/nav.vue';
 
 @Options({
 	name: 'RouteProfileTrophies',
 	components: {
 		AppProfileTrophiesNav,
+		AppShellPageBackdrop,
 	},
 })
 @OptionsForRoute({
@@ -37,22 +39,24 @@ export default class RouteProfileTrophies extends BaseRouteComponent {
 </script>
 
 <template>
-	<section class="section fill-backdrop">
-		<div class="container">
-			<div class="row">
-				<div v-if="Screen.isDesktop" class="col-md-3">
-					<nav class="platform-list">
-						<AppProfileTrophiesNav
-							:games="games"
-							:site-trophy-count="siteTrophyCount"
-							:unviewed-games="unviewedGames"
-						/>
-					</nav>
-				</div>
-				<div class="col-xs-12 col-md-9">
-					<router-view />
+	<AppShellPageBackdrop>
+		<section class="section">
+			<div class="container">
+				<div class="row">
+					<div v-if="Screen.isDesktop" class="col-md-3">
+						<nav class="platform-list">
+							<AppProfileTrophiesNav
+								:games="games"
+								:site-trophy-count="siteTrophyCount"
+								:unviewed-games="unviewedGames"
+							/>
+						</nav>
+					</div>
+					<div class="col-xs-12 col-md-9">
+						<router-view />
+					</div>
 				</div>
 			</div>
-		</div>
-	</section>
+		</section>
+	</AppShellPageBackdrop>
 </template>

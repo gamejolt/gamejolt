@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { AppImgResponsive } from '../../img/responsive/responsive';
-import AppLoading from '../../loading/loading.vue';
+import AppImgResponsive from '../../img/AppImgResponsive.vue';
+import AppLoading from '../../loading/AppLoading.vue';
 import { Sticker } from '../../sticker/sticker.model';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { useContentOwnerController } from '../content-owner';

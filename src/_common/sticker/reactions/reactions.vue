@@ -3,7 +3,7 @@ import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { numberSort } from '../../../utils/array';
 import { shallowSetup } from '../../../utils/vue';
 import { useDrawerStore } from '../../drawer/drawer-store';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { StickerTargetController, toggleStickersShouldShow } from '../target/target-controller';
 import AppStickerReactionsItem from './item.vue';
 
@@ -12,7 +12,7 @@ import AppStickerReactionsItem from './item.vue';
 		AppStickerReactionsItem,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppStickerReactions extends Vue {

@@ -1,7 +1,8 @@
-import * as path from 'path';
 import { Collection } from './collection';
 import { LocalDbGame } from './game/game.model';
 import { LocalDbPackage } from './package/package.model';
+
+const path = require('path') as typeof import('path');
 
 export class LocalDb {
 	readonly games: Collection<LocalDbGame>;

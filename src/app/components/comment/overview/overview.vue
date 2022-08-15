@@ -1,5 +1,6 @@
 <script lang="ts">
 import { Emit, Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import {
 	Comment,
 	getCommentBlockReason,
@@ -14,10 +15,9 @@ import {
 import { DisplayMode } from '../../../../_common/comment/modal/modal.service';
 import { CommentThreadModal } from '../../../../_common/comment/thread/modal.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
-import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { Model } from '../../../../_common/model/model.service';
-import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
+import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import { illNoCommentsSmall } from '../../../img/ill/illustrations';
@@ -97,6 +97,7 @@ export default class AppCommentOverview extends Vue {
 
 	open(comment: Comment) {
 		CommentThreadModal.show({
+			router: this.$router,
 			model: this.model,
 			commentId: comment.id,
 			displayMode: this.displayMode,
@@ -138,7 +139,7 @@ export default class AppCommentOverview extends Vue {
 			</div>
 		</div>
 	</div>
-	<AppIllustration v-else-if="!hasComments" :src="illNoCommentsSmall" sm>
+	<AppIllustration v-else-if="!hasComments" :asset="illNoCommentsSmall" sm>
 		<AppTranslate v-if="displayMode === 'comments'">No comments yet.</AppTranslate>
 		<AppTranslate v-else-if="displayMode === 'shouts'">No shouts yet.</AppTranslate>
 	</AppIllustration>

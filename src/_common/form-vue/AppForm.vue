@@ -21,7 +21,7 @@ import { uuidv4 } from '../../utils/uuid';
 import { MaybeRef } from '../../utils/vue';
 import { Api } from '../api/api.service';
 import AppLoadingFade from '../loading/AppLoadingFade.vue';
-import AppLoading from '../loading/loading.vue';
+import AppLoading from '../loading/AppLoading.vue';
 import { ModelClassType } from '../model/model.service';
 import { PayloadFormErrors } from '../payload/payload-service';
 import { $gettext } from '../translate/translate.service';
@@ -29,16 +29,45 @@ import { FormGroupController } from './AppFormGroup.vue';
 
 const Key: InjectionKey<FormController> = Symbol('form');
 
+type RequiredFormProp<T> = {
+	model: {
+		type: PropType<T>;
+		required: true;
+	};
+};
+
+type OptionalFormProp<T> = {
+	model: {
+		type: PropType<T>;
+		default: undefined;
+	};
+};
+
 /**
  * Used to mix in common props used in most forms.
  */
-export function defineFormProps<T>() {
-	return {
-		model: {
-			type: Object as PropType<T | undefined>,
-			default: () => undefined,
-		},
-	};
+export function defineFormProps<T>(required: true): RequiredFormProp<T>;
+// eslint-disable-next-line no-redeclare
+export function defineFormProps<T>(required?: false): OptionalFormProp<T>;
+// eslint-disable-next-line no-redeclare
+export function defineFormProps<T>(required?: boolean): RequiredFormProp<T> | OptionalFormProp<T>;
+// eslint-disable-next-line no-redeclare
+export function defineFormProps<T>(required?: boolean): RequiredFormProp<T> | OptionalFormProp<T> {
+	if (required === true) {
+		return {
+			model: {
+				type: Object as PropType<T>,
+				required: true,
+			},
+		};
+	} else {
+		return {
+			model: {
+				type: Object as PropType<T>,
+				default: undefined,
+			},
+		};
+	}
 }
 
 export function provideForm(form: FormController) {
@@ -49,7 +78,7 @@ export function useForm<T = any>() {
 	return inject(Key, null) as FormController<T> | null;
 }
 
-interface CreateFormOptions<T> {
+interface CreateFormOptions<T, SubmitResponse = any> {
 	model?: Ref<T | undefined>;
 	modelClass?: ModelClassType<T>;
 	saveMethod?: MaybeRef<keyof T | undefined>;
@@ -61,24 +90,28 @@ interface CreateFormOptions<T> {
 	onInit?: () => void;
 	onLoad?: (response: any) => void;
 	onBeforeSubmit?: () => void;
-	onSubmit?: () => Promise<any>;
-	onSubmitSuccess?: (response: any) => void;
+	onSubmit?: () => Promise<SubmitResponse>;
+	onSubmitSuccess?: (response: SubmitResponse) => void;
 	onSubmitError?: (response: any) => void;
 	onChange?: (formModel: Readonly<T>) => void;
 }
 
-export function createForm<T>({
-	model,
-	modelClass,
-	onInit,
-	onLoad,
-	onBeforeSubmit,
-	onSubmit,
-	onSubmitSuccess,
-	onSubmitError,
-	onChange,
-	...options
-}: CreateFormOptions<T>) {
+export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T, SubmitResponse>) {
+	const { model } = options;
+
+	// These may be redefined below through the overrides. Only needed for
+	// backwards compatibility with old forms.
+	let {
+		modelClass,
+		onInit,
+		onLoad,
+		onBeforeSubmit,
+		onSubmit,
+		onSubmitSuccess,
+		onSubmitError,
+		onChange,
+	} = options;
+
 	const name = uuidv4();
 
 	const formModel = ref(_makeFormModel()) as Ref<T>;
@@ -117,6 +150,7 @@ export function createForm<T>({
 	function _override(overrides: Partial<CreateFormOptions<T>>) {
 		if (overrides.modelClass) {
 			modelClass = overrides.modelClass;
+			formModel.value = _makeFormModel();
 		}
 		if (overrides.saveMethod) {
 			saveMethod = ref(overrides.saveMethod);
@@ -153,9 +187,6 @@ export function createForm<T>({
 				overrides.onChange?.(formModel);
 			};
 		}
-
-		// Since the modelClass probably changed.
-		formModel.value = _makeFormModel();
 	}
 
 	onMounted(() => {
@@ -220,16 +251,18 @@ export function createForm<T>({
 			return;
 		}
 
-		isLoaded.value = null;
-		if (!loadUrl.value) {
-			return;
-		}
+		await reload();
+	}
 
+	async function reload() {
+		isLoaded.value = null;
 		isLoaded.value = false;
 
-		const payload = await Api.sendRequest(loadUrl.value, loadData.value || undefined, {
-			detach: true,
-		});
+		const payload = loadUrl.value
+			? await Api.sendRequest(loadUrl.value, loadData.value || undefined, {
+					detach: true,
+			  })
+			: {};
 
 		isLoaded.value = true;
 		isLoadedBootstrapped.value = true;
@@ -293,7 +326,7 @@ export function createForm<T>({
 			onBeforeSubmit?.();
 
 			if (onSubmit) {
-				const _response = await onSubmit();
+				const _response: any = await onSubmit();
 				if (_response?.success === false) {
 					throw _response;
 				}
@@ -306,6 +339,10 @@ export function createForm<T>({
 				if (model?.value) {
 					Object.assign(model.value, formModel.value);
 				}
+			} else if (import.meta.env.DEV) {
+				throw new Error(
+					`Either [onSubmit] or [modelClass] is required for form submission.`
+				);
 			}
 
 			onSubmitSuccess?.(response);
@@ -360,6 +397,7 @@ export function createForm<T>({
 		valid,
 		invalid,
 		submit,
+		reload,
 		clearErrors,
 		setCustomError,
 		clearCustomError,
@@ -392,6 +430,7 @@ export interface FormController<T = any> {
 	readonly valid: boolean;
 	readonly invalid: boolean;
 	submit: () => Promise<boolean>;
+	reload: () => Promise<void>;
 	clearErrors: () => void;
 	setCustomError: (error: string) => void;
 	clearCustomError: (error: string) => void;
@@ -411,6 +450,11 @@ const props = defineProps({
 		type: Object as PropType<FormController>,
 		required: true,
 	},
+	/** Used to override the normal form loading state. */
+	forcedIsLoading: {
+		type: Boolean,
+		default: undefined,
+	},
 });
 
 const emit = defineEmits({
@@ -418,7 +462,7 @@ const emit = defineEmits({
 	changed: (_formModel: any) => true,
 });
 
-const { controller } = toRefs(props);
+const { controller, forcedIsLoading } = toRefs(props);
 
 // To support old forms.
 controller.value._override({
@@ -427,8 +471,14 @@ controller.value._override({
 
 provide(Key, controller.value);
 
-// Check specifically false so that "null" is correctly shown as loaded.
-const isLoaded = computed(() => controller.value.isLoaded !== false);
+const isLoaded = computed(() => {
+	if (typeof forcedIsLoading?.value === 'boolean') {
+		return !forcedIsLoading.value;
+	}
+
+	// Check specifically false so that "null" is correctly shown as loaded.
+	return controller.value.isLoaded !== false;
+});
 const isLoadedBootstrapped = computed(() => controller.value.isLoadedBootstrapped !== false);
 </script>
 
@@ -439,7 +489,7 @@ const isLoadedBootstrapped = computed(() => controller.value.isLoadedBootstrappe
 		do the loading fade so that the form doesn't completely disappear when
 		loading subsequent.
 		-->
-		<AppLoading v-if="!isLoadedBootstrapped" />
+		<AppLoading v-if="!isLoadedBootstrapped && !forcedIsLoading" />
 		<AppLoadingFade v-else :is-loading="!isLoaded">
 			<slot />
 		</AppLoadingFade>

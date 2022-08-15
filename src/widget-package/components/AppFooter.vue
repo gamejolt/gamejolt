@@ -62,7 +62,6 @@ import AppJolticon from '../../_common/jolticon/AppJolticon.vue';
 	.text
 		theme-prop('color', 'fg-muted')
 		display: inline-block
-		font-family: $font-family-heading
 		opacity: 0
 		transition: opacity 1s, max-width 1s
 		white-space: nowrap

@@ -3,7 +3,7 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
 import { Community } from '../../../../../_common/community/community.model';
 import AppFormControlPrefix from '../../../../../_common/form-vue/AppFormControlPrefix.vue';
-import { AppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
+import { vAppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 
 class Wrapper extends BaseForm<Collaborator> {}
@@ -13,7 +13,7 @@ class Wrapper extends BaseForm<Collaborator> {}
 		AppFormControlPrefix,
 	},
 	directives: {
-		AppFocusWhen,
+		AppFocusWhen: vAppFocusWhen,
 	},
 })
 export default class FormCommunityCollaborator extends mixins(Wrapper) {

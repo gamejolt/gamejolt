@@ -4,7 +4,7 @@ import { formatDate } from '../../../../../../../../_common/filters/date';
 import { formatNumber } from '../../../../../../../../_common/filters/number';
 import { GameScoreTable } from '../../../../../../../../_common/game/score-table/score-table.model';
 import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
-import AppPopper from '../../../../../../../../_common/popper/popper.vue';
+import AppPopper from '../../../../../../../../_common/popper/AppPopper.vue';
 import { UserGameScore } from '../../../../../../../../_common/user/game-score/game-score.model';
 
 @Options({
@@ -113,9 +113,7 @@ export default class AppManageGameListScores extends Vue {
 											@click="removeScore(score)"
 										>
 											<AppJolticon icon="remove" notice />
-											<AppTranslate>
-												Remove Score
-											</AppTranslate>
+											<AppTranslate> Remove Score </AppTranslate>
 										</a>
 									</div>
 								</template>

@@ -11,8 +11,8 @@ import {
 	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../../../../../_common/scroll/affix/affix.vue';
-import { AppNoAutoscroll } from '../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
+import AppScrollAffix from '../../../../../../../_common/scroll/AppScrollAffix.vue';
+import { vAppNoAutoscroll } from '../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import { UserGameScore } from '../../../../../../../_common/user/game-score/game-score.model';
@@ -30,7 +30,7 @@ import { useGameRouteController } from '../../view.vue';
 		AppLoadingFade,
 	},
 	directives: {
-		AppNoAutoscroll,
+		AppNoAutoscroll: vAppNoAutoscroll,
 	},
 })
 @OptionsForRoute({
@@ -196,9 +196,9 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 
 						<div v-if="!scores.length" class="alert alert-notice full-bleed-xs">
 							<template v-if="type === 'best'">
-								<AppTranslate
-									>There are no scores on this scoreboard yet.</AppTranslate
-								>
+								<AppTranslate>
+									There are no scores on this scoreboard yet.
+								</AppTranslate>
 							</template>
 							<template v-else-if="type === 'user'">
 								<AppTranslate>You don't have any scores here yet!</AppTranslate>
@@ -213,7 +213,7 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 						<!--
 							We put some extra spacing in here because of the affixed game header.
 						-->
-						<AppScrollAffix :scroll-offset="80">
+						<AppScrollAffix :padding="80">
 							<div class="-score-selector-nav">
 								<AppScoreboardSelector
 									:current-table="scoreTable"
@@ -228,9 +228,3 @@ export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent
 		</section>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-// Put some extra spacing in here because of the affixed game header.
-.gj-scroll-affixed .-score-selector-nav
-	margin-top: $shell-top-nav-height + 10px !important
-</style>

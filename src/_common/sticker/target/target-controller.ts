@@ -19,6 +19,7 @@ import { Model } from '../../model/model.service';
 import { StickerLayerController } from '../layer/layer-controller';
 import { StickerPlacement } from '../placement/placement.model';
 import { ValidStickerResource } from './target.vue';
+import { CustomStickerPlacementRequest } from '../../drawer/drawer-store';
 
 const StickerTargetParentControllerKey: InjectionKey<StickerTargetController> =
 	Symbol('sticker-target-parent');
@@ -40,12 +41,21 @@ export type StickerTargetController = {
 	model: StickerTargetModel;
 	parent: StickerTargetController | null;
 	isLive: boolean;
+
+	placeStickerCallback?: CustomStickerPlacementRequest;
 };
+
+interface StickerTargetOptions {
+	isLive: boolean;
+	placeStickerCallback?: CustomStickerPlacementRequest;
+}
 
 export function createStickerTargetController(
 	model: StickerTargetModel,
 	parent?: StickerTargetController | null,
-	isLive = false
+	{ isLive, placeStickerCallback }: StickerTargetOptions = {
+		isLive: false,
+	}
 ) {
 	model = reactive(model) as StickerTargetModel;
 	const isInview = ref(false);
@@ -100,6 +110,7 @@ export function createStickerTargetController(
 		model,
 		parent: parent || null,
 		isLive,
+		placeStickerCallback,
 	};
 
 	if (parent) {

@@ -23,7 +23,7 @@ export default class AppFiresideStreamPreview extends Vue {
 	@Emit('changed') emitChanged(_hasVideo: boolean, _isStreaming: boolean) {}
 
 	get location() {
-		return this.fireside.location;
+		return this.fireside.routeLocation;
 	}
 
 	onVideoChanged(hasVideo: boolean, isStreaming: boolean) {
@@ -38,6 +38,7 @@ export default class AppFiresideStreamPreview extends Vue {
 			<div class="-video-wrapper">
 				<div class="-video-inner">
 					<AppFiresideStreamPreviewVideo
+						:key="fireside.id"
 						:fireside="fireside"
 						:show-live="showLive"
 						:show-live-users="showLiveUsers"

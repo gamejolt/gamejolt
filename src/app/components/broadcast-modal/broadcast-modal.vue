@@ -4,10 +4,10 @@ import AppContentViewer from '../../../_common/content/content-viewer/content-vi
 import { Environment } from '../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { $viewPostVideo } from '../../../_common/fireside/post/video/video-model';
-import { AppImgResponsive } from '../../../_common/img/responsive/responsive';
+import AppImgResponsive from '../../../_common/img/AppImgResponsive.vue';
 import { MediaItem } from '../../../_common/media-item/media-item-model';
 import { BaseModal } from '../../../_common/modal/base';
-import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
+import AppResponsiveDimensions from '../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
 import {
 	createStickerTargetController,
 	StickerTargetController,

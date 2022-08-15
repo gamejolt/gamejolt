@@ -2,10 +2,10 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../api/api.service';
 import { Game } from '../../../../game/game.model';
-import AppGameThumbnailImg from '../../../../game/thumbnail-img/thumbnail-img.vue';
 import AppGameThumbnail from '../../../../game/thumbnail/AppGameThumbnail.vue';
+import AppGameThumbnailImg from '../../../../game/thumbnail/AppGameThumbnailImg.vue';
 import { showErrorGrowl } from '../../../../growls/growls.service';
-import AppLoading from '../../../../loading/loading.vue';
+import AppLoading from '../../../../loading/AppLoading.vue';
 import { BaseModal } from '../../../../modal/base';
 import { CommunityCompetition } from '../../competition.model';
 import { CommunityCompetitionEntry } from '../entry.model';
@@ -105,11 +105,7 @@ export default class AppCommunityCompetitionEntrySubmitModal extends mixins(Base
 		<div class="modal-body">
 			<AppLoading v-if="isLoading" centered />
 			<template v-else-if="selectedGame">
-				<AppGameThumbnail
-					:game="selectedGame"
-					class="-game-thumb-selected"
-					hide-pricing
-				/>
+				<AppGameThumbnail :game="selectedGame" class="-game-thumb-selected" hide-pricing />
 				<p class="help-block">
 					<AppTranslate>
 						Before submitting, make sure that you have read and understood the rules of

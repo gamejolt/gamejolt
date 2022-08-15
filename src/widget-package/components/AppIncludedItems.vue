@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { formatFilesize } from '../../_common/filters/filesize';
 import { GameBuild } from '../../_common/game/build/build.model';
-import { AppTooltip as vAppTooltip } from '../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../_common/tooltip/tooltip-directive';
 import { useWidgetPackageStore } from '../store/index';
 
 const store = useWidgetPackageStore();

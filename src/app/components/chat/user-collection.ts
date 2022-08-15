@@ -1,20 +1,26 @@
-import { arrayRemove } from '../../../utils/array';
+import { toRaw } from 'vue';
+import { arrayRemove, numberSort, stringSortRaw } from '../../../utils/array';
+import { FiresideRTCHost } from '../../../_common/fireside/rtc/rtc';
 import { ChatClient, isUserOnline } from './client';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
 
+type RoomType = 'friend' | 'room' | 'fireside';
+
 export class ChatUserCollection {
 	static readonly TYPE_FRIEND = 'friend';
 	static readonly TYPE_ROOM = 'room';
+	static readonly TYPE_FIRESIDE = 'fireside';
 
-	chat: ChatClient | null = null;
 	onlineCount = 0;
 	offlineCount = 0;
 
 	private collection_: ChatUser[] = [];
-	private byId_: Record<number, ChatUser> = {};
-	private byRoomId_: Record<number, ChatUser> = {};
+	private byId_ = new Map<number, ChatUser>();
+	private byRoomId_ = new Map<number, ChatUser>();
 	private doingWork_ = false;
+	private firesideHostUsers_ = new Map<number, ChatUser>();
+	private firesideHosts_ = new Map<number, FiresideRTCHost>();
 
 	get count() {
 		return this.onlineCount + this.offlineCount;
@@ -24,7 +30,7 @@ export class ChatUserCollection {
 		return this.collection_;
 	}
 
-	constructor(public type: 'friend' | 'room', users: any[] = [], chatClient?: ChatClient) {
+	constructor(public chat: ChatClient, public type: RoomType, users: any[] = []) {
 		if (users && users.length) {
 			for (const user of users) {
 				const userModel = new ChatUser(user);
@@ -40,31 +46,28 @@ export class ChatUserCollection {
 
 			this.recollect();
 		}
-
-		if (chatClient) {
-			this.chat = chatClient;
-		}
 	}
 
 	private indexUser(user: ChatUser) {
-		this.byId_[user.id] = user;
+		this.byId_.set(user.id, user);
 		if (user.room_id !== 0) {
-			this.byRoomId_[user.room_id] = user;
+			this.byRoomId_.set(user.room_id, user);
 		}
 	}
 
 	get(input: number | ChatUser): ChatUser | undefined {
 		const userId = typeof input === 'number' ? input : input.id;
-		return this.byId_[userId];
+		return this.byId_.get(userId);
+	}
+
+	has(input: number | ChatUser) {
+		const userId = typeof input === 'number' ? input : input.id;
+		return this.byId_.has(userId);
 	}
 
 	getByRoom(input: number | ChatRoom): ChatUser | undefined {
 		const roomId = typeof input === 'number' ? input : input.id;
-		return this.byRoomId_[roomId];
-	}
-
-	has(input: number | ChatUser) {
-		return !!this.get(input);
+		return this.byRoomId_.get(roomId);
 	}
 
 	add(user: ChatUser) {
@@ -75,6 +78,7 @@ export class ChatUserCollection {
 		}
 
 		this.collection_.push(user);
+		this._assignFiresideHostDataToUser(user);
 		this.indexUser(user);
 
 		if (user.isOnline) {
@@ -94,9 +98,9 @@ export class ChatUserCollection {
 		}
 
 		arrayRemove(this.collection_, i => i === user);
-		delete this.byId_[user.id];
+		this.byId_.delete(user.id);
 		if (user.room_id !== 0) {
-			delete this.byRoomId_[user.room_id];
+			this.byRoomId_.delete(user.room_id);
 		}
 
 		if (user.isOnline) {
@@ -108,10 +112,82 @@ export class ChatUserCollection {
 		this.recollect();
 	}
 
+	assignFiresideHostData(data: FiresideRTCHost[]) {
+		let needsRecollect = false;
+
+		// Store our current host ids so we can find chat users that are no
+		// longer hosts.
+		const staleHostIds = new Set(this.firesideHostUsers_.keys());
+
+		// Clear out our old set of hosts.
+		this.firesideHosts_.clear();
+
+		for (const hostData of data) {
+			const freshHostId = hostData.user.id;
+
+			// Store the new host set so we can use it when chat members get
+			// added or updated.
+			this.firesideHosts_.set(freshHostId, hostData);
+
+			// User is still a host, but host data may be diffrent. Assign new
+			// host data to the chat user.
+			if (staleHostIds.has(freshHostId)) {
+				// Remove the hostId from our old set.
+				staleHostIds.delete(freshHostId);
+
+				const validHost = this.firesideHostUsers_.get(freshHostId);
+				if (validHost) {
+					// Mark ourselves as needing a recollect only if the
+					// relevant state doesn't match.
+					if (!needsRecollect) {
+						const oldHostData = validHost.firesideHost;
+						needsRecollect =
+							oldHostData?.isLive !== hostData.isLive &&
+							oldHostData?.needsPermissionToView !== hostData.needsPermissionToView;
+					}
+					validHost.firesideHost = hostData;
+				}
+				continue;
+			}
+
+			const user = this.get(freshHostId);
+			if (!user) {
+				continue;
+			}
+
+			// Got a user that wasn't previously a host. Assign new host data to
+			// the chat user and set them into our list of current hosts.
+			user.firesideHost = hostData;
+			this.firesideHostUsers_.set(freshHostId, user);
+			needsRecollect = true;
+		}
+
+		if (staleHostIds.size > 0) {
+			needsRecollect = true;
+		}
+
+		// Loop through our (now) invalid host ids. Remove host data from the
+		// chat user and remove the chat user from our list of hosts.
+		for (const invalidHostId of staleHostIds) {
+			const oldHost = this.firesideHostUsers_.get(invalidHostId);
+			if (oldHost) {
+				oldHost.firesideHost = null;
+			}
+			this.firesideHostUsers_.delete(invalidHostId);
+		}
+
+		staleHostIds.clear();
+
+		if (needsRecollect) {
+			this.recollect();
+		}
+	}
+
 	update(user: ChatUser) {
 		const curUser = this.get(user);
 		if (curUser) {
 			Object.assign(curUser, user);
+			this._assignFiresideHostDataToUser(curUser);
 			this.recollect();
 		}
 		return curUser;
@@ -159,9 +235,11 @@ export class ChatUserCollection {
 		}
 
 		if (this.type === ChatUserCollection.TYPE_FRIEND) {
-			sortCollection(this.chat, this.collection_, 'lastMessage');
+			this.collection_ = sortCollection(this.chat, this.collection_, 'lastMessage');
+		} else if (this.type === ChatUserCollection.TYPE_FIRESIDE) {
+			this.collection_ = sortCollection(this.chat, this.collection_, 'role');
 		} else {
-			sortCollection(this.chat, this.collection_, 'title');
+			this.collection_ = sortCollection(this.chat, this.collection_, 'title');
 		}
 	}
 
@@ -180,42 +258,93 @@ export class ChatUserCollection {
 
 		this.recollect();
 	}
+
+	private _assignFiresideHostDataToUser(user: ChatUser) {
+		user.firesideHost = this.firesideHosts_.get(user.id) || null;
+	}
 }
 
-function sortCollection(
-	chat: ChatClient | null,
+const SortingGroup = {
+	owner: 0,
+	liveFiresideHost: 1,
+	firesideHost: 2,
+	moderator: 3,
+	staff: 4,
+	user: 5,
+} as const;
+
+export function sortCollection(
+	chat: ChatClient,
 	collection: ChatUser[],
-	mode: 'lastMessage' | 'title'
+	mode: 'lastMessage' | 'title' | 'role'
 ) {
 	switch (mode) {
+		case 'role': {
+			return toRaw(collection)
+				.map(user => {
+					return {
+						user,
+						role: SortingGroup[getSortingGroupIndex(user)],
+						isFriend: chat.friendsList.has(user.id),
+						lowercaseDisplayName: user.display_name.toLowerCase(),
+					};
+				})
+				.sort((a, b) => {
+					const roleDiff = numberSort(a.role, b.role);
+					if (roleDiff !== 0) {
+						return roleDiff;
+					}
+
+					if (a.isFriend !== b.isFriend) {
+						return a.isFriend ? -1 : 1;
+					}
+
+					return stringSortRaw(a.lowercaseDisplayName, b.lowercaseDisplayName);
+				})
+				.map(i => i.user);
+		}
+
 		case 'lastMessage':
-			sortByLastMessageOn(collection);
-			break;
+			return sortByLastMessageOn([...collection]);
 
 		case 'title':
-			collection.sort((a, b) => {
-				if (chat) {
-					const aSort = getSortVal(chat, a);
-					const bSort = getSortVal(chat, b);
-					if (aSort > bSort) {
+			return toRaw(collection)
+				.map(user => ({
+					user,
+					sort: getSortVal(chat, user),
+					lowercaseDisplayName: user.display_name.toLowerCase(),
+				}))
+				.sort((a, b) => {
+					if (a.sort > b.sort) {
 						return 1;
-					} else if (aSort < bSort) {
+					} else if (a.sort < b.sort) {
 						return -1;
+					} else {
+						return stringSortRaw(a.lowercaseDisplayName, b.lowercaseDisplayName);
 					}
-				}
-
-				const aName = a.display_name.toLowerCase();
-				const bName = b.display_name.toLowerCase();
-				if (aName > bName) {
-					return 1;
-				} else if (aName < bName) {
-					return -1;
-				}
-
-				return 0;
-			});
-			break;
+				})
+				.map(i => i.user);
 	}
+}
+
+function getSortingGroupIndex(user: ChatUser | null | undefined): keyof typeof SortingGroup {
+	if (!user) {
+		return 'user';
+	}
+
+	if (user.role === 'owner') {
+		return 'owner';
+	}
+
+	if (user.firesideHost) {
+		return user.firesideHost.isLive ? 'liveFiresideHost' : 'firesideHost';
+	}
+
+	if (user.isStaff) {
+		return 'staff';
+	}
+
+	return user.role ?? 'user';
 }
 
 function getSortVal(chat: ChatClient, user: ChatUser) {

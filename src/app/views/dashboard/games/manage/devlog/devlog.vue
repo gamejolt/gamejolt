@@ -10,12 +10,13 @@ import {
 	BaseRouteComponent,
 	OptionsForRoute,
 } from '../../../../../../_common/route/route-component';
+import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
-import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { AppActivityFeedLazy } from '../../../../../components/lazy';
 import AppPostAddButton from '../../../../../components/post/add-button/add-button.vue';
+import AppShellPageBackdrop from '../../../../../components/shell/AppShellPageBackdrop.vue';
 import { useGameDashRouteController } from '../manage.store';
 
 function getFetchUrl(route: RouteLocationNormalized) {
@@ -31,6 +32,7 @@ function getFetchUrl(route: RouteLocationNormalized) {
 		AppPostAddButton,
 		AppGamePerms,
 		AppNavTabList,
+		AppShellPageBackdrop,
 	},
 })
 @OptionsForRoute({
@@ -58,7 +60,7 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		this.feed = ActivityFeedService.routeInit(this);
+		this.feed = ActivityFeedService.routeInit(this.isRouteBootstrapped);
 	}
 
 	routeResolved($payload: any, fromCache: boolean) {
@@ -76,26 +78,38 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 	}
 
 	onPostAdded(post: FiresidePost) {
-		ActivityFeedService.onPostAdded(this.feed!, post, this);
+		ActivityFeedService.onPostAdded({
+			feed: this.feed!,
+			post,
+			appRoute: this.appRoute_,
+			route: this.$route,
+			router: this.$router,
+		});
 	}
 
 	onPostEdited(eventItem: EventItem) {
-		ActivityFeedService.onPostEdited(eventItem, this);
+		ActivityFeedService.onPostEdited({
+			eventItem,
+			appRoute: this.appRoute_,
+			route: this.$route,
+			router: this.$router,
+		});
 	}
 
 	onPostPublished(eventItem: EventItem) {
-		ActivityFeedService.onPostPublished(eventItem, this);
-	}
-
-	onPostRemoved(eventItem: EventItem) {
-		ActivityFeedService.onPostRemoved(eventItem, this);
+		ActivityFeedService.onPostPublished({
+			eventItem,
+			appRoute: this.appRoute_,
+			route: this.$route,
+			router: this.$router,
+		});
 	}
 }
 </script>
 
 <template>
-	<div v-if="isRouteBootstrapped">
-		<section class="section fill-backdrop">
+	<AppShellPageBackdrop v-if="isRouteBootstrapped">
+		<section class="section">
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
@@ -158,14 +172,13 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 								:feed="feed"
 								@edit-post="onPostEdited"
 								@publish-post="onPostPublished"
-								@remove-post="onPostRemoved"
 							/>
 							<div v-else class="alert">
 								<template v-if="tab === 'active'">
 									<p>
-										<AppTranslate
-											>You haven't published any posts yet.</AppTranslate
-										>
+										<AppTranslate>
+											You haven't published any posts yet.
+										</AppTranslate>
 									</p>
 								</template>
 								<template v-else-if="tab === 'draft'">
@@ -175,9 +188,9 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 								</template>
 								<template v-else-if="tab === 'scheduled'">
 									<p>
-										<AppTranslate
-											>You don't have any scheduled posts.</AppTranslate
-										>
+										<AppTranslate>
+											You don't have any scheduled posts.
+										</AppTranslate>
 									</p>
 								</template>
 							</div>
@@ -186,5 +199,5 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 				</div>
 			</div>
 		</section>
-	</div>
+	</AppShellPageBackdrop>
 </template>

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
+import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
 import { GameCollection } from '../collection.model';
 
 @Options({
@@ -20,9 +20,7 @@ export default class AppGameCollectionThumbnail extends Vue {
 			<AppTranslate v-if="collection.type === 'developer'">Developer's Games</AppTranslate>
 			<AppTranslate v-else-if="collection.type === 'followed'"> Followed Games </AppTranslate>
 			<AppTranslate v-else-if="collection.type === 'playlist'"> Playlist </AppTranslate>
-			<AppTranslate v-else-if="collection.type === 'bundle'">
-				Bundle
-			</AppTranslate>
+			<AppTranslate v-else-if="collection.type === 'bundle'"> Bundle </AppTranslate>
 			<AppTranslate
 				v-else-if="collection.type === 'tag'"
 				translate-comment="The noun for a tag"

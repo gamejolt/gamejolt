@@ -3,10 +3,10 @@ import { toRaw } from 'vue';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import { Environment } from '../../environment/environment.service';
-import AppLoading from '../../loading/loading.vue';
+import AppLoading from '../../loading/AppLoading.vue';
 import { SiteContentBlock } from '../../site/content-block/content-block-model';
 import { Site } from '../../site/site-model';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import FormContentBlockEditor from './editor-form.vue';
 
 const PreviewDebounce = 3000;
@@ -17,7 +17,7 @@ const PreviewDebounce = 3000;
 		FormContentBlockEditor,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppContentBlockEditor extends Vue {
@@ -218,10 +218,7 @@ export default class AppContentBlockEditor extends Vue {
 			The ng-repeat will refresh the DOM any time the current block changes.
 			This will create a new editor instance and refresh the block content.
 		-->
-			<FormContentBlockEditor
-				:mode="site.game_id ? 'game' : 'user'"
-				:model="contentBlock"
-			/>
+			<FormContentBlockEditor :mode="site.game_id ? 'game' : 'user'" :model="contentBlock" />
 		</div>
 	</div>
 </template>

@@ -2,24 +2,24 @@
 import { defineAsyncComponent } from 'vue';
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { AppAuthRequired } from '../../../auth/auth-required-directive';
+import AppFadeCollapse from '../../../AppFadeCollapse.vue';
+import { vAppAuthRequired } from '../../../auth/auth-required-directive';
 import { Clipboard } from '../../../clipboard/clipboard-service';
 import { Collaborator } from '../../../collaborator/collaborator.model';
 import { Environment } from '../../../environment/environment.service';
 import AppExpand from '../../../expand/AppExpand.vue';
-import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
 import AppMessageThreadAdd from '../../../message-thread/add/add.vue';
 import AppMessageThreadItem from '../../../message-thread/item/item.vue';
 import AppMessageThread from '../../../message-thread/message-thread.vue';
 import { ModalConfirm } from '../../../modal/confirm/confirm-service';
 import { Model } from '../../../model/model.service';
+import AppPopper from '../../../popper/AppPopper.vue';
 import { Popper } from '../../../popper/popper.service';
-import AppPopper from '../../../popper/popper.vue';
 import { ReportModal } from '../../../report/modal/modal.service';
 import { canPlaceStickerOnComment } from '../../../sticker/placement/placement.model';
 import { useCommonStore } from '../../../store/common-store';
 import AppTimelineListItem from '../../../timeline-list/item/item.vue';
-import { AppTooltip } from '../../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import FormComment from '../../add/add.vue';
 import AppCommentContent from '../../AppCommentContent.vue';
 import { Comment, getCommentBlockReason } from '../../comment-model';
@@ -49,8 +49,8 @@ let CommentNum = 0;
 		}),
 	},
 	directives: {
-		AppTooltip,
-		AppAuthRequired,
+		AppTooltip: vAppTooltip,
+		AppAuthRequired: vAppAuthRequired,
 	},
 })
 export default class AppCommentWidgetComment extends Vue {

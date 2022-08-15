@@ -1,14 +1,18 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { Community } from '../../../../_common/community/community.model';
+import { configRealms } from '../../../../_common/config/config.service';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
+import { Realm } from '../../../../_common/realm/realm-model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import { AppAuthJoinLazy } from '../../../components/lazy';
+import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import AppDiscoverHomeBanner from './_home-default/AppDiscoverHomeBanner.vue';
 import AppDiscoverHomeCommunities from './_home-default/AppDiscoverHomeCommunities.vue';
+import AppDiscoverHomeRealms from './_home-default/AppDiscoverHomeRealms.vue';
 
 defineProps({
 	isBootstrapped: {
@@ -26,16 +30,20 @@ defineProps({
 		type: Object as PropType<Fireside>,
 		default: null,
 	},
+	featuredRealms: {
+		type: Array as PropType<Realm[]>,
+		default: () => [],
+	},
 });
 
 const { user } = useCommonStore();
 </script>
 
 <template>
-	<div>
+	<AppShellPageBackdrop>
 		<AppDiscoverHomeBanner :is-loading="!isBootstrapped" :item="featuredItem" />
 
-		<section class="section fill-backdrop">
+		<section class="section">
 			<template v-if="featuredFireside">
 				<div class="container">
 					<div class="text-center">
@@ -59,6 +67,12 @@ const { user } = useCommonStore();
 
 				<br />
 			</template>
+
+			<AppDiscoverHomeRealms
+				v-if="configRealms.value"
+				:is-loading="!isBootstrapped"
+				:realms="featuredRealms"
+			/>
 
 			<AppDiscoverHomeCommunities
 				:is-loading="!isBootstrapped"
@@ -88,5 +102,5 @@ const { user } = useCommonStore();
 				</div>
 			</div>
 		</section>
-	</div>
+	</AppShellPageBackdrop>
 </template>

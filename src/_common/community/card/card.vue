@@ -1,15 +1,13 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { trackGotoCommunity } from '../../analytics/analytics.service';
-import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import AppCommunityCardBase from '../card-base/card-base.vue';
 import { Community } from '../community.model';
-import AppCommunityThumbnailImg from '../thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../thumbnail/AppCommunityThumbnailImg.vue';
 
 @Options({
 	components: {
 		AppCommunityCardBase,
-		AppMediaItemBackdrop,
 		AppCommunityThumbnailImg,
 	},
 })
@@ -40,9 +38,7 @@ export default class AppCommunityCard extends Vue {
 	>
 		<template #thumbnail>
 			<router-link :to="community.routeLocation" @click="trackGotoCommunity()">
-				<AppMediaItemBackdrop :media-item="community.thumbnail">
-					<AppCommunityThumbnailImg :community="community" />
-				</AppMediaItemBackdrop>
+				<AppCommunityThumbnailImg :community="community" />
 			</router-link>
 		</template>
 	</AppCommunityCardBase>

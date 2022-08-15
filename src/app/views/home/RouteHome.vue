@@ -4,15 +4,17 @@ import { useRoute } from 'vue-router';
 import { router } from '..';
 import { Api } from '../../../_common/api/api.service';
 import {
-	createAppRoute,
 	asyncRouteLoader,
+	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../_common/route/route-component';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { IntentService } from '../../components/intent/intent.service';
 import { HomeFeedService } from './home-feed.service';
 
-const RouteHomeFeed = defineAsyncComponent(() => asyncRouteLoader(router, import('./feed.vue')));
+const RouteHomeFeed = defineAsyncComponent(() =>
+	asyncRouteLoader(router, import('./RouteHomeFeed.vue'))
+);
 const RouteDiscoverHome = defineAsyncComponent(() =>
 	asyncRouteLoader(router, import('../discover/home/RouteDiscoverHome.vue'))
 );

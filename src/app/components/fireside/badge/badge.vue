@@ -2,11 +2,12 @@
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../_common/filters/number';
+import AppFiresideLiveTag from '../../../../_common/fireside/AppFiresideLiveTag.vue';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
-import { AppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
+import { vAppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppFiresideStreamPreview from '../stream/preview/preview.vue';
 
@@ -17,10 +18,11 @@ import AppFiresideStreamPreview from '../stream/preview/preview.vue';
 		AppUserAvatarImg,
 		AppFiresideStreamPreview,
 		AppExpand,
+		AppFiresideLiveTag,
 	},
 	directives: {
-		AppTooltip,
-		AppObserveDimensions,
+		AppTooltip: vAppTooltip,
+		AppObserveDimensions: vAppObserveDimensions,
 	},
 })
 export default class AppFiresideBadge extends Vue {
@@ -52,7 +54,7 @@ export default class AppFiresideBadge extends Vue {
 	}
 
 	get location() {
-		return this.fireside?.location ?? null;
+		return this.fireside?.routeLocation ?? null;
 	}
 
 	get headerMediaItem() {
@@ -211,9 +213,7 @@ export default class AppFiresideBadge extends Vue {
 								</AppTranslate>
 							</div>
 						</div>
-						<div v-if="fireside && isStreaming" class="-live">
-							<AppTranslate>LIVE</AppTranslate>
-						</div>
+						<AppFiresideLiveTag v-if="fireside && isStreaming" class="-live" />
 					</div>
 				</div>
 
@@ -314,13 +314,13 @@ $-zindex-content = 3
 
 .-title
 	line-clamp(2)
-	font-weight: bolder
-	font-size: $font-size-h4
+	font-family: $font-family-heading
+	font-size: 21px
 	text-shadow: 1px 1px 3px $black
 
 .-avatar
-	width: 50px
-	height: 50px
+	width: 48px
+	height: 48px
 	background-color: var(--theme-white)
 	border-radius: 50%
 	padding: 2px
@@ -344,15 +344,5 @@ $-zindex-content = 3
 	change-bg('highlight')
 
 .-live
-	rounded-corners-lg()
-	margin: 0 0 0 auto
-	padding: 4px 8px
-	font-size: $font-size-h2
-	font-weight: 700
-	font-family: $font-family-heading
-	text-shadow: none
-	box-shadow: 1px 1px 3px $black
-	letter-spacing: 2px
-	color: $white
-	background-color: $gj-overlay-notice
+	margin-left: auto
 </style>

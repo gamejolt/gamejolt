@@ -11,9 +11,9 @@ import {
 	OptionsForRoute,
 } from '../../../../../../_common/route/route-component';
 import { AppTimeAgo } from '../../../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { UserBlock } from '../../../../../../_common/user/block/block.model';
-import AppUserCardHover from '../../../../../../_common/user/card/hover/hover.vue';
+import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/img/img.vue';
 import FormCommunityBlock from '../../../../../components/forms/community/ban/block.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
@@ -32,7 +32,7 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 		AppPagination,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

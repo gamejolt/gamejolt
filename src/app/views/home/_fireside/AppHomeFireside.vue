@@ -4,13 +4,11 @@ import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import AppFiresideAvatar from '../../../components/fireside/avatar/avatar.vue';
-import AppFiresideAvatarBase from '../../../components/fireside/avatar/_base/base.vue';
-import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { FiresideAddModal } from '../../../components/fireside/add-modal/add-modal.service';
-import { useRouter } from 'vue-router';
+import AppFiresideAvatar from '../../../components/fireside/avatar/AppFiresideAvatar.vue';
+import AppFiresideAvatarAdd from '../../../components/fireside/avatar/AppFiresideAvatarAdd.vue';
+import AppFiresideAvatarBase from '../../../components/fireside/avatar/AppFiresideAvatarBase.vue';
+import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 
 const props = defineProps({
 	firesides: {
@@ -38,8 +36,6 @@ const emit = defineEmits({
 	'request-refresh': () => true,
 });
 
-const router = useRouter();
-
 const displayFiresides = computed(() => {
 	const list = [...props.firesides];
 	if (props.userFireside) {
@@ -50,25 +46,18 @@ const displayFiresides = computed(() => {
 });
 
 const shouldDisplaySingleRow = computed(() => Screen.isMobile);
-const gridColumns = computed(() => (Screen.isMobile ? 5 : 3));
+const gridColumns = computed(() => (Screen.isXs ? 4 : Screen.isSm ? 5 : 3));
 
 const gridStyling = computed(() => ({
 	display: 'grid',
 	gridTemplateColumns: `repeat(${gridColumns.value}, 1fr)`,
-	gridGap: '16px',
+	gridGap: '24px',
 }));
 
 function onFiresideExpired() {
 	// When a fireside expired while showing it here, refresh the list.
 	// It will be excluded from the next fetch.
 	emit('request-refresh');
-}
-
-async function startFireside() {
-	const fireside = await FiresideAddModal.show({ community: undefined });
-	if (fireside instanceof Fireside) {
-		router.push(fireside.location);
-	}
 }
 </script>
 
@@ -85,11 +74,15 @@ async function startFireside() {
 			</span>
 		</div>
 
+		<p class="hidden-xs page-help">
+			<AppTranslate>Livestream and voice chat with your friends in firesides!</AppTranslate>
+		</p>
+
 		<template v-if="featuredFireside && Screen.isDesktop">
 			<AppFiresideBadge :fireside="featuredFireside" show-preview />
 		</template>
 
-		<div v-if="firesides.length || isLoading" class="-list">
+		<div class="-list">
 			<component
 				:is="shouldDisplaySingleRow ? AppScrollScroller : 'div'"
 				:class="{ '-scroller': shouldDisplaySingleRow }"
@@ -100,6 +93,7 @@ async function startFireside() {
 						<AppFiresideAvatarBase v-for="i of gridColumns" :key="i" is-placeholder />
 					</div>
 					<div v-else key="list" :style="gridStyling">
+						<AppFiresideAvatarAdd v-if="!userFireside" key="add" />
 						<AppFiresideAvatar
 							v-for="fireside of displayFiresides"
 							:key="fireside.id"
@@ -110,14 +104,6 @@ async function startFireside() {
 				</div>
 			</component>
 		</div>
-
-		<div>
-			<AppButton v-if="!userFireside" block primary @click="startFireside">
-				<AppTranslate>Start a fireside</AppTranslate>
-			</AppButton>
-		</div>
-		<br />
-		<br />
 	</AppLoadingFade>
 </template>
 

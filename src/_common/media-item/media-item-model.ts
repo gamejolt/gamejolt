@@ -93,6 +93,10 @@ export class MediaItem extends Model implements LightboxMediaModel {
 		this.mediaserver_url = img;
 	}
 
+	get aspectRatio() {
+		return this.croppedHeight / this.croppedWidth;
+	}
+
 	getModelId() {
 		return this.id;
 	}
@@ -124,7 +128,7 @@ export class MediaItem extends Model implements LightboxMediaModel {
 			};
 		}
 
-		const aspectRatio = this.croppedHeight / this.croppedWidth;
+		const aspectRatio = this.aspectRatio;
 		let width = 0;
 		let height = 0;
 

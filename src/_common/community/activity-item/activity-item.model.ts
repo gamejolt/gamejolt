@@ -180,7 +180,7 @@ export class CommunityActivityItem extends Model {
 
 			case CommunityActivityItem.TYPE_GAME_LINK:
 			case CommunityActivityItem.TYPE_GAME_UNLINK:
-				return { icon: 'game', color: '' };
+				return { icon: 'gamepad', color: '' };
 
 			case CommunityActivityItem.TYPE_COMPETITION_VOTING_SET_ACTIVE:
 				return { icon: 'pedestals-numbers', color: '' };

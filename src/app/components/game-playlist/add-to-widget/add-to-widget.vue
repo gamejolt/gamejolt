@@ -1,11 +1,11 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { Game } from '../../../../_common/game/game.model';
-import AppPopper from '../../../../_common/popper/popper.vue';
+import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppGamePlaylistAddToPopover from '../add-to-popover/add-to-popover.vue';
 
 @Options({
@@ -14,8 +14,8 @@ import AppGamePlaylistAddToPopover from '../add-to-popover/add-to-popover.vue';
 		AppGamePlaylistAddToPopover,
 	},
 	directives: {
-		AppAuthRequired,
-		AppTooltip,
+		AppAuthRequired: vAppAuthRequired,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppGamePlaylistAddToWidget extends Vue {

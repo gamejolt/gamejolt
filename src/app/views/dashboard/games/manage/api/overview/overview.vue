@@ -8,13 +8,13 @@ import {
 	BaseRouteComponent,
 	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
-import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { useGameDashRouteController } from '../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageApiOverview',
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({
@@ -104,7 +104,7 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 					class="link-help"
 					:to="{
 						name: 'forums.channels.view',
-						params: { name: 'gj-game-api', sort: 'active' },
+						params: { name: 'gj-game-api', sort: 'archived' },
 					}"
 				>
 					<AppTranslate>Find help in the API forums...</AppTranslate>

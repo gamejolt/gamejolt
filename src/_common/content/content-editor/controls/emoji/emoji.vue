@@ -3,7 +3,7 @@ import { nextTick } from 'vue';
 import { setup } from 'vue-class-component';
 import { Emit, Options, Vue } from 'vue-property-decorator';
 import AppEmoji, { GJ_EMOJIS } from '../../../../emoji/AppEmoji.vue';
-import { AppTooltip } from '../../../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../tooltip/tooltip-directive';
 import { editorInsertEmoji, useContentEditorController } from '../../content-editor-controller';
 
 @Options({
@@ -11,7 +11,7 @@ import { editorInsertEmoji, useContentEditorController } from '../../content-edi
 		AppEmoji,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppContentEditorControlsEmoji extends Vue {

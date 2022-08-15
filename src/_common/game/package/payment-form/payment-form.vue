@@ -7,7 +7,7 @@ import { getDeviceArch, getDeviceOS } from '../../../device/device.service';
 import { Environment } from '../../../environment/environment.service';
 import AppExpand from '../../../expand/AppExpand.vue';
 import { formatCurrency } from '../../../filters/currency';
-import { AppFocusWhen } from '../../../form-vue/focus-when.directive';
+import { vAppFocusWhen } from '../../../form-vue/focus-when.directive';
 import {
 	BaseForm,
 	FormOnSubmit,
@@ -18,14 +18,14 @@ import { Geo, Region } from '../../../geo/geo.service';
 import { showErrorGrowl } from '../../../growls/growls.service';
 import { HistoryTick } from '../../../history-tick/history-tick-service';
 import AppLoadingFade from '../../../loading/AppLoadingFade.vue';
-import AppLoading from '../../../loading/loading.vue';
+import AppLoading from '../../../loading/AppLoading.vue';
 import { Navigate } from '../../../navigate/navigate.service';
 import { OrderPayment } from '../../../order/payment/payment.model';
-import AppPopper from '../../../popper/popper.vue';
+import AppPopper from '../../../popper/AppPopper.vue';
 import { Screen } from '../../../screen/screen-service';
 import { Sellable } from '../../../sellable/sellable.model';
 import { useCommonStore } from '../../../store/common-store';
-import { AppTooltip } from '../../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import { User } from '../../../user/user.model';
 import { GameBuild } from '../../build/build.model';
 import { Game } from '../../game.model';
@@ -43,8 +43,8 @@ class Wrapper extends BaseForm<any> {}
 		AppPopper,
 	},
 	directives: {
-		AppTooltip,
-		AppFocusWhen,
+		AppTooltip: vAppTooltip,
+		AppFocusWhen: vAppFocusWhen,
 	},
 })
 export default class FormGamePackagePayment
@@ -423,6 +423,7 @@ export default class FormGamePackagePayment
 					You've accessed this game through a Game Jolt Partner link! A percentage of this
 					sale will go to %{ user }.
 				</span>
+				{{ ' ' }}
 				<router-link class="link-help" :to="{ name: 'landing.partners' }" target="_blank">
 					<AppTranslate>Learn more about the Game Jolt Partner system.</AppTranslate>
 				</router-link>
@@ -515,7 +516,9 @@ export default class FormGamePackagePayment
 							<div class="col-sm-offset-4 col-sm-8">
 								<p class="small">
 									<strong>
-										<AppTranslate>Support the developer by paying more</AppTranslate>
+										<AppTranslate
+											>Support the developer by paying more</AppTranslate
+										>
 									</strong>
 								</p>
 
@@ -758,10 +761,7 @@ export default class FormGamePackagePayment
 
 					<div class="row">
 						<div class="col-sm-6">
-							<AppFormGroup
-								name="region"
-								:label="$gettext('State/Province/County')"
-							>
+							<AppFormGroup name="region" :label="$gettext('State/Province/County')">
 								<AppFormControl v-if="!regions" type="text" validate-on-blur />
 
 								<AppFormControlSelect v-else>

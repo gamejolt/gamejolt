@@ -23,6 +23,9 @@ export default class AppActivityFeedPostVideo extends Vue {
 	@Inject({ from: ActivityFeedKey })
 	feed!: ActivityFeedView;
 
+	hasVideoProcessingError = false;
+	videoProcessingErrorMsg = '';
+
 	@Emit('query-param') emitQueryParam(_params: Record<string, string>) {}
 
 	get isHydrated() {
@@ -46,24 +49,45 @@ export default class AppActivityFeedPostVideo extends Vue {
 			this.video.assign(payload.video);
 		}
 	}
+
+	onVideoProcessingError(err: string | Error) {
+		if (typeof err === 'string') {
+			this.hasVideoProcessingError = true;
+			this.videoProcessingErrorMsg = err;
+		} else {
+			// The only cases where an actual error is emitted is on network error during polling.
+			// This does not necessarily mean an actual error during processing, so noop.
+		}
+	}
 }
 </script>
 
 <template>
 	<div class="-spacing">
-		<template v-if="!video.is_processing && video.posterMediaItem">
-			<AppActivityFeedVideoPlayer
-				class="-video"
-				:feed-item="item"
-				:manifests="video.manifestSources"
-				:media-item="video.posterMediaItem"
-				@play="onVideoPlay"
-				@time="onTimeChange"
-			/>
+		<template v-if="!hasVideoProcessingError">
+			<template v-if="!video.is_processing && video.posterMediaItem">
+				<AppActivityFeedVideoPlayer
+					class="-video"
+					:feed-item="item"
+					:manifests="video.manifestSources"
+					:media-item="video.posterMediaItem"
+					@play="onVideoPlay"
+					@time="onTimeChange"
+				/>
+			</template>
+			<div v-else class="well sans-rounded fill-offset">
+				<AppVideoProcessingProgress
+					:post="post"
+					@complete="onVideoProcessingComplete"
+					@error="onVideoProcessingError"
+				/>
+			</div>
 		</template>
-		<div v-else class="well sans-rounded fill-offset">
-			<AppVideoProcessingProgress :post="post" @complete="onVideoProcessingComplete" />
-		</div>
+		<template v-else>
+			<div class="well">
+				<div class="alert alert-notice">{{ videoProcessingErrorMsg }}</div>
+			</div>
+		</template>
 	</div>
 </template>
 

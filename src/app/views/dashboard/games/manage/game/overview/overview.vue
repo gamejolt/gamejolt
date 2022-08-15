@@ -6,14 +6,14 @@ import AppExpand from '../../../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import { Game } from '../../../../../../../_common/game/game.model';
 import AppGraphWidget from '../../../../../../../_common/graph/widget/widget.vue';
-import AppProgressBar from '../../../../../../../_common/progress/bar/bar.vue';
+import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
 import { AppProgressPoller } from '../../../../../../../_common/progress/poller/poller';
 import {
 	BaseRouteComponent,
 	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
-import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
 import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector.vue';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
@@ -31,7 +31,7 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppCommunityPerms,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

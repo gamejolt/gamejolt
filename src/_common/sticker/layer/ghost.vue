@@ -77,14 +77,17 @@ export default class AppStickerLayerGhost extends Vue {
 		assignDrawerStoreMoveCallback(this.drawer, this.updateGhostPosition);
 	}
 
-	onConfirmPlacement() {
-		// Only allow 1 placement request through at a time for each sticker ghost. This component will be v-if'd away after placement.
+	async onConfirmPlacement() {
+		// Only allow 1 placement request through at a time for each sticker
+		// ghost. This component will be v-if'd away after placement if it
+		// doesn't fail.
 		if (this.isConfirmingPlacement) {
 			return;
 		}
 		this.isConfirmingPlacement = true;
 		Analytics.trackEvent('sticker-drawer', 'confirm-placement');
-		commitDrawerStoreItemPlacement(this.drawer);
+		await commitDrawerStoreItemPlacement(this.drawer);
+		this.isConfirmingPlacement = false;
 	}
 
 	onStartDrag(event: MouseEvent | TouchEvent) {

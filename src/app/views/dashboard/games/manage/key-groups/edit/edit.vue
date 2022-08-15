@@ -15,13 +15,13 @@ import {
 import { KeyGroup } from '../../../../../../../_common/key-group/key-group.model';
 import { Key } from '../../../../../../../_common/key/key-model';
 import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
-import AppProgressBar from '../../../../../../../_common/progress/bar/bar.vue';
+import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
 import {
 	BaseRouteComponent,
 	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import { AppTimeAgo } from '../../../../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import FormGameKeyGroupAddKeys from '../../../../../../components/forms/game/key-group/add-keys/add-keys.vue';
 import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/key-group.vue';
 import { useGameDashRouteController } from '../../manage.store';
@@ -36,7 +36,7 @@ import { useGameDashRouteController } from '../../manage.store';
 		FormGameKeyGroupAddKeys,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

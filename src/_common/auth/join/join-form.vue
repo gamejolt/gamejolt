@@ -7,8 +7,8 @@ import { BaseForm, FormOnSubmit, FormOnSubmitSuccess } from '../../form-vue/form
 import { validateUsername } from '../../form-vue/validators';
 import { Provider } from '../../linked-account/linked-account.model';
 import { LinkedAccounts } from '../../linked-account/linked-accounts.service';
-import AppLoading from '../../loading/loading.vue';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
+import AppLoading from '../../loading/AppLoading.vue';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import googleImage from '../google-icon.svg';
 
 export type FormModel = {
@@ -25,7 +25,7 @@ class Wrapper extends BaseForm<FormModel> {}
 		AppLoading,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppAuthJoinForm
@@ -146,7 +146,9 @@ export default class AppAuthJoinForm
 				</fieldset>
 
 				<div v-if="blocked" class="alert alert-notice -blocked-message">
-					<AppTranslate>You must wait 15 minutes before creating another account.</AppTranslate>
+					<AppTranslate>
+						You must wait 15 minutes before creating another account.
+					</AppTranslate>
 				</div>
 			</AppForm>
 

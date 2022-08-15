@@ -1,8 +1,8 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { formatNumber } from '../../../../_common/filters/number';
-import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { User } from '../../../../_common/user/user.model';
 
 @Options({
@@ -10,7 +10,7 @@ import { User } from '../../../../_common/user/user.model';
 		AppProgressBar,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppUserLevelWidget extends Vue {
@@ -64,7 +64,6 @@ export default class AppUserLevelWidget extends Vue {
 .user-level-widget-level-digit
 	theme-prop('color', 'highlight')
 	padding-top: 15px
-	font-family: $font-family-heading
 	font-weight: 300
 	font-size: $font-size-h2
 

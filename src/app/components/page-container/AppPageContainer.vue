@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, defineComponent, h, toRefs, useSlots } from 'vue';
+import { computed, toRefs } from 'vue';
 import { Screen } from '../../../_common/screen/screen-service';
 
 const validOrder = ['main', 'left', 'right'];
@@ -7,95 +7,77 @@ const validOrder = ['main', 'left', 'right'];
 function validateOrder(val: unknown) {
 	return typeof val === 'string' && val.split(',').every(i => validOrder.includes(i));
 }
+</script>
 
-export default defineComponent({
-	props: {
-		xl: {
-			type: Boolean,
-		},
-		noLeft: {
-			type: Boolean,
-		},
-		noRight: {
-			type: Boolean,
-		},
-		order: {
-			type: String,
-			default: 'main,left,right',
-			validator: validateOrder,
-		},
+<script lang="ts" setup>
+const props = defineProps({
+	xl: {
+		type: Boolean,
 	},
-	setup(props) {
-		const { xl, noLeft, noRight, order } = toRefs(props);
-		const slots = useSlots();
-
-		const hasLeftColumn = computed(() => !noLeft.value && Screen.isLg);
-		const hasRightColumn = computed(() => !noRight.value);
-		const shouldCombineColumns = computed(() => !noLeft.value && !Screen.isLg);
-
-		const classes = computed(() => {
-			return {
-				container: !xl.value,
-				'container-xl': xl.value,
-				'-no-left': !hasLeftColumn.value,
-				'-no-right': !hasRightColumn.value,
-			};
-		});
-
-		// Vue 2 tried as hard as possible not to have to recreate DOM
-		// elements and instead bind new vnodes to the same DOM elements.
-		// This was breaking when we resized and went from 2-col to 3-col,
-		// etc. If we instead always regenerate a new key when these
-		// properties change, then it actually recompiles into the DOM
-		// perfectly and we don't get any errors.
-		const keySuffix = computed(() =>
-			[
-				hasLeftColumn.value ? 'l' : '-',
-				hasRightColumn.value ? 'r' : '-',
-				shouldCombineColumns.value ? 'c' : '-',
-				':' + order.value,
-			].join('')
-		);
-
-		return () => {
-			const left = slots['left']?.() ?? [];
-			const leftBottom = slots['left-bottom']?.() ?? [];
-			const main = slots['default']?.() ?? [];
-			const right = slots['right']?.() ?? [];
-
-			const cols = {
-				left: hasLeftColumn.value
-					? h('div', { key: `left:${keySuffix.value}`, class: '-left' }, [
-							...left,
-							...leftBottom,
-					  ])
-					: undefined,
-
-				main: h('div', { key: `main:${keySuffix.value}`, class: '-main' }, main),
-
-				right: hasRightColumn.value
-					? h('div', { key: `right:${keySuffix.value}`, class: '-right' }, [
-							...(shouldCombineColumns.value ? left : []),
-							...right,
-							...(shouldCombineColumns.value ? leftBottom : []),
-					  ])
-					: undefined,
-			};
-
-			const orders = order.value.split(',') as (keyof typeof cols)[];
-			const orderedCols = orders.map(i => cols[i]);
-
-			return h(
-				'div',
-				{
-					class: classes.value,
-				},
-				[h('div', { class: '-row' }, orderedCols)]
-			);
-		};
+	noLeft: {
+		type: Boolean,
+	},
+	noRight: {
+		type: Boolean,
+	},
+	order: {
+		type: String,
+		default: 'main,left,right',
+		validator: validateOrder,
 	},
 });
+
+const { xl, noLeft, noRight, order } = toRefs(props);
+
+const hasLeftColumn = computed(() => !noLeft.value && Screen.isLg);
+const hasRightColumn = computed(() => !noRight.value);
+const shouldCombineColumns = computed(() => !noLeft.value && !Screen.isLg);
+
+const classes = computed(() => {
+	return {
+		container: !xl.value,
+		'container-xl': xl.value,
+		'-no-left': !hasLeftColumn.value,
+		'-no-right': !hasRightColumn.value,
+	};
+});
+
+// Vue 2 tried as hard as possible not to have to recreate DOM
+// elements and instead bind new vnodes to the same DOM elements.
+// This was breaking when we resized and went from 2-col to 3-col,
+// etc. If we instead always regenerate a new key when these
+// properties change, then it actually recompiles into the DOM
+// perfectly and we don't get any errors.
+const keySuffix = computed(() =>
+	[
+		hasLeftColumn.value ? 'l' : '-',
+		hasRightColumn.value ? 'r' : '-',
+		shouldCombineColumns.value ? 'c' : '-',
+		':' + order.value,
+	].join('')
+);
 </script>
+
+<template>
+	<div :class="classes">
+		<div class="-row">
+			<div v-if="hasLeftColumn" :key="`left:${keySuffix}`" class="-left">
+				<slot name="left" />
+				<slot name="left-bottom" />
+			</div>
+
+			<div :key="`main:${keySuffix}`" class="-main">
+				<slot name="default" />
+			</div>
+
+			<div v-if="hasRightColumn" :key="`right:${keySuffix}`" class="-right">
+				<slot v-if="shouldCombineColumns" name="left" />
+				<slot name="right" />
+				<slot v-if="shouldCombineColumns" name="left-bottom" />
+			</div>
+		</div>
+	</div>
+</template>
 
 <style lang="stylus" scoped>
 $-main-max-width = 650px

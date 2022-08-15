@@ -1,11 +1,11 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import AppCommunityChannelSelect from '../../../../_common/community/channel/AppCommunityChannelSelect.vue';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
-import AppCommunityChannelSelect from '../../../../_common/community/channel/select/select.vue';
 import { Community } from '../../../../_common/community/community.model';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppPill from '../../../../_common/pill/pill.vue';
+import AppPill from '../../../../_common/pill/AppPill.vue';
 
 @Options({
 	components: {

@@ -4,8 +4,7 @@ import { Api } from '../../api/api.service';
 import { Connection } from '../../connection/connection-service';
 import { Environment } from '../../environment/environment.service';
 import { Navigate } from '../../navigate/navigate.service';
-import { FormModel } from './join-form';
-import AppAuthJoinForm from './join-form.vue';
+import AppAuthJoinForm, { FormModel } from './join-form.vue';
 
 @Options({
 	components: {

@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
-import { AppScrollTo } from '../../../../_common/scroll/to/to.directive';
+import { vAppScrollTo } from '../../../../_common/scroll/to/to.directive';
 import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -18,7 +18,7 @@ import socialImage from './social.png';
 		AppAuthJoin: AppAuthJoinLazy,
 	},
 	directives: {
-		AppScrollTo,
+		AppScrollTo: vAppScrollTo,
 	},
 })
 @OptionsForRoute()

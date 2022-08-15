@@ -1,4 +1,4 @@
-import { RouteLocationNormalized } from 'vue-router';
+import { RouteLocationNormalized, RouteLocationNormalizedLoaded, Router } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
 import { RouteLocationDefinition } from '../../../../utils/router';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
@@ -7,7 +7,7 @@ import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../_common/game/game.model';
 import { HistoryCache } from '../../../../_common/history/cache/cache.service';
 import { Notification } from '../../../../_common/notification/notification-model';
-import { BaseRouteComponent } from '../../../../_common/route/route-component';
+import { AppRoute } from '../../../../_common/route/route-component';
 import { User } from '../../../../_common/user/user.model';
 import { ActivityFeedInput } from './item-service';
 import { ActivityFeedState, ActivityFeedStateOptions } from './state';
@@ -56,11 +56,11 @@ export class ActivityFeedService {
 		return url;
 	}
 
-	static routeInit(routeComponent: BaseRouteComponent) {
+	static routeInit(isRouteBootstrapped: boolean) {
 		// Try to pull the feed from cache if they are going back to this route.
 		// We don't want to pull from cache if they go back and forth between
 		// feed tabs, though.
-		if (!routeComponent.isRouteBootstrapped) {
+		if (!isRouteBootstrapped) {
 			return this.bootstrapFeedFromCache();
 		}
 		return null;
@@ -180,23 +180,25 @@ export class ActivityFeedService {
 		}
 	}
 
-	static onPostAdded(
-		feed: ActivityFeedView,
-		post: FiresidePost,
-		routeComponent: BaseRouteComponent
-	) {
+	static onPostAdded(options: {
+		feed: ActivityFeedView;
+		post: FiresidePost;
+		route: RouteLocationNormalizedLoaded;
+		router: Router;
+		appRoute: AppRoute;
+	}) {
+		const { post, feed, route, router, appRoute } = options;
+
 		if (!post.event_item) {
 			throw new Error('Post was expected to have an event_item field after being added');
 		}
-
-		const route = routeComponent.$route;
 
 		if (this.isInCorrectManageRoute(post, route)) {
 			if (this.isInCorrectManageFeed(post, route)) {
 				// We are in the correct route and feed.
 				if (this.isScheduledFeed(route)) {
 					// Reload the route because scheduled feeds aren't ordered by added on, so we can't prepend.
-					routeComponent.reloadRoute();
+					appRoute.reload();
 				} else {
 					// We are go to prepend.
 					feed.prepend([post.event_item]);
@@ -204,7 +206,7 @@ export class ActivityFeedService {
 			} else {
 				// Redirect to the correct feed.
 				const location = this.getCorrectManageFeedLocation(post, route);
-				routeComponent.$router.push(location);
+				router.push(location);
 			}
 		} else if (this.isInCorrectGameOverview(post, route)) {
 			// When an active post got created in the correct game overview, we can prepend.
@@ -215,9 +217,15 @@ export class ActivityFeedService {
 		}
 	}
 
-	static onPostEdited(eventItem: EventItem, routeComponent: BaseRouteComponent) {
+	static onPostEdited(options: {
+		eventItem: EventItem;
+		route: RouteLocationNormalizedLoaded;
+		router: Router;
+		appRoute: AppRoute;
+	}) {
+		const { eventItem, route, router, appRoute } = options;
+
 		const post = postFromEventItem(eventItem);
-		const route = routeComponent.$route;
 
 		// The post gets its changes applied when edited through a non-manage feed.
 		// That also means that it's always a published post.
@@ -227,12 +235,12 @@ export class ActivityFeedService {
 			if (!this.isInCorrectManageFeed(post, route)) {
 				// Redirect to the correct feed.
 				const location = this.getCorrectManageFeedLocation(post, route);
-				routeComponent.$router.push(location);
+				router.push(location);
 			} else if (this.isScheduledFeed(route)) {
 				// If we still are in the correct feed, but it's a scheduled feed:
 				// Means we had a scheduled post that remained a scheduled post and it got changed in another way.
 				// Since we cannot make sure its position within the feed is still valid, we reload.
-				routeComponent.reloadRoute();
+				appRoute.reload();
 			}
 		} else {
 			// If we just toggled off post_to_user_profile on a game post while
@@ -249,28 +257,30 @@ export class ActivityFeedService {
 					},
 				};
 				this.applyCorrectManageFeedLocation(post, location);
-				routeComponent.$router.push(location);
+				router.push(location);
 			}
 		}
 	}
 
-	static onPostPublished(eventItem: EventItem, routeComponent: BaseRouteComponent) {
+	static onPostPublished(options: {
+		eventItem: EventItem;
+		route: RouteLocationNormalizedLoaded;
+		router: Router;
+		appRoute: AppRoute;
+	}) {
+		const { eventItem, route, router } = options;
+
 		const post = postFromEventItem(eventItem);
-		const route = routeComponent.$route;
 
 		// Redirect to the active posts feed.
 		// A post can only be published from the draft/scheduled feed of the correct route, no need to redirect.
 		const location = this.getCorrectManageFeedLocation(post, route);
-		routeComponent.$router.push(location);
+		router.push(location);
 
 		// Show the publish growl to give them an option to go to the community.
 		if (post.communities.length > 0) {
 			FiresidePostGotoGrowl.show(post, 'publish');
 		}
-	}
-
-	static onPostRemoved(_eventItem: EventItem, _routeComponent: BaseRouteComponent) {
-		// Do nothing.
 	}
 
 	private static makeCachedState(items: ActivityFeedInput[], options: BootstrapOptions) {

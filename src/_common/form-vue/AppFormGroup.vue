@@ -4,16 +4,20 @@ import {
 	inject,
 	InjectionKey,
 	onUnmounted,
+	PropType,
 	provide,
 	Ref,
 	ref,
 	shallowRef,
 	toRefs,
+	useSlots,
 } from 'vue';
 import { CancelToken } from '../../utils/cancel-token';
 import { titleCase } from '../../utils/string';
+import { Jolticon } from '../jolticon/AppJolticon.vue';
 import { useForm } from './AppForm.vue';
 import { FormControlController } from './AppFormControl.vue';
+import AppFormControlLabel from './AppFormControlLabel.vue';
 import { FormValidatorError } from './validators';
 
 export type FormGroupController = ReturnType<typeof createFormGroup>;
@@ -138,28 +142,70 @@ const props = defineProps({
 		type: String,
 		default: undefined,
 	},
+	icon: {
+		type: String as PropType<Jolticon>,
+		default: undefined,
+	},
+	small: {
+		type: Boolean,
+	},
+	tinyLabelMargin: {
+		type: Boolean,
+	},
 });
 
-const form = useForm()!;
+const slots = useSlots();
 
-const c = createFormGroup(toRefs(props));
+const propsRefs = toRefs(props);
+const { labelClass, hideLabel, small } = propsRefs;
+
+const c = createFormGroup(propsRefs);
 provide(Key, c);
 
 const { humanLabel } = c;
-const labelClasses = computed(() => [props.labelClass, { 'sr-only': props.hideLabel }]);
+
+const hasInlineControl = computed(() => !!slots['inline-control']);
 </script>
 
 <template>
-	<div
-		class="form-group"
-		:class="{
-			optional,
-		}"
-	>
-		<label class="control-label" :class="labelClasses" :for="`${form.name}-${name}`">
-			<slot name="label">{{ humanLabel }}</slot>
-		</label>
+	<div class="form-group">
+		<template v-if="!hasInlineControl">
+			<AppFormControlLabel
+				:hide-label="hideLabel"
+				:label-class="labelClass"
+				:icon="icon"
+				:small="small"
+				:tiny-label-margin="tinyLabelMargin"
+			>
+				<slot name="label">{{ humanLabel }}</slot>
+			</AppFormControlLabel>
+		</template>
+		<template v-else>
+			<div class="-inline-control-wrapper">
+				<AppFormControlLabel
+					:hide-label="hideLabel"
+					:label-class="labelClass"
+					:icon="icon"
+					:small="small"
+					:tiny-label-margin="tinyLabelMargin"
+				>
+					<slot name="label">{{ humanLabel }}</slot>
+				</AppFormControlLabel>
+				<slot name="inline-control" />
+			</div>
+		</template>
 
 		<slot />
 	</div>
 </template>
+
+<style lang="stylus" scoped>
+.-inline-control-wrapper
+	display: flex
+	margin-bottom: $form-common-spacing
+	justify-content: space-between
+	align-items: center
+
+	::v-deep(.control-label)
+		margin-bottom: 0
+</style>

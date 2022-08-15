@@ -2,11 +2,11 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppCommunityVerifiedTick from '../../../../../../_common/community/verified-tick/verified-tick.vue';
+import AppPopper from '../../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../../_common/popper/popper.service';
-import AppPopper from '../../../../../../_common/popper/popper.vue';
-import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { AppScrollHelper } from './scroll-helper/scroll-helper';
 
 @Options({
@@ -17,7 +17,7 @@ import { AppScrollHelper } from './scroll-helper/scroll-helper';
 		AppScrollHelper,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppFormsCommunityPillSelector extends Vue {
@@ -82,7 +82,12 @@ export default class AppFormsCommunityPillSelector extends Vue {
 </script>
 
 <template>
-	<AppPopper popover-class="fill-bg" height="45vh" hide-on-state-change @hide="resetSelections">
+	<AppPopper
+		popover-class="fill-bg"
+		max-height="45vh"
+		hide-on-state-change
+		@hide="resetSelections"
+	>
 		<slot />
 
 		<template v-if="selectedCommunity && withChannel" #header>
@@ -93,8 +98,8 @@ export default class AppFormsCommunityPillSelector extends Vue {
 			>
 				<div class="-community-img">
 					<AppCommunityThumbnailImg :community="selectedCommunity" />
-					<AppJolticon v-if="!isInitial" class="-back" icon="arrow-left" />
 				</div>
+				<AppJolticon v-if="!isInitial" class="-back" icon="arrow-left" />
 				<span class="-text">
 					{{ selectedCommunity.name }}
 				</span>
@@ -112,10 +117,9 @@ export default class AppFormsCommunityPillSelector extends Vue {
 						class="-community-item list-group-item"
 						@click="selectCommunity(community)"
 					>
-						<AppCommunityThumbnailImg
-							class="-community-img"
-							:community="community"
-						/>
+						<div class="-community-img">
+							<AppCommunityThumbnailImg :community="community" />
+						</div>
 
 						<span class="-text">
 							{{ community.name }}

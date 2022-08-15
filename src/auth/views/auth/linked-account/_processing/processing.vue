@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-property-decorator';
-import AppLoading from '../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 
 @Options({
 	components: {

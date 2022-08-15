@@ -3,8 +3,9 @@ import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
 import { getAbsoluteLink } from '../../../../../../utils/router';
 import { useAdsController } from '../../../../../../_common/ad/ad-store';
-import AppAdWidget from '../../../../../../_common/ad/widget/widget.vue';
+import AppAdWidget from '../../../../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../../../../_common/api/api.service';
+import AppFadeCollapse from '../../../../../../_common/AppFadeCollapse.vue';
 import AppCard from '../../../../../../_common/card/AppCard.vue';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
 import AppCommentAddButton from '../../../../../../_common/comment/add-button/add-button.vue';
@@ -21,7 +22,6 @@ import {
 } from '../../../../../../_common/comment/thread/modal.service';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../../../../_common/environment/environment.service';
-import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
 import { formatNumber } from '../../../../../../_common/filters/number';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import AppGameExternalPackageCard from '../../../../../../_common/game/external-package/card/card.vue';
@@ -38,22 +38,24 @@ import {
 	OptionsForRoute,
 } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
-import AppShareCard from '../../../../../../_common/share/card/card.vue';
+import AppShareCard from '../../../../../../_common/share/card/AppShareCard.vue';
+import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
-import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import AppCommentOverview from '../../../../../components/comment/overview/overview.vue';
 import AppGameCommunityBadge from '../../../../../components/game/community-badge/community-badge.vue';
+import AppGameList from '../../../../../components/game/list/list.vue';
+import AppGameListPlaceholder from '../../../../../components/game/list/placeholder/placeholder.vue';
 import AppGameOgrs from '../../../../../components/game/ogrs/ogrs.vue';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { AppActivityFeedLazy } from '../../../../../components/lazy';
 import AppPageContainer from '../../../../../components/page-container/AppPageContainer.vue';
 import AppPostAddButton from '../../../../../components/post/add-button/add-button.vue';
 import AppRatingWidget from '../../../../../components/rating/widget/widget.vue';
-import AppUserKnownFollowers from '../../../../../components/user/known-followers/known-followers.vue';
+import AppShellPageBackdrop from '../../../../../components/shell/AppShellPageBackdrop.vue';
+import AppUserKnownFollowers from '../../../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useGameRouteController } from '../view.vue';
 import AppDiscoverGamesViewOverviewDetails from './_details/details.vue';
-import AppDiscoverGamesViewOverviewRecommended from './_recommended/recommended.vue';
 import AppDiscoverGamesViewOverviewStatbar from './_statbar/statbar.vue';
 import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue';
 
@@ -61,8 +63,8 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 	name: 'RouteDiscoverGamesViewOverview',
 	components: {
 		AppPageContainer,
+		AppShellPageBackdrop,
 		AppDiscoverGamesViewOverviewDetails,
-		AppDiscoverGamesViewOverviewRecommended,
 		AppDiscoverGamesViewOverviewSupporters,
 		AppDiscoverGamesViewOverviewStatbar,
 		AppGameCommunityBadge,
@@ -85,6 +87,8 @@ import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue
 		AppContentViewer,
 		AppUserKnownFollowers,
 		AppShareCard,
+		AppGameListPlaceholder,
+		AppGameList,
 	},
 })
 @OptionsForRoute({
@@ -249,6 +253,10 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		return 0;
 	}
 
+	get recommendedGames() {
+		return this.routeStore.recommendedGames;
+	}
+
 	get shouldShowAds() {
 		return this.ads.shouldShow;
 	}
@@ -266,7 +274,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		this.feed = ActivityFeedService.routeInit(this);
+		this.feed = ActivityFeedService.routeInit(this.isRouteBootstrapped);
 	}
 
 	routeResolved(payload: any, fromCache: boolean) {
@@ -303,7 +311,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		);
 	}
 
-	unmounted() {
+	routeDestroyed() {
 		if (this.permalinkWatchDeregister) {
 			this.permalinkWatchDeregister();
 			this.permalinkWatchDeregister = undefined;
@@ -321,7 +329,13 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	onPostAdded(post: FiresidePost) {
-		ActivityFeedService.onPostAdded(this.feed!, post, this);
+		ActivityFeedService.onPostAdded({
+			feed: this.feed!,
+			post,
+			appRoute: this.appRoute_,
+			route: this.$route,
+			router: this.$router,
+		});
 	}
 
 	async reloadPreviewComments() {
@@ -337,11 +351,11 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 </script>
 
 <template>
-	<div class="route-game-overview">
+	<AppShellPageBackdrop class="route-game-overview">
 		<!-- Media Bar -->
 		<AppGameMediaBar v-if="game?.media_count" :media-items="mediaItems" />
 
-		<section class="section section-thin fill-backdrop">
+		<section class="section section-thin">
 			<AppAdWidget
 				v-if="shouldShowAds && !Screen.isMobile"
 				class="-leaderboard-ad"
@@ -408,7 +422,8 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 							<AppTranslate>Recommended</AppTranslate>
 						</h4>
 
-						<AppDiscoverGamesViewOverviewRecommended />
+						<AppGameListPlaceholder v-if="!isOverviewLoaded" :num="5" />
+						<AppGameList v-else :games="recommendedGames" event-label="recommended" />
 					</template>
 				</template>
 
@@ -594,7 +609,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 
 				<AppActivityFeedPlaceholder v-if="!feed || !feed.isBootstrapped" />
 				<template v-else>
-					<AppActivityFeed v-if="feed.hasItems" :feed="feed" />
+					<AppActivityFeed v-if="feed.hasItems" :feed="feed" show-ads />
 					<div v-else class="alert">
 						<AppTranslate>
 							Nothing has been posted to this project page yet. Maybe check back
@@ -604,7 +619,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 				</template>
 			</AppPageContainer>
 		</section>
-	</div>
+	</AppShellPageBackdrop>
 </template>
 
 <style lang="stylus" scoped>

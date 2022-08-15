@@ -8,13 +8,13 @@ import { CommunityCompetitionEntryAward } from '../../../../../../../../../../_c
 import { CommunityCompetitionEntry } from '../../../../../../../../../../_common/community/competition/entry/entry.model';
 import { showErrorGrowl } from '../../../../../../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../../../../../../_common/loading/AppLoadingFade.vue';
-import AppLoading from '../../../../../../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../../../../../../_common/loading/AppLoading.vue';
 import AppPagination from '../../../../../../../../../../_common/pagination/pagination.vue';
 import {
 	BaseRouteComponent,
 	OptionsForRoute,
 } from '../../../../../../../../../../_common/route/route-component';
-import { AppTooltip } from '../../../../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../../../../_common/tooltip/tooltip-directive';
 import { CommunityCompetitionEntryModal } from '../../../../../../../../../components/community/competition/entry/modal/modal.service';
 
 type Payload = {
@@ -51,7 +51,7 @@ function makeRequest(route: RouteLocationNormalized, page = 1, filterValue = '')
 		AppPagination,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

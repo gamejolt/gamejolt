@@ -3,8 +3,7 @@ import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
 import { enforceLocation } from '../../../../../../utils/router';
 import AppAlertDismissable from '../../../../../../_common/alert/dismissable/dismissable.vue';
-import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
-import AppEditableOverlay from '../../../../../../_common/editable-overlay/editable-overlay.vue';
+import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import {
@@ -18,7 +17,7 @@ import FormCommunity from '../../../../../components/forms/community/community.v
 import FormCommunityDescription from '../../../../../components/forms/community/description/description.vue';
 import { useAppStore } from '../../../../../store';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
-import { CommunityThemeKey } from '../../view.vue';
+import { CommunityThemeKey } from '../../RouteCommunitiesView.vue';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
 
 @Options({
@@ -27,7 +26,6 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 		AppCommunitiesViewPageContainer,
 		AppCommunityPerms,
 		AppEditableOverlay,
-		AppCommunityThumbnailImg,
 		FormCommunity,
 		FormCommunityDescription,
 		AppAlertDismissable,

@@ -1,6 +1,12 @@
 import { reactive } from '@vue/reactivity';
 import { Api } from '../../../_common/api/api.service';
-import { SearchPayload } from './payload-service';
+import { Community } from '../../../_common/community/community.model';
+import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { Game } from '../../../_common/game/game.model';
+import { Realm } from '../../../_common/realm/realm-model';
+import { User } from '../../../_common/user/user.model';
+import type { ClientLibraryStore } from '../../store/client-library';
+import type { LocalDbGame } from '../client/local-db/game/game.model';
 
 export interface SearchOptions {
 	type: 'all' | 'user' | 'game' | 'community' | 'typeahead';
@@ -12,6 +18,12 @@ class SearchService {
 }
 
 export const Search = reactive(new SearchService()) as SearchService;
+
+let clientLibraryStore: ClientLibraryStore | undefined;
+
+export function setClientLibraryStore(newClientLibraryStore: ClientLibraryStore) {
+	clientLibraryStore = newClientLibraryStore;
+}
 
 export async function sendSearch(query: string, options: SearchOptions = { type: 'all' }) {
 	const searchPromises: Promise<any>[] = [];
@@ -62,6 +74,45 @@ async function _searchSite(query: string, options: SearchOptions = { type: 'all'
 }
 
 async function _findInstalledGamesByTitle(query: string) {
-	// TODO(vue3): Yariv, this should get the client library injected somehow, yeah?
-	// return appStore.clientLibrary.findInstalledGamesByTitle(query, 3);
+	return clientLibraryStore?.findInstalledGamesByTitle(query, 3) || [];
+}
+
+export class SearchPayload {
+	page: number;
+	perPage: number;
+	count: number;
+
+	users: User[];
+	usersCount: number;
+	games: Game[];
+	gamesCount: number;
+	posts: FiresidePost[];
+	postsCount: number;
+	postsPerPage: number;
+	communities: Community[];
+	communitiesCount: number;
+	realm: Realm | null;
+	libraryGames: LocalDbGame[];
+
+	constructor(public type: string, data: any) {
+		this.page = data.page || 1;
+		this.perPage = data.perPage || 24;
+		this.count = data.count || 0;
+
+		this.users = User.populate(data.users);
+		this.usersCount = data.usersCount || 0;
+		this.games = Game.populate(data.games);
+		this.gamesCount = data.gamesCount || 0;
+		this.posts = FiresidePost.populate(data.posts);
+		this.postsCount = data.postsCount || 0;
+		this.postsPerPage = data.postsPerPage || 0;
+		this.communities = Community.populate(data.communities);
+		this.communitiesCount = data.communitiesCount || 0;
+		this.realm = data.realm ? new Realm(data.realm) : null;
+		this.libraryGames = [];
+
+		if (GJ_IS_DESKTOP_APP) {
+			this.libraryGames = data.libraryGames || [];
+		}
+	}
 }

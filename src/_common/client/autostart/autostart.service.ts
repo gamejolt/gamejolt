@@ -1,8 +1,9 @@
-import * as path from 'path';
 import { getDeviceOS } from '../../device/device.service';
 import { SettingAutostartClient } from '../../settings/settings.service';
-import { Client } from '../client.service';
 import { Autostarter } from '../client-voodoo-imports';
+import { Client } from '../client.service';
+
+const path = require('path') as typeof import('path');
 
 export class ClientAutoStart {
 	static init() {
@@ -12,7 +13,8 @@ export class ClientAutoStart {
 	}
 
 	static get canAutoStart() {
-		if (GJ_BUILD_TYPE === 'development') {
+		// Autostarting is only viable when doing a full build.
+		if (GJ_BUILD_TYPE !== 'build') {
 			return false;
 		}
 

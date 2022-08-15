@@ -1,12 +1,12 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-property-decorator';
 import { Screen } from '../screen/screen-service';
-import { AppTooltip } from '../tooltip/tooltip-directive';
+import { vAppTooltip } from '../tooltip/tooltip-directive';
 import { Minbar, MinbarItem } from './minbar.service';
 
 @Options({
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppMinbar extends Vue {
@@ -33,11 +33,7 @@ export default class AppMinbar extends Vue {
 					<transition>
 						<span
 							v-if="item.notificationCount"
-							class="
-								tag tag-highlight
-								notification-tag
-								anim-fade-enter anim-fade-leave
-							"
+							class="tag tag-highlight notification-tag anim-fade-enter anim-fade-leave"
 						>
 							{{ item.notificationCount }}
 						</span>

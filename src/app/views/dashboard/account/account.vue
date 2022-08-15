@@ -3,7 +3,7 @@ import { inject, InjectionKey, provide, ref } from 'vue';
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
-import AppEditableOverlay from '../../../../_common/editable-overlay/editable-overlay.vue';
+import AppEditableOverlay from '../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
@@ -144,10 +144,10 @@ export default class RouteDashAccount extends BaseRouteComponent {
 								</li>
 								<li>
 									<router-link
-										:to="{ name: 'dash.account.site' }"
+										:to="{ name: 'dash.account.device-settings' }"
 										active-class="active"
 									>
-										<AppTranslate>Portfolio Site</AppTranslate>
+										<AppTranslate>Device Settings</AppTranslate>
 									</router-link>
 								</li>
 								<li>
@@ -229,6 +229,14 @@ export default class RouteDashAccount extends BaseRouteComponent {
 										active-class="active"
 									>
 										<AppTranslate>Revenue</AppTranslate>
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										:to="{ name: 'dash.account.site' }"
+										active-class="active"
+									>
+										<AppTranslate>Portfolio Site</AppTranslate>
 									</router-link>
 								</li>
 							</ul>

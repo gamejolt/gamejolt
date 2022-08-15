@@ -9,8 +9,8 @@ import { BaseForm, FormOnLoad, FormOnSubmit, FormOnSubmitError } from '../../for
 import { validateUsername } from '../../form-vue/validators';
 import { Provider } from '../../linked-account/linked-account.model';
 import { LinkedAccounts } from '../../linked-account/linked-accounts.service';
-import AppLoading from '../../loading/loading.vue';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
+import AppLoading from '../../loading/AppLoading.vue';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import googleImage from '../google-icon.svg';
 
 class Wrapper extends BaseForm<any> {}
@@ -21,7 +21,7 @@ class Wrapper extends BaseForm<any> {}
 		AppGrecaptchaWidget,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppAuthLoginForm

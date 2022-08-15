@@ -1,18 +1,18 @@
 <script lang="ts">
-import { nextTick } from 'vue';
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { computed, nextTick, onMounted, PropType, ref, toRefs, useSlots, watch } from 'vue';
+import { RouterLink } from 'vue-router';
 import { PostOpenSource, trackPostOpen } from '../../../analytics/analytics.service';
+import AppFadeCollapse from '../../../AppFadeCollapse.vue';
+import AppBackground from '../../../background/AppBackground.vue';
 import { ContentFocus } from '../../../content-focus/content-focus.service';
 import AppContentViewer from '../../../content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../environment/environment.service';
-import AppFadeCollapse from '../../../fade-collapse/fade-collapse.vue';
 import { formatFuzzynumber } from '../../../filters/fuzzynumber';
-import { AppImgResponsive } from '../../../img/responsive/responsive';
-import AppLoading from '../../../loading/loading.vue';
+import AppImgResponsive from '../../../img/AppImgResponsive.vue';
+import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../../media-item/media-item-model';
-import { AppObserveDimensions } from '../../../observe-dimensions/observe-dimensions.directive';
-import { AppResponsiveDimensions } from '../../../responsive-dimensions/responsive-dimensions';
+import AppResponsiveDimensions from '../../../responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../../screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../../scroll/inview/AppScrollInview.vue';
 import AppUserAvatar from '../../../user/user-avatar/user-avatar.vue';
@@ -25,229 +25,229 @@ import {
 import AppVideo from '../../../video/video.vue';
 import { FiresidePost } from '../post-model';
 
-const _InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
-
 export const AppPostCardAspectRatio = 10 / 16;
 
-@Options({
-	components: {
-		AppContentViewer,
-		AppImgResponsive,
-		AppLoading,
-		AppMediaItemBackdrop,
-		AppResponsiveDimensions,
-		AppScrollInview,
-		AppUserAvatar,
-		AppVideo,
-		AppFadeCollapse,
+const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
+</script>
+
+<script lang="ts" setup>
+const props = defineProps({
+	post: {
+		type: Object as PropType<FiresidePost>,
+		required: true,
 	},
-	directives: {
-		AppObserveDimensions,
+	source: {
+		type: String as PropType<PostOpenSource>,
+		required: true,
 	},
-})
-export default class AppPostCard extends Vue {
-	@Prop({ type: Object, required: true })
-	post!: FiresidePost;
+	videoContext: {
+		type: String as PropType<VideoPlayerControllerContext>,
+		default: undefined,
+	},
+	withUser: {
+		type: Boolean,
+	},
+});
 
-	@Prop({ type: String, required: true })
-	source!: PostOpenSource;
+const { post, source, videoContext, withUser } = toRefs(props);
+const slots = useSlots();
 
-	@Prop({ type: String, required: false, default: null })
-	videoContext!: VideoPlayerControllerContext;
+const root = ref<HTMLElement>();
+const message = ref<HTMLElement | undefined>();
+const cardElem = ref<HTMLElement>();
 
-	@Prop({ type: Boolean, required: false, default: false })
-	withUser!: boolean;
+const videoController = ref<VideoPlayerController>();
 
-	declare $el: HTMLElement;
-	declare $refs: {
-		card: HTMLElement;
-	};
+const isImageThinner = ref(false);
+const isVideoThinner = ref(false);
 
-	readonly formatFuzzynumber = formatFuzzynumber;
-	readonly InviewConfig = _InviewConfig;
+const cardWidth = ref('100%');
+const cardHeight = ref('100%');
+const imageWidth = ref('100%');
+const imageHeight = ref('100%');
+const videoWidth = ref('100%');
+const videoHeight = ref('100%');
+const leadHeight = ref(0);
 
-	readonly aspectRatio = AppPostCardAspectRatio;
+const isBootstrapped = ref(import.meta.env.SSR);
+const isHydrated = ref(import.meta.env.SSR);
 
-	videoController: VideoPlayerController | null = null;
+const hasOverlayContent = computed(() => !!slots.overlay);
+const shouldPlayVideo = computed(() => isHydrated.value && ContentFocus.hasFocus);
 
-	isImageThinner = false;
-	isVideoThinner = false;
+onMounted(() => calcData());
 
-	cardWidth = '100%';
-	cardHeight = '100%';
-	imageWidth = '100%';
-	imageHeight = '100%';
-	videoWidth = '100%';
-	videoHeight = '100%';
-	leadHeight = 0;
+watch(shouldPlayVideo, _initVideoController);
 
-	isBootstrapped = import.meta.env.SSR;
-	isHydrated = import.meta.env.SSR;
-
-	get shouldPlayVideo() {
-		return this.isHydrated && ContentFocus.hasFocus;
+const mediaItem = computed(() => {
+	if (post.value?.hasMedia) {
+		return post.value.media[0];
+	} else if (post.value?.hasVideo) {
+		return post.value.videos[0].posterMediaItem;
 	}
+	return undefined;
+});
 
-	get mediaItem() {
-		if (this.post?.hasMedia) {
-			return this.post.media[0];
-		} else if (this.post?.hasVideo) {
-			return this.post.videos[0].posterMediaItem;
-		}
+const video = computed(() => {
+	if (!post.value?.hasVideo) {
 		return undefined;
 	}
 
-	get video() {
-		if (!this.post?.hasVideo) {
-			return undefined;
-		}
+	return post.value?.videos[0].media.find(i => i.type == MediaItem.TYPE_TRANSCODED_VIDEO_CARD);
+});
 
-		return this.post?.videos[0].media.find(i => i.type == MediaItem.TYPE_TRANSCODED_VIDEO_CARD);
-	}
+const background = computed(() => post.value.background);
+const overlay = computed(() => !!background.value || !!mediaItem.value);
 
-	get votedOnPoll() {
-		const poll = this.post?.poll;
-		for (let i = 0; i < (poll?.items.length ?? 0); i++) {
-			if (poll?.items[i].is_voted) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	get likedPost() {
-		if (this.post?.user_like) {
+const votedOnPoll = computed(() => {
+	const poll = post.value?.poll;
+	for (let i = 0; i < (poll?.items.length ?? 0); i++) {
+		if (poll?.items[i].is_voted) {
 			return true;
 		}
-		return false;
+	}
+	return false;
+});
+
+const likedPost = computed(() => {
+	if (post.value?.user_like) {
+		return true;
+	}
+	return false;
+});
+
+const userLink = computed(() => Environment.wttfBaseUrl + post.value?.user.url);
+
+async function calcData() {
+	// Safari browsers don't always get the right initial dimensions if we don't do
+	await nextTick();
+
+	if (!root.value) {
+		return;
 	}
 
-	get userLink() {
-		return Environment.wttfBaseUrl + this.post?.user.url;
+	const newCardWidth = root.value.offsetWidth;
+	const newCardHeight = root.value.offsetHeight ?? newCardWidth / AppPostCardAspectRatio;
+	const cardRatio = newCardWidth / newCardHeight;
+
+	cardWidth.value = newCardWidth + 'px';
+	cardHeight.value = newCardHeight + 'px';
+
+	let messageHeight = message.value?.offsetHeight;
+	if (messageHeight && overlay.value) {
+		messageHeight -= 16;
 	}
 
-	mounted() {
-		this.calcData();
+	// Add in some space for the details on the bottom.
+	leadHeight.value = messageHeight ?? newCardHeight - 40;
+
+	const media = mediaItem.value;
+	if (!media) {
+		return;
 	}
 
-	async calcData() {
-		// Safari browsers don't always get the right initial dimensions if we don't do this.
-		await nextTick();
+	const mediaWidth = media.croppedWidth;
+	const mediaHeight = media.croppedHeight;
+	const mediaRatio = mediaWidth / mediaHeight;
+	isImageThinner.value = mediaRatio < cardRatio;
 
-		const cardWidth = this.$el.offsetWidth;
-		const cardHeight = this.$el.offsetHeight ?? cardWidth / this.aspectRatio;
-		const cardRatio = cardWidth / cardHeight;
+	if (video.value) {
+		const videoWidth = video.value.croppedWidth;
+		const videoHeight = video.value.croppedHeight;
+		const videoRatio = videoWidth / videoHeight;
 
-		this.cardWidth = cardWidth + 'px';
-		this.cardHeight = cardHeight + 'px';
-
-		// Add in some space for the details on the bottom.
-		this.leadHeight = cardHeight - 40;
-
-		const media = this.mediaItem;
-		if (!media) {
-			return;
-		}
-
-		const mediaWidth = media.croppedWidth;
-		const mediaHeight = media.croppedHeight;
-		const mediaRatio = mediaWidth / mediaHeight;
-		this.isImageThinner = mediaRatio < cardRatio;
-
-		if (this.video) {
-			const videoWidth = this.video.croppedWidth;
-			const videoHeight = this.video.croppedHeight;
-			const videoRatio = videoWidth / videoHeight;
-
-			this.isVideoThinner = videoRatio < cardRatio;
-		}
-
-		const posterRatio = media.croppedWidth / media.croppedHeight;
-		const videoRatio = this.video
-			? this.video.croppedWidth / this.video.croppedHeight
-			: posterRatio;
-
-		let width;
-		let height;
-
-		let videoWidth;
-		let videoHeight;
-
-		if (this.isImageThinner) {
-			width = cardWidth;
-			height = width / posterRatio;
-		} else {
-			height = cardHeight;
-			width = height * posterRatio;
-		}
-
-		if (this.isVideoThinner) {
-			videoWidth = cardWidth;
-			videoHeight = videoWidth / videoRatio;
-		} else {
-			videoHeight = cardHeight;
-			videoWidth = videoHeight * videoRatio;
-		}
-
-		this.imageWidth = width + 'px';
-		this.imageHeight = height + 'px';
-		this.videoWidth = videoWidth + 'px';
-		this.videoHeight = videoHeight + 'px';
+		isVideoThinner.value = videoRatio < cardRatio;
 	}
 
-	inView() {
-		this.isBootstrapped = true;
-		this.isHydrated = true;
+	const posterRatio = media.croppedWidth / media.croppedHeight;
+	const videoRatio = video.value
+		? video.value.croppedWidth / video.value.croppedHeight
+		: posterRatio;
+
+	let width;
+	let height;
+
+	let newVideoWidth;
+	let newVideoHeight;
+
+	if (isImageThinner.value) {
+		width = newCardWidth;
+		height = width / posterRatio;
+	} else {
+		height = newCardHeight;
+		width = height * posterRatio;
 	}
 
-	outView() {
-		this.isHydrated = false;
+	if (isVideoThinner.value) {
+		newVideoWidth = newCardWidth;
+		newVideoHeight = newVideoWidth / videoRatio;
+	} else {
+		newVideoHeight = newCardHeight;
+		newVideoWidth = newVideoHeight * videoRatio;
 	}
 
-	@Watch('shouldPlayVideo')
-	setupVideoController() {
-		if (this.videoController) {
-			return;
-		}
+	imageWidth.value = width + 'px';
+	imageHeight.value = height + 'px';
+	videoWidth.value = newVideoWidth + 'px';
+	videoHeight.value = newVideoHeight + 'px';
+}
 
-		if (this.post?.hasVideo && this.post.videos[0].postCardVideo) {
-			this.videoController = createVideoPlayerController(
-				this.post.videos[0].postCardVideo,
-				this.videoContext
-			);
+function inView() {
+	isBootstrapped.value = true;
+	isHydrated.value = true;
+}
 
-			this.videoController.volume = 0;
-			this.videoController.muted = true;
-		} else if (this.mediaItem?.is_animated) {
-			const sourcesPayload = {
-				mp4: this.mediaItem.mediaserver_url_mp4,
-				webm: this.mediaItem.mediaserver_url_webm,
-			};
+function outView() {
+	isHydrated.value = false;
+}
 
-			this.videoController = getVideoPlayerFromSources(sourcesPayload, 'gif');
-		}
+function _initVideoController() {
+	if (!videoContext?.value || videoController.value) {
+		return;
 	}
 
-	trackPostOpen() {
-		trackPostOpen({ source: this.source });
+	if (post.value?.hasVideo && post.value.videos[0].postCardVideo) {
+		videoController.value = createVideoPlayerController(
+			post.value.videos[0].postCardVideo,
+			videoContext.value
+		);
+
+		videoController.value.volume = 0;
+		videoController.value.muted = true;
+	} else if (mediaItem.value?.is_animated) {
+		const sourcesPayload = {
+			mp4: mediaItem.value.mediaserver_url_mp4,
+			webm: mediaItem.value.mediaserver_url_webm,
+		};
+
+		videoController.value = getVideoPlayerFromSources(sourcesPayload, 'gif');
 	}
 }
 </script>
 
 <template>
-	<div v-if="post" class="post-card">
-		<AppResponsiveDimensions :ratio="aspectRatio" @change="calcData()">
+	<div v-if="post" ref="root" class="post-card">
+		<AppResponsiveDimensions :ratio="AppPostCardAspectRatio" @change="calcData()">
 			<AppScrollInview
 				:config="InviewConfig"
 				:style="{
 					width: cardWidth,
 					height: cardHeight,
-					'padding-top': GJ_IS_SSR ? (1 / aspectRatio) * 100 + '%' : null,
+					'padding-top': GJ_IS_SSR ? (1 / AppPostCardAspectRatio) * 100 + '%' : null,
 				}"
 				@inview="inView"
 				@outview="outView"
 			>
-				<div ref="card" class="-inner">
+				<div v-if="hasOverlayContent" class="-overlay">
+					<slot name="overlay" />
+				</div>
+
+				<AppBackground
+					ref="cardElem"
+					class="-background"
+					:class="{ '-blur': hasOverlayContent }"
+					:background="background"
+				>
 					<template v-if="!!mediaItem">
 						<div class="-inner-media">
 							<AppMediaItemBackdrop class="-backdrop" :media-item="mediaItem">
@@ -275,23 +275,25 @@ export default class AppPostCard extends Vue {
 								/>
 							</template>
 						</div>
-						<div class="-inner-gradient" />
+						<div v-if="!!mediaItem" class="-inner-gradient" />
 					</template>
 
 					<template v-else>
-						<AppFadeCollapse
-							class="-inner-message"
-							:collapse-height="leadHeight"
-							ignore-threshold
-							size="sm"
-						>
-							<AppContentViewer :source="post.lead_content" />
-						</AppFadeCollapse>
+						<div v-if="!!background" class="-inner-gradient" />
+						<div ref="message" class="-inner-message">
+							<div :class="{ '-overlay-message': overlay }">
+								<AppFadeCollapse
+									:collapse-height="leadHeight"
+									ignore-threshold
+									as-mask
+								>
+									<AppContentViewer :source="post.lead_content" />
+								</AppFadeCollapse>
+							</div>
+						</div>
 					</template>
 
-					<router-link class="-link" :to="post.routeLocation" @click="trackPostOpen()" />
-
-					<div class="-details" :class="{ '-light': !!mediaItem }">
+					<div class="-details" :class="{ '-light': overlay }">
 						<template v-if="withUser">
 							<AppUserAvatar class="-details-user-avatar" :user="post.user" />
 							<a class="-details-user-name" :href="userLink">
@@ -321,7 +323,13 @@ export default class AppPostCard extends Vue {
 							{{ formatFuzzynumber(post.like_count) }}
 						</span>
 					</div>
-				</div>
+
+					<RouterLink
+						class="-link"
+						:to="post.routeLocation"
+						@click="trackPostOpen({ source })"
+					/>
+				</AppBackground>
 			</AppScrollInview>
 		</AppResponsiveDimensions>
 	</div>
@@ -332,6 +340,38 @@ export default class AppPostCard extends Vue {
 
 $-base-width = 200px
 $-padding = 8px
+
+.post-card
+	cursor: pointer
+
+	&:hover
+		elevate-2()
+
+.-link
+	rounded-corners-lg()
+	position: absolute
+	left: 0
+	top: 0
+	right: 0
+	bottom: 0
+	z-index: 1
+
+.-overlay
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	background-color: rgba(black, 0.5)
+	z-index: 2
+
+.-blur
+	filter: blur(4px)
+
+.-background
+	width: 100%
+	height: 100%
+	position: relative
 
 .-inner
 	&
@@ -359,10 +399,22 @@ $-padding = 8px
 		left: $-padding
 		top: $-padding
 		right: $-padding
-		bottom: $-padding
+		bottom: ($-padding * 2) + 20
 
 		::v-deep(.fireside-post-lead-content)
-			font-size: ceil($font-size-base * 1.1)
+			font-size: ceil($font-size-small * 1.1)
+
+.-overlay-message
+	change-bg('bg')
+	elevate-1()
+	border-radius: 8px
+	padding: $-padding
+	max-height: 100%
+
+
+	::v-deep(.fireside-post-lead-content)
+		color: var(--theme-fg)
+		font-size: $font-size-small
 
 .-light
 	&
@@ -373,15 +425,6 @@ $-padding = 8px
 .-voted
 .-liked
 	color: $gj-overlay-notice !important
-
-.-link
-	rounded-corners-lg()
-	position: absolute
-	left: 0
-	top: 0
-	right: 0
-	bottom: 0
-	border: solid $border-width-base transparent
 
 .-details
 	position: absolute

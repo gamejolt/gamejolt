@@ -6,10 +6,10 @@ import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
 import { formatNumber } from '../../../../_common/filters/number';
 import { ReportModal } from '../../../../_common/report/modal/modal.service';
-import AppShareCard from '../../../../_common/share/card/card.vue';
+import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
-import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
+import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../_common/user/user.model';
 import AppGameList from '../../game/list/list.vue';
@@ -223,7 +223,9 @@ export default class AppCommunitySidebar extends Vue {
 						:disabled="isLoadingMoreCollaborators"
 						@click="toggleCollaboratorList"
 					>
-						<AppTranslate v-if="collaboratorListCollapsed || isLoadingMoreCollaborators">
+						<AppTranslate
+							v-if="collaboratorListCollapsed || isLoadingMoreCollaborators"
+						>
 							View All
 						</AppTranslate>
 						<AppTranslate v-else>Show fewer</AppTranslate>

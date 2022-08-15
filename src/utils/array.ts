@@ -4,10 +4,21 @@ export function arrayUnique<T>(values: T[]) {
 	});
 }
 
-export function stringSort(a: string, b: string) {
-	a = a.toLowerCase();
-	b = b.toLowerCase();
+/**
+ * Safe way to assign values from newArray to arr without triggering refs twice.
+ *
+ * For some reason, even for watchers with the default flush behaviour calling
+ * splice(0) followed immediately by a push triggers the ref twice.
+ */
+export function arrayAssignAll<T>(arr: T[], newArray: T[]): void {
+	arr.splice(0, arr.length, ...newArray);
+}
 
+export function stringSort(a: string, b: string) {
+	return stringSortRaw(a.toLowerCase(), b.toLowerCase());
+}
+
+export function stringSortRaw(a: string, b: string) {
 	if (a < b) {
 		return -1;
 	} else if (a > b) {

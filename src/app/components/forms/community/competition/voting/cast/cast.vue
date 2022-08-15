@@ -9,14 +9,14 @@ import { CommunityCompetitionVotingCategory } from '../../../../../../../_common
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.vue';
-import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 
 @Options({
 	components: {
 		AppLoadingFade,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class FormCommunityCompetitionVotingCast extends Vue {

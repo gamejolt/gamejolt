@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-property-decorator';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 
 type Palette = {
 	label: string;
@@ -9,7 +9,7 @@ type Palette = {
 
 @Options({
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppStyleguideColor extends Vue {

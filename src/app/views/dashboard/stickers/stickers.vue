@@ -7,10 +7,10 @@ import { Api } from '../../../../_common/api/api.service';
 import { useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { formatNumber } from '../../../../_common/filters/number';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
-import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
+import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppStickerCard from '../../../../_common/sticker/card/card.vue';
+import AppStickerCard from '../../../../_common/sticker/card/AppStickerCard.vue';
 import { Sticker, StickerStack } from '../../../../_common/sticker/sticker.model';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { useAppStore } from '../../../store';
@@ -55,7 +55,8 @@ export default class RouteDashStickers extends BaseRouteComponent {
 	readonly formatNumber = formatNumber;
 
 	balance = 0;
-	stickerCollection: StickerStack[] = [];
+	generalStickers: StickerStack[] = [];
+	eventStickers: StickerStack[] = [];
 	stickerCost = 10;
 	newStickerIds: number[] = [];
 
@@ -64,7 +65,7 @@ export default class RouteDashStickers extends BaseRouteComponent {
 	}
 
 	get hasStickersInCollection() {
-		return this.stickerCollection.length > 0;
+		return this.generalStickers.length > 0 || this.eventStickers.length > 0;
 	}
 
 	get stickerProgress() {
@@ -88,7 +89,9 @@ export default class RouteDashStickers extends BaseRouteComponent {
 		this.stickerCost = $payload.stickerCost;
 		this.newStickerIds = $payload.newStickerIds;
 
-		this.stickerCollection = [];
+		this.generalStickers = [];
+		this.eventStickers = [];
+
 		for (const stickerCountPayload of $payload.stickerCounts) {
 			const stickerData = $payload.stickers.find(
 				i => i.id === stickerCountPayload.sticker_id
@@ -98,18 +101,25 @@ export default class RouteDashStickers extends BaseRouteComponent {
 				sticker_id: stickerCountPayload.sticker_id,
 				sticker: new Sticker(stickerData),
 			} as StickerStack;
-			this.stickerCollection.push(stickerCount);
-		}
-		this.stickerCollection.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));
 
-		// Sort all "new" stickers to the top.
-		if (this.newStickerIds.length > 0) {
-			const newStickers = this.stickerCollection.filter(x =>
-				this.newStickerIds.includes(x.sticker_id)
-			);
-			this.stickerCollection = this.stickerCollection.filter(x => !newStickers.includes(x));
-			this.stickerCollection.unshift(...newStickers);
+			if (stickerCount.sticker.is_event) {
+				this.eventStickers.push(stickerCount);
+			} else {
+				this.generalStickers.push(stickerCount);
+			}
 		}
+
+		const lists = [this.generalStickers, this.eventStickers];
+		lists.forEach(list => {
+			list.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));
+
+			// Sort all "new" stickers to the top.
+			if (this.newStickerIds.length > 0) {
+				const newStickers = list.filter(x => this.newStickerIds.includes(x.sticker_id));
+				list = list.filter(x => !newStickers.includes(x));
+				list.unshift(...newStickers);
+			}
+		});
 
 		this.grid?.pushViewNotifications('stickers');
 	}
@@ -149,15 +159,35 @@ export default class RouteDashStickers extends BaseRouteComponent {
 					</div>
 					<div class="col-md-8 col-md-pull-4">
 						<template v-if="hasStickersInCollection">
-							<div class="-collection">
-								<AppStickerCard
-									v-for="stickerCount of stickerCollection"
-									:key="stickerCount.sticker_id"
-									:sticker="stickerCount.sticker"
-									:label="`x${stickerCount.count}`"
-									:is-new="newStickerIds.includes(stickerCount.sticker_id)"
-								/>
-							</div>
+							<template
+								v-for="(list, i) in [eventStickers, generalStickers]"
+								:key="i"
+							>
+								<template v-if="list.length > 0">
+									<p class="-collection-title">
+										<AppTranslate>
+											{{
+												i === 0
+													? 'Event Stickers'
+													: i === 1
+													? 'General Stickers'
+													: undefined
+											}}
+										</AppTranslate>
+									</p>
+									<div class="-collection">
+										<AppStickerCard
+											v-for="stickerCount of list"
+											:key="stickerCount.sticker_id"
+											:sticker="stickerCount.sticker"
+											:label="`x${stickerCount.count}`"
+											:is-new="
+												newStickerIds.includes(stickerCount.sticker_id)
+											"
+										/>
+									</div>
+								</template>
+							</template>
 						</template>
 						<p v-else>
 							<AppTranslate>You don't have any stickers yet.</AppTranslate>
@@ -180,4 +210,12 @@ export default class RouteDashStickers extends BaseRouteComponent {
 	grid-template-columns: repeat(auto-fill, $card-width)
 	justify-content: space-between
 	grid-gap: $card-margin * 2
+
+.-collection-title
+	text-transform: uppercase
+	color: var(--theme-fg-muted)
+	margin-top: $grid-gutter-width
+
+	&:first-of-type
+		margin-top: 0
 </style>

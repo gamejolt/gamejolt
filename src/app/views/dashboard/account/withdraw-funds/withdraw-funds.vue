@@ -8,7 +8,7 @@ import { formatNumber } from '../../../../../_common/filters/number';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { User } from '../../../../../_common/user/user.model';
 import FormWithdrawFunds from '../../../../components/forms/withdraw-funds/withdraw-funds.vue';
@@ -21,7 +21,7 @@ import { useAccountRouteController } from '../account.vue';
 		AppExpand,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

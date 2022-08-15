@@ -2,21 +2,21 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../utils/vue';
 import { Analytics } from '../../analytics/analytics.service';
-import { AppAuthRequired } from '../../auth/auth-required-directive';
+import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import { setDrawerOpen, useDrawerStore } from '../../drawer/drawer-store';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
 import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { addCommentVote, canCommentOnModel, Comment, removeCommentVote } from '../comment-model';
 import { CommentThreadModal } from '../thread/modal.service';
 import { CommentVote } from '../vote/vote-model';
 
 @Options({
 	directives: {
-		AppAuthRequired,
-		AppTooltip,
+		AppAuthRequired: vAppAuthRequired,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppCommentControls extends Vue {
@@ -94,6 +94,7 @@ export default class AppCommentControls extends Vue {
 
 	onReplyClick(autofocus: boolean) {
 		CommentThreadModal.show({
+			router: this.$router,
 			model: this.model,
 			commentId: this.comment.id,
 			displayMode: 'comments',

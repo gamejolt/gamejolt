@@ -14,13 +14,13 @@ import {
 import { useRouter } from 'vue-router';
 import { arrayRemove } from '../../../utils/array';
 import { createFocusToken } from '../../../utils/focus-token';
-import AppPopper from '../../../_common/popper/popper.vue';
-import AppShortkey from '../../../_common/shortkey/shortkey.vue';
+import AppPopper from '../../../_common/popper/AppPopper.vue';
+import AppShortkey from '../../../_common/shortkey/AppShortkey.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppSearchInput from './AppSearchInput.vue';
 import { Search } from './search-service';
 
-const AppSearchAutocomplete = defineAsyncComponent(() => import('./autocomplete/autocomplete.vue'));
+const AppSearchAutocomplete = defineAsyncComponent(() => import('./AppSearchAutocomplete.vue'));
 
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;

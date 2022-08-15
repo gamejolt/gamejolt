@@ -1,7 +1,9 @@
+import type { RouteLocationDefinition } from '../../utils/router';
 import { Api } from '../api/api.service';
 import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
 import { ContentSetCacheService } from '../content/content-set-cache';
+import { DogtagData } from '../dogtag/dogtag-data';
 import { MediaItem } from '../media-item/media-item-model';
 import { CommentableModel, Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
@@ -19,7 +21,7 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 	url!: string;
 	slug!: string;
 	img_avatar!: string;
-	dogtag!: string;
+	dogtags?: DogtagData[];
 	shouts_enabled!: boolean;
 
 	status!: number;
@@ -113,6 +115,13 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 		return cache.hasContent;
 	}
 
+	get routeLocation(): RouteLocationDefinition {
+		return {
+			name: 'profile.overview',
+			params: { username: this.username },
+		};
+	}
+
 	get canComment() {
 		if (this.blocked_you || this.is_blocked) {
 			return false;
@@ -149,6 +158,10 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 			this.theme = new Theme(data.theme);
 		}
 
+		if (data.dogtags) {
+			this.dogtags = DogtagData.populate(data.dogtags);
+		}
+
 		Registry.store('User', this);
 	}
 
@@ -170,7 +183,7 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 	$save() {
 		// You can only save yourself, so we don't pass in an ID to the endpoint.
 		return this.$_save('/web/dash/profile/save', 'user', {
-			allowComplexData: ['theme'],
+			allowComplexData: ['theme', 'dogtags', 'pronoun_dogtags'],
 		});
 	}
 

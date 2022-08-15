@@ -1,18 +1,16 @@
 <script lang="ts" setup>
-import { computed, inject, PropType, ref, toRefs } from 'vue';
+import { computed, inject, PropType, toRefs } from 'vue';
+import AppFiresideLiveTag from '../../../../_common/fireside/AppFiresideLiveTag.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppPopper from '../../../../_common/popper/popper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '../../../../_common/scroll/inview/AppScrollInview.vue';
-import { AppTooltip as vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { ChatStore, ChatStoreKey } from '../chat-store';
 import { isUserOnline, tryGetRoomRole } from '../client';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
-import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
+import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
 import AppChatUserPopover from '../user-popover/user-popover.vue';
+import AppChatListItem from '../_list/AppChatListItem.vue';
 
 const props = defineProps({
 	user: {
@@ -23,14 +21,14 @@ const props = defineProps({
 		type: Object as PropType<ChatRoom>,
 		required: true,
 	},
+	horizontalPadding: {
+		type: Number,
+		default: undefined,
+	},
 });
 
 const { user, room } = toRefs(props);
 const chatStore = inject<ChatStore>(ChatStoreKey)!;
-
-const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
-
-const isInview = ref(false);
 
 const chat = computed(() => chatStore.chat!);
 
@@ -44,6 +42,9 @@ const isOnline = computed(() => {
 
 const isOwner = computed(() => room.value.owner_id === user.value.id);
 
+const isLiveFiresideHost = computed(() => user.value.isLive === true);
+const isFiresideHost = computed(() => !!user.value.firesideHost);
+
 const isModerator = computed(
 	() => tryGetRoomRole(chat.value, room.value, user.value) === 'moderator'
 );
@@ -53,90 +54,74 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 </script>
 
 <template>
-	<AppScrollInview
-		tag="li"
-		class="-container"
-		:config="InviewConfig"
-		@inview="isInview = true"
-		@outview="isInview = false"
+	<AppChatListItem
+		:horizontal-padding="horizontalPadding"
+		:popper-placement="Screen.isMobile ? 'bottom' : 'left'"
+		popper-trigger="click"
 	>
-		<AppPopper
-			v-if="isInview"
-			popover-class="fill-darkest"
-			block
-			:placement="Screen.isMobile ? 'bottom' : 'left'"
-		>
-			<a>
-				<div class="shell-nav-icon">
-					<div class="-avatar">
-						<img :src="user.img_avatar" />
-						<AppChatUserOnlineStatus
-							v-if="isOnline !== null"
-							class="-avatar-status"
-							:is-online="isOnline"
-							:size="12"
-						/>
-					</div>
-				</div>
+		<template #leading>
+			<div class="-member-avatar">
+				<img class="-member-avatar-img" :src="user.img_avatar" />
+			</div>
+		</template>
 
-				<div class="shell-nav-label">
-					<span class="-row-icon">
-						<span v-if="isOwner" v-app-tooltip="$gettext(`Room Owner`)">
-							<AppJolticon icon="crown" />
-						</span>
-						<span v-else-if="isStaff" v-app-tooltip="$gettext(`Game Jolt Staff`)">
-							<AppJolticon icon="gamejolt" />
-						</span>
-						<span v-else-if="isModerator" v-app-tooltip="$gettext(`Moderator`)">
-							<AppJolticon icon="star" />
-						</span>
-					</span>
-					{{ ' ' }}
-					<span>{{ user.display_name }}</span>
-					{{ ' ' }}
-					<span class="tiny text-muted">@{{ user.username }}</span>
-				</div>
-			</a>
+		<template #leadingFloat>
+			<AppChatUserOnlineStatus
+				v-if="isOnline !== null"
+				class="-avatar-status"
+				:is-online="isOnline"
+				:size="12"
+				:segment-width="1.5"
+				background-color-base="bg"
+			/>
+		</template>
 
-			<template #popover>
-				<AppChatUserPopover :user="user" :room="room" />
-			</template>
-		</AppPopper>
-	</AppScrollInview>
+		<template #title>
+			<AppFiresideLiveTag
+				v-if="isLiveFiresideHost"
+				class="-nowrap"
+				size="sm"
+				sans-elevation
+			/>
+
+			<span>{{ user.display_name }}</span>
+			<span class="tiny text-muted">@{{ user.username }}</span>
+		</template>
+
+		<template #trailing>
+			<span v-if="isOwner" v-app-tooltip="$gettext(`Room Owner`)">
+				<AppJolticon class="-indicator-icon" icon="crown" />
+			</span>
+			<span v-else-if="isFiresideHost" v-app-tooltip="$gettext(`Host`)">
+				<AppJolticon class="-indicator-icon" icon="star-ten-pointed" />
+			</span>
+
+			<span v-if="isModerator" v-app-tooltip="$gettext(`Chat Moderator`)">
+				<AppJolticon class="-indicator-icon" icon="star" />
+			</span>
+
+			<span v-if="isStaff" v-app-tooltip="$gettext(`Game Jolt Staff`)">
+				<AppJolticon class="-indicator-icon" icon="gamejolt" />
+			</span>
+		</template>
+
+		<template #popover>
+			<AppChatUserPopover :user="user" :room="room" />
+		</template>
+	</AppChatListItem>
 </template>
 
 <style lang="stylus" scoped>
-.-container
-	height: 50px
-	overflow: hidden
-	rounded-corners()
+.-member-avatar
+.-member-avatar-img
+	width: 100%
+	height: 100%
 
-.-row-icon
-	vertical-align: middle
+.-indicator-icon
+	color: var(--theme-primary)
 
-.-avatar
-	position: relative
-
-	img
-		img-circle()
-		display: inline-block
-		width: 24px
-		vertical-align: middle
-
-	.-group-icon
-		img-circle()
-		display: inline-flex
-		align-items: center
-		justify-content: center
-		vertical-align: middle
-		width: 32px
-		height: 32px
-		background-color: var(--theme-backlight)
-
-		.jolticon
-			color: var(--theme-backlight-fg) !important
-
-	&-status
-		right: 12px
-		bottom: 10px
+.-nowrap
+	overflow: unset !important
+	white-space: unset !important
+	text-overflow: unset !important
 </style>

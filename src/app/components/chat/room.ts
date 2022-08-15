@@ -1,3 +1,4 @@
+import { Background } from '../../../_common/background/background.model';
 import { ContentContext } from '../../../_common/content/content-context';
 import { Translate } from '../../../_common/translate/translate.service';
 import { ChatClient } from './client';
@@ -21,15 +22,21 @@ export class ChatRoom {
 	roles!: ChatRole[];
 	owner_id!: number;
 	last_message_on!: number;
+	background?: Background;
 
-	constructor(data: Partial<ChatRoom> = {}) {
+	constructor(data: any = {}) {
 		Object.assign(this, data);
 
-		if (data.members) {
-			this.members = data.members.map(member => new ChatUser(member));
+		if (Array.isArray(data.members)) {
+			this.members = (data.members as unknown[]).map(i => new ChatUser(i));
 		}
-		if (data.roles) {
-			this.roles = data.roles.map(role => new ChatRole(role));
+
+		if (Array.isArray(data.roles)) {
+			this.roles = (data.roles as unknown[]).map(i => new ChatRole(i));
+		}
+
+		if (data.background) {
+			this.background = new Background(data.background);
 		}
 	}
 

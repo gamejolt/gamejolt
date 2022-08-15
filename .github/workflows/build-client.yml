@@ -1,4 +1,4 @@
-name: Build Client
+name: Build Desktop App
 
 on:
   push:
@@ -10,32 +10,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: '16.4.2'
           cache: yarn
 
       - run: yarn install
-      - run: yarn run client-build
-      - run: cd build/prod-client && tar cvf client-build.tar .
+      - run: yarn run client:build
+      - run: cd build/desktop && tar cvf desktop-build.tar .
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
-          name: client-build
-          path: build/prod-client/client-build.tar
+          name: desktop-build
+          path: build/desktop/desktop-build.tar
 
   build-win:
     needs: build-frontend
-
-    strategy:
-      matrix:
-        targetplatform: [x86]
-
-    runs-on: windows-2016
+    runs-on: windows-2022
 
     env:
       GOPATH: 'C:\go'
@@ -48,19 +43,20 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
 
       - name: Install code signing cert
         run: |
-          Set-Content gulp\tasks\client\certs\cert.pfx.b64 ${{ secrets.GJ_CERT }}
-          CertUtil -Decode gulp\tasks\client\certs\cert.pfx.b64 gulp\tasks\client\certs\cert.pfx
+          Set-Content scripts\build\desktop-app\certs\cert.pfx.b64 @'
+          ${{ secrets.GJ_CERT }}
+          '@
+          CertUtil -Decode scripts\build\desktop-app\certs\cert.pfx.b64 scripts\build\desktop-app\certs\cert.pfx
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: '16.4.2'
-          architecture: x86
           cache: yarn
 
       - uses: actions/setup-go@v2
@@ -69,14 +65,14 @@ jobs:
 
       - uses: actions/download-artifact@v2
         with:
-          name: client-build
+          name: desktop-build
 
       # I guess windows doesn't need -p flag
-      - run: mkdir build/prod-client
-      - run: tar -xvf client-build.tar -C build/prod-client
+      - run: mkdir build/desktop
+      - run: tar -xvf desktop-build.tar -C build/desktop
 
       # Enable VS2015 toolset
-      - run: 'call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86'
+      - run: 'call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64'
         shell: cmd
       - run: gcc -v
 
@@ -86,22 +82,22 @@ jobs:
       - run: yarn install
 
       # Production release
-      - run: yarn run client-package --push-build
+      - run: yarn run client:package --push
         if: ${{ !endsWith(github.ref_name, '-stage') }}
 
       # Stage release
-      - run: yarn run client-package --use-test-package --push-build
+      - run: yarn run client:package --push --staging
         if: ${{ endsWith(github.ref_name, '-stage') }}
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
-          name: win32
-          path: build\prod-client-build\GameJoltClientSetup.exe
+          name: win64-installer
+          path: build\desktop-app\GameJoltClientSetup.exe
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
-          name: win32-package
-          path: build\prod-client-build\win32-package.tar.gz
+          name: win64-package
+          path: build\desktop-app\win64-package.tar.gz
 
   build-linux:
     needs: build-frontend
@@ -120,14 +116,14 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
 
       # OpenGL dev dependencies
       - run: sudo apt-get install -y libgl1-mesa-dev xorg-dev
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: '16.4.2'
           cache: yarn
@@ -136,84 +132,85 @@ jobs:
         with:
           go-version: '1.10.8'
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
-          name: client-build
+          name: desktop-build
 
-      - run: mkdir -p build/prod-client
-      - run: tar -xvf client-build.tar -C build/prod-client
+      - run: mkdir -p build/desktop
+      - run: tar -xvf desktop-build.tar -C build/desktop
 
       - run: yarn install
 
       # Production release
-      - run: yarn run client-package --push-build
+      - run: yarn run client:package --push
         if: ${{ !endsWith(github.ref_name, '-stage') }}
 
       # Stage release
-      - run: yarn run client-package --use-test-package --push-build
+      - run: yarn run client:package --push --staging
         if: ${{ endsWith(github.ref_name, '-stage') }}
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
-          name: linux64
-          path: build/prod-client-build/GameJoltClient.tar.gz
+          name: linux64-installer
+          path: build/desktop-app/GameJoltClient.tar.gz
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: linux64-package
-          path: build/prod-client-build/linux64-package.tar.gz
+          path: build/desktop-app/linux64-package.tar.gz
 
-  build-mac:
-    needs: build-frontend
-    runs-on: macos-latest
+  # TODO
+  # build-mac:
+  #   needs: build-frontend
+  #   runs-on: macos-latest
 
-    env:
-      GOPATH: /Users/runner/go
-      GJPUSH_TOKEN: ${{ secrets.GJ_PUSH_TOKEN }}
-      GJ_CERT_PASS: ${{ secrets.GJ_CERT_PASS }}
+  #   env:
+  #     GOPATH: /Users/runner/go
+  #     GJPUSH_TOKEN: ${{ secrets.GJ_PUSH_TOKEN }}
+  #     GJ_CERT_PASS: ${{ secrets.GJ_CERT_PASS }}
 
-    steps:
-      - uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SSH_KEY }}
-          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+  #   steps:
+  #     - uses: shimataro/ssh-key-action@v2
+  #       with:
+  #         key: ${{ secrets.SSH_KEY }}
+  #         known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
-      - uses: actions/checkout@v2
-        with:
-          submodules: recursive
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         submodules: recursive
 
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '16.4.2'
-          cache: yarn
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: '16.4.2'
+  #         cache: yarn
 
-      - uses: actions/setup-go@v2
-        with:
-          go-version: '1.10.8'
+  #     - uses: actions/setup-go@v2
+  #       with:
+  #         go-version: '1.10.8'
 
-      - uses: actions/download-artifact@v2
-        with:
-          name: client-build
+  #     - uses: 3
+  #       with:
+  #         name: client-build
 
-      - run: mkdir -p build/prod-client
-      - run: tar -xvf client-build.tar -C build/prod-client
+  #     - run: mkdir -p build/prod-client
+  #     - run: tar -xvf client-build.tar -C build/prod-client
 
-      - run: yarn install
+  #     - run: yarn install
 
-      # Production release
-      - run: yarn run client-package --push-build
-        if: ${{ !endsWith(github.ref_name, '-stage') }}
+  #     # Production release
+  #     - run: yarn run client-package --push-build
+  #       if: ${{ !endsWith(github.ref_name, '-stage') }}
 
-      # Stage release
-      - run: yarn run client-package --use-test-package --push-build
-        if: ${{ endsWith(github.ref_name, '-stage') }}
+  #     # Stage release
+  #     - run: yarn run client-package --use-test-package --push-build
+  #       if: ${{ endsWith(github.ref_name, '-stage') }}
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: macos64
-          path: build/prod-client-build/GameJoltClient.dmg
+  #     - uses: actions/upload-artifact@v2
+  #       with:
+  #         name: macos64
+  #         path: build/prod-client-build/GameJoltClient.dmg
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: macos64-package
-          path: build/prod-client-build/osx64-package.tar.gz
+  #     - uses: actions/upload-artifact@v2
+  #       with:
+  #         name: macos64-package
+  #         path: build/prod-client-build/osx64-package.tar.gz

@@ -1,7 +1,7 @@
 import { loadScript } from '../../../utils/utils';
 import { AdSlot } from '../ad-slot-info';
 import { AdAdapterBase } from '../adapter-base';
-import AppAdProper from './proper.vue';
+import AppAdProper from './AppAdProper.vue';
 
 export const ProperTagUnits = {
 	side: ['side_1', 'side_2'],

@@ -7,7 +7,7 @@ import { BaseForm, FormOnLoad } from '../../../../_common/form-vue/form.service'
 import { validateUrlPath } from '../../../../_common/form-vue/validators';
 import { Game } from '../../../../_common/game/game.model';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppGameDevStageSelector from './dev-stage-selector/dev-stage-selector.vue';
 import AppDashGameWizardControls from './wizard-controls/wizard-controls.vue';
 
@@ -21,7 +21,7 @@ class Wrapper extends BaseForm<Game> {}
 		AppGameDevStageSelector,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
@@ -162,11 +162,7 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 					</div>
 				</AppFormGroup>
 
-				<AppFormGroup
-					name="web_site"
-					:label="$gettext(`Website`)"
-					:optional="true"
-				>
+				<AppFormGroup name="web_site" :label="$gettext(`Website`)" :optional="true">
 					<AppFormControl
 						type="url"
 						:validators="[validateMaxLength(250)]"
@@ -210,7 +206,9 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 							{{ ' ' }}
 							<span
 								v-app-tooltip.touchable="
-									$gettext(`This helps us create better filtering options around which tools people use.`)
+									$gettext(
+										`This helps us create better filtering options around which tools people use.`
+									)
 								"
 								class="text-help"
 							>
@@ -229,7 +227,9 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 						name="referrals_enabled"
 						:label="$gettext(`Add to partner system?`)"
 					>
-						<AppFormControlToggle class="pull-right" />
+						<template #inline-control>
+							<AppFormControlToggle />
+						</template>
 
 						<div class="help-block">
 							<div>

@@ -7,9 +7,10 @@ type LazyLanguageImport = () => Promise<{
 	[key: string]: any;
 }>;
 
-const _translationImports: Record<string, LazyLanguageImport> = import.meta.env.SSR
-	? {}
-	: import.meta.glob('../../translations/*/main.json');
+const _translationImports: Record<string, LazyLanguageImport> =
+	import.meta.env.SSR || GJ_IS_MOBILE_APP
+		? {}
+		: import.meta.glob('../../translations/*/main.json');
 
 const LangStorageKey = 'lang';
 const InterpolationRegex = /%\{((?:.|\n)+?)\}/g;
@@ -269,7 +270,10 @@ export function $gettextInterpolate(
 ) {
 	return msgid.replace(InterpolationRegex, (_match, token) => {
 		const key = token.trim();
-		const evaluated = context[key].toString();
+
+		// This is for safety so that even if it's null or undefined we don't
+		// break.
+		const evaluated = (context[key] || '').toString();
 
 		return enableHTMLEscaping
 			? evaluated.replace(/[&<>"']/g, (i: keyof typeof EscapeHTMLMap) => EscapeHTMLMap[i])

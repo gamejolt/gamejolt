@@ -9,14 +9,14 @@ import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppCommunitySidebar from '../../../../components/community/sidebar/sidebar.vue';
-import AppFiresideAvatarAdd from '../../../../components/fireside/avatar/add/add.vue';
 import AppFiresideAvatar, {
 	FiresideAvatarEvent,
-} from '../../../../components/fireside/avatar/avatar.vue';
+} from '../../../../components/fireside/avatar/AppFiresideAvatar.vue';
+import AppFiresideAvatarAdd from '../../../../components/fireside/avatar/AppFiresideAvatarAdd.vue';
 import { useAppStore } from '../../../../store/index';
 import { CommunitiesViewChannelDeps } from '../channel/channel.vue';
 import {
@@ -41,7 +41,7 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 		AppLoadingFade,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({
@@ -141,7 +141,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		this.feed = ActivityFeedService.routeInit(this);
+		this.feed = ActivityFeedService.routeInit(this.isRouteBootstrapped);
 		this.finishedLoading = false;
 	}
 
@@ -184,7 +184,13 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	onPostAdded(post: FiresidePost) {
-		ActivityFeedService.onPostAdded(this.feed!, post, this);
+		ActivityFeedService.onPostAdded({
+			feed: this.feed!,
+			post,
+			appRoute: this.appRoute_,
+			route: this.$route,
+			router: this.$router,
+		});
 	}
 
 	async acceptCollaboration() {
@@ -216,9 +222,9 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			<div class="container text-center">
 				<p>
 					<b>
-						<AppTranslate
-							>You've been invited to collaborate on this community.</AppTranslate
-						>
+						<AppTranslate>
+							You've been invited to collaborate on this community.
+						</AppTranslate>
 					</b>
 				</p>
 				<AppButton

@@ -139,7 +139,7 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 	}
 
 	routeCreated() {
-		this.feed = ActivityFeedService.routeInit(this);
+		this.feed = ActivityFeedService.routeInit(this.isRouteBootstrapped);
 	}
 
 	routeResolved($payload: any, fromCache: boolean) {
@@ -196,7 +196,13 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 	}
 
 	onPostAdded(post: FiresidePost) {
-		ActivityFeedService.onPostAdded(this.feed!, post, this);
+		ActivityFeedService.onPostAdded({
+			feed: this.feed!,
+			post,
+			appRoute: this.appRoute_,
+			route: this.$route,
+			router: this.$router,
+		});
 	}
 }
 </script>
@@ -211,7 +217,7 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 			</h1>
 
 			<div v-if="channel && channel.visibility === 'draft'">
-				<AppIllustration :src="illNoComments">
+				<AppIllustration :asset="illNoComments">
 					<AppTranslate>
 						This is a draft channel. When it gets published, the post feed will appear
 						here.

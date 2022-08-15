@@ -1,14 +1,17 @@
 import { reactive } from '@vue/reactivity';
 import type { MsgProgress, SelfUpdaterInstance } from 'client-voodoo';
-import * as path from 'path';
+import { markRaw } from 'vue';
+import { Environment } from '../environment/environment.service';
 import { Navigate } from '../navigate/navigate.service';
 import { Logger, PatcherState, SelfUpdater } from './client-voodoo-imports';
 import { Client } from './client.service';
 
+const path = require('path') as typeof import('path');
+
 export type ClientUpdateStatus = 'checking' | 'none' | 'fetching' | 'ready' | 'error';
 
 class ClientUpdaterService {
-	private initPromise: Promise<void> | null = null;
+	private initialized = false;
 
 	// Updater fields
 	private myClientUpdateStatus: ClientUpdateStatus = 'none';
@@ -36,31 +39,28 @@ class ClientUpdaterService {
 		if (this.clientUpdateStatus !== 'fetching') {
 			this.setClientUpdateProgress(null);
 		}
+
+		this._gotoUpgradeSectionIfNeeded();
 	}
 
 	private setClientUpdateProgress(progress: MsgProgress | null) {
 		this.myClientUpdateProgress = progress;
 	}
 
-	async init() {
-		if (this.initPromise) {
-			return this.initPromise;
+	init() {
+		if (this.initialized) {
+			return;
 		}
-
-		let initPromiseResolver: () => void = null as any;
-		this.initPromise = new Promise(resolve => {
-			initPromiseResolver = resolve;
-		});
+		this.initialized = true;
 
 		Logger.hijack(console);
 		Navigate.registerDestructor(() => Logger.unhijack());
 
 		if (GJ_WITH_UPDATER) {
+			const checkEveryMins = GJ_ENVIRONMENT === 'development' ? 10 : 45;
 			this.checkForClientUpdates();
-			setInterval(() => this.checkForClientUpdates(), 45 * 60 * 1000); // 45min currently
+			setInterval(() => this.checkForClientUpdates(), checkEveryMins * 60 * 1000); // 45min currently
 		}
-
-		initPromiseResolver();
 	}
 
 	async checkForClientUpdates() {
@@ -98,7 +98,7 @@ class ClientUpdaterService {
 				// the check if its already in progress. Something weird is going on.
 				//
 				// Either way, this is an error we should be able to tolerate and just try syncing with joltron's state again.
-				if (err.message === 'Already running an update') {
+				if (err && err.message === 'Already running an update') {
 					await this.queryUpdaterState(updaterInstance);
 				} else {
 					throw err;
@@ -135,7 +135,7 @@ class ClientUpdaterService {
 		return this.updaterInstance || (await this.createUpdaterInstance());
 	}
 
-	private async createUpdaterInstance() {
+	private createUpdaterInstance() {
 		if (this.updaterInstanceBuilder) {
 			return this.updaterInstanceBuilder;
 		}
@@ -146,7 +146,7 @@ class ClientUpdaterService {
 				const manifestPath = path.resolve(Client.joltronDir, '.manifest');
 				console.log('Attaching selfupdater instance for manifest ' + manifestPath);
 
-				thisInstance = await SelfUpdater.attach(manifestPath);
+				thisInstance = markRaw(await SelfUpdater.attach(manifestPath));
 				Navigate.registerDestructor(() => this.disposeUpdaterInstance(thisInstance!));
 
 				thisInstance
@@ -169,6 +169,7 @@ class ClientUpdaterService {
 						nw.Window.get().close(true);
 					})
 					.on('openRequested', () => {
+						console.log('received open request');
 						Client.show();
 					})
 					.on('progress', (progress: MsgProgress) => {
@@ -192,6 +193,7 @@ class ClientUpdaterService {
 
 				return thisInstance;
 			} catch (err) {
+				console.error(err);
 				try {
 					this.setClientUpdateStatus('error');
 					if (thisInstance) {
@@ -250,6 +252,39 @@ class ClientUpdaterService {
 					break;
 			}
 		}
+	}
+
+	private _gotoUpgradeSectionIfNeeded() {
+		// Hacky, but we check against time for 2 reasons:
+		// 1. There's a race condition when redirecting between app and auth
+		//    section that may initialize the client updater service multiple
+		//    times when the client starts.
+		// 2. Checking for updates is asyncronous. we can't easily correlate the
+		//    request to check for updates to the event we're receiving back
+		//    from joltron telling us there is an update available.
+		//
+		// I chose 10 seconds because we need enough time to:
+		// - connect to joltron
+		// - send it a request to check for updates
+		// - wait for joltron to get the latest version info from our servers
+		// - wait for joltron to report the status back to the desktop app
+		const clientStartTime = Client.getStartTime();
+		if (Date.now() - clientStartTime > 10_000) {
+			return;
+		}
+
+		if (this.clientUpdateStatus !== 'fetching' && this.clientUpdateStatus !== 'ready') {
+			return;
+		}
+
+		const isInUpgradeSection =
+			Navigate.currentClientSection === 'client' && window.location.href.endsWith('/upgrade');
+
+		if (isInUpgradeSection) {
+			return;
+		}
+
+		Navigate.goto(Environment.clientSectionUrl + '/upgrade');
 	}
 }
 

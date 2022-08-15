@@ -1,7 +1,7 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import AppLoading from '../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import { BaseModal } from '../../../../../_common/modal/base';
 
 @Options({
@@ -65,17 +65,13 @@ export default class AppArchiveFileSelectorModal extends mixins(BaseModal) {
 	<AppModal>
 		<div class="modal-controls">
 			<AppButton @click="close()">
-				<AppTranslate>
-					Cancel
-				</AppTranslate>
+				<AppTranslate>Cancel</AppTranslate>
 			</AppButton>
 		</div>
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<AppTranslate>
-					Select Executable File
-				</AppTranslate>
+				<AppTranslate>Select Executable File</AppTranslate>
 			</h2>
 		</div>
 
@@ -88,11 +84,7 @@ export default class AppArchiveFileSelectorModal extends mixins(BaseModal) {
 						v-model="filter"
 						class="form-control"
 						type="search"
-						:placeholder="
-							$gettext(
-								`Filter files...`
-							)
-						"
+						:placeholder="$gettext(`Filter files...`)"
 					/>
 				</div>
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { transparentize } from 'polished';
+import { parseToRgb, transparentize } from 'polished';
 import { computed, PropType, useSlots } from 'vue';
 import AppStyle from '../AppStyle.vue';
 import { DefaultTheme, Theme } from './theme.model';
@@ -9,31 +9,25 @@ import { useThemeStore } from './theme.store';
 let _inc = 0;
 
 // Global helpers for generating the style rules.
-function genVar(varname: string, value: string) {
+function genVar(varname: string, value: string, isDark = false) {
+	value = '#' + value;
+	const rgbValue = parseToRgb(value);
+	const dark = isDark ? 'dark-' : '';
+
 	return `
-		--theme-${varname}: #${value};
-		--theme-${varname}-trans: ${transparentize(1, '#' + value)};
+		--${dark}theme-${varname}: ${value};
+		--${dark}theme-${varname}-trans: ${transparentize(1, value)};
+		--${dark}theme-${varname}-rgb: ${rgbValue.red}, ${rgbValue.green}, ${rgbValue.blue};
 	`;
 }
 
-function genDarkVar(varname: string, value: string) {
-	return `
-		--dark-theme-${varname}: #${value};
-		--dark-theme-${varname}-trans: ${transparentize(1, '#' + value)};
-	`;
-}
+function copyVar(varname: string, target: string, isDark = false) {
+	const dark = isDark ? 'dark-' : '';
 
-function copyVar(varname: string, target: string) {
 	return `
-		--theme-${varname}: var(--theme-${target});
-		--theme-${varname}-trans: var(--theme-${target}-trans);
-	`;
-}
-
-function copyDarkVar(varname: string, target: string) {
-	return `
-		--dark-theme-${varname}: var(--theme-${target});
-		--dark-theme-${varname}-trans: var(--theme-${target}-trans);
+		--${dark}theme-${varname}: var(--theme-${target});
+		--${dark}theme-${varname}-trans: var(--theme-${target}-trans);
+		--${dark}theme-${varname}-rgb: var(--theme-${target}-rgb);
 	`;
 }
 
@@ -41,6 +35,7 @@ function darkVar(varname: string) {
 	return `
 		--theme-${varname}: var(--dark-theme-${varname});
 		--theme-${varname}-trans: var(--dark-theme-${varname}-trans);
+		--theme-${varname}-rgb: var(--dark-theme-${varname}-rgb);
 	`;
 }
 </script>
@@ -102,20 +97,24 @@ const styles = computed(() => {
 			${copyVar('fg-muted', 'light')}
 			${copyVar('link', 'backlight')}
 			${copyVar('link-hover', 'black')}
+			${copyVar('primary', 'link')}
+			${copyVar('primary-fg', 'black')}
 
-			${genDarkVar('highlight', _theme.darkHighlight_)}
-			${genDarkVar('backlight', _theme.darkBacklight_)}
-			${genDarkVar('notice', _theme.darkNotice_)}
-			${genDarkVar('bi-bg', _theme.darkBiBg_)}
-			${genDarkVar('bi-fg', _theme.darkBiFg_)}
-			${copyDarkVar('bg', 'dark')}
-			${copyDarkVar('bg-offset', 'darker')}
-			${genDarkVar('bg-backdrop', _theme.darkBgBackdrop_)}
-			${copyDarkVar('bg-subtle', 'gray-subtle')}
-			${copyDarkVar('fg', 'lightest')}
-			${copyDarkVar('fg-muted', 'light')}
-			${genDarkVar('link', _theme.darkHighlight_)}
-			${copyDarkVar('link-hover', 'white')}
+			${genVar('highlight', _theme.darkHighlight_, true)}
+			${genVar('backlight', _theme.darkBacklight_, true)}
+			${genVar('notice', _theme.darkNotice_, true)}
+			${genVar('bi-bg', _theme.darkBiBg_, true)}
+			${genVar('bi-fg', _theme.darkBiFg_, true)}
+			${copyVar('bg', 'dark', true)}
+			${copyVar('bg-offset', 'darker', true)}
+			${genVar('bg-backdrop', _theme.darkBgBackdrop_, true)}
+			${copyVar('bg-subtle', 'gray-subtle', true)}
+			${copyVar('fg', 'lightest', true)}
+			${copyVar('fg-muted', 'light', true)}
+			${genVar('link', _theme.darkHighlight_, true)}
+			${copyVar('link-hover', 'white', true)}
+			${copyVar('primary', 'link', true)}
+			${copyVar('primary-fg', 'white', true)}
 		}
 	`;
 
@@ -136,6 +135,7 @@ const styles = computed(() => {
 				${darkVar('fg-muted')}
 				${darkVar('link')}
 				${darkVar('link-hover')}
+				${darkVar('primary')}
 			}
 		`;
 	}

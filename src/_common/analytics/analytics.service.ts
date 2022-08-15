@@ -1,17 +1,26 @@
-import type { Analytics as FirebaseAnalytics } from 'firebase/analytics';
-import { initializeAnalytics, logEvent, setCurrentScreen, setUserId } from 'firebase/analytics';
+import {
+	Analytics as FirebaseAnalytics,
+	initializeAnalytics,
+	logEvent,
+	setCurrentScreen,
+	setUserId,
+	setUserProperties,
+} from 'firebase/analytics';
 import { unref, watch } from 'vue';
 import { Router } from 'vue-router';
 import { arrayRemove } from '../../utils/array';
-import { AppPromotionSource } from '../../utils/mobile-app';
+import { createLogger } from '../../utils/logging';
 import { AuthMethod } from '../auth/auth.service';
 import { CommentVote } from '../comment/vote/vote-model';
 import { ConfigOption } from '../config/config.service';
 import { DeviceArch, DeviceOs } from '../device/device.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
+import { AppPromotionSource } from '../mobile-app/store';
 import { onRouteChangeAfter } from '../route/route-component';
+import { SettingThemeDark } from '../settings/settings.service';
 import { ShareProvider, ShareResource } from '../share/share.service';
 import { CommonStore } from '../store/common-store';
+import { getTranslationLang } from '../translate/translate.service';
 
 export const SOCIAL_NETWORK_FB = 'facebook';
 export const SOCIAL_NETWORK_TWITTER = 'twitter';
@@ -22,7 +31,8 @@ export const SOCIAL_ACTION_TWEET = 'tweet';
 export const SOCIAL_ACTION_FOLLOW = 'follow';
 
 export type CommunityOpenSource = 'communityChunk' | 'card' | 'cbar' | 'thumbnail';
-export type PostOpenSource = 'communityChunk' | 'postRecommendation' | 'feed';
+export type CommunityJoinLocation = 'onboarding' | 'card' | 'communityPage' | 'homeBanner' | 'cbar';
+export type PostOpenSource = 'realmChunk' | 'communityChunk' | 'postRecommendation' | 'feed';
 export type PostControlsLocation = 'feed' | 'broadcast' | 'postPage';
 export type UserFollowLocation =
 	| 'feed'
@@ -30,10 +40,16 @@ export type UserFollowLocation =
 	| 'postLike'
 	| 'card'
 	| 'profilePage'
+	| 'inviteFollow'
+	| 'firesideOfflineFollow'
 	| 'userList'
 	| 'gameFollow';
 export type GameFollowLocation = 'thumbnail' | 'gamePage' | 'badge' | 'homeBanner' | 'library';
-export type CommunityJoinLocation = 'onboarding' | 'card' | 'communityPage' | 'homeBanner' | 'cbar';
+export type RealmOpenSource = 'realmChunk' | 'realmChunkPost';
+export type RealmFollowSource = 'realmChunk' | 'fullCard' | 'realmHeader';
+export type BannerType = 'store';
+
+const logger = createLogger('Analytics');
 
 /**
  * How long we wait (in ms) before we track another experiment engagement for
@@ -57,9 +73,13 @@ function _getStoreUser() {
 function _shouldTrack() {
 	const user = _getStoreUser();
 
-	// If they're not a normal user, don't track.
-	if (GJ_BUILD_TYPE === 'production' && user && user.permission_level > 0) {
-		return false;
+	// Usually we don't want our staff accounts to count in analytics. That
+	// said, we need to allow tracking staff account while developing so we can
+	// actually test this.
+	const isStaffUser = user && user.permission_level > 0;
+	if (isStaffUser) {
+		// Allow staff users to get tracked in development or when making a staging build.
+		return GJ_ENVIRONMENT === 'development' || GJ_IS_STAGING;
 	}
 
 	return true;
@@ -84,6 +104,17 @@ export function initAnalytics({ commonStore }: { commonStore: CommonStore }) {
 				_untrackUserId();
 			}
 		}
+	);
+
+	watch(
+		() => ({
+			theme_brightness: SettingThemeDark.get() ? 'dark' : 'light',
+			lang: getTranslationLang(),
+		}),
+		properties => {
+			_trackUserProperties(properties);
+		},
+		{ immediate: true }
 	);
 }
 
@@ -124,7 +155,7 @@ function _trackPageview(path?: string) {
 	// Gotta make sure the system has a chance to compile the title into the page.
 	window.setTimeout(() => {
 		if (!_shouldTrack()) {
-			console.log('Skip tracking page view since not a normal user.');
+			logger.warn('Skip tracking page view since not a normal user.');
 			return;
 		}
 
@@ -141,8 +172,10 @@ function _trackPageview(path?: string) {
 		const analytics = _getFirebaseAnalytics();
 
 		// Now track the page view.
-		if (GJ_BUILD_TYPE === 'development') {
-			console.log(`Track page view: ${path}`);
+		//
+		// Avoid tracking page views while developing.
+		if (GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE === 'serve-build') {
+			logger.info(`Track page view: ${path}`);
 		} else {
 			// We have to manually log the page_view event. Setting the current
 			// screen will set that screen variable for all future events.
@@ -170,6 +203,15 @@ function _untrackUserId() {
 	setUserId(_getFirebaseAnalytics(), '');
 }
 
+function _trackUserProperties(properties: { theme_brightness: string; lang: string }) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
+		return;
+	}
+
+	logger.info(`User properties changed.`, properties);
+	setUserProperties(_getFirebaseAnalytics(), properties);
+}
+
 function _trackEvent(
 	name: string,
 	eventParams: Record<string, string | number | boolean | undefined>
@@ -180,7 +222,7 @@ function _trackEvent(
 
 	// We prefix with `x_` so that we know it is one of our own events.
 	logEvent(_getFirebaseAnalytics(), `x_${name}`, eventParams);
-	console.log(`Track event.`, name, eventParams);
+	logger.info(`Track event.`, name, eventParams);
 }
 
 const _expEngagements: { time: number; configOption: ConfigOption }[] = [];
@@ -266,6 +308,10 @@ export function trackGotoCommunity(params: {
 	_trackEvent('goto_community', params);
 }
 
+export function trackGotoRealm(params: { path: string; source: RealmOpenSource }) {
+	_trackEvent('goto_realm', params);
+}
+
 export function trackPostOpen(params: { source: PostOpenSource }) {
 	_trackEvent('post_open', params);
 }
@@ -345,6 +391,20 @@ export function trackCommunityJoin(
 	_trackEvent(`community_${type}`, { location });
 }
 
+export function trackRealmFollow(
+	followed: boolean,
+	params: { failed?: boolean; source: RealmFollowSource }
+) {
+	const { failed, source } = params;
+
+	let type = followed ? 'follow' : 'unfollow';
+	if (failed) {
+		type += '_fail';
+	}
+
+	_trackEvent(`realm_${type}`, { source });
+}
+
 export function trackCommentAdd() {
 	_trackEvent('comment_add', {});
 }
@@ -380,11 +440,15 @@ export function trackLoginCaptcha(
 	});
 }
 
+export function trackBannerClick(params: { type: BannerType; label?: string }) {
+	_trackEvent('banner_click', params);
+}
+
 /**
  * @deprecated This is left here so that old code doesn't break.
  */
 export class Analytics {
-	static trackEvent(category: string, action: string, label?: string, value?: string) {
+	static trackEvent(_category: string, _action: string, _label?: string, _value?: string) {
 		return;
 
 		// if (!this.shouldTrack) {
@@ -406,7 +470,7 @@ export class Analytics {
 		// }
 	}
 
-	static trackSocial(network: string, action: string, target: string) {
+	static trackSocial(_network: string, _action: string, _target: string) {
 		return;
 
 		// if (!this.shouldTrack) {
@@ -423,7 +487,7 @@ export class Analytics {
 		// }
 	}
 
-	static trackTiming(category: string, timingVar: string, value: number, label?: string) {
+	static trackTiming(_category: string, _timingVar: string, _value: number, _label?: string) {
 		return;
 
 		// if (!this.shouldTrack) {

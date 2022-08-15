@@ -2,14 +2,13 @@
 import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { ContentFocus } from '../../../../../_common/content-focus/content-focus.service';
-import { AppImgResponsive } from '../../../../../_common/img/responsive/responsive';
-import AppLoading from '../../../../../_common/loading/loading.vue';
+import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
+import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../../../../_common/media-item/media-item-model';
-import {
-	AppResponsiveDimensions,
+import AppResponsiveDimensions, {
 	AppResponsiveDimensionsChangeEvent,
-} from '../../../../../_common/responsive-dimensions/responsive-dimensions';
+} from '../../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	createScrollInview,

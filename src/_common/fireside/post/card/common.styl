@@ -10,15 +10,3 @@ $-aspect-ratio = (10 / 16)
 	aspect-ratio: $-aspect-ratio
 	// Safari needs this to actually clip our inner content to the border-radius we have assigned.
 	transform: translateZ(0)
-	cursor: pointer
-
-	.-link
-		transition: border-color 200ms ease !important
-
-	&:hover
-		elevate-2()
-
-		.-link
-			border-color: var(--theme-link)
-			// This will immediately show the border and then transition out.
-			transition: none !important

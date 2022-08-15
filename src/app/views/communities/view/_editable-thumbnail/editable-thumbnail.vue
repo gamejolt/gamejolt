@@ -1,9 +1,8 @@
 <script lang="ts">
 import { Inject, Options, Vue } from 'vue-property-decorator';
 import { isEditingCommunity } from '../../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/img/img.vue';
-import AppEditableOverlay from '../../../../../_common/editable-overlay/editable-overlay.vue';
-import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import AppEditableOverlay from '../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import { CommunityThumbnailModal } from '../../../../components/forms/community/thumbnail/modal/modal.service';
 import { routeCommunitiesViewEditDetails } from '../edit/details/details.route';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
@@ -11,7 +10,6 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
 @Options({
 	components: {
 		AppEditableOverlay,
-		AppMediaItemBackdrop,
 		AppCommunityThumbnailImg,
 	},
 })
@@ -46,13 +44,9 @@ export default class AppEditableThumbnail extends Vue {
 		<template #overlay>
 			<AppTranslate>Change</AppTranslate>
 		</template>
-		<AppMediaItemBackdrop :media-item="community.thumbnail">
-			<AppCommunityThumbnailImg :community="community" />
-		</AppMediaItemBackdrop>
+		<AppCommunityThumbnailImg :community="community" />
 	</AppEditableOverlay>
 	<router-link v-else :to="community.routeLocation">
-		<AppMediaItemBackdrop :media-item="community.thumbnail">
-			<AppCommunityThumbnailImg :community="community" />
-		</AppMediaItemBackdrop>
+		<AppCommunityThumbnailImg :community="community" />
 	</router-link>
 </template>

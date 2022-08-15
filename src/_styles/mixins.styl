@@ -32,6 +32,18 @@ change-bg($var, $important = false)
 	--theme-bg-actual-trans: var(unquote('--theme-' + $var + '-trans'))
 	theme-prop('background-color', $var, $important)
 
+change-bg-rgba($rgb, $opacity = 1, $important = false)
+	$var = unquote('rgba(' + $rgb + ', ' + $opacity + ')')
+	--theme-bg-actual: $var
+	--theme-bg-actual-trans: unquote('rgba(' + $rgb + ', 0)')
+	background-color: $var unquote($important ? '!important' : '')
+
+change-bg-hex($hex, $opacity = 1, $important = false)
+	$var = unquote('rgba(' + red($hex) + ', ' + green($hex) + ', ' + blue($hex) + ', ' + $opacity + ')')
+	--theme-bg-actual: $var
+	--theme-bg-actual-trans: unquote('rgba(' + red($hex) + ', ' + green($hex) + ', ' + blue($hex) + ', 0)')
+	background-color: $var unquote($important ? '!important' : '')
+
 rounded-corners-sm()
 	border-radius: $border-radius-small
 
@@ -428,6 +440,13 @@ line-clamp(lines = 2)
 	// should be identical.
 	word-break: break-word
 	overflow-wrap: anywhere
+
+overlay-text-shadow()
+	text-shadow: 0.5px 0.5px 1.5px rgba(black, 0.38)
+
+// Used for the overlayed text on the fireside page specifically
+fireside-overlay-text-shadow()
+	text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15), 0px 4px 4px rgba(0, 0, 0, 0.15), 0px 1px 8px rgba(0, 0, 0, 0.09)
 
 @import './mixins/animations'
 @import './mixins/play-button-overlay'

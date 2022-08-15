@@ -5,16 +5,15 @@ import { Inject, Options } from 'vue-property-decorator';
 import { router } from '../../..';
 import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
+import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
 import { CompetitionPeriodVoting } from '../../../../../_common/community/competition/competition.model';
 import { CommunityCompetitionEntry } from '../../../../../_common/community/competition/entry/entry.model';
 import { CommunityCompetitionEntrySubmitModal } from '../../../../../_common/community/competition/entry/submit-modal/submit-modal.service';
 import { CommunityCompetitionVotingCategory } from '../../../../../_common/community/competition/voting-category/voting-category.model';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
-import AppFadeCollapse from '../../../../../_common/fade-collapse/fade-collapse.vue';
 import { formatDate } from '../../../../../_common/filters/date';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
-import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import {
 	asyncRouteLoader,
 	BaseRouteComponent,
@@ -36,7 +35,6 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 @Options({
 	name: 'RouteCommunitiesViewChannelJam',
 	components: {
-		AppIllustration,
 		AppCommunitiesViewPageContainer,
 		AppCommunityCompetitionEntryGrid,
 		AppCommunityCompetitionCountdown,
@@ -133,7 +131,7 @@ export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
 	get routeTitle() {
 		return this.$gettextInterpolate(`%{ channel } - %{ name } Community on Game Jolt`, {
 			name: this.community.name,
-			channel: this.channel?.displayTitle,
+			channel: this.channel?.displayTitle || '',
 		});
 	}
 

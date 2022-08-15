@@ -1,6 +1,4 @@
-import type * as nodeUtil from 'util';
-
-const util = require('util') as typeof nodeUtil;
+const util = require('util') as typeof import('util');
 
 export function isErrnoException(err: any): err is NodeJS.ErrnoException {
 	return (

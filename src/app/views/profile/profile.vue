@@ -7,7 +7,7 @@ import { BlockModal } from '../../../_common/block/modal/modal.service';
 import { CommentModal } from '../../../_common/comment/modal/modal.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { formatNumber } from '../../../_common/filters/number';
-import AppPopper from '../../../_common/popper/popper.vue';
+import AppPopper from '../../../_common/popper/AppPopper.vue';
 import { Registry } from '../../../_common/registry/registry.service';
 import { ReportModal } from '../../../_common/report/modal/modal.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
@@ -16,7 +16,7 @@ import { copyShareLink } from '../../../_common/share/share.service';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../_common/translate/translate.service';
 import AppUserFollowWidget from '../../../_common/user/follow/widget.vue';
 import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
@@ -30,8 +30,8 @@ import { isUserOnline } from '../../components/chat/client';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPageHeaderControls from '../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../components/page-header/page-header.vue';
+import AppUserDogtag from '../../components/user/AppUserDogtag.vue';
 import AppUserBlockOverlay from '../../components/user/block-overlay/block-overlay.vue';
-import AppUserDogtag from '../../components/user/dogtag/dogtag.vue';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
 
 const Key: InjectionKey<Controller> = Symbol('profile-route');
@@ -203,7 +203,7 @@ const ProfileThemeKey = 'profile';
 		AppUserBlockOverlay,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({
@@ -383,10 +383,9 @@ export default class RouteProfile extends BaseRouteComponent {
 		-->
 		<template v-if="!user.status">
 			<AppPageHeader>
-				<h1>
+				<h1 class="-heading">
 					{{ user.display_name }}
-					<br />
-					<small>@{{ user.username }}</small>
+					<small class="-heading-username">@{{ user.username }}</small>
 				</h1>
 
 				<div class="text-muted small">
@@ -406,19 +405,19 @@ export default class RouteProfile extends BaseRouteComponent {
 					should-affix-nav
 					:autoscroll-anchor-key="autoscrollAnchorKey"
 				>
-					<h1>
-						<router-link
-							:to="{
-								name: 'profile.overview',
-								params: { username: user.username },
-							}"
-						>
+					<router-link
+						:to="{
+							name: 'profile.overview',
+							params: { username: user.username },
+						}"
+					>
+						<h1 class="-heading">
 							{{ user.display_name }}
 							<AppUserVerifiedTick :user="user" big />
-							<small>@{{ user.username }}</small>
-						</router-link>
-					</h1>
-					<div class="small text-muted">
+							<span class="-heading-username">@{{ user.username }}</span>
+						</h1>
+					</router-link>
+					<div>
 						<!-- Joined on -->
 						<AppTranslate>Joined</AppTranslate>
 						{{ ' ' }}
@@ -427,8 +426,8 @@ export default class RouteProfile extends BaseRouteComponent {
 						<template v-if="isRouteBootstrapped">
 							<span class="dot-separator" />
 
-							<!-- Dogtag -->
-							<AppUserDogtag :type="user.dogtag" />
+							<!-- Dogtags -->
+							<AppUserDogtag v-for="tag of user.dogtags" :key="tag.text" :tag="tag" />
 
 							<!-- Friend status -->
 							<span
@@ -626,3 +625,16 @@ export default class RouteProfile extends BaseRouteComponent {
 		</template>
 	</div>
 </template>
+
+<style lang="stylus" scoped>
+.-heading
+	margin-bottom: 4px
+	display: flex
+	align-items: center
+
+.-heading-username
+	font-size: 19px
+	font-family: $font-family-base
+	font-weight: 700
+	margin-left: 8px
+</style>

@@ -9,7 +9,11 @@
 		"thisismanta.stylus-supremacy",
 		"rebornix.project-snippets",
 		"dbaeumer.vscode-eslint",
-		"johnsoncodehk.volar"
+		"Vue.volar"
 	],
-	"unwantedRecommendations": ["octref.vetur", "vscode.typescript-language-features"]
+	"unwantedRecommendations": [
+		"octref.vetur",
+		"vscode.typescript-language-features",
+		"johnsoncodehk.volar"
+	]
 }

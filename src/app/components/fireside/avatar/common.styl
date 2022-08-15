@@ -1,6 +1,6 @@
 $-avatar-size = 80px
-$-tag-font-size = $font-size-tiny
-$-tag-padding-vertical = 2px
+$-tag-font-size = 9px
+$-tag-padding-vertical = 3px
 $-tag-padding-horizontal = 6px
 $-tag-offset = ($-tag-font-size * 0.5) + ($-tag-padding-vertical * 2)
 $-anim-size = 8px
@@ -82,7 +82,6 @@ $-zindex-popper = 4
 		color: var(--theme-bi-fg)
 
 	&-header
-		font-family: $font-family-heading
 		font-size: $font-size-tiny
 		font-weight: normal
 		letter-spacing: 0.1em
@@ -106,6 +105,7 @@ $-zindex-popper = 4
 
 .-community
 	elevate-1()
+	img-circle()
 	width: 25%
 	height: @width
 	border: $border-width-large solid $-border-color
@@ -116,17 +116,11 @@ $-zindex-popper = 4
 	margin-left: -2px
 	z-index: $-zindex-community
 
-	&
-	&-img
-		img-circle()
-
 .-tag
 	rounded-corners()
-	elevate-1()
 	padding: $-tag-padding-vertical $-tag-padding-horizontal
+	background-color: var(--theme-bg-subtle)
 	font-weight: 700
-	letter-spacing: 1px
-	background-color: var(--theme-bg-offset)
 	font-size: $-tag-font-size
 	white-space: nowrap
 	position: absolute
@@ -145,9 +139,12 @@ $-zindex-popper = 4
 	line-clamp(2)
 	width: 100%
 	font-weight: 700
-	font-size: $font-size-tiny
+	font-size: 11px
 	text-align: center
 	color: var(--theme-fg)
+
+	@media $media-xs
+		font-size: 9px
 
 .-tooltip
 	padding: 8px
@@ -166,8 +163,6 @@ $-zindex-popper = 4
 
 	&-img
 		flex: none
-		display: inline-block
-		border-radius: 50%
 		width: 16px
 		height: 16px
 

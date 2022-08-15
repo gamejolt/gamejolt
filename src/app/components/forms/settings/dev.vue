@@ -69,8 +69,11 @@ export default class FormSettingsDev extends mixins(Wrapper) {
 				:name="test.name"
 				:label="`Test: ${test.name}`"
 			>
-				<AppFormControlToggle v-if="isBool(test)" class="pull-right" />
-				<AppFormControlSelect v-else-if="isString(test)">
+				<template v-if="isBool(test)" #inline-control>
+					<AppFormControlToggle />
+				</template>
+
+				<AppFormControlSelect v-if="isString(test)">
 					<option v-for="v in stringValues(test)" :key="v" :value="v">
 						{{ v }}
 					</option>
