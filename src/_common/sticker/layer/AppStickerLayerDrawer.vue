@@ -348,9 +348,16 @@ function onContentDimensionsChanged() {
 		<div class="-margin" @click="onClickMargin()" />
 
 		<template v-if="showPlaceButton">
-			<div class="-drawer-outer -drawer-outer-place" :style="styleOuter">
+			<div
+				class="-drawer-outer -drawer-outer-place"
+				:style="{
+					...styleOuter,
+					borderTopLeftRadius:
+						canPlaceChargedStickerOnResource && !isChargingSticker ? 0 : undefined,
+				}"
+			>
 				<div
-					v-if="canPlaceChargedStickerOnResource"
+					v-if="canPlaceChargedStickerOnResource && !isChargingSticker"
 					class="-top-bar"
 					:class="{
 						'-text-overflow': overflowTopBarText,
@@ -361,19 +368,6 @@ function onContentDimensionsChanged() {
 						Support your favorite creators with charged stickers!
 					</AppTranslate>
 				</div>
-
-				<AppAnimElectricity
-					shock-anim="wide-rect"
-					:disabled="!isChargingSticker"
-					:style="{
-						width: '100%',
-					}"
-				>
-					<AppButton block primary :solid="isChargingSticker" @click="onClickPlace()">
-						<AppTranslate v-if="isChargingSticker">Place charged sticker</AppTranslate>
-						<AppTranslate v-else>Place sticker</AppTranslate>
-					</AppButton>
-				</AppAnimElectricity>
 
 				<AppAnimElectricity
 					v-if="!isChargingSticker && canPlaceChargedStickerOnResource"
@@ -388,6 +382,19 @@ function onContentDimensionsChanged() {
 						:solid="canPlaceChargedStickerOnResource"
 						@click="isChargingSticker = true"
 					/>
+				</AppAnimElectricity>
+
+				<AppAnimElectricity
+					shock-anim="wide-rect"
+					:disabled="!isChargingSticker"
+					:style="{
+						width: '100%',
+					}"
+				>
+					<AppButton block primary :solid="isChargingSticker" @click="onClickPlace()">
+						<AppTranslate v-if="isChargingSticker">Place charged sticker</AppTranslate>
+						<AppTranslate v-else>Place sticker</AppTranslate>
+					</AppButton>
 				</AppAnimElectricity>
 			</div>
 		</template>
@@ -529,18 +536,22 @@ function onContentDimensionsChanged() {
 
 	.-drawer-outer-place
 		flex: 3
+		max-width: calc(min(100% - 64px, 500px)) !important
 
 .-top-bar
-	display: flex
+	display: inline-flex
 	padding: 8px 12px 24px
 	gap: 12px
 	position: absolute
 	bottom: calc(100% - 16px)
 	z-index: -1
 	left: 0
-	right: 0
 	change-bg('primary')
 	theme-prop('color', 'primary-fg')
+	max-width: 100%
+
+	@media $media-xs
+		right: 0
 
 .-drawer-inner
 	transition: transform 300ms $strong-ease-out
