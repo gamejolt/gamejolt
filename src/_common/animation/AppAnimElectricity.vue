@@ -41,8 +41,6 @@ const chosenAsset = computed(() => {
 	}
 
 	const square = [_squareSheet];
-	// TODO(charged-stickers) link animations using same timer. Switch to an
-	// animation controller we can use or something.
 	const wideRect = _rectSheets;
 
 	switch (shockAnim.value) {

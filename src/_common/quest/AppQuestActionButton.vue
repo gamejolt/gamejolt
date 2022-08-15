@@ -143,8 +143,6 @@ async function onActionPressed() {
 					name: reward.name,
 					icon: 'paintbrush',
 				});
-				// TODO(charged-stickers) might need to allow PopcornKettle to
-				// build a Component instead of just taking a straight img_url.
 			} else {
 				if (reward.isCharge) {
 					// Manually alter the sticker charge we have so other UI can
