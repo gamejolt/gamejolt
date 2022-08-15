@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, toRefs } from 'vue';
+import { configChargedStickers } from '../../../_common/config/config.service';
 import AppLoadingFade from '../../../_common/loading/AppLoadingFade.vue';
 import AppQuestLogItem from '../../../_common/quest/AppQuestLogItem.vue';
 import { Screen } from '../../../_common/screen/screen-service';
@@ -106,6 +107,7 @@ function onClickCharge() {
 
 			<span class="help-inline -info">
 				<span
+					v-if="configChargedStickers.value"
 					class="-charge-orb-container"
 					:class="{
 						'-overcharge': chargeOrbStyle === 'overcharge',

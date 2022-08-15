@@ -3,6 +3,7 @@ import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { numberSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
+import { configChargedStickers } from '../../../../_common/config/config.service';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
@@ -134,7 +135,7 @@ createAppRoute({
 			<div class="container">
 				<div class="row">
 					<div class="col-md-4 col-md-push-8">
-						<AppStickerChargeCard />
+						<AppStickerChargeCard v-if="configChargedStickers.value" />
 
 						<AppSpacer vertical :scale="2" />
 

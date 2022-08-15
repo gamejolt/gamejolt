@@ -14,6 +14,7 @@ import {
 } from 'vue';
 import { MaybeComputedRef } from '../../../utils/vue';
 import { Comment } from '../../comment/comment-model';
+import { configChargedStickers } from '../../config/config.service';
 import { Fireside } from '../../fireside/fireside.model';
 import { FiresidePost } from '../../fireside/post/post-model';
 import { MediaItem } from '../../media-item/media-item-model';
@@ -113,7 +114,13 @@ export function createStickerTargetController(
 		parent: parent || null,
 		isLive,
 		placeStickerCallback,
-		isCreator: computed(() => unref(isCreator)),
+		isCreator: computed(() => {
+			if (!configChargedStickers.value) {
+				return false;
+			}
+
+			return unref(isCreator);
+		}),
 	};
 
 	if (parent) {
