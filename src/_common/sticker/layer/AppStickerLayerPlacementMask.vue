@@ -5,7 +5,7 @@ import { vAppObserveDimensions } from '../../observe-dimensions/observe-dimensio
 import { useScroller } from '../../scroll/AppScrollScroller.vue';
 import { Scroll } from '../../scroll/scroll.service';
 import AppStickerChargeCard from '../charge/AppStickerChargeCard.vue';
-import { setStickerDrawerOpen, useStickerStore } from '../sticker-store';
+import { isStickerTargetMine, setStickerDrawerOpen, useStickerStore } from '../sticker-store';
 import AppStickerLayerDrawer from './AppStickerLayerDrawer.vue';
 import AppStickerLayerGhost from './AppStickerLayerGhost.vue';
 import AppStickerLayerPlacementMaskItem from './AppStickerLayerPlacementMaskItem.vue';
@@ -34,6 +34,7 @@ const _height = ref(0);
 const viewbox = computed(() => `0 0 ${_width.value} ${_height.value}`);
 
 const isTargetCreator = computed(() => targetController.value?.isCreator.value);
+const isTargetMine = computed(() => isStickerTargetMine(stickerStore, targetController.value));
 
 function onDimensionsChange([
 	{
@@ -114,7 +115,7 @@ function onClickMask() {
 
 		<AppStickerLayerDrawer class="-drawer" />
 		<div
-			v-if="isAllCreator || isTargetCreator"
+			v-if="isAllCreator || (isTargetCreator && !isTargetMine)"
 			class="-charge-wrapper"
 			:class="{
 				'-charge-shift': isDragging,
