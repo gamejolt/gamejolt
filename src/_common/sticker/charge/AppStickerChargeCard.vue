@@ -52,7 +52,7 @@ function onClick() {
 						draggable="false"
 						alt=""
 					/>
-					<AppAnimChargeOrb v-else />
+					<AppAnimChargeOrb v-else use-random-offset />
 				</AppAspectRatio>
 			</AppAnimElectricity>
 		</div>

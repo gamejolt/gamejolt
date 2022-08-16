@@ -2,17 +2,32 @@
 import AppAnimSlideshow from './AppAnimSlideshow.vue';
 import { sheetChargeOrbBottom, sheetChargeOrbTop } from './slideshow/sheets';
 
-defineProps({
+const props = defineProps({
 	pause: {
 		type: Boolean,
 	},
+	useRandomOffset: {
+		type: Boolean,
+	},
 });
+
+const bottomOffset = props.useRandomOffset ? Math.random() : undefined;
+const topOffset = props.useRandomOffset ? Math.random() : undefined;
 </script>
 
 <template>
 	<div class="charge-orb">
-		<AppAnimSlideshow :pause="pause" :sheet="sheetChargeOrbBottom" />
-		<AppAnimSlideshow class="-top" :pause="pause" :sheet="sheetChargeOrbTop" />
+		<AppAnimSlideshow
+			:pause="pause"
+			:sheet="sheetChargeOrbBottom"
+			:start-offset="bottomOffset"
+		/>
+		<AppAnimSlideshow
+			class="-top"
+			:pause="pause"
+			:sheet="sheetChargeOrbTop"
+			:start-offset="topOffset"
+		/>
 	</div>
 </template>
 

@@ -17,9 +17,14 @@ const props = defineProps({
 	pause: {
 		type: Boolean,
 	},
+	startOffset: {
+		type: Number,
+		default: 0,
+		validator: val => typeof val === 'number' && 0 <= val && val <= 1,
+	},
 });
 
-const { sheet, overlay, pause } = toRefs(props);
+const { sheet, overlay, pause, startOffset } = toRefs(props);
 
 let timer: NodeJS.Timer | null = null;
 
@@ -35,17 +40,18 @@ const offset = computed(() => {
 
 const size = ref({ width: 200, height: 200 });
 
-function initAnimator(fromStart = true) {
+function initAnimator(fromStart: boolean) {
 	if (pause.value) {
 		return;
 	}
 
 	if (timer) {
 		clearInterval(timer);
-
-		if (fromStart) {
-			frame.value = 0;
-		}
+	}
+	if (fromStart) {
+		const offset = Math.min(1, Math.max(0, startOffset.value));
+		const chosenFrame = Math.round(sheet.value.frames * offset);
+		frame.value = chosenFrame;
 	}
 
 	timer = setInterval(() => {
@@ -74,7 +80,7 @@ watch(pause, shouldPause => {
 
 onMounted(() => {
 	onDimensionsChanged();
-	initAnimator();
+	initAnimator(true);
 });
 
 onUnmounted(() => {
