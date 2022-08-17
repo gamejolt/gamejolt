@@ -143,18 +143,24 @@ async function onActionPressed() {
 					name: reward.name,
 					icon: 'paintbrush',
 				});
-			} else {
-				if (reward.isCharge) {
-					// Manually alter the sticker charge we have so other UI can
-					// react as needed.
-					setChargeData({
-						charge: Math.min(
-							chargeLimit.value,
-							currentCharge.value + reward.fallback_amount
-						),
-					});
-				}
+			} else if (reward.isCharge) {
+				// Manually alter the sticker charge we have so other UI can
+				// react as needed.
+				setChargeData({
+					charge: Math.min(
+						chargeLimit.value,
+						currentCharge.value + reward.fallback_amount
+					),
+				});
 
+				addOrUpdateReward({
+					key: `charge`,
+					amount: reward.fallback_amount,
+					img_url: processMediaserverUrl(reward.fallback_media?.mediaserver_url),
+					name: reward.name,
+					icon: fallbackIcon,
+				});
+			} else {
 				addOrUpdateReward({
 					key: `unknown-${reward.name}-${reward.id}`,
 					amount: reward.fallback_amount,
