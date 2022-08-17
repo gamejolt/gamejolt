@@ -42,8 +42,7 @@ const props = defineProps({
 	},
 });
 
-const { caretElement, widthTrackerElement, fixed } = toRefs(props);
-const show = ref(true);
+const { caretElement, widthTrackerElement, show, fixed } = toRefs(props);
 
 const { chargeCost } = useStickerStore();
 
