@@ -1,20 +1,4 @@
 <script lang="ts">
-import { computed, ref } from 'vue';
-import { RouterLink } from 'vue-router';
-import { numberSort } from '../../../../utils/array';
-import { Api } from '../../../../_common/api/api.service';
-import { configChargedStickers } from '../../../../_common/config/config.service';
-import { MediaItem } from '../../../../_common/media-item/media-item-model';
-import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import AppStickerCard from '../../../../_common/sticker/card/AppStickerCard.vue';
-import { Sticker, StickerStack } from '../../../../_common/sticker/sticker.model';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppPageHeader from '../../../components/page-header/page-header.vue';
-import { useAppStore } from '../../../store';
-import backgroundImage from './background.png';
-
 export default {
 	...defineAppRouteOptions({
 		deps: {},
@@ -37,8 +21,24 @@ type StickerCountPayload = {
 </script>
 
 <script lang="ts" setup>
+import { computed, ref } from 'vue';
+import { RouterLink } from 'vue-router';
+import { numberSort } from '../../../../utils/array';
+import { Api } from '../../../../_common/api/api.service';
+import { configChargedStickers } from '../../../../_common/config/config.service';
+import { MediaItem } from '../../../../_common/media-item/media-item-model';
+import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
+import AppStickerCard from '../../../../_common/sticker/card/AppStickerCard.vue';
 import AppStickerChargeCard from '../../../../_common/sticker/charge/AppStickerChargeCard.vue';
+import { Sticker, StickerStack } from '../../../../_common/sticker/sticker.model';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
+import AppPageHeader from '../../../components/page-header/page-header.vue';
+import { useAppStore } from '../../../store';
+import backgroundImage from './background.png';
+
 const store = useAppStore();
 const { grid } = store;
 
@@ -117,7 +117,7 @@ createAppRoute({
 </script>
 
 <template>
-	<div>
+	<div class="route-dash-stickers">
 		<AppPageHeader :cover-media-item="coverMediaItem" :cover-max-height="250">
 			<RouterLink :to="{ name: 'dash.stickers' }">
 				<h1 class="section-header sans-margin-bottom">
@@ -135,22 +135,35 @@ createAppRoute({
 			<div class="container">
 				<div class="row">
 					<div class="col-md-4 col-md-push-8">
-						<AppStickerChargeCard v-if="configChargedStickers.value" />
+						<template v-if="configChargedStickers.value">
+							<AppStickerChargeCard
+								allow-overcharge-text
+								:padding-h="24"
+								:padding-v="24"
+							/>
 
-						<AppSpacer vertical :scale="2" />
+							<AppSpacer vertical :scale="6" />
+						</template>
 
-						<AppProgressBar class="-progress" :percent="stickerProgress">
-							<strong>{{ stickerProgress }}% to next sticker</strong>
-						</AppProgressBar>
+						<div class="-sidebar-card">
+							<span class="-progress-header">
+								{{ stickerProgress }}% to next sticker
+							</span>
 
-						<p class="small">
+							<AppSpacer vertical :scale="1" />
+							<AppProgressBar class="-progress" :percent="stickerProgress" thin />
+							<AppSpacer vertical :scale="4" />
+
 							<AppTranslate>
 								Get more stickers by liking posts on Game Jolt. Every time you like
 								a post, you gain progress to getting your next sticker. Like posts,
 								get stickers!
 							</AppTranslate>
-						</p>
+						</div>
+
+						<AppSpacer vertical :scale="6" />
 					</div>
+
 					<div class="col-md-8 col-md-pull-4">
 						<template v-if="hasStickersInCollection">
 							<template
@@ -196,8 +209,16 @@ createAppRoute({
 <style lang="stylus" scoped>
 @import '../../../../_common/sticker/card/variables'
 
+.route-dash-stickers
+	change-bg(bg-offset)
+
+.-progress-header
+	font-size: $font-size-small
+	color: var(--theme-fg-muted)
+
 .-progress
 	max-width: 350px
+	margin: 0
 
 .-collection
 	display: grid
@@ -212,4 +233,9 @@ createAppRoute({
 
 	&:first-of-type
 		margin-top: 0
+
+.-sidebar-card
+	rounded-corners-lg()
+	change-bg(bg)
+	padding: 24px
 </style>

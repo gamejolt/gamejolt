@@ -1,39 +1,4 @@
 <script lang="ts">
-import { computed, defineAsyncComponent, provide, Ref, ref } from 'vue';
-import { RouterLink, useRoute } from 'vue-router';
-import { router } from '..';
-import { numberSort } from '../../../utils/array';
-import { fuzzysearch } from '../../../utils/string';
-import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
-import { Api } from '../../../_common/api/api.service';
-import AppButton from '../../../_common/button/AppButton.vue';
-import { configHomeDefaultFeed } from '../../../_common/config/config.service';
-import { Fireside } from '../../../_common/fireside/fireside.model';
-import { FiresidePost } from '../../../_common/fireside/post/post-model';
-import {
-	asyncRouteLoader,
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../_common/route/route-component';
-import { Screen } from '../../../_common/screen/screen-service';
-import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import { useCommonStore } from '../../../_common/store/common-store';
-import { EventSubscription } from '../../../_common/system/event/event-topic';
-import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppUserCard from '../../../_common/user/card/AppUserCard.vue';
-import { ActivityFeedService } from '../../components/activity/feed/feed-service';
-import { ActivityFeedView } from '../../components/activity/feed/view';
-import { onFiresideStart } from '../../components/grid/client.service';
-import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
-import AppPostAddButton from '../../components/post/add-button/add-button.vue';
-import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
-import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
-import { useQuestStore } from '../../store/quest';
-import AppHomeFeedMenu from './AppHomeFeedMenu.vue';
-import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
-import AppHomeFireside from './_fireside/AppHomeFireside.vue';
-
 class DashGame {
 	constructor(
 		public id: number,
@@ -67,6 +32,45 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import { computed, defineAsyncComponent, provide, Ref, ref } from 'vue';
+import { RouterLink, useRoute } from 'vue-router';
+import { router } from '..';
+import { numberSort } from '../../../utils/array';
+import { fuzzysearch } from '../../../utils/string';
+import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
+import { Api } from '../../../_common/api/api.service';
+import AppButton from '../../../_common/button/AppButton.vue';
+import {
+	configChargedStickers,
+	configHomeDefaultFeed,
+} from '../../../_common/config/config.service';
+import { Fireside } from '../../../_common/fireside/fireside.model';
+import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import {
+	asyncRouteLoader,
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../_common/route/route-component';
+import { Screen } from '../../../_common/screen/screen-service';
+import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
+import AppStickerChargeCard from '../../../_common/sticker/charge/AppStickerChargeCard.vue';
+import { useCommonStore } from '../../../_common/store/common-store';
+import { EventSubscription } from '../../../_common/system/event/event-topic';
+import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import AppUserCard from '../../../_common/user/card/AppUserCard.vue';
+import { ActivityFeedService } from '../../components/activity/feed/feed-service';
+import { ActivityFeedView } from '../../components/activity/feed/view';
+import { onFiresideStart } from '../../components/grid/client.service';
+import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
+import AppPostAddButton from '../../components/post/add-button/add-button.vue';
+import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
+import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
+import { useQuestStore } from '../../store/quest';
+import AppHomeFeedMenu from './AppHomeFeedMenu.vue';
+import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
+import AppHomeFireside from './_fireside/AppHomeFireside.vue';
+
 const { user } = useCommonStore();
 const { fetchDailyQuests } = useQuestStore();
 const route = useRoute();
@@ -269,6 +273,11 @@ async function refreshQuests() {
 				</template>
 
 				<template v-if="!Screen.isMobile" #right>
+					<template v-if="configChargedStickers.value">
+						<AppStickerChargeCard header-charge allow-overcharge-text />
+						<AppSpacer vertical :scale="12" />
+					</template>
+
 					<AppDailyQuests
 						v-if="user"
 						disable-on-expiry

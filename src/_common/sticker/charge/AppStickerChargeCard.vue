@@ -1,70 +1,156 @@
 <script lang="ts" setup>
-import { computed, CSSProperties } from 'vue';
+import { computed, CSSProperties, ref, toRefs } from 'vue';
 import { illChargeOrbEmpty } from '../../../app/img/ill/illustrations';
 import AppAnimChargeOrb from '../../animation/AppAnimChargeOrb.vue';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
+import { Screen } from '../../screen/screen-service';
+import AppSpacer from '../../spacer/AppSpacer.vue';
 import AppTranslate from '../../translate/AppTranslate.vue';
-import { setStickerDrawerOpen, useStickerStore } from '../sticker-store';
-import { StickerChargeModal } from './modal/modal.service';
+import { useStickerStore } from '../sticker-store';
+import AppStickerChargeTooltip from './AppStickerChargeTooltip.vue';
+import AppStickerChargeTooltipCaret from './AppStickerChargeTooltipCaret.vue';
+import AppStickerChargeTooltipHandler from './AppStickerChargeTooltipHandler.vue';
 
-defineProps({
+const OrbMaxSize = `28px`;
+
+const props = defineProps({
 	elevate: {
 		type: Boolean,
 	},
+	/**
+	 * Move the "Charge" text and "help_circle" jolticon above the card of orbs.
+	 */
+	headerCharge: {
+		type: Boolean,
+	},
+	/**
+	 * Shows text below the charge card when we're able to charge a sticker.
+	 */
+	allowOverchargeText: {
+		type: Boolean,
+	},
+	paddingH: {
+		type: Number,
+		default: 24,
+	},
+	paddingV: {
+		type: Number,
+		default: 16,
+	},
 });
+
+const { elevate, headerCharge, allowOverchargeText, paddingH, paddingV } = toRefs(props);
+
+const root = ref<HTMLElement>();
+const helpIcon = ref<HTMLElement>();
+
+const showTooltip = ref(false);
 
 const stickerStore = useStickerStore();
 const { currentCharge, chargeLimit, canChargeSticker } = stickerStore;
 
 const gridStyling = computed<CSSProperties>(() => {
-	const orbMaxSize = `${28}px`;
-
 	return {
-		height: orbMaxSize,
-		gridTemplateColumns: `repeat(${chargeLimit.value}, minmax(0, ${orbMaxSize}))`,
+		height: OrbMaxSize,
+		gridTemplateColumns: `repeat(${chargeLimit.value}, minmax(0, ${OrbMaxSize}))`,
 		alignContent: 'center',
 	};
 });
 
-function onClick() {
-	StickerChargeModal.show();
-	setStickerDrawerOpen(stickerStore, false, null);
-}
+const showOverchargeText = computed(() => allowOverchargeText.value && canChargeSticker.value);
 </script>
 
 <template>
-	<div class="sticker-charge-card" :class="{ '-elevate': elevate }" @click="onClick()">
-		<div class="-content">
-			<span class="-charge">
-				<AppTranslate>Charge</AppTranslate>
+	<AppStickerChargeTooltipHandler
+		trigger="focus"
+		:disabled="Screen.isPointerMouse"
+		:style="{
+			'--padding-v': paddingV + 'px',
+			'--padding-h': paddingH + 'px',
+		}"
+		@show="showTooltip = true"
+		@hide="showTooltip = false"
+	>
+		<div
+			ref="root"
+			class="sticker-charge-card"
+			:class="{ '-elevate': elevate, '-decorator': !headerCharge }"
+		>
+			<div class="-content" :class="{ '-col': headerCharge }">
+				<AppStickerChargeTooltipHandler
+					trigger="hover"
+					:disabled="!Screen.isPointerMouse"
+					@show="showTooltip = true"
+					@hide="showTooltip = false"
+				>
+					<component :is="headerCharge ? 'h4' : 'h5'" class="-charge-text">
+						<AppTranslate>Charge</AppTranslate>
 
-				<AppJolticon icon="help-circle" />
-			</span>
+						<span ref="helpIcon" class="-help-circle-container">
+							<AppStickerChargeTooltipCaret :show="showTooltip">
+								<AppJolticon icon="help-circle" />
+							</AppStickerChargeTooltipCaret>
+						</span>
+					</component>
+				</AppStickerChargeTooltipHandler>
 
-			<AppAnimElectricity class="-orbs" :style="gridStyling" :disabled="!canChargeSticker">
-				<AppAspectRatio v-for="i of chargeLimit" :key="i" :ratio="1">
-					<img
-						v-if="currentCharge < i"
-						class="-orb-empty"
-						:src="illChargeOrbEmpty.path"
-						draggable="false"
-						alt=""
-					/>
-					<AppAnimChargeOrb v-else use-random-offset />
-				</AppAspectRatio>
-			</AppAnimElectricity>
+				<AppSpacer v-if="headerCharge" vertical :scale="4" />
+
+				<div
+					class="-center-grid"
+					:class="{
+						'-decorator': headerCharge,
+					}"
+				>
+					<AppAnimElectricity
+						class="-orbs"
+						:style="gridStyling"
+						:disabled="!canChargeSticker"
+					>
+						<AppAspectRatio v-for="i of chargeLimit" :key="i" :ratio="1">
+							<img
+								v-if="currentCharge < i"
+								class="-orb-empty"
+								:src="illChargeOrbEmpty.path"
+								draggable="false"
+								alt=""
+							/>
+							<AppAnimChargeOrb v-else class="-abs-fill" use-random-offset />
+						</AppAspectRatio>
+					</AppAnimElectricity>
+				</div>
+			</div>
+
+			<div v-if="showOverchargeText" :class="{ '-small': headerCharge }">
+				<AppSpacer v-if="headerCharge" vertical :scale="4" />
+				<hr v-else />
+
+				<span> You're fully charged! Support your favorite Game Jolt Creator </span>
+				<!-- TODO(charged-stickers) get real icon -->
+				<AppJolticon icon="friends" />
+				<span> with a charged sticker. </span>
+			</div>
+
+			<AppStickerChargeTooltip
+				v-if="helpIcon"
+				:caret-element="helpIcon"
+				:width-tracker-element="root"
+				:show="showTooltip"
+			/>
 		</div>
-	</div>
+	</AppStickerChargeTooltipHandler>
 </template>
 
 <style lang="stylus" scoped>
 .sticker-charge-card
-	rounded-corners()
-	change-bg(bg-backdrop)
-	padding: 16px
-	cursor: pointer
+	position: relative
+
+.-decorator
+	rounded-corners-lg()
+	change-bg(bg)
+	padding: var(--padding-v) var(--padding-h)
 
 	&.-elevate
 		elevate-2()
@@ -73,10 +159,13 @@ function onClick() {
 	display: inline-flex
 	align-items: center
 
-.-charge
-	margin-right: 24px
-	font-family: $font-family-heading
-	font-size: 17px
+	&.-col
+		flex-direction: column
+		align-items: flex-start
+		width: 100%
+
+.-charge-text
+	margin: 0 24px 0 0
 	white-space: nowrap
 	display: inline-flex
 	align-items: center
@@ -86,10 +175,17 @@ function onClick() {
 		margin: 0 0 0 4px
 		color: var(--theme-fg-muted)
 
+.-abs-fill
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+
 .-orbs
 	flex: auto
 	display: inline-grid
-	gap: 0 6px
+	gap: 4px
 	min-width: 0
 
 .-orb-empty
@@ -97,4 +193,24 @@ function onClick() {
 	height: 100%
 	opacity: 0.25
 	vertical-align: top
+
+.-help-circle-container
+	display: inline-flex
+	margin-left: 4px
+
+	::v-deep(.jolticon)
+		margin: 0
+
+hr
+	margin: 16px 0
+
+.-center-grid
+	display: grid
+	justify-content: center
+	width: 100%
+
+.-small
+	&
+	::v-deep(.jolticon)
+		font-size: $font-size-tiny
 </style>

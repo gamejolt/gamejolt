@@ -21,6 +21,7 @@ const props = defineProps({
 
 const { sticker } = toRefs(props);
 
+// NOTE: Check if this is actually used before removing.
 const slotName = computed(() => {
 	if (sticker.value.is_event) {
 		return 'above';
@@ -62,7 +63,7 @@ const slotName = computed(() => {
 @import './variables'
 
 .-card
-	change-bg('bg-offset')
+	change-bg(bg)
 	width: $card-width
 	rounded-corners-lg()
 	position: relative
