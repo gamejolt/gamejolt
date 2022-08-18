@@ -52,7 +52,7 @@ export const sheetChargeOrbBottom = new ImgSlideshow({
 	assetWidth: 2500,
 	assetHeight: 500,
 	frames: 5,
-	fps: 4,
+	fps: 3,
 });
 
 export const sheetChargeOrbTop = new ImgSlideshow({

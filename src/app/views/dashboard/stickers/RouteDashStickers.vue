@@ -217,7 +217,6 @@ createAppRoute({
 	color: var(--theme-fg-muted)
 
 .-progress
-	max-width: 350px
 	margin: 0
 
 .-collection

@@ -348,14 +348,7 @@ function onContentDimensionsChanged() {
 		<div class="-margin" @click="onClickMargin()" />
 
 		<template v-if="showPlaceButton">
-			<div
-				class="-drawer-outer -drawer-outer-place"
-				:style="{
-					...styleOuter,
-					borderTopLeftRadius:
-						canPlaceChargedStickerOnResource && !isChargingSticker ? 0 : undefined,
-				}"
-			>
+			<div class="-drawer-outer -drawer-outer-place" :style="styleOuter">
 				<div
 					v-if="canPlaceChargedStickerOnResource && !isChargingSticker"
 					class="-top-bar"
@@ -472,6 +465,19 @@ function onContentDimensionsChanged() {
 </template>
 
 <style lang="stylus" scoped>
+.sticker-drawer
+	position: fixed
+	left: 0
+	right: 0
+	bottom: 0
+	display: flex
+	justify-content: center
+	transition: transform 250ms $strong-ease-out
+	--top-bar-margin: 4px
+
+	@media $media-xs
+		--top-bar-margin: 0px
+
 .-touch
 	.-drawer-inner
 		white-space: nowrap
@@ -485,15 +491,6 @@ function onContentDimensionsChanged() {
 .-loading
 	margin: auto
 	padding: 16px 0
-
-.sticker-drawer
-	position: fixed
-	left: 0
-	right: 0
-	bottom: 0
-	display: flex
-	justify-content: center
-	transition: transform 250ms $strong-ease-out
 
 .-margin
 	flex: auto
@@ -529,8 +526,10 @@ function onContentDimensionsChanged() {
 	position: relative
 
 @media $media-sm-up
-	.-drawer-outer
 	.-top-bar
+		rounded-corners-lg()
+
+	.-drawer-outer
 		border-top-left-radius: $border-radius-large
 		border-top-right-radius: $border-radius-large
 
@@ -540,10 +539,10 @@ function onContentDimensionsChanged() {
 
 .-top-bar
 	display: inline-flex
-	padding: 8px 12px 24px
+	padding: 8px 12px 8px
 	gap: 12px
 	position: absolute
-	bottom: calc(100% - 16px)
+	bottom: calc(100% + var(--top-bar-margin))
 	z-index: -1
 	left: 0
 	change-bg('primary')
@@ -568,6 +567,6 @@ function onContentDimensionsChanged() {
 .-charge-caret::before
 	content: ''
 	position: absolute
-	bottom: calc(100% + 2px) !important
+	bottom: calc(100% + 2px + var(--top-bar-margin)) !important
 	caret(color: var(--theme-primary), direction: 'down', size: 7px)
 </style>
