@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
 import AppTranslate from '../../translate/AppTranslate.vue';
@@ -177,12 +176,6 @@ const tooltipPosition = computed<CSSProperties | null>(() => {
 		<div>
 			<span>
 				Once all your charge orbs are full, you can support your favorite Game Jolt Creators
-			</span>
-
-			<!-- TODO(charged-stickers) get the real icon -->
-			<AppJolticon icon="friends" />
-
-			<span>
 				by giving them a charged sticker! Every charged sticker uses
 				{{ orbCostText }} and puts 💰💰💰 in their IRL pockets.
 			</span>

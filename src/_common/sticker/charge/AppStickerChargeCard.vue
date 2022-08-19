@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, ref, toRefs } from 'vue';
+import { RouterLink } from 'vue-router';
 import { illChargeOrbEmpty } from '../../../app/img/ill/illustrations';
 import AppAnimChargeOrb from '../../animation/AppAnimChargeOrb.vue';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
+import { configCreatorPageLink } from '../../config/config.service';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { Screen } from '../../screen/screen-service';
 import AppSpacer from '../../spacer/AppSpacer.vue';
@@ -79,22 +81,34 @@ const showOverchargeText = computed(() => allowOverchargeText.value && canCharge
 			:class="{ '-elevate': elevate, '-decorator': !headerCharge }"
 		>
 			<div class="-content" :class="{ '-col': headerCharge }">
-				<AppStickerChargeTooltipHandler
-					trigger="hover"
-					:disabled="!Screen.isPointerMouse"
-					@show="showTooltip = true"
-					@hide="showTooltip = false"
-				>
-					<component :is="headerCharge ? 'h4' : 'h5'" class="-charge-text">
-						<AppTranslate>Charge</AppTranslate>
+				<div :style="{ width: headerCharge ? '100%' : undefined }">
+					<AppStickerChargeTooltipHandler
+						trigger="hover"
+						:disabled="!Screen.isPointerMouse"
+						inline
+						@show="showTooltip = true"
+						@hide="showTooltip = false"
+					>
+						<component :is="headerCharge ? 'h4' : 'h5'" class="-charge-text">
+							<AppTranslate>Charge</AppTranslate>
 
-						<span ref="helpIcon" class="-help-circle-container">
-							<AppStickerChargeTooltipCaret :show="showTooltip">
-								<AppJolticon icon="help-circle" />
-							</AppStickerChargeTooltipCaret>
-						</span>
-					</component>
-				</AppStickerChargeTooltipHandler>
+							<span ref="helpIcon" class="-help-circle-container">
+								<AppStickerChargeTooltipCaret :show="showTooltip">
+									<AppJolticon icon="help-circle" />
+								</AppStickerChargeTooltipCaret>
+							</span>
+						</component>
+					</AppStickerChargeTooltipHandler>
+
+					<RouterLink
+						v-if="headerCharge && configCreatorPageLink.value"
+						to="creator"
+						class="link-muted"
+						:style="{ float: 'right' }"
+					>
+						<AppTranslate> Learn more </AppTranslate>
+					</RouterLink>
+				</div>
 
 				<AppSpacer v-if="headerCharge" vertical :scale="4" />
 
@@ -127,10 +141,10 @@ const showOverchargeText = computed(() => allowOverchargeText.value && canCharge
 				<AppSpacer v-if="headerCharge" vertical :scale="4" />
 				<hr v-else />
 
-				<span> You're fully charged! Support your favorite Game Jolt Creator </span>
-				<!-- TODO(charged-stickers) get real icon -->
-				<AppJolticon icon="friends" />
-				<span> with a charged sticker. </span>
+				<span>
+					You're fully charged! Support your favorite Game Jolt Creator with a charged
+					sticker.
+				</span>
 			</div>
 
 			<AppStickerChargeTooltip
