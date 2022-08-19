@@ -1,9 +1,13 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { mixins, Options, Watch } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, ref, watch } from 'vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { ClientAutoStart } from '../../../../_common/client/safe-exports';
+import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
+import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import { BaseForm } from '../../../../_common/form-vue/form.service';
+import { validateMinValue } from '../../../../_common/form-vue/validators';
 import {
 	SettingAnimatedThumbnails,
 	SettingAutostartClient,
@@ -17,8 +21,8 @@ import {
 	SettingThemeAlwaysOurs,
 	SettingThemeDark,
 } from '../../../../_common/settings/settings.service';
-import { useCommonStore } from '../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 
 type FormModel = {
 	chat_notify_friends_online: boolean;
@@ -38,124 +42,114 @@ type FormModel = {
 	sticker_sounds: boolean;
 };
 
-class Wrapper extends BaseForm<FormModel> {}
+const { setDark, setAlwaysOurs } = useThemeStore();
 
-@Options({
-	components: {
-		AppFormControlToggle,
-	},
-})
-export default class FormSettings extends mixins(Wrapper) {
-	commonStore = setup(() => useCommonStore());
-	themeStore = setup(() => useThemeStore());
+const gameInstallDir = ref<HTMLInputElement>();
 
-	get user() {
-		return this.commonStore.user;
-	}
+const canClientAutostart = computed(() => ClientAutoStart?.canAutoStart);
+const browserNotificationsDisabled = computed(() => (Notification as any).permission === 'denied');
 
-	get canClientAutostart() {
-		return ClientAutoStart?.canAutoStart;
-	}
-
-	get browserNotificationsDisabled() {
-		return (Notification as any).permission === 'denied';
-	}
-
-	created() {
-		this.form.warnOnDiscard = false;
-	}
-
+const form: FormController<FormModel> = createForm({
+	warnOnDiscard: false,
 	onInit() {
-		this.setField('restricted_browsing', SettingRestrictedBrowsing.get());
-		this.setField('broadcast_modal', SettingBroadcastModal.get());
-		this.setField('animated_thumbnails', SettingAnimatedThumbnails.get());
-		this.setField('feed_notifications', SettingFeedNotifications.get());
-		this.setField('theme_dark', SettingThemeDark.get());
-		this.setField('theme_always_ours', SettingThemeAlwaysOurs.get());
+		form.formModel['restricted_browsing'] = SettingRestrictedBrowsing.get();
+		form.formModel['broadcast_modal'] = SettingBroadcastModal.get();
+		form.formModel['animated_thumbnails'] = SettingAnimatedThumbnails.get();
+		form.formModel['feed_notifications'] = SettingFeedNotifications.get();
+		form.formModel['theme_dark'] = SettingThemeDark.get();
+		form.formModel['theme_always_ours'] = SettingThemeAlwaysOurs.get();
 
 		if (GJ_IS_DESKTOP_APP) {
-			this.setField('game_install_dir', SettingGameInstallDir.get());
-			this.setField('queue_when_playing', SettingQueueWhenPlaying.get());
+			form.formModel['game_install_dir'] = SettingGameInstallDir.get();
+			form.formModel['queue_when_playing'] = SettingQueueWhenPlaying.get();
 
-			this.setField('max_download_count', SettingMaxDownloadCount.get());
-			this.setField('limit_downloads', this.formModel.max_download_count !== -1);
+			form.formModel['max_download_count'] = SettingMaxDownloadCount.get();
+			form.formModel['limit_downloads'] = form.formModel.max_download_count !== -1;
 
-			this.setField('max_extract_count', SettingMaxExtractCount.get());
-			this.setField('limit_extractions', this.formModel.max_extract_count !== -1);
+			form.formModel['max_extract_count'] = SettingMaxExtractCount.get();
+			form.formModel['limit_extractions'] = form.formModel.max_extract_count !== -1;
 
-			if (this.canClientAutostart) {
-				this.setField('autostart_client', SettingAutostartClient.get());
+			if (canClientAutostart.value) {
+				form.formModel['autostart_client'] = SettingAutostartClient.get();
 			}
 		}
-	}
-
-	/**
-	 * Just opens a file location dialog.
-	 */
-	changeLocation(ref: string) {
-		const elem = this.$refs[ref];
-		if (elem) {
-			(elem as HTMLElement).click();
-		}
-	}
-
-	onSelectedInstallDir(dir: string) {
-		this.setField('game_install_dir', dir);
-		this.onChange();
-	}
-
-	@Watch('formModel.limit_downloads')
-	limitDownloadsChange(shouldLimit: boolean) {
-		this.setField(
-			'max_download_count',
-			shouldLimit ? SettingMaxDownloadCount.defaultValue : -1
-		);
-		this.onChange();
-	}
-
-	@Watch('formModel.limit_extractions')
-	limitExtractionsChange(shouldLimit: boolean) {
-		this.setField('max_extract_count', shouldLimit ? SettingMaxExtractCount.defaultValue : -1);
-		this.onChange();
-	}
-
+	},
 	onChange() {
-		SettingRestrictedBrowsing.set(this.formModel.restricted_browsing);
-		SettingBroadcastModal.set(this.formModel.broadcast_modal);
-		SettingAnimatedThumbnails.set(this.formModel.animated_thumbnails);
-		SettingFeedNotifications.set(this.formModel.feed_notifications);
-		SettingThemeDark.set(this.formModel.theme_dark);
-		SettingThemeAlwaysOurs.set(this.formModel.theme_always_ours);
+		_onChange();
+	},
+});
 
-		this.themeStore.setDark(this.formModel.theme_dark);
-		this.themeStore.setAlwaysOurs(this.formModel.theme_always_ours);
+function _onChange() {
+	SettingRestrictedBrowsing.set(form.formModel.restricted_browsing);
+	SettingBroadcastModal.set(form.formModel.broadcast_modal);
+	SettingAnimatedThumbnails.set(form.formModel.animated_thumbnails);
+	SettingFeedNotifications.set(form.formModel.feed_notifications);
+	SettingThemeDark.set(form.formModel.theme_dark);
+	SettingThemeAlwaysOurs.set(form.formModel.theme_always_ours);
 
-		if (GJ_IS_DESKTOP_APP) {
-			SettingGameInstallDir.set(this.formModel.game_install_dir);
-			SettingMaxDownloadCount.set(this.formModel.max_download_count);
-			SettingMaxExtractCount.set(this.formModel.max_extract_count);
-			SettingQueueWhenPlaying.set(this.formModel.queue_when_playing);
+	setDark(form.formModel.theme_dark);
+	setAlwaysOurs(form.formModel.theme_always_ours);
 
-			if (ClientAutoStart && this.canClientAutostart) {
-				SettingAutostartClient.set(this.formModel.autostart_client);
+	if (GJ_IS_DESKTOP_APP) {
+		SettingGameInstallDir.set(form.formModel.game_install_dir);
+		SettingMaxDownloadCount.set(form.formModel.max_download_count);
+		SettingMaxExtractCount.set(form.formModel.max_extract_count);
+		SettingQueueWhenPlaying.set(form.formModel.queue_when_playing);
 
-				if (this.formModel.autostart_client) {
-					ClientAutoStart.set();
-				} else {
-					ClientAutoStart.clear();
-				}
+		if (ClientAutoStart && canClientAutostart.value) {
+			SettingAutostartClient.set(form.formModel.autostart_client);
+
+			if (form.formModel.autostart_client) {
+				ClientAutoStart.set();
+			} else {
+				ClientAutoStart.clear();
 			}
-
-			// TODO(vue3)
-			// Tell's it to use the new settings.
-			// this.$store.commit('clientLibrary/checkQueueSettings');
 		}
+
+		// TODO(vue3)
+		// Tell's it to use the new settings.
+		// this.$store.commit('clientLibrary/checkQueueSettings');
 	}
 }
+
+/**
+ * Just opens a file location dialog.
+ */
+function changeLocation(elem: HTMLInputElement | undefined) {
+	elem?.click();
+}
+
+function onSelectedInstallDir(event: InputEvent) {
+	const dir: string = (event.target as any).value;
+	form.formModel['game_install_dir'] = dir;
+	_onChange();
+}
+
+watch(
+	() => form.formModel.limit_downloads,
+	shouldLimit => {
+		form.formModel['max_download_count'] = shouldLimit
+			? SettingMaxDownloadCount.defaultValue
+			: -1;
+
+		_onChange();
+	}
+);
+
+watch(
+	() => form.formModel.limit_extractions,
+	shouldLimit => {
+		form.formModel['max_extract_count'] = shouldLimit
+			? SettingMaxExtractCount.defaultValue
+			: -1;
+
+		_onChange();
+	}
+);
 </script>
 
 <template>
-	<AppForm :controller="form" @changed="onChange">
+	<AppForm :controller="form">
 		<template v-if="GJ_IS_DESKTOP_APP">
 			<fieldset id="settings-client">
 				<legend>
@@ -167,13 +161,13 @@ export default class FormSettings extends mixins(Wrapper) {
 					:label="$gettext('Installed Games Directory')"
 				>
 					<template #inline-control>
-						<AppButton sm @click="changeLocation('game-install-dir')">
+						<AppButton sm @click="changeLocation(gameInstallDir)">
 							<AppTranslate>Change Location</AppTranslate>
 						</AppButton>
 					</template>
 
 					<div class="form-static">
-						<code>{{ formModel.game_install_dir }}</code>
+						<code>{{ form.formModel.game_install_dir }}</code>
 					</div>
 
 					<p class="help-block">
@@ -183,18 +177,18 @@ export default class FormSettings extends mixins(Wrapper) {
 					</p>
 
 					<input
-						ref="game-install-dir"
+						ref="gameInstallDir"
 						class="hidden"
 						type="file"
 						nwdirectory
-						@change="onSelectedInstallDir($event.target.value)"
+						@change="onSelectedInstallDir"
 					/>
 
 					<AppFormControlErrors />
 				</AppFormGroup>
 
 				<AppFormGroup
-					:class="{ 'sans-margin-bottom': formModel.limit_downloads }"
+					:class="{ 'sans-margin-bottom': form.formModel.limit_downloads }"
 					name="limit_downloads"
 					:label="$gettext('Limit simultaneous downloads?')"
 				>
@@ -202,10 +196,10 @@ export default class FormSettings extends mixins(Wrapper) {
 						<AppFormControlToggle />
 					</template>
 				</AppFormGroup>
-				<br v-if="formModel.limit_downloads" />
+				<br v-if="form.formModel.limit_downloads" />
 
 				<AppFormGroup
-					v-if="formModel.max_download_count !== -1"
+					v-if="form.formModel.max_download_count !== -1"
 					name="max_download_count"
 					:label="$gettext('Max # of Simultaneous Downloads')"
 					:hide-label="true"
@@ -220,7 +214,7 @@ export default class FormSettings extends mixins(Wrapper) {
 				</AppFormGroup>
 
 				<AppFormGroup
-					:class="{ 'sans-margin-bottom': formModel.limit_downloads }"
+					:class="{ 'sans-margin-bottom': form.formModel.limit_downloads }"
 					name="limit_extractions"
 					:label="$gettext('Limit simultaneous extractions?')"
 				>
@@ -234,10 +228,10 @@ export default class FormSettings extends mixins(Wrapper) {
 						</AppTranslate>
 					</p>
 				</AppFormGroup>
-				<br v-if="formModel.limit_downloads" />
+				<br v-if="form.formModel.limit_downloads" />
 
 				<AppFormGroup
-					v-if="formModel.max_extract_count !== -1"
+					v-if="form.formModel.max_extract_count !== -1"
 					name="max_extract_count"
 					:label="$gettext('Max # of Simultaneous Extractions')"
 					:hide-label="true"
