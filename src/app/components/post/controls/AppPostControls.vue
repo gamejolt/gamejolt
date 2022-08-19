@@ -34,9 +34,9 @@ import { User } from '../../../../_common/user/user.model';
 import { ActivityFeedItem } from '../../activity/feed/item-service';
 import { ActivityFeedView } from '../../activity/feed/view';
 import { PostEditModal } from '../edit-modal/edit-modal-service';
+import AppPostControlsStats from './AppPostControlsStats.vue';
 import AppPostControlsMore from './more/more.vue';
 import AppPostControlsSaveProgress from './save-progress/save-progress.vue';
-import AppPostControlsStats from './stats/stats.vue';
 import AppPostControlsUserFollow from './user-follow/user-follow.vue';
 
 const props = defineProps({
