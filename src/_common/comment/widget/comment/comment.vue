@@ -274,7 +274,7 @@ export default class AppCommentWidgetComment extends Vue {
 </script>
 
 <template>
-	<AppStickerLayer>
+	<AppStickerLayer no-mask>
 		<AppMessageThreadItem
 			:user="shouldBlock ? null : comment.user"
 			:date="comment.posted_on"

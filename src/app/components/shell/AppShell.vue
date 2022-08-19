@@ -133,12 +133,6 @@ watch([totalChatNotificationsCount, unreadActivityCount, unreadNotificationsCoun
 		}"
 	>
 		<AppStickerLayer>
-			<AppStickerLayerPlacementMask
-				v-if="activeLayer"
-				class="-placement-mask"
-				:layer="activeLayer"
-			/>
-
 			<template v-if="isShellHidden">
 				<slot />
 			</template>
@@ -288,7 +282,4 @@ body.has-hot-bottom
 	&.has-cbar
 		#footer
 			margin-left: $shell-content-sidebar-width + $shell-cbar-width
-
-.-placement-mask
-	z-index: $zindex-sticker-layer
 </style>

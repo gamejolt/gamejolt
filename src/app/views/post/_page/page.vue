@@ -258,7 +258,7 @@ export default class AppPostPage extends Vue {
 	so key on the post ID so that everything gets recompiled when switching
 	posts.
 	-->
-	<AppStickerLayer>
+	<AppStickerLayer no-mask>
 		<section
 			:key="post.id"
 			class="-section section-thin"
