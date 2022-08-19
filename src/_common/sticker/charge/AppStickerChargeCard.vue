@@ -226,5 +226,5 @@ hr
 .-small
 	&
 	::v-deep(.jolticon)
-		font-size: $font-size-tiny
+		font-size: $font-size-small
 </style>
