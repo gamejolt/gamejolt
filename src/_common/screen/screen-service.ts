@@ -84,17 +84,28 @@ class ScreenService {
 				//
 				// Mobile Safari prior to version 14 doesn't support "addEventListener".
 				// Do this or the site will break for old iOS.
-				for (const key in ['addEventListener', 'addListener']) {
-					if (!Object.prototype.hasOwnProperty.call(match, key)) {
-						continue;
-					}
 
-					if (key === 'addEventListener') {
-						// Use the current standard first if available.
-						match['addEventListener']('change', onChange);
-					} else if (key === 'addListener') {
-						// Fallback to the deprecated method if available.
-						match['addListener'](onChange);
+				// TODO(charged-stickers) test with iOS < 14 after changes
+				const fields: (keyof typeof match)[] = ['addEventListener', 'addListener'];
+
+				for (const key of fields) {
+					try {
+						if (key === 'addEventListener') {
+							// Use the current standard first if available.
+							match[key]('change', onChange);
+							break;
+						}
+
+						if (key === 'addListener') {
+							// Fallback to the deprecated method if available.
+							match[key](onChange);
+							break;
+						}
+					} catch (e) {
+						console.error(
+							`Error when trying to listen for pointer changes using method ${key}`,
+							e
+						);
 					}
 				}
 

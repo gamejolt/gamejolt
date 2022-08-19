@@ -1,8 +1,8 @@
+import { Background } from '../background/background.model';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { SiteTrophy } from '../site/trophy/trophy.model';
 import { StickerReward } from '../sticker/sticker-reward-model';
-import { Background } from '../background/background.model';
 
 const QuestRewardTypes = {
 	exp: 0,
@@ -16,6 +16,11 @@ const QuestRewardTypes = {
 	 */
 	custom: 4,
 	background: 5,
+
+	/**
+	 * Adds charge to the StickerStore.
+	 */
+	userCharge: 6,
 } as const;
 
 export class QuestObjectiveReward extends Model {
@@ -66,6 +71,10 @@ export class QuestObjectiveReward extends Model {
 		return this.type === QuestRewardTypes.background;
 	}
 
+	get isCharge() {
+		return this.type === QuestRewardTypes.userCharge;
+	}
+
 	get name() {
 		let result = this.fallback_name;
 		switch (this.type) {
@@ -83,6 +92,10 @@ export class QuestObjectiveReward extends Model {
 
 			case QuestRewardTypes.background:
 				result = 'Background';
+				break;
+
+			case QuestRewardTypes.userCharge:
+				result = 'Charge';
 				break;
 		}
 

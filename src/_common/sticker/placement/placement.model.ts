@@ -11,6 +11,7 @@ export class StickerPlacement extends Model {
 	sticker!: Sticker;
 
 	target_data!: PlacementTargetData;
+	is_charged!: boolean;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -19,7 +20,7 @@ export class StickerPlacement extends Model {
 			this.sticker = new Sticker(data.sticker);
 		}
 
-		if (data.target_data === '') {
+		if (data.target_data === '' || !data.target_data) {
 			this.target_data = {};
 		}
 	}

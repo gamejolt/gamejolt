@@ -9,17 +9,20 @@ import {
 	Ref,
 	ShallowRef,
 	shallowRef,
+	unref,
 	WritableComputedRef,
 } from 'vue';
+import { MaybeComputedRef } from '../../../utils/vue';
 import { Comment } from '../../comment/comment-model';
+import { configChargedStickers } from '../../config/config.service';
 import { Fireside } from '../../fireside/fireside.model';
 import { FiresidePost } from '../../fireside/post/post-model';
 import { MediaItem } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
 import { StickerLayerController } from '../layer/layer-controller';
 import { StickerPlacement } from '../placement/placement.model';
-import { ValidStickerResource } from './target.vue';
-import { CustomStickerPlacementRequest } from '../../drawer/drawer-store';
+import { CustomStickerPlacementRequest } from '../sticker-store';
+import { ValidStickerResource } from './AppStickerTarget.vue';
 
 const StickerTargetParentControllerKey: InjectionKey<StickerTargetController> =
 	Symbol('sticker-target-parent');
@@ -43,19 +46,19 @@ export type StickerTargetController = {
 	isLive: boolean;
 
 	placeStickerCallback?: CustomStickerPlacementRequest;
+	isCreator: ComputedRef<boolean>;
 };
 
 interface StickerTargetOptions {
-	isLive: boolean;
+	isCreator: MaybeComputedRef<boolean>;
+	parent?: StickerTargetController | null;
+	isLive?: boolean;
 	placeStickerCallback?: CustomStickerPlacementRequest;
 }
 
 export function createStickerTargetController(
 	model: StickerTargetModel,
-	parent?: StickerTargetController | null,
-	{ isLive, placeStickerCallback }: StickerTargetOptions = {
-		isLive: false,
-	}
+	{ isCreator, parent, isLive = false, placeStickerCallback }: StickerTargetOptions
 ) {
 	model = reactive(model) as StickerTargetModel;
 	const isInview = ref(false);
@@ -111,6 +114,13 @@ export function createStickerTargetController(
 		parent: parent || null,
 		isLive,
 		placeStickerCallback,
+		isCreator: computed(() => {
+			if (!configChargedStickers.value) {
+				return false;
+			}
+
+			return unref(isCreator);
+		}),
 	};
 
 	if (parent) {

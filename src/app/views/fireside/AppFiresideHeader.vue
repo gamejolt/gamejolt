@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router';
 import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { Screen } from '../../../_common/screen/screen-service';
-import AppStickerLiveReactions from '../../../_common/sticker/live-reactions/AppStickerLiveReactions.vue';
+import AppStickerStack from '../../../_common/sticker/stack/AppStickerStack.vue';
 import { StickerTargetController } from '../../../_common/sticker/target/target-controller';
 import AppTheme from '../../../_common/theme/AppTheme.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
@@ -58,7 +58,7 @@ const { fireside, stickerTargetController, overlay } = toRefs(props);
 		</div>
 
 		<div v-if="!Screen.isXs && stickerTargetController" class="-reactions">
-			<AppStickerLiveReactions :controller="stickerTargetController" reverse />
+			<AppStickerStack :controller="stickerTargetController" reverse use-fireside-sub />
 		</div>
 	</AppTheme>
 </template>

@@ -15,11 +15,12 @@ export default {
 import { computed, customRef, onBeforeUnmount, ref, shallowRef, watch } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import { debounce } from '../../../utils/utils';
+import AppAnimSlideshow from '../../../_common/animation/AppAnimSlideshow.vue';
+import { sheetFireplace } from '../../../_common/animation/slideshow/sheets';
 import { Api } from '../../../_common/api/api.service';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
 import AppBackground from '../../../_common/background/AppBackground.vue';
 import AppButton from '../../../_common/button/AppButton.vue';
-import { useDrawerStore } from '../../../_common/drawer/drawer-store';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
@@ -33,8 +34,9 @@ import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/ro
 import { Ruler } from '../../../_common/ruler/ruler-service';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import AppStickerLayer from '../../../_common/sticker/layer/layer.vue';
-import AppStickerTarget from '../../../_common/sticker/target/target.vue';
+import AppStickerLayer from '../../../_common/sticker/layer/AppStickerLayer.vue';
+import { useStickerStore } from '../../../_common/sticker/sticker-store';
+import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
@@ -47,14 +49,12 @@ import {
 	FiresideSidebar,
 	toggleStreamVideoStats,
 } from '../../components/fireside/controller/controller';
-import AppImgSlideshow from '../../components/img/AppImgSlideshow.vue';
 import {
 	illEndOfFeed,
 	illMaintenance,
 	illMobileKikkerstein,
 	illNoCommentsSmall,
 } from '../../img/ill/illustrations';
-import { sheetFireplace } from '../../img/slideshow/sheets';
 import { useAppStore } from '../../store';
 import AppFiresideHeader from './AppFiresideHeader.vue';
 import AppFiresideStats from './AppFiresideStats.vue';
@@ -69,7 +69,7 @@ import AppFiresideStream from './_stream/AppFiresideStream.vue';
 
 const appStore = useAppStore();
 const commonStore = useCommonStore();
-const drawerStore = useDrawerStore();
+const stickerStore = useStickerStore();
 const chatStore = useChatStore()!;
 const themeStore = useThemeStore();
 
@@ -172,7 +172,7 @@ watch(
 		c.value ??= createFiresideController(payloadFireside.value, {
 			appStore,
 			commonStore,
-			drawerStore,
+			stickerStore,
 			chatStore,
 			router,
 		});
@@ -528,35 +528,35 @@ function onIsPersonallyStreamingChanged() {
 												height: videoHeight + 'px',
 											}"
 										>
-											<AppStickerTarget
-												class="-video-inner -abs-stretch"
-												:controller="c.stickerTargetController"
-											>
-												<AppPopper
-													v-if="c.rtc.value && c.rtc.value.focusedUser"
-													trigger="right-click"
+											<template v-if="c.rtc.value && c.rtc.value.focusedUser">
+												<AppStickerTarget
+													:key="c.rtc.value.focusedUser?.uid"
+													class="-video-inner -abs-stretch"
+													:controller="c.stickerTargetController"
 												>
-													<AppFiresideStream
-														:rtc-user="c.rtc.value.focusedUser"
-														:has-header="isFullscreen"
-														:has-hosts="isFullscreen"
-														:sidebar-collapsed="collapseSidebar"
-													/>
+													<AppPopper trigger="right-click">
+														<AppFiresideStream
+															:rtc-user="c.rtc.value.focusedUser"
+															:has-header="isFullscreen"
+															:has-hosts="isFullscreen"
+															:sidebar-collapsed="collapseSidebar"
+														/>
 
-													<template #popover>
-														<div class="list-group">
-															<a
-																class="list-group-item"
-																@click="toggleVideoStats()"
-															>
-																<AppTranslate>
-																	Toggle Video Stats
-																</AppTranslate>
-															</a>
-														</div>
-													</template>
-												</AppPopper>
-											</AppStickerTarget>
+														<template #popover>
+															<div class="list-group">
+																<a
+																	class="list-group-item"
+																	@click="toggleVideoStats()"
+																>
+																	<AppTranslate>
+																		Toggle Video Stats
+																	</AppTranslate>
+																</a>
+															</div>
+														</template>
+													</AppPopper>
+												</AppStickerTarget>
+											</template>
 										</div>
 									</div>
 									<div v-else class="-video-container">
@@ -568,7 +568,7 @@ function onIsPersonallyStreamingChanged() {
 											}"
 										>
 											<template v-if="c.canStream.value">
-												<AppImgSlideshow
+												<AppAnimSlideshow
 													class="-fireplace"
 													:sheet="sheetFireplace"
 													:overlay="overlayText"
@@ -603,7 +603,7 @@ function onIsPersonallyStreamingChanged() {
 													</a>
 												</div>
 											</template>
-											<AppImgSlideshow
+											<AppAnimSlideshow
 												v-else
 												class="-fireplace"
 												:sheet="sheetFireplace"

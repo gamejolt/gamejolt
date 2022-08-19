@@ -1,3 +1,4 @@
+import illChargeOrbEmptyPath from './charge-orb-empty.png';
 import illEndOfFeedPath from './end-of-feed.png';
 import illMaintenancePath from './maintenance.png';
 import illMobileKikkersteinPath from './mobile-kikkerstein.png';
@@ -66,4 +67,10 @@ export const illNoChat: IllustrationAsset = {
 	path: illNoChatPath,
 	width: 584,
 	height: 362,
+};
+
+export const illChargeOrbEmpty: IllustrationAsset = {
+	path: illChargeOrbEmptyPath,
+	width: 500,
+	height: 500,
 };

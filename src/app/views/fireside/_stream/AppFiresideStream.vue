@@ -7,13 +7,12 @@ const UITransitionTime = 200;
 <script lang="ts" setup>
 import { computed, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import { useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { FiresideRTCUser, setDesktopAudioPlayback } from '../../../../_common/fireside/rtc/user';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
+import { useStickerStore } from '../../../../_common/sticker/sticker-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
@@ -56,7 +55,7 @@ const {
 	isShowingStreamOverlay,
 } = c;
 
-const drawerStore = useDrawerStore();
+const { streak: stickerStreak } = useStickerStore();
 
 const _ignorePointerTimer = ref<NodeJS.Timer | null>();
 const hideUITimer = ref<NodeJS.Timer | null>(null);
@@ -67,8 +66,6 @@ const pausedElement = ref<HTMLDivElement>();
 const isHovered = ref(false);
 const hasQueuedStreakAnimation = ref(false);
 const shouldAnimateStreak = ref(false);
-
-const stickerStreak = computed(() => drawerStore.streak.value);
 
 const streakCount = computed(() => formatFuzzynumber(stickerStreak.value?.count ?? 0));
 

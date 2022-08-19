@@ -6,8 +6,8 @@ import { ContentRules } from '../../../_common/content/content-editor/content-ru
 import AppContentViewer from '../../../_common/content/content-viewer/content-viewer.vue';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { canPlaceStickerOnFiresidePost } from '../../../_common/sticker/placement/placement.model';
+import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.vue';
 import { StickerTargetController } from '../../../_common/sticker/target/target-controller';
-import AppStickerTarget from '../../../_common/sticker/target/target.vue';
 
 const props = defineProps({
 	post: {
@@ -45,8 +45,6 @@ function toggleLead() {
 
 <template>
 	<div class="-container-theme">
-		<div ref="sticker-scroll" />
-
 		<div :class="{ '-overlay-post-lead': overlay }">
 			<AppStickerTarget :controller="stickerTargetController" :disabled="!canPlaceSticker">
 				<!--

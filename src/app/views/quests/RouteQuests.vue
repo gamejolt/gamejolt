@@ -187,6 +187,8 @@ function clearUnknownWatermarks() {
 							<AppDailyQuests
 								v-if="!isBootstrapped || dailyQuests.length > 0"
 								:active-quest-id="activeQuestId"
+								show-charge
+								:constrain-charge-tooltip="showBody"
 							>
 								<template #header>
 									<div class="-subheading">

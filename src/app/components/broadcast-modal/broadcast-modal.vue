@@ -1,4 +1,5 @@
 <script lang="ts">
+import { computed } from 'vue';
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppContentViewer from '../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -8,11 +9,11 @@ import AppImgResponsive from '../../../_common/img/AppImgResponsive.vue';
 import { MediaItem } from '../../../_common/media-item/media-item-model';
 import { BaseModal } from '../../../_common/modal/base';
 import AppResponsiveDimensions from '../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
+import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.vue';
 import {
 	createStickerTargetController,
 	StickerTargetController,
 } from '../../../_common/sticker/target/target-controller';
-import AppStickerTarget from '../../../_common/sticker/target/target.vue';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import AppVideoEmbed from '../../../_common/video/embed/embed.vue';
 import { getVideoPlayerFromSources } from '../../../_common/video/player/controller';
@@ -20,7 +21,7 @@ import AppVideoPlayer from '../../../_common/video/player/player.vue';
 import AppVideo from '../../../_common/video/video.vue';
 import { AppCommentWidgetLazy } from '../lazy';
 import AppPollVoting from '../poll/voting/voting.vue';
-import AppPostControls from '../post/controls/controls.vue';
+import AppPostControls from '../post/controls/AppPostControls.vue';
 
 @Options({
 	components: {
@@ -51,7 +52,9 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 	}
 
 	created() {
-		this.stickerTargetController = createStickerTargetController(this.post);
+		this.stickerTargetController = createStickerTargetController(this.post, {
+			isCreator: computed(() => this.post.displayUser.is_creator),
+		});
 	}
 
 	getVideoController(item: MediaItem) {

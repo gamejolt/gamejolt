@@ -147,6 +147,9 @@ export const configCommunityFrontpageFeedType = new ConfigOptionString(
 	}
 );
 
+export const configChargedStickers = new ConfigOptionBoolean('web_charged_stickers', false);
+export const configCreatorPageLink = new ConfigOptionBoolean('web_creator_page_link', false);
+
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
 }

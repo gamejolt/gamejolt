@@ -4,7 +4,6 @@ import { RouterView } from 'vue-router';
 import { createAdsController } from '../_common/ad/ad-store';
 import { CommentStoreManager, CommentStoreManagerKey } from '../_common/comment/comment-store';
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
-import { createDrawerStore } from '../_common/drawer/drawer-store';
 import AppErrorPage from '../_common/error/page/page.vue';
 import { createAppPromotionStore } from '../_common/mobile-app/store';
 import Onboarding from '../_common/onboarding/onboarding.service';
@@ -21,7 +20,6 @@ const { bootstrap, loadGrid, loadNotificationState, clear, clearGrid, clearNotif
 const { user } = useCommonStore();
 
 createAdsController();
-createDrawerStore();
 createAppPromotionStore();
 provide(CommentStoreManagerKey, reactive(new CommentStoreManager()));
 

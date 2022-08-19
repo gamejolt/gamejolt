@@ -2,7 +2,6 @@
 import { computed, PropType, Ref, ref, toRefs } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import { onFiresideStickerPlaced } from '../../../../_common/drawer/drawer-store';
 import {
 	FiresideRTCUser,
 	setDesktopAudioPlayback,
@@ -16,6 +15,7 @@ import { createPopcornKettleController } from '../../../../_common/popcorn/popco
 import AppSlider, { ScrubberCallback } from '../../../../_common/slider/AppSlider.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { StickerPlacement } from '../../../../_common/sticker/placement/placement.model';
+import { onFiresideStickerPlaced } from '../../../../_common/sticker/sticker-store';
 import { useEventSubscription } from '../../../../_common/system/event/event-topic';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';

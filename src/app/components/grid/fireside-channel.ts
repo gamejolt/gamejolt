@@ -1,10 +1,5 @@
 import { shallowReadonly, triggerRef } from 'vue';
 import { createLogger } from '../../../utils/logging';
-import {
-	DrawerStore,
-	onFiresideStickerPlaced,
-	setStickerStreak,
-} from '../../../_common/drawer/drawer-store';
 import { FiresideChatSettings } from '../../../_common/fireside/chat-settings/chat-settings.model';
 import { FiresideRTCHost } from '../../../_common/fireside/rtc/rtc';
 import {
@@ -12,6 +7,11 @@ import {
 	SocketChannelController,
 } from '../../../_common/socket/socket-controller';
 import { StickerPlacement } from '../../../_common/sticker/placement/placement.model';
+import {
+	onFiresideStickerPlaced,
+	setStickerStreak,
+	StickerStore,
+} from '../../../_common/sticker/sticker-store';
 import { addStickerToTarget } from '../../../_common/sticker/target/target-controller';
 import { User } from '../../../_common/user/user.model';
 import {
@@ -64,11 +64,11 @@ interface UpdateChatSettingsPayload {
 export async function createGridFiresideChannel(
 	client: GridClient,
 	firesideController: FiresideController,
-	options: { firesideHash: string; drawerStore: DrawerStore }
+	options: { firesideHash: string; stickerStore: StickerStore }
 ): Promise<GridFiresideChannel> {
 	const { socketController } = client;
 	const { chatSettings } = firesideController;
-	const { firesideHash, drawerStore } = options;
+	const { firesideHash, stickerStore } = options;
 
 	const logger = createLogger('Fireside');
 
@@ -149,7 +149,7 @@ export async function createGridFiresideChannel(
 			target_data: { host_user_id },
 		} = placement;
 
-		setStickerStreak(drawerStore, sticker, payload.streak);
+		setStickerStreak(stickerStore, sticker, payload.streak);
 
 		const wasMyPlacement = payload.user_id === user.value?.id;
 
