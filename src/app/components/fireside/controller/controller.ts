@@ -171,7 +171,7 @@ export function createFiresideController(
 			if (!user) {
 				return false;
 			}
-			return user.is_creator;
+			return user.is_creator === true;
 		}),
 		placeStickerCallback: async data => {
 			const roomChannel = chatChannel.value;

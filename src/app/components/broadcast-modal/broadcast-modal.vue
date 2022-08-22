@@ -53,7 +53,7 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 
 	created() {
 		this.stickerTargetController = createStickerTargetController(this.post, {
-			isCreator: computed(() => this.post.displayUser.is_creator),
+			isCreator: computed(() => this.post.displayUser.is_creator === true),
 		});
 	}
 

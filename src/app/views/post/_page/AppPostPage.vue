@@ -1,8 +1,6 @@
-<script lang="ts">
-import { computed } from 'vue';
-import { setup } from 'vue-class-component';
-import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { RouteLocationRaw } from 'vue-router';
+<script lang="ts" setup>
+import { computed, PropType, ref, shallowRef, toRefs, watch } from 'vue';
+import { RouteLocationRaw, RouterLink, useRoute, useRouter } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
@@ -11,16 +9,14 @@ import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
 import { configPostShareSide } from '../../../../_common/config/config.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
-import { formatNumber } from '../../../../_common/filters/number';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import {
 	$viewPostVideo,
 	FiresidePostVideo,
 } from '../../../../_common/fireside/post/video/video-model';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { createLightbox } from '../../../../_common/lightbox/lightbox-helpers';
-import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
 import AppResponsiveDimensions from '../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
@@ -40,18 +36,17 @@ import {
 } from '../../../../_common/sticker/target/target-controller';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
 import AppVideoPlayer from '../../../../_common/video/player/player.vue';
 import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/processing-progress.vue';
-import AppVideo from '../../../../_common/video/video.vue';
 import AppCommunityUserNotification from '../../../components/community/user-notification/user-notification.vue';
 import AppFiresidePostEmbed from '../../../components/fireside/post/embed/embed.vue';
 import AppGameBadge from '../../../components/game/badge/badge.vue';
-import AppGameListItem from '../../../components/game/list/item/item.vue';
 import { AppCommentWidgetLazy } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppPollVoting from '../../../components/poll/voting/voting.vue';
@@ -62,193 +57,134 @@ import AppPostPageRecommendations from './recommendations/AppPostPageRecommendat
 
 const UserFollowLocation = 'postPage';
 
-@Options({
-	components: {
-		AppPageContainer,
-		AppTimeAgo,
-		AppImgResponsive,
-		AppVideo,
-		AppVideoPlayer,
-		AppPostControls,
-		AppStickerControlsOverlay,
-		AppPollVoting,
-		AppCommunityPill,
-		AppContentViewer,
-		AppUserCardHover,
-		AppUserAvatar,
-		AppUserFollowWidget,
-		AppGameListItem,
-		AppStickerTarget,
-		AppStickerReactions,
-		AppMediaItemBackdrop,
-		AppMediaItemPost,
-		AppScrollScroller,
-		AppGameBadge,
-		AppUserVerifiedTick,
-		AppVideoProcessingProgress,
-		AppCommentWidgetLazy,
-		AppCommunityUserNotification,
-		AppFiresidePostEmbed,
-		AppPostPageRecommendations,
-		AppShareCard,
-		AppBackground,
-		AppPostHeader,
-		AppActivityFeedPostContent,
-		AppSpacer,
-		AppResponsiveDimensions,
-		AppAdWidget,
-		AppStickerLayer,
+const props = defineProps({
+	post: {
+		type: Object as PropType<FiresidePost>,
+		required: true,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
+	communityNotifications: {
+		type: Array as PropType<CommunityUserNotification[]>,
+		default: () => [],
 	},
-})
-export default class AppPostPage extends Vue {
-	@Prop({ type: Object, required: true })
-	post!: FiresidePost;
+});
 
-	@Prop({ type: Array, required: false, default: () => [] })
-	communityNotifications!: CommunityUserNotification[];
+const { post, communityNotifications } = toRefs(props);
 
-	@Emit('post-updated')
-	emitPostUpdated(_post: FiresidePost) {}
+const route = useRoute();
+const router = useRouter();
+const { user } = useCommonStore();
 
-	commonStore = setup(() => useCommonStore());
+const stickerTargetController = shallowRef<StickerTargetController>(
+	createStickerTargetController(post.value, {
+		isCreator: computed(() => post.value.displayUser.is_creator === true),
+	})
+);
 
-	get user() {
-		return this.commonStore.user;
+provideStickerTargerController(stickerTargetController);
+
+const videoStartTime = ref(0);
+const hasVideoProcessingError = ref(false);
+const videoProcessingErrorMsg = ref('');
+
+const lightbox = createLightbox(computed(() => post.value.media));
+
+const stickerScroll = ref<HTMLDivElement>();
+
+const displayUser = computed(() => {
+	return post.value.displayUser;
+});
+
+const communities = computed(() => {
+	return post.value.communities || [];
+});
+
+const shouldShowCommunityPublishError = computed(() => {
+	return post.value.status === FiresidePost.STATUS_DRAFT && !post.value.canPublishToCommunities();
+});
+
+const video = computed<FiresidePostVideo | null>(() => {
+	return post.value.videos[0] || null;
+});
+
+const background = computed(() => {
+	return post.value.background;
+});
+
+const shareCardOnSide = computed(() => {
+	trackExperimentEngagement(configPostShareSide);
+	return configPostShareSide.value;
+});
+
+if (typeof route.query.t === 'string') {
+	if (video.value) {
+		// DODO: Set the max val to the video end time.
+		videoStartTime.value = Math.floor(Math.max(0, parseInt(route.query.t, 10))) * 1000;
 	}
 
-	stickerTargetController!: StickerTargetController;
+	// Get rid of the time from the URL so that it doesn't pollute
+	// shared addresses.
+	router.replace({
+		...route,
+		query: { ...route.query, t: undefined },
+	} as RouteLocationRaw);
+}
 
-	recommendedPosts: FiresidePost[] = [];
-	videoStartTime = 0;
-	isPlayerFilled = false;
-	hasVideoProcessingError = false;
-	videoProcessingErrorMsg = '';
+watch(
+	() => post.value.id,
+	() => {
+		stickerTargetController.value = createStickerTargetController(post.value, {
+			isCreator: computed(() => post.value.displayUser.is_creator === true),
+		});
+	}
+);
 
-	private lightbox = setup(() => {
-		return createLightbox(computed(() => (this.$props as this).post.media));
+function onVideoProcessingComplete(payload: any) {
+	if (payload.video && video.value) {
+		video.value.assign(payload.video);
+	}
+}
+
+function onVideoProcessingError(err: string | Error) {
+	if (typeof err === 'string') {
+		hasVideoProcessingError.value = true;
+		videoProcessingErrorMsg.value = err;
+	} else {
+		// The only cases where an actual error is emitted is on network error during polling.
+		// This does not necessarily mean an actual error during processing, so noop.
+	}
+}
+
+function onPostRemoved() {
+	router.replace({ name: 'home' });
+	showInfoGrowl($gettext('Your post has been removed'));
+}
+
+function onPostPublished() {
+	showSuccessGrowl({
+		title: $gettext('Huzzah!'),
+		message: $gettext('Your post has been published.'),
 	});
+}
 
-	readonly Screen = Screen;
-	readonly formatNumber = formatNumber;
-	readonly UserFollowLocation = UserFollowLocation;
+function onClickFullscreen(mediaItem: MediaItem) {
+	const index = post.value.media.findIndex(i => i.id === mediaItem.id);
+	lightbox.show(index !== -1 ? index : null);
+}
 
-	declare $refs: {
-		'sticker-scroll': HTMLDivElement;
-	};
-
-	get displayUser() {
-		return this.post.displayUser;
+function onVideoPlay() {
+	if (video.value) {
+		$viewPostVideo(video.value);
 	}
+}
 
-	get communities() {
-		return this.post.communities || [];
+function scrollToStickers() {
+	if (stickerScroll.value) {
+		Scroll.to(stickerScroll.value, { preventDirections: ['down'] });
 	}
+}
 
-	get shouldShowManage() {
-		return this.user?.isMod || this.post.isManageableByUser(this.user);
-	}
-
-	get shouldShowCommunityPublishError() {
-		return (
-			this.post.status === FiresidePost.STATUS_DRAFT && !this.post.canPublishToCommunities()
-		);
-	}
-
-	get video(): null | FiresidePostVideo {
-		return this.post.videos[0] ?? null;
-	}
-
-	get background() {
-		return this.post.background;
-	}
-
-	get shareCardOnSide() {
-		trackExperimentEngagement(configPostShareSide);
-		return configPostShareSide.value;
-	}
-
-	created() {
-		this.stickerTargetController = createStickerTargetController(this.post, {
-			isCreator: computed(() => this.post.displayUser.is_creator),
-		});
-		provideStickerTargerController(this.stickerTargetController);
-
-		if (import.meta.env.SSR) {
-			return;
-		}
-
-		if (typeof this.$route.query.t === 'string') {
-			if (this.video) {
-				// DODO: Set the max val to the video end time.
-				this.videoStartTime =
-					Math.floor(Math.max(0, parseInt(this.$route.query.t, 10))) * 1000;
-			}
-
-			// Get rid of the time from the URL so that it doesn't pollute
-			// shared addresses.
-			this.$router.replace({
-				...this.$route,
-				query: { ...this.$route.query, t: undefined },
-			} as RouteLocationRaw);
-		}
-	}
-
-	@Watch('post.id')
-	onPostChange() {
-		this.stickerTargetController = createStickerTargetController(this.post, {
-			isCreator: computed(() => this.post.displayUser.is_creator),
-		});
-	}
-
-	onVideoProcessingComplete(payload: any) {
-		if (payload.video && this.video) {
-			this.video.assign(payload.video);
-		}
-	}
-
-	onVideoProcessingError(err: string | Error) {
-		if (typeof err === 'string') {
-			this.hasVideoProcessingError = true;
-			this.videoProcessingErrorMsg = err;
-		} else {
-			// The only cases where an actual error is emitted is on network error during polling.
-			// This does not necessarily mean an actual error during processing, so noop.
-		}
-	}
-
-	onPostRemoved() {
-		this.$router.replace({ name: 'home' });
-		showInfoGrowl(this.$gettext('Your post has been removed'));
-	}
-
-	onPostPublished() {
-		showSuccessGrowl({
-			title: this.$gettext('Huzzah!'),
-			message: this.$gettext('Your post has been published.'),
-		});
-	}
-
-	onClickFullscreen(mediaItem: MediaItem) {
-		const index = this.post.media.findIndex(i => i.id === mediaItem.id);
-		this.lightbox.show(index !== -1 ? index : null);
-	}
-
-	onVideoPlay() {
-		if (this.video) {
-			$viewPostVideo(this.video);
-		}
-	}
-
-	scrollToStickers() {
-		Scroll.to(this.$refs['sticker-scroll'], { preventDirections: ['down'] });
-	}
-
-	onDismissNotification(notification: CommunityUserNotification) {
-		arrayRemove(this.communityNotifications, i => i.id === notification.id);
-	}
+function onDismissNotification(notification: CommunityUserNotification) {
+	arrayRemove(communityNotifications.value, i => i.id === notification.id);
 }
 </script>
 
@@ -355,15 +291,15 @@ export default class AppPostPage extends Vue {
 										</AppUserCardHover>
 									</div>
 
-									<router-link :to="displayUser.url" class="-name link-unstyled">
+									<RouterLink :to="displayUser.url" class="-name link-unstyled">
 										<span>
 											<strong>{{ displayUser.display_name }}</strong>
 											<AppUserVerifiedTick :user="displayUser" />
 										</span>
-										<span class="tiny text-muted"
-											>@{{ displayUser.username }}</span
-										>
-									</router-link>
+										<span class="tiny text-muted">
+											@{{ displayUser.username }}
+										</span>
+									</RouterLink>
 
 									<div class="-controls">
 										<AppUserFollowWidget

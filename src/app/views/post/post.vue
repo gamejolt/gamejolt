@@ -16,7 +16,7 @@ import { useThemeStore } from '../../../_common/theme/theme.store';
 import { Translate } from '../../../_common/translate/translate.service';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPostPagePlaceholder from './_page-placeholder/page-placeholder.vue';
-import AppPostPage from './_page/page.vue';
+import AppPostPage from './_page/AppPostPage.vue';
 
 const PostThemeKey = 'post';
 
@@ -143,19 +143,10 @@ export default class RoutePost extends BaseRouteComponent {
 	private setPageTheme() {
 		this.themeStore.setPageTheme({ key: PostThemeKey, theme: this.theme });
 	}
-
-	onPostUpdated(post: FiresidePost) {
-		Object.assign(this.post, post);
-	}
 }
 </script>
 
 <template>
 	<AppPostPagePlaceholder v-if="!post" />
-	<AppPostPage
-		v-else
-		:post="post"
-		:community-notifications="communityNotifications"
-		@post-updated="onPostUpdated($event)"
-	/>
+	<AppPostPage v-else :post="post" :community-notifications="communityNotifications" />
 </template>
