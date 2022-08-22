@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed } from 'vue';
+import { computed, unref } from 'vue';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../utils/vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
@@ -113,9 +113,9 @@ export default class AppMediaItemPost extends Vue {
 
 	created() {
 		this.stickerTargetController = createStickerTargetController(this.mediaItem, {
-			parent: this.parentStickerTarget,
+			parent: computed(() => unref(this.parentStickerTarget)),
 			isCreator: computed(
-				() => this.stickerTargetController.parent?.isCreator.value === true
+				() => this.stickerTargetController.parent.value?.isCreator.value === true
 			),
 		});
 	}

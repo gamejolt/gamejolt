@@ -15,8 +15,11 @@ export type StickerLayerController = {
 	layerItems: ShallowRef<StickerLayerItem[]>;
 
 	isActive: Ref<boolean>;
+	isMask: Ref<boolean>;
 	isShowingDrawer: ComputedRef<boolean>;
 	isAllCreator: ComputedRef<boolean>;
+
+	preferredMask: ComputedRef<StickerLayerController>;
 
 	store: StickerStore;
 };
@@ -34,6 +37,13 @@ export function createStickerLayerController(store: StickerStore) {
 	 * automatically selected as the active layer.
 	 */
 	const isActive = ref(true);
+
+	/**
+	 * If this layer is the one that will be showing the mask and handling
+	 * sticker ghost callbacks. Used so that modals offset events by their own
+	 * scroll values instead of the rest of the document.
+	 */
+	const isMask = ref(true);
 
 	/**
 	 * If this is the layer currently showing sticker target rects.
@@ -56,6 +66,28 @@ export function createStickerLayerController(store: StickerStore) {
 			)
 	);
 
+	const preferredMask = computed(() => {
+		if (isMask.value) {
+			return c;
+		}
+
+		const myIndex = store.layers.indexOf(c);
+		if (myIndex === -1) {
+			return store.layers[0] || c;
+		}
+
+		for (let i = myIndex; myIndex > 0; --i) {
+			const layer = store.layers[i - 1];
+			if (!layer || !layer.isMask.value) {
+				continue;
+			}
+
+			return layer;
+		}
+
+		return c;
+	});
+
 	const c: StickerLayerController = {
 		scroller,
 
@@ -64,8 +96,11 @@ export function createStickerLayerController(store: StickerStore) {
 		layerItems,
 
 		isActive,
+		isMask,
 		isShowingDrawer,
 		isAllCreator,
+
+		preferredMask,
 
 		store,
 	};

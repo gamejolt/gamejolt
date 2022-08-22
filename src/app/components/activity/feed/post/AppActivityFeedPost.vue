@@ -243,7 +243,7 @@ function onPostUnpinned(item: EventItem) {
 
 <template>
 	<div ref="root" v-app-observe-dimensions="onResize" class="-container">
-		<AppStickerLayer>
+		<AppStickerLayer no-mask>
 			<AppActivityFeedPostBlocked
 				v-if="shouldBlock"
 				:username="user.username"

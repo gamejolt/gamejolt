@@ -168,8 +168,8 @@ const tooltipPosition = computed<CSSProperties | null>(() => {
 	>
 		<p>
 			<AppTranslate>
-				Complete daily quests to fill your charge orbs. Each day you miss a daily, your
-				charge goes down.
+				Complete daily quests to fill your charge orbs. Each day you miss a daily quest,
+				your charge goes down.
 			</AppTranslate>
 		</p>
 
