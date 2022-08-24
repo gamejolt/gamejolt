@@ -8,6 +8,7 @@ import {
 	ConfigService,
 } from '../../../../_common/config/config.service';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
+import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlSelect from '../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
@@ -38,14 +39,18 @@ function isBool(option: ConfigOption) {
 }
 
 function isString(option: ConfigOption) {
-	return option instanceof ConfigOptionString;
+	return option instanceof ConfigOptionString && option.validValues !== false;
 }
 
 function stringValues(option: ConfigOption): string[] {
-	if (option instanceof ConfigOptionString) {
+	if (option instanceof ConfigOptionString && option.validValues !== false) {
 		return option.validValues;
 	}
 	return [];
+}
+
+function isStringCustom(option: ConfigOption) {
+	return option instanceof ConfigOptionString && option.validValues === false;
 }
 </script>
 
@@ -71,6 +76,8 @@ function stringValues(option: ConfigOption): string[] {
 						{{ v }}
 					</option>
 				</AppFormControlSelect>
+
+				<AppFormControl v-if="isStringCustom(test)" />
 			</AppFormGroup>
 		</fieldset>
 	</AppForm>

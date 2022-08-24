@@ -1,7 +1,10 @@
 <script lang="ts">
 import { inject, ref } from 'vue';
+import { RouterLink } from 'vue-router';
+import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
+import { configFYPExperiment } from '../../../_common/config/config.service';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
@@ -12,12 +15,16 @@ import { AppActivityFeedLazy } from '../../components/lazy';
 import { illNoComments } from '../../img/ill/illustrations';
 import { RouteActivityFeedController } from './RouteHomeFeed.vue';
 
+function _feedUrl() {
+	return `/web/posts/for-you?exp-fyp=${configFYPExperiment.value}`;
+}
+
 export default {
 	...defineAppRouteOptions({
 		cache: true,
 		lazy: true,
 		resolver: ({ route }) =>
-			Api.sendRequest(ActivityFeedService.makeFeedUrl(route, '/web/posts/for-you')),
+			Api.sendRequest(ActivityFeedService.makeFeedUrl(route, _feedUrl())),
 	}),
 };
 </script>
@@ -39,7 +46,7 @@ createAppRoute({
 			{
 				type: 'EventItem',
 				name: 'fyp',
-				url: `/web/posts/for-you`,
+				url: _feedUrl(),
 				shouldShowFollow: true,
 				shouldShowDates: false,
 				itemsPerPage: payload.perPage,
@@ -48,6 +55,8 @@ createAppRoute({
 			payload.items,
 			fromCache
 		);
+
+		trackExperimentEngagement(configFYPExperiment);
 	},
 });
 </script>
@@ -64,8 +73,7 @@ createAppRoute({
 
 			<AppSpacer vertical :scale="10" />
 
-			<router-link
-				v-app-track-event="`activity:main-menu:fyp-discover`"
+			<RouterLink
 				:to="{
 					name: 'discover.communities',
 				}"
@@ -73,7 +81,7 @@ createAppRoute({
 				<AppButton icon="compass-needle" solid lg block>
 					<AppTranslate>Browse Communities</AppTranslate>
 				</AppButton>
-			</router-link>
+			</RouterLink>
 		</div>
 		<AppActivityFeedLazy v-else :feed="feed" show-ads />
 	</div>
