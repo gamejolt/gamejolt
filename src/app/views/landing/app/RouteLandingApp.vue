@@ -151,7 +151,7 @@ async function _getDownloadUrl(platform: string, arch: string) {
 
 <template>
 	<div class="route-landing-app">
-		<AppBackground :background="headerBackground" scroll>
+		<AppBackground :background="headerBackground" scroll-direction="right">
 			<section class="-header theme-dark">
 				<div class="-header-darken" />
 
@@ -266,7 +266,10 @@ async function _getDownloadUrl(platform: string, arch: string) {
 									overflow: 'hidden',
 								}"
 							>
-								<AppBackground :background="laptopBackground" scroll>
+								<AppBackground
+									:background="laptopBackground"
+									scroll-direction="right"
+								>
 									<AppAspectRatio :ratio="bean2Width / bean2Height" />
 								</AppBackground>
 							</div>
@@ -329,7 +332,10 @@ async function _getDownloadUrl(platform: string, arch: string) {
 									overflow: 'hidden',
 								}"
 							>
-								<AppBackground :background="mobileBackground" scroll>
+								<AppBackground
+									:background="mobileBackground"
+									scroll-direction="right"
+								>
 									<AppAspectRatio :ratio="bean1Width / bean1Height" />
 								</AppBackground>
 							</div>

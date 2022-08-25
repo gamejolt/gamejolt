@@ -24,17 +24,11 @@ const props = defineProps({
 		default: 0.05,
 	},
 	/**
-	 * Will scroll the background infinitely.
+	 * Will scroll the background infinitely in the chosen direction.
 	 */
-	scroll: {
-		type: Boolean,
-	},
 	scrollDirection: {
-		type: String as PropType<'horizontal' | 'vertical'>,
-		default: 'horizontal',
-	},
-	scrollReverse: {
-		type: Boolean,
+		type: String as PropType<'left' | 'up' | 'right' | 'down'>,
+		default: undefined,
 	},
 	/**
 	 * Removes the top/bottom gradients when {@link darken} is true.
@@ -44,16 +38,7 @@ const props = defineProps({
 	},
 });
 
-const {
-	background,
-	darken,
-	bleed,
-	backgroundStyle,
-	fadeOpacity,
-	scroll,
-	scrollDirection,
-	scrollReverse,
-} = toRefs(props);
+const { background, darken, bleed, backgroundStyle, fadeOpacity, scrollDirection } = toRefs(props);
 
 const mediaItem = computed(() => background?.value?.media_item);
 const hasMedia = computed(() => !!mediaItem.value);
@@ -81,26 +66,6 @@ if (import.meta.env.SSR) {
 		{ immediate: true }
 	);
 }
-
-const scrollClasses = computed(() => {
-	if (!scroll.value) {
-		return [];
-	}
-
-	const result: string[] = [];
-
-	if (scrollDirection.value === 'horizontal') {
-		result.push('-scroll-h');
-	} else {
-		result.push('-scroll-v');
-	}
-
-	if (scrollReverse.value) {
-		result.push('-scroll-reverse');
-	}
-
-	return result;
-});
 </script>
 
 <template>
@@ -117,7 +82,14 @@ const scrollClasses = computed(() => {
 					<div
 						v-if="loadedBackground"
 						:key="loadedBackground.id"
-						:class="['-background-img', '-stretch', 'anim-fade-in', ...scrollClasses]"
+						:class="[
+							'-stretch',
+							'anim-fade-in',
+							{
+								'-scroll': scrollDirection,
+								[`-scroll-${scrollDirection}`]: scrollDirection,
+							},
+						]"
 						:style="{
 							backgroundImage: loadedBackground.cssBackgroundImage,
 							backgroundRepeat: loadedBackground.cssBackgroundRepeat,
@@ -174,21 +146,22 @@ const scrollClasses = computed(() => {
 	right: 0
 	bottom: 0
 
-.-background-img
-	&.-scroll-v
-	&.-scroll-h
+.-scroll
 		animation-timing-function: linear !important
 		animation-duration: 20s
 		animation-iteration-count: infinite
 
-	&.-scroll-h
-		animation-name: anim-scroll-h
+.-scroll-left
+.-scroll-right
+	animation-name: anim-scroll-h
 
-	&.-scroll-v
-		animation-name: anim-scroll-v
+.-scroll-up
+.-scroll-down
+	animation-name: anim-scroll-v
 
-	&.-scroll-reverse
-		animation-direction: reverse
+.-scroll-left
+.-scroll-down
+	animation-direction: reverse
 
 .-fade-top
 .-fade-bottom

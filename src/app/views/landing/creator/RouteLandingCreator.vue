@@ -275,13 +275,7 @@ function getRandomStickers(count = 3) {
 			</div>
 		</div>
 
-		<AppBackground
-			class="-why"
-			:background="whyBackground"
-			darken
-			scroll
-			scroll-direction="vertical"
-		>
+		<AppBackground class="-why" :background="whyBackground" darken scroll-direction="up">
 			<div class="-why-content -shadow">
 				<div class="-why-header -sub-header-text">Why become a Game Jolt Creator?</div>
 
