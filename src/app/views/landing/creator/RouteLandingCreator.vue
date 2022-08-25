@@ -66,9 +66,9 @@ import {
 	illPointyThing,
 	illStreamingJelly,
 } from '../../../img/ill/illustrations';
+import { creatorApplyDesktop, creatorApplySm, creatorApplyXs } from './_backgrounds/backgrounds';
 
 const postImages = import.meta.globEager('./_posts/*.jpg');
-
 const postImageKeys = Object.keys(postImages).sort(() => Math.random() - 0.5);
 
 let _routeDestroyed = false;
@@ -81,6 +81,16 @@ const whyBackground = ref<Background>();
 
 const headerPost = computed(() => getPostFromIndex(postIndex.value));
 const postsCount = computed(() => postImageKeys.length);
+
+const applyBackground = computed(() => {
+	if (Screen.isXs) {
+		return creatorApplyXs;
+	} else if (Screen.isSm) {
+		return creatorApplySm;
+	}
+
+	return creatorApplyDesktop;
+});
 
 const displayStickers = computed(() => {
 	// Watch the post index here so our displayStickers recalculate anytime
@@ -217,7 +227,7 @@ function getRandomStickers(count = 3) {
 				</div>
 
 				<div class="-header-post-container">
-					<AppAspectRatio :ratio="488 / 534" show-overflow>
+					<AppAspectRatio :ratio="488 / 570" show-overflow>
 						<div style="position: relative; width: 100%; height: 100%">
 							<transition name="fade" appear>
 								<div
@@ -464,7 +474,14 @@ function getRandomStickers(count = 3) {
 		</div>
 
 		<!-- TODO(creator-page) background images -->
-		<div class="-apply">
+		<div
+			class="-apply"
+			:style="{
+				backgroundImage: `url(${applyBackground.src})`,
+				backgroundPosition: 'center',
+				backgroundRepeat: 'no-repeat',
+			}"
+		>
 			<div class="-apply-content -shadow">
 				<div class="-main-header-text -apply-header">Apply now for limited spots</div>
 
@@ -569,7 +586,7 @@ function getRandomStickers(count = 3) {
 	filter: drop-shadow(0px 4px 12px rgba($black, 0.25))
 
 .-bg-pink
-	Background-color: $gj-pink
+	background-color: $gj-pink
 	color: $gj-green
 
 .-bg-black
@@ -660,6 +677,9 @@ function getRandomStickers(count = 3) {
 	justify-content: space-between
 	align-items: flex-start
 
+	@media $media-mobile
+		align-items: center
+
 	> *
 		z-index: 1
 
@@ -669,6 +689,9 @@ function getRandomStickers(count = 3) {
 	width: 100%
 	text-align: center
 	flex: 1 1 384px
+
+	@media $media-md-up
+		padding-bottom: 32px
 
 	@media $media-mobile
 		flex: none
@@ -685,9 +708,13 @@ function getRandomStickers(count = 3) {
 .-header-post-container
 	flex: 1 1 488px
 
+	@media $media-md-up
+		align-self: flex-end
+
 	@media $media-mobile
 		flex: none
 		padding: 0 40px
+		width: 100%
 
 .-header-post
 	opacity: 1
@@ -698,14 +725,20 @@ function getRandomStickers(count = 3) {
 	z-index: 3
 
 .-header-sticker
+	--sticker-max: 128px
+	--sticker-size: unquote('calc(max(64px, min(20vw, var(--sticker-max))))')
+	--sticker-offset: unquote('calc(var(--sticker-size) * -0.5)')
 	position: absolute
-	width: 128px
-	height: 128px
-	margin-left: -64px
-	margin-top: -64px
+	width: var(--sticker-size)
+	height: @width
+	margin-left: var(--sticker-offset)
+	margin-top: @margin-left
 	animation: anim-sticker 1s $strong-ease-out
 	animation-fill-mode: both
 	opacity: 1
+
+	@media $media-mobile
+		--sticker-max: 96px
 
 	&.-sticker-1
 		left: 100%
