@@ -285,8 +285,8 @@ function getRandomStickers(count = 3) {
 					<div class="-sub-header-text -how-text-header">How does it work?</div>
 
 					<div>
-						Bring your audience on adventures, earn rewards and start making 💰 REAL
-						MONEY 💰
+						Bring your audience on adventures, earn rewards and start making
+						<span class="-nowrap">💰 REAL MONEY 💰</span>
 					</div>
 				</div>
 			</div>
@@ -298,7 +298,8 @@ function getRandomStickers(count = 3) {
 
 				<div>
 					Stop fighting algorithms and start building lasting relationships with an
-					audience who actually sees 👀 and engages ✋ with what you share!
+					audience who actually <span class="-nowrap">sees 👀</span> and
+					<span class="-nowrap">engages ✋</span> with what you share!
 				</div>
 
 				<AppLinkExternal :href="applyUrl">
@@ -407,7 +408,7 @@ function getRandomStickers(count = 3) {
 
 					<div class="-where-trail">
 						<div class="-where-inner-header -tiny-header-text">
-							Engagement should be ✨FUN✨
+							Engagement should be <span class="-nowrap">✨FUN✨</span>
 						</div>
 
 						<div>
@@ -421,7 +422,7 @@ function getRandomStickers(count = 3) {
 
 		<div class="-who">
 			<div class="-who-content">
-				<div class="-who-header -sub-header-text">MEET OUR CREATORS</div>
+				<div class="-who-header -sub-header-text">MEET SOME CREATORS</div>
 
 				<div class="-grid-center">
 					<AppScrollScroller class="-who-scroller" horizontal>
@@ -1127,4 +1128,7 @@ function getRandomStickers(count = 3) {
 	.-col-mobile-reverse
 		display: flex
 		flex-direction: column-reverse
+
+.-nowrap
+	white-space: nowrap
 </style>
