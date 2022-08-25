@@ -1,10 +1,12 @@
 import illChargeOrbEmptyPath from './charge-orb-empty.png';
+import illCreatorInfographicPath from './creator-infographic.png';
 import illEndOfFeedPath from './end-of-feed.png';
 import illMaintenancePath from './maintenance.png';
 import illMobileKikkersteinPath from './mobile-kikkerstein.png';
 import illNoChatPath from './no-chat.png';
 import illNoCommentsSmallPath from './no-comments-small.png';
 import illNoCommentsPath from './no-comments.png';
+import illPointyThingPath from './pointy-thing.png';
 import illStreamingJellyPath from './streaming-jelly.png';
 import illTimeOutPath from './time-out.png';
 
@@ -73,4 +75,16 @@ export const illChargeOrbEmpty: IllustrationAsset = {
 	path: illChargeOrbEmptyPath,
 	width: 500,
 	height: 500,
+};
+
+export const illCreatorInfographic: IllustrationAsset = {
+	path: illCreatorInfographicPath,
+	width: 1600,
+	height: 1000,
+};
+
+export const illPointyThing: IllustrationAsset = {
+	path: illPointyThingPath,
+	width: 383,
+	height: 278,
 };

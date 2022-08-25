@@ -29,9 +29,31 @@ const props = defineProps({
 	scroll: {
 		type: Boolean,
 	},
+	scrollDirection: {
+		type: String as PropType<'horizontal' | 'vertical'>,
+		default: 'horizontal',
+	},
+	scrollReverse: {
+		type: Boolean,
+	},
+	/**
+	 * Removes the top/bottom gradients when {@link darken} is true.
+	 */
+	noEdges: {
+		type: Boolean,
+	},
 });
 
-const { background, darken, bleed, backgroundStyle, fadeOpacity } = toRefs(props);
+const {
+	background,
+	darken,
+	bleed,
+	backgroundStyle,
+	fadeOpacity,
+	scroll,
+	scrollDirection,
+	scrollReverse,
+} = toRefs(props);
 
 const mediaItem = computed(() => background?.value?.media_item);
 const hasMedia = computed(() => !!mediaItem.value);
@@ -59,6 +81,26 @@ if (import.meta.env.SSR) {
 		{ immediate: true }
 	);
 }
+
+const scrollClasses = computed(() => {
+	if (!scroll.value) {
+		return [];
+	}
+
+	const result: string[] = [];
+
+	if (scrollDirection.value === 'horizontal') {
+		result.push('-scroll-h');
+	} else {
+		result.push('-scroll-v');
+	}
+
+	if (scrollReverse.value) {
+		result.push('-scroll-reverse');
+	}
+
+	return result;
+});
 </script>
 
 <template>
@@ -75,12 +117,7 @@ if (import.meta.env.SSR) {
 					<div
 						v-if="loadedBackground"
 						:key="loadedBackground.id"
-						:class="[
-							'-background-img',
-							'-stretch',
-							'anim-fade-in',
-							{ '-scroll': scroll },
-						]"
+						:class="['-background-img', '-stretch', 'anim-fade-in', ...scrollClasses]"
 						:style="{
 							backgroundImage: loadedBackground.cssBackgroundImage,
 							backgroundRepeat: loadedBackground.cssBackgroundRepeat,
@@ -91,14 +128,14 @@ if (import.meta.env.SSR) {
 				</Transition>
 
 				<template v-if="darken">
-					<div class="-fade-top" />
+					<div v-if="!noEdges" class="-fade-top" />
 					<div
 						class="-stretch"
 						:style="{
 							backgroundColor: `rgba(0, 0, 0, ${fadeOpacity})`,
 						}"
 					/>
-					<div class="-fade-bottom" />
+					<div v-if="!noEdges" class="-fade-bottom" />
 				</template>
 			</div>
 		</AppMediaItemBackdrop>
@@ -137,11 +174,21 @@ if (import.meta.env.SSR) {
 	right: 0
 	bottom: 0
 
-.-background-img.-scroll
-	animation-name: anim-scroll
-	animation-timing-function: linear !important
-	animation-duration: 20s
-	animation-iteration-count: infinite
+.-background-img
+	&.-scroll-v
+	&.-scroll-h
+		animation-timing-function: linear !important
+		animation-duration: 20s
+		animation-iteration-count: infinite
+
+	&.-scroll-h
+		animation-name: anim-scroll-h
+
+	&.-scroll-v
+		animation-name: anim-scroll-v
+
+	&.-scroll-reverse
+		animation-direction: reverse
 
 .-fade-top
 .-fade-bottom
@@ -168,10 +215,17 @@ if (import.meta.env.SSR) {
 	width: 100%
 	height: 100%
 
-@keyframes anim-scroll
+@keyframes anim-scroll-h
 	0%
 		background-position: 0 0
 
 	100%
 		background-position: 800px 0
+
+@keyframes anim-scroll-v
+	0%
+		background-position: 0 0
+
+	100%
+		background-position: 0 -800px
 </style>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { AppPostCardAspectRatio } from './AppPostCard.vue';
+import { AppPostCardAspectRatio } from './AppPostCardBase.vue';
 </script>
 
 <template>
