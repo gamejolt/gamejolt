@@ -221,11 +221,13 @@ function getRandomStickers(count = 3) {
 
 			<div class="-page-header-content -col-mobile">
 				<div class="-header-lead -shadow">
+					<div v-if="Screen.isDesktop" class="-header-lead-spacer" />
+
 					<div class="-header-lead-text -main-header-text">
 						Become a Game Jolt Creator
 					</div>
 
-					<AppLinkExternal :href="applyUrl">
+					<AppLinkExternal class="-header-lead-spacer" :href="applyUrl">
 						<AppButton primary solid block overlay lg @click="onClickApply('header')">
 							💰 Apply for private beta 💰
 						</AppButton>
@@ -635,7 +637,7 @@ function getRandomStickers(count = 3) {
 .-page-header
 	@extends .-bg-pink
 	@extends .-grid-center
-	padding: 97px 64px 0
+	padding: 32px 64px 0
 	position: relative
 	overflow: hidden
 
@@ -695,12 +697,13 @@ function getRandomStickers(count = 3) {
 
 .-header-lead
 	@extends .-col
-	align-items: center
-	width: 100%
 	text-align: center
+	width: 100%
 	flex: 1 1 384px
+	gap: 40px
 
 	@media $media-md-up
+		height: 100%
 		padding-bottom: 32px
 
 	@media $media-mobile
@@ -708,11 +711,14 @@ function getRandomStickers(count = 3) {
 		max-width: 450px
 		align-self: center
 
-.-header-lead-text
-	margin-bottom: 40px
-
 	@media $media-xs
-		margin-bottom: 32px
+		gap: 32px
+
+.-header-lead-spacer
+	flex: 1
+
+.-header-lead-text
+	@media $media-xs
 		max-width: 325px
 
 .-header-post-container
