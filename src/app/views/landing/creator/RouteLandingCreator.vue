@@ -1,6 +1,7 @@
 <script lang="ts">
-const boltWidth = computed(() => (Screen.isDesktop ? 90 : 81));
-const boltHeight = computed(() => boltWidth.value / (104 / 154));
+const boltHeight = computed(() => (Screen.isDesktop ? 182 : 164));
+const boltWidth = computed(() => (104 / 154) * boltHeight.value);
+
 const boltPath = `M103.51 7.56474L36.9422 0.148525L0.589619 87.1413L36.0049 87.2411L15.2471 153.757L99.5527 61.591L67.4268 54.046L103.51 7.56474Z`;
 const boltGap = 24;
 
@@ -189,8 +190,6 @@ function getRandomStickers(count = 3) {
 			<div
 				class="-bolts"
 				:style="{
-					top: Screen.isDesktop ? undefined : '15%',
-					bottom: Screen.isDesktop ? '15%' : undefined,
 					gap: boltGap + 'px',
 				}"
 			>
@@ -656,6 +655,15 @@ function getRandomStickers(count = 3) {
 	left: -24px
 	right: -24px
 	z-index: 0
+
+	@media $media-md-up
+		bottom: 14%
+
+	@media $media-sm
+		top: 35%
+
+	@media $media-xs
+		top: 40%
 
 .-bolt
 	transform: rotate(0deg)
