@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import { computed, PropType, toRefs } from 'vue';
+import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
+
 const bean1Path = `M474.117 0.00164546C440.378 0.230874 399.077 24.3772 395.372 53.2712C390.515 91.1562 434.151 94.9785 447.427 103.513C460.704 112.048 475.112 125.826 498.74 118.705C534.693 107.868 535.838 26.2776 499.687 5.85515C492.417 1.74837 483.563 -0.0625347 474.117 0.00164546ZM99.2944 72.4801C89.5244 72.5766 78.989 74.286 67.0971 78.1071C-71.1245 122.521 10.467 410.786 254.288 445.08C410.825 467.097 605.275 360.162 590.111 235.181C576.624 124.023 432.622 141.706 327.251 137.279C190.101 131.516 159 71.8906 99.2944 72.4801Z`;
 const bean1Width = 591;
 const bean1Height = 448;
@@ -15,26 +18,48 @@ const bean2ForegroundPath = `M7.03416 0.0752779C7.03407 110 7.03412 180 7.03406 
 const bean2ForegroundWidth = 598;
 const bean2ForegroundHeight = 448;
 
-defineProps({
+const props = defineProps({
 	variant: {
-		type: Number,
+		type: Number as PropType<1 | 2>,
 		default: 1,
 	},
 	flip: {
 		type: Boolean,
 	},
+	/**
+	 * Removes the `max-width` and `max-height` from the default slot child.
+	 */
+	noClamp: {
+		type: Boolean,
+	},
+	bgColor: {
+		type: String,
+		default: 'var(--theme-bg-offset)',
+	},
+});
+
+const { variant, flip, noClamp } = toRefs(props);
+
+const chosenBeanWidth = computed(() => {
+	const sizes = [bean1Width, bean2Width];
+	return sizes[variant.value - 1];
+});
+
+const chosenBeanHeight = computed(() => {
+	const sizes = [bean1Height, bean2Height];
+	return sizes[variant.value - 1];
 });
 </script>
 
 <template>
-	<div class="-content-col-img">
+	<div class="bean">
 		<!--
 		We have to scale the path data to the size of the viewport.
 		We do that through the transform.
 		http://meyerweb.com/eric/thoughts/2017/02/24/scaling-svg-clipping-paths-for-css-use/
 		-->
 		<template v-if="variant === 1">
-			<svg class="-svg" height="0" width="0" :viewBox="`0 0 ${bean1Width} ${bean1Height}`">
+			<svg height="0" width="0" :viewBox="`0 0 ${bean1Width} ${bean1Height}`">
 				<defs>
 					<clipPath
 						id="-bean-1"
@@ -47,7 +72,6 @@ defineProps({
 			</svg>
 
 			<svg
-				class="-svg"
 				height="0"
 				width="0"
 				:viewBox="`0 0 ${bean1ForegroundWidth} ${bean1ForegroundHeight}`"
@@ -66,7 +90,7 @@ defineProps({
 			</svg>
 		</template>
 		<template v-else-if="variant === 2">
-			<svg class="-svg" height="0" width="0" :viewBox="`0 0 ${bean2Width} ${bean2Height}`">
+			<svg height="0" width="0" :viewBox="`0 0 ${bean2Width} ${bean2Height}`">
 				<defs>
 					<clipPath
 						id="-bean-2"
@@ -79,7 +103,6 @@ defineProps({
 			</svg>
 
 			<svg
-				class="-svg"
 				height="0"
 				width="0"
 				:viewBox="`0 0 ${bean2ForegroundWidth} ${bean2ForegroundHeight}`"
@@ -99,33 +122,44 @@ defineProps({
 		</template>
 
 		<div
+			class="-bg-container"
 			:style="{
-				'clip-path': `url(#-bean-${variant})`,
-				overflow: 'hidden',
-				backgroundColor: 'var(--theme-bg-offset)',
-				height: '100%',
+				clipPath: `url(#-bean-${variant})`,
+				backgroundColor: bgColor,
 				transform: flip ? 'scale(-1, 1)' : undefined,
 			}"
-		/>
+		>
+			<AppAspectRatio :ratio="chosenBeanWidth / chosenBeanHeight">
+				<div class="-bg-stretch">
+					<slot name="background" />
+				</div>
+			</AppAspectRatio>
+		</div>
+
 		<div
 			class="-bean-img-wrapper"
+			:class="{
+				'-clamp-child': !noClamp,
+			}"
 			:style="{
-				'clip-path': `url(#-bean-${variant}-fg)`,
-				overflow: 'hidden',
+				clipPath: `url(#-bean-${variant}-fg)`,
 			}"
 		>
-			<div class="-bean-img-wrapper">
-				<slot />
-			</div>
+			<slot />
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-.-content-col-img
+.bean
 	width: 100%
-	height: 100%
 	position: relative
+
+	svg
+		position: absolute
+
+.-bg-container
+	overflow: hidden
 
 .-bean-img-wrapper
 	position: absolute
@@ -134,14 +168,19 @@ defineProps({
 	bottom: 0
 	left: 0
 	z-index: 1
+	overflow: hidden
 	display: flex
 	justify-content: center
 	align-items: center
 
-	::v-deep(> *)
-		max-width: 100%
-		max-height: 100%
+	&.-clamp-child
+		::v-deep(> *)
+			max-width: 100%
+			max-height: 100%
 
-.-svg
-	position: absolute
+.-bg-stretch
+	&
+	::v-deep(> *)
+		width: 100%
+		height: 100%
 </style>

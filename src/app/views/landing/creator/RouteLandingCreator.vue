@@ -345,7 +345,7 @@ function getRandomStickers(count = 3) {
 			<div class="-where-content">
 				<div class="-where-inner -col-mobile">
 					<div class="-where-lead">
-						<AppBean class="-bean" :variant="1" flip>
+						<AppBean :variant="1" flip>
 							<img
 								:style="{
 									width: Screen.isDesktop ? '140px' : '124px',
@@ -370,7 +370,7 @@ function getRandomStickers(count = 3) {
 
 				<div class="-where-inner -col-mobile">
 					<div class="-where-lead">
-						<AppBean class="-bean" :variant="2">
+						<AppBean :variant="2">
 							<img
 								:style="{
 									width: Screen.isDesktop ? '248px' : '220px',
@@ -392,7 +392,7 @@ function getRandomStickers(count = 3) {
 				</div>
 				<div class="-where-inner -col-mobile">
 					<div class="-where-lead">
-						<AppBean class="-bean" :variant="1">
+						<AppBean :variant="1">
 							<img
 								:style="{
 									width: Screen.isDesktop ? '240px' : '213px',
@@ -929,14 +929,6 @@ function getRandomStickers(count = 3) {
 		max-width: 250px
 		width: 100%
 		align-self: center
-
-.-bean
-	width: 282px
-	height: 214px
-
-	@media $media-mobile
-		width: 250px
-		height: 189px
 
 .-where-trail
 	flex: 1 1 430px
