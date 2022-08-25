@@ -42,6 +42,7 @@ export default {
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
+import { trackCreatorApply } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppBackground from '../../../../_common/background/AppBackground.vue';
@@ -53,6 +54,7 @@ import AppPostCardPlaceholder from '../../../../_common/fireside/post/card/AppPo
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
 import { ImgHelper } from '../../../../_common/img/helper/helper-service';
+import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
@@ -73,6 +75,8 @@ const postImageKeys = Object.keys(postImages).sort(() => Math.random() - 0.5);
 
 let _routeDestroyed = false;
 let _hasPostTimer = false;
+
+const applyUrl = ref<string>();
 
 const postIndex = ref(0);
 
@@ -101,7 +105,6 @@ const displayStickers = computed(() => {
 });
 
 const { isBootstrapped } = createAppRoute({
-	// TODO(creator-page) route title
 	routeTitle: 'Creator',
 	onInit() {
 		if (!_hasPostTimer) {
@@ -111,9 +114,10 @@ const { isBootstrapped } = createAppRoute({
 	},
 	onResolved({ payload }) {
 		const posts = FiresidePost.populate(payload.posts);
-		creatorPosts.value = posts.sort(() => Math.random() - 0.5);
 
+		creatorPosts.value = posts.sort(() => Math.random() - 0.5);
 		whyBackground.value = payload.background ? new Background(payload.background) : undefined;
+		applyUrl.value = payload.applyUrl;
 	},
 	onDestroyed() {
 		_routeDestroyed = true;
@@ -163,7 +167,7 @@ function getPostFromIndex(index: number) {
 }
 
 function onClickApply(section: 'header' | 'why' | 'apply') {
-	// TODO(creator-page) application form, track click location
+	trackCreatorApply({ creator_landing_section: section });
 }
 
 function getRandomStickers(count = 3) {
@@ -221,9 +225,11 @@ function getRandomStickers(count = 3) {
 						Become a Game Jolt Creator
 					</div>
 
-					<AppButton primary solid block overlay lg @click="onClickApply('header')">
-						💰 Apply for private beta 💰
-					</AppButton>
+					<AppLinkExternal :href="applyUrl">
+						<AppButton primary solid block overlay lg @click="onClickApply('header')">
+							💰 Apply for private beta 💰
+						</AppButton>
+					</AppLinkExternal>
 				</div>
 
 				<div class="-header-post-container">
@@ -295,13 +301,15 @@ function getRandomStickers(count = 3) {
 					audience who actually sees 👀 and engages ✋ with what you share!
 				</div>
 
-				<AppButton primary solid block overlay lg @click="onClickApply('why')">
-					$$$
-					<AppSpacer horizontal :scale="3" style="display: inline-block" />
-					APPLY
-					<AppSpacer horizontal :scale="3" style="display: inline-block" />
-					$$$
-				</AppButton>
+				<AppLinkExternal :href="applyUrl">
+					<AppButton primary solid block overlay lg @click="onClickApply('why')">
+						$$$
+						<AppSpacer horizontal :scale="3" style="display: inline-block" />
+						APPLY
+						<AppSpacer horizontal :scale="3" style="display: inline-block" />
+						$$$
+					</AppButton>
+				</AppLinkExternal>
 			</div>
 		</AppBackground>
 
@@ -473,7 +481,6 @@ function getRandomStickers(count = 3) {
 			</div>
 		</div>
 
-		<!-- TODO(creator-page) background images -->
 		<div
 			class="-apply"
 			:style="{
@@ -485,17 +492,19 @@ function getRandomStickers(count = 3) {
 			<div class="-apply-content -shadow">
 				<div class="-main-header-text -apply-header">Apply now for limited spots</div>
 
-				<AppButton
-					:style="{ maxWidth: '384px' }"
-					primary
-					solid
-					block
-					overlay
-					lg
-					@click="onClickApply('apply')"
-				>
-					💰 Apply for private beta 💰
-				</AppButton>
+				<AppLinkExternal :href="applyUrl">
+					<AppButton
+						:style="{ maxWidth: '384px' }"
+						primary
+						solid
+						block
+						overlay
+						lg
+						@click="onClickApply('apply')"
+					>
+						💰 Apply for private beta 💰
+					</AppButton>
+				</AppLinkExternal>
 			</div>
 		</div>
 
