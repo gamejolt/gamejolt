@@ -67,8 +67,9 @@ import {
 	illStreamingJelly,
 } from '../../../img/ill/illustrations';
 
-// TODO(creator-page) check suffix
-const postImages = import.meta.globEager('./_posts/*.png');
+const postImages = import.meta.globEager('./_posts/*.jpg');
+
+const postImageKeys = Object.keys(postImages).sort(() => Math.random() - 0.5);
 
 let _routeDestroyed = false;
 let _hasPostTimer = false;
@@ -79,7 +80,7 @@ const creatorPosts = ref<FiresidePost[]>([]);
 const whyBackground = ref<Background>();
 
 const headerPost = computed(() => getPostFromIndex(postIndex.value));
-const postsCount = computed(() => Object.keys(postImages).length);
+const postsCount = computed(() => postImageKeys.length);
 
 const displayStickers = computed(() => {
 	// Watch the post index here so our displayStickers recalculate anytime
@@ -148,7 +149,7 @@ async function setHeaderPostTimer(initial = false) {
 }
 
 function getPostFromIndex(index: number) {
-	return postImages[Object.keys(postImages)[index]].default;
+	return postImages[postImageKeys[index]].default;
 }
 
 function onClickApply(section: 'header' | 'why' | 'apply') {
