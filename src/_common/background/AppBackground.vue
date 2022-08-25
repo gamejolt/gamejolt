@@ -24,14 +24,21 @@ const props = defineProps({
 		default: 0.05,
 	},
 	/**
-	 * Will scroll the background infinitely.
+	 * Will scroll the background infinitely in the chosen direction.
 	 */
-	scroll: {
+	scrollDirection: {
+		type: String as PropType<'left' | 'up' | 'right' | 'down'>,
+		default: undefined,
+	},
+	/**
+	 * Removes the top/bottom gradients when {@link darken} is true.
+	 */
+	noEdges: {
 		type: Boolean,
 	},
 });
 
-const { background, darken, bleed, backgroundStyle, fadeOpacity } = toRefs(props);
+const { background, darken, bleed, backgroundStyle, fadeOpacity, scrollDirection } = toRefs(props);
 
 const mediaItem = computed(() => background?.value?.media_item);
 const hasMedia = computed(() => !!mediaItem.value);
@@ -76,10 +83,12 @@ if (import.meta.env.SSR) {
 						v-if="loadedBackground"
 						:key="loadedBackground.id"
 						:class="[
-							'-background-img',
 							'-stretch',
 							'anim-fade-in',
-							{ '-scroll': scroll },
+							{
+								'-scroll': scrollDirection,
+								[`-scroll-${scrollDirection}`]: scrollDirection,
+							},
 						]"
 						:style="{
 							backgroundImage: loadedBackground.cssBackgroundImage,
@@ -91,14 +100,14 @@ if (import.meta.env.SSR) {
 				</Transition>
 
 				<template v-if="darken">
-					<div class="-fade-top" />
+					<div v-if="!noEdges" class="-fade-top" />
 					<div
 						class="-stretch"
 						:style="{
 							backgroundColor: `rgba(0, 0, 0, ${fadeOpacity})`,
 						}"
 					/>
-					<div class="-fade-bottom" />
+					<div v-if="!noEdges" class="-fade-bottom" />
 				</template>
 			</div>
 		</AppMediaItemBackdrop>
@@ -137,11 +146,22 @@ if (import.meta.env.SSR) {
 	right: 0
 	bottom: 0
 
-.-background-img.-scroll
-	animation-name: anim-scroll
-	animation-timing-function: linear !important
-	animation-duration: 20s
-	animation-iteration-count: infinite
+.-scroll
+		animation-timing-function: linear !important
+		animation-duration: 20s
+		animation-iteration-count: infinite
+
+.-scroll-left
+.-scroll-right
+	animation-name: anim-scroll-h
+
+.-scroll-up
+.-scroll-down
+	animation-name: anim-scroll-v
+
+.-scroll-left
+.-scroll-down
+	animation-direction: reverse
 
 .-fade-top
 .-fade-bottom
@@ -168,10 +188,17 @@ if (import.meta.env.SSR) {
 	width: 100%
 	height: 100%
 
-@keyframes anim-scroll
+@keyframes anim-scroll-h
 	0%
 		background-position: 0 0
 
 	100%
 		background-position: 800px 0
+
+@keyframes anim-scroll-v
+	0%
+		background-position: 0 0
+
+	100%
+		background-position: 0 -800px
 </style>

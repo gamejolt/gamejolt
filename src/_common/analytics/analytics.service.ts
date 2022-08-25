@@ -444,6 +444,10 @@ export function trackBannerClick(params: { type: BannerType; label?: string }) {
 	_trackEvent('banner_click', params);
 }
 
+export function trackCreatorApply(params: { creator_landing_section: string }) {
+	_trackEvent('creator_apply', params);
+}
+
 /**
  * @deprecated This is left here so that old code doesn't break.
  */

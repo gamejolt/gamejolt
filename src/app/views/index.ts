@@ -9,6 +9,7 @@ import { routeFiresideRedirect } from './fireside/redirect.route';
 import { routeForums } from './forums/forums.route';
 import { routeHome } from './home/home.route';
 import { routeIntent } from './intent/intent.route';
+import { routeLandingCreator } from './landing/creator/creator.route';
 import { routeLanding } from './landing/landing.route';
 import { routeLegal } from './legal/legal.route';
 import { routeLibrary } from './library/library.route';
@@ -47,6 +48,7 @@ const routes = [
 	routeFiresideRedirect,
 	routeRealmsView,
 	routeQuests,
+	routeLandingCreator,
 ];
 
 export const router = initRouter(routes);
