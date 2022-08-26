@@ -1,10 +1,12 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
+import { arrayShuffle } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { Realm } from '../../../../_common/realm/realm-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
@@ -14,7 +16,6 @@ import { FeaturedItem } from '../../../components/featured-item/featured-item.mo
 import socialImage from '../../../img/social/social-share-header.png';
 import AppHomeDefault from './AppHomeDefault.vue';
 import AppHomeSlider from './AppHomeSlider.vue';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -34,6 +35,7 @@ const featuredCommunities = ref<Community[]>([]);
 const featuredFireside = ref<Fireside>();
 const featuredRealms = ref<Realm[]>([]);
 const heroPosts = ref<FiresidePost[]>([]);
+const creatorPosts = ref<FiresidePost[]>([]);
 
 const { isBootstrapped } = createAppRoute({
 	routeTitle: computed(() => (user.value ? $gettext(`Explore`) : null)),
@@ -77,6 +79,10 @@ const { isBootstrapped } = createAppRoute({
 		heroPosts.value = FiresidePost.populate<FiresidePost>(payload.heroPosts).filter(
 			i => i.hasMedia || i.hasVideo
 		);
+
+		creatorPosts.value = payload.creatorPosts
+			? arrayShuffle(FiresidePost.populate(payload.creatorPosts))
+			: [];
 	},
 });
 </script>
@@ -92,6 +98,7 @@ const { isBootstrapped } = createAppRoute({
 		:featured-communities="featuredCommunities"
 		:featured-fireside="featuredFireside"
 		:featured-realms="featuredRealms"
+		:creator-posts="creatorPosts"
 	/>
 	<AppHomeSlider v-else :posts="heroPosts" />
 </template>

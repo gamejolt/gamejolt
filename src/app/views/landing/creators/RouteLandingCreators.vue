@@ -42,7 +42,7 @@ export default {
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { RouterLink } from 'vue-router';
+import { arrayShuffle } from '../../../../utils/array';
 import { trackCreatorApply } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
@@ -50,19 +50,16 @@ import AppBackground from '../../../../_common/background/AppBackground.vue';
 import { Background } from '../../../../_common/background/background.model';
 import AppBean from '../../../../_common/bean/AppBean.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import AppPostCardBase from '../../../../_common/fireside/post/card/AppPostCardBase.vue';
-import AppPostCardPlaceholder from '../../../../_common/fireside/post/card/AppPostCardPlaceholder.vue';
+import AppCreatorsList from '../../../../_common/creator/AppCreatorsList.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
 import { ImgHelper } from '../../../../_common/img/helper/helper-service';
 import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { DefaultTheme } from '../../../../_common/theme/theme.model';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import {
 	illCreatorInfographic,
 	illMobileKikkerstein,
@@ -72,7 +69,7 @@ import {
 import { creatorApplyDesktop, creatorApplySm, creatorApplyXs } from './_backgrounds/backgrounds';
 
 const postImages = import.meta.globEager('./_posts/*.jpg');
-const postImageKeys = Object.keys(postImages).sort(() => Math.random() - 0.5);
+const postImageKeys = arrayShuffle(Object.keys(postImages));
 
 let _routeDestroyed = false;
 let _hasPostTimer = false;
@@ -106,7 +103,7 @@ const displayStickers = computed(() => {
 });
 
 const { isBootstrapped } = createAppRoute({
-	routeTitle: 'Creator',
+	routeTitle: 'Creators',
 	onInit() {
 		if (!_hasPostTimer) {
 			setHeaderPostTimer(true);
@@ -202,7 +199,6 @@ function getRandomStickers(count = 3) {
 						height: boltHeight + 'px',
 						animationDuration: 3_000 + 'ms',
 						animationDelay: -(3_000 / 2.4) * i + 'ms',
-						animationFillMode: 'both',
 					}"
 				>
 					<svg :width="boltWidth + 'px'" :height="boltHeight + 'px'">
@@ -426,59 +422,20 @@ function getRandomStickers(count = 3) {
 				<div class="-who-header -sub-header-text">MEET SOME CREATORS</div>
 
 				<div class="-grid-center">
-					<AppScrollScroller class="-who-scroller" horizontal>
-						<div class="-who-list">
+					<AppCreatorsList
+						:is-loading="!isBootstrapped"
+						:posts="creatorPosts"
+						list-type="scroll"
+						fancy-hover
+					>
+						<template #left>
 							<AppSpacer horizontal :scale="4" />
+						</template>
 
-							<template v-if="!isBootstrapped">
-								<template v-for="i of 4" :key="i">
-									<div class="-who-card-wrapper">
-										<AppPostCardPlaceholder class="-who-card" />
-									</div>
-								</template>
-							</template>
-							<template v-else>
-								<template v-for="post of creatorPosts" :key="post.id">
-									<div class="-who-card-wrapper">
-										<div class="-who-card-shadow" />
-
-										<AppPostCardBase
-											class="-who-card"
-											:post="post"
-											no-elevate-hover
-										>
-											<template #controls>
-												<RouterLink
-													class="-who-card-controls"
-													:to="post.displayUser.routeLocation"
-												>
-													<div class="-who-card-header">
-														<AppUserAvatarImg
-															class="-who-card-avatar"
-															:user="post.displayUser"
-														/>
-
-														<div class="-who-card-names">
-															<div class="-who-card-displayname">
-																{{ post.displayUser.display_name }}
-															</div>
-															<div class="-who-card-username">
-																@{{ post.displayUser.username }}
-															</div>
-														</div>
-													</div>
-												</RouterLink>
-
-												<div class="-who-card-border" />
-											</template>
-										</AppPostCardBase>
-									</div>
-								</template>
-							</template>
-
+						<template #right>
 							<AppSpacer horizontal :scale="4" />
-						</div>
-					</AppScrollScroller>
+						</template>
+					</AppCreatorsList>
 				</div>
 			</div>
 		</div>
@@ -671,6 +628,7 @@ function getRandomStickers(count = 3) {
 	animation-duration: 2s
 	animation-iteration-count: infinite
 	animation-timing-function: linear
+	animation-fill-mode: both
 
 @keyframes anim-bolt
 	0%
@@ -976,103 +934,6 @@ function getRandomStickers(count = 3) {
 
 .-who-header
 	text-align: center
-
-.-who-scroller
-	--who-width: 282px
-	--who-height: 434px
-	--who-displacement: 26px
-	padding-bottom: 'calc(%s * 2)' % var(--who-displacement)
-
-	@media $media-sm
-		--who-width: 216px
-		--who-height: 330px
-		--who-displacement: 20px
-
-	@media $media-xs
-		--who-width: 183px
-		--who-height: 311px
-		--who-displacement: 8px
-
-.-who-list
-	display: flex
-	gap: 24px
-
-	@media $media-sm
-		gap: 17px
-
-	@media $media-xs
-		gap: 16px
-
-.-who-card-wrapper
-	position: relative
-	flex: none
-
-	&:hover
-		.-who-card-shadow
-		.-who-card-border
-			transition: none
-			opacity: 1
-
-	&:nth-child(odd)
-		top: var(--who-displacement)
-
-.-who-card-shadow
-.-who-card-border
-	rounded-corners-lg()
-	position: absolute
-	left: 0
-	top: 0
-	right: 0
-	bottom: 0
-	opacity: 0
-	pointer-events: none
-	transition: opacity 1s $strong-ease-out
-
-.-who-card-shadow
-	transform: translate(-6px, 8px)
-	background-color: #FF3FAC
-
-.-who-card-border
-	border: $border-width-base solid var(--theme-primary)
-
-.-who-card
-	width: var(--who-width)
-	height: var(--who-height)
-	filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)) drop-shadow(0px 1px 8px rgba(0, 0, 0, 0.09))
-
-.-who-card-controls
-	position: absolute
-	left: 0
-	top: 0
-	right: 0
-	bottom: 0
-	padding: 16px
-	display: flex
-	flex-direction: column
-	color: white
-
-.-who-card-header
-	display: flex
-
-.-who-card-avatar
-	width: 40px
-	height: @width
-	flex: none
-	margin-right: 8px
-
-.-who-card-names
-	text-overflow()
-	overlay-text-shadow()
-
-.-who-card-displayname
-	font-weight: bold
-
-.-who-card-username
-	font-size: $font-size-small
-
-.-who-card-follow
-	margin-top: auto
-	filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))
 
 .-apply
 	@extends .-bg-pink

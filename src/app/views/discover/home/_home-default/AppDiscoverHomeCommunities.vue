@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppCommunityCardPlaceholder from '../../../../../_common/community/card-placeholder/card-placeholder.vue';
 import AppCommunityCard from '../../../../../_common/community/card/card.vue';
 import { Community } from '../../../../../_common/community/community.model';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../../../_common/button/AppButton.vue';
 
 const props = defineProps({
 	communities: {
@@ -22,20 +22,22 @@ const slicedCommunities = computed(() => props.communities.slice(0, Screen.isMob
 
 <template>
 	<div class="container">
-		<div class="text-center">
-			<h2 class="section-header">
-				<AppTranslate>Browse Communities</AppTranslate>
-			</h2>
+		<slot name="header">
+			<div class="text-center">
+				<h2 class="section-header">
+					<AppTranslate>Browse Communities</AppTranslate>
+				</h2>
 
-			<p>
-				<AppTranslate>
-					Find a community to create and explore gaming videos, fanart, discussions and
-					more!
-				</AppTranslate>
-			</p>
+				<p>
+					<AppTranslate>
+						Find a community to create and explore gaming videos, fanart, discussions
+						and more!
+					</AppTranslate>
+				</p>
 
-			<hr class="underbar underbar-center" />
-		</div>
+				<hr class="underbar underbar-center" />
+			</div>
+		</slot>
 
 		<div v-if="isLoading" class="row">
 			<div v-for="i of 8" :key="i" class="col-sm-6 col-md-4 col-lg-3">
