@@ -74,7 +74,10 @@ const { user } = useCommonStore();
 				<br />
 			</template>
 
-			<div v-if="configChargedStickers" class="container">
+			<div
+				v-if="configChargedStickers && (!isBootstrapped || creatorPosts.length)"
+				class="container"
+			>
 				<h2 class="-content-section-header">Game Jolt Creators</h2>
 
 				<AppCreatorsList
