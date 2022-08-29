@@ -381,11 +381,34 @@ export default class AppContentEditor extends Vue {
 		++this.controller_.stateCounter;
 	}
 
+	private async highlightCurrentSelection() {
+		// When an outside control got clicked, store the previous selection,
+		// focus the editor and then apply the selection.
+		// We do this so the focused text doesn't visibly lose focus after the outside control
+		// button assumed focus.
+
+		const prevSelection = this.view!.state.selection;
+
+		this.$refs.editor.focus();
+
+		const tr = this.view!.state.tr;
+		tr.setSelection(prevSelection);
+		this.view!.dispatch(tr);
+
+		// Wait a tick for the editor's doc to update, then force an update to reposition the controls.
+		await this.$nextTick();
+		++this.controller_.stateCounter;
+	}
+
 	onEmojiPanelVisibilityChanged(visible: boolean) {
 		this.controller_.emojiPanelVisible = visible;
+		if (this.controller_.emojiPanelVisible) {
+			this.highlightCurrentSelection();
+		}
 	}
 
 	onInsertMention() {
+		this.highlightCurrentSelection();
 		this.controller_.canShowMentionSuggestions = 0; // Hide control
 	}
 

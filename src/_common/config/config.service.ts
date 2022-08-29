@@ -94,12 +94,19 @@ export class ConfigOptionBoolean extends ConfigOption<boolean> {
 }
 
 export class ConfigOptionString<T extends string = string> extends ConfigOption<T> {
-	public readonly validValues: T[];
+	public readonly validValues: T[] | false;
 
 	constructor(
 		name: string,
 		defaultValue: T,
-		{ validValues, conditions }: { validValues: T[]; conditions?: Conditions }
+		{
+			validValues,
+			conditions,
+		}: {
+			/** You can skip checking for valid values if you explicitly set this to false */
+			validValues: T[] | false;
+			conditions?: Conditions;
+		}
 	) {
 		super(name, defaultValue, { conditions: conditions });
 		this.validValues = validValues;
@@ -113,8 +120,9 @@ export class ConfigOptionString<T extends string = string> extends ConfigOption<
 		return this._getValue(() => {
 			const value = getValue(_getFirebaseRemoteConfig(), this.name).asString() as T;
 
-			// If we don't know the value that we got from remote, we need to fallback to default.
-			if (!this.validValues.includes(value)) {
+			// If we don't know the value that we got from remote, we need to
+			// fallback to default.
+			if (this.validValues && !this.validValues.includes(value)) {
 				return this.defaultValue;
 			}
 
@@ -138,6 +146,11 @@ export const configHomeDefaultFeed = new ConfigOptionString(
 	}
 );
 
+export const configFYPExperiment = new ConfigOptionString<string>('fyp_experiment', 'default', {
+	// Allow any value since we pass directly to backend, which does all the logic.
+	validValues: false,
+});
+
 export const configCommunityFrontpageFeedType = new ConfigOptionString(
 	'web_community_frontpage_feed_type',
 	'default',
@@ -146,6 +159,9 @@ export const configCommunityFrontpageFeedType = new ConfigOptionString(
 		conditions: { join: true },
 	}
 );
+
+export const configChargedStickers = new ConfigOptionBoolean('web_charged_stickers', false);
+export const configCreatorPageLink = new ConfigOptionBoolean('web_creator_page_link', false);
 
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());

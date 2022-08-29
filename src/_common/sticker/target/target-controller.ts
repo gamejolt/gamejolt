@@ -9,19 +9,22 @@ import {
 	Ref,
 	ShallowRef,
 	shallowRef,
+	unref,
 	WritableComputedRef,
 } from 'vue';
+import { MaybeComputedRef, MaybeRef } from '../../../utils/vue';
 import { Comment } from '../../comment/comment-model';
+import { configChargedStickers } from '../../config/config.service';
 import { Fireside } from '../../fireside/fireside.model';
 import { FiresidePost } from '../../fireside/post/post-model';
 import { MediaItem } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
 import { StickerLayerController } from '../layer/layer-controller';
 import { StickerPlacement } from '../placement/placement.model';
-import { ValidStickerResource } from './target.vue';
-import { CustomStickerPlacementRequest } from '../../drawer/drawer-store';
+import { CustomStickerPlacementRequest } from '../sticker-store';
+import { ValidStickerResource } from './AppStickerTarget.vue';
 
-const StickerTargetParentControllerKey: InjectionKey<StickerTargetController> =
+const StickerTargetParentControllerKey: InjectionKey<MaybeRef<StickerTargetController>> =
 	Symbol('sticker-target-parent');
 
 type StickerTargetModel = FiresidePost | Comment | MediaItem | Fireside;
@@ -39,27 +42,29 @@ export type StickerTargetController = {
 	children: ShallowRef<StickerTargetController[]>;
 
 	model: StickerTargetModel;
-	parent: StickerTargetController | null;
+	parent: ComputedRef<StickerTargetController | null>;
 	isLive: boolean;
 
 	placeStickerCallback?: CustomStickerPlacementRequest;
+	isCreator: ComputedRef<boolean>;
 };
 
 interface StickerTargetOptions {
-	isLive: boolean;
+	isCreator: MaybeComputedRef<boolean>;
+	parent?: MaybeRef<StickerTargetController | null>;
+	isLive?: boolean;
 	placeStickerCallback?: CustomStickerPlacementRequest;
 }
 
 export function createStickerTargetController(
 	model: StickerTargetModel,
-	parent?: StickerTargetController | null,
-	{ isLive, placeStickerCallback }: StickerTargetOptions = {
-		isLive: false,
-	}
+	{ isCreator, parent, isLive = false, placeStickerCallback }: StickerTargetOptions
 ) {
 	model = reactive(model) as StickerTargetModel;
 	const isInview = ref(false);
 	const hasLoadedStickers = ref(false);
+
+	const refParent = computed(() => unref(parent) || null);
 
 	/**
 	 * Note, the AppStickerTarget component is what actually loads the stickers
@@ -79,7 +84,9 @@ export function createStickerTargetController(
 			}
 
 			return Boolean(
-				_shouldShow.value || parent?.shouldShow.value || layer.value?.isShowingDrawer.value
+				_shouldShow.value ||
+					refParent.value?.shouldShow.value ||
+					layer.value?.isShowingDrawer.value
 			);
 		},
 		set: value => {
@@ -108,19 +115,28 @@ export function createStickerTargetController(
 		children,
 		shouldLoad,
 		model,
-		parent: parent || null,
+		parent: refParent,
 		isLive,
 		placeStickerCallback,
+		isCreator: computed(() => {
+			if (!configChargedStickers.value) {
+				return false;
+			}
+
+			return unref(isCreator);
+		}),
 	};
 
-	if (parent) {
-		parent.children.value.push(c);
+	if (refParent.value) {
+		refParent.value.children.value.push(c);
 	}
 
 	return c;
 }
 
-export function provideStickerTargerController(controller?: StickerTargetController | null) {
+export function provideStickerTargerController(
+	controller?: MaybeRef<StickerTargetController | null>
+) {
 	provide(StickerTargetParentControllerKey, controller);
 }
 
@@ -136,8 +152,8 @@ export function toggleStickersShouldShow(
 ) {
 	// The parent is the one that gets the state for should showing. All
 	// children follow along within the getter.
-	if (controller.parent) {
-		toggleStickersShouldShow(controller.parent, forceLoad, shouldShow);
+	if (controller.parent.value) {
+		toggleStickersShouldShow(controller.parent.value, forceLoad, shouldShow);
 		return;
 	}
 

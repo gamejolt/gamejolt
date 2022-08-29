@@ -4,12 +4,13 @@ export type BottomBarControl = 'members' | 'settings' | 'setup';
 
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { setDrawerOpen, useDrawerStore } from '../../../../_common/drawer/drawer-store';
 import { setProducerDeviceMuted, stopStreaming } from '../../../../_common/fireside/rtc/producer';
 import { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
+import { useStickerLayer } from '../../../../_common/sticker/layer/layer-controller';
+import { setStickerDrawerOpen, useStickerStore } from '../../../../_common/sticker/sticker-store';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import {
@@ -25,6 +26,7 @@ defineProps({
 	},
 });
 
+const stickerLayer = useStickerLayer();
 const c = useFiresideController()!;
 const {
 	rtc,
@@ -37,7 +39,7 @@ const {
 	activeBottomBarControl,
 } = c;
 
-const drawerStore = useDrawerStore();
+const stickerStore = useStickerStore();
 
 const canPlaceStickers = computed(() => !!user.value && !Screen.isMobile && isStreaming.value);
 
@@ -153,7 +155,7 @@ async function onClickVideo() {
 }
 
 function onClickStickerButton() {
-	setDrawerOpen(drawerStore, true);
+	setStickerDrawerOpen(stickerStore, true, stickerLayer);
 }
 
 function toggleStreamSettings() {

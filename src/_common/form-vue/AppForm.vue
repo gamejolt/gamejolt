@@ -20,8 +20,8 @@ import { CancelToken } from '../../utils/cancel-token';
 import { uuidv4 } from '../../utils/uuid';
 import { MaybeRef } from '../../utils/vue';
 import { Api } from '../api/api.service';
-import AppLoadingFade from '../loading/AppLoadingFade.vue';
 import AppLoading from '../loading/AppLoading.vue';
+import AppLoadingFade from '../loading/AppLoadingFade.vue';
 import { ModelClassType } from '../model/model.service';
 import { PayloadFormErrors } from '../payload/payload-service';
 import { $gettext } from '../translate/translate.service';
@@ -115,9 +115,9 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 	const name = uuidv4();
 
 	const formModel = ref(_makeFormModel()) as Ref<T>;
-	const resetOnSubmit = ref(options.resetOnSubmit || false);
-	const warnOnDiscard = ref(options.warnOnDiscard || true);
-	const reloadOnSubmit = ref(options.reloadOnSubmit || false);
+	const resetOnSubmit = ref(options.resetOnSubmit ?? false);
+	const warnOnDiscard = ref(options.warnOnDiscard ?? true);
+	const reloadOnSubmit = ref(options.reloadOnSubmit ?? false);
 
 	// These are only specified as "let" because we need to allow them to be
 	// lazy initialized.

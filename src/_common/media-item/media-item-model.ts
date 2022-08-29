@@ -1,6 +1,7 @@
 import { LightboxMediaModel, LightboxMediaType } from '../lightbox/lightbox-helpers';
 import { Model } from '../model/model.service';
 import { constructStickerCounts, StickerCount } from '../sticker/sticker-count';
+import { User } from '../user/user.model';
 
 export class MediaItem extends Model implements LightboxMediaModel {
 	static readonly TYPE_GAME_THUMBNAIL = 'game-thumbnail';
@@ -57,6 +58,7 @@ export class MediaItem extends Model implements LightboxMediaModel {
 	avg_img_color!: null | string;
 	img_has_transparency!: boolean;
 	sticker_counts: StickerCount[] = [];
+	supporters: User[] = [];
 
 	post_id?: number;
 
@@ -65,6 +67,10 @@ export class MediaItem extends Model implements LightboxMediaModel {
 
 		if (data.sticker_counts) {
 			this.sticker_counts = constructStickerCounts(data.sticker_counts);
+		}
+
+		if (data.supporters) {
+			this.supporters = User.populate(data.supporters);
 		}
 	}
 

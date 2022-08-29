@@ -133,7 +133,7 @@ import AppShellAltMenuExtra from '../../AppShellAltMenuExtra.vue';
 	</div>
 </template>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 .-alt
 	padding: 16px
 

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, PropType, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { useDrawerStore } from '../../../../../_common/drawer/drawer-store';
 import AppFiresideLiveTag from '../../../../../_common/fireside/AppFiresideLiveTag.vue';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
+import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../../_common/user/user.model';
@@ -35,7 +35,7 @@ const c = createFiresideController(props.fireside, {
 	isMuted: true,
 	appStore: useAppStore(),
 	commonStore: useCommonStore(),
-	drawerStore: useDrawerStore(),
+	stickerStore: useStickerStore(),
 	chatStore: useChatStore()!,
 	router: useRouter(),
 });

@@ -3,6 +3,7 @@ import { GamePlayModal } from '../_common/game/play-modal/play-modal.service';
 import { Registry } from '../_common/registry/registry.service';
 import { Scroll } from '../_common/scroll/scroll.service';
 import { createSidebarStore, SidebarStoreKey } from '../_common/sidebar/sidebar.store';
+import { createStickerStore, StickerStoreKey } from '../_common/sticker/sticker-store';
 import { initSafeExportsForClient } from './components/client/safe-exports';
 import './main.styl';
 import { BannerStoreKey, createBannerStore } from './store/banner';
@@ -21,6 +22,9 @@ export async function createApp() {
 	const sidebarStore = createSidebarStore();
 	const libraryStore = createLibraryStore({ router });
 	const bannerStore = createBannerStore({ commonStore, router });
+	const stickerStore = createStickerStore({
+		user: commonStore.user,
+	});
 
 	const appStore = createAppStore({
 		router,
@@ -30,6 +34,7 @@ export async function createApp() {
 		getQuestStore() {
 			return questStore;
 		},
+		stickerStore,
 	});
 
 	const questStore = createQuestStore({ user: commonStore.user, grid: appStore.grid });
@@ -40,6 +45,7 @@ export async function createApp() {
 	app.provide(LibraryStoreKey, libraryStore);
 	app.provide(QuestStoreKey, questStore);
 	app.provide(AppStoreKey, appStore);
+	app.provide(StickerStoreKey, stickerStore);
 
 	if (GJ_IS_DESKTOP_APP) {
 		const { bootstrapClient } = await import('./bootstrap-client');

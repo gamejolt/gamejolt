@@ -247,6 +247,14 @@ export class Theme extends Model {
 		return readableColor('#' + this.backlight_).substr(1);
 	}
 
+	get primaryFg_() {
+		return readableColor('#' + this.highlight_).substr(1);
+	}
+
+	get darkPrimaryFg_() {
+		return readableColor('#' + this.darkHighlight_).substr(1);
+	}
+
 	get noticeFg_() {
 		return readableColor('#' + this.notice_).substr(1);
 	}

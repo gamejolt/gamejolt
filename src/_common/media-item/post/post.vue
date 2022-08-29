@@ -1,4 +1,5 @@
 <script lang="ts">
+import { computed, unref } from 'vue';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../utils/vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
@@ -7,12 +8,12 @@ import AppResponsiveDimensions, {
 	AppResponsiveDimensionsChangeEvent,
 } from '../../responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../screen/screen-service';
+import AppStickerTarget from '../../sticker/target/AppStickerTarget.vue';
 import {
 	createStickerTargetController,
 	StickerTargetController,
 	useStickerTargetController,
 } from '../../sticker/target/target-controller';
-import AppStickerTarget from '../../sticker/target/target.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppVideo from '../../video/video.vue';
@@ -111,10 +112,12 @@ export default class AppMediaItemPost extends Vue {
 	}
 
 	created() {
-		this.stickerTargetController = createStickerTargetController(
-			this.mediaItem,
-			this.parentStickerTarget
-		);
+		this.stickerTargetController = createStickerTargetController(this.mediaItem, {
+			parent: computed(() => unref(this.parentStickerTarget)),
+			isCreator: computed(
+				() => this.stickerTargetController.parent.value?.isCreator.value === true
+			),
+		});
 	}
 
 	async onDimensionsChange(e: AppResponsiveDimensionsChangeEvent) {

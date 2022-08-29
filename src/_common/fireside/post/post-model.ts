@@ -86,6 +86,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	platforms_published_to: FiresidePostPublishedPlatform[] = [];
 	stickers: StickerPlacement[] = [];
 	sticker_counts: StickerCount[] = [];
+	supporters: User[] = [];
 	embeds: FiresidePostEmbed[] = [];
 
 	// Used for forms and saving.
@@ -143,6 +144,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 		if (data.sticker_counts) {
 			this.sticker_counts = constructStickerCounts(data.sticker_counts);
+		}
+
+		if (data.supporters) {
+			this.supporters = User.populate(data.supporters);
 		}
 
 		if (data.embeds) {

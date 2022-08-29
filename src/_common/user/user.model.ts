@@ -102,6 +102,7 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 
 	is_gamer = false;
 	is_developer = false;
+	is_creator?: boolean;
 
 	can_join_communities?: boolean;
 	can_create_communities?: boolean;

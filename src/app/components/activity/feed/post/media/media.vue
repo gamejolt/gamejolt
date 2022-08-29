@@ -8,7 +8,7 @@ import { createLightbox } from '../../../../../../_common/lightbox/lightbox-help
 import AppMediaItemPost from '../../../../../../_common/media-item/post/post.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppTouch, { AppTouchInput } from '../../../../../../_common/touch/AppTouch.vue';
-import AppEventItemMediaIndicator from '../../../../event-item/media-indicator/media-indicator.vue';
+import AppEventItemMediaIndicator from '../../../../event-item/media-indicator/AppEventItemMediaIndicator.vue';
 import { ActivityFeedItem } from '../../item-service';
 import { ActivityFeedKey, ActivityFeedView } from '../../view';
 

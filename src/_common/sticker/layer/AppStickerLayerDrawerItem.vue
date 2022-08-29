@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, StyleValue, toRefs } from 'vue';
-import { useDrawerStore } from '../../drawer/drawer-store';
 import AppQuestFrame from '../../quest/AppQuestFrame.vue';
+import { useStickerStore } from '../sticker-store';
 import { Sticker } from '../sticker.model';
 
 const props = defineProps({
@@ -24,33 +24,27 @@ const props = defineProps({
 
 const { sticker, count, size, hideCount } = toRefs(props);
 
-const drawerStore = useDrawerStore();
+const { streak, isDragging, sticker: storeSticker } = useStickerStore();
+
 const root = ref<HTMLDivElement>();
 
 const currentStreak = computed(() => {
-	const streak = drawerStore.streak.value;
-	if (streak?.sticker.id !== sticker.value.id) {
+	if (streak.value?.sticker.id !== sticker.value.id) {
 		return 0;
 	}
-	return streak.count;
+	return streak.value.count;
 });
 
 const itemStyling = computed<StyleValue>(() => ({
 	height: size.value + 'px',
 	width: size.value + 'px',
-	cursor: drawerStore.isDragging.value ? 'grabbing' : 'grab',
+	cursor: isDragging.value ? 'grabbing' : 'grab',
 }));
 
-const isPeeled = computed(
-	() => drawerStore.sticker.value?.id === sticker.value.id || count.value < 1
-);
+const isPeeled = computed(() => storeSticker.value?.id === sticker.value.id || count.value < 1);
 
-const slotName = computed(() => {
-	if (sticker.value.is_event) {
-		return 'above';
-	}
-	return 'default';
-});
+// NOTE: Says unused for me, but it's in the template. Check before deleting.
+const slotName = computed(() => (sticker.value.is_event ? 'above' : 'default'));
 </script>
 
 <template>
@@ -115,12 +109,12 @@ const slotName = computed(() => {
 .-rarity
 	font-weight: bold
 
-	&-uncommon
-		color: #1bb804
+.-rarity-uncommon
+	color: #1bb804
 
-	&-rare
-		color: #18a5f2
+.-rarity-rare
+	color: #18a5f2
 
-	&-epic
-		color: #ffbc56
+.-rarity-epic
+	color: #ffbc56
 </style>
