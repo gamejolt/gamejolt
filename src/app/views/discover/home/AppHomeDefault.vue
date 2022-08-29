@@ -68,11 +68,13 @@ const { user } = useCommonStore();
 				<br />
 			</template>
 
-			<AppDiscoverHomeRealms
-				v-if="configRealms.value"
-				:is-loading="!isBootstrapped"
-				:realms="featuredRealms"
-			/>
+			<div v-if="configRealms.value" style="margin-bottom: 96px">
+				<div class="container">
+					<h2>Realms</h2>
+				</div>
+
+				<AppDiscoverHomeRealms :is-loading="!isBootstrapped" :realms="featuredRealms" />
+			</div>
 
 			<AppDiscoverHomeCommunities
 				:is-loading="!isBootstrapped"
