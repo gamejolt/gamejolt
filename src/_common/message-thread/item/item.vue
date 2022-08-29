@@ -6,7 +6,7 @@ import AppTimelineListItem from '../../timeline-list/item/item.vue';
 import AppUserCardHover from '../../user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../user/user-avatar/user-avatar.vue';
 import { User } from '../../user/user.model';
-import AppUserVerifiedTick from '../../user/verified-tick/verified-tick.vue';
+import AppUserVerifiedTick from '../../user/verified-tick/AppUserVerifiedTick.vue';
 
 @Options({
 	components: {

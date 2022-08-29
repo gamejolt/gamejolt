@@ -41,7 +41,7 @@ import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
-import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
+import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import AppVideoPlayer from '../../../../_common/video/player/player.vue';
 import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/processing-progress.vue';
 import AppCommunityUserNotification from '../../../components/community/user-notification/user-notification.vue';

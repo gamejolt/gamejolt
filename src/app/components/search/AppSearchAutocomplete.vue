@@ -9,7 +9,7 @@ import AppGameThumbnailImg from '../../../_common/game/thumbnail/AppGameThumbnai
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
 import { User } from '../../../_common/user/user.model';
-import AppUserVerifiedTick from '../../../_common/user/verified-tick/verified-tick.vue';
+import AppUserVerifiedTick from '../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import type { LocalDbGame as LocalDbGameType } from '../client/local-db/game/game.model';
 import { LocalDbGame } from '../client/safe-exports';
 import { SearchKeydownSpy, useSearchController } from './AppSearch.vue';
