@@ -189,6 +189,10 @@ export function mergeDeep(target, source) {
 	return ret;
 }
 
+export function escapeRegex(str: string) {
+	return str.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&');
+}
+
 export function isWindows() {
 	return os.type() === 'Windows_NT';
 }

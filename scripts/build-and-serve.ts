@@ -18,6 +18,7 @@
 
 import * as fs from 'fs-extra';
 import { acquirePrebuiltFFmpeg } from './build/desktop-app/ffmpeg-prebuilt';
+import { deactivateJsonProperty, patchPackageJson, updateJsonProperty } from './build/packageJson';
 import { gjSectionConfigs, type GjSectionName } from './build/section-config';
 import { Options, parseAndInferOptionsFromCommandline } from './build/vite-options';
 import { runVite } from './build/vite-runner';
@@ -117,31 +118,6 @@ function runViteBuild(gjOpts: Options, aborter: AbortController) {
 	return viteProcess;
 }
 
-async function patchPackageJson(rootDir: string, entrypoint: string) {
-	const packageJsonPath = path.join(rootDir, 'package.json');
-	const oldPackageJsonStr = await fs.readFile(packageJsonPath, {
-		encoding: 'utf8',
-	});
-
-	const propertyMain = `chrome-extension://game-jolt-client/build/desktop/${entrypoint}`;
-
-	// Replace properties using a dumb string replace. stringifying json does
-	// not preserve whitespace or quotation style. its easier to just monkey
-	// patch a string like this.
-	const newPackageJsonStr = oldPackageJsonStr
-		.replace(
-			/^(\s*['"]main['"]\s*:\s*['"]).*?(['"],?\s*)$/gim,
-			(_match, before, after) => `${before}${propertyMain}${after}`
-		)
-		// Rename node-remote property to _node-remote
-		.replace(
-			/^(\s*['"])node-remote(['"].*?)$/gim,
-			(_match, before, after) => `${before}_node-remote${after}`
-		);
-
-	await fs.writeFile(packageJsonPath, newPackageJsonStr, { encoding: 'utf8' });
-}
-
 (async () => {
 	const args = minimist(process.argv.splice(2));
 	const gjOpts = await parseAndInferOptionsFromCommandline(args);
@@ -174,12 +150,23 @@ async function patchPackageJson(rootDir: string, entrypoint: string) {
 					}
 				})();
 
-				await patchPackageJson(rootDir, entrypoint);
+				await patchPackageJson(packageJsonStr => {
+					const fullEntrypoint = `chrome-extension://game-jolt-client/build/desktop/${entrypoint}`;
+					packageJsonStr = updateJsonProperty(packageJsonStr, 'main', fullEntrypoint);
+					packageJsonStr = deactivateJsonProperty(packageJsonStr, 'node-remote');
+					return packageJsonStr;
+				});
+
 				runViteBuild(gjOpts, aborter);
 			}
 			// Build all sections.
 			else {
-				await patchPackageJson(rootDir, 'index.html');
+				await patchPackageJson(packageJsonStr => {
+					const fullEntrypoint = `chrome-extension://game-jolt-client/build/desktop/index.html#/`;
+					packageJsonStr = updateJsonProperty(packageJsonStr, 'main', fullEntrypoint);
+					packageJsonStr = deactivateJsonProperty(packageJsonStr, 'node-remote');
+					return packageJsonStr;
+				});
 
 				const frontendBuildDir = path.join(rootDir, 'build', 'desktop');
 
