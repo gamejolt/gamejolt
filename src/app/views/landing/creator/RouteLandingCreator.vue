@@ -71,7 +71,7 @@ import {
 } from '../../../img/ill/illustrations';
 import { creatorApplyDesktop, creatorApplySm, creatorApplyXs } from './_backgrounds/backgrounds';
 
-const postImages = import.meta.globEager('./_posts/*.jpg');
+const postImages = import.meta.glob('./_posts/*.jpg', { eager: true });
 const postImageKeys = Object.keys(postImages).sort(() => Math.random() - 0.5);
 
 let _routeDestroyed = false;

@@ -20,7 +20,7 @@ export default class AppGameDevStageSelector extends Vue {
 	];
 
 	readonly Game = Game;
-	readonly assetPaths = import.meta.globEager('./*.png');
+	readonly assetPaths = import.meta.glob('./*.png', { eager: true });
 
 	@Emit('select')
 	emitSelect(_stage: number) {}

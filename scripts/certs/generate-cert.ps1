@@ -11,7 +11,7 @@ if (Get-ChildItem -Path "Cert:\CurrentUser\My" | Where-Object { $_.DnsNameList -
 	Exit
 }
 
-$projectDir = (Join-Path -Path $PSScriptRoot -ChildPath ".." | Resolve-Path).Path
+$projectDir = (Join-Path -Path $PSScriptRoot -ChildPath "..\.." | Resolve-Path).Path
 
 # Create trusted root certificate.
 # This should be manually installed in Trusted Root Certification Authorities store for the user.

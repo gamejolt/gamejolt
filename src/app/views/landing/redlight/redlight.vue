@@ -66,7 +66,7 @@ export default class RouteLandingRedlight extends BaseRouteComponent {
 	readonly slogan = this.slogans[getRandomInt(0, this.slogans.length)];
 	readonly chosenHandle = this.handles[getRandomInt(0, this.handles.length)];
 	readonly tweet = `Hey @${this.chosenHandle}! I think your games would be a good fit for Game Jolt #redlight #gamedev`;
-	readonly assetPaths = import.meta.globEager('./*.(svg|png)');
+	readonly assetPaths = import.meta.glob('./*.(svg|png)', { eager: true });
 
 	readonly Screen = Screen;
 

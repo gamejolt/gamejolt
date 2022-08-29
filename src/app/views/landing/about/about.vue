@@ -21,7 +21,7 @@ import profileThoro from './thoro.jpg';
 })
 @OptionsForRoute()
 export default class RouteLandingAbout extends BaseRouteComponent {
-	readonly assetUrls = import.meta.globEager('./*.png');
+	readonly assetUrls = import.meta.glob('./*.png', { eager: true });
 	readonly Screen = Screen;
 	readonly imageJolt = imageJolt;
 	readonly profileCros = profileCros;

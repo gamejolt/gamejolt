@@ -118,6 +118,8 @@ export default defineConfig(async () => {
 			// it only worked during build, but not during serve. Looks like Vite
 			// tried parsing index.html before vite-plugin-html processed it, which
 			// meant Vite was seeing invalid looking html and died.
+			//
+			// Note: This may have been fixed by https://github.com/vitejs/vite/pull/6901
 			{
 				name: 'gj:index-interpolations',
 				enforce: 'pre',

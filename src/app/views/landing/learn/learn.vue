@@ -27,7 +27,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 	}
 
 	readonly imageJolt = imageJolt;
-	readonly assetPaths = import.meta.globEager('./*.(svg|png)');
+	readonly assetPaths = import.meta.glob('./*.(svg|png)', { eager: true });
 }
 </script>
 

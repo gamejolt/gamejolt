@@ -13,7 +13,7 @@ import { imageJolt } from '../../../img/images';
 @OptionsForRoute()
 export default class RouteLandingPartners extends BaseRouteComponent {
 	readonly imageJolt = imageJolt;
-	readonly assetPaths = import.meta.globEager('./*.svg');
+	readonly assetPaths = import.meta.glob('./*.svg', { eager: true });
 
 	get routeTitle() {
 		return `Become a Partner`;

@@ -1,6 +1,6 @@
 import { Node, NodeSpec } from 'prosemirror-model';
 
-const assetPaths = import.meta.globEager('../../../../../emoji/*.png');
+const assetPaths = import.meta.glob('../../../../../emoji/*.png', { eager: true });
 
 export const gjEmoji = {
 	attrs: { type: { default: 'grin' } },

@@ -29,7 +29,7 @@ export default class RouteLandingGameApi extends BaseRouteComponent {
 
 	readonly formatNumber = formatNumber;
 	readonly imageJolt = imageJolt;
-	readonly assetPaths = import.meta.globEager('./*.svg');
+	readonly assetPaths = import.meta.glob('./*.svg', { eager: true });
 
 	get routeTitle() {
 		return this.$gettext(`Game API`);

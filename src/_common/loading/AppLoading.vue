@@ -2,7 +2,7 @@
 import { computed, toRefs } from 'vue';
 import { $gettext } from '../translate/translate.service';
 
-const images = import.meta.globEager('./*.gif');
+const images = import.meta.glob('./*.gif', { eager: true });
 
 const props = defineProps({
 	label: {

@@ -22,7 +22,7 @@ export const GJ_EMOJIS = [
 	'yush',
 ] as const;
 
-const assetPaths = import.meta.globEager('./*.png');
+const assetPaths = import.meta.glob('./*.png', { eager: true });
 </script>
 
 <script lang="ts" setup>

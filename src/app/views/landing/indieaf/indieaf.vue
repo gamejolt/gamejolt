@@ -31,7 +31,7 @@ export default class RouteLandingIndieaf extends BaseRouteComponent {
 
 	state: 'bogus' | 'indie' = 'bogus';
 
-	readonly assetPaths = import.meta.globEager('./*.(svg|jpg|png)');
+	readonly assetPaths = import.meta.glob('./*.(svg|jpg|png)', { eager: true });
 
 	get routeTitle() {
 		return `Get Indie.AF // Freakin' legit customizable game sites`;
