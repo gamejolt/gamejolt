@@ -117,6 +117,31 @@ function runViteBuild(gjOpts: Options, aborter: AbortController) {
 	return viteProcess;
 }
 
+async function patchPackageJson(rootDir: string, entrypoint: string) {
+	const packageJsonPath = path.join(rootDir, 'package.json');
+	const oldPackageJsonStr = await fs.readFile(packageJsonPath, {
+		encoding: 'utf8',
+	});
+
+	const propertyMain = `chrome-extension://game-jolt-client/build/desktop/${entrypoint}`;
+
+	// Replace properties using a dumb string replace. stringifying json does
+	// not preserve whitespace or quotation style. its easier to just monkey
+	// patch a string like this.
+	const newPackageJsonStr = oldPackageJsonStr
+		.replace(
+			/^(\s*['"]main['"]\s*:\s*['"]).*?(['"],?\s*)$/gim,
+			(_match, before, after) => `${before}${propertyMain}${after}`
+		)
+		// Rename node-remote property to _node-remote
+		.replace(
+			/^(\s*['"])node-remote(['"].*?)$/gim,
+			(_match, before, after) => `${before}_node-remote${after}`
+		);
+
+	await fs.writeFile(packageJsonPath, newPackageJsonStr, { encoding: 'utf8' });
+}
+
 (async () => {
 	const args = minimist(process.argv.splice(2));
 	const gjOpts = await parseAndInferOptionsFromCommandline(args);
@@ -130,38 +155,64 @@ function runViteBuild(gjOpts: Options, aborter: AbortController) {
 	}
 
 	// If building for desktop app and section wasnt explicitly given, build all sections.
-	if (gjOpts.platform === 'desktop' && !('section' in args)) {
+	if (gjOpts.platform === 'desktop') {
 		try {
 			const rootDir = path.resolve(__dirname, '..');
-			const frontendBuildDir = path.join(rootDir, 'build', 'desktop');
 
-			await acquirePrebuiltFFmpeg({
-				outDir: rootDir,
-				cacheDir: path.resolve(rootDir, 'build', '.cache', 'ffmpeg-prebuilt'),
-				nwjsVersion: gjOpts.nwjsVersion,
-			});
+			// Build a specific section.
+			if ('section' in args) {
+				const entrypoint = (() => {
+					switch (args['section']) {
+						case 'app':
+							return 'index.html#/';
 
-			// Clean the build folder to start fresh.
-			console.log('Cleaning up old build dir');
-			await fs.remove(frontendBuildDir);
+						case 'auth':
+							return 'auth.html#/login';
 
-			const desktopAppSectionNames = Object.entries(gjSectionConfigs)
-				.filter(([k, v]) => v.desktopApp)
-				.map(([k, v]) => k as GjSectionName);
+						default:
+							return `${args['section']}.html#/`;
+					}
+				})();
 
-			for (const sectionName of desktopAppSectionNames) {
-				const argsForSection = Object.assign({}, args, {
-					section: sectionName,
-					'empty-outdir': false,
+				await patchPackageJson(rootDir, entrypoint);
+				runViteBuild(gjOpts, aborter);
+			}
+			// Build all sections.
+			else {
+				await patchPackageJson(rootDir, 'index.html');
+
+				const frontendBuildDir = path.join(rootDir, 'build', 'desktop');
+
+				await acquirePrebuiltFFmpeg({
+					outDir: rootDir,
+					cacheDir: path.resolve(rootDir, 'build', '.cache', 'ffmpeg-prebuilt'),
+					nwjsVersion: gjOpts.nwjsVersion,
 				});
-				const gjOptsForSection = await parseAndInferOptionsFromCommandline(argsForSection);
-				gjOptsForSection.buildType = 'serve-build';
-				// Don't acquire ffmpeg during the build because multiple build
-				// processes would try overwriting the same ffmpeg binary. For
-				// this reason we acquire it before any section starts building.
-				gjOptsForSection.withFfmpeg = false;
 
-				runViteBuild(gjOptsForSection, aborter);
+				// Clean the build folder to start fresh.
+				console.log('Cleaning up old build dir');
+				await fs.remove(frontendBuildDir);
+
+				const desktopAppSectionNames = Object.entries(gjSectionConfigs)
+					.filter(([k, v]) => v.desktopApp)
+					.map(([k, v]) => k as GjSectionName);
+
+				for (const sectionName of desktopAppSectionNames) {
+					const argsForSection = Object.assign({}, args, {
+						section: sectionName,
+						'empty-outdir': false,
+					});
+					const gjOptsForSection = await parseAndInferOptionsFromCommandline(
+						argsForSection
+					);
+					gjOptsForSection.buildType = 'serve-build';
+					// Don't acquire ffmpeg during the build because multiple build
+					// processes would try overwriting the same ffmpeg binary. For
+					// this reason we acquire it before any section starts building.
+					gjOptsForSection.withFfmpeg = false;
+
+					runViteBuild(gjOptsForSection, aborter);
+				}
 			}
 		} catch (e) {
 			console.error(e);

@@ -11,6 +11,9 @@ We wanted to make it open source so everyone can get visibility into what we are
 	- `git submodule init`
 	- `git submodule update`
 	- `yarn`
+- Install git pre commit hooks:
+  - __Windows__ (from administrator powershell)__:__ `.\git-hooks\install.ps1`
+  - __Mac / Linux:__ `./git-hooks/install.sh`
 - Add `127.0.0.1 development.gamejolt.com` to your `/etc/hosts` (or `C:\\Windows\\System32\\drivers\\etc\\hosts` on Windows)
 - Setup local development certificates.
   - __Windows:__

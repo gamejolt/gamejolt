@@ -21,7 +21,8 @@
 		"client": "nw use 0.62.2-sdk && nw .",
 		"ssr:client": "yarn build --platform web",
 		"ssr:server": "yarn build --platform ssr",
-		"ssr": "node ssr/server.js"
+		"ssr": "node ssr/server.js",
+		"pre-commit": "yarn tsscript scripts/git-pre-commit.ts"
 	},
 	"devDependencies": {
 		"@ckpack/vue-color": "1.1.5",
