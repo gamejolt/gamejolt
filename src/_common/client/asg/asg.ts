@@ -1,8 +1,7 @@
 import { computed, markRaw, ref } from 'vue';
-import { getDeviceArch, getDeviceOS } from '../../device/device.service';
+import { getDeviceOS } from '../../device/device.service';
 const { EventEmitter } = require('events') as typeof import('events');
 
-const os = require('os') as typeof import('os');
 const process = require('process') as typeof import('process');
 
 // Only attempt to require asg-prebuilt on Windows.
@@ -15,35 +14,6 @@ const Format: AudioSampleFormat = 'f32';
 export type ASGControllerStatus = 'starting' | 'started' | 'stopping' | 'stopped';
 
 export type ASGController = Awaited<ReturnType<typeof startDesktopAudioCapture>>;
-
-export function isDesktopAudioCaptureSupported() {
-	if (!GJ_IS_DESKTOP_APP) {
-		return false;
-	}
-
-	if (getDeviceOS() !== 'windows' || getDeviceArch() !== '64') {
-		return false;
-	}
-
-	const releaseInfo = os.release().split('.');
-	if (releaseInfo.length < 2) {
-		return false;
-	}
-
-	let winVer: number | null = null;
-	let buildNum: number | null = null;
-
-	try {
-		winVer = parseInt(releaseInfo[0]);
-		buildNum = parseInt(releaseInfo[releaseInfo.length - 1]);
-	} catch (e) {}
-
-	if (winVer === null || buildNum === null) {
-		return false;
-	}
-
-	return winVer > 10 || (winVer == 10 && buildNum >= 19043);
-}
 
 export async function startDesktopAudioCapture(
 	writableStream: WritableStream<AudioData>,

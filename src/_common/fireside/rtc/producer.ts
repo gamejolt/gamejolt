@@ -8,10 +8,7 @@ import { computed, markRaw, ref, shallowRef } from 'vue';
 import { MediaDeviceService } from '../../agora/media-device.service';
 import { Api } from '../../api/api.service';
 import type { ASGController } from '../../client/asg/asg';
-import {
-	isDesktopAudioCaptureSupported,
-	startDesktopAudioCapture,
-} from '../../client/safe-exports';
+import { startDesktopAudioCapture } from '../../client/safe-exports';
 import { importNoSSR } from '../../code-splitting';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { Navigate } from '../../navigate/navigate.service';
@@ -679,16 +676,9 @@ function _handleAsgStartCaptureFailure(producer: FiresideRTCProducer) {
 	// TODO: trigger update to the fireside setup form toggle for desktop audio.
 
 	// Show error message.
-	let errMsg: string;
-	if (isDesktopAudioCaptureSupported()) {
-		errMsg = $gettext(
-			`Try again later. If the error continues, please send us a system report.`
-		);
-	} else {
-		errMsg = $gettext(
-			`Desktop audio capture is only supported on Windows 11 and Windows 10 build 19043 and up.`
-		);
-	}
+	const errMsg = $gettext(
+		`Try again later. If the error continues, please send us a system report.`
+	);
 
 	showErrorGrowl(errMsg, $gettext(`Cannot capture desktop audio`));
 }
