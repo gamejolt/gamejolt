@@ -26,8 +26,8 @@ import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppStickerControlsOverlay from '../../../../_common/sticker/AppStickerControlsOverlay.vue';
+import AppStickerPlacementList from '../../../../_common/sticker/AppStickerPlacementList.vue';
 import AppStickerLayer from '../../../../_common/sticker/layer/AppStickerLayer.vue';
-import AppStickerReactions from '../../../../_common/sticker/reactions/AppStickerReactions.vue';
 import AppStickerTarget from '../../../../_common/sticker/target/AppStickerTarget.vue';
 import {
 	createStickerTargetController,
@@ -383,11 +383,16 @@ function onDismissNotification(notification: CommunityUserNotification) {
 					</AppStickerControlsOverlay>
 
 					<AppStickerControlsOverlay
-						v-if="communities.length || post.sticker_counts.length"
+						v-if="
+							communities.length ||
+							post.supporters.length ||
+							post.sticker_counts.length
+						"
 					>
-						<AppStickerReactions
-							v-if="post.sticker_counts.length"
-							:controller="stickerTargetController"
+						<AppStickerPlacementList
+							:sticker-target-controller="stickerTargetController"
+							:supporters="post.supporters"
+							:stickers="post.sticker_counts"
 							@show="scrollToStickers()"
 						/>
 
