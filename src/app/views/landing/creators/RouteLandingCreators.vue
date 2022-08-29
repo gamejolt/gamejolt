@@ -102,6 +102,10 @@ const displayStickers = computed(() => {
 	return getRandomStickers();
 });
 
+// Force all the page content to use the default theme so our pink backgrounds
+// match well with overlayed buttons.
+const theme = computed(() => DefaultTheme);
+
 const { isBootstrapped } = createAppRoute({
 	routeTitle: 'Creators',
 	onInit() {
@@ -182,7 +186,7 @@ function getRandomStickers(count = 3) {
 </script>
 
 <template>
-	<AppTheme class="route-creator" :theme="DefaultTheme">
+	<AppTheme class="route-creator" :theme="theme" force-dark>
 		<div class="-page-header">
 			<div
 				class="-bolts"
@@ -546,6 +550,8 @@ function getRandomStickers(count = 3) {
 	width: 100%
 	min-height: 100vh
 	font-size: 19px
+	color: var(--theme-fg)
+	change-bg(bg)
 
 	::v-deep(.button.-lg)
 		rounded-corners()
