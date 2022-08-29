@@ -514,6 +514,7 @@ export default defineConfig(async () => {
 			//
 			// More info: https://vitejs.dev/guide/ssr.html#ssr-externals
 			ssr: {
+				format: 'cjs',
 				noExternal: [
 					// These modules for whatever reason don't work being
 					// required server-side directly and must be bundled into
