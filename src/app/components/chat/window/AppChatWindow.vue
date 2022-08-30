@@ -10,7 +10,7 @@ import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue'
 import { SettingChatGroupShowMembers } from '../../../../_common/settings/settings.service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
+import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import { useAppStore } from '../../../store/index';
 import { ChatStoreKey } from '../chat-store';
 import { leaveChatRoom } from '../client';

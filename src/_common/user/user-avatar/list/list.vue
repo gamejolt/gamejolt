@@ -1,8 +1,9 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
+import { configChargedStickers } from '../../../config/config.service';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import { User } from '../../user.model';
-import AppUserVerifiedTick from '../../verified-tick/verified-tick.vue';
+import AppUserVerifiedTick from '../../verified-tick/AppUserVerifiedTick.vue';
 import AppUserAvatar from '../user-avatar.vue';
 
 @Options({
@@ -23,6 +24,10 @@ export default class AppUserAvatarList extends Vue {
 
 	@Prop(Boolean)
 	inline?: boolean;
+
+	get hasChargedStickers() {
+		return configChargedStickers.value;
+	}
 }
 </script>
 
@@ -44,7 +49,14 @@ export default class AppUserAvatarList extends Vue {
 				}"
 				:user="user"
 			/>
-			<AppUserVerifiedTick v-if="!sm" class="-tick" :user="user" />
+			<AppUserVerifiedTick
+				v-if="!sm"
+				class="-tick"
+				:class="{
+					'-tick-round': !hasChargedStickers || user.is_creator !== true,
+				}"
+				:user="user"
+			/>
 		</div>
 	</div>
 </template>
@@ -91,10 +103,12 @@ $-size-sm = 16px
 	height: $-size-sm
 
 .-tick
-	change-bg('bg')
-	border-radius: 50%
 	position: absolute
 	right: 0
 	bottom: 0
 	pointer-events: none
+
+.-tick-round
+	change-bg('bg')
+	border-radius: 50%
 </style>

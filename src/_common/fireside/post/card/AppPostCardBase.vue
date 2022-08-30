@@ -40,9 +40,13 @@ const props = defineProps({
 	noElevateHover: {
 		type: Boolean,
 	},
+	aspectRatio: {
+		type: Number,
+		default: undefined,
+	},
 });
 
-const { post, videoContext } = toRefs(props);
+const { post, videoContext, aspectRatio } = toRefs(props);
 useSlots();
 
 const root = ref<HTMLElement>();
@@ -65,11 +69,14 @@ const leadHeight = ref(0);
 const isBootstrapped = ref(import.meta.env.SSR);
 const isHydrated = ref(import.meta.env.SSR);
 
+const postCardRatio = computed(() => aspectRatio?.value ?? AppPostCardAspectRatio);
+
 const shouldPlayVideo = computed(() => isHydrated.value && ContentFocus.hasFocus);
 
 onMounted(() => calcData());
 
 watch(shouldPlayVideo, _initVideoController);
+watch(postCardRatio, calcData);
 
 const mediaItem = computed(() => {
 	if (post.value?.hasMedia) {
@@ -100,7 +107,7 @@ async function calcData() {
 	}
 
 	const newCardWidth = root.value.offsetWidth;
-	const newCardHeight = root.value.offsetHeight ?? newCardWidth / AppPostCardAspectRatio;
+	const newCardHeight = root.value.offsetHeight ?? newCardWidth / postCardRatio.value;
 	const cardRatio = newCardWidth / newCardHeight;
 
 	cardWidth.value = newCardWidth + 'px';
@@ -199,14 +206,20 @@ function _initVideoController() {
 </script>
 
 <template>
-	<div v-if="post" ref="root" class="post-card" :class="{ '-no-elevate-hover': noElevateHover }">
-		<AppResponsiveDimensions :ratio="AppPostCardAspectRatio" @change="calcData()">
+	<div
+		v-if="post"
+		ref="root"
+		class="post-card"
+		:class="{ '-no-elevate-hover': noElevateHover }"
+		:style="{ aspectRatio: `${postCardRatio}` }"
+	>
+		<AppResponsiveDimensions :ratio="postCardRatio" @change="calcData()">
 			<AppScrollInview
 				:config="InviewConfig"
 				:style="{
 					width: cardWidth,
 					height: cardHeight,
-					'padding-top': GJ_IS_SSR ? (1 / AppPostCardAspectRatio) * 100 + '%' : null,
+					'padding-top': GJ_IS_SSR ? (1 / postCardRatio) * 100 + '%' : null,
 				}"
 				@inview="inView"
 				@outview="outView"

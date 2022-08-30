@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
-import { Realm } from '../realm-model';
-import AppRealmThumbnail from '../AppRealmThumbnail.vue';
-import AppRealmFollowButton from '../AppRealmFollowButton.vue';
-import AppSpacer from '../../spacer/AppSpacer.vue';
 import { RouterLink } from 'vue-router';
+import { trackGotoRealm } from '../../analytics/analytics.service';
+import AppSpacer from '../../spacer/AppSpacer.vue';
+import AppRealmFollowButton from '../AppRealmFollowButton.vue';
+import AppRealmThumbnail from '../AppRealmThumbnail.vue';
+import { Realm } from '../realm-model';
 import AppRealmChunkPosts from './AppRealmChunkPosts.vue';
 import AppRealmChunkPostsPlaceholder from './AppRealmChunkPostsPlaceholder.vue';
-import { trackGotoRealm } from '../../analytics/analytics.service';
 
 const CardsPerRow = 5;
 
@@ -25,7 +25,7 @@ const followWidth = computed(() => `${100 / CardsPerRow}%`);
 </script>
 
 <template>
-	<div class="-chunk">
+	<div class="realm-chunk">
 		<div class="-header">
 			<RouterLink
 				class="-header-link"

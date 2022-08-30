@@ -2,10 +2,10 @@
 import { computed, CSSProperties, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import { illChargeOrbEmpty } from '../../../app/img/ill/illustrations';
+import { routeLandingCreators } from '../../../app/views/landing/creators/creators.route';
 import AppAnimChargeOrb from '../../animation/AppAnimChargeOrb.vue';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
-import { configCreatorPageLink } from '../../config/config.service';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { Screen } from '../../screen/screen-service';
 import AppSpacer from '../../spacer/AppSpacer.vue';
@@ -101,8 +101,8 @@ const showOverchargeText = computed(() => allowOverchargeText.value && canCharge
 					</AppStickerChargeTooltipHandler>
 
 					<RouterLink
-						v-if="headerCharge && configCreatorPageLink.value"
-						to="creator"
+						v-if="headerCharge"
+						:to="routeLandingCreators"
 						class="link-muted"
 						:style="{ float: 'right' }"
 					>

@@ -7,7 +7,7 @@ import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.
 import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
 import AppUserAvatarImg from '../../../../../_common/user/user-avatar/img/img.vue';
 import { User } from '../../../../../_common/user/user.model';
-import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
+import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 
 @Options({
 	components: {
