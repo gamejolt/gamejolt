@@ -306,7 +306,6 @@ function onIsPersonallyStreamingChanged() {
 		:style="`--fireside-chat-width: ${chatWidth}px`"
 	>
 		<AppStickerLayer
-			no-mask
 			:style="{
 				width: '100%',
 				height: '100%',
