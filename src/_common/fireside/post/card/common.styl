@@ -1,12 +1,8 @@
-
-$-aspect-ratio = (10 / 16)
-
 .post-card
 	rounded-corners-lg()
 	elevate-1()
 	overflow: hidden
 	position: relative
 	background-color: var(--theme-bg)
-	aspect-ratio: $-aspect-ratio
 	// Safari needs this to actually clip our inner content to the border-radius we have assigned.
 	transform: translateZ(0)

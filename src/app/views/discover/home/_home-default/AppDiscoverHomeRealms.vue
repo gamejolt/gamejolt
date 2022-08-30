@@ -16,6 +16,8 @@ defineProps({
 
 <template>
 	<div class="container">
+		<slot name="header" />
+
 		<div class="-grid">
 			<template v-for="realm of realms" :key="realm.id">
 				<AppRealmFullCard

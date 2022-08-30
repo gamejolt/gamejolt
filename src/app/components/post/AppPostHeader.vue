@@ -9,7 +9,7 @@ import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppUserCardHover from '../../../_common/user/card/AppUserCardHover.vue';
 import AppUserFollowWidget from '../../../_common/user/follow/widget.vue';
 import AppUserAvatar from '../../../_common/user/user-avatar/user-avatar.vue';
-import AppUserVerifiedTick from '../../../_common/user/verified-tick/verified-tick.vue';
+import AppUserVerifiedTick from '../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import AppActivityFeedPostTime from '../activity/feed/post/time/time.vue';
 import { ActivityFeedView } from '../activity/feed/view';
 

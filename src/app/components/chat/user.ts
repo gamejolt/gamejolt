@@ -10,6 +10,7 @@ export class ChatUser {
 	img_avatar!: string;
 	permission_level!: number;
 	is_verified!: boolean;
+	is_creator?: boolean;
 
 	isOnline = false;
 	typing = false;

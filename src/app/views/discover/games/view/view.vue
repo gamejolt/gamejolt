@@ -46,7 +46,7 @@ import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import { User } from '../../../../../_common/user/user.model';
-import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
+import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import AppGameCoverButtons from '../../../../components/game/cover-buttons/cover-buttons.vue';
 import AppGameMaturityBlock from '../../../../components/game/maturity-block/maturity-block.vue';
 import { AppGamePerms } from '../../../../components/game/perms/perms';

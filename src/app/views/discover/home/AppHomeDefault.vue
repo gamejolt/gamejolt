@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { Community } from '../../../../_common/community/community.model';
-import { configRealms } from '../../../../_common/config/config.service';
+import { configChargedStickers, configRealms } from '../../../../_common/config/config.service';
+import AppCreatorsList from '../../../../_common/creator/AppCreatorsList.vue';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
+import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Realm } from '../../../../_common/realm/realm-model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
@@ -32,6 +34,10 @@ defineProps({
 	},
 	featuredRealms: {
 		type: Array as PropType<Realm[]>,
+		default: () => [],
+	},
+	creatorPosts: {
+		type: Array as PropType<FiresidePost[]>,
 		default: () => [],
 	},
 });
@@ -68,18 +74,37 @@ const { user } = useCommonStore();
 				<br />
 			</template>
 
-			<div v-if="configRealms.value" style="margin-bottom: 96px">
-				<div class="container">
-					<h2>Realms</h2>
-				</div>
+			<div
+				v-if="configChargedStickers.value && (!isBootstrapped || creatorPosts.length)"
+				class="container"
+			>
+				<h2 class="-content-section-header">Game Jolt Creators</h2>
 
-				<AppDiscoverHomeRealms :is-loading="!isBootstrapped" :realms="featuredRealms" />
+				<AppCreatorsList
+					:is-loading="!isBootstrapped"
+					:posts="creatorPosts"
+					list-type="grid"
+				/>
 			</div>
+
+			<AppDiscoverHomeRealms
+				v-if="configRealms.value"
+				:is-loading="!isBootstrapped"
+				:realms="featuredRealms"
+			>
+				<template #header>
+					<h2 class="-content-section-header">Realms</h2>
+				</template>
+			</AppDiscoverHomeRealms>
 
 			<AppDiscoverHomeCommunities
 				:is-loading="!isBootstrapped"
 				:communities="featuredCommunities"
-			/>
+			>
+				<template #header>
+					<h2 class="-content-section-header">Communities</h2>
+				</template>
+			</AppDiscoverHomeCommunities>
 		</section>
 
 		<section v-if="!user" class="section fill-offset">
@@ -106,3 +131,11 @@ const { user } = useCommonStore();
 		</section>
 	</AppShellPageBackdrop>
 </template>
+
+<style lang="stylus" scoped>
+.-content-section-header
+	margin: 120px 0 40px
+
+.section > ::v-deep(.container:first-of-type) .-content-section-header
+	margin-top: 40px
+</style>

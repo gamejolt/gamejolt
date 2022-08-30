@@ -25,7 +25,7 @@ import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
-import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
+import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import FormForumPost from '../../../../components/forms/forum/post/post.vue';
 import FormForumTopic from '../../../../components/forms/forum/topic/topic.vue';
 import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';

@@ -24,7 +24,7 @@ import { populateTrophies } from '../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophy } from '../../../_common/user/trophy/user-base-trophy.model';
 import AppUserAvatar from '../../../_common/user/user-avatar/user-avatar.vue';
 import { User } from '../../../_common/user/user.model';
-import AppUserVerifiedTick from '../../../_common/user/verified-tick/verified-tick.vue';
+import AppUserVerifiedTick from '../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import { ChatStore, ChatStoreKey } from '../../components/chat/chat-store';
 import { isUserOnline } from '../../components/chat/client';
 import { IntentService } from '../../components/intent/intent.service';
