@@ -148,7 +148,7 @@ function onShareClick() {
 			<template #right>
 				<AppScrollAffix :disabled="!Screen.isLg">
 					<h5 class="-communities-header sans-margin-top">
-						<AppTranslate>Top Contributing Communities</AppTranslate>
+						<AppTranslate>Top Contributors</AppTranslate>
 					</h5>
 
 					<div class="-communities">
