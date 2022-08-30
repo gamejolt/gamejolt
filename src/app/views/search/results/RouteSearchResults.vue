@@ -6,7 +6,7 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCommunityThumbnail from '../../../../_common/community/thumbnail/AppCommunityThumbnail.vue';
 import { configRealms } from '../../../../_common/config/config.service';
 import { formatNumber } from '../../../../_common/filters/number';
-import AppRealmChunk from '../../../../_common/realm/chunk/AppRealmChunk.vue';
+import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
@@ -69,7 +69,17 @@ const slicedCommunities = computed(() => searchPayload.value.communities.slice(0
 		<template v-if="configRealms.value && searchPayload.realm">
 			<section class="section section-thin">
 				<div class="container">
-					<AppRealmChunk :realm="searchPayload.realm" />
+					<h3 class="-heading">Realms</h3>
+
+					<div class="-realm-cards">
+						<AppRealmFullCard
+							:realm="searchPayload.realm"
+							:ratio="3.5"
+							no-sheet
+							overlay-content
+							:to="searchPayload.realm.routeLocation"
+						/>
+					</div>
 				</div>
 			</section>
 		</template>
@@ -206,4 +216,14 @@ const slicedCommunities = computed(() => searchPayload.value.communities.slice(0
 .-heading
 	clearfix()
 	margin-top: $line-height-computed
+
+.-realm-cards
+	display: grid
+	--grid-cols: 2
+	gap: 24px
+	grid-template-columns: repeat(var(--grid-cols), 1fr)
+
+	@media $media-xs
+		--grid-cols: 1
+		gap: 16px
 </style>

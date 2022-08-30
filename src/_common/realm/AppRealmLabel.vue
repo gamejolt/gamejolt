@@ -7,11 +7,14 @@ defineProps({
 		type: Object as PropType<Realm>,
 		required: true,
 	},
+	overlay: {
+		type: Boolean,
+	},
 });
 </script>
 
 <template>
-	<div class="-label">
+	<div class="-label" :class="{ '-label-overlay': overlay }">
 		{{ realm.name }}
 	</div>
 </template>
@@ -22,4 +25,8 @@ defineProps({
 	padding: 4px 8px
 	border-radius: 24px
 	font-weight: 700
+
+.-label-overlay
+	background-color: rgba($black, 0.65)
+	color: white
 </style>

@@ -75,7 +75,7 @@ const { user } = useCommonStore();
 			</template>
 
 			<div
-				v-if="configChargedStickers && (!isBootstrapped || creatorPosts.length)"
+				v-if="configChargedStickers.value && (!isBootstrapped || creatorPosts.length)"
 				class="container"
 			>
 				<h2 class="-content-section-header">Game Jolt Creators</h2>
@@ -93,9 +93,7 @@ const { user } = useCommonStore();
 				:realms="featuredRealms"
 			>
 				<template #header>
-					<div>
-						<h2 class="-content-section-header">Realms</h2>
-					</div>
+					<h2 class="-content-section-header">Realms</h2>
 				</template>
 			</AppDiscoverHomeRealms>
 

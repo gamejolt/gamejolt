@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
-import AppRealmChunk from '../../../../../_common/realm/chunk/AppRealmChunk.vue';
+import AppRealmFullCard from '../../../../../_common/realm/AppRealmFullCard.vue';
 import { Realm } from '../../../../../_common/realm/realm-model';
 
 defineProps({
@@ -18,18 +18,29 @@ defineProps({
 	<div class="container">
 		<slot name="header" />
 
-		<template v-for="(realm, index) of realms" :key="realm.id">
-			<AppRealmChunk
-				:class="{
-					'-chunk-pad': index < realms.length - 1,
-				}"
-				:realm="realm"
-			/>
-		</template>
+		<div class="-grid">
+			<template v-for="realm of realms" :key="realm.id">
+				<AppRealmFullCard
+					:ratio="3.5"
+					:realm="realm"
+					overlay-content
+					no-sheet
+					:to="realm.routeLocation"
+				/>
+			</template>
+		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-.-chunk-pad
-	margin-bottom: 48px
+.-grid
+	--grid-cols: 2
+	gap: 24px
+	display: grid
+	grid-template-columns: repeat(var(--grid-cols), 1fr)
+	justify-content: center
+
+	@media $media-xs
+		--grid-cols: 1
+		gap: 16px
 </style>
