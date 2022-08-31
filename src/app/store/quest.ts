@@ -107,15 +107,10 @@ export function createQuestStore({
 		isLoading.value = true;
 		_isLoadingDailyQuests.value = true;
 		try {
-			const payload = await Api.sendRequest(
+			const payload = await Api.sendFieldsRequest(
 				'/mobile/quest',
+				{ dailyQuests: true },
 				{
-					_fields: {
-						dailyQuests: true,
-					},
-				},
-				{
-					sanitizeComplexData: false,
 					detach: true,
 				}
 			);

@@ -1,14 +1,16 @@
 <script lang="ts">
 import { inject, InjectionKey, provide, ref } from 'vue';
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { RouterLink, RouterView } from 'vue-router';
+import { bangRef } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import AppEditableOverlay from '../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { UserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
@@ -27,56 +29,42 @@ function createController() {
 	return { heading };
 }
 
-@Options({
-	name: 'RouteDashAccount',
-	components: {
-		AppPageHeader,
-		AppUserAvatar,
-		AppExpand,
-		AppMediaItemCover,
-		AppEditableOverlay,
+export default {
+	...defineAppRouteOptions({
+		deps: {},
+		// We want to reload this data every time we come into this section.
+		resolver: () => Api.sendRequest('/web/dash/account'),
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+const { user: maybeUser, setUser } = useCommonStore();
+
+const routeStore = createController();
+provide(Key, routeStore);
+
+const { heading } = routeStore;
+const user = bangRef(maybeUser);
+
+const { isBootstrapped } = createAppRoute({
+	onResolved({ payload }) {
+		setUser(payload.user);
 	},
-})
-@OptionsForRoute({
-	deps: {},
-	// We want to reload this data every time we come into this section.
-	resolver: () => Api.sendRequest('/web/dash/account'),
-})
-export default class RouteDashAccount extends BaseRouteComponent {
-	routeStore = setup(() => {
-		const c = createController();
-		provide(Key, c);
-		return c;
-	});
-	commonStore = setup(() => useCommonStore());
+});
 
-	readonly Screen = Screen;
+function showEditHeader() {
+	UserHeaderModal.show();
+}
 
-	get user() {
-		return this.commonStore.user!;
-	}
-
-	get heading() {
-		return this.routeStore.heading;
-	}
-
-	routeResolved(payload: any) {
-		this.commonStore.setUser(payload.user);
-	}
-
-	showEditHeader() {
-		UserHeaderModal.show();
-	}
-
-	showEditAvatar() {
-		UserAvatarModal.show();
-	}
+function showEditAvatar() {
+	UserAvatarModal.show();
 }
 </script>
 
 <template>
 	<div>
-		<div v-if="Screen.isXs" class="well fill-darker sans-margin-bottom">
+		<div v-if="Screen.isXs" class="well fill-darker sans-margin-bottom sans-rounded">
 			<AppButton block icon="chevron-left" :to="{ name: 'dash.account-mobile-nav' }">
 				<AppTranslate>Back to Account</AppTranslate>
 			</AppButton>
@@ -128,116 +116,116 @@ export default class RouteDashAccount extends BaseRouteComponent {
 		</AppExpand>
 
 		<!-- Don't show content before this route has loaded in the account data. -->
-		<section v-if="isRouteBootstrapped" class="section">
+		<section v-if="isBootstrapped" class="section">
 			<div class="container">
 				<div class="row">
 					<div v-if="!Screen.isXs" class="col-sm-3 col-md-2">
 						<nav class="platform-list">
 							<ul>
 								<li>
-									<router-link
+									<RouterLink
 										:to="{ name: 'dash.account.edit' }"
 										active-class="active"
 									>
 										<AppTranslate>Profile</AppTranslate>
-									</router-link>
+									</RouterLink>
 								</li>
 								<li>
-									<router-link
+									<RouterLink
 										:to="{ name: 'dash.account.device-settings' }"
 										active-class="active"
 									>
 										<AppTranslate>Device Settings</AppTranslate>
-									</router-link>
+									</RouterLink>
 								</li>
 								<li>
-									<router-link
+									<RouterLink
 										:to="{ name: 'dash.account.blocks' }"
 										active-class="active"
 									>
 										<AppTranslate>Blocked Users</AppTranslate>
-									</router-link>
+									</RouterLink>
 								</li>
 							</ul>
 							<hr />
 							<ul>
 								<li>
-									<router-link
+									<RouterLink
 										:to="{ name: 'dash.account.linked-accounts' }"
 										active-class="active"
 									>
 										<AppTranslate>Linked Accounts</AppTranslate>
-									</router-link>
+									</RouterLink>
 								</li>
 								<li>
-									<router-link
+									<RouterLink
 										:to="{ name: 'dash.account.email-preferences' }"
 										active-class="active"
 									>
 										<AppTranslate>Email Preferences</AppTranslate>
-									</router-link>
+									</RouterLink>
 								</li>
 								<li>
-									<router-link
+									<RouterLink
 										:to="{ name: 'dash.account.change-password' }"
 										active-class="active"
 									>
 										<AppTranslate>Password</AppTranslate>
-									</router-link>
+									</RouterLink>
 								</li>
 							</ul>
 							<hr />
 							<ul>
 								<li>
-									<router-link
+									<RouterLink
 										:to="{ name: 'dash.account.payment-methods' }"
 										active-class="active"
 									>
 										<AppTranslate>Payment Methods</AppTranslate>
-									</router-link>
+									</RouterLink>
 								</li>
 								<li>
-									<router-link
+									<RouterLink
 										:to="{ name: 'dash.account.addresses' }"
 										active-class="active"
 									>
 										<AppTranslate>Saved Addresses</AppTranslate>
-									</router-link>
+									</RouterLink>
 								</li>
 								<li>
-									<router-link
+									<RouterLink
 										:to="{ name: 'dash.account.purchases.list' }"
 										active-class="active"
 									>
 										<AppTranslate>Purchases</AppTranslate>
-									</router-link>
+									</RouterLink>
 								</li>
 							</ul>
 							<hr />
 							<ul>
 								<li>
-									<router-link
+									<RouterLink
 										:to="{ name: 'dash.account.financials' }"
 										active-class="active"
 									>
 										<AppTranslate>Marketplace Account Setup</AppTranslate>
-									</router-link>
+									</RouterLink>
 								</li>
 								<li>
-									<router-link
-										:to="{ name: 'dash.account.withdraw-funds' }"
+									<RouterLink
+										:to="{ name: 'dash.account.wallet' }"
 										active-class="active"
 									>
-										<AppTranslate>Revenue</AppTranslate>
-									</router-link>
+										<AppTranslate>Wallet</AppTranslate>
+									</RouterLink>
 								</li>
 								<li>
-									<router-link
+									<RouterLink
 										:to="{ name: 'dash.account.site' }"
 										active-class="active"
 									>
 										<AppTranslate>Portfolio Site</AppTranslate>
-									</router-link>
+									</RouterLink>
 								</li>
 							</ul>
 						</nav>
@@ -254,7 +242,7 @@ export default class RouteDashAccount extends BaseRouteComponent {
 							<hr />
 						</template>
 
-						<router-view />
+						<RouterView />
 					</div>
 				</div>
 			</div>

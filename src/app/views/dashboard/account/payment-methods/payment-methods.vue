@@ -7,7 +7,7 @@ import { PaymentSource } from '../../../../../_common/payment-source/payment-sou
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserPaymentSourceCard from '../../../../components/user/payment-source/AppUserPaymentSourceCard.vue';
-import { useAccountRouteController } from '../account.vue';
+import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 @Options({
 	name: 'RouteDashAccountPaymentMethods',

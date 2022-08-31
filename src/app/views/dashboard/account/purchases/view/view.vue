@@ -17,7 +17,7 @@ import {
 } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { useAccountRouteController } from '../../account.vue';
+import { useAccountRouteController } from '../../RouteDashAccount.vue';
 
 @Options({
 	name: 'RouteDashAccountPurchasesView',

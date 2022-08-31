@@ -9,6 +9,9 @@ import { CommentableModel, Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
 import { Theme } from '../theme/theme.model';
 
+export const CreatorStatusCreator = 1;
+export const CreatorStatusApplied = 2;
+
 export class User extends Model implements ContentContainerModel, CommentableModel {
 	static readonly TYPE_GAMER = 'User';
 	static readonly TYPE_DEVELOPER = 'Developer';
@@ -28,6 +31,7 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 	permission_level!: number;
 	is_verified!: boolean;
 	is_partner!: boolean | null;
+	creator_status?: number;
 	friend_requests_enabled!: boolean;
 	liked_posts_enabled?: boolean;
 	mentions_setting?: number;
