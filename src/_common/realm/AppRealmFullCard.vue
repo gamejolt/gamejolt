@@ -31,16 +31,16 @@ defineProps({
 </script>
 
 <template>
-	<component
-		:is="to ? RouterLink : 'div'"
+	<div
 		class="-card"
 		:class="{
-			'-link': to,
+			'-hoverable': to,
 			'-no-sheet': noSheet,
-			['sheet-full sheet-elevate']: !noSheet,
+			['sheet sheet-full sheet-elevate']: !noSheet,
 		}"
-		:to="to"
 	>
+		<RouterLink v-if="to" class="-link-mask" :to="to" />
+
 		<AppRealmLabel class="-label" :overlay="overlayContent" :realm="realm" />
 
 		<AppResponsiveDimensions :ratio="ratio">
@@ -49,7 +49,7 @@ defineProps({
 			</AppMediaItemBackdrop>
 		</AppResponsiveDimensions>
 
-		<div class="-content" :class="{ '-content-overlay': overlayContent }">
+		<div class="-follow-button" :class="{ '-follow-button-overlay': overlayContent }">
 			<AppRealmFollowButton
 				:realm="realm"
 				source="fullCard"
@@ -57,7 +57,7 @@ defineProps({
 				:overlay="overlayContent"
 			/>
 		</div>
-	</component>
+	</div>
 </template>
 
 <style lang="stylus" scoped>
@@ -70,7 +70,7 @@ defineProps({
 	elevate-1()
 	rounded-corners-lg()
 
-	&.-link:hover
+	&.-hoverable:hover
 		elevate-2()
 
 .-cover-img
@@ -78,19 +78,27 @@ defineProps({
 	height: 100%
 	object-fit: cover
 
-.-content
-	padding: 16px
-
-.-content-overlay
-	position: absolute
-	padding: 0
-	right: 8px
-	bottom: 8px
-	z-index: 1
-
 .-label
 	position: absolute
 	left: 8px
 	top: 8px
 	z-index: 1
+
+.-link-mask
+	position: absolute
+	left: 0
+	top: 0
+	right: 0
+	bottom: 0
+	z-index: 2
+
+.-follow-button
+	padding: 16px
+
+.-follow-button-overlay
+	position: absolute
+	padding: 0
+	right: 8px
+	bottom: 8px
+	z-index: 3
 </style>
