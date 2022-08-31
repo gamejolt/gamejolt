@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
 import AppImgResponsive from '../img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '../media-item/backdrop/AppMediaItemBackdrop.vue';
@@ -8,7 +8,7 @@ import AppRealmFollowButton from './AppRealmFollowButton.vue';
 import AppRealmLabel from './AppRealmLabel.vue';
 import { Realm } from './realm-model';
 
-defineProps({
+const props = defineProps({
 	realm: {
 		type: Object as PropType<Realm>,
 		required: true,
@@ -27,7 +27,20 @@ defineProps({
 		type: Object as PropType<RouteLocationRaw>,
 		default: undefined,
 	},
+	/**
+	 * Type of media item that should be used for the card. `cover` should be
+	 * used for narrow {@link ratio}s, where `header` should be used for wider
+	 * ratios.
+	 */
+	mediaItemType: {
+		type: String as PropType<'header' | 'cover'>,
+		default: 'cover',
+	},
 });
+
+const { realm, ratio, mediaItemType } = toRefs(props);
+
+const mediaItem = computed(() => realm.value[mediaItemType.value]);
 </script>
 
 <template>
@@ -44,8 +57,8 @@ defineProps({
 		<AppRealmLabel class="-label" :overlay="overlayContent" :realm="realm" />
 
 		<AppResponsiveDimensions :ratio="ratio">
-			<AppMediaItemBackdrop :media-item="realm.cover">
-				<AppImgResponsive class="-cover-img" :src="realm.cover.mediaserver_url" alt="" />
+			<AppMediaItemBackdrop :media-item="mediaItem">
+				<AppImgResponsive class="-cover-img" :src="mediaItem.mediaserver_url" alt="" />
 			</AppMediaItemBackdrop>
 		</AppResponsiveDimensions>
 
