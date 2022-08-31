@@ -31,6 +31,7 @@ defineProps({
 			class="-card-base"
 			:post="post"
 			no-elevate-hover
+			full-gradient
 			:video-context="noVideo ? undefined : 'gif'"
 			:aspect-ratio="true ? AppCreatorCardAspectRatio : undefined"
 		>

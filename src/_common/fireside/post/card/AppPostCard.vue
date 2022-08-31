@@ -72,6 +72,7 @@ const userLink = computed(() => Environment.wttfBaseUrl + post.value?.user.url);
 		:post="post"
 		:video-context="videoContext"
 		:has-overlay-content="hasOverlayContent"
+		:blur="hasOverlayContent"
 	>
 		<template #overlay>
 			<slot name="overlay" />

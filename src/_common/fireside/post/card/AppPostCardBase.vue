@@ -30,12 +30,13 @@ const props = defineProps({
 		type: Object as PropType<FiresidePost>,
 		required: true,
 	},
+	/**
+	 * Required to allow videos to be played. Uses just the video poster if this
+	 * isn't provided.
+	 */
 	videoContext: {
 		type: String as PropType<VideoPlayerControllerContext>,
 		default: undefined,
-	},
-	hasOverlayContent: {
-		type: Boolean,
 	},
 	noElevateHover: {
 		type: Boolean,
@@ -43,6 +44,26 @@ const props = defineProps({
 	aspectRatio: {
 		type: Number,
 		default: undefined,
+	},
+	/**
+	 * Allows slot content to be build in the #overlay slot. Adds a low
+	 * mid-opacity darkening overlay above the card content as well.
+	 */
+	hasOverlayContent: {
+		type: Boolean,
+	},
+	/**
+	 * Blurs the media item content.
+	 */
+	blur: {
+		type: Boolean,
+	},
+	/**
+	 * Adds a soft gradient overlay on top top 1/3rd of the post card in
+	 * addition to the default bottom 1/3rd.
+	 */
+	fullGradient: {
+		type: Boolean,
 	},
 });
 
@@ -71,7 +92,9 @@ const isHydrated = ref(import.meta.env.SSR);
 
 const postCardRatio = computed(() => aspectRatio?.value ?? AppPostCardAspectRatio);
 
-const shouldPlayVideo = computed(() => isHydrated.value && ContentFocus.hasFocus);
+const shouldPlayVideo = computed(
+	() => Screen.isDesktop && !import.meta.env.SSR && isHydrated.value && ContentFocus.hasFocus
+);
 
 onMounted(() => calcData());
 
@@ -210,7 +233,7 @@ function _initVideoController() {
 		v-if="post"
 		ref="root"
 		class="post-card"
-		:class="{ '-no-elevate-hover': noElevateHover }"
+		:class="{ '-no-elevate-hover': noElevateHover, '-full-gradient': fullGradient }"
 		:style="{ aspectRatio: `${postCardRatio}` }"
 	>
 		<AppResponsiveDimensions :ratio="postCardRatio" @change="calcData()">
@@ -231,7 +254,7 @@ function _initVideoController() {
 				<AppBackground
 					ref="cardElem"
 					class="-background"
-					:class="{ '-blur': hasOverlayContent }"
+					:class="{ '-blur': blur }"
 					:background="background"
 				>
 					<template v-if="!!mediaItem">
@@ -330,7 +353,11 @@ $-padding = 8px
 	left: 0
 	right: 0
 	bottom: 0
-	background: linear-gradient(to top, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))
+	background: linear-gradient(to top, rgba($black, 0.45), rgba($black, 0), rgba($black, 0))
+
+.-full-gradient
+	.-inner-gradient
+		background: linear-gradient(to top, rgba($black, 0.45), rgba($black, 0), rgba($black, 0.45))
 
 .-inner-message
 	position: absolute
@@ -348,7 +375,6 @@ $-padding = 8px
 	border-radius: 8px
 	padding: $-padding
 	max-height: 100%
-
 
 	::v-deep(.fireside-post-lead-content)
 		color: var(--theme-fg)
