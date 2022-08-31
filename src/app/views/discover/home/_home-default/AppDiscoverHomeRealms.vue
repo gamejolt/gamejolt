@@ -22,6 +22,7 @@ defineProps({
 			<template v-for="realm of realms" :key="realm.id">
 				<AppRealmFullCard
 					:ratio="3.5"
+					media-item-type="header"
 					:realm="realm"
 					overlay-content
 					no-sheet
