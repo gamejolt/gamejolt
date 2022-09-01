@@ -30,19 +30,11 @@ export default {
 			params: ['id'],
 		},
 		resolver: async ({ route }) =>
-			Api.sendRequest(
-				`/mobile/quest/${route.params.id}`,
-				{
-					_fields: {
-						quest: true,
-						participatingFriends: true,
-						participatingFriendCount: true,
-					},
-				},
-				{
-					sanitizeComplexData: false,
-				}
-			),
+			Api.sendFieldsRequest(`/mobile/quest/${route.params.id}`, {
+				quest: true,
+				participatingFriends: true,
+				participatingFriendCount: true,
+			}),
 	}),
 };
 </script>

@@ -7,7 +7,7 @@ import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import FormProfile from '../../../../components/forms/profile/FormProfile.vue';
-import { useAccountRouteController } from '../account.vue';
+import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 @Options({
 	name: 'RouteDashAccountEdit',

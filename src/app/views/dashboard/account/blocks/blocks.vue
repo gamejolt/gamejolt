@@ -15,7 +15,7 @@ import { UserBlock } from '../../../../../_common/user/block/block.model';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import FormUserBlock from '../../../../components/forms/user/block/block.vue';
-import { useAccountRouteController } from '../account.vue';
+import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 @Options({
 	name: 'RouteDashAccountBlocks',

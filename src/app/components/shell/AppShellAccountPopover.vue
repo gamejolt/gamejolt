@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
 import { Client } from '../../../_common/client/safe-exports';
 import { formatCurrency } from '../../../_common/filters/currency';
+import { formatNumber } from '../../../_common/filters/number';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../_common/popper/AppPopper.vue';
 import { Screen } from '../../../_common/screen/screen-service';
@@ -11,9 +12,9 @@ import { SettingThemeDark } from '../../../_common/settings/settings.service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
-import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
+import { UserWallet } from '../../../_common/user/wallet/wallet.model';
 import { useAppStore } from '../../store';
 import { UserTokenModal } from '../user/token-modal/token-modal.service';
 
@@ -22,7 +23,10 @@ const { user } = useCommonStore();
 const { isDark, setDark } = useThemeStore();
 
 const isShowing = ref(false);
-const walletAmount = ref<number | false>(false);
+
+const isFetchingWallet = ref(true);
+const marketplaceAmount = ref(0);
+const gemWallet = ref<UserWallet>();
 
 function onShow() {
 	isShowing.value = true;
@@ -43,10 +47,20 @@ function toggleDark() {
 }
 
 async function _getWallet() {
-	const response = await Api.sendRequest('/web/dash/funds/wallet', undefined, {
-		detach: true,
-	});
-	walletAmount.value = response.amount;
+	const response = await Api.sendFieldsRequest(
+		'/mobile/me',
+		{
+			marketplaceWalletBalance: true,
+			gemWallet: true,
+		},
+		{
+			detach: true,
+		}
+	);
+
+	marketplaceAmount.value = response.marketplaceWalletBalance || 0;
+	gemWallet.value = new UserWallet(response.gemWallet);
+	isFetchingWallet.value = false;
 }
 
 function quit() {
@@ -158,30 +172,40 @@ function quit() {
 					<!--
 					We don't know if they have revenue until we do the call.
 					-->
-					<template v-if="walletAmount === false || walletAmount > 0">
-						<div v-if="walletAmount === false" class="list-group-item">
+					<template
+						v-if="isFetchingWallet === true || marketplaceAmount > 0 || gemWallet"
+					>
+						<div v-if="isFetchingWallet" class="list-group-item">
 							<AppTranslate>Loading...</AppTranslate>
 						</div>
 						<RouterLink
 							v-else
-							class="list-group-item"
-							:to="{ name: 'dash.account.withdraw-funds' }"
+							class="-wallet list-group-item"
+							:to="{ name: 'dash.account.wallet' }"
 						>
-							<AppJolticon
-								v-app-tooltip.touchable="
-									$gettext(
-										`These are your available funds to either buy games with or withdraw.`
-									)
-								"
-								class="pull-right"
-								icon="help-circle"
-							/>
-
-							<AppTranslate>Wallet Balance</AppTranslate>
-							&mdash;
-							<span class="-currency">
-								{{ formatCurrency(walletAmount) }}
+							<span>
+								<AppTranslate>Wallet</AppTranslate>
 							</span>
+
+							<span class="-wallet-spacer" />
+
+							<template v-if="gemWallet">
+								<span class="-wallet-icon -gem-icon">
+									<AppJolticon icon="gem" />
+								</span>
+								<span>
+									{{ formatNumber(gemWallet.available_balance) }}
+								</span>
+							</template>
+
+							<template v-if="marketplaceAmount > 0">
+								<span class="-wallet-icon -marketplace-icon">
+									<AppJolticon icon="marketplace-filled" />
+								</span>
+								<span>
+									{{ formatCurrency(marketplaceAmount) }}
+								</span>
+							</template>
 						</RouterLink>
 					</template>
 				</div>
@@ -223,8 +247,21 @@ function quit() {
 .-heading
 	margin: 0
 
-.-currency
-	theme-prop('color', 'highlight')
+.-wallet
+	display: flex
+	flex-direction: row
+
+.-wallet-spacer
+	flex: auto
+
+.-wallet-icon
+	margin-left: 16px
+
+.-gem-icon
+	color: $gj-blue
+
+.-marketplace-icon
+	color: $gj-green
 
 .-separator
 	margin: 0 $list-group-item-padding

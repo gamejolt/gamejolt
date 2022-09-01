@@ -187,18 +187,10 @@ async function onUserCardShow() {
 
 	isLoadingFollowState.value = true;
 	try {
-		const response = await Api.sendRequest(
-			`/mobile/user/${user.id}`,
-			{
-				_fields: {
-					isFollowing: true,
-					dogtags: true,
-				},
-			},
-			{
-				sanitizeComplexData: false,
-			}
-		);
+		const response = await Api.sendFieldsRequest(`/mobile/user/${user.id}`, {
+			isFollowing: true,
+			dogtags: true,
+		});
 
 		const is_following = response.isFollowing === true;
 		const dogtags = response.dogtags;

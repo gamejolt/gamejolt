@@ -184,6 +184,26 @@ export class Api {
 		return Payload.processResponse(requestPromise, options);
 	}
 
+	/**
+	 * Used to send a request for specific fields against the mobile API.
+	 */
+	static async sendFieldsRequest<T = any>(
+		uri: string,
+		fields: Record<string, any>,
+		options: RequestOptions = {}
+	): Promise<T> {
+		return this.sendRequest(
+			uri,
+			{
+				_fields: fields,
+			},
+			{
+				...options,
+				sanitizeComplexData: false,
+			}
+		);
+	}
+
 	private static async createRequest(
 		method: 'GET' | 'POST',
 		url: string,
