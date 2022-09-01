@@ -59,7 +59,7 @@ async function _getWallet() {
 	);
 
 	marketplaceAmount.value = response.marketplaceWalletBalance || 0;
-	gemWallet.value = new UserWallet(response.gemWallet);
+	gemWallet.value = response.gemWallet ? new UserWallet(response.gemWallet) : undefined;
 	isFetchingWallet.value = false;
 }
 
