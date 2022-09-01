@@ -34,7 +34,11 @@ function onClick() {
 		@click.stop="onClick"
 	>
 		<div v-for="(user, index) of displaySupporters" :key="user.id" class="-item">
-			<AppUserAvatarImg class="-item-img" :style="{ zIndex: supporters.length - index }" />
+			<AppUserAvatarImg
+				class="-item-img"
+				:user="user"
+				:style="{ zIndex: supporters.length - index }"
+			/>
 		</div>
 	</div>
 </template>
