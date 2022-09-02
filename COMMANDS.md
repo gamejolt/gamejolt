@@ -53,10 +53,6 @@ Run `yarn ssr:client` and `yarn ssr:server` and after both are done run `yarn ss
   - __For `web` platform (the default):__ It'll run a tiny http server that serves the web frontend on https://development.gamejolt.com.
   - __For `desktop` platform:__ It'll build to disk. Use `yarn client` to run it. __Note:__ this builds ALL sections by default. This is very resource intensive. If this is undesired, you can pass in which section to build explicitly with `--section`.
 
-    > Sorry for the hassle, but in this build mode manual modifications to package.json are necessary:
-    > - Change `main` to `chrome-extension://game-jolt-client/build/desktop/index.html#/` (or other section.html, e.g. auth.html if using `--section auth`)
-    > - Remove `node-remote` key
-
 - `yarn build:devd` - Same as `yarn build:dev` only targetting the development environment.
 
 - `yarn tsscript` - Utility script to execute other scripts that are written in typescript. You shouldn't need to use this directly.

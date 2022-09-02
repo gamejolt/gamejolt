@@ -2,6 +2,11 @@ import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
 import { defineConfig, UserConfig as ViteUserConfigActual } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
 import { acquirePrebuiltFFmpeg } from './scripts/build/desktop-app/ffmpeg-prebuilt';
+import {
+	activateJsonProperty,
+	patchPackageJson,
+	updateJsonProperty,
+} from './scripts/build/packageJson';
 import viteHtmlResolve from './scripts/build/vite-html-resolve';
 import { readFromViteEnv } from './scripts/build/vite-runner';
 
@@ -23,6 +28,27 @@ type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'
 // https://vitejs.dev/config/
 export default defineConfig(async () => {
 	const gjOpts = readFromViteEnv(process.env);
+
+	// package.json has to have specific main/node-remote values depending on if
+	// we are running with HMR (buildType = serve-hmr) or building to disk.
+	// Since only one section at a time may run during HMR, we are free to make
+	// changes to package.json without worrying about conflicting with other
+	// sections.
+	//
+	// Note: when building to disk package.json is changed by the caller
+	// depending on which section(s) are being built.
+	if (gjOpts.buildType === 'serve-hmr') {
+		// Intended values for main and node-remote keys.
+		const propertyMain = 'https://development.gamejolt.com/';
+		const propertyNodeRemote = 'https://development.gamejolt.com';
+
+		await patchPackageJson(packageJsonStr => {
+			packageJsonStr = updateJsonProperty(packageJsonStr, 'main', propertyMain);
+			packageJsonStr = activateJsonProperty(packageJsonStr, 'node-remote');
+			packageJsonStr = updateJsonProperty(packageJsonStr, 'node-remote', propertyNodeRemote);
+			return packageJsonStr;
+		});
+	}
 
 	// Acquire the ffmpeg prebuilt binaries if needed.
 	// By default this is done when serving the desktop app locally.

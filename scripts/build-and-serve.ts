@@ -18,6 +18,7 @@
 
 import * as fs from 'fs-extra';
 import { acquirePrebuiltFFmpeg } from './build/desktop-app/ffmpeg-prebuilt';
+import { deactivateJsonProperty, patchPackageJson, updateJsonProperty } from './build/packageJson';
 import { gjSectionConfigs, type GjSectionName } from './build/section-config';
 import { Options, parseAndInferOptionsFromCommandline } from './build/vite-options';
 import { runVite } from './build/vite-runner';
@@ -130,38 +131,75 @@ function runViteBuild(gjOpts: Options, aborter: AbortController) {
 	}
 
 	// If building for desktop app and section wasnt explicitly given, build all sections.
-	if (gjOpts.platform === 'desktop' && !('section' in args)) {
+	if (gjOpts.platform === 'desktop') {
 		try {
 			const rootDir = path.resolve(__dirname, '..');
-			const frontendBuildDir = path.join(rootDir, 'build', 'desktop');
 
-			await acquirePrebuiltFFmpeg({
-				outDir: rootDir,
-				cacheDir: path.resolve(rootDir, 'build', '.cache', 'ffmpeg-prebuilt'),
-				nwjsVersion: gjOpts.nwjsVersion,
-			});
+			// Build a specific section.
+			if ('section' in args) {
+				const entrypoint = (() => {
+					switch (args['section']) {
+						case 'app':
+							return 'index.html#/';
 
-			// Clean the build folder to start fresh.
-			console.log('Cleaning up old build dir');
-			await fs.remove(frontendBuildDir);
+						case 'auth':
+							return 'auth.html#/login';
 
-			const desktopAppSectionNames = Object.entries(gjSectionConfigs)
-				.filter(([k, v]) => v.desktopApp)
-				.map(([k, v]) => k as GjSectionName);
+						default:
+							return `${args['section']}.html#/`;
+					}
+				})();
 
-			for (const sectionName of desktopAppSectionNames) {
-				const argsForSection = Object.assign({}, args, {
-					section: sectionName,
-					'empty-outdir': false,
+				await patchPackageJson(packageJsonStr => {
+					const fullEntrypoint = `chrome-extension://game-jolt-client/build/desktop/${entrypoint}`;
+					packageJsonStr = updateJsonProperty(packageJsonStr, 'main', fullEntrypoint);
+					packageJsonStr = deactivateJsonProperty(packageJsonStr, 'node-remote');
+					return packageJsonStr;
 				});
-				const gjOptsForSection = await parseAndInferOptionsFromCommandline(argsForSection);
-				gjOptsForSection.buildType = 'serve-build';
-				// Don't acquire ffmpeg during the build because multiple build
-				// processes would try overwriting the same ffmpeg binary. For
-				// this reason we acquire it before any section starts building.
-				gjOptsForSection.withFfmpeg = false;
 
-				runViteBuild(gjOptsForSection, aborter);
+				runViteBuild(gjOpts, aborter);
+			}
+			// Build all sections.
+			else {
+				await patchPackageJson(packageJsonStr => {
+					const fullEntrypoint = `chrome-extension://game-jolt-client/build/desktop/index.html#/`;
+					packageJsonStr = updateJsonProperty(packageJsonStr, 'main', fullEntrypoint);
+					packageJsonStr = deactivateJsonProperty(packageJsonStr, 'node-remote');
+					return packageJsonStr;
+				});
+
+				const frontendBuildDir = path.join(rootDir, 'build', 'desktop');
+
+				await acquirePrebuiltFFmpeg({
+					outDir: rootDir,
+					cacheDir: path.resolve(rootDir, 'build', '.cache', 'ffmpeg-prebuilt'),
+					nwjsVersion: gjOpts.nwjsVersion,
+				});
+
+				// Clean the build folder to start fresh.
+				console.log('Cleaning up old build dir');
+				await fs.remove(frontendBuildDir);
+
+				const desktopAppSectionNames = Object.entries(gjSectionConfigs)
+					.filter(([k, v]) => v.desktopApp)
+					.map(([k, v]) => k as GjSectionName);
+
+				for (const sectionName of desktopAppSectionNames) {
+					const argsForSection = Object.assign({}, args, {
+						section: sectionName,
+						'empty-outdir': false,
+					});
+					const gjOptsForSection = await parseAndInferOptionsFromCommandline(
+						argsForSection
+					);
+					gjOptsForSection.buildType = 'serve-build';
+					// Don't acquire ffmpeg during the build because multiple build
+					// processes would try overwriting the same ffmpeg binary. For
+					// this reason we acquire it before any section starts building.
+					gjOptsForSection.withFfmpeg = false;
+
+					runViteBuild(gjOptsForSection, aborter);
+				}
 			}
 		} catch (e) {
 			console.error(e);
