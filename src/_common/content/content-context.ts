@@ -1,6 +1,8 @@
 import { arrayRemove } from '../../utils/array';
-import { assertNever } from '../../utils/utils';
 import { MediaItem } from '../media-item/media-item-model';
+import contentCapabilityDefinitions from './capabilities.json';
+
+export const GJ_FORMAT_VERSION = '1.0.1';
 
 export type ContentContext =
 	| 'fireside-post-lead'
@@ -18,31 +20,31 @@ export type ContentContext =
 	| 'quest-stage-description';
 
 export enum ContextCapabilityType {
-	TextBold,
-	TextItalic,
-	TextLink,
-	TextCode,
-	TextStrike,
+	TextBold = 'text-bold',
+	TextItalic = 'text-italics',
+	TextLink = 'text-link',
+	TextCode = 'text-code',
+	TextStrike = 'text-strike',
 
-	CustomLink,
-	Emoji,
-	Tag,
-	Mention,
+	CustomLink = 'custom-link',
+	Emoji = 'emoji',
+	Tag = 'tag',
+	Mention = 'mention',
 
-	Media,
-	Gif,
+	Media = 'media',
+	Gif = 'gif',
 
-	EmbedVideo,
-	EmbedMusic,
-	EmbedModel,
+	EmbedVideo = 'embed-video',
+	EmbedMusic = 'embed-music',
+	EmbedModel = 'embed-model',
 
-	CodeBlock,
-	Blockquote,
-	List,
-	HorizontalRule,
-	Spoiler,
-	Heading,
-	Sticker,
+	CodeBlock = 'code-block',
+	Blockquote = 'blockquote',
+	List = 'list',
+	HorizontalRule = 'hr',
+	Spoiler = 'spoiler',
+	Heading = 'heading',
+	Sticker = 'sticker',
 }
 
 export class ContextCapabilities {
@@ -154,170 +156,11 @@ export class ContextCapabilities {
 	}
 
 	public static fromStringList(items: string[]) {
-		const data = new Set<ContextCapabilityType>();
-
-		for (const item of items) {
-			const value: any = ContextCapabilityType[item as any];
-			if (value !== undefined) {
-				data.add(value);
-			}
-		}
-
-		return new ContextCapabilities(Array.from(data));
+		return new ContextCapabilities(items.map(x => x as ContextCapabilityType));
 	}
 
 	public static getForContext(context: ContentContext) {
-		switch (context) {
-			case 'fireside-post-lead':
-				return new ContextCapabilities([
-					ContextCapabilityType.TextLink,
-					ContextCapabilityType.Tag,
-					ContextCapabilityType.Mention,
-				]);
-			case 'fireside-post-article':
-			case 'forum-post':
-				return new ContextCapabilities([
-					ContextCapabilityType.TextBold,
-					ContextCapabilityType.TextItalic,
-					ContextCapabilityType.TextLink,
-					ContextCapabilityType.TextCode,
-					ContextCapabilityType.TextStrike,
-					ContextCapabilityType.CustomLink,
-					ContextCapabilityType.Media,
-					ContextCapabilityType.EmbedVideo,
-					ContextCapabilityType.EmbedMusic,
-					ContextCapabilityType.EmbedModel,
-					ContextCapabilityType.CodeBlock,
-					ContextCapabilityType.Blockquote,
-					ContextCapabilityType.Emoji,
-					ContextCapabilityType.List,
-					ContextCapabilityType.HorizontalRule,
-					ContextCapabilityType.Spoiler,
-					ContextCapabilityType.Tag,
-					ContextCapabilityType.Heading,
-					ContextCapabilityType.Mention,
-					ContextCapabilityType.Gif,
-				]);
-			case 'game-description':
-			case 'community-description':
-			case 'community-channel-description':
-				return new ContextCapabilities([
-					ContextCapabilityType.TextBold,
-					ContextCapabilityType.TextItalic,
-					ContextCapabilityType.TextLink,
-					ContextCapabilityType.TextCode,
-					ContextCapabilityType.TextStrike,
-					ContextCapabilityType.CustomLink,
-					ContextCapabilityType.Media,
-					ContextCapabilityType.CodeBlock,
-					ContextCapabilityType.Blockquote,
-					ContextCapabilityType.Emoji,
-					ContextCapabilityType.List,
-					ContextCapabilityType.HorizontalRule,
-					ContextCapabilityType.Spoiler,
-					ContextCapabilityType.Tag,
-					ContextCapabilityType.Heading,
-					ContextCapabilityType.Mention,
-				]);
-			case 'game-comment':
-			case 'user-comment':
-			case 'fireside-post-comment':
-				return new ContextCapabilities([
-					ContextCapabilityType.TextBold,
-					ContextCapabilityType.TextItalic,
-					ContextCapabilityType.TextLink,
-
-					ContextCapabilityType.TextCode,
-					ContextCapabilityType.TextStrike,
-					ContextCapabilityType.CustomLink,
-					ContextCapabilityType.Media,
-					ContextCapabilityType.CodeBlock,
-					ContextCapabilityType.Blockquote,
-					ContextCapabilityType.Emoji,
-					ContextCapabilityType.List,
-					ContextCapabilityType.HorizontalRule,
-					ContextCapabilityType.Spoiler,
-					ContextCapabilityType.Tag,
-					ContextCapabilityType.Mention,
-					ContextCapabilityType.Gif,
-				]);
-			case 'user-bio':
-				return new ContextCapabilities([
-					ContextCapabilityType.TextBold,
-					ContextCapabilityType.TextItalic,
-					ContextCapabilityType.TextLink,
-					ContextCapabilityType.TextCode,
-					ContextCapabilityType.TextStrike,
-					ContextCapabilityType.CustomLink,
-					ContextCapabilityType.CodeBlock,
-					ContextCapabilityType.Blockquote,
-					ContextCapabilityType.Emoji,
-					ContextCapabilityType.List,
-					ContextCapabilityType.HorizontalRule,
-					ContextCapabilityType.Spoiler,
-					ContextCapabilityType.Tag,
-					ContextCapabilityType.Mention,
-				]);
-			case 'chat-message':
-				return new ContextCapabilities([
-					ContextCapabilityType.TextBold,
-					ContextCapabilityType.TextItalic,
-					ContextCapabilityType.TextLink,
-					ContextCapabilityType.TextCode,
-					ContextCapabilityType.TextStrike,
-					ContextCapabilityType.Media,
-					ContextCapabilityType.CodeBlock,
-					ContextCapabilityType.Blockquote,
-					ContextCapabilityType.Emoji,
-					ContextCapabilityType.List,
-					ContextCapabilityType.Spoiler,
-					ContextCapabilityType.Tag,
-					ContextCapabilityType.Mention,
-					ContextCapabilityType.Gif,
-					ContextCapabilityType.Sticker,
-				]);
-			case 'fireside-chat-message':
-				return new ContextCapabilities([
-					ContextCapabilityType.TextBold,
-					ContextCapabilityType.TextItalic,
-					ContextCapabilityType.TextLink,
-					ContextCapabilityType.TextCode,
-					ContextCapabilityType.TextStrike,
-					ContextCapabilityType.Spoiler,
-					ContextCapabilityType.Emoji,
-					ContextCapabilityType.Tag,
-					ContextCapabilityType.Mention,
-					ContextCapabilityType.Gif,
-					ContextCapabilityType.Media,
-					ContextCapabilityType.Sticker,
-				]);
-			case 'quest-stage-description':
-				return new ContextCapabilities([
-					ContextCapabilityType.TextBold,
-					ContextCapabilityType.TextItalic,
-					ContextCapabilityType.TextLink,
-					ContextCapabilityType.TextCode,
-					ContextCapabilityType.TextStrike,
-					ContextCapabilityType.CustomLink,
-					ContextCapabilityType.Media,
-					ContextCapabilityType.EmbedVideo,
-					ContextCapabilityType.EmbedMusic,
-					ContextCapabilityType.EmbedModel,
-					ContextCapabilityType.CodeBlock,
-					ContextCapabilityType.Blockquote,
-					ContextCapabilityType.Emoji,
-					ContextCapabilityType.List,
-					ContextCapabilityType.HorizontalRule,
-					ContextCapabilityType.Spoiler,
-					ContextCapabilityType.Tag,
-					ContextCapabilityType.Heading,
-					ContextCapabilityType.Mention,
-					ContextCapabilityType.Gif,
-				]);
-
-			default:
-				assertNever(context);
-		}
+		return this.fromStringList(contentCapabilityDefinitions[context]);
 	}
 }
 

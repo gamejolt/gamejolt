@@ -39,6 +39,8 @@ export default class RouteContent extends BaseRouteComponent {
 	resourceUrl!: string;
 	ownerName!: string;
 	ownerUrl!: string;
+	maxLength!: number;
+	contentCapabilities!: string[];
 	logReason = '';
 
 	camelCase(str: string) {
@@ -79,6 +81,8 @@ export default class RouteContent extends BaseRouteComponent {
 		this.resourceUrl = $payload.resourceUrl;
 		this.ownerName = $payload.ownerName;
 		this.ownerUrl = $payload.ownerUrl;
+		this.maxLength = $payload.maxLength;
+		this.contentCapabilities = $payload.contentCapabilities;
 
 		this.isHydrated = true;
 	}

@@ -47,7 +47,11 @@ export default class FormComment
 	readonly validateContentNoActiveUploads = validateContentNoActiveUploads;
 
 	get loadUrl() {
-		return `/comments/save`;
+		if (this.model?.id) {
+			return `/comments/save/${this.model.id}`;
+		} else {
+			return `/comments/save?resource=${getCommentModelResourceName(this.commentModel)}`;
+		}
 	}
 
 	get displayRules() {
