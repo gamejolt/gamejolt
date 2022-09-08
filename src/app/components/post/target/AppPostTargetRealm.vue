@@ -37,7 +37,7 @@ const to = computed(() => (hasLinks.value ? realm.value.routeLocation : undefine
 		<template #img>
 			<div
 				:style="{
-					width: POST_TARGET_HEIGHT / (1 / realm.cover.aspectRatio) + 'px',
+					width: POST_TARGET_HEIGHT * realm.cover.aspectRatio + 'px',
 					height: POST_TARGET_HEIGHT + 'px',
 				}"
 			>
