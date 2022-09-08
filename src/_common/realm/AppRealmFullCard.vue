@@ -3,6 +3,7 @@ import { computed, PropType, toRefs } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
 import AppImgResponsive from '../img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '../media-item/backdrop/AppMediaItemBackdrop.vue';
+import { MediaItem } from '../media-item/media-item-model';
 import AppResponsiveDimensions from '../responsive-dimensions/AppResponsiveDimensions.vue';
 import AppRealmFollowButton from './AppRealmFollowButton.vue';
 import AppRealmLabel from './AppRealmLabel.vue';
@@ -40,7 +41,7 @@ const props = defineProps({
 
 const { realm, ratio, mediaItemType } = toRefs(props);
 
-const mediaItem = computed(() => realm.value[mediaItemType.value]);
+const mediaItem = computed<MediaItem | undefined>(() => realm.value[mediaItemType.value]);
 </script>
 
 <template>
@@ -57,7 +58,7 @@ const mediaItem = computed(() => realm.value[mediaItemType.value]);
 		<AppRealmLabel class="-label" :overlay="overlayContent" :realm="realm" />
 
 		<AppResponsiveDimensions :ratio="ratio">
-			<AppMediaItemBackdrop :media-item="mediaItem">
+			<AppMediaItemBackdrop v-if="mediaItem" :media-item="mediaItem">
 				<AppImgResponsive class="-cover-img" :src="mediaItem.mediaserver_url" alt="" />
 			</AppMediaItemBackdrop>
 		</AppResponsiveDimensions>
