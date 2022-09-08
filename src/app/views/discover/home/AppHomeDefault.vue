@@ -51,7 +51,7 @@ const { user } = useCommonStore();
 
 		<section class="section">
 			<template v-if="featuredFireside">
-				<div class="container">
+				<div class="-content-row container">
 					<div class="text-center">
 						<h2 class="section-header">
 							<AppTranslate>Featured Fireside</AppTranslate>
@@ -76,9 +76,9 @@ const { user } = useCommonStore();
 
 			<div
 				v-if="configChargedStickers.value && (!isBootstrapped || creatorPosts.length)"
-				class="container"
+				class="-content-row container"
 			>
-				<h2 class="-content-section-header">Game Jolt Creators</h2>
+				<h2 class="-content-row-header">Game Jolt Creators</h2>
 
 				<AppCreatorsList
 					:is-loading="!isBootstrapped"
@@ -93,7 +93,7 @@ const { user } = useCommonStore();
 				:realms="featuredRealms"
 			>
 				<template #header>
-					<h2 class="-content-section-header">Realms</h2>
+					<h2 class="-content-row-header">Realms</h2>
 				</template>
 			</AppDiscoverHomeRealms>
 
@@ -102,7 +102,7 @@ const { user } = useCommonStore();
 				:communities="featuredCommunities"
 			>
 				<template #header>
-					<h2 class="-content-section-header">Communities</h2>
+					<h2 class="-content-row-header">Communities</h2>
 				</template>
 			</AppDiscoverHomeCommunities>
 		</section>
@@ -133,9 +133,9 @@ const { user } = useCommonStore();
 </template>
 
 <style lang="stylus" scoped>
-.-content-section-header
-	margin: 120px 0 40px
+.-content-row-header
+	margin: 60px 0 20px
 
-.section > ::v-deep(.container:first-of-type) .-content-section-header
-	margin-top: 40px
+.section > ::v-deep(.-content-row:first-of-type) .-content-row-header
+	margin-top: 0
 </style>
