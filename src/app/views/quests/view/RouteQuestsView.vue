@@ -168,7 +168,7 @@ function onNewQuest(data: Quest) {
 					class="-header-img"
 					:src="quest.header.mediaserver_url"
 					:style="{
-						width: `calc(300px / ${quest.header.aspectRatio})`,
+						width: `calc(300px * (1 / ${quest.header.aspectRatio}))`,
 					}"
 					alt=""
 				/>

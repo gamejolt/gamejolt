@@ -100,7 +100,7 @@ export class MediaItem extends Model implements LightboxMediaModel {
 	}
 
 	get aspectRatio() {
-		return this.croppedHeight / this.croppedWidth;
+		return this.croppedWidth / this.croppedHeight;
 	}
 
 	getModelId() {

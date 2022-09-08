@@ -6,14 +6,12 @@ import { trackPostOpen } from '../../../../../_common/analytics/analytics.servic
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
-import AppCommunityPill from '../../../../../_common/community/pill/pill.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import AppStickerControlsOverlay from '../../../../../_common/sticker/AppStickerControlsOverlay.vue';
@@ -29,6 +27,7 @@ import AppFiresidePostEmbed from '../../../fireside/post/embed/embed.vue';
 import AppPollVoting from '../../../poll/voting/voting.vue';
 import AppPostContent from '../../../post/AppPostContent.vue';
 import AppPostHeader from '../../../post/AppPostHeader.vue';
+import AppPostTargets from '../../../post/AppPostTargets.vue';
 import AppPostControls from '../../../post/controls/AppPostControls.vue';
 import { useActivityFeedInterface } from '../AppActivityFeed.vue';
 import { feedShouldBlockPost } from '../feed-service';
@@ -91,6 +90,8 @@ const communities = computed(() => {
 	return communities;
 });
 
+const realms = computed(() => post.value.realms.map(i => i.realm));
+
 const link = computed(() => {
 	const location = post.value.routeLocation;
 
@@ -101,8 +102,6 @@ const link = computed(() => {
 });
 
 const linkResolved = computed(() => router.resolve(link.value).href);
-
-const shouldShowCommunities = computed(() => communities.value.length > 0);
 
 const shouldShowIsPinned = computed(() => {
 	if (!post.value.is_pinned) {
@@ -334,17 +333,12 @@ function onPostUnpinned(item: EventItem) {
 
 						<AppSpacer vertical :scale="2" />
 
-						<AppScrollScroller
-							v-if="shouldShowCommunities"
+						<AppPostTargets
+							v-if="communities.length || realms.length"
 							class="-communities -controls-buffer"
-							horizontal
-						>
-							<AppCommunityPill
-								v-for="postCommunity of communities"
-								:key="postCommunity.id"
-								:community-link="postCommunity"
-							/>
-						</AppScrollScroller>
+							:communities="communities"
+							:realms="realms"
+						/>
 					</AppStickerControlsOverlay>
 
 					<AppPostControls

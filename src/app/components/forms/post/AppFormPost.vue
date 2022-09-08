@@ -12,6 +12,7 @@ import { Community } from '../../../../_common/community/community.model';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { FiresidePostCommunity } from '../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { FiresidePostRealm } from '../../../../_common/fireside/post/realm/realm.model';
 import { FiresidePostVideo } from '../../../../_common/fireside/post/video/video-model';
 import AppForm, {
 	createForm,
@@ -42,10 +43,10 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { KeyGroup } from '../../../../_common/key-group/key-group.model';
 import { LinkedAccount } from '../../../../_common/linked-account/linked-account.model';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
+import { Popper } from '../../../../_common/popper/popper.service';
 import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
+import { Realm } from '../../../../_common/realm/realm-model';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import { vAppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
 import { SettingPostBackgroundId } from '../../../../_common/settings/settings.service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
@@ -58,9 +59,8 @@ import {
 	$ngettext,
 } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
-import AppFormsCommunityPillAdd from '../community/_pill/add/add.vue';
-import AppFormsCommunityPill from '../community/_pill/community-pill.vue';
-import AppFormsCommunityPillIncomplete from '../community/_pill/incomplete/incomplete.vue';
+import AppPostTargets from '../../post/AppPostTargets.vue';
+import { POST_TARGET_HEIGHT } from '../../post/target/AppPostTarget.vue';
 import AppFormPostMedia from './_media/media.vue';
 import AppFormPostVideo, { VideoStatus } from './_video/video.vue';
 
@@ -70,6 +70,7 @@ type FormPostModel = FiresidePost & {
 	key_group_ids: number[];
 	video_id: number;
 	attached_communities: { community_id: number; channel_id: number }[];
+	attached_realms: number[];
 	background_id: number | null;
 
 	poll_item_count: number;
@@ -124,8 +125,16 @@ const keyGroups = ref<KeyGroup[]>([]);
 const timezones = ref<{ [region: string]: (TimezoneData & { label?: string })[] } | null>(null);
 const linkedAccounts = ref<LinkedAccount[]>([]);
 const publishToPlatforms = ref<number[] | null>(null);
+
+const maxCommunities = ref(0);
 const attachedCommunities = ref<{ community: Community; channel: CommunityChannel }[]>([]);
 const targetableCommunities = ref<Community[]>([]);
+
+const hasLoadedRealms = ref(false);
+const maxRealms = ref(0);
+const attachedRealms = ref<Realm[]>([]);
+const targetableRealms = ref<Realm[]>([]);
+
 const backgrounds = ref<Background[]>([]);
 
 const isShowingMorePollOptions = ref(false);
@@ -135,7 +144,6 @@ const isSavedDraftPost = ref(false);
 const leadLengthLimit = ref(255);
 const articleLengthLimit = ref(50_000);
 const isUploadingPastedImage = ref(false);
-const maxCommunities = ref(0);
 const scrollingKey = ref(1);
 const uploadingVideoStatus = ref(VideoStatus.IDLE);
 const videoProvider = ref(FiresidePostVideo.PROVIDER_GAMEJOLT);
@@ -215,6 +223,7 @@ const form: FormController<FormPostModel> = createForm({
 		leadLengthLimit.value = payload.leadLengthLimit;
 		articleLengthLimit.value = payload.articleLengthLimit;
 		maxCommunities.value = payload.maxCommunities;
+		maxRealms.value = payload.maxRealms;
 
 		backgrounds.value = Background.populate(payload.backgrounds);
 
@@ -232,6 +241,12 @@ const form: FormController<FormPostModel> = createForm({
 					channel: fpc.channel!,
 				};
 			});
+		}
+
+		if (payload.attachedRealms) {
+			attachedRealms.value = FiresidePostRealm.populate(payload.attachedRealms).map(
+				i => i.realm
+			);
 		}
 
 		if (
@@ -288,6 +303,8 @@ const form: FormController<FormPostModel> = createForm({
 				channel_id: channel.id,
 			})
 		);
+
+		form.formModel.attached_realms = attachedRealms.value.map(i => i.id);
 
 		// Set or clear attachments as needed
 		if (attachmentType.value === FiresidePost.TYPE_MEDIA && form.formModel.media) {
@@ -464,6 +481,18 @@ const canAddCommunity = computed(
 		possibleCommunities.value.length > 0
 );
 
+const canAddRealm = computed(() => {
+	if (attachedRealms.value.length >= maxRealms.value) {
+		return false;
+	}
+
+	if (hasLoadedRealms.value) {
+		return possibleRealms.value.length > 0;
+	}
+
+	return true;
+});
+
 const hasChannelError = computed(() => form.hasCustomError('channel'));
 
 const possibleCommunities = computed(() => {
@@ -476,6 +505,12 @@ const possibleCommunities = computed(() => {
 		}
 
 		return !attachedCommunities.value.find(c2 => c1.id === c2.community.id);
+	});
+});
+
+const possibleRealms = computed(() => {
+	return targetableRealms.value.filter(c1 => {
+		return !attachedRealms.value.find(c2 => c1.id === c2.id);
 	});
 });
 
@@ -584,6 +619,27 @@ watch(
 	}
 );
 
+async function loadRealms() {
+	if (hasLoadedRealms.value) {
+		return;
+	}
+
+	try {
+		const response = await Api.sendFieldsRequest('/mobile/galaxy', {
+			realms: {
+				perPage: true,
+			},
+		});
+
+		targetableRealms.value = Realm.populate(response.realms);
+		hasLoadedRealms.value = true;
+	} catch (e) {
+		if (import.meta.env.DEV || GJ_ENVIRONMENT === 'development') {
+			console.error('Failed to load realms for post', e);
+		}
+	}
+}
+
 function attachIncompleteCommunity(community: Community, channel: CommunityChannel) {
 	attachCommunity(community, channel, false);
 }
@@ -602,6 +658,22 @@ function attachCommunity(community: Community, channel: CommunityChannel, append
 	}
 }
 
+function attachRealm(realm: Realm, append = true) {
+	Popper.hideAll();
+
+	// Do nothing if that realm is already attached.
+	if (attachedRealms.value.find(i => i.id === realm.id)) {
+		return;
+	}
+
+	if (append) {
+		attachedRealms.value.push(realm);
+		scrollToAdd();
+	} else {
+		attachedRealms.value.unshift(realm);
+	}
+}
+
 async function scrollToAdd() {
 	// Wait for the DOM to update
 	await nextTick();
@@ -617,6 +689,10 @@ function removeCommunity(community: Community) {
 	}
 
 	attachedCommunities.value.splice(idx, 1);
+}
+
+function removeRealm(realm: Realm) {
+	arrayRemove(attachedRealms.value, i => i.id === realm.id);
 }
 
 function onDraftSubmit() {
@@ -1415,38 +1491,25 @@ function _getMatchingBackgroundIdFromPref() {
 
 		<!-- Communities -->
 		<template v-if="form.isLoaded">
-			<AppScrollScroller v-if="shouldShowCommunities" class="-communities" horizontal thin>
-				<transition-group tag="div" class="-communities-list">
-					<AppFormsCommunityPillIncomplete
-						v-if="incompleteDefaultCommunity"
-						key="incomplete"
-						class="-community-pill anim-fade-in-enlarge no-animate-leave"
-						:communities="possibleCommunities"
-						:community="incompleteDefaultCommunity"
-						@add="attachIncompleteCommunity"
-					/>
-
-					<AppFormsCommunityPill
-						v-for="{ community, channel } of attachedCommunities"
-						:key="community.id"
-						class="-community-pill anim-fade-in-enlarge no-animate-leave"
-						:community="community"
-						:channel="channel"
-						:removable="!wasPublished"
-						@remove="removeCommunity(community)"
-					/>
-
-					<template v-if="!wasPublished && canAddCommunity">
-						<AppFormsCommunityPillAdd
-							key="add"
-							v-app-scroll-when="scrollingKey"
-							class="-community-pill anim-fade-in-enlarge no-animate-leave"
-							:communities="possibleCommunities"
-							@add="attachCommunity"
-						/>
-					</template>
-				</transition-group>
-			</AppScrollScroller>
+			<AppPostTargets
+				v-if="shouldShowCommunities"
+				class="-post-targets"
+				:communities="attachedCommunities"
+				:realms="attachedRealms"
+				:targetable-communities="possibleCommunities"
+				:targetable-realms="possibleRealms"
+				:can-add-community="canAddCommunity"
+				:can-add-realm="canAddRealm"
+				:incomplete-community="incompleteDefaultCommunity || undefined"
+				:is-loading-realms="!hasLoadedRealms"
+				is-editing
+				@remove-community="removeCommunity"
+				@remove-realm="removeRealm"
+				@select-community="attachCommunity"
+				@select-incomplete-community="attachIncompleteCommunity"
+				@select-realm="attachRealm"
+				@show-realms="loadRealms"
+			/>
 			<p v-else-if="!wasPublished" class="help-block">
 				<AppTranslate>Join some communities to post to them.</AppTranslate>
 				<span v-app-tooltip.touchable="$gettext(`Go to the explore page and find some!`)">
@@ -1455,8 +1518,11 @@ function _getMatchingBackgroundIdFromPref() {
 			</p>
 		</template>
 		<template v-else>
-			<div class="-communities-list-placeholder">
-				<div class="-community-pill-placeholder" />
+			<div class="-post-targets-placeholder">
+				<div
+					class="-post-target-placeholder"
+					:style="{ height: POST_TARGET_HEIGHT + 'px' }"
+				/>
 			</div>
 		</template>
 
@@ -1614,8 +1680,6 @@ function _getMatchingBackgroundIdFromPref() {
 </template>
 
 <style lang="stylus" scoped>
-@import '../community/_pill/variables'
-
 .form-group:last-child
 	margin-bottom: 10px
 
@@ -1723,36 +1787,16 @@ function _getMatchingBackgroundIdFromPref() {
 .-linked-account-toggle
 	flex: none
 
-.-communities
+.-post-targets
 	margin: 10px 0
 
-.-communities-list
-	white-space: nowrap
-	display: flex
-	align-items: center
-	margin-bottom: 4px
-
-	.v-leave-from
-		display: none
-		position: absolute
-
-.-communities-list-placeholder
+.-post-targets-placeholder
 	margin: 10px 0 14px
 
-.-community-pill
-	flex-shrink: 0
-
-	// Need to apply to the button inside the pill add component too
-	&
-	::v-deep(.button)
-		height: 28px
-		margin-bottom: 0
-
-.-community-pill-placeholder
+.-post-target-placeholder
 	change-bg('bg-subtle')
 	rounded-corners()
 	width: 138px
-	height: $pill-height
 
 .-author-avatar
 	width: $input-height-base

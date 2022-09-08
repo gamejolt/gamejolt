@@ -11,7 +11,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import AppFormPost from '../../forms/post/AppFormPost.vue';
 import { VideoStatus } from '../../forms/post/_video/video.vue';
-import AppPostAddPlaceholder from '../add-placeholder/add-placeholder.vue';
+import AppPostAddPlaceholder from '../add-placeholder/AppPostAddPlaceholder.vue';
 
 @Options({
 	components: {

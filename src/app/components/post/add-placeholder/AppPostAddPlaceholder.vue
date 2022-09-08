@@ -1,8 +1,5 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-property-decorator';
-
-@Options({})
-export default class AppPostAddPlaceholder extends Vue {}
+<script lang="ts" setup>
+import { POST_TARGET_HEIGHT } from '../target/AppPostTarget.vue';
 </script>
 
 <template>
@@ -25,9 +22,9 @@ export default class AppPostAddPlaceholder extends Vue {}
 			</div>
 		</div>
 
-		<!-- Communities -->
-		<div class="-community">
-			<div class="-community-pill" />
+		<!-- Post targets -->
+		<div class="-post-targets">
+			<div class="-post-targets-pill" :style="{ height: POST_TARGET_HEIGHT + 'px' }" />
 		</div>
 
 		<!-- Controls -->
@@ -49,36 +46,33 @@ export default class AppPostAddPlaceholder extends Vue {}
 </template>
 
 <style lang="stylus" scoped>
-@import '../../forms/community/_pill/variables'
-
 .-hp
 	display: flex
 	align-items: center
 	height: 18px
 	margin-top: 5px
 
-	&-text
-		change-bg('bg-subtle')
-		rounded-corners()
-		width: 18px
-		height: 18px
-		margin-right: 10px
+.-hp-text
+	change-bg('bg-subtle')
+	rounded-corners()
+	width: 18px
+	height: 18px
+	margin-right: 10px
 
-	&-bar
-		change-bg('bg-subtle')
-		rounded-corners()
-		width: 100%
-		height: 5px
+.-hp-bar
+	change-bg('bg-subtle')
+	rounded-corners()
+	width: 100%
+	height: 5px
 
-.-community
+.-post-targets
 	height: 32px
 	margin: 10px 0
 
-	&-pill
-		change-bg('bg-subtle')
-		rounded-corners()
-		height: $pill-height
-		width: 138px
+.-post-targets-pill
+	change-bg('bg-subtle')
+	rounded-corners()
+	width: 138px
 
 .-button
 	lazy-placeholder-inline()
@@ -119,33 +113,33 @@ export default class AppPostAddPlaceholder extends Vue {}
 		display: flex
 		flex-direction: column
 
-		&-attachments
-			display: flex
-			justify-content: center
-			margin-bottom: $line-height-computed
-			padding: 10px 0
-			border-top: $border-width-base solid var(--theme-bg-subtle)
-			border-bottom: $border-width-base solid var(--theme-bg-subtle)
+	.-controls-attachments
+		display: flex
+		justify-content: center
+		margin-bottom: $line-height-computed
+		padding: 10px 0
+		border-top: $border-width-base solid var(--theme-bg-subtle)
+		border-bottom: $border-width-base solid var(--theme-bg-subtle)
 
-			> :not(:first-child)
-				margin-left: 10px
+		> :not(:first-child)
+			margin-left: 10px
 
-		&-submit-button
-			float: right
-			width: 50%
-			padding-left: 10px
+	.-controls-submit-button
+		float: right
+		width: 50%
+		padding-left: 10px
 
-			.-button
-				width: 100%
+		.-button
+			width: 100%
 
 @media $media-sm-up
 	.-controls
 		display: flex
 		flex-direction: row
 
-		&-attachments
-			flex: auto
+	.-controls-attachments
+		flex: auto
 
-		&-submit
-			flex: none
+	.-controls-submit
+		flex: none
 </style>

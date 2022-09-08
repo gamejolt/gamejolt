@@ -167,7 +167,7 @@ export async function createGridFiresideChannel(
 		}
 		onFiresideStickerPlaced.next(placement);
 
-		fireside.addStickerToCount(sticker);
+		fireside.addStickerToCount(sticker, payload.sticker_placement.is_charged === true);
 	}
 
 	/**

@@ -24,6 +24,7 @@ import { User } from '../../user/user.model';
 import { FiresidePostCommunity } from './community/community.model';
 import { FiresidePostEmbed } from './embed/embed.model';
 import { FiresidePostLike } from './like/like-model';
+import { FiresidePostRealm } from './realm/realm.model';
 import { FiresidePostVideo } from './video/video-model';
 
 interface FiresidePostPublishedPlatform {
@@ -78,6 +79,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	article_content!: string;
 
 	communities: FiresidePostCommunity[] = [];
+	realms: FiresidePostRealm[] = [];
 	media: MediaItem[] = [];
 	videos: FiresidePostVideo[] = [];
 	user_like?: FiresidePostLike | null;
@@ -111,6 +113,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 		if (data.communities) {
 			this.communities = FiresidePostCommunity.populate(data.communities);
+		}
+
+		if (data.realms) {
+			this.realms = FiresidePostRealm.populate(data.realms);
 		}
 
 		if (data.media) {
@@ -417,6 +423,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			data: Object.assign({}, this),
 			allowComplexData: [
 				'attached_communities',
+				'attached_realms',
 				'keyGroups',
 				'mediaItemIds',
 				'publishToPlatforms',
