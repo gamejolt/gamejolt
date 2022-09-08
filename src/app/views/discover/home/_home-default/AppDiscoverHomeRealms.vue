@@ -35,11 +35,15 @@ defineProps({
 
 <style lang="stylus" scoped>
 .-grid
-	--grid-cols: 2
+	--grid-cols: 3
 	gap: 24px
 	display: grid
 	grid-template-columns: repeat(var(--grid-cols), 1fr)
 	justify-content: center
+
+	@media $media-sm
+		--grid-cols: 2
+		gap: 24px
 
 	@media $media-xs
 		--grid-cols: 1
