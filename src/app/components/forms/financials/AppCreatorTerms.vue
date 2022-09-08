@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
-import { html as termsTemplate } from '../../../../lib/terms/partner/global.md';
+import { html as termsTemplate } from '../../../../lib/terms/creator/global.md';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatDate } from '../../../../_common/filters/date';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -30,7 +30,7 @@ const hasSigned = computed(() => account?.value && account.value.tos_signed_crea
 // TODO
 const agreementLink = computed(
 	() =>
-		'https://github.com/gamejolt/terms/blob/0371c397b84ac1f10c911de52384a5a727dc9f15/partner/global.md'
+		'https://github.com/gamejolt/terms/blob/d78d92b9d7879788e7ac20f31970c85e398badb7/creator/global.md'
 );
 
 function onAccept() {
