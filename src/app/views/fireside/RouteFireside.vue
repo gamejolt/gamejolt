@@ -149,9 +149,9 @@ const focusedUserVideoAspectRatio = computed(
 
 const chatWidth = computed(() => {
 	if (isFullscreen.value && collapseSidebar.value) {
-		return 200;
+		return 'unset';
 	}
-	return 350;
+	return '350px';
 });
 
 // If the fireside's status ever changes to setup-failed, we want to direct to a
@@ -303,7 +303,7 @@ function onIsPersonallyStreamingChanged() {
 		ref="root"
 		class="route-fireside"
 		:class="{ '-video-square': isFullscreen }"
-		:style="`--fireside-chat-width: ${chatWidth}px`"
+		:style="`--fireside-chat-width: ${chatWidth}`"
 	>
 		<AppStickerLayer
 			:style="{
@@ -619,9 +619,7 @@ function onIsPersonallyStreamingChanged() {
 									v-if="!isFullscreen"
 									:style="{
 										width: '100%',
-										paddingRight: collapseSidebar
-											? chatWidth + 'px'
-											: undefined,
+										paddingRight: collapseSidebar ? chatWidth : undefined,
 									}"
 								>
 									<div class="-bottom-bar-padding">

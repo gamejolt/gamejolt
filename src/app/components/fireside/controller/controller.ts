@@ -290,10 +290,8 @@ export function createFiresideController(
 	const canCommunityEject = computed(
 		() => !!fireside.community && canCommunityEjectFireside(fireside.community)
 	);
-	const canEdit = computed(() => {
-		console.warn('fireside perms', fireside.perms);
-		return isOwner.value || fireside.hasPerms('fireside-edit');
-	});
+
+	const canEdit = computed(() => isOwner.value || fireside.hasPerms('fireside-edit'));
 
 	const canPublish = computed(() => {
 		const role = fireside.role?.role;
