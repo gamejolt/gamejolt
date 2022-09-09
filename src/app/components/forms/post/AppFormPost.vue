@@ -14,9 +14,9 @@ import { FiresidePostCommunity } from '../../../../_common/fireside/post/communi
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { FiresidePostVideo } from '../../../../_common/fireside/post/video/video-model';
 import AppForm, {
-	createForm,
-	defineFormProps,
-	FormController,
+createForm,
+defineFormProps,
+FormController
 } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
@@ -30,18 +30,20 @@ import AppFormControlDate from '../../../../_common/form-vue/controls/AppFormCon
 import AppFormControlSelect from '../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import {
-	validateContentMaxLength,
-	validateContentNoActiveUploads,
-	validateContentRequired,
-	validateMaxLength,
-	validateMaxValue,
-	validateMinValue,
+validateContentMaxLength,
+validateContentNoActiveUploads,
+validateContentRequired,
+validateMaxLength,
+validateMaxValue,
+validateMinValue
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import AppJolticon, { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
 import { KeyGroup } from '../../../../_common/key-group/key-group.model';
 import { LinkedAccount } from '../../../../_common/linked-account/linked-account.model';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
+import AppPopper from '../../../../_common/popper/AppPopper.vue';
+import { Popper } from '../../../../_common/popper/popper.service';
 import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
@@ -53,9 +55,9 @@ import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.se
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import {
-	$gettext,
-	$gettextInterpolate,
-	$ngettext,
+$gettext,
+$gettextInterpolate,
+$ngettext
 } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppFormsCommunityPillAdd from '../community/_pill/add/add.vue';
@@ -71,6 +73,7 @@ type FormPostModel = FiresidePost & {
 	video_id: number;
 	attached_communities: { community_id: number; channel_id: number }[];
 	background_id: number | null;
+	allow_comments?: number;
 
 	poll_item_count: number;
 	poll_duration: number;
@@ -206,6 +209,9 @@ const form: FormController<FormPostModel> = createForm({
 	onLoad(payload) {
 		// Pull any post information that may not already be loaded in.
 		form.formModel.article_content = payload.post.article_content;
+
+		// TODO(post-comment-restrictions) where will we get our existing setting from?
+		form.formModel.allow_comments = payload.allowComments ?? form.formModel.allow_comments;
 
 		keyGroups.value = KeyGroup.populate(payload.keyGroups);
 		wasPublished.value = payload.wasPublished;
@@ -531,6 +537,40 @@ const shouldShowAuthorOptions = computed(() => {
 	// We can only toggle "as game owner" if the post isn't already shared
 	// on the author's profile.
 	return !model.value.post_to_user_profile;
+});
+
+const allowCommentsOptions = computed<{
+	[key: number]: { value: number; icon: Jolticon; text: string; tooltip: string };
+}>(() => {
+	return {
+		[FiresidePost.ALLOW_COMMENTS_DISABLED]: {
+			value: FiresidePost.ALLOW_COMMENTS_DISABLED,
+			icon: 'crown',
+			text: $gettext('Owner only'),
+			tooltip: $gettext('Only you can comment'),
+		},
+		[FiresidePost.ALLOW_COMMENTS_ENABLED]: {
+			value: FiresidePost.ALLOW_COMMENTS_ENABLED,
+			icon: 'users',
+			text: $gettext('Everyone'),
+			tooltip: $gettext('Allowing everyone to comment'),
+		},
+		[FiresidePost.ALLOW_COMMENTS_FRIENDS]: {
+			value: FiresidePost.ALLOW_COMMENTS_FRIENDS,
+			icon: 'friends',
+			text: $gettext('Friends only'),
+			tooltip: $gettext('Allowing only friends to comment'),
+		},
+	};
+});
+
+const selectedAllowCommentsData = computed(() => {
+	const options = allowCommentsOptions.value;
+	if (form.formModel.allow_comments === undefined || !options[form.formModel.allow_comments]) {
+		return options[FiresidePost.ALLOW_COMMENTS_ENABLED];
+	}
+
+	return options[form.formModel.allow_comments];
 });
 
 watch(
@@ -962,6 +1002,16 @@ function _getMatchingBackgroundIdFromPref() {
 
 	// Use the saved ID only if we have an eligible background.
 	return backgrounds.value.find(i => i.id == prefId)?.id || null;
+}
+
+function selectCommentsOption(value: number) {
+	// Ignore unsupported values.
+	if (!allowCommentsOptions.value[value]) {
+		return;
+	}
+
+	Popper.hideAll();
+	form.formModel.allow_comments = value;
 }
 </script>
 
@@ -1578,6 +1628,34 @@ function _getMatchingBackgroundIdFromPref() {
 					icon="share-airplane"
 					@click="addPublishingToPlatforms()"
 				/>
+
+				<AppPopper class="button" hide-on-state-change max-height="45vh">
+					<AppButton
+						v-app-tooltip="selectedAllowCommentsData.tooltip"
+						class="-overlay-text-affected"
+						sparse
+						trans
+						circle
+						:icon="selectedAllowCommentsData.icon"
+					/>
+
+					<template #popover>
+						<div class="-popover-container list-group">
+							<a
+								v-for="{ icon, text, value } of allowCommentsOptions"
+								:key="value"
+								class="list-group-item"
+								@click="selectCommentsOption(value)"
+							>
+								<span class="-text">
+									<AppJolticon :icon="icon" />
+
+									{{ text }}
+								</span>
+							</a>
+						</div>
+					</template>
+				</AppPopper>
 			</div>
 
 			<AppTheme :force-dark="overlay" class="-controls-submit">
@@ -1772,7 +1850,7 @@ function _getMatchingBackgroundIdFromPref() {
 		border-bottom: $border-width-base solid var(--theme-bg-subtle)
 
 		> :not(:first-child)
-			margin-left: 10px
+			margin-left: 10px !important
 
 	.-controls-submit
 		display: flex
@@ -1796,6 +1874,9 @@ function _getMatchingBackgroundIdFromPref() {
 	.-controls-attachments
 		flex: auto
 
+		> *:not(:first-child)
+			margin-left: 4px !important
+
 	.-controls-submit
 		flex: none
 
@@ -1804,7 +1885,8 @@ function _getMatchingBackgroundIdFromPref() {
 
 .-overlay-text
 	&
-	& > *
+	> *
+	.-overlay-text-affected
 		text-shadow: black 1px 1px 4px
 		color: white
 
@@ -1813,4 +1895,7 @@ function _getMatchingBackgroundIdFromPref() {
 
 .-overlay-box
 	elevate-1()
+
+.-popover-container
+	max-width: 300px
 </style>

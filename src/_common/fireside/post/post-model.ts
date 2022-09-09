@@ -48,6 +48,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	static readonly STATUS_REMOVED = 'removed';
 	static readonly STATUS_TEMP = 'temp';
 
+	static readonly ALLOW_COMMENTS_DISABLED = 0;
+	static readonly ALLOW_COMMENTS_ENABLED = 1;
+	static readonly ALLOW_COMMENTS_FRIENDS = 2;
+
 	hash!: string;
 	status!: string;
 	added_on!: number;
@@ -97,6 +101,12 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	event_item?: EventItem;
 
 	background?: Background;
+
+	/**
+	 * If the current post comment restrictions allow us to comment. For the
+	 * result of all restrictions, check {@link canComment}.
+	 */
+	can_comment!: boolean;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -241,6 +251,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	}
 
 	get canComment() {
+		if (!this.can_comment) {
+			return false;
+		}
+
 		if (this.user.blocked_you || this.user.is_blocked) {
 			return false;
 		}
@@ -253,6 +267,8 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	}
 
 	get canPlaceSticker() {
+		// TODO(post-comment-restrictions) Confirm that new comment restrictions
+		// will also alter our ability to place stickers.
 		return this.canComment;
 	}
 
