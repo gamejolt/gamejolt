@@ -477,12 +477,13 @@ const platformRestrictions = computed(() => {
 
 const canAddCommunity = computed(
 	() =>
+		!wasPublished.value &&
 		attachedCommunities.value.length < maxCommunities.value &&
 		possibleCommunities.value.length > 0
 );
 
 const canAddRealm = computed(() => {
-	if (attachedRealms.value.length >= maxRealms.value) {
+	if (wasPublished.value || attachedRealms.value.length >= maxRealms.value) {
 		return false;
 	}
 
@@ -1502,7 +1503,8 @@ function _getMatchingBackgroundIdFromPref() {
 				:can-add-realm="canAddRealm"
 				:incomplete-community="incompleteDefaultCommunity || undefined"
 				:is-loading-realms="!hasLoadedRealms"
-				is-editing
+				:can-remove-communities="!wasPublished"
+				:can-remove-realms="!wasPublished"
 				@remove-community="removeCommunity"
 				@remove-realm="removeRealm"
 				@select-community="attachCommunity"

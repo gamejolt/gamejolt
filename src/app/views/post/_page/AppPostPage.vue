@@ -399,7 +399,7 @@ function onDismissNotification(notification: CommunityUserNotification) {
 							@show="scrollToStickers()"
 						/>
 
-						<AppPostTargets :communities="communities" :realms="realms" />
+						<AppPostTargets :communities="communities" :realms="realms" has-links />
 
 						<template v-if="shouldShowCommunityPublishError">
 							<br />

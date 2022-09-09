@@ -338,6 +338,7 @@ function onPostUnpinned(item: EventItem) {
 							class="-communities -controls-buffer"
 							:communities="communities"
 							:realms="realms"
+							has-links
 						/>
 					</AppStickerControlsOverlay>
 

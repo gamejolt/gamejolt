@@ -39,10 +39,16 @@ const props = defineProps({
 	canAddRealm: {
 		type: Boolean,
 	},
+	canRemoveCommunities: {
+		type: Boolean,
+	},
+	canRemoveRealms: {
+		type: Boolean,
+	},
 	isLoadingRealms: {
 		type: Boolean,
 	},
-	isEditing: {
+	hasLinks: {
 		type: Boolean,
 	},
 });
@@ -55,8 +61,10 @@ const {
 	realms,
 	canAddCommunity,
 	canAddRealm,
+	canRemoveCommunities,
+	canRemoveRealms,
 	isLoadingRealms,
-	isEditing,
+	hasLinks,
 } = toRefs(props);
 
 const emit = defineEmits({
@@ -88,11 +96,21 @@ const canShow = computed(() => {
 
 const baseClasses = computed(() => {
 	const result = ['-no-flex'];
-	if (isEditing.value) {
+
+	if (canRemoveCommunities.value) {
 		result.push('anim-fade-in-enlarge', 'no-animate-leave');
 	}
+
 	return result;
 });
+
+const isEditing = computed(
+	() =>
+		canAddCommunity.value ||
+		canAddRealm.value ||
+		canRemoveCommunities.value ||
+		canRemoveRealms.value
+);
 
 function onRemoveRealm(realm: Realm) {
 	emit('removeRealm', realm);
@@ -146,10 +164,10 @@ async function _scrollToEnd() {
 				v-for="{ community, channel } of communities"
 				:key="`community-${community.id}`"
 				:class="baseClasses"
-				:can-remove="isEditing"
+				:can-remove="canRemoveCommunities"
 				:community="community"
 				:channel="channel"
-				:has-links="!isEditing"
+				:has-links="hasLinks"
 				@remove="onRemoveCommunity"
 			/>
 
@@ -157,9 +175,9 @@ async function _scrollToEnd() {
 				v-for="realm of realms"
 				:key="`realm-${realm.id}`"
 				:class="baseClasses"
-				:can-remove="isEditing"
+				:can-remove="canRemoveRealms"
 				:realm="realm"
-				:has-links="!isEditing"
+				:has-links="hasLinks"
 				@remove="onRemoveRealm"
 			/>
 
