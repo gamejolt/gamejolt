@@ -56,6 +56,7 @@
 	"volar.autoCompleteRefs": false,
 	"volar.codeLens.references": false,
 	"volar.codeLens.scriptSetupTools": false,
+	"html.autoCreateQuotes": false,
 	"editor.linkedEditing": true,
 	"editor.semanticHighlighting.enabled": true,
 	"emmet.excludeLanguages": ["markdown", "stylus", "styl"]

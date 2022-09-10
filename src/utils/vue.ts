@@ -18,9 +18,5 @@ export function shallowSetup<T>(cb: () => T) {
  * null.
  */
 export function bangRef<T>(ref: Ref<T | undefined | null>) {
-	if (ref.value === undefined || ref.value === null) {
-		throw new Error(`Invalid ref.`);
-	}
-
 	return ref as Ref<T>;
 }

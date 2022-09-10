@@ -1,14 +1,10 @@
 import { markRaw, reactive } from 'vue';
 import { arrayRemove, numberSort } from '../../../utils/array';
 import { createLogger } from '../../../utils/logging';
-import { Environment } from '../../../_common/environment/environment.service';
-import {
-	createSocketController,
-	SocketController,
-} from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
 import { EventTopic } from '../../../_common/system/event/event-topic';
 import { AppStore } from '../../store';
+import { type GridClient } from '../grid/client.service';
 import { ChatMessage, ChatMessageType } from './message';
 import { ChatRoom } from './room';
 import { ChatRoomChannel, createChatRoomChannel } from './room-channel';
@@ -24,23 +20,23 @@ export interface ChatNewMessageEvent {
 	message: ChatMessage;
 }
 
-export function createChatClient({ appStore }: { appStore: AppStore }) {
+export function createChatClient({ grid, appStore }: { grid: GridClient; appStore: AppStore }) {
 	// Don't want to unwrap the refs from the app store.
-	const client = reactive(new ChatClient(markRaw(appStore))) as unknown as ChatClient;
+	const client = reactive(
+		new ChatClient(markRaw(grid), markRaw(appStore))
+	) as unknown as ChatClient;
 
-	initChatClient(client);
-
+	// Set it up fresh.
+	clearChat(client);
 	return client;
 }
 
 export class ChatClient {
-	constructor(public readonly appStore: AppStore) {}
+	constructor(private readonly grid: GridClient, public readonly appStore: AppStore) {}
 
 	readonly logger = createLogger('Chat');
 
 	// Will get created in "init".
-	socketController: SocketController = null as any;
-	connected = false;
 	isGuest = false;
 	userChannel: ChatUserChannel | null = null;
 
@@ -75,6 +71,17 @@ export class ChatClient {
 	 */
 	guestToken: string | null = null;
 
+	get socketController() {
+		return this.grid.socketController;
+	}
+
+	/**
+	 * Chat is connected when grid is connected. This if for convenience.
+	 */
+	get connected() {
+		return this.grid.connected;
+	}
+
 	/**
 	 * The session room is stored within their local session. It's their last active room. We reopen
 	 * it when entering the chat again.
@@ -97,23 +104,7 @@ export class ChatClient {
 	}
 }
 
-export function initChatClient(chat: ChatClient) {
-	chat.socketController = markRaw(
-		createSocketController({
-			commonStore,
-			logContext: 'Chat',
-			onDisconnect: () => {
-				reconnect(chat);
-			},
-		})
-	);
-
-	reset(chat);
-	connect(chat);
-}
-
-function reset(chat: ChatClient) {
-	chat.connected = false;
+export function clearChat(chat: ChatClient) {
 	chat.currentUser = null;
 	chat.friendsList = new ChatUserCollection(chat, ChatUserCollection.TYPE_FRIEND, []);
 	chat.populated = false;
@@ -129,47 +120,14 @@ function reset(chat: ChatClient) {
 	chat.isFocused = true;
 
 	chat.messageQueue = [];
+
+	chat.userChannel = null;
+	chat.roomChannels = {};
 }
 
-export function setGuestChatToken(chat: ChatClient, guestToken: string) {
-	const tokenChanged = chat.guestToken !== guestToken;
-	chat.guestToken = guestToken;
-
-	if (!chat.isGuest || tokenChanged) {
-		chat.isGuest = true;
-		reconnect(chat);
-	}
-}
-
-export function unsetGuestChatToken(chat: ChatClient) {
-	chat.guestToken = null;
-
-	if (chat.isGuest) {
-		chat.isGuest = false;
-		reconnect(chat);
-	}
-}
-
-function reconnect(chat: ChatClient) {
-	destroy(chat);
-	connect(chat);
-}
-
-async function connect(chat: ChatClient) {
-	const { isGuest, guestToken, socketController } = chat;
+export async function connectChat(chat: ChatClient) {
 	const { user } = commonStore;
 
-	const didConnect = await socketController.connect({
-		socketUrl: Environment.chat,
-		isGuest,
-		guestToken,
-	});
-
-	if (!didConnect) {
-		return;
-	}
-
-	chat.connected = true;
 	setChatRoom(chat, undefined);
 
 	if (user.value) {
@@ -178,15 +136,6 @@ async function connect(chat: ChatClient) {
 		chat.userChannel = channel;
 		chat.populated = true;
 	}
-}
-
-export function destroy(chat: ChatClient) {
-	reset(chat);
-
-	chat.userChannel = null;
-	chat.roomChannels = {};
-
-	chat.socketController.disconnect();
 }
 
 async function joinRoomChannel(chat: ChatClient, roomId: number) {

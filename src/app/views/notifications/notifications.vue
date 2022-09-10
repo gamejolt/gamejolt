@@ -8,6 +8,7 @@ import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/rout
 import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../components/activity/feed/view';
+import { useGridStore } from '../../components/grid/grid-store';
 import { AppActivityFeedLazy } from '../../components/lazy';
 import AppShellNotificationPopoverStickerNavItem from '../../components/shell/notification-popover/sticker-nav-item/AppShellNotificationPopoverStickerNavItem.vue';
 import AppShellNotificationPopoverStickerNavItemPlaceholder from '../../components/shell/notification-popover/sticker-nav-item/AppShellNotificationPopoverStickerNavItemPlaceholder.vue';
@@ -32,6 +33,7 @@ const HistoryCacheFeedTag = 'notifications-feed';
 })
 export default class RouteNotifications extends BaseRouteComponent {
 	store = setup(() => useAppStore());
+	gridStore = setup(() => useGridStore());
 
 	get notificationState() {
 		return this.store.notificationState;
@@ -42,7 +44,7 @@ export default class RouteNotifications extends BaseRouteComponent {
 	}
 
 	get grid() {
-		return this.store.grid;
+		return this.gridStore.grid;
 	}
 
 	get hasNewUnlockedStickers() {
