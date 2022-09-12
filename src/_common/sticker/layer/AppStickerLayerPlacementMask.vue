@@ -17,10 +17,6 @@ const props = defineProps({
 		type: Object as PropType<StickerLayerController>,
 		required: true,
 	},
-	chargeCardTop: {
-		type: Number,
-		default: 0,
-	},
 });
 
 const { layer } = toRefs(props);
@@ -77,7 +73,6 @@ function onClickMask() {
 		v-app-observe-dimensions="onDimensionsChange"
 		class="-container"
 		:class="{ '-dragging': isDragging }"
-		:style="`--charge-top: ${chargeCardTop}px`"
 	>
 		<div class="-overlay" @click.stop="onClickMask">
 			<svg v-if="_width > 0" :viewBox="viewbox" xmlns="http://www.w3.org/2000/svg">
@@ -157,7 +152,9 @@ function onClickMask() {
 	position: fixed
 	display: inline-flex
 	justify-content: center
-	top: var(--charge-top)
+	// Always offset by the shell-top in case this sticker mask is displayed
+	// with a lower z-index than the shell.
+	top: var(--shell-top)
 	right: 0
 	transition: transform 250ms $strong-ease-out
 

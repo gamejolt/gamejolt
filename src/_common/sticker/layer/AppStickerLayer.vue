@@ -21,13 +21,6 @@ const props = defineProps({
 	noMask: {
 		type: Boolean,
 	},
-	/**
-	 * The top offset we want the charge card to use, if shown.
-	 */
-	chargeCardTop: {
-		type: Number,
-		default: undefined,
-	},
 });
 
 const { noMask } = toRefs(props);
@@ -81,7 +74,6 @@ function onContextMenu(e: MouseEvent) {
 			v-if="!noMask && isActiveMask"
 			class="-placement-mask"
 			:layer="activeLayer!"
-			:charge-card-top="chargeCardTop"
 		/>
 
 		<!--
