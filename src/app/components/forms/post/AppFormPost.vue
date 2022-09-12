@@ -14,9 +14,9 @@ import { FiresidePostCommunity } from '../../../../_common/fireside/post/communi
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { FiresidePostVideo } from '../../../../_common/fireside/post/video/video-model';
 import AppForm, {
-createForm,
-defineFormProps,
-FormController
+	createForm,
+	defineFormProps,
+	FormController,
 } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
@@ -30,12 +30,12 @@ import AppFormControlDate from '../../../../_common/form-vue/controls/AppFormCon
 import AppFormControlSelect from '../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import {
-validateContentMaxLength,
-validateContentNoActiveUploads,
-validateContentRequired,
-validateMaxLength,
-validateMaxValue,
-validateMinValue
+	validateContentMaxLength,
+	validateContentNoActiveUploads,
+	validateContentRequired,
+	validateMaxLength,
+	validateMaxValue,
+	validateMinValue,
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon, { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
@@ -55,9 +55,9 @@ import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.se
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import {
-$gettext,
-$gettextInterpolate,
-$ngettext
+	$gettext,
+	$gettextInterpolate,
+	$ngettext,
 } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppFormsCommunityPillAdd from '../community/_pill/add/add.vue';
