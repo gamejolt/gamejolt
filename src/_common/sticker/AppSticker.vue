@@ -86,25 +86,25 @@ function onClickRemove() {
 
 <template>
 	<div ref="refOuter" class="-sticker" @click.stop="onClickRemove">
-		<component
-			:is="showCharged ? AppAnimElectricity : 'div'"
+		<div
 			ref="refLive"
 			:class="{
 				'-live': isLive,
 			}"
-			v-bind="electricityProps"
 		>
-			<img
-				ref="refInner"
-				draggable="false"
-				onmousedown="return false"
-				style="user-drag: none"
-				:src="sticker.sticker.img_url"
-				:class="{
-					'-clickable': isClickable,
-				}"
-			/>
-		</component>
+			<component :is="showCharged ? AppAnimElectricity : 'div'" v-bind="electricityProps">
+				<img
+					ref="refInner"
+					draggable="false"
+					onmousedown="return false"
+					style="user-drag: none"
+					:src="sticker.sticker.img_url"
+					:class="{
+						'-clickable': isClickable,
+					}"
+				/>
+			</component>
+		</div>
 	</div>
 </template>
 

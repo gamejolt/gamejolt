@@ -302,7 +302,7 @@ function onIsPersonallyStreamingChanged() {
 		:id="popperTeleportId"
 		ref="root"
 		class="route-fireside"
-		:class="{ '-video-square': isFullscreen }"
+		:class="{ '-unround-video': isFullscreen }"
 		:style="`--fireside-chat-width: ${chatWidth}px`"
 	>
 		<AppStickerLayer
@@ -675,7 +675,7 @@ $-center-guide-width = 400px
 	--video-radius: 12px
 	--fireside-chat-width: 350px
 
-	&.-video-square
+	&.-unround-video
 		--video-radius: 0px
 
 .-view-blocked
