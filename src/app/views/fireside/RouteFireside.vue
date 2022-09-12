@@ -310,6 +310,7 @@ function onIsPersonallyStreamingChanged() {
 				width: '100%',
 				height: '100%',
 			}"
+			:charge-card-top="isFullscreen ? undefined : 56"
 		>
 			<AppBackground
 				class="-fill"
