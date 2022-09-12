@@ -24,6 +24,7 @@ import { run, sleep } from '../../../../utils/utils';
 import { uuidv4 } from '../../../../utils/uuid';
 import { MaybeRef } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
+import { Background } from '../../../../_common/background/background.model';
 import {
 	canCommunityEjectFireside,
 	canCommunityFeatureFireside,
@@ -163,6 +164,11 @@ export function createFiresideController(
 	 * Which hosts the current user is able to list.
 	 */
 	const listableHostIds = ref<Set<number>>(new Set());
+
+	/**
+	 * Mapping of user id to the background they have selected. Gets updated through events over {@link GridFiresideChannel}.
+	 */
+	const hostBackgrounds = ref<Map<number, Background>>(new Map());
 
 	const stickerTargetController = createStickerTargetController(fireside, {
 		isLive: true,
@@ -407,6 +413,7 @@ export function createFiresideController(
 				agoraStreamingInfo.value!,
 				hosts,
 				listableHostIds,
+				hostBackgrounds,
 				{ isMuted }
 			);
 		} else if (rtc.value) {
@@ -434,6 +441,14 @@ export function createFiresideController(
 		// Assign our fireside host data anytime our chat users change from
 		// unset to set.
 		chatUsers.value?.assignFiresideHostData(hosts.value);
+	}
+
+	function assignHostBackgroundData(userId: number, background: Background | undefined) {
+		if (!background) {
+			hostBackgrounds.value.delete(userId);
+		} else {
+			hostBackgrounds.value.set(userId, background);
+		}
 	}
 
 	const _unwatchChatUsers = watch(chatUsers, _onChatUsersChanged);
@@ -659,10 +674,12 @@ export function createFiresideController(
 		hosts,
 		fetchedHostUserData,
 		listableHostIds,
+		hostBackgrounds,
 		stickerTargetController,
 		isMuted,
 		rtc,
 		revalidateRTC,
+		assignHostBackgroundData,
 		status,
 		chat,
 		chatSettings,

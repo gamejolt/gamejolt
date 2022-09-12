@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
+import { Background } from '../../../../_common/background/background.model';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { FiresideChatSettings } from '../../../../_common/fireside/chat-settings/chat-settings.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
@@ -10,6 +11,7 @@ import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormStickySubmit from '../../../../_common/form-vue/AppFormStickySubmit.vue';
+import AppFormControlBackground from '../../../../_common/form-vue/controls/AppFormControlBackground.vue';
 import AppFormControlToggleButton from '../../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButton.vue';
 import AppFormControlToggleButtonGroup from '../../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../../_common/form-vue/validators';
@@ -43,6 +45,8 @@ const {
 	sidebar,
 } = c;
 
+const backgrounds = ref<Background[]>([]);
+
 const form: FormController<Fireside> = createForm({
 	warnOnDiscard: false,
 	modelClass: Fireside,
@@ -73,6 +77,32 @@ const settingsForm: FormController<FiresideChatSettings> = createForm({
 	},
 });
 
+const backgroundForm: FormController<{ background_id?: number }> = createForm({
+	warnOnDiscard: false,
+	loadUrl: computed(() => {
+		// Only load this form if we have permissions to edit the fireside.
+		if (!canStream.value) {
+			return undefined;
+		}
+		return `/web/fireside/backgrounds/${fireside.hash}`;
+	}),
+	onLoad(payload) {
+		backgroundForm.formModel.background_id = payload.currentBackgroundId;
+		backgrounds.value = Background.populate(payload.backgrounds);
+	},
+	onSubmit() {
+		return gridChannel.value!.pushUpdateHostBackground(backgroundForm.formModel.background_id!);
+	},
+	onSubmitSuccess(response) {
+		// TODO(fireside-host-backgrounds) Check response, update form model
+		// with new background_id value.
+		const id = response.background ? response.background.id : response.background_id;
+		// Update our form model. The base model will update through a grid
+		// message.
+		backgroundForm.formModel.background_id = id;
+	},
+});
+
 // If anyone else modifies the chat settings, let's sync it back to our form as
 // well. This should only really occur if they do it in another tab or client.
 watch(chatSettings, () => settingsForm.formModel.assign(chatSettings.value), { deep: true });
@@ -80,6 +110,7 @@ watch(chatSettings, () => settingsForm.formModel.assign(chatSettings.value), { d
 watch(canEdit, (value, oldValue) => {
 	if (value && !oldValue) {
 		settingsForm.reload();
+		backgroundForm.reload();
 	}
 });
 
@@ -166,6 +197,31 @@ function onClickExtinguish() {
 									<AppTranslate>Save</AppTranslate>
 								</AppFormButton>
 							</AppFormStickySubmit>
+						</AppForm>
+
+						<AppForm
+							:controller="backgroundForm"
+							:forced-is-loading="backgroundForm.isProcessing ? true : undefined"
+							@changed="backgroundForm.submit"
+						>
+							<template v-if="backgrounds.length">
+								<AppFormGroup
+									name="background_id"
+									class="sans-margin-bottom"
+									:label="$gettext(`Background`)"
+									small
+								>
+									<AppFormControlBackground
+										:backgrounds="backgrounds"
+										:tile-size="32"
+										:tile-gap="8"
+									/>
+								</AppFormGroup>
+
+								<!-- TODO(fireside-host-backgrounds) Might need some text here to let them know it's only visible when you're the focused user. -->
+
+								<AppSpacer vertical :scale="6" />
+							</template>
 						</AppForm>
 
 						<hr class="sans-margin-top" />
