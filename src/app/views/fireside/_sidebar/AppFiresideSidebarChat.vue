@@ -10,7 +10,7 @@ import { useFiresideController } from '../../../components/fireside/controller/c
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 
-const { chatRoom, chatSettings, chat, fireside } = useFiresideController()!;
+const { chatRoom, chatSettings, chat, fireside, background } = useFiresideController()!;
 const route = useRoute();
 
 const contextCapabilities = computed(() => ({
@@ -39,7 +39,7 @@ const loginUrl = computed(
 				v-if="chatRoom"
 				:key="chatRoom.id"
 				:room="chatRoom"
-				:overlay="!!chatRoom.background"
+				:overlay="!!background"
 			/>
 		</template>
 
