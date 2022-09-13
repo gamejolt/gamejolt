@@ -30,7 +30,7 @@ import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
-import { useChatStore } from '../../chat-store';
+import { useGridStore } from '../../../grid/grid-store';
 import {
 	editMessage as chatEditMessage,
 	queueChatMessage,
@@ -75,8 +75,8 @@ const emit = defineEmits({
 
 const { room, slowmodeDuration } = toRefs(props);
 
-const chatStore = useChatStore()!;
 const { isDark } = useThemeStore();
+const { chatUnsafe: chat } = useGridStore();
 
 const focusToken = createFocusToken();
 
@@ -88,8 +88,6 @@ let lastMessageTimestamp: number | null = null;
 
 let escapeCallback: EscapeStackCallback | null = null;
 let typingTimeout: NodeJS.Timer | null = null;
-
-const chat = computed(() => chatStore.chat!);
 
 const contentEditorTempResourceContextData = computed(() => {
 	if (chat.value && room.value) {

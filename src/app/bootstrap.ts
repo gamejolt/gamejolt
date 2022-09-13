@@ -5,6 +5,7 @@ import { Scroll } from '../_common/scroll/scroll.service';
 import { createSidebarStore, SidebarStoreKey } from '../_common/sidebar/sidebar.store';
 import { createStickerStore, StickerStoreKey } from '../_common/sticker/sticker-store';
 import { initSafeExportsForClient } from './components/client/safe-exports';
+import { createGridStore, GridStoreKey } from './components/grid/grid-store';
 import './main.styl';
 import { BannerStoreKey, createBannerStore } from './store/banner';
 import { AppStoreKey, createAppStore } from './store/index';
@@ -37,15 +38,17 @@ export async function createApp() {
 		stickerStore,
 	});
 
-	const questStore = createQuestStore({ user: commonStore.user, grid: appStore.grid });
+	const gridStore = createGridStore({ appStore });
+	const questStore = createQuestStore({ user: commonStore.user, grid: gridStore.grid });
 
 	// Section stores.
-	app.provide(BannerStoreKey, bannerStore);
 	app.provide(SidebarStoreKey, sidebarStore);
 	app.provide(LibraryStoreKey, libraryStore);
-	app.provide(QuestStoreKey, questStore);
-	app.provide(AppStoreKey, appStore);
+	app.provide(BannerStoreKey, bannerStore);
 	app.provide(StickerStoreKey, stickerStore);
+	app.provide(AppStoreKey, appStore);
+	app.provide(GridStoreKey, gridStore);
+	app.provide(QuestStoreKey, questStore);
 
 	if (GJ_IS_DESKTOP_APP) {
 		const { bootstrapClient } = await import('./bootstrap-client');

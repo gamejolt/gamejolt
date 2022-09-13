@@ -7,8 +7,7 @@ import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../../_common/user/user.model';
-import { useAppStore } from '../../../../store';
-import { useChatStore } from '../../../chat/chat-store';
+import { useGridStore } from '../../../grid/grid-store';
 import { createFiresideController, provideFiresideController } from '../../controller/controller';
 import AppFiresideStreamVideo from '../AppFiresideStreamVideo.vue';
 
@@ -33,10 +32,9 @@ const emit = defineEmits({
 
 const c = createFiresideController(props.fireside, {
 	isMuted: true,
-	appStore: useAppStore(),
 	commonStore: useCommonStore(),
 	stickerStore: useStickerStore(),
-	chatStore: useChatStore()!,
+	gridStore: useGridStore(),
 	router: useRouter(),
 });
 provideFiresideController(c);

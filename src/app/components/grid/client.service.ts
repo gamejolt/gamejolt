@@ -32,6 +32,7 @@ import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
 import { User } from '../../../_common/user/user.model';
 import { AppStore } from '../../store/index';
 import { router } from '../../views';
+import { ChatClient, clearChat, connectChat, createChatClient } from '../chat/client';
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
 import { createGridCommunityChannel, GridCommunityChannel } from './community-channel';
 import { GridFiresideChannel } from './fireside-channel';
@@ -117,10 +118,10 @@ export class GridClient {
 	connected = false;
 	isGuest = false;
 	channels: Channel[] = [];
-	// notificationBacklog: NewNotificationPayload[] = [];
 	bootstrapReceived = false;
 	bootstrapTimestamp = 0;
 	bootstrapDelay = 1;
+	chat: ChatClient | null = null;
 	communityChannels: GridCommunityChannel[] = [];
 	firesideChannels: GridFiresideChannel[] = [];
 	firesideDMChannels: GridFiresideDMChannel[] = [];
@@ -152,6 +153,11 @@ export class GridClient {
 				},
 			})
 		);
+
+		this.chat = createChatClient({
+			grid: this,
+			appStore: this.appStore,
+		});
 
 		this.connect();
 	}
@@ -220,6 +226,9 @@ export class GridClient {
 
 			await Promise.all(this.appStore.communities.value.map(i => this.joinCommunity(i)));
 		}
+
+		// Now connect to our chat channels.
+		await connectChat(this.chat!);
 	}
 
 	markConnected() {
@@ -228,6 +237,32 @@ export class GridClient {
 			resolver();
 		}
 		connectionResolvers = [];
+	}
+
+	async disconnect() {
+		if (this.connected) {
+			this.logger.info('Disconnecting...');
+		} else {
+			this.logger.warn('Disconnecting (before we got fully connected)');
+		}
+
+		// Continue attempting to disconnect even if we didn't get fully
+		// connected. This should tear down the channels and socket that may
+		// have connected already, which allows us to cleanly reuse the instance
+		// for the next connection.
+
+		this.connected = false;
+		this.bootstrapReceived = false;
+		this.bootstrapTimestamp = 0;
+
+		this.communityChannels = [];
+		this.firesideChannels = [];
+		this.firesideDMChannels = [];
+		this.notificationChannel = null;
+
+		clearChat(this.chat!);
+
+		this.socketController.disconnect();
 	}
 
 	async reconnect(sleepMs = 2_000) {
@@ -461,30 +496,6 @@ export class GridClient {
 			dmChannel.channelController.leave();
 			arrayRemove(this.firesideDMChannels, i => i === channel);
 		}
-	}
-
-	async disconnect() {
-		if (this.connected) {
-			this.logger.info('Disconnecting...');
-		} else {
-			this.logger.warn('Disconnecting (before we got fully connected)');
-		}
-
-		// Continue attempting to disconnect even if we didn't get fully
-		// connected. This should tear down the channels and socket that may
-		// have connected already, which allows us to cleanly reuse the instance
-		// for the next connection.
-
-		this.connected = false;
-		this.bootstrapReceived = false;
-		this.bootstrapTimestamp = 0;
-
-		this.communityChannels = [];
-		this.firesideChannels = [];
-		this.firesideDMChannels = [];
-		this.notificationChannel = null;
-
-		this.socketController.disconnect();
 	}
 
 	recordFeaturedPost(post: FiresidePost) {

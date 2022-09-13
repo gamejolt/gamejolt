@@ -41,7 +41,6 @@ import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
-import { useChatStore } from '../../components/chat/chat-store';
 import AppFiresideProvider from '../../components/fireside/AppFiresideProvider.vue';
 import {
 	createFiresideController,
@@ -49,13 +48,13 @@ import {
 	FiresideSidebar,
 	toggleStreamVideoStats,
 } from '../../components/fireside/controller/controller';
+import { useGridStore } from '../../components/grid/grid-store';
 import {
 	illEndOfFeed,
 	illMaintenance,
 	illMobileKikkerstein,
 	illNoCommentsSmall,
 } from '../../img/ill/illustrations';
-import { useAppStore } from '../../store';
 import AppFiresideHeader from './AppFiresideHeader.vue';
 import AppFiresideStats from './AppFiresideStats.vue';
 import AppFiresideBottomBar from './_bottom-bar/AppFiresideBottomBar.vue';
@@ -67,10 +66,9 @@ import AppFiresideSidebarMembers from './_sidebar/AppFiresideSidebarMembers.vue'
 import AppFiresideSidebarStreamSettings from './_sidebar/AppFiresideSidebarStreamSettings.vue';
 import AppFiresideStream from './_stream/AppFiresideStream.vue';
 
-const appStore = useAppStore();
 const commonStore = useCommonStore();
 const stickerStore = useStickerStore();
-const chatStore = useChatStore()!;
+const gridStore = useGridStore();
 const themeStore = useThemeStore();
 
 const router = useRouter();
@@ -170,10 +168,9 @@ watch(
 		}
 
 		c.value ??= createFiresideController(payloadFireside.value, {
-			appStore,
 			commonStore,
 			stickerStore,
-			chatStore,
+			gridStore,
 			router,
 		});
 
@@ -302,7 +299,7 @@ function onIsPersonallyStreamingChanged() {
 		:id="popperTeleportId"
 		ref="root"
 		class="route-fireside"
-		:class="{ '-video-square': isFullscreen }"
+		:class="{ '-unround-video': isFullscreen }"
 		:style="`--fireside-chat-width: ${chatWidth}px`"
 	>
 		<AppStickerLayer
@@ -675,7 +672,7 @@ $-center-guide-width = 400px
 	--video-radius: 12px
 	--fireside-chat-width: 350px
 
-	&.-video-square
+	&.-unround-video
 		--video-radius: 0px
 
 .-view-blocked

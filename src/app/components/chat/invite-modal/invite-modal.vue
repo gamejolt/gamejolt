@@ -1,11 +1,12 @@
 <script lang="ts">
-import { Inject, mixins, Options, Prop } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { mixins, Options, Prop } from 'vue-property-decorator';
 import { fuzzysearch } from '../../../../utils/string';
 import { BaseModal } from '../../../../_common/modal/base';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
-import { ChatStore, ChatStoreKey } from '../chat-store';
+import { useGridStore } from '../../grid/grid-store';
 import { addGroupMembers, addGroupRoom } from '../client';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
@@ -22,14 +23,13 @@ export default class AppChatInviteModal extends mixins(BaseModal) {
 	@Prop({ type: Array, required: true }) friends!: ChatUser[];
 	@Prop({ type: Object, default: null }) initialUser!: ChatUser | null;
 
-	@Inject({ from: ChatStoreKey })
-	chatStore!: ChatStore;
+	gridStore = setup(() => useGridStore());
 
 	filterQuery = '';
 	selectedUsers: ChatUser[] = this.initialUser ? [this.initialUser] : [];
 
 	get chat() {
-		return this.chatStore.chat!;
+		return this.gridStore.chatUnsafe;
 	}
 
 	get filteredUsers() {

@@ -1,5 +1,5 @@
-<script lang="ts">
-import { computed, inject, PropType, ref, toRefs, watch } from 'vue';
+<script lang="ts" setup>
+import { computed, PropType, ref, toRefs, watch } from 'vue';
 import { Api } from '../../../_common/api/api.service';
 import { Background } from '../../../_common/background/background.model';
 import AppButton from '../../../_common/button/AppButton.vue';
@@ -19,14 +19,12 @@ import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
-import { ChatStoreKey } from './chat-store';
+import { useGridStore } from '../grid/grid-store';
 import { editChatRoomBackground, editChatRoomTitle, leaveGroupRoom } from './client';
 import AppChatMemberListItem from './member-list/AppChatMemberListItem.vue';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
-</script>
 
-<script lang="ts" setup>
 const props = defineProps({
 	room: {
 		type: Object as PropType<ChatRoom>,
@@ -47,8 +45,7 @@ const emit = defineEmits({
 });
 
 const { room, showMembersPreview, members } = toRefs(props);
-
-const chatStore = inject(ChatStoreKey)!;
+const { chatUnsafe: chat } = useGridStore();
 
 const titleMinLength = ref<number>();
 const titleMaxLength = ref<number>();
@@ -133,8 +130,6 @@ const notificationLevelForm: FormController<FormNotificationLevel> = createForm(
 		notificationLevelForm.formModel.level = payload.level;
 	},
 });
-
-const chat = computed(() => chatStore.chat!);
 
 const isOwner = computed(
 	() =>

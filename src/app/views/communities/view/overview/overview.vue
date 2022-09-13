@@ -17,6 +17,7 @@ import AppFiresideAvatar, {
 	FiresideAvatarEvent,
 } from '../../../../components/fireside/avatar/AppFiresideAvatar.vue';
 import AppFiresideAvatarAdd from '../../../../components/fireside/avatar/AppFiresideAvatarAdd.vue';
+import { useGridStore } from '../../../../components/grid/grid-store';
 import { useAppStore } from '../../../../store/index';
 import { CommunitiesViewChannelDeps } from '../channel/channel.vue';
 import {
@@ -53,6 +54,7 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
+	gridStore = setup(() => useGridStore());
 
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
@@ -67,7 +69,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		return this.store.communityStates;
 	}
 	get grid() {
-		return this.store.grid;
+		return this.gridStore.grid;
 	}
 
 	feed: ActivityFeedView | null = null;
@@ -199,7 +201,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		}
 
 		await acceptCollaboration(this.routeStore, this.user);
-		this.store.joinCommunity(this.community);
+		this.store.joinCommunity(this.community, { grid: this.grid });
 		showSuccessGrowl(this.$gettext(`You are now a collaborator on this community!`));
 	}
 

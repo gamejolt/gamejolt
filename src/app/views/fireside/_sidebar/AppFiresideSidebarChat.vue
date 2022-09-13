@@ -3,22 +3,15 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { Environment } from '../../../../_common/environment/environment.service';
-
 import { createFiresideChatContextCapabilities } from '../../../../_common/fireside/chat-settings/chat-settings.model';
-import { useChatStore } from '../../../components/chat/chat-store';
 import AppChatWindowOutput from '../../../components/chat/window/output/AppChatWindowOutput.vue';
 import AppChatWindowSend from '../../../components/chat/window/send/AppChatWindowSend.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 
-const c = useFiresideController()!;
-const { chatRoom, chatSettings, fireside } = c;
-
+const { chatRoom, chatSettings, chat, fireside } = useFiresideController()!;
 const route = useRoute();
-const chatStore = useChatStore()!;
-
-const chat = computed(() => chatStore.chat);
 
 const contextCapabilities = computed(() => ({
 	capabilities: createFiresideChatContextCapabilities(

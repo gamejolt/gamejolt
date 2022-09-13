@@ -52,6 +52,7 @@ const emit = defineEmits({
 .sticker-placement-list
 	display: inline-flex
 	align-items: center
+	margin-bottom: 16px
 
 .-supporters
 	align-self: flex-start
