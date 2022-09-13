@@ -161,12 +161,13 @@ export function createFiresideController(
 	/**
 	 * Which hosts the current user is able to list.
 	 */
-	const listableHostIds = ref<Set<number>>(new Set());
+	const listableHostIds = ref(new Set<number>());
 
 	/**
-	 * Mapping of user id to the background they have selected. Gets updated through events over {@link GridFiresideChannel}.
+	 * Mapping of user id to the background they have selected. Gets updated
+	 * through events over {@link GridFiresideChannel}.
 	 */
-	const hostBackgrounds = ref<Map<number, Background>>(new Map());
+	const hostBackgrounds = ref(new Map<number, Background>());
 
 	const stickerTargetController = createStickerTargetController(fireside, {
 		isLive: true,

@@ -29,13 +29,18 @@ export type GridFiresideChannel = Readonly<{
 	pushUpdateChatSettings: (
 		chatSettings: FiresideChatSettings
 	) => Promise<UpdateChatSettingsPayload>;
-	pushUpdateHostBackground: (backgroundId: number) => Promise<any>;
+	pushUpdateHost: (data: UpdateHostData) => Promise<any>;
 }>;
+
+interface UpdateHostData {
+	backgroundId?: number | null;
+}
 
 interface JoinPayload {
 	server_time: number;
 	chat_settings: unknown;
 	slow_mode_last_message_on: number;
+	host_data: [{ user_id: number; background?: any }];
 }
 
 interface StickerPlacementPayload {
@@ -74,7 +79,7 @@ export async function createGridFiresideChannel(
 	options: { firesideHash: string; stickerStore: StickerStore }
 ): Promise<GridFiresideChannel> {
 	const { socketController } = client;
-	const { chatSettings } = firesideController;
+	const { chatSettings, assignHostBackgroundData } = firesideController;
 	const { firesideHash, stickerStore } = options;
 
 	const logger = createLogger('Fireside');
@@ -87,22 +92,28 @@ export async function createGridFiresideChannel(
 	channelController.listenTo('update', _onUpdate);
 	channelController.listenTo('streaming-uid', _onStreamingUid);
 	channelController.listenTo('sticker-placement', _onStickerPlacement);
-	// TODO(fireside-host-backgrounds) verify that casing on these events is
-	// correct.
 	channelController.listenTo('update-host', _onUpdateHost);
 
 	const c = shallowReadonly<GridFiresideChannel>({
 		channelController,
 		firesideHash,
 		pushUpdateChatSettings,
-		pushUpdateHostBackground,
+		pushUpdateHost,
 	});
 
 	await channelController.join({
 		async onJoin(response: JoinPayload) {
-			// TODO(fireside-host-backgrounds) Get initial map of user id to
-			// backgrounds. Assign to the Map we have on the FiresideController.
 			chatSettings.value.assign(response.chat_settings);
+
+			// We need to initialize background data for all hosts.
+			if (response.host_data) {
+				for (const hostData of response.host_data) {
+					assignHostBackgroundData(
+						hostData.user_id,
+						hostData.background ? new Background(hostData.background) : undefined
+					);
+				}
+			}
 		},
 	});
 
@@ -187,7 +198,6 @@ export async function createGridFiresideChannel(
 		logger.debug('Grid host update received.', payload);
 
 		const background = payload.background ? new Background(payload.background) : undefined;
-
 		firesideController.assignHostBackgroundData(payload.user_id, background);
 	}
 
@@ -203,10 +213,10 @@ export async function createGridFiresideChannel(
 		});
 	}
 
-	function pushUpdateHostBackground(backgroundId: number) {
+	function pushUpdateHost({ backgroundId }: UpdateHostData) {
 		return channelController.push('update_host', {
 			fireside_hash: firesideHash,
-			background_id: backgroundId,
+			background_id: backgroundId || null,
 		});
 	}
 

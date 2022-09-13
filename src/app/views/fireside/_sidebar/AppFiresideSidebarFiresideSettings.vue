@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, watchEffect } from 'vue';
 import { Background } from '../../../../_common/background/background.model';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { FiresideChatSettings } from '../../../../_common/fireside/chat-settings/chat-settings.model';
@@ -19,6 +19,7 @@ import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import { ReportModal } from '../../../../_common/report/modal/modal.service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -31,10 +32,12 @@ import AppFiresideShare from '../AppFiresideShare.vue';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeadingCollapse from './AppFiresideSidebarHeadingCollapse.vue';
 
+const { user } = useCommonStore();
 const c = useFiresideController()!;
 const {
 	fireside,
 	chatSettings,
+	hostBackgrounds,
 	gridChannel,
 	isStreaming,
 	canEdit,
@@ -44,8 +47,6 @@ const {
 	canReport,
 	sidebar,
 } = c;
-
-const backgrounds = ref<Background[]>([]);
 
 const form: FormController<Fireside> = createForm({
 	warnOnDiscard: false,
@@ -77,6 +78,11 @@ const settingsForm: FormController<FiresideChatSettings> = createForm({
 	},
 });
 
+// If anyone else modifies the chat settings, let's sync it back to our form as
+// well. This should only really occur if they do it in another tab or client.
+watch(chatSettings, () => settingsForm.formModel.assign(chatSettings.value), { deep: true });
+
+const backgrounds = ref<Background[]>([]);
 const backgroundForm: FormController<{ background_id?: number }> = createForm({
 	warnOnDiscard: false,
 	loadUrl: computed(() => {
@@ -87,25 +93,31 @@ const backgroundForm: FormController<{ background_id?: number }> = createForm({
 		return `/web/fireside/backgrounds/${fireside.hash}`;
 	}),
 	onLoad(payload) {
-		backgroundForm.formModel.background_id = payload.currentBackgroundId;
 		backgrounds.value = Background.populate(payload.backgrounds);
+		backgroundForm.formModel.background_id = payload.currentBackgroundId || undefined;
 	},
-	onSubmit() {
-		return gridChannel.value!.pushUpdateHostBackground(backgroundForm.formModel.background_id!);
+	async onSubmit() {
+		return gridChannel.value!.pushUpdateHost({
+			backgroundId: backgroundForm.formModel.background_id,
+		});
 	},
 	onSubmitSuccess(response) {
-		// TODO(fireside-host-backgrounds) Check response, update form model
-		// with new background_id value.
-		const id = response.background ? response.background.id : response.background_id;
 		// Update our form model. The base model will update through a grid
-		// message.
-		backgroundForm.formModel.background_id = id;
+		// message. When it gets synced through grid it'll also apply to the
+		// form just in case through the watch below.
+		backgroundForm.formModel.background_id = response.background?.id || undefined;
 	},
 });
 
-// If anyone else modifies the chat settings, let's sync it back to our form as
-// well. This should only really occur if they do it in another tab or client.
-watch(chatSettings, () => settingsForm.formModel.assign(chatSettings.value), { deep: true });
+// Sync the background if they've changed it from another tab.
+watchEffect(() => {
+	if (!user.value) {
+		return;
+	}
+
+	const current = hostBackgrounds.value.get(user.value.id);
+	backgroundForm.formModel.background_id = current ? current.id : undefined;
+});
 
 watch(canEdit, (value, oldValue) => {
 	if (value && !oldValue) {
@@ -209,16 +221,21 @@ function onClickExtinguish() {
 									name="background_id"
 									class="sans-margin-bottom"
 									:label="$gettext(`Background`)"
+									optional
 									small
 								>
 									<AppFormControlBackground
 										:backgrounds="backgrounds"
-										:tile-size="32"
-										:tile-gap="8"
+										:tile-size="40"
 									/>
 								</AppFormGroup>
 
-								<!-- TODO(fireside-host-backgrounds) Might need some text here to let them know it's only visible when you're the focused user. -->
+								<p class="help-block sans-margin">
+									<AppTranslate>
+										This is the background we'll show to viewers when they focus
+										your stream.
+									</AppTranslate>
+								</p>
 
 								<AppSpacer vertical :scale="6" />
 							</template>
