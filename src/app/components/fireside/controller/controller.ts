@@ -227,6 +227,8 @@ export function createFiresideController(
 
 	const _isExtending = ref(false);
 
+	const focusedUser = computed(() => rtc.value?.focusedUser);
+
 	const chat = computed(() => grid.value?.chat ?? undefined);
 	const chatRoom = computed(() => chatChannel.value?.room.value);
 
@@ -338,6 +340,22 @@ export function createFiresideController(
 		}
 
 		return true;
+	});
+
+	/**
+	 * The background we would like to show currently in the fireside. It
+	 * changes depending on who you are viewing.
+	 */
+	const background = computed(() => {
+		// If we have no focused user, we want to try to use the background of the
+		// logged in user, since they might be setting up their stream at the
+		// moment before anyone else is streaming.
+		if (!focusedUser.value) {
+			const loggedUserId = user.value?.id;
+			return loggedUserId ? rtc.value?.hostBackgrounds.get(loggedUserId) : undefined;
+		}
+
+		return focusedUser.value.background;
 	});
 
 	const shouldShowDesktopAppPromo = ref(shouldPromoteAppForStreaming.value);
@@ -674,6 +692,7 @@ export function createFiresideController(
 		revalidateRTC,
 		assignHostBackgroundData,
 		status,
+		focusedUser,
 		chat,
 		chatSettings,
 		gridChannel,
@@ -704,6 +723,7 @@ export function createFiresideController(
 		canExtinguish,
 		canReport,
 		canBrowserStream,
+		background,
 		shouldShowDesktopAppPromo,
 		logger,
 

@@ -72,8 +72,6 @@ const gridStore = useGridStore();
 const themeStore = useThemeStore();
 const router = useRouter();
 
-const { user: loggedInUser } = commonStore;
-
 const c = shallowRef<FiresideController | null>(null);
 
 let beforeEachDeregister: (() => void) | null = null;
@@ -87,14 +85,8 @@ const videoHeight = ref(0);
 const fireside = computed(() => c.value?.fireside || payloadFireside.value);
 const payloadFireside = ref<Fireside>();
 
-const focusedUser = computed(() => {
-	const rtc = c.value?.rtc.value;
-	if (!rtc) {
-		return;
-	}
-
-	return rtc.focusedUser;
-});
+const focusedUser = computed(() => c.value?.focusedUser.value);
+const background = computed(() => c.value?.background.value);
 
 const isFullscreen = computed(() => c.value?.isFullscreen.value === true);
 const isShowingStreamOverlay = computed(() => c.value?.isShowingStreamOverlay.value === true);
@@ -117,18 +109,6 @@ const cannotViewReason = computed(() => {
 });
 
 const routeStatus = computed(() => c.value?.status.value);
-
-const background = computed(() => {
-	// If we have no focused user, we want to try to use the background of the
-	// logged in user, since they might be setting up their stream at the
-	// moment before anyone else is streaming.
-	if (!focusedUser.value) {
-		const loggedUserId = loggedInUser.value?.id;
-		return loggedUserId ? c.value?.rtc.value?.hostBackgrounds.get(loggedUserId) : undefined;
-	}
-
-	return focusedUser.value.background;
-});
 const overlayText = computed(() => !!background.value || isFullscreen.value);
 
 const sidebar = customRef<FiresideSidebar>((track, trigger) => ({
