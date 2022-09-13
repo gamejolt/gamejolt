@@ -1,5 +1,5 @@
-<script lang="ts">
-import { computed, inject, PropType, ref, toRefs, watch, watchEffect } from 'vue';
+<script lang="ts" setup>
+import { computed, PropType, ref, toRefs, watch, watchEffect } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatNumber } from '../../../../_common/filters/number';
@@ -12,7 +12,7 @@ import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import { useAppStore } from '../../../store/index';
-import { ChatStoreKey } from '../chat-store';
+import { useGridStore } from '../../grid/grid-store';
 import { leaveChatRoom } from '../client';
 import FormChatRoomSettings from '../FormChatRoomSettings.vue';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
@@ -23,9 +23,7 @@ import AppChatWindowOutput from './output/AppChatWindowOutput.vue';
 import AppChatWindowSend from './send/AppChatWindowSend.vue';
 
 type SidebarTab = 'settings' | 'members';
-</script>
 
-<script lang="ts" setup>
 const props = defineProps({
 	room: {
 		type: Object as PropType<ChatRoom>,
@@ -39,7 +37,7 @@ const emit = defineEmits({
 
 const { room } = toRefs(props);
 const { toggleLeftPane } = useAppStore();
-const chatStore = inject(ChatStoreKey)!;
+const { chatUnsafe: chat } = useGridStore();
 
 let showSettingsOnMembersBack = false;
 
@@ -70,7 +68,6 @@ watch(sidebar, (value, oldValue) => {
 
 const isShowingUsers = computed(() => sidebar.value === 'members');
 
-const chat = computed(() => chatStore.chat!);
 const users = computed(() => chat.value.roomMembers[room.value.id]);
 const membersCount = computed(() => formatNumber(room.value.members.length));
 

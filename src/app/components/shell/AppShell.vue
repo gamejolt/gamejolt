@@ -13,9 +13,9 @@ import AppStickerLayer from '../../../_common/sticker/layer/AppStickerLayer.vue'
 import { setStickerDrawerOpen, useStickerStore } from '../../../_common/sticker/sticker-store';
 import { useBannerStore } from '../../store/banner';
 import { useAppStore } from '../../store/index';
-import { useChatStore } from '../chat/chat-store';
 import { setChatFocused } from '../chat/client';
 import { AppClientShell, AppClientStatusBar } from '../client/safe-exports';
+import { useGridStore } from '../grid/grid-store';
 import AppShellBanner from './AppShellBanner.vue';
 import AppShellBody from './AppShellBody.vue';
 import AppShellHotBottom from './AppShellHotBottom.vue';
@@ -24,11 +24,6 @@ import AppShellCbar from './cbar/AppShellCbar.vue';
 import AppShellSidebar from './sidebar/AppShellSidebar.vue';
 
 const AppChatWindow = defineAsyncComponent(() => import('../chat/window/AppChatWindow.vue'));
-
-// Lazy load all of this since we only need it when the drawer is showing.
-const AppStickerLayerPlacementMask = defineAsyncComponent(
-	() => import('../../../_common/sticker/layer/AppStickerLayerPlacementMask.vue')
-);
 
 const {
 	isShellHidden,
@@ -52,13 +47,13 @@ const {
 } = useSidebarStore();
 
 const stickerStore = useStickerStore();
-const { activeLayer } = stickerStore;
 
-const chatStore = useChatStore()!;
+const { chat } = useGridStore();
+
 const route = useRoute();
 const router = useRouter();
 
-const totalChatNotificationsCount = computed(() => chatStore.chat?.roomNotificationsCount ?? 0);
+const totalChatNotificationsCount = computed(() => chat.value?.roomNotificationsCount ?? 0);
 const ssrShouldShowSidebar = computed(
 	() => import.meta.env.SSR && String(route.name).indexOf('communities.view') === 0
 );
@@ -87,7 +82,7 @@ onMounted(() => {
 watch(
 	() => ContentFocus.isWindowFocused,
 	isFocused => {
-		if (!chatStore.chat) {
+		if (!chat.value) {
 			return;
 		}
 
@@ -96,10 +91,10 @@ watch(
 		if (!isFocused) {
 			// Notify the client that we are unfocused, so it should
 			// start accumulating notifications for the current room.
-			setChatFocused(chatStore.chat, false);
+			setChatFocused(chat.value, false);
 		} else {
 			// Notify the client that we aren't unfocused anymore.
-			setChatFocused(chatStore.chat, true);
+			setChatFocused(chat.value, true);
 		}
 	}
 );
@@ -146,10 +141,7 @@ watch([totalChatNotificationsCount, unreadActivityCount, unreadNotificationsCoun
 		<AppShellSidebar v-if="hasSidebar" />
 		<AppShellBanner v-if="!isShellHidden" />
 
-		<AppChatWindow
-			v-if="visibleLeftPane === 'chat' && chatStore.chat && chatStore.chat.room"
-			:room="chatStore.chat.room"
-		/>
+		<AppChatWindow v-if="visibleLeftPane === 'chat' && chat && chat.room" :room="chat.room" />
 
 		<div v-if="GJ_IS_DESKTOP_APP" key="shell-client">
 			<AppClientBase />

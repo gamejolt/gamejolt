@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, inject, PropType, reactive, ref, toRefs } from 'vue';
+import { computed, PropType, reactive, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
 import { ContentOwnerParentBounds } from '../../../../../_common/content/content-owner';
@@ -12,7 +12,7 @@ import { Popper } from '../../../../../_common/popper/popper.service';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { ChatStore, ChatStoreKey } from '../../chat-store';
+import { useGridStore } from '../../../grid/grid-store';
 import {
 	removeMessage as chatRemoveMessage,
 	retryFailedQueuedMessage,
@@ -50,8 +50,7 @@ const props = defineProps({
 });
 
 const { message, room, maxContentWidth } = toRefs(props);
-
-const chatStore = inject<ChatStore>(ChatStoreKey)!;
+const { chatUnsafe: chat } = useGridStore();
 
 const displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
 
@@ -61,8 +60,6 @@ const itemWrapper = ref<HTMLElement>();
 const contentViewerBounds: ContentOwnerParentBounds = reactive({
 	width: maxContentWidth,
 });
-
-const chat = computed(() => chatStore.chat!);
 
 const showAsQueued = computed(() => message.value._showAsQueued);
 const hasError = computed(() => !!message.value._error);
@@ -208,7 +205,7 @@ function onRowClick() {
 
 async function onMessageClick() {
 	if (hasError.value) {
-		retryFailedQueuedMessage(chatStore!.chat!, message.value);
+		retryFailedQueuedMessage(chat.value, message.value);
 	}
 }
 </script>
