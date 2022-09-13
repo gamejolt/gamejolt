@@ -10,21 +10,18 @@ import Onboarding from '../_common/onboarding/onboarding.service';
 import AppCommonShell from '../_common/shell/AppCommonShell.vue';
 import { useCommonStore } from '../_common/store/common-store';
 import { loadCurrentLanguage } from '../_common/translate/translate.service';
-import { ChatStore, ChatStoreKey, clearChat, loadChat } from './components/chat/chat-store';
+import { useGridStore } from './components/grid/grid-store';
 import AppShell from './components/shell/AppShell.vue';
 import { useAppStore } from './store';
 
 const appStore = useAppStore();
-const { bootstrap, loadGrid, loadNotificationState, clear, clearGrid, clearNotificationState } =
-	appStore;
+const { bootstrap, loadNotificationState, clear, clearNotificationState } = appStore;
 const { user } = useCommonStore();
+const { loadGrid, clearGrid } = useGridStore();
 
 createAdsController();
 createAppPromotionStore();
 provide(CommentStoreManagerKey, reactive(new CommentStoreManager()));
-
-const chatStore = reactive(new ChatStore()) as ChatStore;
-provide(ChatStoreKey, chatStore);
 
 if (!import.meta.env.SSR) {
 	performance.measure('gj-shell-init', 'gj-start');
@@ -62,7 +59,6 @@ watch(
 			bootstrap();
 
 			if (!import.meta.env.SSR) {
-				loadChat(chatStore, appStore);
 				loadGrid();
 				loadNotificationState();
 			}
@@ -74,7 +70,6 @@ watch(
 			clear();
 			clearGrid();
 			clearNotificationState();
-			clearChat(chatStore);
 		}
 	},
 	{ immediate: true }

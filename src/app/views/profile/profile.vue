@@ -1,7 +1,7 @@
 <script lang="ts">
 import { inject, InjectionKey, provide, ref } from 'vue';
 import { setup } from 'vue-class-component';
-import { Inject, Options } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
 import { BlockModal } from '../../../_common/block/modal/modal.service';
 import { CommentModal } from '../../../_common/comment/modal/modal.service';
@@ -25,8 +25,8 @@ import { UserBaseTrophy } from '../../../_common/user/trophy/user-base-trophy.mo
 import AppUserAvatar from '../../../_common/user/user-avatar/user-avatar.vue';
 import { User } from '../../../_common/user/user.model';
 import AppUserVerifiedTick from '../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
-import { ChatStore, ChatStoreKey } from '../../components/chat/chat-store';
 import { isUserOnline } from '../../components/chat/client';
+import { useGridStore } from '../../components/grid/grid-store';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPageHeaderControls from '../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../components/page-header/page-header.vue';
@@ -242,9 +242,7 @@ export default class RouteProfile extends BaseRouteComponent {
 
 	commonStore = setup(() => useCommonStore());
 	themeStore = setup(() => useThemeStore());
-
-	@Inject({ from: ChatStoreKey })
-	chatStore!: ChatStore;
+	gridStore = setup(() => useGridStore());
 
 	readonly UserFriendship = UserFriendship;
 	readonly Environment = Environment;
@@ -268,7 +266,7 @@ export default class RouteProfile extends BaseRouteComponent {
 	}
 
 	get chat() {
-		return this.chatStore.chat;
+		return this.gridStore.chat;
 	}
 
 	/**

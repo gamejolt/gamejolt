@@ -1,20 +1,21 @@
 <script lang="ts">
-import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
-import { ChatStore, ChatStoreKey } from '../chat-store';
+import { useGridStore } from '../../grid/grid-store';
 import {
-demoteModerator,
-enterChatRoom,
-isUserOnline,
-kickGroupMember,
-promoteToModerator,
-tryGetRoomRole,
-userCanModerateOtherUser
+	demoteModerator,
+	enterChatRoom,
+	isUserOnline,
+	kickGroupMember,
+	promoteToModerator,
+	tryGetRoomRole,
+	userCanModerateOtherUser,
 } from '../client';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
@@ -32,15 +33,14 @@ export default class AppChatUserPopover extends Vue {
 	@Prop({ type: Object, required: true }) user!: ChatUser;
 	@Prop({ type: Object, required: true }) room!: ChatRoom;
 
-	@Inject({ from: ChatStoreKey })
-	chatStore!: ChatStore;
+	gridStore = setup(() => useGridStore());
 
 	get chat() {
-		return this.chatStore.chat!;
+		return this.gridStore.chatUnsafe;
 	}
 
 	get isOnline() {
-		if (!this.chatStore.chat) {
+		if (!this.chat) {
 			return null;
 		}
 

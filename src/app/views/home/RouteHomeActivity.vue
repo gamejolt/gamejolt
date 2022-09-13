@@ -10,6 +10,7 @@ import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
+import { useGridStore } from '../../components/grid/grid-store';
 import { AppActivityFeedLazy } from '../../components/lazy';
 import { illNoComments } from '../../img/ill/illustrations';
 import { useAppStore } from '../../store/index';
@@ -36,7 +37,8 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const { grid, unreadActivityCount } = useAppStore();
+const { unreadActivityCount } = useAppStore();
+const { grid } = useGridStore();
 const { feed } = inject<RouteActivityFeedController>('route-activity-feed')!;
 
 const isBootstrapped = ref(false);

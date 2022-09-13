@@ -10,12 +10,14 @@ import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
 import { useAppStore } from '../../../store';
+import { useGridStore } from '../../grid/grid-store';
 import { UserFriendshipHelper } from '../../user/friendships-helper/friendship-helper.service';
 import AppShellFriendRequestPopoverItem from './AppShellFriendRequestPopoverItem.vue';
 
 type Tab = 'requests' | 'pending';
 
-const { hasNewFriendRequests, grid } = useAppStore();
+const { hasNewFriendRequests } = useAppStore();
+const { grid } = useGridStore();
 
 const isShowing = ref(false);
 const isLoading = ref(false);
