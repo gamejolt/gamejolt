@@ -119,8 +119,10 @@ watchEffect(() => {
 	backgroundForm.formModel.background_id = current ? current.id : undefined;
 });
 
-watch(canEdit, (value, oldValue) => {
-	if (value && !oldValue) {
+watch([canEdit, canStream], (value, oldValue) => {
+	const needsReload = (value[0] && !oldValue[0]) || (value[1] && !oldValue[1]);
+
+	if (needsReload) {
 		settingsForm.reload();
 		backgroundForm.reload();
 	}
@@ -210,37 +212,40 @@ function onClickExtinguish() {
 								</AppFormButton>
 							</AppFormStickySubmit>
 						</AppForm>
+					</template>
 
-						<AppForm
-							:controller="backgroundForm"
-							:forced-is-loading="backgroundForm.isProcessing ? true : undefined"
-							@changed="backgroundForm.submit"
-						>
-							<template v-if="backgrounds.length">
-								<AppFormGroup
-									name="background_id"
-									class="sans-margin-bottom"
-									:label="$gettext(`Background`)"
-									optional
-									small
-								>
-									<AppFormControlBackground
-										:backgrounds="backgrounds"
-										:tile-size="40"
-									/>
-								</AppFormGroup>
+					<AppForm
+						v-if="canStream"
+						:controller="backgroundForm"
+						:forced-is-loading="backgroundForm.isProcessing ? true : undefined"
+						@changed="backgroundForm.submit"
+					>
+						<template v-if="backgrounds.length">
+							<AppFormGroup
+								name="background_id"
+								class="sans-margin-bottom"
+								:label="$gettext(`Background`)"
+								optional
+								small
+							>
+								<AppFormControlBackground
+									:backgrounds="backgrounds"
+									:tile-size="40"
+								/>
+							</AppFormGroup>
 
-								<p class="help-block sans-margin">
-									<AppTranslate>
-										This is the background we'll show to viewers when they focus
-										your stream.
-									</AppTranslate>
-								</p>
+							<p class="help-block sans-margin">
+								<AppTranslate>
+									This is the background we'll show to viewers when they focus
+									your stream.
+								</AppTranslate>
+							</p>
 
-								<AppSpacer vertical :scale="6" />
-							</template>
-						</AppForm>
+							<AppSpacer vertical :scale="6" />
+						</template>
+					</AppForm>
 
+					<template v-if="canEdit">
 						<hr class="sans-margin-top" />
 
 						<AppForm
