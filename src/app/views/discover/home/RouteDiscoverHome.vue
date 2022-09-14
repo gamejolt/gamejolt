@@ -108,7 +108,9 @@ const { isBootstrapped } = createAppRoute({
 			HistoryCache.store(route, creatorPosts.value, CachedCreatorsKey);
 		}
 
-		trackExperimentEngagement(configGuestHomeDiscover);
+		if (!user.value) {
+			trackExperimentEngagement(configGuestHomeDiscover);
+		}
 	},
 });
 </script>
