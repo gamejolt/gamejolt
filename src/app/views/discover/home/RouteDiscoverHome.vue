@@ -43,7 +43,7 @@ const heroPosts = ref<FiresidePost[]>([]);
 const creatorPosts = ref<FiresidePost[]>([]);
 
 const { isBootstrapped } = createAppRoute({
-	routeTitle: computed(() => (user.value ? $gettext(`Explore`) : null)),
+	routeTitle: computed(() => (user.value ? $gettext(`Discover`) : null)),
 	onInit() {
 		creatorPosts.value = HistoryCache.get(route, CachedCreatorsKey) ?? [];
 	},
