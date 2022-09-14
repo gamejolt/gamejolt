@@ -7,6 +7,7 @@ import {
 	reactive,
 	ref,
 	Ref,
+	shallowReadonly,
 	ShallowRef,
 	shallowRef,
 	unref,
@@ -104,7 +105,7 @@ export function createStickerTargetController(
 	const layer = shallowRef<StickerLayerController | null>(null);
 	const children = shallowRef<StickerTargetController[]>([]);
 
-	const c: StickerTargetController = {
+	const c: StickerTargetController = shallowReadonly({
 		isInview,
 		hasLoadedStickers,
 		shouldShow,
@@ -118,7 +119,7 @@ export function createStickerTargetController(
 		isLive,
 		placeStickerCallback,
 		isCreator: computed(() => unref(isCreator)),
-	};
+	});
 
 	if (refParent.value) {
 		refParent.value.children.value.push(c);
