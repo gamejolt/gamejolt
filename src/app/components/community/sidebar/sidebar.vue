@@ -4,7 +4,6 @@ import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { getAbsoluteLink } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
-import { configChargedStickers } from '../../../../_common/config/config.service';
 import { formatNumber } from '../../../../_common/filters/number';
 import { ReportModal } from '../../../../_common/report/modal/modal.service';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
@@ -64,10 +63,6 @@ export default class AppCommunitySidebar extends Vue {
 	@Watch('sidebarData.collaboratorCount', { immediate: true })
 	onCollaboratorsCountUpdated(collaboratorCount: number) {
 		this.currentCollaboratorCount = collaboratorCount;
-	}
-
-	get hasChargedStickers() {
-		return configChargedStickers.value;
 	}
 
 	get shouldShowKnownMembers() {
@@ -257,8 +252,7 @@ export default class AppCommunitySidebar extends Vue {
 								/>
 
 								<AppUserCreatorBadge
-									v-if="hasChargedStickers && user.is_creator === true"
-									:user="user"
+									v-if="user.is_creator"
 									class="-mod-creator"
 									small
 								/>

@@ -40,7 +40,7 @@ const baseMinColWidth = ref<number>();
 
 const shouldShowSearch = computed(() => !Screen.isXs && !isUserTimedOut.value);
 const shouldShowMenu = computed(() => Screen.isXs && !isUserTimedOut.value);
-const shouldShowExplore = computed(() => !Screen.isXs && user.value && !isUserTimedOut.value);
+const shouldShowDiscover = computed(() => !Screen.isXs && user.value && !isUserTimedOut.value);
 const shouldShowMoreMenu = computed(() => !Screen.isXs && !isUserTimedOut.value);
 const humanizedActivityCount = computed(() =>
 	unreadActivityCount.value < 100 ? unreadActivityCount.value : '99+'
@@ -134,7 +134,7 @@ function _checkColWidths() {
 				</RouterLink>
 
 				<RouterLink
-					v-if="shouldShowExplore"
+					v-if="shouldShowDiscover"
 					v-app-track-event="`top-nav:main-menu:discover`"
 					class="navbar-item"
 					:class="{ active: $route.name === 'discover.home' }"
@@ -142,7 +142,7 @@ function _checkColWidths() {
 				>
 					<AppJolticon icon="compass-needle" class="-section-icon" />
 					<strong class="text-upper">
-						<AppTranslate>Explore</AppTranslate>
+						<AppTranslate>Discover</AppTranslate>
 					</strong>
 				</RouterLink>
 

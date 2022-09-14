@@ -81,7 +81,7 @@ export function arrayChunk<T>(arr: T[], size: number): T[][] {
 export function arrayShuffle<T>(arr: T[]): T[] {
 	let j, tmp;
 
-	for (let i = arr.length - 1; i !== 0; i--) {
+	for (let i = arr.length - 1; i > 0; i--) {
 		j = Math.floor(Math.random() * (i + 1));
 
 		tmp = arr[i];

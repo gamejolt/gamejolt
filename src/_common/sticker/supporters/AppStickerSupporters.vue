@@ -2,7 +2,7 @@
 import { computed, PropType, toRefs } from 'vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
-import AppUserAvatarImg from '../../user/user-avatar/img/img.vue';
+import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
 import { User } from '../../user/user.model';
 import { StickerSupportersModal } from './modal.service';
 

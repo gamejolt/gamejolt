@@ -8,7 +8,7 @@ import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../_common/game/game.model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { PostEditModal } from '../edit-modal/edit-modal-service';
 
 @Options({

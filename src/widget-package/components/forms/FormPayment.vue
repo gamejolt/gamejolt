@@ -11,7 +11,7 @@ import { validateMinValue } from '../../../_common/form-vue/validators';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
+import AppUserAvatarImg from '../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { PaymentData, useWidgetPackageStore } from '../../store/index';
 import AppWidgetModal from '../AppWidgetModal.vue';
 import FormAddress from './FormAddress.vue';

@@ -106,7 +106,7 @@ function onLoadedNew() {
 				}"
 			>
 				<AppButton icon="compass-needle" solid lg block>
-					<AppTranslate>Explore</AppTranslate>
+					<AppTranslate>Discover</AppTranslate>
 				</AppButton>
 			</RouterLink>
 		</div>

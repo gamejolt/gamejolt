@@ -5,7 +5,7 @@ import { Api } from '../../../../_common/api/api.service';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
-import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
+import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import { useGridStore } from '../../grid/grid-store';
 import {

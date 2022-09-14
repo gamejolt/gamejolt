@@ -1,6 +1,5 @@
 <script lang="ts">
 import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { configChargedStickers } from '../../../../config/config.service';
 import AppUserCardHover from '../../../../user/card/AppUserCardHover.vue';
 import AppUserCreatorBadge from '../../../../user/creator/AppUserCreatorBadge.vue';
 import { User } from '../../../../user/user.model';
@@ -30,10 +29,6 @@ export default class AppContentViewerMention extends Vue {
 		});
 	}
 
-	get hasChargedStickers() {
-		return configChargedStickers.value;
-	}
-
 	created() {
 		this.hydrateUser();
 	}
@@ -59,11 +54,7 @@ export default class AppContentViewerMention extends Vue {
 								class="img-responsive mention-avatar-img"
 								alt=""
 							/>
-							<AppUserCreatorBadge
-								v-if="hasChargedStickers && user.is_creator === true"
-								:user="user"
-								class="mention-creator"
-							/>
+							<AppUserCreatorBadge v-if="user.is_creator" class="mention-creator" />
 							<AppJolticon
 								v-else-if="user.is_verified"
 								class="mention-verified"

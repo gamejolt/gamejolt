@@ -22,7 +22,7 @@ import AppUserFollowWidget from '../../../_common/user/follow/widget.vue';
 import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
 import { populateTrophies } from '../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophy } from '../../../_common/user/trophy/user-base-trophy.model';
-import AppUserAvatar from '../../../_common/user/user-avatar/user-avatar.vue';
+import AppUserAvatar from '../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { User } from '../../../_common/user/user.model';
 import AppUserVerifiedTick from '../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import { isUserOnline } from '../../components/chat/client';

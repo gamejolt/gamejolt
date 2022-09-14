@@ -5,7 +5,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
-import AppUserAvatarImg from '../../../../../_common/user/user-avatar/img/img.vue';
+import AppUserAvatarImg from '../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { User } from '../../../../../_common/user/user.model';
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 

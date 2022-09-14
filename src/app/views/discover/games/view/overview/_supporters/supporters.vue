@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatarImg from '../../../../../../../_common/user/user-avatar/img/img.vue';
+import AppUserAvatarImg from '../../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { User } from '../../../../../../../_common/user/user.model';
 import { GameSupportersModal } from '../../../../../../components/game/supporters/modal/modal.service';
 import { useGameRouteController } from '../../view.vue';

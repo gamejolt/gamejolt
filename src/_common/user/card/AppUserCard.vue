@@ -11,7 +11,7 @@ import { useCommonStore } from '../../store/common-store';
 import AppTheme from '../../theme/AppTheme.vue';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import AppUserFollowWidget from '../follow/widget.vue';
-import AppUserAvatarImg from '../user-avatar/img/img.vue';
+import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
 import { User } from '../user.model';
 import AppUserVerifiedTick from '../verified-tick/AppUserVerifiedTick.vue';
 </script>
