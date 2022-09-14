@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Environment } from '../../environment/environment.service';
-import AppUserAvatarImg from '../user-avatar/img/img.vue';
+import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
 import { User } from '../user.model';
 
 @Options({

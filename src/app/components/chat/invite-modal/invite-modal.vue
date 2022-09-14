@@ -4,7 +4,7 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import { fuzzysearch } from '../../../../utils/string';
 import { BaseModal } from '../../../../_common/modal/base';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
 import { useGridStore } from '../../grid/grid-store';
 import { addGroupMembers, addGroupRoom } from '../client';

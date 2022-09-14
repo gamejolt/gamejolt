@@ -1,16 +1,16 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
-import { User } from '../../user.model';
-import guestImage from '../guest.png';
+<script lang="ts" setup>
+import { PropType, ref } from 'vue';
+import { User } from '../user.model';
+import guestImage from './guest.png';
 
-@Options({})
-export default class AppUserAvatarImg extends Vue {
-	@Prop(Object) user?: User;
+defineProps({
+	user: {
+		type: Object as PropType<User>,
+		default: undefined,
+	},
+});
 
-	hasError = false;
-
-	readonly guestImage = guestImage;
-}
+const hasError = ref(false);
 </script>
 
 <template>

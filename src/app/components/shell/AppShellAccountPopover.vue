@@ -13,7 +13,7 @@ import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
+import AppUserAvatarImg from '../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { UserWallet } from '../../../_common/user/wallet/wallet.model';
 import { useAppStore } from '../../store';
 import { UserTokenModal } from '../user/token-modal/token-modal.service';
