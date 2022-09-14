@@ -1,13 +1,14 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { Community } from '../../../../_common/community/community.model';
-import { configChargedStickers, configRealms } from '../../../../_common/config/config.service';
+import { configRealms } from '../../../../_common/config/config.service';
 import AppCreatorsList from '../../../../_common/creator/AppCreatorsList.vue';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Realm } from '../../../../_common/realm/realm-model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppUserCreatorBadge from '../../../../_common/user/creator/AppUserCreatorBadge.vue';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import { AppAuthJoinLazy } from '../../../components/lazy';
@@ -74,11 +75,11 @@ const { user } = useCommonStore();
 				<br />
 			</template>
 
-			<div
-				v-if="configChargedStickers.value && (!isBootstrapped || creatorPosts.length)"
-				class="-content-row container"
-			>
-				<h2 class="-content-row-header">Game Jolt Creators</h2>
+			<div v-if="!isBootstrapped || creatorPosts.length" class="-content-row container">
+				<h2 class="-content-row-header">
+					<AppUserCreatorBadge size="lg" />
+					<AppTranslate>Game Jolt Creators</AppTranslate>
+				</h2>
 
 				<AppCreatorsList
 					:is-loading="!isBootstrapped"

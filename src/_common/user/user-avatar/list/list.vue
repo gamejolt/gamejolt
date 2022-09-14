@@ -1,6 +1,5 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { configChargedStickers } from '../../../config/config.service';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import { User } from '../../user.model';
 import AppUserVerifiedTick from '../../verified-tick/AppUserVerifiedTick.vue';
@@ -24,10 +23,6 @@ export default class AppUserAvatarList extends Vue {
 
 	@Prop(Boolean)
 	inline?: boolean;
-
-	get hasChargedStickers() {
-		return configChargedStickers.value;
-	}
 }
 </script>
 
@@ -53,7 +48,7 @@ export default class AppUserAvatarList extends Vue {
 				v-if="!sm"
 				class="-tick"
 				:class="{
-					'-tick-round': !hasChargedStickers || user.is_creator !== true,
+					'-tick-round': !user.is_creator,
 				}"
 				:user="user"
 			/>

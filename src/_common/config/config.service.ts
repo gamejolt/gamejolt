@@ -160,8 +160,6 @@ export const configCommunityFrontpageFeedType = new ConfigOptionString(
 	}
 );
 
-export const configChargedStickers = new ConfigOptionBoolean('web_charged_stickers', false);
-
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
 }
