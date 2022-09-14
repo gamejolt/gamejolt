@@ -8,7 +8,7 @@ import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/AppCo
 import { Game } from '../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
+import AppUserAvatarImg from '../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { User } from '../../../_common/user/user.model';
 import AppUserVerifiedTick from '../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import type { LocalDbGame as LocalDbGameType } from '../client/local-db/game/game.model';

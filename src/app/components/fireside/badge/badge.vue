@@ -8,7 +8,7 @@ import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMed
 import { vAppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import AppFiresideStreamPreview from '../stream/preview/preview.vue';
 
 @Options({

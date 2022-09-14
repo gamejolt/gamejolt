@@ -11,14 +11,11 @@ import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
-import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import AppStickerControlsOverlay from '../../../../../_common/sticker/AppStickerControlsOverlay.vue';
+import AppStickerPlacementList from '../../../../../_common/sticker/AppStickerPlacementList.vue';
 import AppStickerLayer from '../../../../../_common/sticker/layer/AppStickerLayer.vue';
 import { canPlaceStickerOnFiresidePost } from '../../../../../_common/sticker/placement/placement.model';
-import AppStickerReactions from '../../../../../_common/sticker/reactions/AppStickerReactions.vue';
-import AppStickerSupporters from '../../../../../_common/sticker/supporters/AppStickerSupporters.vue';
 import {
 	createStickerTargetController,
 	provideStickerTargerController,
@@ -304,34 +301,12 @@ function onPostUnpinned(item: EventItem) {
 					</AppPostContent>
 
 					<AppStickerControlsOverlay :hide="!!post.background">
-						<div
-							v-if="post.sticker_counts.length || post.supporters.length"
-							class="-reactions-container -controls-buffer"
-							@click.stop
-						>
-							<AppStickerSupporters
-								v-if="post.supporters.length"
-								class="-supporters"
-								:limit="
-									Screen.isDesktop
-										? 8
-										: Math.max(1, Math.min(8, Math.round(Screen.width / 100)))
-								"
-								:supporters="post.supporters"
-								:style="{
-									marginRight: post.sticker_counts.length ? '12px' : undefined,
-								}"
-							/>
-
-							<AppStickerReactions
-								v-if="post.sticker_counts.length"
-								class="-sticker-reactions"
-								:controller="stickerTargetController"
-								@show="scrollToStickers"
-							/>
-						</div>
-
-						<AppSpacer vertical :scale="2" />
+						<AppStickerPlacementList
+							:sticker-target-controller="stickerTargetController"
+							:supporters="post.supporters"
+							:stickers="post.sticker_counts"
+							@show="scrollToStickers"
+						/>
 
 						<AppPostTargets
 							v-if="communities.length || realms.length"

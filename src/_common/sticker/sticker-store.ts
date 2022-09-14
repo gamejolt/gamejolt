@@ -446,8 +446,8 @@ export async function commitStickerStoreItemPlacement(store: StickerStore) {
 		model.assign(resource);
 		const { parent } = targetController.value;
 
-		if (payloadParent && parent) {
-			parent.model.assign(payloadParent);
+		if (payloadParent && parent.value) {
+			parent.value.model.assign(payloadParent);
 		}
 
 		setStickerDrawerOpen(store, false, null);

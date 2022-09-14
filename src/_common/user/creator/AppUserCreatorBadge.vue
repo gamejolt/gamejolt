@@ -1,52 +1,24 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import type { ChatUser } from '../../../app/components/chat/user';
+import { PropType } from 'vue';
 import { imagePartnerBadge } from '../../../app/img/images';
-import { configChargedStickers } from '../../config/config.service';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
-import { User } from '../user.model';
 
-const props = defineProps({
-	user: {
-		type: Object as PropType<User | ChatUser>,
-		required: true,
+defineProps({
+	size: {
+		type: String as PropType<'md' | 'lg' | 'sm'>,
+		default: 'default',
 	},
-	big: {
-		type: Boolean,
-	},
-	small: {
-		type: Boolean,
-	},
-});
-
-const { user, big, small } = toRefs(props);
-
-const shouldShow = computed(() => isCreator.value);
-
-const isCreator = computed(() => {
-	if (!configChargedStickers.value) {
-		return false;
-	}
-
-	return user.value.is_creator === true;
-});
-
-const tooltip = computed(() => {
-	if (isCreator.value) {
-		return $gettext('Game Jolt Creator');
-	}
 });
 </script>
 
 <template>
 	<img
-		v-if="shouldShow"
-		v-app-tooltip="tooltip"
+		v-app-tooltip="$gettext('Game Jolt Creator')"
 		class="user-creator-badge"
 		:class="{
-			'-big': big,
-			'-small': small,
+			'-big': size === 'lg',
+			'-small': size === 'sm',
 		}"
 		:src="imagePartnerBadge"
 	/>

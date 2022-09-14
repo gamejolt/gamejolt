@@ -11,7 +11,7 @@ import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
+import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { UserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
 import { UserHeaderModal } from '../../../components/user/header-modal/header-modal.service';

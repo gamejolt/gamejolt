@@ -4,7 +4,7 @@ import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Screen } from '../../screen/screen-service';
 import { useCommonStore } from '../../store/common-store';
 import AppTimelineListItem from '../../timeline-list/item/item.vue';
-import AppUserAvatarImg from '../../user/user-avatar/img/img.vue';
+import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
 
 @Options({
 	components: {

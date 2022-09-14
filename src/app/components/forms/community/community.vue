@@ -9,6 +9,7 @@ import { validateUrlPath } from '../../../../_common/form-vue/validators';
 import { DefaultTheme } from '../../../../_common/theme/theme.model';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
 import { useAppStore } from '../../../store';
+import { useGridStore } from '../../grid/grid-store';
 import AppPostAddButtonFormControl from '../../post/add-button/AppPostAddButtonFormControl.vue';
 
 class Wrapper extends BaseForm<Community> {}
@@ -24,6 +25,7 @@ export default class FormCommunity extends mixins(Wrapper) implements FormOnSubm
 	modelClass = Community;
 
 	store = setup(() => useAppStore());
+	gridStore = setup(() => useGridStore());
 	themeStore = setup(() => useThemeStore());
 
 	readonly validateUrlPath = validateUrlPath;
@@ -42,7 +44,7 @@ export default class FormCommunity extends mixins(Wrapper) implements FormOnSubm
 		// When creating a community you get auto joined to it,
 		// but aside from the actual join operation we also do other things
 		// in this store action so we gotta call it anyways.
-		this.store.joinCommunity(community);
+		this.store.joinCommunity(community, { grid: this.gridStore.grid });
 
 		this.$router.push(community.routeEditLocation);
 	}

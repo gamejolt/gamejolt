@@ -58,7 +58,7 @@ import {
 	$gettextInterpolate,
 	$ngettext,
 } from '../../../../_common/translate/translate.service';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import AppPostTargets from '../../post/AppPostTargets.vue';
 import { POST_TARGET_HEIGHT } from '../../post/target/AppPostTarget.vue';
 import AppFormPostMedia from './_media/media.vue';
@@ -1514,7 +1514,7 @@ function _getMatchingBackgroundIdFromPref() {
 			/>
 			<p v-else-if="!wasPublished" class="help-block">
 				<AppTranslate>Join some communities to post to them.</AppTranslate>
-				<span v-app-tooltip.touchable="$gettext(`Go to the explore page and find some!`)">
+				<span v-app-tooltip.touchable="$gettext(`Go to the Discover page and find some!`)">
 					<AppJolticon class="text-muted" icon="help-circle" />
 				</span>
 			</p>

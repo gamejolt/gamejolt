@@ -18,7 +18,7 @@ import AppContentViewer from '../../../../_common/content/content-viewer/content
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { Model } from '../../../../_common/model/model.service';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import { illNoCommentsSmall } from '../../../img/ill/illustrations';
 

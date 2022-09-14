@@ -2,7 +2,7 @@
 import { computed, PropType, toRefs } from 'vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
-import AppUserAvatarImg from '../../user/user-avatar/img/img.vue';
+import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
 import { User } from '../../user/user.model';
 import { StickerSupportersModal } from './modal.service';
 
@@ -34,7 +34,11 @@ function onClick() {
 		@click.stop="onClick"
 	>
 		<div v-for="(user, index) of displaySupporters" :key="user.id" class="-item">
-			<AppUserAvatarImg class="-item-img" :style="{ zIndex: supporters.length - index }" />
+			<AppUserAvatarImg
+				class="-item-img"
+				:user="user"
+				:style="{ zIndex: supporters.length - index }"
+			/>
 		</div>
 	</div>
 </template>

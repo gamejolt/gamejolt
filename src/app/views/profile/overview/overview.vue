@@ -8,17 +8,17 @@ import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue'
 import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
 import { Comment } from '../../../../_common/comment/comment-model';
 import {
-CommentStoreManager,
-CommentStoreManagerKey,
-CommentStoreModel,
-lockCommentStore,
-releaseCommentStore,
-setCommentCount
+	CommentStoreManager,
+	CommentStoreManagerKey,
+	CommentStoreModel,
+	lockCommentStore,
+	releaseCommentStore,
+	setCommentCount,
 } from '../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../_common/comment/modal/modal.service';
 import {
-CommentThreadModal,
-CommentThreadModalPermalinkDeregister
+	CommentThreadModal,
+	CommentThreadModalPermalinkDeregister,
 } from '../../../../_common/comment/thread/modal.service';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
@@ -36,7 +36,7 @@ import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service'
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, {
-ScrollInviewConfig
+	ScrollInviewConfig,
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -46,12 +46,12 @@ import { UserFriendship } from '../../../../_common/user/friendship/friendship.m
 import { showUserInviteFollowModal } from '../../../../_common/user/invite/modal/modal.service';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 import { unfollowUser, User } from '../../../../_common/user/user.model';
-import { ChatStore, ChatStoreKey } from '../../../components/chat/chat-store';
 import { enterChatRoom } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/overview/overview.vue';
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import AppGameList from '../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
+import { useGridStore } from '../../../components/grid/grid-store';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import { TrophyModal } from '../../../components/trophy/modal/modal.service';
@@ -100,9 +100,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	routeStore = setup(() => useProfileRouteController()!);
 	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
-
-	@Inject({ from: ChatStoreKey })
-	chatStore!: ChatStore;
+	gridStore = setup(() => useGridStore());
 
 	@Inject({ from: CommentStoreManagerKey })
 	commentManager!: CommentStoreManager;
@@ -139,7 +137,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	get grid() {
-		return this.store.grid;
+		return this.gridStore.grid;
 	}
 
 	get user() {
@@ -175,7 +173,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	get chat() {
-		return this.chatStore.chat;
+		return this.grid?.chat;
 	}
 
 	get routeTitle() {

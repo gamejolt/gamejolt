@@ -16,7 +16,7 @@ import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useStickerStore } from '../../../../_common/sticker/sticker-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
+import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideDesktopAudio from '../../../components/fireside/stream/AppFiresideDesktopAudio.vue';
 import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';

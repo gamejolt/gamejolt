@@ -5,7 +5,7 @@ import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../api/api.service';
 import AppLoading from '../../../../loading/AppLoading.vue';
 import { Screen } from '../../../../screen/screen-service';
-import AppUserAvatarImg from '../../../../user/user-avatar/img/img.vue';
+import AppUserAvatarImg from '../../../../user/user-avatar/AppUserAvatarImg.vue';
 import { User } from '../../../../user/user.model';
 import AppUserVerifiedTick from '../../../../user/verified-tick/AppUserVerifiedTick.vue';
 import { editorInsertMention, useContentEditorController } from '../../content-editor-controller';

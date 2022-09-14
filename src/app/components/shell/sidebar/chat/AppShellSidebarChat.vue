@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { onMounted, ref } from '@vue/runtime-core';
 import { computed, onUnmounted } from 'vue';
 import { EscapeStack } from '../../../../../_common/escape-stack/escape-stack.service';
@@ -11,23 +11,19 @@ import AppTabBarItem from '../../../../../_common/tab-bar/AppTabBarItem.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { illMaintenance, illNoCommentsSmall } from '../../../../img/ill/illustrations';
 import { useAppStore } from '../../../../store';
-import { useChatStore } from '../../../chat/chat-store';
 import { enterChatRoom, leaveChatRoom } from '../../../chat/client';
 import { sortByLastMessageOn } from '../../../chat/user-collection';
 import AppChatUserList from '../../../chat/user-list/AppChatUserList.vue';
-</script>
+import { useGridStore } from '../../../grid/grid-store';
 
-<script lang="ts" setup>
 const store = useAppStore();
-
-const chatStore = useChatStore()!;
+const { chatUnsafe: chat } = useGridStore();
 
 let escapeCallback: (() => void) | null = null;
 
 const tab = ref<'chats' | 'friends'>('chats');
 
 const visibleLeftPane = computed(() => store.visibleLeftPane.value);
-const chat = computed(() => chatStore.chat!);
 const friends = computed(() => chat.value.friendsList.collection);
 const groups = computed(() => chat.value.groupRooms);
 const chats = computed(() => sortByLastMessageOn([...groups.value, ...friends.value]));

@@ -21,6 +21,7 @@ import { useThemeStore } from '../../../../_common/theme/theme.store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
 import { CommunityHeaderModal } from '../../../components/forms/community/header/modal/modal.service';
+import { useGridStore } from '../../../components/grid/grid-store';
 import AppShellContentWithSidebar from '../../../components/shell/AppShellContentWithSidebar.vue';
 import { useAppStore } from '../../../store/index';
 import { routeCommunitiesViewEditDetails } from './edit/details/details.route';
@@ -59,14 +60,8 @@ export default {
 const routeStore = ref(new CommunityRouteStore());
 provide(CommunityRouteStoreKey, routeStore);
 
-const {
-	communityStates,
-	grid,
-	tillGridBootstrapped,
-	setActiveCommunity,
-	clearActiveCommunity,
-	viewCommunity,
-} = useAppStore();
+const { communityStates, setActiveCommunity, clearActiveCommunity, viewCommunity } = useAppStore();
+const { grid, whenGridBootstrapped } = useGridStore();
 const { user } = useCommonStore();
 const { setPageTheme, clearPageTheme } = useThemeStore();
 const { activeContextPane, addContextPane, removeContextPane } = useSidebarStore();
@@ -170,7 +165,7 @@ watch(
 
 async function _getCommunityBootstrap() {
 	// When this is the first route the user enters, grid might not be bootstrapped yet.
-	const grid = await tillGridBootstrapped();
+	const grid = await whenGridBootstrapped();
 	grid.queueRequestCommunityBootstrap(community.value.id);
 }
 

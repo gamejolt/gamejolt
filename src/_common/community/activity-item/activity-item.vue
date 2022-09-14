@@ -10,7 +10,7 @@ import { AppTimeAgo } from '../../time/ago/ago';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { getSingleReasonText } from '../../user/action-reasons';
 import { UserBlock } from '../../user/block/block.model';
-import AppUserAvatar from '../../user/user-avatar/user-avatar.vue';
+import AppUserAvatar from '../../user/user-avatar/AppUserAvatar.vue';
 import { User } from '../../user/user.model';
 import { CommunityChannel } from '../channel/channel.model';
 import { CommunityCompetition } from '../competition/competition.model';

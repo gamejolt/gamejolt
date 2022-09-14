@@ -12,7 +12,7 @@ import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/rout
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { UserBlock } from '../../../../../_common/user/block/block.model';
-import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
+import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import FormUserBlock from '../../../../components/forms/user/block/block.vue';
 import { useAccountRouteController } from '../RouteDashAccount.vue';

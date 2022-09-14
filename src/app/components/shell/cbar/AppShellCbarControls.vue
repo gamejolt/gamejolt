@@ -7,15 +7,13 @@ import { DefaultTheme } from '../../../../_common/theme/theme.model';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { useAppStore } from '../../../store/index';
-import { useChatStore } from '../../chat/chat-store';
+import { useGridStore } from '../../grid/grid-store';
 import AppShellCbarItem from './AppShellCbarItem.vue';
 
 const { activeCommunity, visibleLeftPane, toggleLeftPane } = useAppStore();
 const { user } = useCommonStore();
 const { theme } = useThemeStore();
-const chatStore = useChatStore()!;
-
-const chat = computed(() => chatStore.chat);
+const { chat } = useGridStore();
 
 const highlight = computed(() => {
 	const _theme = activeCommunity.value?.theme ?? theme.value ?? DefaultTheme;

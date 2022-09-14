@@ -7,7 +7,7 @@ import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppPostCardBase from '../fireside/post/card/AppPostCardBase.vue';
 import { FiresidePost } from '../fireside/post/post-model';
-import AppUserAvatarImg from '../user/user-avatar/img/img.vue';
+import AppUserAvatarImg from '../user/user-avatar/AppUserAvatarImg.vue';
 
 defineProps({
 	post: {

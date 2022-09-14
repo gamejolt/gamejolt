@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { defineAsyncComponent } from '@vue/runtime-core';
-import { computed, inject, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { trackAppPromotionClick } from '../../../_common/analytics/analytics.service';
 import AppButton from '../../../_common/button/AppButton.vue';
@@ -17,7 +17,7 @@ import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { imageGameJoltLogo, imageJolt } from '../../img/images';
 import { useAppStore } from '../../store/index';
-import { ChatStoreKey } from '../chat/chat-store';
+import { useGridStore } from '../grid/grid-store';
 import AppSearch from '../search/AppSearch.vue';
 import AppShellQuestIcon from './AppShellQuestIcon.vue';
 
@@ -32,16 +32,15 @@ const AppShellAltMenuPopover = defineAsyncComponent(() => import('./AppShellAltM
 
 const { visibleLeftPane, hasCbar, unreadActivityCount, toggleCbarMenu } = useAppStore();
 const { isUserTimedOut, user, userBootstrapped } = useCommonStore();
-const chatStore = inject(ChatStoreKey)!;
+const { chat } = useGridStore();
 
 const left = ref<HTMLDivElement>();
 const right = ref<HTMLDivElement>();
 const baseMinColWidth = ref<number>();
 
-const chat = computed(() => chatStore.chat);
 const shouldShowSearch = computed(() => !Screen.isXs && !isUserTimedOut.value);
 const shouldShowMenu = computed(() => Screen.isXs && !isUserTimedOut.value);
-const shouldShowExplore = computed(() => !Screen.isXs && user.value && !isUserTimedOut.value);
+const shouldShowDiscover = computed(() => !Screen.isXs && user.value && !isUserTimedOut.value);
 const shouldShowMoreMenu = computed(() => !Screen.isXs && !isUserTimedOut.value);
 const humanizedActivityCount = computed(() =>
 	unreadActivityCount.value < 100 ? unreadActivityCount.value : '99+'
@@ -135,7 +134,7 @@ function _checkColWidths() {
 				</RouterLink>
 
 				<RouterLink
-					v-if="shouldShowExplore"
+					v-if="shouldShowDiscover"
 					v-app-track-event="`top-nav:main-menu:discover`"
 					class="navbar-item"
 					:class="{ active: $route.name === 'discover.home' }"
@@ -143,7 +142,7 @@ function _checkColWidths() {
 				>
 					<AppJolticon icon="compass-needle" class="-section-icon" />
 					<strong class="text-upper">
-						<AppTranslate>Explore</AppTranslate>
+						<AppTranslate>Discover</AppTranslate>
 					</strong>
 				</RouterLink>
 

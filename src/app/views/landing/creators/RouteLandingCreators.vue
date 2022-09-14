@@ -1,4 +1,35 @@
 <script lang="ts">
+import { computed, ref } from 'vue';
+import { arrayShuffle } from '../../../../utils/array';
+import { trackCreatorApply } from '../../../../_common/analytics/analytics.service';
+import { Api } from '../../../../_common/api/api.service';
+import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
+import AppBackground from '../../../../_common/background/AppBackground.vue';
+import { Background } from '../../../../_common/background/background.model';
+import AppBean from '../../../../_common/bean/AppBean.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import AppCreatorsList from '../../../../_common/creator/AppCreatorsList.vue';
+import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
+import { ImgHelper } from '../../../../_common/img/helper/helper-service';
+import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
+import { Meta } from '../../../../_common/meta/meta-service';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
+import AppTheme from '../../../../_common/theme/AppTheme.vue';
+import { DefaultTheme } from '../../../../_common/theme/theme.model';
+import {
+	illCreatorInfographic,
+	illMobileKikkerstein,
+	illPointyThing,
+	illStreamingJelly,
+} from '../../../img/ill/illustrations';
+import socialImage from './social.png';
+import { creatorApplyDesktop, creatorApplySm, creatorApplyXs } from './_backgrounds/backgrounds';
+
+const postImages = import.meta.globEager('./_posts/*.jpg');
+
 const boltHeight = computed(() => (Screen.isDesktop ? 182 : 164));
 const boltWidth = computed(() => (104 / 154) * boltHeight.value);
 
@@ -41,34 +72,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
-import { arrayShuffle } from '../../../../utils/array';
-import { trackCreatorApply } from '../../../../_common/analytics/analytics.service';
-import { Api } from '../../../../_common/api/api.service';
-import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import AppBackground from '../../../../_common/background/AppBackground.vue';
-import { Background } from '../../../../_common/background/background.model';
-import AppBean from '../../../../_common/bean/AppBean.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCreatorsList from '../../../../_common/creator/AppCreatorsList.vue';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
-import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
-import { ImgHelper } from '../../../../_common/img/helper/helper-service';
-import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import AppTheme from '../../../../_common/theme/AppTheme.vue';
-import { DefaultTheme } from '../../../../_common/theme/theme.model';
-import {
-	illCreatorInfographic,
-	illMobileKikkerstein,
-	illPointyThing,
-	illStreamingJelly,
-} from '../../../img/ill/illustrations';
-import { creatorApplyDesktop, creatorApplySm, creatorApplyXs } from './_backgrounds/backgrounds';
-
-const postImages = import.meta.globEager('./_posts/*.jpg');
 const postImageKeys = arrayShuffle(Object.keys(postImages));
 
 let _routeDestroyed = false;
@@ -106,9 +109,27 @@ const displayStickers = computed(() => {
 // match well with overlayed buttons.
 const theme = computed(() => DefaultTheme);
 
+const routeTitle = `Make money with your gaming content as a Game Jolt Creator`;
+
 const { isBootstrapped } = createAppRoute({
-	routeTitle: 'Creators',
+	routeTitle,
 	onInit() {
+		Meta.description = `BOOM! Be a Game Jolt Creator and make money with your gaming content. Your fans never have to jump through hoops to see your latest post, video, or stream.`;
+
+		Meta.fb = {
+			type: 'website',
+			title: routeTitle,
+			description: Meta.description,
+		};
+
+		Meta.twitter = {
+			card: 'summary_large_image',
+			title: routeTitle,
+			description: Meta.description,
+		};
+
+		Meta.fb.image = Meta.twitter.image = socialImage;
+
 		if (!_hasPostTimer) {
 			setHeaderPostTimer(true);
 			_hasPostTimer = true;
