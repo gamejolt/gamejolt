@@ -157,6 +157,12 @@ export const configCommunityFrontpageFeedType = new ConfigOptionString(
 	}
 );
 
+/**
+ * Whether or not we should show the normal discover screen to guests on the
+ * homepage, or if we show the signup.
+ */
+export const configGuestHomeDiscover = new ConfigOptionBoolean('web_guest_home_discover', false);
+
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
 }
