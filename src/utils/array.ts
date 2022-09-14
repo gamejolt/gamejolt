@@ -79,13 +79,9 @@ export function arrayChunk<T>(arr: T[], size: number): T[][] {
 
 // Based off of https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
 export function arrayShuffle<T>(arr: T[]): T[] {
-	if (!arr.length) {
-		return arr;
-	}
-
 	let j, tmp;
 
-	for (let i = arr.length - 1; i !== 0; i--) {
+	for (let i = arr.length - 1; i > 0; i--) {
 		j = Math.floor(Math.random() * (i + 1));
 
 		tmp = arr[i];
