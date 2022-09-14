@@ -3,11 +3,9 @@ import { computed, PropType, ref, shallowRef, toRefs, watch } from 'vue';
 import { RouteLocationRaw, RouterLink, useRoute, useRouter } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
-import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import AppBackground from '../../../../_common/background/AppBackground.vue';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
-import { configPostShareSide } from '../../../../_common/config/config.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import {
@@ -108,11 +106,6 @@ const video = computed<FiresidePostVideo | null>(() => {
 
 const background = computed(() => {
 	return post.value.background;
-});
-
-const shareCardOnSide = computed(() => {
-	trackExperimentEngagement(configPostShareSide);
-	return configPostShareSide.value;
 });
 
 if (typeof route.query.t === 'string') {
@@ -431,10 +424,6 @@ function onDismissNotification(notification: CommunityUserNotification) {
 						@sticker="scrollToStickers()"
 					/>
 
-					<div v-if="!shareCardOnSide" class="-share">
-						<AppShareCard resource="post" :url="post.url" offset-color />
-					</div>
-
 					<div v-if="Screen.isMobile">
 						<AppPostPageRecommendations :key="post.id" :post="post" />
 					</div>
@@ -446,7 +435,7 @@ function onDismissNotification(notification: CommunityUserNotification) {
 
 				<template v-if="!Screen.isMobile" #right>
 					<div class="-side-col">
-						<div v-if="shareCardOnSide" class="-share">
+						<div class="-share">
 							<AppShareCard resource="post" :url="post.url" offset-color />
 						</div>
 
