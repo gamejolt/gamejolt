@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import type { ChatUser } from '../../../app/components/chat/user';
-import { configChargedStickers } from '../../config/config.service';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
@@ -30,29 +29,12 @@ const props = defineProps({
 const { user, highlight, big, small, verticalAlign } = toRefs(props);
 
 const isVerified = computed(() => user.value.is_verified);
-const isCreator = computed(() => {
-	if (!configChargedStickers.value) {
-		return false;
-	}
-
-	return user.value.is_creator === true;
-});
-
-const icon = computed(() => {
-	if (isVerified.value) {
-		return 'verified';
-	}
-});
-
-const tooltip = computed(() => {
-	if (isVerified.value) {
-		return $gettext(`Verified Account`);
-	}
-});
+const icon = computed(() => (isVerified.value ? 'verified' : undefined));
+const tooltip = computed(() => (isVerified.value ? $gettext(`Verified account`) : undefined));
 </script>
 
 <template>
-	<AppUserCreatorBadge v-if="isCreator" :user="user" :big="big" :small="small" />
+	<AppUserCreatorBadge v-if="user.is_creator" :size="big ? 'lg' : small ? 'sm' : 'md'" />
 	<AppJolticon
 		v-else-if="isVerified"
 		v-app-tooltip="tooltip"
