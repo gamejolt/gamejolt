@@ -3,7 +3,7 @@ import { Options, Prop, Vue } from 'vue-property-decorator';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import { User } from '../../user.model';
 import AppUserVerifiedTick from '../../verified-tick/AppUserVerifiedTick.vue';
-import AppUserAvatar from '../user-avatar.vue';
+import AppUserAvatar from '../AppUserAvatar.vue';
 
 @Options({
 	components: {

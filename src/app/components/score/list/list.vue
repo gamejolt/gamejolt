@@ -5,7 +5,7 @@ import { formatNumber } from '../../../../_common/filters/number';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import { UserGameScore } from '../../../../_common/user/game-score/game-score.model';
-import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
+import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 
 @Options({

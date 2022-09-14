@@ -19,7 +19,7 @@ import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { BaseTrophy } from '../../../../../_common/trophy/base-trophy.model';
 import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
-import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
+import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { User } from '../../../../../_common/user/user.model';
 import { getTrophyImg } from '../../../trophy/thumbnail/thumbnail.vue';
 import { ActivityFeedItem } from '../item-service';
