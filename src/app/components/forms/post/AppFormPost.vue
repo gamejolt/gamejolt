@@ -1449,7 +1449,7 @@ function _getMatchingBackgroundIdFromPref() {
 			</AppScrollScroller>
 			<p v-else-if="!wasPublished" class="help-block">
 				<AppTranslate>Join some communities to post to them.</AppTranslate>
-				<span v-app-tooltip.touchable="$gettext(`Go to the explore page and find some!`)">
+				<span v-app-tooltip.touchable="$gettext(`Go to the Discover page and find some!`)">
 					<AppJolticon class="text-muted" icon="help-circle" />
 				</span>
 			</p>
