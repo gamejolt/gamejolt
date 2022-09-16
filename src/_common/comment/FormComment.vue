@@ -92,6 +92,7 @@ const form: FormController<FormModel> = createForm({
 		if (form.method === 'add') {
 			trackCommentAdd();
 		}
+		emit('submit', form.formModel);
 	},
 });
 
