@@ -105,24 +105,24 @@ function onEditorBlur() {
 					@error="onError"
 				/>
 			</div>
-
-			<template v-if="user && !hasError && parent" #footer>
-				<AppMessageThreadAdd
-					hide-message-split
-					:class="{ '-thread-editor-focus': isEditorFocused }"
-				>
-					<FormComment
-						:model="model"
-						:parent-id="parent?.id"
-						:placeholder="$gettext(`Leave a reply...`)"
-						:autofocus="autofocus"
-						@submit="_onCommentAdd"
-						@editor-focus="onEditorFocus"
-						@editor-blur="onEditorBlur"
-					/>
-				</AppMessageThreadAdd>
-			</template>
 		</AppCommentDisabledCheck>
+
+		<template v-if="user && !hasError && parent" #footer>
+			<AppMessageThreadAdd
+				hide-message-split
+				:class="{ '-thread-editor-focus': isEditorFocused }"
+			>
+				<FormComment
+					:model="model"
+					:parent-id="parent?.id"
+					:placeholder="$gettext(`Leave a reply...`)"
+					:autofocus="autofocus"
+					@submit="_onCommentAdd"
+					@editor-focus="onEditorFocus"
+					@editor-blur="onEditorBlur"
+				/>
+			</AppMessageThreadAdd>
+		</template>
 	</AppModal>
 </template>
 
