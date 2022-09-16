@@ -107,10 +107,11 @@ function onEditorBlur() {
 			</div>
 		</AppCommentDisabledCheck>
 
-		<template v-if="user && !hasError && parent" #footer>
+		<template #footer>
 			<AppMessageThreadAdd
-				hide-message-split
+				v-if="user && !hasError && parent"
 				:class="{ '-thread-editor-focus': isEditorFocused }"
+				hide-message-split
 			>
 				<FormComment
 					:model="model"
