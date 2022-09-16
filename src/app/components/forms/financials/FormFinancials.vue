@@ -129,7 +129,7 @@ async function linkPayPal() {
 		</template>
 		<template v-else>
 			<template v-if="!isVerified">
-				<AppAlertBox icon="notice">
+				<AppAlertBox icon="notice" color="highlight">
 					<AppTranslate>
 						Before you can earn money, we'll need to gather some details from you. This
 						will ensure that your account is completely set up and ready to run
@@ -138,7 +138,7 @@ async function linkPayPal() {
 				</AppAlertBox>
 			</template>
 			<template v-else>
-				<AppAlertBox icon="check">
+				<AppAlertBox icon="check" color="highlight">
 					<AppTranslate>Your account is all ready to go!</AppTranslate>
 				</AppAlertBox>
 			</template>

@@ -29,6 +29,7 @@ import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion.service';
 import { User } from '../../../../_common/user/user.model';
 import { ActivityFeedItem } from '../../activity/feed/item-service';
@@ -140,14 +141,14 @@ const hasPerms = computed(() => {
 });
 
 const shouldShowEdit = computed(() => hasPerms.value);
-
 const shouldShowExtra = computed(() => user.value instanceof User);
-
 const shouldShowCommentsButton = computed(() => showComments.value);
-
 const shouldShowStickersButton = computed(() => post.value.canPlaceSticker);
-
 const shouldShowLike = computed(() => post.value.canLike);
+
+const commentsButtonTooltip = computed(() =>
+	post.value.canViewComments ? $gettext(`View comments`) : $gettext(`Comments are disabled`)
+);
 
 onUnmounted(() => {
 	if (commentStore.value) {
@@ -236,15 +237,16 @@ function onUserFollowDismissal() {
 								:class="{ '-overlay-text': overlay }"
 							>
 								<AppButton
-									v-app-tooltip="$gettext('View Comments')"
+									v-app-tooltip="commentsButtonTooltip"
 									icon="comment-filled"
 									circle
 									trans
+									:disabled="!post.can_view_comments"
 									@click="openComments()"
 								/>
 
 								<a
-									v-if="commentsCount > 0"
+									v-if="post.can_view_comments && commentsCount > 0"
 									class="blip"
 									:class="{ mobile: Screen.isXs }"
 									@click="openComments()"
@@ -263,7 +265,7 @@ function onUserFollowDismissal() {
 									ignore-asset-padding
 								>
 									<AppButton
-										v-app-tooltip="$gettext('Place Sticker')"
+										v-app-tooltip="$gettext('Place sticker')"
 										v-app-auth-required
 										:class="{ '-overlay-text': overlay }"
 										icon="sticker-filled"

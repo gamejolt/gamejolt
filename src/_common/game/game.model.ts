@@ -1,12 +1,13 @@
 import type { RouteLocationDefinition } from '../../utils/router';
 import { Api } from '../api/api.service';
 import { Collaboratable } from '../collaborator/collaboratable';
+import { CommentableModel } from '../comment/comment-model';
 import { Community } from '../community/community.model';
 import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
 import { ContentSetCacheService } from '../content/content-set-cache';
 import { MediaItem } from '../media-item/media-item-model';
-import { CommentableModel, Model } from '../model/model.service';
+import { Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
 import { Sellable } from '../sellable/sellable.model';
 import { Site } from '../site/site-model';
@@ -233,12 +234,20 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 		return cache.hasContent;
 	}
 
-	get canComment() {
-		if (this.developer.blocked_you) {
-			return false;
-		}
+	get hasAnyBlock() {
+		return this.developer.hasAnyBlock;
+	}
 
-		return true;
+	get canViewComments() {
+		return !!this.comments_enabled;
+	}
+
+	get canMakeComment() {
+		return !!this.comments_enabled && !this.hasAnyBlock;
+	}
+
+	get canInteractWithComments() {
+		return !!this.comments_enabled && !this.hasAnyBlock;
 	}
 
 	getContent(context: ContentContext) {

@@ -1,11 +1,12 @@
 import type { RouteLocationDefinition } from '../../utils/router';
 import { Api } from '../api/api.service';
+import { CommentableModel } from '../comment/comment-model';
 import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
 import { ContentSetCacheService } from '../content/content-set-cache';
 import { DogtagData } from '../dogtag/dogtag-data';
 import { MediaItem } from '../media-item/media-item-model';
-import { CommentableModel, Model } from '../model/model.service';
+import { Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
 import { Theme } from '../theme/theme.model';
 
@@ -127,12 +128,20 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 		};
 	}
 
-	get canComment() {
-		if (this.blocked_you || this.is_blocked) {
-			return false;
-		}
+	get hasAnyBlock() {
+		return this.is_blocked || this.blocked_you || false;
+	}
 
-		return true;
+	get canViewComments() {
+		return this.shouts_enabled;
+	}
+
+	get canMakeComment() {
+		return this.shouts_enabled && !this.hasAnyBlock;
+	}
+
+	get canInteractWithComments() {
+		return this.shouts_enabled && !this.hasAnyBlock;
 	}
 
 	getContent(context: ContentContext) {

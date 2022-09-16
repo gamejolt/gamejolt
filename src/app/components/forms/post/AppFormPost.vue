@@ -72,6 +72,9 @@ type FormPostModel = FiresidePost & {
 	attached_communities: { community_id: number; channel_id: number }[];
 	background_id: number | null;
 
+	// Form helper.
+	_comments_enabled: boolean;
+
 	poll_item_count: number;
 	poll_duration: number;
 	poll_is_private: boolean;
@@ -140,6 +143,7 @@ const scrollingKey = ref(1);
 const uploadingVideoStatus = ref(VideoStatus.IDLE);
 const videoProvider = ref(FiresidePostVideo.PROVIDER_GAMEJOLT);
 const hasChangedBackground = ref(false);
+const isShowingMoreOptions = ref(false);
 
 const form: FormController<FormPostModel> = createForm({
 	model,
@@ -200,6 +204,14 @@ const form: FormController<FormPostModel> = createForm({
 			// Initialize this so ContentEditor doesn't complain while loading in.
 			form.formModel.article_content = '';
 		}
+
+		form.formModel._comments_enabled =
+			_model.allow_comments === FiresidePost.ALLOW_COMMENTS_DISABLED ? false : true;
+
+		// Auto-show the more options if the comment options are anything other
+		// than the default.
+		isShowingMoreOptions.value =
+			form.formModel.allow_comments !== FiresidePost.ALLOW_COMMENTS_ENABLED;
 
 		await fetchTimezones();
 	},
@@ -584,6 +596,24 @@ watch(
 	}
 );
 
+// When toggling the "Comments enabled?" checkbox back and forth.
+watch(
+	() => form.formModel._comments_enabled,
+	enabled => {
+		// Gotta wait for form to be initialized before we start listening to
+		// changes.
+		if (!form.isLoaded) {
+			return;
+		}
+
+		if (enabled) {
+			form.formModel.allow_comments = FiresidePost.ALLOW_COMMENTS_ENABLED;
+		} else {
+			form.formModel.allow_comments = FiresidePost.ALLOW_COMMENTS_DISABLED;
+		}
+	}
+);
+
 function attachIncompleteCommunity(community: Community, channel: CommunityChannel) {
 	attachCommunity(community, channel, false);
 }
@@ -605,7 +635,8 @@ function attachCommunity(community: Community, channel: CommunityChannel, append
 async function scrollToAdd() {
 	// Wait for the DOM to update
 	await nextTick();
-	// Change our scrolling key so AppScrollWhen will bring the 'Add Community' button inview.
+	// Change our scrolling key so AppScrollWhen will bring the 'Add Community'
+	// button inview.
 	scrollingKey.value *= -1;
 }
 
@@ -1413,6 +1444,40 @@ function _getMatchingBackgroundIdFromPref() {
 			</div>
 		</template>
 
+		<!-- Other platforms -->
+		<div v-if="isShowingMoreOptions" class="well fill-offset full-bleed">
+			<fieldset>
+				<AppFormLegend compact>
+					<AppTranslate>More options</AppTranslate>
+				</AppFormLegend>
+
+				<AppFormGroup
+					name="_comments_enabled"
+					:label="$gettext(`Enable comments?`)"
+					style="margin-bottom: 0"
+				>
+					<template #inline-control>
+						<AppFormControlToggle />
+					</template>
+				</AppFormGroup>
+
+				<AppFormGroup
+					v-if="form.formModel._comments_enabled"
+					name="allow_comments"
+					:label="$gettext(`Who can comment?`)"
+				>
+					<AppFormControlSelect>
+						<option :value="FiresidePost.ALLOW_COMMENTS_ENABLED">
+							{{ $gettext(`Everyone`) }}
+						</option>
+						<option :value="FiresidePost.ALLOW_COMMENTS_FRIENDS">
+							{{ $gettext(`Only friends`) }}
+						</option>
+					</AppFormControlSelect>
+				</AppFormGroup>
+			</fieldset>
+		</div>
+
 		<!-- Communities -->
 		<template v-if="form.isLoaded">
 			<AppScrollScroller v-if="shouldShowCommunities" class="-communities" horizontal thin>
@@ -1531,7 +1596,7 @@ function _getMatchingBackgroundIdFromPref() {
 			<div class="-controls-attachments" :class="{ '-overlay-text': overlay }">
 				<AppButton
 					v-if="!longEnabled"
-					v-app-tooltip="$gettext(`Add Article`)"
+					v-app-tooltip="$gettext(`Add article`)"
 					sparse
 					trans
 					circle
@@ -1541,7 +1606,7 @@ function _getMatchingBackgroundIdFromPref() {
 
 				<AppButton
 					v-if="!hasPoll"
-					v-app-tooltip="$gettext(`Add Poll`)"
+					v-app-tooltip="$gettext(`Add poll`)"
 					sparse
 					trans
 					circle
@@ -1551,7 +1616,7 @@ function _getMatchingBackgroundIdFromPref() {
 
 				<AppButton
 					v-if="!wasPublished && !isScheduling"
-					v-app-tooltip="$gettext(`Schedule Post`)"
+					v-app-tooltip="$gettext(`Schedule post`)"
 					sparse
 					trans
 					circle
@@ -1561,7 +1626,7 @@ function _getMatchingBackgroundIdFromPref() {
 
 				<AppButton
 					v-if="!accessPermissionsEnabled && !wasPublished && model.game"
-					v-app-tooltip="$gettext(`Access Permissions`)"
+					v-app-tooltip="$gettext(`Permissions`)"
 					sparse
 					trans
 					circle
@@ -1571,12 +1636,22 @@ function _getMatchingBackgroundIdFromPref() {
 
 				<AppButton
 					v-if="!wasPublished && !isPublishingToPlatforms"
-					v-app-tooltip="$gettext(`Publish to Other Platforms`)"
+					v-app-tooltip="$gettext(`Publish to other platforms`)"
 					sparse
 					trans
 					circle
 					icon="share-airplane"
 					@click="addPublishingToPlatforms()"
+				/>
+
+				<AppButton
+					v-if="!isShowingMoreOptions"
+					v-app-tooltip="$gettext(`More options`)"
+					sparse
+					trans
+					circle
+					icon="ellipsis-h"
+					@click="isShowingMoreOptions = true"
 				/>
 			</div>
 
@@ -1772,7 +1847,7 @@ function _getMatchingBackgroundIdFromPref() {
 		border-bottom: $border-width-base solid var(--theme-bg-subtle)
 
 		> :not(:first-child)
-			margin-left: 10px
+			margin-left: 10px !important
 
 	.-controls-submit
 		display: flex
@@ -1796,6 +1871,9 @@ function _getMatchingBackgroundIdFromPref() {
 	.-controls-attachments
 		flex: auto
 
+		> *:not(:first-child)
+			margin-left: 4px !important
+
 	.-controls-submit
 		flex: none
 
@@ -1804,7 +1882,8 @@ function _getMatchingBackgroundIdFromPref() {
 
 .-overlay-text
 	&
-	& > *
+	> *
+	.-overlay-text-affected
 		text-shadow: black 1px 1px 4px
 		color: white
 
@@ -1813,4 +1892,7 @@ function _getMatchingBackgroundIdFromPref() {
 
 .-overlay-box
 	elevate-1()
+
+.-popover-container
+	max-width: 300px
 </style>
