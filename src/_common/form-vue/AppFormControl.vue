@@ -114,7 +114,6 @@ export function createFormControl<T>({
 		}
 
 		form.formModel[groupName.value] = value;
-		console.log('changing value on form model', { ...form.formModel }, groupName.value, value);
 		changed.value = true;
 
 		onChange?.(value);

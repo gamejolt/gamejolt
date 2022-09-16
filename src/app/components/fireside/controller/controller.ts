@@ -352,6 +352,10 @@ export function createFiresideController(
 		// moment before anyone else is streaming.
 		if (!focusedUser.value) {
 			const loggedUserId = user.value?.id;
+			// Check host backgrounds through the RTC instead of the locally
+			// defined values. This should prevent the background from showing
+			// if the user was removed as a host but they still had a background
+			// set.
 			return loggedUserId ? rtc.value?.hostBackgrounds.get(loggedUserId) : undefined;
 		}
 
