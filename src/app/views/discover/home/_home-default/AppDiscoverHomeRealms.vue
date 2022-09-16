@@ -11,6 +11,18 @@ defineProps({
 	isLoading: {
 		type: Boolean,
 	},
+	gridColumnsDesktop: {
+		type: Number,
+		default: 4,
+	},
+	gridColumnsSm: {
+		type: Number,
+		default: 3,
+	},
+	gridColumnsXs: {
+		type: Number,
+		default: 2,
+	},
 });
 </script>
 
@@ -18,15 +30,22 @@ defineProps({
 	<div class="container">
 		<slot name="header" />
 
-		<div class="-grid">
+		<div
+			class="-grid"
+			:style="[
+				`--col-desktop: ${gridColumnsDesktop}`,
+				`--col-sm: ${gridColumnsSm}`,
+				`--col-xs: ${gridColumnsXs}`,
+			]"
+		>
 			<template v-for="realm of realms" :key="realm.id">
 				<AppRealmFullCard
-					:ratio="3.5"
-					media-item-type="header"
 					:realm="realm"
+					:to="realm.routeLocation"
+					label-position="bottom-left"
 					overlay-content
 					no-sheet
-					:to="realm.routeLocation"
+					no-follow
 				/>
 			</template>
 		</div>
@@ -35,17 +54,17 @@ defineProps({
 
 <style lang="stylus" scoped>
 .-grid
-	--grid-cols: 3
+	--grid-cols: var(--col-desktop)
 	gap: 24px
 	display: grid
 	grid-template-columns: repeat(var(--grid-cols), 1fr)
 	justify-content: center
 
 	@media $media-sm
-		--grid-cols: 2
+		--grid-cols: var(--col-sm)
 		gap: 24px
 
 	@media $media-xs
-		--grid-cols: 1
+		--grid-cols: var(--col-xs)
 		gap: 16px
 </style>

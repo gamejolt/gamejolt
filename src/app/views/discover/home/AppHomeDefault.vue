@@ -44,6 +44,10 @@ defineProps({
 });
 
 const { user } = useCommonStore();
+
+const cardColumnsDesktop = 4;
+const cardColumnsSm = 3;
+const cardColumnsXs = 2;
 </script>
 
 <template>
@@ -85,6 +89,9 @@ const { user } = useCommonStore();
 					:is-loading="!isBootstrapped"
 					:posts="creatorPosts"
 					list-type="grid"
+					:grid-columns-desktop="cardColumnsDesktop"
+					:grid-columns-sm="cardColumnsSm"
+					:grid-columns-xs="cardColumnsXs"
 				/>
 			</div>
 
@@ -92,6 +99,9 @@ const { user } = useCommonStore();
 				v-if="configRealms.value"
 				:is-loading="!isBootstrapped"
 				:realms="featuredRealms"
+				:grid-columns-desktop="cardColumnsDesktop"
+				:grid-columns-sm="cardColumnsSm"
+				:grid-columns-xs="cardColumnsXs"
 			>
 				<template #header>
 					<h2 class="-content-row-header">Realms</h2>

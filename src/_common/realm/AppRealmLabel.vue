@@ -22,6 +22,7 @@ defineProps({
 <style lang="stylus" scoped>
 .-label
 	change-bg('bg-backdrop')
+	line-clamp(2)
 	padding: 4px 8px
 	border-radius: 24px
 	font-weight: 700

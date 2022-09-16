@@ -74,10 +74,11 @@ const slicedCommunities = computed(() => searchPayload.value.communities.slice(0
 					<div class="-realm-cards">
 						<AppRealmFullCard
 							:realm="searchPayload.realm"
-							:ratio="3.5"
-							no-sheet
-							overlay-content
 							:to="searchPayload.realm.routeLocation"
+							overlay-content
+							no-sheet
+							no-follow
+							label-position="bottom-left"
 						/>
 					</div>
 				</div>
@@ -219,11 +220,16 @@ const slicedCommunities = computed(() => searchPayload.value.communities.slice(0
 
 .-realm-cards
 	display: grid
-	--grid-cols: 2
+	--grid-cols: 4
 	gap: 24px
 	grid-template-columns: repeat(var(--grid-cols), 1fr)
+	justify-content: center
+
+	@media $media-sm
+		--grid-cols: 3
+		gap: 24px
 
 	@media $media-xs
-		--grid-cols: 1
+		--grid-cols: 2
 		gap: 16px
 </style>
