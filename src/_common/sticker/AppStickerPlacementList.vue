@@ -58,6 +58,6 @@ const emit = defineEmits({
 	align-self: flex-start
 
 .-reactions
-	margin: 0
+	margin: 0 !important
 	line-height: 1
 </style>
