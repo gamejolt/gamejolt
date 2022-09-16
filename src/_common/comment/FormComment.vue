@@ -97,7 +97,7 @@ const form: FormController<FormModel> = createForm({
 		emit('submit', form.formModel);
 	},
 	onSubmitError() {
-		showErrorGrowl($gettext(`Couldn't place your comment for some reason.`));
+		showErrorGrowl($gettext(`Couldn't add your comment for some reason.`));
 	},
 });
 
