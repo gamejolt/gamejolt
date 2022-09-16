@@ -38,12 +38,10 @@ import {
 	validateMinValue,
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppJolticon, { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { KeyGroup } from '../../../../_common/key-group/key-group.model';
 import { LinkedAccount } from '../../../../_common/linked-account/linked-account.model';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
-import AppPopper from '../../../../_common/popper/AppPopper.vue';
-import { Popper } from '../../../../_common/popper/popper.service';
 import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
@@ -73,7 +71,9 @@ type FormPostModel = FiresidePost & {
 	video_id: number;
 	attached_communities: { community_id: number; channel_id: number }[];
 	background_id: number | null;
-	allow_comments?: number;
+
+	// Form helper.
+	_comments_enabled: boolean;
 
 	poll_item_count: number;
 	poll_duration: number;
@@ -143,6 +143,7 @@ const scrollingKey = ref(1);
 const uploadingVideoStatus = ref(VideoStatus.IDLE);
 const videoProvider = ref(FiresidePostVideo.PROVIDER_GAMEJOLT);
 const hasChangedBackground = ref(false);
+const isShowingMoreOptions = ref(false);
 
 const form: FormController<FormPostModel> = createForm({
 	model,
@@ -204,14 +205,19 @@ const form: FormController<FormPostModel> = createForm({
 			form.formModel.article_content = '';
 		}
 
+		form.formModel._comments_enabled =
+			_model.allow_comments === FiresidePost.ALLOW_COMMENTS_DISABLED ? false : true;
+
+		// Auto-show the more options if the comment options are anything other
+		// than the default.
+		isShowingMoreOptions.value =
+			form.formModel.allow_comments !== FiresidePost.ALLOW_COMMENTS_ENABLED;
+
 		await fetchTimezones();
 	},
 	onLoad(payload) {
 		// Pull any post information that may not already be loaded in.
 		form.formModel.article_content = payload.post.article_content;
-
-		// TODO(post-comment-restrictions) where will we get our existing setting from?
-		form.formModel.allow_comments = payload.allowComments ?? form.formModel.allow_comments;
 
 		keyGroups.value = KeyGroup.populate(payload.keyGroups);
 		wasPublished.value = payload.wasPublished;
@@ -539,40 +545,6 @@ const shouldShowAuthorOptions = computed(() => {
 	return !model.value.post_to_user_profile;
 });
 
-const allowCommentsOptions = computed<{
-	[key: number]: { value: number; icon: Jolticon; text: string; tooltip: string };
-}>(() => {
-	return {
-		[FiresidePost.ALLOW_COMMENTS_DISABLED]: {
-			value: FiresidePost.ALLOW_COMMENTS_DISABLED,
-			icon: 'crown',
-			text: $gettext('Owner only'),
-			tooltip: $gettext('Only you can comment'),
-		},
-		[FiresidePost.ALLOW_COMMENTS_ENABLED]: {
-			value: FiresidePost.ALLOW_COMMENTS_ENABLED,
-			icon: 'users',
-			text: $gettext('Everyone'),
-			tooltip: $gettext('Allowing everyone to comment'),
-		},
-		[FiresidePost.ALLOW_COMMENTS_FRIENDS]: {
-			value: FiresidePost.ALLOW_COMMENTS_FRIENDS,
-			icon: 'friends',
-			text: $gettext('Friends only'),
-			tooltip: $gettext('Allowing only friends to comment'),
-		},
-	};
-});
-
-const selectedAllowCommentsData = computed(() => {
-	const options = allowCommentsOptions.value;
-	if (form.formModel.allow_comments === undefined || !options[form.formModel.allow_comments]) {
-		return options[FiresidePost.ALLOW_COMMENTS_ENABLED];
-	}
-
-	return options[form.formModel.allow_comments];
-});
-
 watch(
 	() => form.formModel.post_to_user_profile,
 	() => {
@@ -624,6 +596,24 @@ watch(
 	}
 );
 
+// When toggling the "Comments enabled?" checkbox back and forth.
+watch(
+	() => form.formModel._comments_enabled,
+	enabled => {
+		// Gotta wait for form to be initialized before we start listening to
+		// changes.
+		if (!form.isLoaded) {
+			return;
+		}
+
+		if (enabled) {
+			form.formModel.allow_comments = FiresidePost.ALLOW_COMMENTS_ENABLED;
+		} else {
+			form.formModel.allow_comments = FiresidePost.ALLOW_COMMENTS_DISABLED;
+		}
+	}
+);
+
 function attachIncompleteCommunity(community: Community, channel: CommunityChannel) {
 	attachCommunity(community, channel, false);
 }
@@ -645,7 +635,8 @@ function attachCommunity(community: Community, channel: CommunityChannel, append
 async function scrollToAdd() {
 	// Wait for the DOM to update
 	await nextTick();
-	// Change our scrolling key so AppScrollWhen will bring the 'Add Community' button inview.
+	// Change our scrolling key so AppScrollWhen will bring the 'Add Community'
+	// button inview.
 	scrollingKey.value *= -1;
 }
 
@@ -1002,16 +993,6 @@ function _getMatchingBackgroundIdFromPref() {
 
 	// Use the saved ID only if we have an eligible background.
 	return backgrounds.value.find(i => i.id == prefId)?.id || null;
-}
-
-function selectCommentsOption(value: number) {
-	// Ignore unsupported values.
-	if (!allowCommentsOptions.value[value]) {
-		return;
-	}
-
-	Popper.hideAll();
-	form.formModel.allow_comments = value;
 }
 </script>
 
@@ -1463,6 +1444,40 @@ function selectCommentsOption(value: number) {
 			</div>
 		</template>
 
+		<!-- Other platforms -->
+		<div v-if="isShowingMoreOptions" class="well fill-offset full-bleed">
+			<fieldset>
+				<AppFormLegend compact>
+					<AppTranslate>More options</AppTranslate>
+				</AppFormLegend>
+
+				<AppFormGroup
+					name="_comments_enabled"
+					:label="$gettext(`Enable comments?`)"
+					style="margin-bottom: 0"
+				>
+					<template #inline-control>
+						<AppFormControlToggle />
+					</template>
+				</AppFormGroup>
+
+				<AppFormGroup
+					v-if="form.formModel._comments_enabled"
+					name="allow_comments"
+					:label="$gettext(`Who can comment?`)"
+				>
+					<AppFormControlSelect>
+						<option :value="FiresidePost.ALLOW_COMMENTS_ENABLED">
+							{{ $gettext(`Everyone`) }}
+						</option>
+						<option :value="FiresidePost.ALLOW_COMMENTS_FRIENDS">
+							{{ $gettext(`Only friends`) }}
+						</option>
+					</AppFormControlSelect>
+				</AppFormGroup>
+			</fieldset>
+		</div>
+
 		<!-- Communities -->
 		<template v-if="form.isLoaded">
 			<AppScrollScroller v-if="shouldShowCommunities" class="-communities" horizontal thin>
@@ -1581,7 +1596,7 @@ function selectCommentsOption(value: number) {
 			<div class="-controls-attachments" :class="{ '-overlay-text': overlay }">
 				<AppButton
 					v-if="!longEnabled"
-					v-app-tooltip="$gettext(`Add Article`)"
+					v-app-tooltip="$gettext(`Add article`)"
 					sparse
 					trans
 					circle
@@ -1591,7 +1606,7 @@ function selectCommentsOption(value: number) {
 
 				<AppButton
 					v-if="!hasPoll"
-					v-app-tooltip="$gettext(`Add Poll`)"
+					v-app-tooltip="$gettext(`Add poll`)"
 					sparse
 					trans
 					circle
@@ -1601,7 +1616,7 @@ function selectCommentsOption(value: number) {
 
 				<AppButton
 					v-if="!wasPublished && !isScheduling"
-					v-app-tooltip="$gettext(`Schedule Post`)"
+					v-app-tooltip="$gettext(`Schedule post`)"
 					sparse
 					trans
 					circle
@@ -1611,7 +1626,7 @@ function selectCommentsOption(value: number) {
 
 				<AppButton
 					v-if="!accessPermissionsEnabled && !wasPublished && model.game"
-					v-app-tooltip="$gettext(`Access Permissions`)"
+					v-app-tooltip="$gettext(`Permissions`)"
 					sparse
 					trans
 					circle
@@ -1621,7 +1636,7 @@ function selectCommentsOption(value: number) {
 
 				<AppButton
 					v-if="!wasPublished && !isPublishingToPlatforms"
-					v-app-tooltip="$gettext(`Publish to Other Platforms`)"
+					v-app-tooltip="$gettext(`Publish to other platforms`)"
 					sparse
 					trans
 					circle
@@ -1629,33 +1644,15 @@ function selectCommentsOption(value: number) {
 					@click="addPublishingToPlatforms()"
 				/>
 
-				<AppPopper class="button" hide-on-state-change max-height="45vh">
-					<AppButton
-						v-app-tooltip="selectedAllowCommentsData.tooltip"
-						class="-overlay-text-affected"
-						sparse
-						trans
-						circle
-						:icon="selectedAllowCommentsData.icon"
-					/>
-
-					<template #popover>
-						<div class="-popover-container list-group">
-							<a
-								v-for="{ icon, text, value } of allowCommentsOptions"
-								:key="value"
-								class="list-group-item"
-								@click="selectCommentsOption(value)"
-							>
-								<span class="-text">
-									<AppJolticon :icon="icon" />
-
-									{{ text }}
-								</span>
-							</a>
-						</div>
-					</template>
-				</AppPopper>
+				<AppButton
+					v-if="!isShowingMoreOptions"
+					v-app-tooltip="$gettext(`More options`)"
+					sparse
+					trans
+					circle
+					icon="ellipsis-h"
+					@click="isShowingMoreOptions = true"
+				/>
 			</div>
 
 			<AppTheme :force-dark="overlay" class="-controls-submit">

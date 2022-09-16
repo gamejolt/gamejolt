@@ -4,6 +4,7 @@ import { RouteLocationRaw, RouterLink, useRoute, useRouter } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppBackground from '../../../../_common/background/AppBackground.vue';
+import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisabledCheck.vue';
 import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
@@ -430,7 +431,9 @@ function onDismissNotification(notification: CommunityUserNotification) {
 
 					<br />
 					<br />
-					<AppCommentWidgetLazy :model="post" display-mode="comments" />
+					<AppCommentDisabledCheck :model="post">
+						<AppCommentWidgetLazy :model="post" display-mode="comments" />
+					</AppCommentDisabledCheck>
 				</template>
 
 				<template v-if="!Screen.isMobile" #right>

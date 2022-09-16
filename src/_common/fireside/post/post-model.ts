@@ -3,6 +3,7 @@ import { RouteLocationDefinition } from '../../../utils/router';
 import { Api } from '../../api/api.service';
 import { Background } from '../../background/background.model';
 import { Perm } from '../../collaborator/collaboratable';
+import { CommentableModel } from '../../comment/comment-model';
 import { CommunityChannel } from '../../community/channel/channel.model';
 import { Community } from '../../community/community.model';
 import { ContentContainerModel } from '../../content/content-container-model';
@@ -14,7 +15,7 @@ import { HistoryTick } from '../../history-tick/history-tick-service';
 import { KeyGroup } from '../../key-group/key-group.model';
 import { MediaItem } from '../../media-item/media-item-model';
 import { ModalConfirm } from '../../modal/confirm/confirm-service';
-import { CommentableModel, Model, ModelSaveRequestOptions } from '../../model/model.service';
+import { Model, ModelSaveRequestOptions } from '../../model/model.service';
 import { Poll } from '../../poll/poll.model';
 import { Registry } from '../../registry/registry.service';
 import { StickerPlacement } from '../../sticker/placement/placement.model';
@@ -103,10 +104,23 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	background?: Background;
 
 	/**
-	 * If the current post comment restrictions allow us to comment. For the
-	 * result of all restrictions, check {@link canComment}.
+	 * The raw state of who can comment from backend.
 	 */
-	can_comment!: boolean;
+	declare allow_comments:
+		| typeof FiresidePost['ALLOW_COMMENTS_DISABLED']
+		| typeof FiresidePost['ALLOW_COMMENTS_ENABLED']
+		| typeof FiresidePost['ALLOW_COMMENTS_FRIENDS'];
+
+	/**
+	 * If the current post comment restrictions allow us to comment. For the
+	 * result of all restrictions, check {@link canMakeComment}.
+	 */
+	declare can_comment: boolean;
+
+	/**
+	 * If post comment restrictions allow us to view comments at all.
+	 */
+	declare can_view_comments: boolean;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -179,6 +193,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return this.status === FiresidePost.STATUS_DRAFT;
 	}
 
+	get isRemoved() {
+		return this.status === FiresidePost.STATUS_REMOVED;
+	}
+
 	get isScheduled() {
 		return !!this.scheduled_for;
 	}
@@ -190,6 +208,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		}
 
 		return this.as_game_owner ? this.game.developer : this.user;
+	}
+
+	get hasAnyBlock() {
+		return this.displayUser.hasAnyBlock;
 	}
 
 	/** Checks if any media or videos are attached. */
@@ -250,39 +272,36 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return this.getManageableCommunities(['community-features', 'community-posts'], true);
 	}
 
-	get canComment() {
-		if (!this.can_comment) {
-			return false;
-		}
-
-		if (this.user.blocked_you || this.user.is_blocked) {
-			return false;
-		}
-
-		if (this.game && !this.game.canComment) {
+	/**
+	 * Whether we can like, place stickers, or interact with comments on this
+	 * post.
+	 */
+	private get _canInteractWithPost() {
+		if (this.hasAnyBlock || this.isDraft || this.isRemoved) {
 			return false;
 		}
 
 		return true;
+	}
+
+	get canViewComments() {
+		return this.can_view_comments;
+	}
+
+	get canMakeComment() {
+		return this._canInteractWithPost && this.can_comment;
+	}
+
+	get canInteractWithComments() {
+		return this._canInteractWithPost && this.areCommentsEnabled;
 	}
 
 	get canPlaceSticker() {
-		// TODO(post-comment-restrictions) Confirm that new comment restrictions
-		// will also alter our ability to place stickers.
-		return this.canComment;
+		return this._canInteractWithPost;
 	}
 
 	get canLike() {
-		let postOwner = this.user;
-		if (this.game && this.as_game_owner) {
-			postOwner = this.game.developer;
-		}
-
-		if (postOwner.blocked_you || postOwner.is_blocked) {
-			return false;
-		}
-
-		return true;
+		return this._canInteractWithPost;
 	}
 
 	getContent(context: ContentContext) {

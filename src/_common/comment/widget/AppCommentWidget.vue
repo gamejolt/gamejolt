@@ -6,14 +6,17 @@ import {
 	onUnmounted,
 	PropType,
 	provide,
-	reactive,
+	Ref,
 	ref,
+	shallowReadonly,
 	toRefs,
 	watch,
 } from 'vue';
 import { useRoute } from 'vue-router';
 import { illNoComments } from '../../../app/img/ill/illustrations';
+import AppAlertBox from '../../alert/AppAlertBox.vue';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
+import AppButton from '../../button/AppButton.vue';
 import { Collaborator } from '../../collaborator/collaborator.model';
 import { Environment } from '../../environment/environment.service';
 import { formatNumber } from '../../filters/number';
@@ -24,9 +27,14 @@ import AppMessageThread from '../../message-thread/message-thread.vue';
 import { Model } from '../../model/model.service';
 import AppNavTabList from '../../nav/tab-list/tab-list.vue';
 import { useCommonStore } from '../../store/common-store';
+import AppTranslate from '../../translate/AppTranslate.vue';
 import { User } from '../../user/user.model';
-import FormComment from '../add/add.vue';
-import { canCommentOnModel, Comment, getCommentModelResourceName } from '../comment-model';
+import {
+	canCommentOnModel,
+	Comment,
+	CommentableModel,
+	getCommentModelResourceName,
+} from '../comment-model';
 import {
 	CommentStoreManagerKey,
 	CommentStoreModel,
@@ -45,8 +53,9 @@ import {
 	CommentStoreThreadView,
 	CommentStoreView,
 } from '../comment-store-view';
+import FormComment from '../FormComment.vue';
 import { DisplayMode } from '../modal/modal.service';
-import AppCommentWidgetComment from './comment/comment.vue';
+import AppCommentWidgetComment from './AppCommentWidgetComment.vue';
 
 let incrementer = 0;
 
@@ -54,8 +63,17 @@ export type CommentWidgetController = ReturnType<typeof createCommentWidget>;
 
 const Key: InjectionKey<CommentWidgetController> = Symbol('comment-widget');
 
-export function createCommentWidget($props: typeof props, $emit: typeof emit) {
-	const { model, threadCommentId, showAdd, showTabs, initialTab } = toRefs($props);
+export function createCommentWidget(options: {
+	model: Ref<Model & CommentableModel>;
+	threadCommentId: Ref<number | null>;
+	showTabs: Ref<boolean>;
+	initialTab: Ref<string | null>;
+	onError: (e: any) => void;
+	onAdd: (comment: Comment) => void;
+	onEdit: (comment: Comment) => void;
+	onRemove: (comment: Comment) => void;
+}) {
+	const { model, threadCommentId, showTabs, initialTab } = options;
 
 	const store = ref<CommentStoreModel | null>(null);
 	const storeView = ref<CommentStoreView | null>(null);
@@ -71,9 +89,9 @@ export function createCommentWidget($props: typeof props, $emit: typeof emit) {
 	const route = useRoute();
 	const commentManager = inject(CommentStoreManagerKey)!;
 
-	const loginUrl = computed(() => {
-		return Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(route.fullPath);
-	});
+	const loginUrl = computed(
+		() => Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(route.fullPath)
+	);
 
 	const shouldShowLoadMore = computed(() => {
 		return (
@@ -102,13 +120,7 @@ export function createCommentWidget($props: typeof props, $emit: typeof emit) {
 	const showTopSorting = computed(() => getCommentModelResourceName(model.value) === 'Game');
 	const isThreadView = computed(() => !!threadCommentId.value);
 	const shouldShowEmptyMessage = computed(() => !comments.value.length);
-
-	const shouldShowAdd = computed(() => {
-		if (!canCommentOnModel(model.value)) {
-			return false;
-		}
-		return showAdd.value;
-	});
+	const canComment = computed(() => canCommentOnModel(model.value));
 
 	const shouldShowTabs = computed(() => {
 		if (!showTabs.value) {
@@ -221,7 +233,7 @@ export function createCommentWidget($props: typeof props, $emit: typeof emit) {
 		} catch (e) {
 			console.error(e);
 			hasError.value = true;
-			$emit('error', e);
+			options.onError(e);
 		}
 	}
 
@@ -242,7 +254,7 @@ export function createCommentWidget($props: typeof props, $emit: typeof emit) {
 
 	function onCommentAdd(comment: Comment) {
 		onCommentStoreAdd(commentManager, comment);
-		$emit('add', comment);
+		options.onAdd(comment);
 
 		if (store.value) {
 			if (store.value.sort !== Comment.SORT_YOU) {
@@ -257,16 +269,16 @@ export function createCommentWidget($props: typeof props, $emit: typeof emit) {
 
 	function onCommentEdit(comment: Comment) {
 		onCommentStoreEdit(commentManager, comment);
-		$emit('edit', comment);
+		options.onEdit(comment);
 	}
 
 	function onCommentRemove(comment: Comment) {
 		onCommentStoreRemove(commentManager, comment);
-		$emit('remove', comment);
+		options.onRemove(comment);
 	}
 
 	function pinComment(comment: Comment) {
-		pinStoreComment(commentManager, comment);
+		return pinStoreComment(commentManager, comment);
 	}
 
 	// Reinitialize anytime model changes.
@@ -283,7 +295,7 @@ export function createCommentWidget($props: typeof props, $emit: typeof emit) {
 
 	_init();
 
-	return reactive({
+	return shallowReadonly({
 		threadCommentId,
 
 		store,
@@ -292,7 +304,6 @@ export function createCommentWidget($props: typeof props, $emit: typeof emit) {
 		hasBootstrapped,
 		hasError,
 		isLoading,
-		resourceOwner,
 		perPage,
 		currentPage,
 		collaborators,
@@ -310,9 +321,10 @@ export function createCommentWidget($props: typeof props, $emit: typeof emit) {
 		isSortYou,
 		showTopSorting,
 		isThreadView,
-		shouldShowAdd,
+		canComment,
 		shouldShowEmptyMessage,
 		shouldShowTabs,
+		resourceOwner,
 
 		setSort,
 		loadMore,
@@ -331,11 +343,8 @@ export function useCommentWidget() {
 <script lang="ts" setup>
 const props = defineProps({
 	model: {
-		type: Object as PropType<Model>,
+		type: Object as PropType<Model & CommentableModel>,
 		required: true,
-	},
-	onlyAdd: {
-		type: Boolean,
 	},
 	autofocus: {
 		type: Boolean,
@@ -369,31 +378,22 @@ const emit = defineEmits({
 	remove: (_comment: Comment) => true,
 });
 
-const { user } = useCommonStore();
-const c = createCommentWidget(props, emit);
+const c = createCommentWidget({
+	...toRefs(props),
+	onError: e => emit('error', e),
+	onAdd: comment => emit('add', comment),
+	onEdit: comment => emit('edit', comment),
+	onRemove: comment => emit('remove', comment),
+});
 provide(Key, c);
 
-function sortHot() {
-	c.setSort(Comment.SORT_HOT);
-}
-
-function sortTop() {
-	c.setSort(Comment.SORT_TOP);
-}
-
-function sortNew() {
-	c.setSort(Comment.SORT_NEW);
-}
-
-function sortYou() {
-	c.setSort(Comment.SORT_YOU);
-}
-
+const { user } = useCommonStore();
 const {
+	setSort,
 	totalCommentsCount,
 	hasBootstrapped,
 	hasError,
-	shouldShowAdd,
+	canComment,
 	loginUrl,
 	shouldShowTabs,
 	showTopSorting,
@@ -409,7 +409,23 @@ const {
 	shouldShowEmptyMessage,
 	loadMore,
 	onCommentAdd,
-} = toRefs(c);
+} = c;
+
+function sortHot() {
+	setSort(Comment.SORT_HOT);
+}
+
+function sortTop() {
+	setSort(Comment.SORT_TOP);
+}
+
+function sortNew() {
+	setSort(Comment.SORT_NEW);
+}
+
+function sortYou() {
+	setSort(Comment.SORT_YOU);
+}
 </script>
 
 <template>
@@ -440,21 +456,15 @@ const {
 			<AppTranslate>Couldn't fetch comments.</AppTranslate>
 		</div>
 		<div v-else-if="hasBootstrapped">
-			<template v-if="shouldShowAdd">
+			<template v-if="showAdd">
 				<AppMessageThreadAdd v-if="user" hide-message-split>
-					<FormComment
-						:comment-model="model"
-						:autofocus="autofocus"
-						@submit="onCommentAdd"
-					/>
+					<FormComment :model="model" :autofocus="autofocus" @submit="onCommentAdd" />
 				</AppMessageThreadAdd>
-				<div v-else class="alert">
-					<p>
-						You must be
-						<a v-app-auth-required :href="loginUrl">logged in</a>
-						to Game Jolt to post a comment.
-					</p>
-				</div>
+				<AppAlertBox v-else icon="notice">
+					You must be
+					<a v-app-auth-required :href="loginUrl">logged in</a>
+					to Game Jolt to post a comment.
+				</AppAlertBox>
 			</template>
 
 			<div v-if="shouldShowTabs">
@@ -521,7 +531,7 @@ const {
 			<div v-else-if="shouldShowEmptyMessage">
 				<AppIllustration :asset="illNoComments">
 					<p>
-						<AppTranslate v-if="shouldShowAdd">
+						<AppTranslate v-if="showAdd && canComment">
 							Everyone else seems to be in sleep mode, why don't you start the
 							conversation?
 						</AppTranslate>
