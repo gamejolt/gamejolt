@@ -11,6 +11,14 @@ defineProps({
 	noImg: {
 		type: Boolean,
 	},
+	imgWidth: {
+		type: Number,
+		default: 32,
+	},
+	imgHeight: {
+		type: Number,
+		default: 32,
+	},
 });
 </script>
 
@@ -18,6 +26,7 @@ defineProps({
 	<a
 		class="-item list-group-item"
 		:class="{ '-item-static': isHeader && !hasHeaderBack, '-selected': isHeader }"
+		:style="`--img-width: ${imgWidth}px; --img-height: ${imgHeight}px`"
 	>
 		<div v-if="!noImg || hasHeaderBack" class="-thumbnail">
 			<slot name="img" />
@@ -55,8 +64,8 @@ defineProps({
 
 .-back
 .-thumbnail
-	width: 32px
-	height: 32px
+	width: var(--img-width)
+	height: var(--img-height)
 
 .-back
 	img-circle()

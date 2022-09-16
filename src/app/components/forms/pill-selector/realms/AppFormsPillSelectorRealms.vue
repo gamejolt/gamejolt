@@ -38,19 +38,23 @@ function selectRealm(realm: Realm) {
 		<template #popover>
 			<AppLoading v-if="isLoading" centered hide-label stationary />
 			<template v-else>
-				<AppFormsPillSelectorItem
-					v-for="realm of realms"
-					:key="realm.id"
-					@click="selectRealm(realm)"
-				>
-					<template #img>
-						<AppRealmThumbnail :realm="realm" />
-					</template>
+				<div class="list-group">
+					<AppFormsPillSelectorItem
+						v-for="realm of realms"
+						:key="realm.id"
+						:img-width="32 * 0.75"
+						:img-height="32"
+						@click="selectRealm(realm)"
+					>
+						<template #img>
+							<AppRealmThumbnail :realm="realm" />
+						</template>
 
-					<template #default>
-						{{ realm.name }}
-					</template>
-				</AppFormsPillSelectorItem>
+						<template #default>
+							{{ realm.name }}
+						</template>
+					</AppFormsPillSelectorItem>
+				</div>
 			</template>
 		</template>
 	</AppFormsPillSelector>

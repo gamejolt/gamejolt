@@ -250,13 +250,13 @@ const form: FormController<FormPostModel> = createForm({
 		}
 
 		if (
-			defaultCommunity instanceof Community &&
-			defaultChannel instanceof CommunityChannel &&
-			defaultCommunity.postableChannels.some(
-				channel => channel.title === defaultChannel!.title
+			defaultCommunity.value instanceof Community &&
+			defaultChannel.value instanceof CommunityChannel &&
+			defaultCommunity.value.postableChannels.some(
+				channel => channel.title === defaultChannel.value!.title
 			)
 		) {
-			attachCommunity(defaultCommunity, defaultChannel);
+			attachCommunity(defaultCommunity.value, defaultChannel.value);
 		}
 
 		if (payload.targetableCommunities) {
