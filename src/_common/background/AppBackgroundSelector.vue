@@ -24,6 +24,10 @@ const props = defineProps({
 	disabled: {
 		type: Boolean,
 	},
+	tileGap: {
+		type: Number,
+		default: 12,
+	},
 });
 
 const { backgrounds, background, tileSize, disabled } = toRefs(props);
@@ -46,7 +50,7 @@ function onSelect(item: Background | undefined) {
 </script>
 
 <template>
-	<AppScrollScroller horizontal thin>
+	<AppScrollScroller horizontal thin :style="`--bg-selector-gap: ${tileGap}px`">
 		<div
 			class="-items"
 			:style="{
@@ -84,14 +88,13 @@ function onSelect(item: Background | undefined) {
 </template>
 
 <style lang="stylus" scoped>
-$-padding = 12px
 $-border-width = $border-width-large
 
 .-items
 	white-space: nowrap
 	height: $-height
 	display: inline-flex
-	grid-gap: $-padding
+	grid-gap: var(--bg-selector-gap)
 	transition: opacity 300ms
 
 .-item

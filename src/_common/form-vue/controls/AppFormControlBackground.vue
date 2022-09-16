@@ -29,6 +29,10 @@ const props = defineProps({
 		type: String,
 		default: undefined,
 	},
+	tileGap: {
+		type: Number,
+		default: undefined,
+	},
 	...defineFormControlProps(),
 });
 
@@ -77,6 +81,7 @@ function onSelect(item?: Background) {
 		:hide-empty-tile="hideEmptyTile"
 		:tile-size="tileSize"
 		:disabled="disabled"
+		:tile-gap="tileGap"
 		@background-change="onSelect"
 	/>
 </template>

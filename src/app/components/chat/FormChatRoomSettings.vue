@@ -57,7 +57,7 @@ const notificationLevel = ref('');
 const backgrounds = ref<Background[]>([]);
 const roomBackgroundId = ref(room.value.background?.id || null);
 
-// When a user selects a background in this form, it sends a Chat message to
+// When a user selects a background in this form, it sends a grid message to
 // everyone notifying them the room changed and updating the model. This also
 // happens when you change the background yourself.
 //
@@ -121,7 +121,7 @@ const notificationLevelForm: FormController<FormNotificationLevel> = createForm(
 		notificationLevel.value = payload.level;
 		notificationLevelForm.formModel.level = payload.level;
 	},
-	onSubmit: async () => {
+	async onSubmit() {
 		const payload = await Api.sendRequest(
 			`/web/chat/rooms/set-notification-settings/${room.value.id}`,
 			{ level: notificationLevelForm.formModel.level },
@@ -137,11 +137,8 @@ const isOwner = computed(
 );
 
 const canEditTitle = computed(() => !room.value.isPmRoom && isOwner.value);
-
 const canEditBackground = computed(() => backgrounds.value.length > 0);
-
 const shouldShowLeave = computed(() => !room.value.isPmRoom);
-
 const hasLoadedBackgrounds = computed(() => backgroundForm.isLoadedBootstrapped);
 
 const membersPreview = computed(() => {
