@@ -61,7 +61,7 @@ const emit = defineEmits({
 	cancel: () => true,
 });
 
-const { model, parentId, autofocus, placeholder } = toRefs(props);
+const { comment, model, parentId, autofocus, placeholder } = toRefs(props);
 
 const lengthLimit = ref(5_000);
 
@@ -71,7 +71,7 @@ const form: FormController<FormModel> = createForm({
 	model: toRef(props, 'comment'),
 	loadUrl: `/comments/save`,
 	async onInit() {
-		if (!this.model) {
+		if (!comment?.value) {
 			form.formModel.comment_content = '';
 			form.formModel.resource = getCommentModelResourceName(model.value);
 			form.formModel.resource_id = model.value.id;

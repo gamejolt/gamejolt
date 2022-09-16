@@ -293,7 +293,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	}
 
 	get canInteractWithComments() {
-		return this._canInteractWithPost && this.areCommentsEnabled;
+		return (
+			this._canInteractWithPost &&
+			this.allow_comments !== FiresidePost.ALLOW_COMMENTS_DISABLED
+		);
 	}
 
 	get canPlaceSticker() {

@@ -9,12 +9,7 @@ import { useCommonStore } from '../../store/common-store';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { $gettext } from '../../translate/translate.service';
 import AppCommentDisabledCheck from '../AppCommentDisabledCheck.vue';
-import {
-	canCommentOnModel,
-	Comment,
-	CommentableModel,
-	getCommentModelResourceName,
-} from '../comment-model';
+import { Comment, CommentableModel, getCommentModelResourceName } from '../comment-model';
 import { CommentStoreManagerKey, getCommentStore, onCommentAdd } from '../comment-store';
 import FormComment from '../FormComment.vue';
 import AppCommentWidget from '../widget/AppCommentWidget.vue';
@@ -65,8 +60,6 @@ const parent = computed(() => {
 		return comment;
 	}
 });
-
-const canComment = computed(() => canCommentOnModel(model.value, parent.value));
 
 function _onCommentAdd(comment: Comment) {
 	onCommentAdd(commentManager, comment);

@@ -1,5 +1,4 @@
-import { canCommentOnModel, Comment, CommentableModel } from '../../comment/comment-model';
-import { FiresidePost } from '../../fireside/post/post-model';
+import { Comment, CommentableModel } from '../../comment/comment-model';
 import { Model } from '../../model/model.service';
 import { Sticker } from '../sticker.model';
 
@@ -33,15 +32,11 @@ export function canPlaceStickerOnComment(
 	comment: Comment,
 	parentComment?: Comment
 ) {
-	if (comment.user.hasAnyBlock) {
+	if (comment.user.hasAnyBlock === true || parentComment?.user.hasAnyBlock === true) {
 		return false;
 	}
 
-	if (model instanceof FiresidePost && !model.canPlaceSticker) {
-		return false;
-	}
-
-	return canCommentOnModel(model, parentComment);
+	return model.canInteractWithComments;
 }
 
 interface PlacementTargetData {
