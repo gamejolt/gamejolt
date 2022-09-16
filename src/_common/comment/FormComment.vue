@@ -16,11 +16,13 @@ import {
 	validateContentNoActiveUploads,
 	validateContentRequired,
 } from '../form-vue/validators';
+import { showErrorGrowl } from '../growls/growls.service';
 import AppLinkHelp from '../link/AppLinkHelp.vue';
 import { Model } from '../model/model.service';
 import { Screen } from '../screen/screen-service';
 import AppSpacer from '../spacer/AppSpacer.vue';
 import AppTranslate from '../translate/AppTranslate.vue';
+import { $gettext } from '../translate/translate.service';
 import {
 	canCommentOnModel,
 	Comment,
@@ -93,6 +95,9 @@ const form: FormController<FormModel> = createForm({
 			trackCommentAdd();
 		}
 		emit('submit', form.formModel);
+	},
+	onSubmitError() {
+		showErrorGrowl($gettext(`Couldn't place your comment for some reason.`));
 	},
 });
 
