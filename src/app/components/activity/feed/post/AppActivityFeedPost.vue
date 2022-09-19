@@ -15,7 +15,6 @@ import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import AppStickerControlsOverlay from '../../../../../_common/sticker/AppStickerControlsOverlay.vue';
 import AppStickerPlacementList from '../../../../../_common/sticker/AppStickerPlacementList.vue';
 import AppStickerLayer from '../../../../../_common/sticker/layer/AppStickerLayer.vue';
-import { canPlaceStickerOnFiresidePost } from '../../../../../_common/sticker/placement/placement.model';
 import {
 	createStickerTargetController,
 	provideStickerTargerController,
@@ -114,21 +113,10 @@ const shouldShowDate = computed(() => {
 	return import.meta.env.SSR || feed.shouldShowDates;
 });
 
-const isBlocked = computed(() => {
-	return feedShouldBlockPost(post.value, route);
-});
+const isBlocked = computed(() => feedShouldBlockPost(post.value, route));
+const shouldBlock = computed(() => !hasBypassedBlock.value && isBlocked.value);
 
-const shouldBlock = computed(() => {
-	return !hasBypassedBlock.value && isBlocked.value;
-});
-
-const canPlaceSticker = computed(() => {
-	return canPlaceStickerOnFiresidePost(post.value);
-});
-
-const overlay = computed(() => {
-	return !!post.value.background?.media_item;
-});
+const overlay = computed(() => !!post.value.background?.media_item);
 
 function onResize() {
 	emit('resize', root.value!.offsetHeight);
@@ -268,7 +256,7 @@ function onPostUnpinned(item: EventItem) {
 						v-if="post.hasMedia"
 						:item="item"
 						:post="post"
-						:can-place-sticker="canPlaceSticker"
+						:can-place-sticker="post.canPlaceSticker"
 					/>
 
 					<div ref="stickerScroll" />

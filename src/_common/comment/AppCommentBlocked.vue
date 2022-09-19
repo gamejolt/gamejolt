@@ -1,19 +1,23 @@
-<script lang="ts">
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import AppTimelineListItem from '../../../timeline-list/item/item.vue';
-import { Comment, CommentBlockReason } from '../../comment-model';
+<script lang="ts" setup>
+import { PropType } from 'vue';
+import AppButton from '../button/AppButton.vue';
+import AppTranslate from '../translate/AppTranslate.vue';
+import { Comment, CommentBlockReason } from './comment-model';
 
-@Options({
-	components: {
-		AppTimelineListItem,
+defineProps({
+	comment: {
+		type: Object as PropType<Comment>,
+		required: true,
 	},
-})
-export default class AppCommentWidgetCommentBlocked extends Vue {
-	@Prop({ type: Object, required: true }) comment!: Comment;
-	@Prop({ type: String, required: true }) reason!: CommentBlockReason;
+	reason: {
+		type: String as PropType<CommentBlockReason>,
+		required: true,
+	},
+});
 
-	@Emit('show') show() {}
-}
+const emit = defineEmits({
+	show: () => true,
+});
 </script>
 
 <template>
@@ -28,7 +32,7 @@ export default class AppCommentWidgetCommentBlocked extends Vue {
 				<AppTranslate>A blocked user is mentioned in this comment.</AppTranslate>
 			</span>
 		</template>
-		<AppButton trans @click="show">
+		<AppButton trans @click="emit('show')">
 			<AppTranslate>Show</AppTranslate>
 		</AppButton>
 	</div>

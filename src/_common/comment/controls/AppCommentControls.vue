@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
-import { Analytics } from '../../analytics/analytics.service';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import AppButton from '../../button/AppButton.vue';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
@@ -36,6 +35,9 @@ const props = defineProps({
 	canReply: {
 		type: Boolean,
 	},
+	canVote: {
+		type: Boolean,
+	},
 	canPlaceStickers: {
 		type: Boolean,
 	},
@@ -59,8 +61,8 @@ const votingTooltip = computed(() => {
 		} else {
 			return $gettextInterpolate(
 				$ngettext(
-					'You and another person like this comment.',
-					'You and %{ count } people like this comment.',
+					'You and another person like this comment',
+					'You and %{ count } people like this comment',
 					count - 1
 				),
 				{ count: count - 1 }
@@ -69,8 +71,8 @@ const votingTooltip = computed(() => {
 	} else {
 		return $gettextInterpolate(
 			$ngettext(
-				'One person likes this comment.',
-				'%{ count } people like this comment.',
+				'One person likes this comment',
+				'%{ count } people like this comment',
 				count
 			),
 			{ count }
@@ -117,7 +119,6 @@ function showLikers() {
 }
 
 async function placeSticker() {
-	Analytics.trackEvent('post-controls', 'sticker-place', 'comments');
 	setStickerDrawerOpen(stickerStore, true, stickerLayer);
 }
 </script>
@@ -131,7 +132,8 @@ async function placeSticker() {
 				icon="thumbs-up"
 				circle
 				trans
-				:primary="hasUpvote"
+				:disabled="!canVote"
+				:primary="canVote && hasUpvote"
 				:solid="hasUpvote"
 				@click="onUpvoteClick()"
 			/>
@@ -140,7 +142,10 @@ async function placeSticker() {
 				v-if="comment.votes > 0"
 				v-app-tooltip="$gettext(`View all people that liked this comment`)"
 				class="blip"
-				:class="{ 'blip-active': comment.user_vote, mobile: Screen.isXs }"
+				:class="{
+					'blip-active': canVote && hasUpvote,
+					mobile: Screen.isXs,
+				}"
 				@click="showLikers()"
 			>
 				{{ formatFuzzynumber(comment.votes) }}
@@ -152,14 +157,15 @@ async function placeSticker() {
 				icon="thumbs-down"
 				circle
 				trans
-				:primary="hasDownvote"
+				:disabled="!canVote"
+				:primary="canVote && hasDownvote"
 				:solid="hasDownvote"
 				@click="onDownvoteClick()"
 			/>
 
 			<AppButton
 				v-if="canPlaceStickers"
-				v-app-tooltip="$gettext('Place Sticker')"
+				v-app-tooltip="$gettext('Place sticker')"
 				v-app-track-event="`comment-widget:place-sticker`"
 				v-app-auth-required
 				class="-control-margin"

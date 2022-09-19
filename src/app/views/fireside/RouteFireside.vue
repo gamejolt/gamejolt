@@ -70,7 +70,6 @@ const commonStore = useCommonStore();
 const stickerStore = useStickerStore();
 const gridStore = useGridStore();
 const themeStore = useThemeStore();
-
 const router = useRouter();
 
 const c = shallowRef<FiresideController | null>(null);
@@ -85,6 +84,9 @@ const videoHeight = ref(0);
 
 const fireside = computed(() => c.value?.fireside || payloadFireside.value);
 const payloadFireside = ref<Fireside>();
+
+const focusedUser = computed(() => c.value?.focusedUser.value);
+const background = computed(() => c.value?.background.value);
 
 const isFullscreen = computed(() => c.value?.isFullscreen.value === true);
 const isShowingStreamOverlay = computed(() => c.value?.isShowingStreamOverlay.value === true);
@@ -107,7 +109,6 @@ const cannotViewReason = computed(() => {
 });
 
 const routeStatus = computed(() => c.value?.status.value);
-const background = computed(() => c.value?.chatRoom.value?.background);
 const overlayText = computed(() => !!background.value || isFullscreen.value);
 
 const sidebar = customRef<FiresideSidebar>((track, trigger) => ({
@@ -141,9 +142,7 @@ const collapseSidebar = customRef<boolean>((track, trigger) => ({
 const videoFillColor = computed(() =>
 	!background.value && isFullscreen.value ? 'black' : undefined
 );
-const focusedUserVideoAspectRatio = computed(
-	() => c.value?.rtc.value?.focusedUser?.videoAspectRatio
-);
+const focusedUserVideoAspectRatio = computed(() => focusedUser.value?.videoAspectRatio);
 
 const chatWidth = computed(() => {
 	if (isFullscreen.value && collapseSidebar.value) {
@@ -205,16 +204,10 @@ function onDimensionsChange() {
 		return;
 	}
 
-	const rtc = c.value?.rtc.value;
-	const focusedUser = rtc?.focusedUser;
-	if (!rtc) {
-		return;
-	}
-
 	const { width, height } = Ruler.offset(videoContainer.value);
 	const containerRatio = width / height;
 
-	let receiveRatio = focusedUser?.videoAspectRatio || 16 / 9;
+	let receiveRatio = focusedUserVideoAspectRatio.value || 16 / 9;
 
 	const minRatio = 0.5;
 	const maxRatio = 2;
@@ -256,7 +249,7 @@ watch(() => c.value?.isPersonallyStreaming.value, onIsPersonallyStreamingChanged
 watch(focusedUserVideoAspectRatio, onDimensionsChange);
 
 watch(
-	() => c.value?.rtc.value?.focusedUser?.userModel?.id,
+	() => focusedUser.value?.userModel?.id,
 	() => {
 		const { stickers, newStickers } = c.value?.stickerTargetController ?? {};
 		// Clear any current live stickers when changing the focused user.
@@ -525,15 +518,15 @@ function onIsPersonallyStreamingChanged() {
 												height: videoHeight + 'px',
 											}"
 										>
-											<template v-if="c.rtc.value && c.rtc.value.focusedUser">
+											<template v-if="focusedUser">
 												<AppStickerTarget
-													:key="c.rtc.value.focusedUser?.uid"
+													:key="focusedUser.uid"
 													class="-video-inner -abs-stretch"
 													:controller="c.stickerTargetController"
 												>
 													<AppPopper trigger="right-click">
 														<AppFiresideStream
-															:rtc-user="c.rtc.value.focusedUser"
+															:rtc-user="focusedUser"
 															:has-header="isFullscreen"
 															:has-hosts="isFullscreen"
 															:sidebar-collapsed="collapseSidebar"

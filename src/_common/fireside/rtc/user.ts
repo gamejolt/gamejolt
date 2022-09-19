@@ -168,6 +168,14 @@ export class FiresideRTCUser {
 		// not receive the listable hosts for in time.
 		return this.rtc.listableHostIds.has(host.user.id);
 	}
+
+	get background() {
+		const userId = this.userModel?.id;
+		if (!userId) {
+			return undefined;
+		}
+		return this.rtc.hostBackgrounds.get(userId);
+	}
 }
 
 export function createRemoteFiresideRTCUser(rtc: FiresideRTC, uid: number) {

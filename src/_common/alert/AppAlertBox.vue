@@ -7,12 +7,16 @@ defineProps({
 		type: String as PropType<Jolticon>,
 		default: undefined,
 	},
+	color: {
+		type: String as PropType<'default' | 'highlight'>,
+		default: 'default',
+	},
 });
 </script>
 
 <template>
 	<div class="-alert-box fill-backdrop">
-		<div v-if="icon" class="-icon">
+		<div v-if="icon" class="-icon" :class="`-icon-color-${color}`">
 			<AppJolticon :icon="icon" />
 		</div>
 		<div class="-content">
@@ -33,9 +37,12 @@ defineProps({
 .-content
 	font-size: $font-size-small
 
-.-icon
-	color: var(--theme-highlight)
+.-icon .jolticon
+	font-size: 24px
 
-	.jolticon
-		font-size: 24px
+.-icon-color-default
+	color: var(--theme-fg-muted)
+
+.-icon-color-highlight
+	color: var(--theme-highlight)
 </style>

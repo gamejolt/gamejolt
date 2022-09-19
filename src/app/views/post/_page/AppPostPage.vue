@@ -4,6 +4,7 @@ import { RouteLocationRaw, RouterLink, useRoute, useRouter } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppBackground from '../../../../_common/background/AppBackground.vue';
+import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisabledCheck.vue';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -27,7 +28,6 @@ import AppStickerLayer from '../../../../_common/sticker/layer/AppStickerLayer.v
 import AppStickerTarget from '../../../../_common/sticker/target/AppStickerTarget.vue';
 import {
 	createStickerTargetController,
-	provideStickerTargerController,
 	StickerTargetController,
 } from '../../../../_common/sticker/target/target-controller';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -427,7 +427,9 @@ function onDismissNotification(notification: CommunityUserNotification) {
 
 					<br />
 					<br />
-					<AppCommentWidgetLazy :model="post" display-mode="comments" />
+					<AppCommentDisabledCheck :model="post">
+						<AppCommentWidgetLazy :model="post" display-mode="comments" />
+					</AppCommentDisabledCheck>
 				</template>
 
 				<template v-if="!Screen.isMobile" #right>

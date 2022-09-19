@@ -58,7 +58,7 @@ const form: FormController<FormModel> = createForm({
 
 <template>
 	<template v-if="!paypalId">
-		<AppAlertBox icon="notice">
+		<AppAlertBox icon="notice" color="highlight">
 			<AppTranslate>
 				You must have a PayPal account linked in order to withdraw your funds.
 			</AppTranslate>
@@ -76,7 +76,7 @@ const form: FormController<FormModel> = createForm({
 			</AppTranslate>
 		</p>
 
-		<AppAlertBox icon="notice">
+		<AppAlertBox icon="notice" color="highlight">
 			<AppTranslate>
 				Make sure the information entered below is correct! You will not get a chance to
 				change it after submitting a withdrawal request.

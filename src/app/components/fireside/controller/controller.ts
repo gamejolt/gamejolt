@@ -24,6 +24,7 @@ import { run, sleep } from '../../../../utils/utils';
 import { uuidv4 } from '../../../../utils/uuid';
 import { MaybeRef } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
+import { Background } from '../../../../_common/background/background.model';
 import {
 	canCommunityEjectFireside,
 	canCommunityFeatureFireside,
@@ -160,7 +161,13 @@ export function createFiresideController(
 	/**
 	 * Which hosts the current user is able to list.
 	 */
-	const listableHostIds = ref<Set<number>>(new Set());
+	const listableHostIds = ref(new Set<number>());
+
+	/**
+	 * Mapping of user id to the background they have selected. Gets updated
+	 * through events over {@link GridFiresideChannel}.
+	 */
+	const hostBackgrounds = ref(new Map<number, Background>());
 
 	const stickerTargetController = createStickerTargetController(fireside, {
 		isLive: true,
@@ -219,6 +226,8 @@ export function createFiresideController(
 	const expiresProgressValue = ref<number>();
 
 	const _isExtending = ref(false);
+
+	const focusedUser = computed(() => rtc.value?.focusedUser);
 
 	const chat = computed(() => grid.value?.chat ?? undefined);
 	const chatRoom = computed(() => chatChannel.value?.room.value);
@@ -331,6 +340,26 @@ export function createFiresideController(
 		return true;
 	});
 
+	/**
+	 * The background we would like to show currently in the fireside. It
+	 * changes depending on who you are viewing.
+	 */
+	const background = computed(() => {
+		// If we have no focused user, we want to try to use the background of the
+		// logged in user, since they might be setting up their stream at the
+		// moment before anyone else is streaming.
+		if (!focusedUser.value) {
+			const loggedUserId = user.value?.id;
+			// Check host backgrounds through the RTC instead of the locally
+			// defined values. This should prevent the background from showing
+			// if the user was removed as a host but they still had a background
+			// set.
+			return loggedUserId ? rtc.value?.hostBackgrounds.get(loggedUserId) : undefined;
+		}
+
+		return focusedUser.value.background;
+	});
+
 	const shouldShowDesktopAppPromo = ref(shouldPromoteAppForStreaming.value);
 
 	const _browser = computed(() => getDeviceBrowser().toLowerCase());
@@ -402,6 +431,7 @@ export function createFiresideController(
 				agoraStreamingInfo.value!,
 				hosts,
 				listableHostIds,
+				hostBackgrounds,
 				{ isMuted }
 			);
 		} else if (rtc.value) {
@@ -429,6 +459,14 @@ export function createFiresideController(
 		// Assign our fireside host data anytime our chat users change from
 		// unset to set.
 		chatUsers.value?.assignFiresideHostData(hosts.value);
+	}
+
+	function assignHostBackgroundData(userId: number, background: Background | undefined) {
+		if (!background) {
+			hostBackgrounds.value.delete(userId);
+		} else {
+			hostBackgrounds.value.set(userId, background);
+		}
 	}
 
 	const _unwatchChatUsers = watch(chatUsers, _onChatUsersChanged);
@@ -649,11 +687,14 @@ export function createFiresideController(
 		hosts,
 		fetchedHostUserData,
 		listableHostIds,
+		hostBackgrounds,
 		stickerTargetController,
 		isMuted,
 		rtc,
 		revalidateRTC,
+		assignHostBackgroundData,
 		status,
+		focusedUser,
 		chat,
 		chatSettings,
 		gridChannel,
@@ -684,6 +725,7 @@ export function createFiresideController(
 		canExtinguish,
 		canReport,
 		canBrowserStream,
+		background,
 		shouldShowDesktopAppPromo,
 		logger,
 

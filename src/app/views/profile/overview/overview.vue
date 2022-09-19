@@ -307,7 +307,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 	}
 
 	get shouldShowShoutAdd() {
-		return this.user && this.user.canComment;
+		return this.user && this.user.canMakeComment;
 	}
 
 	get userBlockedYou() {

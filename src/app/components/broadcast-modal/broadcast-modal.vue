@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed } from 'vue';
 import { mixins, Options, Prop } from 'vue-property-decorator';
+import AppCommentDisabledCheck from '../../../_common/comment/AppCommentDisabledCheck.vue';
 import AppContentViewer from '../../../_common/content/content-viewer/content-viewer.vue';
 import { Environment } from '../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
@@ -36,6 +37,7 @@ import AppPostControls from '../post/controls/AppPostControls.vue';
 		AppContentViewer,
 		AppStickerTarget,
 		AppCommentWidgetLazy,
+		AppCommentDisabledCheck,
 	},
 })
 export default class AppBroadcastModal extends mixins(BaseModal) {
@@ -184,7 +186,9 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 
 					<br />
 					<br />
-					<AppCommentWidgetLazy :model="post" display-mode="comments" />
+					<AppCommentDisabledCheck :model="post">
+						<AppCommentWidgetLazy :model="post" display-mode="comments" />
+					</AppCommentDisabledCheck>
 				</div>
 			</div>
 		</div>
