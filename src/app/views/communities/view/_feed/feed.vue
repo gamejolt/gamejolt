@@ -14,7 +14,7 @@ import AppActivityFeedPlaceholder from '../../../../components/activity/feed/App
 import AppActivityFeedNewButton from '../../../../components/activity/feed/new-button/new-button.vue';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../../../components/lazy';
-import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
+import AppPostAddButton from '../../../../components/post/add-button/AppPostAddButton.vue';
 import { illNoCommentsSmall } from '../../../../img/ill/illustrations';
 import { useAppStore } from '../../../../store';
 import { CommunityRouteStore, CommunityRouteStoreKey, isVirtualChannel } from '../view.store';

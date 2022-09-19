@@ -96,9 +96,22 @@ const MIN_POLL_DURATION = 5;
 const MAX_POLL_DURATION = 20160;
 
 const props = defineProps({
-	defaultCommunity: { type: Object as PropType<Community | null>, default: null },
-	defaultChannel: { type: Object as PropType<CommunityChannel | null>, default: null },
-	overlay: { type: Boolean, default: false },
+	defaultCommunity: {
+		type: Object as PropType<Community | null>,
+		default: null,
+	},
+	defaultChannel: {
+		type: Object as PropType<CommunityChannel | null>,
+		default: null,
+	},
+	defaultRealm: {
+		type: Object as PropType<Realm | null>,
+		default: null,
+	},
+	overlay: {
+		type: Boolean,
+		default: false,
+	},
 	...defineFormProps<FiresidePost>(true),
 });
 
@@ -108,7 +121,7 @@ const emit = defineEmits({
 	backgroundChange: (_background?: Background) => true,
 });
 
-const { defaultCommunity, defaultChannel, overlay, model } = toRefs(props);
+const { defaultCommunity, defaultChannel, defaultRealm, overlay, model } = toRefs(props);
 
 const { user } = useCommonStore();
 
@@ -249,9 +262,13 @@ const form: FormController<FormPostModel> = createForm({
 			);
 		}
 
+		if (defaultRealm.value) {
+			attachRealm(defaultRealm.value);
+		}
+
 		if (
-			defaultCommunity.value instanceof Community &&
-			defaultChannel.value instanceof CommunityChannel &&
+			defaultCommunity.value &&
+			defaultChannel.value &&
 			defaultCommunity.value.postableChannels.some(
 				channel => channel.title === defaultChannel.value!.title
 			)

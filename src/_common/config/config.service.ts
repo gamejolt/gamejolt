@@ -131,8 +131,6 @@ export class ConfigOptionString<T extends string = string> extends ConfigOption<
 	}
 }
 
-export const configRealms = new ConfigOptionBoolean('web_realms', false);
-
 /** Which feed do we default to for home */
 export const configHomeDefaultFeed = new ConfigOptionString(
 	'home_default_feed',

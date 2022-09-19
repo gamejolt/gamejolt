@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { Community } from '../../../../_common/community/community.model';
-import { configRealms } from '../../../../_common/config/config.service';
 import AppCreatorsList from '../../../../_common/creator/AppCreatorsList.vue';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -96,7 +95,6 @@ const cardColumnsXs = 2;
 			</div>
 
 			<AppDiscoverHomeRealms
-				v-if="configRealms.value"
 				:is-loading="!isBootstrapped"
 				:realms="featuredRealms"
 				:grid-columns-desktop="cardColumnsDesktop"

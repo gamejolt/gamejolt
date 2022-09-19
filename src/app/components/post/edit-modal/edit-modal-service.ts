@@ -3,10 +3,12 @@ import { CommunityChannel } from '../../../../_common/community/channel/channel.
 import { Community } from '../../../../_common/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { showModal } from '../../../../_common/modal/modal.service';
+import { Realm } from '../../../../_common/realm/realm-model';
 
 export type PostEditModalOptions = {
 	community?: Community;
 	channel?: CommunityChannel;
+	realm?: Realm;
 };
 
 export class PostEditModal {
@@ -25,6 +27,7 @@ export class PostEditModal {
 				postProvider: postProvider,
 				community: options.community,
 				channel: options.channel,
+				realm: options.realm,
 			},
 		});
 	}

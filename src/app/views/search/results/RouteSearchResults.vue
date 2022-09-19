@@ -4,7 +4,6 @@ import { RouterLink, useRoute } from 'vue-router';
 import { getQuery } from '../../../../utils/router';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCommunityThumbnail from '../../../../_common/community/thumbnail/AppCommunityThumbnail.vue';
-import { configRealms } from '../../../../_common/config/config.service';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
@@ -66,7 +65,7 @@ const slicedCommunities = computed(() => searchPayload.value.communities.slice(0
 
 <template>
 	<section v-if="hasSearch">
-		<template v-if="configRealms.value && searchPayload.realm">
+		<template v-if="searchPayload.realm">
 			<section class="section section-thin">
 				<div class="container">
 					<h3 class="-heading">Realms</h3>

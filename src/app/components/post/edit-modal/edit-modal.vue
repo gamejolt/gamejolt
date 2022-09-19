@@ -7,6 +7,7 @@ import { Community } from '../../../../_common/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { BaseModal } from '../../../../_common/modal/base';
+import { Realm } from '../../../../_common/realm/realm-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import AppFormPost from '../../forms/post/AppFormPost.vue';
@@ -31,6 +32,9 @@ export default class AppPostEditModal extends mixins(BaseModal) {
 
 	@Prop(Object)
 	channel?: CommunityChannel;
+
+	@Prop(Object)
+	realm?: Realm;
 
 	post: FiresidePost | null = null;
 	videoUploadStatus: VideoStatus = VideoStatus.IDLE;
@@ -104,6 +108,7 @@ export default class AppPostEditModal extends mixins(BaseModal) {
 						:model="post"
 						:default-community="community"
 						:default-channel="channel"
+						:default-realm="realm"
 						:overlay="overlay"
 						@submit="onSubmitted"
 						@video-upload-status-change="onVideoUploadStatusChanged"
