@@ -128,7 +128,7 @@ export function createStickerTargetController(
 	return c;
 }
 
-export function provideStickerTargerController(
+export function provideStickerTargetController(
 	controller?: MaybeRef<StickerTargetController | null>
 ) {
 	provide(StickerTargetParentControllerKey, controller);

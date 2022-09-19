@@ -17,7 +17,7 @@ import AppStickerPlacementList from '../../../../../_common/sticker/AppStickerPl
 import AppStickerLayer from '../../../../../_common/sticker/layer/AppStickerLayer.vue';
 import {
 	createStickerTargetController,
-	provideStickerTargerController,
+	provideStickerTargetController,
 } from '../../../../../_common/sticker/target/target-controller';
 import AppFiresidePostEmbed from '../../../fireside/post/embed/embed.vue';
 import AppPollVoting from '../../../poll/voting/voting.vue';
@@ -60,7 +60,7 @@ const stickerTargetController = createStickerTargetController(post.value, {
 	isCreator: computed(() => user.value.is_creator === true),
 });
 
-provideStickerTargerController(stickerTargetController);
+provideStickerTargetController(stickerTargetController);
 
 const hasBypassedBlock = ref(false);
 

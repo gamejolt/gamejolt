@@ -28,7 +28,7 @@ import AppStickerLayer from '../../../../_common/sticker/layer/AppStickerLayer.v
 import AppStickerTarget from '../../../../_common/sticker/target/AppStickerTarget.vue';
 import {
 	createStickerTargetController,
-	provideStickerTargerController,
+	provideStickerTargetController,
 	StickerTargetController,
 } from '../../../../_common/sticker/target/target-controller';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -78,7 +78,7 @@ const stickerTargetController = shallowRef<StickerTargetController>(
 	})
 );
 
-provideStickerTargerController(stickerTargetController);
+provideStickerTargetController(stickerTargetController);
 
 const videoStartTime = ref(0);
 const hasVideoProcessingError = ref(false);
