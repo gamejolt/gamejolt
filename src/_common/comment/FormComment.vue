@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, nextTick, PropType, ref, toRef, toRefs } from 'vue';
+import { computed, nextTick, PropType, ref, toRefs } from 'vue';
 import AppAlertBox from '../alert/AppAlertBox.vue';
 import { trackCommentAdd } from '../analytics/analytics.service';
 import AppButton from '../button/AppButton.vue';
@@ -70,7 +70,7 @@ const lengthLimit = ref(5_000);
 const form: FormController<FormModel> = createForm({
 	resetOnSubmit: true,
 	modelClass: Comment,
-	model: toRef(props, 'comment'),
+	model: comment,
 	loadUrl: `/comments/save`,
 	async onInit() {
 		if (!comment?.value) {
@@ -132,7 +132,7 @@ const shouldShowGuidelines = computed(
 	() => !form.formModel.comment_content && !form.changed && form.method !== 'edit'
 );
 
-const contentModelId = computed(() => model.value?.id);
+const contentModelId = computed(() => comment?.value?.id);
 const canComment = computed(() => canCommentOnModel(model.value));
 
 /** If the model we're commenting on is a post, this will return it. */
