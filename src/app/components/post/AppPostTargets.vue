@@ -14,7 +14,9 @@ import AppPostTargetsAddRealm from './target/_add/AppPostTargetAddRealm.vue';
 
 const props = defineProps({
 	communities: {
-		type: Array as PropType<{ community: Community; channel?: CommunityChannel }[]>,
+		type: Array as PropType<
+			{ community: Community; channel?: CommunityChannel; featured_on?: number }[]
+		>,
 		required: true,
 	},
 	realms: {
@@ -161,10 +163,11 @@ async function _scrollToEnd() {
 			</AppFormsPillSelectorCommunities>
 
 			<AppPostTargetCommunity
-				v-for="{ community, channel } of communities"
+				v-for="{ community, channel, featured_on } of communities"
 				:key="`community-${community.id}`"
 				:class="baseClasses"
 				:can-remove="canRemoveCommunities"
+				:is-featured="!!featured_on"
 				:community="community"
 				:channel="channel"
 				:has-links="hasLinks"
