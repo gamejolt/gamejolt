@@ -4,6 +4,7 @@ import { CommunityChannel } from '../../../../_common/community/channel/channel.
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPostTarget from './AppPostTarget.vue';
 
 const props = defineProps({
@@ -14,6 +15,9 @@ const props = defineProps({
 	channel: {
 		type: Object as PropType<CommunityChannel | null>,
 		default: undefined,
+	},
+	isFeatured: {
+		type: Boolean,
 	},
 	canRemove: {
 		type: Boolean,
@@ -69,11 +73,17 @@ const to = computed(() =>
 		</template>
 
 		<template #right>
-			<span>
-				<slot>
-					{{ channel?.displayTitle }}
-				</slot>
-			</span>
+			<slot>
+				{{ channel?.displayTitle }}
+
+				<AppJolticon v-if="isFeatured" class="-featured" icon="star" />
+			</slot>
 		</template>
 	</AppPostTarget>
 </template>
+
+<style lang="stylus" scoped>
+.-featured
+	margin: 0 2px
+	font-size: $jolticon-size * 0.85
+</style>
