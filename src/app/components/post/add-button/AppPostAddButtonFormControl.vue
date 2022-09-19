@@ -23,7 +23,7 @@ const { user } = useCommonStore();
 </template>
 
 <style lang="stylus" scoped>
-@import '../add-button'
+@import './add-button'
 
 .post-add-button
 	margin-bottom: 0
