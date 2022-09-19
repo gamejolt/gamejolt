@@ -200,17 +200,6 @@ const isInvalidConfig = computed(() => {
 
 const form: FormController<FormModel> = createForm({});
 
-// We initialize from what the producer's values currently are first and then
-// try to set it up after. This ensures that when we load this form again, it
-// has the values they are running with.
-_initFormModel({
-	webcamDeviceId: localProducer.selectedWebcamDeviceId.value,
-	micDeviceId: localProducer.selectedMicDeviceId.value,
-	desktopAudioDeviceId: localProducer.selectedDesktopAudioDeviceId.value,
-	groupAudioDeviceId: localProducer.selectedGroupAudioDeviceId.value,
-	shouldStreamDesktopAudio: localProducer.shouldStreamDesktopAudio.value,
-});
-
 onMounted(async () => {
 	// Now try to detect devices and initialize preferred settings based on that.
 	try {
@@ -417,6 +406,20 @@ watch(
 		}
 	}
 );
+
+// We initialize from what the producer's values currently are first and then
+// try to set it up after. This ensures that when we load this form again, it
+// has the values they are running with.
+//
+// NOTE: Make sure we do this after setting up our watchers, otherwise we won't
+// react to the initial data changes properly.
+_initFormModel({
+	webcamDeviceId: localProducer.selectedWebcamDeviceId.value,
+	micDeviceId: localProducer.selectedMicDeviceId.value,
+	desktopAudioDeviceId: localProducer.selectedDesktopAudioDeviceId.value,
+	groupAudioDeviceId: localProducer.selectedGroupAudioDeviceId.value,
+	shouldStreamDesktopAudio: localProducer.shouldStreamDesktopAudio.value,
+});
 
 /**
  * Saves the form's model into their user settings.
