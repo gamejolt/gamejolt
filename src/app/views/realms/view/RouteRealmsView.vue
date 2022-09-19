@@ -1,16 +1,13 @@
 <script lang="ts">
 import { computed, Ref, ref } from 'vue';
-import { RouterLink, useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { getAbsoluteLink } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
-import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
-import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
+import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Meta } from '../../../../_common/meta/meta-service';
 import AppRealmFollowButton from '../../../../_common/realm/AppRealmFollowButton.vue';
 import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
-import { RealmCommunity } from '../../../../_common/realm/realm-community-model';
 import { Realm } from '../../../../_common/realm/realm-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -18,7 +15,6 @@ import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { ShareModal } from '../../../../_common/share/card/_modal/modal.service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
@@ -26,6 +22,7 @@ import { ActivityFeedService } from '../../../components/activity/feed/feed-serv
 import { ActivityFeedView } from '../../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
+import AppPostAddButton from '../../../components/post/add-button/AppPostAddButton.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 
@@ -52,7 +49,6 @@ const route = useRoute();
 const realm = ref<Realm>();
 const knownFollowers = ref<User[]>([]);
 const knownFollowerCount = ref(0);
-const realmCommunities = ref<RealmCommunity[]>([]);
 const feed = ref(null) as Ref<ActivityFeedView | null>;
 const isBootstrapped = ref(false);
 
@@ -60,9 +56,7 @@ const shareLink = computed(() =>
 	realm.value ? getAbsoluteLink(router, realm.value.routeLocation) : undefined
 );
 
-const shownCommunities = computed(() => realmCommunities.value.map(i => i.community) ?? []);
-
-createAppRoute({
+const appRoute = createAppRoute({
 	routeTitle: computed(() =>
 		realm.value
 			? $gettextInterpolate(`%{ realm } Realm - Art, videos, guides, polls and more`, {
@@ -77,7 +71,6 @@ createAppRoute({
 		isBootstrapped.value = true;
 
 		realm.value = new Realm(payload.realm);
-		realmCommunities.value = RealmCommunity.populate(payload.communities);
 		knownFollowers.value = User.populate(payload.knownFollowers);
 		knownFollowerCount.value = payload.knownFollowerCount || 0;
 
@@ -105,6 +98,16 @@ function onShareClick() {
 		return;
 	}
 	ShareModal.show({ resource: 'realm', url: shareLink.value });
+}
+
+function onPostAdded(post: FiresidePost) {
+	ActivityFeedService.onPostAdded({
+		feed: feed.value!,
+		post,
+		appRoute: appRoute,
+		route: route,
+		router: router,
+	});
 }
 </script>
 
@@ -147,41 +150,6 @@ function onShareClick() {
 			</template>
 			<template #right>
 				<AppScrollAffix :disabled="!Screen.isLg">
-					<h5 class="-communities-header sans-margin-top">
-						<AppTranslate>Top Contributors</AppTranslate>
-					</h5>
-
-					<div class="-communities">
-						<template v-if="!isBootstrapped">
-							<div
-								v-for="i in 3"
-								:key="i"
-								class="-community-item -community-thumb-placeholder"
-							>
-								<AppAspectRatio :ratio="1" />
-							</div>
-						</template>
-						<template v-else>
-							<RouterLink
-								v-for="community of shownCommunities"
-								:key="community.id"
-								v-app-tooltip.bottom="community.name"
-								class="-community-item link-unstyled"
-								:to="community.routeLocation"
-							>
-								<AppCommunityThumbnailImg
-									class="-community-thumb"
-									:community="community"
-								/>
-								<AppCommunityVerifiedTick
-									class="-community-verified-tick"
-									:community="community"
-									no-tooltip
-								/>
-							</RouterLink>
-						</template>
-					</div>
-
 					<AppShareCard
 						v-if="shareLink && Screen.isDesktop"
 						resource="realm"
@@ -190,6 +158,14 @@ function onShareClick() {
 				</AppScrollAffix>
 			</template>
 			<template #default>
+				<AppPostAddButton
+					:realm="realm"
+					:placeholder="
+						$gettextInterpolate(`Post about %{ realm }!`, { realm: realm.name })
+					"
+					@add="onPostAdded"
+				/>
+
 				<AppActivityFeedLazy v-if="feed?.isBootstrapped" :feed="feed" show-ads />
 			</template>
 		</AppPageContainer>

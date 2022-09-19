@@ -35,10 +35,14 @@ const topOffset = props.useRandomOffset ? Math.random() : undefined;
 .charge-orb
 	position: relative
 
+.-bottom
+	z-index: 1
+
 .-top
 	position: absolute
 	top: 0
 	right: 0
 	bottom: 0
 	left: 0
+	z-index: 2
 </style>

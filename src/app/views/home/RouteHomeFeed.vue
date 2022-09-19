@@ -60,7 +60,7 @@ import { ActivityFeedService } from '../../components/activity/feed/feed-service
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import { onFiresideStart } from '../../components/grid/client.service';
 import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
-import AppPostAddButton from '../../components/post/add-button/add-button.vue';
+import AppPostAddButton from '../../components/post/add-button/AppPostAddButton.vue';
 import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
 import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
 import { useQuestStore } from '../../store/quest';

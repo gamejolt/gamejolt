@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { Community } from '../../../../_common/community/community.model';
-import { configRealms } from '../../../../_common/config/config.service';
 import AppCreatorsList from '../../../../_common/creator/AppCreatorsList.vue';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -44,6 +43,10 @@ defineProps({
 });
 
 const { user } = useCommonStore();
+
+const cardColumnsDesktop = 4;
+const cardColumnsSm = 3;
+const cardColumnsXs = 2;
 </script>
 
 <template>
@@ -85,13 +88,18 @@ const { user } = useCommonStore();
 					:is-loading="!isBootstrapped"
 					:posts="creatorPosts"
 					list-type="grid"
+					:grid-columns-desktop="cardColumnsDesktop"
+					:grid-columns-sm="cardColumnsSm"
+					:grid-columns-xs="cardColumnsXs"
 				/>
 			</div>
 
 			<AppDiscoverHomeRealms
-				v-if="configRealms.value"
 				:is-loading="!isBootstrapped"
 				:realms="featuredRealms"
+				:grid-columns-desktop="cardColumnsDesktop"
+				:grid-columns-sm="cardColumnsSm"
+				:grid-columns-xs="cardColumnsXs"
 			>
 				<template #header>
 					<h2 class="-content-row-header">Realms</h2>

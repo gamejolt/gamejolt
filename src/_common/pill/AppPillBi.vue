@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, useSlots } from 'vue';
+import { computed, PropType, toRefs, useSlots } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
 
 const props = defineProps({
@@ -15,18 +15,23 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
+	bleedImg: {
+		type: Boolean,
+	},
 });
+
+const { leftTo, rightTo, noHover, bleedImg } = toRefs(props);
 
 const slots = useSlots();
 
-const leftComponent = computed(() => (props.leftTo ? RouterLink : 'span'));
-const rightComponent = computed(() => (props.rightTo ? RouterLink : 'span'));
+const leftComponent = computed(() => (leftTo?.value ? RouterLink : 'span'));
+const rightComponent = computed(() => (rightTo?.value ? RouterLink : 'span'));
 
 const hasImg = computed(() => !!slots.img);
 </script>
 
 <template>
-	<span class="pill-bi">
+	<span class="pill-bi" :class="{ '-bleed-img': bleedImg }">
 		<component :is="leftComponent" class="-left" :class="{ '-no-hover': noHover }" :to="leftTo">
 			<span class="-content">
 				<span v-if="hasImg" class="-img">
@@ -79,6 +84,10 @@ $-separator-overlap = 2px
 	border-color: var(--theme-bg-subtle)
 	border-radius: $border-radius-base
 	overflow: hidden
+
+	&.-bleed-img
+		.-content
+			padding: 0
 
 .-content
 	display: inline-flex

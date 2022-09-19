@@ -5,7 +5,6 @@ import { arrayRemove } from '../../../../utils/array';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppBackground from '../../../../_common/background/AppBackground.vue';
 import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisabledCheck.vue';
-import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -20,7 +19,6 @@ import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
 import AppResponsiveDimensions from '../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
@@ -30,7 +28,6 @@ import AppStickerLayer from '../../../../_common/sticker/layer/AppStickerLayer.v
 import AppStickerTarget from '../../../../_common/sticker/target/AppStickerTarget.vue';
 import {
 	createStickerTargetController,
-	provideStickerTargerController,
 	StickerTargetController,
 } from '../../../../_common/sticker/target/target-controller';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -51,6 +48,7 @@ import AppPageContainer from '../../../components/page-container/AppPageContaine
 import AppPollVoting from '../../../components/poll/voting/voting.vue';
 import AppActivityFeedPostContent from '../../../components/post/AppPostContent.vue';
 import AppPostHeader from '../../../components/post/AppPostHeader.vue';
+import AppPostTargets from '../../../components/post/AppPostTargets.vue';
 import AppPostControls from '../../../components/post/controls/AppPostControls.vue';
 import AppPostPageRecommendations from './recommendations/AppPostPageRecommendations.vue';
 
@@ -95,6 +93,10 @@ const displayUser = computed(() => {
 
 const communities = computed(() => {
 	return post.value.communities || [];
+});
+
+const realms = computed(() => {
+	return post.value.realms.map(i => i.realm);
 });
 
 const shouldShowCommunityPublishError = computed(() => {
@@ -390,13 +392,7 @@ function onDismissNotification(notification: CommunityUserNotification) {
 							@show="scrollToStickers()"
 						/>
 
-						<AppScrollScroller class="-communities" horizontal thin>
-							<AppCommunityPill
-								v-for="postCommunity of communities"
-								:key="postCommunity.id"
-								:community-link="postCommunity"
-							/>
-						</AppScrollScroller>
+						<AppPostTargets :communities="communities" :realms="realms" has-links />
 
 						<template v-if="shouldShowCommunityPublishError">
 							<br />

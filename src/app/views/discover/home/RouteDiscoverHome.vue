@@ -22,6 +22,7 @@ import AppHomeDefault from './AppHomeDefault.vue';
 import AppHomeSlider from './AppHomeSlider.vue';
 
 const CachedCreatorsKey = 'HomeCreators';
+const CachedRealmsKey = 'HomeRealms';
 
 export default {
 	...defineAppRouteOptions({
@@ -92,15 +93,23 @@ const { isBootstrapped } = createAppRoute({
 		featuredFireside.value = payload.featuredFireside
 			? new Fireside(payload.featuredFireside)
 			: undefined;
-		featuredRealms.value = Realm.populate(payload.featuredRealms);
 
 		heroPosts.value = FiresidePost.populate<FiresidePost>(payload.heroPosts).filter(
 			i => i.hasMedia || i.hasVideo
 		);
 
-		const cachedListing = HistoryCache.get(route, CachedCreatorsKey);
-		if (cachedListing) {
-			creatorPosts.value = cachedListing;
+		// Realms might get randomized on backend, so freeze it when going back.
+		const cachedRealms = HistoryCache.get(route, CachedRealmsKey);
+		if (cachedRealms) {
+			featuredRealms.value = cachedRealms;
+		} else {
+			featuredRealms.value = Realm.populate(payload.featuredRealms);
+			HistoryCache.store(route, featuredRealms.value, CachedRealmsKey);
+		}
+
+		const cachedCreators = HistoryCache.get(route, CachedCreatorsKey);
+		if (cachedCreators) {
+			creatorPosts.value = cachedCreators;
 		} else {
 			creatorPosts.value = payload.creatorPosts
 				? arrayShuffle(FiresidePost.populate(payload.creatorPosts))
