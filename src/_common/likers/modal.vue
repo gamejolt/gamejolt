@@ -1,6 +1,6 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import AppUserList from '../../app/components/user/list/list.vue';
+import AppUserList from '../../app/components/user/list/AppUserList.vue';
 import { Api } from '../api/api.service';
 import { Comment } from '../comment/comment-model';
 import { formatNumber } from '../filters/number';

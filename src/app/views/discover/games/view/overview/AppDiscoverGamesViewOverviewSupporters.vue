@@ -1,42 +1,35 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Prop, Vue } from 'vue-property-decorator';
-import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
-import AppUserCardHover from '../../../../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatarImg from '../../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { User } from '../../../../../../../_common/user/user.model';
-import { GameSupportersModal } from '../../../../../../components/game/supporters/modal/modal.service';
-import { useGameRouteController } from '../../view.vue';
+<script lang="ts" setup>
+import { PropType, toRefs } from 'vue';
+import { RouterLink } from 'vue-router';
+import AppButton from '../../../../../../_common/button/AppButton.vue';
+import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
+import { SupportersModal } from '../../../../../../_common/supporters/modal.service';
+import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
+import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
+import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
+import { User } from '../../../../../../_common/user/user.model';
+import { useGameRouteController } from '../view.vue';
 
-@Options({
-	components: {
-		AppUserAvatarImg,
-		AppUserCardHover,
+const props = defineProps({
+	supporters: {
+		type: Array as PropType<User[]>,
+		required: true,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
+	supporterCount: {
+		type: Number,
+		required: true,
 	},
-})
-export default class AppDiscoverGamesViewOverviewSupporters extends Vue {
-	@Prop(Array)
-	supporters!: User[];
+});
 
-	@Prop(Number)
-	supporterCount!: number;
+const { supporterCount } = toRefs(props);
+const { game } = useGameRouteController()!;
 
-	routeStore = setup(() => useGameRouteController()!);
-
-	get game() {
-		return this.routeStore.game!;
-	}
-
-	viewAll() {
-		GameSupportersModal.show({
-			game: this.game,
-			supporters: this.supporters,
-			supporterCount: this.supporterCount,
-		});
-	}
+function viewAll() {
+	SupportersModal.show({
+		model: game.value!,
+		count: supporterCount.value,
+	});
 }
 </script>
 
@@ -59,9 +52,9 @@ export default class AppDiscoverGamesViewOverviewSupporters extends Vue {
 			<div class="-list-fade" />
 			<div v-for="user of supporters.slice(0, 16)" :key="user.id" class="-supporter">
 				<AppUserCardHover :user="user">
-					<router-link class="user-avatar" :to="user.url">
+					<RouterLink class="user-avatar" :to="user.url">
 						<AppUserAvatarImg :user="user" />
-					</router-link>
+					</RouterLink>
 				</AppUserCardHover>
 			</div>
 		</div>

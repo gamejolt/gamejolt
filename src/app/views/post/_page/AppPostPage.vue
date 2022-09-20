@@ -36,7 +36,7 @@ import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
+import AppUserFollowButton from '../../../../_common/user/follow/AppUserFollowButton.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import AppVideoPlayer from '../../../../_common/video/player/player.vue';
@@ -53,7 +53,7 @@ import AppPostTargets from '../../../components/post/AppPostTargets.vue';
 import AppPostControls from '../../../components/post/controls/AppPostControls.vue';
 import AppPostPageRecommendations from './recommendations/AppPostPageRecommendations.vue';
 
-const UserFollowLocation = 'postPage';
+const UserFollowLocation = 'postPage' as const;
 
 const props = defineProps({
 	post: {
@@ -299,7 +299,7 @@ function onDismissNotification(notification: CommunityUserNotification) {
 									</RouterLink>
 
 									<div class="-controls">
-										<AppUserFollowWidget
+										<AppUserFollowButton
 											v-if="!user || displayUser.id !== user.id"
 											:user="displayUser"
 											hide-count
