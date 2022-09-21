@@ -512,7 +512,7 @@ const canAddCommunity = computed(
 );
 
 const canAddRealm = computed(() => {
-	if (wasPublished.value || attachedRealms.value.length >= maxRealms.value) {
+	if (attachedRealms.value.length >= maxRealms.value) {
 		return false;
 	}
 
@@ -1586,7 +1586,7 @@ function _getMatchingBackgroundIdFromPref() {
 				:incomplete-community="incompleteDefaultCommunity || undefined"
 				:is-loading-realms="!hasLoadedRealms"
 				:can-remove-communities="!wasPublished"
-				:can-remove-realms="!wasPublished"
+				can-remove-realms
 				@remove-community="removeCommunity"
 				@remove-realm="removeRealm"
 				@select-community="attachCommunity"
