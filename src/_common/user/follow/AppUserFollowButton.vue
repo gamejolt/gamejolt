@@ -73,7 +73,9 @@ async function onClick() {
 		return;
 	}
 
-	let failed = false;
+	let failed = false,
+		result: boolean | undefined = undefined;
+
 	if (!user.value.is_following) {
 		try {
 			await followUser(user.value);
@@ -86,7 +88,7 @@ async function onClick() {
 		}
 	} else {
 		try {
-			const result = await ModalConfirm.show(
+			result = await ModalConfirm.show(
 				$gettext(`Are you sure you want to unfollow this user?`),
 				$gettext(`Unfollow user?`)
 			);
@@ -101,7 +103,11 @@ async function onClick() {
 			failed = true;
 			showErrorGrowl($gettext(`For some reason we couldn't unfollow this user.`));
 		} finally {
-			trackUserFollow(false, { failed, location: location.value });
+			// Finally is always triggered, even if you return early, so we
+			// don't want to track if they canceled.
+			if (result !== undefined) {
+				trackUserFollow(false, { failed, location: location.value });
+			}
 		}
 	}
 }
