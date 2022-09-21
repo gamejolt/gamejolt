@@ -8,7 +8,7 @@ import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { User } from '../../../../../_common/user/user.model';
 import FormSettings from '../../../../components/forms/settings/FormSettings.vue';
-import { useAccountRouteController } from '../account.vue';
+import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 const FormSettingsDev = defineAsyncComponent(
 	() => import('../../../../components/forms/settings/FormSettingsDev.vue')

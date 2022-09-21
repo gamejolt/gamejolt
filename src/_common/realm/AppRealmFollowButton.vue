@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { PropType, ref, toRefs } from 'vue';
-import { followRealm, Realm, unfollowRealm } from './realm-model';
-import AppButton from '../button/AppButton.vue';
-import AppTranslate from '../translate/AppTranslate.vue';
-import { useCommonStore } from '../store/common-store';
-import { showErrorGrowl } from '../growls/growls.service';
-import { $gettext } from '../translate/translate.service';
-import { vAppAuthRequired } from '../auth/auth-required-directive';
-import { ModalConfirm } from '../modal/confirm/confirm-service';
 import { RealmFollowSource, trackRealmFollow } from '../analytics/analytics.service';
+import { vAppAuthRequired } from '../auth/auth-required-directive';
+import AppButton from '../button/AppButton.vue';
+import { showErrorGrowl } from '../growls/growls.service';
+import { ModalConfirm } from '../modal/confirm/confirm-service';
+import { useCommonStore } from '../store/common-store';
+import AppTranslate from '../translate/AppTranslate.vue';
+import { $gettext } from '../translate/translate.service';
+import { followRealm, Realm, unfollowRealm } from './realm-model';
 
 const props = defineProps({
 	realm: {
@@ -20,6 +20,9 @@ const props = defineProps({
 		required: true,
 	},
 	block: {
+		type: Boolean,
+	},
+	overlay: {
 		type: Boolean,
 	},
 });
@@ -71,6 +74,7 @@ async function onClick() {
 		v-app-auth-required
 		primary
 		:block="block"
+		:overlay="overlay"
 		:solid="realm.is_following"
 		:disabled="isProcessing"
 		@click="onClick"

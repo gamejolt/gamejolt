@@ -16,8 +16,8 @@ import { useCommonStore } from '../../../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../../../_common/time/ago/ago';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatar from '../../../../../../_common/user/user-avatar/user-avatar.vue';
-import AppUserVerifiedTick from '../../../../../../_common/user/verified-tick/verified-tick.vue';
+import AppUserAvatar from '../../../../../../_common/user/user-avatar/AppUserAvatar.vue';
+import AppUserVerifiedTick from '../../../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import AppGameBadge from '../../../../game/badge/badge.vue';
 import AppCommunityCompetitionVotingWidget from '../../voting/widget.vue';
 

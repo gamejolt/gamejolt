@@ -134,7 +134,3 @@ export class Model {
 		return this.processRemove(response);
 	}
 }
-
-export interface CommentableModel {
-	canComment: boolean;
-}

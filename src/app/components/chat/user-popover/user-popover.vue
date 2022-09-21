@@ -1,12 +1,13 @@
 <script lang="ts">
-import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
-import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
-import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
-import { ChatStore, ChatStoreKey } from '../chat-store';
+import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
+import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
+import { useGridStore } from '../../grid/grid-store';
 import {
 	demoteModerator,
 	enterChatRoom,
@@ -32,15 +33,14 @@ export default class AppChatUserPopover extends Vue {
 	@Prop({ type: Object, required: true }) user!: ChatUser;
 	@Prop({ type: Object, required: true }) room!: ChatRoom;
 
-	@Inject({ from: ChatStoreKey })
-	chatStore!: ChatStore;
+	gridStore = setup(() => useGridStore());
 
 	get chat() {
-		return this.chatStore.chat!;
+		return this.gridStore.chatUnsafe;
 	}
 
 	get isOnline() {
-		if (!this.chatStore.chat) {
+		if (!this.chat) {
 			return null;
 		}
 
@@ -200,9 +200,9 @@ export default class AppChatUserPopover extends Vue {
 			</div>
 
 			<div class="-names">
-				<div class="-displayname">
+				<div>
 					<b>{{ user.display_name }}</b>
-					<AppUserVerifiedTick class="-verified-icon" :user="user" />
+					<AppUserVerifiedTick :user="user" vertical-align />
 				</div>
 				<div class="-username text-muted">@{{ user.username }}</div>
 			</div>
@@ -281,10 +281,6 @@ export default class AppChatUserPopover extends Vue {
 	.-names
 		margin-top: 4px
 		text-align: center
-
-		.-displayname
-			.-verified-icon
-				vertical-align: middle
 
 	.-username
 		font-size: $font-size-small

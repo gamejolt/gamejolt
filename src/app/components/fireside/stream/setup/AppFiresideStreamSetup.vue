@@ -133,12 +133,20 @@ const hasWebcamDevice = computed(
 	() => (form.formModel.selectedWebcamDeviceId ?? PRODUCER_UNSET_DEVICE) !== PRODUCER_UNSET_DEVICE
 );
 
-const selectedMicGroupId = computed(
-	() => _getDeviceFromId(form.formModel.selectedMicDeviceId, 'mic')?.groupId
+const selectedMicDeviceId = computed(
+	() => _getDeviceFromId(form.formModel.selectedMicDeviceId, 'mic')?.deviceId
 );
 
-const selectedDesktopAudioGroupId = computed(
-	() => _getDeviceFromId(form.formModel.selectedDesktopAudioDeviceId, 'mic')?.groupId
+const selectedDesktopAudioDeviceId = computed(
+	() => _getDeviceFromId(form.formModel.selectedDesktopAudioDeviceId, 'mic')?.deviceId
+);
+
+const selectableMicrophoneDevices = computed(() =>
+	mics.value.filter(i => i.deviceId !== selectedDesktopAudioDeviceId.value)
+);
+
+const selectableDesktopAudioDevices = computed(() =>
+	mics.value.filter(i => i.deviceId !== selectedMicDeviceId.value)
 );
 
 const isInvalidMicConfig = computed(() => {
@@ -157,32 +165,6 @@ const requiredFields = computed((): Record<string, string> => {
 	};
 });
 
-const audioInputFields = computed((): Record<string, string> => {
-	return {
-		selectedMicDeviceId: form.formModel.selectedMicDeviceId,
-		selectedDesktopAudioDeviceId: form.formModel.selectedDesktopAudioDeviceId,
-	};
-});
-
-const canSwapAudioInputs = computed(() => {
-	if (!isPersonallyStreaming.value) {
-		return true;
-	}
-
-	// If we could potentially swap away from our only valid required
-	// device, we need to check if we'll either get a new one or have a
-	// different device active that meets the form requirements.
-	if (form.formModel.selectedMicDeviceId !== PRODUCER_UNSET_DEVICE) {
-		const required = Object.assign({}, requiredFields.value, audioInputFields.value);
-		delete required['selectedMicDeviceId'];
-		return Object.entries(required).some(([_key, value]) => value !== PRODUCER_UNSET_DEVICE);
-	}
-
-	return Object.entries(audioInputFields.value).some(
-		([_key, value]) => value !== PRODUCER_UNSET_DEVICE
-	);
-});
-
 /**
  * This will be `false` if we detected anything wrong with the config.
  */
@@ -199,17 +181,6 @@ const isInvalidConfig = computed(() => {
 });
 
 const form: FormController<FormModel> = createForm({});
-
-// We initialize from what the producer's values currently are first and then
-// try to set it up after. This ensures that when we load this form again, it
-// has the values they are running with.
-_initFormModel({
-	webcamDeviceId: localProducer.selectedWebcamDeviceId.value,
-	micDeviceId: localProducer.selectedMicDeviceId.value,
-	desktopAudioDeviceId: localProducer.selectedDesktopAudioDeviceId.value,
-	groupAudioDeviceId: localProducer.selectedGroupAudioDeviceId.value,
-	shouldStreamDesktopAudio: localProducer.shouldStreamDesktopAudio.value,
-});
 
 onMounted(async () => {
 	// Now try to detect devices and initialize preferred settings based on that.
@@ -241,12 +212,12 @@ function _initFormModel(from: {
 	const webcamId = _getDeviceFromId(from.webcamDeviceId, 'webcam')?.deviceId;
 	const micId = _getDeviceFromId(from.micDeviceId, 'mic')?.deviceId;
 	const desktopId = _getDeviceFromId(from.desktopAudioDeviceId, 'mic')?.deviceId;
-	const groupId = _getDeviceFromId(from.groupAudioDeviceId, 'speaker')?.deviceId;
+	const groupAudioId = _getDeviceFromId(from.groupAudioDeviceId, 'speaker')?.deviceId;
 
 	form.formModel.selectedWebcamDeviceId = webcamId ?? PRODUCER_UNSET_DEVICE;
 	form.formModel.tempSelectedMicDeviceId = micId ?? PRODUCER_UNSET_DEVICE;
 	form.formModel.tempSelectedDesktopAudioDeviceId = desktopId ?? PRODUCER_UNSET_DEVICE;
-	form.formModel.selectedGroupAudioDeviceId = groupId ?? PRODUCER_DEFAULT_GROUP_AUDIO;
+	form.formModel.selectedGroupAudioDeviceId = groupAudioId ?? PRODUCER_DEFAULT_GROUP_AUDIO;
 	form.formModel.streamDesktopAudio = from.shouldStreamDesktopAudio;
 }
 
@@ -354,7 +325,7 @@ watch(
 		const newId = newMic?.deviceId ?? PRODUCER_UNSET_DEVICE;
 
 		form.formModel.selectedMicDeviceId = newMic?.deviceId ?? PRODUCER_UNSET_DEVICE;
-		if (newId !== PRODUCER_UNSET_DEVICE && newMic?.groupId == oldDesktop?.groupId) {
+		if (newId !== PRODUCER_UNSET_DEVICE && newMic?.deviceId === oldDesktop?.deviceId) {
 			form.formModel.tempSelectedDesktopAudioDeviceId =
 				oldMic?.deviceId ?? PRODUCER_UNSET_DEVICE;
 		}
@@ -370,7 +341,7 @@ watch(
 		const newId = newDesktop?.deviceId ?? PRODUCER_UNSET_DEVICE;
 
 		form.formModel.selectedDesktopAudioDeviceId = newDesktop?.deviceId ?? PRODUCER_UNSET_DEVICE;
-		if (newId !== PRODUCER_UNSET_DEVICE && newDesktop?.groupId == oldMic?.groupId) {
+		if (newId !== PRODUCER_UNSET_DEVICE && newDesktop?.deviceId === oldMic?.deviceId) {
 			form.formModel.tempSelectedMicDeviceId = oldDesktop?.deviceId ?? PRODUCER_UNSET_DEVICE;
 		}
 	}
@@ -417,6 +388,20 @@ watch(
 		}
 	}
 );
+
+// We initialize from what the producer's values currently are first and then
+// try to set it up after. This ensures that when we load this form again, it
+// has the values they are running with.
+//
+// NOTE: Make sure we do this after setting up our watchers, otherwise we won't
+// react to the initial data changes properly.
+_initFormModel({
+	webcamDeviceId: localProducer.selectedWebcamDeviceId.value,
+	micDeviceId: localProducer.selectedMicDeviceId.value,
+	desktopAudioDeviceId: localProducer.selectedDesktopAudioDeviceId.value,
+	groupAudioDeviceId: localProducer.selectedGroupAudioDeviceId.value,
+	shouldStreamDesktopAudio: localProducer.shouldStreamDesktopAudio.value,
+});
 
 /**
  * Saves the form's model into their user settings.
@@ -546,23 +531,12 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 							</option>
 
 							<option
-								v-for="mic of mics"
-								:key="mic.deviceId"
-								:value="mic.deviceId"
-								:disabled="
-									mic.groupId === selectedDesktopAudioGroupId
-										? !canSwapAudioInputs
-											? 'true'
-											: undefined
-										: undefined
-								"
+								v-for="chatMic of selectableMicrophoneDevices"
+								:key="chatMic.deviceId"
+								:value="chatMic.deviceId"
+								:disabled="chatMic.deviceId === selectedDesktopAudioDeviceId"
 							>
-								{{
-									mic.groupId === selectedDesktopAudioGroupId
-										? `[${$gettext('Desktop Audio')}] `
-										: ''
-								}}
-								{{ mic.label }}
+								{{ chatMic.label }}
 							</option>
 						</AppFormControlSelect>
 
@@ -811,23 +785,12 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 								</option>
 
 								<option
-									v-for="mic of mics"
-									:key="mic.deviceId"
-									:value="mic.deviceId"
-									:disabled="
-										mic.groupId === selectedMicGroupId
-											? !canSwapAudioInputs
-												? 'true'
-												: undefined
-											: undefined
-									"
+									v-for="desktopMic of selectableDesktopAudioDevices"
+									:key="desktopMic.deviceId"
+									:value="desktopMic.deviceId"
+									:disabled="desktopMic.deviceId === selectedMicDeviceId"
 								>
-									{{
-										mic.groupId === selectedMicGroupId
-											? `[${$gettext('Microphone')}] `
-											: ''
-									}}
-									{{ mic.label }}
+									{{ desktopMic.label }}
 								</option>
 							</AppFormControlSelect>
 

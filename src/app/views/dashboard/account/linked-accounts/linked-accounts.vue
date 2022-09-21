@@ -15,7 +15,7 @@ import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/rout
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettext, Translate } from '../../../../../_common/translate/translate.service';
 import { UserSetPasswordModal } from '../../../../components/user/set-password-modal/set-password-modal.service';
-import { useAccountRouteController } from '../account.vue';
+import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 @Options({
 	name: 'RouteDashAccountLinkedAccounts',

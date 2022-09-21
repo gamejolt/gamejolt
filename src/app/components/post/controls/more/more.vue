@@ -22,6 +22,7 @@ import { CommunityBlockUserModal } from '../../../community/block-user-modal/blo
 import { CommunityEjectPostModal } from '../../../community/eject-post/modal/modal.service';
 import { CommunityMovePostModal } from '../../../community/move-post/modal/modal.service';
 import { AppCommunityPerms } from '../../../community/perms/perms';
+import { useGridStore } from '../../../grid/grid-store';
 
 @Options({
 	components: {
@@ -39,6 +40,7 @@ export default class AppPostControlsMore extends Vue {
 
 	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
+	gridStore = setup(() => useGridStore());
 
 	get user() {
 		return this.commonStore.user;
@@ -114,7 +116,7 @@ export default class AppPostControlsMore extends Vue {
 			this.emitUnfeature(postCommunity.community);
 		} else {
 			await this.post.$feature(postCommunity.community);
-			this.store.featuredPost(this.post);
+			this.gridStore.grid?.recordFeaturedPost(this.post);
 			this.emitFeature(postCommunity.community);
 		}
 	}

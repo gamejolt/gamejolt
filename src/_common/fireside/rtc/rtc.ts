@@ -3,6 +3,7 @@ import { markRaw, reactive, Ref } from 'vue';
 import { arrayAssignAll, arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
 import { debounce, sleep } from '../../../utils/utils';
+import { Background } from '../../background/background.model';
 import { importNoSSR } from '../../code-splitting';
 import { Navigate } from '../../navigate/navigate.service';
 import { User } from '../../user/user.model';
@@ -76,6 +77,7 @@ export class FiresideRTC {
 		// `reactive` unwraps it.
 		public readonly hosts: FiresideRTCHost[],
 		public readonly listableHostIds: Set<number>,
+		public readonly hostBackgrounds: Map<number, Background>,
 		{ isMuted }: Options
 	) {
 		this.isMuted = isMuted ?? false;
@@ -191,6 +193,7 @@ export function createFiresideRTC(
 	agoraStreamingInfo: AgoraStreamingInfo,
 	hosts: Ref<FiresideRTCHost[]>,
 	listableHostIds: Ref<Set<number>>,
+	hostBackgrounds: Ref<Map<number, Background>>,
 	options: Options = {}
 ) {
 	const rtc = reactive(
@@ -210,6 +213,7 @@ export function createFiresideRTC(
 			// the fields.
 			hosts as unknown as FiresideRTCHost[],
 			listableHostIds as unknown as Set<number>,
+			hostBackgrounds as unknown as Map<number, Background>,
 			options
 		)
 	) as FiresideRTC;

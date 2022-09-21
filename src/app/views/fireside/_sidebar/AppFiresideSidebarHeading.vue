@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref, toRefs, watch } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
+import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -41,6 +42,16 @@ watch(collapsed, () => {
 const shouldCollapse = computed(() => isFullscreen.value && collapsed.value);
 
 const memberCount = computed(() => chatUsers.value?.count || 0);
+
+const useFuzzyNumber = computed(() => memberCount.value >= 10_000);
+
+function _formatMemberCount(count: number) {
+	if (useFuzzyNumber.value) {
+		return formatFuzzynumber(count);
+	}
+
+	return formatNumber(count);
+}
 </script>
 
 <template>
@@ -54,8 +65,11 @@ const memberCount = computed(() => chatUsers.value?.count || 0);
 		:defined-slots="['title', 'actions']"
 	>
 		<template #title>
-			<span class="-member-count">
-				{{ formatNumber(memberCount) }}
+			<span
+				v-app-tooltip="useFuzzyNumber ? formatNumber(memberCount) : undefined"
+				class="-member-count"
+			>
+				{{ _formatMemberCount(memberCount) }}
 			</span>
 
 			{{ ' ' }}
@@ -91,4 +105,5 @@ const memberCount = computed(() => chatUsers.value?.count || 0);
 
 .fireside-sidebar-heading.-collapsed
 	rounded-corners()
+	white-space: nowrap
 </style>

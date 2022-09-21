@@ -11,6 +11,12 @@ import { Subscription } from '../subscription/subscription.model';
 import { User } from '../user/user.model';
 import { CommentVote } from './vote/vote-model';
 
+export interface CommentableModel {
+	canViewComments: boolean;
+	canMakeComment: boolean;
+	canInteractWithComments: boolean;
+}
+
 export class Comment extends Model {
 	static readonly STATUS_REMOVED = 0;
 	static readonly STATUS_VISIBLE = 1;
@@ -166,20 +172,17 @@ export function getCommentModelResourceName(model: Model) {
 	throw new Error('Model cannot contain comments');
 }
 
-export function canCommentOnModel(model: Model, parentComment?: Comment) {
-	if (parentComment && !parentComment.user.canComment) {
+/**
+ * A helper for figuring out if the user can comment on the
+ * {@link CommentableModel} passed in. Will also check any parent comment passed
+ * in to make sure they have the correct permissions on that comment as well.
+ */
+export function canCommentOnModel(model: CommentableModel, parentComment?: Comment) {
+	if (parentComment?.user.hasAnyBlock) {
 		return false;
 	}
 
-	if (model instanceof User) {
-		return model.canComment;
-	} else if (model instanceof FiresidePost) {
-		return model.canComment;
-	} else if (model instanceof Game) {
-		return model.canComment;
-	}
-
-	return true;
+	return model.canMakeComment;
 }
 
 /**

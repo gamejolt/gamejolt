@@ -14,6 +14,7 @@ import {
 import { useRouter } from 'vue-router';
 import { arrayRemove } from '../../../utils/array';
 import { createFocusToken } from '../../../utils/focus-token';
+import { trackSearch } from '../../../_common/analytics/analytics.service';
 import AppPopper from '../../../_common/popper/AppPopper.vue';
 import AppShortkey from '../../../_common/shortkey/AppShortkey.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
@@ -136,6 +137,7 @@ function onKeydown(event: KeyboardEvent) {
 	if (!shouldShowAutocomplete.value && event.keyCode === KEYCODE_ENTER) {
 		focusToken.blur();
 		router.push({ name: 'search.results', query: { q: query.value } });
+		trackSearch({ query: query.value });
 	}
 
 	// We want to blur the input on escape.

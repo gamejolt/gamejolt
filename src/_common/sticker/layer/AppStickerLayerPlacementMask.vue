@@ -152,7 +152,9 @@ function onClickMask() {
 	position: fixed
 	display: inline-flex
 	justify-content: center
-	top: 0
+	// Always offset by the shell-top in case this sticker mask is displayed
+	// with a lower z-index than the shell.
+	top: var(--shell-top)
 	right: 0
 	transition: transform 250ms $strong-ease-out
 

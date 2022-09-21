@@ -5,8 +5,8 @@ import AppModal from '../../../modal/AppModal.vue';
 import { useModal } from '../../../modal/modal.service';
 import AppSpacer from '../../../spacer/AppSpacer.vue';
 import AppTranslate from '../../../translate/AppTranslate.vue';
-import AppUserFollowWidget from '../../follow/widget.vue';
-import AppUserAvatarImg from '../../user-avatar/img/img.vue';
+import AppUserFollowButton from '../../follow/AppUserFollowButton.vue';
+import AppUserAvatarImg from '../../user-avatar/AppUserAvatarImg.vue';
 import { User } from '../../user.model';
 
 defineProps({
@@ -42,9 +42,8 @@ const modal = useModal<boolean>()!;
 
 			<AppSpacer vertical :scale="6" />
 
-			<AppUserFollowWidget
+			<AppUserFollowButton
 				:user="user"
-				primary
 				block
 				solid
 				location="inviteFollow"

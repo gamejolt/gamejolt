@@ -8,6 +8,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
+import { useGridStore } from '../../../../components/grid/grid-store';
 import { illNoComments } from '../../../../img/ill/illustrations';
 import { useAppStore } from '../../../../store';
 import {
@@ -42,6 +43,7 @@ import { CommunitiesViewChannelDeps } from './channel.vue';
 export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent {
 	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
+	gridStore = setup(() => useGridStore());
 
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
@@ -53,7 +55,7 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 		return this.store.communityStates;
 	}
 	get grid() {
-		return this.store.grid;
+		return this.gridStore.grid;
 	}
 
 	feed: ActivityFeedView | null = null;

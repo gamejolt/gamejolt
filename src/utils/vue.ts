@@ -12,3 +12,11 @@ export function shallowSetup<T>(cb: () => T) {
 		return shallowRef<T>(cb());
 	});
 }
+
+/**
+ * Takes a possibly undefined/null ref and returns a typed version that is not
+ * null.
+ */
+export function bangRef<T>(ref: Ref<T | undefined | null>) {
+	return ref as Ref<T>;
+}

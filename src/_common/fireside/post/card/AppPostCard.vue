@@ -5,7 +5,7 @@ import { PostOpenSource, trackPostOpen } from '../../../analytics/analytics.serv
 import { Environment } from '../../../environment/environment.service';
 import { formatFuzzynumber } from '../../../filters/fuzzynumber';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import AppUserAvatar from '../../../user/user-avatar/user-avatar.vue';
+import AppUserAvatar from '../../../user/user-avatar/AppUserAvatar.vue';
 import { VideoPlayerControllerContext } from '../../../video/player/controller';
 import { FiresidePost } from '../post-model';
 import AppPostCardBase from './AppPostCardBase.vue';
@@ -72,6 +72,7 @@ const userLink = computed(() => Environment.wttfBaseUrl + post.value?.user.url);
 		:post="post"
 		:video-context="videoContext"
 		:has-overlay-content="hasOverlayContent"
+		:blur="hasOverlayContent"
 	>
 		<template #overlay>
 			<slot name="overlay" />

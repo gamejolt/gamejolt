@@ -131,11 +131,6 @@ export class ConfigOptionString<T extends string = string> extends ConfigOption<
 	}
 }
 
-export const configRealms = new ConfigOptionBoolean('web_realms', false);
-
-/** Whether or not we show the post share card on the side or inline */
-export const configPostShareSide = new ConfigOptionBoolean('web_post_share_side', false);
-
 /** Which feed do we default to for home */
 export const configHomeDefaultFeed = new ConfigOptionString(
 	'home_default_feed',
@@ -160,8 +155,11 @@ export const configCommunityFrontpageFeedType = new ConfigOptionString(
 	}
 );
 
-export const configChargedStickers = new ConfigOptionBoolean('web_charged_stickers', false);
-export const configCreatorPageLink = new ConfigOptionBoolean('web_creator_page_link', false);
+/**
+ * Whether or not we should show the normal discover screen to guests on the
+ * homepage, or if we show the signup.
+ */
+export const configGuestHomeDiscover = new ConfigOptionBoolean('web_guest_home_discover', false);
 
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());

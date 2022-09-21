@@ -40,10 +40,7 @@ import { fuzzysearch } from '../../../utils/string';
 import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
-import {
-	configChargedStickers,
-	configHomeDefaultFeed,
-} from '../../../_common/config/config.service';
+import { configHomeDefaultFeed } from '../../../_common/config/config.service';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import {
@@ -63,7 +60,7 @@ import { ActivityFeedService } from '../../components/activity/feed/feed-service
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import { onFiresideStart } from '../../components/grid/client.service';
 import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
-import AppPostAddButton from '../../components/post/add-button/add-button.vue';
+import AppPostAddButton from '../../components/post/add-button/AppPostAddButton.vue';
 import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
 import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
 import { useQuestStore } from '../../store/quest';
@@ -273,10 +270,8 @@ async function refreshQuests() {
 				</template>
 
 				<template v-if="!Screen.isMobile" #right>
-					<template v-if="configChargedStickers.value">
-						<AppStickerChargeCard header-charge allow-overcharge-text />
-						<AppSpacer vertical :scale="12" />
-					</template>
+					<AppStickerChargeCard header-charge allow-fully-charged-text />
+					<AppSpacer vertical :scale="12" />
 
 					<AppDailyQuests
 						v-if="user"

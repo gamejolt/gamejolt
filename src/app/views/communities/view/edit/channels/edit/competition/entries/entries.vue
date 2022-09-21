@@ -20,8 +20,8 @@ import { vAppNoAutoscroll } from '../../../../../../../../../_common/scroll/auto
 import { AppTimeAgo } from '../../../../../../../../../_common/time/ago/ago';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../../../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatarImg from '../../../../../../../../../_common/user/user-avatar/img/img.vue';
-import AppUserVerifiedTick from '../../../../../../../../../_common/user/verified-tick/verified-tick.vue';
+import AppUserAvatarImg from '../../../../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
+import AppUserVerifiedTick from '../../../../../../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';
 import { CommunityCompetitionEntryModal } from '../../../../../../../../components/community/competition/entry/modal/modal.service';
 import { illNoCommentsSmall } from '../../../../../../../../img/ill/illustrations';
@@ -415,9 +415,9 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 										sm
 										@click="onClickRemoveEntry(entry)"
 									>
-										<AppTranslate v-if="entry.is_removed"
-											>Readmit Entry</AppTranslate
-										>
+										<AppTranslate v-if="entry.is_removed">
+											Readmit Entry
+										</AppTranslate>
 										<AppTranslate v-else>Hide Entry</AppTranslate>
 									</AppButton>
 								</td>

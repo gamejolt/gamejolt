@@ -16,6 +16,7 @@ import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { useAppStore } from '../../../store';
 import { AppCommunityPerms } from '../../community/perms/perms';
+import { useGridStore } from '../../grid/grid-store';
 import AppShellCbarItem from './AppShellCbarItem.vue';
 
 const props = defineProps({
@@ -29,6 +30,7 @@ const { community } = toRefs(props);
 const { activeCommunity, communityStates, leaveCommunity, joinCommunity, toggleLeftPane } =
 	useAppStore();
 const { user } = useCommonStore();
+const { grid } = useGridStore();
 const { userTheme } = useThemeStore();
 const { showContextOnRouteChange } = useSidebarStore();
 
@@ -58,14 +60,16 @@ const shouldShowJoin = computed(() => !community.value.is_member);
 
 async function onLeaveCommunityClick() {
 	Popper.hideAll();
-	await leaveCommunity(community.value, 'cbar', {
+	await leaveCommunity(community.value, {
+		grid: grid.value,
+		location: 'cbar',
 		shouldConfirm: true,
 	});
 }
 
 async function onJoinCommunityClick() {
 	Popper.hideAll();
-	await joinCommunity(community.value, 'cbar');
+	await joinCommunity(community.value, { grid: grid.value, location: 'cbar' });
 }
 
 function onCommunityClick(event: Event) {

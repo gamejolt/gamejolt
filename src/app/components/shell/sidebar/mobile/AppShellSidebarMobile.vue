@@ -22,7 +22,7 @@ import AppShellAltMenuExtra from '../../AppShellAltMenuExtra.vue';
 						<AppJolticon icon="compass-needle" />
 					</span>
 					<span class="shell-nav-label">
-						<AppTranslate>Explore</AppTranslate>
+						<AppTranslate>Discover</AppTranslate>
 					</span>
 				</RouterLink>
 			</li>

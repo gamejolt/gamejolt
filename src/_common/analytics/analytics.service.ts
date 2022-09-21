@@ -225,6 +225,15 @@ function _trackEvent(
 	logger.info(`Track event.`, name, eventParams);
 }
 
+export function trackSearch(params: { query: string }) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
+		return;
+	}
+
+	logEvent(_getFirebaseAnalytics(), 'search', { search_term: params.query });
+	logEvent(_getFirebaseAnalytics(), 'view_search_results', { search_term: params.query });
+}
+
 const _expEngagements: { time: number; configOption: ConfigOption }[] = [];
 
 function _getExperimentKey(option: ConfigOption) {
@@ -446,6 +455,13 @@ export function trackBannerClick(params: { type: BannerType; label?: string }) {
 
 export function trackCreatorApply(params: { creator_landing_section: string }) {
 	_trackEvent('creator_apply', params);
+}
+
+export function trackSearchAutocomplete(params: {
+	query: string;
+	search_autocomplete_resource: 'community' | 'game' | 'user' | 'library_game' | 'all';
+}) {
+	_trackEvent('search_autocomplete', params);
 }
 
 /**

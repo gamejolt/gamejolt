@@ -2,10 +2,10 @@
 import { computed, CSSProperties, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import { illChargeOrbEmpty } from '../../../app/img/ill/illustrations';
+import { routeLandingCreators } from '../../../app/views/landing/creators/creators.route';
 import AppAnimChargeOrb from '../../animation/AppAnimChargeOrb.vue';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
-import { configCreatorPageLink } from '../../config/config.service';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { Screen } from '../../screen/screen-service';
 import AppSpacer from '../../spacer/AppSpacer.vue';
@@ -30,7 +30,7 @@ const props = defineProps({
 	/**
 	 * Shows text below the charge card when we're able to charge a sticker.
 	 */
-	allowOverchargeText: {
+	allowFullyChargedText: {
 		type: Boolean,
 	},
 	paddingH: {
@@ -43,7 +43,7 @@ const props = defineProps({
 	},
 });
 
-const { elevate, headerCharge, allowOverchargeText, paddingH, paddingV } = toRefs(props);
+const { elevate, headerCharge, allowFullyChargedText, paddingH, paddingV } = toRefs(props);
 
 const root = ref<HTMLElement>();
 const helpIcon = ref<HTMLElement>();
@@ -61,7 +61,7 @@ const gridStyling = computed<CSSProperties>(() => {
 	};
 });
 
-const showOverchargeText = computed(() => allowOverchargeText.value && canChargeSticker.value);
+const showFullyChargedText = computed(() => allowFullyChargedText.value && canChargeSticker.value);
 </script>
 
 <template>
@@ -101,8 +101,8 @@ const showOverchargeText = computed(() => allowOverchargeText.value && canCharge
 					</AppStickerChargeTooltipHandler>
 
 					<RouterLink
-						v-if="headerCharge && configCreatorPageLink.value"
-						to="creator"
+						v-if="headerCharge"
+						:to="routeLandingCreators"
 						class="link-muted"
 						:style="{ float: 'right' }"
 					>
@@ -137,9 +137,8 @@ const showOverchargeText = computed(() => allowOverchargeText.value && canCharge
 				</div>
 			</div>
 
-			<div v-if="showOverchargeText" :class="{ '-small': headerCharge }">
-				<AppSpacer v-if="headerCharge" vertical :scale="4" />
-				<hr v-else />
+			<div v-if="showFullyChargedText" :class="{ '-small': headerCharge }">
+				<AppSpacer vertical :scale="4" />
 
 				<span>
 					You're fully charged! Support your favorite Game Jolt Creator with a charged

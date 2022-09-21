@@ -1,20 +1,18 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { useChatStore } from '../chat-store';
+import { useGridStore } from '../../grid/grid-store';
 import { enterChatRoom, isUserOnline, leaveGroupRoom } from '../client';
 import AppChatNotificationSettings from '../notification-settings/notification-settings.vue';
 import { ChatRoom, getChatRoomTitle } from '../room';
 import { ChatUser } from '../user';
 import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
 import AppChatListItem from '../_list/AppChatListItem.vue';
-</script>
 
-<script lang="ts" setup>
 const props = defineProps({
 	item: {
 		type: Object as PropType<ChatUser | ChatRoom>,
@@ -24,9 +22,7 @@ const props = defineProps({
 
 const { item } = toRefs(props);
 
-const chatStore = useChatStore()!;
-
-const chat = computed(() => chatStore.chat!);
+const { chatUnsafe: chat } = useGridStore();
 
 const roomId = computed(() =>
 	item.value instanceof ChatUser ? item.value.room_id : item.value.id

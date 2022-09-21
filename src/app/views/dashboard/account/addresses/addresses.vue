@@ -7,7 +7,7 @@ import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/rout
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { UserAddress } from '../../../../../_common/user/address/address.model';
 import AppUserAddressCard from '../../../../components/user/address/AppUserAddressCard.vue';
-import { useAccountRouteController } from '../account.vue';
+import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 @Options({
 	name: 'RouteDashAccountAddresses',

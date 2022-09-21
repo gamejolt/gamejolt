@@ -155,7 +155,6 @@ function onDimensionsChanged() {
 	left: 0
 	top: 0
 	pointer-events: none
-	z-index: -1
 
 .-shadow
 	filter: drop-shadow(0px 4px 8px rgba(black, 0.15)) drop-shadow(0px 4px 8px rgba(black, 0.15)) drop-shadow(0px 1px 16px rgba(black, 0.09))

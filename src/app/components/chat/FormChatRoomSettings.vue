@@ -1,5 +1,5 @@
-<script lang="ts">
-import { computed, inject, PropType, ref, toRefs, watch } from 'vue';
+<script lang="ts" setup>
+import { computed, PropType, ref, toRefs, watch } from 'vue';
 import { Api } from '../../../_common/api/api.service';
 import { Background } from '../../../_common/background/background.model';
 import AppButton from '../../../_common/button/AppButton.vue';
@@ -19,14 +19,12 @@ import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
-import { ChatStoreKey } from './chat-store';
+import { useGridStore } from '../grid/grid-store';
 import { editChatRoomBackground, editChatRoomTitle, leaveGroupRoom } from './client';
 import AppChatMemberListItem from './member-list/AppChatMemberListItem.vue';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
-</script>
 
-<script lang="ts" setup>
 const props = defineProps({
 	room: {
 		type: Object as PropType<ChatRoom>,
@@ -47,8 +45,7 @@ const emit = defineEmits({
 });
 
 const { room, showMembersPreview, members } = toRefs(props);
-
-const chatStore = inject(ChatStoreKey)!;
+const { chatUnsafe: chat } = useGridStore();
 
 const titleMinLength = ref<number>();
 const titleMaxLength = ref<number>();
@@ -60,7 +57,7 @@ const notificationLevel = ref('');
 const backgrounds = ref<Background[]>([]);
 const roomBackgroundId = ref(room.value.background?.id || null);
 
-// When a user selects a background in this form, it sends a Chat message to
+// When a user selects a background in this form, it sends a grid message to
 // everyone notifying them the room changed and updating the model. This also
 // happens when you change the background yourself.
 //
@@ -124,7 +121,7 @@ const notificationLevelForm: FormController<FormNotificationLevel> = createForm(
 		notificationLevel.value = payload.level;
 		notificationLevelForm.formModel.level = payload.level;
 	},
-	onSubmit: async () => {
+	async onSubmit() {
 		const payload = await Api.sendRequest(
 			`/web/chat/rooms/set-notification-settings/${room.value.id}`,
 			{ level: notificationLevelForm.formModel.level },
@@ -134,19 +131,14 @@ const notificationLevelForm: FormController<FormNotificationLevel> = createForm(
 	},
 });
 
-const chat = computed(() => chatStore.chat!);
-
 const isOwner = computed(
 	() =>
 		room.value && !!chat.value.currentUser && room.value.owner_id === chat.value.currentUser.id
 );
 
 const canEditTitle = computed(() => !room.value.isPmRoom && isOwner.value);
-
 const canEditBackground = computed(() => backgrounds.value.length > 0);
-
 const shouldShowLeave = computed(() => !room.value.isPmRoom);
-
 const hasLoadedBackgrounds = computed(() => backgroundForm.isLoadedBootstrapped);
 
 const membersPreview = computed(() => {

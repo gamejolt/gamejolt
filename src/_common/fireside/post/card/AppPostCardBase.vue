@@ -30,19 +30,44 @@ const props = defineProps({
 		type: Object as PropType<FiresidePost>,
 		required: true,
 	},
+	/**
+	 * Required to allow videos to be played. Uses just the video poster if this
+	 * isn't provided.
+	 */
 	videoContext: {
 		type: String as PropType<VideoPlayerControllerContext>,
 		default: undefined,
 	},
+	noElevateHover: {
+		type: Boolean,
+	},
+	aspectRatio: {
+		type: Number,
+		default: undefined,
+	},
+	/**
+	 * Allows slot content to be build in the #overlay slot. Adds a low
+	 * mid-opacity darkening overlay above the card content as well.
+	 */
 	hasOverlayContent: {
 		type: Boolean,
 	},
-	noElevateHover: {
+	/**
+	 * Blurs the media item content.
+	 */
+	blur: {
+		type: Boolean,
+	},
+	/**
+	 * Adds a soft gradient overlay on top top 1/3rd of the post card in
+	 * addition to the default bottom 1/3rd.
+	 */
+	fullGradient: {
 		type: Boolean,
 	},
 });
 
-const { post, videoContext } = toRefs(props);
+const { post, videoContext, aspectRatio } = toRefs(props);
 useSlots();
 
 const root = ref<HTMLElement>();
@@ -65,11 +90,16 @@ const leadHeight = ref(0);
 const isBootstrapped = ref(import.meta.env.SSR);
 const isHydrated = ref(import.meta.env.SSR);
 
-const shouldPlayVideo = computed(() => isHydrated.value && ContentFocus.hasFocus);
+const postCardRatio = computed(() => aspectRatio?.value ?? AppPostCardAspectRatio);
+
+const shouldPlayVideo = computed(
+	() => Screen.isDesktop && !import.meta.env.SSR && isHydrated.value && ContentFocus.hasFocus
+);
 
 onMounted(() => calcData());
 
 watch(shouldPlayVideo, _initVideoController);
+watch(postCardRatio, calcData);
 
 const mediaItem = computed(() => {
 	if (post.value?.hasMedia) {
@@ -100,7 +130,7 @@ async function calcData() {
 	}
 
 	const newCardWidth = root.value.offsetWidth;
-	const newCardHeight = root.value.offsetHeight ?? newCardWidth / AppPostCardAspectRatio;
+	const newCardHeight = root.value.offsetHeight ?? newCardWidth / postCardRatio.value;
 	const cardRatio = newCardWidth / newCardHeight;
 
 	cardWidth.value = newCardWidth + 'px';
@@ -199,14 +229,20 @@ function _initVideoController() {
 </script>
 
 <template>
-	<div v-if="post" ref="root" class="post-card" :class="{ '-no-elevate-hover': noElevateHover }">
-		<AppResponsiveDimensions :ratio="AppPostCardAspectRatio" @change="calcData()">
+	<div
+		v-if="post"
+		ref="root"
+		class="post-card"
+		:class="{ '-no-elevate-hover': noElevateHover, '-full-gradient': fullGradient }"
+		:style="{ aspectRatio: `${postCardRatio}` }"
+	>
+		<AppResponsiveDimensions :ratio="postCardRatio" @change="calcData()">
 			<AppScrollInview
 				:config="InviewConfig"
 				:style="{
 					width: cardWidth,
 					height: cardHeight,
-					'padding-top': GJ_IS_SSR ? (1 / AppPostCardAspectRatio) * 100 + '%' : null,
+					'padding-top': GJ_IS_SSR ? (1 / postCardRatio) * 100 + '%' : null,
 				}"
 				@inview="inView"
 				@outview="outView"
@@ -218,7 +254,7 @@ function _initVideoController() {
 				<AppBackground
 					ref="cardElem"
 					class="-background"
-					:class="{ '-blur': hasOverlayContent }"
+					:class="{ '-blur': blur }"
 					:background="background"
 				>
 					<template v-if="!!mediaItem">
@@ -317,7 +353,11 @@ $-padding = 8px
 	left: 0
 	right: 0
 	bottom: 0
-	background: linear-gradient(to top, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))
+	background: linear-gradient(to top, rgba($black, 0.45), rgba($black, 0), rgba($black, 0))
+
+.-full-gradient
+	.-inner-gradient
+		background: linear-gradient(to top, rgba($black, 0.45), rgba($black, 0), rgba($black, 0.45))
 
 .-inner-message
 	position: absolute
@@ -335,7 +375,6 @@ $-padding = 8px
 	border-radius: 8px
 	padding: $-padding
 	max-height: 100%
-
 
 	::v-deep(.fireside-post-lead-content)
 		color: var(--theme-fg)

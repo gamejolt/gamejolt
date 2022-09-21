@@ -2,14 +2,15 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { debounce } from '../../../utils/utils';
+import { trackSearch, trackSearchAutocomplete } from '../../../_common/analytics/analytics.service';
 import { Community } from '../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import { Game } from '../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
+import AppUserAvatarImg from '../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { User } from '../../../_common/user/user.model';
-import AppUserVerifiedTick from '../../../_common/user/verified-tick/verified-tick.vue';
+import AppUserVerifiedTick from '../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import type { LocalDbGame as LocalDbGameType } from '../client/local-db/game/game.model';
 import { LocalDbGame } from '../client/safe-exports';
 import { SearchKeydownSpy, useSearchController } from './AppSearch.vue';
@@ -84,6 +85,8 @@ async function _sendSearch(newQuery: string) {
 		return;
 	}
 
+	trackSearch({ query: newQuery });
+
 	// We store the query that we're waiting on.
 	const payload = await sendSearch(newQuery, { type: 'typeahead' });
 
@@ -131,16 +134,31 @@ function viewAll() {
 		name: 'search.results',
 		query: { q: query.value },
 	});
+
+	trackSearchAutocomplete({
+		query: query.value,
+		search_autocomplete_resource: 'all',
+	});
 }
 
 function selectCommunity(community: Community) {
 	router.push(community.routeLocation);
+
+	trackSearchAutocomplete({
+		query: query.value,
+		search_autocomplete_resource: 'community',
+	});
 }
 
 function selectGame(game: Game) {
 	router.push({
 		name: 'discover.games.view.overview',
 		params: { slug: game.slug, id: game.id + '' },
+	});
+
+	trackSearchAutocomplete({
+		query: query.value,
+		search_autocomplete_resource: 'game',
 	});
 }
 
@@ -149,12 +167,22 @@ function selectUser(user: User) {
 		name: 'profile.overview',
 		params: { username: user.username },
 	});
+
+	trackSearchAutocomplete({
+		query: query.value,
+		search_autocomplete_resource: 'user',
+	});
 }
 
 function selectLibraryGame(localGame: LocalDbGameType) {
 	router.push({
 		name: 'discover.games.view.overview',
 		params: { slug: localGame.slug, id: localGame.id + '' },
+	});
+
+	trackSearchAutocomplete({
+		query: query.value,
+		search_autocomplete_resource: 'library_game',
 	});
 }
 </script>

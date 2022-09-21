@@ -30,19 +30,11 @@ export default {
 			params: ['id'],
 		},
 		resolver: async ({ route }) =>
-			Api.sendRequest(
-				`/mobile/quest/${route.params.id}`,
-				{
-					_fields: {
-						quest: true,
-						participatingFriends: true,
-						participatingFriendCount: true,
-					},
-				},
-				{
-					sanitizeComplexData: false,
-				}
-			),
+			Api.sendFieldsRequest(`/mobile/quest/${route.params.id}`, {
+				quest: true,
+				participatingFriends: true,
+				participatingFriendCount: true,
+			}),
 	}),
 };
 </script>
@@ -176,7 +168,7 @@ function onNewQuest(data: Quest) {
 					class="-header-img"
 					:src="quest.header.mediaserver_url"
 					:style="{
-						width: `calc(300px / ${quest.header.aspectRatio})`,
+						width: `calc(300px * (1 / ${quest.header.aspectRatio}))`,
 					}"
 					alt=""
 				/>

@@ -7,7 +7,7 @@ import { $gettext, Translate } from '../../../../../_common/translate/translate.
 import { User } from '../../../../../_common/user/user.model';
 import FormEmailPreferences from '../../../../components/forms/email-preferences/FormEmailPreferences.vue';
 import { IntentService } from '../../../../components/intent/intent.service';
-import { useAccountRouteController } from '../account.vue';
+import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 @Options({
 	name: 'RouteDashAccountEmailPreferences',

@@ -41,7 +41,6 @@ import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
-import { useChatStore } from '../../components/chat/chat-store';
 import AppFiresideProvider from '../../components/fireside/AppFiresideProvider.vue';
 import {
 	createFiresideController,
@@ -49,13 +48,13 @@ import {
 	FiresideSidebar,
 	toggleStreamVideoStats,
 } from '../../components/fireside/controller/controller';
+import { useGridStore } from '../../components/grid/grid-store';
 import {
 	illEndOfFeed,
 	illMaintenance,
 	illMobileKikkerstein,
 	illNoCommentsSmall,
 } from '../../img/ill/illustrations';
-import { useAppStore } from '../../store';
 import AppFiresideHeader from './AppFiresideHeader.vue';
 import AppFiresideStats from './AppFiresideStats.vue';
 import AppFiresideBottomBar from './_bottom-bar/AppFiresideBottomBar.vue';
@@ -67,12 +66,10 @@ import AppFiresideSidebarMembers from './_sidebar/AppFiresideSidebarMembers.vue'
 import AppFiresideSidebarStreamSettings from './_sidebar/AppFiresideSidebarStreamSettings.vue';
 import AppFiresideStream from './_stream/AppFiresideStream.vue';
 
-const appStore = useAppStore();
 const commonStore = useCommonStore();
 const stickerStore = useStickerStore();
-const chatStore = useChatStore()!;
+const gridStore = useGridStore();
 const themeStore = useThemeStore();
-
 const router = useRouter();
 
 const c = shallowRef<FiresideController | null>(null);
@@ -87,6 +84,9 @@ const videoHeight = ref(0);
 
 const fireside = computed(() => c.value?.fireside || payloadFireside.value);
 const payloadFireside = ref<Fireside>();
+
+const focusedUser = computed(() => c.value?.focusedUser.value);
+const background = computed(() => c.value?.background.value);
 
 const isFullscreen = computed(() => c.value?.isFullscreen.value === true);
 const isShowingStreamOverlay = computed(() => c.value?.isShowingStreamOverlay.value === true);
@@ -109,7 +109,6 @@ const cannotViewReason = computed(() => {
 });
 
 const routeStatus = computed(() => c.value?.status.value);
-const background = computed(() => c.value?.chatRoom.value?.background);
 const overlayText = computed(() => !!background.value || isFullscreen.value);
 
 const sidebar = customRef<FiresideSidebar>((track, trigger) => ({
@@ -143,9 +142,7 @@ const collapseSidebar = customRef<boolean>((track, trigger) => ({
 const videoFillColor = computed(() =>
 	!background.value && isFullscreen.value ? 'black' : undefined
 );
-const focusedUserVideoAspectRatio = computed(
-	() => c.value?.rtc.value?.focusedUser?.videoAspectRatio
-);
+const focusedUserVideoAspectRatio = computed(() => focusedUser.value?.videoAspectRatio);
 
 const chatWidth = computed(() => {
 	if (isFullscreen.value && collapseSidebar.value) {
@@ -170,10 +167,9 @@ watch(
 		}
 
 		c.value ??= createFiresideController(payloadFireside.value, {
-			appStore,
 			commonStore,
 			stickerStore,
-			chatStore,
+			gridStore,
 			router,
 		});
 
@@ -208,16 +204,10 @@ function onDimensionsChange() {
 		return;
 	}
 
-	const rtc = c.value?.rtc.value;
-	const focusedUser = rtc?.focusedUser;
-	if (!rtc) {
-		return;
-	}
-
 	const { width, height } = Ruler.offset(videoContainer.value);
 	const containerRatio = width / height;
 
-	let receiveRatio = focusedUser?.videoAspectRatio || 16 / 9;
+	let receiveRatio = focusedUserVideoAspectRatio.value || 16 / 9;
 
 	const minRatio = 0.5;
 	const maxRatio = 2;
@@ -259,7 +249,7 @@ watch(() => c.value?.isPersonallyStreaming.value, onIsPersonallyStreamingChanged
 watch(focusedUserVideoAspectRatio, onDimensionsChange);
 
 watch(
-	() => c.value?.rtc.value?.focusedUser?.userModel?.id,
+	() => focusedUser.value?.userModel?.id,
 	() => {
 		const { stickers, newStickers } = c.value?.stickerTargetController ?? {};
 		// Clear any current live stickers when changing the focused user.
@@ -302,11 +292,10 @@ function onIsPersonallyStreamingChanged() {
 		:id="popperTeleportId"
 		ref="root"
 		class="route-fireside"
-		:class="{ '-video-square': isFullscreen }"
+		:class="{ '-unround-video': isFullscreen }"
 		:style="`--fireside-chat-width: ${chatWidth}px`"
 	>
 		<AppStickerLayer
-			no-mask
 			:style="{
 				width: '100%',
 				height: '100%',
@@ -529,15 +518,15 @@ function onIsPersonallyStreamingChanged() {
 												height: videoHeight + 'px',
 											}"
 										>
-											<template v-if="c.rtc.value && c.rtc.value.focusedUser">
+											<template v-if="focusedUser">
 												<AppStickerTarget
-													:key="c.rtc.value.focusedUser?.uid"
+													:key="focusedUser.uid"
 													class="-video-inner -abs-stretch"
 													:controller="c.stickerTargetController"
 												>
 													<AppPopper trigger="right-click">
 														<AppFiresideStream
-															:rtc-user="c.rtc.value.focusedUser"
+															:rtc-user="focusedUser"
 															:has-header="isFullscreen"
 															:has-hosts="isFullscreen"
 															:sidebar-collapsed="collapseSidebar"
@@ -676,7 +665,7 @@ $-center-guide-width = 400px
 	--video-radius: 12px
 	--fireside-chat-width: 350px
 
-	&.-video-square
+	&.-unround-video
 		--video-radius: 0px
 
 .-view-blocked

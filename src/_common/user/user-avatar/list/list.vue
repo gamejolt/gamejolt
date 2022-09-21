@@ -2,8 +2,8 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import { User } from '../../user.model';
-import AppUserVerifiedTick from '../../verified-tick/verified-tick.vue';
-import AppUserAvatar from '../user-avatar.vue';
+import AppUserVerifiedTick from '../../verified-tick/AppUserVerifiedTick.vue';
+import AppUserAvatar from '../AppUserAvatar.vue';
 
 @Options({
 	components: {
@@ -44,7 +44,14 @@ export default class AppUserAvatarList extends Vue {
 				}"
 				:user="user"
 			/>
-			<AppUserVerifiedTick v-if="!sm" class="-tick" :user="user" />
+			<AppUserVerifiedTick
+				v-if="!sm"
+				class="-tick"
+				:class="{
+					'-tick-round': !user.is_creator,
+				}"
+				:user="user"
+			/>
 		</div>
 	</div>
 </template>
@@ -91,10 +98,12 @@ $-size-sm = 16px
 	height: $-size-sm
 
 .-tick
-	change-bg('bg')
-	border-radius: 50%
 	position: absolute
 	right: 0
 	bottom: 0
 	pointer-events: none
+
+.-tick-round
+	change-bg('bg')
+	border-radius: 50%
 </style>

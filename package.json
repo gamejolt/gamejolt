@@ -1,6 +1,6 @@
 {
 	"name": "game-jolt-client",
-	"version": "1.10.7",
+	"version": "1.14.0",
 	"scripts": {
 		"check": "tsc --noEmit",
 		"lint": "eslint --ext .js,.vue src",
@@ -55,7 +55,7 @@
 		"@typescript-eslint/eslint-plugin": "5.10.1",
 		"@typescript-eslint/parser": "5.10.1",
 		"@vitejs/plugin-vue": "2.3.3",
-		"agora-rtc-sdk-ng": "4.11.1",
+		"agora-rtc-sdk-ng": "4.14.0",
 		"autoprefixer": "10.4.2",
 		"autosize": "5.0.1",
 		"broadcast-channel": "3.1.0",
@@ -113,7 +113,7 @@
 	},
 	"optionalDependencies": {
 		"appdmg": "argv-minus-one/node-appdmg#node-12-temporary-fix",
-		"asg-prebuilt": "0.2.0",
+		"asg-prebuilt": "0.3.0",
 		"rcedit": "3.0.1"
 	},
 	"dependencies": {
@@ -137,8 +137,8 @@
 		"@types/prosemirror-state": "1.2.4",
 		"@types/prosemirror-view": "1.11.4"
 	},
-	"main": "https://development.gamejolt.com/",
-	"node-remote": "https://development.gamejolt.com",
+	"main": "chrome-extension://game-jolt-client/build/desktop/index.html#/",
+	"_node-remote": "https://development.gamejolt.com",
 	"domain": "game-jolt-client",
 	"window": {
 		"show": false,

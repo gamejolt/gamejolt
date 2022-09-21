@@ -101,15 +101,19 @@ export class Fireside extends Collaboratable(Model) {
 		return this.expires_on - getCurrentServerTime();
 	}
 
-	public addStickerToCount(sticker: Sticker) {
+	public addStickerToCount(sticker: Sticker, isCharged: boolean) {
 		const existingEntry = this.sticker_counts.find(i => i.stickerId === sticker.id);
+		const chargeCount = isCharged ? 1 : 0;
+
 		if (existingEntry) {
 			existingEntry.count++;
+			existingEntry.chargedCount += chargeCount;
 		} else {
 			this.sticker_counts.push({
 				stickerId: sticker.id,
 				imgUrl: sticker.img_url,
 				count: 1,
+				chargedCount: chargeCount,
 			});
 		}
 	}

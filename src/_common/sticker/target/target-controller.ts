@@ -7,6 +7,7 @@ import {
 	reactive,
 	ref,
 	Ref,
+	shallowReadonly,
 	ShallowRef,
 	shallowRef,
 	unref,
@@ -14,7 +15,6 @@ import {
 } from 'vue';
 import { MaybeComputedRef, MaybeRef } from '../../../utils/vue';
 import { Comment } from '../../comment/comment-model';
-import { configChargedStickers } from '../../config/config.service';
 import { Fireside } from '../../fireside/fireside.model';
 import { FiresidePost } from '../../fireside/post/post-model';
 import { MediaItem } from '../../media-item/media-item-model';
@@ -105,7 +105,7 @@ export function createStickerTargetController(
 	const layer = shallowRef<StickerLayerController | null>(null);
 	const children = shallowRef<StickerTargetController[]>([]);
 
-	const c: StickerTargetController = {
+	const c: StickerTargetController = shallowReadonly({
 		isInview,
 		hasLoadedStickers,
 		shouldShow,
@@ -118,14 +118,8 @@ export function createStickerTargetController(
 		parent: refParent,
 		isLive,
 		placeStickerCallback,
-		isCreator: computed(() => {
-			if (!configChargedStickers.value) {
-				return false;
-			}
-
-			return unref(isCreator);
-		}),
-	};
+		isCreator: computed(() => unref(isCreator)),
+	});
 
 	if (refParent.value) {
 		refParent.value.children.value.push(c);
@@ -134,7 +128,7 @@ export function createStickerTargetController(
 	return c;
 }
 
-export function provideStickerTargerController(
+export function provideStickerTargetController(
 	controller?: MaybeRef<StickerTargetController | null>
 ) {
 	provide(StickerTargetParentControllerKey, controller);

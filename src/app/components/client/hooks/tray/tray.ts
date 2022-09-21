@@ -29,7 +29,7 @@ export function createClientTrayMenuBuilder(router: Router, appStore: AppStore) 
 
 		menu.append(
 			new nw.MenuItem({
-				label: $gettext(`Explore`),
+				label: $gettext(`Discover`),
 				click: () =>
 					go({
 						name: 'discover.home',

@@ -23,18 +23,10 @@ export default {
 		deps: {},
 		lazy: true,
 		resolver: async () =>
-			Api.sendRequest(
-				'/mobile/quest',
-				{
-					_fields: {
-						quests: true,
-						dailyQuests: true,
-					},
-				},
-				{
-					sanitizeComplexData: false,
-				}
-			),
+			Api.sendFieldsRequest('/mobile/quest', {
+				quests: true,
+				dailyQuests: true,
+			}),
 	}),
 };
 </script>

@@ -6,29 +6,24 @@ import { trackPostOpen } from '../../../../../_common/analytics/analytics.servic
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
-import AppCommunityPill from '../../../../../_common/community/pill/pill.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import AppStickerControlsOverlay from '../../../../../_common/sticker/AppStickerControlsOverlay.vue';
+import AppStickerPlacementList from '../../../../../_common/sticker/AppStickerPlacementList.vue';
 import AppStickerLayer from '../../../../../_common/sticker/layer/AppStickerLayer.vue';
-import { canPlaceStickerOnFiresidePost } from '../../../../../_common/sticker/placement/placement.model';
-import AppStickerReactions from '../../../../../_common/sticker/reactions/AppStickerReactions.vue';
-import AppStickerSupporters from '../../../../../_common/sticker/supporters/AppStickerSupporters.vue';
 import {
 	createStickerTargetController,
-	provideStickerTargerController,
+	provideStickerTargetController,
 } from '../../../../../_common/sticker/target/target-controller';
 import AppFiresidePostEmbed from '../../../fireside/post/embed/embed.vue';
 import AppPollVoting from '../../../poll/voting/voting.vue';
 import AppPostContent from '../../../post/AppPostContent.vue';
 import AppPostHeader from '../../../post/AppPostHeader.vue';
+import AppPostTargets from '../../../post/AppPostTargets.vue';
 import AppPostControls from '../../../post/controls/AppPostControls.vue';
 import { useActivityFeedInterface } from '../AppActivityFeed.vue';
 import { feedShouldBlockPost } from '../feed-service';
@@ -65,7 +60,7 @@ const stickerTargetController = createStickerTargetController(post.value, {
 	isCreator: computed(() => user.value.is_creator === true),
 });
 
-provideStickerTargerController(stickerTargetController);
+provideStickerTargetController(stickerTargetController);
 
 const hasBypassedBlock = ref(false);
 
@@ -91,6 +86,8 @@ const communities = computed(() => {
 	return communities;
 });
 
+const realms = computed(() => post.value.realms.map(i => i.realm));
+
 const link = computed(() => {
 	const location = post.value.routeLocation;
 
@@ -101,8 +98,6 @@ const link = computed(() => {
 });
 
 const linkResolved = computed(() => router.resolve(link.value).href);
-
-const shouldShowCommunities = computed(() => communities.value.length > 0);
 
 const shouldShowIsPinned = computed(() => {
 	if (!post.value.is_pinned) {
@@ -118,21 +113,10 @@ const shouldShowDate = computed(() => {
 	return import.meta.env.SSR || feed.shouldShowDates;
 });
 
-const isBlocked = computed(() => {
-	return feedShouldBlockPost(post.value, route);
-});
+const isBlocked = computed(() => feedShouldBlockPost(post.value, route));
+const shouldBlock = computed(() => !hasBypassedBlock.value && isBlocked.value);
 
-const shouldBlock = computed(() => {
-	return !hasBypassedBlock.value && isBlocked.value;
-});
-
-const canPlaceSticker = computed(() => {
-	return canPlaceStickerOnFiresidePost(post.value);
-});
-
-const overlay = computed(() => {
-	return !!post.value.background?.media_item;
-});
+const overlay = computed(() => !!post.value.background?.media_item);
 
 function onResize() {
 	emit('resize', root.value!.offsetHeight);
@@ -272,7 +256,7 @@ function onPostUnpinned(item: EventItem) {
 						v-if="post.hasMedia"
 						:item="item"
 						:post="post"
-						:can-place-sticker="canPlaceSticker"
+						:can-place-sticker="post.canPlaceSticker"
 					/>
 
 					<div ref="stickerScroll" />
@@ -305,46 +289,20 @@ function onPostUnpinned(item: EventItem) {
 					</AppPostContent>
 
 					<AppStickerControlsOverlay :hide="!!post.background">
-						<div
-							v-if="post.sticker_counts.length || post.supporters.length"
-							class="-reactions-container -controls-buffer"
-							@click.stop
-						>
-							<AppStickerSupporters
-								v-if="post.supporters.length"
-								class="-supporters"
-								:limit="
-									Screen.isDesktop
-										? 8
-										: Math.max(1, Math.min(8, Math.round(Screen.width / 100)))
-								"
-								:supporters="post.supporters"
-								:style="{
-									marginRight: post.sticker_counts.length ? '12px' : undefined,
-								}"
-							/>
+						<AppStickerPlacementList
+							:sticker-target-controller="stickerTargetController"
+							:supporters="post.supporters"
+							:stickers="post.sticker_counts"
+							@show="scrollToStickers"
+						/>
 
-							<AppStickerReactions
-								v-if="post.sticker_counts.length"
-								class="-sticker-reactions"
-								:controller="stickerTargetController"
-								@show="scrollToStickers"
-							/>
-						</div>
-
-						<AppSpacer vertical :scale="2" />
-
-						<AppScrollScroller
-							v-if="shouldShowCommunities"
+						<AppPostTargets
+							v-if="communities.length || realms.length"
 							class="-communities -controls-buffer"
-							horizontal
-						>
-							<AppCommunityPill
-								v-for="postCommunity of communities"
-								:key="postCommunity.id"
-								:community-link="postCommunity"
-							/>
-						</AppScrollScroller>
+							:communities="communities"
+							:realms="realms"
+							has-links
+						/>
 					</AppStickerControlsOverlay>
 
 					<AppPostControls

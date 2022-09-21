@@ -7,8 +7,8 @@ import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/AppScro
 import { SettingAnimatedThumbnails } from '../../settings/settings.service';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import AppUserCardHover from '../../user/card/AppUserCardHover.vue';
-import AppUserAvatarImg from '../../user/user-avatar/img/img.vue';
-import AppUserVerifiedTick from '../../user/verified-tick/verified-tick.vue';
+import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
+import AppUserVerifiedTick from '../../user/verified-tick/AppUserVerifiedTick.vue';
 import AppGameCompatIcons from '../compat-icons/compat-icons.vue';
 import { Game } from '../game.model';
 import AppGameThumbnailImg from './AppGameThumbnailImg.vue';

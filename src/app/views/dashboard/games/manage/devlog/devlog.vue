@@ -15,7 +15,7 @@ import { ActivityFeedService } from '../../../../../components/activity/feed/fee
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import { AppActivityFeedLazy } from '../../../../../components/lazy';
-import AppPostAddButton from '../../../../../components/post/add-button/add-button.vue';
+import AppPostAddButton from '../../../../../components/post/add-button/AppPostAddButton.vue';
 import AppShellPageBackdrop from '../../../../../components/shell/AppShellPageBackdrop.vue';
 import { useGameDashRouteController } from '../manage.store';
 

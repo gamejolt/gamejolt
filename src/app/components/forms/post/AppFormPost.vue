@@ -12,6 +12,7 @@ import { Community } from '../../../../_common/community/community.model';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { FiresidePostCommunity } from '../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { FiresidePostRealm } from '../../../../_common/fireside/post/realm/realm.model';
 import { FiresidePostVideo } from '../../../../_common/fireside/post/video/video-model';
 import AppForm, {
 	createForm,
@@ -42,10 +43,10 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { KeyGroup } from '../../../../_common/key-group/key-group.model';
 import { LinkedAccount } from '../../../../_common/linked-account/linked-account.model';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
+import { Popper } from '../../../../_common/popper/popper.service';
 import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
+import { Realm } from '../../../../_common/realm/realm-model';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import { vAppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
 import { SettingPostBackgroundId } from '../../../../_common/settings/settings.service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
@@ -57,10 +58,9 @@ import {
 	$gettextInterpolate,
 	$ngettext,
 } from '../../../../_common/translate/translate.service';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
-import AppFormsCommunityPillAdd from '../community/_pill/add/add.vue';
-import AppFormsCommunityPill from '../community/_pill/community-pill.vue';
-import AppFormsCommunityPillIncomplete from '../community/_pill/incomplete/incomplete.vue';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
+import AppPostTargets from '../../post/AppPostTargets.vue';
+import { POST_TARGET_HEIGHT } from '../../post/target/AppPostTarget.vue';
 import AppFormPostMedia from './_media/media.vue';
 import AppFormPostVideo, { VideoStatus } from './_video/video.vue';
 
@@ -70,7 +70,11 @@ type FormPostModel = FiresidePost & {
 	key_group_ids: number[];
 	video_id: number;
 	attached_communities: { community_id: number; channel_id: number }[];
+	attached_realms: number[];
 	background_id: number | null;
+
+	// Form helper.
+	_comments_enabled: boolean;
 
 	poll_item_count: number;
 	poll_duration: number;
@@ -95,9 +99,22 @@ const MIN_POLL_DURATION = 5;
 const MAX_POLL_DURATION = 20160;
 
 const props = defineProps({
-	defaultCommunity: { type: Object as PropType<Community | null>, default: null },
-	defaultChannel: { type: Object as PropType<CommunityChannel | null>, default: null },
-	overlay: { type: Boolean, default: false },
+	defaultCommunity: {
+		type: Object as PropType<Community | null>,
+		default: null,
+	},
+	defaultChannel: {
+		type: Object as PropType<CommunityChannel | null>,
+		default: null,
+	},
+	defaultRealm: {
+		type: Object as PropType<Realm | null>,
+		default: null,
+	},
+	overlay: {
+		type: Boolean,
+		default: false,
+	},
 	...defineFormProps<FiresidePost>(true),
 });
 
@@ -107,7 +124,7 @@ const emit = defineEmits({
 	backgroundChange: (_background?: Background) => true,
 });
 
-const { defaultCommunity, defaultChannel, overlay, model } = toRefs(props);
+const { defaultCommunity, defaultChannel, defaultRealm, overlay, model } = toRefs(props);
 
 const { user } = useCommonStore();
 
@@ -124,8 +141,16 @@ const keyGroups = ref<KeyGroup[]>([]);
 const timezones = ref<{ [region: string]: (TimezoneData & { label?: string })[] } | null>(null);
 const linkedAccounts = ref<LinkedAccount[]>([]);
 const publishToPlatforms = ref<number[] | null>(null);
+
+const maxCommunities = ref(0);
 const attachedCommunities = ref<{ community: Community; channel: CommunityChannel }[]>([]);
 const targetableCommunities = ref<Community[]>([]);
+
+const hasLoadedRealms = ref(false);
+const maxRealms = ref(0);
+const attachedRealms = ref<Realm[]>([]);
+const targetableRealms = ref<Realm[]>([]);
+
 const backgrounds = ref<Background[]>([]);
 
 const isShowingMorePollOptions = ref(false);
@@ -135,11 +160,11 @@ const isSavedDraftPost = ref(false);
 const leadLengthLimit = ref(255);
 const articleLengthLimit = ref(50_000);
 const isUploadingPastedImage = ref(false);
-const maxCommunities = ref(0);
 const scrollingKey = ref(1);
 const uploadingVideoStatus = ref(VideoStatus.IDLE);
 const videoProvider = ref(FiresidePostVideo.PROVIDER_GAMEJOLT);
 const hasChangedBackground = ref(false);
+const isShowingMoreOptions = ref(false);
 
 const form: FormController<FormPostModel> = createForm({
 	model,
@@ -201,6 +226,14 @@ const form: FormController<FormPostModel> = createForm({
 			form.formModel.article_content = '';
 		}
 
+		form.formModel._comments_enabled =
+			_model.allow_comments === FiresidePost.ALLOW_COMMENTS_DISABLED ? false : true;
+
+		// Auto-show the more options if the comment options are anything other
+		// than the default.
+		isShowingMoreOptions.value =
+			form.formModel.allow_comments !== FiresidePost.ALLOW_COMMENTS_ENABLED;
+
 		await fetchTimezones();
 	},
 	onLoad(payload) {
@@ -215,6 +248,7 @@ const form: FormController<FormPostModel> = createForm({
 		leadLengthLimit.value = payload.leadLengthLimit;
 		articleLengthLimit.value = payload.articleLengthLimit;
 		maxCommunities.value = payload.maxCommunities;
+		maxRealms.value = payload.maxRealms;
 
 		backgrounds.value = Background.populate(payload.backgrounds);
 
@@ -234,14 +268,24 @@ const form: FormController<FormPostModel> = createForm({
 			});
 		}
 
+		if (payload.attachedRealms) {
+			attachedRealms.value = FiresidePostRealm.populate(payload.attachedRealms).map(
+				i => i.realm
+			);
+		}
+
+		if (defaultRealm.value) {
+			attachRealm(defaultRealm.value);
+		}
+
 		if (
-			defaultCommunity instanceof Community &&
-			defaultChannel instanceof CommunityChannel &&
-			defaultCommunity.postableChannels.some(
-				channel => channel.title === defaultChannel!.title
+			defaultCommunity.value &&
+			defaultChannel.value &&
+			defaultCommunity.value.postableChannels.some(
+				channel => channel.title === defaultChannel.value!.title
 			)
 		) {
-			attachCommunity(defaultCommunity, defaultChannel);
+			attachCommunity(defaultCommunity.value, defaultChannel.value);
 		}
 
 		if (payload.targetableCommunities) {
@@ -288,6 +332,8 @@ const form: FormController<FormPostModel> = createForm({
 				channel_id: channel.id,
 			})
 		);
+
+		form.formModel.attached_realms = attachedRealms.value.map(i => i.id);
 
 		// Set or clear attachments as needed
 		if (attachmentType.value === FiresidePost.TYPE_MEDIA && form.formModel.media) {
@@ -460,9 +506,22 @@ const platformRestrictions = computed(() => {
 
 const canAddCommunity = computed(
 	() =>
+		!wasPublished.value &&
 		attachedCommunities.value.length < maxCommunities.value &&
 		possibleCommunities.value.length > 0
 );
+
+const canAddRealm = computed(() => {
+	if (wasPublished.value || attachedRealms.value.length >= maxRealms.value) {
+		return false;
+	}
+
+	if (hasLoadedRealms.value) {
+		return possibleRealms.value.length > 0;
+	}
+
+	return true;
+});
 
 const hasChannelError = computed(() => form.hasCustomError('channel'));
 
@@ -476,6 +535,12 @@ const possibleCommunities = computed(() => {
 		}
 
 		return !attachedCommunities.value.find(c2 => c1.id === c2.community.id);
+	});
+});
+
+const possibleRealms = computed(() => {
+	return targetableRealms.value.filter(c1 => {
+		return !attachedRealms.value.find(c2 => c1.id === c2.id);
 	});
 });
 
@@ -584,6 +649,45 @@ watch(
 	}
 );
 
+// When toggling the "Comments enabled?" checkbox back and forth.
+watch(
+	() => form.formModel._comments_enabled,
+	enabled => {
+		// Gotta wait for form to be initialized before we start listening to
+		// changes.
+		if (!form.isLoaded) {
+			return;
+		}
+
+		if (enabled) {
+			form.formModel.allow_comments = FiresidePost.ALLOW_COMMENTS_ENABLED;
+		} else {
+			form.formModel.allow_comments = FiresidePost.ALLOW_COMMENTS_DISABLED;
+		}
+	}
+);
+
+async function loadRealms() {
+	if (hasLoadedRealms.value) {
+		return;
+	}
+
+	try {
+		const response = await Api.sendFieldsRequest('/mobile/galaxy', {
+			realms: {
+				perPage: true,
+			},
+		});
+
+		targetableRealms.value = Realm.populate(response.realms);
+		hasLoadedRealms.value = true;
+	} catch (e) {
+		if (import.meta.env.DEV || GJ_ENVIRONMENT === 'development') {
+			console.error('Failed to load realms for post', e);
+		}
+	}
+}
+
 function attachIncompleteCommunity(community: Community, channel: CommunityChannel) {
 	attachCommunity(community, channel, false);
 }
@@ -602,10 +706,27 @@ function attachCommunity(community: Community, channel: CommunityChannel, append
 	}
 }
 
+function attachRealm(realm: Realm, append = true) {
+	Popper.hideAll();
+
+	// Do nothing if that realm is already attached.
+	if (attachedRealms.value.find(i => i.id === realm.id)) {
+		return;
+	}
+
+	if (append) {
+		attachedRealms.value.push(realm);
+		scrollToAdd();
+	} else {
+		attachedRealms.value.unshift(realm);
+	}
+}
+
 async function scrollToAdd() {
 	// Wait for the DOM to update
 	await nextTick();
-	// Change our scrolling key so AppScrollWhen will bring the 'Add Community' button inview.
+	// Change our scrolling key so AppScrollWhen will bring the 'Add Community'
+	// button inview.
 	scrollingKey.value *= -1;
 }
 
@@ -617,6 +738,10 @@ function removeCommunity(community: Community) {
 	}
 
 	attachedCommunities.value.splice(idx, 1);
+}
+
+function removeRealm(realm: Realm) {
+	arrayRemove(attachedRealms.value, i => i.id === realm.id);
 }
 
 function onDraftSubmit() {
@@ -1413,50 +1538,75 @@ function _getMatchingBackgroundIdFromPref() {
 			</div>
 		</template>
 
+		<!-- Other platforms -->
+		<div v-if="isShowingMoreOptions" class="well fill-offset full-bleed">
+			<fieldset>
+				<AppFormLegend compact>
+					<AppTranslate>More options</AppTranslate>
+				</AppFormLegend>
+
+				<AppFormGroup
+					name="_comments_enabled"
+					:label="$gettext(`Enable comments?`)"
+					style="margin-bottom: 0"
+				>
+					<template #inline-control>
+						<AppFormControlToggle />
+					</template>
+				</AppFormGroup>
+
+				<AppFormGroup
+					v-if="form.formModel._comments_enabled"
+					name="allow_comments"
+					:label="$gettext(`Who can comment?`)"
+				>
+					<AppFormControlSelect>
+						<option :value="FiresidePost.ALLOW_COMMENTS_ENABLED">
+							{{ $gettext(`Everyone`) }}
+						</option>
+						<option :value="FiresidePost.ALLOW_COMMENTS_FRIENDS">
+							{{ $gettext(`Only friends`) }}
+						</option>
+					</AppFormControlSelect>
+				</AppFormGroup>
+			</fieldset>
+		</div>
+
 		<!-- Communities -->
 		<template v-if="form.isLoaded">
-			<AppScrollScroller v-if="shouldShowCommunities" class="-communities" horizontal thin>
-				<transition-group tag="div" class="-communities-list">
-					<AppFormsCommunityPillIncomplete
-						v-if="incompleteDefaultCommunity"
-						key="incomplete"
-						class="-community-pill anim-fade-in-enlarge no-animate-leave"
-						:communities="possibleCommunities"
-						:community="incompleteDefaultCommunity"
-						@add="attachIncompleteCommunity"
-					/>
-
-					<AppFormsCommunityPill
-						v-for="{ community, channel } of attachedCommunities"
-						:key="community.id"
-						class="-community-pill anim-fade-in-enlarge no-animate-leave"
-						:community="community"
-						:channel="channel"
-						:removable="!wasPublished"
-						@remove="removeCommunity(community)"
-					/>
-
-					<template v-if="!wasPublished && canAddCommunity">
-						<AppFormsCommunityPillAdd
-							key="add"
-							v-app-scroll-when="scrollingKey"
-							class="-community-pill anim-fade-in-enlarge no-animate-leave"
-							:communities="possibleCommunities"
-							@add="attachCommunity"
-						/>
-					</template>
-				</transition-group>
-			</AppScrollScroller>
+			<AppPostTargets
+				v-if="shouldShowCommunities"
+				class="-post-targets"
+				:communities="attachedCommunities"
+				:realms="attachedRealms"
+				:targetable-communities="possibleCommunities"
+				:targetable-realms="possibleRealms"
+				:can-add-community="canAddCommunity"
+				:can-add-realm="canAddRealm"
+				:incomplete-community="incompleteDefaultCommunity || undefined"
+				:is-loading-realms="!hasLoadedRealms"
+				:can-remove-communities="!wasPublished"
+				:can-remove-realms="!wasPublished"
+				@remove-community="removeCommunity"
+				@remove-realm="removeRealm"
+				@select-community="attachCommunity"
+				@select-incomplete-community="attachIncompleteCommunity"
+				@select-realm="attachRealm"
+				@show-realms="loadRealms"
+			/>
 			<p v-else-if="!wasPublished" class="help-block">
 				<AppTranslate>Join some communities to post to them.</AppTranslate>
-				<span v-app-tooltip.touchable="$gettext(`Go to the explore page and find some!`)">
+				<span v-app-tooltip.touchable="$gettext(`Go to the Discover page and find some!`)">
 					<AppJolticon class="text-muted" icon="help-circle" />
 				</span>
 			</p>
 		</template>
 		<template v-else>
-			<div class="-communities-list-placeholder">
-				<div class="-community-pill-placeholder" />
+			<div class="-post-targets-placeholder">
+				<div
+					class="-post-target-placeholder"
+					:style="{ height: POST_TARGET_HEIGHT + 'px' }"
+				/>
 			</div>
 		</template>
 
@@ -1531,7 +1681,7 @@ function _getMatchingBackgroundIdFromPref() {
 			<div class="-controls-attachments" :class="{ '-overlay-text': overlay }">
 				<AppButton
 					v-if="!longEnabled"
-					v-app-tooltip="$gettext(`Add Article`)"
+					v-app-tooltip="$gettext(`Add article`)"
 					sparse
 					trans
 					circle
@@ -1541,7 +1691,7 @@ function _getMatchingBackgroundIdFromPref() {
 
 				<AppButton
 					v-if="!hasPoll"
-					v-app-tooltip="$gettext(`Add Poll`)"
+					v-app-tooltip="$gettext(`Add poll`)"
 					sparse
 					trans
 					circle
@@ -1551,7 +1701,7 @@ function _getMatchingBackgroundIdFromPref() {
 
 				<AppButton
 					v-if="!wasPublished && !isScheduling"
-					v-app-tooltip="$gettext(`Schedule Post`)"
+					v-app-tooltip="$gettext(`Schedule post`)"
 					sparse
 					trans
 					circle
@@ -1561,7 +1711,7 @@ function _getMatchingBackgroundIdFromPref() {
 
 				<AppButton
 					v-if="!accessPermissionsEnabled && !wasPublished && model.game"
-					v-app-tooltip="$gettext(`Access Permissions`)"
+					v-app-tooltip="$gettext(`Permissions`)"
 					sparse
 					trans
 					circle
@@ -1571,12 +1721,22 @@ function _getMatchingBackgroundIdFromPref() {
 
 				<AppButton
 					v-if="!wasPublished && !isPublishingToPlatforms"
-					v-app-tooltip="$gettext(`Publish to Other Platforms`)"
+					v-app-tooltip="$gettext(`Publish to other platforms`)"
 					sparse
 					trans
 					circle
 					icon="share-airplane"
 					@click="addPublishingToPlatforms()"
+				/>
+
+				<AppButton
+					v-if="!isShowingMoreOptions"
+					v-app-tooltip="$gettext(`More options`)"
+					sparse
+					trans
+					circle
+					icon="ellipsis-h"
+					@click="isShowingMoreOptions = true"
 				/>
 			</div>
 
@@ -1614,8 +1774,6 @@ function _getMatchingBackgroundIdFromPref() {
 </template>
 
 <style lang="stylus" scoped>
-@import '../community/_pill/variables'
-
 .form-group:last-child
 	margin-bottom: 10px
 
@@ -1723,36 +1881,16 @@ function _getMatchingBackgroundIdFromPref() {
 .-linked-account-toggle
 	flex: none
 
-.-communities
+.-post-targets
 	margin: 10px 0
 
-.-communities-list
-	white-space: nowrap
-	display: flex
-	align-items: center
-	margin-bottom: 4px
-
-	.v-leave-from
-		display: none
-		position: absolute
-
-.-communities-list-placeholder
+.-post-targets-placeholder
 	margin: 10px 0 14px
 
-.-community-pill
-	flex-shrink: 0
-
-	// Need to apply to the button inside the pill add component too
-	&
-	::v-deep(.button)
-		height: 28px
-		margin-bottom: 0
-
-.-community-pill-placeholder
+.-post-target-placeholder
 	change-bg('bg-subtle')
 	rounded-corners()
 	width: 138px
-	height: $pill-height
 
 .-author-avatar
 	width: $input-height-base
@@ -1772,7 +1910,7 @@ function _getMatchingBackgroundIdFromPref() {
 		border-bottom: $border-width-base solid var(--theme-bg-subtle)
 
 		> :not(:first-child)
-			margin-left: 10px
+			margin-left: 10px !important
 
 	.-controls-submit
 		display: flex
@@ -1796,6 +1934,9 @@ function _getMatchingBackgroundIdFromPref() {
 	.-controls-attachments
 		flex: auto
 
+		> *:not(:first-child)
+			margin-left: 4px !important
+
 	.-controls-submit
 		flex: none
 
@@ -1804,7 +1945,8 @@ function _getMatchingBackgroundIdFromPref() {
 
 .-overlay-text
 	&
-	& > *
+	> *
+	.-overlay-text-affected
 		text-shadow: black 1px 1px 4px
 		color: white
 
@@ -1813,4 +1955,7 @@ function _getMatchingBackgroundIdFromPref() {
 
 .-overlay-box
 	elevate-1()
+
+.-popover-container
+	max-width: 300px
 </style>

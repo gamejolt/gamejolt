@@ -11,15 +11,10 @@ export default {
 	...defineAppRouteOptions({
 		lazy: true,
 		resolver: async ({ route }) => {
-			const payload = await Api.sendRequest(
+			const payload = await Api.sendFieldsRequest(
 				`/mobile/fireside/for-user/@${route.params.username}`,
 				{
-					_fields: {
-						fireside: true,
-					},
-				},
-				{
-					sanitizeComplexData: false,
+					fireside: true,
 				}
 			);
 

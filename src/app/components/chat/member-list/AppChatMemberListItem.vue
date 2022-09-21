@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { computed, inject, PropType, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
 import AppFiresideLiveTag from '../../../../_common/fireside/AppFiresideLiveTag.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { ChatStore, ChatStoreKey } from '../chat-store';
+import { useGridStore } from '../../grid/grid-store';
 import { isUserOnline, tryGetRoomRole } from '../client';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
@@ -28,12 +28,10 @@ const props = defineProps({
 });
 
 const { user, room } = toRefs(props);
-const chatStore = inject<ChatStore>(ChatStoreKey)!;
-
-const chat = computed(() => chatStore.chat!);
+const { chatUnsafe: chat } = useGridStore();
 
 const isOnline = computed(() => {
-	if (!chatStore.chat || room.value.isFiresideRoom) {
+	if (!chat.value || room.value.isFiresideRoom) {
 		return null;
 	}
 

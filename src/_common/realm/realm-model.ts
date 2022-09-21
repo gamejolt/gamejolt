@@ -10,10 +10,6 @@ export class Realm extends Model {
 		if (data.cover) {
 			this.cover = new MediaItem(data.cover);
 		}
-
-		if (data.header) {
-			this.header = new MediaItem(data.header);
-		}
 	}
 
 	declare name: string;
@@ -21,7 +17,6 @@ export class Realm extends Model {
 	declare added_on: number;
 
 	declare cover: MediaItem;
-	declare header: MediaItem;
 
 	declare is_following: boolean;
 	declare follower_count: number;
