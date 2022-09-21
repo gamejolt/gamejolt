@@ -1,13 +1,14 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
+import { UserFollowLocation } from '../../../_common/analytics/analytics.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppUserCardHover from '../../../_common/user/card/AppUserCardHover.vue';
-import AppUserFollowWidget from '../../../_common/user/follow/widget.vue';
+import AppUserFollowButton from '../../../_common/user/follow/AppUserFollowButton.vue';
 import AppUserAvatar from '../../../_common/user/user-avatar/AppUserAvatar.vue';
 import AppUserVerifiedTick from '../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import AppActivityFeedPostTime from '../activity/feed/post/time/time.vue';
@@ -19,7 +20,7 @@ const props = defineProps({
 		required: true,
 	},
 	followLocation: {
-		type: String,
+		type: String as PropType<UserFollowLocation>,
 		required: true,
 	},
 	feed: {
@@ -134,7 +135,7 @@ const shouldShowFollow = computed(() => {
 				<AppTimeAgo v-else :date="post.published_on" strict />
 			</span>
 
-			<AppUserFollowWidget
+			<AppUserFollowButton
 				v-if="shouldShowFollow"
 				:user="user"
 				:sm="Screen.isXs"

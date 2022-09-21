@@ -9,13 +9,13 @@ import { ModalConfirm } from '../../modal/confirm/confirm-service';
 import AppPopper from '../../popper/AppPopper.vue';
 import { useCommonStore } from '../../store/common-store';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
+import AppUserFollowButton from '../../user/follow/AppUserFollowButton.vue';
 import { UserFollowSuggestion } from '../../user/follow/suggestion.service';
-import AppUserFollowWidget from '../../user/follow/widget.vue';
 import { followGame, Game, unfollowGame } from '../game.model';
 
 @Options({
 	components: {
-		AppUserFollowWidget,
+		AppUserFollowButton,
 		AppPopper,
 	},
 	directives: {
@@ -207,7 +207,7 @@ export default class AppGameFollowWidget extends Vue {
 						they release new games.
 					</AppTranslate>
 				</p>
-				<AppUserFollowWidget :user="game.developer" block location="gameFollow" />
+				<AppUserFollowButton :user="game.developer" block location="gameFollow" />
 			</div>
 		</template>
 	</AppPopper>

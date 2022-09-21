@@ -10,7 +10,7 @@ import AppLoading from '../../loading/AppLoading.vue';
 import { useCommonStore } from '../../store/common-store';
 import AppTheme from '../../theme/AppTheme.vue';
 import AppTranslate from '../../translate/AppTranslate.vue';
-import AppUserFollowWidget from '../follow/widget.vue';
+import AppUserFollowButton from '../follow/AppUserFollowButton.vue';
 import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
 import { User } from '../user.model';
 import AppUserVerifiedTick from '../verified-tick/AppUserVerifiedTick.vue';
@@ -139,7 +139,7 @@ const showTags = computed(() => !!user.value.follows_you || dogtags.value.length
 				</div>
 
 				<div v-if="appUser" class="-follow">
-					<AppUserFollowWidget
+					<AppUserFollowButton
 						v-if="user.id !== appUser.id"
 						:user="user"
 						location="card"

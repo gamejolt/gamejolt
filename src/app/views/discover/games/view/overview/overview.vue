@@ -55,9 +55,9 @@ import AppRatingWidget from '../../../../../components/rating/widget/widget.vue'
 import AppShellPageBackdrop from '../../../../../components/shell/AppShellPageBackdrop.vue';
 import AppUserKnownFollowers from '../../../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useGameRouteController } from '../view.vue';
+import AppDiscoverGamesViewOverviewSupporters from './AppDiscoverGamesViewOverviewSupporters.vue';
 import AppDiscoverGamesViewOverviewDetails from './_details/details.vue';
 import AppDiscoverGamesViewOverviewStatbar from './_statbar/statbar.vue';
-import AppDiscoverGamesViewOverviewSupporters from './_supporters/supporters.vue';
 
 @Options({
 	name: 'RouteDiscoverGamesViewOverview',

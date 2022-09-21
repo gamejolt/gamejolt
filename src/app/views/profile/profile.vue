@@ -18,7 +18,7 @@ import { useThemeStore } from '../../../_common/theme/theme.store';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../_common/translate/translate.service';
-import AppUserFollowWidget from '../../../_common/user/follow/widget.vue';
+import AppUserFollowButton from '../../../_common/user/follow/AppUserFollowButton.vue';
 import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
 import { populateTrophies } from '../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophy } from '../../../_common/user/trophy/user-base-trophy.model';
@@ -198,7 +198,7 @@ const ProfileThemeKey = 'profile';
 		AppUserAvatar,
 		AppUserDogtag,
 		AppPopper,
-		AppUserFollowWidget,
+		AppUserFollowButton,
 		AppUserVerifiedTick,
 		AppUserBlockOverlay,
 	},
@@ -598,7 +598,7 @@ export default class RouteProfile extends BaseRouteComponent {
 
 					<template #controls>
 						<AppPageHeaderControls>
-							<AppUserFollowWidget
+							<AppUserFollowButton
 								v-if="shouldShowFollow"
 								:user="user"
 								block
