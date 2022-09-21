@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { computed, onMounted, PropType, ref, toRefs } from 'vue';
-import AppUserList from '../../app/components/user/list/AppUserList.vue';
 import { Api } from '../api/api.service';
 import AppButton from '../button/AppButton.vue';
 import { formatNumber } from '../filters/number';
@@ -10,6 +9,7 @@ import AppLoading from '../loading/AppLoading.vue';
 import AppModal from '../modal/AppModal.vue';
 import { useModal } from '../modal/modal.service';
 import AppTranslate from '../translate/AppTranslate.vue';
+import AppUserList from '../user/list/AppUserList.vue';
 import { User } from '../user/user.model';
 import { SupportersModel } from './modal.service';
 

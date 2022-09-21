@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
-import { User } from '../../../../_common/user/user.model';
+import { User } from '../user.model';
 import AppUserListItem from './AppUserListItem.vue';
 
 defineProps({

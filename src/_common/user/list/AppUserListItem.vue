@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserFollowButton from '../../../../_common/user/follow/AppUserFollowButton.vue';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { User } from '../../../../_common/user/user.model';
-import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
+import { vAppTrackEvent } from '../../analytics/track-event.directive';
+import { useCommonStore } from '../../store/common-store';
+import AppUserCardHover from '../card/AppUserCardHover.vue';
+import AppUserFollowButton from '../follow/AppUserFollowButton.vue';
+import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
+import { User } from '../user.model';
+import AppUserVerifiedTick from '../verified-tick/AppUserVerifiedTick.vue';
 
 defineProps({
 	user: {
