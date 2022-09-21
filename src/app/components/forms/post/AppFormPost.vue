@@ -544,14 +544,6 @@ const possibleRealms = computed(() => {
 	});
 });
 
-const shouldShowCommunities = computed(() => {
-	return (
-		attachedCommunities.value.length > 0 ||
-		possibleCommunities.value.length > 0 ||
-		incompleteDefaultCommunity.value
-	);
-});
-
 const incompleteDefaultCommunity = computed(() => {
 	// The default community is considered incomplete if the channel for it
 	// needs to be selected (default channel is null or the community is not attached to the post).
@@ -1572,10 +1564,9 @@ function _getMatchingBackgroundIdFromPref() {
 			</fieldset>
 		</div>
 
-		<!-- Communities -->
+		<!-- Communities/Realms -->
 		<template v-if="form.isLoaded">
 			<AppPostTargets
-				v-if="shouldShowCommunities"
 				class="-post-targets"
 				:communities="attachedCommunities"
 				:realms="attachedRealms"
@@ -1594,12 +1585,6 @@ function _getMatchingBackgroundIdFromPref() {
 				@select-realm="attachRealm"
 				@show-realms="loadRealms"
 			/>
-			<p v-else-if="!wasPublished" class="help-block">
-				<AppTranslate>Join some communities to post to them.</AppTranslate>
-				<span v-app-tooltip.touchable="$gettext(`Go to the Discover page and find some!`)">
-					<AppJolticon class="text-muted" icon="help-circle" />
-				</span>
-			</p>
 		</template>
 		<template v-else>
 			<div class="-post-targets-placeholder">
