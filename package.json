@@ -137,8 +137,8 @@
 		"@types/prosemirror-state": "1.2.4",
 		"@types/prosemirror-view": "1.11.4"
 	},
-	"main": "chrome-extension://game-jolt-client/build/desktop/index.html#/",
-	"_node-remote": "https://development.gamejolt.com",
+	"main": "https://development.gamejolt.com/",
+	"node-remote": "https://development.gamejolt.com",
 	"domain": "game-jolt-client",
 	"window": {
 		"show": false,
