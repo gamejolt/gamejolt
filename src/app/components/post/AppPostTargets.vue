@@ -91,7 +91,9 @@ const canShow = computed(() => {
 	}
 
 	const realmsValid =
-		(!!targetableRealms?.value?.length && canAddRealm.value) || realms.value.length > 0;
+		isLoadingRealms.value ||
+		(!!targetableRealms?.value?.length && canAddRealm.value) ||
+		realms.value.length > 0;
 
 	return realmsValid;
 });
