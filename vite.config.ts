@@ -1,5 +1,5 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
-import { defineConfig, UserConfig as ViteUserConfigActual } from 'vite';
+import { defineConfig, UserConfig as ViteUserConfig } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
 import { acquirePrebuiltFFmpeg } from './scripts/build/desktop-app/ffmpeg-prebuilt';
 import {
@@ -12,16 +12,6 @@ import { readFromViteEnv } from './scripts/build/vite-runner';
 
 const path = require('path') as typeof import('path');
 const fs = require('fs-extra') as typeof import('fs-extra');
-
-type ViteUserConfig = ViteUserConfigActual & {
-	// This is an experimental feature, and as of time of writing
-	// does not exists with the type definition the package exports.
-	// They do work tho: https://vitejs.dev/guide/ssr.html#ssr-externals
-	ssr?: {
-		external?: (string | RegExp)[];
-		noExternal?: (string | RegExp)[];
-	};
-};
 
 type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'];
 
@@ -391,7 +381,7 @@ export default defineConfig(async () => {
 					// By default vite outputs filenames with their chunks, but
 					// some ad blockers are outrageously aggressive with their
 					// filter lists, for example blocking any file that contains
-					// the string 'follow-widget'. It'd ridiculous. For this
+					// the string 'follow-widget'. It's ridiculous. For this
 					// reason, do not output filenames in prod web-based builds.
 					if (
 						gjOpts.environment === 'production' &&
@@ -500,6 +490,15 @@ export default defineConfig(async () => {
 			GJ_VERSION: JSON.stringify(gjOpts.version),
 			GJ_WITH_UPDATER: JSON.stringify(gjOpts.withUpdater),
 			GJ_HAS_ROUTER: JSON.stringify(gjOpts.currentSectionConfig.hasRouter),
+
+			// In SSR builds Vite is not doing the NODE_ENV replacements. Our
+			// code expects the build to replace these so that the code gets
+			// tree shaked out and not run.
+			...onlyInSSR({
+				'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+				'global.process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+				'globalThis.process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+			}),
 		},
 
 		...onlyInSSR<ViteUserConfig>({
