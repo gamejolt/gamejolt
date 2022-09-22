@@ -4,10 +4,13 @@ import { RouterLink } from 'vue-router';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { User } from '../../../../_common/user/user.model';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		resolver: () => User.touch(),
+	}),
 };
 </script>
 
@@ -99,10 +102,10 @@ createAppRoute({
 				</RouterLink>
 				<RouterLink
 					class="list-group-item"
-					:to="{ name: 'dash.account.withdraw-funds' }"
+					:to="{ name: 'dash.account.wallet' }"
 					active-class="active"
 				>
-					<AppTranslate>Revenue</AppTranslate>
+					<AppTranslate>Wallet</AppTranslate>
 				</RouterLink>
 				<RouterLink
 					class="list-group-item"

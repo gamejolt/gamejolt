@@ -29,6 +29,7 @@ import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { Game } from '../../../../_common/game/game.model';
+import AppInviteCard from '../../../../_common/invite/AppInviteCard.vue';
 import '../../../../_common/lazy/placeholder/placeholder.styl';
 import { LinkedAccount, Provider } from '../../../../_common/linked-account/linked-account.model';
 import { Meta } from '../../../../_common/meta/meta-service';
@@ -82,6 +83,7 @@ const FiresideScrollInviewConfig = new ScrollInviewConfig({
 		AppTrophyThumbnail,
 		AppFiresideBadge,
 		AppShareCard,
+		AppInviteCard,
 		AppScrollInview,
 		AppAspectRatio,
 		AppShellPageBackdrop,
@@ -657,7 +659,13 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 					</template>
 
 					<template #right>
-						<AppShareCard resource="user" :url="shareUrl" bleed-padding />
+						<AppShareCard
+							v-if="!app.user || app.user.id !== user.id"
+							resource="user"
+							:url="shareUrl"
+							bleed-padding
+						/>
+						<AppInviteCard v-else :user="app.user" />
 
 						<AppUserKnownFollowers
 							v-if="shouldShowKnownFollowers"
