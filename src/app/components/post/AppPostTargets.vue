@@ -91,7 +91,9 @@ const canShow = computed(() => {
 	}
 
 	const realmsValid =
-		(!!targetableRealms?.value?.length && canAddRealm.value) || realms.value.length > 0;
+		isLoadingRealms.value ||
+		(!!targetableRealms?.value?.length && canAddRealm.value) ||
+		realms.value.length > 0;
 
 	return realmsValid;
 });
@@ -162,6 +164,16 @@ async function _scrollToEnd() {
 				</AppPostTargetCommunity>
 			</AppFormsPillSelectorCommunities>
 
+			<AppPostTargetRealm
+				v-for="realm of realms"
+				:key="`realm-${realm.id}`"
+				:class="baseClasses"
+				:can-remove="canRemoveRealms"
+				:realm="realm"
+				:has-links="hasLinks"
+				@remove="onRemoveRealm"
+			/>
+
 			<AppPostTargetCommunity
 				v-for="{ community, channel, featured_on } of communities"
 				:key="`community-${community.id}`"
@@ -174,14 +186,14 @@ async function _scrollToEnd() {
 				@remove="onRemoveCommunity"
 			/>
 
-			<AppPostTargetRealm
-				v-for="realm of realms"
-				:key="`realm-${realm.id}`"
+			<AppPostTargetsAddRealm
+				v-if="canAddRealm"
+				key="add-realm"
 				:class="baseClasses"
-				:can-remove="canRemoveRealms"
-				:realm="realm"
-				:has-links="hasLinks"
-				@remove="onRemoveRealm"
+				:realms="targetableRealms"
+				:is-loading="isLoadingRealms"
+				@select="selectRealm"
+				@show="emit('showRealms')"
 			/>
 
 			<AppPostTargetsAddCommunity
@@ -191,16 +203,6 @@ async function _scrollToEnd() {
 				:communities="targetableCommunities"
 				@select="selectCommunity"
 				@show="emit('showCommunities')"
-			/>
-
-			<AppPostTargetsAddRealm
-				v-if="canAddRealm"
-				key="add-realm"
-				:class="baseClasses"
-				:realms="targetableRealms"
-				:is-loading="isLoadingRealms"
-				@select="selectRealm"
-				@show="emit('showRealms')"
 			/>
 
 			<span v-if="isEditing" key="autoscroll" v-app-scroll-when="scrollingKey" />

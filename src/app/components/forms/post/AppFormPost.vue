@@ -512,7 +512,7 @@ const canAddCommunity = computed(
 );
 
 const canAddRealm = computed(() => {
-	if (wasPublished.value || attachedRealms.value.length >= maxRealms.value) {
+	if (attachedRealms.value.length >= maxRealms.value) {
 		return false;
 	}
 
@@ -542,14 +542,6 @@ const possibleRealms = computed(() => {
 	return targetableRealms.value.filter(c1 => {
 		return !attachedRealms.value.find(c2 => c1.id === c2.id);
 	});
-});
-
-const shouldShowCommunities = computed(() => {
-	return (
-		attachedCommunities.value.length > 0 ||
-		possibleCommunities.value.length > 0 ||
-		incompleteDefaultCommunity.value
-	);
 });
 
 const incompleteDefaultCommunity = computed(() => {
@@ -1572,10 +1564,9 @@ function _getMatchingBackgroundIdFromPref() {
 			</fieldset>
 		</div>
 
-		<!-- Communities -->
+		<!-- Communities/Realms -->
 		<template v-if="form.isLoaded">
 			<AppPostTargets
-				v-if="shouldShowCommunities"
 				class="-post-targets"
 				:communities="attachedCommunities"
 				:realms="attachedRealms"
@@ -1586,7 +1577,7 @@ function _getMatchingBackgroundIdFromPref() {
 				:incomplete-community="incompleteDefaultCommunity || undefined"
 				:is-loading-realms="!hasLoadedRealms"
 				:can-remove-communities="!wasPublished"
-				:can-remove-realms="!wasPublished"
+				can-remove-realms
 				@remove-community="removeCommunity"
 				@remove-realm="removeRealm"
 				@select-community="attachCommunity"
@@ -1594,12 +1585,6 @@ function _getMatchingBackgroundIdFromPref() {
 				@select-realm="attachRealm"
 				@show-realms="loadRealms"
 			/>
-			<p v-else-if="!wasPublished" class="help-block">
-				<AppTranslate>Join some communities to post to them.</AppTranslate>
-				<span v-app-tooltip.touchable="$gettext(`Go to the Discover page and find some!`)">
-					<AppJolticon class="text-muted" icon="help-circle" />
-				</span>
-			</p>
 		</template>
 		<template v-else>
 			<div class="-post-targets-placeholder">
