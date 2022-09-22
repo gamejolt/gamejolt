@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppUserDogtag from '../../../app/components/user/AppUserDogtag.vue';
@@ -14,9 +14,7 @@ import AppUserFollowButton from '../follow/AppUserFollowButton.vue';
 import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
 import { User } from '../user.model';
 import AppUserVerifiedTick from '../verified-tick/AppUserVerifiedTick.vue';
-</script>
 
-<script lang="ts" setup>
 const props = defineProps({
 	user: {
 		type: Object as PropType<User>,

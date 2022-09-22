@@ -2,12 +2,11 @@
 import { computed, PropType, toRefs, triggerRef } from 'vue';
 import AppButton from '../../button/AppButton.vue';
 import { Clipboard } from '../../clipboard/clipboard-service';
-import { Environment } from '../../environment/environment.service';
+import AppModal from '../../modal/AppModal.vue';
+import { useModal } from '../../modal/modal.service';
 import { ShareModal } from '../../share/card/_modal/modal.service';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { User } from '../../user/user.model';
-import AppModal from '../AppModal.vue';
-import { useModal } from '../modal.service';
 
 const props = defineProps({
 	/** Should only be your own user. */
@@ -20,7 +19,7 @@ const props = defineProps({
 const { user } = toRefs(props);
 const modal = useModal()!;
 
-const url = computed(() => Environment.baseUrl + `/invite/${user.value.username}`);
+const url = computed(() => `https://gamejolt.com/invite/${user.value.username}`);
 
 function onCopy() {
 	Clipboard.copy(url.value);
@@ -69,11 +68,11 @@ function onInput() {
 			<input class="-url form-control" :value="url" @input="onInput" />
 
 			<div class="-actions">
-				<AppButton outline @click="onCopy">
-					<AppTranslate> Copy link </AppTranslate>
+				<AppButton @click="onCopy">
+					<AppTranslate>Copy link</AppTranslate>
 				</AppButton>
-				<AppButton outline primary @click="onShare">
-					<AppTranslate> Share </AppTranslate>
+				<AppButton primary @click="onShare">
+					<AppTranslate>Share</AppTranslate>
 				</AppButton>
 			</div>
 		</div>

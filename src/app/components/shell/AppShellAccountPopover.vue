@@ -2,9 +2,11 @@
 import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
+import AppButton from '../../../_common/button/AppButton.vue';
 import { Client } from '../../../_common/client/safe-exports';
 import { formatCurrency } from '../../../_common/filters/currency';
 import { formatNumber } from '../../../_common/filters/number';
+import { InviteModal } from '../../../_common/invite/modal/modal.service';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../_common/popper/AppPopper.vue';
 import { Screen } from '../../../_common/screen/screen-service';
@@ -61,6 +63,10 @@ async function _getWallet() {
 	marketplaceAmount.value = response.marketplaceWalletBalance || 0;
 	gemWallet.value = response.gemWallet ? new UserWallet(response.gemWallet) : undefined;
 	isFetchingWallet.value = false;
+}
+
+function showInviteModal() {
+	InviteModal.show({ user: user.value! });
 }
 
 function quit() {
@@ -210,6 +216,12 @@ function quit() {
 					</template>
 				</div>
 
+				<div class="-invite-well">
+					<AppButton block primary solid @click="showInviteModal()">
+						<AppTranslate>Invite a friend</AppTranslate>
+					</AppButton>
+				</div>
+
 				<div class="-separator" />
 
 				<div class="-session-actions list-group-dark">
@@ -306,4 +318,7 @@ function quit() {
 	flex: auto
 	align-items: center
 	gap: 8px
+
+.-invite-well
+	padding: $list-group-item-padding
 </style>
