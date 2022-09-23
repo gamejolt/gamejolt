@@ -80,11 +80,16 @@ export type Field =
 
 export type GameField = 'game_name';
 export type UserField = 'user_display_name';
+export type PostField = 'post_lead';
+export type FiresideField = 'fireside_title';
+
 export interface ResourceFields {
 	game?: GameField[];
 	user?: UserField[];
 	partner?: UserField[];
 	creator_supporter?: UserField[];
+	fireside_post?: PostField[];
+	fireside?: FiresideField[];
 }
 
 export type MetricKey =
@@ -145,7 +150,7 @@ export interface ReportComponent {
 	fieldType?: 'currency';
 	fetchFields?: Field[];
 	resourceFields?: ResourceFields;
-	displayField?: Field | GameField | UserField;
+	displayField?: Field | GameField | UserField | PostField | FiresideField;
 
 	// These are only filled out for report component responses.
 	data?: any;
@@ -338,6 +343,32 @@ export const ReportTopCreatorSupporters: ReportComponent[] = [
 			creator_supporter: ['user_display_name'],
 		},
 		displayField: 'user_display_name',
+	},
+];
+
+export const ReportTopCreatorPosts: ReportComponent[] = [
+	{
+		type: 'top-composition-sum',
+		field: 'fireside_post',
+		fieldLabel: 'Posts',
+		fetchFields: ['charge_amount'],
+		resourceFields: {
+			fireside_post: ['post_lead'],
+		},
+		displayField: 'post_lead',
+	},
+];
+
+export const ReportTopCreatorFiresides: ReportComponent[] = [
+	{
+		type: 'top-composition-sum',
+		field: 'fireside',
+		fieldLabel: 'Firesides',
+		fetchFields: ['charge_amount'],
+		resourceFields: {
+			fireside: ['fireside_title'],
+		},
+		displayField: 'fireside_title',
 	},
 ];
 

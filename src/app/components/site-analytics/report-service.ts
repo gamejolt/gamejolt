@@ -266,6 +266,8 @@ export class SiteAnalyticsReport {
 
 						case 'partner':
 						case 'creator_supporter':
+						case 'fireside_post':
+						case 'fireside':
 							dataEntry.label = displayValue;
 							break;
 					}
