@@ -265,6 +265,7 @@ export class SiteAnalyticsReport {
 							break;
 
 						case 'partner':
+						case 'creator_supporter':
 							dataEntry.label = displayValue;
 							break;
 					}

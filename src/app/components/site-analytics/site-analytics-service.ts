@@ -29,7 +29,8 @@ export type Collection =
 	| 'comments'
 	| 'ratings'
 	| 'follows'
-	| 'sales';
+	| 'sales'
+	| 'user-charges';
 
 export type Condition =
 	| 'time'
@@ -69,7 +70,13 @@ export type Field =
 	| 'user'
 	| 'partner_revenue'
 	| 'partner'
-	| 'logged_on';
+	| 'logged_on'
+	| 'charge_amount'
+	| 'charge_purpose'
+	| 'sticker'
+	| 'fireside_post'
+	| 'fireside'
+	| 'creator_supporter';
 
 export type GameField = 'game_name';
 export type UserField = 'user_display_name';
@@ -77,6 +84,7 @@ export interface ResourceFields {
 	game?: GameField[];
 	user?: UserField[];
 	partner?: UserField[];
+	creator_supporter?: UserField[];
 }
 
 export type MetricKey =
@@ -87,7 +95,8 @@ export type MetricKey =
 	| 'rating'
 	| 'follow'
 	| 'sale'
-	| 'revenue';
+	| 'revenue'
+	| 'user-charge';
 
 export interface Metric {
 	key: MetricKey;
@@ -320,6 +329,18 @@ export const ReportTopPartnerRevenue: ReportComponent[] = [
 	},
 ];
 
+export const ReportTopCreatorSupporters: ReportComponent[] = [
+	{
+		type: 'top-composition',
+		field: 'creator_supporter',
+		fieldLabel: 'Supporters',
+		resourceFields: {
+			creator_supporter: ['user_display_name'],
+		},
+		displayField: 'user_display_name',
+	},
+];
+
 export class SiteAnalytics {
 	private static _metrics: Metric[] = [
 		{
@@ -370,6 +391,13 @@ export class SiteAnalytics {
 			label: Translate.$gettext('Revenue'),
 			type: 'currency',
 			field: 'revenue',
+		},
+		{
+			key: 'user-charge',
+			collection: 'user-charges',
+			label: Translate.$gettext('Creator Charges'),
+			type: 'number',
+			field: 'charge_amount',
 		},
 	];
 

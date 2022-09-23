@@ -33,6 +33,7 @@ import {
 	ReportPartnerRevenue,
 	ReportRatingBreakdown,
 	ReportReferringPages,
+	ReportTopCreatorSupporters,
 	ReportTopGamePartnerRevenue,
 	ReportTopGameRevenue,
 	ReportTopGames,
@@ -412,6 +413,12 @@ export default class RouteDashAnalytics extends BaseRouteComponent {
 							...ReportTopGamePartnerRevenue
 						);
 					}
+					break;
+
+				case 'user-charge':
+					this.pullReport(this.$gettext('Top Supporters'), ...ReportTopCreatorSupporters);
+					// this.pullReport(this.$gettext('Top Posts'), ...ReportTopCreatorPosts);
+					// this.pullReport(this.$gettext('Top Firesides'), ...ReportTopCreatorFiresides);
 					break;
 			}
 		}
