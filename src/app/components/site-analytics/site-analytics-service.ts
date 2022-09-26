@@ -78,10 +78,10 @@ export type Field =
 	| 'fireside'
 	| 'creator_supporter';
 
-export type GameField = 'game_name';
-export type UserField = 'user_display_name';
-export type PostField = 'post_lead';
-export type FiresideField = 'fireside_title';
+export type GameField = 'game_name' | 'game_model';
+export type UserField = 'user_display_name' | 'user_model';
+export type PostField = 'post_lead' | 'post_model';
+export type FiresideField = 'fireside_title' | 'fireside_model';
 
 export interface ResourceFields {
 	game?: GameField[];
@@ -348,12 +348,11 @@ export const ReportTopCreatorSupporters: ReportComponent[] = [
 
 export const ReportTopCreatorPosts: ReportComponent[] = [
 	{
-		type: 'top-composition-sum',
+		type: 'top-composition',
 		field: 'fireside_post',
 		fieldLabel: 'Posts',
-		fetchFields: ['charge_amount'],
 		resourceFields: {
-			fireside_post: ['post_lead'],
+			fireside_post: ['post_lead', 'post_model'],
 		},
 		displayField: 'post_lead',
 	},
@@ -361,10 +360,9 @@ export const ReportTopCreatorPosts: ReportComponent[] = [
 
 export const ReportTopCreatorFiresides: ReportComponent[] = [
 	{
-		type: 'top-composition-sum',
+		type: 'top-composition',
 		field: 'fireside',
 		fieldLabel: 'Firesides',
-		fetchFields: ['charge_amount'],
 		resourceFields: {
 			fireside: ['fireside_title'],
 		},
