@@ -1,31 +1,28 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { RouterLink } from 'vue-router';
 import { formatNumber } from '../../../../../_common/filters/number';
-import AppGraph from '../../../../../_common/graph/graph.vue';
+import AppGraph from '../../../../../_common/graph/AppGraph.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import AppAnalyticsReportUserModel from './AppAnalyticsReportUserModel.vue';
 
-@Options({
-	components: {
-		AppGraph,
+defineProps({
+	reportData: {
+		type: Object,
+		required: true,
 	},
-})
-export default class AppAnalyticsReportTopComposition extends Vue {
-	@Prop(Object) reportData!: any;
+});
 
-	readonly Screen = Screen;
-	readonly formatNumber = formatNumber;
-
-	isScalarLabel(val: any) {
-		return typeof val.label !== 'object';
-	}
+function isScalarLabel(val: any) {
+	return typeof val.label !== 'object';
 }
 </script>
 
 <template>
 	<div>
 		<!--
-		If graph data is null, then don't show the graph and give more space for the
-		table.
+		If graph data is null, then don't show the graph and give more space for
+		the table.
 		-->
 		<div :class="reportData.graph !== null ? 'col-sm-8' : 'col-xs-12'">
 			<div v-if="!reportData.hasData" class="alert">
@@ -50,18 +47,29 @@ export default class AppAnalyticsReportTopComposition extends Vue {
 							<template v-if="isScalarLabel(val)">
 								{{ val.label }}
 							</template>
-							<router-link
-								v-else
-								:to="{
-									name: 'dash.analytics',
-									params: {
-										resource: val.label.resource,
-										resourceId: val.label.resourceId,
-									},
-								}"
-							>
-								{{ val.label.value }}
-							</router-link>
+							<template v-else-if="val.label.isAnalyticsEntry">
+								<RouterLink
+									:to="{
+										name: 'dash.analytics',
+										params: {
+											resource: val.label.resource,
+											resourceId: val.label.resourceId,
+										},
+									}"
+								>
+									{{ val.label.value }}
+								</RouterLink>
+							</template>
+							<template v-else>
+								<template v-if="val.label.resource === 'User'">
+									<AppAnalyticsReportUserModel :user="val.label.gathers.user" />
+								</template>
+								<template v-else-if="val.label.resource === 'Fireside_Post'">
+									<RouterLink :to="val.label.gathers.post.routeLocation">
+										{{ val.label.value }}
+									</RouterLink>
+								</template>
+							</template>
 						</th>
 						<td class="text-right">
 							{{ formatNumber(val.value) }}

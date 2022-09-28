@@ -5,7 +5,7 @@ import { Api } from '../../../../../../../_common/api/api.service';
 import AppExpand from '../../../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import { Game } from '../../../../../../../_common/game/game.model';
-import AppGraphWidget from '../../../../../../../_common/graph/widget/widget.vue';
+import AppGraphWidget from '../../../../../../../_common/graph/AppGraphWidget.vue';
 import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
 import { AppProgressPoller } from '../../../../../../../_common/progress/poller/poller';
 import {

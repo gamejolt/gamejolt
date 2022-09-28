@@ -1,13 +1,13 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
 import { formatNumber } from '../../../../../_common/filters/number';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
-@Options({})
-export default class AppAnalyticsReportRatingBreakdown extends Vue {
-	@Prop(Object) reportData!: any;
-
-	readonly formatNumber = formatNumber;
-}
+defineProps({
+	reportData: {
+		type: Object,
+		required: true,
+	},
+});
 </script>
 
 <template>
