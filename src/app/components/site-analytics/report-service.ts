@@ -1,7 +1,9 @@
 import { arrayUnique } from '../../../utils/array';
 import { Api } from '../../../_common/api/api.service';
+import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Geo } from '../../../_common/geo/geo.service';
 import { $gettext } from '../../../_common/translate/translate.service';
+import { User } from '../../../_common/user/user.model';
 import {
 	Analyzer,
 	Collection,
@@ -22,7 +24,6 @@ export class SiteAnalyticsReport {
 		resource: ResourceName,
 		resourceId: number,
 		collection: Collection,
-		partnerMode: boolean,
 		viewAs: number | undefined,
 		startTime: number | undefined,
 		endTime: number | undefined
@@ -58,9 +59,6 @@ export class SiteAnalyticsReport {
 			if (conditionFields.indexOf('partner_generated_donation') !== -1) {
 				conditions.push('has-donations', 'has-partner');
 			}
-			if (partnerMode) {
-				conditions.push('partner');
-			}
 			conditions = arrayUnique(conditions);
 
 			// Replace the pseudo fields by their normal fields
@@ -91,7 +89,6 @@ export class SiteAnalyticsReport {
 				analyzer,
 				field,
 				viewAs,
-				partnerMode,
 				conditions,
 				fetchFields,
 				component.resourceFields,
@@ -131,7 +128,6 @@ export class SiteAnalyticsReport {
 		analyzer: Analyzer,
 		field: Field,
 		viewAs: number | undefined,
-		partnerMode: boolean | undefined,
 		conditions: Condition[] | undefined,
 		fetchFields: Field[] | undefined,
 		resourceFields: ResourceFields | undefined,
@@ -148,10 +144,6 @@ export class SiteAnalyticsReport {
 
 		if (viewAs) {
 			request.view_as = viewAs;
-		}
-
-		if (partnerMode) {
-			request.as_partner = partnerMode;
 		}
 
 		if (conditions) {
@@ -186,9 +178,7 @@ export class SiteAnalyticsReport {
 	}
 
 	private processComponentResponse(component: ReportComponent, _response: any, gathers?: any) {
-		const field = component.field,
-			analyzer = component.type,
-			displayField = component.displayField;
+		const { field, type: analyzer, displayField } = component;
 
 		// Copy the response.
 		const response: any = Object.assign({}, _response);
@@ -208,7 +198,14 @@ export class SiteAnalyticsReport {
 			analyzer === 'top-composition-avg'
 		) {
 			// Rating is a special case of top composition. We want to keep processing it as { key: value } and not convert it.
-			if (field !== 'rating') {
+			if (field === 'rating') {
+				// Make sure all the rating values are filled in, and in the correct order
+				data = {};
+				[1, 2, 3, 4, 5].forEach(rating => {
+					data[rating] = response.result[rating] || 0;
+				});
+				response.result = data;
+			} else {
 				data = [];
 				Object.entries(response.result).forEach((kv: any) => {
 					// eslint-disable-next-line prefer-const
@@ -230,13 +227,6 @@ export class SiteAnalyticsReport {
 					});
 				});
 				response.result = data;
-			} else {
-				// Make sure all the rating values are filled in, and in the correct order
-				data = {};
-				[1, 2, 3, 4, 5].forEach(rating => {
-					data[rating] = response.result[rating] || 0;
-				});
-				response.result = data;
 			}
 
 			// Top composition fields may refer to gathered fields. In this case replace them in now.
@@ -245,7 +235,8 @@ export class SiteAnalyticsReport {
 					const resourceInfo: string[] = dataEntry.label.split('-');
 					const resourceName = resourceInfo[0],
 						resourceId = parseInt(resourceInfo[1], 10);
-					const displayValue = gathers[resourceName][resourceId][displayField];
+					const gatheredData = gathers[resourceName][resourceId];
+					const displayValue = gatheredData[displayField];
 
 					switch (resourceName) {
 						case 'game':
@@ -253,6 +244,7 @@ export class SiteAnalyticsReport {
 								resource: 'Game',
 								resourceId: resourceId,
 								value: displayValue,
+								isAnalyticsEntry: true,
 							};
 							break;
 
@@ -261,12 +253,44 @@ export class SiteAnalyticsReport {
 								resource: 'User',
 								resourceId: resourceId,
 								value: displayValue,
+								isAnalyticsEntry: true,
+								gathers: {
+									user: gatheredData.user_model
+										? new User(gatheredData.user_model)
+										: null,
+								},
+							};
+							break;
+
+						case 'creator_supporter':
+							dataEntry.label = {
+								resource: 'User',
+								resourceId: resourceId,
+								value: displayValue,
+								isAnalyticsEntry: false,
+								gathers: {
+									user: gatheredData.user_model
+										? new User(gatheredData.user_model)
+										: null,
+								},
+							};
+							break;
+
+						case 'fireside_post':
+							dataEntry.label = {
+								resource: 'Fireside_Post',
+								resourceId: resourceId,
+								value: displayValue,
+								isAnalyticsEntry: false,
+								gathers: {
+									post: gatheredData.post_model
+										? new FiresidePost(gatheredData.post_model)
+										: null,
+								},
 							};
 							break;
 
 						case 'partner':
-						case 'creator_supporter':
-						case 'fireside_post':
 						case 'fireside':
 							dataEntry.label = displayValue;
 							break;

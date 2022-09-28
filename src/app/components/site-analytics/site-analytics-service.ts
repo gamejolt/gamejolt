@@ -1,8 +1,9 @@
+import { computed } from 'vue';
 import { arrayIndexBy } from '../../../utils/array';
 import { objectPick } from '../../../utils/object';
 import { Api } from '../../../_common/api/api.service';
 import { Graph } from '../../../_common/graph/graph.service';
-import { Translate } from '../../../_common/translate/translate.service';
+import { $gettext } from '../../../_common/translate/translate.service';
 
 export type ResourceName = 'Partner' | 'User' | 'Game' | 'Game_Package' | 'Game_Release';
 
@@ -114,7 +115,7 @@ export interface Metric {
 /**
  * Metric maps are indexed by the Metric.key field.
  */
-export type MetricMap = { [k: string]: Metric };
+export type MetricMap = Partial<Record<MetricKey, Metric>>;
 
 /**
  * Start timestamp, end timestamp
@@ -258,21 +259,6 @@ export const ReportTopGameRevenue: ReportComponent[] = [
 		displayField: 'game_name',
 	},
 ];
-
-export const ReportTopGamePartnerRevenue: ReportComponent[] = [
-	{
-		type: 'top-composition-sum',
-		field: 'game',
-		fetchFields: ['partner_revenue'],
-		resourceFields: {
-			game: ['game_name'],
-		},
-		fieldLabel: 'Revenue by Game',
-		fieldType: 'currency',
-		displayField: 'game_name',
-	},
-];
-
 export const ReportTopPartners: ReportComponent[] = [
 	{
 		type: 'top-composition',
@@ -296,15 +282,6 @@ export const ReportPartnerGeneratedRevenue: ReportComponent[] = [
 		type: 'average',
 		field: 'partner_generated_donation',
 		fieldLabel: 'Average Support',
-		fieldType: 'currency',
-	},
-];
-
-export const ReportPartnerRevenue: ReportComponent[] = [
-	{
-		type: 'sum',
-		field: 'partner_revenue',
-		fieldLabel: 'Total Revenue',
 		fieldType: 'currency',
 	},
 ];
@@ -340,7 +317,7 @@ export const ReportTopCreatorSupporters: ReportComponent[] = [
 		field: 'creator_supporter',
 		fieldLabel: 'Supporters',
 		resourceFields: {
-			creator_supporter: ['user_display_name'],
+			creator_supporter: ['user_display_name', 'user_model'],
 		},
 		displayField: 'user_display_name',
 	},
@@ -375,112 +352,96 @@ export class SiteAnalytics {
 		{
 			key: 'view',
 			collection: 'views',
-			label: Translate.$gettext('Views'),
+			label: $gettext(`Game Page Views`),
 			type: 'number',
 		},
 		{
 			key: 'download',
 			collection: 'downloads',
-			label: Translate.$gettext('Downloads'),
+			label: $gettext(`Game Downloads`),
 			type: 'number',
 		},
 		{
 			key: 'install',
 			collection: 'installs',
-			label: Translate.$gettext('Installs'),
+			label: $gettext(`Game Installs`),
 			type: 'number',
 		},
 		{
 			key: 'comment',
 			collection: 'comments',
-			label: Translate.$gettext('Comments'),
+			label: $gettext(`Game Comments`),
 			type: 'number',
 		},
 		{
 			key: 'rating',
 			collection: 'ratings',
-			label: Translate.$gettext('Ratings'),
+			label: $gettext(`Game Ratings`),
 			type: 'number',
 		},
 		{
 			key: 'follow',
 			collection: 'follows',
-			label: Translate.$gettext('Follows'),
+			label: $gettext(`Game Follows`),
 			type: 'number',
 		},
 		{
 			key: 'sale',
 			collection: 'sales',
-			label: Translate.$gettext('Sales'),
+			label: $gettext(`Game Sales`),
 			type: 'number',
 		},
 		{
 			key: 'revenue',
 			collection: 'sales',
-			label: Translate.$gettext('Revenue'),
+			label: $gettext(`Game Revenue`),
 			type: 'currency',
 			field: 'revenue',
 		},
 		{
 			key: 'user-charge',
 			collection: 'user-charges',
-			label: Translate.$gettext('Creator Charges'),
+			label: $gettext(`Charged Stickers`),
 			type: 'number',
 			field: 'charge_amount',
 		},
 	];
 
-	private static _allMetrics: MetricMap;
-	private static _packageMetrics: MetricMap;
-	private static _releaseMetrics: MetricMap;
+	static allMetrics = computed((): MetricMap => {
+		return arrayIndexBy(this._metrics, 'key');
+	});
 
-	static get allMetrics() {
-		if (!this._allMetrics) {
-			this._allMetrics = arrayIndexBy(this._metrics, 'key');
-		}
+	static creatorMetrics = computed((): MetricMap => {
+		return objectPick(this.allMetrics.value, ['user-charge']);
+	});
 
-		return this._allMetrics;
-	}
+	static gameDevMetrics = computed((): MetricMap => {
+		return objectPick(this.allMetrics.value, [
+			'view',
+			'download',
+			'install',
+			'comment',
+			'rating',
+			'follow',
+			'sale',
+			'revenue',
+		]);
+	});
 
-	// Currently all metrics work for users and games.
-	// Changes between the reports loaded is in the analytics controller at time of switching metric.
-	static get userMetrics() {
-		return this.allMetrics;
-	}
+	static gameMetrics = computed(() => this.gameDevMetrics.value);
 
-	static get gameMetrics() {
-		return this.allMetrics;
-	}
+	static packageMetrics = computed((): MetricMap => {
+		return objectPick(this.allMetrics.value, ['download', 'install', 'sale', 'revenue']);
+	});
 
-	static get packageMetrics() {
-		if (!this._packageMetrics) {
-			const possibleMetrics: MetricKey[] = ['download', 'install', 'sale', 'revenue'];
-			this._packageMetrics = <MetricMap>objectPick(this.allMetrics, possibleMetrics);
-		}
-
-		return this._packageMetrics;
-	}
-
-	// Current release metrics are the same as package metrics.
-	static get releaseMetrics() {
-		if (!this._releaseMetrics) {
-			const possibleMetrics: MetricKey[] = ['download', 'install'];
-			this._releaseMetrics = <MetricMap>objectPick(this.allMetrics, possibleMetrics);
-		}
-
-		return this._releaseMetrics;
-	}
-
-	static pickPartnerMetrics(metrics: MetricMap) {
-		const possibleMetrics: MetricKey[] = ['view', 'sale', 'revenue'];
-		return <MetricMap>objectPick(metrics, possibleMetrics);
-	}
+	static releaseMetrics = computed((): MetricMap => {
+		return objectPick(this.allMetrics.value, ['download', 'install']);
+	});
 
 	static async getHistogram(
 		resource: ResourceName,
 		resourceId: number,
 		metrics: MetricMap,
-		partnerMode: boolean,
 		viewAs: number,
 		dates: DateRange
 	) {
@@ -489,7 +450,6 @@ export class SiteAnalytics {
 			resourceId,
 			metrics,
 			'histogram',
-			partnerMode,
 			viewAs,
 			dates
 		);
@@ -518,7 +478,6 @@ export class SiteAnalytics {
 		resource: ResourceName,
 		resourceId: number,
 		metrics: MetricMap,
-		partnerMode: boolean,
 		viewAs: number,
 		dates?: DateRange
 	) {
@@ -527,7 +486,6 @@ export class SiteAnalytics {
 			resourceId,
 			metrics,
 			'count',
-			partnerMode,
 			viewAs,
 			dates
 		);
@@ -560,7 +518,6 @@ export class SiteAnalytics {
 		resourceId: number,
 		metrics: MetricMap,
 		analyzer: Analyzer,
-		partnerMode: boolean,
 		viewAs: number,
 		dates?: DateRange
 	) {
@@ -590,14 +547,6 @@ export class SiteAnalytics {
 
 			if (metric.field) {
 				request[metric.key].field = metric.field;
-			}
-
-			if (partnerMode) {
-				if (request[metric.key].field === 'revenue') {
-					request[metric.key].field = 'partner_revenue';
-				}
-				request[metric.key].conditions = ['partner'];
-				request[metric.key].as_partner = true;
 			}
 
 			if (dates) {

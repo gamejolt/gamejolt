@@ -4,33 +4,16 @@
 	position: relative
 	margin-bottom: $line-height-computed
 
-	&::before
-		change-bg('light')
-		display: block
-		content: ''
-		position: absolute
-		left: 0
-		right: 0
-		bottom: 0
-		height: 3px
-		opacity: 0
-		transition: opacity 300ms
-		z-index: 1
-
 	a&
 		color: inherit
-		padding-bottom: 3px
+
+		&:hover
+			.stat-big-label
+				color: var(--theme-fg)
 
 		&.active
-			&
-			&:hover
-				&::before
-					transition: none
-					opacity: 1
-
-		&:hover::before
-			transition: none
-			opacity: 0.8
+			.stat-big-label
+				color: var(--theme-primary)
 
 	> .stat-big
 		position: relative

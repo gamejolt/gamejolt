@@ -1,24 +1,23 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
 import { formatCurrency } from '../../../../../_common/filters/currency';
 import { formatNumber } from '../../../../../_common/filters/number';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
-@Options({})
-export default class AppAnalyticsReportSimpleStat extends Vue {
-	@Prop(Object) reportData!: any;
-
-	readonly formatNumber = formatNumber;
-	readonly formatCurrency = formatCurrency;
-}
+defineProps({
+	reportData: {
+		type: Object,
+		required: true,
+	},
+});
 </script>
 
 <template>
 	<div class="col-sm-6 col-sm-3">
-		<div class="alert" v-if="!reportData.hasData">
+		<div v-if="!reportData.hasData" class="alert">
 			<AppTranslate>No data yet.</AppTranslate>
 		</div>
 
-		<div class="stat-big" v-if="reportData.hasData">
+		<div v-if="reportData.hasData" class="stat-big">
 			<div class="stat-big-label">
 				{{ reportData.fieldLabel }}
 			</div>

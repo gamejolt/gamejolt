@@ -156,6 +156,20 @@ function quit() {
 					>
 						<AppTranslate>Settings</AppTranslate>
 					</RouterLink>
+					<RouterLink
+						v-if="user.is_developer || user.is_creator"
+						v-app-track-event="`account-popover:analytics`"
+						class="list-group-item offline-disable"
+						:to="{
+							name: 'dash.analytics',
+							params: {
+								resource: 'User',
+								resourceId: user.id,
+							},
+						}"
+					>
+						<AppTranslate>Analytics</AppTranslate>
+					</RouterLink>
 					<a
 						v-app-track-event="`account-popover:token`"
 						class="list-group-item offline-disable"
