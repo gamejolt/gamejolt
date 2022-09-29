@@ -263,8 +263,8 @@ async function onMessageClick() {
 					/>
 
 					<div v-if="message.showMeta" class="-item-byline">
-						<span v-if="roleData" v-app-tooltip="roleData.tooltip" class="-role-icon">
-							<AppJolticon :icon="roleData.icon" />
+						<span v-if="roleData" v-app-tooltip="roleData.tooltip" class="-role">
+							<AppJolticon class="-role-icon" :icon="roleData.icon" />
 						</span>
 
 						<RouterLink class="-user link-unstyled" :to="message.user.url">
@@ -434,7 +434,7 @@ $-min-item-width = 24px
 	align-items: center
 	margin-bottom: 4px
 
-.-role-icon
+.-role
 	img-circle()
 	change-bg(bg)
 	elevate-1()
@@ -446,14 +446,14 @@ $-min-item-width = 24px
 	height: 20px
 	z-index: 1
 
-	::v-deep(.jolticon)
-		font-size: 13px
-		position: absolute
-		color: var(--theme-primary)
-		left: 50%
-		top: 50%
-		transform: translate(-50%, -50%)
-		margin: 0
+.-role-icon
+	font-size: 13px
+	position: absolute
+	color: var(--theme-primary)
+	left: 50%
+	top: 50%
+	transform: translate(-50%, -50%)
+	margin: 0
 
 .-user
 	text-overflow()
