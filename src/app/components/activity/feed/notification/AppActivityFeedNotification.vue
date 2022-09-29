@@ -1,5 +1,19 @@
-<script lang="ts">
-import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+// We want to make sure it doesn't actually have to import all these models to
+// display.
+import type { Comment } from '../../../../../_common/comment/comment-model';
+import type { Community } from '../../../../../_common/community/community.model';
+import type { FiresideCommunity } from '../../../../../_common/fireside/community/community.model';
+import type { Fireside } from '../../../../../_common/fireside/fireside.model';
+import type { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
+import type { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import type { Mention } from '../../../../../_common/mention/mention.model';
+import type { QuestNotification } from '../../../../../_common/quest/quest-notification-model';
+import type { UserGameTrophy } from '../../../../../_common/user/trophy/game-trophy.model';
+import type { UserSiteTrophy } from '../../../../../_common/user/trophy/site-trophy.model';
+
+import { computed, PropType, ref, toRefs } from 'vue';
+import { RouterLink, useRouter } from 'vue-router';
 import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
 import '../../../../../_common/comment/comment.styl';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
@@ -9,10 +23,8 @@ import {
 } from '../../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { Mention } from '../../../../../_common/mention/mention.model';
 import { Notification } from '../../../../../_common/notification/notification-model';
 import { NotificationText } from '../../../../../_common/notification/notification-text.service';
-import { Screen } from '../../../../../_common/screen/screen-service';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -23,109 +35,80 @@ import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar
 import { User } from '../../../../../_common/user/user.model';
 import { getTrophyImg } from '../../../trophy/thumbnail/thumbnail.vue';
 import { ActivityFeedItem } from '../item-service';
-import { ActivityFeedKey, ActivityFeedView } from '../view';
+import { useActivityFeed } from '../view';
 
-@Options({
-	components: {
-		AppTimelineListItem,
-		AppTimeAgo,
-		AppFadeCollapse,
-		AppUserCardHover,
-		AppUserAvatar,
-		AppContentViewer,
-		AppCommunityThumbnailImg,
-		AppJolticon,
+const props = defineProps({
+	item: {
+		type: Object as PropType<ActivityFeedItem>,
+		required: true,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppActivityFeedNotification extends Vue {
-	@Prop({ type: Object, required: true })
-	item!: ActivityFeedItem;
+});
 
-	@Inject({ from: ActivityFeedKey })
-	feed!: ActivityFeedView;
+const emit = defineEmits({
+	clicked: () => true,
+});
 
-	canToggleContent = false;
-	readonly Screen = Screen;
-	readonly Notification = Notification;
+const { item } = toRefs(props);
+const feed = useActivityFeed()!;
+const router = useRouter();
 
-	@Emit('clicked')
-	emitClicked() {}
+const canToggleContent = ref(false);
 
-	get notification() {
-		return this.item.feedItem as Notification;
+const notification = computed(() => item.value.feedItem as Notification);
+const isNew = computed(() => feed.isItemUnread(item.value));
+const isFromUser = computed(() => notification.value.from_model instanceof User);
+const showTime = computed(() => notification.value.type !== Notification.TYPE_QUEST_NOTIFICATION);
+const titleText = computed(() => NotificationText.getText(notification.value, false));
+
+// Only show when there is a title text for the notification.
+const shouldShow = computed(() => titleText.value !== undefined);
+
+const hasDetails = computed(() => {
+	if (
+		notification.value.type === Notification.TYPE_MENTION &&
+		(notification.value.action_model as Mention).resource === 'Comment'
+	) {
+		return true;
 	}
 
-	get isNew() {
-		return this.feed.isItemUnread(this.item);
+	// Community user notifications with a post want to show the post lead.
+	if (
+		notification.value.type === Notification.TYPE_COMMUNITY_USER_NOTIFICATION &&
+		[NotificationType.POSTS_EJECT, NotificationType.POSTS_MOVE].includes(
+			(notification.value.action_model as CommunityUserNotification).type
+		)
+	) {
+		return true;
 	}
 
-	get titleText() {
-		return NotificationText.getText(this.notification, false);
+	return [
+		Notification.TYPE_COMMENT_ADD,
+		Notification.TYPE_COMMENT_ADD_OBJECT_OWNER,
+		Notification.TYPE_POST_FEATURED_IN_COMMUNITY,
+		Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY,
+		Notification.TYPE_QUEST_NOTIFICATION,
+		Notification.TYPE_GAME_TROPHY_ACHIEVED,
+		Notification.TYPE_SITE_TROPHY_ACHIEVED,
+	].includes(notification.value.type);
+});
+
+const trophyImg = computed(() => {
+	if (
+		notification.value.action_model instanceof UserBaseTrophy &&
+		notification.value.action_model.trophy instanceof BaseTrophy
+	) {
+		return getTrophyImg(notification.value.action_model.trophy);
 	}
+});
 
-	get shouldShow() {
-		// Only show when there is a title text for the notification.
-		return this.titleText !== undefined;
-	}
+function go() {
+	notification.value.$read();
+	notification.value.go(router);
+	emit('clicked');
+}
 
-	get hasDetails() {
-		if (
-			this.notification.type === Notification.TYPE_MENTION &&
-			(this.notification.action_model as Mention).resource === 'Comment'
-		) {
-			return true;
-		}
-
-		// Community user notifications with a post want to show the post lead.
-		if (
-			this.notification.type === Notification.TYPE_COMMUNITY_USER_NOTIFICATION &&
-			[NotificationType.POSTS_EJECT, NotificationType.POSTS_MOVE].includes(
-				(this.notification.action_model as CommunityUserNotification).type
-			)
-		) {
-			return true;
-		}
-
-		return [
-			Notification.TYPE_COMMENT_ADD,
-			Notification.TYPE_COMMENT_ADD_OBJECT_OWNER,
-			Notification.TYPE_POST_FEATURED_IN_COMMUNITY,
-			Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY,
-			Notification.TYPE_QUEST_NOTIFICATION,
-			Notification.TYPE_GAME_TROPHY_ACHIEVED,
-			Notification.TYPE_SITE_TROPHY_ACHIEVED,
-		].includes(this.notification.type);
-	}
-
-	get trophyImg() {
-		if (
-			this.notification.action_model instanceof UserBaseTrophy &&
-			this.notification.action_model.trophy instanceof BaseTrophy
-		) {
-			return getTrophyImg(this.notification.action_model.trophy);
-		}
-	}
-
-	get fromIsUser() {
-		return this.notification.from_model instanceof User;
-	}
-
-	get showTime() {
-		return this.notification.type !== Notification.TYPE_QUEST_NOTIFICATION;
-	}
-
-	go() {
-		this.notification.$read();
-		this.notification.go(this.$router);
-		this.emitClicked();
-	}
-
-	onMarkRead() {
-		this.notification.$read();
-	}
+function onMarkRead() {
+	notification.value.$read();
 }
 </script>
 
@@ -134,7 +117,7 @@ export default class AppActivityFeedNotification extends Vue {
 		<template v-if="shouldShow">
 			<div class="notification-item">
 				<div class="notification-container" @click.stop="go">
-					<router-link :to="notification.routeLocation">
+					<RouterLink :to="notification.routeLocation">
 						<AppTimelineListItem :is-new="isNew">
 							<template #bubble>
 								<template
@@ -145,16 +128,16 @@ export default class AppActivityFeedNotification extends Vue {
 								>
 									<div class="-community-thumb">
 										<AppCommunityThumbnailImg
-											:community="notification.from_model"
+											:community="(notification.from_model as Community)"
 										/>
 									</div>
 								</template>
-								<template v-else-if="fromIsUser">
+								<template v-else-if="isFromUser">
 									<AppUserCardHover
-										:user="notification.from_model"
+										:user="(notification.from_model as User)"
 										:disabled="!feed.shouldShowUserCards"
 									>
-										<AppUserAvatar :user="notification.from_model" />
+										<AppUserAvatar :user="(notification.from_model as User)" />
 									</AppUserCardHover>
 								</template>
 								<template
@@ -167,7 +150,7 @@ export default class AppActivityFeedNotification extends Vue {
 								>
 									<div class="-community-thumb">
 										<AppCommunityThumbnailImg
-											:community="notification.action_model.community"
+											:community="(notification.action_model as FiresidePostCommunity | FiresideCommunity).community"
 										/>
 									</div>
 								</template>
@@ -217,7 +200,7 @@ export default class AppActivityFeedNotification extends Vue {
 															Notification.TYPE_COMMENT_ADD_OBJECT_OWNER
 													"
 													:source="
-														notification.action_model.comment_content
+														(notification.action_model as Comment).comment_content
 													"
 												/>
 												<AppContentViewer
@@ -226,8 +209,8 @@ export default class AppActivityFeedNotification extends Vue {
 														Notification.TYPE_MENTION
 													"
 													:source="
-														notification.action_model.comment
-															.comment_content
+														(notification.action_model as Mention).comment
+															?.comment_content
 													"
 												/>
 												<span
@@ -237,7 +220,7 @@ export default class AppActivityFeedNotification extends Vue {
 													"
 												>
 													{{
-														notification.action_model.fireside_post.getShortLead()
+														(notification.action_model as FiresidePostCommunity).fireside_post?.getShortLead()
 													}}
 												</span>
 												<span
@@ -246,7 +229,7 @@ export default class AppActivityFeedNotification extends Vue {
 														Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY
 													"
 												>
-													{{ notification.to_model.title }}
+													{{ (notification.to_model as Fireside).title }}
 												</span>
 												<span
 													v-else-if="
@@ -254,7 +237,7 @@ export default class AppActivityFeedNotification extends Vue {
 														Notification.TYPE_COMMUNITY_USER_NOTIFICATION
 													"
 												>
-													{{ notification.to_model.getShortLead() }}
+													{{ (notification.to_model as FiresidePost).getShortLead() }}
 												</span>
 												<span
 													v-else-if="
@@ -265,7 +248,7 @@ export default class AppActivityFeedNotification extends Vue {
 													"
 												>
 													{{
-														notification.action_model.trophy.description
+														(notification.action_model as UserGameTrophy | UserSiteTrophy).trophy?.description
 													}}
 												</span>
 												<span
@@ -275,7 +258,7 @@ export default class AppActivityFeedNotification extends Vue {
 													"
 													class="tiny text-muted"
 												>
-													{{ notification.action_model.subtitle }}
+													{{ (notification.action_model as QuestNotification).subtitle }}
 												</span>
 											</AppFadeCollapse>
 										</div>
@@ -285,7 +268,7 @@ export default class AppActivityFeedNotification extends Vue {
 
 							<div class="-overlay" />
 						</AppTimelineListItem>
-					</router-link>
+					</RouterLink>
 				</div>
 				<div v-if="isNew" class="-actions">
 					<a @click.stop.prevent="onMarkRead">
