@@ -374,6 +374,8 @@ export class GridClient {
 					title = $gettext('Fireside Stream');
 					icon = notification.action_model.users[0].img_avatar;
 				}
+			} else if (notification.type === Notification.TYPE_CHARGED_STICKER) {
+				title = $gettext('Charged Sticker');
 			}
 
 			showInfoGrowl({
