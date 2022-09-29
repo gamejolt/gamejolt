@@ -21,6 +21,7 @@ import {
 } from '../../client';
 import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
+import { getChatUserRoleData } from '../../user';
 import AppChatUserPopover from '../../user-popover/user-popover.vue';
 import AppChatWindowOutputItemTime from './AppChatWindowOutputItemTime.vue';
 
@@ -158,6 +159,8 @@ const canEditMessage = computed(() => {
 	return chat.value.currentUser.id === message.value.user.id;
 });
 
+const roleData = computed(() => getChatUserRoleData(chat.value, room.value, message.value.user));
+
 function startEdit() {
 	setMessageEditing(chat.value, message.value);
 	Popper.hideAll();
@@ -260,6 +263,10 @@ async function onMessageClick() {
 					/>
 
 					<div v-if="message.showMeta" class="-item-byline">
+						<span v-if="roleData" v-app-tooltip="roleData.tooltip" class="-role-icon">
+							<AppJolticon :icon="roleData.icon" />
+						</span>
+
 						<RouterLink class="-user link-unstyled" :to="message.user.url">
 							{{ message.user.display_name }}
 						</RouterLink>
@@ -426,6 +433,27 @@ $-min-item-width = 24px
 	display: flex
 	align-items: center
 	margin-bottom: 4px
+
+.-role-icon
+	img-circle()
+	change-bg(bg)
+	elevate-1()
+	position: absolute
+	left: 0
+	top: 0
+	transform: translate(-25%, -25%)
+	width: 20px
+	height: 20px
+	z-index: 1
+
+	::v-deep(.jolticon)
+		font-size: 13px
+		position: absolute
+		color: var(--theme-primary)
+		left: 50%
+		top: 50%
+		transform: translate(-50%, -50%)
+		margin: 0
 
 .-user
 	text-overflow()
