@@ -5,7 +5,7 @@ import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import { ActivityFeedItem } from '../item-service';
-import AppActivityFeedNotification from '../notification/notification.vue';
+import AppActivityFeedNotification from '../notification/AppActivityFeedNotification.vue';
 import AppActivityFeedPost from '../post/AppActivityFeedPost.vue';
 import { useActivityFeed } from '../view';
 import AppActivityFeedItemPlaceholder from './AppActivityFeedItemPlaceholder.vue';
