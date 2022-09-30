@@ -16,7 +16,10 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
+import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
+import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { vAppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
+import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -25,31 +28,33 @@ import AppPageHeaderControls from '../../../components/page-header/controls/cont
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { SiteAnalyticsReport } from '../../../components/site-analytics/report-service';
 import {
-Metric,
-MetricKey,
-MetricMap,
-ReportCommentLanguages,
-ReportComponent,
-ReportCountries,
-ReportDevRevenue,
-ReportOs,
-ReportPartnerGeneratedRevenue,
-ReportRatingBreakdown,
-ReportReferringPages,
-ReportTopCreatorFiresides,
-ReportTopCreatorPosts,
-ReportTopCreatorSupporters,
-ReportTopGameRevenue,
-ReportTopGames,
-ReportTopPartnerRevenue,
-ReportTopPartners,
-ReportTopSources,
-ResourceName,
-SiteAnalytics
+	Metric,
+	MetricKey,
+	MetricMap,
+	ReportCommentLanguages,
+	ReportComponent,
+	ReportCountries,
+	ReportDevRevenue,
+	ReportInvitedUsers,
+	ReportOs,
+	ReportPartnerGeneratedRevenue,
+	ReportRatingBreakdown,
+	ReportReferringPages,
+	ReportTopChargedFiresides,
+	ReportTopChargedPosts,
+	ReportTopCreatorSupporters,
+	ReportTopGameRevenue,
+	ReportTopGames,
+	ReportTopPartnerRevenue,
+	ReportTopPartners,
+	ReportTopSources,
+	ResourceName,
+	SiteAnalytics,
 } from '../../../components/site-analytics/site-analytics-service';
 import AppAnalyticsReportRatingBreakdown from './_report/AppAnalyticsReportRatingBreakdown.vue';
 import AppAnalyticsReportSimpleStat from './_report/AppAnalyticsReportSimpleStat.vue';
 import AppAnalyticsReportTopComposition from './_report/AppAnalyticsReportTopComposition.vue';
+import AppAnalyticsReportUserGrid from './_report/AppAnalyticsReportUserGrid.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -67,9 +72,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 const { user: appUser } = useCommonStore();
 const route = useRoute();
 
@@ -165,6 +167,8 @@ const { isBootstrapped } = createAppRoute({
 				if (user.value.is_creator) {
 					_addMetrics(SiteAnalytics.creatorMetrics);
 				}
+
+				_addMetrics(SiteAnalytics.userMetrics);
 
 				_selectMetric();
 				break;
@@ -337,9 +341,12 @@ function _metricChanged() {
 
 			case 'user-charge':
 				pullReport($gettext('Top Supporters'), ...ReportTopCreatorSupporters);
-				pullReport($gettext('Top Posts'), ...ReportTopCreatorPosts);
-				pullReport($gettext('Top Firesides'), ...ReportTopCreatorFiresides);
+				pullReport($gettext('Top Posts'), ...ReportTopChargedPosts);
+				pullReport($gettext('Top Firesides'), ...ReportTopChargedFiresides);
 				break;
+
+			case 'user-invite':
+				pullReport($gettext('Latest Invited Users'), ...ReportInvitedUsers);
 		}
 	} else {
 		switch (selectedMetric.value.key) {
@@ -611,7 +618,7 @@ function _metricChanged() {
 			<div v-if="pageReports.length" class="-reports">
 				<AppSpacer vertical :scale="4" />
 
-				<section class="section -reports">
+				<section class="section -reports fill-backdrop">
 					<div class="container">
 						<div v-for="(report, i) of pageReports" :id="`report-${i}`" :key="i">
 							<h2 :class="{ 'section-header': i === 0 }">
@@ -638,6 +645,14 @@ function _metricChanged() {
 									/>
 									<AppAnalyticsReportRatingBreakdown
 										v-else-if="component.type === 'rating-breakdown'"
+										:report-data="component"
+									/>
+									<!-- Fix when we need more types! Right now we only use this type for user lists -->
+									<AppAnalyticsReportUserGrid
+										v-else-if="
+											component.type === 'ordered-asc' ||
+											component.type === 'ordered-desc'
+										"
 										:report-data="component"
 									/>
 								</div>
@@ -670,5 +685,7 @@ function _metricChanged() {
 	text-align: start
 
 .-reports
+	position: relative
 	min-height: calc(100vh - var(--shell-top) - v-bind(metricsHeight))
+	z-index: 0
 </style>

@@ -26,7 +26,7 @@ function isScalarLabel(val: any) {
 		-->
 		<div :class="reportData.graph !== null ? 'col-sm-8' : 'col-xs-12'">
 			<div v-if="!reportData.hasData" class="alert">
-				<AppTranslate>No data yet.</AppTranslate>
+				<AppTranslate>No data.</AppTranslate>
 			</div>
 
 			<table v-if="reportData.hasData" class="table table-striped table-condensed">
@@ -77,8 +77,9 @@ function isScalarLabel(val: any) {
 						<td>
 							<div
 								class="report-percentage"
-								:style="{ width: (val / reportData.total) * 70 + 'px' }"
+								:style="{ width: (val.value / reportData.total) * 70 + 'px' }"
 							/>
+							{{ ' ' }}
 							<small>
 								{{
 									formatNumber(val.value / reportData.total, {

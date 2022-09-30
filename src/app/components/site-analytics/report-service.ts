@@ -93,7 +93,8 @@ export class SiteAnalyticsReport {
 				fetchFields,
 				component.resourceFields,
 				startTime,
-				endTime
+				endTime,
+				component.size
 			);
 		});
 
@@ -132,14 +133,15 @@ export class SiteAnalyticsReport {
 		fetchFields: Field[] | undefined,
 		resourceFields: ResourceFields | undefined,
 		startTime: number | undefined,
-		endTime: number | undefined
+		endTime: number | undefined,
+		size: number | undefined
 	) {
 		const request: Request = {
 			target: resource,
 			target_id: resourceId,
-			collection: collection,
-			analyzer: analyzer,
-			field: field,
+			collection,
+			analyzer,
+			field,
 		};
 
 		if (viewAs) {
@@ -170,6 +172,10 @@ export class SiteAnalyticsReport {
 			request.timezone = date.getTimezoneOffset();
 		}
 
+		if (size) {
+			request.size = size;
+		}
+
 		return Api.sendRequest(
 			'/web/dash/analytics/display',
 			{ data: request },
@@ -181,13 +187,35 @@ export class SiteAnalyticsReport {
 		const { field, type: analyzer, displayField } = component;
 
 		// Copy the response.
-		const response: any = Object.assign({}, _response);
+		const response: any = { ..._response };
 		let graph: any = null;
 		let data: any = {};
 
 		// We return "simple" single value analyzations as is.
 		if (analyzer === 'sum' || analyzer === 'average') {
 			response.result = response.result || 0;
+			return response;
+		}
+
+		// Right now it's pretty simple. We literally just support returning a
+		// list of users, but this should be expanded in the future to allow
+		// showing any type of data with multiple columns instead of just
+		// picking out the first one.
+		if (analyzer === 'ordered-asc' || analyzer === 'ordered-desc') {
+			const data = [];
+			for (const row of Object.values(response)) {
+				// We only support showing the first column returned currently.
+				const rowData = Object.values(row as any)[0];
+				if (!rowData) {
+					continue;
+				}
+
+				data.push({
+					label: this.getGatheredData(rowData as string, displayField!, gathers),
+				});
+			}
+
+			response.result = data;
 			return response;
 		}
 
@@ -232,69 +260,7 @@ export class SiteAnalyticsReport {
 			// Top composition fields may refer to gathered fields. In this case replace them in now.
 			if (gathers && displayField) {
 				for (const dataEntry of response.result) {
-					const resourceInfo: string[] = dataEntry.label.split('-');
-					const resourceName = resourceInfo[0],
-						resourceId = parseInt(resourceInfo[1], 10);
-					const gatheredData = gathers[resourceName][resourceId];
-					const displayValue = gatheredData[displayField];
-
-					switch (resourceName) {
-						case 'game':
-							dataEntry.label = {
-								resource: 'Game',
-								resourceId: resourceId,
-								value: displayValue,
-								isAnalyticsEntry: true,
-							};
-							break;
-
-						case 'user':
-							dataEntry.label = {
-								resource: 'User',
-								resourceId: resourceId,
-								value: displayValue,
-								isAnalyticsEntry: true,
-								gathers: {
-									user: gatheredData.user_model
-										? new User(gatheredData.user_model)
-										: null,
-								},
-							};
-							break;
-
-						case 'creator_supporter':
-							dataEntry.label = {
-								resource: 'User',
-								resourceId: resourceId,
-								value: displayValue,
-								isAnalyticsEntry: false,
-								gathers: {
-									user: gatheredData.user_model
-										? new User(gatheredData.user_model)
-										: null,
-								},
-							};
-							break;
-
-						case 'fireside_post':
-							dataEntry.label = {
-								resource: 'Fireside_Post',
-								resourceId: resourceId,
-								value: displayValue,
-								isAnalyticsEntry: false,
-								gathers: {
-									post: gatheredData.post_model
-										? new FiresidePost(gatheredData.post_model)
-										: null,
-								},
-							};
-							break;
-
-						case 'partner':
-						case 'fireside':
-							dataEntry.label = displayValue;
-							break;
-					}
+					dataEntry.label = this.getGatheredData(dataEntry.label, displayField, gathers);
 				}
 			}
 
@@ -327,5 +293,67 @@ export class SiteAnalyticsReport {
 		}
 
 		return response;
+	}
+
+	private getGatheredData(
+		fieldLabel: string,
+		displayField: string,
+		gathers: Record<string, any>
+	) {
+		const resourceInfo: string[] = fieldLabel.split('-');
+		const resourceName = resourceInfo[0],
+			resourceId = parseInt(resourceInfo[1], 10);
+		const gatheredData = gathers[resourceName][resourceId];
+		const displayValue = gatheredData[displayField];
+
+		switch (resourceName) {
+			case 'game':
+				return {
+					resource: 'Game',
+					resourceId: resourceId,
+					value: displayValue,
+					isAnalyticsEntry: true,
+				};
+
+			case 'user':
+				return {
+					resource: 'User',
+					resourceId: resourceId,
+					value: displayValue,
+					isAnalyticsEntry: true,
+					gathers: {
+						user: gatheredData.user_model ? new User(gatheredData.user_model) : null,
+					},
+				};
+
+			case 'creator_supporter':
+			case 'invited_user':
+				return {
+					resource: 'User',
+					resourceId: resourceId,
+					value: displayValue,
+					isAnalyticsEntry: false,
+					gathers: {
+						user: gatheredData.user_model ? new User(gatheredData.user_model) : null,
+					},
+				};
+
+			case 'fireside_post':
+				return {
+					resource: 'Fireside_Post',
+					resourceId: resourceId,
+					value: displayValue,
+					isAnalyticsEntry: false,
+					gathers: {
+						post: gatheredData.post_model
+							? new FiresidePost(gatheredData.post_model)
+							: null,
+					},
+				};
+
+			case 'partner':
+			case 'fireside':
+				return displayValue;
+		}
 	}
 }
