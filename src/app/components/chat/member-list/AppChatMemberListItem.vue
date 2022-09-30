@@ -5,9 +5,9 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { useGridStore } from '../../grid/grid-store';
-import { isUserOnline, tryGetRoomRole } from '../client';
+import { isUserOnline } from '../client';
 import { ChatRoom } from '../room';
-import { ChatUser } from '../user';
+import { ChatUser, getChatUserRoleData } from '../user';
 import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
 import AppChatUserPopover from '../user-popover/user-popover.vue';
 import AppChatListItem from '../_list/AppChatListItem.vue';
@@ -38,17 +38,9 @@ const isOnline = computed(() => {
 	return isUserOnline(chat.value, user.value.id);
 });
 
-const isOwner = computed(() => room.value.owner_id === user.value.id);
+const roleData = computed(() => getChatUserRoleData(chat.value, room.value, user.value));
 
 const isLiveFiresideHost = computed(() => user.value.isLive === true);
-const isFiresideHost = computed(() => !!user.value.firesideHost);
-
-const isModerator = computed(
-	() => tryGetRoomRole(chat.value, room.value, user.value) === 'moderator'
-);
-
-// In public rooms, display staff member status.
-const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permission_level > 0);
 </script>
 
 <template>
@@ -87,19 +79,8 @@ const isStaff = computed(() => !room.value.isPrivateRoom && user.value.permissio
 		</template>
 
 		<template #trailing>
-			<span v-if="isOwner" v-app-tooltip="$gettext(`Room Owner`)">
-				<AppJolticon class="-indicator-icon" icon="crown" />
-			</span>
-			<span v-else-if="isFiresideHost" v-app-tooltip="$gettext(`Host`)">
-				<AppJolticon class="-indicator-icon" icon="star-ten-pointed" />
-			</span>
-
-			<span v-if="isModerator" v-app-tooltip="$gettext(`Chat Moderator`)">
-				<AppJolticon class="-indicator-icon" icon="star" />
-			</span>
-
-			<span v-if="isStaff" v-app-tooltip="$gettext(`Game Jolt Staff`)">
-				<AppJolticon class="-indicator-icon" icon="gamejolt" />
+			<span v-if="roleData" v-app-tooltip="roleData.tooltip">
+				<AppJolticon class="-indicator-icon" :icon="roleData.icon" />
 			</span>
 		</template>
 
