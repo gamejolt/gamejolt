@@ -333,24 +333,7 @@ export class Notification extends Model {
 				return getRouteLocationForModel(this.action_model as QuestNotification);
 
 			case Notification.TYPE_CHARGED_STICKER: {
-				switch (this.to_resource) {
-					case 'Fireside_Post':
-						return getRouteLocationForModel(this.to_model as FiresidePost);
-
-					// TODO: We are currently just directing to their own
-					// analytics for some info, but it would be nice to direct
-					// somewhere that shows the particular fireside stats when
-					// we have that.
-					case 'Fireside':
-						return {
-							name: 'dash.analytics',
-							params: {
-								resource: 'User',
-								resourceId: (this.action_model as StickerPlacement).target_data
-									.host_user_id,
-							},
-						};
-				}
+				return getRouteLocationForModel(this.from_model!);
 			}
 		}
 
