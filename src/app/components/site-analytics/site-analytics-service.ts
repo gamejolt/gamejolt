@@ -7,7 +7,6 @@ import { $gettext } from '../../../_common/translate/translate.service';
 
 export type ResourceName = 'Partner' | 'User' | 'Game' | 'Game_Package' | 'Game_Release';
 
-// TODO: Figure this out.const ORDERED_ASC = 'ordered-asc';
 export type Analyzer =
 	| 'count'
 	| 'sum'
@@ -31,7 +30,8 @@ export type Collection =
 	| 'ratings'
 	| 'follows'
 	| 'sales'
-	| 'user-charges';
+	| 'user-charges'
+	| 'user-invites';
 
 export type Condition =
 	| 'time'
@@ -77,10 +77,11 @@ export type Field =
 	| 'sticker'
 	| 'fireside_post'
 	| 'fireside'
-	| 'creator_supporter';
+	| 'creator_supporter'
+	| 'invited_user';
 
 export type GameField = 'game_name' | 'game_model';
-export type UserField = 'user_display_name' | 'user_model';
+export type UserField = 'user_display_name' | 'user_username' | 'user_model';
 export type PostField = 'post_lead' | 'post_model';
 export type FiresideField = 'fireside_title' | 'fireside_model';
 
@@ -89,6 +90,7 @@ export interface ResourceFields {
 	user?: UserField[];
 	partner?: UserField[];
 	creator_supporter?: UserField[];
+	invited_user?: UserField[];
 	fireside_post?: PostField[];
 	fireside?: FiresideField[];
 }
@@ -102,7 +104,8 @@ export type MetricKey =
 	| 'follow'
 	| 'sale'
 	| 'revenue'
-	| 'user-charge';
+	| 'user-charge'
+	| 'user-invite';
 
 export interface Metric {
 	key: MetricKey;
@@ -137,6 +140,7 @@ export interface Request {
 	conditions?: Condition[];
 	fetch_fields?: Field[];
 	resource_fields?: (GameField | UserField)[];
+	size?: number;
 
 	// Date info is Optional.
 	from_date?: number; // In seconds.
@@ -152,6 +156,7 @@ export interface ReportComponent {
 	fetchFields?: Field[];
 	resourceFields?: ResourceFields;
 	displayField?: Field | GameField | UserField | PostField | FiresideField;
+	size?: number;
 
 	// These are only filled out for report component responses.
 	data?: any;
@@ -317,13 +322,13 @@ export const ReportTopCreatorSupporters: ReportComponent[] = [
 		field: 'creator_supporter',
 		fieldLabel: 'Supporters',
 		resourceFields: {
-			creator_supporter: ['user_display_name', 'user_model'],
+			creator_supporter: ['user_username', 'user_model'],
 		},
-		displayField: 'user_display_name',
+		displayField: 'user_username',
 	},
 ];
 
-export const ReportTopCreatorPosts: ReportComponent[] = [
+export const ReportTopChargedPosts: ReportComponent[] = [
 	{
 		type: 'top-composition',
 		field: 'fireside_post',
@@ -335,7 +340,7 @@ export const ReportTopCreatorPosts: ReportComponent[] = [
 	},
 ];
 
-export const ReportTopCreatorFiresides: ReportComponent[] = [
+export const ReportTopChargedFiresides: ReportComponent[] = [
 	{
 		type: 'top-composition',
 		field: 'fireside',
@@ -344,6 +349,20 @@ export const ReportTopCreatorFiresides: ReportComponent[] = [
 			fireside: ['fireside_title'],
 		},
 		displayField: 'fireside_title',
+	},
+];
+
+export const ReportInvitedUsers: ReportComponent[] = [
+	{
+		type: 'ordered-desc',
+		field: 'logged_on',
+		fieldLabel: 'Invited Users',
+		resourceFields: {
+			invited_user: ['user_username', 'user_model'],
+		},
+		fetchFields: ['invited_user'],
+		displayField: 'user_username',
+		size: 100,
 	},
 ];
 
@@ -405,10 +424,20 @@ export class SiteAnalytics {
 			type: 'number',
 			field: 'charge_amount',
 		},
+		{
+			key: 'user-invite',
+			collection: 'user-invites',
+			label: $gettext(`User Invites`),
+			type: 'number',
+		},
 	];
 
 	static allMetrics = computed((): MetricMap => {
 		return arrayIndexBy(this._metrics, 'key');
+	});
+
+	static userMetrics = computed((): MetricMap => {
+		return objectPick(this.allMetrics.value, ['user-invite']);
 	});
 
 	static creatorMetrics = computed((): MetricMap => {

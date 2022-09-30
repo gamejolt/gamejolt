@@ -14,7 +14,7 @@ defineProps({
 <template>
 	<div class="col-sm-6 col-sm-3">
 		<div v-if="!reportData.hasData" class="alert">
-			<AppTranslate>No data yet.</AppTranslate>
+			<AppTranslate>No data.</AppTranslate>
 		</div>
 
 		<div v-if="reportData.hasData" class="stat-big">
