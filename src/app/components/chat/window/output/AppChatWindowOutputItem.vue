@@ -159,7 +159,11 @@ const canEditMessage = computed(() => {
 	return chat.value.currentUser.id === message.value.user.id;
 });
 
-const roleData = computed(() => getChatUserRoleData(chat.value, room.value, message.value.user));
+const roleData = computed(() =>
+	getChatUserRoleData(chat.value, room.value, message.value.user, {
+		mesage: message.value,
+	})
+);
 
 function startEdit() {
 	setMessageEditing(chat.value, message.value);
@@ -262,11 +266,15 @@ async function onMessageClick() {
 						}"
 					/>
 
-					<div v-if="message.showMeta" class="-item-byline">
-						<span v-if="roleData" v-app-tooltip="roleData.tooltip" class="-role">
-							<AppJolticon class="-role-icon" :icon="roleData.icon" />
-						</span>
+					<span
+						v-if="(message.showMeta || message.is_automated) && roleData"
+						v-app-tooltip="roleData.tooltip"
+						class="-role"
+					>
+						<AppJolticon class="-role-icon" :icon="roleData.icon" />
+					</span>
 
+					<div v-if="message.showMeta" class="-item-byline">
 						<RouterLink class="-user link-unstyled" :to="message.user.url">
 							{{ message.user.display_name }}
 						</RouterLink>
