@@ -361,8 +361,8 @@ function _updateWebcamTrack(producer: FiresideRTCProducer) {
 				let width = 1280;
 				let height = 720;
 				let fps = 30;
-				let bitrate = 5_000;
-				let mode = 'motion' as 'motion' | 'detail';
+				let bitrate = 4_000;
+				let mode = 'detail' as 'motion' | 'detail';
 				const parts = window.location.search.replace('?', '').split('&');
 
 				const _parseInt = (value: string, defaultValue: number) => {
