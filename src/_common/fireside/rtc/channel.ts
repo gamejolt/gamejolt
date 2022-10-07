@@ -80,7 +80,7 @@ export function createFiresideRTCChannel(
 	const c = reactive(new FiresideRTCChannel(rtc, channel)) as FiresideRTCChannel;
 	c.token = token;
 
-	let codec: SDK_CODEC = 'h264';
+	let codec: SDK_CODEC = 'vp8';
 	const parts = window.location.search.replace('?', '').split('&');
 
 	for (const part of parts) {
