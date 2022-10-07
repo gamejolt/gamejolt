@@ -146,6 +146,10 @@ const canRemoveMessage = computed(() => {
 });
 
 const canEditMessage = computed(() => {
+	if (message.value.is_automated) {
+		return false;
+	}
+
 	// Only content messages can be edited.
 	if (message.value.type !== 'content') {
 		return false;
