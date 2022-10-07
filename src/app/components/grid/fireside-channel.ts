@@ -1,7 +1,7 @@
 import { shallowReadonly, triggerRef } from 'vue';
 import { createLogger } from '../../../utils/logging';
 import { Background } from '../../../_common/background/background.model';
-import { FiresideChatSettings } from '../../../_common/fireside/chat-settings/chat-settings.model';
+import { FiresideChatSettings } from '../../../_common/fireside/chat/chat-settings.model';
 import { FiresideRTCHost } from '../../../_common/fireside/rtc/rtc';
 import {
 	createSocketChannelController,

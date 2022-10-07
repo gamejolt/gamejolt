@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { Environment } from '../../../../_common/environment/environment.service';
-import { createFiresideChatContextCapabilities } from '../../../../_common/fireside/chat-settings/chat-settings.model';
+import { createFiresideChatContextCapabilities } from '../../../../_common/fireside/chat/chat-settings.model';
 import AppChatWindowOutput from '../../../components/chat/window/output/AppChatWindowOutput.vue';
 import AppChatWindowSend from '../../../components/chat/window/send/AppChatWindowSend.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
