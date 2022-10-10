@@ -6,8 +6,8 @@
 	p:empty
 		display: none
 
-	// Responsive images.
-	img
+	// Responsive images. Ignore emoji images.
+	img:not(.emoji)
 		img-responsive()
 
 	// Make all headings just look like bold text.
