@@ -10,7 +10,6 @@ import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { UserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
@@ -66,7 +65,7 @@ function showEditAvatar() {
 	<div>
 		<div v-if="Screen.isXs" class="well fill-darker sans-margin-bottom sans-rounded">
 			<AppButton block icon="chevron-left" :to="{ name: 'dash.account-mobile-nav' }">
-				<AppTranslate>Back to Account</AppTranslate>
+				{{ $gettext(`Back to settings`) }}
 			</AppButton>
 		</div>
 
@@ -84,7 +83,7 @@ function showEditAvatar() {
 					@click="showEditAvatar()"
 				>
 					<template #overlay>
-						<AppTranslate>Change</AppTranslate>
+						{{ $gettext(`Change`) }}
 					</template>
 					<AppUserAvatar :user="user" />
 				</AppEditableOverlay>
@@ -94,7 +93,7 @@ function showEditAvatar() {
 		<AppExpand :when="$route.name === 'dash.account.edit'">
 			<AppEditableOverlay @click="showEditHeader()">
 				<template #overlay>
-					<AppTranslate>Change Profile Header</AppTranslate>
+					{{ $gettext(`Change profile header`) }}
 				</template>
 
 				<!--
@@ -127,7 +126,7 @@ function showEditAvatar() {
 										:to="{ name: 'dash.account.edit' }"
 										active-class="active"
 									>
-										<AppTranslate>Profile</AppTranslate>
+										{{ $gettext(`Profile`) }}
 									</RouterLink>
 								</li>
 								<li>
@@ -135,7 +134,7 @@ function showEditAvatar() {
 										:to="{ name: 'dash.account.device-settings' }"
 										active-class="active"
 									>
-										<AppTranslate>Device Settings</AppTranslate>
+										{{ $gettext(`Device settings`) }}
 									</RouterLink>
 								</li>
 								<li>
@@ -143,7 +142,7 @@ function showEditAvatar() {
 										:to="{ name: 'dash.account.blocks' }"
 										active-class="active"
 									>
-										<AppTranslate>Blocked Users</AppTranslate>
+										{{ $gettext(`Blocked users`) }}
 									</RouterLink>
 								</li>
 							</ul>
@@ -154,7 +153,7 @@ function showEditAvatar() {
 										:to="{ name: 'dash.account.linked-accounts' }"
 										active-class="active"
 									>
-										<AppTranslate>Linked Accounts</AppTranslate>
+										{{ $gettext(`Linked accounts`) }}
 									</RouterLink>
 								</li>
 								<li>
@@ -162,7 +161,7 @@ function showEditAvatar() {
 										:to="{ name: 'dash.account.email-preferences' }"
 										active-class="active"
 									>
-										<AppTranslate>Email Preferences</AppTranslate>
+										{{ $gettext(`Email preferences`) }}
 									</RouterLink>
 								</li>
 								<li>
@@ -170,7 +169,18 @@ function showEditAvatar() {
 										:to="{ name: 'dash.account.change-password' }"
 										active-class="active"
 									>
-										<AppTranslate>Password</AppTranslate>
+										{{ $gettext(`Password`) }}
+									</RouterLink>
+								</li>
+							</ul>
+							<hr />
+							<ul>
+								<li>
+									<RouterLink
+										:to="{ name: 'dash.account.chat-commands' }"
+										active-class="active"
+									>
+										{{ $gettext(`Chat commands`) }}
 									</RouterLink>
 								</li>
 							</ul>
@@ -181,7 +191,7 @@ function showEditAvatar() {
 										:to="{ name: 'dash.account.payment-methods' }"
 										active-class="active"
 									>
-										<AppTranslate>Payment Methods</AppTranslate>
+										{{ $gettext(`Payment methods`) }}
 									</RouterLink>
 								</li>
 								<li>
@@ -189,7 +199,7 @@ function showEditAvatar() {
 										:to="{ name: 'dash.account.addresses' }"
 										active-class="active"
 									>
-										<AppTranslate>Saved Addresses</AppTranslate>
+										{{ $gettext(`Saved addresses`) }}
 									</RouterLink>
 								</li>
 								<li>
@@ -197,7 +207,7 @@ function showEditAvatar() {
 										:to="{ name: 'dash.account.purchases.list' }"
 										active-class="active"
 									>
-										<AppTranslate>Purchases</AppTranslate>
+										{{ $gettext(`Purchases`) }}
 									</RouterLink>
 								</li>
 							</ul>
@@ -208,7 +218,7 @@ function showEditAvatar() {
 										:to="{ name: 'dash.account.financials' }"
 										active-class="active"
 									>
-										<AppTranslate>Marketplace Account Setup</AppTranslate>
+										{{ $gettext(`Marketplace account setup`) }}
 									</RouterLink>
 								</li>
 								<li>
@@ -216,7 +226,7 @@ function showEditAvatar() {
 										:to="{ name: 'dash.account.wallet' }"
 										active-class="active"
 									>
-										<AppTranslate>Wallet</AppTranslate>
+										{{ $gettext(`Wallet`) }}
 									</RouterLink>
 								</li>
 								<li>
@@ -224,7 +234,7 @@ function showEditAvatar() {
 										:to="{ name: 'dash.account.site' }"
 										active-class="active"
 									>
-										<AppTranslate>Portfolio Site</AppTranslate>
+										{{ $gettext(`Portfolio site`) }}
 									</RouterLink>
 								</li>
 							</ul>
@@ -234,7 +244,7 @@ function showEditAvatar() {
 						<template v-if="Screen.isXs && $route.name === 'dash.account.edit'">
 							<AppEditableOverlay class="-avatar-xs" @click="showEditAvatar()">
 								<template #overlay>
-									<AppTranslate>Change</AppTranslate>
+									{{ $gettext(`Change`) }}
 								</template>
 								<AppUserAvatar :user="user" />
 							</AppEditableOverlay>

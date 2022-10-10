@@ -3,7 +3,7 @@ import AppButton from '../../../../../../_common/button/AppButton.vue';
 import AppModal from '../../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../../_common/modal/modal.service';
 import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
-import AppFormChatCommands from '../AppFormChatCommands.vue';
+import FormChatCommands from '../FormChatCommands.vue';
 
 const modal = useModal()!;
 </script>
@@ -23,7 +23,7 @@ const modal = useModal()!;
 		</div>
 
 		<div class="modal-body">
-			<AppFormChatCommands />
+			<FormChatCommands />
 		</div>
 	</AppModal>
 </template>

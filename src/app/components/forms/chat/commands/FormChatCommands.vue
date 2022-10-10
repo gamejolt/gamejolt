@@ -1,11 +1,17 @@
 <script lang="ts">
-type FormItemModel = ChatCommand;
+import { ref } from 'vue';
+import { arrayRemove } from '../../../../../utils/array';
+import { sleep } from '../../../../../utils/utils';
+import { Api } from '../../../../../_common/api/api.service';
+import AppButton from '../../../../../_common/button/AppButton.vue';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormStickySubmit from '../../../../../_common/form-vue/AppFormStickySubmit.vue';
+import AppFormControlChatCommand from './AppFormControlChatCommand.vue';
+import { ChatCommand } from './command.model';
 
-export interface FormModel {
-	commands: FormItemModel[];
-	maxCommands: number;
-	maxCommandLength: number;
-	maxInvokeDelay: number;
+export interface ChatCommandFormModel {
+	commands: ChatCommand[];
 
 	/**
 	 * ChatCommands fields keyed as `command_${id}`, `message_content_${id}`,
@@ -16,31 +22,26 @@ export interface FormModel {
 </script>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { sleep } from '../../../../../utils/utils';
-import { Api } from '../../../../../_common/api/api.service';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormStickySubmit from '../../../../../_common/form-vue/AppFormStickySubmit.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import AppFormControlChatCommand from './AppFormControlChatCommand.vue';
-import { ChatCommand } from './command.model';
-
 const isProcessing = ref(false);
 const isAddingItem = ref(false);
 
-const form: FormController<FormModel> = createForm({
+const maxCommands = ref(100);
+const commandMinLength = ref(2);
+const commandMaxLength = ref(20);
+const messageMaxLength = ref(1000);
+
+const form: FormController<ChatCommandFormModel> = createForm({
 	loadUrl: `/web/chat/commands`,
-	model: ref<FormModel>({
-		commands: [],
-		maxCommandLength: 100,
-		maxCommands: 20,
-		maxInvokeDelay: 100,
+	model: ref({
+		commands: [] as ChatCommand[],
 	}),
 	onLoad(response) {
-		Object.assign(form.formModel, response);
 		form.formModel.commands = ChatCommand.populate(response.commands);
+
+		maxCommands.value = response.maxCommands;
+		commandMinLength.value = response.commandMinLength;
+		commandMaxLength.value = response.commandMaxLength;
+		messageMaxLength.value = response.messageMaxLength;
 	},
 	async onSubmit() {
 		if (isProcessing.value) {
@@ -58,14 +59,7 @@ const form: FormController<FormModel> = createForm({
 			const makeKey = (prefix: string) => `${prefix}_${item.id}`;
 			const getValue = (prefix: string) => form.formModel[makeKey(prefix)];
 
-			const wantedFields: (keyof ChatCommand)[] = [
-				'prefix',
-				'command',
-				'message_content',
-				'is_active',
-				'invoke_delay',
-			];
-
+			const wantedFields: (keyof ChatCommand)[] = ['command', 'message_content', 'is_active'];
 			const formFields: { [k: string]: any } = {};
 
 			let formFieldsLength = 0;
@@ -95,10 +89,14 @@ const form: FormController<FormModel> = createForm({
 			}
 		}
 
-		return Api.sendRequest(`/web/chat/commands/save`, body, {
-			allowComplexData: ['commands'],
-			detach: true,
-		}).finally(() => (isProcessing.value = false));
+		try {
+			return Api.sendRequest(`/web/chat/commands/save`, body, {
+				allowComplexData: ['commands'],
+				detach: true,
+			});
+		} finally {
+			isProcessing.value = false;
+		}
 	},
 });
 
@@ -106,7 +104,7 @@ async function addNewItem() {
 	isAddingItem.value = true;
 
 	try {
-		if (form.formModel.commands.length >= form.formModel.maxCommands) {
+		if (form.formModel.commands.length >= maxCommands.value) {
 			// Wait a little bit so the button isn't spam-clicked.
 			await sleep(2_000);
 			throw Error('Tried adding a new command while already at our limit');
@@ -118,12 +116,25 @@ async function addNewItem() {
 			throw Error('Got no chat command returned when creating a new one');
 		}
 
-		form.formModel.commands.push(new ChatCommand(response.command));
+		const newCommand = new ChatCommand(response.command);
+		// Set it as enabled right way to make it easier for them.
+		newCommand.is_active = true;
+		form.formModel.commands.push(newCommand);
 	} catch (e) {
 		console.error(e);
 	} finally {
 		isAddingItem.value = false;
 	}
+}
+
+function removeItem(item: ChatCommand, fieldsToClear: string[]) {
+	arrayRemove(form.formModel.commands, i => i.id === item.id);
+
+	for (const field of fieldsToClear) {
+		delete form.formModel[field];
+	}
+
+	form.changed = true;
 }
 </script>
 
@@ -134,23 +145,24 @@ async function addNewItem() {
 				v-for="item of form.formModel.commands"
 				:key="item.id"
 				:item="item"
+				:command-min-length="commandMinLength"
+				:command-max-length="commandMaxLength"
+				:message-max-length="messageMaxLength"
+				@remove="removeItem(item, $event)"
 			/>
 
-			<!-- TODO(chat-bang-commands) Only allow adding if all form fields are valid? -->
 			<AppButton
-				v-if="form.formModel.commands.length < form.formModel.maxCommands"
+				v-if="form.formModel.commands.length < maxCommands"
 				block
-				solid
-				primary
 				:disabled="isProcessing || isAddingItem || !form.valid"
 				@click="addNewItem"
 			>
-				<AppTranslate>Add command</AppTranslate>
+				{{ $gettext(`New command`) }}
 			</AppButton>
 
 			<AppFormStickySubmit>
 				<AppFormButton>
-					<AppTranslate>Save commands</AppTranslate>
+					{{ $gettext(`Save`) }}
 				</AppFormButton>
 			</AppFormStickySubmit>
 		</div>
@@ -159,7 +171,7 @@ async function addNewItem() {
 
 <style lang="stylus" scoped>
 .-grid-list
-	display: grid
-	grid-template-columns: minmax(0, 1fr)
-	gap: $line-height-computed
+	display: flex
+	flex-direction: column
+	gap: 20px
 </style>

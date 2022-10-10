@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, onUnmounted, PropType, toRefs } from 'vue';
-import { arrayRemove } from '../../../../../utils/array';
+import { computed, onMounted, PropType, toRefs } from 'vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
 import { useForm } from '../../../../../_common/form-vue/AppForm.vue';
@@ -18,7 +17,8 @@ import {
 	validateMinLength,
 	validatePattern,
 } from '../../../../../_common/form-vue/validators';
-import { FormModel } from './AppFormChatCommands.vue';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { ChatCommandFormModel } from './FormChatCommands.vue';
 import { ChatCommand } from './command.model';
 
 const COMMAND_PATTERN = /^[a-z0-9]+[a-z0-9-]*[a-z0-9]+$/i;
@@ -34,35 +34,37 @@ const props = defineProps({
 		type: Object as PropType<ChatCommand>,
 		required: true,
 	},
+	commandMinLength: {
+		type: Number,
+		required: true,
+	},
+	commandMaxLength: {
+		type: Number,
+		required: true,
+	},
+	messageMaxLength: {
+		type: Number,
+		required: true,
+	},
+});
+
+const emit = defineEmits({
+	remove: (_fieldsToClear: string[]) => true,
 });
 
 const { item } = toRefs(props);
 
-const form = useForm<FormModel>()!;
+const form = useForm<ChatCommandFormModel>()!;
 
 const isActive = computed(() => form.formModel[`is_active_${item.value.id}`] === true);
 
-const fieldPrefix = computed(() => `prefix_${item.value.id}`);
 const fieldCommand = computed(() => `command_${item.value.id}`);
 const fieldMessageContent = computed(() => `message_content_${item.value.id}`);
 const fieldIsActive = computed(() => `is_active_${item.value.id}`);
-const fieldInvokeDelay = computed(() => `invoke_delay_${item.value.id}`);
-const fieldUseBot = computed(() => `use_bot_${item.value.id}`);
-const fields = computed(() => [
-	fieldPrefix,
-	fieldCommand,
-	fieldMessageContent,
-	fieldIsActive,
-	fieldInvokeDelay,
-	fieldUseBot,
-]);
+const fields = computed(() => [fieldCommand.value, fieldMessageContent.value, fieldIsActive.value]);
 
 onMounted(() => {
 	_initFields();
-});
-
-onUnmounted(() => {
-	_deleteFields();
 });
 
 function _getModelValue(formField: string) {
@@ -72,13 +74,7 @@ function _getModelValue(formField: string) {
 
 function _initFields() {
 	for (const field of fields.value) {
-		form.formModel[field.value] = _getModelValue(field.value);
-	}
-}
-
-function _deleteFields() {
-	for (const field of fields.value) {
-		delete form.formModel[field.value];
+		form.formModel[field] = _getModelValue(field);
 	}
 }
 
@@ -88,7 +84,7 @@ function onBlurCommand() {
 }
 
 function removeItem() {
-	arrayRemove(form.formModel.commands, i => i.id === item.value.id);
+	emit('remove', fields.value);
 }
 
 function _validateUnique(id: number) {
@@ -121,13 +117,13 @@ function _validateUnique(id: number) {
 			'-fill-partial': !isActive,
 		}"
 	>
-		<div class="-toggles">
-			<AppFormGroup :name="fieldIsActive" label="enabled" hide-label>
-				<AppFormControlToggle />
-			</AppFormGroup>
-		</div>
-
 		<div class="-chunk-inner">
+			<div class="-toggle">
+				<AppFormGroup :name="fieldIsActive" label="enabled" hide-label>
+					<AppFormControlToggle />
+				</AppFormGroup>
+			</div>
+
 			<AppFormGroup
 				class="-command-chunk sans-margin-bottom"
 				:name="fieldCommand"
@@ -145,9 +141,8 @@ function _validateUnique(id: number) {
 								:validators="[
 									_validateUnique(item.id),
 									validatePattern(COMMAND_PATTERN),
-									// TODO(chat-bang-commands) min-length for commands?
-									validateMinLength(2),
-									validateMaxLength(form.formModel.maxCommandLength),
+									validateMinLength(commandMinLength),
+									validateMaxLength(commandMaxLength),
 								]"
 								placeholder="command"
 								@blur="onBlurCommand()"
@@ -176,8 +171,7 @@ function _validateUnique(id: number) {
 						:validators="[
 							validateContentRequired(),
 							validateContentNoActiveUploads(),
-							// TODO(chat-bang-commands) Do we want to include a max-length for the message?
-							validateContentMaxLength(1_000),
+							validateContentMaxLength(messageMaxLength),
 						]"
 						placeholder="Enter your message"
 					/>
@@ -186,7 +180,15 @@ function _validateUnique(id: number) {
 				</AppFormGroup>
 			</div>
 
-			<AppButton class="-trash" icon="trash-can" solid sparse @click="removeItem()" />
+			<AppButton
+				v-app-tooltip="$gettext(`Remove`)"
+				class="-trash"
+				icon="remove"
+				trans
+				sparse
+				circle
+				@click="removeItem()"
+			/>
 		</div>
 	</div>
 </template>
@@ -199,13 +201,7 @@ function _validateUnique(id: number) {
 	change-bg(bg-offset)
 
 .-fill-partial
-	change-bg-rgba(var(--theme-bg-offset-rgb), 0.2)
-
-.-toggles
-	margin-bottom: 12px
-
-	> *
-		margin-bottom: 0
+	change-bg-rgba(var(--theme-bg-offset-rgb), 0.4)
 
 .-chunk-inner
 	display: flex
@@ -220,6 +216,12 @@ function _validateUnique(id: number) {
 
 .-command-chunk-inner
 	flex: auto
+
+.-toggle
+	margin-top: 3px
+
+	> *
+		margin-bottom: 0
 
 .-prefix
 	rounded-corners()
@@ -240,7 +242,7 @@ function _validateUnique(id: number) {
 	min-width: 0
 
 .-content-editor
-	flex: 4
+	flex: 2
 
 .-command-row
 	flex: none
@@ -258,12 +260,11 @@ function _validateUnique(id: number) {
 		display: flex
 
 	.-command
-		padding-right: 48px
 		flex: auto
 
 	.-trash
 		position: absolute
-		top: 0
+		top: -8px
 		right: 0
 
 	.-content-editor
