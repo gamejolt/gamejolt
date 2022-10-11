@@ -1,20 +1,26 @@
-<script lang="ts">
-import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, PropType, ref, toRefs, watch } from 'vue';
+import { ContextCapabilities } from '../../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import { ContentWriter } from '../../../../../_common/content/content-writer';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
+import AppForm, {
+	createForm,
+	defineFormProps,
+	FormController,
+} from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
-import {
-	BaseForm,
-	FormOnLoad,
-	FormOnSubmitSuccess,
-} from '../../../../../_common/form-vue/form.service';
 import {
 	validateContentMaxLength,
 	validateContentNoActiveUploads,
 	validateContentRequired,
 } from '../../../../../_common/form-vue/validators';
 import { Game } from '../../../../../_common/game/game.model';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { AppGamePerms } from '../../../game/perms/perms';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 import AppFormGameDescriptionTags from './tags/tags.vue';
@@ -24,91 +30,82 @@ type DescriptionFormModel = Game & {
 	autotag_skip?: boolean;
 };
 
-class Wrapper extends BaseForm<DescriptionFormModel> {}
-
-@Options({
-	components: {
-		AppExpand,
-		AppDashGameWizardControls,
-		AppGamePerms,
-		AppFormGameDescriptionTags,
-		AppFormControlContent,
+const props = defineProps({
+	tags: {
+		type: Array as PropType<string[]>,
+		required: true,
 	},
-})
-export default class FormGameDescription
-	extends mixins(Wrapper)
-	implements FormOnSubmitSuccess, FormOnLoad
-{
-	@Prop(Array)
-	tags!: string[];
+	...defineFormProps<Game>(true),
+});
 
-	modelClass = Game;
-	saveMethod = '$saveDescription' as const;
+const { tags, model } = toRefs(props);
 
-	isFnafDetected = false;
-	isDisabled = false;
-	lengthLimit = 50_000;
+const isFnafDetected = ref(false);
+const isDisabled = ref(false);
+const lengthLimit = ref(50_000);
+const descriptionContentCapabilities = ref<ContextCapabilities>();
 
-	readonly validateContentRequired = validateContentRequired;
-	readonly validateContentMaxLength = validateContentMaxLength;
-	readonly validateContentNoActiveUploads = validateContentNoActiveUploads;
+const form: FormController<DescriptionFormModel> = createForm({
+	loadUrl: `/web/dash/developer/games/description/save/${model.value.id}`,
+	model,
+	modelClass: Game,
+	saveMethod: '$saveDescription' as const,
+	onLoad(payload) {
+		lengthLimit.value = payload.lengthLimit;
 
-	get loadUrl() {
-		return `/web/dash/developer/games/description/save/${this.model!.id}`;
-	}
-
-	get hasDetailsPerms() {
-		return this.model && this.model.hasPerms('details');
-	}
-
-	get contentDocument() {
-		if (this.formModel.description_content) {
-			const doc = ContentDocument.fromJson(this.formModel.description_content);
-			return doc;
+		if (payload.contentCapabilities) {
+			descriptionContentCapabilities.value = ContextCapabilities.fromStringList(
+				payload.contentCapabilities
+			);
 		}
-		return null;
-	}
-
-	get tagText() {
-		return this.formModel.title.toLowerCase();
-	}
-
-	onLoad(payload: any) {
-		this.lengthLimit = payload.lengthLimit;
-	}
-
-	@Watch('serverErrors', { deep: true })
-	onServerErrors() {
-		this.isFnafDetected = false;
-		this.isDisabled = false;
-		if (this.serverErrors['autotag-fnaf']) {
-			// This will make it so they can't edit the form and force them to choose if they want to tag or not.
-			this.isFnafDetected = true;
-			this.isDisabled = true;
-		}
-	}
-
+	},
 	onSubmitSuccess() {
-		this.setField('autotag', undefined);
+		form.formModel.autotag = undefined;
+	},
+});
+
+const contentDocument = computed(() => {
+	if (form.formModel.description_content) {
+		const doc = ContentDocument.fromJson(form.formModel.description_content);
+		return doc;
 	}
+	return null;
+});
 
-	async addTag(tag: string) {
-		const doc = this.contentDocument;
-		if (doc instanceof ContentDocument) {
-			const writer = new ContentWriter(doc);
-			writer.appendTag(tag);
+const tagText = computed(() => form.formModel.title.toLowerCase());
 
-			this.setField('description_content', doc.toJson());
+watch(
+	() => form.serverErrors,
+	() => {
+		isFnafDetected.value = false;
+		isDisabled.value = false;
+		if (form.serverErrors['autotag-fnaf']) {
+			// This will make it so they can't edit the form and force them to choose if they want to tag or not.
+			isFnafDetected.value = true;
+			isDisabled.value = true;
 		}
+	},
+	{
+		deep: true,
 	}
+);
 
-	addAutotag(tag: string) {
-		this.setField('autotag', tag);
-	}
+async function addTag(tag: string) {
+	const doc = contentDocument.value;
+	if (doc instanceof ContentDocument) {
+		const writer = new ContentWriter(doc);
+		writer.appendTag(tag);
 
-	skipAutotag() {
-		this.setField('autotag_skip', true);
+		form.formModel.description_content = doc.toJson();
 	}
+}
+
+function addAutotag(tag: string) {
+	form.formModel.autotag = tag;
+}
+
+function skipAutotag() {
+	form.formModel.autotag_skip = true;
 }
 </script>
 
@@ -125,6 +122,7 @@ export default class FormGameDescription
 			<AppFormControlContent
 				:placeholder="$gettext(`Write your game description here...`)"
 				content-context="game-description"
+				:context-capabilities-override="descriptionContentCapabilities"
 				:model-id="model.id"
 				:validators="[
 					validateContentRequired(),

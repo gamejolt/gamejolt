@@ -2,6 +2,7 @@
 import { formatDistanceToNow } from 'date-fns';
 import { computed, onUnmounted, PropType, ref, shallowReactive, toRefs } from 'vue';
 import { arrayUnique } from '../../../../utils/array';
+import { ContextCapabilities } from '../../../../_common/content/content-context';
 import { Dogtag, DogtagType } from '../../../../_common/dogtag/dogtag-model';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
@@ -54,6 +55,8 @@ const usernameDuration = ref('');
 const isBioLocked = ref(false);
 const bioLengthLimit = ref(5_000);
 
+const bioContentCapabilities = ref<ContextCapabilities>();
+
 const pronounDogtags = shallowReactive<Dogtag[]>([]);
 
 const mentionsSettingOptions = computed(() => {
@@ -87,6 +90,12 @@ const form: FormController<FormModel> = createForm({
 		// our form model.
 		if (payload.user) {
 			form.formModel.assign(payload.user);
+		}
+
+		if (payload.contentCapabilities) {
+			bioContentCapabilities.value = ContextCapabilities.fromStringList(
+				payload.contentCapabilities
+			);
 		}
 
 		pronounDogtags.splice(
@@ -254,6 +263,7 @@ function onThemeChanged() {
 		<AppFormGroup name="bio_content" :label="$gettext(`Profile Bio`)" optional>
 			<AppFormControlContent
 				content-context="user-bio"
+				:context-capabilities-override="bioContentCapabilities"
 				:disabled="isBioLocked"
 				:model-id="user.id"
 				:max-height="0"

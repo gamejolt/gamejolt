@@ -25,7 +25,6 @@ import { Model } from '../../model/model.service';
 import AppNavTabList from '../../nav/tab-list/tab-list.vue';
 import { useCommonStore } from '../../store/common-store';
 import { User } from '../../user/user.model';
-import FormComment from '../add/add.vue';
 import { canCommentOnModel, Comment, getCommentModelResourceName } from '../comment-model';
 import {
 	CommentStoreManagerKey,
@@ -45,6 +44,7 @@ import {
 	CommentStoreThreadView,
 	CommentStoreView,
 } from '../comment-store-view';
+import FormComment from '../FormComment.vue';
 import { DisplayMode } from '../modal/modal.service';
 import AppCommentWidgetComment from './comment/comment.vue';
 

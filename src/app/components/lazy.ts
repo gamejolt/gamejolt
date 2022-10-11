@@ -14,7 +14,7 @@ export const AppCommentWidgetLazy = defineAsyncComponent(
 );
 
 export const FormCommentLazy = defineAsyncComponent(
-	() => import('../../_common/comment/add/add.vue')
+	() => import('../../_common/comment/FormComment.vue')
 );
 
 export const AppActivityFeedLazy = defineAsyncComponent({

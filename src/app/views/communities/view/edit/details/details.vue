@@ -14,10 +14,10 @@ import { Screen } from '../../../../../../_common/screen/screen-service';
 import { useThemeStore } from '../../../../../../_common/theme/theme.store';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import FormCommunity from '../../../../../components/forms/community/community.vue';
-import FormCommunityDescription from '../../../../../components/forms/community/description/description.vue';
+import FormCommunityDescription from '../../../../../components/forms/community/description/FormCommunityDescription.vue';
 import { useAppStore } from '../../../../../store';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 import { CommunityThemeKey } from '../../RouteCommunitiesView.vue';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
 
 @Options({

@@ -21,10 +21,10 @@ import { canPlaceStickerOnComment } from '../../../sticker/placement/placement.m
 import { useCommonStore } from '../../../store/common-store';
 import AppTimelineListItem from '../../../timeline-list/item/item.vue';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
-import FormComment from '../../add/add.vue';
 import AppCommentContent from '../../AppCommentContent.vue';
 import { Comment, getCommentBlockReason } from '../../comment-model';
 import AppCommentControls from '../../controls/AppCommentControls.vue';
+import FormComment from '../../FormComment.vue';
 import AppCommentWidgetCommentBlocked from '../comment-blocked/comment-blocked.vue';
 import { useCommentWidget } from '../widget.vue';
 
