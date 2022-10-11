@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
+import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppLoading from '../../loading/AppLoading.vue';
 import { Sticker } from '../../sticker/sticker.model';
@@ -15,6 +16,9 @@ const props = defineProps({
 		type: Boolean,
 	},
 	isDisabled: {
+		type: Boolean,
+	},
+	isCharged: {
 		type: Boolean,
 	},
 });
@@ -36,7 +40,9 @@ owner.hydrator.useData('sticker-id', props.stickerId.toString(), data => {
 <template>
 	<div class="-sticker">
 		<template v-if="sticker">
-			<AppImgResponsive class="content-image" :src="sticker.img_url" />
+			<AppAnimElectricity :disabled="!isCharged" shock-anim="square" ignore-asset-padding>
+				<AppImgResponsive class="content-image" :src="sticker.img_url" />
+			</AppAnimElectricity>
 		</template>
 		<template v-else-if="hasError">
 			<AppTranslate>Error loading sticker</AppTranslate>

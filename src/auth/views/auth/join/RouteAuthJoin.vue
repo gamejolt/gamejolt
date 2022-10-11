@@ -1,14 +1,14 @@
 <script lang="ts">
 import { computed } from 'vue';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { loggedUserBlock } from '../RouteAuth.vue';
-import AppAuthJoin from '../../../../_common/auth/join/join.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { RouterLink } from 'vue-router';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
-import { useAuthStore } from '../../../store/index';
+import AppAuthJoin from '../../../../_common/auth/join/join.vue';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
+import { useAuthStore } from '../../../store/index';
+import { loggedUserBlock } from '../RouteAuth.vue';
 
 export default {
 	...defineAppRouteOptions({

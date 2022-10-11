@@ -3,7 +3,7 @@ import { computed, PropType, toRefs } from 'vue';
 import { FiresideRTCProducer } from '../../../../_common/fireside/rtc/producer';
 import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 
 const props = defineProps({

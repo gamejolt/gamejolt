@@ -26,6 +26,7 @@ export class MediaItem extends Model implements LightboxMediaModel {
 	static readonly TYPE_COMMUNITY_CHANNEL_DESCRIPTION = 'community-channel-description';
 
 	static readonly TYPE_CHAT_MESSAGE = 'chat-message';
+	static readonly TYPE_CHAT_COMMAND = 'chat-command';
 
 	static readonly TYPE_VIDEO_POSTER = 'video-poster';
 	static readonly TYPE_VIDEO_MANIFEST = 'video-manifest';
@@ -100,7 +101,7 @@ export class MediaItem extends Model implements LightboxMediaModel {
 	}
 
 	get aspectRatio() {
-		return this.croppedHeight / this.croppedWidth;
+		return this.croppedWidth / this.croppedHeight;
 	}
 
 	getModelId() {
@@ -140,24 +141,24 @@ export class MediaItem extends Model implements LightboxMediaModel {
 
 		// Forcing one of the dimensions is easy.
 		if (options && options.force) {
-			width = maxWidth || (maxHeight ? maxHeight / aspectRatio : 0);
-			height = maxHeight || (maxWidth ? maxWidth * aspectRatio : 0);
+			width = maxWidth || (maxHeight ? maxHeight * aspectRatio : 0);
+			height = maxHeight || (maxWidth ? maxWidth / aspectRatio : 0);
 		} else {
 			// Setting max for both.
 			if (maxWidth && maxHeight) {
 				width = Math.min(this.croppedWidth, maxWidth);
-				height = width * aspectRatio;
+				height = width / aspectRatio;
 
 				if (height > maxHeight) {
 					height = maxHeight;
-					width = height / aspectRatio;
+					width = height * aspectRatio;
 				}
 			} else if (maxWidth && !maxHeight) {
 				width = Math.min(this.croppedWidth, maxWidth);
-				height = width * aspectRatio;
+				height = width / aspectRatio;
 			} else if (!maxWidth && maxHeight) {
 				height = Math.min(this.croppedHeight, maxHeight);
-				width = height / aspectRatio;
+				width = height * aspectRatio;
 			}
 		}
 

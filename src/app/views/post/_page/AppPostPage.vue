@@ -3,11 +3,9 @@ import { computed, PropType, ref, shallowRef, toRefs, watch } from 'vue';
 import { RouteLocationRaw, RouterLink, useRoute, useRouter } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
-import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import AppBackground from '../../../../_common/background/AppBackground.vue';
-import AppCommunityPill from '../../../../_common/community/pill/pill.vue';
+import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisabledCheck.vue';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
-import { configPostShareSide } from '../../../../_common/config/config.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import {
@@ -21,7 +19,6 @@ import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
 import AppResponsiveDimensions from '../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
@@ -31,7 +28,7 @@ import AppStickerLayer from '../../../../_common/sticker/layer/AppStickerLayer.v
 import AppStickerTarget from '../../../../_common/sticker/target/AppStickerTarget.vue';
 import {
 	createStickerTargetController,
-	provideStickerTargerController,
+	provideStickerTargetController,
 	StickerTargetController,
 } from '../../../../_common/sticker/target/target-controller';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -39,8 +36,8 @@ import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserFollowWidget from '../../../../_common/user/follow/widget.vue';
-import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
+import AppUserFollowButton from '../../../../_common/user/follow/AppUserFollowButton.vue';
+import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import AppVideoPlayer from '../../../../_common/video/player/player.vue';
 import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/processing-progress.vue';
@@ -52,10 +49,11 @@ import AppPageContainer from '../../../components/page-container/AppPageContaine
 import AppPollVoting from '../../../components/poll/voting/voting.vue';
 import AppActivityFeedPostContent from '../../../components/post/AppPostContent.vue';
 import AppPostHeader from '../../../components/post/AppPostHeader.vue';
+import AppPostTargets from '../../../components/post/AppPostTargets.vue';
 import AppPostControls from '../../../components/post/controls/AppPostControls.vue';
 import AppPostPageRecommendations from './recommendations/AppPostPageRecommendations.vue';
 
-const UserFollowLocation = 'postPage';
+const UserFollowLocation = 'postPage' as const;
 
 const props = defineProps({
 	post: {
@@ -80,7 +78,7 @@ const stickerTargetController = shallowRef<StickerTargetController>(
 	})
 );
 
-provideStickerTargerController(stickerTargetController);
+provideStickerTargetController(stickerTargetController);
 
 const videoStartTime = ref(0);
 const hasVideoProcessingError = ref(false);
@@ -98,6 +96,10 @@ const communities = computed(() => {
 	return post.value.communities || [];
 });
 
+const realms = computed(() => {
+	return post.value.realms.map(i => i.realm);
+});
+
 const shouldShowCommunityPublishError = computed(() => {
 	return post.value.status === FiresidePost.STATUS_DRAFT && !post.value.canPublishToCommunities();
 });
@@ -108,11 +110,6 @@ const video = computed<FiresidePostVideo | null>(() => {
 
 const background = computed(() => {
 	return post.value.background;
-});
-
-const shareCardOnSide = computed(() => {
-	trackExperimentEngagement(configPostShareSide);
-	return configPostShareSide.value;
 });
 
 if (typeof route.query.t === 'string') {
@@ -302,7 +299,7 @@ function onDismissNotification(notification: CommunityUserNotification) {
 									</RouterLink>
 
 									<div class="-controls">
-										<AppUserFollowWidget
+										<AppUserFollowButton
 											v-if="!user || displayUser.id !== user.id"
 											:user="displayUser"
 											hide-count
@@ -396,13 +393,7 @@ function onDismissNotification(notification: CommunityUserNotification) {
 							@show="scrollToStickers()"
 						/>
 
-						<AppScrollScroller class="-communities" horizontal thin>
-							<AppCommunityPill
-								v-for="postCommunity of communities"
-								:key="postCommunity.id"
-								:community-link="postCommunity"
-							/>
-						</AppScrollScroller>
+						<AppPostTargets :communities="communities" :realms="realms" has-links />
 
 						<template v-if="shouldShowCommunityPublishError">
 							<br />
@@ -431,22 +422,20 @@ function onDismissNotification(notification: CommunityUserNotification) {
 						@sticker="scrollToStickers()"
 					/>
 
-					<div v-if="!shareCardOnSide" class="-share">
-						<AppShareCard resource="post" :url="post.url" offset-color />
-					</div>
-
 					<div v-if="Screen.isMobile">
 						<AppPostPageRecommendations :key="post.id" :post="post" />
 					</div>
 
 					<br />
 					<br />
-					<AppCommentWidgetLazy :model="post" display-mode="comments" />
+					<AppCommentDisabledCheck :model="post">
+						<AppCommentWidgetLazy :model="post" display-mode="comments" />
+					</AppCommentDisabledCheck>
 				</template>
 
 				<template v-if="!Screen.isMobile" #right>
 					<div class="-side-col">
-						<div v-if="shareCardOnSide" class="-share">
+						<div class="-share">
 							<AppShareCard resource="post" :url="post.url" offset-color />
 						</div>
 

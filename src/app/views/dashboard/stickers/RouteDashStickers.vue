@@ -1,4 +1,21 @@
 <script lang="ts">
+import { computed, ref } from 'vue';
+import { RouterLink } from 'vue-router';
+import { numberSort } from '../../../../utils/array';
+import { Api } from '../../../../_common/api/api.service';
+import { MediaItem } from '../../../../_common/media-item/media-item-model';
+import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
+import AppStickerCard from '../../../../_common/sticker/card/AppStickerCard.vue';
+import AppStickerChargeCard from '../../../../_common/sticker/charge/AppStickerChargeCard.vue';
+import { Sticker, StickerStack } from '../../../../_common/sticker/sticker.model';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
+import { useGridStore } from '../../../components/grid/grid-store';
+import AppPageHeader from '../../../components/page-header/page-header.vue';
+import backgroundImage from './background.png';
+
 export default {
 	...defineAppRouteOptions({
 		deps: {},
@@ -21,26 +38,7 @@ type StickerCountPayload = {
 </script>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
-import { RouterLink } from 'vue-router';
-import { numberSort } from '../../../../utils/array';
-import { Api } from '../../../../_common/api/api.service';
-import { configChargedStickers } from '../../../../_common/config/config.service';
-import { MediaItem } from '../../../../_common/media-item/media-item-model';
-import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import AppStickerCard from '../../../../_common/sticker/card/AppStickerCard.vue';
-import AppStickerChargeCard from '../../../../_common/sticker/charge/AppStickerChargeCard.vue';
-import { Sticker, StickerStack } from '../../../../_common/sticker/sticker.model';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppPageHeader from '../../../components/page-header/page-header.vue';
-import { useAppStore } from '../../../store';
-import backgroundImage from './background.png';
-
-const store = useAppStore();
-const { grid } = store;
+const { grid } = useGridStore();
 
 const balance = ref(0);
 const generalStickers = ref<StickerStack[]>([]);
@@ -135,15 +133,13 @@ createAppRoute({
 			<div class="container">
 				<div class="row">
 					<div class="col-md-4 col-md-push-8">
-						<template v-if="configChargedStickers.value">
-							<AppStickerChargeCard
-								allow-overcharge-text
-								:padding-h="24"
-								:padding-v="24"
-							/>
+						<AppStickerChargeCard
+							allow-fully-charged-text
+							:padding-h="24"
+							:padding-v="24"
+						/>
 
-							<AppSpacer vertical :scale="6" />
-						</template>
+						<AppSpacer vertical :scale="6" />
 
 						<div class="-sidebar-card">
 							<span class="-progress-header">

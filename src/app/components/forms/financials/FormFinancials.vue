@@ -129,7 +129,7 @@ async function linkPayPal() {
 		</template>
 		<template v-else>
 			<template v-if="!isVerified">
-				<AppAlertBox icon="notice">
+				<AppAlertBox icon="notice" color="highlight">
 					<AppTranslate>
 						Before you can earn money, we'll need to gather some details from you. This
 						will ensure that your account is completely set up and ready to run
@@ -138,7 +138,7 @@ async function linkPayPal() {
 				</AppAlertBox>
 			</template>
 			<template v-else>
-				<AppAlertBox icon="check">
+				<AppAlertBox icon="check" color="highlight">
 					<AppTranslate>Your account is all ready to go!</AppTranslate>
 				</AppAlertBox>
 			</template>
@@ -248,7 +248,7 @@ async function linkPayPal() {
 						because we'd rather have you support other developers by buying their games.
 					</p>
 
-					<AppFormGroup name="percentage_split" :hide-label="true">
+					<AppFormGroup name="percentage_split" hide-label optional>
 						<AppFormControl
 							type="number"
 							step="1"
@@ -292,6 +292,7 @@ async function linkPayPal() {
 					<AppFormGroup
 						name="wallet_maximum"
 						:label="$gettext(`Set an amount you would like to keep in your wallet`)"
+						optional
 					>
 						<p class="help-block">
 							<AppTranslate>
@@ -333,7 +334,11 @@ async function linkPayPal() {
 						</AppTranslate>
 					</p>
 
-					<AppFormGroup name="payout_minimum" :label="$gettext('Min. Payout Amount')">
+					<AppFormGroup
+						name="payout_minimum"
+						:label="$gettext('Min. Payout Amount')"
+						optional
+					>
 						<p class="help-block">
 							<AppTranslate
 								:translate-params="{

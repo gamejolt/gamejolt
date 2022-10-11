@@ -8,6 +8,7 @@ import type {
 	ILocalTrack,
 	ILocalVideoTrack,
 	NetworkQuality,
+	SDK_CODEC,
 } from 'agora-rtc-sdk-ng';
 import { markRaw, reactive } from 'vue';
 import { showErrorGrowl } from '../../growls/growls.service';
@@ -79,7 +80,22 @@ export function createFiresideRTCChannel(
 	const c = reactive(new FiresideRTCChannel(rtc, channel)) as FiresideRTCChannel;
 	c.token = token;
 
-	c.agoraClient = markRaw(AgoraRTC.createClient({ mode: 'live', codec: 'h264' }));
+	let codec: SDK_CODEC = 'vp8';
+	const parts = window.location.search.replace('?', '').split('&');
+
+	for (const part of parts) {
+		const [key, value] = part.split('=');
+		if (!key || !value) {
+			continue;
+		}
+
+		if (key === 'codec' && ['h264', 'vp8', 'vp9', 'av1'].includes(value)) {
+			codec = value as SDK_CODEC;
+			rtc.log(`Override codec: ${codec}`);
+		}
+	}
+
+	c.agoraClient = markRaw(AgoraRTC.createClient({ mode: 'live', codec }));
 
 	c.agoraClient.on('user-published', (...args) => {
 		generation.assert();

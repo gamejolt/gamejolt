@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { computed, inject, PropType, ref, toRefs } from 'vue';
-import { Analytics } from '../../analytics/analytics.service';
 import AppButton from '../../button/AppButton.vue';
 import AppMessageThreadAdd from '../../message-thread/add/add.vue';
 import AppModal from '../../modal/AppModal.vue';
@@ -9,10 +8,11 @@ import { Model } from '../../model/model.service';
 import { useCommonStore } from '../../store/common-store';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { $gettext } from '../../translate/translate.service';
-import { canCommentOnModel, Comment, getCommentModelResourceName } from '../comment-model';
+import AppCommentDisabledCheck from '../AppCommentDisabledCheck.vue';
+import { Comment, CommentableModel, getCommentModelResourceName } from '../comment-model';
 import { CommentStoreManagerKey, getCommentStore, onCommentAdd } from '../comment-store';
 import FormComment from '../FormComment.vue';
-import AppCommentWidget from '../widget/widget.vue';
+import AppCommentWidget from '../widget/AppCommentWidget.vue';
 
 const props = defineProps({
 	commentId: {
@@ -20,7 +20,7 @@ const props = defineProps({
 		required: true,
 	},
 	model: {
-		type: Object as PropType<Model>,
+		type: Object as PropType<Model & CommentableModel>,
 		required: true,
 	},
 	displayMode: {
@@ -61,16 +61,7 @@ const parent = computed(() => {
 	}
 });
 
-const shouldShowReply = computed(() => {
-	if (!canCommentOnModel(model.value, parent.value)) {
-		return false;
-	}
-
-	return user.value && !hasError.value;
-});
-
 function _onCommentAdd(comment: Comment) {
-	Analytics.trackEvent('comment-widget', 'add');
 	onCommentAdd(commentManager, comment);
 	emit('add', comment);
 }
@@ -103,35 +94,35 @@ function onEditorBlur() {
 			</AppButton>
 		</div>
 
-		<div class="modal-body">
-			<AppCommentWidget
-				:model="model"
-				:thread-comment-id="commentId"
-				:show-tabs="false"
-				:show-add="false"
-				@remove="onRemove"
-				@error="onError"
-			/>
-		</div>
-
-		<template v-if="shouldShowReply" #footer>
-			<div>
-				<AppMessageThreadAdd
-					v-if="parent"
-					hide-message-split
-					:class="{ '-thread-editor-focus': isEditorFocused }"
-				>
-					<FormComment
-						:comment-model="model"
-						:parent-id="parent.id"
-						:placeholder="$gettext(`Leave a reply...`)"
-						:autofocus="autofocus"
-						@submit="_onCommentAdd"
-						@editor-focus="onEditorFocus"
-						@editor-blur="onEditorBlur"
-					/>
-				</AppMessageThreadAdd>
+		<AppCommentDisabledCheck :model="model">
+			<div class="modal-body">
+				<AppCommentWidget
+					:model="model"
+					:thread-comment-id="commentId"
+					:show-tabs="false"
+					:show-add="false"
+					@remove="onRemove"
+					@error="onError"
+				/>
 			</div>
+		</AppCommentDisabledCheck>
+
+		<template #footer>
+			<AppMessageThreadAdd
+				v-if="user && !hasError && parent"
+				:class="{ '-thread-editor-focus': isEditorFocused }"
+				hide-message-split
+			>
+				<FormComment
+					:model="model"
+					:parent-id="parent?.id"
+					:placeholder="$gettext(`Leave a reply...`)"
+					:autofocus="autofocus"
+					@submit="_onCommentAdd"
+					@editor-focus="onEditorFocus"
+					@editor-blur="onEditorBlur"
+				/>
+			</AppMessageThreadAdd>
 		</template>
 	</AppModal>
 </template>

@@ -12,8 +12,8 @@ import { validateMaxLength, validateMinLength } from '../../../../_common/form-v
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import AppFormsCommunityPillAdd from '../community/_pill/add/add.vue';
-import AppFormsCommunityPill from '../community/_pill/community-pill.vue';
+import AppPostTargetCommunity from '../../post/target/AppPostTargetCommunity.vue';
+import AppPostTargetAddCommunity from '../../post/target/_add/AppPostTargetAddCommunity.vue';
 
 type FormModel = {
 	title: string;
@@ -163,17 +163,18 @@ function onRemoveCommunity() {
 				:label="$gettext(`Start in a community?`)"
 				hide-label
 			>
-				<AppFormsCommunityPill
+				<AppPostTargetCommunity
 					v-if="selectedCommunity"
 					:community="selectedCommunity"
-					:with-channel="false"
+					no-right
+					can-remove
 					@remove="onRemoveCommunity"
 				/>
-				<AppFormsCommunityPillAdd
+				<AppPostTargetAddCommunity
 					v-else
 					:communities="selectableCommunities"
 					:with-channel="false"
-					@add-community="onAddCommunity"
+					@select-community="onAddCommunity"
 				/>
 
 				<div class="help-block">

@@ -170,6 +170,7 @@ export class ContentEditorAppAdapterMessage {
 			| 'window'
 			| 'scope'
 			| 'content'
+			| 'theme'
 			| 'bold'
 			| 'italic'
 			| 'strikethrough'
@@ -289,6 +290,12 @@ export class ContentEditorAppAdapterMessage {
 			case 'content':
 				editorGetAppAdapter().initialContent = this.data.content;
 				return;
+
+			case 'theme': {
+				const isDark = !(this.data.lightMode ?? false);
+				editorGetAppAdapter()._getThemeStore().setDark(isDark);
+				return;
+			}
 
 			case 'bold':
 				return editorToggleMark(controller, marks.strong);

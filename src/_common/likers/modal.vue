@@ -1,6 +1,5 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import AppUserList from '../../app/components/user/list/list.vue';
 import { Api } from '../api/api.service';
 import { Comment } from '../comment/comment-model';
 import { formatNumber } from '../filters/number';
@@ -8,6 +7,7 @@ import { FiresidePost } from '../fireside/post/post-model';
 import { Game } from '../game/game.model';
 import AppLoading from '../loading/AppLoading.vue';
 import { BaseModal } from '../modal/base';
+import AppUserList from '../user/list/AppUserList.vue';
 import { User } from '../user/user.model';
 import { LikersResource } from './modal.service';
 

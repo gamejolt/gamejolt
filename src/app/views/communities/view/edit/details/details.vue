@@ -15,6 +15,7 @@ import { useThemeStore } from '../../../../../../_common/theme/theme.store';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import FormCommunity from '../../../../../components/forms/community/community.vue';
 import FormCommunityDescription from '../../../../../components/forms/community/description/FormCommunityDescription.vue';
+import { useGridStore } from '../../../../../components/grid/grid-store';
 import { useAppStore } from '../../../../../store';
 import { CommunityThemeKey } from '../../RouteCommunitiesView.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
@@ -38,6 +39,7 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 
 	store = setup(() => useAppStore());
 	themeStore = setup(() => useThemeStore());
+	gridStore = setup(() => useGridStore());
 
 	readonly Screen = Screen;
 
@@ -47,6 +49,10 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 
 	get collaborator() {
 		return this.routeStore.collaborator;
+	}
+
+	get grid() {
+		return this.gridStore.grid;
 	}
 
 	get isOwner() {
@@ -82,7 +88,7 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 		}
 
 		await this.community.$remove();
-		await this.store.leaveCommunity(this.community, undefined, { shouldConfirm: false });
+		await this.store.leaveCommunity(this.community, { grid: this.grid, shouldConfirm: false });
 
 		showInfoGrowl(
 			this.$gettext(`Your community has been removed from the site.`),
@@ -106,7 +112,7 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 		}
 
 		await this.collaborator.$remove();
-		await this.store.leaveCommunity(this.community, undefined, { shouldConfirm: false });
+		await this.store.leaveCommunity(this.community, { grid: this.grid, shouldConfirm: false });
 
 		showSuccessGrowl(
 			this.$gettext(`You left the community. You will be missed! ;A;`),

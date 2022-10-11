@@ -14,6 +14,9 @@ const props = defineProps({
 		type: Function,
 		default: undefined,
 	},
+	bleedImg: {
+		type: Boolean,
+	},
 });
 
 const emit = defineEmits({
@@ -47,7 +50,13 @@ function onClick(e: MouseEvent) {
 </script>
 
 <template>
-	<component :is="component" class="pill" :to="to" @click="onClick">
+	<component
+		:is="component"
+		class="pill"
+		:class="{ '-bleed-img': bleedImg }"
+		:to="to"
+		@click="onClick"
+	>
 		<span v-if="hasImg" class="-img">
 			<slot name="img" />
 		</span>
@@ -73,6 +82,18 @@ function onClick(e: MouseEvent) {
 	&.active
 		change-bg('bi-bg')
 		theme-prop('color', 'bi-fg')
+
+	&.-bleed-img
+		padding: 0
+		overflow: hidden
+
+		.-content
+			padding: 5px 10px 5px 0
+
+		.-img
+			width: unset
+			height: unset
+			margin-right: 12px
 
 	a&
 		pressy()

@@ -2,9 +2,11 @@
 import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
+import AppButton from '../../../_common/button/AppButton.vue';
 import { Client } from '../../../_common/client/safe-exports';
 import { formatCurrency } from '../../../_common/filters/currency';
 import { formatNumber } from '../../../_common/filters/number';
+import { InviteModal } from '../../../_common/invite/modal/modal.service';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../_common/popper/AppPopper.vue';
 import { Screen } from '../../../_common/screen/screen-service';
@@ -13,7 +15,7 @@ import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppUserAvatarImg from '../../../_common/user/user-avatar/img/img.vue';
+import AppUserAvatarImg from '../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { UserWallet } from '../../../_common/user/wallet/wallet.model';
 import { useAppStore } from '../../store';
 import { UserTokenModal } from '../user/token-modal/token-modal.service';
@@ -61,6 +63,10 @@ async function _getWallet() {
 	marketplaceAmount.value = response.marketplaceWalletBalance || 0;
 	gemWallet.value = response.gemWallet ? new UserWallet(response.gemWallet) : undefined;
 	isFetchingWallet.value = false;
+}
+
+function showInviteModal() {
+	InviteModal.show({ user: user.value! });
 }
 
 function quit() {
@@ -150,6 +156,20 @@ function quit() {
 					>
 						<AppTranslate>Settings</AppTranslate>
 					</RouterLink>
+					<RouterLink
+						v-if="user.is_developer || user.is_creator"
+						v-app-track-event="`account-popover:analytics`"
+						class="list-group-item offline-disable"
+						:to="{
+							name: 'dash.analytics',
+							params: {
+								resource: 'User',
+								resourceId: user.id,
+							},
+						}"
+					>
+						<AppTranslate>Analytics</AppTranslate>
+					</RouterLink>
 					<a
 						v-app-track-event="`account-popover:token`"
 						class="list-group-item offline-disable"
@@ -208,6 +228,12 @@ function quit() {
 							</template>
 						</RouterLink>
 					</template>
+				</div>
+
+				<div class="-invite-well">
+					<AppButton block primary solid @click="showInviteModal()">
+						<AppTranslate>Invite a friend</AppTranslate>
+					</AppButton>
 				</div>
 
 				<div class="-separator" />
@@ -306,4 +332,7 @@ function quit() {
 	flex: auto
 	align-items: center
 	gap: 8px
+
+.-invite-well
+	padding: $list-group-item-padding
 </style>

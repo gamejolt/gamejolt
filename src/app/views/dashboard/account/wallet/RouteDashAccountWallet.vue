@@ -10,8 +10,8 @@ import { formatNumber } from '../../../../../_common/filters/number';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
 import {
-createAppRoute,
-defineAppRouteOptions
+	createAppRoute,
+	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -151,28 +151,45 @@ async function withdraw() {
 							</div>
 						</div>
 
-						<AppProgressBar :percent="gemsProgress" thin />
-
-						<div
-							style="
-								display: flex;
-								flex-direction: row;
-								grid-gap: 24px;
-								font-size: 13px;
-							"
+						<template
+							v-if="gemWallet.available_balance >= gemWallet.minimum_payout_balance"
 						>
-							<div>
-								Once you reach the minimum withdraw amount, we'll deposit your gems
-								into your PayPal account on the 1st of the following month.
+							<AppSpacer vertical :scale="2" />
+							<AppAlertBox icon="thumbs-up" color="highlight">
+								<AppTranslate>
+									Party time! 🎆 🤸 You've reached the minimum withdrawal amount.
+									We'll be depositing your gems into your PayPal account on the
+									1st of next month.
+								</AppTranslate>
+							</AppAlertBox>
+						</template>
+						<template v-else>
+							<AppProgressBar :percent="gemsProgress" thin />
+
+							<div
+								style="
+									display: flex;
+									flex-direction: row;
+									grid-gap: 24px;
+									font-size: 13px;
+								"
+							>
+								<div>
+									<AppTranslate>
+										Once you reach the minimum withdraw amount, we'll deposit
+										your gems into your PayPal account on the 1st of the
+										following month.
+									</AppTranslate>
+								</div>
+								<div style="flex: auto" />
+								<div style="flex: none">
+									<strong>
+										{{ gemWallet.available_balance }} /
+										{{ gemWallet.minimum_payout_balance }}
+									</strong>
+								</div>
 							</div>
-							<div style="flex: auto" />
-							<div style="flex: none">
-								<strong>
-									{{ gemWallet.available_balance }} /
-									{{ gemWallet.minimum_payout_balance }}
-								</strong>
-							</div>
-						</div>
+						</template>
 					</div>
 				</AppCard>
 			</template>
@@ -324,7 +341,7 @@ async function withdraw() {
 				</AppCard>
 			</template>
 
-			<AppAlertBox v-if="marketplaceRevenuePendingWithdraw > 0">
+			<AppAlertBox v-if="marketplaceRevenuePendingWithdraw > 0" color="highlight">
 				<div v-translate="{ amount: formatCurrency(marketplaceRevenuePendingWithdraw) }">
 					You have pending withdrawals amounting to
 					<b>%{ amount }</b>.

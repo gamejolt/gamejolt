@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, toRefs } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
 import AppImgResponsive from '../img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '../media-item/backdrop/AppMediaItemBackdrop.vue';
@@ -13,10 +13,6 @@ const props = defineProps({
 		type: Object as PropType<Realm>,
 		required: true,
 	},
-	ratio: {
-		type: Number,
-		default: 3 / 4,
-	},
 	overlayContent: {
 		type: Boolean,
 	},
@@ -27,20 +23,37 @@ const props = defineProps({
 		type: Object as PropType<RouteLocationRaw>,
 		default: undefined,
 	},
-	/**
-	 * Type of media item that should be used for the card. `cover` should be
-	 * used for narrow {@link ratio}s, where `header` should be used for wider
-	 * ratios.
-	 */
-	mediaItemType: {
-		type: String as PropType<'header' | 'cover'>,
-		default: 'cover',
+	labelPosition: {
+		type: String as PropType<'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'>,
+		default: 'top-left',
+	},
+	noFollow: {
+		type: Boolean,
 	},
 });
 
-const { realm, ratio, mediaItemType } = toRefs(props);
+const { realm, overlayContent, noSheet, to, labelPosition } = toRefs(props);
 
-const mediaItem = computed(() => realm.value[mediaItemType.value]);
+const mediaItem = computed(() => realm.value.cover);
+
+const labelStyling = computed(() => {
+	const pos = labelPosition.value;
+
+	const dash = pos.indexOf('-');
+	const vPos = pos.slice(0, dash);
+	const hPos = pos.slice(dash + 1, pos.length);
+
+	const result: CSSProperties = {};
+
+	if (vPos === 'top' || vPos === 'bottom') {
+		result[vPos] = '8px';
+	}
+	if (hPos === 'left' || hPos === 'right') {
+		result[hPos] = '8px';
+	}
+
+	return result;
+});
 </script>
 
 <template>
@@ -54,15 +67,24 @@ const mediaItem = computed(() => realm.value[mediaItemType.value]);
 	>
 		<RouterLink v-if="to" class="-link-mask" :to="to" />
 
-		<AppRealmLabel class="-label" :overlay="overlayContent" :realm="realm" />
+		<AppRealmLabel
+			class="-label"
+			:style="labelStyling"
+			:overlay="overlayContent"
+			:realm="realm"
+		/>
 
-		<AppResponsiveDimensions :ratio="ratio">
-			<AppMediaItemBackdrop :media-item="mediaItem">
+		<AppResponsiveDimensions :ratio="0.75">
+			<AppMediaItemBackdrop v-if="mediaItem" :media-item="mediaItem">
 				<AppImgResponsive class="-cover-img" :src="mediaItem.mediaserver_url" alt="" />
 			</AppMediaItemBackdrop>
 		</AppResponsiveDimensions>
 
-		<div class="-follow-button" :class="{ '-follow-button-overlay': overlayContent }">
+		<div
+			v-if="!noFollow"
+			class="-follow-button"
+			:class="{ '-follow-button-overlay': overlayContent }"
+		>
 			<AppRealmFollowButton
 				:realm="realm"
 				source="fullCard"
@@ -93,8 +115,6 @@ const mediaItem = computed(() => realm.value[mediaItemType.value]);
 
 .-label
 	position: absolute
-	left: 8px
-	top: 8px
 	z-index: 1
 
 .-link-mask

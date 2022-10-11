@@ -2,7 +2,6 @@
 import { computed, ref, toRefs } from 'vue';
 import AppAnimChargeOrb from '../../../_common/animation/AppAnimChargeOrb.vue';
 import AppAnimElectricity from '../../../_common/animation/AppAnimElectricity.vue';
-import { configChargedStickers } from '../../../_common/config/config.service';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import AppLoadingFade from '../../../_common/loading/AppLoadingFade.vue';
 import AppQuestLogItem from '../../../_common/quest/AppQuestLogItem.vue';
@@ -127,7 +126,7 @@ function onListClick() {
 			</slot>
 
 			<span class="help-inline -info">
-				<template v-if="showCharge && configChargedStickers.value">
+				<template v-if="showCharge">
 					<AppStickerChargeTooltipHandler
 						class="-charge-orb-container"
 						:class="{

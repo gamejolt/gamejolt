@@ -16,6 +16,7 @@ import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { useAppStore } from '../../../store';
 import { ActivityFeedView } from '../../activity/feed/view';
 import { onNewStickers } from '../../grid/client.service';
+import { useGridStore } from '../../grid/grid-store';
 import { AppActivityFeedLazy } from '../../lazy';
 import AppShellNotificationPopoverStickerNavItem from './sticker-nav-item/AppShellNotificationPopoverStickerNavItem.vue';
 
@@ -31,8 +32,8 @@ const {
 	unreadNotificationsCount,
 	hasNewUnlockedStickers,
 	markNotificationsAsRead,
-	grid,
 } = useAppStore();
+const { grid } = useGridStore();
 
 const newStickerAnimContainer = ref<HTMLDivElement>();
 const isShowing = ref(false);

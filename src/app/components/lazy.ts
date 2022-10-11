@@ -10,7 +10,7 @@ export const AppAuthJoinLazy = defineAsyncComponent(
 );
 
 export const AppCommentWidgetLazy = defineAsyncComponent(
-	() => import('../../_common/comment/widget/widget.vue')
+	() => import('../../_common/comment/widget/AppCommentWidget.vue')
 );
 
 export const FormCommentLazy = defineAsyncComponent(

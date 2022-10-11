@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, inject, PropType, reactive, ref, toRefs } from 'vue';
+import { computed, PropType, reactive, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
 import { ContentOwnerParentBounds } from '../../../../../_common/content/content-owner';
@@ -12,7 +12,7 @@ import { Popper } from '../../../../../_common/popper/popper.service';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { ChatStore, ChatStoreKey } from '../../chat-store';
+import { useGridStore } from '../../../grid/grid-store';
 import {
 	removeMessage as chatRemoveMessage,
 	retryFailedQueuedMessage,
@@ -21,6 +21,7 @@ import {
 } from '../../client';
 import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
+import { getChatUserRoleData } from '../../user';
 import AppChatUserPopover from '../../user-popover/user-popover.vue';
 import AppChatWindowOutputItemTime from './AppChatWindowOutputItemTime.vue';
 
@@ -50,8 +51,7 @@ const props = defineProps({
 });
 
 const { message, room, maxContentWidth } = toRefs(props);
-
-const chatStore = inject<ChatStore>(ChatStoreKey)!;
+const { chatUnsafe: chat } = useGridStore();
 
 const displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
 
@@ -61,8 +61,6 @@ const itemWrapper = ref<HTMLElement>();
 const contentViewerBounds: ContentOwnerParentBounds = reactive({
 	width: maxContentWidth,
 });
-
-const chat = computed(() => chatStore.chat!);
 
 const showAsQueued = computed(() => message.value._showAsQueued);
 const hasError = computed(() => !!message.value._error);
@@ -148,6 +146,10 @@ const canRemoveMessage = computed(() => {
 });
 
 const canEditMessage = computed(() => {
+	if (message.value.is_automated) {
+		return false;
+	}
+
 	// Only content messages can be edited.
 	if (message.value.type !== 'content') {
 		return false;
@@ -160,6 +162,12 @@ const canEditMessage = computed(() => {
 	// Only the owner of the message can edit.
 	return chat.value.currentUser.id === message.value.user.id;
 });
+
+const roleData = computed(() =>
+	getChatUserRoleData(chat.value, room.value, message.value.user, {
+		mesage: message.value,
+	})
+);
 
 function startEdit() {
 	setMessageEditing(chat.value, message.value);
@@ -208,7 +216,7 @@ function onRowClick() {
 
 async function onMessageClick() {
 	if (hasError.value) {
-		retryFailedQueuedMessage(chatStore!.chat!, message.value);
+		retryFailedQueuedMessage(chat.value, message.value);
 	}
 }
 </script>
@@ -261,6 +269,14 @@ async function onMessageClick() {
 							'-primary-border': isEditing,
 						}"
 					/>
+
+					<span
+						v-if="(message.showMeta || message.is_automated) && roleData"
+						v-app-tooltip="roleData.tooltip"
+						class="-role"
+					>
+						<AppJolticon class="-role-icon" :icon="roleData.icon" />
+					</span>
 
 					<div v-if="message.showMeta" class="-item-byline">
 						<RouterLink class="-user link-unstyled" :to="message.user.url">
@@ -429,6 +445,27 @@ $-min-item-width = 24px
 	display: flex
 	align-items: center
 	margin-bottom: 4px
+
+.-role
+	img-circle()
+	change-bg(bg)
+	elevate-1()
+	position: absolute
+	left: 0
+	top: 0
+	transform: translate(-25%, -25%)
+	width: 20px
+	height: 20px
+	z-index: 1
+
+.-role-icon
+	font-size: 13px
+	position: absolute
+	color: var(--theme-primary)
+	left: 50%
+	top: 50%
+	transform: translate(-50%, -50%)
+	margin: 0
 
 .-user
 	text-overflow()

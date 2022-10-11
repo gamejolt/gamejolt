@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
-import { copyShareLink, ShareProvider, ShareResource } from '../share.service';
-import { ShareModal } from './_modal/modal.service';
-import AppShareCardTile from './AppShareCardTile.vue';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import AppButton from '../../button/AppButton.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
+import AppTranslate from '../../translate/AppTranslate.vue';
+import AppShareControl from '../AppShareControl.vue';
+import { ShareProvider, ShareResource } from '../share.service';
+import AppShareCardTile from './AppShareCardTile.vue';
+import { ShareModal } from './_modal/modal.service';
 
 const props = defineProps({
 	resource: {
@@ -35,10 +35,6 @@ function openShareModal() {
 		url: props.url,
 	});
 }
-
-function copyLink() {
-	copyShareLink(props.url, props.resource);
-}
 </script>
 
 <template>
@@ -51,14 +47,7 @@ function copyLink() {
 				<AppTranslate>Share</AppTranslate>
 			</h4>
 
-			<div class="-content-row">
-				<!-- force update on input so that the URL re-applies and they can't edit -->
-				<input class="-url form-control" :value="url" @input="$forceUpdate()" />
-
-				<AppButton class="-copy" @click="copyLink()">
-					<AppTranslate>Copy</AppTranslate>
-				</AppButton>
-			</div>
+			<AppShareControl class="-content-row" :url="url" :resource="resource" />
 
 			<div class="-content-row-lower">
 				<AppShareCardTile

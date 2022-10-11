@@ -2,7 +2,7 @@
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import { validateMaxLength } from '../../../../_common/form-vue/validators';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/img/img.vue';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 
 const { user } = useCommonStore();
 </script>
@@ -23,7 +23,7 @@ const { user } = useCommonStore();
 </template>
 
 <style lang="stylus" scoped>
-@import '../add-button'
+@import './add-button'
 
 .post-add-button
 	margin-bottom: 0

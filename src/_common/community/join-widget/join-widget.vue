@@ -1,6 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
+import { useGridStore } from '../../../app/components/grid/grid-store';
 import { useAppStore } from '../../../app/store';
 import { CommunityJoinLocation } from '../../analytics/analytics.service';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
@@ -34,13 +35,14 @@ export default class AppCommunityJoinWidget extends Vue {
 
 	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
+	gridStore = setup(() => useGridStore());
 
 	get app() {
 		return this.commonStore;
 	}
 
 	get grid() {
-		return this.store.grid;
+		return this.gridStore.grid;
 	}
 
 	isProcessing = false;
@@ -79,7 +81,10 @@ export default class AppCommunityJoinWidget extends Vue {
 
 		if (!this.community.is_member) {
 			try {
-				await this.store.joinCommunity(this.community, this.location);
+				await this.store.joinCommunity(this.community, {
+					grid: this.grid,
+					location: this.location,
+				});
 			} catch (e) {
 				console.log(e);
 				let message = this.$gettext(
@@ -93,7 +98,9 @@ export default class AppCommunityJoinWidget extends Vue {
 			}
 		} else {
 			try {
-				await this.store.leaveCommunity(this.community, this.location, {
+				await this.store.leaveCommunity(this.community, {
+					grid: this.grid,
+					location: this.location,
 					shouldConfirm: true,
 				});
 			} catch (e) {

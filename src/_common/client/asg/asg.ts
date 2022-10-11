@@ -5,7 +5,7 @@ const asgNative = require('asg-prebuilt');
 const process = require('process') as typeof import('process');
 
 const SampleRate = 44100;
-const NumChannels = 1;
+const NumChannels = 2;
 const Format: AudioSampleFormat = 'f32';
 
 export type ASGControllerStatus = 'starting' | 'started' | 'stopping' | 'stopped';
@@ -53,7 +53,7 @@ export async function startDesktopAudioCapture(writableStream: WritableStream<Au
 				const audioData = new AudioData({
 					format: Format,
 					numberOfChannels: NumChannels,
-					numberOfFrames: data.length,
+					numberOfFrames: data.length / NumChannels,
 					timestamp,
 					sampleRate: SampleRate,
 					data,
@@ -66,7 +66,7 @@ export async function startDesktopAudioCapture(writableStream: WritableStream<Au
 		});
 
 	try {
-		uid.value = asgNative.startCapture(appPid, emitter.emit.bind(emitter));
+		uid.value = asgNative.startCapture(appPid, emitter.emit.bind(emitter), NumChannels);
 		status.value = 'started';
 	} catch (error) {
 		console.error('Got error while starting ASG capture', error);

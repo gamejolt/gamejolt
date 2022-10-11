@@ -29,6 +29,7 @@ import { Navigate } from '../navigate/navigate.service';
 import { OrderItem } from '../order/item/item.model';
 import { QuestNotification } from '../quest/quest-notification-model';
 import { Sellable } from '../sellable/sellable.model';
+import { StickerPlacement } from '../sticker/placement/placement.model';
 import { Subscription } from '../subscription/subscription.model';
 import { Translate } from '../translate/translate.service';
 import { UserFriendship } from '../user/friendship/friendship.model';
@@ -77,8 +78,8 @@ export class Notification extends Model {
 	static TYPE_FIRESIDE_START = 'fireside-start';
 	static TYPE_FIRESIDE_STREAM_NOTIFICATION = 'fireside-stream-notification';
 	static TYPE_FIRESIDE_FEATURED_IN_COMMUNITY = 'fireside-featured-in-community';
-
 	static TYPE_QUEST_NOTIFICATION = 'quest-notification';
+	static TYPE_CHARGED_STICKER = 'charged-sticker';
 
 	static ACTIVITY_FEED_TYPES = [EventItem.TYPE_POST_ADD];
 
@@ -99,6 +100,7 @@ export class Notification extends Model {
 		Notification.TYPE_COMMUNITY_USER_NOTIFICATION,
 		Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY,
 		Notification.TYPE_QUEST_NOTIFICATION,
+		Notification.TYPE_CHARGED_STICKER,
 	];
 
 	user_id!: number;
@@ -130,7 +132,8 @@ export class Notification extends Model {
 		| Fireside
 		| FiresideStreamNotification
 		| FiresideCommunity
-		| QuestNotification;
+		| QuestNotification
+		| StickerPlacement;
 
 	to_resource!: string | null;
 	to_resource_id!: number | null;
@@ -234,6 +237,9 @@ export class Notification extends Model {
 			this.action_model = new FiresideCommunity(data.action_resource_model);
 		} else if (this.type === Notification.TYPE_QUEST_NOTIFICATION) {
 			this.action_model = new QuestNotification(data.action_resource_model);
+		} else if (this.type === Notification.TYPE_CHARGED_STICKER) {
+			this.action_model = new StickerPlacement(data.action_resource_model);
+			this.is_user_based = true;
 		}
 
 		// Keep memory clean after bootstrapping the models (the super
@@ -325,6 +331,10 @@ export class Notification extends Model {
 
 			case Notification.TYPE_QUEST_NOTIFICATION:
 				return getRouteLocationForModel(this.action_model as QuestNotification);
+
+			case Notification.TYPE_CHARGED_STICKER: {
+				return getRouteLocationForModel(this.from_model!);
+			}
 		}
 
 		// Must pull asynchronously when they click on the notification.

@@ -53,7 +53,7 @@ export async function buildInnoSetup(options: {
 			shellEscape(options.certFile) +
 			' /p ' +
 			options.certPw +
-			' /t http://timestamp.digicert.com $f',
+			' /tr http://timestamp.digicert.com $f',
 		'/Q',
 		scriptFilepath,
 	]);

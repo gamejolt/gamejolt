@@ -1,33 +1,32 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { onMounted, ref } from '@vue/runtime-core';
 import { computed, onUnmounted } from 'vue';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import { EscapeStack } from '../../../../../_common/escape-stack/escape-stack.service';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
+import { InviteModal } from '../../../../../_common/invite/modal/modal.service';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTabBar from '../../../../../_common/tab-bar/AppTabBar.vue';
 import AppTabBarItem from '../../../../../_common/tab-bar/AppTabBarItem.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { illMaintenance, illNoCommentsSmall } from '../../../../img/ill/illustrations';
 import { useAppStore } from '../../../../store';
-import { useChatStore } from '../../../chat/chat-store';
 import { enterChatRoom, leaveChatRoom } from '../../../chat/client';
 import { sortByLastMessageOn } from '../../../chat/user-collection';
 import AppChatUserList from '../../../chat/user-list/AppChatUserList.vue';
-</script>
+import { useGridStore } from '../../../grid/grid-store';
 
-<script lang="ts" setup>
-const store = useAppStore();
-
-const chatStore = useChatStore()!;
+const { visibleLeftPane, toggleLeftPane } = useAppStore();
+const { user } = useCommonStore();
+const { chatUnsafe: chat } = useGridStore();
 
 let escapeCallback: (() => void) | null = null;
 
 const tab = ref<'chats' | 'friends'>('chats');
 
-const visibleLeftPane = computed(() => store.visibleLeftPane.value);
-const chat = computed(() => chatStore.chat!);
 const friends = computed(() => chat.value.friendsList.collection);
 const groups = computed(() => chat.value.groupRooms);
 const chats = computed(() => sortByLastMessageOn([...groups.value, ...friends.value]));
@@ -54,8 +53,12 @@ onUnmounted(() => {
 
 function hideChatPane() {
 	if (visibleLeftPane.value === 'chat') {
-		store.toggleLeftPane('chat');
+		toggleLeftPane('chat');
 	}
+}
+
+function showInviteModal() {
+	InviteModal.show({ user: user.value! });
 }
 </script>
 
@@ -86,9 +89,23 @@ function hideChatPane() {
 					v-if="chats.length === 0 || (tab === 'friends' && !friends.length)"
 					:asset="illNoCommentsSmall"
 				>
-					<AppTranslate>No friends yet.</AppTranslate>
+					<p>
+						<AppTranslate>No friends yet.</AppTranslate>
+					</p>
+
+					<AppButton primary solid @click="showInviteModal()">
+						<AppTranslate>Invite a friend</AppTranslate>
+					</AppButton>
 				</AppIllustration>
-				<AppChatUserList v-else :entries="tab === 'chats' ? chats : friends" />
+				<template v-else>
+					<AppChatUserList :entries="tab === 'chats' ? chats : friends" />
+
+					<div class="-footer">
+						<AppButton block primary solid @click="showInviteModal()">
+							<AppTranslate>Invite a friend</AppTranslate>
+						</AppButton>
+					</div>
+				</template>
 			</template>
 			<template v-else-if="chat.connected">
 				<AppLoading centered :label="$gettext(`Loading your chats...`)" />
@@ -115,6 +132,9 @@ function hideChatPane() {
 	display: flex
 	flex-direction: column
 	height: 100%
+
+.-footer
+	padding: 4px 16px
 
 .-no-chat
 	margin-left: 12px

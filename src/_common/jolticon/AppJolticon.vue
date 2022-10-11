@@ -199,6 +199,7 @@ export const Jolticons = [
 	'marketplace',
 	'marketplace-filled',
 	'android',
+	'robot',
 ] as const;
 </script>
 

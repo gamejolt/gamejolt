@@ -1,11 +1,9 @@
 <script lang="ts" setup>
-import { ref } from '@vue/reactivity';
-import { computed, PropType } from 'vue';
+import { computed, PropType, ref, toRefs } from 'vue';
 import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
 import { ContentRules } from '../../../_common/content/content-editor/content-rules';
 import AppContentViewer from '../../../_common/content/content-viewer/content-viewer.vue';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
-import { canPlaceStickerOnFiresidePost } from '../../../_common/sticker/placement/placement.model';
 import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.vue';
 import { StickerTargetController } from '../../../_common/sticker/target/target-controller';
 
@@ -23,6 +21,8 @@ const props = defineProps({
 	},
 });
 
+const { truncateLinks, post } = toRefs(props);
+
 // For feeds we want to truncate links, the full links can be seen:
 // - on the post page
 // - when hovering (html title) or on navigation
@@ -30,9 +30,8 @@ const props = defineProps({
 const isLeadOpen = ref(false);
 const canToggleLead = ref(false);
 
-const displayRules = computed(() => new ContentRules({ truncateLinks: props.truncateLinks }));
-const overlay = computed(() => !!props.post.background);
-const canPlaceSticker = computed(() => canPlaceStickerOnFiresidePost(props.post));
+const displayRules = computed(() => new ContentRules({ truncateLinks: truncateLinks.value }));
+const overlay = computed(() => !!post.value.background);
 
 function canToggleLeadChanged(canToggle: boolean) {
 	canToggleLead.value = canToggle;
@@ -46,7 +45,10 @@ function toggleLead() {
 <template>
 	<div class="-container-theme">
 		<div :class="{ '-overlay-post-lead': overlay }">
-			<AppStickerTarget :controller="stickerTargetController" :disabled="!canPlaceSticker">
+			<AppStickerTarget
+				:controller="stickerTargetController"
+				:disabled="!post.canPlaceSticker"
+			>
 				<!--
 					This shouldn't ever really show a collapser. It's for the
 					jokers that think it would be fun to make a post with a

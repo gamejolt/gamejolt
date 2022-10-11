@@ -522,6 +522,26 @@ export class NotificationText {
 						);
 				}
 			}
+
+			case Notification.TYPE_CHARGED_STICKER: {
+				if (notification.to_resource === 'Fireside_Post') {
+					return _process(
+						$gettextInterpolate(
+							`<em>%{ subject }</em> placed a charged sticker on your post <b>%{ object }</b>.`,
+							this.getTranslationValues(notification),
+							!plaintext
+						)
+					);
+				} else if (notification.to_resource === 'Fireside') {
+					return _process(
+						$gettextInterpolate(
+							`<em>%{ subject }</em> placed a charged sticker on your fireside stream.`,
+							this.getTranslationValues(notification),
+							!plaintext
+						)
+					);
+				}
+			}
 		}
 
 		// When the notification type has no implementation, we log and don't show it (return undefined).

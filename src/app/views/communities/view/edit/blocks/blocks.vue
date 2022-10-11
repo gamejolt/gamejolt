@@ -14,7 +14,7 @@ import { AppTimeAgo } from '../../../../../../_common/time/ago/ago';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { UserBlock } from '../../../../../../_common/user/block/block.model';
 import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/img/img.vue';
+import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import FormCommunityBlock from '../../../../../components/forms/community/ban/block.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';

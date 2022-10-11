@@ -22,13 +22,22 @@ const props = defineProps({
 	fancyHover: {
 		type: Boolean,
 	},
+	gridColumnsDesktop: {
+		type: Number,
+		default: 4,
+	},
+	gridColumnsSm: {
+		type: Number,
+		default: 3,
+	},
+	gridColumnsXs: {
+		type: Number,
+		default: 2,
+	},
 });
 
-const { listType, posts } = toRefs(props);
-
-const gridColumnsDesktop = 4;
-const gridColumnsSm = 3;
-const gridColumnsXs = 2;
+const { isLoading, listType, posts, fancyHover, gridColumnsDesktop, gridColumnsSm, gridColumnsXs } =
+	toRefs(props);
 
 const displayPosts = computed(() => {
 	if (listType.value !== 'grid') {
@@ -37,11 +46,11 @@ const displayPosts = computed(() => {
 
 	let count: number;
 	if (Screen.isXs) {
-		count = gridColumnsXs * 3;
+		count = gridColumnsXs.value * 3;
 	} else if (Screen.isSm) {
-		count = gridColumnsSm * 2;
+		count = gridColumnsSm.value * 2;
 	} else {
-		count = gridColumnsDesktop * 2;
+		count = gridColumnsDesktop.value * 2;
 	}
 
 	return posts.value.slice(0, count);
@@ -53,11 +62,11 @@ const placeholderCount = computed(() => {
 	}
 
 	if (Screen.isXs) {
-		return gridColumnsXs;
+		return gridColumnsXs.value;
 	} else if (Screen.isSm) {
-		return gridColumnsSm;
+		return gridColumnsSm.value;
 	} else {
-		return gridColumnsDesktop;
+		return gridColumnsDesktop.value;
 	}
 });
 </script>

@@ -1,15 +1,5 @@
 <script lang="ts" setup>
-import {
-	computed,
-	inject,
-	nextTick,
-	onMounted,
-	onUnmounted,
-	PropType,
-	ref,
-	toRefs,
-	watch,
-} from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
 import { useResizeObserver } from '../../../../../utils/resize-observer';
 import { debounce } from '../../../../../utils/utils';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
@@ -25,7 +15,7 @@ import { useCommonStore } from '../../../../../_common/store/common-store';
 import { useEventSubscription } from '../../../../../_common/system/event/event-topic';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { illNoChat } from '../../../../img/ill/illustrations';
-import { ChatStoreKey } from '../../chat-store';
+import { useGridStore } from '../../../grid/grid-store';
 import { loadOlderChatMessages, onNewChatMessage } from '../../client';
 import { TIMEOUT_CONSIDER_QUEUED } from '../../message';
 import { ChatRoom } from '../../room';
@@ -51,7 +41,7 @@ const props = defineProps({
 
 const { room, background } = toRefs(props);
 const { user } = useCommonStore();
-const chatStore = inject(ChatStoreKey)!;
+const { chatUnsafe: chat } = useGridStore();
 
 const widthWatcher = ref<HTMLDivElement>();
 
@@ -69,7 +59,6 @@ let _isOnScrollQueued = false;
 let _lastScrollMessageId: number | undefined;
 let _lastAutoscrollOffset: number | undefined;
 
-const chat = computed(() => chatStore.chat!);
 const messages = computed(() => chat.value.messages[room.value.id]);
 
 const queuedMessages = computed(() =>

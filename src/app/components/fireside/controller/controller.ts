@@ -24,6 +24,7 @@ import { run, sleep } from '../../../../utils/utils';
 import { uuidv4 } from '../../../../utils/uuid';
 import { MaybeRef } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
+import { Background } from '../../../../_common/background/background.model';
 import {
 	canCommunityEjectFireside,
 	canCommunityFeatureFireside,
@@ -32,7 +33,7 @@ import { getDeviceBrowser, getDeviceOS } from '../../../../_common/device/device
 import { DogtagData } from '../../../../_common/dogtag/dogtag-data';
 import { formatDuration } from '../../../../_common/filters/duration';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
-import { FiresideChatSettings } from '../../../../_common/fireside/chat-settings/chat-settings.model';
+import { FiresideChatSettings } from '../../../../_common/fireside/chat/chat-settings.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../../_common/fireside/role/role.model';
 import {
@@ -59,14 +60,13 @@ import { createStickerTargetController } from '../../../../_common/sticker/targe
 import { CommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
-import { AppStore } from '../../../store';
 import { BottomBarControl } from '../../../views/fireside/_bottom-bar/AppFiresideBottomBar.vue';
-import { ChatStore, loadChat } from '../../chat/chat-store';
-import { leaveChatRoom, setGuestChatToken, unsetGuestChatToken } from '../../chat/client';
+import { leaveChatRoom } from '../../chat/client';
 import { ChatRoomChannel, createChatRoomChannel } from '../../chat/room-channel';
 import { ChatUserCollection } from '../../chat/user-collection';
 import { createGridFiresideChannel, GridFiresideChannel } from '../../grid/fireside-channel';
 import { createGridFiresideDMChannel, GridFiresideDMChannel } from '../../grid/fireside-dm-channel';
+import { GridStore } from '../../grid/grid-store';
 
 /**
  * Should we show the app promo, because it will be better on their device?
@@ -128,16 +128,15 @@ export function createFiresideController(
 	fireside: Fireside,
 	options: {
 		isMuted?: boolean;
-		appStore: AppStore;
 		commonStore: CommonStore;
 		stickerStore: StickerStore;
-		chatStore: ChatStore;
+		gridStore: GridStore;
 		router: Router;
 	}
 ) {
-	const { isMuted = false, appStore, commonStore, stickerStore, chatStore, router } = options;
+	const { isMuted = false, commonStore, gridStore, stickerStore, router } = options;
 	const { user } = commonStore;
-	const { grid, loadGrid } = appStore;
+	const { grid, loadGrid } = gridStore;
 
 	const logger = createLogger('Fireside');
 
@@ -162,7 +161,13 @@ export function createFiresideController(
 	/**
 	 * Which hosts the current user is able to list.
 	 */
-	const listableHostIds = ref<Set<number>>(new Set());
+	const listableHostIds = ref(new Set<number>());
+
+	/**
+	 * Mapping of user id to the background they have selected. Gets updated
+	 * through events over {@link GridFiresideChannel}.
+	 */
+	const hostBackgrounds = ref(new Map<number, Background>());
 
 	const stickerTargetController = createStickerTargetController(fireside, {
 		isLive: true,
@@ -209,21 +214,22 @@ export function createFiresideController(
 	const gridChannel = shallowRef<GridFiresideChannel>();
 	const gridDMChannel = shallowRef<GridFiresideDMChannel>();
 	const chatChannel = shallowRef<ChatRoomChannel>();
-	const expiryInterval = shallowRef<NodeJS.Timer>();
-	const chatPreviousConnectedState = ref<boolean>();
-	const gridPreviousConnectedState = ref<boolean>();
+	let _expiryInterval: NodeJS.Timer | undefined;
+	let _gridPreviousConnectedState: boolean | undefined = undefined;
 
 	const isHoveringOverlayControl = ref(false);
 	const shownUserCardHover = ref<number>();
 	const isShowingStreamSetup = ref(false);
 
-	const updateInterval = ref<NodeJS.Timer>();
+	let _updateInterval: NodeJS.Timer | undefined;
 	const expiresDurationText = ref<string>();
 	const expiresProgressValue = ref<number>();
 
 	const _isExtending = ref(false);
 
-	const chat = computed(() => chatStore.chat ?? undefined);
+	const focusedUser = computed(() => rtc.value?.focusedUser);
+
+	const chat = computed(() => grid.value?.chat ?? undefined);
 	const chatRoom = computed(() => chatChannel.value?.room.value);
 
 	const chatUsers = computed(() => {
@@ -290,10 +296,8 @@ export function createFiresideController(
 	const canCommunityEject = computed(
 		() => !!fireside.community && canCommunityEjectFireside(fireside.community)
 	);
-	const canEdit = computed(() => {
-		console.warn('fireside perms', fireside.perms);
-		return isOwner.value || fireside.hasPerms('fireside-edit');
-	});
+
+	const canEdit = computed(() => isOwner.value || fireside.hasPerms('fireside-edit'));
 
 	const canPublish = computed(() => {
 		const role = fireside.role?.role;
@@ -334,6 +338,26 @@ export function createFiresideController(
 		}
 
 		return true;
+	});
+
+	/**
+	 * The background we would like to show currently in the fireside. It
+	 * changes depending on who you are viewing.
+	 */
+	const background = computed(() => {
+		// If we have no focused user, we want to try to use the background of the
+		// logged in user, since they might be setting up their stream at the
+		// moment before anyone else is streaming.
+		if (!focusedUser.value) {
+			const loggedUserId = user.value?.id;
+			// Check host backgrounds through the RTC instead of the locally
+			// defined values. This should prevent the background from showing
+			// if the user was removed as a host but they still had a background
+			// set.
+			return loggedUserId ? rtc.value?.hostBackgrounds.get(loggedUserId) : undefined;
+		}
+
+		return focusedUser.value.background;
 	});
 
 	const shouldShowDesktopAppPromo = ref(shouldPromoteAppForStreaming.value);
@@ -407,6 +431,7 @@ export function createFiresideController(
 				agoraStreamingInfo.value!,
 				hosts,
 				listableHostIds,
+				hostBackgrounds,
 				{ isMuted }
 			);
 		} else if (rtc.value) {
@@ -434,6 +459,14 @@ export function createFiresideController(
 		// Assign our fireside host data anytime our chat users change from
 		// unset to set.
 		chatUsers.value?.assignFiresideHostData(hosts.value);
+	}
+
+	function assignHostBackgroundData(userId: number, background: Background | undefined) {
+		if (!background) {
+			hostBackgrounds.value.delete(userId);
+		} else {
+			hostBackgrounds.value.set(userId, background);
+		}
 	}
 
 	const _unwatchChatUsers = watch(chatUsers, _onChatUsersChanged);
@@ -514,14 +547,9 @@ export function createFiresideController(
 		{ deep: true }
 	);
 
-	// Set up watchers to initiate connection once one of them boots up. Both
-	// chat/grid reporte connected when they are actually fully connected. When
-	// a connection is dropped or any other error on the socket they immediately
+	// Set up watchers to initiate connection once grid boots up. When a
+	// connection is dropped or any other error on the socket we immediately
 	// become disconnected and then queue up for restarting.
-	const _unwatchChatConnection = watch(
-		() => chat.value?.connected,
-		() => _watchChat
-	);
 	const _unwatchGridConnection = watch(
 		() => grid.value?.connected,
 		() => _watchGrid
@@ -659,23 +687,23 @@ export function createFiresideController(
 		hosts,
 		fetchedHostUserData,
 		listableHostIds,
+		hostBackgrounds,
 		stickerTargetController,
 		isMuted,
 		rtc,
 		revalidateRTC,
+		assignHostBackgroundData,
 		status,
+		focusedUser,
 		chat,
 		chatSettings,
 		gridChannel,
 		gridDMChannel,
 		chatChannel,
-		expiryInterval,
-		chatPreviousConnectedState,
-		gridPreviousConnectedState,
 		isHoveringOverlayControl,
 		shownUserCardHover,
 		isShowingStreamSetup,
-		updateInterval,
+		updateInterval: _updateInterval,
 		expiresDurationText,
 		expiresProgressValue,
 		user,
@@ -697,6 +725,7 @@ export function createFiresideController(
 		canExtinguish,
 		canReport,
 		canBrowserStream,
+		background,
 		shouldShowDesktopAppPromo,
 		logger,
 
@@ -733,32 +762,9 @@ export function createFiresideController(
 			loadGrid();
 		}
 
-		if (!chat.value) {
-			loadChat(chatStore, appStore);
-		}
-
-		// Both services may already be connected (watchers wouldn't fire), so
-		// try joining manually now.
+		// Grid may already be connected (watchers wouldn't fire), so try
+		// joining manually now.
 		_tryJoin();
-	}
-
-	function _watchChat() {
-		logger.debug(
-			'chat.connected watcher triggered: ' +
-				(chat.value?.connected ? 'connected' : 'disconnected')
-		);
-
-		if (chat.value?.connected) {
-			_tryJoin();
-		}
-		// Only disconnect when not connected and it previous registered a different state.
-		// This watcher runs once initially when chat is not connected, and we don't want to call
-		// disconnect in that case.
-		else if (chatPreviousConnectedState.value !== undefined) {
-			_disconnect();
-		}
-
-		chatPreviousConnectedState.value = chat.value?.connected === true;
 	}
 
 	function _watchGrid() {
@@ -770,14 +776,14 @@ export function createFiresideController(
 		if (grid.value?.connected) {
 			_tryJoin();
 		}
-		// Only disconnect when not connected and it previous registered a different state.
-		// This watcher runs once initially when grid is not connected, and we don't want to call
-		// disconnect in that case.
-		else if (grid.value && gridPreviousConnectedState.value !== undefined) {
+		// Only disconnect when not connected and it previous registered a
+		// different state. This watcher runs once initially when grid is not
+		// connected, and we don't want to call disconnect in that case.
+		else if (grid.value && _gridPreviousConnectedState !== undefined) {
 			_disconnect();
 		}
 
-		gridPreviousConnectedState.value = grid.value?.connected ?? undefined;
+		_gridPreviousConnectedState = grid.value?.connected ?? undefined;
 	}
 
 	async function _tryJoin() {
@@ -804,21 +810,6 @@ export function createFiresideController(
 			await sleep(250);
 		}
 
-		while (!chat.value?.connected) {
-			logger.debug('Wait for Chat...');
-
-			if (chat.value && !user.value && !chat.value.isGuest) {
-				logger.info('Enabling guest access to chat');
-				const authToken = _getGuestToken();
-				if (!authToken) {
-					throw new Error('Could not fetch guest token. This should be impossible');
-				}
-				setGuestChatToken(chat.value, authToken);
-			}
-
-			await sleep(250);
-		}
-
 		_join();
 	}
 
@@ -827,13 +818,7 @@ export function createFiresideController(
 
 		// --- Make sure common join conditions are met.
 
-		if (
-			!fireside ||
-			!grid.value ||
-			!grid.value.connected ||
-			!chat.value ||
-			!chat.value.connected
-		) {
+		if (!fireside || !grid.value || !grid.value.connected || !chat.value) {
 			logger.debug(`General connection error.`);
 			status.value = 'setup-failed';
 			return;
@@ -948,7 +933,7 @@ export function createFiresideController(
 
 		// Set up the expiry interval to check if the fireside is expired.
 		_clearExpiryCheck();
-		expiryInterval.value = setInterval(checkExpiry, 1000);
+		_expiryInterval = setInterval(checkExpiry, 1000);
 		checkExpiry();
 
 		_setupExpiryInfoInterval();
@@ -966,24 +951,26 @@ export function createFiresideController(
 		_clearExpiryCheck();
 		_destroyExpiryInfoInterval();
 
-		if (grid.value?.connected && (gridChannel.value || gridDMChannel.value)) {
-			grid.value.leaveFireside(fireside);
-		}
-		gridChannel.value = undefined;
-		gridDMChannel.value = undefined;
+		if (grid.value?.connected) {
+			if (gridChannel.value || gridDMChannel.value) {
+				grid.value.leaveFireside(fireside);
+			}
+			gridChannel.value = undefined;
+			gridDMChannel.value = undefined;
 
-		if (chat.value?.connected && chatChannel.value) {
-			leaveChatRoom(chat.value, chatChannel.value.room.value);
+			if (chat.value && chatChannel.value) {
+				leaveChatRoom(chat.value, chatChannel.value.room.value);
+			}
+			chatChannel.value = undefined;
 		}
-		chatChannel.value = undefined;
 
 		logger.debug(`Disconnected from fireside.`);
 	}
 
 	function _clearExpiryCheck() {
-		if (expiryInterval.value) {
-			clearInterval(expiryInterval.value);
-			expiryInterval.value = undefined;
+		if (_expiryInterval) {
+			clearInterval(_expiryInterval);
+			_expiryInterval = undefined;
 		}
 	}
 
@@ -999,15 +986,15 @@ export function createFiresideController(
 	}
 
 	function _destroyExpiryInfoInterval() {
-		if (updateInterval.value) {
-			clearInterval(updateInterval.value);
-			updateInterval.value = undefined;
+		if (_updateInterval) {
+			clearInterval(_updateInterval);
+			_updateInterval = undefined;
 		}
 	}
 
 	function _setupExpiryInfoInterval() {
 		_destroyExpiryInfoInterval();
-		updateInterval.value = setInterval(() => updateFiresideExpiryValues(controller), 1000);
+		_updateInterval = setInterval(() => updateFiresideExpiryValues(controller), 1000);
 	}
 
 	/**
@@ -1021,9 +1008,6 @@ export function createFiresideController(
 
 		_disconnect();
 		grid.value?.unsetGuestToken();
-		if (chat.value) {
-			unsetGuestChatToken(chat.value);
-		}
 
 		// These watchers are used to figure out
 		// when we need to destroy rtc and rtc producer. we want
@@ -1033,7 +1017,6 @@ export function createFiresideController(
 		_unwatchWantsRTCProducer();
 		_unwatchHostsChanged();
 		_unwatchListableHostIdsChanged();
-		_unwatchChatConnection();
 		_unwatchGridConnection();
 		_unwatchSidebar();
 

@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
+import { FiresidePost } from '../fireside/post/post-model';
 import { Screen } from '../screen/screen-service';
 import { User } from '../user/user.model';
+import AppStickerSupporters from './AppStickerSupporters.vue';
 import AppStickerReactions from './reactions/AppStickerReactions.vue';
 import { StickerCount } from './sticker-count';
-import AppStickerSupporters from './supporters/AppStickerSupporters.vue';
 import { StickerTargetController } from './target/target-controller';
 
-defineProps({
+const props = defineProps({
 	stickerTargetController: {
 		type: Object as PropType<StickerTargetController>,
 		required: true,
@@ -25,13 +26,23 @@ defineProps({
 const emit = defineEmits({
 	show: () => true,
 });
+
+const { stickerTargetController } = toRefs(props);
+
+// We only allow this type of model to show the supporters currently.
+const supportersModel = computed(() =>
+	stickerTargetController.value.model instanceof FiresidePost
+		? stickerTargetController.value.model
+		: undefined
+);
 </script>
 
 <template>
 	<div v-if="supporters.length || stickers.length" class="sticker-placement-list">
 		<AppStickerSupporters
-			v-if="supporters.length"
+			v-if="supporters.length && supportersModel"
 			class="-supporters"
+			:model="supportersModel"
 			:limit="Screen.isDesktop ? 8 : Math.max(1, Math.min(8, Math.round(Screen.width / 100)))"
 			:supporters="supporters"
 			:style="{
@@ -52,11 +63,12 @@ const emit = defineEmits({
 .sticker-placement-list
 	display: inline-flex
 	align-items: center
+	margin-bottom: 16px
 
 .-supporters
 	align-self: flex-start
 
 .-reactions
-	margin: 0
+	margin: 0 !important
 	line-height: 1
 </style>

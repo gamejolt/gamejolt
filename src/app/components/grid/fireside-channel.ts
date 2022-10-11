@@ -1,6 +1,7 @@
 import { shallowReadonly, triggerRef } from 'vue';
 import { createLogger } from '../../../utils/logging';
-import { FiresideChatSettings } from '../../../_common/fireside/chat-settings/chat-settings.model';
+import { Background } from '../../../_common/background/background.model';
+import { FiresideChatSettings } from '../../../_common/fireside/chat/chat-settings.model';
 import { FiresideRTCHost } from '../../../_common/fireside/rtc/rtc';
 import {
 	createSocketChannelController,
@@ -28,12 +29,18 @@ export type GridFiresideChannel = Readonly<{
 	pushUpdateChatSettings: (
 		chatSettings: FiresideChatSettings
 	) => Promise<UpdateChatSettingsPayload>;
+	pushUpdateHost: (data: UpdateHostData) => Promise<any>;
 }>;
+
+interface UpdateHostData {
+	backgroundId?: number | null;
+}
 
 interface JoinPayload {
 	server_time: number;
 	chat_settings: unknown;
 	slow_mode_last_message_on: number;
+	host_data: [{ user_id: number; background?: any }];
 }
 
 interface StickerPlacementPayload {
@@ -61,13 +68,18 @@ interface UpdateChatSettingsPayload {
 	settings: unknown;
 }
 
+interface HostUpdatePayload {
+	user_id: number;
+	background?: any;
+}
+
 export async function createGridFiresideChannel(
 	client: GridClient,
 	firesideController: FiresideController,
 	options: { firesideHash: string; stickerStore: StickerStore }
 ): Promise<GridFiresideChannel> {
 	const { socketController } = client;
-	const { chatSettings } = firesideController;
+	const { chatSettings, assignHostBackgroundData } = firesideController;
 	const { firesideHash, stickerStore } = options;
 
 	const logger = createLogger('Fireside');
@@ -80,16 +92,28 @@ export async function createGridFiresideChannel(
 	channelController.listenTo('update', _onUpdate);
 	channelController.listenTo('streaming-uid', _onStreamingUid);
 	channelController.listenTo('sticker-placement', _onStickerPlacement);
+	channelController.listenTo('update-host', _onUpdateHost);
 
-	const c = shallowReadonly({
+	const c = shallowReadonly<GridFiresideChannel>({
 		channelController,
 		firesideHash,
 		pushUpdateChatSettings,
+		pushUpdateHost,
 	});
 
 	await channelController.join({
 		async onJoin(response: JoinPayload) {
 			chatSettings.value.assign(response.chat_settings);
+
+			// We need to initialize background data for all hosts.
+			if (response.host_data) {
+				for (const hostData of response.host_data) {
+					assignHostBackgroundData(
+						hostData.user_id,
+						hostData.background ? new Background(hostData.background) : undefined
+					);
+				}
+			}
 		},
 	});
 
@@ -167,7 +191,14 @@ export async function createGridFiresideChannel(
 		}
 		onFiresideStickerPlaced.next(placement);
 
-		fireside.addStickerToCount(sticker);
+		fireside.addStickerToCount(sticker, payload.sticker_placement.is_charged === true);
+	}
+
+	function _onUpdateHost(payload: HostUpdatePayload) {
+		logger.debug('Grid host update received.', payload);
+
+		const background = payload.background ? new Background(payload.background) : undefined;
+		firesideController.assignHostBackgroundData(payload.user_id, background);
 	}
 
 	/**
@@ -179,6 +210,13 @@ export async function createGridFiresideChannel(
 			allow_images: chatSettings.allow_images,
 			allow_gifs: chatSettings.allow_gifs,
 			allow_links: chatSettings.allow_links,
+		});
+	}
+
+	function pushUpdateHost({ backgroundId }: UpdateHostData) {
+		return channelController.push('update_host', {
+			fireside_hash: firesideHash,
+			background_id: backgroundId || null,
 		});
 	}
 

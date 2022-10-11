@@ -191,6 +191,10 @@ function _trackPageview(path?: string) {
  * Sets the current user ID into analytics.
  */
 function _trackUserId(id: number) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
+		return;
+	}
+
 	setUserId(_getFirebaseAnalytics(), `${id}`);
 }
 
@@ -199,6 +203,10 @@ function _trackUserId(id: number) {
  * analytics.
  */
 function _untrackUserId() {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
+		return;
+	}
+
 	// TODO: Check to make sure this actually works.
 	setUserId(_getFirebaseAnalytics(), '');
 }

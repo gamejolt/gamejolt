@@ -3,9 +3,10 @@ import { computed, PropType, toRefs } from 'vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
 import { useAppStore } from '../../../store';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import { useGridStore } from '../../grid/grid-store';
 
 const props = defineProps({
 	community: {
@@ -16,6 +17,7 @@ const props = defineProps({
 
 const { community } = toRefs(props);
 const { joinCommunity, leaveCommunity } = useAppStore();
+const { grid } = useGridStore();
 
 const highlight = computed(() => {
 	const highlight = community.value.theme && community.value.theme.highlight_;
@@ -48,9 +50,11 @@ async function toggleJoin() {
 	);
 
 	if (!community.value.is_member) {
-		joinCommunity(community.value, 'onboarding');
+		joinCommunity(community.value, { grid: grid.value, location: 'onboarding' });
 	} else {
-		leaveCommunity(community.value, 'onboarding', {
+		leaveCommunity(community.value, {
+			grid: grid.value,
+			location: 'onboarding',
 			shouldConfirm: false,
 		});
 	}

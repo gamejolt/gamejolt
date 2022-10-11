@@ -1,7 +1,9 @@
 import { arrayUnique } from '../../../utils/array';
 import { Api } from '../../../_common/api/api.service';
+import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Geo } from '../../../_common/geo/geo.service';
 import { $gettext } from '../../../_common/translate/translate.service';
+import { User } from '../../../_common/user/user.model';
 import {
 	Analyzer,
 	Collection,
@@ -22,7 +24,6 @@ export class SiteAnalyticsReport {
 		resource: ResourceName,
 		resourceId: number,
 		collection: Collection,
-		partnerMode: boolean,
 		viewAs: number | undefined,
 		startTime: number | undefined,
 		endTime: number | undefined
@@ -58,9 +59,6 @@ export class SiteAnalyticsReport {
 			if (conditionFields.indexOf('partner_generated_donation') !== -1) {
 				conditions.push('has-donations', 'has-partner');
 			}
-			if (partnerMode) {
-				conditions.push('partner');
-			}
 			conditions = arrayUnique(conditions);
 
 			// Replace the pseudo fields by their normal fields
@@ -91,12 +89,12 @@ export class SiteAnalyticsReport {
 				analyzer,
 				field,
 				viewAs,
-				partnerMode,
 				conditions,
 				fetchFields,
 				component.resourceFields,
 				startTime,
-				endTime
+				endTime,
+				component.size
 			);
 		});
 
@@ -131,27 +129,23 @@ export class SiteAnalyticsReport {
 		analyzer: Analyzer,
 		field: Field,
 		viewAs: number | undefined,
-		partnerMode: boolean | undefined,
 		conditions: Condition[] | undefined,
 		fetchFields: Field[] | undefined,
 		resourceFields: ResourceFields | undefined,
 		startTime: number | undefined,
-		endTime: number | undefined
+		endTime: number | undefined,
+		size: number | undefined
 	) {
 		const request: Request = {
 			target: resource,
 			target_id: resourceId,
-			collection: collection,
-			analyzer: analyzer,
-			field: field,
+			collection,
+			analyzer,
+			field,
 		};
 
 		if (viewAs) {
 			request.view_as = viewAs;
-		}
-
-		if (partnerMode) {
-			request.as_partner = partnerMode;
 		}
 
 		if (conditions) {
@@ -178,6 +172,10 @@ export class SiteAnalyticsReport {
 			request.timezone = date.getTimezoneOffset();
 		}
 
+		if (size) {
+			request.size = size;
+		}
+
 		return Api.sendRequest(
 			'/web/dash/analytics/display',
 			{ data: request },
@@ -186,18 +184,38 @@ export class SiteAnalyticsReport {
 	}
 
 	private processComponentResponse(component: ReportComponent, _response: any, gathers?: any) {
-		const field = component.field,
-			analyzer = component.type,
-			displayField = component.displayField;
+		const { field, type: analyzer, displayField } = component;
 
 		// Copy the response.
-		const response: any = Object.assign({}, _response);
+		const response: any = { ..._response };
 		let graph: any = null;
 		let data: any = {};
 
 		// We return "simple" single value analyzations as is.
 		if (analyzer === 'sum' || analyzer === 'average') {
 			response.result = response.result || 0;
+			return response;
+		}
+
+		// Right now it's pretty simple. We literally just support returning a
+		// list of users, but this should be expanded in the future to allow
+		// showing any type of data with multiple columns instead of just
+		// picking out the first one.
+		if (analyzer === 'ordered-asc' || analyzer === 'ordered-desc') {
+			const data = [];
+			for (const row of Object.values(response)) {
+				// We only support showing the first column returned currently.
+				const rowData = Object.values(row as any)[0];
+				if (!rowData) {
+					continue;
+				}
+
+				data.push({
+					label: this.getGatheredData(rowData as string, displayField!, gathers),
+				});
+			}
+
+			response.result = data;
 			return response;
 		}
 
@@ -208,7 +226,14 @@ export class SiteAnalyticsReport {
 			analyzer === 'top-composition-avg'
 		) {
 			// Rating is a special case of top composition. We want to keep processing it as { key: value } and not convert it.
-			if (field !== 'rating') {
+			if (field === 'rating') {
+				// Make sure all the rating values are filled in, and in the correct order
+				data = {};
+				[1, 2, 3, 4, 5].forEach(rating => {
+					data[rating] = response.result[rating] || 0;
+				});
+				response.result = data;
+			} else {
 				data = [];
 				Object.entries(response.result).forEach((kv: any) => {
 					// eslint-disable-next-line prefer-const
@@ -230,44 +255,12 @@ export class SiteAnalyticsReport {
 					});
 				});
 				response.result = data;
-			} else {
-				// Make sure all the rating values are filled in, and in the correct order
-				data = {};
-				[1, 2, 3, 4, 5].forEach(rating => {
-					data[rating] = response.result[rating] || 0;
-				});
-				response.result = data;
 			}
 
 			// Top composition fields may refer to gathered fields. In this case replace them in now.
 			if (gathers && displayField) {
 				for (const dataEntry of response.result) {
-					const resourceInfo: string[] = dataEntry.label.split('-');
-					const resourceName = resourceInfo[0],
-						resourceId = parseInt(resourceInfo[1], 10);
-					const displayValue = gathers[resourceName][resourceId][displayField];
-
-					switch (resourceName) {
-						case 'game':
-							dataEntry.label = {
-								resource: 'Game',
-								resourceId: resourceId,
-								value: displayValue,
-							};
-							break;
-
-						case 'user':
-							dataEntry.label = {
-								resource: 'User',
-								resourceId: resourceId,
-								value: displayValue,
-							};
-							break;
-
-						case 'partner':
-							dataEntry.label = displayValue;
-							break;
-					}
+					dataEntry.label = this.getGatheredData(dataEntry.label, displayField, gathers);
 				}
 			}
 
@@ -300,5 +293,67 @@ export class SiteAnalyticsReport {
 		}
 
 		return response;
+	}
+
+	private getGatheredData(
+		fieldLabel: string,
+		displayField: string,
+		gathers: Record<string, any>
+	) {
+		const resourceInfo: string[] = fieldLabel.split('-');
+		const resourceName = resourceInfo[0],
+			resourceId = parseInt(resourceInfo[1], 10);
+		const gatheredData = gathers[resourceName][resourceId];
+		const displayValue = gatheredData[displayField];
+
+		switch (resourceName) {
+			case 'game':
+				return {
+					resource: 'Game',
+					resourceId: resourceId,
+					value: displayValue,
+					isAnalyticsEntry: true,
+				};
+
+			case 'user':
+				return {
+					resource: 'User',
+					resourceId: resourceId,
+					value: displayValue,
+					isAnalyticsEntry: true,
+					gathers: {
+						user: gatheredData.user_model ? new User(gatheredData.user_model) : null,
+					},
+				};
+
+			case 'creator_supporter':
+			case 'invited_user':
+				return {
+					resource: 'User',
+					resourceId: resourceId,
+					value: displayValue,
+					isAnalyticsEntry: false,
+					gathers: {
+						user: gatheredData.user_model ? new User(gatheredData.user_model) : null,
+					},
+				};
+
+			case 'fireside_post':
+				return {
+					resource: 'Fireside_Post',
+					resourceId: resourceId,
+					value: displayValue,
+					isAnalyticsEntry: false,
+					gathers: {
+						post: gatheredData.post_model
+							? new FiresidePost(gatheredData.post_model)
+							: null,
+					},
+				};
+
+			case 'partner':
+			case 'fireside':
+				return displayValue;
+		}
 	}
 }

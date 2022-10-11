@@ -9,14 +9,10 @@ import { LikersModal } from '../../../../likers/modal.service';
 import { Screen } from '../../../../screen/screen-service';
 import { useCommonStore } from '../../../../store/common-store';
 import { vAppTooltip } from '../../../../tooltip/tooltip-directive';
-import AppUserFollowWidget from '../../../../user/follow/widget.vue';
 import { FiresidePost } from '../../post-model';
 import { FiresidePostLike, removeFiresidePostLike, saveFiresidePostLike } from '../like-model';
 
 @Options({
-	components: {
-		AppUserFollowWidget,
-	},
 	directives: {
 		AppAuthRequired: vAppAuthRequired,
 		AppTooltip: vAppTooltip,

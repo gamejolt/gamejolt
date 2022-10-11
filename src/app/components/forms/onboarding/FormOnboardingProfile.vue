@@ -2,7 +2,10 @@
 import { computed, PropType, ref, toRefs } from 'vue';
 import { ContentDocument } from '../../../../_common/content/content-document';
 import AppEditableOverlay from '../../../../_common/editable-overlay/AppEditableOverlay.vue';
-import { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
+import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlContent from '../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import {
 	validateAvailability,
@@ -11,14 +14,10 @@ import {
 	validateUsername,
 } from '../../../../_common/form-vue/validators';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
-import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { User } from '../../../../_common/user/user.model';
 import { UserAvatarModal } from '../../user/avatar-modal/avatar-modal.service';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppForm from '../../../../_common/form-vue/AppForm.vue';
-import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
 
 type FormModel = {
 	username: string;

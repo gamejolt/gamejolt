@@ -13,7 +13,6 @@ import {
 	ContentFocus,
 	registerContentFocusWatcher as registerFocusWatcher,
 } from '../../_common/content-focus/content-focus.service';
-import { FiresidePost } from '../../_common/fireside/post/post-model';
 import { showSuccessGrowl } from '../../_common/growls/growls.service';
 import { ModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../_common/screen/screen-service';
@@ -24,7 +23,6 @@ import { $gettext } from '../../_common/translate/translate.service';
 import { ActivityFeedState } from '../components/activity/feed/state';
 import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
 import type { GridClient } from '../components/grid/client.service';
-import { GridClientLazy } from '../components/lazy';
 import { CommunityStates } from './community-state';
 import { LibraryStore } from './library';
 import { QuestStore } from './quest';
@@ -56,11 +54,6 @@ export function createAppStore({
 	getQuestStore: () => QuestStore;
 	stickerStore: StickerStore;
 }) {
-	const grid = ref<GridClient>();
-	let _wantsGrid = false;
-	let _gridLoadPromise: Promise<typeof import('../components/grid/client.service')> | null = null;
-	let _gridBootstrapResolvers: ((client: GridClient) => void)[] = [];
-
 	const isBootstrapped = ref(false);
 	const _bootstrapResolver = ref(null) as Ref<((value?: any) => void) | null>;
 	const tillStoreBootstrapped = ref(new Promise(resolve => (_bootstrapResolver.value = resolve)));
@@ -205,31 +198,6 @@ export function createAppStore({
 	async function clear() {
 		tillStoreBootstrapped.value = new Promise(resolve => (_bootstrapResolver.value = resolve));
 		libraryStore.clear();
-	}
-
-	async function loadGrid() {
-		if (_wantsGrid) {
-			return;
-		}
-
-		_wantsGrid = true;
-		_gridLoadPromise ??= GridClientLazy();
-
-		const { createGridClient } = await _gridLoadPromise;
-
-		// If they disconnected before we loaded it in.
-		if (!_wantsGrid) {
-			return;
-		}
-
-		_setGrid(createGridClient({ appStore: c }));
-	}
-
-	async function clearGrid() {
-		_wantsGrid = false;
-
-		grid.value?.disconnect();
-		_setGrid(undefined);
 	}
 
 	async function loadNotificationState() {
@@ -384,7 +352,12 @@ export function createAppStore({
 		communities.value = Community.populate(payload.communities);
 	}
 
-	async function joinCommunity(community: Community, location?: CommunityJoinLocation) {
+	async function joinCommunity(
+		community: Community,
+		options: { grid: GridClient | undefined; location?: CommunityJoinLocation }
+	) {
+		const { grid, location } = options;
+
 		if (community._removed) {
 			return;
 		}
@@ -393,11 +366,8 @@ export function createAppStore({
 			await joinCommunityModel(community, location);
 		}
 
-		grid.value?.joinCommunity(community);
-		_joinCommunity(community);
-	}
+		grid?.joinCommunity(community);
 
-	function _joinCommunity(community: Community) {
 		if (communities.value.find(c => c.id === community.id)) {
 			return;
 		}
@@ -407,9 +377,14 @@ export function createAppStore({
 
 	async function leaveCommunity(
 		community: Community,
-		location?: CommunityJoinLocation,
-		{ shouldConfirm }: { shouldConfirm?: boolean } = {}
+		options: {
+			grid: GridClient | undefined;
+			location?: CommunityJoinLocation;
+			shouldConfirm?: boolean;
+		}
 	) {
+		const { grid, location, shouldConfirm } = options;
+
 		if (community.is_member && !community._removed) {
 			if (shouldConfirm) {
 				const result = await ModalConfirm.show(
@@ -425,11 +400,8 @@ export function createAppStore({
 			await leaveCommunityModel(community, location);
 		}
 
-		grid.value?.leaveCommunity(community);
-		_leaveCommunity(community);
-	}
+		grid?.leaveCommunity(community);
 
-	function _leaveCommunity(community: Community) {
 		const communityState = communityStates.value.getCommunityState(community);
 		communityState.reset();
 
@@ -460,21 +432,6 @@ export function createAppStore({
 
 		communities.value.splice(idx, 1);
 		communities.value.unshift(community);
-	}
-
-	function featuredPost(post: FiresidePost) {
-		grid.value?.recordFeaturedPost(post);
-	}
-
-	function _setGrid(newGrid?: GridClient) {
-		if (newGrid) {
-			for (const resolver of _gridBootstrapResolvers) {
-				resolver(newGrid);
-			}
-			_gridBootstrapResolvers = [];
-		}
-
-		grid.value = newGrid;
 	}
 
 	function _resetNotificationWatermark() {
@@ -542,19 +499,6 @@ export function createAppStore({
 		_backdrop.value = null;
 	}
 
-	/**
-	 * Returns a promise that resolves once the Grid client is available.
-	 */
-	function tillGridBootstrapped() {
-		return new Promise<GridClient>(resolve => {
-			if (grid.value) {
-				resolve(grid.value);
-			} else {
-				_gridBootstrapResolvers.push(resolve);
-			}
-		});
-	}
-
 	// Handles route meta changes during redirects.
 	// Routes in the app section can define the following meta:
 	// 	isFullPage: boolean - wether to not display the shell and treat the route as a "full page"
@@ -568,9 +512,7 @@ export function createAppStore({
 		next();
 	});
 
-	// We need to reference ourself when creating grid at the moment.
-	const c = {
-		grid,
+	return {
 		isBootstrapped,
 		tillStoreBootstrapped,
 		isLibraryBootstrapped,
@@ -598,8 +540,6 @@ export function createAppStore({
 		bootstrap,
 		logout,
 		clear,
-		loadGrid,
-		clearGrid,
 		loadNotificationState,
 		clearNotificationState,
 		markNotificationsAsRead,
@@ -622,11 +562,7 @@ export function createAppStore({
 		setActiveCommunity,
 		clearActiveCommunity,
 		viewCommunity,
-		featuredPost,
-		tillGridBootstrapped,
 		getQuestStore,
 		stickerStore,
 	};
-
-	return c;
 }

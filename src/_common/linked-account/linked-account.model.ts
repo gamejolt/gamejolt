@@ -32,8 +32,8 @@ export function getLinkedAccountPlatformIcon(provider: string) {
 			return 'twitch';
 		case LinkedAccount.PROVIDER_TUMBLR:
 			return 'tumblr';
-		case LinkedAccount.PROVIDER_DISCORD:
-			return 'radio';
+		// case LinkedAccount.PROVIDER_DISCORD:
+		// 	return 'radio';
 	}
 	return 'remove'; // invalid provider
 }

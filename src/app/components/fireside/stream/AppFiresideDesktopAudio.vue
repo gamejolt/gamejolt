@@ -1,11 +1,11 @@
 <script lang="ts" setup>
+import { onBeforeUnmount, onMounted, PropType, toRefs } from 'vue';
 import {
 	FiresideRTCUser,
 	startDesktopAudioPlayback,
 	stopDesktopAudioPlayback,
 } from '../../../../_common/fireside/rtc/user';
 import { useFiresideController } from '../controller/controller';
-import { PropType, onMounted, onBeforeUnmount, toRefs } from 'vue';
 
 const props = defineProps({
 	rtcUser: {
@@ -20,6 +20,11 @@ const { rtc } = useFiresideController()!;
 onMounted(async () => {
 	// Don't play desktop audio for our own local user.
 	if (!rtc.value || rtc.value.isFocusingMe) {
+		return;
+	}
+
+	// Don't play if the user is currently muted.
+	if (rtcUser.value.remoteDesktopAudioMuted) {
 		return;
 	}
 
