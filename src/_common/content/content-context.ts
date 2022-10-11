@@ -12,9 +12,10 @@ export type ContentContext =
 	| 'user-bio'
 	| 'forum-post'
 	| 'community-description'
-	| 'chat-message'
 	| 'community-channel-description'
+	| 'chat-message'
 	| 'fireside-chat-message'
+	| 'chat-command'
 	| 'quest-stage-description';
 
 export enum ContextCapabilityType {
@@ -277,6 +278,7 @@ export class ContextCapabilities {
 					ContextCapabilityType.Sticker,
 				]);
 			case 'fireside-chat-message':
+			case 'chat-command':
 				return new ContextCapabilities([
 					ContextCapabilityType.TextBold,
 					ContextCapabilityType.TextItalic,
@@ -338,6 +340,8 @@ export function getMediaItemTypeForContext(context: ContentContext) {
 		case 'chat-message':
 		case 'fireside-chat-message':
 			return MediaItem.TYPE_CHAT_MESSAGE;
+		case 'chat-command':
+			return MediaItem.TYPE_CHAT_COMMAND;
 		case 'community-channel-description':
 			return MediaItem.TYPE_COMMUNITY_CHANNEL_DESCRIPTION;
 	}

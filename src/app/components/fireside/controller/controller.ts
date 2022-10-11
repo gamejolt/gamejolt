@@ -33,7 +33,7 @@ import { getDeviceBrowser, getDeviceOS } from '../../../../_common/device/device
 import { DogtagData } from '../../../../_common/dogtag/dogtag-data';
 import { formatDuration } from '../../../../_common/filters/duration';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
-import { FiresideChatSettings } from '../../../../_common/fireside/chat-settings/chat-settings.model';
+import { FiresideChatSettings } from '../../../../_common/fireside/chat/chat-settings.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../../_common/fireside/role/role.model';
 import {

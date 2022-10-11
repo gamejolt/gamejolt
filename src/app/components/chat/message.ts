@@ -18,6 +18,7 @@ export class ChatMessage {
 	showMeta?: boolean;
 	showAvatar?: boolean;
 	dateSplit?: boolean;
+	is_automated?: boolean;
 
 	// Used for rendering.
 	_collapsable = false;
@@ -44,6 +45,10 @@ export class ChatMessage {
 
 		if (this.showMeta === undefined) {
 			this.showMeta = false;
+		}
+
+		if (this.is_automated === undefined) {
+			this.is_automated = false;
 		}
 	}
 

@@ -2,6 +2,7 @@ import { FiresideRTCHost } from '../../../_common/fireside/rtc/rtc';
 import { Jolticon } from '../../../_common/jolticon/AppJolticon.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { ChatClient, tryGetRoomRole } from './client';
+import { ChatMessage } from './message';
 import { CHAT_ROLES } from './role';
 import { ChatRoom } from './room';
 
@@ -51,8 +52,22 @@ interface ChatRoleData {
 export function getChatUserRoleData(
 	chat: ChatClient,
 	room: ChatRoom,
-	user: ChatUser
+	user: ChatUser,
+	extras: {
+		/**
+		 * Can be provided to display a robot Jolticon for automated chat
+		 * messages.
+		 */
+		mesage?: ChatMessage;
+	} = {}
 ): ChatRoleData | undefined {
+	if (extras.mesage?.is_automated) {
+		return {
+			icon: 'robot',
+			tooltip: $gettext(`Automated Message`),
+		};
+	}
+
 	if (room.owner_id === user.id) {
 		return {
 			icon: 'crown',

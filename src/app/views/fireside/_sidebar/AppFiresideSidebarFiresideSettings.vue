@@ -2,7 +2,7 @@
 import { computed, ref, watch, watchEffect } from 'vue';
 import { Background } from '../../../../_common/background/background.model';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import { FiresideChatSettings } from '../../../../_common/fireside/chat-settings/chat-settings.model';
+import { FiresideChatSettings } from '../../../../_common/fireside/chat/chat-settings.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FIRESIDE_ROLES } from '../../../../_common/fireside/role/role.model';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
@@ -28,6 +28,7 @@ import {
 	publishFireside,
 	useFiresideController,
 } from '../../../components/fireside/controller/controller';
+import { ChatCommandsModal } from '../../../components/forms/chat/commands/modal/modal.service';
 import AppFiresideShare from '../AppFiresideShare.vue';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeadingCollapse from './AppFiresideSidebarHeadingCollapse.vue';
@@ -40,6 +41,7 @@ const {
 	hostBackgrounds,
 	gridChannel,
 	isStreaming,
+	isOwner,
 	canEdit,
 	canStream,
 	canPublish,
@@ -145,6 +147,10 @@ function onClickPublish() {
 function onClickExtinguish() {
 	extinguishFireside(c);
 }
+
+function onClickChatCommands() {
+	ChatCommandsModal.show();
+}
 </script>
 
 <template>
@@ -172,6 +178,12 @@ function onClickExtinguish() {
 						<AppButton block @click="sidebar = 'stream-settings'">
 							<AppTranslate>Stream settings</AppTranslate>
 						</AppButton>
+
+						<template v-if="isOwner">
+							<AppButton block @click="onClickChatCommands">
+								<AppTranslate>Chat commands</AppTranslate>
+							</AppButton>
+						</template>
 					</template>
 
 					<!-- Shown to guests and chat mods (since they can't do anything yet) -->
