@@ -140,13 +140,7 @@ async function onClickVideo() {
 	}
 
 	if (!_user.hasMicAudio || producerMicMuted.value) {
-		const shouldStopStreaming = await ModalConfirm.show(
-			$gettext(
-				`Disabling this will stop your current stream. Are you sure you want to stop streaming?`
-			),
-			$gettext(`Stop streaming?`),
-			'yes'
-		);
+		const shouldStopStreaming = await _confirmStopStreaming(true);
 		if (shouldStopStreaming) {
 			stopStreaming(_producer);
 		}
@@ -158,6 +152,18 @@ async function onClickVideo() {
 	} else {
 		toggleStreamSettings();
 	}
+}
+
+async function _confirmStopStreaming(throughInput: boolean) {
+	let message = `Are you sure you want to stop streaming?`;
+	let title: string | undefined = undefined;
+	// Add some extra messaging if we're warning them through an attempted input disable.
+	if (throughInput) {
+		message = `Disabling this will stop your current stream. ${message}`;
+		title = $gettext(`Stop streaming?`);
+	}
+
+	return ModalConfirm.show($gettext(message), title, 'yes');
 }
 
 function onClickStickerButton() {
@@ -179,6 +185,17 @@ function toggleFiresideSettings() {
 function _toggleSidebar(value: FiresideSidebar) {
 	const result = sidebar.value === value ? 'chat' : value;
 	sidebar.value = result;
+}
+
+async function onClickStopStreaming() {
+	if (!producer.value) {
+		return;
+	}
+
+	const result = await _confirmStopStreaming(false);
+	if (result) {
+		stopStreaming(producer.value);
+	}
 }
 </script>
 
@@ -209,7 +226,7 @@ function _toggleSidebar(value: FiresideSidebar) {
 						icon="subscribed"
 						active-color="overlay-notice"
 						:disabled="producer?.isBusy.value"
-						@click="producer ? stopStreaming(producer) : undefined"
+						@click="onClickStopStreaming"
 					/>
 				</template>
 			</div>
@@ -227,7 +244,7 @@ function _toggleSidebar(value: FiresideSidebar) {
 					v-if="canManageCohosts"
 					icon="friend-add-2"
 					:active="activeBottomBarControl === 'manage-cohosts'"
-					@click="toggleHosts()"
+					@click="toggleHosts"
 				/>
 
 				<AppAnimElectricity
@@ -246,7 +263,7 @@ function _toggleSidebar(value: FiresideSidebar) {
 				<AppFiresideBottomBarButton
 					icon="ellipsis-h"
 					:active="activeBottomBarControl === 'settings'"
-					@click="toggleFiresideSettings()"
+					@click="toggleFiresideSettings"
 				/>
 			</div>
 		</div>
