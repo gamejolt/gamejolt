@@ -180,22 +180,32 @@ function _toggleSidebar(value: FiresideSidebar) {
 	<AppTheme class="-bottom-bar" :force-dark="overlay">
 		<div class="-bottom-bar-inner">
 			<div v-if="canStream" class="-group -left">
-				<AppFiresideBottomBarButton
-					:active="localUser?.hasMicAudio && !producerMicMuted"
-					:icon="micIcon"
-					show-settings
-					:disabled="!localUser?._micAudioTrack"
-					@click-settings="toggleStreamSettings()"
-					@click="onClickMic"
-				/>
-				<AppFiresideBottomBarButton
-					:active="localUser?.hasVideo && !producerVideoMuted"
-					:icon="videoIcon"
-					show-settings
-					:disabled="!localUser?._videoTrack"
-					@click-settings="toggleStreamSettings()"
-					@click="onClickVideo"
-				/>
+				<AppFiresideBottomBarButton icon="cog" @click="sidebar = 'stream-settings'" />
+
+				<template v-if="isStreaming">
+					<AppFiresideBottomBarButton
+						:active="localUser?.hasMicAudio && !producerMicMuted"
+						:icon="micIcon"
+						:disabled="!localUser?._micAudioTrack"
+						@click="onClickMic"
+					/>
+
+					<AppFiresideBottomBarButton
+						:active="localUser?.hasVideo && !producerVideoMuted"
+						:icon="videoIcon"
+						:disabled="!localUser?._videoTrack"
+						@click="onClickVideo"
+					/>
+
+					<!-- TODO(fireside-producer-dashboard) end-call icon -->
+					<AppFiresideBottomBarButton
+						:active="localUser?.hasVideo && !producerVideoMuted"
+						icon="subscribed"
+						active-color="overlay-notice"
+						:disabled="producer?.isBusy.value"
+						@click="producer ? stopStreaming(producer) : undefined"
+					/>
+				</template>
 			</div>
 
 			<div v-if="rtc" class="-hosts">
