@@ -664,8 +664,8 @@ export function createFiresideController(
 
 	const activeBottomBarControl = computed<BottomBarControl | undefined>(() => {
 		switch (sidebar.value) {
-			case 'members':
-				return 'members';
+			case 'hosts':
+				return 'manage-cohosts';
 
 			case 'fireside-settings':
 				return 'settings';

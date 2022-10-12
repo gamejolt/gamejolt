@@ -1,9 +1,10 @@
 <script lang="ts">
-export type BottomBarControl = 'members' | 'settings' | 'setup';
+export type BottomBarControl = 'manage-cohosts' | 'settings' | 'setup';
 </script>
 
 <script lang="ts" setup>
 import { computed } from 'vue';
+import AppAnimElectricity from '../../../../_common/animation/AppAnimElectricity.vue';
 import { setProducerDeviceMuted, stopStreaming } from '../../../../_common/fireside/rtc/producer';
 import { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
@@ -33,6 +34,7 @@ const {
 	user,
 	stickerCount,
 	canStream,
+	canManageCohosts,
 	isStreaming,
 	isPersonallyStreaming,
 	sidebar,
@@ -40,6 +42,10 @@ const {
 } = c;
 
 const stickerStore = useStickerStore();
+const { canChargeSticker } = stickerStore;
+
+const layer = useStickerLayer();
+const { isAllCreator } = layer || {};
 
 const canPlaceStickers = computed(() => !!user.value && !Screen.isMobile && isStreaming.value);
 
@@ -162,8 +168,8 @@ function toggleStreamSettings() {
 	_toggleSidebar('stream-settings');
 }
 
-function toggleChatMembers() {
-	_toggleSidebar('members');
+function toggleHosts() {
+	_toggleSidebar('hosts');
 }
 
 function toggleFiresideSettings() {
@@ -218,17 +224,24 @@ function _toggleSidebar(value: FiresideSidebar) {
 
 			<div class="-group -right" :class="{ '-shrink': !canStream }">
 				<AppFiresideBottomBarButton
-					icon="sticker-filled"
-					:badge="stickerCount"
-					:disabled="!canPlaceStickers"
-					@click="onClickStickerButton"
+					v-if="canManageCohosts"
+					icon="friend-add-2"
+					:active="activeBottomBarControl === 'manage-cohosts'"
+					@click="toggleHosts()"
 				/>
 
-				<AppFiresideBottomBarButton
-					icon="users"
-					:active="activeBottomBarControl === 'members'"
-					@click="toggleChatMembers()"
-				/>
+				<AppAnimElectricity
+					shock-anim="square"
+					ignore-asset-padding
+					:disabled="!canChargeSticker || !isAllCreator"
+				>
+					<AppFiresideBottomBarButton
+						icon="sticker-filled"
+						:badge="stickerCount"
+						:disabled="!canPlaceStickers"
+						@click="onClickStickerButton"
+					/>
+				</AppAnimElectricity>
 
 				<AppFiresideBottomBarButton
 					icon="ellipsis-h"
