@@ -303,6 +303,8 @@ function _doBusyWork<T>(producer: FiresideRTCProducer, work: () => Promise<T>) {
 			_syncLocalUserToRTC(producer);
 
 			return ret;
+		} catch (e) {
+			console.error(e);
 		} finally {
 			isBusy.value = false;
 		}

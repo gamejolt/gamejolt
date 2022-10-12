@@ -40,6 +40,9 @@ const props = defineProps({
 		type: Boolean,
 		required: true,
 	},
+	noStats: {
+		type: Boolean,
+	},
 });
 
 const { rtcUser, hasHeader, hasHosts, sidebarCollapsed } = toRefs(props);
@@ -341,7 +344,10 @@ function onMouseLeaveControls() {
 					/>
 
 					<AppFiresideDesktopAudio v-if="shouldPlayDesktopAudio" :rtc-user="rtcUser" />
-					<AppFiresideVideoStats v-if="shouldShowVideoStats" @click.capture.stop />
+					<AppFiresideVideoStats
+						v-if="!noStats && shouldShowVideoStats"
+						@click.capture.stop
+					/>
 				</div>
 			</template>
 		</template>
@@ -527,6 +533,7 @@ $-z-combo = 2
 
 	&.-fullscreen
 		--overlay-position: fixed
+		background-color: black
 
 .jolticon
 	text-shadow: $-text-shadow

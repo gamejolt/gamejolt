@@ -22,11 +22,13 @@ import AppAuthJoin from '../../../_common/auth/join/join.vue';
 import AppBackground from '../../../_common/background/AppBackground.vue';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { Fireside } from '../../../_common/fireside/fireside.model';
+import { stopStreaming } from '../../../_common/fireside/rtc/producer';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
 import { Meta } from '../../../_common/meta/meta-service';
 import AppMobileAppButtons from '../../../_common/mobile-app/AppMobileAppButtons.vue';
+import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
 import { vAppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppPopper from '../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../_common/popper/popper.service';
@@ -43,17 +45,18 @@ import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
 import AppFiresideProvider from '../../components/fireside/AppFiresideProvider.vue';
 import {
-	createFiresideController,
-	FiresideController,
-	FiresideSidebar,
-	toggleStreamVideoStats,
+createFiresideController,
+FiresideController,
+FiresideSidebar,
+toggleStreamVideoStats
 } from '../../components/fireside/controller/controller';
+import AppFiresideVideoStats from '../../components/fireside/stream/video-stats/AppFiresideVideoStats.vue';
 import { useGridStore } from '../../components/grid/grid-store';
 import {
-	illEndOfFeed,
-	illMaintenance,
-	illMobileKikkerstein,
-	illNoCommentsSmall,
+illEndOfFeed,
+illMaintenance,
+illMobileKikkerstein,
+illNoCommentsSmall
 } from '../../img/ill/illustrations';
 import AppFiresideHeader from './AppFiresideHeader.vue';
 import AppFiresideStats from './AppFiresideStats.vue';
@@ -84,6 +87,8 @@ const videoHeight = ref(0);
 
 const fireside = computed(() => c.value?.fireside || payloadFireside.value);
 const payloadFireside = ref<Fireside>();
+
+const rtc = computed(() => c.value?.rtc.value);
 
 const focusedUser = computed(() => c.value?.focusedUser.value);
 const background = computed(() => c.value?.background.value);
@@ -284,6 +289,20 @@ function onIsPersonallyStreamingChanged() {
 		beforeEachDeregister?.();
 		beforeEachDeregister = null;
 	}
+}
+
+async function _stopStreaming() {
+	const producer = rtc.value?.producer;
+	if (!producer) {
+		return;
+	}
+
+	const result = await ModalConfirm.show(`Are you sure you want to stop streaming?`);
+	if (!result) {
+		return;
+	}
+
+	stopStreaming(producer);
 }
 </script>
 
@@ -498,8 +517,8 @@ function onIsPersonallyStreamingChanged() {
 										v-if="
 											c.isStreaming.value &&
 											c.chatRoom.value &&
-											c.rtc.value &&
-											c.rtc.value.listableStreamingUsers.length > 0
+											rtc &&
+											rtc.listableStreamingUsers.length > 0
 										"
 										ref="videoContainer"
 										v-app-observe-dimensions="debounceDimensionsChange"
@@ -511,7 +530,9 @@ function onIsPersonallyStreamingChanged() {
 											backgroundColor: videoFillColor,
 										}"
 									>
+										<!-- Remote videos -->
 										<div
+											v-if="!focusedUser?.isLocal"
 											class="-video-inner"
 											:style="{
 												width: videoWidth + 'px',
@@ -548,6 +569,105 @@ function onIsPersonallyStreamingChanged() {
 												</AppStickerTarget>
 											</template>
 										</div>
+										<!-- Producer dashboard -->
+										<div v-else class="-producer-dash-container">
+											<div class="-producer-dash">
+												<div class="-producer-dash-left">
+													<div style="width: 100%">
+														<div class="-producer-video-header">
+															<h4 class="sans-margin-top">
+																Outgoing video
+															</h4>
+														</div>
+
+														<div
+															class="-producer-video"
+															:style="{
+																paddingTop:
+																	!videoHeight || !videoWidth
+																		? '56.25%'
+																		: (videoHeight /
+																				videoWidth) *
+																				100 +
+																		  '%',
+															}"
+														>
+															<!-- TODO(fireside-producer-dashboard) Hide video if browser/tag isn't focused. Do the same for remote streams as well. -->
+															<template v-if="focusedUser">
+																<AppStickerTarget
+																	:key="focusedUser.uid"
+																	class="-video-inner -abs-stretch"
+																	:controller="
+																		c.stickerTargetController
+																	"
+																>
+																	<AppPopper
+																		:trigger="
+																			isFullscreen
+																				? 'right-click'
+																				: 'manual'
+																		"
+																	>
+																		<AppFiresideStream
+																			:rtc-user="focusedUser"
+																			:has-header="
+																				isFullscreen
+																			"
+																			:has-hosts="
+																				isFullscreen
+																			"
+																			:sidebar-collapsed="
+																				collapseSidebar
+																			"
+																		/>
+
+																		<template #popover>
+																			<div class="list-group">
+																				<a
+																					class="list-group-item"
+																					@click="
+																						toggleVideoStats()
+																					"
+																				>
+																					<AppTranslate>
+																						Toggle Video
+																						Stats
+																					</AppTranslate>
+																				</a>
+																			</div>
+																		</template>
+																	</AppPopper>
+																</AppStickerTarget>
+															</template>
+														</div>
+													</div>
+
+													<AppButton
+														block
+														solid
+														:overlay="overlayText"
+														@click="sidebar = 'stream-settings'"
+													>
+														Stream settings
+													</AppButton>
+
+													<AppButton
+														block
+														solid
+														fill-color="overlay-notice"
+														:overlay="overlayText"
+														@click="_stopStreaming"
+													>
+														Stop streaming
+													</AppButton>
+												</div>
+
+												<div>
+													<h4 class="sans-margin-top">Video stats</h4>
+													<AppFiresideVideoStats no-abs />
+												</div>
+											</div>
+										</div>
 									</div>
 									<div v-else class="-video-container">
 										<div
@@ -564,34 +684,14 @@ function onIsPersonallyStreamingChanged() {
 													:overlay="overlayText"
 												/>
 
-												<div>
-													<div>Start streaming by going to</div>
-													<a
-														class="-center-guide-link"
-														@click="sidebar = 'stream-settings'"
-													>
-														<span>
-															Fireside settings > Stream settings
-														</span>
-													</a>
-													<div>using the gear icons below.</div>
-												</div>
-
-												<div>
-													<AppTranslate>
-														Double check your audio and video source in
-														the settings menu, and then click
-													</AppTranslate>
-													{{ ' ' }}
-													<a
-														class="-center-guide-link"
-														@click="sidebar = 'stream-settings'"
-													>
-														<AppTranslate>
-															Start streaming!
-														</AppTranslate>
-													</a>
-												</div>
+												<AppButton
+													block
+													solid
+													:overlay="overlayText"
+													@click="sidebar = 'stream-settings'"
+												>
+													Set up your stream
+												</AppButton>
 											</template>
 											<AppAnimSlideshow
 												v-else
@@ -814,7 +914,46 @@ $-center-guide-width = 400px
 	position: absolute !important
 	flex-direction: column
 	background-color: var(--theme-bg-subtle)
-	transition: width 200ms, height 200ms, border-radius 1s
+
+.-video-inner
+.-producer-video
+	transition: width 200ms, height 200ms, padding-top 200ms, border-radius 1s
+
+.-producer-dash-container
+	padding: 64px
+	width: 100%
+	height: 100%
+	display: flex
+	align-items: center
+	justify-content: center
+
+	@media $media-md
+		padding: 32px
+
+.-producer-dash
+	max-width: 1100px
+	height: 100%
+	display: grid
+	grid-template-columns: repeat(2, minmax(0, 1fr))
+	gap: $line-height-computed
+	flex: 1
+
+.-producer-dash-left
+	display: flex
+	flex-direction: column
+	flex-wrap: nowrap
+	gap: 12px
+	align-items: stretch
+
+.-producer-video-header
+	display: flex
+	gap: 8px
+	align-items: flex-start
+	justify-content: space-between
+
+.-producer-video
+	position: relative
+	width: 100%
 
 .-center-guide
 	display: flex
