@@ -41,22 +41,24 @@ import { useStickerStore } from '../../../_common/sticker/sticker-store';
 import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
+import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
 import AppFiresideProvider from '../../components/fireside/AppFiresideProvider.vue';
 import {
-createFiresideController,
-FiresideController,
-FiresideSidebar,
-toggleStreamVideoStats
+	createFiresideController,
+	FiresideController,
+	FiresideSidebar,
+	publishFireside,
+	toggleStreamVideoStats,
 } from '../../components/fireside/controller/controller';
 import AppFiresideVideoStats from '../../components/fireside/stream/video-stats/AppFiresideVideoStats.vue';
 import { useGridStore } from '../../components/grid/grid-store';
 import {
-illEndOfFeed,
-illMaintenance,
-illMobileKikkerstein,
-illNoCommentsSmall
+	illEndOfFeed,
+	illMaintenance,
+	illMobileKikkerstein,
+	illNoCommentsSmall,
 } from '../../img/ill/illustrations';
 import AppFiresideHeader from './AppFiresideHeader.vue';
 import AppFiresideStats from './AppFiresideStats.vue';
@@ -89,6 +91,8 @@ const fireside = computed(() => c.value?.fireside || payloadFireside.value);
 const payloadFireside = ref<Fireside>();
 
 const rtc = computed(() => c.value?.rtc.value);
+const canPublish = computed(() => c.value?.canPublish.value === true);
+const isStreaming = computed(() => c.value?.isStreaming.value === true);
 
 const focusedUser = computed(() => c.value?.focusedUser.value);
 const background = computed(() => c.value?.background.value);
@@ -304,6 +308,13 @@ async function _stopStreaming() {
 
 	stopStreaming(producer);
 }
+
+function onClickPublish() {
+	if (!c.value) {
+		return;
+	}
+	publishFireside(c.value);
+}
 </script>
 
 <template>
@@ -328,6 +339,26 @@ async function _stopStreaming() {
 			>
 				<div class="-fireside">
 					<div class="-body">
+						<div v-if="fireside?.is_draft" class="-private-banner">
+							<span>
+								<strong><em>This fireside is private</em></strong>
+							</span>
+
+							<component
+								:is="isStreaming ? 'a' : 'span'"
+								v-if="canPublish"
+								v-app-tooltip="
+									!isStreaming
+										? `There must be a stream running to publish this fireside`
+										: undefined
+								"
+								:class="{ 'text-muted': !isStreaming }"
+								@click="isStreaming ? onClickPublish() : undefined"
+							>
+								<em>Publish fireside</em>
+							</component>
+						</div>
+
 						<AppFiresideHeader
 							v-if="fireside && !isFullscreen"
 							class="-fireside-header"
@@ -825,6 +856,16 @@ $-center-guide-width = 400px
 	flex-direction: column
 	width: 100%
 	overflow: hidden
+
+.-private-banner
+	change-bg(bg)
+	elevate-1()
+	padding: 6px 12px
+	display: flex
+	gap: 16px
+	justify-content: space-between
+	font-size: $font-size-small
+	font-weight: 600
 
 .-fireside-header
 	flex: none
