@@ -59,7 +59,11 @@ let _isOnScrollQueued = false;
 let _lastScrollMessageId: number | undefined;
 let _lastAutoscrollOffset: number | undefined;
 
-const messages = computed(() => chat.value.messages[room.value.id]);
+const messages = computed(() => chat.value.messages[room.value.id] || []);
+const oldestMessage = computed(() => (messages.value.length ? messages.value[0] : null));
+const newestMessage = computed(() =>
+	messages.value.length ? messages.value[messages.value.length - 1] : null
+);
 
 const queuedMessages = computed(() =>
 	chat.value.messageQueue.filter(i => i.room_id === room.value.id)
@@ -76,11 +80,19 @@ const canLoadOlder = computed(
 const shouldShowIntro = computed(() => allMessages.value.length === 0);
 
 const shouldShowNewMessagesButton = computed(() => {
-	if (!latestFrozenTimestamp.value) {
+	if (!latestFrozenTimestamp.value || !newestMessage.value) {
 		return false;
 	}
 
-	return messages.value[messages.value.length - 1].logged_on > latestFrozenTimestamp.value;
+	return newestMessage.value.logged_on > latestFrozenTimestamp.value;
+});
+
+const roomChannel = computed(() => {
+	const item = chat.value.roomChannels[room.value.id];
+	if (item) {
+		return item;
+	}
+	return null;
 });
 
 useEventSubscription(onNewChatMessage, async message => {
@@ -96,8 +108,9 @@ watch(queuedMessages, updateVisibleQueuedMessages, { deep: true });
 
 onMounted(() => {
 	_checkQueuedTimeout = setInterval(updateVisibleQueuedMessages, 1000);
-	if (messages.value.length > 0) {
-		_lastScrollMessageId = messages.value[0].id;
+	const _oldestId = oldestMessage.value?.id || -1;
+	if (_oldestId !== -1) {
+		_lastScrollMessageId = _oldestId;
 	}
 
 	useResizeObserver({
@@ -137,7 +150,7 @@ async function loadOlder() {
 	// Pulling the height after showing the loading allows us to scroll back
 	// without it looking like it jumps.
 	const startHeight = el.scrollHeight ?? 0;
-	const firstMessage = messages.value[0];
+	const firstMessage = oldestMessage.value;
 
 	try {
 		await loadOlderChatMessages(chat.value, room.value.id);
@@ -150,7 +163,7 @@ async function loadOlder() {
 
 	// If the oldest message is the same, we need to mark that we reached the
 	// end of the history so we don't continue loading more.
-	if (messages.value[0].id === firstMessage.id) {
+	if (firstMessage && oldestMessage.value?.id === firstMessage.id) {
 		reachedEnd.value = true;
 		return;
 	}
@@ -210,7 +223,7 @@ function onScroll() {
 		const _lastId = _lastScrollMessageId;
 
 		_lastAutoscrollOffset = offset;
-		_lastScrollMessageId = messages.value[0].id;
+		_lastScrollMessageId = oldestMessage.value?.id;
 
 		// Check if our oldest message was automatically removed. Use our old
 		// scroll offset to check if we were at the bottom of the screen.
@@ -221,16 +234,14 @@ function onScroll() {
 		}
 	}
 
-	const roomChannel = chat.value.roomChannels[room.value.id];
-
 	if (offset > AUTOSCROLL_THRESHOLD) {
-		roomChannel.freezeMessageLimitRemovals();
-		latestFrozenTimestamp.value ??= messages.value[messages.value.length - 1].logged_on;
+		roomChannel.value?.freezeMessageLimitRemovals();
+		latestFrozenTimestamp.value ??= newestMessage.value?.logged_on;
 		_shouldScroll = false;
 	} else {
 		_shouldScroll = true;
 		latestFrozenTimestamp.value = undefined;
-		roomChannel.unfreezeMessageLimitRemovals();
+		roomChannel.value?.unfreezeMessageLimitRemovals();
 	}
 }
 
