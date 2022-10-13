@@ -349,13 +349,16 @@ function onClickPublish() {
 								v-if="canPublish"
 								v-app-tooltip="
 									!isStreaming
-										? `There must be a stream running to publish this fireside`
+										? `Someone needs to be streaming to make the fireside public`
 										: undefined
 								"
 								:class="{ 'text-muted': !isStreaming }"
+								:style="{
+									pointer: isStreaming ? undefined : 'not-allowed',
+								}"
 								@click="isStreaming ? onClickPublish() : undefined"
 							>
-								<em>Publish fireside</em>
+								<em>Make fireside public</em>
 							</component>
 						</div>
 

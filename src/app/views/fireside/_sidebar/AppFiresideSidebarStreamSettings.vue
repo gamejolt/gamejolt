@@ -26,6 +26,7 @@ const {
 	rtc,
 	shouldShowDesktopAppPromo,
 	sidebar,
+	isDraft,
 } = c;
 
 const isStartingStream = ref(false);
@@ -185,6 +186,11 @@ async function onClickStopStreaming() {
 
 		<template #footer>
 			<div v-if="canBrowserStream && !shouldShowDesktopAppPromo" class="-footer">
+				<div v-if="isDraft" class="-private-hint">
+					This won't make your fireside public. Other hosts in the fireside will be able
+					to see your stream.
+				</div>
+
 				<AppButton
 					v-if="!isStreamingElsewhere && !isPersonallyStreaming"
 					primary
@@ -193,7 +199,7 @@ async function onClickStopStreaming() {
 					:disabled="isProducerBusy || isInvalidConfig"
 					@click="onClickStartStreaming()"
 				>
-					<AppTranslate>Start streaming</AppTranslate>
+					Start {{ isDraft ? 'private' : 'public' }} stream
 				</AppButton>
 				<AppButton
 					v-else-if="isPersonallyStreaming"
@@ -218,4 +224,9 @@ async function onClickStopStreaming() {
 
 .-warning-text
 	color: var(--theme-fg)
+
+.-private-hint
+	font-size: $font-size-small
+	margin-bottom: 12px
+	color: var(--theme-fg-muted)
 </style>
