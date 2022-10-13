@@ -608,12 +608,21 @@ export async function stopMicAudioPlayback(user: FiresideRTCUser) {
 }
 
 export function updateVolumeLevel(user: FiresideRTCUser) {
-	if (user._micAudioTrack?.isPlaying !== true) {
+	// Ignore remote users that have no active track.
+	if (user._micAudioTrack?.isPlaying !== true && !user.isLocal) {
 		user.volumeLevel = 0;
 		return;
 	}
 
-	user.volumeLevel = user._micAudioTrack.getVolumeLevel();
+	const level = user._micAudioTrack?.getVolumeLevel() || 0;
+
+	// Treat the user as speaking when their volume level is above a certain
+	// threshold.
+	if (level > 0.4) {
+		user.volumeLevel = 1;
+	} else {
+		user.volumeLevel = 0;
+	}
 }
 
 /** Expects a value from 0 to 1 */

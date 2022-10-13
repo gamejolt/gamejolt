@@ -16,7 +16,7 @@ import {
 import AppFiresideStreamSetup from '../../../components/fireside/stream/setup/AppFiresideStreamSetup.vue';
 import { illNoCommentsSmall, illStreamingJelly } from '../../../img/ill/illustrations';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
-import AppFiresideSidebarHeadingCollapse from './AppFiresideSidebarHeadingCollapse.vue';
+import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 
 const c = useFiresideController()!;
 const {
@@ -85,9 +85,9 @@ async function onClickStopStreaming() {
 <template>
 	<AppFiresideSidebar>
 		<template #header>
-			<AppFiresideSidebarHeadingCollapse>
+			<AppFiresideSidebarHeading>
 				<AppTranslate>Stream Settings</AppTranslate>
-			</AppFiresideSidebarHeadingCollapse>
+			</AppFiresideSidebarHeading>
 		</template>
 
 		<template #body>

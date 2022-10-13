@@ -601,6 +601,7 @@ function onClickPublish() {
 											</template>
 										</div>
 										<!-- Producer dashboard -->
+										<!-- TODO(fireside-producer-dashboard) Move this into its own component; nesting is getting pretty rough -->
 										<div v-else class="-producer-dash-container">
 											<div class="-producer-dash">
 												<div class="-producer-dash-left">
@@ -966,7 +967,7 @@ $-center-guide-width = 400px
 	transition: width 200ms, height 200ms, padding-top 200ms, border-radius 1s
 
 .-producer-dash-container
-	padding: 64px
+	padding: 0 64px
 	width: 100%
 	height: 100%
 	display: flex
@@ -974,7 +975,7 @@ $-center-guide-width = 400px
 	justify-content: center
 
 	@media $media-md
-		padding: 32px
+		padding: 0 32px
 
 .-producer-dash
 	max-width: 1100px

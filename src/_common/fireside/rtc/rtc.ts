@@ -633,10 +633,12 @@ function _removeUserIfNeeded(rtc: FiresideRTC, user: FiresideRTCUser) {
 }
 
 function _updateVolumeLevels(rtc: FiresideRTC) {
-	// Checking against _remoteStreamingUsers and not _allStremaingUsers which includes
-	// the local user because we don't play the local user's stream (it would cause echo)
-	// so we don't get volume data.
-	for (const user of rtc._remoteStreamingUsers) {
+	/**
+	 * Checking against {@link rtc._allStreamingUsers} which includes the local
+	 * user. Change to {@link rtc._remoteStreamingUsers} if we want to disable
+	 * host thumb indicators for self.
+	 */
+	for (const user of rtc._allStreamingUsers) {
 		updateVolumeLevel(user);
 	}
 }

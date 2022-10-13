@@ -203,7 +203,11 @@ async function onClickStopStreaming() {
 	<AppTheme class="-bottom-bar" :force-dark="overlay">
 		<div class="-bottom-bar-inner">
 			<div v-if="canStream" class="-group -left">
-				<AppFiresideBottomBarButton icon="cog" @click="sidebar = 'stream-settings'" />
+				<AppFiresideBottomBarButton
+					:active="sidebar === 'stream-settings'"
+					icon="cog"
+					@click="toggleStreamSettings"
+				/>
 
 				<template v-if="isStreaming">
 					<AppFiresideBottomBarButton

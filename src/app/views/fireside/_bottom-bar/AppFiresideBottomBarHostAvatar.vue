@@ -63,7 +63,10 @@ const isActive = computed(() => {
 <template>
 	<div class="-indicator-wrap" :class="{ '-active-hover': isActive }" :style="{ padding }">
 		<div class="-indicator-color" />
+
 		<div class="-indicator">
+			<div class="-edge-bleed" />
+
 			<template v-if="userModel">
 				<AppUserAvatarImg class="-img -help" :user="userModel" />
 			</template>
@@ -116,6 +119,18 @@ const isActive = computed(() => {
 	align-items: center
 	height: 100%
 	width: 100%
+	position: relative
+
+.-edge-bleed
+	img-circle()
+	--border-size: $border-width-base
+	--bleed-size: unquote('calc(var(--border-size) * -1)')
+	position: absolute
+	top: var(--bleed-size)
+	right: var(--bleed-size)
+	bottom: var(--bleed-size)
+	left: var(--bleed-size)
+	change-bg(primary-fg)
 
 .-img
 	&
