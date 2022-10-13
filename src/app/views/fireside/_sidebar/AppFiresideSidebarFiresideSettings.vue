@@ -15,7 +15,6 @@ import AppFormControlBackground from '../../../../_common/form-vue/controls/AppF
 import AppFormControlToggleButton from '../../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButton.vue';
 import AppFormControlToggleButtonGroup from '../../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../../_common/form-vue/validators';
-import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import { ReportModal } from '../../../../_common/report/modal/modal.service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
@@ -31,7 +30,7 @@ import {
 import { ChatCommandsModal } from '../../../components/forms/chat/commands/modal/modal.service';
 import AppFiresideShare from '../AppFiresideShare.vue';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
-import AppFiresideSidebarHeadingCollapse from './AppFiresideSidebarHeadingCollapse.vue';
+import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 
 const { user } = useCommonStore();
 const c = useFiresideController()!;
@@ -156,19 +155,9 @@ function onClickChatCommands() {
 <template>
 	<AppFiresideSidebar>
 		<template #header>
-			<AppHeaderBar :elevation="2" :defined-slots="['leading', 'title', 'actions']">
-				<template #leading>
-					<AppButton circle sparse trans icon="chevron-left" @click="sidebar = 'chat'" />
-				</template>
-
-				<template #title>
-					<AppTranslate>Fireside Settings</AppTranslate>
-				</template>
-
-				<template #actions>
-					<AppFiresideSidebarHeadingCollapse />
-				</template>
-			</AppHeaderBar>
+			<AppFiresideSidebarHeading>
+				<AppTranslate>Fireside Settings</AppTranslate>
+			</AppFiresideSidebarHeading>
 		</template>
 
 		<template #body>

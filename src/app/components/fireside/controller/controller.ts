@@ -555,7 +555,9 @@ export function createFiresideController(
 		() => _watchGrid
 	);
 
-	let _sidebar: FiresideSidebar = 'chat';
+	const sidebarHome: FiresideSidebar = 'chat';
+	let _sidebar: FiresideSidebar = sidebarHome;
+
 	const sidebar = customRef<FiresideSidebar>((track, trigger) => ({
 		get: () => {
 			track();
@@ -573,6 +575,8 @@ export function createFiresideController(
 			trigger();
 		},
 	}));
+
+	const isSidebarHome = computed(() => sidebar.value === sidebarHome);
 
 	let _collapseSidebar = false;
 	const collapseSidebar = customRef<boolean>((track, trigger) => ({
@@ -743,6 +747,8 @@ export function createFiresideController(
 
 		activeBottomBarControl,
 		sidebar,
+		sidebarHome,
+		isSidebarHome,
 		isShowingStreamOverlay,
 		collapseSidebar,
 		popperTeleportId: computed(() => `fireside-teleport-${fireside.id}`),

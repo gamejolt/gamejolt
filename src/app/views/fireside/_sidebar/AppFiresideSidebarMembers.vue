@@ -23,7 +23,7 @@ const users = computed(() =>
 <template>
 	<AppFiresideSidebar>
 		<template #header>
-			<AppFiresideSidebarHeading showing-members />
+			<AppFiresideSidebarHeading />
 
 			<div v-if="canManageCohosts" class="-manage-button">
 				<AppButton block @click="sidebar = 'hosts'">

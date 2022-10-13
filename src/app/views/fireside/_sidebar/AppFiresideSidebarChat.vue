@@ -31,7 +31,7 @@ const loginUrl = computed(
 <template>
 	<AppFiresideSidebar :opacity="0.3">
 		<template #header>
-			<AppFiresideSidebarHeading />
+			<AppFiresideSidebarHeading has-members />
 		</template>
 
 		<template #body>

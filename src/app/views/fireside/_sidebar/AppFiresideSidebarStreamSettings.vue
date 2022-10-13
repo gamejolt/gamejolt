@@ -3,7 +3,6 @@ import { computed, ref } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { startStreaming, stopStreaming } from '../../../../_common/fireside/rtc/producer';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
@@ -86,19 +85,9 @@ async function onClickStopStreaming() {
 <template>
 	<AppFiresideSidebar>
 		<template #header>
-			<AppHeaderBar :elevation="2" :defined-slots="['leading', 'title', 'actions']">
-				<template #leading>
-					<AppButton circle sparse trans icon="chevron-left" @click="sidebar = 'chat'" />
-				</template>
-
-				<template #title>
-					<AppTranslate>Stream Settings</AppTranslate>
-				</template>
-
-				<template #actions>
-					<AppFiresideSidebarHeadingCollapse />
-				</template>
-			</AppHeaderBar>
+			<AppFiresideSidebarHeadingCollapse>
+				<AppTranslate>Stream Settings</AppTranslate>
+			</AppFiresideSidebarHeadingCollapse>
 		</template>
 
 		<template #body>
