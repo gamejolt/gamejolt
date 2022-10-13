@@ -768,7 +768,12 @@ function onClickPublish() {
 										isFullscreen && collapseSidebar && !isShowingStreamOverlay,
 								}"
 							>
-								<AppFiresideSidebarHeading v-if="collapseSidebar" collapsed />
+								<AppFiresideSidebarHeading
+									v-if="collapseSidebar"
+									collapsed
+									has-members
+									reverse-actions
+								/>
 								<AppFiresideSidebarChat v-else-if="sidebar === 'chat'" />
 								<AppFiresideSidebarMembers v-else-if="sidebar === 'members'" />
 								<AppFiresideSidebarHosts v-else-if="sidebar === 'hosts'" />

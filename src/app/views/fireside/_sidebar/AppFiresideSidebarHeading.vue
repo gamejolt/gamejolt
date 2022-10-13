@@ -17,6 +17,9 @@ const props = defineProps({
 	collapsed: {
 		type: Boolean,
 	},
+	reverseActions: {
+		type: Boolean,
+	},
 });
 
 const { hasMembers, collapsed } = toRefs(props);
@@ -70,6 +73,7 @@ const definedSlots = computed(() => {
 		:elevation="2"
 		:automatically-imply-leading="false"
 		:defined-slots="definedSlots"
+		:reverse-actions="reverseActions"
 	>
 		<template #leading>
 			<AppFiresideSidebarHeadingBack />

@@ -41,6 +41,12 @@ const props = defineProps({
 		type: Array as PropType<HeaderBarSlots[]>,
 		default: undefined,
 	},
+	reverseLeading: {
+		type: Boolean,
+	},
+	reverseActions: {
+		type: Boolean,
+	},
 });
 
 const slots = useSlots();
@@ -107,6 +113,7 @@ const effectiveEdgePadding = computed(() => {
 				class="-leading"
 				:class="{
 					'-shrink': shouldShrinkLeading,
+					'-reverse': reverseLeading,
 				}"
 			>
 				<slot name="leading" />
@@ -130,6 +137,7 @@ const effectiveEdgePadding = computed(() => {
 				class="-actions"
 				:class="{
 					'-shrink': shouldShrinkActions,
+					'-reverse': reverseActions,
 				}"
 			>
 				<slot name="actions" />
@@ -181,6 +189,9 @@ const effectiveEdgePadding = computed(() => {
 	flex: none
 	flex-basis: auto
 	display: inline-flex
+
+	&.-reverse
+		flex-direction: row-reverse
 
 .-leading
 	justify-content: flex-start
