@@ -221,7 +221,7 @@ function onClickChatCommands() {
 						:forced-is-loading="backgroundForm.isProcessing ? true : undefined"
 						@changed="backgroundForm.submit"
 					>
-						<template v-if="backgrounds.length">
+						<template v-if="backgrounds.length || !backgroundForm.isLoaded">
 							<AppFormGroup
 								name="background_id"
 								class="sans-margin-bottom"
