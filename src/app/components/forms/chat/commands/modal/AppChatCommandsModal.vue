@@ -2,7 +2,6 @@
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import AppModal from '../../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../../_common/modal/modal.service';
-import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
 import FormChatCommands from '../FormChatCommands.vue';
 
 const modal = useModal()!;
@@ -12,13 +11,13 @@ const modal = useModal()!;
 	<AppModal>
 		<div class="modal-controls">
 			<AppButton @click="modal.dismiss()">
-				<AppTranslate>Close</AppTranslate>
+				{{ $gettext(`Close`) }}
 			</AppButton>
 		</div>
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<AppTranslate>Chat commands</AppTranslate>
+				{{ $gettext(`Chat commands`) }}
 			</h2>
 		</div>
 
