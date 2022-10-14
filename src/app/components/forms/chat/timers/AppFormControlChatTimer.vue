@@ -70,7 +70,7 @@ const fields = computed(() => [
 const isActive = computed(() => form.formModel[fieldIsActive.value] === true);
 const timingError = computed(() => {
 	const fieldsToCheck = [
-		{ label: 'minutes', field: fieldInvokeSchedule },
+		{ label: 'interval', field: fieldInvokeSchedule },
 		{ label: 'number of required messages', field: fieldNumRequiredMessages },
 	];
 
