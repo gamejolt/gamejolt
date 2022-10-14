@@ -26,6 +26,7 @@ import { ModelClassType } from '../model/model.service';
 import { PayloadFormErrors } from '../payload/payload-service';
 import { $gettext } from '../translate/translate.service';
 import { FormGroupController } from './AppFormGroup.vue';
+import { FormValidatorError } from './validators';
 
 const Key: InjectionKey<FormController> = Symbol('form');
 
@@ -141,6 +142,21 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 		() => _groups.value.every(i => i.valid.value) && customErrors.value.length === 0
 	);
 	const invalid = computed(() => !valid.value);
+
+	/**
+	 * Includes all errors from all form controls.
+	 */
+	const controlErrors = computed(() => {
+		const ret = {} as Record<string, FormValidatorError>;
+
+		for (const group of _groups.value) {
+			if (group.error.value) {
+				ret[group.name.value] = group.error.value;
+			}
+		}
+
+		return ret;
+	});
 
 	/**
 	 * This is purely for {@link BaseForm} to initialize lazily since it doesn't
@@ -391,6 +407,7 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 		isLoadedBootstrapped,
 		isProcessing,
 		submitted,
+		controlErrors,
 		serverErrors,
 		customErrors,
 		validate,
@@ -424,6 +441,7 @@ export interface FormController<T = any> {
 	isLoadedBootstrapped: boolean | null;
 	isProcessing: boolean;
 	submitted: boolean;
+	controlErrors: Record<string, FormValidatorError>;
 	serverErrors: PayloadFormErrors;
 	customErrors: string[];
 	validate: () => Promise<void>;

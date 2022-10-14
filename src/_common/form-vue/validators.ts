@@ -18,6 +18,14 @@ export type FormValidator<T = any> = (
 	value: T | undefined | null
 ) => Promise<FormValidatorError | null>;
 
+/**
+ * Processes a form validator's message for display. Basically replaces
+ * instances of {} with the proper label.
+ */
+export function processFormValidatorErrorMessage(error: string, label: string) {
+	return error.replace(/\{\}/g, label);
+}
+
 /** Alphanumeric, underscores, hyphens */
 const _usernameRegex = /^[\w-]+$/;
 

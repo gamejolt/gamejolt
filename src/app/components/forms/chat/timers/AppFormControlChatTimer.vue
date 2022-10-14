@@ -9,6 +9,7 @@ import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import {
+	processFormValidatorErrorMessage,
 	validateContentMaxLength,
 	validateContentNoActiveUploads,
 	validateContentRequired,
@@ -67,6 +68,20 @@ const fields = computed(() => [
 ]);
 
 const isActive = computed(() => form.formModel[fieldIsActive.value] === true);
+const timingError = computed(() => {
+	const fieldsToCheck = [
+		{ label: 'minutes', field: fieldInvokeSchedule },
+		{ label: 'number of required messages', field: fieldNumRequiredMessages },
+	];
+
+	for (const { label, field } of fieldsToCheck) {
+		if (form.controlErrors[field.value]) {
+			return processFormValidatorErrorMessage(form.controlErrors[field.value].message, label);
+		}
+	}
+
+	return null;
+});
 
 onMounted(() => {
 	_initFields();
@@ -131,43 +146,52 @@ function removeItem() {
 			</div>
 
 			<div class="-trigger">
-				Trigger every
-				<AppFormGroup
-					class="-inline-control"
-					:name="fieldInvokeSchedule"
-					:label="$gettext(`Schedule`)"
-					hide-label
-				>
-					<AppFormControl
-						type="number"
-						step="1"
-						:max="maxInvokeSchedule"
-						min="1"
-						:validators="[validateMinValue(1), validateMaxValue(maxInvokeSchedule)]"
-					/>
-				</AppFormGroup>
-				minute(s)
-				<br />
-				if at least
-				<AppFormGroup
-					class="-inline-control"
-					style="margin-left: 0"
-					:name="fieldNumRequiredMessages"
-					:label="$gettext(`Number of required messages`)"
-					hide-label
-					optional
-				>
-					<AppFormControl
-						type="number"
-						step="1"
-						:max="maxRequiredMessages"
-						min="0"
-						:validators="[validateMinValue(0), validateMaxValue(maxRequiredMessages)]"
-					/>
-				</AppFormGroup>
-				message(s)
-				<br />
-				have been sent in chat
+				<div class="-trigger-text">
+					Trigger every
+					<AppFormGroup
+						class="-inline-control"
+						:name="fieldInvokeSchedule"
+						:label="$gettext(`Schedule`)"
+						hide-label
+					>
+						<AppFormControl
+							type="number"
+							step="1"
+							:max="maxInvokeSchedule"
+							min="1"
+							:validators="[validateMinValue(1), validateMaxValue(maxInvokeSchedule)]"
+						/>
+					</AppFormGroup>
+					minute(s)
+					<br />
+					if at least
+					<AppFormGroup
+						class="-inline-control"
+						style="margin-left: 0"
+						:name="fieldNumRequiredMessages"
+						:label="$gettext(`Number of required messages`)"
+						hide-label
+						optional
+					>
+						<AppFormControl
+							type="number"
+							step="1"
+							:max="maxRequiredMessages"
+							min="0"
+							:validators="[
+								validateMinValue(0),
+								validateMaxValue(maxRequiredMessages),
+							]"
+						/>
+					</AppFormGroup>
+					message(s)
+					<br />
+					have been sent in chat
+				</div>
+
+				<p v-if="timingError" class="help-block error anim-fade-in">
+					{{ timingError }}
+				</p>
 			</div>
 
 			<AppButton
@@ -209,6 +233,8 @@ function removeItem() {
 
 .-trigger
 	flex: 1
+
+.-trigger-text
 	line-height: 40px
 
 .-toggle
