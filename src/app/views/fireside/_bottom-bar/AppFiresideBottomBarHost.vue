@@ -4,6 +4,7 @@ import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import {
 	FiresideRTCUser,
+	saveFiresideRTCUserPrefs,
 	setDesktopAudioPlayback,
 	setMicAudioPlayback,
 	setUserDesktopAudioVolume,
@@ -118,6 +119,7 @@ function _handleScrub(
 		volumeBeforeScrub.value = undefined;
 
 		isScrubbing.value = false;
+		saveFiresideRTCUserPrefs(host.value);
 	}
 }
 

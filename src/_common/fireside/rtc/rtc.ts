@@ -21,6 +21,7 @@ import {
 	createRemoteFiresideRTCUser,
 	FiresideRTCUser,
 	FiresideVideoPlayStateStopped,
+	initRemoteFiresideRTCUserPrefs,
 	setUserHasDesktopAudio,
 	setUserHasMicAudio,
 	setUserHasVideo,
@@ -149,15 +150,6 @@ export class FiresideRTC {
 
 	get listableStreamingUsers() {
 		return this._allStreamingUsers.filter(rtcUser => rtcUser.isListed);
-	}
-
-	get isEveryRemoteListableUsersMuted() {
-		// Check against _remoteStreamingUsers because we want to exclude the local user from this check.
-		const users = this._remoteStreamingUsers.filter(i => i.isListed);
-		if (users.length === 0) {
-			return false;
-		}
-		return users.every(i => i.remoteMicAudioMuted);
 	}
 
 	/**
@@ -604,6 +596,9 @@ function _findOrAddRemoteUser(rtc: FiresideRTC, remoteUser: IAgoraRTCRemoteUser)
 	if (!user) {
 		user = createRemoteFiresideRTCUser(rtc, remoteUser.uid);
 		rtc._remoteStreamingUsers.push(user);
+		// Need to do this after we add the user to our list, otherwise we won't
+		// be able to find a User during this call and nothing will happen.
+		initRemoteFiresideRTCUserPrefs(user);
 	} else if (user.isLocal) {
 		throw new Error('Expected to be handling remote users here');
 	}
