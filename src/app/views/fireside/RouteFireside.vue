@@ -35,6 +35,7 @@ import { Popper } from '../../../_common/popper/popper.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Ruler } from '../../../_common/ruler/ruler-service';
 import { Screen } from '../../../_common/screen/screen-service';
+import AppShortkey from '../../../_common/shortkey/AppShortkey.vue';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppStickerLayer from '../../../_common/sticker/layer/AppStickerLayer.vue';
 import { useStickerStore } from '../../../_common/sticker/sticker-store';
@@ -325,6 +326,11 @@ function onClickPublish() {
 		:class="{ '-unround-video': isFullscreen }"
 		:style="`--fireside-chat-width: ${chatWidth}px`"
 	>
+		<AppShortkey
+			v-if="GJ_IS_DESKTOP_APP"
+			shortkey="Escape"
+			@press="c?.toggleFullscreen(false)"
+		/>
 		<AppStickerLayer
 			:style="{
 				width: '100%',
