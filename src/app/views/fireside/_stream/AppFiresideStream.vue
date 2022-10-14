@@ -107,13 +107,17 @@ const overlayPaddingRight = computed(() => {
 
 const producer = computed(() => rtc.value?.producer);
 
-// We can only show local videos in one place at a time. This will
-// re-grab the video feed when it gets rebuilt.
+/**
+ * We can only show local videos in one place at a time. This will re-grab the
+ * video feed when it gets rebuilt.
+ */
 const shouldShowVideo = computed(() => !(isShowingStreamSetup.value && rtc.value?.isFocusingMe));
 
-// When the stream setup menu is showing its own stream, display a message
-// letting them know they can see their stream in the setup menu instead of
-// here.
+/**
+ * When the stream setup menu is showing its own stream, display a message
+ * letting them know they can see their stream in the setup menu instead of
+ * here.
+ */
 const showVideoPreviewMessage = computed(
 	() => !!rtc.value && rtc.value.isFocusingMe && isShowingStreamSetup.value
 );

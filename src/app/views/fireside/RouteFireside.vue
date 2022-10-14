@@ -121,18 +121,7 @@ const cannotViewReason = computed(() => {
 const routeStatus = computed(() => c.value?.status.value);
 const overlayText = computed(() => !!background.value || isFullscreen.value);
 
-const sidebar = customRef<FiresideSidebar>((track, trigger) => ({
-	get: () => {
-		track();
-		return c.value?.sidebar.value || 'chat';
-	},
-	set: val => {
-		if (!c.value || c.value.sidebar.value === val) {
-			return;
-		}
-		trigger();
-	},
-}));
+const sidebar = computed(() => c.value?.sidebar.value || 'chat');
 
 const collapseSidebar = customRef<boolean>((track, trigger) => ({
 	get: () => {
@@ -209,13 +198,7 @@ const { isBootstrapped } = createAppRoute({
 });
 
 function _setSidebar(option: FiresideSidebar, buttonLocation: string) {
-	const prev = sidebar.value;
-	sidebar.value = option;
-	const current = sidebar.value;
-
-	if (prev !== current) {
-		c.value?.setSidebar(option, buttonLocation);
-	}
+	c.value?.setSidebar(option, buttonLocation);
 }
 
 function onDimensionsChange() {

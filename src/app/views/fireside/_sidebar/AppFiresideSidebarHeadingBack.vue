@@ -2,7 +2,7 @@
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 
-const { sidebar, sidebarHome, isSidebarHome } = useFiresideController()!;
+const { sidebarHome, isSidebarHome, setSidebar } = useFiresideController()!;
 </script>
 
 <template>
@@ -12,6 +12,6 @@ const { sidebar, sidebarHome, isSidebarHome } = useFiresideController()!;
 		sparse
 		trans
 		icon="chevron-left"
-		@click="sidebar = sidebarHome"
+		@click="setSidebar(sidebarHome, 'sidebar-heading-back')"
 	/>
 </template>
