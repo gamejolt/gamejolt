@@ -312,7 +312,7 @@ watch(isInvalidConfig, async () => {
 	await sleep(0);
 
 	if (isInvalidConfig.value && isPersonallyStreaming.value) {
-		stopStreaming(localProducer);
+		stopStreaming(localProducer, 'auto-invalid-config');
 	}
 });
 

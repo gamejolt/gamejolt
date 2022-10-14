@@ -38,6 +38,7 @@ const {
 	isStreaming,
 	isPersonallyStreaming,
 	sidebar,
+	setSidebar,
 	activeBottomBarControl,
 } = c;
 
@@ -110,7 +111,7 @@ async function onClickMic() {
 			'yes'
 		);
 		if (shouldStopStreaming) {
-			stopStreaming(_producer);
+			stopStreaming(_producer, 'last-input-mic');
 		}
 		return;
 	}
@@ -142,7 +143,7 @@ async function onClickVideo() {
 	if (!_user.hasMicAudio || producerMicMuted.value) {
 		const shouldStopStreaming = await _confirmStopStreaming(true);
 		if (shouldStopStreaming) {
-			stopStreaming(_producer);
+			stopStreaming(_producer, 'last-input-video');
 		}
 		return;
 	}
@@ -184,7 +185,7 @@ function toggleFiresideSettings() {
 
 function _toggleSidebar(value: FiresideSidebar) {
 	const result = sidebar.value === value ? 'chat' : value;
-	sidebar.value = result;
+	setSidebar(result, 'bottom-bar');
 }
 
 async function onClickStopStreaming() {
@@ -194,7 +195,7 @@ async function onClickStopStreaming() {
 
 	const result = await _confirmStopStreaming(false);
 	if (result) {
-		stopStreaming(producer.value);
+		stopStreaming(producer.value, 'bottom-bar');
 	}
 }
 </script>

@@ -6,6 +6,7 @@ import {
 	markRaw,
 	provide,
 	reactive,
+	readonly,
 	Ref,
 	ref,
 	shallowReadonly,
@@ -23,6 +24,7 @@ import { getCurrentServerTime, updateServerTimeOffset } from '../../../../utils/
 import { run, sleep } from '../../../../utils/utils';
 import { uuidv4 } from '../../../../utils/uuid';
 import { MaybeRef } from '../../../../utils/vue';
+import { trackFiresideSidebarButton } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Background } from '../../../../_common/background/background.model';
 import {
@@ -493,7 +495,7 @@ export function createFiresideController(
 				// the streams, then cleanupFiresideRTCProducer gets called which sets _isStreaming
 				// to false, and THEN when the streams actually attempt to stop it'd think they
 				// already stopped, and will not run the teardown logic for them..
-				await stopStreaming(prevProducer);
+				await stopStreaming(prevProducer, 'auto-lost-perms');
 				// TODO(big-pp-event) is there a way to make absolutely sure nothing keeps a reference
 				// to producer past this point? theres nothing in the producer class that prevents attempting
 				// to start streaming from a cleanup-up instance of producer.
@@ -556,25 +558,26 @@ export function createFiresideController(
 	);
 
 	const sidebarHome: FiresideSidebar = 'chat';
-	let _sidebar: FiresideSidebar = sidebarHome;
+	const _sidebar = ref<FiresideSidebar>(sidebarHome);
 
-	const sidebar = customRef<FiresideSidebar>((track, trigger) => ({
-		get: () => {
-			track();
-			return _sidebar;
-		},
-		set: val => {
-			if (val === _sidebar) {
-				return;
-			}
+	const sidebar = readonly(computed(() => _sidebar.value));
 
-			_sidebar = val;
-			if (val !== 'chat' && _collapseSidebar) {
-				collapseSidebar.value = false;
-			}
-			trigger();
-		},
-	}));
+	function setSidebar(current: FiresideSidebar, buttonLocation: string) {
+		if (current === _sidebar.value) {
+			return;
+		}
+
+		trackFiresideSidebarButton({
+			previous: _sidebar.value,
+			current,
+			buttonLocation,
+		});
+
+		_sidebar.value = current;
+		if (current !== 'chat' && _collapseSidebar) {
+			collapseSidebar.value = false;
+		}
+	}
 
 	const isSidebarHome = computed(() => sidebar.value === sidebarHome);
 
@@ -591,7 +594,7 @@ export function createFiresideController(
 
 			_collapseSidebar = val;
 			if (val) {
-				sidebar.value = 'chat';
+				_sidebar.value = 'chat';
 			}
 			trigger();
 		},
@@ -610,7 +613,7 @@ export function createFiresideController(
 			if (!isChat) {
 				collapseSidebar.value = false;
 			} else if (collapse) {
-				sidebar.value = 'chat';
+				_sidebar.value = 'chat';
 			}
 		}
 	);
@@ -747,6 +750,7 @@ export function createFiresideController(
 
 		activeBottomBarControl,
 		sidebar,
+		setSidebar,
 		sidebarHome,
 		isSidebarHome,
 		isShowingStreamOverlay,

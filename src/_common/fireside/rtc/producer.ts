@@ -6,6 +6,7 @@ import type {
 } from 'agora-rtc-sdk-ng';
 import { computed, markRaw, ref, shallowRef } from 'vue';
 import { MediaDeviceService } from '../../agora/media-device.service';
+import { trackFiresideStopStreaming } from '../../analytics/analytics.service';
 import { Api } from '../../api/api.service';
 import type { ASGController } from '../../client/asg/asg';
 import { startDesktopAudioCapture } from '../../client/safe-exports';
@@ -910,7 +911,8 @@ export async function startStreaming(producer: FiresideRTCProducer) {
 	});
 }
 
-export function stopStreaming(producer: FiresideRTCProducer) {
+export function stopStreaming(producer: FiresideRTCProducer, logData: string) {
+	trackFiresideStopStreaming(logData);
 	return _stopStreaming(producer, true);
 }
 

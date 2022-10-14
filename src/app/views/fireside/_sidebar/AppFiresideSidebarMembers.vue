@@ -7,7 +7,7 @@ import { useFiresideController } from '../../../components/fireside/controller/c
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 
-const { chatRoom, chatUsers, canManageCohosts, listableHostIds, sidebar } =
+const { chatRoom, chatUsers, canManageCohosts, listableHostIds, setSidebar } =
 	useFiresideController()!;
 
 const users = computed(() =>
@@ -26,7 +26,7 @@ const users = computed(() =>
 			<AppFiresideSidebarHeading />
 
 			<div v-if="canManageCohosts" class="-manage-button">
-				<AppButton block @click="sidebar = 'hosts'">
+				<AppButton block @click="setSidebar('hosts', 'members')">
 					<AppTranslate>Manage Hosts</AppTranslate>
 				</AppButton>
 			</div>

@@ -8,6 +8,7 @@ import {
 } from 'firebase/analytics';
 import { unref, watch } from 'vue';
 import { Router } from 'vue-router';
+import { FiresideSidebar } from '../../app/components/fireside/controller/controller';
 import { arrayRemove } from '../../utils/array';
 import { createLogger } from '../../utils/logging';
 import { AuthMethod } from '../auth/auth.service';
@@ -470,6 +471,28 @@ export function trackSearchAutocomplete(params: {
 	search_autocomplete_resource: 'community' | 'game' | 'user' | 'library_game' | 'all';
 }) {
 	_trackEvent('search_autocomplete', params);
+}
+
+export function trackFiresideSidebarButton({
+	previous,
+	current,
+	buttonLocation,
+}: {
+	previous: FiresideSidebar;
+	current: FiresideSidebar;
+	buttonLocation: string;
+}) {
+	_trackEvent('fireside_sidebar', {
+		previous_sidebar: previous,
+		current_sidebar: current,
+		button_location: buttonLocation,
+	});
+}
+
+export function trackFiresideStopStreaming(location: string) {
+	_trackEvent('fireside_stop_streaming', {
+		trigger_location: location,
+	});
 }
 
 /**

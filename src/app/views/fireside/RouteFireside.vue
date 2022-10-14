@@ -130,7 +130,6 @@ const sidebar = customRef<FiresideSidebar>((track, trigger) => ({
 		if (!c.value || c.value.sidebar.value === val) {
 			return;
 		}
-		c.value.sidebar.value = val;
 		trigger();
 	},
 }));
@@ -208,6 +207,16 @@ const { isBootstrapped } = createAppRoute({
 		beforeEachDeregister = null;
 	},
 });
+
+function _setSidebar(option: FiresideSidebar, buttonLocation: string) {
+	const prev = sidebar.value;
+	sidebar.value = option;
+	const current = sidebar.value;
+
+	if (prev !== current) {
+		c.value?.setSidebar(option, buttonLocation);
+	}
+}
 
 function onDimensionsChange() {
 	if (!videoContainer.value) {
@@ -296,7 +305,7 @@ function onIsPersonallyStreamingChanged() {
 	}
 }
 
-async function _stopStreaming() {
+async function _stopStreaming(location: string) {
 	const producer = rtc.value?.producer;
 	if (!producer) {
 		return;
@@ -307,7 +316,7 @@ async function _stopStreaming() {
 		return;
 	}
 
-	stopStreaming(producer);
+	stopStreaming(producer, location);
 }
 
 function onClickPublish() {
@@ -687,7 +696,12 @@ function onClickPublish() {
 														block
 														solid
 														:overlay="overlayText"
-														@click="sidebar = 'stream-settings'"
+														@click="
+															_setSidebar(
+																'stream-settings',
+																'producer-dashboard'
+															)
+														"
 													>
 														Stream settings
 													</AppButton>
@@ -697,7 +711,9 @@ function onClickPublish() {
 														solid
 														fill-color="overlay-notice"
 														:overlay="overlayText"
-														@click="_stopStreaming"
+														@click="
+															_stopStreaming('producer-dashboard')
+														"
 													>
 														Stop streaming
 													</AppButton>
@@ -729,7 +745,9 @@ function onClickPublish() {
 													block
 													solid
 													:overlay="overlayText"
-													@click="sidebar = 'stream-settings'"
+													@click="
+														_setSidebar('stream-settings', 'fireplace')
+													"
 												>
 													Set up your stream
 												</AppButton>

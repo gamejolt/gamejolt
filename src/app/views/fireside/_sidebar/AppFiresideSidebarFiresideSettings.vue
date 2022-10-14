@@ -46,7 +46,7 @@ const {
 	canPublish,
 	canExtinguish,
 	canReport,
-	sidebar,
+	setSidebar,
 } = c;
 
 const form: FormController<Fireside> = createForm({
@@ -164,7 +164,10 @@ function onClickChatCommands() {
 			<AppScrollScroller class="-pad-v">
 				<div class="-pad-h">
 					<template v-if="canStream">
-						<AppButton block @click="sidebar = 'stream-settings'">
+						<AppButton
+							block
+							@click="setSidebar('stream-settings', 'fireside-settings')"
+						>
 							<AppTranslate>Stream settings</AppTranslate>
 						</AppButton>
 

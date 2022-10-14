@@ -25,7 +25,7 @@ const {
 	isPersonallyStreaming,
 	rtc,
 	shouldShowDesktopAppPromo,
-	sidebar,
+	setSidebar,
 	isDraft,
 } = c;
 
@@ -52,7 +52,7 @@ async function onClickStartStreaming() {
 
 	// Only close the modal if we were able to start streaming.
 	if (_producer.isStreaming.value) {
-		sidebar.value = 'chat';
+		setSidebar('chat', 'started-streaming');
 	}
 }
 
@@ -71,14 +71,14 @@ async function onClickStopStreaming() {
 			return;
 		}
 
-		await stopStreaming(_producer);
+		await stopStreaming(_producer, 'stream-settings');
 	} catch {
 		showErrorGrowl($gettext(`Something went wrong when stopping your stream.`));
 	}
 
 	// Only close the modal if we were able to stop streaming.
 	if (!_producer.isStreaming.value) {
-		sidebar.value = 'chat';
+		setSidebar('chat', 'stopped-streaming');
 	}
 }
 </script>
@@ -176,7 +176,7 @@ async function onClickStopStreaming() {
 						<AppFiresideStreamSetup
 							:c="c"
 							hide-publish-controls
-							@close="sidebar = 'chat'"
+							@close="setSidebar('chat', 'stream-settings-closed')"
 							@is-invalid="isInvalidConfig = $event"
 						/>
 					</template>

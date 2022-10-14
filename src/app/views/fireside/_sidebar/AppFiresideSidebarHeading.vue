@@ -24,7 +24,7 @@ const props = defineProps({
 
 const { hasMembers, collapsed } = toRefs(props);
 
-const { chatUsers, chatRoom, sidebar, isSidebarHome } = useFiresideController()!;
+const { chatUsers, chatRoom, sidebar, setSidebar, isSidebarHome } = useFiresideController()!;
 
 const messageCount = ref(0);
 
@@ -108,7 +108,7 @@ const definedSlots = computed(() => {
 				trans
 				:primary="showingMembers"
 				:solid="showingMembers"
-				@click="showingMembers ? (sidebar = 'chat') : (sidebar = 'members')"
+				@click="setSidebar(showingMembers ? 'chat' : 'members', 'sidebar-heading')"
 			/>
 
 			<AppFiresideSidebarHeadingCollapse />
