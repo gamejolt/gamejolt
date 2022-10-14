@@ -704,7 +704,10 @@ function onClickPublish() {
 
 												<div>
 													<h4 class="sans-margin-top">Video stats</h4>
-													<AppFiresideVideoStats no-abs />
+													<AppFiresideVideoStats
+														class="-producer-dash-stats"
+														no-abs
+													/>
 												</div>
 											</div>
 										</div>
@@ -977,21 +980,19 @@ $-center-guide-width = 400px
 	transition: width 200ms, height 200ms, padding-top 200ms, border-radius 1s
 
 .-producer-dash-container
-	padding: 0 64px
+	padding: 0 32px
 	width: 100%
 	height: 100%
 	display: flex
 	align-items: center
 	justify-content: center
 
-	@media $media-md
-		padding: 0 32px
-
 .-producer-dash
 	max-width: 1100px
 	height: 100%
 	display: grid
-	grid-template-columns: repeat(2, minmax(0, 1fr))
+	grid-template-columns: minmax(0, 450px) minmax(0, 250px)
+	justify-content: center
 	gap: $line-height-computed
 	flex: 1
 
@@ -1011,6 +1012,9 @@ $-center-guide-width = 400px
 .-producer-video
 	position: relative
 	width: 100%
+
+.-producer-dash-stats
+	width: auto
 
 .-center-guide
 	display: flex
