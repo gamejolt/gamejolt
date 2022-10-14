@@ -1,20 +1,21 @@
 import { Model } from '../../../../../_common/model/model.service';
 
-export const CHAT_MESSAGE_MAX_CONTENT_LENGTH = 1000;
-export const TIMEOUT_CONSIDER_QUEUED = 1500; // Time in ms until a queued message should be displayed as such.
-
-export type ChatMessageType = 'content' | 'sticker';
+export const CHAT_COMMAND_TYPE_COMMAND = 'command';
+export const CHAT_COMMAND_TYPE_TIMER = 'timer';
 
 export class ChatCommand extends Model {
 	constructor(data: any = {}) {
 		super(data);
 	}
 
+	declare type: 'command' | 'timer';
 	declare prefix: string;
 	declare command: string;
 	declare message_content: string;
 	declare is_active: boolean;
 	declare invoke_delay: number;
+	declare invoke_schedule: number;
+	declare num_required_messages: number;
 	declare last_invoked: number;
 	declare sort: number;
 }

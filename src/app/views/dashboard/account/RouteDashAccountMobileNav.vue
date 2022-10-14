@@ -80,6 +80,13 @@ createAppRoute({
 				</RouterLink>
 				<RouterLink
 					class="list-group-item"
+					:to="{ name: 'dash.account.chat-timers' }"
+					active-class="active"
+				>
+					{{ $gettext(`Chat timers`) }}
+				</RouterLink>
+				<RouterLink
+					class="list-group-item"
 					:to="{ name: 'dash.account.payment-methods' }"
 					active-class="active"
 				>

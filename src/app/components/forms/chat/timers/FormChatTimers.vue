@@ -9,14 +9,14 @@ import AppForm, { createForm, FormController } from '../../../../../_common/form
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormStickySubmit from '../../../../../_common/form-vue/AppFormStickySubmit.vue';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
-import AppFormControlChatCommand from './AppFormControlChatCommand.vue';
-import { ChatCommand, CHAT_COMMAND_TYPE_COMMAND } from './command.model';
+import { ChatCommand, CHAT_COMMAND_TYPE_TIMER } from '../commands/command.model';
+import AppFormControlChatTimer from './AppFormControlChatTimer.vue';
 
-export interface ChatCommandsFormModel {
-	commands: ChatCommand[];
+export interface ChatTimersFormModel {
+	timers: ChatCommand[];
 
 	/**
-	 * ChatCommands fields keyed as `command_${id}`, `message_content_${id}`,
+	 * Chat timer fields keyed as `description_${id}`, `message_content_${id}`,
 	 * where `id` is the unique {@link ChatCommand.id}.
 	 */
 	[k: string]: any;
@@ -27,22 +27,22 @@ export interface ChatCommandsFormModel {
 const isProcessing = ref(false);
 const isAddingItem = ref(false);
 
-const maxCommands = ref(20);
-const commandMinLength = ref(2);
-const commandMaxLength = ref(20);
+const maxTimers = ref(10);
+const maxInvokeSchedule = ref(60);
+const maxRequiredMessages = ref(100);
 const messageMaxLength = ref(1000);
 
-const form: FormController<ChatCommandsFormModel> = createForm({
-	loadUrl: `/web/chat/commands`,
+const form: FormController<ChatTimersFormModel> = createForm({
+	loadUrl: `/web/chat/commands/timers`,
 	model: ref({
-		commands: [] as ChatCommand[],
+		timers: [] as ChatCommand[],
 	}),
 	onLoad(response) {
-		form.formModel.commands = ChatCommand.populate(response.commands);
+		form.formModel.timers = ChatCommand.populate(response.timers);
 
-		maxCommands.value = response.maxCommands;
-		commandMinLength.value = response.commandMinLength;
-		commandMaxLength.value = response.commandMaxLength;
+		maxTimers.value = response.maxTimers;
+		maxInvokeSchedule.value = response.maxInvokeSchedule;
+		maxRequiredMessages.value = response.maxRequiredMessages;
 		messageMaxLength.value = response.messageMaxLength;
 	},
 	async onSubmit() {
@@ -54,15 +54,20 @@ const form: FormController<ChatCommandsFormModel> = createForm({
 			commands: number[];
 			[k: string]: any;
 		} = {
-			type: CHAT_COMMAND_TYPE_COMMAND,
+			type: CHAT_COMMAND_TYPE_TIMER,
 			commands: [],
 		};
 
-		for (const item of form.formModel.commands) {
+		for (const item of form.formModel.timers) {
 			const makeKey = (prefix: string) => `${prefix}_${item.id}`;
 			const getValue = (prefix: string) => form.formModel[makeKey(prefix)];
 
-			const wantedFields: (keyof ChatCommand)[] = ['command', 'message_content', 'is_active'];
+			const wantedFields: (keyof ChatCommand)[] = [
+				'invoke_schedule',
+				'num_required_messages',
+				'message_content',
+				'is_active',
+			];
 			const formFields: { [k: string]: any } = {};
 
 			let formFieldsLength = 0;
@@ -80,11 +85,11 @@ const form: FormController<ChatCommandsFormModel> = createForm({
 			}
 
 			if (wantedFields.length !== formFieldsLength) {
-				console.error(`Didn't get the required fields to save a chat command.`);
+				console.error(`Didn't get the required fields to save a chat timer.`);
 				break;
 			}
 
-			// Add our ID to the list of commands we're saving.
+			// Add our ID to the list of timers we're saving.
 			body.commands.push(item.id);
 			// Assign each field to our request body.
 			for (const [key, value] of Object.entries(formFields)) {
@@ -107,26 +112,28 @@ async function addNewItem() {
 	isAddingItem.value = true;
 
 	try {
-		if (form.formModel.commands.length >= maxCommands.value) {
+		if (form.formModel.timers.length >= maxTimers.value) {
 			// Wait a little bit so the button isn't spam-clicked.
 			await sleep(2_000);
-			throw Error('Tried adding a new command while already at our limit');
+			throw Error('Tried adding a new timer while already at our limit');
 		}
 
 		const response = await Api.sendRequest(
-			`/web/chat/commands/new/${CHAT_COMMAND_TYPE_COMMAND}`,
+			`/web/chat/commands/new/${CHAT_COMMAND_TYPE_TIMER}`,
 			{},
 			{ detach: true }
 		);
 
 		if (!response.command) {
-			throw Error('Got no chat command returned when creating a new one');
+			throw Error('Got no chat timer returned when creating a new one');
 		}
 
-		const newCommand = new ChatCommand(response.command);
+		const newFilter = new ChatCommand(response.command);
 		// Set it as enabled right way to make it easier for them.
-		newCommand.is_active = true;
-		form.formModel.commands.push(newCommand);
+		newFilter.is_active = true;
+		newFilter.invoke_schedule = 30;
+		newFilter.num_required_messages = 0;
+		form.formModel.timers.push(newFilter);
 	} catch (e) {
 		console.error(e);
 	} finally {
@@ -135,7 +142,7 @@ async function addNewItem() {
 }
 
 function removeItem(item: ChatCommand, fieldsToClear: string[]) {
-	arrayRemove(form.formModel.commands, i => i.id === item.id);
+	arrayRemove(form.formModel.timers, i => i.id === item.id);
 
 	for (const field of fieldsToClear) {
 		delete form.formModel[field];
@@ -151,34 +158,34 @@ function removeItem(item: ChatCommand, fieldsToClear: string[]) {
 			<AppLoading big centered />
 		</template>
 		<template v-else>
-			<AppExpand :when="form.formModel.commands.length === 0">
+			<AppExpand :when="form.formModel.timers.length === 0">
 				<div class="lead text-center">
 					{{
 						$gettext(
-							`Chat commands allow people in your chat to get an automated message when sending a particular text command.`
+							`Chat timers allow you to send messages in your fireside chat on a schedule.`
 						)
 					}}
 				</div>
 			</AppExpand>
 
 			<div class="-list">
-				<AppFormControlChatCommand
-					v-for="item of form.formModel.commands"
+				<AppFormControlChatTimer
+					v-for="item of form.formModel.timers"
 					:key="item.id"
 					:item="item"
-					:command-min-length="commandMinLength"
-					:command-max-length="commandMaxLength"
+					:max-invoke-schedule="maxInvokeSchedule"
+					:max-required-messages="maxRequiredMessages"
 					:message-max-length="messageMaxLength"
 					@remove="removeItem(item, $event)"
 				/>
 
 				<AppButton
-					v-if="form.formModel.commands.length < maxCommands"
+					v-if="form.formModel.timers.length < maxTimers"
 					block
 					:disabled="isProcessing || isAddingItem || !form.valid"
 					@click="addNewItem"
 				>
-					{{ $gettext(`New command`) }}
+					{{ $gettext(`New timer`) }}
 				</AppButton>
 
 				<AppFormStickySubmit>
