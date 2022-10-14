@@ -61,6 +61,7 @@ const emit = defineEmits({
 
 <style lang="stylus" scoped>
 .-button-wrapper
+	pressy()
 	position: relative
 
 .-active-notice
