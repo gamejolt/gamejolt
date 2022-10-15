@@ -7,6 +7,7 @@ const UITransitionTime = 200;
 <script lang="ts" setup>
 import { computed, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
+import { ContentFocus } from '../../../../_common/content-focus/content-focus.service';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { FiresideRTCUser, setDesktopAudioPlayback } from '../../../../_common/fireside/rtc/user';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -327,7 +328,7 @@ function onMouseLeaveControls() {
 		@click="onVideoClick"
 	>
 		<template v-if="showVideoPreviewMessage">
-			<div class="-video-sidebar-notice">
+			<div class="-video-hidden-notice">
 				<strong>
 					<AppTranslate class="text-muted"> See video preview in sidebar </AppTranslate>
 				</strong>
@@ -341,11 +342,19 @@ function onMouseLeaveControls() {
 			</template>
 			<template v-else>
 				<div :key="rtcUser.uid" :style="{ width: '100%', height: '100%' }">
-					<AppFiresideStreamVideo
-						v-if="shouldShowVideo"
-						class="-video-player -click-target"
-						:rtc-user="rtcUser"
-					/>
+					<template v-if="shouldShowVideo && ContentFocus.isWindowFocused">
+						<AppFiresideStreamVideo
+							class="-video-player -click-target"
+							:rtc-user="rtcUser"
+						/>
+					</template>
+					<div v-else-if="shouldShowVideo" class="-video-hidden-notice">
+						<strong>
+							<AppTranslate class="text-muted">
+								We're hiding this video to conserve your system resources
+							</AppTranslate>
+						</strong>
+					</div>
 
 					<AppFiresideDesktopAudio v-if="shouldPlayDesktopAudio" :rtc-user="rtcUser" />
 					<AppFiresideVideoStats
@@ -576,7 +585,7 @@ $-z-combo = 2
 		&.-darken
 			background-color: $-overlay-bg
 
-.-video-sidebar-notice
+.-video-hidden-notice
 	change-bg(bg)
 	width: 100%
 	height: 100%

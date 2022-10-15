@@ -48,6 +48,7 @@ import { $gettext } from '../../../_common/translate/translate.service';
 import AppFiresideProvider from '../../components/fireside/AppFiresideProvider.vue';
 import {
 	createFiresideController,
+	extinguishFireside,
 	FiresideController,
 	FiresideSidebar,
 	publishFireside,
@@ -93,7 +94,10 @@ const payloadFireside = ref<Fireside>();
 
 const rtc = computed(() => c.value?.rtc.value);
 const canPublish = computed(() => c.value?.canPublish.value === true);
+const canStream = computed(() => c.value?.canStream.value === true);
+const canExtinguish = computed(() => c.value?.canExtinguish.value === true);
 const isStreaming = computed(() => c.value?.isStreaming.value === true);
+const isPersonallyStreaming = computed(() => c.value?.isPersonallyStreaming.value === true);
 
 const focusedUser = computed(() => c.value?.focusedUser.value);
 const background = computed(() => c.value?.background.value);
@@ -147,6 +151,18 @@ const chatWidth = computed(() => {
 		return 200;
 	}
 	return 350;
+});
+
+const shouldShowBanner = computed(() => {
+	if (isFullscreen.value) {
+		return false;
+	}
+
+	if (c.value?.isDraft.value) {
+		return true;
+	}
+
+	return isPersonallyStreaming.value;
 });
 
 // If the fireside's status ever changes to setup-failed, we want to direct to a
@@ -246,7 +262,7 @@ function onClickRetry() {
 	c.value?.retry();
 }
 
-watch(() => c.value?.isPersonallyStreaming.value, onIsPersonallyStreamingChanged);
+watch(isPersonallyStreaming, onIsPersonallyStreamingChanged);
 
 watch(focusedUserVideoAspectRatio, onDimensionsChange);
 
@@ -269,7 +285,7 @@ function onIsPersonallyStreamingChanged() {
 		return;
 	}
 
-	if (!c.value || c.value.isPersonallyStreaming.value) {
+	if (!c.value || isPersonallyStreaming.value) {
 		beforeEachDeregister ??= router.beforeEach((_to, _from, next) => {
 			if (
 				!window.confirm(
@@ -337,26 +353,48 @@ function onClickPublish() {
 			>
 				<div class="-fireside">
 					<div class="-body">
-						<div v-if="fireside?.is_draft" class="-private-banner">
-							<span>
-								<strong><em>This fireside is private</em></strong>
-							</span>
+						<div
+							v-if="shouldShowBanner"
+							class="-status-banner"
+							:class="{
+								'-banner-primary': c && !c.isDraft.value && !isPersonallyStreaming,
+								'-banner-live': c && isPersonallyStreaming,
+							}"
+						>
+							<strong v-if="isPersonallyStreaming">
+								{{ $gettext(`You're currently streaming!`) }}
+							</strong>
+
+							<strong>
+								<template v-if="!fireside">
+									{{ $gettext(`Loading fireside...`) }}
+								</template>
+								<template v-else-if="fireside.is_draft">
+									{{ $gettext(`This fireside is private`) }}
+								</template>
+								<template v-else>
+									{{ $gettext(`This fireside is public`) }}
+								</template>
+							</strong>
 
 							<component
 								:is="isStreaming ? 'a' : 'span'"
 								v-if="canPublish"
 								v-app-tooltip="
 									!isStreaming
-										? `Someone needs to be streaming to make the fireside public`
+										? $gettext(
+												`Someone needs to be streaming to make the fireside public`
+										  )
 										: undefined
 								"
+								class="-status-banner-action"
 								:class="{ 'text-muted': !isStreaming }"
 								:style="{
-									pointer: isStreaming ? undefined : 'not-allowed',
+									cursor: isStreaming ? undefined : 'not-allowed',
 								}"
 								@click="isStreaming ? onClickPublish() : undefined"
 							>
-								<em>Make fireside public</em>
+								{{ $gettext(`Make fireside public`) }}
 							</component>
 						</div>
 
@@ -604,12 +642,15 @@ function onClickPublish() {
 										<!-- Producer dashboard -->
 										<!-- TODO(fireside-producer-dashboard) Move this into its own component; nesting is getting pretty rough -->
 										<div v-else class="-producer-dash-container">
-											<div class="-producer-dash">
+											<div
+												class="-producer-dash"
+												:class="{ '-single-col': !focusedUser.hasVideo }"
+											>
 												<div class="-producer-dash-left">
 													<div style="width: 100%">
 														<div class="-producer-video-header">
 															<h4 class="sans-margin-top">
-																Outgoing video
+																{{ $gettext(`Outgoing video`) }}
 															</h4>
 														</div>
 
@@ -675,35 +716,39 @@ function onClickPublish() {
 														</div>
 													</div>
 
-													<AppButton
-														block
-														solid
-														:overlay="overlayText"
-														@click="
-															_setSidebar(
-																'stream-settings',
-																'producer-dashboard'
-															)
-														"
-													>
-														Stream settings
-													</AppButton>
+													<div style="width: 100%">
+														<AppButton
+															block
+															solid
+															:overlay="overlayText"
+															@click="
+																_setSidebar(
+																	'stream-settings',
+																	'producer-dashboard'
+																)
+															"
+														>
+															{{ $gettext(`Stream settings`) }}
+														</AppButton>
 
-													<AppButton
-														block
-														solid
-														fill-color="overlay-notice"
-														:overlay="overlayText"
-														@click="
-															_stopStreaming('producer-dashboard')
-														"
-													>
-														Stop streaming
-													</AppButton>
+														<AppButton
+															block
+															solid
+															fill-color="overlay-notice"
+															:overlay="overlayText"
+															@click="
+																_stopStreaming('producer-dashboard')
+															"
+														>
+															{{ $gettext(`Stop streaming`) }}
+														</AppButton>
+													</div>
 												</div>
 
-												<div>
-													<h4 class="sans-margin-top">Video stats</h4>
+												<div v-if="focusedUser.hasVideo">
+													<h4 class="sans-margin-top">
+														{{ $gettext(`Video stats`) }}
+													</h4>
 													<AppFiresideVideoStats
 														class="-producer-dash-stats"
 														no-abs
@@ -720,23 +765,40 @@ function onClickPublish() {
 												'-bold': overlayText,
 											}"
 										>
-											<template v-if="c.canStream.value">
+											<template v-if="canStream">
 												<AppAnimSlideshow
 													class="-fireplace"
 													:sheet="sheetFireplace"
 													:overlay="overlayText"
 												/>
 
-												<AppButton
-													block
-													solid
-													:overlay="overlayText"
-													@click="
-														_setSidebar('stream-settings', 'fireplace')
+												<div style="width: 100%">
+													<AppButton
+														block
+														solid
+														:overlay="overlayText"
+														@click="
+															_setSidebar(
+																'stream-settings',
+																'fireplace'
+															)
+														"
+													>
+														{{ $gettext(`Set up your stream`) }}
+													</AppButton>
+
+													<AppButton
+														v-if="canExtinguish"
+														block
+														icon-color="notice"
+														icon="remove"
+														:overlay="overlayText"
+														@click="extinguishFireside(c!)
 													"
-												>
-													Set up your stream
-												</AppButton>
+													>
+														{{ $gettext(`Extinguish fireside`) }}
+													</AppButton>
+												</div>
 											</template>
 											<AppAnimSlideshow
 												v-else
@@ -876,15 +938,32 @@ $-center-guide-width = 400px
 	width: 100%
 	overflow: hidden
 
-.-private-banner
+.-status-banner
 	change-bg(bg)
 	elevate-1()
 	padding: 6px 12px
 	display: flex
 	gap: 16px
-	justify-content: space-between
 	font-size: $font-size-small
 	font-weight: 600
+	z-index: 2
+
+	&.-banner-primary
+		background-color: var(--theme-primary)
+
+		&
+		.-status-banner-action
+			color: var(--theme-primary-fg)
+
+	&.-banner-live
+		change-bg-hex($gj-overlay-notice)
+
+		&
+		.-status-banner-action
+			color: white
+
+.-status-banner-action
+	margin-left: auto
 
 .-fireside-header
 	flex: none
@@ -988,13 +1067,17 @@ $-center-guide-width = 400px
 	justify-content: center
 
 .-producer-dash
+	--left-col: minmax(0, 450px)
 	max-width: 1100px
 	height: 100%
 	display: grid
-	grid-template-columns: minmax(0, 450px) minmax(0, 250px)
+	grid-template-columns: var(--left-col) minmax(0, 250px)
 	justify-content: center
 	gap: $line-height-computed
 	flex: 1
+
+	&.-single-col
+		grid-template-columns: var(--left-col)
 
 .-producer-dash-left
 	display: flex

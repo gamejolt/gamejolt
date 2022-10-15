@@ -34,16 +34,20 @@ const { fireside, stickerTargetController, overlay } = toRefs(props);
 					{{ fireside.title }}
 				</div>
 
-				<span
-					v-if="fireside.is_draft"
-					class="-tag tag"
-					style="background-color: var(--theme-bg)"
-				>
-					<AppTranslate>Private</AppTranslate>
-				</span>
-				<span v-else class="-tag tag tag-highlight">
-					<AppTranslate>Public</AppTranslate>
-				</span>
+				<!-- Only show this if our header is being shown as an overlay,
+				otherwise we handle it elsewhere -->
+				<template v-if="overlay">
+					<span
+						v-if="fireside.is_draft"
+						class="-tag tag"
+						style="background-color: var(--theme-bg)"
+					>
+						<AppTranslate>Private</AppTranslate>
+					</span>
+					<span v-else class="-tag tag tag-highlight">
+						<AppTranslate>Public</AppTranslate>
+					</span>
+				</template>
 			</div>
 
 			<div class="-communities">

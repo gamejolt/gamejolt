@@ -31,6 +31,7 @@ import {
 	canCommunityEjectFireside,
 	canCommunityFeatureFireside,
 } from '../../../../_common/community/community.model';
+import { ContentFocus } from '../../../../_common/content-focus/content-focus.service';
 import { getDeviceBrowser, getDeviceOS } from '../../../../_common/device/device.service';
 import { DogtagData } from '../../../../_common/dogtag/dogtag-data';
 import { formatDuration } from '../../../../_common/filters/duration';
@@ -335,7 +336,21 @@ export function createFiresideController(
 
 		// Firefox and Safari each have problems with streaming. See their
 		// comments for reasons.
-		if (_isFirefox.value || _isSafari.value) {
+		const shouldBlockFirefox = _isFirefox.value && user.value?.isMod !== true;
+		if (shouldBlockFirefox || _isSafari.value) {
+			return false;
+		}
+
+		return true;
+	});
+
+	/**
+	 * Some browsers don't allow us to select output devices. If we're allowing
+	 * them to stream, we can check this to know if we should show a tooltip or
+	 * hide some form controls.
+	 */
+	const canBrowserSelectSpeakers = computed(() => {
+		if (_isFirefox.value) {
 			return false;
 		}
 
@@ -363,6 +378,18 @@ export function createFiresideController(
 	});
 
 	const shouldShowDesktopAppPromo = ref(shouldPromoteAppForStreaming.value);
+
+	/**
+	 * If we should hide the stream preview in the stream setup form.
+	 */
+	const shouldHideStreamVideoPreview = computed(() => !ContentFocus.isWindowFocused);
+
+	/**
+	 * If we should hide the focused video stream.
+	 */
+	const shouldHideStreamVideo = computed(
+		() => shouldHideStreamVideoPreview.value && focusedUser.value?.isLocal === true
+	);
 
 	const _browser = computed(() => getDeviceBrowser().toLowerCase());
 
@@ -732,8 +759,11 @@ export function createFiresideController(
 		canExtinguish,
 		canReport,
 		canBrowserStream,
+		canBrowserSelectSpeakers,
 		background,
 		shouldShowDesktopAppPromo,
+		shouldHideStreamVideoPreview,
+		shouldHideStreamVideo,
 		logger,
 
 		_isExtending,

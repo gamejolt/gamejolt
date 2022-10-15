@@ -1,5 +1,6 @@
 import { computed, ref, Ref } from 'vue';
 import { importNoSSR } from '../code-splitting';
+import { getDeviceBrowser } from '../device/device.service';
 
 const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
 
@@ -26,6 +27,25 @@ const DefaultDetectionOptions = <DetectionOptions>{
 	skipIfPrompted: true,
 	prompt: true,
 };
+
+/**
+ * Getting devices directly through Agora doesn't work after closing the initial
+ * MediaStreams on some browsers (Firefox). To fix, all we need to do is call
+ * [navigator.mediaDevices.getUserMedia] with the device types we want to
+ * request.
+ *
+ * https://stackoverflow.com/questions/46648645/navigator-mediadevices-enumeratedevices-not-display-device-label-on-firefox
+ */
+async function _getUserMedia() {
+	if (GJ_IS_DESKTOP_APP || import.meta.env.SSR) {
+		return;
+	}
+
+	return navigator.mediaDevices.getUserMedia({
+		audio: true,
+		video: true,
+	});
+}
 
 function createMediaDeviceService() {
 	const webcamsWasPrompted = ref(false);
@@ -57,6 +77,14 @@ function createMediaDeviceService() {
 	);
 
 	async function detectDevices(options?: Partial<DetectionOptions>) {
+		const hasPrompted =
+			micsWasPrompted.value && speakersWasPrompted.value && webcamsWasPrompted.value;
+		// Firefox doesn't return the label for devices after closing a
+		// MediaStream - we need to request temp access to devices again.
+		if (hasPrompted && getDeviceBrowser().toLowerCase().indexOf('firefox') !== -1) {
+			await _getUserMedia();
+		}
+
 		await Promise.all([detectWebcams(options), detectMics(options), detectSpeakers(options)]);
 	}
 

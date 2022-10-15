@@ -37,6 +37,9 @@ const RENEW_TOKEN_INTERVAL = 60_000;
 export const PRODUCER_UNSET_DEVICE = 'unset';
 export const PRODUCER_DEFAULT_GROUP_AUDIO = 'default';
 
+type DeviceType = 'mic' | 'speakers' | 'video' | 'desktopAudio';
+export type ProducerResetDeviceCallback = (type: DeviceType) => any;
+
 export type FiresideRTCProducer = ReturnType<typeof createFiresideRTCProducer>;
 
 export function createFiresideRTCProducer(rtc: FiresideRTC) {
@@ -101,6 +104,12 @@ export function createFiresideRTCProducer(rtc: FiresideRTC) {
 			selectedDesktopAudioDeviceId.value !== PRODUCER_UNSET_DEVICE
 	);
 
+	let _resetDeviceCallback: ProducerResetDeviceCallback | null = null;
+
+	function setResetDeviceCallback(cb: ProducerResetDeviceCallback | null) {
+		_resetDeviceCallback = cb;
+	}
+
 	MediaDeviceService.detectDevices({ prompt: false });
 
 	const producer = {
@@ -122,6 +131,9 @@ export function createFiresideRTCProducer(rtc: FiresideRTC) {
 		hasWebcamDevice,
 		hasMicDevice,
 		hasDesktopAudioDevice,
+
+		setResetDeviceCallback,
+		_resetDeviceCallback: computed(() => _resetDeviceCallback),
 
 		micMuted,
 		videoMuted,
@@ -456,20 +468,29 @@ function _updateWebcamTrack(producer: FiresideRTCProducer) {
 				// 	mediaStreamTrack: stream.getVideoTracks()[0],
 				// });
 
-				const track = await AgoraRTC.createCameraVideoTrack({
-					cameraId: deviceId,
-					optimizationMode: mode,
-					encoderConfig: {
-						bitrateMax: bitrate,
-						width: { max: width, ideal: width },
-						height: { max: height, ideal: height },
-						frameRate: { max: fps },
-					},
-				});
+				try {
+					const track = await AgoraRTC.createCameraVideoTrack({
+						cameraId: deviceId,
+						optimizationMode: mode,
+						encoderConfig: {
+							bitrateMax: bitrate,
+							width: { max: width, ideal: width },
+							height: { max: height, ideal: height },
+							frameRate: { max: fps },
+						},
+					});
 
-				rtc.log(`Video webcam track ID: ${track.getTrackId()}`);
+					rtc.log(`Video webcam track ID: ${track.getTrackId()}`);
 
-				return track;
+					return track;
+				} catch (e) {
+					const clearSelection = producer._resetDeviceCallback.value;
+					if (deviceId && clearSelection) {
+						clearSelection('video');
+					}
+
+					throw e;
+				}
 			},
 		});
 
@@ -525,14 +546,23 @@ function _updateMicTrack(producer: FiresideRTCProducer) {
 				}
 
 				const AgoraRTC = await AgoraRTCLazy;
-				const track = await AgoraRTC.createMicrophoneAudioTrack({
-					microphoneId: deviceId,
-				});
-				track.setVolume(100);
+				try {
+					const track = await AgoraRTC.createMicrophoneAudioTrack({
+						microphoneId: deviceId,
+					});
+					track.setVolume(100);
 
-				rtc.log(`Mic track ID: ${track.getTrackId()}`);
+					rtc.log(`Mic track ID: ${track.getTrackId()}`);
 
-				return track;
+					return track;
+				} catch (e) {
+					const clearDevice = producer._resetDeviceCallback.value;
+					if (deviceId && clearDevice) {
+						clearDevice('mic');
+					}
+
+					throw e;
+				}
 			},
 		});
 
@@ -608,37 +638,46 @@ function _updateDesktopAudioTrack(producer: FiresideRTCProducer) {
 
 				// If a device was set for streaming, we want to use that
 				// instead of using ASG.
-				if (shouldStream) {
-					rtc.log(`Creating desktop audio track from ASG.`);
+				try {
+					if (shouldStream) {
+						rtc.log(`Creating desktop audio track from ASG.`);
 
-					const generator = new MediaStreamTrackGenerator({ kind: 'audio' });
-					streamingASG.value = await startDesktopAudioCapture(generator.writable);
+						const generator = new MediaStreamTrackGenerator({ kind: 'audio' });
+						streamingASG.value = await startDesktopAudioCapture(generator.writable);
 
-					track = AgoraRTC.createCustomAudioTrack({
-						mediaStreamTrack: generator,
-						encoderConfig: 'high_quality_stereo',
-					});
-				} else if (deviceId) {
-					rtc.log(`Creating desktop audio track from microphone source.`);
+						track = AgoraRTC.createCustomAudioTrack({
+							mediaStreamTrack: generator,
+							encoderConfig: 'high_quality_stereo',
+						});
+					} else if (deviceId) {
+						rtc.log(`Creating desktop audio track from microphone source.`);
 
-					track = await AgoraRTC.createMicrophoneAudioTrack({
-						microphoneId: deviceId,
-						// We disable all this so that it doesn't affect the desktop audio in any way.
-						AEC: false,
-						AGC: false,
-						ANS: false,
-						encoderConfig: 'high_quality_stereo',
-					});
-				} else {
-					rtc.log(`Invalid state detected for desktop audio track.`);
-					return null;
+						track = await AgoraRTC.createMicrophoneAudioTrack({
+							microphoneId: deviceId,
+							// We disable all this so that it doesn't affect the desktop audio in any way.
+							AEC: false,
+							AGC: false,
+							ANS: false,
+							encoderConfig: 'high_quality_stereo',
+						});
+					} else {
+						rtc.log(`Invalid state detected for desktop audio track.`);
+						return null;
+					}
+
+					track.setVolume(100);
+
+					rtc.log(`Desktop audio track ID: ${track.getTrackId()}`);
+
+					return track;
+				} catch (e) {
+					const clearDevice = producer._resetDeviceCallback.value;
+					if (deviceId && clearDevice) {
+						clearDevice('desktopAudio');
+					}
+
+					throw e;
 				}
-
-				track.setVolume(100);
-
-				rtc.log(`Desktop audio track ID: ${track.getTrackId()}`);
-
-				return track;
 			},
 			async onTrackClose() {
 				// Only need to close the track if we're streaming the desktop
@@ -698,41 +737,50 @@ function _updateGroupAudioTrack(producer: FiresideRTCProducer) {
 		rtc.log(`Setting speaker device to ${deviceId}`);
 		rtc.log(`Applying new audio playback device to all remote audio streams.`);
 
-		if (rtc.localUser) {
-			// Local user isn't stored in the agora client remote users, so we
-			// need to set their devices seperately.
-			const { _micAudioTrack, _desktopAudioTrack } = rtc.localUser;
+		try {
+			if (rtc.localUser) {
+				// Local user isn't stored in the agora client remote users, so we
+				// need to set their devices seperately.
+				const { _micAudioTrack, _desktopAudioTrack } = rtc.localUser;
 
-			if (_micAudioTrack) {
-				await updateTrackPlaybackDevice(producer, _micAudioTrack);
+				if (_micAudioTrack) {
+					await updateTrackPlaybackDevice(producer, _micAudioTrack);
+				}
+				if (_desktopAudioTrack) {
+					await updateTrackPlaybackDevice(producer, _desktopAudioTrack);
+				}
 			}
-			if (_desktopAudioTrack) {
-				await updateTrackPlaybackDevice(producer, _desktopAudioTrack);
+
+			await Promise.all([
+				chatChannel.agoraClient.remoteUsers.map(remoteUser => {
+					const audioTrack = remoteUser.audioTrack;
+					if (!audioTrack) {
+						rtc.log(`- no microphone track for user ${remoteUser.uid}`);
+						return;
+					}
+
+					return _updateRemoteUserPlaybackDevice(producer, remoteUser);
+				}),
+				videoChannel.agoraClient.remoteUsers.map(remoteUser => {
+					const audioTrack = remoteUser.audioTrack;
+					if (!audioTrack) {
+						rtc.log(`- no desktop audio track for user ${remoteUser.uid}`);
+						return;
+					}
+
+					return _updateRemoteUserPlaybackDevice(producer, remoteUser);
+				}),
+			]);
+
+			streamingChatPlaybackDeviceId.value = deviceId;
+		} catch (e) {
+			const clearDevice = producer._resetDeviceCallback.value;
+			if (deviceId && clearDevice) {
+				clearDevice('speakers');
 			}
+
+			throw e;
 		}
-
-		await Promise.all([
-			chatChannel.agoraClient.remoteUsers.map(remoteUser => {
-				const audioTrack = remoteUser.audioTrack;
-				if (!audioTrack) {
-					rtc.log(`- no microphone track for user ${remoteUser.uid}`);
-					return;
-				}
-
-				return _updateRemoteUserPlaybackDevice(producer, remoteUser);
-			}),
-			videoChannel.agoraClient.remoteUsers.map(remoteUser => {
-				const audioTrack = remoteUser.audioTrack;
-				if (!audioTrack) {
-					rtc.log(`- no desktop audio track for user ${remoteUser.uid}`);
-					return;
-				}
-
-				return _updateRemoteUserPlaybackDevice(producer, remoteUser);
-			}),
-		]);
-
-		streamingChatPlaybackDeviceId.value = deviceId;
 	});
 }
 
@@ -767,7 +815,9 @@ export async function updateTrackPlaybackDevice(
 		try {
 			// This will throw an error if they're not on Chrome.
 			return track.setPlaybackDevice(deviceId.value);
-		} catch {}
+		} catch (e) {
+			console.error(`Got an error updating track playback device`, e);
+		}
 	}
 }
 

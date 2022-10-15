@@ -9,6 +9,7 @@ import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { hasDesktopAudioCaptureSupport } from '../../../../../_common/fireside/rtc/device-capabilities';
 import {
 	clearSelectedRecordingDevices,
+	ProducerResetDeviceCallback,
 	PRODUCER_DEFAULT_GROUP_AUDIO,
 	PRODUCER_UNSET_DEVICE,
 	setSelectedDesktopAudioStreaming,
@@ -72,7 +73,8 @@ const { hidePublishControls, showLoading } = toRefs(props);
 
 // The controller will never change.
 // eslint-disable-next-line vue/no-setup-props-destructure
-const { rtc, isShowingStreamSetup } = props.c;
+const { rtc, isShowingStreamSetup, canBrowserSelectSpeakers, shouldHideStreamVideoPreview } =
+	props.c;
 const {
 	hasWebcamPermissions,
 	webcamsWasPrompted,
@@ -183,6 +185,8 @@ const isInvalidConfig = computed(() => {
 const form: FormController<FormModel> = createForm({});
 
 onMounted(async () => {
+	localProducer.setResetDeviceCallback(_resetDevice);
+
 	// Now try to detect devices and initialize preferred settings based on that.
 	try {
 		await MediaDeviceService.detectDevices({ prompt: true, skipIfPrompted: false });
@@ -200,7 +204,28 @@ onUnmounted(() => {
 	}
 
 	isShowingStreamSetup.value = false;
+	localProducer.setResetDeviceCallback(null);
 });
+
+const _resetDevice: ProducerResetDeviceCallback = type => {
+	switch (type) {
+		case 'mic':
+			form.formModel.tempSelectedMicDeviceId = PRODUCER_UNSET_DEVICE;
+			break;
+
+		case 'speakers':
+			form.formModel.selectedGroupAudioDeviceId = PRODUCER_DEFAULT_GROUP_AUDIO;
+			break;
+
+		case 'video':
+			form.formModel.selectedWebcamDeviceId = PRODUCER_UNSET_DEVICE;
+			break;
+
+		case 'desktopAudio':
+			form.formModel.tempSelectedDesktopAudioDeviceId = PRODUCER_UNSET_DEVICE;
+			break;
+	}
+};
 
 function _initFormModel(from: {
 	webcamDeviceId?: string;
@@ -584,7 +609,10 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 						</div>
 					</template>
 					<template v-else>
-						<AppFormControlSelect :disabled="isProducerBusy">
+						<AppFormControlSelect
+							v-if="canBrowserSelectSpeakers"
+							:disabled="isProducerBusy"
+						>
 							<option
 								v-for="speaker of speakers"
 								:key="speaker.deviceId"
@@ -593,6 +621,13 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 								{{ speaker.label }}
 							</option>
 						</AppFormControlSelect>
+						<div v-else class="help-block">
+							{{
+								$gettext(
+									`Your browser doesn't allow speaker selection and is using your system default instead.`
+								)
+							}}
+						</div>
 					</template>
 				</AppFormGroup>
 			</template>
@@ -659,7 +694,19 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 						<AppSpacer vertical :scale="2" />
 
 						<AppAspectRatio class="-video-preview" :ratio="16 / 9">
-							<div ref="videoPreviewElem" class="-video-preview-portal" />
+							<div
+								v-if="!shouldHideStreamVideoPreview"
+								ref="videoPreviewElem"
+								class="-video-preview-portal"
+							/>
+							<div v-else-if="hasWebcamDevice" class="-video-preview-text">
+								<span>
+									<AppTranslate>
+										We're hiding this video to conserve your system resources
+									</AppTranslate>
+								</span>
+							</div>
+
 							<div v-if="!hasWebcamDevice" class="-video-preview-text">
 								<span>
 									<AppTranslate>No video source selected</AppTranslate>
@@ -728,6 +775,7 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 			<!-- Only show this section if they've given mic permissions and are not streaming desktop audio -->
 			<fieldset v-if="hasWebcamDevice && hasMicPermissions && !hasDesktopAudio">
 				<AppFormLegend
+					class="sans-margin-bottom"
 					compact
 					:expandable="!hasDesktopAudioDevice"
 					:expanded="shouldShowAdvanced"
@@ -893,6 +941,8 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 	font-weight: 700
 	font-size: 13px
 	z-index: 1
+	padding: 16px
+	text-align: center
 
 .-control-with-meter
 	border-bottom-left-radius: 0
