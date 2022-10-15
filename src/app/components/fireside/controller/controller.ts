@@ -27,6 +27,7 @@ import { MaybeRef } from '../../../../utils/vue';
 import {
 	trackFiresideExtinguish,
 	trackFiresideSidebarButton,
+	trackFiresideSidebarCollapse,
 } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Background } from '../../../../_common/background/background.model';
@@ -588,24 +589,57 @@ export function createFiresideController(
 	);
 
 	const sidebarHome: FiresideSidebar = 'chat';
-	const _sidebar = ref<FiresideSidebar>(sidebarHome);
+	const _sidebars = ref<FiresideSidebar[]>([]);
 
-	const sidebar = readonly(computed(() => _sidebar.value));
+	const sidebar = readonly(
+		computed(() => {
+			const list = _sidebars.value;
+			if (list.length) {
+				return list[list.length - 1];
+			}
+
+			return sidebarHome;
+		})
+	);
 
 	function setSidebar(current: FiresideSidebar, trigger: string) {
-		if (current === _sidebar.value) {
+		if (current === sidebar.value) {
 			return;
 		}
 
 		trackFiresideSidebarButton({
-			previous: _sidebar.value,
+			previous: sidebar.value,
 			current,
 			trigger,
 		});
 
-		_sidebar.value = current;
-		if (current !== 'chat' && _collapseSidebar) {
+		if (current === sidebarHome) {
+			arrayAssignAll(_sidebars.value, []);
+		} else {
+			const existingIndex = _sidebars.value.indexOf(current);
+			if (existingIndex !== -1) {
+				_sidebars.value.splice(existingIndex, 1);
+			}
+			_sidebars.value.push(current);
+		}
+
+		if (current !== sidebarHome && _collapseSidebar) {
 			collapseSidebar.value = false;
+			trackFiresideSidebarCollapse(false, 'new-sidebar');
+		}
+	}
+
+	/**
+	 * Removes a sidebar from the
+	 */
+	function popSidebar() {
+		const previous = _sidebars.value.pop();
+		if (previous) {
+			trackFiresideSidebarButton({
+				previous,
+				current: sidebar.value,
+				trigger: 'go-back',
+			});
 		}
 	}
 
@@ -624,7 +658,7 @@ export function createFiresideController(
 
 			_collapseSidebar = val;
 			if (val) {
-				_sidebar.value = 'chat';
+				arrayAssignAll(_sidebars.value, []);
 			}
 			trigger();
 		},
@@ -634,16 +668,16 @@ export function createFiresideController(
 		() => [sidebar, collapseSidebar],
 		() => {
 			const collapse = collapseSidebar.value;
-			const isChat = sidebar.value === 'chat';
+			const isHome = isSidebarHome.value;
 
-			if (collapse === isChat) {
+			if (collapse === isHome) {
 				return;
 			}
 
-			if (!isChat) {
+			if (!isHome) {
 				collapseSidebar.value = false;
 			} else if (collapse) {
-				_sidebar.value = 'chat';
+				arrayAssignAll(_sidebars.value, []);
 			}
 		}
 	);
@@ -784,6 +818,7 @@ export function createFiresideController(
 		activeBottomBarControl,
 		sidebar,
 		setSidebar,
+		popSidebar,
 		sidebarHome,
 		isSidebarHome,
 		isShowingStreamOverlay,

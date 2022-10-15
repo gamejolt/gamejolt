@@ -522,6 +522,10 @@ export function trackFiresideSidebarButton({
 	});
 }
 
+export function trackFiresideSidebarCollapse(collapsed: boolean, trigger: string) {
+	trackFiresideAction({ action: collapsed ? 'collapse-sidebar' : 'expand-sidebar', trigger });
+}
+
 export function trackFiresideStopStreaming(trigger: string) {
 	trackFiresideAction({ action: 'stop-streaming', trigger: trigger });
 }

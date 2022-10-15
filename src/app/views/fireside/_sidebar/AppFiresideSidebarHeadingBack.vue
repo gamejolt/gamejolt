@@ -2,16 +2,9 @@
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 
-const { sidebarHome, isSidebarHome, setSidebar } = useFiresideController()!;
+const { isSidebarHome, popSidebar } = useFiresideController()!;
 </script>
 
 <template>
-	<AppButton
-		v-if="!isSidebarHome"
-		circle
-		sparse
-		trans
-		icon="chevron-left"
-		@click="setSidebar(sidebarHome, 'sidebar-heading-back')"
-	/>
+	<AppButton v-if="!isSidebarHome" circle sparse trans icon="chevron-left" @click="popSidebar" />
 </template>
