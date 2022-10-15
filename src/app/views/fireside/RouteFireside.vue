@@ -793,7 +793,7 @@ function onClickPublish() {
 														icon-color="notice"
 														icon="remove"
 														:overlay="overlayText"
-														@click="extinguishFireside(c!)
+														@click="extinguishFireside(c!, 'fireplace')
 													"
 													>
 														{{ $gettext(`Extinguish fireside`) }}

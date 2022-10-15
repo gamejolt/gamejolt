@@ -473,26 +473,57 @@ export function trackSearchAutocomplete(params: {
 	_trackEvent('search_autocomplete', params);
 }
 
-export function trackFiresideSidebarButton({
-	previous,
-	current,
-	buttonLocation,
-}: {
-	previous: FiresideSidebar;
-	current: FiresideSidebar;
-	buttonLocation: string;
-}) {
-	_trackEvent('fireside_sidebar', {
-		previous_sidebar: previous,
-		current_sidebar: current,
-		button_location: buttonLocation,
+interface FiresideActionData {
+	action: string;
+	trigger: string;
+	sidebarData?: FiresideSidebarData;
+}
+
+interface FiresideSidebarData {
+	previous: string;
+	current: string;
+}
+
+export function trackFiresideAction({
+	action: action_name,
+	trigger: action_trigger,
+	sidebarData,
+}: FiresideActionData) {
+	const { previous: previous_sidebar, current: current_sidebar } = sidebarData || {};
+
+	_trackEvent('fireside_action', {
+		action_name,
+		action_trigger,
+		previous_sidebar,
+		current_sidebar,
 	});
 }
 
-export function trackFiresideStopStreaming(location: string) {
-	_trackEvent('fireside_stop_streaming', {
-		trigger_location: location,
+export function trackFiresideExtinguish(trigger: string) {
+	trackFiresideAction({ action: 'extinguish', trigger });
+}
+
+export function trackFiresideSidebarButton({
+	previous,
+	current,
+	trigger,
+}: {
+	previous: FiresideSidebar;
+	current: FiresideSidebar;
+	trigger: string;
+}) {
+	trackFiresideAction({
+		action: 'change-sidebar',
+		trigger,
+		sidebarData: {
+			previous,
+			current,
+		},
 	});
+}
+
+export function trackFiresideStopStreaming(trigger: string) {
+	trackFiresideAction({ action: 'stop-streaming', trigger: trigger });
 }
 
 /**

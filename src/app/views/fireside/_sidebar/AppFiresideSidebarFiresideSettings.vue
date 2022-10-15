@@ -144,7 +144,7 @@ function onClickPublish() {
 }
 
 function onClickExtinguish() {
-	extinguishFireside(c);
+	extinguishFireside(c, 'fireside-settings');
 }
 
 function onClickChatCommands() {

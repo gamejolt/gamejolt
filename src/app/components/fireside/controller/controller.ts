@@ -24,7 +24,10 @@ import { getCurrentServerTime, updateServerTimeOffset } from '../../../../utils/
 import { run, sleep } from '../../../../utils/utils';
 import { uuidv4 } from '../../../../utils/uuid';
 import { MaybeRef } from '../../../../utils/vue';
-import { trackFiresideSidebarButton } from '../../../../_common/analytics/analytics.service';
+import {
+	trackFiresideExtinguish,
+	trackFiresideSidebarButton,
+} from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Background } from '../../../../_common/background/background.model';
 import {
@@ -589,7 +592,7 @@ export function createFiresideController(
 
 	const sidebar = readonly(computed(() => _sidebar.value));
 
-	function setSidebar(current: FiresideSidebar, buttonLocation: string) {
+	function setSidebar(current: FiresideSidebar, trigger: string) {
 		if (current === _sidebar.value) {
 			return;
 		}
@@ -597,7 +600,7 @@ export function createFiresideController(
 		trackFiresideSidebarButton({
 			previous: _sidebar.value,
 			current,
-			buttonLocation,
+			trigger,
 		});
 
 		_sidebar.value = current;
@@ -1159,7 +1162,7 @@ async function extendFireside(c: FiresideController, growlOnFail = true) {
 	}
 }
 
-export async function extinguishFireside(c: FiresideController) {
+export async function extinguishFireside(c: FiresideController, trigger: string) {
 	if (!c.fireside || !c.canExtinguish.value) {
 		return;
 	}
@@ -1173,6 +1176,7 @@ export async function extinguishFireside(c: FiresideController) {
 		return;
 	}
 
+	trackFiresideExtinguish(trigger);
 	await c.fireside.$extinguish();
 }
 
