@@ -2,7 +2,7 @@
 import { computed, inject, InjectionKey, provide, ref } from 'vue';
 import { useForm } from './AppForm.vue';
 import { useFormGroup } from './AppFormGroup.vue';
-import { FormValidatorError } from './validators';
+import { FormValidatorError, processFormValidatorErrorMessage } from './validators';
 
 type Controller = ReturnType<typeof createFormControlErrors>;
 
@@ -88,7 +88,7 @@ const errorMessage = computed(() => {
 
 function _processMessage(error: FormValidatorError) {
 	const message = overrides.value.get(error.type) ?? error.message;
-	return message.replace(/\{\}/g, _label.value);
+	return processFormValidatorErrorMessage(message, _label.value);
 }
 </script>
 

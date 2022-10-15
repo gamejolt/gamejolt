@@ -5,24 +5,21 @@ import { ContentRules } from '../../../../../_common/content/content-editor/cont
 import { useForm } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormControlPrefix from '../../../../../_common/form-vue/AppFormControlPrefix.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import {
-	FormValidatorError,
+	processFormValidatorErrorMessage,
 	validateContentMaxLength,
 	validateContentNoActiveUploads,
 	validateContentRequired,
-	validateMaxLength,
-	validateMinLength,
-	validatePattern,
+	validateMaxValue,
+	validateMinValue,
 } from '../../../../../_common/form-vue/validators';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { ChatCommand } from './command.model';
-import { ChatCommandsFormModel } from './FormChatCommands.vue';
+import { ChatCommand } from '../commands/command.model';
+import { ChatTimersFormModel } from './FormChatTimers.vue';
 
-const COMMAND_PATTERN = /^[a-z0-9]+[a-z0-9-]*[a-z0-9]+$/i;
 const MAX_EDITOR_HEIGHT = 480;
 
 const previewContentRules = new ContentRules({
@@ -35,11 +32,11 @@ const props = defineProps({
 		type: Object as PropType<ChatCommand>,
 		required: true,
 	},
-	commandMinLength: {
+	maxInvokeSchedule: {
 		type: Number,
 		required: true,
 	},
-	commandMaxLength: {
+	maxRequiredMessages: {
 		type: Number,
 		required: true,
 	},
@@ -55,14 +52,36 @@ const emit = defineEmits({
 
 const { item } = toRefs(props);
 
-const form = useForm<ChatCommandsFormModel>()!;
+const form = useForm<ChatTimersFormModel>()!;
 
-const fieldCommand = computed(() => `command_${item.value.id}`);
+const fieldDescription = computed(() => `description_${item.value.id}`);
+const fieldInvokeSchedule = computed(() => `invoke_schedule_${item.value.id}`);
+const fieldNumRequiredMessages = computed(() => `num_required_messages_${item.value.id}`);
 const fieldMessageContent = computed(() => `message_content_${item.value.id}`);
 const fieldIsActive = computed(() => `is_active_${item.value.id}`);
-const fields = computed(() => [fieldCommand.value, fieldMessageContent.value, fieldIsActive.value]);
+const fields = computed(() => [
+	fieldDescription.value,
+	fieldInvokeSchedule.value,
+	fieldNumRequiredMessages.value,
+	fieldMessageContent.value,
+	fieldIsActive.value,
+]);
 
 const isActive = computed(() => form.formModel[fieldIsActive.value] === true);
+const timingError = computed(() => {
+	const fieldsToCheck = [
+		{ label: 'interval', field: fieldInvokeSchedule },
+		{ label: 'number of required messages', field: fieldNumRequiredMessages },
+	];
+
+	for (const { label, field } of fieldsToCheck) {
+		if (form.controlErrors[field.value]) {
+			return processFormValidatorErrorMessage(form.controlErrors[field.value].message, label);
+		}
+	}
+
+	return null;
+});
 
 onMounted(() => {
 	_initFields();
@@ -79,33 +98,8 @@ function _initFields() {
 	}
 }
 
-function onBlurCommand() {
-	const newCommand = form.formModel[fieldCommand.value]?.trim() || '';
-	form.formModel[fieldCommand.value] = newCommand;
-}
-
 function removeItem() {
 	emit('remove', fields.value);
-}
-
-function _validateUnique(id: number) {
-	return async (value: string): Promise<FormValidatorError | null> => {
-		const hasConflict = form.formModel.commands.some(i => {
-			if (i.command !== value) {
-				return false;
-			}
-
-			return i.id !== id;
-		});
-
-		if (hasConflict) {
-			return {
-				type: 'unique',
-				message: 'Commands must be unique.',
-			};
-		}
-		return null;
-	};
 }
 </script>
 
@@ -118,37 +112,12 @@ function _validateUnique(id: number) {
 			'-fill-partial': !isActive,
 		}"
 	>
-		<div class="-chunk-inner">
+		<div class="-inner">
 			<div class="-toggle">
 				<AppFormGroup :name="fieldIsActive" label="enabled" hide-label>
 					<AppFormControlToggle />
 				</AppFormGroup>
 			</div>
-
-			<AppFormGroup
-				class="-command-chunk sans-margin-bottom"
-				:name="fieldCommand"
-				label="command"
-				hide-label
-			>
-				<div class="-command-chunk-inner">
-					<AppFormControlPrefix :prefix="item.prefix">
-						<AppFormControl
-							type="text"
-							:validators="[
-								_validateUnique(item.id),
-								validatePattern(COMMAND_PATTERN),
-								validateMinLength(commandMinLength),
-								validateMaxLength(commandMaxLength),
-							]"
-							placeholder="command"
-							@blur="onBlurCommand()"
-						/>
-					</AppFormControlPrefix>
-
-					<AppFormControlErrors class="-command-chunk-errors" />
-				</div>
-			</AppFormGroup>
 
 			<!-- Message content -->
 			<div class="-content-editor">
@@ -162,7 +131,7 @@ function _validateUnique(id: number) {
 						content-context="chat-command"
 						:display-rules="previewContentRules"
 						:max-height="MAX_EDITOR_HEIGHT"
-						:min-height="64"
+						:min-height="100"
 						:model-id="item.id"
 						:validators="[
 							validateContentRequired(),
@@ -174,6 +143,55 @@ function _validateUnique(id: number) {
 
 					<AppFormControlErrors />
 				</AppFormGroup>
+			</div>
+
+			<div class="-trigger">
+				<div class="-trigger-text">
+					Trigger every
+					<AppFormGroup
+						class="-inline-control"
+						:name="fieldInvokeSchedule"
+						:label="$gettext(`Schedule`)"
+						hide-label
+					>
+						<AppFormControl
+							type="number"
+							step="1"
+							:max="maxInvokeSchedule"
+							min="1"
+							:validators="[validateMinValue(1), validateMaxValue(maxInvokeSchedule)]"
+						/>
+					</AppFormGroup>
+					minute(s)
+					<br />
+					if at least
+					<AppFormGroup
+						class="-inline-control"
+						style="margin-left: 0"
+						:name="fieldNumRequiredMessages"
+						:label="$gettext(`Number of required messages`)"
+						hide-label
+						optional
+					>
+						<AppFormControl
+							type="number"
+							step="1"
+							:max="maxRequiredMessages"
+							min="0"
+							:validators="[
+								validateMinValue(0),
+								validateMaxValue(maxRequiredMessages),
+							]"
+						/>
+					</AppFormGroup>
+					message(s)
+					<br />
+					have been sent in chat
+				</div>
+
+				<p v-if="timingError" class="help-block error anim-fade-in">
+					{{ timingError }}
+				</p>
 			</div>
 
 			<AppButton
@@ -199,19 +217,25 @@ function _validateUnique(id: number) {
 .-fill-partial
 	change-bg-rgba(var(--theme-bg-offset-rgb), 0.4)
 
-.-chunk-inner
+.-inner
 	display: flex
 	align-items: flex-start
-	gap: 12px
+	gap: 24px
 	position: relative
 
-.-command-chunk
-	flex: 1
-	min-width: 100px
-	display: flex
+.-inline-control
+	display: inline-block
+	margin: 4px 8px
+	width: 80px
 
-.-command-chunk-inner
-	flex: auto
+	input
+		height: 30px
+
+.-trigger
+	flex: 1
+
+.-trigger-text
+	line-height: 40px
 
 .-toggle
 	margin-top: 3px
@@ -220,25 +244,11 @@ function _validateUnique(id: number) {
 		margin-bottom: 0
 
 .-content-editor
-	flex: 2
-
-.-command-row
-	flex: none
-	display: inline-flex
-	align-items: center
+	flex: 1
 
 @media $media-mobile
-	.-chunk-inner
+	.-inner
 		flex-direction: column
-
-	.-command-chunk
-		width: 100%
-
-	.-command-row
-		display: flex
-
-	.-command
-		flex: auto
 
 	.-trash
 		position: absolute

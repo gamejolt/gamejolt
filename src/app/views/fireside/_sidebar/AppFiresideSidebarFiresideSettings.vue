@@ -15,6 +15,7 @@ import AppFormControlBackground from '../../../../_common/form-vue/controls/AppF
 import AppFormControlToggleButton from '../../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButton.vue';
 import AppFormControlToggleButtonGroup from '../../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../../_common/form-vue/validators';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { ReportModal } from '../../../../_common/report/modal/modal.service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
@@ -28,6 +29,7 @@ import {
 	useFiresideController,
 } from '../../../components/fireside/controller/controller';
 import { ChatCommandsModal } from '../../../components/forms/chat/commands/modal/modal.service';
+import { ChatTimersModal } from '../../../components/forms/chat/timers/modal/modal.service';
 import AppFiresideShare from '../AppFiresideShare.vue';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
@@ -150,6 +152,10 @@ function onClickExtinguish() {
 function onClickChatCommands() {
 	ChatCommandsModal.show();
 }
+
+function onClickChatTimers() {
+	ChatTimersModal.show();
+}
 </script>
 
 <template>
@@ -164,18 +170,33 @@ function onClickChatCommands() {
 			<AppScrollScroller class="-pad-v">
 				<div class="-pad-h">
 					<template v-if="canStream">
-						<AppButton
-							block
-							@click="setSidebar('stream-settings', 'fireside-settings')"
-						>
-							<AppTranslate>Stream settings</AppTranslate>
-						</AppButton>
+						<div class="-icon-buttons">
+							<a
+								class="-icon-button"
+								@click="setSidebar('stream-settings', 'fireside-settings')"
+							>
+								<AppJolticon class="-icon-button-icon" icon="cog" />
+								<div class="-icon-button-label">
+									{{ $gettext(`Stream settings`) }}
+								</div>
+							</a>
 
-						<template v-if="isOwner">
-							<AppButton block @click="onClickChatCommands">
-								<AppTranslate>Chat commands</AppTranslate>
-							</AppButton>
-						</template>
+							<template v-if="isOwner">
+								<a class="-icon-button" @click="onClickChatCommands">
+									<AppJolticon class="-icon-button-icon" icon="wand" />
+									<div class="-icon-button-label">
+										{{ $gettext(`Chat commands`) }}
+									</div>
+								</a>
+
+								<a class="-icon-button" @click="onClickChatTimers">
+									<AppJolticon class="-icon-button-icon" icon="bell-filled" />
+									<div class="-icon-button-label">
+										{{ $gettext(`Chat timers`) }}
+									</div>
+								</a>
+							</template>
+						</div>
 					</template>
 
 					<!-- Shown to guests and chat mods (since they can't do anything yet) -->
@@ -365,4 +386,24 @@ function onClickChatCommands() {
 
 hr
 	margin: 24px 0
+
+.-icon-buttons
+	display: flex
+	flex-direction: row
+	gap: 16px
+	justify-content: center
+
+.-icon-button
+	display: flex
+	flex-direction: column
+	gap: 12px
+	align-items: center
+	color: var(--theme-fg)
+
+.-icon-button-label
+	font-size: $font-size-small
+	font-weight: bold
+
+.-icon-button-icon
+	font-size: 30px
 </style>

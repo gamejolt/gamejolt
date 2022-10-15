@@ -183,6 +183,14 @@ function showEditAvatar() {
 										{{ $gettext(`Chat commands`) }}
 									</RouterLink>
 								</li>
+								<li>
+									<RouterLink
+										:to="{ name: 'dash.account.chat-timers' }"
+										active-class="active"
+									>
+										{{ $gettext(`Chat timers`) }}
+									</RouterLink>
+								</li>
 							</ul>
 							<hr />
 							<ul>

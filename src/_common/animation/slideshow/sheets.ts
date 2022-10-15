@@ -1,5 +1,7 @@
-import assetChargeOrbBottom from './sheets/charge-orb-bottom.png';
-import assetChargeOrbTop from './sheets/charge-orb-top.png';
+import assetChargeOrbHalloweenBottom from './sheets/charge-orb-halloween-bottom.png';
+import assetChargeOrbHalloweenTop from './sheets/charge-orb-halloween-top.png';
+// import assetChargeOrbBottom from './sheets/charge-orb-bottom.png';
+// import assetChargeOrbTop from './sheets/charge-orb-top.png';
 import assetFireplace from './sheets/fireplace.png';
 import assetShockRectBL from './sheets/shock-rect-bl.png';
 import assetShockRectTR from './sheets/shock-rect-tr.png';
@@ -48,7 +50,7 @@ export const sheetFireplace = new ImgSlideshow({
 });
 
 export const sheetChargeOrbBottom = new ImgSlideshow({
-	asset: assetChargeOrbBottom,
+	asset: assetChargeOrbHalloweenBottom, // assetChargeOrbBottom,
 	assetWidth: 2500,
 	assetHeight: 500,
 	frames: 5,
@@ -56,10 +58,10 @@ export const sheetChargeOrbBottom = new ImgSlideshow({
 });
 
 export const sheetChargeOrbTop = new ImgSlideshow({
-	asset: assetChargeOrbTop,
-	assetWidth: 2000,
+	asset: assetChargeOrbHalloweenTop, // assetChargeOrbTop
+	assetWidth: 2500, // 2000
 	assetHeight: 500,
-	frames: 4,
+	frames: 5, // 4
 	blankFrames: 2,
 	fps: 6,
 });
