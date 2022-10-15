@@ -342,19 +342,21 @@ function onMouseLeaveControls() {
 			</template>
 			<template v-else>
 				<div :key="rtcUser.uid" :style="{ width: '100%', height: '100%' }">
-					<template v-if="shouldShowVideo && ContentFocus.isWindowFocused">
-						<AppFiresideStreamVideo
-							class="-video-player -click-target"
-							:rtc-user="rtcUser"
-						/>
+					<template v-if="shouldShowVideo">
+						<template v-if="ContentFocus.isWindowFocused || videoPaused">
+							<AppFiresideStreamVideo
+								class="-video-player -click-target"
+								:rtc-user="rtcUser"
+							/>
+						</template>
+						<div v-else class="-video-hidden-notice">
+							<strong>
+								<AppTranslate class="text-muted">
+									We're hiding this video to conserve your system resources
+								</AppTranslate>
+							</strong>
+						</div>
 					</template>
-					<div v-else-if="shouldShowVideo" class="-video-hidden-notice">
-						<strong>
-							<AppTranslate class="text-muted">
-								We're hiding this video to conserve your system resources
-							</AppTranslate>
-						</strong>
-					</div>
 
 					<AppFiresideDesktopAudio v-if="shouldPlayDesktopAudio" :rtc-user="rtcUser" />
 					<AppFiresideVideoStats
@@ -592,6 +594,8 @@ $-z-combo = 2
 	display: flex
 	justify-content: center
 	align-items: center
+	text-align: center
+	padding: 16px
 
 .-click-target
 	cursor: pointer
