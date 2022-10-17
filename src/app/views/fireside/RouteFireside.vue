@@ -739,6 +739,7 @@ function onClickPublish() {
 									'-trailing-float': collapseSidebar,
 									'-fade':
 										isFullscreen && collapseSidebar && !isShowingStreamOverlay,
+									'-fullscreen': isFullscreen,
 								}"
 							>
 								<AppFiresideSidebarHeading
@@ -881,6 +882,10 @@ $-center-guide-width = 400px
 	z-index: 2
 	opacity: 3
 	visibility: visible
+
+	&.-fullscreen
+		width: unset
+		min-width: var(--fireside-chat-width)
 
 	&.-fade
 		opacity: 0
