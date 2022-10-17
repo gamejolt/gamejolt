@@ -175,7 +175,8 @@ function onClickChatTimers() {
 								class="-icon-button"
 								@click="setSidebar('stream-settings', 'fireside-settings')"
 							>
-								<AppJolticon class="-icon-button-icon" icon="cog" />
+								<!-- TODO(fireside-producer-dashboard) dashboard or cog icon? -->
+								<AppJolticon class="-icon-button-icon" icon="dashboard" />
 								<div class="-icon-button-label">
 									{{ $gettext(`Stream settings`) }}
 								</div>
@@ -190,7 +191,7 @@ function onClickChatTimers() {
 								</a>
 
 								<a class="-icon-button" @click="onClickChatTimers">
-									<AppJolticon class="-icon-button-icon" icon="bell-filled" />
+									<AppJolticon class="-icon-button-icon" icon="timer" />
 									<div class="-icon-button-label">
 										{{ $gettext(`Chat timers`) }}
 									</div>
@@ -396,6 +397,8 @@ hr
 .-icon-button
 	display: flex
 	flex-direction: column
+	align-items: center
+	text-align: center
 	gap: 12px
 	align-items: center
 	color: var(--theme-fg)
