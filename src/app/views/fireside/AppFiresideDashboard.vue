@@ -12,7 +12,10 @@ const { rtc, stickerTargetController, collapseSidebar, background, isFullscreen 
 
 const overlayText = computed(() => !!background.value || isFullscreen.value);
 const localUser = computed(() => rtc.value?.localUser);
+const producer = computed(() => rtc.value?.producer);
 const videoAspectRatio = computed(() => localUser.value?.videoAspectRatio || 0.5625);
+
+const singleCol = computed(() => !localUser.value?.hasVideo || producer.value?.videoMuted.value);
 </script>
 
 <template>
@@ -20,7 +23,7 @@ const videoAspectRatio = computed(() => localUser.value?.videoAspectRatio || 0.5
 		<AppTheme
 			v-if="localUser"
 			class="-producer-dash"
-			:class="{ '-single-col': !localUser.hasVideo, '-overlay-text': overlayText }"
+			:class="{ '-single-col': singleCol, '-overlay-text': overlayText }"
 			:force-dark="overlayText"
 		>
 			<div class="-producer-dash-left">
@@ -55,7 +58,7 @@ const videoAspectRatio = computed(() => localUser.value?.videoAspectRatio || 0.5
 				</div>
 			</div>
 
-			<div v-if="localUser.hasVideo">
+			<div v-if="!singleCol">
 				<h4 class="sans-margin-top">
 					{{ $gettext(`Video stats`) }}
 				</h4>

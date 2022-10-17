@@ -331,6 +331,7 @@ function onClickStreamingBanner() {
 		:class="{ '-unround-video': isFullscreen }"
 		:style="`--fireside-chat-width: ${chatWidth}px`"
 	>
+		<!-- TODO(fireside-producer-dashboard) Doesn't work for desktop app - either something in the function or this itself. -->
 		<AppShortkey
 			v-if="GJ_IS_DESKTOP_APP"
 			shortkey="Escape"

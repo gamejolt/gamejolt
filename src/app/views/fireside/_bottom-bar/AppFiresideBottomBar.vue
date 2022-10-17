@@ -269,10 +269,10 @@ async function onClickStopStreaming() {
 
 					<AppFiresideBottomBarButton
 						v-app-tooltip="$gettext(`Stop streaming`)"
-						:active="localUser?.hasVideo && !producerVideoMuted"
 						icon="hang-up"
-						active-color="overlay-notice"
 						:disabled="producer?.isBusy.value"
+						active-color="overlay-notice"
+						active
 						@click="onClickStopStreaming"
 					/>
 				</template>
