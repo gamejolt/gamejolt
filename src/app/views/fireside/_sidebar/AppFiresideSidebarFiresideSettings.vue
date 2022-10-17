@@ -169,33 +169,21 @@ function onClickChatTimers() {
 		<template #body>
 			<AppScrollScroller class="-pad-v">
 				<div class="-pad-h">
-					<template v-if="canStream">
+					<template v-if="isOwner">
 						<div class="-icon-buttons">
-							<a
-								class="-icon-button"
-								@click="setSidebar('stream-settings', 'fireside-settings')"
-							>
-								<AppJolticon class="-icon-button-icon" icon="dashboard" />
+							<a class="-icon-button" @click="onClickChatCommands">
+								<AppJolticon class="-icon-button-icon" icon="wand" />
 								<div class="-icon-button-label">
-									{{ $gettext(`Stream settings`) }}
+									{{ $gettext(`Chat commands`) }}
 								</div>
 							</a>
 
-							<template v-if="isOwner">
-								<a class="-icon-button" @click="onClickChatCommands">
-									<AppJolticon class="-icon-button-icon" icon="wand" />
-									<div class="-icon-button-label">
-										{{ $gettext(`Chat commands`) }}
-									</div>
-								</a>
-
-								<a class="-icon-button" @click="onClickChatTimers">
-									<AppJolticon class="-icon-button-icon" icon="timer" />
-									<div class="-icon-button-label">
-										{{ $gettext(`Chat timers`) }}
-									</div>
-								</a>
-							</template>
+							<a class="-icon-button" @click="onClickChatTimers">
+								<AppJolticon class="-icon-button-icon" icon="timer" />
+								<div class="-icon-button-label">
+									{{ $gettext(`Chat timers`) }}
+								</div>
+							</a>
 						</div>
 					</template>
 

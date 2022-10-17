@@ -5,6 +5,7 @@ import { stopStreaming } from '../../../_common/fireside/rtc/producer';
 import { showErrorGrowl } from '../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
 import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.vue';
+import AppTheme from '../../../_common/theme/AppTheme.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
 import {
 	FiresideSidebar,
@@ -57,10 +58,11 @@ async function _stopStreaming(location: string) {
 
 <template>
 	<div class="fireside-dashboard">
-		<div
+		<AppTheme
 			v-if="localUser"
 			class="-producer-dash"
-			:class="{ '-single-col': !localUser.hasVideo }"
+			:class="{ '-single-col': !localUser.hasVideo, '-overlay-text': overlayText }"
+			:force-dark="overlayText"
 		>
 			<div class="-producer-dash-left">
 				<div style="width: 100%">
@@ -121,7 +123,7 @@ async function _stopStreaming(location: string) {
 				</h4>
 				<AppFiresideStreamStats class="-producer-dash-stats" no-abs />
 			</div>
-		</div>
+		</AppTheme>
 	</div>
 </template>
 
@@ -133,6 +135,10 @@ async function _stopStreaming(location: string) {
 	display: flex
 	align-items: center
 	justify-content: center
+
+.-overlay-text
+	fireside-overlay-text-shadow()
+	color: white
 
 .-producer-dash
 	--left-col: minmax(0, 450px)

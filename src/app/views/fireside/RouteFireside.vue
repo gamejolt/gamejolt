@@ -23,14 +23,11 @@ import AppAuthJoin from '../../../_common/auth/join/join.vue';
 import AppBackground from '../../../_common/background/AppBackground.vue';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { Fireside } from '../../../_common/fireside/fireside.model';
-import { stopStreaming } from '../../../_common/fireside/rtc/producer';
-import { showErrorGrowl } from '../../../_common/growls/growls.service';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
 import { Meta } from '../../../_common/meta/meta-service';
 import AppMobileAppButtons from '../../../_common/mobile-app/AppMobileAppButtons.vue';
-import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
 import { vAppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppPopper from '../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../_common/popper/popper.service';
@@ -43,6 +40,7 @@ import AppStickerLayer from '../../../_common/sticker/layer/AppStickerLayer.vue'
 import { useStickerStore } from '../../../_common/sticker/sticker-store';
 import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
+import AppTheme from '../../../_common/theme/AppTheme.vue';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
@@ -304,29 +302,6 @@ function onIsPersonallyStreamingChanged() {
 	} else {
 		beforeEachDeregister?.();
 		beforeEachDeregister = null;
-	}
-}
-
-async function _stopStreaming(location: string) {
-	const producer = rtc.value?.producer;
-	if (!producer) {
-		return;
-	}
-
-	const result = await ModalConfirm.show(`Are you sure you want to stop streaming?`);
-	if (!result) {
-		return;
-	}
-
-	try {
-		await stopStreaming(producer, location);
-	} catch (e) {
-		console.error(e);
-		showErrorGrowl($gettext(`Something went wrong when stopping your stream.`));
-	}
-
-	if (!producer.isStreaming.value && c.value) {
-		c.value.setSidebar(c.value.sidebarHome, 'stopped-streaming-dashboard');
 	}
 }
 
@@ -655,13 +630,7 @@ function onClickPublish() {
 										<AppFiresideDashboard v-else />
 									</div>
 									<div v-else class="-video-container">
-										<div
-											class="-center-guide"
-											:class="{
-												'-overlay': overlayText,
-												'-bold': overlayText,
-											}"
-										>
+										<AppTheme class="-center-guide" :force-dark="overlayText">
 											<template v-if="canStream">
 												<AppAnimSlideshow
 													class="-fireplace"
@@ -704,8 +673,12 @@ function onClickPublish() {
 												:overlay="overlayText"
 											/>
 
-											<AppFiresideStats />
-										</div>
+											<AppFiresideStats
+												:class="{
+													'-stats-card': overlayText,
+												}"
+											/>
+										</AppTheme>
 									</div>
 								</div>
 
@@ -976,6 +949,13 @@ $-center-guide-width = 400px
 	width: 100%
 	max-width: $-center-guide-width
 	flex: 0 1 $-center-guide-width
+
+.-stats-card
+	@extends .-bold
+	rounded-corners()
+	change-bg-rgba('0,0,0', 0.5)
+	padding: 12px 6px 6px
+	color: white
 
 .-bottom-bar-padding
 	flex: none
