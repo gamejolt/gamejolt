@@ -26,6 +26,7 @@ const {
 	rtc,
 	shouldShowDesktopAppPromo,
 	setSidebar,
+	sidebarHome,
 	isDraft,
 } = c;
 
@@ -52,7 +53,7 @@ async function onClickStartStreaming() {
 
 	// Only close the modal if we were able to start streaming.
 	if (_producer.isStreaming.value) {
-		setSidebar('chat', 'started-streaming');
+		setSidebar(sidebarHome, 'started-streaming');
 	}
 }
 
@@ -78,7 +79,7 @@ async function onClickStopStreaming() {
 
 	// Only close the modal if we were able to stop streaming.
 	if (!_producer.isStreaming.value) {
-		setSidebar('chat', 'stopped-streaming');
+		setSidebar(sidebarHome, 'stopped-streaming-sidebar');
 	}
 }
 </script>

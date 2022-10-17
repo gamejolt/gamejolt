@@ -175,7 +175,6 @@ function onClickChatTimers() {
 								class="-icon-button"
 								@click="setSidebar('stream-settings', 'fireside-settings')"
 							>
-								<!-- TODO(fireside-producer-dashboard) dashboard or cog icon? -->
 								<AppJolticon class="-icon-button-icon" icon="dashboard" />
 								<div class="-icon-button-label">
 									{{ $gettext(`Stream settings`) }}

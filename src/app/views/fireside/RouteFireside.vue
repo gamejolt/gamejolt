@@ -24,6 +24,7 @@ import AppBackground from '../../../_common/background/AppBackground.vue';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { stopStreaming } from '../../../_common/fireside/rtc/producer';
+import { showErrorGrowl } from '../../../_common/growls/growls.service';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
@@ -317,7 +318,16 @@ async function _stopStreaming(location: string) {
 		return;
 	}
 
-	stopStreaming(producer, location);
+	try {
+		await stopStreaming(producer, location);
+	} catch (e) {
+		console.error(e);
+		showErrorGrowl($gettext(`Something went wrong when stopping your stream.`));
+	}
+
+	if (!producer.isStreaming.value && c.value) {
+		c.value.setSidebar(c.value.sidebarHome, 'stopped-streaming-dashboard');
+	}
 }
 
 function onClickPublish() {
@@ -668,7 +678,6 @@ function onClickPublish() {
 																		  '%',
 															}"
 														>
-															<!-- TODO(fireside-producer-dashboard) Hide video if browser/tag isn't focused. Do the same for remote streams as well. -->
 															<template v-if="focusedUser">
 																<AppStickerTarget
 																	:key="focusedUser.uid"

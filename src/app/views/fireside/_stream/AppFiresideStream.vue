@@ -134,8 +134,6 @@ const showVideoPreviewMessage = computed(
 	() => !!rtc.value && rtc.value.isFocusingMe && isShowingStreamSetup.value
 );
 
-const hasOverlayItems = computed(() => true || hasVolumeControls.value || hasHeader.value);
-
 const videoPaused = computed(() => rtc.value?.videoPaused === true);
 
 const showMutedIndicator = computed(() => rtc.value?.shouldShowMutedIndicator === true);
@@ -385,12 +383,7 @@ function onMouseLeaveControls() {
 			</div>
 		</template>
 
-		<div
-			v-if="hasOverlayItems || showMutedIndicator"
-			class="-overlay"
-			:class="{ '-darken': shouldDarkenAll }"
-			@click.capture="onOverlayTap"
-		>
+		<div class="-overlay" :class="{ '-darken': shouldDarkenAll }" @click.capture="onOverlayTap">
 			<template v-if="shouldShowUI">
 				<template v-if="videoPaused || showMutedIndicator">
 					<transition>

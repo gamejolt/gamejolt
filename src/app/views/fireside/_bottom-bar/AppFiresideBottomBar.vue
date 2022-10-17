@@ -225,7 +225,6 @@ async function onClickStopStreaming() {
 						@click="onClickVideo"
 					/>
 
-					<!-- TODO(fireside-producer-dashboard) end-call icon -->
 					<AppFiresideBottomBarButton
 						:active="localUser?.hasVideo && !producerVideoMuted"
 						icon="hang-up"
