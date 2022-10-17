@@ -240,7 +240,11 @@ async function onClickStopStreaming() {
 		<div class="-bottom-bar-inner">
 			<div v-if="canStream" class="-group -left">
 				<AppFiresideBottomBarButton
-					v-app-tooltip="$gettext(`Stream settings`)"
+					v-app-tooltip="
+						isPersonallyStreaming
+							? $gettext(`Stream settings`)
+							: $gettext(`Set up your stream`)
+					"
 					:active="sidebar === 'stream-settings'"
 					:icon="isPersonallyStreaming ? 'dashboard' : 'broadcast'"
 					@click="toggleStreamSettings"
