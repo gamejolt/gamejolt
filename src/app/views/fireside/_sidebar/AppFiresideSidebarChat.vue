@@ -40,6 +40,8 @@ const loginUrl = computed(
 				:key="chatRoom.id"
 				:room="chatRoom"
 				:overlay="!!background"
+				avatar-popper-placement="left"
+				:avatar-popper-placement-fallbacks="['left', 'right']"
 			/>
 		</template>
 

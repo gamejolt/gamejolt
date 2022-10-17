@@ -83,7 +83,7 @@ export default class AppChatUserPopover extends Vue {
 		}
 
 		// In public rooms, staff members cannot lose their mod status.
-		if (!this.room.isPrivateRoom && this.user.permission_level > 0) {
+		if (!this.room.isPrivateRoom && this.user.isStaff) {
 			return false;
 		}
 
@@ -98,7 +98,7 @@ export default class AppChatUserPopover extends Vue {
 		}
 
 		// In public rooms, staff members can never get kicked.
-		if (!this.room.isPrivateRoom && this.user.permission_level > 0) {
+		if (!this.room.isPrivateRoom && this.user.isStaff) {
 			return false;
 		}
 
