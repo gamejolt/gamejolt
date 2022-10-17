@@ -8,6 +8,7 @@ import { formatDate } from '../../../../../_common/filters/date';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
+import { PopperPlacementType } from '../../../../../_common/popper/AppPopper.vue';
 import AppScrollScroller, {
 	createScroller,
 } from '../../../../../_common/scroll/AppScrollScroller.vue';
@@ -37,6 +38,14 @@ const props = defineProps({
 	overlay: {
 		type: Boolean,
 	},
+	avatarPopperPlacement: {
+		type: String as PropType<PopperPlacementType>,
+		default: undefined,
+	},
+	avatarPopperPlacementFallbacks: {
+		type: Array as PropType<PopperPlacementType[]>,
+		default: undefined,
+	},
 });
 
 const { room, background } = toRefs(props);
@@ -52,7 +61,7 @@ const latestFrozenTimestamp = ref<Date>();
 const maxContentWidth = ref(500);
 const scroller = createScroller();
 
-let _shouldScroll = true;
+let _canAutoscroll = true;
 let _checkQueuedTimeout: NodeJS.Timer | undefined;
 let _isAutoscrolling = false;
 let _isOnScrollQueued = false;
@@ -235,14 +244,26 @@ function onScroll() {
 	}
 
 	if (offset > AUTOSCROLL_THRESHOLD) {
-		roomChannel.value?.freezeMessageLimitRemovals();
-		latestFrozenTimestamp.value ??= newestMessage.value?.logged_on;
-		_shouldScroll = false;
+		_freezeMessages(true);
 	} else {
-		_shouldScroll = true;
-		latestFrozenTimestamp.value = undefined;
-		roomChannel.value?.unfreezeMessageLimitRemovals();
+		_unfreezeMessages(true);
 	}
+}
+
+function _freezeMessages(setScroll: boolean) {
+	roomChannel.value?.freezeMessageLimitRemovals();
+	latestFrozenTimestamp.value ??= messages.value[messages.value.length - 1].logged_on;
+	if (setScroll) {
+		_canAutoscroll = false;
+	}
+}
+
+function _unfreezeMessages(setScroll: boolean) {
+	if (setScroll) {
+		_canAutoscroll = true;
+	}
+	latestFrozenTimestamp.value = undefined;
+	roomChannel.value?.unfreezeMessageLimitRemovals();
 }
 
 function getOffsetFromBottom() {
@@ -254,7 +275,7 @@ function getOffsetFromBottom() {
 }
 
 async function tryAutoscroll() {
-	if (_shouldScroll) {
+	if (_canAutoscroll) {
 		autoscroll();
 	}
 }
@@ -267,15 +288,14 @@ async function autoscroll() {
 	scroller.scrollTo(scroller.element.value!.scrollHeight + 10000);
 
 	// Reset state
-	latestFrozenTimestamp.value = undefined;
-	chat.value.roomChannels[room.value.id].unfreezeMessageLimitRemovals();
+	_unfreezeMessages(false);
 }
 
 async function onClickNewMessages() {
 	autoscroll();
 	await nextTick();
 	if (getOffsetFromBottom() < AUTOSCROLL_THRESHOLD) {
-		_shouldScroll = true;
+		_canAutoscroll = true;
 	}
 }
 
@@ -285,6 +305,21 @@ function onChatOutputResize(entries: ResizeObserverEntry[]) {
 	}
 
 	_updateMaxContentWidth(entries[0].contentRect.width);
+}
+
+function onAvatarPopperShow() {
+	// Freeze messages while we're showing an avatar popper.
+	_freezeMessages(true);
+}
+
+function onAvatarPopperHide() {
+	const allowAutoscroll = getOffsetFromBottom() < AUTOSCROLL_THRESHOLD;
+	// Unfreeze messages after popper hides only if we're near enough to the
+	// bottom of the chat scroller.
+	if (allowAutoscroll) {
+		_unfreezeMessages(allowAutoscroll);
+		autoscroll();
+	}
 }
 
 function _updateMaxContentWidth(width: number) {
@@ -356,6 +391,10 @@ function _updateMaxContentWidth(width: number) {
 							:room="room"
 							:message-padding="MESSAGE_PADDING"
 							:max-content-width="maxContentWidth"
+							:avatar-popper-placement="avatarPopperPlacement"
+							:avatar-popper-placement-fallbacks="avatarPopperPlacementFallbacks"
+							@show-popper="onAvatarPopperShow"
+							@hide-popper="onAvatarPopperHide"
 						/>
 					</div>
 				</div>

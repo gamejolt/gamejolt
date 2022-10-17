@@ -39,7 +39,7 @@ let PopperIndex = 0;
 
 const TouchablePointerTypes = ['touch', 'pen'];
 
-const modifiers = [
+const baseModifiers = [
 	flip,
 	preventOverflow,
 	arrow,
@@ -58,22 +58,30 @@ const modifiers = [
 			padding: 8,
 		},
 	} as ArrowModifier,
-	{
-		name: 'flip',
-		options: {
-			fallbackPlacements: ['top', 'bottom', 'right', 'left'],
-			// This will allow us to slightly overflow the viewport horizontally
-			// without leaving our default placement. We seem to need some top/buttom
-			// padding to prevent flickering.
-			padding: {
-				top: 20,
-				bottom: 20,
-				right: -20,
-				left: -20,
-			},
-		},
-	} as FlipModifier,
 ];
+
+const defaultFallbackPlacements: PopperPlacementType[] = ['top', 'bottom', 'right', 'left'];
+
+function makeModifiers(fallbackPlacements: PopperPlacementType[]) {
+	return [
+		...baseModifiers,
+		{
+			name: 'flip',
+			options: {
+				fallbackPlacements,
+				// This will allow us to slightly overflow the viewport horizontally
+				// without leaving our default placement. We seem to need some top/buttom
+				// padding to prevent flickering.
+				padding: {
+					top: 20,
+					bottom: 20,
+					right: -20,
+					left: -20,
+				},
+			},
+		} as FlipModifier,
+	];
+}
 </script>
 
 <script lang="ts" setup>
@@ -81,6 +89,16 @@ const props = defineProps({
 	placement: {
 		type: String as PropType<PopperPlacementType>,
 		default: 'bottom',
+	},
+	/**
+	 * Allows us to customize the fallback placements allowed for poppers so we
+	 * can force poppers to use a specific placement.
+	 *
+	 * See {@link defaultFallbackPlacements} for the defaults.
+	 */
+	fallbackPlacements: {
+		type: Array as PropType<PopperPlacementType[]>,
+		default: defaultFallbackPlacements,
 	},
 	trigger: {
 		type: String as PropType<PopperTriggerType>,
@@ -141,6 +159,14 @@ const props = defineProps({
 		type: Boolean,
 	},
 	/**
+	 * Anytime this value changes, we'll hide the popper. Useful if we want to
+	 * force a hide when the popper goes out of view.
+	 */
+	hideTrigger: {
+		type: Number,
+		default: 0,
+	},
+	/**
 	 * Will force a block-level display type on the trigger element.
 	 */
 	block: {
@@ -187,6 +213,7 @@ const emit = defineEmits({
 
 const {
 	placement,
+	fallbackPlacements,
 	trigger,
 	noHoverPopover,
 	fixed,
@@ -195,6 +222,7 @@ const {
 	width,
 	maxHeight,
 	manualShow,
+	hideTrigger,
 	block,
 	sansArrow,
 	showDelay,
@@ -241,7 +269,7 @@ const contentClass = computed(() => {
 const popperOptions = computed((): PopperOptions => {
 	return {
 		placement: placement.value,
-		modifiers: [...modifiers],
+		modifiers: [...makeModifiers(fallbackPlacements?.value)],
 		strategy: fixed.value ? 'fixed' : 'absolute',
 	};
 });
@@ -289,6 +317,8 @@ onUnmounted(() => {
 });
 
 watch(manualShow, onManualShow);
+
+watch(hideTrigger, _hide);
 
 function _stateChangeHide() {
 	if (isVisible.value && hideOnStateChange.value) {

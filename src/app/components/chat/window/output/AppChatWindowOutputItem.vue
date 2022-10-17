@@ -1,4 +1,14 @@
 <script lang="ts">
+export interface ChatMessageEditEvent {
+	message: ChatMessage;
+}
+
+const InviewConfig = new ScrollInviewConfig();
+
+const DisplayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
+</script>
+
+<script lang="ts" setup>
 import { computed, PropType, reactive, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
@@ -7,8 +17,11 @@ import AppContentViewer from '../../../../../_common/content/content-viewer/cont
 import { formatDate } from '../../../../../_common/filters/date';
 import AppJolticon, { Jolticon } from '../../../../../_common/jolticon/AppJolticon.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-import AppPopper from '../../../../../_common/popper/AppPopper.vue';
+import AppPopper, { PopperPlacementType } from '../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
+import AppScrollInview, {
+	ScrollInviewConfig,
+} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
@@ -25,12 +38,6 @@ import { getChatUserRoleData } from '../../user';
 import AppChatUserPopover from '../../user-popover/user-popover.vue';
 import AppChatWindowOutputItemTime from './AppChatWindowOutputItemTime.vue';
 
-export interface ChatMessageEditEvent {
-	message: ChatMessage;
-}
-</script>
-
-<script lang="ts" setup>
 const props = defineProps({
 	message: {
 		type: Object as PropType<ChatMessage>,
@@ -48,15 +55,31 @@ const props = defineProps({
 		type: Number,
 		default: 100,
 	},
+	avatarPopperPlacement: {
+		type: String as PropType<PopperPlacementType>,
+		default: 'right',
+	},
+	avatarPopperPlacementFallbacks: {
+		type: Array as PropType<PopperPlacementType[]>,
+		default: undefined,
+	},
+});
+
+const emit = defineEmits({
+	showPopper: () => true,
+	hidePopper: () => true,
 });
 
 const { message, room, maxContentWidth } = toRefs(props);
 const { chatUnsafe: chat } = useGridStore();
 
-const displayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
+let canClearFocus = false;
+let isFocused = false;
 
 const root = ref<HTMLElement>();
 const itemWrapper = ref<HTMLElement>();
+const isShowingAvatarPopper = ref(false);
+const popperHideTrigger = ref(0);
 
 const contentViewerBounds: ContentOwnerParentBounds = reactive({
 	width: maxContentWidth,
@@ -169,6 +192,20 @@ const roleData = computed(() =>
 	})
 );
 
+const shouldShowAvatar = computed(
+	() => message.value.showAvatar === true || isShowingAvatarPopper.value
+);
+
+function onAvatarPopperVisible(isShowing: boolean) {
+	isShowingAvatarPopper.value = isShowing;
+
+	if (!isShowing) {
+		emit('hidePopper');
+	} else {
+		emit('showPopper');
+	}
+}
+
 function startEdit() {
 	setMessageEditing(chat.value, message.value);
 	Popper.hideAll();
@@ -193,9 +230,6 @@ async function removeMessage() {
 	setMessageEditing(chat.value, null);
 	chatRemoveMessage(chat.value, room.value, message.value.id);
 }
-
-let canClearFocus = false;
-let isFocused = false;
 
 async function onFocusItem() {
 	isFocused = true;
@@ -230,8 +264,20 @@ async function onMessageClick() {
 			'-message-editing': isEditing,
 		}"
 	>
-		<a v-if="message.showAvatar" class="-avatar">
-			<AppPopper placement="right">
+		<AppScrollInview
+			v-if="shouldShowAvatar"
+			class="-avatar"
+			tag="a"
+			:config="InviewConfig"
+			@outview="isShowingAvatarPopper ? ++popperHideTrigger : undefined"
+		>
+			<AppPopper
+				:placement="avatarPopperPlacement"
+				:fallback-placements="avatarPopperPlacementFallbacks"
+				:hide-trigger="popperHideTrigger"
+				@show="onAvatarPopperVisible(true)"
+				@hide="onAvatarPopperVisible(false)"
+			>
 				<img
 					class="-avatar-img img-responsive"
 					:src="message.user.img_avatar"
@@ -243,7 +289,7 @@ async function onMessageClick() {
 					<AppChatUserPopover :user="message.user" :room="room" />
 				</template>
 			</AppPopper>
-		</a>
+		</AppScrollInview>
 
 		<div
 			ref="itemWrapper"
@@ -295,7 +341,7 @@ async function onMessageClick() {
 
 					<AppContentViewer
 						:source="message.content"
-						:display-rules="displayRules"
+						:display-rules="DisplayRules"
 						:parent-bounds="contentViewerBounds"
 					/>
 
