@@ -1,59 +1,18 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-import AppButton from '../../../_common/button/AppButton.vue';
-import { stopStreaming } from '../../../_common/fireside/rtc/producer';
-import { showErrorGrowl } from '../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
 import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.vue';
 import AppTheme from '../../../_common/theme/AppTheme.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
-import {
-	FiresideSidebar,
-	useFiresideController,
-} from '../../components/fireside/controller/controller';
+import { useFiresideController } from '../../components/fireside/controller/controller';
 import AppFiresideStreamStats from '../../components/fireside/stream/stream-stats/AppFiresideStreamStats.vue';
 import AppFiresideStream from './_stream/AppFiresideStream.vue';
 
-const {
-	rtc,
-	stickerTargetController,
-	collapseSidebar,
-	background,
-	isFullscreen,
-	setSidebar,
-	sidebarHome,
-} = useFiresideController()!;
+const { rtc, stickerTargetController, collapseSidebar, background, isFullscreen } =
+	useFiresideController()!;
 
 const overlayText = computed(() => !!background.value || isFullscreen.value);
 const localUser = computed(() => rtc.value?.localUser);
 const videoAspectRatio = computed(() => localUser.value?.videoAspectRatio || 0.5625);
-
-function _setSidebar(option: FiresideSidebar, buttonLocation: string) {
-	setSidebar(option, buttonLocation);
-}
-
-async function _stopStreaming(location: string) {
-	const producer = rtc.value?.producer;
-	if (!producer) {
-		return;
-	}
-
-	const result = await ModalConfirm.show(`Are you sure you want to stop streaming?`);
-	if (!result) {
-		return;
-	}
-
-	try {
-		await stopStreaming(producer, location);
-	} catch (e) {
-		console.error(e);
-		showErrorGrowl($gettext(`Something went wrong when stopping your stream.`));
-	}
-
-	if (!producer.isStreaming.value) {
-		setSidebar(sidebarHome, 'stopped-streaming-dashboard');
-	}
-}
 </script>
 
 <template>
@@ -93,27 +52,6 @@ async function _stopStreaming(location: string) {
 							</AppStickerTarget>
 						</template>
 					</div>
-				</div>
-
-				<div style="width: 100%">
-					<AppButton
-						block
-						solid
-						:overlay="overlayText"
-						@click="_setSidebar('stream-settings', 'producer-dashboard')"
-					>
-						{{ $gettext(`Stream settings`) }}
-					</AppButton>
-
-					<AppButton
-						block
-						solid
-						fill-color="overlay-notice"
-						:overlay="overlayText"
-						@click="_stopStreaming('producer-dashboard')"
-					>
-						{{ $gettext(`Stop streaming`) }}
-					</AppButton>
 				</div>
 			</div>
 
