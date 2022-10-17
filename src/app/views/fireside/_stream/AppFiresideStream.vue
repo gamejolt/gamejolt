@@ -55,6 +55,7 @@ const {
 	isHoveringOverlayControl,
 	isShowingStreamSetup,
 	isFullscreen,
+	isPersonallyStreaming,
 	canFullscreen,
 	toggleFullscreen,
 	isShowingStreamOverlay,
@@ -113,6 +114,16 @@ const producer = computed(() => rtc.value?.producer);
  * video feed when it gets rebuilt.
  */
 const shouldShowVideo = computed(() => !(isShowingStreamSetup.value && rtc.value?.isFocusingMe));
+
+const shouldHideUnfocusedStream = computed(() => {
+	if (ContentFocus.isWindowFocused || videoPaused.value) {
+		return false;
+	}
+
+	// Pause other streams if we're currently streaming and the window isn't
+	// focused.
+	return isPersonallyStreaming.value;
+});
 
 /**
  * When the stream setup menu is showing its own stream, display a message
@@ -343,19 +354,19 @@ function onMouseLeaveControls() {
 			<template v-else>
 				<div :key="rtcUser.uid" :style="{ width: '100%', height: '100%' }">
 					<template v-if="shouldShowVideo">
-						<template v-if="ContentFocus.isWindowFocused || videoPaused">
-							<AppFiresideStreamVideo
-								class="-video-player -click-target"
-								:rtc-user="rtcUser"
-							/>
-						</template>
-						<div v-else class="-video-hidden-notice">
+						<div v-if="shouldHideUnfocusedStream" class="-video-hidden-notice">
 							<strong>
 								<AppTranslate class="text-muted">
 									We're hiding this video to conserve your system resources
 								</AppTranslate>
 							</strong>
 						</div>
+						<template v-else>
+							<AppFiresideStreamVideo
+								class="-video-player -click-target"
+								:rtc-user="rtcUser"
+							/>
+						</template>
 					</template>
 
 					<AppFiresideDesktopAudio v-if="shouldPlayDesktopAudio" :rtc-user="rtcUser" />
