@@ -13,6 +13,7 @@ import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue'
 import { useStickerLayer } from '../../../../_common/sticker/layer/layer-controller';
 import { setStickerDrawerOpen, useStickerStore } from '../../../../_common/sticker/sticker-store';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import {
 	FiresideSidebar,
@@ -55,6 +56,40 @@ const localUser = computed(() => rtc.value?.localUser);
 
 const producerMicMuted = computed(() => producer.value?.micMuted.value === true);
 const producerVideoMuted = computed(() => producer.value?.videoMuted.value === true);
+
+const micTooltip = computed(() => {
+	const _user = localUser.value;
+	if (!_user || !producer.value) {
+		return undefined;
+	}
+
+	if (!_user._micAudioTrack) {
+		return $gettext(`No microphone selected`);
+	}
+
+	if (producer.value.micMuted.value) {
+		return $gettext(`Unmute microphone`);
+	}
+
+	return $gettext(`Mute microphone`);
+});
+
+const videoTooltip = computed(() => {
+	const _user = localUser.value;
+	if (!_user || !producer.value) {
+		return undefined;
+	}
+
+	if (!_user._videoTrack) {
+		return $gettext(`No video selected`);
+	}
+
+	if (producer.value.videoMuted.value) {
+		return $gettext(`Show video`);
+	}
+
+	return $gettext(`Hide video`);
+});
 
 const micIcon = computed<Jolticon>(() => {
 	const disabled = 'microphone-off';
@@ -205,13 +240,15 @@ async function onClickStopStreaming() {
 		<div class="-bottom-bar-inner">
 			<div v-if="canStream" class="-group -left">
 				<AppFiresideBottomBarButton
+					v-app-tooltip="$gettext(`Stream settings`)"
 					:active="sidebar === 'stream-settings'"
 					:icon="isPersonallyStreaming ? 'dashboard' : 'broadcast'"
 					@click="toggleStreamSettings"
 				/>
 
-				<template v-if="isStreaming">
+				<template v-if="isPersonallyStreaming">
 					<AppFiresideBottomBarButton
+						v-app-tooltip="micTooltip"
 						:active="localUser?.hasMicAudio && !producerMicMuted"
 						:icon="micIcon"
 						:disabled="!localUser?._micAudioTrack"
@@ -219,6 +256,7 @@ async function onClickStopStreaming() {
 					/>
 
 					<AppFiresideBottomBarButton
+						v-app-tooltip="videoTooltip"
 						:active="localUser?.hasVideo && !producerVideoMuted"
 						:icon="videoIcon"
 						:disabled="!localUser?._videoTrack"
@@ -226,6 +264,7 @@ async function onClickStopStreaming() {
 					/>
 
 					<AppFiresideBottomBarButton
+						v-app-tooltip="$gettext(`Stop streaming`)"
 						:active="localUser?.hasVideo && !producerVideoMuted"
 						icon="hang-up"
 						active-color="overlay-notice"
@@ -246,6 +285,7 @@ async function onClickStopStreaming() {
 			<div class="-group -right" :class="{ '-shrink': !canStream }">
 				<AppFiresideBottomBarButton
 					v-if="canManageCohosts"
+					v-app-tooltip="$gettext(`Manage hosts`)"
 					icon="friend-add-2"
 					:active="activeBottomBarControl === 'manage-cohosts'"
 					@click="toggleHosts"
@@ -257,6 +297,7 @@ async function onClickStopStreaming() {
 					:disabled="!canChargeSticker || !isAllCreator"
 				>
 					<AppFiresideBottomBarButton
+						v-app-tooltip="$gettext(`Place stickers`)"
 						icon="sticker-filled"
 						:badge="stickerCount"
 						:disabled="!canPlaceStickers"
@@ -265,6 +306,7 @@ async function onClickStopStreaming() {
 				</AppAnimElectricity>
 
 				<AppFiresideBottomBarButton
+					v-app-tooltip="$gettext(`Fireside settings`)"
 					icon="ellipsis-h"
 					:active="activeBottomBarControl === 'settings'"
 					@click="toggleFiresideSettings"
