@@ -503,6 +503,10 @@ export function trackFiresideExtinguish(trigger: string) {
 	trackFiresideAction({ action: 'extinguish', trigger });
 }
 
+export function trackFiresidePublish(trigger: string) {
+	trackFiresideAction({ action: 'publish', trigger });
+}
+
 export function trackFiresideSidebarButton({
 	previous,
 	current,

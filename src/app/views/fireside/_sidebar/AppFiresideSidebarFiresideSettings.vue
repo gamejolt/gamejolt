@@ -48,7 +48,6 @@ const {
 	canPublish,
 	canExtinguish,
 	canReport,
-	setSidebar,
 } = c;
 
 const form: FormController<Fireside> = createForm({
@@ -142,7 +141,7 @@ function onClickReport() {
 }
 
 function onClickPublish() {
-	publishFireside(c);
+	publishFireside(c, 'fireside-settings');
 }
 
 function onClickExtinguish() {

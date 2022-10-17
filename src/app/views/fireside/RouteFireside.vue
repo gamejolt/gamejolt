@@ -15,7 +15,10 @@ export default {
 import { computed, customRef, onBeforeUnmount, ref, shallowRef, watch } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import { debounce } from '../../../utils/utils';
-import { trackFiresideSidebarCollapse } from '../../../_common/analytics/analytics.service';
+import {
+	trackFiresideAction,
+	trackFiresideSidebarCollapse,
+} from '../../../_common/analytics/analytics.service';
 import AppAnimSlideshow from '../../../_common/animation/AppAnimSlideshow.vue';
 import { sheetFireplace } from '../../../_common/animation/slideshow/sheets';
 import { Api } from '../../../_common/api/api.service';
@@ -309,7 +312,14 @@ function onClickPublish() {
 	if (!c.value) {
 		return;
 	}
-	publishFireside(c.value);
+	publishFireside(c.value, 'status-banner');
+}
+
+function onClickStreamingBanner() {
+	trackFiresideAction({
+		action: 'noop-click',
+		trigger: 'streaming-status-banner',
+	});
 }
 </script>
 
@@ -347,7 +357,11 @@ function onClickPublish() {
 								'-banner-primary': c && !c.isDraft.value,
 							}"
 						>
-							<div v-if="c && isPersonallyStreaming" class="-status-live">
+							<div
+								v-if="c && isPersonallyStreaming"
+								class="-status-live"
+								@click="onClickStreamingBanner"
+							>
 								<strong>
 									<AppJolticon
 										class="-status-live-icon"
