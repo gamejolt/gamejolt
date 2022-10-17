@@ -378,17 +378,19 @@ hr
 .-icon-buttons
 	display: flex
 	flex-direction: row
-	gap: 16px
-	justify-content: center
 
 .-icon-button
+	pressy()
+	flex: 1
 	display: flex
+	gap: 12px
 	flex-direction: column
 	align-items: center
 	text-align: center
-	gap: 12px
-	align-items: center
 	color: var(--theme-fg)
+
+	&:hover
+		color: var(--theme-primary)
 
 .-icon-button-label
 	font-size: $font-size-small
