@@ -26,6 +26,7 @@ import { uuidv4 } from '../../../../utils/uuid';
 import { MaybeRef } from '../../../../utils/vue';
 import {
 	trackFiresideExtinguish,
+	trackFiresidePublish,
 	trackFiresideSidebarButton,
 	trackFiresideSidebarCollapse,
 } from '../../../../_common/analytics/analytics.service';
@@ -1159,7 +1160,10 @@ export function toggleStreamVideoStats(c: FiresideController) {
 	c.rtc.value.shouldShowVideoStats = !c.rtc.value.shouldShowVideoStats;
 }
 
-export async function publishFireside({ fireside, status, isDraft }: FiresideController) {
+export async function publishFireside(
+	{ fireside, status, isDraft }: FiresideController,
+	trigger: string
+) {
 	if (!fireside || status.value !== 'joined' || !isDraft.value) {
 		return;
 	}
@@ -1173,6 +1177,8 @@ export async function publishFireside({ fireside, status, isDraft }: FiresideCon
 
 	await fireside.$publish({ autoFeature: true });
 	showSuccessGrowl($gettext(`Your fireside is live!`));
+
+	trackFiresidePublish(trigger);
 }
 
 async function extendFireside(c: FiresideController, growlOnFail = true) {

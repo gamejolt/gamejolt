@@ -187,7 +187,7 @@ async function onClickStopStreaming() {
 
 		<template #footer>
 			<div v-if="canBrowserStream && !shouldShowDesktopAppPromo" class="-footer">
-				<div v-if="isDraft" class="-private-hint">
+				<div v-if="isDraft && !isPersonallyStreaming" class="-private-hint">
 					This won't make your fireside public. Other hosts in the fireside will be able
 					to see your stream.
 				</div>
