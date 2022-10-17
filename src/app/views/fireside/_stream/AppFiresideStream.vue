@@ -15,13 +15,14 @@ import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useStickerStore } from '../../../../_common/sticker/sticker-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideDesktopAudio from '../../../components/fireside/stream/AppFiresideDesktopAudio.vue';
 import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';
-import AppFiresideVideoStats from '../../../components/fireside/stream/video-stats/AppFiresideVideoStats.vue';
+import AppFiresideStreamStats from '../../../components/fireside/stream/stream-stats/AppFiresideStreamStats.vue';
 import AppFiresideHeader from '../AppFiresideHeader.vue';
 import AppFiresideBottomBar from '../_bottom-bar/AppFiresideBottomBar.vue';
 import AppFiresideBottomBarHostAvatar from '../_bottom-bar/AppFiresideBottomBarHostAvatar.vue';
@@ -62,6 +63,7 @@ const {
 } = c;
 
 const { streak: stickerStreak } = useStickerStore();
+const { user } = useCommonStore();
 
 const _ignorePointerTimer = ref<NodeJS.Timer | null>();
 const hideUITimer = ref<NodeJS.Timer | null>(null);
@@ -75,7 +77,7 @@ const shouldAnimateStreak = ref(false);
 
 const streakCount = computed(() => formatFuzzynumber(stickerStreak.value?.count ?? 0));
 
-const hasVolumeControls = computed(() => !!rtc.value?.shouldShowVolumeControls);
+const showVideoStatTabs = computed(() => user.value?.isMod === true);
 
 const chatWidth = computed(() => {
 	if (isFullscreen.value && sidebarCollapsed.value) {
@@ -368,9 +370,10 @@ function onMouseLeaveControls() {
 					</template>
 
 					<AppFiresideDesktopAudio v-if="shouldPlayDesktopAudio" :rtc-user="rtcUser" />
-					<AppFiresideVideoStats
+					<AppFiresideStreamStats
 						v-if="!noStats && shouldShowVideoStats"
-						@click.capture.stop
+						class="-stream-stats"
+						:has-tab-switcher="showVideoStatTabs"
 					/>
 				</div>
 			</template>
@@ -600,6 +603,9 @@ $-z-combo = 2
 	align-items: center
 	text-align: center
 	padding: 16px
+
+.-stream-stats
+	z-index: $-z-control - 1
 
 .-click-target
 	cursor: pointer

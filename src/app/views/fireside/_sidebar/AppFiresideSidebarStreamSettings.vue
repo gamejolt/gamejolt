@@ -177,7 +177,7 @@ async function onClickStopStreaming() {
 						<AppFiresideStreamSetup
 							:c="c"
 							hide-publish-controls
-							@close="setSidebar('chat', 'stream-settings-closed')"
+							@close="setSidebar(sidebarHome, 'stream-settings-closed')"
 							@is-invalid="isInvalidConfig = $event"
 						/>
 					</template>

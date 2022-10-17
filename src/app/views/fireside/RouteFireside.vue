@@ -56,7 +56,7 @@ import {
 	publishFireside,
 	toggleStreamVideoStats,
 } from '../../components/fireside/controller/controller';
-import AppFiresideVideoStats from '../../components/fireside/stream/video-stats/AppFiresideVideoStats.vue';
+import AppFiresideStreamStats from '../../components/fireside/stream/stream-stats/AppFiresideStreamStats.vue';
 import { useGridStore } from '../../components/grid/grid-store';
 import {
 	illEndOfFeed,
@@ -760,7 +760,7 @@ function onClickPublish() {
 													<h4 class="sans-margin-top">
 														{{ $gettext(`Video stats`) }}
 													</h4>
-													<AppFiresideVideoStats
+													<AppFiresideStreamStats
 														class="-producer-dash-stats"
 														no-abs
 													/>

@@ -160,14 +160,6 @@ export class FiresideRTC {
 		return this.localUser !== null;
 	}
 
-	get shouldShowVolumeControls() {
-		return (
-			this.focusedUser?.hasDesktopAudio === true &&
-			this.focusedUser?.hasVideo === true &&
-			!this.isFocusingMe
-		);
-	}
-
 	get isFocusingMe() {
 		return (
 			!!this.focusedUser && !!this.localUser && this.focusedUser.uid === this.localUser.uid
