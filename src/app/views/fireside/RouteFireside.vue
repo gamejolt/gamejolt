@@ -344,13 +344,19 @@ function onClickPublish() {
 							v-if="shouldShowBanner"
 							class="-status-banner"
 							:class="{
-								'-banner-primary': c && !c.isDraft.value && !isPersonallyStreaming,
-								'-banner-live': c && isPersonallyStreaming,
+								'-banner-primary': c && !c.isDraft.value,
 							}"
 						>
-							<strong v-if="isPersonallyStreaming">
-								{{ $gettext(`You're currently streaming!`) }}
-							</strong>
+							<div v-if="c && isPersonallyStreaming" class="-status-live">
+								<strong>
+									<AppJolticon
+										class="-status-live-icon"
+										icon="broadcast"
+										middle
+									/>
+									{{ $gettext(`You're currently streaming!`) }}
+								</strong>
+							</div>
 
 							<strong>
 								<template v-if="!fireside">
@@ -813,10 +819,15 @@ $-center-guide-width = 400px
 	elevate-1()
 	padding: 6px 12px
 	display: flex
-	gap: 16px
+	gap: 12px
 	font-size: $font-size-small
 	font-weight: 600
 	z-index: 2
+	margin-left: 12px
+	margin-right: 12px
+	border-bottom-left-radius: $border-radius-base
+	border-bottom-right-radius: $border-radius-base
+	overflow: hidden
 
 	&.-banner-primary
 		background-color: var(--theme-primary)
@@ -825,12 +836,16 @@ $-center-guide-width = 400px
 		.-status-banner-action
 			color: var(--theme-primary-fg)
 
-	&.-banner-live
-		change-bg-hex($gj-overlay-notice)
+.-status-live
+	change-bg-hex($gj-overlay-notice)
+	margin: -6px 0 -6px -12px
+	padding: 6px 12px
+	display: flex
+	color: white
 
-		&
-		.-status-banner-action
-			color: white
+// Make the icon a little smaller than normal to fit in the small banner spage
+.-status-live-icon
+	font-size: 14px
 
 .-status-banner-action
 	margin-left: auto
