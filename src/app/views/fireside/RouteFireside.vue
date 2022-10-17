@@ -56,7 +56,6 @@ import {
 	publishFireside,
 	toggleStreamVideoStats,
 } from '../../components/fireside/controller/controller';
-import AppFiresideStreamStats from '../../components/fireside/stream/stream-stats/AppFiresideStreamStats.vue';
 import { useGridStore } from '../../components/grid/grid-store';
 import {
 	illEndOfFeed,
@@ -64,6 +63,7 @@ import {
 	illMobileKikkerstein,
 	illNoCommentsSmall,
 } from '../../img/ill/illustrations';
+import AppFiresideDashboard from './AppFiresideDashboard.vue';
 import AppFiresideHeader from './AppFiresideHeader.vue';
 import AppFiresideStats from './AppFiresideStats.vue';
 import AppFiresideBottomBar from './_bottom-bar/AppFiresideBottomBar.vue';
@@ -651,122 +651,8 @@ function onClickPublish() {
 												</AppStickerTarget>
 											</template>
 										</div>
-										<!-- Producer dashboard -->
-										<!-- TODO(fireside-producer-dashboard) Move this into its own component; nesting is getting pretty rough -->
-										<div v-else class="-producer-dash-container">
-											<div
-												class="-producer-dash"
-												:class="{ '-single-col': !focusedUser.hasVideo }"
-											>
-												<div class="-producer-dash-left">
-													<div style="width: 100%">
-														<div class="-producer-video-header">
-															<h4 class="sans-margin-top">
-																{{ $gettext(`Outgoing video`) }}
-															</h4>
-														</div>
-
-														<div
-															class="-producer-video"
-															:style="{
-																paddingTop:
-																	!videoHeight || !videoWidth
-																		? '56.25%'
-																		: (videoHeight /
-																				videoWidth) *
-																				100 +
-																		  '%',
-															}"
-														>
-															<template v-if="focusedUser">
-																<AppStickerTarget
-																	:key="focusedUser.uid"
-																	class="-video-inner -abs-stretch"
-																	:controller="
-																		c.stickerTargetController
-																	"
-																>
-																	<AppPopper
-																		:trigger="
-																			isFullscreen
-																				? 'right-click'
-																				: 'manual'
-																		"
-																	>
-																		<AppFiresideStream
-																			:rtc-user="focusedUser"
-																			:has-header="
-																				isFullscreen
-																			"
-																			:has-hosts="
-																				isFullscreen
-																			"
-																			:sidebar-collapsed="
-																				collapseSidebar
-																			"
-																		/>
-
-																		<template #popover>
-																			<div class="list-group">
-																				<a
-																					class="list-group-item"
-																					@click="
-																						toggleVideoStats()
-																					"
-																				>
-																					<AppTranslate>
-																						Toggle Video
-																						Stats
-																					</AppTranslate>
-																				</a>
-																			</div>
-																		</template>
-																	</AppPopper>
-																</AppStickerTarget>
-															</template>
-														</div>
-													</div>
-
-													<div style="width: 100%">
-														<AppButton
-															block
-															solid
-															:overlay="overlayText"
-															@click="
-																_setSidebar(
-																	'stream-settings',
-																	'producer-dashboard'
-																)
-															"
-														>
-															{{ $gettext(`Stream settings`) }}
-														</AppButton>
-
-														<AppButton
-															block
-															solid
-															fill-color="overlay-notice"
-															:overlay="overlayText"
-															@click="
-																_stopStreaming('producer-dashboard')
-															"
-														>
-															{{ $gettext(`Stop streaming`) }}
-														</AppButton>
-													</div>
-												</div>
-
-												<div v-if="focusedUser.hasVideo">
-													<h4 class="sans-margin-top">
-														{{ $gettext(`Video stats`) }}
-													</h4>
-													<AppFiresideStreamStats
-														class="-producer-dash-stats"
-														no-abs
-													/>
-												</div>
-											</div>
-										</div>
+										<!-- Local dashboard -->
+										<AppFiresideDashboard v-else />
 									</div>
 									<div v-else class="-video-container">
 										<div
@@ -1066,49 +952,7 @@ $-center-guide-width = 400px
 	background-color: var(--theme-bg-subtle)
 
 .-video-inner
-.-producer-video
 	transition: width 200ms, height 200ms, padding-top 200ms, border-radius 1s
-
-.-producer-dash-container
-	padding: 0 32px
-	width: 100%
-	height: 100%
-	display: flex
-	align-items: center
-	justify-content: center
-
-.-producer-dash
-	--left-col: minmax(0, 450px)
-	max-width: 1100px
-	height: 100%
-	display: grid
-	grid-template-columns: var(--left-col) minmax(0, 250px)
-	justify-content: center
-	gap: $line-height-computed
-	flex: 1
-
-	&.-single-col
-		grid-template-columns: var(--left-col)
-
-.-producer-dash-left
-	display: flex
-	flex-direction: column
-	flex-wrap: nowrap
-	gap: 12px
-	align-items: stretch
-
-.-producer-video-header
-	display: flex
-	gap: 8px
-	align-items: flex-start
-	justify-content: space-between
-
-.-producer-video
-	position: relative
-	width: 100%
-
-.-producer-dash-stats
-	width: auto
 
 .-center-guide
 	display: flex
