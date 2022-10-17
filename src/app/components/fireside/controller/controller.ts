@@ -590,18 +590,8 @@ export function createFiresideController(
 	);
 
 	const sidebarHome: FiresideSidebar = 'chat';
-	const _sidebars = ref<FiresideSidebar[]>([]);
-
-	const sidebar = readonly(
-		computed(() => {
-			const list = _sidebars.value;
-			if (list.length) {
-				return list[list.length - 1];
-			}
-
-			return sidebarHome;
-		})
-	);
+	const _sidebar = ref<FiresideSidebar>(sidebarHome);
+	const sidebar = readonly(computed(() => _sidebar.value));
 
 	function setSidebar(current: FiresideSidebar, trigger: string) {
 		if (current === sidebar.value) {
@@ -614,15 +604,7 @@ export function createFiresideController(
 			trigger,
 		});
 
-		if (current === sidebarHome) {
-			arrayAssignAll(_sidebars.value, []);
-		} else {
-			const existingIndex = _sidebars.value.indexOf(current);
-			if (existingIndex !== -1) {
-				_sidebars.value.splice(existingIndex, 1);
-			}
-			_sidebars.value.push(current);
-		}
+		_sidebar.value = current;
 
 		if (current !== sidebarHome && _collapseSidebar) {
 			collapseSidebar.value = false;
@@ -634,14 +616,18 @@ export function createFiresideController(
 	 * Removes a sidebar from the
 	 */
 	function popSidebar() {
-		const previous = _sidebars.value.pop();
-		if (previous) {
-			trackFiresideSidebarButton({
-				previous,
-				current: sidebar.value,
-				trigger: 'go-back',
-			});
+		if (isSidebarHome.value) {
+			return;
 		}
+
+		const previous = sidebar.value;
+		_sidebar.value = sidebarHome;
+
+		trackFiresideSidebarButton({
+			previous,
+			current: sidebarHome,
+			trigger: 'go-back',
+		});
 	}
 
 	const isSidebarHome = computed(() => sidebar.value === sidebarHome);
@@ -659,7 +645,7 @@ export function createFiresideController(
 
 			_collapseSidebar = val;
 			if (val) {
-				arrayAssignAll(_sidebars.value, []);
+				_sidebar.value = sidebarHome;
 			}
 			trigger();
 		},
@@ -678,7 +664,7 @@ export function createFiresideController(
 			if (!isHome) {
 				collapseSidebar.value = false;
 			} else if (collapse) {
-				arrayAssignAll(_sidebars.value, []);
+				_sidebar.value = sidebarHome;
 			}
 		}
 	);
