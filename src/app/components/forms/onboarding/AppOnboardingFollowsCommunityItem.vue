@@ -64,15 +64,13 @@ async function toggleJoin() {
 <template>
 	<div class="-item">
 		<div class="-pressy">
-			<div class="-wrapper">
-				<AppCommunityThumbnailImg
-					class="-img"
-					:style="{
-						'border-color': community.is_member ? highlight : '',
-					}"
-					:community="community"
-					@click="toggleJoin"
-				/>
+			<div
+				class="-wrapper"
+				:style="{
+					'border-color': community.is_member ? highlight : '',
+				}"
+			>
+				<AppCommunityThumbnailImg class="-img" :community="community" @click="toggleJoin" />
 
 				<div
 					v-if="community.is_member"
@@ -81,7 +79,11 @@ async function toggleJoin() {
 						'background-color': highlight,
 					}"
 				>
-					<AppJolticon class="-icon" icon="check" :style="{ color: highlightFg }" />
+					<AppJolticon
+						class="-followed-icon"
+						icon="check"
+						:style="{ color: highlightFg }"
+					/>
 				</div>
 			</div>
 		</div>
@@ -99,25 +101,22 @@ async function toggleJoin() {
 	display: inline-block
 
 .-wrapper
+	img-circle()
 	position: relative
 	width: $-community-item-size
 	height: $-community-item-size
+	border: 3px solid
+	theme-prop('border-color', 'gray')
 
 .-pressy
 	display: inline-block
+	pressy()
 
 	&:hover
 		transform: scale(1.05)
 
-	pressy()
-
 .-img
-	img-circle()
-	width: 100%
-	height: 100%
-	border: 3px solid
 	cursor: pointer
-	theme-prop('border-color', 'gray')
 
 .-followed
 	position: absolute
@@ -127,15 +126,15 @@ async function toggleJoin() {
 	height: $-community-bubble-size
 	border-radius: 50%
 
-	.-icon
-		position: absolute
-		top: 2px
-		left: -1px
-		margin: 0
-		width: 100%
-		text-align: center
-		font-size: 20px
-		color: $white
+.-followed-icon
+	position: absolute
+	top: 2px
+	left: -1px
+	margin: 0
+	width: 100%
+	text-align: center
+	font-size: 20px
+	color: $white
 
 .-name
 	text-overflow()

@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 import { computed, PropType, ref } from 'vue';
 import { Community } from '../../../../_common/community/community.model';
-import { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { User } from '../../../../_common/user/user.model';
 import AppOnboardingFollowsCommunityItem from './AppOnboardingFollowsCommunityItem.vue';
-import AppForm from '../../../../_common/form-vue/AppForm.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 
 type FormModel = {
 	// nothing
@@ -82,13 +81,7 @@ const followsAnyCommunity = computed(() => communities.value.find(i => !!i.is_me
 				</AppScrollScroller>
 			</section>
 
-			<section class="-controls">
-				<slot
-					name="controls"
-					:can-continue="canContinue"
-					:should-show-skip="shouldShowSkip"
-				/>
-			</section>
+			<slot name="controls" :can-continue="canContinue" :should-show-skip="shouldShowSkip" />
 		</div>
 	</AppForm>
 </template>
@@ -124,11 +117,4 @@ const followsAnyCommunity = computed(() => communities.value.find(i => !!i.is_me
 @media $media-mobile
 	.-list
 		padding-bottom: 40px
-
-	.-controls
-		position: fixed
-		bottom: 0
-		right: 0
-		left: 0
-		padding: 8px
 </style>
