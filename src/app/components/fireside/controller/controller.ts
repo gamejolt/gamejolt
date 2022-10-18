@@ -392,9 +392,20 @@ export function createFiresideController(
 	/**
 	 * If we should hide the focused video stream.
 	 */
-	const shouldHideStreamVideo = computed(
-		() => shouldHideStreamVideoPreview.value && focusedUser.value?.isLocal === true
-	);
+	const shouldHideStreamVideo = computed(() => {
+		// Always show if the window is focused, we paused the video streams
+		// manually, or we're not streaming.
+		if (
+			ContentFocus.isWindowFocused ||
+			rtc.value?.videoPaused === true ||
+			!isPersonallyStreaming.value
+		) {
+			return false;
+		}
+
+		// Only hide if we're focusing our own stream.
+		return focusedUser.value?.isLocal === true;
+	});
 
 	const _browser = computed(() => getDeviceBrowser().toLowerCase());
 

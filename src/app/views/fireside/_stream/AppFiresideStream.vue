@@ -7,7 +7,6 @@ const UITransitionTime = 200;
 <script lang="ts" setup>
 import { computed, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import { ContentFocus } from '../../../../_common/content-focus/content-focus.service';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { FiresideRTCUser, setDesktopAudioPlayback } from '../../../../_common/fireside/rtc/user';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -53,13 +52,13 @@ const c = useFiresideController()!;
 const {
 	rtc,
 	shownUserCardHover,
+	shouldHideStreamVideo,
 	isHoveringOverlayControl,
 	isShowingStreamSetup,
+	isShowingStreamOverlay,
 	isFullscreen,
-	isPersonallyStreaming,
 	canFullscreen,
 	toggleFullscreen,
-	isShowingStreamOverlay,
 } = c;
 
 const { streak: stickerStreak } = useStickerStore();
@@ -116,16 +115,6 @@ const producer = computed(() => rtc.value?.producer);
  * video feed when it gets rebuilt.
  */
 const shouldShowVideo = computed(() => !(isShowingStreamSetup.value && rtc.value?.isFocusingMe));
-
-const shouldHideUnfocusedStream = computed(() => {
-	if (ContentFocus.isWindowFocused || videoPaused.value) {
-		return false;
-	}
-
-	// Pause other streams if we're currently streaming and the window isn't
-	// focused.
-	return isPersonallyStreaming.value;
-});
 
 /**
  * When the stream setup menu is showing its own stream, display a message
@@ -354,7 +343,7 @@ function onMouseLeaveControls() {
 			<template v-else>
 				<div :key="rtcUser.uid" :style="{ width: '100%', height: '100%' }">
 					<template v-if="shouldShowVideo">
-						<div v-if="shouldHideUnfocusedStream" class="-video-hidden-notice">
+						<div v-if="shouldHideStreamVideo" class="-video-hidden-notice">
 							<strong>
 								<AppTranslate class="text-muted">
 									We're hiding this video to conserve your system resources
