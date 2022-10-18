@@ -1,18 +1,4 @@
 <script lang="ts">
-import { computed, markRaw, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { Api } from '../../../_common/api/api.service';
-import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
-import Onboarding from '../../../_common/onboarding/onboarding.service';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { useCommonStore } from '../../../_common/store/common-store';
-import { $gettext } from '../../../_common/translate/translate.service';
-import FormOnboardingFollows from '../../components/forms/onboarding/FormOnboardingFollows.vue';
-import FormOnboardingProfile from '../../components/forms/onboarding/FormOnboardingProfile.vue';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import { User } from '../../../_common/user/user.model';
-import { showUserInviteFollowGrowl } from '../../../_common/user/invite/modal/modal.service';
-
 export default {
 	...defineAppRouteOptions({
 		resolver: () => Api.sendRequest('/web/onboarding'),
@@ -21,6 +7,21 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import { computed, markRaw, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { Api } from '../../../_common/api/api.service';
+import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
+import Onboarding from '../../../_common/onboarding/onboarding.service';
+import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
+import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
+import { useCommonStore } from '../../../_common/store/common-store';
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../_common/translate/translate.service';
+import { showUserInviteFollowGrowl } from '../../../_common/user/invite/modal/modal.service';
+import { User } from '../../../_common/user/user.model';
+import FormOnboardingFollows from '../../components/forms/onboarding/FormOnboardingFollows.vue';
+import FormOnboardingProfile from '../../components/forms/onboarding/FormOnboardingProfile.vue';
+
 const { user } = useCommonStore();
 const router = useRouter();
 
@@ -73,25 +74,27 @@ function onNextStep() {
 			@next="onNextStep"
 		>
 			<template #controls="{ shouldShowSkip, canContinue }">
-				<section class="-controls">
-					<template v-if="shouldShowSkip">
-						<AppFormButton
-							class="-skip"
-							block
-							:primary="false"
-							:solid="false"
-							trans
-							:disabled="!canContinue"
-						>
-							<AppTranslate>Skip</AppTranslate>
-						</AppFormButton>
-					</template>
-					<template v-else>
-						<AppFormButton primary block solid :disabled="!canContinue">
-							<AppTranslate>Next</AppTranslate>
-						</AppFormButton>
-					</template>
-				</section>
+				<AppScrollAffix class="-controls" anchor="bottom" :padding="8">
+					<section>
+						<template v-if="shouldShowSkip">
+							<AppFormButton
+								class="-skip"
+								block
+								:primary="false"
+								:solid="false"
+								trans
+								:disabled="!canContinue"
+							>
+								<AppTranslate>Skip</AppTranslate>
+							</AppFormButton>
+						</template>
+						<template v-else>
+							<AppFormButton primary block solid :disabled="!canContinue">
+								<AppTranslate>Next</AppTranslate>
+							</AppFormButton>
+						</template>
+					</section>
+				</AppScrollAffix>
 			</template>
 		</component>
 	</div>
