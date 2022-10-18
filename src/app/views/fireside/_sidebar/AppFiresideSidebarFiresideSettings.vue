@@ -15,7 +15,6 @@ import AppFormControlBackground from '../../../../_common/form-vue/controls/AppF
 import AppFormControlToggleButton from '../../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButton.vue';
 import AppFormControlToggleButtonGroup from '../../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../../_common/form-vue/validators';
-import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { ReportModal } from '../../../../_common/report/modal/modal.service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
@@ -33,7 +32,7 @@ import { ChatCommandsModal } from '../../../components/forms/chat/commands/modal
 import { ChatTimersModal } from '../../../components/forms/chat/timers/modal/modal.service';
 import AppFiresideShare from '../AppFiresideShare.vue';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
-import AppFiresideSidebarHeadingCollapse from './AppFiresideSidebarHeadingCollapse.vue';
+import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 
 const { user } = useCommonStore();
 const c = useFiresideController()!;
@@ -49,7 +48,6 @@ const {
 	canPublish,
 	canExtinguish,
 	canReport,
-	sidebar,
 } = c;
 
 const form: FormController<Fireside> = createForm({
@@ -143,11 +141,11 @@ function onClickReport() {
 }
 
 function onClickPublish() {
-	publishFireside(c);
+	publishFireside(c, 'fireside-settings');
 }
 
 function onClickExtinguish() {
-	extinguishFireside(c);
+	extinguishFireside(c, 'fireside-settings');
 }
 
 function onClickChatCommands() {
@@ -162,48 +160,29 @@ function onClickChatTimers() {
 <template>
 	<AppFiresideSidebar>
 		<template #header>
-			<AppHeaderBar :elevation="2" :defined-slots="['leading', 'title', 'actions']">
-				<template #leading>
-					<AppButton circle sparse trans icon="chevron-left" @click="sidebar = 'chat'" />
-				</template>
-
-				<template #title>
-					<AppTranslate>Fireside Settings</AppTranslate>
-				</template>
-
-				<template #actions>
-					<AppFiresideSidebarHeadingCollapse />
-				</template>
-			</AppHeaderBar>
+			<AppFiresideSidebarHeading>
+				<AppTranslate>Fireside Settings</AppTranslate>
+			</AppFiresideSidebarHeading>
 		</template>
 
 		<template #body>
 			<AppScrollScroller class="-pad-v">
 				<div class="-pad-h">
-					<template v-if="canStream">
+					<template v-if="isOwner">
 						<div class="-icon-buttons">
-							<a class="-icon-button" @click="sidebar = 'stream-settings'">
-								<AppJolticon class="-icon-button-icon" icon="cog" />
+							<a class="-icon-button" @click="onClickChatCommands">
+								<AppJolticon class="-icon-button-icon" icon="wand" />
 								<div class="-icon-button-label">
-									{{ $gettext(`Stream settings`) }}
+									{{ $gettext(`Chat commands`) }}
 								</div>
 							</a>
 
-							<template v-if="isOwner">
-								<a class="-icon-button" @click="onClickChatCommands">
-									<AppJolticon class="-icon-button-icon" icon="wand" />
-									<div class="-icon-button-label">
-										{{ $gettext(`Chat commands`) }}
-									</div>
-								</a>
-
-								<a class="-icon-button" @click="onClickChatTimers">
-									<AppJolticon class="-icon-button-icon" icon="bell-filled" />
-									<div class="-icon-button-label">
-										{{ $gettext(`Chat timers`) }}
-									</div>
-								</a>
-							</template>
+							<a class="-icon-button" @click="onClickChatTimers">
+								<AppJolticon class="-icon-button-icon" icon="timer" />
+								<div class="-icon-button-label">
+									{{ $gettext(`Chat timers`) }}
+								</div>
+							</a>
 						</div>
 					</template>
 
@@ -253,7 +232,7 @@ function onClickChatTimers() {
 						:forced-is-loading="backgroundForm.isProcessing ? true : undefined"
 						@changed="backgroundForm.submit"
 					>
-						<template v-if="backgrounds.length">
+						<template v-if="backgrounds.length || !backgroundForm.isLoaded">
 							<AppFormGroup
 								name="background_id"
 								class="sans-margin-bottom"
@@ -398,15 +377,19 @@ hr
 .-icon-buttons
 	display: flex
 	flex-direction: row
-	gap: 16px
-	justify-content: center
 
 .-icon-button
+	pressy()
+	flex: 1
 	display: flex
-	flex-direction: column
 	gap: 12px
+	flex-direction: column
 	align-items: center
+	text-align: center
 	color: var(--theme-fg)
+
+	&:hover
+		color: var(--theme-primary)
 
 .-icon-button-label
 	font-size: $font-size-small

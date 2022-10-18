@@ -3,7 +3,6 @@ import { computed, ref } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { startStreaming, stopStreaming } from '../../../../_common/fireside/rtc/producer';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
@@ -17,7 +16,7 @@ import {
 import AppFiresideStreamSetup from '../../../components/fireside/stream/setup/AppFiresideStreamSetup.vue';
 import { illNoCommentsSmall, illStreamingJelly } from '../../../img/ill/illustrations';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
-import AppFiresideSidebarHeadingCollapse from './AppFiresideSidebarHeadingCollapse.vue';
+import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 
 const c = useFiresideController()!;
 const {
@@ -26,7 +25,9 @@ const {
 	isPersonallyStreaming,
 	rtc,
 	shouldShowDesktopAppPromo,
-	sidebar,
+	setSidebar,
+	sidebarHome,
+	isDraft,
 } = c;
 
 const isStartingStream = ref(false);
@@ -52,7 +53,7 @@ async function onClickStartStreaming() {
 
 	// Only close the modal if we were able to start streaming.
 	if (_producer.isStreaming.value) {
-		sidebar.value = 'chat';
+		setSidebar(sidebarHome, 'started-streaming');
 	}
 }
 
@@ -71,14 +72,14 @@ async function onClickStopStreaming() {
 			return;
 		}
 
-		await stopStreaming(_producer);
+		await stopStreaming(_producer, 'stream-settings');
 	} catch {
 		showErrorGrowl($gettext(`Something went wrong when stopping your stream.`));
 	}
 
 	// Only close the modal if we were able to stop streaming.
 	if (!_producer.isStreaming.value) {
-		sidebar.value = 'chat';
+		setSidebar(sidebarHome, 'stopped-streaming-sidebar');
 	}
 }
 </script>
@@ -86,19 +87,9 @@ async function onClickStopStreaming() {
 <template>
 	<AppFiresideSidebar>
 		<template #header>
-			<AppHeaderBar :elevation="2" :defined-slots="['leading', 'title', 'actions']">
-				<template #leading>
-					<AppButton circle sparse trans icon="chevron-left" @click="sidebar = 'chat'" />
-				</template>
-
-				<template #title>
-					<AppTranslate>Stream Settings</AppTranslate>
-				</template>
-
-				<template #actions>
-					<AppFiresideSidebarHeadingCollapse />
-				</template>
-			</AppHeaderBar>
+			<AppFiresideSidebarHeading>
+				<AppTranslate>Stream Settings</AppTranslate>
+			</AppFiresideSidebarHeading>
 		</template>
 
 		<template #body>
@@ -186,7 +177,7 @@ async function onClickStopStreaming() {
 						<AppFiresideStreamSetup
 							:c="c"
 							hide-publish-controls
-							@close="sidebar = 'chat'"
+							@close="setSidebar(sidebarHome, 'stream-settings-closed')"
 							@is-invalid="isInvalidConfig = $event"
 						/>
 					</template>
@@ -196,16 +187,22 @@ async function onClickStopStreaming() {
 
 		<template #footer>
 			<div v-if="canBrowserStream && !shouldShowDesktopAppPromo" class="-footer">
-				<AppButton
-					v-if="!isStreamingElsewhere && !isPersonallyStreaming"
-					primary
-					solid
-					block
-					:disabled="isProducerBusy || isInvalidConfig"
-					@click="onClickStartStreaming()"
-				>
-					<AppTranslate>Start streaming</AppTranslate>
-				</AppButton>
+				<template v-if="!isStreamingElsewhere && !isPersonallyStreaming">
+					<div v-if="isDraft" class="-private-hint">
+						This won't make your fireside public. Other hosts in the fireside will be
+						able to see your stream.
+					</div>
+
+					<AppButton
+						primary
+						solid
+						block
+						:disabled="isProducerBusy || isInvalidConfig"
+						@click="onClickStartStreaming()"
+					>
+						Start {{ isDraft ? 'private' : 'public' }} stream
+					</AppButton>
+				</template>
 				<AppButton
 					v-else-if="isPersonallyStreaming"
 					primary
@@ -229,4 +226,9 @@ async function onClickStopStreaming() {
 
 .-warning-text
 	color: var(--theme-fg)
+
+.-private-hint
+	font-size: $font-size-small
+	margin-bottom: 12px
+	color: var(--theme-fg-muted)
 </style>

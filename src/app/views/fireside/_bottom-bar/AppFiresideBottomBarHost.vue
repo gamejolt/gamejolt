@@ -4,6 +4,7 @@ import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import {
 	FiresideRTCUser,
+	saveFiresideRTCUserPrefs,
 	setDesktopAudioPlayback,
 	setMicAudioPlayback,
 	setUserDesktopAudioVolume,
@@ -35,8 +36,14 @@ useEventSubscription(onFiresideStickerPlaced, onStickerPlaced);
 
 const { host } = toRefs(props);
 
-const { isFullscreen, popperTeleportId, rtc, fetchedHostUserData, shownUserCardHover } =
-	useFiresideController()!;
+const {
+	isFullscreen,
+	popperTeleportId,
+	rtc,
+	fetchedHostUserData,
+	shownUserCardHover,
+	isShowingStreamSetup,
+} = useFiresideController()!;
 const kettleController = createPopcornKettleController();
 
 const isScrubbingMic = ref(false);
@@ -54,6 +61,21 @@ const showingVideoThumb = computed(() => {
 		return false;
 	}
 	return !isFocused.value && host.value.hasVideo;
+});
+
+const canShowThumbStream = computed(() => {
+	if (!rtc.value || rtc.value.videoPaused) {
+		return false;
+	}
+
+	// We need to hide the video preview if we have the stream setup open,
+	// otherwise it'll end up clearing the preview in the setup form when this
+	// thumb stream shows.
+	if (host.value.isLocal) {
+		return !isShowingStreamSetup.value;
+	}
+
+	return true;
 });
 
 function onClick() {
@@ -118,6 +140,7 @@ function _handleScrub(
 		volumeBeforeScrub.value = undefined;
 
 		isScrubbing.value = false;
+		saveFiresideRTCUserPrefs(host.value);
 	}
 }
 
@@ -237,7 +260,7 @@ function onUserCardUnhovered() {
 					<div class="-display-thumb" :class="{ '-hidden': !showingVideoThumb }">
 						<template v-if="showingVideoThumb">
 							<AppFiresideStreamVideo
-								v-if="rtc && !rtc.videoPaused"
+								v-if="canShowThumbStream"
 								:rtc-user="host"
 								video-fit="cover"
 								low-bitrate

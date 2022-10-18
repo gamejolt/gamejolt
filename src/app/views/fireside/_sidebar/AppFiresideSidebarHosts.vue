@@ -2,12 +2,10 @@
 import { computed, ref } from 'vue';
 import { stringSort } from '../../../../utils/array';
 import { sleep } from '../../../../utils/utils';
-import AppButton from '../../../../_common/button/AppButton.vue';
 import {
 	inviteFiresideHost,
 	removeFiresideHost,
 } from '../../../../_common/fireside/fireside.model';
-import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import AppTabBar from '../../../../_common/tab-bar/AppTabBar.vue';
 import AppTabBarItem from '../../../../_common/tab-bar/AppTabBarItem.vue';
@@ -19,7 +17,7 @@ import AppChatList from '../../../components/chat/_list/AppChatList.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import { illNoCommentsSmall } from '../../../img/ill/illustrations';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
-import AppFiresideSidebarHeadingCollapse from './AppFiresideSidebarHeadingCollapse.vue';
+import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 import AppFiresideSidebarHostsItem from './AppFiresideSidebarHostsItem.vue';
 
 const ListTitles = {
@@ -29,7 +27,7 @@ const ListTitles = {
 
 type ListTitle = keyof typeof ListTitles;
 
-const { user, fireside, rtc, chat, chatRoom, chatUsers, sidebar } = useFiresideController()!;
+const { user, fireside, rtc, chat, chatRoom, chatUsers } = useFiresideController()!;
 
 const usersProcessing = ref<(ChatUser | User)[]>([]);
 const isOpen = ref(true);
@@ -121,19 +119,9 @@ async function processUser(user: ChatUser | User) {
 <template>
 	<AppFiresideSidebar>
 		<template #header>
-			<AppHeaderBar :elevation="2" :defined-slots="['leading', 'title', 'actions']">
-				<template #leading>
-					<AppButton circle sparse trans icon="chevron-left" @click="sidebar = 'chat'" />
-				</template>
-
-				<template #title>
-					<AppTranslate>Manage Hosts</AppTranslate>
-				</template>
-
-				<template #actions>
-					<AppFiresideSidebarHeadingCollapse />
-				</template>
-			</AppHeaderBar>
+			<AppFiresideSidebarHeading>
+				<AppTranslate>Manage Hosts</AppTranslate>
+			</AppFiresideSidebarHeading>
 
 			<AppTabBar>
 				<AppTabBarItem

@@ -21,6 +21,7 @@ import {
 	createRemoteFiresideRTCUser,
 	FiresideRTCUser,
 	FiresideVideoPlayStateStopped,
+	initRemoteFiresideRTCUserPrefs,
 	setUserHasDesktopAudio,
 	setUserHasMicAudio,
 	setUserHasVideo,
@@ -151,29 +152,12 @@ export class FiresideRTC {
 		return this._allStreamingUsers.filter(rtcUser => rtcUser.isListed);
 	}
 
-	get isEveryRemoteListableUsersMuted() {
-		// Check against _remoteStreamingUsers because we want to exclude the local user from this check.
-		const users = this._remoteStreamingUsers.filter(i => i.isListed);
-		if (users.length === 0) {
-			return false;
-		}
-		return users.every(i => i.remoteMicAudioMuted);
-	}
-
 	/**
 	 * If the current user is currently streaming in this fireside. This will
 	 * only return valid data once everything gets subscribed to.
 	 */
 	get isPersonallyStreaming() {
 		return this.localUser !== null;
-	}
-
-	get shouldShowVolumeControls() {
-		return (
-			this.focusedUser?.hasDesktopAudio === true &&
-			this.focusedUser?.hasVideo === true &&
-			!this.isFocusingMe
-		);
 	}
 
 	get isFocusingMe() {
@@ -604,6 +588,9 @@ function _findOrAddRemoteUser(rtc: FiresideRTC, remoteUser: IAgoraRTCRemoteUser)
 	if (!user) {
 		user = createRemoteFiresideRTCUser(rtc, remoteUser.uid);
 		rtc._remoteStreamingUsers.push(user);
+		// Need to do this after we add the user to our list, otherwise we won't
+		// be able to find a User during this call and nothing will happen.
+		initRemoteFiresideRTCUserPrefs(user);
 	} else if (user.isLocal) {
 		throw new Error('Expected to be handling remote users here');
 	}
@@ -633,10 +620,12 @@ function _removeUserIfNeeded(rtc: FiresideRTC, user: FiresideRTCUser) {
 }
 
 function _updateVolumeLevels(rtc: FiresideRTC) {
-	// Checking against _remoteStreamingUsers and not _allStremaingUsers which includes
-	// the local user because we don't play the local user's stream (it would cause echo)
-	// so we don't get volume data.
-	for (const user of rtc._remoteStreamingUsers) {
+	/**
+	 * Checking against {@link rtc._allStreamingUsers} which includes the local
+	 * user. Change to {@link rtc._remoteStreamingUsers} if we want to disable
+	 * host thumb indicators for self.
+	 */
+	for (const user of rtc._allStreamingUsers) {
 		updateVolumeLevel(user);
 	}
 }

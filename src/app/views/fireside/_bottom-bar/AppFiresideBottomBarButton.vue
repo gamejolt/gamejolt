@@ -20,6 +20,10 @@ defineProps({
 	showSettings: {
 		type: Boolean,
 	},
+	activeColor: {
+		type: String as PropType<'primary' | 'overlay-notice'>,
+		default: 'primary',
+	},
 });
 
 const emit = defineEmits({
@@ -29,7 +33,13 @@ const emit = defineEmits({
 </script>
 
 <template>
-	<div class="-button-wrapper">
+	<div
+		class="-button-wrapper"
+		:class="{
+			'-active-notice': activeColor === 'overlay-notice',
+			'-active-primary': activeColor === 'primary',
+		}"
+	>
 		<button
 			class="-button"
 			:class="{ '-active': active }"
@@ -51,7 +61,16 @@ const emit = defineEmits({
 
 <style lang="stylus" scoped>
 .-button-wrapper
+	pressy()
 	position: relative
+
+.-active-notice
+	--active-bg: $gj-overlay-notice
+	--active-fg: white
+
+.-active-primary
+	--active-bg: var(--theme-primary)
+	--active-fg: var(--theme-primary-fg)
 
 .-button
 	flex: none
@@ -73,8 +92,8 @@ const emit = defineEmits({
 
 	&.-active
 	&:hover:not(:disabled)
-		background-color: var(--theme-primary)
-		color: var(--theme-primary-fg)
+		background-color: var(--active-bg)
+		color: var(--active-fg)
 
 .-badge
 	position: absolute

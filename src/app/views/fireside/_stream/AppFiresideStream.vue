@@ -14,13 +14,14 @@ import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useStickerStore } from '../../../../_common/sticker/sticker-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideDesktopAudio from '../../../components/fireside/stream/AppFiresideDesktopAudio.vue';
 import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';
-import AppFiresideVideoStats from '../../../components/fireside/stream/video-stats/AppFiresideVideoStats.vue';
+import AppFiresideStreamStats from '../../../components/fireside/stream/stream-stats/AppFiresideStreamStats.vue';
 import AppFiresideHeader from '../AppFiresideHeader.vue';
 import AppFiresideBottomBar from '../_bottom-bar/AppFiresideBottomBar.vue';
 import AppFiresideBottomBarHostAvatar from '../_bottom-bar/AppFiresideBottomBarHostAvatar.vue';
@@ -40,6 +41,9 @@ const props = defineProps({
 		type: Boolean,
 		required: true,
 	},
+	noStats: {
+		type: Boolean,
+	},
 });
 
 const { rtcUser, hasHeader, hasHosts, sidebarCollapsed } = toRefs(props);
@@ -48,15 +52,17 @@ const c = useFiresideController()!;
 const {
 	rtc,
 	shownUserCardHover,
+	shouldHideStreamVideo,
 	isHoveringOverlayControl,
 	isShowingStreamSetup,
+	isShowingStreamOverlay,
 	isFullscreen,
 	canFullscreen,
 	toggleFullscreen,
-	isShowingStreamOverlay,
 } = c;
 
 const { streak: stickerStreak } = useStickerStore();
+const { user } = useCommonStore();
 
 const _ignorePointerTimer = ref<NodeJS.Timer | null>();
 const hideUITimer = ref<NodeJS.Timer | null>(null);
@@ -70,7 +76,7 @@ const shouldAnimateStreak = ref(false);
 
 const streakCount = computed(() => formatFuzzynumber(stickerStreak.value?.count ?? 0));
 
-const hasVolumeControls = computed(() => !!rtc.value?.shouldShowVolumeControls);
+const showVideoStatTabs = computed(() => user.value?.isMod === true);
 
 const chatWidth = computed(() => {
 	if (isFullscreen.value && sidebarCollapsed.value) {
@@ -104,18 +110,20 @@ const overlayPaddingRight = computed(() => {
 
 const producer = computed(() => rtc.value?.producer);
 
-// We can only show local videos in one place at a time. This will
-// re-grab the video feed when it gets rebuilt.
+/**
+ * We can only show local videos in one place at a time. This will re-grab the
+ * video feed when it gets rebuilt.
+ */
 const shouldShowVideo = computed(() => !(isShowingStreamSetup.value && rtc.value?.isFocusingMe));
 
-// When the stream setup menu is showing its own stream, display a message
-// letting them know they can see their stream in the setup menu instead of
-// here.
+/**
+ * When the stream setup menu is showing its own stream, display a message
+ * letting them know they can see their stream in the setup menu instead of
+ * here.
+ */
 const showVideoPreviewMessage = computed(
 	() => !!rtc.value && rtc.value.isFocusingMe && isShowingStreamSetup.value
 );
-
-const hasOverlayItems = computed(() => true || hasVolumeControls.value || hasHeader.value);
 
 const videoPaused = computed(() => rtc.value?.videoPaused === true);
 
@@ -320,7 +328,7 @@ function onMouseLeaveControls() {
 		@click="onVideoClick"
 	>
 		<template v-if="showVideoPreviewMessage">
-			<div class="-video-sidebar-notice">
+			<div class="-video-hidden-notice">
 				<strong>
 					<AppTranslate class="text-muted"> See video preview in sidebar </AppTranslate>
 				</strong>
@@ -334,14 +342,28 @@ function onMouseLeaveControls() {
 			</template>
 			<template v-else>
 				<div :key="rtcUser.uid" :style="{ width: '100%', height: '100%' }">
-					<AppFiresideStreamVideo
-						v-if="shouldShowVideo"
-						class="-video-player -click-target"
-						:rtc-user="rtcUser"
-					/>
+					<template v-if="shouldShowVideo">
+						<div v-if="shouldHideStreamVideo" class="-video-hidden-notice">
+							<strong>
+								<AppTranslate class="text-muted">
+									We're hiding this video to conserve your system resources
+								</AppTranslate>
+							</strong>
+						</div>
+						<template v-else>
+							<AppFiresideStreamVideo
+								class="-video-player -click-target"
+								:rtc-user="rtcUser"
+							/>
+						</template>
+					</template>
 
 					<AppFiresideDesktopAudio v-if="shouldPlayDesktopAudio" :rtc-user="rtcUser" />
-					<AppFiresideVideoStats v-if="shouldShowVideoStats" @click.capture.stop />
+					<AppFiresideStreamStats
+						v-if="!noStats && shouldShowVideoStats"
+						class="-stream-stats"
+						:has-tab-switcher="showVideoStatTabs"
+					/>
 				</div>
 			</template>
 		</template>
@@ -353,12 +375,7 @@ function onMouseLeaveControls() {
 			</div>
 		</template>
 
-		<div
-			v-if="hasOverlayItems || showMutedIndicator"
-			class="-overlay"
-			:class="{ '-darken': shouldDarkenAll }"
-			@click.capture="onOverlayTap"
-		>
+		<div class="-overlay" :class="{ '-darken': shouldDarkenAll }" @click.capture="onOverlayTap">
 			<template v-if="shouldShowUI">
 				<template v-if="videoPaused || showMutedIndicator">
 					<transition>
@@ -527,6 +544,7 @@ $-z-combo = 2
 
 	&.-fullscreen
 		--overlay-position: fixed
+		background-color: black
 
 .jolticon
 	text-shadow: $-text-shadow
@@ -565,13 +583,18 @@ $-z-combo = 2
 		&.-darken
 			background-color: $-overlay-bg
 
-.-video-sidebar-notice
+.-video-hidden-notice
 	change-bg(bg)
 	width: 100%
 	height: 100%
 	display: flex
 	justify-content: center
 	align-items: center
+	text-align: center
+	padding: 16px
+
+.-stream-stats
+	z-index: $-z-control - 1
 
 .-click-target
 	cursor: pointer

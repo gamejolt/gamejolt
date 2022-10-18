@@ -56,6 +56,10 @@ export default class AppChatUserPopover extends Vue {
 		return role === 'moderator';
 	}
 
+	get isRobojolt() {
+		return this.user.id === 192757;
+	}
+
 	get canMessage() {
 		// Don't show "Send message" link when already in PM room with the user.
 		if (this.room.isPmRoom) {
@@ -67,7 +71,7 @@ export default class AppChatUserPopover extends Vue {
 	}
 
 	get canModerate() {
-		if (!this.chat || !this.chat.currentUser) {
+		if (!this.chat || !this.chat.currentUser || this.isRobojolt) {
 			return false;
 		}
 
@@ -75,7 +79,7 @@ export default class AppChatUserPopover extends Vue {
 	}
 
 	get canChangeModerator() {
-		if (!this.chat.currentUser) {
+		if (!this.chat.currentUser || this.isRobojolt) {
 			return false;
 		}
 		if (!this.room.canElectModerators) {
@@ -83,7 +87,7 @@ export default class AppChatUserPopover extends Vue {
 		}
 
 		// In public rooms, staff members cannot lose their mod status.
-		if (!this.room.isPrivateRoom && this.user.permission_level > 0) {
+		if (!this.room.isPrivateRoom && this.user.isStaff) {
 			return false;
 		}
 
@@ -93,12 +97,12 @@ export default class AppChatUserPopover extends Vue {
 
 	get canKick() {
 		// Cannot kick one of your mods, gotta demote first.
-		if (this.isModerator) {
+		if (this.isModerator || this.isRobojolt) {
 			return false;
 		}
 
 		// In public rooms, staff members can never get kicked.
-		if (!this.room.isPrivateRoom && this.user.permission_level > 0) {
+		if (!this.room.isPrivateRoom && this.user.isStaff) {
 			return false;
 		}
 

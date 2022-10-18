@@ -6,6 +6,7 @@ import {
 	markRaw,
 	provide,
 	reactive,
+	readonly,
 	Ref,
 	ref,
 	shallowReadonly,
@@ -23,12 +24,19 @@ import { getCurrentServerTime, updateServerTimeOffset } from '../../../../utils/
 import { run, sleep } from '../../../../utils/utils';
 import { uuidv4 } from '../../../../utils/uuid';
 import { MaybeRef } from '../../../../utils/vue';
+import {
+	trackFiresideExtinguish,
+	trackFiresidePublish,
+	trackFiresideSidebarButton,
+	trackFiresideSidebarCollapse,
+} from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Background } from '../../../../_common/background/background.model';
 import {
 	canCommunityEjectFireside,
 	canCommunityFeatureFireside,
 } from '../../../../_common/community/community.model';
+import { ContentFocus } from '../../../../_common/content-focus/content-focus.service';
 import { getDeviceBrowser, getDeviceOS } from '../../../../_common/device/device.service';
 import { DogtagData } from '../../../../_common/dogtag/dogtag-data';
 import { formatDuration } from '../../../../_common/filters/duration';
@@ -333,7 +341,21 @@ export function createFiresideController(
 
 		// Firefox and Safari each have problems with streaming. See their
 		// comments for reasons.
-		if (_isFirefox.value || _isSafari.value) {
+		const shouldBlockFirefox = _isFirefox.value && user.value?.isMod !== true;
+		if (shouldBlockFirefox || _isSafari.value) {
+			return false;
+		}
+
+		return true;
+	});
+
+	/**
+	 * Some browsers don't allow us to select output devices. If we're allowing
+	 * them to stream, we can check this to know if we should show a tooltip or
+	 * hide some form controls.
+	 */
+	const canBrowserSelectSpeakers = computed(() => {
+		if (_isFirefox.value) {
 			return false;
 		}
 
@@ -361,6 +383,29 @@ export function createFiresideController(
 	});
 
 	const shouldShowDesktopAppPromo = ref(shouldPromoteAppForStreaming.value);
+
+	/**
+	 * If we should hide the stream preview in the stream setup form.
+	 */
+	const shouldHideStreamVideoPreview = computed(() => !ContentFocus.isWindowFocused);
+
+	/**
+	 * If we should hide the focused video stream.
+	 */
+	const shouldHideStreamVideo = computed(() => {
+		// Always show if the window is focused, we paused the video streams
+		// manually, or we're not streaming.
+		if (
+			ContentFocus.isWindowFocused ||
+			rtc.value?.videoPaused === true ||
+			!isPersonallyStreaming.value
+		) {
+			return false;
+		}
+
+		// Only hide if we're focusing our own stream.
+		return focusedUser.value?.isLocal === true;
+	});
 
 	const _browser = computed(() => getDeviceBrowser().toLowerCase());
 
@@ -493,7 +538,7 @@ export function createFiresideController(
 				// the streams, then cleanupFiresideRTCProducer gets called which sets _isStreaming
 				// to false, and THEN when the streams actually attempt to stop it'd think they
 				// already stopped, and will not run the teardown logic for them..
-				await stopStreaming(prevProducer);
+				await stopStreaming(prevProducer, 'auto-lost-perms');
 				// TODO(big-pp-event) is there a way to make absolutely sure nothing keeps a reference
 				// to producer past this point? theres nothing in the producer class that prevents attempting
 				// to start streaming from a cleanup-up instance of producer.
@@ -555,24 +600,48 @@ export function createFiresideController(
 		() => _watchGrid
 	);
 
-	let _sidebar: FiresideSidebar = 'chat';
-	const sidebar = customRef<FiresideSidebar>((track, trigger) => ({
-		get: () => {
-			track();
-			return _sidebar;
-		},
-		set: val => {
-			if (val === _sidebar) {
-				return;
-			}
+	const sidebarHome: FiresideSidebar = 'chat';
+	const _sidebar = ref<FiresideSidebar>(sidebarHome);
+	const sidebar = readonly(computed(() => _sidebar.value));
 
-			_sidebar = val;
-			if (val !== 'chat' && _collapseSidebar) {
-				collapseSidebar.value = false;
-			}
-			trigger();
-		},
-	}));
+	function setSidebar(current: FiresideSidebar, trigger: string) {
+		if (current === sidebar.value) {
+			return;
+		}
+
+		trackFiresideSidebarButton({
+			previous: sidebar.value,
+			current,
+			trigger,
+		});
+
+		_sidebar.value = current;
+
+		if (current !== sidebarHome && _collapseSidebar) {
+			collapseSidebar.value = false;
+			trackFiresideSidebarCollapse(false, 'new-sidebar');
+		}
+	}
+
+	/**
+	 * Removes a sidebar from the
+	 */
+	function popSidebar() {
+		if (isSidebarHome.value) {
+			return;
+		}
+
+		const previous = sidebar.value;
+		_sidebar.value = sidebarHome;
+
+		trackFiresideSidebarButton({
+			previous,
+			current: sidebarHome,
+			trigger: 'go-back',
+		});
+	}
+
+	const isSidebarHome = computed(() => sidebar.value === sidebarHome);
 
 	let _collapseSidebar = false;
 	const collapseSidebar = customRef<boolean>((track, trigger) => ({
@@ -587,7 +656,7 @@ export function createFiresideController(
 
 			_collapseSidebar = val;
 			if (val) {
-				sidebar.value = 'chat';
+				_sidebar.value = sidebarHome;
 			}
 			trigger();
 		},
@@ -597,16 +666,16 @@ export function createFiresideController(
 		() => [sidebar, collapseSidebar],
 		() => {
 			const collapse = collapseSidebar.value;
-			const isChat = sidebar.value === 'chat';
+			const isHome = isSidebarHome.value;
 
-			if (collapse === isChat) {
+			if (collapse === isHome) {
 				return;
 			}
 
-			if (!isChat) {
+			if (!isHome) {
 				collapseSidebar.value = false;
 			} else if (collapse) {
-				sidebar.value = 'chat';
+				_sidebar.value = sidebarHome;
 			}
 		}
 	);
@@ -664,8 +733,8 @@ export function createFiresideController(
 
 	const activeBottomBarControl = computed<BottomBarControl | undefined>(() => {
 		switch (sidebar.value) {
-			case 'members':
-				return 'members';
+			case 'hosts':
+				return 'manage-cohosts';
 
 			case 'fireside-settings':
 				return 'settings';
@@ -725,8 +794,11 @@ export function createFiresideController(
 		canExtinguish,
 		canReport,
 		canBrowserStream,
+		canBrowserSelectSpeakers,
 		background,
 		shouldShowDesktopAppPromo,
+		shouldHideStreamVideoPreview,
+		shouldHideStreamVideo,
 		logger,
 
 		_isExtending,
@@ -743,6 +815,10 @@ export function createFiresideController(
 
 		activeBottomBarControl,
 		sidebar,
+		setSidebar,
+		popSidebar,
+		sidebarHome,
+		isSidebarHome,
 		isShowingStreamOverlay,
 		collapseSidebar,
 		popperTeleportId: computed(() => `fireside-teleport-${fireside.id}`),
@@ -1081,7 +1157,10 @@ export function toggleStreamVideoStats(c: FiresideController) {
 	c.rtc.value.shouldShowVideoStats = !c.rtc.value.shouldShowVideoStats;
 }
 
-export async function publishFireside({ fireside, status, isDraft }: FiresideController) {
+export async function publishFireside(
+	{ fireside, status, isDraft }: FiresideController,
+	trigger: string
+) {
 	if (!fireside || status.value !== 'joined' || !isDraft.value) {
 		return;
 	}
@@ -1095,6 +1174,8 @@ export async function publishFireside({ fireside, status, isDraft }: FiresideCon
 
 	await fireside.$publish({ autoFeature: true });
 	showSuccessGrowl($gettext(`Your fireside is live!`));
+
+	trackFiresidePublish(trigger);
 }
 
 async function extendFireside(c: FiresideController, growlOnFail = true) {
@@ -1119,7 +1200,7 @@ async function extendFireside(c: FiresideController, growlOnFail = true) {
 	}
 }
 
-export async function extinguishFireside(c: FiresideController) {
+export async function extinguishFireside(c: FiresideController, trigger: string) {
 	if (!c.fireside || !c.canExtinguish.value) {
 		return;
 	}
@@ -1133,6 +1214,7 @@ export async function extinguishFireside(c: FiresideController) {
 		return;
 	}
 
+	trackFiresideExtinguish(trigger);
 	await c.fireside.$extinguish();
 }
 
