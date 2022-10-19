@@ -623,7 +623,10 @@ function onClickStreamingBanner() {
 													class="-video-inner -abs-stretch"
 													:controller="c.stickerTargetController"
 												>
-													<AppPopper trigger="right-click">
+													<AppPopper
+														trigger="right-click"
+														:to="`#${popperTeleportId}`"
+													>
 														<AppFiresideStream
 															:rtc-user="focusedUser"
 															:has-header="isFullscreen"
@@ -886,8 +889,10 @@ $-center-guide-width = 400px
 	visibility: visible
 
 	&.-fullscreen
-		width: unset
 		min-width: var(--fireside-chat-width)
+
+		&.-trailing-float
+			width: unset
 
 	&.-fade
 		opacity: 0

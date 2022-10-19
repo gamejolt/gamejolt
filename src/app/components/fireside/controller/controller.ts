@@ -387,12 +387,24 @@ export function createFiresideController(
 	/**
 	 * If we should hide the stream preview in the stream setup form.
 	 */
-	const shouldHideStreamVideoPreview = computed(() => !ContentFocus.isWindowFocused);
+	const shouldHideStreamVideoPreview = computed(() => {
+		// Never hide if we have the stream "pinned".
+		if (pinStreamVideo.value) {
+			return false;
+		}
+
+		return !ContentFocus.isWindowFocused;
+	});
 
 	/**
 	 * If we should hide the focused video stream.
 	 */
 	const shouldHideStreamVideo = computed(() => {
+		// Never hide if we have the stream "pinned".
+		if (pinStreamVideo.value) {
+			return false;
+		}
+
 		// Always show if the window is focused, we paused the video streams
 		// manually, or we're not streaming.
 		if (
@@ -406,6 +418,12 @@ export function createFiresideController(
 		// Only hide if we're focusing our own stream.
 		return focusedUser.value?.isLocal === true;
 	});
+
+	/**
+	 * Used to override {@link shouldHideStreamVideo} and
+	 * {@link shouldHideStreamVideoPreview}.
+	 */
+	const pinStreamVideo = ref(false);
 
 	const _browser = computed(() => getDeviceBrowser().toLowerCase());
 
@@ -799,6 +817,7 @@ export function createFiresideController(
 		shouldShowDesktopAppPromo,
 		shouldHideStreamVideoPreview,
 		shouldHideStreamVideo,
+		pinStreamVideo,
 		logger,
 
 		_isExtending,
