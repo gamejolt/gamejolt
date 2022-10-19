@@ -51,6 +51,7 @@ const singleCol = computed(() => !localUser.value?.hasVideo || producer.value?.v
 									:has-header="isFullscreen"
 									:has-hosts="isFullscreen"
 									:sidebar-collapsed="collapseSidebar"
+									no-stats
 								/>
 							</AppStickerTarget>
 						</template>
