@@ -309,11 +309,11 @@ export function createFiresideController(
 
 	const canPublish = computed(() => {
 		const role = fireside.role?.role;
-		return (
-			(isOwner.value || role === 'host' || role === 'cohost') &&
-			status.value === 'joined' &&
-			isDraft.value
-		);
+		if (isOwner.value || role === 'host') {
+			return status.value === 'joined' && isDraft.value;
+		}
+
+		return false;
 	});
 
 	const _canExtend = computed(() => {
