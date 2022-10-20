@@ -359,7 +359,8 @@ async function togglePinStream() {
 						<div v-if="shouldHideStreamVideo" class="-video-hidden-notice">
 							<strong>
 								<AppTranslate class="text-muted">
-									We're hiding this video to conserve your system resources
+									We're hiding this video to conserve your system resources and
+									ensure a smooth stream
 								</AppTranslate>
 							</strong>
 						</div>
