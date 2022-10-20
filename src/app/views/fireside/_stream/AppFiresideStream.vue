@@ -17,6 +17,7 @@ import { useStickerStore } from '../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideDesktopAudio from '../../../components/fireside/stream/AppFiresideDesktopAudio.vue';
@@ -57,6 +58,7 @@ const {
 	isShowingStreamSetup,
 	isShowingStreamOverlay,
 	isFullscreen,
+	pinStreamVideo,
 	canFullscreen,
 	toggleFullscreen,
 } = c;
@@ -109,6 +111,13 @@ const overlayPaddingRight = computed(() => {
 });
 
 const producer = computed(() => rtc.value?.producer);
+const isFocusingMe = computed(() => rtcUser.value.isLocal);
+const hasPinVideoToggle = computed(
+	() =>
+		isFocusingMe.value &&
+		producer.value?.hasWebcamDevice.value &&
+		!producer.value.videoMuted.value
+);
 
 /**
  * We can only show local videos in one place at a time. This will re-grab the
@@ -313,6 +322,10 @@ function onMouseEnterControls() {
 function onMouseLeaveControls() {
 	isHoveringOverlayControl.value = false;
 }
+
+async function togglePinStream() {
+	pinStreamVideo.value = !pinStreamVideo.value;
+}
 </script>
 
 <template>
@@ -346,7 +359,8 @@ function onMouseLeaveControls() {
 						<div v-if="shouldHideStreamVideo" class="-video-hidden-notice">
 							<strong>
 								<AppTranslate class="text-muted">
-									We're hiding this video to conserve your system resources
+									We're hiding this video to conserve your system resources and
+									ensure a smooth stream
 								</AppTranslate>
 							</strong>
 						</div>
@@ -405,25 +419,53 @@ function onMouseLeaveControls() {
 								paddingRight: overlayPaddingRight,
 							}"
 						>
-							<AppFiresideHeader
-								v-if="hasHeader"
-								class="-header"
-								:fireside="c.fireside"
-								:sticker-target-controller="c.stickerTargetController"
-								overlay
-							/>
-							<AppSpacer v-if="hasHeader && canFullscreen" horizontal :scale="2" />
-							<AppButton
-								v-if="canFullscreen"
-								class="-button-lg"
-								sparse
-								circle
-								overlay
-								trans
-								style="margin-left: auto"
-								:icon="isFullscreen ? 'unfullscreen' : 'fullscreen'"
-								@click="toggleFullscreen()"
-							/>
+							<template v-if="hasHeader">
+								<AppFiresideHeader
+									class="-header"
+									:fireside="c.fireside"
+									:sticker-target-controller="c.stickerTargetController"
+									overlay
+								/>
+
+								<AppSpacer
+									v-if="canFullscreen || hasPinVideoToggle"
+									horizontal
+									:scale="2"
+								/>
+							</template>
+
+							<div
+								v-if="canFullscreen || hasPinVideoToggle"
+								class="-header-video-controls"
+							>
+								<AppButton
+									v-if="hasPinVideoToggle"
+									v-app-tooltip="
+										pinStreamVideo
+											? $gettext(`Hide when unfocused`)
+											: $gettext(`Always show video`)
+									"
+									class="-button-lg"
+									sparse
+									circle
+									overlay
+									:trans="!pinStreamVideo"
+									:primary="pinStreamVideo"
+									:solid="pinStreamVideo"
+									icon="thumbtack"
+									@click="togglePinStream()"
+								/>
+								<AppButton
+									v-if="canFullscreen"
+									class="-button-lg"
+									sparse
+									circle
+									overlay
+									trans
+									:icon="isFullscreen ? 'unfullscreen' : 'fullscreen'"
+									@click="toggleFullscreen()"
+								/>
+							</div>
 						</div>
 					</div>
 
@@ -629,6 +671,12 @@ $-z-combo = 2
 
 .-header
 	flex: auto
+
+.-header-video-controls
+	margin-left: auto
+	display: inline-flex
+	align-items: flex-start
+	gap: 4px
 
 .-overlay-members
 	opacity: 0.75

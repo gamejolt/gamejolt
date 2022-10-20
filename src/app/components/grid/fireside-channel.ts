@@ -166,6 +166,11 @@ export async function createGridFiresideChannel(
 		logger.debug('Grid sticker placement received.', payload, payload.streak);
 
 		const { rtc, stickerTargetController, fireside, user } = firesideController;
+		// Ignore placements if we don't have an RTC set up.
+		if (!rtc.value) {
+			logger.debug(`Received grid sticker placement while we have no RTC`);
+			return;
+		}
 
 		const placement = new StickerPlacement(payload.sticker_placement);
 		const {
