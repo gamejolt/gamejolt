@@ -7,6 +7,7 @@ import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppPostCardBase from '../fireside/post/card/AppPostCardBase.vue';
 import { FiresidePost } from '../fireside/post/post-model';
+import AppUserFollowButton from '../user/follow/AppUserFollowButton.vue';
 import AppUserAvatarImg from '../user/user-avatar/AppUserAvatarImg.vue';
 
 defineProps({
@@ -20,6 +21,13 @@ defineProps({
 	noVideo: {
 		type: Boolean,
 	},
+	noLink: {
+		type: Boolean,
+	},
+	followButtonType: {
+		type: String as PropType<'with-count' | 'no-count'>,
+		default: undefined,
+	},
 });
 </script>
 
@@ -31,12 +39,17 @@ defineProps({
 			class="-card-base"
 			:post="post"
 			no-elevate-hover
+			:no-hover="noLink"
 			full-gradient
 			:video-context="noVideo ? undefined : 'gif'"
-			:aspect-ratio="true ? AppCreatorCardAspectRatio : undefined"
+			:aspect-ratio="AppCreatorCardAspectRatio"
 		>
 			<template #controls>
-				<RouterLink class="-card-controls" :to="post.displayUser.routeLocation">
+				<component
+					:is="noLink ? 'div' : RouterLink"
+					class="-card-controls"
+					:to="post.displayUser.routeLocation"
+				>
 					<div class="-card-header">
 						<AppUserAvatarImg class="-card-avatar" :user="post.displayUser" />
 
@@ -47,7 +60,17 @@ defineProps({
 							<div class="-card-username">@{{ post.displayUser.username }}</div>
 						</div>
 					</div>
-				</RouterLink>
+				</component>
+
+				<div v-if="followButtonType" class="-card-follow">
+					<AppUserFollowButton
+						block
+						overlay
+						:user="post.displayUser"
+						location="creatorCard"
+						:hide-count="followButtonType === 'no-count'"
+					/>
+				</div>
 
 				<div class="-card-border" />
 			</template>
@@ -60,7 +83,7 @@ defineProps({
 	position: relative
 	flex: none
 
-	&:hover
+	&.-hoverable:hover
 		.-card-shadow
 		.-card-border
 			transition: none
@@ -122,6 +145,10 @@ defineProps({
 	font-size: $font-size-small
 
 .-card-follow
-	margin-top: auto
+	position: absolute
+	left: 8px
+	bottom: 8px
+	right: 8px
 	filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))
+	z-index: 1
 </style>

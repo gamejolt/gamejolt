@@ -41,6 +41,9 @@ const props = defineProps({
 	noElevateHover: {
 		type: Boolean,
 	},
+	noHover: {
+		type: Boolean,
+	},
 	aspectRatio: {
 		type: Number,
 		default: undefined,
@@ -233,7 +236,11 @@ function _initVideoController() {
 		v-if="post"
 		ref="root"
 		class="post-card"
-		:class="{ '-no-elevate-hover': noElevateHover, '-full-gradient': fullGradient }"
+		:class="{
+			'-hoverable': !noHover,
+			'-no-elevate-hover': noElevateHover,
+			'-full-gradient': fullGradient,
+		}"
 		:style="{ aspectRatio: `${postCardRatio}` }"
 	>
 		<AppResponsiveDimensions :ratio="postCardRatio" @change="calcData()">
@@ -315,7 +322,7 @@ function _initVideoController() {
 $-base-width = 200px
 $-padding = 8px
 
-.post-card
+.post-card.-hoverable
 	cursor: pointer
 
 	&:hover:not(.-no-elevate-hover)

@@ -7,9 +7,13 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { computed, markRaw, ref } from 'vue';
+import { ComponentPublicInstance, computed, markRaw, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
+import {
+	configOnboardingResources,
+	configSkipOnboardingProfile,
+} from '../../../_common/config/config.service';
 import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
 import Onboarding from '../../../_common/onboarding/onboarding.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
@@ -19,19 +23,45 @@ import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { showUserInviteFollowGrowl } from '../../../_common/user/invite/modal/modal.service';
 import { User } from '../../../_common/user/user.model';
+import FormOnboardingCreators from '../../components/forms/onboarding/FormOnboardingCreators.vue';
 import FormOnboardingFollows from '../../components/forms/onboarding/FormOnboardingFollows.vue';
 import FormOnboardingProfile from '../../components/forms/onboarding/FormOnboardingProfile.vue';
+import FormOnboardingRealms from '../../components/forms/onboarding/FormOnboardingRealms.vue';
 
 const { user } = useCommonStore();
 const router = useRouter();
 
-const steps = [markRaw(FormOnboardingProfile), markRaw(FormOnboardingFollows)];
+const steps = computed(() => {
+	const result: ComponentPublicInstance<any>[] = configSkipOnboardingProfile.value
+		? []
+		: [markRaw(FormOnboardingProfile)];
+
+	switch (configOnboardingResources.value) {
+		case 'communities':
+			result.push(markRaw(FormOnboardingFollows));
+			break;
+
+		case 'creators':
+			result.push(markRaw(FormOnboardingCreators));
+			break;
+
+		case 'realms':
+			result.push(markRaw(FormOnboardingRealms));
+			break;
+	}
+
+	return result;
+});
 
 const currentStep = ref(0);
 const isSocialRegistration = ref(false);
 const inviteUser = ref<User>();
 
-const stepComponent = computed(() => steps[currentStep.value]);
+const stepComponent = computed(() => {
+	const items = steps.value;
+	const step = Math.max(0, Math.min(items.length - 1, currentStep.value));
+	return items[step];
+});
 
 createAppRoute({
 	routeTitle: computed(() => $gettext(`Welcome to Game Jolt!`)),
@@ -50,7 +80,7 @@ createAppRoute({
 });
 
 function onNextStep() {
-	if (currentStep.value === steps.length - 1) {
+	if (currentStep.value === steps.value.length - 1) {
 		Onboarding.end();
 
 		if (inviteUser.value) {
@@ -82,7 +112,7 @@ function onNextStep() {
 								block
 								:primary="false"
 								:solid="false"
-								trans
+								overlay
 								:disabled="!canContinue"
 							>
 								<AppTranslate>Skip</AppTranslate>

@@ -85,6 +85,7 @@ interface CreateFormOptions<T, SubmitResponse = any> {
 	saveMethod?: MaybeRef<keyof T | undefined>;
 	loadUrl?: MaybeRef<string | undefined>;
 	loadData?: MaybeRef<any>;
+	sanitizeComplexData?: boolean;
 	resetOnSubmit?: MaybeRef<boolean>;
 	warnOnDiscard?: MaybeRef<boolean>;
 	reloadOnSubmit?: MaybeRef<boolean>;
@@ -98,7 +99,7 @@ interface CreateFormOptions<T, SubmitResponse = any> {
 }
 
 export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T, SubmitResponse>) {
-	const { model } = options;
+	const { model, sanitizeComplexData = false } = options;
 
 	// These may be redefined below through the overrides. Only needed for
 	// backwards compatibility with old forms.
@@ -277,6 +278,7 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 		const payload = loadUrl.value
 			? await Api.sendRequest(loadUrl.value, loadData.value || undefined, {
 					detach: true,
+					sanitizeComplexData,
 			  })
 			: {};
 
