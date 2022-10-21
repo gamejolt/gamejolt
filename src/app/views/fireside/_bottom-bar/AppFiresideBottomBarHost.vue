@@ -399,7 +399,7 @@ function onUserCardUnhovered() {
 	width: 100%
 	height: @width
 	z-index: 1
-	transition: all 400ms $strong-ease-out
+	transition: all 400ms
 
 	&.-small
 		left: -2px

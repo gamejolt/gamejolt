@@ -7,7 +7,7 @@ import { useCommonStore } from '../../../../_common/store/common-store';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 
-const BandGap = 4;
+const BandGap = 2;
 const BandWidth = 3;
 
 const props = defineProps({
