@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { transparentize } from 'polished';
+import { shade } from 'polished';
 import { computed, PropType, toRefs } from 'vue';
 import { FiresideRTCProducer } from '../../../../_common/fireside/rtc/producer';
 import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
@@ -69,7 +69,7 @@ const imgColorTint = computed(() => {
 	}
 
 	try {
-		return transparentize(0.75, `#${color}`);
+		return shade(-0.15, `#${color}`);
 	} catch {
 		return undefined;
 	}
@@ -190,6 +190,7 @@ const isActive = computed(() => {
 	left: @top
 
 .-img
+.-avatar
 	&
 	::v-deep(img)
 		height: 100%
