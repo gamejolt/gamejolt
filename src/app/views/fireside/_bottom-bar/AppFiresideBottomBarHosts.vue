@@ -50,12 +50,18 @@ const listableStreamingUsers = computed(() => rtc.value?.listableStreamingUsers 
 
 <style lang="stylus" scoped>
 .bottom-bar-hosts
-	--fireside-host-size: 64px
+	--fireside-host-size: 100px
 	--fireside-host-gap: 8px
 	width: 100%
 	// This extra padding is so that the shadows of the floating avatars don't
 	// get cut off
 	padding: 4px 4px 0 4px
+
+	@media screen and (max-height: 700px)
+		--fireside-host-size: 80px
+
+	@media screen and (max-height: 500px)
+		--fireside-host-size: 64px
 
 .-hosts
 	display: inline-flex
