@@ -64,10 +64,15 @@ const userModel = computed(() => {
 
 const imgColorTint = computed(() => {
 	const color = userModel.value?.avatar_media_item?.avg_img_color;
-	if (color) {
-		return transparentize(0.75, color);
+	if (!color) {
+		return undefined;
 	}
-	return undefined;
+
+	try {
+		return transparentize(0.75, `#${color}`);
+	} catch {
+		return undefined;
+	}
 });
 
 const isActive = computed(() => {
