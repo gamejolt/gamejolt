@@ -729,7 +729,9 @@ export function createFiresideController(
 		const checkIsFullscreen = () => document.fullscreenElement === element;
 
 		if (!element || !shouldFullscreen) {
-			document.exitFullscreen();
+			if (document.fullscreenElement) {
+				document.exitFullscreen();
+			}
 			_isFullscreen.value = false;
 			return;
 		}
