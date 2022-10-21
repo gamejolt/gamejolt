@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { transparentize } from 'polished';
 import { computed, PropType, toRefs } from 'vue';
 import { FiresideRTCProducer } from '../../../../_common/fireside/rtc/producer';
 import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
@@ -61,6 +62,14 @@ const userModel = computed(() => {
 	}
 });
 
+const imgColorTint = computed(() => {
+	const color = userModel.value?.avatar_media_item?.avg_img_color;
+	if (color) {
+		return transparentize(0.75, color);
+	}
+	return undefined;
+});
+
 const isActive = computed(() => {
 	if (!rtc.value || !rtc.value.focusedUser) {
 		return false;
@@ -84,7 +93,14 @@ const isActive = computed(() => {
 	>
 		<div class="-highlight-band" />
 
-		<div class="-indicator">
+		<div
+			class="-indicator"
+			:style="{
+				backgroundImage: imgColorTint
+					? `linear-gradient(${imgColorTint}, ${imgColorTint})`
+					: undefined,
+			}"
+		>
 			<div v-if="userModel" class="-avatar">
 				<AppUserAvatarImg class="-img -help" :user="userModel" />
 			</div>
@@ -95,6 +111,9 @@ const isActive = computed(() => {
 <style lang="stylus" scoped>
 .-indicator
 	z-index: 1
+
+.-highlight-band
+	z-index: -1
 
 .bottom-bar-host-avatar
 	elevate-1()
@@ -110,7 +129,7 @@ const isActive = computed(() => {
 
 	&
 	.-indicator
-	.-edge-bleed
+	.-highlight-band
 		border-radius: 50%
 		transition: border-radius 300ms $strong-ease-out
 
@@ -123,7 +142,7 @@ const isActive = computed(() => {
 		&
 		.-indicator-color
 		.-indicator
-		.-edge-bleed
+		.-highlight-band
 			border-radius: inherit
 
 	&.-sm
@@ -138,11 +157,11 @@ const isActive = computed(() => {
 	&.-lg
 		border-radius: var(--radius)
 
-		.-edge-bleed
-			border-radius: calc(var(--radius) * 0.95)
+		.-highlight-band
+			border-radius: calc(var(--radius) * 1.01)
 
 		.-indicator
-			border-radius: calc(var(--radius) * 0.75)
+			border-radius: calc(var(--radius) * 0.5)
 
 .-active-hover
 	elevate-2() !important
@@ -156,7 +175,6 @@ const isActive = computed(() => {
 	height: 100%
 	width: 100%
 	position: relative
-	z-index: 1
 
 .-highlight-band
 	border: var(--band-width) solid var(--theme-primary)
@@ -165,7 +183,6 @@ const isActive = computed(() => {
 	right: @top
 	bottom: @top
 	left: @top
-	z-index: -1
 
 .-img
 	&

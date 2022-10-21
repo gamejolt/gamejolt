@@ -441,7 +441,7 @@ function onUserCardUnhovered() {
 	width: 0
 	bottom: -24px
 	opacity: 0
-	background-color: var(--theme-link)
+	background-color: var(--theme-primary)
 	transition: width 400ms $ease-out-back, opacity 250ms
 
 	&.-active
