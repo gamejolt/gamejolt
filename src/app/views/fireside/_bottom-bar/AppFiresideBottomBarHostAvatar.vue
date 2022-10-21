@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { shade } from 'polished';
 import { computed, PropType, toRefs } from 'vue';
 import { FiresideRTCProducer } from '../../../../_common/fireside/rtc/producer';
 import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
@@ -6,10 +7,20 @@ import { useCommonStore } from '../../../../_common/store/common-store';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 
+const BandGap = 2;
+const BandWidth = 3;
+
 const props = defineProps({
 	host: {
 		type: Object as PropType<FiresideRTCUser | FiresideRTCProducer>,
 		required: true,
+	},
+	fillParent: {
+		type: Boolean,
+	},
+	fillRadius: {
+		type: String as PropType<'sm' | 'md' | 'lg'>,
+		default: undefined,
 	},
 });
 
@@ -32,7 +43,7 @@ const padding = computed(() => {
 	// Doing either ceil or floor here will help with weird half-value
 	// padding jank depending on the browser.
 	const clamped = Math.ceil(Math.min(1, Math.max(0, volumeSnapped)) * 6);
-	return `calc( max( ${clamped}px, ${clamped}% ))`;
+	return `calc( min(${BandGap + BandWidth}px, max( ${clamped}px, ${clamped}% )))`;
 });
 
 const uid = computed(() => {
@@ -51,6 +62,19 @@ const userModel = computed(() => {
 	}
 });
 
+const imgColorTint = computed(() => {
+	const color = userModel.value?.avatar_media_item?.avg_img_color;
+	if (!color) {
+		return undefined;
+	}
+
+	try {
+		return shade(-0.15, `#${color}`);
+	} catch {
+		return undefined;
+	}
+});
+
 const isActive = computed(() => {
 	if (!rtc.value || !rtc.value.focusedUser) {
 		return false;
@@ -61,35 +85,42 @@ const isActive = computed(() => {
 </script>
 
 <template>
-	<div class="-indicator-wrap" :class="{ '-active-hover': isActive }" :style="{ padding }">
-		<div class="-indicator-color" />
+	<div
+		class="bottom-bar-host-avatar"
+		:class="{
+			'-active-hover': isActive,
+			'-fill-parent': fillParent,
+			'-sm': fillRadius === 'sm',
+			'-md': fillRadius === 'md',
+			'-lg': fillRadius === 'lg',
+		}"
+		:style="[`padding: ${padding}`, `--band-width: ${BandWidth}px`]"
+	>
+		<div class="-highlight-band" />
 
-		<div class="-indicator">
-			<div class="-edge-bleed" />
-
-			<template v-if="userModel">
+		<div
+			class="-indicator"
+			:style="{
+				backgroundImage: imgColorTint
+					? `linear-gradient(${imgColorTint}, ${imgColorTint})`
+					: undefined,
+			}"
+		>
+			<div v-if="userModel" class="-avatar">
 				<AppUserAvatarImg class="-img -help" :user="userModel" />
-			</template>
+			</div>
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-.-indicator-color
-	z-index: 0
-
 .-indicator
 	z-index: 1
 
-.-indicator
-.-indicator-wrap
-.-indicator-color
-	img-circle()
+.-highlight-band
+	z-index: -1
 
-.-active-hover
-	elevate-2() !important
-
-.-indicator-wrap
+.bottom-bar-host-avatar
 	elevate-1()
 	position: relative
 	height: 100%
@@ -98,18 +129,47 @@ const isActive = computed(() => {
 	display: flex
 	align-items: center
 	justify-content: center
-	border-radius: 50%
-	transition: padding 100ms cubic-bezier(0.39, 0.58, 0.57, 1)
+	transition: all 300ms cubic-bezier(0.39, 0.58, 0.57, 1) !important
 	will-change: padding
 
-.-indicator-color
-	background-color: var(--theme-link)
-	position: absolute
-	// Inset this slightly so the color doesn't show behind the antialiasing
-	top: 1px
-	right: @top
-	bottom: @top
-	left: @top
+	&
+	.-indicator
+	.-highlight-band
+		border-radius: 50%
+		transition: border-radius 300ms $strong-ease-out
+
+.-fill-parent
+	.-avatar
+		width: calc(var(--fireside-host-size) - 32px)
+		height: @width
+
+	&.-inherit
+		&
+		.-indicator-color
+		.-indicator
+		.-highlight-band
+			border-radius: inherit
+
+	&.-sm
+		--radius: $border-radius-sm
+	&.-md
+		--radius: $border-radius-base
+	&.-lg
+		--radius: $border-radius-large
+
+	&.-sm
+	&.-md
+	&.-lg
+		border-radius: var(--radius)
+
+		.-highlight-band
+			border-radius: calc(var(--radius) * 1.01)
+
+		.-indicator
+			border-radius: calc(var(--radius) * 0.5)
+
+.-active-hover
+	elevate-2() !important
 
 .-indicator
 	background-color: var(--theme-bg-offset)
@@ -121,18 +181,16 @@ const isActive = computed(() => {
 	width: 100%
 	position: relative
 
-.-edge-bleed
-	img-circle()
-	--border-size: $border-width-base
-	--bleed-size: unquote('calc(var(--border-size) * -1)')
+.-highlight-band
+	border: var(--band-width) solid var(--theme-primary)
 	position: absolute
-	top: var(--bleed-size)
-	right: var(--bleed-size)
-	bottom: var(--bleed-size)
-	left: var(--bleed-size)
-	change-bg(primary-fg)
+	top: 0
+	right: @top
+	bottom: @top
+	left: @top
 
 .-img
+.-avatar
 	&
 	::v-deep(img)
 		height: 100%

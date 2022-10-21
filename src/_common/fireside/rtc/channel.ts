@@ -312,9 +312,9 @@ export async function startChannelStreaming(channel: FiresideRTCChannel) {
 	generation.assert();
 
 	agoraClient.setLowStreamParameter({
-		width: 128,
-		height: 72,
-		framerate: 10,
+		width: 160,
+		height: 90,
+		framerate: 30,
 		bitrate: 350,
 	});
 
