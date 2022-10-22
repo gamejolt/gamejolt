@@ -17,6 +17,7 @@ import {
 import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
 import Onboarding from '../../../_common/onboarding/onboarding.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
+import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
@@ -105,25 +106,27 @@ function onNextStep() {
 		>
 			<template #controls="{ shouldShowSkip, canContinue }">
 				<AppScrollAffix class="-controls" anchor="bottom" :padding="8">
-					<section>
-						<template v-if="shouldShowSkip">
-							<AppFormButton
-								class="-skip"
-								block
-								:primary="false"
-								:solid="false"
-								overlay
-								:disabled="!canContinue"
-							>
-								<AppTranslate>Skip</AppTranslate>
-							</AppFormButton>
-						</template>
-						<template v-else>
-							<AppFormButton primary block solid :disabled="!canContinue">
-								<AppTranslate>Next</AppTranslate>
-							</AppFormButton>
-						</template>
-					</section>
+					<div class="-controls-outer">
+						<div class="-controls-content">
+							<template v-if="shouldShowSkip">
+								<AppFormButton
+									class="-skip"
+									:primary="false"
+									:solid="false"
+									trans
+									:sm="Screen.isXs"
+									:disabled="!canContinue"
+								>
+									<AppTranslate>Skip</AppTranslate>
+								</AppFormButton>
+							</template>
+							<template v-else>
+								<AppFormButton primary block solid :disabled="!canContinue">
+									<AppTranslate>Next</AppTranslate>
+								</AppFormButton>
+							</template>
+						</div>
+					</div>
 				</AppScrollAffix>
 			</template>
 		</component>
@@ -136,8 +139,18 @@ function onNextStep() {
 	min-height: 100vh
 
 .-controls
-	margin-top: 30px
+	margin-top: 20px
 
-.-skip
-	theme-prop('color', 'fg-muted')
+.-controls-outer
+	display: flex
+	justify-content: flex-end
+
+.-controls-content
+	rounded-corners()
+	padding: 8px
+	margin-right: 8px
+
+	::v-deep(.gj-scroll-affixed) &
+		background-color: var(--theme-darkest)
+		elevate-2()
 </style>

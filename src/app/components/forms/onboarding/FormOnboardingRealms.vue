@@ -1,17 +1,12 @@
 <script lang="ts" setup>
-import { computed, shallowRef } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed, ref } from 'vue';
 import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { configOnboardingResources } from '../../../../_common/config/config.service';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
-import { HistoryCache } from '../../../../_common/history/cache/cache.service';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
 import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
 import { Realm } from '../../../../_common/realm/realm-model';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-
-const CachedRealmsKey = 'OnboardingRealms';
 
 type FormModel = {
 	// nothing
@@ -21,36 +16,16 @@ const emit = defineEmits({
 	next: () => true,
 });
 
-const route = useRoute();
-
-const realms = shallowRef<Realm[]>([]);
+const realms = ref<Realm[]>([]);
 
 const form: FormController<FormModel> = createForm({
 	warnOnDiscard: false,
 	onInit() {
 		Onboarding.startStep('follows');
-		realms.value = HistoryCache.get(route, CachedRealmsKey) ?? [];
 	},
-	loadUrl: '/mobile/galaxy',
-	loadData: {
-		_fields: {
-			realms: true,
-		},
-	},
-	sanitizeComplexData: false,
+	loadUrl: '/web/onboarding/realms',
 	onLoad(payload) {
-		const cachedRealms = HistoryCache.get(route, CachedRealmsKey);
-
-		let newRealms: Realm[];
-
-		if (cachedRealms) {
-			newRealms = cachedRealms;
-		} else {
-			newRealms = payload.realms ? Realm.populate(payload.realms) : [];
-			HistoryCache.store(route, newRealms, CachedRealmsKey);
-		}
-
-		realms.value = newRealms;
+		realms.value = Realm.populate(payload.realms);
 		trackExperimentEngagement(configOnboardingResources);
 	},
 	onBeforeSubmit() {
@@ -72,13 +47,11 @@ const joinedAnyRealm = computed(() => realms.value.find(i => !!i.is_following));
 		<div class="-form">
 			<section class="-message">
 				<h3 class="section-header">
-					<AppTranslate>Follow Interesting Realms</AppTranslate>
+					{{ $gettext(`Follow some realms`) }}
 				</h3>
 
 				<p class="text-muted">
-					<AppTranslate>
-						Explore fan-created artwork, videos, guides and more.
-					</AppTranslate>
+					{{ $gettext(`Explore fan-created artwork, videos, guides and more.`) }}
 				</p>
 			</section>
 
