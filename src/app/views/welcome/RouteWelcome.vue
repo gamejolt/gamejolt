@@ -9,6 +9,7 @@ export default {
 <script lang="ts" setup>
 import { ComponentPublicInstance, computed, markRaw, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import {
 	configOnboardingResources,
@@ -77,6 +78,7 @@ createAppRoute({
 
 		isSocialRegistration.value = payload.isSocialRegistration || false;
 		inviteUser.value = payload.inviteUser && new User(payload.inviteUser);
+		trackExperimentEngagement(configSkipOnboardingProfile);
 	},
 });
 
