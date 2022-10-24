@@ -45,6 +45,9 @@ const form: FormController<FormModel> = createForm({
 			followsAnyCommunity.value ? 'follow-communities-set' : 'follow-communities-skip'
 		);
 	},
+	async onSubmit() {
+		// Nothing to submit.
+	},
 	onSubmitSuccess() {
 		Onboarding.endStep(shouldShowSkip.value);
 		emit('next');

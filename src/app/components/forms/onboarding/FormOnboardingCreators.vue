@@ -44,6 +44,9 @@ const form: FormController<FormModel> = createForm({
 			followsAnyCreator.value ? 'follow-creators-set' : 'follow-creators-skip'
 		);
 	},
+	async onSubmit() {
+		// Nothing to submit.
+	},
 	onSubmitSuccess() {
 		Onboarding.endStep(shouldShowSkip.value);
 		emit('next');

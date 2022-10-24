@@ -31,6 +31,9 @@ const form: FormController<FormModel> = createForm({
 	onBeforeSubmit() {
 		Onboarding.trackEvent(joinedAnyRealm.value ? 'follow-realms-set' : 'follow-realms-skip');
 	},
+	async onSubmit() {
+		// Nothing to submit.
+	},
 	onSubmitSuccess() {
 		Onboarding.endStep(shouldShowSkip.value);
 		emit('next');
