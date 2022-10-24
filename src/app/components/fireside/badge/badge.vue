@@ -344,5 +344,5 @@ $-zindex-content = 3
 	change-bg('highlight')
 
 .-live
-	margin-left: auto
+	margin-left: auto !important
 </style>

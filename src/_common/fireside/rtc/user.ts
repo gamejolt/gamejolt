@@ -230,8 +230,8 @@ export function createLocalFiresideRTCUser(rtc: FiresideRTC, uid: number) {
 }
 
 export function initRemoteFiresideRTCUserPrefs(user: FiresideRTCUser) {
-	// Ignore local user.
-	if (user.isLocal) {
+	// Ignore local user and RTC controllers that disable audio.
+	if (user.isLocal || user.rtc.isMuted) {
 		return;
 	}
 
