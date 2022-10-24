@@ -67,6 +67,7 @@ const joinedAnyRealm = computed(() => realms.value.find(i => !!i.is_following));
 							:realm="realm"
 							no-sheet
 							overlay-content
+							follow-on-click
 						/>
 					</div>
 				</AppScrollScroller>

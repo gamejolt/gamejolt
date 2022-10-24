@@ -81,6 +81,7 @@ const followsAnyCreator = computed(() => creators.value.find(i => !!i.is_followi
 							:post="post"
 							follow-button-type="no-count"
 							no-link
+							follow-on-click
 						/>
 					</div>
 				</AppScrollScroller>

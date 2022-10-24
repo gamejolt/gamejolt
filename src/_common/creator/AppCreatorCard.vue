@@ -3,14 +3,16 @@ export const AppCreatorCardAspectRatio = 11 / 17;
 </script>
 
 <script lang="ts" setup>
-import { PropType } from 'vue';
+import { computed } from '@vue/runtime-core';
+import { PropType, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppPostCardBase from '../fireside/post/card/AppPostCardBase.vue';
 import { FiresidePost } from '../fireside/post/post-model';
 import AppUserFollowButton from '../user/follow/AppUserFollowButton.vue';
 import AppUserAvatarImg from '../user/user-avatar/AppUserAvatarImg.vue';
+import { toggleUserFollow } from '../user/user.model';
 
-defineProps({
+const props = defineProps({
 	post: {
 		type: Object as PropType<FiresidePost>,
 		required: true,
@@ -28,21 +30,53 @@ defineProps({
 		type: String as PropType<'with-count' | 'no-count'>,
 		default: undefined,
 	},
+	followOnClick: {
+		type: Boolean,
+	},
 });
+
+const { post, fancyHover, noVideo, noLink, followButtonType, followOnClick } = toRefs(props);
+
+const isHovered = ref(false);
+const isProcessing = ref(false);
+
+const user = computed(() => post.value.displayUser);
+
+async function onClick(event: Event) {
+	if (!followOnClick.value) {
+		return;
+	}
+
+	event.preventDefault();
+	event.stopPropagation();
+
+	if (isProcessing.value) {
+		return;
+	}
+
+	isProcessing.value = true;
+	await toggleUserFollow(user.value, 'creatorCard');
+	isProcessing.value = false;
+}
 </script>
 
 <template>
-	<div class="creator-card">
+	<div
+		class="creator-card"
+		@mouseover="isHovered = true"
+		@mouseout="isHovered = false"
+		@click.capture="onClick"
+	>
 		<div v-if="fancyHover" class="-card-shadow" />
 
 		<AppPostCardBase
 			class="-card-base"
 			:post="post"
-			no-elevate-hover
-			:no-hover="noLink"
-			full-gradient
+			:no-hover="!followOnClick && noLink"
 			:video-context="noVideo ? undefined : 'gif'"
 			:aspect-ratio="AppCreatorCardAspectRatio"
+			no-elevate-hover
+			full-gradient
 		>
 			<template #controls>
 				<component
@@ -69,6 +103,8 @@ defineProps({
 						:user="post.displayUser"
 						location="creatorCard"
 						:hide-count="followButtonType === 'no-count'"
+						:force-hover="followOnClick && isHovered"
+						:disabled="isProcessing"
 					/>
 				</div>
 
@@ -82,12 +118,6 @@ defineProps({
 .creator-card
 	position: relative
 	flex: none
-
-	&.-hoverable:hover
-		.-card-shadow
-		.-card-border
-			transition: none
-			opacity: 1
 
 .-card-shadow
 .-card-border
@@ -124,6 +154,7 @@ defineProps({
 
 .-card-header
 	display: flex
+	text-align: start
 
 .-card-avatar
 	width: 40px
