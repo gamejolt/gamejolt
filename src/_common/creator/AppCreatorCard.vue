@@ -8,6 +8,7 @@ import { PropType, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppPostCardBase from '../fireside/post/card/AppPostCardBase.vue';
 import { FiresidePost } from '../fireside/post/post-model';
+import { useCommonStore } from '../store/common-store';
 import AppUserFollowButton from '../user/follow/AppUserFollowButton.vue';
 import AppUserAvatarImg from '../user/user-avatar/AppUserAvatarImg.vue';
 import { toggleUserFollow } from '../user/user.model';
@@ -40,10 +41,14 @@ const { post, fancyHover, noVideo, noLink, followButtonType, followOnClick } = t
 const isHovered = ref(false);
 const isProcessing = ref(false);
 
+const { user: sessionUser } = useCommonStore();
+
 const user = computed(() => post.value.displayUser);
+const isMe = computed(() => sessionUser.value?.id === user.value.id);
+const hasFollowOnClick = computed(() => followOnClick.value && !isMe.value);
 
 async function onClick(event: Event) {
-	if (!followOnClick.value) {
+	if (!hasFollowOnClick.value) {
 		return;
 	}
 
@@ -72,7 +77,7 @@ async function onClick(event: Event) {
 		<AppPostCardBase
 			class="-card-base"
 			:post="post"
-			:no-hover="!followOnClick && noLink"
+			:no-hover="!hasFollowOnClick && noLink"
 			:video-context="noVideo ? undefined : 'gif'"
 			:aspect-ratio="AppCreatorCardAspectRatio"
 			no-elevate-hover
@@ -103,7 +108,7 @@ async function onClick(event: Event) {
 						:user="post.displayUser"
 						location="creatorCard"
 						:hide-count="followButtonType === 'no-count'"
-						:force-hover="followOnClick && isHovered"
+						:force-hover="hasFollowOnClick && isHovered"
 						:disabled="isProcessing"
 					/>
 				</div>
