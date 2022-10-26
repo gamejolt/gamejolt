@@ -1,3 +1,7 @@
+<script lang="ts">
+export const REALM_CARD_RATIO = 0.75;
+</script>
+
 <script lang="ts" setup>
 import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
@@ -32,6 +36,10 @@ const props = defineProps({
 	},
 	followOnClick: {
 		type: Boolean,
+	},
+	labelSize: {
+		type: String as PropType<'small' | 'tiny'>,
+		default: undefined,
 	},
 });
 
@@ -99,9 +107,11 @@ async function onClick(event: Event) {
 			:style="labelStyling"
 			:overlay="overlayContent"
 			:realm="realm"
+			:small="labelSize === 'small'"
+			:tiny="labelSize === 'tiny'"
 		/>
 
-		<AppResponsiveDimensions :ratio="0.75">
+		<AppResponsiveDimensions :ratio="REALM_CARD_RATIO">
 			<AppMediaItemBackdrop v-if="mediaItem" :media-item="mediaItem">
 				<AppImgResponsive class="-cover-img" :src="mediaItem.mediaserver_url" alt="" />
 			</AppMediaItemBackdrop>

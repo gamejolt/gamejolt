@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
-import { stringSort } from '../../../../../utils/array';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { GameCollection } from '../../../game/collection/collection.model';
+import { stringSort } from '../../../../utils/array';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { GameCollection } from '../../game/collection/collection.model';
 
 const props = defineProps({
 	collections: {

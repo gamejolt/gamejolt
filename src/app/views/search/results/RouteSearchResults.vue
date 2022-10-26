@@ -17,7 +17,12 @@ import AppGameList from '../../../components/game/list/list.vue';
 import { AppActivityFeedLazy as AppActivityFeed } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import { sendSearch } from '../../../components/search/search-service';
+import { routeSearchRealms } from '../realms/realms.route';
 import { useSearchRouteController } from '../RouteSearch.vue';
+
+const REALM_COL_DESKTOP = 4;
+const REALM_COL_SM = 3;
+const REALM_COL_XS = 2;
 
 export default {
 	...defineAppRouteOptions({
@@ -61,19 +66,49 @@ const slicedUsers = computed(() =>
 );
 
 const slicedCommunities = computed(() => searchPayload.value.communities.slice(0, 6));
+
+const slicedRealms = computed(() => {
+	let count = REALM_COL_DESKTOP;
+	if (Screen.isSm) {
+		count = REALM_COL_SM;
+	} else if (Screen.isXs) {
+		count = REALM_COL_XS;
+	}
+
+	return searchPayload.value.realms.slice(0, count);
+});
 </script>
 
 <template>
 	<section v-if="hasSearch">
-		<template v-if="searchPayload.realm">
+		<template v-if="slicedRealms.length">
 			<section class="section section-thin">
 				<div class="container">
-					<h3 class="-heading">Realms</h3>
+					<h3 class="-heading">
+						Realms
 
-					<div class="-realm-cards">
+						<AppButton
+							v-if="searchPayload.realmsCount > slicedRealms.length"
+							class="-heading-more"
+							:to="{ name: routeSearchRealms.name, query: { q: query } }"
+						>
+							{{ $gettext(`View All`) }}
+						</AppButton>
+					</h3>
+
+					<div
+						class="-realm-cards"
+						:style="[
+							`--col-desktop: ${REALM_COL_DESKTOP}`,
+							`--col-sm: ${REALM_COL_SM}`,
+							`--col-xs: ${REALM_COL_XS}`,
+						]"
+					>
 						<AppRealmFullCard
-							:realm="searchPayload.realm"
-							:to="searchPayload.realm.routeLocation"
+							v-for="realm of slicedRealms"
+							:key="realm.id"
+							:realm="realm"
+							:to="realm.routeLocation"
 							overlay-content
 							no-sheet
 							no-follow
@@ -217,18 +252,21 @@ const slicedCommunities = computed(() => searchPayload.value.communities.slice(0
 	clearfix()
 	margin-top: $line-height-computed
 
+.-heading-more
+	float: right
+
 .-realm-cards
 	display: grid
-	--grid-cols: 4
+	--grid-cols: var(--col-desktop)
 	gap: 24px
 	grid-template-columns: repeat(var(--grid-cols), 1fr)
 	justify-content: center
 
 	@media $media-sm
-		--grid-cols: 3
+		--grid-cols: var(--col-sm)
 		gap: 24px
 
 	@media $media-xs
-		--grid-cols: 2
+		--grid-cols: var(--col-xs)
 		gap: 16px
 </style>

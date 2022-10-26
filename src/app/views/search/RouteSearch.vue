@@ -16,6 +16,7 @@ import AppPageHeader from '../../components/page-header/page-header.vue';
 import AppSearch from '../../components/search/AppSearch.vue';
 import { Search, SearchPayload } from '../../components/search/search-service';
 import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
+import { routeSearchRealms } from './realms/realms.route';
 
 const Key: InjectionKey<Controller> = Symbol('search-route');
 
@@ -99,7 +100,7 @@ const noResults = computed(() => {
 		!searchPayload.value.usersCount &&
 		!searchPayload.value.postsCount &&
 		!searchPayload.value.communitiesCount &&
-		!searchPayload.value.realm
+		!searchPayload.value.realmsCount
 	);
 });
 </script>
@@ -148,7 +149,19 @@ const noResults = computed(() => {
 								:to="{ name: 'search.results', query: { q: query } }"
 								exact-active-class="active"
 							>
-								<AppTranslate>All</AppTranslate>
+								{{ $gettext(`All`) }}
+							</RouterLink>
+						</li>
+						<li v-if="searchPayload.realmsCount">
+							<RouterLink
+								:to="{ name: routeSearchRealms.name, query: { q: query } }"
+								exact-active-class="active"
+							>
+								{{ $gettext(`Realms`) }}
+
+								<span class="badge">
+									{{ formatNumber(searchPayload.realmsCount) }}
+								</span>
 							</RouterLink>
 						</li>
 						<li v-if="searchPayload.communitiesCount">
@@ -156,7 +169,8 @@ const noResults = computed(() => {
 								:to="{ name: 'search.communities', query: { q: query } }"
 								exact-active-class="active"
 							>
-								<AppTranslate>Communities</AppTranslate>
+								{{ $gettext(`Communities`) }}
+
 								<span class="badge">
 									{{ formatNumber(searchPayload.communitiesCount) }}
 								</span>
@@ -167,7 +181,8 @@ const noResults = computed(() => {
 								:to="{ name: 'search.users', query: { q: query } }"
 								exact-active-class="active"
 							>
-								<AppTranslate>Users</AppTranslate>
+								{{ $gettext(`Users`) }}
+
 								<span class="badge">
 									{{ formatNumber(searchPayload.usersCount) }}
 								</span>
@@ -178,7 +193,8 @@ const noResults = computed(() => {
 								:to="{ name: 'search.games', query: { q: query } }"
 								exact-active-class="active"
 							>
-								<AppTranslate>Games</AppTranslate>
+								{{ $gettext(`Games`) }}
+
 								<span class="badge">
 									{{ formatNumber(searchPayload.gamesCount) }}
 								</span>
@@ -202,6 +218,7 @@ const noResults = computed(() => {
 
 			<br />
 
+			<!-- TODO(realms-discover-improvements) Realm pagination -->
 			<AppPagination
 				v-if="searchPayload.perPage && searchPayload.count"
 				class="text-center"

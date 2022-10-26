@@ -10,11 +10,17 @@ defineProps({
 	overlay: {
 		type: Boolean,
 	},
+	small: {
+		type: Boolean,
+	},
+	tiny: {
+		type: Boolean,
+	},
 });
 </script>
 
 <template>
-	<div class="-label" :class="{ '-label-overlay': overlay }">
+	<div class="-label" :class="{ '-label-overlay': overlay, small, tiny }">
 		{{ realm.name }}
 	</div>
 </template>
