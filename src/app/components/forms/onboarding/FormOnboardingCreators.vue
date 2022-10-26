@@ -1,48 +1,47 @@
 <script lang="ts" setup>
-import { computed, PropType, ref } from 'vue';
+import { computed, ref } from 'vue';
+import { arrayShuffle } from '../../../../utils/array';
 import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
-import { Community } from '../../../../_common/community/community.model';
 import { configOnboardingResources } from '../../../../_common/config/config.service';
+import AppCreatorCard from '../../../../_common/creator/AppCreatorCard.vue';
+import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import { User } from '../../../../_common/user/user.model';
-import AppOnboardingFollowsCommunityItem from './AppOnboardingFollowsCommunityItem.vue';
 
 type FormModel = {
 	// nothing
 };
 
-defineProps({
-	user: {
-		type: Object as PropType<User>,
-		required: true,
-	},
-	isSocialRegistration: {
-		type: Boolean,
-		required: true,
-	},
-});
-
 const emit = defineEmits({
 	next: () => true,
 });
 
-const communities = ref<Community[]>([]);
+const creatorPosts = ref<FiresidePost[]>([]);
 
 const form: FormController<FormModel> = createForm({
 	warnOnDiscard: false,
 	onInit() {
 		Onboarding.startStep('follows');
 	},
-	loadUrl: '/web/onboarding/follows',
+	loadUrl: '/web/onboarding/creators',
 	onLoad(payload) {
-		communities.value = Community.populate(payload.communities);
+		let newCreatorPosts = payload.creatorPosts
+			? arrayShuffle(FiresidePost.populate<FiresidePost>(payload.creatorPosts))
+			: [];
+
+		// Filter out posts so we only display one per user.
+		const uniqueCreatorPosts: Record<number, FiresidePost> = {};
+		for (const post of newCreatorPosts) {
+			uniqueCreatorPosts[post.displayUser.id] ??= post;
+		}
+
+		creatorPosts.value = Object.values(uniqueCreatorPosts);
 		trackExperimentEngagement(configOnboardingResources);
 	},
 	onBeforeSubmit() {
 		Onboarding.trackEvent(
-			followsAnyCommunity.value ? 'follow-communities-set' : 'follow-communities-skip'
+			followsAnyCreator.value ? 'follow-creators-set' : 'follow-creators-skip'
 		);
 	},
 	async onSubmit() {
@@ -55,8 +54,9 @@ const form: FormController<FormModel> = createForm({
 });
 
 const canContinue = computed(() => form.valid);
-const shouldShowSkip = computed(() => !followsAnyCommunity.value);
-const followsAnyCommunity = computed(() => communities.value.find(i => !!i.is_member));
+const shouldShowSkip = computed(() => !followsAnyCreator.value);
+const creators = computed(() => creatorPosts.value.map(i => i.user));
+const followsAnyCreator = computed(() => creators.value.find(i => !!i.is_following));
 </script>
 
 <template>
@@ -64,7 +64,7 @@ const followsAnyCommunity = computed(() => communities.value.find(i => !!i.is_me
 		<div class="-form">
 			<section class="-message">
 				<h3 class="section-header">
-					{{ $gettext(`Join some communities`) }}
+					{{ $gettext(`Follow some creators`) }}
 				</h3>
 
 				<p class="text-muted">
@@ -72,13 +72,16 @@ const followsAnyCommunity = computed(() => communities.value.find(i => !!i.is_me
 				</p>
 			</section>
 
-			<section class="-communities">
+			<section class="-creators">
 				<AppScrollScroller thin>
 					<div class="-list">
-						<AppOnboardingFollowsCommunityItem
-							v-for="community of communities"
-							:key="community.id"
-							:community="community"
+						<AppCreatorCard
+							v-for="post of creatorPosts"
+							:key="post.id"
+							:post="post"
+							follow-button-type="no-count"
+							no-link
+							follow-on-click
 						/>
 					</div>
 				</AppScrollScroller>
@@ -95,7 +98,7 @@ const followsAnyCommunity = computed(() => communities.value.find(i => !!i.is_me
 .-form
 	display: flex
 	flex-direction: column
-	max-width: 500px
+	max-width: 1100px
 	margin: 0 auto
 	padding: ($grid-gutter-width-xs / 2)
 
@@ -107,13 +110,13 @@ const followsAnyCommunity = computed(() => communities.value.find(i => !!i.is_me
 	> *:not(:first-child)
 		margin-top: 30px
 
-.-communities
+.-creators
 	p
 		margin-bottom: 5px
 
 	.-list
 		display: grid
-		grid-template-columns: repeat(auto-fill, $-community-item-size)
+		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))
 		grid-gap: 8px
 		justify-content: space-between
 

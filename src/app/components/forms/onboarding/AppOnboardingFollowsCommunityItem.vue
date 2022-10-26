@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
-import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -36,14 +35,6 @@ const highlightFg = computed(() => {
 });
 
 async function toggleJoin() {
-	// This matches what's on community join widget. Seems odd but okay.
-	Analytics.trackEvent(
-		'community-join',
-		'onboarding',
-		community.value.is_member ? 'leave' : 'join'
-	);
-
-	// Onboarding analytics too
 	Onboarding.trackEvent(
 		community.value.is_member ? 'community-leave' : 'community-join',
 		`${community.value.id}-${community.value.path}`

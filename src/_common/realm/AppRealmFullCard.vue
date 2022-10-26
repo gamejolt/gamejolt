@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
 import AppImgResponsive from '../img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '../media-item/backdrop/AppMediaItemBackdrop.vue';
 import AppResponsiveDimensions from '../responsive-dimensions/AppResponsiveDimensions.vue';
 import AppRealmFollowButton from './AppRealmFollowButton.vue';
 import AppRealmLabel from './AppRealmLabel.vue';
-import { Realm } from './realm-model';
+import { Realm, toggleRealmFollow } from './realm-model';
 
 const props = defineProps({
 	realm: {
@@ -30,9 +30,16 @@ const props = defineProps({
 	noFollow: {
 		type: Boolean,
 	},
+	followOnClick: {
+		type: Boolean,
+	},
 });
 
-const { realm, overlayContent, noSheet, to, labelPosition } = toRefs(props);
+const { realm, overlayContent, noSheet, to, labelPosition, noFollow, followOnClick } =
+	toRefs(props);
+
+const isHovered = ref(false);
+const isProcessing = ref(false);
 
 const mediaItem = computed(() => realm.value.cover);
 
@@ -54,16 +61,36 @@ const labelStyling = computed(() => {
 
 	return result;
 });
+
+async function onClick(event: Event) {
+	if (!followOnClick.value) {
+		return;
+	}
+
+	event.preventDefault();
+	event.stopPropagation();
+
+	if (isProcessing.value) {
+		return;
+	}
+
+	isProcessing.value = true;
+	await toggleRealmFollow(realm.value, 'fullCard');
+	isProcessing.value = false;
+}
 </script>
 
 <template>
 	<div
 		class="-card"
 		:class="{
-			'-hoverable': to,
+			'-hoverable': to || followOnClick,
 			'-no-sheet': noSheet,
 			['sheet sheet-full sheet-elevate']: !noSheet,
 		}"
+		@mouseover="isHovered = true"
+		@mouseout="isHovered = false"
+		@click.capture="onClick"
 	>
 		<RouterLink v-if="to" class="-link-mask" :to="to" />
 
@@ -90,6 +117,8 @@ const labelStyling = computed(() => {
 				source="fullCard"
 				:block="!overlayContent"
 				:overlay="overlayContent"
+				:force-hover="followOnClick && isHovered"
+				:disabled="isProcessing"
 			/>
 		</div>
 	</div>
@@ -100,6 +129,9 @@ const labelStyling = computed(() => {
 	position: relative
 	overflow: hidden
 	display: block
+
+.-hoverable
+	cursor: pointer
 
 .-no-sheet
 	elevate-1()

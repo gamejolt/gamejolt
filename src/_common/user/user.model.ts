@@ -1,14 +1,18 @@
 import type { RouteLocationDefinition } from '../../utils/router';
+import { trackUserFollow, UserFollowLocation } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
 import { CommentableModel } from '../comment/comment-model';
 import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
 import { ContentSetCacheService } from '../content/content-set-cache';
 import { DogtagData } from '../dogtag/dogtag-data';
+import { showErrorGrowl } from '../growls/growls.service';
 import { MediaItem } from '../media-item/media-item-model';
+import { ModalConfirm } from '../modal/confirm/confirm-service';
 import { Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
 import { Theme } from '../theme/theme.model';
+import { $gettext } from '../translate/translate.service';
 
 export const CreatorStatusCreator = 1;
 export const CreatorStatusApplied = 2;
@@ -283,4 +287,47 @@ export async function unfollowUser(user: User) {
 		++user.follower_count;
 		throw e;
 	}
+}
+
+export async function toggleUserFollow(
+	user: User,
+	location: UserFollowLocation
+): Promise<boolean | null> {
+	let failed = false,
+		result: boolean | undefined = undefined;
+
+	if (!user.is_following) {
+		try {
+			await followUser(user);
+		} catch (e) {
+			failed = true;
+			showErrorGrowl($gettext(`Something has prevented you from following this user.`));
+		} finally {
+			trackUserFollow(true, { failed, location });
+		}
+	} else {
+		try {
+			result = await ModalConfirm.show(
+				$gettext(`Are you sure you want to unfollow this user?`),
+				$gettext(`Unfollow user?`)
+			);
+
+			if (!result) {
+				return null;
+			}
+
+			await unfollowUser(user);
+		} catch (e) {
+			failed = true;
+			showErrorGrowl($gettext(`For some reason we couldn't unfollow this user.`));
+		} finally {
+			// Finally is always triggered, even if you return early, so we
+			// don't want to track if they canceled.
+			if (result !== undefined) {
+				trackUserFollow(false, { failed, location });
+			}
+		}
+	}
+
+	return !failed;
 }

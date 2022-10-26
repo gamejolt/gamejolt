@@ -1,49 +1,35 @@
 <script lang="ts" setup>
-import { computed, PropType, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
-import { Community } from '../../../../_common/community/community.model';
 import { configOnboardingResources } from '../../../../_common/config/config.service';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
+import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
+import { Realm } from '../../../../_common/realm/realm-model';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import { User } from '../../../../_common/user/user.model';
-import AppOnboardingFollowsCommunityItem from './AppOnboardingFollowsCommunityItem.vue';
 
 type FormModel = {
 	// nothing
 };
 
-defineProps({
-	user: {
-		type: Object as PropType<User>,
-		required: true,
-	},
-	isSocialRegistration: {
-		type: Boolean,
-		required: true,
-	},
-});
-
 const emit = defineEmits({
 	next: () => true,
 });
 
-const communities = ref<Community[]>([]);
+const realms = ref<Realm[]>([]);
 
 const form: FormController<FormModel> = createForm({
 	warnOnDiscard: false,
 	onInit() {
 		Onboarding.startStep('follows');
 	},
-	loadUrl: '/web/onboarding/follows',
+	loadUrl: '/web/onboarding/realms',
 	onLoad(payload) {
-		communities.value = Community.populate(payload.communities);
+		realms.value = Realm.populate(payload.realms);
 		trackExperimentEngagement(configOnboardingResources);
 	},
 	onBeforeSubmit() {
-		Onboarding.trackEvent(
-			followsAnyCommunity.value ? 'follow-communities-set' : 'follow-communities-skip'
-		);
+		Onboarding.trackEvent(joinedAnyRealm.value ? 'follow-realms-set' : 'follow-realms-skip');
 	},
 	async onSubmit() {
 		// Nothing to submit.
@@ -55,8 +41,8 @@ const form: FormController<FormModel> = createForm({
 });
 
 const canContinue = computed(() => form.valid);
-const shouldShowSkip = computed(() => !followsAnyCommunity.value);
-const followsAnyCommunity = computed(() => communities.value.find(i => !!i.is_member));
+const shouldShowSkip = computed(() => !joinedAnyRealm.value);
+const joinedAnyRealm = computed(() => realms.value.find(i => !!i.is_following));
 </script>
 
 <template>
@@ -64,7 +50,7 @@ const followsAnyCommunity = computed(() => communities.value.find(i => !!i.is_me
 		<div class="-form">
 			<section class="-message">
 				<h3 class="section-header">
-					{{ $gettext(`Join some communities`) }}
+					{{ $gettext(`Follow some realms`) }}
 				</h3>
 
 				<p class="text-muted">
@@ -72,13 +58,16 @@ const followsAnyCommunity = computed(() => communities.value.find(i => !!i.is_me
 				</p>
 			</section>
 
-			<section class="-communities">
+			<section class="-realms">
 				<AppScrollScroller thin>
 					<div class="-list">
-						<AppOnboardingFollowsCommunityItem
-							v-for="community of communities"
-							:key="community.id"
-							:community="community"
+						<AppRealmFullCard
+							v-for="realm of realms"
+							:key="realm.id"
+							:realm="realm"
+							no-sheet
+							overlay-content
+							follow-on-click
 						/>
 					</div>
 				</AppScrollScroller>
@@ -95,7 +84,7 @@ const followsAnyCommunity = computed(() => communities.value.find(i => !!i.is_me
 .-form
 	display: flex
 	flex-direction: column
-	max-width: 500px
+	max-width: 1100px
 	margin: 0 auto
 	padding: ($grid-gutter-width-xs / 2)
 
@@ -107,13 +96,13 @@ const followsAnyCommunity = computed(() => communities.value.find(i => !!i.is_me
 	> *:not(:first-child)
 		margin-top: 30px
 
-.-communities
+.-realms
 	p
 		margin-bottom: 5px
 
 	.-list
 		display: grid
-		grid-template-columns: repeat(auto-fill, $-community-item-size)
+		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))
 		grid-gap: 8px
 		justify-content: space-between
 

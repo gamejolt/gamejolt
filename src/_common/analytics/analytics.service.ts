@@ -40,6 +40,7 @@ export type UserFollowLocation =
 	| 'postPage'
 	| 'postLike'
 	| 'card'
+	| 'creatorCard'
 	| 'profilePage'
 	| 'inviteFollow'
 	| 'firesideOfflineFollow'
