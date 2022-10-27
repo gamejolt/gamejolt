@@ -69,6 +69,8 @@ export function createAppStore({
 	const hasNewUnlockedStickers = ref(false);
 
 	const notificationState = ref<ActivityFeedState>();
+	const filteredNotificationTypes = ref([] as string[]);
+	const supportedNotificationTypes = ref([] as string[]);
 
 	const mobileCbarShowing = ref(false);
 	const lastOpenLeftPane = ref<Exclude<TogglableLeftPane, 'context'>>(
@@ -523,6 +525,8 @@ export function createAppStore({
 		hasNewFriendRequests,
 		hasNewUnlockedStickers,
 		notificationState,
+		filteredNotificationTypes,
+		supportedNotificationTypes,
 		mobileCbarShowing,
 		lastOpenLeftPane,
 		overlayedLeftPane,

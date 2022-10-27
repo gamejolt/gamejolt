@@ -54,6 +54,7 @@ export class ActivityFeedState {
 	games: { [k: number]: Game } = {};
 	notificationWatermark = 0; // Timestamp.
 	viewedItems: string[] = [];
+
 	isBootstrapped = false;
 	isLoadingMore = false;
 	isLoadingNew = false;

@@ -12,6 +12,7 @@ import { useGridStore } from '../../components/grid/grid-store';
 import { AppActivityFeedLazy } from '../../components/lazy';
 import AppShellNotificationPopoverStickerNavItem from '../../components/shell/notification-popover/sticker-nav-item/AppShellNotificationPopoverStickerNavItem.vue';
 import AppShellNotificationPopoverStickerNavItemPlaceholder from '../../components/shell/notification-popover/sticker-nav-item/AppShellNotificationPopoverStickerNavItemPlaceholder.vue';
+import AppUserNotificationFeedFilters from '../../components/user/AppUserNotificationFeedFilters.vue';
 import { Store, useAppStore } from '../../store';
 
 const HistoryCacheFeedTag = 'notifications-feed';
@@ -23,6 +24,7 @@ const HistoryCacheFeedTag = 'notifications-feed';
 		AppActivityFeedPlaceholder,
 		AppShellNotificationPopoverStickerNavItem,
 		AppShellNotificationPopoverStickerNavItemPlaceholder,
+		AppUserNotificationFeedFilters,
 	},
 })
 @OptionsForRoute({
@@ -91,6 +93,9 @@ export default class RouteNotifications extends BaseRouteComponent {
 	}
 
 	async routeResolved($payload: any, fromCache: boolean) {
+		this.store.filteredNotificationTypes = $payload.filteredNotificationTypes;
+		this.store.supportedNotificationTypes = $payload.supportedNotificationTypes;
+
 		// We mark in the history cache whether this route is a historical view
 		// or a new view. If it's new, we want to load fresh. If it's old, we
 		// want to use current feed data, just so we can try to go back to the
@@ -123,6 +128,11 @@ export default class RouteNotifications extends BaseRouteComponent {
 			this.grid?.pushViewNotifications('notifications');
 		}
 	}
+
+	onFiltersChanged() {
+		this.feed?.clear();
+		this.reloadRoute();
+	}
 }
 </script>
 
@@ -130,7 +140,7 @@ export default class RouteNotifications extends BaseRouteComponent {
 	<section class="section">
 		<div class="container">
 			<div class="row">
-				<div class="col-sm-9 col-md-8 col-lg-7 col-centered">
+				<div class="col-sm-9 col-md-8 col-lg-7">
 					<template v-if="!feed || !feed.isBootstrapped">
 						<AppShellNotificationPopoverStickerNavItemPlaceholder />
 						<AppActivityFeedPlaceholder />
@@ -171,6 +181,11 @@ export default class RouteNotifications extends BaseRouteComponent {
 
 							<AppActivityFeed :feed="feed" @load-new="onLoadedNew" />
 						</template>
+					</template>
+				</div>
+				<div class="hidden-sm col-md-4 col-lg-4">
+					<template v-if="feed && feed.isBootstrapped">
+						<AppUserNotificationFeedFilters @submit="onFiltersChanged" />
 					</template>
 				</div>
 			</div>
