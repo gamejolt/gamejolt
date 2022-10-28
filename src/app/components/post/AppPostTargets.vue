@@ -2,15 +2,17 @@
 import { computed, PropType, ref, toRefs } from 'vue';
 import { CommunityChannel } from '../../../_common/community/channel/channel.model';
 import { Community } from '../../../_common/community/community.model';
+import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { Realm } from '../../../_common/realm/realm-model';
 import AppScrollScroller from '../../../_common/scroll/AppScrollScroller.vue';
 import { vAppScrollWhen } from '../../../_common/scroll/scroll-when.directive';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppFormsPillSelectorCommunities from '../forms/pill-selector/communities/AppFormsPillSelectorCommunities.vue';
+import AppPostTarget from './target/AppPostTarget.vue';
 import AppPostTargetCommunity from './target/AppPostTargetCommunity.vue';
 import AppPostTargetRealm from './target/AppPostTargetRealm.vue';
+import { PostTargetManageRealmsModal } from './target/manage-realms/modal.service';
 import AppPostTargetsAddCommunity from './target/_add/AppPostTargetAddCommunity.vue';
-import AppPostTargetsAddRealm from './target/_add/AppPostTargetAddRealm.vue';
 
 const props = defineProps({
 	communities: {
@@ -34,6 +36,10 @@ const props = defineProps({
 	targetableRealms: {
 		type: Array as PropType<Realm[]>,
 		default: () => [],
+	},
+	maxRealms: {
+		type: Number,
+		default: undefined,
 	},
 	canAddCommunity: {
 		type: Boolean,
@@ -59,6 +65,7 @@ const {
 	incompleteCommunity,
 	targetableCommunities,
 	targetableRealms,
+	maxRealms,
 	communities,
 	realms,
 	canAddCommunity,
@@ -141,6 +148,17 @@ function selectIncompleteCommunity(community: Community, channel: CommunityChann
 async function _scrollToEnd() {
 	++scrollingKey.value;
 }
+
+function onClickAddRealm() {
+	emit('showRealms');
+	// TODO(realms-discover-improvements) Should probably take onAdd and
+	// onRemove callbacks instead of modifying the list directly. Haven't
+	// checked what data is getting lost because of this.
+	PostTargetManageRealmsModal.show({
+		selectedRealms: realms.value,
+		maxRealms: maxRealms?.value || 5,
+	});
+}
 </script>
 
 <template>
@@ -186,15 +204,15 @@ async function _scrollToEnd() {
 				@remove="onRemoveCommunity"
 			/>
 
-			<AppPostTargetsAddRealm
-				v-if="canAddRealm"
-				key="add-realm"
-				:class="baseClasses"
-				:realms="targetableRealms"
-				:is-loading="isLoadingRealms"
-				@select="selectRealm"
-				@show="emit('showRealms')"
-			/>
+			<a v-if="canAddRealm" key="add-realm" @click="onClickAddRealm">
+				<AppPostTarget class="-add">
+					<template #img>
+						<AppJolticon icon="add" />
+					</template>
+
+					<AppTranslate>Add realm</AppTranslate>
+				</AppPostTarget>
+			</a>
 
 			<AppPostTargetsAddCommunity
 				v-if="canAddCommunity"
