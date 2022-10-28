@@ -3,7 +3,7 @@ import { inject, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
-import { configHomeDefaultFeed } from '../../../_common/config/config.service';
+import { shouldUseFYPDefault } from '../../../_common/config/config.service';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
@@ -14,13 +14,12 @@ import { useGridStore } from '../../components/grid/grid-store';
 import { AppActivityFeedLazy } from '../../components/lazy';
 import { illNoComments } from '../../img/ill/illustrations';
 import { useAppStore } from '../../store/index';
-import { HOME_FEED_ACTIVITY } from './home-feed.service';
 import { RouteActivityFeedController } from './RouteHomeFeed.vue';
 
 function getFetchUrl() {
 	let url = '/web/dash/activity/activity';
 	// If our home feed is not the activity feed, we only want to include the actual followed content in the feed.
-	if (configHomeDefaultFeed.value !== HOME_FEED_ACTIVITY) {
+	if (shouldUseFYPDefault()) {
 		url += '?only-followed=1';
 	}
 	return url;

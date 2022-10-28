@@ -37,10 +37,8 @@ import { RouterLink, useRoute } from 'vue-router';
 import { router } from '..';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
-import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
-import { configHomeDefaultFeed } from '../../../_common/config/config.service';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import AppInviteCard from '../../../_common/invite/AppInviteCard.vue';
@@ -118,8 +116,6 @@ const tabs = computed(() => {
 const appRoute = createAppRoute({
 	routeTitle: null,
 	onResolved({ payload }) {
-		trackExperimentEngagement(configHomeDefaultFeed);
-
 		games.value = (payload.ownerGames as DashGame[])
 			.map(i => new DashGame(i.id, i.title, i.ownerName, i.createdOn))
 			.sort((a, b) => numberSort(a.createdOn, b.createdOn))
