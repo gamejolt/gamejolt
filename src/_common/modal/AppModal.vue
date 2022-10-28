@@ -146,6 +146,7 @@ function scrollTo(offsetY: number) {
 					:theme="theme"
 					@mouseover="isHoveringContent = true"
 					@mouseout="isHoveringContent = false"
+					@click.stop
 				>
 					<slot />
 
