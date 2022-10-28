@@ -58,7 +58,7 @@ function createRealmSearchFeed(query: string) {
 			console.error(e);
 			hasError.value = true;
 		} finally {
-			isLoading.value = true;
+			isLoading.value = false;
 		}
 	}
 
@@ -82,7 +82,7 @@ function createRealmSearchFeed(query: string) {
 			console.error(e);
 			hasError.value = true;
 		} finally {
-			isLoading.value = true;
+			isLoading.value = false;
 		}
 	}
 
@@ -237,7 +237,7 @@ const debounceSearchInput = debounce(() => {
 			</h2>
 		</div>
 
-		<AppLoadingFade
+		<div
 			class="modal-body"
 			:is-loading="isLoading"
 			:style="[`--col-count-base: ${COL_COUNT_BASE}`, `--col-count-xs: ${COL_COUNT_XS}`]"
@@ -266,69 +266,71 @@ const debounceSearchInput = debounce(() => {
 			/>
 			<AppSpacer vertical :scale="4" />
 
-			<template v-if="isBootstrapped && !realms.length">
-				<AppIllustration :asset="illPointyThing">
-					{{ $gettext(`We couldn't find what you were looking for`) }}
-				</AppIllustration>
-			</template>
-			<div v-else class="-realms">
-				<template v-if="!isBootstrapped">
-					<AppAspectRatio
-						v-for="i of COL_COUNT_BASE"
-						:key="i"
-						class="lazy-placeholder"
-						:ratio="REALM_CARD_RATIO"
-					/>
+			<AppLoadingFade :is-loading="isLoading">
+				<template v-if="isBootstrapped && !realms.length">
+					<AppIllustration :asset="illPointyThing">
+						{{ $gettext(`We couldn't find what you were looking for`) }}
+					</AppIllustration>
 				</template>
-				<template v-else-if="realms.length">
-					<div v-for="realm of realms" :key="realm.id" class="-realm-wrapper">
-						<AppRealmFullCard
-							class="-hazy-transition"
-							:class="{
-								'-hazy': !canAddRealms && !isRealmSelected(realm),
-							}"
-							:realm="realm"
-							label-position="top-left"
-							:label-size="Screen.isMobile ? 'tiny' : undefined"
-							overlay-content
-							no-sheet
-							no-follow
-							ondragstart="return false"
-							@click="toggleRealmSelection(realm)"
+				<div v-else class="-realms">
+					<template v-if="!isBootstrapped">
+						<AppAspectRatio
+							v-for="i of COL_COUNT_BASE"
+							:key="i"
+							class="lazy-placeholder"
+							:ratio="REALM_CARD_RATIO"
 						/>
+					</template>
+					<template v-else-if="realms.length">
+						<div v-for="realm of realms" :key="realm.id" class="-realm-wrapper">
+							<AppRealmFullCard
+								class="-hazy-transition"
+								:class="{
+									'-hazy': !canAddRealms && !isRealmSelected(realm),
+								}"
+								:realm="realm"
+								label-position="top-left"
+								:label-size="Screen.isMobile ? 'tiny' : undefined"
+								overlay-content
+								no-sheet
+								no-follow
+								ondragstart="return false"
+								@click="toggleRealmSelection(realm)"
+							/>
 
-						<div v-if="isRealmSelected(realm)" class="-check-overlay">
-							<div class="-check-overlay-circle">
-								<AppJolticon class="-icon" icon="check" />
+							<div v-if="isRealmSelected(realm)" class="-check-overlay">
+								<div class="-check-overlay-circle">
+									<AppJolticon class="-icon" icon="check" />
+								</div>
+							</div>
+							<div
+								v-else
+								class="-realm-hover"
+								:class="{ '-force-show-touch': !canAddRealms }"
+							>
+								<template v-if="canAddRealms">
+									<AppJolticon class="-icon" icon="add" />
+
+									<div>
+										{{ $gettext(`Add`) }}
+									</div>
+								</template>
+								<template v-else>
+									<AppJolticon class="-icon" icon="exclamation-circle" />
+
+									<div>
+										{{ $gettext(`Realm limit reached`) }}
+									</div>
+								</template>
 							</div>
 						</div>
-						<div
-							v-else
-							class="-realm-hover"
-							:class="{ '-force-show-touch': !canAddRealms }"
-						>
-							<template v-if="canAddRealms">
-								<AppJolticon class="-icon" icon="add" />
-
-								<div>
-									{{ $gettext(`Add`) }}
-								</div>
-							</template>
-							<template v-else>
-								<AppJolticon class="-icon" icon="exclamation-circle" />
-
-								<div>
-									{{ $gettext(`Realm limit reached`) }}
-								</div>
-							</template>
-						</div>
-					</div>
-				</template>
-			</div>
+					</template>
+				</div>
+			</AppLoadingFade>
 
 			<!-- TODO(realms-discover-improvements) Auto-load more realms on scroll. -->
 			<!-- TODO(realms-discover-improvements) Do we want to link to the /search/realms page? Should this list only include realms you follow? Figure out how to paginate this if we're allowing filtering/searching. -->
-		</AppLoadingFade>
+		</div>
 	</AppModal>
 </template>
 
