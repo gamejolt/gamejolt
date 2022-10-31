@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, defineAsyncComponent, nextTick, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import AppButton from '../../../_common/button/AppButton.vue';
 import { AppClientBase } from '../../../_common/client/safe-exports';
 import { Connection } from '../../../_common/connection/connection-service';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
@@ -13,8 +14,11 @@ import AppStickerLayer from '../../../_common/sticker/layer/AppStickerLayer.vue'
 import { setStickerDrawerOpen, useStickerStore } from '../../../_common/sticker/sticker-store';
 import { useBannerStore } from '../../store/banner';
 import { useAppStore } from '../../store/index';
+import AppFiresideStream from '../../views/fireside/_stream/AppFiresideStream.vue';
 import { setChatFocused } from '../chat/client';
 import { AppClientShell, AppClientStatusBar } from '../client/safe-exports';
+import AppFiresideProvider from '../fireside/AppFiresideProvider.vue';
+import { useFiresideStore } from '../fireside/fireside.store';
 import { useGridStore } from '../grid/grid-store';
 import AppShellBanner from './AppShellBanner.vue';
 import AppShellBody from './AppShellBody.vue';
@@ -49,6 +53,7 @@ const {
 const stickerStore = useStickerStore();
 
 const { chat } = useGridStore();
+const firesideStore = useFiresideStore();
 
 const route = useRoute();
 const router = useRouter();
@@ -57,6 +62,17 @@ const totalChatNotificationsCount = computed(() => chat.value?.roomNotifications
 const ssrShouldShowSidebar = computed(
 	() => import.meta.env.SSR && String(route.name).indexOf('communities.view') === 0
 );
+
+// TODO(global-firesides) We only render out 1 at a time, but that doesn't close
+// the channel connections of any previous firesides - audio may be playing from
+// multiple firesides.
+const globalFireside = computed(() => {
+	const list = firesideStore.firesides.value;
+	if (list.length) {
+		return list[list.length - 1];
+	}
+	return null;
+});
 
 onMounted(() => {
 	router.afterEach(async () => {
@@ -133,6 +149,26 @@ watch([totalChatNotificationsCount, unreadActivityCount, unreadNotificationsCoun
 			</template>
 			<AppShellBody v-else>
 				<slot />
+
+				<div v-if="globalFireside" id="global-fireside">
+					<AppFiresideProvider :controller="globalFireside">
+						<AppFiresideStream
+							v-if="globalFireside.focusedUser.value"
+							:rtc-user="globalFireside.focusedUser.value"
+							:sidebar-collapsed="false"
+						/>
+					</AppFiresideProvider>
+
+					<AppButton
+						class="-close"
+						icon="remove"
+						circle
+						sparse
+						overlay
+						solid
+						@click="firesideStore.removeFireside(globalFireside!)"
+					/>
+				</div>
 			</AppShellBody>
 		</AppStickerLayer>
 
@@ -252,6 +288,31 @@ html, body
 
 		#shell-cbar
 			transform: translateX(0)
+
+#global-fireside
+	z-index: 2000
+	position: fixed
+	width: calc(min(25vw, 360px))
+	height: calc(min(25vw, 360px) * 0.5625)
+	bottom: 48px
+	right: 48px
+	rounded-corners-lg()
+	elevate-2()
+	overflow: hidden
+
+	.-fireside
+		position: absolute
+		left: 0
+		top: 0
+		right: 0
+		bottom: 0
+		z-index: 1
+
+	.-close
+		position: absolute
+		top: 12px
+		left: 12px
+		z-index: 2
 
 body.has-hot-bottom
 	#shell

@@ -16,8 +16,8 @@ import { computed, customRef, onBeforeUnmount, ref, shallowRef, watch } from 'vu
 import { RouterLink, useRouter } from 'vue-router';
 import { debounce } from '../../../utils/utils';
 import {
-	trackFiresideAction,
-	trackFiresideSidebarCollapse,
+trackFiresideAction,
+trackFiresideSidebarCollapse
 } from '../../../_common/analytics/analytics.service';
 import AppAnimSlideshow from '../../../_common/animation/AppAnimSlideshow.vue';
 import { sheetFireplace } from '../../../_common/animation/slideshow/sheets';
@@ -50,19 +50,20 @@ import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
 import AppFiresideProvider from '../../components/fireside/AppFiresideProvider.vue';
 import {
-	createFiresideController,
-	extinguishFireside,
-	FiresideController,
-	FiresideSidebar,
-	publishFireside,
-	toggleStreamVideoStats,
+createFiresideController,
+extinguishFireside,
+FiresideController,
+FiresideSidebar,
+publishFireside,
+toggleStreamVideoStats
 } from '../../components/fireside/controller/controller';
+import { useFiresideStore } from '../../components/fireside/fireside.store';
 import { useGridStore } from '../../components/grid/grid-store';
 import {
-	illEndOfFeed,
-	illMaintenance,
-	illMobileKikkerstein,
-	illNoCommentsSmall,
+illEndOfFeed,
+illMaintenance,
+illMobileKikkerstein,
+illNoCommentsSmall
 } from '../../img/ill/illustrations';
 import AppFiresideDashboard from './AppFiresideDashboard.vue';
 import AppFiresideHeader from './AppFiresideHeader.vue';
@@ -184,6 +185,9 @@ watch(
 			return;
 		}
 
+		// TODO(global-firesides) Check if we already have a matching global
+		// controller. Don't render out the global fireside if we're in the main
+		// route for that fireside.
 		c.value ??= createFiresideController(payloadFireside.value, {
 			commonStore,
 			stickerStore,
@@ -194,6 +198,8 @@ watch(
 		c.value.setFullscreenableElement(root);
 	}
 );
+
+const firesideStore = useFiresideStore();
 
 const { isBootstrapped } = createAppRoute({
 	routeTitle,
@@ -209,7 +215,10 @@ const { isBootstrapped } = createAppRoute({
 		setPageTheme();
 	},
 	onDestroyed() {
-		c.value?.cleanup();
+		if (c.value) {
+			firesideStore.addFireside(c.value);
+		}
+
 		themeStore.clearPageTheme(FiresideThemeKey);
 
 		beforeEachDeregister?.();
