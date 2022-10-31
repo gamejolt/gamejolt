@@ -193,6 +193,34 @@ export class ChatUserCollection {
 		return curUser;
 	}
 
+	online(input: number | ChatUser) {
+		const user = this.get(input);
+		if (!user) {
+			return;
+		}
+		// Were they previously offline?
+		if (!user.isOnline) {
+			--this.offlineCount;
+			++this.onlineCount;
+		}
+		user.isOnline = true;
+		this.recollect();
+	}
+
+	offline(input: number | ChatUser) {
+		const user = this.get(input);
+		if (!user) {
+			return;
+		}
+		// Were they previously online?
+		if (user.isOnline) {
+			++this.offlineCount;
+			--this.onlineCount;
+		}
+		user.isOnline = false;
+		this.recollect();
+	}
+
 	/**
 	 * Will resort our collection of users. We need to call this internally in
 	 * reaction to changes to the users being tracked.

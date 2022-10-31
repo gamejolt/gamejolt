@@ -339,7 +339,6 @@ export async function createChatRoomChannel(
 				const user = roomMembers.get(+id) ?? new ChatUser(roomPresence.user);
 				user.typing = roomPresence.metas.some(meta => meta.typing);
 				roomMembers.update(user);
-				// roomMembers.online(+id);
 			});
 		});
 	}
