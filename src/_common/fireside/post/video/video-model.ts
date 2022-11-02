@@ -7,7 +7,12 @@ import { VideoSourceArray } from '../../../video/video';
 const manifestPreferences = ['m3u8', 'mpd'];
 
 export class FiresidePostVideo extends Model {
+	static PROVIDER_YOUTUBE = 'youtube';
+	static PROVIDER_GAMEJOLT = 'gamejolt';
+
 	fireside_post_id!: number;
+	provider!: 'youtube' | 'gamejolt';
+	video_id!: string;
 	thumbnail_url!: string;
 	view_count!: number;
 	media: MediaItem[] = [];
