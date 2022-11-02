@@ -16,7 +16,6 @@ import {
 	StickerTargetController,
 } from '../../../_common/sticker/target/target-controller';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
-import AppVideoEmbed from '../../../_common/video/embed/embed.vue';
 import { getVideoPlayerFromSources } from '../../../_common/video/player/controller';
 import AppVideoPlayer from '../../../_common/video/player/player.vue';
 import AppVideo from '../../../_common/video/video.vue';
@@ -29,7 +28,6 @@ import AppPostControls from '../post/controls/AppPostControls.vue';
 		AppResponsiveDimensions,
 		AppImgResponsive,
 		AppVideo,
-		AppVideoEmbed,
 		AppVideoPlayer,
 		AppTimeAgo,
 		AppPollVoting,
@@ -145,20 +143,12 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 
 					<div v-if="post.hasVideo">
 						<AppVideoPlayer
-							v-if="video.provider === 'gamejolt'"
 							context="page"
 							:media-item="video.posterMediaItem"
 							:manifests="video.manifestSources"
 							autoplay
 							@play="onVideoPlay"
 						/>
-						<AppVideoEmbed
-							v-else
-							video-provider="youtube"
-							:video-id="video.video_id"
-							autoplay
-						/>
-
 						<br />
 					</div>
 
