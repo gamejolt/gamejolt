@@ -9,11 +9,9 @@ import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vu
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import { useGridStore } from '../../grid/grid-store';
 import {
-	demoteModerator,
 	enterChatRoom,
 	isUserOnline,
 	kickGroupMember,
-	promoteToModerator,
 	tryGetRoomRole,
 	userCanModerateOtherUser,
 } from '../client';
@@ -145,21 +143,17 @@ export default class AppChatUserPopover extends Vue {
 		);
 
 		if (result) {
-			if (this.chat.roomMembers[this.room.id].has(this.user)) {
-				promoteToModerator(this.chat, this.room, this.user.id);
-			} else if (this.room.type === 'fireside_group') {
-				const payload = await Api.sendRequest(
-					`/web/dash/fireside/chat/promote-moderator/${this.room.id}/${this.user.id}`,
-					{}
+			const payload = await Api.sendRequest(
+				`/web/dash/fireside/chat/promote-moderator/${this.room.id}/${this.user.id}`,
+				{}
+			);
+
+			if (payload.success && payload.role) {
+				showSuccessGrowl(
+					this.$gettextInterpolate(`@%{ username } has been promoted to Moderator.`, {
+						username: this.user.username,
+					})
 				);
-				if (payload.success && payload.role) {
-					showSuccessGrowl(
-						this.$gettextInterpolate(
-							`@%{ username } has been promoted to Moderator. Refresh the page to see changes.`,
-							{ username: this.user.username }
-						)
-					);
-				}
 			}
 		}
 	}
@@ -172,21 +166,16 @@ export default class AppChatUserPopover extends Vue {
 		);
 
 		if (result) {
-			if (this.chat.roomMembers[this.room.id].has(this.user)) {
-				demoteModerator(this.chat, this.room, this.user.id);
-			} else if (this.room.type === 'fireside_group') {
-				const payload = await Api.sendRequest(
-					`/web/dash/fireside/chat/demote-moderator/${this.room.id}/${this.user.id}`,
-					{}
+			const payload = await Api.sendRequest(
+				`/web/dash/fireside/chat/demote-moderator/${this.room.id}/${this.user.id}`,
+				{}
+			);
+			if (payload.success && payload.role) {
+				showSuccessGrowl(
+					this.$gettextInterpolate(`@%{ username } has been demoted to User.`, {
+						username: this.user.username,
+					})
 				);
-				if (payload.success && payload.role) {
-					showSuccessGrowl(
-						this.$gettextInterpolate(
-							`@%{ username } has been demoted to User. Refresh the page to see changes.`,
-							{ username: this.user.username }
-						)
-					);
-				}
 			}
 		}
 	}
