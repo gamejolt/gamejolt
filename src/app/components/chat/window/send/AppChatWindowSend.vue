@@ -76,7 +76,7 @@ const emit = defineEmits({
 const { room, slowmodeDuration } = toRefs(props);
 
 const { isDark } = useThemeStore();
-const { chatUnsafe: chat } = useGridStore();
+const { connectedChat, chatUnsafe } = useGridStore();
 
 const focusToken = createFocusToken();
 
@@ -90,7 +90,7 @@ let escapeCallback: EscapeStackCallback | null = null;
 let typingTimeout: NodeJS.Timer | null = null;
 
 const contentEditorTempResourceContextData = computed(() => {
-	if (chat.value && room.value) {
+	if (connectedChat.value && room.value) {
 		return { roomId: room.value.id };
 	}
 	return undefined;
@@ -109,22 +109,32 @@ const hasContent = computed(() => {
 });
 
 const isSendButtonDisabled = computed(() => {
-	if (!form.valid || !hasContent.value || nextMessageTimeout.value !== null) {
+	if (
+		!form.valid ||
+		!hasContent.value ||
+		nextMessageTimeout.value !== null ||
+		!connectedChat.value
+	) {
 		return true;
 	}
 
 	return !FormValidatorContentNoMediaUpload(form.formModel.content ?? '');
 });
 
-const isEditing = computed(() => !!chat.value.messageEditing);
+const isEditing = computed(() => !!connectedChat.value?.messageEditing);
 
 const editorModelId = computed(() => form.formModel.id);
 
 const typingText = computed(() => {
-	const { roomMembers, currentUser } = chat.value;
+	const chat = connectedChat.value;
+	if (!chat) {
+		return '';
+	}
+
+	const { roomMembers, currentUser } = chat;
 	const usersOnline = roomMembers[room.value.id];
 	if (!usersOnline || usersOnline.collection.length === 0) {
-		return [];
+		return '';
 	}
 
 	const typingNames = usersOnline.collection
@@ -171,7 +181,7 @@ onUnmounted(() => {
 });
 
 watch(
-	() => chat.value.messageEditing,
+	() => chatUnsafe.value.messageEditing,
 	async (message: ChatMessage | null) => {
 		if (message) {
 			form.formModel.content = message.content;
@@ -210,7 +220,12 @@ watch(
 watch(() => room.value.id, onRoomChanged);
 
 function editMessage({ content, id }: FormModel) {
-	setMessageEditing(chat.value, null);
+	const chat = connectedChat.value;
+	if (!chat) {
+		return;
+	}
+
+	setMessageEditing(chat, null);
 	// This shouldn't happen, but typescript complains without this.
 	if (!id) {
 		return;
@@ -222,22 +237,37 @@ function editMessage({ content, id }: FormModel) {
 		content = contentJson;
 	}
 
-	chatEditMessage(chat.value, room.value, { content, id });
+	chatEditMessage(chat, room.value, { content, id });
 }
 
 function sendMessage({ content }: FormModel) {
+	const chat = connectedChat.value;
+	if (!chat) {
+		return;
+	}
+
 	const doc = ContentDocument.fromJson(content);
 	if (doc instanceof ContentDocument) {
 		const contentJson = doc.toJson();
-		queueChatMessage(chat.value, 'content', contentJson, room.value.id);
+		queueChatMessage(chat, 'content', contentJson, room.value.id);
 	}
 }
 
 async function onRoomChanged() {
-	setMessageEditing(chat.value, null);
+	const chat = connectedChat.value;
+	if (!chat) {
+		return;
+	}
+
+	setMessageEditing(chat, null);
 }
 
 async function submitMessage() {
+	const chat = connectedChat.value;
+	if (!chat) {
+		return;
+	}
+
 	let doc;
 
 	try {
@@ -253,7 +283,7 @@ async function submitMessage() {
 			data.id = form.formModel.id;
 		}
 
-		if (chat.value.messageEditing) {
+		if (chat.messageEditing) {
 			editMessage(data);
 		} else {
 			sendMessage(data);
@@ -263,7 +293,7 @@ async function submitMessage() {
 }
 
 async function onSubmit() {
-	if (!form.valid) {
+	if (!form.valid || !connectedChat.value) {
 		return;
 	}
 
@@ -304,7 +334,12 @@ function applyNextMessageTimeout(options: { ignoreLastMessageTimestamp: boolean 
 		return;
 	}
 
-	const { currentUser } = chat.value;
+	const chat = connectedChat.value;
+	if (!chat) {
+		return;
+	}
+
+	const { currentUser } = chat;
 	// For fireside rooms, timeout the user from sending another message for 1.5s.
 	// Do not do this for the owner/mods.
 	if (currentUser?.id === room.value.owner_id) {
@@ -312,7 +347,7 @@ function applyNextMessageTimeout(options: { ignoreLastMessageTimestamp: boolean 
 	}
 
 	if (currentUser) {
-		const userRole = tryGetRoomRole(chat.value, room.value, currentUser);
+		const userRole = tryGetRoomRole(chat, room.value, currentUser);
 		if (userRole === 'owner' || userRole === 'moderator') {
 			return;
 		}
@@ -351,9 +386,11 @@ function applyNextMessageTimeout(options: { ignoreLastMessageTimestamp: boolean 
 }
 
 function onChange(_value: string) {
-	if (!typing.value) {
+	const chat = connectedChat.value;
+
+	if (!typing.value && chat) {
 		typing.value = true;
-		startTyping(chat.value, room.value);
+		startTyping(chat, room.value);
 	} else if (typingTimeout) {
 		clearTimeout(typingTimeout);
 	}
@@ -377,10 +414,11 @@ function onTabKeyPressed() {
 }
 
 function onUpKeyPressed(event: KeyboardEvent) {
-	if (isEditing.value || hasContent.value) {
+	const chat = connectedChat.value;
+	if (isEditing.value || hasContent.value || !chat) {
 		return;
 	}
-	const { messages, currentUser } = chat.value;
+	const { messages, currentUser } = chat;
 
 	// Find the last message sent by the current user.
 	const userMessages = messages[room.value.id].filter(msg => msg.user.id === currentUser?.id);
@@ -392,12 +430,17 @@ function onUpKeyPressed(event: KeyboardEvent) {
 		// of the content. This prevents it jump to the beginning of the line.
 		event.preventDefault();
 
-		setMessageEditing(chat.value, lastMessage);
+		setMessageEditing(chat, lastMessage);
 	}
 }
 
 async function cancelEditing() {
-	setMessageEditing(chat.value, null);
+	const chat = connectedChat.value;
+	if (!chat) {
+		return;
+	}
+
+	setMessageEditing(chat, null);
 	clearMsg();
 
 	// Wait in case the editor loses focus
@@ -417,7 +460,13 @@ async function clearMsg() {
 
 function disableTypingTimeout() {
 	typing.value = false;
-	stopTyping(chat.value, room.value);
+
+	const chat = connectedChat.value;
+	if (!chat) {
+		return;
+	}
+
+	stopTyping(chat, room.value);
 }
 </script>
 

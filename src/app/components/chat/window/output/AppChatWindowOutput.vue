@@ -50,7 +50,7 @@ const props = defineProps({
 
 const { room, background } = toRefs(props);
 const { user } = useCommonStore();
-const { chatUnsafe: chat } = useGridStore();
+const { connectedChat: chat } = useGridStore();
 
 const widthWatcher = ref<HTMLDivElement>();
 
@@ -59,6 +59,7 @@ const reachedEnd = ref(false);
 const isLoadingOlder = ref(false);
 const latestFrozenTimestamp = ref<Date>();
 const maxContentWidth = ref(500);
+
 const scroller = createScroller();
 
 let _canAutoscroll = true;
@@ -68,14 +69,14 @@ let _isOnScrollQueued = false;
 let _lastScrollMessageId: number | undefined;
 let _lastAutoscrollOffset: number | undefined;
 
-const messages = computed(() => chat.value.messages[room.value.id] || []);
+const messages = computed(() => chat.value?.messages[room.value.id] || []);
 const oldestMessage = computed(() => (messages.value.length ? messages.value[0] : null));
 const newestMessage = computed(() =>
 	messages.value.length ? messages.value[messages.value.length - 1] : null
 );
 
-const queuedMessages = computed(() =>
-	chat.value.messageQueue.filter(i => i.room_id === room.value.id)
+const queuedMessages = computed(
+	() => chat.value?.messageQueue.filter(i => i.room_id === room.value.id) || []
 );
 
 const allMessages = computed(() => [...messages.value, ...queuedMessages.value]);
@@ -97,7 +98,7 @@ const shouldShowNewMessagesButton = computed(() => {
 });
 
 const roomChannel = computed(() => {
-	const item = chat.value.roomChannels[room.value.id];
+	const item = chat.value?.roomChannels[room.value.id];
 	if (item) {
 		return item;
 	}
@@ -148,6 +149,10 @@ function updateVisibleQueuedMessages() {
 }
 
 async function loadOlder() {
+	if (!chat.value) {
+		return;
+	}
+
 	isLoadingOlder.value = true;
 	await nextTick();
 

@@ -169,6 +169,10 @@ const shouldShowBanner = computed(() => {
 	return isPersonallyStreaming.value;
 });
 
+const shouldShowRouteConnectionError = computed(
+	() => c.value?.shouldShowConnectionError.value === true
+);
+
 // If the fireside's status ever changes to setup-failed, we want to direct to a
 // 404 page.
 watch(routeStatus, status => {
@@ -543,7 +547,7 @@ function onClickStreamingBanner() {
 									</div>
 								</div>
 							</template>
-							<template v-else-if="routeStatus === 'disconnected'">
+							<template v-else-if="shouldShowRouteConnectionError">
 								<div key="disconnected" class="-message-wrapper">
 									<div class="-message">
 										<AppIllustration :asset="illNoCommentsSmall">
@@ -728,7 +732,11 @@ function onClickStreamingBanner() {
 							:class="{ '-trailing-shadow-none': collapseSidebar }"
 						>
 							<div
-								v-if="routeStatus === 'joined'"
+								v-if="
+									routeStatus === 'joined' ||
+									(routeStatus === 'disconnected' &&
+										!shouldShowRouteConnectionError)
+								"
 								key="sidebar"
 								class="-trailing"
 								:class="{

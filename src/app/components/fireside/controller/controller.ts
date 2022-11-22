@@ -219,6 +219,20 @@ export function createFiresideController(
 	const rtc = ref<FiresideRTC>();
 	const status = ref<RouteStatus>('initial');
 
+	const _isSilentlyLoading = ref(false);
+
+	const hasConnectionError = computed(() => !grid.value?.connected);
+
+	const hasChatConnectionError = computed(() => hasConnectionError.value);
+
+	const shouldShowConnectionError = computed(
+		() => hasConnectionError.value && status.value === 'expired'
+	);
+
+	const _shouldSilentlyReconnect = computed(
+		() => hasConnectionError.value && status.value !== 'expired'
+	);
+
 	const gridChannel = shallowRef<GridFiresideChannel>();
 	const gridDMChannel = shallowRef<GridFiresideDMChannel>();
 	const chatChannel = shallowRef<ChatRoomChannel>();
@@ -448,8 +462,13 @@ export function createFiresideController(
 
 		// Only initialize RTC when we are fully connected.
 		if (myStatus !== 'joined') {
-			logger.info('status not joined');
-			return false;
+			const isSilentlyReconnecting =
+				myStatus === 'disconnected' && !shouldShowConnectionError.value;
+
+			if (!isSilentlyReconnecting) {
+				logger.info('status not joined');
+				return false;
+			}
 		}
 
 		// We have to have valid looking agora streaming credentials.
@@ -458,7 +477,7 @@ export function createFiresideController(
 			return false;
 		}
 
-		// If we don't have hosts, we shouldnt initialize RTC.
+		// If we don't have hosts, we shouldn't initialize RTC.
 		if (!myHosts || myHosts.length === 0) {
 			logger.info('no hosts gtfo');
 			return false;
@@ -615,8 +634,45 @@ export function createFiresideController(
 	// become disconnected and then queue up for restarting.
 	const _unwatchGridConnection = watch(
 		() => grid.value?.connected,
-		() => _watchGrid
+		() => _watchGrid()
 	);
+
+	let _canAutoRejoin = true;
+
+	// TODO(fireside-reconnects) test this more thoroughly.
+	const _unwatchShouldSilentlyReconnect = watch(_shouldSilentlyReconnect, shouldReconnect => {
+		if (!shouldReconnect || !_canAutoRejoin || _isSilentlyLoading.value) {
+			return;
+		}
+
+		_isSilentlyLoading.value = true;
+		_canAutoRejoin = false;
+		_tryJoin();
+	});
+
+	// TODO(fireside-reconnects) test this more thoroughly.
+	const _unwatchStatus = watch(status, async status => {
+		if (
+			status === 'expired' &&
+			_canAutoRejoin &&
+			!grid.value?.connected &&
+			!_isSilentlyLoading.value
+		) {
+			_isSilentlyLoading.value = true;
+			_canAutoRejoin = false;
+
+			// We don't want a ton of people connecting all at once, so we
+			// should stagger by some random amount.
+			await sleep(Math.random() * 5);
+			_retrySilently();
+			return;
+		}
+
+		if (status === 'joined') {
+			_isSilentlyLoading.value = false;
+			_canAutoRejoin = true;
+		}
+	});
 
 	const sidebarHome: FiresideSidebar = 'chat';
 	const _sidebar = ref<FiresideSidebar>(sidebarHome);
@@ -843,6 +899,10 @@ export function createFiresideController(
 		isShowingStreamOverlay,
 		collapseSidebar,
 		popperTeleportId: computed(() => `fireside-teleport-${fireside.id}`),
+
+		hasConnectionError,
+		hasChatConnectionError,
+		shouldShowConnectionError,
 	});
 
 	// Let's set ourselves up now!
@@ -889,7 +949,16 @@ export function createFiresideController(
 			return;
 		}
 
-		status.value = 'loading';
+		if (!_isSilentlyLoading.value) {
+			// Don't do anything if we're not trying to join from a disconnect or
+			// initializing things.
+			if (status.value !== 'disconnected' && status.value !== 'initial') {
+				return;
+			}
+
+			// Change the state to Loading since we're not trying to load silently.
+			status.value = 'loading';
+		}
 
 		// Make sure the services are connected.
 		while (!grid.value?.connected) {
@@ -1037,13 +1106,13 @@ export function createFiresideController(
 		updateFiresideExpiryValues(controller);
 	}
 
-	function _disconnect() {
+	function _disconnect(isReconnecting = false) {
 		if (status.value === 'disconnected') {
 			return;
 		}
 
 		logger.debug(`Disconnecting from fireside.`);
-		status.value = 'disconnected';
+		status.value = isReconnecting ? 'loading' : 'disconnected';
 
 		_clearExpiryCheck();
 		_destroyExpiryInfoInterval();
@@ -1115,6 +1184,8 @@ export function createFiresideController(
 		_unwatchHostsChanged();
 		_unwatchListableHostIdsChanged();
 		_unwatchGridConnection();
+		_unwatchShouldSilentlyReconnect();
+		_unwatchStatus();
 		_unwatchSidebar();
 
 		if (rtc.value) {
@@ -1133,6 +1204,11 @@ export function createFiresideController(
 	 */
 	function retry() {
 		_disconnect();
+		_tryJoin();
+	}
+
+	function _retrySilently() {
+		_disconnect(true);
 		_tryJoin();
 	}
 

@@ -4,13 +4,17 @@ import { useRoute } from 'vue-router';
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { createFiresideChatContextCapabilities } from '../../../../_common/fireside/chat/chat-settings.model';
+import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppChatWindowOutput from '../../../components/chat/window/output/AppChatWindowOutput.vue';
 import AppChatWindowSend from '../../../components/chat/window/send/AppChatWindowSend.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
+import { illMaintenance } from '../../../img/ill/illustrations';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 
-const { chatRoom, chatSettings, chat, fireside, background } = useFiresideController()!;
+const { chatRoom, chatSettings, chat, fireside, background, hasChatConnectionError, user } =
+	useFiresideController()!;
 const route = useRoute();
 
 const contextCapabilities = computed(() => ({
@@ -35,8 +39,14 @@ const loginUrl = computed(
 		</template>
 
 		<template #body>
+			<div v-if="hasChatConnectionError" class="-chat-error">
+				<AppIllustration :asset="illMaintenance">
+					<p><AppTranslate>You lost connection to the chat.</AppTranslate></p>
+					<p><AppTranslate>We're actively reconnecting you.</AppTranslate></p>
+				</AppIllustration>
+			</div>
 			<AppChatWindowOutput
-				v-if="chatRoom"
+				v-else-if="chatRoom"
 				:key="chatRoom.id"
 				:room="chatRoom"
 				:overlay="!!background"
@@ -47,7 +57,7 @@ const loginUrl = computed(
 
 		<template #footer>
 			<AppChatWindowSend
-				v-if="chat?.currentUser && chatRoom"
+				v-if="user && chatRoom"
 				:key="contextCapabilities.key"
 				:room="chatRoom"
 				:context-capabilities="contextCapabilities.capabilities"
@@ -56,7 +66,7 @@ const loginUrl = computed(
 				"
 				:max-content-length="chatSettings.max_message_length"
 			/>
-			<div v-if="chat && !chat.currentUser" class="-login fill-backdrop">
+			<div v-else-if="chat && !user" class="-login fill-backdrop">
 				<div class="alert">
 					<p>
 						You must be
@@ -70,6 +80,12 @@ const loginUrl = computed(
 </template>
 
 <style lang="stylus" scoped>
+.-chat-error
+	display: flex
+	align-items: center
+	justify-content: center
+	padding: 16px
+
 .-login
 	padding: ($grid-gutter-width-xs / 2)
 

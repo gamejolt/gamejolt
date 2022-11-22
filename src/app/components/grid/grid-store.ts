@@ -29,6 +29,11 @@ export function createGridStore({ appStore }: { appStore: AppStore }) {
 	 */
 	const chatUnsafe = bangRef(chat);
 
+	/**
+	 * A helper to get the chat client only if it has an active connection.
+	 */
+	const connectedChat = computed(() => (chat.value?.connected ? chat.value : null));
+
 	async function loadGrid() {
 		_wantsGrid = true;
 
@@ -89,5 +94,5 @@ export function createGridStore({ appStore }: { appStore: AppStore }) {
 		});
 	}
 
-	return { grid, chat, chatUnsafe, loadGrid, clearGrid, whenGridBootstrapped };
+	return { grid, chat, chatUnsafe, connectedChat, loadGrid, clearGrid, whenGridBootstrapped };
 }
