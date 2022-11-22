@@ -6,6 +6,7 @@ import { routeDashCommunities } from './communities/communities.route';
 import { routeDashGames } from './games/games.route';
 import { routeDashLinking } from './linking/linking.route';
 import { routeDashStickers } from './stickers/stickers.route';
+import { routeDashSupporters } from './supporters/supporters.route';
 
 export const routeDash: RouteRecordRaw = {
 	name: 'dashboard',
@@ -19,5 +20,6 @@ export const routeDash: RouteRecordRaw = {
 		routeDashAnalytics,
 		routeDashLinking,
 		routeDashStickers,
+		routeDashSupporters,
 	],
 };
