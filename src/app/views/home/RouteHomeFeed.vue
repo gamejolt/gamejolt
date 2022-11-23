@@ -62,13 +62,15 @@ import AppPageContainer from '../../components/page-container/AppPageContainer.v
 import AppPostAddButton from '../../components/post/add-button/AppPostAddButton.vue';
 import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
 import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
+import { imageJoltCupBanner } from '../../img/images';
 import { useQuestStore } from '../../store/quest';
+import { routePost } from '../post/post.route';
 import AppHomeFeedMenu from './AppHomeFeedMenu.vue';
 import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
 import AppHomeFireside from './_fireside/AppHomeFireside.vue';
 
 const { user } = useCommonStore();
-const { fetchDailyQuests } = useQuestStore();
+const { fetchDailyQuests, isLoading: isQuestStoreLoading, dailyQuests } = useQuestStore();
 const route = useRoute();
 
 const games = ref<DashGame[]>([]);
@@ -272,16 +274,27 @@ async function refreshQuests() {
 
 				<template v-if="!Screen.isMobile" #right>
 					<AppStickerChargeCard header-charge allow-fully-charged-text />
-					<AppSpacer vertical :scale="12" />
+					<AppSpacer vertical :scale="8" />
 
-					<AppDailyQuests
-						v-if="user"
-						disable-on-expiry
-						single-row
-						:force-loading="isLoadingQuests"
-					/>
+					<template v-if="user">
+						<AppDailyQuests
+							disable-on-expiry
+							single-row
+							:force-loading="isLoadingQuests"
+						/>
 
-					<AppSpacer vertical :scale="12" />
+						<AppSpacer
+							v-if="isQuestStoreLoading || dailyQuests.length > 0"
+							vertical
+							:scale="8"
+						/>
+					</template>
+
+					<RouterLink :to="{ name: routePost.name, params: { slug: 'g8vqnqfe' } }">
+						<img class="-event-banner img-responsive" :src="imageJoltCupBanner" />
+					</RouterLink>
+
+					<AppSpacer vertical :scale="8" />
 
 					<AppHomeFireside
 						:featured-fireside="featuredFireside"
@@ -298,6 +311,12 @@ async function refreshQuests() {
 				<AppPostAddButton @add="onPostAdded" />
 
 				<template v-if="Screen.isMobile">
+					<RouterLink :to="{ name: routePost.name, params: { slug: 'g8vqnqfe' } }">
+						<img class="-event-banner img-responsive" :src="imageJoltCupBanner" />
+
+						<AppSpacer vertical :scale="4" />
+					</RouterLink>
+
 					<AppHomeFireside
 						:user-fireside="userFireside"
 						:firesides="firesides"
@@ -322,4 +341,7 @@ async function refreshQuests() {
 .-game-list
 	a
 		text-overflow()
+
+.-event-banner
+	rounded-corners()
 </style>
