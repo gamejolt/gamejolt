@@ -105,6 +105,7 @@ export async function createChatRoomChannel(
 
 	const presence = markRaw(new Presence(channel));
 	presence.onSync(() => _syncPresentUsers(presence));
+	presence.onLeave(_syncPresenceData);
 
 	const c = shallowReadonly({
 		channelController,
@@ -333,14 +334,25 @@ export async function createChatRoomChannel(
 		}
 
 		const roomMembers = client.roomMembers[room.value.id];
-
 		roomMembers.doBatchWork(() => {
-			presence.list((id: string, roomPresence: RoomPresence) => {
-				const user = roomMembers.get(+id) ?? new ChatUser(roomPresence.user);
-				user.typing = roomPresence.metas.some(meta => meta.typing);
-				roomMembers.update(user);
-			});
+			presence.list(_syncPresenceData);
 		});
+	}
+
+	function _syncPresenceData(presenceId: string, roomPresence: RoomPresence | undefined) {
+		if (!roomPresence) {
+			return;
+		}
+
+		const roomMembers = client.roomMembers[room.value.id];
+		const user = roomMembers.get(+presenceId);
+		if (!user) {
+			return;
+		}
+
+		// We currently only sync the typing status.
+		user.typing = roomPresence.metas.some(i => i.typing);
+		roomMembers.update(user);
 	}
 
 	// TODO: why is this here and not in the chat client?
