@@ -43,9 +43,9 @@ import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import AppInviteCard from '../../../_common/invite/AppInviteCard.vue';
 import {
-	asyncRouteLoader,
-	createAppRoute,
-	defineAppRouteOptions,
+asyncRouteLoader,
+createAppRoute,
+defineAppRouteOptions
 } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
@@ -311,7 +311,7 @@ async function refreshQuests() {
 				<AppPostAddButton @add="onPostAdded" />
 
 				<template v-if="Screen.isMobile">
-					<RouterLink :to="{ name: routePost.name, params: { slug: 'g8vqnqfe' } }">
+					<RouterLink v-if="!Screen.isXs" :to="{ name: routePost.name, params: { slug: 'g8vqnqfe' } }">
 						<img class="-event-banner img-responsive" :src="imageJoltCupBanner" />
 
 						<AppSpacer vertical :scale="4" />
