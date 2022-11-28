@@ -59,13 +59,16 @@ const labelStyling = computed(() => {
 	const hPos = pos.slice(dash + 1, pos.length);
 
 	const result: CSSProperties = {};
+	const margin = '8px';
 
 	if (vPos === 'top' || vPos === 'bottom') {
-		result[vPos] = '8px';
+		result[vPos] = margin;
 	}
 	if (hPos === 'left' || hPos === 'right') {
-		result[hPos] = '8px';
+		result[hPos] = margin;
 	}
+
+	result['max-width'] = `calc(100% - (${margin} * 2))`;
 
 	return result;
 });
