@@ -30,9 +30,6 @@ const props = defineProps({
 	showPinned: {
 		type: Boolean,
 	},
-	showDate: {
-		type: Boolean,
-	},
 	dateLink: {
 		type: String as PropType<string>,
 		default: undefined,
@@ -42,7 +39,7 @@ const props = defineProps({
 	},
 });
 
-const { post, feed, showPinned, showDate, dateLink } = toRefs(props);
+const { post, feed, showPinned, dateLink } = toRefs(props);
 
 const user = computed(() => post.value.displayUser);
 const overlay = computed(() => !!post.value.background);
@@ -130,7 +127,7 @@ const shouldShowFollow = computed(() => {
 				</span>
 			</span>
 
-			<span v-if="showDate && post.isActive" :class="{ '-overlay-text': overlay }">
+			<span v-if="post.isActive" :class="{ '-overlay-text': overlay }">
 				<AppActivityFeedPostTime v-if="dateLink" :post="post" :link="dateLink" />
 				<AppTimeAgo v-else :date="post.published_on" strict />
 			</span>

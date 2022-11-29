@@ -111,7 +111,6 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 				name: 'user-profile',
 				url: getFetchUrl(this.$route),
 				itemsPerPage: payload.perPage,
-				shouldShowDates: !this.isLikeFeed,
 				shouldShowFollow: this.isLikeFeed,
 			},
 			payload.items,

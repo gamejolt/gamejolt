@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { RouterLink } from 'vue-router';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { TranslateLangSelectorModal } from '../../../_common/translate/lang-selector/lang-selector-modal.service';
 
 function showLangSelector() {
@@ -16,23 +15,23 @@ function showLangSelector() {
 				params: { path: 'support' },
 			}"
 		>
-			<AppTranslate>Support</AppTranslate>
+			{{ $gettext(`Support`) }}
 		</RouterLink>
 		<div class="-dot" />
 		<RouterLink :to="{ name: 'legal.terms' }">
-			<AppTranslate>Terms</AppTranslate>
+			{{ $gettext(`Terms`) }}
 		</RouterLink>
 		<div class="-dot" />
 		<RouterLink :to="{ name: 'legal.privacy' }">
-			<AppTranslate>Privacy</AppTranslate>
+			{{ $gettext(`Privacy`) }}
 		</RouterLink>
 		<div class="-row-break" />
 		<RouterLink :to="{ name: 'legal.cookies' }">
-			<AppTranslate>Cookie Policy</AppTranslate>
+			{{ $gettext(`Cookie policy`) }}
 		</RouterLink>
 		<div class="-dot" />
 		<a @click="showLangSelector">
-			<AppTranslate>Change Language</AppTranslate>
+			{{ $gettext(`Change language`) }}
 		</a>
 	</div>
 </template>

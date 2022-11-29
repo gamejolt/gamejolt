@@ -7,7 +7,7 @@ import { $gettext } from '../../translate/translate.service';
 defineProps({
 	size: {
 		type: String as PropType<'md' | 'lg' | 'sm'>,
-		default: 'default',
+		default: 'md',
 	},
 });
 </script>

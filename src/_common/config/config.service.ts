@@ -144,36 +144,6 @@ export const configCommunityFrontpageFeedType = new ConfigOptionString(
 	}
 );
 
-/**
- * Determines what kind of resource we want to show for Onboarding, where our
- * existing baseline is `communities`.
- */
-export const configOnboardingResources = new ConfigOptionString(
-	'web_onboarding_resources',
-	'communities',
-	{
-		validValues: ['communities', 'creators', 'realms'],
-		conditions: { join: true },
-	}
-);
-
-/**
- * New users targeted by our {@link configOnboardingResources} test should
- * display FYP as the deafult feed, even if they're targeted by the baseline.
- */
-export function shouldUseFYPDefault() {
-	// Ignore users that signed up prior to the config creation.
-	return !configOnboardingResources.isExcluded;
-}
-
-export const configSkipOnboardingProfile = new ConfigOptionBoolean(
-	'web_skip_onboarding_profile',
-	false,
-	{
-		conditions: { join: true },
-	}
-);
-
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
 }

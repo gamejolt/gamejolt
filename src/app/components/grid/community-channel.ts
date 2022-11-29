@@ -1,12 +1,12 @@
 import { markRaw, shallowReadonly } from 'vue';
 import { Router } from 'vue-router';
 import { Analytics } from '../../../_common/analytics/analytics.service';
-import { shouldUseFYPDefault } from '../../../_common/config/config.service';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { showInfoGrowl } from '../../../_common/growls/growls.service';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
 import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
+import { shouldUseFYPDefault } from '../../views/home/home-feed.service';
 import { GridClient } from './client.service';
 
 export type GridCommunityChannel = Awaited<ReturnType<typeof createGridCommunityChannel>>;
