@@ -80,24 +80,6 @@ const highlight = computed(() => {
 					<AppJolticon class="-control-icon" icon="books" />
 				</a>
 			</AppShellCbarItem>
-
-			<!-- Realms -->
-			<AppShellCbarItem
-				class="-control"
-				:highlight="highlight"
-				:is-active="visibleLeftPane === 'realms'"
-				is-control
-			>
-				<!-- TODO(realms-discover-improvements) Do we want a shortkey here? How often are they (intentionally) used? -->
-				<a
-					v-app-tooltip.right="$gettext(`My Realms`)"
-					v-app-track-event="`cbar:realms:toggle`"
-					class="-control-item"
-					@click="toggleLeftPane('realms')"
-				>
-					<AppJolticon class="-control-icon" icon="portal" />
-				</a>
-			</AppShellCbarItem>
 		</template>
 
 		<hr v-if="Screen.isXs || user" class="-hr" />
