@@ -1,7 +1,5 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
-import { configOnboardingResources } from '../../../../_common/config/config.service';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
 import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
@@ -26,7 +24,6 @@ const form: FormController<FormModel> = createForm({
 	loadUrl: '/web/onboarding/realms',
 	onLoad(payload) {
 		realms.value = Realm.populate(payload.realms);
-		trackExperimentEngagement(configOnboardingResources);
 	},
 	onBeforeSubmit() {
 		Onboarding.trackEvent(joinedAnyRealm.value ? 'follow-realms-set' : 'follow-realms-skip');
@@ -49,12 +46,12 @@ const joinedAnyRealm = computed(() => realms.value.find(i => !!i.is_following));
 	<AppForm :controller="form">
 		<div class="-form">
 			<section class="-message">
-				<h3 class="section-header">
-					{{ $gettext(`Follow some realms`) }}
-				</h3>
+				<h1 class="section-header text-display">
+					{{ $gettext(`What are you into?`) }}
+				</h1>
 
 				<p class="text-muted">
-					{{ $gettext(`Explore fan-created artwork, videos, guides and more.`) }}
+					{{ $gettext(`Follow your interests to discover awesome creators`) }}
 				</p>
 			</section>
 

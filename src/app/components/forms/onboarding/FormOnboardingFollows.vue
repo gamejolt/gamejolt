@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref } from 'vue';
-import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Community } from '../../../../_common/community/community.model';
-import { configOnboardingResources } from '../../../../_common/config/config.service';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
@@ -38,7 +36,6 @@ const form: FormController<FormModel> = createForm({
 	loadUrl: '/web/onboarding/follows',
 	onLoad(payload) {
 		communities.value = Community.populate(payload.communities);
-		trackExperimentEngagement(configOnboardingResources);
 	},
 	onBeforeSubmit() {
 		Onboarding.trackEvent(
@@ -63,12 +60,12 @@ const followsAnyCommunity = computed(() => communities.value.find(i => !!i.is_me
 	<AppForm :controller="form">
 		<div class="-form">
 			<section class="-message">
-				<h3 class="section-header">
+				<h1 class="section-header text-display">
 					{{ $gettext(`Join some communities`) }}
-				</h3>
+				</h1>
 
 				<p class="text-muted">
-					{{ $gettext(`Explore fan-created artwork, videos, guides and more.`) }}
+					{{ $gettext(`Explore fan-created artwork, videos, guides and more`) }}
 				</p>
 			</section>
 
