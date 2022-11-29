@@ -272,16 +272,14 @@ const debounceSearchInput = debounce(() => {
 				<AppExpand :when="selectedRealms.length > 0">
 					<AppScrollScroller horizontal :controller="scrollController">
 						<div class="-selected-realms">
-							<TransitionGroup>
-								<AppPostTargetRealm
-									v-for="realm of selectedRealms"
-									:key="realm.id"
-									class="-realm-wrapper"
-									:realm="realm"
-									can-remove
-									@remove="removeRealm(realm)"
-								/>
-							</TransitionGroup>
+							<AppPostTargetRealm
+								v-for="realm of selectedRealms"
+								:key="realm.id"
+								class="-realm-wrapper"
+								:realm="realm"
+								can-remove
+								@remove="removeRealm(realm)"
+							/>
 						</div>
 					</AppScrollScroller>
 				</AppExpand>

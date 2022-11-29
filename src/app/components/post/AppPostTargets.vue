@@ -86,9 +86,7 @@ const canShow = computed(() => {
 		return true;
 	}
 
-	const realmsValid = canAddRealm.value || realms.value.length > 0;
-
-	return realmsValid;
+	return canAddRealm.value || realms.value.length > 0;
 });
 
 const baseClasses = computed(() => {
@@ -183,7 +181,7 @@ async function onClickAddRealm() {
 				@remove="onRemoveCommunity"
 			/>
 
-			<a v-if="canAddRealm" key="add-realm" @click="onClickAddRealm">
+			<a v-if="canAddRealm" key="add-realm" :class="baseClasses" @click="onClickAddRealm">
 				<AppPostTarget class="-add">
 					<template #img>
 						<AppJolticon icon="add" />
