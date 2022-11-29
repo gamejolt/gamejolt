@@ -1,6 +1,5 @@
 import { fetchAndActivate, getRemoteConfig, getValue } from 'firebase/remote-config';
 import { reactive } from 'vue';
-import { HOME_FEED_ACTIVITY, HOME_FEED_FYP } from '../../app/views/home/home-feed.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
 
 const ConfigService_ = {
@@ -131,16 +130,6 @@ export class ConfigOptionString<T extends string = string> extends ConfigOption<
 	}
 }
 
-/** Which feed do we default to for home */
-export const configHomeDefaultFeed = new ConfigOptionString(
-	'home_default_feed',
-	HOME_FEED_ACTIVITY,
-	{
-		validValues: [HOME_FEED_ACTIVITY, HOME_FEED_FYP],
-		conditions: { join: true },
-	}
-);
-
 export const configFYPExperiment = new ConfigOptionString<string>('fyp_experiment', 'default', {
 	// Allow any value since we pass directly to backend, which does all the logic.
 	validValues: false,
@@ -151,27 +140,6 @@ export const configCommunityFrontpageFeedType = new ConfigOptionString(
 	'default',
 	{
 		validValues: ['default', 'featured', 'featured-hot'],
-		conditions: { join: true },
-	}
-);
-
-/**
- * Determines what kind of resource we want to show for Onboarding, where our
- * existing baseline is `communities`.
- */
-export const configOnboardingResources = new ConfigOptionString(
-	'web_onboarding_resources',
-	'communities',
-	{
-		validValues: ['communities', 'creators', 'realms'],
-		conditions: { join: true },
-	}
-);
-
-export const configSkipOnboardingProfile = new ConfigOptionBoolean(
-	'web_skip_onboarding_profile',
-	false,
-	{
 		conditions: { join: true },
 	}
 );

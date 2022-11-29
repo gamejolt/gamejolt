@@ -160,7 +160,6 @@ const articleLengthLimit = ref(50_000);
 const isUploadingPastedImage = ref(false);
 const scrollingKey = ref(1);
 const uploadingVideoStatus = ref(VideoStatus.IDLE);
-const videoProvider = ref(FiresidePostVideo.PROVIDER_GAMEJOLT);
 const hasChangedBackground = ref(false);
 const isShowingMoreOptions = ref(false);
 
@@ -341,13 +340,9 @@ const form: FormController<FormPostModel> = createForm({
 		}
 
 		if (attachmentType.value === FiresidePost.TYPE_VIDEO) {
-			if (videoProvider.value === FiresidePostVideo.PROVIDER_GAMEJOLT) {
-				// Unset the video url for linked videos and set the video id for uploaded videos
-				// to signal to the backend that the attached video should be kept.
-				form.formModel.video_id = form.formModel.videos[0].id;
-			} else {
-				form.formModel.video_id = 0;
-			}
+			// Unset the video url for linked videos and set the video id for uploaded videos
+			// to signal to the backend that the attached video should be kept.
+			form.formModel.video_id = form.formModel.videos[0].id;
 		} else {
 			form.formModel.video_id = 0;
 		}
@@ -1006,10 +1001,6 @@ function onUploadingVideoStatusChanged(status: VideoStatus) {
 	emit('videoUploadStatusChange', uploadingVideoStatus.value);
 }
 
-function onVideoProviderChanged(provider: string) {
-	videoProvider.value = provider;
-}
-
 function onDisableVideoAttachment() {
 	disableAttachments();
 }
@@ -1098,7 +1089,6 @@ function _getMatchingBackgroundIdFromPref() {
 				@delete="onDisableVideoAttachment"
 				@video-change="onVideoChanged"
 				@video-status-change="onUploadingVideoStatusChanged"
-				@video-provider-change="onVideoProviderChanged"
 			/>
 		</div>
 

@@ -707,11 +707,3 @@ export function userCanModerateOtherUser(
 
 	return userRole === 'moderator';
 }
-
-export function promoteToModerator(chat: ChatClient, room: ChatRoom, memberId: number) {
-	return chat.roomChannels[room.id].pushPromoteModerator(memberId);
-}
-
-export function demoteModerator(chat: ChatClient, room: ChatRoom, memberId: number) {
-	return chat.roomChannels[room.id].pushDemoteModerator(memberId);
-}

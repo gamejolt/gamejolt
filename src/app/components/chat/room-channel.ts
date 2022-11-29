@@ -129,8 +129,6 @@ export async function createChatRoomChannel(
 		pushUpdateBackground,
 		pushStartTyping,
 		pushStopTyping,
-		pushPromoteModerator,
-		pushDemoteModerator,
 		pushPlaceSticker,
 	});
 
@@ -481,20 +479,6 @@ export async function createChatRoomChannel(
 	 */
 	function pushStopTyping() {
 		return channelController.push<void>('stop_typing');
-	}
-
-	/**
-	 * Promotes a member in the room to a moderator.
-	 */
-	function pushPromoteModerator(memberId: number) {
-		return channelController.push<void>('promote_moderator', { member_id: memberId });
-	}
-
-	/**
-	 * Demotes a moderator in the room.
-	 */
-	function pushDemoteModerator(memberId: number) {
-		return channelController.push<void>('demote_moderator', { member_id: memberId });
 	}
 
 	/**

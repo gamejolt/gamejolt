@@ -31,6 +31,9 @@ const friends = computed(() => chat.value.friendsList.collection);
 const groups = computed(() => chat.value.groupRooms);
 const chats = computed(() => sortByLastMessageOn([...groups.value, ...friends.value]));
 const friendsCount = computed(() => chat.value.friendsList.collection.length);
+const isEmpty = computed(
+	() => chats.value.length === 0 || (tab.value === 'friends' && !friends.value.length)
+);
 
 onMounted(() => {
 	// xs size needs to show the friends list
@@ -66,38 +69,37 @@ function showInviteModal() {
 	<div id="shell-chat-pane">
 		<div class="-pane-inner">
 			<template v-if="chat.populated">
-				<AppTabBar class="-nav-tabs">
-					<AppTabBarItem
-						v-if="chats.length > 0"
-						:active="tab === 'chats'"
-						@click="tab = 'chats'"
-					>
-						<AppTranslate>Chats</AppTranslate>
-					</AppTabBarItem>
-					<AppTabBarItem
-						:active="chats.length === 0 || tab === 'friends'"
-						@click="tab = 'friends'"
-					>
-						<AppTranslate>Friends</AppTranslate>
-						<span class="badge badge-subtle">
-							{{ formatNumber(friendsCount) }}
-						</span>
-					</AppTabBarItem>
-				</AppTabBar>
+				<template v-if="isEmpty">
+					<AppIllustration :asset="illNoCommentsSmall">
+						<p>
+							<AppTranslate>No friends yet.</AppTranslate>
+						</p>
 
-				<AppIllustration
-					v-if="chats.length === 0 || (tab === 'friends' && !friends.length)"
-					:asset="illNoCommentsSmall"
-				>
-					<p>
-						<AppTranslate>No friends yet.</AppTranslate>
-					</p>
-
-					<AppButton primary solid @click="showInviteModal()">
-						<AppTranslate>Invite a friend</AppTranslate>
-					</AppButton>
-				</AppIllustration>
+						<AppButton primary solid @click="showInviteModal()">
+							<AppTranslate>Invite a friend</AppTranslate>
+						</AppButton>
+					</AppIllustration>
+				</template>
 				<template v-else>
+					<AppTabBar class="-nav-tabs">
+						<AppTabBarItem
+							v-if="chats.length > 0"
+							:active="tab === 'chats'"
+							@click="tab = 'chats'"
+						>
+							<AppTranslate>Chats</AppTranslate>
+						</AppTabBarItem>
+						<AppTabBarItem
+							:active="chats.length === 0 || tab === 'friends'"
+							@click="tab = 'friends'"
+						>
+							<AppTranslate>Friends</AppTranslate>
+							<span class="badge badge-subtle">
+								{{ formatNumber(friendsCount) }}
+							</span>
+						</AppTabBarItem>
+					</AppTabBar>
+
 					<AppChatUserList :entries="tab === 'chats' ? chats : friends" />
 
 					<div class="-footer">

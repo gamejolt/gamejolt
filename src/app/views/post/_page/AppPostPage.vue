@@ -199,36 +199,34 @@ function onDismissNotification(notification: CommunityUserNotification) {
 		>
 			<div v-if="video" class="container-xl">
 				<div class="full-bleed-xs">
-					<template v-if="video.provider === 'gamejolt'">
-						<template v-if="!hasVideoProcessingError">
-							<AppVideoPlayer
-								v-if="!video.is_processing && video.posterMediaItem"
-								context="page"
-								:media-item="video.posterMediaItem"
-								:manifests="video.manifestSources"
-								:view-count="video.view_count"
-								:start-time="videoStartTime"
-								autoplay
-								show-video-stats
-								@play="onVideoPlay"
-							/>
-							<template v-else>
-								<AppVideoProcessingProgress
-									:post="post"
-									@complete="onVideoProcessingComplete"
-									@error="onVideoProcessingError"
-								/>
-							</template>
-						</template>
+					<template v-if="!hasVideoProcessingError">
+						<AppVideoPlayer
+							v-if="!video.is_processing && video.posterMediaItem"
+							context="page"
+							:media-item="video.posterMediaItem"
+							:manifests="video.manifestSources"
+							:view-count="video.view_count"
+							:start-time="videoStartTime"
+							autoplay
+							show-video-stats
+							@play="onVideoPlay"
+						/>
 						<template v-else>
-							<AppResponsiveDimensions :ratio="16 / 9">
-								<div class="-video-preview">
-									<AppJolticon icon="video" big class="-video-preview-icon" />
-								</div>
-							</AppResponsiveDimensions>
-							<br />
-							<div class="alert alert-notice">{{ videoProcessingErrorMsg }}</div>
+							<AppVideoProcessingProgress
+								:post="post"
+								@complete="onVideoProcessingComplete"
+								@error="onVideoProcessingError"
+							/>
 						</template>
+					</template>
+					<template v-else>
+						<AppResponsiveDimensions :ratio="16 / 9">
+							<div class="-video-preview">
+								<AppJolticon icon="video" big class="-video-preview-icon" />
+							</div>
+						</AppResponsiveDimensions>
+						<br />
+						<div class="alert alert-notice">{{ videoProcessingErrorMsg }}</div>
 					</template>
 				</div>
 			</div>

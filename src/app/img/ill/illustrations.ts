@@ -1,5 +1,4 @@
-// import illChargeOrbEmptyPath from './charge-orb-empty.png';
-import illChargeOrbHalloweenEmptyPath from './charge-orb-halloween-empty.png';
+import illChargeOrbEmptyPath from './charge-orb-empty.png';
 import illCreatorInfographicPath from './creator-infographic.png';
 import illEndOfFeedPath from './end-of-feed.png';
 import illMaintenancePath from './maintenance.png';
@@ -73,7 +72,7 @@ export const illNoChat: IllustrationAsset = {
 };
 
 export const illChargeOrbEmpty: IllustrationAsset = {
-	path: illChargeOrbHalloweenEmptyPath, // illChargeOrbEmptyPath
+	path: illChargeOrbEmptyPath,
 	width: 500,
 	height: 500,
 };

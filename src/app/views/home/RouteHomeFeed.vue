@@ -37,10 +37,8 @@ import { RouterLink, useRoute } from 'vue-router';
 import { router } from '..';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
-import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
-import { configHomeDefaultFeed } from '../../../_common/config/config.service';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import AppInviteCard from '../../../_common/invite/AppInviteCard.vue';
@@ -64,13 +62,15 @@ import AppPageContainer from '../../components/page-container/AppPageContainer.v
 import AppPostAddButton from '../../components/post/add-button/AppPostAddButton.vue';
 import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
 import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
+import { imageJoltCupBanner } from '../../img/images';
 import { useQuestStore } from '../../store/quest';
+import { routePost } from '../post/post.route';
 import AppHomeFeedMenu from './AppHomeFeedMenu.vue';
 import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
 import AppHomeFireside from './_fireside/AppHomeFireside.vue';
 
 const { user } = useCommonStore();
-const { fetchDailyQuests } = useQuestStore();
+const { fetchDailyQuests, isLoading: isQuestStoreLoading, dailyQuests } = useQuestStore();
 const route = useRoute();
 
 const games = ref<DashGame[]>([]);
@@ -118,8 +118,6 @@ const tabs = computed(() => {
 const appRoute = createAppRoute({
 	routeTitle: null,
 	onResolved({ payload }) {
-		trackExperimentEngagement(configHomeDefaultFeed);
-
 		games.value = (payload.ownerGames as DashGame[])
 			.map(i => new DashGame(i.id, i.title, i.ownerName, i.createdOn))
 			.sort((a, b) => numberSort(a.createdOn, b.createdOn))
@@ -276,16 +274,27 @@ async function refreshQuests() {
 
 				<template v-if="!Screen.isMobile" #right>
 					<AppStickerChargeCard header-charge allow-fully-charged-text />
-					<AppSpacer vertical :scale="12" />
+					<AppSpacer vertical :scale="8" />
 
-					<AppDailyQuests
-						v-if="user"
-						disable-on-expiry
-						single-row
-						:force-loading="isLoadingQuests"
-					/>
+					<template v-if="user">
+						<AppDailyQuests
+							disable-on-expiry
+							single-row
+							:force-loading="isLoadingQuests"
+						/>
 
-					<AppSpacer vertical :scale="12" />
+						<AppSpacer
+							v-if="isQuestStoreLoading || dailyQuests.length > 0"
+							vertical
+							:scale="8"
+						/>
+					</template>
+
+					<RouterLink :to="{ name: routePost.name, params: { slug: 'g8vqnqfe' } }">
+						<img class="-event-banner img-responsive" :src="imageJoltCupBanner" />
+					</RouterLink>
+
+					<AppSpacer vertical :scale="8" />
 
 					<AppHomeFireside
 						:featured-fireside="featuredFireside"
@@ -302,6 +311,15 @@ async function refreshQuests() {
 				<AppPostAddButton @add="onPostAdded" />
 
 				<template v-if="Screen.isMobile">
+					<RouterLink
+						v-if="!Screen.isXs"
+						:to="{ name: routePost.name, params: { slug: 'g8vqnqfe' } }"
+					>
+						<img class="-event-banner img-responsive" :src="imageJoltCupBanner" />
+
+						<AppSpacer vertical :scale="4" />
+					</RouterLink>
+
 					<AppHomeFireside
 						:user-fireside="userFireside"
 						:firesides="firesides"
@@ -326,4 +344,7 @@ async function refreshQuests() {
 .-game-list
 	a
 		text-overflow()
+
+.-event-banner
+	rounded-corners()
 </style>

@@ -53,7 +53,6 @@ createAppRoute({
 				url: `/web/posts/fetch/search/${encodeURIComponent(getQuery(route, 'q')!)}`,
 				shouldShowFollow: true,
 				itemsPerPage: payload.postsPerPage,
-				shouldShowDates: false,
 			},
 			payload.posts,
 			fromCache

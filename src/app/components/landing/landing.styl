@@ -1,10 +1,8 @@
 .landing-header
 	@extend .fill-darkest
 
-.landing-header, .landing-header-no-fill
-	background-image: url('../shell/shell-bg.png')
-	background-repeat: repeat
-
+.landing-header
+.landing-header-no-fill
 	&.has-nav
 		padding-bottom: 0
 
@@ -53,11 +51,19 @@
 		margin-top: $line-height-computed * 2
 
 .landing-body
-	h1, h2, h3, h4, h5, h6
+	h1
+	h2
+	h3
+	h4
+	h5
+	h6
 		text-transform: uppercase
 
 	@media $media-xs
-		h3, h4, h5, h6
+		h3
+		h4
+		h5
+		h6
 			margin-top: $line-height-computed
 
 	a
@@ -86,7 +92,9 @@
 		position: relative
 
 	.fill-black
-		h1, h2, h3
+		h1
+		h2
+		h3
 			theme-prop('color', 'highlight')
 
 	p
@@ -95,7 +103,9 @@
 	.stat-big-digit
 		font-size: $font-size-h1 * 1.2
 
-.landing-break-lg, .landing-break-md, .landing-break-sm
+.landing-break-lg
+.landing-break-md
+.landing-break-sm
 	display: none
 
 @media $media-sm
@@ -116,7 +126,8 @@
 		clear: both
 		height: $grid-gutter-width * 1.5
 
-.landing-graphic, .landing-graphic-full
+.landing-graphic
+.landing-graphic-full
 	text-align: center
 
 	> img
