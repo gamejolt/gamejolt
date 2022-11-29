@@ -24,9 +24,13 @@ const props = defineProps({
 		validator: i => typeof i === 'string' && ['top', 'bottom'].indexOf(i) !== -1,
 		default: 'top',
 	},
+	offsetTop: {
+		type: Number,
+		default: undefined,
+	},
 });
 
-const { className, disabled, padding, anchor } = toRefs(props);
+const { className, disabled, padding, anchor, offsetTop } = toRefs(props);
 
 const container = ref<HTMLElement>();
 const placeholder = ref<HTMLElement>();
@@ -91,16 +95,22 @@ function inview() {
 	shouldAffix.value = false;
 }
 
+function getOffsetTop() {
+	return offsetTop?.value ?? Scroll.offsetTop;
+}
+
 function _createInviewConfig() {
 	let offset = padding.value;
 	if (anchor.value === 'top') {
-		offset += Scroll.offsetTop;
+		offset += getOffsetTop();
 	}
 
 	// The 10000px is so that it only considers the element "out of view" in
 	// one direction.
 	const margin =
-		anchor.value === 'top' ? `-${offset}px 0px 10000px 0px` : `10000px 0px -${offset}px 0px`;
+		anchor.value === 'top'
+			? `${offset * -1}px 0px 10000px 0px`
+			: `10000px 0px -${offset}px 0px`;
 
 	return new ScrollInviewConfig({ margin, emitsOn: 'full-overlap' });
 }
