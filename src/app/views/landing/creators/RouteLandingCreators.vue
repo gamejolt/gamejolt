@@ -304,10 +304,12 @@ function getRandomStickers(count = 3) {
 			<div class="-where-header -sub-header-text">
 				<span class="-where-header-text">
 					<AppCreatorMooMoo />
-					Engage with your audience. Get paid for your content.
+					Where your existing followers can
 				</span>
+				<span class="-text-primary"> {{ ' <' }}gasp{{ '> ' }} </span>
+				<span>follow</span>
 				<br />
-				<span class="-text-primary">Be seen by your followers.</span>
+				<span class="-text-primary">Get paid to engage with your audience!</span>
 			</div>
 
 			<div class="-where-content">
@@ -377,7 +379,7 @@ function getRandomStickers(count = 3) {
 
 					<div class="-where-trail">
 						<div class="-where-inner-header -tiny-header-text">
-							EXPRESS WHAT YOU WANT, HOW YOU WANT TO
+							EXPRESS YOURSELF IN ANY FORMAT
 						</div>
 
 						<div>
@@ -557,15 +559,6 @@ function getRandomStickers(count = 3) {
 		</div>
 
 		<div class="-footer -section-row">
-			<div class="-footer-header -sub-header-text">
-				<span class="-footer-header-text">
-					<AppCreatorMooMoo />
-					Where your existing followers can
-				</span>
-				<span class="-text-primary"> {{ ' <' }}gasp{{ '> ' }} </span>
-				<span>follow</span>
-			</div>
-
 			<div class="-footer-content">
 				<AppLinkExternal :href="applyUrl">
 					<AppButton
