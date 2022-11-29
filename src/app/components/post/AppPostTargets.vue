@@ -149,15 +149,17 @@ async function _scrollToEnd() {
 	++scrollingKey.value;
 }
 
-function onClickAddRealm() {
+async function onClickAddRealm() {
 	emit('showRealms');
 	// TODO(realms-discover-improvements) Should probably take onAdd and
 	// onRemove callbacks instead of modifying the list directly. Haven't
 	// checked what data is getting lost because of this.
-	PostTargetManageRealmsModal.show({
+	await PostTargetManageRealmsModal.show({
 		selectedRealms: realms.value,
 		maxRealms: maxRealms?.value || 5,
 	});
+
+	_scrollToEnd();
 }
 </script>
 
