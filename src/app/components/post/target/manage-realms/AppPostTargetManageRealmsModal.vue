@@ -18,27 +18,33 @@ function createRealmSearchFeed(query: string) {
 	const canLoadMore = computed(() => !reachedEnd.value && !hasError.value);
 
 	async function _makeRequest(pos: number) {
-		const body = {
-			...(isOverview ? {} : { q: safeQuery }),
-			_fields: {
-				realms: {
-					pos,
-					perPage,
-				},
-			},
-		};
-
 		const options: RequestOptions = {
 			detach: true,
-			allowComplexData: ['_fields'],
 		};
 
+		let payload: any;
+
 		if (isOverview) {
-			// TODO(realms-discover-improvements) Endpoint to fetch own realms, paginate
-			return Api.sendRequest(`/mobile/galaxy`, body, options);
+			payload = await Api.sendRequest(`/web/discover`, null, options);
 		} else {
-			return Api.sendRequest(`/mobile/search`, body, options);
+			const searchParams = [`q=${safeQuery}`];
+			if (pos > 1) {
+				searchParams.push(`page=${pos}`);
+			}
+
+			payload = await Api.sendRequest(
+				`/web/search/realms?${searchParams.join('&')}`,
+				null,
+				options
+			);
 		}
+
+		if (payload.featuredRealms) {
+			payload.realms = payload.featuredRealms;
+			delete payload.featuredRealms;
+		}
+
+		return payload;
 	}
 
 	async function init() {
@@ -52,7 +58,7 @@ function createRealmSearchFeed(query: string) {
 			const rawRealms: any[] = response.realms || [];
 			realms.value = Realm.populate(rawRealms);
 
-			reachedEnd.value = rawRealms.length < perPage;
+			reachedEnd.value = isOverview || rawRealms.length < perPage;
 			isBootstrapped.value = true;
 		} catch (e) {
 			console.error(e);
@@ -87,6 +93,7 @@ function createRealmSearchFeed(query: string) {
 	}
 
 	return {
+		isOverview,
 		query,
 		safeQuery,
 		perPage,
@@ -95,6 +102,7 @@ function createRealmSearchFeed(query: string) {
 		isLoading,
 		reachedEnd,
 		hasError,
+		canLoadMore,
 
 		init,
 		loadMore,
@@ -103,7 +111,7 @@ function createRealmSearchFeed(query: string) {
 </script>
 
 <script lang="ts" setup>
-import { computed, onMounted, PropType, ref, shallowRef, toRefs } from 'vue';
+import { computed, nextTick, onMounted, PropType, ref, shallowRef, toRefs } from 'vue';
 import { arrayRemove } from '../../../../../utils/array';
 import { debounce } from '../../../../../utils/utils';
 import { Api, RequestOptions } from '../../../../../_common/api/api.service';
@@ -113,7 +121,7 @@ import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
+import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
 import AppRealmFullCard, {
@@ -121,12 +129,21 @@ import AppRealmFullCard, {
 } from '../../../../../_common/realm/AppRealmFullCard.vue';
 import { Realm } from '../../../../../_common/realm/realm-model';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import AppScrollAffix from '../../../../../_common/scroll/AppScrollAffix.vue';
+import AppScrollScroller, {
+	createScroller,
+} from '../../../../../_common/scroll/AppScrollScroller.vue';
+import AppScrollInview, {
+	ScrollInviewConfig,
+} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import { illPointyThing } from '../../../../img/ill/illustrations';
 import AppPostTargetRealm from '../AppPostTargetRealm.vue';
 
 const COL_COUNT_BASE = 4;
 const COL_COUNT_XS = 2;
+
+const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 
 const props = defineProps({
 	selectedRealms: {
@@ -142,6 +159,7 @@ const props = defineProps({
 const { selectedRealms, maxRealms } = toRefs(props);
 
 const modal = useModal()!;
+const scrollController = createScroller();
 
 const currentQuery = ref('');
 
@@ -161,8 +179,10 @@ const renderedFeed = computed(() => {
 const realms = computed(() => renderedFeed.value.realms.value);
 const isBootstrapped = computed(() => renderedFeed.value.isBootstrapped.value);
 const isLoading = computed(() => renderedFeed.value.isLoading.value);
-const reachedEnd = computed(() => renderedFeed.value.reachedEnd.value);
+const isOverview = computed(() => renderedFeed.value.isOverview);
+const hasError = computed(() => renderedFeed.value.hasError.value);
 
+const canLoadMore = computed(() => renderedFeed.value.canLoadMore.value);
 const canAddRealms = computed(() => selectedRealms.value.length < maxRealms.value);
 
 onMounted(() => {
@@ -181,12 +201,20 @@ function toggleRealmSelection(realm: Realm) {
 	}
 }
 
-function selectRealm(realm: Realm) {
+async function selectRealm(realm: Realm) {
 	if (selectedRealms.value.length >= maxRealms.value || isRealmSelected(realm)) {
 		return;
 	}
 
 	selectedRealms.value.push(realm);
+	await nextTick();
+	const offset = scrollController.element.value?.scrollWidth;
+	if (offset) {
+		scrollController.scrollTo(offset, {
+			edge: 'left',
+			behavior: 'smooth',
+		});
+	}
 }
 
 function removeRealm(realm: Realm) {
@@ -208,8 +236,6 @@ const debounceSearchInput = debounce(() => {
 	const newFeed = createRealmSearchFeed(query);
 	realmFeeds.value.set(query, newFeed);
 
-	// TODO(realms-discover-improvements) might want to clear out old search feeds after we get a certain amount?
-
 	newFeed.init();
 	renderedFeedQuery.value = query;
 }, 500);
@@ -217,69 +243,80 @@ const debounceSearchInput = debounce(() => {
 
 <template>
 	<AppModal>
-		<div class="modal-controls">
-			<AppButton icon="chevron-left" @click="modal.dismiss()">
-				{{ $gettext(`Back`) }}
-			</AppButton>
-		</div>
+		<AppScrollAffix class="-floating-top-anchor" anchor="top" :offset-top="0" :padding="0">
+			<div class="modal-controls">
+				<AppButton icon="chevron-left" @click="modal.dismiss()">
+					{{ $gettext(`Back`) }}
+				</AppButton>
+			</div>
 
-		<div class="modal-header">
-			<h2 class="modal-title">
-				<div class="-title">
-					<span class="-title-text">
-						{{ $gettext(`Manage realms`) }}
-					</span>
+			<div class="-floating-top">
+				<div class="-sans-padding-horizontal modal-header">
+					<h2 class="modal-title">
+						<div class="-title">
+							<span class="-title-text">
+								{{ $gettext(`Manage realms`) }}
+							</span>
 
-					<span class="-title-count">
-						{{ `(${formatNumber(selectedRealms.length)}/${formatNumber(maxRealms)})` }}
-					</span>
+							<span class="-title-count">
+								{{
+									`(${formatNumber(selectedRealms.length)}/${formatNumber(
+										maxRealms
+									)})`
+								}}
+							</span>
+						</div>
+					</h2>
 				</div>
-			</h2>
-		</div>
+
+				<AppExpand :when="selectedRealms.length > 0">
+					<AppScrollScroller horizontal :controller="scrollController">
+						<div class="-selected-realms">
+							<TransitionGroup>
+								<AppPostTargetRealm
+									v-for="realm of selectedRealms"
+									:key="realm.id"
+									class="-realm-wrapper"
+									:realm="realm"
+									can-remove
+									@remove="removeRealm(realm)"
+								/>
+							</TransitionGroup>
+						</div>
+					</AppScrollScroller>
+				</AppExpand>
+
+				<AppSpacer vertical :scale="2" />
+				<input
+					v-model="currentQuery"
+					class="form-control"
+					:placeholder="$gettext(`Search realms...`)"
+					@input="debounceSearchInput"
+				/>
+				<AppSpacer vertical :scale="4" />
+			</div>
+		</AppScrollAffix>
 
 		<div
 			class="modal-body"
-			:is-loading="isLoading"
 			:style="[`--col-count-base: ${COL_COUNT_BASE}`, `--col-count-xs: ${COL_COUNT_XS}`]"
 		>
-			<AppExpand :when="selectedRealms.length > 0">
-				<div class="-selected-realms">
-					<TransitionGroup>
-						<AppPostTargetRealm
-							v-for="realm of selectedRealms"
-							:key="realm.id"
-							class="-realm-wrapper anim-fade-in-right anim-fade-leave-shrink"
-							:realm="realm"
-							can-remove
-							@remove="removeRealm(realm)"
-						/>
-					</TransitionGroup>
-				</div>
-			</AppExpand>
-
-			<AppSpacer vertical :scale="2" />
-			<input
-				v-model="currentQuery"
-				class="form-control"
-				:placeholder="$gettext(`Search realms...`)"
-				@input="debounceSearchInput"
-			/>
-			<AppSpacer vertical :scale="4" />
-
-			<AppLoadingFade :is-loading="isLoading">
-				<template v-if="isBootstrapped && !realms.length">
-					<AppIllustration :asset="illPointyThing">
-						{{ $gettext(`We couldn't find what you were looking for`) }}
-					</AppIllustration>
-				</template>
-				<div v-else class="-realms">
+			<template v-if="(isBootstrapped && !realms.length) || (!isBootstrapped && hasError)">
+				<AppIllustration :asset="illPointyThing">
+					{{ $gettext(`We couldn't find what you were looking for`) }}
+				</AppIllustration>
+			</template>
+			<template v-else>
+				<div class="-realms">
 					<template v-if="!isBootstrapped">
 						<AppAspectRatio
-							v-for="i of COL_COUNT_BASE"
+							v-for="i of COL_COUNT_BASE * 2"
 							:key="i"
-							class="lazy-placeholder"
+							class="-placeholder"
 							:ratio="REALM_CARD_RATIO"
-						/>
+						>
+							<div class="-placeholder" />
+						</AppAspectRatio>
 					</template>
 					<template v-else-if="realms.length">
 						<div v-for="realm of realms" :key="realm.id" class="-realm-wrapper">
@@ -289,7 +326,7 @@ const debounceSearchInput = debounce(() => {
 									'-hazy': !canAddRealms && !isRealmSelected(realm),
 								}"
 								:realm="realm"
-								label-position="top-left"
+								label-position="bottom-left"
 								:label-size="Screen.isMobile ? 'tiny' : undefined"
 								overlay-content
 								no-sheet
@@ -326,10 +363,22 @@ const debounceSearchInput = debounce(() => {
 						</div>
 					</template>
 				</div>
-			</AppLoadingFade>
 
-			<!-- TODO(realms-discover-improvements) Auto-load more realms on scroll. -->
-			<!-- TODO(realms-discover-improvements) Do we want to link to the /search/realms page? Should this list only include realms you follow? Figure out how to paginate this if we're allowing filtering/searching. -->
+				<template v-if="canLoadMore">
+					<AppScrollInview
+						v-if="!isLoading"
+						:config="InviewConfig"
+						@inview="renderedFeed.loadMore()"
+					/>
+					<AppLoading v-else class="-loading-more" centered />
+				</template>
+				<template v-else-if="isOverview">
+					<AppSpacer vertical :scale="4" />
+					<div class="well sans-margin-bottom fill-darker text-center">
+						{{ $gettext(`Search for more realms above!`) }}
+					</div>
+				</template>
+			</template>
 		</div>
 	</AppModal>
 </template>
@@ -337,6 +386,10 @@ const debounceSearchInput = debounce(() => {
 <style lang="stylus" scoped>
 .modal-body
 	padding-top: 0
+
+.-placeholder
+	rounded-corners-lg()
+	change-bg(bg-subtle)
 
 .-title
 	vertical-align: middle
@@ -360,10 +413,9 @@ const debounceSearchInput = debounce(() => {
 		--col-count: var(--col-count-xs)
 
 .-selected-realms
-	display: flex
+	display: inline-flex
 	gap: 8px
-	flex-flow: row wrap
-	max-width: 100%
+	white-space: nowrap
 
 .-realm-wrapper
 	position: relative
@@ -446,4 +498,31 @@ const debounceSearchInput = debounce(() => {
 
 	.-icon
 		font-size: $font-size-h2
+
+.-floating-top-anchor
+	--float-padding: ($grid-gutter-width-xs / 2)
+
+	@media $media-sm-up
+		--float-padding: ($grid-gutter-width / 2)
+
+	.-floating-top
+		background-color: var(--theme-bg-actual)
+		transition: box-shadow 300ms $strong-ease-out
+		padding: 0 var(--float-padding)
+
+	::v-deep(.gj-scroll-affixed)
+		z-index: 3
+
+		.modal-controls
+			background-color: var(--theme-bg-actual)
+			position: relative
+			z-index: 2
+
+		.-floating-top
+			box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5)
+			z-index: 1
+
+.-sans-padding-horizontal
+	padding-left: 0
+	padding-right: 0
 </style>
