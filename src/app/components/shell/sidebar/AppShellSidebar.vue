@@ -8,7 +8,6 @@ import { useAppStore } from '../../../store';
 import AppShellSidebarContext from './AppShellSidebarContext.vue';
 import AppShellSidebarLibrary from './AppShellSidebarLibrary.vue';
 import AppShellSidebarMobile from './AppShellSidebarMobile.vue';
-import AppShellSidebarRealms from './AppShellSidebarRealms.vue';
 
 const AppShellSidebarChat = defineAsyncComponent(() => import('./AppShellSidebarChat.vue'));
 
@@ -45,7 +44,6 @@ watch(
 		<AppShellSidebarLibrary v-else-if="visibleLeftPane === 'library'" />
 		<AppShellSidebarContext v-else-if="visibleLeftPane === 'context'" />
 		<AppShellSidebarMobile v-else-if="visibleLeftPane === 'mobile'" />
-		<AppShellSidebarRealms v-else-if="visibleLeftPane === 'realms'" />
 	</component>
 </template>
 

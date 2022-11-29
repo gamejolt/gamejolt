@@ -33,10 +33,6 @@ const props = defineProps({
 		type: Array as PropType<Community[]>,
 		default: () => [],
 	},
-	targetableRealms: {
-		type: Array as PropType<Realm[]>,
-		default: () => [],
-	},
 	maxRealms: {
 		type: Number,
 		default: undefined,
@@ -53,9 +49,6 @@ const props = defineProps({
 	canRemoveRealms: {
 		type: Boolean,
 	},
-	isLoadingRealms: {
-		type: Boolean,
-	},
 	hasLinks: {
 		type: Boolean,
 	},
@@ -64,7 +57,6 @@ const props = defineProps({
 const {
 	incompleteCommunity,
 	targetableCommunities,
-	targetableRealms,
 	maxRealms,
 	communities,
 	realms,
@@ -72,16 +64,13 @@ const {
 	canAddRealm,
 	canRemoveCommunities,
 	canRemoveRealms,
-	isLoadingRealms,
 	hasLinks,
 } = toRefs(props);
 
 const emit = defineEmits({
 	showCommunities: () => true,
-	showRealms: () => true,
 	selectCommunity: (_community: Community, _channel: CommunityChannel) => true,
 	selectIncompleteCommunity: (_community: Community, _channel: CommunityChannel) => true,
-	selectRealm: (_realm: Realm) => true,
 	removeCommunity: (_community: Community) => true,
 	removeRealm: (_realm: Realm) => true,
 });
@@ -97,10 +86,7 @@ const canShow = computed(() => {
 		return true;
 	}
 
-	const realmsValid =
-		isLoadingRealms.value ||
-		(!!targetableRealms?.value?.length && canAddRealm.value) ||
-		realms.value.length > 0;
+	const realmsValid = canAddRealm.value || realms.value.length > 0;
 
 	return realmsValid;
 });
@@ -131,11 +117,6 @@ function onRemoveCommunity(community: Community) {
 	emit('removeCommunity', community);
 }
 
-function selectRealm(realm: Realm) {
-	emit('selectRealm', realm);
-	_scrollToEnd();
-}
-
 function selectCommunity(community: Community, channel: CommunityChannel) {
 	emit('selectCommunity', community, channel);
 	_scrollToEnd();
@@ -150,10 +131,6 @@ async function _scrollToEnd() {
 }
 
 async function onClickAddRealm() {
-	emit('showRealms');
-	// TODO(realms-discover-improvements) Should probably take onAdd and
-	// onRemove callbacks instead of modifying the list directly. Haven't
-	// checked what data is getting lost because of this.
 	await PostTargetManageRealmsModal.show({
 		selectedRealms: realms.value,
 		maxRealms: maxRealms?.value || 5,

@@ -15,7 +15,6 @@ import {
 } from '../../_common/content-focus/content-focus.service';
 import { showSuccessGrowl } from '../../_common/growls/growls.service';
 import { ModalConfirm } from '../../_common/modal/confirm/confirm-service';
-import { Realm } from '../../_common/realm/realm-model';
 import { Screen } from '../../_common/screen/screen-service';
 import { SidebarStore } from '../../_common/sidebar/sidebar.store';
 import { StickerStore } from '../../_common/sticker/sticker-store';
@@ -30,7 +29,7 @@ import { QuestStore } from './quest';
 
 // the two types an event notification can assume, either "activity" for the post activity feed or "notifications"
 type UnreadItemType = 'activity' | 'notifications';
-type TogglableLeftPane = '' | 'chat' | 'context' | 'library' | 'mobile' | 'realms';
+type TogglableLeftPane = '' | 'chat' | 'context' | 'library' | 'mobile';
 
 export const AppStoreKey: InjectionKey<AppStore> = Symbol('app-store');
 
@@ -83,9 +82,6 @@ export function createAppStore({
 	const activeCommunity = ref<Community>();
 	const communities = ref<Community[]>([]);
 	const communityStates = ref(new CommunityStates());
-
-	const realms = ref<Realm[]>([]);
-	const realmCount = ref(0);
 
 	const _backdrop = shallowRef(null) as ShallowRef<BackdropController | null>;
 
@@ -354,9 +350,6 @@ export function createAppStore({
 	function _shellPayload(payload: any) {
 		isShellBootstrapped.value = true;
 		communities.value = Community.populate(payload.communities);
-		// TODO(realms-discover-improvements) initial payload
-		realms.value = Realm.populate(payload.realms);
-		realmCount.value = realms.value.length;
 	}
 
 	async function joinCommunity(
@@ -538,8 +531,6 @@ export function createAppStore({
 		activeCommunity,
 		communities,
 		communityStates,
-		realms,
-		realmCount,
 		hasTopBar,
 		hasSidebar,
 		hasCbar,

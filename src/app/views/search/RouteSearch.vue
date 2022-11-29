@@ -218,7 +218,6 @@ const noResults = computed(() => {
 
 			<br />
 
-			<!-- TODO(realms-discover-improvements) Realm pagination -->
 			<AppPagination
 				v-if="searchPayload.perPage && searchPayload.count"
 				class="text-center"

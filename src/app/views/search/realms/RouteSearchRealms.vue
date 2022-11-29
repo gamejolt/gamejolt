@@ -54,6 +54,10 @@ createAppRoute({
 	display: grid
 	grid-template-columns: repeat(var(--grid-col), minmax(0, 1fr))
 	gap: 24px
+	padding: 0 ($grid-gutter-width-xs / 2)
+
+	@media $media-sm-up
+		padding: 0 ($grid-gutter-width / 2)
 
 	@media $media-sm
 		--grid-col: 3

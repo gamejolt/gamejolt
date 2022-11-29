@@ -111,7 +111,6 @@ export class SearchPayload {
 		this.postsPerPage = data.postsPerPage || 0;
 		this.communities = Community.populate(data.communities);
 		this.communitiesCount = data.communitiesCount || 0;
-		// TODO(realms-discover-improvements) Add 'realms', 'realmsCount' fields to endpoint
 		this.realms = Realm.populate(data.realms);
 		this.realmsCount = data.realmsCount || 0;
 		this.libraryGames = [];
