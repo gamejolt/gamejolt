@@ -63,7 +63,6 @@ export function resolveFeedChannelPayload(
 			shouldShowFollow: true,
 			notificationWatermark: payload.unreadWatermark,
 			itemsPerPage: payload.perPage,
-			shouldShowDates: channel !== CommunityPresetChannelType.FEATURED,
 		},
 		payload.items,
 		fromCache

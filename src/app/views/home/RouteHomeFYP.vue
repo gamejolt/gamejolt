@@ -48,7 +48,6 @@ createAppRoute({
 				name: 'fyp',
 				url: _feedUrl(),
 				shouldShowFollow: true,
-				shouldShowDates: false,
 				itemsPerPage: payload.perPage,
 				suppressTicks: payload.suppressTicks,
 			},

@@ -31,7 +31,6 @@ export interface ActivityFeedViewOptions {
 	shouldShowUserCards?: boolean;
 	shouldShowFollow?: boolean;
 	itemsPerPage?: number;
-	shouldShowDates?: boolean;
 }
 
 export const ActivityFeedKey: InjectionKey<ActivityFeedView> = Symbol('activity-feed');
@@ -65,7 +64,6 @@ export class ActivityFeedView {
 	mainCommunity: Community | null = null;
 	shouldShowUserCards = true;
 	shouldShowFollow = false;
-	shouldShowDates = true;
 	newCount = 0;
 	/**
 	 * How many feed items are expected to be loaded per page.
@@ -128,7 +126,6 @@ export class ActivityFeedView {
 			shouldShowUserCards = true,
 			shouldShowFollow = false,
 			itemsPerPage = -1,
-			shouldShowDates = true,
 		}: ActivityFeedViewOptions = {}
 	) {
 		this.state = state;
@@ -147,7 +144,6 @@ export class ActivityFeedView {
 					this.state.loadMoreUrl
 			);
 		}
-		this.shouldShowDates = shouldShowDates;
 	}
 
 	clear() {
