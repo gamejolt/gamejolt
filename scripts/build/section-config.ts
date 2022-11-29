@@ -38,7 +38,7 @@ export type GjSectionConfig = {
 };
 
 const sectionDefaultConfig: GjSectionConfig = Object.freeze({
-	title: 'Game Jolt - Games for the love of it',
+	title: 'Game Jolt - Share your creations',
 	hasRouter: true,
 	allowCrawlers: false,
 	htmlBodyClass: '',
@@ -50,13 +50,13 @@ const sectionDefaultConfig: GjSectionConfig = Object.freeze({
 
 const sectionOverrides: Partial<Record<GjSectionName, Partial<GjSectionConfig>>> = Object.freeze({
 	app: {
-		title: 'Game Jolt - Games for the love of it',
+		title: 'Game Jolt - Share your creations',
 		allowCrawlers: true,
 		desktopApp: true,
 		ssr: true,
 	},
 	auth: {
-		title: 'Game Jolt - Games for the love of it',
+		title: 'Game Jolt',
 		allowCrawlers: true,
 		htmlBodyClass: 'fill-darkest',
 		desktopApp: true,
@@ -70,7 +70,7 @@ const sectionOverrides: Partial<Record<GjSectionName, Partial<GjSectionConfig>>>
 		title: 'Claim - Game Jolt',
 	},
 	'site-editor': {
-		title: 'Edit Site - Game Jolt',
+		title: 'Edit site - Game Jolt',
 	},
 	gameserver: {
 		title: 'Playing Game - Game Jolt',
@@ -82,11 +82,11 @@ const sectionOverrides: Partial<Record<GjSectionName, Partial<GjSectionConfig>>>
 		desktopApp: true,
 	},
 	'widget-package': {
-		title: 'Get Game from Game Jolt',
+		title: 'Get game from Game Jolt',
 		hasRouter: false,
 	},
 	z: {
-		title: 'Game Jolt - Games for the love of it',
+		title: 'Game Jolt Zection',
 		htmlBodyClass: 'main-body',
 	},
 	editor: {
