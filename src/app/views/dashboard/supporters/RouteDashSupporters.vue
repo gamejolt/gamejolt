@@ -1,6 +1,7 @@
 <script lang="ts">
 const ACTIONS_PER_PAGE = 25;
 
+// TODO(supporter-messages) Route isn't currently linked to anywhere.
 export default {
 	...defineAppRouteOptions({
 		resolver: () =>
