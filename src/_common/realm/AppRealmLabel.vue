@@ -30,7 +30,7 @@ defineProps({
 	change-bg('bg-backdrop')
 	line-clamp(2)
 	padding: 4px 8px
-	border-radius: 24px
+	border-radius: 16px
 	font-weight: 700
 
 .-label-overlay

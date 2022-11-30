@@ -325,7 +325,7 @@ const debounceSearchInput = debounce(() => {
 								}"
 								:realm="realm"
 								label-position="bottom-left"
-								:label-size="Screen.isMobile ? 'tiny' : undefined"
+								label-size="tiny"
 								overlay-content
 								no-sheet
 								no-follow
