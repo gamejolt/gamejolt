@@ -9,7 +9,7 @@ import type { ClientLibraryStore } from '../../store/client-library';
 import type { LocalDbGame } from '../client/local-db/game/game.model';
 
 export interface SearchOptions {
-	type: 'all' | 'user' | 'game' | 'community' | 'typeahead';
+	type: 'all' | 'user' | 'game' | 'community' | 'realms' | 'typeahead';
 	page?: number;
 }
 
@@ -54,6 +54,8 @@ async function _searchSite(query: string, options: SearchOptions = { type: 'all'
 		endpoint += '/games';
 	} else if (options.type === 'community') {
 		endpoint += '/communities';
+	} else if (options.type === 'realms') {
+		endpoint += '/realms';
 	} else if (options.type === 'typeahead') {
 		endpoint += '/typeahead';
 		requestOptions.detach = true;
@@ -91,7 +93,8 @@ export class SearchPayload {
 	postsPerPage: number;
 	communities: Community[];
 	communitiesCount: number;
-	realm: Realm | null;
+	realms: Realm[];
+	realmsCount: number;
 	libraryGames: LocalDbGame[];
 
 	constructor(public type: string, data: any) {
@@ -108,7 +111,8 @@ export class SearchPayload {
 		this.postsPerPage = data.postsPerPage || 0;
 		this.communities = Community.populate(data.communities);
 		this.communitiesCount = data.communitiesCount || 0;
-		this.realm = data.realm ? new Realm(data.realm) : null;
+		this.realms = Realm.populate(data.realms);
+		this.realmsCount = data.realmsCount || 0;
 		this.libraryGames = [];
 
 		if (GJ_IS_DESKTOP_APP) {

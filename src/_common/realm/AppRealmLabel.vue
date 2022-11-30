@@ -10,11 +10,17 @@ defineProps({
 	overlay: {
 		type: Boolean,
 	},
+	small: {
+		type: Boolean,
+	},
+	tiny: {
+		type: Boolean,
+	},
 });
 </script>
 
 <template>
-	<div class="-label" :class="{ '-label-overlay': overlay }">
+	<div class="-label" :class="{ '-label-overlay': overlay, small, tiny }">
 		{{ realm.name }}
 	</div>
 </template>
@@ -24,7 +30,7 @@ defineProps({
 	change-bg('bg-backdrop')
 	line-clamp(2)
 	padding: 4px 8px
-	border-radius: 24px
+	border-radius: 16px
 	font-weight: 700
 
 .-label-overlay

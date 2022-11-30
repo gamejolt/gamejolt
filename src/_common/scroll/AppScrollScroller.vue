@@ -16,8 +16,11 @@ export function useScroller() {
 export function createScroller() {
 	const element = ref<HTMLElement>();
 
-	function scrollTo(offsetY: number) {
-		element.value?.scrollTo({ top: offsetY });
+	function scrollTo(
+		offset: number,
+		{ edge, behavior }: ScrollOptions & { edge: 'top' | 'left' } = { edge: 'top' }
+	) {
+		element.value?.scrollTo({ [`${edge}`]: offset, behavior });
 	}
 
 	return {
