@@ -4,7 +4,7 @@ import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppUserCreatorBadge from '../../../../_common/user/creator/AppUserCreatorBadge.vue';
 import AppShellAltMenuDevelopers from '../AppShellAltMenuDevelopers.vue';
 import AppShellAltMenuExtra from '../AppShellAltMenuExtra.vue';
 </script>
@@ -22,7 +22,7 @@ import AppShellAltMenuExtra from '../AppShellAltMenuExtra.vue';
 						<AppJolticon icon="compass-needle" />
 					</span>
 					<span class="shell-nav-label">
-						<AppTranslate>Discover</AppTranslate>
+						{{ $gettext(`Discover`) }}
 					</span>
 				</RouterLink>
 			</li>
@@ -40,7 +40,7 @@ import AppShellAltMenuExtra from '../AppShellAltMenuExtra.vue';
 						<AppJolticon icon="gamepad" />
 					</span>
 					<span class="shell-nav-label">
-						<AppTranslate>Store</AppTranslate>
+						{{ $gettext(`Store`) }}
 					</span>
 				</RouterLink>
 			</li>
@@ -55,7 +55,7 @@ import AppShellAltMenuExtra from '../AppShellAltMenuExtra.vue';
 						<AppJolticon icon="search" />
 					</span>
 					<span class="shell-nav-label">
-						<AppTranslate>Search</AppTranslate>
+						{{ $gettext(`Search`) }}
 					</span>
 				</RouterLink>
 			</li>
@@ -78,7 +78,7 @@ import AppShellAltMenuExtra from '../AppShellAltMenuExtra.vue';
 						<AppJolticon icon="phone" />
 					</span>
 					<span class="shell-nav-label">
-						<AppTranslate>Get the Mobile App</AppTranslate>
+						{{ $gettext(`Get the app`) }}
 					</span>
 				</RouterLink>
 			</li>
@@ -93,7 +93,21 @@ import AppShellAltMenuExtra from '../AppShellAltMenuExtra.vue';
 						<AppJolticon icon="forums" />
 					</span>
 					<span class="shell-nav-label">
-						<AppTranslate>Site Guidelines</AppTranslate>
+						{{ $gettext(`Site guidelines`) }}
+					</span>
+				</RouterLink>
+			</li>
+			<li>
+				<RouterLink
+					:to="{
+						name: 'landing.creators',
+					}"
+				>
+					<span class="shell-nav-icon">
+						<AppUserCreatorBadge />
+					</span>
+					<span class="shell-nav-label">
+						{{ $gettext(`Become a creator`) }}
 					</span>
 				</RouterLink>
 			</li>
@@ -103,7 +117,7 @@ import AppShellAltMenuExtra from '../AppShellAltMenuExtra.vue';
 						<AppJolticon icon="gift" />
 					</span>
 					<span class="shell-nav-label">
-						<AppTranslate>Merch</AppTranslate>
+						{{ $gettext(`Merch`) }}
 					</span>
 				</AppLinkExternal>
 			</li>
@@ -117,7 +131,7 @@ import AppShellAltMenuExtra from '../AppShellAltMenuExtra.vue';
 						<AppJolticon icon="info-circle" />
 					</span>
 					<span class="shell-nav-label">
-						<AppTranslate>About</AppTranslate>
+						{{ $gettext(`About`) }}
 					</span>
 				</RouterLink>
 			</li>

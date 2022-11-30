@@ -304,12 +304,12 @@ function getRandomStickers(count = 3) {
 			<div class="-where-header -sub-header-text">
 				<span class="-where-header-text">
 					<AppCreatorMooMoo />
-					Where your existing followers can
+					<span class="-text-primary"> Get paid to engage with your audience! </span>
+					<br />
+					<span> Where your existing followers can </span>
+					<span class="-text-primary"> {{ ' <' }}gasp{{ '> ' }} </span>
+					<span>follow</span>
 				</span>
-				<span class="-text-primary"> {{ ' <' }}gasp{{ '> ' }} </span>
-				<span>follow</span>
-				<br />
-				<span class="-text-primary">Get paid to engage with your audience!</span>
 			</div>
 
 			<div class="-where-content">
@@ -657,6 +657,9 @@ function getRandomStickers(count = 3) {
 	font-family: $font-family-display
 	font-size: 48px
 	text-shadow: -2px 4px 0px rgba(47, 127, 111, 0.5), -4px 2px 0px rgba(204, 255, 0, 0.5)
+
+	@media $media-xs
+		font-size: 36px
 
 .-tiny-header-text
 	font-family: $font-family-display
