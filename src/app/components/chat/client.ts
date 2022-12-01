@@ -502,25 +502,21 @@ export function setChatFocused(chat: ChatClient, focused: boolean) {
 
 		// Update focused for all instanced rooms.
 		for (const roomId in chat.roomChannels) {
-			if (Object.prototype.hasOwnProperty.call(chat.roomChannels, roomId)) {
-				const roomChannel = chat.roomChannels[roomId];
-				if (roomChannel.instanced) {
-					const channelRoomId = roomChannel.roomId;
-					if (chat.isFocused) {
-						chat.roomChannels[channelRoomId].pushFocus();
-					} else {
-						chat.roomChannels[channelRoomId].pushUnfocus();
-					}
-				}
+			if (!chat.roomChannels[roomId]) {
+				continue;
 			}
-		}
-	}
 
-	if (chat.room && chat.currentUser) {
-		if (chat.isFocused) {
-			chat.roomChannels[chat.room.id].pushFocus();
-		} else {
-			chat.roomChannels[chat.room.id].pushUnfocus();
+			const roomChannel = chat.roomChannels[roomId];
+			if (!roomChannel.instanced) {
+				continue;
+			}
+
+			const channelRoomId = roomChannel.roomId;
+			if (chat.isFocused) {
+				chat.roomChannels[channelRoomId].pushFocus();
+			} else {
+				chat.roomChannels[channelRoomId].pushUnfocus();
+			}
 		}
 	}
 }
