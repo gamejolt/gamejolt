@@ -62,9 +62,10 @@ import AppPageContainer from '../../components/page-container/AppPageContainer.v
 import AppPostAddButton from '../../components/post/add-button/AppPostAddButton.vue';
 import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
 import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
-import { imageJoltCupBanner } from '../../img/images';
+import { imagePseudoFeatureBanner } from '../../img/images';
 import { useQuestStore } from '../../store/quest';
 import { routePost } from '../post/post.route';
+import { routeQuests } from '../quests/quests.route';
 import AppHomeFeedMenu from './AppHomeFeedMenu.vue';
 import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
 import AppHomeFireside from './_fireside/AppHomeFireside.vue';
@@ -290,8 +291,8 @@ async function refreshQuests() {
 						/>
 					</template>
 
-					<RouterLink :to="{ name: routePost.name, params: { slug: 'g8vqnqfe' } }">
-						<img class="-event-banner img-responsive" :src="imageJoltCupBanner" />
+					<RouterLink :to="{ name: routeQuests.name }">
+						<img class="-event-banner img-responsive" :src="imagePseudoFeatureBanner" />
 					</RouterLink>
 
 					<AppSpacer vertical :scale="8" />
@@ -315,7 +316,7 @@ async function refreshQuests() {
 						v-if="!Screen.isXs"
 						:to="{ name: routePost.name, params: { slug: 'g8vqnqfe' } }"
 					>
-						<img class="-event-banner img-responsive" :src="imageJoltCupBanner" />
+						<img class="-event-banner img-responsive" :src="imagePseudoFeatureBanner" />
 
 						<AppSpacer vertical :scale="4" />
 					</RouterLink>
