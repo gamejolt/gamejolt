@@ -60,8 +60,8 @@ function createController() {
 
 		if (payload.socialMetadata) {
 			Meta.description = payload.socialMetadata.description;
-			Meta.fb = payload.socialMetadata.fb;
-			Meta.twitter = payload.socialMetadata.twitter;
+			Meta.fb = payload.socialMetadata.fb || {};
+			Meta.twitter = payload.socialMetadata.twitter || {};
 		}
 	}
 
