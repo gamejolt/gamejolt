@@ -1,7 +1,9 @@
 <script lang="ts">
+import { computed } from 'vue';
 import { getQuery } from '../../../../utils/router';
 import AppCommunityCard from '../../../../_common/community/card/card.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
 import { sendSearch } from '../../../components/search/search-service';
 import { useSearchRouteController } from '../RouteSearch.vue';
 
@@ -18,9 +20,14 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const { processPayload, hasSearch, searchPayload } = useSearchRouteController()!;
+const { processPayload, hasSearch, searchPayload, query } = useSearchRouteController()!;
 
 createAppRoute({
+	routeTitle: computed(() =>
+		$gettextInterpolate(`"%{ query }" communities`, {
+			query: query.value,
+		})
+	),
 	onResolved({ payload }) {
 		processPayload({ payload });
 	},

@@ -9,6 +9,7 @@ import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
 import AppUserCard from '../../../../_common/user/card/AppUserCard.vue';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../components/activity/feed/view';
@@ -39,6 +40,11 @@ const { processPayload, hasSearch, searchPayload, query } = useSearchRouteContro
 const feed = ref(null) as Ref<ActivityFeedView | null>;
 
 createAppRoute({
+	routeTitle: computed(() =>
+		$gettextInterpolate(`Results for "%{ query }"`, {
+			query: query.value,
+		})
+	),
 	onInit() {
 		feed.value = ActivityFeedService.bootstrapFeedFromCache();
 	},
