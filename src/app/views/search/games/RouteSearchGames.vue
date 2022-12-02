@@ -1,9 +1,11 @@
 <script lang="ts">
+import { computed } from 'vue';
 import { getQuery } from '../../../../utils/router';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
+import AppGameGrid from '../../../components/game/grid/grid.vue';
 import { sendSearch } from '../../../components/search/search-service';
 import { useSearchRouteController } from '../RouteSearch.vue';
-import AppGameGrid from '../../../components/game/grid/grid.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -18,9 +20,14 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const { processPayload, hasSearch, searchPayload } = useSearchRouteController()!;
+const { processPayload, hasSearch, searchPayload, query } = useSearchRouteController()!;
 
 createAppRoute({
+	routeTitle: computed(() =>
+		$gettextInterpolate(`"%{ query }" games`, {
+			query: query.value,
+		})
+	),
 	onResolved({ payload }) {
 		processPayload({ payload });
 	},

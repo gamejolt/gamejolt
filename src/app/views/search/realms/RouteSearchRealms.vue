@@ -1,4 +1,12 @@
 <script lang="ts">
+import { computed } from 'vue';
+import { getQuery } from '../../../../utils/router';
+import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
+import { sendSearch } from '../../../components/search/search-service';
+import { useSearchRouteController } from '../RouteSearch.vue';
+
 export default {
 	...defineAppRouteOptions({
 		cache: true,
@@ -12,15 +20,14 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { getQuery } from '../../../../utils/router';
-import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { sendSearch } from '../../../components/search/search-service';
-import { useSearchRouteController } from '../RouteSearch.vue';
-
-const { processPayload, hasSearch, searchPayload } = useSearchRouteController()!;
+const { processPayload, hasSearch, searchPayload, query } = useSearchRouteController()!;
 
 createAppRoute({
+	routeTitle: computed(() =>
+		$gettextInterpolate(`"%{ query }" realms`, {
+			query: query.value,
+		})
+	),
 	onResolved({ payload }) {
 		processPayload({ payload });
 	},
