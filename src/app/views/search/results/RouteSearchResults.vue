@@ -41,10 +41,11 @@ const feed = ref(null) as Ref<ActivityFeedView | null>;
 
 createAppRoute({
 	routeTitle: computed(() =>
-		$gettextInterpolate(`Results for "%{ query }"`, {
+		$gettextInterpolate(`"%{ query }" on Game Jolt`, {
 			query: query.value,
 		})
 	),
+	disableTitleSuffix: true,
 	onInit() {
 		feed.value = ActivityFeedService.bootstrapFeedFromCache();
 	},
