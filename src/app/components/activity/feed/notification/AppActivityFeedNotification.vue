@@ -25,6 +25,7 @@ import AppContentViewer from '../../../../../_common/content/content-viewer/cont
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { Notification } from '../../../../../_common/notification/notification-model';
 import { NotificationText } from '../../../../../_common/notification/notification-text.service';
+import { SupporterMessage } from '../../../../../_common/supporters/message.model';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -89,6 +90,7 @@ const hasDetails = computed(() => {
 		Notification.TYPE_QUEST_NOTIFICATION,
 		Notification.TYPE_GAME_TROPHY_ACHIEVED,
 		Notification.TYPE_SITE_TROPHY_ACHIEVED,
+		Notification.TYPE_SUPPORTER_MESSAGE,
 	].includes(notification.value.type);
 });
 
@@ -211,6 +213,15 @@ function onMarkRead() {
 													:source="
 														(notification.action_model as Mention).comment
 															?.comment_content
+													"
+												/>
+												<AppContentViewer
+													v-else-if="
+														notification.type ===
+														Notification.TYPE_SUPPORTER_MESSAGE
+													"
+													:source="
+														(notification.action_model as SupporterMessage).content
 													"
 												/>
 												<span

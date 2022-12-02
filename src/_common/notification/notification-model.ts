@@ -31,6 +31,7 @@ import { QuestNotification } from '../quest/quest-notification-model';
 import { Sellable } from '../sellable/sellable.model';
 import { StickerPlacement } from '../sticker/placement/placement.model';
 import { Subscription } from '../subscription/subscription.model';
+import { SupporterMessage } from '../supporters/message.model';
 import { Translate } from '../translate/translate.service';
 import { UserFriendship } from '../user/friendship/friendship.model';
 import { UserGameTrophy } from '../user/trophy/game-trophy.model';
@@ -80,6 +81,7 @@ export class Notification extends Model {
 	static TYPE_FIRESIDE_FEATURED_IN_COMMUNITY = 'fireside-featured-in-community';
 	static TYPE_QUEST_NOTIFICATION = 'quest-notification';
 	static TYPE_CHARGED_STICKER = 'charged-sticker';
+	static TYPE_SUPPORTER_MESSAGE = 'supporter-message';
 
 	static ACTIVITY_FEED_TYPES = [EventItem.TYPE_POST_ADD];
 
@@ -101,6 +103,7 @@ export class Notification extends Model {
 		Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY,
 		Notification.TYPE_QUEST_NOTIFICATION,
 		Notification.TYPE_CHARGED_STICKER,
+		Notification.TYPE_SUPPORTER_MESSAGE,
 	];
 
 	user_id!: number;
@@ -133,7 +136,8 @@ export class Notification extends Model {
 		| FiresideStreamNotification
 		| FiresideCommunity
 		| QuestNotification
-		| StickerPlacement;
+		| StickerPlacement
+		| SupporterMessage;
 
 	to_resource!: string | null;
 	to_resource_id!: number | null;
@@ -240,6 +244,9 @@ export class Notification extends Model {
 		} else if (this.type === Notification.TYPE_CHARGED_STICKER) {
 			this.action_model = new StickerPlacement(data.action_resource_model);
 			this.is_user_based = true;
+		} else if (this.type === Notification.TYPE_SUPPORTER_MESSAGE) {
+			this.action_model = new SupporterMessage(data.action_resource_model);
+			this.is_user_based = true;
 		}
 
 		// Keep memory clean after bootstrapping the models (the super
@@ -333,6 +340,10 @@ export class Notification extends Model {
 				return getRouteLocationForModel(this.action_model as QuestNotification);
 
 			case Notification.TYPE_CHARGED_STICKER: {
+				return getRouteLocationForModel(this.from_model!);
+			}
+
+			case Notification.TYPE_SUPPORTER_MESSAGE: {
 				return getRouteLocationForModel(this.from_model!);
 			}
 		}

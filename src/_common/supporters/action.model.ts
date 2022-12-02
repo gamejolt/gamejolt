@@ -15,7 +15,6 @@ export class SupporterAction extends Model {
 	declare added_on: number;
 	declare message?: SupporterMessage;
 
-	declare resource: any;
 	declare resource_type: string;
 
 	declare post?: FiresidePost;
@@ -32,13 +31,15 @@ export class SupporterAction extends Model {
 			this.message = new SupporterMessage(data.message);
 		}
 
-		if (this.resource_type === RESOURCE_FIRESIDE_POST) {
-			this.post = new FiresidePost(this.resource);
+		if (data.resource && this.resource_type === RESOURCE_FIRESIDE_POST) {
+			this.post = new FiresidePost(data.resource);
 		}
 
-		if (this.resource_type === RESOURCE_FIRESIDE) {
-			this.fireside = new Fireside(this.resource);
+		if (data.resource && this.resource_type === RESOURCE_FIRESIDE) {
+			this.fireside = new Fireside(data.resource);
 		}
+
+		delete (this as any).resource;
 	}
 
 	get isThanked() {

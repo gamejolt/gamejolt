@@ -8,6 +8,7 @@ import AppForm, {
 	FormController,
 } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import {
@@ -30,7 +31,7 @@ const props = defineProps({
 		type: Object as PropType<SupporterAction>,
 		default: undefined,
 	},
-	...defineFormProps<SupporterMessage | undefined>(true),
+	...defineFormProps<SupporterMessage>(),
 });
 
 const { action, model } = toRefs(props);
@@ -97,9 +98,7 @@ const form: FormController<SupporterMessage> = createForm({
 				return;
 			}
 
-			model.value?.assign(response.message ?? form.formModel);
-
-			modal.dismiss();
+			modal.resolve(new SupporterMessage(response.message));
 		} catch (e) {
 			console.error(e);
 			showErrorGrowl($gettext(`Something went wrong`));
@@ -155,9 +154,8 @@ const form: FormController<SupporterMessage> = createForm({
 				<AppFormGroup
 					class="-content"
 					name="content"
-					:label="isTemplate ? $gettext(`Message template`) : $gettext(`Custom message`)"
-					tiny-label-margin
-					label-class="tiny"
+					:label="$gettext(`Message`)"
+					hide-label
 				>
 					<AppFormControlContent
 						content-context="supporter-message"
@@ -175,6 +173,8 @@ const form: FormController<SupporterMessage> = createForm({
 						"
 						autofocus
 					/>
+
+					<AppFormControlErrors />
 				</AppFormGroup>
 
 				<div class="-submit-row">

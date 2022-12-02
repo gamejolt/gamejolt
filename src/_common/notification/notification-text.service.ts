@@ -541,6 +541,18 @@ export class NotificationText {
 						)
 					);
 				}
+				break;
+			}
+
+			case Notification.TYPE_SUPPORTER_MESSAGE: {
+				return _process(
+					$gettextInterpolate(
+						// TODO(supporter-messages) Check if this was actually a charged sticker.
+						`<em>%{ subject }</em> thanked you for giving them a charged sticker.`,
+						this.getTranslationValues(notification),
+						!plaintext
+					)
+				);
 			}
 		}
 
