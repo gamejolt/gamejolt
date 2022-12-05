@@ -27,7 +27,7 @@ type InitPayload = {
 </script>
 
 <script lang="ts" setup>
-import { computed, ref, shallowRef } from 'vue';
+import { computed, Ref, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { getCurrentServerTime } from '../../../../utils/server-time';
 import { Api } from '../../../../_common/api/api.service';
@@ -55,7 +55,7 @@ const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height}p
 
 const routeTitle = computed(() => $gettext(`Your Supporters`));
 
-const actions = shallowRef<SupporterAction[]>([]);
+const actions = ref<SupporterAction[]>([]) as Ref<SupporterAction[]>;
 
 const isLoadingMore = ref(false);
 const hasError = ref(false);
