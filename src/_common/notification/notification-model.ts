@@ -103,6 +103,26 @@ export class Notification extends Model {
 		Notification.TYPE_CHARGED_STICKER,
 	];
 
+	static NOTIFICATION_FEED_TYPE_LABELS = {
+		[Notification.TYPE_COMMENT_ADD]: 'Comment replies',
+		[Notification.TYPE_COMMENT_ADD_OBJECT_OWNER]: 'Comments on your content',
+		[Notification.TYPE_FORUM_POST_ADD]: 'Forum posts',
+		[Notification.TYPE_FRIENDSHIP_ACCEPT]: 'Accepted friend requests',
+		[Notification.TYPE_GAME_RATING_ADD]: 'Game ratings',
+		[Notification.TYPE_GAME_FOLLOW]: 'Game follows',
+		[Notification.TYPE_POST_FEATURED_IN_COMMUNITY]: 'Post featured',
+		[Notification.TYPE_SELLABLE_SELL]: 'Sales',
+		[Notification.TYPE_USER_FOLLOW]: 'Follows',
+		[Notification.TYPE_MENTION]: 'Mentions',
+		[Notification.TYPE_COLLABORATOR_INVITE]: 'Collaborator invites',
+		[Notification.TYPE_GAME_TROPHY_ACHIEVED]: 'Game trophies',
+		[Notification.TYPE_SITE_TROPHY_ACHIEVED]: 'Site trophies',
+		[Notification.TYPE_COMMUNITY_USER_NOTIFICATION]: 'Community actions',
+		[Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY]: 'Community featured firesides',
+		[Notification.TYPE_QUEST_NOTIFICATION]: 'Quests',
+		[Notification.TYPE_CHARGED_STICKER]: 'Charged stickers',
+	};
+
 	user_id!: number;
 	type!: string;
 	added_on!: number;

@@ -1,6 +1,6 @@
 import { inject, InjectionKey } from 'vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
-import { Api } from '../../../../_common/api/api.service';
+import { Api, RequestOptions } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
 import { Notification } from '../../../../_common/notification/notification-model';
@@ -31,6 +31,7 @@ export interface ActivityFeedViewOptions {
 	shouldShowUserCards?: boolean;
 	shouldShowFollow?: boolean;
 	itemsPerPage?: number;
+	extraData?: Record<string, any> | null;
 }
 
 export const ActivityFeedKey: InjectionKey<ActivityFeedView> = Symbol('activity-feed');
@@ -69,6 +70,15 @@ export class ActivityFeedView {
 	 * How many feed items are expected to be loaded per page.
 	 */
 	itemsPerPage!: number;
+
+	/**
+	 * Can be used for more complicated feed filtering or any other data we want
+	 * sent through the POST body.
+	 *
+	 * Any keys provided in here will also be included in `allowComplexData` for
+	 * our request.
+	 */
+	extraData: Record<string, any> | null = null;
 
 	get isBootstrapped() {
 		return this.state.isBootstrapped;
@@ -126,6 +136,7 @@ export class ActivityFeedView {
 			shouldShowUserCards = true,
 			shouldShowFollow = false,
 			itemsPerPage = -1,
+			extraData = null,
 		}: ActivityFeedViewOptions = {}
 	) {
 		this.state = state;
@@ -136,6 +147,7 @@ export class ActivityFeedView {
 		this.shouldShowUserCards = shouldShowUserCards;
 		this.shouldShowFollow = shouldShowFollow;
 		this.itemsPerPage = itemsPerPage;
+		this.extraData = extraData;
 
 		// Should never create a feed view without this argument.
 		if (this.itemsPerPage === -1) {
@@ -270,6 +282,32 @@ export class ActivityFeedView {
 		}
 	}
 
+	private _getRequestBody(type: 'more' | 'new') {
+		const body = {
+			...this.extraData,
+		};
+
+		if (type === 'more') {
+			body.scrollId = this.state.endScrollId;
+			body.scrollDirection = ScrollDirectionFrom;
+		} else if (type === 'new') {
+			body.scrollId = this.state.startScrollId;
+			body.scrollDirection = ScrollDirectionTo;
+		}
+
+		return body;
+	}
+
+	private _getRequestOptions() {
+		let options: RequestOptions | undefined = undefined;
+		if (this.extraData) {
+			options = {
+				allowComplexData: [...Object.keys(this.extraData)],
+			};
+		}
+		return options;
+	}
+
 	async loadMore() {
 		if (this.isLoadingMore || this.reachedEnd) {
 			return;
@@ -279,10 +317,11 @@ export class ActivityFeedView {
 		++this.timesLoaded;
 		++this.totalTimesLoaded;
 
-		const response = await Api.sendRequest(this.state.loadMoreUrl, {
-			scrollId: this.state.endScrollId,
-			scrollDirection: ScrollDirectionFrom,
-		});
+		const response = await Api.sendRequest(
+			this.state.loadMoreUrl,
+			this._getRequestBody('more'),
+			this._getRequestOptions()
+		);
 
 		this.state.isLoadingMore = false;
 
@@ -316,10 +355,11 @@ export class ActivityFeedView {
 		// we want to refresh the whole thing so that we don't have gaps.
 		const clearOld = newCount > this.itemsPerPage;
 
-		const response = await Api.sendRequest(this.state.loadMoreUrl, {
-			scrollId: this.state.startScrollId,
-			scrollDirection: ScrollDirectionTo,
-		});
+		const response = await Api.sendRequest(
+			this.state.loadMoreUrl,
+			this._getRequestBody('new'),
+			this._getRequestOptions()
+		);
 
 		this.state.isLoadingNew = false;
 

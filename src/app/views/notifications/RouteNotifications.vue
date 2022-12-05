@@ -1,0 +1,255 @@
+<script lang="ts">
+export const SUPPORTED_NOTIFICATION_FEED_TYPES = Notification.NOTIFICATION_FEED_TYPES;
+export const NOTIFICATION_FILTER_QUERY = 'f';
+export const NOTIFICATION_FILTER_FIELD = 'notificationTypes';
+
+export default {
+	...defineAppRouteOptions({
+		lazy: true,
+		deps: { query: ['feed_last_id', NOTIFICATION_FILTER_QUERY] },
+		resolver: ({ route }) =>
+			Api.sendRequest(
+				ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/notifications'),
+				{
+					[NOTIFICATION_FILTER_FIELD]: getNotificationTypesFromQuery(
+						route,
+						NOTIFICATION_FILTER_QUERY
+					),
+				},
+				{
+					allowComplexData: [NOTIFICATION_FILTER_FIELD],
+				}
+			),
+	}),
+};
+
+function getNotificationTypesFromQuery(route: RouteLocationNormalized, queryKey: string) {
+	let notificationTypes: string[] | null = null;
+
+	const queryData = route.query[queryKey];
+	if (queryData && typeof queryData === 'string') {
+		const initialFilters = queryData
+			.split(',')
+			.filter(i => SUPPORTED_NOTIFICATION_FEED_TYPES.includes(i));
+
+		if (initialFilters.length) {
+			notificationTypes = initialFilters;
+		}
+	}
+
+	if (!notificationTypes || !notificationTypes.length) {
+		notificationTypes = SUPPORTED_NOTIFICATION_FEED_TYPES;
+	}
+
+	return notificationTypes;
+}
+</script>
+
+<script lang="ts" setup>
+import { computed, ref, watch } from 'vue';
+import { RouteLocationNormalized, useRoute } from 'vue-router';
+import { Api } from '../../../_common/api/api.service';
+import AppButton from '../../../_common/button/AppButton.vue';
+import { HistoryCache } from '../../../_common/history/cache/cache.service';
+import { Notification } from '../../../_common/notification/notification-model';
+import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
+import { Screen } from '../../../_common/screen/screen-service';
+import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
+import { $gettext } from '../../../_common/translate/translate.service';
+import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
+import { ActivityFeedService } from '../../components/activity/feed/feed-service';
+import { ActivityFeedView } from '../../components/activity/feed/view';
+import { useGridStore } from '../../components/grid/grid-store';
+import { AppActivityFeedLazy } from '../../components/lazy';
+import AppShellNotificationPopoverStickerNavItem from '../../components/shell/notification-popover/sticker-nav-item/AppShellNotificationPopoverStickerNavItem.vue';
+import AppShellNotificationPopoverStickerNavItemPlaceholder from '../../components/shell/notification-popover/sticker-nav-item/AppShellNotificationPopoverStickerNavItemPlaceholder.vue';
+import { useAppStore } from '../../store';
+import { NotificationsFilterModal } from './filter/modal.service';
+import { routeNotifications } from './notifications.route';
+
+const HistoryCacheFeedTag = 'notifications-feed';
+
+const { unreadNotificationsCount, hasNewUnlockedStickers, markNotificationsAsRead } = useAppStore();
+
+const { grid } = useGridStore();
+
+const route = useRoute();
+
+const feed = ref<ActivityFeedView | null>(null);
+
+const itemsPerPage = ref(15);
+const totalStickersCount = ref(0);
+const isStickersLoading = ref(true);
+
+const routeTitle = computed(() => $gettext(`Your Notifications`));
+const shouldShowStickers = computed(() => totalStickersCount.value > 0);
+const shouldShowStickerPlaceholder = computed(() => isStickersLoading.value);
+
+const existingFilters = computed<string[] | undefined>(
+	() => feed.value?.extraData?.[NOTIFICATION_FILTER_FIELD]
+);
+
+const hasFilter = computed(
+	() =>
+		existingFilters.value &&
+		existingFilters.value.length !== SUPPORTED_NOTIFICATION_FEED_TYPES.length
+);
+
+watch(
+	unreadNotificationsCount,
+	() => {
+		if (
+			feed.value &&
+			!hasFilter.value &&
+			unreadNotificationsCount.value > feed.value.newCount
+		) {
+			feed.value.newCount = unreadNotificationsCount.value;
+		}
+	},
+	{ immediate: true }
+);
+
+createAppRoute({
+	routeTitle,
+	async onResolved({ payload, fromCache }) {
+		itemsPerPage.value = payload.perPage || itemsPerPage.value;
+
+		// TODO(notification-filtering) Scroll position isn't saved when clicking into a notification and navigating back.
+
+		feed.value = ActivityFeedService.routed(
+			null,
+			{
+				type: 'Notification',
+				name: 'notification',
+				url: `/web/dash/activity/more/notifications`,
+				extraData: {
+					[NOTIFICATION_FILTER_FIELD]: getNotificationTypesFromQuery(
+						route,
+						NOTIFICATION_FILTER_QUERY
+					),
+				},
+				itemsPerPage: itemsPerPage.value,
+			},
+			payload.items,
+			fromCache
+		);
+
+		// We mark in the history cache whether this route is a historical view
+		// or a new view. If it's new, we want to load fresh. If it's old, we
+		// want to use current feed data, just so we can try to go back to the
+		// correct scroll spot.
+		if (feed.value && !HistoryCache.has(route, HistoryCacheFeedTag)) {
+			feed.value.clear();
+			feed.value.append(Notification.populate(payload.items));
+			HistoryCache.store(route, true, HistoryCacheFeedTag);
+		}
+
+		if (!fromCache) {
+			grid.value?.pushViewNotifications('notifications');
+		}
+
+		const countPayload = await Api.sendRequest(`/web/stickers/user-count`);
+		totalStickersCount.value = countPayload.count;
+		isStickersLoading.value = false;
+	},
+});
+
+function onLoadedNew() {
+	if (unreadNotificationsCount.value > 0) {
+		grid.value?.pushViewNotifications('notifications');
+	}
+}
+
+function onClickFilter() {
+	NotificationsFilterModal.show({
+		filters: existingFilters.value ?? SUPPORTED_NOTIFICATION_FEED_TYPES,
+		replaceRoute: true,
+	});
+}
+</script>
+
+<template>
+	<section class="section">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-9 col-md-8 col-lg-7 col-centered">
+					<p v-if="feed" class="-header">
+						<a
+							class="small"
+							:class="{
+								'link-muted': !hasFilter,
+							}"
+							@click="onClickFilter"
+						>
+							{{ $gettext(`Filter`) }}
+						</a>
+
+						<!-- Mobile sizes navigate here directly instead of
+						showing a notification popover. We don't want this
+						showing for sizes that have the popover available. -->
+						<a
+							v-if="Screen.isMobile && feed.hasItems && !hasFilter"
+							class="link-muted small"
+							@click="markNotificationsAsRead()"
+						>
+							{{ $gettext(`Mark All as Read`) }}
+						</a>
+					</p>
+
+					<template v-if="!feed || !feed.isBootstrapped">
+						<AppShellNotificationPopoverStickerNavItemPlaceholder />
+						<AppActivityFeedPlaceholder />
+					</template>
+					<template v-else>
+						<template v-if="!feed.hasItems">
+							<template v-if="shouldShowStickerPlaceholder">
+								<AppShellNotificationPopoverStickerNavItemPlaceholder />
+							</template>
+							<AppShellNotificationPopoverStickerNavItem
+								v-else-if="shouldShowStickers"
+								:sticker-count="totalStickersCount"
+								:has-new="hasNewUnlockedStickers"
+							/>
+
+							<div v-if="hasFilter" class="alert full-bleed-xs">
+								{{
+									$gettext(
+										`You don't have any notifications matching your filter.`
+									)
+								}}
+
+								<AppSpacer vertical :scale="4" />
+
+								<AppButton block solid :to="routeNotifications">
+									{{ $gettext(`Clear filters`) }}
+								</AppButton>
+							</div>
+							<div v-else class="alert full-bleed-xs">
+								{{ $gettext(`You don't have any notifications yet.`) }}
+							</div>
+						</template>
+						<template v-else>
+							<template v-if="shouldShowStickerPlaceholder">
+								<AppShellNotificationPopoverStickerNavItemPlaceholder />
+							</template>
+							<AppShellNotificationPopoverStickerNavItem
+								v-else-if="shouldShowStickers"
+								:sticker-count="totalStickersCount"
+								:has-new="hasNewUnlockedStickers"
+							/>
+
+							<AppActivityFeedLazy :feed="feed" @load-new="onLoadedNew" />
+						</template>
+					</template>
+				</div>
+			</div>
+		</div>
+	</section>
+</template>
+
+<style lang="stylus" scoped>
+.-header
+	display: flex
+	justify-content: flex-end
+	gap: 12px
+</style>
