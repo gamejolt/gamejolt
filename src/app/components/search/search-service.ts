@@ -97,6 +97,12 @@ export class SearchPayload {
 	realmsCount: number;
 	libraryGames: LocalDbGame[];
 
+	socialMetadata?: {
+		description: string;
+		fb: string;
+		twitter: string;
+	};
+
 	constructor(public type: string, data: any) {
 		this.page = data.page || 1;
 		this.perPage = data.perPage || 24;
@@ -117,6 +123,14 @@ export class SearchPayload {
 
 		if (GJ_IS_DESKTOP_APP) {
 			this.libraryGames = data.libraryGames || [];
+		}
+
+		if (data.metaDescription) {
+			this.socialMetadata = {
+				description: data.metaDescription,
+				fb: data.fb,
+				twitter: data.twitter,
+			};
 		}
 	}
 }

@@ -11,7 +11,7 @@ import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/ro
 import { Screen } from '../../../_common/screen/screen-service';
 import { Scroll } from '../../../_common/scroll/scroll.service';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
+import { $gettext } from '../../../_common/translate/translate.service';
 import AppPageHeader from '../../components/page-header/page-header.vue';
 import AppSearch from '../../components/search/AppSearch.vue';
 import { Search, SearchPayload } from '../../components/search/search-service';
@@ -57,6 +57,12 @@ function createController() {
 		// updated with the new query.
 		Search.query = query.value;
 		isBootstrapped.value = true;
+
+		if (payload.socialMetadata) {
+			Meta.description = payload.socialMetadata.description;
+			Meta.fb = payload.socialMetadata.fb || {};
+			Meta.twitter = payload.socialMetadata.twitter || {};
+		}
 	}
 
 	return {
@@ -74,22 +80,13 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const route = useRoute();
-
 const c = createController();
 provide(Key, c);
 
 const { isBootstrapped, hasSearch, query, searchPayload } = c;
 
 createAppRoute({
-	routeTitle: computed(() => {
-		if (route.query.q) {
-			return $gettextInterpolate(`Search results for %{ query }`, {
-				query: getQuery(route, 'q') ?? '',
-			});
-		}
-		return $gettext(`Search Game Jolt`);
-	}),
+	routeTitle: computed(() => $gettext(`Search`)),
 });
 
 const noResults = computed(() => {

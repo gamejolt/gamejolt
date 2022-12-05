@@ -380,6 +380,7 @@ function onDismissNotification(notification: CommunityUserNotification) {
 					<AppStickerControlsOverlay
 						v-if="
 							communities.length ||
+							realms.length ||
 							post.supporters.length ||
 							post.sticker_counts.length
 						"
