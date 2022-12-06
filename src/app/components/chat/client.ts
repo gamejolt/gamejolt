@@ -183,10 +183,6 @@ export function setChatRoom(chat: ChatClient, newRoom: ChatRoom | undefined) {
 			chat.roomChannels[newRoom.id].pushFocus();
 		}
 
-		if (newRoom.isGroupRoom) {
-			delete chat.notifications[newRoom.id];
-		}
-
 		chat.sessionRoomId = newRoom.id;
 	}
 
