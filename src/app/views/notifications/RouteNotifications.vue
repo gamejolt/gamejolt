@@ -46,11 +46,10 @@ function getNotificationTypesFromQuery(route: RouteLocationNormalized, queryKey:
 </script>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
+import { computed, ref, Ref, watch } from 'vue';
 import { RouteLocationNormalized, useRoute } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
-import { HistoryCache } from '../../../_common/history/cache/cache.service';
 import { Notification } from '../../../_common/notification/notification-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
@@ -67,19 +66,17 @@ import { useAppStore } from '../../store';
 import { NotificationsFilterModal } from './filter/modal.service';
 import { routeNotifications } from './notifications.route';
 
-const HistoryCacheFeedTag = 'notifications-feed';
-
 const { unreadNotificationsCount, hasNewUnlockedStickers, markNotificationsAsRead } = useAppStore();
-
 const { grid } = useGridStore();
-
 const route = useRoute();
 
-const feed = ref<ActivityFeedView | null>(null);
+const feed = ref<ActivityFeedView | null>(null) as Ref<ActivityFeedView | null>;
 
 const itemsPerPage = ref(15);
 const totalStickersCount = ref(0);
 const isStickersLoading = ref(true);
+
+const isBootstrapped = ref(false);
 
 const routeTitle = computed(() => $gettext(`Your Notifications`));
 const shouldShowStickers = computed(() => totalStickersCount.value > 0);
@@ -111,13 +108,15 @@ watch(
 
 createAppRoute({
 	routeTitle,
+	onInit() {
+		feed.value = ActivityFeedService.routeInit(isBootstrapped.value);
+	},
 	async onResolved({ payload, fromCache }) {
+		isBootstrapped.value = true;
 		itemsPerPage.value = payload.perPage || itemsPerPage.value;
 
-		// TODO(notification-filtering) Scroll position isn't saved when clicking into a notification and navigating back.
-
 		feed.value = ActivityFeedService.routed(
-			null,
+			feed.value,
 			{
 				type: 'Notification',
 				name: 'notification',
@@ -134,17 +133,9 @@ createAppRoute({
 			fromCache
 		);
 
-		// We mark in the history cache whether this route is a historical view
-		// or a new view. If it's new, we want to load fresh. If it's old, we
-		// want to use current feed data, just so we can try to go back to the
-		// correct scroll spot.
-		if (feed.value && !HistoryCache.has(route, HistoryCacheFeedTag)) {
-			feed.value.clear();
-			feed.value.append(Notification.populate(payload.items));
-			HistoryCache.store(route, true, HistoryCacheFeedTag);
-		}
+		const mayHaveMarkAllRead = feed.value?.hasItems && !hasFilter.value;
 
-		if (!fromCache) {
+		if (!fromCache && mayHaveMarkAllRead) {
 			grid.value?.pushViewNotifications('notifications');
 		}
 
