@@ -214,7 +214,7 @@ function onClickFilter() {
 				</a>
 
 				<a class="link-muted" @click="markNotificationsAsRead()">
-					{{ $gettext(`Mark All as Read`) }}
+					{{ $gettext(`Mark all as read`) }}
 				</a>
 			</div>
 		</template>
@@ -246,7 +246,7 @@ function onClickFilter() {
 		<template v-if="feed && isShowing" #footer>
 			<div class="fill-darker">
 				<AppButton :to="{ name: 'notifications' }" block trans>
-					{{ $gettext(`View All`) }}
+					{{ $gettext(`View all`) }}
 				</AppButton>
 			</div>
 		</template>

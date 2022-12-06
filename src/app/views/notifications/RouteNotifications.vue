@@ -1,4 +1,24 @@
 <script lang="ts">
+import { computed, ref, Ref, watch } from 'vue';
+import { RouteLocationNormalized, useRoute } from 'vue-router';
+import { Api } from '../../../_common/api/api.service';
+import AppButton from '../../../_common/button/AppButton.vue';
+import { Notification } from '../../../_common/notification/notification-model';
+import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
+import { Screen } from '../../../_common/screen/screen-service';
+import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
+import { $gettext } from '../../../_common/translate/translate.service';
+import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
+import { ActivityFeedService } from '../../components/activity/feed/feed-service';
+import { ActivityFeedView } from '../../components/activity/feed/view';
+import { useGridStore } from '../../components/grid/grid-store';
+import { AppActivityFeedLazy } from '../../components/lazy';
+import AppShellNotificationPopoverStickerNavItem from '../../components/shell/notification-popover/sticker-nav-item/AppShellNotificationPopoverStickerNavItem.vue';
+import AppShellNotificationPopoverStickerNavItemPlaceholder from '../../components/shell/notification-popover/sticker-nav-item/AppShellNotificationPopoverStickerNavItemPlaceholder.vue';
+import { useAppStore } from '../../store';
+import { NotificationsFilterModal } from './filter/modal.service';
+import { routeNotifications } from './notifications.route';
+
 export const SUPPORTED_NOTIFICATION_FEED_TYPES = Notification.NOTIFICATION_FEED_TYPES;
 export const NOTIFICATION_FILTER_QUERY = 'f';
 export const NOTIFICATION_FILTER_FIELD = 'notificationTypes';
@@ -46,26 +66,6 @@ function getNotificationTypesFromQuery(route: RouteLocationNormalized, queryKey:
 </script>
 
 <script lang="ts" setup>
-import { computed, ref, Ref, watch } from 'vue';
-import { RouteLocationNormalized, useRoute } from 'vue-router';
-import { Api } from '../../../_common/api/api.service';
-import AppButton from '../../../_common/button/AppButton.vue';
-import { Notification } from '../../../_common/notification/notification-model';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { Screen } from '../../../_common/screen/screen-service';
-import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import { $gettext } from '../../../_common/translate/translate.service';
-import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
-import { ActivityFeedService } from '../../components/activity/feed/feed-service';
-import { ActivityFeedView } from '../../components/activity/feed/view';
-import { useGridStore } from '../../components/grid/grid-store';
-import { AppActivityFeedLazy } from '../../components/lazy';
-import AppShellNotificationPopoverStickerNavItem from '../../components/shell/notification-popover/sticker-nav-item/AppShellNotificationPopoverStickerNavItem.vue';
-import AppShellNotificationPopoverStickerNavItemPlaceholder from '../../components/shell/notification-popover/sticker-nav-item/AppShellNotificationPopoverStickerNavItemPlaceholder.vue';
-import { useAppStore } from '../../store';
-import { NotificationsFilterModal } from './filter/modal.service';
-import { routeNotifications } from './notifications.route';
-
 const { unreadNotificationsCount, hasNewUnlockedStickers, markNotificationsAsRead } = useAppStore();
 const { grid } = useGridStore();
 const route = useRoute();
@@ -133,9 +133,9 @@ createAppRoute({
 			fromCache
 		);
 
-		const mayHaveMarkAllRead = feed.value?.hasItems && !hasFilter.value;
-
-		if (!fromCache && mayHaveMarkAllRead) {
+		// Only push the view for "fresh" activity feeds that aren't being
+		// filtered.
+		if (!fromCache && !hasFilter.value) {
 			grid.value?.pushViewNotifications('notifications');
 		}
 
@@ -183,7 +183,7 @@ function onClickFilter() {
 							class="link-muted small"
 							@click="markNotificationsAsRead()"
 						>
-							{{ $gettext(`Mark All as Read`) }}
+							{{ $gettext(`Mark all as read`) }}
 						</a>
 					</p>
 

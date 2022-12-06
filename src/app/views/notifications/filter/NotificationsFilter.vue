@@ -10,7 +10,10 @@ import AppFormStickySubmit from '../../../../_common/form-vue/AppFormStickySubmi
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppModal from '../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
-import { Notification } from '../../../../_common/notification/notification-model';
+import {
+	Notification,
+	NOTIFICATION_FEED_TYPE_LABELS,
+} from '../../../../_common/notification/notification-model';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { routeNotifications } from '../notifications.route';
 import { NOTIFICATION_FILTER_QUERY } from '../RouteNotifications.vue';
@@ -33,8 +36,6 @@ const { filters, replaceRoute } = toRefs(props);
 
 const modal = useModal()!;
 const router = useRouter();
-
-const readableMap = Notification.NOTIFICATION_FEED_TYPE_LABELS;
 
 const form: FormController<FormModel> = createForm({
 	onInit() {
@@ -128,7 +129,7 @@ function assignAll(value: boolean) {
 						class="-group"
 						:name="option"
 						label-class="-group-link"
-						:label="$gettext(readableMap[option])"
+						:label="NOTIFICATION_FEED_TYPE_LABELS[option]"
 					>
 						<template #inline-control>
 							<AppFormControlToggle />
