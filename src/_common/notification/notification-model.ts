@@ -1,5 +1,6 @@
 import { Router } from 'vue-router';
 import { TrophyModal } from '../../app/components/trophy/modal/modal.service';
+import { routeDashSupporters } from '../../app/views/dashboard/supporters/supporters.route';
 import type { RouteLocationDefinition } from '../../utils/router';
 import { isKnownRoute } from '../../utils/router';
 import { assertNever } from '../../utils/utils';
@@ -340,7 +341,7 @@ export class Notification extends Model {
 				return getRouteLocationForModel(this.action_model as QuestNotification);
 
 			case Notification.TYPE_CHARGED_STICKER: {
-				return getRouteLocationForModel(this.from_model!);
+				return routeDashSupporters;
 			}
 
 			case Notification.TYPE_SUPPORTER_MESSAGE: {
@@ -471,4 +472,5 @@ export const NOTIFICATION_FEED_TYPE_LABELS = {
 	[Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY]: $gettext(`Community featured firesides`),
 	[Notification.TYPE_QUEST_NOTIFICATION]: $gettext(`Quests`),
 	[Notification.TYPE_CHARGED_STICKER]: $gettext(`Charged stickers`),
+	[Notification.TYPE_SUPPORTER_MESSAGE]: $gettext(`Creator thank-you messages`),
 } as const;
