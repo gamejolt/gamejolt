@@ -3,6 +3,7 @@ import { computed, ref, Ref, watch } from 'vue';
 import { RouteLocationNormalized, useRoute } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
+import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { Notification } from '../../../_common/notification/notification-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
@@ -172,6 +173,7 @@ function onClickFilter() {
 							}"
 							@click="onClickFilter"
 						>
+							<AppJolticon icon="filter" middle />
 							{{ $gettext(`Filter`) }}
 						</a>
 

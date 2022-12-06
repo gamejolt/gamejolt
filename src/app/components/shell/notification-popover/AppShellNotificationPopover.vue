@@ -210,6 +210,7 @@ function onClickFilter() {
 		<template v-if="feed && isShowing" #header>
 			<div class="-header fill-darker small">
 				<a class="link-muted" @click="onClickFilter()">
+					<AppJolticon icon="filter" middle />
 					{{ $gettext(`Filter`) }}
 				</a>
 
