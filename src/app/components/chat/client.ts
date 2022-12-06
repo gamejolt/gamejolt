@@ -176,12 +176,10 @@ export function setupChatRoom(chat: ChatClient, room: ChatRoom, messages: ChatMe
 }
 
 export function setChatRoom(chat: ChatClient, newRoom: ChatRoom | undefined) {
-	// In single-room mode, if there is a currently active room, we always want
-	// to clear it out. Whether we're setting to null or a new room.
 	leaveChatRoom(chat);
 
 	if (newRoom) {
-		if (chat.currentUser) {
+		if (chat.currentUser && chat.isFocused) {
 			chat.roomChannels[newRoom.id].pushFocus();
 		}
 
@@ -193,24 +191,6 @@ export function setChatRoom(chat: ChatClient, newRoom: ChatRoom | undefined) {
 	}
 
 	chat.room = newRoom || null;
-}
-
-export function newChatNotification(chat: ChatClient, roomId: number) {
-	// Don't shows if they're focused in the room.
-	if (isInChatRoom(chat, roomId) && chat.isFocused) {
-		return;
-	}
-
-	// Only store for non-instanced channels.
-	if (isRoomInstanced(chat, roomId)) {
-		return;
-	}
-
-	if (chat.notifications[roomId]) {
-		++chat.notifications[roomId];
-	} else {
-		chat.notifications[roomId] = 1;
-	}
 }
 
 /**
@@ -254,6 +234,64 @@ export function leaveChatRoom(chat: ChatClient, room: ChatRoom | null = null) {
 		delete chat.roomChannels[room.id];
 		channel.channelController.leave();
 		chat.pollingRoomId = -1;
+	}
+}
+
+export function isChatFocusedOnRoom(chat: ChatClient, roomId: number) {
+	return isInChatRoom(chat, roomId) && chat.isFocused;
+}
+
+export function setChatFocused(chat: ChatClient, focused: boolean) {
+	chat.isFocused = focused;
+
+	if (!chat.currentUser) {
+		return;
+	}
+
+	// Update focused for current room.
+	if (chat.room) {
+		if (chat.isFocused) {
+			chat.roomChannels[chat.room.id].pushFocus();
+		} else {
+			chat.roomChannels[chat.room.id].pushUnfocus();
+		}
+	}
+
+	// Update focused for all instanced rooms.
+	for (const roomId in chat.roomChannels) {
+		if (!chat.roomChannels[roomId]) {
+			continue;
+		}
+
+		const roomChannel = chat.roomChannels[roomId];
+		if (!roomChannel.instanced) {
+			continue;
+		}
+
+		const channelRoomId = roomChannel.roomId;
+		if (chat.isFocused) {
+			chat.roomChannels[channelRoomId].pushFocus();
+		} else {
+			chat.roomChannels[channelRoomId].pushUnfocus();
+		}
+	}
+}
+
+export function newChatNotification(chat: ChatClient, roomId: number) {
+	// Don't shows if they're focused in the room.
+	if (isChatFocusedOnRoom(chat, roomId)) {
+		return;
+	}
+
+	// Only store for non-instanced channels.
+	if (isRoomInstanced(chat, roomId)) {
+		return;
+	}
+
+	if (chat.notifications[roomId]) {
+		++chat.notifications[roomId];
+	} else {
+		chat.notifications[roomId] = 1;
 	}
 }
 
@@ -485,40 +523,6 @@ export function isUserOnline(chat: ChatClient, userId: number): null | boolean {
 	}
 
 	return chat.friendsList.get(userId)?.isOnline ?? null;
-}
-
-export function setChatFocused(chat: ChatClient, focused: boolean) {
-	chat.isFocused = focused;
-
-	if (chat.currentUser) {
-		// Update focused for current room.
-		if (chat.room) {
-			if (chat.isFocused) {
-				chat.roomChannels[chat.room.id].pushFocus();
-			} else {
-				chat.roomChannels[chat.room.id].pushUnfocus();
-			}
-		}
-
-		// Update focused for all instanced rooms.
-		for (const roomId in chat.roomChannels) {
-			if (!chat.roomChannels[roomId]) {
-				continue;
-			}
-
-			const roomChannel = chat.roomChannels[roomId];
-			if (!roomChannel.instanced) {
-				continue;
-			}
-
-			const channelRoomId = roomChannel.roomId;
-			if (chat.isFocused) {
-				chat.roomChannels[channelRoomId].pushFocus();
-			} else {
-				chat.roomChannels[channelRoomId].pushUnfocus();
-			}
-		}
-	}
 }
 
 export async function addGroupRoom(chat: ChatClient, members: number[]) {
