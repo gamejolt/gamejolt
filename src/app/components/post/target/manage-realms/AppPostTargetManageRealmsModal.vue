@@ -245,8 +245,8 @@ const debounceSearchInput = debounce(() => {
 	<AppModal>
 		<AppScrollAffix class="-floating-top-anchor" anchor="top" :offset-top="0" :padding="0">
 			<div class="modal-controls">
-				<AppButton icon="chevron-left" @click="modal.dismiss()">
-					{{ $gettext(`Back`) }}
+				<AppButton @click="modal.resolve()">
+					{{ $gettext(`Confirm`) }}
 				</AppButton>
 			</div>
 
