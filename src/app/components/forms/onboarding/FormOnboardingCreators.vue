@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { arrayShuffle } from '../../../../utils/array';
-import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
-import { configOnboardingResources } from '../../../../_common/config/config.service';
 import AppCreatorCard from '../../../../_common/creator/AppCreatorCard.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
@@ -37,7 +35,6 @@ const form: FormController<FormModel> = createForm({
 		}
 
 		creatorPosts.value = Object.values(uniqueCreatorPosts);
-		trackExperimentEngagement(configOnboardingResources);
 	},
 	onBeforeSubmit() {
 		Onboarding.trackEvent(
@@ -63,12 +60,16 @@ const followsAnyCreator = computed(() => creators.value.find(i => !!i.is_followi
 	<AppForm :controller="form">
 		<div class="-form">
 			<section class="-message">
-				<h3 class="section-header">
-					{{ $gettext(`Follow some creators`) }}
-				</h3>
+				<h1 class="section-header text-display">
+					{{ $gettext(`Follow creators`) }}
+				</h1>
 
 				<p class="text-muted">
-					{{ $gettext(`Explore fan-created artwork, videos, guides and more.`) }}
+					{{
+						$gettext(
+							`Let's get you ready to go by following some amazing Game Jolt creators`
+						)
+					}}
 				</p>
 			</section>
 

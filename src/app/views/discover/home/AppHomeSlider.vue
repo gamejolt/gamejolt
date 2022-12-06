@@ -97,7 +97,7 @@ function onPostLoaded(post: FiresidePost) {
 			/>
 
 			<div class="-hero-text -text-shadow">
-				Discover gaming communities filled with millions of videos, art and discussions
+				Join a growing community of creators and gamers from around the world!
 			</div>
 
 			<div class="-auth-island">
@@ -191,7 +191,7 @@ function onPostLoaded(post: FiresidePost) {
 
 .-hero-text
 	font-size: 36px
-	line-height: 36px
+	line-height: 1.2
 	font-family: $font-family-heading
 	font-weight: 700
 	text-align: center

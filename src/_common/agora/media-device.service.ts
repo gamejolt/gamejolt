@@ -1,6 +1,9 @@
-import { computed, ref, Ref } from 'vue';
+import { computed, ref, Ref, shallowReadonly } from 'vue';
 import { importNoSSR } from '../code-splitting';
+import { configCanStreamDesktopVideo } from '../config/config.service';
 import { getDeviceBrowser } from '../device/device.service';
+import { hasDesktopVideoCaptureSupport } from '../fireside/rtc/device-capabilities';
+import { PRODUCER_DESKTOP_VIDEO_DEVICE_ID } from '../fireside/rtc/producer';
 
 const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
 
@@ -79,6 +82,7 @@ function createMediaDeviceService() {
 	async function detectDevices(options?: Partial<DetectionOptions>) {
 		const hasPrompted =
 			micsWasPrompted.value && speakersWasPrompted.value && webcamsWasPrompted.value;
+
 		// Firefox doesn't return the label for devices after closing a
 		// MediaStream - we need to request temp access to devices again.
 		if (hasPrompted && getDeviceBrowser().toLowerCase().indexOf('firefox') !== -1) {
@@ -104,7 +108,20 @@ function createMediaDeviceService() {
 		try {
 			const AgoraRTC = await AgoraRTCLazy;
 			const newCameras = await AgoraRTC.getCameras(!effectiveOptions.prompt);
-			webcams.value = Object.freeze(
+			let filteredCameras: MediaDeviceInfo[] = [];
+
+			// We fake a webcam for their desktop video capture if
+			// they are using a device that would support it.
+			if (hasDesktopVideoCaptureSupport && configCanStreamDesktopVideo.value) {
+				filteredCameras.push(<MediaDeviceInfo>{
+					deviceId: PRODUCER_DESKTOP_VIDEO_DEVICE_ID,
+					groupId: PRODUCER_DESKTOP_VIDEO_DEVICE_ID,
+					kind: 'videoinput',
+					label: 'Desktop video capture',
+				});
+			}
+
+			filteredCameras = filteredCameras.concat(
 				newCameras
 					.filter(
 						// Only get devices if we managed to fetch info for them.
@@ -112,6 +129,8 @@ function createMediaDeviceService() {
 					)
 					.map(deviceInfo => Object.freeze(deviceInfo.toJSON()))
 			);
+
+			webcams.value = Object.freeze(filteredCameras);
 			webcamsPermissionError.value = false;
 			console.log('Got webcams: ', webcams.value);
 		} catch (e) {
@@ -242,7 +261,7 @@ function createMediaDeviceService() {
 		return isAgoraError ? e : null;
 	}
 
-	return {
+	return shallowReadonly({
 		webcamsWasPrompted: computed(() => webcamsWasPrompted.value),
 		webcams: computed(() => webcams.value),
 		webcamsPermissionError: computed(() => webcamsPermissionError.value),
@@ -264,7 +283,7 @@ function createMediaDeviceService() {
 		detectDisplays,
 		detectMics,
 		detectSpeakers,
-	};
+	});
 }
 
 export const MediaDeviceService = createMediaDeviceService();

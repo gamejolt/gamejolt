@@ -36,6 +36,7 @@ const RENEW_TOKEN_INTERVAL = 60_000;
 
 export const PRODUCER_UNSET_DEVICE = 'unset';
 export const PRODUCER_DEFAULT_GROUP_AUDIO = 'default';
+export const PRODUCER_DESKTOP_VIDEO_DEVICE_ID = 'GJ_DESKTOP_VIDEO_CAPTURE';
 
 type DeviceType = 'mic' | 'speakers' | 'video' | 'desktopAudio';
 export type ProducerResetDeviceCallback = (type: DeviceType) => any;
@@ -469,6 +470,38 @@ function _updateWebcamTrack(producer: FiresideRTCProducer) {
 				// });
 
 				try {
+					// If they've chosen to use their desktop video source, we
+					// need to show them a selector window.
+					if (deviceId === PRODUCER_DESKTOP_VIDEO_DEVICE_ID) {
+						console.log(`Prompting them to choose a desktop video source.`);
+
+						const stream = await navigator.mediaDevices.getDisplayMedia({
+							audio: false,
+							video: {
+								width: { max: width, ideal: width },
+								height: { max: height, ideal: height },
+								frameRate: { max: fps, ideal: fps },
+							},
+						});
+
+						const videoTrack = stream.getVideoTracks()[0];
+
+						console.info('Track settings:');
+						console.info(JSON.stringify(videoTrack.getSettings(), null, 2));
+						console.info('Track constraints:');
+						console.info(JSON.stringify(videoTrack.getConstraints(), null, 2));
+
+						const track = AgoraRTC.createCustomVideoTrack({
+							optimizationMode: mode,
+							bitrateMax: bitrate,
+							mediaStreamTrack: videoTrack,
+						});
+
+						rtc.log(`Video desktop source track ID: ${track.getTrackId()}`);
+
+						return track;
+					}
+
 					const track = await AgoraRTC.createCameraVideoTrack({
 						cameraId: deviceId,
 						optimizationMode: mode,

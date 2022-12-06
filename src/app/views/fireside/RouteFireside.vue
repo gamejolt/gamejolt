@@ -109,14 +109,6 @@ const isFullscreen = computed(() => c.value?.isFullscreen.value === true);
 const isShowingStreamOverlay = computed(() => c.value?.isShowingStreamOverlay.value === true);
 const popperTeleportId = computed(() => c.value?.popperTeleportId.value);
 
-const routeTitle = computed(() => {
-	if (!fireside.value) {
-		return $gettext(`Loading Fireside...`);
-	}
-
-	return fireside.value.title + ' - Fireside';
-});
-
 const cannotViewReason = computed(() => {
 	if (!isBootstrapped.value || Screen.isDesktop) {
 		return undefined;
@@ -195,16 +187,25 @@ watch(
 	}
 );
 
+const routeTitle = computed(() => {
+	if (!payloadFireside.value) {
+		return $gettext(`Loading Fireside...`);
+	}
+
+	return payloadFireside.value.title + ' - A fireside livestream on Game Jolt';
+});
+
 const { isBootstrapped } = createAppRoute({
 	routeTitle,
+	disableTitleSuffix: true,
 	onResolved({ payload }) {
+		payloadFireside.value = new Fireside(payload.fireside);
+
 		Meta.description = payload.metaDescription;
 		Meta.fb = payload.fb || {};
 		Meta.fb.title = routeTitle.value;
 		Meta.twitter = payload.twitter || {};
 		Meta.twitter.title = routeTitle.value;
-
-		payloadFireside.value = new Fireside(payload.fireside);
 
 		setPageTheme();
 	},

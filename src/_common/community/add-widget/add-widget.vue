@@ -30,7 +30,7 @@ export default class AppCommunityAddWidget extends Vue {
 	get tooltip() {
 		let content;
 		if (this.canCreate || !this.user) {
-			content = this.$gettext(`Create a Community`);
+			content = this.$gettext(`Create a community`);
 		} else {
 			content = this.$gettext(`You own too many communities`);
 		}

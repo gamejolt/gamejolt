@@ -1,4 +1,18 @@
 <script lang="ts">
+import { computed, markRaw, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { Api } from '../../../_common/api/api.service';
+import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
+import Onboarding from '../../../_common/onboarding/onboarding.service';
+import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
+import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
+import { useCommonStore } from '../../../_common/store/common-store';
+import { $gettext } from '../../../_common/translate/translate.service';
+import { showUserInviteFollowGrowl } from '../../../_common/user/invite/modal/modal.service';
+import { User } from '../../../_common/user/user.model';
+import FormOnboardingProfile from '../../components/forms/onboarding/FormOnboardingProfile.vue';
+import FormOnboardingRealms from '../../components/forms/onboarding/FormOnboardingRealms.vue';
+
 export default {
 	...defineAppRouteOptions({
 		resolver: () => Api.sendRequest('/web/onboarding'),
@@ -7,62 +21,18 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { ComponentPublicInstance, computed, markRaw, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
-import { Api } from '../../../_common/api/api.service';
-import {
-	configOnboardingResources,
-	configSkipOnboardingProfile,
-} from '../../../_common/config/config.service';
-import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
-import Onboarding from '../../../_common/onboarding/onboarding.service';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { Screen } from '../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
-import { useCommonStore } from '../../../_common/store/common-store';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { showUserInviteFollowGrowl } from '../../../_common/user/invite/modal/modal.service';
-import { User } from '../../../_common/user/user.model';
-import FormOnboardingCreators from '../../components/forms/onboarding/FormOnboardingCreators.vue';
-import FormOnboardingFollows from '../../components/forms/onboarding/FormOnboardingFollows.vue';
-import FormOnboardingProfile from '../../components/forms/onboarding/FormOnboardingProfile.vue';
-import FormOnboardingRealms from '../../components/forms/onboarding/FormOnboardingRealms.vue';
-
 const { user } = useCommonStore();
 const router = useRouter();
 
-const steps = computed(() => {
-	const result: ComponentPublicInstance<any>[] = configSkipOnboardingProfile.value
-		? []
-		: [markRaw(FormOnboardingProfile)];
-
-	switch (configOnboardingResources.value) {
-		case 'communities':
-			result.push(markRaw(FormOnboardingFollows));
-			break;
-
-		case 'creators':
-			result.push(markRaw(FormOnboardingCreators));
-			break;
-
-		case 'realms':
-			result.push(markRaw(FormOnboardingRealms));
-			break;
-	}
-
-	return result;
-});
+const steps = [markRaw(FormOnboardingProfile), markRaw(FormOnboardingRealms)];
 
 const currentStep = ref(0);
 const isSocialRegistration = ref(false);
 const inviteUser = ref<User>();
 
 const stepComponent = computed(() => {
-	const items = steps.value;
-	const step = Math.max(0, Math.min(items.length - 1, currentStep.value));
-	return items[step];
+	const step = Math.max(0, Math.min(steps.length - 1, currentStep.value));
+	return steps[step];
 });
 
 createAppRoute({
@@ -78,12 +48,11 @@ createAppRoute({
 
 		isSocialRegistration.value = payload.isSocialRegistration || false;
 		inviteUser.value = payload.inviteUser && new User(payload.inviteUser);
-		trackExperimentEngagement(configSkipOnboardingProfile);
 	},
 });
 
 function onNextStep() {
-	if (currentStep.value === steps.value.length - 1) {
+	if (currentStep.value === steps.length - 1) {
 		Onboarding.end();
 
 		if (inviteUser.value) {
@@ -115,16 +84,16 @@ function onNextStep() {
 									class="-skip"
 									:primary="false"
 									:solid="false"
+									block
 									trans
-									:sm="Screen.isXs"
 									:disabled="!canContinue"
 								>
-									<AppTranslate>Skip</AppTranslate>
+									{{ $gettext(`Skip`) }}
 								</AppFormButton>
 							</template>
 							<template v-else>
 								<AppFormButton primary block solid :disabled="!canContinue">
-									<AppTranslate>Next</AppTranslate>
+									{{ $gettext(`Next`) }}
 								</AppFormButton>
 							</template>
 						</div>
@@ -142,17 +111,15 @@ function onNextStep() {
 
 .-controls
 	margin-top: 20px
-
-.-controls-outer
-	display: flex
-	justify-content: flex-end
+	// Gotta go over other content on the page.
+	z-index: 10
 
 .-controls-content
 	rounded-corners()
 	padding: 8px
 	margin-right: 8px
+	background-color: var(--theme-dark)
 
 	::v-deep(.gj-scroll-affixed) &
-		background-color: var(--theme-darkest)
 		elevate-2()
 </style>
