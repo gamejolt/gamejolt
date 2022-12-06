@@ -144,6 +144,14 @@ export const configCommunityFrontpageFeedType = new ConfigOptionString(
 	}
 );
 
+/**
+ * Whether or not to allow streaming of desktop video directly.
+ */
+export const configCanStreamDesktopVideo = new ConfigOptionBoolean(
+	'client_can_stream_desktop_video',
+	false
+);
+
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
 }

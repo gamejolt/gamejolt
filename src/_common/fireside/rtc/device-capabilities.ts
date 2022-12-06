@@ -1,9 +1,10 @@
+import { run } from '../../../utils/utils';
 import { getDeviceArch, getDeviceOS } from '../../device/device.service';
 
 /**
  * Whether or not we can capture desktop audio.
  */
-export const hasDesktopAudioCaptureSupport = (() => {
+export const hasDesktopAudioCaptureSupport = run(() => {
 	if (!GJ_IS_DESKTOP_APP) {
 		return false;
 	}
@@ -31,4 +32,9 @@ export const hasDesktopAudioCaptureSupport = (() => {
 	}
 
 	return winVer > 10 || (winVer == 10 && buildNum >= 19043);
-})();
+});
+
+/**
+ * Whether or not we're able to capture video from their desktop.
+ */
+export const hasDesktopVideoCaptureSupport = GJ_IS_DESKTOP_APP;
