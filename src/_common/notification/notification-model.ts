@@ -1,5 +1,6 @@
 import { Router } from 'vue-router';
 import { TrophyModal } from '../../app/components/trophy/modal/modal.service';
+import { SupporterMessageModal } from '../../app/views/dashboard/supporters/message/modal.service';
 import { routeDashSupporters } from '../../app/views/dashboard/supporters/supporters.route';
 import type { RouteLocationDefinition } from '../../utils/router';
 import { isKnownRoute } from '../../utils/router';
@@ -345,7 +346,10 @@ export class Notification extends Model {
 			}
 
 			case Notification.TYPE_SUPPORTER_MESSAGE: {
-				return getRouteLocationForModel(this.from_model!);
+				// Messages might have their height cropped in the notification
+				// feed. Don't return a location here, we'll instead show a
+				// modal in the `go` function.
+				return '';
 			}
 		}
 
@@ -425,6 +429,10 @@ export class Notification extends Model {
 			} catch (e) {
 				console.error(e);
 				showErrorGrowl(Translate.$gettext(`Couldn't go to notification.`));
+			}
+		} else if (this.type === Notification.TYPE_SUPPORTER_MESSAGE) {
+			if (this.action_model instanceof SupporterAction) {
+				SupporterMessageModal.show(this.action_model);
 			}
 		}
 	}

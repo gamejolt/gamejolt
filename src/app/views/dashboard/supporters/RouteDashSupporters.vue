@@ -49,7 +49,7 @@ import { SupporterMessage } from '../../../../_common/supporters/message.model';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
-import { SupporterMessageModal } from './message/modal.service';
+import { DoSupporterMessageModal } from './message/do/modal.service';
 
 const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 
@@ -180,7 +180,7 @@ async function onClickSendAll() {
 }
 
 async function onClickEdit() {
-	const newTemplate = await SupporterMessageModal.show({
+	const newTemplate = await DoSupporterMessageModal.show({
 		model: templateMessage.value,
 	});
 
@@ -192,7 +192,7 @@ async function onClickEdit() {
 }
 
 async function onClickCreateCustom(action: SupporterAction) {
-	const sentMessage = await SupporterMessageModal.show({
+	const sentMessage = await DoSupporterMessageModal.show({
 		model: action.message,
 		action,
 	});
