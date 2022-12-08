@@ -72,6 +72,13 @@ const replyTimeLimit = ref<number>(7 * 24 * 60 * 60);
 const isSending = ref(false);
 const canSendAll = ref(false);
 
+/**
+ * Used to mark the timestamp that we sent a message to everyone. We'll then
+ * compare the `added_on` of a message with this to know if we need to show the
+ * templateMessage as a fallback.
+ */
+const sentAllDate = ref<number>();
+
 const sendAllUrl = computed(() => `/web/dash/creators/supporters/send_all`);
 
 const canSubmitSendAll = computed(() => !isSending.value && canSendAll.value && hasTemplate.value);
@@ -172,6 +179,8 @@ async function onClickSendAll() {
 			showErrorGrowl(message);
 			return;
 		}
+
+		sentAllDate.value = Date.now();
 	} catch (e) {
 		console.error(e);
 		showErrorGrowl($gettext(`Something went wrong`));
@@ -215,6 +224,10 @@ function _isActionStale(action: SupporterAction) {
 
 function _canThankSupporterAction(action: SupporterAction) {
 	if (action.isThanked) {
+		return false;
+	}
+
+	if (sentAllDate.value && sentAllDate.value > action.added_on) {
 		return false;
 	}
 
@@ -339,14 +352,19 @@ function _canThankSupporterAction(action: SupporterAction) {
 								{{ $gettext(`Say thanks`) }}
 							</AppButton>
 						</div>
-						<div v-else-if="action.message" class="-thanks-message">
+						<div
+							v-else-if="
+								action.message || (sentAllDate && sentAllDate > action.added_on)
+							"
+							class="-thanks-message"
+						>
 							<div class="-subtle-header">
 								{{ $gettext(`Message sent`) }}
 							</div>
 
 							<AppContentViewer
 								class="-message-viewer fill-offset form-control content-editor-form-control"
-								:source="action.message.content"
+								:source="action.message?.content || templateMessage.content"
 							/>
 						</div>
 						<div v-else-if="_isActionStale(action)">
