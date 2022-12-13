@@ -25,6 +25,11 @@ export class ChatUser {
 	firesideHost: FiresideRTCHost | null = null;
 
 	constructor(data: any = {}) {
+		// Don't assign this, use our getter instead.
+		if (data.url) {
+			delete data.url;
+		}
+
 		Object.assign(this, data);
 	}
 
@@ -41,6 +46,16 @@ export class ChatUser {
 			return false;
 		}
 		return this.firesideHost.isLive;
+	}
+
+	static populate(rows: any[]): any[] {
+		const models: any[] = [];
+		if (rows && Array.isArray(rows) && rows.length) {
+			for (const row of rows) {
+				models.push(new ChatUser(row));
+			}
+		}
+		return models;
 	}
 }
 

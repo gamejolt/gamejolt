@@ -47,6 +47,7 @@ const isLiveFiresideHost = computed(() => user.value.isLive === true);
 	<AppChatListItem
 		:horizontal-padding="horizontalPadding"
 		:popper-placement="Screen.isMobile ? 'bottom' : 'left'"
+		:defined-slots="roleData ? ['leading', 'title', 'trailing'] : ['leading', 'title']"
 		popper-trigger="click"
 	>
 		<template #leading>

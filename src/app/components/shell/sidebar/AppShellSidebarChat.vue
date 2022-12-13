@@ -128,7 +128,7 @@ function showInviteModal() {
 	height: 100%
 
 .-nav-tabs
-	padding: 0 4px
+	padding: 0 16px
 
 .-pane-inner
 	display: flex

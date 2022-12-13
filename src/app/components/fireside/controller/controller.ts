@@ -94,12 +94,7 @@ export type RouteStatus =
 	| 'joined' // Currently joined to the fireside.
 	| 'blocked'; // Blocked from joining the fireside (user blocked).
 
-export type FiresideSidebar =
-	| 'chat'
-	| 'members'
-	| 'hosts'
-	| 'fireside-settings'
-	| 'stream-settings';
+export type FiresideSidebar = 'chat' | 'members' | 'fireside-settings' | 'stream-settings';
 
 export interface StreamingInfoPayload {
 	streamingAppId: string;
@@ -753,9 +748,6 @@ export function createFiresideController(
 
 	const activeBottomBarControl = computed<BottomBarControl | undefined>(() => {
 		switch (sidebar.value) {
-			case 'hosts':
-				return 'manage-cohosts';
-
 			case 'fireside-settings':
 				return 'settings';
 
