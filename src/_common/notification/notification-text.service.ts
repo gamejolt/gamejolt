@@ -17,6 +17,7 @@ import { OrderItem } from '../order/item/item.model';
 import { QuestNotification } from '../quest/quest-notification-model';
 import { Sellable } from '../sellable/sellable.model';
 import { SiteTrophy } from '../site/trophy/trophy.model';
+import { SupporterAction } from '../supporters/action.model';
 import { $gettext, $gettextInterpolate } from '../translate/translate.service';
 import { UserGameTrophy } from '../user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../user/trophy/site-trophy.model';
@@ -541,6 +542,32 @@ export class NotificationText {
 						)
 					);
 				}
+				break;
+			}
+
+			case Notification.TYPE_SUPPORTER_MESSAGE: {
+				const action =
+					notification.action_model instanceof SupporterAction
+						? notification.action_model
+						: null;
+
+				if (action?.isChargedSticker) {
+					return _process(
+						$gettextInterpolate(
+							`<em>%{ subject }</em> thanked you for giving them a charged sticker.`,
+							this.getTranslationValues(notification),
+							!plaintext
+						)
+					);
+				}
+
+				return _process(
+					$gettextInterpolate(
+						`<em>%{ subject }</em> thanked you for supporting them.`,
+						this.getTranslationValues(notification),
+						!plaintext
+					)
+				);
 			}
 		}
 

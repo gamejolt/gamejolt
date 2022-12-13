@@ -155,7 +155,7 @@ function removeItem(item: ChatCommand, fieldsToClear: string[]) {
 				<div class="lead text-center">
 					{{
 						$gettext(
-							`Chat commands allow people in your chat to get an automated message when sending a particular text command.`
+							`Chat commands allow people in your fireside chat to get an automated message when sending a particular text command.`
 						)
 					}}
 				</div>

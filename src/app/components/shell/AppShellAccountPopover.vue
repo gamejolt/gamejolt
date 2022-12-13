@@ -18,6 +18,7 @@ import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { UserWallet } from '../../../_common/user/wallet/wallet.model';
 import { useAppStore } from '../../store';
+import { routeDashCreator } from '../../views/dashboard/creator/creator.route';
 import { UserTokenModal } from '../user/token-modal/token-modal.service';
 
 const { logout, hasNewUnlockedStickers } = useAppStore();
@@ -109,6 +110,16 @@ function quit() {
 				<AppSpacer vertical :scale="3" />
 
 				<div class="-quick-actions">
+					<RouterLink
+						v-if="user.is_creator"
+						class="-quick-action"
+						:to="{ name: routeDashCreator.name }"
+					>
+						<AppJolticon class="-quick-action-icon" icon="dashboard" />
+						<div class="-quick-action-label">
+							{{ $gettext(`Creator HUD`) }}
+						</div>
+					</RouterLink>
 					<RouterLink class="-quick-action" :to="{ name: 'dash.stickers' }">
 						<AppJolticon class="-quick-action-icon" icon="sticker-filled" />
 						<div class="-quick-action-label">
