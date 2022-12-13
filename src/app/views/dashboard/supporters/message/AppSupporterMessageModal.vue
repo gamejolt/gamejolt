@@ -68,13 +68,9 @@ const content = computed(() => action.value.message?.content);
 				{{ $gettext(`Message`) }}
 			</h6>
 
-			<ContentViewer
-				v-if="content"
-				class="-message-viewer fill-bg form-control content-editor-form-control"
-				:source="content"
-			/>
+			<ContentViewer v-if="content" class="-message-viewer" :source="content" />
 			<div v-else class="fill-bg well">
-				{{ $gettext(`This user thanked you for supporting them.`) }}
+				{{ $gettext(`This creator thanked you for supporting them.`) }}
 			</div>
 		</div>
 	</AppModal>

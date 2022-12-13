@@ -1,7 +1,30 @@
 <script lang="ts">
+import { computed, Ref, ref } from 'vue';
+import { RouterLink } from 'vue-router';
+import { getCurrentServerTime } from '../../../../utils/server-time';
+import { Api } from '../../../../_common/api/api.service';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import { ContentDocument } from '../../../../_common/content/content-document';
+import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
+import { showErrorGrowl } from '../../../../_common/growls/growls.service';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
+import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppScrollInview, {
+	ScrollInviewConfig,
+} from '../../../../_common/scroll/inview/AppScrollInview.vue';
+import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
+import { SupporterAction } from '../../../../_common/supporters/action.model';
+import { SupporterMessage } from '../../../../_common/supporters/message.model';
+import { $gettext } from '../../../../_common/translate/translate.service';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
+import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
+import { DoSupporterMessageModal } from './message/do/modal.service';
+
 const ACTIONS_PER_PAGE = 25;
 
-// TODO(supporter-messages) Route isn't currently linked to anywhere.
 export default {
 	...defineAppRouteOptions({
 		resolver: () =>
@@ -27,30 +50,6 @@ type InitPayload = {
 </script>
 
 <script lang="ts" setup>
-import { computed, Ref, ref } from 'vue';
-import { RouterLink } from 'vue-router';
-import { getCurrentServerTime } from '../../../../utils/server-time';
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { ContentDocument } from '../../../../_common/content/content-document';
-import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
-import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '../../../../_common/scroll/inview/AppScrollInview.vue';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { SupporterAction } from '../../../../_common/supporters/action.model';
-import { SupporterMessage } from '../../../../_common/supporters/message.model';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
-import { DoSupporterMessageModal } from './message/do/modal.service';
-
 const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 
 const routeTitle = computed(() => $gettext(`Your Supporters`));
@@ -210,7 +209,6 @@ async function onClickCreateCustom(action: SupporterAction) {
 		return;
 	}
 
-	// TODO(supporter-messages) doesn't render the new content
 	if (action.message) {
 		action.message.assign(sentMessage);
 	} else {
@@ -256,27 +254,35 @@ function _canThankSupporterAction(action: SupporterAction) {
 				</div>
 
 				<div class="-template-viewer">
-					<template v-if="templateMessage && hasTemplate">
-						<AppContentViewer
-							class="-message-viewer fill-bg form-control content-editor-form-control"
-							:source="templateMessage.content"
-						/>
+					<div class="well sans-margin-bottom fill-bg" style="width: 100%">
+						<h4 class="sans-margin-top">
+							{{ $gettext(`Message template`) }}
+						</h4>
 
-						<a class="link-muted" @click="onClickEdit">
-							{{ $gettext(`Edit template`) }}
-						</a>
-					</template>
-					<template v-else>
-						<div class="well sans-margin-bottom fill-bg" style="width: 100%">
+						<template v-if="templateMessage && hasTemplate">
+							<AppContentViewer
+								class="-message-viewer"
+								:source="templateMessage.content"
+							/>
+
+							<a class="link-muted" @click="onClickEdit">
+								{{ $gettext(`Edit template`) }}
+							</a>
+						</template>
+						<template v-else>
 							<p>
-								{{ $gettext(`You haven't created a message template yet.`) }}
+								{{
+									$gettext(
+										`Set up a message template that you can then use to send messages to all recent supporters at once.`
+									)
+								}}
 							</p>
 
 							<AppButton class="-template-action" solid @click="onClickEdit">
 								{{ $gettext(`Create template`) }}
 							</AppButton>
-						</div>
-					</template>
+						</template>
+					</div>
 				</div>
 			</div>
 
@@ -363,7 +369,7 @@ function _canThankSupporterAction(action: SupporterAction) {
 							</div>
 
 							<AppContentViewer
-								class="-message-viewer fill-offset form-control content-editor-form-control"
+								class="-message-viewer"
 								:source="action.message?.content || templateMessage.content"
 							/>
 						</div>
@@ -508,8 +514,9 @@ function _canThankSupporterAction(action: SupporterAction) {
 	align-items: center
 
 .-thanks-message
-	flex: 1 1 auto
+	flex: auto
 	min-width: 100px
+	max-width: 450px
 
 	> .-message-viewer
 		height: auto
