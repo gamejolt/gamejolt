@@ -1,4 +1,5 @@
-import { inject, InjectionKey, provide, ref, watch } from 'vue';
+import { Component, inject, InjectionKey, markRaw, provide, ref, watch } from 'vue';
+import { ComponentProps } from '../component-helpers';
 
 const PopcornKettleControllerKey: InjectionKey<PopcornKettleController> = Symbol('popcorn-kettle');
 
@@ -29,13 +30,19 @@ export interface KernelRecipeBase {
 	useClassFadeIn: boolean;
 }
 
-export type PopcornKernelData = KernelRecipeBase & {
+export type PopcornKernelData<C extends Component = any> = KernelRecipeBase & {
 	key: any;
-	kernelImage: string;
+	kernelImage?: string;
+	kernelComponent?: C;
+	kernelComponentProps?: ComponentProps<C>;
 	rotationVelocity: number;
 };
 
-export type KernelRecipe = KernelRecipeBase & {
+export type KernelRecipe<C extends Component = any> = KernelRecipeBase & {
+	kernelImage?: string;
+	kernelComponent?: C;
+	kernelComponentProps?: ComponentProps<C>;
+
 	/** Default: `45.0` */
 	popAngleVariance: number;
 	/** Default: `10.0` */
@@ -61,32 +68,40 @@ export function createPopcornKettleController() {
 		{ deep: true }
 	);
 
-	function addKernel(
-		kernelImage: string,
-		{
-			duration = 1_000,
-			popAngle = 0,
-			downwardGravityStrength = 2.0,
-			velocity = 20.0,
-			baseSize = 32.0,
-			reverse = false,
-			zIndexInvert = false,
-			fadeOut = true,
-			useClassFadeIn = false,
-			fadeInStop = reverse ? 0.3 : 0,
-			fadeOutStart = fadeOut ? 0.8 : 0,
-			rotationVelocityVariance = 10.0,
-			popAngleVariance = 45.0,
-			onDispose,
-		}: Partial<KernelRecipe> = {}
-	) {
+	function addKernel<C extends Component>({
+		kernelImage,
+		kernelComponent,
+		kernelComponentProps,
+		duration = 1_000,
+		popAngle = 0,
+		downwardGravityStrength = 2.0,
+		velocity = 20.0,
+		baseSize = 32.0,
+		reverse = false,
+		zIndexInvert = false,
+		fadeOut = true,
+		useClassFadeIn = false,
+		fadeInStop = reverse ? 0.3 : 0,
+		fadeOutStart = fadeOut ? 0.8 : 0,
+		rotationVelocityVariance = 10.0,
+		popAngleVariance = 45.0,
+		onDispose,
+	}: Partial<KernelRecipe<C>> = {}) {
 		if (import.meta.env.SSR) {
 			return;
 		}
 
-		const _kernelData: PopcornKernelData = {
+		if (!kernelImage && !kernelComponent) {
+			throw Error(
+				'Popcorn kernels require either a kernelImage or kernelComponent to display.'
+			);
+		}
+
+		const _kernelData: PopcornKernelData = markRaw({
 			key: Date.now(),
 			kernelImage,
+			kernelComponent,
+			kernelComponentProps,
 			duration,
 			popAngle: _randomizePopAngle(popAngle, { range: popAngleVariance }),
 			downwardGravityStrength,
@@ -99,7 +114,7 @@ export function createPopcornKettleController() {
 			fadeInStop,
 			fadeOutStart,
 			rotationVelocity: _randomizeRotation({ range: rotationVelocityVariance }),
-		};
+		});
 
 		// Layer the stickers based on kernel recipe
 		const shouldInvertIndex = reverse ? !zIndexInvert : zIndexInvert;

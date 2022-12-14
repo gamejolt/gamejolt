@@ -184,7 +184,8 @@ async function onStickerPlaced(placement: StickerPlacement) {
 		return;
 	}
 
-	kettleController.addKernel(img_url, {
+	kettleController.addKernel({
+		kernelImage: img_url,
 		duration: 2_500,
 		baseSize: 48,
 		velocity: 22.5,
