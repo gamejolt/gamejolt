@@ -123,8 +123,8 @@ function calcData() {
 			alt=""
 			draggable="false"
 			:style="{
-				width: kernelData.baseSize + 'px',
-				height: kernelData.baseSize + 'px',
+				width: `${kernelData.baseSize}px`,
+				height: `${kernelData.baseSize}px`,
 				opacity: styleData.opacity,
 				transform: `rotate(${styleData.rotation}deg)`,
 			}"
@@ -132,12 +132,16 @@ function calcData() {
 		<div
 			v-else
 			draggable="false"
-			:style="{
-				width: kernelData.baseSize + 'px',
-				height: kernelData.baseSize + 'px',
-				opacity: styleData.opacity,
-				transform: `rotate(${styleData.rotation}deg)`,
-			}"
+			class="-custom-kernel-wrapper"
+			:style="[
+				{
+					width: `${kernelData.baseSize}px`,
+					height: `${kernelData.baseSize}px`,
+					opacity: styleData.opacity,
+					transform: `rotate(${styleData.rotation}deg)`,
+				},
+				`--jolticon-size: ${kernelData.baseSize * 0.75}px`,
+			]"
 		>
 			<component
 				:is="kernelData.kernelComponent"
@@ -156,6 +160,14 @@ function calcData() {
 	&.-kernel-forward
 		opacity: 0
 		animation: anim-opacity 200ms both
+
+.-custom-kernel-wrapper
+	--jolticon-size: 24px
+
+	::v-deep(.jolticon)
+		font-size: var(--jolticon-size)
+		margin: 0
+		vertical-align: middle
 
 @keyframes anim-opacity
 	0%
