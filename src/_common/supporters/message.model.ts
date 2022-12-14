@@ -5,6 +5,7 @@ export class SupporterMessage extends Model {
 	declare from_user: User;
 	declare to_user: User;
 	declare sent_on: number;
+	declare skipped_on?: number;
 	declare content: string;
 
 	constructor(data: any = {}) {

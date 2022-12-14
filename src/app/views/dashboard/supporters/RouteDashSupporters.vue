@@ -52,16 +52,6 @@ type InitPayload = {
 <script lang="ts" setup>
 const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 
-const routeTitle = computed(() => $gettext(`Your Supporters`));
-
-const actions = ref<SupporterAction[]>([]) as Ref<SupporterAction[]>;
-
-const isLoadingMore = ref(false);
-const hasError = ref(false);
-const reachedEnd = ref(false);
-
-const templateMessage = ref<SupporterMessage>({ content: '{}' } as SupporterMessage);
-
 /**
  * Actions older than this cannot be thanked.
  *
@@ -70,16 +60,15 @@ const templateMessage = ref<SupporterMessage>({ content: '{}' } as SupporterMess
 const replyTimeLimit = ref<number>(7 * 24 * 60 * 60);
 const isSending = ref(false);
 const canSendAll = ref(false);
+const isLoadingMore = ref(false);
+const hasError = ref(false);
+const reachedEnd = ref(false);
 
-/**
- * Used to mark the timestamp that we sent a message to everyone. We'll then
- * compare the `added_on` of a message with this to know if we need to show the
- * templateMessage as a fallback.
- */
-const sentAllDate = ref<number>();
+const actions = ref([]) as Ref<SupporterAction[]>;
+const templateMessage = ref<SupporterMessage>({ content: '{}' } as SupporterMessage);
 
+const routeTitle = computed(() => $gettext(`Your Supporters`));
 const sendAllUrl = computed(() => `/web/dash/creators/supporters/send_all`);
-
 const canSubmitSendAll = computed(() => !isSending.value && canSendAll.value && hasTemplate.value);
 
 const hasTemplate = computed(() => {
@@ -91,22 +80,27 @@ const hasTemplate = computed(() => {
 	return ContentDocument.fromJson(content).hasContent;
 });
 
-createAppRoute({
+const { reload } = createAppRoute({
 	routeTitle,
 	onResolved(data) {
 		const payload: InitPayload = data.payload;
+		const rawActions = payload.actions;
 
-		if (payload.actions.length) {
-			actions.value = SupporterAction.populate(payload.actions);
+		if (rawActions.length) {
+			actions.value = SupporterAction.populate(rawActions);
 		} else {
-			reachedEnd.value = true;
+			actions.value = [];
 		}
 
+		// We'll reload this route after sending to everyone. Ensure we're
+		// resetting state as needed.
 		templateMessage.value = new SupporterMessage(payload.templateMessage);
 		replyTimeLimit.value = payload.replyTimeLimit;
-
 		isSending.value = payload.isSending === true;
 		canSendAll.value = payload.canSendAll === true;
+		isLoadingMore.value = false;
+		hasError.value = false;
+		reachedEnd.value = rawActions.length < ACTIONS_PER_PAGE;
 	},
 });
 
@@ -142,6 +136,11 @@ async function loadMore() {
 }
 
 async function onClickSendAll() {
+	if (isSending.value) {
+		showErrorGrowl($gettext(`You already have messages being sent. Please try again later.`));
+		return;
+	}
+
 	const shouldSend = await ModalConfirm.show(
 		$gettext(
 			`Are you sure you want to thank your recent supporters using your existing message template?`
@@ -152,7 +151,6 @@ async function onClickSendAll() {
 		return;
 	}
 
-	const wasSending = isSending.value;
 	isSending.value = true;
 	try {
 		const response = await Api.sendRequest(
@@ -176,15 +174,18 @@ async function onClickSendAll() {
 			}
 
 			showErrorGrowl(message);
+			isSending.value = false;
 			return;
 		}
-
-		sentAllDate.value = Date.now();
 	} catch (e) {
 		console.error(e);
 		showErrorGrowl($gettext(`Something went wrong`));
-		isSending.value = wasSending;
+		isSending.value = false;
+		return;
 	}
+
+	// Refresh everything so we have accurate model data for all our messages.
+	reload();
 }
 
 async function onClickEdit() {
@@ -221,11 +222,7 @@ function _isActionStale(action: SupporterAction) {
 }
 
 function _canThankSupporterAction(action: SupporterAction) {
-	if (action.isThanked) {
-		return false;
-	}
-
-	if (sentAllDate.value && sentAllDate.value > action.added_on) {
+	if (action.isThanked || action.message?.skipped_on) {
 		return false;
 	}
 
@@ -321,7 +318,7 @@ function _canThankSupporterAction(action: SupporterAction) {
 								<AppUserAvatarImg :user="action.user" />
 							</div>
 
-							<div>
+							<div class="-user-info">
 								<div class="-display-name">
 									{{ action.user.display_name }}
 								</div>
@@ -358,29 +355,44 @@ function _canThankSupporterAction(action: SupporterAction) {
 								{{ $gettext(`Say thanks`) }}
 							</AppButton>
 						</div>
-						<div
-							v-else-if="
-								action.message || (sentAllDate && sentAllDate > action.added_on)
-							"
-							class="-thanks-message"
-						>
-							<div class="-subtle-header">
-								{{ $gettext(`Message sent`) }}
-							</div>
+						<div v-else class="-thanks-message">
+							<template v-if="action.message && action.message.skipped_on">
+								<div class="-subtle-header">
+									{{ $gettext(`Message skipped`) }}
+								</div>
 
-							<AppContentViewer
-								class="-message-viewer"
-								:source="action.message?.content || templateMessage.content"
-							/>
-						</div>
-						<div v-else-if="_isActionStale(action)">
-							<div class="-subtle-header">
-								{{ $gettext(`Expired`) }}
-							</div>
+								<AppContentViewer
+									class="-message-viewer"
+									:source="action.message.content"
+								/>
 
-							<div class="well sans-margin-bottom fill-offset">
-								{{ $gettext(`This action can no longer be thanked.`) }}
-							</div>
+								<div class="well sans-margin-bottom fill-offset small">
+									{{
+										$gettext(
+											`This user supported you multiple times before you said thank you to everyone, so we only notified them once.`
+										)
+									}}
+								</div>
+							</template>
+							<template v-else-if="action.message">
+								<div class="-subtle-header">
+									{{ $gettext(`Message sent`) }}
+								</div>
+
+								<AppContentViewer
+									class="-message-viewer"
+									:source="action.message.content"
+								/>
+							</template>
+							<template v-else-if="_isActionStale(action)">
+								<div class="-subtle-header">
+									{{ $gettext(`Expired`) }}
+								</div>
+
+								<div class="well sans-margin-bottom fill-offset small">
+									{{ $gettext(`This action can no longer be thanked.`) }}
+								</div>
+							</template>
 						</div>
 					</div>
 				</div>
@@ -469,6 +481,9 @@ function _canThankSupporterAction(action: SupporterAction) {
 		flex-direction: column
 		grid-gap: 16px
 
+		.-user
+			width: auto
+
 		.-resource-wrapper
 			flex-basis: auto
 
@@ -487,6 +502,10 @@ function _canThankSupporterAction(action: SupporterAction) {
 	width: 42px
 	flex: none
 
+.-user-info
+	flex: auto
+	min-width: 0
+
 .-display-name
 .-username
 	text-overflow()
@@ -501,7 +520,7 @@ function _canThankSupporterAction(action: SupporterAction) {
 	font-size: $font-size-small
 
 .-resource-wrapper
-	flex: 1 1 200px
+	flex: 1 1
 
 .-subtle-header
 	font-size: $font-size-small
@@ -514,9 +533,7 @@ function _canThankSupporterAction(action: SupporterAction) {
 	align-items: center
 
 .-thanks-message
-	flex: auto
-	min-width: 100px
-	max-width: 450px
+	flex: 2 1
 
 	> .-message-viewer
 		height: auto
