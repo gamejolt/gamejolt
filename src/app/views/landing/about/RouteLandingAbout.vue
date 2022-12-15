@@ -1,45 +1,49 @@
 <script lang="ts">
-import { Options } from 'vue-property-decorator';
+import { computed } from 'vue';
+import { RouterLink } from 'vue-router';
+import { arrayShuffle } from '../../../../utils/array';
 import AppContactLink from '../../../../_common/contact-link/AppContactLink.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
-import { Screen } from '../../../../_common/screen/screen-service';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { imageJolt } from '../../../img/images';
-import profileCros from './cros.jpg';
-import profileThoro from './thoro.jpg';
+import { routeLandingCreators } from '../creators/creators.route';
 
-@Options({
-	name: 'RouteLandingAbout',
-	components: {
-		AppThemeSvg,
-		AppContactLink,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-@OptionsForRoute()
-export default class RouteLandingAbout extends BaseRouteComponent {
-	readonly assetUrls = import.meta.globEager('./*.png');
-	readonly Screen = Screen;
-	readonly imageJolt = imageJolt;
-	readonly profileCros = profileCros;
-	readonly profileThoro = profileThoro;
+const assetUrls = import.meta.globEager('./*.png');
+const profileUrls = import.meta.globEager('./profile-*.jpg');
 
-	colors = {
-		'#ccff00': 'black',
-		'#2f7f6f': 'white',
-		'#31d6ff': 'white',
-		'#ff3fac': 'white',
-	};
+const colors = {
+	'#ccff00': 'black',
+	'#2f7f6f': 'white',
+	'#31d6ff': 'white',
+	'#ff3fac': 'white',
+};
 
-	disableRouteTitleSuffix = true;
+const staff = arrayShuffle([
+	'ylivay',
+	'nilllzz',
+	'hapu',
+	'babblingbendu',
+	'kniteblargh',
+	'lorac',
+	'manu',
+	'spyros',
+	'unicornface',
+	'19thgreeny',
+]);
 
-	get routeTitle() {
-		return this.$gettext(`About Game Jolt`);
-	}
-}
+export default {
+	...defineAppRouteOptions({}),
+	components: { RouterLink },
+};
+</script>
+
+<script lang="ts" setup>
+createAppRoute({
+	routeTitle: computed(() => $gettext(`About Game Jolt`)),
+	disableTitleSuffix: true,
+});
 </script>
 
 <template>
@@ -62,8 +66,7 @@ export default class RouteLandingAbout extends BaseRouteComponent {
 					<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 						<p class="lead">
 							Game Jolt is one of the largest communities in existence for video games
-							and the people who love to make and play them, working its way into the
-							lives of 150 million people!
+							and the millions of people around the world who love them.
 						</p>
 					</div>
 				</div>
@@ -73,69 +76,67 @@ export default class RouteLandingAbout extends BaseRouteComponent {
 		<div class="landing-body">
 			<section class="section">
 				<div class="container">
-					<h1 class="section-header text-center">A Love of Games</h1>
-
+					<h1 class="section-header text-center">Best place for creators</h1>
 					<hr class="underbar underbar-center" />
-					<br />
 
 					<div class="row">
 						<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 							<p>
-								Whether you're into sharing your fan art for the most popular games
-								in the world or you spend your free time finding obscure games
-								nobody has heard of, Game Jolt is a one-stop community for all of
-								gaming.
+								Whether you're into livestreaming together with your followers, or
+								sharing your fan art for the most popular games, music, film and TV
+								shows in the world, Game Jolt is the best platform for creators.
 							</p>
 							<p>
-								Connecting gamers and creators within game communities across PC,
-								mobile and console, join communities like
-								<a href="https://gamejolt.com/c/minecraft">Minecraft</a>,
-								<a href="https://gamejolt.com/c/pokemon">Pokémon</a> and
-								<a href="https://gamejolt.com/c/fnaf">FNaF</a> or try your hand at
-								playing some of our
-								<a href="https://gamejolt.com/games">favorite games</a>!
+								<a href="https://gamejolt.com/join">Join</a> a growing population of
+								visual artists, musicians, streamers, writers, conversationalists,
+								fan cultures, and whatever it is that you do!
 							</p>
 							<p>
-								We’ve extended our reach to a growing population of visual artists,
-								musicians, streamers, writers, conversationalists, fan cultures, and
-								the list goes on. Our
-								<a href="https://gamejolt.com/communities">community</a> continues
-								to demonstrate their widening range of interests making us the
-								ultimate platform for billions of gamers!
-							</p>
-							<p>
-								<a href="https://gamejolt.com/join">Join</a> over a hundred million
-								gamers on Game Jolt and hundreds of thousands of creators!
+								<RouterLink :to="{ name: routeLandingCreators.name }">
+									Learn more about being a creator on Game Jolt
+								</RouterLink>
 							</p>
 						</div>
 					</div>
 
-					<h1 class="text-center">Our Team</h1>
-
+					<h1 class="text-center">Our team</h1>
 					<hr class="underbar underbar-center" />
-					<br />
 
 					<div class="row">
 						<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
-							<p>
-								Our team is made up of gamers, developers, artists, musicians and
-								publishers. We are building the platform for billions of gamers
-								worldwide!
-							</p>
 							<div class="-staff">
 								<div class="-staff-item">
 									<a href="https://gamejolt.com/@thoro">
-										<img :src="profileThoro" alt="thoro" class="-avatar" />
+										<img
+											:src="profileUrls['./profile-thoro.jpg'].default"
+											alt="thoro"
+											class="-avatar"
+										/>
 									</a>
 									<strong>Yaprak</strong> <small>@thoro</small> <br />
 									Co-founder / CEO
 								</div>
 								<div class="-staff-item">
 									<a href="https://gamejolt.com/@cros">
-										<img :src="profileCros" alt="cros" class="-avatar" />
+										<img
+											:src="profileUrls['./profile-cros.jpg'].default"
+											alt="cros"
+											class="-avatar"
+										/>
 									</a>
 									<strong>David</strong> <small>@cros</small> <br />
 									Co-founder / CTO
+								</div>
+
+								<div v-for="username of staff" :key="username" class="-staff-item">
+									<a :href="`https://gamejolt.com/@${username}`">
+										<img
+											:src="profileUrls[`./profile-${username}.jpg`].default"
+											:alt="`@${username}`"
+											class="-avatar"
+										/>
+									</a>
+									<strong>@{{ username }}</strong>
 								</div>
 							</div>
 							<br />
@@ -337,7 +338,7 @@ export default class RouteLandingAbout extends BaseRouteComponent {
 					<hr class="underbar underbar-center" />
 					<br />
 
-					<p class="text-center">Wanna look like us? Check these hex codes out!</p>
+					<p class="text-center">Wanna look like us? Check out these hex codes!</p>
 
 					<div class="row">
 						<div v-for="(fg, bg) of colors" :key="bg" class="col-sm-3">
@@ -364,18 +365,14 @@ export default class RouteLandingAbout extends BaseRouteComponent {
 	font-weight: bold
 
 .-staff
-	display: flex
-	flex-direction: row
+	display: grid
+	grid-template-columns: repeat(auto-fit, minmax(0, 150px))
+	gap: $grid-gutter-width
 	justify-content: center
 
 .-staff-item
 	width: 100%
-	max-width: 150px
-	margin: 0 ($grid-gutter-width-xs / 2)
 	text-align: center
-
-	@media $media-sm-up
-		margin: 0 ($grid-gutter-width / 2)
 
 .-avatar
 	img-responsive()

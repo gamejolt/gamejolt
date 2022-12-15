@@ -3,17 +3,17 @@ import { inject, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
-import { shouldUseFYPDefault } from '../../../_common/config/config.service';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { useGridStore } from '../../components/grid/grid-store';
 import { AppActivityFeedLazy } from '../../components/lazy';
 import { illNoComments } from '../../img/ill/illustrations';
 import { useAppStore } from '../../store/index';
+import { routeDiscoverHome } from '../discover/home/home.route';
+import { shouldUseFYPDefault } from './home-feed.service';
 import { RouteActivityFeedController } from './RouteHomeFeed.vue';
 
 function getFetchUrl() {
@@ -91,9 +91,9 @@ function onLoadedNew() {
 	<div v-else>
 		<div v-if="!feed.hasItems">
 			<AppIllustration :asset="illNoComments">
-				<AppTranslate>You don't have any activity yet.</AppTranslate>
+				{{ $gettext(`You don't have any activity yet.`) }}
 				<br />
-				<AppTranslate>Follow your friends, creators, and communities!</AppTranslate>
+				{{ $gettext(`Follow people to see their posts here!`) }}
 			</AppIllustration>
 
 			<AppSpacer vertical :scale="10" />
@@ -101,11 +101,11 @@ function onLoadedNew() {
 			<RouterLink
 				v-app-track-event="`activity:main-menu:discover`"
 				:to="{
-					name: 'discover.home',
+					name: routeDiscoverHome.name,
 				}"
 			>
 				<AppButton icon="compass-needle" solid lg block>
-					<AppTranslate>Discover</AppTranslate>
+					{{ $gettext(`Discover`) }}
 				</AppButton>
 			</RouterLink>
 		</div>

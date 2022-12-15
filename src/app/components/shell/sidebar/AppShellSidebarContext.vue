@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, watch } from 'vue';
-import { useSidebarStore } from '../../../../../_common/sidebar/sidebar.store';
-import { useAppStore } from '../../../../store/index';
+import { useSidebarStore } from '../../../../_common/sidebar/sidebar.store';
+import { useAppStore } from '../../../store/index';
 
 const { visibleLeftPane, setHasContentSidebar } = useAppStore();
 const { activeContextPane } = useSidebarStore();

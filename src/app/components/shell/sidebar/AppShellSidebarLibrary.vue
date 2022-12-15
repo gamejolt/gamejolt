@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppExpand from '../../../../../_common/expand/AppExpand.vue';
-import { formatNumber } from '../../../../../_common/filters/number';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { useAppStore } from '../../../../store/index';
-import { libraryNewPlaylist, useLibraryStore } from '../../../../store/library';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import AppExpand from '../../../../_common/expand/AppExpand.vue';
+import { formatNumber } from '../../../../_common/filters/number';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { useAppStore } from '../../../store/index';
+import { libraryNewPlaylist, useLibraryStore } from '../../../store/library';
 import AppShellSidebarCollectionList from './AppShellSidebarCollectionList.vue';
 
 const { isLibraryBootstrapped } = useAppStore();

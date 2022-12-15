@@ -198,13 +198,11 @@ export class ChatUserCollection {
 		if (!user) {
 			return;
 		}
-
 		// Were they previously offline?
 		if (!user.isOnline) {
 			--this.offlineCount;
 			++this.onlineCount;
 		}
-
 		user.isOnline = true;
 		this.recollect();
 	}
@@ -214,13 +212,11 @@ export class ChatUserCollection {
 		if (!user) {
 			return;
 		}
-
 		// Were they previously online?
 		if (user.isOnline) {
 			++this.offlineCount;
 			--this.onlineCount;
 		}
-
 		user.isOnline = false;
 		this.recollect();
 	}

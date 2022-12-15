@@ -1,27 +1,21 @@
 <script lang="ts" setup>
 import { RouterLink } from 'vue-router';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 </script>
 
 <template>
 	<div class="-small-heading">
-		<AppTranslate>For Developers</AppTranslate>
+		{{ $gettext(`For developers`) }}
 	</div>
 
 	<ol class="list-unstyled -link-list">
 		<li>
 			<RouterLink :to="{ name: 'landing.game-api' }">
-				<AppTranslate>Game API</AppTranslate>
+				{{ $gettext(`Game API`) }}
 			</RouterLink>
 		</li>
 		<li>
 			<RouterLink :to="{ name: 'landing.marketplace' }">
-				<AppTranslate>Marketplace</AppTranslate>
-			</RouterLink>
-		</li>
-		<li>
-			<RouterLink :to="{ name: 'landing.partners' }">
-				<AppTranslate>Partner Program</AppTranslate>
+				{{ $gettext(`Game marketplace`) }}
 			</RouterLink>
 		</li>
 	</ol>

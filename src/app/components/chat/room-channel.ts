@@ -104,9 +104,8 @@ export async function createChatRoomChannel(
 	});
 
 	const presence = markRaw(new Presence(channel));
-	presence.onJoin(_onUserJoin);
-	presence.onLeave(_onUserLeave);
 	presence.onSync(() => _syncPresentUsers(presence));
+	presence.onLeave(_syncPresenceData);
 
 	const c = shallowReadonly({
 		channelController,
@@ -272,22 +271,6 @@ export async function createChatRoomChannel(
 		message.edited_on = edited.edited_on;
 	}
 
-	function _onUserJoin(presenceId: string, currentPresence: RoomPresence | undefined) {
-		// If this is the first user presence from a device.
-		if (!currentPresence && client.roomMembers[roomId]) {
-			const userId = +presenceId;
-			client.roomMembers[roomId].online(userId);
-		}
-	}
-
-	function _onUserLeave(presenceId: string, currentPresence: RoomPresence | undefined) {
-		// If the user has left all devices.
-		if (currentPresence?.metas.length === 0 && client.roomMembers[roomId]) {
-			const userId = +presenceId;
-			client.roomMembers[roomId].offline(userId);
-		}
-	}
-
 	function _onMemberLeave(data: MemberLeavePayload) {
 		const roomMembers = client.roomMembers[roomId];
 
@@ -349,15 +332,25 @@ export async function createChatRoomChannel(
 		}
 
 		const roomMembers = client.roomMembers[room.value.id];
-
 		roomMembers.doBatchWork(() => {
-			presence.list((id: string, roomPresence: RoomPresence) => {
-				const user = roomMembers.get(+id) ?? new ChatUser(roomPresence.user);
-				user.typing = roomPresence.metas.some(meta => meta.typing);
-				roomMembers.update(user);
-				roomMembers.online(+id);
-			});
+			presence.list(_syncPresenceData);
 		});
+	}
+
+	function _syncPresenceData(presenceId: string, roomPresence: RoomPresence | undefined) {
+		if (!roomPresence) {
+			return;
+		}
+
+		const roomMembers = client.roomMembers[room.value.id];
+		const user = roomMembers.get(+presenceId);
+		if (!user) {
+			return;
+		}
+
+		// We currently only sync the typing status.
+		user.typing = roomPresence.metas.some(i => i.typing);
+		roomMembers.update(user);
 	}
 
 	// TODO: why is this here and not in the chat client?

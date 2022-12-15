@@ -1,12 +1,12 @@
 import { computed, reactive, shallowReadonly } from 'vue';
 import { TabLeaderInterface } from '../../../utils/tab-leader';
 import { importNoSSR } from '../../../_common/code-splitting';
-import { shouldUseFYPDefault } from '../../../_common/config/config.service';
 import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Notification } from '../../../_common/notification/notification-model';
 import { QuestNotification } from '../../../_common/quest/quest-notification-model';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
+import { shouldUseFYPDefault } from '../../views/home/home-feed.service';
 import { GridClient, onFiresideStart, onNewStickers } from './client.service';
 
 const TabLeaderLazy = importNoSSR(async () => await import('../../../utils/tab-leader'));

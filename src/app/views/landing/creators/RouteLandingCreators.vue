@@ -1,6 +1,6 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
-import { arrayShuffle } from '../../../../utils/array';
+import { arrayIndexBy, arrayShuffle } from '../../../../utils/array';
 import { trackCreatorApply } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
@@ -19,12 +19,14 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { DefaultTheme } from '../../../../_common/theme/theme.model';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
+import { User } from '../../../../_common/user/user.model';
 import {
-	illCreatorInfographic,
 	illMobileKikkerstein,
 	illPointyThing,
 	illStreamingJelly,
 } from '../../../img/ill/illustrations';
+import AppCreatorMooMoo from './AppCreatorMooMoo.vue';
 import socialImage from './social.png';
 import { creatorApplyDesktop, creatorApplySm, creatorApplyXs } from './_backgrounds/backgrounds';
 
@@ -40,11 +42,6 @@ const boltCount = computed(() => {
 	const bleed = 24;
 	return Math.ceil((Screen.width + bleed * 2) / (boltWidth.value + boltGap));
 });
-
-const moomooWidth = 70;
-const moomooHeight = 35;
-const mPath = `M24.1737 14.3505L8.38119 33.0065L0.772005 22.1169L21.7373 3.34891L37.1056 14.0705L47.386 0.252628L70.7271 23.5059L61.1165 32.5245L47.6693 14.8317L35.1359 27.0814L24.1737 14.3505Z`;
-const wPath = `M22.9344 19.9755L8.15959 0.789419L0.202878 11.3923L20.0699 30.8736L35.665 20.7133L45.2124 34.8736L69.1917 12.4838L60.102 3.13888L46.1061 20.3275L34.2726 7.653L22.9344 19.9755Z`;
 
 const stickers = [
 	'https://m.gjcdn.net/sticker/200/10-pwkhwvdr-v4.png',
@@ -72,20 +69,26 @@ export default {
 </script>
 
 <script lang="ts" setup>
+interface Testimonial {
+	user: number;
+	text: string;
+	tag: string;
+}
+
 const postImageKeys = arrayShuffle(Object.keys(postImages));
 
-let _routeDestroyed = false;
 let _hasPostTimer = false;
 
 const applyUrl = ref<string>();
-
 const postIndex = ref(0);
-
 const creatorPosts = ref<FiresidePost[]>([]);
 const whyBackground = ref<Background>();
+const testimonialUsers = ref<User[]>([]);
+const testimonials = ref<Testimonial[]>([]);
 
 const headerPost = computed(() => getPostFromIndex(postIndex.value));
 const postsCount = computed(() => postImageKeys.length);
+const testimonialUsersIndexed = computed(() => arrayIndexBy(testimonialUsers.value, 'id'));
 
 const applyBackground = computed(() => {
 	if (Screen.isXs) {
@@ -109,10 +112,11 @@ const displayStickers = computed(() => {
 // match well with overlayed buttons.
 const theme = computed(() => DefaultTheme);
 
-const routeTitle = `Make money with your gaming content as a Game Jolt Creator`;
+const routeTitle = `Become a Game Jolt Creator`;
 
-const { isBootstrapped } = createAppRoute({
+const { isBootstrapped, isDestroyed } = createAppRoute({
 	routeTitle,
+	disableTitleSuffix: true,
 	onInit() {
 		Meta.description = `BOOM! Be a Game Jolt Creator and make money with your gaming content. Your fans never have to jump through hoops to see your latest post, video, or stream.`;
 
@@ -139,16 +143,15 @@ const { isBootstrapped } = createAppRoute({
 		const posts = FiresidePost.populate(payload.posts);
 
 		creatorPosts.value = posts.sort(() => Math.random() - 0.5);
+		testimonialUsers.value = User.populate(payload.testimonialUsers);
+		testimonials.value = payload.testimonials;
 		whyBackground.value = payload.background ? new Background(payload.background) : undefined;
 		applyUrl.value = payload.applyUrl;
-	},
-	onDestroyed() {
-		_routeDestroyed = true;
 	},
 });
 
 async function setHeaderPostTimer(initial = false) {
-	if (_routeDestroyed) {
+	if (isDestroyed) {
 		return;
 	}
 
@@ -172,7 +175,7 @@ async function setHeaderPostTimer(initial = false) {
 		setTimeout(tryResolve, 5_000);
 	});
 
-	if (_routeDestroyed) {
+	if (isDestroyed) {
 		return;
 	}
 
@@ -249,7 +252,7 @@ function getRandomStickers(count = 3) {
 
 					<AppLinkExternal class="-header-lead-spacer" :href="applyUrl">
 						<AppButton primary solid block overlay lg @click="onClickApply('header')">
-							💰 Apply for private beta 💰
+							APPLY NOW
 						</AppButton>
 					</AppLinkExternal>
 				</div>
@@ -297,72 +300,16 @@ function getRandomStickers(count = 3) {
 			</div>
 		</div>
 
-		<div class="-how">
-			<div class="-how-content -col-mobile-reverse">
-				<AppImgResponsive class="-how-img" :src="illCreatorInfographic.path" />
-
-				<AppSpacer class="-how-spacer" vertical :scale="6" />
-
-				<div class="-how-text">
-					<div class="-sub-header-text -how-text-header">How does it work?</div>
-
-					<div>
-						Bring your audience on adventures, earn rewards and start making
-						<span class="-nowrap">💰 REAL MONEY 💰</span>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<AppBackground class="-why" :background="whyBackground" darken scroll-direction="up">
-			<div class="-why-content -shadow">
-				<div class="-why-header -sub-header-text">Why become a Game Jolt Creator?</div>
-
-				<div>
-					Stop fighting algorithms and start building lasting relationships with an
-					audience who actually <span class="-nowrap">sees 👀</span> and
-					<span class="-nowrap">engages ✋</span> with what you share!
-				</div>
-
-				<AppLinkExternal :href="applyUrl">
-					<AppButton primary solid block overlay lg @click="onClickApply('why')">
-						$$$
-						<AppSpacer horizontal :scale="3" style="display: inline-block" />
-						APPLY
-						<AppSpacer horizontal :scale="3" style="display: inline-block" />
-						$$$
-					</AppButton>
-				</AppLinkExternal>
-			</div>
-		</AppBackground>
-
-		<div class="-where">
+		<div class="-where -section-row">
 			<div class="-where-header -sub-header-text">
 				<span class="-where-header-text">
-					<div class="-moomoo">
-						<div
-							v-for="i of 5"
-							:key="`moomoo-${i}`"
-							:class="{ [`-moomoo-${i === 1 || i === 4 ? 'w' : 'm'}`]: true }"
-							:style="{
-								height: moomooHeight * (i === 1 || i === 4 ? 0.5 : 1) + 'px',
-							}"
-						>
-							<svg :width="moomooWidth + 'px'" :height="moomooHeight + 'px'">
-								<path
-									:d="i === 1 || i === 4 ? wPath : mPath"
-									:width="moomooWidth + 'px'"
-									:height="moomooHeight + 'px'"
-									fill="#FF3FAC"
-								/>
-							</svg>
-						</div>
-					</div>
-
-					Where your existing followers can
+					<AppCreatorMooMoo />
+					<span class="-text-primary"> Get paid to engage with your audience! </span>
+					<br />
+					<span> Where your existing followers can </span>
+					<span class="-text-primary"> {{ ' <' }}gasp{{ '> ' }} </span>
+					<span>follow</span>
 				</span>
-				<span class="-text-primary"> {{ ' <' }}gasp{{ '> ' }} </span>
-				<span> follow </span>
 			</div>
 
 			<div class="-where-content">
@@ -409,7 +356,9 @@ function getRandomStickers(count = 3) {
 						<div class="-where-inner-header -tiny-header-text">BE AUTHENTIC</div>
 
 						<div>
-							You're not beholden to advertisers so create what you want to create.
+							Unlike Twitter and Instagram you'll actually be paid for your content,
+							and stop living in fear of getting demonetized on platforms like
+							YouTube.
 						</div>
 					</div>
 				</div>
@@ -430,22 +379,51 @@ function getRandomStickers(count = 3) {
 
 					<div class="-where-trail">
 						<div class="-where-inner-header -tiny-header-text">
-							Engagement should be <span class="-nowrap">✨FUN✨</span>
+							EXPRESS YOURSELF IN ANY FORMAT
 						</div>
 
 						<div>
-							Our goals are aligned with yours. It's all about turning your views into
-							supporters.
+							Don't tie yourself down to a single communication format with your fans.
+							Chat, post images, upload videos, livestream and share your status all
+							from your profile.
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 
+		<AppBackground
+			class="-testimonial -section-row"
+			:background="whyBackground"
+			darken
+			scroll-direction="up"
+		>
+			<div class="-testimonial-content -shadow">
+				<div class="-testimonial-header -sub-header-text">What creators are saying</div>
+
+				<div
+					v-for="testimonial of testimonials"
+					:key="testimonial.user"
+					class="-testimonial-item"
+				>
+					<div class="-testimonial-avatar">
+						<AppUserAvatarImg :user="testimonialUsersIndexed[testimonial.user]" />
+					</div>
+
+					<div class="-testimonial-text">
+						{{ testimonial.text }}
+						<br />
+						-
+						<strong>@{{ testimonialUsersIndexed[testimonial.user].username }},</strong>
+						{{ ' ' }}
+						<em>{{ testimonial.tag }}</em>
+					</div>
+				</div>
+			</div>
+		</AppBackground>
+
 		<div class="-who">
 			<div class="-who-content">
-				<div class="-who-header -sub-header-text">MEET SOME CREATORS</div>
-
 				<div class="-grid-center">
 					<AppCreatorsList
 						:is-loading="!isBootstrapped"
@@ -466,7 +444,7 @@ function getRandomStickers(count = 3) {
 		</div>
 
 		<div
-			class="-apply"
+			class="-apply -section-row"
 			:style="{
 				backgroundImage: `url(${applyBackground.src})`,
 				backgroundPosition: 'center',
@@ -474,7 +452,11 @@ function getRandomStickers(count = 3) {
 			}"
 		>
 			<div class="-apply-content -shadow">
-				<div class="-main-header-text -apply-header">Apply now for limited spots</div>
+				<div class="-main-header-text -apply-header">
+					Apply now,
+					<br />
+					let's gooooo
+				</div>
 
 				<AppLinkExternal :href="applyUrl">
 					<AppButton
@@ -486,13 +468,13 @@ function getRandomStickers(count = 3) {
 						lg
 						@click="onClickApply('apply')"
 					>
-						💰 Apply for private beta 💰
+						PRESS START
 					</AppButton>
 				</AppLinkExternal>
 			</div>
 		</div>
 
-		<div class="-faqs">
+		<div class="-faqs -section-row">
 			<div class="-sub-header-text -faqs-header">FAQ</div>
 
 			<div class="-faqs-content -col-mobile">
@@ -502,38 +484,108 @@ function getRandomStickers(count = 3) {
 					</div>
 
 					<div>
-						Apply! We'll be selecting an initial cohort of creators to set them up for
-						success in the next few months before opening the platform for everyone.
+						Apply! We'll reach out with next steps or let you know what we need in order
+						to get you in.
 					</div>
 				</div>
 
 				<div class="-col">
 					<div class="-tiny-header-text -faqs-content-header">
-						Are Game Jolt Creators exclusive?
+						What are the requirements to become a Game Jolt creator?
 					</div>
 
 					<div>
-						No! We're the best place for you to collect recurring payments but it
-						doesn't matter where your audience is. Let them know they can better support
-						you financially on Game Jolt.
+						Game Jolt users with 1,000 or more followers or users on platforms like
+						YouTube, TikTok, Twitter, Instagram, Twitch and Patreon that have 3,000 or
+						more followers will be considered.
 					</div>
 				</div>
 
 				<div class="-col">
 					<div class="-tiny-header-text -faqs-content-header">
-						How often do I need to post or livestream?
+						Do I have to sign an exclusivity deal?
 					</div>
 
 					<div>
-						As often as you'd like! The more frequent and active you are, the more
-						💰💰💰 you'll earn.
+						No way! We want you to be successful even if opportunities take you
+						elsewhere.
 					</div>
 				</div>
 
 				<div class="-col">
-					<div class="-tiny-header-text -faqs-content-header">How do I get paid?</div>
+					<div class="-tiny-header-text -faqs-content-header">Am I a creator?</div>
 
-					<div>Creators can withdraw directly into their PayPal accounts.</div>
+					<div>
+						Creator is a loose term. If you consider yourself to be an artist, musician,
+						streamer, crafter or a builder, you are a creator and should apply!
+					</div>
+				</div>
+
+				<div class="-col">
+					<div class="-tiny-header-text -faqs-content-header">
+						What's the deal with your algorithms?
+					</div>
+
+					<div>
+						We have 2 feeds on Game Jolt. The Following feed will ensure anyone that
+						puts in the effort to follow you on Game Jolt will get your content in their
+						feed. Our For You feed will help other users discover you.
+					</div>
+				</div>
+
+				<div class="-col">
+					<div class="-tiny-header-text -faqs-content-header">
+						Why do you need tax forms?
+					</div>
+
+					<div>
+						As a company based in the United States, our government requires us to
+						collect the proper tax forms in order to continue our operations. This is a
+						legal requirement.
+					</div>
+				</div>
+
+				<div class="-col">
+					<div class="-tiny-header-text -faqs-content-header">
+						When will you add new payment withdrawal methods?
+					</div>
+
+					<div>
+						Soon! We support PayPal withdrawals for now, but our goal is to support more
+						currencies and banks across the globe.
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="-footer -section-row">
+			<div class="-footer-content">
+				<AppLinkExternal :href="applyUrl">
+					<AppButton
+						:style="{ maxWidth: '384px' }"
+						primary
+						solid
+						block
+						overlay
+						lg
+						@click="onClickApply('apply')"
+					>
+						Apply
+					</AppButton>
+				</AppLinkExternal>
+
+				<div>
+					<div class="-footer-header-text -tiny-header-text">More questions?</div>
+					<div class="-footer-header-text -tiny-header-text">
+						We've got answers in
+						<a
+							href="https://gamejolt.com/p/why-game-jolt-eny749ba"
+							target="_blank"
+							style="white-space: nowrap"
+						>
+							our Creator FAQ
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -606,9 +658,20 @@ function getRandomStickers(count = 3) {
 	font-size: 48px
 	text-shadow: -2px 4px 0px rgba(47, 127, 111, 0.5), -4px 2px 0px rgba(204, 255, 0, 0.5)
 
+	@media $media-xs
+		font-size: 36px
+
 .-tiny-header-text
 	font-family: $font-family-display
 	font-size: 27px
+
+	a
+		text-decoration: underline
+
+.-body-text
+	font-weight: bold
+	line-height: 1.7
+	font-size: 21px
 
 .-text-primary
 	color: var(--theme-primary)
@@ -773,90 +836,18 @@ function getRandomStickers(count = 3) {
 		transform: translate(0, 0)
 		opacity: 1
 
-.-how
-	@extends .-bg-black
-	padding: 107px 64px 115px
-	display: flex
-
-	@media $media-mobile
-		padding: 96px 24px 80px
-		text-align: center
-
-.-how-content
-	margin-left: auto
-	margin-right: auto
-	flex: auto
-	display: flex
-	justify-content: space-between
-	width: 100%
-	max-width: 1000px
-
-	@media $media-mobile
-		flex: none
-		max-width: 450px
-
-.-how-img
-	min-width: 0
-
-	@media $media-md-up
-		flex: 1 1 486px
-
-.-how-spacer
-	@media $media-md-up
-		flex: 1 4 126px
-
-.-how-text
-	align-self: center
-	max-width: 100%
-
-	@media $media-md-up
-		flex: 1 1 384px
-
-.-how-text-header
-	margin-bottom: 32px
-
-	@media $media-mobile
-		margin-bottom: 24px
-
-.-why
-	@extends .-grid-center
-	padding: 160px 64px
-	text-align: center
+.-section-row
+	padding: 64px
 
 	@media $media-sm
-		padding: 160px 32px
+		padding: 64px 32px
 
 	@media $media-xs
-		padding: 160px 16px
-
-.-why-content
-	display: flex
-	flex-direction: column
-	gap: 32px
-	align-items: center
-
-	@media $media-mobile
-		max-width: 450px
-
-	@media $media-md-up
-		max-width: 800px
-
-	> *
-		max-width: 383px
-
-.-why-header
-	max-width: unset
+		padding: 64px 16px
 
 .-where
 	@extends .-bg-black
 	@extends .-grid-center
-	padding: 132px 64px 165px
-
-	@media $media-sm
-		padding: 132px 32px 142px
-
-	@media $media-xs
-		padding: 104px 16px 122px
 
 .-where-content
 	display: flex
@@ -883,33 +874,6 @@ function getRandomStickers(count = 3) {
 .-where-header-text
 	position: relative
 	z-index: 1
-
-.-moomoo
-	position: absolute
-	top: 0
-	left: 0
-	transform: translate3d(-50%, -15%, 0) rotate(14.73deg)
-	width: 147px
-	opacity: 0.4
-	display: grid
-	z-index: -1
-
-	> *
-		transform: rotate(-14.73deg)
-		display: inline-flex
-		justify-content: center
-		align-items: center
-
-.-moomoo-m
-	justify-self: flex-start
-	margin-left: 0px
-
-	&:nth-child(3)
-		margin-left: 16px
-
-.-moomoo-w
-	margin-right: 8px
-	justify-self: flex-end
 
 .-where-inner
 	display: flex
@@ -939,14 +903,46 @@ function getRandomStickers(count = 3) {
 .-where-inner-header
 	margin-bottom: 24px
 
+.-testimonial
+	@extends .-grid-center
+
+.-testimonial-content
+	display: flex
+	flex-direction: column
+	gap: 32px
+	align-items: center
+	max-width: 800px
+
+.-testimonial-header
+	max-width: unset
+	text-align: center
+
+.-testimonial-item
+	--testimonial-avatar-size: 100px
+	display: flex
+	flex-direction: row
+	align-items: center
+	gap: 20px
+	background-color: black
+	min-height: var(--testimonial-avatar-size)
+	border-radius: var(--testimonial-avatar-size)
+	padding: 12px calc(var(--testimonial-avatar-size) / 2) 12px 12px
+
+.-testimonial-avatar
+	width: var(--testimonial-avatar-size)
+	height: var(--testimonial-avatar-size)
+	flex: none
+	background-color: white
+	border-radius: 50%
+
+@media $media-xs
+	.-testimonial-item
+		--testimonial-avatar-size: 48px
+		font-size: 16px
+		align-items: start
+
 .-who
-	padding: 132px 0 165px
-
-	@media $media-sm
-		padding-bottom: 132px
-
-	@media $media-xs
-		padding-bottom: 151px
+	padding: 32px 0
 
 .-who-content
 	display: flex
@@ -965,15 +961,8 @@ function getRandomStickers(count = 3) {
 .-apply
 	@extends .-bg-pink
 	@extends .-grid-center
-	padding: 167px 64px
 	position: relative
 	overflow: hidden
-
-	@media $media-sm
-		padding: 246px 32px
-
-	@media $media-xs
-		padding: 286px 16px
 
 .-apply-content
 	display: flex
@@ -991,10 +980,6 @@ function getRandomStickers(count = 3) {
 	display: flex
 	flex-direction: column
 	align-items: center
-	padding: 96px 64px 158px
-
-	@media $media-mobile
-		padding: 64px 16.5px 116px
 
 .-faqs-header
 	text-align: center
@@ -1021,6 +1006,24 @@ function getRandomStickers(count = 3) {
 
 	@media $media-mobile
 		margin-bottom: 32px
+
+.-footer
+	@extends .-bg-black
+	@extends .-grid-center
+
+.-footer-header
+	text-align: center
+	margin-bottom: 48px
+
+.-footer-content
+	display: flex
+	flex-direction: column
+	gap: 32px
+	align-items: center
+	max-width: 800px
+
+.-footer-header-text
+	text-align: center
 
 @media $media-mobile
 	.-col-mobile

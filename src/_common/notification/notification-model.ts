@@ -1,5 +1,7 @@
 import { Router } from 'vue-router';
 import { TrophyModal } from '../../app/components/trophy/modal/modal.service';
+import { SupporterMessageModal } from '../../app/views/dashboard/supporters/message/modal.service';
+import { routeDashSupporters } from '../../app/views/dashboard/supporters/supporters.route';
 import type { RouteLocationDefinition } from '../../utils/router';
 import { isKnownRoute } from '../../utils/router';
 import { assertNever } from '../../utils/utils';
@@ -31,7 +33,8 @@ import { QuestNotification } from '../quest/quest-notification-model';
 import { Sellable } from '../sellable/sellable.model';
 import { StickerPlacement } from '../sticker/placement/placement.model';
 import { Subscription } from '../subscription/subscription.model';
-import { Translate } from '../translate/translate.service';
+import { SupporterAction } from '../supporters/action.model';
+import { $gettext, Translate } from '../translate/translate.service';
 import { UserFriendship } from '../user/friendship/friendship.model';
 import { UserGameTrophy } from '../user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../user/trophy/site-trophy.model';
@@ -80,6 +83,7 @@ export class Notification extends Model {
 	static TYPE_FIRESIDE_FEATURED_IN_COMMUNITY = 'fireside-featured-in-community';
 	static TYPE_QUEST_NOTIFICATION = 'quest-notification';
 	static TYPE_CHARGED_STICKER = 'charged-sticker';
+	static TYPE_SUPPORTER_MESSAGE = 'supporter-message';
 
 	static ACTIVITY_FEED_TYPES = [EventItem.TYPE_POST_ADD];
 
@@ -101,6 +105,7 @@ export class Notification extends Model {
 		Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY,
 		Notification.TYPE_QUEST_NOTIFICATION,
 		Notification.TYPE_CHARGED_STICKER,
+		Notification.TYPE_SUPPORTER_MESSAGE,
 	];
 
 	user_id!: number;
@@ -133,7 +138,8 @@ export class Notification extends Model {
 		| FiresideStreamNotification
 		| FiresideCommunity
 		| QuestNotification
-		| StickerPlacement;
+		| StickerPlacement
+		| SupporterAction;
 
 	to_resource!: string | null;
 	to_resource_id!: number | null;
@@ -240,6 +246,9 @@ export class Notification extends Model {
 		} else if (this.type === Notification.TYPE_CHARGED_STICKER) {
 			this.action_model = new StickerPlacement(data.action_resource_model);
 			this.is_user_based = true;
+		} else if (this.type === Notification.TYPE_SUPPORTER_MESSAGE) {
+			this.action_model = new SupporterAction(data.action_resource_model);
+			this.is_user_based = true;
 		}
 
 		// Keep memory clean after bootstrapping the models (the super
@@ -333,7 +342,14 @@ export class Notification extends Model {
 				return getRouteLocationForModel(this.action_model as QuestNotification);
 
 			case Notification.TYPE_CHARGED_STICKER: {
-				return getRouteLocationForModel(this.from_model!);
+				return routeDashSupporters;
+			}
+
+			case Notification.TYPE_SUPPORTER_MESSAGE: {
+				// Messages might have their height cropped in the notification
+				// feed. Don't return a location here, we'll instead show a
+				// modal in the `go` function.
+				return '';
 			}
 		}
 
@@ -414,6 +430,10 @@ export class Notification extends Model {
 				console.error(e);
 				showErrorGrowl(Translate.$gettext(`Couldn't go to notification.`));
 			}
+		} else if (this.type === Notification.TYPE_SUPPORTER_MESSAGE) {
+			if (this.action_model instanceof SupporterAction) {
+				SupporterMessageModal.show(this.action_model);
+			}
 		}
 	}
 
@@ -437,3 +457,28 @@ export class Notification extends Model {
 }
 
 Model.create(Notification);
+
+/**
+ * Map of {@link Notification.NOTIFICATION_FEED_TYPES} and their readable
+ * translated labels.
+ */
+export const NOTIFICATION_FEED_TYPE_LABELS = {
+	[Notification.TYPE_COMMENT_ADD]: $gettext(`Comment replies`),
+	[Notification.TYPE_COMMENT_ADD_OBJECT_OWNER]: $gettext(`Comments on your content`),
+	[Notification.TYPE_FORUM_POST_ADD]: $gettext(`Forum posts`),
+	[Notification.TYPE_FRIENDSHIP_ACCEPT]: $gettext(`Accepted friend requests`),
+	[Notification.TYPE_GAME_RATING_ADD]: $gettext(`Game ratings`),
+	[Notification.TYPE_GAME_FOLLOW]: $gettext(`Game follows`),
+	[Notification.TYPE_POST_FEATURED_IN_COMMUNITY]: $gettext(`Post featured`),
+	[Notification.TYPE_SELLABLE_SELL]: $gettext(`Sales`),
+	[Notification.TYPE_USER_FOLLOW]: $gettext(`Follows`),
+	[Notification.TYPE_MENTION]: $gettext(`Mentions`),
+	[Notification.TYPE_COLLABORATOR_INVITE]: $gettext(`Collaborator invites`),
+	[Notification.TYPE_GAME_TROPHY_ACHIEVED]: $gettext(`Game trophies`),
+	[Notification.TYPE_SITE_TROPHY_ACHIEVED]: $gettext(`Site trophies`),
+	[Notification.TYPE_COMMUNITY_USER_NOTIFICATION]: $gettext(`Community actions`),
+	[Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY]: $gettext(`Community featured firesides`),
+	[Notification.TYPE_QUEST_NOTIFICATION]: $gettext(`Quests`),
+	[Notification.TYPE_CHARGED_STICKER]: $gettext(`Charged stickers`),
+	[Notification.TYPE_SUPPORTER_MESSAGE]: $gettext(`Creator thank-you messages`),
+} as const;

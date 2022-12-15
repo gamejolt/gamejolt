@@ -291,7 +291,8 @@ function _onFiresideStickerPlaced(placement: StickerPlacement) {
 
 			const sticker = allStickers.value[stickers.value.length + extraCount];
 
-			trailingKettle.addKernel(sticker!.img_url, {
+			trailingKettle.addKernel({
+				kernelImage: sticker!.img_url,
 				...baseKernelOptions,
 				popAngle: -popAngle,
 			});
@@ -320,7 +321,8 @@ function _onFiresideStickerPlaced(placement: StickerPlacement) {
 		kettle = leadingKettle;
 	}
 
-	kettle.addKernel(img_url, {
+	kettle.addKernel({
+		kernelImage: img_url,
 		...baseKernelOptions,
 		popAngle,
 		reverse: true,

@@ -16,7 +16,8 @@ export type ContentContext =
 	| 'chat-message'
 	| 'fireside-chat-message'
 	| 'chat-command'
-	| 'quest-stage-description';
+	| 'quest-stage-description'
+	| 'supporter-message';
 
 export enum ContextCapabilityType {
 	TextBold,
@@ -315,6 +316,11 @@ export class ContextCapabilities {
 					ContextCapabilityType.Heading,
 					ContextCapabilityType.Mention,
 					ContextCapabilityType.Gif,
+				]);
+			case 'supporter-message':
+				return new ContextCapabilities([
+					ContextCapabilityType.TextBold,
+					ContextCapabilityType.TextItalic,
 				]);
 
 			default:

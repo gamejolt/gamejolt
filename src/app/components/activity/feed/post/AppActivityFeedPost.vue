@@ -107,12 +107,6 @@ const shouldShowIsPinned = computed(() => {
 	return post.value.getPinContextFor(route) !== null;
 });
 
-const shouldShowDate = computed(() => {
-	// We always show in SSR because this is how crawlers find the link to
-	// click into the post.
-	return import.meta.env.SSR || feed.shouldShowDates;
-});
-
 const isBlocked = computed(() => feedShouldBlockPost(post.value, route));
 const shouldBlock = computed(() => !hasBypassedBlock.value && isBlocked.value);
 
@@ -240,7 +234,6 @@ function onPostUnpinned(item: EventItem) {
 						follow-location="feed"
 						:feed="feed"
 						:show-pinned="shouldShowIsPinned"
-						:show-date="shouldShowDate"
 						:date-link="linkResolved"
 						:is-new="isNew"
 					/>

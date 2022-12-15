@@ -14,7 +14,6 @@ import {
 	validateUsername,
 } from '../../../../_common/form-vue/validators';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { User } from '../../../../_common/user/user.model';
 import { UserAvatarModal } from '../../user/avatar-modal/avatar-modal.service';
@@ -141,15 +140,15 @@ async function chooseAvatar() {
 	<AppForm :controller="form">
 		<div class="-form">
 			<section class="-message">
-				<h3 class="section-header">
-					<AppTranslate>Let's get you set up!</AppTranslate>
-				</h3>
+				<h1 class="section-header text-display">
+					{{ $gettext(`Let's get you set up!`) }}
+				</h1>
 			</section>
 
 			<section class="-avatar">
 				<AppEditableOverlay @click="chooseAvatar()">
 					<template #overlay>
-						<AppTranslate>Change</AppTranslate>
+						{{ $gettext(`Change`) }}
 					</template>
 					<AppUserAvatar :user="user" />
 				</AppEditableOverlay>
@@ -159,7 +158,7 @@ async function chooseAvatar() {
 				<section class="-username">
 					<div class="-field-row">
 						<div class="-hello text-muted">
-							<AppTranslate>Hello! It'sa me,</AppTranslate>
+							{{ $gettext(`Hello! It'sa me,`) }}
 						</div>
 						<div class="-field">
 							<div class="-at text-muted">@</div>

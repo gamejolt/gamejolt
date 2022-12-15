@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import AppCommunityAddWidget from '../../../../_common/community/add-widget/add-widget.vue';
-import AppCommunityDiscoverWidget from '../../../../_common/community/discover-widget/discover-widget.vue';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { useAppStore } from '../../../store';
 import AppShellCbarCommunity from './AppShellCbarCommunity.vue';
@@ -35,9 +34,6 @@ const sortedCommunities = computed(() => {
 						:community="community"
 					/>
 				</transition-group>
-				<AppShellCbarItem>
-					<AppCommunityDiscoverWidget tooltip-placement="right" @contextmenu.prevent />
-				</AppShellCbarItem>
 				<AppShellCbarItem>
 					<AppCommunityAddWidget tooltip-placement="right" @contextmenu.prevent />
 				</AppShellCbarItem>

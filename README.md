@@ -56,7 +56,7 @@ We wanted to make it open source so everyone can get visibility into what we are
 
   * Mac users will also have to forward traffic from port 8443 to 443 to get around a security restriction (see note below)
 
->Note: First time running these will take longer than usual and the website/desktop may refresh multiple times.
+>Note: First time running these will take longer than usual.
 
 For more commands see [COMMANDS.md](COMMANDS.md).
 
@@ -65,14 +65,13 @@ For more commands see [COMMANDS.md](COMMANDS.md).
 Translations are done by the community. If you want to participate, feel free to join at https://poeditor.com/join/project/B4nWT6EgnD.
 
 ### Notes for Mac Users
-Listening on port 443 (the default port for https) requires root pri
-vileges, but we want to keep root usage to a minimum.
+Listening on port 443 (the default port for https) requires root privileges, but we want to keep root usage to a minimum.
 
 For this reason, the webserver listens on port 8443 instead, and then in a separate rooted process we can forward traffic from port 443 to port 8443.
 
-There are plenty of ways to do that (netcat, AuthBind, etc), personally I like using [socat](https://www.redhat.com/sysadmin/getting-started-socat):
+There are plenty of ways to do that, personally I like using [socat](https://www.redhat.com/sysadmin/getting-started-socat):
 - Install using `brew install socat`
 - Run the following while developing:
   ```
-  sudo socat tcp4-listen:443,bind=127.0.0.1,reuseaddr,fork tcp:127.0.0.0.1:8443
+  sudo socat tcp4-listen:443,bind=127.0.0.1,reuseaddr,fork tcp:127.0.0.1:8443
   ```
