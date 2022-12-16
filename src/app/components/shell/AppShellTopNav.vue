@@ -5,6 +5,7 @@ import { RouterLink } from 'vue-router';
 import { trackAppPromotionClick } from '../../../_common/analytics/analytics.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { AppClientHistoryNavigator } from '../../../_common/client/safe-exports';
+import { configShowStoreInMoreMenu } from '../../../_common/config/config.service';
 import { AppConfigLoaded } from '../../../_common/config/loaded';
 import { Connection } from '../../../_common/connection/connection-service';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -14,7 +15,6 @@ import { Screen } from '../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../_common/store/common-store';
 import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { imageGameJoltLogo, imageJolt } from '../../img/images';
 import { useAppStore } from '../../store/index';
 import { useGridStore } from '../grid/grid-store';
@@ -42,6 +42,9 @@ const shouldShowSearch = computed(() => !Screen.isXs && !isUserTimedOut.value);
 const shouldShowMenu = computed(() => Screen.isXs && !isUserTimedOut.value);
 const shouldShowDiscover = computed(() => !Screen.isXs && user.value && !isUserTimedOut.value);
 const shouldShowMoreMenu = computed(() => !Screen.isXs && !isUserTimedOut.value);
+const shouldShowStoreInMoreMenu = computed(
+	() => shouldShowMoreMenu.value && !user.value && configShowStoreInMoreMenu.value
+);
 const humanizedActivityCount = computed(() =>
 	unreadActivityCount.value < 100 ? unreadActivityCount.value : '99+'
 );
@@ -88,7 +91,6 @@ function _checkColWidths() {
 			<div v-app-observe-dimensions="_checkColWidths" class="-col">
 				<a
 					v-if="shouldShowMenu"
-					v-app-track-event="`top-nav:cbar:toggle`"
 					class="-small-cbar navbar-item"
 					:class="{
 						active: !!visibleLeftPane,
@@ -110,7 +112,6 @@ function _checkColWidths() {
 				</template>
 
 				<RouterLink
-					v-app-track-event="`top-nav:main-menu:home`"
 					class="navbar-item"
 					:class="{
 						active: $route.name === 'home',
@@ -135,20 +136,18 @@ function _checkColWidths() {
 
 				<RouterLink
 					v-if="shouldShowDiscover"
-					v-app-track-event="`top-nav:main-menu:discover`"
 					class="navbar-item"
 					:class="{ active: $route.name === 'discover.home' }"
 					:to="{ name: 'discover.home' }"
 				>
 					<AppJolticon icon="compass-needle" class="-section-icon" />
 					<strong class="text-upper">
-						<AppTranslate>Discover</AppTranslate>
+						{{ $gettext(`Discover`) }}
 					</strong>
 				</RouterLink>
 
 				<RouterLink
-					v-if="!Screen.isXs"
-					v-app-track-event="`top-nav:main-menu:store`"
+					v-if="!shouldShowStoreInMoreMenu"
 					class="navbar-item"
 					:class="{ active: String($route.name).startsWith('discover.games.') }"
 					:to="{
@@ -157,11 +156,14 @@ function _checkColWidths() {
 					}"
 				>
 					<strong class="text-upper">
-						<AppTranslate>Store</AppTranslate>
+						{{ $gettext(`Store`) }}
 					</strong>
 				</RouterLink>
 
-				<AppShellAltMenuPopover v-if="shouldShowMoreMenu" />
+				<AppShellAltMenuPopover
+					v-if="shouldShowMoreMenu"
+					:show-store="shouldShowStoreInMoreMenu"
+				/>
 			</div>
 		</div>
 
@@ -198,7 +200,7 @@ function _checkColWidths() {
 							})
 						"
 					>
-						<AppTranslate>Get App</AppTranslate>
+						{{ $gettext(`Get App`) }}
 					</AppButton>
 				</div>
 			</template>
@@ -232,19 +234,13 @@ function _checkColWidths() {
 				<template v-if="!user">
 					<ul class="navbar-items">
 						<li>
-							<a
-								v-app-track-event="`top-nav:login:click`"
-								:href="Environment.authBaseUrl + '/login'"
-							>
-								<AppTranslate>Log In</AppTranslate>
+							<a :href="Environment.authBaseUrl + '/login'">
+								{{ $gettext(`Log in`) }}
 							</a>
 						</li>
 						<li>
-							<a
-								v-app-track-event="`top-nav:join:click`"
-								:href="Environment.authBaseUrl + '/join'"
-							>
-								<AppTranslate>Sign Up</AppTranslate>
+							<a :href="Environment.authBaseUrl + '/join'">
+								{{ $gettext(`Sign up`) }}
 							</a>
 						</li>
 					</ul>

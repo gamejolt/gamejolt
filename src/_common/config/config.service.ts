@@ -152,6 +152,11 @@ export const configCanStreamDesktopVideo = new ConfigOptionBoolean(
 	false
 );
 
+export const configShowStoreInMoreMenu = new ConfigOptionBoolean(
+	'web_show_store_in_more_menu',
+	false
+);
+
 export const configShowSearchAutocomplete = new ConfigOptionBoolean(
 	'web_show_search_autocomplete',
 	true
