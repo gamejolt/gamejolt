@@ -54,7 +54,6 @@ import { useCommonStore } from '../../../_common/store/common-store';
 import { EventSubscription } from '../../../_common/system/event/event-topic';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppUserCard from '../../../_common/user/card/AppUserCard.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import { onFiresideStart } from '../../components/grid/client.service';
@@ -204,98 +203,104 @@ async function refreshQuests() {
 			<AppPageContainer xl>
 				<template #left>
 					<template v-if="Screen.isDesktop">
-						<AppUserCard :user="user!" />
+						<div class="-top-spacer" />
+
+						<AppStickerChargeCard header-charge allow-fully-charged-text />
+						<AppSpacer vertical :scale="8" />
+
+						<template v-if="user">
+							<AppDailyQuests
+								disable-on-expiry
+								single-row
+								:force-loading="isLoadingQuests"
+							/>
+
+							<AppSpacer
+								v-if="isQuestStoreLoading || dailyQuests.length > 0"
+								vertical
+								:scale="8"
+							/>
+						</template>
+
+						<RouterLink :to="{ name: routeQuests.name }">
+							<img
+								class="-event-banner img-responsive"
+								:src="imagePseudoFeatureBanner"
+							/>
+						</RouterLink>
+						<AppSpacer vertical :scale="8" />
 
 						<AppInviteCard :user="user!" elevate />
 
-						<template v-if="hasGamesSection">
-							<div class="clearfix">
-								<div class="pull-right">
-									<AppButton
-										v-app-tooltip="$gettext(`Add Game`)"
-										icon="add"
-										circle
-										trans
-										:to="{ name: 'dash.games.add' }"
-									/>
+						<template v-if="false">
+							<template v-if="hasGamesSection">
+								<div class="clearfix">
+									<div class="pull-right">
+										<AppButton
+											v-app-tooltip="$gettext(`Add Game`)"
+											icon="add"
+											circle
+											trans
+											:to="{ name: 'dash.games.add' }"
+										/>
+									</div>
+									<h4 class="section-header">
+										<AppTranslate>Manage Games</AppTranslate>
+									</h4>
 								</div>
-								<h4 class="section-header">
-									<AppTranslate>Manage Games</AppTranslate>
-								</h4>
-							</div>
 
-							<template v-if="hasGameFilter">
-								<div>
-									<input
-										v-model="gameFilterQuery"
-										type="search"
-										class="form-control"
-										:placeholder="$gettext(`Filter games`)"
-									/>
-								</div>
-								<br />
+								<template v-if="hasGameFilter">
+									<div>
+										<input
+											v-model="gameFilterQuery"
+											type="search"
+											class="form-control"
+											:placeholder="$gettext(`Filter games`)"
+										/>
+									</div>
+									<br />
+								</template>
+
+								<nav class="-game-list platform-list">
+									<ul>
+										<li v-for="game of filteredGames" :key="game.id">
+											<RouterLink
+												v-app-track-event="`activity:quick-game`"
+												:to="{
+													name: 'dash.games.manage.game.overview',
+													params: { id: game.id },
+												}"
+												:title="
+													(game.ownerName ? `@${game.ownerName}/` : '') +
+													game.title
+												"
+											>
+												<template v-if="game.ownerName">
+													<small>@{{ game.ownerName }}</small>
+													/
+												</template>
+												{{ game.title }}
+											</RouterLink>
+										</li>
+									</ul>
+								</nav>
+
+								<p v-if="isShowAllGamesVisible">
+									<a
+										v-app-track-event="`activity:quick-game-all`"
+										class="link-muted"
+										@click="isShowingAllGames = !isShowingAllGames"
+									>
+										<AppTranslate>Show all</AppTranslate>
+									</a>
+								</p>
 							</template>
-
-							<nav class="-game-list platform-list">
-								<ul>
-									<li v-for="game of filteredGames" :key="game.id">
-										<RouterLink
-											v-app-track-event="`activity:quick-game`"
-											:to="{
-												name: 'dash.games.manage.game.overview',
-												params: { id: game.id },
-											}"
-											:title="
-												(game.ownerName ? `@${game.ownerName}/` : '') +
-												game.title
-											"
-										>
-											<template v-if="game.ownerName">
-												<small>@{{ game.ownerName }}</small>
-												/
-											</template>
-											{{ game.title }}
-										</RouterLink>
-									</li>
-								</ul>
-							</nav>
-
-							<p v-if="isShowAllGamesVisible">
-								<a
-									v-app-track-event="`activity:quick-game-all`"
-									class="link-muted"
-									@click="isShowingAllGames = !isShowingAllGames"
-								>
-									<AppTranslate>Show all</AppTranslate>
-								</a>
-							</p>
 						</template>
 					</template>
 				</template>
 
 				<template v-if="!Screen.isMobile" #right>
-					<AppStickerChargeCard header-charge allow-fully-charged-text />
-					<AppSpacer vertical :scale="8" />
-
-					<template v-if="user">
-						<AppDailyQuests
-							disable-on-expiry
-							single-row
-							:force-loading="isLoadingQuests"
-						/>
-
-						<AppSpacer
-							v-if="isQuestStoreLoading || dailyQuests.length > 0"
-							vertical
-							:scale="8"
-						/>
-					</template>
-
-					<RouterLink :to="{ name: routeQuests.name }">
-						<img class="-event-banner img-responsive" :src="imagePseudoFeatureBanner" />
-					</RouterLink>
-
-					<AppSpacer vertical :scale="8" />
+					<div class="-top-spacer" />
 
 					<AppHomeFireside
 						:featured-fireside="featuredFireside"
@@ -342,6 +347,11 @@ async function refreshQuests() {
 </template>
 
 <style lang="stylus" scoped>
+// We add this margin to try to shift the page content below the For You |
+// Following tabs.
+.-top-spacer
+	margin-top: 60px
+
 .-game-list
 	a
 		text-overflow()
