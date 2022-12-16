@@ -232,69 +232,67 @@ async function refreshQuests() {
 
 						<AppInviteCard :user="user!" elevate />
 
-						<template v-if="false">
-							<template v-if="hasGamesSection">
-								<div class="clearfix">
-									<div class="pull-right">
-										<AppButton
-											v-app-tooltip="$gettext(`Add Game`)"
-											icon="add"
-											circle
-											trans
-											:to="{ name: 'dash.games.add' }"
-										/>
-									</div>
-									<h4 class="section-header">
-										<AppTranslate>Manage Games</AppTranslate>
-									</h4>
+						<template v-if="hasGamesSection">
+							<div class="clearfix">
+								<div class="pull-right">
+									<AppButton
+										v-app-tooltip="$gettext(`Add Game`)"
+										icon="add"
+										circle
+										trans
+										:to="{ name: 'dash.games.add' }"
+									/>
 								</div>
+								<h4 class="section-header">
+									<AppTranslate>Manage Games</AppTranslate>
+								</h4>
+							</div>
 
-								<template v-if="hasGameFilter">
-									<div>
-										<input
-											v-model="gameFilterQuery"
-											type="search"
-											class="form-control"
-											:placeholder="$gettext(`Filter games`)"
-										/>
-									</div>
-									<br />
-								</template>
-
-								<nav class="-game-list platform-list">
-									<ul>
-										<li v-for="game of filteredGames" :key="game.id">
-											<RouterLink
-												v-app-track-event="`activity:quick-game`"
-												:to="{
-													name: 'dash.games.manage.game.overview',
-													params: { id: game.id },
-												}"
-												:title="
-													(game.ownerName ? `@${game.ownerName}/` : '') +
-													game.title
-												"
-											>
-												<template v-if="game.ownerName">
-													<small>@{{ game.ownerName }}</small>
-													/
-												</template>
-												{{ game.title }}
-											</RouterLink>
-										</li>
-									</ul>
-								</nav>
-
-								<p v-if="isShowAllGamesVisible">
-									<a
-										v-app-track-event="`activity:quick-game-all`"
-										class="link-muted"
-										@click="isShowingAllGames = !isShowingAllGames"
-									>
-										<AppTranslate>Show all</AppTranslate>
-									</a>
-								</p>
+							<template v-if="hasGameFilter">
+								<div>
+									<input
+										v-model="gameFilterQuery"
+										type="search"
+										class="form-control"
+										:placeholder="$gettext(`Filter games`)"
+									/>
+								</div>
+								<br />
 							</template>
+
+							<nav class="-game-list platform-list">
+								<ul>
+									<li v-for="game of filteredGames" :key="game.id">
+										<RouterLink
+											v-app-track-event="`activity:quick-game`"
+											:to="{
+												name: 'dash.games.manage.game.overview',
+												params: { id: game.id },
+											}"
+											:title="
+												(game.ownerName ? `@${game.ownerName}/` : '') +
+												game.title
+											"
+										>
+											<template v-if="game.ownerName">
+												<small>@{{ game.ownerName }}</small>
+												/
+											</template>
+											{{ game.title }}
+										</RouterLink>
+									</li>
+								</ul>
+							</nav>
+
+							<p v-if="isShowAllGamesVisible">
+								<a
+									v-app-track-event="`activity:quick-game-all`"
+									class="link-muted"
+									@click="isShowingAllGames = !isShowingAllGames"
+								>
+									<AppTranslate>Show all</AppTranslate>
+								</a>
+							</p>
 						</template>
 					</template>
 				</template>
