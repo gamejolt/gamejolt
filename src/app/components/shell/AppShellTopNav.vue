@@ -2,10 +2,14 @@
 import { defineAsyncComponent } from '@vue/runtime-core';
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import { trackAppPromotionClick } from '../../../_common/analytics/analytics.service';
+import { run } from '../../../utils/utils';
+import {
+	trackAppPromotionClick,
+	trackExperimentEngagement,
+} from '../../../_common/analytics/analytics.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { AppClientHistoryNavigator } from '../../../_common/client/safe-exports';
-import { configShowStoreInMoreMenu } from '../../../_common/config/config.service';
+import { configShowStoreInMoreMenu, ensureConfig } from '../../../_common/config/config.service';
 import { AppConfigLoaded } from '../../../_common/config/loaded';
 import { Connection } from '../../../_common/connection/connection-service';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -83,6 +87,11 @@ function _checkColWidths() {
 
 	baseMinColWidth.value = max;
 }
+
+run(async () => {
+	await ensureConfig();
+	trackExperimentEngagement(configShowStoreInMoreMenu);
+});
 </script>
 
 <template>
