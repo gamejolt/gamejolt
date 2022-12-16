@@ -1,13 +1,14 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
+import { RouterLink, useRouter } from 'vue-router';
 import { debounce } from '../../../utils/utils';
 import { trackSearch, trackSearchAutocomplete } from '../../../_common/analytics/analytics.service';
 import { Community } from '../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import { Game } from '../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import AppRealmThumbnail from '../../../_common/realm/AppRealmThumbnail.vue';
+import { Realm } from '../../../_common/realm/realm-model';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { User } from '../../../_common/user/user.model';
 import AppUserVerifiedTick from '../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
@@ -24,6 +25,7 @@ const router = useRouter();
 const { isEmpty, query, setKeydownSpy, removeKeydownSpy, focusToken } = useSearchController()!;
 
 const selected = ref(0);
+const realms = ref<Realm[]>([]);
 const communities = ref<Community[]>([]);
 const games = ref<Game[]>([]);
 const users = ref<User[]>([]);
@@ -36,6 +38,7 @@ const isHidden = computed(() => isEmpty.value);
  * This needs to be in the order that they will show in the results list.
  */
 const items = computed(() => [
+	...realms.value,
 	...communities.value,
 	...libraryGames.value,
 	...games.value,
@@ -97,9 +100,10 @@ async function _sendSearch(newQuery: string) {
 		return;
 	}
 
-	communities.value = payload.communities.slice(0, 2);
-	games.value = payload.games.slice(0, 3);
-	users.value = payload.users.slice(0, 3);
+	realms.value = payload.realms.slice(0, 3);
+	communities.value = payload.communities.slice(0, 1);
+	games.value = payload.games.slice(0, 2);
+	users.value = payload.users.slice(0, 2);
 	libraryGames.value = payload.libraryGames.slice(0, 3);
 }
 
@@ -113,7 +117,9 @@ function selectActive() {
 		viewAll();
 	} else {
 		const item = items.value[selected.value - 1];
-		if (item instanceof Community) {
+		if (item instanceof Realm) {
+			selectRealm(item);
+		} else if (item instanceof Community) {
 			selectCommunity(item);
 		} else if (item instanceof Game) {
 			selectGame(item);
@@ -138,6 +144,15 @@ function viewAll() {
 	trackSearchAutocomplete({
 		query: query.value,
 		search_autocomplete_resource: 'all',
+	});
+}
+
+function selectRealm(realm: Realm) {
+	router.push(realm.routeLocation);
+
+	trackSearchAutocomplete({
+		query: query.value,
+		search_autocomplete_resource: 'realm',
 	});
 }
 
@@ -188,9 +203,9 @@ function selectLibraryGame(localGame: LocalDbGameType) {
 </script>
 
 <template>
-	<div class="search-autocomplete-popover">
+	<div class="search-autocomplete-popover fill-darkest">
 		<div v-if="isHidden" class="well sans-margin-bottom">
-			<AppTranslate>Enter your search query for maximum finding...</AppTranslate>
+			{{ $gettext(`Enter your search query for maximum finding...`) }}
 		</div>
 		<template v-else>
 			<!-- View All -->
@@ -200,17 +215,17 @@ function selectLibraryGame(localGame: LocalDbGameType) {
 					:class="{ active: selected === 0 }"
 					@mousedown="viewAll()"
 				>
-					<AppTranslate>Show all results...</AppTranslate>
+					{{ $gettext(`Show all results...`) }}
 				</a>
 			</div>
 
 			<!-- Installed Games -->
 			<template v-if="libraryGames.length">
-				<div class="popper-heading">
-					<AppTranslate>Installed Games</AppTranslate>
+				<div class="-heading">
+					{{ $gettext(`Installed games`) }}
 				</div>
 				<div class="list-group list-group-dark thin">
-					<router-link
+					<RouterLink
 						v-for="libraryGame of libraryGames"
 						:key="libraryGame.id"
 						class="-item -game list-group-item"
@@ -229,17 +244,39 @@ function selectLibraryGame(localGame: LocalDbGameType) {
 						</span>
 
 						{{ libraryGame.title }}
-					</router-link>
+					</RouterLink>
+				</div>
+			</template>
+
+			<!-- Realms -->
+			<template v-if="realms.length">
+				<div class="-heading">
+					{{ $gettext(`Realms`) }}
+				</div>
+				<div class="list-group list-group-dark thin">
+					<RouterLink
+						v-for="realm of realms"
+						:key="realm.id"
+						class="-item -realm list-group-item"
+						:to="realm.routeLocation"
+						:class="{ active: items[selected - 1] === realm }"
+					>
+						<span class="-thumb">
+							<AppRealmThumbnail :realm="realm" />
+						</span>
+
+						{{ realm.name }}
+					</RouterLink>
 				</div>
 			</template>
 
 			<!-- Communities -->
 			<template v-if="communities.length">
-				<div class="popper-heading">
-					<AppTranslate>Communities</AppTranslate>
+				<div class="-heading">
+					{{ $gettext(`Communities`) }}
 				</div>
 				<div class="list-group list-group-dark thin">
-					<router-link
+					<RouterLink
 						v-for="community of communities"
 						:key="community.id"
 						class="-item -community list-group-item"
@@ -251,17 +288,17 @@ function selectLibraryGame(localGame: LocalDbGameType) {
 						</span>
 
 						{{ community.name }}
-					</router-link>
+					</RouterLink>
 				</div>
 			</template>
 
 			<!-- Games -->
 			<template v-if="games.length">
-				<div class="popper-heading">
-					<AppTranslate>Games</AppTranslate>
+				<div class="-heading">
+					{{ $gettext(`Games`) }}
 				</div>
 				<div class="list-group list-group-dark thin">
-					<router-link
+					<RouterLink
 						v-for="game of games"
 						:key="game.id"
 						class="-item -game list-group-item"
@@ -276,17 +313,17 @@ function selectLibraryGame(localGame: LocalDbGameType) {
 						</span>
 
 						{{ game.title }}
-					</router-link>
+					</RouterLink>
 				</div>
 			</template>
 
 			<!-- Users -->
 			<template v-if="users.length">
-				<div class="popper-heading">
-					<AppTranslate>Users</AppTranslate>
+				<div class="-heading">
+					{{ $gettext(`Users`) }}
 				</div>
 				<div class="list-group list-group-dark thin">
-					<router-link
+					<RouterLink
 						v-for="user of users"
 						:key="user.id"
 						class="-item -user list-group-item"
@@ -306,7 +343,7 @@ function selectLibraryGame(localGame: LocalDbGameType) {
 							{{ ' ' }}
 							<span class="tiny text-muted">@{{ user.username }}</span>
 						</span>
-					</router-link>
+					</RouterLink>
 				</div>
 			</template>
 		</template>
@@ -314,6 +351,9 @@ function selectLibraryGame(localGame: LocalDbGameType) {
 </template>
 
 <style lang="stylus" scoped>
+.-heading
+	margin-left: $list-group-item-padding
+	font-weight: bold
 
 .-item
 	display: flex
@@ -325,6 +365,9 @@ function selectLibraryGame(localGame: LocalDbGameType) {
 	flex: none
 	width: 20px
 	margin-right: 8px
+
+.-realm .-thumb
+	width: 30px
 
 .-game .-thumb
 	width: 36px
