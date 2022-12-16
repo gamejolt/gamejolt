@@ -469,7 +469,7 @@ export function trackCreatorApply(params: { creator_landing_section: string }) {
 
 export function trackSearchAutocomplete(params: {
 	query: string;
-	search_autocomplete_resource: 'community' | 'game' | 'user' | 'library_game' | 'all';
+	search_autocomplete_resource: 'realm' | 'community' | 'game' | 'user' | 'library_game' | 'all';
 }) {
 	_trackEvent('search_autocomplete', params);
 }

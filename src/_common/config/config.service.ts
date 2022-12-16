@@ -152,6 +152,11 @@ export const configCanStreamDesktopVideo = new ConfigOptionBoolean(
 	false
 );
 
+export const configShowSearchAutocomplete = new ConfigOptionBoolean(
+	'web_show_search_autocomplete',
+	true
+);
+
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
 }
