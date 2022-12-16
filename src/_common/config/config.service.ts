@@ -152,6 +152,11 @@ export const configCanStreamDesktopVideo = new ConfigOptionBoolean(
 	false
 );
 
+export const configShowStoreInMoreMenu = new ConfigOptionBoolean(
+	'web_show_store_in_more_menu',
+	false
+);
+
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
 }

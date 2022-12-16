@@ -12,6 +12,12 @@ import { ClientSystemReportModal } from '../client/safe-exports';
 import AppShellAltMenuDevelopers from './AppShellAltMenuDevelopers.vue';
 import AppShellAltMenuExtra from './AppShellAltMenuExtra.vue';
 
+defineProps({
+	showStore: {
+		type: Boolean,
+	},
+});
+
 const moreMenuShowing = ref(false);
 
 function showSystemReport() {
@@ -49,6 +55,18 @@ function showSystemReport() {
 					>
 						<AppJolticon icon="download-box" />
 						{{ $gettext(`Get the app`) }}
+					</RouterLink>
+
+					<RouterLink
+						v-if="showStore"
+						class="list-group-item has-icon"
+						:to="{
+							name: 'discover.games.list._fetch',
+							params: { section: null },
+						}"
+					>
+						<AppJolticon icon="gamepad" />
+						{{ $gettext(`Store`) }}
 					</RouterLink>
 
 					<RouterLink
