@@ -80,6 +80,23 @@ const highlight = computed(() => {
 					<AppJolticon class="-control-icon" icon="books" />
 				</a>
 			</AppShellCbarItem>
+
+			<!-- Backpack -->
+			<AppShellCbarItem
+				class="-control"
+				:highlight="highlight"
+				:is-active="visibleLeftPane === 'backpack'"
+				is-control
+			>
+				<a
+					v-app-tooltip.right="$gettext(`Backpack`)"
+					v-app-track-event="`cbar:backpack:toggle`"
+					class="-control-item"
+					@click="toggleLeftPane('backpack')"
+				>
+					<AppJolticon class="-control-icon" icon="other-os" />
+				</a>
+			</AppShellCbarItem>
 		</template>
 
 		<hr v-if="Screen.isXs || user" class="-hr" />
