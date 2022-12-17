@@ -156,7 +156,7 @@ run(async () => {
 				</RouterLink>
 
 				<RouterLink
-					v-if="!shouldShowStoreInMoreMenu"
+					v-if="!Screen.isXs && !shouldShowStoreInMoreMenu"
 					class="navbar-item"
 					:class="{ active: String($route.name).startsWith('discover.games.') }"
 					:to="{
