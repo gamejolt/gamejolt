@@ -50,7 +50,7 @@ export default class AppChatUserPopover extends Vue {
 	}
 
 	get isModerator() {
-		const role = tryGetRoomRole(this.chat, this.room, this.user);
+		const role = tryGetRoomRole(this.room, this.user);
 		return role === 'moderator';
 	}
 
@@ -73,7 +73,7 @@ export default class AppChatUserPopover extends Vue {
 			return false;
 		}
 
-		return userCanModerateOtherUser(this.chat, this.room, this.chat.currentUser, this.user);
+		return userCanModerateOtherUser(this.room, this.chat.currentUser, this.user);
 	}
 
 	get canChangeModerator() {

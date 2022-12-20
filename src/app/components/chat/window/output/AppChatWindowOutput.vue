@@ -68,14 +68,12 @@ let _isOnScrollQueued = false;
 let _lastScrollMessageId: number | undefined;
 let _lastAutoscrollOffset: number | undefined;
 
-const messages = computed(() => chat.value.messages[room.value.id] || []);
+const messages = computed(() => room.value.messages);
+const queuedMessages = computed(() => room.value.queuedMessages);
+
 const oldestMessage = computed(() => (messages.value.length ? messages.value[0] : null));
 const newestMessage = computed(() =>
 	messages.value.length ? messages.value[messages.value.length - 1] : null
-);
-
-const queuedMessages = computed(() =>
-	chat.value.messageQueue.filter(i => i.room_id === room.value.id)
 );
 
 const allMessages = computed(() => [...messages.value, ...queuedMessages.value]);
@@ -162,7 +160,7 @@ async function loadOlder() {
 	const firstMessage = oldestMessage.value;
 
 	try {
-		await loadOlderChatMessages(chat.value, room.value.id);
+		await loadOlderChatMessages(room.value);
 	} catch (e) {
 		console.error(e);
 	}

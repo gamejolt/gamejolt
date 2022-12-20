@@ -1,5 +1,5 @@
 import { markRaw, reactive } from 'vue';
-import { arrayRemove, numberSort } from '../../../utils/array';
+import { arrayRemove } from '../../../utils/array';
 import { createLogger } from '../../../utils/logging';
 import { commonStore } from '../../../_common/store/common-store';
 import { EventTopic } from '../../../_common/system/event/event-topic';
@@ -49,6 +49,7 @@ export class ChatClient {
 	groupRooms: ChatRoom[] = [];
 
 	room: ChatRoom | null = null;
+
 	/**
 	 * Used to check which room is currently being polled.
 	 * We are only allowing polling of one room simultaneously
@@ -57,13 +58,9 @@ export class ChatClient {
 
 	// The following are indexed by room ID.
 	roomChannels: { [k: string]: ChatRoomChannel } = {};
-	messages: { [k: string]: ChatMessage[] } = {};
-	usersOnline: { [k: string]: ChatUserCollection } = {};
-	roomMembers: { [k: string]: ChatUserCollection } = {};
 	notifications: { [k: string]: number } = {};
 	isFocused = true;
 
-	messageQueue: ChatMessage[] = [];
 	messageEditing: null | ChatMessage = null;
 
 	/**
@@ -111,15 +108,10 @@ export function clearChat(chat: ChatClient) {
 	chat.pollingRoomId = -1;
 
 	chat.room = null;
+	chat.groupRooms = [];
 
-	// The following are indexed by roomId
-	chat.messages = {};
-	chat.usersOnline = {};
-	chat.roomMembers = {};
 	chat.notifications = {};
 	chat.isFocused = true;
-
-	chat.messageQueue = [];
 
 	chat.userChannel = null;
 	chat.roomChannels = {};
@@ -152,26 +144,11 @@ async function joinRoomChannel(chat: ChatClient, roomId: number) {
  */
 export function setupChatRoom(chat: ChatClient, room: ChatRoom, messages: ChatMessage[]) {
 	if (isRoomInstanced(chat, room.id) || !isInChatRoom(chat, room.id)) {
-		if (room.type === ChatRoom.ROOM_PM) {
-			// We need to rename the room to the username
-			const friend = chat.friendsList.getByRoom(room.id);
-			if (friend) {
-				room.user = friend;
-			}
-		}
-		// Set the room info
-		chat.messages[room.id] = [];
-		chat.roomMembers[room.id] = new ChatUserCollection(
-			chat,
-			room.isFiresideRoom ? ChatUserCollection.TYPE_FIRESIDE : ChatUserCollection.TYPE_ROOM,
-			room.members || []
-		);
-
 		// Only set the room as "the" active room when it's not instanced.
 		if (!isRoomInstanced(chat, room.id)) {
 			setChatRoom(chat, room);
 		}
-		processNewChatOutput(chat, room.id, messages, true);
+		processNewChatOutput(room, messages, true);
 	}
 }
 
@@ -257,12 +234,9 @@ export function leaveChatRoom(chat: ChatClient, room: ChatRoom | null = null) {
 	}
 }
 
-export function queueChatMessage(
-	chat: ChatClient,
-	type: ChatMessageType,
-	content: string,
-	roomId: number
-) {
+export function queueChatMessage(room: ChatRoom, type: ChatMessageType, content: string) {
+	const { chat } = room;
+
 	if (chat.currentUser === null) {
 		return;
 	}
@@ -273,7 +247,7 @@ export function queueChatMessage(
 			id: tempId,
 			user_id: chat.currentUser.id,
 			user: chat.currentUser,
-			room_id: roomId,
+			room_id: room.id,
 			type,
 			content,
 			logged_on: new Date(),
@@ -281,23 +255,21 @@ export function queueChatMessage(
 		})
 	) as ChatMessage;
 
-	setTimeSplit(chat, roomId, message);
-
-	chat.messageQueue.push(message);
-
-	sendChatMessage(chat, message);
+	setTimeSplit(room, message);
+	room.queuedMessages.push(message);
+	sendChatMessage(room, message);
 }
 
-export function setTimeSplit(chat: ChatClient, roomId: number, message: ChatMessage) {
+export function setTimeSplit(room: ChatRoom, message: ChatMessage) {
 	message.showAvatar = false;
 	message.showMeta = true;
 	message.dateSplit = false;
 
-	let messages = chat.messages[roomId];
+	let messages = room.messages;
 
 	// For queued messages, we also factor in the other queued messages.
 	if (message._isQueued) {
-		messages = messages.concat(chat.messageQueue.filter(i => i.room_id === roomId));
+		messages = messages.concat(room.queuedMessages);
 	}
 
 	// Find the message preceeding this one.
@@ -346,33 +318,27 @@ export function setTimeSplit(chat: ChatClient, roomId: number, message: ChatMess
 	}
 }
 
-function outputMessage(
-	chat: ChatClient,
-	roomId: number,
-	message: ChatMessage,
-	isHistorical: boolean
-) {
-	const isInstanced = isRoomInstanced(chat, roomId);
-	if (!isInstanced && (!chat.room || !isInChatRoom(chat, roomId))) {
+function outputMessage(room: ChatRoom, message: ChatMessage, isHistorical: boolean) {
+	const isInstanced = isRoomInstanced(room.chat, room.id);
+	if (!isInstanced && (!room || !isInChatRoom(room.chat, room.id))) {
 		return;
 	}
 
 	message.logged_on = new Date(message.logged_on);
-	setTimeSplit(chat, roomId, message);
+	setTimeSplit(room, message);
 
 	if (!isHistorical) {
-		if (isInstanced || (chat.room && !chat.room.isPrivateRoom)) {
-			newChatNotification(chat, roomId);
+		if (isInstanced || !room.isPrivateRoom) {
+			newChatNotification(room.chat, room.id);
 		}
 	}
 
 	// Push it into the room's message list.
-	chat.messages[roomId].push(message);
+	room.messages.push(message);
 }
 
 export function processNewChatOutput(
-	chat: ChatClient,
-	roomId: number,
+	room: ChatRoom,
 	messages: ChatMessage[],
 	isHistorical: boolean
 ) {
@@ -381,7 +347,7 @@ export function processNewChatOutput(
 	}
 
 	messages.forEach(message => {
-		outputMessage(chat, message.room_id, message, isHistorical);
+		outputMessage(room, message, isHistorical);
 
 		if (!isHistorical) {
 			// Emit an event that we've sent out a new message.
@@ -389,16 +355,22 @@ export function processNewChatOutput(
 		}
 	});
 
-	// After we received and output the message(s), update the time split for queued messages.
-	chat.messageQueue.filter(i => i.room_id === roomId).forEach(i => setTimeSplit(chat, roomId, i));
+	// After we received and output the message(s), update the time split for
+	// queued messages.
+	room.queuedMessages.forEach(i => setTimeSplit(room, i));
 }
 
-async function sendChatMessage(chat: ChatClient, message: ChatMessage) {
+async function sendChatMessage(room: ChatRoom, message: ChatMessage) {
+	const roomChannel = room.chat.roomChannels[room.id];
+	if (!roomChannel) {
+		return;
+	}
+
 	message._error = false;
 	message._isProcessing = true;
 
 	try {
-		const data = await chat.roomChannels[message.room_id].pushMessage(message.content);
+		const data = await roomChannel.pushMessage(message.content);
 
 		// Upon receiving confirmation from the server, remove the message from
 		// the queue and add the received message to the list.
@@ -408,12 +380,12 @@ async function sendChatMessage(chat: ChatClient, message: ChatMessage) {
 		// same time so it seems like the message gets replaced seamlessly,
 		// instead of having a very slight (but noticable) delay between adding
 		// the new message and removing the queued one.
-		arrayRemove(chat.messageQueue, i => i.id === message.id);
+		arrayRemove(room.queuedMessages, i => i.id === message.id);
 
 		const newMessage = reactive(new ChatMessage(data)) as ChatMessage;
-		chat.roomChannels[message.room_id].processNewRoomMessage(newMessage);
+		roomChannel.processNewRoomMessage(newMessage);
 	} catch (e) {
-		chat.logger.error('Received error sending message', e);
+		room.chat.logger.error('Received error sending message', e);
 		message._error = true;
 		message._isProcessing = false;
 	}
@@ -433,43 +405,39 @@ export function setMessageEditing(chat: ChatClient, message: ChatMessage | null)
 	chat.messageEditing = message;
 }
 
-export function retryFailedQueuedMessage(chat: ChatClient, message: ChatMessage) {
+export function retryFailedQueuedMessage(room: ChatRoom, message: ChatMessage) {
 	if (!message._isQueued || !message._error) {
 		return;
 	}
 
-	// Assign new logged on time and order queued messages by date.
 	message.logged_on = new Date();
+	arrayRemove(room.queuedMessages, i => i.id === message.id);
 
-	const roomQueuedMessages = arrayRemove(chat.messageQueue, i => i.room_id === message.room_id);
-	if (roomQueuedMessages) {
-		roomQueuedMessages.sort((a, b) => numberSort(a.logged_on.getTime(), b.logged_on.getTime()));
-		chat.messageQueue.push(...roomQueuedMessages);
-	}
+	// We need to update time splits in case it changed after removing the
+	// message.
+	room.queuedMessages.forEach(i => setTimeSplit(room, i));
 
-	// After that, update the timesplit of those queued messages to make sure it's still correct after reordering.
-	chat.messageQueue
-		.filter(i => i.room_id === message.room_id)
-		.forEach(i => setTimeSplit(chat, message.room_id, i));
-
-	sendChatMessage(chat, message);
+	// Now we try to send again.
+	sendChatMessage(room, message);
 }
 
-export async function loadOlderChatMessages(chat: ChatClient, roomId: number) {
+export async function loadOlderChatMessages(room: ChatRoom) {
+	const { chat } = room;
+
 	try {
-		const firstMessage = chat.messages[roomId][0];
-		const data = await chat.roomChannels[roomId].pushLoadMessages(firstMessage.logged_on);
+		const firstMessage = room.messages[0];
+		const data = await chat.roomChannels[room.id].pushLoadMessages(firstMessage.logged_on);
 
 		const oldMessages = data.messages.map((i: any) => new ChatMessage(i));
 
 		// If no older messages, we reached the end of the history.
 		if (oldMessages.length > 0) {
-			const messages = [...oldMessages.reverse(), ...chat.messages[roomId]];
+			const messages = [...oldMessages.reverse(), ...room.messages];
 
 			// We have to clear out all messages and add them again so that we
 			// calculate proper date splits and what not.
-			chat.messages[roomId] = [];
-			processNewChatOutput(chat, roomId, messages, true);
+			room.messages = [];
+			processNewChatOutput(room, messages, true);
 		}
 	} catch {
 		throw new Error(`Failed to load messages.`);
@@ -527,7 +495,7 @@ export async function addGroupRoom(chat: ChatClient, members: number[]) {
 	}
 
 	const response = await chat.userChannel.pushGroupAdd(members);
-	const newGroupRoom = new ChatRoom(response.room);
+	const newGroupRoom = new ChatRoom(chat, response.room);
 	chat.groupRooms.push(newGroupRoom);
 	enterChatRoom(chat, newGroupRoom.id);
 }
@@ -634,7 +602,9 @@ export function kickGroupMember(chat: ChatClient, room: ChatRoom, memberId: numb
  * to reflect that status.
  */
 export function recollectChatRoomMembers(chat: ChatClient) {
-	Object.values(chat.roomMembers).forEach(i => i.recollect());
+	for (const room of chat.groupRooms) {
+		room.memberCollection.recollect();
+	}
 }
 
 /**
@@ -642,13 +612,13 @@ export function recollectChatRoomMembers(chat: ChatClient) {
  * This is only possible if the role is bootstrapped onto the input user,
  * or if the user is currently in the room.
  */
-export function tryGetRoomRole(chat: ChatClient, room: ChatRoom, user: ChatUser) {
+export function tryGetRoomRole(room: ChatRoom, user: ChatUser) {
 	if (room.owner_id === user.id) {
 		return 'owner';
 	}
 
 	// The room userCollection always has the most up to date role information.
-	const roomUser = chat.roomMembers[room.id].get(user);
+	const roomUser = room.memberCollection.get(user);
 	if (roomUser && roomUser.role !== null) {
 		return roomUser.role;
 	}
@@ -672,19 +642,14 @@ export function tryGetRoomRole(chat: ChatClient, room: ChatRoom, user: ChatUser)
 /**
  * Returns whether `user` can moderate `otherUser` within the given `room`.
  */
-export function userCanModerateOtherUser(
-	chat: ChatClient,
-	room: ChatRoom,
-	user: ChatUser,
-	otherUser: ChatUser
-) {
+export function userCanModerateOtherUser(room: ChatRoom, user: ChatUser, otherUser: ChatUser) {
 	// Cannot moderate yourself.
 	if (user.id === otherUser.id) {
 		return false;
 	}
 
-	const userRole = tryGetRoomRole(chat, room, user);
-	const otherUserRole = tryGetRoomRole(chat, room, otherUser);
+	const userRole = tryGetRoomRole(room, user);
+	const otherUserRole = tryGetRoomRole(room, otherUser);
 
 	// Owners can always moderate.
 	if (userRole === 'owner') {

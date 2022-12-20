@@ -40,15 +40,11 @@ const isOnline = computed(() => {
 	return isUserOnline(chat.value, item.value.id);
 });
 
-const title = computed(() => {
-	return item.value instanceof ChatUser
-		? item.value.display_name
-		: getChatRoomTitle(item.value, chat.value);
-});
+const title = computed(() =>
+	item.value instanceof ChatUser ? item.value.display_name : getChatRoomTitle(item.value)
+);
 
-const meta = computed(() => {
-	return item.value instanceof ChatUser ? `@${item.value.username}` : null;
-});
+const meta = computed(() => (item.value instanceof ChatUser ? `@${item.value.username}` : null));
 
 const hoverTitle = computed(() => {
 	const parts = [title.value];

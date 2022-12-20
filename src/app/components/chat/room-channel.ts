@@ -83,9 +83,9 @@ export async function createChatRoomChannel(
 	channelController.listenTo('user_updated', _onUserUpdated);
 	channelController.listenTo('message_update', _onUpdateMsg);
 	channelController.listenTo('message_remove', _onRemoveMsg);
+	channelController.listenTo('member_add', _onMemberAdd);
 	channelController.listenTo('member_leave', _onMemberLeave);
 	channelController.listenTo('owner_sync', _onOwnerSync);
-	channelController.listenTo('member_add', _onMemberAdd);
 	channelController.listenTo('room_update', _onRoomUpdate);
 	channelController.listenTo('kick_member', _onMemberKicked);
 
@@ -98,9 +98,6 @@ export async function createChatRoomChannel(
 		if (!instanced) {
 			setChatRoom(client, undefined);
 		}
-
-		delete client.roomMembers[roomId];
-		delete client.messages[roomId];
 	});
 
 	const presence = markRaw(new Presence(channel));
@@ -150,7 +147,7 @@ export async function createChatRoomChannel(
 
 			client.roomChannels[roomId] = markRaw(c);
 
-			_room.value = new ChatRoom(response.room);
+			_room.value = new ChatRoom(client, response.room);
 
 			const messages = response.messages.map((i: ChatMessage) => new ChatMessage(i));
 			messages.reverse();
@@ -174,10 +171,8 @@ export async function createChatRoomChannel(
 			// message in one, they receive it in the other. We can safely
 			// assume that they wouldn't try and use two windows to send
 			// messages in the same room at the same time.
-			const hasQueuedMessages = client.messageQueue.some(i => i.room_id === message.room_id);
-			const hasReceivedMessage = client.messages[message.room_id].some(
-				i => i.id === message.id
-			);
+			const hasQueuedMessages = room.value.queuedMessages.length > 0;
+			const hasReceivedMessage = room.value.messages.some(i => i.id === message.id);
 			if (hasQueuedMessages || hasReceivedMessage) {
 				return;
 			}
@@ -196,7 +191,7 @@ export async function createChatRoomChannel(
 	}
 
 	function _removeMessagesPastLimit(maxMessages: number) {
-		const messages = client.messages[roomId];
+		const { messages } = room.value;
 		const removalCount = messages.length - maxMessages;
 		if (removalCount <= 0) {
 			return;
@@ -204,7 +199,7 @@ export async function createChatRoomChannel(
 
 		messages.splice(0, removalCount);
 		if (messages.length > 0) {
-			setTimeSplit(client, roomId, messages[0]);
+			setTimeSplit(room.value, messages[0]);
 		}
 	}
 
@@ -212,13 +207,13 @@ export async function createChatRoomChannel(
 		const updatedUser = new ChatUser(data);
 		if (room.value.isGroupRoom) {
 			if (isInChatRoom(client, roomId)) {
-				client.roomMembers[roomId].update(updatedUser);
+				room.value.memberCollection.update(updatedUser);
 			}
 
 			room.value.updateRoleForUser(updatedUser);
 
 			// Sync the user update to the list of messages.
-			for (const message of client.messages[roomId]) {
+			for (const message of room.value.messages) {
 				if (message.user.id === updatedUser.id) {
 					Object.assign(message.user, updatedUser);
 				}
@@ -231,18 +226,16 @@ export async function createChatRoomChannel(
 			return;
 		}
 
-		const roomMessages = client.messages[roomId];
+		const { messages } = room.value;
 
 		// Get the two surrounding messages of the removed message.
-		const removedMessageIndex = roomMessages.findIndex(i => i.id === data.id);
+		const removedMessageIndex = messages.findIndex(i => i.id === data.id);
 		const previousMessage =
-			removedMessageIndex === 0 ? null : roomMessages[removedMessageIndex - 1];
+			removedMessageIndex === 0 ? null : messages[removedMessageIndex - 1];
 		const nextMessage =
-			removedMessageIndex === roomMessages.length - 1
-				? null
-				: roomMessages[removedMessageIndex + 1];
+			removedMessageIndex === messages.length - 1 ? null : messages[removedMessageIndex + 1];
 
-		arrayRemove(client.messages[roomId], i => i.id === data.id);
+		arrayRemove(messages, i => i.id === data.id);
 
 		// Recalc the time split of the surrounding messages. If for example the
 		// removed message was the first in a batch of user messages, removing
@@ -250,10 +243,10 @@ export async function createChatRoomChannel(
 		// Resetting the time split on the next (now first in batch) message
 		// shows the user header on that message.
 		if (previousMessage) {
-			setTimeSplit(client, roomId, previousMessage);
+			setTimeSplit(room.value, previousMessage);
 		}
 		if (nextMessage) {
-			setTimeSplit(client, roomId, nextMessage);
+			setTimeSplit(room.value, nextMessage);
 		}
 	}
 
@@ -262,22 +255,18 @@ export async function createChatRoomChannel(
 			return;
 		}
 
+		const message = room.value.messages.find(i => i.id === data.id);
+		if (!message) {
+			return;
+		}
+
 		const edited = new ChatMessage(data);
-
-		const index = client.messages[roomId].findIndex(msg => msg.id === data.id);
-		const message = client.messages[roomId][index];
-
 		message.content = edited.content;
 		message.edited_on = edited.edited_on;
 	}
 
 	function _onMemberLeave(data: MemberLeavePayload) {
-		const roomMembers = client.roomMembers[roomId];
-
-		if (roomMembers) {
-			roomMembers.remove(data.user_id);
-		}
-		arrayRemove(room.value.members, i => i.id === data.user_id);
+		room.value.memberCollection.remove(data.user_id);
 	}
 
 	function _onMemberKicked(data: ChatRoomMemberKickedPayload) {
@@ -292,7 +281,7 @@ export async function createChatRoomChannel(
 		const json = doc.toJson();
 
 		// Mark all messages by the kicked member as "removed".
-		for (const message of client.messages[roomId]) {
+		for (const message of room.value.messages) {
 			if (message.user.id === data.user_id) {
 				message.content = json;
 			}
@@ -302,16 +291,10 @@ export async function createChatRoomChannel(
 	}
 
 	function _onMemberAdd(data: MemberAddPayload) {
-		const roomMembers = client.roomMembers[roomId];
-
 		for (const member of data.members) {
 			const user = new ChatUser(member);
 
-			if (roomMembers) {
-				roomMembers.add(user);
-			}
-
-			room.value.members.push(user);
+			room.value.memberCollection.add(user);
 			room.value.updateRoleForUser(user);
 		}
 	}
@@ -331,8 +314,7 @@ export async function createChatRoomChannel(
 			return;
 		}
 
-		const roomMembers = client.roomMembers[room.value.id];
-		roomMembers.doBatchWork(() => {
+		room.value.memberCollection.doBatchWork(() => {
 			presence.list(_syncPresenceData);
 		});
 	}
@@ -342,27 +324,25 @@ export async function createChatRoomChannel(
 			return;
 		}
 
-		const roomMembers = client.roomMembers[room.value.id];
-		const user = roomMembers.get(+presenceId);
+		const { memberCollection } = room.value;
+		const user = memberCollection.get(+presenceId);
 		if (!user) {
 			return;
 		}
 
 		// We currently only sync the typing status.
 		user.typing = roomPresence.metas.some(i => i.typing);
-		roomMembers.update(user);
+		memberCollection.update(user);
 	}
 
 	// TODO: why is this here and not in the chat client?
 	function processNewRoomMessage(message: ChatMessage) {
-		const alreadyReceivedMessage = client.messages[message.room_id].some(
-			i => i.id === message.id
-		);
+		const alreadyReceivedMessage = room.value.messages.some(i => i.id === message.id);
 		if (alreadyReceivedMessage) {
 			return;
 		}
 
-		processNewChatOutput(client, roomId, [message], false);
+		processNewChatOutput(room.value, [message], false);
 		updateChatRoomLastMessageOn(client, message);
 
 		if (room.value.isFiresideRoom) {

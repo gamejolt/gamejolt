@@ -50,7 +50,6 @@ interface ChatRoleData {
 }
 
 export function getChatUserRoleData(
-	chat: ChatClient,
 	room: ChatRoom,
 	user: ChatUser,
 	extras: {
@@ -82,7 +81,7 @@ export function getChatUserRoleData(
 		};
 	}
 
-	if (tryGetRoomRole(chat, room, user) === 'moderator') {
+	if (tryGetRoomRole(room, user) === 'moderator') {
 		return {
 			icon: 'star',
 			tooltip: $gettext(`Chat Moderator`),

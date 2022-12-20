@@ -11,7 +11,7 @@ const { chatRoom, chatUsers, canManageCohosts, listableHostIds, setSidebar } =
 	useFiresideController()!;
 
 const users = computed(() =>
-	chatUsers.value?.collection.filter(i => {
+	chatUsers.value?.users.filter(i => {
 		if (!i.firesideHost || !i.firesideHost.needsPermissionToView) {
 			return true;
 		}

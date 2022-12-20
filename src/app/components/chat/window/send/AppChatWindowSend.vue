@@ -121,13 +121,13 @@ const isEditing = computed(() => !!chat.value.messageEditing);
 const editorModelId = computed(() => form.formModel.id);
 
 const typingText = computed(() => {
-	const { roomMembers, currentUser } = chat.value;
-	const usersOnline = roomMembers[room.value.id];
-	if (!usersOnline || usersOnline.collection.length === 0) {
+	const { currentUser } = chat.value;
+	const memberCollection = room.value.memberCollection;
+	if (memberCollection.count === 0) {
 		return [];
 	}
 
-	const typingNames = usersOnline.collection
+	const typingNames = memberCollection.users
 		.filter(user => user.typing)
 		.filter(user => user.id !== currentUser?.id)
 		.map(user => user.display_name);
@@ -229,7 +229,7 @@ function sendMessage({ content }: FormModel) {
 	const doc = ContentDocument.fromJson(content);
 	if (doc instanceof ContentDocument) {
 		const contentJson = doc.toJson();
-		queueChatMessage(chat.value, 'content', contentJson, room.value.id);
+		queueChatMessage(room.value, 'content', contentJson);
 	}
 }
 
@@ -312,7 +312,7 @@ function applyNextMessageTimeout(options: { ignoreLastMessageTimestamp: boolean 
 	}
 
 	if (currentUser) {
-		const userRole = tryGetRoomRole(chat.value, room.value, currentUser);
+		const userRole = tryGetRoomRole(room.value, currentUser);
 		if (userRole === 'owner' || userRole === 'moderator') {
 			return;
 		}
@@ -380,10 +380,11 @@ function onUpKeyPressed(event: KeyboardEvent) {
 	if (isEditing.value || hasContent.value) {
 		return;
 	}
-	const { messages, currentUser } = chat.value;
+	const { currentUser } = chat.value;
+	const { messages } = room.value;
 
 	// Find the last message sent by the current user.
-	const userMessages = messages[room.value.id].filter(msg => msg.user.id === currentUser?.id);
+	const userMessages = messages.filter(i => i.user.id === currentUser?.id);
 	const lastMessage = userMessages[userMessages.length - 1];
 
 	if (lastMessage) {

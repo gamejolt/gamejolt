@@ -440,7 +440,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	openMessaging() {
 		if (this.user && this.chat) {
-			const chatUser = this.chat.friendsList.collection.find(u => u.id === this.user!.id);
+			const chatUser = this.chat.friendsList.get(this.user!.id);
 			if (chatUser) {
 				if (Screen.isXs) {
 					this.store.toggleLeftPane('chat');

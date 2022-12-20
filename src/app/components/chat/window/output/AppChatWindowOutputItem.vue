@@ -160,12 +160,7 @@ const canRemoveMessage = computed(() => {
 	}
 
 	// Mods/Room owners can also remove the message.
-	return userCanModerateOtherUser(
-		chat.value,
-		room.value,
-		chat.value.currentUser,
-		message.value.user
-	);
+	return userCanModerateOtherUser(room.value, chat.value.currentUser, message.value.user);
 });
 
 const canEditMessage = computed(() => {
@@ -187,7 +182,7 @@ const canEditMessage = computed(() => {
 });
 
 const roleData = computed(() =>
-	getChatUserRoleData(chat.value, room.value, message.value.user, {
+	getChatUserRoleData(room.value, message.value.user, {
 		mesage: message.value,
 	})
 );
@@ -250,7 +245,7 @@ function onRowClick() {
 
 async function onMessageClick() {
 	if (hasError.value) {
-		retryFailedQueuedMessage(chat.value, message.value);
+		retryFailedQueuedMessage(room.value, message.value);
 	}
 }
 </script>

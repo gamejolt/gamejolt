@@ -36,10 +36,10 @@ const activeList = ref<ListTitle>('friends');
 const users = computed(() => {
 	switch (activeList.value) {
 		case 'chat':
-			return chatUsers.value?.collection || [];
+			return chatUsers.value?.users || [];
 
 		case 'friends':
-			return chat.value?.friendsList.collection || [];
+			return chat.value?.friendsList.users || [];
 
 		default:
 			return [];

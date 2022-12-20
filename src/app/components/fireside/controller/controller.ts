@@ -71,7 +71,6 @@ import { User } from '../../../../_common/user/user.model';
 import { BottomBarControl } from '../../../views/fireside/_bottom-bar/AppFiresideBottomBar.vue';
 import { leaveChatRoom } from '../../chat/client';
 import { ChatRoomChannel, createChatRoomChannel } from '../../chat/room-channel';
-import { ChatUserCollection } from '../../chat/user-collection';
 import { createGridFiresideChannel, GridFiresideChannel } from '../../grid/fireside-channel';
 import { createGridFiresideDMChannel, GridFiresideDMChannel } from '../../grid/fireside-dm-channel';
 import { GridStore } from '../../grid/grid-store';
@@ -244,7 +243,7 @@ export function createFiresideController(
 		if (!chatRoom.value) {
 			return undefined;
 		}
-		return chat.value?.roomMembers[chatRoom.value.id] as ChatUserCollection;
+		return chatRoom.value.memberCollection;
 	});
 
 	const stickerCount = computed(() => {

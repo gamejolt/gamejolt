@@ -15,7 +15,7 @@ export class ChatUserCollection {
 	onlineCount = 0;
 	offlineCount = 0;
 
-	private collection_: ChatUser[] = [];
+	private users_: ChatUser[] = [];
 	private byId_ = new Map<number, ChatUser>();
 	private byRoomId_ = new Map<number, ChatUser>();
 	private doingWork_ = false;
@@ -23,18 +23,22 @@ export class ChatUserCollection {
 	private firesideHosts_ = new Map<number, FiresideRTCHost>();
 
 	get count() {
-		return this.onlineCount + this.offlineCount;
+		return this.users_.length;
 	}
 
-	get collection() {
-		return this.collection_;
+	get users() {
+		return this.users_;
 	}
 
-	constructor(public chat: ChatClient, public type: RoomType, users: any[] = []) {
+	constructor(
+		public readonly chat: ChatClient,
+		public readonly type: RoomType,
+		users: any[] = []
+	) {
 		if (users && users.length) {
 			for (const user of users) {
 				const userModel = new ChatUser(user);
-				this.collection_.push(userModel);
+				this.users_.push(userModel);
 				this.indexUser(userModel);
 
 				if (user.isOnline) {
@@ -77,7 +81,7 @@ export class ChatUserCollection {
 			return;
 		}
 
-		this.collection_.push(user);
+		this.users_.push(user);
 		this._assignFiresideHostDataToUser(user);
 		this.indexUser(user);
 
@@ -97,7 +101,7 @@ export class ChatUserCollection {
 			return;
 		}
 
-		arrayRemove(this.collection_, i => i === user);
+		arrayRemove(this.users_, i => i === user);
 		this.byId_.delete(user.id);
 		if (user.room_id !== 0) {
 			this.byRoomId_.delete(user.room_id);
@@ -231,11 +235,11 @@ export class ChatUserCollection {
 		}
 
 		if (this.type === ChatUserCollection.TYPE_FRIEND) {
-			this.collection_ = sortCollection(this.chat, this.collection_, 'lastMessage');
+			this.users_ = sortCollection(this.chat, this.users_, 'lastMessage');
 		} else if (this.type === ChatUserCollection.TYPE_FIRESIDE) {
-			this.collection_ = sortCollection(this.chat, this.collection_, 'role');
+			this.users_ = sortCollection(this.chat, this.users_, 'role');
 		} else {
-			this.collection_ = sortCollection(this.chat, this.collection_, 'title');
+			this.users_ = sortCollection(this.chat, this.users_, 'title');
 		}
 	}
 
