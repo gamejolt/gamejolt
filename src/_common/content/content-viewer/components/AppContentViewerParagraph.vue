@@ -15,14 +15,18 @@ const { contentData } = toRefs(props);
 
 const owner = useContentOwnerController()!;
 
-const rootComponent = computed(() => (owner.contentRules.inlineParagraphs ? 'span' : 'p'));
 const children = computed(() => renderChildren(contentData.value.content));
 </script>
 
 <template>
-	<component :is="rootComponent">
+	<p :class="{ '-inline': owner.contentRules.inlineParagraphs }">
 		<template v-for="child in children" :key="child">
 			<component :is="child" />
 		</template>
-	</component>
+	</p>
 </template>
+
+<style lang="stylus" scoped>
+.-inline
+	display: inline
+</style>
