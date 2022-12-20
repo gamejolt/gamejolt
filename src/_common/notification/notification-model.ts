@@ -110,6 +110,7 @@ export class Notification extends Model {
 
 	user_id!: number;
 	type!: string;
+	is_feed!: boolean;
 	added_on!: number;
 	viewed_on!: number | null;
 
