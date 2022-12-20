@@ -23,7 +23,7 @@ import {
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
-import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../_common/filters/number';

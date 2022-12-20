@@ -10,7 +10,7 @@ import { CompetitionPeriodVoting } from '../../../../../_common/community/compet
 import { CommunityCompetitionEntry } from '../../../../../_common/community/competition/entry/entry.model';
 import { CommunityCompetitionEntrySubmitModal } from '../../../../../_common/community/competition/entry/submit-modal/submit-modal.service';
 import { CommunityCompetitionVotingCategory } from '../../../../../_common/community/competition/voting-category/voting-category.model';
-import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { formatDate } from '../../../../../_common/filters/date';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';

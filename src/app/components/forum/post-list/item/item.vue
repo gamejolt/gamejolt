@@ -4,7 +4,7 @@ import { setup } from 'vue-class-component';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
-import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatDate } from '../../../../../_common/filters/date';

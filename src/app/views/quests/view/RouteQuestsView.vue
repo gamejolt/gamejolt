@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { numberSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
-import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';

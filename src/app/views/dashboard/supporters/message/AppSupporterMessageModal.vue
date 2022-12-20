@@ -2,7 +2,7 @@
 import { computed, PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppButton from '../../../../../_common/button/AppButton.vue';
-import ContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
+import ContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';

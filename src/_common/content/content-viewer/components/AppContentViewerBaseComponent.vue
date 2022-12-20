@@ -1,6 +1,8 @@
-import { h } from 'vue';
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts">
+import { computed, h, PropType, toRefs } from 'vue';
+import { ContentRules } from '../../content-editor/content-rules';
 import { ContentObject } from '../../content-object';
+import AppContentViewerParagraph from './AppContentViewerParagraph.vue';
 import { AppContentViewerBlockquote } from './blockquote';
 import { AppContentViewerHardBreak } from './br';
 import { AppContentViewerCodeBlock } from './code/code';
@@ -12,7 +14,6 @@ import { AppContentViewerHorizontalRule } from './hr';
 import { AppContentViewerList } from './list';
 import { AppContentViewerListItem } from './list-item';
 import { AppContentViewerMediaItem } from './media-item';
-import { AppContentViewerParagraph } from './paragraph';
 import { AppContentViewerSpoiler } from './spoiler';
 import { AppContentViewerSticker } from './sticker';
 import { AppContentViewerText } from './text';
@@ -53,23 +54,54 @@ function getComponentType(data: ContentObject): any {
 	}
 }
 
-export function renderChildren(childObjects: ReadonlyArray<ContentObject>) {
+export function renderChildren(
+	childObjects: ReadonlyArray<ContentObject>,
+	contentRules?: ContentRules
+) {
 	const children = [];
 	if (childObjects) {
+		let prevWasParagraph = false;
+		const inlineParagraphs = contentRules?.inlineParagraphs === true;
+
 		for (const contentData of childObjects) {
+			const currentIsParagraph = contentData.type === 'paragraph';
+
+			// Add a space of padding around each paragraph we're trying to
+			// render inline.
+			if (inlineParagraphs && (prevWasParagraph || currentIsParagraph)) {
+				children.push(h('span', {}, ' '));
+			}
+
 			const childVNode = h(getComponentType(contentData), { contentData });
 			children.push(childVNode);
+			prevWasParagraph = currentIsParagraph;
 		}
 	}
 	return children;
 }
+</script>
 
-@Options({})
-export class AppContentViewerBaseComponent extends Vue {
-	@Prop(Array)
-	content!: ContentObject[];
+<script lang="ts" setup>
+const props = defineProps({
+	content: {
+		type: Array as PropType<ContentObject[]>,
+		required: true,
+	},
+	contentRules: {
+		type: Object as PropType<ContentRules>,
+		required: true,
+	},
+});
 
-	render() {
-		return h('div', {}, renderChildren(this.content));
-	}
-}
+const { content, contentRules } = toRefs(props);
+
+const children = computed(() => renderChildren(content.value, contentRules.value));
+</script>
+
+<template>
+	<div>
+		<template v-for="child in children" :key="child">
+			<component :is="child" />
+		</template>
+	</div>
+</template>
