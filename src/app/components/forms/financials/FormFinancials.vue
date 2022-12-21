@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, onUnmounted, ref } from 'vue';
 import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -24,6 +24,7 @@ import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { UserStripeManagedAccount } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
+import { UserTipaltiManagedAccount } from '../../../../_common/user/tipalti-managed-account/tipalti-managed-account';
 import {
 	CreatorStatusApplied,
 	CreatorStatusCreator,
@@ -42,6 +43,9 @@ interface FormModel {
 }
 
 const account = ref<UserStripeManagedAccount>();
+const creatorAccount = ref<UserTipaltiManagedAccount>();
+const creatorOnboardingForm = ref<string>();
+const creatorOnboardingFormHeight = ref(200);
 
 // We store the user again instead of using the one from app store because this
 // one would have financials data in it.
@@ -70,6 +74,23 @@ const hasMarketplaceAccount = computed(
 		(account.value.tos_signed_developer > 0 || account.value.tos_signed_partner > 0)
 );
 
+const tipaltiHandler = (e: MessageEvent) => {
+	if (!e || !e.data || !e.data.TipaltiIframeInfo) {
+		return;
+	}
+
+	creatorOnboardingFormHeight.value = e.data.TipaltiIframeInfo.height ?? 200;
+	console.log(e);
+
+	e.stopImmediatePropagation();
+};
+
+window.addEventListener('message', tipaltiHandler);
+
+onUnmounted(() => {
+	window.removeEventListener('message', tipaltiHandler);
+});
+
 const form: FormController<FormModel> = createForm({
 	reloadOnSubmit: true,
 	onInit() {
@@ -79,6 +100,10 @@ const form: FormController<FormModel> = createForm({
 	onLoad(payload) {
 		user.value = new User(payload.user);
 		account.value = payload.account ? new UserStripeManagedAccount(payload.account) : undefined;
+		creatorAccount.value = payload.creatorAccount
+			? new UserTipaltiManagedAccount(payload.creatorAccount)
+			: undefined;
+		creatorOnboardingForm.value = payload.creatorOnboardingForm ?? undefined;
 		partner.value = payload.partner ? new ReferralEntry(payload.partner) : undefined;
 
 		maxWallet.value = payload.maxWallet;
@@ -159,8 +184,17 @@ async function linkPayPal() {
 
 			<AppDeveloperTerms :account="account" @accepted="acceptTerms('developer')" />
 
-			<!-- PayPal is required. -->
-			<fieldset v-if="account">
+			<iframe
+				v-if="creatorOnboardingForm"
+				class="-creator-onboarding-form"
+				:style="{
+					height: creatorOnboardingFormHeight + 'px',
+				}"
+				:src="creatorOnboardingForm"
+			/>
+
+			<!-- PayPal is required only for marketplace developers and partners. -->
+			<fieldset v-if="account && hasMarketplaceAccount">
 				<legend>
 					<span
 						v-if="user.paypal_id"
@@ -396,4 +430,9 @@ async function linkPayPal() {
 		p
 			&:first-child
 				margin-top: 0
+
+.-creator-onboarding-form
+	display: block
+	width: 100%
+	border: 0
 </style>
