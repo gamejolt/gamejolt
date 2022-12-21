@@ -2,9 +2,9 @@
 import { computed, h, PropType, toRefs } from 'vue';
 import { ContentRules } from '../../content-editor/content-rules';
 import { ContentObject } from '../../content-object';
+import AppContentViewerHardBreak from './AppContentViewerHardBreak.vue';
 import AppContentViewerParagraph from './AppContentViewerParagraph.vue';
 import { AppContentViewerBlockquote } from './blockquote';
-import { AppContentViewerHardBreak } from './br';
 import { AppContentViewerCodeBlock } from './code/code';
 import { AppContentViewerEmbed } from './embed';
 import { AppContentViewerGif } from './gif';
