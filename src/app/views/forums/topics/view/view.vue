@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import { enforceLocation } from '../../../../../utils/router';
 import { Api } from '../../../../../_common/api/api.service';
 import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
-import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';

@@ -1,11 +1,14 @@
 <script lang="ts" setup>
+import { computed, PropType, ref, toRefs } from 'vue';
+import { useRoute } from 'vue-router';
+import { Api } from '../../../../../_common/api/api.service';
+import { configNextUpPostLeads } from '../../../../../_common/config/config.service';
+import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
+import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import AppPostCard from '../../../../../_common/fireside/post/card/AppPostCard.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import { PropType, computed, toRefs, ref } from 'vue';
-import { Api } from '../../../../../_common/api/api.service';
-import { useRoute } from 'vue-router';
 import { HistoryCache } from '../../../../../_common/history/cache/cache.service';
+import { Screen } from '../../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 
 const props = defineProps({
@@ -17,6 +20,11 @@ const props = defineProps({
 
 const { post } = toRefs(props);
 const route = useRoute();
+
+const displayRules = new ContentRules({
+	truncateLinks: true,
+	inlineParagraphs: true,
+});
 
 const cacheKey = `post-recommendations-${post.value.id}`;
 
@@ -43,6 +51,14 @@ const usablePosts = computed(() => {
 	<template v-for="recommendedPost of usablePosts" :key="recommendedPost.id">
 		<div class="-post">
 			<AppPostCard :post="recommendedPost" with-user source="postRecommendation" />
+
+			<template v-if="configNextUpPostLeads.value && recommendedPost.hasAnyMedia">
+				<AppContentViewer
+					class="-post-lead"
+					:source="recommendedPost.lead_content"
+					:display-rules="displayRules"
+				/>
+			</template>
 		</div>
 
 		<AppSpacer v-if="Screen.isXs" horizontal :scale="4" />
@@ -53,4 +69,10 @@ const usablePosts = computed(() => {
 @media $media-xs
 	.-post
 		min-width: 40vw
+
+.-post-lead
+	margin-top: 4px
+	margin-bottom: 4px
+	font-size: $font-size-small
+	line-clamp(3)
 </style>
