@@ -278,7 +278,7 @@ export class GridClient {
 
 	spawnNotification(notification: Notification) {
 		// Only increment counts if the notification would show in the feed.
-		if (notification.is_feed) {
+		if (notification.is_notification_feed_item) {
 			const feedType = notification.feedType;
 			if (feedType !== '') {
 				this.appStore.incrementNotificationCount({ count: 1, type: feedType });
