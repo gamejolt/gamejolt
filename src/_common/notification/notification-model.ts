@@ -171,6 +171,11 @@ export class Notification extends Model {
 			this.viewed_on = null;
 		}
 
+		// Default to `true` if not provided.
+		if (typeof data.is_notification_feed_item !== 'boolean') {
+			this.is_notification_feed_item = true;
+		}
+
 		if (data.to_resource === 'Game') {
 			this.to_model = new Game(data.to_resource_model);
 		} else if (data.to_resource === 'User') {
