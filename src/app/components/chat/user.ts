@@ -80,18 +80,18 @@ export function getChatUserRoleData(
 		};
 	}
 
-	if (tryGetRoomRole(room, user) === 'moderator') {
-		return {
-			icon: 'star',
-			tooltip: $gettext(`Chat Moderator`),
-		};
-	}
-
 	// In public rooms, display staff member status.
 	if (!room.isPrivateRoom && user.isStaff) {
 		return {
 			icon: 'gamejolt',
 			tooltip: $gettext(`Game Jolt Staff`),
+		};
+	}
+
+	if (tryGetRoomRole(room, user) === 'moderator') {
+		return {
+			icon: 'star',
+			tooltip: $gettext(`Chat Moderator`),
 		};
 	}
 }
