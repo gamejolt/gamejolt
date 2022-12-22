@@ -6,6 +6,7 @@ import { routeDashCommunities } from './communities/communities.route';
 import { routeDashCreator } from './creator/creator.route';
 import { routeDashGames } from './games/games.route';
 import { routeDashLinking } from './linking/linking.route';
+import { routeDashReferrals } from './referrals/referrals.route';
 import { routeDashStickers } from './stickers/stickers.route';
 import { routeDashSupporters } from './supporters/supporters.route';
 
@@ -23,5 +24,6 @@ export const routeDash: RouteRecordRaw = {
 		routeDashLinking,
 		routeDashStickers,
 		routeDashSupporters,
+		routeDashReferrals,
 	],
 };

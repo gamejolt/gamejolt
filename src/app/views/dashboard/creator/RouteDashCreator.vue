@@ -11,6 +11,7 @@ import { routeDashAccountChatCommands } from '../account/chat-commands/chat-comm
 import { routeDashAccountChatTimers } from '../account/chat-timers/chat-timers.route';
 import { routeDashAccountWallet } from '../account/wallet/wallet.route';
 import { routeDashAnalytics } from '../analytics/analytics.route';
+import { routeDashReferrals } from '../referrals/referrals.route';
 import { routeDashSupporters } from '../supporters/supporters.route';
 
 export default {
@@ -63,6 +64,11 @@ const buttons = computed<Button[]>(() => [
 		to: routeDashAccountChatTimers.name!,
 		label: $gettext(`Chat timers`),
 		icon: 'timer',
+	},
+	{
+		to: routeDashReferrals.name!,
+		label: $gettext(`Referrals`),
+		icon: 'friends',
 	},
 	{
 		to: routeDashAccountBlocks.name!,
