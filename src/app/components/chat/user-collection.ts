@@ -35,37 +35,45 @@ export class ChatUserCollection {
 		public readonly type: RoomType,
 		users: any[] = []
 	) {
-		if (users && users.length) {
-			for (const user of users) {
-				const userModel = new ChatUser(user);
-				this._users.push(userModel);
-				this.indexUser(userModel);
-
-				if (user.isOnline) {
-					++this.onlineCount;
-				} else {
-					++this.offlineCount;
-				}
-			}
-
-			this.recollect();
-		}
+		this.doBatchWork(() => {
+			this._addAllUsers(users);
+		});
 	}
 
 	/**
 	 * Use this to fully replace the list of users we're tracking.
 	 */
-	replace(newUsers: ChatUser[]) {
+	replace(newUsers: any[]) {
 		this.doBatchWork(() => {
-			this.users.splice(0, Infinity, ...newUsers);
+			this.users.splice(0, Infinity);
 			this._byId.clear();
 			this._byRoomId.clear();
+
+			this._addAllUsers(newUsers);
 			// We keep the fireside host data since that's managed outside of
 			// this class.
 		});
 	}
 
-	private indexUser(user: ChatUser) {
+	private _addAllUsers(users: any[]) {
+		if (!users || !users.length) {
+			return;
+		}
+
+		for (const user of users) {
+			const userModel = new ChatUser(user);
+			this._users.push(userModel);
+			this._indexUser(userModel);
+
+			if (user.isOnline) {
+				++this.onlineCount;
+			} else {
+				++this.offlineCount;
+			}
+		}
+	}
+
+	private _indexUser(user: ChatUser) {
 		this._byId.set(user.id, user);
 		if (user.room_id !== 0) {
 			this._byRoomId.set(user.room_id, user);
@@ -96,7 +104,7 @@ export class ChatUserCollection {
 
 		this._users.push(user);
 		this._assignFiresideHostDataToUser(user);
-		this.indexUser(user);
+		this._indexUser(user);
 
 		if (user.isOnline) {
 			++this.onlineCount;

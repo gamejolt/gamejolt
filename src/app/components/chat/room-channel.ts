@@ -545,7 +545,7 @@ export async function createChatRoomChannel(
 				// don't want to do it if they quick unwatched/watched and
 				// our token is no longer active.
 				if (!cancelToken.isCanceled) {
-					room.value.memberCollection.replace(response.members.map(i => new ChatUser(i)));
+					room.value.memberCollection.replace(response.members);
 				}
 			});
 		} else {
@@ -600,6 +600,8 @@ export function useChatRoomMembers(room: ComputedRef<ChatRoom | undefined>) {
 
 	const roomChannel = computed(() => room.value?.chat.roomChannels[room.value.id]);
 	const memberCollection = computed(() => room.value?.memberCollection);
+
+	console.log('getting member collection', memberCollection.value);
 
 	onMounted(() => {
 		mounted.value = true;
