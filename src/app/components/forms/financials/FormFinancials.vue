@@ -176,14 +176,6 @@ async function linkPayPal() {
 				@accepted="acceptTerms('creator')"
 			/>
 
-			<AppPartnerTerms
-				v-if="canBePartner"
-				:account="account"
-				@accepted="acceptTerms('partner')"
-			/>
-
-			<AppDeveloperTerms :account="account" @accepted="acceptTerms('developer')" />
-
 			<iframe
 				v-if="creatorOnboardingForm"
 				class="-creator-onboarding-form"
@@ -192,6 +184,45 @@ async function linkPayPal() {
 				}"
 				:src="creatorOnboardingForm"
 			/>
+
+			<template v-else-if="creatorAccount">
+				<legend v-if="creatorAccount.onboarding_status === 'active'">
+					<span
+						v-app-tooltip="$gettext(`You are an active creator.`)"
+						class="pull-right done-icon"
+					>
+						<AppJolticon icon="check" big />
+					</span>
+					<AppTranslate>You're a creator!</AppTranslate>
+				</legend>
+				<template v-else-if="creatorAccount.onboarding_status === 'rejected'">
+					<div class="alert">
+						<p>
+							<AppTranslate>
+								We can't approve you as a creator. Contact us for more info.
+							</AppTranslate>
+						</p>
+					</div>
+				</template>
+				<template v-else>
+					<div class="alert">
+						<p>
+							<AppTranslate>
+								We are processing your creator application. Check back later (we'll
+								also update you through email)
+							</AppTranslate>
+						</p>
+					</div>
+				</template>
+			</template>
+
+			<AppPartnerTerms
+				v-if="canBePartner"
+				:account="account"
+				@accepted="acceptTerms('partner')"
+			/>
+
+			<AppDeveloperTerms :account="account" @accepted="acceptTerms('developer')" />
 
 			<!-- PayPal is required only for marketplace developers and partners. -->
 			<fieldset v-if="account && hasMarketplaceAccount">
@@ -254,15 +285,6 @@ async function linkPayPal() {
 				</template>
 				<template v-else-if="hasMarketplaceAccount">
 					<FormFinancialsManagedAccount />
-				</template>
-				<template v-else>
-					<div class="alert">
-						<p>
-							<AppTranslate>
-								We will reach out to you to finish the approval process.
-							</AppTranslate>
-						</p>
-					</div>
 				</template>
 			</fieldset>
 
