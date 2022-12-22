@@ -3,8 +3,8 @@ import { computed, ref } from 'vue';
 import { stringSort } from '../../../../utils/array';
 import { sleep } from '../../../../utils/utils';
 import {
-inviteFiresideHost,
-removeFiresideHost
+	inviteFiresideHost,
+	removeFiresideHost,
 } from '../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import AppTabBar from '../../../../_common/tab-bar/AppTabBar.vue';
@@ -28,8 +28,8 @@ const ListTitles = {
 
 type ListTitle = keyof typeof ListTitles;
 
-const { user, fireside, rtc, chat, chatRoom, chatChannel } = useFiresideController()!;
-const memberCollection = useChatRoomMembers(chatChannel.value!);
+const { user, fireside, rtc, chat, chatRoom } = useFiresideController()!;
+const { memberCollection } = useChatRoomMembers(chatRoom);
 
 const usersProcessing = ref<(ChatUser | User)[]>([]);
 const isOpen = ref(true);
@@ -38,7 +38,7 @@ const activeList = ref<ListTitle>('friends');
 const users = computed(() => {
 	switch (activeList.value) {
 		case 'chat':
-			return memberCollection.users || [];
+			return memberCollection.value?.users || [];
 
 		case 'friends':
 			return chat.value?.friendsList.users || [];

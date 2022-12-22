@@ -8,18 +8,18 @@ import { useFiresideController } from '../../../components/fireside/controller/c
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 
-const { chatChannel, chatRoom, canManageCohosts, listableHostIds, setSidebar } =
-	useFiresideController()!;
+const { chatRoom, canManageCohosts, listableHostIds, setSidebar } = useFiresideController()!;
 
-const memberCollection = useChatRoomMembers(chatChannel.value!);
+const { memberCollection } = useChatRoomMembers(chatRoom);
 
-const users = computed(() =>
-	memberCollection.users.filter(i => {
-		if (!i.firesideHost || !i.firesideHost.needsPermissionToView) {
-			return true;
-		}
-		return listableHostIds.value.has(i.id);
-	})
+const users = computed(
+	() =>
+		(memberCollection.value?.users || []).filter(i => {
+			if (!i.firesideHost || !i.firesideHost.needsPermissionToView) {
+				return true;
+			}
+			return listableHostIds.value.has(i.id);
+		})
 );
 </script>
 

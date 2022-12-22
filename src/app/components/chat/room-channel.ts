@@ -1,5 +1,14 @@
 import { Presence } from 'phoenix';
-import { computed, markRaw, onMounted, onUnmounted, Ref, ref, shallowReadonly, watch } from 'vue';
+import {
+	computed,
+	ComputedRef,
+	markRaw,
+	onMounted,
+	onUnmounted,
+	ref,
+	shallowReadonly,
+	watch,
+} from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
 import { run } from '../../../utils/utils';
@@ -100,7 +109,7 @@ export async function createChatRoomChannel(
 	channelController.listenTo('room_update', _onRoomUpdate);
 	channelController.listenTo('kick_member', _onMemberKicked);
 
-	const { channel } = channelController;
+	const { channel, isClosed } = channelController;
 	channel.onClose(() => {
 		if (!isInChatRoom(client, roomId)) {
 			return;
@@ -508,65 +517,66 @@ export async function createChatRoomChannel(
 	// Currently this only works for firesides. But if you want to get
 	// information from the member collection you need to first get a lock to
 	// watch the most up to date data.
-	const _memberWatchLocks = ref([]) as Ref<ChatRoomChannelLock[]>;
-	const _isWatchingMembers = ref(false);
+	const _memberWatchLocks: ChatRoomChannelLock[] = [];
 	let _memberWatchCancelToken = new CancelToken();
+	let _isWatchingMembers = false;
 
-	watch(
-		_memberWatchLocks,
-		() => {
-			if (_memberWatchLocks.value.length > 0) {
-				if (_isWatchingMembers.value) {
-					// Nothing to do
-					return;
+	// Call this function anytime we modify the watch lock array.
+	function _memberWatchLocksChanged() {
+		if (_memberWatchLocks.length > 0) {
+			if (_isWatchingMembers) {
+				// Nothing to do
+				return;
+			}
+
+			_isWatchingMembers = true;
+			run(async () => {
+				interface Payload {
+					members: unknown[];
 				}
 
-				_isWatchingMembers.value = true;
-				run(async () => {
-					interface Payload {
-						members: unknown[];
-					}
+				const cancelToken = new CancelToken();
+				_memberWatchCancelToken.cancel();
+				_memberWatchCancelToken = cancelToken;
+				const response = await channelController.push<Payload>('member_watch');
 
-					const cancelToken = new CancelToken();
-					_memberWatchCancelToken.cancel();
-					_memberWatchCancelToken = cancelToken;
-					const response = await channelController.push<Payload>('member_watch');
-
-					// It's fine if they stop watching and this returns. We
-					// still want to store it as the latest cached data. We
-					// don't want to do it if they quick unwatched/watched and
-					// our token is no longer active.
-					if (!cancelToken.isCanceled) {
-						room.value.memberCollection.replace(
-							response.members.map(i => new ChatUser(i))
-						);
-					}
-				});
-			} else {
-				if (!_isWatchingMembers.value) {
-					// Nothing to do
-					return;
+				// It's fine if they stop watching and this returns. We
+				// still want to store it as the latest cached data. We
+				// don't want to do it if they quick unwatched/watched and
+				// our token is no longer active.
+				if (!cancelToken.isCanceled) {
+					room.value.memberCollection.replace(response.members.map(i => new ChatUser(i)));
 				}
+			});
+		} else {
+			if (!_isWatchingMembers) {
+				// Nothing to do
+				return;
+			}
 
-				// We don't clear the member list out, we keep it as is so we
-				// can switch quickly back to the cached version while loading
-				// again in future.
+			// We don't clear the member list out, we keep it as is so we
+			// can switch quickly back to the cached version while loading
+			// again in future.
 
-				_isWatchingMembers.value = false;
+			_isWatchingMembers = false;
+
+			if (!isClosed.value) {
 				channelController.push('member_unwatch');
 			}
-		},
-		{ deep: true }
-	);
+		}
+	}
 
 	function getMemberWatchLock() {
 		const newLock = new ChatRoomChannelLock(() => {
 			// We compare with id so that vue wrapping it reactively doesn't
 			// screw up our instance of checks.
-			arrayRemove(_memberWatchLocks.value, i => i.id === newLock.id);
+			arrayRemove(_memberWatchLocks, i => i.id === newLock.id);
+			_memberWatchLocksChanged();
 		});
 
-		_memberWatchLocks.value.push(newLock);
+		_memberWatchLocks.push(newLock);
+		_memberWatchLocksChanged();
+
 		return newLock;
 	}
 
@@ -584,17 +594,33 @@ class ChatRoomChannelLock {
  * Convenience for getting a member collection and releasing the lock on
  * component unmount.
  */
-export function useChatRoomMembers(roomChannel: ChatRoomChannel) {
+export function useChatRoomMembers(room: ComputedRef<ChatRoom | undefined>) {
 	let lock: ChatRoomChannelLock | undefined;
+	const mounted = ref(false);
+
+	const roomChannel = computed(() => room.value?.chat.roomChannels[room.value.id]);
+	const memberCollection = computed(() => room.value?.memberCollection);
 
 	onMounted(() => {
-		lock = roomChannel.getMemberWatchLock();
+		mounted.value = true;
 	});
 
 	onUnmounted(() => {
-		lock?.release();
-		lock = undefined;
+		mounted.value = false;
 	});
 
-	return roomChannel.room.value.memberCollection;
+	watch([roomChannel, mounted], () => {
+		if (mounted.value && roomChannel.value) {
+			if (!lock) {
+				lock = roomChannel.value.getMemberWatchLock();
+			}
+		} else {
+			if (lock && roomChannel.value) {
+				lock?.release();
+				lock = undefined;
+			}
+		}
+	});
+
+	return shallowReadonly({ memberCollection });
 }

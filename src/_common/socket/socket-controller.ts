@@ -217,6 +217,12 @@ export function createSocketChannelController(
 	(socket.value as any).channels.push(channel);
 
 	/**
+	 * If this channel either was closed directly or errored out, this will get
+	 * set to true.
+	 */
+	const isClosed = ref(false);
+
+	/**
 	 * Joins the channel, will call [onJoin] when the channel joins
 	 * successfully. If any errors are thrown in this callback, it'll retry the
 	 * join again.
@@ -233,6 +239,7 @@ export function createSocketChannelController(
 				return;
 			}
 			alertedLeave = true;
+			isClosed.value = true;
 			onLeave?.();
 		}
 
@@ -337,6 +344,7 @@ export function createSocketChannelController(
 	return shallowReadonly({
 		topic,
 		channel,
+		isClosed,
 		join,
 		leave,
 		listenTo,
