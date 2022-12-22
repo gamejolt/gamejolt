@@ -67,11 +67,9 @@ watch(sidebar, (value, oldValue) => {
 });
 
 const isShowingUsers = computed(() => sidebar.value === 'members');
-
 const memberCollection = computed(() => room.value.memberCollection);
-const membersCount = computed(() => formatNumber(room.value.memberCollection.count));
+const membersCount = computed(() => formatNumber(room.value.member_count));
 const roomTitle = computed(() => getChatRoomTitle(room.value));
-
 const showMembersViewButton = computed(() => !room.value.isPmRoom && !Screen.isXs);
 
 watchEffect(() => SettingChatGroupShowMembers.set(isShowingUsers.value));
@@ -92,7 +90,7 @@ function addGroup() {
 
 function addMembers() {
 	// Filter out the room members as we don't want to add them again.
-	const members = room.value.memberCollection.users.map(i => i.id);
+	const members = memberCollection.value.users.map(i => i.id);
 	const invitableUsers = chat.value.friendsList.users.filter(({ id }) => !members.includes(id));
 	ChatInviteModal.show(room.value, invitableUsers);
 }

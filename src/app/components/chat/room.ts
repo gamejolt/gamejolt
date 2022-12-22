@@ -9,6 +9,10 @@ import { ChatUserCollection } from './user-collection';
 
 export type ChatRoomType = 'pm' | 'open_group' | 'closed_group' | 'viral_group' | 'fireside_group';
 
+interface TypingUserData {
+	username: string;
+}
+
 export class ChatRoom {
 	static readonly ROOM_PM = 'pm';
 	static readonly ROOM_OPEN_GROUP = 'open_group';
@@ -21,13 +25,17 @@ export class ChatRoom {
 	declare type: ChatRoomType;
 	declare user?: ChatUser;
 	declare roles: ChatRole[];
-	declare memberCollection: ChatUserCollection;
+	declare member_count: number;
 	declare owner_id: number;
 	declare last_message_on: number;
 	declare background?: Background;
 
+	declare memberCollection: ChatUserCollection;
 	messages: ChatMessage[] = [];
 	queuedMessages: ChatMessage[] = [];
+
+	/** Indexed by user ID */
+	usersTyping = new Map<number, TypingUserData>();
 
 	constructor(public readonly chat: ChatClient, data: any = {}) {
 		Object.assign(this, data);

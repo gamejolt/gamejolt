@@ -3,15 +3,18 @@ import { computed } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppChatMemberList from '../../../components/chat/member-list/AppChatMemberList.vue';
+import { useChatRoomMembers } from '../../../components/chat/room-channel';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 
-const { chatRoom, chatUsers, canManageCohosts, listableHostIds, setSidebar } =
+const { chatChannel, chatRoom, canManageCohosts, listableHostIds, setSidebar } =
 	useFiresideController()!;
 
+const memberCollection = useChatRoomMembers(chatChannel.value!);
+
 const users = computed(() =>
-	chatUsers.value?.users.filter(i => {
+	memberCollection.users.filter(i => {
 		if (!i.firesideHost || !i.firesideHost.needsPermissionToView) {
 			return true;
 		}

@@ -531,6 +531,8 @@ export function createFiresideController(
 		}
 	}
 
+	// Sync we're not doing a deep watch, this'll only trigger when the actual
+	// instance changes (unset to set).
 	const _unwatchChatUsers = watch(chatUsers, _onChatUsersChanged);
 
 	const _unwatchWantsRTC = watch(_wantsRTC, revalidateRTC);

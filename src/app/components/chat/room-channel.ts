@@ -1,6 +1,8 @@
 import { Presence } from 'phoenix';
-import { computed, markRaw, ref, shallowReadonly } from 'vue';
+import { computed, markRaw, onMounted, onUnmounted, Ref, ref, shallowReadonly, watch } from 'vue';
 import { arrayRemove } from '../../../utils/array';
+import { CancelToken } from '../../../utils/cancel-token';
+import { run } from '../../../utils/utils';
 import { Background } from '../../../_common/background/background.model';
 import { ContentDocument } from '../../../_common/content/content-document';
 import { ContentObject } from '../../../_common/content/content-object';
@@ -28,8 +30,15 @@ interface JoinPayload {
 }
 
 interface RoomPresence {
-	metas: { phx_ref: string; typing: boolean }[];
-	user: unknown;
+	metas: { phx_ref: string; typing: boolean; username: string }[];
+}
+
+interface MemberIncPayload {
+	amount: number;
+}
+
+interface MemberDecPayload {
+	amount: number;
 }
 
 interface MemberAddPayload {
@@ -83,6 +92,8 @@ export async function createChatRoomChannel(
 	channelController.listenTo('user_updated', _onUserUpdated);
 	channelController.listenTo('message_update', _onUpdateMsg);
 	channelController.listenTo('message_remove', _onRemoveMsg);
+	channelController.listenTo('member_inc', _onMemberInc);
+	channelController.listenTo('member_dec', _onMemberDec);
 	channelController.listenTo('member_add', _onMemberAdd);
 	channelController.listenTo('member_leave', _onMemberLeave);
 	channelController.listenTo('owner_sync', _onOwnerSync);
@@ -126,6 +137,7 @@ export async function createChatRoomChannel(
 		pushStartTyping,
 		pushStopTyping,
 		pushPlaceSticker,
+		getMemberWatchLock,
 	});
 
 	// If we're not an instanced room, we only want to allow joining a single
@@ -265,6 +277,23 @@ export async function createChatRoomChannel(
 		message.edited_on = edited.edited_on;
 	}
 
+	function _onMemberInc(data: MemberIncPayload) {
+		room.value.member_count += data.amount;
+	}
+
+	function _onMemberDec(data: MemberDecPayload) {
+		room.value.member_count -= data.amount;
+	}
+
+	function _onMemberAdd(data: MemberAddPayload) {
+		for (const member of data.members) {
+			const user = new ChatUser(member);
+
+			room.value.memberCollection.add(user);
+			room.value.updateRoleForUser(user);
+		}
+	}
+
 	function _onMemberLeave(data: MemberLeavePayload) {
 		room.value.memberCollection.remove(data.user_id);
 	}
@@ -288,15 +317,6 @@ export async function createChatRoomChannel(
 		}
 
 		afterMemberKick?.(data);
-	}
-
-	function _onMemberAdd(data: MemberAddPayload) {
-		for (const member of data.members) {
-			const user = new ChatUser(member);
-
-			room.value.memberCollection.add(user);
-			room.value.updateRoleForUser(user);
-		}
 	}
 
 	function _onRoomUpdate(json: Partial<ChatRoom>) {
@@ -324,15 +344,26 @@ export async function createChatRoomChannel(
 			return;
 		}
 
-		const { memberCollection } = room.value;
-		const user = memberCollection.get(+presenceId);
-		if (!user) {
-			return;
+		const userId = +presenceId;
+
+		let isTyping = false;
+		let username = null;
+		for (const meta of roomPresence.metas) {
+			if (meta.typing) {
+				isTyping = true;
+			}
+			if (meta.username) {
+				username = meta.username;
+			}
 		}
 
-		// We currently only sync the typing status.
-		user.typing = roomPresence.metas.some(i => i.typing);
-		memberCollection.update(user);
+		if (isTyping && username) {
+			room.value.usersTyping.set(userId, {
+				username,
+			});
+		} else {
+			room.value.usersTyping.delete(userId);
+		}
 	}
 
 	// TODO: why is this here and not in the chat client?
@@ -474,5 +505,96 @@ export async function createChatRoomChannel(
 		);
 	}
 
+	// Currently this only works for firesides. But if you want to get
+	// information from the member collection you need to first get a lock to
+	// watch the most up to date data.
+	const _memberWatchLocks = ref([]) as Ref<ChatRoomChannelLock[]>;
+	const _isWatchingMembers = ref(false);
+	let _memberWatchCancelToken = new CancelToken();
+
+	watch(
+		_memberWatchLocks,
+		() => {
+			if (_memberWatchLocks.value.length > 0) {
+				if (_isWatchingMembers.value) {
+					// Nothing to do
+					return;
+				}
+
+				_isWatchingMembers.value = true;
+				run(async () => {
+					interface Payload {
+						members: unknown[];
+					}
+
+					const cancelToken = new CancelToken();
+					_memberWatchCancelToken.cancel();
+					_memberWatchCancelToken = cancelToken;
+					const response = await channelController.push<Payload>('member_watch');
+
+					// It's fine if they stop watching and this returns. We
+					// still want to store it as the latest cached data. We
+					// don't want to do it if they quick unwatched/watched and
+					// our token is no longer active.
+					if (!cancelToken.isCanceled) {
+						room.value.memberCollection.replace(
+							response.members.map(i => new ChatUser(i))
+						);
+					}
+				});
+			} else {
+				if (!_isWatchingMembers.value) {
+					// Nothing to do
+					return;
+				}
+
+				// We don't clear the member list out, we keep it as is so we
+				// can switch quickly back to the cached version while loading
+				// again in future.
+
+				_isWatchingMembers.value = false;
+				channelController.push('member_unwatch');
+			}
+		},
+		{ deep: true }
+	);
+
+	function getMemberWatchLock() {
+		const newLock = new ChatRoomChannelLock(() => {
+			// We compare with id so that vue wrapping it reactively doesn't
+			// screw up our instance of checks.
+			arrayRemove(_memberWatchLocks.value, i => i.id === newLock.id);
+		});
+
+		_memberWatchLocks.value.push(newLock);
+		return newLock;
+	}
+
 	return c;
+}
+
+class ChatRoomChannelLock {
+	static _idInc = 0;
+	public readonly id = ++ChatRoomChannelLock._idInc;
+
+	constructor(public readonly release: () => void) {}
+}
+
+/**
+ * Convenience for getting a member collection and releasing the lock on
+ * component unmount.
+ */
+export function useChatRoomMembers(roomChannel: ChatRoomChannel) {
+	let lock: ChatRoomChannelLock | undefined;
+
+	onMounted(() => {
+		lock = roomChannel.getMemberWatchLock();
+	});
+
+	onUnmounted(() => {
+		lock?.release();
+		lock = undefined;
+	});
+
+	return roomChannel.room.value.memberCollection;
 }

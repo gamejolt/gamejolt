@@ -15,19 +15,19 @@ export class ChatUserCollection {
 	onlineCount = 0;
 	offlineCount = 0;
 
-	private users_: ChatUser[] = [];
-	private byId_ = new Map<number, ChatUser>();
-	private byRoomId_ = new Map<number, ChatUser>();
-	private doingWork_ = false;
-	private firesideHostUsers_ = new Map<number, ChatUser>();
-	private firesideHosts_ = new Map<number, FiresideRTCHost>();
+	private _users: ChatUser[] = [];
+	private _byId = new Map<number, ChatUser>();
+	private _byRoomId = new Map<number, ChatUser>();
+	private _doingWork = false;
+	private _firesideHostUsers = new Map<number, ChatUser>();
+	private _firesideHosts = new Map<number, FiresideRTCHost>();
 
 	get count() {
-		return this.users_.length;
+		return this._users.length;
 	}
 
 	get users() {
-		return this.users_;
+		return this._users;
 	}
 
 	constructor(
@@ -38,7 +38,7 @@ export class ChatUserCollection {
 		if (users && users.length) {
 			for (const user of users) {
 				const userModel = new ChatUser(user);
-				this.users_.push(userModel);
+				this._users.push(userModel);
 				this.indexUser(userModel);
 
 				if (user.isOnline) {
@@ -52,26 +52,39 @@ export class ChatUserCollection {
 		}
 	}
 
+	/**
+	 * Use this to fully replace the list of users we're tracking.
+	 */
+	replace(newUsers: ChatUser[]) {
+		this.doBatchWork(() => {
+			this.users.splice(0, Infinity, ...newUsers);
+			this._byId.clear();
+			this._byRoomId.clear();
+			// We keep the fireside host data since that's managed outside of
+			// this class.
+		});
+	}
+
 	private indexUser(user: ChatUser) {
-		this.byId_.set(user.id, user);
+		this._byId.set(user.id, user);
 		if (user.room_id !== 0) {
-			this.byRoomId_.set(user.room_id, user);
+			this._byRoomId.set(user.room_id, user);
 		}
 	}
 
 	get(input: number | ChatUser): ChatUser | undefined {
 		const userId = typeof input === 'number' ? input : input.id;
-		return this.byId_.get(userId);
+		return this._byId.get(userId);
 	}
 
 	has(input: number | ChatUser) {
 		const userId = typeof input === 'number' ? input : input.id;
-		return this.byId_.has(userId);
+		return this._byId.has(userId);
 	}
 
 	getByRoom(input: number | ChatRoom): ChatUser | undefined {
 		const roomId = typeof input === 'number' ? input : input.id;
-		return this.byRoomId_.get(roomId);
+		return this._byRoomId.get(roomId);
 	}
 
 	add(user: ChatUser) {
@@ -81,7 +94,7 @@ export class ChatUserCollection {
 			return;
 		}
 
-		this.users_.push(user);
+		this._users.push(user);
 		this._assignFiresideHostDataToUser(user);
 		this.indexUser(user);
 
@@ -101,10 +114,10 @@ export class ChatUserCollection {
 			return;
 		}
 
-		arrayRemove(this.users_, i => i === user);
-		this.byId_.delete(user.id);
+		arrayRemove(this._users, i => i === user);
+		this._byId.delete(user.id);
 		if (user.room_id !== 0) {
-			this.byRoomId_.delete(user.room_id);
+			this._byRoomId.delete(user.room_id);
 		}
 
 		if (user.isOnline) {
@@ -121,17 +134,17 @@ export class ChatUserCollection {
 
 		// Store our current host ids so we can find chat users that are no
 		// longer hosts.
-		const staleHostIds = new Set(this.firesideHostUsers_.keys());
+		const staleHostIds = new Set(this._firesideHostUsers.keys());
 
 		// Clear out our old set of hosts.
-		this.firesideHosts_.clear();
+		this._firesideHosts.clear();
 
 		for (const hostData of data) {
 			const freshHostId = hostData.user.id;
 
 			// Store the new host set so we can use it when chat members get
 			// added or updated.
-			this.firesideHosts_.set(freshHostId, hostData);
+			this._firesideHosts.set(freshHostId, hostData);
 
 			// User is still a host, but host data may be diffrent. Assign new
 			// host data to the chat user.
@@ -139,7 +152,7 @@ export class ChatUserCollection {
 				// Remove the hostId from our old set.
 				staleHostIds.delete(freshHostId);
 
-				const validHost = this.firesideHostUsers_.get(freshHostId);
+				const validHost = this._firesideHostUsers.get(freshHostId);
 				if (validHost) {
 					// Mark ourselves as needing a recollect only if the
 					// relevant state doesn't match.
@@ -162,7 +175,7 @@ export class ChatUserCollection {
 			// Got a user that wasn't previously a host. Assign new host data to
 			// the chat user and set them into our list of current hosts.
 			user.firesideHost = hostData;
-			this.firesideHostUsers_.set(freshHostId, user);
+			this._firesideHostUsers.set(freshHostId, user);
 			needsRecollect = true;
 		}
 
@@ -173,11 +186,11 @@ export class ChatUserCollection {
 		// Loop through our (now) invalid host ids. Remove host data from the
 		// chat user and remove the chat user from our list of hosts.
 		for (const invalidHostId of staleHostIds) {
-			const oldHost = this.firesideHostUsers_.get(invalidHostId);
+			const oldHost = this._firesideHostUsers.get(invalidHostId);
 			if (oldHost) {
 				oldHost.firesideHost = null;
 			}
-			this.firesideHostUsers_.delete(invalidHostId);
+			this._firesideHostUsers.delete(invalidHostId);
 		}
 
 		staleHostIds.clear();
@@ -230,16 +243,16 @@ export class ChatUserCollection {
 	 * reaction to changes to the users being tracked.
 	 */
 	recollect() {
-		if (this.doingWork_) {
+		if (this._doingWork) {
 			return;
 		}
 
 		if (this.type === ChatUserCollection.TYPE_FRIEND) {
-			this.users_ = sortCollection(this.chat, this.users_, 'lastMessage');
+			this._users = sortCollection(this.chat, this._users, 'lastMessage');
 		} else if (this.type === ChatUserCollection.TYPE_FIRESIDE) {
-			this.users_ = sortCollection(this.chat, this.users_, 'role');
+			this._users = sortCollection(this.chat, this._users, 'role');
 		} else {
-			this.users_ = sortCollection(this.chat, this.users_, 'title');
+			this._users = sortCollection(this.chat, this._users, 'title');
 		}
 	}
 
@@ -248,19 +261,19 @@ export class ChatUserCollection {
 	 * sorted.
 	 */
 	doBatchWork(fn: () => void) {
-		this.doingWork_ = true;
+		this._doingWork = true;
 
 		try {
 			fn();
 		} finally {
-			this.doingWork_ = false;
+			this._doingWork = false;
 		}
 
 		this.recollect();
 	}
 
 	private _assignFiresideHostDataToUser(user: ChatUser) {
-		user.firesideHost = this.firesideHosts_.get(user.id) || null;
+		user.firesideHost = this._firesideHosts.get(user.id) || null;
 	}
 }
 

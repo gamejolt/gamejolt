@@ -122,17 +122,21 @@ const editorModelId = computed(() => form.formModel.id);
 
 const typingText = computed(() => {
 	const { currentUser } = chat.value;
-	const memberCollection = room.value.memberCollection;
-	if (memberCollection.count === 0) {
-		return [];
+
+	const typingNames: string[] = [];
+	for (const [userId, typingData] of room.value.usersTyping) {
+		if (userId === currentUser?.id) {
+			continue;
+		}
+
+		typingNames.push(`@${typingData.username}`);
 	}
 
-	const typingNames = memberCollection.users
-		.filter(user => user.typing)
-		.filter(user => user.id !== currentUser?.id)
-		.map(user => user.display_name);
+	if (typingNames.length === 0) {
+		return '';
+	}
 
-	const displayNamePlaceholderValues = {
+	const namePlaceholderValues = {
 		user1: typingNames[0],
 		user2: typingNames[1],
 		user3: typingNames[2],
@@ -143,15 +147,15 @@ const typingText = computed(() => {
 	} else if (typingNames.length === 3) {
 		return $gettextInterpolate(
 			`%{ user1 }, %{ user2 } and %{ user3 } are typing...`,
-			displayNamePlaceholderValues
+			namePlaceholderValues
 		);
 	} else if (typingNames.length === 2) {
 		return $gettextInterpolate(
 			`%{ user1 } and %{ user2 } are typing...`,
-			displayNamePlaceholderValues
+			namePlaceholderValues
 		);
 	} else if (typingNames.length === 1) {
-		return $gettextInterpolate(`%{ user1 } is typing...`, displayNamePlaceholderValues);
+		return $gettextInterpolate(`%{ user1 } is typing...`, namePlaceholderValues);
 	}
 
 	return '';

@@ -7,6 +7,9 @@ import { Api } from '../api/api.service';
 import { getCookie } from '../cookie/cookie.service';
 import { CommonStore } from '../store/common-store';
 
+// These are the features we support for Grid to know and behave properly.
+const SupportedFeatures = ['chat_member_watching'];
+
 export type SocketController = ReturnType<typeof createSocketController>;
 export type SocketChannelController = ReturnType<typeof createSocketChannelController>;
 
@@ -100,13 +103,20 @@ export function createSocketController(options: {
 
 		logger.info(`Got token from host: ${host}`);
 
+		const params: Record<string, any> = {
+			token,
+			gj_platform: GJ_IS_DESKTOP_APP ? 'client' : 'web',
+			gj_platform_version: GJ_VERSION,
+		};
+
+		// Pass through the features that are particular client supports.
+		for (const feature of SupportedFeatures) {
+			params[`${feature}_support`] = true;
+		}
+
 		const newSocket = new Socket(host, {
 			heartbeatIntervalMs: 30_000,
-			params: {
-				token,
-				gj_platform: GJ_IS_DESKTOP_APP ? 'client' : 'web',
-				gj_platform_version: GJ_VERSION,
-			},
+			params,
 		});
 
 		socket.value = markRaw(newSocket);

@@ -617,13 +617,7 @@ export function tryGetRoomRole(room: ChatRoom, user: ChatUser) {
 		return 'owner';
 	}
 
-	// The room userCollection always has the most up to date role information.
-	const roomUser = room.memberCollection.get(user);
-	if (roomUser && roomUser.role !== null) {
-		return roomUser.role;
-	}
-
-	// See if the role is set onto the room.
+	// The role should be set on the room.
 	const roomRole = room.roles.find(i => i.user_id === user.id);
 	if (roomRole && roomRole.role) {
 		return roomRole.role;

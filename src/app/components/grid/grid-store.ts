@@ -15,7 +15,7 @@ export function createGridStore({ appStore }: { appStore: AppStore }) {
 	const grid = ref<GridClient>();
 
 	let _wantsGrid = false;
-	let _moduleLoadPromise: Promise<typeof import('./client.service')> | null = null;
+	let _isLoadingGrid = false;
 	let _bootstrapResolvers: ((client: GridClient) => void)[] = [];
 
 	/**
@@ -32,8 +32,13 @@ export function createGridStore({ appStore }: { appStore: AppStore }) {
 	async function loadGrid() {
 		_wantsGrid = true;
 
-		_moduleLoadPromise ??= GridClientLazy();
-		const { createGridClient } = await _moduleLoadPromise;
+		if (_isLoadingGrid) {
+			return;
+		}
+
+		_isLoadingGrid = true;
+		const { createGridClient } = await GridClientLazy();
+		_isLoadingGrid = false;
 
 		// If they disconnected before we loaded it in.
 		if (!_wantsGrid) {
