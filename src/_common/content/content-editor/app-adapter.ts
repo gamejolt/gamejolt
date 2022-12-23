@@ -139,7 +139,7 @@ export function editorDebugAppAdapter(message: string, data?: any) {
 		data,
 	};
 
-	console.debug(messageData);
+	console.info(messageData);
 	if (GJ_IS_MOBILE_APP) {
 		editorGetAppAdapter().send(new ContentEditorAppAdapterMessage('debug', messageData));
 	}

@@ -13,7 +13,7 @@ function searchEntries(entries: ChatListEntries, query: string): ChatListEntries
 				fuzzysearch(query, i.username.toLowerCase())
 			);
 		} else if (i instanceof ChatRoom) {
-			return searchEntries(i.members, query).length > 0;
+			return searchEntries(i.memberCollection.users, query).length > 0;
 		}
 	});
 }
@@ -57,17 +57,7 @@ const filteredEntries = computed(() => {
 		return entries.value;
 	}
 	const query = filterQuery.value.toLowerCase().trim();
-
-	return entries.value.filter(i => {
-		if (i instanceof ChatUser) {
-			return (
-				fuzzysearch(query, i.display_name.toLowerCase()) ||
-				fuzzysearch(query, i.username.toLowerCase())
-			);
-		} else if (i instanceof ChatRoom) {
-			return searchEntries(i.members, query).length > 0;
-		}
-	});
+	return searchEntries(entries.value, query);
 });
 
 const mappedEntries = computed(() =>

@@ -1,6 +1,17 @@
 import { Presence } from 'phoenix';
-import { computed, markRaw, ref, shallowReadonly } from 'vue';
+import {
+	computed,
+	ComputedRef,
+	markRaw,
+	onMounted,
+	onUnmounted,
+	ref,
+	shallowReadonly,
+	watch,
+} from 'vue';
 import { arrayRemove } from '../../../utils/array';
+import { CancelToken } from '../../../utils/cancel-token';
+import { run } from '../../../utils/utils';
 import { Background } from '../../../_common/background/background.model';
 import { ContentDocument } from '../../../_common/content/content-document';
 import { ContentObject } from '../../../_common/content/content-object';
@@ -28,8 +39,15 @@ interface JoinPayload {
 }
 
 interface RoomPresence {
-	metas: { phx_ref: string; typing: boolean }[];
-	user: unknown;
+	metas: { phx_ref: string; typing: boolean; username: string }[];
+}
+
+interface MemberIncPayload {
+	amount: number;
+}
+
+interface MemberDecPayload {
+	amount: number;
 }
 
 interface MemberAddPayload {
@@ -83,13 +101,15 @@ export async function createChatRoomChannel(
 	channelController.listenTo('user_updated', _onUserUpdated);
 	channelController.listenTo('message_update', _onUpdateMsg);
 	channelController.listenTo('message_remove', _onRemoveMsg);
+	channelController.listenTo('member_inc', _onMemberInc);
+	channelController.listenTo('member_dec', _onMemberDec);
+	channelController.listenTo('member_add', _onMemberAdd);
 	channelController.listenTo('member_leave', _onMemberLeave);
 	channelController.listenTo('owner_sync', _onOwnerSync);
-	channelController.listenTo('member_add', _onMemberAdd);
 	channelController.listenTo('room_update', _onRoomUpdate);
 	channelController.listenTo('kick_member', _onMemberKicked);
 
-	const { channel } = channelController;
+	const { channel, isClosed } = channelController;
 	channel.onClose(() => {
 		if (!isInChatRoom(client, roomId)) {
 			return;
@@ -98,9 +118,6 @@ export async function createChatRoomChannel(
 		if (!instanced) {
 			setChatRoom(client, undefined);
 		}
-
-		delete client.roomMembers[roomId];
-		delete client.messages[roomId];
 	});
 
 	const presence = markRaw(new Presence(channel));
@@ -129,6 +146,7 @@ export async function createChatRoomChannel(
 		pushStartTyping,
 		pushStopTyping,
 		pushPlaceSticker,
+		getMemberWatchLock,
 	});
 
 	// If we're not an instanced room, we only want to allow joining a single
@@ -150,7 +168,7 @@ export async function createChatRoomChannel(
 
 			client.roomChannels[roomId] = markRaw(c);
 
-			_room.value = new ChatRoom(response.room);
+			_room.value = new ChatRoom(client, response.room);
 
 			const messages = response.messages.map((i: ChatMessage) => new ChatMessage(i));
 			messages.reverse();
@@ -174,10 +192,8 @@ export async function createChatRoomChannel(
 			// message in one, they receive it in the other. We can safely
 			// assume that they wouldn't try and use two windows to send
 			// messages in the same room at the same time.
-			const hasQueuedMessages = client.messageQueue.some(i => i.room_id === message.room_id);
-			const hasReceivedMessage = client.messages[message.room_id].some(
-				i => i.id === message.id
-			);
+			const hasQueuedMessages = room.value.queuedMessages.length > 0;
+			const hasReceivedMessage = room.value.messages.some(i => i.id === message.id);
 			if (hasQueuedMessages || hasReceivedMessage) {
 				return;
 			}
@@ -196,7 +212,7 @@ export async function createChatRoomChannel(
 	}
 
 	function _removeMessagesPastLimit(maxMessages: number) {
-		const messages = client.messages[roomId];
+		const { messages } = room.value;
 		const removalCount = messages.length - maxMessages;
 		if (removalCount <= 0) {
 			return;
@@ -204,7 +220,7 @@ export async function createChatRoomChannel(
 
 		messages.splice(0, removalCount);
 		if (messages.length > 0) {
-			setTimeSplit(client, roomId, messages[0]);
+			setTimeSplit(room.value, messages[0]);
 		}
 	}
 
@@ -212,13 +228,13 @@ export async function createChatRoomChannel(
 		const updatedUser = new ChatUser(data);
 		if (room.value.isGroupRoom) {
 			if (isInChatRoom(client, roomId)) {
-				client.roomMembers[roomId].update(updatedUser);
+				room.value.memberCollection.update(updatedUser);
 			}
 
 			room.value.updateRoleForUser(updatedUser);
 
 			// Sync the user update to the list of messages.
-			for (const message of client.messages[roomId]) {
+			for (const message of room.value.messages) {
 				if (message.user.id === updatedUser.id) {
 					Object.assign(message.user, updatedUser);
 				}
@@ -231,18 +247,16 @@ export async function createChatRoomChannel(
 			return;
 		}
 
-		const roomMessages = client.messages[roomId];
+		const { messages } = room.value;
 
 		// Get the two surrounding messages of the removed message.
-		const removedMessageIndex = roomMessages.findIndex(i => i.id === data.id);
+		const removedMessageIndex = messages.findIndex(i => i.id === data.id);
 		const previousMessage =
-			removedMessageIndex === 0 ? null : roomMessages[removedMessageIndex - 1];
+			removedMessageIndex === 0 ? null : messages[removedMessageIndex - 1];
 		const nextMessage =
-			removedMessageIndex === roomMessages.length - 1
-				? null
-				: roomMessages[removedMessageIndex + 1];
+			removedMessageIndex === messages.length - 1 ? null : messages[removedMessageIndex + 1];
 
-		arrayRemove(client.messages[roomId], i => i.id === data.id);
+		arrayRemove(messages, i => i.id === data.id);
 
 		// Recalc the time split of the surrounding messages. If for example the
 		// removed message was the first in a batch of user messages, removing
@@ -250,10 +264,10 @@ export async function createChatRoomChannel(
 		// Resetting the time split on the next (now first in batch) message
 		// shows the user header on that message.
 		if (previousMessage) {
-			setTimeSplit(client, roomId, previousMessage);
+			setTimeSplit(room.value, previousMessage);
 		}
 		if (nextMessage) {
-			setTimeSplit(client, roomId, nextMessage);
+			setTimeSplit(room.value, nextMessage);
 		}
 	}
 
@@ -262,22 +276,35 @@ export async function createChatRoomChannel(
 			return;
 		}
 
+		const message = room.value.messages.find(i => i.id === data.id);
+		if (!message) {
+			return;
+		}
+
 		const edited = new ChatMessage(data);
-
-		const index = client.messages[roomId].findIndex(msg => msg.id === data.id);
-		const message = client.messages[roomId][index];
-
 		message.content = edited.content;
 		message.edited_on = edited.edited_on;
 	}
 
-	function _onMemberLeave(data: MemberLeavePayload) {
-		const roomMembers = client.roomMembers[roomId];
+	function _onMemberInc(data: MemberIncPayload) {
+		room.value.member_count += data.amount;
+	}
 
-		if (roomMembers) {
-			roomMembers.remove(data.user_id);
+	function _onMemberDec(data: MemberDecPayload) {
+		room.value.member_count -= data.amount;
+	}
+
+	function _onMemberAdd(data: MemberAddPayload) {
+		for (const member of data.members) {
+			const user = new ChatUser(member);
+
+			room.value.memberCollection.add(user);
+			room.value.updateRoleForUser(user);
 		}
-		arrayRemove(room.value.members, i => i.id === data.user_id);
+	}
+
+	function _onMemberLeave(data: MemberLeavePayload) {
+		room.value.memberCollection.remove(data.user_id);
 	}
 
 	function _onMemberKicked(data: ChatRoomMemberKickedPayload) {
@@ -292,28 +319,13 @@ export async function createChatRoomChannel(
 		const json = doc.toJson();
 
 		// Mark all messages by the kicked member as "removed".
-		for (const message of client.messages[roomId]) {
+		for (const message of room.value.messages) {
 			if (message.user.id === data.user_id) {
 				message.content = json;
 			}
 		}
 
 		afterMemberKick?.(data);
-	}
-
-	function _onMemberAdd(data: MemberAddPayload) {
-		const roomMembers = client.roomMembers[roomId];
-
-		for (const member of data.members) {
-			const user = new ChatUser(member);
-
-			if (roomMembers) {
-				roomMembers.add(user);
-			}
-
-			room.value.members.push(user);
-			room.value.updateRoleForUser(user);
-		}
 	}
 
 	function _onRoomUpdate(json: Partial<ChatRoom>) {
@@ -331,8 +343,7 @@ export async function createChatRoomChannel(
 			return;
 		}
 
-		const roomMembers = client.roomMembers[room.value.id];
-		roomMembers.doBatchWork(() => {
+		room.value.memberCollection.doBatchWork(() => {
 			presence.list(_syncPresenceData);
 		});
 	}
@@ -342,27 +353,36 @@ export async function createChatRoomChannel(
 			return;
 		}
 
-		const roomMembers = client.roomMembers[room.value.id];
-		const user = roomMembers.get(+presenceId);
-		if (!user) {
-			return;
+		const userId = +presenceId;
+
+		let isTyping = false;
+		let username = null;
+		for (const meta of roomPresence.metas) {
+			if (meta.typing) {
+				isTyping = true;
+			}
+			if (meta.username) {
+				username = meta.username;
+			}
 		}
 
-		// We currently only sync the typing status.
-		user.typing = roomPresence.metas.some(i => i.typing);
-		roomMembers.update(user);
+		if (isTyping && username) {
+			room.value.usersTyping.set(userId, {
+				username,
+			});
+		} else {
+			room.value.usersTyping.delete(userId);
+		}
 	}
 
 	// TODO: why is this here and not in the chat client?
 	function processNewRoomMessage(message: ChatMessage) {
-		const alreadyReceivedMessage = client.messages[message.room_id].some(
-			i => i.id === message.id
-		);
+		const alreadyReceivedMessage = room.value.messages.some(i => i.id === message.id);
 		if (alreadyReceivedMessage) {
 			return;
 		}
 
-		processNewChatOutput(client, roomId, [message], false);
+		processNewChatOutput(room.value, [message], false);
 		updateChatRoomLastMessageOn(client, message);
 
 		if (room.value.isFiresideRoom) {
@@ -494,5 +514,115 @@ export async function createChatRoomChannel(
 		);
 	}
 
+	// Currently this only works for firesides. But if you want to get
+	// information from the member collection you need to first get a lock to
+	// watch the most up to date data.
+	const _memberWatchLocks: ChatRoomChannelLock[] = [];
+	let _memberWatchCancelToken = new CancelToken();
+	let _isWatchingMembers = false;
+
+	// Call this function anytime we modify the watch lock array.
+	function _memberWatchLocksChanged() {
+		if (_memberWatchLocks.length > 0) {
+			if (_isWatchingMembers) {
+				// Nothing to do
+				return;
+			}
+
+			_isWatchingMembers = true;
+			run(async () => {
+				interface Payload {
+					members: unknown[];
+				}
+
+				const cancelToken = new CancelToken();
+				_memberWatchCancelToken.cancel();
+				_memberWatchCancelToken = cancelToken;
+				const response = await channelController.push<Payload>('member_watch');
+
+				// It's fine if they stop watching and this returns. We
+				// still want to store it as the latest cached data. We
+				// don't want to do it if they quick unwatched/watched and
+				// our token is no longer active.
+				if (!cancelToken.isCanceled) {
+					room.value.memberCollection.replace(response.members);
+				}
+			});
+		} else {
+			if (!_isWatchingMembers) {
+				// Nothing to do
+				return;
+			}
+
+			// We don't clear the member list out, we keep it as is so we
+			// can switch quickly back to the cached version while loading
+			// again in future.
+
+			_isWatchingMembers = false;
+
+			if (!isClosed.value) {
+				channelController.push('member_unwatch');
+			}
+		}
+	}
+
+	function getMemberWatchLock() {
+		const newLock = new ChatRoomChannelLock(() => {
+			// We compare with id so that vue wrapping it reactively doesn't
+			// screw up our instance of checks.
+			arrayRemove(_memberWatchLocks, i => i.id === newLock.id);
+			_memberWatchLocksChanged();
+		});
+
+		_memberWatchLocks.push(newLock);
+		_memberWatchLocksChanged();
+
+		return newLock;
+	}
+
 	return c;
+}
+
+class ChatRoomChannelLock {
+	static _idInc = 0;
+	public readonly id = ++ChatRoomChannelLock._idInc;
+
+	constructor(public readonly release: () => void) {}
+}
+
+/**
+ * Convenience for getting a member collection and releasing the lock on
+ * component unmount.
+ */
+export function useChatRoomMembers(room: ComputedRef<ChatRoom | undefined>) {
+	let lock: ChatRoomChannelLock | undefined;
+	const mounted = ref(false);
+
+	const roomChannel = computed(() => room.value?.chat.roomChannels[room.value.id]);
+	const memberCollection = computed(() => room.value?.memberCollection);
+
+	console.log('getting member collection', memberCollection.value);
+
+	onMounted(() => {
+		mounted.value = true;
+	});
+
+	onUnmounted(() => {
+		mounted.value = false;
+	});
+
+	watch([roomChannel, mounted], () => {
+		if (mounted.value && roomChannel.value) {
+			if (!lock) {
+				lock = roomChannel.value.getMemberWatchLock();
+			}
+		} else {
+			if (lock && roomChannel.value) {
+				lock?.release();
+				lock = undefined;
+			}
+		}
+	});
+
+	return shallowReadonly({ memberCollection });
 }

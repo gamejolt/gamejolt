@@ -12,6 +12,7 @@ import AppTabBarItem from '../../../../_common/tab-bar/AppTabBarItem.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
+import { useChatRoomMembers } from '../../../components/chat/room-channel';
 import { ChatUser } from '../../../components/chat/user';
 import AppChatList from '../../../components/chat/_list/AppChatList.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
@@ -27,7 +28,8 @@ const ListTitles = {
 
 type ListTitle = keyof typeof ListTitles;
 
-const { user, fireside, rtc, chat, chatRoom, chatUsers } = useFiresideController()!;
+const { user, fireside, rtc, chat, chatRoom } = useFiresideController()!;
+const { memberCollection } = useChatRoomMembers(chatRoom);
 
 const usersProcessing = ref<(ChatUser | User)[]>([]);
 const isOpen = ref(true);
@@ -36,10 +38,10 @@ const activeList = ref<ListTitle>('friends');
 const users = computed(() => {
 	switch (activeList.value) {
 		case 'chat':
-			return chatUsers.value?.collection || [];
+			return memberCollection.value?.users || [];
 
 		case 'friends':
-			return chat.value?.friendsList.collection || [];
+			return chat.value?.friendsList.users || [];
 
 		default:
 			return [];

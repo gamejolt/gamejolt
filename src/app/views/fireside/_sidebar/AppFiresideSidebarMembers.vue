@@ -3,20 +3,23 @@ import { computed } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppChatMemberList from '../../../components/chat/member-list/AppChatMemberList.vue';
+import { useChatRoomMembers } from '../../../components/chat/room-channel';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 
-const { chatRoom, chatUsers, canManageCohosts, listableHostIds, setSidebar } =
-	useFiresideController()!;
+const { chatRoom, canManageCohosts, listableHostIds, setSidebar } = useFiresideController()!;
 
-const users = computed(() =>
-	chatUsers.value?.collection.filter(i => {
-		if (!i.firesideHost || !i.firesideHost.needsPermissionToView) {
-			return true;
-		}
-		return listableHostIds.value.has(i.id);
-	})
+const { memberCollection } = useChatRoomMembers(chatRoom);
+
+const users = computed(
+	() =>
+		(memberCollection.value?.users || []).filter(i => {
+			if (!i.firesideHost || !i.firesideHost.needsPermissionToView) {
+				return true;
+			}
+			return listableHostIds.value.has(i.id);
+		})
 );
 </script>
 

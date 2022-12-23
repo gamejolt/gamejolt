@@ -20,7 +20,7 @@ export class ChatNotificationGrowl {
 		let title = `💬 ${message.user.display_name}`;
 		// Append room title when message was sent in a group room.
 		if (groupRoom) {
-			title += ' (' + getChatRoomTitle(groupRoom, chat) + ')';
+			title += ' (' + getChatRoomTitle(groupRoom) + ')';
 		} else {
 			title += ` (@${message.user.username})`;
 		}
