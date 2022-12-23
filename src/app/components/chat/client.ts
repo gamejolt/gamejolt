@@ -1,5 +1,5 @@
 import { markRaw, reactive } from 'vue';
-import { arrayRemove } from '../../../utils/array';
+import { arrayRemove, numberSort } from '../../../utils/array';
 import { createLogger } from '../../../utils/logging';
 import { commonStore } from '../../../_common/store/common-store';
 import { EventTopic } from '../../../_common/system/event/event-topic';
@@ -410,11 +410,9 @@ export function retryFailedQueuedMessage(room: ChatRoom, message: ChatMessage) {
 		return;
 	}
 
+	// Set the date, and then resort everything so it shows as the latest message.
 	message.logged_on = new Date();
-	arrayRemove(room.queuedMessages, i => i.id === message.id);
-
-	// We need to update time splits in case it changed after removing the
-	// message.
+	room.queuedMessages.sort((a, b) => numberSort(a.logged_on.getTime(), b.logged_on.getTime()));
 	room.queuedMessages.forEach(i => setTimeSplit(room, i));
 
 	// Now we try to send again.
