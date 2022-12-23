@@ -39,7 +39,10 @@ export default defineConfig(async () => {
 	// depending on which section(s) are being built.
 	if (gjOpts.buildType === 'serve-hmr') {
 		// Intended values for main and node-remote keys.
-		const propertyMain = 'https://development.gamejolt.com/';
+		const propertyMain =
+			gjOpts.section === 'auth'
+				? 'https://development.gamejolt.com/login'
+				: 'https://development.gamejolt.com';
 		const propertyNodeRemote = 'https://development.gamejolt.com';
 
 		await patchPackageJson(packageJsonStr => {

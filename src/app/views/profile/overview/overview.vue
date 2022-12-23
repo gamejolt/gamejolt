@@ -23,7 +23,7 @@ import {
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
-import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../_common/filters/number';
@@ -440,7 +440,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 
 	openMessaging() {
 		if (this.user && this.chat) {
-			const chatUser = this.chat.friendsList.collection.find(u => u.id === this.user!.id);
+			const chatUser = this.chat.friendsList.get(this.user!.id);
 			if (chatUser) {
 				if (Screen.isXs) {
 					this.store.toggleLeftPane('chat');

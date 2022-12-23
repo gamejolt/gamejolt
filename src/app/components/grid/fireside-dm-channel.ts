@@ -43,7 +43,7 @@ export async function createGridFiresideDMChannel(
 	await channelController.join();
 
 	async function _onListableHosts(payload: ListableHostsPayload) {
-		logger.debug('Grid listable hosts.', payload);
+		logger.info('Grid listable hosts.', payload);
 		const { listableHostIds, rtc } = firesideController;
 
 		listableHostIds.value = new Set(payload.listable_host_ids ?? []);

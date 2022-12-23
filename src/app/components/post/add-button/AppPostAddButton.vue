@@ -8,7 +8,8 @@ import { Game } from '../../../../_common/game/game.model';
 import { Realm } from '../../../../_common/realm/realm-model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
+import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
+import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { PostEditModal } from '../edit-modal/edit-modal-service';
 
 const props = defineProps({
@@ -72,10 +73,15 @@ async function open() {
 <template>
 	<div v-app-auth-required class="post-add-button sheet sheet-elevate">
 		<span class="-avatar">
-			<AppUserAvatarImg :user="user" />
+			<AppUserCardHover :user="user">
+				<AppUserAvatar :user="user" />
+			</AppUserCardHover>
 		</span>
-		<div class="-input" @click="open()">
-			{{ placeholderMessage }}
+		<div class="-input-container">
+			<div v-if="user" class="-username">Hey @{{ user.username }}</div>
+			<div class="-input" @click="open()">
+				{{ placeholderMessage }}
+			</div>
 		</div>
 	</div>
 </template>

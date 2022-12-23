@@ -1,6 +1,6 @@
 {
 	"name": "game-jolt-client",
-	"version": "1.19.0-stage",
+	"version": "1.19.4",
 	"scripts": {
 		"check": "tsc --noEmit",
 		"lint": "eslint --ext .js,.vue src",
@@ -55,7 +55,7 @@
 		"@typescript-eslint/eslint-plugin": "5.10.1",
 		"@typescript-eslint/parser": "5.10.1",
 		"@vitejs/plugin-vue": "2.3.3",
-		"agora-rtc-sdk-ng": "4.14.0",
+		"agora-rtc-sdk-ng": "4.15.1",
 		"autoprefixer": "10.4.2",
 		"autosize": "5.0.1",
 		"broadcast-channel": "3.1.0",

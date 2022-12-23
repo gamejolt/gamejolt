@@ -67,16 +67,9 @@ watch(sidebar, (value, oldValue) => {
 });
 
 const isShowingUsers = computed(() => sidebar.value === 'members');
-
-const users = computed(() => chat.value.roomMembers[room.value.id]);
-const membersCount = computed(() => formatNumber(room.value.members.length));
-
-const roomTitle = computed(() =>
-	room.value.isGroupRoom
-		? getChatRoomTitle(room.value, chat.value)
-		: room.value.user?.display_name
-);
-
+const memberCollection = computed(() => room.value.memberCollection);
+const membersCount = computed(() => formatNumber(room.value.member_count));
+const roomTitle = computed(() => getChatRoomTitle(room.value));
 const showMembersViewButton = computed(() => !room.value.isPmRoom && !Screen.isXs);
 
 watchEffect(() => SettingChatGroupShowMembers.set(isShowingUsers.value));
@@ -85,9 +78,7 @@ function addGroup() {
 	// When creating a group from a PM window,
 	// we want to put the room user at the top of the list
 	const initialUser = room.value.user;
-	const invitableUsers = chat.value.friendsList.collection.filter(
-		friend => friend.id !== initialUser?.id
-	);
+	const invitableUsers = chat.value.friendsList.users.filter(i => i.id !== initialUser?.id);
 
 	if (initialUser) {
 		invitableUsers.unshift(initialUser);
@@ -99,10 +90,8 @@ function addGroup() {
 
 function addMembers() {
 	// Filter out the room members as we don't want to add them again.
-	const members = room.value.members.map(member => member.id);
-	const invitableUsers = chat.value.friendsList.collection.filter(
-		({ id }) => !members.includes(id)
-	);
+	const members = memberCollection.value.users.map(i => i.id);
+	const invitableUsers = chat.value.friendsList.users.filter(({ id }) => !members.includes(id));
 	ChatInviteModal.show(room.value, invitableUsers);
 }
 
@@ -326,7 +315,7 @@ function onMobileAppBarBack() {
 											(!showMembersViewButton || Screen.isMobile) &&
 											room.isGroupRoom
 										"
-										:members="users.collection"
+										:members="memberCollection.users"
 										:style="{
 											paddingTop: Screen.isXs ? '16px' : undefined,
 										}"
@@ -341,8 +330,8 @@ function onMobileAppBarBack() {
 								</div>
 
 								<AppChatMemberList
-									v-if="users"
-									:users="users.collection"
+									v-if="memberCollection"
+									:users="memberCollection.users"
 									:room="room"
 								/>
 							</template>

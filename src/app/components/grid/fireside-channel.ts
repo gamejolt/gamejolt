@@ -128,7 +128,7 @@ export async function createGridFiresideChannel(
 	}
 
 	function _onStreamingUid(payload: StreamingUIDPayload) {
-		logger.debug('Grid streaming uid added.', payload);
+		logger.info('Grid streaming uid added.', payload);
 
 		const { hosts } = firesideController;
 		if (!payload.streaming_uid || !payload.user) {
@@ -138,7 +138,7 @@ export async function createGridFiresideChannel(
 		const user = new User(payload.user);
 		const host = hosts.value.find(host => host.user.id === user.id);
 		if (host) {
-			logger.debug('Adding streaming uid to existing host');
+			logger.info('Adding streaming uid to existing host');
 
 			host.user = user;
 			host.needsPermissionToView = payload.is_unlisted;
@@ -147,7 +147,7 @@ export async function createGridFiresideChannel(
 				host.uids.push(payload.streaming_uid);
 			}
 		} else {
-			logger.debug('Adding streaming uid to new host');
+			logger.info('Adding streaming uid to new host');
 			hosts.value.push({
 				user: user,
 				needsPermissionToView: payload.is_unlisted,
@@ -163,12 +163,12 @@ export async function createGridFiresideChannel(
 	}
 
 	function _onStickerPlacement(payload: StickerPlacementPayload) {
-		logger.debug('Grid sticker placement received.', payload, payload.streak);
+		logger.info('Grid sticker placement received.', payload, payload.streak);
 
 		const { rtc, stickerTargetController, fireside, user } = firesideController;
 		// Ignore placements if we don't have an RTC set up.
 		if (!rtc.value) {
-			logger.debug(`Received grid sticker placement while we have no RTC`);
+			logger.info(`Received grid sticker placement while we have no RTC`);
 			return;
 		}
 
@@ -200,7 +200,7 @@ export async function createGridFiresideChannel(
 	}
 
 	function _onUpdateHost(payload: HostUpdatePayload) {
-		logger.debug('Grid host update received.', payload);
+		logger.info('Grid host update received.', payload);
 
 		const background = payload.background ? new Background(payload.background) : undefined;
 		firesideController.assignHostBackgroundData(payload.user_id, background);

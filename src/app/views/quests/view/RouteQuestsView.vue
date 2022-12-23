@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { numberSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
-import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
@@ -47,6 +47,8 @@ const participatingFriends = ref<User[]>([]);
 const participatingFriendCount = ref(0);
 const isLoading = ref(true);
 
+const hasActionButtonError = ref(false);
+
 const objectives = computed(() => {
 	const _quest = quest.value;
 	if (!_quest) {
@@ -76,9 +78,12 @@ const isQuestAcceptAction = computed(() => {
 	return q.canAccept;
 });
 
-const shouldShowActionButton = computed(
-	() => isQuestAcceptAction.value || objectives.value.some(i => i.has_unclaimed_rewards)
-);
+const shouldShowActionButton = computed(() => {
+	if (hasActionButtonError.value) {
+		return false;
+	}
+	return isQuestAcceptAction.value || objectives.value.some(i => i.has_unclaimed_rewards);
+});
 
 const friendsText = computed(() => {
 	const count = participatingFriendCount.value;
@@ -252,15 +257,21 @@ function onNewQuest(data: Quest) {
 			</section>
 		</div>
 
-		<AppScrollAffix class="-action-button-container" anchor="bottom" :padding="0">
+		<AppScrollAffix
+			v-if="shouldShowActionButton"
+			class="-action-button-container"
+			anchor="bottom"
+			:padding="0"
+		>
 			<div class="-action-button-decorator">
 				<AppQuestActionButton
 					:key="quest.id"
 					class="-action-button container"
 					:quest="quest"
-					:show="shouldShowActionButton"
 					:is-accept="isQuestAcceptAction"
+					show
 					@new-quest="onNewQuest"
+					@payload-error="hasActionButtonError = true"
 				/>
 			</div>
 		</AppScrollAffix>

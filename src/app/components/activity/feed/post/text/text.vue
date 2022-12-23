@@ -2,7 +2,7 @@
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../../../../_common/analytics/analytics.service';
 import AppFadeCollapse from '../../../../../../_common/AppFadeCollapse.vue';
-import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import {
 	FiresidePost,
 	loadArticleIntoPost,

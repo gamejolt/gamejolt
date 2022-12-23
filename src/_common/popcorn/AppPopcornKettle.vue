@@ -29,6 +29,7 @@ const isWrappingComponent = computed(() => !!slots['default']);
 <template>
 	<div class="-popcorn-kettle" :class="isWrappingComponent ? {} : ['-fill', '-ignore']">
 		<slot />
+
 		<div class="-kernels -fill -ignore">
 			<template v-for="data of kernels" :key="data.key">
 				<AppPopcornKernel class="-kernel" :kernel-data="data" />
