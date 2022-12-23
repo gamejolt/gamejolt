@@ -601,7 +601,15 @@ export function useChatRoomMembers(room: ComputedRef<ChatRoom | undefined>) {
 	const roomChannel = computed(() => room.value?.chat.roomChannels[room.value.id]);
 	const memberCollection = computed(() => room.value?.memberCollection);
 
-	console.log('getting member collection', memberCollection.value);
+	watch([roomChannel, mounted], () => {
+		if (mounted.value && roomChannel.value) {
+			if (!lock) {
+				lock = roomChannel.value.getMemberWatchLock();
+			}
+		} else {
+			cleanup();
+		}
+	});
 
 	onMounted(() => {
 		mounted.value = true;
@@ -609,20 +617,15 @@ export function useChatRoomMembers(room: ComputedRef<ChatRoom | undefined>) {
 
 	onUnmounted(() => {
 		mounted.value = false;
+		cleanup();
 	});
 
-	watch([roomChannel, mounted], () => {
-		if (mounted.value && roomChannel.value) {
-			if (!lock) {
-				lock = roomChannel.value.getMemberWatchLock();
-			}
-		} else {
-			if (lock && roomChannel.value) {
-				lock?.release();
-				lock = undefined;
-			}
+	function cleanup() {
+		if (lock) {
+			lock?.release();
+			lock = undefined;
 		}
-	});
+	}
 
 	return shallowReadonly({ memberCollection });
 }
