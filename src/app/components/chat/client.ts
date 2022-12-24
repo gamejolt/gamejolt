@@ -149,6 +149,10 @@ export function setupChatRoom(chat: ChatClient, room: ChatRoom, messages: ChatMe
 		if (!isRoomInstanced(chat, room.id)) {
 			setChatRoom(chat, room);
 		}
+
+		// Clear out any old messages so we don't use old data from the model
+		// store.
+		room.messages = [];
 		processNewChatOutput(room, messages, true);
 	}
 }
