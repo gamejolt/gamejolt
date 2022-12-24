@@ -1,6 +1,7 @@
 import { toRaw } from 'vue';
 import { arrayRemove, numberSort, stringSortRaw } from '../../../utils/array';
 import { FiresideRTCHost } from '../../../_common/fireside/rtc/rtc';
+import { storeModel } from '../../../_common/model/model-store.service';
 import { ChatClient, isUserOnline } from './client';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
@@ -61,7 +62,7 @@ export class ChatUserCollection {
 		}
 
 		for (const user of users) {
-			const userModel = new ChatUser(user);
+			const userModel = storeModel(ChatUser, user);
 			this._users.push(userModel);
 			this._indexUser(userModel);
 
@@ -98,7 +99,7 @@ export class ChatUserCollection {
 	add(user: ChatUser) {
 		// Don't add the same user again, update with new data instead.
 		if (this.has(user)) {
-			this.update(user);
+			this.updated(user);
 			return;
 		}
 
@@ -208,10 +209,9 @@ export class ChatUserCollection {
 		}
 	}
 
-	update(user: ChatUser) {
+	updated(user: ChatUser) {
 		const curUser = this.get(user);
 		if (curUser) {
-			Object.assign(curUser, user);
 			this._assignFiresideHostDataToUser(curUser);
 			this.recollect();
 		}

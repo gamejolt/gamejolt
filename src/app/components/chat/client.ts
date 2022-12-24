@@ -1,6 +1,7 @@
 import { markRaw, reactive } from 'vue';
 import { arrayRemove, numberSort } from '../../../utils/array';
 import { createLogger } from '../../../utils/logging';
+import { storeModel, storeModelList } from '../../../_common/model/model-store.service';
 import { commonStore } from '../../../_common/store/common-store';
 import { EventTopic } from '../../../_common/system/event/event-topic';
 import { AppStore } from '../../store';
@@ -276,18 +277,16 @@ export function queueChatMessage(room: ChatRoom, type: ChatMessageType, content:
 	}
 
 	const tempId = Math.floor(Math.random() * Date.now());
-	const message = reactive(
-		new ChatMessage({
-			id: tempId,
-			user_id: chat.currentUser.id,
-			user: chat.currentUser,
-			room_id: room.id,
-			type,
-			content,
-			logged_on: new Date(),
-			_isQueued: true,
-		})
-	) as ChatMessage;
+	const message = storeModel(ChatMessage, {
+		id: tempId,
+		user_id: chat.currentUser.id,
+		user: chat.currentUser,
+		room_id: room.id,
+		type,
+		content,
+		logged_on: Date.now(),
+		_isQueued: true,
+	});
 
 	setTimeSplit(room, message);
 	room.queuedMessages.push(message);
@@ -416,7 +415,7 @@ async function sendChatMessage(room: ChatRoom, message: ChatMessage) {
 		// the new message and removing the queued one.
 		arrayRemove(room.queuedMessages, i => i.id === message.id);
 
-		const newMessage = reactive(new ChatMessage(data)) as ChatMessage;
+		const newMessage = storeModel(ChatMessage, data);
 		roomChannel.processNewRoomMessage(newMessage);
 	} catch (e) {
 		room.chat.logger.error('Received error sending message', e);
@@ -460,7 +459,7 @@ export async function loadOlderChatMessages(room: ChatRoom) {
 		const firstMessage = room.messages[0];
 		const data = await chat.roomChannels[room.id].pushLoadMessages(firstMessage.logged_on);
 
-		const oldMessages = data.messages.map((i: any) => new ChatMessage(i));
+		const oldMessages = storeModelList(ChatMessage, data.messages);
 
 		// If no older messages, we reached the end of the history.
 		if (oldMessages.length > 0) {
@@ -493,7 +492,7 @@ export async function addGroupRoom(chat: ChatClient, members: number[]) {
 	}
 
 	const response = await chat.userChannel.pushGroupAdd(members);
-	const newGroupRoom = new ChatRoom(chat, response.room);
+	const newGroupRoom = storeModel(ChatRoom, { chat, ...response.room });
 	chat.groupRooms.push(newGroupRoom);
 	enterChatRoom(chat, newGroupRoom.id);
 }
@@ -567,7 +566,7 @@ export function updateChatRoomLastMessageOn(chat: ChatClient, message: ChatMessa
 	const friend = chat.friendsList.getByRoom(message.room_id);
 	if (friend) {
 		friend.last_message_on = time;
-		chat.friendsList.update(friend);
+		chat.friendsList.updated(friend);
 	}
 
 	// If it's a group chat.

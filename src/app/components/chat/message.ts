@@ -1,3 +1,4 @@
+import { ModelStoreModel, storeModel } from '../../../_common/model/model-store.service';
 import { ChatUser } from './user';
 
 export const CHAT_MESSAGE_MAX_CONTENT_LENGTH = 1000;
@@ -5,20 +6,20 @@ export const TIMEOUT_CONSIDER_QUEUED = 1500; // Time in ms until a queued messag
 
 export type ChatMessageType = 'content' | 'sticker';
 
-export class ChatMessage {
-	id!: number;
-	user_id!: number;
-	user!: ChatUser;
-	room_id!: number;
-	content!: string;
-	logged_on!: Date;
-	edited_on!: Date | null;
-	type!: ChatMessageType;
+export class ChatMessage implements ModelStoreModel {
+	declare id: number;
+	declare user_id: number;
+	declare user: ChatUser;
+	declare room_id: number;
+	declare content: string;
+	declare logged_on: Date;
+	declare edited_on: Date | null;
+	declare type: ChatMessageType;
 
-	showMeta?: boolean;
-	showAvatar?: boolean;
-	dateSplit?: boolean;
-	is_automated?: boolean;
+	declare showMeta?: boolean;
+	declare showAvatar?: boolean;
+	declare dateSplit?: boolean;
+	declare is_automated?: boolean;
 
 	// Used for rendering.
 	_collapsable = false;
@@ -28,7 +29,11 @@ export class ChatMessage {
 	_isProcessing = false;
 	_error = false; // When an error was received trying to send the message.
 
-	constructor(data: any = {}) {
+	constructor(data: any) {
+		this.update(data);
+	}
+
+	update(data: any) {
 		Object.assign(this, data);
 
 		if (typeof data.logged_on === 'number' || typeof data.logged_on === 'string') {
@@ -40,7 +45,7 @@ export class ChatMessage {
 		}
 
 		if (data.user) {
-			this.user = new ChatUser(data.user);
+			this.user = storeModel(ChatUser, data.user);
 		}
 
 		if (this.showMeta === undefined) {

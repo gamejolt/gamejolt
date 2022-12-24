@@ -271,6 +271,7 @@ export function createSocketChannelController(
 
 								resolve();
 							} catch (e) {
+								logger.error(`Got error while trying to join channel.`, e);
 								reject(e);
 							}
 						});

@@ -7,6 +7,12 @@ export type ModelClassType<T> = { new (data?: any): T };
 
 export type ModelSaveRequestOptions = RequestOptions & { data?: any };
 
+/**
+ * When you don't know what data is returned from backend, but you know it's for
+ * a model.
+ */
+export type UnknownModelData = Record<string, unknown>;
+
 export class Model {
 	id!: number;
 
