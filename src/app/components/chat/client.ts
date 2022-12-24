@@ -288,8 +288,8 @@ export function queueChatMessage(room: ChatRoom, type: ChatMessageType, content:
 		_isQueued: true,
 	});
 
-	setTimeSplit(room, message);
 	room.queuedMessages.push(message);
+	setTimeSplit(room, message);
 	sendChatMessage(room, message);
 }
 
@@ -298,6 +298,7 @@ export function setTimeSplit(room: ChatRoom, message: ChatMessage) {
 	message.showMeta = true;
 	message.dateSplit = false;
 
+	const combineTimeCheck = 5 * 60 * 1000;
 	let messages = room.messages;
 
 	// For queued messages, we also factor in the other queued messages.
@@ -308,34 +309,33 @@ export function setTimeSplit(room: ChatRoom, message: ChatMessage) {
 	// Find the message preceeding this one.
 	// If we can't locate the message in the list, we assume it's not in the list yet and about to be added to the end.
 	// Therefore, we use the last message in the list as previous and pretend this message is at the end of the list.
-	let messageIndex = messages.findIndex(i => i.id === message.id);
-	if (messageIndex === -1 && messages.length > 0) {
-		messageIndex = messages.length;
-	}
-
-	let previousMessage: ChatMessage | null = null;
+	const messageIndex = messages.findIndex(i => i.id === message.id);
+	let prevMessage: ChatMessage | null = null;
 
 	if (messageIndex > 0) {
-		previousMessage = messages[messageIndex - 1];
-		const nextMessage = messages[messageIndex + 1];
+		prevMessage = messages[messageIndex - 1];
+		const nextMessage =
+			messageIndex === messages.length - 1 ? null : messages[messageIndex + 1];
 
-		if (!nextMessage) {
-			message.showAvatar = true;
-		} else {
-			message.showAvatar = nextMessage.user.id !== message.user.id;
-		}
+		const isSameUser = message.user.id === prevMessage.user.id;
+		const isWithinTime =
+			message.logged_on.getTime() - prevMessage.logged_on.getTime() <= combineTimeCheck;
 
-		// Combine if the same user and within 5 minutes of their previous message.
-		if (
-			message.user.id === previousMessage.user.id &&
-			message.logged_on.getTime() - previousMessage.logged_on.getTime() <= 5 * 60 * 1000
-		) {
+		message.showAvatar = !nextMessage || isSameUser;
+
+		if (isSameUser && isWithinTime) {
 			message.showMeta = false;
 		}
 
 		// If the date is different than the date for the previous
 		// message, we want to split it in the view.
-		if (message.logged_on.toDateString() !== previousMessage.logged_on.toDateString()) {
+		const curDate = message.logged_on;
+		const prevDate = prevMessage.logged_on;
+		if (
+			curDate.getFullYear() !== prevDate.getFullYear() ||
+			curDate.getMonth() !== prevDate.getMonth() ||
+			curDate.getDate() !== prevDate.getDate()
+		) {
 			message.dateSplit = true;
 			message.showAvatar = true;
 			message.showMeta = true;
@@ -346,8 +346,8 @@ export function setTimeSplit(room: ChatRoom, message: ChatMessage) {
 		message.showAvatar = true;
 	}
 
-	if (!message.showMeta && previousMessage) {
-		previousMessage.showAvatar = false;
+	if (!message.showMeta && prevMessage) {
+		prevMessage.showAvatar = false;
 	}
 }
 
@@ -358,6 +358,7 @@ function outputMessage(room: ChatRoom, message: ChatMessage, isHistorical: boole
 	}
 
 	message.logged_on = new Date(message.logged_on);
+	room.messages.push(message);
 	setTimeSplit(room, message);
 
 	if (!isHistorical) {
@@ -365,9 +366,6 @@ function outputMessage(room: ChatRoom, message: ChatMessage, isHistorical: boole
 			newChatNotification(room.chat, room.id);
 		}
 	}
-
-	// Push it into the room's message list.
-	room.messages.push(message);
 }
 
 export function processNewChatOutput(
