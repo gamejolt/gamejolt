@@ -151,12 +151,12 @@ export class ChatRoom implements ModelStoreModel {
 }
 
 export function getChatRoomTitle(room: ChatRoom) {
-	if (room.title) {
-		return room.title;
-	}
-
 	if (room.type === ChatRoom.ROOM_PM) {
 		return room.user?.display_name ?? $gettext(`PM Chat`);
+	}
+
+	if (room.title) {
+		return room.title;
 	}
 
 	// When no title is set and no/one member is in the chat, set the title
