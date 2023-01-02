@@ -1,20 +1,20 @@
 <script lang="ts">
+import { computed, unref } from 'vue';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../utils/vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
-import { AppImgResponsive } from '../../img/responsive/responsive';
-import {
-	AppResponsiveDimensions,
+import AppImgResponsive from '../../img/AppImgResponsive.vue';
+import AppResponsiveDimensions, {
 	AppResponsiveDimensionsChangeEvent,
-} from '../../responsive-dimensions/responsive-dimensions';
+} from '../../responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../screen/screen-service';
+import AppStickerTarget from '../../sticker/target/AppStickerTarget.vue';
 import {
 	createStickerTargetController,
 	StickerTargetController,
 	useStickerTargetController,
 } from '../../sticker/target/target-controller';
-import AppStickerTarget from '../../sticker/target/target.vue';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppVideo from '../../video/video.vue';
 import AppMediaItemBackdrop from '../backdrop/AppMediaItemBackdrop.vue';
@@ -29,7 +29,7 @@ import { MediaItem } from '../media-item-model';
 		AppStickerTarget,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppMediaItemPost extends Vue {
@@ -112,10 +112,12 @@ export default class AppMediaItemPost extends Vue {
 	}
 
 	created() {
-		this.stickerTargetController = createStickerTargetController(
-			this.mediaItem,
-			this.parentStickerTarget
-		);
+		this.stickerTargetController = createStickerTargetController(this.mediaItem, {
+			parent: computed(() => unref(this.parentStickerTarget)),
+			isCreator: computed(
+				() => this.stickerTargetController.parent.value?.isCreator.value === true
+			),
+		});
 	}
 
 	async onDimensionsChange(e: AppResponsiveDimensionsChangeEvent) {

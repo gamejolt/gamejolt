@@ -1,9 +1,9 @@
+import { renderToString } from 'vue/server-renderer';
 import { setDeviceUserAgent } from '../_common/device/device.service';
 import { Environment } from '../_common/environment/environment.service';
 import { renderMeta } from '../_common/meta/meta-service';
 import { translationsReady } from '../_common/translate/translate.service';
 import { createApp } from './bootstrap';
-import { renderToString } from 'vue/server-renderer';
 
 export default async (context: any) => {
 	const { app, router } = await createApp();
@@ -34,7 +34,7 @@ export default async (context: any) => {
 		console.log(`data fetch: ${context.prefetchTime}ms`);
 
 		context.meta = {
-			title: 'Game Jolt - Games for the love of it',
+			title: 'Game Jolt - Share your creations',
 			renderTags() {
 				return renderMeta();
 			},

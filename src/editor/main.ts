@@ -1,5 +1,9 @@
 import { createApp } from './bootstrap';
 
-const { app } = createApp();
+async function start() {
+	const { app } = await createApp();
 
-app.mount('#app');
+	app.mount('#app');
+}
+
+start();

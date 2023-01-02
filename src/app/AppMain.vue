@@ -1,34 +1,42 @@
 <script lang="ts" setup>
 import { onMounted, provide, reactive, watch } from '@vue/runtime-core';
 import { RouterView } from 'vue-router';
-import { AppPromotionStore, AppPromotionStoreKey } from '../utils/mobile-app';
 import { createAdsController } from '../_common/ad/ad-store';
 import { CommentStoreManager, CommentStoreManagerKey } from '../_common/comment/comment-store';
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
-import { createDrawerStore } from '../_common/drawer/drawer-store';
 import AppErrorPage from '../_common/error/page/page.vue';
+import { createAppPromotionStore } from '../_common/mobile-app/store';
+import Onboarding from '../_common/onboarding/onboarding.service';
 import AppCommonShell from '../_common/shell/AppCommonShell.vue';
 import { useCommonStore } from '../_common/store/common-store';
 import { loadCurrentLanguage } from '../_common/translate/translate.service';
-import { ChatStore, ChatStoreKey, clearChat, loadChat } from './components/chat/chat-store';
-import AppShell from './components/shell/shell.vue';
+import { useGridStore } from './components/grid/grid-store';
+import AppShell from './components/shell/AppShell.vue';
 import { useAppStore } from './store';
 
 const appStore = useAppStore();
-const { bootstrap, loadGrid, loadNotificationState, clear, clearGrid, clearNotificationState } =
-	appStore;
+const { bootstrap, loadNotificationState, clear, clearNotificationState } = appStore;
 const { user } = useCommonStore();
+const { loadGrid, clearGrid } = useGridStore();
 
 createAdsController();
-createDrawerStore();
+createAppPromotionStore();
 provide(CommentStoreManagerKey, reactive(new CommentStoreManager()));
-provide(AppPromotionStoreKey, reactive(new AppPromotionStore()));
-
-const chatStore = reactive(new ChatStore()) as ChatStore;
-provide(ChatStoreKey, chatStore);
 
 if (!import.meta.env.SSR) {
 	performance.measure('gj-shell-init', 'gj-start');
+
+	// We allow users to access the onboarding flow even after they've gone
+	// through onboarding.
+	//
+	// In case they did that, or didn't fully complete their onboarding, clear
+	// out their onboarding-start timestamp now so they're no longer considered
+	// to be onboarding.
+	//
+	// NOTE: This can't be done for SSR. It also can't be done within
+	// [onMounted], otherwise it gets called after [Onboarding] sets the new
+	// token.
+	Onboarding.clearOnboardingStartTimestamp();
 }
 
 onMounted(() => {
@@ -51,7 +59,6 @@ watch(
 			bootstrap();
 
 			if (!import.meta.env.SSR) {
-				loadChat(chatStore, appStore);
 				loadGrid();
 				loadNotificationState();
 			}
@@ -63,7 +70,6 @@ watch(
 			clear();
 			clearGrid();
 			clearNotificationState();
-			clearChat(chatStore);
 		}
 	},
 	{ immediate: true }

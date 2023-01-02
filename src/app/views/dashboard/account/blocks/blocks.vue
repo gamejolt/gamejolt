@@ -6,16 +6,16 @@ import { Api } from '../../../../../_common/api/api.service';
 import AppCardList from '../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../_common/card/list/AppCardListAdd.vue';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
-import AppLoading from '../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { UserBlock } from '../../../../../_common/user/block/block.model';
-import AppUserAvatar from '../../../../../_common/user/user-avatar/user-avatar.vue';
-import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/verified-tick.vue';
+import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
+import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import FormUserBlock from '../../../../components/forms/user/block/block.vue';
-import { useAccountRouteController } from '../account.vue';
+import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 @Options({
 	name: 'RouteDashAccountBlocks',
@@ -117,6 +117,7 @@ export default class RouteDashAccountBlocks extends BaseRouteComponent {
 					When you block someone, that user won't be able to follow you, send you a friend
 					request, or reply to your posts and comments.
 				</AppTranslate>
+				{{ ' ' }}
 				<AppLinkHelp page="blocking-users" class="link-help">
 					<AppTranslate>Learn more about what happens when you block a user</AppTranslate>
 				</AppLinkHelp>

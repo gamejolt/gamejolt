@@ -3,7 +3,7 @@ import { Api, RequestOptions } from '../api/api.service';
 /**
  * Helper type that looks like our model classes.
  */
-export type ModelClassType<T> = { new (data?: T): T };
+export type ModelClassType<T> = { new (data?: any): T };
 
 export type ModelSaveRequestOptions = RequestOptions & { data?: any };
 
@@ -45,10 +45,8 @@ export class Model {
 				try {
 					this[k] = newObj[k];
 				} catch (e) {
-					if (GJ_BUILD_TYPE === 'development') {
-						console.warn(`Got an error when setting a model value in assign().`);
-						console.warn(e);
-					}
+					console.warn(`Got an error when setting a model value (key ${k}) in assign().`);
+					console.warn(e);
 				}
 			}
 		};
@@ -135,8 +133,4 @@ export class Model {
 		);
 		return this.processRemove(response);
 	}
-}
-
-export interface CommentableModel {
-	canComment: boolean;
 }

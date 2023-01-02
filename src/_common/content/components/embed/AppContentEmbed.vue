@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from 'vue';
 import { arrayShuffle } from '../../../../utils/array';
 import { showErrorGrowl } from '../../../growls/growls.service';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import AppLoading from '../../../loading/loading.vue';
+import AppLoading from '../../../loading/AppLoading.vue';
 import AppTranslate from '../../../translate/AppTranslate.vue';
 import { $gettext } from '../../../translate/translate.service';
 import AppVideoEmbed from '../../../video/embed/embed.vue';

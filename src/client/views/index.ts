@@ -1,6 +1,5 @@
 import { initRouter } from '../../utils/router';
-import { routeDowngrade } from './downgrade/downgrade.route';
 import { routeUpgrade } from './upgrade/upgrade.route';
 
-const routes = [routeDowngrade, routeUpgrade];
+const routes = [routeUpgrade];
 export const router = initRouter(routes);

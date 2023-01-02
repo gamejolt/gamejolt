@@ -6,10 +6,11 @@ import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
 import { formatNumber } from '../../../../_common/filters/number';
 import { ReportModal } from '../../../../_common/report/modal/modal.service';
-import AppShareCard from '../../../../_common/share/card/card.vue';
+import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
-import AppUserCardHover from '../../../../_common/user/card/hover/hover.vue';
+import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
+import AppUserCreatorBadge from '../../../../_common/user/creator/AppUserCreatorBadge.vue';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../_common/user/user.model';
 import AppGameList from '../../game/list/list.vue';
@@ -26,6 +27,7 @@ const GAME_LIST_COLLAPSED_COUNT = 3;
 		AppTimeAgo,
 		AppGameList,
 		AppShareCard,
+		AppUserCreatorBadge,
 	},
 })
 export default class AppCommunitySidebar extends Vue {
@@ -223,7 +225,9 @@ export default class AppCommunitySidebar extends Vue {
 						:disabled="isLoadingMoreCollaborators"
 						@click="toggleCollaboratorList"
 					>
-						<AppTranslate v-if="collaboratorListCollapsed || isLoadingMoreCollaborators">
+						<AppTranslate
+							v-if="collaboratorListCollapsed || isLoadingMoreCollaborators"
+						>
 							View All
 						</AppTranslate>
 						<AppTranslate v-else>Show fewer</AppTranslate>
@@ -246,8 +250,14 @@ export default class AppCommunitySidebar extends Vue {
 									class="img-responsive -mod-avatar-img"
 									alt=""
 								/>
+
+								<AppUserCreatorBadge
+									v-if="user.is_creator"
+									class="-mod-creator"
+									small
+								/>
 								<AppJolticon
-									v-if="user.is_verified"
+									v-else-if="user.is_verified"
 									class="-mod-verified"
 									icon="verified"
 								/>
@@ -294,10 +304,13 @@ export default class AppCommunitySidebar extends Vue {
 	height: 1.5em
 	img-circle()
 
+.-mod-creator
 .-mod-verified
 	position: absolute
 	right: -4px
 	bottom: -4px
+
+.-mod-verified
 	change-bg('bg-offset')
 	border-radius: 100%
 	font-size: 14px

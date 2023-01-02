@@ -1,4 +1,5 @@
-import type * as nodePath from 'path';
+import { ref } from 'vue';
+import { hasDesktopAudioCaptureSupport } from '../fireside/rtc/device-capabilities';
 
 const STORAGE_PREFIX = 'settings.';
 
@@ -10,13 +11,23 @@ abstract class SettingBase<T extends SettingType> {
 	public abstract set(value: T): void;
 	public abstract get(): T;
 
+	/**
+	 * We use this to trigger vue's effect changes (watch and stuff) when
+	 * setting a value.
+	 */
+	private _watcherRef = ref(0);
+
 	protected _set(val: string) {
 		if (!import.meta.env.SSR) {
 			localStorage.setItem(STORAGE_PREFIX + this.key, val);
 		}
+
+		++this._watcherRef.value;
 	}
 
 	protected _get() {
+		this._watcherRef.value;
+
 		if (!import.meta.env.SSR && localStorage.getItem(STORAGE_PREFIX + this.key) !== null) {
 			return localStorage.getItem(STORAGE_PREFIX + this.key);
 		} else {
@@ -68,7 +79,7 @@ class BooleanSetting extends SettingBase<boolean> {
 export const SettingThemeDark = new BooleanSetting('theme-dark', true);
 export const SettingThemeAlwaysOurs = new BooleanSetting('theme-always-ours', false);
 export const SettingGameInstallDir = new StringSetting('game-install-dir', () => {
-	const path = require('path') as typeof nodePath;
+	const path = require('path') as typeof import('path');
 	const dataPath = nw.App.dataPath;
 
 	return path.join(dataPath, 'Games');
@@ -96,8 +107,13 @@ export const SettingStreamDesktopVolume = new NumberSetting('stream-desktop-volu
 // Stream Setup
 export const SettingStreamProducerWebcam = new StringSetting('stream-producer-webcam', '');
 export const SettingStreamProducerMic = new StringSetting('stream-producer-mic', '');
-export const SettingStreamProducerDesktopAudio = new StringSetting(
-	'stream-producer-desktop-audio',
+export const SettingStreamProducerShouldStreamDesktopAudio = new BooleanSetting(
+	'stream-producer-should-stream-desktop-audio',
+	hasDesktopAudioCaptureSupport
+);
+export const SettingStreamProducerDesktopAudioDevice = new StringSetting(
+	'stream-producer-desktop-audio-device',
 	''
 );
 export const SettingStreamProducerGroupAudio = new StringSetting('stream-producer-group-audio', '');
+export const SettingPostBackgroundId = new NumberSetting('post-background-id', -1);

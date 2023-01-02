@@ -1,12 +1,12 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { AppAuthRequired } from '../../auth/auth-required-directive';
+import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import { Model } from '../../model/model.service';
 import { CommentModal, DisplayMode } from '../modal/modal.service';
 
 @Options({
 	directives: {
-		AppAuthRequired,
+		AppAuthRequired: vAppAuthRequired,
 	},
 })
 export default class AppCommentAddButton extends Vue {

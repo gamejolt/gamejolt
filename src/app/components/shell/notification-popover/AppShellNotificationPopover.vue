@@ -1,23 +1,29 @@
 <script lang="ts" setup>
-import { ref, computed, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { sleep } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { Connection } from '../../../../_common/connection/connection-service';
-import AppLoading from '../../../../_common/loading/loading.vue';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Notification } from '../../../../_common/notification/notification-model';
-import AppPopper from '../../../../_common/popper/popper.vue';
+import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useEventSubscription } from '../../../../_common/system/event/event-topic';
-import { AppTooltip as vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { useAppStore } from '../../../store';
+import { NotificationsFilterModal } from '../../../views/notifications/filter/modal.service';
+import { routeNotifications } from '../../../views/notifications/notifications.route';
+import {
+	NOTIFICATION_FILTER_FIELD,
+	SUPPORTED_NOTIFICATION_FEED_TYPES,
+} from '../../../views/notifications/RouteNotifications.vue';
 import { ActivityFeedView } from '../../activity/feed/view';
 import { onNewStickers } from '../../grid/client.service';
+import { useGridStore } from '../../grid/grid-store';
 import { AppActivityFeedLazy } from '../../lazy';
-import AppShellNotificationPopoverStickerNavItem from './sticker-nav-item/sticker-nav-item.vue';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
+import AppShellNotificationPopoverStickerNavItem from './sticker-nav-item/AppShellNotificationPopoverStickerNavItem.vue';
 
 interface StickerAnimationData {
 	key: string;
@@ -31,8 +37,8 @@ const {
 	unreadNotificationsCount,
 	hasNewUnlockedStickers,
 	markNotificationsAsRead,
-	grid,
 } = useAppStore();
+const { grid } = useGridStore();
 
 const newStickerAnimContainer = ref<HTMLDivElement>();
 const isShowing = ref(false);
@@ -92,13 +98,21 @@ async function onShow() {
 		// If the feed isn't bootstrapped with data, then we have to do the
 		// first bootstrapping call to get data into it.
 		if (!feed.value.isBootstrapped) {
-			const $payload = await Api.sendRequest('/web/dash/activity/notifications');
+			const payload = await Api.sendRequest(
+				'/web/dash/activity/notifications',
+				{
+					[NOTIFICATION_FILTER_FIELD]: SUPPORTED_NOTIFICATION_FEED_TYPES,
+				},
+				{
+					allowComplexData: [NOTIFICATION_FILTER_FIELD],
+				}
+			);
 
-			const items = Notification.populate($payload.items);
+			const items = Notification.populate(payload.items);
 			feed.value.append(items);
 
-			if ($payload.perPage) {
-				feed.value.itemsPerPage = $payload.perPage;
+			if (payload.perPage) {
+				feed.value.itemsPerPage = payload.perPage;
 			}
 		}
 		// If it is already bootstrapped, we just want to load new items if
@@ -149,6 +163,13 @@ function removeStickerAnimation(key: string) {
 		animatingStickers.value.splice(index, 1);
 	}
 }
+
+function onClickFilter() {
+	NotificationsFilterModal.show({
+		filters: Notification.NOTIFICATION_FEED_TYPES,
+		replaceRoute: route.name === routeNotifications.name,
+	});
+}
 </script>
 
 <template>
@@ -157,6 +178,7 @@ function removeStickerAnimation(key: string) {
 		popover-class="fill-dark"
 		fixed
 		hide-on-state-change
+		width="400px"
 		@show="onShow()"
 		@hide="onHide()"
 	>
@@ -173,7 +195,6 @@ function removeStickerAnimation(key: string) {
 			>
 				{{ unreadNotificationsCount }}
 			</span>
-			<div v-if="hasNewUnlockedStickers" class="-new-tag anim-fade-enter anim-fade-leave" />
 			<AppJolticon icon="bell-filled" />
 			<div ref="newStickerAnimContainer" class="-new-sticker-anim-container">
 				<div
@@ -188,14 +209,19 @@ function removeStickerAnimation(key: string) {
 
 		<template v-if="feed && isShowing" #header>
 			<div class="-header fill-darker small">
+				<a class="link-muted" @click="onClickFilter()">
+					<AppJolticon icon="filter" middle />
+					{{ $gettext(`Filter`) }}
+				</a>
+
 				<a class="link-muted" @click="markNotificationsAsRead()">
-					<AppTranslate>Mark All as Read</AppTranslate>
+					{{ $gettext(`Mark all as read`) }}
 				</a>
 			</div>
 		</template>
 
 		<template v-if="feed && isShowing" #popover>
-			<div class="shell-card-popover">
+			<div class="-wrapper">
 				<template v-if="isLoading">
 					<br />
 					<AppLoading centered />
@@ -208,7 +234,7 @@ function removeStickerAnimation(key: string) {
 					/>
 					<template v-if="!feed || !feed.hasItems">
 						<div class="alert">
-							<AppTranslate>You don't have any notifications yet.</AppTranslate>
+							{{ $gettext(`You don't have any notifications yet.`) }}
 						</div>
 					</template>
 					<template v-else>
@@ -221,7 +247,7 @@ function removeStickerAnimation(key: string) {
 		<template v-if="feed && isShowing" #footer>
 			<div class="fill-darker">
 				<AppButton :to="{ name: 'notifications' }" block trans>
-					<AppTranslate>View All</AppTranslate>
+					{{ $gettext(`View all`) }}
 				</AppButton>
 			</div>
 		</template>
@@ -235,12 +261,15 @@ $-new-sticker-size = 32px
 	full-bleed()
 
 // The full-bleed would add a scrollbar if we didn't cut it off like this.
-.shell-card-popover
+.-wrapper
 	overflow: hidden
+	padding: 10px
 
 .-header
 	padding: $popover-spacing
-	text-align: right
+	display: flex
+	justify-content: flex-end
+	gap: 12px
 
 .-new-sticker-anim-container
 	position: absolute
@@ -249,21 +278,6 @@ $-new-sticker-size = 32px
 	user-select: none
 	pointer-events: none
 	z-index: 3
-
-.-new-tag
-	border-radius: 50%
-	width: 12px
-	height: 12px
-	display: block
-	change-bg('highlight')
-	position: absolute
-	bottom: 10px
-	right: 4px
-	display: block
-	border-color: var(--theme-darkest)
-	border-width: 2px
-	border-style: solid
-
 
 .-new-sticker
 	position: fixed

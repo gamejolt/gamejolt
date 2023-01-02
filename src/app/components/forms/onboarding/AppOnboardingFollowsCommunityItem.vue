@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
-import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Community } from '../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/img/img.vue';
+import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
 import { useAppStore } from '../../../store';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import { useGridStore } from '../../grid/grid-store';
 
 const props = defineProps({
 	community: {
@@ -16,6 +16,7 @@ const props = defineProps({
 
 const { community } = toRefs(props);
 const { joinCommunity, leaveCommunity } = useAppStore();
+const { grid } = useGridStore();
 
 const highlight = computed(() => {
 	const highlight = community.value.theme && community.value.theme.highlight_;
@@ -34,23 +35,17 @@ const highlightFg = computed(() => {
 });
 
 async function toggleJoin() {
-	// This matches what's on community join widget. Seems odd but okay.
-	Analytics.trackEvent(
-		'community-join',
-		'onboarding',
-		community.value.is_member ? 'leave' : 'join'
-	);
-
-	// Onboarding analytics too
 	Onboarding.trackEvent(
 		community.value.is_member ? 'community-leave' : 'community-join',
 		`${community.value.id}-${community.value.path}`
 	);
 
 	if (!community.value.is_member) {
-		joinCommunity(community.value, 'onboarding');
+		joinCommunity(community.value, { grid: grid.value, location: 'onboarding' });
 	} else {
-		leaveCommunity(community.value, 'onboarding', {
+		leaveCommunity(community.value, {
+			grid: grid.value,
+			location: 'onboarding',
 			shouldConfirm: false,
 		});
 	}
@@ -60,15 +55,13 @@ async function toggleJoin() {
 <template>
 	<div class="-item">
 		<div class="-pressy">
-			<div class="-wrapper">
-				<AppCommunityThumbnailImg
-					class="-img"
-					:style="{
-						'border-color': community.is_member ? highlight : '',
-					}"
-					:community="community"
-					@click="toggleJoin"
-				/>
+			<div
+				class="-wrapper"
+				:style="{
+					'border-color': community.is_member ? highlight : '',
+				}"
+			>
+				<AppCommunityThumbnailImg class="-img" :community="community" @click="toggleJoin" />
 
 				<div
 					v-if="community.is_member"
@@ -77,7 +70,11 @@ async function toggleJoin() {
 						'background-color': highlight,
 					}"
 				>
-					<AppJolticon class="-icon" icon="check" :style="{ color: highlightFg }" />
+					<AppJolticon
+						class="-followed-icon"
+						icon="check"
+						:style="{ color: highlightFg }"
+					/>
 				</div>
 			</div>
 		</div>
@@ -95,25 +92,22 @@ async function toggleJoin() {
 	display: inline-block
 
 .-wrapper
+	img-circle()
 	position: relative
 	width: $-community-item-size
 	height: $-community-item-size
+	border: 3px solid
+	theme-prop('border-color', 'gray')
 
 .-pressy
 	display: inline-block
+	pressy()
 
 	&:hover
 		transform: scale(1.05)
 
-	pressy()
-
 .-img
-	img-circle()
-	width: 100%
-	height: 100%
-	border: 3px solid
 	cursor: pointer
-	theme-prop('border-color', 'gray')
 
 .-followed
 	position: absolute
@@ -123,15 +117,15 @@ async function toggleJoin() {
 	height: $-community-bubble-size
 	border-radius: 50%
 
-	.-icon
-		position: absolute
-		top: 2px
-		left: -1px
-		margin: 0
-		width: 100%
-		text-align: center
-		font-size: 20px
-		color: $white
+.-followed-icon
+	position: absolute
+	top: 2px
+	left: -1px
+	margin: 0
+	width: 100%
+	text-align: center
+	font-size: 20px
+	color: $white
 
 .-name
 	text-overflow()

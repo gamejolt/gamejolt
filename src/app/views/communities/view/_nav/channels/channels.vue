@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Inject, Options, Vue } from 'vue-property-decorator';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../../_common/community/community.model';
-import AppLoading from '../../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
 import AppCommunityChannelCard from '../../../../../components/community/channel/card/card.vue';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';

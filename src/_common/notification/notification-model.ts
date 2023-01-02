@@ -1,5 +1,9 @@
-import { RouteLocationRaw, Router } from 'vue-router';
+import { Router } from 'vue-router';
 import { TrophyModal } from '../../app/components/trophy/modal/modal.service';
+import { SupporterMessageModal } from '../../app/views/dashboard/supporters/message/modal.service';
+import { routeDashSupporters } from '../../app/views/dashboard/supporters/supporters.route';
+import type { RouteLocationDefinition } from '../../utils/router';
+import { isKnownRoute } from '../../utils/router';
 import { assertNever } from '../../utils/utils';
 import { Collaborator } from '../collaborator/collaborator.model';
 import { Comment, getCommentUrl } from '../comment/comment-model';
@@ -25,9 +29,12 @@ import { Mention } from '../mention/mention.model';
 import { Model } from '../model/model.service';
 import { Navigate } from '../navigate/navigate.service';
 import { OrderItem } from '../order/item/item.model';
+import { QuestNotification } from '../quest/quest-notification-model';
 import { Sellable } from '../sellable/sellable.model';
+import { StickerPlacement } from '../sticker/placement/placement.model';
 import { Subscription } from '../subscription/subscription.model';
-import { Translate } from '../translate/translate.service';
+import { SupporterAction } from '../supporters/action.model';
+import { $gettext, Translate } from '../translate/translate.service';
 import { UserFriendship } from '../user/friendship/friendship.model';
 import { UserGameTrophy } from '../user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../user/trophy/site-trophy.model';
@@ -35,10 +42,10 @@ import { UserBaseTrophy } from '../user/trophy/user-base-trophy.model';
 import { User } from '../user/user.model';
 
 function getRouteLocationForModel(
-	model: Game | User | FiresidePost | Community | Fireside
-): RouteLocationRaw {
+	model: Game | User | FiresidePost | Community | Fireside | QuestNotification
+): RouteLocationDefinition | '' {
 	if (model instanceof User) {
-		return model.url;
+		return model.routeLocation;
 	} else if (model instanceof Game) {
 		return model.routeLocation;
 	} else if (model instanceof FiresidePost) {
@@ -46,7 +53,9 @@ function getRouteLocationForModel(
 	} else if (model instanceof Community) {
 		return model.routeLocation;
 	} else if (model instanceof Fireside) {
-		return model.location;
+		return model.routeLocation;
+	} else if (model instanceof QuestNotification) {
+		return model.routeLocation;
 	}
 	return '';
 }
@@ -72,6 +81,9 @@ export class Notification extends Model {
 	static TYPE_FIRESIDE_START = 'fireside-start';
 	static TYPE_FIRESIDE_STREAM_NOTIFICATION = 'fireside-stream-notification';
 	static TYPE_FIRESIDE_FEATURED_IN_COMMUNITY = 'fireside-featured-in-community';
+	static TYPE_QUEST_NOTIFICATION = 'quest-notification';
+	static TYPE_CHARGED_STICKER = 'charged-sticker';
+	static TYPE_SUPPORTER_MESSAGE = 'supporter-message';
 
 	static ACTIVITY_FEED_TYPES = [EventItem.TYPE_POST_ADD];
 
@@ -91,6 +103,9 @@ export class Notification extends Model {
 		Notification.TYPE_SITE_TROPHY_ACHIEVED,
 		Notification.TYPE_COMMUNITY_USER_NOTIFICATION,
 		Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY,
+		Notification.TYPE_QUEST_NOTIFICATION,
+		Notification.TYPE_CHARGED_STICKER,
+		Notification.TYPE_SUPPORTER_MESSAGE,
 	];
 
 	user_id!: number;
@@ -121,7 +136,10 @@ export class Notification extends Model {
 		| CommunityUserNotification
 		| Fireside
 		| FiresideStreamNotification
-		| FiresideCommunity;
+		| FiresideCommunity
+		| QuestNotification
+		| StickerPlacement
+		| SupporterAction;
 
 	to_resource!: string | null;
 	to_resource_id!: number | null;
@@ -223,6 +241,14 @@ export class Notification extends Model {
 			this.action_model = new FiresideStreamNotification(data.action_resource_model);
 		} else if (this.type === Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY) {
 			this.action_model = new FiresideCommunity(data.action_resource_model);
+		} else if (this.type === Notification.TYPE_QUEST_NOTIFICATION) {
+			this.action_model = new QuestNotification(data.action_resource_model);
+		} else if (this.type === Notification.TYPE_CHARGED_STICKER) {
+			this.action_model = new StickerPlacement(data.action_resource_model);
+			this.is_user_based = true;
+		} else if (this.type === Notification.TYPE_SUPPORTER_MESSAGE) {
+			this.action_model = new SupporterAction(data.action_resource_model);
+			this.is_user_based = true;
 		}
 
 		// Keep memory clean after bootstrapping the models (the super
@@ -232,7 +258,7 @@ export class Notification extends Model {
 		delete (this as any).to_resource_model;
 	}
 
-	get routeLocation(): RouteLocationRaw {
+	get routeLocation(): RouteLocationDefinition | '' {
 		switch (this.type) {
 			case Notification.TYPE_FRIENDSHIP_REQUEST:
 			case Notification.TYPE_FRIENDSHIP_ACCEPT:
@@ -311,6 +337,20 @@ export class Notification extends Model {
 
 			case Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY:
 				return getRouteLocationForModel(this.to_model as Fireside);
+
+			case Notification.TYPE_QUEST_NOTIFICATION:
+				return getRouteLocationForModel(this.action_model as QuestNotification);
+
+			case Notification.TYPE_CHARGED_STICKER: {
+				return routeDashSupporters;
+			}
+
+			case Notification.TYPE_SUPPORTER_MESSAGE: {
+				// Messages might have their height cropped in the notification
+				// feed. Don't return a location here, we'll instead show a
+				// modal in the `go` function.
+				return '';
+			}
 		}
 
 		// Must pull asynchronously when they click on the notification.
@@ -327,8 +367,9 @@ export class Notification extends Model {
 	}
 
 	async go(router: Router) {
-		if (this.routeLocation) {
-			router.push(this.routeLocation);
+		const gotoLocation = this.routeLocation;
+		if (gotoLocation !== '') {
+			router.push(gotoLocation);
 		} else if (
 			this.type === Notification.TYPE_GAME_TROPHY_ACHIEVED ||
 			this.type === Notification.TYPE_SITE_TROPHY_ACHIEVED
@@ -374,6 +415,13 @@ export class Notification extends Model {
 				const search = Environment.baseUrl;
 				if (url.search(search) === 0) {
 					url = url.replace(search, '');
+
+					if (!isKnownRoute(router, url)) {
+						throw new Error(
+							`Could not resolve notification url to a vue route. Notification id: ${this.id}, Url: ${url}`
+						);
+					}
+
 					router.push(url);
 				} else {
 					Navigate.gotoExternal(url);
@@ -381,6 +429,10 @@ export class Notification extends Model {
 			} catch (e) {
 				console.error(e);
 				showErrorGrowl(Translate.$gettext(`Couldn't go to notification.`));
+			}
+		} else if (this.type === Notification.TYPE_SUPPORTER_MESSAGE) {
+			if (this.action_model instanceof SupporterAction) {
+				SupporterMessageModal.show(this.action_model);
 			}
 		}
 	}
@@ -405,3 +457,28 @@ export class Notification extends Model {
 }
 
 Model.create(Notification);
+
+/**
+ * Map of {@link Notification.NOTIFICATION_FEED_TYPES} and their readable
+ * translated labels.
+ */
+export const NOTIFICATION_FEED_TYPE_LABELS = {
+	[Notification.TYPE_COMMENT_ADD]: $gettext(`Comment replies`),
+	[Notification.TYPE_COMMENT_ADD_OBJECT_OWNER]: $gettext(`Comments on your content`),
+	[Notification.TYPE_FORUM_POST_ADD]: $gettext(`Forum posts`),
+	[Notification.TYPE_FRIENDSHIP_ACCEPT]: $gettext(`Accepted friend requests`),
+	[Notification.TYPE_GAME_RATING_ADD]: $gettext(`Game ratings`),
+	[Notification.TYPE_GAME_FOLLOW]: $gettext(`Game follows`),
+	[Notification.TYPE_POST_FEATURED_IN_COMMUNITY]: $gettext(`Post featured`),
+	[Notification.TYPE_SELLABLE_SELL]: $gettext(`Sales`),
+	[Notification.TYPE_USER_FOLLOW]: $gettext(`Follows`),
+	[Notification.TYPE_MENTION]: $gettext(`Mentions`),
+	[Notification.TYPE_COLLABORATOR_INVITE]: $gettext(`Collaborator invites`),
+	[Notification.TYPE_GAME_TROPHY_ACHIEVED]: $gettext(`Game trophies`),
+	[Notification.TYPE_SITE_TROPHY_ACHIEVED]: $gettext(`Site trophies`),
+	[Notification.TYPE_COMMUNITY_USER_NOTIFICATION]: $gettext(`Community actions`),
+	[Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY]: $gettext(`Community featured firesides`),
+	[Notification.TYPE_QUEST_NOTIFICATION]: $gettext(`Quests`),
+	[Notification.TYPE_CHARGED_STICKER]: $gettext(`Charged stickers`),
+	[Notification.TYPE_SUPPORTER_MESSAGE]: $gettext(`Creator thank-you messages`),
+} as const;

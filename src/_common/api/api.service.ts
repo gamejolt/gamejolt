@@ -116,11 +116,11 @@ export class Api {
 	static uploadHost: string = Environment.uploadHost;
 	static apiPath = '/site-api';
 
-	static async sendRequest(
+	static async sendRequest<T = any>(
 		uri: string,
 		postData?: any,
 		options: RequestOptions = {}
-	): Promise<any> {
+	): Promise<T> {
 		options = {
 			...(<RequestOptions>{
 				ignoreLoadingBar: false,
@@ -182,6 +182,26 @@ export class Api {
 		}
 
 		return Payload.processResponse(requestPromise, options);
+	}
+
+	/**
+	 * Used to send a request for specific fields against the mobile API.
+	 */
+	static async sendFieldsRequest<T = any>(
+		uri: string,
+		fields: Record<string, any>,
+		options: RequestOptions = {}
+	): Promise<T> {
+		return this.sendRequest(
+			uri,
+			{
+				_fields: fields,
+			},
+			{
+				...options,
+				sanitizeComplexData: false,
+			}
+		);
 	}
 
 	private static async createRequest(

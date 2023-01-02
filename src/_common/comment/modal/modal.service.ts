@@ -1,12 +1,13 @@
 import { defineAsyncComponent } from 'vue';
 import { showModal } from '../../modal/modal.service';
 import { Model } from '../../model/model.service';
+import { CommentableModel } from '../comment-model';
 
 export type DisplayMode = 'comments' | 'shouts';
 
 interface CommentModalOptions {
 	displayMode?: DisplayMode;
-	model: Model;
+	model: CommentableModel & Model;
 	initialTab?: string;
 }
 
@@ -16,7 +17,7 @@ export class CommentModal {
 
 		return await showModal<void>({
 			modalId: 'Comment-' + [model.constructor.name, model.id].join('-'),
-			component: defineAsyncComponent(() => import('./modal.vue')),
+			component: defineAsyncComponent(() => import('./AppCommentModal.vue')),
 			props: {
 				displayMode,
 				model,

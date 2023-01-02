@@ -15,6 +15,7 @@ const adapter = createContentEditorAppAdapter({ themeStore });
 		<AppContentEditor
 			v-if="adapter.isInitialized && adapter.controller"
 			ref="editor"
+			:key="adapter.capabilitiesKey"
 			:controller="adapter.controller"
 			:content-context="adapter.context"
 			:value="adapter.initialContent"

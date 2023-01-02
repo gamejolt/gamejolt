@@ -9,19 +9,19 @@ import {
 import { CommunityCompetitionEntry } from '../../../../../../../../../_common/community/competition/entry/entry.model';
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../../../../../../_common/illustration/AppIllustration.vue';
-import AppLoading from '../../../../../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../../../../../_common/loading/AppLoading.vue';
 import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import AppPagination from '../../../../../../../../../_common/pagination/pagination.vue';
 import {
 	BaseRouteComponent,
 	OptionsForRoute,
 } from '../../../../../../../../../_common/route/route-component';
-import { AppNoAutoscroll } from '../../../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
+import { vAppNoAutoscroll } from '../../../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import { AppTimeAgo } from '../../../../../../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
-import AppUserCardHover from '../../../../../../../../../_common/user/card/hover/hover.vue';
-import AppUserAvatarImg from '../../../../../../../../../_common/user/user-avatar/img/img.vue';
-import AppUserVerifiedTick from '../../../../../../../../../_common/user/verified-tick/verified-tick.vue';
+import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
+import AppUserCardHover from '../../../../../../../../../_common/user/card/AppUserCardHover.vue';
+import AppUserAvatarImg from '../../../../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
+import AppUserVerifiedTick from '../../../../../../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';
 import { CommunityCompetitionEntryModal } from '../../../../../../../../components/community/competition/entry/modal/modal.service';
 import { illNoCommentsSmall } from '../../../../../../../../img/ill/illustrations';
@@ -84,8 +84,8 @@ function getValidSortDirectionQueryParam(route: RouteLocationNormalized) {
 		AppPagination,
 	},
 	directives: {
-		AppTooltip,
-		AppNoAutoscroll,
+		AppTooltip: vAppTooltip,
+		AppNoAutoscroll: vAppNoAutoscroll,
 	},
 })
 @OptionsForRoute({
@@ -267,7 +267,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 		</template>
 		<template v-else>
 			<template v-if="entryCount === 0">
-				<AppIllustration :src="illNoCommentsSmall">
+				<AppIllustration :asset="illNoCommentsSmall">
 					<p>
 						<AppTranslate v-if="competition.periodNum >= CompetitionPeriodVoting">
 							No new entries can be submitted to the jam, and none have been submitted
@@ -415,9 +415,9 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 										sm
 										@click="onClickRemoveEntry(entry)"
 									>
-										<AppTranslate v-if="entry.is_removed"
-											>Readmit Entry</AppTranslate
-										>
+										<AppTranslate v-if="entry.is_removed">
+											Readmit Entry
+										</AppTranslate>
 										<AppTranslate v-else>Hide Entry</AppTranslate>
 									</AppButton>
 								</td>

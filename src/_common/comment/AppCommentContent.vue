@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import { PropType, ref } from 'vue';
-import AppContentViewer from '../content/content-viewer/content-viewer.vue';
-import AppFadeCollapse from '../fade-collapse/fade-collapse.vue';
+import AppFadeCollapse from '../AppFadeCollapse.vue';
+import AppContentViewer from '../content/content-viewer/AppContentViewer.vue';
 import { formatDate } from '../filters/date';
-import AppStickerControlsOverlay from '../sticker/controls-overlay/controls-overlay.vue';
-import AppStickerReactions from '../sticker/reactions/reactions.vue';
+import AppStickerControlsOverlay from '../sticker/AppStickerControlsOverlay.vue';
+import AppStickerReactions from '../sticker/reactions/AppStickerReactions.vue';
+import AppStickerTarget from '../sticker/target/AppStickerTarget.vue';
 import { createStickerTargetController } from '../sticker/target/target-controller';
-import AppStickerTarget from '../sticker/target/target.vue';
+import AppTranslate from '../translate/AppTranslate.vue';
 import { Comment } from './comment-model';
 import './comment.styl';
-import AppTranslate from '../translate/AppTranslate.vue';
 
 const props = defineProps({
 	comment: {
@@ -25,7 +25,10 @@ const props = defineProps({
 	},
 });
 
-const stickerTargetController = createStickerTargetController(props.comment);
+const stickerTargetController = createStickerTargetController(props.comment, {
+	// Can't place charged stickers on comments.
+	isCreator: false,
+});
 
 const canToggleContent = ref(false);
 const showFullContent = ref(false);

@@ -1,13 +1,13 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
-import { AppTooltip } from '../../../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../tooltip/tooltip-directive';
 import { editorInsertGif, useContentEditorController } from '../../content-editor-controller';
 import { ContentEditorGifModal } from '../../modals/gif/gif-modal.service';
 
 @Options({
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppContentEditorControlsGif extends Vue {

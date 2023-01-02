@@ -5,7 +5,7 @@ import { Community } from '../../../../../_common/community/community.model';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTheme from '../../../../../_common/theme/AppTheme.vue';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { FiresideAddModal } from '../../add-modal/add-modal.service';
 
 @Options({
@@ -13,7 +13,7 @@ import { FiresideAddModal } from '../../add-modal/add-modal.service';
 		AppTheme,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppFiresideBadgeAdd extends Vue {
@@ -45,7 +45,7 @@ export default class AppFiresideBadgeAdd extends Vue {
 	async onClickBadge() {
 		const fireside = await FiresideAddModal.show({ community: this.community });
 		if (fireside instanceof Fireside) {
-			this.$router.push(fireside.location);
+			this.$router.push(fireside.routeLocation);
 		}
 	}
 }

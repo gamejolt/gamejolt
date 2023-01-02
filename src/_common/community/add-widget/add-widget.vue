@@ -1,16 +1,16 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { AppAuthRequired } from '../../auth/auth-required-directive';
+import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { useCommonStore } from '../../store/common-store';
 import { TooltipPlacement } from '../../tooltip/tooltip-controller';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 
 @Options({
 	directives: {
-		AppTooltip,
-		AppAuthRequired,
+		AppTooltip: vAppTooltip,
+		AppAuthRequired: vAppAuthRequired,
 	},
 })
 export default class AppCommunityAddWidget extends Vue {
@@ -30,7 +30,7 @@ export default class AppCommunityAddWidget extends Vue {
 	get tooltip() {
 		let content;
 		if (this.canCreate || !this.user) {
-			content = this.$gettext(`Create a Community`);
+			content = this.$gettext(`Create a community`);
 		} else {
 			content = this.$gettext(`You own too many communities`);
 		}

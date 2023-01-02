@@ -1,33 +1,33 @@
 <script lang="ts">
+import { computed } from 'vue';
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import AppContentViewer from '../../../_common/content/content-viewer/content-viewer.vue';
+import AppCommentDisabledCheck from '../../../_common/comment/AppCommentDisabledCheck.vue';
+import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { $viewPostVideo } from '../../../_common/fireside/post/video/video-model';
-import { AppImgResponsive } from '../../../_common/img/responsive/responsive';
+import AppImgResponsive from '../../../_common/img/AppImgResponsive.vue';
 import { MediaItem } from '../../../_common/media-item/media-item-model';
 import { BaseModal } from '../../../_common/modal/base';
-import { AppResponsiveDimensions } from '../../../_common/responsive-dimensions/responsive-dimensions';
+import AppResponsiveDimensions from '../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
+import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.vue';
 import {
 	createStickerTargetController,
 	StickerTargetController,
 } from '../../../_common/sticker/target/target-controller';
-import AppStickerTarget from '../../../_common/sticker/target/target.vue';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
-import AppVideoEmbed from '../../../_common/video/embed/embed.vue';
 import { getVideoPlayerFromSources } from '../../../_common/video/player/controller';
 import AppVideoPlayer from '../../../_common/video/player/player.vue';
 import AppVideo from '../../../_common/video/video.vue';
 import { AppCommentWidgetLazy } from '../lazy';
 import AppPollVoting from '../poll/voting/voting.vue';
-import AppPostControls from '../post/controls/controls.vue';
+import AppPostControls from '../post/controls/AppPostControls.vue';
 
 @Options({
 	components: {
 		AppResponsiveDimensions,
 		AppImgResponsive,
 		AppVideo,
-		AppVideoEmbed,
 		AppVideoPlayer,
 		AppTimeAgo,
 		AppPollVoting,
@@ -35,6 +35,7 @@ import AppPostControls from '../post/controls/controls.vue';
 		AppContentViewer,
 		AppStickerTarget,
 		AppCommentWidgetLazy,
+		AppCommentDisabledCheck,
 	},
 })
 export default class AppBroadcastModal extends mixins(BaseModal) {
@@ -51,7 +52,9 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 	}
 
 	created() {
-		this.stickerTargetController = createStickerTargetController(this.post);
+		this.stickerTargetController = createStickerTargetController(this.post, {
+			isCreator: computed(() => this.post.displayUser.is_creator === true),
+		});
 	}
 
 	getVideoController(item: MediaItem) {
@@ -140,20 +143,12 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 
 					<div v-if="post.hasVideo">
 						<AppVideoPlayer
-							v-if="video.provider === 'gamejolt'"
 							context="page"
 							:media-item="video.posterMediaItem"
 							:manifests="video.manifestSources"
 							autoplay
 							@play="onVideoPlay"
 						/>
-						<AppVideoEmbed
-							v-else
-							video-provider="youtube"
-							:video-id="video.video_id"
-							autoplay
-						/>
-
 						<br />
 					</div>
 
@@ -181,7 +176,9 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 
 					<br />
 					<br />
-					<AppCommentWidgetLazy :model="post" display-mode="comments" />
+					<AppCommentDisabledCheck :model="post">
+						<AppCommentWidgetLazy :model="post" display-mode="comments" />
+					</AppCommentDisabledCheck>
 				</div>
 			</div>
 		</div>

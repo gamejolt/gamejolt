@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import AppExpand from '../../expand/AppExpand.vue';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 
 const STORAGE_KEY_PREFIX = 'dismiss-alert:';
 
@@ -10,7 +10,7 @@ const STORAGE_KEY_PREFIX = 'dismiss-alert:';
 		AppExpand,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppAlertDismissable extends Vue {

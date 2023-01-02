@@ -159,7 +159,7 @@ export default class AppDiscoverHomeBanner extends Vue {
 								'-info-full': !item.front_url,
 							}"
 						>
-							<p class="lead">
+							<p class="-text-shadow lead">
 								{{ item.content }}
 							</p>
 
@@ -316,6 +316,9 @@ export default class AppDiscoverHomeBanner extends Vue {
 		justify-content: center
 		margin-left: -($grid-gutter-width / 2)
 		margin-right: -($grid-gutter-width / 2)
+
+.-text-shadow
+	overlay-text-shadow()
 
 .-logo
 	-gutter()

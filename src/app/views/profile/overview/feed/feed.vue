@@ -9,12 +9,12 @@ import AppIllustration from '../../../../../_common/illustration/AppIllustration
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import AppActivityFeedPlaceholder from '../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
-import AppActivityFeedPlaceholder from '../../../../components/activity/feed/placeholder/placeholder.vue';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../../../components/lazy';
-import AppPostAddButton from '../../../../components/post/add-button/add-button.vue';
+import AppPostAddButton from '../../../../components/post/add-button/AppPostAddButton.vue';
 import AppUserSpawnDay from '../../../../components/user/spawn-day/spawn-day.vue';
 import { illNoComments } from '../../../../img/ill/illustrations';
 import { useProfileRouteController } from '../../profile.vue';
@@ -40,7 +40,7 @@ function getFetchUrl(route: RouteLocationNormalized) {
 		AppIllustration,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({
@@ -100,7 +100,7 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 	}
 
 	routeCreated() {
-		this.feed = ActivityFeedService.routeInit(this);
+		this.feed = ActivityFeedService.routeInit(this.isRouteBootstrapped);
 	}
 
 	routeResolved(payload: any, fromCache: boolean) {
@@ -111,7 +111,6 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 				name: 'user-profile',
 				url: getFetchUrl(this.$route),
 				itemsPerPage: payload.perPage,
-				shouldShowDates: !this.isLikeFeed,
 				shouldShowFollow: this.isLikeFeed,
 			},
 			payload.items,
@@ -120,19 +119,31 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 	}
 
 	onPostAdded(post: FiresidePost) {
-		ActivityFeedService.onPostAdded(this.feed!, post, this);
+		ActivityFeedService.onPostAdded({
+			feed: this.feed!,
+			post,
+			appRoute: this.appRoute_,
+			route: this.$route,
+			router: this.$router,
+		});
 	}
 
 	onPostEdited(eventItem: EventItem) {
-		ActivityFeedService.onPostEdited(eventItem, this);
+		ActivityFeedService.onPostEdited({
+			eventItem,
+			appRoute: this.appRoute_,
+			route: this.$route,
+			router: this.$router,
+		});
 	}
 
 	onPostPublished(eventItem: EventItem) {
-		ActivityFeedService.onPostPublished(eventItem, this);
-	}
-
-	onPostRemoved(eventItem: EventItem) {
-		ActivityFeedService.onPostRemoved(eventItem, this);
+		ActivityFeedService.onPostPublished({
+			eventItem,
+			appRoute: this.appRoute_,
+			route: this.$route,
+			router: this.$router,
+		});
 	}
 }
 </script>
@@ -209,7 +220,7 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 			</ul>
 		</AppNavTabList>
 
-		<AppIllustration v-if="isLikeFeed && isLikeFeedDisabled && !isOwner" :src="illNoComments">
+		<AppIllustration v-if="isLikeFeed && isLikeFeedDisabled && !isOwner" :asset="illNoComments">
 			<p>
 				<AppTranslate>This user has made their liked posts private.</AppTranslate>
 			</p>
@@ -219,16 +230,16 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 			<AppActivityFeed
 				v-if="feed.hasItems"
 				:feed="feed"
+				show-ads
 				@edit-post="onPostEdited"
 				@publish-post="onPostPublished"
-				@remove-post="onPostRemoved"
 			/>
-			<AppIllustration v-else :src="illNoComments">
+			<AppIllustration v-else :asset="illNoComments">
 				<p>
 					<template v-if="isOwner">
-						<AppTranslate v-if="isLikeFeed"
-							>You haven't liked anything yet.</AppTranslate
-						>
+						<AppTranslate v-if="isLikeFeed">
+							You haven't liked anything yet.
+						</AppTranslate>
 						<AppTranslate v-else>You haven't posted anything yet.</AppTranslate>
 					</template>
 					<template v-else>

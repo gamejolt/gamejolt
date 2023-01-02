@@ -10,9 +10,6 @@ import { User } from '../user/user.model';
 import { FiresideCommunity } from './community/community.model';
 import { FiresideRole } from './role/role.model';
 
-/** The time remaining in seconds when we want to show expiry warnings */
-export const FIRESIDE_EXPIRY_THRESHOLD = 60;
-
 export class Fireside extends Collaboratable(Model) {
 	user!: User;
 	community_links: FiresideCommunity[] = [];
@@ -20,6 +17,7 @@ export class Fireside extends Collaboratable(Model) {
 	role: FiresideRole | null = null;
 	user_block?: UserBlock | null;
 	sticker_counts: StickerCount[] = [];
+	supporters: User[] = [];
 
 	hash!: string;
 	title!: string;
@@ -39,7 +37,7 @@ export class Fireside extends Collaboratable(Model) {
 		return !!this.user_block || this.user.blocked_you || this.user.is_blocked;
 	}
 
-	get location() {
+	get routeLocation() {
 		return {
 			name: 'fireside',
 			params: {
@@ -85,6 +83,10 @@ export class Fireside extends Collaboratable(Model) {
 		if (data.sticker_counts) {
 			this.sticker_counts = constructStickerCounts(data.sticker_counts);
 		}
+
+		if (data.supporters) {
+			this.supporters = User.populate(data.supporters);
+		}
 	}
 
 	public isOpen() {
@@ -99,15 +101,19 @@ export class Fireside extends Collaboratable(Model) {
 		return this.expires_on - getCurrentServerTime();
 	}
 
-	public addStickerToCount(sticker: Sticker) {
+	public addStickerToCount(sticker: Sticker, isCharged: boolean) {
 		const existingEntry = this.sticker_counts.find(i => i.stickerId === sticker.id);
+		const chargeCount = isCharged ? 1 : 0;
+
 		if (existingEntry) {
 			existingEntry.count++;
+			existingEntry.chargedCount += chargeCount;
 		} else {
 			this.sticker_counts.push({
 				stickerId: sticker.id,
 				imgUrl: sticker.img_url,
 				count: 1,
+				chargedCount: chargeCount,
 			});
 		}
 	}

@@ -1,11 +1,11 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
 import { TooltipPlacement } from '../../tooltip/tooltip-controller';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 
 @Options({
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppCommunityDiscoverWidget extends Vue {
@@ -14,7 +14,7 @@ export default class AppCommunityDiscoverWidget extends Vue {
 
 	get tooltip() {
 		return {
-			content: this.$gettext(`Discover Communities`),
+			content: this.$gettext(`Discover communities`),
 			placement: this.tooltipPlacement,
 		};
 	}

@@ -1,9 +1,10 @@
 import { bootstrapCommon } from '../_common/bootstrap';
-import App from './AppMain.vue';
 import './main.styl';
 
-export function createApp() {
-	const { app } = bootstrapCommon(App);
+export async function createApp() {
+	const { app } = await bootstrapCommon({
+		appComponentLoader: async () => (await import('./AppMain.vue')).default,
+	});
 
 	return { app };
 }

@@ -1,7 +1,7 @@
 import { Directive } from 'vue';
 import { Scroll } from '../scroll.service';
 
-export const AppScrollTo: Directive<HTMLElement, string | undefined> = {
+export const vAppScrollTo: Directive<HTMLElement, string | undefined> = {
 	beforeMount(el, binding) {
 		el.addEventListener('click', e => {
 			e.preventDefault();

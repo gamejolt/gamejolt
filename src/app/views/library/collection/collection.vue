@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import { enforceLocation } from '../../../../utils/router';
 import { shallowSetup } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
-import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { formatNumber } from '../../../../_common/filters/number';
 import { GameBundle } from '../../../../_common/game-bundle/game-bundle.model';
 import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
@@ -12,20 +12,20 @@ import { Game } from '../../../../_common/game/game.model';
 import { Jam } from '../../../../_common/jam/jam.model';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
-import AppPopper from '../../../../_common/popper/popper.vue';
+import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { User } from '../../../../_common/user/user.model';
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import AppGameCollectionFollowWidget from '../../../components/game/collection/follow-widget/follow-widget.vue';
 import AppGameCollectionThumbnail from '../../../components/game/collection/thumbnail/thumbnail.vue';
 import { GameFilteringContainer } from '../../../components/game/filtering/container';
 import AppGameGrid from '../../../components/game/grid/grid.vue';
+import AppGameListing from '../../../components/game/listing/AppGameListing.vue';
 import { GameListingContainer } from '../../../components/game/listing/listing-container-service';
-import AppGameListing from '../../../components/game/listing/listing.vue';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { useAppStore } from '../../../store/index';
@@ -55,8 +55,8 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 		AppLoadingFade,
 	},
 	directives: {
-		AppTooltip,
-		AppAuthRequired,
+		AppTooltip: vAppTooltip,
+		AppAuthRequired: vAppAuthRequired,
 	},
 })
 @OptionsForRoute({
@@ -202,7 +202,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 		if (!this.listing || !this.filtering) {
 			this.filtering = new GameFilteringContainer(this.$route);
-			this.listing = new GameListingContainer();
+			this.listing = new GameListingContainer({ loadInfinitely: false });
 		}
 
 		this.filtering.init(this.$route);
@@ -491,9 +491,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 										<AppTranslate>Your Owned Games</AppTranslate>
 									</h1>
 									<p class="text-muted small">
-										<AppTranslate
-											>These are all the games you own.</AppTranslate
-										>
+										<AppTranslate>
+											These are all the games you own.
+										</AppTranslate>
 									</p>
 								</template>
 								<template v-else-if="user">

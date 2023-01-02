@@ -9,7 +9,7 @@ import AppFormLegend from '../../../../../../_common/form-vue/AppFormLegend.vue'
 import AppFormControlDate from '../../../../../../_common/form-vue/controls/AppFormControlDate.vue';
 import { FormTimezoneService } from '../../../../../../_common/form-vue/form-timezone.service';
 import { BaseForm } from '../../../../../../_common/form-vue/form.service';
-import AppLoading from '../../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
 import AppCommunityCompetitionDate from '../../../../community/competition/date/date.vue';
 
 class Wrapper extends BaseForm<CommunityCompetition> {}
@@ -90,7 +90,9 @@ export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
 				<template v-else>
 					<AppFormGroup name="timezone" :label="$gettext(`Selected Timezone`)">
 						<p class="help-block">
-							<AppTranslate>All time selection below are using this timezone.</AppTranslate>
+							<AppTranslate>
+								All time selection below are using this timezone.
+							</AppTranslate>
 						</p>
 						{{ timezoneService.activeTimezoneName }}
 					</AppFormGroup>

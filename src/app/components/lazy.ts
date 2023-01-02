@@ -1,6 +1,6 @@
 import { defineAsyncComponent } from '@vue/runtime-core';
 import { lazyImportNoSSR } from '../../_common/code-splitting';
-import AppActivityFeedPlaceholder from './activity/feed/placeholder/placeholder.vue';
+import AppActivityFeedPlaceholder from './activity/feed/AppActivityFeedPlaceholder.vue';
 
 export const GridClientLazy = lazyImportNoSSR(() => import('./grid/client.service'));
 export const ChatClientLazy = lazyImportNoSSR(() => import('./chat/client'));
@@ -10,15 +10,11 @@ export const AppAuthJoinLazy = defineAsyncComponent(
 );
 
 export const AppCommentWidgetLazy = defineAsyncComponent(
-	() => import('../../_common/comment/widget/widget.vue')
-);
-
-export const FormCommentLazy = defineAsyncComponent(
-	() => import('../../_common/comment/add/add.vue')
+	() => import('../../_common/comment/widget/AppCommentWidget.vue')
 );
 
 export const AppActivityFeedLazy = defineAsyncComponent({
-	loader: () => import('./activity/feed/feed.vue'),
+	loader: () => import('./activity/feed/AppActivityFeed.vue'),
 	loadingComponent: AppActivityFeedPlaceholder,
 });
 

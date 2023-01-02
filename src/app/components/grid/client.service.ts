@@ -1,19 +1,15 @@
-import { Channel, Socket } from 'phoenix';
+import { Channel } from 'phoenix';
 import { markRaw, reactive } from 'vue';
 import { arrayRemove } from '../../../utils/array';
-import { CancelToken } from '../../../utils/cancel-token';
-import type { TabLeaderInterface } from '../../../utils/tab-leader';
+import { createLogger } from '../../../utils/logging';
 import { sleep } from '../../../utils/utils';
 import { uuidv4 } from '../../../utils/uuid';
 import { Analytics } from '../../../_common/analytics/analytics.service';
-import { Api } from '../../../_common/api/api.service';
-import { importNoSSR } from '../../../_common/code-splitting';
 import { Community } from '../../../_common/community/community.model';
-import { getCookie } from '../../../_common/cookie/cookie.service';
+import { ensureConfig } from '../../../_common/config/config.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresidePostCommunity } from '../../../_common/fireside/post/community/community.model';
-import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { FiresideStreamNotification } from '../../../_common/fireside/stream-notification/stream-notification.model';
 import { GameTrophy } from '../../../_common/game/trophy/trophy.model';
@@ -21,8 +17,13 @@ import { showInfoGrowl } from '../../../_common/growls/growls.service';
 import { Model } from '../../../_common/model/model.service';
 import { Notification } from '../../../_common/notification/notification-model';
 import { NotificationText } from '../../../_common/notification/notification-text.service';
+import Onboarding from '../../../_common/onboarding/onboarding.service';
 import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
 import { SiteTrophy } from '../../../_common/site/trophy/trophy.model';
+import {
+	createSocketController,
+	SocketController,
+} from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
 import { EventTopic } from '../../../_common/system/event/event-topic';
 import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
@@ -31,58 +32,15 @@ import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
 import { User } from '../../../_common/user/user.model';
 import { AppStore } from '../../store/index';
 import { router } from '../../views';
+import { ChatClient, clearChat, connectChat, createChatClient } from '../chat/client';
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
-import { CommunityChannel } from './community-channel';
-import { FiresideChannel } from './fireside-channel';
-
-const TabLeaderLazy = importNoSSR(
-	async () => (await import('../../../utils/tab-leader')).TabLeader
-);
+import { createGridCommunityChannel, GridCommunityChannel } from './community-channel';
+import { GridFiresideChannel } from './fireside-channel';
+import { GridFiresideDMChannel } from './fireside-dm-channel';
+import { createGridNotificationChannel, GridNotificationChannel } from './notification-channel';
 
 export const onFiresideStart = new EventTopic<Model>();
 export const onNewStickers = new EventTopic<string[]>();
-
-interface NewNotificationPayload {
-	notification_data: {
-		event_item: any;
-	};
-}
-
-interface CommunityFeaturePayload {
-	post_id: string;
-}
-
-interface CommunityFeatureFiresidePayload {
-	fireside_id: string;
-	fireside_data: any;
-}
-
-interface CommunityNewPostPayload {
-	channel_id: string;
-}
-
-interface BootstrapPayload {
-	status: string;
-	body: {
-		hasNewFriendRequests: boolean;
-		lastNotificationTime: number;
-		notificationCount: number;
-		activityUnreadCount: number;
-		notificationUnreadCount: number;
-		unreadFeaturedCommunities: { [communityId: number]: number };
-		unreadCommunities: number[];
-		hasNewUnlockedStickers: boolean;
-	};
-}
-
-interface CommunityBootstrapPayload {
-	status: string;
-	community_id: string;
-	body: {
-		unreadChannels: number[];
-		unreadFeatured: boolean;
-	};
-}
 
 type ClearNotificationsType =
 	// For the user's activity feed.
@@ -97,7 +55,11 @@ type ClearNotificationsType =
 	| 'community-channel'
 	| 'friend-requests'
 	// For the user's unviewed automatically unlocked stickers.
-	| 'stickers';
+	| 'stickers'
+	// A quest became available and is ready to be accepted.
+	| 'new-quest'
+	// A quest has updated progress or rewards available to claim.
+	| 'quest-activity';
 
 interface ClearNotificationsPayload {
 	type: ClearNotificationsType;
@@ -108,76 +70,11 @@ interface ClearNotificationsPayload {
 interface ClearNotificationsData {
 	channelId?: number;
 	communityId?: number;
-}
-
-interface StickerUnlockPayload {
-	sticker_img_urls: string[];
-}
-
-interface PostUpdatedPayload {
-	post_id: number;
-	/** Contains payload data for a `FiresidePost` resource. */
-	post_data: any;
-	/** `true` when the post was just published in the chain of events. */
-	was_published: boolean;
-	/** (Only set when `was_published` is true) Indicate whether this post was scheduled before it was automatically published. */
-	was_scheduled: boolean;
+	questId?: number;
 }
 
 export interface ClearNotificationsEventData extends ClearNotificationsPayload {
 	currentCount: number;
-}
-
-function clearNotifications(
-	appStore: AppStore,
-	type: ClearNotificationsType,
-	data: ClearNotificationsData = {}
-) {
-	switch (type) {
-		case 'activity':
-			appStore.setNotificationCount({
-				type: 'activity',
-				count: 0,
-			});
-			break;
-		case 'notifications':
-			appStore.setNotificationCount({
-				type: 'notifications',
-				count: 0,
-			});
-			break;
-		case 'community-channel':
-			{
-				const communityChannelId = data.channelId as number;
-				const communityId = data.communityId as number;
-				const communityState =
-					appStore.communityStates.value.getCommunityState(communityId);
-				communityState.markChannelRead(communityChannelId);
-			}
-			break;
-		case 'community-featured':
-			{
-				const communityId = data.communityId as number;
-				const communityState =
-					appStore.communityStates.value.getCommunityState(communityId);
-				communityState.hasUnreadFeaturedPosts = false;
-			}
-			break;
-		case 'community-unread':
-			{
-				const communityId = data.communityId as number;
-				const communityState =
-					appStore.communityStates.value.getCommunityState(communityId);
-				communityState.hasUnreadPosts = false;
-			}
-			break;
-		case 'friend-requests':
-			appStore.setHasNewFriendRequests(false);
-			break;
-		case 'stickers':
-			appStore.setHasNewUnlockedStickers(false);
-			break;
-	}
 }
 
 /**
@@ -185,6 +82,7 @@ function clearNotifications(
  * These resolvers get resolved in the connect function once Grid connected.
  */
 let connectionResolvers: (() => void)[] = [];
+
 /**
  * Resolves once Grid is fully connected.
  */
@@ -198,71 +96,36 @@ function tillConnection(client: GridClient) {
 	});
 }
 
-/**
- * Polls a request until it returns a result, increases the delay time between requests after each failed attempt.
- * @param context Context for logging
- * @param abortPromise Promise that once fulfilled would cause the polling to abort.
- * @param requestGetter Function that generates a promise that represents the request
- */
-async function pollRequest(
-	context: string,
-	cancelToken: CancelToken,
-	requestGetter: () => Promise<any>
-): Promise<any> {
-	let result = null;
-	let finished = false;
-
-	let delay = 0;
-
-	console.log(`[Grid] ${context}`);
-
-	while (!finished) {
-		try {
-			const promise = requestGetter();
-			result = await promise;
-			finished = true;
-		} catch (e) {
-			if (cancelToken.isCanceled) {
-				finished = true;
-			}
-
-			const sleepMs = Math.min(
-				30_000 + Math.random() * 10_000,
-				Math.random() * delay * 1_000 + 1_000
-			);
-			console.error(`[Grid] Failed request [${context}]. Reattempt in ${sleepMs} ms.`);
-			await sleep(sleepMs);
-		}
-
-		delay++;
-	}
-
-	return result;
-}
-
 export function createGridClient({ appStore }: { appStore: AppStore }) {
-	// We need to be able to get the raw app store without unwrapping its refs.
-	return reactive(new GridClient(() => appStore)) as GridClient;
+	// Don't want to unwrap the refs from the app store.
+	const client = reactive(new GridClient(markRaw(appStore))) as unknown as GridClient;
+
+	client.init();
+
+	return client;
 }
 
 export class GridClient {
-	constructor(public readonly _getAppStore: () => AppStore) {}
+	constructor(public readonly appStore: AppStore) {}
+
+	readonly logger = createLogger('Grid');
 
 	// Stores a unique id that identifies this session when it pushes data to Grid.
 	readonly clientId = uuidv4();
 
+	// Will get created in "init".
+	socketController: SocketController = null as any;
 	connected = false;
 	isGuest = false;
-	socket: Socket | null = null;
 	channels: Channel[] = [];
-	notificationBacklog: NewNotificationPayload[] = [];
 	bootstrapReceived = false;
 	bootstrapTimestamp = 0;
 	bootstrapDelay = 1;
-	communityChannels: CommunityChannel[] = [];
-	firesideChannels: FiresideChannel[] = [];
-	notificationChannel: Channel | null = null;
-	tabLeader: TabLeaderInterface | null = null;
+	chat: ChatClient | null = null;
+	communityChannels: GridCommunityChannel[] = [];
+	firesideChannels: GridFiresideChannel[] = [];
+	firesideDMChannels: GridFiresideDMChannel[] = [];
+	notificationChannel: GridNotificationChannel | null = null;
 	/**
 	 * @see `deregisterViewingCommunity` doc-block for explanation.
 	 */
@@ -278,15 +141,24 @@ export class GridClient {
 	 * The Grid client will ignore any incoming feature notifications for posts recorded here,
 	 * because users that feature posts should not get notified about those exact posts.
 	 */
-	private featuredPostIds: Set<number> = new Set<number>();
-
-	/**
-	 * This is used to abort a single connection flow so we can cleanly retry.
-	 */
-	private cancelToken: CancelToken = null as any;
+	featuredPostIds: Set<number> = new Set<number>();
 
 	init() {
-		this.cancelToken = new CancelToken();
+		this.socketController = markRaw(
+			createSocketController({
+				commonStore,
+				logContext: 'Grid',
+				onDisconnect: () => {
+					this.reconnect(0);
+				},
+			})
+		);
+
+		this.chat = createChatClient({
+			grid: this,
+			appStore: this.appStore,
+		});
+
 		this.connect();
 	}
 
@@ -312,193 +184,51 @@ export class GridClient {
 	}
 
 	private async connect() {
-		const cancelToken = this.cancelToken;
+		const { isGuest, guestToken, logger } = this;
+		const { user } = commonStore;
 
-		const user = commonStore.user.value;
-		if ((!this.isGuest && !user) || (this.isGuest && !!user)) {
-			return;
-		}
-
-		const authToken = this.isGuest ? this.guestToken : await getCookie('frontend');
-		if (cancelToken.isCanceled) {
-			console.log('[Grid] Aborted connection (1)');
-			return;
-		}
-
-		const timedOut = commonStore.isUserTimedOut.value;
-
-		if (!authToken || timedOut) {
-			// Not properly logged in.
-			return;
-		}
-
-		console.log('[Grid] Connecting...');
-
-		// get hostname from loadbalancer first
-		const hostResult = await pollRequest('Select server', cancelToken, () => {
-			return Api.sendRawRequest(Environment.gridHost, {
-				timeout: 3_000,
-			});
+		const didConnect = await this.socketController.connect({
+			socketUrl: Environment.grid,
+			isGuest,
+			guestToken,
+			hostSuffix: '/grid/socket',
 		});
 
-		if (cancelToken.isCanceled) {
-			console.log('[Grid] Aborted connection (2)');
-			return;
-		}
-		const host = `${hostResult.data}/grid/socket`;
-
-		console.log('[Grid] Server selected:', host);
-
-		// heartbeat is 30 seconds, backend disconnects after 40 seconds
-		this.socket = markRaw(
-			new Socket(host, {
-				heartbeatIntervalMs: 30_000,
-				params: {
-					gj_platform: GJ_IS_DESKTOP_APP ? 'client' : 'web',
-					gj_platform_version: GJ_VERSION,
-				},
-			})
-		);
-
-		// TODO: niiiiils, any reason not to do this?
-		this.socket.onError(() => {
-			if (!cancelToken.isCanceled) {
-				this.restart(0);
-			}
-		});
-
-		// HACK
-		// there is no built in way to stop a Phoenix socket from attempting to reconnect on its own after it got disconnected.
-		// this replaces the socket's "reconnectTimer" property with an empty object that matches the Phoenix "Timer" signature
-		// The 'reconnectTimer' usually restarts the connection after a delay, this prevents that from happening
-		const socketAny: any = this.socket;
-		if (Object.prototype.hasOwnProperty.call(socketAny, 'reconnectTimer')) {
-			socketAny.reconnectTimer = { scheduleTimeout: () => {}, reset: () => {} };
-		}
-
-		await pollRequest(
-			'Connect to socket',
-			cancelToken,
-			() =>
-				new Promise<void>(resolve => {
-					if (cancelToken.isCanceled) {
-						resolve();
-						return;
-					}
-
-					this.socket?.connect();
-					resolve();
-				})
-		);
-
-		if (cancelToken.isCanceled) {
-			console.log('[Grid] Aborted connection (3)');
+		if (!didConnect) {
 			return;
 		}
 
-		// Guest connections are only used for realtime stuff like fireside state updates.
-		// They don't need to do any more setup work beyond successfully connecting to the socket.
+		// Freeze the cancel token we're using.
+		const cancelToken = this.socketController.cancelToken.value;
+
+		// Make sure their remote config is setup before connecting fully to
+		// grid. We might end up handling things differently depending on their
+		// split tests.
+		await ensureConfig();
+
+		if (cancelToken.isCanceled) {
+			return;
+		}
+
+		// Guest connections are only used for realtime stuff like fireside
+		// state updates. They don't need to do any more setup work beyond
+		// successfully connecting to the socket.
 		if (this.isGuest) {
 			this.markConnected();
 		}
 		// User connections expected to handle a bunch of notification stuff.
-		else if (user) {
-			const userId = user.id.toString();
-			const channel = markRaw(
-				this.socket.channel('notifications:' + userId, {
-					auth_token: authToken,
-				})
-			);
-			this.notificationChannel = channel;
+		else if (user.value) {
+			const channel = await createGridNotificationChannel(this, { userId: user.value.id });
+			this.notificationChannel = markRaw(channel);
+			this.markConnected();
 
-			await pollRequest(
-				'Join user notification channel',
-				cancelToken,
-				() =>
-					new Promise<void>((resolve, reject) => {
-						channel
-							.join()
-							.receive('error', reject)
-							.receive('ok', () => {
-								this.markConnected();
-								resolve();
-							});
-					})
-			);
+			logger.info('Subscribing to community channels...');
 
-			// TODO: check if we need to kill the tab leader even tho we got aborted.
-			// Not sure when this would happen at the moment.
-			if (cancelToken.isCanceled) {
-				console.log('[Grid] Aborted connection (4)');
-				return;
-			}
-
-			// After successfully connecting to the socket, elect leader.
-			if (this.tabLeader !== null) {
-				await this.tabLeader.kill();
-
-				if (cancelToken.isCanceled) {
-					console.log('[Grid] Aborted connection (5)');
-					return;
-				}
-			}
-
-			const TabLeaderActual = await TabLeaderLazy;
-			this.tabLeader = new TabLeaderActual('grid_notification_channel_' + user.id);
-			this.tabLeader.init();
-
-			channel.on('new-notification', (payload: NewNotificationPayload) => {
-				if (cancelToken.isCanceled) {
-					return;
-				}
-
-				this.handleNotification(payload);
-			});
-
-			channel.on('bootstrap', (payload: BootstrapPayload) => {
-				if (cancelToken.isCanceled) {
-					return;
-				}
-
-				this.handleBootstrap(channel, payload);
-			});
-
-			channel.push('request-bootstrap', {});
-
-			channel.on('clear-notifications', (payload: ClearNotificationsPayload) => {
-				if (cancelToken.isCanceled) {
-					return;
-				}
-
-				this.handleClearNotifications(payload);
-			});
-
-			channel.on('community-bootstrap', (payload: CommunityBootstrapPayload) => {
-				if (cancelToken.isCanceled) {
-					return;
-				}
-
-				this.handleCommunityBootstrap(payload);
-			});
-
-			channel.on('sticker-unlock', (payload: StickerUnlockPayload) => {
-				if (cancelToken.isCanceled) {
-					return;
-				}
-
-				this.handleStickerUnlock(payload);
-			});
-
-			channel.on('post-updated', (payload: PostUpdatedPayload) => {
-				if (cancelToken.isCanceled) {
-					return;
-				}
-
-				this.handlePostUpdated(payload);
-			});
-
-			this.joinCommunities(cancelToken);
+			await Promise.all(this.appStore.communities.value.map(i => this.joinCommunity(i)));
 		}
+
+		// Now connect to our chat channels.
+		await connectChat(this.chat!);
 	}
 
 	markConnected() {
@@ -509,179 +239,58 @@ export class GridClient {
 		connectionResolvers = [];
 	}
 
-	async restart(sleepMs = 2_000) {
+	async disconnect() {
+		if (this.connected) {
+			this.logger.info('Disconnecting...');
+		} else {
+			this.logger.warn('Disconnecting (before we got fully connected)');
+		}
+
+		// Continue attempting to disconnect even if we didn't get fully
+		// connected. This should tear down the channels and socket that may
+		// have connected already, which allows us to cleanly reuse the instance
+		// for the next connection.
+
+		this.connected = false;
+		this.bootstrapReceived = false;
+		this.bootstrapTimestamp = 0;
+
+		this.communityChannels = [];
+		this.firesideChannels = [];
+		this.firesideDMChannels = [];
+		this.notificationChannel = null;
+
+		clearChat(this.chat!);
+
+		this.socketController.disconnect();
+	}
+
+	async reconnect(sleepMs = 2_000) {
 		// sleep a bit before trying to reconnect
 		await sleep(sleepMs);
+
 		// teardown and try to reconnect
 		if (this.connected) {
 			await this.disconnect();
-			this.connect();
 		}
-	}
-
-	handleNotification(payload: NewNotificationPayload) {
-		if (this.connected) {
-			// If no bootstrap has been received yet, store new notifications in a backlog to process them later
-			// the bootstrap delivers the timestamp of the last event item included in the bootstrap's notification count
-			// all event notifications received before the timestamp from the bootstrap will be ignored
-			if (!this.bootstrapReceived) {
-				this.notificationBacklog.push(payload);
-			} else {
-				const data = payload.notification_data.event_item;
-				const notification = reactive(new Notification(data)) as Notification;
-
-				// Only handle if timestamp is newer than the bootstrap timestamp
-				if (notification.added_on > this.bootstrapTimestamp) {
-					switch (notification.type) {
-						case Notification.TYPE_FRIENDSHIP_REQUEST:
-							// For an incoming friend request, set that they have a new friend request.
-							this._getAppStore().setHasNewFriendRequests(true);
-							this.spawnNotification(notification);
-							break;
-
-						case Notification.TYPE_FIRESIDE_START:
-							// Emit event that different components can pick up to update their views.
-							onFiresideStart.next(notification.action_model);
-							this.spawnNotification(notification);
-							break;
-
-						default:
-							this.spawnNotification(notification);
-							break;
-					}
-				}
-			}
-		}
-	}
-
-	handleBootstrap(channel: Channel, payload: BootstrapPayload) {
-		if (payload.status === 'ok') {
-			console.log('[Grid] Received bootstrap.');
-
-			const appStore = this._getAppStore();
-
-			channel.onError(reason => {
-				console.log(`[Grid] Connection error encountered (Reason: ${reason}).`);
-				this.restart(0);
-			});
-
-			appStore.setNotificationCount({
-				type: 'activity',
-				count: payload.body.activityUnreadCount,
-			});
-			appStore.setNotificationCount({
-				type: 'notifications',
-				count: payload.body.notificationUnreadCount,
-			});
-
-			appStore.setHasNewFriendRequests(payload.body.hasNewFriendRequests);
-			appStore.setHasNewUnlockedStickers(payload.body.hasNewUnlockedStickers);
-			this.bootstrapTimestamp = payload.body.lastNotificationTime;
-
-			this.bootstrapReceived = true;
-
-			// handle backlog
-			for (const notification of this.notificationBacklog) {
-				this.handleNotification(notification);
-			}
-			this.notificationBacklog = [];
-
-			// communities - has unread posts?
-			// When bootstrapping grid, we only get a list of communities and we don't
-			// care which channels in them are unread, just if it has any unread posts in them.
-			// when navigating into the community itself - this flag is cleared and the actual counts
-			// for the channels are populated.
-			for (const communityId of payload.body.unreadCommunities) {
-				const communityState =
-					appStore.communityStates.value.getCommunityState(communityId);
-				if (!communityState.dataBootstrapped) {
-					communityState.hasUnreadPosts = true;
-				}
-			}
-
-			// Reset delay when the bootstrap went through successfully.
-			this.bootstrapDelay = 1;
-
-			// If we are viewing a community, call its bootstrap as well:
-			if (this.viewingCommunityId) {
-				const communityState = appStore.communityStates.value.getCommunityState(
-					this.viewingCommunityId
-				);
-				if (!communityState || !communityState.dataBootstrapped) {
-					this.queueRequestCommunityBootstrap(this.viewingCommunityId);
-				}
-			}
-		} else {
-			// error
-			console.error(`[Grid] Failed to fetch notification count bootstrap (${payload.body}).`);
-
-			const delay = Math.min(
-				30_000 + Math.random() * 10_000,
-				Math.random() * this.bootstrapDelay * 2_000 + 1_000
-			);
-			this.bootstrapDelay++;
-
-			console.log(`[Grid] Reconnect in ${delay}ms...`);
-
-			this.restart(delay);
-		}
-	}
-
-	handleCommunityBootstrap({ community_id, body }: CommunityBootstrapPayload) {
-		const communityId = parseInt(community_id, 10);
-		const communityState =
-			this._getAppStore().communityStates.value.getCommunityState(communityId);
-
-		// This flag was set to true in the main bootstrap and we need to unset it
-		// now that we have the actual unread channels in this community.
-		// read comment in client service for more info.
-		communityState.hasUnreadPosts = false;
-		communityState.dataBootstrapped = true;
-
-		communityState.hasUnreadFeaturedPosts = body.unreadFeatured;
-		for (const channelId of body.unreadChannels) {
-			communityState.markChannelUnread(channelId);
-		}
-	}
-
-	handleClearNotifications({ clientId, type, data }: ClearNotificationsPayload) {
-		// Don't do anything when the notification originated from this client.
-		if (clientId === this.clientId) {
-			return;
-		}
-
-		clearNotifications(this._getAppStore(), type, data);
-	}
-
-	handleStickerUnlock({ sticker_img_urls }: StickerUnlockPayload) {
-		const appStore = this._getAppStore();
-
-		if (!appStore.hasNewUnlockedStickers.value) {
-			appStore.setHasNewUnlockedStickers(true);
-		}
-
-		onNewStickers.next(sticker_img_urls);
-	}
-
-	handlePostUpdated({ post_data, was_scheduled, was_published }: PostUpdatedPayload) {
-		const post = reactive(new FiresidePost(post_data)) as FiresidePost;
-
-		if (was_published) {
-			// Send out a growl to let the user know that their post was updated.
-			FiresidePostGotoGrowl.show(post, was_scheduled ? 'scheduled-publish' : 'publish');
-		}
+		this.connect();
 	}
 
 	spawnNotification(notification: Notification) {
 		const feedType = notification.feedType;
 		if (feedType !== '') {
-			this._getAppStore().incrementNotificationCount({ count: 1, type: feedType });
+			this.appStore.incrementNotificationCount({ count: 1, type: feedType });
 		}
 
 		// In Client when the feed notifications setting is disabled, don't show them notifications.
 		// On site we only use it to disable native browser notifications, but still try to show in
 		// the Growl.
 		if (GJ_IS_DESKTOP_APP && !SettingFeedNotifications.get()) {
+			return;
+		}
+
+		// Don't show Notification growls if the user is still in onboarding.
+		if (Onboarding.isOnboarding) {
 			return;
 		}
 
@@ -703,7 +312,7 @@ export class GridClient {
 		}
 
 		let isSystem = SettingFeedNotifications.get();
-		if (this.tabLeader && !this.tabLeader.isLeader) {
+		if (!this.notificationChannel?.isTabLeader.value) {
 			isSystem = false;
 		}
 
@@ -765,6 +374,8 @@ export class GridClient {
 					title = $gettext('Fireside Stream');
 					icon = notification.action_model.users[0].img_avatar;
 				}
+			} else if (notification.type === Notification.TYPE_CHARGED_STICKER) {
+				title = $gettext('Charged Sticker');
 			}
 
 			showInfoGrowl({
@@ -779,276 +390,166 @@ export class GridClient {
 			});
 		} else {
 			// Received a notification that cannot be parsed properly...
-			console.error(
-				'[Grid] Received notification that cannot be displayed.',
-				notification.type
-			);
+			this.logger.error('Received notification that cannot be displayed.', notification.type);
 		}
 	}
 
-	joinCommunities(cancelToken: CancelToken) {
-		console.log('[Grid] Subscribing to community channels...');
-
-		const promises = [];
-		for (const community of this._getAppStore().communities.value) {
-			promises.push(this._joinCommunity(cancelToken, community));
+	clearNotifications(type: ClearNotificationsType, data: ClearNotificationsData = {}) {
+		switch (type) {
+			case 'activity':
+				this.appStore.setNotificationCount({
+					type: 'activity',
+					count: 0,
+				});
+				break;
+			case 'notifications':
+				this.appStore.setNotificationCount({
+					type: 'notifications',
+					count: 0,
+				});
+				break;
+			case 'community-channel':
+				{
+					const communityChannelId = data.channelId as number;
+					const communityId = data.communityId as number;
+					const communityState =
+						this.appStore.communityStates.value.getCommunityState(communityId);
+					communityState.markChannelRead(communityChannelId);
+				}
+				break;
+			case 'community-featured':
+				{
+					const communityId = data.communityId as number;
+					const communityState =
+						this.appStore.communityStates.value.getCommunityState(communityId);
+					communityState.hasUnreadFeaturedPosts = false;
+				}
+				break;
+			case 'community-unread':
+				{
+					const communityId = data.communityId as number;
+					const communityState =
+						this.appStore.communityStates.value.getCommunityState(communityId);
+					communityState.hasUnreadPosts = false;
+				}
+				break;
+			case 'friend-requests':
+				this.appStore.setHasNewFriendRequests(false);
+				break;
+			case 'stickers':
+				this.appStore.setHasNewUnlockedStickers(false);
+				break;
+			case 'new-quest':
+				{
+					const questId = data.questId ?? -1;
+					if (questId !== -1) {
+						this.appStore
+							.getQuestStore()
+							.clearNewQuestIds([questId], { pushView: false });
+					}
+				}
+				break;
+			case 'quest-activity':
+				{
+					const questId = data.questId ?? -1;
+					if (questId !== -1) {
+						this.appStore
+							.getQuestStore()
+							.clearQuestActivityIds([questId], { pushView: false });
+					}
+				}
+				break;
 		}
-		return Promise.all(promises);
 	}
 
-	joinCommunity(community: Community) {
-		return this._joinCommunity(this.cancelToken, community);
-	}
+	async joinCommunity(community: Community) {
+		const cancelToken = this.socketController.cancelToken.value;
 
-	private async _joinCommunity(cancelToken: CancelToken, community: Community) {
-		const authToken = this.isGuest ? this.guestToken : await getCookie('frontend');
 		if (cancelToken.isCanceled) {
-			console.log(
-				`[Grid] Aborted connection (6) (while joining community: ${community.name}, id: ${community.id}`
+			this.logger.info(
+				`Aborted connection (6) (while joining community: ${community.name}, id: ${community.id}`
 			);
 			return;
 		}
 
-		const user = commonStore.user.value;
-		if (this.socket && user && authToken) {
-			const userId = user.id.toString();
-
-			const channel = reactive(
-				new CommunityChannel(community, this.socket, {
-					auth_token: authToken,
-					user_id: userId,
-				})
-			) as CommunityChannel;
-			channel.init();
-
-			await pollRequest(
-				`Join community channel '${community.name}' (${community.id})`,
-				cancelToken,
-				() =>
-					new Promise<void>((resolve, reject) => {
-						channel.socketChannel
-							.join()
-							.receive('error', reject)
-							.receive('ok', () => {
-								if (cancelToken.isCanceled) {
-									resolve();
-									return;
-								}
-
-								this.communityChannels.push(channel);
-								resolve();
-							});
-					})
-			);
-
-			if (cancelToken.isCanceled) {
-				console.log(
-					`[Grid] Aborted connection (7) (while joining community: ${community.name}, id: ${community.id}`
-				);
-				return;
-			}
-
-			channel.socketChannel.on('feature', (payload: CommunityFeaturePayload) => {
-				if (cancelToken.isCanceled) {
-					return;
-				}
-
-				this.handleCommunityFeature(community.id, payload);
-			});
-			channel.socketChannel.on('new-post', (payload: CommunityNewPostPayload) => {
-				if (cancelToken.isCanceled) {
-					return;
-				}
-
-				this.handleCommunityNewPost(community.id, payload);
-			});
-			channel.socketChannel.on(
-				'feature-fireside',
-				(payload: CommunityFeatureFiresidePayload) => {
-					if (cancelToken.isCanceled) {
-						return;
-					}
-
-					this.handleCommunityFeatureFireside(community.id, payload);
-				}
-			);
-		}
+		return await createGridCommunityChannel(this, {
+			communityId: community.id,
+			router,
+		});
 	}
 
 	async leaveCommunity(community: Community) {
-		const channel = this.communityChannels.find(i => i.community.id === community.id);
+		const channel = this.communityChannels.find(i => i.communityId === community.id);
 		if (channel) {
-			this._leaveSocketChannel(channel.socketChannel);
+			channel.channelController.leave();
 			arrayRemove(this.communityChannels, i => i === channel);
 		}
 	}
 
 	async leaveFireside(fireside: Fireside) {
-		const channel = this.firesideChannels.find(i => i.fireside.id === fireside.id);
+		const channel = this.firesideChannels.find(i => i.firesideHash === fireside.hash);
 		if (channel) {
-			this._leaveSocketChannel(channel.socketChannel);
+			channel.channelController.leave();
 			arrayRemove(this.firesideChannels, i => i === channel);
 		}
-	}
 
-	handleCommunityFeature(communityId: number, payload: CommunityFeaturePayload) {
-		// Suppress notification if the user featured that post.
-		if (payload.post_id) {
-			const postId = parseInt(payload.post_id, 10);
-			if (this.featuredPostIds.has(postId)) {
-				return;
-			}
-		}
-
-		const appStore = this._getAppStore();
-		const communityState = appStore.communityStates.value.getCommunityState(communityId);
-		communityState.hasUnreadFeaturedPosts = true;
-
-		appStore.incrementNotificationCount({ count: 1, type: 'activity' });
-	}
-
-	handleCommunityFeatureFireside(_communityId: number, payload: CommunityFeatureFiresidePayload) {
-		const fireside = new Fireside(payload.fireside_data);
-		if (!fireside.community) {
-			console.error('Featured fireside must have a community, but it does not.');
-			return;
-		}
-
-		if (commonStore.user.value && fireside.user.id === commonStore.user.value.id) {
-			console.log('Suppress featured fireside notification for fireside owner.');
-			return;
-		}
-
-		showInfoGrowl({
-			title: $gettext(`New Featured Fireside!`),
-			message: $gettextInterpolate(
-				`@%{ username }'s fireside %{ firesideTitle } was featured in %{ communityName }!`,
-				{
-					username: fireside.user.username,
-					firesideTitle: fireside.title,
-					communityName: fireside.community.name,
-				}
-			),
-			icon: fireside.user.img_avatar,
-			onClick: () => {
-				Analytics.trackEvent(
-					'grid',
-					'notification-click',
-					'fireside-featured-in-community'
-				);
-				router.push(fireside.location);
-			},
-			system: true,
-		});
-	}
-
-	handleCommunityNewPost(communityId: number, payload: CommunityNewPostPayload) {
-		const channelId = parseInt(payload.channel_id, 10);
-		const communityState =
-			this._getAppStore().communityStates.value.getCommunityState(communityId);
-		communityState.markChannelUnread(channelId);
-	}
-
-	_leaveSocketChannel(channel: Channel) {
-		channel.leave();
-		this.socket?.remove(channel);
-	}
-
-	async disconnect() {
-		if (this.connected) {
-			console.log('[Grid] Disconnecting...');
-		} else {
-			console.warn('[Grid] Disconnecting (before we got fully connected)');
-		}
-
-		this.cancelToken.cancel();
-		this.cancelToken = new CancelToken();
-
-		// Continue attempting to disconnect even if we didn't get fully connected.
-		// This should tear down the channels and socket that may have connected already,
-		// which allows us to cleanly reuse the instance for the next connection.
-
-		this.connected = false;
-		this.bootstrapReceived = false;
-		this.notificationBacklog = [];
-		this.bootstrapTimestamp = 0;
-
-		this.communityChannels.forEach(i => this._leaveSocketChannel(i.socketChannel));
-		this.communityChannels = [];
-
-		this.firesideChannels.forEach(i => this._leaveSocketChannel(i.socketChannel));
-		this.firesideChannels = [];
-
-		if (this.notificationChannel) {
-			this._leaveSocketChannel(this.notificationChannel);
-			this.notificationChannel = null;
-		}
-
-		if (this.socket !== null) {
-			this.socket.disconnect();
-			this.socket = null;
-		}
-
-		if (this.tabLeader !== null) {
-			await this.tabLeader.kill();
+		const dmChannel = this.firesideDMChannels.find(i => i.firesideHash === fireside.hash);
+		if (dmChannel) {
+			dmChannel.channelController.leave();
+			arrayRemove(this.firesideDMChannels, i => i === channel);
 		}
 	}
 
-	public recordFeaturedPost(post: FiresidePost) {
+	recordFeaturedPost(post: FiresidePost) {
 		if (!this.featuredPostIds.has(post.id)) {
 			this.featuredPostIds.add(post.id);
 		}
 	}
 
-	public async pushViewNotifications(
+	async pushViewNotifications(
 		type: ClearNotificationsType,
 		data: ClearNotificationsData = {},
 		doClearNotifications = true
 	) {
-		// This can get invoked before grid is up and running, so wait here until it is.
-		// That can mainly happen when the route-resolve for a page clears notifications.
-		// For example: main feed page clears notifications in backend as the route loads,
-		// but grid is not loaded yet.
+		// This can get invoked before grid is up and running, so wait here
+		// until it is. That can mainly happen when the route-resolve for a page
+		// clears notifications. For example: main feed page clears
+		// notifications in backend as the route loads, but grid is not loaded
+		// yet.
 		await tillConnection(this);
 
 		if (doClearNotifications) {
 			// Clear notifications on this client.
-			clearNotifications(this._getAppStore(), type, data);
+			this.clearNotifications(type, data);
 		}
 
-		if (this.notificationChannel) {
-			this.notificationChannel.push('view-notifications', {
-				type,
-				data,
-				clientId: this.clientId,
-			});
-		}
+		this.notificationChannel?.pushViewNotifications(type, data);
 	}
 
-	public async queueRequestCommunityBootstrap(communityId: number) {
+	async queueRequestCommunityBootstrap(communityId: number) {
 		await tillConnection(this);
 
 		if (this.notificationChannel) {
 			this.viewingCommunityId = communityId;
-			this.notificationChannel.push('request-community-bootstrap', {
-				community_id: communityId.toString(),
-			});
+			this.notificationChannel.pushCommunityBootstrap(communityId);
 		}
 	}
 
 	/**
-	 * When viewing a community, Grid calls in the community bootstrap (request-community-bootstrap).
-	 * In case Grid disconnects while the user is viewing the community, we want to rebootstrap
-	 * the community as well after the normal Grid bootstrap went through.
+	 * When viewing a community, Grid calls in the community bootstrap
+	 * (request-community-bootstrap). In case Grid disconnects while the user is
+	 * viewing the community, we want to rebootstrap the community as well after
+	 * the normal Grid bootstrap went through.
 	 *
-	 * Do keep track of which community the user is viewing, we register the community with Grid
-	 * when calling queueRequestCommunityBootstrap.
+	 * Do keep track of which community the user is viewing, we register the
+	 * community with Grid when calling queueRequestCommunityBootstrap.
 	 *
-	 * When leaving the community page, deregister the community to avoid uselessly bootstrapping it.
+	 * When leaving the community page, deregister the community to avoid
+	 * uselessly bootstrapping it.
 	 */
-	public deregisterViewingCommunity(communityId: number) {
+	deregisterViewingCommunity(communityId: number) {
 		if (this.viewingCommunityId !== communityId) {
-			console.warn(
+			this.logger.warn(
 				'Deregistering a community id that did not match the currently registered one!',
 				communityId,
 				this.viewingCommunityId

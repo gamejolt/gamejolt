@@ -1,11 +1,11 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { Community } from '../community.model';
 
 @Options({
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppCommunityVerifiedTick extends Vue {

@@ -93,12 +93,19 @@ export class ConfigOptionBoolean extends ConfigOption<boolean> {
 }
 
 export class ConfigOptionString<T extends string = string> extends ConfigOption<T> {
-	public readonly validValues: T[];
+	public readonly validValues: T[] | false;
 
 	constructor(
 		name: string,
 		defaultValue: T,
-		{ validValues, conditions }: { validValues: T[]; conditions?: Conditions }
+		{
+			validValues,
+			conditions,
+		}: {
+			/** You can skip checking for valid values if you explicitly set this to false */
+			validValues: T[] | false;
+			conditions?: Conditions;
+		}
 	) {
 		super(name, defaultValue, { conditions: conditions });
 		this.validValues = validValues;
@@ -112,8 +119,9 @@ export class ConfigOptionString<T extends string = string> extends ConfigOption<
 		return this._getValue(() => {
 			const value = getValue(_getFirebaseRemoteConfig(), this.name).asString() as T;
 
-			// If we don't know the value that we got from remote, we need to fallback to default.
-			if (!this.validValues.includes(value)) {
+			// If we don't know the value that we got from remote, we need to
+			// fallback to default.
+			if (this.validValues && !this.validValues.includes(value)) {
 				return this.defaultValue;
 			}
 
@@ -122,21 +130,43 @@ export class ConfigOptionString<T extends string = string> extends ConfigOption<
 	}
 }
 
-export const configDiscoverCommunityChunks = new ConfigOptionBoolean(
-	'discover_community_chunks',
+export const configFYPExperiment = new ConfigOptionString<string>('fyp_experiment', 'default', {
+	// Allow any value since we pass directly to backend, which does all the logic.
+	validValues: false,
+});
+
+export const configCommunityFrontpageFeedType = new ConfigOptionString(
+	'web_community_frontpage_feed_type',
+	'default',
+	{
+		validValues: ['default', 'featured', 'featured-hot'],
+		conditions: { join: true },
+	}
+);
+
+/**
+ * Whether or not to allow streaming of desktop video directly.
+ */
+export const configCanStreamDesktopVideo = new ConfigOptionBoolean(
+	'client_can_stream_desktop_video',
 	false
 );
 
-export const configHomeNav = new ConfigOptionString('home_nav', 'default', {
-	validValues: ['default', 'simple'],
-	conditions: { join: true },
-});
+export const configShowStoreInMoreMenu = new ConfigOptionBoolean(
+	'web_show_store_in_more_menu',
+	false
+);
 
-export const configGuestHome = new ConfigOptionString('web_guest_home', 'default', {
-	validValues: ['default', 'hero'],
-});
+export const configShowSearchAutocomplete = new ConfigOptionBoolean(
+	'web_show_search_autocomplete',
+	true
+);
 
-export const configClientAllowStreaming = new ConfigOptionBoolean('client_allow_streaming', false);
+/**
+ * Shows post lead content below recommended post cards that have media
+ * attached.
+ */
+export const configNextUpPostLeads = new ConfigOptionBoolean('web_next_up_post_leads', false);
 
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
@@ -167,7 +197,9 @@ async function _init() {
 			fetchTimeoutMillis: 3_000,
 			// The fallback is the default value (12 hours).
 			minimumFetchIntervalMillis:
-				GJ_BUILD_TYPE === 'development' ? 10 * 60 * 1_000 : 4_320_0000,
+				GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE === 'serve-build'
+					? 10 * 60 * 1_000
+					: 4_320_0000,
 		};
 
 		// Pull from the defaults that were set up before calling this function.

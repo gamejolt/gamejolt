@@ -1,7 +1,6 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { mixins, Options, Watch } from 'vue-property-decorator';
-import * as illustrations from '../../../app/img/ill/illustrations';
 import { imageGameJoltClientLogo, imageGameJoltLogo, imageJolt } from '../../../app/img/images';
 import AppForm from '../../form-vue/AppForm.vue';
 import AppFormGroup from '../../form-vue/AppFormGroup.vue';
@@ -51,7 +50,6 @@ export default class AppThemeSvgStyleguide extends mixins(Wrapper) {
 		imageGameJoltLogo,
 		imageGameJoltClientLogo,
 		imageJolt,
-		...illustrations,
 	};
 	readonly FillList = [
 		'fill-offset',

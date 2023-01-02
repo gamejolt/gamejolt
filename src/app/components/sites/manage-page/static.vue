@@ -4,7 +4,7 @@ import { Api } from '../../../../_common/api/api.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { SiteBuild } from '../../../../_common/site/build/build-model';
 import { Site } from '../../../../_common/site/site-model';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import FormDashSiteBuild from '../../forms/site/build/build.vue';
 
 @Options({
@@ -12,7 +12,7 @@ import FormDashSiteBuild from '../../forms/site/build/build.vue';
 		FormDashSiteBuild,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppSitesManagePageStatic extends Vue {
@@ -88,9 +88,7 @@ export default class AppSitesManagePageStatic extends Vue {
 
 					<AppButton
 						v-else
-						v-app-tooltip="
-							enableTooltip
-						"
+						v-app-tooltip="enableTooltip"
 						primary
 						@click="activateBuild()"
 					>

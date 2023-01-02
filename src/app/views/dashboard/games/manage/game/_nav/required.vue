@@ -1,10 +1,10 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 
 @Options({
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppManageGameNavRequired extends Vue {

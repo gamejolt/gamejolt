@@ -7,7 +7,7 @@ import { formatCurrency } from '../../../../../../_common/filters/currency';
 import { formatDate } from '../../../../../../_common/filters/date';
 import { Game } from '../../../../../../_common/game/game.model';
 import { GamePackage } from '../../../../../../_common/game/package/package.model';
-import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
+import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { Geo } from '../../../../../../_common/geo/geo.service';
 import { Order } from '../../../../../../_common/order/order.model';
 import { OrderPayment } from '../../../../../../_common/order/payment/payment.model';
@@ -17,7 +17,7 @@ import {
 } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { useAccountRouteController } from '../../account.vue';
+import { useAccountRouteController } from '../../RouteDashAccount.vue';
 
 @Options({
 	name: 'RouteDashAccountPurchasesView',

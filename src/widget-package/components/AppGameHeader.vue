@@ -3,10 +3,10 @@ import { computed, ref } from 'vue';
 import { Environment } from '../../_common/environment/environment.service';
 import AppJolticon from '../../_common/jolticon/AppJolticon.vue';
 import { Sellable } from '../../_common/sellable/sellable.model';
-import { AppTooltip as vAppTooltip } from '../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../_common/tooltip/tooltip-directive';
 import { useWidgetPackageStore } from '../store/index';
 import AppIncludedItems from './AppIncludedItems.vue';
-import AppModal from './AppModal.vue';
+import AppWidgetModal from './AppWidgetModal.vue';
 import AppPricingCard from './AppPricingCard.vue';
 
 const store = useWidgetPackageStore();
@@ -66,9 +66,9 @@ const shouldShowIncluded = computed(() => sellable.value.type !== Sellable.TYPE_
 		</div>
 
 		<transition>
-			<AppModal v-if="isShowingIncluded" @close="isShowingIncluded = false">
+			<AppWidgetModal v-if="isShowingIncluded" @close="isShowingIncluded = false">
 				<AppIncludedItems />
-			</AppModal>
+			</AppWidgetModal>
 		</transition>
 	</div>
 </template>

@@ -3,7 +3,6 @@ import { mixins, Options, Watch } from 'vue-property-decorator';
 import { Community } from '../../../../../_common/community/community.model';
 import { formatFilesize } from '../../../../../_common/filters/filesize';
 import AppFormControlCrop from '../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
-import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	BaseForm,
@@ -21,7 +20,6 @@ class Wrapper extends BaseForm<FormModel> {}
 	components: {
 		AppFormControlUpload,
 		AppFormControlCrop,
-		AppFormControlToggle,
 	},
 })
 export default class FormCommunityThumbnail

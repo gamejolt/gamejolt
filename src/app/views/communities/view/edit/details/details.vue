@@ -3,8 +3,7 @@ import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
 import { enforceLocation } from '../../../../../../utils/router';
 import AppAlertDismissable from '../../../../../../_common/alert/dismissable/dismissable.vue';
-import AppCommunityThumbnailImg from '../../../../../../_common/community/thumbnail/img/img.vue';
-import AppEditableOverlay from '../../../../../../_common/editable-overlay/editable-overlay.vue';
+import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import {
@@ -16,9 +15,10 @@ import { useThemeStore } from '../../../../../../_common/theme/theme.store';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import FormCommunity from '../../../../../components/forms/community/community.vue';
 import FormCommunityDescription from '../../../../../components/forms/community/description/description.vue';
+import { useGridStore } from '../../../../../components/grid/grid-store';
 import { useAppStore } from '../../../../../store';
+import { CommunityThemeKey } from '../../RouteCommunitiesView.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
-import { CommunityThemeKey } from '../../view.vue';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
 
 @Options({
@@ -27,7 +27,6 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 		AppCommunitiesViewPageContainer,
 		AppCommunityPerms,
 		AppEditableOverlay,
-		AppCommunityThumbnailImg,
 		FormCommunity,
 		FormCommunityDescription,
 		AppAlertDismissable,
@@ -40,6 +39,7 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 
 	store = setup(() => useAppStore());
 	themeStore = setup(() => useThemeStore());
+	gridStore = setup(() => useGridStore());
 
 	readonly Screen = Screen;
 
@@ -49,6 +49,10 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 
 	get collaborator() {
 		return this.routeStore.collaborator;
+	}
+
+	get grid() {
+		return this.gridStore.grid;
 	}
 
 	get isOwner() {
@@ -84,7 +88,7 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 		}
 
 		await this.community.$remove();
-		await this.store.leaveCommunity(this.community, undefined, { shouldConfirm: false });
+		await this.store.leaveCommunity(this.community, { grid: this.grid, shouldConfirm: false });
 
 		showInfoGrowl(
 			this.$gettext(`Your community has been removed from the site.`),
@@ -108,7 +112,7 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 		}
 
 		await this.collaborator.$remove();
-		await this.store.leaveCommunity(this.community, undefined, { shouldConfirm: false });
+		await this.store.leaveCommunity(this.community, { grid: this.grid, shouldConfirm: false });
 
 		showSuccessGrowl(
 			this.$gettext(`You left the community. You will be missed! ;A;`),

@@ -1,13 +1,13 @@
 <script lang="ts">
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Analytics } from '../../../../../../_common/analytics/analytics.service';
-import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
-import AppFadeCollapse from '../../../../../../_common/fade-collapse/fade-collapse.vue';
+import AppFadeCollapse from '../../../../../../_common/AppFadeCollapse.vue';
+import AppContentViewer from '../../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import {
 	FiresidePost,
 	loadArticleIntoPost,
 } from '../../../../../../_common/fireside/post/post-model';
-import AppLoading from '../../../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../../_common/scroll/scroll.service';
 import { ActivityFeedItem } from '../../item-service';

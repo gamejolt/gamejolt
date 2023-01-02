@@ -1,6 +1,4 @@
 <script lang="ts">
-import * as fs from 'fs';
-import * as path from 'path';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { arrayGroupBy } from '../../../../utils/array';
 import { shallowSetup } from '../../../../utils/vue';
@@ -10,20 +8,12 @@ import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.se
 import { Game } from '../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import { GamePackagePurchaseModal } from '../../../../_common/game/package/purchase-modal/purchase-modal.service';
+import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
-import AppPopper from '../../../../_common/popper/popper.vue';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import {
-findPackageToRepresentGameStatus,
-useClientLibraryStore
-} from '../../../store/client-library';
-// import {
-// 	ClientLibraryAction,
-// 	ClientLibraryState,
-// 	ClientLibraryStore,
-// } from '../../../store/client-library';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { useClientLibraryStore } from '../../../store/client-library';
+import AppClientInstallProgress from '../AppClientInstallProgress.vue';
 import { ClientInstallPackageModal } from '../install-package-modal/install-package-modal.service';
-import AppClientInstallProgress from '../install-progress/install-progress.vue';
 import { LocalDbPackage } from '../local-db/package/package.model';
 
 @Options({
@@ -32,35 +22,11 @@ import { LocalDbPackage } from '../local-db/package/package.model';
 		AppClientInstallProgress,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppClientGameButtons extends Vue {
 	readonly clientLibrary = shallowSetup(() => useClientLibraryStore());
-
-	// @ClientLibraryAction
-	// private packageInstall!: ClientLibraryStore['packageInstall'];
-	private packageInstall!: any;
-
-	// @ClientLibraryAction
-	// private packageUninstall!: ClientLibraryStore['packageUninstall'];
-	private packageUninstall!: any;
-
-	// @ClientLibraryAction
-	// private launcherLaunch!: ClientLibraryStore['launcherLaunch'];
-	private launcherLaunch!: any;
-
-	// @ClientLibraryAction
-	// private installerPause!: ClientLibraryStore['installerPause'];
-	private installerPause!: any;
-
-	// @ClientLibraryAction
-	// private installerResume!: ClientLibraryStore['installerResume'];
-	private installerResume!: any;
-
-	// @ClientLibraryAction
-	// private installerRetry!: ClientLibraryStore['installerRetry'];
-	private installerRetry!: any;
 
 	@Prop(Object)
 	game!: Game;
@@ -114,8 +80,7 @@ export default class AppClientGameButtons extends Vue {
 	// We try to pull a package with some action on it.
 	// For example, if a package is installing, we want to pull that one to show.
 	get localPackage() {
-		// return this.clientLibrary.findPackageToRepresentGameStatus(this.game.id);
-		return findPackageToRepresentGameStatus(this.clientLibrary, this.game.id);
+		return this.clientLibrary.findPackageToRepresentGameStatus(this.game.id);
 	}
 
 	get gamePackages() {
@@ -165,13 +130,13 @@ export default class AppClientGameButtons extends Vue {
 			return;
 		}
 
-		return this.packageInstall([
+		return this.clientLibrary.packageInstall(
 			this.game,
 			build._package!,
 			build._release!,
 			build,
-			build._launch_options!,
-		]);
+			build._launch_options!
+		);
 	}
 
 	private async fetchPackageData() {
@@ -193,7 +158,7 @@ export default class AppClientGameButtons extends Vue {
 		}
 
 		Analytics.trackEvent('client-game-buttons', 'pause-install');
-		this.installerPause(this.localPackage);
+		this.clientLibrary.installerPause(this.localPackage);
 	}
 
 	resume() {
@@ -202,7 +167,7 @@ export default class AppClientGameButtons extends Vue {
 		}
 
 		Analytics.trackEvent('client-game-buttons', 'resume-install');
-		this.installerResume(this.localPackage);
+		this.clientLibrary.installerResume(this.localPackage);
 	}
 
 	cancel() {
@@ -211,7 +176,7 @@ export default class AppClientGameButtons extends Vue {
 		}
 
 		Analytics.trackEvent('client-game-buttons', 'cancel-install');
-		this.packageUninstall([this.localPackage]);
+		this.clientLibrary.packageUninstall(this.localPackage);
 	}
 
 	retryInstall() {
@@ -220,7 +185,7 @@ export default class AppClientGameButtons extends Vue {
 		}
 
 		Analytics.trackEvent('client-game-buttons', 'retry-install');
-		this.installerRetry(this.localPackage);
+		this.clientLibrary.installerRetry(this.localPackage);
 	}
 
 	launch(localPackage: LocalDbPackage) {
@@ -231,10 +196,13 @@ export default class AppClientGameButtons extends Vue {
 
 		Analytics.trackEvent('client-game-buttons', 'launch');
 		Popper.hideAll();
-		return this.launcherLaunch(localPackage);
+		return this.clientLibrary.launcherLaunch(localPackage);
 	}
 
 	openFolder(localPackage: LocalDbPackage) {
+		const fs = require('fs') as typeof import('fs');
+		const path = require('path') as typeof import('path');
+
 		fs.readdir(path.resolve(localPackage.install_dir), function (err, files) {
 			if (err) {
 				return;
@@ -255,7 +223,7 @@ export default class AppClientGameButtons extends Vue {
 		Analytics.trackEvent('client-game-buttons', 'uninstall');
 		Popper.hideAll();
 
-		await this.packageUninstall([localPackage]);
+		await this.clientLibrary.packageUninstall(localPackage);
 	}
 }
 </script>
@@ -365,7 +333,7 @@ export default class AppClientGameButtons extends Vue {
 						:overlay="overlay"
 						:sm="small"
 						:lg="large"
-						@click.stop="launch(localPackage)"
+						@click.stop="launch(localPackage!)"
 					>
 						<AppTranslate>Launch</AppTranslate>
 					</AppButton>
@@ -378,14 +346,7 @@ export default class AppClientGameButtons extends Vue {
 					@show="emitShowLaunchOptions()"
 					@hide="emitHideLaunchOptions()"
 				>
-					<AppButton
-						primary
-						solid
-						icon="play"
-						:overlay="overlay"
-						:sm="small"
-						:lg="large"
-					>
+					<AppButton primary solid icon="play" :overlay="overlay" :sm="small" :lg="large">
 						<AppTranslate>Launch</AppTranslate>
 					</AppButton>
 
@@ -435,7 +396,7 @@ export default class AppClientGameButtons extends Vue {
 								},
 							}"
 						>
-							<AppJolticon icon="game" />
+							<AppJolticon icon="gamepad" />
 							<AppTranslate>View Game</AppTranslate>
 						</router-link>
 						<a

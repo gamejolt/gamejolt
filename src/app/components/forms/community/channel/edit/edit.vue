@@ -8,7 +8,7 @@ import {
 	FormOnLoad,
 	FormOnSubmitSuccess,
 } from '../../../../../../_common/form-vue/form.service';
-import { AppImgResponsive } from '../../../../../../_common/img/responsive/responsive';
+import AppImgResponsive from '../../../../../../_common/img/AppImgResponsive.vue';
 import { CommunityChannelBackgroundModal } from '../../../../community/channel/background-modal/background-modal.service';
 import AppCommunityChannelCardEdit from '../../../../community/channel/card/edit/edit.vue';
 import AppFormCommunityChannelPermissions from '../_permissions/permissions.vue';

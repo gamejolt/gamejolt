@@ -6,7 +6,7 @@ export class ClientInstallPackageModal {
 	static async show(game: Game) {
 		return await showModal({
 			modalId: 'ClientInstallPackage-' + game.id,
-			component: defineAsyncComponent(() => import('./install-package-modal.vue')),
+			component: defineAsyncComponent(() => import('./AppClientInstallPackageModal.vue')),
 			props: { game },
 			size: 'sm',
 		});

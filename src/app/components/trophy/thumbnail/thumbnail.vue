@@ -1,8 +1,8 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { GameTrophy } from '../../../../_common/game/trophy/trophy.model';
-import { AppImgResponsive } from '../../../../_common/img/responsive/responsive';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { BaseTrophy } from '../../../../_common/trophy/base-trophy.model';
 import bronzeSecretImage from './bronze-secret.png';
 import bronzeImage from './bronze.png';
@@ -57,7 +57,7 @@ const BaseHeight = 35;
 		AppImgResponsive,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppTrophyThumbnail extends Vue {

@@ -1,8 +1,8 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
-import AppFadeCollapse from '../../../../_common/fade-collapse/fade-collapse.vue';
-import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
+import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
+import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
+import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { ChatClient } from '../client';
 import { ChatMessage } from '../message';
 

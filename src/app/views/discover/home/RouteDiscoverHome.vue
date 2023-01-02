@@ -1,14 +1,16 @@
 <script lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, shallowRef } from 'vue';
 import { useRoute } from 'vue-router';
-import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
+import { arrayShuffle } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
-import { configGuestHome, configSaveOverride } from '../../../../_common/config/config.service';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { HistoryCache } from '../../../../_common/history/cache/cache.service';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
+import { Realm } from '../../../../_common/realm/realm-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -16,6 +18,9 @@ import { FeaturedItem } from '../../../components/featured-item/featured-item.mo
 import socialImage from '../../../img/social/social-share-header.png';
 import AppHomeDefault from './AppHomeDefault.vue';
 import AppHomeSlider from './AppHomeSlider.vue';
+
+const CachedCreatorsKey = 'HomeCreators';
+const CachedRealmsKey = 'HomeRealms';
 
 export default {
 	...defineAppRouteOptions({
@@ -28,17 +33,22 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const route = useRoute();
 const { user, userBootstrapped } = useCommonStore();
+const route = useRoute();
 
 const featuredItem = ref<FeaturedItem>();
 const featuredCommunities = ref<Community[]>([]);
 const featuredFireside = ref<Fireside>();
-const heroPosts = ref<FiresidePost[]>([]);
-const split = ref<'default' | 'hero'>();
+const featuredRealms = ref<Realm[]>([]);
+
+const heroPosts = shallowRef<FiresidePost[]>([]);
+const creatorPosts = shallowRef<FiresidePost[]>([]);
 
 const { isBootstrapped } = createAppRoute({
-	routeTitle: computed(() => (user.value ? $gettext(`Explore`) : null)),
+	routeTitle: computed(() => (user.value ? $gettext(`Discover`) : null)),
+	onInit() {
+		creatorPosts.value = HistoryCache.get(route, CachedCreatorsKey) ?? [];
+	},
 	onResolved({ payload }) {
 		Meta.description = payload.metaDescription;
 		Meta.fb = payload.fb;
@@ -78,44 +88,50 @@ const { isBootstrapped } = createAppRoute({
 		heroPosts.value = FiresidePost.populate<FiresidePost>(payload.heroPosts).filter(
 			i => i.hasMedia || i.hasVideo
 		);
+
+		// Realms might get randomized on backend, so freeze it when going back.
+		const cachedRealms = HistoryCache.get(route, CachedRealmsKey);
+		if (cachedRealms) {
+			featuredRealms.value = cachedRealms;
+		} else {
+			featuredRealms.value = Realm.populate(payload.featuredRealms);
+			HistoryCache.store(route, featuredRealms.value, CachedRealmsKey);
+		}
+
+		const cachedCreators = HistoryCache.get(route, CachedCreatorsKey);
+		if (cachedCreators) {
+			creatorPosts.value = cachedCreators;
+		} else {
+			creatorPosts.value = payload.creatorPosts
+				? arrayShuffle(FiresidePost.populate(payload.creatorPosts))
+				: [];
+			HistoryCache.store(route, creatorPosts.value, CachedCreatorsKey);
+		}
 	},
 });
-
-watch(
-	userBootstrapped,
-	(userBootstrapped: boolean) => {
-		if (!userBootstrapped) {
-			return;
-		}
-
-		// If we bootstrapped and are logged out, then we've decided to
-		// show this as a split test. If we're logged in, we always use
-		// the default, since it's used as the discover page.
-		if (!user.value) {
-			// If they came in through an ad, we want to force them into
-			// the "hero" split test and save it into their session so
-			// that it always shows when they go back.
-			if (route.query['utm_campaign'] === 'pmf_communities') {
-				configSaveOverride(configGuestHome, 'hero');
-			}
-
-			trackExperimentEngagement(configGuestHome);
-			split.value = configGuestHome.value;
-		} else {
-			split.value = 'default';
-		}
-	},
-	{ immediate: true }
-);
 </script>
 
 <template>
+	<div v-if="!userBootstrapped" class="-load-container">
+		<AppLoading stationary hide-label />
+	</div>
+
 	<AppHomeDefault
-		v-if="split === 'default'"
+		v-if="user"
 		:is-bootstrapped="isBootstrapped"
 		:featured-item="featuredItem"
 		:featured-communities="featuredCommunities"
 		:featured-fireside="featuredFireside"
+		:featured-realms="featuredRealms"
+		:creator-posts="creatorPosts"
 	/>
-	<AppHomeSlider v-else-if="split === 'hero'" :posts="heroPosts" />
+	<AppHomeSlider v-else :posts="heroPosts" />
 </template>
+
+<style lang="stylus" scoped>
+.-load-container
+	height: 100vh
+	display: flex
+	align-items: center
+	justify-content: center
+</style>

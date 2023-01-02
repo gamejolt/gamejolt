@@ -3,7 +3,7 @@ import { Directive } from 'vue';
 
 const observers = new WeakMap<HTMLElement, ResizeObserver>();
 
-export const AppObserveDimensions: Directive<HTMLElement, ResizeObserverCallback> = {
+export const vAppObserveDimensions: Directive<HTMLElement, ResizeObserverCallback> = {
 	mounted(el, binding) {
 		const observer = new ResizeObserver(binding.value);
 		observer.observe(el);

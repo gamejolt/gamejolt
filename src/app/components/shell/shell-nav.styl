@@ -64,14 +64,14 @@ ul.shell-nav
 			line-height: $shell-nav-item-height
 
 			&:hover
-				change-bg('bg-subtle')
+				background-color: unquote('rgba(var(--theme-fg-rgb), 0.1)')
 				color: var(--theme-link-hover)
 
 			&.no-icon
 				padding-left: 15px
 
 			&.active
-				change-bg('bg-subtle')
+				background-color: unquote('rgba(var(--theme-fg-rgb), 0.1)')
 
 				&
 				&:hover
@@ -117,7 +117,6 @@ ul.shell-nav ul
  */
 .nav-heading
 	display: block
-	font-family: $font-family-heading
 	font-size: $font-size-tiny
 	letter-spacing: 0.1em
 	line-height: 1

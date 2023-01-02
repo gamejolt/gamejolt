@@ -1,12 +1,14 @@
 <script lang="ts">
 import { Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import AppUserCardHover from '../../../../user/card/hover/hover.vue';
+import AppUserCardHover from '../../../../user/card/AppUserCardHover.vue';
+import AppUserCreatorBadge from '../../../../user/creator/AppUserCreatorBadge.vue';
 import { User } from '../../../../user/user.model';
 import { ContentOwnerController, ContentOwnerControllerKey } from '../../../content-owner';
 
 @Options({
 	components: {
 		AppUserCardHover,
+		AppUserCreatorBadge,
 	},
 })
 export default class AppContentViewerMention extends Vue {
@@ -52,8 +54,9 @@ export default class AppContentViewerMention extends Vue {
 								class="img-responsive mention-avatar-img"
 								alt=""
 							/>
+							<AppUserCreatorBadge v-if="user.is_creator" class="mention-creator" />
 							<AppJolticon
-								v-if="user.is_verified"
+								v-else-if="user.is_verified"
 								class="mention-verified"
 								icon="verified"
 							/>
@@ -87,10 +90,13 @@ export default class AppContentViewerMention extends Vue {
 	height: 1.5em
 	img-circle()
 
+.mention-creator
 .mention-verified
 	position: absolute
 	right: -4px
 	bottom: -4px
+
+.mention-verified
 	change-bg('bg-offset')
 	border-radius: 100%
 </style>

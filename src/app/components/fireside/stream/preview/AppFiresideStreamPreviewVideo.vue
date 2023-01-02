@@ -1,12 +1,15 @@
 <script lang="ts" setup>
-import { computed, PropType, watch } from 'vue';
+import { computed, onBeforeUnmount, PropType, watch } from 'vue';
+import { useRouter } from 'vue-router';
+import AppFiresideLiveTag from '../../../../../_common/fireside/AppFiresideLiveTag.vue';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../../_common/user/user.model';
-import { AppFiresideContainer } from '../../container/container';
-import { createFiresideController } from '../../controller/controller';
-import AppFiresideStreamVideo from '../video/video.vue';
+import { useGridStore } from '../../../grid/grid-store';
+import { createFiresideController, provideFiresideController } from '../../controller/controller';
+import AppFiresideStreamVideo from '../AppFiresideStreamVideo.vue';
 
 const props = defineProps({
 	fireside: {
@@ -29,23 +32,34 @@ const emit = defineEmits({
 
 const c = createFiresideController(props.fireside, {
 	isMuted: true,
+	commonStore: useCommonStore(),
+	stickerStore: useStickerStore(),
+	gridStore: useGridStore(),
+	router: useRouter(),
 });
+provideFiresideController(c);
 
-const { rtc, isShowingStreamSetup, isStreaming } = c;
+const { rtc, isShowingStreamSetup, isStreaming, cleanup: cleanupController } = c;
 
-const rtcUsers = computed(() => {
-	if (!rtc.value) {
-		return [];
+const cohosts = computed(() => {
+	const result: User[] = [];
+
+	for (const rtcUser of rtc.value?.listableStreamingUsers ?? []) {
+		// Since we're iterating over listable users they will always have their userModel.
+		const userModel = rtcUser.userModel!;
+
+		// Filter out creator of the fireside.
+		//
+		// TODO(big-pp-event) why are we doing this?
+		//
+		// Note: this would probably not exclude the remote instance of the
+		// creator of the fireside. Intentional?
+		if (userModel !== props.fireside.user) {
+			result.push(userModel);
+		}
 	}
 
-	const users: User[] = [];
-	rtc.value.users.forEach(i => {
-		if (!i.userModel || i.userModel === props.fireside.user) {
-			return;
-		}
-		users.push(i.userModel);
-	});
-	return users;
+	return result;
 });
 
 const focusedUser = computed(() => rtc.value?.focusedUser);
@@ -61,33 +75,34 @@ const shouldShowVideo = computed(() => {
 watch([isStreaming, hasVideo], () => {
 	emit('changed', hasVideo.value, isStreaming.value);
 });
+
+// TODO(big-pp-event) should we use onUnmounted here?
+onBeforeUnmount(() => cleanupController());
 </script>
 
 <template>
-	<AppFiresideContainer class="-stream theme-dark" :controller="c">
+	<div class="-stream-preview-video theme-dark">
 		<div v-if="focusedUser && shouldShowVideo" :key="focusedUser.uid">
-			<AppFiresideStreamVideo class="-video-player" :rtc-user="focusedUser" />
+			<AppFiresideStreamVideo class="-stream-preview-video-inner" :rtc-user="focusedUser" />
 
 			<div class="-overlay">
 				<div v-if="showLive" class="-center">
-					<div class="-live">
-						<AppTranslate>LIVE</AppTranslate>
-					</div>
+					<AppFiresideLiveTag />
 				</div>
 				<div v-if="showLiveUsers" class="-live-users">
-					<AppUserAvatarList :users="rtcUsers" sm inline />
+					<AppUserAvatarList :users="cohosts" sm inline />
 				</div>
 			</div>
 		</div>
 		<div v-else />
-	</AppFiresideContainer>
+	</div>
 </template>
 
 <style lang="stylus" scoped>
-.-stream
-.-video-player
+.-stream-preview-video
+.-stream-preview-video-inner
 .-overlay
-	position: absolute
+	position: absolute !important
 	top: 0
 	right: 0
 	bottom: 0
@@ -104,19 +119,6 @@ watch([isStreaming, hasVideo], () => {
 	display: flex
 	justify-content: center
 	align-items: center
-
-.-live
-	rounded-corners-lg()
-	margin: 0
-	padding: 4px 8px
-	font-size: $font-size-h1
-	font-weight: 700
-	font-family: $font-family-heading
-	text-shadow: none
-	box-shadow: 1px 1px 3px $black
-	letter-spacing: 2px
-	color: $white
-	background-color: $gj-overlay-notice
 
 .-live-users
 	position: absolute

@@ -5,17 +5,17 @@ import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatCurrency } from '../../../../_common/filters/currency';
 import AppFormControlMask from '../../../../_common/form-vue/AppFormControlMask.vue';
-import { AppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
+import { vAppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
 import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
 import {
 	validateCreditCard,
 	validateCreditCardExpiration,
 } from '../../../../_common/form-vue/validators';
 import { Geo, Region } from '../../../../_common/geo/geo.service';
-import AppLoading from '../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Order } from '../../../../_common/order/order.model';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 
 class Wrapper extends BaseForm<any> {}
 
@@ -26,8 +26,8 @@ class Wrapper extends BaseForm<any> {}
 		AppFormControlMask,
 	},
 	directives: {
-		AppTooltip,
-		AppFocusWhen,
+		AppTooltip: vAppTooltip,
+		AppFocusWhen: vAppFocusWhen,
 	},
 })
 export default class FormPayment extends mixins(Wrapper) implements FormOnSubmit {
@@ -345,7 +345,9 @@ export default class FormPayment extends mixins(Wrapper) implements FormOnSubmit
 							>
 								<label class="checkbox">
 									<AppFormControlCheckbox />
-									<AppTranslate>Remember this card for future purchases</AppTranslate>
+									<AppTranslate
+										>Remember this card for future purchases</AppTranslate
+									>
 								</label>
 							</AppFormGroup>
 
@@ -401,10 +403,7 @@ export default class FormPayment extends mixins(Wrapper) implements FormOnSubmit
 										</AppFormGroup>
 									</div>
 									<div class="right-col">
-										<AppFormGroup
-											name="postcode"
-											:label="$gettext('zip code')"
-										>
+										<AppFormGroup name="postcode" :label="$gettext('zip code')">
 											<AppFormControl
 												type="text"
 												:placeholder="$gettext('zip code')"

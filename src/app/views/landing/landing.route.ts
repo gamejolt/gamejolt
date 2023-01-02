@@ -7,7 +7,7 @@ import { routeLandingGameApiDoc } from './game-api-doc/game-api-doc.route';
 import { routeLandingGameApi } from './game-api/game-api.route';
 import { routeLandingHelp } from './help/help.route';
 import { routeLandingIndieaf } from './indieaf/indieaf.route';
-import RouteLanding from './landing';
+import RouteLanding from './RouteLanding.vue';
 import { routeLandingLearn } from './learn/learn.route';
 import { routeLandingMarketplace } from './marketplace/marketplace.route';
 import { routeLandingPartners } from './partners/partners.route';

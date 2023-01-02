@@ -4,10 +4,10 @@ import { stringSort } from '../../../../utils/array';
 import { fuzzysearch } from '../../../../utils/string';
 import { shallowSetup } from '../../../../utils/vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
-import { AppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
+import { vAppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
 import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
 import { Game } from '../../../../_common/game/game.model';
-import AppLoading from '../../../../_common/loading/loading.vue';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
 import {
 	libraryAddGameToPlaylist,
@@ -21,7 +21,7 @@ import {
 		AppLoading,
 	},
 	directives: {
-		AppFocusWhen,
+		AppFocusWhen: vAppFocusWhen,
 	},
 })
 export default class AppGamePlaylistAddToPopover extends Vue {

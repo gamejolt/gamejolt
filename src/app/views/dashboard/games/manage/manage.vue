@@ -9,7 +9,7 @@ import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/rout
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
@@ -25,7 +25,7 @@ import { createGameDashRouteController, ManageGameThemeKey } from './manage.stor
 		AppGamePerms,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({
@@ -170,7 +170,7 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 								<AppTranslate>Unlisted</AppTranslate>
 							</span>
 
-							<template v-if="game.isVisible">
+							<template v-if="game.isVisible && game.published_on">
 								<span class="tag tag-highlight">
 									<AppTranslate>Published</AppTranslate>
 								</span>

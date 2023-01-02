@@ -1,5 +1,5 @@
 import { reactive } from '@vue/reactivity';
-import { debounce } from '../../utils/utils';
+import { debounce, run } from '../../utils/utils';
 import { EventTopic } from '../system/event/event-topic';
 
 /**
@@ -76,7 +76,41 @@ class ScreenService {
 
 	isPointerMouse = import.meta.env.SSR
 		? true
-		: window.matchMedia('not screen and (pointer: coarse)').matches;
+		: run(() => {
+				const match = window.matchMedia('not screen and (pointer: coarse)');
+				const onChange = (e: MediaQueryListEvent) => (Screen.isPointerMouse = e.matches);
+
+				// https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList#browser_compatibility
+				//
+				// Mobile Safari prior to version 14 doesn't support "addEventListener".
+				// Do this or the site will break for old iOS.
+
+				// TODO(charged-stickers) test with iOS < 14 after changes
+				const fields: (keyof typeof match)[] = ['addEventListener', 'addListener'];
+
+				for (const key of fields) {
+					try {
+						if (key === 'addEventListener') {
+							// Use the current standard first if available.
+							match[key]('change', onChange);
+							break;
+						}
+
+						if (key === 'addListener') {
+							// Fallback to the deprecated method if available.
+							match[key](onChange);
+							break;
+						}
+					} catch (e) {
+						console.error(
+							`Error when trying to listen for pointer changes using method ${key}`,
+							e
+						);
+					}
+				}
+
+				return match.matches;
+		  });
 }
 
 export const Screen = reactive(new ScreenService()) as ScreenService;

@@ -6,13 +6,13 @@ import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.v
 import AppCardListDraggable from '../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem.vue';
 import { Game } from '../../../../../../_common/game/game.model';
-import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail-img/thumbnail-img.vue';
+import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
 import {
 	BaseRouteComponent,
 	OptionsForRoute,
 } from '../../../../../../_common/route/route-component';
-import { AppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { CommunityLinkGameModal } from '../../../../../components/community/link-game-modal/link-game-modal.service';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
@@ -30,7 +30,7 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 		AppGameThumbnailImg,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

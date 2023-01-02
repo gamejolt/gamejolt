@@ -6,8 +6,8 @@ import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import AppFiresideAvatar from '../../../../components/fireside/avatar/avatar.vue';
-import AppFiresideAvatarBase from '../../../../components/fireside/avatar/_base/base.vue';
+import AppFiresideAvatar from '../../../../components/fireside/avatar/AppFiresideAvatar.vue';
+import AppFiresideAvatarBase from '../../../../components/fireside/avatar/AppFiresideAvatarBase.vue';
 import { illNoComments } from '../../../../img/ill/illustrations';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
@@ -87,14 +87,14 @@ export default class RouteCommunitiesViewFiresides extends BaseRouteComponent {
 		</h1>
 		<br />
 
-		<AppIllustration v-if="!community.allow_firesides" :src="illNoComments">
+		<AppIllustration v-if="!community.allow_firesides" :asset="illNoComments">
 			<p>
 				<AppTranslate>This community doesn't allow firesides.</AppTranslate>
 			</p>
 		</AppIllustration>
 		<AppIllustration
 			v-else-if="isRouteBootstrapped && firesides.length === 0"
-			:src="illNoComments"
+			:asset="illNoComments"
 		>
 			<p>
 				<AppTranslate>There are no active firesides in this community yet.</AppTranslate>

@@ -7,7 +7,7 @@ import { Site } from '../../../../../_common/site/site-model';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppSitesLinkCard from '../../../../components/sites/link-card/link-card.vue';
 import AppSitesManagePage from '../../../../components/sites/manage-page/manage-page.vue';
-import { useAccountRouteController } from '../account.vue';
+import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 @Options({
 	name: 'RouteDashAccountSite',
@@ -54,6 +54,7 @@ export default class RouteDashAccountSite extends BaseRouteComponent {
 						games!
 					</AppTranslate>
 				</strong>
+				{{ ' ' }}
 				<AppTranslate>
 					You can use a customizable template, or simply upload your own static site.
 				</AppTranslate>

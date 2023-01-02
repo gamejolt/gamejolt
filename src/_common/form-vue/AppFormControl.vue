@@ -2,7 +2,7 @@
 import { computed, ComputedRef, onMounted, PropType, Ref, ref, toRefs, watch } from 'vue';
 import { useForm } from './AppForm.vue';
 import { useFormGroup } from './AppFormGroup.vue';
-import { AppFocusWhen as vAppFocusWhen } from './focus-when.directive';
+import { vAppFocusWhen } from './focus-when.directive';
 import { useFormControlHooks } from './form-control-hooks';
 import { FormValidator, validateDecimal, validateEmail, validateRequired } from './validators';
 

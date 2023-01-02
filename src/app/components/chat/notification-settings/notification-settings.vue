@@ -65,10 +65,7 @@ export default class AppChatNotificationSettings extends Vue {
 </script>
 
 <template>
-	<AppLoadingFade
-		class="chat-notification-settings"
-		:is-loading="isLoadingNotificationSettings"
-	>
+	<AppLoadingFade class="chat-notification-settings" :is-loading="isLoadingNotificationSettings">
 		<h5 class="-header list-group-item">
 			<AppTranslate>Notifications</AppTranslate>
 		</h5>
@@ -90,7 +87,7 @@ export default class AppChatNotificationSettings extends Vue {
 <style lang="stylus" scoped>
 .chat-notification-settings
 	.-header
-		font-family: $font-family-heading
+		font-family: $font-family-base
 		font-size: $font-size-tiny
 		font-weight: normal
 		letter-spacing: 0.1em

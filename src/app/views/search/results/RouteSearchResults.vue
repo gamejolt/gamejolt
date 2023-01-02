@@ -2,11 +2,15 @@
 import { computed, Ref, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { getQuery } from '../../../../utils/router';
-import AppCommunityThumbnail from '../../../../_common/community/thumbnail/thumbnail.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import AppCommunityThumbnail from '../../../../_common/community/thumbnail/AppCommunityThumbnail.vue';
 import { formatNumber } from '../../../../_common/filters/number';
+import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppUserCard from '../../../../_common/user/card/card.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
+import AppUserCard from '../../../../_common/user/card/AppUserCard.vue';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../components/activity/feed/view';
 import AppGameGrid from '../../../components/game/grid/grid.vue';
@@ -14,9 +18,12 @@ import AppGameList from '../../../components/game/list/list.vue';
 import { AppActivityFeedLazy as AppActivityFeed } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import { sendSearch } from '../../../components/search/search-service';
+import { routeSearchRealms } from '../realms/realms.route';
 import { useSearchRouteController } from '../RouteSearch.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+
+const REALM_COL_DESKTOP = 4;
+const REALM_COL_SM = 3;
+const REALM_COL_XS = 2;
 
 export default {
 	...defineAppRouteOptions({
@@ -33,6 +40,12 @@ const { processPayload, hasSearch, searchPayload, query } = useSearchRouteContro
 const feed = ref(null) as Ref<ActivityFeedView | null>;
 
 createAppRoute({
+	routeTitle: computed(() =>
+		$gettextInterpolate(`"%{ query }" on Game Jolt`, {
+			query: query.value,
+		})
+	),
+	disableTitleSuffix: true,
 	onInit() {
 		feed.value = ActivityFeedService.bootstrapFeedFromCache();
 	},
@@ -47,7 +60,6 @@ createAppRoute({
 				url: `/web/posts/fetch/search/${encodeURIComponent(getQuery(route, 'q')!)}`,
 				shouldShowFollow: true,
 				itemsPerPage: payload.postsPerPage,
-				shouldShowDates: false,
 			},
 			payload.posts,
 			fromCache
@@ -55,17 +67,64 @@ createAppRoute({
 	},
 });
 
-const slicedUsers = computed(() => {
-	return Screen.isXs ? searchPayload.value.users : searchPayload.value.users.slice(0, 2);
-});
+const slicedUsers = computed(() =>
+	Screen.isXs ? searchPayload.value.users : searchPayload.value.users.slice(0, 2)
+);
 
-const slicedCommunities = computed(() => {
-	return searchPayload.value.communities.slice(0, 6);
+const slicedCommunities = computed(() => searchPayload.value.communities.slice(0, 6));
+
+const slicedRealms = computed(() => {
+	let count = REALM_COL_DESKTOP;
+	if (Screen.isSm) {
+		count = REALM_COL_SM;
+	} else if (Screen.isXs) {
+		count = REALM_COL_XS;
+	}
+
+	return searchPayload.value.realms.slice(0, count);
 });
 </script>
 
 <template>
 	<section v-if="hasSearch">
+		<template v-if="slicedRealms.length">
+			<section class="section section-thin">
+				<div class="container">
+					<h3 class="-heading">
+						Realms
+
+						<AppButton
+							v-if="searchPayload.realmsCount > slicedRealms.length"
+							class="-heading-more"
+							:to="{ name: routeSearchRealms.name, query: { q: query } }"
+						>
+							{{ $gettext(`View All`) }}
+						</AppButton>
+					</h3>
+
+					<div
+						class="-realm-cards"
+						:style="[
+							`--col-desktop: ${REALM_COL_DESKTOP}`,
+							`--col-sm: ${REALM_COL_SM}`,
+							`--col-xs: ${REALM_COL_XS}`,
+						]"
+					>
+						<AppRealmFullCard
+							v-for="realm of slicedRealms"
+							:key="realm.id"
+							:realm="realm"
+							:to="realm.routeLocation"
+							overlay-content
+							no-sheet
+							no-follow
+							label-position="bottom-left"
+						/>
+					</div>
+				</div>
+			</section>
+		</template>
+
 		<!-- Communities -->
 		<template v-if="searchPayload.communities.length">
 			<section class="section section-thin">
@@ -85,6 +144,7 @@ const slicedCommunities = computed(() => {
 						>
 							<AppTranslate>Communities</AppTranslate>
 						</RouterLink>
+						{{ ' ' }}
 						<small>({{ formatNumber(searchPayload.communitiesCount) }})</small>
 					</h3>
 
@@ -121,6 +181,7 @@ const slicedCommunities = computed(() => {
 					>
 						<AppTranslate>Games</AppTranslate>
 					</RouterLink>
+					{{ ' ' }}
 					<small>({{ formatNumber(searchPayload.gamesCount) }})</small>
 				</h3>
 
@@ -163,6 +224,7 @@ const slicedCommunities = computed(() => {
 					>
 						<AppTranslate>Users</AppTranslate>
 					</RouterLink>
+					{{ ' ' }}
 					<small>({{ formatNumber(searchPayload.usersCount) }})</small>
 				</h3>
 
@@ -185,7 +247,7 @@ const slicedCommunities = computed(() => {
 					<AppTranslate>Posts</AppTranslate>
 				</h3>
 
-				<AppActivityFeed :feed="feed" />
+				<AppActivityFeed :feed="feed" show-ads />
 			</template>
 		</AppPageContainer>
 	</section>
@@ -195,4 +257,22 @@ const slicedCommunities = computed(() => {
 .-heading
 	clearfix()
 	margin-top: $line-height-computed
+
+.-heading-more
+	float: right
+
+.-realm-cards
+	display: grid
+	--grid-cols: var(--col-desktop)
+	gap: 24px
+	grid-template-columns: repeat(var(--grid-cols), 1fr)
+	justify-content: center
+
+	@media $media-sm
+		--grid-cols: var(--col-sm)
+		gap: 24px
+
+	@media $media-xs
+		--grid-cols: var(--col-xs)
+		gap: 16px
 </style>

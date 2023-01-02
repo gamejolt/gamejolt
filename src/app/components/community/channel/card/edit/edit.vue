@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import AppEditableOverlay from '../../../../../../_common/editable-overlay/editable-overlay.vue';
+import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import { MediaItem } from '../../../../../../_common/media-item/media-item-model';
 
 @Options({

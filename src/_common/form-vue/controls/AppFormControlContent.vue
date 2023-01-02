@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { PropType, toRef } from 'vue';
 import { FocusToken } from '../../../utils/focus-token';
-import { ContentContext } from '../../content/content-context';
+import { ContentContext, ContextCapabilities } from '../../content/content-context';
 import AppContentEditor from '../../content/content-editor/content-editor.vue';
 import { ContentRules } from '../../content/content-editor/content-rules';
 import {
@@ -16,6 +16,10 @@ const props = defineProps({
 	contentContext: {
 		type: String as PropType<ContentContext>,
 		required: true,
+	},
+	contextCapabilitiesOverride: {
+		type: Object as PropType<ContextCapabilities>,
+		default: undefined,
 	},
 	placeholder: {
 		type: String,
@@ -64,7 +68,6 @@ const emit = defineEmits({
 	focus: () => true,
 	blur: () => true,
 	submit: () => true,
-	'insert-block-node': (_nodeType: string) => true,
 });
 
 const { name } = useFormGroup()!;
@@ -94,6 +97,7 @@ function onChange(value: string) {
 			:class="{ '-compact': compact }"
 			:name="name"
 			:content-context="contentContext"
+			:context-capabilities-override="contextCapabilitiesOverride"
 			:placeholder="placeholder"
 			:disabled="disabled"
 			:autofocus="autofocus"
@@ -109,7 +113,6 @@ function onChange(value: string) {
 			@editor-focus="emit('focus')"
 			@editor-blur="emit('blur')"
 			@submit="emit('submit')"
-			@insert-block-node="emit('insert-block-node', $event)"
 		/>
 	</div>
 </template>

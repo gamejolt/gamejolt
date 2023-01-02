@@ -8,24 +8,32 @@ export function useModal<T>() {
 	return inject(ModalKey, null) as Modal<T> | null;
 }
 
+export type ModalDismissReason = 'route-change' | 'esc' | 'backdrop' | 'manual';
+
 export interface ModalOptions {
 	component: Component;
 	modalId: string;
-	size?: 'sm' | 'lg' | 'full' | undefined;
+	size?: 'xs' | 'sm' | 'lg' | 'full' | undefined;
 	props?: any;
 	noBackdrop?: boolean;
 	noBackdropClose?: boolean;
 	noEscClose?: boolean;
+	/**
+	 * When the modal is dismissed rather than resolved, this callback will be
+	 * called with the reason why the dismiss was triggered.
+	 */
+	onDismiss?: (reason: ModalDismissReason) => void;
 }
 
 export class Modal<T = any> {
-	size: 'sm' | 'lg' | 'full' | undefined;
+	size: 'xs' | 'sm' | 'lg' | 'full' | undefined;
 	component: Component;
 	modalId: string;
 	props?: any;
 	noBackdrop?: boolean;
 	noBackdropClose?: boolean;
 	noEscClose?: boolean;
+	onDismiss?: (reason: ModalDismissReason) => void;
 
 	get index(): number {
 		return Modals.modals.findIndex(i => i === this);
@@ -39,6 +47,7 @@ export class Modal<T = any> {
 		this.noBackdropClose = options.noBackdropClose;
 		this.noEscClose = options.noEscClose;
 		this.modalId = options.modalId;
+		this.onDismiss = options.onDismiss;
 	}
 
 	resolve(val?: T) {
@@ -46,9 +55,10 @@ export class Modal<T = any> {
 		this._resolve(val);
 	}
 
-	dismiss() {
+	dismiss(reason?: ModalDismissReason) {
 		_removeModal(this);
 		this._resolve(undefined);
+		this.onDismiss?.(reason || 'manual');
 	}
 }
 

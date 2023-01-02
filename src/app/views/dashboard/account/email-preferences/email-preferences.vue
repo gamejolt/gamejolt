@@ -5,9 +5,9 @@ import { Api } from '../../../../../_common/api/api.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { $gettext, Translate } from '../../../../../_common/translate/translate.service';
 import { User } from '../../../../../_common/user/user.model';
-import FormEmailPreferences from '../../../../components/forms/email-preferences/email-preferences.vue';
+import FormEmailPreferences from '../../../../components/forms/email-preferences/FormEmailPreferences.vue';
 import { IntentService } from '../../../../components/intent/intent.service';
-import { useAccountRouteController } from '../account.vue';
+import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 @Options({
 	name: 'RouteDashAccountEmailPreferences',
@@ -51,7 +51,7 @@ export default class RouteDashAccountEmailPreferences extends BaseRouteComponent
 <template>
 	<div v-if="isRouteBootstrapped" class="row">
 		<div class="col-md-9 col-lg-8">
-			<FormEmailPreferences :model="user" />
+			<FormEmailPreferences :user="user" />
 		</div>
 	</div>
 </template>

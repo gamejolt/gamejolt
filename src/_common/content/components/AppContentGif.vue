@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, ref, toRefs, unref } from 'vue';
 import { ContentFocus } from '../../content-focus/content-focus.service';
-import { AppResponsiveDimensions } from '../../responsive-dimensions/responsive-dimensions';
+import AppResponsiveDimensions from '../../responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/AppScrollInview.vue';
 import { getVideoPlayerFromSources } from '../../video/player/controller';
@@ -44,43 +44,50 @@ const props = defineProps({
 	...defineEditableNodeViewProps(),
 });
 
+const { width, height, media, isEditing, isDisabled } = toRefs(props);
+
 const owner = useContentOwnerController()!;
 const isInview = ref(false);
-const container = ref<HTMLElement>();
 
 const shouldPlay = computed(() => {
 	return ContentFocus.isWindowFocused;
 });
 
 const videoController = computed(() => {
-	if (!props.media || !props.media.mp4.url || !props.media.webm.url) {
+	if (!media.value || !media.value.mp4.url || !media.value.webm.url) {
 		return undefined;
 	}
 
 	const sourcesPayload = {
-		mp4: props.media.mp4.url,
-		webm: props.media.webm.url,
+		mp4: media.value.mp4.url,
+		webm: media.value.webm.url,
 	};
 
-	return getVideoPlayerFromSources(sourcesPayload, 'gif', props.media.preview);
+	return getVideoPlayerFromSources(sourcesPayload, 'gif', media.value.preview);
 });
+
+const parentWidth = computed(() => unref(owner.parentBounds?.width));
 
 const maxWidth = computed(() => {
 	const maxOwnerWidth = owner.contentRules.maxMediaWidth;
 	if (maxOwnerWidth !== null) {
-		return Math.min(maxOwnerWidth, container.value ? container.value.clientWidth : props.width);
+		const sizes = [maxOwnerWidth, width.value];
+		if (parentWidth.value) {
+			sizes.push(parentWidth.value);
+		}
+		return Math.min(...sizes);
 	}
 
-	return props.width;
+	return width.value;
 });
 
 const maxHeight = computed(() => {
 	const maxOwnerHeight = owner.contentRules.maxMediaHeight;
 	if (maxOwnerHeight !== null) {
-		return Math.min(maxOwnerHeight, props.height);
+		return Math.min(maxOwnerHeight, height.value);
 	}
 
-	return props.height;
+	return height.value;
 });
 
 function onInviewChange(inview: boolean) {
@@ -96,11 +103,11 @@ function onInviewChange(inview: boolean) {
 	>
 		<div class="-outer content-gif">
 			<AppResponsiveDimensions
-				ref="container"
 				class="-container"
 				:ratio="width / height"
 				:max-width="maxWidth"
 				:max-height="maxHeight"
+				:parent-width="parentWidth"
 			>
 				<AppScrollInview
 					:config="InviewConfig"

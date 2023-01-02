@@ -10,11 +10,11 @@ import { MediaItem } from '../../media-item/media-item-model';
 import { ContentContext, ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentFormatAdapter, ProsemirrorEditorFormat } from '../content-format-adapter';
-import { ContentHydrator } from '../content-hydrator';
+import { ContentOwnerController } from '../content-owner';
 import { ContentEditorAppAdapterMessage, editorGetAppAdapter } from './app-adapter';
 import { ContentEditorService } from './content-editor.service';
 import buildEditorEvents from './events/build-events';
-import { MediaUploadTask } from './media-upload-task';
+import { createMediaUploadTask, MediaUploadTask } from './media-upload-task';
 import { SearchResult } from './modals/gif/gif-modal.service';
 import { NodeViewRenderData } from './node-views/base';
 import { buildEditorNodeViews } from './node-views/node-view-builder';
@@ -37,18 +37,24 @@ type Coordinates = {
 	bottom: number;
 };
 
-export function createContentEditor({
-	contentContext,
-	singleLineMode,
-	disabled,
-}: {
+export function createContentEditor(options: {
 	contentContext: ContentContext;
 	singleLineMode?: MaybeRef<boolean>;
 	disabled?: MaybeRef<boolean>;
+
+	/**
+	 * If this is passed in, we'll use these directly instead of generating from
+	 * the ContentContext.
+	 */
+	contextCapabilities?: ContextCapabilities;
 }): ContentEditorController {
+	const { contentContext, singleLineMode, disabled } = options;
+
 	const c = reactive(new ContentEditorController(contentContext)) as ContentEditorController;
 
-	c.contextCapabilities = markRaw(ContextCapabilities.getForContext(c.contentContext));
+	c.contextCapabilities = markRaw(
+		options.contextCapabilities ?? ContextCapabilities.getForContext(c.contentContext)
+	);
 	c.schema = markRaw(generateEditorSchema(c.contextCapabilities));
 	c.plugins = markRaw(createEditorPlugins(c));
 
@@ -92,7 +98,6 @@ export class ContentEditorController {
 	window = new ContentEditorWindow();
 	scope = new ContentEditorScope();
 	capabilities = new ContentEditorScopeCapabilities();
-	hydrator = new ContentHydrator();
 
 	/**
 	 * Keep a copy of the json version of the doc, to only set the content if
@@ -131,6 +136,7 @@ export class ContentEditorController {
 	controlsCollapsed = true;
 
 	declare _editor?: {
+		ownerController: () => ContentOwnerController;
 		getWindowRect: () => DOMRect;
 		emitSubmit: () => void;
 		emitInput: (newSource: string) => void;
@@ -440,11 +446,8 @@ export function editorSyncScope(c: ContentEditorController) {
 		node?.isText &&
 		marksForSelection.some(i => i.type.name === 'link' && !!i.attrs.autolink);
 
-	// App doesn't really care about the correct xy coordinates of the editor
-	// window, but others may need it to update any floating controls.
-	if (!GJ_IS_MOBILE_APP) {
-		editorSyncWindow(c);
-	}
+	// Update any floating controls and give mobile app info about our view.
+	editorSyncWindow(c);
 
 	c.scope = new ContentEditorScope({
 		isFocused,
@@ -706,19 +709,7 @@ export function editorUploadImageFile(c: ContentEditorController, file: File | n
 		return false;
 	}
 
-	// Only preview the image if it's smaller than 5 Mb.
-	let thumbnail: string | undefined;
-	if (file.size < 5000000) {
-		const reader = new FileReader();
-		reader.onloadend = () => {
-			if (reader.result !== null) {
-				thumbnail = reader.result.toString();
-			}
-		};
-		reader.readAsDataURL(file);
-	}
-
-	const uploadTask = new MediaUploadTask(c, uuidv4(), thumbnail).withFile(file);
+	const uploadTask = createMediaUploadTask(c, uuidv4(), { file });
 	editorMediaUploadInsert(c, uploadTask);
 	return true;
 }
@@ -960,7 +951,7 @@ export function editorMediaUploadInsert(c: ContentEditorController, uploadTask: 
 
 	// The media upload node will use the uploadId to find the task in this
 	// object.
-	ContentEditorService.UploadTaskCache[uploadTask.uploadId] = uploadTask;
+	ContentEditorService.UploadTaskCache[uploadTask.uploadId] = markRaw(uploadTask);
 
 	// TODO: This might need to insert an inline node.
 	_insertNewBlockNode(c, schema =>

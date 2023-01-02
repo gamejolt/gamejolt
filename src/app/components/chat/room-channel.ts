@@ -1,35 +1,64 @@
-import { Channel, Presence, Socket } from 'phoenix';
-import { markRaw } from 'vue';
+import { Presence } from 'phoenix';
+import {
+	computed,
+	ComputedRef,
+	markRaw,
+	onMounted,
+	onUnmounted,
+	ref,
+	shallowReadonly,
+	watch,
+} from 'vue';
 import { arrayRemove } from '../../../utils/array';
+import { CancelToken } from '../../../utils/cancel-token';
+import { run } from '../../../utils/utils';
+import { Background } from '../../../_common/background/background.model';
 import { ContentDocument } from '../../../_common/content/content-document';
 import { ContentObject } from '../../../_common/content/content-object';
 import { MarkObject } from '../../../_common/content/mark-object';
+import { createSocketChannelController } from '../../../_common/socket/socket-controller';
+import { StickerPlacement } from '../../../_common/sticker/placement/placement.model';
 import {
 	ChatClient,
 	isInChatRoom,
 	processNewChatOutput,
 	setChatRoom,
 	setTimeSplit,
+	setupChatRoom,
 	updateChatRoomLastMessageOn,
 } from './client';
 import { ChatMessage } from './message';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
 
+export type ChatRoomChannel = Awaited<ReturnType<typeof createChatRoomChannel>>;
+
+interface JoinPayload {
+	room: unknown;
+	messages: unknown[];
+}
+
 interface RoomPresence {
-	metas: { phx_ref: string; typing: boolean }[];
-	user: ChatUser;
+	metas: { phx_ref: string; typing: boolean; username: string }[];
+}
+
+interface MemberIncPayload {
+	amount: number;
+}
+
+interface MemberDecPayload {
+	amount: number;
 }
 
 interface MemberAddPayload {
-	members: ChatUser[];
+	members: unknown[];
 }
 
 interface MemberLeavePayload {
 	user_id: number;
 }
 
-interface MemberKickedPayload {
+export interface ChatRoomMemberKickedPayload {
 	user_id: number;
 }
 
@@ -37,121 +66,175 @@ interface OwnerSyncPayload {
 	owner_id: number;
 }
 
-interface UpdateTitlePayload {
-	title: string;
-}
+export async function createChatRoomChannel(
+	client: ChatClient,
+	options: {
+		roomId: number;
+		/**
+		 * An instanced room channel is for a room that can be opened anywhere
+		 * on the site, outside of and in addition to the active chat in the
+		 * chat sidebar.
+		 */
+		instanced: boolean;
 
-export class ChatRoomChannel {
-	constructor(
-		public readonly roomId: number,
-		public readonly client: ChatClient,
-		params?: Record<string, any>
-	) {
-		this.socket = client.socket!;
+		/**
+		 * If you want to hook into the member kicked even to do some extra
+		 * logic.
+		 */
+		afterMemberKick?: (data: ChatRoomMemberKickedPayload) => void;
+	}
+) {
+	const { socketController } = client;
+	const { roomId, instanced, afterMemberKick } = options;
 
-		this.socketChannel = markRaw(new Channel('room:' + roomId, params, this.socket));
-		(this.socket as any).channels.push(this.socketChannel);
-		this.instanced = false;
+	// This is because the join set its up async, but all the functionality that
+	// attaches to this channel will be called after the room is set up. So we
+	// can just safely access it.
+	const _room = ref<ChatRoom>();
+	const room = computed(() => _room.value!);
+
+	let _freezeMessageLimitRemovals = false;
+	let _queuedMessageLimit: number | undefined = undefined;
+
+	const channelController = createSocketChannelController(`room:${roomId}`, socketController);
+	channelController.listenTo('message', _onMsg);
+	channelController.listenTo('user_updated', _onUserUpdated);
+	channelController.listenTo('message_update', _onUpdateMsg);
+	channelController.listenTo('message_remove', _onRemoveMsg);
+	channelController.listenTo('member_inc', _onMemberInc);
+	channelController.listenTo('member_dec', _onMemberDec);
+	channelController.listenTo('member_add', _onMemberAdd);
+	channelController.listenTo('member_leave', _onMemberLeave);
+	channelController.listenTo('owner_sync', _onOwnerSync);
+	channelController.listenTo('room_update', _onRoomUpdate);
+	channelController.listenTo('kick_member', _onMemberKicked);
+
+	const { channel, isClosed } = channelController;
+	channel.onClose(() => {
+		if (!isInChatRoom(client, roomId)) {
+			return;
+		}
+
+		if (!instanced) {
+			setChatRoom(client, undefined);
+		}
+	});
+
+	const presence = markRaw(new Presence(channel));
+	presence.onSync(() => _syncPresentUsers(presence));
+	presence.onLeave(_syncPresenceData);
+
+	const c = shallowReadonly({
+		channelController,
+		roomId,
+		instanced,
+		room,
+
+		processNewRoomMessage,
+		freezeMessageLimitRemovals,
+		unfreezeMessageLimitRemovals,
+		pushFocus,
+		pushUnfocus,
+		pushMessage,
+		pushMessageRemove,
+		pushMessageUpdate,
+		pushLoadMessages,
+		pushMemberAdd,
+		pushKickMember,
+		pushUpdateTitle,
+		pushUpdateBackground,
+		pushStartTyping,
+		pushStopTyping,
+		pushPlaceSticker,
+		getMemberWatchLock,
+	});
+
+	// If we're not an instanced room, we only want to allow joining a single
+	// one. So we save our room as the one that we're polling and then check
+	// after join to make sure that we didn't change.
+	if (!instanced) {
+		client.pollingRoomId = roomId;
 	}
 
-	readonly socket: Socket;
-	readonly socketChannel: Channel;
-
-	room!: ChatRoom;
-
-	/**
-	 * An instanced room channel is for a room that can be opened anywhere on
-	 * the site, outside of and in addition to the active chat in the chat
-	 * sidebar.
-	 */
-	instanced: boolean;
-
-	init() {
-		this.setupPresence();
-
-		this.socketChannel.on('message', this.onMsg.bind(this));
-		this.socketChannel.on('user_updated', this.onUserUpdated.bind(this));
-		this.socketChannel.on('message_update', this.onUpdateMsg.bind(this));
-		this.socketChannel.on('message_remove', this.onRemoveMsg.bind(this));
-		this.socketChannel.on('member_leave', this.onMemberLeave.bind(this));
-		this.socketChannel.on('owner_sync', this.onOwnerSync.bind(this));
-		this.socketChannel.on('member_add', this.onMemberAdd.bind(this));
-		this.socketChannel.on('update_title', this.onUpdateTitle.bind(this));
-		this.socketChannel.on('kick_member', this.onMemberKicked.bind(this));
-
-		this.socketChannel.onClose(() => {
-			if (isInChatRoom(this.client, this.roomId)) {
-				if (!this.instanced) {
-					setChatRoom(this.client, undefined);
+	await channelController.join({
+		async onJoin(response: JoinPayload) {
+			if (!instanced) {
+				if (client.pollingRoomId !== roomId) {
+					throw new Error(`Not polling our room anymore.`);
 				}
 
-				// Reset the room we were in
-				delete this.client.roomMembers[this.roomId];
-				delete this.client.messages[this.roomId];
+				client.pollingRoomId = -1;
 			}
-		});
-	}
 
-	private setupPresence() {
-		const presence = markRaw(new Presence(this.socketChannel));
+			client.roomChannels[roomId] = markRaw(c);
 
-		presence.onJoin(this.onUserJoin.bind(this));
-		presence.onLeave(this.onUserLeave.bind(this));
-		presence.onSync(() => this.syncPresentUsers(presence, this.room));
-	}
+			_room.value = new ChatRoom(client, response.room);
 
-	private onMsg(data: Partial<ChatMessage>) {
+			const messages = response.messages.map((i: ChatMessage) => new ChatMessage(i));
+			messages.reverse();
+			setupChatRoom(client, room.value, messages);
+		},
+	});
+
+	function _onMsg(data: Partial<ChatMessage>) {
 		const message = new ChatMessage(data);
 
-		// If we receive a message from the currently logged in user on this room channel,
-		// we ignore it.
-		// We handle this message as incoming in the chat client as a response to sending the message.
-		// So as to not duplicate the message in the room, ignore it here.
-		if (this.client.currentUser && this.client.currentUser.id === message.user.id) {
-			// The only exception is if that message was not already received, and the client is not having any messages queued.
-			// This is so when a user has the same room open in two windows, and they send a message in one, they receive it in the other.
-			// We can safely assume that they wouldn't try and use two windows to send messages in the same room at the same time.
-			const hasQueuedMessages = this.client.messageQueue.some(
-				i => i.room_id === message.room_id
-			);
-			const hasReceivedMessage = this.client.messages[message.room_id].some(
-				i => i.id === message.id
-			);
+		// If we receive a message from the currently logged in user on this
+		// room channel, we ignore it.
+		//
+		// We handle this message as incoming in the chat client as a response
+		// to sending the message. So as to not duplicate the message in the
+		// room, ignore it here.
+		if (client.currentUser && client.currentUser.id === message.user.id) {
+			// The only exception is if that message was not already received,
+			// and the client is not having any messages queued. This is so when
+			// a user has the same room open in two windows, and they send a
+			// message in one, they receive it in the other. We can safely
+			// assume that they wouldn't try and use two windows to send
+			// messages in the same room at the same time.
+			const hasQueuedMessages = room.value.queuedMessages.length > 0;
+			const hasReceivedMessage = room.value.messages.some(i => i.id === message.id);
 			if (hasQueuedMessages || hasReceivedMessage) {
 				return;
 			}
 		}
 
-		this.processNewRoomMessage(message);
+		processNewRoomMessage(message);
 	}
 
-	processNewRoomMessage(message: ChatMessage) {
-		const alreadyReceivedMessage = this.client.messages[message.room_id].some(
-			i => i.id === message.id
-		);
-		if (alreadyReceivedMessage) {
+	function _queueMessageLimitRemoval(maxMessages: number) {
+		if (_freezeMessageLimitRemovals) {
+			_queuedMessageLimit = maxMessages;
+		} else {
+			_removeMessagesPastLimit(maxMessages);
+			_queuedMessageLimit = undefined;
+		}
+	}
+
+	function _removeMessagesPastLimit(maxMessages: number) {
+		const { messages } = room.value;
+		const removalCount = messages.length - maxMessages;
+		if (removalCount <= 0) {
 			return;
 		}
 
-		processNewChatOutput(this.client, this.roomId, [message], false);
-		updateChatRoomLastMessageOn(this.client, message);
-
-		while (this.room.isFiresideRoom && this.client.messages[this.roomId].length > 100) {
-			this.client.messages[this.roomId].shift();
+		messages.splice(0, removalCount);
+		if (messages.length > 0) {
+			setTimeSplit(room.value, messages[0]);
 		}
 	}
 
-	private onUserUpdated(data: Partial<ChatUser>) {
+	function _onUserUpdated(data: Partial<ChatUser>) {
 		const updatedUser = new ChatUser(data);
-		if (this.room && this.room.isGroupRoom) {
-			if (isInChatRoom(this.client, this.roomId)) {
-				this.client.roomMembers[this.roomId].update(updatedUser);
+		if (room.value.isGroupRoom) {
+			if (isInChatRoom(client, roomId)) {
+				room.value.memberCollection.update(updatedUser);
 			}
 
-			this.room.updateRoleForUser(updatedUser);
+			room.value.updateRoleForUser(updatedUser);
 
 			// Sync the user update to the list of messages.
-			for (const message of this.client.messages[this.roomId]) {
+			for (const message of room.value.messages) {
 				if (message.user.id === updatedUser.id) {
 					Object.assign(message.user, updatedUser);
 				}
@@ -159,123 +242,390 @@ export class ChatRoomChannel {
 		}
 	}
 
-	private onRemoveMsg(data: { id: number }) {
-		if (this.room) {
-			const roomMessages = this.client.messages[this.roomId];
+	function _onRemoveMsg(data: { id: number }) {
+		if (!room.value) {
+			return;
+		}
 
-			// Get the two surrounding messages of the removed message.
-			const removedMessageIndex = roomMessages.findIndex(i => i.id === data.id);
-			const previousMessage =
-				removedMessageIndex === 0 ? null : roomMessages[removedMessageIndex - 1];
-			const nextMessage =
-				removedMessageIndex === roomMessages.length - 1
-					? null
-					: roomMessages[removedMessageIndex + 1];
+		const { messages } = room.value;
 
-			arrayRemove(this.client.messages[this.roomId], i => i.id === data.id);
+		// Get the two surrounding messages of the removed message.
+		const removedMessageIndex = messages.findIndex(i => i.id === data.id);
+		const previousMessage =
+			removedMessageIndex === 0 ? null : messages[removedMessageIndex - 1];
+		const nextMessage =
+			removedMessageIndex === messages.length - 1 ? null : messages[removedMessageIndex + 1];
 
-			// Recalc the time split of the surrounding messages.
-			// If for example the removed message was the first in a batch of user messages,
-			// removing it would get rid of the split between that user and the previous one.
-			// Resetting the time split on the next (now first in batch) message shows the user
-			// header on that message.
-			if (previousMessage) {
-				setTimeSplit(this.client, this.roomId, previousMessage);
-			}
-			if (nextMessage) {
-				setTimeSplit(this.client, this.roomId, nextMessage);
-			}
+		arrayRemove(messages, i => i.id === data.id);
+
+		// Recalc the time split of the surrounding messages. If for example the
+		// removed message was the first in a batch of user messages, removing
+		// it would get rid of the split between that user and the previous one.
+		// Resetting the time split on the next (now first in batch) message
+		// shows the user header on that message.
+		if (previousMessage) {
+			setTimeSplit(room.value, previousMessage);
+		}
+		if (nextMessage) {
+			setTimeSplit(room.value, nextMessage);
 		}
 	}
 
-	private onUpdateMsg(data: Partial<ChatMessage>) {
+	function _onUpdateMsg(data: Partial<ChatMessage>) {
+		if (!room.value) {
+			return;
+		}
+
+		const message = room.value.messages.find(i => i.id === data.id);
+		if (!message) {
+			return;
+		}
+
 		const edited = new ChatMessage(data);
-		if (this.room) {
-			const index = this.client.messages[this.roomId].findIndex(msg => msg.id === data.id);
-			const message = this.client.messages[this.roomId][index];
+		message.content = edited.content;
+		message.edited_on = edited.edited_on;
+	}
 
-			message.content = edited.content;
-			message.edited_on = edited.edited_on;
+	function _onMemberInc(data: MemberIncPayload) {
+		room.value.member_count += data.amount;
+	}
+
+	function _onMemberDec(data: MemberDecPayload) {
+		room.value.member_count -= data.amount;
+	}
+
+	function _onMemberAdd(data: MemberAddPayload) {
+		for (const member of data.members) {
+			const user = new ChatUser(member);
+
+			room.value.memberCollection.add(user);
+			room.value.updateRoleForUser(user);
 		}
 	}
 
-	private onUserJoin(presenceId: string, currentPresence: RoomPresence | undefined) {
-		// If this is the first user presence from a device.
-		if (!currentPresence && this.client.roomMembers[this.roomId]) {
-			const userId = +presenceId;
-			this.client.roomMembers[this.roomId].online(userId);
-		}
+	function _onMemberLeave(data: MemberLeavePayload) {
+		room.value.memberCollection.remove(data.user_id);
 	}
 
-	private onUserLeave(presenceId: string, currentPresence: RoomPresence | undefined) {
-		// If the user has left all devices.
-		if (currentPresence?.metas.length === 0 && this.client.roomMembers[this.roomId]) {
-			const userId = +presenceId;
-			this.client.roomMembers[this.roomId].offline(userId);
-		}
-	}
-
-	private onMemberLeave(data: MemberLeavePayload) {
-		const roomMembers = this.client.roomMembers[this.roomId];
-
-		if (roomMembers) {
-			roomMembers.remove(data.user_id);
-		}
-		arrayRemove(this.room.members, i => i.id === data.user_id);
-	}
-
-	private onMemberKicked(data: MemberKickedPayload) {
+	function _onMemberKicked(data: ChatRoomMemberKickedPayload) {
 		// Generate doc for the message that contains "[removed]".
 		const text = new ContentObject('text');
 		text.text = '[removed]';
 		const textMark = new MarkObject('code');
 		text.marks.push(textMark);
 		const p = new ContentObject('paragraph', [text]);
-		const doc = new ContentDocument(this.room.messagesContentContext, [p]);
+		const doc = new ContentDocument(room.value.messagesContentContext, [p]);
 
 		const json = doc.toJson();
 
 		// Mark all messages by the kicked member as "removed".
-		for (const message of this.client.messages[this.roomId]) {
+		for (const message of room.value.messages) {
 			if (message.user.id === data.user_id) {
 				message.content = json;
 			}
 		}
+
+		afterMemberKick?.(data);
 	}
 
-	private onMemberAdd(data: MemberAddPayload) {
-		const roomMembers = this.client.roomMembers[this.roomId];
+	function _onRoomUpdate(json: Partial<ChatRoom>) {
+		const { title, background } = json;
+		room.value.title = title || '';
+		room.value.background = background ? new Background(background) : undefined;
+	}
 
-		for (const member of data.members) {
-			const user = new ChatUser(member);
+	function _onOwnerSync(data: OwnerSyncPayload) {
+		room.value.owner_id = data.owner_id;
+	}
 
-			if (roomMembers) {
-				roomMembers.add(user);
+	function _syncPresentUsers(presence: Presence) {
+		if (!room.value) {
+			return;
+		}
+
+		room.value.memberCollection.doBatchWork(() => {
+			presence.list(_syncPresenceData);
+		});
+	}
+
+	function _syncPresenceData(presenceId: string, roomPresence: RoomPresence | undefined) {
+		if (!roomPresence) {
+			return;
+		}
+
+		const userId = +presenceId;
+
+		let isTyping = false;
+		let username = null;
+		for (const meta of roomPresence.metas) {
+			if (meta.typing) {
+				isTyping = true;
 			}
+			if (meta.username) {
+				username = meta.username;
+			}
+		}
 
-			this.room.members.push(user);
-			this.room.updateRoleForUser(user);
+		if (isTyping && username) {
+			room.value.usersTyping.set(userId, {
+				username,
+			});
+		} else {
+			room.value.usersTyping.delete(userId);
 		}
 	}
 
-	private onUpdateTitle(data: UpdateTitlePayload) {
-		this.room.title = data.title;
+	// TODO: why is this here and not in the chat client?
+	function processNewRoomMessage(message: ChatMessage) {
+		const alreadyReceivedMessage = room.value.messages.some(i => i.id === message.id);
+		if (alreadyReceivedMessage) {
+			return;
+		}
+
+		processNewChatOutput(room.value, [message], false);
+		updateChatRoomLastMessageOn(client, message);
+
+		if (room.value.isFiresideRoom) {
+			_queueMessageLimitRemoval(100);
+		}
 	}
 
-	private onOwnerSync(data: OwnerSyncPayload) {
-		this.room.owner_id = data.owner_id;
+	function freezeMessageLimitRemovals() {
+		_freezeMessageLimitRemovals = true;
 	}
 
-	private syncPresentUsers(presence: Presence, room: ChatRoom) {
-		const roomMembers = this.client.roomMembers[room.id];
+	function unfreezeMessageLimitRemovals() {
+		_freezeMessageLimitRemovals = false;
+		if (_queuedMessageLimit != null) {
+			_removeMessagesPastLimit(_queuedMessageLimit!);
+			_queuedMessageLimit = undefined;
+		}
+	}
 
-		roomMembers.doBatchWork(() => {
-			presence.list((id: string, roomPresence: RoomPresence) => {
-				const user = roomMembers.get(+id) ?? new ChatUser(roomPresence.user);
-				user.typing = roomPresence.metas.some(meta => meta.typing);
-				roomMembers.update(user);
-				roomMembers.online(+id);
+	/**
+	 * Focus this particular room.
+	 */
+	function pushFocus() {
+		return channelController.push<void>('focus', { roomId });
+	}
+
+	/**
+	 * Unfocus this particular room.
+	 */
+	function pushUnfocus() {
+		return channelController.push<void>('unfocus', { roomId });
+	}
+
+	/**
+	 * Adds a new message. Will resolve with the new data for the ChatMessage
+	 * model.
+	 */
+	function pushMessage(content: string) {
+		return channelController.push<object>('message', { content });
+	}
+
+	/**
+	 * Removes a particular message.
+	 */
+	function pushMessageRemove(messageId: number) {
+		return channelController.push<void>('message_remove', { id: messageId });
+	}
+
+	/**
+	 * Updates a particular message with new content.
+	 */
+	function pushMessageUpdate(messageId: number, content: string) {
+		return channelController.push<void>('message_update', { id: messageId, content });
+	}
+
+	/**
+	 * Load messages for this room.
+	 */
+	function pushLoadMessages(before: Date) {
+		return channelController.push<{
+			messages: unknown[];
+		}>('load_messages', { before_date: before });
+	}
+
+	/**
+	 * Adds new members to this room.
+	 */
+	function pushMemberAdd(members: number[]) {
+		return channelController.push<void>('member_add', { member_ids: members });
+	}
+
+	/**
+	 * Removes a member from this room.
+	 */
+	function pushKickMember(memberId: number) {
+		return channelController.push<void>('kick_member', { member_id: memberId });
+	}
+
+	/**
+	 * Updates the title of the room.
+	 */
+	function pushUpdateTitle(title: string) {
+		return channelController.push<void>('update_title', { title });
+	}
+
+	/**
+	 * Updates the background for the room. Passing in `null` will unset the
+	 * background.
+	 */
+	function pushUpdateBackground(backgroundId: number | null) {
+		return channelController.push<void>(
+			'update_background',
+			{ background_id: backgroundId },
+			5_000
+		);
+	}
+
+	/**
+	 * Notifies that we've started typing in the room.
+	 */
+	function pushStartTyping() {
+		return channelController.push<void>('start_typing');
+	}
+
+	/**
+	 * Notifies that we've stopped typing the room.
+	 */
+	function pushStopTyping() {
+		return channelController.push<void>('stop_typing');
+	}
+
+	/**
+	 * Places a sticker on a particular target user in the room.
+	 */
+	function pushPlaceSticker(targetUserId: number, stickerData: any) {
+		interface Payload {
+			stickerPlacement: StickerPlacement;
+		}
+
+		return channelController.push<Payload>(
+			'place_sticker',
+			{
+				...stickerData,
+				host_user_id: targetUserId,
+			},
+			// Just in case they get disconnected (or bad data causes it to
+			// error out)
+			5_000
+		);
+	}
+
+	// Currently this only works for firesides. But if you want to get
+	// information from the member collection you need to first get a lock to
+	// watch the most up to date data.
+	const _memberWatchLocks: ChatRoomChannelLock[] = [];
+	let _memberWatchCancelToken = new CancelToken();
+	let _isWatchingMembers = false;
+
+	// Call this function anytime we modify the watch lock array.
+	function _memberWatchLocksChanged() {
+		if (_memberWatchLocks.length > 0) {
+			if (_isWatchingMembers) {
+				// Nothing to do
+				return;
+			}
+
+			_isWatchingMembers = true;
+			run(async () => {
+				interface Payload {
+					members: unknown[];
+				}
+
+				const cancelToken = new CancelToken();
+				_memberWatchCancelToken.cancel();
+				_memberWatchCancelToken = cancelToken;
+				const response = await channelController.push<Payload>('member_watch');
+
+				// It's fine if they stop watching and this returns. We
+				// still want to store it as the latest cached data. We
+				// don't want to do it if they quick unwatched/watched and
+				// our token is no longer active.
+				if (!cancelToken.isCanceled) {
+					room.value.memberCollection.replace(response.members);
+				}
 			});
-		});
+		} else {
+			if (!_isWatchingMembers) {
+				// Nothing to do
+				return;
+			}
+
+			// We don't clear the member list out, we keep it as is so we
+			// can switch quickly back to the cached version while loading
+			// again in future.
+
+			_isWatchingMembers = false;
+
+			if (!isClosed.value) {
+				channelController.push('member_unwatch');
+			}
+		}
 	}
+
+	function getMemberWatchLock() {
+		const newLock = new ChatRoomChannelLock(() => {
+			// We compare with id so that vue wrapping it reactively doesn't
+			// screw up our instance of checks.
+			arrayRemove(_memberWatchLocks, i => i.id === newLock.id);
+			_memberWatchLocksChanged();
+		});
+
+		_memberWatchLocks.push(newLock);
+		_memberWatchLocksChanged();
+
+		return newLock;
+	}
+
+	return c;
+}
+
+class ChatRoomChannelLock {
+	static _idInc = 0;
+	public readonly id = ++ChatRoomChannelLock._idInc;
+
+	constructor(public readonly release: () => void) {}
+}
+
+/**
+ * Convenience for getting a member collection and releasing the lock on
+ * component unmount.
+ */
+export function useChatRoomMembers(room: ComputedRef<ChatRoom | undefined>) {
+	let lock: ChatRoomChannelLock | undefined;
+	const mounted = ref(false);
+
+	const roomChannel = computed(() => room.value?.chat.roomChannels[room.value.id]);
+	const memberCollection = computed(() => room.value?.memberCollection);
+
+	watch([roomChannel, mounted], () => {
+		if (mounted.value && roomChannel.value) {
+			if (!lock) {
+				lock = roomChannel.value.getMemberWatchLock();
+			}
+		} else {
+			cleanup();
+		}
+	});
+
+	onMounted(() => {
+		mounted.value = true;
+	});
+
+	onUnmounted(() => {
+		mounted.value = false;
+		cleanup();
+	});
+
+	function cleanup() {
+		if (lock) {
+			lock?.release();
+			lock = undefined;
+		}
+	}
+
+	return shallowReadonly({ memberCollection });
 }

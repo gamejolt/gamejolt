@@ -12,7 +12,7 @@ import {
 	BaseRouteComponent,
 	OptionsForRoute,
 } from '../../../../../../../../_common/route/route-component';
-import { AppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import FormGameScoreTable from '../../../../../../../components/forms/game/score-table/score-table.vue';
 import { useGameDashRouteController } from '../../../manage.store';
 
@@ -26,7 +26,7 @@ import { useGameDashRouteController } from '../../../manage.store';
 		AppCardListDraggable,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

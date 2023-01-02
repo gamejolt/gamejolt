@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { EditorView } from 'prosemirror-view';
-import { computed, onMounted, PropType } from 'vue';
+import { computed, onMounted, PropType, toRefs } from 'vue';
 import { Api } from '../../api/api.service';
 import { showErrorGrowl } from '../../growls/growls.service';
-import AppLoading from '../../loading/loading.vue';
+import AppLoading from '../../loading/AppLoading.vue';
 import { MediaItem } from '../../media-item/media-item-model';
-import AppProgressBar from '../../progress/bar/bar.vue';
+import AppProgressBar from '../../progress/AppProgressBar.vue';
 import { $gettext } from '../../translate/translate.service';
 import { getMediaItemTypeForContext } from '../content-context';
 import {
@@ -27,8 +27,11 @@ const props = defineProps({
 	},
 });
 
+const { uploadId } = toRefs(props);
+
 const owner = useContentOwnerController()!;
-const task = ContentEditorService.UploadTaskCache[props.uploadId]!;
+const task = ContentEditorService.UploadTaskCache[uploadId.value]!;
+const { file: taskfile, thumbnail, progress, isProcessing, updateProgress } = task;
 
 const placeholderMaxHeight = computed(() => {
 	const maxHeight = owner.contentRules.maxMediaHeight;
@@ -39,14 +42,14 @@ const placeholderMaxHeight = computed(() => {
 });
 
 onMounted(() => {
-	// In the app, we don't handle the upload. The app will do it all.
-	if (!GJ_IS_DESKTOP_APP) {
+	// In the mobile app, we don't handle the upload. The app will do it all.
+	if (!GJ_IS_MOBILE_APP) {
 		_uploadFile();
 	}
 });
 
 async function _uploadFile() {
-	let file = task.file!;
+	let file = taskfile.value!;
 
 	// Non-alphanumeric chars get removed.
 	let name = (file.name || 'pasted_image').replace(/ /g, '_').replace(/\.[^/.]+$/, '');
@@ -78,8 +81,8 @@ async function _uploadFile() {
 }
 
 async function _doUpload(file: File) {
-	task.progress = 0;
-	task.isProcessing = false;
+	progress.value = 0;
+	isProcessing.value = false;
 
 	const itemType = getMediaItemTypeForContext(owner.context);
 	const parentId = await owner.getModelId?.();
@@ -128,9 +131,9 @@ async function _doUpload(file: File) {
 
 function _handleProgressEvent(e: ProgressEvent | null) {
 	if (e !== null) {
-		task.updateProgress(e.loaded / e.total);
+		updateProgress(e.loaded / e.total);
 	} else {
-		task.updateProgress(1);
+		updateProgress(1);
 	}
 }
 </script>
@@ -139,8 +142,8 @@ function _handleProgressEvent(e: ProgressEvent | null) {
 	<div class="media-upload-container">
 		<div class="media-upload">
 			<img
-				v-if="task.thumbnail"
-				:src="task.thumbnail"
+				v-if="thumbnail"
+				:src="thumbnail"
 				class="-placeholder"
 				:style="{ 'max-height': placeholderMaxHeight + 'px' }"
 			/>
@@ -149,9 +152,9 @@ function _handleProgressEvent(e: ProgressEvent | null) {
 				<AppProgressBar
 					class="-progress"
 					thin
-					:percent="task.progress * 100.0"
-					:indeterminate="task.isProcessing"
-					:active="task.isProcessing"
+					:percent="progress * 100.0"
+					:indeterminate="isProcessing"
+					:active="isProcessing"
 				/>
 			</div>
 		</div>

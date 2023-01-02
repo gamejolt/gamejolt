@@ -3,7 +3,7 @@ import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { Site } from '../../../../_common/site/site-model';
-import { AppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import FormSiteSettings from '../../forms/site/settings/settings.vue';
 
 @Options({
@@ -11,7 +11,7 @@ import FormSiteSettings from '../../forms/site/settings/settings.vue';
 		FormSiteSettings,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppSitesManagePageTemplate extends Vue {

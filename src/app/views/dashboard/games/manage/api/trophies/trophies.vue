@@ -14,7 +14,7 @@ import {
 	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
-import { AppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { TrophyDifficulty } from '../../../../../../../_common/trophy/base-trophy.model';
 import FormGameTrophy from '../../../../../../components/forms/game/trophy/trophy.vue';
 import AppTrophyThumbnail from '../../../../../../components/trophy/thumbnail/thumbnail.vue';
@@ -31,7 +31,7 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppCardListDraggable,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 @OptionsForRoute({

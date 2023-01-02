@@ -2,33 +2,22 @@ const fs = require('fs');
 const vm = require('vm');
 const NativeModule = require('module');
 
-// module.exports.getPreparedScript = filepath => {
-// 	const codeString = fs.readFileSync(filepath, 'utf-8');
-// 	const script = new vm2.VMScript(codeString);
-// 	script.compile();
+// A lot of this code is taken from
+// https://github.com/vuejs/vue/blob/063acb79ebc02344ab277196d4aea0577b113926/src/server/bundle-renderer/create-bundle-runner.js
 
-// 	return script;
-// };
-
-// module.exports.getNewContext = (context = {}) =>
-// 	new vm2.NodeVM({
-// 		sandbox: context,
-
-// 		require: {
-// 			external: true,
-// 			builtin: ['*'],
-// 			context: 'sandbox',
-// 		},
-
-// 		env: {
-// 			...process.env,
-
-// 			// Axios uses follow-redirects which uses debug which attempts to detect
-// 			// if the process is running from a tty by inspecting process.stdout.fd and process.stderr.fd.
-// 			// The VM unsets these which causes: Cannot read property 'fd' of undefined
-// 			DEBUG_COLORS: 'false',
-// 		},
-// 	});
+function createSandbox(context) {
+	const sandbox = {
+		console,
+		setTimeout,
+		setInterval,
+		setImmediate,
+		clearTimeout,
+		clearInterval,
+		clearImmediate,
+	};
+	sandbox.global = sandbox;
+	return sandbox;
+}
 
 module.exports.compileModule = filepath => {
 	// We have to wrap the code in the nodejs module wrapper function like it
@@ -42,7 +31,7 @@ module.exports.compileModule = filepath => {
 	});
 
 	return (context = {}) => {
-		const compiledWrapper = script.runInNewContext(context);
+		const compiledWrapper = script.runInNewContext(createSandbox(context));
 
 		const m = { exports: {} };
 

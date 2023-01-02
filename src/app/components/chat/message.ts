@@ -15,8 +15,10 @@ export class ChatMessage {
 	edited_on!: Date | null;
 	type!: ChatMessageType;
 
-	combine?: boolean;
+	showMeta?: boolean;
+	showAvatar?: boolean;
 	dateSplit?: boolean;
+	is_automated?: boolean;
 
 	// Used for rendering.
 	_collapsable = false;
@@ -26,19 +28,27 @@ export class ChatMessage {
 	_isProcessing = false;
 	_error = false; // When an error was received trying to send the message.
 
-	constructor(data: Partial<ChatMessage> = {}) {
+	constructor(data: any = {}) {
 		Object.assign(this, data);
 
-		if (typeof this.logged_on === 'number' || typeof this.logged_on === 'string') {
-			this.logged_on = new Date(this.logged_on);
+		if (typeof data.logged_on === 'number' || typeof data.logged_on === 'string') {
+			this.logged_on = new Date(data.logged_on);
 		}
 
-		if (typeof this.edited_on === 'number' || typeof this.edited_on === 'string') {
-			this.edited_on = new Date(this.edited_on);
+		if (typeof data.edited_on === 'number' || typeof data.edited_on === 'string') {
+			this.edited_on = new Date(data.edited_on);
 		}
 
 		if (data.user) {
 			this.user = new ChatUser(data.user);
+		}
+
+		if (this.showMeta === undefined) {
+			this.showMeta = false;
+		}
+
+		if (this.is_automated === undefined) {
+			this.is_automated = false;
 		}
 	}
 

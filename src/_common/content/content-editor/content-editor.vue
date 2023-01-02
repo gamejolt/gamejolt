@@ -5,9 +5,9 @@ import { computed, nextTick, provide } from 'vue';
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { FocusToken } from '../../../utils/focus-token';
-import { AppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
+import { vAppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
 import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
-import { ContentContext } from '../content-context';
+import { ContentContext, ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentFormatAdapter, ProsemirrorEditorFormat } from '../content-format-adapter';
 import {
@@ -49,7 +49,7 @@ export interface AppContentEditorInterface {
 		AppScrollScroller,
 	},
 	directives: {
-		AppObserveDimensions,
+		AppObserveDimensions: vAppObserveDimensions,
 	},
 })
 export default class AppContentEditor extends Vue {
@@ -58,6 +58,9 @@ export default class AppContentEditor extends Vue {
 
 	@Prop({ type: String, required: true })
 	contentContext!: ContentContext;
+
+	@Prop({ type: Object, default: undefined })
+	contextCapabilitiesOverride?: ContextCapabilities;
 
 	@Prop({ type: String, required: true })
 	value!: string;
@@ -119,6 +122,7 @@ export default class AppContentEditor extends Vue {
 			this.controller ||
 			createContentEditor({
 				contentContext: props.contentContext,
+				contextCapabilities: props.contextCapabilitiesOverride,
 				disabled: computed(() => props.disabled),
 				singleLineMode: computed(() => props.singleLineMode),
 			});
@@ -144,9 +148,6 @@ export default class AppContentEditor extends Vue {
 
 	@Emit('submit')
 	emitSubmit() {}
-
-	@Emit('insert-block-node')
-	emitInsertBlockNode(_nodeType: string) {}
 
 	@Emit('input')
 	emitInput(_source: string) {}
@@ -282,6 +283,7 @@ export default class AppContentEditor extends Vue {
 		// Attach our editor hooks into the controller so that we can be
 		// controlled through the controller. So much control.
 		this.controller_._editor = {
+			ownerController: () => this.ownerController,
 			getWindowRect: () => this.$refs.editor.getBoundingClientRect(),
 			emitSubmit: () => this.emitSubmit(),
 			emitInput: newSource => this.emitInput(newSource),
@@ -379,11 +381,34 @@ export default class AppContentEditor extends Vue {
 		++this.controller_.stateCounter;
 	}
 
+	private async highlightCurrentSelection() {
+		// When an outside control got clicked, store the previous selection,
+		// focus the editor and then apply the selection.
+		// We do this so the focused text doesn't visibly lose focus after the outside control
+		// button assumed focus.
+
+		const prevSelection = this.view!.state.selection;
+
+		this.$refs.editor.focus();
+
+		const tr = this.view!.state.tr;
+		tr.setSelection(prevSelection);
+		this.view!.dispatch(tr);
+
+		// Wait a tick for the editor's doc to update, then force an update to reposition the controls.
+		await this.$nextTick();
+		++this.controller_.stateCounter;
+	}
+
 	onEmojiPanelVisibilityChanged(visible: boolean) {
 		this.controller_.emojiPanelVisible = visible;
+		if (this.controller_.emojiPanelVisible) {
+			this.highlightCurrentSelection();
+		}
 	}
 
 	onInsertMention() {
+		this.highlightCurrentSelection();
 		this.controller_.canShowMentionSuggestions = 0; // Hide control
 	}
 

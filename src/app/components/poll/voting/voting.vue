@@ -1,12 +1,12 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { AppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Game } from '../../../../_common/game/game.model';
 import { PollItem } from '../../../../_common/poll/item/item.model';
 import { Poll } from '../../../../_common/poll/poll.model';
-import AppProgressBar from '../../../../_common/progress/bar/bar.vue';
+import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../_common/time/ago/ago';
 import { User } from '../../../../_common/user/user.model';
@@ -17,7 +17,7 @@ import { User } from '../../../../_common/user/user.model';
 		AppTimeAgo,
 	},
 	directives: {
-		AppAuthRequired,
+		AppAuthRequired: vAppAuthRequired,
 	},
 })
 export default class AppPollVoting extends Vue {

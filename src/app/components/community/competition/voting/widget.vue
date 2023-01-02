@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { numberSort } from '../../../../../utils/array';
-import { AppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
+import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import {
 	CommunityCompetition,
 	CompetitionPeriodVoting,
@@ -14,7 +14,7 @@ import { Environment } from '../../../../../_common/environment/environment.serv
 import { formatNumber } from '../../../../../_common/filters/number';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import FormCommunityCompetitionVotingCast from '../../../forms/community/competition/voting/cast/cast.vue';
 
 @Options({
@@ -23,8 +23,8 @@ import FormCommunityCompetitionVotingCast from '../../../forms/community/competi
 		FormCommunityCompetitionVotingCast,
 	},
 	directives: {
-		AppTooltip,
-		AppAuthRequired,
+		AppTooltip: vAppTooltip,
+		AppAuthRequired: vAppAuthRequired,
 	},
 })
 export default class AppCommunityCompetitionVotingWidget extends Vue {

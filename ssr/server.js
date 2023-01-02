@@ -8,7 +8,7 @@ const isProd = process.env.NODE_ENV === 'production';
 const projectRoot = path.resolve(__dirname, '..');
 
 const buildDir = path.join(projectRoot, 'build');
-const serverBuildPath = path.join(buildDir, 'server');
+const serverBuildPath = path.join(buildDir, 'ssr');
 const webBuildPath = path.join(buildDir, 'web');
 
 // This is the output of build:client.

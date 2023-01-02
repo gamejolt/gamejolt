@@ -2,11 +2,11 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import AppUserFollowWidget from '../../../../../_common/user/follow/widget.vue';
+import AppUserFollowButton from '../../../../../_common/user/follow/AppUserFollowButton.vue';
 
 @Options({
 	components: {
-		AppUserFollowWidget,
+		AppUserFollowButton,
 	},
 })
 export default class AppPostControlsUserFollow extends Vue {
@@ -39,7 +39,7 @@ export default class AppPostControlsUserFollow extends Vue {
 					<br />
 					<AppTranslate>You will get notified when they post new stuff.</AppTranslate>
 				</p>
-				<AppUserFollowWidget
+				<AppUserFollowButton
 					class="-flex-none"
 					:sm="Screen.isXs"
 					:user="user"

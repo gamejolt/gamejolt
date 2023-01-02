@@ -1,17 +1,20 @@
 import type {
 	AudienceLatencyLevelType,
+	ConnectionState,
+	IAgoraRTC,
 	IAgoraRTCClient,
 	IAgoraRTCRemoteUser,
 	ILocalAudioTrack,
 	ILocalTrack,
 	ILocalVideoTrack,
 	NetworkQuality,
+	SDK_CODEC,
 } from 'agora-rtc-sdk-ng';
 import { markRaw, reactive } from 'vue';
-import { importNoSSR } from '../../code-splitting';
+import { showErrorGrowl } from '../../growls/growls.service';
+import { $gettext } from '../../translate/translate.service';
 import { FiresideRTC } from './rtc';
-
-const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
+import { FiresideRTCUser, setupFiresideVideoElementListeners } from './user';
 
 type OnTrackPublish = (remoteUser: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => void;
 type OnTrackUnpublish = (remoteUser: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => void;
@@ -29,6 +32,7 @@ export class FiresideRTCChannel {
 	_localVideoTrack: ILocalVideoTrack | null = null;
 	_localAudioTrack: ILocalAudioTrack | null = null;
 	_networkQuality: NetworkQuality | null = null;
+	_connectionState: ConnectionState | null = null;
 
 	/**
 	 * Whether or not we have a track published in this channel. This will
@@ -37,11 +41,11 @@ export class FiresideRTCChannel {
 	_isPublished = false;
 
 	get isDisconnected() {
-		return this.agoraClient.connectionState === 'DISCONNECTED';
+		return this._connectionState === 'DISCONNECTED';
 	}
 
 	get isConnected() {
-		return this.agoraClient.connectionState === 'CONNECTED';
+		return this._connectionState === 'CONNECTED';
 	}
 
 	get isPoorNetworkQuality() {
@@ -58,10 +62,11 @@ export class FiresideRTCChannel {
 }
 
 /// Wraps a [FiresideRTCChannel] in [reactive] after initializing it.
-export async function createFiresideRTCChannel(
+export function createFiresideRTCChannel(
 	rtc: FiresideRTC,
 	channel: string,
 	token: string,
+	AgoraRTC: IAgoraRTC,
 	{
 		onTrackPublish,
 		onTrackUnpublish,
@@ -75,8 +80,22 @@ export async function createFiresideRTCChannel(
 	const c = reactive(new FiresideRTCChannel(rtc, channel)) as FiresideRTCChannel;
 	c.token = token;
 
-	const AgoraRTC = await AgoraRTCLazy;
-	c.agoraClient = markRaw(AgoraRTC.createClient({ mode: 'live', codec: 'h264' }));
+	let codec: SDK_CODEC = 'vp8';
+	const parts = window.location.search.replace('?', '').split('&');
+
+	for (const part of parts) {
+		const [key, value] = part.split('=');
+		if (!key || !value) {
+			continue;
+		}
+
+		if (key === 'codec' && ['h264', 'vp8', 'vp9', 'av1'].includes(value)) {
+			codec = value as SDK_CODEC;
+			rtc.log(`Override codec: ${codec}`);
+		}
+	}
+
+	c.agoraClient = markRaw(AgoraRTC.createClient({ mode: 'live', codec }));
 
 	c.agoraClient.on('user-published', (...args) => {
 		generation.assert();
@@ -90,6 +109,10 @@ export async function createFiresideRTCChannel(
 
 	c.agoraClient.on('network-quality', stats => {
 		c._networkQuality = markRaw(stats);
+	});
+
+	c.agoraClient.on('connection-state-change', newState => {
+		c._connectionState = newState;
 	});
 
 	return c;
@@ -128,12 +151,19 @@ export async function destroyChannel(channel: FiresideRTCChannel) {
 }
 
 export async function setChannelToken(channel: FiresideRTCChannel, token: string) {
+	channel.token = token;
 	await channel.agoraClient.renewToken(token);
 }
 
 export async function setChannelVideoTrack(
 	channel: FiresideRTCChannel,
-	trackBuilder: () => Promise<ILocalVideoTrack | null>
+	{
+		trackBuilder,
+		onTrackClose,
+	}: {
+		trackBuilder: () => Promise<ILocalVideoTrack | null>;
+		onTrackClose?: () => Promise<void>;
+	}
 ) {
 	const { agoraClient, rtc } = channel;
 	const generation = channel.rtc.generation;
@@ -153,11 +183,22 @@ export async function setChannelVideoTrack(
 
 		rtc.log(`Closing previous local video track.`);
 		localTrack.close();
+
+		await onTrackClose?.();
 	}
 
 	rtc.log(`Getting new video track.`);
-	const track = await trackBuilder();
-	channel._localVideoTrack = track ? markRaw(track) : null;
+	let newTrack: ILocalVideoTrack | null = null;
+	try {
+		newTrack = await trackBuilder();
+	} catch (e) {
+		showErrorGrowl({
+			message: $gettext(`Something went wrong trying to use that video device.`),
+		});
+		channel._localVideoTrack = null;
+		return;
+	}
+	channel._localVideoTrack = newTrack ? markRaw(newTrack) : null;
 	generation.assert();
 
 	// Only publish if we are streaming.
@@ -169,17 +210,31 @@ export async function setChannelVideoTrack(
 	generation.assert();
 }
 
-export function previewChannelVideo(channel: FiresideRTCChannel, element: HTMLDivElement) {
+export function previewChannelVideo(
+	user: FiresideRTCUser | null,
+	channel: FiresideRTCChannel,
+	element: HTMLDivElement
+) {
 	element.innerHTML = '';
 	channel._localVideoTrack?.play(element, {
 		fit: 'contain',
 		mirror: false,
 	});
+
+	if (user) {
+		setupFiresideVideoElementListeners(element, user);
+	}
 }
 
 export async function setChannelAudioTrack(
 	channel: FiresideRTCChannel,
-	trackBuilder: () => Promise<ILocalAudioTrack | null>
+	{
+		trackBuilder,
+		onTrackClose,
+	}: {
+		trackBuilder: () => Promise<ILocalAudioTrack | null>;
+		onTrackClose?: () => Promise<void>;
+	}
 ) {
 	const { agoraClient, rtc } = channel;
 	const generation = channel.rtc.generation;
@@ -199,11 +254,22 @@ export async function setChannelAudioTrack(
 
 		rtc.log(`Closing previous local audio track.`);
 		localTrack.close();
+
+		await onTrackClose?.();
 	}
 
 	rtc.log(`Getting new audio track.`);
-	const track = await trackBuilder();
-	channel._localAudioTrack = track ? markRaw(track) : null;
+	let newTrack: ILocalAudioTrack | null = null;
+	try {
+		newTrack = await trackBuilder();
+	} catch (e) {
+		showErrorGrowl({
+			message: $gettext(`Something went wrong trying to use that audio device.`),
+		});
+		channel._localAudioTrack = null;
+		return;
+	}
+	channel._localAudioTrack = newTrack ? markRaw(newTrack) : null;
 	generation.assert();
 
 	// Only publish if we are streaming.
@@ -246,9 +312,9 @@ export async function startChannelStreaming(channel: FiresideRTCChannel) {
 	generation.assert();
 
 	agoraClient.setLowStreamParameter({
-		width: 128,
-		height: 72,
-		framerate: 10,
+		width: 160,
+		height: 90,
+		framerate: 30,
 		bitrate: 350,
 	});
 
@@ -268,12 +334,9 @@ export async function startChannelStreaming(channel: FiresideRTCChannel) {
 
 export async function stopChannelStreaming(channel: FiresideRTCChannel) {
 	const { agoraClient, rtc } = channel;
-	const generation = channel.rtc.generation;
 
 	rtc.log(`Stopping stream.`);
 	channel._isPublished = false;
-
-	// TODO: We used to stop playback, do we still need to do that?
 
 	const tracksToUnpublish = [channel._localAudioTrack!, channel._localVideoTrack!].filter(
 		i => i !== null && _isTrackPublished(channel, i)
@@ -284,12 +347,10 @@ export async function stopChannelStreaming(channel: FiresideRTCChannel) {
 		rtc.log(`Unpublishing local tracks: ${trackIds.join(', ')}.`);
 
 		await agoraClient.unpublish(tracksToUnpublish);
-		generation.assert();
 	}
 
 	rtc.log(`Setting client role back to audience.`);
 	await agoraClient.setClientRole('audience', { level: DefaultAudienceLevel });
-	generation.assert();
 
 	rtc.log(`Stopped streaming.`);
 }

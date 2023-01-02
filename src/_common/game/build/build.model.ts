@@ -1,4 +1,5 @@
 import { Api } from '../../api/api.service';
+import { Jolticon } from '../../jolticon/AppJolticon.vue';
 import { Model } from '../../model/model.service';
 import { Game } from '../game.model';
 import { GamePackage } from '../package/package.model';
@@ -8,7 +9,7 @@ import { GameBuildLaunchOption } from './launch-option/launch-option.model';
 import { GameBuildParam } from './param/param.model';
 
 interface PlatformSupport {
-	icon: string;
+	icon: Jolticon;
 	tooltip: string;
 	sort: number;
 	arch?: string;
@@ -183,7 +184,7 @@ export class GameBuild extends Model {
 	_launch_options?: GameBuildLaunchOption[];
 
 	static pluckOsSupport(build: GameBuild) {
-		let support = [];
+		const support = [];
 
 		// We only include the 64-bit versions if the build doesn't have 32bit and 64bit
 		// on the same build. That basically just means it's a universal build.
@@ -294,7 +295,7 @@ export class GameBuild extends Model {
 	}
 
 	$save() {
-		let params = [this.game_id, this.game_package_id, this.game_release_id];
+		const params = [this.game_id, this.game_package_id, this.game_release_id];
 		if (!this.id) {
 			return this.$_save(
 				'/web/dash/developer/games/builds/save/' + params.join('/'),

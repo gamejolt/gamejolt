@@ -1,11 +1,21 @@
+import type { RouteLocationDefinition } from '../../utils/router';
+import { trackUserFollow, UserFollowLocation } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
+import { CommentableModel } from '../comment/comment-model';
 import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
 import { ContentSetCacheService } from '../content/content-set-cache';
+import { DogtagData } from '../dogtag/dogtag-data';
+import { showErrorGrowl } from '../growls/growls.service';
 import { MediaItem } from '../media-item/media-item-model';
-import { CommentableModel, Model } from '../model/model.service';
+import { ModalConfirm } from '../modal/confirm/confirm-service';
+import { Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
 import { Theme } from '../theme/theme.model';
+import { $gettext } from '../translate/translate.service';
+
+export const CreatorStatusCreator = 1;
+export const CreatorStatusApplied = 2;
 
 export class User extends Model implements ContentContainerModel, CommentableModel {
 	static readonly TYPE_GAMER = 'User';
@@ -19,13 +29,14 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 	url!: string;
 	slug!: string;
 	img_avatar!: string;
-	dogtag!: string;
+	dogtags?: DogtagData[];
 	shouts_enabled!: boolean;
 
 	status!: number;
 	permission_level!: number;
 	is_verified!: boolean;
 	is_partner!: boolean | null;
+	creator_status?: number;
 	friend_requests_enabled!: boolean;
 	liked_posts_enabled?: boolean;
 	mentions_setting?: number;
@@ -100,6 +111,7 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 
 	is_gamer = false;
 	is_developer = false;
+	is_creator?: boolean;
 
 	can_join_communities?: boolean;
 	can_create_communities?: boolean;
@@ -113,12 +125,27 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 		return cache.hasContent;
 	}
 
-	get canComment() {
-		if (this.blocked_you || this.is_blocked) {
-			return false;
-		}
+	get routeLocation(): RouteLocationDefinition {
+		return {
+			name: 'profile.overview',
+			params: { username: this.username },
+		};
+	}
 
-		return true;
+	get hasAnyBlock() {
+		return this.is_blocked || this.blocked_you || false;
+	}
+
+	get canViewComments() {
+		return this.shouts_enabled;
+	}
+
+	get canMakeComment() {
+		return this.shouts_enabled && !this.hasAnyBlock;
+	}
+
+	get canInteractWithComments() {
+		return this.shouts_enabled && !this.hasAnyBlock;
 	}
 
 	getContent(context: ContentContext) {
@@ -149,6 +176,10 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 			this.theme = new Theme(data.theme);
 		}
 
+		if (data.dogtags) {
+			this.dogtags = DogtagData.populate(data.dogtags);
+		}
+
 		Registry.store('User', this);
 	}
 
@@ -170,7 +201,7 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 	$save() {
 		// You can only save yourself, so we don't pass in an ID to the endpoint.
 		return this.$_save('/web/dash/profile/save', 'user', {
-			allowComplexData: ['theme'],
+			allowComplexData: ['theme', 'dogtags', 'pronoun_dogtags'],
 		});
 	}
 
@@ -256,4 +287,47 @@ export async function unfollowUser(user: User) {
 		++user.follower_count;
 		throw e;
 	}
+}
+
+export async function toggleUserFollow(
+	user: User,
+	location: UserFollowLocation
+): Promise<boolean | null> {
+	let failed = false,
+		result: boolean | undefined = undefined;
+
+	if (!user.is_following) {
+		try {
+			await followUser(user);
+		} catch (e) {
+			failed = true;
+			showErrorGrowl($gettext(`Something has prevented you from following this user.`));
+		} finally {
+			trackUserFollow(true, { failed, location });
+		}
+	} else {
+		try {
+			result = await ModalConfirm.show(
+				$gettext(`Are you sure you want to unfollow this user?`),
+				$gettext(`Unfollow user?`)
+			);
+
+			if (!result) {
+				return null;
+			}
+
+			await unfollowUser(user);
+		} catch (e) {
+			failed = true;
+			showErrorGrowl($gettext(`For some reason we couldn't unfollow this user.`));
+		} finally {
+			// Finally is always triggered, even if you return early, so we
+			// don't want to track if they canceled.
+			if (result !== undefined) {
+				trackUserFollow(false, { failed, location });
+			}
+		}
+	}
+
+	return !failed;
 }

@@ -1,3 +1,4 @@
+import { arrayRemove } from '../../utils/array';
 import { assertNever } from '../../utils/utils';
 import { MediaItem } from '../media-item/media-item-model';
 
@@ -11,11 +12,14 @@ export type ContentContext =
 	| 'user-bio'
 	| 'forum-post'
 	| 'community-description'
-	| 'chat-message'
 	| 'community-channel-description'
-	| 'fireside-chat-message';
+	| 'chat-message'
+	| 'fireside-chat-message'
+	| 'chat-command'
+	| 'quest-stage-description'
+	| 'supporter-message';
 
-enum ContextCapabilityType {
+export enum ContextCapabilityType {
 	TextBold,
 	TextItalic,
 	TextLink,
@@ -143,8 +147,25 @@ export class ContextCapabilities {
 		return this.capabilities.includes(capability);
 	}
 
+	removeCapability(capability: ContextCapabilityType) {
+		arrayRemove(this.capabilities, i => i === capability);
+	}
+
 	public static getEmpty() {
 		return new ContextCapabilities([]);
+	}
+
+	public static fromStringList(items: string[]) {
+		const data = new Set<ContextCapabilityType>();
+
+		for (const item of items) {
+			const value: any = ContextCapabilityType[item as any];
+			if (value !== undefined) {
+				data.add(value);
+			}
+		}
+
+		return new ContextCapabilities(Array.from(data));
 	}
 
 	public static getForContext(context: ContentContext) {
@@ -207,6 +228,7 @@ export class ContextCapabilities {
 					ContextCapabilityType.TextBold,
 					ContextCapabilityType.TextItalic,
 					ContextCapabilityType.TextLink,
+
 					ContextCapabilityType.TextCode,
 					ContextCapabilityType.TextStrike,
 					ContextCapabilityType.CustomLink,
@@ -257,6 +279,7 @@ export class ContextCapabilities {
 					ContextCapabilityType.Sticker,
 				]);
 			case 'fireside-chat-message':
+			case 'chat-command':
 				return new ContextCapabilities([
 					ContextCapabilityType.TextBold,
 					ContextCapabilityType.TextItalic,
@@ -270,6 +293,34 @@ export class ContextCapabilities {
 					ContextCapabilityType.Gif,
 					ContextCapabilityType.Media,
 					ContextCapabilityType.Sticker,
+				]);
+			case 'quest-stage-description':
+				return new ContextCapabilities([
+					ContextCapabilityType.TextBold,
+					ContextCapabilityType.TextItalic,
+					ContextCapabilityType.TextLink,
+					ContextCapabilityType.TextCode,
+					ContextCapabilityType.TextStrike,
+					ContextCapabilityType.CustomLink,
+					ContextCapabilityType.Media,
+					ContextCapabilityType.EmbedVideo,
+					ContextCapabilityType.EmbedMusic,
+					ContextCapabilityType.EmbedModel,
+					ContextCapabilityType.CodeBlock,
+					ContextCapabilityType.Blockquote,
+					ContextCapabilityType.Emoji,
+					ContextCapabilityType.List,
+					ContextCapabilityType.HorizontalRule,
+					ContextCapabilityType.Spoiler,
+					ContextCapabilityType.Tag,
+					ContextCapabilityType.Heading,
+					ContextCapabilityType.Mention,
+					ContextCapabilityType.Gif,
+				]);
+			case 'supporter-message':
+				return new ContextCapabilities([
+					ContextCapabilityType.TextBold,
+					ContextCapabilityType.TextItalic,
 				]);
 
 			default:
@@ -295,6 +346,8 @@ export function getMediaItemTypeForContext(context: ContentContext) {
 		case 'chat-message':
 		case 'fireside-chat-message':
 			return MediaItem.TYPE_CHAT_MESSAGE;
+		case 'chat-command':
+			return MediaItem.TYPE_CHAT_COMMAND;
 		case 'community-channel-description':
 			return MediaItem.TYPE_COMMUNITY_CHANNEL_DESCRIPTION;
 	}

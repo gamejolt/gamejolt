@@ -30,7 +30,9 @@ export default class FormFiresidePublish extends mixins(Wrapper) {
 			name="auto_feature"
 			:label="$gettext(`Automatically feature in community?`)"
 		>
-			<AppFormControlToggle class="pull-right" />
+			<template #inline-control>
+				<AppFormControlToggle />
+			</template>
 
 			<p class="help-block">
 				<AppTranslate>

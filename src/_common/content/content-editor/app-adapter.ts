@@ -1,10 +1,10 @@
-import { reactive } from 'vue';
+import { markRaw, reactive } from 'vue';
 import { objectPick } from '../../../utils/object';
 import { assertNever } from '../../../utils/utils';
 import { MediaItem } from '../../media-item/media-item-model';
 import { Theme } from '../../theme/theme.model';
 import { ThemeStore } from '../../theme/theme.store';
-import { ContentContext } from '../content-context';
+import { ContentContext, ContextCapabilities } from '../content-context';
 import { ContentHydrationType } from '../content-hydrator';
 import {
 	ContentEditorController,
@@ -27,7 +27,7 @@ import {
 	editorUnlink,
 } from './content-editor-controller';
 import { ContentEditorService } from './content-editor.service';
-import { MediaUploadTask } from './media-upload-task';
+import { createMediaUploadTask } from './media-upload-task';
 
 export function createContentEditorAppAdapter({ themeStore }: { themeStore: ThemeStore }) {
 	const c = reactive(new ContentEditorAppAdapter(() => themeStore)) as ContentEditorAppAdapter;
@@ -44,6 +44,8 @@ export class ContentEditorAppAdapter {
 	initialContent = '';
 	placeholder = '';
 	theme?: Theme;
+
+	capabilitiesKey = Math.random();
 
 	/**
 	 * This channel is set up by the app and can be used to send data back to
@@ -70,7 +72,7 @@ export class ContentEditorAppAdapter {
 		}
 
 		const {
-			data: { context, initialContent, placeholder, theme, lightMode },
+			data: { context, initialContent, placeholder, theme, lightMode, capabilities },
 		} = msg;
 
 		if (!context) {
@@ -81,7 +83,16 @@ export class ContentEditorAppAdapter {
 		this.initialContent = initialContent ?? '';
 		this.placeholder = placeholder ?? '';
 		this.theme = theme ? new Theme(theme) : undefined;
-		this.controller = createContentEditor({ contentContext: this.context! });
+
+		this.controller = createContentEditor({
+			contentContext: this.context!,
+			contextCapabilities: capabilities
+				? ContextCapabilities.fromStringList(capabilities)
+				: undefined,
+		});
+
+		this.capabilitiesKey = Math.random();
+
 		this.isInitialized = true;
 
 		this._getThemeStore().setDark(!(lightMode ?? false));
@@ -105,11 +116,32 @@ export class ContentEditorAppAdapter {
 	}
 
 	send(message: ContentEditorAppAdapterMessage) {
+		// if (message.action !== 'debug') {
+		// 	editorDebugAppAdapter(
+		// 		message.action,
+		// 		JSON.stringify({
+		// 			data: message.data,
+		// 		})
+		// 	);
+		// }
+
 		this.appChannel.postMessage(message.toJson());
 	}
 
 	onContentChange(content: string) {
 		this.send(ContentEditorAppAdapterMessage.syncContent(content));
+	}
+}
+
+export function editorDebugAppAdapter(message: string, data?: any) {
+	const messageData = {
+		message: `${message}`,
+		data,
+	};
+
+	console.info(messageData);
+	if (GJ_IS_MOBILE_APP) {
+		editorGetAppAdapter().send(new ContentEditorAppAdapterMessage('debug', messageData));
 	}
 }
 
@@ -138,6 +170,7 @@ export class ContentEditorAppAdapterMessage {
 			| 'window'
 			| 'scope'
 			| 'content'
+			| 'theme'
 			| 'bold'
 			| 'italic'
 			| 'strikethrough'
@@ -160,7 +193,9 @@ export class ContentEditorAppAdapterMessage {
 			| 'mediaUploadFinalize'
 			| 'mediaUploadCancel'
 			| 'hydrationRequest'
-			| 'hydrationResponse',
+			| 'hydrationResponse'
+			| 'capabilities'
+			| 'debug',
 		public readonly data: null | any
 	) {}
 
@@ -256,6 +291,12 @@ export class ContentEditorAppAdapterMessage {
 				editorGetAppAdapter().initialContent = this.data.content;
 				return;
 
+			case 'theme': {
+				const isDark = !(this.data.lightMode ?? false);
+				editorGetAppAdapter()._getThemeStore().setDark(isDark);
+				return;
+			}
+
 			case 'bold':
 				return editorToggleMark(controller, marks.strong);
 
@@ -311,11 +352,9 @@ export class ContentEditorAppAdapterMessage {
 				return editorInsertMention(controller, this.data.username);
 
 			case 'mediaUploadStart': {
-				const uploadTask = new MediaUploadTask(
-					controller,
-					this.data.uploadId,
-					this.data.thumbnail
-				);
+				const uploadTask = createMediaUploadTask(controller, this.data.uploadId, {
+					thumbnail: this.data.thumbnail,
+				});
 				return editorMediaUploadInsert(controller, uploadTask);
 			}
 
@@ -353,7 +392,9 @@ export class ContentEditorAppAdapterMessage {
 					return;
 				}
 
-				return controller.hydrator.setData(type, source, hydrationData);
+				return controller._editor
+					?.ownerController()
+					?.hydrator.setData(type, source, hydrationData);
 			}
 
 			case 'initialize':
@@ -364,8 +405,25 @@ export class ContentEditorAppAdapterMessage {
 			case 'window':
 			case 'scope':
 			case 'hydrationRequest':
+			case 'debug':
 				// These are never run locally, only sent to the app.
 				break;
+
+			case 'capabilities': {
+				const { capabilities } = this.data;
+
+				controller.contextCapabilities = markRaw(
+					capabilities
+						? ContextCapabilities.fromStringList(capabilities)
+						: ContextCapabilities.getForContext(controller.contentContext)
+				);
+
+				// Force the editor to rebuild when we alter the capabilities.
+				editorGetAppAdapter().capabilitiesKey = Math.random();
+				// Increment the stateCounter so app gets a new `scope` message.
+				++controller.stateCounter;
+				break;
+			}
 
 			default:
 				assertNever(this.action);

@@ -1,7 +1,9 @@
 import { RouteLocationNormalized } from 'vue-router';
 import { RouteLocationDefinition } from '../../../utils/router';
 import { Api } from '../../api/api.service';
+import { Background } from '../../background/background.model';
 import { Perm } from '../../collaborator/collaboratable';
+import { CommentableModel } from '../../comment/comment-model';
 import { CommunityChannel } from '../../community/channel/channel.model';
 import { Community } from '../../community/community.model';
 import { ContentContainerModel } from '../../content/content-container-model';
@@ -13,7 +15,7 @@ import { HistoryTick } from '../../history-tick/history-tick-service';
 import { KeyGroup } from '../../key-group/key-group.model';
 import { MediaItem } from '../../media-item/media-item-model';
 import { ModalConfirm } from '../../modal/confirm/confirm-service';
-import { CommentableModel, Model, ModelSaveRequestOptions } from '../../model/model.service';
+import { Model, ModelSaveRequestOptions } from '../../model/model.service';
 import { Poll } from '../../poll/poll.model';
 import { Registry } from '../../registry/registry.service';
 import { StickerPlacement } from '../../sticker/placement/placement.model';
@@ -23,6 +25,7 @@ import { User } from '../../user/user.model';
 import { FiresidePostCommunity } from './community/community.model';
 import { FiresidePostEmbed } from './embed/embed.model';
 import { FiresidePostLike } from './like/like-model';
+import { FiresidePostRealm } from './realm/realm.model';
 import { FiresidePostVideo } from './video/video-model';
 
 interface FiresidePostPublishedPlatform {
@@ -46,6 +49,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	static readonly STATUS_ACTIVE = 'active';
 	static readonly STATUS_REMOVED = 'removed';
 	static readonly STATUS_TEMP = 'temp';
+
+	static readonly ALLOW_COMMENTS_DISABLED = 0;
+	static readonly ALLOW_COMMENTS_ENABLED = 1;
+	static readonly ALLOW_COMMENTS_FRIENDS = 2;
 
 	hash!: string;
 	status!: string;
@@ -77,6 +84,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	article_content!: string;
 
 	communities: FiresidePostCommunity[] = [];
+	realms: FiresidePostRealm[] = [];
 	media: MediaItem[] = [];
 	videos: FiresidePostVideo[] = [];
 	user_like?: FiresidePostLike | null;
@@ -85,6 +93,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	platforms_published_to: FiresidePostPublishedPlatform[] = [];
 	stickers: StickerPlacement[] = [];
 	sticker_counts: StickerCount[] = [];
+	supporters: User[] = [];
 	embeds: FiresidePostEmbed[] = [];
 
 	// Used for forms and saving.
@@ -93,6 +102,27 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	// Returned when saving a post for the first time.
 	// The feed no longer works with posts directly - we need the event item.
 	event_item?: EventItem;
+
+	background?: Background;
+
+	/**
+	 * The raw state of who can comment from backend.
+	 */
+	declare allow_comments:
+		| typeof FiresidePost['ALLOW_COMMENTS_DISABLED']
+		| typeof FiresidePost['ALLOW_COMMENTS_ENABLED']
+		| typeof FiresidePost['ALLOW_COMMENTS_FRIENDS'];
+
+	/**
+	 * If the current post comment restrictions allow us to comment. For the
+	 * result of all restrictions, check {@link canMakeComment}.
+	 */
+	declare can_comment: boolean;
+
+	/**
+	 * If post comment restrictions allow us to view comments at all.
+	 */
+	declare can_view_comments: boolean;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -107,6 +137,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 		if (data.communities) {
 			this.communities = FiresidePostCommunity.populate(data.communities);
+		}
+
+		if (data.realms) {
+			this.realms = FiresidePostRealm.populate(data.realms);
 		}
 
 		if (data.media) {
@@ -142,8 +176,16 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			this.sticker_counts = constructStickerCounts(data.sticker_counts);
 		}
 
+		if (data.supporters) {
+			this.supporters = User.populate(data.supporters);
+		}
+
 		if (data.embeds) {
 			this.embeds = FiresidePostEmbed.populate(data.embeds);
+		}
+
+		if (data.background) {
+			this.background = new Background(data.background);
 		}
 
 		Registry.store('FiresidePost', this);
@@ -155,6 +197,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 	get isDraft() {
 		return this.status === FiresidePost.STATUS_DRAFT;
+	}
+
+	get isRemoved() {
+		return this.status === FiresidePost.STATUS_REMOVED;
 	}
 
 	get isScheduled() {
@@ -170,12 +216,26 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return this.as_game_owner ? this.game.developer : this.user;
 	}
 
+	get hasAnyBlock() {
+		return this.displayUser.hasAnyBlock;
+	}
+
+	/** Checks if any media or videos are attached. */
+	get hasAnyMedia() {
+		return this.hasMedia || this.hasVideo;
+	}
+
+	/** Has images/gifs. */
 	get hasMedia() {
 		return this.media.length > 0;
 	}
 
 	get hasVideo() {
 		return this.videos.length > 0;
+	}
+
+	get hasBackground() {
+		return !!this.background;
 	}
 
 	/**
@@ -218,33 +278,39 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return this.getManageableCommunities(['community-features', 'community-posts'], true);
 	}
 
-	get canComment() {
-		if (this.user.blocked_you || this.user.is_blocked) {
-			return false;
-		}
-
-		if (this.game && !this.game.canComment) {
+	/**
+	 * Whether we can like, place stickers, or interact with comments on this
+	 * post.
+	 */
+	private get _canInteractWithPost() {
+		if (this.hasAnyBlock || this.isDraft || this.isRemoved) {
 			return false;
 		}
 
 		return true;
+	}
+
+	get canViewComments() {
+		return this.can_view_comments;
+	}
+
+	get canMakeComment() {
+		return this._canInteractWithPost && this.can_comment;
+	}
+
+	get canInteractWithComments() {
+		return (
+			this._canInteractWithPost &&
+			this.allow_comments !== FiresidePost.ALLOW_COMMENTS_DISABLED
+		);
 	}
 
 	get canPlaceSticker() {
-		return this.canComment;
+		return this._canInteractWithPost;
 	}
 
 	get canLike() {
-		let postOwner = this.user;
-		if (this.game && this.as_game_owner) {
-			postOwner = this.game.developer;
-		}
-
-		if (postOwner.blocked_you || postOwner.is_blocked) {
-			return false;
-		}
-
-		return true;
+		return this._canInteractWithPost;
 	}
 
 	getContent(context: ContentContext) {
@@ -395,6 +461,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			data: Object.assign({}, this),
 			allowComplexData: [
 				'attached_communities',
+				'attached_realms',
 				'keyGroups',
 				'mediaItemIds',
 				'publishToPlatforms',
@@ -487,6 +554,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 			`/web/posts/manage/toggle-pin/${this.id}/${targetModel}/${targetId}`,
 			'post'
 		);
+	}
+
+	$removeVideo() {
+		return Api.sendRequest(`/web/posts/manage/remove-video/${this.id}`, {});
 	}
 
 	async remove() {

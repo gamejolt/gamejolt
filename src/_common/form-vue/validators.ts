@@ -18,6 +18,14 @@ export type FormValidator<T = any> = (
 	value: T | undefined | null
 ) => Promise<FormValidatorError | null>;
 
+/**
+ * Processes a form validator's message for display. Basically replaces
+ * instances of {} with the proper label.
+ */
+export function processFormValidatorErrorMessage(error: string, label: string) {
+	return error.replace(/\{\}/g, label);
+}
+
 /** Alphanumeric, underscores, hyphens */
 const _usernameRegex = /^[\w-]+$/;
 
@@ -373,15 +381,15 @@ export const validateImageMinDimensions =
 		if (!result) {
 			let message = '';
 			if (width && height) {
-				message = `Lookin' pretty sus! The dimensions of your {} must be at least ${formatNumber(
+				message = `BIG OOF! The dimensions of your {} must be at least ${formatNumber(
 					width
 				)}x${formatNumber(height)}px.`;
 			} else if (width) {
-				message = `Lookin' pretty sus! The width of your {} must be at least ${formatNumber(
+				message = `BIG OOF! The width of your {} must be at least ${formatNumber(
 					width
 				)}px.`;
 			} else if (height) {
-				message = `Lookin' pretty sus! The height of your {} must be at least ${formatNumber(
+				message = `BIG OOF! The height of your {} must be at least ${formatNumber(
 					height
 				)}px.`;
 			}
@@ -414,15 +422,15 @@ export const validateImageMaxDimensions =
 		if (!result) {
 			let message = '';
 			if (width && height) {
-				message = `Your {} is too large. The dimensions must be no greater than ${formatNumber(
+				message = `BIG OOF! The dimensions of your {} must be no greater than ${formatNumber(
 					width
 				)}x${formatNumber(height)}px.`;
 			} else if (width) {
-				message = `Your {} is too wide. The width must be no greater than ${formatNumber(
+				message = `BIG OOF! The width of your {} must be no greater than ${formatNumber(
 					width
 				)}px.`;
 			} else if (height) {
-				message = `Your {} is too tall. The height must be no greater than ${formatNumber(
+				message = `BIG OOF! The height of your {} must be no greater than ${formatNumber(
 					height
 				)}px.`;
 			}

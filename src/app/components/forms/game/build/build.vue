@@ -17,10 +17,10 @@ import { Game } from '../../../../../_common/game/game.model';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { GameRelease } from '../../../../../_common/game/release/release.model';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
-import AppLoading from '../../../../../_common/loading/loading.vue';
-import AppProgressBar from '../../../../../_common/progress/bar/bar.vue';
+import AppLoading from '../../../../../_common/loading/AppLoading.vue';
+import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
 import { AppProgressPoller } from '../../../../../_common/progress/poller/poller';
-import { AppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { useFormGameRelease } from '../release/release.vue';
 import { ArchiveFileSelectorModal } from './archive-file-selector-modal.service';
 
@@ -52,7 +52,7 @@ class Wrapper extends BaseForm<GameBuildFormModel> {}
 		AppFormControlToggle,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad {
@@ -579,11 +579,9 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 					class="alert alert-notice sans-margin"
 				>
 					<AppJolticon icon="notice" />
-					<strong
-						><AppTranslate
-							>Silverlight builds have been deprecated.</AppTranslate
-						></strong
-					>
+					<strong>
+						<AppTranslate> Silverlight builds have been deprecated. </AppTranslate>
+					</strong>
 					<AppTranslate>
 						You can no longer edit your Silverlight builds, although gamers will still
 						be able to play them if their browsers support them.
@@ -599,9 +597,9 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 							<div class="alert alert-notice sans-margin-bottom">
 								<p>{{ archiveError }}</p>
 								<p>
-									<AppTranslate
-										>Please re-upload with a valid archive.</AppTranslate
-									>
+									<AppTranslate>
+										Please re-upload with a valid archive.
+									</AppTranslate>
 								</p>
 							</div>
 						</AppExpand>
@@ -734,11 +732,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 
 											<span class="input-group-addon">
 												<a
-													v-app-tooltip="
-														$gettext(
-															`Browse file list.`
-														)
-													"
+													v-app-tooltip="$gettext(`Browse file list.`)"
 													class="link-unstyled"
 													@click="openFileSelector(platform.key)"
 												>
@@ -749,11 +743,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 
 										<AppFormControlErrors
 											:ignore-dirty="true"
-											:label="
-												$gettext(
-													`path to the executable file`
-												)
-											"
+											:label="$gettext(`path to the executable file`)"
 										/>
 									</div>
 								</AppFormGroup>
@@ -784,9 +774,9 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 										</strong>
 									</p>
 									<p>
-										<AppTranslate
-											>It can be launched automatically.</AppTranslate
-										>
+										<AppTranslate>
+											It can be launched automatically.
+										</AppTranslate>
 									</p>
 								</div>
 							</AppExpand>
@@ -800,10 +790,9 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 								name="embed_fit_to_screen"
 								:label="$gettext(`Fit to screen?`)"
 							>
-								<AppFormControlToggle
-									class="pull-right"
-									@changed="onBuildFieldChanged"
-								/>
+								<template #inline-control>
+									<AppFormControlToggle @changed="onBuildFieldChanged" />
+								</template>
 
 								<p class="help-block">
 									<AppTranslate>
@@ -854,10 +843,9 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 							</template>
 
 							<AppFormGroup name="https_enabled" :label="$gettext(`HTTPS support?`)">
-								<AppFormControlToggle
-									class="pull-right"
-									@changed="onBuildFieldChanged"
-								/>
+								<template #inline-control>
+									<AppFormControlToggle @changed="onBuildFieldChanged" />
+								</template>
 
 								<p class="help-block">
 									<AppTranslate>
@@ -880,7 +868,8 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 						>
 							<p class="help-block">
 								<AppTranslate>
-									This allows you to disable right mouse click behavior. Only enable this if your game needs to intercept right clicks.
+									This allows you to disable right mouse click behavior. Only
+									enable this if your game needs to intercept right clicks.
 								</AppTranslate>
 							</p>
 							<AppFormControlToggle @changed="onBuildFieldChanged" />

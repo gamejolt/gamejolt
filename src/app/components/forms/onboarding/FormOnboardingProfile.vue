@@ -1,8 +1,11 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
 import { ContentDocument } from '../../../../_common/content/content-document';
-import AppEditableOverlay from '../../../../_common/editable-overlay/editable-overlay.vue';
-import { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
+import AppEditableOverlay from '../../../../_common/editable-overlay/AppEditableOverlay.vue';
+import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
+import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlContent from '../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import {
 	validateAvailability,
@@ -11,14 +14,9 @@ import {
 	validateUsername,
 } from '../../../../_common/form-vue/validators';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
-import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
+import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { User } from '../../../../_common/user/user.model';
 import { UserAvatarModal } from '../../user/avatar-modal/avatar-modal.service';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppForm from '../../../../_common/form-vue/AppForm.vue';
-import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
 
 type FormModel = {
 	username: string;
@@ -142,15 +140,15 @@ async function chooseAvatar() {
 	<AppForm :controller="form">
 		<div class="-form">
 			<section class="-message">
-				<h3 class="section-header">
-					<AppTranslate>Let's get you set up!</AppTranslate>
-				</h3>
+				<h1 class="section-header text-display">
+					{{ $gettext(`Let's get you set up!`) }}
+				</h1>
 			</section>
 
 			<section class="-avatar">
 				<AppEditableOverlay @click="chooseAvatar()">
 					<template #overlay>
-						<AppTranslate>Change</AppTranslate>
+						{{ $gettext(`Change`) }}
 					</template>
 					<AppUserAvatar :user="user" />
 				</AppEditableOverlay>
@@ -160,7 +158,7 @@ async function chooseAvatar() {
 				<section class="-username">
 					<div class="-field-row">
 						<div class="-hello text-muted">
-							<AppTranslate>Hello! It'sa me,</AppTranslate>
+							{{ $gettext(`Hello! It'sa me,`) }}
 						</div>
 						<div class="-field">
 							<div class="-at text-muted">@</div>

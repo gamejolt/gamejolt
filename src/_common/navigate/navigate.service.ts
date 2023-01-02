@@ -1,6 +1,9 @@
+import { createLogger } from '../../utils/logging';
 import { Environment } from '../environment/environment.service';
 
 export type DestructorFunc = (href?: string) => void;
+
+export const logger = createLogger('Navigate');
 
 export class Navigate {
 	private static redirecting = false;
@@ -18,13 +21,13 @@ export class Navigate {
 			throw new Error('Attempted to use Navigate.currentClientSection outside of client');
 		}
 
-		// TODO(vue3) not sure this is the correct way to do this.
-		if (GJ_BUILD_TYPE === 'development') {
+		// At the time of writing, when serving the client with HMR we only
+		// support watching one section at a time, and its not always possible
+		// to infer the section purely from the url. A bit ugly but this works
+		// for now.
+		if (GJ_BUILD_TYPE === 'serve-hmr') {
 			return GJ_SECTION;
 		}
-
-		// TODO(vue3) Environment urls changed, update this.
-		throw new Error('vue3 todo');
 
 		if (window.location.href.startsWith(Environment.wttfBaseUrl)) {
 			return 'app';
@@ -53,6 +56,7 @@ export class Navigate {
 	}
 
 	static reload() {
+		logger.info('Reloading');
 		this.redirecting = true;
 
 		this.callDestructors();
@@ -65,6 +69,8 @@ export class Navigate {
 	}
 
 	public static goto(href: string) {
+		logger.info('Going to ' + href);
+
 		this.redirecting = true;
 
 		this.callDestructors(href);
@@ -72,6 +78,8 @@ export class Navigate {
 	}
 
 	static gotoExternal(href: string) {
+		logger.info('Going to in a new tab ' + href);
+
 		if (GJ_IS_DESKTOP_APP) {
 			nw.Shell.openExternal(href);
 		} else {
@@ -100,6 +108,8 @@ export class Navigate {
 			center?: boolean;
 		}
 	) {
+		logger.info('Going to in a new window ' + url);
+
 		if (GJ_IS_DESKTOP_APP) {
 			Navigate.gotoExternal(url);
 		} else if (!windowOptions) {

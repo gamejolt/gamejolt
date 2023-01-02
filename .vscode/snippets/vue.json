@@ -3,10 +3,16 @@
 		"prefix": "translate",
 		"body": ["<AppTranslate>${1:$TM_SELECTED_TEXT}</AppTranslate>"]
 	},
+	"gettext": {
+		"prefix": "gettext",
+		"body": ["{{ \\$gettext(`$1`) }}"]
+	},
 	"Vue component": {
 		"prefix": "vue-component",
 		"body": [
-			"<script lang=\"ts\" setup></script>",
+			"<script lang=\"ts\" setup>",
+			"const props = defineProps({});",
+			"</script>",
 			"",
 			"<template></template>",
 			"",

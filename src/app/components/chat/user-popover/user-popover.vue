@@ -1,24 +1,23 @@
 <script lang="ts">
-import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
-import AppUserAvatar from '../../../../_common/user/user-avatar/user-avatar.vue';
-import AppUserVerifiedTick from '../../../../_common/user/verified-tick/verified-tick.vue';
-import { ChatStore, ChatStoreKey } from '../chat-store';
+import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
+import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
+import { useGridStore } from '../../grid/grid-store';
 import {
-	demoteModerator,
 	enterChatRoom,
 	isUserOnline,
 	kickGroupMember,
-	promoteToModerator,
 	tryGetRoomRole,
 	userCanModerateOtherUser,
 } from '../client';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
-import AppChatUserOnlineStatus from '../user-online-status/user-online-status.vue';
+import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
 
 @Options({
 	components: {
@@ -32,15 +31,14 @@ export default class AppChatUserPopover extends Vue {
 	@Prop({ type: Object, required: true }) user!: ChatUser;
 	@Prop({ type: Object, required: true }) room!: ChatRoom;
 
-	@Inject({ from: ChatStoreKey })
-	chatStore!: ChatStore;
+	gridStore = setup(() => useGridStore());
 
 	get chat() {
-		return this.chatStore.chat!;
+		return this.gridStore.chatUnsafe;
 	}
 
 	get isOnline() {
-		if (!this.chatStore.chat) {
+		if (!this.chat) {
 			return null;
 		}
 
@@ -52,8 +50,12 @@ export default class AppChatUserPopover extends Vue {
 	}
 
 	get isModerator() {
-		const role = tryGetRoomRole(this.chat, this.room, this.user);
+		const role = tryGetRoomRole(this.room, this.user);
 		return role === 'moderator';
+	}
+
+	get isRobojolt() {
+		return this.user.id === 192757;
 	}
 
 	get canMessage() {
@@ -67,15 +69,15 @@ export default class AppChatUserPopover extends Vue {
 	}
 
 	get canModerate() {
-		if (!this.chat || !this.chat.currentUser) {
+		if (!this.chat || !this.chat.currentUser || this.isRobojolt) {
 			return false;
 		}
 
-		return userCanModerateOtherUser(this.chat, this.room, this.chat.currentUser, this.user);
+		return userCanModerateOtherUser(this.room, this.chat.currentUser, this.user);
 	}
 
 	get canChangeModerator() {
-		if (!this.chat.currentUser) {
+		if (!this.chat.currentUser || this.isRobojolt) {
 			return false;
 		}
 		if (!this.room.canElectModerators) {
@@ -83,7 +85,7 @@ export default class AppChatUserPopover extends Vue {
 		}
 
 		// In public rooms, staff members cannot lose their mod status.
-		if (!this.room.isPrivateRoom && this.user.permission_level > 0) {
+		if (!this.room.isPrivateRoom && this.user.isStaff) {
 			return false;
 		}
 
@@ -93,12 +95,12 @@ export default class AppChatUserPopover extends Vue {
 
 	get canKick() {
 		// Cannot kick one of your mods, gotta demote first.
-		if (this.isModerator) {
+		if (this.isModerator || this.isRobojolt) {
 			return false;
 		}
 
 		// In public rooms, staff members can never get kicked.
-		if (!this.room.isPrivateRoom && this.user.permission_level > 0) {
+		if (!this.room.isPrivateRoom && this.user.isStaff) {
 			return false;
 		}
 
@@ -141,21 +143,17 @@ export default class AppChatUserPopover extends Vue {
 		);
 
 		if (result) {
-			if (this.chat.roomMembers[this.room.id].has(this.user)) {
-				promoteToModerator(this.chat, this.room, this.user.id);
-			} else if (this.room.type === 'fireside_group') {
-				const payload = await Api.sendRequest(
-					`/web/dash/fireside/chat/promote-moderator/${this.room.id}/${this.user.id}`,
-					{}
+			const payload = await Api.sendRequest(
+				`/web/dash/fireside/chat/promote-moderator/${this.room.id}/${this.user.id}`,
+				{}
+			);
+
+			if (payload.success && payload.role) {
+				showSuccessGrowl(
+					this.$gettextInterpolate(`@%{ username } has been promoted to Moderator.`, {
+						username: this.user.username,
+					})
 				);
-				if (payload.success && payload.role) {
-					showSuccessGrowl(
-						this.$gettextInterpolate(
-							`@%{ username } has been promoted to Moderator. Refresh the page to see changes.`,
-							{ username: this.user.username }
-						)
-					);
-				}
 			}
 		}
 	}
@@ -168,21 +166,16 @@ export default class AppChatUserPopover extends Vue {
 		);
 
 		if (result) {
-			if (this.chat.roomMembers[this.room.id].has(this.user)) {
-				demoteModerator(this.chat, this.room, this.user.id);
-			} else if (this.room.type === 'fireside_group') {
-				const payload = await Api.sendRequest(
-					`/web/dash/fireside/chat/demote-moderator/${this.room.id}/${this.user.id}`,
-					{}
+			const payload = await Api.sendRequest(
+				`/web/dash/fireside/chat/demote-moderator/${this.room.id}/${this.user.id}`,
+				{}
+			);
+			if (payload.success && payload.role) {
+				showSuccessGrowl(
+					this.$gettextInterpolate(`@%{ username } has been demoted to User.`, {
+						username: this.user.username,
+					})
 				);
-				if (payload.success && payload.role) {
-					showSuccessGrowl(
-						this.$gettextInterpolate(
-							`@%{ username } has been demoted to User. Refresh the page to see changes.`,
-							{ username: this.user.username }
-						)
-					);
-				}
 			}
 		}
 	}
@@ -200,9 +193,9 @@ export default class AppChatUserPopover extends Vue {
 			</div>
 
 			<div class="-names">
-				<div class="-displayname">
+				<div>
 					<b>{{ user.display_name }}</b>
-					<AppUserVerifiedTick class="-verified-icon" :user="user" />
+					<AppUserVerifiedTick :user="user" vertical-align />
 				</div>
 				<div class="-username text-muted">@{{ user.username }}</div>
 			</div>
@@ -211,8 +204,8 @@ export default class AppChatUserPopover extends Vue {
 				<AppChatUserOnlineStatus
 					class="-status-bubble"
 					:is-online="isOnline"
-					:size="16"
-					:absolute="false"
+					:size="12"
+					:segment-width="1.5"
 				/>
 				<span>{{ isOnline ? $gettext(`Online`) : $gettext(`Offline`) }}</span>
 			</div>
@@ -282,10 +275,6 @@ export default class AppChatUserPopover extends Vue {
 		margin-top: 4px
 		text-align: center
 
-		.-displayname
-			.-verified-icon
-				vertical-align: middle
-
 	.-username
 		font-size: $font-size-small
 
@@ -298,27 +287,27 @@ export default class AppChatUserPopover extends Vue {
 		&:hover
 			filter: brightness(0.6) contrast(1.1)
 
-		&-circle
-			width: 80px
-			height: 80px
-			top: -4px
-			left: -4px
-			position: absolute
-			z-index: 1
-			border-radius: 50%
-			background-color: var(--theme-darkest)
+	.-avatar-circle
+		width: 80px
+		height: 80px
+		top: -4px
+		left: -4px
+		position: absolute
+		z-index: 1
+		border-radius: 50%
+		background-color: var(--theme-darkest)
 
-		&-img
-			position: relative
-			border-radius: 50%
+	.-avatar-img
+		position: relative
+		border-radius: 50%
 
-			&:hover
-				elevate-hover-2()
+		&:hover
+			elevate-hover-2()
 
-		&-container
-			display: flex
-			justify-content: center
-			margin-bottom: 10px
+	.-avatar-container
+		display: flex
+		justify-content: center
+		margin-bottom: 10px
 
 	.-status
 		margin-top: 8px
@@ -327,11 +316,14 @@ export default class AppChatUserPopover extends Vue {
 		font-size: $font-size-tiny
 		font-weight: bold
 		justify-content: center
+		align-items: center
 		user-select: none
+		line-height: 1
 
-		&-icon
-			vertical-align: middle
+	.-status-icon
+		vertical-align: middle
 
-		&-bubble
-			margin-right: 4px
+	.-status-bubble
+		margin-right: 4px
+		height: 100%
 </style>

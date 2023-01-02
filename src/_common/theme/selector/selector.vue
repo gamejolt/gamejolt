@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import AppPopper from '../../popper/AppPopper.vue';
 import { Popper } from '../../popper/popper.service';
-import AppPopper from '../../popper/popper.vue';
 import { SiteTemplate } from '../../site/template/template-model';
 
 @Options({

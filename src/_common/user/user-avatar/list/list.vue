@@ -1,9 +1,9 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { AppTooltip } from '../../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import { User } from '../../user.model';
-import AppUserVerifiedTick from '../../verified-tick/verified-tick.vue';
-import AppUserAvatar from '../user-avatar.vue';
+import AppUserVerifiedTick from '../../verified-tick/AppUserVerifiedTick.vue';
+import AppUserAvatar from '../AppUserAvatar.vue';
 
 @Options({
 	components: {
@@ -11,7 +11,7 @@ import AppUserAvatar from '../user-avatar.vue';
 		AppUserVerifiedTick,
 	},
 	directives: {
-		AppTooltip,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppUserAvatarList extends Vue {
@@ -44,7 +44,14 @@ export default class AppUserAvatarList extends Vue {
 				}"
 				:user="user"
 			/>
-			<AppUserVerifiedTick v-if="!sm" class="-tick" :user="user" />
+			<AppUserVerifiedTick
+				v-if="!sm"
+				class="-tick"
+				:class="{
+					'-tick-round': !user.is_creator,
+				}"
+				:user="user"
+			/>
 		</div>
 	</div>
 </template>
@@ -52,7 +59,7 @@ export default class AppUserAvatarList extends Vue {
 <style lang="stylus" scoped>
 $-size = 40px
 $-spacing = 4px
-$-size-sm = 24px
+$-size-sm = 16px
 
 .-list
 	display: grid
@@ -91,10 +98,12 @@ $-size-sm = 24px
 	height: $-size-sm
 
 .-tick
-	change-bg('bg')
-	border-radius: 50%
 	position: absolute
 	right: 0
 	bottom: 0
 	pointer-events: none
+
+.-tick-round
+	change-bg('bg')
+	border-radius: 50%
 </style>

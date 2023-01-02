@@ -8,6 +8,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
+import { useGridStore } from '../../../../components/grid/grid-store';
 import { illNoComments } from '../../../../img/ill/illustrations';
 import { useAppStore } from '../../../../store';
 import {
@@ -42,6 +43,7 @@ import { CommunitiesViewChannelDeps } from './channel.vue';
 export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent {
 	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
+	gridStore = setup(() => useGridStore());
 
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
@@ -53,7 +55,7 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 		return this.store.communityStates;
 	}
 	get grid() {
-		return this.store.grid;
+		return this.gridStore.grid;
 	}
 
 	feed: ActivityFeedView | null = null;
@@ -139,7 +141,7 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 	}
 
 	routeCreated() {
-		this.feed = ActivityFeedService.routeInit(this);
+		this.feed = ActivityFeedService.routeInit(this.isRouteBootstrapped);
 	}
 
 	routeResolved($payload: any, fromCache: boolean) {
@@ -196,7 +198,13 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 	}
 
 	onPostAdded(post: FiresidePost) {
-		ActivityFeedService.onPostAdded(this.feed!, post, this);
+		ActivityFeedService.onPostAdded({
+			feed: this.feed!,
+			post,
+			appRoute: this.appRoute_,
+			route: this.$route,
+			router: this.$router,
+		});
 	}
 }
 </script>
@@ -211,7 +219,7 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 			</h1>
 
 			<div v-if="channel && channel.visibility === 'draft'">
-				<AppIllustration :src="illNoComments">
+				<AppIllustration :asset="illNoComments">
 					<AppTranslate>
 						This is a draft channel. When it gets published, the post feed will appear
 						here.

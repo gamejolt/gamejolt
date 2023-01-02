@@ -99,7 +99,12 @@ export default class UpdateAutolinkPlugin extends Plugin {
 	 */
 	rangeHasLinks(tr: Transaction<ContentEditorSchema>, from: number, to: number) {
 		const marks = this.c.view!.state.schema.marks;
-		const markTypes = [marks.mention, marks.tag, marks.link];
+		// Ensure that our list of markTypes contains valid values.
+		//
+		// Depending on the context this editor is used, it may not have access
+		// to marks like `links`. This can happen if links are disabled in a
+		// Fireside.
+		const markTypes = [marks.mention, marks.tag, marks.link].filter(i => !!i);
 		for (const markType of markTypes) {
 			if (tr.doc.rangeHasMark(from, to, markType)) {
 				return true;

@@ -14,13 +14,18 @@ import {
 import { useRouter } from 'vue-router';
 import { arrayRemove } from '../../../utils/array';
 import { createFocusToken } from '../../../utils/focus-token';
-import AppPopper from '../../../_common/popper/popper.vue';
-import AppShortkey from '../../../_common/shortkey/shortkey.vue';
+import {
+	trackExperimentEngagement,
+	trackSearch,
+} from '../../../_common/analytics/analytics.service';
+import { configShowSearchAutocomplete } from '../../../_common/config/config.service';
+import AppPopper from '../../../_common/popper/AppPopper.vue';
+import AppShortkey from '../../../_common/shortkey/AppShortkey.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppSearchInput from './AppSearchInput.vue';
 import { Search } from './search-service';
 
-const AppSearchAutocomplete = defineAsyncComponent(() => import('./autocomplete/autocomplete.vue'));
+const AppSearchAutocomplete = defineAsyncComponent(() => import('./AppSearchAutocomplete.vue'));
 
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;
@@ -52,7 +57,9 @@ function createSearchController({
 	const keydownSpies = ref([] as SearchKeydownSpy[]);
 	const focusToken = createFocusToken();
 
-	const shouldShowAutocomplete = computed(() => !autocompleteDisabled.value);
+	const shouldShowAutocomplete = computed(
+		() => !autocompleteDisabled.value && configShowSearchAutocomplete.value
+	);
 	const isEmpty = computed(() => !query.value.trim());
 
 	onMounted(() => {
@@ -136,6 +143,7 @@ function onKeydown(event: KeyboardEvent) {
 	if (!shouldShowAutocomplete.value && event.keyCode === KEYCODE_ENTER) {
 		focusToken.blur();
 		router.push({ name: 'search.results', query: { q: query.value } });
+		trackSearch({ query: query.value });
 	}
 
 	// We want to blur the input on escape.
@@ -154,6 +162,8 @@ function onFocus() {
 	if (shouldShowAutocomplete.value) {
 		isShowingAutocomplete.value = true;
 	}
+
+	trackExperimentEngagement(configShowSearchAutocomplete);
 }
 
 function onBlur() {

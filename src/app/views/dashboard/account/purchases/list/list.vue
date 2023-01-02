@@ -10,7 +10,7 @@ import {
 	OptionsForRoute,
 } from '../../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { useAccountRouteController } from '../../account.vue';
+import { useAccountRouteController } from '../../RouteDashAccount.vue';
 
 @Options({
 	name: 'RouteDashAccountPurchasesList',

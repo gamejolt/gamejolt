@@ -1,10 +1,14 @@
 import { RouteLocationNormalized } from 'vue-router';
+import { commonStore } from '../../../_common/store/common-store';
 
 export const HOME_FEED_FYP = 'fyp';
 export const HOME_FEED_ACTIVITY = 'activity';
 
 export class HomeFeedService {
 	public static getDefault() {
+		if (shouldUseFYPDefault()) {
+			return HOME_FEED_FYP;
+		}
 		return HOME_FEED_ACTIVITY;
 	}
 
@@ -23,16 +27,36 @@ export class HomeFeedService {
 	}
 
 	public static getRouteFeedTab(route: RouteLocationNormalized) {
+		// When no tab value is given, use the default tab.
+		if (!route.params?.tab) {
+			return this.getDefault();
+		}
+
 		switch (route.params?.tab) {
 			case HOME_FEED_FYP:
-			case this.fypTab:
 				return HOME_FEED_FYP;
 			case HOME_FEED_ACTIVITY:
-			case this.activityTab:
 				return HOME_FEED_ACTIVITY;
 		}
 
 		// For some other tab value, go to activity tab.
 		return HOME_FEED_ACTIVITY;
 	}
+}
+
+export function shouldUseFYPDefault() {
+	const user = commonStore.user.value;
+
+	if (!user || !user.created_on) {
+		return true;
+	}
+
+	// This is the date that we pushed out a split test to show different
+	// onboarding resources in the Welcome section. We want to roll this out to
+	// everyone, though.
+	//
+	// https://github.com/gamejolt/gamejolt/commit/44632ce13e6eb7c428b70157c2e092149c275b32
+	//
+	// Wed Oct 26 2022 00:00:00 GMT+0000
+	return user?.created_on >= 1666742400 * 1000;
 }

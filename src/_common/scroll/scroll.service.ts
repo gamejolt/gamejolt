@@ -1,11 +1,11 @@
 import { Ruler } from '../ruler/ruler-service';
-import { Screen } from '../screen/screen-service';
 import { AppAutoscrollAnchor } from './auto-scroll/anchor';
 
 export type ScrollContext = HTMLElement | HTMLDocument;
 
 interface ScrollToOptions {
 	animate?: boolean;
+	exact?: boolean;
 	preventDirections?: ('up' | 'down')[];
 }
 
@@ -136,7 +136,7 @@ export class Scroll {
 				// based on the screen's height, so that mobile and stuff works
 				// well too. This is because I think it's kind of annoying when
 				// the edge hits the exact top of the browser.
-				this.scrollToElement(element, Screen.height * 0.1 + this.offsetTop, options);
+				this.scrollToElement(element, this.offsetTop, options);
 			} else {
 				this.scrollTo(to, options);
 			}

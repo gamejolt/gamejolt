@@ -2,25 +2,25 @@
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { GameFollowLocation, trackGameFollow } from '../../analytics/analytics.service';
-import { AppAuthRequired } from '../../auth/auth-required-directive';
+import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import { formatNumber } from '../../filters/number';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { ModalConfirm } from '../../modal/confirm/confirm-service';
-import AppPopper from '../../popper/popper.vue';
+import AppPopper from '../../popper/AppPopper.vue';
 import { useCommonStore } from '../../store/common-store';
-import { AppTooltip } from '../../tooltip/tooltip-directive';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
+import AppUserFollowButton from '../../user/follow/AppUserFollowButton.vue';
 import { UserFollowSuggestion } from '../../user/follow/suggestion.service';
-import AppUserFollowWidget from '../../user/follow/widget.vue';
 import { followGame, Game, unfollowGame } from '../game.model';
 
 @Options({
 	components: {
-		AppUserFollowWidget,
+		AppUserFollowButton,
 		AppPopper,
 	},
 	directives: {
-		AppAuthRequired,
-		AppTooltip,
+		AppAuthRequired: vAppAuthRequired,
+		AppTooltip: vAppTooltip,
 	},
 })
 export default class AppGameFollowWidget extends Vue {
@@ -207,7 +207,7 @@ export default class AppGameFollowWidget extends Vue {
 						they release new games.
 					</AppTranslate>
 				</p>
-				<AppUserFollowWidget :user="game.developer" block location="gameFollow" />
+				<AppUserFollowButton :user="game.developer" block location="gameFollow" />
 			</div>
 		</template>
 	</AppPopper>

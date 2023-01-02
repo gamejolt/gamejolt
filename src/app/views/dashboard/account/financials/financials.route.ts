@@ -3,5 +3,5 @@ import { RouteRecordRaw } from 'vue-router';
 export const routeDashAccountFinancials: RouteRecordRaw = {
 	name: 'dash.account.financials',
 	path: 'financials',
-	component: () => import('./financials.vue'),
+	component: () => import('./RouteDashAccountFinancials.vue'),
 };

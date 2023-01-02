@@ -13,6 +13,7 @@ export class AppContentViewerSticker extends Vue {
 			key: this.contentData.attrs.id,
 			stickerId: this.contentData.attrs.id,
 			isEditing: false,
+			isCharged: this.contentData.attrs.is_charged === true,
 		});
 	}
 }
