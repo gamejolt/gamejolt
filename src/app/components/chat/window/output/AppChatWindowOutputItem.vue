@@ -13,7 +13,7 @@ import { computed, PropType, reactive, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
 import { ContentOwnerParentBounds } from '../../../../../_common/content/content-owner';
-import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { formatDate } from '../../../../../_common/filters/date';
 import AppJolticon, { Jolticon } from '../../../../../_common/jolticon/AppJolticon.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
@@ -160,12 +160,7 @@ const canRemoveMessage = computed(() => {
 	}
 
 	// Mods/Room owners can also remove the message.
-	return userCanModerateOtherUser(
-		chat.value,
-		room.value,
-		chat.value.currentUser,
-		message.value.user
-	);
+	return userCanModerateOtherUser(room.value, chat.value.currentUser, message.value.user);
 });
 
 const canEditMessage = computed(() => {
@@ -187,7 +182,7 @@ const canEditMessage = computed(() => {
 });
 
 const roleData = computed(() =>
-	getChatUserRoleData(chat.value, room.value, message.value.user, {
+	getChatUserRoleData(room.value, message.value.user, {
 		mesage: message.value,
 	})
 );
@@ -250,7 +245,7 @@ function onRowClick() {
 
 async function onMessageClick() {
 	if (hasError.value) {
-		retryFailedQueuedMessage(chat.value, message.value);
+		retryFailedQueuedMessage(room.value, message.value);
 	}
 }
 </script>

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { PropType, ref } from 'vue';
 import AppFadeCollapse from '../AppFadeCollapse.vue';
-import AppContentViewer from '../content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../content/content-viewer/AppContentViewer.vue';
 import { formatDate } from '../filters/date';
 import AppStickerControlsOverlay from '../sticker/AppStickerControlsOverlay.vue';
 import AppStickerReactions from '../sticker/reactions/AppStickerReactions.vue';

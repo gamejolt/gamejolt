@@ -24,7 +24,7 @@ const props = defineProps({
 
 const { hasMembers, collapsed } = toRefs(props);
 
-const { chatUsers, chatRoom, sidebar, setSidebar, isSidebarHome } = useFiresideController()!;
+const { chatRoom, sidebar, setSidebar, isSidebarHome } = useFiresideController()!;
 
 const messageCount = ref(0);
 
@@ -43,7 +43,7 @@ watch(collapsed, () => {
 	messageCount.value = 0;
 });
 
-const memberCount = computed(() => chatUsers.value?.count || 0);
+const memberCount = computed(() => chatRoom.value?.member_count || 0);
 const showingMembers = computed(() => sidebar.value === 'members');
 const useFuzzyNumber = computed(() => memberCount.value >= 10_000);
 

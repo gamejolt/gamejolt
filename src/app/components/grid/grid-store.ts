@@ -1,6 +1,8 @@
-import { computed, inject, InjectionKey, ref } from 'vue';
+import { computed, inject, InjectionKey, ref, watch } from 'vue';
 import { bangRef } from '../../../utils/vue';
+import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
 import { AppStore } from '../../store';
+import { setChatFocused } from '../chat/client';
 import { GridClientLazy } from '../lazy';
 import { type GridClient } from './client.service';
 
@@ -15,7 +17,7 @@ export function createGridStore({ appStore }: { appStore: AppStore }) {
 	const grid = ref<GridClient>();
 
 	let _wantsGrid = false;
-	let _moduleLoadPromise: Promise<typeof import('./client.service')> | null = null;
+	let _isLoadingGrid = false;
 	let _bootstrapResolvers: ((client: GridClient) => void)[] = [];
 
 	/**
@@ -29,11 +31,37 @@ export function createGridStore({ appStore }: { appStore: AppStore }) {
 	 */
 	const chatUnsafe = bangRef(chat);
 
+	// Sync up focus state for chat.
+	watch(
+		() => ContentFocus.isWindowFocused,
+		isFocused => {
+			if (!chat.value) {
+				return;
+			}
+
+			// When the window is unfocused, start counting notifications for
+			// current room.
+			if (!isFocused) {
+				// Notify the client that we are unfocused, so it should start
+				// accumulating notifications for the current room.
+				setChatFocused(chat.value, false);
+			} else {
+				// Notify the client that we aren't unfocused anymore.
+				setChatFocused(chat.value, true);
+			}
+		}
+	);
+
 	async function loadGrid() {
 		_wantsGrid = true;
 
-		_moduleLoadPromise ??= GridClientLazy();
-		const { createGridClient } = await _moduleLoadPromise;
+		if (_isLoadingGrid) {
+			return;
+		}
+
+		_isLoadingGrid = true;
+		const { createGridClient } = await GridClientLazy();
+		_isLoadingGrid = false;
 
 		// If they disconnected before we loaded it in.
 		if (!_wantsGrid) {

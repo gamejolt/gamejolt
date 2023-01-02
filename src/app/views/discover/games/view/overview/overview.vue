@@ -20,7 +20,7 @@ import {
 	CommentThreadModal,
 	CommentThreadModalPermalinkDeregister,
 } from '../../../../../../_common/comment/thread/modal.service';
-import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../../../_common/filters/number';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';

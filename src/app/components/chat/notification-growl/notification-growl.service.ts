@@ -1,6 +1,6 @@
 import { ContentDocument } from '../../../../_common/content/content-document';
 import { showInfoGrowl } from '../../../../_common/growls/growls.service';
-import { ChatClient, enterChatRoom, isInChatRoom } from '../client';
+import { ChatClient, enterChatRoom, isChatFocusedOnRoom } from '../client';
 import { ChatMessage } from '../message';
 import { ChatRoom, getChatRoomTitle } from '../room';
 import AppChatNotificationGrowl from './notification-growl.vue';
@@ -13,14 +13,14 @@ export class ChatNotificationGrowl {
 		system = true
 	) {
 		// Skip if already in the room.
-		if (isInChatRoom(chat, message.room_id) && chat.isFocused) {
+		if (isChatFocusedOnRoom(chat, message.room_id)) {
 			return;
 		}
 
 		let title = `💬 ${message.user.display_name}`;
 		// Append room title when message was sent in a group room.
 		if (groupRoom) {
-			title += ' (' + getChatRoomTitle(groupRoom, chat) + ')';
+			title += ' (' + getChatRoomTitle(groupRoom) + ')';
 		} else {
 			title += ` (@${message.user.username})`;
 		}
