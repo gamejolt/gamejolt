@@ -61,9 +61,7 @@ import AppPageContainer from '../../components/page-container/AppPageContainer.v
 import AppPostAddButton from '../../components/post/add-button/AppPostAddButton.vue';
 import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
 import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
-import { imagePseudoFeatureBanner } from '../../img/images';
 import { useQuestStore } from '../../store/quest';
-import { routeQuests } from '../quests/quests.route';
 import AppHomeFeedMenu from './AppHomeFeedMenu.vue';
 import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
 import AppHomeFireside from './_fireside/AppHomeFireside.vue';
@@ -291,11 +289,6 @@ async function refreshQuests() {
 				<template v-if="!Screen.isMobile" #right>
 					<div class="-top-spacer" />
 
-					<RouterLink :to="{ name: routeQuests.name }">
-						<img class="-event-banner img-responsive" :src="imagePseudoFeatureBanner" />
-					</RouterLink>
-					<AppSpacer vertical :scale="8" />
-
 					<AppHomeFireside
 						:featured-fireside="featuredFireside"
 						:user-fireside="userFireside"
@@ -311,16 +304,6 @@ async function refreshQuests() {
 				<AppPostAddButton @add="onPostAdded" />
 
 				<template v-if="Screen.isMobile">
-					<template v-if="!Screen.isXs">
-						<RouterLink :to="{ name: routeQuests.name }">
-							<img
-								class="-event-banner img-responsive"
-								:src="imagePseudoFeatureBanner"
-							/>
-						</RouterLink>
-						<AppSpacer vertical :scale="4" />
-					</template>
-
 					<AppHomeFireside
 						:user-fireside="userFireside"
 						:firesides="firesides"
@@ -350,7 +333,4 @@ async function refreshQuests() {
 .-game-list
 	a
 		text-overflow()
-
-.-event-banner
-	rounded-corners()
 </style>
