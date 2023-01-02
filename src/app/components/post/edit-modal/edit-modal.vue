@@ -61,10 +61,6 @@ export default class AppPostEditModal extends mixins(BaseModal) {
 		this.background = this.post.background || null;
 	}
 
-	onRouteChange() {
-		this.modal.dismiss();
-	}
-
 	onSubmitted(post: FiresidePost) {
 		this.modal.resolve(post);
 	}
@@ -80,7 +76,7 @@ export default class AppPostEditModal extends mixins(BaseModal) {
 </script>
 
 <template>
-	<AppModal ignore-router>
+	<AppModal>
 		<AppBackground
 			class="-background"
 			:background="background"

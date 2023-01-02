@@ -55,14 +55,6 @@ export class BaseForm<T> extends Vue {
 	@Emit('submit')
 	emitSubmit(_formModel: Readonly<T>, _response: any) {}
 
-	// Some components, like Modals, might try to attach their own
-	// NavigationGuard callbacks so they can close themselves.
-	//
-	// Since we may require confirmation to change our route, they should
-	// instead do any cleanup when this emit triggers.
-	@Emit('route-change')
-	emitRouteChange() {}
-
 	modelClass?: ModelClassType<T> = undefined;
 	saveMethod?: keyof T;
 
