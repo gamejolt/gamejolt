@@ -71,7 +71,6 @@ import { User } from '../../../../_common/user/user.model';
 import { BottomBarControl } from '../../../views/fireside/_bottom-bar/AppFiresideBottomBar.vue';
 import { leaveChatRoom } from '../../chat/client';
 import { ChatRoomChannel, createChatRoomChannel } from '../../chat/room-channel';
-import { ChatUserCollection } from '../../chat/user-collection';
 import { createGridFiresideChannel, GridFiresideChannel } from '../../grid/fireside-channel';
 import { createGridFiresideDMChannel, GridFiresideDMChannel } from '../../grid/fireside-dm-channel';
 import { GridStore } from '../../grid/grid-store';
@@ -239,7 +238,7 @@ export function createFiresideController(
 		if (!chatRoom.value) {
 			return undefined;
 		}
-		return chat.value?.roomMembers[chatRoom.value.id] as ChatUserCollection;
+		return chatRoom.value.memberCollection;
 	});
 
 	const stickerCount = computed(() => {
@@ -478,7 +477,7 @@ export function createFiresideController(
 	});
 
 	const revalidateRTC = () => {
-		logger.debug('wantsRTC changed to ' + (_wantsRTC.value ? 'true' : 'false'));
+		logger.info('wantsRTC changed to ' + (_wantsRTC.value ? 'true' : 'false'));
 
 		if (_wantsRTC.value) {
 			// Note: since revalidateRTC may be called outside of watcher flow,
@@ -493,7 +492,7 @@ export function createFiresideController(
 				{ isMuted }
 			);
 		} else if (rtc.value) {
-			logger.debug('Destroying old rtc');
+			logger.info('Destroying old rtc');
 
 			destroyFiresideRTC(rtc.value);
 
@@ -507,7 +506,7 @@ export function createFiresideController(
 			// call stopStreaming..
 			rtc.value = undefined;
 		} else {
-			logger.debug('rtc was not set, nothing to do');
+			logger.info('rtc was not set, nothing to do');
 		}
 
 		return rtc.value;
@@ -527,12 +526,14 @@ export function createFiresideController(
 		}
 	}
 
+	// Sync we're not doing a deep watch, this'll only trigger when the actual
+	// instance changes (unset to set).
 	const _unwatchChatUsers = watch(chatUsers, _onChatUsersChanged);
 
 	const _unwatchWantsRTC = watch(_wantsRTC, revalidateRTC);
 
 	const _unwatchWantsRTCProducer = watch(_wantsRTCProducer, async newWantsRTCProducer => {
-		logger.debug('wantsRTCProducer changed to ' + (newWantsRTCProducer ? 'true' : 'false'));
+		logger.info('wantsRTCProducer changed to ' + (newWantsRTCProducer ? 'true' : 'false'));
 
 		if (newWantsRTCProducer) {
 			// Do not create the producer if it already exists.
@@ -543,7 +544,7 @@ export function createFiresideController(
 			rtc.value.producer = null;
 
 			if (prevProducer) {
-				logger.debug('Tearing down old producer');
+				logger.info('Tearing down old producer');
 				// Ideally we'd like to not await here because we want the producer
 				// to be considered "torn down" immediately. It simplifies logic for handling it.
 				// We can't avoid awaiting here tho because if the producer instance
@@ -557,17 +558,17 @@ export function createFiresideController(
 				// to start streaming from a cleanup-up instance of producer.
 				cleanupFiresideRTCProducer(prevProducer);
 			} else {
-				logger.debug('rtc.producer was not set, nothing to do');
+				logger.info('rtc.producer was not set, nothing to do');
 			}
 		} else {
-			logger.debug('rtc was not set, nothing to do');
+			logger.info('rtc was not set, nothing to do');
 		}
 	});
 
 	const _unwatchHostsChanged = watch(
 		hosts,
 		(newHosts, prevHosts) => {
-			logger.debug('updating hosts in controller');
+			logger.info('updating hosts in controller');
 
 			// We want to merge the streaming uids of our existing hosts with the new ones.
 			// Note: I'm not 100% sure why we want that. My guess is because we freeze the
@@ -576,7 +577,7 @@ export function createFiresideController(
 			for (const newHost of newHosts) {
 				const prevHost = prevHosts.find(i => i.user.id === newHost.user.id);
 				if (prevHost) {
-					logger.debug(`merging streaming uids of host ${newHost.user.id}`);
+					logger.info(`merging streaming uids of host ${newHost.user.id}`);
 
 					// Transfer over all previously assigned uids to the new host.
 					const newUids = arrayUnique([...prevHost.uids, ...newHost.uids]);
@@ -584,10 +585,10 @@ export function createFiresideController(
 				}
 			}
 
-			logger.debug('new hosts after merging uids', JSON.stringify(newHosts));
+			logger.info('new hosts after merging uids', JSON.stringify(newHosts));
 
 			if (rtc.value) {
-				logger.debug('updating hosts in rtc');
+				logger.info('updating hosts in rtc');
 				setHosts(rtc.value, newHosts);
 			}
 		},
@@ -598,7 +599,7 @@ export function createFiresideController(
 		listableHostIds,
 		newListableHostIds => {
 			if (rtc.value) {
-				logger.debug('setting listableHostIds', JSON.stringify(newListableHostIds));
+				logger.info('setting listableHostIds', JSON.stringify(newListableHostIds));
 				setListableHostIds(rtc.value, newListableHostIds);
 			}
 		},
@@ -843,7 +844,7 @@ export function createFiresideController(
 	async function _init() {
 		if (fireside.blocked) {
 			status.value = 'blocked';
-			logger.debug(`Blocked from joining blocked user's fireside.`);
+			logger.info(`Blocked from joining blocked user's fireside.`);
 			return;
 		}
 
@@ -857,7 +858,7 @@ export function createFiresideController(
 	}
 
 	function _watchGrid() {
-		logger.debug(
+		logger.info(
 			'grid.connected watcher triggered: ' +
 				(grid.value?.connected ? 'connected' : 'disconnected')
 		);
@@ -885,7 +886,7 @@ export function createFiresideController(
 
 		// Make sure the services are connected.
 		while (!grid.value?.connected) {
-			logger.debug('Wait for Grid...');
+			logger.info('Wait for Grid...');
 
 			if (grid.value && !user.value && !grid.value.isGuest) {
 				logger.info('Enabling guest access to grid');
@@ -903,12 +904,12 @@ export function createFiresideController(
 	}
 
 	async function _join() {
-		logger.debug(`Joining fireside.`);
+		logger.info(`Joining fireside.`);
 
 		// --- Make sure common join conditions are met.
 
 		if (!fireside || !grid.value || !grid.value.connected || !chat.value) {
-			logger.debug(`General connection error.`);
+			logger.info(`General connection error.`);
 			status.value = 'setup-failed';
 			return;
 		}
@@ -925,13 +926,13 @@ export function createFiresideController(
 		// Maybe they are blocked now?
 		if (fireside.blocked) {
 			status.value = 'blocked';
-			logger.debug(`Blocked from joining blocked user's fireside.`);
+			logger.info(`Blocked from joining blocked user's fireside.`);
 			return;
 		}
 
 		// Make sure it's still joinable.
 		if (!fireside.isOpen()) {
-			logger.debug(`Fireside is expired, and cannot be joined.`);
+			logger.info(`Fireside is expired, and cannot be joined.`);
 			status.value = 'expired';
 			return;
 		}
@@ -941,7 +942,7 @@ export function createFiresideController(
 		if (user.value && !fireside.role) {
 			const rolePayload = await Api.sendRequest(`/web/fireside/join/${fireside.hash}`);
 			if (!rolePayload || !rolePayload.success || !rolePayload.role) {
-				logger.debug(`Failed to acquire a role.`);
+				logger.info(`Failed to acquire a role.`);
 				status.value = 'setup-failed';
 				return;
 			}
@@ -1018,7 +1019,7 @@ export function createFiresideController(
 		}
 
 		status.value = 'joined';
-		logger.debug(`Successfully joined fireside.`);
+		logger.info(`Successfully joined fireside.`);
 
 		// Set up the expiry interval to check if the fireside is expired.
 		_clearExpiryCheck();
@@ -1034,7 +1035,7 @@ export function createFiresideController(
 			return;
 		}
 
-		logger.debug(`Disconnecting from fireside.`);
+		logger.info(`Disconnecting from fireside.`);
 		status.value = 'disconnected';
 
 		_clearExpiryCheck();
@@ -1053,7 +1054,7 @@ export function createFiresideController(
 			chatChannel.value = undefined;
 		}
 
-		logger.debug(`Disconnected from fireside.`);
+		logger.info(`Disconnected from fireside.`);
 	}
 
 	function _clearExpiryCheck() {
@@ -1091,7 +1092,7 @@ export function createFiresideController(
 	 * shouldn't be used to disconnect.
 	 */
 	async function cleanup() {
-		logger.debug('controller cleanup called');
+		logger.info('controller cleanup called');
 
 		stickerStore.streak.value = null;
 
@@ -1363,7 +1364,7 @@ export async function updateFiresideData(
 			// to just always call fetch-for-streaming.
 			const streamingUid = agoraStreamingInfo.value?.streamingUid;
 			if (!streamingUid) {
-				logger.debug('Got fireside-updated grid event before fully bootstrapped');
+				logger.info('Got fireside-updated grid event before fully bootstrapped');
 				await _fetchForFiresideStreaming(c, { assignStatus: false });
 			} else if (!fireside.role?.canStream) {
 				// Otherwise, if our host state did not change and we are a
@@ -1467,10 +1468,10 @@ async function _fetchForFiresideStreaming(c: FiresideController, { assignStatus 
 			{ detach: true }
 		);
 
-		logger.debug('fetch-for-streaming payload received', payload);
+		logger.info('fetch-for-streaming payload received', payload);
 
 		if (!payload.fireside) {
-			logger.debug(`Trying to load fireside, but it was not found.`);
+			logger.info(`Trying to load fireside, but it was not found.`);
 			if (assignStatus) {
 				status.value = 'setup-failed';
 			}
@@ -1510,7 +1511,7 @@ async function _fetchForFiresideStreaming(c: FiresideController, { assignStatus 
 		// that case, we want to set up the RTC stuff.
 		// this.upsertRtc(payload, { checkJoined: false });
 	} catch (error) {
-		logger.debug(`Setup failure 2.`, error);
+		logger.info(`Setup failure 2.`, error);
 		if (assignStatus) {
 			status.value = 'setup-failed';
 		}

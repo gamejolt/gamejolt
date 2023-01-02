@@ -3,7 +3,7 @@ import { computed, nextTick, onMounted, PropType, ref, toRefs, useSlots, watch }
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
 import AppBackground from '../../../background/AppBackground.vue';
 import { ContentFocus } from '../../../content-focus/content-focus.service';
-import AppContentViewer from '../../../content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../content/content-viewer/AppContentViewer.vue';
 import AppImgResponsive from '../../../img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../../media-item/media-item-model';

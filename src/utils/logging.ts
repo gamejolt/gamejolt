@@ -5,13 +5,12 @@ export type Logger = ReturnType<typeof createLogger>;
  */
 export function createLogger(name: string) {
 	const _createLevel =
-		(level: 'info' | 'debug' | 'warn' | 'error') =>
+		(level: 'info' | 'warn' | 'error') =>
 		(message: any, ...optionalParams: any[]) =>
 			console[level](`[${name}] ${message}`, ...optionalParams);
 
 	return {
 		info: _createLevel('info'),
-		debug: _createLevel('debug'),
 		warn: _createLevel('warn'),
 		error: _createLevel('error'),
 	};

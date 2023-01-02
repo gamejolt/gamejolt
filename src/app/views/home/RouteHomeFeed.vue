@@ -54,7 +54,6 @@ import { useCommonStore } from '../../../_common/store/common-store';
 import { EventSubscription } from '../../../_common/system/event/event-topic';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppUserCard from '../../../_common/user/card/AppUserCard.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import { onFiresideStart } from '../../components/grid/client.service';
@@ -62,10 +61,7 @@ import AppPageContainer from '../../components/page-container/AppPageContainer.v
 import AppPostAddButton from '../../components/post/add-button/AppPostAddButton.vue';
 import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
 import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
-import { imagePseudoFeatureBanner } from '../../img/images';
 import { useQuestStore } from '../../store/quest';
-import { routePost } from '../post/post.route';
-import { routeQuests } from '../quests/quests.route';
 import AppHomeFeedMenu from './AppHomeFeedMenu.vue';
 import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
 import AppHomeFireside from './_fireside/AppHomeFireside.vue';
@@ -204,7 +200,24 @@ async function refreshQuests() {
 			<AppPageContainer xl>
 				<template #left>
 					<template v-if="Screen.isDesktop">
-						<AppUserCard :user="user!" />
+						<div class="-top-spacer" />
+
+						<AppStickerChargeCard header-charge allow-fully-charged-text />
+						<AppSpacer vertical :scale="8" />
+
+						<template v-if="user">
+							<AppDailyQuests
+								disable-on-expiry
+								single-row
+								:force-loading="isLoadingQuests"
+							/>
+
+							<AppSpacer
+								v-if="isQuestStoreLoading || dailyQuests.length > 0"
+								vertical
+								:scale="8"
+							/>
+						</template>
 
 						<AppInviteCard :user="user!" elevate />
 
@@ -274,28 +287,7 @@ async function refreshQuests() {
 				</template>
 
 				<template v-if="!Screen.isMobile" #right>
-					<AppStickerChargeCard header-charge allow-fully-charged-text />
-					<AppSpacer vertical :scale="8" />
-
-					<template v-if="user">
-						<AppDailyQuests
-							disable-on-expiry
-							single-row
-							:force-loading="isLoadingQuests"
-						/>
-
-						<AppSpacer
-							v-if="isQuestStoreLoading || dailyQuests.length > 0"
-							vertical
-							:scale="8"
-						/>
-					</template>
-
-					<RouterLink :to="{ name: routeQuests.name }">
-						<img class="-event-banner img-responsive" :src="imagePseudoFeatureBanner" />
-					</RouterLink>
-
-					<AppSpacer vertical :scale="8" />
+					<div class="-top-spacer" />
 
 					<AppHomeFireside
 						:featured-fireside="featuredFireside"
@@ -312,15 +304,6 @@ async function refreshQuests() {
 				<AppPostAddButton @add="onPostAdded" />
 
 				<template v-if="Screen.isMobile">
-					<RouterLink
-						v-if="!Screen.isXs"
-						:to="{ name: routePost.name, params: { slug: 'g8vqnqfe' } }"
-					>
-						<img class="-event-banner img-responsive" :src="imagePseudoFeatureBanner" />
-
-						<AppSpacer vertical :scale="4" />
-					</RouterLink>
-
 					<AppHomeFireside
 						:user-fireside="userFireside"
 						:firesides="firesides"
@@ -342,10 +325,12 @@ async function refreshQuests() {
 </template>
 
 <style lang="stylus" scoped>
+// We add this margin to try to shift the page content below the For You |
+// Following tabs.
+.-top-spacer
+	margin-top: 58px
+
 .-game-list
 	a
 		text-overflow()
-
-.-event-banner
-	rounded-corners()
 </style>

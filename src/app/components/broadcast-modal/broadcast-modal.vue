@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppCommentDisabledCheck from '../../../_common/comment/AppCommentDisabledCheck.vue';
-import AppContentViewer from '../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { $viewPostVideo } from '../../../_common/fireside/post/video/video-model';

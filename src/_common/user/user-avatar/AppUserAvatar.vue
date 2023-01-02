@@ -6,7 +6,7 @@ import AppUserAvatarImg from './AppUserAvatarImg.vue';
 
 const props = defineProps({
 	user: {
-		type: Object as PropType<User>,
+		type: Object as PropType<User | null | undefined>,
 		default: undefined,
 	},
 	link: {

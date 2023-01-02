@@ -1,15 +1,17 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import AppChatMemberList from '../../../components/chat/member-list/AppChatMemberList.vue';
+import { useChatRoomMembers } from '../../../components/chat/room-channel';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 
-const c = useFiresideController()!;
-const { chatRoom, chatUsers, listableHostIds } = c;
+const { chatRoom, listableHostIds } = useFiresideController()!;
+
+const { memberCollection } = useChatRoomMembers(chatRoom);
 
 const users = computed(() =>
-	chatUsers.value?.collection.filter(i => {
+	(memberCollection.value?.users || []).filter(i => {
 		if (!i.firesideHost || !i.firesideHost.needsPermissionToView) {
 			return true;
 		}

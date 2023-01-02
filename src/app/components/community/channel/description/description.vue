@@ -2,7 +2,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
-import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 
 @Options({
 	components: {

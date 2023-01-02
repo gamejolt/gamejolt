@@ -2,7 +2,7 @@
 import { computed, PropType, ref, toRefs } from 'vue';
 import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
 import { ContentRules } from '../../../_common/content/content-editor/content-rules';
-import AppContentViewer from '../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.vue';
 import { StickerTargetController } from '../../../_common/sticker/target/target-controller';

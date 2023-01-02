@@ -28,6 +28,9 @@ const props = defineProps({
 	withUser: {
 		type: Boolean,
 	},
+	noLink: {
+		type: Boolean,
+	},
 });
 
 const { post, source, videoContext, withUser } = toRefs(props);
@@ -105,7 +108,12 @@ const userLink = computed(() => Environment.wttfBaseUrl + post.value?.user.url);
 				</span>
 			</div>
 
-			<RouterLink class="-link" :to="post.routeLocation" @click="trackPostOpen({ source })" />
+			<RouterLink
+				v-if="!noLink"
+				class="-link"
+				:to="post.routeLocation"
+				@click="trackPostOpen({ source })"
+			/>
 		</template>
 	</AppPostCardBase>
 </template>

@@ -38,8 +38,7 @@ const isOnline = computed(() => {
 	return isUserOnline(chat.value, user.value.id);
 });
 
-const roleData = computed(() => getChatUserRoleData(chat.value, room.value, user.value));
-
+const roleData = computed(() => getChatUserRoleData(room.value, user.value));
 const isLiveFiresideHost = computed(() => user.value.isLive === true);
 </script>
 
