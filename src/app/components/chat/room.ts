@@ -1,11 +1,17 @@
 import { Background } from '../../../_common/background/background.model';
 import { ContentContext } from '../../../_common/content/content-context';
-import { Translate } from '../../../_common/translate/translate.service';
+import { $gettext } from '../../../_common/translate/translate.service';
 import { ChatClient } from './client';
+import { ChatMessage } from './message';
 import { ChatRole } from './role';
 import { ChatUser } from './user';
+import { ChatUserCollection } from './user-collection';
 
 export type ChatRoomType = 'pm' | 'open_group' | 'closed_group' | 'viral_group' | 'fireside_group';
+
+interface TypingUserData {
+	username: string;
+}
 
 export class ChatRoom {
 	static readonly ROOM_PM = 'pm';
@@ -14,22 +20,25 @@ export class ChatRoom {
 	static readonly ROOM_VIRAL_GROUP = 'viral_group';
 	static readonly ROOM_FIRESIDE_GROUP = 'fireside_group';
 
-	id!: number;
-	title!: string;
-	type!: ChatRoomType;
-	user?: ChatUser;
-	members!: ChatUser[];
-	roles!: ChatRole[];
-	owner_id!: number;
-	last_message_on!: number;
-	background?: Background;
+	declare id: number;
+	declare title: string;
+	declare type: ChatRoomType;
+	declare user?: ChatUser;
+	declare roles: ChatRole[];
+	declare member_count: number;
+	declare owner_id: number;
+	declare last_message_on: number;
+	declare background?: Background;
 
-	constructor(data: any = {}) {
+	declare memberCollection: ChatUserCollection;
+	messages: ChatMessage[] = [];
+	queuedMessages: ChatMessage[] = [];
+
+	/** Indexed by user ID */
+	usersTyping = new Map<number, TypingUserData>();
+
+	constructor(public readonly chat: ChatClient, data: any = {}) {
 		Object.assign(this, data);
-
-		if (Array.isArray(data.members)) {
-			this.members = (data.members as unknown[]).map(i => new ChatUser(i));
-		}
 
 		if (Array.isArray(data.roles)) {
 			this.roles = (data.roles as unknown[]).map(i => new ChatRole(i));
@@ -37,6 +46,21 @@ export class ChatRoom {
 
 		if (data.background) {
 			this.background = new Background(data.background);
+		}
+
+		const members = Array.isArray(data.members)
+			? (data.members as unknown[]).map(i => new ChatUser(i))
+			: [];
+
+		this.memberCollection = new ChatUserCollection(
+			chat,
+			this.isFiresideRoom ? ChatUserCollection.TYPE_FIRESIDE : ChatUserCollection.TYPE_ROOM,
+			members || []
+		);
+
+		if (this.type === ChatRoom.ROOM_PM) {
+			// We need to rename the room to the username
+			this.user = chat.friendsList.getByRoom(this.id);
 		}
 	}
 
@@ -109,20 +133,26 @@ export class ChatRoom {
 	}
 }
 
-export function getChatRoomTitle(room: ChatRoom, chat: ChatClient) {
+export function getChatRoomTitle(room: ChatRoom) {
 	if (room.title) {
 		return room.title;
 	}
 
+	if (room.type === ChatRoom.ROOM_PM) {
+		return room.user?.display_name ?? $gettext(`PM Chat`);
+	}
+
 	// When no title is set and no/one member is in the chat, set the title
 	// to "Group Chat" instead of just the single name.
-	if (!room.members || room.members.length === 1) {
-		return Translate.$gettext(`Group Chat`);
+	if (room.memberCollection.count <= 1) {
+		return $gettext(`Group Chat`);
 	}
 
 	// No room title, return a comma separated list of members.
-	return room.members
-		.filter(member => member.id !== chat.currentUser?.id)
-		.map(member => member.display_name)
+	const chat = room.chat;
+	return room.memberCollection.users
+		.filter(i => i.id !== chat.currentUser?.id)
+		.slice(0, 5)
+		.map(i => i.display_name)
 		.join(', ');
 }
