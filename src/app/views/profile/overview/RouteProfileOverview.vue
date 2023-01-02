@@ -3,7 +3,7 @@ import { computed, inject, ref } from 'vue';
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
 import { numberSort } from '../../../../utils/array';
 import { removeQuery } from '../../../../utils/router';
-import AppAnimChargeOrb from '../../../../_common/animation/AppAnimChargeOrb.vue';
+import AppAnimElectricity from '../../../../_common/animation/AppAnimElectricity.vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
@@ -28,7 +28,7 @@ import AppCommunityVerifiedTick from '../../../../_common/community/verified-tic
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
+import { formatFuzzynumberOverThreshold } from '../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { Game } from '../../../../_common/game/game.model';
@@ -65,6 +65,7 @@ import AppPageContainer from '../../../components/page-container/AppPageContaine
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import { TrophyModal } from '../../../components/trophy/modal/modal.service';
 import AppTrophyThumbnail from '../../../components/trophy/thumbnail/thumbnail.vue';
+import AppUserVerifiedWrapper from '../../../components/user/AppUserVerifiedWrapper.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useAppStore } from '../../../store/index';
 import { useProfileRouteController } from '../profile.vue';
@@ -283,10 +284,15 @@ const shouldShowFireside = computed(() => {
 });
 
 const canShowFiresidePreview = computed(() => {
-	return (
-		shouldShowFireside.value &&
-		(isFiresideInview.value ? firesideHasVideo.value : maintainFiresideOutviewSpace.value)
-	);
+	if (!shouldShowFireside.value) {
+		return false;
+	}
+
+	if (isFiresideInview.value) {
+		return firesideHasVideo.value;
+	}
+
+	return maintainFiresideOutviewSpace.value;
 });
 
 function getLinkedAccount(provider: Provider) {
@@ -314,6 +320,7 @@ createAppRoute({
 		allCommunities.value = null;
 		linkedAccounts.value = [];
 		overviewComments.value = [];
+		topSupporters.value = [];
 	},
 	onResolved({ payload }) {
 		Meta.description = payload.metaDescription;
@@ -333,20 +340,22 @@ createAppRoute({
 		linkedAccounts.value = LinkedAccount.populate(payload.linkedAccounts);
 		overviewComments.value = Comment.populate(payload.comments);
 
-		if (payload.topSupporters) {
-			const newList = Array.from<TopSupporter>(payload.topSupporters).reduce(
-				(result, current) => {
-					if (current.user && current.value) {
-						result.push({
-							user: new User(current.user),
-							value: current.value,
-						});
-					}
-					return result;
-				},
-				[] as TopSupporter[]
-			);
-			topSupporters.value = newList;
+		if (payload.topSupporters && Array.isArray(payload.topSupporters)) {
+			const supportersData: Partial<TopSupporter>[] = payload.topSupporters;
+			const newSupporters: TopSupporter[] = [];
+
+			for (const { user, value } of supportersData) {
+				if (user && value) {
+					newSupporters.push({
+						user: new User(user),
+						value,
+					});
+				}
+			}
+
+			topSupporters.value = newSupporters
+				.sort((a, b) => numberSort(b.value, a.value))
+				.slice(0, 3);
 		} else {
 			topSupporters.value = [];
 		}
@@ -744,37 +753,38 @@ async function onFriendRequestReject() {
 							</div>
 
 							<div class="-supporters-card">
-								<div
-									v-for="(supporter, index) of topSupporters
-										.sort((a, b) => numberSort(b.value, a.value))
-										.splice(0, 3)"
-									:key="supporter.user.id"
+								<RouterLink
+									v-for="{ user, value } of topSupporters"
+									:key="user.id"
 									class="-supporter"
+									:to="user.routeLocation"
 								>
-									<AppUserAvatarImg
-										class="-supporter-avatar"
-										:class="{ '-large': index === 0 }"
-									/>
-
-									<AppSpacer vertical :scale="2" />
-
-									<div class="-supporter-username">
-										{{ '@' + supporter.user.username }}
+									<div class="-supporter-avatar">
+										<AppAspectRatio :ratio="1" show-overflow>
+											<AppUserVerifiedWrapper :user="user">
+												<AppUserAvatarImg :user="user" />
+											</AppUserVerifiedWrapper>
+										</AppAspectRatio>
 									</div>
 
 									<AppSpacer vertical :scale="2" />
 
-									<div class="-supporter-data">
-										<AppAnimChargeOrb
-											class="-supporter-orb"
-											use-random-offset
-										/>
-
-										<span class="-supporter-value">
-											{{ formatFuzzynumber(supporter.value) }}
-										</span>
+									<div
+										v-app-tooltip="'@' + user.username"
+										class="-supporter-username"
+									>
+										{{ '@' + user.username }}
 									</div>
-								</div>
+
+									<AppSpacer vertical :scale="2" />
+
+									<AppAnimElectricity
+										class="-supporter-value"
+										shock-anim="wide-rect"
+									>
+										{{ formatFuzzynumberOverThreshold(value, 10_000) }}
+									</AppAnimElectricity>
+								</RouterLink>
 							</div>
 
 							<br />
@@ -1001,35 +1011,39 @@ async function onFriendRequestReject() {
 
 .-supporters-card
 	rounded-corners-lg()
+	change-bg(bg-offset)
 	padding: 12px 16px
 	display: flex
 	gap: 16px
 
 .-supporter
 	flex: 1
+	display: flex
+	flex-direction: column
+	align-items: center
+	justify-content: flex-end
+	min-width: 0
+	color: var(--theme-fg)
 
 .-supporter-avatar
-	width: 40px
-	height: 40px
-
-	&.-large
-		width: 56px
-		height: 56px
+	width: 100%
+	max-width: 56px
 
 .-supporter-username
 	text-overflow()
 	max-width: 100%
 	min-width: 0
+	font-size: $font-size-small
 
-.-supporter-data
-	display: flex
-	align-items: center
-	gap: 8px
-
-.-supporter-orb
-	width: 16px
-	height: 16px
-	margin-right: 8px
+.-supporter-value
+	rounded-corners()
+	change-bg(bg)
+	min-width: 32px
+	padding: 0px 6px
+	font-weight: bold
+	display: inline-flex
+	justify-content: center
+	font-size: $font-size-small
 
 .-communities
 	display: grid
