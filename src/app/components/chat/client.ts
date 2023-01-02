@@ -321,13 +321,14 @@ export function setTimeSplit(room: ChatRoom, message: ChatMessage) {
 		const nextMessage =
 			messageIndex === messages.length - 1 ? null : messages[messageIndex + 1];
 
-		const isSameUser = message.user.id === prevMessage.user.id;
+		const isPrevSameUser = message.user.id === prevMessage.user.id;
+		const isNextSameUser = !!nextMessage && nextMessage.user.id === message.user.id;
 		const isWithinTime =
 			message.logged_on.getTime() - prevMessage.logged_on.getTime() <= combineTimeCheck;
 
-		message.showAvatar = !nextMessage || isSameUser;
+		message.showAvatar = !nextMessage || isPrevSameUser || !isNextSameUser;
 
-		if (isSameUser && isWithinTime) {
+		if (isPrevSameUser && isWithinTime) {
 			message.showMeta = false;
 		}
 
