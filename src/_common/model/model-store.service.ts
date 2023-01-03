@@ -1,6 +1,7 @@
 import { reactive, ref } from 'vue';
 
 export interface ModelStoreModel {
+	modelStoreId?(): number | string;
 	update(data: any): void;
 }
 
@@ -22,12 +23,7 @@ export function storeModel<T extends ModelStoreModel>(
 		throw new Error(`Called storeModel with empty data: ${typename}.`);
 	}
 
-	const id = data.id as number | undefined;
-
-	if (!id) {
-		throw new Error(`Tried registering model with a null id: ${typename}`);
-	}
-
+	const id = _getModelId(data);
 	const key = _generateKey(typename, id);
 	let targetModel = _models.value.get(key) as T | undefined;
 
@@ -70,7 +66,22 @@ export function getModel<T extends ModelStoreModel>(
 	return _models.value.get(key);
 }
 
-function _generateKey(typename: string, id?: number) {
+function _getModelId(modelData: any) {
+	let id: number | string | undefined;
+	if (typeof modelData?.modelStoreId === 'function') {
+		id = modelData.modelStoreId();
+	} else {
+		id = modelData.id;
+	}
+
+	if (!id || (typeof id !== 'string' && typeof id !== 'number')) {
+		throw new Error(`Tried registering model with a null id.`);
+	}
+
+	return id;
+}
+
+function _generateKey(typename: string, id?: number | string) {
 	if (!id) {
 		throw new Error(`Tried generating key for model with a null id: ${typename}`);
 	}

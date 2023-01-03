@@ -26,6 +26,14 @@ export class ChatUser implements ModelStoreModel {
 		this.update(data);
 	}
 
+	// Since the chat user is just a wrapper for user, the chat user ID will be
+	// the same across many rooms, even though we store different data. In order
+	// to separate these models in the model store, we want to take into account
+	// the room ID as well.
+	modelStoreId() {
+		return `${this.id}/${this.room_id}`;
+	}
+
 	update(data: any) {
 		Object.assign(this, data);
 	}
