@@ -16,6 +16,8 @@ import { Background } from '../../../_common/background/background.model';
 import { ContentDocument } from '../../../_common/content/content-document';
 import { ContentObject } from '../../../_common/content/content-object';
 import { MarkObject } from '../../../_common/content/mark-object';
+import { storeModel, storeModelList } from '../../../_common/model/model-store.service';
+import { UnknownModelData } from '../../../_common/model/model.service';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { StickerPlacement } from '../../../_common/sticker/placement/placement.model';
 import {
@@ -34,8 +36,8 @@ import { ChatUser } from './user';
 export type ChatRoomChannel = Awaited<ReturnType<typeof createChatRoomChannel>>;
 
 interface JoinPayload {
-	room: unknown;
-	messages: unknown[];
+	room: UnknownModelData;
+	messages: UnknownModelData[];
 }
 
 interface RoomPresence {
@@ -51,7 +53,7 @@ interface MemberDecPayload {
 }
 
 interface MemberAddPayload {
-	members: unknown[];
+	members: UnknownModelData[];
 }
 
 interface MemberLeavePayload {
@@ -168,16 +170,16 @@ export async function createChatRoomChannel(
 
 			client.roomChannels[roomId] = markRaw(c);
 
-			_room.value = new ChatRoom(client, response.room);
+			_room.value = storeModel(ChatRoom, { chat: client, ...response.room });
 
-			const messages = response.messages.map((i: ChatMessage) => new ChatMessage(i));
+			const messages = storeModelList(ChatMessage, response.messages);
 			messages.reverse();
 			setupChatRoom(client, room.value, messages);
 		},
 	});
 
 	function _onMsg(data: Partial<ChatMessage>) {
-		const message = new ChatMessage(data);
+		const message = storeModel(ChatMessage, data);
 
 		// If we receive a message from the currently logged in user on this
 		// room channel, we ignore it.
@@ -225,20 +227,13 @@ export async function createChatRoomChannel(
 	}
 
 	function _onUserUpdated(data: Partial<ChatUser>) {
-		const updatedUser = new ChatUser(data);
+		const updatedUser = storeModel(ChatUser, data);
 		if (room.value.isGroupRoom) {
 			if (isInChatRoom(client, roomId)) {
-				room.value.memberCollection.update(updatedUser);
+				room.value.memberCollection.updated(updatedUser);
 			}
 
 			room.value.updateRoleForUser(updatedUser);
-
-			// Sync the user update to the list of messages.
-			for (const message of room.value.messages) {
-				if (message.user.id === updatedUser.id) {
-					Object.assign(message.user, updatedUser);
-				}
-			}
 		}
 	}
 
@@ -276,14 +271,8 @@ export async function createChatRoomChannel(
 			return;
 		}
 
-		const message = room.value.messages.find(i => i.id === data.id);
-		if (!message) {
-			return;
-		}
-
-		const edited = new ChatMessage(data);
-		message.content = edited.content;
-		message.edited_on = edited.edited_on;
+		// This will edit it within the room's message list.
+		storeModel(ChatMessage, data);
 	}
 
 	function _onMemberInc(data: MemberIncPayload) {
@@ -296,7 +285,7 @@ export async function createChatRoomChannel(
 
 	function _onMemberAdd(data: MemberAddPayload) {
 		for (const member of data.members) {
-			const user = new ChatUser(member);
+			const user = storeModel(ChatUser, member);
 
 			room.value.memberCollection.add(user);
 			room.value.updateRoleForUser(user);
@@ -443,7 +432,7 @@ export async function createChatRoomChannel(
 	 */
 	function pushLoadMessages(before: Date) {
 		return channelController.push<{
-			messages: unknown[];
+			messages: UnknownModelData[];
 		}>('load_messages', { before_date: before });
 	}
 
@@ -532,7 +521,7 @@ export async function createChatRoomChannel(
 			_isWatchingMembers = true;
 			run(async () => {
 				interface Payload {
-					members: unknown[];
+					members: UnknownModelData[];
 				}
 
 				const cancelToken = new CancelToken();

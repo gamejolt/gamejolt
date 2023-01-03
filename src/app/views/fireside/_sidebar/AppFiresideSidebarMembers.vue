@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppChatMemberList from '../../../components/chat/member-list/AppChatMemberList.vue';
@@ -8,19 +7,9 @@ import { useFiresideController } from '../../../components/fireside/controller/c
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 
-const { chatRoom, canManageCohosts, listableHostIds, setSidebar } = useFiresideController()!;
-
+const c = useFiresideController()!;
+const { chatRoom, canManageCohosts, setSidebar } = c;
 const { memberCollection } = useChatRoomMembers(chatRoom);
-
-const users = computed(
-	() =>
-		(memberCollection.value?.users || []).filter(i => {
-			if (!i.firesideHost || !i.firesideHost.needsPermissionToView) {
-				return true;
-			}
-			return listableHostIds.value.has(i.id);
-		})
-);
 </script>
 
 <template>
@@ -37,9 +26,10 @@ const users = computed(
 
 		<template #body>
 			<AppChatMemberList
-				v-if="users && chatRoom"
-				:users="users"
+				v-if="chatRoom && memberCollection"
+				:collection="memberCollection"
 				:room="chatRoom"
+				:fireside-controller="c"
 				hide-filter
 			/>
 		</template>

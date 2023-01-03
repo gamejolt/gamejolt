@@ -5,6 +5,8 @@ import type { TabLeaderInterface } from '../../../utils/tab-leader';
 import { Background } from '../../../_common/background/background.model';
 import { importNoSSR } from '../../../_common/code-splitting';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
+import { storeModel } from '../../../_common/model/model-store.service';
+import { UnknownModelData } from '../../../_common/model/model.service';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import {
 	ChatClient,
@@ -25,10 +27,10 @@ const TabLeaderLazy = importNoSSR(async () => await import('../../../utils/tab-l
 export type ChatUserChannel = Awaited<ReturnType<typeof createChatUserChannel>>;
 
 interface JoinPayload {
-	user: unknown;
-	friends: unknown[];
+	user: UnknownModelData;
+	friends: UnknownModelData[];
 	notifications: Record<string, number>;
-	groups: unknown[];
+	groups: UnknownModelData[];
 }
 
 interface UserPresence {
@@ -40,7 +42,7 @@ interface FriendRemovePayload {
 }
 
 interface GroupAddPayload {
-	room: unknown;
+	room: UnknownModelData;
 }
 
 interface RoomIdPayload {
@@ -103,15 +105,15 @@ export async function createChatUserChannel(
 			_tabLeader = new TabLeader('chat_notification_channel');
 			_tabLeader.init();
 
-			client.currentUser = new ChatUser(response.user);
+			client.currentUser = storeModel(ChatUser, response.user);
 			client.friendsList = new ChatUserCollection(
 				client,
 				ChatUserCollection.TYPE_FRIEND,
 				response.friends || []
 			);
 			client.notifications = response.notifications;
-			client.groupRooms = (response.groups as unknown[]).map(
-				(room: ChatRoom) => new ChatRoom(client, room)
+			client.groupRooms = (response.groups as UnknownModelData[]).map(room =>
+				storeModel(ChatRoom, { chat: client, ...room })
 			);
 		},
 
@@ -139,7 +141,7 @@ export async function createChatUserChannel(
 	}
 
 	function _onFriendAdd(data: Partial<ChatUser>) {
-		const newFriend = new ChatUser(data);
+		const newFriend = storeModel(ChatUser, data);
 		client.friendsList.add(newFriend);
 		recollectChatRoomMembers(client);
 	}
@@ -162,7 +164,7 @@ export async function createChatUserChannel(
 		if (userId) {
 			const friend = client.friendsList.get(userId);
 			data.isOnline = friend?.isOnline;
-			client.friendsList.update(new ChatUser(data));
+			client.friendsList.updated(storeModel(ChatUser, data));
 			recollectChatRoomMembers(client);
 		}
 	}
@@ -176,7 +178,7 @@ export async function createChatUserChannel(
 	}
 
 	function _onNotification(data: Partial<ChatMessage>) {
-		const message = new ChatMessage(data);
+		const message = storeModel(ChatMessage, data);
 
 		// We got a notification for some room.
 		// If the notification key is null, set it to 1.
@@ -199,8 +201,7 @@ export async function createChatUserChannel(
 	}
 
 	function _onYouUpdated(data: Partial<ChatUser>) {
-		const newUser = new ChatUser(data);
-		client.currentUser = newUser;
+		client.currentUser = storeModel(ChatUser, data);
 	}
 
 	function _onClearNotifications(data: RoomIdPayload) {
@@ -208,7 +209,7 @@ export async function createChatUserChannel(
 	}
 
 	function _onGroupAdd(data: GroupAddPayload) {
-		const newGroup = new ChatRoom(client, data.room);
+		const newGroup = storeModel(ChatRoom, { chat: client, ...data.room });
 		client.groupRooms.push(newGroup);
 	}
 
@@ -232,7 +233,9 @@ export async function createChatUserChannel(
 	 * Makes a new group with an initial set of users.
 	 */
 	function pushGroupAdd(members: number[]) {
-		return channelController.push<{ room: unknown }>('group_add', { member_ids: members });
+		return channelController.push<{ room: UnknownModelData }>('group_add', {
+			member_ids: members,
+		});
 	}
 
 	/**

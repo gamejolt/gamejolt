@@ -110,7 +110,7 @@ async function leaveRoom() {
 		</template>
 
 		<template #title>
-			{{ title }}
+			<span>{{ title }}</span>
 			<span v-if="meta" class="tiny text-muted">{{ meta }}</span>
 		</template>
 

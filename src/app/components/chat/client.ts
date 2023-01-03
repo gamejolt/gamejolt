@@ -1,6 +1,7 @@
 import { markRaw, reactive } from 'vue';
 import { arrayRemove, numberSort } from '../../../utils/array';
 import { createLogger } from '../../../utils/logging';
+import { storeModel, storeModelList } from '../../../_common/model/model-store.service';
 import { commonStore } from '../../../_common/store/common-store';
 import { EventTopic } from '../../../_common/system/event/event-topic';
 import { AppStore } from '../../store';
@@ -148,6 +149,10 @@ export function setupChatRoom(chat: ChatClient, room: ChatRoom, messages: ChatMe
 		if (!isRoomInstanced(chat, room.id)) {
 			setChatRoom(chat, room);
 		}
+
+		// Clear out any old messages so we don't use old data from the model
+		// store.
+		room.messages = [];
 		processNewChatOutput(room, messages, true);
 	}
 }
@@ -276,21 +281,19 @@ export function queueChatMessage(room: ChatRoom, type: ChatMessageType, content:
 	}
 
 	const tempId = Math.floor(Math.random() * Date.now());
-	const message = reactive(
-		new ChatMessage({
-			id: tempId,
-			user_id: chat.currentUser.id,
-			user: chat.currentUser,
-			room_id: room.id,
-			type,
-			content,
-			logged_on: new Date(),
-			_isQueued: true,
-		})
-	) as ChatMessage;
+	const message = storeModel(ChatMessage, {
+		id: tempId,
+		user_id: chat.currentUser.id,
+		user: chat.currentUser,
+		room_id: room.id,
+		type,
+		content,
+		logged_on: Date.now(),
+		_isQueued: true,
+	});
 
-	setTimeSplit(room, message);
 	room.queuedMessages.push(message);
+	setTimeSplit(room, message);
 	sendChatMessage(room, message);
 }
 
@@ -299,6 +302,7 @@ export function setTimeSplit(room: ChatRoom, message: ChatMessage) {
 	message.showMeta = true;
 	message.dateSplit = false;
 
+	const combineTimeCheck = 5 * 60 * 1000;
 	let messages = room.messages;
 
 	// For queued messages, we also factor in the other queued messages.
@@ -309,34 +313,34 @@ export function setTimeSplit(room: ChatRoom, message: ChatMessage) {
 	// Find the message preceeding this one.
 	// If we can't locate the message in the list, we assume it's not in the list yet and about to be added to the end.
 	// Therefore, we use the last message in the list as previous and pretend this message is at the end of the list.
-	let messageIndex = messages.findIndex(i => i.id === message.id);
-	if (messageIndex === -1 && messages.length > 0) {
-		messageIndex = messages.length;
-	}
-
-	let previousMessage: ChatMessage | null = null;
+	const messageIndex = messages.findIndex(i => i.id === message.id);
+	let prevMessage: ChatMessage | null = null;
 
 	if (messageIndex > 0) {
-		previousMessage = messages[messageIndex - 1];
-		const nextMessage = messages[messageIndex + 1];
+		prevMessage = messages[messageIndex - 1];
+		const nextMessage =
+			messageIndex === messages.length - 1 ? null : messages[messageIndex + 1];
 
-		if (!nextMessage) {
-			message.showAvatar = true;
-		} else {
-			message.showAvatar = nextMessage.user.id !== message.user.id;
-		}
+		const isPrevSameUser = message.user.id === prevMessage.user.id;
+		const isNextSameUser = !!nextMessage && nextMessage.user.id === message.user.id;
+		const isWithinTime =
+			message.logged_on.getTime() - prevMessage.logged_on.getTime() <= combineTimeCheck;
 
-		// Combine if the same user and within 5 minutes of their previous message.
-		if (
-			message.user.id === previousMessage.user.id &&
-			message.logged_on.getTime() - previousMessage.logged_on.getTime() <= 5 * 60 * 1000
-		) {
+		message.showAvatar = !nextMessage || isPrevSameUser || !isNextSameUser;
+
+		if (isPrevSameUser && isWithinTime) {
 			message.showMeta = false;
 		}
 
 		// If the date is different than the date for the previous
 		// message, we want to split it in the view.
-		if (message.logged_on.toDateString() !== previousMessage.logged_on.toDateString()) {
+		const curDate = message.logged_on;
+		const prevDate = prevMessage.logged_on;
+		if (
+			curDate.getFullYear() !== prevDate.getFullYear() ||
+			curDate.getMonth() !== prevDate.getMonth() ||
+			curDate.getDate() !== prevDate.getDate()
+		) {
 			message.dateSplit = true;
 			message.showAvatar = true;
 			message.showMeta = true;
@@ -347,8 +351,8 @@ export function setTimeSplit(room: ChatRoom, message: ChatMessage) {
 		message.showAvatar = true;
 	}
 
-	if (!message.showMeta && previousMessage) {
-		previousMessage.showAvatar = false;
+	if (!message.showMeta && prevMessage) {
+		prevMessage.showAvatar = false;
 	}
 }
 
@@ -359,6 +363,7 @@ function outputMessage(room: ChatRoom, message: ChatMessage, isHistorical: boole
 	}
 
 	message.logged_on = new Date(message.logged_on);
+	room.messages.push(message);
 	setTimeSplit(room, message);
 
 	if (!isHistorical) {
@@ -366,9 +371,6 @@ function outputMessage(room: ChatRoom, message: ChatMessage, isHistorical: boole
 			newChatNotification(room.chat, room.id);
 		}
 	}
-
-	// Push it into the room's message list.
-	room.messages.push(message);
 }
 
 export function processNewChatOutput(
@@ -416,7 +418,7 @@ async function sendChatMessage(room: ChatRoom, message: ChatMessage) {
 		// the new message and removing the queued one.
 		arrayRemove(room.queuedMessages, i => i.id === message.id);
 
-		const newMessage = reactive(new ChatMessage(data)) as ChatMessage;
+		const newMessage = storeModel(ChatMessage, data);
 		roomChannel.processNewRoomMessage(newMessage);
 	} catch (e) {
 		room.chat.logger.error('Received error sending message', e);
@@ -460,7 +462,7 @@ export async function loadOlderChatMessages(room: ChatRoom) {
 		const firstMessage = room.messages[0];
 		const data = await chat.roomChannels[room.id].pushLoadMessages(firstMessage.logged_on);
 
-		const oldMessages = data.messages.map((i: any) => new ChatMessage(i));
+		const oldMessages = storeModelList(ChatMessage, data.messages);
 
 		// If no older messages, we reached the end of the history.
 		if (oldMessages.length > 0) {
@@ -493,7 +495,7 @@ export async function addGroupRoom(chat: ChatClient, members: number[]) {
 	}
 
 	const response = await chat.userChannel.pushGroupAdd(members);
-	const newGroupRoom = new ChatRoom(chat, response.room);
+	const newGroupRoom = storeModel(ChatRoom, { chat, ...response.room });
 	chat.groupRooms.push(newGroupRoom);
 	enterChatRoom(chat, newGroupRoom.id);
 }
@@ -567,7 +569,7 @@ export function updateChatRoomLastMessageOn(chat: ChatClient, message: ChatMessa
 	const friend = chat.friendsList.getByRoom(message.room_id);
 	if (friend) {
 		friend.last_message_on = time;
-		chat.friendsList.update(friend);
+		chat.friendsList.updated(friend);
 	}
 
 	// If it's a group chat.

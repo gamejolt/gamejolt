@@ -1,11 +1,22 @@
-import { toRaw } from 'vue';
+import { inject, InjectionKey, provide, toRaw } from 'vue';
 import { arrayRemove, numberSort, stringSortRaw } from '../../../utils/array';
 import { FiresideRTCHost } from '../../../_common/fireside/rtc/rtc';
+import { storeModel } from '../../../_common/model/model-store.service';
 import { ChatClient, isUserOnline } from './client';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
 
 type RoomType = 'friend' | 'room' | 'fireside';
+
+const Key: InjectionKey<ChatUserCollection> = Symbol('chat-user-collection');
+
+export function provideChatUserCollection(c: ChatUserCollection) {
+	return provide(Key, c);
+}
+
+export function useChatUserCollection() {
+	return inject(Key);
+}
 
 export class ChatUserCollection {
 	static readonly TYPE_FRIEND = 'friend';
@@ -19,7 +30,6 @@ export class ChatUserCollection {
 	private _byId = new Map<number, ChatUser>();
 	private _byRoomId = new Map<number, ChatUser>();
 	private _doingWork = false;
-	private _firesideHostUsers = new Map<number, ChatUser>();
 	private _firesideHosts = new Map<number, FiresideRTCHost>();
 
 	get count() {
@@ -61,7 +71,7 @@ export class ChatUserCollection {
 		}
 
 		for (const user of users) {
-			const userModel = new ChatUser(user);
+			const userModel = storeModel(ChatUser, user);
 			this._users.push(userModel);
 			this._indexUser(userModel);
 
@@ -95,15 +105,19 @@ export class ChatUserCollection {
 		return this._byRoomId.get(roomId);
 	}
 
+	getFiresideHost(input: number | ChatUser): FiresideRTCHost | undefined {
+		const userId = typeof input === 'number' ? input : input.id;
+		return this._firesideHosts.get(userId);
+	}
+
 	add(user: ChatUser) {
 		// Don't add the same user again, update with new data instead.
 		if (this.has(user)) {
-			this.update(user);
+			this.updated(user);
 			return;
 		}
 
 		this._users.push(user);
-		this._assignFiresideHostDataToUser(user);
 		this._indexUser(user);
 
 		if (user.isOnline) {
@@ -138,81 +152,22 @@ export class ChatUserCollection {
 	}
 
 	assignFiresideHostData(data: FiresideRTCHost[]) {
-		let needsRecollect = false;
+		this.doBatchWork(() => {
+			this._firesideHosts.clear();
 
-		// Store our current host ids so we can find chat users that are no
-		// longer hosts.
-		const staleHostIds = new Set(this._firesideHostUsers.keys());
+			for (const hostData of data) {
+				const freshHostId = hostData.user.id;
 
-		// Clear out our old set of hosts.
-		this._firesideHosts.clear();
-
-		for (const hostData of data) {
-			const freshHostId = hostData.user.id;
-
-			// Store the new host set so we can use it when chat members get
-			// added or updated.
-			this._firesideHosts.set(freshHostId, hostData);
-
-			// User is still a host, but host data may be diffrent. Assign new
-			// host data to the chat user.
-			if (staleHostIds.has(freshHostId)) {
-				// Remove the hostId from our old set.
-				staleHostIds.delete(freshHostId);
-
-				const validHost = this._firesideHostUsers.get(freshHostId);
-				if (validHost) {
-					// Mark ourselves as needing a recollect only if the
-					// relevant state doesn't match.
-					if (!needsRecollect) {
-						const oldHostData = validHost.firesideHost;
-						needsRecollect =
-							oldHostData?.isLive !== hostData.isLive &&
-							oldHostData?.needsPermissionToView !== hostData.needsPermissionToView;
-					}
-					validHost.firesideHost = hostData;
-				}
-				continue;
+				// Store the new host set so we can use it when chat members get
+				// added or updated.
+				this._firesideHosts.set(freshHostId, hostData);
 			}
-
-			const user = this.get(freshHostId);
-			if (!user) {
-				continue;
-			}
-
-			// Got a user that wasn't previously a host. Assign new host data to
-			// the chat user and set them into our list of current hosts.
-			user.firesideHost = hostData;
-			this._firesideHostUsers.set(freshHostId, user);
-			needsRecollect = true;
-		}
-
-		if (staleHostIds.size > 0) {
-			needsRecollect = true;
-		}
-
-		// Loop through our (now) invalid host ids. Remove host data from the
-		// chat user and remove the chat user from our list of hosts.
-		for (const invalidHostId of staleHostIds) {
-			const oldHost = this._firesideHostUsers.get(invalidHostId);
-			if (oldHost) {
-				oldHost.firesideHost = null;
-			}
-			this._firesideHostUsers.delete(invalidHostId);
-		}
-
-		staleHostIds.clear();
-
-		if (needsRecollect) {
-			this.recollect();
-		}
+		});
 	}
 
-	update(user: ChatUser) {
+	updated(user: ChatUser) {
 		const curUser = this.get(user);
 		if (curUser) {
-			Object.assign(curUser, user);
-			this._assignFiresideHostDataToUser(curUser);
 			this.recollect();
 		}
 		return curUser;
@@ -247,24 +202,6 @@ export class ChatUserCollection {
 	}
 
 	/**
-	 * Will resort our collection of users. We need to call this internally in
-	 * reaction to changes to the users being tracked.
-	 */
-	recollect() {
-		if (this._doingWork) {
-			return;
-		}
-
-		if (this.type === ChatUserCollection.TYPE_FRIEND) {
-			this._users = sortCollection(this.chat, this._users, 'lastMessage');
-		} else if (this.type === ChatUserCollection.TYPE_FIRESIDE) {
-			this._users = sortCollection(this.chat, this._users, 'role');
-		} else {
-			this._users = sortCollection(this.chat, this._users, 'title');
-		}
-	}
-
-	/**
 	 * Do many operations of work and then recollect afterwards to keep things
 	 * sorted.
 	 */
@@ -280,8 +217,74 @@ export class ChatUserCollection {
 		this.recollect();
 	}
 
-	private _assignFiresideHostDataToUser(user: ChatUser) {
-		user.firesideHost = this._firesideHosts.get(user.id) || null;
+	/**
+	 * Will resort our collection of users. We need to call this internally in
+	 * reaction to changes to the users being tracked.
+	 */
+	recollect() {
+		if (this._doingWork) {
+			return;
+		}
+
+		if (this.type === ChatUserCollection.TYPE_FRIEND) {
+			this._users = this._sortCollection('lastMessage');
+		} else if (this.type === ChatUserCollection.TYPE_FIRESIDE) {
+			this._users = this._sortCollection('role');
+		} else {
+			this._users = this._sortCollection('title');
+		}
+	}
+
+	private _sortCollection(mode: 'lastMessage' | 'title' | 'role') {
+		switch (mode) {
+			case 'role': {
+				return toRaw(this._users)
+					.map(user => {
+						return {
+							user,
+							role: SortingGroup[
+								_getSortingGroupIndex(user, this.getFiresideHost(user))
+							],
+							isFriend: this.chat.friendsList.has(user.id),
+							lowercaseDisplayName: user.display_name.toLowerCase(),
+						};
+					})
+					.sort((a, b) => {
+						const roleDiff = numberSort(a.role, b.role);
+						if (roleDiff !== 0) {
+							return roleDiff;
+						}
+
+						if (a.isFriend !== b.isFriend) {
+							return a.isFriend ? -1 : 1;
+						}
+
+						return stringSortRaw(a.lowercaseDisplayName, b.lowercaseDisplayName);
+					})
+					.map(i => i.user);
+			}
+
+			case 'lastMessage':
+				return sortByLastMessageOn([...this._users]);
+
+			case 'title':
+				return toRaw(this._users)
+					.map(user => ({
+						user,
+						sort: _getSortVal(this.chat, user),
+						lowercaseDisplayName: user.display_name.toLowerCase(),
+					}))
+					.sort((a, b) => {
+						if (a.sort > b.sort) {
+							return 1;
+						} else if (a.sort < b.sort) {
+							return -1;
+						} else {
+							return stringSortRaw(a.lowercaseDisplayName, b.lowercaseDisplayName);
+						}
+					})
+					.map(i => i.user);
+		}
 	}
 }
 
@@ -294,61 +297,10 @@ const SortingGroup = {
 	user: 5,
 } as const;
 
-export function sortCollection(
-	chat: ChatClient,
-	collection: ChatUser[],
-	mode: 'lastMessage' | 'title' | 'role'
-) {
-	switch (mode) {
-		case 'role': {
-			return toRaw(collection)
-				.map(user => {
-					return {
-						user,
-						role: SortingGroup[getSortingGroupIndex(user)],
-						isFriend: chat.friendsList.has(user.id),
-						lowercaseDisplayName: user.display_name.toLowerCase(),
-					};
-				})
-				.sort((a, b) => {
-					const roleDiff = numberSort(a.role, b.role);
-					if (roleDiff !== 0) {
-						return roleDiff;
-					}
-
-					if (a.isFriend !== b.isFriend) {
-						return a.isFriend ? -1 : 1;
-					}
-
-					return stringSortRaw(a.lowercaseDisplayName, b.lowercaseDisplayName);
-				})
-				.map(i => i.user);
-		}
-
-		case 'lastMessage':
-			return sortByLastMessageOn([...collection]);
-
-		case 'title':
-			return toRaw(collection)
-				.map(user => ({
-					user,
-					sort: getSortVal(chat, user),
-					lowercaseDisplayName: user.display_name.toLowerCase(),
-				}))
-				.sort((a, b) => {
-					if (a.sort > b.sort) {
-						return 1;
-					} else if (a.sort < b.sort) {
-						return -1;
-					} else {
-						return stringSortRaw(a.lowercaseDisplayName, b.lowercaseDisplayName);
-					}
-				})
-				.map(i => i.user);
-	}
-}
-
-function getSortingGroupIndex(user: ChatUser | null | undefined): keyof typeof SortingGroup {
+function _getSortingGroupIndex(
+	user: ChatUser | null | undefined,
+	firesideHost: FiresideRTCHost | undefined
+): keyof typeof SortingGroup {
 	if (!user) {
 		return 'user';
 	}
@@ -357,8 +309,8 @@ function getSortingGroupIndex(user: ChatUser | null | undefined): keyof typeof S
 		return 'owner';
 	}
 
-	if (user.firesideHost) {
-		return user.firesideHost.isLive ? 'liveFiresideHost' : 'firesideHost';
+	if (firesideHost) {
+		return firesideHost.isLive ? 'liveFiresideHost' : 'firesideHost';
 	}
 
 	if (user.isStaff) {
@@ -368,7 +320,7 @@ function getSortingGroupIndex(user: ChatUser | null | undefined): keyof typeof S
 	return user.role ?? 'user';
 }
 
-function getSortVal(chat: ChatClient, user: ChatUser) {
+function _getSortVal(chat: ChatClient, user: ChatUser) {
 	// Move your own user to the top of lists
 	if (chat?.currentUser?.id === user.id) {
 		return -1;
