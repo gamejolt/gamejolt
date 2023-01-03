@@ -381,8 +381,6 @@ watch(
 		() => form.formModel.streamDesktopAudio,
 	],
 	() => {
-		console.debug('test', { ...form.formModel });
-
 		// When streaming, only apply changes to selected devices if the config
 		// is valid.
 		if ((isInvalidConfig.value && isPersonallyStreaming.value) || !_didDetectDevices) {

@@ -27,10 +27,10 @@ let escapeCallback: (() => void) | null = null;
 
 const tab = ref<'chats' | 'friends'>('chats');
 
-const friends = computed(() => chat.value.friendsList.collection);
+const friends = computed(() => chat.value.friendsList.users);
 const groups = computed(() => chat.value.groupRooms);
 const chats = computed(() => sortByLastMessageOn([...groups.value, ...friends.value]));
-const friendsCount = computed(() => chat.value.friendsList.collection.length);
+const friendsCount = computed(() => chat.value.friendsList.count);
 const isEmpty = computed(
 	() => chats.value.length === 0 || (tab.value === 'friends' && !friends.value.length)
 );

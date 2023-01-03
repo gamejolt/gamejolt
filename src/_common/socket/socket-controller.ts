@@ -7,6 +7,9 @@ import { Api } from '../api/api.service';
 import { getCookie } from '../cookie/cookie.service';
 import { CommonStore } from '../store/common-store';
 
+// These are the features we support for Grid to know and behave properly.
+const SupportedFeatures = ['chat_member_watching'];
+
 export type SocketController = ReturnType<typeof createSocketController>;
 export type SocketChannelController = ReturnType<typeof createSocketChannelController>;
 
@@ -100,13 +103,20 @@ export function createSocketController(options: {
 
 		logger.info(`Got token from host: ${host}`);
 
+		const params: Record<string, any> = {
+			token,
+			gj_platform: GJ_IS_DESKTOP_APP ? 'client' : 'web',
+			gj_platform_version: GJ_VERSION,
+		};
+
+		// Pass through the features that are particular client supports.
+		for (const feature of SupportedFeatures) {
+			params[`${feature}_support`] = true;
+		}
+
 		const newSocket = new Socket(host, {
 			heartbeatIntervalMs: 30_000,
-			params: {
-				token,
-				gj_platform: GJ_IS_DESKTOP_APP ? 'client' : 'web',
-				gj_platform_version: GJ_VERSION,
-			},
+			params,
 		});
 
 		socket.value = markRaw(newSocket);
@@ -207,6 +217,12 @@ export function createSocketChannelController(
 	(socket.value as any).channels.push(channel);
 
 	/**
+	 * If this channel either was closed directly or errored out, this will get
+	 * set to true.
+	 */
+	const isClosed = ref(false);
+
+	/**
 	 * Joins the channel, will call [onJoin] when the channel joins
 	 * successfully. If any errors are thrown in this callback, it'll retry the
 	 * join again.
@@ -223,6 +239,7 @@ export function createSocketChannelController(
 				return;
 			}
 			alertedLeave = true;
+			isClosed.value = true;
 			onLeave?.();
 		}
 
@@ -327,6 +344,7 @@ export function createSocketChannelController(
 	return shallowReadonly({
 		topic,
 		channel,
+		isClosed,
 		join,
 		leave,
 		listenTo,

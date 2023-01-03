@@ -1,7 +1,7 @@
 import { FiresideRTCHost } from '../../../_common/fireside/rtc/rtc';
 import { Jolticon } from '../../../_common/jolticon/AppJolticon.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
-import { ChatClient, tryGetRoomRole } from './client';
+import { tryGetRoomRole } from './client';
 import { ChatMessage } from './message';
 import { CHAT_ROLES } from './role';
 import { ChatRoom } from './room';
@@ -18,7 +18,6 @@ export class ChatUser {
 	is_creator?: boolean;
 
 	isOnline = false;
-	typing = false;
 
 	role: CHAT_ROLES | null = null;
 
@@ -50,7 +49,6 @@ interface ChatRoleData {
 }
 
 export function getChatUserRoleData(
-	chat: ChatClient,
 	room: ChatRoom,
 	user: ChatUser,
 	extras: {
@@ -82,18 +80,18 @@ export function getChatUserRoleData(
 		};
 	}
 
-	if (tryGetRoomRole(chat, room, user) === 'moderator') {
-		return {
-			icon: 'star',
-			tooltip: $gettext(`Chat Moderator`),
-		};
-	}
-
 	// In public rooms, display staff member status.
 	if (!room.isPrivateRoom && user.isStaff) {
 		return {
 			icon: 'gamejolt',
 			tooltip: $gettext(`Game Jolt Staff`),
+		};
+	}
+
+	if (tryGetRoomRole(room, user) === 'moderator') {
+		return {
+			icon: 'star',
+			tooltip: $gettext(`Chat Moderator`),
 		};
 	}
 }

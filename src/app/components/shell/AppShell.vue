@@ -3,7 +3,6 @@ import { computed, defineAsyncComponent, nextTick, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import { AppClientBase } from '../../../_common/client/safe-exports';
 import { Connection } from '../../../_common/connection/connection-service';
-import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
 import { Meta } from '../../../_common/meta/meta-service';
 import AppMinbar from '../../../_common/minbar/minbar.vue';
 import AppMobileAppPromotionBanner from '../../../_common/mobile-app/AppMobileAppPromotionBanner.vue';
@@ -13,7 +12,6 @@ import AppStickerLayer from '../../../_common/sticker/layer/AppStickerLayer.vue'
 import { setStickerDrawerOpen, useStickerStore } from '../../../_common/sticker/sticker-store';
 import { useBannerStore } from '../../store/banner';
 import { useAppStore } from '../../store/index';
-import { setChatFocused } from '../chat/client';
 import { AppClientShell, AppClientStatusBar } from '../client/safe-exports';
 import { useGridStore } from '../grid/grid-store';
 import AppShellBanner from './AppShellBanner.vue';
@@ -78,26 +76,6 @@ onMounted(() => {
 		setStickerDrawerOpen(stickerStore, false, null);
 	});
 });
-
-watch(
-	() => ContentFocus.isWindowFocused,
-	isFocused => {
-		if (!chat.value) {
-			return;
-		}
-
-		// When the window is unfocused, start counting notifications
-		// for current room.
-		if (!isFocused) {
-			// Notify the client that we are unfocused, so it should
-			// start accumulating notifications for the current room.
-			setChatFocused(chat.value, false);
-		} else {
-			// Notify the client that we aren't unfocused anymore.
-			setChatFocused(chat.value, true);
-		}
-	}
-);
 
 // Since the cbar takes up width from the whole screen, we want to trigger a
 // screen "resize" event so that content can recalculate.

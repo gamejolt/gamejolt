@@ -61,10 +61,7 @@ import AppPageContainer from '../../components/page-container/AppPageContainer.v
 import AppPostAddButton from '../../components/post/add-button/AppPostAddButton.vue';
 import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
 import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
-import { imagePseudoFeatureBanner } from '../../img/images';
 import { useQuestStore } from '../../store/quest';
-import { routePost } from '../post/post.route';
-import { routeQuests } from '../quests/quests.route';
 import AppHomeFeedMenu from './AppHomeFeedMenu.vue';
 import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
 import AppHomeFireside from './_fireside/AppHomeFireside.vue';
@@ -222,14 +219,6 @@ async function refreshQuests() {
 							/>
 						</template>
 
-						<RouterLink :to="{ name: routeQuests.name }">
-							<img
-								class="-event-banner img-responsive"
-								:src="imagePseudoFeatureBanner"
-							/>
-						</RouterLink>
-						<AppSpacer vertical :scale="8" />
-
 						<AppInviteCard :user="user!" elevate />
 
 						<template v-if="hasGamesSection">
@@ -315,15 +304,6 @@ async function refreshQuests() {
 				<AppPostAddButton @add="onPostAdded" />
 
 				<template v-if="Screen.isMobile">
-					<RouterLink
-						v-if="!Screen.isXs"
-						:to="{ name: routePost.name, params: { slug: 'g8vqnqfe' } }"
-					>
-						<img class="-event-banner img-responsive" :src="imagePseudoFeatureBanner" />
-
-						<AppSpacer vertical :scale="4" />
-					</RouterLink>
-
 					<AppHomeFireside
 						:user-fireside="userFireside"
 						:firesides="firesides"
@@ -348,12 +328,9 @@ async function refreshQuests() {
 // We add this margin to try to shift the page content below the For You |
 // Following tabs.
 .-top-spacer
-	margin-top: 60px
+	margin-top: 58px
 
 .-game-list
 	a
 		text-overflow()
-
-.-event-banner
-	rounded-corners()
 </style>
