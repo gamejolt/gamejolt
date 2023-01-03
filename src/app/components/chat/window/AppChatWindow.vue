@@ -331,7 +331,7 @@ function onMobileAppBarBack() {
 
 								<AppChatMemberList
 									v-if="memberCollection"
-									:users="memberCollection.users"
+									:collection="memberCollection"
 									:room="room"
 								/>
 							</template>

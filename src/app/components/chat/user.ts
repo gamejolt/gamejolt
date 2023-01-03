@@ -77,14 +77,16 @@ export function getChatUserRoleData(
 		};
 	}
 
-	if (room.owner_id === user.id) {
+	const role = tryGetRoomRole(room, user);
+
+	if (role === 'owner') {
 		return {
 			icon: 'crown',
 			tooltip: $gettext(`Room Owner`),
 		};
 	}
 
-	if (user.firesideHost) {
+	if (room.memberCollection.getFiresideHost(user)) {
 		return {
 			icon: 'star-ten-pointed',
 			tooltip: $gettext(`Host`),
@@ -99,7 +101,7 @@ export function getChatUserRoleData(
 		};
 	}
 
-	if (tryGetRoomRole(room, user) === 'moderator') {
+	if (role === 'moderator') {
 		return {
 			icon: 'star',
 			tooltip: $gettext(`Chat Moderator`),
