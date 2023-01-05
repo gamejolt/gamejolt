@@ -218,6 +218,10 @@ html, body
 	// Affixed components should be shifted down from the top of the shell to make room
 	// for the top nav.
 	--scroll-affix-top: $shell-top-nav-height
+	// TODO(sticker-collections-2) Have this v-bind to a computed that checks a
+	// map of `visibleLeftPane`s to get the width for those. Animate the width
+	// for whatever actually uses this.
+	--shell-pane-width: $shell-pane-width
 
 	&.has-banner
 		--shell-top: $shell-top-nav-height * 2

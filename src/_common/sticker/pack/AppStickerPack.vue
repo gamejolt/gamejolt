@@ -28,9 +28,12 @@ const props = defineProps({
 	canClickPack: {
 		type: Boolean,
 	},
+	forceElevate: {
+		type: Boolean,
+	},
 });
 
-const { pack, showDetails, canClickPack } = toRefs(props);
+const { pack, showDetails, canClickPack, forceElevate } = toRefs(props);
 
 const showName = computed(() => {
 	if (!showDetails.value) {
@@ -75,7 +78,7 @@ function onClickPack() {
 	<div class="-sticker-pack">
 		<AppAspectRatio :ratio="pack.media_item.aspectRatio" show-overflow>
 			<AppMediaItemBackdrop
-				:class="{ '-pack-hoverable': canClickPack }"
+				:class="{ '-pack-hoverable': canClickPack, '-force-elevate': forceElevate }"
 				:media-item="pack.media_item"
 				radius="lg"
 				@click="onClickPack"
@@ -89,6 +92,7 @@ function onClickPack() {
 			</AppMediaItemBackdrop>
 		</AppAspectRatio>
 
+		<!-- TODO(sticker-collections-2) Change some of these to be bubbles in the corners of the pack. -->
 		<div v-if="showDetails" class="-details">
 			<div v-if="showName" class="-name">{{ pack.name }}</div>
 			<div v-if="showCost">
@@ -110,6 +114,9 @@ function onClickPack() {
 </template>
 
 <style lang="stylus" scoped>
+.-force-elevate
+	elevate-1()
+
 .-pack-hoverable
 	cursor: pointer
 	elevate-hover-1()

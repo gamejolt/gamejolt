@@ -17,7 +17,7 @@ import {
 } from '../../../../_common/sticker/sticker-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { illPointyThing } from '../../../img/ill/illustrations';
-import { showVendingMachineModal } from '../../vending-machine/modal/vending-machine-modal.service';
+import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
 
 type FormModel = {
 	// nothing
@@ -40,25 +40,15 @@ const form: FormController<FormModel> = createForm({
 	async onLoad(payload) {
 		stickerPacks.value = UserStickerPack.populate(payload.ownedPacks);
 
-		// TODO(sticker-collections-2) remove, should get from the above payload instead.
-		payload = await Api.sendRequest(`/web/stickers/dash`);
-		const { stickerCounts, stickers: payloadStickers } = payload;
-		console.warn('asdf', payload);
-
-		// const { stickerCounts, stickers } = payload.ownedStickers;
-
 		stickers.value = getStickerCountsFromPayloadData({
-			stickerCounts,
-			stickers: payloadStickers,
+			stickerCounts: payload.ownedStickers.stickerCounts,
+			stickers: payload.ownedStickers.stickers,
 		});
 	},
 });
 
 async function onClickVendingMachine() {
 	await showVendingMachineModal();
-	// TODO(sticker-collections-2) Shop modal can probably modify state itself.
-	//
-	// Probably refetch data afterwards as users may have bought packs.
 }
 
 async function onClickPack(pack: UserStickerPack) {
@@ -104,31 +94,18 @@ async function onClickPack(pack: UserStickerPack) {
 			{{ $gettext(`Purchase items`) }}
 		</AppButton>
 
-		<!-- TODO(sticker-collections-2) AppIllustration directing to shop? -->
 		<AppSpacer vertical :scale="4" />
 
-		<!--
-			TODO(sticker-collections-2) Primary/Home display with sticky tabs at the top.
-
-			Main tab:
-				- Sticker packs, new stickers, more?
-
-			Header tabs:
-				- Overview
-				- Packs
-				- Stickers
-		-->
 		<div class="-section-header">
 			{{ $gettext(`Sticker packs`) }}
 		</div>
 		<div v-if="stickerPacks.length" class="-packs">
 			<AppStickerPack
-				v-for="userPack in stickerPacks.splice(0, 1)"
+				v-for="userPack in stickerPacks"
 				:key="userPack.id"
 				:pack="userPack.sticker_pack"
 				:show-details="{
 					name: true,
-					contents: true,
 					expiry: true,
 				}"
 				can-click-pack
@@ -136,15 +113,14 @@ async function onClickPack(pack: UserStickerPack) {
 			/>
 		</div>
 		<div v-else>
-			<AppIllustration :asset="illPointyThing">
-				<p class="text-center small">
-					{{
-						$gettext(
-							`You currently have no packs to open. Visit the store to purchase more.`
-						)
-					}}
-				</p>
-			</AppIllustration>
+			<AppIllustration :asset="illPointyThing" />
+
+			<p class="text-center">
+				{{ $gettext(`You currently have no packs to open.`) }}
+			</p>
+			<AppButton block trans @click="onClickVendingMachine()">
+				{{ $gettext(`Get packs`) }}
+			</AppButton>
 		</div>
 
 		<AppSpacer vertical :scale="8" />
@@ -152,7 +128,7 @@ async function onClickPack(pack: UserStickerPack) {
 		<div class="-section-header">
 			{{ $gettext(`Stickers`) }}
 		</div>
-		<div class="-stickers">
+		<div v-if="stickers.length" class="-stickers">
 			<AppStickerLayerDrawerItem
 				v-for="{ sticker, sticker_id, count } in stickers"
 				:key="sticker_id"
@@ -161,6 +137,14 @@ async function onClickPack(pack: UserStickerPack) {
 				fit-parent
 				no-drag
 			/>
+		</div>
+		<div v-else>
+			<p class="text-center">
+				{{ $gettext(`You have no stickers. Open packs to get some!`) }}
+			</p>
+			<AppButton block trans @click="onClickVendingMachine()">
+				{{ $gettext(`Get packs`) }}
+			</AppButton>
 		</div>
 	</AppForm>
 </template>

@@ -7,14 +7,17 @@ import { formatNumber } from '../../../../_common/filters/number';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppModal from '../../../../_common/modal/AppModal.vue';
 import AppModalFloatingHeader from '../../../../_common/modal/AppModalFloatingHeader.vue';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { useModal } from '../../../../_common/modal/modal.service';
 import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppStickerPack from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
+import { UserStickerPack } from '../../../../_common/sticker/pack/user_pack.model';
+import { useStickerStore } from '../../../../_common/sticker/sticker-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { showVendingMachinePurchaseModal } from './purchase-modal/modal.service';
 
+const { stickerPacks } = useStickerStore();
 const modal = useModal()!;
 
 const isPurchasingPack = ref(false);
@@ -48,22 +51,9 @@ run(async () => {
 	availablePacks.value = StickerPack.populate(payload.availablePacks);
 
 	const mePayload = p[1];
-	console.warn(payload, mePayload);
 	coinBalance.value = mePayload.coinBalance;
 	isLoading.value = false;
 });
-
-function onSubmit() {
-	// showSuccessGrowl({
-	// 	title: $gettext(`Request Sent`),
-	// 	message: $gettext(
-	// 		`Your request has been sent and will be processed within 3 days. At the time it's processed, your balance will be updated to reflect the changes.`
-	// 	),
-	// 	sticky: true,
-	// });
-
-	modal.resolve();
-}
 
 async function purchasePack(pack: StickerPack) {
 	if (isPurchasingPack.value) {
@@ -75,8 +65,9 @@ async function purchasePack(pack: StickerPack) {
 		return;
 	}
 
-	const canProceed = await ModalConfirm.show($gettext(`Are you sure you want to purchase this?`));
-	if (!canProceed) {
+	// TODO(sticker-collections-2) Change to a popper-like wrapper component.
+	const purchaseMethod = await showVendingMachinePurchaseModal({ pack });
+	if (!purchaseMethod) {
 		return;
 	}
 
@@ -90,14 +81,33 @@ async function purchasePack(pack: StickerPack) {
 			{ detach: true }
 		);
 
-		purchasedPackX.value = Math.random();
-		purchasedPack.value = pack;
-		coinBalance.value = payload.coinBalance;
+		const rawNewPack = payload.pack;
+		// TODO(sticker-collections-2) Check actual payload errors
+		if (!rawNewPack) {
+			throw Error('No pack was returned when trying to purchase one.');
+		}
 
-		// TODO(sticker-collections-2) Add an easy way to open the purchased
-		// back immediately.
+		const newPack = new UserStickerPack(rawNewPack);
+		purchasedPackX.value = Math.random();
+		purchasedPack.value = newPack.sticker_pack;
+
+		let newBalance = payload.coinBalance;
+		if (typeof newBalance !== 'number') {
+			newBalance = coinBalance.value - pack.cost_coins;
+		}
+		coinBalance.value = Math.max(newBalance, 0);
+
+		if (purchaseMethod === 'purchase') {
+			stickerPacks.value.push(newPack);
+		} else if (purchaseMethod === 'purchase-and-open') {
+			// TODO(sticker-collections-2) remove
+		}
 	} catch (e) {
 		console.error('Error while purchasing pack.', e);
+
+		showErrorGrowl(
+			$gettext(`Something went wrong trying to purchase that pack. Try again later.`)
+		);
 	} finally {
 		isPurchasingPack.value = false;
 	}
@@ -110,90 +120,98 @@ function getPurchasedPackX() {
 
 <template>
 	<AppModal>
-		<AppModalFloatingHeader>
-			<template #modal-controls>
-				<div class="-balance">
-					<span>{{ formatNumber(coinBalance) }}</span>
-					{{ ' ' }}
-					<!-- TODO(sticker-collections-2) coin jolticon? -->
-					<span>🪙</span>
+		<div class="-container">
+			<AppModalFloatingHeader>
+				<template #modal-controls>
+					<div class="-balance">
+						<span>{{ formatNumber(coinBalance) }}</span>
+						{{ ' ' }}
+						<!-- TODO(sticker-collections-2) coin jolticon -->
+						<span>🪙</span>
+					</div>
+
+					<AppButton @click="modal.dismiss()">
+						{{ $gettext(`Close`) }}
+					</AppButton>
+				</template>
+			</AppModalFloatingHeader>
+
+			<div class="modal-body -wrapper">
+				<div class="-packs">
+					<AppStickerPack
+						v-for="pack in availablePacks"
+						:key="pack.id"
+						class="-pack"
+						:pack="pack"
+						can-click-pack
+						show-details
+						@click-pack="purchasePack(pack)"
+					/>
 				</div>
 
-				<AppButton @click="modal.dismiss()">
-					{{ $gettext(`Close`) }}
-				</AppButton>
-			</template>
-		</AppModalFloatingHeader>
+				<AppScrollAffix anchor="bottom" :offset-top="0" :padding="0">
+					<div class="-output-bg">
+						<div class="-output-corner-tl">
+							<div class="-output-corner-tl-border" />
+							<div class="-output-corner-bg" />
+						</div>
+						<div class="-output-corner-tr">
+							<div class="-output-corner-tr-border" />
+							<div class="-output-corner-bg" />
+						</div>
 
-		<div class="modal-body -container">
-			<div class="-packs">
-				<div class="-glass-overlay">
-					<div class="-glass-1" />
-					<div class="-glass-2" />
-				</div>
+						<AppSpacer vertical :scale="4" />
 
-				<AppStickerPack
-					v-for="pack in availablePacks"
-					:key="pack.id"
-					class="-pack"
-					:pack="pack"
-					can-click-pack
-					show-details
-					@click-pack="purchasePack(pack)"
-				/>
+						<div class="-output">
+							<div class="-output-face">
+								<div class="-output-face-eye" />
+								<div class="-output-face-mouth" />
+								<div class="-output-face-eye" />
+							</div>
+
+							<div class="-purchased">
+								<!--
+								TODO(sticker-collections) on click this should spawn a copy with position: fixed and placed roughly where this element
+								currently is. Then remove this element.
+								Get the screen position of the #shell-sidebar-backpack element, and move the newly spawned element
+								towards it while shrinking it, to signify that the purchased pack moved to the backpack.
+								-->
+								<AppStickerPack
+									v-if="purchasedPack"
+									:pack="purchasedPack"
+									class="-purchased-pack"
+									:style="{
+										left: getPurchasedPackX(),
+									}"
+								/>
+							</div>
+						</div>
+
+						<AppSpacer vertical :scale="4" />
+					</div>
+				</AppScrollAffix>
 			</div>
-
-			<AppScrollAffix anchor="bottom" :offset-top="0" :padding="0">
-				<div class="-output-bg">
-					<div class="-output-corner-tl">
-						<div class="-output-corner-tl-border" />
-						<div class="-output-corner-bg" />
-					</div>
-					<div class="-output-corner-tr">
-						<div class="-output-corner-tr-border" />
-						<div class="-output-corner-bg" />
-					</div>
-
-					<AppSpacer vertical :scale="4" />
-
-					<div class="-output">
-						<div class="-output-face">
-							<div class="-output-face-eye" />
-							<div class="-output-face-mouth" />
-							<div class="-output-face-eye" />
-						</div>
-						<div class="-purchased">
-							<!--
-							TODO: on click this should spawn a copy with position: fixed and placed roughly where this element
-							currently is. Then remove this element.
-							Get the screen position of the #shell-sidebar-backpack element, and move the newly spawned element
-							towards it while shrinking it, to signify that the purchased pack moved to the backpack.
-						-->
-							<AppStickerPack
-								v-if="purchasedPack"
-								:pack="purchasedPack"
-								class="-purchased-pack"
-								:style="{
-									left: getPurchasedPackX(),
-								}"
-							/>
-						</div>
-					</div>
-
-					<AppSpacer vertical :scale="4" />
-				</div>
-			</AppScrollAffix>
 		</div>
 	</AppModal>
 </template>
 
 <style lang="stylus" scoped>
+// Make the vending machine full-height for phone sizes
 .-container
+	@media $media-xs
+		display: flex
+		flex-direction: column
+		min-height: 100vh
+
+.-wrapper
 	padding-top: 0
 	padding-bottom: 0
+	flex: auto
+	display: flex
+	flex-direction: column
 
 .-balance
-	margin-top: 12px
+	align-self: flex-end
 	margin-right: auto
 	font-weight: 600
 
@@ -203,51 +221,21 @@ function getPurchasedPackX() {
 	color: var(--theme-fg)
 	position: relative
 	overflow: hidden
-
-	min-height: 400px
+	min-height: calc(min(40vh, 400px))
 	display: grid
 	grid-template-columns: repeat(auto-fill, minmax(100px, 1fr))
 	gap: 12px
 	padding: 12px
-	padding-bottom: 0
 	border-bottom-left-radius: 0
 	border-bottom-right-radius: 0
+	flex: auto
 
 .-pack
 	z-index: 1
 
-.-glass-overlay
-	position: absolute
-	top: -300px
-	left: 0
-	bottom: 0
-	right: 0
-	transform: rotateZ(35deg)
-	opacity: 0.15
-	user-select: none
-	pointer-events: none
-	z-index: 2
-
-.-glass-1
-	position: absolute
-	top: 0
-	left: 0px
-	background-color: white
-	width: 80px
-	height: 1000px
-
-.-glass-2
-	position: absolute
-	top: 0
-	left: 110px
-	background-color: white
-	width: 20px
-	height: 1000px
-
 .-output-bg
 	position: relative
 	background-color: var(--theme-bg-actual)
-
 
 .-output-corner-tl
 .-output-corner-tr
@@ -321,6 +309,7 @@ function getPurchasedPackX() {
 .-purchased-pack
 	position: absolute
 	top: 0
+	width: 80px
 	filter: drop-shadow(6px 6px 0 #187899)
 	animation-name: purchased-pack
 	animation-duration: 0.25s
