@@ -5,8 +5,8 @@ export class StickerPack extends Model {
 	declare name: string;
 	declare payout_sticker_num: number;
 	declare cost_coins: number;
-	declare starts_on: number;
-	declare ends_on: number;
+	declare starts_on?: number;
+	declare ends_on?: number;
 	declare is_active?: boolean;
 
 	declare media_item: MediaItem;

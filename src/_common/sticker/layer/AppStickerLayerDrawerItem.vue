@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, StyleValue, toRefs } from 'vue';
+import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 import AppQuestFrame from '../../quest/AppQuestFrame.vue';
 import { useStickerStore } from '../sticker-store';
 import { Sticker } from '../sticker.model';
@@ -17,12 +18,25 @@ const props = defineProps({
 		type: Number,
 		default: 64,
 	},
+	/**
+	 * Ignores the {@link size} prop and instead sizes to the constraints of the
+	 * parent, using a 1:1 ratio.
+	 */
+	fitParent: {
+		type: Boolean,
+	},
+	/**
+	 * Removes grab[bing] cursor styling.
+	 */
+	noDrag: {
+		type: Boolean,
+	},
 	hideCount: {
 		type: Boolean,
 	},
 });
 
-const { sticker, count, size, hideCount } = toRefs(props);
+const { sticker, count, size, fitParent, noDrag, hideCount } = toRefs(props);
 
 const { streak, isDragging, sticker: storeSticker } = useStickerStore();
 
@@ -35,32 +49,49 @@ const currentStreak = computed(() => {
 	return streak.value.count;
 });
 
-const itemStyling = computed<StyleValue>(() => ({
-	height: size.value + 'px',
-	width: size.value + 'px',
-	cursor: isDragging.value ? 'grabbing' : 'grab',
-}));
+const itemStyling = computed(() => {
+	const sizeVal = fitParent.value ? '100%' : size.value + 'px';
+	const result: StyleValue = {
+		width: sizeVal,
+		height: sizeVal,
+	};
+
+	if (!noDrag.value) {
+		result.cursor = isDragging.value ? 'grabbing' : 'grab';
+	}
+
+	return result;
+});
 
 const isPeeled = computed(() => storeSticker.value?.id === sticker.value.id || count.value < 1);
 
 // NOTE: Says unused for me, but it's in the template. Check before deleting.
 const slotName = computed(() => (sticker.value.is_event ? 'above' : 'default'));
+
+function onContextMenu(event: Event) {
+	if (noDrag.value) {
+		return;
+	}
+	event.preventDefault();
+}
 </script>
 
 <template>
-	<div ref="root" class="-item" draggable="false" @contextmenu.prevent>
-		<component :is="sticker.is_event ? AppQuestFrame : 'div'" :style="itemStyling">
-			<template #[slotName]>
-				<div :class="{ '-peeled': isPeeled }">
-					<img
-						draggable="false"
-						class="-img"
-						:style="itemStyling"
-						:src="sticker.img_url"
-						@dragstart.prevent
-					/>
-				</div>
-			</template>
+	<div ref="root" class="-item" draggable="false" @contextmenu="onContextMenu">
+		<component :is="fitParent ? AppAspectRatio : 'div'" :ratio="1">
+			<component :is="sticker.is_event ? AppQuestFrame : 'div'" :style="itemStyling">
+				<template #[slotName]>
+					<div :class="{ '-peeled': isPeeled }">
+						<img
+							draggable="false"
+							class="-img"
+							:style="itemStyling"
+							:src="sticker.img_url"
+							@dragstart.prevent
+						/>
+					</div>
+				</template>
+			</component>
 		</component>
 
 		<div v-if="currentStreak > 1" class="-pocket-left badge fill-dark">
@@ -85,8 +116,6 @@ const slotName = computed(() => (sticker.value.is_event ? 'above' : 'default'));
 <style lang="stylus" scoped>
 .-item
 	position: relative
-	height: 64px
-	width: 64px
 	user-drag: none
 	user-select: none
 	touch-action: none

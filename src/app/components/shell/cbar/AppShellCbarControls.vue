@@ -82,6 +82,7 @@ const highlight = computed(() => {
 			</AppShellCbarItem>
 
 			<!-- Backpack -->
+			<!-- TODO(sticker-collections-2) Backpack illustration -->
 			<AppShellCbarItem
 				class="-control"
 				:highlight="highlight"

@@ -12,6 +12,7 @@ import { $gettext } from '../translate/translate.service';
 import { User } from '../user/user.model';
 import AppStickerLayer from './layer/AppStickerLayer.vue';
 import { getCollidingStickerTarget, StickerLayerController } from './layer/layer-controller';
+import { UserStickerPack } from './pack/user_pack.model';
 import { StickerPlacement } from './placement/placement.model';
 import { Sticker, StickerStack } from './sticker.model';
 import { ValidStickerResource } from './target/AppStickerTarget.vue';
@@ -36,6 +37,8 @@ export function createStickerStore(options: { user: Ref<User | null> }) {
 	const targetController = shallowRef<StickerTargetController | null>(null);
 
 	const drawerItems = shallowRef<StickerStack[]>([]);
+	const stickerPacks = ref<UserStickerPack[]>([]);
+
 	const placedItem = shallowRef<StickerPlacement | null>(null);
 	const sticker = shallowRef<Sticker | null>(null);
 	const streak = shallowRef<StickerStreak | null>(null);
@@ -129,6 +132,7 @@ export function createStickerStore(options: { user: Ref<User | null> }) {
 	const c = {
 		layers,
 		drawerItems,
+		stickerPacks,
 		targetController,
 		placedItem,
 		sticker,
@@ -183,7 +187,7 @@ export function isStickerTargetMine(store: StickerStore, target: StickerTargetCo
 			break;
 		}
 
-		tempController = tempController?.parent || null;
+		tempController = tempController?.parent?.value || null;
 	} while (tempController?.parent);
 
 	return isMine;
@@ -266,13 +270,29 @@ async function _initializeDrawerContent(store: StickerStore) {
 		cost: payload.chargeCost,
 	});
 
+	drawerItems.value = getStickerCountsFromPayloadData({
+		stickerCounts: payload.stickerCounts,
+		stickers: payload.stickers,
+	});
+	isLoading.value = false;
+	hasLoaded.value = true;
+}
+
+/**
+ * Returns a sorted list of stickers, inserting event stickers up front.
+ */
+export function getStickerCountsFromPayloadData({
+	stickerCounts,
+	stickers,
+}: {
+	stickerCounts: any[];
+	stickers: any[];
+}) {
 	const eventStickers: StickerStack[] = [];
 	const generalStickers: StickerStack[] = [];
 
-	payload.stickerCounts.forEach((stickerCountPayload: any) => {
-		const stickerData = payload.stickers.find(
-			(i: Sticker) => i.id === stickerCountPayload.sticker_id
-		);
+	stickerCounts.forEach((stickerCountPayload: any) => {
+		const stickerData = stickers.find((i: Sticker) => i.id === stickerCountPayload.sticker_id);
 
 		const stickerCount = {
 			count: stickerCountPayload.count,
@@ -290,9 +310,9 @@ async function _initializeDrawerContent(store: StickerStore) {
 	const lists = [eventStickers, generalStickers];
 	lists.forEach(i => i.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity)));
 
-	drawerItems.value = lists.flat();
-	isLoading.value = false;
-	hasLoaded.value = true;
+	console.warn('asdf got sticker data', lists, lists.flat());
+
+	return lists.flat();
 }
 
 /**
