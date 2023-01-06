@@ -163,9 +163,13 @@ async function onClickPack(pack: UserStickerPack) {
 	margin-bottom: var(--half-pad)
 
 .-packs
+	--min-pack-width: 100px
 	display: grid
 	gap: var(--base-pad)
-	grid-template-columns: repeat(auto-fill, minmax(100px, 1fr))
+	grid-template-columns: repeat(auto-fill, minmax(var(--min-pack-width), 1fr))
+
+	@media $media-xs
+		--min-pack-width: 80px
 
 .-stickers
 	display: grid
