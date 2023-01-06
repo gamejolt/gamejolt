@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
+import { formatNumber } from '../../filters/number';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
@@ -25,6 +26,10 @@ const props = defineProps({
 		type: [Object, Boolean] as PropType<PackDetailsOptions>,
 		default: false,
 	},
+	count: {
+		type: Number,
+		default: undefined,
+	},
 	canClickPack: {
 		type: Boolean,
 	},
@@ -33,7 +38,7 @@ const props = defineProps({
 	},
 });
 
-const { pack, showDetails, canClickPack, forceElevate } = toRefs(props);
+const { pack, showDetails, count, canClickPack, forceElevate } = toRefs(props);
 
 const showName = computed(() => {
 	if (!showDetails.value) {
@@ -48,6 +53,8 @@ const showCost = computed(() => {
 	}
 	return showDetails.value === true || showDetails.value.cost === true;
 });
+
+const showCount = computed(() => count?.value && count.value > 1);
 
 const showContents = computed(() => {
 	if (!showDetails.value) {
@@ -75,41 +82,47 @@ function onClickPack() {
 </script>
 
 <template>
-	<div class="-sticker-pack">
-		<AppAspectRatio :ratio="pack.media_item.aspectRatio" show-overflow>
-			<AppMediaItemBackdrop
-				:class="{ '-pack-hoverable': canClickPack, '-force-elevate': forceElevate }"
-				:media-item="pack.media_item"
-				radius="lg"
-				@click="onClickPack"
-			>
-				<AppImgResponsive
-					:src="pack.media_item.mediaserver_url"
-					alt=""
-					draggable="false"
-					ondragstart="return false"
-				/>
-			</AppMediaItemBackdrop>
-		</AppAspectRatio>
+	<div>
+		<div class="-pack">
+			<AppAspectRatio :ratio="pack.media_item.aspectRatio" show-overflow>
+				<AppMediaItemBackdrop
+					:class="{ '-pack-hoverable': canClickPack, '-force-elevate': forceElevate }"
+					:media-item="pack.media_item"
+					radius="lg"
+					@click="onClickPack"
+				>
+					<AppImgResponsive
+						:src="pack.media_item.mediaserver_url"
+						alt=""
+						draggable="false"
+						ondragstart="return false"
+					/>
+				</AppMediaItemBackdrop>
+			</AppAspectRatio>
 
-		<!-- TODO(sticker-collections-2) Change some of these to be bubbles in the corners of the pack. -->
-		<div v-if="showDetails" class="-details">
-			<div v-if="showName" class="-name">{{ pack.name }}</div>
-			<div v-if="showCost">
+			<div v-if="showCost" class="-cost">
 				<span>{{ pack.cost_coins }}</span>
 				{{ ' ' }}
 				<span>🪙</span>
 			</div>
-			<!-- TODO(sticker-collections-2) Put this as an overlay above the pack? -->
-			<div v-if="showContents">
+
+			<div v-if="showCount" class="-count">
+				<span>{{ formatNumber(count) }}</span>
+			</div>
+
+			<div v-if="showContents" class="-contents">
 				<span>{{ pack.payout_sticker_num }}x</span>
 				{{ ' ' }}
 				<AppJolticon class="-sticker-icon" icon="sticker-filled" middle />
 			</div>
-			<div v-if="showExpiry && pack.ends_on">
+
+			<!-- TODO(sticker-collections-2) make styling more noticeable? -->
+			<div v-if="showExpiry && pack.ends_on" class="-expiry">
 				<AppTimeAgo :date="pack.ends_on" is-future />
 			</div>
 		</div>
+
+		<div v-if="showName" class="-name">{{ pack.name }}</div>
 	</div>
 </template>
 
@@ -117,16 +130,52 @@ function onClickPack() {
 .-force-elevate
 	elevate-1()
 
+.-pack
+	position: relative
+	margin: 2px
+
 .-pack-hoverable
 	cursor: pointer
 	elevate-hover-1()
 
-.-details
-	font-size: $font-size-small
-	font-weight: 600
-
 .-name
+	font-size: $font-size-small
 	font-weight: 700
+
+.-cost
+.-count
+.-contents
+.-expiry
+	change-bg-rgba('0,0,0', 0.54)
+	color: white
+	elevate-1()
+	rounded-corners-lg()
+	position: absolute
+	padding: 2px 6px
+	font-weight: 700
+	--offset: -4px
+	--inset: 4px
+
+	&
+	::v-deep(.jolticon)
+		font-size: $font-size-tiny
+
+.-cost
+	bottom: var(--inset)
+	right: var(--offset)
+
+.-count
+	top: var(--offset)
+	left: var(--offset)
+	font-size: $font-size-small
+
+.-contents
+	bottom: var(--inset)
+	left: var(--offset)
+
+.-expiry
+	top: var(--offset)
+	right: var(--offset)
 
 .-sticker-icon
 	margin: 0
