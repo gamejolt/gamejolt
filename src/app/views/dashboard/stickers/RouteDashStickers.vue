@@ -9,7 +9,6 @@ import AppStickerCard from '../../../../_common/sticker/card/AppStickerCard.vue'
 import AppStickerChargeCard from '../../../../_common/sticker/charge/AppStickerChargeCard.vue';
 import { getStickerCountsFromPayloadData } from '../../../../_common/sticker/sticker-store';
 import { StickerStack } from '../../../../_common/sticker/sticker.model';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { useGridStore } from '../../../components/grid/grid-store';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
@@ -85,12 +84,12 @@ createAppRoute({
 		<AppPageHeader :cover-media-item="coverMediaItem" :cover-max-height="250">
 			<RouterLink :to="{ name: 'dash.stickers' }">
 				<h1 class="section-header sans-margin-bottom">
-					<AppTranslate>Your Stickers</AppTranslate>
+					{{ $gettext(`Your Stickers`) }}
 				</h1>
 			</RouterLink>
 			<div class="text-muted small">
 				<p>
-					<AppTranslate> Marvel at your collection of beautiful stickers. </AppTranslate>
+					{{ $gettext(`Marvel at your collection of beautiful stickers.`) }}
 				</p>
 			</div>
 		</AppPageHeader>
@@ -117,15 +116,12 @@ createAppRoute({
 							>
 								<template v-if="list.length > 0">
 									<p class="-collection-title">
-										<AppTranslate>
-											{{
-												i === 0
-													? 'Event Stickers'
-													: i === 1
-													? 'General Stickers'
-													: undefined
-											}}
-										</AppTranslate>
+										<span v-if="i === 0">
+											{{ $gettext(`Event stickers`) }}
+										</span>
+										<span v-else-if="i === 1">
+											{{ $gettext(`General stickers`) }}
+										</span>
 									</p>
 									<div class="-collection">
 										<AppStickerCard
@@ -142,7 +138,7 @@ createAppRoute({
 							</template>
 						</template>
 						<p v-else>
-							<AppTranslate>You don't have any stickers yet.</AppTranslate>
+							{{ $gettext(`You don't have any stickers yet.`) }}
 						</p>
 					</div>
 				</div>

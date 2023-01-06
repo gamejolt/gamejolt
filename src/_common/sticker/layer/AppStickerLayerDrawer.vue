@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import AppEventItemMediaIndicator from '../../../app/components/event-item/media-indicator/AppEventItemMediaIndicator.vue';
+import { showVendingMachineModal } from '../../../app/components/vending-machine/modal/modal.service';
 import { Analytics } from '../../analytics/analytics.service';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
 import AppButton from '../../button/AppButton.vue';
@@ -12,7 +13,6 @@ import { onScreenResize, Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
 import { useEventSubscription } from '../../system/event/event-topic';
 import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
-import AppTranslate from '../../translate/AppTranslate.vue';
 import {
 	commitStickerStoreItemPlacement,
 	setStickerDrawerOpen,
@@ -357,9 +357,9 @@ function onContentDimensionsChanged() {
 					}"
 					@click="overflowTopBarText = !overflowTopBarText"
 				>
-					<AppTranslate class="-top-bar-text">
-						Support your favorite creators with charged stickers!
-					</AppTranslate>
+					<div class="-top-bar-text">
+						{{ $gettext(`Support your favorite creators with charged stickers!`) }}
+					</div>
 				</div>
 
 				<AppAnimElectricity
@@ -385,8 +385,12 @@ function onContentDimensionsChanged() {
 					}"
 				>
 					<AppButton block primary :solid="isChargingSticker" @click="onClickPlace()">
-						<AppTranslate v-if="isChargingSticker">Place charged sticker</AppTranslate>
-						<AppTranslate v-else>Place sticker</AppTranslate>
+						<span v-if="isChargingSticker">
+							{{ $gettext(`Place charged sticker`) }}
+						</span>
+						<span v-else>
+							{{ $gettext(`Place sticker`) }}
+						</span>
 					</AppButton>
 				</AppAnimElectricity>
 			</div>
@@ -434,15 +438,16 @@ function onContentDimensionsChanged() {
 							<template v-else-if="hasLoaded">
 								<div class="text-center">
 									<p class="lead" style="padding: 0 16px">
-										<AppTranslate>
-											Oh no! Looks like you don't have any stickers.
-										</AppTranslate>
+										{{
+											$gettext(
+												`Oh no! Looks like you don't have any stickers.`
+											)
+										}}
 									</p>
-									<p>
-										<AppTranslate>
-											Use Game Jolt, like some posts, and you might get some.
-										</AppTranslate>
-									</p>
+
+									<AppButton block trans @click="showVendingMachineModal()">
+										{{ $gettext(`Purchase packs`) }}
+									</AppButton>
 								</div>
 							</template>
 							<template v-else>
