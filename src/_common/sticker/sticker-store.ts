@@ -273,20 +273,32 @@ async function _initializeDrawerContent(store: StickerStore) {
 	drawerItems.value = getStickerCountsFromPayloadData({
 		stickerCounts: payload.stickerCounts,
 		stickers: payload.stickers,
-	});
+	}).flat();
 	isLoading.value = false;
 	hasLoaded.value = true;
 }
 
 /**
- * Returns a sorted list of stickers, inserting event stickers up front.
+ * Returns sorted lists of stickers. Provide {@link newStickerIds} to sort new
+ * stickers to the top of their lists.
+ *
+ * Call `.flat()` on the result to flatten to a single list.
+ *
+ * ```
+ * const result: [
+ *          eventStickers: StickerStack[],
+ *          generalStickers: StickerStack[]
+ *      ];
+ * ```
  */
 export function getStickerCountsFromPayloadData({
 	stickerCounts,
 	stickers,
+	newStickerIds,
 }: {
 	stickerCounts: any[];
 	stickers: any[];
+	newStickerIds?: number[];
 }) {
 	const eventStickers: StickerStack[] = [];
 	const generalStickers: StickerStack[] = [];
@@ -308,11 +320,18 @@ export function getStickerCountsFromPayloadData({
 	});
 
 	const lists = [eventStickers, generalStickers];
-	lists.forEach(i => i.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity)));
+	lists.forEach(list => {
+		list.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));
 
-	console.warn('asdf got sticker data', lists, lists.flat());
+		// Sort all "new" stickers to the top of their groups.
+		if (newStickerIds && newStickerIds.length > 0) {
+			const newStickers = list.filter(x => newStickerIds.includes(x.sticker_id));
+			list = list.filter(x => !newStickers.includes(x));
+			list.unshift(...newStickers);
+		}
+	});
 
-	return lists.flat();
+	return lists;
 }
 
 /**

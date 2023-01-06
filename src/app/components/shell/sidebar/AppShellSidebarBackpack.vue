@@ -43,7 +43,7 @@ const form: FormController<FormModel> = createForm({
 		stickers.value = getStickerCountsFromPayloadData({
 			stickerCounts: payload.ownedStickers.stickerCounts,
 			stickers: payload.ownedStickers.stickers,
-		});
+		}).flat();
 	},
 });
 
