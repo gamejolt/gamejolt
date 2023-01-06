@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { arrayRemove } from '../../../../utils/array';
+import { run } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
+import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
@@ -26,17 +28,33 @@ type FormModel = {
 const { stickerPacks, drawerItems: stickers } = useStickerStore();
 
 const isOpeningPack = ref(false);
+// TODO(sticker-collections-2) Put this in a store somewhere so we have some
+// placeholder data.
+const coinBalance = ref(0);
 
 const form: FormController<FormModel> = createForm({
 	loadUrl: `/mobile/sticker`,
 	loadData: {
 		_fields: {
+			// TODO(sticker-collections-2) `coinBalance`
 			ownedPacks: true,
 			ownedStickers: true,
 			unreadStickerIds: true,
 		},
 	},
 	sanitizeComplexData: false,
+	// TODO(sticker-collections-2) Remove if we get resolve the above TODO
+	onInit() {
+		run(async () => {
+			const payload = await Api.sendFieldsRequest(
+				'/mobile/me',
+				{ coinBalance: true },
+				{ detach: true }
+			);
+
+			coinBalance.value = payload.coinBalance;
+		});
+	},
 	async onLoad(payload) {
 		stickerPacks.value = UserStickerPack.populate(payload.ownedPacks);
 
@@ -89,64 +107,73 @@ async function onClickPack(pack: UserStickerPack) {
 </script>
 
 <template>
-	<AppForm id="shell-sidebar-backpack" :controller="form">
-		<AppButton icon="marketplace" solid block @click="onClickVendingMachine()">
-			{{ $gettext(`Purchase items`) }}
-		</AppButton>
+	<div id="shell-sidebar-backpack">
+		<AppForm :controller="form">
+			<AppButton solid block @click="onClickVendingMachine()">
+				<span>
+					{{ formatFuzzynumber(coinBalance) }}
+					{{ ' 🪙 ' }}
+				</span>
 
-		<AppSpacer vertical :scale="4" />
-
-		<div class="-section-header">
-			{{ $gettext(`Sticker packs`) }}
-		</div>
-		<div v-if="stickerPacks.length" class="-packs">
-			<AppStickerPack
-				v-for="userPack in stickerPacks"
-				:key="userPack.id"
-				:pack="userPack.sticker_pack"
-				:show-details="{
-					name: true,
-					expiry: true,
-				}"
-				can-click-pack
-				@click-pack="onClickPack(userPack)"
-			/>
-		</div>
-		<div v-else>
-			<AppIllustration :asset="illPointyThing" />
-
-			<p class="text-center">
-				{{ $gettext(`You currently have no packs to open.`) }}
-			</p>
-			<AppButton block trans @click="onClickVendingMachine()">
-				{{ $gettext(`Get packs`) }}
+				<span>
+					{{ $gettext(`Purchase items`) }}
+				</span>
 			</AppButton>
-		</div>
 
-		<AppSpacer vertical :scale="8" />
+			<AppSpacer vertical :scale="4" />
 
-		<div class="-section-header">
-			{{ $gettext(`Stickers`) }}
-		</div>
-		<div v-if="stickers.length" class="-stickers">
-			<AppStickerLayerDrawerItem
-				v-for="{ sticker, sticker_id, count } in stickers"
-				:key="sticker_id"
-				:sticker="sticker"
-				:count="count"
-				fit-parent
-				no-drag
-			/>
-		</div>
-		<div v-else>
-			<p class="text-center">
-				{{ $gettext(`You have no stickers. Open packs to get some!`) }}
-			</p>
-			<AppButton block trans @click="onClickVendingMachine()">
-				{{ $gettext(`Get packs`) }}
-			</AppButton>
-		</div>
-	</AppForm>
+			<div class="-section-header">
+				{{ $gettext(`Sticker packs`) }}
+			</div>
+			<div v-if="stickerPacks.length" class="-packs">
+				<AppStickerPack
+					v-for="userPack in stickerPacks"
+					:key="userPack.id"
+					:pack="userPack.sticker_pack"
+					:show-details="{
+						name: true,
+						expiry: true,
+					}"
+					can-click-pack
+					@click-pack="onClickPack(userPack)"
+				/>
+			</div>
+			<div v-else>
+				<AppIllustration :asset="illPointyThing" />
+
+				<p class="text-center">
+					{{ $gettext(`You currently have no packs to open.`) }}
+				</p>
+				<AppButton block trans @click="onClickVendingMachine()">
+					{{ $gettext(`Get packs`) }}
+				</AppButton>
+			</div>
+
+			<AppSpacer vertical :scale="8" />
+
+			<div class="-section-header">
+				{{ $gettext(`Stickers`) }}
+			</div>
+			<div v-if="stickers.length" class="-stickers">
+				<AppStickerLayerDrawerItem
+					v-for="{ sticker, sticker_id, count } in stickers"
+					:key="sticker_id"
+					:sticker="sticker"
+					:count="count"
+					fit-parent
+					no-drag
+				/>
+			</div>
+			<div v-else>
+				<p class="text-center">
+					{{ $gettext(`You have no stickers. Open packs to get some!`) }}
+				</p>
+				<AppButton block trans @click="onClickVendingMachine()">
+					{{ $gettext(`Get packs`) }}
+				</AppButton>
+			</div>
+		</AppForm>
+	</div>
 </template>
 
 <style lang="stylus" scoped>
