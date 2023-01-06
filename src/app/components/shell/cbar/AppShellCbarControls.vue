@@ -105,7 +105,6 @@ const highlight = computed(() => {
 </template>
 
 <style lang="stylus" scoped>
-@import './variables'
 @import './common'
 
 .shell-cbar-controls
@@ -123,8 +122,8 @@ const highlight = computed(() => {
 			display: flex
 			justify-content: center
 			align-items: center
-			width: $cbar-item-size
-			height: $cbar-item-size
+			width: var(--cbar-item-size)
+			height: var(--cbar-item-size)
 
 		&-icon
 			font-size: $jolticon-size * 1.5

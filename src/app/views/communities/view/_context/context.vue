@@ -50,7 +50,7 @@ export default class AppCommunitiesViewContext extends Vue {
 @import '../../../../components/community/channel/card/variables'
 
 .sidebar-context-channels
-	padding: $shell-content-sidebar-padding
+	padding: var(--shell-content-sidebar-padding)
 
 	@media $media-sm-up
 		padding-right: 0
