@@ -46,14 +46,14 @@ const cbarCSSVariables = computed(() => {
 			<div class="-inner">
 				<AppShellCbarControls />
 
-				<transition-group tag="div" name="-communities">
+				<TransitionGroup tag="div" name="-communities">
 					<AppShellCbarCommunity
 						v-for="community of sortedCommunities"
 						:key="community.id"
 						class="-community-item"
 						:community="community"
 					/>
-				</transition-group>
+				</TransitionGroup>
 				<AppShellCbarItem>
 					<AppCommunityAddWidget tooltip-placement="right" @contextmenu.prevent />
 				</AppShellCbarItem>

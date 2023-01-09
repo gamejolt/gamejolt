@@ -15,7 +15,6 @@ import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
 import { UserStickerPack } from '../../../../_common/sticker/pack/user_pack.model';
 import { useStickerStore } from '../../../../_common/sticker/sticker-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { showVendingMachinePurchaseModal } from './purchase-modal/modal.service';
 
 const { stickerPacks } = useStickerStore();
 const modal = useModal()!;
@@ -41,7 +40,6 @@ run(async () => {
 			'/mobile/me',
 			{
 				coinBalance: true,
-				doCoinBalance: true,
 			},
 			{ detach: true }
 		),
@@ -52,22 +50,19 @@ run(async () => {
 
 	const mePayload = p[1];
 	coinBalance.value = mePayload.coinBalance;
+
 	isLoading.value = false;
 });
 
 async function purchasePack(pack: StickerPack) {
+	// TODO(sticker-collections-2) Disable opening other packs while we're
+	// already opening?
 	if (isPurchasingPack.value) {
 		return;
 	}
 
 	if (pack.cost_coins > coinBalance.value) {
 		showErrorGrowl($gettext(`You don't have enough coins to purchase this.`));
-		return;
-	}
-
-	// TODO(sticker-collections-2) Change to a popper-like wrapper component.
-	const purchaseMethod = await showVendingMachinePurchaseModal({ pack });
-	if (!purchaseMethod) {
 		return;
 	}
 
@@ -97,10 +92,18 @@ async function purchasePack(pack: StickerPack) {
 		}
 		coinBalance.value = Math.max(newBalance, 0);
 
-		if (purchaseMethod === 'purchase') {
+		// TODO(sticker-collections-2) Show a modal where we can open the pack.
+		// If we choose not to open, push new pack into our backpack. If we
+		// choose to open, the pack-open-modal should take care of the rest.
+
+		// TODO(sticker-collections-2) We should manually insert into our
+		// stickers anytime we open new ones from the pack. Or we can request
+		// them again.
+		const showPackOpenModal: () => Promise<'open' | 'save' | undefined> = async () => 'save';
+		const packModalResult = await showPackOpenModal();
+
+		if (packModalResult === 'save') {
 			stickerPacks.value.push(newPack);
-		} else if (purchaseMethod === 'purchase-and-open') {
-			// TODO(sticker-collections-2) remove
 		}
 	} catch (e) {
 		console.error('Error while purchasing pack.', e);

@@ -26,7 +26,7 @@ const highlight = computed(() => {
 </script>
 
 <template>
-	<div class="shell-cbar-controls">
+	<div>
 		<!-- Mobile -->
 		<AppShellCbarItem
 			v-if="Screen.isXs"
@@ -107,24 +107,23 @@ const highlight = computed(() => {
 <style lang="stylus" scoped>
 @import './common'
 
-.shell-cbar-controls
-	.-control
-		pressy()
-		img-circle()
-		background-color: var(--theme-bg-offset)
-		position: relative
-		z-index: 1
+.-control
+	pressy()
+	img-circle()
+	background-color: var(--theme-bg-offset)
+	position: relative
+	z-index: 1
 
-		::v-deep(.jolticon)
-			color: var(--theme-lighter)
+	::v-deep(.jolticon)
+		color: var(--theme-lighter)
 
-		&-item
-			display: flex
-			justify-content: center
-			align-items: center
-			width: var(--cbar-item-size)
-			height: var(--cbar-item-size)
+.-control-item
+	display: flex
+	justify-content: center
+	align-items: center
+	width: var(--cbar-item-size)
+	height: var(--cbar-item-size)
 
-		&-icon
-			font-size: $jolticon-size * 1.5
+.-control-icon
+	font-size: $jolticon-size * 1.5
 </style>

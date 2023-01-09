@@ -5,6 +5,7 @@ import { formatNumber } from '../../filters/number';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
+import AppPopperConfirmWrapper from '../../popper/confirm-wrapper/AppPopperConfirmWrapper.vue';
 import { AppTimeAgo } from '../../time/ago/ago';
 import { StickerPack } from './pack.model';
 
@@ -54,7 +55,7 @@ const showCost = computed(() => {
 	return showDetails.value === true || showDetails.value.cost === true;
 });
 
-const showCount = computed(() => count?.value && count.value > 1);
+const showCount = computed(() => count?.value !== undefined && count.value > 1);
 
 const showContents = computed(() => {
 	if (!showDetails.value) {
@@ -85,19 +86,24 @@ function onClickPack() {
 	<div>
 		<div class="-pack">
 			<AppAspectRatio :ratio="pack.media_item.aspectRatio" show-overflow>
-				<AppMediaItemBackdrop
-					:class="{ '-pack-hoverable': canClickPack, '-force-elevate': forceElevate }"
-					:media-item="pack.media_item"
-					radius="lg"
-					@click="onClickPack"
+				<AppPopperConfirmWrapper
+					:overlay-radius="12"
+					:disabled="!canClickPack"
+					@confirm="onClickPack()"
 				>
-					<AppImgResponsive
-						:src="pack.media_item.mediaserver_url"
-						alt=""
-						draggable="false"
-						ondragstart="return false"
-					/>
-				</AppMediaItemBackdrop>
+					<AppMediaItemBackdrop
+						:class="{ '-pack-hoverable': canClickPack, '-force-elevate': forceElevate }"
+						:media-item="pack.media_item"
+						radius="lg"
+					>
+						<AppImgResponsive
+							:src="pack.media_item.mediaserver_url"
+							alt=""
+							draggable="false"
+							ondragstart="return false"
+						/>
+					</AppMediaItemBackdrop>
+				</AppPopperConfirmWrapper>
 			</AppAspectRatio>
 
 			<div v-if="showCost" class="-cost">
@@ -106,7 +112,7 @@ function onClickPack() {
 				<span>🪙</span>
 			</div>
 
-			<div v-if="showCount" class="-count">
+			<div v-if="showCount && count !== undefined" class="-count">
 				<span>{{ formatNumber(count) }}</span>
 			</div>
 
@@ -157,7 +163,7 @@ function onClickPack() {
 	--inset: 4px
 
 	&
-	::v-deep(.jolticon)
+	.jolticon
 		font-size: $font-size-tiny
 
 .-cost

@@ -4,11 +4,10 @@ import { arrayRemove } from '../../../../utils/array';
 import { run } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
+import { formatNumber } from '../../../../_common/filters/number';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppStickerLayerDrawerItem from '../../../../_common/sticker/layer/AppStickerLayerDrawerItem.vue';
 import AppStickerPack from '../../../../_common/sticker/pack/AppStickerPack.vue';
@@ -70,14 +69,6 @@ async function onClickVendingMachine() {
 }
 
 async function onClickPack(pack: UserStickerPack) {
-	const canProceed = await ModalConfirm.show(
-		$gettext(`Are you sure you want to open this pack?`)
-	);
-
-	if (!canProceed) {
-		return;
-	}
-
 	isOpeningPack.value = true;
 	try {
 		const payload = await Api.sendRequest(
@@ -109,9 +100,11 @@ async function onClickPack(pack: UserStickerPack) {
 <template>
 	<div id="shell-sidebar-backpack">
 		<AppForm :controller="form">
+			<!-- TODO(sticker-collections-2) Change styling, maybe put coin
+			balance to the right of the button. -->
 			<AppButton solid block @click="onClickVendingMachine()">
 				<span>
-					{{ formatFuzzynumber(coinBalance) }}
+					{{ formatNumber(coinBalance) }}
 					{{ ' 🪙 ' }}
 				</span>
 
