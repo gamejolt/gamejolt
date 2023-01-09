@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, nextTick, PropType, ref, Ref, StyleValue, toRefs, watch } from 'vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
+import { Screen } from '../../screen/screen-service';
 import AppTheme from '../../theme/AppTheme.vue';
 import { $gettext } from '../../translate/translate.service';
 
@@ -39,12 +40,6 @@ const stage = ref<ConfirmWrapperStage>('hidden');
  */
 const prevStage = ref<ConfirmWrapperStage>('hidden');
 
-watch(disabled, isDisabled => {
-	if (isDisabled) {
-		setStage('hidden');
-	}
-});
-
 const displayStage = computed(() => {
 	if (stage.value === 'hidden') {
 		return prevStage.value;
@@ -71,9 +66,23 @@ const confirmOverlayStyle = computed(() => {
 	return result;
 });
 
+watch(disabled, isDisabled => {
+	if (isDisabled) {
+		setStage('hidden');
+	}
+});
+
+watch(
+	() => Screen.isPointerMouse,
+	isMouse => {
+		if (isMouse) {
+			root.value.blur();
+		}
+	}
+);
+
 function setStage(newStage: ConfirmWrapperStage) {
 	if (newStage === stage.value) {
-		console.warn('dupe stage');
 		return;
 	}
 
@@ -85,7 +94,15 @@ function setStage(newStage: ConfirmWrapperStage) {
 	}
 }
 
-async function onWrapperFocus() {
+function onClickWrapper() {
+	if (stage.value === 'hidden') {
+		showWrapperInitial();
+	} else if (stage.value === 'initial') {
+		setStage('confirm');
+	}
+}
+
+async function showWrapperInitial() {
 	if (disabled.value) {
 		return;
 	}
@@ -99,14 +116,8 @@ async function onWrapperFocus() {
 	setStage('initial');
 }
 
-function onWrapperBlur() {
+function hideWrapper() {
 	setStage('hidden');
-}
-
-function onClickInitial() {
-	if (stage.value === 'initial') {
-		setStage('confirm');
-	}
 }
 
 function onConfirm() {
@@ -116,14 +127,16 @@ function onConfirm() {
 </script>
 
 <template>
-	<!-- TODO(sticker-collections-2) Show on hover for mouse devices, on focus for touch -->
 	<div
 		ref="root"
 		class="popper-confirm-wrapper"
 		:class="{ '-clickable': !disabled }"
-		tabindex="-1"
-		@focus="onWrapperFocus"
-		@blur="onWrapperBlur"
+		:tabindex="Screen.isPointerMouse ? undefined : -1"
+		@click="onClickWrapper"
+		@mouseenter="showWrapperInitial"
+		@mouseleave="hideWrapper"
+		@focus="showWrapperInitial"
+		@blur="hideWrapper"
 	>
 		<div class="-popper-confirm-child">
 			<slot />
@@ -146,7 +159,6 @@ function onConfirm() {
 				<div
 					class="-message -button-like -primary"
 					:class="{ '-clickable': stage === 'initial' }"
-					@click="onClickInitial"
 				>
 					<span class="-message-contents">
 						<template v-if="displayStage === 'initial'">
@@ -162,11 +174,11 @@ function onConfirm() {
 			<template v-if="displayStage !== 'hidden'">
 				<div class="-confirm-buttons" :class="{ '-shrink': displayStage !== 'confirm' }">
 					<div class="-confirm-buttons-inner">
-						<div class="-button-like -primary" @click="onConfirm()">
+						<div class="-button-like -primary" @click.stop="onConfirm()">
 							<AppJolticon icon="check" />
 						</div>
 
-						<div class="-button-like -reject" @click="setStage('hidden')">
+						<div class="-button-like -reject" @click.stop="setStage('hidden')">
 							<AppJolticon icon="remove" />
 						</div>
 					</div>
@@ -209,6 +221,7 @@ $-z-index-message = 3
 	left: 0
 
 .-confirm-overlay
+	user-select: none
 	display: flex
 	flex-direction: column
 	align-items: center
