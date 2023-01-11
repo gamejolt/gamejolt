@@ -21,7 +21,8 @@ export type ContentObjectType =
 	| 'spoiler'
 	| 'heading'
 	| 'gif'
-	| 'sticker';
+	| 'sticker'
+	| 'chatInvite';
 
 export class ContentObject extends ContentNode {
 	public type!: ContentObjectType;
@@ -140,6 +141,7 @@ export class ContentObject extends ContentNode {
 			case 'paragraph':
 			case 'gif':
 			case 'sticker':
+			case 'chatInvite':
 				length++;
 				break;
 			case 'embed':
