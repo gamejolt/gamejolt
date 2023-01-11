@@ -1,16 +1,15 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { arrayRemove } from '../../../../utils/array';
 import { run } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
-import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppStickerLayerDrawerItem from '../../../../_common/sticker/layer/AppStickerLayerDrawerItem.vue';
 import AppStickerPack from '../../../../_common/sticker/pack/AppStickerPack.vue';
+import { StickerPackOpenModal } from '../../../../_common/sticker/pack/open-modal/modal.service';
 import { UserStickerPack } from '../../../../_common/sticker/pack/user_pack.model';
 import {
 	getStickerCountsFromPayloadData,
@@ -26,7 +25,6 @@ type FormModel = {
 
 const { stickerPacks, drawerItems: stickers } = useStickerStore();
 
-const isOpeningPack = ref(false);
 // TODO(sticker-collections-2) Put this in a store somewhere so we have some
 // placeholder data.
 const coinBalance = ref(0);
@@ -68,32 +66,11 @@ async function onClickVendingMachine() {
 	await showVendingMachineModal();
 }
 
-async function onClickPack(pack: UserStickerPack) {
-	isOpeningPack.value = true;
-	try {
-		const payload = await Api.sendRequest(
-			`/web/stickers/open-pack/${pack.id}`,
-			{},
-			{ detach: true }
-		);
-
-		if (!payload.success) {
-			throw 'Pack was unable to be opened.';
-		}
-
-		// TODO(sticker-collections-2) Show a modal displaying rewards from our newly opened pack.
-		arrayRemove(stickerPacks.value, i => i.id === pack.id);
-
-		// TODO(sticker-collections-2) Remove debug code.
-		//
-		// Refetch data as the pack was opened, and new stickers were added.
-		showSuccessGrowl(JSON.stringify(payload), 'OPENED PACK');
-	} catch (e) {
-		console.error(e);
-		showErrorGrowl($gettext(`Something went wrong opening that pack.`));
-	} finally {
-		isOpeningPack.value = false;
-	}
+function openPack(pack: UserStickerPack) {
+	StickerPackOpenModal.show({
+		pack,
+		openImmediate: true,
+	});
 }
 </script>
 
@@ -128,7 +105,8 @@ async function onClickPack(pack: UserStickerPack) {
 						expiry: true,
 					}"
 					can-click-pack
-					@click-pack="onClickPack(userPack)"
+					:hover-title="$gettext(`Open`)"
+					@click-pack="openPack(userPack)"
 				/>
 			</div>
 			<div v-else>

@@ -37,6 +37,10 @@ const props = defineProps({
 	forceElevate: {
 		type: Boolean,
 	},
+	hoverTitle: {
+		type: String,
+		default: undefined,
+	},
 });
 
 const { pack, showDetails, count, canClickPack, forceElevate } = toRefs(props);
@@ -87,8 +91,13 @@ function onClickPack() {
 		<div class="-pack">
 			<AppAspectRatio :ratio="pack.media_item.aspectRatio" show-overflow>
 				<AppPopperConfirmWrapper
+					:style="{
+						width: '100%',
+						height: '100%',
+					}"
 					:overlay-radius="12"
 					:disabled="!canClickPack"
+					:initial-text="hoverTitle"
 					@confirm="onClickPack()"
 				>
 					<AppMediaItemBackdrop

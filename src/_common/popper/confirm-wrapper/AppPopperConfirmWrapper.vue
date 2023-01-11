@@ -197,6 +197,8 @@ $-z-index-message = 3
 	position: relative
 
 .-popper-confirm-child
+	width: 100%
+	height: 100%
 	z-index: 1
 
 .-clickable
@@ -262,6 +264,7 @@ $-z-index-message = 3
 		margin-top: 0
 		height: 0
 		opacity: 0
+		pointer-events: none
 
 .-confirm-buttons-inner
 	rounded-corners-sm()

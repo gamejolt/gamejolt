@@ -11,6 +11,7 @@ import { useModal } from '../../../../_common/modal/modal.service';
 import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppStickerPack from '../../../../_common/sticker/pack/AppStickerPack.vue';
+import { StickerPackOpenModal } from '../../../../_common/sticker/pack/open-modal/modal.service';
 import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
 import { UserStickerPack } from '../../../../_common/sticker/pack/user_pack.model';
 import { useStickerStore } from '../../../../_common/sticker/sticker-store';
@@ -92,19 +93,14 @@ async function purchasePack(pack: StickerPack) {
 		}
 		coinBalance.value = Math.max(newBalance, 0);
 
-		// TODO(sticker-collections-2) Show a modal where we can open the pack.
-		// If we choose not to open, push new pack into our backpack. If we
-		// choose to open, the pack-open-modal should take care of the rest.
+		stickerPacks.value.push(newPack);
 
-		// TODO(sticker-collections-2) We should manually insert into our
-		// stickers anytime we open new ones from the pack. Or we can request
-		// them again.
-		const showPackOpenModal: () => Promise<'open' | 'save' | undefined> = async () => 'save';
-		const packModalResult = await showPackOpenModal();
-
-		if (packModalResult === 'save') {
-			stickerPacks.value.push(newPack);
-		}
+		// Show the PackOpen modal. This should ask them if they want to open
+		// right away or save their pack for later.
+		StickerPackOpenModal.show({
+			pack: newPack,
+			openImmediate: false,
+		});
 	} catch (e) {
 		console.error('Error while purchasing pack.', e);
 
@@ -227,6 +223,7 @@ function getPurchasedPackX() {
 	min-height: calc(min(40vh, 400px))
 	display: grid
 	grid-template-columns: repeat(auto-fill, minmax(100px, 1fr))
+	align-content: start
 	gap: 12px
 	padding: 12px
 	border-bottom-left-radius: 0

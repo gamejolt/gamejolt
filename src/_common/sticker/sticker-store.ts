@@ -319,6 +319,26 @@ export function getStickerCountsFromPayloadData({
 		}
 	});
 
+	return sortStickerCounts({
+		eventStickers,
+		generalStickers,
+		newStickerIds,
+	});
+}
+
+/**
+ * Sorts stickers in place. Moves "new" stickers to the start of their parent
+ * array.
+ */
+export function sortStickerCounts({
+	eventStickers,
+	generalStickers,
+	newStickerIds,
+}: {
+	eventStickers: StickerStack[];
+	generalStickers: StickerStack[];
+	newStickerIds?: number[];
+}) {
 	const lists = [eventStickers, generalStickers];
 	lists.forEach(list => {
 		list.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));
@@ -330,7 +350,6 @@ export function getStickerCountsFromPayloadData({
 			list.unshift(...newStickers);
 		}
 	});
-
 	return lists;
 }
 
