@@ -40,11 +40,6 @@ const DurationBackpackClose = 500;
 
 const DurationModalClose = 250;
 
-/**
- * Degrees of range to position the stickers between.
- */
-const StickerRangeDegrees = 90;
-
 type PackOpenStage = 'confirm' | 'pack-open' | 'results-show' | 'results-stash' | 'closing';
 
 /**
