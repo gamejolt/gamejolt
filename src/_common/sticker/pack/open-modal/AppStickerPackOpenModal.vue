@@ -1,5 +1,15 @@
 <script lang="ts">
-import { computed, nextTick, onMounted, onUnmounted, PropType, ref, toRefs, unref } from 'vue';
+import {
+	computed,
+	CSSProperties,
+	nextTick,
+	onMounted,
+	onUnmounted,
+	PropType,
+	ref,
+	toRefs,
+	unref,
+} from 'vue';
 import { arrayRemove } from '../../../../utils/array';
 import { run, sleep } from '../../../../utils/utils';
 import { MaybeRef } from '../../../../utils/vue';
@@ -12,6 +22,7 @@ import AppLoadingFade from '../../../loading/AppLoadingFade.vue';
 import AppModal from '../../../modal/AppModal.vue';
 import { useModal } from '../../../modal/modal.service';
 import { illBackpackClosed, illBackpackOpen } from '../../../quest/ill/illustrations';
+import { Screen } from '../../../screen/screen-service';
 import AppThemeSvg from '../../../theme/svg/AppThemeSvg.vue';
 import { $gettext } from '../../../translate/translate.service';
 import AppStickerStackItem from '../../stack/AppStickerStackItem.vue';
@@ -121,6 +132,13 @@ const stickerAnimationDuration = computed(() =>
 	stage.value === 'results-show' ? DurationStickerShow : DurationStickerStash
 );
 const stickerAnimationOffset = computed(() => (stage.value === 'results-show' ? 400 : 200));
+const stickerSizing = computed<CSSProperties>(() => {
+	let size = 64;
+	if (Screen.isXs) {
+		size = Math.min(64, Math.max(Screen.width * 0.2, 32));
+	}
+	return { width: `${size}px`, height: `${size}px` };
+});
 
 onMounted(() => afterMount());
 onUnmounted(() => {
@@ -328,7 +346,18 @@ function playAnimation(
 }
 
 function getRotationForIndex(index: number) {
-	const range = StickerRangeDegrees;
+	const originFromTop = Screen.height * 0.5;
+	const stickerLandingFromOrigin = originFromTop * 0.5;
+	const stickerLandingHalfWidth = (Screen.width - 64) / 2;
+	const coneEdgeLength = Math.sqrt(
+		Math.pow(stickerLandingFromOrigin, 2) + Math.pow(stickerLandingHalfWidth, 2)
+	);
+
+	const radians = Math.asin(stickerLandingHalfWidth / coneEdgeLength);
+	const angle = radians / (Math.PI / 180);
+
+	const maxRange = 120;
+	const range = Math.min(angle * 2, maxRange);
 	const offset = -range / 2;
 
 	if (index === 0) {
@@ -398,8 +427,9 @@ async function closeModal() {
 			<div
 				:style="{
 					position: 'relative',
-					width: '25%',
+					width: '40%',
 					maxWidth: '160px',
+					minWidth: '80px',
 					display: 'flex',
 					alignItems: 'center',
 					flexDirection: 'column',
@@ -443,19 +473,19 @@ async function closeModal() {
 								:key="index"
 								:style="{
 									position: 'absolute',
-									width: '64px',
-									height: '64px',
 									left: '50%',
 									top: '25%',
 									transform: 'translate(-50%, -50%)',
 									zIndex: index - openedStickers.length,
 									pointerEvents: 'none',
+									...stickerSizing,
 								}"
 							>
 								<!-- Rotation -->
 								<div
 									:style="{
 										transform: `rotate(${getRotationForIndex(index)}deg)`,
+										transformOrigin: 'bottom center',
 									}"
 								>
 									<!-- Offset -->
@@ -465,6 +495,8 @@ async function closeModal() {
 										:style="{
 											animationDuration: `${stickerAnimationDuration}ms`,
 											animationDelay: `${index * stickerAnimationOffset}ms`,
+											animationFillMode:
+												stage === 'results-stash' ? 'both' : 'backwards',
 										}"
 									>
 										<!-- Counter-rotation -->
@@ -607,7 +639,7 @@ async function closeModal() {
 ._sticker-anim
 	animation-name: anim-sticker
 	animation-timing-function: $weak-ease-in-out
-	animation-fill-mode: both
+	transform: translateY(-25vh)
 
 ._strong-ease-out
 	transition-timing-function: $strong-ease-out
