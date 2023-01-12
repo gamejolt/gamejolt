@@ -17,7 +17,8 @@ export type ContentContext =
 	| 'fireside-chat-message'
 	| 'chat-command'
 	| 'quest-stage-description'
-	| 'supporter-message';
+	| 'supporter-message'
+	| 'help-page';
 
 export enum ContextCapabilityType {
 	TextBold,
@@ -322,6 +323,29 @@ export class ContextCapabilities {
 					ContextCapabilityType.TextBold,
 					ContextCapabilityType.TextItalic,
 				]);
+			case 'help-page':
+				return new ContextCapabilities([
+					ContextCapabilityType.TextBold,
+					ContextCapabilityType.TextItalic,
+					ContextCapabilityType.TextLink,
+					ContextCapabilityType.TextCode,
+					ContextCapabilityType.TextStrike,
+					ContextCapabilityType.CustomLink,
+					ContextCapabilityType.Media,
+					ContextCapabilityType.EmbedVideo,
+					ContextCapabilityType.EmbedMusic,
+					ContextCapabilityType.EmbedModel,
+					ContextCapabilityType.CodeBlock,
+					ContextCapabilityType.Blockquote,
+					ContextCapabilityType.Emoji,
+					ContextCapabilityType.List,
+					ContextCapabilityType.HorizontalRule,
+					ContextCapabilityType.Spoiler,
+					ContextCapabilityType.Tag,
+					ContextCapabilityType.Heading,
+					ContextCapabilityType.Mention,
+					ContextCapabilityType.Gif,
+				]);
 
 			default:
 				assertNever(context);
@@ -350,6 +374,8 @@ export function getMediaItemTypeForContext(context: ContentContext) {
 			return MediaItem.TYPE_CHAT_COMMAND;
 		case 'community-channel-description':
 			return MediaItem.TYPE_COMMUNITY_CHANNEL_DESCRIPTION;
+		case 'help-page':
+			return MediaItem.TYPE_HELP_PAGE_IMAGE;
 	}
 	throw new Error('There is no matching media item type for the context ' + context);
 }
