@@ -77,18 +77,32 @@ function openPack(pack: UserStickerPack) {
 <template>
 	<div id="shell-sidebar-backpack">
 		<AppForm :controller="form">
-			<!-- TODO(sticker-collections-2) Change styling, maybe put coin
-			balance to the right of the button. -->
-			<AppButton solid block @click="onClickVendingMachine()">
-				<span>
-					{{ formatNumber(coinBalance) }}
-					{{ ' 🪙 ' }}
-				</span>
+			<div
+				:style="{
+					display: 'flex',
+					alignItems: 'center',
+					gap: '12px',
+				}"
+			>
+				<AppButton solid block @click="onClickVendingMachine()">
+					<span>
+						{{ $gettext(`Purchase items`) }}
+					</span>
+				</AppButton>
 
-				<span>
-					{{ $gettext(`Purchase items`) }}
-				</span>
-			</AppButton>
+				<div
+					class="_radius-lg"
+					:style="{
+						flex: 'none',
+						backgroundColor: 'var(--theme-bg)',
+						padding: '2px 6px',
+						fontWeight: 600,
+					}"
+				>
+					{{ formatNumber(coinBalance) }}
+					{{ ' 🪙' }}
+				</div>
+			</div>
 
 			<AppSpacer vertical :scale="4" />
 
@@ -152,6 +166,9 @@ function openPack(pack: UserStickerPack) {
 	--base-pad: 12px
 	--half-pad: calc(var(--base-pad) * 0.5)
 	padding: var(--base-pad)
+
+._radius-lg
+	rounded-corners-lg()
 
 ._section-header
 	margin-top: 0

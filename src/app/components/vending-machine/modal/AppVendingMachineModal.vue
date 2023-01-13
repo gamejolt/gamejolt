@@ -56,8 +56,6 @@ run(async () => {
 });
 
 async function purchasePack(pack: StickerPack) {
-	// TODO(sticker-collections-2) Disable opening other packs while we're
-	// already opening?
 	if (isPurchasingPack.value) {
 		return;
 	}
@@ -78,7 +76,6 @@ async function purchasePack(pack: StickerPack) {
 		);
 
 		const rawNewPack = payload.pack;
-		// TODO(sticker-collections-2) Check actual payload errors
 		if (!rawNewPack) {
 			throw Error('No pack was returned when trying to purchase one.');
 		}
@@ -169,12 +166,6 @@ function getPurchasedPackX() {
 							</div>
 
 							<div class="_purchased">
-								<!--
-								TODO(sticker-collections) on click this should spawn a copy with position: fixed and placed roughly where this element
-								currently is. Then remove this element.
-								Get the screen position of the #shell-sidebar-backpack element, and move the newly spawned element
-								towards it while shrinking it, to signify that the purchased pack moved to the backpack.
-								-->
 								<AppStickerPack
 									v-if="purchasedPack"
 									:pack="purchasedPack"
