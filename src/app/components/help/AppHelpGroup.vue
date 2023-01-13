@@ -18,28 +18,26 @@ const { category, pages } = toRefs(props);
 </script>
 
 <template>
-	<transition>
-		<div class="list-group anim-fade-in-enlarge">
-			<div class="list-group-item" :class="{ 'has-icon': category.icon }">
-				<h3 class="list-group-item-heading">
-					<AppJolticon v-if="category.icon" :icon="category.icon" notice />
-					{{ category.name }}
-				</h3>
-			</div>
-			<RouterLink
-				v-for="page of pages"
-				:key="page.id"
-				class="list-group-item"
-				:to="{
-					name: 'landing.help.page',
-					params: {
-						category: category.url,
-						page: page.url,
-					},
-				}"
-			>
-				{{ page.title }}
-			</RouterLink>
+	<div class="list-group anim-fade-in-enlarge">
+		<div class="list-group-item" :class="{ 'has-icon': category.icon }">
+			<h3 class="list-group-item-heading">
+				<AppJolticon v-if="category.icon" :icon="category.icon" notice />
+				{{ category.name }}
+			</h3>
 		</div>
-	</transition>
+		<RouterLink
+			v-for="page of pages"
+			:key="page.id"
+			class="list-group-item"
+			:to="{
+				name: 'landing.help.page',
+				params: {
+					category: category.url,
+					page: page.url,
+				},
+			}"
+		>
+			{{ page.title }}
+		</RouterLink>
+	</div>
 </template>

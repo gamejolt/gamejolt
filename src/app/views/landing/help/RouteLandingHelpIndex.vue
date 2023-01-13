@@ -90,18 +90,16 @@ createAppRoute({
 					{{ $gettext(`Recent updates`) }}
 				</h2>
 
-				<transition>
-					<AppScrollScroller class="_recent-container" thin horizontal>
-						<AppPostCard
-							v-for="broadcastPost of broadcastPosts"
-							:key="broadcastPost.id"
-							class="_post-card anim-fade-in-enlarge"
-							:post="broadcastPost"
-							:source="'help'"
-							with-user
-						/>
-					</AppScrollScroller>
-				</transition>
+				<AppScrollScroller class="_recent-container" thin horizontal>
+					<AppPostCard
+						v-for="broadcastPost of broadcastPosts"
+						:key="broadcastPost.id"
+						class="_post-card anim-fade-in-up stagger"
+						:post="broadcastPost"
+						:source="'help'"
+						with-user
+					/>
+				</AppScrollScroller>
 			</div>
 		</section>
 
