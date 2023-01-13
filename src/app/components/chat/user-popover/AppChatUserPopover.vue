@@ -137,7 +137,7 @@ async function onClickKick() {
 async function onClickPromoteModerator() {
 	const result = await ModalConfirm.show(
 		$gettextInterpolate(
-			`Do you want to promote @%{ username } to Moderator? They will be able to remove messages and kick users from the chat. You can demote them at any time.`,
+			`Do you want to promote @%{ username } to moderator? They will be able to remove messages and kick users from the chat. You can demote them at any time.`,
 			{ username: user.value.username }
 		)
 	);
@@ -150,7 +150,7 @@ async function onClickPromoteModerator() {
 
 		if (payload.success && payload.role) {
 			showSuccessGrowl(
-				$gettextInterpolate(`@%{ username } has been promoted to Moderator.`, {
+				$gettextInterpolate(`@%{ username } has been promoted to moderator.`, {
 					username: user.value.username,
 				})
 			);
@@ -160,7 +160,7 @@ async function onClickPromoteModerator() {
 
 async function onClickDemoteModerator() {
 	const result = await ModalConfirm.show(
-		$gettextInterpolate(`Do you want to demote @%{ username } to User?`, {
+		$gettextInterpolate(`Do you want to demote @%{ username } to a normal user?`, {
 			username: user.value.username,
 		})
 	);
@@ -172,7 +172,7 @@ async function onClickDemoteModerator() {
 		);
 		if (payload.success && payload.role) {
 			showSuccessGrowl(
-				$gettextInterpolate(`@%{ username } has been demoted to User.`, {
+				$gettextInterpolate(`@%{ username } is no longer a moderator.`, {
 					username: user.value.username,
 				})
 			);

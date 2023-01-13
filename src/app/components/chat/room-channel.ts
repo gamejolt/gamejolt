@@ -117,14 +117,6 @@ export function createChatRoomChannel(
 
 	const joinPromise = channelController.join({
 		async onJoin(response: JoinPayload) {
-			// if (!instanced) {
-			// 	if (client.pollingRoomId !== roomId) {
-			// 		throw new Error(`Not polling our room anymore.`);
-			// 	}
-
-			// 	client.pollingRoomId = -1;
-			// }
-
 			client.roomChannels.set(roomId, markRaw(c));
 			_room.value = storeModel(ChatRoom, { chat: client, ...response.room });
 
@@ -147,7 +139,6 @@ export function createChatRoomChannel(
 				_room.value.messageEditing = null;
 			}
 
-			// pushStopTyping();
 			client.roomChannels.delete(roomId);
 		},
 	});

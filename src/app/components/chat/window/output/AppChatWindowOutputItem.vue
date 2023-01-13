@@ -20,7 +20,7 @@ import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-servi
 import AppPopper, { PopperPlacementType } from '../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppScrollInview, {
-	ScrollInviewConfig,
+ScrollInviewConfig
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
@@ -28,9 +28,9 @@ import { $gettext } from '../../../../../_common/translate/translate.service';
 import { kChatRoomWindowPaddingH } from '../../../../styles/variables';
 import { useGridStore } from '../../../grid/grid-store';
 import {
-	removeMessage as chatRemoveMessage,
-	retryFailedQueuedMessage,
-	userCanModerateOtherUser,
+removeMessage as chatRemoveMessage,
+retryFailedQueuedMessage,
+userCanModerateOtherUser
 } from '../../client';
 import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
@@ -444,7 +444,7 @@ $-min-item-width = 24px
 
 	@media $media-xs
 		// On small screens, reduce the left side margin to make more space for the actual messages.
-		margin-left: calc(v-bind(ChatWindowAvatarSize) + 12px)
+		margin-left: add-unit(calc(v-bind(ChatWindowAvatarSize) + 12), px)
 
 .-item-container
 	position: relative
