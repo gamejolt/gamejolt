@@ -10,7 +10,7 @@ import { isUserOnline } from '../client';
 import { ChatRoom } from '../room';
 import { ChatUser, getChatUserRoleData } from '../user';
 import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
-import AppChatUserPopover from '../user-popover/user-popover.vue';
+import AppChatUserPopover from '../user-popover/AppChatUserPopover.vue';
 import AppChatListItem from '../_list/AppChatListItem.vue';
 
 const props = defineProps({

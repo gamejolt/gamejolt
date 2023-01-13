@@ -119,7 +119,11 @@ watch([totalChatNotificationsCount, unreadActivityCount, unreadNotificationsCoun
 		<AppShellSidebar v-if="hasSidebar" />
 		<AppShellBanner v-if="!isShellHidden" />
 
-		<AppChatWindow v-if="visibleLeftPane === 'chat' && chat && chat.room" :room="chat.room" />
+		<AppChatWindow
+			v-if="visibleLeftPane === 'chat' && chat && chat.populated && chat.activeRoomId"
+			:key="chat.activeRoomId"
+			:room-id="chat.activeRoomId"
+		/>
 
 		<div v-if="GJ_IS_DESKTOP_APP" key="shell-client">
 			<AppClientBase />

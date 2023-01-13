@@ -25,17 +25,18 @@ import AppScrollInview, {
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import { kChatRoomWindowPaddingH } from '../../../../styles/variables';
 import { useGridStore } from '../../../grid/grid-store';
 import {
 	removeMessage as chatRemoveMessage,
 	retryFailedQueuedMessage,
-	setMessageEditing,
 	userCanModerateOtherUser,
 } from '../../client';
 import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
 import { getChatUserRoleData } from '../../user';
-import AppChatUserPopover from '../../user-popover/user-popover.vue';
+import AppChatUserPopover from '../../user-popover/AppChatUserPopover.vue';
+import { ChatWindowAvatarSize, ChatWindowLeftGutterSize } from '../variables';
 import AppChatWindowOutputItemTime from './AppChatWindowOutputItemTime.vue';
 
 const props = defineProps({
@@ -87,7 +88,7 @@ const contentViewerBounds: ContentOwnerParentBounds = reactive({
 
 const showAsQueued = computed(() => message.value._showAsQueued);
 const hasError = computed(() => !!message.value._error);
-const isEditing = computed(() => chat.value.messageEditing === message.value);
+const isEditing = computed(() => room.value.messageEditing === message.value);
 
 const messageState = computed<{ icon?: Jolticon; display: string; tooltip?: string } | null>(() => {
 	const wrap = (text: string) => `(${text})`;
@@ -202,12 +203,12 @@ function onAvatarPopperVisible(isShowing: boolean) {
 }
 
 function startEdit() {
-	setMessageEditing(chat.value, message.value);
+	room.value.messageEditing = message.value;
 	Popper.hideAll();
 }
 
 function stopEdit() {
-	setMessageEditing(chat.value, null);
+	room.value.messageEditing = null;
 	Popper.hideAll();
 }
 
@@ -222,7 +223,7 @@ async function removeMessage() {
 		return;
 	}
 
-	setMessageEditing(chat.value, null);
+	room.value.messageEditing = null;
 	chatRemoveMessage(chat.value, room.value, message.value.id);
 }
 
@@ -299,8 +300,8 @@ async function onMessageClick() {
 					class="-item-decorator"
 					:style="{
 						opacity: showAsQueued ? 0.7 : 1,
-						cursor: hasError ? 'pointer' : undefined,
-						padding: messagePadding + 'px',
+						cursor: hasError ? `pointer` : undefined,
+						padding: `${messagePadding}px`,
 					}"
 					@click="onMessageClick"
 				>
@@ -404,8 +405,6 @@ async function onMessageClick() {
 </template>
 
 <style lang="stylus" scoped>
-@import '../variables'
-
 $-min-item-width = 24px
 
 .chat-window-output-item
@@ -427,8 +426,8 @@ $-min-item-width = 24px
 	position: absolute
 	left: 0
 	bottom: 0
-	width: $avatar-size
-	height: $avatar-size
+	width: add-unit(v-bind(ChatWindowAvatarSize), px)
+	height: add-unit(v-bind(ChatWindowAvatarSize), px)
 	z-index: 1
 
 	.-avatar-img
@@ -439,13 +438,13 @@ $-min-item-width = 24px
 	display: flex
 	align-items: flex-start
 	outline: 0
-	margin-left: $left-gutter-size
+	margin-left: add-unit(v-bind(ChatWindowLeftGutterSize), px)
 	flex: auto
 	min-width: 0
 
 	@media $media-xs
 		// On small screens, reduce the left side margin to make more space for the actual messages.
-		margin-left: $avatar-size + 12px
+		margin-left: calc(v-bind(ChatWindowAvatarSize) + 12px)
 
 .-item-container
 	position: relative
@@ -565,7 +564,7 @@ $-min-item-width = 24px
 	position: absolute
 	right: 100%
 	transform: translate3d(-50%, 0, 0)
-	width: $left-gutter-size + $chat-room-window-padding-h
+	width: add-unit(v-bind('ChatWindowLeftGutterSize + kChatRoomWindowPaddingH'), px)
 	display: flex
 	justify-content: center
 

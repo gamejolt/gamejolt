@@ -210,8 +210,7 @@ export function createSocketChannelController(
 
 	const logger = createLogger(`Socket Channel/${topic}`);
 
-	// Freeze the cancel token.
-	const cancelToken = socketController.cancelToken.value;
+	const cancelToken = new CancelToken();
 
 	const channel = markRaw(new Channel(topic, params, socket.value));
 	(socket.value as any).channels.push(channel);
@@ -238,6 +237,7 @@ export function createSocketChannelController(
 			if (alertedLeave) {
 				return;
 			}
+			cancelToken.cancel();
 			alertedLeave = true;
 			isClosed.value = true;
 			onLeave?.();
@@ -283,14 +283,18 @@ export function createSocketChannelController(
 	 * Leaves the channel.
 	 */
 	async function leave() {
+		if (cancelToken.isCanceled) {
+			return;
+		}
+
 		logger.info(`Leaving channel.`);
 
-		const leavePromise = new Promise((resolve, reject) => {
-			channel.leave().receive('error', reject).receive('ok', resolve);
-		});
-
 		try {
-			await leavePromise;
+			cancelToken.cancel();
+
+			await new Promise((resolve, reject) => {
+				channel.leave().receive('error', reject).receive('ok', resolve);
+			});
 			socket.value?.remove(channel);
 
 			logger.info(`Left channel.`);
