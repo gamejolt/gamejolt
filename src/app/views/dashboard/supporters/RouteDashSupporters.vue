@@ -107,12 +107,16 @@ const { reload } = createAppRoute({
 		reachedEnd.value = rawActions.length < ACTIONS_PER_PAGE;
 	},
 	onDestroyed() {
-		if (_sendAllInterval) {
-			clearInterval(_sendAllInterval);
-			_sendAllInterval = null;
-		}
+		clearSendAllInterval();
 	},
 });
+
+function clearSendAllInterval() {
+	if (_sendAllInterval) {
+		clearInterval(_sendAllInterval);
+		_sendAllInterval = null;
+	}
+}
 
 async function loadMore() {
 	if (isLoadingMore.value || hasError.value || !actions.value.length) {
@@ -156,21 +160,14 @@ async function _checkSendAll() {
 			return;
 		}
 
-		if (_sendAllInterval) {
-			clearTimeout(_sendAllInterval);
-			_sendAllInterval = null;
-		}
+		clearSendAllInterval();
 
 		// Reload the page when we've determined we're no longer sending
 		// messages.
 		reload();
 	} catch (e) {
 		console.error(e);
-
-		if (_sendAllInterval) {
-			clearTimeout(_sendAllInterval);
-			_sendAllInterval = null;
-		}
+		clearSendAllInterval();
 	}
 }
 
@@ -217,9 +214,7 @@ async function onClickSendAll() {
 			return;
 		}
 
-		if (_sendAllInterval) {
-			clearInterval(_sendAllInterval);
-		}
+		clearSendAllInterval();
 		_sendAllInterval = setInterval(_checkSendAll, 5_000);
 	} catch (e) {
 		console.error(e);
