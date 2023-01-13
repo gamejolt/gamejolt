@@ -11,14 +11,13 @@ import {
 	unref,
 } from 'vue';
 import { arrayRemove } from '../../../../utils/array';
-import { run, sleep } from '../../../../utils/utils';
+import { sleep } from '../../../../utils/utils';
 import { MaybeRef } from '../../../../utils/vue';
 import { Api } from '../../../api/api.service';
-import AppAspectRatio from '../../../aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../button/AppButton.vue';
 import { showErrorGrowl } from '../../../growls/growls.service';
 import { ImgHelper } from '../../../img/helper/helper-service';
-import AppLoadingFade from '../../../loading/AppLoadingFade.vue';
+import AppLoading from '../../../loading/AppLoading.vue';
 import AppModal from '../../../modal/AppModal.vue';
 import { useModal } from '../../../modal/modal.service';
 import { illBackpackClosed, illBackpackOpen } from '../../../quest/ill/illustrations';
@@ -31,16 +30,29 @@ import { Sticker, StickerStack } from '../../sticker.model';
 import AppStickerPack from '../AppStickerPack.vue';
 import { UserStickerPack } from '../user_pack.model';
 
-const DurationStickerShow = 2_000;
-const DurationStickerStash = 1_500;
+const DurationStickerShow = 500;
+const DurationStickerStash = 1_000;
 
-const DurationBackpackEnter = 1_000;
 const DurationBackpackOpen = 250;
 const DurationBackpackClose = 500;
 
 const DurationModalClose = 250;
 
-type PackOpenStage = 'confirm' | 'pack-open' | 'results-show' | 'results-stash' | 'closing';
+const DurationPackFade = 500;
+const DurationBackpackFade = 500;
+
+const OffsetSliceTop = 15;
+const DurationSliceTop = 1_000;
+const DelayPackTrash = DurationSliceTop * 0.75;
+const DurationPackTrash = 1_000;
+
+type PackOpenStage =
+	| 'confirm'
+	| 'pack-open'
+	| 'pack-slice'
+	| 'results-show'
+	| 'results-stash'
+	| 'closing';
 
 /**
  * Returns an error message if we've encountered one.
@@ -114,19 +126,23 @@ const { pack } = toRefs(props);
 
 const { stickerPacks: myPacks, drawerItems: myStickers } = useStickerStore();
 
-const packContainer = ref<HTMLDivElement>();
+const root = ref<HTMLDivElement>();
+const packSlice = ref<HTMLDivElement>();
+const packTrash = ref<HTMLDivElement>();
 
 const stage = ref<PackOpenStage>('confirm');
 const openedStickers = ref<Sticker[]>([]);
+const expandStickers = ref(false);
+
 const shownContainer = ref<'pack' | 'backpack'>('pack');
 const shownBackpack = ref<'open' | 'closed'>('closed');
 
 let _isMounted = false;
 
 const stickerAnimationDuration = computed(() =>
-	stage.value === 'results-show' ? DurationStickerShow : DurationStickerStash
+	expandStickers.value ? DurationStickerShow : DurationStickerStash
 );
-const stickerAnimationOffset = computed(() => (stage.value === 'results-show' ? 400 : 200));
+const stickerAnimationOffset = computed(() => (expandStickers.value ? 400 : 200));
 const stickerSizing = computed<CSSProperties>(() => {
 	let size = 64;
 	if (Screen.isXs) {
@@ -193,14 +209,27 @@ async function _openPack() {
 		// Preload our images so backpack and sticker assets show as soon as we
 		// want them to.
 		preloadImages();
-
-		// Show results of our pack opening.
-		setStage('results-show');
+		setStage('pack-slice');
 	} catch (e) {
 		console.error('Error while opening pack.', e);
 		showErrorGrowl(errorMessage || packOpenFallbackError);
 		setStage('closing');
 	}
+}
+
+async function playSliceAnimations() {
+	// Delay by a bit. Helps make the animation more noticeable.
+	await sleep(500);
+
+	// Play slice and trash wrapper animations.
+	const elements = [packSlice.value, packTrash.value];
+	for (const item of elements) {
+		if (item) {
+			item.style.animationPlayState = 'running';
+			// playAnimation(item);
+		}
+	}
+	await sleep(DelayPackTrash + DurationPackTrash * 0.5);
 }
 
 function preloadImages() {
@@ -250,10 +279,15 @@ function sortMyStickers(newStickers: Sticker[]) {
 	}).flat();
 }
 
-function setStage(newStage: PackOpenStage) {
+async function setStage(newStage: PackOpenStage) {
 	// Do nothing if we're already on the stage or we've already initiated a
 	// modal close.
-	if (stage.value === newStage || stage.value === 'closing') {
+	if (stage.value === newStage || !_isMounted) {
+		return;
+	}
+
+	// Ignore other setStage calls if we're already attempting to close.
+	if (stage.value === 'closing') {
 		return;
 	}
 
@@ -270,44 +304,64 @@ function setStage(newStage: PackOpenStage) {
 		return;
 	}
 
+	if (newStage === 'pack-slice') {
+		await playSliceAnimations();
+		setStage('results-show');
+		return;
+	}
+
 	// Displays the results of our pack opening, animating stickers coming out
 	// of the pack we just opened.
 	if (newStage === 'results-show') {
-		run(async () => {
-			// Wait for sticker elements to build.
-			await nextTick();
-			// Find the last sticker (last to animate).
-			const element = packContainer.value?.querySelector<HTMLDivElement>(
-				`._sticker-${openedStickers.value.length - 1}`
-			);
-			if (!element) {
-				return;
+		// Wait for sticker elements to build.
+		await nextTick();
+
+		// Tell the stickers to "expand", causing them to animate out from the pack.
+		expandStickers.value = true;
+
+		const stickerElements =
+			root.value?.querySelectorAll<HTMLDivElement>(`._anim-sticker`) || [];
+
+		for (let i = 0; i < stickerElements.length; i++) {
+			const element = stickerElements[i];
+
+			element.style.animationPlayState = 'running';
+			// playAnimation(element);
+
+			if (i === stickerElements.length - 1) {
+				const cb = () => {
+					if (!_isMounted || stage.value !== 'results-show') {
+						element.removeEventListener('animationend', cb);
+					}
+					onFinalStickerAnimationEnd();
+				};
+
+				element.addEventListener('animationend', cb, {
+					passive: true,
+				});
 			}
-			const cb = () => {
-				if (!_isMounted || stage.value === 'results-stash') {
-					element.removeEventListener('animationend', cb);
-				}
-				onFinalStickerAnimationEnd();
-			};
-			element.addEventListener('animationend', cb, {
-				passive: true,
-			});
-		});
+		}
+
 		return;
 	}
 
 	//  Animates stickers from their `results-show` position and animates them
 	//  entering the backpack.
 	if (newStage === 'results-stash') {
+		// Tell the stickers to animate back towards the pack/backpack.
+		expandStickers.value = false;
+
 		for (let i = 0; i < openedStickers.value.length; i++) {
-			const element = packContainer.value?.querySelector<HTMLDivElement>(`._sticker-${i}`);
-			if (element) {
-				// Reverse animations, causing stickers to animate towards the
-				// backpack.
-				playAnimation(element, {
-					reverse: true,
-				});
+			const element = root.value?.querySelector<HTMLDivElement>(`._sticker-${i}`);
+			if (!element) {
+				continue;
 			}
+
+			// Reverse animations, causing stickers to animate towards the
+			// backpack.
+			playAnimation(element, {
+				reverse: true,
+			});
 		}
 		return;
 	}
@@ -322,7 +376,7 @@ function setStage(newStage: PackOpenStage) {
  * "Resets" the animation of an element, changing direction as directed.
  */
 function playAnimation(
-	element: MaybeRef<HTMLElement | undefined>,
+	element: MaybeRef<HTMLElement | null | undefined>,
 	{ reverse }: { reverse?: boolean } = {}
 ) {
 	const rawElement = unref(element);
@@ -332,12 +386,19 @@ function playAnimation(
 
 	rawElement.style.animationName = 'unset';
 	if (reverse) {
-		const direction = rawElement.style.animationDirection;
-		rawElement.style.animationDirection = direction !== 'reverse' ? 'reverse' : 'normal';
+		rawElement.style.animationDirection = 'reverse';
+	} else if (rawElement.style.animationDirection === 'reverse') {
+		rawElement.style.animationDirection = 'normal';
 	}
 	// Force a reflow so it animates again.
 	rawElement.offsetWidth;
 	rawElement.style.animationName = '';
+}
+
+function getBottomForRotation(angle: number) {
+	const maxAngle = 120 / 2;
+	const factor = Math.abs(angle) / maxAngle;
+	return Math.max(Screen.height * 0.15, Screen.height * 0.25 * factor);
 }
 
 function getRotationForIndex(index: number) {
@@ -364,15 +425,19 @@ function getRotationForIndex(index: number) {
 
 async function onFinalStickerAnimationEnd() {
 	if (stage.value === 'results-show') {
+		await sleep(200);
+
 		// Replace sticker pack with a backpack.
 		shownContainer.value = 'backpack';
-		// Wait for new element to load in.
-		await nextTick();
+
+		// Wait a bit for the backpack to animate in.
+		await sleep(DurationBackpackFade);
+
 		// Set the backpack to open, animating it in.
 		shownBackpack.value = 'open';
-		// Wait for animation to complete.
-		await sleep(1_000);
-		// Continue to next stage, animating stickers into the opened backpack.
+
+		// Give some breathing room for the animation.
+		await sleep(DurationBackpackOpen * 2);
 		setStage('results-stash');
 		return;
 	}
@@ -380,12 +445,21 @@ async function onFinalStickerAnimationEnd() {
 	if (stage.value === 'results-stash') {
 		// Close the backpack.
 		shownBackpack.value = 'closed';
+
 		// Allow the animation to play for a little bit.
-		await sleep(DurationBackpackClose / 2);
-		// Fade the modal out before closing it.
+		await sleep(DurationBackpackClose);
+
 		setStage('closing');
 		return;
 	}
+}
+
+function onClickBackdrop() {
+	// This stage shows its own "close" button.
+	if (stage.value === 'confirm') {
+		return;
+	}
+	setStage('closing');
 }
 
 async function closeModal() {
@@ -393,283 +467,380 @@ async function closeModal() {
 	await sleep(DurationModalClose);
 	modal.dismiss();
 }
+
+function ignoreWhen(condition: boolean): CSSProperties {
+	return condition ? { pointerEvents: 'none' } : {};
+}
+
+function addMs(value: number) {
+	return `${value}ms`;
+}
 </script>
 
 <template>
-	<AppModal
-		class="anim-fade-in"
-		:class="{ '_fade-out': stage === 'closing' }"
-		:style="{
-			backgroundColor: `rgba(black, 0.37)`,
-			transitionDuration: `${DurationModalClose}ms`,
-		}"
-	>
-		<!-- TODO: Dismiss modal on tap here as well? -->
-		<div
-			:style="{
-				position: 'absolute',
-				left: 0,
-				top: 0,
-				right: 0,
-				bottom: 0,
-				display: 'flex',
-				alignItems: 'center',
-				justifyContent: 'center',
-				flexDirection: 'column',
-				overflow: 'hidden',
+	<div ref="root">
+		<AppModal
+			class="anim-fade-in"
+			:class="{
+				'_anim-modal-fade-out': stage === 'closing',
 			}"
 		>
 			<div
 				:style="{
-					position: 'relative',
-					width: '40%',
-					maxWidth: '160px',
-					minWidth: '80px',
+					position: 'absolute',
+					top: 0,
+					right: 0,
+					bottom: 0,
+					left: 0,
 					display: 'flex',
-					alignItems: 'center',
 					flexDirection: 'column',
+					alignItems: 'stretch',
 				}"
+				@click="onClickBackdrop()"
 			>
-				<!-- "Close" button -->
-				<Transition name="fade">
-					<AppButton
-						class="_strong-ease-out"
-						:style="{
-							position: 'absolute',
-							bottom: '100%',
-							left: '100%',
-							zIndex: 2,
-						}"
-						icon="remove"
-						circle
-						sparse
-						trans
-						solid
-						@click="modal.dismiss()"
-					/>
-				</Transition>
-
-				<!-- Opened stickers, Pack/Backpack, "Open" button -->
-				<AppAspectRatio
+				<div
 					:style="{
-						position: 'relative',
-						width: '100%',
+						position: 'absolute',
+						width: '50vw',
+						minWidth: '100px',
+						maxWidth: '206px',
 						zIndex: 2,
+						top: '50%',
+						left: '50%',
+						transform: 'translate(-50%, -50%)',
 					}"
-					:ratio="1"
-					show-overflow
 				>
-					<div ref="packContainer">
-						<!-- Opened stickers -->
-						<template v-if="stage === 'results-show' || stage === 'results-stash'">
-							<!-- Initial positioning -->
-							<div
-								v-for="(sticker, index) of openedStickers"
-								:key="index"
-								:style="{
-									position: 'absolute',
-									left: '50%',
-									top: '25%',
-									transform: 'translate(-50%, -50%)',
-									zIndex: index - openedStickers.length,
-									pointerEvents: 'none',
-									...stickerSizing,
-								}"
-							>
-								<!-- Rotation -->
-								<div
-									:style="{
-										transform: `rotate(${getRotationForIndex(index)}deg)`,
-										transformOrigin: 'bottom center',
-									}"
-								>
-									<!-- Offset -->
-									<div
-										class="_sticker-anim"
-										:class="[`_sticker-${index}`]"
-										:style="{
-											animationDuration: `${stickerAnimationDuration}ms`,
-											animationDelay: `${index * stickerAnimationOffset}ms`,
-											animationFillMode:
-												stage === 'results-stash' ? 'both' : 'backwards',
-										}"
-									>
-										<!-- Counter-rotation -->
-										<AppStickerStackItem
-											:style="{
-												transform: `rotate(${
-													-getRotationForIndex(index) * 0.75
-												}deg)`,
-											}"
-											:img-url="sticker.img_url"
-										/>
-									</div>
-								</div>
-							</div>
-						</template>
-
-						<!-- Pack/Backpacks, "Open" button -->
+					<div
+						:style="{
+							position: 'relative',
+						}"
+					>
+						<!-- Pack container -->
 						<div
-							class="anim-fade-in-up"
+							class="_strong-ease-out"
 							:style="{
-								position: 'relative',
-								zIndex:
-									shownContainer === 'pack' ? 1 : -(openedStickers.length + 1),
+								width: '100%',
+								pointerEvents: 'none',
+								opacity: shownContainer === 'pack' ? 1 : 0,
+								transition: `transform ${DurationPackFade}ms, opacity ${DurationPackFade}ms`,
+								transform: `scale(${shownContainer === 'pack' ? 1 : 0.8})`,
+								transformOrigin: 'center',
 							}"
 						>
-							<Transition name="fade">
-								<AppLoadingFade
-									v-if="stage !== 'closing'"
-									:key="shownContainer"
-									:is-loading="stage === 'pack-open'"
+							<div
+								:style="{
+									position: 'relative',
+									display: 'grid',
+								}"
+							>
+								<!-- Pack (bottom wrapper) -->
+								<div
 									:style="{
-										width: '100%',
+										clipPath:
+											`polygon(` +
+											`0% ${OffsetSliceTop}%,` +
+											`0% 100%,` +
+											`100% 100%,` +
+											`100% ${OffsetSliceTop}%)`,
 									}"
 								>
-									<!-- Pack -->
-									<AppStickerPack
-										v-if="shownContainer === 'pack'"
-										:pack="pack.sticker_pack"
-										:style="{
-											pointerEvents: 'none',
-										}"
-									/>
+									<AppStickerPack :pack="pack.sticker_pack" />
+								</div>
 
-									<!-- Backpacks -->
-									<AppAspectRatio
-										v-else-if="shownContainer === 'backpack'"
-										:style="{
-											pointerEvents: 'none',
-										}"
-										:ratio="illBackpackClosed.width / illBackpackClosed.height"
-										show-overflow
-									>
-										<div
-											:style="{
-												position: 'absolute',
-												animationDuration: `${DurationBackpackEnter}ms`,
-												left: '50%',
-												top: '50%',
-												transform: 'translate(-50%, -50%)',
-												// Backpack has a lot of empty space.
-												// Make it bigger to closer match the size of the sticker pack.
-												width: '200%',
-												height: '200%',
-											}"
-										>
-											<!-- Backpack closed -->
-											<AppThemeSvg
-												:style="{
-													width: '100%',
-													height: '100%',
-													animationDuration: `${DurationBackpackClose}ms`,
-												}"
-												:src="illBackpackClosed.path"
-												strict-colors
-											/>
+								<!-- Pack (top wrapper) -->
+								<div
+									ref="packTrash"
+									class="_anim-pack-trash"
+									:style="{
+										position: 'absolute',
+										width: '100%',
+										top: 0,
+										left: 0,
+										clipPath:
+											`polygon(` +
+											`0% ${OffsetSliceTop + 1}%,` +
+											`100% ${OffsetSliceTop + 1}%,` +
+											`100% 0%,` +
+											`0% 0%)`,
+										animationDelay: `${DelayPackTrash}ms`,
+										animationDuration: `${DurationPackTrash}ms`,
+									}"
+								>
+									<AppStickerPack :pack="pack.sticker_pack" />
+								</div>
 
-											<!-- Backpack open -->
-											<Transition name="fade-stationary">
-												<AppThemeSvg
-													v-if="shownBackpack === 'open'"
-													:style="{
-														position: 'absolute',
-														left: 0,
-														top: 0,
-														width: '100%',
-														height: '100%',
-														animationDuration: `${
-															shownBackpack === 'open'
-																? DurationBackpackOpen
-																: DurationBackpackClose
-														}ms !important`,
-													}"
-													:src="illBackpackOpen.path"
-													strict-colors
-												/>
-											</Transition>
-										</div>
-									</AppAspectRatio>
+								<AppLoading
+									v-if="stage === 'pack-open'"
+									:style="{
+										position: 'absolute',
+										top: '50%',
+										left: '50%',
+										transform: 'translate(-50%, -50%)',
+									}"
+									stationary
+									centered
+									hide-label
+								/>
+							</div>
 
-									<!-- "Open" button -->
-									<AppButton
-										class="_strong-ease-out"
-										:style="{
-											position: 'absolute',
-											top: 'calc(100% + 16px)',
-											opacity: stage === 'confirm' ? 1 : 0,
-											transition: 'opacity 200ms',
-											...(stage === 'confirm'
-												? {}
-												: { pointerEvents: 'none' }),
-										}"
-										solid
-										primary
-										block
-										overlay
-										@click="setStage('pack-open')"
-									>
-										{{ $gettext(`Open pack`) }}
-									</AppButton>
-								</AppLoadingFade>
-							</Transition>
+							<!-- Slice animation -->
+							<div
+								ref="packSlice"
+								class="_anim-slice"
+								:style="{
+									top: `${OffsetSliceTop}%`,
+									transform: `translateY(-50%)`,
+									animationDuration: `${DurationSliceTop}ms`,
+								}"
+							/>
+						</div>
+
+						<!-- Close button -->
+						<AppButton
+							class="_strong-ease-out"
+							:style="{
+								position: 'absolute',
+								bottom: '100%',
+								left: '100%',
+								zIndex: 2,
+								transition: `opacity 300ms`,
+								opacity: stage === 'confirm' ? 1 : 0,
+								...ignoreWhen(stage !== 'confirm'),
+							}"
+							icon="remove"
+							circle
+							sparse
+							trans
+							solid
+							@click.capture.stop="setStage('closing')"
+						/>
+
+						<!-- Open button -->
+						<AppButton
+							class="_strong-ease-out"
+							:style="{
+								position: 'absolute',
+								top: 'calc(100% + 16px)',
+								opacity: stage === 'confirm' ? 1 : 0,
+								transition: 'opacity 200ms',
+								...ignoreWhen(stage !== 'confirm'),
+							}"
+							solid
+							primary
+							block
+							overlay
+							@click.capture.stop="setStage('pack-open')"
+						>
+							{{ $gettext(`Open pack`) }}
+						</AppButton>
+					</div>
+				</div>
+
+				<!-- Opened stickers -->
+				<!-- Stickers initial positioning -->
+				<div
+					v-for="(sticker, index) of openedStickers"
+					:key="index"
+					class="_weak-ease-in"
+					:style="{
+						position: 'absolute',
+						left: '50%',
+						bottom: stage === 'results-stash' ? `128px` : `60%`,
+						transition: `bottom`,
+						transitionDuration: `${stickerAnimationDuration}ms`,
+						transitionDelay: `${index * stickerAnimationOffset}ms`,
+						transform: 'translateX(-50%)',
+						zIndex:
+							shownContainer === 'pack' ? index - openedStickers.length : index + 1,
+						pointerEvents: 'none',
+						...stickerSizing,
+					}"
+				>
+					<!-- Stickers rotation -->
+					<div
+						:style="{
+							transform: `rotate(${getRotationForIndex(index)}deg)`,
+							transformOrigin: `bottom center`,
+						}"
+					>
+						<!-- Stickers offset -->
+						<div
+							class="_anim-sticker _anim-weak-ease-in-out"
+							:class="[
+								`_sticker-${index}`,
+								{
+									'_weak-ease-in-out': !expandStickers,
+									'_ease-out-back': expandStickers,
+								},
+							]"
+							:style="{
+								transition: `bottom`,
+								transitionDelay: `${index * stickerAnimationOffset}ms`,
+								animationDelay: `${index * stickerAnimationOffset}ms`,
+								transitionDuration: `${stickerAnimationDuration}ms`,
+								animationDuration: `${stickerAnimationDuration}ms`,
+								position: 'relative',
+								bottom: expandStickers
+									? `${getBottomForRotation(getRotationForIndex(index))}px`
+									: 0,
+							}"
+						>
+							<!-- Stickers counter-rotation -->
+							<AppStickerStackItem
+								:style="{
+									transform: `rotate(${-getRotationForIndex(index) * 0.75}deg)`,
+								}"
+								:img-url="sticker.img_url"
+							/>
 						</div>
 					</div>
-				</AppAspectRatio>
+				</div>
+
+				<!-- Backpacks -->
+				<div
+					v-if="shownContainer === 'backpack'"
+					:style="{
+						position: 'absolute',
+						bottom: 0,
+						left: '50%',
+						width: '75vw',
+						maxWidth: `${illBackpackClosed.width}px`,
+						pointerEvents: 'none',
+						transform: `translate(-50%, ${stage === 'closing' ? 50 : 25}%)`,
+						transition: `transform ${DurationBackpackFade}ms`,
+						zIndex: 0,
+					}"
+				>
+					<div
+						class="anim-fade-in-up"
+						:style="{
+							width: '100%',
+							transitionDuration: `${DurationBackpackFade}ms`,
+						}"
+					>
+						<!-- Backpack closed -->
+						<AppThemeSvg
+							:style="{
+								width: '100%',
+							}"
+							:src="illBackpackClosed.path"
+							strict-colors
+						/>
+
+						<!-- Backpack open -->
+						<Transition name="fade">
+							<AppThemeSvg
+								v-if="shownBackpack === 'open'"
+								:style="{
+									position: 'absolute',
+									left: 0,
+									top: 0,
+									width: '100%',
+									animationDuration: `${
+										shownBackpack === 'open'
+											? DurationBackpackOpen
+											: DurationBackpackClose
+									}ms !important`,
+								}"
+								:src="illBackpackOpen.path"
+								strict-colors
+							/>
+						</Transition>
+					</div>
+				</div>
 			</div>
-		</div>
-	</AppModal>
+		</AppModal>
+	</div>
 </template>
 
 <style lang="stylus" scoped>
 ::v-deep(.modal)
 	background-color: transparent !important
 
-._fade-out
+._anim-modal-fade-out
 	animation-name: anim-fade-out
-	animation-duration: 200ms
-	animation-timing-function: $weak-ease-out
+	animation-duration: v-bind('addMs(DurationModalClose)')
+	animation-timing-function: $weak-ease-out !important
 	animation-fill-mode: both
 
-._sticker-anim
-	animation-name: anim-sticker
-	animation-timing-function: $weak-ease-in-out
-	transform: translateY(-25vh)
+._ease-out-back
+	transition-timing-function: $ease-out-back !important
+
+._weak-ease-in
+	transition-timing-function: $weak-ease-in !important
+
+._weak-ease-in-out
+	transition-timing-function: $weak-ease-in-out !important
+
+._anim-weak-ease-in-out
+	animation-timing-function: $weak-ease-in-out !important
 
 ._strong-ease-out
-	transition-timing-function: $strong-ease-out
+	transition-timing-function: $strong-ease-out !important
+
+._anim-sticker
+	animation-name: anim-sticker
+	animation-fill-mode: both
+	animation-play-state: paused
+
+._anim-slice
+	animation-name: anim-slice
+	animation-fill-mode: both
+	animation-play-state: paused
+	animation-timing-function: $weak-ease-in-out
+	height: 3px
+	border-radius: 50%
+	background-image: linear-gradient(to right, transparent, white, white, transparent)
+	background-size: 200% 100%
+	background-repeat: no-repeat
+	position: absolute
+	left: -25%
+	right: -25%
+
+._anim-pack-trash
+	animation-name: anim-pack-trash
+	animation-fill-mode: both
+	animation-play-state: paused
+	animation-timing-function: $strong-ease-out
 
 .fade-enter-active
 .fade-leave-active
-.fade-stationary-enter-active
-.fade-stationary-leave-active
 	z-index: 0
 	transition: opacity 300ms, transform 300ms
 
 .fade-enter-from
 .fade-leave-to
-.fade-stationary-enter-from
-.fade-stationary-leave-to
 	position: absolute
 	opacity: 0
 	z-index: -1
 
-.fade-enter-from
-.fade-leave-to
-	transform: translateY(25%) !important
-
-@keyframes anim-sticker
-	0%
-		transform: translateY(0)
-		opacity: 0
-	50%
-		opacity: 1
-	100%
-		transform: translateY(-25vh)
-
 @keyframes anim-fade-out
 	0%
 		opacity: 1
+
 	100%
+		opacity: 0
+
+@keyframes anim-sticker
+	0%
+		opacity: 0
+
+	50%
+		opacity: 1
+
+@keyframes anim-slice
+	0%
+		background-position: 200% 0%
+
+	100%
+		background-position: -200% 0%
+
+@keyframes anim-pack-trash
+	0%
+		transform: translate(0px, 0px) rotate(0deg) scale(1)
+		opacity: 1
+
+	100%
+		transform: translate(-24px, -48px) rotate(-15deg) scale(0.8)
 		opacity: 0
 </style>
