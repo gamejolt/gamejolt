@@ -4,11 +4,13 @@ import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
+import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppHelpSearch from '../../../components/help/AppHelpSearch.vue';
 import HelpPage from '../../../components/help/page/page.model';
+import { illNoComments } from '../../../img/ill/illustrations';
 
 export default {
 	...defineAppRouteOptions({
@@ -17,7 +19,7 @@ export default {
 		deps: { query: ['q'] },
 		resolver: ({ route }) => Api.sendRequest(`/web/help/search?q=${route.query.q}`),
 	}),
-	components: { AppContentViewer, AppHelpSearch },
+	components: { AppContentViewer, AppHelpSearch, AppIllustration },
 };
 </script>
 
@@ -74,8 +76,14 @@ const hasResults = computed(() => pages.value && pages.value.length > 0);
 	<section class="section">
 		<div class="container">
 			<div v-if="!hasResults">
-				<div class="well fill-offset">
-					{{ $gettext(`We couldn't find anything for your query.`) }}
+				<div class="row">
+					<div class="col-lg-6 col-sm-12">
+						<AppIllustration :asset="illNoComments">
+							<p>
+								{{ $gettext(`No results were found for your search.`) }}
+							</p>
+						</AppIllustration>
+					</div>
 				</div>
 			</div>
 			<div v-else>

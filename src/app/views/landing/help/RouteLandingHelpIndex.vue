@@ -126,6 +126,9 @@ createAppRoute({
 	overflow-x: scroll
 	white-space: nowrap
 
+	@media $media-md-up
+		padding: 8px
+
 ._post-card
 	height: 280px
 	display: inline-block

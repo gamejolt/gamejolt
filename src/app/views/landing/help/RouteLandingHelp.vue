@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed } from '@vue/reactivity';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { imageJolt } from '../../../img/images';
@@ -34,8 +35,8 @@ createAppRoute({
 							<AppThemeSvg
 								class="_header-icon"
 								:src="imageJolt"
-								:width="17 * 3"
-								:height="18 * 3"
+								:width="17 * (Screen.isMobile ? 2 : 3)"
+								:height="18 * (Screen.isMobile ? 2 : 3)"
 								strict-colors
 							/>
 
