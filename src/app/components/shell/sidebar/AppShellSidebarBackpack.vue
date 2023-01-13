@@ -33,14 +33,12 @@ const form: FormController<FormModel> = createForm({
 	loadUrl: `/mobile/sticker`,
 	loadData: {
 		_fields: {
-			// TODO(sticker-collections-2) `coinBalance`
 			ownedPacks: true,
 			ownedStickers: true,
 			unreadStickerIds: true,
 		},
 	},
 	sanitizeComplexData: false,
-	// TODO(sticker-collections-2) Remove if we get resolve the above TODO
 	onInit() {
 		run(async () => {
 			const payload = await Api.sendFieldsRequest(
@@ -178,13 +176,13 @@ function openPack(pack: UserStickerPack) {
 	margin-bottom: var(--half-pad)
 
 ._packs
-	--min-pack-width: 100px
+	--min-pack-width: 120px
 	display: grid
 	gap: var(--base-pad)
 	grid-template-columns: repeat(auto-fill, minmax(var(--min-pack-width), 1fr))
 
 	@media $media-xs
-		--min-pack-width: 80px
+		--min-pack-width: 100px
 
 ._stickers
 	display: grid

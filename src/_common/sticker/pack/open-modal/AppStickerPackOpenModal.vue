@@ -495,6 +495,7 @@ function addMs(value: number) {
 					display: 'flex',
 					flexDirection: 'column',
 					alignItems: 'stretch',
+					overflow: 'hidden',
 				}"
 				@click="onClickBackdrop()"
 			>
@@ -703,8 +704,9 @@ function addMs(value: number) {
 						position: 'absolute',
 						bottom: 0,
 						left: '50%',
-						width: '75vw',
+						width: '100vw',
 						maxWidth: `${illBackpackClosed.width}px`,
+						minWidth: `${illBackpackClosed.width / 2}px`,
 						pointerEvents: 'none',
 						transform: `translate(-50%, ${stage === 'closing' ? 50 : 25}%)`,
 						transition: `transform ${DurationBackpackFade}ms`,

@@ -2,9 +2,12 @@
 import { ref } from 'vue';
 import { run } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
+import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
+import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
+import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import AppModal from '../../../../_common/modal/AppModal.vue';
 import AppModalFloatingHeader from '../../../../_common/modal/AppModalFloatingHeader.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
@@ -16,6 +19,7 @@ import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
 import { UserStickerPack } from '../../../../_common/sticker/pack/user_pack.model';
 import { useStickerStore } from '../../../../_common/sticker/sticker-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { illNoCommentsSmall } from '../../../img/ill/illustrations';
 
 const { stickerPacks } = useStickerStore();
 const modal = useModal()!;
@@ -23,7 +27,7 @@ const modal = useModal()!;
 const isPurchasingPack = ref(false);
 const isLoading = ref(true);
 
-const availablePacks = ref<StickerPack[]>();
+const availablePacks = ref<StickerPack[]>([]);
 const coinBalance = ref(0);
 const purchasedPack = ref<StickerPack | null>(null);
 const purchasedPackX = ref(0);
@@ -121,9 +125,8 @@ function getPurchasedPackX() {
 				<template #modal-controls>
 					<div class="_balance">
 						<span>{{ formatNumber(coinBalance) }}</span>
-						{{ ' ' }}
-						<!-- TODO(sticker-collections-2) coin jolticon -->
-						<span>🪙</span>
+						<!-- TODO(sticker-collections-2) proper jolticon -->
+						<span>{{ ' 🪙' }}</span>
 					</div>
 
 					<AppButton @click="modal.dismiss()">
@@ -133,17 +136,73 @@ function getPurchasedPackX() {
 			</AppModalFloatingHeader>
 
 			<div class="modal-body _wrapper">
-				<div class="_packs">
-					<AppStickerPack
-						v-for="pack in availablePacks"
-						:key="pack.id"
-						class="_pack"
-						:pack="pack"
-						can-click-pack
-						show-details
-						@click-pack="purchasePack(pack)"
-					/>
-				</div>
+				<AppLoadingFade :is-loading="isLoading">
+					<div
+						class="_packs"
+						:style="
+							isLoading || availablePacks.length
+								? {}
+								: {
+										gridTemplateColumns: '1fr',
+										alignContent: 'center',
+								  }
+						"
+					>
+						<template v-if="isLoading">
+							<!-- TODO(sticker-collections-2) placeholder ratio -->
+							<AppAspectRatio v-for="i in 3" :key="i" :ratio="2 / 3" show-overflow>
+								<div class="_pack-placeholder" />
+							</AppAspectRatio>
+						</template>
+						<template v-else-if="availablePacks.length">
+							<template v-for="pack in availablePacks" :key="pack.id">
+								<div
+									:style="{
+										position: 'relative',
+									}"
+								>
+									<AppStickerPack
+										class="_pack"
+										:pack="pack"
+										:can-click-pack="coinBalance >= pack.cost_coins"
+										show-details
+										@click-pack="purchasePack(pack)"
+									>
+										<template #overlay>
+											<div
+												v-if="coinBalance < pack.cost_coins"
+												class="_radius-lg _text-shadow"
+												:style="{
+													position: 'absolute',
+													top: 0,
+													right: 0,
+													bottom: 0,
+													left: 0,
+													fontSize: '13px',
+													padding: '8px',
+													zIndex: 2,
+													display: 'grid',
+													justifyContent: 'center',
+													alignContent: 'center',
+													textAlign: 'center',
+													fontWeight: 'bold',
+													backgroundColor: 'rgba(0, 0, 0, 0.45)',
+												}"
+											>
+												{{ $gettext(`Insufficient coin balance`) }}
+											</div>
+										</template>
+									</AppStickerPack>
+								</div>
+							</template>
+						</template>
+						<AppIllustration v-else :asset="illNoCommentsSmall">
+							<div>
+								{{ $gettext(`There are no sticker packs available for purchase.`) }}
+							</div>
+						</AppIllustration>
+					</div>
+				</AppLoadingFade>
 
 				<AppScrollAffix anchor="bottom" :offset-top="0" :padding="0">
 					<div class="_output-bg">
@@ -200,6 +259,12 @@ function getPurchasedPackX() {
 	display: flex
 	flex-direction: column
 
+._radius-lg
+	rounded-corners-lg()
+
+._text-shadow
+	overlay-text-shadow()
+
 ._balance
 	change-bg(bg-offset)
 	rounded-corners-lg()
@@ -223,6 +288,13 @@ function getPurchasedPackX() {
 	border-bottom-left-radius: 0
 	border-bottom-right-radius: 0
 	flex: auto
+
+._pack-placeholder
+	rounded-corners-lg()
+	change-bg(bg-subtle)
+	elevate-1()
+	width: 100%
+	height: 100%
 
 ._pack
 	z-index: 1

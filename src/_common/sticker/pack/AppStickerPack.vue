@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
+import { shorthandReadableTime } from '../../filters/duration';
 import { formatNumber } from '../../filters/number';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import AppPopperConfirmWrapper from '../../popper/confirm-wrapper/AppPopperConfirmWrapper.vue';
-import { AppTimeAgo } from '../../time/ago/ago';
 import { StickerPack } from './pack.model';
 
 interface StickerPackDetails {
@@ -112,6 +112,8 @@ function onClickPack() {
 							ondragstart="return false"
 						/>
 					</AppMediaItemBackdrop>
+
+					<slot name="overlay" />
 				</AppPopperConfirmWrapper>
 			</AppAspectRatio>
 
@@ -133,7 +135,12 @@ function onClickPack() {
 
 			<!-- TODO(sticker-collections-2) make styling more noticeable? -->
 			<div v-if="showExpiry && pack.ends_on" class="-expiry">
-				<AppTimeAgo :date="pack.ends_on" is-future />
+				{{
+					shorthandReadableTime(pack.ends_on, {
+						allowFuture: true,
+						precision: 'rough',
+					})
+				}}
 			</div>
 		</div>
 
