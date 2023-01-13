@@ -119,10 +119,10 @@ function getPurchasedPackX() {
 
 <template>
 	<AppModal>
-		<div class="-container">
+		<div class="_container">
 			<AppModalFloatingHeader>
 				<template #modal-controls>
-					<div class="-balance">
+					<div class="_balance">
 						<span>{{ formatNumber(coinBalance) }}</span>
 						{{ ' ' }}
 						<!-- TODO(sticker-collections-2) coin jolticon -->
@@ -135,12 +135,12 @@ function getPurchasedPackX() {
 				</template>
 			</AppModalFloatingHeader>
 
-			<div class="modal-body -wrapper">
-				<div class="-packs">
+			<div class="modal-body _wrapper">
+				<div class="_packs">
 					<AppStickerPack
 						v-for="pack in availablePacks"
 						:key="pack.id"
-						class="-pack"
+						class="_pack"
 						:pack="pack"
 						can-click-pack
 						show-details
@@ -149,26 +149,26 @@ function getPurchasedPackX() {
 				</div>
 
 				<AppScrollAffix anchor="bottom" :offset-top="0" :padding="0">
-					<div class="-output-bg">
-						<div class="-output-corner-tl">
-							<div class="-output-corner-tl-border" />
-							<div class="-output-corner-bg" />
+					<div class="_output-bg">
+						<div class="_output-corner-tl">
+							<div class="_output-corner-tl-border" />
+							<div class="_output-corner-bg" />
 						</div>
-						<div class="-output-corner-tr">
-							<div class="-output-corner-tr-border" />
-							<div class="-output-corner-bg" />
+						<div class="_output-corner-tr">
+							<div class="_output-corner-tr-border" />
+							<div class="_output-corner-bg" />
 						</div>
 
 						<AppSpacer vertical :scale="4" />
 
-						<div class="-output">
-							<div class="-output-face">
-								<div class="-output-face-eye" />
-								<div class="-output-face-mouth" />
-								<div class="-output-face-eye" />
+						<div class="_output">
+							<div class="_output-face">
+								<div class="_output-face-eye" />
+								<div class="_output-face-mouth" />
+								<div class="_output-face-eye" />
 							</div>
 
-							<div class="-purchased">
+							<div class="_purchased">
 								<!--
 								TODO(sticker-collections) on click this should spawn a copy with position: fixed and placed roughly where this element
 								currently is. Then remove this element.
@@ -178,7 +178,7 @@ function getPurchasedPackX() {
 								<AppStickerPack
 									v-if="purchasedPack"
 									:pack="purchasedPack"
-									class="-purchased-pack"
+									class="_purchased-pack"
 									:style="{
 										left: getPurchasedPackX(),
 									}"
@@ -196,25 +196,28 @@ function getPurchasedPackX() {
 
 <style lang="stylus" scoped>
 // Make the vending machine full-height for phone sizes
-.-container
+._container
 	@media $media-xs
 		display: flex
 		flex-direction: column
 		min-height: 100vh
 
-.-wrapper
+._wrapper
 	padding-top: 0
 	padding-bottom: 0
 	flex: auto
 	display: flex
 	flex-direction: column
 
-.-balance
+._balance
+	change-bg(bg-offset)
+	rounded-corners-lg()
+	padding: 2px 6px
 	align-self: flex-end
 	margin-right: auto
 	font-weight: 600
 
-.-packs
+._packs
 	rounded-corners-lg()
 	change-bg(bg-offset)
 	color: var(--theme-fg)
@@ -230,38 +233,38 @@ function getPurchasedPackX() {
 	border-bottom-right-radius: 0
 	flex: auto
 
-.-pack
+._pack
 	z-index: 1
 
-.-output-bg
+._output-bg
 	position: relative
 	background-color: var(--theme-bg-actual)
 
-.-output-corner-tl
-.-output-corner-tr
+._output-corner-tl
+._output-corner-tr
 	width: 12px
 	height: 12px
 	position: absolute
 	top: -12px
 	z-index: 3
 
-.-output-corner-tl-border
-.-output-corner-tr-border
+._output-corner-tl-border
+._output-corner-tr-border
 	border: 6px solid var(--theme-bg-offset)
 
-.-output-corner-tl
+._output-corner-tl
 	left: 0
 
-.-output-corner-tr
+._output-corner-tr
 	right: 0
 
-.-output-corner-tl-border
+._output-corner-tl-border
 	border-bottom-left-radius: 12px
 
-.-output-corner-tr-border
+._output-corner-tr-border
 	border-bottom-right-radius: 12px
 
-.-output-corner-bg
+._output-corner-bg
 	background-color: var(--theme-bg)
 	width: 100%
 	height: 100%
@@ -270,7 +273,7 @@ function getPurchasedPackX() {
 	top: 0
 	z-index: -1
 
-.-output
+._output
 	height: 96px
 	rounded-corners-lg()
 	overflow: hidden
@@ -278,18 +281,18 @@ function getPurchasedPackX() {
 	box-shadow: inset 20px 20px #187899
 	position: relative
 
-.-output-face
+._output-face
 	display: flex
 	justify-content: center
 	padding-top: 16px
 
-.-output-face-eye
+._output-face-eye
 	height: 40px
 	width: 16px
 	rounded-corners-lg()
 	background-color: black
 
-.-output-face-mouth
+._output-face-mouth
 	width: 64px
 	height: 12px
 	rounded-corners-lg()
@@ -298,7 +301,7 @@ function getPurchasedPackX() {
 	margin-right: 32px
 	margin-top: 32px
 
-.-purchased
+._purchased
 	position: absolute
 	top: 0
 	left: 0
@@ -306,7 +309,7 @@ function getPurchasedPackX() {
 	right: 0
 	overflow: hidden
 
-.-purchased-pack
+._purchased-pack
 	position: absolute
 	top: 0
 	width: 80px

@@ -92,10 +92,10 @@ function openPack(pack: UserStickerPack) {
 
 			<AppSpacer vertical :scale="4" />
 
-			<div class="-section-header">
+			<div class="_section-header">
 				{{ $gettext(`Sticker packs`) }}
 			</div>
-			<div v-if="stickerPacks.length" class="-packs">
+			<div v-if="stickerPacks.length" class="_packs">
 				<AppStickerPack
 					v-for="userPack in stickerPacks"
 					:key="userPack.id"
@@ -122,10 +122,10 @@ function openPack(pack: UserStickerPack) {
 
 			<AppSpacer vertical :scale="8" />
 
-			<div class="-section-header">
+			<div class="_section-header">
 				{{ $gettext(`Stickers`) }}
 			</div>
-			<div v-if="stickers.length" class="-stickers">
+			<div v-if="stickers.length" class="_stickers">
 				<AppStickerLayerDrawerItem
 					v-for="{ sticker, sticker_id, count } in stickers"
 					:key="sticker_id"
@@ -153,14 +153,14 @@ function openPack(pack: UserStickerPack) {
 	--half-pad: calc(var(--base-pad) * 0.5)
 	padding: var(--base-pad)
 
-.-section-header
+._section-header
 	margin-top: 0
 	font-family: $font-family-display
 	font-weight: 800
 	font-size: $font-size-large
 	margin-bottom: var(--half-pad)
 
-.-packs
+._packs
 	--min-pack-width: 100px
 	display: grid
 	gap: var(--base-pad)
@@ -169,7 +169,7 @@ function openPack(pack: UserStickerPack) {
 	@media $media-xs
 		--min-pack-width: 80px
 
-.-stickers
+._stickers
 	display: grid
 	gap: var(--half-pad)
 	grid-template-columns: repeat(auto-fill, minmax(56px, 1fr))
