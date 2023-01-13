@@ -8,7 +8,7 @@ import { AppStore } from '../../store';
 import { type GridClient } from '../grid/client.service';
 import { ChatMessage, ChatMessageType } from './message';
 import { ChatRoom } from './room';
-import { ChatRoomChannel, createChatRoomChannel } from './room-channel';
+import { ChatRoomChannel } from './room-channel';
 import { ChatUser } from './user';
 import { ChatUserChannel, createChatUserChannel } from './user-channel';
 import { ChatUserCollection } from './user-collection';
@@ -16,6 +16,8 @@ import { ChatUserCollection } from './user-collection';
 export const ChatKey = Symbol('chat');
 
 export const onNewChatMessage = new EventTopic<ChatMessage>();
+
+export const RoboJoltUserId = 192757;
 
 export interface ChatNewMessageEvent {
 	message: ChatMessage;
@@ -49,20 +51,12 @@ export class ChatClient {
 	friendsList: ChatUserCollection = null as any;
 	groupRooms: ChatRoom[] = [];
 
-	room: ChatRoom | null = null;
-
-	/**
-	 * Used to check which room is currently being polled.
-	 * We are only allowing polling of one room simultaneously
-	 */
-	pollingRoomId = -1;
+	activeRoomId: number | null = null;
 
 	// The following are indexed by room ID.
-	roomChannels: { [k: string]: ChatRoomChannel } = {};
-	notifications: { [k: string]: number } = {};
+	roomChannels = new Map<number, ChatRoomChannel>();
+	notifications = new Map<number, number>();
 	isFocused = true;
-
-	messageEditing: null | ChatMessage = null;
 
 	/**
 	 * If set, will connect as a guest, using this token.
@@ -81,15 +75,15 @@ export class ChatClient {
 	}
 
 	/**
-	 * The session room is stored within their local session. It's their last active room. We reopen
-	 * it when entering the chat again.
+	 * The session room is stored within their local session. It's their last
+	 * active room. We reopen it when entering the chat again.
 	 */
-	get sessionRoomId(): number | undefined {
+	getSessionRoomId(): number | undefined {
 		const roomId = sessionStorage.getItem('chat:room');
 		return roomId ? parseInt(roomId, 10) : undefined;
 	}
 
-	set sessionRoomId(roomId: number | undefined) {
+	setSessionRoomId(roomId: number | undefined) {
 		if (!roomId) {
 			sessionStorage.removeItem('chat:room');
 		} else {
@@ -98,121 +92,50 @@ export class ChatClient {
 	}
 
 	get roomNotificationsCount() {
-		return Object.values(this.notifications).reduce((total, roomCount) => total + roomCount, 0);
+		let count = 0;
+		for (const roomCount of this.notifications.values()) {
+			count += roomCount;
+		}
+		return count;
 	}
 }
 
 export function clearChat(chat: ChatClient) {
-	chat.currentUser = null;
-	chat.friendsList = new ChatUserCollection(chat, ChatUserCollection.TYPE_FRIEND, []);
-	chat.populated = false;
-	chat.pollingRoomId = -1;
-
-	chat.room = null;
-	chat.groupRooms = [];
-
-	chat.notifications = {};
-	chat.isFocused = true;
-
 	chat.userChannel = null;
-	chat.roomChannels = {};
+	chat.roomChannels.clear();
 }
 
 export async function connectChat(chat: ChatClient) {
 	const { user } = commonStore;
 
-	setChatRoom(chat, undefined);
-
 	if (user.value) {
-		const channel = await createChatUserChannel(chat, { userId: user.value.id });
+		const channel = createChatUserChannel(chat, { userId: user.value.id });
+		await channel.joinPromise;
 
 		chat.userChannel = channel;
 		chat.populated = true;
 	}
 }
 
-async function joinRoomChannel(chat: ChatClient, roomId: number) {
-	if (chat.pollingRoomId === roomId) {
-		chat.logger.info('Do not attempt to join the same room twice.', roomId);
-		return;
-	}
+/**
+ * Call this to open a chat room window. This will trigger the Shell to show the
+ * chat window which will do the actual connection.
+ */
+export function openChatRoom(chat: ChatClient, roomId: number) {
+	const { openChatPane } = chat.appStore;
 
-	return await createChatRoomChannel(chat, { roomId, instanced: false });
+	chat.activeRoomId = roomId;
+	chat.setSessionRoomId(roomId);
+
+	openChatPane();
 }
 
 /**
- * Called by the chat room channel to set itself up fully after joining.
+ * Call this to close the chat room window. When the window tears down, the
+ * disconnection from the room will happen.
  */
-export function setupChatRoom(chat: ChatClient, room: ChatRoom, messages: ChatMessage[]) {
-	if (isRoomInstanced(chat, room.id) || !isInChatRoom(chat, room.id)) {
-		// Only set the room as "the" active room when it's not instanced.
-		if (!isRoomInstanced(chat, room.id)) {
-			setChatRoom(chat, room);
-		}
-
-		// Clear out any old messages so we don't use old data from the model
-		// store.
-		room.messages = [];
-		processNewChatOutput(room, messages, true);
-	}
-}
-
-export function setChatRoom(chat: ChatClient, newRoom: ChatRoom | undefined) {
-	leaveChatRoom(chat);
-
-	if (newRoom) {
-		if (chat.currentUser && chat.isFocused) {
-			chat.roomChannels[newRoom.id].pushFocus();
-		}
-
-		chat.sessionRoomId = newRoom.id;
-	}
-
-	chat.room = newRoom || null;
-}
-
-/**
- * Call this to open a room. It'll do the correct thing to either open the chat
- * if closed, or enter the room.
- */
-export function enterChatRoom(chat: ChatClient, roomId: number) {
-	if (isInChatRoom(chat, roomId)) {
-		return;
-	}
-
-	const { visibleLeftPane, toggleChatPane } = chat.appStore;
-
-	// If the chat isn't visible yet, set the session room to this new room and
-	// open it. That will in turn do the entry. Otherwise we want to just switch
-	// rooms.
-	if (visibleLeftPane.value !== 'chat') {
-		chat.sessionRoomId = roomId;
-		toggleChatPane();
-	} else {
-		joinRoomChannel(chat, roomId);
-	}
-}
-
-export function leaveChatRoom(chat: ChatClient, room: ChatRoom | null = null) {
-	if (chat.messageEditing) {
-		setMessageEditing(chat, null);
-	}
-
-	if (room === null) {
-		room = chat.room;
-	}
-
-	if (!room) {
-		return;
-	}
-
-	const channel = chat.roomChannels[room.id];
-	if (channel) {
-		stopTyping(chat, room);
-		delete chat.roomChannels[room.id];
-		channel.channelController.leave();
-		chat.pollingRoomId = -1;
-	}
+export function closeChatRoom(chat: ChatClient) {
+	chat.activeRoomId = null;
 }
 
 export function isChatFocusedOnRoom(chat: ChatClient, roomId: number) {
@@ -226,31 +149,14 @@ export function setChatFocused(chat: ChatClient, focused: boolean) {
 		return;
 	}
 
-	// Update focused for current room.
-	if (chat.room) {
-		if (chat.isFocused) {
-			chat.roomChannels[chat.room.id].pushFocus();
-		} else {
-			chat.roomChannels[chat.room.id].pushUnfocus();
-		}
-	}
-
-	// Update focused for all instanced rooms.
-	for (const roomId in chat.roomChannels) {
-		if (!chat.roomChannels[roomId]) {
-			continue;
-		}
-
-		const roomChannel = chat.roomChannels[roomId];
-		if (!roomChannel.instanced) {
-			continue;
-		}
-
-		const channelRoomId = roomChannel.roomId;
-		if (chat.isFocused) {
-			chat.roomChannels[channelRoomId].pushFocus();
-		} else {
-			chat.roomChannels[channelRoomId].pushUnfocus();
+	// Update focused for all instanced rooms and the active room.
+	for (const [roomId, roomChannel] of chat.roomChannels) {
+		if (roomChannel.instanced || roomId === chat.activeRoomId) {
+			if (chat.isFocused) {
+				roomChannel.pushFocus();
+			} else {
+				roomChannel.pushUnfocus();
+			}
 		}
 	}
 }
@@ -266,11 +172,8 @@ export function newChatNotification(chat: ChatClient, roomId: number) {
 		return;
 	}
 
-	if (chat.notifications[roomId]) {
-		++chat.notifications[roomId];
-	} else {
-		chat.notifications[roomId] = 1;
-	}
+	const current = chat.notifications.get(roomId);
+	chat.notifications.set(roomId, current ? current + 1 : 1);
 }
 
 export function queueChatMessage(room: ChatRoom, type: ChatMessageType, content: string) {
@@ -397,8 +300,8 @@ export function processNewChatOutput(
 }
 
 async function sendChatMessage(room: ChatRoom, message: ChatMessage) {
-	const roomChannel = room.chat.roomChannels[room.id];
-	if (!roomChannel) {
+	const channel = room.chat.roomChannels.get(room.id);
+	if (!channel) {
 		return;
 	}
 
@@ -406,7 +309,7 @@ async function sendChatMessage(room: ChatRoom, message: ChatMessage) {
 	message._isProcessing = true;
 
 	try {
-		const data = await roomChannel.pushMessage(message.content);
+		const data = await channel.pushMessage(message.content);
 
 		// Upon receiving confirmation from the server, remove the message from
 		// the queue and add the received message to the list.
@@ -419,7 +322,7 @@ async function sendChatMessage(room: ChatRoom, message: ChatMessage) {
 		arrayRemove(room.queuedMessages, i => i.id === message.id);
 
 		const newMessage = storeModel(ChatMessage, data);
-		roomChannel.processNewRoomMessage(newMessage);
+		channel.processNewRoomMessage(newMessage);
 	} catch (e) {
 		room.chat.logger.error('Received error sending message', e);
 		message._error = true;
@@ -428,17 +331,12 @@ async function sendChatMessage(room: ChatRoom, message: ChatMessage) {
 }
 
 function isRoomInstanced(chat: ChatClient, roomId: number) {
-	const channel = chat.roomChannels[roomId];
+	const channel = chat.roomChannels.get(roomId);
 	if (!channel) {
 		return false;
 	}
 
 	return channel.instanced;
-}
-
-/** Set the message that is currently being edited, or 'null' to clear the state. */
-export function setMessageEditing(chat: ChatClient, message: ChatMessage | null) {
-	chat.messageEditing = message;
 }
 
 export function retryFailedQueuedMessage(room: ChatRoom, message: ChatMessage) {
@@ -458,9 +356,14 @@ export function retryFailedQueuedMessage(room: ChatRoom, message: ChatMessage) {
 export async function loadOlderChatMessages(room: ChatRoom) {
 	const { chat } = room;
 
+	const channel = chat.roomChannels.get(room.id);
+	if (!channel) {
+		return;
+	}
+
 	try {
 		const firstMessage = room.messages[0];
-		const data = await chat.roomChannels[room.id].pushLoadMessages(firstMessage.logged_on);
+		const data = await channel.pushLoadMessages(firstMessage.logged_on);
 
 		const oldMessages = storeModelList(ChatMessage, data.messages);
 
@@ -497,11 +400,20 @@ export async function addGroupRoom(chat: ChatClient, members: number[]) {
 	const response = await chat.userChannel.pushGroupAdd(members);
 	const newGroupRoom = storeModel(ChatRoom, { chat, ...response.room });
 	chat.groupRooms.push(newGroupRoom);
-	enterChatRoom(chat, newGroupRoom.id);
+	openChatRoom(chat, newGroupRoom.id);
+}
+
+function _getRoomChannelOrFail(chat: ChatClient, roomId: number) {
+	const channel = chat.roomChannels.get(roomId);
+	if (!channel) {
+		throw new Error(`Not connected to room: ${roomId}`);
+	}
+
+	return channel;
 }
 
 export function addGroupMembers(chat: ChatClient, roomId: number, members: number[]) {
-	return chat.roomChannels[roomId].pushMemberAdd(members);
+	return _getRoomChannelOrFail(chat, roomId).pushMemberAdd(members);
 }
 
 export async function leaveGroupRoom(chat: ChatClient, room: ChatRoom) {
@@ -517,7 +429,7 @@ export async function leaveGroupRoom(chat: ChatClient, room: ChatRoom) {
 }
 
 export function removeMessage(chat: ChatClient, room: ChatRoom, messageId: number) {
-	return chat.roomChannels[room.id].pushMessageRemove(messageId);
+	return _getRoomChannelOrFail(chat, room.id).pushMessageRemove(messageId);
 }
 
 export function editMessage(
@@ -525,11 +437,11 @@ export function editMessage(
 	room: ChatRoom,
 	{ content, id }: { content: string; id: number }
 ) {
-	return chat.roomChannels[room.id].pushMessageUpdate(id, content);
+	return _getRoomChannelOrFail(chat, room.id).pushMessageUpdate(id, content);
 }
 
 export function editChatRoomTitle(chat: ChatClient, room: ChatRoom, title: string) {
-	return chat.roomChannels[room.id].pushUpdateTitle(title);
+	return _getRoomChannelOrFail(chat, room.id).pushUpdateTitle(title);
 }
 
 export function editChatRoomBackground(
@@ -537,21 +449,17 @@ export function editChatRoomBackground(
 	room: ChatRoom,
 	backgroundId: number | null
 ) {
-	return chat.roomChannels[room.id].pushUpdateBackground(backgroundId);
+	return _getRoomChannelOrFail(chat, room.id).pushUpdateBackground(backgroundId);
 }
 
-export function startTyping(chat: ChatClient, room: ChatRoom) {
-	return chat.roomChannels[room.id].pushStartTyping();
-}
-
-export function stopTyping(chat: ChatClient, room: ChatRoom) {
-	return chat.roomChannels[room.id].pushStopTyping();
+export function kickGroupMember(chat: ChatClient, room: ChatRoom, memberId: number) {
+	return _getRoomChannelOrFail(chat, room.id).pushKickMember(memberId);
 }
 
 export function isInChatRoom(chat: ChatClient, roomId?: number) {
 	// When no room id is passed in, just check if the user is in any room.
 	if (!roomId) {
-		return !!chat.room;
+		return !!chat.activeRoomId;
 	}
 
 	// Instanced rooms are always active, and the user is in all instanced rooms.
@@ -559,7 +467,7 @@ export function isInChatRoom(chat: ChatClient, roomId?: number) {
 		return true;
 	}
 
-	return chat.room ? chat.room.id === roomId : false;
+	return chat.activeRoomId ? chat.activeRoomId === roomId : false;
 }
 
 export function updateChatRoomLastMessageOn(chat: ChatClient, message: ChatMessage) {
@@ -584,14 +492,10 @@ export function updateChatRoomLastMessageOn(chat: ChatClient, message: ChatMessa
 
 	// Firesides aren't part of friends list or group rooms. If we didn't find a
 	// matching room yet, try finding it here and assigning the timestamp data.
-	const roomChannel = chat.roomChannels[message.room_id];
+	const roomChannel = chat.roomChannels.get(message.room_id);
 	if (roomChannel) {
 		roomChannel.room.value.last_message_on = time;
 	}
-}
-
-export function kickGroupMember(chat: ChatClient, room: ChatRoom, memberId: number) {
-	return chat.roomChannels[room.id].pushKickMember(memberId);
 }
 
 /**

@@ -63,7 +63,7 @@ export function getModel<T extends ModelStoreModel>(
 	id: number
 ) {
 	const key = _generateKey(modelConstructor.name, id);
-	return _models.value.get(key);
+	return _models.value.get(key) as T | undefined;
 }
 
 function _getModelId(modelData: any) {

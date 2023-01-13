@@ -33,8 +33,10 @@ export class ChatRoom implements ModelStoreModel {
 
 	declare chat: ChatClient;
 	declare memberCollection: ChatUserCollection;
+	messagesPopulated = false;
 	messages: ChatMessage[] = [];
 	queuedMessages: ChatMessage[] = [];
+	messageEditing: null | ChatMessage = null;
 
 	/** Indexed by user ID */
 	usersTyping = new Map<number, TypingUserData>();
