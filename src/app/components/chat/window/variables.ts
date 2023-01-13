@@ -1,2 +1,2 @@
-export const ChatWindowAvatarSize = 32;
-export const ChatWindowLeftGutterSize = 40;
+export const ChatWindowLeftGutterSize = 32;
+export const ChatWindowAvatarSize = 24;
