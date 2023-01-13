@@ -11,7 +11,7 @@ function showLangSelector() {
 	<div class="-extra-links">
 		<RouterLink
 			:to="{
-				name: 'landing.help',
+				name: 'landing.help.redirect',
 				params: { path: 'support' },
 			}"
 		>

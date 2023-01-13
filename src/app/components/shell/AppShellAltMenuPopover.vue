@@ -72,7 +72,7 @@ function showSystemReport() {
 					<RouterLink
 						class="list-group-item has-icon"
 						:to="{
-							name: 'landing.help',
+							name: 'landing.help.redirect',
 							params: { path: 'guidelines' },
 						}"
 					>

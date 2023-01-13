@@ -85,7 +85,7 @@ import AppShellAltMenuExtra from '../AppShellAltMenuExtra.vue';
 			<li>
 				<RouterLink
 					:to="{
-						name: 'landing.help',
+						name: 'landing.help.redirect',
 						params: { path: 'guidelines' },
 					}"
 				>
