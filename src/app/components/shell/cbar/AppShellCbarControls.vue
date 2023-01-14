@@ -82,7 +82,6 @@ const highlight = computed(() => {
 			</AppShellCbarItem>
 
 			<!-- Backpack -->
-			<!-- TODO(sticker-collections-2) Backpack illustration -->
 			<AppShellCbarItem
 				class="-control"
 				:highlight="highlight"
@@ -95,7 +94,7 @@ const highlight = computed(() => {
 					class="-control-item"
 					@click="toggleLeftPane('backpack')"
 				>
-					<AppJolticon class="-control-icon" icon="other-os" />
+					<AppJolticon class="-control-icon" icon="backpack" />
 				</a>
 			</AppShellCbarItem>
 		</template>
