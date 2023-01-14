@@ -70,10 +70,16 @@ const listOptions = computed<Partial<typeof ListTitles>>(() => {
 		</div>
 
 		<div class="modal-header">
-			<div class="-header-row">
+			<div
+				:style="{
+					display: 'flex',
+				}"
+			>
 				<template v-if="isAdding && hasCurrentMods">
 					<AppButton
-						class="-flex-start"
+						:style="{
+							alignSelf: 'flex-start',
+						}"
 						circle
 						sparse
 						trans

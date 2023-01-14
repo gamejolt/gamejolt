@@ -48,10 +48,16 @@ const isAdding = computed(() => activeList.value !== 'currentHosts');
 		</div>
 
 		<div class="modal-header">
-			<div class="-header-row">
+			<div
+				:style="{
+					display: 'flex',
+				}"
+			>
 				<template v-if="isAdding">
 					<AppButton
-						class="-flex-start"
+						:style="{
+							alignSelf: 'flex-start',
+						}"
 						circle
 						sparse
 						trans
