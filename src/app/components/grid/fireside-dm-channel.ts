@@ -1,4 +1,5 @@
-import { shallowReadonly } from 'vue';
+import { markRaw, shallowReadonly } from 'vue';
+import { arrayRemove } from '../../../utils/array';
 import { createLogger } from '../../../utils/logging';
 import { chooseFocusedRTCUser } from '../../../_common/fireside/rtc/rtc';
 import {
@@ -36,7 +37,14 @@ export function createGridFiresideDMChannel(
 
 	channelController.listenTo('update', _onListableHosts);
 
-	const joinPromise = channelController.join();
+	const joinPromise = channelController.join({
+		async onJoin() {
+			client.firesideDMChannels.push(markRaw(c));
+		},
+		onLeave() {
+			arrayRemove(client.firesideDMChannels, i => i.firesideHash === firesideHash);
+		},
+	});
 
 	const c = shallowReadonly({
 		channelController,

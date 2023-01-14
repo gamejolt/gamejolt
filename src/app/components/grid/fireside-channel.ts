@@ -1,4 +1,5 @@
-import { shallowReadonly, triggerRef } from 'vue';
+import { markRaw, shallowReadonly, triggerRef } from 'vue';
+import { arrayRemove } from '../../../utils/array';
 import { createLogger } from '../../../utils/logging';
 import { Background } from '../../../_common/background/background.model';
 import { FiresideChatSettings } from '../../../_common/fireside/chat/chat-settings.model';
@@ -97,6 +98,7 @@ export function createGridFiresideChannel(
 
 	const joinPromise = channelController.join({
 		async onJoin(response: JoinPayload) {
+			client.firesideChannels.push(markRaw(c));
 			chatSettings.value.assign(response.chat_settings);
 
 			// We need to initialize background data for all hosts.
@@ -108,6 +110,9 @@ export function createGridFiresideChannel(
 					);
 				}
 			}
+		},
+		onLeave() {
+			arrayRemove(client.firesideChannels, i => i.firesideHash === firesideHash);
 		},
 	});
 

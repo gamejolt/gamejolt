@@ -489,6 +489,7 @@ export class GridClient {
 	async leaveCommunity(community: Community) {
 		const channel = this.communityChannels.find(i => i.communityId === community.id);
 		if (channel) {
+			// TODO(fireside-reconnects): Should we make all the channels add/remove themselves to the grid client?
 			channel.channelController.leave();
 			arrayRemove(this.communityChannels, i => i === channel);
 		}
@@ -496,16 +497,10 @@ export class GridClient {
 
 	async leaveFireside(fireside: Fireside) {
 		const channel = this.firesideChannels.find(i => i.firesideHash === fireside.hash);
-		if (channel) {
-			channel.channelController.leave();
-			arrayRemove(this.firesideChannels, i => i === channel);
-		}
+		channel?.channelController.leave();
 
 		const dmChannel = this.firesideDMChannels.find(i => i.firesideHash === fireside.hash);
-		if (dmChannel) {
-			dmChannel.channelController.leave();
-			arrayRemove(this.firesideDMChannels, i => i === channel);
-		}
+		dmChannel?.channelController.leave();
 	}
 
 	recordFeaturedPost(post: FiresidePost) {

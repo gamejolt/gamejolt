@@ -472,14 +472,6 @@ export function createFiresideController(
 		return isListableHostStreaming(myHosts, myListableHostIds);
 	});
 
-	const _wantsRTCProducer = computed(() => {
-		if (!rtc.value) {
-			return false;
-		}
-
-		return !!fireside.role?.canStream;
-	});
-
 	const revalidateRTC = () => {
 		logger.info('wantsRTC changed to ' + (_wantsRTC.value ? 'true' : 'false'));
 
@@ -530,92 +522,115 @@ export function createFiresideController(
 		}
 	}
 
+	/**
+	 * We set up a bunch of watchers in this controller. When destroying it we
+	 * need to clean them up. Add any watches in here to deregister during
+	 * cleanup.
+	 */
+	const _unwatches: (() => void)[] = [];
+
 	// Sync we're not doing a deep watch, this'll only trigger when the actual
 	// instance changes (unset to set).
-	const _unwatchChatUsers = watch(chatUsers, _onChatUsersChanged);
+	_unwatches.push(watch(chatUsers, _onChatUsersChanged));
+	_unwatches.push(watch(_wantsRTC, revalidateRTC));
 
-	const _unwatchWantsRTC = watch(_wantsRTC, revalidateRTC);
+	_unwatches.push(
+		watch(
+			() => {
+				if (!rtc.value) {
+					return false;
+				}
 
-	const _unwatchWantsRTCProducer = watch(_wantsRTCProducer, async newWantsRTCProducer => {
-		logger.info('wantsRTCProducer changed to ' + (newWantsRTCProducer ? 'true' : 'false'));
+				return !!fireside.role?.canStream;
+			},
+			async wantsRTCProducer => {
+				logger.info('wantsRTCProducer changed to ' + (wantsRTCProducer ? 'true' : 'false'));
 
-		if (newWantsRTCProducer) {
-			// Do not create the producer if it already exists.
-			// This should never happen normally.
-			rtc.value!.producer ??= markRaw(createFiresideRTCProducer(rtc.value!));
-		} else if (rtc.value) {
-			const prevProducer = rtc.value.producer;
-			rtc.value.producer = null;
+				if (wantsRTCProducer) {
+					// Do not create the producer if it already exists.
+					// This should never happen normally.
+					rtc.value!.producer ??= markRaw(createFiresideRTCProducer(rtc.value!));
+				} else if (rtc.value) {
+					const prevProducer = rtc.value.producer;
+					rtc.value.producer = null;
 
-			if (prevProducer) {
-				logger.info('Tearing down old producer');
-				// Ideally we'd like to not await here because we want the producer
-				// to be considered "torn down" immediately. It simplifies logic for handling it.
-				// We can't avoid awaiting here tho because if the producer instance
-				// is in a busy state at the moment we want do dispose it, it'll queue up stopping
-				// the streams, then cleanupFiresideRTCProducer gets called which sets _isStreaming
-				// to false, and THEN when the streams actually attempt to stop it'd think they
-				// already stopped, and will not run the teardown logic for them..
-				await stopStreaming(prevProducer, 'auto-lost-perms');
-				// TODO(big-pp-event) is there a way to make absolutely sure nothing keeps a reference
-				// to producer past this point? theres nothing in the producer class that prevents attempting
-				// to start streaming from a cleanup-up instance of producer.
-				cleanupFiresideRTCProducer(prevProducer);
-			} else {
-				logger.info('rtc.producer was not set, nothing to do');
-			}
-		} else {
-			logger.info('rtc was not set, nothing to do');
-		}
-	});
-
-	const _unwatchHostsChanged = watch(
-		hosts,
-		(newHosts, prevHosts) => {
-			logger.info('updating hosts in controller');
-
-			// We want to merge the streaming uids of our existing hosts with the new ones.
-			// Note: I'm not 100% sure why we want that. My guess is because we freeze the
-			// streaming uid on the RTCUser instances, but we still want to match against the
-			// same RTCHost with their new streaming uids?
-			for (const newHost of newHosts) {
-				const prevHost = prevHosts.find(i => i.user.id === newHost.user.id);
-				if (prevHost) {
-					logger.info(`merging streaming uids of host ${newHost.user.id}`);
-
-					// Transfer over all previously assigned uids to the new host.
-					const newUids = arrayUnique([...prevHost.uids, ...newHost.uids]);
-					arrayAssignAll(newHost.uids, newUids);
+					if (prevProducer) {
+						logger.info('Tearing down old producer');
+						// Ideally we'd like to not await here because we want the producer
+						// to be considered "torn down" immediately. It simplifies logic for handling it.
+						// We can't avoid awaiting here tho because if the producer instance
+						// is in a busy state at the moment we want do dispose it, it'll queue up stopping
+						// the streams, then cleanupFiresideRTCProducer gets called which sets _isStreaming
+						// to false, and THEN when the streams actually attempt to stop it'd think they
+						// already stopped, and will not run the teardown logic for them..
+						await stopStreaming(prevProducer, 'auto-lost-perms');
+						// TODO(big-pp-event) is there a way to make absolutely sure nothing keeps a reference
+						// to producer past this point? theres nothing in the producer class that prevents attempting
+						// to start streaming from a cleanup-up instance of producer.
+						cleanupFiresideRTCProducer(prevProducer);
+					} else {
+						logger.info('rtc.producer was not set, nothing to do');
+					}
+				} else {
+					logger.info('rtc was not set, nothing to do');
 				}
 			}
-
-			logger.info('new hosts after merging uids', JSON.stringify(newHosts));
-
-			if (rtc.value) {
-				logger.info('updating hosts in rtc');
-				setHosts(rtc.value, newHosts);
-			}
-		},
-		{ deep: true }
+		)
 	);
 
-	const _unwatchListableHostIdsChanged = watch(
-		listableHostIds,
-		newListableHostIds => {
-			if (rtc.value) {
-				logger.info('setting listableHostIds', JSON.stringify(newListableHostIds));
-				setListableHostIds(rtc.value, newListableHostIds);
-			}
-		},
-		{ deep: true }
+	_unwatches.push(
+		watch(
+			hosts,
+			(newHosts, prevHosts) => {
+				logger.info('updating hosts in controller');
+
+				// We want to merge the streaming uids of our existing hosts with the new ones.
+				// Note: I'm not 100% sure why we want that. My guess is because we freeze the
+				// streaming uid on the RTCUser instances, but we still want to match against the
+				// same RTCHost with their new streaming uids?
+				for (const newHost of newHosts) {
+					const prevHost = prevHosts.find(i => i.user.id === newHost.user.id);
+					if (prevHost) {
+						logger.info(`merging streaming uids of host ${newHost.user.id}`);
+
+						// Transfer over all previously assigned uids to the new host.
+						const newUids = arrayUnique([...prevHost.uids, ...newHost.uids]);
+						arrayAssignAll(newHost.uids, newUids);
+					}
+				}
+
+				logger.info('new hosts after merging uids', JSON.stringify(newHosts));
+
+				if (rtc.value) {
+					logger.info('updating hosts in rtc');
+					setHosts(rtc.value, newHosts);
+				}
+			},
+			{ deep: true }
+		)
+	);
+
+	_unwatches.push(
+		watch(
+			listableHostIds,
+			newListableHostIds => {
+				if (rtc.value) {
+					logger.info('setting listableHostIds', JSON.stringify(newListableHostIds));
+					setListableHostIds(rtc.value, newListableHostIds);
+				}
+			},
+			{ deep: true }
+		)
 	);
 
 	// Set up watchers to initiate connection once grid boots up. When a
 	// connection is dropped or any other error on the socket we immediately
 	// become disconnected and then queue up for restarting.
-	const _unwatchGridConnection = watch(
-		() => grid.value?.connected,
-		() => _watchGrid
+	_unwatches.push(
+		watch(
+			() => grid.value?.connected,
+			() => _watchGrid
+		)
 	);
 
 	const sidebarHome: FiresideSidebar = 'chat';
@@ -680,22 +695,24 @@ export function createFiresideController(
 		},
 	}));
 
-	const _unwatchSidebar = watch(
-		() => [sidebar, collapseSidebar],
-		() => {
-			const collapse = collapseSidebar.value;
-			const isHome = isSidebarHome.value;
+	_unwatches.push(
+		watch(
+			() => [sidebar, collapseSidebar],
+			() => {
+				const collapse = collapseSidebar.value;
+				const isHome = isSidebarHome.value;
 
-			if (collapse === isHome) {
-				return;
-			}
+				if (collapse === isHome) {
+					return;
+				}
 
-			if (!isHome) {
-				collapseSidebar.value = false;
-			} else if (collapse) {
-				_sidebar.value = sidebarHome;
+				if (!isHome) {
+					collapseSidebar.value = false;
+				} else if (collapse) {
+					_sidebar.value = sidebarHome;
+				}
 			}
-		}
+		)
 	);
 
 	const _isFullscreen = ref(false);
@@ -970,7 +987,6 @@ export function createFiresideController(
 
 					await newChannel.joinPromise;
 					gridChannel.value = newChannel;
-					grid.value!.firesideChannels.push(markRaw(newChannel));
 
 					logger.info('Connected to fireside channel.');
 				}),
@@ -990,7 +1006,6 @@ export function createFiresideController(
 
 					await newChannel.joinPromise;
 					gridDMChannel.value = newChannel;
-					grid.value!.firesideDMChannels.push(markRaw(newChannel));
 
 					logger.info('Connected to fireside DM channel.');
 				}),
@@ -1110,13 +1125,8 @@ export function createFiresideController(
 		// These watchers are used to figure out
 		// when we need to destroy rtc and rtc producer. we want
 		// to make sure these are still destroyed even if the watchers are disposed.
-		_unwatchChatUsers();
-		_unwatchWantsRTC();
-		_unwatchWantsRTCProducer();
-		_unwatchHostsChanged();
-		_unwatchListableHostIdsChanged();
-		_unwatchGridConnection();
-		_unwatchSidebar();
+		_unwatches.forEach(i => i());
+		_unwatches.splice(0, Infinity);
 
 		if (rtc.value) {
 			destroyFiresideRTC(rtc.value);
