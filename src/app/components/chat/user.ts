@@ -1,29 +1,40 @@
 import { FiresideRTCHost } from '../../../_common/fireside/rtc/rtc';
 import { Jolticon } from '../../../_common/jolticon/AppJolticon.vue';
+import { ModelStoreModel } from '../../../_common/model/model-store.service';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { tryGetRoomRole } from './client';
 import { ChatMessage } from './message';
 import { CHAT_ROLES } from './role';
 import { ChatRoom } from './room';
 
-export class ChatUser {
-	id!: number;
-	room_id!: number;
-	last_message_on!: number;
-	username!: string;
-	display_name!: string;
-	img_avatar!: string;
-	permission_level!: number;
-	is_verified!: boolean;
-	is_creator?: boolean;
+export class ChatUser implements ModelStoreModel {
+	declare id: number;
+	declare room_id: number;
+	declare last_message_on: number;
+	declare username: string;
+	declare display_name: string;
+	declare img_avatar: string;
+	declare permission_level: number;
+	declare is_verified: boolean;
+	declare is_creator?: boolean;
 
 	isOnline = false;
-
 	role: CHAT_ROLES | null = null;
-
 	firesideHost: FiresideRTCHost | null = null;
 
 	constructor(data: any = {}) {
+		this.update(data);
+	}
+
+	// Since the chat user is just a wrapper for user, the chat user ID will be
+	// the same across many rooms, even though we store different data. In order
+	// to separate these models in the model store, we want to take into account
+	// the room ID as well.
+	modelStoreId() {
+		return `${this.id}/${this.room_id}`;
+	}
+
+	update(data: any) {
 		// Don't assign this, use our getter instead.
 		if (data.url) {
 			delete data.url;
@@ -81,14 +92,16 @@ export function getChatUserRoleData(
 		};
 	}
 
-	if (room.owner_id === user.id) {
+	const role = tryGetRoomRole(room, user);
+
+	if (role === 'owner') {
 		return {
 			icon: 'crown',
 			tooltip: $gettext(`Room Owner`),
 		};
 	}
 
-	if (user.firesideHost) {
+	if (room.memberCollection.getFiresideHost(user)) {
 		return {
 			icon: 'star-ten-pointed',
 			tooltip: $gettext(`Host`),
@@ -103,7 +116,7 @@ export function getChatUserRoleData(
 		};
 	}
 
-	if (tryGetRoomRole(room, user) === 'moderator') {
+	if (role === 'moderator') {
 		return {
 			icon: 'star',
 			tooltip: $gettext(`Chat Moderator`),

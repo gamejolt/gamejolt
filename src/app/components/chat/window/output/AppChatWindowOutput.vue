@@ -20,10 +20,10 @@ import { useGridStore } from '../../../grid/grid-store';
 import { loadOlderChatMessages, onNewChatMessage } from '../../client';
 import { TIMEOUT_CONSIDER_QUEUED } from '../../message';
 import { ChatRoom } from '../../room';
+import { ChatWindowAvatarSize } from '../variables';
 import AppChatWindowOutputItem from './AppChatWindowOutputItem.vue';
 
 const AUTOSCROLL_THRESHOLD = 10;
-const AVATAR_MARGIN = 32;
 const MESSAGE_PADDING = 12;
 
 const props = defineProps({
@@ -94,13 +94,7 @@ const shouldShowNewMessagesButton = computed(() => {
 	return newestMessage.value.logged_on > latestFrozenTimestamp.value;
 });
 
-const roomChannel = computed(() => {
-	const item = chat.value.roomChannels[room.value.id];
-	if (item) {
-		return item;
-	}
-	return null;
-});
+const roomChannel = computed(() => chat.value.roomChannels.get(room.value.id));
 
 useEventSubscription(onNewChatMessage, async message => {
 	// When the user sent a message, we want the chat to scroll all the way down
@@ -325,7 +319,7 @@ function _updateMaxContentWidth(width: number) {
 	const messageInnerPadding = MESSAGE_PADDING * 2;
 
 	maxContentWidth.value = Math.max(
-		width - (chatInnerPadding + AVATAR_MARGIN + messageInnerPadding),
+		width - (chatInnerPadding + ChatWindowAvatarSize + messageInnerPadding),
 		100
 	);
 }

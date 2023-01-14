@@ -1,9 +1,9 @@
 import { ContentDocument } from '../../../../_common/content/content-document';
 import { showInfoGrowl } from '../../../../_common/growls/growls.service';
-import { ChatClient, enterChatRoom, isChatFocusedOnRoom } from '../client';
+import { ChatClient, isChatFocusedOnRoom, openChatRoom } from '../client';
 import { ChatMessage } from '../message';
 import { ChatRoom, getChatRoomTitle } from '../room';
-import AppChatNotificationGrowl from './notification-growl.vue';
+import AppChatNotificationGrowl from './AppChatNotificationGrowl.vue';
 
 export class ChatNotificationGrowl {
 	static async show(
@@ -26,7 +26,7 @@ export class ChatNotificationGrowl {
 		}
 
 		showInfoGrowl({
-			onClick: () => enterChatRoom(chat, message.room_id),
+			onClick: () => openChatRoom(chat, message.room_id),
 			system,
 
 			title,
