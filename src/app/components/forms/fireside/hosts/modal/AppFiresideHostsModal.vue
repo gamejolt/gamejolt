@@ -96,8 +96,3 @@ const isAdding = computed(() => activeList.value !== 'currentHosts');
 		</div>
 	</AppModal>
 </template>
-
-<style lang="stylus" scoped>
-.-header-row
-	display: flex
-</style>

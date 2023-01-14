@@ -125,8 +125,3 @@ const listOptions = computed<Partial<typeof ListTitles>>(() => {
 		</div>
 	</AppModal>
 </template>
-
-<style lang="stylus" scoped>
-.-header-row
-	display: flex
-</style>
