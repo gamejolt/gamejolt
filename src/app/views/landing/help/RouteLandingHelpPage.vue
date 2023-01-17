@@ -9,7 +9,7 @@ import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import HelpPage from '../../../components/help/page/page.model';
+import HelpPage, { $viewPage } from '../../../components/help/page/page.model';
 
 export default {
 	...defineAppRouteOptions({
@@ -34,6 +34,8 @@ createAppRoute({
 	routeTitle,
 	onResolved({ payload }) {
 		page.value = new HelpPage(payload.page);
+
+		$viewPage(page.value);
 
 		if (payload.meta) {
 			const meta = payload.meta;
