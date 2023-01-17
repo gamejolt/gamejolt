@@ -18,7 +18,6 @@ import AppPostTargets from '../../post/AppPostTargets.vue';
 
 type FormModel = {
 	title: string;
-	community_id: number | null;
 	auto_feature: boolean;
 	add_community_as_cohosts: boolean;
 };
@@ -26,7 +25,6 @@ type FormModel = {
 const props = defineProps({
 	community: { type: Object as PropType<Community>, default: null },
 	realms: { type: Array as PropType<Realm[]>, default: () => [] },
-	maxRealms: { type: Number, default: 5 },
 	...defineFormProps<FormModel>(false),
 });
 
@@ -34,23 +32,17 @@ const emit = defineEmits({
 	submit: (_fireside: Fireside) => true,
 });
 
-const { community, realms, maxRealms, model } = toRefs(props);
+const { community, realms, model } = toRefs(props);
 
 const canSelectCommunity = computed(() => selectableCommunities.value.length > 0);
 
 const selectableCommunities = computed(() => targetableCommunities.value.filter(c => !c.isBlocked));
 
-const selectedCommunity = computed(() => {
-	if (!form.formModel.community_id) {
-		return undefined;
-	}
-	return targetableCommunities.value.find(c => c.id === form.formModel.community_id);
-});
-
 const defaultTitle = computed(() => nameSuggestion.value ?? undefined);
 const nameSuggestion = ref<string | null>(null);
 const targetableCommunities = ref<Community[]>([]);
 const communities = ref<{ community: Community }[]>([]);
+const maxRealms = ref(5);
 
 const loadUrl = `/web/dash/fireside/add`;
 
@@ -74,6 +66,10 @@ const form = createForm({
 		} else {
 			targetableCommunities.value = [];
 		}
+
+		if (payload.maxRealms) {
+			maxRealms.value = payload.maxRealms;
+		}
 	},
 	onInit() {
 		form.formModel.title = '';
@@ -89,8 +85,11 @@ const form = createForm({
 			is_draft: true,
 		} as any;
 
-		if (form.formModel.community_id) {
-			payloadData['community_id'] = form.formModel.community_id;
+		const selectedCommunity =
+			communities.value.length > 0 ? communities.value[0].community : null;
+
+		if (selectedCommunity) {
+			payloadData['community_id'] = selectedCommunity.id;
 			payloadData['auto_feature'] = form.formModel.auto_feature;
 			payloadData['add_community_as_cohosts'] = form.formModel.add_community_as_cohosts;
 		}
@@ -213,7 +212,9 @@ function removeRealm(realm: Realm) {
 				<AppPostTargets
 					class="-post-targets"
 					:communities="communities"
+					:max-communities="1"
 					:realms="realms"
+					:max-realms="maxRealms"
 					:targetable-communities="selectableCommunities"
 					can-add-community
 					can-add-realm
