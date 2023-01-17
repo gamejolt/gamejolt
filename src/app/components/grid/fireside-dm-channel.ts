@@ -14,6 +14,7 @@ export type GridFiresideDMChannel = Readonly<{
 	channelController: SocketChannelController;
 	firesideHash: string;
 	joinPromise: Promise<void>;
+	leave: () => void;
 }>;
 
 interface ListableHostsPayload {
@@ -50,7 +51,13 @@ export function createGridFiresideDMChannel(
 		channelController,
 		firesideHash,
 		joinPromise,
+
+		leave,
 	});
+
+	function leave() {
+		channelController.leave();
+	}
 
 	async function _onListableHosts(payload: ListableHostsPayload) {
 		logger.info('Grid listable hosts.', payload);

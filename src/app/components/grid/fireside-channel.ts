@@ -32,6 +32,7 @@ export type GridFiresideChannel = Readonly<{
 		chatSettings: FiresideChatSettings
 	) => Promise<UpdateChatSettingsPayload>;
 	pushUpdateHost: (data: UpdateHostData) => Promise<any>;
+	leave: () => void;
 }>;
 
 interface UpdateHostData {
@@ -120,9 +121,15 @@ export function createGridFiresideChannel(
 		channelController,
 		firesideHash,
 		joinPromise,
+
 		pushUpdateChatSettings,
 		pushUpdateHost,
+		leave,
 	});
+
+	function leave() {
+		channelController.leave();
+	}
 
 	async function _onUpdate(payload: UpdatePayload) {
 		logger.info('Fireside update message:', payload);

@@ -495,14 +495,6 @@ export class GridClient {
 		}
 	}
 
-	async leaveFireside(fireside: Fireside) {
-		const channel = this.firesideChannels.find(i => i.firesideHash === fireside.hash);
-		channel?.channelController.leave();
-
-		const dmChannel = this.firesideDMChannels.find(i => i.firesideHash === fireside.hash);
-		dmChannel?.channelController.leave();
-	}
-
 	recordFeaturedPost(post: FiresidePost) {
 		if (!this.featuredPostIds.has(post.id)) {
 			this.featuredPostIds.add(post.id);

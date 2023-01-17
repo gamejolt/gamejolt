@@ -61,6 +61,7 @@ import {
 } from '../../../../_common/fireside/rtc/rtc';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { getModel } from '../../../../_common/model/model-store.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
 import { onFiresideStickerPlaced, StickerStore } from '../../../../_common/sticker/sticker-store';
@@ -69,6 +70,7 @@ import { CommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
 import { BottomBarControl } from '../../../views/fireside/_bottom-bar/AppFiresideBottomBar.vue';
+import { ChatRoom } from '../../chat/room';
 import { ChatRoomChannel, createChatRoomChannel } from '../../chat/room-channel';
 import { createGridFiresideChannel, GridFiresideChannel } from '../../grid/fireside-channel';
 import { createGridFiresideDMChannel, GridFiresideDMChannel } from '../../grid/fireside-dm-channel';
@@ -84,7 +86,6 @@ export const shouldPromoteAppForStreaming = computed(
 
 export type RouteStatus =
 	| 'initial' // Initial status when route loads.
-	| 'disconnected' // Disconnected from the fireside (chat/client channels).
 	| 'loading' // Initiated loading to connect to relevant channels.
 	| 'unauthorized' // Cannot join because user is not logged in/has no cookie.
 	| 'expired' // Fireside has expired.
@@ -149,6 +150,12 @@ export function createFiresideController(
 	fireside = reactive(fireside) as Fireside;
 
 	const agoraStreamingInfo = ref<AgoraStreamingInfo>();
+
+	/**
+	 * If we were online and then got disconnected, we'll go into a reconnecting
+	 * flow and this will get set.
+	 */
+	const isReconnecting = ref(false);
 
 	/**
 	 * The hosts that are allowed to stream in the fireside.
@@ -221,7 +228,6 @@ export function createFiresideController(
 	const gridDMChannel = shallowRef<GridFiresideDMChannel>();
 	const chatChannel = shallowRef<ChatRoomChannel>();
 	let _expiryInterval: NodeJS.Timer | undefined;
-	let _gridPreviousConnectedState: boolean | undefined = undefined;
 
 	const isHoveringOverlayControl = ref(false);
 	const shownUserCardHover = ref<number>();
@@ -236,7 +242,7 @@ export function createFiresideController(
 	const focusedUser = computed(() => rtc.value?.focusedUser);
 
 	const chat = computed(() => grid.value?.chat ?? undefined);
-	const chatRoom = computed(() => chatChannel.value?.room.value);
+	const chatRoom = shallowRef(getModel(ChatRoom, fireside.chat_room_id));
 
 	const chatUsers = computed(() => {
 		if (!chatRoom.value) {
@@ -508,12 +514,6 @@ export function createFiresideController(
 		return rtc.value;
 	};
 
-	function _onChatUsersChanged() {
-		// Assign our fireside host data anytime our chat users change from
-		// unset to set.
-		chatUsers.value?.assignFiresideHostData(hosts.value);
-	}
-
 	function assignHostBackgroundData(userId: number, background: Background | undefined) {
 		if (!background) {
 			hostBackgrounds.value.delete(userId);
@@ -529,11 +529,39 @@ export function createFiresideController(
 	 */
 	const _unwatches: (() => void)[] = [];
 
-	// Sync we're not doing a deep watch, this'll only trigger when the actual
-	// instance changes (unset to set).
-	_unwatches.push(watch(chatUsers, _onChatUsersChanged));
-	_unwatches.push(watch(_wantsRTC, revalidateRTC));
+	// Set up watchers to initiate connection once grid boots up. When a
+	// connection is dropped or any other error on the socket we immediately
+	// become disconnected and then queue up for reconnecting.
+	_unwatches.push(
+		watch(
+			() => grid.value?.connected || false,
+			isConnected => {
+				logger.info(
+					'grid.connected watcher triggered: ' +
+						(isConnected ? 'connected' : 'disconnected')
+				);
 
+				if (!isConnected) {
+					_disconnect();
+					isReconnecting.value = true;
+				} else {
+					_tryJoin();
+				}
+			}
+		)
+	);
+
+	// Since we're not doing a deep watch, this'll only trigger when the actual
+	// instance changes (unset to set).
+	_unwatches.push(
+		watch(chatUsers, () => {
+			// Assign our fireside host data anytime our chat users change from
+			// unset to set.
+			chatUsers.value?.assignFiresideHostData(hosts.value);
+		})
+	);
+
+	_unwatches.push(watch(_wantsRTC, revalidateRTC));
 	_unwatches.push(
 		watch(
 			() => {
@@ -620,16 +648,6 @@ export function createFiresideController(
 				}
 			},
 			{ deep: true }
-		)
-	);
-
-	// Set up watchers to initiate connection once grid boots up. When a
-	// connection is dropped or any other error on the socket we immediately
-	// become disconnected and then queue up for restarting.
-	_unwatches.push(
-		watch(
-			() => grid.value?.connected,
-			() => _watchGrid
 		)
 	);
 
@@ -800,6 +818,7 @@ export function createFiresideController(
 		revalidateRTC,
 		assignHostBackgroundData,
 		status,
+		isReconnecting,
 		focusedUser,
 		chat,
 		chatSettings,
@@ -881,32 +900,18 @@ export function createFiresideController(
 		_tryJoin();
 	}
 
-	function _watchGrid() {
-		logger.info(
-			'grid.connected watcher triggered: ' +
-				(grid.value?.connected ? 'connected' : 'disconnected')
-		);
-
-		if (grid.value?.connected) {
-			_tryJoin();
-		}
-		// Only disconnect when not connected and it previous registered a
-		// different state. This watcher runs once initially when grid is not
-		// connected, and we don't want to call disconnect in that case.
-		else if (grid.value && _gridPreviousConnectedState !== undefined) {
-			_disconnect();
-		}
-
-		_gridPreviousConnectedState = grid.value?.connected ?? undefined;
-	}
-
 	async function _tryJoin() {
-		// Only try to join when disconnected (or for the first "initial" load).
-		if (status.value !== 'disconnected' && status.value !== 'initial') {
+		// Only try to join when reconnecting (or for the first "initial" load).
+		if (!isReconnecting.value && status.value !== 'initial') {
 			return;
 		}
 
-		status.value = 'loading';
+		// We only want to set the status to loading if they haven't connected
+		// yet. If they have and then we change the status, the whole page will
+		// essentially get reloaded.
+		if (status.value === 'initial') {
+			status.value = 'loading';
+		}
 
 		// Make sure the services are connected.
 		while (!grid.value?.connected) {
@@ -980,13 +985,12 @@ export function createFiresideController(
 				run(async () => {
 					logger.info('Trying to connect to fireside channel.');
 
-					const newChannel = createGridFiresideChannel(grid.value!, controller, {
+					gridChannel.value = createGridFiresideChannel(grid.value!, controller, {
 						firesideHash: fireside.hash,
 						stickerStore,
 					});
 
-					await newChannel.joinPromise;
-					gridChannel.value = newChannel;
+					await gridChannel.value.joinPromise;
 
 					logger.info('Connected to fireside channel.');
 				}),
@@ -999,13 +1003,12 @@ export function createFiresideController(
 
 					logger.info('Trying to connect to fireside DM channel.');
 
-					const newChannel = createGridFiresideDMChannel(grid.value!, controller, {
+					gridDMChannel.value = createGridFiresideDMChannel(grid.value!, controller, {
 						firesideHash: fireside.hash,
 						user: user.value,
 					});
 
-					await newChannel.joinPromise;
-					gridDMChannel.value = newChannel;
+					await gridDMChannel.value.joinPromise;
 
 					logger.info('Connected to fireside DM channel.');
 				}),
@@ -1013,10 +1016,8 @@ export function createFiresideController(
 				run(async () => {
 					logger.info('Trying to connect to chat room.');
 
-					const roomId = fireside.chat_room_id;
-
-					const newChannel = createChatRoomChannel(chat.value!, {
-						roomId,
+					chatChannel.value = createChatRoomChannel(chat.value!, {
+						roomId: fireside.chat_room_id,
 						instanced: true,
 						afterMemberKick: data => {
 							if (user.value && data.user_id === user.value.id) {
@@ -1026,8 +1027,8 @@ export function createFiresideController(
 						},
 					});
 
-					await newChannel.joinPromise;
-					chatChannel.value = newChannel;
+					await chatChannel.value.joinPromise;
+					chatRoom.value = chatChannel.value.room.value;
 
 					logger.info('Connected to chat room.');
 				}),
@@ -1056,26 +1057,25 @@ export function createFiresideController(
 	}
 
 	function _disconnect() {
-		if (status.value === 'disconnected') {
+		// Already reconnecting, so don't disconnect again.
+		if (isReconnecting.value) {
 			return;
 		}
 
 		logger.info(`Disconnecting from fireside.`);
-		status.value = 'disconnected';
 
 		_clearExpiryCheck();
 		_destroyExpiryInfoInterval();
 
 		if (grid.value?.connected) {
-			if (gridChannel.value || gridDMChannel.value) {
-				grid.value.leaveFireside(fireside);
-			}
-			gridChannel.value = undefined;
-			gridDMChannel.value = undefined;
-
+			gridChannel.value?.leave();
+			gridDMChannel.value?.leave();
 			chatChannel.value?.leave();
-			chatChannel.value = undefined;
 		}
+
+		gridChannel.value = undefined;
+		gridDMChannel.value = undefined;
+		chatChannel.value = undefined;
 
 		logger.info(`Disconnected from fireside.`);
 	}

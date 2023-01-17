@@ -544,7 +544,7 @@ function onClickStreamingBanner() {
 									</div>
 								</div>
 							</template>
-							<template v-else-if="routeStatus === 'disconnected'">
+							<!-- <template v-else-if="routeStatus === 'disconnected'">
 								<div key="disconnected" class="-message-wrapper">
 									<div class="-message">
 										<AppIllustration :asset="illNoCommentsSmall">
@@ -565,7 +565,7 @@ function onClickStreamingBanner() {
 										</AppIllustration>
 									</div>
 								</div>
-							</template>
+							</template> -->
 							<template v-else-if="routeStatus === 'blocked'">
 								<div key="blocked" class="-message-wrapper">
 									<div class="-message">
