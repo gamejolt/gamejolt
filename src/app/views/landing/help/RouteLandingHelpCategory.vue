@@ -111,13 +111,13 @@ createAppRoute({
 						</nav>
 					</div>
 					<template v-else>
-						<div class="_search">
+						<div class="_search anim-fade-in-right">
 							<AppHelpSearch />
 						</div>
 						<div
 							v-for="category of categories"
 							:key="category.category.id"
-							class="_category"
+							class="_category anim-fade-in-right stagger"
 						>
 							<h3 class="sans-margin-top">{{ category.category.name }}</h3>
 							<div>

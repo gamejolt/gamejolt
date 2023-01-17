@@ -52,7 +52,7 @@ const canModerate = computed(() => user.value && user.value.permission_level > 3
 
 <template>
 	<div v-if="page" :key="page.id">
-		<h2 class="sans-margin-top _page-header">
+		<h2 class="sans-margin-top _page-header anim-fade-in">
 			{{ page?.title }}
 			<a
 				v-if="canModerate"
@@ -63,7 +63,7 @@ const canModerate = computed(() => user.value && user.value.permission_level > 3
 				<AppJolticon icon="cog" />
 			</a>
 		</h2>
-		<div>
+		<div class="anim-fade-in">
 			<div v-if="canModerate">
 				<p>
 					<a
