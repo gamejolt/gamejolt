@@ -15,9 +15,9 @@ import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { FiresidePostRealm } from '../../../../_common/fireside/post/realm/realm.model';
 import { FiresidePostVideo } from '../../../../_common/fireside/post/video/video-model';
 import AppForm, {
-	createForm,
-	defineFormProps,
-	FormController,
+createForm,
+defineFormProps,
+FormController
 } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
@@ -31,12 +31,12 @@ import AppFormControlDate from '../../../../_common/form-vue/controls/AppFormCon
 import AppFormControlSelect from '../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import {
-	validateContentMaxLength,
-	validateContentNoActiveUploads,
-	validateContentRequired,
-	validateMaxLength,
-	validateMaxValue,
-	validateMinValue,
+validateContentMaxLength,
+validateContentNoActiveUploads,
+validateContentRequired,
+validateMaxLength,
+validateMaxValue,
+validateMinValue
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -54,9 +54,9 @@ import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.se
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import {
-	$gettext,
-	$gettextInterpolate,
-	$ngettext,
+$gettext,
+$gettextInterpolate,
+$ngettext
 } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import AppPostTargets from '../../post/AppPostTargets.vue';
@@ -636,11 +636,21 @@ watch(
 	}
 );
 
-function attachIncompleteCommunity(community: Community, channel: CommunityChannel) {
+function attachIncompleteCommunity(community: Community, channel?: CommunityChannel) {
+	if (!channel) {
+		console.warn('Attempt to attach a community without a channel');
+		return;
+	}
+
 	attachCommunity(community, channel, false);
 }
 
-function attachCommunity(community: Community, channel: CommunityChannel, append = true) {
+function attachCommunity(community: Community, channel?: CommunityChannel, append = true) {
+	if (!channel) {
+		console.warn('Attempt to attach a community without a channel');
+		return;
+	}
+
 	// Do nothing if that community is already attached.
 	if (attachedCommunities.value.find(i => i.community.id === community.id)) {
 		return;

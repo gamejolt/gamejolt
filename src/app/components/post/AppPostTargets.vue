@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+// TODO(fireside-realms) refactor this into a component thats not specific for posts.
+// Its basically a general purpose "attachable targets".
+
 import { computed, PropType, ref, toRefs } from 'vue';
 import { arrayIndexBy } from '../../../utils/array';
 import { CommunityChannel } from '../../../_common/community/channel/channel.model';
@@ -37,6 +40,10 @@ const props = defineProps({
 	targetableCommunities: {
 		type: Array as PropType<Community[]>,
 		default: () => [],
+	},
+	withCommunityChannels: {
+		type: Boolean,
+		default: true,
 	},
 	maxCommunities: {
 		type: Number,
@@ -79,8 +86,8 @@ const {
 
 const emit = defineEmits({
 	showCommunities: () => true,
-	selectCommunity: (_community: Community, _channel: CommunityChannel) => true,
-	selectIncompleteCommunity: (_community: Community, _channel: CommunityChannel) => true,
+	selectCommunity: (_community: Community, _channel?: CommunityChannel) => true,
+	selectIncompleteCommunity: (_community: Community, _channel?: CommunityChannel) => true,
 	selectRealm: (_realm: Realm) => true,
 	removeCommunity: (_community: Community) => true,
 	removeRealm: (_realm: Realm) => true,
@@ -162,12 +169,12 @@ function onRemoveCommunity(community: Community) {
 	emit('removeCommunity', community);
 }
 
-function selectCommunity(community: Community, channel: CommunityChannel) {
+function selectCommunity(community: Community, channel?: CommunityChannel) {
 	emit('selectCommunity', community, channel);
 	_scrollToEnd();
 }
 
-function selectIncompleteCommunity(community: Community, channel: CommunityChannel) {
+function selectIncompleteCommunity(community: Community, channel?: CommunityChannel) {
 	emit('selectIncompleteCommunity', community, channel);
 }
 
@@ -267,6 +274,7 @@ async function onClickAddRealm() {
 				key="add-community"
 				:class="baseClasses"
 				:communities="targetableCommunities"
+				:with-channel="withCommunityChannels"
 				@select="selectCommunity"
 				@show="emit('showCommunities')"
 			/>

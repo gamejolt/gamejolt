@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
-import { arrayRemove } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
+import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppForm, { createForm, defineFormProps } from '../../../../_common/form-vue/AppForm.vue';
@@ -11,15 +11,10 @@ import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErr
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Realm } from '../../../../_common/realm/realm-model';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import AppPostTarget from '../../post/target/AppPostTarget.vue';
-import AppPostTargetCommunity from '../../post/target/AppPostTargetCommunity.vue';
-import AppPostTargetRealm from '../../post/target/AppPostTargetRealm.vue';
-import { PostTargetManageRealmsModal } from '../../post/target/manage-realms/modal.service';
-import AppPostTargetAddCommunity from '../../post/target/_add/AppPostTargetAddCommunity.vue';
+import AppPostTargets from '../../post/AppPostTargets.vue';
 
 type FormModel = {
 	title: string;
@@ -43,18 +38,19 @@ const { community, realms, maxRealms, model } = toRefs(props);
 
 const canSelectCommunity = computed(() => selectableCommunities.value.length > 0);
 
-const selectableCommunities = computed(() => communities.value.filter(c => !c.isBlocked));
+const selectableCommunities = computed(() => targetableCommunities.value.filter(c => !c.isBlocked));
 
 const selectedCommunity = computed(() => {
 	if (!form.formModel.community_id) {
 		return undefined;
 	}
-	return communities.value.find(c => c.id === form.formModel.community_id);
+	return targetableCommunities.value.find(c => c.id === form.formModel.community_id);
 });
 
 const defaultTitle = computed(() => nameSuggestion.value ?? undefined);
 const nameSuggestion = ref<string | null>(null);
-const communities = ref<Community[]>([]);
+const targetableCommunities = ref<Community[]>([]);
+const communities = ref<{ community: Community }[]>([]);
 
 const loadUrl = `/web/dash/fireside/add`;
 
@@ -74,18 +70,16 @@ const form = createForm({
 		}
 
 		if (payload.targetableCommunities) {
-			communities.value = Community.populate(payload.targetableCommunities);
+			targetableCommunities.value = Community.populate(payload.targetableCommunities);
 		} else {
-			communities.value = [];
+			targetableCommunities.value = [];
 		}
 	},
 	onInit() {
 		form.formModel.title = '';
 
 		if (community.value) {
-			setCommunity(community.value);
-		} else {
-			form.formModel.community_id = null;
+			communities.value.push({ community: community.value });
 		}
 	},
 	async onSubmit() {
@@ -139,27 +133,54 @@ function onBlurTitle() {
 	form.formModel.title = form.formModel.title.trim();
 }
 
-function setCommunity(community: Community) {
-	form.formModel.community_id = community.id;
+function attachCommunity(
+	community: Community,
+	_channel: CommunityChannel | undefined,
+	append = true
+) {
+	// Do nothing if that community is already attached.
+	if (communities.value.find(i => i.community.id === community.id)) {
+		return;
+	}
+
+	if (append) {
+		communities.value.push({ community: community });
+	} else {
+		communities.value.unshift({ community: community });
+	}
 }
 
-function onAddCommunity(community: Community) {
-	setCommunity(community);
+function attachRealm(realm: Realm, append = true) {
+	// Do nothing if that realm is already attached.
+	if (realms.value.find(i => i.id === realm.id)) {
+		return;
+	}
+
+	if (append) {
+		realms.value.push(realm);
+	} else {
+		realms.value.unshift(realm);
+	}
 }
 
-function onRemoveCommunity() {
-	form.formModel.community_id = null;
+function removeCommunity(community: Community) {
+	const idx = communities.value.findIndex(i => i.community.id === community.id);
+	if (idx === -1) {
+		console.warn('Attempted to remove a community that is not attached');
+		return;
+	}
+
+	communities.value.splice(idx, 1);
 }
 
-function onClickAddRealm() {
-	PostTargetManageRealmsModal.show({
-		selectedRealms: realms.value,
-		maxRealms: maxRealms.value,
-	});
-}
+function removeRealm(realm: Realm) {
+	const idx = realms.value.findIndex(i => i.id === realm.id);
+	if (idx === -1) {
+		console.warn('Attempted to remove a realm that is not attached');
+		return;
+	}
 
-function onRemoveRealm(realm: Realm) {
-	arrayRemove(realms.value, i => i.id === realm.id);
+	realms.value.splice(idx, 1);
 }
 </script>
 
@@ -181,6 +202,7 @@ function onRemoveRealm(realm: Realm) {
 			<AppFormControlErrors />
 		</AppFormGroup>
 
+		<!-- TODO(fireside-realms) canSelectCommunity is wrong, should check for realms too or just remove -->
 		<template v-if="canSelectCommunity">
 			<AppFormGroup
 				class="-group-targettables"
@@ -188,40 +210,21 @@ function onRemoveRealm(realm: Realm) {
 				:label="$gettext(`Start in a community?`)"
 				hide-label
 			>
-				<div class="-group-targettables-list">
-					<AppPostTargetRealm
-						v-for="realm of realms"
-						:key="`realm-${realm.id}`"
-						can-remove
-						:realm="realm"
-						@remove="onRemoveRealm"
-					/>
-
-					<AppPostTargetCommunity
-						v-if="selectedCommunity"
-						:community="selectedCommunity"
-						no-right
-						can-remove
-						@remove="onRemoveCommunity"
-					/>
-
-					<a v-if="realms.length < maxRealms" @click="onClickAddRealm">
-						<AppPostTarget class="-add">
-							<template #img>
-								<AppJolticon icon="add" />
-							</template>
-
-							<AppTranslate>Add realm</AppTranslate>
-						</AppPostTarget>
-					</a>
-
-					<AppPostTargetAddCommunity
-						v-if="!selectedCommunity"
-						:communities="selectableCommunities"
-						:with-channel="false"
-						@select-community="onAddCommunity"
-					/>
-				</div>
+				<AppPostTargets
+					class="-post-targets"
+					:communities="communities"
+					:realms="realms"
+					:targetable-communities="selectableCommunities"
+					can-add-community
+					can-add-realm
+					can-remove-communities
+					can-remove-realms
+					:with-community-channels="false"
+					@remove-community="removeCommunity"
+					@remove-realm="removeRealm"
+					@select-community="attachCommunity"
+					@select-realm="attachRealm"
+				/>
 
 				<div class="help-block">
 					<AppTranslate>

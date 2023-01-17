@@ -27,12 +27,16 @@ const { communities, initialCommunity, withChannel } = toRefs(props);
 const emit = defineEmits({
 	selectCommunity: (_community: Community) => true,
 	selectChannel: (_channel: CommunityChannel) => true,
-	select: (_community: Community, _channel: CommunityChannel) => true,
+	select: (_community: Community, _channel?: CommunityChannel) => true,
 	show: () => true,
 });
 
 function onSelectCommunity(community: Community) {
 	emit('selectCommunity', community);
+
+	if (!withChannel.value) {
+		emit('select', community);
+	}
 }
 
 function onSelectChannel(channel: CommunityChannel) {
