@@ -47,7 +47,7 @@ import { UserFriendship } from '../../../../_common/user/friendship/friendship.m
 import { showUserInviteFollowModal } from '../../../../_common/user/invite/modal/modal.service';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 import { unfollowUser, User } from '../../../../_common/user/user.model';
-import { enterChatRoom } from '../../../components/chat/client';
+import { openChatRoom } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/overview/overview.vue';
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import AppGameList from '../../../components/game/list/list.vue';
@@ -445,7 +445,7 @@ export default class RouteProfileOverview extends BaseRouteComponent {
 				if (Screen.isXs) {
 					this.store.toggleLeftPane('chat');
 				}
-				enterChatRoom(this.chat, chatUser.room_id);
+				openChatRoom(this.chat, chatUser.room_id);
 			}
 		}
 	}

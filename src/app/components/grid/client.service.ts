@@ -218,7 +218,9 @@ export class GridClient {
 		}
 		// User connections expected to handle a bunch of notification stuff.
 		else if (user.value) {
-			const channel = await createGridNotificationChannel(this, { userId: user.value.id });
+			const channel = createGridNotificationChannel(this, { userId: user.value.id });
+			await channel.joinPromise;
+
 			this.notificationChannel = markRaw(channel);
 			this.markConnected();
 
@@ -475,10 +477,13 @@ export class GridClient {
 			return;
 		}
 
-		return await createGridCommunityChannel(this, {
+		const communityChannel = createGridCommunityChannel(this, {
 			communityId: community.id,
 			router,
 		});
+
+		await communityChannel.joinPromise;
+		return communityChannel;
 	}
 
 	async leaveCommunity(community: Community) {
