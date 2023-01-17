@@ -1,6 +1,5 @@
 <script lang="ts">
-import { computed } from '@vue/reactivity';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
@@ -8,8 +7,9 @@ import { Meta } from '../../../../_common/meta/meta-service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
+import { kThemeFgMuted } from '../../../../_common/theme/variables';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import HelpPage, { $viewPage } from '../../../components/help/page/page.model';
+import HelpPage from '../../../components/help/page/page.model';
 
 export default {
 	...defineAppRouteOptions({
@@ -19,7 +19,6 @@ export default {
 		resolver: ({ route }) =>
 			Api.sendRequest(`/web/help/page/${route.params.category}/${route.params.page}`),
 	}),
-	components: { AppShareCard },
 };
 </script>
 
@@ -34,8 +33,6 @@ createAppRoute({
 	routeTitle,
 	onResolved({ payload }) {
 		page.value = new HelpPage(payload.page);
-
-		$viewPage(page.value);
 
 		if (payload.meta) {
 			const meta = payload.meta;
@@ -54,13 +51,13 @@ const canModerate = computed(() => user.value && user.value.permission_level > 3
 
 <template>
 	<div v-if="page" :key="page.id">
-		<h2 class="sans-margin-top _page-header anim-fade-in">
+		<h2 class="sans-margin-top anim-fade-in">
 			{{ page?.title }}
 			<a
 				v-if="canModerate"
 				:href="`${Environment.baseUrl}/moderate/help/page/${page.id}`"
 				target="_blank"
-				:style="{ color: 'var(--theme-fg-muted)' }"
+				:style="{ color: kThemeFgMuted }"
 			>
 				<AppJolticon icon="cog" />
 			</a>
@@ -81,23 +78,8 @@ const canModerate = computed(() => user.value && user.value.permission_level > 3
 			<AppContentViewer :source="page.content" />
 		</div>
 		<hr />
-		<div>
-			<AppShareCard
-				class="_share-card"
-				resource="help-page"
-				:url="page.getShareUrl()"
-				offset-color
-			/>
+		<div :style="{ maxWidth: `400px` }">
+			<AppShareCard resource="help-page" :url="page.getShareUrl()" offset-color />
 		</div>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-h2._page-header
-	font-size: 32px
-	margin-bottom: 40px
-
-._share-card
-	margin-top: 24px
-	max-width: 360px
-</style>

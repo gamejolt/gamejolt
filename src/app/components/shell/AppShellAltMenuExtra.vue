@@ -1,6 +1,10 @@
 <script lang="ts" setup>
 import { RouterLink } from 'vue-router';
 import { TranslateLangSelectorModal } from '../../../_common/translate/lang-selector/lang-selector-modal.service';
+import { routeLandingHelpRedirect } from '../../views/landing/help/help.route';
+import { routeLegalCookies } from '../../views/legal/cookies/cookies.route';
+import { routeLegalPrivacy } from '../../views/legal/privacy/privacy.route';
+import { routeLegalTerms } from '../../views/legal/terms/terms.route';
 
 function showLangSelector() {
 	TranslateLangSelectorModal.show();
@@ -11,22 +15,22 @@ function showLangSelector() {
 	<div class="-extra-links">
 		<RouterLink
 			:to="{
-				name: 'landing.help.redirect',
+				name: routeLandingHelpRedirect.name,
 				params: { path: 'support' },
 			}"
 		>
 			{{ $gettext(`Support`) }}
 		</RouterLink>
 		<div class="-dot" />
-		<RouterLink :to="{ name: 'legal.terms' }">
+		<RouterLink :to="{ name: routeLegalTerms.name }">
 			{{ $gettext(`Terms`) }}
 		</RouterLink>
 		<div class="-dot" />
-		<RouterLink :to="{ name: 'legal.privacy' }">
+		<RouterLink :to="{ name: routeLegalPrivacy.name }">
 			{{ $gettext(`Privacy`) }}
 		</RouterLink>
 		<div class="-row-break" />
-		<RouterLink :to="{ name: 'legal.cookies' }">
+		<RouterLink :to="{ name: routeLegalCookies.name }">
 			{{ $gettext(`Cookie policy`) }}
 		</RouterLink>
 		<div class="-dot" />

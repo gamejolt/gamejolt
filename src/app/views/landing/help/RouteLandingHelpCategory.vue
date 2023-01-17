@@ -1,15 +1,15 @@
 <script lang="ts">
-import { computed } from '@vue/reactivity';
-import { ref } from '@vue/runtime-core';
-import { useRoute } from 'vue-router';
+import { computed, Ref, ref } from 'vue';
+import { RouterLink, RouterView, useRoute } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { kFontSizeLarge } from '../../../../_styles/variables';
 import AppHelpGroup from '../../../components/help/AppHelpGroup.vue';
-import AppHelpSearch from '../../../components/help/AppHelpSearch.vue';
 import HelpCategory from '../../../components/help/category/category.model';
 import HelpPage from '../../../components/help/page/page.model';
+import { routeLandingHelp, routeLandingHelpCategory, routeLandingHelpPage } from './help.route';
 
 export default {
 	...defineAppRouteOptions({
@@ -18,7 +18,6 @@ export default {
 		deps: { params: ['category'] },
 		resolver: () => Api.sendRequest(`/web/help/categories`),
 	}),
-	components: { AppHelpGroup, AppHelpSearch },
 };
 </script>
 
@@ -30,7 +29,7 @@ interface PayloadCategory {
 
 const route = useRoute();
 
-const categories = ref<PayloadCategory[]>([]);
+const categories = ref([]) as Ref<PayloadCategory[]>;
 
 const currentCategory = computed(() =>
 	categories.value.find(x => x.category.url === route.params.category)
@@ -62,12 +61,17 @@ createAppRoute({
 			<div class="row">
 				<div class="col-lg-3 col-sm-12">
 					<div v-if="Screen.isMobile">
-						<nav class="breadcrumb _mobile-nav">
+						<nav
+							class="breadcrumb"
+							:style="{
+								marginBottom: `12px`,
+							}"
+						>
 							<ul>
 								<li>
 									<RouterLink
 										:to="{
-											name: 'landing.help',
+											name: routeLandingHelp.name,
 										}"
 									>
 										{{ $gettext(`Help Docs`) }}
@@ -80,7 +84,7 @@ createAppRoute({
 								<li>
 									<RouterLink
 										:to="{
-											name: 'landing.help.category',
+											name: routeLandingHelpCategory.name,
 											params: {
 												category: currentCategory?.category.url,
 											},
@@ -97,7 +101,7 @@ createAppRoute({
 								<li v-if="currentPage">
 									<RouterLink
 										:to="{
-											name: 'landing.help.page',
+											name: routeLandingHelpPage.name,
 											params: {
 												category: currentCategory?.category.url,
 												page: currentPage.url,
@@ -111,28 +115,34 @@ createAppRoute({
 						</nav>
 					</div>
 					<template v-else>
-						<div class="_search anim-fade-in-right">
-							<AppHelpSearch />
-						</div>
 						<div
-							v-for="category of categories"
-							:key="category.category.id"
-							class="_category anim-fade-in-right stagger"
+							v-for="{ category, pages } of categories"
+							:key="category.id"
+							class="anim-fade-in-right stagger"
+							:style="{
+								marginBottom: `48px`,
+							}"
 						>
-							<h3 class="sans-margin-top">{{ category.category.name }}</h3>
+							<h3
+								class="sans-margin-top"
+								:style="{
+									fontSize: `${kFontSizeLarge}px`,
+								}"
+							>
+								{{ category.name }}
+							</h3>
 							<div>
 								<nav class="platform-list">
 									<ul>
-										<li
-											v-for="page of category.pages"
-											:key="page.id"
-											class="_page"
-										>
+										<li v-for="page of pages" :key="page.id">
 											<RouterLink
+												:style="{
+													marginBottom: `-12px`,
+												}"
 												:to="{
-													name: 'landing.help.page',
+													name: routeLandingHelpPage.name,
 													params: {
-														category: category.category.url,
+														category: category.url,
 														page: page.url,
 													},
 												}"
@@ -148,7 +158,7 @@ createAppRoute({
 					</template>
 				</div>
 				<div class="col-lg-9 col-sm-12">
-					<router-view v-if="$route.params.page" />
+					<RouterView v-if="$route.params.page" />
 					<template v-else-if="currentCategory">
 						<div class="row">
 							<div class="col-lg-9 col-sm-12">
@@ -164,21 +174,3 @@ createAppRoute({
 		</div>
 	</section>
 </template>
-
-<style lang="stylus" scoped>
-._category
-	margin-bottom: 48px
-
-	& > h3
-		font-size: 18px
-		text-transform: uppercase
-
-._page > a
-	margin-bottom: -12px
-
-._mobile-nav
-	margin-bottom: 12px
-
-._search
-	margin-bottom: 48px
-</style>

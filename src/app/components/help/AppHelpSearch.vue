@@ -2,6 +2,7 @@
 import { ref } from '@vue/reactivity';
 import { useRouter } from 'vue-router';
 import { $gettext } from '../../../_common/translate/translate.service';
+import { routeLandingHelpSearch } from '../../views/landing/help/help.route';
 
 const props = defineProps({
 	query: {
@@ -10,8 +11,8 @@ const props = defineProps({
 	},
 });
 
-const value = ref<string>(props.query);
 const router = useRouter();
+const value = ref(props.query);
 
 function onKeyDown(e: KeyboardEvent) {
 	value.value = (e.target as HTMLInputElement).value;
@@ -22,7 +23,7 @@ function onKeyDown(e: KeyboardEvent) {
 
 function go() {
 	router.push({
-		name: 'landing.help.search',
+		name: routeLandingHelpSearch.name,
 		query: {
 			q: value.value,
 		},

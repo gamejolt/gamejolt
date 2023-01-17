@@ -1,5 +1,4 @@
 import { Environment } from '../../../../_common/environment/environment.service';
-import { HistoryTick } from '../../../../_common/history-tick/history-tick-service';
 import { Model } from '../../../../_common/model/model.service';
 import HelpCategory from '../category/category.model';
 
@@ -30,7 +29,3 @@ export default class HelpPage extends Model {
 }
 
 Model.create(HelpPage);
-
-export function $viewPage(page: HelpPage) {
-	HistoryTick.sendBeacon('help-page', page.id);
-}

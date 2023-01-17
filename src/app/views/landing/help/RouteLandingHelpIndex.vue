@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref } from '@vue/reactivity';
+import { computed, Ref, ref } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppPostCard from '../../../../_common/fireside/post/card/AppPostCard.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -18,12 +18,6 @@ export default {
 		deps: {},
 		resolver: () => Api.sendRequest('/web/help'),
 	}),
-	components: {
-		AppScrollScroller,
-		AppHelpGroup,
-		AppPostCard,
-		AppHelpSearch,
-	},
 };
 </script>
 
@@ -33,8 +27,8 @@ interface PayloadFeatured {
 	pages: HelpPage[];
 }
 
-const featuredPages = ref<PayloadFeatured[]>([]);
-const broadcastPosts = ref<FiresidePost[]>([]);
+const featuredPages = ref([]) as Ref<PayloadFeatured[]>;
+const broadcastPosts = ref([]) as Ref<FiresidePost[]>;
 
 createAppRoute({
 	routeTitle: computed(() => $gettext(`Help Docs`)),
@@ -56,45 +50,56 @@ createAppRoute({
 	<div>
 		<section class="section fill-offset">
 			<div class="container">
-				<h2 class="section-header">
-					{{ $gettext(`Find what you're looking for`) }}
-				</h2>
 				<div class="row">
-					<div class="col-lg-6 col-sm-12">
+					<div class="col-lg-6 col-sm-12 col-centered">
+						<h2 class="section-header text-center">
+							{{ $gettext(`Find what you're looking for`) }}
+						</h2>
 						<AppHelpSearch />
 					</div>
 				</div>
 			</div>
 		</section>
 
-		<section v-if="featuredPages && featuredPages.length" class="section">
+		<section v-if="featuredPages?.length" class="section">
 			<div class="container">
 				<div class="row">
 					<div
-						v-for="featuredCategory of featuredPages"
-						:key="featuredCategory.category.id"
+						v-for="{ category, pages } of featuredPages"
+						:key="category.id"
 						class="col-lg-6 col-sm-12"
 					>
-						<AppHelpGroup
-							:category="featuredCategory.category"
-							:pages="featuredCategory.pages"
-						/>
+						<AppHelpGroup :category="category" :pages="pages" />
 					</div>
 				</div>
 			</div>
 		</section>
 
-		<section v-if="broadcastPosts && broadcastPosts.length" class="section fill-offset">
+		<section v-if="broadcastPosts?.length" class="section fill-offset">
 			<div class="container">
 				<h2 class="section-header">
 					{{ $gettext(`Recent updates`) }}
 				</h2>
 
-				<AppScrollScroller class="_recent-container" thin horizontal>
+				<AppScrollScroller
+					class="_recent-container"
+					:style="{
+						// Inline block overflow x:
+						overflowX: `scroll`,
+						whiteSpace: `nowrap`,
+					}"
+					thin
+					horizontal
+				>
 					<AppPostCard
 						v-for="broadcastPost of broadcastPosts"
 						:key="broadcastPost.id"
-						class="_post-card anim-fade-in-up stagger"
+						class="anim-fade-in-up stagger"
+						:style="{
+							height: `280px`,
+							display: `inline-block`,
+							marginRight: `24px`,
+						}"
 						:post="broadcastPost"
 						:source="'help'"
 						with-user
@@ -120,15 +125,6 @@ createAppRoute({
 
 <style lang="stylus" scoped>
 ._recent-container
-	// Inline block overflow x:
-	overflow-x: scroll
-	white-space: nowrap
-
 	@media $media-md-up
 		padding: 8px
-
-._post-card
-	height: 280px
-	display: inline-block
-	margin-right: 24px
 </style>

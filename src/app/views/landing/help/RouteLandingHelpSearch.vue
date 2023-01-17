@@ -6,11 +6,15 @@ import { Api } from '../../../../_common/api/api.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
+import AppOnHover from '../../../../_common/on/AppOnHover.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { kThemeFg } from '../../../../_common/theme/variables';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { styleWhen } from '../../../../_styles/mixins';
 import AppHelpSearch from '../../../components/help/AppHelpSearch.vue';
 import HelpPage from '../../../components/help/page/page.model';
 import { illNoComments } from '../../../img/ill/illustrations';
+import { routeLandingHelpPage } from './help.route';
 
 export default {
 	...defineAppRouteOptions({
@@ -19,13 +23,12 @@ export default {
 		deps: { query: ['q'] },
 		resolver: ({ route }) => Api.sendRequest(`/web/help/search?q=${route.query.q}`),
 	}),
-	components: { AppContentViewer, AppHelpSearch, AppIllustration },
 };
 </script>
 
 <script lang="ts" setup>
-const pages = ref<HelpPage[]>([]);
 const route = useRoute();
+const pages = ref<HelpPage[]>([]);
 
 const routeTitle = computed(() => $gettext(`Help Docs Search Results`));
 
@@ -59,14 +62,12 @@ const hasResults = computed(() => pages.value && pages.value.length > 0);
 <template>
 	<section class="section fill-offset">
 		<div class="container">
-			<h2 class="section-header">
-				{{
-					$gettextInterpolate(`Search results for "%{ query }"`, { query: initialQuery })
-				}}
-			</h2>
-
 			<div class="row">
-				<div class="col-lg-6 col-sm-12">
+				<div class="col-lg-6 col-sm-12 col-centered">
+					<h2 class="section-header text-center">
+						{{ $gettext(`Search results for...`) }}
+					</h2>
+
 					<AppHelpSearch :query="initialQuery" />
 				</div>
 			</div>
@@ -75,52 +76,43 @@ const hasResults = computed(() => pages.value && pages.value.length > 0);
 
 	<section class="section">
 		<div class="container">
-			<div v-if="!hasResults">
-				<div class="row">
-					<div class="col-lg-6 col-sm-12">
-						<AppIllustration :asset="illNoComments">
-							<p>
-								{{ $gettext(`No results were found for your search.`) }}
-							</p>
-						</AppIllustration>
-					</div>
-				</div>
-			</div>
-			<div v-else>
-				<div v-for="page of pages" :key="page.id" class="_result">
-					<RouterLink
-						:to="{
-							name: 'landing.help.page',
-							params: { category: page.help_category.url, page: page.url },
-						}"
-					>
-						<h3 class="_result-header">
-							{{ page.title }}
-							<AppJolticon icon="chevron-right" class="_result-header-go-icon" />
-						</h3>
-						<div class="_page-subline">
-							<AppContentViewer :source="page.subline_content" />
-						</div>
-					</RouterLink>
+			<template v-if="!hasResults">
+				<AppIllustration :asset="illNoComments">
+					<p>
+						{{ $gettext(`No results were found for your search.`) }}
+					</p>
+				</AppIllustration>
+			</template>
+			<template v-else>
+				<div v-for="page of pages" :key="page.id">
+					<AppOnHover v-slot="{ binding, hovered }">
+						<RouterLink
+							v-bind="binding"
+							:to="{
+								name: routeLandingHelpPage.name,
+								params: { category: page.help_category.url, page: page.url },
+							}"
+						>
+							<h3 :style="{ marginTop: 0 }">
+								{{ page.title }}
+								<AppJolticon
+									icon="chevron-right"
+									:style="{
+										transition: `transform 0.15s ease`,
+										...styleWhen(hovered, {
+											transform: `translateX(12px)`,
+										}),
+									}"
+								/>
+							</h3>
+							<div :style="{ color: kThemeFg }">
+								<AppContentViewer :source="page.subline_content" />
+							</div>
+						</RouterLink>
+					</AppOnHover>
 					<hr />
 				</div>
-			</div>
+			</template>
 		</div>
 	</section>
 </template>
-
-<style lang="stylus" scoped>
-._page-subline
-	color: var(--theme-fg)
-
-._result-header
-	margin-top: 0
-
-._result:hover
-	._result-header
-		._result-header-go-icon
-			transform: translateX(12px)
-
-._result-header-go-icon
-	transition: transform 0.15s ease
-</style>

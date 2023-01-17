@@ -4,6 +4,7 @@ import { RouteLocationRedirect } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { routeLandingHelp, routeLandingHelpPage } from './help.route';
 
 export default {
 	...defineAppRouteOptions({
@@ -17,12 +18,12 @@ export default {
 			// If the redirect path is not known, redirect to index.
 			if (!payload || !payload.redirect) {
 				return new RouteLocationRedirect({
-					name: 'landing.help',
+					name: routeLandingHelp.name,
 				});
 			}
 
 			return new RouteLocationRedirect({
-				name: 'landing.help.page',
+				name: routeLandingHelpPage.name,
 				params: {
 					category: payload.redirect.category,
 					page: payload.redirect.page,

@@ -1,9 +1,11 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
+import { PropType } from 'vue';
+import { RouterLink } from 'vue-router';
+import { routeLandingHelpPage } from '../../views/landing/help/help.route';
 import HelpCategory from './category/category.model';
 import HelpPage from './page/page.model';
 
-const props = defineProps({
+defineProps({
 	category: {
 		type: Object as PropType<HelpCategory>,
 		required: true,
@@ -13,8 +15,6 @@ const props = defineProps({
 		required: true,
 	},
 });
-
-const { category, pages } = toRefs(props);
 </script>
 
 <template>
@@ -30,7 +30,7 @@ const { category, pages } = toRefs(props);
 			:key="page.id"
 			class="list-group-item"
 			:to="{
-				name: 'landing.help.page',
+				name: routeLandingHelpPage.name,
 				params: {
 					category: category.url,
 					page: page.url,
