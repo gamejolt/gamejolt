@@ -20,6 +20,9 @@ export default class AppFiresideBadgeAdd extends Vue {
 	@Prop({ type: Object, default: undefined })
 	community!: Community | undefined;
 
+	@Prop({ type: Array, default: undefined })
+	realms!: Realm[] | undefined;
+
 	commonStore = setup(() => useCommonStore());
 
 	get user() {
@@ -43,7 +46,11 @@ export default class AppFiresideBadgeAdd extends Vue {
 	};
 
 	async onClickBadge() {
-		const fireside = await FiresideAddModal.show({ community: this.community });
+		const fireside = await FiresideAddModal.show({
+			community: this.community,
+			realms: this.realms || [],
+		});
+
 		if (fireside instanceof Fireside) {
 			this.$router.push(fireside.routeLocation);
 		}

@@ -655,6 +655,7 @@ function attachCommunity(community: Community, channel: CommunityChannel, append
 }
 
 function attachRealm(realm: Realm, append = true) {
+	// TODO(fireside-realms) why is this here?
 	Popper.hideAll();
 
 	// Do nothing if that realm is already attached.
@@ -1531,6 +1532,7 @@ function _getMatchingBackgroundIdFromPref() {
 				@remove-realm="removeRealm"
 				@select-community="attachCommunity"
 				@select-incomplete-community="attachIncompleteCommunity"
+				@select-realm="attachRealm"
 			/>
 		</template>
 		<template v-else>

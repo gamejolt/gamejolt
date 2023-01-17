@@ -15,6 +15,7 @@ import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
+import AppRealmThumbnail from '../../../../_common/realm/AppRealmThumbnail.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
@@ -37,6 +38,10 @@ const props = defineProps({
 	hideCommunity: {
 		type: Boolean,
 	},
+	// TODO: added this
+	hideRealm: {
+		type: Boolean,
+	},
 });
 
 const emit = defineEmits({
@@ -54,6 +59,9 @@ let _expiryCheck: NodeJS.Timer | null = null;
 const isLoading = ref(false);
 
 const community = computed(() => fireside.value.community ?? undefined);
+const realm = computed(() =>
+	fireside.value.hasRealms ? fireside.value.realms[0].realm : undefined
+);
 const title = computed(() => fireside.value.title);
 
 const canModerate = computed(
@@ -183,6 +191,7 @@ async function ejectFireside(community: FiresideCommunity) {
 	<AppFiresideAvatarBase
 		:avatar-media-item="fireside.user.avatar_media_item"
 		:community="hideCommunity ? undefined : community"
+		:realm="hideRealm ? undefined : realm"
 		:is-live="!fireside.is_draft"
 	>
 		<template #extras>
@@ -269,12 +278,25 @@ async function ejectFireside(community: FiresideCommunity) {
 							@{{ fireside.user.username }}
 						</div>
 
-						<div v-if="community" class="-tooltip-row -tooltip-community">
+						<div v-if="community || realm" class="-tooltip-row -tooltip-muted">
 							<AppTranslate>in</AppTranslate>
-							<div class="-tooltip-img">
-								<AppCommunityThumbnailImg :community="community" />
-							</div>
-							{{ community.name }}
+							<template v-if="community">
+								<div class="-tooltip-img">
+									<AppCommunityThumbnailImg :community="community" />
+								</div>
+								{{ community.name }}
+
+								<template v-if="realm">
+									<AppTranslate>and</AppTranslate>
+								</template>
+							</template>
+
+							<template v-if="realm">
+								<div class="-tooltip-img-realm">
+									<AppRealmThumbnail :realm="realm" />
+								</div>
+								{{ realm.name }}
+							</template>
 						</div>
 					</div>
 				</template>

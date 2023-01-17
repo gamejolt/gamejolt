@@ -8,11 +8,13 @@ import { Sticker } from '../sticker/sticker.model';
 import { UserBlock } from '../user/block/block.model';
 import { User } from '../user/user.model';
 import { FiresideCommunity } from './community/community.model';
+import { FiresideRealm } from './realm/realm.model';
 import { FiresideRole } from './role/role.model';
 
 export class Fireside extends Collaboratable(Model) {
 	user!: User;
 	community_links: FiresideCommunity[] = [];
+	realms: FiresideRealm[] = [];
 	header_media_item: MediaItem | null = null;
 	role: FiresideRole | null = null;
 	user_block?: UserBlock | null;
@@ -57,6 +59,10 @@ export class Fireside extends Collaboratable(Model) {
 		return null;
 	}
 
+	get hasRealms() {
+		return this.realms.length !== 0;
+	}
+
 	constructor(data: any = {}) {
 		super(data);
 
@@ -78,6 +84,10 @@ export class Fireside extends Collaboratable(Model) {
 
 		if (data.community_links) {
 			this.community_links = FiresideCommunity.populate(data.community_links);
+		}
+
+		if (data.realms) {
+			this.realms = FiresideRealm.populate(data.realms);
 		}
 
 		if (data.sticker_counts) {

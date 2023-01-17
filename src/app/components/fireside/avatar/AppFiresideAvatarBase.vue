@@ -4,6 +4,8 @@ import { Community } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
+import AppRealmThumbnail from '../../../../_common/realm/AppRealmThumbnail.vue';
+import { Realm } from '../../../../_common/realm/realm-model';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 
 const props = defineProps({
@@ -19,6 +21,10 @@ const props = defineProps({
 	},
 	community: {
 		type: Object as PropType<Community>,
+		default: undefined,
+	},
+	realm: {
+		type: Object as PropType<Realm>,
 		default: undefined,
 	},
 	borderHighlight: {
@@ -80,6 +86,10 @@ const hasLink = computed(() => {
 				/>
 			</div>
 
+			<div v-if="realm" class="-realm">
+				<AppRealmThumbnail v-if="!isPlaceholder" class="-realm-img" :realm="realm" />
+			</div>
+
 			<div v-if="hasTag" class="-tag" :class="{ '-live': isLive }">
 				<slot v-if="!isPlaceholder" name="tag" />
 				<AppTranslate v-else>CHAT</AppTranslate>
@@ -130,6 +140,7 @@ const hasLink = computed(() => {
 
 	.-avatar-img
 	.-community
+	.-realm
 	.-tag
 		@extend .-subtle
 </style>

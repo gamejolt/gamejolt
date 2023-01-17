@@ -5,6 +5,7 @@ import { Community } from '../../../../_common/community/community.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppModal from '../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
+import { Realm } from '../../../../_common/realm/realm-model';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppFormFiresideAdd from '../../forms/fireside/AppFormFiresideAdd.vue';
 
@@ -13,9 +14,13 @@ const props = defineProps({
 		type: Object as PropType<Community>,
 		default: undefined,
 	},
+	realms: {
+		type: Array as PropType<Realm[]>,
+		default: () => [],
+	},
 });
 
-const { community } = toRefs(props);
+const { community, realms } = toRefs(props);
 
 const modal = useModal()!;
 
@@ -39,7 +44,7 @@ function onSubmit(fireside: Fireside) {
 				</AppTranslate>
 			</p>
 
-			<AppFormFiresideAdd :community="community" @submit="onSubmit" />
+			<AppFormFiresideAdd :community="community" :realms="realms" @submit="onSubmit" />
 		</div>
 	</AppModal>
 </template>

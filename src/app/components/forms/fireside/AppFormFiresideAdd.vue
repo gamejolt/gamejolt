@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
+import { arrayRemove } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
@@ -10,9 +11,14 @@ import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErr
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import { Realm } from '../../../../_common/realm/realm-model';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import AppPostTarget from '../../post/target/AppPostTarget.vue';
 import AppPostTargetCommunity from '../../post/target/AppPostTargetCommunity.vue';
+import AppPostTargetRealm from '../../post/target/AppPostTargetRealm.vue';
+import { PostTargetManageRealmsModal } from '../../post/target/manage-realms/modal.service';
 import AppPostTargetAddCommunity from '../../post/target/_add/AppPostTargetAddCommunity.vue';
 
 type FormModel = {
@@ -24,6 +30,8 @@ type FormModel = {
 
 const props = defineProps({
 	community: { type: Object as PropType<Community>, default: null },
+	realms: { type: Array as PropType<Realm[]>, default: () => [] },
+	maxRealms: { type: Number, default: 5 },
 	...defineFormProps<FormModel>(false),
 });
 
@@ -31,7 +39,7 @@ const emit = defineEmits({
 	submit: (_fireside: Fireside) => true,
 });
 
-const { community, model } = toRefs(props);
+const { community, realms, maxRealms, model } = toRefs(props);
 
 const canSelectCommunity = computed(() => selectableCommunities.value.length > 0);
 
@@ -93,7 +101,13 @@ const form = createForm({
 			payloadData['add_community_as_cohosts'] = form.formModel.add_community_as_cohosts;
 		}
 
-		const payload = await Api.sendRequest(loadUrl, payloadData);
+		if (realms.value.length > 0) {
+			payloadData['realm_ids'] = realms.value.map(x => x.id);
+		}
+
+		const payload = await Api.sendRequest(loadUrl, payloadData, {
+			allowComplexData: ['realm_ids'],
+		});
 
 		if (!payload.success) {
 			if (payload.errors && payload.errors['rate-limit']) {
@@ -136,6 +150,17 @@ function onAddCommunity(community: Community) {
 function onRemoveCommunity() {
 	form.formModel.community_id = null;
 }
+
+function onClickAddRealm() {
+	PostTargetManageRealmsModal.show({
+		selectedRealms: realms.value,
+		maxRealms: maxRealms.value,
+	});
+}
+
+function onRemoveRealm(realm: Realm) {
+	arrayRemove(realms.value, i => i.id === realm.id);
+}
 </script>
 
 <template>
@@ -158,29 +183,50 @@ function onRemoveCommunity() {
 
 		<template v-if="canSelectCommunity">
 			<AppFormGroup
-				class="-group-community"
+				class="-group-targettables"
 				name="community_id"
 				:label="$gettext(`Start in a community?`)"
 				hide-label
 			>
-				<AppPostTargetCommunity
-					v-if="selectedCommunity"
-					:community="selectedCommunity"
-					no-right
-					can-remove
-					@remove="onRemoveCommunity"
-				/>
-				<AppPostTargetAddCommunity
-					v-else
-					:communities="selectableCommunities"
-					:with-channel="false"
-					@select-community="onAddCommunity"
-				/>
+				<div class="-group-targettables-list">
+					<AppPostTargetRealm
+						v-for="realm of realms"
+						:key="`realm-${realm.id}`"
+						can-remove
+						:realm="realm"
+						@remove="onRemoveRealm"
+					/>
+
+					<AppPostTargetCommunity
+						v-if="selectedCommunity"
+						:community="selectedCommunity"
+						no-right
+						can-remove
+						@remove="onRemoveCommunity"
+					/>
+
+					<a v-if="realms.length < maxRealms" @click="onClickAddRealm">
+						<AppPostTarget class="-add">
+							<template #img>
+								<AppJolticon icon="add" />
+							</template>
+
+							<AppTranslate>Add realm</AppTranslate>
+						</AppPostTarget>
+					</a>
+
+					<AppPostTargetAddCommunity
+						v-if="!selectedCommunity"
+						:communities="selectableCommunities"
+						:with-channel="false"
+						@select-community="onAddCommunity"
+					/>
+				</div>
 
 				<div class="help-block">
 					<AppTranslate>
-						You can start firesides in communities you collaborate on. If you do,
-						community members will be notified and other collaborators can stream with
+						You can start firesides in realms or communities you collaborate on.
+						Community members will be notified and other collaborators can stream with
 						you.
 					</AppTranslate>
 				</div>
@@ -197,8 +243,15 @@ function onRemoveCommunity() {
 .-group-title
 	margin-bottom: 16px
 
-.-group-community
+.-group-targettables
 	margin-bottom: 40px
+
+	&-list
+		display: flex
+		flex-wrap: nowrap
+		white-space: nowrap
+		margin-bottom: 5px
+		gap: 5px
 
 .help-block
 	margin-top: 8px

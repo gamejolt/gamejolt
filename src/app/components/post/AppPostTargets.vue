@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
+import { arrayIndexBy } from '../../../utils/array';
 import { CommunityChannel } from '../../../_common/community/channel/channel.model';
 import { Community } from '../../../_common/community/community.model';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
@@ -15,12 +16,16 @@ import { PostTargetManageRealmsModal } from './target/manage-realms/modal.servic
 import AppPostTargetsAddCommunity from './target/_add/AppPostTargetAddCommunity.vue';
 
 const props = defineProps({
+	// The selected communities. These are not mutated by this component
+	// directly. Instead, it emits events to add and remove items from it, and
+	// its up to the parent to apply these back to the prop.
 	communities: {
 		type: Array as PropType<
 			{ community: Community; channel?: CommunityChannel; featured_on?: number }[]
 		>,
 		required: true,
 	},
+	// Similar to communities, these are not mutated by this component directly.
 	realms: {
 		type: Array as PropType<Realm[]>,
 		required: true,
@@ -32,6 +37,10 @@ const props = defineProps({
 	targetableCommunities: {
 		type: Array as PropType<Community[]>,
 		default: () => [],
+	},
+	maxCommunities: {
+		type: Number,
+		default: undefined,
 	},
 	maxRealms: {
 		type: Number,
@@ -57,6 +66,7 @@ const props = defineProps({
 const {
 	incompleteCommunity,
 	targetableCommunities,
+	maxCommunities,
 	maxRealms,
 	communities,
 	realms,
@@ -71,6 +81,7 @@ const emit = defineEmits({
 	showCommunities: () => true,
 	selectCommunity: (_community: Community, _channel: CommunityChannel) => true,
 	selectIncompleteCommunity: (_community: Community, _channel: CommunityChannel) => true,
+	selectRealm: (_realm: Realm) => true,
 	removeCommunity: (_community: Community) => true,
 	removeRealm: (_realm: Realm) => true,
 });
@@ -78,15 +89,51 @@ const emit = defineEmits({
 const scrollingKey = ref(0);
 
 const canShow = computed(() => {
-	const communitiesValid =
-		(!!targetableCommunities?.value?.length && canAddCommunity.value) ||
-		communities.value.length > 0;
-
-	if (communitiesValid) {
+	// If has a community or a realm selected already.
+	if (communities.value.length > 0 || realms.value.length > 0) {
 		return true;
 	}
 
-	return canAddRealm.value || realms.value.length > 0;
+	// If can select a community (requires targettableCommunities)
+	if (canAddCommunity.value && !!targetableCommunities?.value?.length) {
+		return true;
+	}
+
+	if (canAddRealm.value) {
+		return true;
+	}
+
+	return false;
+});
+
+const showAddCommunity = computed(() => {
+	if (!canAddCommunity.value) {
+		return false;
+	}
+
+	if (!targetableCommunities.value.length) {
+		return false;
+	}
+
+	const maxNum = maxCommunities?.value ?? 0;
+	if (maxNum > 0 && communities.value.length >= maxNum) {
+		return false;
+	}
+
+	return true;
+});
+
+const showAddRealm = computed(() => {
+	if (!canAddRealm.value) {
+		return false;
+	}
+
+	const maxNum = maxRealms?.value ?? 0;
+	if (maxNum > 0 && realms.value.length >= maxNum) {
+		return false;
+	}
+
+	return true;
 });
 
 const baseClasses = computed(() => {
@@ -124,15 +171,39 @@ function selectIncompleteCommunity(community: Community, channel: CommunityChann
 	emit('selectIncompleteCommunity', community, channel);
 }
 
+function selectRealm(realm: Realm) {
+	emit('selectRealm', realm);
+}
+
 async function _scrollToEnd() {
 	++scrollingKey.value;
 }
 
 async function onClickAddRealm() {
+	const curRealms = realms.value;
+	const newRealms = [...curRealms];
+
 	await PostTargetManageRealmsModal.show({
-		selectedRealms: realms.value,
+		selectedRealms: newRealms,
 		maxRealms: maxRealms?.value || 5,
 	});
+
+	const curRealmsMap = arrayIndexBy(curRealms, 'id');
+	const newRealmsMap = arrayIndexBy(newRealms, 'id');
+
+	// emit removeRealm for removed realms.
+	for (const curRealmId in curRealmsMap) {
+		if (!(curRealmId in newRealmsMap)) {
+			onRemoveRealm(curRealmsMap[curRealmId]);
+		}
+	}
+
+	// and selectRealm for new realms.
+	for (const newRealmId in newRealmsMap) {
+		if (!(newRealmId in curRealmsMap)) {
+			selectRealm(newRealmsMap[newRealmId]);
+		}
+	}
 
 	_scrollToEnd();
 }
@@ -181,7 +252,7 @@ async function onClickAddRealm() {
 				@remove="onRemoveCommunity"
 			/>
 
-			<a v-if="canAddRealm" key="add-realm" :class="baseClasses" @click="onClickAddRealm">
+			<a v-if="showAddRealm" key="add-realm" :class="baseClasses" @click="onClickAddRealm">
 				<AppPostTarget class="-add">
 					<template #img>
 						<AppJolticon icon="add" />
@@ -192,7 +263,7 @@ async function onClickAddRealm() {
 			</a>
 
 			<AppPostTargetsAddCommunity
-				v-if="canAddCommunity"
+				v-if="showAddCommunity"
 				key="add-community"
 				:class="baseClasses"
 				:communities="targetableCommunities"

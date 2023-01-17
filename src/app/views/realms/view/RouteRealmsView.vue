@@ -1,10 +1,12 @@
 <script lang="ts">
-import { computed, Ref, ref } from 'vue';
+import { computed, provide, Ref, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { getAbsoluteLink } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
+import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import AppRealmFollowButton from '../../../../_common/realm/AppRealmFollowButton.vue';
 import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
@@ -20,11 +22,14 @@ import { $gettextInterpolate } from '../../../../_common/translate/translate.ser
 import { User } from '../../../../_common/user/user.model';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../components/activity/feed/view';
+import AppFiresideAvatar from '../../../components/fireside/avatar/AppFiresideAvatar.vue';
+import AppFiresideAvatarAdd from '../../../components/fireside/avatar/AppFiresideAvatarAdd.vue';
 import { AppActivityFeedLazy } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppPostAddButton from '../../../components/post/add-button/AppPostAddButton.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
+import { createRealmRouteStore, RealmRouteStoreKey } from './view.store';
 
 export default {
 	...defineAppRouteOptions({
@@ -46,11 +51,24 @@ export default {
 const router = useRouter();
 const route = useRoute();
 
-const realm = ref<Realm>();
+const routeStore = createRealmRouteStore();
+provide(RealmRouteStoreKey, routeStore);
+
+const realm = computed(() => routeStore.realm.value);
 const knownFollowers = ref<User[]>([]);
 const knownFollowerCount = ref(0);
 const feed = ref(null) as Ref<ActivityFeedView | null>;
+const firesides = ref<Fireside[]>([]);
 const isBootstrapped = ref(false);
+
+// How many firesides to show in the preview row, including the "add a fireside".
+const firesidesGridColumns = 5;
+
+const displayablePreviewFiresides = computed(() => {
+	// -1 to leave room for the "add a fireside"
+	const perRow = firesidesGridColumns - 1;
+	return Object.freeze(firesides.value.slice(0, perRow));
+});
 
 const shareLink = computed(() =>
 	realm.value ? getAbsoluteLink(router, realm.value.routeLocation) : undefined
@@ -70,7 +88,7 @@ const appRoute = createAppRoute({
 	onResolved({ payload: [payload, feedPayload], fromCache }) {
 		isBootstrapped.value = true;
 
-		realm.value = new Realm(payload.realm);
+		routeStore.realm.value = new Realm(payload.realm);
 		knownFollowers.value = User.populate(payload.knownFollowers);
 		knownFollowerCount.value = payload.knownFollowerCount || 0;
 
@@ -86,6 +104,8 @@ const appRoute = createAppRoute({
 			feedPayload.items,
 			fromCache
 		);
+
+		firesides.value = Fireside.populate(payload.activeFiresides);
 
 		Meta.description = payload.metaDescription;
 		Meta.fb = payload.fb;
@@ -158,6 +178,40 @@ function onPostAdded(post: FiresidePost) {
 				</AppScrollAffix>
 			</template>
 			<template #default>
+				<div class="-firesides-header">
+					<h4 class="section-header">
+						<AppTranslate>Firesides</AppTranslate>
+					</h4>
+
+					<AppButton
+						trans
+						:to="{
+							name: 'realms.view.firesides',
+							params: { path: realm.path },
+						}"
+					>
+						<AppTranslate>View All</AppTranslate>
+					</AppButton>
+				</div>
+
+				<AppLoadingFade :is-loading="!isBootstrapped">
+					<div
+						class="-firesides-grid"
+						:style="{
+							gridTemplateColumns: `repeat(${firesidesGridColumns}, 1fr)`,
+						}"
+					>
+						<AppFiresideAvatarAdd :realms="[realm]" />
+
+						<AppFiresideAvatar
+							v-for="fireside in displayablePreviewFiresides"
+							:key="fireside.id"
+							:fireside="fireside"
+							hide-realm
+						/>
+					</div>
+				</AppLoadingFade>
+
 				<AppPostAddButton
 					:realm="realm"
 					:placeholder="
@@ -235,4 +289,13 @@ function onPostAdded(post: FiresidePost) {
 	bottom: -1px
 	change-bg('bg-offset')
 	border-radius: 50%
+
+.-firesides-grid
+	display: grid
+	grid-gap: $line-height-computed
+	margin-bottom: $line-height-computed
+
+.-firesides-header
+	display: flex
+	justify-content: space-between
 </style>
