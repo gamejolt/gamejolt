@@ -7,6 +7,7 @@ import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route
 import { Screen } from '../../../../_common/screen/screen-service';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppHelpGroup from '../../../components/help/AppHelpGroup.vue';
+import AppHelpSearch from '../../../components/help/AppHelpSearch.vue';
 import HelpCategory from '../../../components/help/category/category.model';
 import HelpPage from '../../../components/help/page/page.model';
 
@@ -17,7 +18,7 @@ export default {
 		deps: { params: ['category'] },
 		resolver: () => Api.sendRequest(`/web/help/categories`),
 	}),
-	components: { AppHelpGroup },
+	components: { AppHelpGroup, AppHelpSearch },
 };
 </script>
 
@@ -110,6 +111,9 @@ createAppRoute({
 						</nav>
 					</div>
 					<template v-else>
+						<div class="_search">
+							<AppHelpSearch />
+						</div>
 						<div
 							v-for="category of categories"
 							:key="category.category.id"
@@ -174,4 +178,7 @@ createAppRoute({
 
 ._mobile-nav
 	margin-bottom: 12px
+
+._search
+	margin-bottom: 48px
 </style>
