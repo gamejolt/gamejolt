@@ -9,7 +9,11 @@ import { kFontSizeLarge } from '../../../../_styles/variables';
 import AppHelpGroup from '../../../components/help/AppHelpGroup.vue';
 import HelpCategory from '../../../components/help/category/category.model';
 import HelpPage from '../../../components/help/page/page.model';
-import { routeLandingHelp, routeLandingHelpCategory, routeLandingHelpPage } from './help.route';
+import {
+	routeLandingHelpCategory,
+	routeLandingHelpIndex,
+	routeLandingHelpPage,
+} from './help.route';
 
 export default {
 	...defineAppRouteOptions({
@@ -71,7 +75,7 @@ createAppRoute({
 								<li>
 									<RouterLink
 										:to="{
-											name: routeLandingHelp.name,
+											name: routeLandingHelpIndex.name,
 										}"
 									>
 										{{ $gettext(`Help Docs`) }}

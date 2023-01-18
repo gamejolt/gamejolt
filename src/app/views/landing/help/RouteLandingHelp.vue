@@ -6,7 +6,7 @@ import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { kThemeFg } from '../../../../_common/theme/variables';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { imageJolt } from '../../../img/images';
-import { routeLandingHelp } from './help.route';
+import { routeLandingHelpIndex } from './help.route';
 
 export default {
 	...defineAppRouteOptions({
@@ -32,7 +32,7 @@ createAppRoute({
 						color: kThemeFg,
 					}"
 					:to="{
-						name: routeLandingHelp.name,
+						name: routeLandingHelpIndex.name,
 					}"
 				>
 					<AppThemeSvg class="bolt" :src="imageJolt" strict-colors />

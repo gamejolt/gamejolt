@@ -39,7 +39,7 @@ export const routeLandingHelp: RouteRecordRaw = {
 // When going to gamejolt.com/help, this redirects to gamejolt.com/help-docs.
 export const routeLandingHelpIndexRedirect: RouteRecordRaw = {
 	path: '/help',
-	redirect: routeLandingHelp,
+	redirect: routeLandingHelpIndex,
 };
 
 // When going to gamejolt.com/help/<page>, this fetches where to go and redirects.

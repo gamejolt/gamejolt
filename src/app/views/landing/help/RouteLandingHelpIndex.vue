@@ -3,6 +3,7 @@ import { computed, Ref, ref } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppPostCard from '../../../../_common/fireside/post/card/AppPostCard.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import AppPill from '../../../../_common/pill/AppPill.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -10,6 +11,7 @@ import AppHelpGroup from '../../../components/help/AppHelpGroup.vue';
 import AppHelpSearch from '../../../components/help/AppHelpSearch.vue';
 import HelpCategory from '../../../components/help/category/category.model';
 import HelpPage from '../../../components/help/page/page.model';
+import { routeLandingHelpSearch } from './help.route';
 
 export default {
 	...defineAppRouteOptions({
@@ -18,6 +20,7 @@ export default {
 		deps: {},
 		resolver: () => Api.sendRequest('/web/help'),
 	}),
+	components: { AppPill },
 };
 </script>
 
@@ -29,6 +32,7 @@ interface PayloadFeatured {
 
 const featuredPages = ref([]) as Ref<PayloadFeatured[]>;
 const broadcastPosts = ref([]) as Ref<FiresidePost[]>;
+const searchSuggestions = ref<string[]>([]);
 
 createAppRoute({
 	routeTitle: computed(() => $gettext(`Help Docs`)),
@@ -42,6 +46,7 @@ createAppRoute({
 		}
 
 		broadcastPosts.value = FiresidePost.populate(payload.broadcasts);
+		searchSuggestions.value = payload.searchSuggestions;
 	},
 });
 </script>
@@ -56,6 +61,19 @@ createAppRoute({
 							{{ $gettext(`Find what you're looking for`) }}
 						</h2>
 						<AppHelpSearch />
+						<div v-if="searchSuggestions?.length > 0" :style="{ 'margin-top': '16px' }">
+							<AppPill
+								v-for="suggestion of searchSuggestions"
+								:key="suggestion"
+								:to="{
+									name: routeLandingHelpSearch.name,
+									query: { q: suggestion },
+								}"
+								class="anim-fade-in stagger"
+							>
+								{{ suggestion }}
+							</AppPill>
+						</div>
 					</div>
 				</div>
 			</div>
