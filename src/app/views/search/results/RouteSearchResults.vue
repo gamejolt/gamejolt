@@ -57,7 +57,9 @@ createAppRoute({
 			{
 				type: 'EventItem',
 				name: 'search',
-				url: `/web/posts/fetch/search/${encodeURIComponent(getQuery(route, 'q')!)}`,
+				url: `/web/posts/fetch/search/${encodeURIComponent(
+					getQuery(route, 'q')!
+				)}?post-feed-use-offset=1`,
 				shouldShowFollow: true,
 				itemsPerPage: payload.postsPerPage,
 			},
