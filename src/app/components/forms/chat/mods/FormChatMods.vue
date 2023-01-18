@@ -7,6 +7,7 @@ import AppIllustration from '../../../../../_common/illustration/AppIllustration
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { storeModelList } from '../../../../../_common/model/model-store.service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
@@ -18,6 +19,7 @@ import { illNoCommentsSmall } from '../../../../img/ill/illustrations';
 import { tryGetRoomRole } from '../../../chat/client';
 import { ChatRole } from '../../../chat/role';
 import { ChatRoom } from '../../../chat/room';
+import { useChatRoomMembers } from '../../../chat/room-channel';
 import { ChatUser } from '../../../chat/user';
 import AppChatList from '../../../chat/_list/AppChatList.vue';
 import { useGridStore } from '../../../grid/grid-store';
@@ -62,6 +64,9 @@ const emit = defineEmits({
 const { chat } = useGridStore();
 const { user: myUser } = useCommonStore();
 
+const safeChatRoom = computed(() => chatRoom?.value);
+const { memberCollection } = useChatRoomMembers(safeChatRoom);
+
 const isMounted = ref(true);
 const isLoading = ref(false);
 const hasError = ref(false);
@@ -86,13 +91,11 @@ const users = computed(() => {
 		}
 
 		case 'chat':
-			if (chat.value && chatRoom?.value) {
-				list = chat.value?.roomMembers[chatRoom.value.id]?.collection || [];
-			}
+			list = memberCollection.value?.users || [];
 			break;
 
 		case 'friends':
-			list = chat.value?.friendsList.collection || [];
+			list = chat.value?.friendsList.users || [];
 			break;
 	}
 
@@ -137,7 +140,7 @@ async function fetchChatMods(pos: number, assignAll = false) {
 			reachedEnd.value = true;
 		}
 
-		const newModerators = ChatUser.populate(response.moderators);
+		const newModerators = storeModelList(ChatUser, response.moderators);
 		if (assignAll) {
 			chatMods.value = newModerators;
 		} else {
@@ -170,7 +173,7 @@ function isModerator(user: User | ChatUser) {
 	}
 
 	if (chatRoom?.value) {
-		return tryGetRoomRole(chat.value, chatRoom.value, user) !== 'user';
+		return tryGetRoomRole(chatRoom.value, user) !== 'user';
 	}
 
 	return chatMods.value.some(i => i.id === user.id);

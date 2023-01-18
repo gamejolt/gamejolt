@@ -1,4 +1,4 @@
-import { FiresideRTCHost } from '../../../_common/fireside/rtc/rtc';
+import { objectOmit } from '../../../utils/object';
 import { Jolticon } from '../../../_common/jolticon/AppJolticon.vue';
 import { ModelStoreModel } from '../../../_common/model/model-store.service';
 import { $gettext } from '../../../_common/translate/translate.service';
@@ -20,7 +20,6 @@ export class ChatUser implements ModelStoreModel {
 
 	isOnline = false;
 	role: CHAT_ROLES | null = null;
-	firesideHost: FiresideRTCHost | null = null;
 
 	constructor(data: any = {}) {
 		this.update(data);
@@ -35,12 +34,8 @@ export class ChatUser implements ModelStoreModel {
 	}
 
 	update(data: any) {
-		// Don't assign this, use our getter instead.
-		if (data.url) {
-			delete data.url;
-		}
-
-		Object.assign(this, data);
+		// Exclude our `url` getter when assigning.
+		Object.assign(this, objectOmit(data, ['url']));
 	}
 
 	get url() {
@@ -49,23 +44,6 @@ export class ChatUser implements ModelStoreModel {
 
 	get isStaff() {
 		return this.permission_level > 0;
-	}
-
-	get isLive() {
-		if (!this.firesideHost || this.firesideHost.needsPermissionToView) {
-			return false;
-		}
-		return this.firesideHost.isLive;
-	}
-
-	static populate(rows: any[]): any[] {
-		const models: any[] = [];
-		if (rows && Array.isArray(rows) && rows.length) {
-			for (const row of rows) {
-				models.push(new ChatUser(row));
-			}
-		}
-		return models;
 	}
 }
 

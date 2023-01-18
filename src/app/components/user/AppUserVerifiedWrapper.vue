@@ -20,7 +20,9 @@ defineProps({
 
 <template>
 	<div class="user-verified-wrapper">
-		<slot name="default" class="-inner" />
+		<div class="-inner">
+			<slot name="default" />
+		</div>
 
 		<AppUserVerifiedTick class="-floating-tick" :user="user" :small="small" :tiny="tiny" />
 	</div>

@@ -12,6 +12,7 @@ import { ChatUser } from '../../../../components/chat/user';
 import AppChatList from '../../../../components/chat/_list/AppChatList.vue';
 import { FiresideController } from '../../../../components/fireside/controller/controller';
 import { illNoCommentsSmall } from '../../../../img/ill/illustrations';
+import { useChatRoomMembers } from '../../../chat/room-channel';
 import AppFiresideHostsItem from './AppFiresideHostsItem.vue';
 
 const ListTitles = {
@@ -44,7 +45,10 @@ const isMounted = ref(true);
 const myUser = computed(() => controller.value.user.value);
 const fireside = computed(() => controller.value.fireside);
 const chat = computed(() => controller.value.chat.value);
-const chatUsers = computed(() => controller.value.chatUsers.value);
+
+const chatRoom = computed(() => controller.value.chatRoom.value);
+const { memberCollection } = useChatRoomMembers(chatRoom);
+
 const canManageCohosts = computed(() => controller.value.canManageCohosts.value);
 const hosts = computed(() => controller.value.hosts.value);
 
@@ -62,11 +66,11 @@ const users = computed(() => {
 		}
 
 		case 'chat':
-			list = chatUsers.value?.collection || [];
+			list = memberCollection.value?.users || [];
 			break;
 
 		case 'friends':
-			list = chat.value?.friendsList.collection || [];
+			list = chat.value?.friendsList.users || [];
 			break;
 	}
 

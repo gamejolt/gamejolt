@@ -33,7 +33,7 @@ const emit = defineEmits({
 			</div>
 		</template>
 
-		<template #leadingFloat>
+		<template #leading-float>
 			<AppUserVerifiedTick class="-verified-tick" :user="user" small vertical-align />
 		</template>
 

@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { PropType, ref } from 'vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { ChatUser } from '../../../../components/chat/user';
 import AppChatManageUserItem from '../AppChatManageUserItem.vue';
 
@@ -45,7 +44,7 @@ const hovered = ref(false);
 					:force-hover="hovered"
 					@click="emit('click')"
 				>
-					<AppTranslate>Add</AppTranslate>
+					{{ $gettext(`Add`) }}
 				</AppButton>
 				<AppButton
 					v-else

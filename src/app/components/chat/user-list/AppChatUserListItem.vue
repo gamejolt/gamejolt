@@ -102,7 +102,7 @@ async function leaveRoom() {
 			</div>
 		</template>
 
-		<template #leadingFloat>
+		<template #leading-float>
 			<AppChatUserOnlineStatus
 				v-if="isOnline !== null"
 				:is-online="isOnline"

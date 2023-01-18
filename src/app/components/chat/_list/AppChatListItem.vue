@@ -112,7 +112,7 @@ const hasTrailing = computed(() =>
 							</div>
 
 							<div class="-leading-float">
-								<slot name="leadingFloat" />
+								<slot name="leading-float" />
 							</div>
 						</AppAspectRatio>
 					</div>

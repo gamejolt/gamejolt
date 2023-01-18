@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
@@ -21,7 +22,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 const { heading } = useAccountRouteController()!;
 
 const chatMods = ref<ChatUser[]>([]);

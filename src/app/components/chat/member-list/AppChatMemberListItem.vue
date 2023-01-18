@@ -66,7 +66,7 @@ const isLiveFiresideHost = computed(() => {
 			</div>
 		</template>
 
-		<template #leadingFloat>
+		<template #leading-float>
 			<AppChatUserOnlineStatus
 				v-if="isOnline !== null"
 				class="-avatar-status"
