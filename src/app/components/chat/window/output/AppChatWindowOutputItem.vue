@@ -275,7 +275,7 @@ async function onMessageClick() {
 				@show="onAvatarPopperVisible(true)"
 				@hide="onAvatarPopperVisible(false)"
 			>
-				<AppUserVerifiedWrapper :user="message.user" tiny>
+				<AppUserVerifiedWrapper :user="message.user" small>
 					<img
 						class="-avatar-img img-responsive"
 						:src="message.user.img_avatar"

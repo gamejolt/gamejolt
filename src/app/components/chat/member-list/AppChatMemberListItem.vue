@@ -5,6 +5,7 @@ import { FiresideRTCHost } from '../../../../_common/fireside/rtc/rtc';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import { useGridStore } from '../../grid/grid-store';
 import { isUserOnline } from '../client';
 import { ChatRoom } from '../room';
@@ -35,8 +36,9 @@ const props = defineProps({
 const { user, room, host } = toRefs(props);
 const { chatUnsafe: chat } = useGridStore();
 
+const showVerificationData = computed(() => room.value.isFiresideRoom);
 const isOnline = computed(() => {
-	if (!chat.value || room.value.isFiresideRoom) {
+	if (!chat.value || showVerificationData.value) {
 		return null;
 	}
 
@@ -67,8 +69,20 @@ const isLiveFiresideHost = computed(() => {
 		</template>
 
 		<template #leading-float>
+			<AppUserVerifiedTick
+				v-if="showVerificationData"
+				:style="{
+					borderRadius: '50%',
+					backgroundColor: 'var(--theme-bg)',
+					color: 'var(--theme-fg)',
+					margin: '4px 0px 0px',
+					padding: '1px',
+				}"
+				:user="user"
+				small
+			/>
 			<AppChatUserOnlineStatus
-				v-if="isOnline !== null"
+				v-else-if="isOnline !== null"
 				class="-avatar-status"
 				:is-online="isOnline"
 				:size="12"

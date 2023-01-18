@@ -9,6 +9,9 @@ defineProps({
 		type: Object as PropType<User | ChatUser>,
 		required: true,
 	},
+	hideTick: {
+		type: Boolean,
+	},
 	small: {
 		type: Boolean,
 	},
@@ -24,7 +27,13 @@ defineProps({
 			<slot name="default" />
 		</div>
 
-		<AppUserVerifiedTick class="-floating-tick" :user="user" :small="small" :tiny="tiny" />
+		<AppUserVerifiedTick
+			v-if="!hideTick"
+			class="-floating-tick"
+			:user="user"
+			:small="small"
+			:tiny="tiny"
+		/>
 	</div>
 </template>
 
