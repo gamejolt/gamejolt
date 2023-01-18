@@ -22,18 +22,11 @@ export const routeLandingHelpIndex: RouteRecordRaw = {
 	component: () => import('./RouteLandingHelpIndex.vue'),
 };
 
-// Search page
-export const routeLandingHelpSearch: RouteRecordRaw = {
-	name: 'landing.help.search',
-	path: 'search',
-	component: () => import('./RouteLandingHelpSearch.vue'),
-};
-
 // Base help route split between viewing a category/page and the index.
 export const routeLandingHelp: RouteRecordRaw = {
 	path: '/help-docs',
 	component: () => import('./RouteLandingHelp.vue'),
-	children: [routeLandingHelpSearch, routeLandingHelpCategory, routeLandingHelpIndex],
+	children: [routeLandingHelpCategory, routeLandingHelpIndex],
 };
 
 // When going to gamejolt.com/help, this redirects to gamejolt.com/help-docs.
