@@ -206,7 +206,9 @@ async function ejectFireside(community: FiresideCommunity) {
 							<hr v-if="index !== 0" />
 
 							<h5 class="-extras-header list-group-item has-icon">
-								<AppCommunityThumbnailImg class="-img" :community="i.community" />
+								<div class="-img">
+									<AppCommunityThumbnailImg :community="i.community" />
+								</div>
 								{{ i.community.name }}
 							</h5>
 
