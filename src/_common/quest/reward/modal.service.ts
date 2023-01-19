@@ -1,11 +1,11 @@
 import { defineAsyncComponent } from 'vue';
 import { showModal } from '../../modal/modal.service';
 import { Quest } from '../quest-model';
-import { QuestReward } from './AppQuestRewardModal.vue';
+import { QuestRewardData } from './AppQuestRewardModal.vue';
 
 interface QuestRewardModalOptions {
 	quest: Quest;
-	rewards: QuestReward[];
+	rewards: QuestRewardData[];
 	title?: string;
 }
 
