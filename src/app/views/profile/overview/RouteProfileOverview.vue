@@ -55,7 +55,7 @@ import { showUserInviteFollowModal } from '../../../../_common/user/invite/modal
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { unfollowUser, User } from '../../../../_common/user/user.model';
-import { enterChatRoom } from '../../../components/chat/client';
+import { openChatRoom } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/overview/overview.vue';
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import AppGameList from '../../../components/game/list/list.vue';
@@ -428,12 +428,12 @@ function showComments() {
 
 function openMessaging() {
 	if (routeUser.value && chat.value) {
-		const chatUser = chat.value.friendsList.collection.find(u => u.id === routeUser.value!.id);
+		const chatUser = chat.value.friendsList.get(routeUser.value.id);
 		if (chatUser) {
 			if (Screen.isXs) {
 				toggleLeftPane('chat');
 			}
-			enterChatRoom(chat.value, chatUser.room_id);
+			openChatRoom(chat.value, chatUser.room_id);
 		}
 	}
 }
