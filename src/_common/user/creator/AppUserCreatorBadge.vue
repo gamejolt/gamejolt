@@ -6,7 +6,7 @@ import { $gettext } from '../../translate/translate.service';
 
 defineProps({
 	size: {
-		type: String as PropType<'md' | 'lg' | 'sm'>,
+		type: String as PropType<'md' | 'lg' | 'sm' | 'tiny'>,
 		default: 'md',
 	},
 });
@@ -19,6 +19,7 @@ defineProps({
 		:class="{
 			'-big': size === 'lg',
 			'-small': size === 'sm',
+			'-tiny': size === 'tiny',
 		}"
 		:src="imagePartnerBadge"
 	/>
@@ -40,5 +41,9 @@ $jolticon-size = 16px
 
 	&.-small
 		width: $jolticon-size * 0.85
+		height: @width
+
+	&.-tiny
+		width: $jolticon-size * 0.7
 		height: @width
 </style>

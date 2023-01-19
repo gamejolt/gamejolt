@@ -48,7 +48,7 @@ export class ChatClient {
 	 */
 	populated = false;
 	currentUser: ChatUser | null = null;
-	friendsList: ChatUserCollection = null as any;
+	friendsList = new ChatUserCollection(this, ChatUserCollection.TYPE_FRIEND);
 	groupRooms: ChatRoom[] = [];
 
 	activeRoomId: number | null = null;

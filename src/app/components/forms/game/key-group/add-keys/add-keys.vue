@@ -36,12 +36,12 @@ export default class FormGameKeyGroupAddKeys extends mixins(Wrapper) implements 
 <template>
 	<AppForm :controller="form">
 		<AppFormGroup
-			name="amount"
-			:label="$gettext(`# of Keys to Generate`)"
 			v-if="
 				keyGroup.type === KeyGroup.TYPE_ANONYMOUS ||
 				keyGroup.type === KeyGroup.TYPE_ANONYMOUS_CLAIM
 			"
+			name="amount"
+			:label="$gettext(`# of Keys to Generate`)"
 		>
 			<AppFormControl
 				type="number"
@@ -54,24 +54,24 @@ export default class FormGameKeyGroupAddKeys extends mixins(Wrapper) implements 
 		</AppFormGroup>
 
 		<AppFormGroup
+			v-if="keyGroup.type === KeyGroup.TYPE_EMAIL"
 			name="emails"
 			:label="$gettext(`Email Addresses`)"
-			v-if="keyGroup.type === KeyGroup.TYPE_EMAIL"
 		>
 			<p class="help-block">
-				<AppTranslate>Paste one email address per line, or separate them by commas.</AppTranslate>
+				{{ $gettext(`Paste one email address per line, or separate them by commas.`) }}
 			</p>
 			<AppFormControlTextarea rows="10" :validators="[validateMaxLength(25000)]" />
 			<AppFormControlErrors />
 		</AppFormGroup>
 
 		<AppFormGroup
+			v-if="keyGroup.type === KeyGroup.TYPE_USER"
 			name="users"
 			:label="$gettext(`Usernames`)"
-			v-if="keyGroup.type === KeyGroup.TYPE_USER"
 		>
 			<p class="help-block">
-				<AppTranslate>Paste one username per line, or separate them by commas.</AppTranslate>
+				{{ $gettext(`Paste one username per line, or separate them by commas.`) }}
 			</p>
 			<AppFormControlTextarea rows="10" :validators="[validateMaxLength(25000)]" />
 			<AppFormControlErrors />
@@ -79,18 +79,17 @@ export default class FormGameKeyGroupAddKeys extends mixins(Wrapper) implements 
 
 		<AppExpand :when="serverErrors['num-keys']">
 			<div class="alert alert-notice">
-				<AppTranslate
-					:translate-params="{
-						max: formatNumber(20000),
-					}"
-				>
-					You can only have a max of %{ max } keys in a single key group.
-				</AppTranslate>
+				{{
+					$gettextInterpolate(
+						`You can only have a max of %{ max } keys in a single key group.`,
+						{ max: formatNumber(20000) }
+					)
+				}}
 			</div>
 		</AppExpand>
 
 		<AppFormButton>
-			<AppTranslate>Add</AppTranslate>
+			{{ $gettext(`Add`) }}
 		</AppFormButton>
 	</AppForm>
 </template>
