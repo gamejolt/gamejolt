@@ -16,7 +16,7 @@ import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop
 import { routeDashAccountBlocks } from '../account/blocks/blocks.route';
 import { routeDashAccountChatCommands } from '../account/chat-commands/chat-commands.route';
 import { routeDashAccountChatTimers } from '../account/chat-timers/chat-timers.route';
-import { routeDashAccountReferrals } from '../account/referrals/referrals';
+import { routeDashAccountReferrals } from '../account/referrals/referrals.route';
 import { routeDashAccountWallet } from '../account/wallet/wallet.route';
 import { routeDashAnalytics } from '../analytics/analytics.route';
 import { routeDashSupporters } from '../supporters/supporters.route';

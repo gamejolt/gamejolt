@@ -14,7 +14,7 @@ import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vu
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { UserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
 import { UserHeaderModal } from '../../../components/user/header-modal/header-modal.service';
-import { routeDashAccountReferrals } from './referrals/referrals';
+import { routeDashAccountReferrals } from './referrals/referrals.route';
 
 const Key: InjectionKey<Controller> = Symbol('account-route');
 
