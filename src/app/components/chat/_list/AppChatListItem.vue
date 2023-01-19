@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, PropType, ref, useSlots } from 'vue';
+import { computed, PropType, ref, toRefs, useSlots } from 'vue';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppPopper, {
 	PopperPlacementType,
@@ -11,10 +11,12 @@ import AppScrollInview, {
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
+
+type ChatListItemSlot = 'leading' | 'title' | 'trailing';
 </script>
 
 <script lang="ts" setup>
-defineProps({
+const props = defineProps({
 	horizontalPadding: {
 		type: Number,
 		default: 16,
@@ -41,15 +43,27 @@ defineProps({
 		type: String as PropType<PopperPlacementType>,
 		default: 'bottom',
 	},
+	definedSlots: {
+		type: Array as PropType<ChatListItemSlot[]>,
+		default: undefined,
+	},
 });
+
+const { definedSlots } = toRefs(props);
 
 const slots = useSlots();
 
 const isInview = ref(false);
 
-const hasLeading = computed(() => !!slots['leading']);
-const hasTitle = computed(() => !!slots['title']);
-const hasTrailing = computed(() => !!slots['trailing']);
+const hasLeading = computed(() =>
+	definedSlots?.value ? definedSlots.value.includes('leading') : !!slots['leading']
+);
+const hasTitle = computed(() =>
+	definedSlots?.value ? definedSlots.value.includes('title') : !!slots['title']
+);
+const hasTrailing = computed(() =>
+	definedSlots?.value ? definedSlots.value.includes('trailing') : !!slots['trailing']
+);
 </script>
 
 <template>
@@ -82,6 +96,7 @@ const hasTrailing = computed(() => !!slots['trailing']);
 					}"
 					:style="{
 						padding: `${verticalPadding}px ${horizontalPadding}px`,
+						height: avatarSize + verticalPadding * 2 + 'px',
 					}"
 				>
 					<div
@@ -97,7 +112,7 @@ const hasTrailing = computed(() => !!slots['trailing']);
 							</div>
 
 							<div class="-leading-float">
-								<slot name="leadingFloat" />
+								<slot name="leading-float" />
 							</div>
 						</AppAspectRatio>
 					</div>
