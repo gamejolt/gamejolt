@@ -13,6 +13,7 @@ import { routeDashAccountLinkedAccounts } from './linked-accounts/linked-account
 import { routeDashAccountPaymentMethods } from './payment-methods/payment-methods.route';
 import { routeDashAccountPurchasesList } from './purchases/list/list.route';
 import { routeDashAccountPurchasesView } from './purchases/view/view.route';
+import { routeDashAccountReferrals } from './referrals/referrals';
 import { routeDashAccountSite } from './site/site.route';
 import { routeDashAccountWallet } from './wallet/wallet.route';
 
@@ -36,5 +37,6 @@ export const routeDashAccount: RouteRecordRaw = {
 		routeDashAccountDeviceSettings,
 		routeDashAccountChatCommands,
 		routeDashAccountChatTimers,
+		routeDashAccountReferrals,
 	],
 };

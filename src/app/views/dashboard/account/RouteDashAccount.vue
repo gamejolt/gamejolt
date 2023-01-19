@@ -14,6 +14,7 @@ import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vu
 import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { UserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
 import { UserHeaderModal } from '../../../components/user/header-modal/header-modal.service';
+import { routeDashAccountReferrals } from './referrals/referrals';
 
 const Key: InjectionKey<Controller> = Symbol('account-route');
 
@@ -235,6 +236,14 @@ function showEditAvatar() {
 										active-class="active"
 									>
 										{{ $gettext(`Wallet`) }}
+									</RouterLink>
+								</li>
+								<li>
+									<RouterLink
+										:to="{ name: routeDashAccountReferrals.name }"
+										active-class="active"
+									>
+										{{ $gettext(`Referrals`) }}
 									</RouterLink>
 								</li>
 								<li>

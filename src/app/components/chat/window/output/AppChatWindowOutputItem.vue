@@ -564,7 +564,7 @@ $-min-item-width = 24px
 	position: absolute
 	right: 100%
 	transform: translate3d(-50%, 0, 0)
-	width: add-unit(v-bind('ChatWindowLeftGutterSize + kChatRoomWindowPaddingH'), px)
+	width: add-unit(v-bind('ChatWindowLeftGutterSize + kChatRoomWindowPaddingH.value'), px)
 	display: flex
 	justify-content: center
 
