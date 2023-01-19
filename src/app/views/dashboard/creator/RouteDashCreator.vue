@@ -84,7 +84,7 @@ const buttons = computed<Button[]>(() => [
 </script>
 
 <template>
-	<AppShellPageBackdrop>
+	<AppShellPageBackdrop v-if="user">
 		<section class="section">
 			<div class="container">
 				<h1 class="text-center">
