@@ -26,9 +26,9 @@ import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import {
-extinguishFireside,
-publishFireside,
-useFiresideController
+	extinguishFireside,
+	publishFireside,
+	useFiresideController,
 } from '../../../components/fireside/controller/controller';
 import { ChatCommandsModal } from '../../../components/forms/chat/commands/modal/modal.service';
 import { ChatTimersModal } from '../../../components/forms/chat/timers/modal/modal.service';
@@ -65,11 +65,6 @@ const form: FormController<Fireside> = createForm({
 	model: ref(fireside),
 	loadUrl: `/web/dash/fireside/save/${fireside.hash}`,
 	onLoad: response => {
-		fireside.assign(new Fireside(response.fireside));
-		selectedCommunities.value = fireside.community_links.map(i => {
-			return { community: i.community };
-		});
-		selectedRealms.value = fireside.realms.map(i => i.realm);
 		maxRealms.value = response.maxRealms;
 	},
 	onInit: () => {
@@ -78,20 +73,9 @@ const form: FormController<Fireside> = createForm({
 		});
 		selectedRealms.value = fireside.realms.map(i => i.realm);
 	},
-	onSubmit: () =>
-		fireside.$_save(`/web/dash/fireside/save/${fireside.hash}`, 'fireside', {
-			data: {
-				title: form.formModel.title,
-				realm_ids: selectedRealms.value.map(i => i.id),
-			},
-			allowComplexData: ['realm_ids'],
-		}),
-	onSubmitSuccess: response => {
-		selectedCommunities.value = fireside.community_links.map(i => {
-			return { community: i.community };
-		});
-		selectedRealms.value = fireside.realms.map(i => i.realm);
-		maxRealms.value = response.maxRealms;
+	onSubmit: () => form.formModel.$saveWithRealms(selectedRealms.value.map(i => i.id)),
+	onSubmitSuccess: () => {
+		fireside.assign(form.formModel);
 	},
 });
 

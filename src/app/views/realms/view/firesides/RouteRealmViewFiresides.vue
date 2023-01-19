@@ -58,7 +58,8 @@ const appRoute = createAppRoute({
 <template>
 	<div>
 		<h1 class="section-header" :class="{ 'h2 -text-overflow': Screen.isMobile }">
-			<AppTranslate>Active Firesides</AppTranslate>
+			{{ $gettext(`Active Firesides`) }}
+			{{ ' ' }}
 			<small v-if="Screen.isDesktop">in {{ routeStore.realm.value.name }}</small>
 		</h1>
 		<br />

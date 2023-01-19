@@ -18,6 +18,7 @@ import AppFiresideAvatar from '../../../../components/fireside/avatar/AppFiresid
 import AppFiresideAvatarAdd from '../../../../components/fireside/avatar/AppFiresideAvatarAdd.vue';
 import { AppActivityFeedLazy } from '../../../../components/lazy';
 import AppPostAddButton from '../../../../components/post/add-button/AppPostAddButton.vue';
+import { routeRealmsViewFiresides } from '../firesides/firesides.route';
 import { useRealmRouteStore } from '../view.store';
 
 export default {
@@ -104,7 +105,7 @@ function onPostAdded(post: FiresidePost) {
 			<AppButton
 				trans
 				:to="{
-					name: 'realms.view.firesides',
+					name: routeRealmsViewFiresides.name,
 					params: { path: routeStore.realm.value.path },
 				}"
 			>

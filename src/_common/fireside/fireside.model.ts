@@ -143,6 +143,16 @@ export class Fireside extends Collaboratable(Model) {
 		return this.$_save(`/web/dash/fireside/save/` + this.hash, 'fireside');
 	}
 
+	$saveWithRealms(realmIds: number[]) {
+		return this.$_save(`/web/dash/fireside/save/${this.hash}`, 'fireside', {
+			data: {
+				title: this.title,
+				realm_ids: realmIds,
+			},
+			allowComplexData: ['realm_ids'],
+		});
+	}
+
 	$publish({ autoFeature }: { autoFeature?: boolean } = {}) {
 		return this.$_save(`/web/dash/fireside/publish/` + this.hash, 'fireside', {
 			data: {

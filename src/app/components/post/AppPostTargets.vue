@@ -255,6 +255,7 @@ async function onClickAddRealm() {
 				:is-featured="!!featured_on"
 				:community="community"
 				:channel="channel"
+				:no-right="!channel"
 				:has-links="hasLinks"
 				@remove="onRemoveCommunity"
 			/>

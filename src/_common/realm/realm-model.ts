@@ -27,7 +27,7 @@ export class Realm extends Model {
 
 	get routeLocation(): RouteLocationDefinition {
 		return {
-			name: 'realms.view',
+			name: 'realms.view.overview',
 			params: {
 				path: this.path,
 			},
