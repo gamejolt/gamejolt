@@ -98,11 +98,7 @@ export function createChatUserChannel(
 			_tabLeader.init();
 
 			client.currentUser = storeModel(ChatUser, response.user);
-			client.friendsList = new ChatUserCollection(
-				client,
-				ChatUserCollection.TYPE_FRIEND,
-				response.friends || []
-			);
+			client.friendsList.replace(response.friends || []);
 			client.groupRooms = (response.groups as UnknownModelData[]).map(room =>
 				storeModel(ChatRoom, { chat: client, ...room })
 			);
