@@ -4,6 +4,7 @@ import AppFiresideLiveTag from '../../../../_common/fireside/AppFiresideLiveTag.
 import { FiresideRTCHost } from '../../../../_common/fireside/rtc/rtc';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { kThemeBg, kThemeFg, kThemePrimary } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import { useGridStore } from '../../grid/grid-store';
@@ -73,8 +74,8 @@ const isLiveFiresideHost = computed(() => {
 				v-if="showVerificationData"
 				:style="{
 					borderRadius: '50%',
-					backgroundColor: 'var(--theme-bg)',
-					color: 'var(--theme-fg)',
+					backgroundColor: kThemeBg,
+					color: kThemeFg,
 					margin: '4px 0px 0px',
 					padding: '1px',
 				}"
@@ -105,7 +106,12 @@ const isLiveFiresideHost = computed(() => {
 
 		<template #trailing>
 			<span v-if="roleData" v-app-tooltip="roleData.tooltip">
-				<AppJolticon class="-indicator-icon" :icon="roleData.icon" />
+				<AppJolticon
+					:style="{
+						color: kThemePrimary,
+					}"
+					:icon="roleData.icon"
+				/>
 			</span>
 		</template>
 
@@ -120,9 +126,6 @@ const isLiveFiresideHost = computed(() => {
 .-member-avatar-img
 	width: 100%
 	height: 100%
-
-.-indicator-icon
-	color: var(--theme-primary)
 
 .-nowrap
 	overflow: unset !important
