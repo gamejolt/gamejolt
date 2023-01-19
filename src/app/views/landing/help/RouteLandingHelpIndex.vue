@@ -70,29 +70,28 @@ createAppRoute({
 					{{ $gettext(`Recent updates`) }}
 				</h2>
 
-				<AppScrollScroller
-					class="_recent-container"
-					:style="{
-						// Inline block overflow x:
-						overflowX: `scroll`,
-						whiteSpace: `nowrap`,
-					}"
-					thin
-					horizontal
-				>
-					<AppPostCard
-						v-for="broadcastPost of broadcastPosts"
-						:key="broadcastPost.id"
-						class="anim-fade-in-up stagger"
+				<AppScrollScroller class="_recent-container" thin horizontal>
+					<div
 						:style="{
-							height: `280px`,
-							display: `inline-block`,
-							marginRight: `24px`,
+							display: 'flex',
+							alignItems: 'flex-start',
+							gap: '24px',
 						}"
-						:post="broadcastPost"
-						:source="'help'"
-						with-user
-					/>
+					>
+						<AppPostCard
+							v-for="broadcastPost of broadcastPosts"
+							:key="broadcastPost.id"
+							class="anim-fade-in-up stagger"
+							:style="{
+								width: `160px`,
+								flex: `none`,
+							}"
+							:post="broadcastPost"
+							source="help"
+							with-user
+							show-media-post-lead
+						/>
+					</div>
 				</AppScrollScroller>
 			</div>
 		</section>
