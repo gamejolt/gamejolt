@@ -36,7 +36,7 @@ export default class AppDiscoverHomeBanner extends Vue {
 			return false;
 		}
 
-		return !this.item.custom_url || !this.shouldShowFollowGame;
+		return !this.item.hero_button_url || !this.shouldShowFollowGame;
 	}
 
 	get shouldShowFollowGame() {
@@ -51,7 +51,7 @@ export default class AppDiscoverHomeBanner extends Vue {
 			return false;
 		}
 
-		return !this.item.custom_url || !this.shouldShowJoinCommunity;
+		return !this.item.hero_button_url || !this.shouldShowJoinCommunity;
 	}
 
 	get shouldShowJoinCommunity() {
@@ -126,7 +126,7 @@ export default class AppDiscoverHomeBanner extends Vue {
 			<section
 				class="-banner landing-header-no-fill"
 				:style="{
-					'background-image': `url('${item.back_url}')`,
+					'background-image': `url('${item.hero_back_media_item?.mediaserver_url}')`,
 				}"
 			>
 				<router-link
@@ -136,19 +136,23 @@ export default class AppDiscoverHomeBanner extends Vue {
 					:to="location"
 				/>
 				<a
-					v-else-if="item.custom_url"
+					v-else-if="item.hero_button_url"
 					v-app-track-event="`home:banner:${item.id}`"
 					class="-click"
-					:href="item.custom_url"
+					:href="item.hero_button_url"
 				/>
 
 				<div class="container">
 					<div class="-main">
-						<div v-if="item.front_url" class="-logo">
+						<div v-if="item.hero_front_media_item" class="-logo">
 							<img
 								class="-img"
-								style="display: inline-block"
-								:src="item.front_url"
+								style="
+									 {
+										display: inline-block;
+									}
+								"
+								:src="item.hero_front_media_item.mediaserver_url"
 								alt=""
 							/>
 						</div>
@@ -156,25 +160,25 @@ export default class AppDiscoverHomeBanner extends Vue {
 						<div
 							class="-info"
 							:class="{
-								'-info-full': !item.front_url,
+								'-info-full': !item.hero_front_media_item,
 							}"
 						>
 							<p class="-text-shadow lead">
-								{{ item.content }}
+								{{ item.hero_text }}
 							</p>
 
 							<div class="-controls">
 								<template v-if="item.game">
 									<AppButton
-										v-if="item.custom_url"
+										v-if="item.hero_button_url"
 										v-app-track-event="`home:banner:custom-${item.game.id}`"
 										solid
-										:href="item.custom_url"
+										:href="item.hero_button_url"
 										target="_blank"
 									>
-										{{ item.custom_text }}
+										{{ item.hero_button_text }}
 									</AppButton>
-
+									&nbsp;
 									<AppButton
 										v-if="shouldShowViewGame"
 										v-app-track-event="`home:banner:${item.game.id}`"
@@ -195,17 +199,17 @@ export default class AppDiscoverHomeBanner extends Vue {
 								</template>
 								<template v-else-if="item.community">
 									<AppButton
-										v-if="item.custom_url"
+										v-if="item.hero_button_url"
 										v-app-track-event="
 											`home:banner:custom-community-${item.community.path}`
 										"
 										solid
-										:href="item.custom_url"
+										:href="item.hero_button_url"
 										target="_blank"
 									>
-										{{ item.custom_text }}
+										{{ item.hero_button_text }}
 									</AppButton>
-
+									&nbsp;
 									<AppButton
 										v-if="shouldShowViewCommunity"
 										v-app-track-event="
@@ -235,6 +239,7 @@ export default class AppDiscoverHomeBanner extends Vue {
 									>
 										<AppTranslate>View Games</AppTranslate>
 									</AppButton>
+									&nbsp;
 									<AppButton
 										v-app-track-event="`home:banne:jam-${item.jam.id}`"
 										solid
@@ -244,14 +249,14 @@ export default class AppDiscoverHomeBanner extends Vue {
 										<AppTranslate>View Jam Page</AppTranslate>
 									</AppButton>
 								</template>
-								<template v-else-if="item.custom_url">
+								<template v-else-if="item.hero_button_url">
 									<AppButton
 										v-app-track-event="`home:banner:custom`"
 										solid
-										:href="item.custom_url"
+										:href="item.hero_button_url"
 										target="_blank"
 									>
-										{{ item.custom_text }}
+										{{ item.hero_button_text }}
 									</AppButton>
 								</template>
 							</div>
