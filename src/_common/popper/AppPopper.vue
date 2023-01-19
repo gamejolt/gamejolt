@@ -243,6 +243,8 @@ const {
 const slots = useSlots();
 const router = GJ_HAS_ROUTER ? useRouter() : undefined;
 
+const debugActual = computed(() => GJ_BUILD_TYPE !== 'build' && debug.value);
+
 const isHiding = ref(false);
 const isVisible = ref(false);
 const calculatedWidth = ref('');
@@ -301,7 +303,7 @@ onMounted(() => {
 
 	Popper.registerPopper(popperIndex, {
 		onHideAll: () => {
-			if (trigger.value === 'manual' || debug.value) {
+			if (trigger.value === 'manual' || debugActual.value) {
 				return;
 			}
 
@@ -329,7 +331,7 @@ onUnmounted(() => {
 	Popper.deregisterPopper(popperIndex);
 });
 
-watch([manualShow, debug], onManualShow);
+watch([manualShow, debugActual], onManualShow);
 
 watch(hideTrigger, _hide);
 
@@ -524,7 +526,7 @@ function _calcWidth() {
 }
 
 function _hide() {
-	if (debug.value) {
+	if (debugActual.value) {
 		return;
 	}
 
@@ -564,7 +566,7 @@ function _clearHideTimeout() {
 }
 
 function onManualShow() {
-	if (debug.value) {
+	if (debugActual.value) {
 		return _show();
 	}
 
