@@ -12,6 +12,7 @@ import {
 } from '../../../../../_common/route/route-component';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettextInterpolate } from '../../../../../_common/translate/translate.service';
+import { kLineHeightComputed } from '../../../../../_styles/variables';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppFiresideAvatar from '../../../../components/fireside/avatar/AppFiresideAvatar.vue';
@@ -97,7 +98,12 @@ function onPostAdded(post: FiresidePost) {
 
 <template>
 	<div>
-		<div class="-firesides-header">
+		<div
+			:style="{
+				display: `flex`,
+				justifyContent: `space-between`,
+			}"
+		>
 			<h4 class="section-header">
 				<AppTranslate>Firesides</AppTranslate>
 			</h4>
@@ -115,9 +121,11 @@ function onPostAdded(post: FiresidePost) {
 
 		<AppLoadingFade :is-loading="!isBootstrapped">
 			<div
-				class="-firesides-grid"
 				:style="{
 					gridTemplateColumns: `repeat(${firesidesGridColumns}, 1fr)`,
+					display: `grid`,
+					gridGap: `${kLineHeightComputed}px`,
+					marginBottom: `${kLineHeightComputed}px`,
 				}"
 			>
 				<AppFiresideAvatarAdd :realms="[routeStore.realm.value]" />
@@ -144,14 +152,3 @@ function onPostAdded(post: FiresidePost) {
 		<AppActivityFeedLazy v-if="feed?.isBootstrapped" :feed="feed" show-ads />
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.-firesides-grid
-	display: grid
-	grid-gap: $line-height-computed
-	margin-bottom: $line-height-computed
-
-.-firesides-header
-	display: flex
-	justify-content: space-between
-</style>

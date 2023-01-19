@@ -8,7 +8,6 @@ import {
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import AppFiresideAvatar from '../../../../components/fireside/avatar/AppFiresideAvatar.vue';
 import AppFiresideAvatarBase from '../../../../components/fireside/avatar/AppFiresideAvatarBase.vue';
 import { illNoComments } from '../../../../img/ill/illustrations';
@@ -69,7 +68,7 @@ const appRoute = createAppRoute({
 			:asset="illNoComments"
 		>
 			<p>
-				<AppTranslate>There are no active firesides in this realm yet.</AppTranslate>
+				{{ $gettext(`There are no active firesides in this realm yet.`) }}
 			</p>
 		</AppIllustration>
 		<div

@@ -28,3 +28,6 @@ export const kFontSizeH3 = 21;
 export const kFontSizeH4 = 18;
 export const kFontSizeH5 = kFontSizeBase;
 export const kFontSizeH6 = 13;
+
+export const kLineHeightBase = 1.428571429;
+export const kLineHeightComputed = Math.floor(kFontSizeBase * kLineHeightBase);

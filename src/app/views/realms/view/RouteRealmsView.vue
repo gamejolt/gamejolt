@@ -68,10 +68,20 @@ function onShareClick() {
 				<AppScrollAffix :disabled="!Screen.isLg">
 					<AppRealmFullCard v-if="Screen.isDesktop" :realm="routeStore.realm.value" />
 					<template v-else>
-						<h1 class="-heading">
-							<span class="-heading-text">{{ routeStore.realm.value.name }}</span>
+						<h1
+							:style="{
+								display: `flex`,
+								flexDirection: `row`,
+								alignItems: `center`,
+								fontSize: `18px`,
+								height: `48px`,
+								margin: `0`,
+								marginBottom: `8px`,
+							}"
+						>
+							<span :style="{ flex: `auto` }">{{ routeStore.realm.value.name }}</span>
 							<AppButton
-								class="-more"
+								:style="{ flex: `none` }"
 								icon="share-airplane"
 								trans
 								@click="onShareClick"
@@ -81,14 +91,21 @@ function onShareClick() {
 						</h1>
 
 						<AppRealmFollowButton
-							class="-follow"
+							:style="{ marginBottom: `8px` }"
 							:realm="routeStore.realm.value"
 							source="realmHeader"
 							block
 						/>
 					</template>
 
-					<div class="-followers">
+					<div
+						class="_followers"
+						:style="{
+							display: `flex`,
+							alignItems: `center`,
+							justifyContent: `center`,
+						}"
+					>
 						<AppUserKnownFollowers
 							:users="knownFollowers"
 							:count="knownFollowerCount"
@@ -115,29 +132,7 @@ function onShareClick() {
 </template>
 
 <style lang="stylus" scoped>
-.-heading
-	display: flex
-	flex-direction: row
-	align-items: center
-	font-size: 18px
-	height: 48px
-	margin: 0
-	margin-bottom: 8px
-
-.-heading-text
-	flex: auto
-
-.-more
-	flex: none
-
-.-follow
-	margin-bottom: 8px
-
-.-followers
-	display: flex
-	align-items: center
-	justify-content: center
-
+._followers
 	@media $media-lg-up
-		display: block
+		display: block !important
 </style>
