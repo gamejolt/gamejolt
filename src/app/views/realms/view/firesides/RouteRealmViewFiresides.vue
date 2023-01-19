@@ -2,11 +2,15 @@
 import { computed, ref } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
+import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import AppFiresideAvatar from '../../../../components/fireside/avatar/AppFiresideAvatar.vue';
+import AppFiresideAvatarBase from '../../../../components/fireside/avatar/AppFiresideAvatarBase.vue';
 import { illNoComments } from '../../../../img/ill/illustrations';
 import { useRealmRouteStore } from '../view.store';
 
@@ -24,7 +28,6 @@ export default {
 
 <script lang="ts" setup>
 const routeStore = useRealmRouteStore();
-const realm = computed(() => routeStore.realm.value);
 const firesides = ref<Fireside[]>([]);
 
 const gridColumns = computed(() => {
@@ -43,7 +46,9 @@ const placeholderCount = computed(() => {
 });
 
 const appRoute = createAppRoute({
-	routeTitle: computed(() => (realm.value ? `Firesides in the ${realm.value.name} Realm` : null)),
+	routeTitle: computed(() =>
+		routeStore.realm.value ? `Firesides in the ${routeStore.realm.value.name} Realm` : null
+	),
 	onResolved: ({ payload }) => {
 		firesides.value = Fireside.populate(payload.firesides);
 	},
@@ -54,7 +59,7 @@ const appRoute = createAppRoute({
 	<div>
 		<h1 class="section-header" :class="{ 'h2 -text-overflow': Screen.isMobile }">
 			<AppTranslate>Active Firesides</AppTranslate>
-			<small v-if="Screen.isDesktop">in {{ realm.name }}</small>
+			<small v-if="Screen.isDesktop">in {{ routeStore.realm.value.name }}</small>
 		</h1>
 		<br />
 

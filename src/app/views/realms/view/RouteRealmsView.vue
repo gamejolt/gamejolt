@@ -1,13 +1,9 @@
 <script lang="ts">
-import { computed, provide, Ref, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { computed, provide, ref } from 'vue';
+import { RouterView, useRouter } from 'vue-router';
 import { getAbsoluteLink } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
-import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
-import { Meta } from '../../../../_common/meta/meta-service';
 import AppRealmFollowButton from '../../../../_common/realm/AppRealmFollowButton.vue';
 import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
 import { Realm } from '../../../../_common/realm/realm-model';
@@ -18,98 +14,40 @@ import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { ShareModal } from '../../../../_common/share/card/_modal/modal.service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
-import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
-import { ActivityFeedView } from '../../../components/activity/feed/view';
-import AppFiresideAvatar from '../../../components/fireside/avatar/AppFiresideAvatar.vue';
-import AppFiresideAvatarAdd from '../../../components/fireside/avatar/AppFiresideAvatarAdd.vue';
-import { AppActivityFeedLazy } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
-import AppPostAddButton from '../../../components/post/add-button/AppPostAddButton.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { createRealmRouteStore, RealmRouteStoreKey } from './view.store';
 
 export default {
 	...defineAppRouteOptions({
-		resolver: async ({ route }) =>
-			Promise.all([
-				Api.sendRequest('/web/realms/' + route.params.path),
-				Api.sendRequest(
-					ActivityFeedService.makeFeedUrl(
-						route,
-						`/web/posts/fetch/realm/${route.params.path}`
-					)
-				),
-			]),
+		resolver: async ({ route }) => Api.sendRequest('/web/realms/' + route.params.path),
 	}),
+	components: { RouterView },
 };
 </script>
 
 <script lang="ts" setup>
 const router = useRouter();
-const route = useRoute();
 
 const routeStore = createRealmRouteStore();
 provide(RealmRouteStoreKey, routeStore);
 
-const realm = computed(() => routeStore.realm.value);
 const knownFollowers = ref<User[]>([]);
 const knownFollowerCount = ref(0);
-const feed = ref(null) as Ref<ActivityFeedView | null>;
-const firesides = ref<Fireside[]>([]);
-const isBootstrapped = ref(false);
-
-// How many firesides to show in the preview row, including the "add a fireside".
-const firesidesGridColumns = 5;
-
-const displayablePreviewFiresides = computed(() => {
-	// -1 to leave room for the "add a fireside"
-	const perRow = firesidesGridColumns - 1;
-	return Object.freeze(firesides.value.slice(0, perRow));
-});
 
 const shareLink = computed(() =>
-	realm.value ? getAbsoluteLink(router, realm.value.routeLocation) : undefined
+	routeStore.realm.value
+		? getAbsoluteLink(router, routeStore.realm.value.routeLocation)
+		: undefined
 );
 
-const appRoute = createAppRoute({
-	routeTitle: computed(() =>
-		realm.value
-			? $gettextInterpolate(`%{ realm } Realm - Art, videos, guides, polls and more`, {
-					realm: realm.value.name,
-			  })
-			: null
-	),
-	onInit() {
-		feed.value = ActivityFeedService.routeInit(isBootstrapped.value);
-	},
-	onResolved({ payload: [payload, feedPayload], fromCache }) {
-		isBootstrapped.value = true;
-
+createAppRoute({
+	onResolved({ payload }) {
 		routeStore.realm.value = new Realm(payload.realm);
 		knownFollowers.value = User.populate(payload.knownFollowers);
 		knownFollowerCount.value = payload.knownFollowerCount || 0;
-
-		feed.value = ActivityFeedService.routed(
-			feed.value,
-			{
-				type: 'EventItem',
-				name: 'realm',
-				url: `/web/posts/fetch/realm/${route.params.path}`,
-				shouldShowFollow: true,
-				itemsPerPage: feedPayload.perPage,
-			},
-			feedPayload.items,
-			fromCache
-		);
-
-		firesides.value = Fireside.populate(payload.activeFiresides);
-
-		Meta.description = payload.metaDescription;
-		Meta.fb = payload.fb;
-		Meta.twitter = payload.twitter;
 	},
 });
 
@@ -119,29 +57,19 @@ function onShareClick() {
 	}
 	ShareModal.show({ resource: 'realm', url: shareLink.value });
 }
-
-function onPostAdded(post: FiresidePost) {
-	ActivityFeedService.onPostAdded({
-		feed: feed.value!,
-		post,
-		appRoute: appRoute,
-		route: route,
-		router: router,
-	});
-}
 </script>
 
 <template>
-	<AppShellPageBackdrop v-if="realm">
+	<AppShellPageBackdrop v-if="routeStore.realm.value">
 		<AppSpacer vertical :scale="10" :scale-sm="5" :scale-xs="5" />
 
 		<AppPageContainer xl>
 			<template #left>
 				<AppScrollAffix :disabled="!Screen.isLg">
-					<AppRealmFullCard v-if="Screen.isDesktop" :realm="realm" />
+					<AppRealmFullCard v-if="Screen.isDesktop" :realm="routeStore.realm.value" />
 					<template v-else>
 						<h1 class="-heading">
-							<span class="-heading-text">{{ realm.name }}</span>
+							<span class="-heading-text">{{ routeStore.realm.value.name }}</span>
 							<AppButton
 								class="-more"
 								icon="share-airplane"
@@ -154,7 +82,7 @@ function onPostAdded(post: FiresidePost) {
 
 						<AppRealmFollowButton
 							class="-follow"
-							:realm="realm"
+							:realm="routeStore.realm.value"
 							source="realmHeader"
 							block
 						/>
@@ -178,49 +106,7 @@ function onPostAdded(post: FiresidePost) {
 				</AppScrollAffix>
 			</template>
 			<template #default>
-				<div class="-firesides-header">
-					<h4 class="section-header">
-						<AppTranslate>Firesides</AppTranslate>
-					</h4>
-
-					<AppButton
-						trans
-						:to="{
-							name: 'realms.view.firesides',
-							params: { path: realm.path },
-						}"
-					>
-						<AppTranslate>View All</AppTranslate>
-					</AppButton>
-				</div>
-
-				<AppLoadingFade :is-loading="!isBootstrapped">
-					<div
-						class="-firesides-grid"
-						:style="{
-							gridTemplateColumns: `repeat(${firesidesGridColumns}, 1fr)`,
-						}"
-					>
-						<AppFiresideAvatarAdd :realms="[realm]" />
-
-						<AppFiresideAvatar
-							v-for="fireside in displayablePreviewFiresides"
-							:key="fireside.id"
-							:fireside="fireside"
-							hide-realm
-						/>
-					</div>
-				</AppLoadingFade>
-
-				<AppPostAddButton
-					:realm="realm"
-					:placeholder="
-						$gettextInterpolate(`Post about %{ realm }!`, { realm: realm.name })
-					"
-					@add="onPostAdded"
-				/>
-
-				<AppActivityFeedLazy v-if="feed?.isBootstrapped" :feed="feed" show-ads />
+				<RouterView />
 			</template>
 		</AppPageContainer>
 
@@ -254,48 +140,4 @@ function onPostAdded(post: FiresidePost) {
 
 	@media $media-lg-up
 		display: block
-
-.-communities-header
-	margin-top: 32px
-	font-size: $font-size-small
-
-	@media $media-lg-up
-		margin-top: 0
-		font-size: $font-size-base
-
-.-communities
-	display: grid
-	grid-template-columns: repeat(10, minmax(24px, 1fr))
-	grid-gap: 8px
-	margin-bottom: 54px
-
-	@media $media-lg-up
-		grid-template-columns: repeat(5, minmax(55px, 1fr))
-
-.-community-item
-	pressy()
-	display: inline-block
-	position: relative
-	width: 100%
-	height: auto
-
-.-community-thumb-placeholder
-	img-circle()
-	change-bg('bg-subtle')
-
-.-community-verified-tick
-	position: absolute
-	right: -3px
-	bottom: -1px
-	change-bg('bg-offset')
-	border-radius: 50%
-
-.-firesides-grid
-	display: grid
-	grid-gap: $line-height-computed
-	margin-bottom: $line-height-computed
-
-.-firesides-header
-	display: flex
-	justify-content: space-between
 </style>
