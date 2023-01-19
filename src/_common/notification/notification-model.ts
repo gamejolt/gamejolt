@@ -103,13 +103,13 @@ export class Notification extends Model {
 		Notification.TYPE_SITE_TROPHY_ACHIEVED,
 		Notification.TYPE_COMMUNITY_USER_NOTIFICATION,
 		Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY,
-		Notification.TYPE_QUEST_NOTIFICATION,
 		Notification.TYPE_CHARGED_STICKER,
 		Notification.TYPE_SUPPORTER_MESSAGE,
 	];
 
 	user_id!: number;
 	type!: string;
+	is_notification_feed_item!: boolean;
 	added_on!: number;
 	viewed_on!: number | null;
 
@@ -169,6 +169,11 @@ export class Notification extends Model {
 
 		if (!this.viewed_on) {
 			this.viewed_on = null;
+		}
+
+		// Default to `true` if not provided.
+		if (typeof data.is_notification_feed_item !== 'boolean') {
+			this.is_notification_feed_item = true;
 		}
 
 		if (data.to_resource === 'Game') {

@@ -69,7 +69,6 @@ import { CommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
 import { BottomBarControl } from '../../../views/fireside/_bottom-bar/AppFiresideBottomBar.vue';
-import { leaveChatRoom } from '../../chat/client';
 import { ChatRoomChannel, createChatRoomChannel } from '../../chat/room-channel';
 import { createGridFiresideChannel, GridFiresideChannel } from '../../grid/fireside-channel';
 import { createGridFiresideDMChannel, GridFiresideDMChannel } from '../../grid/fireside-dm-channel';
@@ -964,11 +963,12 @@ export function createFiresideController(
 				run(async () => {
 					logger.info('Trying to connect to fireside channel.');
 
-					const newChannel = await createGridFiresideChannel(grid.value!, controller, {
+					const newChannel = createGridFiresideChannel(grid.value!, controller, {
 						firesideHash: fireside.hash,
 						stickerStore,
 					});
 
+					await newChannel.joinPromise;
 					gridChannel.value = newChannel;
 					grid.value!.firesideChannels.push(markRaw(newChannel));
 
@@ -983,11 +983,12 @@ export function createFiresideController(
 
 					logger.info('Trying to connect to fireside DM channel.');
 
-					const newChannel = await createGridFiresideDMChannel(grid.value!, controller, {
+					const newChannel = createGridFiresideDMChannel(grid.value!, controller, {
 						firesideHash: fireside.hash,
 						user: user.value,
 					});
 
+					await newChannel.joinPromise;
 					gridDMChannel.value = newChannel;
 					grid.value!.firesideDMChannels.push(markRaw(newChannel));
 
@@ -999,7 +1000,7 @@ export function createFiresideController(
 
 					const roomId = fireside.chat_room_id;
 
-					const newChannel = await createChatRoomChannel(chat.value!, {
+					const newChannel = createChatRoomChannel(chat.value!, {
 						roomId,
 						instanced: true,
 						afterMemberKick: data => {
@@ -1010,6 +1011,7 @@ export function createFiresideController(
 						},
 					});
 
+					await newChannel.joinPromise;
 					chatChannel.value = newChannel;
 
 					logger.info('Connected to chat room.');
@@ -1056,9 +1058,7 @@ export function createFiresideController(
 			gridChannel.value = undefined;
 			gridDMChannel.value = undefined;
 
-			if (chat.value && chatChannel.value) {
-				leaveChatRoom(chat.value, chatChannel.value.room.value);
-			}
+			chatChannel.value?.leave();
 			chatChannel.value = undefined;
 		}
 

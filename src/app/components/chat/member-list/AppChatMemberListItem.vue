@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import AppFiresideLiveTag from '../../../../_common/fireside/AppFiresideLiveTag.vue';
+import { FiresideRTCHost } from '../../../../_common/fireside/rtc/rtc';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -9,7 +10,7 @@ import { isUserOnline } from '../client';
 import { ChatRoom } from '../room';
 import { ChatUser, getChatUserRoleData } from '../user';
 import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
-import AppChatUserPopover from '../user-popover/user-popover.vue';
+import AppChatUserPopover from '../user-popover/AppChatUserPopover.vue';
 import AppChatListItem from '../_list/AppChatListItem.vue';
 
 const props = defineProps({
@@ -21,13 +22,17 @@ const props = defineProps({
 		type: Object as PropType<ChatRoom>,
 		required: true,
 	},
+	host: {
+		type: Object as PropType<FiresideRTCHost>,
+		default: undefined,
+	},
 	horizontalPadding: {
 		type: Number,
 		default: undefined,
 	},
 });
 
-const { user, room } = toRefs(props);
+const { user, room, host } = toRefs(props);
 const { chatUnsafe: chat } = useGridStore();
 
 const isOnline = computed(() => {
@@ -39,7 +44,13 @@ const isOnline = computed(() => {
 });
 
 const roleData = computed(() => getChatUserRoleData(room.value, user.value));
-const isLiveFiresideHost = computed(() => user.value.isLive === true);
+const isLiveFiresideHost = computed(() => {
+	if (!host?.value) {
+		return false;
+	}
+
+	return !host.value.needsPermissionToView && host.value.isLive;
+});
 </script>
 
 <template>

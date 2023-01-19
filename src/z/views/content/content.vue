@@ -30,6 +30,7 @@ import { User } from '../../../_common/user/user.model';
 export default class RouteContent extends BaseRouteComponent {
 	isHydrated = false;
 	isLoading = false;
+	requireLog = true;
 	errors = [] as string[];
 
 	contentJson!: string;
@@ -37,6 +38,7 @@ export default class RouteContent extends BaseRouteComponent {
 	lastEdit!: number;
 	resourceTitle!: string;
 	resourceUrl!: string;
+	resourceId!: number;
 	ownerName!: string;
 	ownerUrl!: string;
 	logReason = '';
@@ -54,7 +56,7 @@ export default class RouteContent extends BaseRouteComponent {
 	}
 
 	get canSubmit() {
-		return this.logReason.length > 0;
+		return this.logReason.length > 0 || !this.requireLog;
 	}
 
 	get routeTitle() {
@@ -79,6 +81,9 @@ export default class RouteContent extends BaseRouteComponent {
 		this.resourceUrl = $payload.resourceUrl;
 		this.ownerName = $payload.ownerName;
 		this.ownerUrl = $payload.ownerUrl;
+		this.resourceId =
+			$payload.resourceId || parseInt(this.$route.params.resourceId.toString(), 10);
+		this.requireLog = $payload.requireLog;
 
 		this.isHydrated = true;
 	}
@@ -154,16 +159,13 @@ export default class RouteContent extends BaseRouteComponent {
 						class="content-editor-moderate"
 						:value="contentJson"
 						:content-context="contentContext"
+						:model-id="resourceId"
+						:max-height="800"
 						@input="onUpdate"
 					/>
 				</div>
 
 				<br />
-
-				<div class="alert alert-info">
-					<AppJolticon icon="info-circle" />
-					<AppTranslate>Image uploads are currently unavailable.</AppTranslate>
-				</div>
 
 				<div class="log-reason">
 					<textarea

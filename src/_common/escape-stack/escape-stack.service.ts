@@ -1,3 +1,4 @@
+import { onMounted, onUnmounted } from 'vue';
 import { arrayRemove } from '../../utils/array';
 
 export type EscapeStackCallback = () => void;
@@ -34,4 +35,14 @@ export class EscapeStack {
 		document.addEventListener('keydown', e => this.handle(e));
 		this.initialized = true;
 	}
+}
+
+export function useEscapeStack(cb: () => void) {
+	onMounted(() => {
+		EscapeStack.register(cb);
+	});
+
+	onUnmounted(() => {
+		EscapeStack.deregister(cb);
+	});
 }

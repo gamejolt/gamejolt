@@ -16,26 +16,26 @@ import { Background } from '../../../_common/background/background.model';
 import { ContentDocument } from '../../../_common/content/content-document';
 import { ContentObject } from '../../../_common/content/content-object';
 import { MarkObject } from '../../../_common/content/mark-object';
+import { storeModel, storeModelList } from '../../../_common/model/model-store.service';
+import { UnknownModelData } from '../../../_common/model/model.service';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { StickerPlacement } from '../../../_common/sticker/placement/placement.model';
 import {
 	ChatClient,
 	isInChatRoom,
 	processNewChatOutput,
-	setChatRoom,
 	setTimeSplit,
-	setupChatRoom,
 	updateChatRoomLastMessageOn,
 } from './client';
 import { ChatMessage } from './message';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
 
-export type ChatRoomChannel = Awaited<ReturnType<typeof createChatRoomChannel>>;
+export type ChatRoomChannel = ReturnType<typeof createChatRoomChannel>;
 
 interface JoinPayload {
-	room: unknown;
-	messages: unknown[];
+	room: UnknownModelData;
+	messages: UnknownModelData[];
 }
 
 interface RoomPresence {
@@ -51,7 +51,7 @@ interface MemberDecPayload {
 }
 
 interface MemberAddPayload {
-	members: unknown[];
+	members: UnknownModelData[];
 }
 
 interface MemberLeavePayload {
@@ -66,7 +66,7 @@ interface OwnerSyncPayload {
 	owner_id: number;
 }
 
-export async function createChatRoomChannel(
+export function createChatRoomChannel(
 	client: ChatClient,
 	options: {
 		roomId: number;
@@ -110,25 +110,45 @@ export async function createChatRoomChannel(
 	channelController.listenTo('kick_member', _onMemberKicked);
 
 	const { channel, isClosed } = channelController;
-	channel.onClose(() => {
-		if (!isInChatRoom(client, roomId)) {
-			return;
-		}
-
-		if (!instanced) {
-			setChatRoom(client, undefined);
-		}
-	});
 
 	const presence = markRaw(new Presence(channel));
 	presence.onSync(() => _syncPresentUsers(presence));
 	presence.onLeave(_syncPresenceData);
+
+	const joinPromise = channelController.join({
+		async onJoin(response: JoinPayload) {
+			client.roomChannels.set(roomId, markRaw(c));
+			_room.value = storeModel(ChatRoom, { chat: client, ...response.room });
+
+			// Clear out any old messages so we don't use old data from the
+			// model store.
+			room.value.messages = [];
+
+			const messages = storeModelList(ChatMessage, response.messages);
+			messages.reverse();
+			processNewChatOutput(room.value, messages, true);
+			room.value.messagesPopulated = true;
+
+			// Don't push for guests.
+			if (client.currentUser && client.isFocused) {
+				pushFocus();
+			}
+		},
+		onLeave() {
+			if (_room.value?.messageEditing) {
+				_room.value.messageEditing = null;
+			}
+
+			client.roomChannels.delete(roomId);
+		},
+	});
 
 	const c = shallowReadonly({
 		channelController,
 		roomId,
 		instanced,
 		room,
+		joinPromise,
 
 		processNewRoomMessage,
 		freezeMessageLimitRemovals,
@@ -147,37 +167,15 @@ export async function createChatRoomChannel(
 		pushStopTyping,
 		pushPlaceSticker,
 		getMemberWatchLock,
+		leave,
 	});
 
-	// If we're not an instanced room, we only want to allow joining a single
-	// one. So we save our room as the one that we're polling and then check
-	// after join to make sure that we didn't change.
-	if (!instanced) {
-		client.pollingRoomId = roomId;
+	function leave() {
+		channelController.leave();
 	}
 
-	await channelController.join({
-		async onJoin(response: JoinPayload) {
-			if (!instanced) {
-				if (client.pollingRoomId !== roomId) {
-					throw new Error(`Not polling our room anymore.`);
-				}
-
-				client.pollingRoomId = -1;
-			}
-
-			client.roomChannels[roomId] = markRaw(c);
-
-			_room.value = new ChatRoom(client, response.room);
-
-			const messages = response.messages.map((i: ChatMessage) => new ChatMessage(i));
-			messages.reverse();
-			setupChatRoom(client, room.value, messages);
-		},
-	});
-
 	function _onMsg(data: Partial<ChatMessage>) {
-		const message = new ChatMessage(data);
+		const message = storeModel(ChatMessage, data);
 
 		// If we receive a message from the currently logged in user on this
 		// room channel, we ignore it.
@@ -225,20 +223,13 @@ export async function createChatRoomChannel(
 	}
 
 	function _onUserUpdated(data: Partial<ChatUser>) {
-		const updatedUser = new ChatUser(data);
+		const updatedUser = storeModel(ChatUser, data);
 		if (room.value.isGroupRoom) {
 			if (isInChatRoom(client, roomId)) {
-				room.value.memberCollection.update(updatedUser);
+				room.value.memberCollection.updated(updatedUser);
 			}
 
 			room.value.updateRoleForUser(updatedUser);
-
-			// Sync the user update to the list of messages.
-			for (const message of room.value.messages) {
-				if (message.user.id === updatedUser.id) {
-					Object.assign(message.user, updatedUser);
-				}
-			}
 		}
 	}
 
@@ -276,14 +267,8 @@ export async function createChatRoomChannel(
 			return;
 		}
 
-		const message = room.value.messages.find(i => i.id === data.id);
-		if (!message) {
-			return;
-		}
-
-		const edited = new ChatMessage(data);
-		message.content = edited.content;
-		message.edited_on = edited.edited_on;
+		// This will edit it within the room's message list.
+		storeModel(ChatMessage, data);
 	}
 
 	function _onMemberInc(data: MemberIncPayload) {
@@ -296,7 +281,7 @@ export async function createChatRoomChannel(
 
 	function _onMemberAdd(data: MemberAddPayload) {
 		for (const member of data.members) {
-			const user = new ChatUser(member);
+			const user = storeModel(ChatUser, member);
 
 			room.value.memberCollection.add(user);
 			room.value.updateRoleForUser(user);
@@ -443,7 +428,7 @@ export async function createChatRoomChannel(
 	 */
 	function pushLoadMessages(before: Date) {
 		return channelController.push<{
-			messages: unknown[];
+			messages: UnknownModelData[];
 		}>('load_messages', { before_date: before });
 	}
 
@@ -532,7 +517,7 @@ export async function createChatRoomChannel(
 			_isWatchingMembers = true;
 			run(async () => {
 				interface Payload {
-					members: unknown[];
+					members: UnknownModelData[];
 				}
 
 				const cancelToken = new CancelToken();
@@ -598,7 +583,12 @@ export function useChatRoomMembers(room: ComputedRef<ChatRoom | undefined>) {
 	let lock: ChatRoomChannelLock | undefined;
 	const mounted = ref(false);
 
-	const roomChannel = computed(() => room.value?.chat.roomChannels[room.value.id]);
+	const roomChannel = computed(() => {
+		if (!room.value?.chat) {
+			return;
+		}
+		return room.value.chat.roomChannels.get(room.value.id);
+	});
 	const memberCollection = computed(() => room.value?.memberCollection);
 
 	watch([roomChannel, mounted], () => {
