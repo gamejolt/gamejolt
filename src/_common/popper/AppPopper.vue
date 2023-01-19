@@ -86,6 +86,16 @@ function makeModifiers(fallbackPlacements: PopperPlacementType[]) {
 
 <script lang="ts" setup>
 const props = defineProps({
+	/**
+	 * Used to force show the popover unconditionally. Useful when developing
+	 * functionality inside the popover.
+	 *
+	 * It is basically equivalent to trigger = manual + manual-show = true
+	 */
+	debug: {
+		type: Boolean,
+		default: false,
+	},
 	placement: {
 		type: String as PropType<PopperPlacementType>,
 		default: 'bottom',
@@ -212,6 +222,7 @@ const emit = defineEmits({
 });
 
 const {
+	debug,
 	placement,
 	fallbackPlacements,
 	trigger,
@@ -290,7 +301,7 @@ onMounted(() => {
 
 	Popper.registerPopper(popperIndex, {
 		onHideAll: () => {
-			if (trigger.value === 'manual') {
+			if (trigger.value === 'manual' || debug.value) {
 				return;
 			}
 
@@ -299,6 +310,8 @@ onMounted(() => {
 			}
 		},
 	});
+
+	onManualShow();
 });
 
 onBeforeUnmount(() => {
@@ -316,7 +329,7 @@ onUnmounted(() => {
 	Popper.deregisterPopper(popperIndex);
 });
 
-watch(manualShow, onManualShow);
+watch([manualShow, debug], onManualShow);
 
 watch(hideTrigger, _hide);
 
@@ -511,6 +524,10 @@ function _calcWidth() {
 }
 
 function _hide() {
+	if (debug.value) {
+		return;
+	}
+
 	// In case a popper was hidden from something other than a click,
 	// like right-clicking a cbar item or Popover.hideAll() being triggered.
 	document.removeEventListener('click', _onClickAway, true);
@@ -547,6 +564,10 @@ function _clearHideTimeout() {
 }
 
 function onManualShow() {
+	if (debug.value) {
+		return _show();
+	}
+
 	if (trigger.value !== 'manual') {
 		return;
 	}

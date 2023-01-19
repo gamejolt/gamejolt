@@ -250,7 +250,7 @@ async function ejectFireside(community: FiresideCommunity) {
 		</template>
 
 		<template #link>
-			<AppPopper trigger="hover" no-hover-popover>
+			<AppPopper trigger="hover" no-hover-popover debug>
 				<template #default>
 					<RouterLink class="-link" :to="fireside.routeLocation" />
 				</template>
@@ -295,7 +295,7 @@ async function ejectFireside(community: FiresideCommunity) {
 
 							<template v-if="realm">
 								<div class="-tooltip-img-realm">
-									<AppRealmThumbnail :realm="realm" />
+									<AppRealmThumbnail :realm="realm" not-rounded />
 								</div>
 								{{ realm.name }}
 							</template>

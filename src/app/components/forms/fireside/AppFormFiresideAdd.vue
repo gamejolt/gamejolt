@@ -210,7 +210,6 @@ function removeRealm(realm: Realm) {
 				hide-label
 			>
 				<AppPostTargets
-					class="-post-targets"
 					:communities="communities"
 					:max-communities="1"
 					:realms="realms"

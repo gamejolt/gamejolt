@@ -63,6 +63,17 @@ export class Fireside extends Collaboratable(Model) {
 		return this.realms.length !== 0;
 	}
 
+	get primaryRealmLink() {
+		if (this.realms.length > 0) {
+			return this.realms[0];
+		}
+		return null;
+	}
+
+	get realm() {
+		return this.primaryRealmLink?.realm ?? null;
+	}
+
 	constructor(data: any = {}) {
 		super(data);
 

@@ -2,6 +2,7 @@
 import { computed, ref, watch, watchEffect } from 'vue';
 import { Background } from '../../../../_common/background/background.model';
 import AppButton from '../../../../_common/button/AppButton.vue';
+import { Community } from '../../../../_common/community/community.model';
 import { FiresideChatSettings } from '../../../../_common/fireside/chat/chat-settings.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FIRESIDE_ROLES } from '../../../../_common/fireside/role/role.model';
@@ -16,6 +17,7 @@ import AppFormControlToggleButton from '../../../../_common/form-vue/controls/to
 import AppFormControlToggleButtonGroup from '../../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../../_common/form-vue/validators';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import { Realm } from '../../../../_common/realm/realm-model';
 import { ReportModal } from '../../../../_common/report/modal/modal.service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
@@ -24,12 +26,13 @@ import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import {
-	extinguishFireside,
-	publishFireside,
-	useFiresideController,
+extinguishFireside,
+publishFireside,
+useFiresideController
 } from '../../../components/fireside/controller/controller';
 import { ChatCommandsModal } from '../../../components/forms/chat/commands/modal/modal.service';
 import { ChatTimersModal } from '../../../components/forms/chat/timers/modal/modal.service';
+import AppPostTargets from '../../../components/post/AppPostTargets.vue';
 import AppFiresideShare from '../AppFiresideShare.vue';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
@@ -50,12 +53,72 @@ const {
 	canReport,
 } = c;
 
+const selectedCommunities = ref<{ community: Community }[]>([]);
+const targetableCommunities = computed(() => selectedCommunities.value.map(i => i.community));
+const selectedRealms = ref<Realm[]>([]);
+const maxRealms = ref(5);
+
 const form: FormController<Fireside> = createForm({
 	warnOnDiscard: false,
 	modelClass: Fireside,
 	// Just wrapping in a ref to make the form happy. It never actually changes.
 	model: ref(fireside),
+	loadUrl: `/web/dash/fireside/save/${fireside.hash}`,
+	onLoad: response => {
+		fireside.assign(new Fireside(response.fireside));
+		selectedCommunities.value = fireside.community_links.map(i => {
+			return { community: i.community };
+		});
+		selectedRealms.value = fireside.realms.map(i => i.realm);
+		maxRealms.value = response.maxRealms;
+	},
+	onInit: () => {
+		selectedCommunities.value = fireside.community_links.map(i => {
+			return { community: i.community };
+		});
+		selectedRealms.value = fireside.realms.map(i => i.realm);
+	},
+	onSubmit: () =>
+		fireside.$_save(`/web/dash/fireside/save/${fireside.hash}`, 'fireside', {
+			data: {
+				title: form.formModel.title,
+				realm_ids: selectedRealms.value.map(i => i.id),
+			},
+			allowComplexData: ['realm_ids'],
+		}),
+	onSubmitSuccess: response => {
+		selectedCommunities.value = fireside.community_links.map(i => {
+			return { community: i.community };
+		});
+		selectedRealms.value = fireside.realms.map(i => i.realm);
+		maxRealms.value = response.maxRealms;
+	},
 });
+
+function attachRealm(realm: Realm, append = true) {
+	// Do nothing if that realm is already attached.
+	if (selectedRealms.value.find(i => i.id === realm.id)) {
+		return;
+	}
+
+	if (append) {
+		selectedRealms.value.push(realm);
+	} else {
+		selectedRealms.value.unshift(realm);
+	}
+	form.changed = true;
+}
+
+function removeRealm(realm: Realm) {
+	const idx = selectedRealms.value.findIndex(i => i.id === realm.id);
+	if (idx === -1) {
+		console.warn('Attempted to remove a realm that is not attached');
+		return;
+	}
+
+	selectedRealms.value.splice(idx, 1);
+	form.changed = true;
+}
 
 const settingsForm: FormController<FiresideChatSettings> = createForm({
 	warnOnDiscard: false,
@@ -214,6 +277,28 @@ function onClickChatTimers() {
 								/>
 
 								<AppFormControlErrors />
+							</AppFormGroup>
+
+							<AppSpacer vertical :scale="6" />
+
+							<AppFormGroup
+								name="targettables"
+								class="sans-margin-bottom"
+								:label="$gettext(`Tagged to`)"
+								small
+							>
+								<AppPostTargets
+									:communities="selectedCommunities"
+									:max-communities="1"
+									:realms="selectedRealms"
+									:max-realms="maxRealms"
+									:targetable-communities="targetableCommunities"
+									can-add-realm
+									can-remove-realms
+									:with-community-channels="false"
+									@remove-realm="removeRealm"
+									@select-realm="attachRealm"
+								/>
 							</AppFormGroup>
 
 							<AppSpacer vertical :scale="6" />
