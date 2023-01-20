@@ -3,12 +3,23 @@ import { computed, Ref, ref } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppPostCard from '../../../../_common/fireside/post/card/AppPostCard.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppHelpGroup from '../../../components/help/AppHelpGroup.vue';
 import HelpCategory from '../../../components/help/category/category.model';
 import HelpPage from '../../../components/help/page/page.model';
+import { routeDiscoverGames } from '../../discover/games/games.route';
+import { routeLegalAds } from '../../legal/ads/ads.route';
+import { routeLegalCookies } from '../../legal/cookies/cookies.route';
+import { routeLegalPrivacy } from '../../legal/privacy/privacy.route';
+import { routeLegalTerms } from '../../legal/terms/terms.route';
+import { routeProfileOverviewFeed } from '../../profile/overview/feed/feed.route';
+import { routeLandingAbout } from '../about/about.route';
+import { routeLandingCreators } from '../creators/creators.route';
+import { routeLandingGameApi } from '../game-api/game-api.route';
+import { routeLandingMarketplace } from '../marketplace/marketplace.route';
 
 export default {
 	...defineAppRouteOptions({
@@ -17,7 +28,7 @@ export default {
 		deps: {},
 		resolver: () => Api.sendRequest('/web/help'),
 	}),
-	components: {},
+	components: { AppLinkExternal },
 };
 </script>
 
@@ -98,13 +109,109 @@ createAppRoute({
 
 		<section class="section">
 			<div class="container">
-				<!-- TODO: real content -->
-				<h2 class="section-header">Contact</h2>
-				<div>- follow @gamejolt for updates on Game Jolt</div>
-				<div>- follow @gjsupport for support related information</div>
-				<div>
-					Questions regarding accounts, send an email to contact@gamejolt.com, or read
-					this help page: link
+				<div class="col-lg-3 col-sm-12 _footer-column">
+					<h3 class="sans-margin-top _footer-header">{{ $gettext(`Company`) }}</h3>
+					<div>
+						<RouterLink :to="{ name: routeLandingAbout.name }">
+							{{ $gettext(`About Game Jolt`) }}
+						</RouterLink>
+					</div>
+					<div>
+						<AppLinkExternal href="mailto:contact@gamejolt.com">
+							{{ $gettext(`Contact`) }}
+						</AppLinkExternal>
+					</div>
+					<div>
+						<AppLinkExternal href="https://angel.co/company/gjolt/jobs">
+							{{ $gettext(`Career`) }}
+						</AppLinkExternal>
+					</div>
+					<div>
+						<RouterLink :to="{ name: routeDiscoverGames.name }">
+							{{ $gettext(`Store`) }}
+						</RouterLink>
+					</div>
+				</div>
+				<div class="col-lg-3 col-sm-12 _footer-column">
+					<h3 class="sans-margin-top _footer-header">
+						{{ $gettext(`Creators & Developers`) }}
+					</h3>
+					<div>
+						<RouterLink :to="{ name: routeLandingCreators.name }">
+							{{ $gettext(`Creators`) }}
+						</RouterLink>
+					</div>
+					<div>
+						<RouterLink :to="{ name: routeLandingMarketplace.name }">
+							{{ $gettext(`Marketplace`) }}
+						</RouterLink>
+					</div>
+					<div>
+						<RouterLink :to="{ name: routeLandingGameApi.name }">
+							{{ $gettext(`Game Api`) }}
+						</RouterLink>
+					</div>
+				</div>
+				<div class="col-lg-3 col-sm-12 _footer-column">
+					<h3 class="sans-margin-top _footer-header">{{ $gettext(`Socials`) }}</h3>
+					<div>
+						<RouterLink
+							:to="{
+								name: routeProfileOverviewFeed.name,
+								params: { username: 'gamejolt' },
+							}"
+						>
+							{{ $gettext(`Follow Game Jolt`) }}
+						</RouterLink>
+					</div>
+					<div>
+						<RouterLink
+							:to="{
+								name: routeProfileOverviewFeed.name,
+								params: { username: 'gjsupport' },
+							}"
+						>
+							{{ $gettext(`Follow Game Jolt Support`) }}
+						</RouterLink>
+					</div>
+					<div>
+						<AppLinkExternal href="https://twitter.com/gamejolt">
+							{{ $gettext(`Twitter`) }}
+						</AppLinkExternal>
+					</div>
+					<div>
+						<AppLinkExternal href="https://www.tiktok.com/@gamejolt">
+							{{ $gettext(`TikTok`) }}
+						</AppLinkExternal>
+					</div>
+					<div>
+						<AppLinkExternal href="https://www.instagram.com/thegamejolt/">
+							{{ $gettext(`Instagram`) }}
+						</AppLinkExternal>
+					</div>
+				</div>
+				<div class="col-lg-3 col-sm-12 _footer-column">
+					<h3 class="sans-margin-top _footer-header">{{ $gettext(`Legal`) }}</h3>
+					<div>
+						<RouterLink :to="{ name: routeLegalTerms.name }">
+							{{ $gettext(`Terms of Service`) }}
+						</RouterLink>
+					</div>
+					<div>
+						<RouterLink :to="{ name: routeLegalPrivacy.name }">
+							{{ $gettext(`Privacy Policy`) }}
+						</RouterLink>
+					</div>
+					<div>
+						<RouterLink :to="{ name: routeLegalCookies.name }">
+							{{ $gettext(`Cookie Policy`) }}
+						</RouterLink>
+					</div>
+					<div>
+						<RouterLink :to="{ name: routeLegalAds.name }">
+							{{ $gettext(`Advertisement`) }}
+						</RouterLink>
+					</div>
 				</div>
 			</div>
 		</section>
@@ -115,4 +222,16 @@ createAppRoute({
 ._recent-container
 	@media $media-md-up
 		padding: 8px
+
+._footer-column > div
+	line-height: 28px
+	a
+		color: var(--theme-fg-muted)
+
+		&:hover
+			color: var(--theme-fg-link)
+
+._footer-header
+	@media $media-mobile
+		margin-top: 24px
 </style>
