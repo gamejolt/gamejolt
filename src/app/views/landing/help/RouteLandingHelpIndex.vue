@@ -134,7 +134,7 @@ createAppRoute({
 				</div>
 				<div class="col-lg-3 col-sm-12 _footer-column">
 					<h3 class="sans-margin-top _footer-header">
-						{{ $gettext(`Creators & Developers`) }}
+						{{ $gettext(`Creators`) }}
 					</h3>
 					<div>
 						<RouterLink :to="{ name: routeLandingCreators.name }">
