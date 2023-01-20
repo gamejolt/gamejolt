@@ -161,10 +161,11 @@ export default class FormCommunityChannelAdd extends mixins(Wrapper) {
 	<AppForm :controller="form">
 		<AppFormGroup name="display_title" :label="$gettext(`Display Name`)" optional>
 			<div class="help-block">
-				<AppTranslate>
-					This should be short and to the point. If you don't fill in a display name,
-					we'll use your channel's URL path as its name.
-				</AppTranslate>
+				{{
+					$gettext(
+						`This should be short and to the point. If you don't fill in a display name, we'll use your channel's URL path as its name.`
+					)
+				}}
 			</div>
 
 			<AppFormControl
@@ -235,9 +236,7 @@ export default class FormCommunityChannelAdd extends mixins(Wrapper) {
 		</AppFormGroup>
 
 		<AppFormButton :disabled="!isValid">
-			<AppTranslate>Add</AppTranslate>
+			{{ $gettext(`Add`) }}
 		</AppFormButton>
 	</AppForm>
 </template>
-
-<style lang="stylus" scoped></style>

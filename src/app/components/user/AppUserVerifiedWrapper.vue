@@ -9,6 +9,9 @@ defineProps({
 		type: Object as PropType<User | ChatUser>,
 		required: true,
 	},
+	hideTick: {
+		type: Boolean,
+	},
 	small: {
 		type: Boolean,
 	},
@@ -20,9 +23,17 @@ defineProps({
 
 <template>
 	<div class="user-verified-wrapper">
-		<slot name="default" class="-inner" />
+		<div class="-inner">
+			<slot name="default" />
+		</div>
 
-		<AppUserVerifiedTick class="-floating-tick" :user="user" :small="small" :tiny="tiny" />
+		<AppUserVerifiedTick
+			v-if="!hideTick"
+			class="-floating-tick"
+			:user="user"
+			:small="small"
+			:tiny="tiny"
+		/>
 	</div>
 </template>
 
@@ -34,8 +45,8 @@ defineProps({
 	z-index: 1
 
 .-floating-tick
+	change-bg(bg)
 	img-circle()
-	background-color: var(--theme-bg-actual)
 	position: absolute
 	right: 0px
 	bottom: 0px
