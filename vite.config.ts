@@ -1,4 +1,5 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
+import VueDefineOptions from 'unplugin-vue-define-options/vite';
 import { defineConfig, UserConfig as ViteUserConfigActual } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
 import { acquirePrebuiltFFmpeg } from './scripts/build/desktop-app/ffmpeg-prebuilt';
@@ -115,6 +116,8 @@ export default defineConfig(async () => {
 
 	return {
 		plugins: [
+			VueDefineOptions(),
+
 			// Does a simple string replace based interpolation in our html.
 			//
 			// I originally used vite-plugin-html here but for some reason

@@ -184,7 +184,7 @@ const styleStatus: CSSProperties = {
 	marginTop: `8px`,
 	display: `flex`,
 	fontFamily: kFontFamilyTiny,
-	fontSize: kFontSizeTiny,
+	fontSize: kFontSizeTiny.px,
 	fontWeight: `bold`,
 	justifyContent: `center`,
 	alignItems: `center`,
@@ -203,7 +203,7 @@ const styleStatusIcon: CSSProperties = {
 			class="fill-darker"
 			:style="{
 				padding: `16px`,
-				borderBottom: `${kBorderWidthLg}px solid ${kThemeDarkest}`,
+				borderBottom: `${kBorderWidthLg.px} solid ${kThemeDarkest}`,
 				width: `250px`,
 			}"
 		>
@@ -264,7 +264,7 @@ const styleStatusIcon: CSSProperties = {
 				<div
 					class="text-muted"
 					:style="{
-						fontSize: kFontSizeSmall,
+						fontSize: kFontSizeSmall.px,
 					}"
 				>
 					@{{ user.username }}

@@ -48,7 +48,7 @@ const loggedOn = computed(() => {
 	<div
 		:style="{
 			color: kThemeFgMuted,
-			fontSize: `${kFontSizeTiny}px`,
+			fontSize: kFontSizeTiny.px,
 			cursor: 'default',
 		}"
 	>

@@ -19,8 +19,8 @@ import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { UserWallet } from '../../../../../_common/user/wallet/wallet.model';
 import { showWalletWithdrawModal } from '../../../../components/wallet/withdraw/withdraw-modal.service';
+import { imageGems } from '../../../../img/images';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
-import gemsImage from './gems.png';
 import marketplaceImage from './marketplace.png';
 
 export default {
@@ -108,7 +108,7 @@ async function withdraw() {
 					<div class="-wallet-title">
 						<img
 							class="-wallet-icon"
-							:src="gemsImage"
+							:src="imageGems"
 							width="32"
 							height="32"
 							alt="Gems Wallet Icon"
