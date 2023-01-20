@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts">
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
@@ -11,7 +11,6 @@ import {
 } from '../../../../../_common/route/route-component';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { User } from '../../../../../_common/user/user.model';
@@ -21,7 +20,7 @@ import AppShellPageBackdrop from '../../../../components/shell/AppShellPageBackd
 import { imageGems } from '../../../../img/images';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 
-defineOptions({
+export default {
 	...defineAppRouteOptions({
 		deps: {},
 		resolver: () =>
@@ -29,8 +28,10 @@ defineOptions({
 				referrals: true,
 			}),
 	}),
-});
+};
+</script>
 
+<script lang="ts" setup>
 interface EarnedRevenue {
 	currency: string;
 	amount: number;

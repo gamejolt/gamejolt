@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts">
 import { computed } from 'vue';
 import { RouteParamsRaw, RouteRecordName, RouterLink } from 'vue-router';
 import AppInviteCard from '../../../../_common/invite/AppInviteCard.vue';
@@ -21,12 +21,14 @@ import { routeDashAccountWallet } from '../account/wallet/wallet.route';
 import { routeDashAnalytics } from '../analytics/analytics.route';
 import { routeDashSupporters } from '../supporters/supporters.route';
 
-defineOptions({
+export default {
 	...defineAppRouteOptions({
 		resolver: async () => User.touch(),
 	}),
-});
+};
+</script>
 
+<script lang="ts" setup>
 const { user } = useCommonStore();
 
 createAppRoute({

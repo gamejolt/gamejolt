@@ -1,5 +1,4 @@
 /// <reference types="vite/client" />
-/// <reference types="unplugin-vue-define-options/macros-global" />
 
 import './typings/environment-vue.d.ts';
 import './typings/environment.d.ts';
