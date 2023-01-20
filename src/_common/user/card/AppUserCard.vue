@@ -11,6 +11,7 @@ import { useCommonStore } from '../../store/common-store';
 import AppTheme from '../../theme/AppTheme.vue';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import AppUserFollowButton from '../follow/AppUserFollowButton.vue';
+import AppUserAvatarFrame from '../user-avatar/AppUserAvatarFrame.vue';
 import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
 import { User } from '../user.model';
 import AppUserVerifiedTick from '../verified-tick/AppUserVerifiedTick.vue';
@@ -82,9 +83,11 @@ const showTags = computed(() => !!user.value.follows_you || dogtags.value.length
 				}"
 			/>
 
-			<RouterLink :to="user.url" class="-avatar">
-				<AppUserAvatarImg :user="user" />
-			</RouterLink>
+			<AppUserAvatarFrame :user="user" class="-avatar">
+				<RouterLink :to="user.url" class="-avatar-img">
+					<AppUserAvatarImg :user="user" />
+				</RouterLink>
+			</AppUserAvatarFrame>
 
 			<div class="-well fill-bg">
 				<div v-if="showTags" class="-tags">
