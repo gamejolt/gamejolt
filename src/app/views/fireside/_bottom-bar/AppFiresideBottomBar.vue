@@ -1,8 +1,4 @@
 <script lang="ts">
-export type BottomBarControl = 'manage-cohosts' | 'settings' | 'setup';
-</script>
-
-<script lang="ts" setup>
 import { computed } from 'vue';
 import AppAnimElectricity from '../../../../_common/animation/AppAnimElectricity.vue';
 import { setProducerDeviceMuted, stopStreaming } from '../../../../_common/fireside/rtc/producer';
@@ -19,9 +15,14 @@ import {
 	FiresideSidebar,
 	useFiresideController,
 } from '../../../components/fireside/controller/controller';
+import { FiresideHostsModal } from '../../../components/forms/fireside/hosts/modal/modal.service';
 import AppFiresideBottomBarButton from './AppFiresideBottomBarButton.vue';
 import AppFiresideBottomBarHosts from './AppFiresideBottomBarHosts.vue';
 
+export type BottomBarControl = 'settings' | 'setup';
+</script>
+
+<script lang="ts" setup>
 defineProps({
 	overlay: {
 		type: Boolean,
@@ -210,8 +211,8 @@ function toggleStreamSettings() {
 	_toggleSidebar('stream-settings');
 }
 
-function toggleHosts() {
-	_toggleSidebar('hosts');
+function showHostsModal() {
+	FiresideHostsModal.show({ controller: c });
 }
 
 function toggleFiresideSettings() {
@@ -291,8 +292,7 @@ async function onClickStopStreaming() {
 					v-if="canManageCohosts"
 					v-app-tooltip="$gettext(`Manage hosts`)"
 					icon="friend-add-2"
-					:active="activeBottomBarControl === 'manage-cohosts'"
-					@click="toggleHosts"
+					@click="showHostsModal"
 				/>
 
 				<AppAnimElectricity

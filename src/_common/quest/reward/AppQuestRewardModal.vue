@@ -1,5 +1,6 @@
 <script lang="ts">
 import { nextTick, onMounted, onUnmounted, PropType, ref, Ref, toRefs } from 'vue';
+import { sleep } from '../../../utils/utils';
 import AppJolticon, { Jolticon } from '../../jolticon/AppJolticon.vue';
 import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
@@ -13,34 +14,41 @@ import illBackpackClosed from '../ill/backpack-closed.svg';
 import illBackpackOpen from '../ill/backpack-open.svg';
 import { Quest } from '../quest-model';
 
-export interface QuestReward {
-	amount: number;
-	name: string;
-	img_url: undefined | string;
-	icon: Jolticon;
-	isExp?: boolean;
-}
-
 export interface QuestRewardData {
-	/**
-	 * The index id of the backback item element. This is used so we can remove
-	 * the element after its animation ends.
-	 */
-	id: number;
+	key: string;
 
-	/** The image to display, if any. Uses [icon] as a fallback. */
-	img_url?: string;
+	/**
+	 * Count of rewards by this {@link key}.
+	 */
+	amount: number;
+
+	/**
+	 * Readable name of the reward.
+	 */
+	name: string;
+
+	/**
+	 * The image to display, if any. Uses [icon] as a fallback.
+	 */
+	img_url: string | undefined;
 
 	/**
 	 * If [img_url] is empty, displays a fallback Jolticon. Uses `present` as a
 	 * fallback.
 	 */
-	icon?: Jolticon;
+	icon: Jolticon;
 
 	/**
 	 * Exp rewards shouldn't show an 'x' after their count.
 	 */
-	isExp: boolean;
+	isExp?: boolean;
+
+	/**
+	 * Backend will return this along with the quest reward model. Lets us know
+	 * if we should only show one kernel for this reward, or if we should add
+	 * kernels equal to the total {@link amount}.
+	 */
+	isCondensed: boolean;
 }
 
 export const DurationBackpackItem = 1_500;
@@ -61,7 +69,7 @@ const props = defineProps({
 		required: true,
 	},
 	rewards: {
-		type: Array as PropType<QuestReward[]>,
+		type: Array as PropType<QuestRewardData[]>,
 		required: true,
 	},
 	title: {
@@ -103,10 +111,6 @@ async function afterMount() {
 	modal.dismiss();
 }
 
-async function sleep(ms: number) {
-	return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 async function startBackpackFlow() {
 	openBackpack();
 	await sleep(DurationBackpackItem + DurationBackpackOpen);
@@ -117,8 +121,10 @@ async function startBackpackFlow() {
 	const radians = Math.asin(opposite / hypo);
 	const angle = radians / (Math.PI / 180);
 
-	for (const { amount, img_url, icon } of rewards.value) {
-		for (let i = 0; i < amount; i++) {
+	for (const { amount, img_url, icon, isCondensed } of rewards.value) {
+		const kernelCount = isCondensed ? 1 : amount;
+
+		for (let i = 0; i < kernelCount; i++) {
 			// Stop adding kernels if the modal was closed.
 			if (!_isMounted) {
 				return;

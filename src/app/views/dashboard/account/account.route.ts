@@ -3,6 +3,7 @@ import { routeDashAccountAddresses } from './addresses/addresses.route';
 import { routeDashAccountBlocks } from './blocks/blocks.route';
 import { routeDashAccountChangePassword } from './change-password/change-password.route';
 import { routeDashAccountChatCommands } from './chat-commands/chat-commands.route';
+import { routeDashAccountChatMods } from './chat-mods/chat-mods.route';
 import { routeDashAccountChatTimers } from './chat-timers/chat-timers.route';
 import { routeDashAccountDeviceSettings } from './device-settings/device-settings.route';
 import { routeDashAccountEdit } from './edit/edit.route';
@@ -13,6 +14,7 @@ import { routeDashAccountLinkedAccounts } from './linked-accounts/linked-account
 import { routeDashAccountPaymentMethods } from './payment-methods/payment-methods.route';
 import { routeDashAccountPurchasesList } from './purchases/list/list.route';
 import { routeDashAccountPurchasesView } from './purchases/view/view.route';
+import { routeDashAccountReferrals } from './referrals/referrals.route';
 import { routeDashAccountSite } from './site/site.route';
 import { routeDashAccountWallet } from './wallet/wallet.route';
 
@@ -36,5 +38,7 @@ export const routeDashAccount: RouteRecordRaw = {
 		routeDashAccountDeviceSettings,
 		routeDashAccountChatCommands,
 		routeDashAccountChatTimers,
+		routeDashAccountChatMods,
+		routeDashAccountReferrals,
 	],
 };
