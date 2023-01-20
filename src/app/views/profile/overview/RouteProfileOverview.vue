@@ -47,6 +47,7 @@ import AppScrollInview, {
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
+import { kThemeFgMuted } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { showUserFiresideFollowModal } from '../../../../_common/user/fireside/modal/follow-modal.service';
@@ -533,7 +534,7 @@ async function onFriendRequestReject() {
 		-->
 		<section v-if="!routeUser.status" class="section fill-notice">
 			<div class="container">
-				<h2 class="-banned-header">
+				<h2 class="_banned-header">
 					{{ $gettext(`This account is banned.`) }}
 				</h2>
 
@@ -617,6 +618,76 @@ async function onFriendRequestReject() {
 									@click="showFullDescription = !showFullDescription"
 								/>
 							</p>
+						</template>
+
+						<!-- Top supporters -->
+						<template v-if="topSupporters.length">
+							<div class="clearfix">
+								<h4 class="section-header">
+									<span>
+										{{ $gettext(`Top supporters`) }}
+									</span>
+
+									<div
+										v-app-tooltip.touchable="
+											$gettext(
+												`Top supporters that placed a charged sticker in the last 30 days`
+											)
+										"
+										:style="{
+											display: 'inline-block',
+											minHeight: '100%',
+											paddingLeft: '4px',
+											paddingRight: '4px',
+										}"
+									>
+										<AppJolticon
+											:style="{
+												fontSize: '14px',
+												color: kThemeFgMuted,
+											}"
+											icon="help-circle"
+										/>
+									</div>
+								</h4>
+							</div>
+
+							<div class="_supporters-card">
+								<RouterLink
+									v-for="{ user, value } of topSupporters"
+									:key="user.id"
+									class="_supporter"
+									:to="user.routeLocation"
+								>
+									<div class="_supporter-avatar">
+										<AppAspectRatio :ratio="1" show-overflow>
+											<AppUserVerifiedWrapper :user="user">
+												<AppUserAvatarImg :user="user" />
+											</AppUserVerifiedWrapper>
+										</AppAspectRatio>
+									</div>
+
+									<AppSpacer vertical :scale="2" />
+
+									<div
+										v-app-tooltip="'@' + user.username"
+										class="_supporter-username"
+									>
+										{{ '@' + user.username }}
+									</div>
+
+									<AppSpacer vertical :scale="2" />
+
+									<AppAnimElectricity
+										class="_supporter-value"
+										shock-anim="wide-rect"
+									>
+										{{ formatFuzzynumberOverThreshold(value, 10_000) }}
+									</AppAnimElectricity>
+								</RouterLink>
+							</div>
+
+							<br />
 						</template>
 					</template>
 
@@ -744,52 +815,6 @@ async function onFriendRequestReject() {
 							<br />
 						</template>
 
-						<!-- Top supporters -->
-						<template v-if="topSupporters.length">
-							<div class="clearfix">
-								<h4 class="section-header">
-									{{ $gettext(`Top supporters`) }}
-								</h4>
-							</div>
-
-							<div class="-supporters-card">
-								<RouterLink
-									v-for="{ user, value } of topSupporters"
-									:key="user.id"
-									class="-supporter"
-									:to="user.routeLocation"
-								>
-									<div class="-supporter-avatar">
-										<AppAspectRatio :ratio="1" show-overflow>
-											<AppUserVerifiedWrapper :user="user">
-												<AppUserAvatarImg :user="user" />
-											</AppUserVerifiedWrapper>
-										</AppAspectRatio>
-									</div>
-
-									<AppSpacer vertical :scale="2" />
-
-									<div
-										v-app-tooltip="'@' + user.username"
-										class="-supporter-username"
-									>
-										{{ '@' + user.username }}
-									</div>
-
-									<AppSpacer vertical :scale="2" />
-
-									<AppAnimElectricity
-										class="-supporter-value"
-										shock-anim="wide-rect"
-									>
-										{{ formatFuzzynumberOverThreshold(value, 10_000) }}
-									</AppAnimElectricity>
-								</RouterLink>
-							</div>
-
-							<br />
-						</template>
-
 						<!-- Communities -->
 						<template v-if="hasCommunitiesSection">
 							<div class="clearfix">
@@ -810,12 +835,12 @@ async function onFriendRequestReject() {
 								</h4>
 							</div>
 
-							<span class="-communities">
+							<span class="_communities">
 								<template v-if="!isOverviewLoaded || isLoadingAllCommunities">
 									<div
 										v-for="i in previewCommunityCount"
 										:key="i"
-										class="-community-item -community-thumb-placeholder"
+										class="_community-item _community-thumb-placeholder"
 									>
 										<AppAspectRatio :ratio="1" />
 									</div>
@@ -825,16 +850,16 @@ async function onFriendRequestReject() {
 										v-for="community of shownCommunities"
 										:key="community.id"
 										v-app-tooltip.bottom="community.name"
-										class="-community-item link-unstyled"
+										class="_community-item link-unstyled"
 										:to="community.routeLocation"
 									>
-										<div class="-community-item-align">
+										<div class="_community-item-align">
 											<AppCommunityThumbnailImg
 												class="-community-thumb"
 												:community="community"
 											/>
 											<AppCommunityVerifiedTick
-												class="-community-verified-tick"
+												class="_community-verified-tick"
 												:community="community"
 												no-tooltip
 											/>
@@ -882,12 +907,12 @@ async function onFriendRequestReject() {
 								{{ $gettext(`Trophies`) }}
 							</h4>
 
-							<div class="-trophies">
+							<div class="_trophies">
 								<template v-if="previewTrophies.length">
 									<AppTrophyThumbnail
 										v-for="trophy of previewTrophies"
 										:key="trophy.key"
-										class="-trophy"
+										class="_trophy"
 										:trophy="trophy.trophy"
 										no-difficulty
 										no-highlight
@@ -898,7 +923,7 @@ async function onFriendRequestReject() {
 								<RouterLink
 									v-if="shouldShowMoreTrophies"
 									v-app-tooltip="$gettext(`View All Trophies...`)"
-									class="-trophies-more -trophy link-unstyled"
+									class="_trophies-more _trophy link-unstyled"
 									:to="{ name: 'profile.trophies' }"
 								>
 									+{{ moreTrophyCount }}
@@ -1006,17 +1031,17 @@ async function onFriendRequestReject() {
 </template>
 
 <style lang="stylus" scoped>
-.-banned-header
+._banned-header
 	margin-top: 0
 
-.-supporters-card
+._supporters-card
 	rounded-corners-lg()
-	change-bg(bg-offset)
+	change-bg('bg')
 	padding: 12px 16px
 	display: flex
 	gap: 16px
 
-.-supporter
+._supporter
 	flex: 1
 	display: flex
 	flex-direction: column
@@ -1025,19 +1050,19 @@ async function onFriendRequestReject() {
 	min-width: 0
 	color: var(--theme-fg)
 
-.-supporter-avatar
+._supporter-avatar
 	width: 100%
 	max-width: 56px
 
-.-supporter-username
+._supporter-username
 	text-overflow()
 	max-width: 100%
 	min-width: 0
 	font-size: $font-size-small
 
-.-supporter-value
+._supporter-value
 	rounded-corners()
-	change-bg(bg)
+	change-bg('bg-offset')
 	min-width: 32px
 	padding: 0px 6px
 	font-weight: bold
@@ -1045,47 +1070,47 @@ async function onFriendRequestReject() {
 	justify-content: center
 	font-size: $font-size-small
 
-.-communities
+._communities
 	display: grid
 	grid-template-columns: repeat(5, minmax(55px, 1fr))
 	grid-gap: 8px
 
-.-community-item
+._community-item
 	pressy()
 	display: inline-block
 	position: relative
 	outline: 0
 	width: 100%
 
-.-community-thumb-placeholder
+._community-thumb-placeholder
 	img-circle()
 	change-bg('bg-subtle')
 
-.-community-verified-tick
+._community-verified-tick
 	position: absolute
 	right: -3px
 	bottom: -1px
 	change-bg('bg-offset')
 	border-radius: 50%
 
-.-trophies
+._trophies
 	display: grid
 	grid-template-columns: repeat(5, 55px)
 	grid-gap: 5px 10px
 
-	&-more
-		change-bg('bg-offset')
-		rounded-corners-lg()
-		display: flex !important
-		justify-content: center
-		align-items: center
-		font-size: $font-size-h4
-		user-select: none
+._trophies-more
+	change-bg('bg-offset')
+	rounded-corners-lg()
+	display: flex !important
+	justify-content: center
+	align-items: center
+	font-size: $font-size-h4
+	user-select: none
 
-		&:hover
-			text-decoration: none
+	&:hover
+		text-decoration: none
 
-.-trophy
+._trophy
 	width: 55px
 	height: 55px
 	pressy()
