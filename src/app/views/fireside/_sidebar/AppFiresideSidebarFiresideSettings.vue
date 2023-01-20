@@ -21,7 +21,6 @@ import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue'
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import {
 	extinguishFireside,
@@ -29,7 +28,9 @@ import {
 	useFiresideController,
 } from '../../../components/fireside/controller/controller';
 import { ChatCommandsModal } from '../../../components/forms/chat/commands/modal/modal.service';
+import { ChatModsModal } from '../../../components/forms/chat/mods/modal/modal.service';
 import { ChatTimersModal } from '../../../components/forms/chat/timers/modal/modal.service';
+import { FiresideHostsModal } from '../../../components/forms/fireside/hosts/modal/modal.service';
 import AppFiresideShare from '../AppFiresideShare.vue';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
@@ -39,6 +40,7 @@ const c = useFiresideController()!;
 const {
 	fireside,
 	chatSettings,
+	chatRoom,
 	hostBackgrounds,
 	gridChannel,
 	isStreaming,
@@ -155,13 +157,27 @@ function onClickChatCommands() {
 function onClickChatTimers() {
 	ChatTimersModal.show();
 }
+
+function onClickHosts() {
+	FiresideHostsModal.show({ controller: c });
+}
+
+function onClickChatMods() {
+	if (chatRoom.value) {
+		ChatModsModal.show({
+			chatRoom: chatRoom.value,
+			hasCurrentMods: true,
+			initialSection: 'currentMods',
+		});
+	}
+}
 </script>
 
 <template>
 	<AppFiresideSidebar>
 		<template #header>
 			<AppFiresideSidebarHeading>
-				<AppTranslate>Fireside Settings</AppTranslate>
+				{{ $gettext(`Fireside settings`) }}
 			</AppFiresideSidebarHeading>
 		</template>
 
@@ -181,6 +197,28 @@ function onClickChatTimers() {
 								<AppJolticon class="-icon-button-icon" icon="timer" />
 								<div class="-icon-button-label">
 									{{ $gettext(`Chat timers`) }}
+								</div>
+							</a>
+						</div>
+
+						<AppSpacer vertical :scale="8" />
+
+						<div class="-icon-buttons">
+							<a class="-icon-button" @click="onClickHosts">
+								<AppJolticon class="-icon-button-icon" icon="friend-add-2" />
+								<div class="-icon-button-label">
+									{{ $gettext(`Manage hosts`) }}
+								</div>
+							</a>
+
+							<a
+								v-if="chatRoom && chatRoom.canElectModerators"
+								class="-icon-button"
+								@click="onClickChatMods"
+							>
+								<AppJolticon class="-icon-button-icon" icon="user-messages" />
+								<div class="-icon-button-label">
+									{{ $gettext(`Chat moderators`) }}
 								</div>
 							</a>
 						</div>
@@ -220,7 +258,7 @@ function onClickChatTimers() {
 
 							<AppFormStickySubmit>
 								<AppFormButton>
-									<AppTranslate>Save</AppTranslate>
+									{{ $gettext(`Save`) }}
 								</AppFormButton>
 							</AppFormStickySubmit>
 						</AppForm>
@@ -247,10 +285,11 @@ function onClickChatTimers() {
 							</AppFormGroup>
 
 							<p class="help-block sans-margin">
-								<AppTranslate>
-									This is the background we'll show to viewers when they focus
-									your stream.
-								</AppTranslate>
+								{{
+									$gettext(
+										`This is the background we'll show to viewers when they focus your stream.`
+									)
+								}}
 							</p>
 
 							<AppSpacer vertical :scale="6" />
@@ -341,7 +380,7 @@ function onClickChatTimers() {
 					:disabled="!isStreaming"
 					@click="onClickPublish"
 				>
-					<AppTranslate>Make fireside public</AppTranslate>
+					{{ $gettext(`Make fireside public`) }}
 				</AppButton>
 
 				<AppButton
@@ -351,11 +390,11 @@ function onClickChatTimers() {
 					block
 					@click="onClickExtinguish"
 				>
-					<AppTranslate>Extinguish fireside</AppTranslate>
+					{{ $gettext(`Extinguish fireside`) }}
 				</AppButton>
 
 				<AppButton v-if="canReport" icon="flag" trans block @click="onClickReport()">
-					<AppTranslate>Report fireside</AppTranslate>
+					{{ $gettext(`Report fireside`) }}
 				</AppButton>
 			</div>
 		</template>

@@ -1,14 +1,4 @@
 <script lang="ts">
-export interface ChatMessageEditEvent {
-	message: ChatMessage;
-}
-
-const InviewConfig = new ScrollInviewConfig();
-
-const DisplayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
-</script>
-
-<script lang="ts" setup>
 import { computed, PropType, reactive, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
@@ -27,6 +17,7 @@ import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { kChatRoomWindowPaddingH } from '../../../../styles/variables';
 import { useGridStore } from '../../../grid/grid-store';
+import AppUserVerifiedWrapper from '../../../user/AppUserVerifiedWrapper.vue';
 import {
 	removeMessage as chatRemoveMessage,
 	retryFailedQueuedMessage,
@@ -39,6 +30,16 @@ import AppChatUserPopover from '../../user-popover/AppChatUserPopover.vue';
 import { ChatWindowAvatarSize, ChatWindowLeftGutterSize } from '../variables';
 import AppChatWindowOutputItemTime from './AppChatWindowOutputItemTime.vue';
 
+export interface ChatMessageEditEvent {
+	message: ChatMessage;
+}
+
+const InviewConfig = new ScrollInviewConfig();
+
+const DisplayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
+</script>
+
+<script lang="ts" setup>
 const props = defineProps({
 	message: {
 		type: Object as PropType<ChatMessage>,
@@ -274,12 +275,14 @@ async function onMessageClick() {
 				@show="onAvatarPopperVisible(true)"
 				@hide="onAvatarPopperVisible(false)"
 			>
-				<img
-					class="-avatar-img img-responsive"
-					:src="message.user.img_avatar"
-					alt=""
-					draggable="false"
-				/>
+				<AppUserVerifiedWrapper :user="message.user" small>
+					<img
+						class="-avatar-img img-responsive"
+						:src="message.user.img_avatar"
+						alt=""
+						draggable="false"
+					/>
+				</AppUserVerifiedWrapper>
 
 				<template #popover>
 					<AppChatUserPopover :user="message.user" :room="room" />
