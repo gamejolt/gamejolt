@@ -1,3 +1,7 @@
+function fuzzNumber(count: number, divisor: number, character: string) {
+	return Math.floor((count / divisor) * 10) / 10 + character;
+}
+
 export function formatFuzzynumber(num: number) {
 	// For testing.
 	// number = 2900;
@@ -39,10 +43,6 @@ export function formatFuzzynumber(num: number) {
 	// number = 209000000;
 	// number = 290000000;
 
-	function fuzzNumber(count: number, divisor: number, character: string) {
-		return Math.floor((count / divisor) * 10) / 10 + character;
-	}
-
 	if (num >= 1000000000) {
 		return fuzzNumber(num, 1000000000, 'g');
 	}
@@ -56,4 +56,12 @@ export function formatFuzzynumber(num: number) {
 	}
 
 	return num;
+}
+
+export function formatFuzzynumberOverThreshold(num: number, threshold: number) {
+	if (num < threshold) {
+		return num;
+	}
+
+	return formatFuzzynumber(num);
 }
