@@ -24,7 +24,6 @@ export default {
 	...defineAppRouteOptions({
 		resolver: async ({ route }) => Api.sendRequest('/web/realms/' + route.params.path),
 	}),
-	components: { RouterView },
 };
 </script>
 
@@ -66,7 +65,12 @@ function onShareClick() {
 		<AppPageContainer xl>
 			<template #left>
 				<AppScrollAffix :disabled="!Screen.isLg">
-					<AppRealmFullCard v-if="Screen.isDesktop" :realm="routeStore.realm.value" />
+					<AppRealmFullCard
+						v-if="Screen.isDesktop"
+						:realm="routeStore.realm.value"
+						:to="routeStore.realm.value.routeLocation"
+						to-linkifies-image
+					/>
 					<template v-else>
 						<h1
 							:style="{

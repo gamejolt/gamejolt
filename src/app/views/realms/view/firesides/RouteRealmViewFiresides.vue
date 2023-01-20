@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
+import { RouterLink } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
@@ -59,7 +60,13 @@ const appRoute = createAppRoute({
 		<h1 class="section-header" :class="{ 'h2 -text-overflow': Screen.isMobile }">
 			{{ $gettext(`Active Firesides`) }}
 			{{ ' ' }}
-			<small v-if="Screen.isDesktop">in {{ routeStore.realm.value.name }}</small>
+			<small v-if="Screen.isDesktop">
+				{{ $gettext(`in`) }}
+				{{ ' ' }}
+				<RouterLink :to="routeStore.realm.value.routeLocation">
+					{{ routeStore.realm.value.name }}
+				</RouterLink>
+			</small>
 		</h1>
 		<br />
 

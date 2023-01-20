@@ -27,6 +27,14 @@ const props = defineProps({
 		type: Object as PropType<RouteLocationRaw>,
 		default: undefined,
 	},
+	/**
+	 * By default when `to` prop is specified the entire card is linkified.
+	 * If `toLinkifiesImage` is true, it'll only linkify the image.
+	 */
+	toLinkifiesImage: {
+		type: Boolean,
+		default: false,
+	},
 	labelPosition: {
 		type: String as PropType<'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'>,
 		default: 'top-left',
@@ -95,7 +103,6 @@ async function onClick(event: Event) {
 	<div
 		class="-card"
 		:class="{
-			'-hoverable': to || followOnClick,
 			'-no-sheet': noSheet,
 			['sheet sheet-full sheet-elevate']: !noSheet,
 		}"
@@ -103,7 +110,7 @@ async function onClick(event: Event) {
 		@mouseout="isHovered = false"
 		@click.capture="onClick"
 	>
-		<RouterLink v-if="to" class="-link-mask" :to="to" />
+		<RouterLink v-if="to && !toLinkifiesImage" class="-link-mask" :to="to" />
 
 		<AppRealmLabel
 			class="-label"
@@ -115,9 +122,11 @@ async function onClick(event: Event) {
 		/>
 
 		<AppResponsiveDimensions :ratio="REALM_CARD_RATIO">
-			<AppMediaItemBackdrop v-if="mediaItem" :media-item="mediaItem">
-				<AppImgResponsive class="-cover-img" :src="mediaItem.mediaserver_url" alt="" />
-			</AppMediaItemBackdrop>
+			<RouterLink v-if="to" :to="to">
+				<AppMediaItemBackdrop v-if="mediaItem" :media-item="mediaItem">
+					<AppImgResponsive class="-cover-img" :src="mediaItem.mediaserver_url" alt="" />
+				</AppMediaItemBackdrop>
+			</RouterLink>
 		</AppResponsiveDimensions>
 
 		<div
@@ -143,9 +152,6 @@ async function onClick(event: Event) {
 	overflow: hidden
 	display: block
 
-.-hoverable
-	cursor: pointer
-
 .-no-sheet
 	elevate-1()
 	rounded-corners-lg()
@@ -169,6 +175,7 @@ async function onClick(event: Event) {
 	right: 0
 	bottom: 0
 	z-index: 2
+	cursor: pointer
 
 .-follow-button
 	padding: 16px
