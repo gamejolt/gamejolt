@@ -31,13 +31,18 @@ defineOptions({
 	}),
 });
 
+interface EarnedRevenue {
+	currency: string;
+	amount: number;
+}
+
 interface ReferralData {
 	id: number;
 	share_part: number;
 	share_time_finished: boolean;
 	start_time: number;
 	user: User;
-	gems_earned: number;
+	earned_revenue: EarnedRevenue[];
 }
 
 const { heading } = useAccountRouteController()!;
@@ -60,14 +65,17 @@ const { isBootstrapped } = createAppRoute({
 					share_part: referral.share_part,
 					start_time: referral.start_time,
 					user: new User(referral.user),
-					// TODO
-					gems_earned: 2,
-					share_time_finished: true,
+					share_time_finished: referral.share_time_finished,
+					earned_revenue: referral.earned_revenue,
 				});
 			}
 		}
 	},
 });
+
+function getEarnedGems(referral: ReferralData) {
+	return referral.earned_revenue.find(x => x.currency === '$GEM')?.amount || 0;
+}
 </script>
 
 <template>
@@ -196,7 +204,7 @@ const { isBootstrapped } = createAppRoute({
 						</div>
 						<div class="stat-big-digit">
 							<img :src="imageGems" width="24" height="24" alt="Gems" />
-							{{ formatNumber(referral.gems_earned) }}
+							{{ formatNumber(getEarnedGems(referral)) }}
 						</div>
 					</div>
 				</div>
