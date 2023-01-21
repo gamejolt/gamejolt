@@ -28,6 +28,7 @@ import { routeDashAccountLinkedAccounts } from './linked-accounts/linked-account
 import { routeDashAccountMobileNav } from './mobile-nav.route';
 import { routeDashAccountPaymentMethods } from './payment-methods/payment-methods.route';
 import { routeDashAccountPurchasesList } from './purchases/list/list.route';
+import { routeDashAccountReferrals } from './referrals/referrals.route';
 import { routeDashAccountSite } from './site/site.route';
 import { routeDashAccountWallet } from './wallet/wallet.route';
 
@@ -259,6 +260,14 @@ function showEditAvatar() {
 										active-class="active"
 									>
 										{{ $gettext(`Wallet`) }}
+									</RouterLink>
+								</li>
+								<li>
+									<RouterLink
+										:to="{ name: routeDashAccountReferrals.name }"
+										active-class="active"
+									>
+										{{ $gettext(`Referrals`) }}
 									</RouterLink>
 								</li>
 								<li>

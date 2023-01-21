@@ -61,7 +61,7 @@ async function _searchSite(query: string, options: SearchOptions = { type: 'all'
 		requestOptions.detach = true;
 	}
 
-	const searchParams = ['q=' + encodeURIComponent(query || '')];
+	const searchParams = ['q=' + encodeURIComponent(query || ''), 'post-feed-use-offset=1'];
 
 	if (options.page && options.page > 1) {
 		searchParams.push('page=' + options.page);
