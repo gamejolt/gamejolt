@@ -12,15 +12,15 @@ export const styleBorderRadiusCircle: CSSProperties = {
 };
 
 export const styleBorderRadiusBase: CSSProperties = {
-	borderRadius: `${kBorderRadiusBase}px`,
+	borderRadius: kBorderRadiusBase.px,
 };
 
 export const styleBorderRadiusSm: CSSProperties = {
-	borderRadius: `${kBorderRadiusSm}px`,
+	borderRadius: kBorderRadiusSm.px,
 };
 
 export const styleBorderRadiusLg: CSSProperties = {
-	borderRadius: `${kBorderRadiusLg}px`,
+	borderRadius: kBorderRadiusLg.px,
 };
 
 /**

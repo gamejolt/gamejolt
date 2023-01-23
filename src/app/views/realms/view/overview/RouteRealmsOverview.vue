@@ -123,8 +123,8 @@ function onPostAdded(post: FiresidePost) {
 				:style="{
 					gridTemplateColumns: `repeat(${firesidesGridColumns}, 1fr)`,
 					display: `grid`,
-					gridGap: `${kLineHeightComputed}px`,
-					marginBottom: `${kLineHeightComputed}px`,
+					gridGap: kLineHeightComputed.px,
+					marginBottom: kLineHeightComputed.px,
 				}"
 			>
 				<AppFiresideAvatarAdd :realms="[realm]" />

@@ -5,6 +5,7 @@ import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
 import AppPageHeader from '../../../components/page-header/page-header.vue';
+import { routeDashAccountReferrals } from './referrals/referrals.route';
 
 export default {
 	...defineAppRouteOptions({
@@ -119,6 +120,13 @@ createAppRoute({
 					active-class="active"
 				>
 					{{ $gettext(`Wallet`) }}
+				</RouterLink>
+				<RouterLink
+					class="list-group-item"
+					:to="{ name: routeDashAccountReferrals.name }"
+					active-class="active"
+				>
+					{{ $gettext(`Referrals`) }}
 				</RouterLink>
 				<RouterLink
 					class="list-group-item"
