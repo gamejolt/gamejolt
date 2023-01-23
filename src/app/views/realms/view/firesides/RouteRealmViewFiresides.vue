@@ -14,7 +14,7 @@ import { $gettextInterpolate } from '../../../../../_common/translate/translate.
 import AppFiresideAvatar from '../../../../components/fireside/avatar/AppFiresideAvatar.vue';
 import AppFiresideAvatarBase from '../../../../components/fireside/avatar/AppFiresideAvatarBase.vue';
 import { illNoComments } from '../../../../img/ill/illustrations';
-import { useRealmRouteStore } from '../view.store';
+import { RealmRoutePayload, useRealmRouteStore } from '../view.store';
 
 export default {
 	...defineAppRouteOptions({
