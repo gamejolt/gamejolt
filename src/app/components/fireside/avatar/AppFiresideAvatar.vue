@@ -38,7 +38,6 @@ const props = defineProps({
 	hideCommunity: {
 		type: Boolean,
 	},
-	// TODO: added this
 	hideRealm: {
 		type: Boolean,
 	},

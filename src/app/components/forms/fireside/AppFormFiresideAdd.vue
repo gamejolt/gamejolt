@@ -34,15 +34,16 @@ const emit = defineEmits({
 
 const { community, realms, model } = toRefs(props);
 
-const canSelectCommunity = computed(() => selectableCommunities.value.length > 0);
-
-const selectableCommunities = computed(() => targetableCommunities.value.filter(c => !c.isBlocked));
-
 const defaultTitle = computed(() => nameSuggestion.value ?? undefined);
 const nameSuggestion = ref<string | null>(null);
 const targetableCommunities = ref<Community[]>([]);
 const communities = ref<{ community: Community }[]>([]);
 const maxRealms = ref(5);
+
+const selectableCommunities = computed(() => targetableCommunities.value.filter(c => !c.isBlocked));
+const canAttachTargets = computed(
+	() => selectableCommunities.value.length > 0 || maxRealms.value > 0
+);
 
 const loadUrl = `/web/dash/fireside/add`;
 
@@ -201,8 +202,7 @@ function removeRealm(realm: Realm) {
 			<AppFormControlErrors />
 		</AppFormGroup>
 
-		<!-- TODO(fireside-realms) canSelectCommunity is wrong, should check for realms too or just remove -->
-		<template v-if="canSelectCommunity">
+		<template v-if="canAttachTargets">
 			<AppFormGroup
 				class="-group-targettables"
 				name="community_id"
