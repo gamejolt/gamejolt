@@ -1,6 +1,6 @@
 import { inject, InjectionKey, ref, Ref } from 'vue';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
-import { ModelClassType } from '../../../../_common/model/model.service';
+import { ModelData } from '../../../../_common/model/model.service';
 import { Realm } from '../../../../_common/realm/realm-model';
 import { User } from '../../../../_common/user/user.model';
 
@@ -9,10 +9,10 @@ export const RealmRouteStoreKey: InjectionKey<RealmRouteStore> = Symbol('realm-s
 export type RealmRouteStore = ReturnType<typeof createRealmRouteStore>;
 
 export type RealmRoutePayload = {
-	realm: ModelClassType<Realm>;
-	knownFollowers: ModelClassType<User>[];
+	realm: ModelData<Realm>;
+	knownFollowers: ModelData<User>[];
 	knownFollowerCount: number;
-	activeFiresides: ModelClassType<Fireside>[];
+	activeFiresides: ModelData<Fireside>[];
 };
 
 export function createRealmRouteStore() {
