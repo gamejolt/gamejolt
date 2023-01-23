@@ -4,11 +4,13 @@ import { RouterLink } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
+import { ModelClassType } from '../../../../../_common/model/model.service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import { $gettextInterpolate } from '../../../../../_common/translate/translate.service';
 import AppFiresideAvatar from '../../../../components/fireside/avatar/AppFiresideAvatar.vue';
 import AppFiresideAvatarBase from '../../../../components/fireside/avatar/AppFiresideAvatarBase.vue';
 import { illNoComments } from '../../../../img/ill/illustrations';
@@ -21,13 +23,17 @@ export default {
 		deps: {
 			params: ['path'],
 		},
-		resolver: ({ route }) => Api.sendRequest(`/web/realms/firesides/${route.params.path}`),
+		resolver: ({ route }) =>
+			Promise.all([
+				Api.sendRequest('/web/realms/' + route.params.path),
+				Api.sendRequest(`/web/realms/firesides/${route.params.path}`),
+			]),
 	}),
 };
 </script>
 
 <script lang="ts" setup>
-const routeStore = useRealmRouteStore();
+const { realm, processPayload } = useRealmRouteStore();
 const firesides = ref<Fireside[]>([]);
 
 const gridColumns = computed(() => {
@@ -40,17 +46,24 @@ const gridColumns = computed(() => {
 	return 6;
 });
 
-const placeholderCount = computed(() => {
-	// 2 rows for all breakpoints
-	return gridColumns.value * 2;
-});
+// 2 rows for all breakpoints
+const placeholderCount = computed(() => gridColumns.value * 2);
 
-const appRoute = createAppRoute({
+type RealmFiresidesPayload = {
+	firesides: ModelClassType<Fireside>[];
+};
+
+const { isBootstrapped } = createAppRoute({
 	routeTitle: computed(() =>
-		routeStore.realm.value ? `Firesides in the ${routeStore.realm.value.name} Realm` : null
+		realm.value
+			? $gettextInterpolate(`Firesides in the %{ realm } Realm`, { realm: realm.value.name })
+			: null
 	),
-	onResolved: ({ payload }) => {
-		firesides.value = Fireside.populate(payload.firesides);
+	onResolved: (resolved: { payload: [RealmRoutePayload, RealmFiresidesPayload] }) => {
+		const [realmPayload, firesidePayload] = resolved.payload;
+		processPayload(realmPayload);
+
+		firesides.value = Fireside.populate(firesidePayload.firesides);
 	},
 });
 </script>
@@ -63,17 +76,14 @@ const appRoute = createAppRoute({
 			<small v-if="Screen.isDesktop">
 				{{ $gettext(`in`) }}
 				{{ ' ' }}
-				<RouterLink :to="routeStore.realm.value.routeLocation">
-					{{ routeStore.realm.value.name }}
+				<RouterLink :to="realm.routeLocation">
+					{{ realm.name }}
 				</RouterLink>
 			</small>
 		</h1>
 		<br />
 
-		<AppIllustration
-			v-if="appRoute.isBootstrapped && firesides.length === 0"
-			:asset="illNoComments"
-		>
+		<AppIllustration v-if="isBootstrapped && firesides.length === 0" :asset="illNoComments">
 			<p>
 				{{ $gettext(`There are no active firesides in this realm yet.`) }}
 			</p>
@@ -90,7 +100,7 @@ const appRoute = createAppRoute({
 				<AppFiresideAvatarBase
 					v-for="i of placeholderCount"
 					:key="`placeholder-${i}`"
-					:is-placeholder="true"
+					is-placeholder
 				/>
 			</template>
 			<template v-else>

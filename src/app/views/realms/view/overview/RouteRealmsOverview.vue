@@ -3,14 +3,12 @@ import { computed, Ref, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
-import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettextInterpolate } from '../../../../../_common/translate/translate.service';
 import { kLineHeightComputed } from '../../../../../_styles/variables';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
@@ -24,24 +22,26 @@ import { useRealmRouteStore } from '../view.store';
 
 export default {
 	...defineAppRouteOptions({
-		resolver: async ({ route }) =>
-			Api.sendRequest(
-				ActivityFeedService.makeFeedUrl(
-					route,
-					`/web/posts/fetch/realm/${route.params.path}`
-				)
-			),
+		resolver: ({ route }) =>
+			Promise.all([
+				Api.sendRequest('/web/realms/' + route.params.path),
+				Api.sendRequest(
+					ActivityFeedService.makeFeedUrl(
+						route,
+						`/web/posts/fetch/realm/${route.params.path}`
+					)
+				),
+			]),
 	}),
 };
 </script>
 
 <script lang="ts" setup>
-const routeStore = useRealmRouteStore();
+const { realm, firesides, processPayload } = useRealmRouteStore();
 const router = useRouter();
 const route = useRoute();
 
 const feed = ref(null) as Ref<ActivityFeedView | null>;
-const firesides = ref<Fireside[]>([]);
 const isBootstrapped = ref(false);
 
 // How many firesides to show in the preview row, including the "add a fireside".
@@ -49,15 +49,14 @@ const firesidesGridColumns = 5;
 
 const displayablePreviewFiresides = computed(() => {
 	// -1 to leave room for the "add a fireside"
-	const perRow = firesidesGridColumns - 1;
-	return Object.freeze(firesides.value.slice(0, perRow));
+	return firesides.value.slice(0, firesidesGridColumns - 1);
 });
 
 const appRoute = createAppRoute({
 	routeTitle: computed(() =>
-		routeStore.realm.value
+		realm.value
 			? $gettextInterpolate(`%{ realm } Realm - Art, videos, guides, polls and more`, {
-					realm: routeStore.realm.value.name,
+					realm: realm.value.name,
 			  })
 			: null
 	),
@@ -65,7 +64,10 @@ const appRoute = createAppRoute({
 		feed.value = ActivityFeedService.routeInit(isBootstrapped.value);
 	},
 	onResolved({ payload, fromCache }) {
+		const [realmPayload, feedPayload] = payload;
 		isBootstrapped.value = true;
+
+		processPayload(realmPayload);
 
 		feed.value = ActivityFeedService.routed(
 			feed.value,
@@ -74,14 +76,11 @@ const appRoute = createAppRoute({
 				name: 'realm',
 				url: `/web/posts/fetch/realm/${route.params.path}`,
 				shouldShowFollow: true,
-				itemsPerPage: payload.perPage,
+				itemsPerPage: feedPayload.perPage,
 			},
-			payload.items,
+			feedPayload.items,
 			fromCache
 		);
-
-		// TODO(fireside-realms) this does not exist on this payload. need a new overview endpoint.
-		firesides.value = []; // Fireside.populate(payload.activeFiresides);
 	},
 });
 
@@ -105,17 +104,17 @@ function onPostAdded(post: FiresidePost) {
 			}"
 		>
 			<h4 class="section-header">
-				<AppTranslate>Firesides</AppTranslate>
+				{{ $gettext(`Firesides`) }}
 			</h4>
 
 			<AppButton
 				trans
 				:to="{
 					name: routeRealmsViewFiresides.name,
-					params: { path: routeStore.realm.value.path },
+					params: { path: realm.path },
 				}"
 			>
-				<AppTranslate>View All</AppTranslate>
+				{{ $gettext(`View all`) }}
 			</AppButton>
 		</div>
 
@@ -128,7 +127,7 @@ function onPostAdded(post: FiresidePost) {
 					marginBottom: `${kLineHeightComputed}px`,
 				}"
 			>
-				<AppFiresideAvatarAdd :realms="[routeStore.realm.value]" />
+				<AppFiresideAvatarAdd :realms="[realm]" />
 
 				<AppFiresideAvatar
 					v-for="fireside in displayablePreviewFiresides"
@@ -140,10 +139,10 @@ function onPostAdded(post: FiresidePost) {
 		</AppLoadingFade>
 
 		<AppPostAddButton
-			:realm="routeStore.realm.value"
+			:realm="realm"
 			:placeholder="
 				$gettextInterpolate(`Post about %{ realm }!`, {
-					realm: routeStore.realm.value.name,
+					realm: realm.name,
 				})
 			"
 			@add="onPostAdded"

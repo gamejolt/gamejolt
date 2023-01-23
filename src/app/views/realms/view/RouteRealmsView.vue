@@ -1,12 +1,11 @@
 <script lang="ts">
-import { computed, provide, ref } from 'vue';
+import { computed, provide } from 'vue';
 import { RouterView, useRouter } from 'vue-router';
 import { getAbsoluteLink } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppRealmFollowButton from '../../../../_common/realm/AppRealmFollowButton.vue';
 import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
-import { Realm } from '../../../../_common/realm/realm-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
@@ -14,7 +13,6 @@ import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { ShareModal } from '../../../../_common/share/card/_modal/modal.service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { User } from '../../../../_common/user/user.model';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
@@ -31,23 +29,15 @@ export default {
 const router = useRouter();
 
 const routeStore = createRealmRouteStore();
+const { realm, knownFollowers, knownFollowerCount, processPayload } = routeStore;
 provide(RealmRouteStoreKey, routeStore);
 
-const knownFollowers = ref<User[]>([]);
-const knownFollowerCount = ref(0);
-
 const shareLink = computed(() =>
-	routeStore.realm.value
-		? getAbsoluteLink(router, routeStore.realm.value.routeLocation)
-		: undefined
+	realm.value ? getAbsoluteLink(router, realm.value.routeLocation) : undefined
 );
 
 createAppRoute({
-	onResolved({ payload }) {
-		routeStore.realm.value = new Realm(payload.realm);
-		knownFollowers.value = User.populate(payload.knownFollowers);
-		knownFollowerCount.value = payload.knownFollowerCount || 0;
-	},
+	onResolved: ({ payload }) => processPayload(payload),
 });
 
 function onShareClick() {
@@ -59,7 +49,7 @@ function onShareClick() {
 </script>
 
 <template>
-	<AppShellPageBackdrop v-if="routeStore.realm.value">
+	<AppShellPageBackdrop v-if="realm">
 		<AppSpacer vertical :scale="10" :scale-sm="5" :scale-xs="5" />
 
 		<AppPageContainer xl>
@@ -67,8 +57,8 @@ function onShareClick() {
 				<AppScrollAffix :disabled="!Screen.isLg">
 					<AppRealmFullCard
 						v-if="Screen.isDesktop"
-						:realm="routeStore.realm.value"
-						:to="routeStore.realm.value.routeLocation"
+						:realm="realm"
+						:to="realm.routeLocation"
 						to-linkifies-image
 					/>
 					<template v-else>
@@ -83,7 +73,7 @@ function onShareClick() {
 								marginBottom: `8px`,
 							}"
 						>
-							<span :style="{ flex: `auto` }">{{ routeStore.realm.value.name }}</span>
+							<span :style="{ flex: `auto` }">{{ realm.name }}</span>
 							<AppButton
 								:style="{ flex: `none` }"
 								icon="share-airplane"
@@ -96,7 +86,7 @@ function onShareClick() {
 
 						<AppRealmFollowButton
 							:style="{ marginBottom: `8px` }"
-							:realm="routeStore.realm.value"
+							:realm="realm"
 							source="realmHeader"
 							block
 						/>

@@ -23,7 +23,7 @@ export class Model {
 	_progress: ProgressEvent | null = null;
 
 	// We need to create some methods dynamically on the model.
-	static populate: <T = any>(rows: T[]) => T[];
+	static populate: <T = any>(rows: (T | ModelClassType<T>)[]) => T[];
 	assign!: (other: any) => void;
 
 	static create(self: any) {
