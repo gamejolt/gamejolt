@@ -15,9 +15,9 @@ import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { FiresidePostRealm } from '../../../../_common/fireside/post/realm/realm.model';
 import { FiresidePostVideo } from '../../../../_common/fireside/post/video/video-model';
 import AppForm, {
-createForm,
-defineFormProps,
-FormController
+	createForm,
+	defineFormProps,
+	FormController,
 } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
@@ -31,19 +31,18 @@ import AppFormControlDate from '../../../../_common/form-vue/controls/AppFormCon
 import AppFormControlSelect from '../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import {
-validateContentMaxLength,
-validateContentNoActiveUploads,
-validateContentRequired,
-validateMaxLength,
-validateMaxValue,
-validateMinValue
+	validateContentMaxLength,
+	validateContentNoActiveUploads,
+	validateContentRequired,
+	validateMaxLength,
+	validateMaxValue,
+	validateMinValue,
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { KeyGroup } from '../../../../_common/key-group/key-group.model';
 import { LinkedAccount } from '../../../../_common/linked-account/linked-account.model';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
-import { Popper } from '../../../../_common/popper/popper.service';
 import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
 import { Realm } from '../../../../_common/realm/realm-model';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -54,9 +53,9 @@ import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.se
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import {
-$gettext,
-$gettextInterpolate,
-$ngettext
+	$gettext,
+	$gettextInterpolate,
+	$ngettext,
 } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import AppPostTargets from '../../post/AppPostTargets.vue';
@@ -665,9 +664,6 @@ function attachCommunity(community: Community, channel?: CommunityChannel, appen
 }
 
 function attachRealm(realm: Realm, append = true) {
-	// TODO(fireside-realms) why is this here?
-	Popper.hideAll();
-
 	// Do nothing if that realm is already attached.
 	if (attachedRealms.value.find(i => i.id === realm.id)) {
 		return;
