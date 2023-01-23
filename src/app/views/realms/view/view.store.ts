@@ -12,7 +12,7 @@ export type RealmRoutePayload = {
 	realm: ModelClassType<Realm>;
 	knownFollowers: ModelClassType<User>[];
 	knownFollowerCount: number;
-	firesides: ModelClassType<Fireside>[];
+	activeFiresides: ModelClassType<Fireside>[];
 };
 
 export function createRealmRouteStore() {
@@ -25,7 +25,7 @@ export function createRealmRouteStore() {
 		realm.value = new Realm(payload.realm);
 		knownFollowers.value = User.populate(payload.knownFollowers);
 		knownFollowerCount.value = payload.knownFollowerCount || 0;
-		firesides.value = Fireside.populate(payload.firesides);
+		firesides.value = Fireside.populate(payload.activeFiresides);
 	};
 
 	return {
