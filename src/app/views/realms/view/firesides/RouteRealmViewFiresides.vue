@@ -18,8 +18,6 @@ import { RealmRoutePayload, useRealmRouteStore } from '../view.store';
 
 export default {
 	...defineAppRouteOptions({
-		cache: true,
-		lazy: true,
 		deps: {
 			params: ['path'],
 		},
