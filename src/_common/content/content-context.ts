@@ -173,7 +173,12 @@ export class ContextCapabilities {
 		switch (context) {
 			case 'fireside-post-lead':
 				return new ContextCapabilities([
+					ContextCapabilityType.TextBold,
+					ContextCapabilityType.TextItalic,
 					ContextCapabilityType.TextLink,
+					ContextCapabilityType.TextCode,
+					ContextCapabilityType.TextStrike,
+					ContextCapabilityType.Emoji,
 					ContextCapabilityType.Tag,
 					ContextCapabilityType.Mention,
 				]);
