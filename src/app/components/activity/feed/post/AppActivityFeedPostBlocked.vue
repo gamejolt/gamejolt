@@ -25,7 +25,7 @@ const emit = defineEmits({
 </template>
 
 <style lang="stylus" scoped>
-@import '../../variables'
+@import '../variables'
 
 .alert
 	-activity-feed-item()
