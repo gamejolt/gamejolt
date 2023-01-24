@@ -33,7 +33,7 @@ export const styleTextOverflow: CSSProperties = {
 	textOverflow: `ellipsis`,
 };
 
-export const changeBg = (bg: ThemeColor, important = false): any => ({
+export const styleChangeBg = (bg: ThemeColor, important = false): any => ({
 	'--theme-bg-actual': `var(--theme-${bg})`,
 	'--theme-bg-actual-trans': `var(--theme-${bg}-trans)`,
 	backgroundColor: `var(--theme-${bg})` + important ? ' !important' : '',

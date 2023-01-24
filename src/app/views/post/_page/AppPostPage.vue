@@ -40,7 +40,7 @@ import AppUserFollowButton from '../../../../_common/user/follow/AppUserFollowBu
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import AppVideoPlayer from '../../../../_common/video/player/player.vue';
-import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/processing-progress.vue';
+import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
 import AppCommunityUserNotification from '../../../components/community/user-notification/user-notification.vue';
 import AppFiresidePostEmbed from '../../../components/fireside/post/embed/embed.vue';
 import AppGameBadge from '../../../components/game/badge/badge.vue';
