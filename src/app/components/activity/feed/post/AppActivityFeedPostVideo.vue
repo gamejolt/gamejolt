@@ -84,7 +84,7 @@ function onVideoProcessingError(err: string | Error) {
 </template>
 
 <style lang="stylus" scoped>
-@import '../../variables'
+@import '../variables'
 
 .-spacing
 	margin-left: -($grid-gutter-width-xs / 2)
