@@ -61,7 +61,10 @@
 	width: device-width
 
 // Visibility utilities
-.visible-xs, .visible-sm, .visible-md, .visible-lg
+.visible-xs
+.visible-sm
+.visible-md
+.visible-lg
 	responsive-invisibility()
 
 .visible-xs
@@ -117,12 +120,33 @@
 	@media print
 		responsive-invisibility()
 
-// Misc
-.pixel
-	display: block
-	width: 0
-	height: 0
-	line-height: 0
+// Elevation
+.elevate-0
+	elevate-0()
+
+.elevate-xs
+	elevate-xs()
+
+.elevate-1
+	elevate-1()
+
+.elevate-2
+	elevate-2()
+
+.elevate-3
+	elevate-3()
+
+.elevate-hover-xs
+	elevate-hover-xs()
+
+.elevate-hover-1
+	elevate-hover-1()
+
+.elevate-hover-2
+	elevate-hover-2()
+
+.elevate-hover-3
+	elevate-hover-3()
 
 .dot-separator
 	dot-separator()

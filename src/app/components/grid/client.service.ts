@@ -218,7 +218,9 @@ export class GridClient {
 		}
 		// User connections expected to handle a bunch of notification stuff.
 		else if (user.value) {
-			const channel = await createGridNotificationChannel(this, { userId: user.value.id });
+			const channel = createGridNotificationChannel(this, { userId: user.value.id });
+			await channel.joinPromise;
+
 			this.notificationChannel = markRaw(channel);
 			this.markConnected();
 
@@ -277,9 +279,12 @@ export class GridClient {
 	}
 
 	spawnNotification(notification: Notification) {
-		const feedType = notification.feedType;
-		if (feedType !== '') {
-			this.appStore.incrementNotificationCount({ count: 1, type: feedType });
+		// Only increment counts if the notification would show in the feed.
+		if (notification.is_notification_feed_item) {
+			const feedType = notification.feedType;
+			if (feedType !== '') {
+				this.appStore.incrementNotificationCount({ count: 1, type: feedType });
+			}
 		}
 
 		// In Client when the feed notifications setting is disabled, don't show them notifications.
@@ -472,10 +477,13 @@ export class GridClient {
 			return;
 		}
 
-		return await createGridCommunityChannel(this, {
+		const communityChannel = createGridCommunityChannel(this, {
 			communityId: community.id,
 			router,
 		});
+
+		await communityChannel.joinPromise;
+		return communityChannel;
 	}
 
 	async leaveCommunity(community: Community) {

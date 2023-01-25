@@ -23,3 +23,15 @@ export function objectPick<T>(source: T, fields: (keyof T)[]) {
 
 	return obj;
 }
+
+export function objectOmit<T>(source: T, excludedFields: (keyof T)[]) {
+	const obj: any = {};
+	for (const field in source) {
+		if (excludedFields.includes(field)) {
+			continue;
+		}
+		obj[field] = source[field];
+	}
+
+	return obj;
+}

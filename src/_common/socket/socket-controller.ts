@@ -1,4 +1,4 @@
-import { Channel, Socket } from 'phoenix';
+import { Socket } from 'phoenix';
 import { markRaw, ref, shallowReadonly, shallowRef } from 'vue';
 import { CancelToken } from '../../utils/cancel-token';
 import { createLogger } from '../../utils/logging';
@@ -6,6 +6,9 @@ import { sleep } from '../../utils/utils';
 import { Api } from '../api/api.service';
 import { getCookie } from '../cookie/cookie.service';
 import { CommonStore } from '../store/common-store';
+
+// These are the features we support for Grid to know and behave properly.
+const SupportedFeatures = ['chat_member_watching'];
 
 export type SocketController = ReturnType<typeof createSocketController>;
 export type SocketChannelController = ReturnType<typeof createSocketChannelController>;
@@ -100,13 +103,20 @@ export function createSocketController(options: {
 
 		logger.info(`Got token from host: ${host}`);
 
+		const params: Record<string, any> = {
+			token,
+			gj_platform: GJ_IS_DESKTOP_APP ? 'client' : 'web',
+			gj_platform_version: GJ_VERSION,
+		};
+
+		// Pass through the features that are particular client supports.
+		for (const feature of SupportedFeatures) {
+			params[`${feature}_support`] = true;
+		}
+
 		const newSocket = new Socket(host, {
 			heartbeatIntervalMs: 30_000,
-			params: {
-				token,
-				gj_platform: GJ_IS_DESKTOP_APP ? 'client' : 'web',
-				gj_platform_version: GJ_VERSION,
-			},
+			params,
 		});
 
 		socket.value = markRaw(newSocket);
@@ -200,11 +210,15 @@ export function createSocketChannelController(
 
 	const logger = createLogger(`Socket Channel/${topic}`);
 
-	// Freeze the cancel token.
-	const cancelToken = socketController.cancelToken.value;
+	const cancelToken = new CancelToken();
 
-	const channel = markRaw(new Channel(topic, params, socket.value));
-	(socket.value as any).channels.push(channel);
+	const channel = markRaw(socket.value!.channel(topic, params));
+
+	/**
+	 * If this channel either was closed directly or errored out, this will get
+	 * set to true.
+	 */
+	const isClosed = ref(false);
 
 	/**
 	 * Joins the channel, will call [onJoin] when the channel joins
@@ -222,7 +236,9 @@ export function createSocketChannelController(
 			if (alertedLeave) {
 				return;
 			}
+			cancelToken.cancel();
 			alertedLeave = true;
+			isClosed.value = true;
 			onLeave?.();
 		}
 
@@ -254,6 +270,7 @@ export function createSocketChannelController(
 
 								resolve();
 							} catch (e) {
+								logger.error(`Got error while trying to join channel.`, e);
 								reject(e);
 							}
 						});
@@ -265,14 +282,18 @@ export function createSocketChannelController(
 	 * Leaves the channel.
 	 */
 	async function leave() {
+		if (cancelToken.isCanceled) {
+			return;
+		}
+
 		logger.info(`Leaving channel.`);
 
-		const leavePromise = new Promise((resolve, reject) => {
-			channel.leave().receive('error', reject).receive('ok', resolve);
-		});
-
 		try {
-			await leavePromise;
+			cancelToken.cancel();
+
+			await new Promise((resolve, reject) => {
+				channel.leave().receive('error', reject).receive('ok', resolve);
+			});
 			socket.value?.remove(channel);
 
 			logger.info(`Left channel.`);
@@ -327,6 +348,7 @@ export function createSocketChannelController(
 	return shallowReadonly({
 		topic,
 		channel,
+		isClosed,
 		join,
 		leave,
 		listenTo,

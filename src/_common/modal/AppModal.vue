@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, PropType, ref, useSlots } from 'vue';
-import { useRouter } from 'vue-router';
+import { isNavigationFailure, useRouter } from 'vue-router';
 import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import { Screen } from '../screen/screen-service';
@@ -40,7 +40,7 @@ const root = ref<HTMLElement>();
 const isHoveringContent = ref(false);
 
 let _backdrop: BackdropController | undefined;
-let _beforeEachDeregister: (() => void) | undefined;
+let _afterEachDeregister: (() => void) | undefined;
 let _escapeCallback: EscapeStackCallback | undefined;
 
 const zIndex = computed(() => 1050 + modal.index);
@@ -54,9 +54,12 @@ onMounted(() => {
 		});
 	}
 
-	_beforeEachDeregister = router.beforeEach((_to, _from, next) => {
-		_dismissRouteChange();
-		next();
+	_afterEachDeregister = router.afterEach((_to, _from, failure) => {
+		// Dismiss if there wasn't a navigation failure (canceled navigation
+		// through dirty form guards).
+		if (!isNavigationFailure(failure)) {
+			_dismissRouteChange();
+		}
 	});
 
 	_escapeCallback = () => dismissEsc();
@@ -70,9 +73,9 @@ onUnmounted(() => {
 		_backdrop = undefined;
 	}
 
-	if (_beforeEachDeregister) {
-		_beforeEachDeregister();
-		_beforeEachDeregister = undefined;
+	if (_afterEachDeregister) {
+		_afterEachDeregister();
+		_afterEachDeregister = undefined;
 	}
 
 	if (_escapeCallback) {
@@ -146,7 +149,6 @@ function scrollTo(offsetY: number) {
 					:theme="theme"
 					@mouseover="isHoveringContent = true"
 					@mouseout="isHoveringContent = false"
-					@click.stop
 				>
 					<slot />
 

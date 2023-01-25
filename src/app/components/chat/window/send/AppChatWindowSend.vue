@@ -1,12 +1,3 @@
-<script lang="ts">
-export type FormModel = {
-	content: string;
-	id?: number;
-};
-
-const TYPING_TIMEOUT_INTERVAL = 3000;
-</script>
-
 <script lang="ts" setup>
 import { computed, nextTick, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
 import { createFocusToken } from '../../../../../utils/focus-token';
@@ -28,19 +19,14 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import AppShortkey from '../../../../../_common/shortkey/AppShortkey.vue';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
 import { useGridStore } from '../../../grid/grid-store';
-import {
-	editMessage as chatEditMessage,
-	queueChatMessage,
-	setMessageEditing,
-	startTyping,
-	stopTyping,
-	tryGetRoomRole,
-} from '../../client';
+import { editMessage as chatEditMessage, queueChatMessage, tryGetRoomRole } from '../../client';
 import { ChatMessage, CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../message';
 import { ChatRoom } from '../../room';
+import { ChatWindowLeftGutterSize } from '../variables';
+
+const TYPING_TIMEOUT_INTERVAL = 3000;
 
 // Allow images to be up to 100px in height so that image and a chat message fit
 // into the editor without scrolling.
@@ -86,8 +72,19 @@ const typing = ref(false);
 const nextMessageTimeout = ref<NodeJS.Timer | null>(null);
 let lastMessageTimestamp: number | null = null;
 
-let escapeCallback: EscapeStackCallback | null = null;
 let typingTimeout: NodeJS.Timer | null = null;
+
+const roomChannel = computed(() => chat.value.roomChannels.get(room.value.id));
+
+// Doing it like this instead of a computed so that we can only set the state
+// after the first change.
+const isDisconnected = ref(false);
+watch(
+	() => !chat.value.currentUser || !roomChannel.value,
+	state => {
+		isDisconnected.value = state;
+	}
+);
 
 const contentEditorTempResourceContextData = computed(() => {
 	if (chat.value && room.value) {
@@ -109,30 +106,38 @@ const hasContent = computed(() => {
 });
 
 const isSendButtonDisabled = computed(() => {
-	if (!form.valid || !hasContent.value || nextMessageTimeout.value !== null) {
+	if (
+		!form.valid ||
+		!hasContent.value ||
+		nextMessageTimeout.value !== null ||
+		isDisconnected.value
+	) {
 		return true;
 	}
 
 	return !FormValidatorContentNoMediaUpload(form.formModel.content ?? '');
 });
 
-const isEditing = computed(() => !!chat.value.messageEditing);
-
+const isEditing = computed(() => !!room.value.messageEditing);
 const editorModelId = computed(() => form.formModel.id);
 
 const typingText = computed(() => {
-	const { roomMembers, currentUser } = chat.value;
-	const usersOnline = roomMembers[room.value.id];
-	if (!usersOnline || usersOnline.collection.length === 0) {
-		return [];
+	const { currentUser } = chat.value;
+
+	const typingNames: string[] = [];
+	for (const [userId, typingData] of room.value.usersTyping) {
+		if (userId === currentUser?.id) {
+			continue;
+		}
+
+		typingNames.push(`@${typingData.username}`);
 	}
 
-	const typingNames = usersOnline.collection
-		.filter(user => user.typing)
-		.filter(user => user.id !== currentUser?.id)
-		.map(user => user.display_name);
+	if (typingNames.length === 0) {
+		return '';
+	}
 
-	const displayNamePlaceholderValues = {
+	const namePlaceholderValues = {
 		user1: typingNames[0],
 		user2: typingNames[1],
 		user3: typingNames[2],
@@ -143,19 +148,24 @@ const typingText = computed(() => {
 	} else if (typingNames.length === 3) {
 		return $gettextInterpolate(
 			`%{ user1 }, %{ user2 } and %{ user3 } are typing...`,
-			displayNamePlaceholderValues
+			namePlaceholderValues
 		);
 	} else if (typingNames.length === 2) {
 		return $gettextInterpolate(
 			`%{ user1 } and %{ user2 } are typing...`,
-			displayNamePlaceholderValues
+			namePlaceholderValues
 		);
 	} else if (typingNames.length === 1) {
-		return $gettextInterpolate(`%{ user1 } is typing...`, displayNamePlaceholderValues);
+		return $gettextInterpolate(`%{ user1 } is typing...`, namePlaceholderValues);
 	}
 
 	return '';
 });
+
+type FormModel = {
+	content: string;
+	id?: number;
+};
 
 const form: FormController<FormModel> = createForm({
 	warnOnDiscard: false,
@@ -170,8 +180,27 @@ onUnmounted(() => {
 	}
 });
 
+// Edit handling.
+let escapeCallback: EscapeStackCallback | null = null;
+
+function registerEditEscape() {
+	escapeCallback = () => cancelEditing();
+	EscapeStack.register(escapeCallback);
+}
+
+function deregisterEditEscape() {
+	if (escapeCallback) {
+		EscapeStack.deregister(escapeCallback);
+		escapeCallback = null;
+	}
+}
+
+onUnmounted(() => {
+	deregisterEditEscape();
+});
+
 watch(
-	() => chat.value.messageEditing,
+	() => room.value.messageEditing,
 	async (message: ChatMessage | null) => {
 		if (message) {
 			form.formModel.content = message.content;
@@ -182,35 +211,16 @@ watch(
 			// Regain focus on the editor
 			focusToken.focus();
 
-			escapeCallback = () => cancelEditing();
-			EscapeStack.register(escapeCallback);
+			registerEditEscape();
 		} else {
-			if (escapeCallback) {
-				EscapeStack.deregister(escapeCallback);
-				escapeCallback = null;
-			}
+			deregisterEditEscape();
 			cancelEditing();
 		}
 	}
 );
 
-watch(
-	() => room.value.id,
-	async () => {
-		if (form.formModel.content !== '') {
-			// Clear out the editor when entering a new room.
-			clearMsg();
-		}
-
-		// Then focus it.
-		focusToken.focus();
-	}
-);
-
-watch(() => room.value.id, onRoomChanged);
-
 function editMessage({ content, id }: FormModel) {
-	setMessageEditing(chat.value, null);
+	room.value.messageEditing = null;
 	// This shouldn't happen, but typescript complains without this.
 	if (!id) {
 		return;
@@ -229,12 +239,8 @@ function sendMessage({ content }: FormModel) {
 	const doc = ContentDocument.fromJson(content);
 	if (doc instanceof ContentDocument) {
 		const contentJson = doc.toJson();
-		queueChatMessage(chat.value, 'content', contentJson, room.value.id);
+		queueChatMessage(room.value, 'content', contentJson);
 	}
-}
-
-async function onRoomChanged() {
-	setMessageEditing(chat.value, null);
 }
 
 async function submitMessage() {
@@ -253,7 +259,7 @@ async function submitMessage() {
 			data.id = form.formModel.id;
 		}
 
-		if (chat.value.messageEditing) {
+		if (room.value.messageEditing) {
 			editMessage(data);
 		} else {
 			sendMessage(data);
@@ -312,7 +318,7 @@ function applyNextMessageTimeout(options: { ignoreLastMessageTimestamp: boolean 
 	}
 
 	if (currentUser) {
-		const userRole = tryGetRoomRole(chat.value, room.value, currentUser);
+		const userRole = tryGetRoomRole(room.value, currentUser);
 		if (userRole === 'owner' || userRole === 'moderator') {
 			return;
 		}
@@ -353,7 +359,7 @@ function applyNextMessageTimeout(options: { ignoreLastMessageTimestamp: boolean 
 function onChange(_value: string) {
 	if (!typing.value) {
 		typing.value = true;
-		startTyping(chat.value, room.value);
+		roomChannel.value?.pushStartTyping();
 	} else if (typingTimeout) {
 		clearTimeout(typingTimeout);
 	}
@@ -380,10 +386,11 @@ function onUpKeyPressed(event: KeyboardEvent) {
 	if (isEditing.value || hasContent.value) {
 		return;
 	}
-	const { messages, currentUser } = chat.value;
+	const { currentUser } = chat.value;
+	const { messages } = room.value;
 
 	// Find the last message sent by the current user.
-	const userMessages = messages[room.value.id].filter(msg => msg.user.id === currentUser?.id);
+	const userMessages = messages.filter(i => i.user.id === currentUser?.id);
 	const lastMessage = userMessages[userMessages.length - 1];
 
 	if (lastMessage) {
@@ -392,12 +399,12 @@ function onUpKeyPressed(event: KeyboardEvent) {
 		// of the content. This prevents it jump to the beginning of the line.
 		event.preventDefault();
 
-		setMessageEditing(chat.value, lastMessage);
+		room.value.messageEditing = lastMessage;
 	}
 }
 
 async function cancelEditing() {
-	setMessageEditing(chat.value, null);
+	room.value.messageEditing = null;
 	clearMsg();
 
 	// Wait in case the editor loses focus
@@ -417,7 +424,7 @@ async function clearMsg() {
 
 function disableTypingTimeout() {
 	typing.value = false;
-	stopTyping(chat.value, room.value);
+	roomChannel.value?.pushStopTyping();
 }
 </script>
 
@@ -429,19 +436,26 @@ function disableTypingTimeout() {
 
 				<transition name="fade">
 					<div
-						v-if="!!typingText || isEditing"
+						v-if="isDisconnected || typingText || isEditing"
 						class="-top-indicators"
 						:class="{
 							'-light-mode': !isDark,
 						}"
 					>
-						<div v-if="typingText">
-							{{ typingText }}
-						</div>
+						<template v-if="isDisconnected">
+							<div>
+								{{ $gettext(`Chat disconnected. Reconnect to send a message.`) }}
+							</div>
+						</template>
+						<template v-else>
+							<div v-if="typingText">
+								{{ typingText }}
+							</div>
 
-						<div v-if="isEditing" class="-editing">
-							<AppTranslate>Editing...</AppTranslate>
-						</div>
+							<div v-if="isEditing" class="-editing">
+								{{ $gettext(`Editing...`) }}
+							</div>
+						</template>
 					</div>
 				</transition>
 
@@ -502,8 +516,6 @@ function disableTypingTimeout() {
 </template>
 
 <style lang="stylus" scoped>
-@import '../variables'
-
 $-button-width = 40px
 $-button-height = 40px
 
@@ -576,7 +588,7 @@ $-button-height = 40px
 	min-width: 0
 
 	@media $media-sm-up
-		margin-left: $left-gutter-size
+		margin-left: add-unit(v-bind(ChatWindowLeftGutterSize), px)
 
 .-send-button-container
 	display: flex

@@ -7,7 +7,6 @@ import AppIllustration from '../../../../_common/illustration/AppIllustration.vu
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import {
 	shouldPromoteAppForStreaming,
@@ -88,7 +87,7 @@ async function onClickStopStreaming() {
 	<AppFiresideSidebar>
 		<template #header>
 			<AppFiresideSidebarHeading>
-				<AppTranslate>Stream Settings</AppTranslate>
+				{{ $gettext(`Stream settings`) }}
 			</AppFiresideSidebarHeading>
 		</template>
 
@@ -98,23 +97,26 @@ async function onClickStopStreaming() {
 					<template v-if="!canBrowserStream">
 						<AppIllustration :asset="illNoCommentsSmall">
 							<p class="-warning-text">
-								<AppTranslate>
-									Your browser either cannot stream, or will have poor
-									performance.
-								</AppTranslate>
+								{{
+									$gettext(
+										`Your browser either cannot stream, or will have poor performance.`
+									)
+								}}
 							</p>
 							<p class="-warning-text">
 								<template v-if="shouldPromoteAppForStreaming">
-									<AppTranslate>
-										For the best streaming experience, we recommend using the
-										Game Jolt desktop app.
-									</AppTranslate>
+									{{
+										$gettext(
+											`For the best streaming experience, we recommend using the Game Jolt desktop app.`
+										)
+									}}
 								</template>
 								<template v-else>
-									<AppTranslate>
-										Please use a different browser, such as Google Chrome or
-										Microsoft Edge, if you want to start a stream.
-									</AppTranslate>
+									{{
+										$gettext(
+											`Please use a different browser, such as Google Chrome or Microsoft Edge, if you want to start a stream.`
+										)
+									}}
 								</template>
 							</p>
 						</AppIllustration>
@@ -130,7 +132,7 @@ async function onClickStopStreaming() {
 								:to="{ name: 'landing.app' }"
 								target="_blank"
 							>
-								<AppTranslate>Get the desktop app</AppTranslate>
+								{{ $gettext(`Get the desktop app`) }}
 							</AppButton>
 						</template>
 					</template>
@@ -138,10 +140,11 @@ async function onClickStopStreaming() {
 						<div class="-app-promo">
 							<AppIllustration :asset="illStreamingJelly">
 								<p class="-ill-text">
-									<AppTranslate>
-										For the best streaming experience, we recommend using the
-										Game Jolt desktop app.
-									</AppTranslate>
+									{{
+										$gettext(
+											`For the best streaming experience, we recommend using the Game Jolt desktop app.`
+										)
+									}}
 								</p>
 							</AppIllustration>
 
@@ -155,21 +158,22 @@ async function onClickStopStreaming() {
 								:to="{ name: 'landing.app' }"
 								target="_blank"
 							>
-								<AppTranslate>Get the desktop app</AppTranslate>
+								{{ $gettext(`Get the desktop app`) }}
 							</AppButton>
 
 							<AppButton trans block @click="shouldShowDesktopAppPromo = false">
-								<AppTranslate>Use web anyway</AppTranslate>
+								{{ $gettext(`Use web anyway`) }}
 							</AppButton>
 						</div>
 					</template>
 					<template v-else-if="isStreamingElsewhere">
 						<AppIllustration :asset="illNoCommentsSmall">
 							<p class="-warning-text">
-								<AppTranslate>
-									You're currently streaming on another device. Stop that stream
-									before starting a new one.
-								</AppTranslate>
+								{{
+									$gettext(
+										`You're currently streaming on another device. Stop that stream before starting a new one.`
+									)
+								}}
 							</p>
 						</AppIllustration>
 					</template>
@@ -212,7 +216,7 @@ async function onClickStopStreaming() {
 					fill-color="overlay-notice"
 					@click="onClickStopStreaming()"
 				>
-					<AppTranslate>Stop streaming</AppTranslate>
+					{{ $gettext(`Stop streaming`) }}
 				</AppButton>
 			</div>
 		</template>

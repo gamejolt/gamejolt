@@ -9,7 +9,7 @@ import AppLoading from '../loading/AppLoading.vue';
 import { useStickerStore } from '../sticker/sticker-store';
 import { Quest } from './quest-model';
 import { QuestObjectiveReward } from './quest-objective-reward-model';
-import { QuestReward } from './reward/AppQuestRewardModal.vue';
+import { QuestRewardData } from './reward/AppQuestRewardModal.vue';
 import { QuestRewardModal } from './reward/modal.service';
 </script>
 
@@ -82,14 +82,13 @@ async function onActionPressed() {
 			? QuestObjectiveReward.populate(payload.rewards)
 			: [];
 
-		const compactRewards = new Map<string, QuestReward>();
+		const compactRewards = new Map<string, QuestRewardData>();
 
-		const addOrUpdateReward = (options: QuestReward & { key: string }) => {
+		const addOrUpdateReward = (options: QuestRewardData) => {
 			const { key, amount } = options;
 			if (compactRewards.has(key)) {
 				compactRewards.get(key)!.amount += amount;
 			} else {
-				options.icon ??= 'gift';
 				compactRewards.set(key, options);
 			}
 		};
@@ -106,6 +105,8 @@ async function onActionPressed() {
 		const fallbackIcon: Jolticon = 'gift';
 
 		for (const reward of objectiveRewards) {
+			const isCondensed = reward.is_condensed === true;
+
 			if (reward.isSticker) {
 				for (const { amount, sticker } of reward.stickers) {
 					addOrUpdateReward({
@@ -114,6 +115,7 @@ async function onActionPressed() {
 						img_url: sticker.img_url,
 						name: reward.name,
 						icon: fallbackIcon,
+						isCondensed,
 					});
 				}
 			} else if (reward.isExp) {
@@ -125,6 +127,7 @@ async function onActionPressed() {
 					name: reward.name,
 					icon: 'exp',
 					isExp: true,
+					isCondensed,
 				});
 			} else if (reward.isTrophy && !!reward.trophy) {
 				const { id, img_thumbnail } = reward.trophy;
@@ -134,6 +137,7 @@ async function onActionPressed() {
 					img_url: img_thumbnail,
 					name: reward.name,
 					icon: 'trophy',
+					isCondensed,
 				});
 			} else if (reward.isBackground && !!reward.background) {
 				const { id } = reward.background;
@@ -143,6 +147,7 @@ async function onActionPressed() {
 					img_url: processMediaserverUrl(reward.background.media_item.mediaserver_url),
 					name: reward.name,
 					icon: 'paintbrush',
+					isCondensed,
 				});
 			} else if (reward.isCharge) {
 				// Manually alter the sticker charge we have so other UI can
@@ -160,6 +165,7 @@ async function onActionPressed() {
 					img_url: processMediaserverUrl(reward.fallback_media?.mediaserver_url),
 					name: reward.name,
 					icon: fallbackIcon,
+					isCondensed,
 				});
 			} else {
 				addOrUpdateReward({
@@ -168,6 +174,7 @@ async function onActionPressed() {
 					img_url: processMediaserverUrl(reward.fallback_media?.mediaserver_url),
 					name: reward.name,
 					icon: fallbackIcon,
+					isCondensed,
 				});
 			}
 		}

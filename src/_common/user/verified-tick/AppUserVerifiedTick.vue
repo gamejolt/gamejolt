@@ -21,6 +21,9 @@ const props = defineProps({
 	small: {
 		type: Boolean,
 	},
+	tiny: {
+		type: Boolean,
+	},
 	verticalAlign: {
 		type: Boolean,
 	},
@@ -34,7 +37,10 @@ const tooltip = computed(() => (isVerified.value ? $gettext(`Verified account`) 
 </script>
 
 <template>
-	<AppUserCreatorBadge v-if="user.is_creator" :size="big ? 'lg' : small ? 'sm' : 'md'" />
+	<AppUserCreatorBadge
+		v-if="user.is_creator"
+		:size="big ? 'lg' : small ? 'sm' : tiny ? 'tiny' : 'md'"
+	/>
 	<AppJolticon
 		v-else-if="isVerified"
 		v-app-tooltip="tooltip"
@@ -42,6 +48,7 @@ const tooltip = computed(() => (isVerified.value ? $gettext(`Verified account`) 
 			'-highlight': highlight,
 			'-vertical-align': verticalAlign,
 			'-small': small,
+			'-tiny': tiny,
 		}"
 		:icon="icon!"
 		:big="big"
@@ -60,4 +67,8 @@ $jolticon-size = 16px
 .-small
 	margin: 0 2px
 	font-size: $jolticon-size * 0.85
+
+.-tiny
+	margin: 0
+	font-size: $jolticon-size * 0.7
 </style>

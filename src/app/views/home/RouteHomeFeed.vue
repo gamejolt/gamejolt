@@ -1,4 +1,40 @@
 <script lang="ts">
+import { computed, defineAsyncComponent, provide, Ref, ref } from 'vue';
+import { RouterLink, useRoute } from 'vue-router';
+import { router } from '..';
+import { numberSort } from '../../../utils/array';
+import { fuzzysearch } from '../../../utils/string';
+import { Api } from '../../../_common/api/api.service';
+import AppButton from '../../../_common/button/AppButton.vue';
+import { Fireside } from '../../../_common/fireside/fireside.model';
+import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import AppInviteCard from '../../../_common/invite/AppInviteCard.vue';
+import {
+	asyncRouteLoader,
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../_common/route/route-component';
+import { Screen } from '../../../_common/screen/screen-service';
+import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
+import AppStickerChargeCard from '../../../_common/sticker/charge/AppStickerChargeCard.vue';
+import { useCommonStore } from '../../../_common/store/common-store';
+import { EventSubscription } from '../../../_common/system/event/event-topic';
+import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import { ActivityFeedService } from '../../components/activity/feed/feed-service';
+import { ActivityFeedView } from '../../components/activity/feed/view';
+import { FeaturedItem } from '../../components/featured-item/featured-item.model';
+import { onFiresideStart } from '../../components/grid/client.service';
+import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
+import AppPostAddButton from '../../components/post/add-button/AppPostAddButton.vue';
+import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
+import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
+import { useQuestStore } from '../../store/quest';
+import AppHomeFeaturedBanner from './AppHomeFeaturedBanner.vue';
+import AppHomeFeedMenu from './AppHomeFeedMenu.vue';
+import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
+import AppHomeFireside from './_fireside/AppHomeFireside.vue';
+
 class DashGame {
 	constructor(
 		public id: number,
@@ -32,43 +68,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { computed, defineAsyncComponent, provide, Ref, ref } from 'vue';
-import { RouterLink, useRoute } from 'vue-router';
-import { router } from '..';
-import { numberSort } from '../../../utils/array';
-import { fuzzysearch } from '../../../utils/string';
-import { Api } from '../../../_common/api/api.service';
-import AppButton from '../../../_common/button/AppButton.vue';
-import { Fireside } from '../../../_common/fireside/fireside.model';
-import { FiresidePost } from '../../../_common/fireside/post/post-model';
-import AppInviteCard from '../../../_common/invite/AppInviteCard.vue';
-import {
-	asyncRouteLoader,
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../_common/route/route-component';
-import { Screen } from '../../../_common/screen/screen-service';
-import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import AppStickerChargeCard from '../../../_common/sticker/charge/AppStickerChargeCard.vue';
-import { useCommonStore } from '../../../_common/store/common-store';
-import { EventSubscription } from '../../../_common/system/event/event-topic';
-import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import { ActivityFeedService } from '../../components/activity/feed/feed-service';
-import { ActivityFeedView } from '../../components/activity/feed/view';
-import { onFiresideStart } from '../../components/grid/client.service';
-import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
-import AppPostAddButton from '../../components/post/add-button/AppPostAddButton.vue';
-import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
-import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
-import { imagePseudoFeatureBanner } from '../../img/images';
-import { useQuestStore } from '../../store/quest';
-import { routePost } from '../post/post.route';
-import { routeQuests } from '../quests/quests.route';
-import AppHomeFeedMenu from './AppHomeFeedMenu.vue';
-import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
-import AppHomeFireside from './_fireside/AppHomeFireside.vue';
-
 const { user } = useCommonStore();
 const { fetchDailyQuests, isLoading: isQuestStoreLoading, dailyQuests } = useQuestStore();
 const route = useRoute();
@@ -77,6 +76,7 @@ const games = ref<DashGame[]>([]);
 const gameFilterQuery = ref('');
 const isShowingAllGames = ref(false);
 
+const featuredItem = ref<FeaturedItem>();
 const isLoadingQuests = ref(true);
 const isLoadingFiresides = ref(true);
 const isFiresidesBootstrapped = ref(false);
@@ -118,6 +118,10 @@ const tabs = computed(() => {
 const appRoute = createAppRoute({
 	routeTitle: null,
 	onResolved({ payload }) {
+		featuredItem.value = payload.featuredItem
+			? new FeaturedItem(payload.featuredItem)
+			: undefined;
+
 		games.value = (payload.ownerGames as DashGame[])
 			.map(i => new DashGame(i.id, i.title, i.ownerName, i.createdOn))
 			.sort((a, b) => numberSort(a.createdOn, b.createdOn))
@@ -222,14 +226,6 @@ async function refreshQuests() {
 							/>
 						</template>
 
-						<RouterLink :to="{ name: routeQuests.name }">
-							<img
-								class="-event-banner img-responsive"
-								:src="imagePseudoFeatureBanner"
-							/>
-						</RouterLink>
-						<AppSpacer vertical :scale="8" />
-
 						<AppInviteCard :user="user!" elevate />
 
 						<template v-if="hasGamesSection">
@@ -300,6 +296,11 @@ async function refreshQuests() {
 				<template v-if="!Screen.isMobile" #right>
 					<div class="-top-spacer" />
 
+					<template v-if="featuredItem">
+						<AppHomeFeaturedBanner :featured-item="featuredItem" />
+						<AppSpacer vertical :scale="8" />
+					</template>
+
 					<AppHomeFireside
 						:featured-fireside="featuredFireside"
 						:user-fireside="userFireside"
@@ -315,14 +316,10 @@ async function refreshQuests() {
 				<AppPostAddButton @add="onPostAdded" />
 
 				<template v-if="Screen.isMobile">
-					<RouterLink
-						v-if="!Screen.isXs"
-						:to="{ name: routePost.name, params: { slug: 'g8vqnqfe' } }"
-					>
-						<img class="-event-banner img-responsive" :src="imagePseudoFeatureBanner" />
-
+					<template v-if="!Screen.isXs && featuredItem">
+						<AppHomeFeaturedBanner :featured-item="featuredItem" />
 						<AppSpacer vertical :scale="4" />
-					</RouterLink>
+					</template>
 
 					<AppHomeFireside
 						:user-fireside="userFireside"
@@ -348,12 +345,9 @@ async function refreshQuests() {
 // We add this margin to try to shift the page content below the For You |
 // Following tabs.
 .-top-spacer
-	margin-top: 60px
+	margin-top: 58px
 
 .-game-list
 	a
 		text-overflow()
-
-.-event-banner
-	rounded-corners()
 </style>

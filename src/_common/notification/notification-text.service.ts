@@ -467,7 +467,7 @@ export class NotificationText {
 				if (notification.action_model instanceof Fireside) {
 					return _process(
 						$gettextInterpolate(
-							`<em>%{ subject }</em> started up a new Fireside.`,
+							`<em>%{ subject }</em> is live!.`,
 							this.getTranslationValues(notification),
 							!plaintext
 						)
@@ -495,7 +495,7 @@ export class NotificationText {
 					case 1:
 						return _process(
 							$gettextInterpolate(
-								`<em>%{ user1 }</em> is streaming in a Fireside.`,
+								`<em>%{ user1 }</em> is live!`,
 								userInterpolates,
 								!plaintext
 							)
@@ -504,7 +504,7 @@ export class NotificationText {
 					case 2:
 						return _process(
 							$gettextInterpolate(
-								`<em>%{ user1 }</em> and <em>%{ user2 }</em> are streaming in a Fireside.`,
+								`<em>%{ user1 }</em> and <em>%{ user2 }</em> are live!.`,
 								userInterpolates,
 								!plaintext
 							)
@@ -513,7 +513,7 @@ export class NotificationText {
 					default:
 						return _process(
 							$gettextInterpolate(
-								`<em>%{ user1 }</em>, <em>%{ user2 }</em> and <em>%{ more }</em> more are streaming in a Fireside.`,
+								`<em>%{ user1 }</em>, <em>%{ user2 }</em> and <em>%{ more }</em> more are live!`,
 								{
 									...userInterpolates,
 									more: users.length - 2,

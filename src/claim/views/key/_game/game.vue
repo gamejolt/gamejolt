@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
-import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { GameBundle } from '../../../../_common/game-bundle/game-bundle.model';
 import { CustomMessage as CustomGameMessage, Game } from '../../../../_common/game/game.model';

@@ -264,7 +264,19 @@ export function createAppStore({
 		checkBackdrop();
 	}
 
-	async function toggleChatPane() {
+	function openChatPane() {
+		if (visibleLeftPane.value !== 'chat') {
+			toggleChatPane();
+		}
+	}
+
+	function closeChatPane() {
+		if (visibleLeftPane.value === 'chat') {
+			toggleChatPane();
+		}
+	}
+
+	function toggleChatPane() {
 		_toggleLeftPane('chat');
 		checkBackdrop();
 	}
@@ -547,6 +559,8 @@ export function createAppStore({
 		showContextPane,
 		toggleLeftPane,
 		toggleRightPane,
+		openChatPane,
+		closeChatPane,
 		toggleChatPane,
 		clearPanes,
 		checkBackdrop,
