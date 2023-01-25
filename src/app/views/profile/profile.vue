@@ -28,8 +28,8 @@ import AppUserVerifiedTick from '../../../_common/user/verified-tick/AppUserVeri
 import { isUserOnline } from '../../components/chat/client';
 import { useGridStore } from '../../components/grid/grid-store';
 import { IntentService } from '../../components/intent/intent.service';
+import AppPageHeader from '../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderControls from '../../components/page-header/controls/controls.vue';
-import AppPageHeader from '../../components/page-header/page-header.vue';
 import AppUserDogtag from '../../components/user/AppUserDogtag.vue';
 import AppUserBlockOverlay from '../../components/user/block-overlay/block-overlay.vue';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';

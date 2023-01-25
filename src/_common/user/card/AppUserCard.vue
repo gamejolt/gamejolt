@@ -3,6 +3,7 @@ import { computed, PropType, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppUserDogtag from '../../../app/components/user/AppUserDogtag.vue';
 import { getMediaserverUrlForBounds } from '../../../utils/image';
+import AppAvatarFrame from '../../avatar/AppAvatarFrame.vue';
 import AppButton from '../../button/AppButton.vue';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
 import { formatNumber } from '../../filters/number';
@@ -11,7 +12,6 @@ import { useCommonStore } from '../../store/common-store';
 import AppTheme from '../../theme/AppTheme.vue';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import AppUserFollowButton from '../follow/AppUserFollowButton.vue';
-import AppUserAvatarFrame from '../user-avatar/AppUserAvatarFrame.vue';
 import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
 import { User } from '../user.model';
 import AppUserVerifiedTick from '../verified-tick/AppUserVerifiedTick.vue';
@@ -83,11 +83,11 @@ const showTags = computed(() => !!user.value.follows_you || dogtags.value.length
 				}"
 			/>
 
-			<AppUserAvatarFrame :user="user" class="-avatar">
+			<AppAvatarFrame :frame="user.avatar_frame" class="-avatar">
 				<RouterLink :to="user.url" class="-avatar-img">
 					<AppUserAvatarImg :user="user" />
 				</RouterLink>
-			</AppUserAvatarFrame>
+			</AppAvatarFrame>
 
 			<div class="-well fill-bg">
 				<div v-if="showTags" class="-tags">

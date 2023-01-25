@@ -1,6 +1,7 @@
 import type { RouteLocationDefinition } from '../../utils/router';
 import { trackUserFollow, UserFollowLocation } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
+import { AvatarFrame } from '../avatar/frame.model';
 import { CommentableModel } from '../comment/comment-model';
 import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
@@ -62,6 +63,7 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 	avatar_media_item?: MediaItem;
 	header_media_item?: MediaItem;
 	disable_gravatar?: boolean;
+	avatar_frame?: AvatarFrame;
 
 	bio_content!: string;
 
@@ -178,6 +180,10 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 
 		if (data.dogtags) {
 			this.dogtags = DogtagData.populate(data.dogtags);
+		}
+
+		if (data.avatar_frame) {
+			this.avatar_frame = new AvatarFrame(data.avatar_frame);
 		}
 
 		Registry.store('User', this);

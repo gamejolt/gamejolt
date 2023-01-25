@@ -6,73 +6,6 @@
 	$screen-lg-full = $screen-lg-min + ($spotlight-size * 2)
 	$page-header-spotlight-breakpoint = media(min: $screen-sm-min, max: $screen-lg-full)
 
-	&-cover.has-cover-image
-		.page-header-cover-buttons
-			.button
-				margin: 0 5px
-
-		.text-muted
-			theme-prop('color', 'lightest')
-
-		.link-muted
-			color: rgba($white, 0.6)
-
-		.tag
-		.user-dogtag
-			text-shadow: none
-
-		.meter-blip
-			background-color: rgba($white, 0.5)
-			box-shadow: 1px 1px 1px rgba($black, 0.3)
-
-		.meter-blip-filled
-			background-color: $white
-
-	&-content
-		h1
-		h2
-		h3
-			margin: 0
-
-			small
-				color: $white
-
-		a
-			color: $white !important
-
-			&:hover
-				color: $white !important
-				text-decoration: underline
-
-		.meter
-			display: inline-block
-			vertical-align: middle
-
-	&-nav
-		nav
-			margin-top: 11px !important
-
-		nav.breadcrumb
-			margin-bottom: 11px
-
-		@media $media-lg
-			.stat-list
-				margin-top: 7px
-
-			.platform-list
-				margin-top: 11px !important
-
-			../ .gj-scroll-affixed
-				elevate-2()
-				theme-prop('border-bottom-color', 'darker')
-				change-bg('gray')
-				border-bottom-width: 2px
-				border-bottom-style: solid
-				z-index: $zindex-nav-scroll-affixed
-
-				nav
-					margin-left: 0
-
 	&.has-spotlight &
 		@media $media-sm-md
 			&-controls
@@ -88,3 +21,70 @@
 
 			&-nav nav
 				margin-left: $spotlight-size
+
+.page-header-cover.has-cover-image
+	.page-header-cover-buttons
+		.button
+			margin: 0 5px
+
+	.text-muted
+		theme-prop('color', 'lightest')
+
+	.link-muted
+		color: rgba($white, 0.6)
+
+	.tag
+	.user-dogtag
+		text-shadow: none
+
+	.meter-blip
+		background-color: rgba($white, 0.5)
+		box-shadow: 1px 1px 1px rgba($black, 0.3)
+
+	.meter-blip-filled
+		background-color: $white
+
+.page-header-content
+	h1
+	h2
+	h3
+		margin: 0
+
+		small
+			color: $white
+
+	a
+		color: $white !important
+
+		&:hover
+			color: $white !important
+			text-decoration: underline
+
+	.meter
+		display: inline-block
+		vertical-align: middle
+
+.page-header-nav
+	nav
+		margin-top: 11px !important
+
+	nav.breadcrumb
+		margin-bottom: 11px
+
+	@media $media-lg
+		.stat-list
+			margin-top: 7px
+
+		.platform-list
+			margin-top: 11px !important
+
+		../ .gj-scroll-affixed
+			elevate-2()
+			theme-prop('border-bottom-color', 'darker')
+			change-bg('gray')
+			border-bottom-width: 2px
+			border-bottom-style: solid
+			z-index: $zindex-nav-scroll-affixed
+
+			nav
+				margin-left: 0

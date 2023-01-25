@@ -31,8 +31,8 @@ import FormForumTopic from '../../../../components/forms/forum/topic/topic.vue';
 import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
 import AppForumPostList from '../../../../components/forum/post-list/post-list.vue';
 import AppForumRules from '../../../../components/forum/rules/rules.vue';
+import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderControls from '../../../../components/page-header/controls/controls.vue';
-import AppPageHeader from '../../../../components/page-header/page-header.vue';
 
 @Options({
 	name: 'RouteForumsTopicsView',
