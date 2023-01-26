@@ -31,3 +31,23 @@ export const styleTextOverflow: CSSProperties = {
 	whiteSpace: `nowrap`,
 	textOverflow: `ellipsis`,
 };
+
+/**
+ * Will style a particular element to scrollable on the y-axis.
+ */
+export const styleScrollable: CSSProperties = {
+	overflowY: `auto`,
+	overflowX: `hidden`,
+	willChange: `scroll-position`,
+	'-webkit-overflow-scrolling': `touch`,
+};
+
+/**
+ * Will style a particular element to scrollable on the x-axis.
+ */
+export const styleScrollableX: CSSProperties = {
+	overflowY: `hidden`,
+	overflowX: `auto`,
+	willChange: `scroll-position`,
+	'-webkit-overflow-scrolling': `touch`,
+};

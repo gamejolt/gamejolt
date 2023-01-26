@@ -331,3 +331,9 @@ export async function toggleUserFollow(
 
 	return !failed;
 }
+
+export function userCanBeCreator(user: User) {
+	return (
+		user.creator_status === CreatorStatusApplied || user.creator_status === CreatorStatusCreator
+	);
+}
