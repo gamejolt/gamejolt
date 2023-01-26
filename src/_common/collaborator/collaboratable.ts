@@ -27,7 +27,8 @@ export type Perm =
 	| 'fireside-collaborators'
 	| 'fireside-edit'
 	| 'fireside-extend'
-	| 'fireside-extinguish';
+	| 'fireside-extinguish'
+	| 'fireside-publish';
 
 export const Collaboratable = <T extends new (...args: any[]) => Model>(Base: T) =>
 	class extends Base {
