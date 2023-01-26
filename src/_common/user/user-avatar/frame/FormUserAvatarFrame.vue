@@ -33,7 +33,6 @@ const form: FormController<FormModel> = createForm({
 	onLoad(payload) {
 		// TODO(avatar-frames) paginate if required
 		availableFrames.value = UserAvatarFrame.populate(payload.userAvatarFrames);
-		console.warn('asdf', payload, availableFrames.value);
 	},
 	async onSubmit() {
 		return Api.sendRequest(`/web/dash/profile/save`, {
