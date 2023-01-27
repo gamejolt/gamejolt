@@ -281,17 +281,13 @@ export class GridClient {
 	spawnNotification(notification: Notification) {
 		const feedType = notification.feedType;
 
-		// Only increment notification count if:
-		let wantsCountIncrement = false;
-		if (feedType === 'notifications') {
-			// the notification would show in the notifications feed,
-			wantsCountIncrement = notification.is_notification_feed_item;
-		} else if (feedType === 'activity') {
-			// or if it will show in the activity feed.
-			wantsCountIncrement = Notification.ACTIVITY_FEED_TYPES.includes(notification.type);
-		}
+		// Activity feed types should always increment. Notification feed types
+		// require extra checks.
+		const wantsCountIncrement =
+			feedType === 'activity' ||
+			(feedType === 'notifications' && notification.is_notification_feed_item);
 
-		if (wantsCountIncrement && feedType !== '') {
+		if (wantsCountIncrement) {
 			this.appStore.incrementNotificationCount({ count: 1, type: feedType });
 		}
 
