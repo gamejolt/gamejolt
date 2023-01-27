@@ -279,12 +279,20 @@ export class GridClient {
 	}
 
 	spawnNotification(notification: Notification) {
-		// Only increment counts if the notification would show in the feed.
-		if (notification.is_notification_feed_item) {
-			const feedType = notification.feedType;
-			if (feedType !== '') {
-				this.appStore.incrementNotificationCount({ count: 1, type: feedType });
-			}
+		const feedType = notification.feedType;
+
+		// Only increment notification count if:
+		let wantsCountIncrement = false;
+		if (feedType === 'notifications') {
+			// the notification would show in the notifications feed,
+			wantsCountIncrement = notification.is_notification_feed_item;
+		} else if (feedType === 'activity') {
+			// or if it will show in the activity feed.
+			wantsCountIncrement = Notification.ACTIVITY_FEED_TYPES.includes(notification.type);
+		}
+
+		if (wantsCountIncrement && feedType !== '') {
+			this.appStore.incrementNotificationCount({ count: 1, type: feedType });
 		}
 
 		// In Client when the feed notifications setting is disabled, don't show them notifications.
