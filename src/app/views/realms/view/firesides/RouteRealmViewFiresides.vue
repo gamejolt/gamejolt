@@ -67,7 +67,7 @@ const { isBootstrapped } = createAppRoute({
 </script>
 
 <template>
-	<div>
+	<div v-if="realm">
 		<h1 class="section-header" :class="{ 'h2 -text-overflow': Screen.isMobile }">
 			{{ $gettext(`Active Firesides`) }}
 			{{ ' ' }}

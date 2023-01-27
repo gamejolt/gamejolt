@@ -197,7 +197,7 @@ function removeRealm(realm: Realm) {
 
 		<template v-if="canAttachTargets">
 			<AppFormGroup
-				class="-group-targettables"
+				class="-group-targetables"
 				name="community_id"
 				:label="$gettext(`Start in a community?`)"
 				hide-label
@@ -212,7 +212,7 @@ function removeRealm(realm: Realm) {
 					can-add-realm
 					can-remove-communities
 					can-remove-realms
-					:with-community-channels="false"
+					no-community-channels
 					@remove-community="removeCommunity"
 					@remove-realm="removeRealm"
 					@select-community="attachCommunity"
@@ -239,15 +239,8 @@ function removeRealm(realm: Realm) {
 .-group-title
 	margin-bottom: 16px
 
-.-group-targettables
+.-group-targetables
 	margin-bottom: 40px
-
-	&-list
-		display: flex
-		flex-wrap: nowrap
-		white-space: nowrap
-		margin-bottom: 5px
-		gap: 5px
 
 .help-block
 	margin-top: 8px

@@ -111,7 +111,7 @@ function onPostAdded(post: FiresidePost) {
 				trans
 				:to="{
 					name: routeRealmsViewFiresides.name,
-					params: { path: realm.path },
+					params: { path: route.params['path'] },
 				}"
 			>
 				{{ $gettext(`View all`) }}
@@ -127,7 +127,7 @@ function onPostAdded(post: FiresidePost) {
 					marginBottom: kLineHeightComputed.px,
 				}"
 			>
-				<AppFiresideAvatarAdd :realms="[realm]" />
+				<AppFiresideAvatarAdd v-if="realm" :realms="[realm]" />
 
 				<AppFiresideAvatar
 					v-for="fireside in displayablePreviewFiresides"
@@ -139,6 +139,7 @@ function onPostAdded(post: FiresidePost) {
 		</AppLoadingFade>
 
 		<AppPostAddButton
+			v-if="realm"
 			:realm="realm"
 			:placeholder="
 				$gettextInterpolate(`Post about %{ realm }!`, {

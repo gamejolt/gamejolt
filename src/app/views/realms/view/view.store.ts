@@ -1,4 +1,4 @@
-import { inject, InjectionKey, ref, Ref } from 'vue';
+import { inject, InjectionKey, ref } from 'vue';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { ModelClassType } from '../../../../_common/model/model.service';
 import { Realm } from '../../../../_common/realm/realm-model';
@@ -16,7 +16,7 @@ export type RealmRoutePayload = {
 };
 
 export function createRealmRouteStore() {
-	const realm = ref() as Ref<Realm>;
+	const realm = ref<Realm>();
 	const knownFollowers = ref<User[]>([]);
 	const knownFollowerCount = ref(0);
 	const firesides = ref<Fireside[]>([]);

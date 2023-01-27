@@ -304,7 +304,7 @@ function onClickChatMods() {
 							<AppSpacer vertical :scale="6" />
 
 							<AppFormGroup
-								name="targettables"
+								name="targetables"
 								class="sans-margin-bottom"
 								:label="$gettext(`Tagged to`)"
 								small
@@ -317,7 +317,7 @@ function onClickChatMods() {
 									:targetable-communities="targetableCommunities"
 									can-add-realm
 									can-remove-realms
-									:with-community-channels="false"
+									no-community-channels
 									@remove-realm="removeRealm"
 									@select-realm="attachRealm"
 								/>
