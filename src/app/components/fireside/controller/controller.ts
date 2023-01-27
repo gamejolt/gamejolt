@@ -301,12 +301,7 @@ export function createFiresideController(
 	const canEdit = computed(() => isOwner.value || fireside.hasPerms('fireside-edit'));
 
 	const canPublish = computed(() => {
-		const role = fireside.role?.role;
-		if (isOwner.value || role === 'host') {
-			return status.value === 'joined' && isDraft.value;
-		}
-
-		return false;
+		return status.value === 'joined' && isDraft.value && fireside.hasPerms('fireside-publish');
 	});
 
 	const _canExtend = computed(() => {
