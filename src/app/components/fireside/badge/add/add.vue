@@ -49,7 +49,7 @@ export default class AppFiresideBadgeAdd extends Vue {
 	async onClickBadge() {
 		const fireside = await FiresideAddModal.show({
 			community: this.community,
-			realms: this.realms || [],
+			realms: this.realms,
 		});
 
 		if (fireside instanceof Fireside) {

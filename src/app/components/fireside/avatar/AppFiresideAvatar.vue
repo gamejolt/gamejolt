@@ -217,13 +217,16 @@ async function ejectFireside(community: FiresideCommunity) {
 								@click="toggleFeatured(i)"
 							>
 								<AppJolticon icon="star" />
-								<AppTranslate v-if="i.isFeatured">Unfeature fireside</AppTranslate>
-								<AppTranslate v-else>Feature fireside</AppTranslate>
+								{{
+									i.isFeatured
+										? $gettext(`Unfeature fireside`)
+										: $gettext(`Feature fireside`)
+								}}
 							</a>
 
 							<a class="list-group-item has-icon" @click="ejectFireside(i)">
 								<AppJolticon icon="eject" />
-								<AppTranslate>Eject fireside</AppTranslate>
+								{{ $gettext(`Eject fireside`) }}
 							</a>
 						</div>
 					</div>
@@ -239,8 +242,7 @@ async function ejectFireside(community: FiresideCommunity) {
 			<div>
 				<AppJolticon v-if="isFeaturedInCommunity" icon="star" />
 
-				<AppTranslate v-if="fireside.is_draft">PRIVATE</AppTranslate>
-				<AppTranslate v-else>LIVE</AppTranslate>
+				{{ fireside.is_draft ? $gettext(`PRIVATE`) : $gettext(`LIVE`) }}
 			</div>
 		</template>
 
@@ -272,31 +274,29 @@ async function ejectFireside(community: FiresideCommunity) {
 						<hr />
 
 						<div class="-tooltip-row -tooltip-user">
-							<AppTranslate>by</AppTranslate>
-							{{ ' ' }}
+							{{ $gettext(`by`) + ' ' }}
 							<AppUserAvatarImg class="-tooltip-img" :user="fireside.user" />
-							{{ ' ' }}
-							@{{ fireside.user.username }}
+							{{ ' ' + `@${fireside.user.username}` }}
 						</div>
 
 						<div v-if="community || realm" class="-tooltip-row -tooltip-muted">
-							<AppTranslate>in</AppTranslate>
-							<template v-if="community">
-								<div class="-tooltip-img">
-									<AppCommunityThumbnailImg :community="community" />
-								</div>
-								{{ community.name }}
-
-								<template v-if="realm">
-									<AppTranslate>and</AppTranslate>
-								</template>
-							</template>
-
+							{{ $gettext(`in`) }}
 							<template v-if="realm">
 								<div class="-tooltip-img-realm">
 									<AppRealmThumbnail :realm="realm" not-rounded />
 								</div>
 								{{ realm.name }}
+
+								<template v-if="community">
+									{{ ' ' + $gettext(`and`) + ' ' }}
+								</template>
+							</template>
+
+							<template v-if="community">
+								<div class="-tooltip-img-community">
+									<AppCommunityThumbnailImg :community="community" />
+								</div>
+								{{ community.name }}
 							</template>
 						</div>
 					</div>

@@ -686,17 +686,15 @@ async function scrollToAdd() {
 }
 
 function removeCommunity(community: Community) {
-	const idx = attachedCommunities.value.findIndex(i => i.community.id === community.id);
-	if (idx === -1) {
-		console.warn('Attempted to remove a community that is not attached');
-		return;
-	}
-
-	attachedCommunities.value.splice(idx, 1);
+	arrayRemove(attachedCommunities.value, i => i.community.id === community.id, {
+		onMissing: () => console.warn('Attempted to remove a community that is not attached'),
+	});
 }
 
 function removeRealm(realm: Realm) {
-	arrayRemove(attachedRealms.value, i => i.id === realm.id);
+	arrayRemove(attachedRealms.value, i => i.id === realm.id, {
+		onMissing: () => console.warn('Attempted to remove a realm that is not attached'),
+	});
 }
 
 function onDraftSubmit() {

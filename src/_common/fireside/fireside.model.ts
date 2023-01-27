@@ -64,7 +64,7 @@ export class Fireside extends Collaboratable(Model) {
 	}
 
 	get primaryRealmLink() {
-		if (this.realms.length > 0) {
+		if (this.hasRealms) {
 			return this.realms[0];
 		}
 		return null;

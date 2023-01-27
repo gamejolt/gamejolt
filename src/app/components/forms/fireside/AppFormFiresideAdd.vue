@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
+import { arrayRemove } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
@@ -164,23 +165,15 @@ function attachRealm(realm: Realm, append = true) {
 }
 
 function removeCommunity(community: Community) {
-	const idx = communities.value.findIndex(i => i.community.id === community.id);
-	if (idx === -1) {
-		console.warn('Attempted to remove a community that is not attached');
-		return;
+	arrayRemove(communities.value, i => i.community.id === community.id, {
+		onMissing: () => console.warn('Attempted to remove a community that is not attached');
 	}
-
-	communities.value.splice(idx, 1);
 }
 
 function removeRealm(realm: Realm) {
-	const idx = realms.value.findIndex(i => i.id === realm.id);
-	if (idx === -1) {
-		console.warn('Attempted to remove a realm that is not attached');
-		return;
-	}
-
-	realms.value.splice(idx, 1);
+	arrayRemove(realms.value, i => i.id === realm.id, {
+		onMissing: () => console.warn('Attempted to remove a realm that is not attached');
+	});
 }
 </script>
 

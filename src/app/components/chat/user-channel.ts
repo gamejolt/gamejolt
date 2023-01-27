@@ -20,7 +20,6 @@ import { ChatMessage } from './message';
 import { ChatNotificationGrowl } from './notification-growl/notification-growl.service';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
-import { ChatUserCollection } from './user-collection';
 
 const TabLeaderLazy = importNoSSR(async () => await import('../../../utils/tab-leader'));
 
@@ -172,7 +171,7 @@ export function createChatUserChannel(
 
 	function _onGroupLeave(data: RoomIdPayload) {
 		const removed = arrayRemove(client.groupRooms, i => i.id === data.room_id);
-		if (!removed || !removed.length) {
+		if (!removed.length) {
 			return;
 		}
 
