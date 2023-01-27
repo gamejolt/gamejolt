@@ -209,8 +209,6 @@ function getEarnedGems(referral: ReferralData) {
 						</div>
 					</div>
 				</div>
-
-				<AppSpacer vertical :scale="8" />
 			</template>
 		</template>
 	</AppShellPageBackdrop>

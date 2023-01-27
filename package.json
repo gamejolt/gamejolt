@@ -1,6 +1,6 @@
 {
 	"name": "game-jolt-client",
-	"version": "1.20.2",
+	"version": "1.21.2",
 	"scripts": {
 		"check": "tsc --noEmit",
 		"lint": "eslint --ext .js,.vue src",
