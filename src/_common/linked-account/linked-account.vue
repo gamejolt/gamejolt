@@ -5,9 +5,7 @@ import {
 	getLinkedAccountPlatformIcon,
 	getLinkedAccountProviderDisplayName,
 	LinkedAccount,
-	TumblrBlog,
 } from './linked-account.model';
-import { ModalTumblrBlogSelector } from './tumblr-blog-selector-modal/tumblr-blog-selector-modal-service';
 
 @Options({
 	components: { AppCard },
@@ -27,9 +25,6 @@ export default class AppLinkedAccount extends Vue {
 
 	@Prop(Boolean)
 	disabled?: boolean;
-
-	@Prop(Boolean)
-	showTumblrBlog?: boolean;
 
 	get providerIcon() {
 		const provider = this.getProvider();
@@ -65,12 +60,6 @@ export default class AppLinkedAccount extends Vue {
 	@Emit('link')
 	emitLink(_provider: string) {}
 
-	@Emit('link-tumblr-blog')
-	emitLinkTumblrBlog(_blog: TumblrBlog) {}
-
-	@Emit('unlink-tumblr-blog')
-	emitUnlinkTumblrBlog() {}
-
 	onSync() {
 		this.emitSync(this.getProvider());
 	}
@@ -81,33 +70,6 @@ export default class AppLinkedAccount extends Vue {
 
 	onLink() {
 		this.emitLink(this.getProvider());
-	}
-
-	async onSelectTumblrBlog() {
-		if (!this.account) {
-			return;
-		}
-
-		const modalResult = await ModalTumblrBlogSelector.show(
-			this.account,
-			this.$gettext('Select Tumblr Blog')
-		);
-
-		if (modalResult) {
-			// do not send if the same blog was already selected
-			if (
-				this.account.tumblrSelectedBlog &&
-				JSON.stringify(modalResult) === JSON.stringify(this.account.tumblrSelectedBlog)
-			) {
-				return;
-			}
-
-			this.emitLinkTumblrBlog(modalResult);
-		}
-	}
-
-	async onUnlinkTumblrBlog() {
-		this.emitUnlinkTumblrBlog();
 	}
 }
 </script>
@@ -160,41 +122,6 @@ export default class AppLinkedAccount extends Vue {
 						<AppTranslate>Unlink</AppTranslate>
 					</AppButton>
 				</div>
-
-				<div v-if="showTumblrBlog" class="-tumblr-blog">
-					<br />
-					<template v-if="account.tumblrSelectedBlog">
-						<p>
-							<strong>
-								<a :href="account.tumblrSelectedBlog.url" target="_blank">
-									{{ account.tumblrSelectedBlog.title }}
-								</a>
-							</strong>
-						</p>
-						<AppButton :disabled="disabled" @click="onSelectTumblrBlog">
-							<AppTranslate>Change Blog</AppTranslate>
-						</AppButton>
-						<AppButton
-							v-if="account.tumblrSelectedBlog"
-							:disabled="disabled"
-							trans
-							@click="onUnlinkTumblrBlog"
-						>
-							<AppTranslate>Unlink Blog</AppTranslate>
-						</AppButton>
-					</template>
-					<template v-else>
-						<div class="alert alert-notice">
-							<AppTranslate>
-								Before you can publish to Tumblr, you have to select a blog within
-								your Tumblr account that you'd like to use.
-							</AppTranslate>
-						</div>
-						<AppButton :disabled="disabled" @click="onSelectTumblrBlog">
-							<AppTranslate>Select Blog</AppTranslate>
-						</AppButton>
-					</template>
-				</div>
 			</template>
 
 			<slot />
@@ -211,11 +138,5 @@ export default class AppLinkedAccount extends Vue {
 
 	> h5
 		margin: 0
-		font-weight: bold
-
-.-facebook-page, .-tumblr-blog
-	> h5
-		margin-top: 20px
-		margin-bottom: 0
 		font-weight: bold
 </style>

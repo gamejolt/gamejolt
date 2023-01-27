@@ -4,7 +4,6 @@ import { Options, Vue } from 'vue-property-decorator';
 import { formatDate } from '../../../../../../../_common/filters/date';
 import { Game } from '../../../../../../../_common/game/game.model';
 import { AppLazyPlaceholder } from '../../../../../../../_common/lazy/placeholder/placeholder';
-import { LinkedAccount } from '../../../../../../../_common/linked-account/linked-account.model';
 import { useGameRouteController } from '../../view.vue';
 
 @Options({
@@ -36,34 +35,7 @@ export default class AppDiscoverGamesViewOverviewDetails extends Vue {
 	}
 
 	get hasLinksSection() {
-		return (
-			this.game.web_site || this.facebookAccount || this.twitterAccount || this.tumblrAccount
-		);
-	}
-
-	get facebookAccount() {
-		if (this.linkedAccounts) {
-			return this.linkedAccounts.find(
-				i => i.provider === LinkedAccount.PROVIDER_FACEBOOK && !!i.facebookSelectedPage
-			);
-		}
-		return undefined;
-	}
-
-	get twitterAccount() {
-		if (this.linkedAccounts) {
-			return this.linkedAccounts.find(i => i.provider === LinkedAccount.PROVIDER_TWITTER);
-		}
-		return undefined;
-	}
-
-	get tumblrAccount() {
-		if (this.linkedAccounts) {
-			return this.linkedAccounts.find(
-				i => i.provider === LinkedAccount.PROVIDER_TUMBLR && !!i.tumblrSelectedBlog
-			);
-		}
-		return undefined;
+		return this.game.web_site;
 	}
 }
 </script>
@@ -81,7 +53,9 @@ export default class AppDiscoverGamesViewOverviewDetails extends Vue {
 					<AppTranslate v-if="game._is_devlog">Devlog</AppTranslate>
 					<AppTranslate v-if="game._is_wip">Early Access</AppTranslate>
 					<AppTranslate v-if="game._is_finished">Complete</AppTranslate>
-					<AppTranslate v-if="game.canceled" class="tag tag-notice">Canceled</AppTranslate>
+					<AppTranslate v-if="game.canceled" class="tag tag-notice">
+						Canceled
+					</AppTranslate>
 				</span>
 			</AppLazyPlaceholder>
 		</div>
@@ -127,24 +101,6 @@ export default class AppDiscoverGamesViewOverviewDetails extends Vue {
 				{{ ' ' }}
 				<AppLinkExternal :href="game.web_site">
 					<AppTranslate>Game Website</AppTranslate>
-				</AppLinkExternal>
-			</li>
-			<li v-if="facebookAccount?.facebookSelectedPage">
-				<AppJolticon icon="facebook" />
-				<AppLinkExternal :href="facebookAccount.facebookPageUrl">
-					{{ facebookAccount.facebookSelectedPage.name }}
-				</AppLinkExternal>
-			</li>
-			<li v-if="twitterAccount">
-				<AppJolticon icon="twitter-bird" />
-				<AppLinkExternal :href="twitterAccount.platformLink">
-					@{{ twitterAccount.name }}
-				</AppLinkExternal>
-			</li>
-			<li v-if="tumblrAccount?.tumblrSelectedBlog">
-				<AppJolticon icon="tumblr" />
-				<AppLinkExternal :href="tumblrAccount.tumblrSelectedBlog.url">
-					{{ tumblrAccount.tumblrSelectedBlog.title }}
 				</AppLinkExternal>
 			</li>
 		</ul>

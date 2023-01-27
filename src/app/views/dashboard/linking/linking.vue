@@ -26,10 +26,7 @@ export default class RouteDashLinking extends BaseRouteComponent {
 	}
 
 	completed(response: any) {
-		const routeName =
-			response.resource === 'Game'
-				? 'dash.games.manage.game.linked-accounts.link-callback'
-				: 'dash.account.linked-accounts.link-callback';
+		const routeName = 'dash.account.linked-accounts.link-callback';
 
 		const routeParams: { [k: string]: string } =
 			response.resource === 'Game' ? { id: response['resource-id'] } : {};
