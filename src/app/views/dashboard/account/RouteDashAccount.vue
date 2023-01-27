@@ -262,7 +262,7 @@ function showEditAvatar() {
 										{{ $gettext(`Wallet`) }}
 									</RouterLink>
 								</li>
-								<li>
+								<li v-if="user.is_creator">
 									<RouterLink
 										:to="{ name: routeDashAccountReferrals.name }"
 										active-class="active"

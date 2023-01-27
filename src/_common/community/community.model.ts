@@ -24,12 +24,12 @@ export class Community extends Collaboratable(Model) {
 
 	thumbnail?: MediaItem;
 	header?: MediaItem;
-	theme!: Theme | null;
-	games!: Game[] | null;
-	channels?: CommunityChannel[] | null;
+	theme?: Theme;
+	games?: Game[];
+	channels?: CommunityChannel[];
 	featured_background?: MediaItem;
 	all_background?: MediaItem;
-	user_block?: UserBlock | null;
+	user_block?: UserBlock;
 
 	member_count!: number;
 	is_member?: boolean;

@@ -1,192 +1,167 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, PropType, toRefs } from 'vue';
 import { RouteLocationDefinition } from '../../../../../utils/router';
 import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/join-widget.vue';
 import AppGameFollowWidget from '../../../../../_common/game/follow-widget/follow-widget.vue';
 import { Jam } from '../../../../../_common/jam/jam.model';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
-import { Screen } from '../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTheme from '../../../../../_common/theme/AppTheme.vue';
 import { FeaturedItem } from '../../../../components/featured-item/featured-item.model';
 
-@Options({
-	components: {
-		AppGameFollowWidget,
-		AppCommunityJoinWidget,
-		AppTheme,
-		AppMediaItemBackdrop,
+const props = defineProps({
+	item: {
+		type: Object as PropType<FeaturedItem>,
+		default: undefined,
 	},
-})
-export default class AppDiscoverHomeBanner extends Vue {
-	@Prop(Object) item?: FeaturedItem;
-	@Prop({ type: Boolean, default: false }) isLoading!: boolean;
+	isLoading: {
+		type: Boolean,
+	},
+});
 
-	commonStore = setup(() => useCommonStore());
+const { item, isLoading } = toRefs(props);
+const { user } = useCommonStore();
 
-	get app() {
-		return this.commonStore;
-	}
-
-	readonly Screen = Screen;
-
-	get shouldShowViewGame() {
-		if (!this.item?.game) {
-			return false;
-		}
-
-		return !this.item.custom_url || !this.shouldShowFollowGame;
-	}
-
-	get shouldShowFollowGame() {
-		if (this.item?.game) {
-			return !this.app.user || !this.item.game.is_following;
-		}
+const shouldShowViewGame = computed(() => {
+	if (!item?.value?.game) {
 		return false;
 	}
 
-	get shouldShowViewCommunity() {
-		if (!this.item?.community) {
-			return false;
-		}
+	return !item?.value.hero_button_url || !shouldShowFollowGame.value;
+});
 
-		return !this.item.custom_url || !this.shouldShowJoinCommunity;
+const shouldShowFollowGame = computed(() => {
+	if (item?.value?.game) {
+		return !user.value || !item?.value.game.is_following;
 	}
+	return false;
+});
 
-	get shouldShowJoinCommunity() {
-		if (this.item?.community) {
-			return !this.app.user || !this.item.community.is_member;
-		}
+const shouldShowViewCommunity = computed(() => {
+	if (!item?.value?.community) {
 		return false;
 	}
 
-	get shouldShowJamViewGames() {
-		if (!this.item?.jam) {
-			return false;
-		}
+	return !item?.value.hero_button_url || !shouldShowJoinCommunity.value;
+});
 
-		return this.item.jam.getPeriod() >= Jam.PERIOD_RUNNING;
+const shouldShowJoinCommunity = computed(() => {
+	if (item?.value?.community) {
+		return !user.value || !item?.value.community.is_member;
+	}
+	return false;
+});
+
+const shouldShowJamViewGames = computed(() => {
+	if (!item?.value?.jam) {
+		return false;
 	}
 
-	get location(): RouteLocationDefinition | null {
-		if (this.item?.game) {
-			return {
-				name: 'discover.games.view.overview',
-				params: {
-					id: this.item.game.id + '',
-					slug: this.item.game.slug,
-				},
-			};
-		} else if (this.item?.jam) {
-			return {
-				name: 'library.collection.jam',
-				params: {
-					id: this.item.jam.url,
-				},
-			};
-		} else if (this.item?.community) {
-			return {
-				name: 'communities.view.overview',
-				params: {
-					path: this.item.community.path,
-				},
-			};
-		}
-		return null;
+	return item?.value.jam.getPeriod() >= Jam.PERIOD_RUNNING;
+});
+
+const location = computed((): RouteLocationDefinition | undefined => {
+	if (item?.value?.game) {
+		return {
+			name: 'discover.games.view.overview',
+			params: {
+				id: item?.value.game.id + '',
+				slug: item?.value.game.slug,
+			},
+		};
+	} else if (item?.value?.jam) {
+		return {
+			name: 'library.collection.jam',
+			params: {
+				id: item?.value.jam.url,
+			},
+		};
+	} else if (item?.value?.community) {
+		return {
+			name: 'communities.view.overview',
+			params: {
+				path: item?.value.community.path,
+			},
+		};
+	}
+	return undefined;
+});
+
+const theme = computed(() => {
+	if (item?.value?.game) {
+		return item?.value.game.theme;
+	} else if (item?.value?.community) {
+		return item?.value.community.theme;
+	}
+	return undefined;
+});
+
+const bannerMediaItem = computed(() => {
+	if (item?.value?.game) {
+		return item?.value.game.header_media_item;
 	}
 
-	get theme() {
-		if (this.item?.game) {
-			return this.item.game.theme;
-		} else if (this.item?.community) {
-			return this.item.community.theme;
-		}
-		return null;
+	if (item?.value?.community) {
+		return item?.value.community.header;
 	}
 
-	get bannerMediaItem() {
-		if (this.item?.game) {
-			return this.item.game.header_media_item;
-		}
-
-		if (this.item?.community) {
-			return this.item.community.header;
-		}
-
-		return null;
-	}
-}
+	return undefined;
+});
 </script>
 
 <template>
-	<div v-if="!item || isLoading" class="-placeholder" />
+	<div v-if="!item || isLoading" class="_placeholder" />
 	<AppTheme v-else :theme="theme" force-dark>
-		<AppMediaItemBackdrop class="-backdrop" :media-item="bannerMediaItem">
+		<AppMediaItemBackdrop class="_backdrop" :media-item="bannerMediaItem">
 			<section
-				class="-banner landing-header-no-fill"
+				class="_banner landing-header-no-fill"
 				:style="{
-					'background-image': `url('${item.back_url}')`,
+					'background-image': `url('${item.hero_back_media_item?.mediaserver_url}')`,
 				}"
 			>
-				<router-link
-					v-if="location"
-					v-app-track-event="`home:banner:${item.id}`"
-					class="-click"
-					:to="location"
-				/>
-				<a
-					v-else-if="item.custom_url"
-					v-app-track-event="`home:banner:${item.id}`"
-					class="-click"
-					:href="item.custom_url"
-				/>
+				<router-link v-if="location" class="_click" :to="location" />
+				<a v-else-if="item.hero_button_url" class="_click" :href="item.hero_button_url" />
 
 				<div class="container">
-					<div class="-main">
-						<div v-if="item.front_url" class="-logo">
+					<div class="_main">
+						<div v-if="item.hero_front_media_item" class="_logo">
 							<img
 								class="-img"
-								style="display: inline-block"
-								:src="item.front_url"
+								:style="{
+									display: `inline-block`,
+								}"
+								:src="item.hero_front_media_item.mediaserver_url"
 								alt=""
 							/>
 						</div>
 
 						<div
-							class="-info"
+							class="_info"
 							:class="{
-								'-info-full': !item.front_url,
+								'_info-full': !item.hero_front_media_item,
 							}"
 						>
-							<p class="-text-shadow lead">
-								{{ item.content }}
+							<p class="_text-shadow lead">
+								{{ item.hero_text }}
 							</p>
 
-							<div class="-controls">
+							<div class="_controls">
 								<template v-if="item.game">
 									<AppButton
-										v-if="item.custom_url"
-										v-app-track-event="`home:banner:custom-${item.game.id}`"
+										v-if="item.hero_button_url"
 										solid
-										:href="item.custom_url"
+										:href="item.hero_button_url"
 										target="_blank"
 									>
-										{{ item.custom_text }}
+										{{ item.hero_button_text }}
 									</AppButton>
-
-									<AppButton
-										v-if="shouldShowViewGame"
-										v-app-track-event="`home:banner:${item.game.id}`"
-										solid
-										:to="location"
-									>
-										<AppTranslate>View Game</AppTranslate>
+									&nbsp;
+									<AppButton v-if="shouldShowViewGame" solid :to="location">
+										{{ $gettext(`View game`) }}
 									</AppButton>
 
 									<AppGameFollowWidget
 										v-if="shouldShowFollowGame"
-										v-app-track-event="`home:banner:follow-${item.game.id}`"
 										:game="item.game"
 										solid
 										primary
@@ -195,26 +170,16 @@ export default class AppDiscoverHomeBanner extends Vue {
 								</template>
 								<template v-else-if="item.community">
 									<AppButton
-										v-if="item.custom_url"
-										v-app-track-event="
-											`home:banner:custom-community-${item.community.path}`
-										"
+										v-if="item.hero_button_url"
 										solid
-										:href="item.custom_url"
+										:href="item.hero_button_url"
 										target="_blank"
 									>
-										{{ item.custom_text }}
+										{{ item.hero_button_text }}
 									</AppButton>
-
-									<AppButton
-										v-if="shouldShowViewCommunity"
-										v-app-track-event="
-											`home:banner:community-${item.community.path}`
-										"
-										solid
-										:to="location"
-									>
-										<AppTranslate>View Community</AppTranslate>
+									&nbsp;
+									<AppButton v-if="shouldShowViewCommunity" solid :to="location">
+										{{ $gettext(`View community`) }}
 									</AppButton>
 
 									<AppCommunityJoinWidget
@@ -228,30 +193,20 @@ export default class AppDiscoverHomeBanner extends Vue {
 								<template v-else-if="item.jam">
 									<AppButton
 										v-if="shouldShowJamViewGames"
-										v-app-track-event="`home:banner:${item.jam.id}`"
 										primary
 										solid
 										:to="location"
 									>
-										<AppTranslate>View Games</AppTranslate>
+										{{ $gettext(`View games`) }}
 									</AppButton>
-									<AppButton
-										v-app-track-event="`home:banne:jam-${item.jam.id}`"
-										solid
-										:href="item.jam.fullUrl"
-										target="_blank"
-									>
-										<AppTranslate>View Jam Page</AppTranslate>
+									&nbsp;
+									<AppButton solid :href="item.jam.fullUrl" target="_blank">
+										{{ $gettext(`View jam page`) }}
 									</AppButton>
 								</template>
-								<template v-else-if="item.custom_url">
-									<AppButton
-										v-app-track-event="`home:banner:custom`"
-										solid
-										:href="item.custom_url"
-										target="_blank"
-									>
-										{{ item.custom_text }}
+								<template v-else-if="item.hero_button_url">
+									<AppButton solid :href="item.hero_button_url" target="_blank">
+										{{ item.hero_button_text }}
 									</AppButton>
 								</template>
 							</div>
@@ -264,7 +219,7 @@ export default class AppDiscoverHomeBanner extends Vue {
 </template>
 
 <style lang="stylus" scoped>
--gutter()
+_gutter()
 	padding-left: ($grid-gutter-width-xs / 2)
 	padding-right: ($grid-gutter-width-xs / 2)
 
@@ -272,25 +227,25 @@ export default class AppDiscoverHomeBanner extends Vue {
 		padding-left: ($grid-gutter-width / 2)
 		padding-right: ($grid-gutter-width / 2)
 
-.-backdrop
-.-banner
-.-placeholder
+._backdrop
+._banner
+._placeholder
 	height: 450px
 
-.-placeholder
+._placeholder
 	change-bg('bg-subtle')
 
-.-backdrop
+._backdrop
 	change-bg('bg-offset')
 
-.-banner
+._banner
 	position: relative
 	width: 100%
 	background-repeat: no-repeat
 	background-position: 50% 50%
 	background-size: cover
 
-.-click
+._click
 	position: absolute
 	top: 0
 	right: 0
@@ -301,7 +256,7 @@ export default class AppDiscoverHomeBanner extends Vue {
 .container
 	height: 100%
 
-.-main
+._main
 	position: relative
 	display: flex
 	height: 100%
@@ -317,11 +272,11 @@ export default class AppDiscoverHomeBanner extends Vue {
 		margin-left: -($grid-gutter-width / 2)
 		margin-right: -($grid-gutter-width / 2)
 
-.-text-shadow
+._text-shadow
 	overlay-text-shadow()
 
-.-logo
-	-gutter()
+._logo
+	_gutter()
 	display: flex
 	align-items: center
 	justify-content: center
@@ -335,20 +290,20 @@ export default class AppDiscoverHomeBanner extends Vue {
 	@media $media-sm-up
 		width: 60%
 
-.-info
-	-gutter()
+._info
+	_gutter()
 	text-align: center
 
 	@media $media-sm-up
 		width: 40%
 		text-align: left
 
-	&-full
-		width: 100%
-		max-width: 500px
-		text-align: center
+._info-full
+	width: 100%
+	max-width: 500px
+	text-align: center
 
-.-controls
+._controls
 	position: relative
 	// Put this over the click.
 	z-index: 2
