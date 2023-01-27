@@ -1,4 +1,4 @@
-import { Channel, Socket } from 'phoenix';
+import { Socket } from 'phoenix';
 import { markRaw, ref, shallowReadonly, shallowRef } from 'vue';
 import { CancelToken } from '../../utils/cancel-token';
 import { createLogger } from '../../utils/logging';
@@ -212,8 +212,7 @@ export function createSocketChannelController(
 
 	const cancelToken = new CancelToken();
 
-	const channel = markRaw(new Channel(topic, params, socket.value));
-	(socket.value as any).channels.push(channel);
+	const channel = markRaw(socket.value!.channel(topic, params));
 
 	/**
 	 * If this channel either was closed directly or errored out, this will get

@@ -2,12 +2,13 @@
 import { computed, PropType, ref, toRefs } from 'vue';
 import { fuzzysearch } from '../../../../utils/string';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
+import { User } from '../../../../_common/user/user.model';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
 
 function searchEntries(entries: ChatListEntries, query: string): ChatListEntries {
 	return entries.filter(i => {
-		if (i instanceof ChatUser) {
+		if (i instanceof ChatUser || i instanceof User) {
 			return (
 				fuzzysearch(query, i.display_name.toLowerCase()) ||
 				fuzzysearch(query, i.username.toLowerCase())
@@ -18,17 +19,19 @@ function searchEntries(entries: ChatListEntries, query: string): ChatListEntries
 	});
 }
 
-type ChatListEntry = ChatUser | ChatRoom;
+type ChatListEntry = ChatUser | User | ChatRoom;
 type ChatListEntries = ChatListEntry[];
 
 export type ChatListSlotProps = {
 	item: ChatListEntry;
 };
 
-function getKeyForEntry(entry: ChatUser | ChatRoom) {
+function getKeyForEntry(entry: ChatListEntry) {
 	let key = '';
 	if (entry instanceof ChatUser) {
 		key = 'chat-user-';
+	} else if (entry instanceof User) {
+		key = 'user-';
 	} else if (entry instanceof ChatRoom) {
 		key = 'chat-room-';
 	}
@@ -44,6 +47,9 @@ const props = defineProps({
 		required: true,
 	},
 	hideFilter: {
+		type: Boolean,
+	},
+	bleedFilter: {
 		type: Boolean,
 	},
 });
@@ -67,7 +73,7 @@ const mappedEntries = computed(() =>
 
 <template>
 	<div class="chat-list">
-		<div v-if="!hideFilter" class="-input-container">
+		<div v-if="!hideFilter" class="-input-container" :class="{ '-bleed-filter': bleedFilter }">
 			<input
 				v-model="filterQuery"
 				text="search"
@@ -80,6 +86,8 @@ const mappedEntries = computed(() =>
 			<template v-for="{ key, item } of mappedEntries" :key="key">
 				<slot v-bind="{ item }" />
 			</template>
+
+			<slot name="scroll-end" />
 		</AppScrollScroller>
 		<div v-else class="-empty">
 			<slot name="empty" />
@@ -98,6 +106,10 @@ const mappedEntries = computed(() =>
 	padding: 0 16px
 	position: relative
 	z-index: 1
+
+	&.-bleed-filter
+		padding-left: 0
+		padding-right: 0
 
 .-list-scroller
 	flex: auto

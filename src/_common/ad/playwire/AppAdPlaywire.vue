@@ -1,17 +1,10 @@
 <script lang="ts" setup>
-import { computed, onMounted, PropType } from 'vue';
-import { AdSlot } from '../ad-slot-info';
+import { computed, onMounted } from 'vue';
+import { defineAdAdapterComponentProps } from '../adapter-base';
 import { AdPlaywireAdapter } from './playwire-adapter';
 
 const props = defineProps({
-	adSlot: {
-		type: Object as PropType<AdSlot>,
-		required: true,
-	},
-	adapter: {
-		type: Object as PropType<AdPlaywireAdapter>,
-		required: true,
-	},
+	...defineAdAdapterComponentProps<AdPlaywireAdapter>(),
 });
 
 /**
