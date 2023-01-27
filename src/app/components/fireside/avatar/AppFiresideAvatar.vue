@@ -275,7 +275,7 @@ async function ejectFireside(community: FiresideCommunity) {
 
 						<div class="-tooltip-row -tooltip-user">
 							{{ $gettext(`by`) + ' ' }}
-							<AppUserAvatarImg class="-tooltip-img" :user="fireside.user" />
+							<AppUserAvatarImg class="-tooltip-img-user" :user="fireside.user" />
 							{{ ' ' + `@${fireside.user.username}` }}
 						</div>
 
