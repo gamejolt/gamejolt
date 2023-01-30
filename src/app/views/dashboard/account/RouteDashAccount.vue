@@ -74,7 +74,6 @@ const { isBootstrapped } = createAppRoute({
 const spotlightWrapper = computed(() => AppAvatarFrame);
 const spotlightWrapperProps = computed<ComponentProps<typeof spotlightWrapper.value>>(() => ({
 	frame: user.value.avatar_frame,
-	inset: 5,
 }));
 
 function showEditHeader() {
