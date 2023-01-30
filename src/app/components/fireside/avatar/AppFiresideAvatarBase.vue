@@ -78,16 +78,13 @@ const hasLink = computed(() => {
 				</div>
 			</div>
 
-			<div v-if="community" class="-community">
-				<AppCommunityThumbnailImg
-					v-if="!isPlaceholder"
-					class="-community-img"
-					:community="community"
-				/>
+			<!-- TODO(fireside-realms) styling for -realm -->
+			<div v-if="realm" class="-realm">
+				<AppRealmThumbnail v-if="!isPlaceholder" :realm="realm" />
 			</div>
 
-			<div v-if="realm" class="-realm">
-				<AppRealmThumbnail v-if="!isPlaceholder" class="-realm-img" :realm="realm" />
+			<div v-if="community" class="-community">
+				<AppCommunityThumbnailImg v-if="!isPlaceholder" :community="community" />
 			</div>
 
 			<div v-if="hasTag" class="-tag" :class="{ '-live': isLive }">

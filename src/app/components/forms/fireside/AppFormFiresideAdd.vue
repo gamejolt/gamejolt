@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
+import { arrayRemove } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
@@ -164,23 +165,15 @@ function attachRealm(realm: Realm, append = true) {
 }
 
 function removeCommunity(community: Community) {
-	const idx = communities.value.findIndex(i => i.community.id === community.id);
-	if (idx === -1) {
-		console.warn('Attempted to remove a community that is not attached');
-		return;
+	arrayRemove(communities.value, i => i.community.id === community.id, {
+		onMissing: () => console.warn('Attempted to remove a community that is not attached');
 	}
-
-	communities.value.splice(idx, 1);
 }
 
 function removeRealm(realm: Realm) {
-	const idx = realms.value.findIndex(i => i.id === realm.id);
-	if (idx === -1) {
-		console.warn('Attempted to remove a realm that is not attached');
-		return;
-	}
-
-	realms.value.splice(idx, 1);
+	arrayRemove(realms.value, i => i.id === realm.id, {
+		onMissing: () => console.warn('Attempted to remove a realm that is not attached');
+	});
 }
 </script>
 
@@ -204,7 +197,7 @@ function removeRealm(realm: Realm) {
 
 		<template v-if="canAttachTargets">
 			<AppFormGroup
-				class="-group-targettables"
+				class="-group-targetables"
 				name="community_id"
 				:label="$gettext(`Start in a community?`)"
 				hide-label
@@ -219,7 +212,7 @@ function removeRealm(realm: Realm) {
 					can-add-realm
 					can-remove-communities
 					can-remove-realms
-					:with-community-channels="false"
+					no-community-channels
 					@remove-community="removeCommunity"
 					@remove-realm="removeRealm"
 					@select-community="attachCommunity"
@@ -246,15 +239,8 @@ function removeRealm(realm: Realm) {
 .-group-title
 	margin-bottom: 16px
 
-.-group-targettables
+.-group-targetables
 	margin-bottom: 40px
-
-	&-list
-		display: flex
-		flex-wrap: nowrap
-		white-space: nowrap
-		margin-bottom: 5px
-		gap: 5px
 
 .help-block
 	margin-top: 8px

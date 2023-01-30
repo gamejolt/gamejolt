@@ -44,6 +44,7 @@ $jolticon-size = 16px
 		height: @width
 
 	&.-tiny
+		margin: 0
 		width: $jolticon-size * 0.7
 		height: @width
 </style>

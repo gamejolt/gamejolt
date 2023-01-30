@@ -217,6 +217,7 @@ export function createGridFiresideChannel(
 			allow_images: chatSettings.allow_images,
 			allow_gifs: chatSettings.allow_gifs,
 			allow_links: chatSettings.allow_links,
+			automated_sticker_messages: chatSettings.automated_sticker_messages,
 		});
 	}
 

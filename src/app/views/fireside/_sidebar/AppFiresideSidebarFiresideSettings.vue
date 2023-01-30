@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref, watch, watchEffect } from 'vue';
+import { arrayRemove } from '../../../../utils/array';
 import { Background } from '../../../../_common/background/background.model';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { Community } from '../../../../_common/community/community.model';
@@ -13,6 +14,7 @@ import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErr
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormStickySubmit from '../../../../_common/form-vue/AppFormStickySubmit.vue';
 import AppFormControlBackground from '../../../../_common/form-vue/controls/AppFormControlBackground.vue';
+import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppFormControlToggleButton from '../../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButton.vue';
 import AppFormControlToggleButtonGroup from '../../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../../_common/form-vue/validators';
@@ -25,9 +27,9 @@ import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import {
-	extinguishFireside,
-	publishFireside,
-	useFiresideController,
+extinguishFireside,
+publishFireside,
+useFiresideController
 } from '../../../components/fireside/controller/controller';
 import { ChatCommandsModal } from '../../../components/forms/chat/commands/modal/modal.service';
 import { ChatModsModal } from '../../../components/forms/chat/mods/modal/modal.service';
@@ -96,14 +98,13 @@ function attachRealm(realm: Realm, append = true) {
 }
 
 function removeRealm(realm: Realm) {
-	const idx = selectedRealms.value.findIndex(i => i.id === realm.id);
-	if (idx === -1) {
-		console.warn('Attempted to remove a realm that is not attached');
-		return;
-	}
+	const removed = arrayRemove(selectedRealms.value, i => i.id === realm.id, {
+		onMissing: () => console.warn('Attempted to remove a realm that is not attached');
+	});
 
-	selectedRealms.value.splice(idx, 1);
-	form.changed = true;
+	if (removed.length) {
+		form.changed = true;
+	}
 }
 
 const settingsForm: FormController<FiresideChatSettings> = createForm({
@@ -304,7 +305,7 @@ function onClickChatMods() {
 							<AppSpacer vertical :scale="6" />
 
 							<AppFormGroup
-								name="targettables"
+								name="targetables"
 								class="sans-margin-bottom"
 								:label="$gettext(`Tagged to`)"
 								small
@@ -317,7 +318,7 @@ function onClickChatMods() {
 									:targetable-communities="targetableCommunities"
 									can-add-realm
 									can-remove-realms
-									:with-community-channels="false"
+									no-community-channels
 									@remove-realm="removeRealm"
 									@select-realm="attachRealm"
 								/>
@@ -413,8 +414,8 @@ function onClickChatMods() {
 
 							<AppFormGroup
 								name="allow_links"
-								class="sans-margin-bottom"
 								:label="$gettext(`Allow links in fireside chat`)"
+								class="sans-margin-bottom"
 								small
 							>
 								<AppFormControlToggleButtonGroup>
@@ -426,6 +427,17 @@ function onClickChatMods() {
 										{{ label }}
 									</AppFormControlToggleButton>
 								</AppFormControlToggleButtonGroup>
+							</AppFormGroup>
+
+							<AppSpacer vertical :scale="6" />
+
+							<AppFormGroup
+								name="automated_sticker_messages"
+								class="sans-margin-bottom"
+								:label="$gettext(`Show who placed a sticker in chat`)"
+								small
+							>
+								<AppFormControlToggle />
 							</AppFormGroup>
 						</AppForm>
 					</template>

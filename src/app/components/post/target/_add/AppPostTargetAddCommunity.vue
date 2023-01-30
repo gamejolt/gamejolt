@@ -16,13 +16,13 @@ const props = defineProps({
 		type: Object as PropType<Community>,
 		default: undefined,
 	},
-	withChannel: {
+	noChannel: {
 		type: Boolean,
-		default: true,
+		default: false,
 	},
 });
 
-const { communities, initialCommunity, withChannel } = toRefs(props);
+const { communities, initialCommunity, noChannel } = toRefs(props);
 
 const emit = defineEmits({
 	selectCommunity: (_community: Community) => true,
@@ -34,7 +34,9 @@ const emit = defineEmits({
 function onSelectCommunity(community: Community) {
 	emit('selectCommunity', community);
 
-	if (!withChannel.value) {
+	// If channels are disabled, it's enough to select a community, so also emit
+	// the 'select' event.
+	if (noChannel.value) {
 		emit('select', community);
 	}
 }
@@ -52,7 +54,7 @@ function onSelect(community: Community, channel: CommunityChannel) {
 	<AppFormsPillSelectorCommunities
 		:communities="communities"
 		:initial-community="initialCommunity"
-		:with-channel="withChannel"
+		:no-channel="noChannel"
 		@select-community="onSelectCommunity"
 		@select-channel="onSelectChannel"
 		@select="onSelect"

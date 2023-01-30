@@ -19,16 +19,20 @@ import { PostTargetManageRealmsModal } from './target/manage-realms/modal.servic
 import AppPostTargetsAddCommunity from './target/_add/AppPostTargetAddCommunity.vue';
 
 const props = defineProps({
-	// The selected communities. These are not mutated by this component
-	// directly. Instead, it emits events to add and remove items from it, and
-	// its up to the parent to apply these back to the prop.
+	/**
+	 * The selected communities. These are not mutated by this component
+	 * directly. Instead, it emits events to add and remove items from it, and
+	 * its up to the parent to apply these back to the prop.
+	 */
 	communities: {
 		type: Array as PropType<
 			{ community: Community; channel?: CommunityChannel; featured_on?: number }[]
 		>,
 		required: true,
 	},
-	// Similar to communities, these are not mutated by this component directly.
+	/**
+	 * Similar to communities, these are not mutated by this component directly.
+	 */
 	realms: {
 		type: Array as PropType<Realm[]>,
 		required: true,
@@ -41,9 +45,9 @@ const props = defineProps({
 		type: Array as PropType<Community[]>,
 		default: () => [],
 	},
-	withCommunityChannels: {
+	noCommunityChannels: {
 		type: Boolean,
-		default: true,
+		default: false,
 	},
 	maxCommunities: {
 		type: Number,
@@ -73,6 +77,7 @@ const props = defineProps({
 const {
 	incompleteCommunity,
 	targetableCommunities,
+	noCommunityChannels,
 	maxCommunities,
 	maxRealms,
 	communities,
@@ -101,7 +106,7 @@ const canShow = computed(() => {
 		return true;
 	}
 
-	// If can select a community (requires targettableCommunities)
+	// If can select a community (requires targetableCommunities)
 	if (canAddCommunity.value && !!targetableCommunities?.value?.length) {
 		return true;
 	}
@@ -275,7 +280,7 @@ async function onClickAddRealm() {
 				key="add-community"
 				:class="baseClasses"
 				:communities="targetableCommunities"
-				:with-channel="withCommunityChannels"
+				:no-channel="noCommunityChannels"
 				@select="selectCommunity"
 				@show="emit('showCommunities')"
 			/>

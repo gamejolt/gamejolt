@@ -20,13 +20,13 @@ const props = defineProps({
 		type: Object as PropType<Community | null>,
 		default: null,
 	},
-	withChannel: {
+	noChannel: {
 		type: Boolean,
-		default: true,
+		default: false,
 	},
 });
 
-const { communities, initialCommunity, withChannel } = toRefs(props);
+const { communities, initialCommunity, noChannel } = toRefs(props);
 
 const emit = defineEmits({
 	selectCommunity: (_community: Community) => true,
@@ -40,7 +40,7 @@ const channels = computed(() => selectedCommunity.value?.postableChannels);
 
 const isInitial = computed(() => selectedCommunity.value === initialCommunity.value);
 
-const shouldShowCommunitySelector = computed(() => !selectedCommunity.value || !withChannel.value);
+const shouldShowCommunitySelector = computed(() => !selectedCommunity.value || noChannel.value);
 
 resetSelections();
 
@@ -56,7 +56,7 @@ function selectCommunity(community: Community) {
 	selectedCommunity.value = community;
 	emit('selectCommunity', community);
 
-	if (!withChannel.value) {
+	if (noChannel.value) {
 		_closeAndReset();
 	}
 }
