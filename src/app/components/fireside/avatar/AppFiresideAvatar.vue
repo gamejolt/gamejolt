@@ -8,6 +8,7 @@ import {
 	Community,
 } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import { Environment } from '../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../_common/filters/number';
 import { FiresideCommunity } from '../../../../_common/fireside/community/community.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
@@ -63,12 +64,17 @@ const realm = computed(() =>
 const title = computed(() => fireside.value.title);
 
 const canModerate = computed(
-	() => !isLoading.value && !fireside.value.is_draft && manageableCommunities.value.length > 0
+	() =>
+		!isLoading.value &&
+		!fireside.value.is_draft &&
+		(manageableCommunities.value.length > 0 || manageableRealms.value.length > 0)
 );
 
 const manageableCommunities = computed(() =>
 	fireside.value.community_links.filter(i => canCommunityEjectFireside(i.community))
 );
+
+const manageableRealms = computed(() => fireside.value.realms.filter(i => i.realm.can_moderate));
 
 const isFeaturedInCommunity = computed(() => {
 	return (
@@ -155,7 +161,7 @@ async function toggleFeatured(community: FiresideCommunity) {
 	isLoading.value = false;
 }
 
-async function ejectFireside(community: FiresideCommunity) {
+async function ejectFiresideFromCommunity(community: FiresideCommunity) {
 	Popper.hideAll();
 	if (!canCommunityEjectFireside(community.community)) {
 		return;
@@ -200,8 +206,28 @@ async function ejectFireside(community: FiresideCommunity) {
 
 				<template #popover>
 					<div class="list-group list-group-dark">
-						<div v-for="(i, index) in manageableCommunities" :key="i.id">
+						<div v-for="(i, index) in manageableRealms" :key="`r-${i.id}`">
 							<hr v-if="index !== 0" />
+
+							<h5 class="-extras-header list-group-item has-icon">
+								<div class="-img">
+									<AppRealmThumbnail :realm="i.realm" />
+								</div>
+								{{ i.realm.name }}
+							</h5>
+
+							<a
+								class="list-group-item has-icon"
+								:href="`${Environment.baseUrl}/moderate/realms/eject-fireside/${i.id}`"
+								target="_blank"
+							>
+								<AppJolticon icon="eject" />
+								{{ $gettext(`Eject fireside`) }}
+							</a>
+						</div>
+
+						<div v-for="(i, index) in manageableCommunities" :key="`c-${i.id}`">
+							<hr v-if="index !== 0 || manageableRealms.length !== 0" />
 
 							<h5 class="-extras-header list-group-item has-icon">
 								<div class="-img">
@@ -223,7 +249,10 @@ async function ejectFireside(community: FiresideCommunity) {
 								}}
 							</a>
 
-							<a class="list-group-item has-icon" @click="ejectFireside(i)">
+							<a
+								class="list-group-item has-icon"
+								@click="ejectFiresideFromCommunity(i)"
+							>
 								<AppJolticon icon="eject" />
 								{{ $gettext(`Eject fireside`) }}
 							</a>

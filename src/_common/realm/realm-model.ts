@@ -24,6 +24,7 @@ export class Realm extends Model {
 
 	declare is_following: boolean;
 	declare follower_count: number;
+	declare can_moderate: boolean;
 
 	get routeLocation(): RouteLocationDefinition {
 		return {

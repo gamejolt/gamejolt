@@ -27,9 +27,9 @@ import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import {
-extinguishFireside,
-publishFireside,
-useFiresideController
+	extinguishFireside,
+	publishFireside,
+	useFiresideController,
 } from '../../../components/fireside/controller/controller';
 import { ChatCommandsModal } from '../../../components/forms/chat/commands/modal/modal.service';
 import { ChatModsModal } from '../../../components/forms/chat/mods/modal/modal.service';
@@ -99,7 +99,7 @@ function attachRealm(realm: Realm, append = true) {
 
 function removeRealm(realm: Realm) {
 	const removed = arrayRemove(selectedRealms.value, i => i.id === realm.id, {
-		onMissing: () => console.warn('Attempted to remove a realm that is not attached');
+		onMissing: () => console.warn('Attempted to remove a realm that is not attached'),
 	});
 
 	if (removed.length) {

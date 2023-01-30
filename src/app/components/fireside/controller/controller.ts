@@ -32,10 +32,6 @@ import {
 } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Background } from '../../../../_common/background/background.model';
-import {
-	canCommunityEjectFireside,
-	canCommunityFeatureFireside,
-} from '../../../../_common/community/community.model';
 import { ContentFocus } from '../../../../_common/content-focus/content-focus.service';
 import { getDeviceBrowser, getDeviceOS } from '../../../../_common/device/device.service';
 import { DogtagData } from '../../../../_common/dogtag/dogtag-data';
@@ -290,12 +286,6 @@ export function createFiresideController(
 	const isOwner = computed(() => !!user.value && user.value.id === fireside.user.id);
 	const canManageCohosts = computed(
 		() => isOwner.value || fireside.hasPerms('fireside-collaborators')
-	);
-	const canCommunityFeature = computed(
-		() => !!fireside.community && canCommunityFeatureFireside(fireside.community)
-	);
-	const canCommunityEject = computed(
-		() => !!fireside.community && canCommunityEjectFireside(fireside.community)
 	);
 
 	const canEdit = computed(() => isOwner.value || fireside.hasPerms('fireside-edit'));
@@ -794,8 +784,6 @@ export function createFiresideController(
 		canStream,
 		isOwner,
 		canManageCohosts,
-		canCommunityFeature,
-		canCommunityEject,
 		canEdit,
 		canPublish,
 		canExtinguish,
