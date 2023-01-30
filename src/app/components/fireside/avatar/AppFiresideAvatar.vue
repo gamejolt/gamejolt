@@ -205,9 +205,9 @@ async function ejectFiresideFromCommunity(community: FiresideCommunity) {
 				</template>
 
 				<template #popover>
-					<div class="list-group list-group-dark">
+					<div class="list-group thin list-group-dark">
 						<div v-for="(i, index) in manageableRealms" :key="`r-${i.id}`">
-							<hr v-if="index !== 0" />
+							<hr v-if="index !== 0" class="sans-margin-top" />
 
 							<h5 class="-extras-header list-group-item has-icon">
 								<div class="-img">
@@ -227,7 +227,10 @@ async function ejectFiresideFromCommunity(community: FiresideCommunity) {
 						</div>
 
 						<div v-for="(i, index) in manageableCommunities" :key="`c-${i.id}`">
-							<hr v-if="index !== 0 || manageableRealms.length !== 0" />
+							<hr
+								v-if="index !== 0 || manageableRealms.length !== 0"
+								class="sans-margin-top"
+							/>
 
 							<h5 class="-extras-header list-group-item has-icon">
 								<div class="-img">
