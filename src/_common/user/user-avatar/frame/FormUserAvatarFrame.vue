@@ -25,10 +25,12 @@ const { user } = useCommonStore();
 const availableFrames = ref<UserAvatarFrame[]>([]);
 const displayFrames = computed(() => [null, ...availableFrames.value]);
 
+const myFrameId = computed(() => user.value?.avatar_frame?.id || 0);
+
 const form: FormController<FormModel> = createForm({
 	loadUrl: '/web/dash/profile/save',
 	onInit() {
-		form.formModel.avatar_frame = user.value?.avatar_frame?.id;
+		form.formModel.avatar_frame = myFrameId.value;
 	},
 	onLoad(payload) {
 		// TODO(avatar-frames) paginate if required
@@ -47,13 +49,14 @@ const form: FormController<FormModel> = createForm({
 	},
 });
 
-function pickFrame(frameId: number | undefined) {
+function pickFrame(frameId: number) {
 	form.formModel.avatar_frame = frameId;
-	form.changed = form.formModel.avatar_frame !== user.value?.avatar_frame?.id;
+	form.changed = form.formModel.avatar_frame !== myFrameId.value;
 }
 
 function isSelected(data: UserAvatarFrame | null) {
-	return data?.avatar_frame.id === form.formModel.avatar_frame;
+	const frameId = data?.avatar_frame.id || 0;
+	return frameId === form.formModel.avatar_frame;
 }
 </script>
 
@@ -69,7 +72,7 @@ function isSelected(data: UserAvatarFrame | null) {
 			<!-- TODO(avatar-frames) no-items state, placeholders -->
 			<div
 				v-for="data of displayFrames"
-				:key="data?.avatar_frame?.id ?? 'no-frame'"
+				:key="data?.avatar_frame.id ?? 'no-frame'"
 				:style="{
 					padding: `24px`,
 					cursor: 'pointer',
@@ -80,7 +83,7 @@ function isSelected(data: UserAvatarFrame | null) {
 					...styleBorderRadiusLg,
 					border: `${kBorderWidthLg.px} solid ${kThemeFg10}`,
 				}"
-				@click="pickFrame(data?.avatar_frame?.id)"
+				@click="pickFrame(data?.avatar_frame.id || 0)"
 			>
 				<AppAspectRatio
 					:style="{
