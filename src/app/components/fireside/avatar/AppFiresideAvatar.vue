@@ -16,7 +16,6 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
 import AppRealmThumbnail from '../../../../_common/realm/AppRealmThumbnail.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import AppChatUserOnlineStatus from '../../chat/user-online-status/AppChatUserOnlineStatus.vue';
@@ -260,15 +259,16 @@ async function ejectFireside(community: FiresideCommunity) {
 					<div class="-tooltip">
 						<div class="-tooltip-row -tooltip-members">
 							<AppChatUserOnlineStatus is-online :size="12" :segment-width="1.5" />
-							<AppTranslate
-								:translate-n="fireside.member_count || 0"
-								:translate-params="{
-									count: formatNumber(fireside.member_count || 0),
-								}"
-								translate-plural="%{ count } members"
-							>
-								%{ count } member
-							</AppTranslate>
+							{{
+								$gettextInterpolate(
+									$ngettext(
+										`%{ count } member`,
+										`%{ count } members`,
+										fireside.member_count
+									),
+									{ count: formatNumber(fireside.member_count || 0) }
+								)
+							}}
 						</div>
 
 						<hr />
