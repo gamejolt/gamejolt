@@ -224,6 +224,15 @@ async function ejectFiresideFromCommunity(community: FiresideCommunity) {
 								<AppJolticon icon="eject" />
 								{{ $gettext(`Eject fireside`) }}
 							</a>
+
+							<a
+								class="list-group-item has-icon"
+								:href="`${Environment.baseUrl}/moderate/realms/uneject-fireside/${i.id}`"
+								target="_blank"
+							>
+								<AppJolticon icon="wand" />
+								{{ $gettext(`Uneject fireside`) }}
+							</a>
 						</div>
 
 						<div v-for="(i, index) in manageableCommunities" :key="`c-${i.id}`">
