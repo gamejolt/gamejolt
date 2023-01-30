@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { styleBorderRadiusCircle } from '../../../../_styles/mixins';
-import { kBorderRadiusLg, kFontSizeSmall } from '../../../../_styles/variables';
+import { styleBorderRadiusCircle, styleBorderRadiusLg } from '../../../../_styles/mixins';
+import { kBorderRadiusLg, kBorderWidthLg, kFontSizeSmall } from '../../../../_styles/variables';
 import { Api } from '../../../api/api.service';
 import AppAspectRatio from '../../../aspect-ratio/AppAspectRatio.vue';
 import AppAvatarFrame from '../../../avatar/AppAvatarFrame.vue';
@@ -11,7 +11,7 @@ import AppFormStickySubmit from '../../../form-vue/AppFormStickySubmit.vue';
 import { showErrorGrowl } from '../../../growls/growls.service';
 import AppSpacer from '../../../spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../store/common-store';
-import { kThemeBgOffset, kThemeDark } from '../../../theme/variables';
+import { kThemeBgOffset, kThemeDark, kThemeFg10 } from '../../../theme/variables';
 import { $gettext } from '../../../translate/translate.service';
 import AppUserAvatarImg from '../AppUserAvatarImg.vue';
 import { UserAvatarFrame } from './frame.model';
@@ -77,6 +77,8 @@ function isSelected(data: UserAvatarFrame | null) {
 					borderRadius: kBorderRadiusLg.px,
 					// TODO(avatar-frames) add consts for our curve variables
 					transition: `background-color 300ms cubic-bezier(0.19, 1, 0.2, 1)`,
+					...styleBorderRadiusLg,
+					border: `${kBorderWidthLg.px} solid ${kThemeFg10}`,
 				}"
 				@click="pickFrame(data?.avatar_frame?.id)"
 			>
