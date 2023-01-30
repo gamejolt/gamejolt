@@ -1,24 +1,29 @@
 
 .page-header
 	$spotlight-size = $page-header-spotlight-size + $page-header-spotlight-margin
-	// Double the spotlight size since it will effectively take up the left AND
-	// right side of screens since content is centered.
 	$screen-lg-full = $screen-lg-min + ($spotlight-size * 2)
 	$page-header-spotlight-breakpoint = media(min: $screen-sm-min, max: $screen-lg-full)
 
+	// NOTE: Removing the `&-controls` styling seems to cause some issues with
+	// selectors like this. Leaving comments so class names are at easier to
+	// find at least.
 	&.has-spotlight &
 		@media $media-sm-md
+			// .page-header-controls
 			&-controls
 				margin-left: $spotlight-size
 
 		// For when the page gets too small to float the spotlight off the left edge.
 		@media $page-header-spotlight-breakpoint
+			// .page-header-spotlight
 			&-spotlight
 				left: $page-header-spotlight-margin
 
+			// .page-header-content
 			&-content
 				padding-left: $spotlight-size
 
+			// .page-header-nav nav
 			&-nav nav
 				margin-left: $spotlight-size
 
@@ -64,27 +69,32 @@
 		display: inline-block
 		vertical-align: middle
 
-.page-header-nav
-	nav
-		margin-top: 11px !important
-
-	nav.breadcrumb
-		margin-bottom: 11px
-
-	@media $media-lg
-		.stat-list
-			margin-top: 7px
-
-		.platform-list
+// NOTE: Removing the `&-nav` selector breaks the `../ .gj-scroll-affixed`
+// selector. Leaving this comment so we can easily search the class name, and so
+// we check scroll-affixed styling before changing.
+.page-header
+	// .page-header-nav
+	&-nav
+		nav
 			margin-top: 11px !important
 
-		../ .gj-scroll-affixed
-			elevate-2()
-			theme-prop('border-bottom-color', 'darker')
-			change-bg('gray')
-			border-bottom-width: 2px
-			border-bottom-style: solid
-			z-index: $zindex-nav-scroll-affixed
+		nav.breadcrumb
+			margin-bottom: 11px
 
-			nav
-				margin-left: 0
+		@media $media-lg
+			.stat-list
+				margin-top: 7px
+
+			.platform-list
+				margin-top: 11px !important
+
+			../ .gj-scroll-affixed
+				elevate-2()
+				theme-prop('border-bottom-color', 'darker')
+				change-bg('gray')
+				border-bottom-width: 2px
+				border-bottom-style: solid
+				z-index: $zindex-nav-scroll-affixed
+
+				nav
+					margin-left: 0
