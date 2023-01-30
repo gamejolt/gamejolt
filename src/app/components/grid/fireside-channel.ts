@@ -26,6 +26,7 @@ import { GridClient } from './client.service';
 export type GridFiresideChannel = Readonly<{
 	channelController: SocketChannelController;
 	firesideHash: string;
+	joinPromise: Promise<void>;
 	pushUpdateChatSettings: (
 		chatSettings: FiresideChatSettings
 	) => Promise<UpdateChatSettingsPayload>;
@@ -73,11 +74,11 @@ interface HostUpdatePayload {
 	background?: any;
 }
 
-export async function createGridFiresideChannel(
+export function createGridFiresideChannel(
 	client: GridClient,
 	firesideController: FiresideController,
 	options: { firesideHash: string; stickerStore: StickerStore }
-): Promise<GridFiresideChannel> {
+): GridFiresideChannel {
 	const { socketController } = client;
 	const { chatSettings, assignHostBackgroundData } = firesideController;
 	const { firesideHash, stickerStore } = options;
@@ -94,14 +95,7 @@ export async function createGridFiresideChannel(
 	channelController.listenTo('sticker-placement', _onStickerPlacement);
 	channelController.listenTo('update-host', _onUpdateHost);
 
-	const c = shallowReadonly<GridFiresideChannel>({
-		channelController,
-		firesideHash,
-		pushUpdateChatSettings,
-		pushUpdateHost,
-	});
-
-	await channelController.join({
+	const joinPromise = channelController.join({
 		async onJoin(response: JoinPayload) {
 			chatSettings.value.assign(response.chat_settings);
 
@@ -115,6 +109,14 @@ export async function createGridFiresideChannel(
 				}
 			}
 		},
+	});
+
+	const c = shallowReadonly<GridFiresideChannel>({
+		channelController,
+		firesideHash,
+		joinPromise,
+		pushUpdateChatSettings,
+		pushUpdateHost,
 	});
 
 	async function _onUpdate(payload: UpdatePayload) {
@@ -215,6 +217,7 @@ export async function createGridFiresideChannel(
 			allow_images: chatSettings.allow_images,
 			allow_gifs: chatSettings.allow_gifs,
 			allow_links: chatSettings.allow_links,
+			automated_sticker_messages: chatSettings.automated_sticker_messages,
 		});
 	}
 

@@ -2,7 +2,7 @@
 import { onMounted, ref } from '@vue/runtime-core';
 import { computed, onUnmounted } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import { EscapeStack } from '../../../../_common/escape-stack/escape-stack.service';
+import { useEscapeStack } from '../../../../_common/escape-stack/escape-stack.service';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { InviteModal } from '../../../../_common/invite/modal/modal.service';
@@ -14,16 +14,14 @@ import AppTabBarItem from '../../../../_common/tab-bar/AppTabBarItem.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { illMaintenance, illNoCommentsSmall } from '../../../img/ill/illustrations';
 import { useAppStore } from '../../../store';
-import { enterChatRoom, leaveChatRoom } from '../../chat/client';
+import { closeChatRoom, openChatRoom } from '../../chat/client';
 import { sortByLastMessageOn } from '../../chat/user-collection';
 import AppChatUserList from '../../chat/user-list/AppChatUserList.vue';
 import { useGridStore } from '../../grid/grid-store';
 
-const { visibleLeftPane, toggleLeftPane } = useAppStore();
+const { closeChatPane } = useAppStore();
 const { user } = useCommonStore();
 const { chatUnsafe: chat } = useGridStore();
-
-let escapeCallback: (() => void) | null = null;
 
 const tab = ref<'chats' | 'friends'>('chats');
 
@@ -36,29 +34,17 @@ const isEmpty = computed(
 );
 
 onMounted(() => {
-	// xs size needs to show the friends list
-	if (chat.value.sessionRoomId && !Screen.isXs) {
-		enterChatRoom(chat.value, chat.value.sessionRoomId);
-	}
+	const sessionRoomId = chat.value.getSessionRoomId();
 
-	escapeCallback = () => hideChatPane();
-	EscapeStack.register(escapeCallback);
+	// xs size needs to show the friends list instead of opening the last chat
+	// room.
+	if (sessionRoomId && !Screen.isXs) {
+		openChatRoom(chat.value, sessionRoomId);
+	}
 });
 
-onUnmounted(() => {
-	if (escapeCallback) {
-		EscapeStack.deregister(escapeCallback);
-		escapeCallback = null;
-	}
-
-	leaveChatRoom(chat.value);
-});
-
-function hideChatPane() {
-	if (visibleLeftPane.value === 'chat') {
-		toggleLeftPane('chat');
-	}
-}
+useEscapeStack(() => closeChatPane());
+onUnmounted(() => closeChatRoom(chat.value));
 
 function showInviteModal() {
 	InviteModal.show({ user: user.value! });
@@ -128,7 +114,7 @@ function showInviteModal() {
 	height: 100%
 
 .-nav-tabs
-	padding: 0 4px
+	padding: 0 16px
 
 .-pane-inner
 	display: flex

@@ -9,7 +9,7 @@ import { $gettext, $gettextInterpolate } from '../../../_common/translate/transl
 import { shouldUseFYPDefault } from '../../views/home/home-feed.service';
 import { GridClient } from './client.service';
 
-export type GridCommunityChannel = Awaited<ReturnType<typeof createGridCommunityChannel>>;
+export type GridCommunityChannel = ReturnType<typeof createGridCommunityChannel>;
 
 interface FeaturePayload {
 	post_id: string;
@@ -24,7 +24,7 @@ interface NewPostPayload {
 	channel_id: string;
 }
 
-export async function createGridCommunityChannel(
+export function createGridCommunityChannel(
 	client: GridClient,
 	options: { communityId: number; router: Router }
 ) {
@@ -40,15 +40,16 @@ export async function createGridCommunityChannel(
 	channelController.listenTo('new-post', _onNewPost);
 	channelController.listenTo('feature-fireside', _onFeatureFireside);
 
-	const c = shallowReadonly({
-		channelController,
-		communityId,
-	});
-
-	await channelController.join({
+	const joinPromise = channelController.join({
 		async onJoin() {
 			client.communityChannels.push(markRaw(c));
 		},
+	});
+
+	const c = shallowReadonly({
+		channelController,
+		communityId,
+		joinPromise,
 	});
 
 	function _onFeature(payload: FeaturePayload) {

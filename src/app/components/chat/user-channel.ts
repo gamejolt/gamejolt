@@ -10,8 +10,8 @@ import { UnknownModelData } from '../../../_common/model/model.service';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import {
 	ChatClient,
+	closeChatRoom,
 	isInChatRoom,
-	leaveChatRoom,
 	newChatNotification,
 	recollectChatRoomMembers,
 	updateChatRoomLastMessageOn,
@@ -20,11 +20,10 @@ import { ChatMessage } from './message';
 import { ChatNotificationGrowl } from './notification-growl/notification-growl.service';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
-import { ChatUserCollection } from './user-collection';
 
 const TabLeaderLazy = importNoSSR(async () => await import('../../../utils/tab-leader'));
 
-export type ChatUserChannel = Awaited<ReturnType<typeof createChatUserChannel>>;
+export type ChatUserChannel = ReturnType<typeof createChatUserChannel>;
 
 interface JoinPayload {
 	user: UnknownModelData;
@@ -54,7 +53,7 @@ interface UpdateGroupTitlePayload {
 	room_id: number;
 }
 
-export async function createChatUserChannel(
+export function createChatUserChannel(
 	client: ChatClient,
 	options: {
 		userId: number;
@@ -74,7 +73,7 @@ export async function createChatUserChannel(
 	channelController.listenTo('you_updated', _onYouUpdated);
 	channelController.listenTo('clear_notifications', _onClearNotifications);
 	channelController.listenTo('group_add', _onGroupAdd);
-	channelController.listenTo('group_leave', _onRoomLeave);
+	channelController.listenTo('group_leave', _onGroupLeave);
 	channelController.listenTo('update_title', _onUpdateTitle);
 	channelController.listenTo('update_background', _onUpdateBackground);
 
@@ -91,35 +90,36 @@ export async function createChatUserChannel(
 		})
 	);
 
-	const c = shallowReadonly({
-		channelController,
-		userId,
-		isTabLeader,
-		pushGroupAdd,
-		pushGroupLeave,
-	});
-
-	await channelController.join({
+	const joinPromise = channelController.join({
 		async onJoin(response: JoinPayload) {
 			const { TabLeader } = await TabLeaderLazy;
 			_tabLeader = new TabLeader('chat_notification_channel');
 			_tabLeader.init();
 
 			client.currentUser = storeModel(ChatUser, response.user);
-			client.friendsList = new ChatUserCollection(
-				client,
-				ChatUserCollection.TYPE_FRIEND,
-				response.friends || []
-			);
-			client.notifications = response.notifications;
+			client.friendsList.replace(response.friends || []);
 			client.groupRooms = (response.groups as UnknownModelData[]).map(room =>
 				storeModel(ChatRoom, { chat: client, ...room })
 			);
+
+			client.notifications.clear();
+			for (const [roomId, count] of Object.entries(response.notifications)) {
+				client.notifications.set(+roomId, count);
+			}
 		},
 
 		onLeave() {
 			_tabLeader?.kill();
 		},
+	});
+
+	const c = shallowReadonly({
+		channelController,
+		userId,
+		isTabLeader,
+		pushGroupAdd,
+		pushGroupLeave,
+		joinPromise,
 	});
 
 	function _onFriendJoin(presenceId: string, currentPresence: UserPresence | undefined) {
@@ -151,7 +151,7 @@ export async function createChatUserChannel(
 		const friend = client.friendsList.get(userId);
 
 		if (friend && isInChatRoom(client, friend.room_id)) {
-			leaveChatRoom(client);
+			closeChatRoom(client);
 		}
 
 		client.friendsList.remove(userId);
@@ -169,11 +169,15 @@ export async function createChatUserChannel(
 		}
 	}
 
-	function _onRoomLeave(data: RoomIdPayload) {
-		arrayRemove(client.groupRooms, i => i.id === data.room_id);
+	function _onGroupLeave(data: RoomIdPayload) {
+		const removed = arrayRemove(client.groupRooms, i => i.id === data.room_id);
+		if (!removed || !removed.length) {
+			return;
+		}
 
-		if (isInChatRoom(client, data.room_id)) {
-			leaveChatRoom(client, client.roomChannels[data.room_id].room.value);
+		const [room] = removed;
+		if (room && isInChatRoom(client, room.id)) {
+			closeChatRoom(client);
 		}
 	}
 
@@ -205,7 +209,7 @@ export async function createChatUserChannel(
 	}
 
 	function _onClearNotifications(data: RoomIdPayload) {
-		delete client.notifications[data.room_id];
+		client.notifications.delete(data.room_id);
 	}
 
 	function _onGroupAdd(data: GroupAddPayload) {

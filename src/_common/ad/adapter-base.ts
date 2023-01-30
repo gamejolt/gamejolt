@@ -1,4 +1,4 @@
-import { Component } from 'vue';
+import { Component, PropType } from 'vue';
 import { AdSlot } from './ad-slot-info';
 
 export abstract class AdAdapterBase {
@@ -24,4 +24,21 @@ export abstract class AdAdapterBase {
 		cb();
 		this.ranOnce = true;
 	}
+}
+
+/**
+ * Used to define the common interface for all ad adapter components. These are
+ * always passed into every ad adapter's components to display the actual ads.
+ */
+export function defineAdAdapterComponentProps<T extends AdAdapterBase>() {
+	return {
+		adSlot: {
+			type: Object as PropType<AdSlot>,
+			required: true,
+		},
+		adapter: {
+			type: Object as PropType<T>,
+			required: true,
+		},
+	} as const;
 }
