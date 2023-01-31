@@ -7,7 +7,7 @@ import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/r
 import { User } from '../../../../_common/user/user.model';
 import AppFollowerList from '../../../components/follower/list/list.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
-import { useProfileRouteController } from '../profile.vue';
+import { useProfileRouteController } from '../RouteProfile.vue';
 
 function getFetchUrl(route: RouteLocationNormalized) {
 	return `/web/profile/following/@${route.params.username}`;

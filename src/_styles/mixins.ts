@@ -36,5 +36,5 @@ export const styleTextOverflow: CSSProperties = {
 export const styleChangeBg = (bg: ThemeColor, important = false): any => ({
 	'--theme-bg-actual': `var(--theme-${bg})`,
 	'--theme-bg-actual-trans': `var(--theme-${bg}-trans)`,
-	backgroundColor: `var(--theme-${bg})` + important ? ' !important' : '',
+	backgroundColor: `var(--theme-${bg})` + (important ? ' !important' : ''),
 });

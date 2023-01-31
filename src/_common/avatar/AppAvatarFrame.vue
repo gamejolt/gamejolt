@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, toRefs } from 'vue';
 import { AvatarFrame } from './frame.model';
 
 const BASE_INSET = -10;
@@ -7,16 +7,38 @@ const BASE_SIZE = 100 - BASE_INSET * 2;
 
 const props = defineProps({
 	frame: {
-		type: Object as PropType<AvatarFrame | null | undefined>,
+		type: [Object, null, undefined] as PropType<AvatarFrame | null | undefined>,
 		required: true,
 	},
 	inset: {
 		type: Number,
 		default: undefined,
 	},
+	hideFrame: {
+		type: Boolean,
+	},
+	/**
+	 * Treats the avatar frame as a border that insets our content, rather than
+	 * an overlay that exceeds the container bounds.
+	 */
+	shrinkOnShow: {
+		type: Boolean,
+	},
 });
 
-const { frame, inset } = toRefs(props);
+const { frame, inset, hideFrame, shrinkOnShow } = toRefs(props);
+
+const rootStyles = computed(() => {
+	const result: CSSProperties = {
+		position: `relative`,
+	};
+
+	if (shrinkOnShow.value && !!frame.value && !hideFrame.value) {
+		result.transform = `scale(${100 / BASE_SIZE})`;
+	}
+
+	return result;
+});
 
 const frameInset = computed(() => {
 	const base = `${BASE_INSET}%`;
@@ -36,11 +58,8 @@ const frameSize = computed(() => {
 </script>
 
 <template>
-	<div
-		:style="{
-			position: `relative`,
-		}"
-	>
+	<!-- AppAvatarFrame -->
+	<div :style="rootStyles">
 		<div
 			:style="{
 				zIndex: 0,
@@ -50,7 +69,7 @@ const frameSize = computed(() => {
 		</div>
 
 		<img
-			v-if="frame"
+			v-if="frame && !hideFrame"
 			:style="{
 				position: `absolute`,
 				top: frameInset,

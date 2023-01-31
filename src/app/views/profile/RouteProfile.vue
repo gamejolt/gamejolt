@@ -1,16 +1,19 @@
 <script lang="ts">
-import { inject, InjectionKey, provide, ref } from 'vue';
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { computed, inject, InjectionKey, provide, ref } from 'vue';
+import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
+import { vAppTrackEvent } from '../../../_common/analytics/track-event.directive';
 import { Api } from '../../../_common/api/api.service';
 import { BlockModal } from '../../../_common/block/modal/modal.service';
+import AppButton from '../../../_common/button/AppButton.vue';
 import { CommentModal } from '../../../_common/comment/modal/modal.service';
+import { ComponentProps } from '../../../_common/component-helpers';
 import { Environment } from '../../../_common/environment/environment.service';
 import { formatNumber } from '../../../_common/filters/number';
+import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../_common/popper/AppPopper.vue';
 import { Registry } from '../../../_common/registry/registry.service';
 import { ReportModal } from '../../../_common/report/modal/modal.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../_common/share/share.service';
 import { useCommonStore } from '../../../_common/store/common-store';
@@ -24,12 +27,12 @@ import { populateTrophies } from '../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophy } from '../../../_common/user/trophy/user-base-trophy.model';
 import AppUserAvatar from '../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { User } from '../../../_common/user/user.model';
-import AppUserVerifiedTick from '../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import { isUserOnline } from '../../components/chat/client';
 import { useGridStore } from '../../components/grid/grid-store';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPageHeader from '../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderControls from '../../components/page-header/controls/controls.vue';
+import AppUserAvatarBubble from '../../components/user/AppUserAvatarBubble.vue';
 import AppUserDogtag from '../../components/user/AppUserDogtag.vue';
 import AppUserBlockOverlay from '../../components/user/block-overlay/block-overlay.vue';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
@@ -189,243 +192,220 @@ function createController() {
 
 const ProfileThemeKey = 'profile';
 
-@Options({
-	name: 'RouteProfile',
-	components: {
-		AppPageHeader,
-		AppPageHeaderControls,
-		AppTimeAgo,
-		AppUserAvatar,
-		AppUserDogtag,
-		AppPopper,
-		AppUserFollowButton,
-		AppUserVerifiedTick,
-		AppUserBlockOverlay,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-@OptionsForRoute({
-	cache: true,
-	lazy: true,
-	deps: { params: ['username'], query: ['intent'] },
-	async resolver({ route }) {
-		const intentRedirect = IntentService.checkRoute(
-			route,
-			{
-				intent: 'follow-user',
-				message: $gettext(`You're now following this user.`),
-			},
-			{
-				intent: 'accept-friend-request',
-				message: $gettext(`You are now friends with this user!`),
-			},
-			{
-				intent: 'decline-friend-request',
-				message: $gettext(`You've declined this user's friend request.`),
+export default {
+	...defineAppRouteOptions({
+		cache: true,
+		lazy: true,
+		deps: { params: ['username'], query: ['intent'] },
+		async resolver({ route }) {
+			const intentRedirect = IntentService.checkRoute(
+				route,
+				{
+					intent: 'follow-user',
+					message: $gettext(`You're now following this user.`),
+				},
+				{
+					intent: 'accept-friend-request',
+					message: $gettext(`You are now friends with this user!`),
+				},
+				{
+					intent: 'decline-friend-request',
+					message: $gettext(`You've declined this user's friend request.`),
+				}
+			);
+			if (intentRedirect) {
+				return intentRedirect;
 			}
-		);
-		if (intentRedirect) {
-			return intentRedirect;
-		}
+			return Api.sendRequest('/web/profile/@' + route.params.username);
+		},
+	}),
+};
+</script>
 
-		return Api.sendRequest('/web/profile/@' + route.params.username);
-	},
-})
-export default class RouteProfile extends BaseRouteComponent {
-	routeStore = setup(() => {
-		const c = createController();
-		provide(Key, c);
-		return c;
-	});
+<script lang="ts" setup>
+const routeStore = createController();
+provide(Key, routeStore);
 
-	commonStore = setup(() => useCommonStore());
-	themeStore = setup(() => useThemeStore());
-	gridStore = setup(() => useGridStore());
+const { user: routeUser, trophyCount, userFriendship, bootstrapUser, profilePayload } = routeStore;
 
-	readonly UserFriendship = UserFriendship;
-	readonly Environment = Environment;
-	readonly Screen = Screen;
-	readonly formatNumber = formatNumber;
+const { user: myUser } = useCommonStore();
+const { setPageTheme: setThemeStorePageTheme, clearPageTheme } = useThemeStore();
+const { chat } = useGridStore();
 
-	get app() {
-		return this.commonStore;
+const route = useRoute();
+const router = useRouter();
+
+/**
+ * The cover height changes when we switch to not showing the full cover, so
+ * let's make sure we reset the autoscroll anchor so that it scrolls to the
+ * top again.
+ */
+const autoscrollAnchorKey = computed(() => routeUser.value!.id);
+
+const commentsCount = computed(() => {
+	if (routeUser.value && routeUser.value.comment_count) {
+		return routeUser.value.comment_count;
+	}
+	return 0;
+});
+
+const canBlock = computed(
+	() =>
+		routeUser.value &&
+		!routeUser.value.is_blocked &&
+		myUser.value &&
+		routeUser.value.id !== myUser.value.id
+);
+
+const shouldShowFollow = computed(
+	() =>
+		myUser.value &&
+		routeUser.value &&
+		myUser.value.id !== routeUser.value.id &&
+		!routeUser.value.is_blocked &&
+		!routeUser.value.blocked_you
+);
+
+const shouldShowEdit = computed(
+	() => myUser.value && routeUser.value && myUser.value.id === routeUser.value.id
+);
+
+const isOnline = computed<null | boolean>(() => {
+	if (!chat.value || !routeUser.value) {
+		return null;
 	}
 
-	get user() {
-		return this.routeStore.user;
-	}
+	return isUserOnline(chat.value, routeUser.value.id);
+});
 
-	get trophyCount() {
-		return this.routeStore.trophyCount;
-	}
+const spotlightWrapper = computed(() => AppUserAvatarBubble);
+const spotlightWrapperProps = computed<ComponentProps<typeof spotlightWrapper.value>>(() => ({
+	user: routeUser.value,
+	disableLink: true,
+	showFrame: true,
+	showVerified: true,
+	verifiedSize: 'big',
+	verifiedOffset: 0,
+}));
 
-	get userFriendship() {
-		return this.routeStore.userFriendship;
-	}
-
-	get chat() {
-		return this.gridStore.chat;
-	}
-
-	/**
-	 * The cover height changes when we switch to not showing the full cover, so
-	 * let's make sure we reset the autoscroll anchor so that it scrolls to the
-	 * top again.
-	 */
-	get autoscrollAnchorKey() {
-		return this.user!.id;
-	}
-
-	get commentsCount() {
-		if (this.user && this.user.comment_count) {
-			return this.user.comment_count;
-		}
-		return 0;
-	}
-
-	get canBlock() {
-		return (
-			this.user && !this.user.is_blocked && this.app.user && this.user.id !== this.app.user.id
-		);
-	}
-
-	get shouldShowFollow() {
-		return (
-			this.app.user &&
-			this.user &&
-			this.app.user.id !== this.user.id &&
-			!this.user.is_blocked &&
-			!this.user.blocked_you
-		);
-	}
-
-	get shouldShowEdit() {
-		return this.app.user && this.user && this.app.user.id === this.user.id;
-	}
-
-	get isOnline(): null | boolean {
-		if (!this.chat || !this.user) {
-			return null;
-		}
-
-		return isUserOnline(this.chat, this.user.id);
-	}
-
-	routeCreated() {
+const { isBootstrapped } = createAppRoute({
+	onInit() {
 		// This isn't needed by SSR or anything, so it's fine to call it here.
-		this.routeStore.bootstrapUser(this.$route.params.username.toString());
-		this.setPageTheme();
-	}
+		bootstrapUser(route.params.username.toString());
+		setPageTheme();
+	},
+	onResolved({ payload }) {
+		profilePayload(payload);
+		setPageTheme();
+	},
+	onDestroyed() {
+		clearPageTheme(ProfileThemeKey);
+	},
+});
 
-	routeResolved(payload: any) {
-		this.routeStore.profilePayload(payload);
-		this.setPageTheme();
-	}
+function setPageTheme() {
+	const theme = routeUser.value?.theme ?? null;
+	setThemeStorePageTheme({
+		key: ProfileThemeKey,
+		theme,
+	});
+}
 
-	routeDestroyed() {
-		this.themeStore.clearPageTheme(ProfileThemeKey);
-	}
-
-	private setPageTheme() {
-		const theme = this.user?.theme ?? null;
-		this.themeStore.setPageTheme({
-			key: ProfileThemeKey,
-			theme,
+function showComments() {
+	if (routeUser.value) {
+		CommentModal.show({
+			model: routeUser.value,
+			displayMode: 'shouts',
 		});
 	}
+}
 
-	showComments() {
-		if (this.user) {
-			CommentModal.show({
-				model: this.user,
-				displayMode: 'shouts',
+function copyShareUrl() {
+	if (!routeUser.value) {
+		return;
+	}
+	const url = Environment.baseUrl + routeUser.value.url;
+	copyShareLink(url, 'user');
+}
+
+function report() {
+	if (routeUser.value) {
+		ReportModal.show(routeUser.value);
+	}
+}
+
+async function blockUser() {
+	if (routeUser.value) {
+		const result = await BlockModal.show(routeUser.value);
+
+		// Navigate away from the page after blocking.
+		if (result) {
+			router.push({
+				name: 'dash.account.blocks',
 			});
-		}
-	}
-
-	copyShareUrl() {
-		if (!this.user) {
-			return;
-		}
-		const url = Environment.baseUrl + this.user.url;
-		copyShareLink(url, 'user');
-	}
-
-	report() {
-		if (this.user) {
-			ReportModal.show(this.user);
-		}
-	}
-
-	async blockUser() {
-		if (this.user) {
-			const result = await BlockModal.show(this.user);
-
-			// Navigate away from the page after blocking.
-			if (result) {
-				this.$router.push({
-					name: 'dash.account.blocks',
-				});
-			}
 		}
 	}
 }
 </script>
 
 <template>
-	<div v-if="user">
+	<div v-if="routeUser">
 		<!--
 			If this user is banned, we show very little.
 		-->
-		<template v-if="!user.status">
+		<template v-if="!routeUser.status">
 			<AppPageHeader>
 				<h1 class="-heading">
-					{{ user.display_name }}
-					<small class="-heading-username">@{{ user.username }}</small>
+					{{ routeUser.display_name }}
+					<small class="-heading-username">@{{ routeUser.username }}</small>
 				</h1>
 
 				<div class="text-muted small">
-					<AppTranslate>Joined</AppTranslate>
+					{{ $gettext(`Joined`) }}
 					{{ ' ' }}
-					<AppTimeAgo :date="user.created_on" />
+					<AppTimeAgo :date="routeUser.created_on" />
 				</div>
 			</AppPageHeader>
 
-			<router-view />
+			<RouterView />
 		</template>
 		<template v-else>
-			<AppUserBlockOverlay :user="user">
+			<AppUserBlockOverlay :user="routeUser">
 				<AppPageHeader
-					:cover-media-item="user.header_media_item"
+					:cover-media-item="routeUser.header_media_item"
 					:cover-max-height="400"
 					should-affix-nav
 					:autoscroll-anchor-key="autoscrollAnchorKey"
+					:spotlight-wrapper="spotlightWrapper"
+					:spotlight-wrapper-props="spotlightWrapperProps"
 				>
-					<router-link
+					<RouterLink
 						:to="{
 							name: 'profile.overview',
-							params: { username: user.username },
+							params: { username: routeUser.username },
 						}"
 					>
 						<h1 class="-heading">
-							{{ user.display_name }}
-							<AppUserVerifiedTick :user="user" big />
-							<span class="-heading-username">@{{ user.username }}</span>
+							{{ routeUser.display_name }}
+							<!-- <AppUserVerifiedTick :user="routeUser" big /> -->
+							<span class="-heading-username">@{{ routeUser.username }}</span>
 						</h1>
-					</router-link>
+					</RouterLink>
 					<div>
 						<!-- Joined on -->
-						<AppTranslate>Joined</AppTranslate>
+						{{ $gettext(`Joined`) }}
 						{{ ' ' }}
-						<AppTimeAgo :date="user.created_on" />
+						<AppTimeAgo :date="routeUser.created_on" />
 
-						<template v-if="isRouteBootstrapped">
+						<template v-if="isBootstrapped">
 							<span class="dot-separator" />
 
 							<!-- Dogtags -->
-							<AppUserDogtag v-for="tag of user.dogtags" :key="tag.text" :tag="tag" />
+							<AppUserDogtag
+								v-for="tag of routeUser.dogtags"
+								:key="tag.text"
+								:tag="tag"
+							/>
 
 							<!-- Friend status -->
 							<span
@@ -436,7 +416,7 @@ export default class RouteProfile extends BaseRouteComponent {
 								v-app-tooltip="$gettext('You are friends! Awwww!')"
 								class="tag tag-highlight"
 							>
-								<AppTranslate>Friend</AppTranslate>
+								{{ $gettext(`Friend`) }}
 							</span>
 
 							<!-- Online status -->
@@ -446,94 +426,94 @@ export default class RouteProfile extends BaseRouteComponent {
 									v-app-tooltip="$gettext('This user is currently offline.')"
 									class="tag"
 								>
-									<AppTranslate>Offline</AppTranslate>
+									{{ $gettext(`Offline`) }}
 								</span>
 								<span
 									v-else
 									v-app-tooltip="$gettext('This user is currently online.')"
 									class="tag tag-highlight"
 								>
-									<AppTranslate>Online</AppTranslate>
+									{{ $gettext(`Online`) }}
 								</span>
 							</template>
 
 							<!-- Following status -->
 							<span
-								v-if="user.follows_you"
+								v-if="routeUser.follows_you"
 								v-app-tooltip="$gettext('This user is following you.')"
 								class="tag tag-highlight"
 							>
-								<AppTranslate>Follows You</AppTranslate>
+								{{ $gettext(`Follows you`) }}
 							</span>
 						</template>
 					</div>
 
 					<template #spotlight>
-						<AppUserAvatar :user="user" />
+						<AppUserAvatar :user="routeUser" />
 					</template>
 
 					<template #nav>
 						<nav class="platform-list inline">
 							<ul>
 								<li>
-									<router-link
+									<RouterLink
 										:to="{ name: 'profile.overview' }"
-										:class="{ active: $route.name === 'profile.overview' }"
+										:class="{ active: route.name === 'profile.overview' }"
 									>
-										<AppTranslate>Profile</AppTranslate>
-									</router-link>
+										{{ $gettext(`Profile`) }}
+									</RouterLink>
 								</li>
 								<li>
-									<router-link
+									<RouterLink
 										:to="{ name: 'profile.following' }"
 										active-class="active"
 									>
-										<AppTranslate>Following</AppTranslate>
+										{{ $gettext(`Following`) }}
 										<span class="badge">
-											{{ formatNumber(user.following_count) }}
+											{{ formatNumber(routeUser.following_count) }}
 										</span>
-									</router-link>
+									</RouterLink>
 								</li>
 								<li>
-									<router-link
+									<RouterLink
 										:to="{ name: 'profile.followers' }"
 										active-class="active"
 									>
-										<AppTranslate>Followers</AppTranslate>
+										{{ $gettext(`Followers`) }}
 										<span class="badge">
-											{{ formatNumber(user.follower_count) }}
+											{{ formatNumber(routeUser.follower_count) }}
 										</span>
-									</router-link>
+									</RouterLink>
 								</li>
 								<!--
 									We only need to show this on mobile.
 								-->
-								<li v-if="user.shouts_enabled && Screen.isMobile">
+								<li v-if="routeUser.shouts_enabled && Screen.isMobile">
 									<a @click="showComments()">
-										<AppTranslate>Shouts</AppTranslate>
+										{{ $gettext(`Shouts`) }}
 										<span class="badge">
 											{{ formatNumber(commentsCount) }}
 										</span>
 									</a>
 								</li>
 								<li>
-									<router-link
+									<RouterLink
 										:to="{ name: 'profile.library' }"
 										active-class="active"
 									>
-										<AppTranslate>Library</AppTranslate>
-									</router-link>
+										{{ $gettext(`Library`) }}
+									</RouterLink>
 								</li>
 								<li>
-									<router-link
+									<RouterLink
 										:to="{ name: 'profile.trophies' }"
 										active-class="active"
 									>
-										<AppTranslate>Trophies</AppTranslate>
+										{{ $gettext(`Trophies`) }}
 										<span class="badge">
 											{{ formatNumber(trophyCount) }}
 										</span>
-									</router-link>
+									</RouterLink>
 								</li>
 								<li>
 									<AppPopper popover-class="fill-darkest">
@@ -549,15 +529,15 @@ export default class RouteProfile extends BaseRouteComponent {
 													@click="copyShareUrl"
 												>
 													<AppJolticon icon="link" />
-													<AppTranslate>Copy link to user</AppTranslate>
+													{{ $gettext(`Copy link to user`) }}
 												</a>
 												<a
-													v-if="app.user && user.id !== app.user.id"
+													v-if="myUser && routeUser.id !== myUser.id"
 													class="list-group-item has-icon"
 													@click="report"
 												>
 													<AppJolticon icon="flag" />
-													<AppTranslate> Report user </AppTranslate>
+													{{ $gettext(`Report user`) }}
 												</a>
 												<a
 													v-if="
@@ -569,7 +549,7 @@ export default class RouteProfile extends BaseRouteComponent {
 													@click="routeStore.removeFriend()"
 												>
 													<AppJolticon icon="friend-remove-1" notice />
-													<AppTranslate> Remove Friend </AppTranslate>
+													{{ $gettext(`Remove friend`) }}
 												</a>
 												<a
 													v-if="canBlock"
@@ -577,16 +557,16 @@ export default class RouteProfile extends BaseRouteComponent {
 													@click="blockUser"
 												>
 													<AppJolticon icon="friend-remove-2" notice />
-													<AppTranslate>Block user</AppTranslate>
+													{{ $gettext(`Block user`) }}
 												</a>
 												<a
-													v-if="app.user && app.user.permission_level > 0"
+													v-if="myUser && myUser.permission_level > 0"
 													class="list-group-item has-icon"
-													:href="`${Environment.baseUrl}/moderate/users/view/${user.id}`"
+													:href="`${Environment.baseUrl}/moderate/users/view/${routeUser.id}`"
 													target="_blank"
 												>
 													<AppJolticon icon="cog" />
-													<AppTranslate> Moderate User </AppTranslate>
+													{{ $gettext(`Moderate user`) }}
 												</a>
 											</div>
 										</template>
@@ -600,7 +580,7 @@ export default class RouteProfile extends BaseRouteComponent {
 						<AppPageHeaderControls>
 							<AppUserFollowButton
 								v-if="shouldShowFollow"
-								:user="user"
+								:user="routeUser"
 								block
 								location="profilePage"
 							/>
@@ -612,13 +592,13 @@ export default class RouteProfile extends BaseRouteComponent {
 									name: 'dash.account.edit',
 								}"
 							>
-								<AppTranslate>Edit Profile</AppTranslate>
+								{{ $gettext(`Edit profile`) }}
 							</AppButton>
 						</AppPageHeaderControls>
 					</template>
 				</AppPageHeader>
 
-				<router-view />
+				<RouterView />
 			</AppUserBlockOverlay>
 		</template>
 	</div>

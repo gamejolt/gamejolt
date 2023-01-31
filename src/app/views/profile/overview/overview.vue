@@ -30,7 +30,6 @@ import { formatNumber } from '../../../../_common/filters/number';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { Game } from '../../../../_common/game/game.model';
 import AppInviteCard from '../../../../_common/invite/AppInviteCard.vue';
-import '../../../../_common/lazy/placeholder/placeholder.styl';
 import { LinkedAccount, Provider } from '../../../../_common/linked-account/linked-account.model';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
@@ -59,7 +58,7 @@ import { TrophyModal } from '../../../components/trophy/modal/modal.service';
 import AppTrophyThumbnail from '../../../components/trophy/thumbnail/thumbnail.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useAppStore } from '../../../store/index';
-import { useProfileRouteController } from '../profile.vue';
+import { useProfileRouteController } from '../RouteProfile.vue';
 
 const FiresideScrollInviewConfig = new ScrollInviewConfig({
 	emitsOn: 'partial-overlap',
