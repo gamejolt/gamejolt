@@ -2,7 +2,12 @@
 import { computed, ref } from 'vue';
 import { illNoCommentsSmall } from '../../../../app/img/ill/illustrations';
 import { styleBorderRadiusCircle, styleBorderRadiusLg } from '../../../../_styles/mixins';
-import { kBorderRadiusLg, kBorderWidthLg, kFontSizeSmall } from '../../../../_styles/variables';
+import {
+	kBorderRadiusLg,
+	kBorderWidthLg,
+	kFontSizeSmall,
+	kStrongEaseOut,
+} from '../../../../_styles/variables';
 import { Api } from '../../../api/api.service';
 import AppAspectRatio from '../../../aspect-ratio/AppAspectRatio.vue';
 import AppAvatarFrame from '../../../avatar/AppAvatarFrame.vue';
@@ -104,8 +109,7 @@ function isSelected(data: UserAvatarFrame | null) {
 						{
 							padding: `24px`,
 							borderRadius: kBorderRadiusLg.px,
-							// TODO(avatar-frames) add consts for our curve variables
-							transition: `background-color 300ms cubic-bezier(0.19, 1, 0.2, 1)`,
+							transition: `background-color 300ms ${kStrongEaseOut}`,
 							...styleBorderRadiusLg,
 							border: `${kBorderWidthLg.px} solid ${kThemeFg10}`,
 						},
