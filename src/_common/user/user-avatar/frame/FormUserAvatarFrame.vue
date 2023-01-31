@@ -1,7 +1,11 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, onUnmounted, ref } from 'vue';
 import { illNoCommentsSmall } from '../../../../app/img/ill/illustrations';
-import { styleBorderRadiusCircle, styleBorderRadiusLg } from '../../../../_styles/mixins';
+import {
+	styleBorderRadiusBase,
+	styleBorderRadiusCircle,
+	styleBorderRadiusLg,
+} from '../../../../_styles/mixins';
 import {
 	kBorderRadiusLg,
 	kBorderWidthLg,
@@ -11,6 +15,7 @@ import {
 import { Api } from '../../../api/api.service';
 import AppAspectRatio from '../../../aspect-ratio/AppAspectRatio.vue';
 import AppAvatarFrame from '../../../avatar/AppAvatarFrame.vue';
+import { shorthandReadableTime } from '../../../filters/duration';
 import AppForm, { createForm, FormController } from '../../../form-vue/AppForm.vue';
 import AppFormButton from '../../../form-vue/AppFormButton.vue';
 import AppFormStickySubmit from '../../../form-vue/AppFormStickySubmit.vue';
@@ -18,7 +23,13 @@ import { showErrorGrowl } from '../../../growls/growls.service';
 import AppIllustration from '../../../illustration/AppIllustration.vue';
 import AppSpacer from '../../../spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../store/common-store';
-import { kThemeBgOffset, kThemeBgSubtle, kThemeDark, kThemeFg10 } from '../../../theme/variables';
+import {
+	kThemeBgOffset,
+	kThemeBgSubtle,
+	kThemeDark,
+	kThemeFg10,
+	kThemeGjOverlayNotice,
+} from '../../../theme/variables';
 import { $gettext } from '../../../translate/translate.service';
 import AppUserAvatarImg from '../AppUserAvatarImg.vue';
 import { UserAvatarFrame } from './frame.model';
@@ -31,6 +42,7 @@ const { user } = useCommonStore();
 
 const placeholderFrames = [null, null];
 
+const expiryInfoKey = ref(-1);
 const availableFrames = ref<UserAvatarFrame[]>([]);
 
 const displayFrames = computed(() =>
@@ -58,6 +70,12 @@ const form: FormController<FormModel> = createForm({
 	onSubmitSuccess(response) {
 		user.value?.processUpdate(response, 'user');
 	},
+});
+
+const interval = setInterval(() => (expiryInfoKey.value *= -1), 1_000);
+
+onUnmounted(() => {
+	clearInterval(interval);
 });
 
 function pickFrame(frameId: number) {
@@ -98,7 +116,7 @@ function isSelected(data: UserAvatarFrame | null) {
 					:style="[
 						form.isLoaded
 							? {
-									cursor: 'pointer',
+									cursor: data?.isExpired ? 'normal' : 'pointer',
 									backgroundColor: isSelected(data)
 										? kThemeBgOffset
 										: `transparent`,
@@ -107,6 +125,7 @@ function isSelected(data: UserAvatarFrame | null) {
 									backgroundColor: kThemeBgSubtle,
 							  },
 						{
+							position: `relative`,
 							padding: `24px`,
 							borderRadius: kBorderRadiusLg.px,
 							transition: `background-color 300ms ${kStrongEaseOut}`,
@@ -114,7 +133,7 @@ function isSelected(data: UserAvatarFrame | null) {
 							border: `${kBorderWidthLg.px} solid ${kThemeFg10}`,
 						},
 					]"
-					@click="pickFrame(data?.avatar_frame.id || 0)"
+					@click="data?.isExpired ? undefined : pickFrame(data?.avatar_frame.id || 0)"
 				>
 					<AppAspectRatio
 						:style="{
@@ -123,45 +142,73 @@ function isSelected(data: UserAvatarFrame | null) {
 						:ratio="1"
 						show-overflow
 					>
-						<!-- TODO(avatar-frames) expiry info -->
-						<div
-							v-if="form.isLoaded"
-							:style="{
-								position: `absolute`,
-								left: 0,
-								top: 0,
-								right: 0,
-								bottom: 0,
-								display: `grid`,
-								alignItems: `center`,
-							}"
-						>
+						<template v-if="form.isLoaded">
 							<div
-								v-if="!data"
 								:style="{
-									textAlign: `center`,
-									fontWeight: `bold`,
-									fontSize: kFontSizeSmall.px,
+									position: `absolute`,
+									left: 0,
+									top: 0,
+									right: 0,
+									bottom: 0,
+									display: `grid`,
+									alignItems: `center`,
 								}"
 							>
-								{{ $gettext(`No frame`) }}
+								<div
+									v-if="!data"
+									:style="{
+										textAlign: `center`,
+										fontWeight: `bold`,
+										fontSize: kFontSizeSmall.px,
+									}"
+								>
+									{{ $gettext(`No frame`) }}
+								</div>
+								<AppAvatarFrame v-else :frame="data.avatar_frame">
+									<AppAspectRatio :ratio="1">
+										<Transition name="fade">
+											<AppUserAvatarImg
+												v-if="isSelected(data)"
+												:style="{
+													backgroundColor: kThemeDark,
+													...styleBorderRadiusCircle,
+												}"
+												:user="user"
+											/>
+										</Transition>
+									</AppAspectRatio>
+								</AppAvatarFrame>
 							</div>
-							<AppAvatarFrame v-else :frame="data.avatar_frame">
-								<AppAspectRatio :ratio="1">
-									<Transition name="fade">
-										<AppUserAvatarImg
-											v-if="isSelected(data)"
-											:style="{
-												backgroundColor: kThemeDark,
-												...styleBorderRadiusCircle,
-											}"
-											:user="user"
-										/>
-									</Transition>
-								</AppAspectRatio>
-							</AppAvatarFrame>
-						</div>
+						</template>
 					</AppAspectRatio>
+
+					<div
+						v-if="data && data.expires_on"
+						:key="expiryInfoKey"
+						:style="{
+							position: `absolute`,
+							top: `8px`,
+							left: `8px`,
+							padding: `2px 6px`,
+							backgroundColor: `rgba(0, 0, 0, 0.54)`,
+							color: data.isExpired ? kThemeGjOverlayNotice : `white`,
+							fontWeight: `bold`,
+							fontSize: kFontSizeSmall.px,
+							...styleBorderRadiusBase,
+							zIndex: 3,
+							pointerEvents: `none`,
+						}"
+					>
+						{{
+							data.isExpired
+								? 'Expired'
+								: shorthandReadableTime(data.expires_on, {
+										allowFuture: true,
+										precision: 'rough',
+										nowText: 'Expired',
+								  })
+						}}
+					</div>
 				</div>
 			</div>
 

@@ -31,6 +31,13 @@ export type ThemeColor =
 	| 'primary'
 	| 'primary-fg';
 
+// GJ Color Palette
+export const kThemeGjGreen = `#cf0`;
+export const kThemeGjDarkGreen = `#2f7f6f`;
+export const kThemeGjPink = `#ff3fac`;
+export const kThemeGjBlue = `#31d6ff`;
+export const kThemeGjOverlayNotice = `#f11a5c`;
+
 export const kThemeDarkest = `var(--theme-darkest)`;
 export const kThemeDarker = `var(--theme-darker)`;
 export const kThemeDark = `var(--theme-dark)`;
