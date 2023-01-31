@@ -25,7 +25,7 @@ const creatorAccount = ref<UserTipaltiManagedAccount>();
 const creatorOnboardingForm = ref<string>();
 const creatorOnboardingFormHeight = ref(200);
 
-const isVerified = computed(() => account.value && account.value.is_verified);
+const isVerified = computed(() => creatorAccount.value?.onboarding_status === 'active');
 const canBeCreator = computed(() => userCanBeCreator(user.value));
 
 /**
