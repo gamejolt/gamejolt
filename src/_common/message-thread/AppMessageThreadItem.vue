@@ -1,36 +1,50 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
-import { formatDate } from '../../filters/date';
-import { AppTimeAgo } from '../../time/ago/ago';
-import AppTimelineListItem from '../../timeline-list/item/item.vue';
-import AppUserCardHover from '../../user/card/AppUserCardHover.vue';
-import AppUserAvatar from '../../user/user-avatar/AppUserAvatar.vue';
-import { User } from '../../user/user.model';
-import AppUserVerifiedTick from '../../user/verified-tick/AppUserVerifiedTick.vue';
+<script lang="ts" setup>
+import { PropType } from 'vue';
+import { RouterLink } from 'vue-router';
+import AppUserAvatarBubble from '../../app/components/user/AppUserAvatarBubble.vue';
+import { formatDate } from '../filters/date';
+import AppJolticon from '../jolticon/AppJolticon.vue';
+import { AppTimeAgo } from '../time/ago/ago';
+import AppTimelineListItem from '../timeline-list/item/item.vue';
+import AppUserCardHover from '../user/card/AppUserCardHover.vue';
+import { User } from '../user/user.model';
 
-@Options({
-	components: {
-		AppTimelineListItem,
-		AppUserCardHover,
-		AppUserAvatar,
-		AppTimeAgo,
-		AppUserVerifiedTick,
+defineProps({
+	user: {
+		type: [Object, null] as PropType<User | null>,
+		required: true,
 	},
-})
-export default class AppMessageThreadItem extends Vue {
-	@Prop({ type: Object, required: true }) user!: User;
-	@Prop(Object) repliedTo?: User;
-	@Prop({ type: Number, required: true }) date!: number;
-	@Prop(String) id?: string;
-	@Prop({ type: Boolean, default: false }) isActive!: boolean;
-	@Prop({ type: Boolean, default: false }) isNew!: boolean;
-	@Prop({ type: Boolean, default: false }) isReply!: boolean;
-	@Prop({ type: Boolean, default: false }) isLast!: boolean;
-	@Prop({ type: Boolean, default: false }) isShowingReplies!: boolean;
-	@Prop({ type: Boolean, default: false }) isBlocked!: boolean;
-
-	readonly formatDate = formatDate;
-}
+	repliedTo: {
+		type: Object as PropType<User>,
+		default: undefined,
+	},
+	date: {
+		type: Number,
+		required: true,
+	},
+	id: {
+		type: String,
+		default: undefined,
+	},
+	isActive: {
+		type: Boolean,
+	},
+	isNew: {
+		type: Boolean,
+	},
+	isReply: {
+		type: Boolean,
+	},
+	isLast: {
+		type: Boolean,
+	},
+	isShowingReplies: {
+		type: Boolean,
+	},
+	isBlocked: {
+		type: Boolean,
+	},
+});
 </script>
 
 <template>
@@ -43,7 +57,7 @@ export default class AppMessageThreadItem extends Vue {
 		>
 			<template v-if="!isBlocked && user" #bubble>
 				<AppUserCardHover :user="user">
-					<AppUserAvatar :user="user" />
+					<AppUserAvatarBubble :user="user" show-frame show-verified />
 				</AppUserCardHover>
 			</template>
 
@@ -53,7 +67,7 @@ export default class AppMessageThreadItem extends Vue {
 					<div v-if="user" class="-meta clearfix">
 						<div class="-byline">
 							<span class="-author">
-								<router-link
+								<RouterLink
 									:to="{
 										name: 'profile.overview',
 										params: { username: user.username },
@@ -61,8 +75,8 @@ export default class AppMessageThreadItem extends Vue {
 									class="link-unstyled"
 								>
 									{{ user.display_name }}
-									<AppUserVerifiedTick :user="user" />
-								</router-link>
+									{{ ' ' }}
+								</RouterLink>
 
 								<small class="text-muted">@{{ user.username }}</small>
 							</span>
@@ -71,7 +85,7 @@ export default class AppMessageThreadItem extends Vue {
 								<AppJolticon icon="arrow-forward" />
 
 								<span class="-author tiny">
-									<router-link
+									<RouterLink
 										:to="{
 											name: 'profile.overview',
 											params: { username: repliedTo.username },
@@ -79,7 +93,7 @@ export default class AppMessageThreadItem extends Vue {
 										class="link-unstyled"
 									>
 										{{ repliedTo.display_name }}
-									</router-link>
+									</RouterLink>
 
 									<span class="text-muted">@{{ repliedTo.username }}</span>
 								</span>

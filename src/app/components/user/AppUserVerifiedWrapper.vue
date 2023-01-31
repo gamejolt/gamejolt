@@ -8,7 +8,7 @@ import { ChatUser } from '../chat/user';
 
 const props = defineProps({
 	user: {
-		type: [Object, undefined] as PropType<User | ChatUser | undefined>,
+		type: [Object, null, undefined] as PropType<User | ChatUser | null | undefined>,
 		required: true,
 	},
 	position: {

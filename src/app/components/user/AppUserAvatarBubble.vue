@@ -14,7 +14,7 @@ import AppUserVerifiedWrapper from './AppUserVerifiedWrapper.vue';
 
 const props = defineProps({
 	user: {
-		type: Object as PropType<User | ChatUser | undefined>,
+		type: [Object, null, undefined] as PropType<User | ChatUser | null | undefined>,
 		required: true,
 	},
 	bgColor: {
