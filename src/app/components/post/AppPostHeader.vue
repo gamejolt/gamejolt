@@ -72,9 +72,9 @@ const shouldShowFollow = computed(() => {
 				<div class="-header-avatar" :class="{ '-new': isNew }">
 					<AppUserAvatarBubble
 						:user="user"
-						frame-shrink-on-show
 						show-frame
 						show-verified
+						smoosh
 						bg-color="bg-subtle"
 					/>
 				</div>

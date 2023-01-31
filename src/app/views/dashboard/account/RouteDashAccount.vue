@@ -1,6 +1,6 @@
 <script lang="ts">
 import { computed, inject, InjectionKey, provide, ref } from 'vue';
-import { RouterLink, RouterView } from 'vue-router';
+import { RouterLink, RouterView, useRoute } from 'vue-router';
 import { bangRef } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppAvatarFrame from '../../../../_common/avatar/AppAvatarFrame.vue';
@@ -13,6 +13,7 @@ import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import { UserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
 import { UserHeaderModal } from '../../../components/user/header-modal/header-modal.service';
@@ -65,6 +66,8 @@ provide(Key, routeStore);
 const { heading } = routeStore;
 const user = bangRef(maybeUser);
 
+const route = useRoute();
+
 const { isBootstrapped } = createAppRoute({
 	onResolved({ payload }) {
 		setUser(payload.user);
@@ -108,7 +111,7 @@ function showEditAvatar() {
 
 			<template v-if="!Screen.isXs" #spotlight>
 				<AppEditableOverlay
-					:disabled="$route.name !== routeDashAccountEdit.name"
+					:disabled="route.name !== routeDashAccountEdit.name"
 					@click="showEditAvatar()"
 				>
 					<template #overlay>
@@ -119,7 +122,7 @@ function showEditAvatar() {
 			</template>
 		</AppPageHeader>
 
-		<AppExpand :when="$route.name === routeDashAccountEdit.name">
+		<AppExpand :when="route.name === routeDashAccountEdit.name">
 			<AppEditableOverlay @click="showEditHeader()">
 				<template #overlay>
 					{{ $gettext(`Change profile header`) }}
@@ -294,7 +297,7 @@ function showEditAvatar() {
 						</nav>
 					</div>
 					<div class="col-xs-12 col-sm-9 col-md-10">
-						<template v-if="Screen.isXs && $route.name === routeDashAccountEdit.name">
+						<template v-if="Screen.isXs && route.name === routeDashAccountEdit.name">
 							<AppAvatarFrame
 								:style="{
 									margin: `0 auto`,
@@ -312,7 +315,7 @@ function showEditAvatar() {
 									<template #overlay>
 										{{ $gettext(`Change`) }}
 									</template>
-									<AppUserAvatar :user="user" />
+									<AppUserAvatarImg :user="user" />
 								</AppEditableOverlay>
 							</AppAvatarFrame>
 

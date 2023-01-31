@@ -62,7 +62,10 @@ const props = defineProps({
 		validator: value => value === undefined || typeof value === 'number',
 		default: undefined,
 	},
-	frameShrinkOnShow: {
+	/**
+	 * Smooshes it.
+	 */
+	smoosh: {
 		type: Boolean,
 	},
 });
@@ -77,17 +80,13 @@ const {
 	verifiedSize,
 	showFrame,
 	frameInset,
-	frameShrinkOnShow,
+	smoosh,
 } = toRefs(props);
 
 const avatarFrame = computed(() => (isChatUser(user.value) ? undefined : user.value?.avatar_frame));
 
-const mayShrinkFrame = computed(
-	() =>
-		!isChatUser(user.value) &&
-		!!user.value?.avatar_frame &&
-		showFrame.value &&
-		frameShrinkOnShow.value
+const maySmooshFrame = computed(
+	() => !isChatUser(user.value) && !!user.value?.avatar_frame && showFrame.value && smoosh.value
 );
 
 const href = computed(() => {
@@ -116,7 +115,7 @@ function isChatUser(user: typeof props.user): user is ChatUser {
 			<AppUserVerifiedWrapper
 				:user="user"
 				:hide-tick="!showVerified"
-				:tick-offset="verifiedOffset ?? (mayShrinkFrame ? 0 : undefined)"
+				:tick-offset="verifiedOffset ?? (maySmooshFrame ? 0 : undefined)"
 				:position="verifiedPosition"
 				:big="verifiedSize === 'big'"
 				:small="verifiedSize === 'small'"
@@ -126,7 +125,7 @@ function isChatUser(user: typeof props.user): user is ChatUser {
 					:frame="avatarFrame"
 					:hide-frame="!showFrame"
 					:inset="frameInset"
-					:shrink-on-show="frameShrinkOnShow"
+					:smoosh="smoosh"
 				>
 					<div
 						:style="{

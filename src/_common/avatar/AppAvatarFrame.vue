@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, PropType, toRefs } from 'vue';
+import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
 import { AvatarFrame } from './frame.model';
 
-const BASE_INSET = -10;
-const BASE_SIZE = 100 - BASE_INSET * 2;
+const BASE_FRAME_INSET = -10;
+const BASE_FRAME_SIZE = 100 - BASE_FRAME_INSET * 2;
 
 const props = defineProps({
 	frame: {
@@ -18,71 +19,83 @@ const props = defineProps({
 		type: Boolean,
 	},
 	/**
-	 * Treats the avatar frame as a border that insets our content, rather than
-	 * an overlay that exceeds the container bounds.
+	 * Smooshes it.
 	 */
-	shrinkOnShow: {
+	smoosh: {
 		type: Boolean,
 	},
 });
 
-const { frame, inset, hideFrame, shrinkOnShow } = toRefs(props);
+const { frame, inset, hideFrame, smoosh } = toRefs(props);
 
-const rootStyles = computed(() => {
+const avatarStyling = computed(() => {
 	const result: CSSProperties = {
-		position: `relative`,
+		position: `absolute`,
+		zIndex: 0,
 	};
 
-	if (shrinkOnShow.value && !!frame.value && !hideFrame.value) {
-		result.transform = `scale(${100 / BASE_SIZE})`;
+	let insetBase = `0px`;
+	let sizeBase = `100%`;
+
+	if (frame.value && smoosh.value) {
+		insetBase = `${BASE_FRAME_INSET * -1}%`;
+		sizeBase = `${100 + BASE_FRAME_INSET * 2}`;
 	}
+
+	result.top = insetBase;
+	result.right = insetBase;
+	result.bottom = insetBase;
+	result.left = insetBase;
+
+	result.width = sizeBase;
+	result.height = sizeBase;
 
 	return result;
 });
 
-const frameInset = computed(() => {
-	const base = `${BASE_INSET}%`;
-	if (!inset?.value) {
-		return base;
-	}
-	return `calc(${base} + ${inset.value}px)`;
-});
+const frameStyling = computed(() => {
+	const result: CSSProperties = {
+		position: `absolute`,
+		pointerEvents: `none`,
+		zIndex: 1,
+	};
 
-const frameSize = computed(() => {
-	const base = `${BASE_SIZE}%`;
-	if (!inset?.value) {
-		return base;
+	let insetBase = `${BASE_FRAME_INSET}%`;
+	let sizeBase = `${BASE_FRAME_SIZE}%`;
+
+	if (frame.value && smoosh.value) {
+		insetBase = `0px`;
+		sizeBase = `100%`;
+	} else if (inset?.value) {
+		insetBase = `calc(${insetBase} + ${inset.value}px)`;
+		sizeBase = `calc(${sizeBase} - ${inset.value * 2}px)`;
 	}
-	return `calc(${base} - ${inset.value * 2}px)`;
+
+	result.top = insetBase;
+	result.right = insetBase;
+	result.bottom = insetBase;
+	result.left = insetBase;
+
+	result.width = sizeBase;
+	result.height = sizeBase;
+
+	return result;
 });
 </script>
 
 <template>
 	<!-- AppAvatarFrame -->
-	<div :style="rootStyles">
-		<div
-			:style="{
-				zIndex: 0,
-			}"
-		>
-			<slot />
-		</div>
+	<div
+		:style="{
+			position: `relative`,
+		}"
+	>
+		<AppAspectRatio :ratio="1" show-overflow>
+			<div :style="avatarStyling">
+				<slot />
+			</div>
 
-		<img
-			v-if="frame && !hideFrame"
-			:style="{
-				position: `absolute`,
-				top: frameInset,
-				right: frameInset,
-				bottom: frameInset,
-				left: frameInset,
-				width: frameSize,
-				height: frameSize,
-				pointerEvents: `none`,
-				zIndex: 1,
-			}"
-			:src="frame.image_url"
-			alt=""
-		/>
+			<img v-if="frame && !hideFrame" :style="frameStyling" :src="frame.image_url" alt="" />
+		</AppAspectRatio>
 	</div>
 </template>

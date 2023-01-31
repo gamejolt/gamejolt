@@ -281,8 +281,8 @@ function onDismissNotification(notification: CommunityUserNotification) {
 											<AppUserAvatarBubble
 												:user="displayUser"
 												show-verified
-												frame-shrink-on-show
 												show-frame
+												smoosh
 												bg-color="bg-subtle"
 											/>
 										</AppUserCardHover>
