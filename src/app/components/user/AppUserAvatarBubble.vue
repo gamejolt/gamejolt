@@ -14,7 +14,7 @@ import AppUserVerifiedWrapper from './AppUserVerifiedWrapper.vue';
 
 const props = defineProps({
 	user: {
-		type: [Object, null, undefined] as PropType<User | ChatUser | null | undefined>,
+		type: [Object, null] as PropType<User | ChatUser | null>,
 		required: true,
 	},
 	bgColor: {
@@ -122,7 +122,7 @@ function isChatUser(user: typeof props.user): user is ChatUser {
 				:tiny="verifiedSize === 'tiny'"
 			>
 				<AppAvatarFrame
-					:frame="avatarFrame"
+					:frame="avatarFrame || null"
 					:hide-frame="!showFrame"
 					:inset="frameInset"
 					:smoosh="smoosh"

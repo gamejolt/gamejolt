@@ -303,7 +303,7 @@ function showEditAvatar() {
 									margin: `0 auto`,
 									maxWidth: `200px`,
 								}"
-								:frame="user.avatar_frame"
+								:frame="user.avatar_frame || null"
 							>
 								<AppEditableOverlay
 									:style="{
