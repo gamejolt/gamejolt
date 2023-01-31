@@ -47,7 +47,7 @@ import { showUserInviteFollowModal } from '../../../../_common/user/invite/modal
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 import { unfollowUser, User } from '../../../../_common/user/user.model';
 import { openChatRoom } from '../../../components/chat/client';
-import AppCommentOverview from '../../../components/comment/overview/overview.vue';
+import AppCommentOverview from '../../../components/comment/AppCommentOverview.vue';
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import AppGameList from '../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
