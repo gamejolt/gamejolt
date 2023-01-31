@@ -201,11 +201,11 @@ function isSelected(data: UserAvatarFrame | null) {
 					>
 						{{
 							data.isExpired
-								? 'Expired'
+								? $gettext(`Expired`)
 								: shorthandReadableTime(data.expires_on, {
 										allowFuture: true,
 										precision: 'rough',
-										nowText: 'Expired',
+										nowText: $gettext(`Expired`),
 								  })
 						}}
 					</div>
