@@ -104,6 +104,7 @@ export function createAdsController() {
 		// changed.
 		if (_didRouteChange(from, to)) {
 			c.adapter.onBeforeRouteChange();
+			c.videoAdapter.onBeforeRouteChange();
 			c.routeResolved = false;
 		}
 		next();
@@ -116,6 +117,7 @@ export function createAdsController() {
 
 		c.routeResolved = true;
 		c.adapter.onRouteChanged();
+		c.videoAdapter.onRouteChanged();
 		_displayAds(Array.from(c.ads));
 	});
 
