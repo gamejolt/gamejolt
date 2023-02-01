@@ -3,10 +3,9 @@ import { computed, PropType, toRefs } from 'vue';
 import AppAvatarFrame from '../../../_common/avatar/AppAvatarFrame.vue';
 import { ComponentProps } from '../../../_common/component-helpers';
 import { Environment } from '../../../_common/environment/environment.service';
+import { imageGuestAvatar } from '../../../_common/img/images';
 import { ThemeColor } from '../../../_common/theme/variables';
-import AppUserAvatarImg, {
-	assetGuestImage,
-} from '../../../_common/user/user-avatar/AppUserAvatarImg.vue';
+import AppUserAvatarImg from '../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { User } from '../../../_common/user/user.model';
 import { styleBorderRadiusCircle, styleChangeBg } from '../../../_styles/mixins';
 import { ChatUser } from '../chat/user';
@@ -136,7 +135,7 @@ function isChatUser(user: typeof props.user): user is ChatUser {
 						<slot>
 							<template v-if="isChatUser(user)">
 								<img v-if="user.img_avatar" :src="user.img_avatar" alt="" />
-								<img v-else :src="assetGuestImage" alt="" />
+								<img v-else :src="imageGuestAvatar" alt="" />
 							</template>
 							<AppUserAvatarImg v-else :user="user" />
 						</slot>
