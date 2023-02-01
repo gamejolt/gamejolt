@@ -20,7 +20,7 @@ import {
 	provideStickerTargetController,
 } from '../../../../../_common/sticker/target/target-controller';
 import AppFiresidePostEmbed from '../../../fireside/post/embed/embed.vue';
-import AppPollVoting from '../../../poll/voting/voting.vue';
+import AppPollVoting from '../../../poll/AppPollVoting.vue';
 import AppPostContent from '../../../post/AppPostContent.vue';
 import AppPostHeader from '../../../post/AppPostHeader.vue';
 import AppPostTargets from '../../../post/AppPostTargets.vue';
@@ -272,11 +272,7 @@ function onPostUnpinned(item: EventItem) {
 							/>
 
 							<div v-if="post.hasPoll" class="-poll" @click.stop>
-								<AppPollVoting
-									:poll="post.poll"
-									:game="post.game"
-									:user="post.user"
-								/>
+								<AppPollVoting :poll="post.poll" :post="post" />
 							</div>
 						</AppStickerControlsOverlay>
 					</AppPostContent>
