@@ -9,7 +9,7 @@ import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { UserStripeManagedAccount } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
 import { UserTipaltiManagedAccount } from '../../../../_common/user/tipalti-managed-account/tipalti-managed-account';
-import { userCanBeCreator } from '../../../../_common/user/user.model';
+import { userCanAccessCreatorForm } from '../../../../_common/user/user.model';
 import AppCreatorTerms from './AppCreatorTerms.vue';
 import AppFinancialsCheckmark from './AppFinancialsCheckmark.vue';
 
@@ -26,7 +26,7 @@ const creatorOnboardingForm = ref<string>();
 const creatorOnboardingFormHeight = ref(200);
 
 const isVerified = computed(() => creatorAccount.value?.onboarding_status === 'active');
-const canBeCreator = computed(() => userCanBeCreator(user.value));
+const canAccessCreatorForm = computed(() => userCanAccessCreatorForm(user.value));
 
 /**
  * This will handle any message events sent over to our page. Tipalti sends
@@ -99,7 +99,11 @@ async function acceptTerms() {
 			<br />
 
 			<!-- First step is to sign an agreement. -->
-			<AppCreatorTerms v-if="canBeCreator" :account="account" @accepted="acceptTerms()" />
+			<AppCreatorTerms
+				v-if="canAccessCreatorForm"
+				:account="account"
+				@accepted="acceptTerms()"
+			/>
 
 			<template v-if="creatorOnboardingForm">
 				<h2 :style="{ marginTop: 0 }">

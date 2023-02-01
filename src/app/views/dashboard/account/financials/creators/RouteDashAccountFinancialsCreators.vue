@@ -10,7 +10,7 @@ import {
 } from '../../../../../../_common/route/route-component';
 import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
-import { userCanBeCreator } from '../../../../../../_common/user/user.model';
+import { userCanAccessCreatorForm } from '../../../../../../_common/user/user.model';
 import FormFinancialsCreator from '../../../../../components/forms/financials/FormFinancialsCreator.vue';
 import { illEndOfFeed } from '../../../../../img/ill/illustrations';
 import { routeLandingCreators } from '../../../../landing/creators/creators.route';
@@ -24,13 +24,15 @@ export default {
 <script lang="ts" setup>
 const { user } = useCommonStore();
 
-const canBeCreator = computed(() => (user.value ? userCanBeCreator(user.value) : false));
+const canAccessCreatorForm = computed(() =>
+	user.value ? userCanAccessCreatorForm(user.value) : false
+);
 
 createAppRoute({});
 </script>
 
 <template>
-	<template v-if="!canBeCreator">
+	<template v-if="!canAccessCreatorForm">
 		<AppAlertBox icon="notice" color="primary">
 			{{
 				$gettext(
