@@ -167,7 +167,7 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 					</div>
 
 					<template v-if="post.hasPoll">
-						<AppPollVoting :poll="post.poll" />
+						<AppPollVoting :post="post" :poll="post.poll" />
 
 						<br />
 					</template>

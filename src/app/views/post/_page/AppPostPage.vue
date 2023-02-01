@@ -372,7 +372,7 @@ function onDismissNotification(notification: CommunityUserNotification) {
 					</div>
 
 					<AppStickerControlsOverlay v-if="post.hasPoll">
-						<AppPollVoting :poll="post.poll" :post="post" />
+						<AppPollVoting :post="post" :poll="post.poll" />
 
 						<br />
 					</AppStickerControlsOverlay>

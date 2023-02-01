@@ -272,7 +272,7 @@ function onPostUnpinned(item: EventItem) {
 							/>
 
 							<div v-if="post.hasPoll" class="-poll" @click.stop>
-								<AppPollVoting :poll="post.poll" :post="post" />
+								<AppPollVoting :post="post" :poll="post.poll" />
 							</div>
 						</AppStickerControlsOverlay>
 					</AppPostContent>
