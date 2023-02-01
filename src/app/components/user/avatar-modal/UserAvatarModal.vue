@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import { onMounted, ref } from 'vue';
+import { run } from '../../../../utils/utils';
+import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppModal from '../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
@@ -8,6 +11,20 @@ import FormAvatar from '../../forms/avatar/avatar.vue';
 
 const modal = useModal()!;
 const { user } = useCommonStore();
+
+const hasAvatarFrameSelector = ref(false);
+
+onMounted(() => {
+	run(async () => {
+		const response = await Api.sendFieldsRequest(
+			`/mobile/feature`,
+			{ avatar_frames: true },
+			{ detach: true }
+		);
+
+		hasAvatarFrameSelector.value = response.avatar_frames === true;
+	});
+});
 </script>
 
 <template>
@@ -21,10 +38,12 @@ const { user } = useCommonStore();
 		<div class="modal-body">
 			<FormAvatar :model="user" />
 
-			<label class="control-label">
-				{{ $gettext(`Avatar frames`) }}
-			</label>
-			<FormUserAvatarFrame />
+			<template v-if="hasAvatarFrameSelector">
+				<label class="control-label">
+					{{ $gettext(`Avatar frames`) }}
+				</label>
+				<FormUserAvatarFrame />
+			</template>
 		</div>
 	</AppModal>
 </template>
