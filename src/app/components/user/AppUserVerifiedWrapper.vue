@@ -6,13 +6,22 @@ import AppUserVerifiedTick from '../../../_common/user/verified-tick/AppUserVeri
 import { styleBorderRadiusCircle, styleChangeBg } from '../../../_styles/mixins';
 import { ChatUser } from '../chat/user';
 
+interface PositionData {
+	vPos: 'top' | 'bottom';
+	hPos: 'left' | 'right';
+	translateY: number;
+	translateX: number;
+}
+
+type PositionCorner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+
 const props = defineProps({
 	user: {
 		type: [Object, null] as PropType<User | ChatUser | null>,
 		required: true,
 	},
 	position: {
-		type: String as PropType<'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'>,
+		type: String as PropType<PositionCorner>,
 		default: 'bottom-right',
 	},
 	hideTick: {
@@ -35,32 +44,46 @@ const props = defineProps({
 
 const { user, position, hideTick, tickOffset, big, small, tiny } = toRefs(props);
 
-const styleFloatingTickPosition = computed(() => {
+const floatingTickPositionStyles = computed(() => {
 	const result: CSSProperties = {
 		position: `absolute`,
 		pointerEvents: `all`,
 	};
 
-	const pos = position.value;
-	const dash = pos.indexOf('-');
-	const vPos = pos.slice(0, dash);
-	const hPos = pos.slice(dash + 1, pos.length);
-
-	const inset = 0;
 	const offset = tickOffset.value;
+	const inset = 0;
 
-	let translateX = 0;
-	let translateY = 0;
+	const data: Record<PositionCorner, PositionData> = {
+		'top-left': {
+			vPos: 'top',
+			hPos: 'left',
+			translateX: -offset,
+			translateY: -offset,
+		},
+		'top-right': {
+			vPos: 'top',
+			hPos: 'right',
+			translateX: offset,
+			translateY: -offset,
+		},
+		'bottom-right': {
+			vPos: 'bottom',
+			hPos: 'right',
+			translateX: offset,
+			translateY: offset,
+		},
+		'bottom-left': {
+			vPos: 'bottom',
+			hPos: 'left',
+			translateX: -offset,
+			translateY: offset,
+		},
+	};
 
-	if (vPos === 'top' || vPos === 'bottom') {
-		result[vPos] = inset;
-		translateY = vPos === 'top' ? -offset : vPos === 'bottom' ? offset : 0;
-	}
-	if (hPos === 'left' || hPos === 'right') {
-		result[hPos] = inset;
-		translateX = hPos === 'left' ? -offset : hPos === 'right' ? offset : 0;
-	}
+	const { hPos, vPos, translateX, translateY } = data[position.value];
 
+	result[hPos] = inset;
+	result[vPos] = inset;
 	result['transform'] = `translate(${translateX}%, ${translateY}%)`;
 	return result;
 });
@@ -86,7 +109,7 @@ const styleFloatingTickPosition = computed(() => {
 			:style="{
 				...styleChangeBg('bg'),
 				...styleBorderRadiusCircle,
-				...styleFloatingTickPosition,
+				...floatingTickPositionStyles,
 				margin: 0,
 				padding: `1px`,
 				color: kThemeFg,
