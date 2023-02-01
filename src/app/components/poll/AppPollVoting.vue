@@ -153,12 +153,25 @@ function setDateRefresh() {
 			<div
 				v-for="item of poll.items"
 				:key="item.id"
-				:class="{
-					'-chosen': item.is_voted,
-				}"
+				:style="
+					item.is_voted
+						? {
+								fontWeight: `bold`,
+						  }
+						: {}
+				"
 			>
 				<AppProgressBar :percent="getItemPercentage(item) * 100">
-					<span v-if="!shouldObscureResults" class="-progress-percent">
+					<span
+						v-if="!shouldObscureResults"
+						:style="{
+							display: `inline-block`,
+							width: `50px`,
+							fontWeight: `bold`,
+							marginRight: `10px`,
+							textAlign: `right`,
+						}"
+					>
 						{{
 							formatNumber(getItemPercentage(item), {
 								style: 'percent',
@@ -210,15 +223,3 @@ function setDateRefresh() {
 		</div>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.-progress-percent
-	display: inline-block
-	width: 50px
-	font-weight: bold
-	margin-right: 10px
-	text-align: right
-
-.-chosen
-	font-weight: bold
-</style>
