@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+import { openChatRoom } from '../../../app/components/chat/client';
+import { useGridStore } from '../../../app/components/grid/grid-store';
 import { Api } from '../../api/api.service';
 import ChatInvite from '../../chat/invite/invite.model';
 import { useCommonStore } from '../../store/common-store';
@@ -21,6 +23,7 @@ const invite = ref<ChatInvite>();
 const hasError = ref(false);
 
 const { user } = useCommonStore();
+const { chatUnsafe: chat } = useGridStore();
 
 owner?.hydrator.useData('chat-invite', props.inviteId.toString(), data => {
 	if (data) {
@@ -40,8 +43,21 @@ async function onClickAccept() {
 	}
 
 	const payload = await Api.sendRequest(`/web/chat/invite/accept/${invite.value.id}`, {});
-	if (payload && payload.success && payload.invite) {
-		invite.value = new ChatInvite(payload.invite);
+	if (payload && payload.success) {
+		if (payload.invite) {
+			invite.value = new ChatInvite(payload.invite);
+		}
+
+		// Immediately open new room.
+		// TODO: this doesn't work yet, it will be able to open the chat window,
+		// but the room channel won't be connected and the side panel, while having the room
+		// in it won't have it focused.
+		// The openChatRoom function needs to be able to handle not having been connected to the room
+		// before and try to do so before opening the chat window.
+		// Sending messages in this "fake" room does not work, however if a different user sends a message
+		// in that channel, the chat client properly connects to the room channel and receives messages.
+		// Any future messages can then also be sent.
+		openChatRoom(chat.value, payload.roomId);
 	}
 }
 
