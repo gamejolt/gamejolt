@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, inject, InjectionKey, provide, ref } from 'vue';
+import { computed, CSSProperties, inject, InjectionKey, provide, ref } from 'vue';
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
 import { vAppTrackEvent } from '../../../_common/analytics/track-event.directive';
 import { Api } from '../../../_common/api/api.service';
@@ -27,6 +27,7 @@ import { populateTrophies } from '../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophy } from '../../../_common/user/trophy/user-base-trophy.model';
 import AppUserAvatar from '../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { User } from '../../../_common/user/user.model';
+import { kFontFamilyBase } from '../../../_styles/variables';
 import { isUserOnline } from '../../components/chat/client';
 import { useGridStore } from '../../components/grid/grid-store';
 import { IntentService } from '../../components/intent/intent.service';
@@ -278,9 +279,9 @@ const isOnline = computed<null | boolean>(() => {
 	return isUserOnline(chat.value, routeUser.value.id);
 });
 
-const spotlightWrapper = computed(() => AppUserAvatarBubble);
-const spotlightWrapperProps = computed<ComponentProps<typeof spotlightWrapper.value>>(() => ({
-	user: routeUser.value,
+const spotlightWrapper = AppUserAvatarBubble;
+const spotlightWrapperProps = computed<ComponentProps<typeof spotlightWrapper>>(() => ({
+	user: routeUser.value || null,
 	disableLink: true,
 	showFrame: true,
 	showVerified: true,
@@ -346,6 +347,19 @@ async function blockUser() {
 		}
 	}
 }
+
+const headingStyles: CSSProperties = {
+	marginBottom: `4px`,
+	display: `flex`,
+	alignItems: `center`,
+};
+
+const headingUsernameStyles = computed<CSSProperties>(() => ({
+	fontSize: `19px`,
+	fontFamily: kFontFamilyBase,
+	fontWeight: `bold`,
+	marginLeft: `8px`,
+}));
 </script>
 
 <template>
@@ -355,9 +369,9 @@ async function blockUser() {
 		-->
 		<template v-if="!routeUser.status">
 			<AppPageHeader>
-				<h1 class="-heading">
+				<h1 :style="headingStyles">
 					{{ routeUser.display_name }}
-					<small class="-heading-username">@{{ routeUser.username }}</small>
+					<small :style="headingUsernameStyles">@{{ routeUser.username }}</small>
 				</h1>
 
 				<div class="text-muted small">
@@ -385,10 +399,9 @@ async function blockUser() {
 							params: { username: routeUser.username },
 						}"
 					>
-						<h1 class="-heading">
+						<h1 :style="headingStyles">
 							{{ routeUser.display_name }}
-							<!-- <AppUserVerifiedTick :user="routeUser" big /> -->
-							<span class="-heading-username">@{{ routeUser.username }}</span>
+							<span :style="headingUsernameStyles">@{{ routeUser.username }}</span>
 						</h1>
 					</RouterLink>
 					<div>
@@ -603,16 +616,3 @@ async function blockUser() {
 		</template>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.-heading
-	margin-bottom: 4px
-	display: flex
-	align-items: center
-
-.-heading-username
-	font-size: 19px
-	font-family: $font-family-base
-	font-weight: 700
-	margin-left: 8px
-</style>

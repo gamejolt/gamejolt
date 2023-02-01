@@ -85,7 +85,6 @@ const showTags = computed(() => !!user.value.follows_you || dogtags.value.length
 			<AppUserAvatarBubble
 				class="-avatar"
 				:user="user"
-				disable-link
 				show-verified
 				show-frame
 				verified-size="big"

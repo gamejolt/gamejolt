@@ -39,7 +39,7 @@ const avatarStyling = computed(() => {
 
 	if (frame.value && smoosh.value) {
 		insetBase = `${BASE_FRAME_INSET * -1}%`;
-		sizeBase = `${100 + BASE_FRAME_INSET * 2}`;
+		sizeBase = `${100 + BASE_FRAME_INSET * 2}px`;
 	}
 
 	result.top = insetBase;
