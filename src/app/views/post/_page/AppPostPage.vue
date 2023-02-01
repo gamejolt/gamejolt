@@ -46,7 +46,7 @@ import AppFiresidePostEmbed from '../../../components/fireside/post/embed/embed.
 import AppGameBadge from '../../../components/game/badge/badge.vue';
 import { AppCommentWidgetLazy } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
-import AppPollVoting from '../../../components/poll/voting/voting.vue';
+import AppPollVoting from '../../../components/poll/AppPollVoting.vue';
 import AppActivityFeedPostContent from '../../../components/post/AppPostContent.vue';
 import AppPostHeader from '../../../components/post/AppPostHeader.vue';
 import AppPostTargets from '../../../components/post/AppPostTargets.vue';
@@ -372,7 +372,7 @@ function onDismissNotification(notification: CommunityUserNotification) {
 					</div>
 
 					<AppStickerControlsOverlay v-if="post.hasPoll">
-						<AppPollVoting :poll="post.poll" :game="post.game" :user="post.user" />
+						<AppPollVoting :post="post" :poll="post.poll" />
 
 						<br />
 					</AppStickerControlsOverlay>
