@@ -98,8 +98,6 @@ const href = computed(() => {
 		return Environment.wttfBaseUrl + user.value.url;
 	} else if (link.value === 'dashboard') {
 		return Environment.wttfBaseUrl;
-	} else if (link.value === 'fireside') {
-		return Environment.firesideBaseUrl + '/@' + user.value.username;
 	}
 });
 

@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
-import { run } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppModal from '../../../../_common/modal/AppModal.vue';
@@ -14,16 +13,14 @@ const { user } = useCommonStore();
 
 const hasAvatarFrameSelector = ref(false);
 
-onMounted(() => {
-	run(async () => {
-		const response = await Api.sendFieldsRequest(
-			`/mobile/feature`,
-			{ avatar_frames: true },
-			{ detach: true }
-		);
+onMounted(async () => {
+	const response = await Api.sendFieldsRequest(
+		`/mobile/feature`,
+		{ avatar_frames: true },
+		{ detach: true }
+	);
 
-		hasAvatarFrameSelector.value = response.avatar_frames === true;
-	});
+	hasAvatarFrameSelector.value = response.avatar_frames === true;
 });
 </script>
 

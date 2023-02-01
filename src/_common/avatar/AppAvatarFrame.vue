@@ -19,7 +19,8 @@ const props = defineProps({
 		type: Boolean,
 	},
 	/**
-	 * Smooshes it.
+	 * Treats the frame as a border that insets our avatar instead of the having
+	 * the frame extend the container bounds.
 	 */
 	smoosh: {
 		type: Boolean,
