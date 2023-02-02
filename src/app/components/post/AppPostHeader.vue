@@ -5,10 +5,12 @@ import { UserFollowLocation } from '../../../_common/analytics/analytics.service
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../_common/screen/screen-service';
+import { kThemeNotice } from '../../../_common/theme/variables';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppUserCardHover from '../../../_common/user/card/AppUserCardHover.vue';
 import AppUserFollowButton from '../../../_common/user/follow/AppUserFollowButton.vue';
+import { styleBorderRadiusCircle } from '../../../_styles/mixins';
 import AppActivityFeedPostTime from '../activity/feed/post/time/time.vue';
 import { ActivityFeedView } from '../activity/feed/view';
 import AppUserAvatarBubble from '../user/AppUserAvatarBubble.vue';
@@ -69,13 +71,28 @@ const shouldShowFollow = computed(() => {
 	<div v-if="user" class="-header">
 		<div class="-header-content">
 			<AppUserCardHover :user="user" :disabled="feed && !feed.shouldShowUserCards">
-				<div class="-header-avatar" :class="{ '-new': isNew }">
+				<div class="-header-avatar">
 					<AppUserAvatarBubble
 						:user="user"
 						show-frame
 						show-verified
 						smoosh
 						bg-color="bg-subtle"
+					/>
+
+					<div
+						v-if="isNew"
+						:style="{
+							...styleBorderRadiusCircle,
+							position: `absolute`,
+							top: `1px`,
+							right: `1px`,
+							width: `12px`,
+							height: `12px`,
+							zIndex: 2,
+							backgroundColor: kThemeNotice,
+							filter: `drop-shadow(0 0 1px ${kThemeNotice})`,
+						}"
 					/>
 				</div>
 			</AppUserCardHover>
@@ -156,11 +173,13 @@ $-avatar-size = 40px
 	align-items: center
 
 .-header-avatar
+	position: relative
 	flex: none
 	margin-right: $-item-padding-xs
 	width: $-avatar-size
 	height: $-avatar-size
 	line-height: $-avatar-size
+	margin-bottom: 4px
 
 	&.-new
 		theme-prop('border-color', 'notice')
