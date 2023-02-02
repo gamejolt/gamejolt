@@ -12,6 +12,7 @@ import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErr
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormStickySubmit from '../../../../_common/form-vue/AppFormStickySubmit.vue';
 import AppFormControlBackground from '../../../../_common/form-vue/controls/AppFormControlBackground.vue';
+import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppFormControlToggleButton from '../../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButton.vue';
 import AppFormControlToggleButtonGroup from '../../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../../_common/form-vue/validators';
@@ -344,8 +345,8 @@ function onClickChatMods() {
 
 							<AppFormGroup
 								name="allow_links"
-								class="sans-margin-bottom"
 								:label="$gettext(`Allow links in fireside chat`)"
+								class="sans-margin-bottom"
 								small
 							>
 								<AppFormControlToggleButtonGroup>
@@ -357,6 +358,17 @@ function onClickChatMods() {
 										{{ label }}
 									</AppFormControlToggleButton>
 								</AppFormControlToggleButtonGroup>
+							</AppFormGroup>
+
+							<AppSpacer vertical :scale="6" />
+
+							<AppFormGroup
+								name="automated_sticker_messages"
+								class="sans-margin-bottom"
+								:label="$gettext(`Show who placed a sticker in chat`)"
+								small
+							>
+								<AppFormControlToggle />
 							</AppFormGroup>
 						</AppForm>
 					</template>

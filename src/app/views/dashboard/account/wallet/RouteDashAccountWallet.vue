@@ -158,8 +158,8 @@ async function withdraw() {
 							<AppAlertBox icon="thumbs-up" color="highlight">
 								<AppTranslate>
 									Party time! 🎆 🤸 You've reached the minimum withdrawal amount.
-									We'll be depositing your gems into your PayPal account on the
-									1st of next month.
+									We'll be depositing your gems into your preferred payment method
+									within the first 15 days of next month.
 								</AppTranslate>
 							</AppAlertBox>
 						</template>
@@ -176,9 +176,9 @@ async function withdraw() {
 							>
 								<div>
 									<AppTranslate>
-										Once you reach the minimum withdraw amount, we'll deposit
-										your gems into your PayPal account on the 1st of the
-										following month.
+										Once you reach the minimum withdrawal amount, we'll deposit
+										your gems through your preferred payment method within the
+										first 15 days of the following month.
 									</AppTranslate>
 								</div>
 								<div style="flex: auto" />

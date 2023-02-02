@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
@@ -15,6 +16,8 @@ export default {
 </script>
 
 <script lang="ts" setup>
+const { user } = useCommonStore();
+
 createAppRoute({
 	routeTitle: computed(() => $gettext(`Account settings`)),
 });
@@ -122,6 +125,7 @@ createAppRoute({
 					{{ $gettext(`Wallet`) }}
 				</RouterLink>
 				<RouterLink
+					v-if="user?.is_creator"
 					class="list-group-item"
 					:to="{ name: routeDashAccountReferrals.name }"
 					active-class="active"
