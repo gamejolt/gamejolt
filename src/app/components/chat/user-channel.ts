@@ -119,6 +119,9 @@ export function createChatUserChannel(
 		isTabLeader,
 		pushGroupAdd,
 		pushGroupLeave,
+		pushInviteAccept,
+		pushInviteDecline,
+		pushInviteCancel,
 		joinPromise,
 	});
 
@@ -234,7 +237,7 @@ export function createChatUserChannel(
 	}
 
 	/**
-	 * Makes a new group with an initial set of users.
+	 * Makes a new group and sends invites to join that room to the users in members.
 	 */
 	function pushGroupAdd(members: number[]) {
 		return channelController.push<{ room: UnknownModelData }>('group_add', {
@@ -247,6 +250,24 @@ export function createChatUserChannel(
 	 */
 	function pushGroupLeave(roomId: number) {
 		return channelController.push<void>('group_leave', { room_id: roomId });
+	}
+
+	function pushInviteAccept(inviteId: number) {
+		return channelController.push<{ room_id: number }>('invite_accept', {
+			invite_id: inviteId,
+		});
+	}
+
+	function pushInviteDecline(inviteId: number) {
+		return channelController.push<void>('invite_decline', {
+			invite_id: inviteId,
+		});
+	}
+
+	function pushInviteCancel(inviteId: number) {
+		return channelController.push<void>('invite_cancel', {
+			invite_id: inviteId,
+		});
 	}
 
 	return c;
