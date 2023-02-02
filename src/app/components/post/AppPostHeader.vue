@@ -181,16 +181,6 @@ $-avatar-size = 40px
 	line-height: $-avatar-size
 	margin-bottom: 4px
 
-	&.-new
-		theme-prop('border-color', 'notice')
-		border-width: $border-width-large
-		border-style: solid
-
-		.-header-avatar-inner
-			change-bg('bg')
-			img-circle()
-			padding: $border-width-large
-
 	@media $media-sm-up
 		margin-right: $-item-padding
 
