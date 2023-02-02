@@ -29,10 +29,10 @@ import { useActivityFeedInterface } from '../AppActivityFeed.vue';
 import { feedShouldBlockPost } from '../feed-service';
 import { ActivityFeedItem } from '../item-service';
 import { useActivityFeed } from '../view';
-import AppActivityFeedPostBlocked from './blocked/blocked.vue';
+import AppActivityFeedPostBlocked from './AppActivityFeedPostBlocked.vue';
 import AppActivityFeedPostMedia from './media/media.vue';
 import AppActivityFeedPostText from './text/text.vue';
-import AppActivityFeedPostVideo from './video/video.vue';
+import AppActivityFeedPostVideo from './AppActivityFeedPostVideo.vue';
 
 const props = defineProps({
 	item: {

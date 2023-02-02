@@ -12,7 +12,7 @@ import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-tro
 import AppTrophyCard from '../../../../components/trophy/card/card.vue';
 import AppTrophyCompletion from '../../../../components/trophy/completion/completion.vue';
 import AppTrophyListPaged from '../../../../components/trophy/list/paged/paged.vue';
-import { useProfileRouteController } from '../../profile.vue';
+import { useProfileRouteController } from '../../RouteProfile.vue';
 
 type CompletionData = {
 	experience: number;

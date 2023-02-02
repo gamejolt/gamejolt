@@ -15,7 +15,7 @@ import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/rout
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import { Translate } from '../../../_common/translate/translate.service';
 import { IntentService } from '../../components/intent/intent.service';
-import AppPostPagePlaceholder from './_page-placeholder/page-placeholder.vue';
+import AppPostPagePlaceholder from './_page-placeholder/AppPostPagePlaceholder.vue';
 import AppPostPage from './_page/AppPostPage.vue';
 
 const PostThemeKey = 'post';

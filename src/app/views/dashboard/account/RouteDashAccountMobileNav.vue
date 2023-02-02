@@ -5,7 +5,7 @@ import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
-import AppPageHeader from '../../../components/page-header/page-header.vue';
+import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import { routeDashAccountReferrals } from './referrals/referrals.route';
 
 export default {

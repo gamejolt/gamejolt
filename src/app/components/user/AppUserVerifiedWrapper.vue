@@ -1,15 +1,37 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
+import { computed, CSSProperties, PropType, toRefs } from 'vue';
+import { kThemeFg } from '../../../_common/theme/variables';
 import { User } from '../../../_common/user/user.model';
 import AppUserVerifiedTick from '../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
+import { styleBorderRadiusCircle, styleChangeBg } from '../../../_styles/mixins';
 import { ChatUser } from '../chat/user';
 
-defineProps({
+interface PositionData {
+	vPos: 'top' | 'bottom';
+	hPos: 'left' | 'right';
+	translateY: number;
+	translateX: number;
+}
+
+type PositionCorner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+
+const props = defineProps({
 	user: {
-		type: Object as PropType<User | ChatUser>,
+		type: [Object, null] as PropType<User | ChatUser | null>,
 		required: true,
 	},
+	position: {
+		type: String as PropType<PositionCorner>,
+		default: 'bottom-right',
+	},
 	hideTick: {
+		type: Boolean,
+	},
+	tickOffset: {
+		type: Number,
+		default: 20,
+	},
+	big: {
 		type: Boolean,
 	},
 	small: {
@@ -19,40 +41,84 @@ defineProps({
 		type: Boolean,
 	},
 });
+
+const { user, position, hideTick, tickOffset, big, small, tiny } = toRefs(props);
+
+const floatingTickPositionStyles = computed(() => {
+	const result: CSSProperties = {
+		position: `absolute`,
+		pointerEvents: `all`,
+	};
+
+	const offset = tickOffset.value;
+	const inset = 0;
+
+	const data: Record<PositionCorner, PositionData> = {
+		'top-left': {
+			vPos: 'top',
+			hPos: 'left',
+			translateX: -offset,
+			translateY: -offset,
+		},
+		'top-right': {
+			vPos: 'top',
+			hPos: 'right',
+			translateX: offset,
+			translateY: -offset,
+		},
+		'bottom-right': {
+			vPos: 'bottom',
+			hPos: 'right',
+			translateX: offset,
+			translateY: offset,
+		},
+		'bottom-left': {
+			vPos: 'bottom',
+			hPos: 'left',
+			translateX: -offset,
+			translateY: offset,
+		},
+	};
+
+	const { hPos, vPos, translateX, translateY } = data[position.value];
+
+	result[hPos] = inset;
+	result[vPos] = inset;
+	result['transform'] = `translate(${translateX}%, ${translateY}%)`;
+	return result;
+});
 </script>
 
 <template>
-	<div class="user-verified-wrapper">
-		<div class="-inner">
+	<!-- UserVerifiedWrapper -->
+	<div
+		:style="{
+			position: `relative`,
+		}"
+	>
+		<div
+			:style="{
+				zIndex: 1,
+			}"
+		>
 			<slot name="default" />
 		</div>
 
 		<AppUserVerifiedTick
-			v-if="!hideTick"
-			class="-floating-tick"
+			v-if="user && !hideTick"
+			:style="{
+				...styleChangeBg('bg'),
+				...styleBorderRadiusCircle,
+				...floatingTickPositionStyles,
+				margin: 0,
+				padding: `1px`,
+				color: kThemeFg,
+				zIndex: 2,
+			}"
 			:user="user"
+			:big="big"
 			:small="small"
 			:tiny="tiny"
 		/>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.user-verified-wrapper
-	position: relative
-
-.-inner
-	z-index: 1
-
-.-floating-tick
-	change-bg(bg)
-	img-circle()
-	position: absolute
-	right: 0px
-	bottom: 0px
-	transform: translate(20%, 20%)
-	margin: 0
-	z-index: 2
-	color: var(--theme-fg)
-	padding: 1px
-</style>

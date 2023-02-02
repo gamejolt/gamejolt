@@ -15,7 +15,7 @@ import { populateTrophies } from '../../../../../_common/user/trophy/trophy-util
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import { TrophyModal } from '../../../../components/trophy/modal/modal.service';
 import AppTrophyThumbnail from '../../../../components/trophy/thumbnail/thumbnail.vue';
-import { useProfileRouteController } from '../../profile.vue';
+import { useProfileRouteController } from '../../RouteProfile.vue';
 
 type TrophyEntry = {
 	gameId?: number;

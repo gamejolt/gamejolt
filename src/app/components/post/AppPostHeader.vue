@@ -9,10 +9,9 @@ import { AppTimeAgo } from '../../../_common/time/ago/ago';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppUserCardHover from '../../../_common/user/card/AppUserCardHover.vue';
 import AppUserFollowButton from '../../../_common/user/follow/AppUserFollowButton.vue';
-import AppUserAvatar from '../../../_common/user/user-avatar/AppUserAvatar.vue';
-import AppUserVerifiedTick from '../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import AppActivityFeedPostTime from '../activity/feed/post/time/time.vue';
 import { ActivityFeedView } from '../activity/feed/view';
+import AppUserAvatarBubble from '../user/AppUserAvatarBubble.vue';
 
 const props = defineProps({
 	post: {
@@ -71,9 +70,13 @@ const shouldShowFollow = computed(() => {
 		<div class="-header-content">
 			<AppUserCardHover :user="user" :disabled="feed && !feed.shouldShowUserCards">
 				<div class="-header-avatar" :class="{ '-new': isNew }">
-					<div class="-header-avatar-inner">
-						<AppUserAvatar :user="user" />
-					</div>
+					<AppUserAvatarBubble
+						:user="user"
+						show-frame
+						show-verified
+						smoosh
+						bg-color="bg-subtle"
+					/>
 				</div>
 			</AppUserCardHover>
 
@@ -89,7 +92,6 @@ const shouldShowFollow = computed(() => {
 							}"
 						>
 							{{ user.display_name }}
-							<AppUserVerifiedTick :user="user" />
 						</RouterLink>
 					</strong>
 
@@ -154,10 +156,7 @@ $-avatar-size = 40px
 	align-items: center
 
 .-header-avatar
-	change-bg('bg-subtle')
-	img-circle()
 	flex: none
-	overflow: hidden
 	margin-right: $-item-padding-xs
 	width: $-avatar-size
 	height: $-avatar-size

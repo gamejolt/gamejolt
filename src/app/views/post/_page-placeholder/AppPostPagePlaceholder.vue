@@ -1,13 +1,5 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-property-decorator';
-import { AppLazyPlaceholder } from '../../../../_common/lazy/placeholder/placeholder';
-
-@Options({
-	components: {
-		AppLazyPlaceholder,
-	},
-})
-export default class AppPostViewPlaceholder extends Vue {}
+<script lang="ts" setup>
+import { styleBorderRadiusCircle, styleChangeBg } from '../../../../_styles/mixins';
 </script>
 
 <template>
@@ -15,7 +7,13 @@ export default class AppPostViewPlaceholder extends Vue {}
 		<div class="container-xl">
 			<div class="-col-primary">
 				<div class="-user-info">
-					<div class="-avatar" />
+					<div
+						class="-avatar"
+						:style="{
+							...styleBorderRadiusCircle,
+							...styleChangeBg('bg-subtle'),
+						}"
+					/>
 					<div class="-name">
 						<div class="-name-top lazy-placeholder" />
 						<div class="-name-bottom lazy-placeholder" />
@@ -54,14 +52,14 @@ export default class AppPostViewPlaceholder extends Vue {}
 .-name
 	margin-right: auto
 
-	&-top
-		width: 80px
-		height: $font-size-small
-		margin-bottom: 4px
+.-name-top
+	width: 80px
+	height: $font-size-small
+	margin-bottom: 4px
 
-	&-bottom
-		width: 64px
-		height: $font-size-tiny
+.-name-bottom
+	width: 64px
+	height: $font-size-tiny
 
 .-follow
 	width: 88px

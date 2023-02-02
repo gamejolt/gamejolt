@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
+import AppUserAvatarBubble from '../../../app/components/user/AppUserAvatarBubble.vue';
 import AppUserDogtag from '../../../app/components/user/AppUserDogtag.vue';
 import { getMediaserverUrlForBounds } from '../../../utils/image';
 import AppButton from '../../button/AppButton.vue';
@@ -13,7 +14,6 @@ import AppTranslate from '../../translate/AppTranslate.vue';
 import AppUserFollowButton from '../follow/AppUserFollowButton.vue';
 import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
 import { User } from '../user.model';
-import AppUserVerifiedTick from '../verified-tick/AppUserVerifiedTick.vue';
 
 const props = defineProps({
 	user: {
@@ -82,9 +82,18 @@ const showTags = computed(() => !!user.value.follows_you || dogtags.value.length
 				}"
 			/>
 
-			<RouterLink :to="user.url" class="-avatar">
-				<AppUserAvatarImg :user="user" />
-			</RouterLink>
+			<AppUserAvatarBubble
+				class="-avatar"
+				:user="user"
+				show-verified
+				show-frame
+				verified-size="big"
+				:verified-offset="0"
+				verified-position="top-right"
+				bg-color="bg"
+			>
+				<AppUserAvatarImg class="-avatar-img" :user="user" />
+			</AppUserAvatarBubble>
 
 			<div class="-well fill-bg">
 				<div v-if="showTags" class="-tags">
@@ -98,7 +107,6 @@ const showTags = computed(() => !!user.value.follows_you || dogtags.value.length
 				<div class="-display-name">
 					<RouterLink :to="user.url" class="link-unstyled">
 						{{ user.display_name }}
-						<AppUserVerifiedTick :user="user" />
 					</RouterLink>
 				</div>
 
