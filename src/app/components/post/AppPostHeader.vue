@@ -86,7 +86,7 @@ const shouldShowFollow = computed(() => {
 							...styleBorderRadiusCircle,
 							position: `absolute`,
 							top: `1px`,
-							right: `1px`,
+							left: `1px`,
 							width: `12px`,
 							height: `12px`,
 							zIndex: 2,
