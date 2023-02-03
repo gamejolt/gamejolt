@@ -7,8 +7,10 @@ import AppButtonPlaceholder from '../../button/AppButtonPlaceholder.vue';
 		<div class="-user-info">
 			<div class="-header" />
 
-			<!-- Need to do the fill-darker here for the offset color to be for dark offset -->
-			<div class="-avatar fill-darker" />
+			<div class="-avatar">
+				<!-- Need to do the fill-darker here for the offset color to be for dark offset -->
+				<div class="-avatar-img fill-darker" />
+			</div>
 
 			<div class="-well fill-bg">
 				<div class="-display-name">
@@ -37,7 +39,7 @@ import AppButtonPlaceholder from '../../button/AppButtonPlaceholder.vue';
 <style lang="stylus" scoped>
 @import './common'
 
-.-avatar
+.-avatar-img
 	change-bg('bg-subtle')
 
 .-placeholder-large

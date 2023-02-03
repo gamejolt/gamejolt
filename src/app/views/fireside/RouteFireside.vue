@@ -1,17 +1,4 @@
 <script lang="ts">
-const FiresideThemeKey = 'fireside';
-
-export default {
-	...defineAppRouteOptions({
-		deps: { params: ['hash'] },
-		lazy: true,
-		resolver: async ({ route }) =>
-			Api.sendRequest(`/web/fireside/fetch/${route.params.hash}?meta=1`),
-	}),
-};
-</script>
-
-<script lang="ts" setup>
 import { computed, customRef, onBeforeUnmount, ref, shallowRef, watch } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import { debounce } from '../../../utils/utils';
@@ -46,7 +33,6 @@ import { useCommonStore } from '../../../_common/store/common-store';
 import AppTheme from '../../../_common/theme/AppTheme.vue';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
 import AppFiresideProvider from '../../components/fireside/AppFiresideProvider.vue';
 import {
@@ -71,11 +57,23 @@ import AppFiresideBottomBar from './_bottom-bar/AppFiresideBottomBar.vue';
 import AppFiresideSidebarChat from './_sidebar/AppFiresideSidebarChat.vue';
 import AppFiresideSidebarFiresideSettings from './_sidebar/AppFiresideSidebarFiresideSettings.vue';
 import AppFiresideSidebarHeading from './_sidebar/AppFiresideSidebarHeading.vue';
-import AppFiresideSidebarHosts from './_sidebar/AppFiresideSidebarHosts.vue';
 import AppFiresideSidebarMembers from './_sidebar/AppFiresideSidebarMembers.vue';
 import AppFiresideSidebarStreamSettings from './_sidebar/AppFiresideSidebarStreamSettings.vue';
 import AppFiresideStream from './_stream/AppFiresideStream.vue';
 
+const FiresideThemeKey = 'fireside';
+
+export default {
+	...defineAppRouteOptions({
+		deps: { params: ['hash'] },
+		lazy: true,
+		resolver: async ({ route }) =>
+			Api.sendRequest(`/web/fireside/fetch/${route.params.hash}?meta=1`),
+	}),
+};
+</script>
+
+<script lang="ts" setup>
 const commonStore = useCommonStore();
 const stickerStore = useStickerStore();
 const gridStore = useGridStore();
@@ -419,10 +417,11 @@ function onClickStreamingBanner() {
 							<div class="-view-blocked">
 								<AppIllustration :asset="illMobileKikkerstein" :max-width="90">
 									<h2 class="-view-blocked-heading">
-										<AppTranslate>
-											We want you to have the best fireside experience
-											possible!
-										</AppTranslate>
+										{{
+											$gettext(
+												`We want you to have the best fireside experience possible!`
+											)
+										}}
 									</h2>
 
 									<AppSpacer vertical :scale="6" />
@@ -431,18 +430,20 @@ function onClickStreamingBanner() {
 
 									<AppSpacer vertical :scale="6" />
 
-									<AppTranslate>
-										Download the mobile app to watch streams, follow your
-										friends, and place stickers!
-									</AppTranslate>
+									{{
+										$gettext(
+											`Download the mobile app to watch streams, follow your friends, and place stickers!`
+										)
+									}}
 
 									<template v-if="Screen.isPointerMouse">
 										<AppSpacer vertical :scale="4" />
 
-										<AppTranslate>
-											If you're on desktop, resize your window larger to watch
-											this fireside.
-										</AppTranslate>
+										{{
+											$gettext(
+												`If you're on desktop, resize your window larger to watch this fireside.`
+											)
+										}}
 									</template>
 								</AppIllustration>
 							</div>
@@ -451,17 +452,16 @@ function onClickStreamingBanner() {
 							<div class="-view-blocked">
 								<AppIllustration :asset="illNoCommentsSmall">
 									<h2 class="-view-blocked-heading">
-										<AppTranslate>
-											This window size is unsupported
-										</AppTranslate>
+										{{ $gettext(`This window size is unsupported`) }}
 									</h2>
 
 									<AppSpacer vertical :scale="4" />
 
-									<AppTranslate>
-										Please make your browser larger to be able to view this
-										content.
-									</AppTranslate>
+									{{
+										$gettext(
+											`Please make your browser larger to be able to view this content.`
+										)
+									}}
 								</AppIllustration>
 							</div>
 						</template>
@@ -482,14 +482,14 @@ function onClickStreamingBanner() {
 								<div key="unauthorized" class="-message-wrapper">
 									<div class="-message">
 										<h2 class="section-header text-center">
-											<AppTranslate>Join Game Jolt</AppTranslate>
+											{{ $gettext(`Join Game Jolt`) }}
 										</h2>
 
 										<div class="text-center">
 											<p class="lead">
-												<AppTranslate>
-													Do you love games as much as we do?
-												</AppTranslate>
+												{{
+													$gettext(`Do you love games as much as we do?`)
+												}}
 											</p>
 										</div>
 
@@ -505,16 +505,14 @@ function onClickStreamingBanner() {
 									<div class="-message">
 										<AppIllustration :asset="illNoCommentsSmall">
 											<p>
-												<AppTranslate>
-													This fireside's fire has burned out.
-												</AppTranslate>
+												{{
+													$gettext(`This fireside's fire has burned out.`)
+												}}
 											</p>
 											<p>
 												<RouterLink :to="{ name: 'home' }">
 													<small>
-														<AppTranslate>
-															Everybody go home
-														</AppTranslate>
+														{{ $gettext(`Everybody go home`) }}
 													</small>
 												</RouterLink>
 											</p>
@@ -527,17 +525,13 @@ function onClickStreamingBanner() {
 									<div class="-message">
 										<AppIllustration :asset="illMaintenance">
 											<p>
-												<AppTranslate>
-													Could not reach this fireside.
-												</AppTranslate>
+												{{ $gettext(`Could not reach this fireside.`) }}
 												<br />
-												<AppTranslate>
-													Maybe try finding it again?
-												</AppTranslate>
+												{{ $gettext(`Maybe try finding it again?`) }}
 											</p>
 											&nbsp;
 											<AppButton block @click="onClickRetry">
-												<AppTranslate>Retry</AppTranslate>
+												{{ $gettext(`Retry`) }}
 											</AppButton>
 											&nbsp;
 										</AppIllustration>
@@ -549,17 +543,19 @@ function onClickStreamingBanner() {
 									<div class="-message">
 										<AppIllustration :asset="illNoCommentsSmall">
 											<p>
-												<AppTranslate>
-													You have been disconnected from fireside
-													services.
-												</AppTranslate>
+												{{
+													$gettext(
+														`You have been disconnected from fireside services.`
+													)
+												}}
 												<br />
 												<br />
 												<small>
-													<AppTranslate>
-														We are actively trying to reconnect you, but
-														you can also try refreshing the page.
-													</AppTranslate>
+													{{
+														$gettext(
+															`We are actively trying to reconnect you, but you can also try refreshing the page.`
+														)
+													}}
 												</small>
 											</p>
 										</AppIllustration>
@@ -574,14 +570,16 @@ function onClickStreamingBanner() {
 										</div>
 										<div class="text-center">
 											<h3>
-												<AppTranslate>
-													You are blocked from joining this fireside
-												</AppTranslate>
+												{{
+													$gettext(
+														`You are blocked from joining this fireside`
+													)
+												}}
 											</h3>
 											<p>
 												<router-link :to="{ name: 'home' }">
 													<small>
-														<AppTranslate>Return home</AppTranslate>
+														{{ $gettext(`Return home`) }}
 													</small>
 												</router-link>
 											</p>
@@ -640,9 +638,11 @@ function onClickStreamingBanner() {
 																	class="list-group-item"
 																	@click="toggleVideoStats()"
 																>
-																	<AppTranslate>
-																		Toggle Video Stats
-																	</AppTranslate>
+																	{{
+																		$gettext(
+																			`Toggle Video Stats`
+																		)
+																	}}
 																</a>
 															</div>
 														</template>
@@ -746,7 +746,6 @@ function onClickStreamingBanner() {
 								/>
 								<AppFiresideSidebarChat v-else-if="sidebar === 'chat'" />
 								<AppFiresideSidebarMembers v-else-if="sidebar === 'members'" />
-								<AppFiresideSidebarHosts v-else-if="sidebar === 'hosts'" />
 								<AppFiresideSidebarFiresideSettings
 									v-else-if="sidebar === 'fireside-settings'"
 								/>

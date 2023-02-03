@@ -20,7 +20,6 @@ import { ChatMessage } from './message';
 import { ChatNotificationGrowl } from './notification-growl/notification-growl.service';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
-import { ChatUserCollection } from './user-collection';
 
 const TabLeaderLazy = importNoSSR(async () => await import('../../../utils/tab-leader'));
 
@@ -98,11 +97,7 @@ export function createChatUserChannel(
 			_tabLeader.init();
 
 			client.currentUser = storeModel(ChatUser, response.user);
-			client.friendsList = new ChatUserCollection(
-				client,
-				ChatUserCollection.TYPE_FRIEND,
-				response.friends || []
-			);
+			client.friendsList.replace(response.friends || []);
 			client.groupRooms = (response.groups as UnknownModelData[]).map(room =>
 				storeModel(ChatRoom, { chat: client, ...room })
 			);

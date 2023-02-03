@@ -2,7 +2,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { ForumPost } from '../../../../_common/forum/post/post.model';
 import { ForumTopic } from '../../../../_common/forum/topic/topic.model';
-import AppMessageThread from '../../../../_common/message-thread/message-thread.vue';
+import AppMessageThread from '../../../../_common/message-thread/AppMessageThread.vue';
 import AppForumPostListItem from './item/item.vue';
 
 @Options({

@@ -1,17 +1,10 @@
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, PropType, ref, toRefs } from 'vue';
-import { AdSlot } from '../ad-slot-info';
+import { onBeforeUnmount, onMounted, ref, toRefs } from 'vue';
+import { defineAdAdapterComponentProps } from '../adapter-base';
 import { AdProperAdapter, ProperTagPlacement } from './proper-adapter';
 
 const props = defineProps({
-	adSlot: {
-		type: Object as PropType<AdSlot>,
-		required: true,
-	},
-	adapter: {
-		type: Object as PropType<AdProperAdapter>,
-		required: true,
-	},
+	...defineAdAdapterComponentProps<AdProperAdapter>(),
 });
 
 const tagPlacement = ref<ProperTagPlacement | null>(null);

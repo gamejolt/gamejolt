@@ -85,6 +85,9 @@ async function leaveRoom() {
 		:title="hoverTitle"
 		:horizontal-padding="16"
 		:force-hover="isActive"
+		:defined-slots="
+			notificationsCount ? ['leading', 'title', 'trailing'] : ['leading', 'title']
+		"
 		popper-placement="bottom"
 		popper-trigger="right-click"
 		popper-hide-on-state-change
@@ -99,7 +102,7 @@ async function leaveRoom() {
 			</div>
 		</template>
 
-		<template #leadingFloat>
+		<template #leading-float>
 			<AppChatUserOnlineStatus
 				v-if="isOnline !== null"
 				:is-online="isOnline"

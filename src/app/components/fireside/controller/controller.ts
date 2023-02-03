@@ -92,12 +92,7 @@ export type RouteStatus =
 	| 'joined' // Currently joined to the fireside.
 	| 'blocked'; // Blocked from joining the fireside (user blocked).
 
-export type FiresideSidebar =
-	| 'chat'
-	| 'members'
-	| 'hosts'
-	| 'fireside-settings'
-	| 'stream-settings';
+export type FiresideSidebar = 'chat' | 'members' | 'fireside-settings' | 'stream-settings';
 
 export interface StreamingInfoPayload {
 	streamingAppId: string;
@@ -306,12 +301,7 @@ export function createFiresideController(
 	const canEdit = computed(() => isOwner.value || fireside.hasPerms('fireside-edit'));
 
 	const canPublish = computed(() => {
-		const role = fireside.role?.role;
-		if (isOwner.value || role === 'host') {
-			return status.value === 'joined' && isDraft.value;
-		}
-
-		return false;
+		return status.value === 'joined' && isDraft.value && fireside.hasPerms('fireside-publish');
 	});
 
 	const _canExtend = computed(() => {
@@ -753,9 +743,6 @@ export function createFiresideController(
 
 	const activeBottomBarControl = computed<BottomBarControl | undefined>(() => {
 		switch (sidebar.value) {
-			case 'hosts':
-				return 'manage-cohosts';
-
 			case 'fireside-settings':
 				return 'settings';
 

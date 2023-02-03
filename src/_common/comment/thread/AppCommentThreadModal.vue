@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, inject, PropType, ref, toRefs } from 'vue';
 import AppButton from '../../button/AppButton.vue';
-import AppMessageThreadAdd from '../../message-thread/add/add.vue';
+import AppMessageThreadAdd from '../../message-thread/AppMessageThreadAdd.vue';
 import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
 import { Model } from '../../model/model.service';

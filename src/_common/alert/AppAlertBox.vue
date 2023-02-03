@@ -11,11 +11,15 @@ defineProps({
 		type: String as PropType<'default' | 'highlight'>,
 		default: 'default',
 	},
+	fillColor: {
+		type: String as PropType<'backdrop' | 'offset' | 'bg'>,
+		default: 'backdrop',
+	},
 });
 </script>
 
 <template>
-	<div class="-alert-box fill-backdrop">
+	<div class="-alert-box" :class="[`fill-${fillColor}`]">
 		<div v-if="icon" class="-icon" :class="`-icon-color-${color}`">
 			<AppJolticon :icon="icon" />
 		</div>

@@ -8,7 +8,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import AppGameCollectionGrid from '../../../components/game/collection/grid/grid.vue';
 import AppGameCollectionList from '../../../components/game/collection/list/list.vue';
-import AppPageHeader from '../../../components/page-header/page-header.vue';
+import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import { useAppStore } from '../../../store';
 import { useLibraryStore } from '../../../store/library';
 

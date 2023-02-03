@@ -46,7 +46,7 @@ onUnmounted(() => {
 function getReadableTime() {
 	return shorthandReadableTime(date.value, {
 		allowFuture: true,
-		precision: 'quest',
+		precision: 'rough',
 		joiner: ', ',
 		nowText: 'now',
 	});
