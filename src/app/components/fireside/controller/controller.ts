@@ -69,7 +69,11 @@ import { CommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
 import { BottomBarControl } from '../../../views/fireside/_bottom-bar/AppFiresideBottomBar.vue';
-import { ChatRoomChannel, createChatRoomChannel } from '../../chat/room-channel';
+import {
+	ChatRoomChannel,
+	createChatRoomChannel,
+	PlaceStickerPayload,
+} from '../../chat/room-channel';
 import { createGridFiresideChannel, GridFiresideChannel } from '../../grid/fireside-channel';
 import { createGridFiresideDMChannel, GridFiresideDMChannel } from '../../grid/fireside-dm-channel';
 import { GridStore } from '../../grid/grid-store';
@@ -198,13 +202,19 @@ export function createFiresideController(
 				}
 			}
 
-			const result = await roomChannel.pushPlaceSticker(targetUserId, stickerData);
+			let payload: Partial<PlaceStickerPayload> = {};
+			try {
+				payload = await roomChannel.pushPlaceSticker(targetUserId, stickerData);
 
-			const placement = result.stickerPlacement;
-			if (placement) {
-				onFiresideStickerPlaced.next(placement);
+				const { stickerPlacement, success = true } = payload;
+
+				if (stickerPlacement) {
+					onFiresideStickerPlaced.next(stickerPlacement);
+				}
+				return { ...payload, success };
+			} catch (e) {
+				return { ...payload, ...errorResponse };
 			}
-			return { ...result, success: true };
 		},
 	});
 
