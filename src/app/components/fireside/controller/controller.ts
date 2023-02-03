@@ -174,6 +174,10 @@ export function createFiresideController(
 	 */
 	const hostBackgrounds = ref(new Map<number, Background>());
 
+	const targetData = computed(() => {
+		return { host_user_id: rtc.value?.focusedUser?.userModel?.id };
+	});
+
 	const stickerTargetController = createStickerTargetController(fireside, {
 		isLive: true,
 		isCreator: computed(() => {
@@ -183,9 +187,10 @@ export function createFiresideController(
 			}
 			return user.is_creator === true;
 		}),
+		targetData,
 		placeStickerCallback: async data => {
 			const roomChannel = chatChannel.value;
-			const targetUserId = rtc.value?.focusedUser?.userModel?.id;
+			const targetUserId = targetData.value.host_user_id;
 			const errorResponse = { success: false };
 
 			if (!roomChannel || !targetUserId) {

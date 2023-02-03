@@ -165,6 +165,7 @@ function onPlaceDrawerSticker(pointer: PointerPosition) {
 		position_y: (pointer.y - rect.y) / rect.height,
 		rotation: Math.random(),
 		sticker: storeSticker.value,
+		target_data: controller.value.targetData.value,
 	});
 
 	assignStickerStoreItem(stickerStore, stickerPlacement, controller.value);
