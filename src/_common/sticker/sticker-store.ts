@@ -462,8 +462,6 @@ export async function commitStickerStoreItemPlacement(store: StickerStore) {
 		}
 	} catch (e) {
 		console.error(e);
-		// TODO(handle-chat-sticker-errors) Should we close here, or only when
-		// the placement succeeds?
 		setStickerDrawerOpen(store, false, null);
 		showErrorGrowl($gettext(`Failed to place sticker.`));
 	}
