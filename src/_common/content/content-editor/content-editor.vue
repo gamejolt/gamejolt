@@ -150,9 +150,10 @@ export default class AppContentEditor extends Vue {
 	onContextCapabilityOverrideChange() {
 		// When the input capability overrides change, apply the change to the controller.
 		const props = this.$props as this;
-		if (props.contextCapabilitiesOverride) {
-			this.controller_.contextCapabilities = props.contextCapabilitiesOverride;
-		}
+		// TODO(remote-content-capabilities) TODO{Jonathan} Test this. Convert to script setup if able.
+		this.controller_.contextCapabilities = props.contextCapabilitiesOverride
+			? props.contextCapabilitiesOverride
+			: ContextCapabilities.getForContext(props.contentContext);
 	}
 
 	@Emit('submit')
