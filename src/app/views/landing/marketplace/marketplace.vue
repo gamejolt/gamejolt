@@ -38,7 +38,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 	readonly Screen = Screen;
 	readonly imageJolt = imageJolt;
-	readonly assetPaths = import.meta.globEager('./*.svg');
+	readonly assetPaths = import.meta.glob('./*.svg', { eager: true, as: 'url' });
 
 	get routeTitle() {
 		return 'Sell Your Games';
@@ -77,10 +77,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<AppThemeSvg
-									:src="assetPaths['./revenue-share.svg'].default"
-									alt=""
-								/>
+								<AppThemeSvg :src="assetPaths['./revenue-share.svg']" alt="" />
 							</div>
 
 							<h4 class="text-center">Revenue Split</h4>
@@ -96,7 +93,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<AppThemeSvg :src="assetPaths['./taxes.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./taxes.svg']" alt="" />
 							</div>
 
 							<h4 class="text-center">Taxes</h4>
@@ -108,7 +105,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<AppThemeSvg :src="assetPaths['./payouts.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./payouts.svg']" alt="" />
 							</div>
 
 							<h4 class="text-center">Payouts</h4>
@@ -123,7 +120,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4 col-md-offset-4">
 							<div class="landing-graphic">
-								<AppThemeSvg :src="assetPaths['./wallet.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./wallet.svg']" alt="" />
 							</div>
 
 							<h4 class="text-center">Game Jolt Wallet</h4>
@@ -146,10 +143,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<AppThemeSvg
-									:src="assetPaths['./selling-options.svg'].default"
-									alt=""
-								/>
+								<AppThemeSvg :src="assetPaths['./selling-options.svg']" alt="" />
 							</div>
 
 							<h4 class="text-center">Selling Options</h4>
@@ -163,7 +157,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<AppThemeSvg :src="assetPaths['./keys.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./keys.svg']" alt="" />
 							</div>
 
 							<h4 class="text-center">Flexible Key Management</h4>
@@ -183,10 +177,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<AppThemeSvg
-									:src="assetPaths['./early-access.svg'].default"
-									alt=""
-								/>
+								<AppThemeSvg :src="assetPaths['./early-access.svg']" alt="" />
 							</div>
 
 							<h4 class="text-center">Early Access</h4>
@@ -203,7 +194,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4 col-md-offset-2">
 							<div class="landing-graphic">
-								<AppThemeSvg :src="assetPaths['./analytics.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./analytics.svg']" alt="" />
 							</div>
 
 							<h4 class="text-center">Powerful Analytics</h4>
@@ -221,10 +212,7 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<AppThemeSvg
-									:src="assetPaths['./supporter-focused.svg'].default"
-									alt=""
-								/>
+								<AppThemeSvg :src="assetPaths['./supporter-focused.svg']" alt="" />
 							</div>
 
 							<h4 class="text-center">Supporter Focused</h4>

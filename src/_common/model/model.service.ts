@@ -1,4 +1,4 @@
-import { Api, RequestOptions } from '../api/api.service';
+import { Api, ApiProgressEvent, RequestOptions } from '../api/api.service';
 
 /**
  * Helper type that looks like our model classes.
@@ -20,7 +20,7 @@ export class Model {
 	// set up observers.
 	file: File | File[] | null = null;
 	_removed = false;
-	_progress: ProgressEvent | null = null;
+	_progress: ApiProgressEvent | null = null;
 
 	// We need to create some methods dynamically on the model.
 	static populate: <T = any>(rows: T[]) => T[];

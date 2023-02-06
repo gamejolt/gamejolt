@@ -1,13 +1,12 @@
-import AxiosStatic, { AxiosRequestConfig } from 'axios';
+import Axios, { AxiosRequestConfig } from 'axios';
 import { ref } from 'vue';
 import { Environment } from '../environment/environment.service';
 import { Payload } from '../payload/payload-service';
 
-// Force using node http adapter in SSR.
-// We need to do this because when in the server the code is rendered
-// from a vm that interfers with how axios detects which adapter it should use.
-const adapter = import.meta.env.SSR ? require('axios/lib/adapters/http') : undefined;
-const Axios = AxiosStatic.create({ adapter });
+export interface ApiProgressEvent {
+	loaded: number;
+	total: number;
+}
 
 // Memoized essentially, and lazily fetched when first needed.
 let _hasWebpSupport: null | Promise<boolean> = null;
@@ -39,7 +38,7 @@ export interface RequestOptions {
 	/**
 	 * Progress handler. Will only be used when uploading a file.
 	 */
-	progress?: (event: ProgressEvent | null) => void;
+	progress?: (event: ApiProgressEvent | null) => void;
 
 	/**
 	 * Whether or not to show the loading bar.
@@ -249,9 +248,12 @@ export class Api {
 				headers,
 				withCredentials: options.withCredentials,
 				signal: options.fileCancelToken,
-				onUploadProgress: (e: ProgressEvent) => {
-					if (options.progress && e.lengthComputable) {
-						options.progress(e);
+				onUploadProgress: e => {
+					if (options.progress && e.total) {
+						options.progress({
+							loaded: e.loaded,
+							total: e.total,
+						});
 					}
 				},
 			}).then((response: any) => {
