@@ -53,6 +53,8 @@ export class QuestObjectiveReward extends Model {
 	declare fallback_amount: number;
 	declare fallback_media?: MediaItem;
 
+	declare is_condensed?: boolean;
+
 	get isSticker() {
 		return (
 			this.type === QuestRewardTypes.sticker || this.type === QuestRewardTypes.randomSticker

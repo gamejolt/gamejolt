@@ -33,6 +33,8 @@ export class MediaItem extends Model implements LightboxMediaModel {
 	static readonly TYPE_TRANSCODED_VIDEO = 'transcoded-video';
 	static readonly TYPE_TRANSCODED_VIDEO_CARD = 'transcoded-video-card';
 
+	static readonly TYPE_HELP_PAGE_IMAGE = 'help-page-image';
+
 	static readonly STATUS_ACTIVE = 'active';
 	static readonly STATUS_REMOVED = 'removed';
 	static readonly STATUS_INACTIVE = 'inactive';

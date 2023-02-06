@@ -13,7 +13,7 @@ import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
-import AppPageHeader from '../../../../components/page-header/page-header.vue';
+import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';
 import { createGameDashRouteController, ManageGameThemeKey } from './manage.store';
 
 @Options({

@@ -19,8 +19,8 @@ import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { UserWallet } from '../../../../../_common/user/wallet/wallet.model';
 import { showWalletWithdrawModal } from '../../../../components/wallet/withdraw/withdraw-modal.service';
+import { imageGems } from '../../../../img/images';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
-import gemsImage from './gems.png';
 import marketplaceImage from './marketplace.png';
 
 export default {
@@ -108,7 +108,7 @@ async function withdraw() {
 					<div class="-wallet-title">
 						<img
 							class="-wallet-icon"
-							:src="gemsImage"
+							:src="imageGems"
 							width="32"
 							height="32"
 							alt="Gems Wallet Icon"
@@ -158,8 +158,8 @@ async function withdraw() {
 							<AppAlertBox icon="thumbs-up" color="highlight">
 								<AppTranslate>
 									Party time! 🎆 🤸 You've reached the minimum withdrawal amount.
-									We'll be depositing your gems into your PayPal account on the
-									1st of next month.
+									We'll be depositing your gems into your preferred payment method
+									within the first 15 days of next month.
 								</AppTranslate>
 							</AppAlertBox>
 						</template>
@@ -176,9 +176,9 @@ async function withdraw() {
 							>
 								<div>
 									<AppTranslate>
-										Once you reach the minimum withdraw amount, we'll deposit
-										your gems into your PayPal account on the 1st of the
-										following month.
+										Once you reach the minimum withdrawal amount, we'll deposit
+										your gems through your preferred payment method within the
+										first 15 days of the following month.
 									</AppTranslate>
 								</div>
 								<div style="flex: auto" />

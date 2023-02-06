@@ -21,7 +21,7 @@ import {
 	CommunityUserNotification,
 	NotificationType,
 } from '../../../../../_common/community/user-notification/user-notification.model';
-import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { Notification } from '../../../../../_common/notification/notification-model';
 import { NotificationText } from '../../../../../_common/notification/notification-text.service';

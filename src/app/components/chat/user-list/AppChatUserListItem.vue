@@ -6,7 +6,7 @@ import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service'
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { useGridStore } from '../../grid/grid-store';
-import { enterChatRoom, isUserOnline, leaveGroupRoom } from '../client';
+import { isUserOnline, leaveGroupRoom, openChatRoom } from '../client';
 import AppChatNotificationSettings from '../notification-settings/notification-settings.vue';
 import { ChatRoom, getChatRoomTitle } from '../room';
 import { ChatUser } from '../user';
@@ -29,8 +29,8 @@ const roomId = computed(() =>
 );
 
 const user = computed(() => (item.value instanceof ChatUser ? item.value : null));
-const isActive = computed(() => chat.value.room?.id === roomId.value);
-const notificationsCount = computed(() => chat.value.notifications[roomId.value] ?? 0);
+const isActive = computed(() => chat.value.activeRoomId === roomId.value);
+const notificationsCount = computed(() => chat.value.notifications.get(roomId.value) || 0);
 
 const isOnline = computed(() => {
 	if (!chat.value || !user.value) {
@@ -40,15 +40,11 @@ const isOnline = computed(() => {
 	return isUserOnline(chat.value, item.value.id);
 });
 
-const title = computed(() => {
-	return item.value instanceof ChatUser
-		? item.value.display_name
-		: getChatRoomTitle(item.value, chat.value);
-});
+const title = computed(() =>
+	item.value instanceof ChatUser ? item.value.display_name : getChatRoomTitle(item.value)
+);
 
-const meta = computed(() => {
-	return item.value instanceof ChatUser ? `@${item.value.username}` : null;
-});
+const meta = computed(() => (item.value instanceof ChatUser ? `@${item.value.username}` : null));
 
 const hoverTitle = computed(() => {
 	const parts = [title.value];
@@ -60,7 +56,7 @@ const hoverTitle = computed(() => {
 });
 
 function onClick(e: Event) {
-	enterChatRoom(chat.value, roomId.value);
+	openChatRoom(chat.value, roomId.value);
 	e.preventDefault();
 }
 
@@ -89,6 +85,9 @@ async function leaveRoom() {
 		:title="hoverTitle"
 		:horizontal-padding="16"
 		:force-hover="isActive"
+		:defined-slots="
+			notificationsCount ? ['leading', 'title', 'trailing'] : ['leading', 'title']
+		"
 		popper-placement="bottom"
 		popper-trigger="right-click"
 		popper-hide-on-state-change
@@ -103,7 +102,7 @@ async function leaveRoom() {
 			</div>
 		</template>
 
-		<template #leadingFloat>
+		<template #leading-float>
 			<AppChatUserOnlineStatus
 				v-if="isOnline !== null"
 				:is-online="isOnline"
@@ -114,7 +113,7 @@ async function leaveRoom() {
 		</template>
 
 		<template #title>
-			{{ title }}
+			<span>{{ title }}</span>
 			<span v-if="meta" class="tiny text-muted">{{ meta }}</span>
 		</template>
 

@@ -20,10 +20,10 @@ import { useGridStore } from '../../../grid/grid-store';
 import { loadOlderChatMessages, onNewChatMessage } from '../../client';
 import { TIMEOUT_CONSIDER_QUEUED } from '../../message';
 import { ChatRoom } from '../../room';
+import { ChatWindowAvatarSize } from '../variables';
 import AppChatWindowOutputItem from './AppChatWindowOutputItem.vue';
 
 const AUTOSCROLL_THRESHOLD = 10;
-const AVATAR_MARGIN = 32;
 const MESSAGE_PADDING = 12;
 
 const props = defineProps({
@@ -68,14 +68,12 @@ let _isOnScrollQueued = false;
 let _lastScrollMessageId: number | undefined;
 let _lastAutoscrollOffset: number | undefined;
 
-const messages = computed(() => chat.value.messages[room.value.id] || []);
+const messages = computed(() => room.value.messages);
+const queuedMessages = computed(() => room.value.queuedMessages);
+
 const oldestMessage = computed(() => (messages.value.length ? messages.value[0] : null));
 const newestMessage = computed(() =>
 	messages.value.length ? messages.value[messages.value.length - 1] : null
-);
-
-const queuedMessages = computed(() =>
-	chat.value.messageQueue.filter(i => i.room_id === room.value.id)
 );
 
 const allMessages = computed(() => [...messages.value, ...queuedMessages.value]);
@@ -96,13 +94,7 @@ const shouldShowNewMessagesButton = computed(() => {
 	return newestMessage.value.logged_on > latestFrozenTimestamp.value;
 });
 
-const roomChannel = computed(() => {
-	const item = chat.value.roomChannels[room.value.id];
-	if (item) {
-		return item;
-	}
-	return null;
-});
+const roomChannel = computed(() => chat.value.roomChannels.get(room.value.id));
 
 useEventSubscription(onNewChatMessage, async message => {
 	// When the user sent a message, we want the chat to scroll all the way down
@@ -162,7 +154,7 @@ async function loadOlder() {
 	const firstMessage = oldestMessage.value;
 
 	try {
-		await loadOlderChatMessages(chat.value, room.value.id);
+		await loadOlderChatMessages(room.value);
 	} catch (e) {
 		console.error(e);
 	}
@@ -327,7 +319,7 @@ function _updateMaxContentWidth(width: number) {
 	const messageInnerPadding = MESSAGE_PADDING * 2;
 
 	maxContentWidth.value = Math.max(
-		width - (chatInnerPadding + AVATAR_MARGIN + messageInnerPadding),
+		width - (chatInnerPadding + ChatWindowAvatarSize + messageInnerPadding),
 		100
 	);
 }

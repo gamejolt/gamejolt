@@ -11,7 +11,7 @@ import { GridClient, onFiresideStart, onNewStickers } from './client.service';
 
 const TabLeaderLazy = importNoSSR(async () => await import('../../../utils/tab-leader'));
 
-export type GridNotificationChannel = Awaited<ReturnType<typeof createGridNotificationChannel>>;
+export type GridNotificationChannel = ReturnType<typeof createGridNotificationChannel>;
 
 interface ChargeData {
 	charge: number;
@@ -91,10 +91,7 @@ interface PostUpdatedPayload {
 	was_scheduled: boolean;
 }
 
-export async function createGridNotificationChannel(
-	client: GridClient,
-	options: { userId: number }
-) {
+export function createGridNotificationChannel(client: GridClient, options: { userId: number }) {
 	const { socketController, appStore } = client;
 	const { userId } = options;
 	const { communityStates, stickerStore } = appStore;
@@ -112,15 +109,7 @@ export async function createGridNotificationChannel(
 	channelController.listenTo('sticker-unlock', _onStickerUnlock);
 	channelController.listenTo('post-updated', _onPostUpdated);
 
-	const c = shallowReadonly({
-		channelController,
-		userId,
-		isTabLeader,
-		pushViewNotifications,
-		pushCommunityBootstrap,
-	});
-
-	await channelController.join({
+	const joinPromise = channelController.join({
 		async onJoin(payload: JoinPayload) {
 			const { TabLeader } = await TabLeaderLazy;
 			_tabLeader = new TabLeader('grid_notification_channel_' + userId);
@@ -200,6 +189,16 @@ export async function createGridNotificationChannel(
 		onLeave() {
 			_tabLeader?.kill();
 		},
+	});
+
+	const c = shallowReadonly({
+		channelController,
+		userId,
+		isTabLeader,
+		joinPromise,
+
+		pushViewNotifications,
+		pushCommunityBootstrap,
 	});
 
 	function _onNewNotification(payload: NewNotificationPayload) {

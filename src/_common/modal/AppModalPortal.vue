@@ -8,7 +8,7 @@ const modals = computed(() => Modals.modals);
 
 <template>
 	<div class="modals">
-		<AppModalWrapper v-for="(modal, index) of modals" :key="index" :modal="modal" />
+		<AppModalWrapper v-for="modal of modals" :key="modal.modalId" :modal="modal" />
 	</div>
 </template>
 

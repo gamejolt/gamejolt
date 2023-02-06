@@ -20,7 +20,7 @@ import {
 	CommentThreadModal,
 	CommentThreadModalPermalinkDeregister,
 } from '../../../../../../_common/comment/thread/modal.service';
-import AppContentViewer from '../../../../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../../../_common/filters/number';
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
@@ -42,7 +42,7 @@ import AppShareCard from '../../../../../../_common/share/card/AppShareCard.vue'
 import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
-import AppCommentOverview from '../../../../../components/comment/overview/overview.vue';
+import AppCommentOverview from '../../../../../components/comment/AppCommentOverview.vue';
 import AppGameCommunityBadge from '../../../../../components/game/community-badge/community-badge.vue';
 import AppGameList from '../../../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../../../components/game/list/placeholder/placeholder.vue';

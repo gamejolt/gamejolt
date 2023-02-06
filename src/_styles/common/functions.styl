@@ -14,3 +14,11 @@ media( min = false, max = false )
  */
 calc-hd-height( width )
 	width / (16 / 9)
+
+/**
+ * When v-binding into stylus, the values often are unitless, so we need to add
+ * a "px" unit to the end. You can use this function to quickly do so:
+ *   left: add-unit(v-bind(KGutterWidth), px)
+ */
+add-unit(binding, unit)
+	unquote('calc(' + binding + ' * 1' + unit + ')')

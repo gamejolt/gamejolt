@@ -12,17 +12,18 @@ import { GridClient } from './client.service';
 export type GridFiresideDMChannel = Readonly<{
 	channelController: SocketChannelController;
 	firesideHash: string;
+	joinPromise: Promise<void>;
 }>;
 
 interface ListableHostsPayload {
 	listable_host_ids?: number[];
 }
 
-export async function createGridFiresideDMChannel(
+export function createGridFiresideDMChannel(
 	client: GridClient,
 	firesideController: FiresideController,
 	options: { firesideHash: string; user: User }
-): Promise<GridFiresideDMChannel> {
+): GridFiresideDMChannel {
 	const { socketController } = client;
 	const { firesideHash, user } = options;
 
@@ -35,15 +36,16 @@ export async function createGridFiresideDMChannel(
 
 	channelController.listenTo('update', _onListableHosts);
 
+	const joinPromise = channelController.join();
+
 	const c = shallowReadonly({
 		channelController,
 		firesideHash,
+		joinPromise,
 	});
 
-	await channelController.join();
-
 	async function _onListableHosts(payload: ListableHostsPayload) {
-		logger.debug('Grid listable hosts.', payload);
+		logger.info('Grid listable hosts.', payload);
 		const { listableHostIds, rtc } = firesideController;
 
 		listableHostIds.value = new Set(payload.listable_host_ids ?? []);

@@ -1,3 +1,4 @@
+import { Component } from 'vue';
 import { loadScript } from '../../../utils/utils';
 import { AdSlot } from '../ad-slot-info';
 import { AdAdapterBase } from '../adapter-base';
@@ -25,7 +26,7 @@ export type ProperTagPlacement = keyof typeof ProperTagUnits;
 export class AdProperAdapter extends AdAdapterBase {
 	tagUnits = { ...ProperTagUnits };
 
-	component(_slot: AdSlot) {
+	component(_slot: AdSlot): Component {
 		return AppAdProper;
 	}
 

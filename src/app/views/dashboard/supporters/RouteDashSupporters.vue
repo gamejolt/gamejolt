@@ -2,10 +2,12 @@
 import { computed, Ref, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { getCurrentServerTime } from '../../../../utils/server-time';
+import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { ContentDocument } from '../../../../_common/content/content-document';
-import AppContentViewer from '../../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
+import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
@@ -51,6 +53,8 @@ type InitPayload = {
 
 <script lang="ts" setup>
 const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height}px` });
+
+let _sendAllInterval: NodeJS.Timer | null = null;
 
 /**
  * Actions older than this cannot be thanked.
@@ -102,7 +106,17 @@ const { reload } = createAppRoute({
 		hasError.value = false;
 		reachedEnd.value = rawActions.length < ACTIONS_PER_PAGE;
 	},
+	onDestroyed() {
+		clearSendAllInterval();
+	},
 });
+
+function clearSendAllInterval() {
+	if (_sendAllInterval) {
+		clearInterval(_sendAllInterval);
+		_sendAllInterval = null;
+	}
+}
 
 async function loadMore() {
 	if (isLoadingMore.value || hasError.value || !actions.value.length) {
@@ -132,6 +146,28 @@ async function loadMore() {
 		hasError.value = true;
 	} finally {
 		isLoadingMore.value = false;
+	}
+}
+
+async function _checkSendAll() {
+	try {
+		const response = await Api.sendFieldsRequest('/mobile/dash/creators/supporters', {
+			isSending: true,
+		});
+
+		isSending.value = response.isSending === true;
+		if (isSending.value) {
+			return;
+		}
+
+		clearSendAllInterval();
+
+		// Reload the page when we've determined we're no longer sending
+		// messages.
+		reload();
+	} catch (e) {
+		console.error(e);
+		clearSendAllInterval();
 	}
 }
 
@@ -177,15 +213,14 @@ async function onClickSendAll() {
 			isSending.value = false;
 			return;
 		}
+
+		clearSendAllInterval();
+		_sendAllInterval = setInterval(_checkSendAll, 5_000);
 	} catch (e) {
 		console.error(e);
 		showErrorGrowl($gettext(`Something went wrong`));
 		isSending.value = false;
-		return;
 	}
-
-	// Refresh everything so we have accurate model data for all our messages.
-	reload();
 }
 
 async function onClickEdit() {
@@ -285,6 +320,16 @@ function _canThankSupporterAction(action: SupporterAction) {
 
 			<AppSpacer vertical :scale="4" />
 
+			<AppExpand :when="isSending">
+				<AppAlertBox icon="lock" color="highlight" fill-color="offset">
+					{{
+						$gettext(
+							`We're processing your outgoing messages right now. You'll be able to thank more users once this is finished.`
+						)
+					}}
+				</AppAlertBox>
+			</AppExpand>
+
 			<div class="-row -flex-wrap">
 				<h1 class="-auto-flex sans-margin-bottom">
 					{{ $gettext(`Latest Supporters`) }}
@@ -350,7 +395,10 @@ function _canThankSupporterAction(action: SupporterAction) {
 							</template>
 						</div>
 
-						<div v-if="_canThankSupporterAction(action)" class="-thanks">
+						<div v-if="!action.message && !_isActionStale(action) && isSending">
+							<AppLoading stationary hide-label centered />
+						</div>
+						<div v-else-if="_canThankSupporterAction(action)" class="-thanks">
 							<AppButton @click="onClickCreateCustom(action)">
 								{{ $gettext(`Say thanks`) }}
 							</AppButton>

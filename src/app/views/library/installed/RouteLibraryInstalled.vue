@@ -6,7 +6,7 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import AppPageHeader from '../../../components/page-header/page-header.vue';
+import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import { useClientLibraryStore } from '../../../store/client-library/index';
 import AppLibraryInstalledGame from './AppLibraryInstalledGame.vue';
 

@@ -6,7 +6,6 @@ import AppButton from '../../../_common/button/AppButton.vue';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { Notification } from '../../../_common/notification/notification-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
@@ -177,11 +176,8 @@ function onClickFilter() {
 							{{ $gettext(`Filter`) }}
 						</a>
 
-						<!-- Mobile sizes navigate here directly instead of
-						showing a notification popover. We don't want this
-						showing for sizes that have the popover available. -->
 						<a
-							v-if="Screen.isMobile && feed.hasItems && !hasFilter"
+							v-if="feed.hasItems && !hasFilter"
 							class="link-muted small"
 							@click="markNotificationsAsRead()"
 						>

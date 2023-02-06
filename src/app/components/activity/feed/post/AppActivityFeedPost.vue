@@ -19,8 +19,10 @@ import {
 	createStickerTargetController,
 	provideStickerTargetController,
 } from '../../../../../_common/sticker/target/target-controller';
+import { kThemeGjOverlayNotice } from '../../../../../_common/theme/variables';
+import { styleBorderRadiusCircle } from '../../../../../_styles/mixins';
 import AppFiresidePostEmbed from '../../../fireside/post/embed/embed.vue';
-import AppPollVoting from '../../../poll/voting/voting.vue';
+import AppPollVoting from '../../../poll/AppPollVoting.vue';
 import AppPostContent from '../../../post/AppPostContent.vue';
 import AppPostHeader from '../../../post/AppPostHeader.vue';
 import AppPostTargets from '../../../post/AppPostTargets.vue';
@@ -29,10 +31,10 @@ import { useActivityFeedInterface } from '../AppActivityFeed.vue';
 import { feedShouldBlockPost } from '../feed-service';
 import { ActivityFeedItem } from '../item-service';
 import { useActivityFeed } from '../view';
-import AppActivityFeedPostBlocked from './blocked/blocked.vue';
+import AppActivityFeedPostBlocked from './AppActivityFeedPostBlocked.vue';
+import AppActivityFeedPostVideo from './AppActivityFeedPostVideo.vue';
 import AppActivityFeedPostMedia from './media/media.vue';
 import AppActivityFeedPostText from './text/text.vue';
-import AppActivityFeedPostVideo from './video/video.vue';
 
 const props = defineProps({
 	item: {
@@ -228,6 +230,21 @@ function onPostUnpinned(item: EventItem) {
 				@show="onUnhideBlock"
 			/>
 			<div v-else class="-item" @click.capture="onClickCapture" @click="onClick">
+				<div
+					v-if="isNew"
+					:style="{
+						...styleBorderRadiusCircle,
+						position: `absolute`,
+						top: `6px`,
+						left: `6px`,
+						width: `12px`,
+						height: `12px`,
+						zIndex: 1000,
+						backgroundColor: kThemeGjOverlayNotice,
+						filter: `drop-shadow(0 0 1px ${kThemeGjOverlayNotice})`,
+					}"
+				/>
+
 				<AppBackground :background="post.background" :darken="overlay" bleed>
 					<AppPostHeader
 						:post="post"
@@ -235,7 +252,6 @@ function onPostUnpinned(item: EventItem) {
 						:feed="feed"
 						:show-pinned="shouldShowIsPinned"
 						:date-link="linkResolved"
-						:is-new="isNew"
 					/>
 
 					<AppActivityFeedPostVideo
@@ -272,11 +288,7 @@ function onPostUnpinned(item: EventItem) {
 							/>
 
 							<div v-if="post.hasPoll" class="-poll" @click.stop>
-								<AppPollVoting
-									:poll="post.poll"
-									:game="post.game"
-									:user="post.user"
-								/>
+								<AppPollVoting :post="post" :poll="post.poll" />
 							</div>
 						</AppStickerControlsOverlay>
 					</AppPostContent>

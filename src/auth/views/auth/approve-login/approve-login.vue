@@ -8,7 +8,7 @@ import {
 } from '../../../../_common/auth/auth.service';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Navigate } from '../../../../_common/navigate/navigate.service';
-import { AppProgressPoller } from '../../../../_common/progress/poller/poller';
+import AppProgressPoller from '../../../../_common/progress/poller/AppProgressPoller.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 
 @Options({

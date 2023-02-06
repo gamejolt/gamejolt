@@ -4,7 +4,7 @@ import { Api } from '../../../../_common/api/api.service';
 import { authOnJoin, redirectToOnboarding } from '../../../../_common/auth/auth.service';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import { AppProgressPoller } from '../../../../_common/progress/poller/poller';
+import AppProgressPoller from '../../../../_common/progress/poller/AppProgressPoller.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 
 @Options({

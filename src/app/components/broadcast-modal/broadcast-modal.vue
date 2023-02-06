@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppCommentDisabledCheck from '../../../_common/comment/AppCommentDisabledCheck.vue';
-import AppContentViewer from '../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { $viewPostVideo } from '../../../_common/fireside/post/video/video-model';
@@ -20,7 +20,7 @@ import { getVideoPlayerFromSources } from '../../../_common/video/player/control
 import AppVideoPlayer from '../../../_common/video/player/player.vue';
 import AppVideo from '../../../_common/video/video.vue';
 import { AppCommentWidgetLazy } from '../lazy';
-import AppPollVoting from '../poll/voting/voting.vue';
+import AppPollVoting from '../poll/AppPollVoting.vue';
 import AppPostControls from '../post/controls/AppPostControls.vue';
 
 @Options({
@@ -167,7 +167,7 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 					</div>
 
 					<template v-if="post.hasPoll">
-						<AppPollVoting :poll="post.poll" :game="post.game" :user="post.user" />
+						<AppPollVoting :post="post" :poll="post.poll" />
 
 						<br />
 					</template>
