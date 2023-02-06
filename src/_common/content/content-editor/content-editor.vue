@@ -146,6 +146,15 @@ export default class AppContentEditor extends Vue {
 		doc: HTMLElement;
 	};
 
+	@Watch('$props.contextCapabilitiesOverride')
+	onContextCapabilityOverrideChange() {
+		// When the input capability overrides change, apply the change to the controller.
+		const props = this.$props as this;
+		if (props.contextCapabilitiesOverride) {
+			this.controller_.contextCapabilities = props.contextCapabilitiesOverride;
+		}
+	}
+
 	@Emit('submit')
 	emitSubmit() {}
 

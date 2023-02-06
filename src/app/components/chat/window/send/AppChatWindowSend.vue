@@ -64,6 +64,11 @@ const { room, slowmodeDuration } = toRefs(props);
 const { isDark } = useThemeStore();
 const { chatUnsafe: chat } = useGridStore();
 
+const lengthLimit = ref(props.maxContentLength);
+// TODO: do we need to watch the props and override this value if the prop changes?
+// It currently gets overridden in the form onLoad.
+const messageContentCapabilities = ref(props.contextCapabilities);
+
 const focusToken = createFocusToken();
 
 const isEditorFocused = ref(false);
@@ -167,10 +172,20 @@ type FormModel = {
 	id?: number;
 };
 
+// TODO: editing message, send message id with request.
 const form: FormController<FormModel> = createForm({
+	loadUrl: `/web/chat/rooms/get-message-content-capabilities/${props.room.id}`,
 	warnOnDiscard: false,
 	onInit() {
 		form.formModel.content = '';
+	},
+	onLoad(payload) {
+		lengthLimit.value = payload.lengthLimit;
+		if (payload.contentCapabilities) {
+			messageContentCapabilities.value = ContextCapabilities.fromStringList(
+				payload.contentCapabilities
+			);
+		}
 	},
 });
 
@@ -473,11 +488,11 @@ function disableTypingTimeout() {
 							:key="room.id"
 							ref="editor"
 							:content-context="room.messagesContentContext"
-							:context-capabilities-override="contextCapabilities"
+							:context-capabilities-override="messageContentCapabilities"
 							:temp-resource-context-data="contentEditorTempResourceContextData"
 							:placeholder="$gettext('Send a message')"
 							:single-line-mode="Screen.isDesktop"
-							:validators="[validateContentMaxLength(maxContentLength)]"
+							:validators="[validateContentMaxLength(lengthLimit)]"
 							:max-height="160"
 							:display-rules="displayRules"
 							:autofocus="!Screen.isMobile"
