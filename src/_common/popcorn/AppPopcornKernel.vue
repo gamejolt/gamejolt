@@ -1,5 +1,5 @@
 <script lang="ts">
-import { onBeforeUnmount, onMounted, PropType, ref, toRaw, toRefs } from 'vue';
+import { computed, onBeforeUnmount, onMounted, PropType, ref, toRaw, toRefs } from 'vue';
 import { arrayRemove } from '../../utils/array';
 import { PopcornKernelData, usePopcornKettleController } from './popcorn-kettle-controller';
 </script>
@@ -26,6 +26,10 @@ const styleData = ref({
 	offsetY: 0,
 });
 
+const canShow = computed(
+	() => !!kernelData.value.kernelImage || !!kernelData.value.kernelComponent
+);
+
 onMounted(() => kernelFrameCallbacks.value.push(calcData));
 
 onBeforeUnmount(() => arrayRemove(kernelFrameCallbacks.value, i => toRaw(i) === toRaw(calcData)));
@@ -39,6 +43,10 @@ function inverseLerp(a: number, b: number, val: number) {
 }
 
 function calcData() {
+	if (!canShow.value) {
+		return;
+	}
+
 	const {
 		downwardGravityStrength,
 		velocity,
@@ -102,6 +110,7 @@ function calcData() {
 
 <template>
 	<div
+		v-if="canShow"
 		class="popcorn-kernel"
 		:class="{ '-kernel-forward': kernelData.useClassFadeIn }"
 		:style="{
@@ -109,16 +118,40 @@ function calcData() {
 		}"
 	>
 		<img
+			v-if="kernelData.kernelImage"
 			:src="kernelData.kernelImage"
 			alt=""
 			draggable="false"
 			:style="{
-				width: kernelData.baseSize + 'px',
-				height: kernelData.baseSize + 'px',
+				width: `${kernelData.baseSize}px`,
+				height: `${kernelData.baseSize}px`,
 				opacity: styleData.opacity,
 				transform: `rotate(${styleData.rotation}deg)`,
 			}"
 		/>
+		<div
+			v-else
+			draggable="false"
+			class="-custom-kernel-wrapper"
+			:style="[
+				{
+					width: `${kernelData.baseSize}px`,
+					height: `${kernelData.baseSize}px`,
+					opacity: styleData.opacity,
+					transform: `rotate(${styleData.rotation}deg)`,
+				},
+				`--jolticon-size: ${kernelData.baseSize * 0.75}px`,
+			]"
+		>
+			<component
+				:is="kernelData.kernelComponent"
+				v-bind="kernelData.kernelComponentProps"
+				:style="{
+					maxWidth: '100%',
+					maxHeight: '100%',
+				}"
+			/>
+		</div>
 	</div>
 </template>
 
@@ -127,6 +160,14 @@ function calcData() {
 	&.-kernel-forward
 		opacity: 0
 		animation: anim-opacity 200ms both
+
+.-custom-kernel-wrapper
+	--jolticon-size: 24px
+
+	::v-deep(.jolticon)
+		font-size: var(--jolticon-size)
+		margin: 0
+		vertical-align: middle
 
 @keyframes anim-opacity
 	0%

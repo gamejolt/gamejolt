@@ -10,7 +10,7 @@ const emit = defineEmits({
 });
 
 const c = useFiresideController()!;
-const { rtc, isPersonallyStreaming, isStreamingElsewhere, canStream } = c;
+const { rtc, isPersonallyStreaming, isStreamingElsewhere, canStream, focusedUser } = c;
 
 const listableStreamingUsers = computed(() => rtc.value?.listableStreamingUsers ?? []);
 </script>
@@ -32,24 +32,36 @@ const listableStreamingUsers = computed(() => rtc.value?.listableStreamingUsers 
 				</a>
 			</div>
 
-			<AppFiresideBottomBarHost
-				v-for="host of listableStreamingUsers"
-				:key="host.uid"
-				class="-host-thumb"
-				:host="host"
-			/>
+			<!-- Only render these out when we have a focused user. If we don't
+			do this, we could have a conflict with the video preview and the
+			primary video stream trying to play at the same time (showing a gray
+			screen). -->
+			<template v-if="focusedUser">
+				<AppFiresideBottomBarHost
+					v-for="host of listableStreamingUsers"
+					:key="host.uid"
+					class="-host-thumb"
+					:host="host"
+				/>
+			</template>
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
 .bottom-bar-hosts
-	--fireside-host-size: 64px
+	--fireside-host-size: 100px
 	--fireside-host-gap: 8px
 	width: 100%
 	// This extra padding is so that the shadows of the floating avatars don't
 	// get cut off
 	padding: 4px 4px 0 4px
+
+	@media screen and (max-height: 700px)
+		--fireside-host-size: 80px
+
+	@media screen and (max-height: 500px)
+		--fireside-host-size: 64px
 
 .-hosts
 	display: inline-flex

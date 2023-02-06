@@ -26,6 +26,7 @@ import { GridClient } from './client.service';
 export type GridFiresideChannel = Readonly<{
 	channelController: SocketChannelController;
 	firesideHash: string;
+	joinPromise: Promise<void>;
 	pushUpdateChatSettings: (
 		chatSettings: FiresideChatSettings
 	) => Promise<UpdateChatSettingsPayload>;
@@ -73,11 +74,11 @@ interface HostUpdatePayload {
 	background?: any;
 }
 
-export async function createGridFiresideChannel(
+export function createGridFiresideChannel(
 	client: GridClient,
 	firesideController: FiresideController,
 	options: { firesideHash: string; stickerStore: StickerStore }
-): Promise<GridFiresideChannel> {
+): GridFiresideChannel {
 	const { socketController } = client;
 	const { chatSettings, assignHostBackgroundData } = firesideController;
 	const { firesideHash, stickerStore } = options;
@@ -94,14 +95,7 @@ export async function createGridFiresideChannel(
 	channelController.listenTo('sticker-placement', _onStickerPlacement);
 	channelController.listenTo('update-host', _onUpdateHost);
 
-	const c = shallowReadonly<GridFiresideChannel>({
-		channelController,
-		firesideHash,
-		pushUpdateChatSettings,
-		pushUpdateHost,
-	});
-
-	await channelController.join({
+	const joinPromise = channelController.join({
 		async onJoin(response: JoinPayload) {
 			chatSettings.value.assign(response.chat_settings);
 
@@ -117,6 +111,14 @@ export async function createGridFiresideChannel(
 		},
 	});
 
+	const c = shallowReadonly<GridFiresideChannel>({
+		channelController,
+		firesideHash,
+		joinPromise,
+		pushUpdateChatSettings,
+		pushUpdateHost,
+	});
+
 	async function _onUpdate(payload: UpdatePayload) {
 		logger.info('Fireside update message:', payload);
 
@@ -128,7 +130,7 @@ export async function createGridFiresideChannel(
 	}
 
 	function _onStreamingUid(payload: StreamingUIDPayload) {
-		logger.debug('Grid streaming uid added.', payload);
+		logger.info('Grid streaming uid added.', payload);
 
 		const { hosts } = firesideController;
 		if (!payload.streaming_uid || !payload.user) {
@@ -138,7 +140,7 @@ export async function createGridFiresideChannel(
 		const user = new User(payload.user);
 		const host = hosts.value.find(host => host.user.id === user.id);
 		if (host) {
-			logger.debug('Adding streaming uid to existing host');
+			logger.info('Adding streaming uid to existing host');
 
 			host.user = user;
 			host.needsPermissionToView = payload.is_unlisted;
@@ -147,7 +149,7 @@ export async function createGridFiresideChannel(
 				host.uids.push(payload.streaming_uid);
 			}
 		} else {
-			logger.debug('Adding streaming uid to new host');
+			logger.info('Adding streaming uid to new host');
 			hosts.value.push({
 				user: user,
 				needsPermissionToView: payload.is_unlisted,
@@ -163,9 +165,14 @@ export async function createGridFiresideChannel(
 	}
 
 	function _onStickerPlacement(payload: StickerPlacementPayload) {
-		logger.debug('Grid sticker placement received.', payload, payload.streak);
+		logger.info('Grid sticker placement received.', payload, payload.streak);
 
 		const { rtc, stickerTargetController, fireside, user } = firesideController;
+		// Ignore placements if we don't have an RTC set up.
+		if (!rtc.value) {
+			logger.info(`Received grid sticker placement while we have no RTC`);
+			return;
+		}
 
 		const placement = new StickerPlacement(payload.sticker_placement);
 		const {
@@ -195,7 +202,7 @@ export async function createGridFiresideChannel(
 	}
 
 	function _onUpdateHost(payload: HostUpdatePayload) {
-		logger.debug('Grid host update received.', payload);
+		logger.info('Grid host update received.', payload);
 
 		const background = payload.background ? new Background(payload.background) : undefined;
 		firesideController.assignHostBackgroundData(payload.user_id, background);
@@ -210,6 +217,7 @@ export async function createGridFiresideChannel(
 			allow_images: chatSettings.allow_images,
 			allow_gifs: chatSettings.allow_gifs,
 			allow_links: chatSettings.allow_links,
+			automated_sticker_messages: chatSettings.automated_sticker_messages,
 		});
 	}
 

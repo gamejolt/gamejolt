@@ -4,6 +4,7 @@ import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import {
 	FiresideRTCUser,
+	saveFiresideRTCUserPrefs,
 	setDesktopAudioPlayback,
 	setMicAudioPlayback,
 	setUserDesktopAudioVolume,
@@ -35,8 +36,14 @@ useEventSubscription(onFiresideStickerPlaced, onStickerPlaced);
 
 const { host } = toRefs(props);
 
-const { isFullscreen, popperTeleportId, rtc, fetchedHostUserData, shownUserCardHover } =
-	useFiresideController()!;
+const {
+	isFullscreen,
+	popperTeleportId,
+	rtc,
+	fetchedHostUserData,
+	shownUserCardHover,
+	isShowingStreamSetup,
+} = useFiresideController()!;
 const kettleController = createPopcornKettleController();
 
 const isScrubbingMic = ref(false);
@@ -54,6 +61,21 @@ const showingVideoThumb = computed(() => {
 		return false;
 	}
 	return !isFocused.value && host.value.hasVideo;
+});
+
+const canShowThumbStream = computed(() => {
+	if (!rtc.value || rtc.value.videoPaused) {
+		return false;
+	}
+
+	// We need to hide the video preview if we have the stream setup open,
+	// otherwise it'll end up clearing the preview in the setup form when this
+	// thumb stream shows.
+	if (host.value.isLocal) {
+		return !isShowingStreamSetup.value;
+	}
+
+	return true;
 });
 
 function onClick() {
@@ -118,6 +140,7 @@ function _handleScrub(
 		volumeBeforeScrub.value = undefined;
 
 		isScrubbing.value = false;
+		saveFiresideRTCUserPrefs(host.value);
 	}
 }
 
@@ -161,7 +184,8 @@ async function onStickerPlaced(placement: StickerPlacement) {
 		return;
 	}
 
-	kettleController.addKernel(img_url, {
+	kettleController.addKernel({
+		kernelImage: img_url,
 		duration: 2_500,
 		baseSize: 48,
 		velocity: 22.5,
@@ -234,20 +258,25 @@ function onUserCardUnhovered() {
 		>
 			<template #default>
 				<div class="-click-capture" @click="onClick">
-					<div class="-display-thumb" :class="{ '-hidden': !showingVideoThumb }">
+					<div class="-video-thumb" :class="{ '-hidden': !showingVideoThumb }">
 						<template v-if="showingVideoThumb">
 							<AppFiresideStreamVideo
-								v-if="rtc && !rtc.videoPaused"
+								v-if="canShowThumbStream"
 								:rtc-user="host"
 								video-fit="cover"
 								low-bitrate
 							/>
-							<AppJolticon v-else icon="camera" class="-display-thumb-icon" />
+							<AppJolticon v-else icon="camera" />
 						</template>
 					</div>
 
-					<div class="-avatar-wrap" :class="{ '-full': !showingVideoThumb }">
-						<AppFiresideBottomBarHostAvatar :host="host" />
+					<div class="-avatar-wrap" :class="{ '-small': showingVideoThumb }">
+						<AppFiresideBottomBarHostAvatar
+							class="-avatar-item"
+							:host="host"
+							:fill-parent="!showingVideoThumb"
+							fill-radius="lg"
+						/>
 
 						<AppPopcornKettle :controller="kettleController" />
 					</div>
@@ -335,24 +364,28 @@ function onUserCardUnhovered() {
 .-thumb
 .-click-capture
 	position: relative
-	width: var(--fireside-host-size)
+	width: calc(var(--fireside-host-size) * (16 / 9))
 	height: var(--fireside-host-size)
 
 .-click-capture
 	display: flex
 	flex-direction: column
 	align-items: center
+	justify-content: center
 	cursor: pointer
 	user-select: none
 
-.-display-thumb
-	img-circle()
+.-video-thumb
+.-avatar-wrap
+	rounded-corners-lg()
+
+.-video-thumb
 	position: absolute
 	top: 0
 	display: flex
 	align-items: center
 	justify-content: center
-	width: var(--fireside-host-size)
+	width: calc(var(--fireside-host-size) * (16 / 9))
 	height: var(--fireside-host-size)
 	background-color: var(--theme-bg-subtle)
 	overflow: hidden
@@ -360,27 +393,24 @@ function onUserCardUnhovered() {
 	&.-hidden
 		visibility: hidden
 
-.-stream-player
-	width: 100%
-	height: 100%
-
 .-avatar-wrap
-	elevate-1()
 	position: absolute
-	top: -2px
-	left: -2px
-	width: 24px
-	height: 24px
-	transition: all 350ms $ease-out-back
-	border-radius: 100%
+	left: 0
+	top: @left
+	width: 100%
+	height: @width
+	z-index: 1
+	transition: all 400ms
 
-	&.-full
-		width: var(--fireside-host-size)
-		height: var(--fireside-host-size)
-		top: 0
-		left: 0
-		// Get rid of the elevate shadow without ruining our transition
-		box-shadow: none
+	&.-small
+		left: -2px
+		top: @left
+		width: 32px
+		height: @width
+
+.-avatar-item
+	position: absolute
+	z-index: 1
 
 .-avatar-stickers
 	position: absolute
@@ -412,7 +442,7 @@ function onUserCardUnhovered() {
 	width: 0
 	bottom: -24px
 	opacity: 0
-	background-color: var(--theme-link)
+	background-color: var(--theme-primary)
 	transition: width 400ms $ease-out-back, opacity 250ms
 
 	&.-active

@@ -5,7 +5,7 @@ import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 
-const { chatRoom, collapseSidebar } = useFiresideController()!;
+const { chatRoom, collapseSidebar, isSidebarHome } = useFiresideController()!;
 
 const messageCount = ref(0);
 
@@ -26,13 +26,13 @@ watch(collapseSidebar, () => {
 </script>
 
 <template>
-	<div>
+	<div v-if="isSidebarHome || collapseSidebar">
 		<AppButton
 			v-app-tooltip="{
 				placement: 'left',
-				content: collapseSidebar ? $gettext(`Show chat`) : $gettext(`Hide chat`),
+				content: collapseSidebar ? $gettext(`Show chat`) : $gettext(`Collapse`),
 			}"
-			:icon="collapseSidebar ? 'expand' : 'remove'"
+			:icon="collapseSidebar ? 'message' : 'remove'"
 			circle
 			trans
 			@click="collapseSidebar = !collapseSidebar"

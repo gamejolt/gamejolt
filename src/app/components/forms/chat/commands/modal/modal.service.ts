@@ -5,7 +5,7 @@ export class ChatCommandsModal {
 	static async show() {
 		return await showModal<void>({
 			modalId: 'ChatCommands',
-			component: defineAsyncComponent(() => import('./ChatCommandsModal.vue')),
+			component: defineAsyncComponent(() => import('./AppChatCommandsModal.vue')),
 			noEscClose: true,
 			noBackdropClose: true,
 			size: 'lg',

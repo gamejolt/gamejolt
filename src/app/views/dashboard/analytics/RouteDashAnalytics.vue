@@ -24,8 +24,8 @@ import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
+import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
-import AppPageHeader from '../../../components/page-header/page-header.vue';
 import { SiteAnalyticsReport } from '../../../components/site-analytics/report-service';
 import {
 	Metric,

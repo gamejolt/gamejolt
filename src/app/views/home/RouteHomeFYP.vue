@@ -8,11 +8,11 @@ import { configFYPExperiment } from '../../../_common/config/config.service';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { AppActivityFeedLazy } from '../../components/lazy';
 import { illNoComments } from '../../img/ill/illustrations';
+import { routeDiscoverHome } from '../discover/home/home.route';
 import { RouteActivityFeedController } from './RouteHomeFeed.vue';
 
 function _feedUrl() {
@@ -48,7 +48,6 @@ createAppRoute({
 				name: 'fyp',
 				url: _feedUrl(),
 				shouldShowFollow: true,
-				shouldShowDates: false,
 				itemsPerPage: payload.perPage,
 				suppressTicks: payload.suppressTicks,
 			},
@@ -66,20 +65,22 @@ createAppRoute({
 	<div v-else>
 		<div v-if="!feed.hasItems">
 			<AppIllustration :asset="illNoComments">
-				<AppTranslate>
-					You need to join some active communities for us to know your tastes.
-				</AppTranslate>
+				{{
+					$gettext(
+						`You need to join some realms, creators or friends for us to know your tastes.`
+					)
+				}}
 			</AppIllustration>
 
 			<AppSpacer vertical :scale="10" />
 
 			<RouterLink
 				:to="{
-					name: 'discover.communities',
+					name: routeDiscoverHome.name,
 				}"
 			>
 				<AppButton icon="compass-needle" solid lg block>
-					<AppTranslate>Browse Communities</AppTranslate>
+					{{ $gettext(`Discover`) }}
 				</AppButton>
 			</RouterLink>
 		</div>

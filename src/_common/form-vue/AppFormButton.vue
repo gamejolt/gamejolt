@@ -15,6 +15,9 @@ const props = defineProps({
 	trans: {
 		type: Boolean,
 	},
+	overlay: {
+		type: Boolean,
+	},
 	solid: {
 		type: Boolean,
 		default: true,
@@ -110,6 +113,7 @@ async function onClick(e: Event) {
 		v-if="shouldShow"
 		:primary="primary"
 		:trans="trans"
+		:overlay="overlay"
 		:solid="solid"
 		:block="block"
 		:disabled="disabled || form.isProcessing"

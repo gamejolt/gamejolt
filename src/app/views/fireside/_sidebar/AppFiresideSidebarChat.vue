@@ -31,7 +31,7 @@ const loginUrl = computed(
 <template>
 	<AppFiresideSidebar :opacity="0.3">
 		<template #header>
-			<AppFiresideSidebarHeading />
+			<AppFiresideSidebarHeading has-members />
 		</template>
 
 		<template #body>
@@ -40,6 +40,8 @@ const loginUrl = computed(
 				:key="chatRoom.id"
 				:room="chatRoom"
 				:overlay="!!background"
+				avatar-popper-placement="left"
+				:avatar-popper-placement-fallbacks="['left', 'right']"
 			/>
 		</template>
 

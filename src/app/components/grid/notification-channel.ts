@@ -1,18 +1,17 @@
 import { computed, reactive, shallowReadonly } from 'vue';
 import { TabLeaderInterface } from '../../../utils/tab-leader';
 import { importNoSSR } from '../../../_common/code-splitting';
-import { configHomeDefaultFeed } from '../../../_common/config/config.service';
 import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Notification } from '../../../_common/notification/notification-model';
 import { QuestNotification } from '../../../_common/quest/quest-notification-model';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
-import { HOME_FEED_FYP } from '../../views/home/home-feed.service';
+import { shouldUseFYPDefault } from '../../views/home/home-feed.service';
 import { GridClient, onFiresideStart, onNewStickers } from './client.service';
 
 const TabLeaderLazy = importNoSSR(async () => await import('../../../utils/tab-leader'));
 
-export type GridNotificationChannel = Awaited<ReturnType<typeof createGridNotificationChannel>>;
+export type GridNotificationChannel = ReturnType<typeof createGridNotificationChannel>;
 
 interface ChargeData {
 	charge: number;
@@ -92,10 +91,7 @@ interface PostUpdatedPayload {
 	was_scheduled: boolean;
 }
 
-export async function createGridNotificationChannel(
-	client: GridClient,
-	options: { userId: number }
-) {
+export function createGridNotificationChannel(client: GridClient, options: { userId: number }) {
 	const { socketController, appStore } = client;
 	const { userId } = options;
 	const { communityStates, stickerStore } = appStore;
@@ -113,15 +109,7 @@ export async function createGridNotificationChannel(
 	channelController.listenTo('sticker-unlock', _onStickerUnlock);
 	channelController.listenTo('post-updated', _onPostUpdated);
 
-	const c = shallowReadonly({
-		channelController,
-		userId,
-		isTabLeader,
-		pushViewNotifications,
-		pushCommunityBootstrap,
-	});
-
-	await channelController.join({
+	const joinPromise = channelController.join({
 		async onJoin(payload: JoinPayload) {
 			const { TabLeader } = await TabLeaderLazy;
 			_tabLeader = new TabLeader('grid_notification_channel_' + userId);
@@ -132,7 +120,7 @@ export async function createGridNotificationChannel(
 			// If the FYP feed is the default feed, community feature items will
 			// not be returned in the home feed. Only show new-counts from posts
 			// of sources the user follows.
-			if (configHomeDefaultFeed.value === HOME_FEED_FYP) {
+			if (shouldUseFYPDefault()) {
 				activityUnreadCount = payload.activityUnreadCounts['following'];
 			}
 
@@ -201,6 +189,16 @@ export async function createGridNotificationChannel(
 		onLeave() {
 			_tabLeader?.kill();
 		},
+	});
+
+	const c = shallowReadonly({
+		channelController,
+		userId,
+		isTabLeader,
+		joinPromise,
+
+		pushViewNotifications,
+		pushCommunityBootstrap,
 	});
 
 	function _onNewNotification(payload: NewNotificationPayload) {

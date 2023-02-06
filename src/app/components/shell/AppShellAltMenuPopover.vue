@@ -7,10 +7,16 @@ import AppLinkExternal from '../../../_common/link/AppLinkExternal.vue';
 import AppPopper from '../../../_common/popper/AppPopper.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import AppUserCreatorBadge from '../../../_common/user/creator/AppUserCreatorBadge.vue';
 import { ClientSystemReportModal } from '../client/safe-exports';
 import AppShellAltMenuDevelopers from './AppShellAltMenuDevelopers.vue';
 import AppShellAltMenuExtra from './AppShellAltMenuExtra.vue';
+
+defineProps({
+	showStore: {
+		type: Boolean,
+	},
+});
 
 const moreMenuShowing = ref(false);
 
@@ -48,7 +54,19 @@ function showSystemReport() {
 						"
 					>
 						<AppJolticon icon="download-box" />
-						<AppTranslate>Get the App</AppTranslate>
+						{{ $gettext(`Get the app`) }}
+					</RouterLink>
+
+					<RouterLink
+						v-if="showStore"
+						class="list-group-item has-icon"
+						:to="{
+							name: 'discover.games.list._fetch',
+							params: { section: null },
+						}"
+					>
+						<AppJolticon icon="gamepad" />
+						{{ $gettext(`Store`) }}
 					</RouterLink>
 
 					<RouterLink
@@ -59,7 +77,17 @@ function showSystemReport() {
 						}"
 					>
 						<AppJolticon icon="forums" />
-						<AppTranslate>Site Guidelines</AppTranslate>
+						{{ $gettext(`Site guidelines`) }}
+					</RouterLink>
+
+					<RouterLink
+						class="list-group-item has-icon"
+						:to="{
+							name: 'landing.creators',
+						}"
+					>
+						<AppUserCreatorBadge class="list-group-item-icon" />
+						{{ $gettext(`Become a creator`) }}
 					</RouterLink>
 
 					<AppLinkExternal
@@ -67,7 +95,7 @@ function showSystemReport() {
 						href="https://www.redbubble.com/people/gamejolt/shop"
 					>
 						<AppJolticon icon="gift" />
-						<AppTranslate>Merch</AppTranslate>
+						{{ $gettext(`Merch`) }}
 					</AppLinkExternal>
 
 					<RouterLink
@@ -77,7 +105,7 @@ function showSystemReport() {
 						}"
 					>
 						<AppJolticon icon="info-circle" />
-						<AppTranslate>About</AppTranslate>
+						{{ $gettext(`About`) }}
 					</RouterLink>
 				</div>
 
@@ -97,7 +125,7 @@ function showSystemReport() {
 							v{{ GJ_VERSION }}
 							<div class="-dot" />
 							<a @click="showSystemReport">
-								<AppTranslate>Send System Report</AppTranslate>
+								{{ $gettext(`Send system report`) }}
 							</a>
 						</div>
 					</template>

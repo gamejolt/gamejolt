@@ -1,16 +1,16 @@
 <script lang="ts">
 import { watch } from '@vue/runtime-core';
-import { computed, defineAsyncComponent, PropType, ref, toRefs } from 'vue';
+import { computed, PropType, ref, toRefs } from 'vue';
 import { getMediaserverUrlForBounds } from '../../utils/image';
 import { Api } from '../api/api.service';
 import AppButton from '../button/AppButton.vue';
 import { Jolticon } from '../jolticon/AppJolticon.vue';
 import AppLoading from '../loading/AppLoading.vue';
-import { showModal } from '../modal/modal.service';
 import { useStickerStore } from '../sticker/sticker-store';
 import { Quest } from './quest-model';
 import { QuestObjectiveReward } from './quest-objective-reward-model';
-import { QuestReward } from './reward/AppQuestRewardModal.vue';
+import { QuestRewardData } from './reward/AppQuestRewardModal.vue';
+import { QuestRewardModal } from './reward/modal.service';
 </script>
 
 <script lang="ts" setup>
@@ -31,6 +31,7 @@ const { quest, show, isAccept } = toRefs(props);
 
 const emit = defineEmits({
 	newQuest: (_quest: Quest) => true,
+	payloadError: () => true,
 });
 
 const { setChargeData, currentCharge, chargeLimit } = useStickerStore();
@@ -81,14 +82,13 @@ async function onActionPressed() {
 			? QuestObjectiveReward.populate(payload.rewards)
 			: [];
 
-		const compactRewards = new Map<string, QuestReward>();
+		const compactRewards = new Map<string, QuestRewardData>();
 
-		const addOrUpdateReward = (options: QuestReward & { key: string }) => {
+		const addOrUpdateReward = (options: QuestRewardData) => {
 			const { key, amount } = options;
 			if (compactRewards.has(key)) {
 				compactRewards.get(key)!.amount += amount;
 			} else {
-				options.icon ??= 'gift';
 				compactRewards.set(key, options);
 			}
 		};
@@ -105,6 +105,8 @@ async function onActionPressed() {
 		const fallbackIcon: Jolticon = 'gift';
 
 		for (const reward of objectiveRewards) {
+			const isCondensed = reward.is_condensed === true;
+
 			if (reward.isSticker) {
 				for (const { amount, sticker } of reward.stickers) {
 					addOrUpdateReward({
@@ -113,6 +115,7 @@ async function onActionPressed() {
 						img_url: sticker.img_url,
 						name: reward.name,
 						icon: fallbackIcon,
+						isCondensed,
 					});
 				}
 			} else if (reward.isExp) {
@@ -124,6 +127,7 @@ async function onActionPressed() {
 					name: reward.name,
 					icon: 'exp',
 					isExp: true,
+					isCondensed,
 				});
 			} else if (reward.isTrophy && !!reward.trophy) {
 				const { id, img_thumbnail } = reward.trophy;
@@ -133,6 +137,7 @@ async function onActionPressed() {
 					img_url: img_thumbnail,
 					name: reward.name,
 					icon: 'trophy',
+					isCondensed,
 				});
 			} else if (reward.isBackground && !!reward.background) {
 				const { id } = reward.background;
@@ -142,6 +147,7 @@ async function onActionPressed() {
 					img_url: processMediaserverUrl(reward.background.media_item.mediaserver_url),
 					name: reward.name,
 					icon: 'paintbrush',
+					isCondensed,
 				});
 			} else if (reward.isCharge) {
 				// Manually alter the sticker charge we have so other UI can
@@ -159,6 +165,7 @@ async function onActionPressed() {
 					img_url: processMediaserverUrl(reward.fallback_media?.mediaserver_url),
 					name: reward.name,
 					icon: fallbackIcon,
+					isCondensed,
 				});
 			} else {
 				addOrUpdateReward({
@@ -167,6 +174,7 @@ async function onActionPressed() {
 					img_url: processMediaserverUrl(reward.fallback_media?.mediaserver_url),
 					name: reward.name,
 					icon: fallbackIcon,
+					isCondensed,
 				});
 			}
 		}
@@ -177,20 +185,15 @@ async function onActionPressed() {
 		}
 		const title = isAccept.value ? quest.value.title : undefined;
 
-		showModal({
-			modalId: 'QuestRewards',
-			component: defineAsyncComponent(() => import('./reward/AppQuestRewardModal.vue')),
-			props: {
-				quest: quest.value,
-				title,
-				rewards,
-			},
-			noBackdropClose: true,
-			size: 'full',
+		QuestRewardModal.show({
+			quest: quest.value,
+			rewards,
+			title,
 		});
 	} catch (e) {
 		// Mark this component as having an error, hiding the action button from other inputs.
 		hasError.value = true;
+		emit('payloadError');
 		console.error(e);
 	} finally {
 		isProcessingAction.value = false;
@@ -200,11 +203,11 @@ async function onActionPressed() {
 
 <template>
 	<div ref="root">
-		<AppButton v-if="shouldShow" primary outline block @click="onActionPressed">
+		<AppButton v-if="shouldShow" primary block @click="onActionPressed">
 			<AppLoading v-if="isProcessingAction" class="-loading" hide-label stationary centered />
-			<AppTranslate v-else>
-				{{ isAccept ? 'Accept quest' : 'Claim rewards' }}
-			</AppTranslate>
+			<template v-else>
+				{{ isAccept ? $gettext(`Accept quest`) : $gettext(`Claim rewards`) }}
+			</template>
 		</AppButton>
 	</div>
 </template>

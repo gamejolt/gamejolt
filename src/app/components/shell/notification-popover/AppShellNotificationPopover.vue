@@ -12,8 +12,13 @@ import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useEventSubscription } from '../../../../_common/system/event/event-topic';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { useAppStore } from '../../../store';
+import { NotificationsFilterModal } from '../../../views/notifications/filter/modal.service';
+import { routeNotifications } from '../../../views/notifications/notifications.route';
+import {
+	NOTIFICATION_FILTER_FIELD,
+	SUPPORTED_NOTIFICATION_FEED_TYPES,
+} from '../../../views/notifications/RouteNotifications.vue';
 import { ActivityFeedView } from '../../activity/feed/view';
 import { onNewStickers } from '../../grid/client.service';
 import { useGridStore } from '../../grid/grid-store';
@@ -93,7 +98,15 @@ async function onShow() {
 		// If the feed isn't bootstrapped with data, then we have to do the
 		// first bootstrapping call to get data into it.
 		if (!feed.value.isBootstrapped) {
-			const payload = await Api.sendRequest('/web/dash/activity/notifications');
+			const payload = await Api.sendRequest(
+				'/web/dash/activity/notifications',
+				{
+					[NOTIFICATION_FILTER_FIELD]: SUPPORTED_NOTIFICATION_FEED_TYPES,
+				},
+				{
+					allowComplexData: [NOTIFICATION_FILTER_FIELD],
+				}
+			);
 
 			const items = Notification.populate(payload.items);
 			feed.value.append(items);
@@ -150,6 +163,13 @@ function removeStickerAnimation(key: string) {
 		animatingStickers.value.splice(index, 1);
 	}
 }
+
+function onClickFilter() {
+	NotificationsFilterModal.show({
+		filters: Notification.NOTIFICATION_FEED_TYPES,
+		replaceRoute: route.name === routeNotifications.name,
+	});
+}
 </script>
 
 <template>
@@ -189,8 +209,13 @@ function removeStickerAnimation(key: string) {
 
 		<template v-if="feed && isShowing" #header>
 			<div class="-header fill-darker small">
+				<a class="link-muted" @click="onClickFilter()">
+					<AppJolticon icon="filter" middle />
+					{{ $gettext(`Filter`) }}
+				</a>
+
 				<a class="link-muted" @click="markNotificationsAsRead()">
-					<AppTranslate>Mark All as Read</AppTranslate>
+					{{ $gettext(`Mark all as read`) }}
 				</a>
 			</div>
 		</template>
@@ -209,7 +234,7 @@ function removeStickerAnimation(key: string) {
 					/>
 					<template v-if="!feed || !feed.hasItems">
 						<div class="alert">
-							<AppTranslate>You don't have any notifications yet.</AppTranslate>
+							{{ $gettext(`You don't have any notifications yet.`) }}
 						</div>
 					</template>
 					<template v-else>
@@ -222,7 +247,7 @@ function removeStickerAnimation(key: string) {
 		<template v-if="feed && isShowing" #footer>
 			<div class="fill-darker">
 				<AppButton :to="{ name: 'notifications' }" block trans>
-					<AppTranslate>View All</AppTranslate>
+					{{ $gettext(`View all`) }}
 				</AppButton>
 			</div>
 		</template>
@@ -242,7 +267,9 @@ $-new-sticker-size = 32px
 
 .-header
 	padding: $popover-spacing
-	text-align: right
+	display: flex
+	justify-content: flex-end
+	gap: 12px
 
 .-new-sticker-anim-container
 	position: absolute

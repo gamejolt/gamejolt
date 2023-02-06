@@ -26,6 +26,7 @@ import { ModelClassType } from '../model/model.service';
 import { PayloadFormErrors } from '../payload/payload-service';
 import { $gettext } from '../translate/translate.service';
 import { FormGroupController } from './AppFormGroup.vue';
+import { FormValidatorError } from './validators';
 
 const Key: InjectionKey<FormController> = Symbol('form');
 
@@ -84,6 +85,7 @@ interface CreateFormOptions<T, SubmitResponse = any> {
 	saveMethod?: MaybeRef<keyof T | undefined>;
 	loadUrl?: MaybeRef<string | undefined>;
 	loadData?: MaybeRef<any>;
+	sanitizeComplexData?: boolean;
 	resetOnSubmit?: MaybeRef<boolean>;
 	warnOnDiscard?: MaybeRef<boolean>;
 	reloadOnSubmit?: MaybeRef<boolean>;
@@ -97,7 +99,7 @@ interface CreateFormOptions<T, SubmitResponse = any> {
 }
 
 export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T, SubmitResponse>) {
-	const { model } = options;
+	const { model, sanitizeComplexData = false } = options;
 
 	// These may be redefined below through the overrides. Only needed for
 	// backwards compatibility with old forms.
@@ -141,6 +143,21 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 		() => _groups.value.every(i => i.valid.value) && customErrors.value.length === 0
 	);
 	const invalid = computed(() => !valid.value);
+
+	/**
+	 * Includes all errors from all form controls.
+	 */
+	const controlErrors = computed(() => {
+		const ret = {} as Record<string, FormValidatorError>;
+
+		for (const group of _groups.value) {
+			if (group.error.value) {
+				ret[group.name.value] = group.error.value;
+			}
+		}
+
+		return ret;
+	});
 
 	/**
 	 * This is purely for {@link BaseForm} to initialize lazily since it doesn't
@@ -261,6 +278,7 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 		const payload = loadUrl.value
 			? await Api.sendRequest(loadUrl.value, loadData.value || undefined, {
 					detach: true,
+					sanitizeComplexData,
 			  })
 			: {};
 
@@ -391,6 +409,7 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 		isLoadedBootstrapped,
 		isProcessing,
 		submitted,
+		controlErrors,
 		serverErrors,
 		customErrors,
 		validate,
@@ -424,6 +443,7 @@ export interface FormController<T = any> {
 	isLoadedBootstrapped: boolean | null;
 	isProcessing: boolean;
 	submitted: boolean;
+	controlErrors: Record<string, FormValidatorError>;
 	serverErrors: PayloadFormErrors;
 	customErrors: string[];
 	validate: () => Promise<void>;

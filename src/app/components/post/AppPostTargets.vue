@@ -2,15 +2,17 @@
 import { computed, PropType, ref, toRefs } from 'vue';
 import { CommunityChannel } from '../../../_common/community/channel/channel.model';
 import { Community } from '../../../_common/community/community.model';
+import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { Realm } from '../../../_common/realm/realm-model';
 import AppScrollScroller from '../../../_common/scroll/AppScrollScroller.vue';
 import { vAppScrollWhen } from '../../../_common/scroll/scroll-when.directive';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppFormsPillSelectorCommunities from '../forms/pill-selector/communities/AppFormsPillSelectorCommunities.vue';
+import AppPostTarget from './target/AppPostTarget.vue';
 import AppPostTargetCommunity from './target/AppPostTargetCommunity.vue';
 import AppPostTargetRealm from './target/AppPostTargetRealm.vue';
+import { PostTargetManageRealmsModal } from './target/manage-realms/modal.service';
 import AppPostTargetsAddCommunity from './target/_add/AppPostTargetAddCommunity.vue';
-import AppPostTargetsAddRealm from './target/_add/AppPostTargetAddRealm.vue';
 
 const props = defineProps({
 	communities: {
@@ -31,9 +33,9 @@ const props = defineProps({
 		type: Array as PropType<Community[]>,
 		default: () => [],
 	},
-	targetableRealms: {
-		type: Array as PropType<Realm[]>,
-		default: () => [],
+	maxRealms: {
+		type: Number,
+		default: undefined,
 	},
 	canAddCommunity: {
 		type: Boolean,
@@ -47,9 +49,6 @@ const props = defineProps({
 	canRemoveRealms: {
 		type: Boolean,
 	},
-	isLoadingRealms: {
-		type: Boolean,
-	},
 	hasLinks: {
 		type: Boolean,
 	},
@@ -58,23 +57,20 @@ const props = defineProps({
 const {
 	incompleteCommunity,
 	targetableCommunities,
-	targetableRealms,
+	maxRealms,
 	communities,
 	realms,
 	canAddCommunity,
 	canAddRealm,
 	canRemoveCommunities,
 	canRemoveRealms,
-	isLoadingRealms,
 	hasLinks,
 } = toRefs(props);
 
 const emit = defineEmits({
 	showCommunities: () => true,
-	showRealms: () => true,
 	selectCommunity: (_community: Community, _channel: CommunityChannel) => true,
 	selectIncompleteCommunity: (_community: Community, _channel: CommunityChannel) => true,
-	selectRealm: (_realm: Realm) => true,
 	removeCommunity: (_community: Community) => true,
 	removeRealm: (_realm: Realm) => true,
 });
@@ -90,12 +86,7 @@ const canShow = computed(() => {
 		return true;
 	}
 
-	const realmsValid =
-		isLoadingRealms.value ||
-		(!!targetableRealms?.value?.length && canAddRealm.value) ||
-		realms.value.length > 0;
-
-	return realmsValid;
+	return canAddRealm.value || realms.value.length > 0;
 });
 
 const baseClasses = computed(() => {
@@ -124,11 +115,6 @@ function onRemoveCommunity(community: Community) {
 	emit('removeCommunity', community);
 }
 
-function selectRealm(realm: Realm) {
-	emit('selectRealm', realm);
-	_scrollToEnd();
-}
-
 function selectCommunity(community: Community, channel: CommunityChannel) {
 	emit('selectCommunity', community, channel);
 	_scrollToEnd();
@@ -140,6 +126,15 @@ function selectIncompleteCommunity(community: Community, channel: CommunityChann
 
 async function _scrollToEnd() {
 	++scrollingKey.value;
+}
+
+async function onClickAddRealm() {
+	await PostTargetManageRealmsModal.show({
+		selectedRealms: realms.value,
+		maxRealms: maxRealms?.value || 5,
+	});
+
+	_scrollToEnd();
 }
 </script>
 
@@ -186,15 +181,15 @@ async function _scrollToEnd() {
 				@remove="onRemoveCommunity"
 			/>
 
-			<AppPostTargetsAddRealm
-				v-if="canAddRealm"
-				key="add-realm"
-				:class="baseClasses"
-				:realms="targetableRealms"
-				:is-loading="isLoadingRealms"
-				@select="selectRealm"
-				@show="emit('showRealms')"
-			/>
+			<a v-if="canAddRealm" key="add-realm" :class="baseClasses" @click="onClickAddRealm">
+				<AppPostTarget class="-add">
+					<template #img>
+						<AppJolticon icon="add" />
+					</template>
+
+					<AppTranslate>Add realm</AppTranslate>
+				</AppPostTarget>
+			</a>
 
 			<AppPostTargetsAddCommunity
 				v-if="canAddCommunity"

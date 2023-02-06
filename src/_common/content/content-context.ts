@@ -18,7 +18,9 @@ export type ContentContext =
 	| 'chat-message'
 	| 'fireside-chat-message'
 	| 'chat-command'
-	| 'quest-stage-description';
+	| 'quest-stage-description'
+	| 'supporter-message'
+	| 'help-page';
 
 export enum ContextCapabilityType {
 	TextBold = 'text-bold',
@@ -186,6 +188,8 @@ export function getMediaItemTypeForContext(context: ContentContext) {
 			return MediaItem.TYPE_CHAT_COMMAND;
 		case 'community-channel-description':
 			return MediaItem.TYPE_COMMUNITY_CHANNEL_DESCRIPTION;
+		case 'help-page':
+			return MediaItem.TYPE_HELP_PAGE_IMAGE;
 	}
 	throw new Error('There is no matching media item type for the context ' + context);
 }

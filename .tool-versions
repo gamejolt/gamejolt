@@ -1,3 +1,4 @@
 nodejs 16.4.2
-golang 1.10.8
+# Not supported on arm64, understandably.
+#golang 1.10.8
 

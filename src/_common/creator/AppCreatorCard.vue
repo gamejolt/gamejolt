@@ -3,13 +3,17 @@ export const AppCreatorCardAspectRatio = 11 / 17;
 </script>
 
 <script lang="ts" setup>
-import { PropType } from 'vue';
+import { computed } from '@vue/runtime-core';
+import { PropType, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppPostCardBase from '../fireside/post/card/AppPostCardBase.vue';
 import { FiresidePost } from '../fireside/post/post-model';
+import { useCommonStore } from '../store/common-store';
+import AppUserFollowButton from '../user/follow/AppUserFollowButton.vue';
 import AppUserAvatarImg from '../user/user-avatar/AppUserAvatarImg.vue';
+import { toggleUserFollow } from '../user/user.model';
 
-defineProps({
+const props = defineProps({
 	post: {
 		type: Object as PropType<FiresidePost>,
 		required: true,
@@ -20,23 +24,71 @@ defineProps({
 	noVideo: {
 		type: Boolean,
 	},
+	noLink: {
+		type: Boolean,
+	},
+	followButtonType: {
+		type: String as PropType<'with-count' | 'no-count'>,
+		default: undefined,
+	},
+	followOnClick: {
+		type: Boolean,
+	},
 });
+
+const { post, fancyHover, noVideo, noLink, followButtonType, followOnClick } = toRefs(props);
+
+const isHovered = ref(false);
+const isProcessing = ref(false);
+
+const { user: sessionUser } = useCommonStore();
+
+const user = computed(() => post.value.displayUser);
+const isMe = computed(() => sessionUser.value?.id === user.value.id);
+const hasFollowOnClick = computed(() => followOnClick.value && !isMe.value);
+
+async function onClick(event: Event) {
+	if (!hasFollowOnClick.value) {
+		return;
+	}
+
+	event.preventDefault();
+	event.stopPropagation();
+
+	if (isProcessing.value) {
+		return;
+	}
+
+	isProcessing.value = true;
+	await toggleUserFollow(user.value, 'creatorCard');
+	isProcessing.value = false;
+}
 </script>
 
 <template>
-	<div class="creator-card">
+	<div
+		class="creator-card"
+		@mouseover="isHovered = true"
+		@mouseout="isHovered = false"
+		@click.capture="onClick"
+	>
 		<div v-if="fancyHover" class="-card-shadow" />
 
 		<AppPostCardBase
 			class="-card-base"
 			:post="post"
+			:no-hover="!hasFollowOnClick && noLink"
+			:video-context="noVideo ? undefined : 'gif'"
+			:aspect-ratio="AppCreatorCardAspectRatio"
 			no-elevate-hover
 			full-gradient
-			:video-context="noVideo ? undefined : 'gif'"
-			:aspect-ratio="true ? AppCreatorCardAspectRatio : undefined"
 		>
 			<template #controls>
-				<RouterLink class="-card-controls" :to="post.displayUser.routeLocation">
+				<component
+					:is="noLink ? 'div' : RouterLink"
+					class="-card-controls"
+					:to="post.displayUser.routeLocation"
+				>
 					<div class="-card-header">
 						<AppUserAvatarImg class="-card-avatar" :user="post.displayUser" />
 
@@ -47,7 +99,19 @@ defineProps({
 							<div class="-card-username">@{{ post.displayUser.username }}</div>
 						</div>
 					</div>
-				</RouterLink>
+				</component>
+
+				<div v-if="followButtonType" class="-card-follow">
+					<AppUserFollowButton
+						block
+						overlay
+						:user="post.displayUser"
+						location="creatorCard"
+						:hide-count="followButtonType === 'no-count'"
+						:force-hover="hasFollowOnClick && isHovered"
+						:disabled="isProcessing"
+					/>
+				</div>
 
 				<div class="-card-border" />
 			</template>
@@ -59,12 +123,6 @@ defineProps({
 .creator-card
 	position: relative
 	flex: none
-
-	&:hover
-		.-card-shadow
-		.-card-border
-			transition: none
-			opacity: 1
 
 .-card-shadow
 .-card-border
@@ -101,6 +159,7 @@ defineProps({
 
 .-card-header
 	display: flex
+	text-align: start
 
 .-card-avatar
 	width: 40px
@@ -122,6 +181,10 @@ defineProps({
 	font-size: $font-size-small
 
 .-card-follow
-	margin-top: auto
+	position: absolute
+	left: 8px
+	bottom: 8px
+	right: 8px
 	filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))
+	z-index: 1
 </style>

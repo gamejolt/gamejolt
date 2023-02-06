@@ -1,9 +1,6 @@
 <script lang="ts">
-export type BottomBarControl = 'members' | 'settings' | 'setup';
-</script>
-
-<script lang="ts" setup>
 import { computed } from 'vue';
+import AppAnimElectricity from '../../../../_common/animation/AppAnimElectricity.vue';
 import { setProducerDeviceMuted, stopStreaming } from '../../../../_common/fireside/rtc/producer';
 import { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
@@ -12,14 +9,20 @@ import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue'
 import { useStickerLayer } from '../../../../_common/sticker/layer/layer-controller';
 import { setStickerDrawerOpen, useStickerStore } from '../../../../_common/sticker/sticker-store';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import {
 	FiresideSidebar,
 	useFiresideController,
 } from '../../../components/fireside/controller/controller';
+import { FiresideHostsModal } from '../../../components/forms/fireside/hosts/modal/modal.service';
 import AppFiresideBottomBarButton from './AppFiresideBottomBarButton.vue';
 import AppFiresideBottomBarHosts from './AppFiresideBottomBarHosts.vue';
 
+export type BottomBarControl = 'settings' | 'setup';
+</script>
+
+<script lang="ts" setup>
 defineProps({
 	overlay: {
 		type: Boolean,
@@ -33,13 +36,19 @@ const {
 	user,
 	stickerCount,
 	canStream,
+	canManageCohosts,
 	isStreaming,
 	isPersonallyStreaming,
 	sidebar,
+	setSidebar,
 	activeBottomBarControl,
 } = c;
 
 const stickerStore = useStickerStore();
+const { canChargeSticker } = stickerStore;
+
+const layer = useStickerLayer();
+const { isAllCreator } = layer || {};
 
 const canPlaceStickers = computed(() => !!user.value && !Screen.isMobile && isStreaming.value);
 
@@ -48,6 +57,40 @@ const localUser = computed(() => rtc.value?.localUser);
 
 const producerMicMuted = computed(() => producer.value?.micMuted.value === true);
 const producerVideoMuted = computed(() => producer.value?.videoMuted.value === true);
+
+const micTooltip = computed(() => {
+	const _user = localUser.value;
+	if (!_user || !producer.value) {
+		return undefined;
+	}
+
+	if (!_user._micAudioTrack) {
+		return $gettext(`No microphone selected`);
+	}
+
+	if (producer.value.micMuted.value) {
+		return $gettext(`Unmute microphone`);
+	}
+
+	return $gettext(`Mute microphone`);
+});
+
+const videoTooltip = computed(() => {
+	const _user = localUser.value;
+	if (!_user || !producer.value) {
+		return undefined;
+	}
+
+	if (!_user._videoTrack) {
+		return $gettext(`No video selected`);
+	}
+
+	if (producer.value.videoMuted.value) {
+		return $gettext(`Show video`);
+	}
+
+	return $gettext(`Hide video`);
+});
 
 const micIcon = computed<Jolticon>(() => {
 	const disabled = 'microphone-off';
@@ -104,7 +147,7 @@ async function onClickMic() {
 			'yes'
 		);
 		if (shouldStopStreaming) {
-			stopStreaming(_producer);
+			stopStreaming(_producer, 'last-input-mic');
 		}
 		return;
 	}
@@ -134,15 +177,9 @@ async function onClickVideo() {
 	}
 
 	if (!_user.hasMicAudio || producerMicMuted.value) {
-		const shouldStopStreaming = await ModalConfirm.show(
-			$gettext(
-				`Disabling this will stop your current stream. Are you sure you want to stop streaming?`
-			),
-			$gettext(`Stop streaming?`),
-			'yes'
-		);
+		const shouldStopStreaming = await _confirmStopStreaming(true);
 		if (shouldStopStreaming) {
-			stopStreaming(_producer);
+			stopStreaming(_producer, 'last-input-video');
 		}
 		return;
 	}
@@ -154,6 +191,18 @@ async function onClickVideo() {
 	}
 }
 
+async function _confirmStopStreaming(throughInput: boolean) {
+	let message = `Are you sure you want to stop streaming?`;
+	let title: string | undefined = undefined;
+	// Add some extra messaging if we're warning them through an attempted input disable.
+	if (throughInput) {
+		message = `Disabling this will stop your current stream. ${message}`;
+		title = $gettext(`Stop streaming?`);
+	}
+
+	return ModalConfirm.show($gettext(message), title, 'yes');
+}
+
 function onClickStickerButton() {
 	setStickerDrawerOpen(stickerStore, true, stickerLayer);
 }
@@ -162,8 +211,8 @@ function toggleStreamSettings() {
 	_toggleSidebar('stream-settings');
 }
 
-function toggleChatMembers() {
-	_toggleSidebar('members');
+function showHostsModal() {
+	FiresideHostsModal.show({ controller: c });
 }
 
 function toggleFiresideSettings() {
@@ -172,7 +221,18 @@ function toggleFiresideSettings() {
 
 function _toggleSidebar(value: FiresideSidebar) {
 	const result = sidebar.value === value ? 'chat' : value;
-	sidebar.value = result;
+	setSidebar(result, 'bottom-bar');
+}
+
+async function onClickStopStreaming() {
+	if (!producer.value) {
+		return;
+	}
+
+	const result = await _confirmStopStreaming(false);
+	if (result) {
+		stopStreaming(producer.value, 'bottom-bar');
+	}
 }
 </script>
 
@@ -181,21 +241,42 @@ function _toggleSidebar(value: FiresideSidebar) {
 		<div class="-bottom-bar-inner">
 			<div v-if="canStream" class="-group -left">
 				<AppFiresideBottomBarButton
-					:active="localUser?.hasMicAudio && !producerMicMuted"
-					:icon="micIcon"
-					show-settings
-					:disabled="!localUser?._micAudioTrack"
-					@click-settings="toggleStreamSettings()"
-					@click="onClickMic"
+					v-app-tooltip="
+						isPersonallyStreaming
+							? $gettext(`Stream settings`)
+							: $gettext(`Set up your stream`)
+					"
+					:active="sidebar === 'stream-settings'"
+					:icon="isPersonallyStreaming ? 'dashboard' : 'broadcast'"
+					@click="toggleStreamSettings"
 				/>
-				<AppFiresideBottomBarButton
-					:active="localUser?.hasVideo && !producerVideoMuted"
-					:icon="videoIcon"
-					show-settings
-					:disabled="!localUser?._videoTrack"
-					@click-settings="toggleStreamSettings()"
-					@click="onClickVideo"
-				/>
+
+				<template v-if="isPersonallyStreaming">
+					<AppFiresideBottomBarButton
+						v-app-tooltip="micTooltip"
+						:active="localUser?.hasMicAudio && !producerMicMuted"
+						:icon="micIcon"
+						:disabled="!localUser?._micAudioTrack"
+						@click="onClickMic"
+					/>
+
+					<AppFiresideBottomBarButton
+						v-app-tooltip="videoTooltip"
+						:active="localUser?.hasVideo && !producerVideoMuted"
+						:icon="videoIcon"
+						:disabled="!localUser?._videoTrack"
+						@click="onClickVideo"
+					/>
+
+					<AppFiresideBottomBarButton
+						v-app-tooltip="$gettext(`Stop streaming`)"
+						icon="hang-up"
+						:disabled="producer?.isBusy.value"
+						active-color="overlay-notice"
+						active
+						@click="onClickStopStreaming"
+					/>
+				</template>
 			</div>
 
 			<div v-if="rtc" class="-hosts">
@@ -208,22 +289,31 @@ function _toggleSidebar(value: FiresideSidebar) {
 
 			<div class="-group -right" :class="{ '-shrink': !canStream }">
 				<AppFiresideBottomBarButton
-					icon="sticker-filled"
-					:badge="stickerCount"
-					:disabled="!canPlaceStickers"
-					@click="onClickStickerButton"
+					v-if="canManageCohosts"
+					v-app-tooltip="$gettext(`Manage hosts`)"
+					icon="friend-add-2"
+					@click="showHostsModal"
 				/>
 
-				<AppFiresideBottomBarButton
-					icon="users"
-					:active="activeBottomBarControl === 'members'"
-					@click="toggleChatMembers()"
-				/>
+				<AppAnimElectricity
+					shock-anim="square"
+					ignore-asset-padding
+					:disabled="!canChargeSticker || !isAllCreator"
+				>
+					<AppFiresideBottomBarButton
+						v-app-tooltip="$gettext(`Place stickers`)"
+						icon="sticker-filled"
+						:badge="stickerCount"
+						:disabled="!canPlaceStickers"
+						@click="onClickStickerButton"
+					/>
+				</AppAnimElectricity>
 
 				<AppFiresideBottomBarButton
+					v-app-tooltip="$gettext(`Fireside settings`)"
 					icon="ellipsis-h"
 					:active="activeBottomBarControl === 'settings'"
-					@click="toggleFiresideSettings()"
+					@click="toggleFiresideSettings"
 				/>
 			</div>
 		</div>

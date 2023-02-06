@@ -17,7 +17,7 @@ import { AppActivityFeedLazy } from '../../../../components/lazy';
 import AppPostAddButton from '../../../../components/post/add-button/AppPostAddButton.vue';
 import AppUserSpawnDay from '../../../../components/user/spawn-day/spawn-day.vue';
 import { illNoComments } from '../../../../img/ill/illustrations';
-import { useProfileRouteController } from '../../profile.vue';
+import { useProfileRouteController } from '../../RouteProfile.vue';
 
 function isLikeFeed(route: RouteLocationNormalized) {
 	return route.params.feedSection === 'likes';
@@ -111,7 +111,6 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 				name: 'user-profile',
 				url: getFetchUrl(this.$route),
 				itemsPerPage: payload.perPage,
-				shouldShowDates: !this.isLikeFeed,
 				shouldShowFollow: this.isLikeFeed,
 			},
 			payload.items,

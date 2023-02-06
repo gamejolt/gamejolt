@@ -1,16 +1,15 @@
 import { markRaw, shallowReadonly } from 'vue';
 import { Router } from 'vue-router';
 import { Analytics } from '../../../_common/analytics/analytics.service';
-import { configHomeDefaultFeed } from '../../../_common/config/config.service';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { showInfoGrowl } from '../../../_common/growls/growls.service';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
 import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
-import { HOME_FEED_ACTIVITY } from '../../views/home/home-feed.service';
+import { shouldUseFYPDefault } from '../../views/home/home-feed.service';
 import { GridClient } from './client.service';
 
-export type GridCommunityChannel = Awaited<ReturnType<typeof createGridCommunityChannel>>;
+export type GridCommunityChannel = ReturnType<typeof createGridCommunityChannel>;
 
 interface FeaturePayload {
 	post_id: string;
@@ -25,7 +24,7 @@ interface NewPostPayload {
 	channel_id: string;
 }
 
-export async function createGridCommunityChannel(
+export function createGridCommunityChannel(
 	client: GridClient,
 	options: { communityId: number; router: Router }
 ) {
@@ -41,15 +40,16 @@ export async function createGridCommunityChannel(
 	channelController.listenTo('new-post', _onNewPost);
 	channelController.listenTo('feature-fireside', _onFeatureFireside);
 
-	const c = shallowReadonly({
-		channelController,
-		communityId,
-	});
-
-	await channelController.join({
+	const joinPromise = channelController.join({
 		async onJoin() {
 			client.communityChannels.push(markRaw(c));
 		},
+	});
+
+	const c = shallowReadonly({
+		channelController,
+		communityId,
+		joinPromise,
 	});
 
 	function _onFeature(payload: FeaturePayload) {
@@ -66,7 +66,7 @@ export async function createGridCommunityChannel(
 
 		// Only increment when we use the activity feed as the home feed, as it
 		// includes the community items only at that point.
-		if (configHomeDefaultFeed.value === HOME_FEED_ACTIVITY) {
+		if (!shouldUseFYPDefault()) {
 			appStore.incrementNotificationCount({ count: 1, type: 'activity' });
 		}
 	}

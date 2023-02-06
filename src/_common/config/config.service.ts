@@ -1,6 +1,5 @@
 import { fetchAndActivate, getRemoteConfig, getValue } from 'firebase/remote-config';
 import { reactive } from 'vue';
-import { HOME_FEED_ACTIVITY, HOME_FEED_FYP } from '../../app/views/home/home-feed.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
 
 const ConfigService_ = {
@@ -131,16 +130,6 @@ export class ConfigOptionString<T extends string = string> extends ConfigOption<
 	}
 }
 
-/** Which feed do we default to for home */
-export const configHomeDefaultFeed = new ConfigOptionString(
-	'home_default_feed',
-	HOME_FEED_ACTIVITY,
-	{
-		validValues: [HOME_FEED_ACTIVITY, HOME_FEED_FYP],
-		conditions: { join: true },
-	}
-);
-
 export const configFYPExperiment = new ConfigOptionString<string>('fyp_experiment', 'default', {
 	// Allow any value since we pass directly to backend, which does all the logic.
 	validValues: false,
@@ -156,10 +145,28 @@ export const configCommunityFrontpageFeedType = new ConfigOptionString(
 );
 
 /**
- * Whether or not we should show the normal discover screen to guests on the
- * homepage, or if we show the signup.
+ * Whether or not to allow streaming of desktop video directly.
  */
-export const configGuestHomeDiscover = new ConfigOptionBoolean('web_guest_home_discover', false);
+export const configCanStreamDesktopVideo = new ConfigOptionBoolean(
+	'client_can_stream_desktop_video',
+	false
+);
+
+export const configShowStoreInMoreMenu = new ConfigOptionBoolean(
+	'web_show_store_in_more_menu',
+	false
+);
+
+export const configShowSearchAutocomplete = new ConfigOptionBoolean(
+	'web_show_search_autocomplete',
+	true
+);
+
+/**
+ * Shows post lead content below recommended post cards that have media
+ * attached.
+ */
+export const configNextUpPostLeads = new ConfigOptionBoolean('web_next_up_post_leads', false);
 
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());

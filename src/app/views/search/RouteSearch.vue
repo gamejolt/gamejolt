@@ -11,11 +11,12 @@ import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/ro
 import { Screen } from '../../../_common/screen/screen-service';
 import { Scroll } from '../../../_common/scroll/scroll.service';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
-import AppPageHeader from '../../components/page-header/page-header.vue';
+import { $gettext } from '../../../_common/translate/translate.service';
+import AppPageHeader from '../../components/page-header/AppPageHeader.vue';
 import AppSearch from '../../components/search/AppSearch.vue';
 import { Search, SearchPayload } from '../../components/search/search-service';
 import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
+import { routeSearchRealms } from './realms/realms.route';
 
 const Key: InjectionKey<Controller> = Symbol('search-route');
 
@@ -56,6 +57,12 @@ function createController() {
 		// updated with the new query.
 		Search.query = query.value;
 		isBootstrapped.value = true;
+
+		if (payload.socialMetadata) {
+			Meta.description = payload.socialMetadata.description;
+			Meta.fb = payload.socialMetadata.fb || {};
+			Meta.twitter = payload.socialMetadata.twitter || {};
+		}
 	}
 
 	return {
@@ -73,22 +80,13 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const route = useRoute();
-
 const c = createController();
 provide(Key, c);
 
 const { isBootstrapped, hasSearch, query, searchPayload } = c;
 
 createAppRoute({
-	routeTitle: computed(() => {
-		if (route.query.q) {
-			return $gettextInterpolate(`Search results for %{ query }`, {
-				query: getQuery(route, 'q') ?? '',
-			});
-		}
-		return $gettext(`Search Game Jolt`);
-	}),
+	routeTitle: computed(() => $gettext(`Search`)),
 });
 
 const noResults = computed(() => {
@@ -99,7 +97,7 @@ const noResults = computed(() => {
 		!searchPayload.value.usersCount &&
 		!searchPayload.value.postsCount &&
 		!searchPayload.value.communitiesCount &&
-		!searchPayload.value.realm
+		!searchPayload.value.realmsCount
 	);
 });
 </script>
@@ -148,7 +146,19 @@ const noResults = computed(() => {
 								:to="{ name: 'search.results', query: { q: query } }"
 								exact-active-class="active"
 							>
-								<AppTranslate>All</AppTranslate>
+								{{ $gettext(`All`) }}
+							</RouterLink>
+						</li>
+						<li v-if="searchPayload.realmsCount">
+							<RouterLink
+								:to="{ name: routeSearchRealms.name, query: { q: query } }"
+								exact-active-class="active"
+							>
+								{{ $gettext(`Realms`) }}
+
+								<span class="badge">
+									{{ formatNumber(searchPayload.realmsCount) }}
+								</span>
 							</RouterLink>
 						</li>
 						<li v-if="searchPayload.communitiesCount">
@@ -156,7 +166,8 @@ const noResults = computed(() => {
 								:to="{ name: 'search.communities', query: { q: query } }"
 								exact-active-class="active"
 							>
-								<AppTranslate>Communities</AppTranslate>
+								{{ $gettext(`Communities`) }}
+
 								<span class="badge">
 									{{ formatNumber(searchPayload.communitiesCount) }}
 								</span>
@@ -167,7 +178,8 @@ const noResults = computed(() => {
 								:to="{ name: 'search.users', query: { q: query } }"
 								exact-active-class="active"
 							>
-								<AppTranslate>Users</AppTranslate>
+								{{ $gettext(`Users`) }}
+
 								<span class="badge">
 									{{ formatNumber(searchPayload.usersCount) }}
 								</span>
@@ -178,7 +190,8 @@ const noResults = computed(() => {
 								:to="{ name: 'search.games', query: { q: query } }"
 								exact-active-class="active"
 							>
-								<AppTranslate>Games</AppTranslate>
+								{{ $gettext(`Games`) }}
+
 								<span class="badge">
 									{{ formatNumber(searchPayload.gamesCount) }}
 								</span>

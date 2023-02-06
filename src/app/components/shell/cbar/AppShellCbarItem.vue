@@ -31,29 +31,32 @@ const { visibleLeftPane } = useAppStore();
 const { activeContextPane } = useSidebarStore();
 
 const notificationCountText = computed(() => {
-	return notificationCount.value > 99 ? '99+' : formatNumber(notificationCount.value);
+	if (notificationCount.value > 99) {
+		return '99+';
+	}
+
+	return formatNumber(notificationCount.value);
 });
 
 // We want a context indicator only for non-control items that are the current
 // active item (selected or active route).
-const hasContextIndicator = computed(() => {
-	return !Screen.isLg && isActive.value && !isControl.value && activeContextPane.value;
-});
+const hasContextIndicator = computed(
+	() => !Screen.isLg && isActive.value && !isControl.value && activeContextPane.value
+);
 
 // There can be two active items between the cbar controls and normal cbar
 // items, so we check the pane information to figure out what should be the
 // active item visually.
 const showAsActive = computed(() => {
-	return (
-		isActive.value &&
-		(!visibleLeftPane.value || visibleLeftPane.value === 'context' || isControl.value)
-	);
+	if (!isActive.value) {
+		return false;
+	}
+
+	return !visibleLeftPane.value || visibleLeftPane.value === 'context' || isControl.value;
 });
 
 // Check what the actual active item is and if it's showing a pane.
-const isShowingPane = computed(() => {
-	return showAsActive.value && !!visibleLeftPane.value;
-});
+const isShowingPane = computed(() => showAsActive.value && !!visibleLeftPane.value);
 </script>
 
 <template>

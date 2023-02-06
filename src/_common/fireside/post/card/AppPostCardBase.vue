@@ -3,7 +3,7 @@ import { computed, nextTick, onMounted, PropType, ref, toRefs, useSlots, watch }
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
 import AppBackground from '../../../background/AppBackground.vue';
 import { ContentFocus } from '../../../content-focus/content-focus.service';
-import AppContentViewer from '../../../content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../content/content-viewer/AppContentViewer.vue';
 import AppImgResponsive from '../../../img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../../media-item/media-item-model';
@@ -39,6 +39,9 @@ const props = defineProps({
 		default: undefined,
 	},
 	noElevateHover: {
+		type: Boolean,
+	},
+	noHover: {
 		type: Boolean,
 	},
 	aspectRatio: {
@@ -233,7 +236,11 @@ function _initVideoController() {
 		v-if="post"
 		ref="root"
 		class="post-card"
-		:class="{ '-no-elevate-hover': noElevateHover, '-full-gradient': fullGradient }"
+		:class="{
+			'-hoverable': !noHover,
+			'-no-elevate-hover': noElevateHover,
+			'-full-gradient': fullGradient,
+		}"
 		:style="{ aspectRatio: `${postCardRatio}` }"
 	>
 		<AppResponsiveDimensions :ratio="postCardRatio" @change="calcData()">
@@ -315,7 +322,7 @@ function _initVideoController() {
 $-base-width = 200px
 $-padding = 8px
 
-.post-card
+.post-card.-hoverable
 	cursor: pointer
 
 	&:hover:not(.-no-elevate-hover)

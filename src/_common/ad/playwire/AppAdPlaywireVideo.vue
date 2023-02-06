@@ -1,30 +1,27 @@
 <script lang="ts" setup>
-import { onMounted, PropType, ref } from 'vue';
-import { AdSlot } from '../ad-slot-info';
+import { onMounted, toRefs } from 'vue';
+import { defineAdAdapterComponentProps } from '../adapter-base';
 import { AdPlaywireAdapter } from './playwire-adapter';
 
-defineProps({
-	adSlot: {
-		type: Object as PropType<AdSlot>,
-		required: true,
-	},
-	adapter: {
-		type: Object as PropType<AdPlaywireAdapter>,
-		required: true,
-	},
+const props = defineProps({
+	...defineAdAdapterComponentProps<AdPlaywireAdapter>(),
 });
 
-const root = ref<HTMLElement>();
+const { adapter } = toRefs(props);
 
 onMounted(() => {
-	const script = window.document.createElement('script');
-	script.dataset.config = 'https://config.playwire.com/1391/playlists/v2/4898/zeus.json';
-
-	root.value!.appendChild(script);
-	script.src = 'https://cdn.playwire.com/bolt/js/zeus/embed.js';
+	adapter.value.run(async ramp => {
+		await ramp.addUnits({
+			selectorId: 'ad-playwire-video',
+			type: 'trendi_video',
+		});
+		ramp.displayUnits();
+	});
 });
 </script>
 
 <template>
-	<div ref="root" />
+	<div id="ad-playwire-video-container">
+		<div id="ad-playwire-video" />
+	</div>
 </template>

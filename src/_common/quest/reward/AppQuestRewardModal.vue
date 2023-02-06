@@ -1,50 +1,54 @@
 <script lang="ts">
-import { nextTick, onMounted, PropType, ref, Ref, toRefs } from 'vue';
+import { nextTick, onMounted, onUnmounted, PropType, ref, Ref, toRefs } from 'vue';
+import { sleep } from '../../../utils/utils';
 import AppJolticon, { Jolticon } from '../../jolticon/AppJolticon.vue';
 import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
+import AppPopcornKettle from '../../popcorn/AppPopcornKettle.vue';
+import { createPopcornKettleController } from '../../popcorn/popcorn-kettle-controller';
+import { Screen } from '../../screen/screen-service';
 import AppSpacer from '../../spacer/AppSpacer.vue';
 import AppThemeSvg from '../../theme/svg/AppThemeSvg.vue';
-import AppTranslate from '../../translate/AppTranslate.vue';
 import AppQuestThumbnail from '../AppQuestThumbnail.vue';
 import illBackpackClosed from '../ill/backpack-closed.svg';
 import illBackpackOpen from '../ill/backpack-open.svg';
 import { Quest } from '../quest-model';
-import AppQuestRewardItem from './AppQuestRewardItem.vue';
-
-export interface QuestReward {
-	amount: number;
-	name: string;
-	img_url: undefined | string;
-	icon: Jolticon;
-	isExp?: boolean;
-}
 
 export interface QuestRewardData {
-	/**
-	 * The index id of the backback item element. This is used so we can remove
-	 * the element after its animation ends.
-	 */
-	id: number;
+	key: string;
 
-	/** The image to display, if any. Uses [icon] as a fallback. */
-	img_url?: string;
+	/**
+	 * Count of rewards by this {@link key}.
+	 */
+	amount: number;
+
+	/**
+	 * Readable name of the reward.
+	 */
+	name: string;
+
+	/**
+	 * The image to display, if any. Uses [icon] as a fallback.
+	 */
+	img_url: string | undefined;
 
 	/**
 	 * If [img_url] is empty, displays a fallback Jolticon. Uses `present` as a
 	 * fallback.
 	 */
-	icon?: Jolticon;
-
-	/**
-	 * Used so {@link AppQuestRewardItem} can create its trajectory path.
-	 */
-	random: number;
+	icon: Jolticon;
 
 	/**
 	 * Exp rewards shouldn't show an 'x' after their count.
 	 */
-	isExp: boolean;
+	isExp?: boolean;
+
+	/**
+	 * Backend will return this along with the quest reward model. Lets us know
+	 * if we should only show one kernel for this reward, or if we should add
+	 * kernels equal to the total {@link amount}.
+	 */
+	isCondensed: boolean;
 }
 
 export const DurationBackpackItem = 1_500;
@@ -65,7 +69,7 @@ const props = defineProps({
 		required: true,
 	},
 	rewards: {
-		type: Array as PropType<QuestReward[]>,
+		type: Array as PropType<QuestRewardData[]>,
 		required: true,
 	},
 	title: {
@@ -76,17 +80,22 @@ const props = defineProps({
 
 const { quest, rewards, title } = toRefs(props);
 
+const kettleController = createPopcornKettleController();
+
 const backpackEnter = ref<HTMLElement>();
 const backpackOpen = ref<HTMLElement>();
 
-const rewardElements = ref<QuestRewardData[]>([]);
 const isClosing = ref(false);
 
 let itemAnimationOffset = 500;
+let _isMounted = false;
 
 onMounted(() => afterMount());
+onUnmounted(() => (_isMounted = false));
 
 async function afterMount() {
+	_isMounted = true;
+
 	await nextTick();
 	if (rewards.value.length > 0) {
 		await startBackpackFlow();
@@ -94,29 +103,46 @@ async function afterMount() {
 		await startAvatarFlow();
 	}
 
+	if (!_isMounted) {
+		return;
+	}
+
 	await closeBackpack();
 	modal.dismiss();
-}
-
-async function sleep(ms: number) {
-	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function startBackpackFlow() {
 	openBackpack();
 	await sleep(DurationBackpackItem + DurationBackpackOpen);
 
-	let id = 0;
-	for (const { amount, img_url, icon, isExp } of rewards.value) {
-		for (let i = 0; i < amount; i++) {
-			rewardElements.value.push({
-				id,
-				img_url,
-				icon,
-				isExp: isExp === true,
-				random: Math.random(),
+	const opposite = Screen.width / 3;
+	const adjacent = Screen.height * 0.7;
+	const hypo = Math.sqrt(Math.pow(opposite, 2) + Math.pow(adjacent, 2));
+	const radians = Math.asin(opposite / hypo);
+	const angle = radians / (Math.PI / 180);
+
+	for (const { amount, img_url, icon, isCondensed } of rewards.value) {
+		const kernelCount = isCondensed ? 1 : amount;
+
+		for (let i = 0; i < kernelCount; i++) {
+			// Stop adding kernels if the modal was closed.
+			if (!_isMounted) {
+				return;
+			}
+
+			kettleController.addKernel({
+				kernelImage: img_url,
+				kernelComponent: img_url ? undefined : AppJolticon,
+				kernelComponentProps: { icon },
+				reverse: true,
+				baseSize: 80,
+				velocity: 40,
+				downwardGravityStrength: 1.75,
+				popAngleVariance: angle * 2,
+				popAngle: 0,
+				duration: DurationBackpackItem,
+				fadeOutStart: 0.9,
 			});
-			++id;
 
 			// Wait to show the next item.
 			await sleep(itemAnimationOffset);
@@ -163,13 +189,6 @@ function playAnimation(
 	element.value.offsetWidth;
 	element.value.style.animationName = '';
 }
-
-function onAnimationEnd(id: number) {
-	const index = rewardElements.value.findIndex(i => i.id === id);
-	if (index !== -1) {
-		rewardElements.value.splice(index, 1);
-	}
-}
 </script>
 
 <template>
@@ -180,13 +199,13 @@ function onAnimationEnd(id: number) {
 			animationDuration: (isClosing ? DurationBackpackClose : DurationBackpackOpen) + 'ms',
 		}"
 	>
-		<div class="-quest-container">
+		<div class="-quest-container" @click="modal.dismiss()">
 			<div class="-quest-title -center-col anim-fade-in-down anim-fade-in-enlarge">
 				<div class="-quest-spacer" />
 				<template v-if="!!title">
 					<span>
 						-
-						<AppTranslate>{{ 'QUEST STARTED' }}</AppTranslate>
+						{{ $gettext(`QUEST STARTED`) }}
 						-
 					</span>
 
@@ -200,7 +219,7 @@ function onAnimationEnd(id: number) {
 				<template v-if="rewards.length > 0">
 					<span>
 						-
-						<AppTranslate>{{ 'YOUR REWARDS' }}</AppTranslate>
+						{{ $gettext(`YOUR REWARDS`) }}
 						-
 					</span>
 
@@ -237,16 +256,8 @@ function onAnimationEnd(id: number) {
 						>
 							<AppThemeSvg :src="illBackpackOpen" strict-colors />
 						</div>
+						<AppPopcornKettle class="-kettle" :controller="kettleController" />
 					</div>
-				</div>
-
-				<div class="-rewards">
-					<AppQuestRewardItem
-						v-for="data in rewardElements"
-						:key="data.id"
-						:data="data"
-						@animationend="() => onAnimationEnd(data.id)"
-					/>
 				</div>
 			</template>
 			<div
@@ -316,6 +327,11 @@ $-z-backpack = 1
 .-reward-img
 	rounded-corners()
 
+.-kettle
+	position: absolute
+	z-index: $-z-rewards
+	top: 0
+
 .-backpack
 	z-index: $-z-backpack
 	position: absolute
@@ -351,14 +367,6 @@ $-z-backpack = 1
 
 	&.-show
 		opacity: 1
-
-.-rewards
-	position: absolute
-	left: 0
-	top: 0
-	right: 0
-	bottom: 0
-	z-index: $-z-rewards
 
 .-thumbnail
 	width: calc(min(300px, 60vw, 40vh))

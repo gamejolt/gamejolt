@@ -150,10 +150,8 @@ const maxCommunities = ref(0);
 const attachedCommunities = ref<{ community: Community; channel: CommunityChannel }[]>([]);
 const targetableCommunities = ref<Community[]>([]);
 
-const hasLoadedRealms = ref(false);
 const maxRealms = ref(0);
 const attachedRealms = ref<Realm[]>([]);
-const targetableRealms = ref<Realm[]>([]);
 
 const backgrounds = ref<Background[]>([]);
 
@@ -166,7 +164,6 @@ const articleLengthLimit = ref(50_000);
 const isUploadingPastedImage = ref(false);
 const scrollingKey = ref(1);
 const uploadingVideoStatus = ref(VideoStatus.IDLE);
-const videoProvider = ref(FiresidePostVideo.PROVIDER_GAMEJOLT);
 const hasChangedBackground = ref(false);
 const isShowingMoreOptions = ref(false);
 
@@ -359,13 +356,9 @@ const form: FormController<FormPostModel> = createForm({
 		}
 
 		if (attachmentType.value === FiresidePost.TYPE_VIDEO) {
-			if (videoProvider.value === FiresidePostVideo.PROVIDER_GAMEJOLT) {
-				// Unset the video url for linked videos and set the video id for uploaded videos
-				// to signal to the backend that the attached video should be kept.
-				form.formModel.video_id = form.formModel.videos[0].id;
-			} else {
-				form.formModel.video_id = 0;
-			}
+			// Unset the video url for linked videos and set the video id for uploaded videos
+			// to signal to the backend that the attached video should be kept.
+			form.formModel.video_id = form.formModel.videos[0].id;
 		} else {
 			form.formModel.video_id = 0;
 		}
@@ -527,17 +520,7 @@ const canAddCommunity = computed(
 		possibleCommunities.value.length > 0
 );
 
-const canAddRealm = computed(() => {
-	if (attachedRealms.value.length >= maxRealms.value) {
-		return false;
-	}
-
-	if (hasLoadedRealms.value) {
-		return possibleRealms.value.length > 0;
-	}
-
-	return true;
-});
+const canAddRealm = computed(() => attachedRealms.value.length < maxRealms.value);
 
 const hasChannelError = computed(() => form.hasCustomError('channel'));
 
@@ -551,12 +534,6 @@ const possibleCommunities = computed(() => {
 		}
 
 		return !attachedCommunities.value.find(c2 => c1.id === c2.community.id);
-	});
-});
-
-const possibleRealms = computed(() => {
-	return targetableRealms.value.filter(c1 => {
-		return !attachedRealms.value.find(c2 => c1.id === c2.id);
 	});
 });
 
@@ -674,27 +651,6 @@ watch(
 		}
 	}
 );
-
-async function loadRealms() {
-	if (hasLoadedRealms.value) {
-		return;
-	}
-
-	try {
-		const response = await Api.sendFieldsRequest('/mobile/galaxy', {
-			realms: {
-				perPage: true,
-			},
-		});
-
-		targetableRealms.value = Realm.populate(response.realms);
-		hasLoadedRealms.value = true;
-	} catch (e) {
-		if (import.meta.env.DEV || GJ_ENVIRONMENT === 'development') {
-			console.error('Failed to load realms for post', e);
-		}
-	}
-}
 
 function attachIncompleteCommunity(community: Community, channel: CommunityChannel) {
 	attachCommunity(community, channel, false);
@@ -1061,10 +1017,6 @@ function onUploadingVideoStatusChanged(status: VideoStatus) {
 	emit('videoUploadStatusChange', uploadingVideoStatus.value);
 }
 
-function onVideoProviderChanged(provider: string) {
-	videoProvider.value = provider;
-}
-
 function onDisableVideoAttachment() {
 	disableAttachments();
 }
@@ -1153,7 +1105,6 @@ function _getMatchingBackgroundIdFromPref() {
 				@delete="onDisableVideoAttachment"
 				@video-change="onVideoChanged"
 				@video-status-change="onUploadingVideoStatusChanged"
-				@video-provider-change="onVideoProviderChanged"
 			/>
 		</div>
 
@@ -1589,19 +1540,15 @@ function _getMatchingBackgroundIdFromPref() {
 				:communities="attachedCommunities"
 				:realms="attachedRealms"
 				:targetable-communities="possibleCommunities"
-				:targetable-realms="possibleRealms"
 				:can-add-community="canAddCommunity"
 				:can-add-realm="canAddRealm"
 				:incomplete-community="incompleteDefaultCommunity || undefined"
-				:is-loading-realms="!hasLoadedRealms"
 				:can-remove-communities="!wasPublished"
 				can-remove-realms
 				@remove-community="removeCommunity"
 				@remove-realm="removeRealm"
 				@select-community="attachCommunity"
 				@select-incomplete-community="attachIncompleteCommunity"
-				@select-realm="attachRealm"
-				@show-realms="loadRealms"
 			/>
 		</template>
 		<template v-else>

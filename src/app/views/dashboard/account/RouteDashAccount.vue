@@ -1,9 +1,11 @@
 <script lang="ts">
-import { inject, InjectionKey, provide, ref } from 'vue';
-import { RouterLink, RouterView } from 'vue-router';
+import { computed, inject, InjectionKey, provide, ref } from 'vue';
+import { RouterLink, RouterView, useRoute } from 'vue-router';
 import { bangRef } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
+import AppAvatarFrame from '../../../../_common/avatar/AppAvatarFrame.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
+import { ComponentProps } from '../../../../_common/component-helpers';
 import AppEditableOverlay from '../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
@@ -11,9 +13,27 @@ import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import AppPageHeader from '../../../components/page-header/page-header.vue';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
+import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import { UserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
 import { UserHeaderModal } from '../../../components/user/header-modal/header-modal.service';
+import { routeDashAccountAddresses } from './addresses/addresses.route';
+import { routeDashAccountBlocks } from './blocks/blocks.route';
+import { routeDashAccountChangePassword } from './change-password/change-password.route';
+import { routeDashAccountChatCommands } from './chat-commands/chat-commands.route';
+import { routeDashAccountChatMods } from './chat-mods/chat-mods.route';
+import { routeDashAccountChatTimers } from './chat-timers/chat-timers.route';
+import { routeDashAccountDeviceSettings } from './device-settings/device-settings.route';
+import { routeDashAccountEdit } from './edit/edit.route';
+import { routeDashAccountEmailPreferences } from './email-preferences/email-preferences.route';
+import { routeDashAccountFinancials } from './financials/financials.route';
+import { routeDashAccountLinkedAccounts } from './linked-accounts/linked-accounts.route';
+import { routeDashAccountMobileNav } from './mobile-nav.route';
+import { routeDashAccountPaymentMethods } from './payment-methods/payment-methods.route';
+import { routeDashAccountPurchasesList } from './purchases/list/list.route';
+import { routeDashAccountReferrals } from './referrals/referrals.route';
+import { routeDashAccountSite } from './site/site.route';
+import { routeDashAccountWallet } from './wallet/wallet.route';
 
 const Key: InjectionKey<Controller> = Symbol('account-route');
 
@@ -46,11 +66,18 @@ provide(Key, routeStore);
 const { heading } = routeStore;
 const user = bangRef(maybeUser);
 
+const route = useRoute();
+
 const { isBootstrapped } = createAppRoute({
 	onResolved({ payload }) {
 		setUser(payload.user);
 	},
 });
+
+const spotlightWrapper = AppAvatarFrame;
+const spotlightWrapperProps = computed<ComponentProps<typeof spotlightWrapper>>(() => ({
+	frame: user.value.avatar_frame || null,
+}));
 
 function showEditHeader() {
 	UserHeaderModal.show();
@@ -64,12 +91,18 @@ function showEditAvatar() {
 <template>
 	<div>
 		<div v-if="Screen.isXs" class="well fill-darker sans-margin-bottom sans-rounded">
-			<AppButton block icon="chevron-left" :to="{ name: 'dash.account-mobile-nav' }">
+			<AppButton block icon="chevron-left" :to="{ name: routeDashAccountMobileNav.name }">
 				{{ $gettext(`Back to settings`) }}
 			</AppButton>
 		</div>
 
-		<AppPageHeader>
+		<AppPageHeader
+			:override-slots="{
+				spotlight: !Screen.isXs,
+			}"
+			:spotlight-wrapper="spotlightWrapper"
+			:spotlight-wrapper-props="spotlightWrapperProps"
+		>
 			<h1>{{ heading }}</h1>
 
 			<p>
@@ -78,8 +111,7 @@ function showEditAvatar() {
 
 			<template v-if="!Screen.isXs" #spotlight>
 				<AppEditableOverlay
-					class="-fill"
-					:disabled="$route.name !== 'dash.account.edit'"
+					:disabled="route.name !== routeDashAccountEdit.name"
 					@click="showEditAvatar()"
 				>
 					<template #overlay>
@@ -90,7 +122,7 @@ function showEditAvatar() {
 			</template>
 		</AppPageHeader>
 
-		<AppExpand :when="$route.name === 'dash.account.edit'">
+		<AppExpand :when="route.name === routeDashAccountEdit.name">
 			<AppEditableOverlay @click="showEditHeader()">
 				<template #overlay>
 					{{ $gettext(`Change profile header`) }}
@@ -123,7 +155,7 @@ function showEditAvatar() {
 							<ul>
 								<li>
 									<RouterLink
-										:to="{ name: 'dash.account.edit' }"
+										:to="{ name: routeDashAccountEdit.name }"
 										active-class="active"
 									>
 										{{ $gettext(`Profile`) }}
@@ -131,7 +163,7 @@ function showEditAvatar() {
 								</li>
 								<li>
 									<RouterLink
-										:to="{ name: 'dash.account.device-settings' }"
+										:to="{ name: routeDashAccountDeviceSettings.name }"
 										active-class="active"
 									>
 										{{ $gettext(`Device settings`) }}
@@ -139,7 +171,7 @@ function showEditAvatar() {
 								</li>
 								<li>
 									<RouterLink
-										:to="{ name: 'dash.account.blocks' }"
+										:to="{ name: routeDashAccountBlocks.name }"
 										active-class="active"
 									>
 										{{ $gettext(`Blocked users`) }}
@@ -150,7 +182,7 @@ function showEditAvatar() {
 							<ul>
 								<li>
 									<RouterLink
-										:to="{ name: 'dash.account.linked-accounts' }"
+										:to="{ name: routeDashAccountLinkedAccounts.name }"
 										active-class="active"
 									>
 										{{ $gettext(`Linked accounts`) }}
@@ -158,7 +190,7 @@ function showEditAvatar() {
 								</li>
 								<li>
 									<RouterLink
-										:to="{ name: 'dash.account.email-preferences' }"
+										:to="{ name: routeDashAccountEmailPreferences.name }"
 										active-class="active"
 									>
 										{{ $gettext(`Email preferences`) }}
@@ -166,7 +198,7 @@ function showEditAvatar() {
 								</li>
 								<li>
 									<RouterLink
-										:to="{ name: 'dash.account.change-password' }"
+										:to="{ name: routeDashAccountChangePassword.name }"
 										active-class="active"
 									>
 										{{ $gettext(`Password`) }}
@@ -177,10 +209,26 @@ function showEditAvatar() {
 							<ul>
 								<li>
 									<RouterLink
-										:to="{ name: 'dash.account.chat-commands' }"
+										:to="{ name: routeDashAccountChatCommands.name }"
 										active-class="active"
 									>
 										{{ $gettext(`Chat commands`) }}
+									</RouterLink>
+								</li>
+								<li>
+									<RouterLink
+										:to="{ name: routeDashAccountChatTimers.name }"
+										active-class="active"
+									>
+										{{ $gettext(`Chat timers`) }}
+									</RouterLink>
+								</li>
+								<li>
+									<RouterLink
+										:to="{ name: routeDashAccountChatMods.name }"
+										active-class="active"
+									>
+										{{ $gettext(`Chat moderators`) }}
 									</RouterLink>
 								</li>
 							</ul>
@@ -188,7 +236,7 @@ function showEditAvatar() {
 							<ul>
 								<li>
 									<RouterLink
-										:to="{ name: 'dash.account.payment-methods' }"
+										:to="{ name: routeDashAccountPaymentMethods.name }"
 										active-class="active"
 									>
 										{{ $gettext(`Payment methods`) }}
@@ -196,7 +244,7 @@ function showEditAvatar() {
 								</li>
 								<li>
 									<RouterLink
-										:to="{ name: 'dash.account.addresses' }"
+										:to="{ name: routeDashAccountAddresses.name }"
 										active-class="active"
 									>
 										{{ $gettext(`Saved addresses`) }}
@@ -204,7 +252,7 @@ function showEditAvatar() {
 								</li>
 								<li>
 									<RouterLink
-										:to="{ name: 'dash.account.purchases.list' }"
+										:to="{ name: routeDashAccountPurchasesList.name }"
 										active-class="active"
 									>
 										{{ $gettext(`Purchases`) }}
@@ -215,7 +263,7 @@ function showEditAvatar() {
 							<ul>
 								<li>
 									<RouterLink
-										:to="{ name: 'dash.account.financials' }"
+										:to="{ name: routeDashAccountFinancials.name }"
 										active-class="active"
 									>
 										{{ $gettext(`Marketplace account setup`) }}
@@ -223,15 +271,23 @@ function showEditAvatar() {
 								</li>
 								<li>
 									<RouterLink
-										:to="{ name: 'dash.account.wallet' }"
+										:to="{ name: routeDashAccountWallet.name }"
 										active-class="active"
 									>
 										{{ $gettext(`Wallet`) }}
 									</RouterLink>
 								</li>
+								<li v-if="user.is_creator">
+									<RouterLink
+										:to="{ name: routeDashAccountReferrals.name }"
+										active-class="active"
+									>
+										{{ $gettext(`Referrals`) }}
+									</RouterLink>
+								</li>
 								<li>
 									<RouterLink
-										:to="{ name: 'dash.account.site' }"
+										:to="{ name: routeDashAccountSite.name }"
 										active-class="active"
 									>
 										{{ $gettext(`Portfolio site`) }}
@@ -241,13 +297,27 @@ function showEditAvatar() {
 						</nav>
 					</div>
 					<div class="col-xs-12 col-sm-9 col-md-10">
-						<template v-if="Screen.isXs && $route.name === 'dash.account.edit'">
-							<AppEditableOverlay class="-avatar-xs" @click="showEditAvatar()">
-								<template #overlay>
-									{{ $gettext(`Change`) }}
-								</template>
-								<AppUserAvatar :user="user" />
-							</AppEditableOverlay>
+						<template v-if="Screen.isXs && route.name === routeDashAccountEdit.name">
+							<AppAvatarFrame
+								:style="{
+									margin: `0 auto`,
+									maxWidth: `200px`,
+								}"
+								:frame="user.avatar_frame || null"
+							>
+								<AppEditableOverlay
+									:style="{
+										borderRadius: `50%`,
+										overflow: `hidden`,
+									}"
+									@click="showEditAvatar()"
+								>
+									<template #overlay>
+										{{ $gettext(`Change`) }}
+									</template>
+									<AppUserAvatarImg :user="user" />
+								</AppEditableOverlay>
+							</AppAvatarFrame>
 
 							<hr />
 						</template>
@@ -259,18 +329,3 @@ function showEditAvatar() {
 		</section>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.-fill
-	position: absolute
-	top: 0
-	right: 0
-	bottom: 0
-	left: 0
-
-.-avatar-xs
-	margin: 0 auto
-	max-width: 200px
-	border-radius: 50%
-	overflow: hidden
-</style>

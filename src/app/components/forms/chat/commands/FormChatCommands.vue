@@ -4,13 +4,15 @@ import { arrayRemove } from '../../../../../utils/array';
 import { sleep } from '../../../../../utils/utils';
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormStickySubmit from '../../../../../_common/form-vue/AppFormStickySubmit.vue';
+import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppFormControlChatCommand from './AppFormControlChatCommand.vue';
-import { ChatCommand } from './command.model';
+import { ChatCommand, CHAT_COMMAND_TYPE_COMMAND } from './command.model';
 
-export interface ChatCommandFormModel {
+export interface ChatCommandsFormModel {
 	commands: ChatCommand[];
 
 	/**
@@ -25,12 +27,12 @@ export interface ChatCommandFormModel {
 const isProcessing = ref(false);
 const isAddingItem = ref(false);
 
-const maxCommands = ref(100);
+const maxCommands = ref(20);
 const commandMinLength = ref(2);
 const commandMaxLength = ref(20);
 const messageMaxLength = ref(1000);
 
-const form: FormController<ChatCommandFormModel> = createForm({
+const form: FormController<ChatCommandsFormModel> = createForm({
 	loadUrl: `/web/chat/commands`,
 	model: ref({
 		commands: [] as ChatCommand[],
@@ -52,6 +54,7 @@ const form: FormController<ChatCommandFormModel> = createForm({
 			commands: number[];
 			[k: string]: any;
 		} = {
+			type: CHAT_COMMAND_TYPE_COMMAND,
 			commands: [],
 		};
 
@@ -110,7 +113,11 @@ async function addNewItem() {
 			throw Error('Tried adding a new command while already at our limit');
 		}
 
-		const response = await Api.sendRequest(`/web/chat/commands/new`, {}, { detach: true });
+		const response = await Api.sendRequest(
+			`/web/chat/commands/new/${CHAT_COMMAND_TYPE_COMMAND}`,
+			{},
+			{ detach: true }
+		);
 
 		if (!response.command) {
 			throw Error('Got no chat command returned when creating a new one');
@@ -140,37 +147,52 @@ function removeItem(item: ChatCommand, fieldsToClear: string[]) {
 
 <template>
 	<AppForm :controller="form" :forced-is-loading="isProcessing">
-		<div class="-grid-list">
-			<AppFormControlChatCommand
-				v-for="item of form.formModel.commands"
-				:key="item.id"
-				:item="item"
-				:command-min-length="commandMinLength"
-				:command-max-length="commandMaxLength"
-				:message-max-length="messageMaxLength"
-				@remove="removeItem(item, $event)"
-			/>
+		<template v-if="!form.isLoadedBootstrapped">
+			<AppLoading big centered />
+		</template>
+		<template v-else>
+			<AppExpand :when="form.formModel.commands.length === 0">
+				<div class="lead text-center">
+					{{
+						$gettext(
+							`Chat commands allow people in your fireside chat to get an automated message when sending a particular text command.`
+						)
+					}}
+				</div>
+			</AppExpand>
 
-			<AppButton
-				v-if="form.formModel.commands.length < maxCommands"
-				block
-				:disabled="isProcessing || isAddingItem || !form.valid"
-				@click="addNewItem"
-			>
-				{{ $gettext(`New command`) }}
-			</AppButton>
+			<div class="-list">
+				<AppFormControlChatCommand
+					v-for="item of form.formModel.commands"
+					:key="item.id"
+					:item="item"
+					:command-min-length="commandMinLength"
+					:command-max-length="commandMaxLength"
+					:message-max-length="messageMaxLength"
+					@remove="removeItem(item, $event)"
+				/>
 
-			<AppFormStickySubmit>
-				<AppFormButton>
-					{{ $gettext(`Save`) }}
-				</AppFormButton>
-			</AppFormStickySubmit>
-		</div>
+				<AppButton
+					v-if="form.formModel.commands.length < maxCommands"
+					block
+					:disabled="isProcessing || isAddingItem || !form.valid"
+					@click="addNewItem"
+				>
+					{{ $gettext(`New command`) }}
+				</AppButton>
+
+				<AppFormStickySubmit>
+					<AppFormButton>
+						{{ $gettext(`Save`) }}
+					</AppFormButton>
+				</AppFormStickySubmit>
+			</div>
+		</template>
 	</AppForm>
 </template>
 
 <style lang="stylus" scoped>
-.-grid-list
+.-list
 	display: flex
 	flex-direction: column
 	gap: 20px

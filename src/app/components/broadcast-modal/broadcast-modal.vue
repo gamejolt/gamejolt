@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppCommentDisabledCheck from '../../../_common/comment/AppCommentDisabledCheck.vue';
-import AppContentViewer from '../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { $viewPostVideo } from '../../../_common/fireside/post/video/video-model';
@@ -16,12 +16,11 @@ import {
 	StickerTargetController,
 } from '../../../_common/sticker/target/target-controller';
 import { AppTimeAgo } from '../../../_common/time/ago/ago';
-import AppVideoEmbed from '../../../_common/video/embed/embed.vue';
 import { getVideoPlayerFromSources } from '../../../_common/video/player/controller';
 import AppVideoPlayer from '../../../_common/video/player/player.vue';
 import AppVideo from '../../../_common/video/video.vue';
 import { AppCommentWidgetLazy } from '../lazy';
-import AppPollVoting from '../poll/voting/voting.vue';
+import AppPollVoting from '../poll/AppPollVoting.vue';
 import AppPostControls from '../post/controls/AppPostControls.vue';
 
 @Options({
@@ -29,7 +28,6 @@ import AppPostControls from '../post/controls/AppPostControls.vue';
 		AppResponsiveDimensions,
 		AppImgResponsive,
 		AppVideo,
-		AppVideoEmbed,
 		AppVideoPlayer,
 		AppTimeAgo,
 		AppPollVoting,
@@ -145,20 +143,12 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 
 					<div v-if="post.hasVideo">
 						<AppVideoPlayer
-							v-if="video.provider === 'gamejolt'"
 							context="page"
 							:media-item="video.posterMediaItem"
 							:manifests="video.manifestSources"
 							autoplay
 							@play="onVideoPlay"
 						/>
-						<AppVideoEmbed
-							v-else
-							video-provider="youtube"
-							:video-id="video.video_id"
-							autoplay
-						/>
-
 						<br />
 					</div>
 
@@ -177,7 +167,7 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 					</div>
 
 					<template v-if="post.hasPoll">
-						<AppPollVoting :poll="post.poll" :game="post.game" :user="post.user" />
+						<AppPollVoting :post="post" :poll="post.poll" />
 
 						<br />
 					</template>

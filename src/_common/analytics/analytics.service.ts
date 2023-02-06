@@ -8,6 +8,7 @@ import {
 } from 'firebase/analytics';
 import { unref, watch } from 'vue';
 import { Router } from 'vue-router';
+import { FiresideSidebar } from '../../app/components/fireside/controller/controller';
 import { arrayRemove } from '../../utils/array';
 import { createLogger } from '../../utils/logging';
 import { AuthMethod } from '../auth/auth.service';
@@ -39,6 +40,7 @@ export type UserFollowLocation =
 	| 'postPage'
 	| 'postLike'
 	| 'card'
+	| 'creatorCard'
 	| 'profilePage'
 	| 'inviteFollow'
 	| 'firesideOfflineFollow'
@@ -467,9 +469,70 @@ export function trackCreatorApply(params: { creator_landing_section: string }) {
 
 export function trackSearchAutocomplete(params: {
 	query: string;
-	search_autocomplete_resource: 'community' | 'game' | 'user' | 'library_game' | 'all';
+	search_autocomplete_resource: 'realm' | 'community' | 'game' | 'user' | 'library_game' | 'all';
 }) {
 	_trackEvent('search_autocomplete', params);
+}
+
+interface FiresideActionData {
+	action: string;
+	trigger: string;
+	sidebarData?: FiresideSidebarData;
+}
+
+interface FiresideSidebarData {
+	previous: string;
+	current: string;
+}
+
+export function trackFiresideAction({
+	action: action_name,
+	trigger: action_trigger,
+	sidebarData,
+}: FiresideActionData) {
+	const { previous: previous_sidebar, current: current_sidebar } = sidebarData || {};
+
+	_trackEvent('fireside_action', {
+		action_name,
+		action_trigger,
+		previous_sidebar,
+		current_sidebar,
+	});
+}
+
+export function trackFiresideExtinguish(trigger: string) {
+	trackFiresideAction({ action: 'extinguish', trigger });
+}
+
+export function trackFiresidePublish(trigger: string) {
+	trackFiresideAction({ action: 'publish', trigger });
+}
+
+export function trackFiresideSidebarButton({
+	previous,
+	current,
+	trigger,
+}: {
+	previous: FiresideSidebar;
+	current: FiresideSidebar;
+	trigger: string;
+}) {
+	trackFiresideAction({
+		action: 'change-sidebar',
+		trigger,
+		sidebarData: {
+			previous,
+			current,
+		},
+	});
+}
+
+export function trackFiresideSidebarCollapse(collapsed: boolean, trigger: string) {
+	trackFiresideAction({ action: collapsed ? 'collapse-sidebar' : 'expand-sidebar', trigger });
+}
+
+export function trackFiresideStopStreaming(trigger: string) {
+	trackFiresideAction({ action: 'stop-streaming', trigger: trigger });
 }
 
 /**

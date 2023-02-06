@@ -9,7 +9,7 @@ import type { ClientLibraryStore } from '../../store/client-library';
 import type { LocalDbGame } from '../client/local-db/game/game.model';
 
 export interface SearchOptions {
-	type: 'all' | 'user' | 'game' | 'community' | 'typeahead';
+	type: 'all' | 'user' | 'game' | 'community' | 'realms' | 'typeahead';
 	page?: number;
 }
 
@@ -54,12 +54,14 @@ async function _searchSite(query: string, options: SearchOptions = { type: 'all'
 		endpoint += '/games';
 	} else if (options.type === 'community') {
 		endpoint += '/communities';
+	} else if (options.type === 'realms') {
+		endpoint += '/realms';
 	} else if (options.type === 'typeahead') {
 		endpoint += '/typeahead';
 		requestOptions.detach = true;
 	}
 
-	const searchParams = ['q=' + encodeURIComponent(query || '')];
+	const searchParams = ['q=' + encodeURIComponent(query || ''), 'post-feed-use-offset=1'];
 
 	if (options.page && options.page > 1) {
 		searchParams.push('page=' + options.page);
@@ -91,8 +93,15 @@ export class SearchPayload {
 	postsPerPage: number;
 	communities: Community[];
 	communitiesCount: number;
-	realm: Realm | null;
+	realms: Realm[];
+	realmsCount: number;
 	libraryGames: LocalDbGame[];
+
+	socialMetadata?: {
+		description: string;
+		fb: string;
+		twitter: string;
+	};
 
 	constructor(public type: string, data: any) {
 		this.page = data.page || 1;
@@ -108,11 +117,20 @@ export class SearchPayload {
 		this.postsPerPage = data.postsPerPage || 0;
 		this.communities = Community.populate(data.communities);
 		this.communitiesCount = data.communitiesCount || 0;
-		this.realm = data.realm ? new Realm(data.realm) : null;
+		this.realms = Realm.populate(data.realms);
+		this.realmsCount = data.realmsCount || 0;
 		this.libraryGames = [];
 
 		if (GJ_IS_DESKTOP_APP) {
 			this.libraryGames = data.libraryGames || [];
+		}
+
+		if (data.metaDescription) {
+			this.socialMetadata = {
+				description: data.metaDescription,
+				fb: data.fb,
+				twitter: data.twitter,
+			};
 		}
 	}
 }

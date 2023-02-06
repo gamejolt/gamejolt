@@ -8,6 +8,8 @@ import {
 import { markRaw, reactive, toRaw, watch, WatchStopHandle } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
+import { User } from '../../user/user.model';
+import { Fireside } from '../fireside.model';
 import { updateTrackPlaybackDevice } from './producer';
 import { chooseFocusedRTCUser, FiresideRTC } from './rtc';
 
@@ -56,16 +58,7 @@ export class FiresideRTCUser {
 		public readonly uid: number,
 		public readonly isLocal: boolean
 	) {
-		// If everyone is currently muted, add new users as muted.
-		// TODO(big-pp-event) when this user becomes listable we may need to unmute their mic.
-		// This is because at the time this unlisted user started streaming the viewer had everyone
-		// muted, which would cause this instance to get initialized with micAudioMuted = true,
-		// but since then the viewer may have unmuted some users and THEN this user become listable.
-		// in this case it should act as if it was just now initialized and spawn in "unmuted".
-		// we basically need to rerun the published callbacks in rtc for this user.
-		this.remoteMicAudioMuted = isLocal
-			? false
-			: rtc.isMuted || rtc.isEveryRemoteListableUsersMuted;
+		this.remoteMicAudioMuted = rtc.isMuted;
 	}
 
 	// These won't be assigned if this is the local user.
@@ -112,6 +105,7 @@ export class FiresideRTCUser {
 	desktopPlaybackVolumeLevel = 0.75;
 
 	_unwatchIsListed: WatchStopHandle | null = null;
+	_unwatchPrefableFields: WatchStopHandle | null = null;
 
 	get _rtcHost() {
 		return this.rtc.hosts.find(host => host.uids.includes(this.uid));
@@ -213,11 +207,104 @@ export function createRemoteFiresideRTCUser(rtc: FiresideRTC, uid: number) {
 		}
 	);
 
+	user._unwatchPrefableFields = watch(
+		() => [
+			user.remoteMicAudioMuted,
+			user.remoteDesktopAudioMuted,
+			// These should be done in their respective scrubbers so we don't
+			// trigger events crazy often.
+			//
+			// user.micPlaybackVolumeLevel,
+			// user.desktopPlaybackVolumeLevel,
+		],
+		() => {
+			saveFiresideRTCUserPrefs(user);
+		}
+	);
+
 	return user;
 }
 
 export function createLocalFiresideRTCUser(rtc: FiresideRTC, uid: number) {
 	return reactive(new FiresideRTCUser(rtc, uid, true)) as FiresideRTCUser;
+}
+
+export function initRemoteFiresideRTCUserPrefs(user: FiresideRTCUser) {
+	// Ignore local user and RTC controllers that disable audio.
+	if (user.isLocal || user.rtc.isMuted) {
+		return;
+	}
+
+	const {
+		userModel,
+		rtc,
+		rtc: { fireside },
+	} = user;
+
+	if (!userModel) {
+		rtc.log(`Tried initializing RTC user options without a user model - ignoring.`);
+		return;
+	}
+
+	const existingOptions = sessionStorage.getItem(_getFiresideRTCUserPrefKey(fireside, userModel));
+	if (!existingOptions) {
+		return;
+	}
+
+	const options: FiresideRTCUserPrefs = JSON.parse(existingOptions);
+	const {
+		desktopPlaybackVolumeLevel,
+		micPlaybackVolumeLevel,
+		remoteDesktopAudioMuted,
+		remoteMicAudioMuted,
+	} = options;
+
+	if (remoteMicAudioMuted !== undefined) {
+		setMicAudioPlayback(user, !remoteMicAudioMuted);
+	}
+	if (remoteDesktopAudioMuted !== undefined) {
+		setDesktopAudioPlayback(user, !remoteDesktopAudioMuted);
+	}
+	if (micPlaybackVolumeLevel !== undefined) {
+		setUserMicrophoneAudioVolume(user, micPlaybackVolumeLevel);
+	}
+	if (desktopPlaybackVolumeLevel !== undefined) {
+		setUserDesktopAudioVolume(user, desktopPlaybackVolumeLevel);
+	}
+}
+
+function _getFiresideRTCUserPrefKey(fireside: Fireside, userModel: User) {
+	return `${fireside.id}-${userModel.id}`;
+}
+
+interface FiresideRTCUserPrefs {
+	remoteMicAudioMuted: boolean | undefined;
+	remoteDesktopAudioMuted: boolean | undefined;
+	micPlaybackVolumeLevel: number | undefined;
+	desktopPlaybackVolumeLevel: number | undefined;
+}
+
+export function saveFiresideRTCUserPrefs(user: FiresideRTCUser) {
+	const {
+		userModel,
+		rtc: { fireside },
+	} = user;
+
+	if (!userModel) {
+		return;
+	}
+
+	const options: FiresideRTCUserPrefs = {
+		remoteMicAudioMuted: user.remoteMicAudioMuted,
+		remoteDesktopAudioMuted: user.remoteDesktopAudioMuted,
+		micPlaybackVolumeLevel: user.micPlaybackVolumeLevel,
+		desktopPlaybackVolumeLevel: user.desktopPlaybackVolumeLevel,
+	};
+
+	sessionStorage.setItem(
+		_getFiresideRTCUserPrefKey(fireside, userModel),
+		JSON.stringify(options)
+	);
 }
 
 export function cleanupFiresideRTCUser(user: FiresideRTCUser) {
@@ -226,6 +313,9 @@ export function cleanupFiresideRTCUser(user: FiresideRTCUser) {
 
 	user._unwatchIsListed?.();
 	user._unwatchIsListed = null;
+
+	user._unwatchPrefableFields?.();
+	user._unwatchPrefableFields = null;
 }
 
 function _userIdForLog(user: FiresideRTCUser) {
@@ -608,12 +698,24 @@ export async function stopMicAudioPlayback(user: FiresideRTCUser) {
 }
 
 export function updateVolumeLevel(user: FiresideRTCUser) {
-	if (user._micAudioTrack?.isPlaying !== true) {
+	// Ignore remote users that have no active track.
+	if (
+		(user._micAudioTrack?.isPlaying !== true && !user.isLocal) ||
+		(user.isLocal && user.rtc.producer?.micMuted.value === true)
+	) {
 		user.volumeLevel = 0;
 		return;
 	}
 
-	user.volumeLevel = user._micAudioTrack.getVolumeLevel();
+	const level = user._micAudioTrack?.getVolumeLevel() || 0;
+
+	// Treat the user as speaking when their volume level is above a certain
+	// threshold.
+	if (level > 0.6) {
+		user.volumeLevel = 1;
+	} else {
+		user.volumeLevel = 0;
+	}
 }
 
 /** Expects a value from 0 to 1 */

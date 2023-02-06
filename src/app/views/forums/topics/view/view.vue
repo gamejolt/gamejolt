@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import { enforceLocation } from '../../../../../utils/router';
 import { Api } from '../../../../../_common/api/api.service';
 import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
-import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
@@ -31,8 +31,8 @@ import FormForumTopic from '../../../../components/forms/forum/topic/topic.vue';
 import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
 import AppForumPostList from '../../../../components/forum/post-list/post-list.vue';
 import AppForumRules from '../../../../components/forum/rules/rules.vue';
+import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderControls from '../../../../components/page-header/controls/controls.vue';
-import AppPageHeader from '../../../../components/page-header/page-header.vue';
 
 @Options({
 	name: 'RouteForumsTopicsView',

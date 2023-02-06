@@ -6,6 +6,7 @@ import {
 	markRaw,
 	provide,
 	reactive,
+	readonly,
 	Ref,
 	ref,
 	shallowReadonly,
@@ -23,12 +24,19 @@ import { getCurrentServerTime, updateServerTimeOffset } from '../../../../utils/
 import { run, sleep } from '../../../../utils/utils';
 import { uuidv4 } from '../../../../utils/uuid';
 import { MaybeRef } from '../../../../utils/vue';
+import {
+	trackFiresideExtinguish,
+	trackFiresidePublish,
+	trackFiresideSidebarButton,
+	trackFiresideSidebarCollapse,
+} from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Background } from '../../../../_common/background/background.model';
 import {
 	canCommunityEjectFireside,
 	canCommunityFeatureFireside,
 } from '../../../../_common/community/community.model';
+import { ContentFocus } from '../../../../_common/content-focus/content-focus.service';
 import { getDeviceBrowser, getDeviceOS } from '../../../../_common/device/device.service';
 import { DogtagData } from '../../../../_common/dogtag/dogtag-data';
 import { formatDuration } from '../../../../_common/filters/duration';
@@ -61,9 +69,11 @@ import { CommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
 import { BottomBarControl } from '../../../views/fireside/_bottom-bar/AppFiresideBottomBar.vue';
-import { leaveChatRoom } from '../../chat/client';
-import { ChatRoomChannel, createChatRoomChannel } from '../../chat/room-channel';
-import { ChatUserCollection } from '../../chat/user-collection';
+import {
+	ChatRoomChannel,
+	createChatRoomChannel,
+	PlaceStickerPayload,
+} from '../../chat/room-channel';
 import { createGridFiresideChannel, GridFiresideChannel } from '../../grid/fireside-channel';
 import { createGridFiresideDMChannel, GridFiresideDMChannel } from '../../grid/fireside-dm-channel';
 import { GridStore } from '../../grid/grid-store';
@@ -86,12 +96,7 @@ export type RouteStatus =
 	| 'joined' // Currently joined to the fireside.
 	| 'blocked'; // Blocked from joining the fireside (user blocked).
 
-export type FiresideSidebar =
-	| 'chat'
-	| 'members'
-	| 'hosts'
-	| 'fireside-settings'
-	| 'stream-settings';
+export type FiresideSidebar = 'chat' | 'members' | 'fireside-settings' | 'stream-settings';
 
 export interface StreamingInfoPayload {
 	streamingAppId: string;
@@ -169,6 +174,10 @@ export function createFiresideController(
 	 */
 	const hostBackgrounds = ref(new Map<number, Background>());
 
+	const targetData = computed(() => {
+		return { host_user_id: rtc.value?.focusedUser?.userModel?.id };
+	});
+
 	const stickerTargetController = createStickerTargetController(fireside, {
 		isLive: true,
 		isCreator: computed(() => {
@@ -178,9 +187,10 @@ export function createFiresideController(
 			}
 			return user.is_creator === true;
 		}),
+		targetData,
 		placeStickerCallback: async data => {
 			const roomChannel = chatChannel.value;
-			const targetUserId = rtc.value?.focusedUser?.userModel?.id;
+			const targetUserId = targetData.value.host_user_id;
 			const errorResponse = { success: false };
 
 			if (!roomChannel || !targetUserId) {
@@ -197,13 +207,19 @@ export function createFiresideController(
 				}
 			}
 
-			const result = await roomChannel.pushPlaceSticker(targetUserId, stickerData);
+			let payload: Partial<PlaceStickerPayload> = {};
+			try {
+				payload = await roomChannel.pushPlaceSticker(targetUserId, stickerData);
 
-			const placement = result.stickerPlacement;
-			if (placement) {
-				onFiresideStickerPlaced.next(placement);
+				const { stickerPlacement, success = true } = payload;
+
+				if (stickerPlacement) {
+					onFiresideStickerPlaced.next(stickerPlacement);
+				}
+				return { ...payload, success };
+			} catch (e) {
+				return { ...payload, ...errorResponse };
 			}
-			return { ...result, success: true };
 		},
 	});
 
@@ -236,7 +252,7 @@ export function createFiresideController(
 		if (!chatRoom.value) {
 			return undefined;
 		}
-		return chat.value?.roomMembers[chatRoom.value.id] as ChatUserCollection;
+		return chatRoom.value.memberCollection;
 	});
 
 	const stickerCount = computed(() => {
@@ -300,12 +316,7 @@ export function createFiresideController(
 	const canEdit = computed(() => isOwner.value || fireside.hasPerms('fireside-edit'));
 
 	const canPublish = computed(() => {
-		const role = fireside.role?.role;
-		return (
-			(isOwner.value || role === 'host' || role === 'cohost') &&
-			status.value === 'joined' &&
-			isDraft.value
-		);
+		return status.value === 'joined' && isDraft.value && fireside.hasPerms('fireside-publish');
 	});
 
 	const _canExtend = computed(() => {
@@ -333,7 +344,21 @@ export function createFiresideController(
 
 		// Firefox and Safari each have problems with streaming. See their
 		// comments for reasons.
-		if (_isFirefox.value || _isSafari.value) {
+		const shouldBlockFirefox = _isFirefox.value && user.value?.isMod !== true;
+		if (shouldBlockFirefox || _isSafari.value) {
+			return false;
+		}
+
+		return true;
+	});
+
+	/**
+	 * Some browsers don't allow us to select output devices. If we're allowing
+	 * them to stream, we can check this to know if we should show a tooltip or
+	 * hide some form controls.
+	 */
+	const canBrowserSelectSpeakers = computed(() => {
+		if (_isFirefox.value) {
 			return false;
 		}
 
@@ -361,6 +386,47 @@ export function createFiresideController(
 	});
 
 	const shouldShowDesktopAppPromo = ref(shouldPromoteAppForStreaming.value);
+
+	/**
+	 * If we should hide the stream preview in the stream setup form.
+	 */
+	const shouldHideStreamVideoPreview = computed(() => {
+		// Never hide if we have the stream "pinned".
+		if (pinStreamVideo.value) {
+			return false;
+		}
+
+		return !ContentFocus.isWindowFocused;
+	});
+
+	/**
+	 * If we should hide the focused video stream.
+	 */
+	const shouldHideStreamVideo = computed(() => {
+		// Never hide if we have the stream "pinned".
+		if (pinStreamVideo.value) {
+			return false;
+		}
+
+		// Always show if the window is focused, we paused the video streams
+		// manually, or we're not streaming.
+		if (
+			ContentFocus.isWindowFocused ||
+			rtc.value?.videoPaused === true ||
+			!isPersonallyStreaming.value
+		) {
+			return false;
+		}
+
+		// Only hide if we're focusing our own stream.
+		return focusedUser.value?.isLocal === true;
+	});
+
+	/**
+	 * Used to override {@link shouldHideStreamVideo} and
+	 * {@link shouldHideStreamVideoPreview}.
+	 */
+	const pinStreamVideo = ref(false);
 
 	const _browser = computed(() => getDeviceBrowser().toLowerCase());
 
@@ -420,7 +486,7 @@ export function createFiresideController(
 	});
 
 	const revalidateRTC = () => {
-		logger.debug('wantsRTC changed to ' + (_wantsRTC.value ? 'true' : 'false'));
+		logger.info('wantsRTC changed to ' + (_wantsRTC.value ? 'true' : 'false'));
 
 		if (_wantsRTC.value) {
 			// Note: since revalidateRTC may be called outside of watcher flow,
@@ -435,7 +501,7 @@ export function createFiresideController(
 				{ isMuted }
 			);
 		} else if (rtc.value) {
-			logger.debug('Destroying old rtc');
+			logger.info('Destroying old rtc');
 
 			destroyFiresideRTC(rtc.value);
 
@@ -449,7 +515,7 @@ export function createFiresideController(
 			// call stopStreaming..
 			rtc.value = undefined;
 		} else {
-			logger.debug('rtc was not set, nothing to do');
+			logger.info('rtc was not set, nothing to do');
 		}
 
 		return rtc.value;
@@ -469,12 +535,14 @@ export function createFiresideController(
 		}
 	}
 
+	// Sync we're not doing a deep watch, this'll only trigger when the actual
+	// instance changes (unset to set).
 	const _unwatchChatUsers = watch(chatUsers, _onChatUsersChanged);
 
 	const _unwatchWantsRTC = watch(_wantsRTC, revalidateRTC);
 
 	const _unwatchWantsRTCProducer = watch(_wantsRTCProducer, async newWantsRTCProducer => {
-		logger.debug('wantsRTCProducer changed to ' + (newWantsRTCProducer ? 'true' : 'false'));
+		logger.info('wantsRTCProducer changed to ' + (newWantsRTCProducer ? 'true' : 'false'));
 
 		if (newWantsRTCProducer) {
 			// Do not create the producer if it already exists.
@@ -485,7 +553,7 @@ export function createFiresideController(
 			rtc.value.producer = null;
 
 			if (prevProducer) {
-				logger.debug('Tearing down old producer');
+				logger.info('Tearing down old producer');
 				// Ideally we'd like to not await here because we want the producer
 				// to be considered "torn down" immediately. It simplifies logic for handling it.
 				// We can't avoid awaiting here tho because if the producer instance
@@ -493,23 +561,23 @@ export function createFiresideController(
 				// the streams, then cleanupFiresideRTCProducer gets called which sets _isStreaming
 				// to false, and THEN when the streams actually attempt to stop it'd think they
 				// already stopped, and will not run the teardown logic for them..
-				await stopStreaming(prevProducer);
+				await stopStreaming(prevProducer, 'auto-lost-perms');
 				// TODO(big-pp-event) is there a way to make absolutely sure nothing keeps a reference
 				// to producer past this point? theres nothing in the producer class that prevents attempting
 				// to start streaming from a cleanup-up instance of producer.
 				cleanupFiresideRTCProducer(prevProducer);
 			} else {
-				logger.debug('rtc.producer was not set, nothing to do');
+				logger.info('rtc.producer was not set, nothing to do');
 			}
 		} else {
-			logger.debug('rtc was not set, nothing to do');
+			logger.info('rtc was not set, nothing to do');
 		}
 	});
 
 	const _unwatchHostsChanged = watch(
 		hosts,
 		(newHosts, prevHosts) => {
-			logger.debug('updating hosts in controller');
+			logger.info('updating hosts in controller');
 
 			// We want to merge the streaming uids of our existing hosts with the new ones.
 			// Note: I'm not 100% sure why we want that. My guess is because we freeze the
@@ -518,7 +586,7 @@ export function createFiresideController(
 			for (const newHost of newHosts) {
 				const prevHost = prevHosts.find(i => i.user.id === newHost.user.id);
 				if (prevHost) {
-					logger.debug(`merging streaming uids of host ${newHost.user.id}`);
+					logger.info(`merging streaming uids of host ${newHost.user.id}`);
 
 					// Transfer over all previously assigned uids to the new host.
 					const newUids = arrayUnique([...prevHost.uids, ...newHost.uids]);
@@ -526,10 +594,10 @@ export function createFiresideController(
 				}
 			}
 
-			logger.debug('new hosts after merging uids', JSON.stringify(newHosts));
+			logger.info('new hosts after merging uids', JSON.stringify(newHosts));
 
 			if (rtc.value) {
-				logger.debug('updating hosts in rtc');
+				logger.info('updating hosts in rtc');
 				setHosts(rtc.value, newHosts);
 			}
 		},
@@ -540,7 +608,7 @@ export function createFiresideController(
 		listableHostIds,
 		newListableHostIds => {
 			if (rtc.value) {
-				logger.debug('setting listableHostIds', JSON.stringify(newListableHostIds));
+				logger.info('setting listableHostIds', JSON.stringify(newListableHostIds));
 				setListableHostIds(rtc.value, newListableHostIds);
 			}
 		},
@@ -555,24 +623,48 @@ export function createFiresideController(
 		() => _watchGrid
 	);
 
-	let _sidebar: FiresideSidebar = 'chat';
-	const sidebar = customRef<FiresideSidebar>((track, trigger) => ({
-		get: () => {
-			track();
-			return _sidebar;
-		},
-		set: val => {
-			if (val === _sidebar) {
-				return;
-			}
+	const sidebarHome: FiresideSidebar = 'chat';
+	const _sidebar = ref<FiresideSidebar>(sidebarHome);
+	const sidebar = readonly(computed(() => _sidebar.value));
 
-			_sidebar = val;
-			if (val !== 'chat' && _collapseSidebar) {
-				collapseSidebar.value = false;
-			}
-			trigger();
-		},
-	}));
+	function setSidebar(current: FiresideSidebar, trigger: string) {
+		if (current === sidebar.value) {
+			return;
+		}
+
+		trackFiresideSidebarButton({
+			previous: sidebar.value,
+			current,
+			trigger,
+		});
+
+		_sidebar.value = current;
+
+		if (current !== sidebarHome && _collapseSidebar) {
+			collapseSidebar.value = false;
+			trackFiresideSidebarCollapse(false, 'new-sidebar');
+		}
+	}
+
+	/**
+	 * Removes a sidebar from the
+	 */
+	function popSidebar() {
+		if (isSidebarHome.value) {
+			return;
+		}
+
+		const previous = sidebar.value;
+		_sidebar.value = sidebarHome;
+
+		trackFiresideSidebarButton({
+			previous,
+			current: sidebarHome,
+			trigger: 'go-back',
+		});
+	}
+
+	const isSidebarHome = computed(() => sidebar.value === sidebarHome);
 
 	let _collapseSidebar = false;
 	const collapseSidebar = customRef<boolean>((track, trigger) => ({
@@ -587,7 +679,7 @@ export function createFiresideController(
 
 			_collapseSidebar = val;
 			if (val) {
-				sidebar.value = 'chat';
+				_sidebar.value = sidebarHome;
 			}
 			trigger();
 		},
@@ -597,16 +689,16 @@ export function createFiresideController(
 		() => [sidebar, collapseSidebar],
 		() => {
 			const collapse = collapseSidebar.value;
-			const isChat = sidebar.value === 'chat';
+			const isHome = isSidebarHome.value;
 
-			if (collapse === isChat) {
+			if (collapse === isHome) {
 				return;
 			}
 
-			if (!isChat) {
+			if (!isHome) {
 				collapseSidebar.value = false;
 			} else if (collapse) {
-				sidebar.value = 'chat';
+				_sidebar.value = sidebarHome;
 			}
 		}
 	);
@@ -642,7 +734,9 @@ export function createFiresideController(
 		const checkIsFullscreen = () => document.fullscreenElement === element;
 
 		if (!element || !shouldFullscreen) {
-			document.exitFullscreen();
+			if (document.fullscreenElement) {
+				document.exitFullscreen();
+			}
 			_isFullscreen.value = false;
 			return;
 		}
@@ -664,9 +758,6 @@ export function createFiresideController(
 
 	const activeBottomBarControl = computed<BottomBarControl | undefined>(() => {
 		switch (sidebar.value) {
-			case 'members':
-				return 'members';
-
 			case 'fireside-settings':
 				return 'settings';
 
@@ -725,8 +816,12 @@ export function createFiresideController(
 		canExtinguish,
 		canReport,
 		canBrowserStream,
+		canBrowserSelectSpeakers,
 		background,
 		shouldShowDesktopAppPromo,
+		shouldHideStreamVideoPreview,
+		shouldHideStreamVideo,
+		pinStreamVideo,
 		logger,
 
 		_isExtending,
@@ -743,6 +838,10 @@ export function createFiresideController(
 
 		activeBottomBarControl,
 		sidebar,
+		setSidebar,
+		popSidebar,
+		sidebarHome,
+		isSidebarHome,
 		isShowingStreamOverlay,
 		collapseSidebar,
 		popperTeleportId: computed(() => `fireside-teleport-${fireside.id}`),
@@ -754,7 +853,7 @@ export function createFiresideController(
 	async function _init() {
 		if (fireside.blocked) {
 			status.value = 'blocked';
-			logger.debug(`Blocked from joining blocked user's fireside.`);
+			logger.info(`Blocked from joining blocked user's fireside.`);
 			return;
 		}
 
@@ -768,7 +867,7 @@ export function createFiresideController(
 	}
 
 	function _watchGrid() {
-		logger.debug(
+		logger.info(
 			'grid.connected watcher triggered: ' +
 				(grid.value?.connected ? 'connected' : 'disconnected')
 		);
@@ -796,7 +895,7 @@ export function createFiresideController(
 
 		// Make sure the services are connected.
 		while (!grid.value?.connected) {
-			logger.debug('Wait for Grid...');
+			logger.info('Wait for Grid...');
 
 			if (grid.value && !user.value && !grid.value.isGuest) {
 				logger.info('Enabling guest access to grid');
@@ -814,12 +913,12 @@ export function createFiresideController(
 	}
 
 	async function _join() {
-		logger.debug(`Joining fireside.`);
+		logger.info(`Joining fireside.`);
 
 		// --- Make sure common join conditions are met.
 
 		if (!fireside || !grid.value || !grid.value.connected || !chat.value) {
-			logger.debug(`General connection error.`);
+			logger.info(`General connection error.`);
 			status.value = 'setup-failed';
 			return;
 		}
@@ -836,13 +935,13 @@ export function createFiresideController(
 		// Maybe they are blocked now?
 		if (fireside.blocked) {
 			status.value = 'blocked';
-			logger.debug(`Blocked from joining blocked user's fireside.`);
+			logger.info(`Blocked from joining blocked user's fireside.`);
 			return;
 		}
 
 		// Make sure it's still joinable.
 		if (!fireside.isOpen()) {
-			logger.debug(`Fireside is expired, and cannot be joined.`);
+			logger.info(`Fireside is expired, and cannot be joined.`);
 			status.value = 'expired';
 			return;
 		}
@@ -852,7 +951,7 @@ export function createFiresideController(
 		if (user.value && !fireside.role) {
 			const rolePayload = await Api.sendRequest(`/web/fireside/join/${fireside.hash}`);
 			if (!rolePayload || !rolePayload.success || !rolePayload.role) {
-				logger.debug(`Failed to acquire a role.`);
+				logger.info(`Failed to acquire a role.`);
 				status.value = 'setup-failed';
 				return;
 			}
@@ -866,11 +965,12 @@ export function createFiresideController(
 				run(async () => {
 					logger.info('Trying to connect to fireside channel.');
 
-					const newChannel = await createGridFiresideChannel(grid.value!, controller, {
+					const newChannel = createGridFiresideChannel(grid.value!, controller, {
 						firesideHash: fireside.hash,
 						stickerStore,
 					});
 
+					await newChannel.joinPromise;
 					gridChannel.value = newChannel;
 					grid.value!.firesideChannels.push(markRaw(newChannel));
 
@@ -885,11 +985,12 @@ export function createFiresideController(
 
 					logger.info('Trying to connect to fireside DM channel.');
 
-					const newChannel = await createGridFiresideDMChannel(grid.value!, controller, {
+					const newChannel = createGridFiresideDMChannel(grid.value!, controller, {
 						firesideHash: fireside.hash,
 						user: user.value,
 					});
 
+					await newChannel.joinPromise;
 					gridDMChannel.value = newChannel;
 					grid.value!.firesideDMChannels.push(markRaw(newChannel));
 
@@ -901,7 +1002,7 @@ export function createFiresideController(
 
 					const roomId = fireside.chat_room_id;
 
-					const newChannel = await createChatRoomChannel(chat.value!, {
+					const newChannel = createChatRoomChannel(chat.value!, {
 						roomId,
 						instanced: true,
 						afterMemberKick: data => {
@@ -912,6 +1013,7 @@ export function createFiresideController(
 						},
 					});
 
+					await newChannel.joinPromise;
 					chatChannel.value = newChannel;
 
 					logger.info('Connected to chat room.');
@@ -929,7 +1031,7 @@ export function createFiresideController(
 		}
 
 		status.value = 'joined';
-		logger.debug(`Successfully joined fireside.`);
+		logger.info(`Successfully joined fireside.`);
 
 		// Set up the expiry interval to check if the fireside is expired.
 		_clearExpiryCheck();
@@ -945,7 +1047,7 @@ export function createFiresideController(
 			return;
 		}
 
-		logger.debug(`Disconnecting from fireside.`);
+		logger.info(`Disconnecting from fireside.`);
 		status.value = 'disconnected';
 
 		_clearExpiryCheck();
@@ -958,13 +1060,11 @@ export function createFiresideController(
 			gridChannel.value = undefined;
 			gridDMChannel.value = undefined;
 
-			if (chat.value && chatChannel.value) {
-				leaveChatRoom(chat.value, chatChannel.value.room.value);
-			}
+			chatChannel.value?.leave();
 			chatChannel.value = undefined;
 		}
 
-		logger.debug(`Disconnected from fireside.`);
+		logger.info(`Disconnected from fireside.`);
 	}
 
 	function _clearExpiryCheck() {
@@ -1002,7 +1102,7 @@ export function createFiresideController(
 	 * shouldn't be used to disconnect.
 	 */
 	async function cleanup() {
-		logger.debug('controller cleanup called');
+		logger.info('controller cleanup called');
 
 		stickerStore.streak.value = null;
 
@@ -1081,7 +1181,10 @@ export function toggleStreamVideoStats(c: FiresideController) {
 	c.rtc.value.shouldShowVideoStats = !c.rtc.value.shouldShowVideoStats;
 }
 
-export async function publishFireside({ fireside, status, isDraft }: FiresideController) {
+export async function publishFireside(
+	{ fireside, status, isDraft }: FiresideController,
+	trigger: string
+) {
 	if (!fireside || status.value !== 'joined' || !isDraft.value) {
 		return;
 	}
@@ -1095,6 +1198,8 @@ export async function publishFireside({ fireside, status, isDraft }: FiresideCon
 
 	await fireside.$publish({ autoFeature: true });
 	showSuccessGrowl($gettext(`Your fireside is live!`));
+
+	trackFiresidePublish(trigger);
 }
 
 async function extendFireside(c: FiresideController, growlOnFail = true) {
@@ -1119,7 +1224,7 @@ async function extendFireside(c: FiresideController, growlOnFail = true) {
 	}
 }
 
-export async function extinguishFireside(c: FiresideController) {
+export async function extinguishFireside(c: FiresideController, trigger: string) {
 	if (!c.fireside || !c.canExtinguish.value) {
 		return;
 	}
@@ -1133,6 +1238,7 @@ export async function extinguishFireside(c: FiresideController) {
 		return;
 	}
 
+	trackFiresideExtinguish(trigger);
 	await c.fireside.$extinguish();
 }
 
@@ -1268,7 +1374,7 @@ export async function updateFiresideData(
 			// to just always call fetch-for-streaming.
 			const streamingUid = agoraStreamingInfo.value?.streamingUid;
 			if (!streamingUid) {
-				logger.debug('Got fireside-updated grid event before fully bootstrapped');
+				logger.info('Got fireside-updated grid event before fully bootstrapped');
 				await _fetchForFiresideStreaming(c, { assignStatus: false });
 			} else if (!fireside.role?.canStream) {
 				// Otherwise, if our host state did not change and we are a
@@ -1372,10 +1478,10 @@ async function _fetchForFiresideStreaming(c: FiresideController, { assignStatus 
 			{ detach: true }
 		);
 
-		logger.debug('fetch-for-streaming payload received', payload);
+		logger.info('fetch-for-streaming payload received', payload);
 
 		if (!payload.fireside) {
-			logger.debug(`Trying to load fireside, but it was not found.`);
+			logger.info(`Trying to load fireside, but it was not found.`);
 			if (assignStatus) {
 				status.value = 'setup-failed';
 			}
@@ -1415,7 +1521,7 @@ async function _fetchForFiresideStreaming(c: FiresideController, { assignStatus 
 		// that case, we want to set up the RTC stuff.
 		// this.upsertRtc(payload, { checkJoined: false });
 	} catch (error) {
-		logger.debug(`Setup failure 2.`, error);
+		logger.info(`Setup failure 2.`, error);
 		if (assignStatus) {
 			status.value = 'setup-failed';
 		}

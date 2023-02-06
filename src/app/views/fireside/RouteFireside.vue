@@ -1,20 +1,11 @@
 <script lang="ts">
-const FiresideThemeKey = 'fireside';
-
-export default {
-	...defineAppRouteOptions({
-		deps: { params: ['hash'] },
-		lazy: true,
-		resolver: async ({ route }) =>
-			Api.sendRequest(`/web/fireside/fetch/${route.params.hash}?meta=1`),
-	}),
-};
-</script>
-
-<script lang="ts" setup>
 import { computed, customRef, onBeforeUnmount, ref, shallowRef, watch } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import { debounce } from '../../../utils/utils';
+import {
+	trackFiresideAction,
+	trackFiresideSidebarCollapse,
+} from '../../../_common/analytics/analytics.service';
 import AppAnimSlideshow from '../../../_common/animation/AppAnimSlideshow.vue';
 import { sheetFireplace } from '../../../_common/animation/slideshow/sheets';
 import { Api } from '../../../_common/api/api.service';
@@ -33,19 +24,23 @@ import { Popper } from '../../../_common/popper/popper.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Ruler } from '../../../_common/ruler/ruler-service';
 import { Screen } from '../../../_common/screen/screen-service';
+import AppShortkey from '../../../_common/shortkey/AppShortkey.vue';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppStickerLayer from '../../../_common/sticker/layer/AppStickerLayer.vue';
 import { useStickerStore } from '../../../_common/sticker/sticker-store';
 import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
+import AppTheme from '../../../_common/theme/AppTheme.vue';
 import { useThemeStore } from '../../../_common/theme/theme.store';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../_common/translate/translate.service';
 import AppFiresideProvider from '../../components/fireside/AppFiresideProvider.vue';
 import {
 	createFiresideController,
+	extinguishFireside,
 	FiresideController,
 	FiresideSidebar,
+	publishFireside,
 	toggleStreamVideoStats,
 } from '../../components/fireside/controller/controller';
 import { useGridStore } from '../../components/grid/grid-store';
@@ -55,17 +50,30 @@ import {
 	illMobileKikkerstein,
 	illNoCommentsSmall,
 } from '../../img/ill/illustrations';
+import AppFiresideDashboard from './AppFiresideDashboard.vue';
 import AppFiresideHeader from './AppFiresideHeader.vue';
 import AppFiresideStats from './AppFiresideStats.vue';
 import AppFiresideBottomBar from './_bottom-bar/AppFiresideBottomBar.vue';
 import AppFiresideSidebarChat from './_sidebar/AppFiresideSidebarChat.vue';
 import AppFiresideSidebarFiresideSettings from './_sidebar/AppFiresideSidebarFiresideSettings.vue';
 import AppFiresideSidebarHeading from './_sidebar/AppFiresideSidebarHeading.vue';
-import AppFiresideSidebarHosts from './_sidebar/AppFiresideSidebarHosts.vue';
 import AppFiresideSidebarMembers from './_sidebar/AppFiresideSidebarMembers.vue';
 import AppFiresideSidebarStreamSettings from './_sidebar/AppFiresideSidebarStreamSettings.vue';
 import AppFiresideStream from './_stream/AppFiresideStream.vue';
 
+const FiresideThemeKey = 'fireside';
+
+export default {
+	...defineAppRouteOptions({
+		deps: { params: ['hash'] },
+		lazy: true,
+		resolver: async ({ route }) =>
+			Api.sendRequest(`/web/fireside/fetch/${route.params.hash}?meta=1`),
+	}),
+};
+</script>
+
+<script lang="ts" setup>
 const commonStore = useCommonStore();
 const stickerStore = useStickerStore();
 const gridStore = useGridStore();
@@ -85,20 +93,19 @@ const videoHeight = ref(0);
 const fireside = computed(() => c.value?.fireside || payloadFireside.value);
 const payloadFireside = ref<Fireside>();
 
+const rtc = computed(() => c.value?.rtc.value);
+const canPublish = computed(() => c.value?.canPublish.value === true);
+const canStream = computed(() => c.value?.canStream.value === true);
+const canExtinguish = computed(() => c.value?.canExtinguish.value === true);
+const isStreaming = computed(() => c.value?.isStreaming.value === true);
+const isPersonallyStreaming = computed(() => c.value?.isPersonallyStreaming.value === true);
+
 const focusedUser = computed(() => c.value?.focusedUser.value);
 const background = computed(() => c.value?.background.value);
 
 const isFullscreen = computed(() => c.value?.isFullscreen.value === true);
 const isShowingStreamOverlay = computed(() => c.value?.isShowingStreamOverlay.value === true);
 const popperTeleportId = computed(() => c.value?.popperTeleportId.value);
-
-const routeTitle = computed(() => {
-	if (!fireside.value) {
-		return $gettext(`Loading Fireside...`);
-	}
-
-	return fireside.value.title + ' - Fireside';
-});
 
 const cannotViewReason = computed(() => {
 	if (!isBootstrapped.value || Screen.isDesktop) {
@@ -111,19 +118,7 @@ const cannotViewReason = computed(() => {
 const routeStatus = computed(() => c.value?.status.value);
 const overlayText = computed(() => !!background.value || isFullscreen.value);
 
-const sidebar = customRef<FiresideSidebar>((track, trigger) => ({
-	get: () => {
-		track();
-		return c.value?.sidebar.value || 'chat';
-	},
-	set: val => {
-		if (!c.value || c.value.sidebar.value === val) {
-			return;
-		}
-		c.value.sidebar.value = val;
-		trigger();
-	},
-}));
+const sidebar = computed(() => c.value?.sidebar.value || 'chat');
 
 const collapseSidebar = customRef<boolean>((track, trigger) => ({
 	get: () => {
@@ -135,6 +130,7 @@ const collapseSidebar = customRef<boolean>((track, trigger) => ({
 			return;
 		}
 		c.value.collapseSidebar.value = val;
+		trackFiresideSidebarCollapse(val, 'toggle-button');
 		trigger();
 	},
 }));
@@ -149,6 +145,18 @@ const chatWidth = computed(() => {
 		return 200;
 	}
 	return 350;
+});
+
+const shouldShowBanner = computed(() => {
+	if (isFullscreen.value) {
+		return false;
+	}
+
+	if (c.value?.isDraft.value) {
+		return true;
+	}
+
+	return isPersonallyStreaming.value;
 });
 
 // If the fireside's status ever changes to setup-failed, we want to direct to a
@@ -177,16 +185,25 @@ watch(
 	}
 );
 
+const routeTitle = computed(() => {
+	if (!payloadFireside.value) {
+		return $gettext(`Loading Fireside...`);
+	}
+
+	return payloadFireside.value.title + ' - A fireside livestream on Game Jolt';
+});
+
 const { isBootstrapped } = createAppRoute({
 	routeTitle,
+	disableTitleSuffix: true,
 	onResolved({ payload }) {
+		payloadFireside.value = new Fireside(payload.fireside);
+
 		Meta.description = payload.metaDescription;
 		Meta.fb = payload.fb || {};
 		Meta.fb.title = routeTitle.value;
 		Meta.twitter = payload.twitter || {};
 		Meta.twitter.title = routeTitle.value;
-
-		payloadFireside.value = new Fireside(payload.fireside);
 
 		setPageTheme();
 	},
@@ -198,6 +215,10 @@ const { isBootstrapped } = createAppRoute({
 		beforeEachDeregister = null;
 	},
 });
+
+function _setSidebar(option: FiresideSidebar, buttonLocation: string) {
+	c.value?.setSidebar(option, buttonLocation);
+}
 
 function onDimensionsChange() {
 	if (!videoContainer.value) {
@@ -244,7 +265,7 @@ function onClickRetry() {
 	c.value?.retry();
 }
 
-watch(() => c.value?.isPersonallyStreaming.value, onIsPersonallyStreamingChanged);
+watch(isPersonallyStreaming, onIsPersonallyStreamingChanged);
 
 watch(focusedUserVideoAspectRatio, onDimensionsChange);
 
@@ -267,7 +288,7 @@ function onIsPersonallyStreamingChanged() {
 		return;
 	}
 
-	if (!c.value || c.value.isPersonallyStreaming.value) {
+	if (!c.value || isPersonallyStreaming.value) {
 		beforeEachDeregister ??= router.beforeEach((_to, _from, next) => {
 			if (
 				!window.confirm(
@@ -285,6 +306,20 @@ function onIsPersonallyStreamingChanged() {
 		beforeEachDeregister = null;
 	}
 }
+
+function onClickPublish() {
+	if (!c.value) {
+		return;
+	}
+	publishFireside(c.value, 'status-banner');
+}
+
+function onClickStreamingBanner() {
+	trackFiresideAction({
+		action: 'noop-click',
+		trigger: 'streaming-status-banner',
+	});
+}
 </script>
 
 <template>
@@ -295,6 +330,11 @@ function onIsPersonallyStreamingChanged() {
 		:class="{ '-unround-video': isFullscreen }"
 		:style="`--fireside-chat-width: ${chatWidth}px`"
 	>
+		<AppShortkey
+			v-if="GJ_IS_DESKTOP_APP"
+			shortkey="escape"
+			@press="c?.toggleFullscreen(false)"
+		/>
 		<AppStickerLayer
 			:style="{
 				width: '100%',
@@ -309,6 +349,61 @@ function onIsPersonallyStreamingChanged() {
 			>
 				<div class="-fireside">
 					<div class="-body">
+						<div
+							v-if="shouldShowBanner"
+							class="-status-banner"
+							:class="{
+								'-banner-primary': c && !c.isDraft.value,
+							}"
+						>
+							<div
+								v-if="c && isPersonallyStreaming"
+								class="-status-live"
+								@click="onClickStreamingBanner"
+							>
+								<strong>
+									<AppJolticon
+										class="-status-live-icon"
+										icon="broadcast"
+										middle
+									/>
+									{{ $gettext(`You're currently streaming!`) }}
+								</strong>
+							</div>
+
+							<strong>
+								<template v-if="!fireside">
+									{{ $gettext(`Loading fireside...`) }}
+								</template>
+								<template v-else-if="fireside.is_draft">
+									{{ $gettext(`This fireside is private`) }}
+								</template>
+								<template v-else>
+									{{ $gettext(`This fireside is public`) }}
+								</template>
+							</strong>
+
+							<component
+								:is="isStreaming ? 'a' : 'span'"
+								v-if="canPublish"
+								v-app-tooltip="
+									!isStreaming
+										? $gettext(
+												`Someone needs to be streaming to make the fireside public`
+										  )
+										: undefined
+								"
+								class="-status-banner-action"
+								:class="{ 'text-muted': !isStreaming }"
+								:style="{
+									cursor: isStreaming ? undefined : 'not-allowed',
+								}"
+								@click="isStreaming ? onClickPublish() : undefined"
+							>
+								{{ $gettext(`Make fireside public`) }}
+							</component>
+						</div>
+
 						<AppFiresideHeader
 							v-if="fireside && !isFullscreen"
 							class="-fireside-header"
@@ -322,10 +417,11 @@ function onIsPersonallyStreamingChanged() {
 							<div class="-view-blocked">
 								<AppIllustration :asset="illMobileKikkerstein" :max-width="90">
 									<h2 class="-view-blocked-heading">
-										<AppTranslate>
-											We want you to have the best fireside experience
-											possible!
-										</AppTranslate>
+										{{
+											$gettext(
+												`We want you to have the best fireside experience possible!`
+											)
+										}}
 									</h2>
 
 									<AppSpacer vertical :scale="6" />
@@ -334,18 +430,20 @@ function onIsPersonallyStreamingChanged() {
 
 									<AppSpacer vertical :scale="6" />
 
-									<AppTranslate>
-										Download the mobile app to watch streams, follow your
-										friends, and place stickers!
-									</AppTranslate>
+									{{
+										$gettext(
+											`Download the mobile app to watch streams, follow your friends, and place stickers!`
+										)
+									}}
 
 									<template v-if="Screen.isPointerMouse">
 										<AppSpacer vertical :scale="4" />
 
-										<AppTranslate>
-											If you're on desktop, resize your window larger to watch
-											this fireside.
-										</AppTranslate>
+										{{
+											$gettext(
+												`If you're on desktop, resize your window larger to watch this fireside.`
+											)
+										}}
 									</template>
 								</AppIllustration>
 							</div>
@@ -354,17 +452,16 @@ function onIsPersonallyStreamingChanged() {
 							<div class="-view-blocked">
 								<AppIllustration :asset="illNoCommentsSmall">
 									<h2 class="-view-blocked-heading">
-										<AppTranslate>
-											This window size is unsupported
-										</AppTranslate>
+										{{ $gettext(`This window size is unsupported`) }}
 									</h2>
 
 									<AppSpacer vertical :scale="4" />
 
-									<AppTranslate>
-										Please make your browser larger to be able to view this
-										content.
-									</AppTranslate>
+									{{
+										$gettext(
+											`Please make your browser larger to be able to view this content.`
+										)
+									}}
 								</AppIllustration>
 							</div>
 						</template>
@@ -385,14 +482,14 @@ function onIsPersonallyStreamingChanged() {
 								<div key="unauthorized" class="-message-wrapper">
 									<div class="-message">
 										<h2 class="section-header text-center">
-											<AppTranslate>Join Game Jolt</AppTranslate>
+											{{ $gettext(`Join Game Jolt`) }}
 										</h2>
 
 										<div class="text-center">
 											<p class="lead">
-												<AppTranslate>
-													Do you love games as much as we do?
-												</AppTranslate>
+												{{
+													$gettext(`Do you love games as much as we do?`)
+												}}
 											</p>
 										</div>
 
@@ -408,16 +505,14 @@ function onIsPersonallyStreamingChanged() {
 									<div class="-message">
 										<AppIllustration :asset="illNoCommentsSmall">
 											<p>
-												<AppTranslate>
-													This fireside's fire has burned out.
-												</AppTranslate>
+												{{
+													$gettext(`This fireside's fire has burned out.`)
+												}}
 											</p>
 											<p>
 												<RouterLink :to="{ name: 'home' }">
 													<small>
-														<AppTranslate>
-															Everybody go home
-														</AppTranslate>
+														{{ $gettext(`Everybody go home`) }}
 													</small>
 												</RouterLink>
 											</p>
@@ -430,17 +525,13 @@ function onIsPersonallyStreamingChanged() {
 									<div class="-message">
 										<AppIllustration :asset="illMaintenance">
 											<p>
-												<AppTranslate>
-													Could not reach this fireside.
-												</AppTranslate>
+												{{ $gettext(`Could not reach this fireside.`) }}
 												<br />
-												<AppTranslate>
-													Maybe try finding it again?
-												</AppTranslate>
+												{{ $gettext(`Maybe try finding it again?`) }}
 											</p>
 											&nbsp;
 											<AppButton block @click="onClickRetry">
-												<AppTranslate>Retry</AppTranslate>
+												{{ $gettext(`Retry`) }}
 											</AppButton>
 											&nbsp;
 										</AppIllustration>
@@ -452,17 +543,19 @@ function onIsPersonallyStreamingChanged() {
 									<div class="-message">
 										<AppIllustration :asset="illNoCommentsSmall">
 											<p>
-												<AppTranslate>
-													You have been disconnected from fireside
-													services.
-												</AppTranslate>
+												{{
+													$gettext(
+														`You have been disconnected from fireside services.`
+													)
+												}}
 												<br />
 												<br />
 												<small>
-													<AppTranslate>
-														We are actively trying to reconnect you, but
-														you can also try refreshing the page.
-													</AppTranslate>
+													{{
+														$gettext(
+															`We are actively trying to reconnect you, but you can also try refreshing the page.`
+														)
+													}}
 												</small>
 											</p>
 										</AppIllustration>
@@ -477,14 +570,16 @@ function onIsPersonallyStreamingChanged() {
 										</div>
 										<div class="text-center">
 											<h3>
-												<AppTranslate>
-													You are blocked from joining this fireside
-												</AppTranslate>
+												{{
+													$gettext(
+														`You are blocked from joining this fireside`
+													)
+												}}
 											</h3>
 											<p>
 												<router-link :to="{ name: 'home' }">
 													<small>
-														<AppTranslate>Return home</AppTranslate>
+														{{ $gettext(`Return home`) }}
 													</small>
 												</router-link>
 											</p>
@@ -498,8 +593,8 @@ function onIsPersonallyStreamingChanged() {
 										v-if="
 											c.isStreaming.value &&
 											c.chatRoom.value &&
-											c.rtc.value &&
-											c.rtc.value.listableStreamingUsers.length > 0
+											rtc &&
+											rtc.listableStreamingUsers.length > 0
 										"
 										ref="videoContainer"
 										v-app-observe-dimensions="debounceDimensionsChange"
@@ -511,7 +606,9 @@ function onIsPersonallyStreamingChanged() {
 											backgroundColor: videoFillColor,
 										}"
 									>
+										<!-- Remote videos -->
 										<div
+											v-if="!focusedUser?.isLocal"
 											class="-video-inner"
 											:style="{
 												width: videoWidth + 'px',
@@ -524,7 +621,10 @@ function onIsPersonallyStreamingChanged() {
 													class="-video-inner -abs-stretch"
 													:controller="c.stickerTargetController"
 												>
-													<AppPopper trigger="right-click">
+													<AppPopper
+														trigger="right-click"
+														:to="`#${popperTeleportId}`"
+													>
 														<AppFiresideStream
 															:rtc-user="focusedUser"
 															:has-header="isFullscreen"
@@ -538,9 +638,11 @@ function onIsPersonallyStreamingChanged() {
 																	class="list-group-item"
 																	@click="toggleVideoStats()"
 																>
-																	<AppTranslate>
-																		Toggle Video Stats
-																	</AppTranslate>
+																	{{
+																		$gettext(
+																			`Toggle Video Stats`
+																		)
+																	}}
 																</a>
 															</div>
 														</template>
@@ -548,49 +650,44 @@ function onIsPersonallyStreamingChanged() {
 												</AppStickerTarget>
 											</template>
 										</div>
+										<!-- Local dashboard -->
+										<AppFiresideDashboard v-else />
 									</div>
 									<div v-else class="-video-container">
-										<div
-											class="-center-guide"
-											:class="{
-												'-overlay': overlayText,
-												'-bold': overlayText,
-											}"
-										>
-											<template v-if="c.canStream.value">
+										<AppTheme class="-center-guide" :force-dark="overlayText">
+											<template v-if="canStream">
 												<AppAnimSlideshow
 													class="-fireplace"
 													:sheet="sheetFireplace"
 													:overlay="overlayText"
 												/>
 
-												<div>
-													<div>Start streaming by going to</div>
-													<a
-														class="-center-guide-link"
-														@click="sidebar = 'stream-settings'"
+												<div style="width: 100%">
+													<AppButton
+														block
+														solid
+														:overlay="overlayText"
+														@click="
+															_setSidebar(
+																'stream-settings',
+																'fireplace'
+															)
+														"
 													>
-														<span>
-															Fireside settings > Stream settings
-														</span>
-													</a>
-													<div>using the gear icons below.</div>
-												</div>
+														{{ $gettext(`Set up your stream`) }}
+													</AppButton>
 
-												<div>
-													<AppTranslate>
-														Double check your audio and video source in
-														the settings menu, and then click
-													</AppTranslate>
-													{{ ' ' }}
-													<a
-														class="-center-guide-link"
-														@click="sidebar = 'stream-settings'"
+													<AppButton
+														v-if="canExtinguish"
+														block
+														icon-color="notice"
+														icon="remove"
+														:overlay="overlayText"
+														@click="extinguishFireside(c!, 'fireplace')
+													"
 													>
-														<AppTranslate>
-															Start streaming!
-														</AppTranslate>
-													</a>
+														{{ $gettext(`Extinguish fireside`) }}
+													</AppButton>
 												</div>
 											</template>
 											<AppAnimSlideshow
@@ -600,8 +697,12 @@ function onIsPersonallyStreamingChanged() {
 												:overlay="overlayText"
 											/>
 
-											<AppFiresideStats />
-										</div>
+											<AppFiresideStats
+												:class="{
+													'-stats-card': overlayText,
+												}"
+											/>
+										</AppTheme>
 									</div>
 								</div>
 
@@ -635,12 +736,16 @@ function onIsPersonallyStreamingChanged() {
 									'-trailing-float': collapseSidebar,
 									'-fade':
 										isFullscreen && collapseSidebar && !isShowingStreamOverlay,
+									'-fullscreen': isFullscreen,
 								}"
 							>
-								<AppFiresideSidebarHeading v-if="collapseSidebar" collapsed />
+								<AppFiresideSidebarHeading
+									v-if="collapseSidebar"
+									collapsed
+									has-members
+								/>
 								<AppFiresideSidebarChat v-else-if="sidebar === 'chat'" />
 								<AppFiresideSidebarMembers v-else-if="sidebar === 'members'" />
-								<AppFiresideSidebarHosts v-else-if="sidebar === 'hosts'" />
 								<AppFiresideSidebarFiresideSettings
 									v-else-if="sidebar === 'fireside-settings'"
 								/>
@@ -726,6 +831,42 @@ $-center-guide-width = 400px
 	width: 100%
 	overflow: hidden
 
+.-status-banner
+	change-bg(bg)
+	elevate-1()
+	padding: 6px 12px
+	display: flex
+	gap: 12px
+	font-size: $font-size-small
+	font-weight: 600
+	z-index: 2
+	margin-left: 12px
+	margin-right: 12px
+	border-bottom-left-radius: $border-radius-base
+	border-bottom-right-radius: $border-radius-base
+	overflow: hidden
+
+	&.-banner-primary
+		background-color: var(--theme-primary)
+
+		&
+		.-status-banner-action
+			color: var(--theme-primary-fg)
+
+.-status-live
+	change-bg-hex($gj-overlay-notice)
+	margin: -6px 0 -6px -12px
+	padding: 6px 12px
+	display: flex
+	color: white
+
+// Make the icon a little smaller than normal to fit in the small banner spage
+.-status-live-icon
+	font-size: 14px
+
+.-status-banner-action
+	margin-left: auto
+
 .-fireside-header
 	flex: none
 	width: 100%
@@ -745,6 +886,12 @@ $-center-guide-width = 400px
 	z-index: 2
 	opacity: 3
 	visibility: visible
+
+	&.-fullscreen
+		min-width: var(--fireside-chat-width)
+
+		&.-trailing-float
+			width: unset
 
 	&.-fade
 		opacity: 0
@@ -814,7 +961,9 @@ $-center-guide-width = 400px
 	position: absolute !important
 	flex-direction: column
 	background-color: var(--theme-bg-subtle)
-	transition: width 200ms, height 200ms, border-radius 1s
+
+.-video-inner
+	transition: width 200ms, height 200ms, padding-top 200ms, border-radius 1s
 
 .-center-guide
 	display: flex
@@ -834,6 +983,13 @@ $-center-guide-width = 400px
 	width: 100%
 	max-width: $-center-guide-width
 	flex: 0 1 $-center-guide-width
+
+.-stats-card
+	@extends .-bold
+	rounded-corners()
+	change-bg-rgba('0,0,0', 0.5)
+	padding: 12px 6px 6px
+	color: white
 
 .-bottom-bar-padding
 	flex: none

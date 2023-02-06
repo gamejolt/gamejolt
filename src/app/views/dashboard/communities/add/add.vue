@@ -19,7 +19,7 @@ import AppPageContainer from '../../../../components/page-container/AppPageConta
 })
 export default class RouteDashCommunitiesAdd extends BaseRouteComponent {
 	get routeTitle() {
-		return this.$gettext('Create a Community');
+		return this.$gettext('Create a community');
 	}
 
 	onSubmit(community: Community) {
@@ -30,43 +30,18 @@ export default class RouteDashCommunitiesAdd extends BaseRouteComponent {
 
 <template>
 	<section class="section">
-		<AppPageContainer no-left order="right,main">
-			<template #right>
-				<h3><AppTranslate>What are Communities?</AppTranslate></h3>
-				<p>
-					<AppTranslate>
-						Communities gather people around a specific game or interest to share
-						thoughts, art, wiki, guides, videos, and more.
-					</AppTranslate>
-				</p>
-
-				<h3><AppTranslate>Get Featured</AppTranslate></h3>
-				<p>
-					<AppTranslate>
-						We are looking for Communities that can act as role models. We feature the
-						most active communities with a constant stream of awesome content, all over
-						Game Jolt.
-					</AppTranslate>
-				</p>
-
-				<h3><AppTranslate>Communities are Beta</AppTranslate></h3>
-				<p>
-					<AppTranslate>
-						we will be updating and changing how communities function as we gather
-						feedback from users. Have a suggestions? Let us know!
-					</AppTranslate>
-				</p>
-			</template>
-
+		<AppPageContainer no-left no-right>
 			<h2>
-				<AppTranslate>Create Your Community</AppTranslate>
+				{{ $gettext(`Create your community`) }}
 				<br />
-				<small>
-					<AppTranslate>
-						Communities are a magical place where people of similar interests gather.
-					</AppTranslate>
-				</small>
+				<small>{{
+					$gettext(
+						`Communities are magical places where people of similar interests hang out, post interesting content, and stream together.`
+					)
+				}}</small>
 			</h2>
+
+			<br />
 
 			<FormCommunity @submit="onSubmit" />
 		</AppPageContainer>

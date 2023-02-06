@@ -21,10 +21,11 @@ import {
 	CommunityUserNotification,
 	NotificationType,
 } from '../../../../../_common/community/user-notification/user-notification.model';
-import AppContentViewer from '../../../../../_common/content/content-viewer/content-viewer.vue';
+import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { Notification } from '../../../../../_common/notification/notification-model';
 import { NotificationText } from '../../../../../_common/notification/notification-text.service';
+import { SupporterAction } from '../../../../../_common/supporters/action.model';
 import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
 import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -64,21 +65,24 @@ const titleText = computed(() => NotificationText.getText(notification.value, fa
 const shouldShow = computed(() => titleText.value !== undefined);
 
 const hasDetails = computed(() => {
-	if (
-		notification.value.type === Notification.TYPE_MENTION &&
-		(notification.value.action_model as Mention).resource === 'Comment'
-	) {
+	const { type, action_model } = notification.value;
+
+	if (type === Notification.TYPE_MENTION && (action_model as Mention).resource === 'Comment') {
 		return true;
 	}
 
 	// Community user notifications with a post want to show the post lead.
 	if (
-		notification.value.type === Notification.TYPE_COMMUNITY_USER_NOTIFICATION &&
+		type === Notification.TYPE_COMMUNITY_USER_NOTIFICATION &&
 		[NotificationType.POSTS_EJECT, NotificationType.POSTS_MOVE].includes(
-			(notification.value.action_model as CommunityUserNotification).type
+			(action_model as CommunityUserNotification).type
 		)
 	) {
 		return true;
+	}
+
+	if (type === Notification.TYPE_SUPPORTER_MESSAGE) {
+		return !!(action_model as SupporterAction).message?.content;
 	}
 
 	return [
@@ -89,7 +93,7 @@ const hasDetails = computed(() => {
 		Notification.TYPE_QUEST_NOTIFICATION,
 		Notification.TYPE_GAME_TROPHY_ACHIEVED,
 		Notification.TYPE_SITE_TROPHY_ACHIEVED,
-	].includes(notification.value.type);
+	].includes(type);
 });
 
 const trophyImg = computed(() => {
@@ -211,6 +215,15 @@ function onMarkRead() {
 													:source="
 														(notification.action_model as Mention).comment
 															?.comment_content
+													"
+												/>
+												<AppContentViewer
+													v-else-if="
+														notification.type ===
+														Notification.TYPE_SUPPORTER_MESSAGE
+													"
+													:source="
+														(notification.action_model as SupporterAction).message?.content
 													"
 												/>
 												<span

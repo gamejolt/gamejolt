@@ -5,6 +5,7 @@ import { ContentRules } from '../../../../../_common/content/content-editor/cont
 import { useForm } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormControlPrefix from '../../../../../_common/form-vue/AppFormControlPrefix.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
@@ -18,8 +19,8 @@ import {
 	validatePattern,
 } from '../../../../../_common/form-vue/validators';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { ChatCommandFormModel } from './FormChatCommands.vue';
 import { ChatCommand } from './command.model';
+import { ChatCommandsFormModel } from './FormChatCommands.vue';
 
 const COMMAND_PATTERN = /^[a-z0-9]+[a-z0-9-]*[a-z0-9]+$/i;
 const MAX_EDITOR_HEIGHT = 480;
@@ -54,14 +55,14 @@ const emit = defineEmits({
 
 const { item } = toRefs(props);
 
-const form = useForm<ChatCommandFormModel>()!;
-
-const isActive = computed(() => form.formModel[`is_active_${item.value.id}`] === true);
+const form = useForm<ChatCommandsFormModel>()!;
 
 const fieldCommand = computed(() => `command_${item.value.id}`);
 const fieldMessageContent = computed(() => `message_content_${item.value.id}`);
 const fieldIsActive = computed(() => `is_active_${item.value.id}`);
 const fields = computed(() => [fieldCommand.value, fieldMessageContent.value, fieldIsActive.value]);
+
+const isActive = computed(() => form.formModel[fieldIsActive.value] === true);
 
 onMounted(() => {
 	_initFields();
@@ -131,24 +132,19 @@ function _validateUnique(id: number) {
 				hide-label
 			>
 				<div class="-command-chunk-inner">
-					<div class="-command-row">
-						<div class="-prefix">{{ item.prefix }}</div>
-
-						<div class="-command">
-							<AppFormControl
-								class="-command-input"
-								type="text"
-								:validators="[
-									_validateUnique(item.id),
-									validatePattern(COMMAND_PATTERN),
-									validateMinLength(commandMinLength),
-									validateMaxLength(commandMaxLength),
-								]"
-								placeholder="command"
-								@blur="onBlurCommand()"
-							/>
-						</div>
-					</div>
+					<AppFormControlPrefix :prefix="item.prefix">
+						<AppFormControl
+							type="text"
+							:validators="[
+								_validateUnique(item.id),
+								validatePattern(COMMAND_PATTERN),
+								validateMinLength(commandMinLength),
+								validateMaxLength(commandMaxLength),
+							]"
+							placeholder="command"
+							@blur="onBlurCommand()"
+						/>
+					</AppFormControlPrefix>
 
 					<AppFormControlErrors class="-command-chunk-errors" />
 				</div>
@@ -173,7 +169,7 @@ function _validateUnique(id: number) {
 							validateContentNoActiveUploads(),
 							validateContentMaxLength(messageMaxLength),
 						]"
-						placeholder="Enter your message"
+						:placeholder="$gettext(`Enter your message`)"
 					/>
 
 					<AppFormControlErrors />
@@ -222,24 +218,6 @@ function _validateUnique(id: number) {
 
 	> *
 		margin-bottom: 0
-
-.-prefix
-	rounded-corners()
-	border-top-right-radius: 0
-	border-bottom-right-radius: 0
-	change-bg(bg-subtle)
-	border: $border-width-base solid var(--theme-bg-subtle)
-	padding: 4px 12px 4px 8px
-	margin-right: -6px
-	display: inline-flex
-	align-items: center
-
-.-command-input
-.-prefix
-	height: 34px
-
-.-command
-	min-width: 0
 
 .-content-editor
 	flex: 2

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
-import { authOnLogin, redirectToOnboarding } from '../../../../_common/auth/auth.service';
+import { authOnJoin, redirectToOnboarding } from '../../../../_common/auth/auth.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 
 @Options({
@@ -34,7 +34,7 @@ export default class RouteAuthAuthorize extends BaseRouteComponent {
 
 		// Redirect them to onboarding.
 		if (this.isSuccess) {
-			authOnLogin('email');
+			authOnJoin('email');
 			redirectToOnboarding();
 		}
 	}

@@ -23,7 +23,7 @@ import { Payload } from '../../../../../_common/payload/payload-service';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
 import AppVideoPlayer from '../../../../../_common/video/player/player.vue';
-import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/processing-progress.vue';
+import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
 
 interface FormModel {
 	video: File | null;
@@ -73,7 +73,6 @@ export default class AppFormPostVideo
 	minAspect = 0.5;
 	allowedFiletypes: string[] = [];
 
-	videoProvider = FiresidePostVideo.PROVIDER_GAMEJOLT;
 	isDropActive = false;
 	uploadCancelToken: AbortController | null = null;
 	hasVideoProcessingError = false;
@@ -94,9 +93,6 @@ export default class AppFormPostVideo
 
 	@Emit('video-change')
 	emitVideoChange(_video: FiresidePostVideo | null) {}
-
-	@Emit('video-provider-change')
-	emitVideoProviderChange(_provider: string) {}
 
 	get loadUrl() {
 		return `/web/posts/manage/add-video/${this.post.id}`;
@@ -120,8 +116,7 @@ export default class AppFormPostVideo
 	}
 
 	get uploadedVideo() {
-		const video = this.videos.length ? this.videos[0] : null;
-		return video && video.provider === FiresidePostVideo.PROVIDER_GAMEJOLT ? video : null;
+		return this.videos.length ? this.videos[0] : null;
 	}
 
 	get videoManifestSources() {
@@ -163,17 +158,6 @@ export default class AppFormPostVideo
 	@Watch('videoStatus')
 	onVideoStatusChange() {
 		this.emitVideoStatusChange(this.videoStatus);
-	}
-
-	onInit() {
-		if (this.videos.length) {
-			const video = this.videos[0];
-			if (video.provider === FiresidePostVideo.PROVIDER_GAMEJOLT) {
-				this.setVideoProvider(FiresidePostVideo.PROVIDER_GAMEJOLT);
-			}
-		} else {
-			this.setVideoProvider(FiresidePostVideo.PROVIDER_GAMEJOLT);
-		}
 	}
 
 	onLoad($payload: any) {
@@ -323,11 +307,6 @@ export default class AppFormPostVideo
 		this.setField('video', null);
 	}
 
-	setVideoProvider(provider: string) {
-		this.videoProvider = provider;
-		this.emitVideoProviderChange(this.videoProvider);
-	}
-
 	async onDeleteUpload() {
 		if (this.videoStatus !== VideoStatus.IDLE) {
 			const result = await ModalConfirm.show(
@@ -378,7 +357,7 @@ export default class AppFormPostVideo
 			</p>
 			<span class="-placeholder-add" />
 		</template>
-		<template v-else-if="videoProvider === FiresidePostVideo.PROVIDER_GAMEJOLT">
+		<template v-else>
 			<AppFormLegend compact :deletable="canRemoveUploadingVideo" @delete="onDeleteUpload">
 				<AppTranslate>Video</AppTranslate>
 			</AppFormLegend>

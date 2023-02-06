@@ -19,7 +19,7 @@ import { GameRelease } from '../../../../../_common/game/release/release.model';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
-import { AppProgressPoller } from '../../../../../_common/progress/poller/poller';
+import AppProgressPoller from '../../../../../_common/progress/poller/AppProgressPoller.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { useFormGameRelease } from '../release/release.vue';
 import { ArchiveFileSelectorModal } from './archive-file-selector-modal.service';
