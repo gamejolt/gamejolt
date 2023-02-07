@@ -13,6 +13,7 @@ import { User } from '../../../../_common/user/user.model';
 import { styleBorderRadiusLg, styleWhen } from '../../../../_styles/mixins';
 import { kFontSizeLarge, kGridGutterWidth } from '../../../../_styles/variables';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
+import { routeLandingHelpCategory } from '../../landing/help/help.route';
 import { routeDashAccountBlocks } from '../account/blocks/blocks.route';
 import { routeDashAccountChatCommands } from '../account/chat-commands/chat-commands.route';
 import { routeDashAccountChatTimers } from '../account/chat-timers/chat-timers.route';
@@ -81,6 +82,14 @@ const buttons = computed<Button[]>(() => [
 		to: routeDashAccountBlocks.name!,
 		label: $gettext(`Blocked users`),
 		icon: 'friend-remove-2',
+	},
+	{
+		to: routeLandingHelpCategory.name!,
+		routeParams: {
+			category: 'creators',
+		},
+		label: $gettext(`Help and FAQs`),
+		icon: 'help-circle',
 	},
 ]);
 </script>
