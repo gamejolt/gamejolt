@@ -9,7 +9,7 @@ export class StickerPlacement extends Model {
 
 	sticker!: Sticker;
 
-	target_data!: PlacementTargetData;
+	target_data!: StickerPlacementTargetData;
 	is_charged!: boolean;
 
 	constructor(data: any = {}) {
@@ -39,6 +39,6 @@ export function canPlaceStickerOnComment(
 	return model.canInteractWithComments;
 }
 
-interface PlacementTargetData {
+export interface StickerPlacementTargetData {
 	host_user_id?: number;
 }

@@ -21,5 +21,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="ad-playwire-video" />
+	<div id="ad-playwire-video-container">
+		<div id="ad-playwire-video" />
+	</div>
 </template>

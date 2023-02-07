@@ -183,7 +183,7 @@ export function isStickerTargetMine(store: StickerStore, target: StickerTargetCo
 			break;
 		}
 
-		tempController = tempController?.parent || null;
+		tempController = tempController?.parent.value || null;
 	} while (tempController?.parent);
 
 	return isMine;
@@ -434,13 +434,17 @@ export async function commitStickerStoreItemPlacement(store: StickerStore) {
 		isCharged,
 	};
 
-	const promise = placeStickerCallback
-		? placeStickerCallback(body)
-		: Api.sendRequest('/web/stickers/place', body, { detach: true });
+	try {
+		const promise = placeStickerCallback
+			? placeStickerCallback(body)
+			: Api.sendRequest('/web/stickers/place', body, { detach: true });
 
-	const { success, resource, parent: payloadParent, stickerPlacement } = await promise;
+		const payload = await promise;
+		const { success, resource, parent: payloadParent, stickerPlacement } = payload;
+		if (success === false) {
+			throw payload;
+		}
 
-	if (success) {
 		addStickerToTarget(targetController.value, new StickerPlacement(stickerPlacement));
 
 		model.assign(resource);
@@ -456,7 +460,9 @@ export async function commitStickerStoreItemPlacement(store: StickerStore) {
 		if (isCharged) {
 			currentCharge.value = Math.max(0, currentCharge.value - chargeCost.value);
 		}
-	} else {
+	} catch (e) {
+		console.error(e);
+		setStickerDrawerOpen(store, false, null);
 		showErrorGrowl($gettext(`Failed to place sticker.`));
 	}
 
