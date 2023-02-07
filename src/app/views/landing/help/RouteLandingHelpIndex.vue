@@ -10,7 +10,7 @@ import { $gettext } from '../../../../_common/translate/translate.service';
 import AppHelpGroup from '../../../components/help/AppHelpGroup.vue';
 import HelpCategory from '../../../components/help/category/category.model';
 import HelpPage from '../../../components/help/page/page.model';
-import { routeDiscoverGames } from '../../discover/games/games.route';
+import { routeDiscoverGamesListSection } from '../../discover/games/list/list.route';
 import { routeLegalAds } from '../../legal/ads/ads.route';
 import { routeLegalCookies } from '../../legal/cookies/cookies.route';
 import { routeLegalPrivacy } from '../../legal/privacy/privacy.route';
@@ -127,7 +127,12 @@ createAppRoute({
 						</AppLinkExternal>
 					</div>
 					<div>
-						<RouterLink :to="{ name: routeDiscoverGames.name }">
+						<RouterLink
+							:to="{
+								name: routeDiscoverGamesListSection.name,
+								params: { section: null },
+							}"
+						>
 							{{ $gettext(`Store`) }}
 						</RouterLink>
 					</div>
