@@ -14,7 +14,7 @@ import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
 import AppForumRules from '../../../../components/forum/rules/rules.vue';
 import AppForumTopicList from '../../../../components/forum/topic-list/topic-list.vue';
-import AppPageHeader from '../../../../components/page-header/page-header.vue';
+import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';
 
 @Options({
 	name: 'RouteForumsChannelsView',

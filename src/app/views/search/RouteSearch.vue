@@ -12,7 +12,7 @@ import { Screen } from '../../../_common/screen/screen-service';
 import { Scroll } from '../../../_common/scroll/scroll.service';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
-import AppPageHeader from '../../components/page-header/page-header.vue';
+import AppPageHeader from '../../components/page-header/AppPageHeader.vue';
 import AppSearch from '../../components/search/AppSearch.vue';
 import { Search, SearchPayload } from '../../components/search/search-service';
 import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';

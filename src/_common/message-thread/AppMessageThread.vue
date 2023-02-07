@@ -1,15 +1,11 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
 import AppTimelineList from '../timeline-list/timeline-list.vue';
 
-@Options({
-	components: {
-		AppTimelineList,
+defineProps({
+	isNested: {
+		type: Boolean,
 	},
-})
-export default class AppMessageThread extends Vue {
-	@Prop(Boolean) isNested?: boolean;
-}
+});
 </script>
 
 <template>

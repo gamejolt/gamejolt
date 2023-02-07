@@ -23,7 +23,7 @@ import { Payload } from '../../../../../_common/payload/payload-service';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
 import AppVideoPlayer from '../../../../../_common/video/player/player.vue';
-import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/processing-progress.vue';
+import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
 
 interface FormModel {
 	video: File | null;

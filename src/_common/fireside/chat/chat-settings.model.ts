@@ -14,6 +14,7 @@ export class FiresideChatSettings extends Model {
 	declare max_message_length: number;
 	declare slow_mode_enabled: boolean;
 	declare slow_mode_seconds: number;
+	declare automated_sticker_messages: boolean;
 }
 
 Model.create(FiresideChatSettings);

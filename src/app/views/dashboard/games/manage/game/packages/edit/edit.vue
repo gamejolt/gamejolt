@@ -16,7 +16,7 @@ import {
 import AppLoading from '../../../../../../../../_common/loading/AppLoading.vue';
 import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import AppNavTabList from '../../../../../../../../_common/nav/tab-list/tab-list.vue';
-import { AppProgressPoller } from '../../../../../../../../_common/progress/poller/poller';
+import AppProgressPoller from '../../../../../../../../_common/progress/poller/AppProgressPoller.vue';
 import {
 	BaseRouteComponent,
 	OptionsForRoute,

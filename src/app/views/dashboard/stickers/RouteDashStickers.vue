@@ -13,7 +13,7 @@ import { Sticker, StickerStack } from '../../../../_common/sticker/sticker.model
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { useGridStore } from '../../../components/grid/grid-store';
-import AppPageHeader from '../../../components/page-header/page-header.vue';
+import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import backgroundImage from './background.png';
 
 export default {

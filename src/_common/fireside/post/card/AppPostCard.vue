@@ -1,7 +1,9 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { computed, PropType, toRefs, useSlots } from 'vue';
 import { RouterLink } from 'vue-router';
 import { PostOpenSource, trackPostOpen } from '../../../analytics/analytics.service';
+import { ContentRules } from '../../../content/content-editor/content-rules';
+import AppContentViewer from '../../../content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../environment/environment.service';
 import { formatFuzzynumber } from '../../../filters/fuzzynumber';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
@@ -9,9 +11,12 @@ import AppUserAvatar from '../../../user/user-avatar/AppUserAvatar.vue';
 import { VideoPlayerControllerContext } from '../../../video/player/controller';
 import { FiresidePost } from '../post-model';
 import AppPostCardBase from './AppPostCardBase.vue';
-</script>
 
-<script lang="ts" setup>
+const displayRules = new ContentRules({
+	truncateLinks: true,
+	inlineParagraphs: true,
+});
+
 const props = defineProps({
 	post: {
 		type: Object as PropType<FiresidePost>,
@@ -31,9 +36,16 @@ const props = defineProps({
 	noLink: {
 		type: Boolean,
 	},
+	/**
+	 * Shows a preview of the post lead below the post card. Only has an effect
+	 * if the post has media.
+	 */
+	showMediaPostLead: {
+		type: Boolean,
+	},
 });
 
-const { post, source, videoContext, withUser } = toRefs(props);
+const { post, source, videoContext, withUser, noLink } = toRefs(props);
 const slots = useSlots();
 
 const mediaItem = computed(() => {
@@ -71,51 +83,63 @@ const userLink = computed(() => Environment.wttfBaseUrl + post.value?.user.url);
 </script>
 
 <template>
-	<AppPostCardBase
-		:post="post"
-		:video-context="videoContext"
-		:has-overlay-content="hasOverlayContent"
-		:blur="hasOverlayContent"
-	>
-		<template #overlay>
-			<slot name="overlay" />
-		</template>
+	<div>
+		<AppPostCardBase
+			:post="post"
+			:video-context="videoContext"
+			:has-overlay-content="hasOverlayContent"
+			:blur="hasOverlayContent"
+		>
+			<template #overlay>
+				<slot name="overlay" />
+			</template>
 
-		<template #controls>
-			<div class="-details" :class="{ '-light': overlay }">
-				<template v-if="withUser">
-					<AppUserAvatar class="-details-user-avatar" :user="post.user" />
-					<a class="-details-user-name" :href="userLink"> @{{ post.user.username }} </a>
-				</template>
+			<template #controls>
+				<div class="-details" :class="{ '-light': overlay }">
+					<template v-if="withUser">
+						<AppUserAvatar class="-details-user-avatar" :user="post.user" />
+						<a class="-details-user-name" :href="userLink">
+							@{{ post.user.username }}
+						</a>
+					</template>
 
-				<span class="-details-spacer" />
+					<span class="-details-spacer" />
 
-				<template v-if="post.scheduled_for">
-					<AppJolticon icon="calendar" />
-				</template>
+					<template v-if="post.scheduled_for">
+						<AppJolticon icon="calendar" />
+					</template>
 
-				<template v-if="post.hasPoll">
-					<AppJolticon :class="{ '-voted': votedOnPoll }" icon="pedestals-numbers" />
-				</template>
+					<template v-if="post.hasPoll">
+						<AppJolticon :class="{ '-voted': votedOnPoll }" icon="pedestals-numbers" />
+					</template>
 
-				<template v-if="post.is_pinned">
-					<AppJolticon icon="thumbtack" />
-				</template>
+					<template v-if="post.is_pinned">
+						<AppJolticon icon="thumbtack" />
+					</template>
 
-				<AppJolticon icon="heart-filled" :class="{ '-liked': likedPost }" />
-				<span class="-details-likes">
-					{{ formatFuzzynumber(post.like_count) }}
-				</span>
-			</div>
+					<AppJolticon icon="heart-filled" :class="{ '-liked': likedPost }" />
+					<span class="-details-likes">
+						{{ formatFuzzynumber(post.like_count) }}
+					</span>
+				</div>
 
-			<RouterLink
-				v-if="!noLink"
-				class="-link"
-				:to="post.routeLocation"
-				@click="trackPostOpen({ source })"
+				<RouterLink
+					v-if="!noLink"
+					class="-link"
+					:to="post.routeLocation"
+					@click="trackPostOpen({ source })"
+				/>
+			</template>
+		</AppPostCardBase>
+
+		<template v-if="showMediaPostLead && post.hasAnyMedia">
+			<AppContentViewer
+				class="-post-lead"
+				:source="post.lead_content"
+				:display-rules="displayRules"
 			/>
 		</template>
-	</AppPostCardBase>
+	</div>
 </template>
 
 <style lang="stylus" scoped>
@@ -166,13 +190,24 @@ $-padding = 8px
 		width: 20px
 		height: 20px
 
-	.-details-user-name
-		overflow: hidden
-		text-overflow: ellipsis
-		padding-right: $-padding * 0.5m
-		margin-right: 0 !important
-		white-space: nowrap
+.-details-user-name
+	overflow: hidden
+	text-overflow: ellipsis
+	padding-right: $-padding * 0.5m
+	margin-right: 0 !important
+	white-space: nowrap
 
-	.-details-spacer
-		flex: auto
+.-details-spacer
+	flex: auto
+
+.-post-lead
+	line-clamp(3)
+	margin-top: 4px
+	margin-bottom: 4px
+	font-size: $font-size-small
+	z-index: 1
+
+	&
+	::v-deep(a)
+		color: var(--theme-fg)
 </style>

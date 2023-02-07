@@ -1,4 +1,5 @@
 import { CSSProperties } from 'vue';
+import { ThemeColor } from '../_common/theme/variables';
 import { kBorderRadiusBase, kBorderRadiusLg, kBorderRadiusSm } from './variables';
 
 /**
@@ -31,6 +32,12 @@ export const styleTextOverflow: CSSProperties = {
 	whiteSpace: `nowrap`,
 	textOverflow: `ellipsis`,
 };
+
+export const styleChangeBg = (bg: ThemeColor, important = false): any => ({
+	'--theme-bg-actual': `var(--theme-${bg})`,
+	'--theme-bg-actual-trans': `var(--theme-${bg}-trans)`,
+	backgroundColor: `var(--theme-${bg})` + (important ? ' !important' : ''),
+});
 
 /**
  * Will style a particular element to scrollable on the y-axis.

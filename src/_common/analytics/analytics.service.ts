@@ -33,7 +33,12 @@ export const SOCIAL_ACTION_FOLLOW = 'follow';
 
 export type CommunityOpenSource = 'communityChunk' | 'card' | 'cbar' | 'thumbnail';
 export type CommunityJoinLocation = 'onboarding' | 'card' | 'communityPage' | 'homeBanner' | 'cbar';
-export type PostOpenSource = 'realmChunk' | 'communityChunk' | 'postRecommendation' | 'feed';
+export type PostOpenSource =
+	| 'realmChunk'
+	| 'communityChunk'
+	| 'postRecommendation'
+	| 'feed'
+	| 'help';
 export type PostControlsLocation = 'feed' | 'broadcast' | 'postPage';
 export type UserFollowLocation =
 	| 'feed'

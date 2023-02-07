@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { PropType, ref } from 'vue';
+import { imageGuestAvatar } from '../../img/images';
 import { User } from '../user.model';
-import guestImage from './guest.png';
 
 defineProps({
 	user: {
@@ -22,7 +22,7 @@ const hasError = ref(false);
 			alt=""
 			@error="hasError = true"
 		/>
-		<img v-else :src="guestImage" class="img-responsive" alt="" />
+		<img v-else :src="imageGuestAvatar" class="img-responsive" alt="" />
 	</span>
 </template>
 

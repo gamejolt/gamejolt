@@ -1,5 +1,6 @@
-<script lang="ts">
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, PropType, toRefs, useSlots } from 'vue';
+import { ComponentProps } from '../../../_common/component-helpers';
 import AppEditableOverlay from '../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppMediaItemCover from '../../../_common/media-item/cover/cover.vue';
 import { MediaItem } from '../../../_common/media-item/media-item-model';
@@ -8,72 +9,119 @@ import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
 import { AppAutoscrollAnchor } from '../../../_common/scroll/auto-scroll/anchor';
 import './page-header-content.styl';
 
-@Options({
-	components: {
-		AppAutoscrollAnchor,
-		AppScrollAffix,
-		AppMediaItemCover,
-		AppEditableOverlay,
-	},
-})
-export default class AppPageHeader extends Vue {
-	@Prop(Object)
-	coverMediaItem?: MediaItem;
-
-	@Prop(Number)
-	coverMaxHeight?: number;
-
-	@Prop(Boolean)
-	coverAutoHeight?: boolean;
-
-	@Prop(Boolean)
-	coverEditable?: boolean;
-
-	@Prop(Boolean)
-	hideNav?: boolean;
-
-	@Prop(Boolean)
-	shouldAffixNav?: boolean;
-
-	@Prop(Boolean)
-	spotlightDark?: boolean;
-
-	@Prop(Boolean)
-	blurHeader?: boolean;
-
-	@Prop({ type: String, default: 'col-xs-12' })
-	colClasses?: string;
-
-	@Prop()
-	autoscrollAnchorKey!: any;
-
-	@Prop(Boolean)
-	disableAutoscrollAnchor!: any;
-
-	@Prop(Boolean)
-	showCoverButtons?: boolean;
-
-	readonly Screen = Screen;
-
-	@Emit('edit-cover')
-	emitEditCover() {}
-
-	get hasSpotlight() {
-		return !!this.$slots.spotlight && !Screen.isXs;
-	}
-
-	get hasNav() {
-		return !!this.$slots.nav;
-	}
-
-	get hasControls() {
-		return !!this.$slots.controls;
-	}
-
-	get hasContent() {
-		return !!this.$slots.default;
-	}
+interface PageHeaderSlots {
+	spotlight?: boolean;
+	nav?: boolean;
+	controls?: boolean;
 }
+
+const props = defineProps({
+	coverMediaItem: {
+		type: Object as PropType<MediaItem>,
+		default: undefined,
+	},
+	coverMaxHeight: {
+		type: Number,
+		default: undefined,
+	},
+	coverAutoHeight: {
+		type: Boolean,
+	},
+	coverEditable: {
+		type: Boolean,
+	},
+	hideNav: {
+		type: Boolean,
+	},
+	shouldAffixNav: {
+		type: Boolean,
+	},
+	spotlightDark: {
+		type: Boolean,
+	},
+	blurHeader: {
+		type: Boolean,
+	},
+	colClasses: {
+		type: String,
+		default: 'col-xs-12',
+	},
+	autoscrollAnchorKey: {
+		type: [String, Number] as PropType<string | number>,
+		default: undefined,
+	},
+	disableAutoscrollAnchor: {
+		type: Boolean,
+	},
+	showCoverButtons: {
+		type: Boolean,
+	},
+	spotlightWrapper: {
+		type: [Object, String] as PropType<any>,
+		default: 'div',
+	},
+	spotlightWrapperProps: {
+		type: Object as PropType<ComponentProps<any>>,
+		default: undefined,
+	},
+	/**
+	 * Used so we can override our `hasSlotName` computed properties, allowing
+	 * them to be reactive.
+	 */
+	overrideSlots: {
+		type: Object as PropType<PageHeaderSlots>,
+		default: undefined,
+	},
+});
+
+const {
+	coverMediaItem,
+	coverMaxHeight,
+	coverAutoHeight,
+	coverEditable,
+	hideNav,
+	shouldAffixNav,
+	spotlightDark,
+	blurHeader,
+	colClasses,
+	autoscrollAnchorKey,
+	disableAutoscrollAnchor,
+	showCoverButtons,
+	spotlightWrapper,
+	spotlightWrapperProps,
+	overrideSlots,
+} = toRefs(props);
+
+const emit = defineEmits({
+	'edit-cover': () => true,
+});
+
+const slots = useSlots();
+
+const hasSpotlight = computed(() => {
+	if (Screen.isXs) {
+		return false;
+	}
+	const override = overrideSlots?.value?.spotlight;
+	if (override !== undefined) {
+		return override;
+	}
+	return !!slots['spotlight'];
+});
+const hasNav = computed(() => {
+	const override = overrideSlots?.value?.nav;
+	if (override !== undefined) {
+		return override;
+	}
+	return !!slots['nav'];
+});
+const hasControls = computed(() => {
+	const override = overrideSlots?.value?.controls;
+	if (override !== undefined) {
+		return override;
+	}
+	return !!slots['controls'];
+});
 </script>
 
 <template>
@@ -98,7 +146,7 @@ export default class AppPageHeader extends Vue {
 				v-if="coverEditable"
 				:class="{ '-cover-img': !!coverMediaItem }"
 				:disabled="!coverEditable"
-				@click="emitEditCover"
+				@click="emit('edit-cover')"
 			>
 				<template #overlay>
 					<span>
@@ -169,12 +217,31 @@ export default class AppPageHeader extends Vue {
 					</div>
 				</div>
 
-				<div
-					v-if="hasSpotlight"
-					class="page-header-spotlight"
-					:class="{ dark: spotlightDark }"
-				>
-					<slot name="spotlight" />
+				<div v-if="hasSpotlight" class="page-header-spotlight">
+					<component
+						:is="spotlightWrapper"
+						:style="{
+							width: `100%`,
+							height: `100%`,
+						}"
+						v-bind="spotlightWrapperProps"
+					>
+						<div
+							class="page-header-spotlight-bubble"
+							:style="{
+								zIndex: 2,
+							}"
+							:class="{ dark: spotlightDark }"
+						>
+							<div
+								:style="{
+									zIndex: 0,
+								}"
+							>
+								<slot name="spotlight" />
+							</div>
+						</div>
+					</component>
 				</div>
 			</div>
 		</section>
