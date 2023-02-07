@@ -2,7 +2,7 @@
 import { computed, PropType, toRefs } from 'vue';
 import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
 import { Realm } from '../../../../_common/realm/realm-model';
-import AppPostTarget, { POST_TARGET_HEIGHT } from './AppPostTarget.vue';
+import AppContentTarget, { CONTENT_TARGET_HEIGHT } from './AppContentTarget.vue';
 
 const props = defineProps({
 	realm: {
@@ -27,7 +27,7 @@ const to = computed(() => (hasLinks.value ? realm.value.routeLocation : undefine
 </script>
 
 <template>
-	<AppPostTarget
+	<AppContentTarget
 		bleed-img
 		:has-remove="canRemove"
 		:no-hover="!hasLinks"
@@ -37,8 +37,8 @@ const to = computed(() => (hasLinks.value ? realm.value.routeLocation : undefine
 		<template #img>
 			<div
 				:style="{
-					width: POST_TARGET_HEIGHT * realm.cover.aspectRatio + 'px',
-					height: POST_TARGET_HEIGHT + 'px',
+					width: CONTENT_TARGET_HEIGHT * realm.cover.aspectRatio + 'px',
+					height: CONTENT_TARGET_HEIGHT + 'px',
 				}"
 			>
 				<AppImgResponsive :src="realm.cover.mediaserver_url" alt="" />
@@ -48,5 +48,5 @@ const to = computed(() => (hasLinks.value ? realm.value.routeLocation : undefine
 		<template #default>
 			{{ realm.name }}
 		</template>
-	</AppPostTarget>
+	</AppContentTarget>
 </template>

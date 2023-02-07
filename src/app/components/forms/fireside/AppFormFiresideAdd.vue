@@ -15,7 +15,7 @@ import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import { Realm } from '../../../../_common/realm/realm-model';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import AppPostTargets from '../../post/AppPostTargets.vue';
+import AppContentTargets from '../../content/AppContentTargets.vue';
 
 type FormModel = {
 	title: string;
@@ -166,13 +166,13 @@ function attachRealm(realm: Realm, append = true) {
 
 function removeCommunity(community: Community) {
 	arrayRemove(communities.value, i => i.community.id === community.id, {
-		onMissing: () => console.warn('Attempted to remove a community that is not attached');
-	}
+		onMissing: () => console.warn('Attempted to remove a community that is not attached'),
+	});
 }
 
 function removeRealm(realm: Realm) {
 	arrayRemove(realms.value, i => i.id === realm.id, {
-		onMissing: () => console.warn('Attempted to remove a realm that is not attached');
+		onMissing: () => console.warn('Attempted to remove a realm that is not attached'),
 	});
 }
 </script>
@@ -202,7 +202,7 @@ function removeRealm(realm: Realm) {
 				:label="$gettext(`Start in a community?`)"
 				hide-label
 			>
-				<AppPostTargets
+				<AppContentTargets
 					:communities="communities"
 					:max-communities="1"
 					:realms="realms"

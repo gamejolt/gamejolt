@@ -42,6 +42,7 @@ import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserV
 import AppVideoPlayer from '../../../../_common/video/player/player.vue';
 import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/processing-progress.vue';
 import AppCommunityUserNotification from '../../../components/community/user-notification/user-notification.vue';
+import AppContentTargets from '../../../components/content/AppContentTargets.vue';
 import AppFiresidePostEmbed from '../../../components/fireside/post/embed/embed.vue';
 import AppGameBadge from '../../../components/game/badge/badge.vue';
 import { AppCommentWidgetLazy } from '../../../components/lazy';
@@ -49,7 +50,6 @@ import AppPageContainer from '../../../components/page-container/AppPageContaine
 import AppPollVoting from '../../../components/poll/voting/voting.vue';
 import AppActivityFeedPostContent from '../../../components/post/AppPostContent.vue';
 import AppPostHeader from '../../../components/post/AppPostHeader.vue';
-import AppPostTargets from '../../../components/post/AppPostTargets.vue';
 import AppPostControls from '../../../components/post/controls/AppPostControls.vue';
 import AppPostPageRecommendations from './recommendations/AppPostPageRecommendations.vue';
 
@@ -392,7 +392,7 @@ function onDismissNotification(notification: CommunityUserNotification) {
 							@show="scrollToStickers()"
 						/>
 
-						<AppPostTargets :communities="communities" :realms="realms" has-links />
+						<AppContentTargets :communities="communities" :realms="realms" has-links />
 
 						<template v-if="shouldShowCommunityPublishError">
 							<br />

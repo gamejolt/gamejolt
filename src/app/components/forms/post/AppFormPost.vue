@@ -15,9 +15,9 @@ import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { FiresidePostRealm } from '../../../../_common/fireside/post/realm/realm.model';
 import { FiresidePostVideo } from '../../../../_common/fireside/post/video/video-model';
 import AppForm, {
-	createForm,
-	defineFormProps,
-	FormController,
+createForm,
+defineFormProps,
+FormController
 } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
@@ -31,12 +31,12 @@ import AppFormControlDate from '../../../../_common/form-vue/controls/AppFormCon
 import AppFormControlSelect from '../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import {
-	validateContentMaxLength,
-	validateContentNoActiveUploads,
-	validateContentRequired,
-	validateMaxLength,
-	validateMaxValue,
-	validateMinValue,
+validateContentMaxLength,
+validateContentNoActiveUploads,
+validateContentRequired,
+validateMaxLength,
+validateMaxValue,
+validateMinValue
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -53,13 +53,13 @@ import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.se
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import {
-	$gettext,
-	$gettextInterpolate,
-	$ngettext,
+$gettext,
+$gettextInterpolate,
+$ngettext
 } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import AppPostTargets from '../../post/AppPostTargets.vue';
-import { POST_TARGET_HEIGHT } from '../../post/target/AppPostTarget.vue';
+import AppContentTargets from '../../content/AppContentTargets.vue';
+import { CONTENT_TARGET_HEIGHT } from '../../content/target/AppContentTarget.vue';
 import AppFormPostMedia from './_media/media.vue';
 import AppFormPostVideo, { VideoStatus } from './_video/video.vue';
 
@@ -1522,8 +1522,8 @@ function _getMatchingBackgroundIdFromPref() {
 
 		<!-- Communities/Realms -->
 		<template v-if="form.isLoaded">
-			<AppPostTargets
-				class="-post-targets"
+			<AppContentTargets
+				class="-content-targets"
 				:communities="attachedCommunities"
 				:realms="attachedRealms"
 				:targetable-communities="possibleCommunities"
@@ -1540,10 +1540,10 @@ function _getMatchingBackgroundIdFromPref() {
 			/>
 		</template>
 		<template v-else>
-			<div class="-post-targets-placeholder">
+			<div class="-content-targets-placeholder">
 				<div
-					class="-post-target-placeholder"
-					:style="{ height: POST_TARGET_HEIGHT + 'px' }"
+					class="-content-target-placeholder"
+					:style="{ height: CONTENT_TARGET_HEIGHT + 'px' }"
 				/>
 			</div>
 		</template>
@@ -1819,13 +1819,13 @@ function _getMatchingBackgroundIdFromPref() {
 .-linked-account-toggle
 	flex: none
 
-.-post-targets
+.-content-targets
 	margin: 10px 0
 
-.-post-targets-placeholder
+.-content-targets-placeholder
 	margin: 10px 0 14px
 
-.-post-target-placeholder
+.-content-target-placeholder
 	change-bg('bg-subtle')
 	rounded-corners()
 	width: 138px

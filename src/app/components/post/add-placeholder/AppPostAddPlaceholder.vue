@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { POST_TARGET_HEIGHT } from '../target/AppPostTarget.vue';
+import { CONTENT_TARGET_HEIGHT } from '../../content/target/AppContentTarget.vue';
 </script>
 
 <template>
@@ -22,9 +22,9 @@ import { POST_TARGET_HEIGHT } from '../target/AppPostTarget.vue';
 			</div>
 		</div>
 
-		<!-- Post targets -->
-		<div class="-post-targets">
-			<div class="-post-targets-pill" :style="{ height: POST_TARGET_HEIGHT + 'px' }" />
+		<!-- Content targets -->
+		<div class="-content-targets">
+			<div class="-content-targets-pill" :style="{ height: CONTENT_TARGET_HEIGHT + 'px' }" />
 		</div>
 
 		<!-- Controls -->
@@ -65,11 +65,11 @@ import { POST_TARGET_HEIGHT } from '../target/AppPostTarget.vue';
 	width: 100%
 	height: 5px
 
-.-post-targets
+.-content-targets
 	height: 32px
 	margin: 10px 0
 
-.-post-targets-pill
+.-content-targets-pill
 	change-bg('bg-subtle')
 	rounded-corners()
 	width: 138px

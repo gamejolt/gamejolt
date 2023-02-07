@@ -1,7 +1,4 @@
 <script lang="ts" setup>
-// TODO(fireside-realms) refactor this into a component thats not specific for posts.
-// Its basically a general purpose "attachable targets".
-
 import { computed, PropType, ref, toRefs } from 'vue';
 import { arrayIndexBy } from '../../../utils/array';
 import { CommunityChannel } from '../../../_common/community/channel/channel.model';
@@ -10,13 +7,12 @@ import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { Realm } from '../../../_common/realm/realm-model';
 import AppScrollScroller from '../../../_common/scroll/AppScrollScroller.vue';
 import { vAppScrollWhen } from '../../../_common/scroll/scroll-when.directive';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppFormsPillSelectorCommunities from '../forms/pill-selector/communities/AppFormsPillSelectorCommunities.vue';
-import AppPostTarget from './target/AppPostTarget.vue';
-import AppPostTargetCommunity from './target/AppPostTargetCommunity.vue';
-import AppPostTargetRealm from './target/AppPostTargetRealm.vue';
-import { PostTargetManageRealmsModal } from './target/manage-realms/modal.service';
-import AppPostTargetsAddCommunity from './target/_add/AppPostTargetAddCommunity.vue';
+import AppContentTarget from './target/AppContentTarget.vue';
+import AppContentTargetCommunity from './target/AppContentTargetCommunity.vue';
+import AppContentTargetRealm from './target/AppContentTargetRealm.vue';
+import { ContentTargetManageRealmsModal } from './target/manage-realms/modal.service';
+import AppContentTargetAddCommunity from './target/_add/AppContentTargetAddCommunity.vue';
 
 const props = defineProps({
 	/**
@@ -195,7 +191,7 @@ async function onClickAddRealm() {
 	const curRealms = realms.value;
 	const newRealms = [...curRealms];
 
-	await PostTargetManageRealmsModal.show({
+	await ContentTargetManageRealmsModal.show({
 		selectedRealms: newRealms,
 		maxRealms: maxRealms?.value || 5,
 	});
@@ -232,17 +228,17 @@ async function onClickAddRealm() {
 				:initial-community="incompleteCommunity"
 				@select="selectIncompleteCommunity"
 			>
-				<AppPostTargetCommunity
+				<AppContentTargetCommunity
 					:community="incompleteCommunity"
 					@remove="onRemoveCommunity"
 				>
 					<div class="-incomplete-channel">
-						<AppTranslate>Select channel</AppTranslate>
+						{{ $gettext(`Select channel`) }}
 					</div>
-				</AppPostTargetCommunity>
+				</AppContentTargetCommunity>
 			</AppFormsPillSelectorCommunities>
 
-			<AppPostTargetRealm
+			<AppContentTargetRealm
 				v-for="realm of realms"
 				:key="`realm-${realm.id}`"
 				:class="baseClasses"
@@ -252,7 +248,7 @@ async function onClickAddRealm() {
 				@remove="onRemoveRealm"
 			/>
 
-			<AppPostTargetCommunity
+			<AppContentTargetCommunity
 				v-for="{ community, channel, featured_on } of communities"
 				:key="`community-${community.id}`"
 				:class="baseClasses"
@@ -266,16 +262,16 @@ async function onClickAddRealm() {
 			/>
 
 			<a v-if="showAddRealm" key="add-realm" :class="baseClasses" @click="onClickAddRealm">
-				<AppPostTarget class="-add">
+				<AppContentTarget class="-add">
 					<template #img>
 						<AppJolticon icon="add" />
 					</template>
 
-					<AppTranslate>Add realm</AppTranslate>
-				</AppPostTarget>
+					{{ $gettext(`Add realm`) }}
+				</AppContentTarget>
 			</a>
 
-			<AppPostTargetsAddCommunity
+			<AppContentTargetAddCommunity
 				v-if="showAddCommunity"
 				key="add-community"
 				:class="baseClasses"

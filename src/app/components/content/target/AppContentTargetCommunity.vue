@@ -5,7 +5,7 @@ import { Community } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppPostTarget from './AppPostTarget.vue';
+import AppContentTarget from './AppContentTarget.vue';
 
 const props = defineProps({
 	community: {
@@ -48,7 +48,7 @@ const to = computed(() =>
 </script>
 
 <template>
-	<AppPostTarget
+	<AppContentTarget
 		:has-remove="canRemove"
 		:left-to="leftTo"
 		:right-to="rightTo"
@@ -79,7 +79,7 @@ const to = computed(() =>
 				<AppJolticon v-if="isFeatured" class="-featured" icon="star" />
 			</slot>
 		</template>
-	</AppPostTarget>
+	</AppContentTarget>
 </template>
 
 <style lang="stylus" scoped>

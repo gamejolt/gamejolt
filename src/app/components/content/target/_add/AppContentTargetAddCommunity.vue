@@ -5,7 +5,7 @@ import { Community } from '../../../../../_common/community/community.model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import AppFormsPillSelectorCommunities from '../../../forms/pill-selector/communities/AppFormsPillSelectorCommunities.vue';
-import AppPostTarget from '../AppPostTarget.vue';
+import AppContentTarget from '../AppContentTarget.vue';
 
 const props = defineProps({
 	communities: {
@@ -61,13 +61,13 @@ function onSelect(community: Community, channel: CommunityChannel) {
 		@show="emit('show')"
 	>
 		<template #default>
-			<AppPostTarget class="-add">
+			<AppContentTarget class="-add">
 				<template #img>
 					<AppJolticon icon="add" />
 				</template>
 
 				<AppTranslate>Add community</AppTranslate>
-			</AppPostTarget>
+			</AppContentTarget>
 		</template>
 	</AppFormsPillSelectorCommunities>
 </template>

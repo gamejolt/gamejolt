@@ -26,6 +26,7 @@ import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import AppContentTargets from '../../../components/content/AppContentTargets.vue';
 import {
 	extinguishFireside,
 	publishFireside,
@@ -35,7 +36,6 @@ import { ChatCommandsModal } from '../../../components/forms/chat/commands/modal
 import { ChatModsModal } from '../../../components/forms/chat/mods/modal/modal.service';
 import { ChatTimersModal } from '../../../components/forms/chat/timers/modal/modal.service';
 import { FiresideHostsModal } from '../../../components/forms/fireside/hosts/modal/modal.service';
-import AppPostTargets from '../../../components/post/AppPostTargets.vue';
 import AppFiresideShare from '../AppFiresideShare.vue';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
@@ -310,7 +310,7 @@ function onClickChatMods() {
 								:label="$gettext(`Tagged to`)"
 								small
 							>
-								<AppPostTargets
+								<AppContentTargets
 									:communities="selectedCommunities"
 									:max-communities="1"
 									:realms="selectedRealms"
