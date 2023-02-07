@@ -39,23 +39,23 @@ export function formatDuration(time: number, language = 'shortEn'): string {
 	}
 }
 
-type ShorthandTimePrecision = 'exact' | 'quest';
+type ShorthandTimePrecision = 'exact' | 'rough';
 
 interface ShorthandTimeOptions {
-	allowFuture: boolean;
-	precision: ShorthandTimePrecision;
-	joiner: string;
-	nowText: string;
+	allowFuture?: boolean;
+	precision?: ShorthandTimePrecision;
+	joiner?: string;
+	nowText?: string;
 }
 
 export function shorthandReadableTime(
 	date: number,
-	{ allowFuture, precision, joiner, nowText }: ShorthandTimeOptions = {
-		allowFuture: false,
-		precision: 'exact',
-		joiner: ', ',
-		nowText: 'now',
-	}
+	{
+		allowFuture = false,
+		precision = 'exact',
+		joiner = ', ',
+		nowText = 'now',
+	}: ShorthandTimeOptions = {}
 ): string {
 	const now = getCurrentServerTime();
 	let duration = now - date;
@@ -86,7 +86,7 @@ export function shorthandReadableTime(
 			// Use existing data as-is.
 			break;
 
-		case 'quest': {
+		case 'rough': {
 			const newData: Record<string, number> = {};
 			for (const [key, value] of Object.entries(data)) {
 				if (value <= 0) {

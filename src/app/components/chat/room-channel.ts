@@ -66,6 +66,11 @@ interface OwnerSyncPayload {
 	owner_id: number;
 }
 
+export interface PlaceStickerPayload {
+	stickerPlacement: StickerPlacement;
+	success?: boolean;
+}
+
 export function createChatRoomChannel(
 	client: ChatClient,
 	options: {
@@ -490,11 +495,7 @@ export function createChatRoomChannel(
 	 * Places a sticker on a particular target user in the room.
 	 */
 	function pushPlaceSticker(targetUserId: number, stickerData: any) {
-		interface Payload {
-			stickerPlacement: StickerPlacement;
-		}
-
-		return channelController.push<Payload>(
+		return channelController.push<PlaceStickerPayload>(
 			'place_sticker',
 			{
 				...stickerData,
