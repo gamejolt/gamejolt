@@ -148,12 +148,12 @@ createAppRoute({
 					</div>
 					<div>
 						<RouterLink :to="{ name: routeLandingMarketplace.name }">
-							{{ $gettext(`Marketplace`) }}
+							{{ $gettext(`Game marketplace`) }}
 						</RouterLink>
 					</div>
 					<div>
 						<RouterLink :to="{ name: routeLandingGameApi.name }">
-							{{ $gettext(`Game Api`) }}
+							{{ $gettext(`Game API`) }}
 						</RouterLink>
 					</div>
 				</div>
@@ -199,22 +199,22 @@ createAppRoute({
 					<h3 class="sans-margin-top _footer-header">{{ $gettext(`Legal`) }}</h3>
 					<div>
 						<RouterLink :to="{ name: routeLegalTerms.name }">
-							{{ $gettext(`Terms of Service`) }}
+							{{ $gettext(`Terms of service`) }}
 						</RouterLink>
 					</div>
 					<div>
 						<RouterLink :to="{ name: routeLegalPrivacy.name }">
-							{{ $gettext(`Privacy Policy`) }}
+							{{ $gettext(`Privacy policy`) }}
 						</RouterLink>
 					</div>
 					<div>
 						<RouterLink :to="{ name: routeLegalCookies.name }">
-							{{ $gettext(`Cookie Policy`) }}
+							{{ $gettext(`Cookie policy`) }}
 						</RouterLink>
 					</div>
 					<div>
 						<RouterLink :to="{ name: routeLegalAds.name }">
-							{{ $gettext(`Advertisement`) }}
+							{{ $gettext(`Advertisements`) }}
 						</RouterLink>
 					</div>
 				</div>

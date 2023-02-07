@@ -8,7 +8,7 @@ import AppPopper from '../../../_common/popper/AppPopper.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppUserCreatorBadge from '../../../_common/user/creator/AppUserCreatorBadge.vue';
-import { routeLandingHelpRedirect } from '../../views/landing/help/help.route';
+import { routeLandingHelpIndex, routeLandingHelpRedirect } from '../../views/landing/help/help.route';
 import { ClientSystemReportModal } from '../client/safe-exports';
 import AppShellAltMenuDevelopers from './AppShellAltMenuDevelopers.vue';
 import AppShellAltMenuExtra from './AppShellAltMenuExtra.vue';
@@ -107,6 +107,16 @@ function showSystemReport() {
 					>
 						<AppJolticon icon="info-circle" />
 						{{ $gettext(`About`) }}
+					</RouterLink>
+
+					<RouterLink
+						class="list-group-item has-icon"
+						:to="{
+							name: routeLandingHelpIndex.name,
+						}"
+					>
+						<AppJolticon icon="help-circle" />
+						{{ $gettext(`Help / FAQs`) }}
 					</RouterLink>
 				</div>
 
