@@ -64,23 +64,6 @@ const highlight = computed(() => {
 				</a>
 			</AppShellCbarItem>
 
-			<!-- Library -->
-			<AppShellCbarItem
-				class="-control"
-				:highlight="highlight"
-				:is-active="visibleLeftPane === 'library'"
-				is-control
-			>
-				<a
-					v-app-tooltip.right="$gettext(`Game Library (m)`)"
-					v-app-track-event="`cbar:library:toggle`"
-					class="-control-item"
-					@click="toggleLeftPane('library')"
-				>
-					<AppJolticon class="-control-icon" icon="books" />
-				</a>
-			</AppShellCbarItem>
-
 			<!-- Backpack -->
 			<AppShellCbarItem
 				class="-control"
@@ -95,6 +78,23 @@ const highlight = computed(() => {
 					@click="toggleLeftPane('backpack')"
 				>
 					<AppJolticon class="-control-icon" icon="backpack" />
+				</a>
+			</AppShellCbarItem>
+
+			<!-- Library -->
+			<AppShellCbarItem
+				class="-control"
+				:highlight="highlight"
+				:is-active="visibleLeftPane === 'library'"
+				is-control
+			>
+				<a
+					v-app-tooltip.right="$gettext(`Game Library (m)`)"
+					v-app-track-event="`cbar:library:toggle`"
+					class="-control-item"
+					@click="toggleLeftPane('library')"
+				>
+					<AppJolticon class="-control-icon" icon="books" />
 				</a>
 			</AppShellCbarItem>
 		</template>
