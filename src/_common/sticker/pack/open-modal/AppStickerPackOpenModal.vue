@@ -173,7 +173,7 @@ async function _openPack() {
 	try {
 		const packId = pack.value.id;
 		const payload = await Api.sendRequest(
-			`/web/stickers/open_pack/${packId}`,
+			`/web/stickers/open-pack/${packId}`,
 			{},
 			{ detach: true }
 		);
