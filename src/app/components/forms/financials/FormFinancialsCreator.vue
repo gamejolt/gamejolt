@@ -23,7 +23,7 @@ const user = bangRef(maybeUser);
 const account = ref<UserStripeManagedAccount>();
 const creatorAccount = ref<UserTipaltiManagedAccount>();
 const creatorOnboardingForm = ref<string>();
-const creatorOnboardingFormHeight = ref(200);
+const creatorOnboardingFormHeight = ref(500);
 
 const isVerified = computed(() => creatorAccount.value?.onboarding_status === 'active');
 const canAccessCreatorForm = computed(() => userCanAccessCreatorForm(user.value));
@@ -38,7 +38,7 @@ function tipaltiHandler(e: MessageEvent) {
 		return;
 	}
 
-	creatorOnboardingFormHeight.value = e.data.TipaltiIframeInfo.height ?? 200;
+	creatorOnboardingFormHeight.value = e.data.TipaltiIframeInfo.height ?? 500;
 
 	e.stopImmediatePropagation();
 }
