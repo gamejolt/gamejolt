@@ -1,5 +1,6 @@
 import { ContentDocument } from '../../../../_common/content/content-document';
 import { showInfoGrowl } from '../../../../_common/growls/growls.service';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { ChatClient, isChatFocusedOnRoom, openChatRoom } from '../client';
 import { ChatMessage } from '../message';
 import { ChatRoom, getChatRoomTitle } from '../room';
@@ -53,6 +54,10 @@ export class ChatNotificationGrowl {
 		message: ChatMessage,
 		groupRoom: ChatRoom | undefined
 	): string {
+		if (message.type === 'invite') {
+			return this.generateSystemInviteMessage();
+		}
+
 		let systemMessage = '';
 
 		const doc = ContentDocument.fromJson(message.content);
@@ -127,12 +132,16 @@ export class ChatNotificationGrowl {
 		// Fallback, in case the message somehow ends up empty.
 		if (systemMessage.trim() === '') {
 			if (groupRoom) {
-				systemMessage = 'Sent a message';
+				systemMessage = $gettext(`Sent a message`);
 			} else {
-				systemMessage = 'Sent you a message';
+				systemMessage = $gettext(`Sent you a message`);
 			}
 		}
 
 		return systemMessage;
+	}
+
+	private static generateSystemInviteMessage(): string {
+		return $gettext(`Invited you to join a chat room`);
 	}
 }
