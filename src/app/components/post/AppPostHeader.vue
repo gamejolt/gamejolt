@@ -5,11 +5,11 @@ import { UserFollowLocation } from '../../../_common/analytics/analytics.service
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../_common/screen/screen-service';
-import { AppTimeAgo } from '../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppUserCardHover from '../../../_common/user/card/AppUserCardHover.vue';
 import AppUserFollowButton from '../../../_common/user/follow/AppUserFollowButton.vue';
-import AppActivityFeedPostTime from '../activity/feed/post/time/time.vue';
+import AppActivityFeedPostTime from '../activity/feed/post/AppActivityFeedPostTime.vue';
 import { ActivityFeedView } from '../activity/feed/view';
 import AppUserAvatarBubble from '../user/AppUserAvatarBubble.vue';
 
@@ -126,7 +126,7 @@ const shouldShowFollow = computed(() => {
 				</span>
 			</span>
 
-			<span v-if="post.isActive" :class="{ '-overlay-text': overlay }">
+			<span v-if="post.isActive || post.isScheduled" :class="{ '-overlay-text': overlay }">
 				<AppActivityFeedPostTime v-if="dateLink" :post="post" :link="dateLink" />
 				<AppTimeAgo v-else :date="post.published_on" strict />
 			</span>
