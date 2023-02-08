@@ -155,7 +155,7 @@ async function withdraw() {
 							v-if="gemWallet.available_balance >= gemWallet.minimum_payout_balance"
 						>
 							<AppSpacer vertical :scale="2" />
-							<AppAlertBox icon="thumbs-up" color="highlight">
+							<AppAlertBox icon="thumbs-up" color="primary">
 								<AppTranslate>
 									Party time! 🎆 🤸 You've reached the minimum withdrawal amount.
 									We'll be depositing your gems into your preferred payment method
@@ -341,7 +341,7 @@ async function withdraw() {
 				</AppCard>
 			</template>
 
-			<AppAlertBox v-if="marketplaceRevenuePendingWithdraw > 0" color="highlight">
+			<AppAlertBox v-if="marketplaceRevenuePendingWithdraw > 0" color="primary">
 				<div v-translate="{ amount: formatCurrency(marketplaceRevenuePendingWithdraw) }">
 					You have pending withdrawals amounting to
 					<b>%{ amount }</b>.
