@@ -32,6 +32,7 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 	img_avatar!: string;
 	dogtags?: DogtagData[];
 	shouts_enabled!: boolean;
+	is_spawnday!: boolean;
 
 	status!: number;
 	permission_level!: number;
