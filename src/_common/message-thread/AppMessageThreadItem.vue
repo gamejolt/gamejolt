@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router';
 import AppUserAvatarBubble from '../../app/components/user/AppUserAvatarBubble.vue';
 import { formatDate } from '../filters/date';
 import AppJolticon from '../jolticon/AppJolticon.vue';
-import { AppTimeAgo } from '../time/ago/ago';
+import AppTimeAgo from '../time/AppTimeAgo.vue';
 import AppTimelineListItem from '../timeline-list/item/item.vue';
 import AppUserCardHover from '../user/card/AppUserCardHover.vue';
 import { User } from '../user/user.model';
