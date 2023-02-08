@@ -27,7 +27,6 @@ import {
 	illPointyThing,
 	illStreamingJelly,
 } from '../../../img/ill/illustrations';
-import { routeLandingHelpRedirect } from '../help/help.route';
 import AppCreatorMooMoo from './AppCreatorMooMoo.vue';
 import socialImage from './social.png';
 import { creatorApplyDesktop, creatorApplySm, creatorApplyXs } from './_backgrounds/backgrounds';
@@ -583,7 +582,7 @@ function getRandomStickers(count = 3) {
 					<div class="-footer-header-text -tiny-header-text">
 						<RouterLink
 							:to="{
-								name: routeLandingHelpRedirect.name,
+								name: 'landing.help.redirect',
 								params: {
 									path: 'creators',
 								},
