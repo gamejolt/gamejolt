@@ -55,7 +55,11 @@ const form: FormController<FormModel> = createForm({
 			name="avatar_frame"
 			hide-label
 		>
-			<AppAlertBox v-if="user?.is_spawnday" :style="{ marginBottom: '16px' }">
+			<AppAlertBox
+				v-if="user?.is_spawnday"
+				icon="info-circle"
+				:style="{ marginBottom: '16px' }"
+			>
 				{{
 					$gettext(
 						`It's your spawnday! Congrats! Your spawnday frame is being proudly displayed for the entire day.`
