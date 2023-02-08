@@ -13,7 +13,7 @@ import { CommunityCompetitionVotingCategory } from '../../../../../_common/commu
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import FormCommunityCompetitionVotingCast from '../../../forms/community/competition/voting/cast/cast.vue';
 

@@ -6,7 +6,7 @@ import {
 	CommunityUserNotification,
 	NotificationType,
 } from '../../../../_common/community/user-notification/user-notification.model';
-import { AppTimeAgo } from '../../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import {
 	getCommunityEjectPostReasons,
 	getCommunityMovePostReasons,

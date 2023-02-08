@@ -32,7 +32,7 @@ import {
 	StickerTargetController,
 } from '../../../../_common/sticker/target/target-controller';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { AppTimeAgo } from '../../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
