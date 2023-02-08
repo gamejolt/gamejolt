@@ -36,28 +36,7 @@ export default class AppUserSpawnDay extends Vue {
 	emitPostAdd(_post: FiresidePost) {}
 
 	get shouldShowSpawnDay() {
-		if (this.user) {
-			// Don't show if the current user blocked the other, or vice versa.
-			if (this.user.blocked_you || this.user.is_blocked) {
-				return false;
-			}
-
-			// Don't show for new users or users from the future
-			if (Date.now() - this.user.created_on < 30 * 60 * 60 * 1000) {
-				return false;
-			}
-
-			const createdDate = new Date(this.user.created_on);
-			const createdDayOfMonth = createdDate.getUTCDate();
-			const createdMonth = createdDate.getUTCMonth();
-
-			const nowDate = new Date();
-			const nowDayOfMonth = nowDate.getUTCDate();
-			const nowMonth = nowDate.getUTCMonth();
-
-			return createdDayOfMonth === nowDayOfMonth && createdMonth === nowMonth;
-		}
-		return false;
+		return !!this.user.is_spawnday;
 	}
 
 	get isOwnSpawnDay() {
@@ -185,9 +164,7 @@ export default class AppUserSpawnDay extends Vue {
 				That means on this day, you have been on Game Jolt for %{ years }!
 			</p>
 			<p>
-				<AppTranslate>
-					Tell your followers, let the world know!
-				</AppTranslate>
+				<AppTranslate>Tell your followers, let the world know!</AppTranslate>
 			</p>
 			<AppButton @click="showNewPost">
 				<AppTranslate>Celebrate</AppTranslate>
@@ -228,5 +205,4 @@ export default class AppUserSpawnDay extends Vue {
 	pointer-events: none
 	*
 		pointer-events: none
-
 </style>
