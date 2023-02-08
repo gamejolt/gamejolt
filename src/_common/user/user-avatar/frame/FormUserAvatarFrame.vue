@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { illNoCommentsSmall } from '../../../../app/img/ill/illustrations';
+import AppAlertBox from '../../../alert/AppAlertBox.vue';
 import { Api } from '../../../api/api.service';
 import AppForm, { createForm, FormController } from '../../../form-vue/AppForm.vue';
 import AppFormButton from '../../../form-vue/AppFormButton.vue';
@@ -54,6 +55,14 @@ const form: FormController<FormModel> = createForm({
 			name="avatar_frame"
 			hide-label
 		>
+			<AppAlertBox v-if="user?.is_spawnday" :style="{ marginBottom: '16px' }">
+				{{
+					$gettext(
+						`It's your spawnday! Congrats! Your spawnday frame is being proudly displayed for the entire day.`
+					)
+				}}
+			</AppAlertBox>
+
 			<AppUserAvatarFrameSelector :frames="availableFrames">
 				<template #no-items>
 					<AppIllustration :asset="illNoCommentsSmall" sm>
