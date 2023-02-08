@@ -39,3 +39,7 @@ createAppRoute({
 	routeTitle: computed(() => $gettext(`Help Docs`)),
 });
 </script>
+
+<template>
+	<div />
+</template>

@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
+import { RouterLink } from 'vue-router';
 import { arrayIndexBy, arrayShuffle } from '../../../../utils/array';
 import { trackCreatorApply } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
@@ -26,6 +27,7 @@ import {
 	illPointyThing,
 	illStreamingJelly,
 } from '../../../img/ill/illustrations';
+import { routeLandingHelpRedirect } from '../help/help.route';
 import AppCreatorMooMoo from './AppCreatorMooMoo.vue';
 import socialImage from './social.png';
 import { creatorApplyDesktop, creatorApplySm, creatorApplyXs } from './_backgrounds/backgrounds';
@@ -577,14 +579,19 @@ function getRandomStickers(count = 3) {
 				<div>
 					<div class="-footer-header-text -tiny-header-text">More questions?</div>
 					<div class="-footer-header-text -tiny-header-text">
-						We've got answers in
-						<a
-							href="https://gamejolt.com/p/why-game-jolt-eny749ba"
-							target="_blank"
-							style="white-space: nowrap"
+						<RouterLink
+							:to="{
+								name: routeLandingHelpRedirect.name,
+								params: {
+									path: 'creators',
+								},
+							}"
+							:style="{
+								whitespace: 'nowrap',
+							}"
 						>
-							our Creator FAQ
-						</a>
+							We've got answers in our Creator FAQ
+						</RouterLink>
 					</div>
 				</div>
 			</div>
