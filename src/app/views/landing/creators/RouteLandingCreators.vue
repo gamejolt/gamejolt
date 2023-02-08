@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { arrayIndexBy, arrayShuffle } from '../../../../utils/array';
 import { trackCreatorApply } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
@@ -133,11 +133,6 @@ const { isBootstrapped, isDestroyed } = createAppRoute({
 		};
 
 		Meta.fb.image = Meta.twitter.image = socialImage;
-
-		if (!_hasPostTimer) {
-			setHeaderPostTimer(true);
-			_hasPostTimer = true;
-		}
 	},
 	onResolved({ payload }) {
 		const posts = FiresidePost.populate(payload.posts);
@@ -150,8 +145,15 @@ const { isBootstrapped, isDestroyed } = createAppRoute({
 	},
 });
 
+onMounted(() => {
+	if (!_hasPostTimer && !isDestroyed.value) {
+		setHeaderPostTimer(true);
+		_hasPostTimer = true;
+	}
+});
+
 async function setHeaderPostTimer(initial = false) {
-	if (isDestroyed) {
+	if (isDestroyed.value) {
 		return;
 	}
 
@@ -175,7 +177,7 @@ async function setHeaderPostTimer(initial = false) {
 		setTimeout(tryResolve, 5_000);
 	});
 
-	if (isDestroyed) {
+	if (isDestroyed.value) {
 		return;
 	}
 
