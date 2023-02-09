@@ -15,9 +15,9 @@ import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { FiresidePostRealm } from '../../../../_common/fireside/post/realm/realm.model';
 import { FiresidePostVideo } from '../../../../_common/fireside/post/video/video-model';
 import AppForm, {
-	createForm,
-	defineFormProps,
-	FormController,
+createForm,
+defineFormProps,
+FormController
 } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
@@ -31,19 +31,18 @@ import AppFormControlDate from '../../../../_common/form-vue/controls/AppFormCon
 import AppFormControlSelect from '../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import {
-	validateContentMaxLength,
-	validateContentNoActiveUploads,
-	validateContentRequired,
-	validateMaxLength,
-	validateMaxValue,
-	validateMinValue,
+validateContentMaxLength,
+validateContentNoActiveUploads,
+validateContentRequired,
+validateMaxLength,
+validateMaxValue,
+validateMinValue
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { KeyGroup } from '../../../../_common/key-group/key-group.model';
 import { LinkedAccount } from '../../../../_common/linked-account/linked-account.model';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
-import { Popper } from '../../../../_common/popper/popper.service';
 import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
 import { Realm } from '../../../../_common/realm/realm-model';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -54,13 +53,13 @@ import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.se
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import {
-	$gettext,
-	$gettextInterpolate,
-	$ngettext,
+$gettext,
+$gettextInterpolate,
+$ngettext
 } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import AppPostTargets from '../../post/AppPostTargets.vue';
-import { POST_TARGET_HEIGHT } from '../../post/target/AppPostTarget.vue';
+import AppContentTargets from '../../content/AppContentTargets.vue';
+import { CONTENT_TARGET_HEIGHT } from '../../content/target/AppContentTarget.vue';
 import AppFormPostMedia from './_media/media.vue';
 import AppFormPostVideo, { VideoStatus } from './_video/video.vue';
 
@@ -636,11 +635,21 @@ watch(
 	}
 );
 
-function attachIncompleteCommunity(community: Community, channel: CommunityChannel) {
+function attachIncompleteCommunity(community: Community, channel?: CommunityChannel) {
+	if (!channel) {
+		console.warn('Attempt to attach a community without a channel');
+		return;
+	}
+
 	attachCommunity(community, channel, false);
 }
 
-function attachCommunity(community: Community, channel: CommunityChannel, append = true) {
+function attachCommunity(community: Community, channel?: CommunityChannel, append = true) {
+	if (!channel) {
+		console.warn('Attempt to attach a community without a channel');
+		return;
+	}
+
 	// Do nothing if that community is already attached.
 	if (attachedCommunities.value.find(i => i.community.id === community.id)) {
 		return;
@@ -655,8 +664,6 @@ function attachCommunity(community: Community, channel: CommunityChannel, append
 }
 
 function attachRealm(realm: Realm, append = true) {
-	Popper.hideAll();
-
 	// Do nothing if that realm is already attached.
 	if (attachedRealms.value.find(i => i.id === realm.id)) {
 		return;
@@ -679,17 +686,15 @@ async function scrollToAdd() {
 }
 
 function removeCommunity(community: Community) {
-	const idx = attachedCommunities.value.findIndex(i => i.community.id === community.id);
-	if (idx === -1) {
-		console.warn('Attempted to remove a community that is not attached');
-		return;
-	}
-
-	attachedCommunities.value.splice(idx, 1);
+	arrayRemove(attachedCommunities.value, i => i.community.id === community.id, {
+		onMissing: () => console.warn('Attempted to remove a community that is not attached'),
+	});
 }
 
 function removeRealm(realm: Realm) {
-	arrayRemove(attachedRealms.value, i => i.id === realm.id);
+	arrayRemove(attachedRealms.value, i => i.id === realm.id, {
+		onMissing: () => console.warn('Attempted to remove a realm that is not attached'),
+	});
 }
 
 function onDraftSubmit() {
@@ -1517,8 +1522,8 @@ function _getMatchingBackgroundIdFromPref() {
 
 		<!-- Communities/Realms -->
 		<template v-if="form.isLoaded">
-			<AppPostTargets
-				class="-post-targets"
+			<AppContentTargets
+				class="-content-targets"
 				:communities="attachedCommunities"
 				:realms="attachedRealms"
 				:targetable-communities="possibleCommunities"
@@ -1531,13 +1536,14 @@ function _getMatchingBackgroundIdFromPref() {
 				@remove-realm="removeRealm"
 				@select-community="attachCommunity"
 				@select-incomplete-community="attachIncompleteCommunity"
+				@select-realm="attachRealm"
 			/>
 		</template>
 		<template v-else>
-			<div class="-post-targets-placeholder">
+			<div class="-content-targets-placeholder">
 				<div
-					class="-post-target-placeholder"
-					:style="{ height: POST_TARGET_HEIGHT + 'px' }"
+					class="-content-target-placeholder"
+					:style="{ height: CONTENT_TARGET_HEIGHT + 'px' }"
 				/>
 			</div>
 		</template>
@@ -1813,13 +1819,13 @@ function _getMatchingBackgroundIdFromPref() {
 .-linked-account-toggle
 	flex: none
 
-.-post-targets
+.-content-targets
 	margin: 10px 0
 
-.-post-targets-placeholder
+.-content-targets-placeholder
 	margin: 10px 0 14px
 
-.-post-target-placeholder
+.-content-target-placeholder
 	change-bg('bg-subtle')
 	rounded-corners()
 	width: 138px

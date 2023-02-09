@@ -43,6 +43,11 @@ export const kFontSizeH4 = new CSSPixelValue(18);
 export const kFontSizeH5 = new CSSPixelValue(kFontSizeBase.value);
 export const kFontSizeH6 = new CSSPixelValue(13);
 
+export const kLineHeightBase = 1.428571429;
+export const kLineHeightComputed = new CSSPixelValue(
+	Math.floor(kFontSizeBase.value * kLineHeightBase)
+);
+
 // Animations
 export const kWeakEaseIn = `cubic-bezier(0.55, 0.085, 0.68, 0.53)`;
 export const kWeakEaseOut = `cubic-bezier(0.25, 0.46, 0.45, 0.94)`;

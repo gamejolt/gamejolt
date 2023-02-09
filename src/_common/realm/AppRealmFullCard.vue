@@ -27,6 +27,10 @@ const props = defineProps({
 		type: Object as PropType<RouteLocationRaw>,
 		default: undefined,
 	},
+	linkTarget: {
+		type: String as PropType<'whole-card' | 'image'>,
+		default: 'whole-card',
+	},
 	labelPosition: {
 		type: String as PropType<'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'>,
 		default: 'top-left',
@@ -43,7 +47,7 @@ const props = defineProps({
 	},
 });
 
-const { realm, overlayContent, noSheet, to, labelPosition, noFollow, followOnClick } =
+const { realm, overlayContent, noSheet, to, linkTarget, labelPosition, noFollow, followOnClick } =
 	toRefs(props);
 
 const isHovered = ref(false);
@@ -95,7 +99,7 @@ async function onClick(event: Event) {
 	<div
 		class="-card"
 		:class="{
-			'-hoverable': to || followOnClick,
+			'-hoverable': linkTarget === 'whole-card' && (to || followOnClick),
 			'-no-sheet': noSheet,
 			['sheet sheet-full sheet-elevate']: !noSheet,
 		}"
@@ -103,7 +107,7 @@ async function onClick(event: Event) {
 		@mouseout="isHovered = false"
 		@click.capture="onClick"
 	>
-		<RouterLink v-if="to" class="-link-mask" :to="to" />
+		<RouterLink v-if="to && linkTarget === 'whole-card'" class="-link-mask" :to="to" />
 
 		<AppRealmLabel
 			class="-label"
@@ -115,9 +119,11 @@ async function onClick(event: Event) {
 		/>
 
 		<AppResponsiveDimensions :ratio="REALM_CARD_RATIO">
-			<AppMediaItemBackdrop v-if="mediaItem" :media-item="mediaItem">
-				<AppImgResponsive class="-cover-img" :src="mediaItem.mediaserver_url" alt="" />
-			</AppMediaItemBackdrop>
+			<component :is="to && linkTarget === 'image' ? RouterLink : 'div'" :to="to">
+				<AppMediaItemBackdrop v-if="mediaItem" :media-item="mediaItem">
+					<AppImgResponsive class="-cover-img" :src="mediaItem.mediaserver_url" alt="" />
+				</AppMediaItemBackdrop>
+			</component>
 		</AppResponsiveDimensions>
 
 		<div

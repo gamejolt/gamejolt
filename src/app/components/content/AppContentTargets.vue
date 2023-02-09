@@ -1,26 +1,34 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
+import { arrayIndexBy } from '../../../utils/array';
 import { CommunityChannel } from '../../../_common/community/channel/channel.model';
 import { Community } from '../../../_common/community/community.model';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { Realm } from '../../../_common/realm/realm-model';
 import AppScrollScroller from '../../../_common/scroll/AppScrollScroller.vue';
 import { vAppScrollWhen } from '../../../_common/scroll/scroll-when.directive';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppFormsPillSelectorCommunities from '../forms/pill-selector/communities/AppFormsPillSelectorCommunities.vue';
-import AppPostTarget from './target/AppPostTarget.vue';
-import AppPostTargetCommunity from './target/AppPostTargetCommunity.vue';
-import AppPostTargetRealm from './target/AppPostTargetRealm.vue';
-import { PostTargetManageRealmsModal } from './target/manage-realms/modal.service';
-import AppPostTargetsAddCommunity from './target/_add/AppPostTargetAddCommunity.vue';
+import AppContentTarget from './target/AppContentTarget.vue';
+import AppContentTargetCommunity from './target/AppContentTargetCommunity.vue';
+import AppContentTargetRealm from './target/AppContentTargetRealm.vue';
+import { ContentTargetManageRealmsModal } from './target/manage-realms/modal.service';
+import AppContentTargetAddCommunity from './target/_add/AppContentTargetAddCommunity.vue';
 
 const props = defineProps({
+	/**
+	 * The selected communities. These are not mutated by this component
+	 * directly. Instead, it emits events to add and remove items from it, and
+	 * its up to the parent to apply these back to the prop.
+	 */
 	communities: {
 		type: Array as PropType<
 			{ community: Community; channel?: CommunityChannel; featured_on?: number }[]
 		>,
 		required: true,
 	},
+	/**
+	 * Similar to communities, these are not mutated by this component directly.
+	 */
 	realms: {
 		type: Array as PropType<Realm[]>,
 		required: true,
@@ -32,6 +40,14 @@ const props = defineProps({
 	targetableCommunities: {
 		type: Array as PropType<Community[]>,
 		default: () => [],
+	},
+	noCommunityChannels: {
+		type: Boolean,
+		default: false,
+	},
+	maxCommunities: {
+		type: Number,
+		default: undefined,
 	},
 	maxRealms: {
 		type: Number,
@@ -52,11 +68,26 @@ const props = defineProps({
 	hasLinks: {
 		type: Boolean,
 	},
+	/**
+	 * Makes the targetables background color use --theme-bg instead of
+	 * --theme-bg-offset.
+	 *
+	 * @deprecated This prop is a single-use quick hack for fireside settings sidebar,
+	 * it isnt tested anywhere else. if you want this capability in other
+	 * components it's time to rewrite this into a proper solution where we pass
+	 * in a bg-color prop instead, and propogate it through all the nested
+	 * components all the way through AppPill and AppPillBi.
+	 */
+	bgColorOffset: {
+		type: Boolean,
+	},
 });
 
 const {
 	incompleteCommunity,
 	targetableCommunities,
+	noCommunityChannels,
+	maxCommunities,
 	maxRealms,
 	communities,
 	realms,
@@ -65,12 +96,14 @@ const {
 	canRemoveCommunities,
 	canRemoveRealms,
 	hasLinks,
+	bgColorOffset,
 } = toRefs(props);
 
 const emit = defineEmits({
 	showCommunities: () => true,
-	selectCommunity: (_community: Community, _channel: CommunityChannel) => true,
-	selectIncompleteCommunity: (_community: Community, _channel: CommunityChannel) => true,
+	selectCommunity: (_community: Community, _channel?: CommunityChannel) => true,
+	selectIncompleteCommunity: (_community: Community, _channel?: CommunityChannel) => true,
+	selectRealm: (_realm: Realm) => true,
 	removeCommunity: (_community: Community) => true,
 	removeRealm: (_realm: Realm) => true,
 });
@@ -78,15 +111,51 @@ const emit = defineEmits({
 const scrollingKey = ref(0);
 
 const canShow = computed(() => {
-	const communitiesValid =
-		(!!targetableCommunities?.value?.length && canAddCommunity.value) ||
-		communities.value.length > 0;
-
-	if (communitiesValid) {
+	// If has a community or a realm selected already.
+	if (communities.value.length > 0 || realms.value.length > 0) {
 		return true;
 	}
 
-	return canAddRealm.value || realms.value.length > 0;
+	// If can select a community (requires targetableCommunities)
+	if (canAddCommunity.value && !!targetableCommunities?.value?.length) {
+		return true;
+	}
+
+	if (canAddRealm.value) {
+		return true;
+	}
+
+	return false;
+});
+
+const showAddCommunity = computed(() => {
+	if (!canAddCommunity.value) {
+		return false;
+	}
+
+	if (!targetableCommunities.value.length) {
+		return false;
+	}
+
+	const maxNum = maxCommunities?.value ?? 0;
+	if (maxNum > 0 && communities.value.length >= maxNum) {
+		return false;
+	}
+
+	return true;
+});
+
+const showAddRealm = computed(() => {
+	if (!canAddRealm.value) {
+		return false;
+	}
+
+	const maxNum = maxRealms?.value ?? 0;
+	if (maxNum > 0 && realms.value.length >= maxNum) {
+		return false;
+	}
+
+	return true;
 });
 
 const baseClasses = computed(() => {
@@ -115,13 +184,17 @@ function onRemoveCommunity(community: Community) {
 	emit('removeCommunity', community);
 }
 
-function selectCommunity(community: Community, channel: CommunityChannel) {
+function selectCommunity(community: Community, channel?: CommunityChannel) {
 	emit('selectCommunity', community, channel);
 	_scrollToEnd();
 }
 
-function selectIncompleteCommunity(community: Community, channel: CommunityChannel) {
+function selectIncompleteCommunity(community: Community, channel?: CommunityChannel) {
 	emit('selectIncompleteCommunity', community, channel);
+}
+
+function selectRealm(realm: Realm) {
+	emit('selectRealm', realm);
 }
 
 async function _scrollToEnd() {
@@ -129,10 +202,30 @@ async function _scrollToEnd() {
 }
 
 async function onClickAddRealm() {
-	await PostTargetManageRealmsModal.show({
-		selectedRealms: realms.value,
-		maxRealms: maxRealms?.value || 5,
+	const curRealms = realms.value;
+	const newRealms = [...curRealms];
+
+	await ContentTargetManageRealmsModal.show({
+		selectedRealms: newRealms,
+		maxRealms: maxRealms?.value || 0,
 	});
+
+	const curRealmsMap = arrayIndexBy(curRealms, 'id');
+	const newRealmsMap = arrayIndexBy(newRealms, 'id');
+
+	// emit removeRealm for removed realms.
+	for (const curRealmId in curRealmsMap) {
+		if (!(curRealmId in newRealmsMap)) {
+			onRemoveRealm(curRealmsMap[curRealmId]);
+		}
+	}
+
+	// and selectRealm for new realms.
+	for (const newRealmId in newRealmsMap) {
+		if (!(newRealmId in curRealmsMap)) {
+			selectRealm(newRealmsMap[newRealmId]);
+		}
+	}
 
 	_scrollToEnd();
 }
@@ -140,7 +233,7 @@ async function onClickAddRealm() {
 
 <template>
 	<AppScrollScroller v-if="canShow" horizontal thin>
-		<TransitionGroup tag="div" class="-list">
+		<TransitionGroup tag="div" :class="['-list', { '-bg-color-offset': bgColorOffset }]">
 			<AppFormsPillSelectorCommunities
 				v-if="incompleteCommunity"
 				key="incomplete-item"
@@ -149,17 +242,17 @@ async function onClickAddRealm() {
 				:initial-community="incompleteCommunity"
 				@select="selectIncompleteCommunity"
 			>
-				<AppPostTargetCommunity
+				<AppContentTargetCommunity
 					:community="incompleteCommunity"
 					@remove="onRemoveCommunity"
 				>
 					<div class="-incomplete-channel">
-						<AppTranslate>Select channel</AppTranslate>
+						{{ $gettext(`Select channel`) }}
 					</div>
-				</AppPostTargetCommunity>
+				</AppContentTargetCommunity>
 			</AppFormsPillSelectorCommunities>
 
-			<AppPostTargetRealm
+			<AppContentTargetRealm
 				v-for="realm of realms"
 				:key="`realm-${realm.id}`"
 				:class="baseClasses"
@@ -169,7 +262,7 @@ async function onClickAddRealm() {
 				@remove="onRemoveRealm"
 			/>
 
-			<AppPostTargetCommunity
+			<AppContentTargetCommunity
 				v-for="{ community, channel, featured_on } of communities"
 				:key="`community-${community.id}`"
 				:class="baseClasses"
@@ -177,25 +270,27 @@ async function onClickAddRealm() {
 				:is-featured="!!featured_on"
 				:community="community"
 				:channel="channel"
+				:no-right="!channel"
 				:has-links="hasLinks"
 				@remove="onRemoveCommunity"
 			/>
 
-			<a v-if="canAddRealm" key="add-realm" :class="baseClasses" @click="onClickAddRealm">
-				<AppPostTarget class="-add">
+			<a v-if="showAddRealm" key="add-realm" :class="baseClasses" @click="onClickAddRealm">
+				<AppContentTarget class="-add">
 					<template #img>
 						<AppJolticon icon="add" />
 					</template>
 
-					<AppTranslate>Add realm</AppTranslate>
-				</AppPostTarget>
+					{{ $gettext(`Add realm`) }}
+				</AppContentTarget>
 			</a>
 
-			<AppPostTargetsAddCommunity
-				v-if="canAddCommunity"
+			<AppContentTargetAddCommunity
+				v-if="showAddCommunity"
 				key="add-community"
 				:class="baseClasses"
 				:communities="targetableCommunities"
+				:no-channel="noCommunityChannels"
 				@select="selectCommunity"
 				@show="emit('showCommunities')"
 			/>
@@ -206,6 +301,9 @@ async function onClickAddRealm() {
 </template>
 
 <style lang="stylus" scoped>
+.-bg-color-offset >>>.pill
+	background-color: var(--theme-bg)
+
 .-list
 	display: flex
 	flex-wrap: nowrap

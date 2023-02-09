@@ -4,6 +4,8 @@ import { Community } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
+import AppRealmThumbnail from '../../../../_common/realm/AppRealmThumbnail.vue';
+import { Realm } from '../../../../_common/realm/realm-model';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 
 const props = defineProps({
@@ -19,6 +21,10 @@ const props = defineProps({
 	},
 	community: {
 		type: Object as PropType<Community>,
+		default: undefined,
+	},
+	realm: {
+		type: Object as PropType<Realm>,
 		default: undefined,
 	},
 	borderHighlight: {
@@ -72,12 +78,12 @@ const hasLink = computed(() => {
 				</div>
 			</div>
 
+			<div v-if="realm" class="-realm">
+				<AppRealmThumbnail v-if="!isPlaceholder" :realm="realm" not-rounded />
+			</div>
+
 			<div v-if="community" class="-community">
-				<AppCommunityThumbnailImg
-					v-if="!isPlaceholder"
-					class="-community-img"
-					:community="community"
-				/>
+				<AppCommunityThumbnailImg v-if="!isPlaceholder" :community="community" />
 			</div>
 
 			<div v-if="hasTag" class="-tag" :class="{ '-live': isLive }">
@@ -130,6 +136,7 @@ const hasLink = computed(() => {
 
 	.-avatar-img
 	.-community
+	.-realm
 	.-tag
 		@extend .-subtle
 </style>
