@@ -35,6 +35,8 @@ const emit = defineEmits({
 
 const { community, realms, model } = toRefs(props);
 
+const realmsActual = ref<Realm[]>([...realms.value]);
+
 const defaultTitle = computed(() => nameSuggestion.value ?? undefined);
 const nameSuggestion = ref<string | null>(null);
 const targetableCommunities = ref<Community[]>([]);
@@ -96,8 +98,8 @@ const form = createForm({
 			payloadData['add_community_as_cohosts'] = form.formModel.add_community_as_cohosts;
 		}
 
-		if (realms.value.length > 0) {
-			payloadData['realm_ids'] = realms.value.map(x => x.id);
+		if (realmsActual.value.length > 0) {
+			payloadData['realm_ids'] = realmsActual.value.map(x => x.id);
 		}
 
 		const payload = await Api.sendRequest(loadUrl, payloadData, {
@@ -153,14 +155,14 @@ function attachCommunity(
 
 function attachRealm(realm: Realm, append = true) {
 	// Do nothing if that realm is already attached.
-	if (realms.value.find(i => i.id === realm.id)) {
+	if (realmsActual.value.find(i => i.id === realm.id)) {
 		return;
 	}
 
 	if (append) {
-		realms.value.push(realm);
+		realmsActual.value.push(realm);
 	} else {
-		realms.value.unshift(realm);
+		realmsActual.value.unshift(realm);
 	}
 }
 
@@ -171,7 +173,7 @@ function removeCommunity(community: Community) {
 }
 
 function removeRealm(realm: Realm) {
-	arrayRemove(realms.value, i => i.id === realm.id, {
+	arrayRemove(realmsActual.value, i => i.id === realm.id, {
 		onMissing: () => console.warn('Attempted to remove a realm that is not attached'),
 	});
 }
@@ -205,11 +207,11 @@ function removeRealm(realm: Realm) {
 				<AppContentTargets
 					:communities="communities"
 					:max-communities="1"
-					:realms="realms"
+					:realms="realmsActual"
 					:max-realms="maxRealms"
 					:targetable-communities="selectableCommunities"
 					can-add-community
-					can-add-realm
+					:can-add-realm="maxRealms > 0"
 					can-remove-communities
 					can-remove-realms
 					no-community-channels
