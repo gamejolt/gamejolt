@@ -119,7 +119,14 @@ async function onClick(event: Event) {
 		/>
 
 		<AppResponsiveDimensions :ratio="REALM_CARD_RATIO">
-			<component :is="to && linkTarget === 'image' ? RouterLink : 'div'" :to="to">
+			<component
+				:is="to && linkTarget === 'image' ? RouterLink : 'div'"
+				:style="{
+					width: `100%`,
+					height: `100%`,
+				}"
+				:to="to"
+			>
 				<AppMediaItemBackdrop v-if="mediaItem" :media-item="mediaItem">
 					<AppImgResponsive class="-cover-img" :src="mediaItem.mediaserver_url" alt="" />
 				</AppMediaItemBackdrop>

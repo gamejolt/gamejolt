@@ -2,6 +2,7 @@
 import { computed, PropType, toRefs } from 'vue';
 import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { REALM_CARD_RATIO } from '../../../../_common/realm/AppRealmFullCard.vue';
 import { Realm } from '../../../../_common/realm/realm-model';
 import AppContentTarget, { CONTENT_TARGET_HEIGHT } from './AppContentTarget.vue';
 
@@ -38,7 +39,7 @@ const to = computed(() => (hasLinks.value ? realm.value.routeLocation : undefine
 		<template #img>
 			<div
 				:style="{
-					width: CONTENT_TARGET_HEIGHT * realm.cover.aspectRatio + 'px',
+					width: CONTENT_TARGET_HEIGHT * REALM_CARD_RATIO + 'px',
 					height: CONTENT_TARGET_HEIGHT + 'px',
 				}"
 			>
