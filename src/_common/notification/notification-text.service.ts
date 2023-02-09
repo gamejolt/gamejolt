@@ -569,6 +569,10 @@ export class NotificationText {
 					)
 				);
 			}
+
+			case Notification.TYPE_POLL_ENDED: {
+				return _process($gettext(`Poll's closed, results are in!`));
+			}
 		}
 
 		// When the notification type has no implementation, we log and don't show it (return undefined).

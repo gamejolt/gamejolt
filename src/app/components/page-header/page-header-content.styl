@@ -1,53 +1,79 @@
 
 .page-header
 	$spotlight-size = $page-header-spotlight-size + $page-header-spotlight-margin
-	// Double the spotlight size since it will effectively take up the left AND
-	// right side of screens since content is centered.
 	$screen-lg-full = $screen-lg-min + ($spotlight-size * 2)
 	$page-header-spotlight-breakpoint = media(min: $screen-sm-min, max: $screen-lg-full)
 
-	&-cover.has-cover-image
-		.page-header-cover-buttons
-			.button
-				margin: 0 5px
+	// NOTE: Removing the `&-controls` styling seems to cause some issues with
+	// selectors like this. Leaving comments so class names are at easier to
+	// find at least.
+	&.has-spotlight &
+		@media $media-sm-md
+			// .page-header-controls
+			&-controls
+				margin-left: $spotlight-size
 
-		.text-muted
-			theme-prop('color', 'lightest')
+		// For when the page gets too small to float the spotlight off the left edge.
+		@media $page-header-spotlight-breakpoint
+			// .page-header-spotlight
+			&-spotlight
+				left: $page-header-spotlight-margin
 
-		.link-muted
-			color: rgba($white, 0.6)
+			// .page-header-content
+			&-content
+				padding-left: $spotlight-size
 
-		.tag
-		.user-dogtag
-			text-shadow: none
+			// .page-header-nav nav
+			&-nav nav
+				margin-left: $spotlight-size
 
-		.meter-blip
-			background-color: rgba($white, 0.5)
-			box-shadow: 1px 1px 1px rgba($black, 0.3)
+.page-header-cover.has-cover-image
+	.page-header-cover-buttons
+		.button
+			margin: 0 5px
 
-		.meter-blip-filled
-			background-color: $white
+	.text-muted
+		theme-prop('color', 'lightest')
 
-	&-content
-		h1
-		h2
-		h3
-			margin: 0
+	.link-muted
+		color: rgba($white, 0.6)
 
-			small
-				color: $white
+	.tag
+	.user-dogtag
+		text-shadow: none
 
-		a
+	.meter-blip
+		background-color: rgba($white, 0.5)
+		box-shadow: 1px 1px 1px rgba($black, 0.3)
+
+	.meter-blip-filled
+		background-color: $white
+
+.page-header-content
+	h1
+	h2
+	h3
+		margin: 0
+
+		small
+			color: $white
+
+	a
+		color: $white !important
+
+		&:hover
 			color: $white !important
+			text-decoration: underline
 
-			&:hover
-				color: $white !important
-				text-decoration: underline
+	.meter
+		display: inline-block
+		vertical-align: middle
 
-		.meter
-			display: inline-block
-			vertical-align: middle
-
+// NOTE: Removing the `&-nav` selector breaks the `../ .gj-scroll-affixed`
+// selector. Leaving this comment so we can easily search the class name, and so
+// we check scroll-affixed styling before changing.
+.page-header
+	// .page-header-nav
 	&-nav
 		nav
 			margin-top: 11px !important
@@ -72,19 +98,3 @@
 
 				nav
 					margin-left: 0
-
-	&.has-spotlight &
-		@media $media-sm-md
-			&-controls
-				margin-left: $spotlight-size
-
-		// For when the page gets too small to float the spotlight off the left edge.
-		@media $page-header-spotlight-breakpoint
-			&-spotlight
-				left: $page-header-spotlight-margin
-
-			&-content
-				padding-left: $spotlight-size
-
-			&-nav nav
-				margin-left: $spotlight-size

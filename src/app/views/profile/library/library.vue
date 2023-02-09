@@ -5,7 +5,7 @@ import { Api } from '../../../../_common/api/api.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import AppGameCollectionGrid from '../../../components/game/collection/grid/grid.vue';
-import { useProfileRouteController } from '../profile.vue';
+import { useProfileRouteController } from '../RouteProfile.vue';
 
 @Options({
 	name: 'RouteProfileLibrary',

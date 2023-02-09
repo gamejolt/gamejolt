@@ -7,6 +7,3 @@
 [submodule "src/lib/terms"]
 	path = src/lib/terms
 	url = https://github.com/gamejolt/terms.git
-[submodule "src/lib/doc-help"]
-	path = src/lib/doc-help
-	url = https://github.com/gamejolt/doc-help.git

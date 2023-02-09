@@ -2,7 +2,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../_common/filters/number';
-import { AppTimeAgo } from '../../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import { UserGameScore } from '../../../../_common/user/game-score/game-score.model';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';

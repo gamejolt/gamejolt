@@ -5,6 +5,7 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppUserCreatorBadge from '../../../../_common/user/creator/AppUserCreatorBadge.vue';
+import { routeLandingHelpRedirect } from '../../../views/landing/help/help.route';
 import AppShellAltMenuDevelopers from '../AppShellAltMenuDevelopers.vue';
 import AppShellAltMenuExtra from '../AppShellAltMenuExtra.vue';
 </script>
@@ -85,7 +86,7 @@ import AppShellAltMenuExtra from '../AppShellAltMenuExtra.vue';
 			<li>
 				<RouterLink
 					:to="{
-						name: 'landing.help',
+						name: routeLandingHelpRedirect.name,
 						params: { path: 'guidelines' },
 					}"
 				>

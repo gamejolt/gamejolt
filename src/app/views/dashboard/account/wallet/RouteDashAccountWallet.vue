@@ -155,11 +155,11 @@ async function withdraw() {
 							v-if="gemWallet.available_balance >= gemWallet.minimum_payout_balance"
 						>
 							<AppSpacer vertical :scale="2" />
-							<AppAlertBox icon="thumbs-up" color="highlight">
+							<AppAlertBox icon="thumbs-up" color="primary">
 								<AppTranslate>
 									Party time! 🎆 🤸 You've reached the minimum withdrawal amount.
-									We'll be depositing your gems into your PayPal account on the
-									1st of next month.
+									We'll be depositing your gems into your preferred payment method
+									within the first 15 days of next month.
 								</AppTranslate>
 							</AppAlertBox>
 						</template>
@@ -176,9 +176,9 @@ async function withdraw() {
 							>
 								<div>
 									<AppTranslate>
-										Once you reach the minimum withdraw amount, we'll deposit
-										your gems into your PayPal account on the 1st of the
-										following month.
+										Once you reach the minimum withdrawal amount, we'll deposit
+										your gems through your preferred payment method within the
+										first 15 days of the following month.
 									</AppTranslate>
 								</div>
 								<div style="flex: auto" />
@@ -341,7 +341,7 @@ async function withdraw() {
 				</AppCard>
 			</template>
 
-			<AppAlertBox v-if="marketplaceRevenuePendingWithdraw > 0" color="highlight">
+			<AppAlertBox v-if="marketplaceRevenuePendingWithdraw > 0" color="primary">
 				<div v-translate="{ amount: formatCurrency(marketplaceRevenuePendingWithdraw) }">
 					You have pending withdrawals amounting to
 					<b>%{ amount }</b>.

@@ -32,25 +32,24 @@ import {
 	StickerTargetController,
 } from '../../../../_common/sticker/target/target-controller';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { AppTimeAgo } from '../../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserFollowButton from '../../../../_common/user/follow/AppUserFollowButton.vue';
-import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import AppVideoPlayer from '../../../../_common/video/player/player.vue';
-import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/processing-progress.vue';
+import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
 import AppCommunityUserNotification from '../../../components/community/user-notification/user-notification.vue';
 import AppContentTargets from '../../../components/content/AppContentTargets.vue';
 import AppFiresidePostEmbed from '../../../components/fireside/post/embed/embed.vue';
 import AppGameBadge from '../../../components/game/badge/badge.vue';
 import { AppCommentWidgetLazy } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
-import AppPollVoting from '../../../components/poll/voting/voting.vue';
+import AppPollVoting from '../../../components/poll/AppPollVoting.vue';
 import AppActivityFeedPostContent from '../../../components/post/AppPostContent.vue';
 import AppPostHeader from '../../../components/post/AppPostHeader.vue';
 import AppPostControls from '../../../components/post/controls/AppPostControls.vue';
+import AppUserAvatarBubble from '../../../components/user/AppUserAvatarBubble.vue';
 import AppPostPageRecommendations from './recommendations/AppPostPageRecommendations.vue';
 
 const UserFollowLocation = 'postPage' as const;
@@ -239,7 +238,7 @@ function onDismissNotification(notification: CommunityUserNotification) {
 				<AppPageContainer xl>
 					<AppSpacer :scale="4" vertical />
 
-					<AppPostHeader :post="post" :follow-location="UserFollowLocation" show-date />
+					<AppPostHeader :post="post" :follow-location="UserFollowLocation" />
 					<AppActivityFeedPostContent
 						:post="post"
 						:sticker-target-controller="stickerTargetController"
@@ -279,9 +278,12 @@ function onDismissNotification(notification: CommunityUserNotification) {
 											:user="displayUser"
 											:disabled="Screen.isXs"
 										>
-											<AppUserAvatar
-												class="-circle-img"
+											<AppUserAvatarBubble
 												:user="displayUser"
+												show-verified
+												show-frame
+												smoosh
+												bg-color="bg-subtle"
 											/>
 										</AppUserCardHover>
 									</div>
@@ -289,7 +291,6 @@ function onDismissNotification(notification: CommunityUserNotification) {
 									<RouterLink :to="displayUser.url" class="-name link-unstyled">
 										<span>
 											<strong>{{ displayUser.display_name }}</strong>
-											<AppUserVerifiedTick :user="displayUser" />
 										</span>
 										<span class="tiny text-muted">
 											@{{ displayUser.username }}
@@ -372,7 +373,7 @@ function onDismissNotification(notification: CommunityUserNotification) {
 					</div>
 
 					<AppStickerControlsOverlay v-if="post.hasPoll">
-						<AppPollVoting :poll="post.poll" :game="post.game" :user="post.user" />
+						<AppPollVoting :post="post" :poll="post.poll" />
 
 						<br />
 					</AppStickerControlsOverlay>

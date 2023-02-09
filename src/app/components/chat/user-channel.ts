@@ -152,6 +152,7 @@ export function createChatUserChannel(
 
 		if (friend && isInChatRoom(client, friend.room_id)) {
 			closeChatRoom(client);
+			client.setSessionRoomId(undefined);
 		}
 
 		client.friendsList.remove(userId);
@@ -169,6 +170,10 @@ export function createChatUserChannel(
 		}
 	}
 
+	/**
+	 * Gets called when they either leave a group room themselves, or if they
+	 * get kicked out.
+	 */
 	function _onGroupLeave(data: RoomIdPayload) {
 		const removed = arrayRemove(client.groupRooms, i => i.id === data.room_id);
 		if (!removed.length) {
@@ -178,6 +183,7 @@ export function createChatUserChannel(
 		const [room] = removed;
 		if (room && isInChatRoom(client, room.id)) {
 			closeChatRoom(client);
+			client.setSessionRoomId(undefined);
 		}
 	}
 

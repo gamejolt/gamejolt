@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, PropType } from 'vue';
-import { trackExperimentEngagement } from '../../../../../_common/analytics/analytics.service';
-import { configNextUpPostLeads } from '../../../../../_common/config/config.service';
+import { computed, PropType } from 'vue';
 import AppPostCardPlaceholder from '../../../../../_common/fireside/post/card/AppPostCardPlaceholder.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -17,10 +15,6 @@ defineProps({
 });
 
 const shouldScroll = computed(() => Screen.isXs);
-
-onMounted(() => {
-	trackExperimentEngagement(configNextUpPostLeads);
-});
 </script>
 
 <template>

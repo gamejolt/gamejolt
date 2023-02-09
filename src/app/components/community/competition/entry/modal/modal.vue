@@ -13,7 +13,7 @@ import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
 import { BaseModal } from '../../../../../../_common/modal/base';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
-import { AppTimeAgo } from '../../../../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../../../_common/user/user-avatar/AppUserAvatar.vue';
