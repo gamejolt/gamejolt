@@ -60,7 +60,7 @@ const {
 const selectedCommunities = ref<{ community: Community }[]>([]);
 const targetableCommunities = computed(() => selectedCommunities.value.map(i => i.community));
 const selectedRealms = ref<Realm[]>([]);
-const maxRealms = ref(5);
+const maxRealms = ref(0);
 
 const form: FormController<Fireside> = createForm({
 	warnOnDiscard: false,

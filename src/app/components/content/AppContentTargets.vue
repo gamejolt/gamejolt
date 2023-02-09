@@ -193,7 +193,7 @@ async function onClickAddRealm() {
 
 	await ContentTargetManageRealmsModal.show({
 		selectedRealms: newRealms,
-		maxRealms: maxRealms?.value || 5,
+		maxRealms: maxRealms?.value || 0,
 	});
 
 	const curRealmsMap = arrayIndexBy(curRealms, 'id');

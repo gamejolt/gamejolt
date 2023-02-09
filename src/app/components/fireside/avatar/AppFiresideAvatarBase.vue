@@ -78,9 +78,8 @@ const hasLink = computed(() => {
 				</div>
 			</div>
 
-			<!-- TODO(fireside-realms) styling for -realm -->
 			<div v-if="realm" class="-realm">
-				<AppRealmThumbnail v-if="!isPlaceholder" :realm="realm" />
+				<AppRealmThumbnail v-if="!isPlaceholder" :realm="realm" not-rounded />
 			</div>
 
 			<div v-if="community" class="-community">

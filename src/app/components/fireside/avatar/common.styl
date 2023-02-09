@@ -5,7 +5,7 @@ $-tag-padding-horizontal = 6px
 $-tag-offset = ($-tag-font-size * 0.5) + ($-tag-padding-vertical * 2)
 $-anim-size = 8px
 $-border-color = var(--theme-fg)
-$-zindex-community = 1
+$-zindex-targetables = 1
 $-zindex-tag = 2
 $-zindex-link = 3
 $-zindex-popper = 4
@@ -110,9 +110,19 @@ $-zindex-popper = 4
 	background-color: $-border-color
 	position: absolute
 	bottom: $-tag-offset + 2px
+	right: 5%
+	z-index: $-zindex-targetables
+
+.-realm
+	elevate-1()
+	width: 25%
+	border: $border-width-large solid $-border-color
+	background-color: $-border-color
+	position: absolute
+	bottom: $-tag-offset + 2px
 	left: 5%
-	margin-left: -2px
-	z-index: $-zindex-community
+	margin-bottom: -2px
+	z-index: $-zindex-targetables
 
 .-tag
 	rounded-corners()

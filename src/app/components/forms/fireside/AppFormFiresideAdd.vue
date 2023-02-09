@@ -39,7 +39,7 @@ const defaultTitle = computed(() => nameSuggestion.value ?? undefined);
 const nameSuggestion = ref<string | null>(null);
 const targetableCommunities = ref<Community[]>([]);
 const communities = ref<{ community: Community }[]>([]);
-const maxRealms = ref(5);
+const maxRealms = ref(0);
 
 const selectableCommunities = computed(() => targetableCommunities.value.filter(c => !c.isBlocked));
 const canAttachTargets = computed(
@@ -199,7 +199,7 @@ function removeRealm(realm: Realm) {
 			<AppFormGroup
 				class="-group-targetables"
 				name="community_id"
-				:label="$gettext(`Start in a community?`)"
+				:label="$gettext(`Start in a community or realm?`)"
 				hide-label
 			>
 				<AppContentTargets
