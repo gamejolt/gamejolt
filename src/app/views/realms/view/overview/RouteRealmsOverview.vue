@@ -37,7 +37,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const { realm, firesides, processPayload } = useRealmRouteStore();
+const { realm, firesides, userFireside, userHasFireside, processPayload } = useRealmRouteStore();
 const router = useRouter();
 const route = useRoute();
 
@@ -48,8 +48,12 @@ const isBootstrapped = ref(false);
 const firesidesGridColumns = 5;
 
 const displayablePreviewFiresides = computed(() => {
+	const previewable = userFireside.value
+		? [userFireside.value, ...firesides.value]
+		: firesides.value;
+
 	// -1 to leave room for the "add a fireside"
-	return firesides.value.slice(0, firesidesGridColumns - 1);
+	return previewable.slice(0, firesidesGridColumns - (userHasFireside.value ? 0 : 1));
 });
 
 const appRoute = createAppRoute({
@@ -127,7 +131,7 @@ function onPostAdded(post: FiresidePost) {
 					marginBottom: kLineHeightComputed.px,
 				}"
 			>
-				<AppFiresideAvatarAdd v-if="realm" :realms="[realm]" />
+				<AppFiresideAvatarAdd v-if="realm && !userHasFireside" :realms="[realm]" />
 
 				<AppFiresideAvatar
 					v-for="fireside in displayablePreviewFiresides"

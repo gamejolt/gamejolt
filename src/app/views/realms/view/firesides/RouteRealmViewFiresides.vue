@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
-import { ModelClassType } from '../../../../../_common/model/model.service';
+import { ModelData } from '../../../../../_common/model/model.service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
@@ -48,7 +48,7 @@ const gridColumns = computed(() => {
 const placeholderCount = computed(() => gridColumns.value * 2);
 
 type RealmFiresidesPayload = {
-	firesides: ModelClassType<Fireside>[];
+	firesides: ModelData<Fireside>[];
 };
 
 const { isBootstrapped } = createAppRoute({

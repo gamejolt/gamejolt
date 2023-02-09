@@ -59,7 +59,7 @@ function onShareClick() {
 						v-if="Screen.isDesktop"
 						:realm="realm"
 						:to="realm.routeLocation"
-						to-linkifies-image
+						link-target="image"
 					/>
 					<template v-else>
 						<h1

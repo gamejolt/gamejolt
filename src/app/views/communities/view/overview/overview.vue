@@ -132,11 +132,11 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	get displayablePreviewFiresides() {
-		const firesides = this.userFireside
+		const previewable = this.userFireside
 			? [this.userFireside, ...this.previewFiresides]
 			: this.previewFiresides;
 
-		return firesides.slice(0, this.firesidesGridColumns - (this.canCreateFireside ? 1 : 0));
+		return previewable.slice(0, this.firesidesGridColumns - (this.canCreateFireside ? 1 : 0));
 	}
 
 	@Watch('communityState.hasUnreadFeaturedPosts', { immediate: true })

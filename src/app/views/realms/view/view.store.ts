@@ -13,6 +13,8 @@ export type RealmRoutePayload = {
 	knownFollowers: ModelData<User>[];
 	knownFollowerCount: number;
 	activeFiresides: ModelData<Fireside>[];
+	userFireside: ModelData<Fireside> | undefined;
+	userHasFireside: boolean;
 };
 
 export function createRealmRouteStore() {
@@ -20,12 +22,18 @@ export function createRealmRouteStore() {
 	const knownFollowers = ref<User[]>([]);
 	const knownFollowerCount = ref(0);
 	const firesides = ref<Fireside[]>([]);
+	const userFireside = ref<Fireside>();
+	const userHasFireside = ref(false);
 
 	const processPayload = (payload: RealmRoutePayload) => {
 		realm.value = new Realm(payload.realm);
 		knownFollowers.value = User.populate(payload.knownFollowers);
 		knownFollowerCount.value = payload.knownFollowerCount || 0;
 		firesides.value = Fireside.populate(payload.activeFiresides);
+		if (payload.userFireside) {
+			userFireside.value = new Fireside(payload.userFireside);
+		}
+		userHasFireside.value = payload.userHasFireside;
 	};
 
 	return {
@@ -33,6 +41,8 @@ export function createRealmRouteStore() {
 		knownFollowers,
 		knownFollowerCount,
 		firesides,
+		userFireside,
+		userHasFireside,
 		processPayload,
 	};
 }
