@@ -24,10 +24,6 @@ const emit = defineEmits({
 	remove: (_realm: Realm) => true,
 });
 
-const imgRatio = 0.75;
-const imgHeight = POST_TARGET_HEIGHT;
-const imgWidth = imgHeight * imgRatio;
-
 const to = computed(() => (hasLinks.value ? realm.value.routeLocation : undefined));
 </script>
 
