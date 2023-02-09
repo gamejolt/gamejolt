@@ -4,6 +4,7 @@ import { Api } from '../../../../_common/api/api.service';
 import AppPostCard from '../../../../_common/fireside/post/card/AppPostCard.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
+import { Meta } from '../../../../_common/meta/meta-service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -42,8 +43,10 @@ const featuredPages = ref([]) as Ref<PayloadFeatured[]>;
 const broadcastPosts = ref([]) as Ref<FiresidePost[]>;
 const searchSuggestions = ref<string[]>([]);
 
+const routeTitle = computed(() => $gettext(`Help Docs`));
+
 createAppRoute({
-	routeTitle: computed(() => $gettext(`Help Docs`)),
+	routeTitle,
 	onResolved({ payload }) {
 		featuredPages.value = [];
 		for (const categoryData of payload.featured) {
@@ -55,6 +58,16 @@ createAppRoute({
 
 		broadcastPosts.value = FiresidePost.populate(payload.broadcasts);
 		searchSuggestions.value = payload.searchSuggestions;
+
+		if (payload.meta) {
+			const meta = payload.meta;
+
+			Meta.description = meta.description;
+			Meta.fb = payload.fb || {};
+			Meta.fb.title = routeTitle.value;
+			Meta.twitter = payload.twitter || {};
+			Meta.twitter.title = routeTitle.value;
+		}
 	},
 });
 </script>
