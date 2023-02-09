@@ -68,6 +68,19 @@ const props = defineProps({
 	hasLinks: {
 		type: Boolean,
 	},
+	/**
+	 * Makes the targetables background color use --theme-bg instead of
+	 * --theme-bg-offset.
+	 *
+	 * @deprecated This prop is a single-use quick hack for fireside settings sidebar,
+	 * it isnt tested anywhere else. if you want this capability in other
+	 * components it's time to rewrite this into a proper solution where we pass
+	 * in a bg-color prop instead, and propogate it through all the nested
+	 * components all the way through AppPill and AppPillBi.
+	 */
+	bgColorOffset: {
+		type: Boolean,
+	},
 });
 
 const {
@@ -83,6 +96,7 @@ const {
 	canRemoveCommunities,
 	canRemoveRealms,
 	hasLinks,
+	bgColorOffset,
 } = toRefs(props);
 
 const emit = defineEmits({
@@ -219,7 +233,7 @@ async function onClickAddRealm() {
 
 <template>
 	<AppScrollScroller v-if="canShow" horizontal thin>
-		<TransitionGroup tag="div" class="-list">
+		<TransitionGroup tag="div" :class="['-list', { '-bg-color-offset': bgColorOffset }]">
 			<AppFormsPillSelectorCommunities
 				v-if="incompleteCommunity"
 				key="incomplete-item"
@@ -287,6 +301,9 @@ async function onClickAddRealm() {
 </template>
 
 <style lang="stylus" scoped>
+.-bg-color-offset >>>.pill
+	background-color: var(--theme-bg)
+
 .-list
 	display: flex
 	flex-wrap: nowrap

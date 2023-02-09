@@ -319,6 +319,7 @@ function onClickChatMods() {
 									can-add-realm
 									can-remove-realms
 									no-community-channels
+									bg-color-offset
 									@remove-realm="removeRealm"
 									@select-realm="attachRealm"
 								/>
