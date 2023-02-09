@@ -47,11 +47,11 @@ const props = defineProps({
 	},
 	maxCommunities: {
 		type: Number,
-		default: undefined,
+		default: 0,
 	},
 	maxRealms: {
 		type: Number,
-		default: undefined,
+		default: 0,
 	},
 	canAddCommunity: {
 		type: Boolean,
@@ -137,8 +137,8 @@ const showAddCommunity = computed(() => {
 		return false;
 	}
 
-	const maxNum = maxCommunities?.value ?? 0;
-	if (maxNum > 0 && communities.value.length >= maxNum) {
+	const maxNum = maxCommunities.value;
+	if (communities.value.length >= maxNum) {
 		return false;
 	}
 
@@ -150,8 +150,8 @@ const showAddRealm = computed(() => {
 		return false;
 	}
 
-	const maxNum = maxRealms?.value ?? 0;
-	if (maxNum > 0 && realms.value.length >= maxNum) {
+	const maxNum = maxRealms.value;
+	if (realms.value.length >= maxNum) {
 		return false;
 	}
 
