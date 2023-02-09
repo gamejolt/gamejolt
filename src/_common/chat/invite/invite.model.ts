@@ -7,8 +7,8 @@ export default class ChatInvite extends Model {
 	static readonly STATUS_DECLINED = 'declined';
 	static readonly STATUS_CANCELED = 'canceled';
 
-	declare user: User;
-	declare by_user: User;
+	declare invited_user: User;
+	declare inviter_user: User;
 	declare room_title: string;
 	declare chat_message_id: number;
 	declare status: string;
@@ -17,11 +17,11 @@ export default class ChatInvite extends Model {
 	constructor(data: Partial<ChatInvite> = {}) {
 		super(data);
 
-		if (data.user) {
-			this.user = new User(data.user);
+		if (data.invited_user) {
+			this.invited_user = new User(data.invited_user);
 		}
-		if (data.by_user) {
-			this.user = new User(data.by_user);
+		if (data.inviter_user) {
+			this.inviter_user = new User(data.inviter_user);
 		}
 	}
 }

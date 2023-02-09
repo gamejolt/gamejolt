@@ -35,7 +35,7 @@ owner?.hydrator.useData('chat-invite', props.inviteId.toString(), data => {
 });
 
 const sentInvite = computed(
-	() => user.value && invite.value && user.value?.id == invite.value?.by_user.id
+	() => user.value && invite.value && user.value?.id == invite.value?.inviter_user.id
 );
 
 async function onClickAccept() {
