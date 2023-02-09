@@ -321,7 +321,7 @@ function _canThankSupporterAction(action: SupporterAction) {
 			<AppSpacer vertical :scale="4" />
 
 			<AppExpand :when="isSending">
-				<AppAlertBox icon="lock" color="highlight" fill-color="offset">
+				<AppAlertBox icon="lock" color="primary" fill-color="offset">
 					{{
 						$gettext(
 							`We're processing your outgoing messages right now. You'll be able to thank more users once this is finished.`

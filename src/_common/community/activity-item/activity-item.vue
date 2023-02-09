@@ -6,7 +6,7 @@ import { Fireside } from '../../fireside/fireside.model';
 import { FiresidePost } from '../../fireside/post/post-model';
 import { Game } from '../../game/game.model';
 import { Screen } from '../../screen/screen-service';
-import { AppTimeAgo } from '../../time/ago/ago';
+import AppTimeAgo from '../../time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { getSingleReasonText } from '../../user/action-reasons';
 import { UserBlock } from '../../user/block/block.model';

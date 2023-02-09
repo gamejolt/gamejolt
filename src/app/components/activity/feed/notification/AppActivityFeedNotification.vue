@@ -26,7 +26,7 @@ import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { Notification } from '../../../../../_common/notification/notification-model';
 import { NotificationText } from '../../../../../_common/notification/notification-text.service';
 import { SupporterAction } from '../../../../../_common/supporters/action.model';
-import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { BaseTrophy } from '../../../../../_common/trophy/base-trophy.model';

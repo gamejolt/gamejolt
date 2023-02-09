@@ -21,7 +21,7 @@ import AppScrollAffix from '../../../../../_common/scroll/AppScrollAffix.vue';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { vAppScrollTo } from '../../../../../_common/scroll/to/to.directive';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';

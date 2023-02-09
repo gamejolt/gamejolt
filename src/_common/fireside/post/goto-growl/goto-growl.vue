@@ -2,7 +2,7 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { RouteLocationRaw } from 'vue-router';
 import { Game } from '../../../game/game.model';
-import { AppTimeAgo } from '../../../time/ago/ago';
+import AppTimeAgo from '../../../time/AppTimeAgo.vue';
 import { FiresidePost } from '../post-model';
 
 export type Action = 'add' | 'publish' | 'scheduled-publish';

@@ -22,7 +22,7 @@ import {
 	OptionsForRoute,
 } from '../../../../../../../../_common/route/route-component';
 import { Sellable } from '../../../../../../../../_common/sellable/sellable.model';
-import { AppTimeAgo } from '../../../../../../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import FormGamePackage from '../../../../../../../components/forms/game/package/package.vue';
 import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';

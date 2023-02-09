@@ -2,6 +2,7 @@
 import { computed, Ref, ref } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
+import { Meta } from '../../../../_common/meta/meta-service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -45,8 +46,12 @@ const currentPage = computed(() => {
 	}
 });
 
+const routeTitle = computed(
+	() => (currentCategory.value?.category.name || '') + ' ' + $gettext(`Help Docs`).trim()
+);
+
 createAppRoute({
-	routeTitle: computed(() => currentCategory.value?.category.name || $gettext(`Help Docs`)),
+	routeTitle,
 	onResolved({ payload }) {
 		categories.value = [];
 		for (const categoryData of payload.categories) {
@@ -54,6 +59,16 @@ createAppRoute({
 				category: new HelpCategory(categoryData.category),
 				pages: HelpPage.populate(categoryData.pages),
 			});
+		}
+
+		if (payload.meta) {
+			const meta = payload.meta;
+
+			Meta.description = meta.description;
+			Meta.fb = payload.fb || {};
+			Meta.fb.title = routeTitle.value;
+			Meta.twitter = payload.twitter || {};
+			Meta.twitter.title = routeTitle.value;
 		}
 	},
 });

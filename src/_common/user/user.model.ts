@@ -17,6 +17,7 @@ import { $gettext } from '../translate/translate.service';
 
 export const CreatorStatusCreator = 1;
 export const CreatorStatusApplied = 2;
+export const CreatorStatusSuspended = 3;
 
 export class User extends Model implements ContentContainerModel, CommentableModel {
 	static readonly TYPE_GAMER = 'User';
@@ -32,6 +33,7 @@ export class User extends Model implements ContentContainerModel, CommentableMod
 	img_avatar!: string;
 	dogtags?: DogtagData[];
 	shouts_enabled!: boolean;
+	is_spawnday!: boolean;
 
 	status!: number;
 	permission_level!: number;
@@ -336,4 +338,12 @@ export async function toggleUserFollow(
 	}
 
 	return !failed;
+}
+
+export function userCanAccessCreatorForm(user: User) {
+	return (
+		user.creator_status === CreatorStatusApplied ||
+		user.creator_status === CreatorStatusCreator ||
+		user.creator_status === CreatorStatusSuspended
+	);
 }
