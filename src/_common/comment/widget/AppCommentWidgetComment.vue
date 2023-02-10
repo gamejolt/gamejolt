@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed, onMounted, PropType, ref, toRefs } from 'vue';
 import { Clipboard } from '../../clipboard/clipboard-service';
-import { Collaborator } from '../../collaborator/collaborator.model';
 import { Environment } from '../../environment/environment.service';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppMessageThreadItem from '../../message-thread/AppMessageThreadItem.vue';
@@ -92,7 +91,7 @@ const isCollaborator = computed(() => {
 
 /**
  * Whether or not they own the resource this comment was posted to, or they are a collaborator
- * on the resource with the correct permissions..
+ * on the resource with the correct permissions.
  */
 const hasModPermissions = computed(() => {
 	if (!user.value) {
@@ -104,15 +103,26 @@ const hasModPermissions = computed(() => {
 		return true;
 	}
 
-	// A collaborator for the game the comment is attached to can remove,
-	// if they have the comments permission.
-	if (collaborators.value.length) {
+	// When collaborator data is given for the active user,
+	// they can remove comments based the perm/resource combination on the collaborator.
+	if (collaborators.value.length > 0) {
 		const collaborator = collaborators.value.find(i => i.user_id === user.value!.id);
 
-		if (collaborator instanceof Collaborator) {
-			if (collaborator.perms.includes('all') || collaborator.perms.includes('comments')) {
-				return true;
-			}
+		if (collaborator?.perms.includes('all')) {
+			return true;
+		}
+
+		// They are a collaborator of the game the post is shared on, with the "comments" perm.
+		if (collaborator?.resource === 'Game' && collaborator.perms.includes('comments')) {
+			return true;
+		}
+
+		// They are a collaborator of one of the communities the post is shared in, with the "community-comments" perm.
+		if (
+			collaborator?.resource === 'Community' &&
+			collaborator.perms.includes('community-comments')
+		) {
+			return true;
 		}
 	}
 
