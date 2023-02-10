@@ -115,13 +115,15 @@ $result-border-width = 4px
 	overflow: hidden
 	width: 100%
 	cursor: pointer
+	background-color: var(--theme-bg-offset)
 
 	img
-		transition: filter 0.1s ease
+		transition: filter 0.1s, transform 0.1s ease
 		filter: brightness(0.6)
 
 	&:hover img
 		filter: brightness(0.3)
+		transform: scaleX(1.1) scaleY(1.1)
 
 .category-text
 	position: absolute
@@ -156,6 +158,18 @@ $result-border-width = 4px
 	&:hover
 		border-color: var(--theme-backlight)
 		background-color: var(--theme-backlight)
+
+	&-favorite-icon
+		cursor: pointer
+		position: absolute
+		z-index: 2
+		top: 6px
+		right: 6px
+		filter: drop-shadow(0 0 4px var(--theme-bg))
+		transition: transform 0.1s ease
+
+		&:hover
+			transform: scaleX(1.25) scaleY(1.25)
 
 .search-result-placeholder
 	rounded-corners-lg()
