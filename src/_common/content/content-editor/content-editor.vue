@@ -153,7 +153,7 @@ export default class AppContentEditor extends Vue {
 		// TODO(remote-content-capabilities) TODO{Jonathan} Test this. Convert to script setup if able.
 		this.controller_.contextCapabilities = props.contextCapabilitiesOverride
 			? props.contextCapabilitiesOverride
-			: ContextCapabilities.getForContext(props.contentContext);
+			: ContextCapabilities.getEmpty();
 	}
 
 	@Emit('submit')

@@ -22,7 +22,7 @@ import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
 import { useGridStore } from '../../../grid/grid-store';
 import { editMessage as chatEditMessage, queueChatMessage, tryGetRoomRole } from '../../client';
-import { ChatMessage, CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../message';
+import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
 import { ChatWindowLeftGutterSize } from '../variables';
 
@@ -51,7 +51,7 @@ const props = defineProps({
 	},
 	maxContentLength: {
 		type: Number,
-		default: CHAT_MESSAGE_MAX_CONTENT_LENGTH,
+		default: undefined,
 	},
 });
 
@@ -59,15 +59,20 @@ const emit = defineEmits({
 	'focus-change': (_focused: boolean) => true,
 });
 
-const { room, slowmodeDuration } = toRefs(props);
+const { room, slowmodeDuration, maxContentLength, contextCapabilities } = toRefs(props);
 
 const { isDark } = useThemeStore();
 const { chatUnsafe: chat } = useGridStore();
 
-const lengthLimit = ref(props.maxContentLength);
-// TODO: do we need to watch the props and override this value if the prop changes?
-// It currently gets overridden in the form onLoad.
-const messageContentCapabilities = ref(props.contextCapabilities);
+const formMaxContentLength = ref<number | null>(null);
+const formContextCapabilities = ref<ContextCapabilities | null>(null);
+
+const actualMaxContentLength = computed(
+	() => maxContentLength?.value || formMaxContentLength?.value || 1000
+);
+const actualContextCapabilities = computed(
+	() => contextCapabilities?.value || formContextCapabilities?.value || undefined
+);
 
 const focusToken = createFocusToken();
 
@@ -172,7 +177,6 @@ type FormModel = {
 	id?: number;
 };
 
-// TODO: editing message, send message id with request.
 const form: FormController<FormModel> = createForm({
 	loadUrl: `/web/chat/rooms/get-message-content-capabilities/${props.room.id}`,
 	warnOnDiscard: false,
@@ -180,9 +184,9 @@ const form: FormController<FormModel> = createForm({
 		form.formModel.content = '';
 	},
 	onLoad(payload) {
-		lengthLimit.value = payload.lengthLimit;
+		formMaxContentLength.value = payload.lengthLimit;
 		if (payload.contentCapabilities) {
-			messageContentCapabilities.value = ContextCapabilities.fromStringList(
+			formContextCapabilities.value = ContextCapabilities.fromStringList(
 				payload.contentCapabilities
 			);
 		}
@@ -488,11 +492,11 @@ function disableTypingTimeout() {
 							:key="room.id"
 							ref="editor"
 							:content-context="room.messagesContentContext"
-							:context-capabilities-override="messageContentCapabilities"
+							:context-capabilities-override="actualContextCapabilities"
 							:temp-resource-context-data="contentEditorTempResourceContextData"
 							:placeholder="$gettext('Send a message')"
 							:single-line-mode="Screen.isDesktop"
-							:validators="[validateContentMaxLength(lengthLimit)]"
+							:validators="[validateContentMaxLength(actualMaxContentLength)]"
 							:max-height="160"
 							:display-rules="displayRules"
 							:autofocus="!Screen.isMobile"

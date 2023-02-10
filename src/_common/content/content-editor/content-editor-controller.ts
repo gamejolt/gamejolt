@@ -52,9 +52,7 @@ export function createContentEditor(options: {
 
 	const c = reactive(new ContentEditorController(contentContext)) as ContentEditorController;
 
-	c.contextCapabilities = markRaw(
-		options.contextCapabilities ?? ContextCapabilities.getForContext(c.contentContext)
-	);
+	c.contextCapabilities = markRaw(options.contextCapabilities ?? ContextCapabilities.getEmpty());
 	c.schema = markRaw(generateEditorSchema(c.contextCapabilities));
 	c.plugins = markRaw(createEditorPlugins(c));
 

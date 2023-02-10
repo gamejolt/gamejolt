@@ -43,9 +43,7 @@ const viewerStyleClass = computed(() => {
 
 const content = computed(() => doc.value?.content ?? []);
 const context = computed(() => doc.value!.context);
-const capabilities = computed(() =>
-	doc.value ? ContextCapabilities.getForContext(context.value) : ContextCapabilities.getEmpty()
-);
+const capabilities = computed(() => ContextCapabilities.getEmpty());
 const contentRules = computed(() => displayRules?.value);
 const maybeParentBounds = computed(() => parentBounds?.value);
 

@@ -415,7 +415,7 @@ export class ContentEditorAppAdapterMessage {
 				controller.contextCapabilities = markRaw(
 					capabilities
 						? ContextCapabilities.fromStringList(capabilities)
-						: ContextCapabilities.getForContext(controller.contentContext)
+						: ContextCapabilities.getEmpty()
 				);
 
 				// Force the editor to rebuild when we alter the capabilities.

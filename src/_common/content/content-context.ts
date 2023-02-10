@@ -1,6 +1,5 @@
 import { arrayRemove } from '../../utils/array';
 import { MediaItem } from '../media-item/media-item-model';
-import contentCapabilityDefinitions from './capabilities.json';
 
 export const GJ_FORMAT_VERSION = '1.0.1';
 
@@ -160,10 +159,6 @@ export class ContextCapabilities {
 
 	public static fromStringList(items: string[]) {
 		return new ContextCapabilities(items.map(x => x as ContextCapabilityType));
-	}
-
-	public static getForContext(context: ContentContext) {
-		return this.fromStringList(contentCapabilityDefinitions[context]);
 	}
 }
 
