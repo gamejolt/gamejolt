@@ -62,10 +62,17 @@ export function arrayGroupBy<T>(values: T[], field: keyof T): { [k: string]: T[]
 	return indexed;
 }
 
-export function arrayRemove<T>(arr: T[], predicate: (v: T) => boolean) {
+export type ArrayRemoveOptions = Partial<{
+	onMissing: () => void;
+}>;
+
+export function arrayRemove<T>(arr: T[], predicate: (v: T) => boolean, opts?: ArrayRemoveOptions) {
 	const idx = arr.findIndex(predicate);
 	if (idx !== -1) {
 		return arr.splice(idx, 1);
+	} else {
+		opts?.onMissing?.();
+		return [];
 	}
 }
 

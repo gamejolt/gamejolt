@@ -3,6 +3,7 @@ import { PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import { Fireside } from '../../../_common/fireside/fireside.model';
+import AppRealmThumbnail from '../../../_common/realm/AppRealmThumbnail.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppStickerStack from '../../../_common/sticker/stack/AppStickerStack.vue';
 import { StickerTargetController } from '../../../_common/sticker/target/target-controller';
@@ -50,8 +51,16 @@ const { fireside, stickerTargetController, overlay } = toRefs(props);
 				</template>
 			</div>
 
-			<div class="-communities">
-				<div v-if="fireside.community" class="-community">
+			<div class="-targetables">
+				<div v-if="fireside.realm" class="-targetable">
+					<div class="-realm-avatar">
+						<AppRealmThumbnail :realm="fireside.realm" not-rounded />
+					</div>
+					<RouterLink :class="{ '-overlay': overlay }" :to="fireside.realm.routeLocation">
+						{{ fireside.realm.name }}
+					</RouterLink>
+				</div>
+				<div v-if="fireside.community" class="-targetable">
 					<div class="-community-avatar">
 						<AppCommunityThumbnailImg :community="fireside.community" />
 					</div>
@@ -101,11 +110,11 @@ const { fireside, stickerTargetController, overlay } = toRefs(props);
 	flex: none
 	text-shadow: none
 
-.-communities
+.-targetables
 	display: flex
 	gap: 8px
 
-.-community
+.-targetable
 	display: flex
 	align-items: center
 	font-weight: 700
@@ -114,6 +123,11 @@ const { fireside, stickerTargetController, overlay } = toRefs(props);
 	width: 16px
 	height: 16px
 	margin-right: 4px
+
+.-realm-avatar
+	width: 12px
+	height: 16px
+	margin-right: 8px
 
 .-reactions
 	margin-left: 8px
