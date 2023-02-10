@@ -1,12 +1,11 @@
 import * as fs from 'fs-extra';
+import * as path from 'path';
 import { gjSectionConfigs, GjSectionName } from '../section-config';
 import { createTarGz, packageJson, runShell } from '../utils';
 import { Options } from '../vite-options';
 import { Gjpush } from './gjpush';
 import { buildJoltron, createInstaller, ensureJoltronCloned, restructureProject } from './joltron';
 import { NwBuilder } from './nwjs-builder';
-
-const path = require('path') as typeof import('path');
 
 const rootDir = path.resolve(__dirname, '..', '..', '..');
 

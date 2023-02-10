@@ -12,7 +12,7 @@ export default class AppGameOgrsTag extends Vue {
 	@Prop(Object) game!: Game;
 	@Prop(Boolean) full?: boolean;
 
-	readonly assetPaths = import.meta.globEager('./*.svg');
+	readonly assetPaths = import.meta.glob('./*.svg', { eager: true, as: 'url' });
 
 	get imgTag() {
 		if (this.game) {
@@ -29,11 +29,11 @@ export default class AppGameOgrsTag extends Vue {
 	}
 
 	get imgUrl() {
-		return this.assetPaths[`./${this.imgTag}.svg`].default;
+		return this.assetPaths[`./${this.imgTag}.svg`];
 	}
 
 	get imgTagUrl() {
-		return this.assetPaths[`./${this.imgTag}-tag.svg`].default;
+		return this.assetPaths[`./${this.imgTag}-tag.svg`];
 	}
 
 	get imgTagHeight() {
@@ -57,17 +57,10 @@ export default class AppGameOgrsTag extends Vue {
 			strict-colors
 		/>
 		<template v-if="full">
-			<AppThemeSvg
-				class="-face"
-				:src="imgUrl"
-				width="80"
-				height="80"
-				alt=""
-				strict-colors
-			/>
+			<AppThemeSvg class="-face" :src="imgUrl" width="80" height="80" alt="" strict-colors />
 			<img
 				class="-logo"
-				:src="assetPaths['./ogrs-logo.svg'].default"
+				:src="assetPaths['./ogrs-logo.svg']"
 				width="76"
 				height="8"
 				alt="OGRS"

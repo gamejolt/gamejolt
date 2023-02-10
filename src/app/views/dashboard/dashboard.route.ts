@@ -10,7 +10,6 @@ import { routeDashStickers } from './stickers/stickers.route';
 import { routeDashSupporters } from './supporters/supporters.route';
 
 export const routeDash: RouteRecordRaw = {
-	name: 'dashboard',
 	path: '/dashboard',
 	component: () => import('./RouteDashboard.vue'),
 	children: [

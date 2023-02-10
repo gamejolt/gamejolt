@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
-import { Api } from '../../../../../_common/api/api.service';
+import { Api, ApiProgressEvent } from '../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { FiresidePostVideo } from '../../../../../_common/fireside/post/video/video-model';
@@ -27,7 +27,7 @@ import AppVideoProcessingProgress from '../../../../../_common/video/processing-
 
 interface FormModel {
 	video: File | null;
-	_progress: ProgressEvent | null;
+	_progress: ApiProgressEvent | null;
 }
 
 export const enum VideoStatus {
@@ -216,7 +216,7 @@ export default class AppFormPostVideo
 		}
 	}
 
-	onProgressUpdate(e: ProgressEvent | null) {
+	onProgressUpdate(e: ApiProgressEvent | null) {
 		if (e) {
 			this.setField('_progress', e);
 		} else {

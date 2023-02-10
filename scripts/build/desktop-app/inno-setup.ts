@@ -1,8 +1,7 @@
+import * as cp from 'child_process';
 import * as fs from 'fs-extra';
+import * as path from 'path';
 import { shellEscape } from '../utils';
-
-const path = require('path') as typeof import('path');
-const cp = require('child_process') as typeof import('child_process');
 
 function execFile(cmd, args) {
 	return new Promise<void>(function (resolve, reject) {
