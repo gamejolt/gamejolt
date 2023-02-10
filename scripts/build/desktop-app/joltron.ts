@@ -1,3 +1,6 @@
+import * as fs from 'fs-extra';
+import * as path from 'path';
+import * as readdirp from 'readdirp';
 import {
 	createTarGz,
 	isLinux,
@@ -7,13 +10,8 @@ import {
 	runShell,
 	shellEscape,
 } from '../utils';
-import * as fs from 'fs-extra';
-import * as readdirp from 'readdirp';
-import { buildInnoSetup } from './inno-setup';
 import { Options } from '../vite-options';
-
-const path = require('path') as typeof import('path');
-const os = require('os') as typeof import('os');
+import { buildInnoSetup } from './inno-setup';
 
 // The loader variant version looks like `${version}.loader`, but git's release version is simply `${version}` so we gotta transform it.
 export const joltronVersion = (packageJson.joltronVersion as string).replace(/\.loader$/, '');
