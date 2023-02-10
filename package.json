@@ -1,6 +1,6 @@
 {
 	"name": "game-jolt-client",
-	"version": "1.21.6",
+	"version": "1.23.1",
 	"scripts": {
 		"check": "tsc --noEmit",
 		"lint": "eslint --ext .js,.vue src",
@@ -138,7 +138,7 @@
 		"@types/prosemirror-state": "1.2.4",
 		"@types/prosemirror-view": "1.11.4"
 	},
-	"main": "https://development.gamejolt.com/",
+	"main": "https://development.gamejolt.com",
 	"node-remote": "https://development.gamejolt.com",
 	"domain": "game-jolt-client",
 	"window": {

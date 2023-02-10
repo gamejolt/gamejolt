@@ -32,7 +32,7 @@ import {
 	StickerTargetController,
 } from '../../../../_common/sticker/target/target-controller';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { AppTimeAgo } from '../../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
@@ -40,6 +40,7 @@ import AppUserFollowButton from '../../../../_common/user/follow/AppUserFollowBu
 import AppVideoPlayer from '../../../../_common/video/player/player.vue';
 import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
 import AppCommunityUserNotification from '../../../components/community/user-notification/user-notification.vue';
+import AppContentTargets from '../../../components/content/AppContentTargets.vue';
 import AppFiresidePostEmbed from '../../../components/fireside/post/embed/embed.vue';
 import AppGameBadge from '../../../components/game/badge/badge.vue';
 import { AppCommentWidgetLazy } from '../../../components/lazy';
@@ -47,7 +48,6 @@ import AppPageContainer from '../../../components/page-container/AppPageContaine
 import AppPollVoting from '../../../components/poll/AppPollVoting.vue';
 import AppActivityFeedPostContent from '../../../components/post/AppPostContent.vue';
 import AppPostHeader from '../../../components/post/AppPostHeader.vue';
-import AppPostTargets from '../../../components/post/AppPostTargets.vue';
 import AppPostControls from '../../../components/post/controls/AppPostControls.vue';
 import AppUserAvatarBubble from '../../../components/user/AppUserAvatarBubble.vue';
 import AppPostPageRecommendations from './recommendations/AppPostPageRecommendations.vue';
@@ -393,7 +393,7 @@ function onDismissNotification(notification: CommunityUserNotification) {
 							@show="scrollToStickers()"
 						/>
 
-						<AppPostTargets :communities="communities" :realms="realms" has-links />
+						<AppContentTargets :communities="communities" :realms="realms" has-links />
 
 						<template v-if="shouldShowCommunityPublishError">
 							<br />

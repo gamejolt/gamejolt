@@ -1,5 +1,5 @@
 <script lang="ts">
-export const POST_TARGET_HEIGHT = 30;
+export const CONTENT_TARGET_HEIGHT = 30;
 </script>
 
 <script lang="ts" setup>
@@ -91,10 +91,10 @@ function onClickRemove() {
 <template>
 	<component
 		:is="component"
-		class="post-target"
+		class="content-target"
 		:class="{ '-bleed-img': bleedImg }"
 		:style="{
-			height: POST_TARGET_HEIGHT + 'px',
+			height: CONTENT_TARGET_HEIGHT + 'px',
 		}"
 		v-bind="componentProps"
 	>
@@ -127,7 +127,7 @@ function onClickRemove() {
 </template>
 
 <style lang="stylus" scoped>
-.post-target
+.content-target
 	margin: 0
 
 .-row

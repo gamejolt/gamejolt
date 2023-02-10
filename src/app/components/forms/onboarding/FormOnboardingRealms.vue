@@ -79,16 +79,19 @@ const joinedAnyRealm = computed(() => realms.value.find(i => !!i.is_following));
 @import './variables'
 
 .-form
+	--grid-item-width: 200px
 	display: flex
 	flex-direction: column
 	max-width: 1100px
 	margin: 0 auto
 	padding: ($grid-gutter-width-xs / 2)
+	text-align: center
+
+	@media $media-xs
+		--grid-item-width: 128px
 
 	@media $media-sm-up
 		padding: $grid-gutter-width
-
-	text-align: center
 
 	> *:not(:first-child)
 		margin-top: 30px
@@ -97,13 +100,12 @@ const joinedAnyRealm = computed(() => realms.value.find(i => !!i.is_following));
 	p
 		margin-bottom: 5px
 
-	.-list
-		display: grid
-		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))
-		grid-gap: 8px
-		justify-content: space-between
+.-list
+	display: grid
+	grid-template-columns: repeat(auto-fill, minmax(var(--grid-item-width), 1fr))
+	grid-gap: 8px
+	justify-content: space-between
 
-@media $media-mobile
-	.-list
+	@media $media-mobile
 		padding-bottom: 40px
 </style>

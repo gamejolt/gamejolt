@@ -86,6 +86,16 @@ function makeModifiers(fallbackPlacements: PopperPlacementType[]) {
 
 <script lang="ts" setup>
 const props = defineProps({
+	/**
+	 * Used to force show the popover unconditionally. Useful when developing
+	 * functionality inside the popover.
+	 *
+	 * It is basically equivalent to trigger = manual + manual-show = true
+	 */
+	debug: {
+		type: Boolean,
+		default: false,
+	},
 	placement: {
 		type: String as PropType<PopperPlacementType>,
 		default: 'bottom',
@@ -212,6 +222,7 @@ const emit = defineEmits({
 });
 
 const {
+	debug,
 	placement,
 	fallbackPlacements,
 	trigger,
@@ -231,6 +242,8 @@ const {
 
 const slots = useSlots();
 const router = GJ_HAS_ROUTER ? useRouter() : undefined;
+
+const debugActual = computed(() => GJ_BUILD_TYPE !== 'build' && debug.value);
 
 const isHiding = ref(false);
 const isVisible = ref(false);
@@ -290,7 +303,7 @@ onMounted(() => {
 
 	Popper.registerPopper(popperIndex, {
 		onHideAll: () => {
-			if (trigger.value === 'manual') {
+			if (trigger.value === 'manual' || debugActual.value) {
 				return;
 			}
 
@@ -299,6 +312,8 @@ onMounted(() => {
 			}
 		},
 	});
+
+	onManualShow();
 });
 
 onBeforeUnmount(() => {
@@ -316,7 +331,7 @@ onUnmounted(() => {
 	Popper.deregisterPopper(popperIndex);
 });
 
-watch(manualShow, onManualShow);
+watch([manualShow, debugActual], onManualShow);
 
 watch(hideTrigger, _hide);
 
@@ -511,6 +526,10 @@ function _calcWidth() {
 }
 
 function _hide() {
+	if (debugActual.value) {
+		return;
+	}
+
 	// In case a popper was hidden from something other than a click,
 	// like right-clicking a cbar item or Popover.hideAll() being triggered.
 	document.removeEventListener('click', _onClickAway, true);
@@ -547,6 +566,10 @@ function _clearHideTimeout() {
 }
 
 function onManualShow() {
+	if (debugActual.value) {
+		return _show();
+	}
+
 	if (trigger.value !== 'manual') {
 		return;
 	}

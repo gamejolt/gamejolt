@@ -8,6 +8,7 @@ import {
 	Community,
 } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import { Environment } from '../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../_common/filters/number';
 import { FiresideCommunity } from '../../../../_common/fireside/community/community.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
@@ -15,7 +16,7 @@ import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppRealmThumbnail from '../../../../_common/realm/AppRealmThumbnail.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import AppChatUserOnlineStatus from '../../chat/user-online-status/AppChatUserOnlineStatus.vue';
@@ -37,6 +38,9 @@ const props = defineProps({
 	hideCommunity: {
 		type: Boolean,
 	},
+	hideRealm: {
+		type: Boolean,
+	},
 });
 
 const emit = defineEmits({
@@ -54,15 +58,23 @@ let _expiryCheck: NodeJS.Timer | null = null;
 const isLoading = ref(false);
 
 const community = computed(() => fireside.value.community ?? undefined);
+const realm = computed(() =>
+	fireside.value.hasRealms ? fireside.value.realms[0].realm : undefined
+);
 const title = computed(() => fireside.value.title);
 
 const canModerate = computed(
-	() => !isLoading.value && !fireside.value.is_draft && manageableCommunities.value.length > 0
+	() =>
+		!isLoading.value &&
+		!fireside.value.is_draft &&
+		(manageableCommunities.value.length > 0 || manageableRealms.value.length > 0)
 );
 
 const manageableCommunities = computed(() =>
 	fireside.value.community_links.filter(i => canCommunityEjectFireside(i.community))
 );
+
+const manageableRealms = computed(() => fireside.value.realms.filter(i => i.realm.can_moderate));
 
 const isFeaturedInCommunity = computed(() => {
 	return (
@@ -149,7 +161,7 @@ async function toggleFeatured(community: FiresideCommunity) {
 	isLoading.value = false;
 }
 
-async function ejectFireside(community: FiresideCommunity) {
+async function ejectFiresideFromCommunity(community: FiresideCommunity) {
 	Popper.hideAll();
 	if (!canCommunityEjectFireside(community.community)) {
 		return;
@@ -183,6 +195,7 @@ async function ejectFireside(community: FiresideCommunity) {
 	<AppFiresideAvatarBase
 		:avatar-media-item="fireside.user.avatar_media_item"
 		:community="hideCommunity ? undefined : community"
+		:realm="hideRealm ? undefined : realm"
 		:is-live="!fireside.is_draft"
 	>
 		<template #extras>
@@ -192,12 +205,46 @@ async function ejectFireside(community: FiresideCommunity) {
 				</template>
 
 				<template #popover>
-					<div class="list-group list-group-dark">
-						<div v-for="(i, index) in manageableCommunities" :key="i.id">
-							<hr v-if="index !== 0" />
+					<div class="list-group thin list-group-dark">
+						<div v-for="(i, index) in manageableRealms" :key="`r-${i.id}`">
+							<hr v-if="index !== 0" class="sans-margin-top" />
 
 							<h5 class="-extras-header list-group-item has-icon">
-								<AppCommunityThumbnailImg class="-img" :community="i.community" />
+								<div class="-img">
+									<AppRealmThumbnail :realm="i.realm" />
+								</div>
+								{{ i.realm.name }}
+							</h5>
+
+							<a
+								class="list-group-item has-icon"
+								:href="`${Environment.baseUrl}/moderate/realms/eject-fireside/${i.id}`"
+								target="_blank"
+							>
+								<AppJolticon icon="eject" />
+								{{ $gettext(`Eject fireside`) }}
+							</a>
+
+							<a
+								class="list-group-item has-icon"
+								:href="`${Environment.baseUrl}/moderate/realms/uneject-fireside/${i.id}`"
+								target="_blank"
+							>
+								<AppJolticon icon="wand" />
+								{{ $gettext(`Uneject fireside`) }}
+							</a>
+						</div>
+
+						<div v-for="(i, index) in manageableCommunities" :key="`c-${i.id}`">
+							<hr
+								v-if="index !== 0 || manageableRealms.length !== 0"
+								class="sans-margin-top"
+							/>
+
+							<h5 class="-extras-header list-group-item has-icon">
+								<div class="-img">
+									<AppCommunityThumbnailImg :community="i.community" />
+								</div>
 								{{ i.community.name }}
 							</h5>
 
@@ -207,13 +254,19 @@ async function ejectFireside(community: FiresideCommunity) {
 								@click="toggleFeatured(i)"
 							>
 								<AppJolticon icon="star" />
-								<AppTranslate v-if="i.isFeatured">Unfeature fireside</AppTranslate>
-								<AppTranslate v-else>Feature fireside</AppTranslate>
+								{{
+									i.isFeatured
+										? $gettext(`Unfeature fireside`)
+										: $gettext(`Feature fireside`)
+								}}
 							</a>
 
-							<a class="list-group-item has-icon" @click="ejectFireside(i)">
+							<a
+								class="list-group-item has-icon"
+								@click="ejectFiresideFromCommunity(i)"
+							>
 								<AppJolticon icon="eject" />
-								<AppTranslate>Eject fireside</AppTranslate>
+								{{ $gettext(`Eject fireside`) }}
 							</a>
 						</div>
 					</div>
@@ -229,8 +282,7 @@ async function ejectFireside(community: FiresideCommunity) {
 			<div>
 				<AppJolticon v-if="isFeaturedInCommunity" icon="star" />
 
-				<AppTranslate v-if="fireside.is_draft">PRIVATE</AppTranslate>
-				<AppTranslate v-else>LIVE</AppTranslate>
+				{{ fireside.is_draft ? $gettext(`PRIVATE`) : $gettext(`LIVE`) }}
 			</div>
 		</template>
 
@@ -248,33 +300,45 @@ async function ejectFireside(community: FiresideCommunity) {
 					<div class="-tooltip">
 						<div class="-tooltip-row -tooltip-members">
 							<AppChatUserOnlineStatus is-online :size="12" :segment-width="1.5" />
-							<AppTranslate
-								:translate-n="fireside.member_count || 0"
-								:translate-params="{
-									count: formatNumber(fireside.member_count || 0),
-								}"
-								translate-plural="%{ count } members"
-							>
-								%{ count } member
-							</AppTranslate>
+							{{
+								$gettextInterpolate(
+									$ngettext(
+										`%{ count } member`,
+										`%{ count } members`,
+										fireside.member_count
+									),
+									{ count: formatNumber(fireside.member_count || 0) }
+								)
+							}}
 						</div>
 
 						<hr />
 
 						<div class="-tooltip-row -tooltip-user">
-							<AppTranslate>by</AppTranslate>
-							{{ ' ' }}
-							<AppUserAvatarImg class="-tooltip-img" :user="fireside.user" />
-							{{ ' ' }}
-							@{{ fireside.user.username }}
+							{{ $gettext(`by`) + ' ' }}
+							<AppUserAvatarImg class="-tooltip-img-user" :user="fireside.user" />
+							{{ ' ' + `@${fireside.user.username}` }}
 						</div>
 
-						<div v-if="community" class="-tooltip-row -tooltip-community">
-							<AppTranslate>in</AppTranslate>
-							<div class="-tooltip-img">
-								<AppCommunityThumbnailImg :community="community" />
-							</div>
-							{{ community.name }}
+						<div v-if="community || realm" class="-tooltip-row -tooltip-muted">
+							{{ $gettext(`in`) }}
+							<template v-if="realm">
+								<div class="-tooltip-img-realm">
+									<AppRealmThumbnail :realm="realm" not-rounded />
+								</div>
+								{{ realm.name }}
+
+								<template v-if="community">
+									{{ ' ' + $gettext(`and`) + ' ' }}
+								</template>
+							</template>
+
+							<template v-if="community">
+								<div class="-tooltip-img-community">
+									<AppCommunityThumbnailImg :community="community" />
+								</div>
+								{{ community.name }}
+							</template>
 						</div>
 					</div>
 				</template>

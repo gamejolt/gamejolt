@@ -43,7 +43,6 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { KeyGroup } from '../../../../_common/key-group/key-group.model';
 import { LinkedAccount } from '../../../../_common/linked-account/linked-account.model';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
-import { Popper } from '../../../../_common/popper/popper.service';
 import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
 import { Realm } from '../../../../_common/realm/realm-model';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -59,8 +58,8 @@ import {
 	$ngettext,
 } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import AppPostTargets from '../../post/AppPostTargets.vue';
-import { POST_TARGET_HEIGHT } from '../../post/target/AppPostTarget.vue';
+import AppContentTargets from '../../content/AppContentTargets.vue';
+import { CONTENT_TARGET_HEIGHT } from '../../content/target/AppContentTarget.vue';
 import AppFormPostMedia from './_media/media.vue';
 import AppFormPostVideo, { VideoStatus } from './_video/video.vue';
 
@@ -636,11 +635,21 @@ watch(
 	}
 );
 
-function attachIncompleteCommunity(community: Community, channel: CommunityChannel) {
+function attachIncompleteCommunity(community: Community, channel?: CommunityChannel) {
+	if (!channel) {
+		console.warn('Attempt to attach a community without a channel');
+		return;
+	}
+
 	attachCommunity(community, channel, false);
 }
 
-function attachCommunity(community: Community, channel: CommunityChannel, append = true) {
+function attachCommunity(community: Community, channel?: CommunityChannel, append = true) {
+	if (!channel) {
+		console.warn('Attempt to attach a community without a channel');
+		return;
+	}
+
 	// Do nothing if that community is already attached.
 	if (attachedCommunities.value.find(i => i.community.id === community.id)) {
 		return;
@@ -655,8 +664,6 @@ function attachCommunity(community: Community, channel: CommunityChannel, append
 }
 
 function attachRealm(realm: Realm, append = true) {
-	Popper.hideAll();
-
 	// Do nothing if that realm is already attached.
 	if (attachedRealms.value.find(i => i.id === realm.id)) {
 		return;
@@ -679,17 +686,15 @@ async function scrollToAdd() {
 }
 
 function removeCommunity(community: Community) {
-	const idx = attachedCommunities.value.findIndex(i => i.community.id === community.id);
-	if (idx === -1) {
-		console.warn('Attempted to remove a community that is not attached');
-		return;
-	}
-
-	attachedCommunities.value.splice(idx, 1);
+	arrayRemove(attachedCommunities.value, i => i.community.id === community.id, {
+		onMissing: () => console.warn('Attempted to remove a community that is not attached'),
+	});
 }
 
 function removeRealm(realm: Realm) {
-	arrayRemove(attachedRealms.value, i => i.id === realm.id);
+	arrayRemove(attachedRealms.value, i => i.id === realm.id, {
+		onMissing: () => console.warn('Attempted to remove a realm that is not attached'),
+	});
 }
 
 function onDraftSubmit() {
@@ -1517,13 +1522,15 @@ function _getMatchingBackgroundIdFromPref() {
 
 		<!-- Communities/Realms -->
 		<template v-if="form.isLoaded">
-			<AppPostTargets
-				class="-post-targets"
+			<AppContentTargets
+				class="-content-targets"
 				:communities="attachedCommunities"
 				:realms="attachedRealms"
 				:targetable-communities="possibleCommunities"
 				:can-add-community="canAddCommunity"
 				:can-add-realm="canAddRealm"
+				:max-communities="maxCommunities"
+				:max-realms="maxRealms"
 				:incomplete-community="incompleteDefaultCommunity || undefined"
 				:can-remove-communities="!wasPublished"
 				can-remove-realms
@@ -1531,13 +1538,14 @@ function _getMatchingBackgroundIdFromPref() {
 				@remove-realm="removeRealm"
 				@select-community="attachCommunity"
 				@select-incomplete-community="attachIncompleteCommunity"
+				@select-realm="attachRealm"
 			/>
 		</template>
 		<template v-else>
-			<div class="-post-targets-placeholder">
+			<div class="-content-targets-placeholder">
 				<div
-					class="-post-target-placeholder"
-					:style="{ height: POST_TARGET_HEIGHT + 'px' }"
+					class="-content-target-placeholder"
+					:style="{ height: CONTENT_TARGET_HEIGHT + 'px' }"
 				/>
 			</div>
 		</template>
@@ -1813,13 +1821,13 @@ function _getMatchingBackgroundIdFromPref() {
 .-linked-account-toggle
 	flex: none
 
-.-post-targets
+.-content-targets
 	margin: 10px 0
 
-.-post-targets-placeholder
+.-content-targets-placeholder
 	margin: 10px 0 14px
 
-.-post-target-placeholder
+.-content-target-placeholder
 	change-bg('bg-subtle')
 	rounded-corners()
 	width: 138px

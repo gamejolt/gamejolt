@@ -9,7 +9,7 @@ import { PollItem } from '../../../_common/poll/item/item.model';
 import { Poll } from '../../../_common/poll/poll.model';
 import AppProgressBar from '../../../_common/progress/AppProgressBar.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
-import { AppTimeAgo } from '../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
 import { $ngettext } from '../../../_common/translate/translate.service';
 
 const props = defineProps({

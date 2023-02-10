@@ -15,7 +15,7 @@ import {
 	createStickerTargetController,
 	StickerTargetController,
 } from '../../../_common/sticker/target/target-controller';
-import { AppTimeAgo } from '../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
 import { getVideoPlayerFromSources } from '../../../_common/video/player/controller';
 import AppVideoPlayer from '../../../_common/video/player/player.vue';
 import AppVideo from '../../../_common/video/video.vue';

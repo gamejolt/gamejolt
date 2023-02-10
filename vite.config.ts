@@ -31,8 +31,8 @@ export default defineConfig(async () => {
 		// Intended values for main and node-remote keys.
 		const propertyMain =
 			gjOpts.section === 'auth'
-				? 'https://development.gamejolt.com/login'
-				: 'https://development.gamejolt.com';
+				? 'https://development.gamejolt.com/login/'
+				: 'https://development.gamejolt.com/';
 		const propertyNodeRemote = 'https://development.gamejolt.com';
 
 		await patchPackageJson(packageJsonStr => {

@@ -8,7 +8,7 @@ defineProps({
 		default: undefined,
 	},
 	color: {
-		type: String as PropType<'default' | 'highlight'>,
+		type: String as PropType<'default' | 'primary'>,
 		default: 'default',
 	},
 	fillColor: {
@@ -47,6 +47,6 @@ defineProps({
 .-icon-color-default
 	color: var(--theme-fg-muted)
 
-.-icon-color-highlight
-	color: var(--theme-highlight)
+.-icon-color-primary
+	color: var(--theme-primary)
 </style>

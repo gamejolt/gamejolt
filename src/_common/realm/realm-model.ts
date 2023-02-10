@@ -24,10 +24,11 @@ export class Realm extends Model {
 
 	declare is_following: boolean;
 	declare follower_count: number;
+	declare can_moderate: boolean;
 
 	get routeLocation(): RouteLocationDefinition {
 		return {
-			name: 'realms.view',
+			name: 'realms.view.overview',
 			params: {
 				path: this.path,
 			},

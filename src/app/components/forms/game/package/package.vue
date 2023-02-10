@@ -21,7 +21,7 @@ import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-servi
 import { SellablePricing } from '../../../../../_common/sellable/pricing/pricing.model';
 import { Sellable } from '../../../../../_common/sellable/sellable.model';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
 import { AppGamePerms } from '../../../game/perms/perms';
 
