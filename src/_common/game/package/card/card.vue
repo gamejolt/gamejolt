@@ -12,7 +12,7 @@ import { formatFilesize } from '../../../filters/filesize';
 import { LinkedKey } from '../../../linked-key/linked-key.model';
 import { SellablePricing } from '../../../sellable/pricing/pricing.model';
 import { Sellable } from '../../../sellable/sellable.model';
-import { AppTimeAgo } from '../../../time/ago/ago';
+import AppTimeAgo from '../../../time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import { User } from '../../../user/user.model';
 import { GameBuild } from '../../build/build.model';

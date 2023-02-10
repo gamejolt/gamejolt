@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue';
-import { Api } from '../../../api/api.service';
+import { Api, ApiProgressEvent } from '../../../api/api.service';
 import AppButton from '../../../button/AppButton.vue';
 import { Clipboard } from '../../../clipboard/clipboard-service';
 import { MediaItem } from '../../../media-item/media-item-model';
@@ -17,7 +17,7 @@ interface FormModel {
 	type: string;
 	parent_id: number;
 	image: File | null;
-	_progress: ProgressEvent | null;
+	_progress: ApiProgressEvent | null;
 }
 
 const props = defineProps({

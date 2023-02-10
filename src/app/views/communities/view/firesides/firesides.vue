@@ -87,13 +87,8 @@ export default class RouteCommunitiesViewFiresides extends BaseRouteComponent {
 		</h1>
 		<br />
 
-		<AppIllustration v-if="!community.allow_firesides" :asset="illNoComments">
-			<p>
-				<AppTranslate>This community doesn't allow firesides.</AppTranslate>
-			</p>
-		</AppIllustration>
 		<AppIllustration
-			v-else-if="isRouteBootstrapped && firesides.length === 0"
+			v-if="isRouteBootstrapped && firesides.length === 0"
 			:asset="illNoComments"
 		>
 			<p>

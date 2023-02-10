@@ -38,3 +38,23 @@ export const styleChangeBg = (bg: ThemeColor, important = false): any => ({
 	'--theme-bg-actual-trans': `var(--theme-${bg}-trans)`,
 	backgroundColor: `var(--theme-${bg})` + (important ? ' !important' : ''),
 });
+
+/**
+ * Will style a particular element to scrollable on the y-axis.
+ */
+export const styleScrollable: CSSProperties = {
+	overflowY: `auto`,
+	overflowX: `hidden`,
+	willChange: `scroll-position`,
+	'-webkit-overflow-scrolling': `touch`,
+};
+
+/**
+ * Will style a particular element to scrollable on the x-axis.
+ */
+export const styleScrollableX: CSSProperties = {
+	overflowY: `hidden`,
+	overflowX: `auto`,
+	willChange: `scroll-position`,
+	'-webkit-overflow-scrolling': `touch`,
+};

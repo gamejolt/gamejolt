@@ -137,7 +137,7 @@ import AppScrollInview, {
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import { illPointyThing } from '../../../../img/ill/illustrations';
-import AppPostTargetRealm from '../AppPostTargetRealm.vue';
+import AppContentTargetRealm from '../AppContentTargetRealm.vue';
 
 const COL_COUNT_BASE = 4;
 const COL_COUNT_XS = 2;
@@ -257,7 +257,7 @@ const debounceSearchInput = debounce(() => {
 				<AppExpand :when="selectedRealms.length > 0">
 					<AppScrollScroller horizontal :controller="scrollController">
 						<div class="-selected-realms">
-							<AppPostTargetRealm
+							<AppContentTargetRealm
 								v-for="realm of selectedRealms"
 								:key="realm.id"
 								class="-realm-wrapper"

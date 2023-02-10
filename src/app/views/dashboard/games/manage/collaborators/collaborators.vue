@@ -13,7 +13,7 @@ import {
 	BaseRouteComponent,
 	OptionsForRoute,
 } from '../../../../../../_common/route/route-component';
-import { AppTimeAgo } from '../../../../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../../../../_common/time/AppTimeAgo.vue';
 import FormGameCollaborator from '../../../../../components/forms/game/collaborator/collaborator.vue';
 import { useGameDashRouteController } from '../manage.store';
 

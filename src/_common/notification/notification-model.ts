@@ -29,6 +29,7 @@ import { Mention } from '../mention/mention.model';
 import { Model } from '../model/model.service';
 import { Navigate } from '../navigate/navigate.service';
 import { OrderItem } from '../order/item/item.model';
+import { Poll } from '../poll/poll.model';
 import { QuestNotification } from '../quest/quest-notification-model';
 import { Sellable } from '../sellable/sellable.model';
 import { StickerPlacement } from '../sticker/placement/placement.model';
@@ -84,6 +85,7 @@ export class Notification extends Model {
 	static TYPE_QUEST_NOTIFICATION = 'quest-notification';
 	static TYPE_CHARGED_STICKER = 'charged-sticker';
 	static TYPE_SUPPORTER_MESSAGE = 'supporter-message';
+	static TYPE_POLL_ENDED = 'poll-ended';
 
 	static ACTIVITY_FEED_TYPES = [EventItem.TYPE_POST_ADD];
 
@@ -105,6 +107,7 @@ export class Notification extends Model {
 		Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY,
 		Notification.TYPE_CHARGED_STICKER,
 		Notification.TYPE_SUPPORTER_MESSAGE,
+		Notification.TYPE_POLL_ENDED,
 	];
 
 	user_id!: number;
@@ -115,7 +118,7 @@ export class Notification extends Model {
 
 	from_resource!: string;
 	from_resource_id!: number;
-	from_model?: User | Community;
+	from_model?: User | Community | FiresidePost;
 
 	action_resource!: string;
 	action_resource_id!: number;
@@ -139,7 +142,8 @@ export class Notification extends Model {
 		| FiresideCommunity
 		| QuestNotification
 		| StickerPlacement
-		| SupporterAction;
+		| SupporterAction
+		| Poll;
 
 	to_resource!: string | null;
 	to_resource_id!: number | null;
@@ -163,6 +167,9 @@ export class Notification extends Model {
 					break;
 				case 'Community':
 					this.from_model = new Community(data.from_resource_model);
+					break;
+				case 'Fireside_Post':
+					this.from_model = new FiresidePost(data.from_resource_model);
 					break;
 			}
 		}
@@ -254,6 +261,8 @@ export class Notification extends Model {
 		} else if (this.type === Notification.TYPE_SUPPORTER_MESSAGE) {
 			this.action_model = new SupporterAction(data.action_resource_model);
 			this.is_user_based = true;
+		} else if (this.type === Notification.TYPE_POLL_ENDED) {
+			this.action_model = new Poll(data.action_resource_model);
 		}
 
 		// Keep memory clean after bootstrapping the models (the super
@@ -355,6 +364,12 @@ export class Notification extends Model {
 				// feed. Don't return a location here, we'll instead show a
 				// modal in the `go` function.
 				return '';
+			}
+
+			case Notification.TYPE_POLL_ENDED: {
+				if (this.from_model) {
+					return getRouteLocationForModel(this.from_model);
+				}
 			}
 		}
 
@@ -486,4 +501,5 @@ export const NOTIFICATION_FEED_TYPE_LABELS = {
 	[Notification.TYPE_QUEST_NOTIFICATION]: $gettext(`Quests`),
 	[Notification.TYPE_CHARGED_STICKER]: $gettext(`Charged stickers`),
 	[Notification.TYPE_SUPPORTER_MESSAGE]: $gettext(`Creator thank-you messages`),
+	[Notification.TYPE_POLL_ENDED]: $gettext(`Polls`),
 } as const;

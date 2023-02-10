@@ -5,7 +5,7 @@ import { Community } from '../../../../../_common/community/community.model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import AppFormsPillSelectorCommunities from '../../../forms/pill-selector/communities/AppFormsPillSelectorCommunities.vue';
-import AppPostTarget from '../AppPostTarget.vue';
+import AppContentTarget from '../AppContentTarget.vue';
 
 const props = defineProps({
 	communities: {
@@ -16,23 +16,29 @@ const props = defineProps({
 		type: Object as PropType<Community>,
 		default: undefined,
 	},
-	withChannel: {
+	noChannel: {
 		type: Boolean,
-		default: true,
+		default: false,
 	},
 });
 
-const { communities, initialCommunity, withChannel } = toRefs(props);
+const { communities, initialCommunity, noChannel } = toRefs(props);
 
 const emit = defineEmits({
 	selectCommunity: (_community: Community) => true,
 	selectChannel: (_channel: CommunityChannel) => true,
-	select: (_community: Community, _channel: CommunityChannel) => true,
+	select: (_community: Community, _channel?: CommunityChannel) => true,
 	show: () => true,
 });
 
 function onSelectCommunity(community: Community) {
 	emit('selectCommunity', community);
+
+	// If channels are disabled, it's enough to select a community, so also emit
+	// the 'select' event.
+	if (noChannel.value) {
+		emit('select', community);
+	}
 }
 
 function onSelectChannel(channel: CommunityChannel) {
@@ -48,20 +54,20 @@ function onSelect(community: Community, channel: CommunityChannel) {
 	<AppFormsPillSelectorCommunities
 		:communities="communities"
 		:initial-community="initialCommunity"
-		:with-channel="withChannel"
+		:no-channel="noChannel"
 		@select-community="onSelectCommunity"
 		@select-channel="onSelectChannel"
 		@select="onSelect"
 		@show="emit('show')"
 	>
 		<template #default>
-			<AppPostTarget class="-add">
+			<AppContentTarget class="-add">
 				<template #img>
 					<AppJolticon icon="add" />
 				</template>
 
 				<AppTranslate>Add community</AppTranslate>
-			</AppPostTarget>
+			</AppContentTarget>
 		</template>
 	</AppFormsPillSelectorCommunities>
 </template>

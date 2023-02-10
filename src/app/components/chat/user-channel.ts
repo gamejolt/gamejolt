@@ -176,7 +176,7 @@ export function createChatUserChannel(
 	 */
 	function _onGroupLeave(data: RoomIdPayload) {
 		const removed = arrayRemove(client.groupRooms, i => i.id === data.room_id);
-		if (!removed || !removed.length) {
+		if (!removed.length) {
 			return;
 		}
 

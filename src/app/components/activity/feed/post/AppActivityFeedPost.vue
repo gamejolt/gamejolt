@@ -21,11 +21,11 @@ import {
 } from '../../../../../_common/sticker/target/target-controller';
 import { kThemeGjOverlayNotice } from '../../../../../_common/theme/variables';
 import { styleBorderRadiusCircle } from '../../../../../_styles/mixins';
+import AppContentTargets from '../../../content/AppContentTargets.vue';
 import AppFiresidePostEmbed from '../../../fireside/post/embed/embed.vue';
 import AppPollVoting from '../../../poll/AppPollVoting.vue';
 import AppPostContent from '../../../post/AppPostContent.vue';
 import AppPostHeader from '../../../post/AppPostHeader.vue';
-import AppPostTargets from '../../../post/AppPostTargets.vue';
 import AppPostControls from '../../../post/controls/AppPostControls.vue';
 import { useActivityFeedInterface } from '../AppActivityFeed.vue';
 import { feedShouldBlockPost } from '../feed-service';
@@ -301,7 +301,7 @@ function onPostUnpinned(item: EventItem) {
 							@show="scrollToStickers"
 						/>
 
-						<AppPostTargets
+						<AppContentTargets
 							v-if="communities.length || realms.length"
 							class="-communities -controls-buffer"
 							:communities="communities"

@@ -28,7 +28,7 @@ export type BootstrapOptions<T = Component> = {
  * point can call to get what it needs.
  */
 export async function bootstrapCommon(options: BootstrapOptions) {
-	const router = options.router ?? null;
+	const router = options?.router ?? null;
 
 	// Check to make sure our build config is correct.
 	// We only want to throw this while developing as it is not a critical error at the time of writing.
