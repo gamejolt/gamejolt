@@ -4,6 +4,7 @@ import { arrayRemove } from '../../../../../utils/array';
 import { sleep } from '../../../../../utils/utils';
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
+import { ContextCapabilities } from '../../../../../_common/content/content-context';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
@@ -31,6 +32,7 @@ const maxTimers = ref(10);
 const maxInvokeSchedule = ref(60);
 const maxRequiredMessages = ref(100);
 const messageMaxLength = ref(1000);
+const messageCapabilities = ref(ContextCapabilities.getPlaceholder());
 
 const form: FormController<ChatTimersFormModel> = createForm({
 	loadUrl: `/web/chat/commands/timers`,
@@ -44,6 +46,10 @@ const form: FormController<ChatTimersFormModel> = createForm({
 		maxInvokeSchedule.value = response.maxInvokeSchedule;
 		maxRequiredMessages.value = response.maxRequiredMessages;
 		messageMaxLength.value = response.messageMaxLength;
+		// TODO(remote-content-capabilities) Needs capabilities.
+		messageCapabilities.value = ContextCapabilities.fromPayloadList(
+			response.contentCapabilities
+		);
 	},
 	async onSubmit() {
 		if (isProcessing.value) {
@@ -176,6 +182,7 @@ function removeItem(item: ChatCommand, fieldsToClear: string[]) {
 					:max-invoke-schedule="maxInvokeSchedule"
 					:max-required-messages="maxRequiredMessages"
 					:message-max-length="messageMaxLength"
+					:message-capabilities="messageCapabilities"
 					@remove="removeItem(item, $event)"
 				/>
 

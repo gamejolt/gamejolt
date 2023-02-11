@@ -66,7 +66,7 @@ const emit = defineEmits({
 });
 
 const lengthLimit = ref(5_000);
-const contentCapabilities = ref<ContextCapabilities>();
+const contentCapabilities = ref(ContextCapabilities.getPlaceholder());
 
 const loadUrl = computed(() => {
 	if (model.value?.id) {
@@ -98,12 +98,9 @@ const form: FormController<FormModel> = createForm({
 	},
 	onLoad(payload: any) {
 		lengthLimit.value = payload.lengthLimit;
-
-		if (payload.contentCapabilities) {
-			contentCapabilities.value = ContextCapabilities.fromStringList(
-				payload.contentCapabilities
-			);
-		}
+		contentCapabilities.value = ContextCapabilities.fromPayloadList(
+			payload.contentCapabilities
+		);
 	},
 	onSubmitSuccess() {
 		if (form.method === 'add') {
@@ -178,7 +175,7 @@ const onlyFriends = computed(
 			<AppFormControlContent
 				:placeholder="placeholder || $gettext(`Leave a comment...`)"
 				:content-context="contentContext"
-				:context-capabilities-override="contentCapabilities"
+				:capabilities="contentCapabilities"
 				:autofocus="autofocus"
 				:validators="[
 					validateContentRequired(),

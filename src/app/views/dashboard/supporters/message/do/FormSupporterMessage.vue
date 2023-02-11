@@ -2,6 +2,7 @@
 import { computed, PropType, ref, toRefs } from 'vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
+import { ContextCapabilities } from '../../../../../../_common/content/content-context';
 import AppForm, {
 	createForm,
 	defineFormProps,
@@ -38,6 +39,7 @@ const { action, model } = toRefs(props);
 const modal = useModal()!;
 
 const lengthLimit = ref(300);
+const contentCapabilities = ref(ContextCapabilities.getPlaceholder());
 
 const isTemplate = computed(() => !action?.value);
 
@@ -50,6 +52,9 @@ const form: FormController<SupporterMessage> = createForm({
 	loadUrl,
 	onLoad(response) {
 		lengthLimit.value = response.lengthLimit;
+		contentCapabilities.value = ContextCapabilities.fromPayloadList(
+			response.contentCapabilities
+		);
 	},
 	async onSubmit() {
 		try {
@@ -158,6 +163,7 @@ const form: FormController<SupporterMessage> = createForm({
 				>
 					<AppFormControlContent
 						content-context="supporter-message"
+						:capabilities="contentCapabilities"
 						:validators="[
 							validateContentRequired(),
 							validateContentMaxLength(lengthLimit),

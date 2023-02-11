@@ -15,6 +15,7 @@ export class FiresideChatSettings extends Model {
 	declare slow_mode_enabled: boolean;
 	declare slow_mode_seconds: number;
 	declare automated_sticker_messages: boolean;
+	// TODO(remote-content-capabilities) Broken, not always provided. Don't deploy until fixed.
 	declare content_capabilities: string[];
 }
 
@@ -28,7 +29,7 @@ export function createFiresideChatContextCapabilities(
 	settings: FiresideChatSettings,
 	role: FIRESIDE_ROLES
 ) {
-	const capabilities = ContextCapabilities.fromStringList(settings.content_capabilities);
+	const capabilities = ContextCapabilities.fromPayloadList(settings.content_capabilities);
 
 	// Remove capabilities that the given role does not have access to. If the
 	// required role's power is higher than the input role's power, they don't

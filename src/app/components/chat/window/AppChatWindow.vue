@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref, shallowRef, toRefs, watch, watchEffect } from 'vue';
 import { RouterLink } from 'vue-router';
+import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
+import { ContextCapabilities } from '../../../../_common/content/content-context';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -48,19 +50,34 @@ let destroyed = false;
 const room = shallowRef(getModel(ChatRoom, roomId.value));
 const roomChannel = shallowRef<ChatRoomChannel>();
 
+const contentCapabilities = ref(ContextCapabilities.getPlaceholder());
+const maxContentLength = ref(1_000);
+
 async function joinChannel() {
 	roomChannel.value = createChatRoomChannel(chat.value, {
 		roomId: roomId.value,
 		instanced: false,
 	});
 
-	await roomChannel.value.joinPromise;
+	const payloads = await Promise.all([
+		roomChannel.value.joinPromise,
+		Api.sendRequest(`/web/chat/rooms/get-message-content-capabilities/${roomId.value}`),
+	]);
 
 	// Short circuit if this component is gone by the time the connection was
 	// finished.
-	if (!destroyed) {
-		room.value = roomChannel.value.room.value;
+	if (destroyed) {
+		return;
 	}
+
+	const inputPayload = payloads[1];
+	maxContentLength.value = inputPayload.lengthLimit;
+	contentCapabilities.value = ContextCapabilities.fromPayloadList(
+		inputPayload.contentCapabilities
+	);
+
+	// Set the room after everything else is set up.
+	room.value = roomChannel.value.room.value;
 }
 
 onMounted(() => {
@@ -332,6 +349,8 @@ function onMobileAppBarBack() {
 						<div v-if="room" class="_send-container">
 							<AppChatWindowSend
 								:room="room"
+								:capabilities="contentCapabilities"
+								:max-content-length="maxContentLength"
 								@focus-change="emit('focus-change', $event)"
 							/>
 						</div>

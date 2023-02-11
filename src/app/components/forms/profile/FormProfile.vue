@@ -55,7 +55,7 @@ const usernameDuration = ref('');
 const isBioLocked = ref(false);
 const bioLengthLimit = ref(5_000);
 
-const bioContentCapabilities = ref<ContextCapabilities>();
+const bioContentCapabilities = ref(ContextCapabilities.getPlaceholder());
 
 const pronounDogtags = shallowReactive<Dogtag[]>([]);
 
@@ -92,12 +92,6 @@ const form: FormController<FormModel> = createForm({
 			form.formModel.assign(payload.user);
 		}
 
-		if (payload.contentCapabilities) {
-			bioContentCapabilities.value = ContextCapabilities.fromStringList(
-				payload.contentCapabilities
-			);
-		}
-
 		pronounDogtags.splice(
 			0,
 			pronounDogtags.length,
@@ -125,6 +119,9 @@ const form: FormController<FormModel> = createForm({
 
 		isBioLocked.value = payload.isBioLocked;
 		bioLengthLimit.value = payload.bioLengthLimit;
+		bioContentCapabilities.value = ContextCapabilities.fromPayloadList(
+			payload.contentCapabilities
+		);
 	},
 	onSubmitError(response) {
 		if (response?.errors['bio-locked']) {
@@ -263,7 +260,7 @@ function onThemeChanged() {
 		<AppFormGroup name="bio_content" :label="$gettext(`Profile Bio`)" optional>
 			<AppFormControlContent
 				content-context="user-bio"
-				:context-capabilities-override="bioContentCapabilities"
+				:capabilities="bioContentCapabilities"
 				:disabled="isBioLocked"
 				:model-id="user.id"
 				:max-height="0"

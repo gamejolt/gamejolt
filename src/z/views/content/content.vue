@@ -1,8 +1,9 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
+import { ContextCapabilities } from '../../../_common/content/content-context';
 import { ContentDocument } from '../../../_common/content/content-document';
-import AppContentEditor from '../../../_common/content/content-editor/content-editor.vue';
+import AppContentEditor from '../../../_common/content/content-editor/AppContentEditor.vue';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
@@ -42,7 +43,7 @@ export default class RouteContent extends BaseRouteComponent {
 	ownerName!: string;
 	ownerUrl!: string;
 	maxLength!: number;
-	contentCapabilities!: string[];
+	contentCapabilities!: ContextCapabilities;
 	logReason = '';
 
 	camelCase(str: string) {
@@ -58,6 +59,11 @@ export default class RouteContent extends BaseRouteComponent {
 	}
 
 	get canSubmit() {
+		// TODO(remote-content-capabilities) Test this.
+		if (ContentDocument.fromJson(this.contentJson).getLength() > this.maxLength) {
+			return false;
+		}
+
 		return this.logReason.length > 0 || !this.requireLog;
 	}
 
@@ -87,7 +93,10 @@ export default class RouteContent extends BaseRouteComponent {
 			$payload.resourceId || parseInt(this.$route.params.resourceId.toString(), 10);
 		this.requireLog = $payload.requireLog;
 		this.maxLength = $payload.maxLength;
-		this.contentCapabilities = $payload.contentCapabilities;
+		// TODO(remote-content-capabilities) Test this.
+		this.contentCapabilities = ContextCapabilities.fromPayloadList(
+			$payload.contentCapabilities
+		);
 
 		this.isHydrated = true;
 	}
@@ -163,6 +172,7 @@ export default class RouteContent extends BaseRouteComponent {
 						class="content-editor-moderate"
 						:value="contentJson"
 						:content-context="contentContext"
+						:capabilities="contentCapabilities"
 						:model-id="resourceId"
 						:max-height="800"
 						@input="onUpdate"

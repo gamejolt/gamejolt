@@ -43,7 +43,7 @@ const { tags, model } = toRefs(props);
 const isFnafDetected = ref(false);
 const isDisabled = ref(false);
 const lengthLimit = ref(50_000);
-const descriptionContentCapabilities = ref<ContextCapabilities>();
+const descriptionContentCapabilities = ref(ContextCapabilities.getPlaceholder());
 
 const form: FormController<DescriptionFormModel> = createForm({
 	loadUrl: `/web/dash/developer/games/description/save/${model.value.id}`,
@@ -53,11 +53,9 @@ const form: FormController<DescriptionFormModel> = createForm({
 	onLoad(payload) {
 		lengthLimit.value = payload.lengthLimit;
 
-		if (payload.contentCapabilities) {
-			descriptionContentCapabilities.value = ContextCapabilities.fromStringList(
-				payload.contentCapabilities
-			);
-		}
+		descriptionContentCapabilities.value = ContextCapabilities.fromPayloadList(
+			payload.contentCapabilities
+		);
 	},
 	onSubmitSuccess() {
 		form.formModel.autotag = undefined;
@@ -122,7 +120,7 @@ function skipAutotag() {
 			<AppFormControlContent
 				:placeholder="$gettext(`Write your game description here...`)"
 				content-context="game-description"
-				:context-capabilities-override="descriptionContentCapabilities"
+				:capabilities="descriptionContentCapabilities"
 				:model-id="model.id"
 				:validators="[
 					validateContentRequired(),

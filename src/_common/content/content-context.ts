@@ -1,4 +1,4 @@
-import { arrayRemove } from '../../utils/array';
+import { arrayRemove, stringSort } from '../../utils/array';
 import { MediaItem } from '../media-item/media-item-model';
 
 export const GJ_FORMAT_VERSION = '1.0.1';
@@ -49,10 +49,16 @@ export enum ContextCapabilityType {
 	Sticker = 'sticker',
 }
 
+const contextCapabilityTypes = Object.entries(ContextCapabilityType);
+
 export class ContextCapabilities {
 	public capabilities: ContextCapabilityType[];
 
 	get hasAnyBlock() {
+		if (this.isPlaceholder) {
+			return true;
+		}
+
 		return (
 			this.hasAnyEmbed ||
 			this.media ||
@@ -65,6 +71,10 @@ export class ContextCapabilities {
 		);
 	}
 	get hasAnyText() {
+		if (this.isPlaceholder) {
+			return true;
+		}
+
 		return (
 			this.textBold ||
 			this.textItalic ||
@@ -141,11 +151,17 @@ export class ContextCapabilities {
 		return this._hasCapability(ContextCapabilityType.Sticker);
 	}
 
-	private constructor(capabilities: ContextCapabilityType[]) {
-		this.capabilities = capabilities;
+	private constructor(
+		capabilities: ContextCapabilityType[],
+		public readonly isPlaceholder = false
+	) {
+		this.capabilities = [...capabilities];
 	}
 
 	_hasCapability(capability: ContextCapabilityType) {
+		if (this.isPlaceholder) {
+			return true;
+		}
 		return this.capabilities.includes(capability);
 	}
 
@@ -153,12 +169,42 @@ export class ContextCapabilities {
 		arrayRemove(this.capabilities, i => i === capability);
 	}
 
-	public static getEmpty() {
-		return new ContextCapabilities([]);
+	toStringList() {
+		return [...this.capabilities].sort((a, b) => stringSort(b, a));
 	}
 
-	public static fromStringList(items: string[]) {
-		return new ContextCapabilities(items.map(x => x as ContextCapabilityType));
+	/**
+	 * Returns capabilities that allow everything.
+	 *
+	 * Content editors should check the
+	 * {@link ContextCapabilities.isPlaceholder} field and build themselves in a
+	 * readonly state.
+	 */
+	public static getPlaceholder() {
+		return new ContextCapabilities([], true);
+	}
+
+	/**
+	 * Expects a array of strings. Returns empty capabilities if the provided
+	 * data is invalid.
+	 */
+	public static fromPayloadList(data: any) {
+		if (!Array.isArray(data)) {
+			return new ContextCapabilities([]);
+		}
+
+		const capabilities: ContextCapabilityType[] = [];
+		for (const item of data) {
+			const validItemData = contextCapabilityTypes.find(
+				([value, name]) => item === value || item === name
+			);
+
+			const capability = validItemData?.[1];
+			if (capability) {
+				capabilities.push(capability);
+			}
+		}
+		return new ContextCapabilities(capabilities);
 	}
 }
 

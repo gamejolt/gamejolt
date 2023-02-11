@@ -4,6 +4,7 @@ import { arrayRemove } from '../../../../../utils/array';
 import { sleep } from '../../../../../utils/utils';
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
+import { ContextCapabilities } from '../../../../../_common/content/content-context';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
@@ -31,6 +32,7 @@ const maxCommands = ref(20);
 const commandMinLength = ref(2);
 const commandMaxLength = ref(20);
 const messageMaxLength = ref(1000);
+const messageCapabilities = ref(ContextCapabilities.getPlaceholder());
 
 const form: FormController<ChatCommandsFormModel> = createForm({
 	loadUrl: `/web/chat/commands`,
@@ -44,6 +46,10 @@ const form: FormController<ChatCommandsFormModel> = createForm({
 		commandMinLength.value = response.commandMinLength;
 		commandMaxLength.value = response.commandMaxLength;
 		messageMaxLength.value = response.messageMaxLength;
+		// TODO(remote-content-capabilities) Needs capabilities.
+		messageCapabilities.value = ContextCapabilities.fromPayloadList(
+			response.contentCapabilities
+		);
 	},
 	async onSubmit() {
 		if (isProcessing.value) {
@@ -169,6 +175,7 @@ function removeItem(item: ChatCommand, fieldsToClear: string[]) {
 					:command-min-length="commandMinLength"
 					:command-max-length="commandMaxLength"
 					:message-max-length="messageMaxLength"
+					:message-capabilities="messageCapabilities"
 					@remove="removeItem(item, $event)"
 				/>
 

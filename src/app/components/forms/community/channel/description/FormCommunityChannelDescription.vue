@@ -26,7 +26,7 @@ const props = defineProps({
 const { model } = toRefs(props);
 
 const lengthLimit = ref(5_000);
-const descriptionContentCapabilities = ref<ContextCapabilities>();
+const descriptionContentCapabilities = ref(ContextCapabilities.getPlaceholder());
 
 const form: FormController<CommunityChannel> = createForm({
 	loadUrl: `/web/dash/communities/description/save-channel/${model.value.id}`,
@@ -37,11 +37,9 @@ const form: FormController<CommunityChannel> = createForm({
 		lengthLimit.value = payload.lengthLimit;
 		form.formModel.description_content = model.value.description_content ?? '';
 
-		if (payload.contentCapabilities) {
-			descriptionContentCapabilities.value = ContextCapabilities.fromStringList(
-				payload.contentCapabilities
-			);
-		}
+		descriptionContentCapabilities.value = ContextCapabilities.fromPayloadList(
+			payload.contentCapabilities
+		);
 	},
 });
 </script>
@@ -52,7 +50,7 @@ const form: FormController<CommunityChannel> = createForm({
 			<AppFormControlContent
 				:placeholder="$gettext(`Write your channel description here...`)"
 				content-context="community-channel-description"
-				:context-capabilities-override="descriptionContentCapabilities"
+				:capabilities="descriptionContentCapabilities"
 				:model-id="model.id"
 				:validators="[
 					validateContentRequired(),

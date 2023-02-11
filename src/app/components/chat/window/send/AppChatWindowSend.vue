@@ -37,12 +37,9 @@ const props = defineProps({
 		type: Object as PropType<ChatRoom>,
 		required: true,
 	},
-	/**
-	 * Optional if needed to do custom overrides (such as firesides with roles).
-	 */
-	contextCapabilities: {
+	capabilities: {
 		type: Object as PropType<ContextCapabilities>,
-		default: undefined,
+		required: true,
 	},
 	/** Duration in milliseconds */
 	slowmodeDuration: {
@@ -51,7 +48,7 @@ const props = defineProps({
 	},
 	maxContentLength: {
 		type: Number,
-		default: undefined,
+		required: true,
 	},
 });
 
@@ -59,20 +56,10 @@ const emit = defineEmits({
 	'focus-change': (_focused: boolean) => true,
 });
 
-const { room, slowmodeDuration, maxContentLength, contextCapabilities } = toRefs(props);
+const { room, slowmodeDuration, maxContentLength, capabilities } = toRefs(props);
 
 const { isDark } = useThemeStore();
 const { chatUnsafe: chat } = useGridStore();
-
-const formMaxContentLength = ref<number | null>(null);
-const formContextCapabilities = ref<ContextCapabilities | null>(null);
-
-const actualMaxContentLength = computed(
-	() => maxContentLength?.value || formMaxContentLength?.value || 1000
-);
-const actualContextCapabilities = computed(
-	() => contextCapabilities?.value || formContextCapabilities?.value || undefined
-);
 
 const focusToken = createFocusToken();
 
@@ -178,18 +165,9 @@ type FormModel = {
 };
 
 const form: FormController<FormModel> = createForm({
-	loadUrl: `/web/chat/rooms/get-message-content-capabilities/${props.room.id}`,
 	warnOnDiscard: false,
 	onInit() {
 		form.formModel.content = '';
-	},
-	onLoad(payload) {
-		formMaxContentLength.value = payload.lengthLimit;
-		if (payload.contentCapabilities) {
-			formContextCapabilities.value = ContextCapabilities.fromStringList(
-				payload.contentCapabilities
-			);
-		}
 	},
 });
 
@@ -492,11 +470,11 @@ function disableTypingTimeout() {
 							:key="room.id"
 							ref="editor"
 							:content-context="room.messagesContentContext"
-							:context-capabilities-override="actualContextCapabilities"
+							:capabilities="capabilities"
 							:temp-resource-context-data="contentEditorTempResourceContextData"
 							:placeholder="$gettext('Send a message')"
 							:single-line-mode="Screen.isDesktop"
-							:validators="[validateContentMaxLength(actualMaxContentLength)]"
+							:validators="[validateContentMaxLength(maxContentLength)]"
 							:max-height="160"
 							:display-rules="displayRules"
 							:autofocus="!Screen.isMobile"
