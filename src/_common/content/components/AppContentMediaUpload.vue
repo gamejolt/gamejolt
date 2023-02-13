@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { EditorView } from 'prosemirror-view';
 import { computed, onMounted, PropType, toRefs } from 'vue';
-import { Api } from '../../api/api.service';
+import { Api, ApiProgressEvent } from '../../api/api.service';
 import { showErrorGrowl } from '../../growls/growls.service';
 import AppLoading from '../../loading/AppLoading.vue';
 import { MediaItem } from '../../media-item/media-item-model';
@@ -129,7 +129,7 @@ async function _doUpload(file: File) {
 	// }
 }
 
-function _handleProgressEvent(e: ProgressEvent | null) {
+function _handleProgressEvent(e: ApiProgressEvent | null) {
 	if (e !== null) {
 		updateProgress(e.loaded / e.total);
 	} else {

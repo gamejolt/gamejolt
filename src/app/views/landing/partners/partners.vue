@@ -13,7 +13,7 @@ import { imageJolt } from '../../../img/images';
 @OptionsForRoute()
 export default class RouteLandingPartners extends BaseRouteComponent {
 	readonly imageJolt = imageJolt;
-	readonly assetPaths = import.meta.globEager('./*.svg');
+	readonly assetPaths = import.meta.glob('./*.svg', { eager: true, as: 'url' });
 
 	get routeTitle() {
 		return `Become a Partner`;
@@ -55,10 +55,7 @@ export default class RouteLandingPartners extends BaseRouteComponent {
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<AppThemeSvg
-									:src="assetPaths['./supporting-indies.svg'].default"
-									alt=""
-								/>
+								<AppThemeSvg :src="assetPaths['./supporting-indies.svg']" alt="" />
 							</div>
 
 							<h4 class="text-center">Indies supporting indies</h4>
@@ -72,10 +69,7 @@ export default class RouteLandingPartners extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<AppThemeSvg
-									:src="assetPaths['./revenue-share.svg'].default"
-									alt=""
-								/>
+								<AppThemeSvg :src="assetPaths['./revenue-share.svg']" alt="" />
 							</div>
 
 							<h4 class="text-center">Revenue Share</h4>
@@ -92,10 +86,7 @@ export default class RouteLandingPartners extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 							<div class="landing-graphic">
-								<AppThemeSvg
-									:src="assetPaths['./access-any-game.svg'].default"
-									alt=""
-								/>
+								<AppThemeSvg :src="assetPaths['./access-any-game.svg']" alt="" />
 							</div>
 
 							<h4 class="text-center">Access any game</h4>

@@ -88,9 +88,24 @@ watch(
 let showSettingsOnMembersBack = false;
 
 const friendAddJolticonVersion = ref<1 | 2>(1);
-const sidebar = ref<SidebarTab | undefined>(
+
+/**
+ * The sidebar that we want to be displayed.
+ */
+const preferredSidebar = ref<SidebarTab | undefined>(
 	!Screen.isXs && SettingChatGroupShowMembers.get() ? 'members' : undefined
 );
+
+/**
+ * The sidebar we're actually displaying. Ignores 'members' sidebar when there's
+ * nothing worth showing.
+ */
+const sidebar = computed(() => {
+	if (room.value?.isPmRoom && preferredSidebar.value === 'members') {
+		return undefined;
+	}
+	return preferredSidebar.value;
+});
 
 watch(sidebar, (value, oldValue) => {
 	if (!value) {
@@ -103,7 +118,7 @@ watch(sidebar, (value, oldValue) => {
 	}
 });
 
-const isShowingUsers = computed(() => sidebar.value === 'members');
+const isShowingUsers = computed(() => preferredSidebar.value === 'members');
 const memberCollection = computed(() => room.value!.memberCollection);
 const membersCount = computed(() => formatNumber(room.value?.member_count || 0));
 const roomTitle = computed(() => (!room.value ? $gettext(`Chat`) : getChatRoomTitle(room.value)));
@@ -144,7 +159,7 @@ function addMembers() {
 }
 
 function toggleSidebar(val: SidebarTab) {
-	sidebar.value = sidebar.value === val ? undefined : val;
+	preferredSidebar.value = sidebar.value === val ? undefined : val;
 }
 
 function close() {
@@ -159,10 +174,10 @@ function close() {
 
 function onMobileAppBarBack() {
 	if (showSettingsOnMembersBack) {
-		sidebar.value = 'settings';
+		preferredSidebar.value = 'settings';
 		showSettingsOnMembersBack = false;
 	} else {
-		sidebar.value = undefined;
+		preferredSidebar.value = undefined;
 	}
 }
 </script>

@@ -1,6 +1,5 @@
 import { h } from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import './placeholder.styl';
 
 @Options({})
 export class AppLazyPlaceholder extends Vue {

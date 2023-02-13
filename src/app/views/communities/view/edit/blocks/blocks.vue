@@ -10,7 +10,7 @@ import {
 	BaseRouteComponent,
 	OptionsForRoute,
 } from '../../../../../../_common/route/route-component';
-import { AppTimeAgo } from '../../../../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { UserBlock } from '../../../../../../_common/user/block/block.model';
 import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';

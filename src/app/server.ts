@@ -18,7 +18,7 @@ export default async (context: any) => {
 	// hooks.
 	await router.isReady();
 	const matchedComponents = router.currentRoute.value.matched.flatMap(record =>
-		Object.values(record.components)
+		record.components ? Object.values(record.components) : []
 	);
 
 	if (!matchedComponents.length) {

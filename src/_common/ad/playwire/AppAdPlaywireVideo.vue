@@ -10,21 +10,18 @@ const props = defineProps({
 const { adapter } = toRefs(props);
 
 onMounted(() => {
-	adapter.value.ensureLoaded();
+	adapter.value.run(async ramp => {
+		await ramp.addUnits({
+			selectorId: 'ad-playwire-video',
+			type: 'trendi_video',
+		});
+		ramp.displayUnits();
+	});
 });
-
-// TODO: apparently they don't need anything set up in the slot?
-// const root = ref<HTMLElement>();
-
-// onMounted(() => {
-// 	const script = window.document.createElement('script');
-// 	script.dataset.config = 'https://config.playwire.com/1391/playlists/v2/4898/zeus.json';
-
-// 	root.value!.appendChild(script);
-// 	script.src = 'https://cdn.playwire.com/bolt/js/zeus/embed.js';
-// });
 </script>
 
 <template>
-	<div class="ad-playwire-video" />
+	<div id="ad-playwire-video-container">
+		<div id="ad-playwire-video" />
+	</div>
 </template>

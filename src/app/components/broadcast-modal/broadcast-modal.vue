@@ -15,12 +15,12 @@ import {
 	createStickerTargetController,
 	StickerTargetController,
 } from '../../../_common/sticker/target/target-controller';
-import { AppTimeAgo } from '../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
 import { getVideoPlayerFromSources } from '../../../_common/video/player/controller';
 import AppVideoPlayer from '../../../_common/video/player/player.vue';
 import AppVideo from '../../../_common/video/video.vue';
 import { AppCommentWidgetLazy } from '../lazy';
-import AppPollVoting from '../poll/voting/voting.vue';
+import AppPollVoting from '../poll/AppPollVoting.vue';
 import AppPostControls from '../post/controls/AppPostControls.vue';
 
 @Options({
@@ -167,7 +167,7 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 					</div>
 
 					<template v-if="post.hasPoll">
-						<AppPollVoting :poll="post.poll" :game="post.game" :user="post.user" />
+						<AppPollVoting :post="post" :poll="post.poll" />
 
 						<br />
 					</template>

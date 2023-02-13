@@ -17,7 +17,7 @@ import {
 	OptionsForRoute,
 } from '../../../../../../../../../_common/route/route-component';
 import { vAppNoAutoscroll } from '../../../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
-import { AppTimeAgo } from '../../../../../../../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../../../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';

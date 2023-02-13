@@ -1,6 +1,6 @@
-const path = require('path') as typeof import('path');
-const os = require('os') as typeof import('os');
 import * as fs from 'fs-extra';
+import * as os from 'os';
+import * as path from 'path';
 import { downloadFile, unzip } from '../utils';
 
 type AcquireOptions = {

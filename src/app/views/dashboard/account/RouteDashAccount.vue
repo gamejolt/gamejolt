@@ -1,9 +1,11 @@
 <script lang="ts">
-import { inject, InjectionKey, provide, ref } from 'vue';
-import { RouterLink, RouterView } from 'vue-router';
+import { computed, inject, InjectionKey, provide, ref } from 'vue';
+import { RouterLink, RouterView, useRoute } from 'vue-router';
 import { bangRef } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
+import AppAvatarFrame from '../../../../_common/avatar/AppAvatarFrame.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
+import { ComponentProps } from '../../../../_common/component-helpers';
 import AppEditableOverlay from '../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
@@ -11,7 +13,8 @@ import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import AppPageHeader from '../../../components/page-header/page-header.vue';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
+import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import { UserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
 import { UserHeaderModal } from '../../../components/user/header-modal/header-modal.service';
 import { routeDashAccountAddresses } from './addresses/addresses.route';
@@ -63,11 +66,18 @@ provide(Key, routeStore);
 const { heading } = routeStore;
 const user = bangRef(maybeUser);
 
+const route = useRoute();
+
 const { isBootstrapped } = createAppRoute({
 	onResolved({ payload }) {
 		setUser(payload.user);
 	},
 });
+
+const spotlightWrapper = AppAvatarFrame;
+const spotlightWrapperProps = computed<ComponentProps<typeof spotlightWrapper>>(() => ({
+	frame: user.value.avatar_frame || null,
+}));
 
 function showEditHeader() {
 	UserHeaderModal.show();
@@ -86,7 +96,13 @@ function showEditAvatar() {
 			</AppButton>
 		</div>
 
-		<AppPageHeader>
+		<AppPageHeader
+			:override-slots="{
+				spotlight: !Screen.isXs,
+			}"
+			:spotlight-wrapper="spotlightWrapper"
+			:spotlight-wrapper-props="spotlightWrapperProps"
+		>
 			<h1>{{ heading }}</h1>
 
 			<p>
@@ -95,8 +111,7 @@ function showEditAvatar() {
 
 			<template v-if="!Screen.isXs" #spotlight>
 				<AppEditableOverlay
-					class="-fill"
-					:disabled="$route.name !== routeDashAccountEdit.name"
+					:disabled="route.name !== routeDashAccountEdit.name"
 					@click="showEditAvatar()"
 				>
 					<template #overlay>
@@ -107,7 +122,7 @@ function showEditAvatar() {
 			</template>
 		</AppPageHeader>
 
-		<AppExpand :when="$route.name === routeDashAccountEdit.name">
+		<AppExpand :when="route.name === routeDashAccountEdit.name">
 			<AppEditableOverlay @click="showEditHeader()">
 				<template #overlay>
 					{{ $gettext(`Change profile header`) }}
@@ -282,13 +297,27 @@ function showEditAvatar() {
 						</nav>
 					</div>
 					<div class="col-xs-12 col-sm-9 col-md-10">
-						<template v-if="Screen.isXs && $route.name === routeDashAccountEdit.name">
-							<AppEditableOverlay class="-avatar-xs" @click="showEditAvatar()">
-								<template #overlay>
-									{{ $gettext(`Change`) }}
-								</template>
-								<AppUserAvatar :user="user" />
-							</AppEditableOverlay>
+						<template v-if="Screen.isXs && route.name === routeDashAccountEdit.name">
+							<AppAvatarFrame
+								:style="{
+									margin: `0 auto`,
+									maxWidth: `200px`,
+								}"
+								:frame="user.avatar_frame || null"
+							>
+								<AppEditableOverlay
+									:style="{
+										borderRadius: `50%`,
+										overflow: `hidden`,
+									}"
+									@click="showEditAvatar()"
+								>
+									<template #overlay>
+										{{ $gettext(`Change`) }}
+									</template>
+									<AppUserAvatarImg :user="user" />
+								</AppEditableOverlay>
+							</AppAvatarFrame>
 
 							<hr />
 						</template>
@@ -300,18 +329,3 @@ function showEditAvatar() {
 		</section>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.-fill
-	position: absolute
-	top: 0
-	right: 0
-	bottom: 0
-	left: 0
-
-.-avatar-xs
-	margin: 0 auto
-	max-width: 200px
-	border-radius: 50%
-	overflow: hidden
-</style>

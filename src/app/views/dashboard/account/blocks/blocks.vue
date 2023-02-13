@@ -9,7 +9,7 @@ import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
-import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { UserBlock } from '../../../../../_common/user/block/block.model';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';

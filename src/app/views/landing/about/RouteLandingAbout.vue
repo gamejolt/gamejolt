@@ -10,8 +10,7 @@ import { $gettext } from '../../../../_common/translate/translate.service';
 import { imageJolt } from '../../../img/images';
 import { routeLandingCreators } from '../creators/creators.route';
 
-const assetUrls = import.meta.globEager('./*.png');
-const profileUrls = import.meta.globEager('./profile-*.jpg');
+const assetUrls = import.meta.glob('./*.(png|jpg)', { eager: true, as: 'url' });
 
 const colors = {
 	'#ccff00': 'black',
@@ -108,7 +107,7 @@ createAppRoute({
 								<div class="-staff-item">
 									<a href="https://gamejolt.com/@thoro">
 										<img
-											:src="profileUrls['./profile-thoro.jpg'].default"
+											:src="assetUrls['./profile-thoro.jpg']"
 											alt="thoro"
 											class="-avatar"
 										/>
@@ -119,7 +118,7 @@ createAppRoute({
 								<div class="-staff-item">
 									<a href="https://gamejolt.com/@cros">
 										<img
-											:src="profileUrls['./profile-cros.jpg'].default"
+											:src="assetUrls['./profile-cros.jpg']"
 											alt="cros"
 											class="-avatar"
 										/>
@@ -131,7 +130,7 @@ createAppRoute({
 								<div v-for="username of staff" :key="username" class="-staff-item">
 									<a :href="`https://gamejolt.com/@${username}`">
 										<img
-											:src="profileUrls[`./profile-${username}.jpg`].default"
+											:src="assetUrls[`./profile-${username}.jpg`]"
 											:alt="`@${username}`"
 											class="-avatar"
 										/>
@@ -177,13 +176,13 @@ createAppRoute({
 
 								<div class="visible-xs text-center">
 									<img
-										:src="assetUrls['./gamejolt-logo-dark-1x.png'].default"
+										:src="assetUrls['./gamejolt-logo-dark-1x.png']"
 										alt="Game Jolt Logo Dark"
 									/>
 								</div>
 								<div class="hidden-xs text-center">
 									<img
-										:src="assetUrls['./gamejolt-logo-dark-2x.png'].default"
+										:src="assetUrls['./gamejolt-logo-dark-2x.png']"
 										alt="Game Jolt Logo Dark"
 									/>
 								</div>
@@ -195,7 +194,6 @@ createAppRoute({
 										<a
 											:href="
 												assetUrls['./gamejolt-logo-dark-' + size + '.png']
-													.default
 											"
 											target="_blank"
 										>
@@ -215,9 +213,7 @@ createAppRoute({
 
 										<div class="text-center">
 											<img
-												:src="
-													assetUrls['./gamejolt-bolt-dark-2x.png'].default
-												"
+												:src="assetUrls['./gamejolt-bolt-dark-2x.png']"
 												alt="Game Jolt Bolt Dark"
 											/>
 										</div>
@@ -233,7 +229,7 @@ createAppRoute({
 													:href="
 														assetUrls[
 															'./gamejolt-bolt-dark-' + size + '.png'
-														].default
+														]
 													"
 													target="_blank"
 												>
@@ -261,10 +257,7 @@ createAppRoute({
 
 										<div class="text-center">
 											<img
-												:src="
-													assetUrls['./gamejolt-bolt-white-2x.png']
-														.default
-												"
+												:src="assetUrls['./gamejolt-bolt-white-2x.png']"
 												alt="Game Jolt Bolt White"
 											/>
 										</div>
@@ -280,7 +273,7 @@ createAppRoute({
 													:href="
 														assetUrls[
 															'./gamejolt-bolt-white-' + size + '.png'
-														].default
+														]
 													"
 													target="_blank"
 												>
@@ -299,10 +292,7 @@ createAppRoute({
 
 										<div class="text-center">
 											<img
-												:src="
-													assetUrls['./gamejolt-bolt-black-2x.png']
-														.default
-												"
+												:src="assetUrls['./gamejolt-bolt-black-2x.png']"
 												alt="Game Jolt Bolt Black"
 											/>
 										</div>
@@ -318,7 +308,7 @@ createAppRoute({
 													:href="
 														assetUrls[
 															'./gamejolt-bolt-black-' + size + '.png'
-														].default
+														]
 													"
 													target="_blank"
 												>

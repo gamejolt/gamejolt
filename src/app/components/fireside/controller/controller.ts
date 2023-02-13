@@ -32,10 +32,6 @@ import {
 } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Background } from '../../../../_common/background/background.model';
-import {
-	canCommunityEjectFireside,
-	canCommunityFeatureFireside,
-} from '../../../../_common/community/community.model';
 import { ContentFocus } from '../../../../_common/content-focus/content-focus.service';
 import { getDeviceBrowser, getDeviceOS } from '../../../../_common/device/device.service';
 import { DogtagData } from '../../../../_common/dogtag/dogtag-data';
@@ -69,7 +65,11 @@ import { CommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
 import { BottomBarControl } from '../../../views/fireside/_bottom-bar/AppFiresideBottomBar.vue';
-import { ChatRoomChannel, createChatRoomChannel } from '../../chat/room-channel';
+import {
+	ChatRoomChannel,
+	createChatRoomChannel,
+	PlaceStickerPayload,
+} from '../../chat/room-channel';
 import { createGridFiresideChannel, GridFiresideChannel } from '../../grid/fireside-channel';
 import { createGridFiresideDMChannel, GridFiresideDMChannel } from '../../grid/fireside-dm-channel';
 import { GridStore } from '../../grid/grid-store';
@@ -170,6 +170,10 @@ export function createFiresideController(
 	 */
 	const hostBackgrounds = ref(new Map<number, Background>());
 
+	const targetData = computed(() => {
+		return { host_user_id: rtc.value?.focusedUser?.userModel?.id };
+	});
+
 	const stickerTargetController = createStickerTargetController(fireside, {
 		isLive: true,
 		isCreator: computed(() => {
@@ -179,9 +183,10 @@ export function createFiresideController(
 			}
 			return user.is_creator === true;
 		}),
+		targetData,
 		placeStickerCallback: async data => {
 			const roomChannel = chatChannel.value;
-			const targetUserId = rtc.value?.focusedUser?.userModel?.id;
+			const targetUserId = targetData.value.host_user_id;
 			const errorResponse = { success: false };
 
 			if (!roomChannel || !targetUserId) {
@@ -198,13 +203,19 @@ export function createFiresideController(
 				}
 			}
 
-			const result = await roomChannel.pushPlaceSticker(targetUserId, stickerData);
+			let payload: Partial<PlaceStickerPayload> = {};
+			try {
+				payload = await roomChannel.pushPlaceSticker(targetUserId, stickerData);
 
-			const placement = result.stickerPlacement;
-			if (placement) {
-				onFiresideStickerPlaced.next(placement);
+				const { stickerPlacement, success = true } = payload;
+
+				if (stickerPlacement) {
+					onFiresideStickerPlaced.next(stickerPlacement);
+				}
+				return { ...payload, success };
+			} catch (e) {
+				return { ...payload, ...errorResponse };
 			}
-			return { ...result, success: true };
 		},
 	});
 
@@ -291,22 +302,11 @@ export function createFiresideController(
 	const canManageCohosts = computed(
 		() => isOwner.value || fireside.hasPerms('fireside-collaborators')
 	);
-	const canCommunityFeature = computed(
-		() => !!fireside.community && canCommunityFeatureFireside(fireside.community)
-	);
-	const canCommunityEject = computed(
-		() => !!fireside.community && canCommunityEjectFireside(fireside.community)
-	);
 
 	const canEdit = computed(() => isOwner.value || fireside.hasPerms('fireside-edit'));
 
 	const canPublish = computed(() => {
-		const role = fireside.role?.role;
-		if (isOwner.value || role === 'host') {
-			return status.value === 'joined' && isDraft.value;
-		}
-
-		return false;
+		return status.value === 'joined' && isDraft.value && fireside.hasPerms('fireside-publish');
 	});
 
 	const _canExtend = computed(() => {
@@ -799,8 +799,6 @@ export function createFiresideController(
 		canStream,
 		isOwner,
 		canManageCohosts,
-		canCommunityFeature,
-		canCommunityEject,
 		canEdit,
 		canPublish,
 		canExtinguish,

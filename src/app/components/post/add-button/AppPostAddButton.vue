@@ -9,7 +9,7 @@ import { Realm } from '../../../../_common/realm/realm-model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
+import AppUserAvatarBubble from '../../user/AppUserAvatarBubble.vue';
 import { PostEditModal } from '../edit-modal/edit-modal-service';
 
 const props = defineProps({
@@ -74,7 +74,7 @@ async function open() {
 	<div v-app-auth-required class="post-add-button sheet sheet-elevate">
 		<span class="-avatar">
 			<AppUserCardHover :user="user">
-				<AppUserAvatar :user="user" />
+				<AppUserAvatarBubble :user="user" show-frame show-verified />
 			</AppUserCardHover>
 		</span>
 		<div class="-input-container">

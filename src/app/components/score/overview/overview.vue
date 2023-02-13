@@ -8,7 +8,7 @@ import { GameScoreTable } from '../../../../_common/game/score-table/score-table
 import { Popper } from '../../../../_common/popper/popper.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { AppTimeAgo } from '../../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import { UserGameScore } from '../../../../_common/user/game-score/game-score.model';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import AppScoreList from '../list/list.vue';

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
 import draggable from 'vuedraggable';
-import { Api } from '../../../../../_common/api/api.service';
+import { Api, ApiProgressEvent } from '../../../../../_common/api/api.service';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppFormControlUpload, {
 	AppFormControlUploadInterface,
@@ -20,7 +20,7 @@ import AppFormPostMediaItem from './item/item.vue';
 
 interface FormModel {
 	image: File[] | null;
-	_progress: ProgressEvent | null;
+	_progress: ApiProgressEvent | null;
 }
 
 class Wrapper extends BaseForm<FormModel> {}
