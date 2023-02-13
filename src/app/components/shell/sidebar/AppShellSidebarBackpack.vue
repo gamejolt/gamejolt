@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
 import { run } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import { formatNumber } from '../../../../_common/filters/number';
+import AppCurrencyPill from '../../../../_common/currency/AppCurrencyPill.vue';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
@@ -17,6 +16,7 @@ import {
 } from '../../../../_common/sticker/sticker-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { illPointyThing } from '../../../img/ill/illustrations';
+import { useAppStore } from '../../../store';
 import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
 
 type FormModel = {
@@ -24,10 +24,7 @@ type FormModel = {
 };
 
 const { stickerPacks, drawerItems: stickers } = useStickerStore();
-
-// TODO(sticker-collections-2) Put this in a store somewhere so we have some
-// placeholder data.
-const coinBalance = ref(0);
+const { coinBalance } = useAppStore();
 
 const form: FormController<FormModel> = createForm({
 	loadUrl: `/mobile/sticker`,
@@ -82,27 +79,20 @@ function openPack(pack: UserStickerPack) {
 					gap: '12px',
 				}"
 			>
-				<AppButton solid block @click="onClickVendingMachine()">
-					<span>
-						{{ $gettext(`Purchase items`) }}
-					</span>
+				<AppButton block solid @click="onClickVendingMachine()">
+					{{ $gettext(`Get packs`) }}
 				</AppButton>
 
-				<div
-					class="_radius-lg"
+				<AppCurrencyPill
 					:style="{
 						flex: 'none',
-						backgroundColor: 'var(--theme-bg)',
-						padding: '2px 6px',
-						fontWeight: 600,
 					}"
-				>
-					{{ formatNumber(coinBalance) }}
-					{{ ' 🪙' }}
-				</div>
+					currency="coins"
+					:amount="coinBalance"
+				/>
 			</div>
 
-			<AppSpacer vertical :scale="4" />
+			<AppSpacer vertical :scale="8" />
 
 			<div class="_section-header">
 				{{ $gettext(`Sticker packs`) }}
@@ -127,9 +117,6 @@ function openPack(pack: UserStickerPack) {
 				<p class="text-center">
 					{{ $gettext(`You currently have no packs to open.`) }}
 				</p>
-				<AppButton block trans @click="onClickVendingMachine()">
-					{{ $gettext(`Get packs`) }}
-				</AppButton>
 			</div>
 
 			<AppSpacer vertical :scale="8" />
@@ -161,7 +148,7 @@ function openPack(pack: UserStickerPack) {
 
 <style lang="stylus" scoped>
 #shell-sidebar-backpack
-	--base-pad: 12px
+	--base-pad: 16px
 	--half-pad: calc(var(--base-pad) * 0.5)
 	padding: var(--base-pad)
 
@@ -178,7 +165,7 @@ function openPack(pack: UserStickerPack) {
 ._packs
 	--min-pack-width: 120px
 	display: grid
-	gap: var(--base-pad)
+	gap: var(--half-pad)
 	grid-template-columns: repeat(auto-fill, minmax(var(--min-pack-width), 1fr))
 
 	@media $media-xs

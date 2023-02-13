@@ -4,7 +4,7 @@ import { run } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import { formatNumber } from '../../../../_common/filters/number';
+import AppCurrencyPill from '../../../../_common/currency/AppCurrencyPill.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
@@ -20,7 +20,11 @@ import { UserStickerPack } from '../../../../_common/sticker/pack/user_pack.mode
 import { useStickerStore } from '../../../../_common/sticker/sticker-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { illNoCommentsSmall } from '../../../img/ill/illustrations';
+import { useAppStore } from '../../../store';
 
+import imageVance from './vance.png';
+
+const { coinBalance } = useAppStore();
 const { stickerPacks } = useStickerStore();
 const modal = useModal()!;
 
@@ -28,7 +32,6 @@ const isPurchasingPack = ref(false);
 const isLoading = ref(true);
 
 const availablePacks = ref<StickerPack[]>([]);
-const coinBalance = ref(0);
 const purchasedPack = ref<StickerPack | null>(null);
 const purchasedPackX = ref(0);
 
@@ -123,11 +126,14 @@ function getPurchasedPackX() {
 		<div class="_container">
 			<AppModalFloatingHeader>
 				<template #modal-controls>
-					<div class="_balance">
-						<span>{{ formatNumber(coinBalance) }}</span>
-						<!-- TODO(sticker-collections-2) proper jolticon -->
-						<span>{{ ' 🪙' }}</span>
-					</div>
+					<AppCurrencyPill
+						:style="{
+							alignSelf: 'flex-end',
+							marginRight: 'auto',
+						}"
+						currency="coins"
+						:amount="coinBalance"
+					/>
 
 					<AppButton @click="modal.dismiss()">
 						{{ $gettext(`Close`) }}
@@ -205,8 +211,16 @@ function getPurchasedPackX() {
 				</AppLoadingFade>
 
 				<AppScrollAffix anchor="bottom" :offset-top="0" :padding="0">
-					<div class="_output-bg">
-						<div class="_output-corner-tl">
+					<div :style="{ position: 'relative' }">
+						<AppAspectRatio :ratio="1000 / 250">
+							<img
+								:src="imageVance"
+								:style="{ width: `100%`, height: `100%` }"
+								alt="Vending Vance"
+							/>
+						</AppAspectRatio>
+						<!-- vance -->
+						<!-- <div class="_output-corner-tl">
 							<div class="_output-corner-tl-border" />
 							<div class="_output-corner-bg" />
 						</div>
@@ -234,7 +248,7 @@ function getPurchasedPackX() {
 									}"
 								/>
 							</div>
-						</div>
+						</div> -->
 
 						<AppSpacer vertical :scale="4" />
 					</div>
@@ -271,7 +285,7 @@ function getPurchasedPackX() {
 	padding: 2px 6px
 	align-self: flex-end
 	margin-right: auto
-	font-weight: 600
+	font-weight: bold
 
 ._packs
 	rounded-corners-lg()
@@ -281,7 +295,8 @@ function getPurchasedPackX() {
 	overflow: hidden
 	min-height: calc(min(40vh, 400px))
 	display: grid
-	grid-template-columns: repeat(auto-fill, minmax(100px, 1fr))
+	// TODO(sticker-collections-2) make better
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))
 	align-content: start
 	gap: 12px
 	padding: 12px

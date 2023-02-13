@@ -6,6 +6,6 @@ export async function showVendingMachineModal() {
 		modalId: 'VendingMachine',
 		component: defineAsyncComponent(() => import('./AppVendingMachineModal.vue')),
 		props: {},
-		size: 'sm',
+		size: 'lg',
 	});
 }

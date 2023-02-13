@@ -68,6 +68,9 @@ export function createAppStore({
 	const hasNewFriendRequests = ref(false);
 	const hasNewUnlockedStickers = ref(false);
 
+	// Wallet currencies.
+	const coinBalance = ref(0);
+
 	const notificationState = ref<ActivityFeedState>();
 
 	const mobileCbarShowing = ref(false);
@@ -578,5 +581,6 @@ export function createAppStore({
 		viewCommunity,
 		getQuestStore,
 		stickerStore,
+		coinBalance,
 	};
 }

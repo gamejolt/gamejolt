@@ -31,8 +31,7 @@ const emit = defineEmits({
 
 const { disabled, overlayRadius, overlayStyle, initialText } = toRefs(props);
 
-const root = ref<HTMLDivElement>() as Ref<HTMLDivElement>;
-
+const root = ref() as Ref<HTMLDivElement>;
 const stage = ref<ConfirmWrapperStage>('hidden');
 
 /**
@@ -272,14 +271,13 @@ $-z-index-message = 3
 	display: inline-flex
 
 .-button-like
-	padding: 2px 6px
+	padding: 8px 10px
 	text-align: center
 	cursor: pointer
 	font-weight: bold
-
-	&
-	::v-deep(.jolticon)
-		font-size: $font-size-small
+	display: flex
+	align-items: center
+	justify-content: center
 
 	&.-primary
 		change-bg(primary)
