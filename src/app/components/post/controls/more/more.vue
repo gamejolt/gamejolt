@@ -11,7 +11,6 @@ import { FiresidePostCommunity } from '../../../../../_common/fireside/post/comm
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../../_common/game/game.model';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
-import { getLinkedAccountPlatformIcon } from '../../../../../_common/linked-account/linked-account.model';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { ReportModal } from '../../../../../_common/report/modal/modal.service';
 import { copyShareLink } from '../../../../../_common/share/share.service';
@@ -104,10 +103,6 @@ export default class AppPostControlsMore extends Vue {
 	get shouldShowBlockCommunityUser() {
 		// Cannot block yourself.
 		return this.post.user.id !== this.user?.id;
-	}
-
-	getProviderIcon(provider: string) {
-		return getLinkedAccountPlatformIcon(provider);
 	}
 
 	async toggleFeatured(postCommunity: FiresidePostCommunity) {
@@ -300,23 +295,6 @@ export default class AppPostControlsMore extends Vue {
 					<AppJolticon icon="cog" />
 					<AppTranslate>Moderate</AppTranslate>
 				</a>
-
-				<!-- When published to platforms, shows links to created resources. -->
-				<template v-if="canEdit && post.platforms_published_to.length > 0">
-					<hr />
-					<div class="-header list-group-item">
-						<AppTranslate>Published to:</AppTranslate>
-					</div>
-					<AppLinkExternal
-						v-for="platform of post.platforms_published_to"
-						:key="platform.url"
-						class="list-group-item has-icon"
-						:href="platform.url"
-					>
-						<AppJolticon :icon="getProviderIcon(platform.created_resource_provider)" />
-						{{ platform.created_resource_account_name }}
-					</AppLinkExternal>
-				</template>
 
 				<!-- Community feature/unfeature, move to channel and eject -->
 				<template v-if="shouldShowManageCommunities">

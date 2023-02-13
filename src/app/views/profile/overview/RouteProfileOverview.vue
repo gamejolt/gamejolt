@@ -193,14 +193,6 @@ const twitchAccount = computed(() => {
 	return getLinkedAccount(LinkedAccount.PROVIDER_TWITCH);
 });
 
-const tumblrAccount = computed(() => {
-	const account = getLinkedAccount(LinkedAccount.PROVIDER_TUMBLR);
-	if (account && account.tumblrSelectedBlog) {
-		return account;
-	}
-	return null;
-});
-
 const addCommentPlaceholder = computed(() => {
 	if (!routeUser.value) {
 		return undefined;
@@ -789,16 +781,6 @@ async function onFriendRequestReject() {
 										{{ ' ' }}
 										<span>@</span>
 										{{ twitterAccount.name }}
-									</AppLinkExternal>
-								</div>
-								<div v-if="tumblrAccount && tumblrAccount.tumblrSelectedBlog">
-									<AppLinkExternal
-										class="link-unstyled"
-										:href="tumblrAccount.tumblrSelectedBlog.url"
-									>
-										<AppJolticon :icon="tumblrAccount.icon" />
-										{{ ' ' }}
-										{{ tumblrAccount.tumblrSelectedBlog.title }}
 									</AppLinkExternal>
 								</div>
 							</template>
