@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
-import { imageCoins, imageGems } from '../../app/img/images';
 import { formatNumber } from '../filters/number';
+import { imageCoins, imageGems } from '../img/images';
 
 const props = defineProps({
 	currency: {
