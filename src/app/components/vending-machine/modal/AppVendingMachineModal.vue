@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { run } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
@@ -11,14 +11,19 @@ import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import AppModal from '../../../../_common/modal/AppModal.vue';
 import AppModalFloatingHeader from '../../../../_common/modal/AppModalFloatingHeader.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
+import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import AppStickerPack from '../../../../_common/sticker/pack/AppStickerPack.vue';
+import AppStickerPack, {
+	StickerPackRatio,
+} from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { StickerPackOpenModal } from '../../../../_common/sticker/pack/open-modal/modal.service';
 import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
 import { UserStickerPack } from '../../../../_common/sticker/pack/user_pack.model';
 import { useStickerStore } from '../../../../_common/sticker/sticker-store';
+import { kThemeBgActual } from '../../../../_common/theme/variables';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { styleWhen } from '../../../../_styles/mixins';
 import { illNoCommentsSmall } from '../../../img/ill/illustrations';
 import { useAppStore } from '../../../store';
 
@@ -32,8 +37,6 @@ const isPurchasingPack = ref(false);
 const isLoading = ref(true);
 
 const availablePacks = ref<StickerPack[]>([]);
-const purchasedPack = ref<StickerPack | null>(null);
-const purchasedPackX = ref(0);
 
 run(async () => {
 	const p = await Promise.all([
@@ -72,7 +75,6 @@ async function purchasePack(pack: StickerPack) {
 		return;
 	}
 
-	purchasedPack.value = null;
 	isPurchasingPack.value = true;
 
 	try {
@@ -88,8 +90,6 @@ async function purchasePack(pack: StickerPack) {
 		}
 
 		const newPack = new UserStickerPack(rawNewPack);
-		purchasedPackX.value = Math.random();
-		purchasedPack.value = newPack.sticker_pack;
 
 		let newBalance = payload.coinBalance;
 		if (typeof newBalance !== 'number') {
@@ -116,14 +116,31 @@ async function purchasePack(pack: StickerPack) {
 	}
 }
 
-function getPurchasedPackX() {
-	return (0.1 + purchasedPackX.value) * 0.75 * 100 + '%';
-}
+// Make the vending machine content full-height for phone sizes.
+const containerStyles = computed(() =>
+	styleWhen(Screen.isXs, {
+		display: `flex`,
+		flexDirection: `column`,
+		minHeight: `100vh`,
+	})
+);
+
+// Make the vending machine content full-height for phone sizes.
+const loadingFadeStyles = computed(() =>
+	styleWhen(Screen.isXs, {
+		flex: `auto`,
+		display: `flex`,
+		flexDirection: `column`,
+	})
+);
+
+// Make the vending machine content full-height for phone sizes.
+const loadingFadeContentStyles = loadingFadeStyles;
 </script>
 
 <template>
 	<AppModal>
-		<div class="_container">
+		<div :style="containerStyles">
 			<AppModalFloatingHeader>
 				<template #modal-controls>
 					<AppCurrencyPill
@@ -142,21 +159,27 @@ function getPurchasedPackX() {
 			</AppModalFloatingHeader>
 
 			<div class="modal-body _wrapper">
-				<AppLoadingFade :is-loading="isLoading">
+				<AppLoadingFade
+					:style="loadingFadeStyles"
+					:content-styles="loadingFadeContentStyles"
+					:is-loading="isLoading"
+				>
 					<div
 						class="_packs"
 						:style="
-							isLoading || availablePacks.length
-								? {}
-								: {
-										gridTemplateColumns: '1fr',
-										alignContent: 'center',
-								  }
+							styleWhen(!isLoading && !availablePacks.length, {
+								gridTemplateColumns: '1fr',
+								alignContent: 'center',
+							})
 						"
 					>
 						<template v-if="isLoading">
-							<!-- TODO(sticker-collections-2) placeholder ratio -->
-							<AppAspectRatio v-for="i in 3" :key="i" :ratio="2 / 3" show-overflow>
+							<AppAspectRatio
+								v-for="i in 3"
+								:key="i"
+								:ratio="StickerPackRatio"
+								show-overflow
+							>
 								<div class="_pack-placeholder" />
 							</AppAspectRatio>
 						</template>
@@ -210,17 +233,37 @@ function getPurchasedPackX() {
 					</div>
 				</AppLoadingFade>
 
-				<AppScrollAffix anchor="bottom" :offset-top="0" :padding="0">
-					<div :style="{ position: 'relative' }">
+				<AppScrollAffix
+					:style="{
+						zIndex: 2,
+					}"
+					anchor="bottom"
+					:offset-top="0"
+					:padding="0"
+				>
+					<div
+						:style="{
+							position: 'relative',
+							backgroundColor: kThemeBgActual,
+						}"
+					>
+						<!-- vance -->
+						<AppSpacer vertical :scale="4" />
 						<AppAspectRatio :ratio="1000 / 250">
 							<img
 								:src="imageVance"
-								:style="{ width: `100%`, height: `100%` }"
+								:style="{
+									width: `100%`,
+									height: `100%`,
+									userSelect: `none`,
+								}"
 								alt="Vending Vance"
 							/>
 						</AppAspectRatio>
-						<!-- vance -->
-						<!-- <div class="_output-corner-tl">
+						<AppSpacer vertical :scale="4" />
+
+						<!-- Rounded corner decorators -->
+						<div class="_output-corner-tl">
 							<div class="_output-corner-tl-border" />
 							<div class="_output-corner-bg" />
 						</div>
@@ -228,29 +271,6 @@ function getPurchasedPackX() {
 							<div class="_output-corner-tr-border" />
 							<div class="_output-corner-bg" />
 						</div>
-
-						<AppSpacer vertical :scale="4" />
-
-						<div class="_output">
-							<div class="_output-face">
-								<div class="_output-face-eye" />
-								<div class="_output-face-mouth" />
-								<div class="_output-face-eye" />
-							</div>
-
-							<div class="_purchased">
-								<AppStickerPack
-									v-if="purchasedPack"
-									:pack="purchasedPack"
-									class="_purchased-pack"
-									:style="{
-										left: getPurchasedPackX(),
-									}"
-								/>
-							</div>
-						</div> -->
-
-						<AppSpacer vertical :scale="4" />
 					</div>
 				</AppScrollAffix>
 			</div>
@@ -259,13 +279,6 @@ function getPurchasedPackX() {
 </template>
 
 <style lang="stylus" scoped>
-// Make the vending machine full-height for phone sizes
-._container
-	@media $media-xs
-		display: flex
-		flex-direction: column
-		min-height: 100vh
-
 ._wrapper
 	padding-top: 0
 	padding-bottom: 0
@@ -288,21 +301,24 @@ function getPurchasedPackX() {
 	font-weight: bold
 
 ._packs
+	--pack-min-width: 200px
 	rounded-corners-lg()
 	change-bg(bg-offset)
 	color: var(--theme-fg)
 	position: relative
 	overflow: hidden
-	min-height: calc(min(40vh, 400px))
+	min-height: calc(min(45vh, 800px))
 	display: grid
-	// TODO(sticker-collections-2) make better
-	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))
+	grid-template-columns: repeat(auto-fill, minmax(var(--pack-min-width), 1fr))
 	align-content: start
 	gap: 12px
 	padding: 12px
 	border-bottom-left-radius: 0
 	border-bottom-right-radius: 0
 	flex: auto
+
+	@media $media-xs
+		--pack-min-width: 140px
 
 ._pack-placeholder
 	rounded-corners-lg()
@@ -313,10 +329,6 @@ function getPurchasedPackX() {
 
 ._pack
 	z-index: 1
-
-._output-bg
-	position: relative
-	background-color: var(--theme-bg-actual)
 
 ._output-corner-tl
 ._output-corner-tr
@@ -350,57 +362,4 @@ function getPurchasedPackX() {
 	left: 0
 	top: 0
 	z-index: -1
-
-._output
-	height: 96px
-	rounded-corners-lg()
-	overflow: hidden
-	background-color: #31d6ff
-	box-shadow: inset 20px 20px #187899
-	position: relative
-
-._output-face
-	display: flex
-	justify-content: center
-	padding-top: 16px
-
-._output-face-eye
-	height: 40px
-	width: 16px
-	rounded-corners-lg()
-	background-color: black
-
-._output-face-mouth
-	width: 64px
-	height: 12px
-	rounded-corners-lg()
-	background-color: black
-	margin-left: 32px
-	margin-right: 32px
-	margin-top: 32px
-
-._purchased
-	position: absolute
-	top: 0
-	left: 0
-	bottom: 0
-	right: 0
-	overflow: hidden
-
-._purchased-pack
-	position: absolute
-	top: 0
-	width: 80px
-	filter: drop-shadow(6px 6px 0 #187899)
-	animation-name: purchased-pack
-	animation-duration: 0.25s
-	animation-iteration-count: 1
-	animation-fill-mode: forwards
-
-@keyframes purchased-pack
-	0%
-		transform: translateY(-150px) rotateZ(-20deg)
-
-	100%
-		transform: translateY(-5px) rotateZ(-20deg)
 </style>

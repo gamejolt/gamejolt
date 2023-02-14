@@ -49,7 +49,7 @@ const img = computed(() => {
 			'loading-centered': centered,
 		}"
 	>
-		<img :src="img" alt="Loading" :title="$gettext(`Loading...`)" />
+		<img :src="img" alt="" :title="$gettext(`Loading...`)" />
 		<span class="loading-label" :class="{ 'sr-only': hideLabel }">
 			{{ label }}
 		</span>

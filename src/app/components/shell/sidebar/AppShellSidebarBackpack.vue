@@ -70,7 +70,7 @@ function openPack(pack: UserStickerPack) {
 </script>
 
 <template>
-	<div id="shell-sidebar-backpack">
+	<div id="shell-sidebar-backpack" class="fill-offset">
 		<AppForm :controller="form">
 			<div
 				:style="{
@@ -163,13 +163,12 @@ function openPack(pack: UserStickerPack) {
 	margin-bottom: var(--half-pad)
 
 ._packs
-	--min-pack-width: 120px
 	display: grid
 	gap: var(--half-pad)
-	grid-template-columns: repeat(auto-fill, minmax(var(--min-pack-width), 1fr))
+	grid-template-columns: repeat(3, 1fr)
 
 	@media $media-xs
-		--min-pack-width: 100px
+		grid-template-columns: repeat(2, 1fr)
 
 ._stickers
 	display: grid

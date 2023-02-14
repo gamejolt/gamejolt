@@ -1,19 +1,24 @@
 <script lang="ts" setup>
+import { CSSProperties, PropType } from 'vue';
 import AppLoading from './AppLoading.vue';
 
 defineProps({
 	isLoading: {
 		type: Boolean,
 	},
+	contentStyles: {
+		type: Object as PropType<CSSProperties>,
+		default: undefined,
+	},
 });
 </script>
 
 <template>
-	<div class="loading-fade" :class="{ 'loading-fade-loading': isLoading }">
+	<div class="loading-fade">
 		<div v-if="isLoading" class="loading-fade-img">
 			<AppLoading centered hide-label stationary />
 		</div>
-		<div class="loading-fade-content">
+		<div class="loading-fade-content" :class="{ '-loading': isLoading }" :style="contentStyles">
 			<slot />
 		</div>
 	</div>
@@ -23,16 +28,14 @@ defineProps({
 .loading-fade
 	position: relative
 
-	&-img
-		position: absolute
-		top: 20px
-		left: 0
-		right: 0
-		z-index: 1
+.loading-fade-img
+	position: absolute
+	top: 20px
+	left: 0
+	right: 0
+	z-index: 1
 
-	&-loading
-
-		.loading-fade-content
-			opacity: 0.5
-			pointer-events: none
+.-loading
+	opacity: 0.5
+	pointer-events: none
 </style>

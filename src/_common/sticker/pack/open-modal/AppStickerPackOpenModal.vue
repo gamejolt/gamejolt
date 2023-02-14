@@ -31,7 +31,7 @@ import AppStickerPack from '../AppStickerPack.vue';
 import { UserStickerPack } from '../user_pack.model';
 
 const DurationStickerShow = 500;
-const DurationStickerStash = 1_000;
+const DurationStickerStash = 750;
 
 const DurationBackpackOpen = 250;
 const DurationBackpackClose = 500;
@@ -45,6 +45,8 @@ const OffsetSliceTop = 15;
 const DurationSliceTop = 1_000;
 const DelayPackTrash = DurationSliceTop * 0.75;
 const DurationPackTrash = 1_000;
+
+const DurationStickerAnimationOffset = 200;
 
 type PackOpenStage =
 	| 'confirm'
@@ -142,11 +144,11 @@ let _isMounted = false;
 const stickerAnimationDuration = computed(() =>
 	expandStickers.value ? DurationStickerShow : DurationStickerStash
 );
-const stickerAnimationOffset = computed(() => (expandStickers.value ? 400 : 200));
+
 const stickerSizing = computed<CSSProperties>(() => {
-	let size = 64;
+	let size = 128;
 	if (Screen.isXs) {
-		size = Math.min(64, Math.max(Screen.width * 0.2, 32));
+		size = Math.min(size, Math.max(Screen.width * 0.2, size / 2));
 	}
 	return { width: `${size}px`, height: `${size}px` };
 });
@@ -486,6 +488,7 @@ function addMs(value: number) {
 			}"
 		>
 			<div
+				class="theme-dark"
 				:style="{
 					position: 'absolute',
 					top: 0,
@@ -502,9 +505,9 @@ function addMs(value: number) {
 				<div
 					:style="{
 						position: 'absolute',
-						width: '50vw',
+						width: '75vw',
 						minWidth: '100px',
-						maxWidth: '206px',
+						maxWidth: '300px',
 						zIndex: 2,
 						top: '50%',
 						left: '50%',
@@ -646,13 +649,12 @@ function addMs(value: number) {
 					:style="{
 						position: 'absolute',
 						left: '50%',
-						bottom: stage === 'results-stash' ? `128px` : `60%`,
+						bottom: stage === 'results-stash' ? `64px` : `60%`,
 						transition: `bottom`,
 						transitionDuration: `${stickerAnimationDuration}ms`,
-						transitionDelay: `${index * stickerAnimationOffset}ms`,
+						transitionDelay: `${index * DurationStickerAnimationOffset}ms`,
 						transform: 'translateX(-50%)',
-						zIndex:
-							shownContainer === 'pack' ? index - openedStickers.length : index + 1,
+						zIndex: 3 + index,
 						pointerEvents: 'none',
 						...stickerSizing,
 					}"
@@ -661,23 +663,22 @@ function addMs(value: number) {
 					<div
 						:style="{
 							transform: `rotate(${getRotationForIndex(index)}deg)`,
-							transformOrigin: `bottom center`,
+							transformOrigin: `center center`,
 						}"
 					>
 						<!-- Stickers offset -->
 						<div
-							class="_anim-sticker _anim-weak-ease-in-out"
+							class="_anim-sticker"
 							:class="[
 								`_sticker-${index}`,
 								{
-									'_weak-ease-in-out': !expandStickers,
-									'_ease-out-back': expandStickers,
+									'_strong-ease-out': expandStickers,
 								},
 							]"
 							:style="{
 								transition: `bottom`,
-								transitionDelay: `${index * stickerAnimationOffset}ms`,
-								animationDelay: `${index * stickerAnimationOffset}ms`,
+								transitionDelay: `${index * DurationStickerAnimationOffset}ms`,
+								animationDelay: `${index * DurationStickerAnimationOffset}ms`,
 								transitionDuration: `${stickerAnimationDuration}ms`,
 								animationDuration: `${stickerAnimationDuration}ms`,
 								position: 'relative',
@@ -687,12 +688,29 @@ function addMs(value: number) {
 							}"
 						>
 							<!-- Stickers counter-rotation -->
-							<AppStickerStackItem
+							<div
 								:style="{
 									transform: `rotate(${-getRotationForIndex(index) * 0.75}deg)`,
 								}"
-								:img-url="sticker.img_url"
-							/>
+							>
+								<!-- Stickers scale -->
+								<AppStickerStackItem
+									:style="{
+										transform:
+											stage === 'results-show' ? `scale(1)` : `scale(0.5)`,
+										transformOrigin: `center center`,
+										transition: `transform`,
+										transitionDuration:
+											stage === 'results-stash'
+												? `${stickerAnimationDuration * 2}ms`
+												: `${stickerAnimationDuration}ms`,
+										transitionDelay: `${
+											index * DurationStickerAnimationOffset
+										}ms`,
+									}"
+									:img-url="sticker.img_url"
+								/>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -757,7 +775,7 @@ function addMs(value: number) {
 
 <style lang="stylus" scoped>
 ::v-deep(.modal)
-	background-color: transparent !important
+	change-bg-rgba('0, 0, 0', 0.87, true)
 
 ._anim-modal-fade-out
 	animation-name: anim-fade-out

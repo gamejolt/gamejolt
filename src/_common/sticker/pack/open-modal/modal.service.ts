@@ -18,6 +18,7 @@ export class StickerPackOpenModal {
 				pack,
 				openImmediate,
 			},
+			noBackdrop: true,
 			size: 'full',
 		});
 	}

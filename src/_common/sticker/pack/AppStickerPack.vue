@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts">
 import { computed, CSSProperties, PropType, toRefs } from 'vue';
 import {
 	styleBorderRadiusLg,
@@ -14,6 +14,10 @@ import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop
 import AppPopperConfirmWrapper from '../../popper/confirm-wrapper/AppPopperConfirmWrapper.vue';
 import { StickerPack } from './pack.model';
 
+export const StickerPackRatio = 0.75;
+</script>
+
+<script lang="ts" setup>
 interface StickerPackDetails {
 	name?: boolean;
 	cost?: boolean;
@@ -91,7 +95,7 @@ const overlayedStyle: CSSProperties = {
 	<!-- AppStickerPack -->
 	<div>
 		<div :style="{ position: `relative` }">
-			<AppAspectRatio :ratio="pack.media_item.aspectRatio" show-overflow>
+			<AppAspectRatio :ratio="StickerPackRatio" show-overflow>
 				<AppPopperConfirmWrapper
 					:style="{
 						width: `100%`,
@@ -115,6 +119,11 @@ const overlayedStyle: CSSProperties = {
 						<AppImgResponsive
 							:src="pack.media_item.mediaserver_url"
 							alt=""
+							:style="{
+								width: `100%`,
+								height: `100%`,
+								objectFit: `cover`,
+							}"
 							draggable="false"
 							ondragstart="return false"
 						/>

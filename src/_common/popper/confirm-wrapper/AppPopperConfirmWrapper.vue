@@ -228,6 +228,7 @@ $-z-index-message = 3
 	align-items: center
 	justify-content: center
 	transition: opacity 400ms $strong-ease-out
+	padding: 8px
 	z-index: 2
 
 .-fade
