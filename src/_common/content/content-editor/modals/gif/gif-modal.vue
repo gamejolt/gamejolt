@@ -349,7 +349,7 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 							@click="onClickCategory(category.searchterm)"
 						>
 							<div class="category">
-								<img :src="category.previewGif" />
+								<img v-if="category.previewGif" :src="category.previewGif" />
 								<div class="category-text">
 									<span>{{ category.searchterm }}</span>
 								</div>
