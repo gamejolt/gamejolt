@@ -93,7 +93,6 @@ export default class RouteContent extends BaseRouteComponent {
 			$payload.resourceId || parseInt(this.$route.params.resourceId.toString(), 10);
 		this.requireLog = $payload.requireLog;
 		this.maxLength = $payload.maxLength;
-		// TODO(remote-content-capabilities) Test this.
 		this.contentCapabilities = ContextCapabilities.fromPayloadList(
 			$payload.contentCapabilities
 		);
