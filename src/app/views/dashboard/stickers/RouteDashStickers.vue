@@ -104,7 +104,6 @@ createAppRoute({
 							:padding-v="24"
 						/>
 
-						<!-- TODO(sticker-collections-2) Anything we want to put here? Button to check the vending machine? -->
 						<AppSpacer vertical :scale="6" />
 					</div>
 
