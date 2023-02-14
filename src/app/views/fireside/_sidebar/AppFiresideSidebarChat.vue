@@ -13,7 +13,6 @@ import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 const { chatRoom, chatSettings, chat, fireside, background } = useFiresideController()!;
 const route = useRoute();
 
-// TODO(remote-content-capabilities) Test this once chat settings include content_capabilities.
 const contextCapabilities = computed(() =>
 	createFiresideChatContextCapabilities(chatSettings.value, fireside.role?.role || 'audience')
 );
