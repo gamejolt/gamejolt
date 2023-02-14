@@ -14,7 +14,7 @@ import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop
 import AppPopperConfirmWrapper from '../../popper/confirm-wrapper/AppPopperConfirmWrapper.vue';
 import { StickerPack } from './pack.model';
 
-export const StickerPackRatio = 0.75;
+export const StickerPackRatio = 2 / 3;
 </script>
 
 <script lang="ts" setup>
