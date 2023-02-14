@@ -46,7 +46,6 @@ const form: FormController<ChatCommandsFormModel> = createForm({
 		commandMinLength.value = response.commandMinLength;
 		commandMaxLength.value = response.commandMaxLength;
 		messageMaxLength.value = response.messageMaxLength;
-		// TODO(remote-content-capabilities) Needs capabilities.
 		messageCapabilities.value = ContextCapabilities.fromPayloadList(
 			response.contentCapabilities
 		);

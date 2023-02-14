@@ -15,7 +15,6 @@ export class FiresideChatSettings extends Model {
 	declare slow_mode_enabled: boolean;
 	declare slow_mode_seconds: number;
 	declare automated_sticker_messages: boolean;
-	// TODO(remote-content-capabilities) Broken, not always provided. Don't deploy until fixed.
 	declare content_capabilities: string[];
 }
 

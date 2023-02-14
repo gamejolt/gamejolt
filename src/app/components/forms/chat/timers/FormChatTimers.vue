@@ -46,7 +46,6 @@ const form: FormController<ChatTimersFormModel> = createForm({
 		maxInvokeSchedule.value = response.maxInvokeSchedule;
 		maxRequiredMessages.value = response.maxRequiredMessages;
 		messageMaxLength.value = response.messageMaxLength;
-		// TODO(remote-content-capabilities) Needs capabilities.
 		messageCapabilities.value = ContextCapabilities.fromPayloadList(
 			response.contentCapabilities
 		);

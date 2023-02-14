@@ -78,7 +78,6 @@ const form: FormController<FormModel> = createForm({
 	onLoad(payload) {
 		allowUsernameChange.value = payload.allowUsernameChange || true;
 		allowBioChange.value = payload.allowBioChange || true;
-		// TODO(remote-content-capabilities) Needs capabilities, lengthLimit.
 		bioCapabilities.value = ContextCapabilities.fromPayloadList(payload.contentCapabilities);
 		bioLengthLimit.value = payload.lengthLimit;
 	},
