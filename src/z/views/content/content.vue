@@ -45,6 +45,7 @@ export default class RouteContent extends BaseRouteComponent {
 	maxLength!: number;
 	contentCapabilities!: ContextCapabilities;
 	logReason = '';
+	currentContentLength = 0;
 
 	camelCase(str: string) {
 		return str.replace(/-([a-z])/gi, function (_all, letter) {
@@ -59,8 +60,7 @@ export default class RouteContent extends BaseRouteComponent {
 	}
 
 	get canSubmit() {
-		// TODO(remote-content-capabilities) Test this.
-		if (ContentDocument.fromJson(this.contentJson).getLength() > this.maxLength) {
+		if (this.currentContentLength > this.maxLength) {
 			return false;
 		}
 
@@ -108,6 +108,7 @@ export default class RouteContent extends BaseRouteComponent {
 
 	onUpdate(source: string) {
 		this.contentJson = source;
+		this.currentContentLength = ContentDocument.fromJson(this.contentJson).getLength();
 	}
 
 	async submit() {
@@ -186,7 +187,7 @@ export default class RouteContent extends BaseRouteComponent {
 						id="log-reason"
 						rows="2"
 						class="log-field"
-						placeholder="Reason for editing"
+						:placeholder="'Reason for editing' + (requireLog ? ' (required)' : '')"
 						:value="logReason"
 						@input="onChangeLogReason"
 					/>
