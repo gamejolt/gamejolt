@@ -7,7 +7,7 @@ import AppContentEditor from '../../../_common/content/content-editor/AppContent
 import AppLoading from '../../../_common/loading/AppLoading.vue';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
-import { AppTimeAgo } from '../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
 import { User } from '../../../_common/user/user.model';
 
 @Options({

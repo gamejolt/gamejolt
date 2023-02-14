@@ -13,20 +13,30 @@ defineProps({
 		type: Number,
 		default: undefined,
 	},
+	notRounded: {
+		type: Boolean,
+		default: false,
+	},
 });
 </script>
 
 <template>
-	<AppResponsiveDimensions class="-thumb" :ratio="0.75" :max-height="maxHeight">
+	<AppResponsiveDimensions
+		:class="['-thumb', { '-rounded': !notRounded }]"
+		:ratio="0.75"
+		:max-height="maxHeight"
+	>
 		<AppImgResponsive class="-img" :src="realm.cover.mediaserver_url" alt="" />
 	</AppResponsiveDimensions>
 </template>
 
 <style lang="stylus" scoped>
 .-thumb
-	rounded-corners()
 	change-bg('bg-offset')
 	overflow: hidden
+
+.-rounded
+	rounded-corners()
 
 .-img
 	object-fit: cover

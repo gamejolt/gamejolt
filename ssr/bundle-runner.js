@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const vm = require('vm');
 const NativeModule = require('module');
 
@@ -14,6 +15,9 @@ function createSandbox(context) {
 		clearTimeout,
 		clearInterval,
 		clearImmediate,
+		process,
+		URL,
+		Buffer,
 	};
 	sandbox.global = sandbox;
 	return sandbox;
@@ -40,7 +44,22 @@ module.exports.compileModule = filepath => {
 		//
 		// So we call the function, passin the exports as the "this" object,
 		// then pass in the appropriate other stuff.
-		compiledWrapper.call(m.exports, m.exports, require, m);
+		compiledWrapper.call(
+			m.exports,
+			m.exports,
+			// This is the "require" function within the script. We hijack it.
+			id => {
+				// If it's a relateive path, resolve it relative to the entry
+				// file.
+				if (id.startsWith('.')) {
+					id = path.resolve(path.dirname(filepath), id);
+				}
+				return require(id);
+			},
+			m,
+			filepath,
+			path.dirname(filepath)
+		);
 
 		const res = Object.prototype.hasOwnProperty.call(m.exports, 'default')
 			? m.exports.default

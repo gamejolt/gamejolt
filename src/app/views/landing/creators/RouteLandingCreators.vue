@@ -1,5 +1,6 @@
 <script lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { RouterLink } from 'vue-router';
 import { arrayIndexBy, arrayShuffle } from '../../../../utils/array';
 import { trackCreatorApply } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
@@ -30,7 +31,7 @@ import AppCreatorMooMoo from './AppCreatorMooMoo.vue';
 import socialImage from './social.png';
 import { creatorApplyDesktop, creatorApplySm, creatorApplyXs } from './_backgrounds/backgrounds';
 
-const postImages = import.meta.globEager('./_posts/*.jpg');
+const postImages = import.meta.glob('./_posts/*.jpg', {eager: true, as: 'url'});
 
 const boltHeight = computed(() => (Screen.isDesktop ? 182 : 164));
 const boltWidth = computed(() => (104 / 154) * boltHeight.value);
@@ -133,11 +134,6 @@ const { isBootstrapped, isDestroyed } = createAppRoute({
 		};
 
 		Meta.fb.image = Meta.twitter.image = socialImage;
-
-		if (!_hasPostTimer) {
-			setHeaderPostTimer(true);
-			_hasPostTimer = true;
-		}
 	},
 	onResolved({ payload }) {
 		const posts = FiresidePost.populate(payload.posts);
@@ -150,8 +146,15 @@ const { isBootstrapped, isDestroyed } = createAppRoute({
 	},
 });
 
+onMounted(() => {
+	if (!_hasPostTimer && !isDestroyed.value) {
+		setHeaderPostTimer(true);
+		_hasPostTimer = true;
+	}
+});
+
 async function setHeaderPostTimer(initial = false) {
-	if (isDestroyed) {
+	if (isDestroyed.value) {
 		return;
 	}
 
@@ -175,7 +178,7 @@ async function setHeaderPostTimer(initial = false) {
 		setTimeout(tryResolve, 5_000);
 	});
 
-	if (isDestroyed) {
+	if (isDestroyed.value) {
 		return;
 	}
 
@@ -189,7 +192,7 @@ async function setHeaderPostTimer(initial = false) {
 }
 
 function getPostFromIndex(index: number) {
-	return postImages[postImageKeys[index]].default;
+	return postImages[postImageKeys[index]];
 }
 
 function onClickApply(section: 'header' | 'why' | 'apply') {
@@ -577,14 +580,19 @@ function getRandomStickers(count = 3) {
 				<div>
 					<div class="-footer-header-text -tiny-header-text">More questions?</div>
 					<div class="-footer-header-text -tiny-header-text">
-						We've got answers in
-						<a
-							href="https://gamejolt.com/p/why-game-jolt-eny749ba"
-							target="_blank"
-							style="white-space: nowrap"
+						<RouterLink
+							:to="{
+								name: 'landing.help.redirect',
+								params: {
+									path: 'creators',
+								},
+							}"
+							:style="{
+								whitespace: 'nowrap',
+							}"
 						>
-							our Creator FAQ
-						</a>
+							We've got answers in our Creator FAQ
+						</RouterLink>
 					</div>
 				</div>
 			</div>

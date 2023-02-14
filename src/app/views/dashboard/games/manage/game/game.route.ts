@@ -2,8 +2,6 @@ import { RouteRecordRaw } from 'vue-router';
 import { routeDashGamesManageGameDescription } from './description/description.route';
 import { routeDashGamesManageGameDesign } from './design/design.route';
 import { routeDashGamesManageGameDetails } from './details/details.route';
-import { routeDashGamesManageGameLinkedAccountsLinkCallback } from './linked-accounts/link-callback/link-callback.route';
-import { routeDashGamesManageGameLinkedAccounts } from './linked-accounts/linked-accounts.route';
 import { routeDashGamesManageGameMaturity } from './maturity/maturity.route';
 import { routeDashGamesManageGameMusic } from './music/music.route';
 import { routeDashGamesManageGameOverview } from './overview/overview.route';
@@ -30,7 +28,5 @@ export const routeDashGamesManageGame: RouteRecordRaw = {
 		routeDashGamesManageGamePackageReleaseEdit,
 		routeDashGamesManageGameMaturity,
 		routeDashGamesManageGameWizardFinish,
-		routeDashGamesManageGameLinkedAccounts,
-		routeDashGamesManageGameLinkedAccountsLinkCallback,
 	],
 };

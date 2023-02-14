@@ -47,9 +47,7 @@ export class CommentStoreModel {
 	// removes a comment from the store, does not delete the comment itself
 	remove(id: number) {
 		const removedComments = arrayRemove(this.comments, c => c.id === id);
-		if (removedComments) {
-			this.count -= removedComments.length;
-		}
+		this.count -= removedComments.length;
 	}
 
 	clear() {

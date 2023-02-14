@@ -1,4 +1,5 @@
-import { Api, RequestOptions } from '../api/api.service';
+import { HidePrivateKeys, Primitives } from '../../utils/utils';
+import { Api, ApiProgressEvent, RequestOptions } from '../api/api.service';
 
 /**
  * Helper type that looks like our model classes.
@@ -6,6 +7,28 @@ import { Api, RequestOptions } from '../api/api.service';
 export type ModelClassType<T> = { new (data?: any): T };
 
 export type ModelSaveRequestOptions = RequestOptions & { data?: any };
+
+/**
+ * A recursive utility type that represents data that is used to construct a
+ * model.
+ *
+ * Use this when you want to signify that you're working with model data, but
+ * not the actual model class, e.g. when handling payloads from backend.
+ *
+ * It sucks for hover tooltips, but does a good enough job at catching common
+ * errors.
+ */
+export type ModelData<T> = HidePrivateKeys<{
+	[K in keyof T]: T[K] extends Primitives | Primitives[]
+		? T[K]
+		: T[K] extends Model
+		? ModelData<T[K]>
+		: T[K] extends (infer U)[]
+		? U extends Model
+			? ModelData<U>[]
+			: never
+		: never;
+}>;
 
 /**
  * When you don't know what data is returned from backend, but you know it's for
@@ -20,10 +43,10 @@ export class Model {
 	// set up observers.
 	file: File | File[] | null = null;
 	_removed = false;
-	_progress: ProgressEvent | null = null;
+	_progress: ApiProgressEvent | null = null;
 
 	// We need to create some methods dynamically on the model.
-	static populate: <T = any>(rows: T[]) => T[];
+	static populate: <T = any>(rows: (T | ModelData<T>)[]) => T[];
 	assign!: (other: any) => void;
 
 	static create(self: any) {

@@ -28,12 +28,6 @@ import { FiresidePostLike } from './like/like-model';
 import { FiresidePostRealm } from './realm/realm.model';
 import { FiresidePostVideo } from './video/video-model';
 
-interface FiresidePostPublishedPlatform {
-	created_resource_provider: string;
-	created_resource_account_name: string;
-	url: string;
-}
-
 export type CommunityNotifyOptions = {
 	notifyUser: boolean;
 	reason: string | null;
@@ -90,7 +84,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	user_like?: FiresidePostLike | null;
 	key_groups: KeyGroup[] = [];
 	poll!: Poll | null;
-	platforms_published_to: FiresidePostPublishedPlatform[] = [];
 	stickers: StickerPlacement[] = [];
 	sticker_counts: StickerCount[] = [];
 	supporters: User[] = [];
@@ -166,10 +159,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 		if (data.event_item) {
 			this.event_item = new EventItem(data.event_item);
-		}
-
-		if (data.platforms_published_to) {
-			this.platforms_published_to = data.platforms_published_to;
 		}
 
 		if (data.sticker_counts) {
@@ -464,7 +453,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 				'attached_realms',
 				'keyGroups',
 				'mediaItemIds',
-				'publishToPlatforms',
 			],
 		};
 

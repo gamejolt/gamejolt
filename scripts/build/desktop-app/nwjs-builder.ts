@@ -1,4 +1,7 @@
 import * as fs from 'fs-extra';
+import * as path from 'path';
+import * as readdirp from 'readdirp';
+import plist from 'simple-plist';
 import {
 	downloadFile,
 	extractTarGz,
@@ -11,9 +14,6 @@ import {
 	unzip,
 } from '../utils';
 import { acquirePrebuiltFFmpeg } from './ffmpeg-prebuilt';
-const path = require('path') as typeof import('path');
-const plist = require('simple-plist') as typeof import('simple-plist');
-const readdirp = require('readdirp') as typeof import('readdirp');
 
 const NWJS_VERSION = packageJson.nwjsVersion as string;
 
