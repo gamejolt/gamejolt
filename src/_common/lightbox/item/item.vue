@@ -8,7 +8,7 @@ import AppSketchfabEmbed from '../../sketchfab/embed/embed.vue';
 import { useEventSubscription } from '../../system/event/event-topic';
 import AppVideoEmbed from '../../video/embed/embed.vue';
 import { getVideoPlayerFromSources } from '../../video/player/controller';
-import AppVideo from '../../video/video.vue';
+import AppVideo from '../../video/AppVideo.vue';
 import { LightboxConfig, LightboxMediaModel } from '../lightbox-helpers';
 
 @Options({
