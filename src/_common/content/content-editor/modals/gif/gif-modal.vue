@@ -274,7 +274,7 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 		if (!response.success) {
 			showErrorGrowl(
 				$gettext(
-					`You've reached the maximum amount of favorite GIFs. Unfavorite some from your Favorites list to add more.`
+					`Sorry, you have reached the maximum number of favorite GIFs. To add more, please remove some from your Favorites list.`
 				)
 			);
 			searchResult.favorite = !toggleTo;

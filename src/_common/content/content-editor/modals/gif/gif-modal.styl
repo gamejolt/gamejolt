@@ -159,17 +159,17 @@ $result-border-width = 4px
 		border-color: var(--theme-backlight)
 		background-color: var(--theme-backlight)
 
-	&-favorite-icon
-		cursor: pointer
-		position: absolute
-		z-index: 2
-		top: 6px
-		right: 6px
-		filter: drop-shadow(0 0 4px var(--theme-bg))
-		transition: transform 0.1s ease
+.search-result-favorite-icon
+	cursor: pointer
+	position: absolute
+	z-index: 2
+	top: 8px
+	right: 8px
+	filter: drop-shadow(0 0 4px var(--theme-bg))
+	transition: transform 0.1s ease
 
-		&:hover
-			transform: scaleX(1.25) scaleY(1.25)
+	&:hover
+		transform: scaleX(1.25) scaleY(1.25)
 
 .search-result-placeholder
 	rounded-corners-lg()
