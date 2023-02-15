@@ -7,7 +7,6 @@ import {
 	getLinkedAccountProviderDisplayName,
 	LinkedAccount,
 	Provider,
-	TumblrBlog,
 } from '../../../../../_common/linked-account/linked-account.model';
 import AppLinkedAccount from '../../../../../_common/linked-account/linked-account.vue';
 import { LinkedAccounts } from '../../../../../_common/linked-account/linked-accounts.service';
@@ -52,10 +51,6 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 
 	get twitchAccount() {
 		return this.getAccount(LinkedAccount.PROVIDER_TWITCH);
-	}
-
-	get tumblrAccount() {
-		return this.getAccount(LinkedAccount.PROVIDER_TUMBLR);
 	}
 
 	getAccount(provider: string) {
@@ -133,80 +128,6 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 		}
 		this.loading = false;
 	}
-
-	async onLinkTumblrBlog(tumblrBlog: TumblrBlog) {
-		if (!this.tumblrAccount) {
-			return;
-		}
-
-		this.loading = true;
-
-		const payload = await Api.sendRequest(
-			'/web/dash/linked-accounts/link-tumblr-blog/' +
-				this.tumblrAccount.id +
-				'/' +
-				tumblrBlog.name +
-				'?resource=User',
-			{}
-		);
-
-		if (payload.success) {
-			if (payload.accounts) {
-				// update accounts
-				this.accounts = LinkedAccount.populate(payload.accounts);
-			}
-
-			showSuccessGrowl(
-				this.$gettextInterpolate('Changed the selected Tumblr blog to %{ title }.', {
-					title: tumblrBlog.title,
-				}),
-				this.$gettext('Tumblr Blog Changed')
-			);
-		} else {
-			showErrorGrowl(
-				this.$gettext(
-					'Failed to change to new Tumblr blog. Maybe try to sync your Tumblr account.'
-				)
-			);
-		}
-
-		this.loading = false;
-	}
-
-	async onUnlinkTumblrBlog() {
-		if (!this.tumblrAccount || !this.tumblrAccount.tumblrSelectedBlog) {
-			return;
-		}
-
-		this.loading = true;
-
-		const tempBlogTitle = this.tumblrAccount.tumblrSelectedBlog.title;
-
-		const payload = await Api.sendRequest(
-			'/web/dash/linked-accounts/unlink-tumblr-blog/' +
-				this.tumblrAccount.id +
-				'?resource=User',
-			{}
-		);
-
-		if (payload.success) {
-			if (payload.accounts) {
-				// update accounts
-				this.accounts = LinkedAccount.populate(payload.accounts);
-			}
-
-			showSuccessGrowl(
-				this.$gettextInterpolate(`The Tumblr Blog %{ title } has been unlinked.`, {
-					title: tempBlogTitle,
-				}),
-				this.$gettext('Tumblr Blog Unlinked')
-			);
-		} else {
-			showErrorGrowl(this.$gettext(`Could not unlink your Tumblr Blog.`));
-		}
-
-		this.loading = false;
-	}
 }
 </script>
 
@@ -251,19 +172,6 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 					@link="onLink"
 					@sync="onLink"
 					@unlink="onUnlink"
-				/>
-			</div>
-			<div class="col-md-8 col-lg-6">
-				<AppLinkedAccount
-					:account="tumblrAccount"
-					:disabled="loading"
-					provider="tumblr"
-					show-tumblr-blog
-					@link="onLink"
-					@sync="onLink"
-					@unlink="onUnlink"
-					@link-tumblr-blog="onLinkTumblrBlog"
-					@unlink-tumblr-blog="onUnlinkTumblrBlog"
 				/>
 			</div>
 		</div>

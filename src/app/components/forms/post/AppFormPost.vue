@@ -41,7 +41,6 @@ import {
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { KeyGroup } from '../../../../_common/key-group/key-group.model';
-import { LinkedAccount } from '../../../../_common/linked-account/linked-account.model';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
 import { Realm } from '../../../../_common/realm/realm-model';
@@ -65,7 +64,6 @@ import AppFormPostVideo, { VideoStatus } from './_video/video.vue';
 
 type FormPostModel = FiresidePost & {
 	mediaItemIds: number[];
-	publishToPlatforms: number[] | null;
 	key_group_ids: number[];
 	video_id: number;
 	attached_communities: { community_id: number; channel_id: number }[];
@@ -138,8 +136,6 @@ const now = ref(0);
 
 const keyGroups = ref<KeyGroup[]>([]);
 const timezones = ref<{ [region: string]: (TimezoneData & { label?: string })[] } | null>(null);
-const linkedAccounts = ref<LinkedAccount[]>([]);
-const publishToPlatforms = ref<number[] | null>(null);
 
 const maxCommunities = ref(0);
 const attachedCommunities = ref<{ community: Community; channel: CommunityChannel }[]>([]);
@@ -293,17 +289,6 @@ const form: FormController<FormPostModel> = createForm({
 				community => !community.isBlocked && community.postableChannels.length > 0
 			);
 		}
-
-		linkedAccounts.value = LinkedAccount.populate(payload.linkedAccounts);
-		publishToPlatforms.value = payload.publishToPlatforms || null;
-
-		if (publishToPlatforms.value) {
-			for (const accountId of publishToPlatforms.value) {
-				(form.formModel[
-					`linked_account_${accountId}` as keyof typeof form.formModel
-				] as any) = true;
-			}
-		}
 	},
 
 	onSubmitError(payload: any) {
@@ -353,8 +338,6 @@ const form: FormController<FormPostModel> = createForm({
 		if (!longEnabled.value) {
 			form.formModel.article_content = '';
 		}
-
-		form.formModel.publishToPlatforms = publishToPlatforms.value;
 
 		form.formModel.poll_duration = pollDuration.value * 60; // site-api expects duration in seconds.
 
@@ -473,28 +456,9 @@ const scheduledTimezoneOffset = computed(() => {
 
 const isScheduling = computed(() => form.formModel.isScheduled);
 
-const isPublishingToPlatforms = computed(
-	() => !wasPublished.value && publishToPlatforms.value !== null
-);
-
-const hasPublishedToPlatforms = computed(
-	() => wasPublished.value && publishToPlatforms.value !== null
-);
-
 const leadLengthPercent = computed(
 	() => 100 - (form.formModel.leadLength / leadLengthLimit.value) * 100
 );
-
-const platformRestrictions = computed(() => {
-	// Platform restriction errors returned from server are prefixed with
-	// 'platform-restriction-'.
-	return Object.keys(form.serverErrors)
-		.filter(i => i.indexOf('platform-restriction-') === 0)
-		.map(i => {
-			const key = i.substr('platform-restriction-'.length);
-			return getPlatformRestrictionTitle(key);
-		});
-});
 
 const canAddCommunity = computed(
 	() =>
@@ -835,72 +799,6 @@ function removeSchedule() {
 	form.formModel.scheduled_for_timezone = null;
 	form.formModel.scheduled_for = null;
 	form.changed = true;
-}
-
-async function addPublishingToPlatforms() {
-	publishToPlatforms.value = [];
-}
-
-function removePublishingToPlatforms() {
-	publishToPlatforms.value = null;
-}
-
-function isLinkedAccountActive(id: number) {
-	return publishToPlatforms.value && publishToPlatforms.value.indexOf(id) !== -1;
-}
-
-async function changeLinkedAccount(id: number) {
-	if (!publishToPlatforms.value) {
-		return;
-	}
-
-	const isActive = isLinkedAccountActive(id);
-	if (isActive) {
-		arrayRemove(publishToPlatforms.value, i => i === id);
-	} else {
-		publishToPlatforms.value.push(id);
-	}
-
-	form.changed = true;
-}
-
-function getLinkedAccountDisplayName(account: LinkedAccount) {
-	switch (account.provider) {
-		case LinkedAccount.PROVIDER_FACEBOOK:
-			return account.facebookSelectedPage && account.facebookSelectedPage.name;
-
-		case LinkedAccount.PROVIDER_TUMBLR:
-			return account.tumblrSelectedBlog && account.tumblrSelectedBlog.title;
-
-		default:
-			return account.name;
-	}
-}
-
-function getPlatformRestrictionTitle(restriction: string) {
-	switch (restriction) {
-		case 'twitter-lead-too-long':
-			return $gettext(`Your post lead is too long for a tweet.`);
-		case 'twitter-gif-file-size-too-large':
-			return $gettext(`Twitter doesn't allow GIFs larger than 15MB in filesize.`);
-		case 'twitter-too-many-media-items-1-animation':
-			return $gettext(`Twitter only allows one GIF per tweet.`);
-		case 'twitter-too-many-media-items-4-images':
-			return $gettext(`Twitter only allows a max of 4 images per tweet.`);
-		case 'twitter-image-file-size-too-large':
-			return $gettext(`Twitter doesn't allow images larger than 5MB in filesize.`);
-		case 'facebook-media-item-photo-too-large':
-			return $gettext(`Facebook doesn't allow images larger than 10MB in filesize.`);
-		case 'tumblr-media-item-photo-too-large':
-			return $gettext(`Tumblr doesn't allow images larger than 10MB in filesize.`);
-	}
-
-	// We do not have the restriction listed here, try and make the topic
-	// somewhat readable.
-	return $gettextInterpolate(
-		`Your post can't be published to the platforms you've selected. Error: %{ error }`,
-		{ error: restriction }
-	);
 }
 
 function timezoneByName(timezone: string) {
@@ -1418,75 +1316,6 @@ function _getMatchingBackgroundIdFromPref() {
 		</template>
 
 		<!-- Other platforms -->
-		<div v-if="isPublishingToPlatforms" class="well fill-offset full-bleed">
-			<fieldset>
-				<AppFormLegend compact deletable @delete="removePublishingToPlatforms()">
-					<AppTranslate>Publish your post to other platforms</AppTranslate>
-				</AppFormLegend>
-
-				<div v-if="!linkedAccounts.length" class="alert">
-					<AppTranslate>You can publish this post to other platforms!</AppTranslate>
-					{{ ' ' }}
-					<AppTranslate v-if="!model.game">
-						Set up your linked accounts in your user account.
-					</AppTranslate>
-					<AppTranslate v-else>
-						Set up your linked accounts either in your game dashboard, or your user
-						account.
-					</AppTranslate>
-				</div>
-				<div v-else class="-linked-accounts">
-					<AppFormGroup
-						v-for="account of linkedAccounts"
-						:key="account.id"
-						:name="`linked_account_${account.id}`"
-						:label="$gettext(`Linked Account`)"
-						hide-label
-					>
-						<div class="-linked-account">
-							<div class="-linked-account-icon">
-								<AppJolticon
-									v-app-tooltip="account.providerDisplayName"
-									:icon="account.icon"
-									big
-								/>
-							</div>
-
-							<div class="-linked-account-label">
-								{{ getLinkedAccountDisplayName(account) }}
-							</div>
-
-							<div class="-linked-account-toggle">
-								<AppFormControlToggle @changed="changeLinkedAccount(account.id)" />
-							</div>
-						</div>
-					</AppFormGroup>
-				</div>
-			</fieldset>
-		</div>
-
-		<div v-if="hasPublishedToPlatforms" class="alert">
-			<strong>
-				<AppTranslate>This post has been published to other platforms.</AppTranslate>
-			</strong>
-			<AppTranslate>
-				Any edits made to this post will not be reflected on those other platforms.
-			</AppTranslate>
-		</div>
-
-		<template v-if="platformRestrictions.length">
-			<div
-				v-for="restriction of platformRestrictions"
-				:key="restriction"
-				class="alert alert-notice full-bleed anim-fade-in"
-			>
-				<strong>
-					{{ restriction }}
-				</strong>
-			</div>
-		</template>
-
-		<!-- Other platforms -->
 		<div v-if="isShowingMoreOptions" class="well fill-offset full-bleed">
 			<fieldset>
 				<AppFormLegend compact>
@@ -1657,16 +1486,6 @@ function _getMatchingBackgroundIdFromPref() {
 					circle
 					icon="key-diagonal"
 					@click="enableAccessPermissions()"
-				/>
-
-				<AppButton
-					v-if="!wasPublished && !isPublishingToPlatforms"
-					v-app-tooltip="$gettext(`Publish to other platforms`)"
-					sparse
-					trans
-					circle
-					icon="share-airplane"
-					@click="addPublishingToPlatforms()"
 				/>
 
 				<AppButton
