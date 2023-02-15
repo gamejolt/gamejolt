@@ -1,6 +1,5 @@
 <script lang="ts">
 import 'prosemirror-view/style/prosemirror.css';
-
 import ResizeObserver from 'resize-observer-polyfill';
 import {
 	computed,
@@ -532,18 +531,18 @@ function focus() {
 .content-container
 	position: relative
 
-	&-scroller
-		// Spacing for the scrollbar side
-		margin-right: 4px
-		// Add extra padding to get total spacing equal to '.form-control' padding.
-		padding-right: $padding-base-horizontal - @margin-right
+.content-container-scroller
+	// Spacing for the scrollbar side
+	margin-right: 4px
+	// Add extra padding to get total spacing equal to '.form-control' padding.
+	padding-right: $padding-base-horizontal - @margin-right
 
-	// Gutter space to not overlay potential content
-	&-gutter-1
-		padding-right: 32px
+// Gutter space to not overlay potential content
+.content-container-gutter-1
+	padding-right: 32px
 
-	&-gutter-2
-		padding-right: 64px
+.content-container-gutter-2
+	padding-right: 64px
 
 .content-editor
 	position: relative

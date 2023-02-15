@@ -1,4 +1,4 @@
-import { defineAsyncComponent } from '@vue/runtime-core';
+import { defineAsyncComponent } from 'vue';
 import { lazyImportNoSSR } from '../../_common/code-splitting';
 import AppActivityFeedPlaceholder from './activity/feed/AppActivityFeedPlaceholder.vue';
 
@@ -13,15 +13,7 @@ export const AppCommentWidgetLazy = defineAsyncComponent(
 	() => import('../../_common/comment/widget/AppCommentWidget.vue')
 );
 
-export const FormCommentLazy = defineAsyncComponent(
-	() => import('../../_common/comment/FormComment.vue')
-);
-
 export const AppActivityFeedLazy = defineAsyncComponent({
 	loader: () => import('./activity/feed/AppActivityFeed.vue'),
 	loadingComponent: AppActivityFeedPlaceholder,
 });
-
-export const AppVideoPlayerShakaLazy = defineAsyncComponent(
-	lazyImportNoSSR(() => import('../../_common/video/player/shaka.vue'))
-);

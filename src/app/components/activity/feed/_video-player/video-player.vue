@@ -3,6 +3,7 @@ import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { ContentFocus } from '../../../../../_common/content-focus/content-focus.service';
 import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
+import { AppVideoPlayerShakaLazy } from '../../../../../_common/lazy';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../../../../_common/media-item/media-item-model';
@@ -26,7 +27,6 @@ import {
 } from '../../../../../_common/video/player/controller';
 import { createDenseReadableTimestamp } from '../../../../../_common/video/player/player.vue';
 import AppVideo, { VideoSourceArray } from '../../../../../_common/video/video.vue';
-import { AppVideoPlayerShakaLazy } from '../../../lazy';
 import { ActivityFeedItem } from '../item-service';
 import { ActivityFeedKey, ActivityFeedView, InviewConfigFocused } from '../view';
 

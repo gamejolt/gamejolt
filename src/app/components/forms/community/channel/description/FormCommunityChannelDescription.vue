@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import { ref } from '@vue/runtime-core';
-import { toRefs } from 'vue';
+import { ref, toRefs } from 'vue';
 import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
 import { ContextCapabilities } from '../../../../../../_common/content/content-context';
 import AppForm, {
