@@ -1,4 +1,4 @@
-// Have to put all the sizing information here.
+/* Have to put all the sizing information here. */
 make-button-size(size)
 	font-size: lookup('$button-' + size + '-font-size')
 	font-weight: lookup('$button-' + size + '-font-weight')
@@ -6,25 +6,16 @@ make-button-size(size)
 	border-width: lookup('$button-' + size + '-outline-border-size')
 	padding: 0 lookup('$button-' + size + '-padding-horizontal') - @border-width
 	line-height: lookup('$button-' + size + '-line-height') - (@border-width * 2)
+	overflow: hidden
 
 	.-icon
 		margin-right: lookup('$button-' + size + '-icon-spacing-right')
 
 	.-badge
 		padding: 0 (lookup('$button-' + size + '-padding-horizontal') / 2)
-		margin-right: -(lookup('$button-' + size + '-padding-horizontal'))
+		margin-right: -(lookup('$button-' + size + '-padding-horizontal')) + @border-width
 		margin-left: (lookup('$button-' + size + '-padding-horizontal') / 2) * 1.5
 		font-size: lookup('$button-' + size + '-font-size')
-		border-top-right-radius: lookup('$button-' + size + '-border-radius')
-		border-bottom-right-radius: lookup('$button-' + size + '-border-radius')
-
-		&::after
-			border-width: @border-width
-
-	&.-outline
-		.-badge
-			border-top-right-radius: lookup('$button-' + size + '-border-radius')
-			border-bottom-right-radius: lookup('$button-' + size + '-border-radius')
 
 	&.-trans
 		.-badge
@@ -37,10 +28,6 @@ make-button-size(size)
 
 		.-icon
 			margin: 0 !important
-
-		.-badge
-			margin-right: -($$button-horizontal-padding)
-			margin-left: $$button-horizontal-padding
 
 .button
 	pressy()
@@ -58,8 +45,15 @@ make-button-size(size)
 	// Hover state is always the same.
 	&:hover
 	&.-hover
-		change-bg('bi-bg', true)
-		theme-prop('border-color', 'bi-bg', true)
+		change-bg(
+			'bi-bg',
+			true
+		)
+		theme-prop(
+			'border-color',
+			'bi-bg',
+			true
+		)
 		text-decoration: none
 		cursor: pointer
 
@@ -67,11 +61,11 @@ make-button-size(size)
 		.-icon
 		::v-deep(.jolticon-addon)
 		::v-deep(small)
-			theme-prop('color', 'bi-fg', true)
-
-		&.-outline
-			.-badge::after
-				theme-prop('border-color', 'bi-bg', true)
+			theme-prop(
+				'color',
+				'bi-fg',
+				true
+			)
 
 	// Disabled state.
 	&.-disabled
@@ -117,7 +111,11 @@ make-button-size(size)
 .-fill-color-overlay-notice
 	&
 	&:hover
-		change-bg-hex($gj-overlay-notice, 1, true)
+		change-bg-hex(
+			$gj-overlay-notice,
+			1,
+			true
+		)
 		border-color: $gj-overlay-notice !important
 		color: white !important
 
@@ -128,10 +126,6 @@ make-button-size(size)
 		::v-deep(small)
 			color: white !important
 
-		&.-outline
-			.-badge::after
-				border-color: $gj-overlay-notice !important
-
 .-badge
 	theme-prop('color', 'highlight')
 	background-color: $black
@@ -139,23 +133,6 @@ make-button-size(size)
 	display: inline-block
 	position: relative
 	z-index: 1
-	border-width: inherit
-
-	&::after
-		position: absolute
-		z-index: -1
-		content: ''
-		top: -1.5px
-		right: @top
-		bottom: @top
-		left: 0
-		background-color: $black
-		border-style: solid
-		border-color: inherit
-		border-radius: inherit
-		border-left: 0
-		border-top-left-radius: 0
-		border-bottom-left-radius: 0
 
 /**
  * Button types
@@ -163,9 +140,6 @@ make-button-size(size)
 .button
 	change-bg('fg')
 	theme-prop('color', 'bg')
-
-	.-badge
-		border-color: $black
 
 .-primary
 	change-bg('bi-bg')
@@ -176,28 +150,15 @@ make-button-size(size)
 	theme-prop('color', 'fg')
 	background-color: transparent
 
-	.-badge
-		theme-prop('border-color', 'fg')
-
 	&.-primary
 		theme-prop('border-color', 'bi-bg')
 		theme-prop('color', 'fg')
-
-		.-badge
-			theme-prop('border-color', 'bi-bg')
 
 /**
  * Trans buttons
  */
 .-trans
 	border-color: transparent
-
-	.-badge
-		transform: translateX(-1.5px)
-
-		&::after
-			border-style: none
-			background-color: transparent
 
 /**
  * Overlay buttons
