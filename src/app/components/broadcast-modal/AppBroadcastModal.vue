@@ -1,74 +1,52 @@
-<script lang="ts">
-import { computed } from 'vue';
-import { mixins, Options, Prop } from 'vue-property-decorator';
-import AppCommentDisabledCheck from '../../../_common/comment/AppCommentDisabledCheck.vue';
+<script lang="ts" setup>
+import { computed, PropType, toRefs } from 'vue';
+import AppButton from '../../../_common/button/AppButton.vue';
 import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
-import { Environment } from '../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { $viewPostVideo } from '../../../_common/fireside/post/video/video-model';
 import AppImgResponsive from '../../../_common/img/AppImgResponsive.vue';
+import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { MediaItem } from '../../../_common/media-item/media-item-model';
-import { BaseModal } from '../../../_common/modal/base';
+import { useModal } from '../../../_common/modal/modal.service';
 import AppResponsiveDimensions from '../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
 import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.vue';
-import {
-	createStickerTargetController,
-	StickerTargetController,
-} from '../../../_common/sticker/target/target-controller';
+import { createStickerTargetController } from '../../../_common/sticker/target/target-controller';
 import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
+import AppVideo from '../../../_common/video/AppVideo.vue';
 import { getVideoPlayerFromSources } from '../../../_common/video/player/controller';
 import AppVideoPlayer from '../../../_common/video/player/player.vue';
-import AppVideo from '../../../_common/video/AppVideo.vue';
 import { AppCommentWidgetLazy } from '../lazy';
 import AppPollVoting from '../poll/AppPollVoting.vue';
 import AppPostControls from '../post/controls/AppPostControls.vue';
 
-@Options({
-	components: {
-		AppResponsiveDimensions,
-		AppImgResponsive,
-		AppVideo,
-		AppVideoPlayer,
-		AppTimeAgo,
-		AppPollVoting,
-		AppPostControls,
-		AppContentViewer,
-		AppStickerTarget,
-		AppCommentWidgetLazy,
-		AppCommentDisabledCheck,
+const props = defineProps({
+	posts: {
+		type: Array as PropType<FiresidePost[]>,
+		required: true,
 	},
-})
-export default class AppBroadcastModal extends mixins(BaseModal) {
-	@Prop({ type: Array, required: true })
-	posts!: FiresidePost[];
+});
 
-	post: FiresidePost = this.posts[0];
-	stickerTargetController!: StickerTargetController;
+const { posts } = toRefs(props);
+const modal = useModal()!;
 
-	readonly Environment = Environment;
+const post = computed(() => posts.value[0]);
+const stickerTargetController = createStickerTargetController(post.value, {
+	isCreator: computed(() => post.value.displayUser.is_creator === true),
+});
 
-	get video() {
-		return this.post.videos[0];
-	}
+const video = computed(() => post.value.videos[0]);
 
-	created() {
-		this.stickerTargetController = createStickerTargetController(this.post, {
-			isCreator: computed(() => this.post.displayUser.is_creator === true),
-		});
-	}
+function getVideoController(item: MediaItem) {
+	const sources = {
+		mp4: item.mediaserver_url_mp4,
+		webm: item.mediaserver_url_webm,
+	};
+	return getVideoPlayerFromSources(sources, 'gif', item.mediaserver_url);
+}
 
-	getVideoController(item: MediaItem) {
-		const sources = {
-			mp4: item.mediaserver_url_mp4,
-			webm: item.mediaserver_url_webm,
-		};
-		return getVideoPlayerFromSources(sources, 'gif', item.mediaserver_url);
-	}
-
-	onVideoPlay() {
-		if (this.video) {
-			$viewPostVideo(this.video);
-		}
+function onVideoPlay() {
+	if (video.value) {
+		$viewPostVideo(video.value);
 	}
 }
 </script>
@@ -77,17 +55,17 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 	<AppModal>
 		<div class="modal-controls">
 			<AppButton @click="modal.dismiss()">
-				<AppTranslate>Close</AppTranslate>
+				{{ $gettext(`Close`) }}
 			</AppButton>
 		</div>
 
 		<div class="modal-header">
 			<h1 class="text-center section-header">
-				<AppTranslate>We've built some new stuff!</AppTranslate>
+				{{ $gettext(`We've built some new stuff!`) }}
 			</h1>
 
 			<p class="small text-center">
-				<AppTranslate>Constantly improving for your enjoyment. Be enjoyed!</AppTranslate>
+				{{ $gettext(`Constantly improving for your enjoyment. Be enjoyed!`) }}
 			</p>
 		</div>
 
@@ -174,11 +152,12 @@ export default class AppBroadcastModal extends mixins(BaseModal) {
 
 					<AppPostControls :post="post" location="broadcast" event-label="broadcast" />
 
-					<br />
-					<br />
-					<AppCommentDisabledCheck :model="post">
+					<!-- We don't even want to show comment info if the comments are disabled -->
+					<template v-if="post.canViewComments">
+						<br />
+						<br />
 						<AppCommentWidgetLazy :model="post" display-mode="comments" />
-					</AppCommentDisabledCheck>
+					</template>
 				</div>
 			</div>
 		</div>
