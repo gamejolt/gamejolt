@@ -1,7 +1,7 @@
 import { arrayRemove, stringSort } from '../../utils/array';
 import { MediaItem } from '../media-item/media-item-model';
 
-export const GJ_FORMAT_VERSION = '1.0.1';
+export const GJ_FORMAT_VERSION = '1';
 
 export type ContentContext =
 	| 'fireside-post-lead'
