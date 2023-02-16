@@ -7,7 +7,7 @@ import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { Screen } from '../../screen/screen-service';
 import { getVideoPlayerFromSources } from '../../video/player/controller';
-import AppVideo from '../../video/video.vue';
+import AppVideo from '../../video/AppVideo.vue';
 import { Game } from '../game.model';
 
 const props = defineProps({

@@ -1,4 +1,4 @@
-import { defineAsyncComponent } from '@vue/runtime-core';
+import { defineAsyncComponent } from 'vue';
 import { lazyImportNoSSR } from '../../_common/code-splitting';
 import AppActivityFeedPlaceholder from './activity/feed/AppActivityFeedPlaceholder.vue';
 
@@ -19,5 +19,5 @@ export const AppActivityFeedLazy = defineAsyncComponent({
 });
 
 export const AppVideoPlayerShakaLazy = defineAsyncComponent(
-	lazyImportNoSSR(() => import('../../_common/video/player/shaka.vue'))
+	lazyImportNoSSR(() => import('../../_common/video/player/AppVideoPlayerShaka.vue'))
 );

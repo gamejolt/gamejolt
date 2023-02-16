@@ -16,7 +16,7 @@ import {
 	VideoPlayerController,
 	VideoPlayerControllerContext,
 } from '../../../video/player/controller';
-import AppVideo from '../../../video/video.vue';
+import AppVideo from '../../../video/AppVideo.vue';
 import { FiresidePost } from '../post-model';
 
 export const AppPostCardAspectRatio = 10 / 16;
