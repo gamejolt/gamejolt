@@ -1,6 +1,9 @@
 import * as fs from 'fs-extra';
+import * as https from 'https';
 import type { RequestInit } from 'node-fetch';
 import fetch from 'node-fetch';
+import * as os from 'os';
+import * as path from 'path';
 import {
 	downloadFile,
 	isWindows,
@@ -11,10 +14,6 @@ import {
 	unzip,
 } from '../utils';
 import { Options } from '../vite-options';
-
-const path = require('path') as typeof import('path');
-const os = require('os') as typeof import('os');
-const https = require('https') as typeof import('https');
 
 export const gjpushVersion = packageJson.gjpushVersion as string;
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { Api } from '../../api/api.service';
+import { Api, ApiProgressEvent } from '../../api/api.service';
 import AppFormControlUpload from '../../form-vue/controls/upload/AppFormControlUpload.vue';
 import { BaseForm, FormOnLoad, FormOnSubmit } from '../../form-vue/form.service';
 
@@ -8,7 +8,7 @@ interface FormModel {
 	type: string;
 	parent_id: number;
 	file?: File;
-	_progress: ProgressEvent | null;
+	_progress: ApiProgressEvent | null;
 }
 
 class Wrapper extends BaseForm<FormModel> {}

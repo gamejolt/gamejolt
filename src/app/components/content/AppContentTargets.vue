@@ -301,7 +301,7 @@ async function onClickAddRealm() {
 </template>
 
 <style lang="stylus" scoped>
-.-bg-color-offset >>>.pill
+.-bg-color-offset ::v-deep(.pill)
 	background-color: var(--theme-bg)
 
 .-list

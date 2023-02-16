@@ -31,7 +31,7 @@ import AppCreatorMooMoo from './AppCreatorMooMoo.vue';
 import socialImage from './social.png';
 import { creatorApplyDesktop, creatorApplySm, creatorApplyXs } from './_backgrounds/backgrounds';
 
-const postImages = import.meta.globEager('./_posts/*.jpg');
+const postImages = import.meta.glob('./_posts/*.jpg', {eager: true, as: 'url'});
 
 const boltHeight = computed(() => (Screen.isDesktop ? 182 : 164));
 const boltWidth = computed(() => (104 / 154) * boltHeight.value);
@@ -192,7 +192,7 @@ async function setHeaderPostTimer(initial = false) {
 }
 
 function getPostFromIndex(index: number) {
-	return postImages[postImageKeys[index]].default;
+	return postImages[postImageKeys[index]];
 }
 
 function onClickApply(section: 'header' | 'why' | 'apply') {

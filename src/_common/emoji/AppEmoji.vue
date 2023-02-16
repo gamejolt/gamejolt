@@ -22,7 +22,7 @@ export const GJ_EMOJIS = [
 	'yush',
 ] as const;
 
-const assetPaths = import.meta.globEager('./*.png');
+const assetPaths = import.meta.glob('./*.png', { eager: true, as: 'url' });
 </script>
 
 <script lang="ts" setup>
@@ -36,7 +36,7 @@ const props = defineProps({
 	},
 });
 
-const backgroundImage = computed(() => assetPaths[`./${props.emoji}.png`].default);
+const backgroundImage = computed(() => assetPaths[`./${props.emoji}.png`]);
 </script>
 
 <template>

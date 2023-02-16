@@ -20,7 +20,7 @@ export default class AppGameDevStageSelector extends Vue {
 	];
 
 	readonly Game = Game;
-	readonly assetPaths = import.meta.globEager('./*.png');
+	readonly assetPaths = import.meta.glob('./*.png', { eager: true, as: 'url' });
 
 	@Emit('select')
 	emitSelect(_stage: number) {}
@@ -127,21 +127,21 @@ export default class AppGameDevStageSelector extends Vue {
 					<div class="dev-stage-selector-mascot">
 						<img
 							v-if="stage === Game.DEVELOPMENT_STATUS_DEVLOG"
-							:src="assetPaths['./mascot-devlog.png'].default"
+							:src="assetPaths['./mascot-devlog.png']"
 							width="68"
 							height="68"
 							alt=""
 						/>
 						<img
 							v-else-if="stage === Game.DEVELOPMENT_STATUS_WIP"
-							:src="assetPaths['./mascot-early-access.png'].default"
+							:src="assetPaths['./mascot-early-access.png']"
 							width="48"
 							height="46"
 							alt=""
 						/>
 						<img
 							v-else-if="stage === Game.DEVELOPMENT_STATUS_FINISHED"
-							:src="assetPaths['./mascot-complete.png'].default"
+							:src="assetPaths['./mascot-complete.png']"
 							width="52"
 							height="54"
 							alt=""

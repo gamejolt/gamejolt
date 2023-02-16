@@ -23,6 +23,7 @@ export type SearchResult = {
 	url: string;
 	width: number;
 	height: number;
+	favorite: boolean;
 };
 
 export class ContentEditorGifModal {

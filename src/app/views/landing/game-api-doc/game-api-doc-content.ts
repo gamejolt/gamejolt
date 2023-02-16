@@ -1,9 +1,10 @@
 import { h } from 'vue';
 import { Options } from 'vue-property-decorator';
+import { ViteMarkdownExport } from '../../../../../typings/markdown';
 import { PayloadError } from '../../../../_common/payload/payload-service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 
-const paths = import.meta.glob('../../../../lib/doc-game-api/v1.x/**/*.md');
+const paths = import.meta.glob<ViteMarkdownExport>('../../../../lib/doc-game-api/v1.x/**/*.md');
 
 @Options({
 	name: 'RouteLandingGameApiDocContent',

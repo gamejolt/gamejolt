@@ -14,11 +14,6 @@ const firebaseConfig = {
 	measurementId: Environment.firebaseMeasurementId,
 };
 
-export function initFirebase() {
-	// Just calling this should initialize it and save it.
-	getFirebaseApp();
-}
-
 let _firebaseApp: FirebaseApp | null = null;
 export function getFirebaseApp() {
 	if (!_firebaseApp) {
