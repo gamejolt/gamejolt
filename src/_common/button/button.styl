@@ -6,6 +6,7 @@ make-button-size(size)
 	border-width: lookup('$button-' + size + '-outline-border-size')
 	padding: 0 lookup('$button-' + size + '-padding-horizontal') - @border-width
 	line-height: lookup('$button-' + size + '-line-height') - (@border-width * 2)
+	overflow: hidden
 
 	.-icon
 		margin-right: lookup('$button-' + size + '-icon-spacing-right')
@@ -15,16 +16,6 @@ make-button-size(size)
 		margin-right: -(lookup('$button-' + size + '-padding-horizontal')) + @border-width
 		margin-left: (lookup('$button-' + size + '-padding-horizontal') / 2) * 1.5
 		font-size: lookup('$button-' + size + '-font-size')
-		border-top-right-radius: lookup('$button-' + size + '-border-radius')
-		border-bottom-right-radius: lookup('$button-' + size + '-border-radius')
-
-		&::after
-			border-width: @border-width
-
-	&.-outline
-		.-badge
-			border-top-right-radius: lookup('$button-' + size + '-border-radius')
-			border-bottom-right-radius: lookup('$button-' + size + '-border-radius')
 
 	&.-trans
 		.-badge
@@ -37,10 +28,6 @@ make-button-size(size)
 
 		.-icon
 			margin: 0 !important
-
-		.-badge
-			margin-right: -($$button-horizontal-padding)
-			margin-left: $$button-horizontal-padding
 
 .button
 	pressy()
