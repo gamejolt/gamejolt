@@ -7,6 +7,7 @@ import { $viewPostVideo } from '../../../_common/fireside/post/video/video-model
 import AppImgResponsive from '../../../_common/img/AppImgResponsive.vue';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { MediaItem } from '../../../_common/media-item/media-item-model';
+import AppModal from '../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../_common/modal/modal.service';
 import AppResponsiveDimensions from '../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
 import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.vue';
