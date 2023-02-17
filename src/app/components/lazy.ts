@@ -17,3 +17,7 @@ export const AppActivityFeedLazy = defineAsyncComponent({
 	loader: () => import('./activity/feed/AppActivityFeed.vue'),
 	loadingComponent: AppActivityFeedPlaceholder,
 });
+
+export const AppVideoPlayerShakaLazy = defineAsyncComponent(
+	lazyImportNoSSR(() => import('../../_common/video/player/AppVideoPlayerShaka.vue'))
+);

@@ -7,7 +7,7 @@ import {
 	getVideoPlayerFromSources,
 	VideoPlayerController,
 } from '../../../../../_common/video/player/controller';
-import AppVideo from '../../../../../_common/video/video.vue';
+import AppVideo from '../../../../../_common/video/AppVideo.vue';
 
 const props = defineProps({
 	post: {

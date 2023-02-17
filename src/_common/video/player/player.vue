@@ -11,7 +11,7 @@ import AppResponsiveDimensions, {
 } from '../../responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../screen/screen-service';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { VideoSourceArray } from '../video.vue';
+import { VideoSourceArray } from '../AppVideo.vue';
 import AppPlayerFullscreen from './AppVideoPlayerFullscreen.vue';
 import AppPlayerPlayback from './AppVideoPlayerPlayback.vue';
 import {
