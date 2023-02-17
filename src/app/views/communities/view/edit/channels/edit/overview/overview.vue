@@ -13,7 +13,7 @@ import {
 } from '../../../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../../../../_common/scroll/scroll.service';
-import FormCommunityChannelDescription from '../../../../../../../components/forms/community/channel/description/description.vue';
+import FormCommunityChannelDescription from '../../../../../../../components/forms/community/channel/description/FormCommunityChannelDescription.vue';
 import FormCommunityChannelEdit from '../../../../../../../components/forms/community/channel/edit/edit.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.store';
 import AppCommunitiesViewPageContainer from '../../../../_page-container/page-container.vue';

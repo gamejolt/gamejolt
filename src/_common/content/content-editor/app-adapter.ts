@@ -86,9 +86,7 @@ export class ContentEditorAppAdapter {
 
 		this.controller = createContentEditor({
 			contentContext: this.context!,
-			contextCapabilities: capabilities
-				? ContextCapabilities.fromStringList(capabilities)
-				: undefined,
+			contextCapabilities: ContextCapabilities.fromPayloadList(capabilities),
 		});
 
 		this.capabilitiesKey = Math.random();
@@ -413,9 +411,7 @@ export class ContentEditorAppAdapterMessage {
 				const { capabilities } = this.data;
 
 				controller.contextCapabilities = markRaw(
-					capabilities
-						? ContextCapabilities.fromStringList(capabilities)
-						: ContextCapabilities.getForContext(controller.contentContext)
+					ContextCapabilities.fromPayloadList(capabilities)
 				);
 
 				// Force the editor to rebuild when we alter the capabilities.

@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import { watch } from '@vue/runtime-core';
-import { computed, PropType, provide, ref, toRefs } from 'vue';
+import { computed, PropType, provide, ref, toRefs, watch } from 'vue';
 import { ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentRules } from '../content-editor/content-rules';
@@ -43,9 +42,7 @@ const viewerStyleClass = computed(() => {
 
 const content = computed(() => doc.value?.content ?? []);
 const context = computed(() => doc.value!.context);
-const capabilities = computed(() =>
-	doc.value ? ContextCapabilities.getForContext(context.value) : ContextCapabilities.getEmpty()
-);
+const capabilities = computed(() => ContextCapabilities.getPlaceholder());
 const contentRules = computed(() => displayRules?.value);
 const maybeParentBounds = computed(() => parentBounds?.value);
 

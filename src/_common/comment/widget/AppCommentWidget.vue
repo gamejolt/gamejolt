@@ -21,6 +21,7 @@ import { Collaborator } from '../../collaborator/collaborator.model';
 import { Environment } from '../../environment/environment.service';
 import { formatNumber } from '../../filters/number';
 import AppIllustration from '../../illustration/AppIllustration.vue';
+import { FormCommentLazy } from '../../lazy';
 import AppLoading from '../../loading/AppLoading.vue';
 import AppMessageThread from '../../message-thread/AppMessageThread.vue';
 import AppMessageThreadAdd from '../../message-thread/AppMessageThreadAdd.vue';
@@ -53,7 +54,6 @@ import {
 	CommentStoreThreadView,
 	CommentStoreView,
 } from '../comment-store-view';
-import FormComment from '../FormComment.vue';
 import { DisplayMode } from '../modal/modal.service';
 import AppCommentWidgetComment from './AppCommentWidgetComment.vue';
 
@@ -458,7 +458,7 @@ function sortYou() {
 		<div v-else-if="hasBootstrapped">
 			<template v-if="showAdd">
 				<AppMessageThreadAdd v-if="user" hide-message-split>
-					<FormComment :model="model" :autofocus="autofocus" @submit="onCommentAdd" />
+					<FormCommentLazy :model="model" :autofocus="autofocus" @submit="onCommentAdd" />
 				</AppMessageThreadAdd>
 				<AppAlertBox v-else icon="notice">
 					You must be

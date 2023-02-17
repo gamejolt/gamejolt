@@ -15,6 +15,7 @@ export class FiresideChatSettings extends Model {
 	declare slow_mode_enabled: boolean;
 	declare slow_mode_seconds: number;
 	declare automated_sticker_messages: boolean;
+	declare content_capabilities: string[];
 }
 
 Model.create(FiresideChatSettings);
@@ -27,8 +28,7 @@ export function createFiresideChatContextCapabilities(
 	settings: FiresideChatSettings,
 	role: FIRESIDE_ROLES
 ) {
-	// Base capabilities for all chat messages.
-	const capabilities = ContextCapabilities.getForContext('fireside-chat-message');
+	const capabilities = ContextCapabilities.fromPayloadList(settings.content_capabilities);
 
 	// Remove capabilities that the given role does not have access to. If the
 	// required role's power is higher than the input role's power, they don't

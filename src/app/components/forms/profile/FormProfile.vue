@@ -2,6 +2,7 @@
 import { formatDistanceToNow } from 'date-fns';
 import { computed, onUnmounted, PropType, ref, shallowReactive, toRefs } from 'vue';
 import { arrayUnique } from '../../../../utils/array';
+import { ContextCapabilities } from '../../../../_common/content/content-context';
 import { Dogtag, DogtagType } from '../../../../_common/dogtag/dogtag-model';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
@@ -53,6 +54,8 @@ const usernameTimeLeft = ref(0);
 const usernameDuration = ref('');
 const isBioLocked = ref(false);
 const bioLengthLimit = ref(5_000);
+
+const bioContentCapabilities = ref(ContextCapabilities.getPlaceholder());
 
 const pronounDogtags = shallowReactive<Dogtag[]>([]);
 
@@ -116,6 +119,9 @@ const form: FormController<FormModel> = createForm({
 
 		isBioLocked.value = payload.isBioLocked;
 		bioLengthLimit.value = payload.bioLengthLimit;
+		bioContentCapabilities.value = ContextCapabilities.fromPayloadList(
+			payload.contentCapabilities
+		);
 	},
 	onSubmitError(response) {
 		if (response?.errors['bio-locked']) {
@@ -254,6 +260,7 @@ function onThemeChanged() {
 		<AppFormGroup name="bio_content" :label="$gettext(`Profile Bio`)" optional>
 			<AppFormControlContent
 				content-context="user-bio"
+				:capabilities="bioContentCapabilities"
 				:disabled="isBioLocked"
 				:model-id="user.id"
 				:max-height="0"

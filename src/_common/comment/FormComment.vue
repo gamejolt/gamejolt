@@ -3,7 +3,7 @@ import { computed, nextTick, PropType, ref, toRefs } from 'vue';
 import AppAlertBox from '../alert/AppAlertBox.vue';
 import { trackCommentAdd } from '../analytics/analytics.service';
 import AppButton from '../button/AppButton.vue';
-import { ContentContext } from '../content/content-context';
+import { ContentContext, ContextCapabilities } from '../content/content-context';
 import { ContentRules } from '../content/content-editor/content-rules';
 import { FiresidePost } from '../fireside/post/post-model';
 import AppForm, { createForm, FormController } from '../form-vue/AppForm.vue';
@@ -56,6 +56,8 @@ const props = defineProps({
 	},
 });
 
+const { comment, model, parentId, autofocus, placeholder } = toRefs(props);
+
 const emit = defineEmits({
 	submit: (_model: Comment) => true,
 	'editor-focus': () => true,
@@ -63,15 +65,22 @@ const emit = defineEmits({
 	cancel: () => true,
 });
 
-const { comment, model, parentId, autofocus, placeholder } = toRefs(props);
-
 const lengthLimit = ref(5_000);
+const contentCapabilities = ref(ContextCapabilities.getPlaceholder());
+
+const loadUrl = computed(() => {
+	if (model.value?.id) {
+		return `/comments/save/${model.value.id}`;
+	} else {
+		return `/comments/save?resource=${getCommentModelResourceName(model.value)}`;
+	}
+});
 
 const form: FormController<FormModel> = createForm({
 	resetOnSubmit: true,
 	modelClass: Comment,
 	model: comment,
-	loadUrl: `/comments/save`,
+	loadUrl,
 	async onInit() {
 		if (!comment?.value) {
 			form.formModel.comment_content = '';
@@ -89,6 +98,9 @@ const form: FormController<FormModel> = createForm({
 	},
 	onLoad(payload: any) {
 		lengthLimit.value = payload.lengthLimit;
+		contentCapabilities.value = ContextCapabilities.fromPayloadList(
+			payload.contentCapabilities
+		);
 	},
 	onSubmitSuccess() {
 		if (form.method === 'add') {
@@ -142,10 +154,6 @@ const postModel = computed(() => (model.value instanceof FiresidePost ? model.va
 const onlyFriends = computed(
 	() => postModel.value?.allow_comments === FiresidePost.ALLOW_COMMENTS_FRIENDS
 );
-
-function onCancel() {
-	emit('cancel');
-}
 </script>
 
 <template>
@@ -167,6 +175,7 @@ function onCancel() {
 			<AppFormControlContent
 				:placeholder="placeholder || $gettext(`Leave a comment...`)"
 				:content-context="contentContext"
+				:capabilities="contentCapabilities"
 				:autofocus="autofocus"
 				:validators="[
 					validateContentRequired(),
@@ -189,7 +198,7 @@ function onCancel() {
 			<AppLinkHelp page="guidelines">Site Guidelines</AppLinkHelp>.
 		</p>
 		<div v-else class="-buttons">
-			<AppButton v-if="form.method === 'edit'" trans @click="onCancel">
+			<AppButton v-if="form.method === 'edit'" trans @click="emit('cancel')">
 				<AppTranslate>Cancel</AppTranslate>
 			</AppButton>
 
