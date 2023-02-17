@@ -23,6 +23,7 @@ import { imageGameJoltLogo, imageJolt } from '../../img/images';
 import { useAppStore } from '../../store/index';
 import { useGridStore } from '../grid/grid-store';
 import AppSearch from '../search/AppSearch.vue';
+import { CBAR_WIDTH } from './AppShell.vue';
 import AppShellQuestIcon from './AppShellQuestIcon.vue';
 
 const AppShellAccountPopover = defineAsyncComponent(() => import('./AppShellAccountPopover.vue'));
@@ -78,11 +79,11 @@ function _checkColWidths() {
 		return;
 	}
 
-	// Page content is centered within a column that is offset by the cbar (value of $shell-cbar-width),
+	// Page content is centered within a column that is offset by the cbar (value of `var(--shell-cbar-width)`),
 	// so this does the same offseting within the top nav for the search bar
 	// to align properly in the center with the page content.
 	if (hasCbar.value) {
-		max -= 70;
+		max -= CBAR_WIDTH;
 	}
 
 	baseMinColWidth.value = max;
@@ -275,7 +276,7 @@ run(async () => {
 .-small
 	&-home
 		text-align: center
-		width: $shell-cbar-width
+		width: var(--shell-cbar-width)
 
 	// Transition the width of the cbar toggle to better match up with the cbar.
 	&-cbar
@@ -284,7 +285,7 @@ run(async () => {
 		transition: min-width 300ms $weak-ease-out
 
 		&.active
-			min-width: $shell-cbar-width
+			min-width: var(--shell-cbar-width)
 
 		.-notification-chat
 			pointer-events: none

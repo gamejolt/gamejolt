@@ -5,6 +5,7 @@ import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue'
 import AppShortkey from '../../../../_common/shortkey/AppShortkey.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { useAppStore } from '../../../store';
+import AppShellSidebarBackpack from './AppShellSidebarBackpack.vue';
 import AppShellSidebarContext from './AppShellSidebarContext.vue';
 import AppShellSidebarLibrary from './AppShellSidebarLibrary.vue';
 import AppShellSidebarMobile from './AppShellSidebarMobile.vue';
@@ -44,6 +45,7 @@ watch(
 		<AppShellSidebarLibrary v-else-if="visibleLeftPane === 'library'" />
 		<AppShellSidebarContext v-else-if="visibleLeftPane === 'context'" />
 		<AppShellSidebarMobile v-else-if="visibleLeftPane === 'mobile'" />
+		<AppShellSidebarBackpack v-else-if="visibleLeftPane === 'backpack'" />
 	</component>
 </template>
 

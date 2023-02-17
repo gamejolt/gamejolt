@@ -1,5 +1,6 @@
-import { Component, inject, markRaw, reactive } from 'vue';
+import { Component, inject, markRaw, reactive, ref } from 'vue';
 import { arrayRemove } from '../../utils/array';
+import { MaybeRef } from '../../utils/vue';
 import { Popper } from '../popper/popper.service';
 
 export const ModalKey = Symbol('modal-key');
@@ -13,7 +14,7 @@ export type ModalDismissReason = 'route-change' | 'esc' | 'backdrop' | 'manual';
 export interface ModalOptions {
 	component: Component;
 	modalId: string;
-	size?: 'xs' | 'sm' | 'lg' | 'full' | undefined;
+	size?: MaybeRef<'xs' | 'sm' | 'lg' | 'full' | undefined>;
 	props?: any;
 	noBackdrop?: boolean;
 	noBackdropClose?: boolean;
@@ -40,7 +41,8 @@ export class Modal<T = any> {
 	}
 
 	constructor(public id: number, private _resolve: (value?: T) => void, options: ModalOptions) {
-		this.size = options.size;
+		// avert your eyes
+		this.size = ref(options.size) as unknown as Modal['size'];
 		this.component = markRaw(options.component);
 		this.props = options.props;
 		this.noBackdrop = options.noBackdrop;

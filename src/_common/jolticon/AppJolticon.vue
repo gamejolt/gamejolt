@@ -14,6 +14,7 @@ export const Jolticons = [
 	'arrows',
 	'at-sign',
 	'audio',
+	'backpack',
 	'backward',
 	'blockquote',
 	'blog-article',

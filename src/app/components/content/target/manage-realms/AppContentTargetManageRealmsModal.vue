@@ -116,20 +116,19 @@ import { arrayRemove } from '../../../../../utils/array';
 import { debounce } from '../../../../../utils/utils';
 import { Api, RequestOptions } from '../../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
+import AppModalFloatingHeader from '../../../../../_common/modal/AppModalFloatingHeader.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
 import AppRealmFullCard, {
 	REALM_CARD_RATIO,
 } from '../../../../../_common/realm/AppRealmFullCard.vue';
 import { Realm } from '../../../../../_common/realm/realm-model';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../../../_common/scroll/AppScrollAffix.vue';
 import AppScrollScroller, {
 	createScroller,
 } from '../../../../../_common/scroll/AppScrollScroller.vue';
@@ -243,32 +242,18 @@ const debounceSearchInput = debounce(() => {
 
 <template>
 	<AppModal>
-		<AppScrollAffix class="-floating-top-anchor" anchor="top" :offset-top="0" :padding="0">
-			<div class="modal-controls">
-				<AppButton @click="modal.resolve()">
-					{{ $gettext(`Confirm`) }}
-				</AppButton>
-			</div>
+		<AppModalFloatingHeader>
+			<template #title>
+				<span class="-title-text">
+					{{ $gettext(`Manage realms`) }}
+				</span>
 
-			<div class="-floating-top">
-				<div class="-sans-padding-horizontal modal-header">
-					<h2 class="modal-title">
-						<div class="-title">
-							<span class="-title-text">
-								{{ $gettext(`Manage realms`) }}
-							</span>
+				<span class="-title-count">
+					{{ `(${formatNumber(selectedRealms.length)}/${formatNumber(maxRealms)})` }}
+				</span>
+			</template>
 
-							<span class="-title-count">
-								{{
-									`(${formatNumber(selectedRealms.length)}/${formatNumber(
-										maxRealms
-									)})`
-								}}
-							</span>
-						</div>
-					</h2>
-				</div>
-
+			<template #bottom>
 				<AppExpand :when="selectedRealms.length > 0">
 					<AppScrollScroller horizontal :controller="scrollController">
 						<div class="-selected-realms">
@@ -292,8 +277,8 @@ const debounceSearchInput = debounce(() => {
 					@input="debounceSearchInput"
 				/>
 				<AppSpacer vertical :scale="4" />
-			</div>
-		</AppScrollAffix>
+			</template>
+		</AppModalFloatingHeader>
 
 		<div
 			class="modal-body"
@@ -496,31 +481,4 @@ const debounceSearchInput = debounce(() => {
 
 	.-icon
 		font-size: $font-size-h2
-
-.-floating-top-anchor
-	--float-padding: ($grid-gutter-width-xs / 2)
-
-	@media $media-sm-up
-		--float-padding: ($grid-gutter-width / 2)
-
-	.-floating-top
-		background-color: var(--theme-bg-actual)
-		transition: box-shadow 300ms $strong-ease-out
-		padding: 0 var(--float-padding)
-
-	::v-deep(.gj-scroll-affixed)
-		z-index: 3
-
-		.modal-controls
-			background-color: var(--theme-bg-actual)
-			position: relative
-			z-index: 2
-
-		.-floating-top
-			box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5)
-			z-index: 1
-
-.-sans-padding-horizontal
-	padding-left: 0
-	padding-right: 0
 </style>

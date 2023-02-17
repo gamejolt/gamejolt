@@ -56,6 +56,7 @@ export const kThemeNoticeFg = `var(--theme-notice-fg)`;
 export const kThemeBiBg = `var(--theme-bi-bg)`;
 export const kThemeBiFg = `var(--theme-bi-fg)`;
 export const kThemeBg = `var(--theme-bg)`;
+export const kThemeBgActual = `var(--theme-bg-actual)`;
 export const kThemeBgOffset = `var(--theme-bg-offset)`;
 export const kThemeBgBackdrop = `var(--theme-bg-backdrop)`;
 export const kThemeBgSubtle = `var(--theme-bg-subtle)`;

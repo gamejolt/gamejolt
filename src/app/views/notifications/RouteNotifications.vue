@@ -13,8 +13,6 @@ import { ActivityFeedService } from '../../components/activity/feed/feed-service
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import { useGridStore } from '../../components/grid/grid-store';
 import { AppActivityFeedLazy } from '../../components/lazy';
-import AppShellNotificationPopoverStickerNavItem from '../../components/shell/notification-popover/sticker-nav-item/AppShellNotificationPopoverStickerNavItem.vue';
-import AppShellNotificationPopoverStickerNavItemPlaceholder from '../../components/shell/notification-popover/sticker-nav-item/AppShellNotificationPopoverStickerNavItemPlaceholder.vue';
 import { useAppStore } from '../../store';
 import { NotificationsFilterModal } from './filter/modal.service';
 import { routeNotifications } from './notifications.route';
@@ -66,11 +64,11 @@ function getNotificationTypesFromQuery(route: RouteLocationNormalized, queryKey:
 </script>
 
 <script lang="ts" setup>
-const { unreadNotificationsCount, hasNewUnlockedStickers, markNotificationsAsRead } = useAppStore();
+const { unreadNotificationsCount, markNotificationsAsRead } = useAppStore();
 const { grid } = useGridStore();
 const route = useRoute();
 
-const feed = ref<ActivityFeedView | null>(null) as Ref<ActivityFeedView | null>;
+const feed = ref(null) as Ref<ActivityFeedView | null>;
 
 const itemsPerPage = ref(15);
 const totalStickersCount = ref(0);
@@ -79,8 +77,6 @@ const isStickersLoading = ref(true);
 const isBootstrapped = ref(false);
 
 const routeTitle = computed(() => $gettext(`Your Notifications`));
-const shouldShowStickers = computed(() => totalStickersCount.value > 0);
-const shouldShowStickerPlaceholder = computed(() => isStickersLoading.value);
 
 const existingFilters = computed<string[] | undefined>(
 	() => feed.value?.extraData?.[NOTIFICATION_FILTER_FIELD]
@@ -186,20 +182,10 @@ function onClickFilter() {
 					</p>
 
 					<template v-if="!feed || !feed.isBootstrapped">
-						<AppShellNotificationPopoverStickerNavItemPlaceholder />
 						<AppActivityFeedPlaceholder />
 					</template>
 					<template v-else>
 						<template v-if="!feed.hasItems">
-							<template v-if="shouldShowStickerPlaceholder">
-								<AppShellNotificationPopoverStickerNavItemPlaceholder />
-							</template>
-							<AppShellNotificationPopoverStickerNavItem
-								v-else-if="shouldShowStickers"
-								:sticker-count="totalStickersCount"
-								:has-new="hasNewUnlockedStickers"
-							/>
-
 							<div v-if="hasFilter" class="alert full-bleed-xs">
 								{{
 									$gettext(
@@ -218,15 +204,6 @@ function onClickFilter() {
 							</div>
 						</template>
 						<template v-else>
-							<template v-if="shouldShowStickerPlaceholder">
-								<AppShellNotificationPopoverStickerNavItemPlaceholder />
-							</template>
-							<AppShellNotificationPopoverStickerNavItem
-								v-else-if="shouldShowStickers"
-								:sticker-count="totalStickersCount"
-								:has-new="hasNewUnlockedStickers"
-							/>
-
 							<AppActivityFeedLazy :feed="feed" @load-new="onLoadedNew" />
 						</template>
 					</template>

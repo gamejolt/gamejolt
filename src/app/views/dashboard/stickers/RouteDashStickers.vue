@@ -1,16 +1,14 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import { numberSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
-import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppStickerCard from '../../../../_common/sticker/card/AppStickerCard.vue';
 import AppStickerChargeCard from '../../../../_common/sticker/charge/AppStickerChargeCard.vue';
-import { Sticker, StickerStack } from '../../../../_common/sticker/sticker.model';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { getStickerCountsFromPayloadData } from '../../../../_common/sticker/sticker-store';
+import { StickerStack } from '../../../../_common/sticker/sticker.model';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { useGridStore } from '../../../components/grid/grid-store';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
@@ -24,10 +22,8 @@ export default {
 };
 
 type InitPayload = {
-	balance: number;
 	stickerCounts: StickerCountPayload[];
 	stickers: any[];
-	stickerCost: number;
 	newStickerIds: number[];
 };
 
@@ -40,10 +36,8 @@ type StickerCountPayload = {
 <script lang="ts" setup>
 const { grid } = useGridStore();
 
-const balance = ref(0);
 const generalStickers = ref<StickerStack[]>([]);
 const eventStickers = ref<StickerStack[]>([]);
-const stickerCost = ref(10);
 const newStickerIds = ref<number[]>([]);
 
 const routeTitle = computed(() => {
@@ -52,11 +46,6 @@ const routeTitle = computed(() => {
 
 const hasStickersInCollection = computed(() => {
 	return generalStickers.value.length > 0 || eventStickers.value.length > 0;
-});
-
-const stickerProgress = computed(() => {
-	const progress = balance.value % stickerCost.value;
-	return Math.floor((progress / stickerCost.value) * 100);
 });
 
 const coverMediaItem = computed(() => {
@@ -75,39 +64,15 @@ createAppRoute({
 	onResolved(data) {
 		const payload: InitPayload = data.payload;
 
-		balance.value = payload.balance;
-		stickerCost.value = payload.stickerCost;
-		newStickerIds.value = payload.newStickerIds;
-
-		generalStickers.value = [];
-		eventStickers.value = [];
-
-		for (const stickerCountPayload of payload.stickerCounts) {
-			const stickerData = payload.stickers.find(i => i.id === stickerCountPayload.sticker_id);
-			const stickerCount = {
-				count: stickerCountPayload.count,
-				sticker_id: stickerCountPayload.sticker_id,
-				sticker: new Sticker(stickerData),
-			} as StickerStack;
-
-			if (stickerCount.sticker.is_event) {
-				eventStickers.value.push(stickerCount);
-			} else {
-				generalStickers.value.push(stickerCount);
-			}
-		}
-
-		const lists = [generalStickers.value, eventStickers.value];
-		lists.forEach(list => {
-			list.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));
-
-			// Sort all "new" stickers to the top.
-			if (newStickerIds.value.length > 0) {
-				const newStickers = list.filter(x => newStickerIds.value.includes(x.sticker_id));
-				list = list.filter(x => !newStickers.includes(x));
-				list.unshift(...newStickers);
-			}
+		const newStickers = getStickerCountsFromPayloadData({
+			stickerCounts: payload.stickerCounts,
+			stickers: payload.stickers,
+			newStickerIds: payload.newStickerIds,
 		});
+
+		newStickerIds.value = payload.newStickerIds;
+		eventStickers.value = newStickers[0];
+		generalStickers.value = newStickers[1];
 
 		grid.value?.pushViewNotifications('stickers');
 	},
@@ -119,12 +84,12 @@ createAppRoute({
 		<AppPageHeader :cover-media-item="coverMediaItem" :cover-max-height="250">
 			<RouterLink :to="{ name: 'dash.stickers' }">
 				<h1 class="section-header sans-margin-bottom">
-					<AppTranslate>Your Stickers</AppTranslate>
+					{{ $gettext(`Your Stickers`) }}
 				</h1>
 			</RouterLink>
 			<div class="text-muted small">
 				<p>
-					<AppTranslate> Marvel at your collection of beautiful stickers. </AppTranslate>
+					{{ $gettext(`Marvel at your collection of beautiful stickers.`) }}
 				</p>
 			</div>
 		</AppPageHeader>
@@ -140,24 +105,6 @@ createAppRoute({
 						/>
 
 						<AppSpacer vertical :scale="6" />
-
-						<div class="-sidebar-card">
-							<span class="-progress-header">
-								{{ stickerProgress }}% to next sticker
-							</span>
-
-							<AppSpacer vertical :scale="1" />
-							<AppProgressBar class="-progress" :percent="stickerProgress" thin />
-							<AppSpacer vertical :scale="4" />
-
-							<AppTranslate>
-								Get more stickers by liking posts on Game Jolt. Every time you like
-								a post, you gain progress to getting your next sticker. Like posts,
-								get stickers!
-							</AppTranslate>
-						</div>
-
-						<AppSpacer vertical :scale="6" />
 					</div>
 
 					<div class="col-md-8 col-md-pull-4">
@@ -168,15 +115,12 @@ createAppRoute({
 							>
 								<template v-if="list.length > 0">
 									<p class="-collection-title">
-										<AppTranslate>
-											{{
-												i === 0
-													? 'Event Stickers'
-													: i === 1
-													? 'General Stickers'
-													: undefined
-											}}
-										</AppTranslate>
+										<span v-if="i === 0">
+											{{ $gettext(`Event stickers`) }}
+										</span>
+										<span v-else-if="i === 1">
+											{{ $gettext(`General stickers`) }}
+										</span>
 									</p>
 									<div class="-collection">
 										<AppStickerCard
@@ -193,7 +137,7 @@ createAppRoute({
 							</template>
 						</template>
 						<p v-else>
-							<AppTranslate>You don't have any stickers yet.</AppTranslate>
+							{{ $gettext(`You don't have any stickers yet.`) }}
 						</p>
 					</div>
 				</div>
@@ -208,13 +152,6 @@ createAppRoute({
 .route-dash-stickers
 	change-bg(bg-offset)
 
-.-progress-header
-	font-size: $font-size-small
-	color: var(--theme-fg-muted)
-
-.-progress
-	margin: 0
-
 .-collection
 	display: grid
 	grid-template-columns: repeat(auto-fill, $card-width)
@@ -228,9 +165,4 @@ createAppRoute({
 
 	&:first-of-type
 		margin-top: 0
-
-.-sidebar-card
-	rounded-corners-lg()
-	change-bg(bg)
-	padding: 24px
 </style>

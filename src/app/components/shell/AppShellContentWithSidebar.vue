@@ -47,5 +47,5 @@ watch(
 	// available. All other breakpoints should instead overlay their content.
 	&.-context-available
 		@media $media-lg
-			padding-left: $shell-content-sidebar-width
+			padding-left: var(--shell-content-sidebar-width)
 </style>

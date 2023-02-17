@@ -4,7 +4,9 @@ import { RouterLink } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import { formatDate } from '../../../../../_common/filters/date';
 import { formatNumber } from '../../../../../_common/filters/number';
+import { imageGems } from '../../../../../_common/img/images';
 import AppInviteCard from '../../../../../_common/invite/AppInviteCard.vue';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
@@ -17,7 +19,6 @@ import { User } from '../../../../../_common/user/user.model';
 import { styleTextOverflow } from '../../../../../_styles/mixins';
 import { kFontSizeLarge } from '../../../../../_styles/variables';
 import AppShellPageBackdrop from '../../../../components/shell/AppShellPageBackdrop.vue';
-import { imageGems } from '../../../../img/images';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 export default {

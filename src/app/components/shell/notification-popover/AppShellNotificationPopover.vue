@@ -23,7 +23,6 @@ import { ActivityFeedView } from '../../activity/feed/view';
 import { onNewStickers } from '../../grid/client.service';
 import { useGridStore } from '../../grid/grid-store';
 import { AppActivityFeedLazy } from '../../lazy';
-import AppShellNotificationPopoverStickerNavItem from './sticker-nav-item/AppShellNotificationPopoverStickerNavItem.vue';
 
 interface StickerAnimationData {
 	key: string;
@@ -32,12 +31,7 @@ interface StickerAnimationData {
 
 const route = useRoute();
 const router = useRouter();
-const {
-	notificationState,
-	unreadNotificationsCount,
-	hasNewUnlockedStickers,
-	markNotificationsAsRead,
-} = useAppStore();
+const { notificationState, unreadNotificationsCount, markNotificationsAsRead } = useAppStore();
 const { grid } = useGridStore();
 
 const newStickerAnimContainer = ref<HTMLDivElement>();
@@ -227,11 +221,6 @@ function onClickFilter() {
 					<AppLoading centered />
 				</template>
 				<template v-else>
-					<AppShellNotificationPopoverStickerNavItem
-						v-if="totalStickersCount > 0"
-						:sticker-count="totalStickersCount"
-						:has-new="hasNewUnlockedStickers"
-					/>
 					<template v-if="!feed || !feed.hasItems">
 						<div class="alert">
 							{{ $gettext(`You don't have any notifications yet.`) }}
