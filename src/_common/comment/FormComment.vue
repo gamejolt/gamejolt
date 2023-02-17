@@ -69,8 +69,8 @@ const lengthLimit = ref(5_000);
 const contentCapabilities = ref(ContextCapabilities.getPlaceholder());
 
 const loadUrl = computed(() => {
-	if (model.value?.id) {
-		return `/comments/save/${model.value.id}`;
+	if (comment?.value?.id) {
+		return `/comments/save/${comment.value.id}`;
 	} else {
 		return `/comments/save?resource=${getCommentModelResourceName(model.value)}`;
 	}
