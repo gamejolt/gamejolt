@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts">
 import { computed, onMounted, onUnmounted, PropType, ref, useSlots } from 'vue';
 import { isNavigationFailure, useRouter } from 'vue-router';
 import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
@@ -6,7 +6,6 @@ import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.s
 import { Screen } from '../screen/screen-service';
 import AppScrollAffix from '../scroll/AppScrollAffix.vue';
 import AppScrollScroller, { createScroller } from '../scroll/AppScrollScroller.vue';
-import { useStickerStore } from '../sticker/sticker-store';
 import AppTheme from '../theme/AppTheme.vue';
 import { Theme } from '../theme/theme.model';
 import { ModalDismissReason, Modals, useModal } from './modal.service';
@@ -15,6 +14,20 @@ export interface AppModalInterface {
 	scrollTo: (offsetY: number) => void;
 }
 
+/**
+ * This is a collection of functions responsible for determining whether the
+ * modal backdrop should be dismissed. If you need to prevent auto-dismissal due
+ * to content displayed over the modal, you can add a new check that will be
+ * called anytime modal backdrops are trying to be dismissed.
+ */
+export function addModalBackdropCheck(fn: () => boolean) {
+	_modalBackdropChecks.push(fn);
+}
+
+const _modalBackdropChecks: (() => boolean)[] = [];
+</script>
+
+<script lang="ts" setup>
 defineProps({
 	theme: {
 		type: Object as PropType<Theme>,
@@ -33,7 +46,6 @@ defineExpose<AppModalInterface>({
 const slots = useSlots();
 const router = useRouter();
 const modal = useModal()!;
-const stickerStore = useStickerStore();
 const scroller = createScroller();
 
 const root = ref<HTMLElement>();
@@ -101,7 +113,8 @@ function dismissBackdrop() {
 		Screen.isMobile ||
 		modal.noBackdropClose ||
 		isHoveringContent.value ||
-		stickerStore.isDrawerOpen.value
+		// If any of the extra backdrop checks return false then don't dismiss.
+		!_modalBackdropChecks.every(checkFn => checkFn())
 	) {
 		return;
 	}

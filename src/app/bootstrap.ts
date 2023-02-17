@@ -1,5 +1,6 @@
 import { bootstrapCommon } from '../_common/bootstrap';
 import { GamePlayModal } from '../_common/game/play-modal/play-modal.service';
+import { addModalBackdropCheck } from '../_common/modal/AppModal.vue';
 import { Registry } from '../_common/registry/registry.service';
 import { Scroll } from '../_common/scroll/scroll.service';
 import { createSidebarStore, SidebarStoreKey } from '../_common/sidebar/sidebar.store';
@@ -63,6 +64,9 @@ export async function createApp() {
 
 	// The height of the top nav bar.
 	Scroll.setOffsetTop(56);
+
+	// Set up the modals to not dismiss when sticker drawer is active.
+	addModalBackdropCheck(() => !stickerStore.isDrawerOpen.value);
 
 	return { app, router };
 }
