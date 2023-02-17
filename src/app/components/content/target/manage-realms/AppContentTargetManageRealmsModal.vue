@@ -116,6 +116,7 @@ import { arrayRemove } from '../../../../../utils/array';
 import { debounce } from '../../../../../utils/utils';
 import { Api, RequestOptions } from '../../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
@@ -251,6 +252,12 @@ const debounceSearchInput = debounce(() => {
 				<span class="-title-count">
 					{{ `(${formatNumber(selectedRealms.length)}/${formatNumber(maxRealms)})` }}
 				</span>
+			</template>
+
+			<template #modal-controls>
+				<AppButton @click="modal.resolve()">
+					{{ $gettext(`Confirm`) }}
+				</AppButton>
 			</template>
 
 			<template #bottom>
