@@ -31,8 +31,8 @@ export default defineConfig(async () => {
 		// Intended values for main and node-remote keys.
 		const propertyMain =
 			gjOpts.section === 'auth'
-				? 'https://development.gamejolt.com/login/'
-				: 'https://development.gamejolt.com/';
+				? 'https://development.gamejolt.com/login'
+				: 'https://development.gamejolt.com';
 		const propertyNodeRemote = 'https://development.gamejolt.com';
 
 		await patchPackageJson(packageJsonStr => {
@@ -317,7 +317,11 @@ export default defineConfig(async () => {
 						// traffic from port 443 to 8443 in a separate process.
 						// Example of using socat for that is in the README.md
 						port: process.platform === 'darwin' ? 8443 : 443,
-						host: true,
+
+						// Need to do this since vite might bind to ipv6 or
+						// ipv4. This forces it into ipv4 always so that our
+						// hosts file matches.
+						host: '127.0.0.1',
 
 						https: {
 							pfx: path.resolve(__dirname, 'development.gamejolt.com.pfx'),

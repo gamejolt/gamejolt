@@ -1886,10 +1886,10 @@ electron-to-chromium@^1.4.17:
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.38.tgz#10ea58d73d36b13e78d5024f3b74a352d3958d01"
   integrity sha512-WhHt3sZazKj0KK/UpgsbGQnUUoFeAHVishzHFExMxagpZgjiGYSC9S0ZlbhCfSH2L2i+2A1yyqOIliTctMx7KQ==
 
-eme-encryption-scheme-polyfill@^2.0.1:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/eme-encryption-scheme-polyfill/-/eme-encryption-scheme-polyfill-2.0.3.tgz#2ca6e06480e06cceb5e50efd27943ac46c959878"
-  integrity sha512-44CNFMsqzHdKHrzWxlS7xZ8KUHn5XutBqpmCuWzNIynmAyFInHrrD3ozv/RvK9ZhgV6QY6Easx8EWAmxteNodg==
+eme-encryption-scheme-polyfill@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/eme-encryption-scheme-polyfill/-/eme-encryption-scheme-polyfill-2.1.1.tgz#91c823ed584e8ec5a9f03a6a676def8f80c57a4c"
+  integrity sha512-njD17wcUrbqCj0ArpLu5zWXtaiupHb/2fIUQGdInf83GlI+Q6mmqaPGLdrke4savKAu15J/z1Tg/ivDgl14g0g==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -3804,12 +3804,12 @@ setprototypeof@1.2.0:
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.2.0.tgz#66c9a24a73f9fc28cbe66b09fed3d33dcaf1b424"
   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
 
-shaka-player@3.0.5:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/shaka-player/-/shaka-player-3.0.5.tgz#132f959dd61b8c3dbc235ea280304b157e45ff9c"
-  integrity sha512-LYq56q9DA7yTLBD1yQwZrMlJZOovb2yRmo0C3AsddL1J0ee+U4BXr1QZd5amtpBvl8fOiLgkW/12UuChMR764A==
+shaka-player@4.3.4:
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/shaka-player/-/shaka-player-4.3.4.tgz#97c7cb73743884e55a4855f5efe4d116aff83848"
+  integrity sha512-fF90r/57Oxk+SV2cnoEpJxNujNj1gJkudKXVbXEBhgxh5qYu5gdFU+nT2N7jMN71KxQdtXo1NOqdNphudLEEug==
   dependencies:
-    eme-encryption-scheme-polyfill "^2.0.1"
+    eme-encryption-scheme-polyfill "^2.1.1"
 
 shebang-command@^1.2.0:
   version "1.2.0"

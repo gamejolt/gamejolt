@@ -134,21 +134,6 @@ export default class AppManageGameNav extends Vue {
 					<AppTranslate>Music</AppTranslate>
 				</router-link>
 			</AppGamePerms>
-			<AppGamePerms
-				v-if="!isWizard && app.user && app.user.id === game.developer.id"
-				tag="li"
-				required="all"
-			>
-				<router-link
-					:to="{
-						name: 'dash.games.manage.game.linked-accounts',
-						query: $route.query,
-					}"
-					active-class="active"
-				>
-					<AppTranslate>Linked Accounts</AppTranslate>
-				</router-link>
-			</AppGamePerms>
 			<AppGamePerms v-if="!isWizard" tag="li">
 				<router-link
 					:to="{

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, PropType, toRefs } from 'vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
+import { ContextCapabilities } from '../../../../../_common/content/content-context';
 import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
 import { useForm } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
@@ -45,6 +46,10 @@ const props = defineProps({
 	},
 	messageMaxLength: {
 		type: Number,
+		required: true,
+	},
+	messageCapabilities: {
+		type: Object as PropType<ContextCapabilities>,
 		required: true,
 	},
 });
@@ -160,6 +165,7 @@ function _validateUnique(id: number) {
 				>
 					<AppFormControlContent
 						content-context="chat-command"
+						:capabilities="messageCapabilities"
 						:display-rules="previewContentRules"
 						:max-height="MAX_EDITOR_HEIGHT"
 						:min-height="64"

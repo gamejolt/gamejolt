@@ -4,6 +4,7 @@ import { Clipboard } from '../../clipboard/clipboard-service';
 import { Collaborator } from '../../collaborator/collaborator.model';
 import { Environment } from '../../environment/environment.service';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
+import { FormCommentLazy } from '../../lazy';
 import AppMessageThreadItem from '../../message-thread/AppMessageThreadItem.vue';
 import { ModalConfirm } from '../../modal/confirm/confirm-service';
 import { Model } from '../../model/model.service';
@@ -25,7 +26,6 @@ import {
 	getCommentBlockReason,
 } from '../comment-model';
 import AppCommentControls from '../controls/AppCommentControls.vue';
-import FormComment from '../FormComment.vue';
 import { useCommentWidget } from './AppCommentWidget.vue';
 
 const props = defineProps({
@@ -363,7 +363,7 @@ function onUnhideBlock() {
 					/>
 				</template>
 				<template v-else>
-					<FormComment
+					<FormCommentLazy
 						:comment="comment"
 						:model="model"
 						@submit="commentEdited"

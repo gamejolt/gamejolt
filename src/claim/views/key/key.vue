@@ -18,6 +18,8 @@ import AppKeyGame from './_game/game.vue';
 	name: 'RouteKey',
 	components: {
 		AppInvalidKey,
+		AppKeyBundle,
+		AppKeyGame,
 	},
 })
 @OptionsForRoute({

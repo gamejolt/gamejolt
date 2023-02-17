@@ -8,7 +8,7 @@ import {
 	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
-import FormGameDescription from '../../../../../../components/forms/game/description/description.vue';
+import FormGameDescription from '../../../../../../components/forms/game/description/FormGameDescription.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
 @Options({

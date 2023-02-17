@@ -22,7 +22,7 @@ import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
 import { useGridStore } from '../../../grid/grid-store';
 import { editMessage as chatEditMessage, queueChatMessage, tryGetRoomRole } from '../../client';
-import { ChatMessage, CHAT_MESSAGE_MAX_CONTENT_LENGTH } from '../../message';
+import { ChatMessage } from '../../message';
 import { ChatRoom } from '../../room';
 import { ChatWindowLeftGutterSize } from '../variables';
 
@@ -37,12 +37,9 @@ const props = defineProps({
 		type: Object as PropType<ChatRoom>,
 		required: true,
 	},
-	/**
-	 * Optional if needed to do custom overrides (such as firesides with roles).
-	 */
-	contextCapabilities: {
+	capabilities: {
 		type: Object as PropType<ContextCapabilities>,
-		default: undefined,
+		required: true,
 	},
 	/** Duration in milliseconds */
 	slowmodeDuration: {
@@ -51,7 +48,7 @@ const props = defineProps({
 	},
 	maxContentLength: {
 		type: Number,
-		default: CHAT_MESSAGE_MAX_CONTENT_LENGTH,
+		required: true,
 	},
 });
 
@@ -59,7 +56,7 @@ const emit = defineEmits({
 	'focus-change': (_focused: boolean) => true,
 });
 
-const { room, slowmodeDuration } = toRefs(props);
+const { room, slowmodeDuration, maxContentLength, capabilities } = toRefs(props);
 
 const { isDark } = useThemeStore();
 const { chatUnsafe: chat } = useGridStore();
@@ -473,7 +470,7 @@ function disableTypingTimeout() {
 							:key="room.id"
 							ref="editor"
 							:content-context="room.messagesContentContext"
-							:context-capabilities-override="contextCapabilities"
+							:capabilities="capabilities"
 							:temp-resource-context-data="contentEditorTempResourceContextData"
 							:placeholder="$gettext('Send a message')"
 							:single-line-mode="Screen.isDesktop"
