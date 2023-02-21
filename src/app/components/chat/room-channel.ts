@@ -16,6 +16,7 @@ import { Background } from '../../../_common/background/background.model';
 import { ContentDocument } from '../../../_common/content/content-document';
 import { ContentObject } from '../../../_common/content/content-object';
 import { MarkObject } from '../../../_common/content/mark-object';
+import { Fireside } from '../../../_common/fireside/fireside.model';
 import { storeModel, storeModelList } from '../../../_common/model/model-store.service';
 import { UnknownModelData } from '../../../_common/model/model.service';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
@@ -36,6 +37,7 @@ export type ChatRoomChannel = ReturnType<typeof createChatRoomChannel>;
 interface JoinPayload {
 	room: UnknownModelData;
 	messages: UnknownModelData[];
+	fireside: UnknownModelData | null;
 }
 
 interface RoomPresence {
@@ -71,6 +73,10 @@ export interface PlaceStickerPayload {
 	success?: boolean;
 }
 
+interface StartFiresidePayload {
+	fireside: Fireside;
+}
+
 export function createChatRoomChannel(
 	client: ChatClient,
 	options: {
@@ -97,6 +103,9 @@ export function createChatRoomChannel(
 	// can just safely access it.
 	const _room = ref<ChatRoom>();
 	const room = computed(() => _room.value!);
+
+	/** One of the firesides that were started for this room. This is not an inverse of the Fireside -> Chat room relation. */
+	const fireside = ref<Fireside | null>(null);
 
 	let _freezeMessageLimitRemovals = false;
 	let _queuedMessageLimit: number | undefined = undefined;
@@ -134,6 +143,8 @@ export function createChatRoomChannel(
 			processNewChatOutput(room.value, messages, true);
 			room.value.messagesPopulated = true;
 
+			fireside.value = response.fireside ? new Fireside(response.fireside) : null;
+
 			// Don't push for guests.
 			if (client.currentUser && client.isFocused) {
 				pushFocus();
@@ -154,6 +165,7 @@ export function createChatRoomChannel(
 		instanced,
 		room,
 		joinPromise,
+		fireside,
 
 		processNewRoomMessage,
 		freezeMessageLimitRemovals,
@@ -171,6 +183,7 @@ export function createChatRoomChannel(
 		pushStartTyping,
 		pushStopTyping,
 		pushPlaceSticker,
+		pushStartFireside,
 		getMemberWatchLock,
 		leave,
 	});
@@ -498,6 +511,10 @@ export function createChatRoomChannel(
 			// error out)
 			5_000
 		);
+	}
+
+	function pushStartFireside() {
+		return channelController.push<StartFiresidePayload>('start_fireside');
 	}
 
 	// Currently this only works for firesides. But if you want to get
