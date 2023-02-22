@@ -1,7 +1,6 @@
 import { ModelStoreModel, storeModel } from '../../../_common/model/model-store.service';
 import { ChatUser } from './user';
 
-export const CHAT_MESSAGE_MAX_CONTENT_LENGTH = 1000;
 export const TIMEOUT_CONSIDER_QUEUED = 1500; // Time in ms until a queued message should be displayed as such.
 
 export type ChatMessageType = 'content' | 'sticker' | 'invite';

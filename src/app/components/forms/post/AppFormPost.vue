@@ -9,6 +9,7 @@ import { Background } from '../../../../_common/background/background.model';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
+import { ContextCapabilities } from '../../../../_common/content/content-context';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { FiresidePostCommunity } from '../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -134,6 +135,9 @@ const maxWidth = ref(0);
 const maxHeight = ref(0);
 const now = ref(0);
 
+const leadContentCapabilities = ref(ContextCapabilities.getPlaceholder());
+const articleContentCapabilities = ref(ContextCapabilities.getPlaceholder());
+
 const keyGroups = ref<KeyGroup[]>([]);
 const timezones = ref<{ [region: string]: (TimezoneData & { label?: string })[] } | null>(null);
 
@@ -231,6 +235,14 @@ const form: FormController<FormPostModel> = createForm({
 	onLoad(payload) {
 		// Pull any post information that may not already be loaded in.
 		form.formModel.article_content = payload.post.article_content;
+
+		leadContentCapabilities.value = ContextCapabilities.fromPayloadList(
+			payload.leadContentCapabilities
+		);
+
+		articleContentCapabilities.value = ContextCapabilities.fromPayloadList(
+			payload.articleContentCapabilities
+		);
 
 		keyGroups.value = KeyGroup.populate(payload.keyGroups);
 		wasPublished.value = payload.wasPublished;
@@ -1004,6 +1016,7 @@ function _getMatchingBackgroundIdFromPref() {
 		>
 			<AppFormControlContent
 				content-context="fireside-post-lead"
+				:capabilities="leadContentCapabilities"
 				autofocus
 				:placeholder="
 					!longEnabled
@@ -1069,6 +1082,7 @@ function _getMatchingBackgroundIdFromPref() {
 					<AppFormControlContent
 						:placeholder="$gettext(`Write your article here...`)"
 						content-context="fireside-post-article"
+						:capabilities="articleContentCapabilities"
 						:model-id="model.id"
 						:validators="[
 							validateContentNoActiveUploads(),

@@ -2,7 +2,9 @@
 import { defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
 import { router } from '..';
+import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
+import { configHomeFeedSwitcher } from '../../../_common/config/config.service';
 import {
 	asyncRouteLoader,
 	createAppRoute,
@@ -10,6 +12,7 @@ import {
 } from '../../../_common/route/route-component';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { IntentService } from '../../components/intent/intent.service';
+import { RealmPathHistoryStateKey } from './feed-switcher/AppHomeFeedSwitcher.vue';
 import { HomeFeedService } from './home-feed.service';
 
 const RouteHomeFeed = defineAsyncComponent(() =>
@@ -42,17 +45,26 @@ const route = useRoute();
 createAppRoute({
 	routeTitle: null,
 	onResolved() {
+		trackExperimentEngagement(configHomeFeedSwitcher);
+
 		// The route content, but not the path, changes depending on the user
 		// state - so we need to track the page view through a analyticsPath
 		// meta value that aligns with our route content.
 		let analyticsPath = '/discover';
 		if (user.value) {
-			if (route.params?.tab === HomeFeedService.fypTab) {
+			const tab = route.params?.tab;
+			if (tab === HomeFeedService.fypTab) {
 				analyticsPath = '/fyp';
-			} else if (route.params?.tab === HomeFeedService.activityTab) {
+			} else if (tab === HomeFeedService.activityTab) {
 				analyticsPath = '/'; // For clarification purposes that "activity" => "/".
 			} else {
-				analyticsPath = '/';
+				const realmPath = router.options.history.state[RealmPathHistoryStateKey];
+
+				if (typeof realmPath === 'string' && realmPath.length) {
+					analyticsPath = `/realm-${realmPath}`;
+				} else {
+					analyticsPath = '/';
+				}
 			}
 		}
 

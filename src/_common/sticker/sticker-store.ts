@@ -12,6 +12,7 @@ import { $gettext } from '../translate/translate.service';
 import { User } from '../user/user.model';
 import AppStickerLayer from './layer/AppStickerLayer.vue';
 import { getCollidingStickerTarget, StickerLayerController } from './layer/layer-controller';
+import { UserStickerPack } from './pack/user_pack.model';
 import { StickerPlacement } from './placement/placement.model';
 import { Sticker, StickerStack } from './sticker.model';
 import { ValidStickerResource } from './target/AppStickerTarget.vue';
@@ -36,6 +37,8 @@ export function createStickerStore(options: { user: Ref<User | null> }) {
 	const targetController = shallowRef<StickerTargetController | null>(null);
 
 	const drawerItems = shallowRef<StickerStack[]>([]);
+	const stickerPacks = ref<UserStickerPack[]>([]);
+
 	const placedItem = shallowRef<StickerPlacement | null>(null);
 	const sticker = shallowRef<Sticker | null>(null);
 	const streak = shallowRef<StickerStreak | null>(null);
@@ -129,6 +132,7 @@ export function createStickerStore(options: { user: Ref<User | null> }) {
 	const c = {
 		layers,
 		drawerItems,
+		stickerPacks,
 		targetController,
 		placedItem,
 		sticker,
@@ -266,13 +270,41 @@ async function _initializeDrawerContent(store: StickerStore) {
 		cost: payload.chargeCost,
 	});
 
+	drawerItems.value = getStickerCountsFromPayloadData({
+		stickerCounts: payload.stickerCounts,
+		stickers: payload.stickers,
+	}).flat();
+	isLoading.value = false;
+	hasLoaded.value = true;
+}
+
+/**
+ * Returns sorted lists of stickers. Provide {@link newStickerIds} to sort new
+ * stickers to the top of their lists.
+ *
+ * Call `.flat()` on the result to flatten to a single list.
+ *
+ * ```
+ * const result: [
+ *          eventStickers: StickerStack[],
+ *          generalStickers: StickerStack[]
+ *      ];
+ * ```
+ */
+export function getStickerCountsFromPayloadData({
+	stickerCounts,
+	stickers,
+	newStickerIds,
+}: {
+	stickerCounts: any[];
+	stickers: any[];
+	newStickerIds?: number[];
+}) {
 	const eventStickers: StickerStack[] = [];
 	const generalStickers: StickerStack[] = [];
 
-	payload.stickerCounts.forEach((stickerCountPayload: any) => {
-		const stickerData = payload.stickers.find(
-			(i: Sticker) => i.id === stickerCountPayload.sticker_id
-		);
+	stickerCounts.forEach((stickerCountPayload: any) => {
+		const stickerData = stickers.find((i: Sticker) => i.id === stickerCountPayload.sticker_id);
 
 		const stickerCount = {
 			count: stickerCountPayload.count,
@@ -287,12 +319,38 @@ async function _initializeDrawerContent(store: StickerStore) {
 		}
 	});
 
-	const lists = [eventStickers, generalStickers];
-	lists.forEach(i => i.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity)));
+	return sortStickerCounts({
+		eventStickers,
+		generalStickers,
+		newStickerIds,
+	});
+}
 
-	drawerItems.value = lists.flat();
-	isLoading.value = false;
-	hasLoaded.value = true;
+/**
+ * Sorts stickers in place. Moves "new" stickers to the start of their parent
+ * array.
+ */
+export function sortStickerCounts({
+	eventStickers,
+	generalStickers,
+	newStickerIds,
+}: {
+	eventStickers: StickerStack[];
+	generalStickers: StickerStack[];
+	newStickerIds?: number[];
+}) {
+	const lists = [eventStickers, generalStickers];
+	lists.forEach(list => {
+		list.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));
+
+		// Sort all "new" stickers to the top of their groups.
+		if (newStickerIds && newStickerIds.length > 0) {
+			const newStickers = list.filter(x => newStickerIds.includes(x.sticker_id));
+			list = list.filter(x => !newStickers.includes(x));
+			list.unshift(...newStickers);
+		}
+	});
+	return lists;
 }
 
 /**

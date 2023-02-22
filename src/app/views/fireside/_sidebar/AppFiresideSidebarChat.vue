@@ -13,15 +13,9 @@ import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 const { chatRoom, chatSettings, chat, fireside, background } = useFiresideController()!;
 const route = useRoute();
 
-const contextCapabilities = computed(() => ({
-	capabilities: createFiresideChatContextCapabilities(
-		chatSettings.value,
-		fireside.role?.role || 'audience'
-	),
-	// We return a key anytime that we generate a new context capability so that
-	// it can reload the chat input with the new capabilities.
-	key: Math.random(),
-}));
+const contextCapabilities = computed(() =>
+	createFiresideChatContextCapabilities(chatSettings.value, fireside.role?.role || 'audience')
+);
 
 const loginUrl = computed(
 	() => Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(route.fullPath)
@@ -48,9 +42,8 @@ const loginUrl = computed(
 		<template #footer>
 			<AppChatWindowSend
 				v-if="chat?.currentUser && chatRoom"
-				:key="contextCapabilities.key"
 				:room="chatRoom"
-				:context-capabilities="contextCapabilities.capabilities"
+				:capabilities="contextCapabilities"
 				:slowmode-duration="
 					chatSettings.slow_mode_enabled ? chatSettings.slow_mode_seconds * 1_000 : 0
 				"

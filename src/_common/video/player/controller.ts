@@ -1,5 +1,4 @@
-import { reactive, ref } from '@vue/runtime-core';
-import { computed, Ref } from 'vue';
+import { computed, reactive, ref, Ref } from 'vue';
 import { assertNever } from '../../../utils/utils';
 import { Analytics } from '../../analytics/analytics.service';
 import {
@@ -10,7 +9,7 @@ import {
 	SettingVideoPlayerVolume,
 } from '../../settings/settings.service';
 import { ScrubberStage } from '../../slider/AppSlider.vue';
-import { VideoSourceArray } from '../video.vue';
+import { VideoSourceArray } from '../AppVideo.vue';
 
 export type VideoPlayerControllerContext = 'feed' | 'page' | 'gif' | null;
 export type VideoPlayerState = 'paused' | 'playing';

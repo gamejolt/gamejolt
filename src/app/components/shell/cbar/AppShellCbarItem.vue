@@ -86,14 +86,12 @@ const isShowingPane = computed(() => showAsActive.value && !!visibleLeftPane.val
 </template>
 
 <style lang="stylus" scoped>
-@import './variables'
-
 .-item
 	display: block
 	position: relative
-	margin-bottom: $cbar-item-spacing
-	width: $cbar-item-size
-	height: $cbar-item-size
+	margin-bottom: var(--cbar-item-spacing)
+	width: var(--cbar-item-size)
+	height: var(--cbar-item-size)
 
 .-blip
 .-notification-count
@@ -101,10 +99,10 @@ const isShowingPane = computed(() => showAsActive.value && !!visibleLeftPane.val
 
 .-blip
 	position: absolute
-	width: $cbar-blip-size
-	height: $cbar-blip-size
-	top: $cbar-blip-top
-	left: -($cbar-blip-size * 2)
+	width: var(--cbar-blip-size)
+	height: var(--cbar-blip-size)
+	top: var(--cbar-blip-top)
+	left: calc(var(--cbar-blip-size) * -2)
 	background-color: var(--theme-lighter)
 	border-radius: 50%
 	will-change: height, top, left
@@ -112,12 +110,12 @@ const isShowingPane = computed(() => showAsActive.value && !!visibleLeftPane.val
 	transition: height 300ms $ease-in-out-back, top 300ms $ease-in-out-back, left 300ms $ease-in-out-back, background-color 300ms
 
 .-blip-unread
-	left: $cbar-blip-left
+	left: var(--cbar-blip-left)
 
 .-blip-active
 	top: 0
-	left: $cbar-blip-left
-	height: $cbar-item-size
+	left: var(--cbar-blip-left)
+	height: var(--cbar-item-size)
 
 .-notification-count
 .-context-indicator

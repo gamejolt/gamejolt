@@ -5,7 +5,7 @@ import AppResponsiveDimensions from '../../responsive-dimensions/AppResponsiveDi
 import { Screen } from '../../screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/AppScrollInview.vue';
 import { getVideoPlayerFromSources } from '../../video/player/controller';
-import AppVideo from '../../video/video.vue';
+import AppVideo from '../../video/AppVideo.vue';
 import { defineEditableNodeViewProps } from '../content-editor/node-views/base';
 import { useContentOwnerController } from '../content-owner';
 import AppBaseContentComponent from './AppBaseContentComponent.vue';

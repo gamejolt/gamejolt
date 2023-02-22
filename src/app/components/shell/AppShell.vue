@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts">
 import { computed, defineAsyncComponent, nextTick, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { AppClientBase } from '../../../_common/client/safe-exports';
@@ -23,6 +23,10 @@ import AppShellSidebar from './sidebar/AppShellSidebar.vue';
 
 const AppChatWindow = defineAsyncComponent(() => import('../chat/window/AppChatWindow.vue'));
 
+export const CBAR_WIDTH = 70;
+</script>
+
+<script lang="ts" setup>
 const {
 	isShellHidden,
 	hasTopBar,
@@ -55,6 +59,31 @@ const totalChatNotificationsCount = computed(() => chat.value?.roomNotifications
 const ssrShouldShowSidebar = computed(
 	() => import.meta.env.SSR && String(route.name).indexOf('communities.view') === 0
 );
+
+const sidebarWidth = computed(() => {
+	const base = 270;
+
+	switch (visibleLeftPane.value) {
+		case 'backpack':
+			return base + 200;
+
+		default:
+			return base;
+	}
+});
+
+const shellCSSVariables = computed(() => {
+	const cbarWidth = CBAR_WIDTH;
+	const sidebarPadding = 12;
+	const sidebarWidthBase = sidebarWidth.value;
+
+	return [
+		`--shell-cbar-width: ${cbarWidth}px`,
+		`--shell-content-sidebar-padding: ${sidebarPadding}px`,
+		`--shell-content-sidebar-width-base: ${sidebarWidthBase}px`,
+		`--shell-content-sidebar-width: ${sidebarWidthBase + sidebarPadding * 2}px`,
+	];
+});
 
 onMounted(() => {
 	router.afterEach(async () => {
@@ -104,6 +133,7 @@ watch([totalChatNotificationsCount, unreadActivityCount, unreadNotificationsCoun
 			'has-cbar-mobile': hasCbar && Screen.isXs,
 			'has-banner': hasBanner && !isShellHidden,
 		}"
+		:style="shellCSSVariables"
 	>
 		<AppStickerLayer>
 			<template v-if="isShellHidden">
@@ -185,7 +215,7 @@ html, body
 
 	@media $media-sm-up
 		top: $shell-top-nav-height
-		left: $shell-content-sidebar-width + $shell-cbar-width
+		left: calc(var(--shell-content-sidebar-width) + var(--shell-cbar-width))
 
 //
 // And now for the long list of positioning shell elements.
@@ -221,16 +251,16 @@ html, body
 		--scroll-affix-top: $shell-top-nav-height * 2
 
 	&.has-cbar
-		--shell-left: $shell-cbar-width
+		--shell-left: var(--shell-cbar-width)
 
 		#shell-body
-			padding-left: $shell-cbar-width
+			padding-left: var(--shell-cbar-width)
 
 	&.has-cbar
 	&.has-cbar-mobile
 		.shell-pane-left
 		#shell-sidebar
-			left: $shell-cbar-width
+			left: var(--shell-cbar-width)
 
 		#shell-cbar
 			transform: translateX(0)
@@ -251,9 +281,9 @@ body.has-hot-bottom
 
 #shell-body.has-content-sidebar
 	#footer
-		margin-left: $shell-content-sidebar-width
+		margin-left: var(--shell-content-sidebar-width)
 
 	&.has-cbar
 		#footer
-			margin-left: $shell-content-sidebar-width + $shell-cbar-width
+			margin-left: calc(var(--shell-content-sidebar-width) + var(--shell-cbar-width))
 </style>

@@ -1,8 +1,8 @@
 import { RouteLocationNormalized } from 'vue-router';
 import { commonStore } from '../../../_common/store/common-store';
 
-export const HOME_FEED_FYP = 'fyp';
-export const HOME_FEED_ACTIVITY = 'activity';
+export const HOME_FEED_FYP = 'fyp' as const;
+export const HOME_FEED_ACTIVITY = 'activity' as const;
 
 export class HomeFeedService {
 	public static getDefault() {
@@ -28,15 +28,15 @@ export class HomeFeedService {
 
 	public static getRouteFeedTab(route: RouteLocationNormalized) {
 		// When no tab value is given, use the default tab.
-		if (!route.params?.tab) {
+		const tab = route.params?.tab;
+		if (!tab) {
 			return this.getDefault();
 		}
 
-		switch (route.params?.tab) {
+		switch (tab) {
 			case HOME_FEED_FYP:
-				return HOME_FEED_FYP;
 			case HOME_FEED_ACTIVITY:
-				return HOME_FEED_ACTIVITY;
+				return tab;
 		}
 
 		// For some other tab value, go to activity tab.
