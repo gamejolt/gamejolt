@@ -162,6 +162,12 @@ export const configShowSearchAutocomplete = new ConfigOptionBoolean(
 	true
 );
 
+export const configHomeRealmSwitcher = new ConfigOptionBoolean('web_home_realm_switcher', false, {
+	conditions: {
+		join: true,
+	},
+});
+
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
 }

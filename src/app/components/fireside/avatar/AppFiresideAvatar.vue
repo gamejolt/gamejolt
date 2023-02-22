@@ -47,7 +47,7 @@ const emit = defineEmits({
 	eject: (_: FiresideAvatarEvent) => true,
 	featured: (_: FiresideAvatarEvent) => true,
 	unfeatured: (_: FiresideAvatarEvent) => true,
-	expire: () => true,
+	expired: () => true,
 });
 
 const { fireside } = toRefs(props);
@@ -114,7 +114,7 @@ function _checkExpiry() {
 
 	if (!fireside.value.isOpen()) {
 		_canEmitExpiry = false;
-		emit('expire');
+		emit('expired');
 	}
 }
 

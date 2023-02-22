@@ -136,7 +136,7 @@ function _createInviewConfig() {
 			}"
 			:class="cssClasses"
 		>
-			<slot />
+			<slot :affixed="isAffixed" />
 		</div>
 	</AppScrollInview>
 </template>

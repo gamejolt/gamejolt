@@ -10,6 +10,7 @@ import {
 } from '../../../_common/route/route-component';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { IntentService } from '../../components/intent/intent.service';
+import { RealmPathHistoryStateKey } from './feed-switcher/AppHomeFeedSwitcher.vue';
 import { HomeFeedService } from './home-feed.service';
 
 const RouteHomeFeed = defineAsyncComponent(() =>
@@ -47,12 +48,20 @@ createAppRoute({
 		// meta value that aligns with our route content.
 		let analyticsPath = '/discover';
 		if (user.value) {
-			if (route.params?.tab === HomeFeedService.fypTab) {
+			const tab = route.params?.tab;
+			if (tab === HomeFeedService.fypTab) {
 				analyticsPath = '/fyp';
-			} else if (route.params?.tab === HomeFeedService.activityTab) {
+			} else if (tab === HomeFeedService.activityTab) {
 				analyticsPath = '/'; // For clarification purposes that "activity" => "/".
 			} else {
-				analyticsPath = '/';
+				const realmPath = router.options.history.state[RealmPathHistoryStateKey];
+
+				if (typeof realmPath === 'string' && realmPath.length) {
+					// TODO(home-realm-switcher): Analytics path
+					analyticsPath = `/realm-${realmPath}`;
+				} else {
+					analyticsPath = '/';
+				}
 			}
 		}
 
