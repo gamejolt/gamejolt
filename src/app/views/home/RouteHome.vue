@@ -61,7 +61,6 @@ createAppRoute({
 				const realmPath = router.options.history.state[RealmPathHistoryStateKey];
 
 				if (typeof realmPath === 'string' && realmPath.length) {
-					// TODO(home-realm-switcher): Analytics path
 					analyticsPath = `/realm-${realmPath}`;
 				} else {
 					analyticsPath = '/';
