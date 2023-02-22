@@ -30,11 +30,11 @@ import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
 import { useAppStore } from '../../../store/index';
 import {
-	libraryEditPlaylist,
-	libraryRemoveGameFromPlaylist,
-	libraryRemovePlaylist,
-	libraryUnfollowGame,
-	useLibraryStore,
+libraryEditPlaylist,
+libraryRemoveGameFromPlaylist,
+libraryRemovePlaylist,
+libraryUnfollowGame,
+useLibraryStore
 } from '../../../store/library';
 
 const CollectionThemeKey = 'collection';
@@ -317,7 +317,32 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 	get shouldShowEditPlaylist() {
 		return (
-			!this.shouldShowFollow && this.collection.type === 'playlist' && this.collection.isOwner
+			!this.shouldShowFollow &&
+			this.collection.type === GameCollection.TYPE_PLAYLIST &&
+			this.collection.isOwner
+		);
+	}
+
+	get canReorder() {
+		return this.collection.type === GameCollection.TYPE_DEVELOPER && this.collection.isOwner;
+	}
+
+	async onSortedGames(games: Game[]) {
+		if (!this.canReorder || !this.listing) {
+			return;
+		}
+
+		this.listing.setGames(games);
+
+		await Api.sendRequest(
+			`/web/dash/developer/games/save-sort`,
+			{
+				game_ids: games.map(x => x.id),
+			},
+			{
+				noErrorRedirect: true,
+				allowComplexData: ['game_ids'],
+			}
 		);
 	}
 
@@ -682,7 +707,13 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 			hide-section-nav
 			:is-loading="isRouteLoading"
 		>
-			<AppGameGrid v-if="listing" :games="listing.games" event-label="collection-games">
+			<AppGameGrid
+				v-if="listing"
+				:games="listing.games"
+				event-label="collection-games"
+				:can-reorder="canReorder"
+				@sort="$event => onSortedGames($event)"
+			>
 				<template
 					v-if="type === 'playlist' || type === 'followed'"
 					#thumbnail-controls="props"
