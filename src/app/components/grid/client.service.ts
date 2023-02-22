@@ -22,7 +22,7 @@ import { SettingFeedNotifications } from '../../../_common/settings/settings.ser
 import { SiteTrophy } from '../../../_common/site/trophy/trophy.model';
 import {
 	createSocketController,
-	SocketController,
+	SocketController
 } from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
 import { EventTopic } from '../../../_common/system/event/event-topic';
@@ -218,20 +218,24 @@ export class GridClient {
 		}
 		// User connections expected to handle a bunch of notification stuff.
 		else if (user.value) {
-			const channel = createGridNotificationChannel(this, { userId: user.value.id });
+			const channel = createGridNotificationChannel(this, { userId: user.value.id, router });
 			await channel.joinPromise;
 
 			this.notificationChannel = markRaw(channel);
 			this.markConnected();
 
 			logger.info('Subscribing to community channels...');
-
-			await Promise.all(this.appStore.communities.value.map(i => this.joinCommunity(i)));
+			// this.notificationChannel.channelController.listenTo(community.id)
+			// joinCommunity is basically looped to every user-followed-subscribed communities
+			// this action should now happen as a topic subscription from notification channel
+			// await Promise.all(this.appStore.communities.value.map(i => this.joinCommunity(i)));
 		}
 
 		// Now connect to our chat channels.
 		await connectChat(this.chat!);
 	}
+
+	
 
 	markConnected() {
 		this.connected = true;
