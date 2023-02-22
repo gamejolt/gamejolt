@@ -313,11 +313,11 @@ function onMobileAppBarBack() {
 					<template #actions>
 						<template v-if="room">
 							<AppButton
-								v-if="roomChannel?.fireside?.value"
+								v-if="room?.fireside"
 								class="_header-control anim-fade-in"
 								primary
 								solid
-								:to="roomChannel.fireside.value.routeLocation"
+								:to="room.fireside.routeLocation"
 							>
 								{{ $gettext(`LIVE`) }}
 							</AppButton>

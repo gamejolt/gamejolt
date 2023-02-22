@@ -104,9 +104,6 @@ export function createChatRoomChannel(
 	const _room = ref<ChatRoom>();
 	const room = computed(() => _room.value!);
 
-	/** One of the firesides that were started for this room. This is not an inverse of the Fireside -> Chat room relation. */
-	const fireside = ref<Fireside | null>(null);
-
 	let _freezeMessageLimitRemovals = false;
 	let _queuedMessageLimit: number | undefined = undefined;
 
@@ -122,6 +119,7 @@ export function createChatRoomChannel(
 	channelController.listenTo('owner_sync', _onOwnerSync);
 	channelController.listenTo('room_update', _onRoomUpdate);
 	channelController.listenTo('kick_member', _onMemberKicked);
+	channelController.listenTo('fireside_start', _onFiresideStart);
 
 	const { channel, isClosed } = channelController;
 
@@ -143,7 +141,7 @@ export function createChatRoomChannel(
 			processNewChatOutput(room.value, messages, true);
 			room.value.messagesPopulated = true;
 
-			fireside.value = response.fireside ? new Fireside(response.fireside) : null;
+			room.value.fireside = response.fireside ? new Fireside(response.fireside) : null;
 
 			// Don't push for guests.
 			if (client.currentUser && client.isFocused) {
@@ -165,7 +163,6 @@ export function createChatRoomChannel(
 		instanced,
 		room,
 		joinPromise,
-		fireside,
 
 		processNewRoomMessage,
 		freezeMessageLimitRemovals,
@@ -339,6 +336,10 @@ export function createChatRoomChannel(
 
 	function _onOwnerSync(data: OwnerSyncPayload) {
 		room.value.owner_id = data.owner_id;
+	}
+
+	function _onFiresideStart(data: StartFiresidePayload) {
+		room.value.fireside = new Fireside(data.fireside);
 	}
 
 	function _syncPresentUsers(presence: Presence) {

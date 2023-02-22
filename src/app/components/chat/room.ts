@@ -1,5 +1,6 @@
 import { Background } from '../../../_common/background/background.model';
 import { ContentContext } from '../../../_common/content/content-context';
+import { Fireside } from '../../../_common/fireside/fireside.model';
 import { ModelStoreModel } from '../../../_common/model/model-store.service';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { ChatClient } from './client';
@@ -37,6 +38,8 @@ export class ChatRoom implements ModelStoreModel {
 	messages: ChatMessage[] = [];
 	queuedMessages: ChatMessage[] = [];
 	messageEditing: null | ChatMessage = null;
+	/** One of the firesides that were started for this room. This is not an inverse of the Fireside -> Chat room relation. */
+	fireside: Fireside | null = null;
 
 	/** Indexed by user ID */
 	usersTyping = new Map<number, TypingUserData>();
