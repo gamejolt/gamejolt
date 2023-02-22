@@ -30,11 +30,11 @@ import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
 import { useAppStore } from '../../../store/index';
 import {
-libraryEditPlaylist,
-libraryRemoveGameFromPlaylist,
-libraryRemovePlaylist,
-libraryUnfollowGame,
-useLibraryStore
+	libraryEditPlaylist,
+	libraryRemoveGameFromPlaylist,
+	libraryRemovePlaylist,
+	libraryUnfollowGame,
+	useLibraryStore,
 } from '../../../store/library';
 
 const CollectionThemeKey = 'collection';
@@ -324,7 +324,11 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 	}
 
 	get canReorder() {
-		return this.collection.type === GameCollection.TYPE_DEVELOPER && this.collection.isOwner;
+		return (
+			this.collection.type === GameCollection.TYPE_DEVELOPER &&
+			this.collection.isOwner &&
+			(this.filtering === null || this.filtering.areTagFiltersEmpty)
+		);
 	}
 
 	async onSortedGames(games: Game[]) {
