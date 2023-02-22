@@ -555,10 +555,10 @@ export function trackHomeFeedSwitch({
 }) {
 	_trackEvent('home_feed_switch', {
 		path,
+		is_active,
 		realm_id,
 		realm_index,
 		realm_count,
-		is_active,
 	});
 }
 

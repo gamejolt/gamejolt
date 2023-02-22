@@ -15,7 +15,7 @@ import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
-import { configHomeRealmSwitcher } from '../../../_common/config/config.service';
+import { configHomeFeedSwitcher } from '../../../_common/config/config.service';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import AppInviteCard from '../../../_common/invite/AppInviteCard.vue';
@@ -130,7 +130,7 @@ const homeFiresideData = ref(
 ) as Ref<FiresideFeedData>;
 
 const currentFiresideData = computed(() => {
-	if (!configHomeRealmSwitcher.value && realmFeedData.value?.firesideData) {
+	if (!configHomeFeedSwitcher.value && realmFeedData.value?.firesideData) {
 		return realmFeedData.value.firesideData;
 	}
 	return homeFiresideData.value;
@@ -164,7 +164,7 @@ const realm = computed(() => realmFeedData.value?.store.realm.value);
 const realmFeed = computed(() => realmFeedData.value?.feed);
 
 watch(realmPath, async path => {
-	if (!path || !configHomeRealmSwitcher.value) {
+	if (!path || !configHomeFeedSwitcher.value) {
 		realmFeedData.value = null;
 		return;
 	}
@@ -233,7 +233,7 @@ watch(realmPath, async path => {
 });
 
 const feedTab = computed(() => {
-	if (configHomeRealmSwitcher.value && realmPath.value) {
+	if (configHomeFeedSwitcher.value && realmPath.value) {
 		return { realmPath: realmPath.value } as RealmTabData;
 	}
 	return HomeFeedService.getRouteFeedTab(route);
@@ -363,7 +363,7 @@ async function refreshQuests() {
 <template>
 	<AppShellPageBackdrop>
 		<AppHomeFeedSwitcher
-			v-if="configHomeRealmSwitcher.value"
+			v-if="configHomeFeedSwitcher.value"
 			:style="{
 				position: `relative`,
 				zIndex: 2,
@@ -374,7 +374,7 @@ async function refreshQuests() {
 		<section
 			class="section"
 			:style="
-				styleWhen(configHomeRealmSwitcher.value, {
+				styleWhen(configHomeFeedSwitcher.value, {
 					position: `relative`,
 					zIndex: 1,
 					paddingTop: 0,
@@ -384,7 +384,7 @@ async function refreshQuests() {
 			<AppPageContainer xl>
 				<template #left>
 					<template v-if="Screen.isDesktop">
-						<div v-if="!configHomeRealmSwitcher.value" class="-top-spacer" />
+						<div v-if="!configHomeFeedSwitcher.value" class="-top-spacer" />
 
 						<AppStickerChargeCard header-charge allow-fully-charged-text />
 						<AppSpacer vertical :scale="8" />
@@ -471,7 +471,7 @@ async function refreshQuests() {
 				</template>
 
 				<template v-if="!Screen.isMobile" #right>
-					<div v-if="!configHomeRealmSwitcher.value" class="-top-spacer" />
+					<div v-if="!configHomeFeedSwitcher.value" class="-top-spacer" />
 
 					<template v-if="featuredItem">
 						<AppHomeFeaturedBanner :featured-item="featuredItem" />
@@ -490,7 +490,7 @@ async function refreshQuests() {
 
 				<AppHomeFeedMenu
 					v-if="
-						!configHomeRealmSwitcher.value &&
+						!configHomeFeedSwitcher.value &&
 						Screen.isDesktop &&
 						typeof feedTab === 'string'
 					"
@@ -500,7 +500,7 @@ async function refreshQuests() {
 
 				<!-- Realm feed will handle its own add button. -->
 				<AppPostAddButton
-					v-if="!configHomeRealmSwitcher.value || !realmPath"
+					v-if="!configHomeFeedSwitcher.value || !realmPath"
 					@add="onPostAdded"
 				/>
 
@@ -521,14 +521,14 @@ async function refreshQuests() {
 					<hr class="full-bleed" />
 
 					<AppHomeFeedMenu
-						v-if="!configHomeRealmSwitcher.value && typeof feedTab === 'string'"
+						v-if="!configHomeFeedSwitcher.value && typeof feedTab === 'string'"
 						:tabs="tabs"
 						:feed-tab="feedTab"
 					/>
 				</template>
 
 				<RouteHomeRealm
-					v-if="configHomeRealmSwitcher.value && realmPath"
+					v-if="configHomeFeedSwitcher.value && realmPath"
 					:key="realmPath"
 					:realm="realm"
 					:feed="realmFeed"

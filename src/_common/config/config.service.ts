@@ -162,7 +162,7 @@ export const configShowSearchAutocomplete = new ConfigOptionBoolean(
 	true
 );
 
-export const configHomeRealmSwitcher = new ConfigOptionBoolean('web_home_realm_switcher', false, {
+export const configHomeFeedSwitcher = new ConfigOptionBoolean('web_home_feed_switcher', false, {
 	conditions: {
 		join: true,
 	},
