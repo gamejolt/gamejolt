@@ -2,7 +2,9 @@
 import { defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
 import { router } from '..';
+import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
+import { configHomeRealmSwitcher } from '../../../_common/config/config.service';
 import {
 	asyncRouteLoader,
 	createAppRoute,
@@ -43,6 +45,8 @@ const route = useRoute();
 createAppRoute({
 	routeTitle: null,
 	onResolved() {
+		trackExperimentEngagement(configHomeRealmSwitcher);
+
 		// The route content, but not the path, changes depending on the user
 		// state - so we need to track the page view through a analyticsPath
 		// meta value that aligns with our route content.

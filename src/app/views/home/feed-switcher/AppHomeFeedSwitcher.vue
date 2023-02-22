@@ -1,6 +1,7 @@
 <script lang="ts">
 import { CSSProperties, onMounted, PropType, ref, Ref, toRefs } from 'vue';
 import { RouteLocationRaw, useRouter } from 'vue-router';
+import { trackHomeFeedSwitch } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Realm } from '../../../../_common/realm/realm-model';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -89,31 +90,49 @@ function getLocation(data: RealmSwitcherTab): RouteLocationRaw {
 	};
 }
 
-function getPath(data: RealmSwitcherTab) {
+function getPath(data: RealmSwitcherTab, prefix = true) {
 	if (typeof data === 'string') {
 		return data;
 	}
-	return `realm-${data.realmPath}`;
+	const base = prefix ? 'realm-' : '';
+	return `${base}${data.realmPath}`;
 }
 
 function onClickTile(data: RealmSwitcherTab) {
-	if (getPath(data) !== getPath(feedTab.value)) {
+	const isActiveTile = getPath(data) === getPath(feedTab.value);
+	if (!isActiveTile) {
 		scrollController.scrollTo(0, {
 			edge: 'left',
 			behavior: 'smooth',
 		});
 	}
 
-	if (typeof data === 'string') {
-		return;
+	const index =
+		typeof data === 'string'
+			? undefined
+			: realms.value.findIndex(i => i.path === data.realmPath);
+
+	let realm: Realm | null = null;
+	if (index !== undefined && index !== -1) {
+		realm = realms.value.splice(index, 1)[0];
+		realms.value.unshift(realm);
+
+		if (index > 0) {
+			Api.sendRequest(
+				`/mobile/realm/mark-viewed/${realm.path}`,
+				{},
+				{ detach: true }
+			).catch();
+		}
 	}
 
-	const index = realms.value.findIndex(i => i.path === data.realmPath);
-	if (index > 0) {
-		const [realm] = realms.value.splice(index, 1);
-		realms.value.unshift(realm);
-		Api.sendRequest(`/mobile/realm/mark-viewed/${realm.path}`, {}, { detach: true });
-	}
+	trackHomeFeedSwitch({
+		path: getPath(data, false),
+		realmId: realm?.id,
+		realmIndex: index,
+		realmCount: realms.value.length,
+		isActive: isActiveTile,
+	});
 }
 </script>
 
