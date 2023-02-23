@@ -1,9 +1,22 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import ChatInvite from '../../../../_common/chat/invite/invite.model';
+import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import {
+	ChatInvite,
+	ChatInviteStatusAccepted,
+	ChatInviteStatusCanceled,
+	ChatInviteStatusDeclined,
+	ChatInviteStatusOpen,
+} from '../../../../_common/chat/invite/invite.model';
 import { useContentOwnerController } from '../../../../_common/content/content-owner';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
+import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
+import { $gettext, $gettextInterpolate } from '../../../../_common/translate/translate.service';
+import { styleBorderRadiusBase, styleChangeBg } from '../../../../_styles/mixins';
+import { kFontSizeLarge } from '../../../../_styles/variables';
 import { openChatRoom } from '../../chat/client';
 import { useGridStore } from '../../grid/grid-store';
 
@@ -38,8 +51,32 @@ const sentInvite = computed(
 	() => user.value && invite.value && user.value?.id == invite.value?.inviter_user.id
 );
 
+const statusText = computed(() => {
+	if (!invite.value) {
+		return;
+	}
+
+	if (invite.value.status === ChatInviteStatusCanceled) {
+		return sentInvite.value
+			? $gettext(`You canceled this invite.`)
+			: $gettext(`This invite was canceled.`);
+	} else if (invite.value.status === ChatInviteStatusAccepted) {
+		return sentInvite.value
+			? $gettextInterpolate(`@%{ user } accepted this invite.`, {
+					user: invite.value?.invited_user.username,
+			  })
+			: $gettext(`You accepted this invite.`);
+	} else if (invite.value.status === ChatInviteStatusDeclined) {
+		return sentInvite.value
+			? $gettextInterpolate(`@%{ user } declined this invite.`, {
+					user: invite.value?.invited_user.username,
+			  })
+			: $gettext(`You declined this invite.`);
+	}
+});
+
 async function onClickAccept() {
-	if (!invite.value || invite.value.status !== ChatInvite.STATUS_OPEN) {
+	if (!invite.value || invite.value.status !== ChatInviteStatusOpen) {
 		return;
 	}
 
@@ -54,7 +91,7 @@ async function onClickAccept() {
 }
 
 async function onClickDecline() {
-	if (!invite.value || invite.value.status !== ChatInvite.STATUS_OPEN) {
+	if (!invite.value || invite.value.status !== ChatInviteStatusOpen) {
 		return;
 	}
 
@@ -64,12 +101,12 @@ async function onClickDecline() {
 	await chat.value.userChannel?.pushInviteDecline(invite.value.id);
 
 	// Set status to "declined" after a successful request.
-	invite.value.status = ChatInvite.STATUS_DECLINED;
+	invite.value.status = ChatInviteStatusDeclined;
 	isLoading.value = false;
 }
 
 async function onClickCancel() {
-	if (!invite.value || invite.value.status !== ChatInvite.STATUS_OPEN) {
+	if (!invite.value || invite.value.status !== ChatInviteStatusOpen) {
 		return;
 	}
 
@@ -79,102 +116,71 @@ async function onClickCancel() {
 	await chat.value.userChannel?.pushInviteDecline(invite.value.id);
 
 	// Set status to "canceled" after a successful request.
-	invite.value.status = ChatInvite.STATUS_CANCELED;
+	invite.value.status = ChatInviteStatusCanceled;
 	isLoading.value = false;
 }
 </script>
 
 <template>
-	<div class="-invite">
+	<!-- AppContentChatInvite -->
+	<div
+		:style="{
+			...styleChangeBg('bg-offset'),
+			...styleBorderRadiusBase,
+			padding: `8px`,
+			width: `300px`,
+			maxWidth: `100%`,
+		}"
+	>
 		<template v-if="hasError || !invite">
-			<div class="-invite-header">
+			<div>
 				{{ $gettext(`Invalid Invite`) }}
 			</div>
-			<div class="-invite-content">
+			<div>
 				<AppJolticon icon="offline" big />
 			</div>
 		</template>
 		<template v-else>
 			<AppLoadingFade :is-loading="isLoading">
-				<div class="-invite-header">
+				<div>
 					<template v-if="sentInvite">
-						{{ $gettext(`You sent an invite`) }}
+						{{
+							$gettextInterpolate(`You invited @%{ user } to a group chat`, {
+								user: invite.invited_user.username,
+							})
+						}}
 					</template>
 					<template v-else>
-						{{ $gettext(`You were invited to join a chat room`) }}
+						{{
+							$gettextInterpolate(`@%{ user } invited you to a group chat`, {
+								user: invite.inviter_user.username,
+							})
+						}}
 					</template>
 				</div>
-				<div class="-invite-content">
-					<div class="-room">
-						<AppJolticon icon="users" big />
-						<span>{{ invite?.room_title || 'Group Chat' }}</span>
-					</div>
 
-					<div class="-controls">
-						<template v-if="invite.status === ChatInvite.STATUS_CANCELED">
-							<template v-if="sentInvite">
-								{{ $gettext(`You canceled this invite.`) }}
-							</template>
-							<template v-else>
-								{{ $gettext(`This invite was canceled.`) }}
-							</template>
-						</template>
-						<template
-							v-else-if="
-								invite.status === ChatInvite.STATUS_ACCEPTED ||
-								invite.status === ChatInvite.STATUS_DECLINED
-							"
-						>
-							<template v-if="sentInvite">
-								<!-- {{ $gettext(``) }} -->
-							</template>
-							<template v-else>
-								<template v-if="invite.status === ChatInvite.STATUS_ACCEPTED">
-									{{ $gettext(`You accepted this invite.`) }}
-								</template>
-								<template v-else-if="invite.status === ChatInvite.STATUS_DECLINED">
-									{{ $gettext(`You declined this invite`) }}
-								</template>
-							</template>
-						</template>
-						<template v-else-if="invite.status === ChatInvite.STATUS_OPEN">
-							<template v-if="sentInvite">
-								<AppButton @click="onClickCancel">
-									{{ $gettext(`Cancel`) }}
-								</AppButton>
-							</template>
-							<template v-else>
-								<AppButton primary solid @click="onClickAccept">
-									{{ $gettext(`Accept`) }}
-								</AppButton>
-								<AppButton @click="onClickDecline">
-									{{ $gettext(`Decline`) }}
-								</AppButton>
-							</template>
-						</template>
-					</div>
+				<div v-if="invite.room_title" :style="{ fontSize: kFontSizeLarge.px }">
+					{{ invite.room_title }}
+				</div>
+
+				<AppSpacer vertical :scale="4" />
+
+				<AppAlertBox v-if="statusText">
+					{{ statusText }}
+				</AppAlertBox>
+
+				<div
+					v-if="!sentInvite && invite.status === ChatInviteStatusOpen"
+					:style="{ display: `flex`, gap: `12px` }"
+				>
+					<AppButton primary solid block @click="onClickAccept">
+						{{ $gettext(`Accept`) }}
+					</AppButton>
+					<AppButton trans block @click="onClickDecline">
+						{{ $gettext(`Decline`) }}
+					</AppButton>
 				</div>
 			</AppLoadingFade>
 		</template>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.-invite
-	padding: 8px
-	change-bg('bg-offset')
-	rounded-corners()
-
-	&-content
-		display: flex
-
-	&-message
-		&-invalid
-			color: var(--theme-notice)
-
-		&-accepted
-			color: var(--theme-primary)
-
-		&-declined
-			color: var(--theme-fg-muted)
-</style>

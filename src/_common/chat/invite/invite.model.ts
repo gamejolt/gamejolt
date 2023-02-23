@@ -1,12 +1,12 @@
 import { Model } from '../../model/model.service';
 import { User } from '../../user/user.model';
 
-export default class ChatInvite extends Model {
-	static readonly STATUS_OPEN = 'open';
-	static readonly STATUS_ACCEPTED = 'accepted';
-	static readonly STATUS_DECLINED = 'declined';
-	static readonly STATUS_CANCELED = 'canceled';
+export const ChatInviteStatusOpen = 'open';
+export const ChatInviteStatusAccepted = 'accepted';
+export const ChatInviteStatusDeclined = 'declined';
+export const ChatInviteStatusCanceled = 'canceled';
 
+export class ChatInvite extends Model {
 	declare invited_user: User;
 	declare inviter_user: User;
 	declare room_title: string;
