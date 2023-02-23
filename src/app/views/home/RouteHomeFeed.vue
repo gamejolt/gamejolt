@@ -131,7 +131,7 @@ const homeFiresideData = ref(
 ) as Ref<FiresideFeedData>;
 
 const currentFiresideData = computed(() => {
-	if (!configHomeFeedSwitcher.value && realmFeedData.value?.firesideData) {
+	if (configHomeFeedSwitcher.value && realmFeedData.value?.firesideData) {
 		return realmFeedData.value.firesideData;
 	}
 	return homeFiresideData.value;
