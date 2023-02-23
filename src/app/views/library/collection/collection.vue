@@ -200,15 +200,17 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 			await this.store.tillStoreBootstrapped;
 		}
 
+		this.type = this.$route.meta.collectionType as string;
+
 		if (!this.listing || !this.filtering) {
 			this.filtering = new GameFilteringContainer(this.$route);
-			this.listing = new GameListingContainer({ loadInfinitely: false });
+			this.listing = new GameListingContainer({
+				loadInfinitely: this.type === GameCollection.TYPE_DEVELOPER,
+			});
 		}
 
 		this.filtering.init(this.$route);
 		this.listing.processPayload(this.$route, $payload);
-
-		this.type = this.$route.meta.collectionType as string;
 
 		// We try pulling a populated collection from the registry. This will be
 		// the case if it's in their library. When they don't have it registered
@@ -373,11 +375,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 			return;
 		}
 
-		let id = this.id;
-		if (UserTypes.indexOf(this.type) !== -1) {
-			id = '@' + id;
-		}
-
+		const id = this.processedId;
 		const action = shouldRefresh ? 'refresh-mix' : 'mix';
 
 		this.isLoadingRecommended = true;
@@ -386,6 +384,23 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		);
 		this.recommendedGames = Game.populate(payload.games);
 		this.isLoadingRecommended = false;
+	}
+
+	async loadMore() {
+		if (!this.filtering || !this.listing || this.listing.isLoadingMore) {
+			return;
+		}
+
+		this.listing.isLoadingMore = true;
+
+		const page = this.listing.currentPage + 1;
+		const id = this.processedId;
+		const payload = await Api.sendRequest(
+			`/web/library/games/${this.type}/${id}?` +
+				this.filtering.getQueryString(this.$route, { page })
+		);
+		this.listing.processPagePayload(page, payload);
+		this.listing.isLoadingMore = false;
 	}
 }
 </script>
@@ -710,6 +725,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 			:filtering="filtering"
 			hide-section-nav
 			:is-loading="isRouteLoading"
+			@load="loadMore"
 		>
 			<AppGameGrid
 				v-if="listing"
