@@ -235,6 +235,9 @@ function getImageFilters({ hovered }: { hovered: boolean }) {
 											...styleOverlayTextShadow,
 											position: `absolute`,
 											color: `white`,
+											...styleWhen(!mediaItem && (hovered || isActive), {
+												color: kThemeBiFg,
+											}),
 									  }
 									: {
 											marginTop: `6px`,

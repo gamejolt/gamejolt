@@ -31,6 +31,7 @@ import { useCommonStore } from '../../../_common/store/common-store';
 import { EventSubscription } from '../../../_common/system/event/event-topic';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { styleWhen } from '../../../_styles/mixins';
+import { kLineHeightComputed } from '../../../_styles/variables';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import { FeaturedItem } from '../../components/featured-item/featured-item.model';
@@ -367,6 +368,7 @@ async function refreshQuests() {
 			:style="{
 				position: `relative`,
 				zIndex: 2,
+				marginBottom: kLineHeightComputed.px,
 			}"
 			:feed-tab="feedTab"
 		/>
