@@ -13,6 +13,7 @@ import AppFormControlBackground from '../../../_common/form-vue/controls/AppForm
 import AppFormControlToggleButton from '../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButton.vue';
 import AppFormControlToggleButtonGroup from '../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../_common/form-vue/validators';
+import { showErrorGrowl } from '../../../_common/growls/growls.service';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
 import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../_common/screen/screen-service';
@@ -140,6 +141,7 @@ const canEditTitle = computed(() => !room.value.isPmRoom && isOwner.value);
 const canEditBackground = computed(() => backgrounds.value.length > 0);
 const shouldShowLeave = computed(() => !room.value.isPmRoom);
 const hasLoadedBackgrounds = computed(() => backgroundForm.isLoadedBootstrapped);
+const canExtinguishFireside = computed(() => room.value.fireside && isOwner.value);
 
 const membersPreview = computed(() => {
 	if (showMembersPreview.value) {
@@ -206,6 +208,35 @@ async function leaveRoom() {
 	}
 
 	leaveGroupRoom(chat.value, room.value);
+}
+
+async function extinguishRoomFireside() {
+	if (!canExtinguishFireside.value) {
+		return;
+	}
+
+	const result = await ModalConfirm.show(
+		$gettext(`Are you sure you want to extinguish the fireside?`)
+	);
+
+	if (!result) {
+		return;
+	}
+
+	const fireside = room.value.fireside;
+	room.value.fireside = null;
+
+	try {
+		await Api.sendRequest(
+			`/web/dash/fireside/extinguish-for-room/${room.value.id}/${fireside!.hash}`,
+			{},
+			{ detach: true }
+		);
+	} catch (error) {
+		showErrorGrowl($gettext(`Could not extinguish fireside.`));
+		console.error('Failed to extinguish fireside.', error);
+		room.value.fireside = fireside;
+	}
 }
 </script>
 
@@ -321,9 +352,13 @@ async function leaveRoom() {
 				<AppSpacer vertical :scale="6" />
 				<hr />
 
+				<AppButton v-if="canExtinguishFireside" @click="extinguishRoomFireside">
+					{{ $gettext(`Extinguish Fireside`) }}
+				</AppButton>
+
 				<a @click="leaveRoom">
 					<div class="-pad -leave">
-						<AppTranslate> Leave group </AppTranslate>
+						<AppTranslate>Leave group</AppTranslate>
 					</div>
 				</a>
 			</template>
