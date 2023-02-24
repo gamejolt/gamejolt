@@ -147,9 +147,9 @@ if (import.meta.env.SSR) {
 	bottom: 0
 
 .-scroll
-		animation-timing-function: linear !important
-		animation-duration: 20s
-		animation-iteration-count: infinite
+	animation-timing-function: linear !important
+	animation-duration: 20s
+	animation-iteration-count: infinite
 
 .-scroll-left
 .-scroll-right
