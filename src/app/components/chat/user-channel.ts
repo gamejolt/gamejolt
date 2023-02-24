@@ -121,7 +121,6 @@ export function createChatUserChannel(
 		pushGroupLeave,
 		pushInviteAccept,
 		pushInviteDecline,
-		pushInviteCancel,
 		joinPromise,
 	});
 
@@ -266,12 +265,6 @@ export function createChatUserChannel(
 
 	function pushInviteDecline(inviteId: number) {
 		return channelController.push<void>('invite_decline', {
-			invite_id: inviteId,
-		});
-	}
-
-	function pushInviteCancel(inviteId: number) {
-		return channelController.push<void>('invite_cancel', {
 			invite_id: inviteId,
 		});
 	}
