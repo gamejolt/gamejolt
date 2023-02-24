@@ -526,17 +526,15 @@ export function handleGameAddFailure(user: User, reason: string, router: Router)
 			showErrorGrowl(
 				$gettext(`You've reached the limit of how many games you can collaborate on.`)
 			);
-			router.push({
-				name: 'library.collection.developer',
-				params: { id: user.username },
-			});
 			break;
 
 		default:
 			showErrorGrowl($gettext(`You cannot add a new game or collaborate on this game.`));
-			router.push({
-				name: 'library.collection.developer',
-				params: { id: user.username },
-			});
+			break;
 	}
+
+	router.push({
+		name: 'library.collection.developer',
+		params: { id: user.username },
+	});
 }
