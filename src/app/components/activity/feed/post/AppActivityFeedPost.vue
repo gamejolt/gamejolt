@@ -32,8 +32,8 @@ import { feedShouldBlockPost } from '../feed-service';
 import { ActivityFeedItem } from '../item-service';
 import { useActivityFeed } from '../view';
 import AppActivityFeedPostBlocked from './AppActivityFeedPostBlocked.vue';
+import AppActivityFeedPostMedia from './AppActivityFeedPostMedia.vue';
 import AppActivityFeedPostVideo from './AppActivityFeedPostVideo.vue';
-import AppActivityFeedPostMedia from './media/media.vue';
 import AppActivityFeedPostText from './text/text.vue';
 
 const props = defineProps({
@@ -245,7 +245,12 @@ function onPostUnpinned(item: EventItem) {
 					}"
 				/>
 
-				<AppBackground :background="post.background" :darken="overlay" bleed>
+				<AppBackground
+					:background="post.background"
+					:darken="overlay"
+					:fade-opacity="post.hasAnyMedia ? 0.2 : undefined"
+					bleed
+				>
 					<AppPostHeader
 						:post="post"
 						follow-location="feed"
