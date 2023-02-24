@@ -13,7 +13,7 @@ import {
 	shallowRef,
 	toRaw,
 	unref,
-	watch,
+	watch
 } from 'vue';
 import { Router } from 'vue-router';
 import { arrayAssignAll, arrayUnique } from '../../../../utils/array';
@@ -28,7 +28,7 @@ import {
 	trackFiresideExtinguish,
 	trackFiresidePublish,
 	trackFiresideSidebarButton,
-	trackFiresideSidebarCollapse,
+	trackFiresideSidebarCollapse
 } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Background } from '../../../../_common/background/background.model';
@@ -43,7 +43,7 @@ import { FiresideRole } from '../../../../_common/fireside/role/role.model';
 import {
 	cleanupFiresideRTCProducer,
 	createFiresideRTCProducer,
-	stopStreaming,
+	stopStreaming
 } from '../../../../_common/fireside/rtc/producer';
 import {
 	AgoraStreamingInfo,
@@ -53,7 +53,7 @@ import {
 	FiresideRTC,
 	FiresideRTCHost,
 	setHosts,
-	setListableHostIds,
+	setListableHostIds
 } from '../../../../_common/fireside/rtc/rtc';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
@@ -68,7 +68,7 @@ import { BottomBarControl } from '../../../views/fireside/_bottom-bar/AppFiresid
 import {
 	ChatRoomChannel,
 	createChatRoomChannel,
-	PlaceStickerPayload,
+	PlaceStickerPayload
 } from '../../chat/room-channel';
 import { createGridFiresideChannel, GridFiresideChannel } from '../../grid/fireside-channel';
 import { createGridFiresideDMChannel, GridFiresideDMChannel } from '../../grid/fireside-dm-channel';
@@ -999,6 +999,7 @@ export function createFiresideController(
 								router.push({ name: 'home' });
 							}
 						},
+						firesideSocketParams: {fireside_viewing_mode: isMuted ? 'preview' : 'full'}
 					});
 
 					await newChannel.joinPromise;

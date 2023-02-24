@@ -7,7 +7,7 @@ import {
 	onUnmounted,
 	ref,
 	shallowReadonly,
-	watch,
+	watch
 } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
@@ -25,7 +25,7 @@ import {
 	isInChatRoom,
 	processNewChatOutput,
 	setTimeSplit,
-	updateChatRoomLastMessageOn,
+	updateChatRoomLastMessageOn
 } from './client';
 import { ChatMessage } from './message';
 import { ChatRoom } from './room';
@@ -71,6 +71,10 @@ export interface PlaceStickerPayload {
 	success?: boolean;
 }
 
+interface FiresideSocketParams {
+	fireside_viewing_mode: string;
+}
+
 export function createChatRoomChannel(
 	client: ChatClient,
 	options: {
@@ -87,10 +91,15 @@ export function createChatRoomChannel(
 		 * logic.
 		 */
 		afterMemberKick?: (data: ChatRoomMemberKickedPayload) => void;
+
+		/**
+		 * Fireside socket params to pass to the socket controller.
+		 */
+		firesideSocketParams?: FiresideSocketParams;
 	}
 ) {
 	const { socketController } = client;
-	const { roomId, instanced, afterMemberKick } = options;
+	const { roomId, instanced, afterMemberKick, firesideSocketParams } = options;
 
 	// This is because the join set its up async, but all the functionality that
 	// attaches to this channel will be called after the room is set up. So we
@@ -100,7 +109,8 @@ export function createChatRoomChannel(
 
 	let _freezeMessageLimitRemovals = false;
 	let _queuedMessageLimit: number | undefined = undefined;
-
+	console.log("testingg")
+	console.log(firesideSocketParams)
 	const channelController = createSocketChannelController(`room:${roomId}`, socketController);
 	channelController.listenTo('message', _onMsg);
 	channelController.listenTo('user_updated', _onUserUpdated);

@@ -31,7 +31,7 @@ const emit = defineEmits({
 });
 
 const c = createFiresideController(props.fireside, {
-	isMuted: true,
+	isMuted: true, //rename to isPreviewMode here?
 	commonStore: useCommonStore(),
 	stickerStore: useStickerStore(),
 	gridStore: useGridStore(),
