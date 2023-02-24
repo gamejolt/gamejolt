@@ -109,9 +109,7 @@ export function createChatRoomChannel(
 
 	let _freezeMessageLimitRemovals = false;
 	let _queuedMessageLimit: number | undefined = undefined;
-	console.log("testingg")
-	console.log(firesideSocketParams)
-	const channelController = createSocketChannelController(`room:${roomId}`, socketController);
+	const channelController = createSocketChannelController(`room:${roomId}`, socketController, firesideSocketParams);
 	channelController.listenTo('message', _onMsg);
 	channelController.listenTo('user_updated', _onUserUpdated);
 	channelController.listenTo('message_update', _onUpdateMsg);
