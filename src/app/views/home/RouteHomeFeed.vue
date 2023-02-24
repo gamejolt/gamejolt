@@ -13,6 +13,10 @@ import { RouterLink, useRoute } from 'vue-router';
 import { router } from '..';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
+import {
+	trackExperimentEngagement,
+	trackPageViewAfterRoute,
+} from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { configHomeFeedSwitcher } from '../../../_common/config/config.service';
@@ -49,6 +53,11 @@ import AppHomeFeedSwitcher, {
 	RealmTabData,
 } from './feed-switcher/AppHomeFeedSwitcher.vue';
 import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
+import {
+	getCurrentHomeRouteAnalyticsPath,
+	getNewHomeRouteAnalyticsPath,
+	updateHomeRouteAnalyticsPath,
+} from './RouteHome.vue';
 import AppHomeFireside from './_fireside/AppHomeFireside.vue';
 
 class DashGame {
@@ -165,6 +174,12 @@ const realm = computed(() => realmFeedData.value?.store.realm.value);
 const realmFeed = computed(() => realmFeedData.value?.feed);
 
 watch(realmPath, async path => {
+	// If our realm path changed, we need to update our analytics path. If we
+	// don't do this, we won't be logging page views properly when navigating
+	// between realms and our root page feed (url is the same, history state
+	// data is different).
+	afterRouteChange();
+
 	if (!path || !configHomeFeedSwitcher.value) {
 		realmFeedData.value = null;
 		return;
@@ -260,6 +275,8 @@ const appRoute = createAppRoute({
 		}
 	},
 	onResolved({ payload }) {
+		trackExperimentEngagement(configHomeFeedSwitcher);
+
 		featuredItem.value = payload.featuredItem
 			? new FeaturedItem(payload.featuredItem)
 			: undefined;
@@ -278,6 +295,8 @@ const appRoute = createAppRoute({
 		if (payload.eventFireside) {
 			homeFiresideData.value.eventFireside = new Fireside(payload.eventFireside);
 		}
+
+		afterRouteChange();
 	},
 	onDestroyed() {
 		_firesideStartSubscription?.close();
@@ -287,6 +306,18 @@ const appRoute = createAppRoute({
 		}
 	},
 });
+
+function afterRouteChange() {
+	const currentPath = getCurrentHomeRouteAnalyticsPath(route);
+	const proposedPath = getNewHomeRouteAnalyticsPath(route, user.value);
+	// Ignore if our analytics path won't be changed.
+	if (currentPath === proposedPath) {
+		return;
+	}
+
+	updateHomeRouteAnalyticsPath(route, user.value);
+	trackPageViewAfterRoute(router);
+}
 
 function _checkGameFilter(game: DashGame) {
 	let text = '';
@@ -486,6 +517,7 @@ async function refreshQuests() {
 						:firesides="currentFiresideData.firesides"
 						:is-loading="currentFiresideData.isLoading"
 						:show-placeholders="!currentFiresideData.isBootstrapped"
+						:initial-realm="realm"
 						@request-refresh="currentFiresideData.refresh()"
 					/>
 				</template>
@@ -517,6 +549,7 @@ async function refreshQuests() {
 						:firesides="currentFiresideData.firesides"
 						:is-loading="currentFiresideData.isLoading"
 						:show-placeholders="!currentFiresideData.isBootstrapped"
+						:initial-realm="realm"
 						@request-refresh="currentFiresideData.refresh()"
 					/>
 

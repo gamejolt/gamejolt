@@ -24,8 +24,14 @@ type FormModel = {
 };
 
 const props = defineProps({
-	community: { type: Object as PropType<Community>, default: null },
-	realms: { type: Array as PropType<Realm[]>, default: () => [] },
+	community: {
+		type: Object as PropType<Community>,
+		default: null,
+	},
+	realms: {
+		type: Array as PropType<Realm[]>,
+		default: () => [],
+	},
 	...defineFormProps<FormModel>(false),
 });
 
