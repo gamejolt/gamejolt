@@ -13,10 +13,16 @@ import { FiresideAddModal } from '../add-modal/add-modal.service';
 import AppFiresideAvatarBase from './AppFiresideAvatarBase.vue';
 
 const props = defineProps({
+	/**
+	 * Initial community to populate the content targets with.
+	 */
 	community: {
 		type: Object as PropType<Community>,
 		default: undefined,
 	},
+	/**
+	 * Initial realms to populate the content targets with.
+	 */
 	realms: {
 		type: Array as PropType<Realm[]>,
 		default: () => [],

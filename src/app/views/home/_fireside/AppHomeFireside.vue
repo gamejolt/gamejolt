@@ -2,6 +2,7 @@
 import { computed, PropType } from 'vue';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
+import { Realm } from '../../../../_common/realm/realm-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
@@ -29,6 +30,10 @@ const props = defineProps({
 	},
 	showPlaceholders: {
 		type: Boolean,
+	},
+	initialRealm: {
+		type: Object as PropType<Realm>,
+		default: undefined,
 	},
 });
 
@@ -96,7 +101,11 @@ function onFiresideExpired() {
 						<AppFiresideAvatarBase v-for="i of gridColumns" :key="i" is-placeholder />
 					</div>
 					<div v-else key="list" :style="gridStyling">
-						<AppFiresideAvatarAdd v-if="!userFireside" key="add" />
+						<AppFiresideAvatarAdd
+							v-if="!userFireside"
+							key="add"
+							:realms="initialRealm ? [initialRealm] : undefined"
+						/>
 						<AppFiresideAvatar
 							v-for="fireside of displayFiresides"
 							:key="fireside.id"
