@@ -10,6 +10,7 @@ import {
 	ChatInviteStatusOpen,
 } from '../../../../_common/chat/invite/invite.model';
 import { useContentOwnerController } from '../../../../_common/content/content-owner';
+import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
@@ -34,7 +35,7 @@ const owner = useContentOwnerController();
 
 const invite = ref<ChatInvite>();
 const hasError = ref(false);
-const isLoading = ref(false);
+const isProcessing = ref(false);
 
 const { user } = useCommonStore();
 const { chatUnsafe: chat } = useGridStore();
@@ -48,7 +49,7 @@ owner?.hydrator.useData('chat-invite', props.inviteId.toString(), data => {
 });
 
 const sentInvite = computed(
-	() => user.value && invite.value && user.value?.id == invite.value?.inviter_user.id
+	() => !!user.value && !!invite.value && user.value.id == invite.value.inviter_user.id
 );
 
 const statusText = computed(() => {
@@ -72,52 +73,69 @@ const statusText = computed(() => {
 					user: invite.value?.invited_user.username,
 			  })
 			: $gettext(`You declined this invite.`);
+	} else if (invite.value.status === ChatInviteStatusOpen && sentInvite.value) {
+		return $gettext(`This invite hasn't been responded to yet.`);
 	}
 });
 
 async function onClickAccept() {
-	if (!invite.value || invite.value.status !== ChatInviteStatusOpen) {
+	if (!invite.value || invite.value.status !== ChatInviteStatusOpen || isProcessing.value) {
 		return;
 	}
 
-	isLoading.value = true;
+	const { userChannel } = chat.value;
+	if (!userChannel) {
+		showErrorGrowl($gettext(`Unable to accept this chat invite. Please try again later.`));
+		return;
+	}
 
-	// TODO: error handling
-	const payload = await chat.value.userChannel?.pushInviteAccept(invite.value.id);
+	isProcessing.value = true;
 
-	// Immediately open new room.
-	openChatRoom(chat.value, payload!.room_id);
-	isLoading.value = false;
+	try {
+		const payload = await userChannel.pushInviteAccept(invite.value.id);
+
+		if (!payload || !payload.room_id) {
+			throw new Error('No room id returned for invite.');
+		}
+
+		// Immediately open new room.
+		openChatRoom(chat.value, payload.room_id);
+	} catch (e) {
+		console.error('Failed to accept chat invite.', e);
+		showErrorGrowl(
+			$gettext(`Something went wrong accepting this chat invite. Try again later.`)
+		);
+	}
+
+	isProcessing.value = false;
 }
 
 async function onClickDecline() {
-	if (!invite.value || invite.value.status !== ChatInviteStatusOpen) {
+	if (!invite.value || invite.value.status !== ChatInviteStatusOpen || isProcessing.value) {
 		return;
 	}
 
-	isLoading.value = true;
+	isProcessing.value = true;
 
-	// TODO: error handling
-	await chat.value.userChannel?.pushInviteDecline(invite.value.id);
-
-	// Set status to "declined" after a successful request.
-	invite.value.status = ChatInviteStatusDeclined;
-	isLoading.value = false;
-}
-
-async function onClickCancel() {
-	if (!invite.value || invite.value.status !== ChatInviteStatusOpen) {
+	const { userChannel } = chat.value;
+	if (!userChannel) {
+		showErrorGrowl($gettext(`Unable to decline this chat invite. Please try again later.`));
 		return;
 	}
 
-	isLoading.value = true;
+	try {
+		await userChannel.pushInviteDecline(invite.value.id);
 
-	// TODO: error handling
-	await chat.value.userChannel?.pushInviteDecline(invite.value.id);
+		// Set status to "declined" after a successful request.
+		invite.value.status = ChatInviteStatusDeclined;
+	} catch (e) {
+		console.error('Failed to decline chat invite.', e);
+		showErrorGrowl(
+			$gettext(`Something went wrong declining this chat invite. Try again later.`)
+		);
+	}
 
-	// Set status to "canceled" after a successful request.
-	invite.value.status = ChatInviteStatusCanceled;
-	isLoading.value = false;
+	isProcessing.value = false;
 }
 </script>
 
@@ -141,7 +159,7 @@ async function onClickCancel() {
 			</div>
 		</template>
 		<template v-else>
-			<AppLoadingFade :is-loading="isLoading">
+			<AppLoadingFade :is-loading="isProcessing">
 				<div>
 					<template v-if="sentInvite">
 						{{

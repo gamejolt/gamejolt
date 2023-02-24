@@ -26,15 +26,24 @@ export class ChatNotificationGrowl {
 			title += ` (@${message.user.username})`;
 		}
 
+		let growlMessage = '';
+		let wantsComponent = true;
+		if (message.type === 'invite') {
+			wantsComponent = false;
+			growlMessage = $gettext(`Invited you to join a chat room`);
+		} else {
+			growlMessage = this.generateSystemMessage(message, groupRoom);
+		}
+
 		showInfoGrowl({
 			onClick: () => openChatRoom(chat, message.room_id),
 			system,
 
 			title,
-			message: this.generateSystemMessage(message, groupRoom),
+			message: growlMessage,
 			icon: message.user.img_avatar,
 
-			component: AppChatNotificationGrowl,
+			component: wantsComponent ? AppChatNotificationGrowl : undefined,
 			props: { chat, message },
 		});
 	}
@@ -54,10 +63,6 @@ export class ChatNotificationGrowl {
 		message: ChatMessage,
 		groupRoom: ChatRoom | undefined
 	): string {
-		if (message.type === 'invite') {
-			return this.generateSystemInviteMessage();
-		}
-
 		let systemMessage = '';
 
 		const doc = ContentDocument.fromJson(message.content);
@@ -139,9 +144,5 @@ export class ChatNotificationGrowl {
 		}
 
 		return systemMessage;
-	}
-
-	private static generateSystemInviteMessage(): string {
-		return $gettext(`Invited you to join a chat room`);
 	}
 }
