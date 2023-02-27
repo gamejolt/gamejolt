@@ -42,6 +42,8 @@ export class Comment extends Model {
 	comment_content!: string;
 	sticker_counts: StickerCount[] = [];
 	supporters: User[] = [];
+	has_owner_like!: boolean;
+	has_owner_reply!: boolean;
 
 	isFollowPending = false;
 
@@ -254,6 +256,7 @@ export async function addCommentVote(comment: Comment, vote: number) {
 		comment.votes -= operation;
 		comment.user_vote = previousVote;
 		showErrorGrowl(`Can't do that now. Try again later?`);
+		return null;
 	} finally {
 		trackCommentVote(vote, { failed, toggled: false });
 	}
@@ -280,6 +283,7 @@ export async function removeCommentVote(comment: Comment) {
 		comment.user_vote = previousVote;
 		++comment.votes;
 		showErrorGrowl(`Can't do that now. Try again later?`);
+		return null;
 	} finally {
 		trackCommentVote(previousVote.vote, { failed, toggled: true });
 	}
