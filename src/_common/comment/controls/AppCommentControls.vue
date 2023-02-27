@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
+import AppUserAvatarBubble from '../../../app/components/user/AppUserAvatarBubble.vue';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import AppButton from '../../button/AppButton.vue';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
@@ -15,6 +16,7 @@ import { $gettext, $gettextInterpolate, $ngettext } from '../../translate/transl
 import { addCommentVote, Comment, removeCommentVote } from '../comment-model';
 import { CommentThreadModal } from '../thread/modal.service';
 import { CommentVote } from '../vote/vote-model';
+import { useCommentWidget } from '../widget/AppCommentWidget.vue';
 
 const props = defineProps({
 	model: {
@@ -48,6 +50,7 @@ const { model, comment, children, showReply, canReply, canPlaceStickers } = toRe
 const stickerStore = useStickerStore();
 const stickerLayer = useStickerLayer();
 const router = useRouter();
+const { resourceOwner } = useCommentWidget()!;
 
 const votingTooltip = computed(() => {
 	const userHasVoted = !!comment.value.user_vote;
@@ -96,11 +99,17 @@ function onDownvoteClick() {
 	voteComment(CommentVote.VOTE_DOWNVOTE);
 }
 
-function voteComment(vote: number) {
+async function voteComment(vote: number) {
+	let result: any | null = null;
 	if (!comment.value.user_vote || comment.value.user_vote.vote !== vote) {
-		return addCommentVote(comment.value, vote);
+		result = await addCommentVote(comment.value, vote);
 	} else {
-		return removeCommentVote(comment.value);
+		result = await removeCommentVote(comment.value);
+	}
+
+	if (result && result.comment) {
+		const resultComment = new Comment(result.comment);
+		comment.value.has_owner_like = resultComment.has_owner_like;
 	}
 }
 
@@ -149,6 +158,26 @@ async function placeSticker() {
 				@click="showLikers()"
 			>
 				{{ formatFuzzynumber(comment.votes) }}
+
+				<span
+					v-if="comment.has_owner_like && resourceOwner"
+					:style="{ display: 'inline-block', 'margin-left': '8px' }"
+				>
+					<AppUserAvatarBubble
+						v-app-tooltip="
+							$gettextInterpolate(`Liked by @%{ username }`, {
+								username: resourceOwner.username,
+							})
+						"
+						:user="resourceOwner"
+						show-frame
+						disable-link
+						:style="{
+							width: '24px',
+							height: '24px',
+						}"
+					/>
+				</span>
 			</a>
 			<span v-else class="blip-missing" />
 
@@ -197,6 +226,27 @@ async function placeSticker() {
 					+ %{ count } reply
 				</AppTranslate>
 			</AppButton>
+			<span
+				v-if="comment.has_owner_reply && resourceOwner"
+				:style="{
+					'margin-left': '16px',
+				}"
+			>
+				<AppUserAvatarBubble
+					:user="resourceOwner"
+					show-verified
+					show-frame
+					bg-color="bg-offset"
+					:style="{
+						width: '24px',
+						height: '24px',
+						display: 'inline-block',
+						'margin-top': '-8px',
+						'padding-top': '8px',
+					}"
+					class="_owner-reply-avatar"
+				/>
+			</span>
 		</template>
 	</span>
 </template>
@@ -206,8 +256,37 @@ async function placeSticker() {
 	margin-left: 8px
 
 .-replies
+	display: inline-flex
+	align-items: center
+
 	@media $media-xs
 		margin-top: 8px
 		margin-left: -6px
-		display: block
+
+._owner-reply-avatar
+	position: relative
+	z-index: 1
+
+	&::before
+		content: ''
+		position: absolute
+		z-index: -1
+		top: 12px
+		left: -11px
+		width: 0
+		height: 0
+		border-top: 8px solid transparent
+		border-bottom: 8px solid transparent
+		border-right: 8px solid var(--theme-bg-offset)
+
+	&::after
+		content: ''
+		position: absolute
+		z-index: -1
+		top: 4px
+		left: -4px
+		width: 32px
+		height: 32px
+		background-color: var(--theme-bg-offset)
+		rounded-corners-lg()
 </style>
