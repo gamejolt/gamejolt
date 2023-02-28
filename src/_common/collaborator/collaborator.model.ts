@@ -3,7 +3,7 @@ import { Community } from '../community/community.model';
 import { Game } from '../game/game.model';
 import { Model } from '../model/model.service';
 import { User } from '../user/user.model';
-import { Perm } from './collaboratable';
+import { Collaboratable, Perm } from './collaboratable';
 
 export type Roles =
 	| 'owner'
@@ -14,7 +14,7 @@ export type Roles =
 	| 'moderator'
 	| 'jam-organizer';
 
-export class Collaborator extends Model {
+export class Collaborator extends Collaboratable(Model) {
 	static readonly STATUS_ACTIVE = 'active';
 	static readonly STATUS_INVITE = 'invite';
 
