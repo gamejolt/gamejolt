@@ -16,6 +16,7 @@ import { SettingChatGroupShowMembers } from '../../../../_common/settings/settin
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import { useAppStore } from '../../../store';
 import { useGridStore } from '../../grid/grid-store';
@@ -319,6 +320,21 @@ function onMobileAppBarBack() {
 								solid
 								:to="room.fireside.routeLocation"
 							>
+								<span
+									v-for="user of room.firesideStreamingUsers"
+									:key="user.id"
+									:style="{
+										width: '20px',
+										height: '20px',
+										display: 'inline-block',
+										marginTop: '-5px',
+										paddingTop: '5px',
+										marginLeft: '-10px',
+									}"
+								>
+									<AppUserAvatarImg :user="user" />
+								</span>
+
 								{{ $gettext(`LIVE`) }}
 							</AppButton>
 							<AppButton

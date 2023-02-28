@@ -40,6 +40,7 @@ export class ChatRoom implements ModelStoreModel {
 	messageEditing: null | ChatMessage = null;
 	/** One of the firesides that were started for this room. This is not an inverse of the Fireside -> Chat room relation. */
 	fireside: Fireside | null = null;
+	firesideStreamingUsers: ChatUser[] = [];
 
 	/** Indexed by user ID */
 	usersTyping = new Map<number, TypingUserData>();
@@ -151,6 +152,15 @@ export class ChatRoom implements ModelStoreModel {
 		// Update the owner id if the input user is the owner.
 		if (updatedUser.role === 'owner') {
 			this.owner_id = updatedUser.id;
+		}
+	}
+
+	updateFireside(fireside: Fireside | null, streamingUsers: ChatUser[]) {
+		this.fireside = fireside;
+		if (this.fireside) {
+			this.firesideStreamingUsers = streamingUsers;
+		} else {
+			this.firesideStreamingUsers = [];
 		}
 	}
 }

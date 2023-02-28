@@ -38,6 +38,7 @@ interface JoinPayload {
 	room: UnknownModelData;
 	messages: UnknownModelData[];
 	fireside: UnknownModelData | null;
+	streaming_users: UnknownModelData[];
 }
 
 interface RoomPresence {
@@ -79,6 +80,7 @@ interface StartFiresidePayload {
 
 interface UpdateFiresidePayload {
 	fireside: UnknownModelData | null;
+	streaming_users: UnknownModelData[];
 }
 
 export function createChatRoomChannel(
@@ -146,7 +148,10 @@ export function createChatRoomChannel(
 			processNewChatOutput(room.value, messages, true);
 			room.value.messagesPopulated = true;
 
-			room.value.fireside = response.fireside ? new Fireside(response.fireside) : null;
+			room.value.updateFireside(
+				response.fireside ? new Fireside(response.fireside) : null,
+				response.streaming_users.map(x => new ChatUser(x))
+			);
 
 			// Don't push for guests.
 			if (client.currentUser && client.isFocused) {
@@ -344,12 +349,15 @@ export function createChatRoomChannel(
 	}
 
 	function _onFiresideStart(data: StartFiresidePayload) {
-		room.value.fireside = new Fireside(data.fireside);
+		room.value.updateFireside(new Fireside(data.fireside), []);
 	}
 
 	function _onFiresideUpdate(data: UpdateFiresidePayload) {
-		// This returns `null` when the Fireside is expired.
-		room.value.fireside = data.fireside ? new Fireside(data.fireside) : null;
+		room.value.updateFireside(
+			// This returns `null` when the Fireside is expired.
+			data.fireside ? new Fireside(data.fireside) : null,
+			data.streaming_users.map(x => new ChatUser(x))
+		);
 	}
 
 	function _syncPresentUsers(presence: Presence) {
