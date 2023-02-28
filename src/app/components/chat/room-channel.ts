@@ -74,7 +74,11 @@ export interface PlaceStickerPayload {
 }
 
 interface StartFiresidePayload {
-	fireside: Fireside;
+	fireside: UnknownModelData;
+}
+
+interface UpdateFiresidePayload {
+	fireside: UnknownModelData | null;
 }
 
 export function createChatRoomChannel(
@@ -120,6 +124,7 @@ export function createChatRoomChannel(
 	channelController.listenTo('room_update', _onRoomUpdate);
 	channelController.listenTo('kick_member', _onMemberKicked);
 	channelController.listenTo('fireside_start', _onFiresideStart);
+	channelController.listenTo('fireside_update', _onFiresideUpdate);
 
 	const { channel, isClosed } = channelController;
 
@@ -340,6 +345,11 @@ export function createChatRoomChannel(
 
 	function _onFiresideStart(data: StartFiresidePayload) {
 		room.value.fireside = new Fireside(data.fireside);
+	}
+
+	function _onFiresideUpdate(data: UpdateFiresidePayload) {
+		// This returns `null` when the Fireside is expired.
+		room.value.fireside = data.fireside ? new Fireside(data.fireside) : null;
 	}
 
 	function _syncPresentUsers(presence: Presence) {
