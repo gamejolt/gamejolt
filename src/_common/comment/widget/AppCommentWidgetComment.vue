@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, PropType, ref, toRefs } from 'vue';
 import { Clipboard } from '../../clipboard/clipboard-service';
+import { Perm } from '../../collaborator/collaboratable';
 import { Environment } from '../../environment/environment.service';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppMessageThreadItem from '../../message-thread/AppMessageThreadItem.vue';
@@ -89,46 +90,6 @@ const isCollaborator = computed(() => {
 	return !!collaborators.value.some(i => i.user_id === comment.value.user.id);
 });
 
-/**
- * Whether or not they own the resource this comment was posted to, or they are a collaborator
- * on the resource with the correct permissions.
- */
-const hasModPermissions = computed(() => {
-	if (!user.value) {
-		return false;
-	}
-
-	// The owner of the resource the comment is attached to can remove.
-	if (resourceOwner.value && resourceOwner.value.id === user.value.id) {
-		return true;
-	}
-
-	// When collaborator data is given for the active user,
-	// they can remove comments based the perm/resource combination on the collaborator.
-	if (collaborators.value.length > 0) {
-		const collaborator = collaborators.value.find(i => i.user_id === user.value!.id);
-
-		if (collaborator?.perms.includes('all')) {
-			return true;
-		}
-
-		// They are a collaborator of the game the post is shared on, with the "comments" perm.
-		if (collaborator?.resource === 'Game' && collaborator.perms.includes('comments')) {
-			return true;
-		}
-
-		// They are a collaborator of one of the communities the post is shared in, with the "community-comments" perm.
-		if (
-			collaborator?.resource === 'Community' &&
-			collaborator.perms.includes('community-comments')
-		) {
-			return true;
-		}
-	}
-
-	return false;
-});
-
 const canRemove = computed(() => {
 	if (!user.value) {
 		return false;
@@ -139,7 +100,7 @@ const canRemove = computed(() => {
 		return true;
 	}
 
-	return hasModPermissions.value;
+	return hasModPermissions(['comments', 'community-comments']);
 });
 
 const canPin = computed(() => {
@@ -147,8 +108,8 @@ const canPin = computed(() => {
 		return false;
 	}
 
-	// Must have "mod" permissions to be able to pin.
-	return !comment.value.parent_id && hasModPermissions.value;
+	// 'community-comments' perms are unable to pin.
+	return !comment.value.parent_id && hasModPermissions(['comments']);
 });
 
 const shouldShowReplies = computed(() => children.value.length > 0 && showChildren.value);
@@ -194,6 +155,37 @@ onMounted(() => {
 		}, 250);
 	}
 });
+
+/**
+ * Whether or not they own the resource this comment was posted to, or they are
+ * a collaborator on the resource with the correct permissions.
+ *
+ * @param requiredPerms Permissions required to perform a specific action. 'all'
+ * is checked and doesn't need to be provided.
+ */
+function hasModPermissions(requiredPerms: Perm[]) {
+	const myUser = user.value;
+	if (!myUser) {
+		return false;
+	}
+
+	// The owner of the resource the comment is attached to can remove/pin.
+	if (resourceOwner.value && resourceOwner.value.id === myUser.id) {
+		return true;
+	}
+
+	// When collaborator data is given for the active user, they can remove/pin
+	// comments based the perm/resource combination on the collaborator.
+	if (collaborators.value.length > 0) {
+		const collaborator = collaborators.value.find(i => i.user_id === myUser.id);
+
+		if (collaborator?.hasPerms(requiredPerms, true)) {
+			return true;
+		}
+	}
+
+	return false;
+}
 
 function startEdit() {
 	isEditing.value = true;
