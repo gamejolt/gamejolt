@@ -8,6 +8,7 @@ import { kThemeBg, kThemeFg, kThemePrimary } from '../../../../_common/theme/var
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import { useGridStore } from '../../grid/grid-store';
+import AppUserAvatarBubble from '../../user/AppUserAvatarBubble.vue';
 import { isUserOnline } from '../client';
 import { ChatRoom } from '../room';
 import { ChatUser, getChatUserRoleData } from '../user';
@@ -64,9 +65,16 @@ const isLiveFiresideHost = computed(() => {
 		popper-trigger="click"
 	>
 		<template #leading>
-			<div class="-member-avatar">
-				<img class="-member-avatar-img" :src="user.img_avatar" />
-			</div>
+			<AppUserAvatarBubble
+				:style="{
+					width: `100%`,
+					height: `100%`,
+				}"
+				:user="user"
+				disable-link
+				show-frame
+				smoosh
+			/>
 		</template>
 
 		<template #leading-float>
@@ -84,7 +92,6 @@ const isLiveFiresideHost = computed(() => {
 			/>
 			<AppChatUserOnlineStatus
 				v-else-if="isOnline !== null"
-				class="-avatar-status"
 				:is-online="isOnline"
 				:size="12"
 				:segment-width="1.5"
@@ -95,7 +102,11 @@ const isLiveFiresideHost = computed(() => {
 		<template #title>
 			<AppFiresideLiveTag
 				v-if="isLiveFiresideHost"
-				class="-nowrap"
+				:style="{
+					overflow: `unset !important`,
+					whiteSpace: `unset !important`,
+					textOverflow: `unset !important`,
+				}"
 				size="sm"
 				sans-elevation
 			/>
@@ -120,15 +131,3 @@ const isLiveFiresideHost = computed(() => {
 		</template>
 	</AppChatListItem>
 </template>
-
-<style lang="stylus" scoped>
-.-member-avatar
-.-member-avatar-img
-	width: 100%
-	height: 100%
-
-.-nowrap
-	overflow: unset !important
-	white-space: unset !important
-	text-overflow: unset !important
-</style>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, toRefs } from 'vue';
 import AppAvatarFrame from '../../../_common/avatar/AppAvatarFrame.vue';
 import { ComponentProps } from '../../../_common/component-helpers';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -83,7 +83,13 @@ const {
 	smoosh,
 } = toRefs(props);
 
-const avatarFrame = computed(() => (isChatUser(user.value) ? undefined : user.value?.avatar_frame));
+const chatAvatarStyles: CSSProperties = {
+	...styleBorderRadiusCircle,
+	width: `100%`,
+	height: `100%`,
+};
+
+const avatarFrame = computed(() => user.value?.avatar_frame || null);
 
 const maySmooshFrame = computed(
 	() => !isChatUser(user.value) && !!user.value?.avatar_frame && showFrame.value && smoosh.value
@@ -120,7 +126,7 @@ function isChatUser(user: typeof props.user): user is ChatUser {
 				:tiny="verifiedSize === 'tiny'"
 			>
 				<AppAvatarFrame
-					:frame="avatarFrame || null"
+					:frame="avatarFrame"
 					:hide-frame="!showFrame"
 					:inset="frameInset"
 					:smoosh="smoosh"
@@ -133,8 +139,11 @@ function isChatUser(user: typeof props.user): user is ChatUser {
 					>
 						<slot>
 							<template v-if="isChatUser(user)">
-								<img v-if="user.img_avatar" :src="user.img_avatar" alt="" />
-								<img v-else :src="imageGuestAvatar" alt="" />
+								<img
+									:style="chatAvatarStyles"
+									:src="user.img_avatar || imageGuestAvatar"
+									alt=""
+								/>
 							</template>
 							<AppUserAvatarImg v-else :user="user" />
 						</slot>

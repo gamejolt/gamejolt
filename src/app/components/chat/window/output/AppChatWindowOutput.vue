@@ -319,7 +319,7 @@ function _updateMaxContentWidth(width: number) {
 	const messageInnerPadding = MESSAGE_PADDING * 2;
 
 	maxContentWidth.value = Math.max(
-		width - (chatInnerPadding + ChatWindowAvatarSize + messageInnerPadding),
+		width - (chatInnerPadding + ChatWindowAvatarSize.value + messageInnerPadding),
 		100
 	);
 }
