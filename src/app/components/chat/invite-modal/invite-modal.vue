@@ -81,7 +81,7 @@ export default class AppChatInviteModal extends mixins(BaseModal) {
 		} else {
 			addGroupMembers(this.chat, this.room.id, selectedUsers);
 		}
-		this.modal.dismiss();
+		this.modal.resolve(true);
 	}
 
 	toggle(user: ChatUser) {
