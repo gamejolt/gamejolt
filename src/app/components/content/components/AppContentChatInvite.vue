@@ -102,9 +102,18 @@ async function onClickAccept() {
 		openChatRoom(chat.value, payload.room_id);
 	} catch (e) {
 		console.error('Failed to accept chat invite.', e);
-		showErrorGrowl(
-			$gettext(`Something went wrong accepting this chat invite. Try again later.`)
-		);
+		switch (e) {
+			case 'too-many-members':
+				showErrorGrowl(
+					$gettext(`You can't join this chat because it has too many members.`)
+				);
+				break;
+			default:
+				showErrorGrowl(
+					$gettext(`Something went wrong accepting this chat invite. Try again later.`)
+				);
+				break;
+		}
 	}
 
 	isProcessing.value = false;
