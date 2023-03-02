@@ -5,6 +5,7 @@ import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { ContextCapabilities } from '../../../../_common/content/content-context';
 import { formatNumber } from '../../../../_common/filters/number';
+import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { getModel } from '../../../../_common/model/model-store.service';
@@ -164,7 +165,7 @@ function addGroup() {
 	ChatInviteModal.show(room.value, invitableUsers, initialUser);
 }
 
-function addMembers() {
+async function addMembers() {
 	if (!room.value) {
 		return;
 	}
@@ -172,7 +173,12 @@ function addMembers() {
 	// Filter out the room members as we don't want to add them again.
 	const members = memberCollection.value.users.map(i => i.id);
 	const invitableUsers = chat.value.friendsList.users.filter(({ id }) => !members.includes(id));
-	ChatInviteModal.show(room.value, invitableUsers);
+	const result = await ChatInviteModal.show(room.value, invitableUsers);
+	if (result) {
+		showSuccessGrowl(
+			$gettext(`Sent invites to users. They will be added to the chat once they accept.`)
+		);
+	}
 }
 
 function toggleSidebar(val: SidebarTab) {
