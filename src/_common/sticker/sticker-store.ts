@@ -45,8 +45,6 @@ export function createStickerStore(options: { user: Ref<User | null> }) {
 
 	const drawerHeight = ref(0);
 	const stickerSize = ref(64);
-	const stickerCurrency = ref<number | null>(null);
-	const stickerCost = ref<number | null>(null);
 
 	const currentCharge = ref(0);
 	const chargeLimit = ref(7);
@@ -138,8 +136,6 @@ export function createStickerStore(options: { user: Ref<User | null> }) {
 		sticker,
 		drawerHeight,
 		stickerSize,
-		stickerCurrency,
-		stickerCost,
 		currentCharge,
 		chargeLimit,
 		chargeCost,
@@ -255,14 +251,10 @@ export function setStickerDrawerHidden(store: StickerStore, shouldHide: boolean)
  * Send an API request to get the user stickers.
  */
 async function _initializeDrawerContent(store: StickerStore) {
-	const { isLoading, stickerCost, stickerCurrency, drawerItems, hasLoaded, setChargeData } =
-		store;
+	const { isLoading, drawerItems, hasLoaded, setChargeData } = store;
 
 	isLoading.value = true;
 	const payload = await Api.sendRequest('/web/stickers/dash');
-
-	stickerCost.value = payload.stickerCost;
-	stickerCurrency.value = payload.balance;
 
 	setChargeData({
 		charge: payload.currentCharge,
