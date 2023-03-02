@@ -18,6 +18,7 @@ import { routeDashAccountChatTimers } from '../account/chat-timers/chat-timers.r
 import { routeDashAccountReferrals } from '../account/referrals/referrals.route';
 import { routeDashAccountWallet } from '../account/wallet/wallet.route';
 import { routeDashAnalytics } from '../analytics/analytics.route';
+import { routeDashStickersEdit } from '../stickers/edit/edit.route';
 import { routeDashSupporters } from '../supporters/supporters.route';
 
 export default {
@@ -60,6 +61,11 @@ const buttons = computed<Button[]>(() => [
 		to: routeDashAccountWallet.name!,
 		label: $gettext(`Wallet`),
 		icon: 'gem',
+	},
+	{
+		to: routeDashStickersEdit.name!,
+		label: $gettext(`Sticker Pack`),
+		icon: 'sticker',
 	},
 	{
 		to: routeDashAccountReferrals.name!,
