@@ -1,3 +1,4 @@
+import { Router } from 'vue-router';
 import type { RouteLocationDefinition } from '../../utils/router';
 import { Api } from '../api/api.service';
 import { Collaboratable } from '../collaborator/collaboratable';
@@ -6,12 +7,14 @@ import { Community } from '../community/community.model';
 import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
 import { ContentSetCacheService } from '../content/content-set-cache';
+import { showErrorGrowl } from '../growls/growls.service';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
 import { Sellable } from '../sellable/sellable.model';
 import { Site } from '../site/site-model';
 import { Theme } from '../theme/theme.model';
+import { $gettext } from '../translate/translate.service';
 import { User } from '../user/user.model';
 import { GameBuild } from './build/build.model';
 import { GamePackage } from './package/package.model';
@@ -515,4 +518,23 @@ export async function unfollowGame(game: Game) {
 		++game.follower_count;
 		throw e;
 	}
+}
+
+export function handleGameAddFailure(user: User, reason: string, router: Router) {
+	switch (reason) {
+		case 'game-limit-reached':
+			showErrorGrowl(
+				$gettext(`You've reached the limit of how many games you can collaborate on.`)
+			);
+			break;
+
+		default:
+			showErrorGrowl($gettext(`You cannot add a new game or collaborate on this game.`));
+			break;
+	}
+
+	router.push({
+		name: 'library.collection.developer',
+		params: { id: user.username },
+	});
 }

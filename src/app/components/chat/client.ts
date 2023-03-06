@@ -226,12 +226,16 @@ export function setTimeSplit(room: ChatRoom, message: ChatMessage) {
 
 		const isPrevSameUser = message.user.id === prevMessage.user.id;
 		const isNextSameUser = !!nextMessage && nextMessage.user.id === message.user.id;
-		const isWithinTime =
+
+		const isPrevWithinTime =
 			message.logged_on.getTime() - prevMessage.logged_on.getTime() <= combineTimeCheck;
+		const isNextWithinTime =
+			!!nextMessage &&
+			nextMessage.logged_on.getTime() - message.logged_on.getTime() <= combineTimeCheck;
 
-		message.showAvatar = !nextMessage || isPrevSameUser || !isNextSameUser;
+		message.showAvatar = !isNextSameUser || !isNextWithinTime;
 
-		if (isPrevSameUser && isWithinTime) {
+		if (isPrevSameUser && isPrevWithinTime) {
 			message.showMeta = false;
 		}
 
@@ -245,7 +249,6 @@ export function setTimeSplit(room: ChatRoom, message: ChatMessage) {
 			curDate.getDate() !== prevDate.getDate()
 		) {
 			message.dateSplit = true;
-			message.showAvatar = true;
 			message.showMeta = true;
 		}
 	} else {

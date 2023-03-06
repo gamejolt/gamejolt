@@ -185,3 +185,38 @@ const _mdcElevationAmbientMap: Record<number, string> = {
 const _mdcUmbraColor = `rgba(0, 0, 0, 0.15)`;
 const _mdcPenumbraColor = `rgba(0, 0, 0, 0.1)`;
 const _mdcAmbientColor = `rgba(0, 0, 0, 0.09)`;
+
+export function styleLineClamp(lines = 2): CSSProperties {
+	return {
+		// https://github.com/postcss/autoprefixer/issues/1141#issuecomment-431280891
+		overflow: `hidden`,
+		display: `-webkit-box`,
+		'-webkit-line-clamp': lines,
+		/* autoprefixer: ignore next */
+		'-webkit-box-orient': `vertical`,
+		// Safari doesn't currently support `overflow-wrap: anywhere`, but this
+		// should be identical.
+		wordBreak: `break-word`,
+		overflowWrap: `anywhere`,
+	};
+}
+
+export function styleFlexCenter(direction?: 'row' | 'column'): CSSProperties {
+	return {
+		display: `flex`,
+		alignItems: `center`,
+		justifyContent: `center`,
+		...styleWhen(!!direction, {
+			flexDirection: direction,
+		}),
+	};
+}
+
+export const styleOverlayTextShadow: CSSProperties = {
+	textShadow: `0.5px 0.5px 1.5px rgba(0, 0, 0, 0.38)`,
+};
+
+// Used for the overlayed text on the fireside page specifically
+export const styleFiresideOverlayTextShadow: CSSProperties = {
+	textShadow: `0px 4px 4px rgba(0, 0, 0, 0.15), 0px 4px 4px rgba(0, 0, 0, 0.15), 0px 1px 8px rgba(0, 0, 0, 0.09)`,
+};

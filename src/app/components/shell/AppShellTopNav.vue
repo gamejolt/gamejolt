@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import { defineAsyncComponent } from '@vue/runtime-core';
-import { computed, ref } from 'vue';
+import { computed, defineAsyncComponent, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { run } from '../../../utils/utils';
 import {

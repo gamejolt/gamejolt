@@ -17,7 +17,7 @@ import { ContentDocument } from '../../../_common/content/content-document';
 import { ContentObject } from '../../../_common/content/content-object';
 import { MarkObject } from '../../../_common/content/mark-object';
 import { Fireside } from '../../../_common/fireside/fireside.model';
-import { storeModel, storeModelList } from '../../../_common/model/model-store.service';
+import { getModel, storeModel, storeModelList } from '../../../_common/model/model-store.service';
 import { UnknownModelData } from '../../../_common/model/model.service';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { StickerPlacement } from '../../../_common/sticker/placement/placement.model';
@@ -200,7 +200,14 @@ export function createChatRoomChannel(
 	}
 
 	function _onMsg(data: Partial<ChatMessage>) {
-		const message = storeModel(ChatMessage, data);
+		let message = getModel(ChatMessage, data.id!);
+		const storedMessage = message !== undefined;
+		message = storeModel(ChatMessage, data);
+
+		// If we already stored the message before, just update its data and return.
+		if (storedMessage) {
+			return;
+		}
 
 		// If we receive a message from the currently logged in user on this
 		// room channel, we ignore it.
@@ -216,7 +223,7 @@ export function createChatRoomChannel(
 			// assume that they wouldn't try and use two windows to send
 			// messages in the same room at the same time.
 			const hasQueuedMessages = room.value.queuedMessages.length > 0;
-			const hasReceivedMessage = room.value.messages.some(i => i.id === message.id);
+			const hasReceivedMessage = room.value.messages.some(i => i.id === message!.id);
 			if (hasQueuedMessages || hasReceivedMessage) {
 				return;
 			}

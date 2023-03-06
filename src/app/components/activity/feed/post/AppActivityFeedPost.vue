@@ -239,7 +239,7 @@ function onPostUnpinned(item: EventItem) {
 						left: `6px`,
 						width: `12px`,
 						height: `12px`,
-						zIndex: 1000,
+						zIndex: 2,
 						backgroundColor: kThemeGjOverlayNotice,
 						filter: `drop-shadow(0 0 1px ${kThemeGjOverlayNotice})`,
 					}"
