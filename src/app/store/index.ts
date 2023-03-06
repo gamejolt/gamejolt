@@ -13,6 +13,7 @@ import {
 	ContentFocus,
 	registerContentFocusWatcher as registerFocusWatcher,
 } from '../../_common/content-focus/content-focus.service';
+import { Fireside } from '../../_common/fireside/fireside.model';
 import { showSuccessGrowl } from '../../_common/growls/growls.service';
 import { ModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../_common/screen/screen-service';
@@ -26,6 +27,7 @@ import type { GridClient } from '../components/grid/client.service';
 import { CommunityStates } from './community-state';
 import { LibraryStore } from './library';
 import { QuestStore } from './quest';
+import { StoredFireside } from './stored-fireside';
 
 // the two types an event notification can assume, either "activity" for the post activity feed or "notifications"
 type UnreadItemType = 'activity' | 'notifications';
@@ -85,6 +87,8 @@ export function createAppStore({
 	const activeCommunity = ref<Community>();
 	const communities = ref<Community[]>([]);
 	const communityStates = ref(new CommunityStates());
+
+	const firesides = ref<StoredFireside[]>([]);
 
 	const _backdrop = shallowRef(null) as ShallowRef<BackdropController | null>;
 
@@ -449,6 +453,34 @@ export function createAppStore({
 		communities.value.unshift(community);
 	}
 
+	function removeFireside(firesideHash: string) {
+		firesides.value = firesides.value.filter(f => f.fireside?.hash !== firesideHash);
+	}
+
+	function addFireside(
+		fireside: Fireside,
+		isFeatured: boolean | null = null,
+		isUserOwned: boolean | null = null
+	) {
+		const existingFireside = firesides.value.find(f => f.fireside?.hash === fireside.hash);
+		if (existingFireside) {
+			// Update existing stored fireside.
+			existingFireside.fireside = fireside;
+			if (isFeatured !== null) {
+				existingFireside.isFeatured = isFeatured;
+			}
+			if (isUserOwned !== null) {
+				existingFireside.isUserOwned = isUserOwned;
+			}
+		} else {
+			const storedFireside = new StoredFireside();
+			storedFireside.fireside = fireside;
+			storedFireside.isFeatured = isFeatured || false;
+			storedFireside.isUserOwned = isUserOwned || false;
+			firesides.value.unshift(storedFireside);
+		}
+	}
+
 	function _resetNotificationWatermark() {
 		// Mark all loaded notifications as read through the feed watermark.
 		// It's better than having to reload from the backend.
@@ -582,5 +614,8 @@ export function createAppStore({
 		getQuestStore,
 		stickerStore,
 		coinBalance,
+		firesides,
+		removeFireside,
+		addFireside,
 	};
 }

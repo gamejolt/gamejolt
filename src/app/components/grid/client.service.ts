@@ -37,6 +37,7 @@ import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
 import { createGridCommunityChannel, GridCommunityChannel } from './community-channel';
 import { GridFiresideChannel } from './fireside-channel';
 import { GridFiresideDMChannel } from './fireside-dm-channel';
+import { createGridFiresidesChannel, GridFiresidesChannel } from './firesides-channel';
 import { createGridNotificationChannel, GridNotificationChannel } from './notification-channel';
 
 export const onFiresideStart = new EventTopic<Model>();
@@ -126,6 +127,7 @@ export class GridClient {
 	firesideChannels: GridFiresideChannel[] = [];
 	firesideDMChannels: GridFiresideDMChannel[] = [];
 	notificationChannel: GridNotificationChannel | null = null;
+	firesidesChannel: GridFiresidesChannel | null = null;
 	/**
 	 * @see `deregisterViewingCommunity` doc-block for explanation.
 	 */
@@ -218,11 +220,17 @@ export class GridClient {
 		}
 		// User connections expected to handle a bunch of notification stuff.
 		else if (user.value) {
-			const channel = createGridNotificationChannel(this, { userId: user.value.id });
-			await channel.joinPromise;
+			const notificationChannel = createGridNotificationChannel(this, {
+				userId: user.value.id,
+			});
+			await notificationChannel.joinPromise;
+			this.notificationChannel = markRaw(notificationChannel);
 
-			this.notificationChannel = markRaw(channel);
 			this.markConnected();
+
+			const firesidesChannel = createGridFiresidesChannel(this);
+			await firesidesChannel.joinPromise;
+			this.firesidesChannel = markRaw(firesidesChannel);
 
 			logger.info('Subscribing to community channels...');
 
@@ -261,6 +269,7 @@ export class GridClient {
 		this.firesideChannels = [];
 		this.firesideDMChannels = [];
 		this.notificationChannel = null;
+		this.firesidesChannel = null;
 
 		clearChat(this.chat!);
 
@@ -377,11 +386,13 @@ export class GridClient {
 			} else if (notification.type === Notification.TYPE_FIRESIDE_START) {
 				if (notification.action_model instanceof Fireside) {
 					title = notification.action_model.title;
+					this.appStore.addFireside(notification.action_model);
 				}
 			} else if (notification.type === Notification.TYPE_FIRESIDE_STREAM_NOTIFICATION) {
 				if (notification.action_model instanceof FiresideStreamNotification) {
 					title = $gettext('Fireside Stream');
 					icon = notification.action_model.users[0].img_avatar;
+					this.appStore.addFireside(notification.action_model.fireside);
 				}
 			} else if (notification.type === Notification.TYPE_CHARGED_STICKER) {
 				title = $gettext('Charged Sticker');
