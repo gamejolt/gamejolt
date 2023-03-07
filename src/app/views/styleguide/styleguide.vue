@@ -43,7 +43,7 @@ export default class RouteStyleguide extends BaseRouteComponent {
 			'progress-bars': 'Progress Bars',
 			colors: 'Colors',
 			'theme-svg': 'Theme SVG',
-			'avatar-frames': 'Avatar Frames',
+			'avatar-frame': 'Avatar Frame',
 			jolticons: 'Jolticons',
 		};
 	}
@@ -54,8 +54,8 @@ export default class RouteStyleguide extends BaseRouteComponent {
 			AppListGroupStyleguide,
 			AppProgressBarStyleguide,
 			AppStyleguideColor,
-			AppAvatarFrameStyleguide,
 			AppThemeSvgStyleguide,
+			AppAvatarFrameStyleguide,
 			AppJolticonsStyleguide,
 		];
 	}
