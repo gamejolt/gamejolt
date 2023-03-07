@@ -1,0 +1,313 @@
+<script lang="ts" setup>
+import { computed, CSSProperties, onUnmounted, ref, Ref, toRaw, toRefs } from 'vue';
+import { Api } from '../../../../_common/api/api.service';
+import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
+import AppForm, {
+	createForm,
+	defineFormProps,
+	FormController,
+} from '../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormStickySubmit from '../../../../_common/form-vue/AppFormStickySubmit.vue';
+import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import {
+	validateFilesize,
+	validateImageMaxDimensions,
+	validateImageMinDimensions,
+	validateMaxLength,
+	validateMinLength,
+} from '../../../../_common/form-vue/validators';
+import { showErrorGrowl } from '../../../../_common/growls/growls.service';
+import AppLinkHelp from '../../../../_common/link/AppLinkHelp.vue';
+import { ModelData, UnknownModelData } from '../../../../_common/model/model.service';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
+import { Sticker } from '../../../../_common/sticker/sticker.model';
+import { $gettext } from '../../../../_common/translate/translate.service';
+import {
+	styleBorderRadiusCircle,
+	styleBorderRadiusLg,
+	styleChangeBg,
+	styleFlexCenter,
+} from '../../../../_styles/mixins';
+import { kLineHeightComputed } from '../../../../_styles/variables';
+
+type FormModel = Partial<Sticker>;
+
+const props = defineProps({
+	...defineFormProps<Sticker>(),
+});
+
+const emit = defineEmits({
+	changed: (_payloadSticker: UnknownModelData | ModelData<Sticker>) => true,
+	pack: (_payloadPack: StickerPack | undefined) => true,
+});
+
+const { model } = toRefs(props);
+
+const minNameLength = ref(3);
+const maxNameLength = ref(50);
+const maxFilesize = ref(5 * 1024 * 1024);
+const minSize = ref(100);
+const maxSize = ref(400);
+
+// TODO(creator-stickers) Should we validate aspect ratio? How forgiving should
+// we be with rounding, e.x. 1:1 ratio with a 399x400 image? Remove if doing no
+// validation.
+const aspectRatio = ref(1);
+
+const loadUrl = computed(() => {
+	if (model?.value) {
+		return `/web/dash/creators/stickers/save/${model.value.id}`;
+	}
+	return `/web/dash/creators/stickers/save`;
+});
+
+const form: FormController<FormModel> = createForm({
+	loadUrl,
+	model: ref({ ...model?.value, is_active: false } as FormModel),
+	onInit() {
+		form.formModel.is_active = !model?.value || model.value.is_active === true;
+	},
+	// modelClass: Sticker,
+	onLoad(payload) {
+		minNameLength.value = payload.minNameLength ?? minNameLength.value;
+		maxNameLength.value = payload.maxNameLength ?? maxNameLength.value;
+		maxFilesize.value = payload.maxFilesize ?? maxFilesize.value;
+		minSize.value = payload.minSize ?? minSize.value;
+		maxSize.value = payload.maxSize ?? maxSize.value;
+		aspectRatio.value = payload.aspectRatio ?? aspectRatio.value;
+
+		if (payload.sticker) {
+			model?.value?.assign(payload.sticker);
+			form.formModel.is_active = (model?.value?.is_active ?? payload.is_active) === true;
+		}
+	},
+	onSubmit() {
+		return Api.sendRequest(loadUrl.value, form.formModel, {
+			detach: true,
+			file: form.formModel.file,
+		});
+	},
+	onSubmitError(response) {
+		let message: string | null = null;
+
+		if (response.errors) {
+			if (response.errors['max-sticker-amount-reached']) {
+				message = $gettext(
+					`You've reached the limit of stickers you can add. You may edit any existing sticker you've created instead.`
+				);
+			}
+			// TODO(creator-stickers) Check other error reasons.
+		}
+
+		showErrorGrowl(message || $gettext(`There was an error saving your sticker.`));
+	},
+	onSubmitSuccess(response) {
+		emit('changed', response.sticker);
+		emit('pack', response.pack ? new StickerPack(response.pack) : undefined);
+	},
+});
+
+onUnmounted(() => {
+	if (processedFileData.value) {
+		(window.URL || window.webkitURL).revokeObjectURL(processedFileData.value.url);
+		processedFileData.value = undefined;
+	}
+});
+
+const processedFileData = ref() as Ref<{ file: File; url: string } | undefined>;
+const imgUrl = computed(() => getImgUrl());
+
+function getImgUrl(): string | undefined {
+	if (model?.value) {
+		return model.value.img_url;
+	}
+
+	// If we weren't provided a model to edit, try grabbing one from our file.
+	const file = Array.isArray(form.formModel.file) ? form.formModel.file[0] : form.formModel.file;
+	// TODO(creator-stickers) This is grabbing a new URL every time part of our
+	// form control errors is updated. Move this into a watcher or something so
+	// we only update when `form.formModel.file` changes or the file field
+	// specifically has an error.
+	if (!file || form.controlErrors.file || toRaw(file) === toRaw(processedFileData.value?.file)) {
+		return processedFileData.value?.url;
+	}
+
+	const windowUrl = window.URL || window.webkitURL;
+	const oldImage = processedFileData.value?.url;
+	processedFileData.value = { file, url: windowUrl.createObjectURL(file) };
+	if (oldImage) {
+		windowUrl.revokeObjectURL(oldImage);
+	}
+	return processedFileData.value.url;
+}
+
+function onFileUploadChanged() {
+	if (form.formModel.file) {
+		form.submit();
+	}
+}
+
+const gridTemplateAreas: CSSProperties['gridTemplateAreas'] = `
+		"a a a a a a b b b"
+		"a a a a a a b b b"
+		"a a a a a a b b b"
+		"a a a a a a c c no-xs"
+		"a a a a a a c c ."
+		"a a a a a a . . ."
+	`;
+
+const gridStyles: CSSProperties = {
+	display: `grid`,
+	gap: `8px`,
+	gridTemplateAreas,
+	gridAutoColumns: `1fr`,
+	gridAutoRows: `1fr`,
+};
+
+const stickerGridItems = computed(() => {
+	const matches = gridTemplateAreas.match(/([\w|-]+)/g) || [];
+	const items = new Set<string>();
+	for (const item of matches) {
+		// Xs breakpoint may show some grid items too small. Filter them out
+		// from this builder for that breakpoint.
+		if (Screen.isXs && item.startsWith('no-xs')) {
+			continue;
+		}
+		items.add(item);
+	}
+	return items;
+});
+</script>
+
+<template>
+	<!-- FormSticker -->
+	<AppForm :controller="form">
+		<AppFormGroup name="is_active" :label="$gettext(`Enable sticker`)" tiny-label-margin>
+			<AppFormControlToggle />
+		</AppFormGroup>
+
+		<AppFormGroup
+			name="file"
+			:label="$gettext(`Upload your sticker`)"
+			tiny-label-margin
+			:optional="!!model"
+		>
+			<p v-translate class="help-block">Your sticker image must be a PNG.</p>
+			<p
+				v-translate="{
+					min: `${minSize}×${minSize}`,
+					max: `${maxSize}×${maxSize}`,
+				}"
+				class="help-block strong"
+			>
+				Sticker images must be between
+				<code>%{min}</code>
+				and
+				<code>%{max}</code>
+				(ratio of 1 ÷ 1).
+			</p>
+
+			<!-- TODO(creator-stickers) help page -->
+			<p class="help-block">
+				<AppLinkHelp page="stickers" class="link-help">
+					{{ $gettext(`What are the sticker image requirements and guidelines?`) }}
+				</AppLinkHelp>
+			</p>
+
+			<AppFormControlUpload
+				:validators="[
+					validateFilesize(maxFilesize),
+					validateImageMinDimensions({ width: minSize, height: minSize }),
+					validateImageMaxDimensions({ width: maxSize, height: maxSize }),
+				]"
+				accept=".png"
+				@changed="onFileUploadChanged()"
+			/>
+
+			<AppFormControlErrors :label="$gettext(`sticker image`)" />
+		</AppFormGroup>
+
+		<AppFormGroup
+			name="name"
+			tiny-label-margin
+			:style="{
+				marginBottom: kLineHeightComputed.px,
+			}"
+		>
+			<AppFormControl
+				:placeholder="$gettext(`Sticker name...`)"
+				:validators="[validateMinLength(minNameLength), validateMaxLength(maxNameLength)]"
+			/>
+
+			<AppFormControlErrors :label="$gettext(`sticker name`)" />
+		</AppFormGroup>
+
+		<div :style="gridStyles">
+			<AppAspectRatio
+				v-for="gridKey of stickerGridItems"
+				:key="gridKey"
+				:style="{
+					gridArea: gridKey,
+				}"
+				:ratio="1"
+			>
+				<div
+					:style="{
+						...styleBorderRadiusLg,
+						...styleChangeBg('bg-offset'),
+						...styleFlexCenter(),
+						width: `100%`,
+						height: `100%`,
+						padding: `8px`,
+					}"
+				>
+					<div
+						:style="{
+							...styleFlexCenter(),
+							width: `50%`,
+							height: `50%`,
+						}"
+					>
+						<img
+							v-if="imgUrl"
+							:style="{
+								width: `100%`,
+								height: `auto`,
+								maxHeight: `100%`,
+							}"
+							:src="imgUrl"
+							draggable="false"
+							style="user-select: none"
+							ondragstart="return false"
+						/>
+						<div
+							v-else
+							:style="{
+								...styleBorderRadiusCircle,
+								...styleChangeBg('bg-subtle'),
+								width: `100%`,
+								height: `100%`,
+							}"
+						/>
+					</div>
+				</div>
+			</AppAspectRatio>
+		</div>
+
+		<AppFormStickySubmit
+			:style="{
+				marginTop: kLineHeightComputed.px,
+			}"
+		>
+			<AppFormButton>
+				{{ $gettext(`Save`) }}
+			</AppFormButton>
+		</AppFormStickySubmit>
+	</AppForm>
+</template>

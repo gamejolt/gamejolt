@@ -89,6 +89,9 @@ export function checkPackOpenPayloadErrors({
 	} else if (reason === 'pack-expired') {
 		errorMessage = $gettext(`This pack has already expired.`);
 		removeFromCollection = true;
+	} else if (reason === 'pack-inactive') {
+		errorMessage = $gettext(`This pack is inactive and cannot be opened.`);
+		removeFromCollection = true;
 	}
 
 	if (!errorMessage) {
