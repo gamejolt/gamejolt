@@ -1,4 +1,6 @@
+import { defineAsyncComponent } from 'vue';
 import { bootstrapCommon } from '../_common/bootstrap';
+import { setChatInviteComponent } from '../_common/content/content-viewer/components/chat-invite';
 import { GamePlayModal } from '../_common/game/play-modal/play-modal.service';
 import { addModalBackdropCheck } from '../_common/modal/AppModal.vue';
 import { Registry } from '../_common/registry/registry.service';
@@ -55,6 +57,14 @@ export async function createApp() {
 		const { bootstrapClient } = await import('./bootstrap-client');
 		await bootstrapClient(app, appStore, commonStore);
 	}
+
+	// The content viewer component that renders this lives in _common, but it
+	// needs to render a component from app. Set the component it should render
+	// here.
+	const AppContentChatInview = defineAsyncComponent(
+		() => import('./components/content/components/AppContentChatInvite.vue')
+	);
+	setChatInviteComponent(AppContentChatInview);
 
 	GamePlayModal.init({ canMinimize: true });
 
