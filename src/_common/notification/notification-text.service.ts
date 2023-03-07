@@ -1,7 +1,7 @@
 import { Community } from '../community/community.model';
 import {
 	CommunityUserNotification,
-	NotificationType
+	NotificationType,
 } from '../community/user-notification/user-notification.model';
 import { formatCurrency } from '../filters/currency';
 import { FiresideCommunity } from '../fireside/community/community.model';
