@@ -130,10 +130,6 @@ function getImgUrl(): string | undefined {
 
 	// If we weren't provided a model to edit, try grabbing one from our file.
 	const file = Array.isArray(form.formModel.file) ? form.formModel.file[0] : form.formModel.file;
-	// TODO(creator-stickers) This is grabbing a new URL every time part of our
-	// form control errors is updated. Move this into a watcher or something so
-	// we only update when `form.formModel.file` changes or the file field
-	// specifically has an error.
 	if (!file || form.controlErrors.file || toRaw(file) === toRaw(processedFileData.value?.file)) {
 		return processedFileData.value?.url;
 	}
