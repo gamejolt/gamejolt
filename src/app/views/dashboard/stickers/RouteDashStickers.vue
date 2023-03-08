@@ -84,21 +84,6 @@ const isPackDisabled = computed(() => {
 
 const routeTitle = computed(() => $gettext(`Your Stickers`));
 
-const { isBootstrapped } = createAppRoute({
-	routeTitle,
-	onResolved(data) {
-		const payload: InitPayload = data.payload;
-
-		stickers.value = Sticker.populate(payload.stickers);
-		pack.value = payload.pack ? new StickerPack(payload.pack) : null;
-		maxStickerAmount.value = payload.maxStickerAmount;
-
-		if (pack.value) {
-			packForm.formModel.is_active = pack.value.is_active === true;
-		}
-	},
-});
-
 const packForm: FormController<PackFormModel> = createForm({
 	loadUrl: '/web/dash/creators/stickers/save-pack',
 	model: ref({ ...pack.value }),
@@ -123,6 +108,21 @@ const packForm: FormController<PackFormModel> = createForm({
 	},
 	onSubmitSuccess(payload) {
 		pack.value = new StickerPack(payload.pack);
+	},
+});
+
+const { isBootstrapped } = createAppRoute({
+	routeTitle,
+	onResolved(data) {
+		const payload: InitPayload = data.payload;
+
+		stickers.value = Sticker.populate(payload.stickers);
+		pack.value = payload.pack ? new StickerPack(payload.pack) : null;
+		maxStickerAmount.value = payload.maxStickerAmount;
+
+		if (pack.value) {
+			packForm.formModel.is_active = pack.value.is_active === true;
+		}
 	},
 });
 
@@ -237,7 +237,7 @@ function onPackEnabledChanged() {
 					</div>
 				</div>
 
-				<div v-if="pack">
+				<div v-if="pack && pack.media_item">
 					<AppForm :controller="packForm">
 						<h1>
 							{{ $gettext(`Pack`) }}
