@@ -49,7 +49,9 @@ const firesidesGridColumns = 5;
 
 const displayablePreviewFiresides = computed(() => {
 	const previewable = userFireside.value
-		? [userFireside.value, ...firesides.value]
+		? // Move the user's Fireside to the start of the list, and remove it from the rest so it
+		  // doesn't show up twice.
+		  [userFireside.value, ...firesides.value.filter(x => x.id !== userFireside.value!.id)]
 		: firesides.value;
 
 	// -1 to leave room for the "add a fireside"
