@@ -36,12 +36,19 @@ export function createStickerStore(options: { user: Ref<User | null> }) {
 	const layers = shallowReactive<StickerLayerController[]>([]);
 	const targetController = shallowRef<StickerTargetController | null>(null);
 
-	const drawerItems = shallowRef<StickerStack[]>([]);
-	const stickerPacks = ref<UserStickerPack[]>([]);
+	const eventStickers = ref([]) as Ref<StickerStack[]>;
+	const creatorStickers = ref(new Map<User, StickerStack[]>());
+	const generalStickers = ref([]) as Ref<StickerStack[]>;
+
+	const stickerPacks = ref([]) as Ref<UserStickerPack[]>;
 
 	const placedItem = shallowRef<StickerPlacement | null>(null);
 	const sticker = shallowRef<Sticker | null>(null);
 	const streak = shallowRef<StickerStreak | null>(null);
+
+	const allStickers = computed(() =>
+		[eventStickers.value, ...creatorStickers.value.values(), generalStickers.value].flat()
+	);
 
 	const drawerHeight = ref(0);
 	const stickerSize = ref(64);
@@ -128,7 +135,10 @@ export function createStickerStore(options: { user: Ref<User | null> }) {
 
 	const c = {
 		layers,
-		drawerItems,
+		eventStickers,
+		creatorStickers,
+		generalStickers,
+		allStickers,
 		stickerPacks,
 		targetController,
 		placedItem,
@@ -223,7 +233,8 @@ export function closeStickerDrawer(store: StickerStore) {
  * Send an API request to get the user stickers.
  */
 async function _initializeDrawerContent(store: StickerStore, layer: StickerLayerController) {
-	const { isLoading, drawerItems, hasLoaded, setChargeData } = store;
+	const { isLoading, hasLoaded, setChargeData, eventStickers, creatorStickers, generalStickers } =
+		store;
 
 	isLoading.value = true;
 
@@ -248,25 +259,27 @@ async function _initializeDrawerContent(store: StickerStore, layer: StickerLayer
 		cost: payload.chargeCost,
 	});
 
-	drawerItems.value = getStickerCountsFromPayloadData({
+	const data = getStickerCountsFromPayloadData({
 		stickerCounts: payload.stickerCounts,
 		stickers: payload.stickers,
-	}).flat();
+	});
+
+	eventStickers.value = data.eventStickers;
+	creatorStickers.value = data.creatorStickers;
+	generalStickers.value = data.generalStickers;
+
 	isLoading.value = false;
 	hasLoaded.value = true;
 }
 
+interface SortedStickerStacks {
+	eventStickers: StickerStack[];
+	creatorStickers: Map<User, StickerStack[]>;
+	generalStickers: StickerStack[];
+}
+
 /**
- * Returns sorted lists of stickers. Provide {@link newStickerIds} to sort new
- * stickers to the top of their lists.
- *
- * Call `.flat()` on the result to flatten to a single list.
- *
- * ```
- * const result: [
- *          eventStickers: StickerStack[],
- *          generalStickers: StickerStack[]
- *      ];
+ * Returns sorted lists of stickers.
  * ```
  */
 export function getStickerCountsFromPayloadData({
@@ -275,7 +288,7 @@ export function getStickerCountsFromPayloadData({
 }: {
 	stickerCounts: any[];
 	stickers: any[];
-}) {
+}): SortedStickerStacks {
 	const eventStickers: StickerStack[] = [];
 	const creatorStickers = new Map<User, StickerStack[]>();
 	const generalStickers: StickerStack[] = [];
@@ -322,12 +335,12 @@ export function sortStickerCounts({
 	eventStickers: StickerStack[];
 	creatorStickers: Map<User, StickerStack[]>;
 	generalStickers: StickerStack[];
-}) {
+}): SortedStickerStacks {
 	const lists = [eventStickers, ...creatorStickers.values(), generalStickers];
 	lists.forEach(list => {
 		list.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));
 	});
-	return lists;
+	return { eventStickers, creatorStickers, generalStickers };
 }
 
 /**
@@ -511,7 +524,7 @@ export function alterStickerStoreItemCount(
 	sticker: Sticker,
 	returnToDrawer = false
 ) {
-	const drawerItem = store.drawerItems.value.find(i => {
+	const drawerItem = store.allStickers.value.find(i => {
 		return i.sticker.id === sticker.id;
 	});
 

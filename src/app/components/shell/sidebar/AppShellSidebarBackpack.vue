@@ -15,6 +15,8 @@ import {
 	useStickerStore,
 } from '../../../../_common/sticker/sticker-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
+import { styleTextOverflow } from '../../../../_styles/mixins';
 import { illPointyThing } from '../../../img/ill/illustrations';
 import { useAppStore } from '../../../store';
 import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
@@ -23,7 +25,8 @@ type FormModel = {
 	// nothing
 };
 
-const { stickerPacks, drawerItems: stickers } = useStickerStore();
+const { stickerPacks, eventStickers, creatorStickers, generalStickers, allStickers } =
+	useStickerStore();
 const { coinBalance } = useAppStore();
 
 const form: FormController<FormModel> = createForm({
@@ -50,10 +53,14 @@ const form: FormController<FormModel> = createForm({
 	async onLoad(payload) {
 		stickerPacks.value = UserStickerPack.populate(payload.ownedPacks);
 
-		stickers.value = getStickerCountsFromPayloadData({
+		const data = getStickerCountsFromPayloadData({
 			stickerCounts: payload.ownedStickers.stickerCounts,
 			stickers: payload.ownedStickers.stickers,
-		}).flat();
+		});
+
+		eventStickers.value = data.eventStickers;
+		creatorStickers.value = data.creatorStickers;
+		generalStickers.value = data.generalStickers;
 	},
 });
 
@@ -124,18 +131,94 @@ function openPack(pack: UserStickerPack) {
 			<div class="_section-header">
 				{{ $gettext(`Stickers`) }}
 			</div>
-			<div v-if="stickers.length" class="_stickers">
-				<AppStickerLayerDrawerItem
-					v-for="{ sticker, sticker_id, count } in stickers"
-					:key="sticker_id"
-					:sticker="sticker"
-					:count="count"
-					fit-parent
-					no-drag
-					show-creator
-				/>
+
+			<div v-if="eventStickers.length">
+				<div
+					v-if="generalStickers.length || creatorStickers.size"
+					class="_section-subheader"
+				>
+					{{ $gettext(`Event stickers`) }}
+				</div>
+
+				<div class="_stickers">
+					<AppStickerLayerDrawerItem
+						v-for="{ sticker, sticker_id, count } in eventStickers"
+						:key="sticker_id"
+						:sticker="sticker"
+						:count="count"
+						fit-parent
+						no-drag
+					/>
+				</div>
 			</div>
-			<div v-else>
+
+			<template v-if="creatorStickers.size">
+				<div v-for="[creator, stickers] in creatorStickers" :key="creator.id">
+					<template v-if="stickers.length">
+						<div
+							class="_section-subheader"
+							:style="{
+								maxWidth: `100%`,
+								display: `inline-flex`,
+								alignItems: `center`,
+								gap: `6px`,
+							}"
+						>
+							<AppUserAvatar
+								:style="{
+									width: `16px`,
+									height: `16px`,
+								}"
+								:user="creator"
+								disable-link
+							/>
+
+							<div
+								:style="{
+									...styleTextOverflow,
+									minWidth: 0,
+								}"
+							>
+								{{
+									$gettextInterpolate(`@%{ username } stickers`, {
+										username: creator.username,
+									})
+								}}
+							</div>
+						</div>
+
+						<div class="_stickers">
+							<AppStickerLayerDrawerItem
+								v-for="{ sticker, sticker_id, count } in stickers"
+								:key="sticker_id"
+								:sticker="sticker"
+								:count="count"
+								fit-parent
+								no-drag
+							/>
+						</div>
+					</template>
+				</div>
+			</template>
+
+			<div v-if="generalStickers.length">
+				<div v-if="eventStickers.length || creatorStickers.size" class="_section-subheader">
+					{{ $gettext(`General stickers`) }}
+				</div>
+
+				<div class="_stickers">
+					<AppStickerLayerDrawerItem
+						v-for="{ sticker, sticker_id, count } in generalStickers"
+						:key="sticker_id"
+						:sticker="sticker"
+						:count="count"
+						fit-parent
+						no-drag
+					/>
+				</div>
+			</div>
+
+			<div v-if="!allStickers.length">
 				<p class="text-center">
 					{{ $gettext(`You have no stickers. Open packs to get some!`) }}
 				</p>
@@ -163,6 +246,12 @@ function openPack(pack: UserStickerPack) {
 	font-size: $font-size-large
 	margin-bottom: var(--half-pad)
 
+._section-subheader
+	margin-top: 0
+	font-size: $font-size-small
+	margin-bottom: var(--half-pad)
+	color: var(--theme-fg-muted)
+
 ._packs
 	display: grid
 	gap: var(--half-pad)
@@ -175,4 +264,5 @@ function openPack(pack: UserStickerPack) {
 	display: grid
 	gap: var(--half-pad)
 	grid-template-columns: repeat(auto-fill, minmax(56px, 1fr))
+	margin-bottom: $line-height-computed
 </style>

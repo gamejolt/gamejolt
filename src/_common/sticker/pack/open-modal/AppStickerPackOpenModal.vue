@@ -130,7 +130,13 @@ const props = defineProps({
 
 const { pack } = toRefs(props);
 
-const { stickerPacks: myPacks, drawerItems: myStickers } = useStickerStore();
+const {
+	stickerPacks: myPacks,
+	eventStickers,
+	creatorStickers,
+	generalStickers,
+	allStickers,
+} = useStickerStore();
 
 const root = ref<HTMLDivElement>();
 const packSlice = ref<HTMLDivElement>();
@@ -248,17 +254,17 @@ function preloadImages() {
 }
 
 function sortMyStickers(newStickers: Sticker[]) {
-	const allStickers = [...myStickers.value];
+	const myStickers = [...allStickers.value];
 
 	// Increment or add new stickers to our existing list as required.
 	for (const sticker of newStickers) {
 		const cb = (i: StickerStack) => i.sticker_id === sticker.id;
-		const existing = allStickers.find(cb);
+		const existing = myStickers.find(cb);
 
 		if (existing) {
 			++existing.count;
 		} else {
-			allStickers.push({
+			myStickers.push({
 				count: 1,
 				sticker,
 				sticker_id: sticker.id,
@@ -266,30 +272,34 @@ function sortMyStickers(newStickers: Sticker[]) {
 		}
 	}
 
-	const eventStickers: StickerStack[] = [];
-	const creatorStickers = new Map<User, StickerStack[]>();
-	const generalStickers: StickerStack[] = [];
+	const newEventStickers: StickerStack[] = [];
+	const newCreatorStickers = new Map<User, StickerStack[]>();
+	const newGeneralStickers: StickerStack[] = [];
 
-	for (const item of allStickers) {
+	for (const item of myStickers) {
 		const creator = item.sticker.owner_user;
 		if (item.sticker.isCreatorSticker && creator) {
-			if (creatorStickers.has(creator)) {
-				creatorStickers.get(creator)!.push(item);
+			if (newCreatorStickers.has(creator)) {
+				newCreatorStickers.get(creator)!.push(item);
 			} else {
-				creatorStickers.set(creator, [item]);
+				newCreatorStickers.set(creator, [item]);
 			}
 		} else if (item.sticker.is_event) {
-			eventStickers.push(item);
+			newEventStickers.push(item);
 		} else {
-			generalStickers.push(item);
+			newGeneralStickers.push(item);
 		}
 	}
 
-	myStickers.value = sortStickerCounts({
-		eventStickers,
-		creatorStickers,
-		generalStickers,
-	}).flat();
+	const data = sortStickerCounts({
+		eventStickers: newEventStickers,
+		creatorStickers: newCreatorStickers,
+		generalStickers: newGeneralStickers,
+	});
+
+	eventStickers.value = data.eventStickers;
+	creatorStickers.value = data.creatorStickers;
+	generalStickers.value = data.generalStickers;
 }
 
 async function setStage(newStage: PackOpenStage) {

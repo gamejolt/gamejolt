@@ -25,7 +25,7 @@ import AppStickerLayerDrawerItem from './AppStickerLayerDrawerItem.vue';
 const stickerStore = useStickerStore();
 const {
 	sticker: storeSticker,
-	drawerItems: items,
+	allStickers: items,
 	stickerSize,
 	drawerHeight,
 	isHoveringDrawer,
