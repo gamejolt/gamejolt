@@ -69,6 +69,7 @@ interface OwnerSyncPayload {
 export interface PlaceStickerPayload {
 	stickerPlacement: StickerPlacement;
 	success?: boolean;
+	unlockedSticker?: UnknownModelData;
 }
 
 export function createChatRoomChannel(

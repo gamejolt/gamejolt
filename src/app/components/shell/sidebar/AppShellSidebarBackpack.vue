@@ -132,6 +132,7 @@ function openPack(pack: UserStickerPack) {
 					:count="count"
 					fit-parent
 					no-drag
+					show-creator
 				/>
 			</div>
 			<div v-else>

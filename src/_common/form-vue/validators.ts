@@ -444,6 +444,29 @@ export const validateImageMaxDimensions =
 		return null;
 	};
 
+export const validateImageAspectRatio =
+	({ ratio }: { ratio: number }): FormValidator<File | File[]> =>
+	async files => {
+		if (!ratio) {
+			throw new Error(`Aspect ratio must be greater than 0.`);
+		}
+
+		const result = await _validateFiles(files, async file => {
+			const dimensions = await getImgDimensions(file);
+			const [width, height] = dimensions;
+			return width / height === ratio;
+		});
+
+		if (!result) {
+			return {
+				type: 'img_ratio',
+				message: `Uh oh, L + Ratio! The aspect ratio of your {} must be ${ratio}.`,
+			};
+		}
+
+		return null;
+	};
+
 /**
  * Validates that a timestamp is later than or equal to the given min timestamp.
  */

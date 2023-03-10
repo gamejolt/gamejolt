@@ -9,6 +9,7 @@ import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormC
 import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	validateFilesize,
+	validateImageAspectRatio,
 	validateImageMaxDimensions,
 	validateImageMinDimensions,
 } from '../../../../_common/form-vue/validators';
@@ -23,7 +24,11 @@ import AppStickerPack, {
 } from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
 import { Sticker } from '../../../../_common/sticker/sticker.model';
-import { $gettext } from '../../../../_common/translate/translate.service';
+import {
+	$gettext,
+	$gettextInterpolate,
+	$ngettext,
+} from '../../../../_common/translate/translate.service';
 import { styleFlexCenter, styleWhen } from '../../../../_styles/mixins';
 import { kLineHeightComputed } from '../../../../_styles/variables';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
@@ -103,8 +108,25 @@ const packForm: FormController<PackFormModel> = createForm({
 			file: packForm.formModel.file,
 		});
 	},
-	onSubmitError() {
-		showErrorGrowl($gettext(`Could not update your sticker pack. Try again later.`));
+	onSubmitError(response) {
+		let message: string | null = null;
+
+		if (response.errors) {
+			if (response.errors['not-enough-active-stickers']) {
+				message = $gettextInterpolate(
+					$ngettext(
+						`You need at least %{ num } active sticker to enable your sticker pack.`,
+						`You need at least %{ num } active stickers to enable your sticker pack.`,
+						requiredActiveStickers.value
+					),
+					{
+						num: requiredActiveStickers.value,
+					}
+				);
+			}
+		}
+
+		showErrorGrowl(message || $gettext(`Could not update your sticker pack. Try again later.`));
 	},
 	onSubmitSuccess(payload) {
 		pack.value = new StickerPack(payload.pack);
@@ -359,6 +381,7 @@ function onPackEnabledChanged() {
 												width: packMaxWidth,
 												height: packMaxHeight,
 											}),
+											validateImageAspectRatio({ ratio: packAspectRatio }),
 										]"
 										accept=".png,.jpg,.jpeg,.webp"
 										@changed="onFileUploadChanged()"

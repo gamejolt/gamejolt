@@ -24,6 +24,7 @@ import { illBackpackClosed, illBackpackOpen } from '../../../quest/ill/illustrat
 import { Screen } from '../../../screen/screen-service';
 import AppThemeSvg from '../../../theme/svg/AppThemeSvg.vue';
 import { $gettext } from '../../../translate/translate.service';
+import { User } from '../../../user/user.model';
 import AppStickerStackItem from '../../stack/AppStickerStackItem.vue';
 import { sortStickerCounts, useStickerStore } from '../../sticker-store';
 import { Sticker, StickerStack } from '../../sticker.model';
@@ -266,21 +267,28 @@ function sortMyStickers(newStickers: Sticker[]) {
 	}
 
 	const eventStickers: StickerStack[] = [];
+	const creatorStickers = new Map<User, StickerStack[]>();
 	const generalStickers: StickerStack[] = [];
 
 	for (const item of allStickers) {
-		if (item.sticker.is_event) {
+		const creator = item.sticker.owner_user;
+		if (item.sticker.isCreatorSticker && creator) {
+			if (creatorStickers.has(creator)) {
+				creatorStickers.get(creator)!.push(item);
+			} else {
+				creatorStickers.set(creator, [item]);
+			}
+		} else if (item.sticker.is_event) {
 			eventStickers.push(item);
 		} else {
 			generalStickers.push(item);
 		}
 	}
 
-	const newStickerIds = newStickers.map(i => i.id);
 	myStickers.value = sortStickerCounts({
 		eventStickers,
+		creatorStickers,
 		generalStickers,
-		newStickerIds,
 	}).flat();
 }
 

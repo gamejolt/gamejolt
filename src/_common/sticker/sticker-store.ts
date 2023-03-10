@@ -63,7 +63,6 @@ export function createStickerStore(options: { user: Ref<User | null> }) {
 	const isHoveringDrawer = ref(false);
 	const isLoading = ref(false);
 	const hasLoaded = ref(false);
-	const hideDrawer = ref(false);
 
 	const _waitingForFrame = ref(false);
 	const _onPointerMove = shallowRef<((event: MouseEvent | TouchEvent) => void) | null>(null);
@@ -146,7 +145,6 @@ export function createStickerStore(options: { user: Ref<User | null> }) {
 		isHoveringDrawer,
 		isLoading,
 		hasLoaded,
-		hideDrawer,
 		_waitingForFrame,
 		_onPointerMove,
 		_onPointerUp,
@@ -200,61 +198,49 @@ export function setStickerStreak(store: StickerStore, sticker: Sticker, count: n
 	};
 }
 
-/**
- * Toggle the shell drawer, initializing the state when opening or resetting it
- * when closing.
- */
-export function setStickerDrawerOpen(
-	store: StickerStore,
-	shouldOpen: boolean,
-	preferredLayer: StickerLayerController | null
-) {
-	const { isDrawerOpen, layers, activeLayer } = store;
-
-	if (shouldOpen === isDrawerOpen.value) {
+export function openStickerDrawer(store: StickerStore, layer: StickerLayerController) {
+	const { isDrawerOpen, activeLayer } = store;
+	if (isDrawerOpen.value) {
 		return;
 	}
 
-	if (shouldOpen) {
-		let _chosenLayer = preferredLayer;
-		// In reverse order, check layers and use the first one that marked itself
-		// as active.
-		if (!_chosenLayer && layers.length > 0) {
-			for (let i = layers.length; i > 0; --i) {
-				const layer = layers[i - 1];
-				if (layer.isActive.value) {
-					_chosenLayer = layer;
-					break;
-				}
-			}
-		}
+	activeLayer.value = layer;
 
-		activeLayer.value = _chosenLayer;
-
-		isDrawerOpen.value = true;
-		_initializeDrawerContent(store);
-	} else {
-		_resetStickerStore(store);
-	}
+	isDrawerOpen.value = true;
+	_initializeDrawerContent(store, layer);
 }
 
-export function setStickerDrawerHidden(store: StickerStore, shouldHide: boolean) {
-	store.hideDrawer.value = shouldHide;
-
-	// Everytime we un-hide the drawer we want to fetch their new stickers since they may have unlocked more.
-	if (!shouldHide) {
-		_initializeDrawerContent(store);
+export function closeStickerDrawer(store: StickerStore) {
+	const { isDrawerOpen } = store;
+	if (!isDrawerOpen.value) {
+		return;
 	}
+
+	_resetStickerStore(store);
 }
 
 /**
  * Send an API request to get the user stickers.
  */
-async function _initializeDrawerContent(store: StickerStore) {
+async function _initializeDrawerContent(store: StickerStore, layer: StickerLayerController) {
 	const { isLoading, drawerItems, hasLoaded, setChargeData } = store;
 
 	isLoading.value = true;
-	const payload = await Api.sendRequest('/web/stickers/dash');
+
+	const layerItem = layer.layerItems.value.find(i => i.controller.children.value.length === 0);
+	if (!layerItem) {
+		throw new Error('Could not find a primary sticker controller for the given layer.');
+	}
+
+	const { model, targetData } = layerItem.controller;
+	const resourceType = getStickerModelResourceName(model);
+
+	let url = `/web/stickers/placeable/${resourceType}/${model.id}`;
+	if (targetData.value?.host_user_id) {
+		// TODO(creator-stickers) broken for firesides
+		url += `?hostUserId=${targetData.value.host_user_id}`;
+	}
+	const payload = await Api.sendRequest(url ?? '/web/stickers/dash');
 
 	setChargeData({
 		charge: payload.currentCharge,
@@ -286,35 +272,41 @@ async function _initializeDrawerContent(store: StickerStore) {
 export function getStickerCountsFromPayloadData({
 	stickerCounts,
 	stickers,
-	newStickerIds,
 }: {
 	stickerCounts: any[];
 	stickers: any[];
-	newStickerIds?: number[];
 }) {
 	const eventStickers: StickerStack[] = [];
+	const creatorStickers = new Map<User, StickerStack[]>();
 	const generalStickers: StickerStack[] = [];
 
 	stickerCounts.forEach((stickerCountPayload: any) => {
 		const stickerData = stickers.find((i: Sticker) => i.id === stickerCountPayload.sticker_id);
 
-		const stickerCount = {
+		const item: StickerStack = {
 			count: stickerCountPayload.count,
 			sticker_id: stickerCountPayload.sticker_id,
 			sticker: new Sticker(stickerData),
-		} as StickerStack;
+		};
 
-		if (stickerCount.sticker.is_event) {
-			eventStickers.push(stickerCount);
+		const creator = item.sticker.owner_user;
+		if (item.sticker.isCreatorSticker && creator) {
+			if (creatorStickers.has(creator)) {
+				creatorStickers.get(creator)!.push(item);
+			} else {
+				creatorStickers.set(creator, [item]);
+			}
+		} else if (item.sticker.is_event) {
+			eventStickers.push(item);
 		} else {
-			generalStickers.push(stickerCount);
+			generalStickers.push(item);
 		}
 	});
 
 	return sortStickerCounts({
 		eventStickers,
+		creatorStickers,
 		generalStickers,
-		newStickerIds,
 	});
 }
 
@@ -324,23 +316,16 @@ export function getStickerCountsFromPayloadData({
  */
 export function sortStickerCounts({
 	eventStickers,
+	creatorStickers,
 	generalStickers,
-	newStickerIds,
 }: {
 	eventStickers: StickerStack[];
+	creatorStickers: Map<User, StickerStack[]>;
 	generalStickers: StickerStack[];
-	newStickerIds?: number[];
 }) {
-	const lists = [eventStickers, generalStickers];
+	const lists = [eventStickers, ...creatorStickers.values(), generalStickers];
 	lists.forEach(list => {
 		list.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));
-
-		// Sort all "new" stickers to the top of their groups.
-		if (newStickerIds && newStickerIds.length > 0) {
-			const newStickers = list.filter(x => newStickerIds.includes(x.sticker_id));
-			list = list.filter(x => !newStickers.includes(x));
-			list.unshift(...newStickers);
-		}
 	});
 	return lists;
 }
@@ -358,7 +343,6 @@ function _resetStickerStore(store: StickerStore) {
 	store.isDrawerOpen.value = false;
 	store.isHoveringDrawer.value = false;
 	store.drawerHeight.value = 0;
-	store.hideDrawer.value = false;
 
 	store._waitingForFrame.value = false;
 	store._updateGhostPosition.value = null;
@@ -504,7 +488,7 @@ export async function commitStickerStoreItemPlacement(store: StickerStore) {
 			parent.value.model.assign(payloadParent);
 		}
 
-		setStickerDrawerOpen(store, false, null);
+		closeStickerDrawer(store);
 
 		// Update our sticker charge after a successful placement.
 		if (isCharged) {
@@ -512,7 +496,7 @@ export async function commitStickerStoreItemPlacement(store: StickerStore) {
 		}
 	} catch (e) {
 		console.error(e);
-		setStickerDrawerOpen(store, false, null);
+		closeStickerDrawer(store);
 		showErrorGrowl($gettext(`Failed to place sticker.`));
 	}
 

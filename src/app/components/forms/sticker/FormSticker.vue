@@ -16,6 +16,7 @@ import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormC
 import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	validateFilesize,
+	validateImageAspectRatio,
 	validateImageMaxDimensions,
 	validateImageMinDimensions,
 	validateMaxLength,
@@ -54,10 +55,6 @@ const maxNameLength = ref(50);
 const maxFilesize = ref(5 * 1024 * 1024);
 const minSize = ref(100);
 const maxSize = ref(400);
-
-// TODO(creator-stickers) Should we validate aspect ratio? How forgiving should
-// we be with rounding, e.x. 1:1 ratio with a 399x400 image? Remove if doing no
-// validation.
 const aspectRatio = ref(1);
 
 const loadUrl = computed(() => {
@@ -102,7 +99,6 @@ const form: FormController<FormModel> = createForm({
 					`You've reached the limit of stickers you can add. You may edit any existing sticker you've created instead.`
 				);
 			}
-			// TODO(creator-stickers) Check other error reasons.
 		}
 
 		showErrorGrowl(message || $gettext(`There was an error saving your sticker.`));
@@ -221,6 +217,7 @@ const stickerGridItems = computed(() => {
 					validateFilesize(maxFilesize),
 					validateImageMinDimensions({ width: minSize, height: minSize }),
 					validateImageMaxDimensions({ width: maxSize, height: maxSize }),
+					validateImageAspectRatio({ ratio: aspectRatio }),
 				]"
 				accept=".png"
 				@changed="onFileUploadChanged()"
