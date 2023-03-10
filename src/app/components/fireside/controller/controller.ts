@@ -245,20 +245,23 @@ export function createFiresideController(
 			try {
 				payload = await roomChannel.pushPlaceSticker(targetUserId, stickerData);
 
-				const { stickerPlacement, success = true, unlockedSticker } = payload;
+				const { stickerPlacement, success = true, unlockedPack } = payload;
 
 				if (stickerPlacement) {
 					onFiresideStickerPlaced.next(stickerPlacement);
 				}
 
-				// TODO(creator-stickers) test this
-				if (unlockedSticker) {
+				if (unlockedPack) {
 					const type = PayloadAction.UNLOCK_STICKER_PACK;
 					checkPayloadActions({
-						type,
-						data: {
-							[PayloadActionDataKey[type]]: unlockedSticker,
-						},
+						actions: [
+							{
+								type,
+								data: {
+									[PayloadActionDataKey[type]]: unlockedPack,
+								},
+							},
+						],
 					});
 				}
 
