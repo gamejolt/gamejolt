@@ -16,9 +16,10 @@ import {
 } from '../../../../_common/sticker/sticker-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import { styleTextOverflow } from '../../../../_styles/mixins';
+import { styleBorderRadiusLg, styleChangeBg, styleTextOverflow } from '../../../../_styles/mixins';
 import { illPointyThing } from '../../../img/ill/illustrations';
 import { useAppStore } from '../../../store';
+import { routeQuests } from '../../../views/quests/quests.route';
 import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
 
 type FormModel = {
@@ -99,7 +100,24 @@ function openPack(pack: UserStickerPack) {
 				/>
 			</div>
 
-			<AppSpacer vertical :scale="8" />
+			<AppSpacer vertical :scale="4" />
+			<RouterLink class="link-unstyled" :to="{ name: routeQuests.name }">
+				<div
+					class="well"
+					:style="{
+						...styleBorderRadiusLg,
+						...styleChangeBg('bg-offset'),
+					}"
+				>
+					{{
+						$gettext(
+							`Complete quests to earn coins that you can use to purchase packs!`
+						)
+					}}
+				</div>
+			</RouterLink>
+
+			<AppSpacer vertical :scale="4" />
 
 			<div class="_section-header">
 				{{ $gettext(`Sticker packs`) }}
