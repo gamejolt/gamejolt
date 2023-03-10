@@ -248,10 +248,9 @@ async function _initializeDrawerContent(store: StickerStore, layer: StickerLayer
 
 	let url = `/web/stickers/placeable/${resourceType}/${model.id}`;
 	if (targetData.value?.host_user_id) {
-		// TODO(creator-stickers) broken for firesides
 		url += `?hostUserId=${targetData.value.host_user_id}`;
 	}
-	const payload = await Api.sendRequest(url ?? '/web/stickers/dash');
+	const payload = await Api.sendRequest(url);
 
 	setChargeData({
 		charge: payload.currentCharge,
