@@ -38,9 +38,9 @@ export interface QuestRewardData {
 	icon: Jolticon;
 
 	/**
-	 * Exp rewards shouldn't show an 'x' after their count.
+	 * If we should show an 'x' character after the reward amount.
 	 */
-	isExp?: boolean;
+	xAfterCount: boolean;
 
 	/**
 	 * Backend will return this along with the quest reward model. Lets us know
@@ -223,7 +223,7 @@ function playAnimation(
 					</span>
 
 					<div
-						v-for="({ img_url, name, amount, icon, isExp }, i) of rewards"
+						v-for="({ img_url, name, amount, icon, xAfterCount: isExp }, i) of rewards"
 						:key="i"
 						class="-quest-title-header"
 					>
