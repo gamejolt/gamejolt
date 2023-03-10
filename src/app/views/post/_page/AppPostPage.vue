@@ -17,6 +17,7 @@ import AppResponsiveDimensions from '../../../../_common/responsive-dimensions/A
 import { Screen } from '../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
+import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppStickerControlsOverlay from '../../../../_common/sticker/AppStickerControlsOverlay.vue';
 import AppStickerPlacementList from '../../../../_common/sticker/AppStickerPlacementList.vue';
 import AppStickerLayer from '../../../../_common/sticker/layer/AppStickerLayer.vue';
@@ -153,6 +154,8 @@ function onVideoPlay() {
 		>
 			<AppBackground :background="background" darken>
 				<div v-if="video" class="container-xl">
+					<AppSpacer v-if="!Screen.isXs" vertical :scale="4" />
+
 					<div class="full-bleed-xs">
 						<template v-if="!hasVideoProcessingError">
 							<AppVideoPlayer
