@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, StyleValue, toRefs, watch } from 'vue';
+import { kStrongEaseOut } from '../../_styles/variables';
 import { ImgHelper } from '../img/helper/helper-service';
 import AppMediaItemBackdrop from '../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { Background } from './background.model';
@@ -105,6 +106,7 @@ if (import.meta.env.SSR) {
 						class="-stretch"
 						:style="{
 							backgroundColor: `rgba(0, 0, 0, ${fadeOpacity})`,
+							transition: `background-color 300ms ${kStrongEaseOut}`,
 						}"
 					/>
 					<div v-if="!noEdges" class="-fade-bottom" />
