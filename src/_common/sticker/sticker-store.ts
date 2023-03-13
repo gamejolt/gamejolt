@@ -29,6 +29,9 @@ interface StickerStreak {
 	count: number;
 }
 
+export type CreatorStickersMap = Map<number, CreatorStickersList>;
+export type CreatorStickersList = StickerStack[];
+
 export type StickerStore = ReturnType<typeof createStickerStore>;
 
 export function createStickerStore(options: { user: Ref<User | null> }) {
@@ -36,9 +39,9 @@ export function createStickerStore(options: { user: Ref<User | null> }) {
 	const layers = shallowReactive<StickerLayerController[]>([]);
 	const targetController = shallowRef<StickerTargetController | null>(null);
 
-	const eventStickers = ref([]) as Ref<StickerStack[]>;
-	const creatorStickers = ref(new Map<User, StickerStack[]>());
-	const generalStickers = ref([]) as Ref<StickerStack[]>;
+	const eventStickers = ref([]) as Ref<CreatorStickersList>;
+	const creatorStickers = ref<CreatorStickersMap>(new Map());
+	const generalStickers = ref([]) as Ref<CreatorStickersList>;
 
 	const stickerPacks = ref([]) as Ref<UserStickerPack[]>;
 
@@ -272,9 +275,9 @@ async function _initializeDrawerContent(store: StickerStore, layer: StickerLayer
 }
 
 interface SortedStickerStacks {
-	eventStickers: StickerStack[];
-	creatorStickers: Map<User, StickerStack[]>;
-	generalStickers: StickerStack[];
+	eventStickers: CreatorStickersList;
+	creatorStickers: CreatorStickersMap;
+	generalStickers: CreatorStickersList;
 }
 
 /**
@@ -288,9 +291,9 @@ export function getStickerCountsFromPayloadData({
 	stickerCounts: any[];
 	stickers: any[];
 }): SortedStickerStacks {
-	const eventStickers: StickerStack[] = [];
-	const creatorStickers = new Map<User, StickerStack[]>();
-	const generalStickers: StickerStack[] = [];
+	const eventStickers: CreatorStickersList = [];
+	const creatorStickers: CreatorStickersMap = new Map();
+	const generalStickers: CreatorStickersList = [];
 
 	stickerCounts.forEach((stickerCountPayload: any) => {
 		const stickerData = stickers.find((i: Sticker) => i.id === stickerCountPayload.sticker_id);
@@ -303,10 +306,10 @@ export function getStickerCountsFromPayloadData({
 
 		const creator = item.sticker.owner_user;
 		if (item.sticker.isCreatorSticker && creator) {
-			if (creatorStickers.has(creator)) {
-				creatorStickers.get(creator)!.push(item);
+			if (creatorStickers.has(creator.id)) {
+				creatorStickers.get(creator.id)!.push(item);
 			} else {
-				creatorStickers.set(creator, [item]);
+				creatorStickers.set(creator.id, [item]);
 			}
 		} else if (item.sticker.is_event) {
 			eventStickers.push(item);
@@ -331,9 +334,9 @@ export function sortStickerCounts({
 	creatorStickers,
 	generalStickers,
 }: {
-	eventStickers: StickerStack[];
-	creatorStickers: Map<User, StickerStack[]>;
-	generalStickers: StickerStack[];
+	eventStickers: CreatorStickersList;
+	creatorStickers: CreatorStickersMap;
+	generalStickers: CreatorStickersList;
 }): SortedStickerStacks {
 	const lists = [eventStickers, ...creatorStickers.values(), generalStickers];
 	lists.forEach(list => {

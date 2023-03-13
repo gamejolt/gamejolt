@@ -130,7 +130,6 @@ const tagStyles: CSSProperties = {
 			v-if="!hideCount"
 			:style="{
 				...tagStyles,
-
 				top: 0,
 				left: 0,
 			}"
@@ -184,6 +183,7 @@ const tagStyles: CSSProperties = {
 
 .-rarity
 	font-weight: bold
+	color: white
 
 .-rarity-uncommon
 	color: #1bb804

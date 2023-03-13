@@ -24,9 +24,8 @@ import { illBackpackClosed, illBackpackOpen } from '../../../quest/ill/illustrat
 import { Screen } from '../../../screen/screen-service';
 import AppThemeSvg from '../../../theme/svg/AppThemeSvg.vue';
 import { $gettext } from '../../../translate/translate.service';
-import { User } from '../../../user/user.model';
 import AppStickerStackItem from '../../stack/AppStickerStackItem.vue';
-import { sortStickerCounts, useStickerStore } from '../../sticker-store';
+import { CreatorStickersMap, sortStickerCounts, useStickerStore } from '../../sticker-store';
 import { Sticker, StickerStack } from '../../sticker.model';
 import AppStickerPack from '../AppStickerPack.vue';
 import { UserStickerPack } from '../user_pack.model';
@@ -273,16 +272,16 @@ function sortMyStickers(newStickers: Sticker[]) {
 	}
 
 	const newEventStickers: StickerStack[] = [];
-	const newCreatorStickers = new Map<User, StickerStack[]>();
+	const newCreatorStickers: CreatorStickersMap = new Map();
 	const newGeneralStickers: StickerStack[] = [];
 
 	for (const item of myStickers) {
 		const creator = item.sticker.owner_user;
 		if (item.sticker.isCreatorSticker && creator) {
-			if (newCreatorStickers.has(creator)) {
-				newCreatorStickers.get(creator)!.push(item);
+			if (newCreatorStickers.has(creator.id)) {
+				newCreatorStickers.get(creator.id)!.push(item);
 			} else {
-				newCreatorStickers.set(creator, [item]);
+				newCreatorStickers.set(creator.id, [item]);
 			}
 		} else if (item.sticker.is_event) {
 			newEventStickers.push(item);

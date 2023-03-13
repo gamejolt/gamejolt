@@ -171,9 +171,10 @@ function openPack(pack: UserStickerPack) {
 			</div>
 
 			<template v-if="creatorStickers.size">
-				<div v-for="[creator, stickers] in creatorStickers" :key="creator.id">
+				<div v-for="[creatorId, stickers] in creatorStickers" :key="creatorId">
 					<template v-if="stickers.length">
 						<div
+							v-if="stickers[0].sticker.owner_user"
 							class="_section-subheader"
 							:style="{
 								maxWidth: `100%`,
@@ -187,7 +188,7 @@ function openPack(pack: UserStickerPack) {
 									width: `16px`,
 									height: `16px`,
 								}"
-								:user="creator"
+								:user="stickers[0].sticker.owner_user"
 								disable-link
 							/>
 
@@ -199,7 +200,7 @@ function openPack(pack: UserStickerPack) {
 							>
 								{{
 									$gettextInterpolate(`@%{ username } stickers`, {
-										username: creator.username,
+										username: stickers[0].sticker.owner_user.username,
 									})
 								}}
 							</div>
