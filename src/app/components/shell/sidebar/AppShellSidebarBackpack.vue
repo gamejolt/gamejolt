@@ -14,11 +14,11 @@ import {
 	getStickerCountsFromPayloadData,
 	useStickerStore,
 } from '../../../../_common/sticker/sticker-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { styleBorderRadiusLg, styleChangeBg, styleTextOverflow } from '../../../../_styles/mixins';
 import { illPointyThing } from '../../../img/ill/illustrations';
-import { useAppStore } from '../../../store';
 import { routeQuests } from '../../../views/quests/quests.route';
 import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
 
@@ -28,7 +28,7 @@ type FormModel = {
 
 const { stickerPacks, eventStickers, creatorStickers, generalStickers, allStickers } =
 	useStickerStore();
-const { coinBalance } = useAppStore();
+const { coinBalance } = useCommonStore();
 
 const form: FormController<FormModel> = createForm({
 	loadUrl: `/mobile/sticker`,

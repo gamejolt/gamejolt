@@ -6,6 +6,7 @@ import AppButton from '../button/AppButton.vue';
 import { Jolticon } from '../jolticon/AppJolticon.vue';
 import AppLoading from '../loading/AppLoading.vue';
 import { useStickerStore } from '../sticker/sticker-store';
+import { useCommonStore } from '../store/common-store';
 import { Quest } from './quest-model';
 import { QuestObjectiveReward } from './quest-objective-reward-model';
 import { QuestRewardData } from './reward/AppQuestRewardModal.vue';
@@ -34,6 +35,7 @@ const emit = defineEmits({
 });
 
 const { setChargeData, currentCharge, chargeLimit } = useStickerStore();
+const { coinBalance } = useCommonStore();
 
 const root = ref<HTMLElement>();
 const isProcessingAction = ref(false);
@@ -171,9 +173,7 @@ async function onActionPressed() {
 					isCondensed,
 				});
 			} else if (reward.isCoin) {
-				// TODO(creator-stickers) Update coins when getting this reward. coinBalance is in appStore, needs to be moved to commonStore for this to work properly.
-				//
-				// coinBalance.value = Math.max(0, coinBalance.value + reward.fallback_amount);
+				coinBalance.value = Math.max(0, coinBalance.value + reward.fallback_amount);
 
 				addOrUpdateReward({
 					key: `coin`,

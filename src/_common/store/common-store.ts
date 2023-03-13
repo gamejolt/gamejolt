@@ -25,6 +25,9 @@ export function createCommonStore() {
 	const error = ref<number | string | null>(null);
 	const timeout = ref<UserTimeout | null>(null);
 
+	// Wallet currencies.
+	const coinBalance = ref(0);
+
 	const isUserTimedOut = computed(() => {
 		return (
 			userBootstrapped.value && !!user.value && !!timeout.value && timeout.value.getIsActive()
@@ -60,6 +63,7 @@ export function createCommonStore() {
 	function clearUser() {
 		user.value = null;
 		userBootstrapped.value = true;
+		coinBalance.value = 0;
 	}
 
 	function setConsents(newConsents: UserConsents) {
@@ -97,6 +101,7 @@ export function createCommonStore() {
 		setError,
 		clearError,
 		redirect,
+		coinBalance,
 	};
 }
 

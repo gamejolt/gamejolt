@@ -21,15 +21,15 @@ import { StickerPackOpenModal } from '../../../../_common/sticker/pack/open-moda
 import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
 import { UserStickerPack } from '../../../../_common/sticker/pack/user_pack.model';
 import { useStickerStore } from '../../../../_common/sticker/sticker-store';
+import { useCommonStore } from '../../../../_common/store/common-store';
 import { kThemeBgActual } from '../../../../_common/theme/variables';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { styleWhen } from '../../../../_styles/mixins';
 import { illNoCommentsSmall } from '../../../img/ill/illustrations';
-import { useAppStore } from '../../../store';
 
 import imageVance from './vance.png';
 
-const { coinBalance } = useAppStore();
+const { coinBalance } = useCommonStore();
 const { stickerPacks } = useStickerStore();
 const modal = useModal()!;
 
