@@ -359,9 +359,8 @@ function onPackEnabledChanged() {
 										(ideal ratio of 2 ÷ 3).
 									</p>
 
-									<!-- TODO(creator-stickers) help page -->
 									<p class="help-block">
-										<AppLinkHelp page="sticker-packs" class="link-help">
+										<AppLinkHelp page="creators/stickers" class="link-help">
 											{{
 												$gettext(
 													`What are the sticker pack image requirements and guidelines?`

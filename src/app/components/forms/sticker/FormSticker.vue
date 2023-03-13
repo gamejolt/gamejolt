@@ -205,9 +205,8 @@ const stickerGridItems = computed(() => {
 				(ratio of 1 ÷ 1).
 			</p>
 
-			<!-- TODO(creator-stickers) help page -->
 			<p class="help-block">
-				<AppLinkHelp page="stickers" class="link-help">
+				<AppLinkHelp page="creators/stickers" class="link-help">
 					{{ $gettext(`What are the sticker image requirements and guidelines?`) }}
 				</AppLinkHelp>
 			</p>
