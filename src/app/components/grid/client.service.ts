@@ -225,18 +225,13 @@ export class GridClient {
 			this.notificationChannel = markRaw(channel);
 			this.markConnected();
 
-			logger.info('Subscribing to community channels...');
-			// this.notificationChannel.channelController.listenTo(community.id)
-			// joinCommunity is basically looped to every user-followed-subscribed communities
 			// this action should now happen as a topic subscription from notification channel
 			// await Promise.all(this.appStore.communities.value.map(i => this.joinCommunity(i)));
 		}
 
 		// Now connect to our chat channels.
 		await connectChat(this.chat!);
-	}
-
-	
+	}	
 
 	markConnected() {
 		this.connected = true;
