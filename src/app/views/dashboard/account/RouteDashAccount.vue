@@ -71,6 +71,10 @@ const route = useRoute();
 const { isBootstrapped } = createAppRoute({
 	onResolved({ payload }) {
 		setUser(payload.user);
+
+		if (route.name === routeDashAccountEdit.name && route.query.avatar) {
+			showEditAvatar();
+		}
 	},
 });
 
