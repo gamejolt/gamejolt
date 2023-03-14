@@ -53,6 +53,7 @@ export function createGridCommunityChannel(
 	});
 
 	function _onFeature(payload: FeaturePayload) {
+		console.log('capturing featureY with ' + payload)
 		// Suppress notification if the user featured that post.
 		if (payload.post_id) {
 			const postId = parseInt(payload.post_id, 10);

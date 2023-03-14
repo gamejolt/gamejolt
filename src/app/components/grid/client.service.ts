@@ -34,7 +34,8 @@ import { AppStore } from '../../store/index';
 import { router } from '../../views';
 import { ChatClient, clearChat, connectChat, createChatClient } from '../chat/client';
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
-import { createGridCommunityChannel, GridCommunityChannel } from './community-channel';
+import { GridCommunityChannel } from './community-channel';
+
 import { GridFiresideChannel } from './fireside-channel';
 import { GridFiresideDMChannel } from './fireside-dm-channel';
 import { createGridNotificationChannel, GridNotificationChannel } from './notification-channel';
@@ -485,21 +486,23 @@ export class GridClient {
 			return;
 		}
 
-		const communityChannel = createGridCommunityChannel(this, {
-			communityId: community.id,
-			router,
+		// here
+		//%{community_id: community_id}
+		this.notificationChannel?.pushFollowCommunity({
+			community_id: community.id,
 		});
 
-		await communityChannel.joinPromise;
-		return communityChannel;
+		
+		//const communityChannel = createGridCommunityChannel2(this, );
+
+		//await communityChannel.joinPromise;
+		return 1;
 	}
 
 	async leaveCommunity(community: Community) {
-		const channel = this.communityChannels.find(i => i.communityId === community.id);
-		if (channel) {
-			channel.channelController.leave();
-			arrayRemove(this.communityChannels, i => i === channel);
-		}
+		this.notificationChannel?.pushUnfollowCommunity({
+			community_id: community.id,
+		});
 	}
 
 	async leaveFireside(fireside: Fireside) {

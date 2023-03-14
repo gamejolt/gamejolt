@@ -83,6 +83,10 @@ interface ClearNotificationsData {
 	questId?: number;
 }
 
+interface FollowCommunityData {
+	community_id?: number;
+}
+
 interface StickerUnlockPayload {
 	sticker_img_urls: string[];
 }
@@ -233,6 +237,8 @@ export function createGridNotificationChannel(client: GridClient,
 		joinPromise,
 
 		pushViewNotifications,
+		pushFollowCommunity,
+		pushUnfollowCommunity,
 		pushCommunityBootstrap,
 	});
 
@@ -311,7 +317,7 @@ export function createGridNotificationChannel(client: GridClient,
 
 	// from community channel
 	function _onFeature(payload: FeaturePayload) {
-		console.log('capturing featureX')
+		console.log('capturing featureX with ' + payload)
 		// Suppress notification if the user featured that post.
 		if (payload.post_id) {
 			const postId = parseInt(payload.post_id, 10);
@@ -393,6 +399,26 @@ export function createGridNotificationChannel(client: GridClient,
 			clientId: client.clientId,
 		});
 	}
+
+	function pushFollowCommunity(
+		data: FollowCommunityData = {}
+	) {
+		console.log("pushing out follw_event")
+		return channelController.push('follow_community', {
+			community_id: data.community_id,
+		});
+	}
+
+	function pushUnfollowCommunity(
+		data: FollowCommunityData = {}
+	) {
+		console.log("pushing out unfollw_event")
+		return channelController.push('unfollow_community', {
+			community_id: data.community_id,
+		});
+	}
+
+
 
 	async function pushCommunityBootstrap(communityId: number) {
 		interface Payload {
