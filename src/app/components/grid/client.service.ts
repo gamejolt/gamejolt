@@ -486,17 +486,15 @@ export class GridClient {
 			return;
 		}
 
-		// here
-		//%{community_id: community_id}
 		this.notificationChannel?.pushFollowCommunity({
 			community_id: community.id,
 		});
 
 		
-		//const communityChannel = createGridCommunityChannel2(this, );
-
+		//const communityChannel = (this,{communityId: community.id, router, });
 		//await communityChannel.joinPromise;
-		return 1;
+		//return communityChannel
+		return;
 	}
 
 	async leaveCommunity(community: Community) {

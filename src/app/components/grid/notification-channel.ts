@@ -83,7 +83,7 @@ interface ClearNotificationsData {
 	questId?: number;
 }
 
-interface FollowCommunityData {
+interface FollowUnfollowCommunityData {
 	community_id?: number;
 }
 
@@ -140,7 +140,7 @@ export function createGridNotificationChannel(client: GridClient,
 	channelController.listenTo('post-updated', _onPostUpdated);
 	
 	// from community channel
-	channelController.listenTo('featureX', _onFeature);
+	channelController.listenTo('feature', _onFeature);
 	channelController.listenTo('new-post', _onNewPost);
 	channelController.listenTo('feature-fireside', _onFeatureFireside);
 
@@ -241,9 +241,6 @@ export function createGridNotificationChannel(client: GridClient,
 		pushUnfollowCommunity,
 		pushCommunityBootstrap,
 	});
-
-
-
 	
 	function _onNewNotification(payload: NewNotificationPayload) {
 		const data = payload.notification_data.event_item;
@@ -317,7 +314,7 @@ export function createGridNotificationChannel(client: GridClient,
 
 	// from community channel
 	function _onFeature(payload: FeaturePayload) {
-		console.log('capturing featureX with ' + payload)
+		console.log('[community chnl test] Capturing feature event with ' + payload)
 		// Suppress notification if the user featured that post.
 		if (payload.post_id) {
 			const postId = parseInt(payload.post_id, 10);
@@ -326,11 +323,6 @@ export function createGridNotificationChannel(client: GridClient,
 			}
 		}
 
-		if (payload.community_id) {
-			//const postId = parseInt(payload.community_id, 10)
-			console.log("getting featureX from " + payload.community_id)
-		}
-		return;
 		const communityState = appStore.communityStates.value.getCommunityState(
 			parseInt(payload.community_id, 10));
 		communityState.hasUnreadFeaturedPosts = true;
@@ -401,7 +393,7 @@ export function createGridNotificationChannel(client: GridClient,
 	}
 
 	function pushFollowCommunity(
-		data: FollowCommunityData = {}
+		data: FollowUnfollowCommunityData = {}
 	) {
 		console.log("pushing out follw_event")
 		return channelController.push('follow_community', {
@@ -410,7 +402,7 @@ export function createGridNotificationChannel(client: GridClient,
 	}
 
 	function pushUnfollowCommunity(
-		data: FollowCommunityData = {}
+		data: FollowUnfollowCommunityData = {}
 	) {
 		console.log("pushing out unfollw_event")
 		return channelController.push('unfollow_community', {
