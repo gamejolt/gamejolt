@@ -230,7 +230,11 @@ function onPackEnabledChanged() {
 								@pack="updatePack"
 							/>
 
-							<AppStickerEditTile v-if="canCreateSticker" :stickers="stickers">
+							<AppStickerEditTile
+								v-if="canCreateSticker"
+								:stickers="stickers"
+								@pack="updatePack"
+							>
 								<template #no-sticker>
 									<div
 										:style="{
@@ -356,7 +360,7 @@ function onPackEnabledChanged() {
 										<code>%{min}</code>
 										and
 										<code>%{max}</code>
-										(ideal ratio of 2 ÷ 3).
+										(ratio of 2 ÷ 3).
 									</p>
 
 									<p class="help-block">
