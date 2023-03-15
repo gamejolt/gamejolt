@@ -454,7 +454,13 @@ export const validateImageAspectRatio =
 		const result = await _validateFiles(files, async file => {
 			const dimensions = await getImgDimensions(file);
 			const [width, height] = dimensions;
-			return width / height === ratio;
+
+			const imgRatio = width / height;
+			if (imgRatio - ratio > 0.01 || imgRatio - ratio < -0.01) {
+				return false;
+			}
+
+			return true;
 		});
 
 		if (!result) {
