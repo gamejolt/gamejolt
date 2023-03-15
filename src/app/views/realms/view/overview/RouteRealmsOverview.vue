@@ -1,7 +1,6 @@
 <script lang="ts">
 import { computed, Ref, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { canDeviceCreateFiresides } from '../../../../../_common/fireside/fireside.model';
@@ -52,11 +51,11 @@ const firesidesGridColumns = 5;
 const canCreateFireside = computed(() => !userFireside.value && canDeviceCreateFiresides());
 
 const displayablePreviewFiresides = computed(() => {
-	const previewable = [...firesides.value];
-	if (userFireside.value) {
-		arrayRemove(previewable, i => i.id === userFireside.value?.id);
-		previewable.unshift(userFireside.value);
-	}
+	const previewable = userFireside.value
+		? // Move the user's Fireside to the start of the list, and remove it from the rest so it
+		  // doesn't show up twice.
+		  [userFireside.value, ...firesides.value.filter(x => x.id !== userFireside.value!.id)]
+		: firesides.value;
 
 	// -1 to leave room for the "add a fireside"
 	return previewable.slice(0, firesidesGridColumns - (userHasFireside.value ? 0 : 1));

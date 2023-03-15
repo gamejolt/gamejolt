@@ -10,13 +10,13 @@ import { MediaItem } from '../../../media-item/media-item-model';
 import AppResponsiveDimensions from '../../../responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../../screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../../scroll/inview/AppScrollInview.vue';
+import AppVideo from '../../../video/AppVideo.vue';
 import {
 	createVideoPlayerController,
 	getVideoPlayerFromSources,
 	VideoPlayerController,
 	VideoPlayerControllerContext,
 } from '../../../video/player/controller';
-import AppVideo from '../../../video/AppVideo.vue';
 import { FiresidePost } from '../post-model';
 
 export const AppPostCardAspectRatio = 10 / 16;
@@ -264,6 +264,8 @@ function _initVideoController() {
 					:class="{ '-blur': blur }"
 					:background="background"
 				>
+					<div v-if="!!background" class="-inner-gradient" />
+
 					<template v-if="!!mediaItem">
 						<div class="-inner-media">
 							<AppMediaItemBackdrop class="-backdrop" :media-item="mediaItem">
@@ -295,7 +297,6 @@ function _initVideoController() {
 					</template>
 
 					<template v-else>
-						<div v-if="!!background" class="-inner-gradient" />
 						<div ref="message" class="-inner-message">
 							<div :class="{ '-overlay-message': overlay }">
 								<AppFadeCollapse

@@ -1,6 +1,6 @@
-import { Model } from '../model/model.service';
-import { MediaItem } from '../media-item/media-item-model';
 import { getMediaserverUrlForBounds } from '../../utils/image';
+import { MediaItem } from '../media-item/media-item-model';
+import { Model } from '../model/model.service';
 
 const ScalingStretch = 'stretch';
 const ScalingTile = 'tile';
