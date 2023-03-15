@@ -5,7 +5,7 @@ import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { ContextCapabilities } from '../../../../_common/content/content-context';
 import { formatNumber } from '../../../../_common/filters/number';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
+import { canDeviceCreateFiresides, Fireside } from '../../../../_common/fireside/fireside.model';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -16,7 +16,6 @@ import { SettingChatGroupShowMembers } from '../../../../_common/settings/settin
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import { useAppStore } from '../../../store';
 import { useGridStore } from '../../grid/grid-store';
@@ -319,32 +318,8 @@ function onMobileAppBarBack() {
 					<template #actions>
 						<template v-if="room">
 							<AppButton
-								v-if="room?.fireside"
-								class="_header-control anim-fade-in"
-								primary
-								solid
-								:to="room.fireside.routeLocation"
-							>
-								<span
-									v-for="user of room.firesideStreamingUsers"
-									:key="user.id"
-									:style="{
-										width: '20px',
-										height: '20px',
-										display: 'inline-block',
-										marginTop: '-5px',
-										paddingTop: '5px',
-										marginLeft: '-10px',
-									}"
-								>
-									<AppUserAvatarImg :user="user" />
-								</span>
-
-								{{ $gettext(`LIVE`) }}
-							</AppButton>
-							<AppButton
-								v-else
-								v-app-tooltip="$gettext(`Start Livestream/Video Call`)"
+								v-if="room && !room.fireside && canDeviceCreateFiresides()"
+								v-app-tooltip="$gettext(`Start livestream/video call`)"
 								class="_header-control anim-fade-in"
 								trans
 								icon="video-camera"

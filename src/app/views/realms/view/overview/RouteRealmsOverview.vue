@@ -1,8 +1,10 @@
 <script lang="ts">
 import { computed, Ref, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
+import { canDeviceCreateFiresides } from '../../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import {
@@ -47,10 +49,16 @@ const isBootstrapped = ref(false);
 // How many firesides to show in the preview row, including the "add a fireside".
 const firesidesGridColumns = 5;
 
+const canCreateFireside = computed(() => !userFireside.value && canDeviceCreateFiresides());
+
 const displayablePreviewFiresides = computed(() => {
-	const previewable = userFireside.value
-		? [userFireside.value, ...firesides.value]
-		: firesides.value;
+	const previewable = [...firesides.value];
+	if (userFireside.value) {
+		// TODO(group-chat-firesides) check if we need to do this or if backend
+		// will be filtering out our own fireside.
+		arrayRemove(previewable, i => i.id === userFireside.value?.id);
+		previewable.unshift(userFireside.value);
+	}
 
 	// -1 to leave room for the "add a fireside"
 	return previewable.slice(0, firesidesGridColumns - (userHasFireside.value ? 0 : 1));
@@ -131,7 +139,7 @@ function onPostAdded(post: FiresidePost) {
 					marginBottom: kLineHeightComputed.px,
 				}"
 			>
-				<AppFiresideAvatarAdd v-if="realm && !userHasFireside" :realms="[realm]" />
+				<AppFiresideAvatarAdd v-if="realm && canCreateFireside" :realms="[realm]" />
 
 				<AppFiresideAvatar
 					v-for="fireside in displayablePreviewFiresides"

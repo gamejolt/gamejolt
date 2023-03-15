@@ -47,6 +47,8 @@ const emit = defineEmits({
 
 const { room, showMembersPreview, members } = toRefs(props);
 const { chatUnsafe: chat } = useGridStore();
+// TODO(group-chat-firesides)
+// const { user: myUser } = useCommonStore();
 
 const titleMinLength = ref<number>();
 const titleMaxLength = ref<number>();
@@ -351,14 +353,22 @@ async function extinguishRoomFireside() {
 			<template v-if="shouldShowLeave">
 				<AppSpacer vertical :scale="6" />
 				<hr />
+				<AppSpacer vertical :scale="2" />
 
-				<AppButton v-if="canExtinguishFireside" @click="extinguishRoomFireside">
-					{{ $gettext(`Extinguish Fireside`) }}
-				</AppButton>
+				<!-- TODO(group-chat-firesides) Current only supported for group
+				rooms, but we're able to make rooms in private chats. If we want
+				to create, the owner of the fireside should be able to
+				extinguish from here. -->
+
+				<a v-if="canExtinguishFireside" @click="extinguishRoomFireside">
+					<div class="-pad -action">
+						{{ $gettext(`Extinguish fireside`) }}
+					</div>
+				</a>
 
 				<a @click="leaveRoom">
-					<div class="-pad -leave">
-						<AppTranslate>Leave group</AppTranslate>
+					<div class="-pad -action">
+						{{ $gettext(`Leave group`) }}
 					</div>
 				</a>
 			</template>
@@ -377,6 +387,7 @@ async function extinguishRoomFireside() {
 <style lang="stylus" scoped>
 $-padding = 16px
 $-padding-v = 24px
+$-action-padding-v = 12px
 
 .form-chat-room-settings
 	padding: $-padding-v 0
@@ -391,9 +402,9 @@ $-padding-v = 24px
 hr
 	margin: 0 $-padding
 
-.-leave
-	padding: $-padding-v $-padding
-	font-size: 15px
+.-action
+	padding: $-action-padding-v $-padding
+	font-size: $font-size-base
 
 .-header
 	padding: 0 $-padding
