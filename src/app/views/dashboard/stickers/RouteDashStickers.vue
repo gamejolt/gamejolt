@@ -322,7 +322,7 @@ function onPackEnabledChanged() {
 							<div
 								:style="{
 									maxWidth: `240px`,
-									flex: `auto`,
+									flex: `1 1 240px`,
 								}"
 							>
 								<AppStickerPack
@@ -335,7 +335,7 @@ function onPackEnabledChanged() {
 
 							<div
 								:style="{
-									flex: `1`,
+									flex: `1 1 75%`,
 								}"
 							>
 								<AppFormGroup
@@ -387,6 +387,7 @@ function onPackEnabledChanged() {
 											validateImageAspectRatio({ ratio: packAspectRatio }),
 										]"
 										accept=".png,.jpg,.jpeg,.webp"
+										fix-overflow
 										@changed="onFileUploadChanged()"
 									/>
 

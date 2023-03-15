@@ -219,6 +219,7 @@ const stickerGridItems = computed(() => {
 					validateImageAspectRatio({ ratio: aspectRatio }),
 				]"
 				accept=".png"
+				fix-overflow
 				@changed="onFileUploadChanged()"
 			/>
 
