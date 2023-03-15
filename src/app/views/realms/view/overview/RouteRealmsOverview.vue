@@ -48,7 +48,7 @@ const isBootstrapped = ref(false);
 // How many firesides to show in the preview row, including the "add a fireside".
 const firesidesGridColumns = 5;
 
-const canCreateFireside = computed(() => !userFireside.value && canDeviceCreateFiresides());
+const canCreateFireside = computed(() => !userHasFireside.value && canDeviceCreateFiresides());
 
 const displayablePreviewFiresides = computed(() => {
 	const previewable = userFireside.value

@@ -224,6 +224,7 @@ async function extinguishRoomFireside() {
 	}
 
 	const fireside = room.value.fireside;
+	const roomId = room.value.id;
 	room.value.fireside = null;
 
 	try {
@@ -235,7 +236,10 @@ async function extinguishRoomFireside() {
 	} catch (error) {
 		showErrorGrowl($gettext(`Could not extinguish fireside.`));
 		console.error('Failed to extinguish fireside.', error);
-		room.value.fireside = fireside;
+
+		if (room.value.id === roomId && !room.value.fireside) {
+			room.value.fireside = fireside;
+		}
 	}
 }
 </script>
