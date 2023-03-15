@@ -371,7 +371,7 @@ const bannerScrollerMargin = computed(
 				v-app-observe-dimensions="tryAutoscroll"
 				class="_container anim-fade-in no-animate-leave"
 				:style="{
-					...styleWhen(true, {
+					...styleWhen(!!fireside && showFiresideBanner, {
 						marginTop: bannerScrollerMargin.px,
 					}),
 				}"
