@@ -54,8 +54,6 @@ const canCreateFireside = computed(() => !userFireside.value && canDeviceCreateF
 const displayablePreviewFiresides = computed(() => {
 	const previewable = [...firesides.value];
 	if (userFireside.value) {
-		// TODO(group-chat-firesides) check if we need to do this or if backend
-		// will be filtering out our own fireside.
 		arrayRemove(previewable, i => i.id === userFireside.value?.id);
 		previewable.unshift(userFireside.value);
 	}

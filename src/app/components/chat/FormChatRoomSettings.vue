@@ -47,8 +47,6 @@ const emit = defineEmits({
 
 const { room, showMembersPreview, members } = toRefs(props);
 const { chatUnsafe: chat } = useGridStore();
-// TODO(group-chat-firesides)
-// const { user: myUser } = useCommonStore();
 
 const titleMinLength = ref<number>();
 const titleMaxLength = ref<number>();
@@ -354,11 +352,6 @@ async function extinguishRoomFireside() {
 				<AppSpacer vertical :scale="6" />
 				<hr />
 				<AppSpacer vertical :scale="2" />
-
-				<!-- TODO(group-chat-firesides) Current only supported for group
-				rooms, but we're able to make rooms in private chats. If we want
-				to create, the owner of the fireside should be able to
-				extinguish from here. -->
 
 				<a v-if="canExtinguishFireside" @click="extinguishRoomFireside">
 					<div class="-pad -action">
