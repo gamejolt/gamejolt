@@ -83,7 +83,7 @@ interface ClearNotificationsData {
 	questId?: number;
 }
 
-interface FollowUnfollowCommunityData {
+interface SubscriptionCommunityData {
 	community_id?: number;
 }
 
@@ -237,8 +237,8 @@ export function createGridNotificationChannel(client: GridClient,
 		joinPromise,
 
 		pushViewNotifications,
-		pushFollowCommunity,
-		pushUnfollowCommunity,
+		join_community,
+		leave_community,
 		pushCommunityBootstrap,
 	});
 	
@@ -392,19 +392,17 @@ export function createGridNotificationChannel(client: GridClient,
 		});
 	}
 
-	function pushFollowCommunity(
-		data: FollowUnfollowCommunityData = {}
+	function join_community(
+		data: SubscriptionCommunityData = {}
 	) {
-		console.log("pushing out follw_event")
 		return channelController.push('follow_community', {
 			community_id: data.community_id,
 		});
 	}
 
-	function pushUnfollowCommunity(
-		data: FollowUnfollowCommunityData = {}
+	function leave_community(
+		data: SubscriptionCommunityData = {}
 	) {
-		console.log("pushing out unfollw_event")
 		return channelController.push('unfollow_community', {
 			community_id: data.community_id,
 		});

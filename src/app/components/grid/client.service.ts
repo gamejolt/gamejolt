@@ -481,19 +481,15 @@ export class GridClient {
 			return;
 		}
 
-		this.notificationChannel?.pushFollowCommunity({
+		this.notificationChannel?.join_community({
 			community_id: community.id,
 		});
 
-		
-		//const communityChannel = (this,{communityId: community.id, router, });
-		//await communityChannel.joinPromise;
-		//return communityChannel
 		return;
 	}
 
 	async leaveCommunity(community: Community) {
-		this.notificationChannel?.pushUnfollowCommunity({
+		this.notificationChannel?.leave_community({
 			community_id: community.id,
 		});
 	}
