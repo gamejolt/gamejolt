@@ -23,7 +23,7 @@ import {
 	validateMinLength,
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppLinkHelp from '../../../../_common/link/AppLinkHelp.vue';
+import AppLinkHelpDocs from '../../../../_common/link/AppLinkHelpDocs.vue';
 import { ModelData, UnknownModelData } from '../../../../_common/model/model.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
@@ -206,9 +206,9 @@ const stickerGridItems = computed(() => {
 			</p>
 
 			<p class="help-block">
-				<AppLinkHelp page="creators/stickers" class="link-help">
+				<AppLinkHelpDocs category="creators" page="stickers" class="link-help">
 					{{ $gettext(`What are the sticker image requirements and guidelines?`) }}
-				</AppLinkHelp>
+				</AppLinkHelpDocs>
 			</p>
 
 			<AppFormControlUpload

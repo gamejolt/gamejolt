@@ -15,7 +15,7 @@ import {
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLinkHelp from '../../../../_common/link/AppLinkHelp.vue';
+import AppLinkHelpDocs from '../../../../_common/link/AppLinkHelpDocs.vue';
 import { ModelData } from '../../../../_common/model/model.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -39,6 +39,7 @@ export default {
 		deps: {},
 		resolver: () => Api.sendRequest('/web/dash/creators/stickers'),
 	}),
+	components: { AppLinkHelpDocs },
 };
 
 type InitPayload = {
@@ -364,13 +365,17 @@ function onPackEnabledChanged() {
 									</p>
 
 									<p class="help-block">
-										<AppLinkHelp page="creators/stickers" class="link-help">
+										<AppLinkHelpDocs
+											category="creators"
+											page="stickers"
+											class="link-help"
+										>
 											{{
 												$gettext(
 													`What are the sticker pack image requirements and guidelines?`
 												)
 											}}
-										</AppLinkHelp>
+										</AppLinkHelpDocs>
 									</p>
 
 									<AppFormControlUpload
