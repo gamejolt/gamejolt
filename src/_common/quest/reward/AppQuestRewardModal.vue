@@ -223,11 +223,11 @@ function playAnimation(
 					</span>
 
 					<div
-						v-for="({ img_url, name, amount, icon, xAfterCount: isExp }, i) of rewards"
+						v-for="({ img_url, name, amount, icon, xAfterCount }, i) of rewards"
 						:key="i"
 						class="-quest-title-header"
 					>
-						{{ amount + (isExp ? ' ' : 'x ') }}
+						{{ amount + (xAfterCount ? 'x ' : ' ') }}
 
 						<img v-if="img_url" class="-reward-img" :src="img_url" alt="" />
 						<AppJolticon v-else :icon="icon" />

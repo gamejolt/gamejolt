@@ -70,7 +70,6 @@ const form: FormController<FormModel> = createForm({
 	onInit() {
 		form.formModel.is_active = !model?.value || model.value.is_active === true;
 	},
-	// modelClass: Sticker,
 	onLoad(payload) {
 		minNameLength.value = payload.minNameLength ?? minNameLength.value;
 		maxNameLength.value = payload.maxNameLength ?? maxNameLength.value;

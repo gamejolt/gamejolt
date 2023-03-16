@@ -212,7 +212,7 @@ function onPackEnabledChanged() {
 					<div class="help-block">
 						{{
 							$gettext(
-								`Create custom stickers that will show up in your own personalized sticker pack! You may edit or disable stickers at any time, but you'll need some enabled ones to include in your sticker pack.`
+								`Create custom stickers that will show up in your own personalized sticker pack! You may edit or disable stickers at any time, but you'll need some enabled to include them in your sticker pack.`
 							)
 						}}
 					</div>

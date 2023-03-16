@@ -204,30 +204,4 @@ function onClickFilter() {
 	display: flex
 	justify-content: flex-end
 	gap: 12px
-
-@keyframes anim
-	0%
-		transform: none
-		opacity: 0.5
-
-	50%
-		transform: translateY(100px) scale(1.5)
-		opacity: 1
-
-	55%
-		transform: translateY(100px) scale(1.7) rotateZ(-20deg)
-
-	60%
-		transform: translateY(100px) scale(1.9) rotateZ(20deg)
-
-	65%
-		transform: translateY(100px) scale(2.1) rotateZ(-20deg)
-
-	70%
-		transform: translateY(100px) scale(2.3) rotateZ(20deg)
-		opacity: 1
-
-	100%
-		transform: translateY(0) scale(0)
-		opacity: 0
 </style>
