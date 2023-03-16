@@ -297,6 +297,6 @@ export function canCommunityEjectFireside(community: Community) {
 	return !!community.hasPerms('community-firesides');
 }
 
-export function canCreateFiresides(community: Community) {
+export function canCommunityCreateFiresides(community: Community) {
 	return community.hasPerms('community-firesides');
 }

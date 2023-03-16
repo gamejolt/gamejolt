@@ -218,10 +218,12 @@ export class GridClient {
 		}
 		// User connections expected to handle a bunch of notification stuff.
 		else if (user.value) {
-			const channel = createGridNotificationChannel(this, { userId: user.value.id });
-			await channel.joinPromise;
+			const notificationChannel = createGridNotificationChannel(this, {
+				userId: user.value.id,
+			});
+			await notificationChannel.joinPromise;
+			this.notificationChannel = markRaw(notificationChannel);
 
-			this.notificationChannel = markRaw(channel);
 			this.markConnected();
 
 			logger.info('Subscribing to community channels...');

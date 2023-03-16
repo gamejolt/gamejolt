@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
+import { computed, PropType, toRefs } from 'vue';
+import { canDeviceCreateFiresides, Fireside } from '../../../../_common/fireside/fireside.model';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { Realm } from '../../../../_common/realm/realm-model';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -37,14 +37,19 @@ const props = defineProps({
 	},
 });
 
+const { firesides, isLoading, featuredFireside, userFireside, showPlaceholders, initialRealm } =
+	toRefs(props);
+
 const emit = defineEmits({
 	'request-refresh': () => true,
 });
 
+const canCreateFireside = computed(() => !userFireside.value && canDeviceCreateFiresides());
+
 const displayFiresides = computed(() => {
-	const list = [...props.firesides];
-	if (props.userFireside) {
-		list.unshift(props.userFireside);
+	const list = [...firesides.value];
+	if (userFireside.value) {
+		list.unshift(userFireside.value);
 	}
 
 	return shouldDisplaySingleRow.value ? list.slice(0, gridColumns.value) : list;
@@ -102,7 +107,7 @@ function onFiresideExpired() {
 					</div>
 					<div v-else key="list" :style="gridStyling">
 						<AppFiresideAvatarAdd
-							v-if="!userFireside"
+							v-if="canCreateFireside"
 							key="add"
 							:realms="initialRealm ? [initialRealm] : undefined"
 						/>

@@ -3,6 +3,7 @@ import { computed, Ref, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
+import { canDeviceCreateFiresides } from '../../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import {
@@ -46,6 +47,8 @@ const isBootstrapped = ref(false);
 
 // How many firesides to show in the preview row, including the "add a fireside".
 const firesidesGridColumns = 5;
+
+const canCreateFireside = computed(() => !userHasFireside.value && canDeviceCreateFiresides());
 
 const displayablePreviewFiresides = computed(() => {
 	const previewable = userFireside.value
@@ -133,7 +136,7 @@ function onPostAdded(post: FiresidePost) {
 					marginBottom: kLineHeightComputed.px,
 				}"
 			>
-				<AppFiresideAvatarAdd v-if="realm && !userHasFireside" :realms="[realm]" />
+				<AppFiresideAvatarAdd v-if="realm && canCreateFireside" :realms="[realm]" />
 
 				<AppFiresideAvatar
 					v-for="fireside in displayablePreviewFiresides"
