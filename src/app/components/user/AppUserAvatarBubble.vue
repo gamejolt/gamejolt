@@ -137,6 +137,7 @@ function isChatUser(user: typeof props.user): user is ChatUser {
 						:style="{
 							...styleBorderRadiusCircle,
 							...styleChangeBg(bgColor),
+							lineHeight: 1,
 						}"
 					>
 						<slot>
