@@ -2,24 +2,27 @@
 import { computed, toRefs } from 'vue';
 import { Environment } from '../environment/environment.service';
 import { Navigate } from '../navigate/navigate.service';
-import AppLinkHelpDocs from './AppLinkHelpDocs.vue';
 
-/**
- * This component is older, and is used to handle redirects to the real
- * help-docs.
- *
- * Use {@link AppLinkHelpDocs} when going directly to a category/page.
- */
 const props = defineProps({
-	page: {
+	category: {
 		type: String,
 		required: true,
 	},
+	page: {
+		type: String,
+		default: undefined,
+	},
 });
 
-const { page } = toRefs(props);
+const { category, page } = toRefs(props);
 
-const url = computed(() => Environment.helpBaseUrl + '/' + page.value);
+const url = computed(() => {
+	let result = Environment.helpDocsBaseUrl + '/' + category.value;
+	if (page?.value) {
+		result += '/' + page.value;
+	}
+	return result;
+});
 
 function onClick(e: Event) {
 	Navigate.newWindow(url.value);

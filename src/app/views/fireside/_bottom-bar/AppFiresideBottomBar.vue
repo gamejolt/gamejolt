@@ -7,7 +7,7 @@ import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service'
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { useStickerLayer } from '../../../../_common/sticker/layer/layer-controller';
-import { setStickerDrawerOpen, useStickerStore } from '../../../../_common/sticker/sticker-store';
+import { openStickerDrawer, useStickerStore } from '../../../../_common/sticker/sticker-store';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -50,7 +50,9 @@ const { canChargeSticker } = stickerStore;
 const layer = useStickerLayer();
 const { isAllCreator } = layer || {};
 
-const canPlaceStickers = computed(() => !!user.value && !Screen.isMobile && isStreaming.value);
+const canPlaceStickers = computed(
+	() => !!user.value && !Screen.isMobile && isStreaming.value && !!stickerLayer
+);
 
 const producer = computed(() => rtc.value?.producer);
 const localUser = computed(() => rtc.value?.localUser);
@@ -204,7 +206,10 @@ async function _confirmStopStreaming(throughInput: boolean) {
 }
 
 function onClickStickerButton() {
-	setStickerDrawerOpen(stickerStore, true, stickerLayer);
+	if (!stickerLayer) {
+		return;
+	}
+	openStickerDrawer(stickerStore, stickerLayer);
 }
 
 function toggleStreamSettings() {
@@ -296,6 +301,7 @@ async function onClickStopStreaming() {
 				/>
 
 				<AppAnimElectricity
+					v-if="stickerLayer"
 					shock-anim="square"
 					ignore-asset-padding
 					:disabled="!canChargeSticker || !isAllCreator"

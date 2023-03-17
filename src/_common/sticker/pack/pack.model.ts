@@ -1,5 +1,5 @@
 import { MediaItem } from '../../media-item/media-item-model';
-import { Model } from '../../model/model.service';
+import { Model, ModelData, UnknownModelData } from '../../model/model.service';
 
 export class StickerPack extends Model {
 	declare name: string;
@@ -11,7 +11,7 @@ export class StickerPack extends Model {
 
 	declare media_item: MediaItem;
 
-	constructor(data: Partial<StickerPack> = {}) {
+	constructor(data: UnknownModelData | ModelData<StickerPack> = {}) {
 		super(data);
 
 		if (data.media_item) {
