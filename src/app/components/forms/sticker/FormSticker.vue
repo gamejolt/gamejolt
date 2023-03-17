@@ -22,7 +22,6 @@ import {
 	validateImageMinDimensions,
 	validateMaxLength,
 	validateMinLength,
-	validatePattern,
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLinkHelpDocs from '../../../../_common/link/AppLinkHelpDocs.vue';
@@ -247,7 +246,6 @@ const validateAvailabilityPath = computed(() => {
 					validateMinLength(minNameLength),
 					validateMaxLength(maxNameLength),
 					validateAvailability({ url: validateAvailabilityPath }),
-					validatePattern(/^[a-z0-9 ]+$/i),
 				]"
 			/>
 
