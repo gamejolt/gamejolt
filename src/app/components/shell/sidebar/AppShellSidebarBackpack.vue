@@ -129,8 +129,8 @@ function openPack(pack: UserStickerPack) {
 					:pack="userPack.sticker_pack"
 					:show-details="{
 						name: true,
-						expiry: true,
 					}"
+					:expiry-info="userPack.expires_on"
 					can-click-pack
 					:hover-title="$gettext(`Open`)"
 					@click-pack="openPack(userPack)"
