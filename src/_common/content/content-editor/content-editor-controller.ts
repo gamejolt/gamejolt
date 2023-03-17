@@ -880,12 +880,17 @@ export function editorShowEmojiPanel(c: ContentEditorController) {
 	c._emojiPanel?.show();
 }
 
-export function editorInsertEmoji(c: ContentEditorController, emojiType: string) {
+export function editorInsertEmoji(
+	c: ContentEditorController,
+	{ emojiType, emojiSrc }: { emojiType: string; emojiSrc?: string }
+) {
 	if (!c.capabilities.emoji) {
 		return;
 	}
 
-	_insertNewInlineNode(c, schema => schema.nodes.gjEmoji.create({ type: emojiType }));
+	_insertNewInlineNode(c, schema =>
+		schema.nodes.gjEmoji.create({ type: emojiType, src: emojiSrc })
+	);
 }
 
 export function editorInsertGif(c: ContentEditorController, gif: SearchResult) {

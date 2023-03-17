@@ -3,6 +3,7 @@ import { nextTick } from 'vue';
 import { setup } from 'vue-class-component';
 import { Emit, Options, Vue } from 'vue-property-decorator';
 import AppEmoji, { GJ_EMOJIS } from '../../../../emoji/AppEmoji.vue';
+import { EmojiModal } from '../../../../emoji/modal/modal.service';
 import { vAppTooltip } from '../../../../tooltip/tooltip-directive';
 import { editorInsertEmoji, useContentEditorController } from '../../content-editor-controller';
 
@@ -91,10 +92,20 @@ export default class AppContentEditorControlsEmoji extends Vue {
 	}
 
 	onClickEmoji(emojiType: string) {
-		editorInsertEmoji(this.controller, emojiType);
+		editorInsertEmoji(this.controller, { emojiType });
 	}
 
 	public async show() {
+		// TODO(reactions) cleanup
+		const emojo = await EmojiModal.show({ resource: undefined });
+		if (emojo) {
+			editorInsertEmoji(this.controller, {
+				emojiType: emojo.short_name,
+				emojiSrc: emojo.img_url,
+			});
+		}
+		return;
+
 		this.setPanelVisibility(true);
 		await nextTick();
 		this.$refs.panel.focus();

@@ -54,6 +54,7 @@ function insertEmojiRule(c: ContentEditorController) {
 				}
 				start += matchWalker;
 
+				// TODO(reactions) auto-complete/typeahead
 				const newNode = state.schema.nodes.gjEmoji.create({
 					type: emojiType.toLowerCase(),
 				});

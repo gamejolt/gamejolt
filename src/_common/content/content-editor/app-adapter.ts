@@ -341,7 +341,10 @@ export class ContentEditorAppAdapterMessage {
 				return editorInsertCodeBlock(controller);
 
 			case 'emoji':
-				return editorInsertEmoji(controller, this.data.type);
+				return editorInsertEmoji(controller, {
+					emojiType: this.data.type,
+					emojiSrc: this.data.src,
+				});
 
 			case 'gif':
 				return editorInsertGif(controller, this.data.result);

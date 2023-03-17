@@ -674,4 +674,10 @@ function focus() {
 
 ::v-deep(img.emoji)
 	border-radius: 0
+
+// TODO(reactions) better sizing. better way to do this?
+::v-deep(img.emoji-box)
+	width: 24px
+	height: auto
+	max-height: 24px
 </style>
