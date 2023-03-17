@@ -72,6 +72,7 @@ interface OwnerSyncPayload {
 export interface PlaceStickerPayload {
 	stickerPlacement: StickerPlacement;
 	success?: boolean;
+	unlockedPack?: UnknownModelData;
 }
 
 interface StartFiresidePayload {

@@ -1,7 +1,15 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, StyleValue, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, ref, StyleValue, toRefs } from 'vue';
+import {
+	styleBorderRadiusCircle,
+	styleBorderRadiusLg,
+	styleChangeBg,
+	styleElevate,
+} from '../../../_styles/mixins';
+import { kBorderWidthLg } from '../../../_styles/variables';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 import AppQuestFrame from '../../quest/AppQuestFrame.vue';
+import AppUserAvatar from '../../user/user-avatar/AppUserAvatar.vue';
 import { useStickerStore } from '../sticker-store';
 import { Sticker } from '../sticker.model';
 
@@ -32,6 +40,9 @@ const props = defineProps({
 		type: Boolean,
 	},
 	hideCount: {
+		type: Boolean,
+	},
+	showCreator: {
 		type: Boolean,
 	},
 });
@@ -74,6 +85,16 @@ function onContextMenu(event: Event) {
 	}
 	event.preventDefault();
 }
+
+const tagStyles: CSSProperties = {
+	...styleBorderRadiusLg,
+	...styleElevate(1),
+	backgroundColor: `rgba(0,0,0,0.87)`,
+	position: `absolute`,
+	zIndex: 1,
+	padding: `4px 6px`,
+	pointerEvents: `none`,
+};
 </script>
 
 <template>
@@ -94,11 +115,25 @@ function onContextMenu(event: Event) {
 			</component>
 		</component>
 
-		<div v-if="currentStreak > 1" class="-pocket-left badge fill-dark">
+		<div
+			v-if="currentStreak > 1"
+			:style="{
+				...tagStyles,
+				top: 0,
+				right: 0,
+			}"
+		>
 			<div class="-rarity">x{{ currentStreak }}</div>
 		</div>
 
-		<div v-if="!hideCount" class="-pocket badge fill-dark">
+		<div
+			v-if="!hideCount"
+			:style="{
+				...tagStyles,
+				top: 0,
+				left: 0,
+			}"
+		>
 			<div
 				class="-rarity"
 				:class="{
@@ -109,6 +144,29 @@ function onContextMenu(event: Event) {
 			>
 				{{ count }}
 			</div>
+		</div>
+
+		<div
+			v-if="showCreator && sticker.isCreatorSticker && sticker.owner_user"
+			:style="{
+				...styleBorderRadiusCircle,
+				...styleChangeBg('bg-offset'),
+				position: `absolute`,
+				right: 0,
+				bottom: 0,
+				zIndex: 2,
+				padding: kBorderWidthLg.px,
+				pointerEvents: `none`,
+			}"
+		>
+			<AppUserAvatar
+				:style="{
+					width: `16px`,
+					height: `16px`,
+				}"
+				:user="sticker.owner_user"
+				disable-link
+			/>
 		</div>
 	</div>
 </template>
@@ -123,20 +181,9 @@ function onContextMenu(event: Event) {
 .-peeled
 	filter: contrast(0)
 
-.-pocket-left
-	position: absolute
-	top: 0
-	left: 0
-	pointer-events: none
-
-.-pocket
-	position: absolute
-	bottom: 0
-	right: 0
-	pointer-events: none
-
 .-rarity
 	font-weight: bold
+	color: white
 
 .-rarity-uncommon
 	color: #1bb804

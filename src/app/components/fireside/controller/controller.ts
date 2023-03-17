@@ -56,6 +56,10 @@ import {
 } from '../../../../_common/fireside/rtc/rtc';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import checkPayloadActions, {
+	PayloadAction,
+	PayloadActionDataKey,
+} from '../../../../_common/payload/payload-actions.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
 import { onFiresideStickerPlaced, StickerStore } from '../../../../_common/sticker/sticker-store';
@@ -241,11 +245,26 @@ export function createFiresideController(
 			try {
 				payload = await roomChannel.pushPlaceSticker(targetUserId, stickerData);
 
-				const { stickerPlacement, success = true } = payload;
+				const { stickerPlacement, success = true, unlockedPack } = payload;
 
 				if (stickerPlacement) {
 					onFiresideStickerPlaced.next(stickerPlacement);
 				}
+
+				if (unlockedPack) {
+					const type = PayloadAction.UNLOCK_STICKER_PACK;
+					checkPayloadActions({
+						actions: [
+							{
+								type,
+								data: {
+									[PayloadActionDataKey[type]]: unlockedPack,
+								},
+							},
+						],
+					});
+				}
+
 				return { ...payload, success };
 			} catch (e) {
 				return { ...payload, ...errorResponse };

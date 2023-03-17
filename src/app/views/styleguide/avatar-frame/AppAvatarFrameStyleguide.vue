@@ -145,15 +145,22 @@ function setFiles(files: File[]) {
 		return;
 	}
 
+	const oldUrl = form.formModel.avatarFrame?.image_url;
+	const windowUrl = window.URL || window.webkitURL;
+
 	form.formModel.avatarFrame = new AvatarFrame({
-		image_url: (window.URL || window.webkitURL).createObjectURL(files[0]),
+		image_url: windowUrl.createObjectURL(files[0]),
 	} as Partial<AvatarFrame>);
+
+	if (oldUrl) {
+		windowUrl.revokeObjectURL(oldUrl);
+	}
 }
 </script>
 
 <template>
 	<AppTheme :theme="theme">
-		<section id="styleguide-avatar-frames" class="section" @dragover="dragOver" @drop="drop">
+		<section id="styleguide-avatar-frame" class="section" @dragover="dragOver" @drop="drop">
 			<h1 class="section-header">Avatar Frame</h1>
 
 			<p>See how avatar frames are displayed on top of a user avatar.</p>
@@ -253,7 +260,7 @@ function setFiles(files: File[]) {
 </template>
 
 <style lang="stylus" scoped>
-#styleguide-avatar-frames
+#styleguide-avatar-frame
 	rounded-corners-lg()
 	change-bg('bg')
 	border: $border-width-base solid var(--theme-bg-subtle)

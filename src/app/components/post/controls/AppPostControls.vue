@@ -24,7 +24,7 @@ import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerControlsOverlay from '../../../../_common/sticker/AppStickerControlsOverlay.vue';
 import { useStickerLayer } from '../../../../_common/sticker/layer/layer-controller';
-import { setStickerDrawerOpen, useStickerStore } from '../../../../_common/sticker/sticker-store';
+import { openStickerDrawer, useStickerStore } from '../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -143,7 +143,7 @@ const hasPerms = computed(() => {
 const shouldShowEdit = computed(() => hasPerms.value);
 const shouldShowExtra = computed(() => user.value instanceof User);
 const shouldShowCommentsButton = computed(() => showComments.value);
-const shouldShowStickersButton = computed(() => post.value.canPlaceSticker);
+const shouldShowStickersButton = computed(() => post.value.canPlaceSticker && !!stickerLayer);
 const shouldShowLike = computed(() => post.value.canLike);
 
 const commentsButtonTooltip = computed(() =>
@@ -179,8 +179,12 @@ async function publish() {
 }
 
 async function placeSticker() {
+	if (!stickerLayer) {
+		return;
+	}
+
 	Analytics.trackEvent('post-controls', 'sticker-place', eventLabel.value);
-	setStickerDrawerOpen(stickerStore, true, stickerLayer);
+	openStickerDrawer(stickerStore, stickerLayer);
 	emit('sticker');
 }
 

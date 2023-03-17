@@ -22,7 +22,6 @@ interface StickerPackDetails {
 	name?: boolean;
 	cost?: boolean;
 	contents?: boolean;
-	expiry?: boolean;
 }
 
 type PackDetailsOptions = boolean | StickerPackDetails;
@@ -46,13 +45,17 @@ const props = defineProps({
 		type: String,
 		default: undefined,
 	},
+	expiryInfo: {
+		type: Number,
+		default: undefined,
+	},
 });
 
 const emit = defineEmits({
 	clickPack: () => true,
 });
 
-const { pack, showDetails, canClickPack, forceElevate } = toRefs(props);
+const { pack, showDetails, canClickPack, forceElevate, hoverTitle, expiryInfo } = toRefs(props);
 
 const showName = computed(() => {
 	if (!showDetails.value) {
@@ -66,13 +69,6 @@ const showCost = computed(() => {
 		return false;
 	}
 	return showDetails.value === true || showDetails.value.cost === true;
-});
-
-const showExpiry = computed(() => {
-	if (!showDetails.value) {
-		return false;
-	}
-	return showDetails.value === true || showDetails.value.expiry === true;
 });
 
 function onClickPack() {
@@ -145,7 +141,7 @@ const overlayedStyle: CSSProperties = {
 			</div>
 
 			<div
-				v-if="showExpiry && pack.ends_on"
+				v-if="expiryInfo"
 				:style="{
 					...overlayedStyle,
 					right: `4px`,
@@ -153,9 +149,10 @@ const overlayedStyle: CSSProperties = {
 				}"
 			>
 				{{
-					shorthandReadableTime(pack.ends_on, {
+					shorthandReadableTime(expiryInfo, {
 						allowFuture: true,
 						precision: 'rough',
+						nowText: $gettext(`Expired`),
 					})
 				}}
 			</div>

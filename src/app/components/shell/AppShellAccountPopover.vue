@@ -21,7 +21,7 @@ import { routeDashCreator } from '../../views/dashboard/creator/creator.route';
 import AppUserAvatarBubble from '../user/AppUserAvatarBubble.vue';
 import { UserTokenModal } from '../user/token-modal/token-modal.service';
 
-const { logout, hasNewUnlockedStickers } = useAppStore();
+const { logout } = useAppStore();
 const { user } = useCommonStore();
 const { isDark, setDark } = useThemeStore();
 
@@ -119,13 +119,6 @@ function quit() {
 						<div class="-quick-action-label">
 							{{ $gettext(`Creator HUD`) }}
 						</div>
-					</RouterLink>
-					<RouterLink class="-quick-action" :to="{ name: 'dash.stickers' }">
-						<AppJolticon class="-quick-action-icon" icon="sticker-filled" />
-						<div class="-quick-action-label">
-							<AppTranslate>Stickers</AppTranslate>
-						</div>
-						<div v-if="hasNewUnlockedStickers" class="-quick-action-new" />
 					</RouterLink>
 					<RouterLink
 						class="-quick-action"

@@ -212,6 +212,32 @@ export function styleFlexCenter(direction?: 'row' | 'column'): CSSProperties {
 	};
 }
 
+export function styleAbsoluteFill({
+	top = 0,
+	right = 0,
+	bottom = 0,
+	left = 0,
+	zIndex,
+}: {
+	top?: CSSProperties['top'];
+	right?: CSSProperties['right'];
+	bottom?: CSSProperties['bottom'];
+	left?: CSSProperties['left'];
+	zIndex?: CSSProperties['zIndex'];
+} = {}) {
+	const result: CSSProperties = {
+		position: `absolute`,
+		top,
+		left,
+		right,
+		bottom,
+	};
+	if (zIndex !== undefined) {
+		result.zIndex = zIndex;
+	}
+	return result;
+}
+
 export const styleOverlayTextShadow: CSSProperties = {
 	textShadow: `0.5px 0.5px 1.5px rgba(0, 0, 0, 0.38)`,
 };

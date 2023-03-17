@@ -5,7 +5,7 @@ import { vAppObserveDimensions } from '../../observe-dimensions/observe-dimensio
 import { useScroller } from '../../scroll/AppScrollScroller.vue';
 import { Scroll } from '../../scroll/scroll.service';
 import AppStickerChargeCard from '../charge/AppStickerChargeCard.vue';
-import { isStickerTargetMine, setStickerDrawerOpen, useStickerStore } from '../sticker-store';
+import { closeStickerDrawer, isStickerTargetMine, useStickerStore } from '../sticker-store';
 import AppStickerLayerDrawer from './AppStickerLayerDrawer.vue';
 import AppStickerLayerGhost from './AppStickerLayerGhost.vue';
 import AppStickerLayerPlacementMaskItem from './AppStickerLayerPlacementMaskItem.vue';
@@ -59,7 +59,7 @@ function onDimensionsChange([
 
 function onClickMask() {
 	Analytics.trackEvent('sticker-drawer', 'click-mask-hide');
-	setStickerDrawerOpen(stickerStore, false, null);
+	closeStickerDrawer(stickerStore);
 }
 </script>
 
