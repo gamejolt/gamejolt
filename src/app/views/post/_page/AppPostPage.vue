@@ -192,6 +192,7 @@ function onVideoPlay() {
 				<AppPostPageContent
 					v-if="background"
 					:post="post"
+					:sticker-target-controller="stickerTargetController"
 					:community-notifications="communityNotifications"
 				>
 					<template #sticker-scroll>
@@ -209,6 +210,7 @@ function onVideoPlay() {
 					<AppPostPageContent
 						v-if="!background"
 						:post="post"
+						:sticker-target-controller="stickerTargetController"
 						:community-notifications="communityNotifications"
 					>
 						<template #sticker-scroll>
