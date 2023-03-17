@@ -9,9 +9,15 @@ export class AppContentViewerGJEmoji extends Vue {
 	contentData!: ContentObject;
 
 	render() {
+		const emoji = this.contentData.attrs.type;
+		// TODO(reactions) get working
+		const useNetworkAsset = !!this.contentData.attrs.src;
+
 		return h(AppEmoji, {
-			emoji: this.contentData.attrs.type,
-			title: `:${this.contentData.attrs.type}:`,
+			emoji,
+			src: useNetworkAsset ? this.contentData.attrs.src : undefined,
+			// TODO(reactions) figure out if "type" will include the colons
+			title: useNetworkAsset ? emoji : `:${emoji}:`,
 		});
 	}
 }
