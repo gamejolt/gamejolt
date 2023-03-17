@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, ref, shallowRef, toRefs, watch } from 'vue';
+import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
 import { RouteLocationRaw, RouterLink, useRoute, useRouter } from 'vue-router';
 import { arrayRemove } from '../../../../utils/array';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
@@ -10,11 +10,7 @@ import { createLightbox } from '../../../../_common/lightbox/lightbox-helpers';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
 import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import {
-	createStickerTargetController,
-	provideStickerTargetController,
-	StickerTargetController,
-} from '../../../../_common/sticker/target/target-controller';
+import { StickerTargetController } from '../../../../_common/sticker/target/target-controller';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
@@ -34,6 +30,10 @@ const props = defineProps({
 		type: Object as PropType<FiresidePost>,
 		required: true,
 	},
+	stickerTargetController: {
+		type: Object as PropType<StickerTargetController>,
+		required: true,
+	},
 	communityNotifications: {
 		type: Array as PropType<CommunityUserNotification[]>,
 		default: () => [],
@@ -45,14 +45,6 @@ const { post, communityNotifications } = toRefs(props);
 const route = useRoute();
 const router = useRouter();
 const { user } = useCommonStore();
-
-const stickerTargetController = shallowRef<StickerTargetController>(
-	createStickerTargetController(post.value, {
-		isCreator: computed(() => post.value.displayUser.is_creator === true),
-	})
-);
-
-provideStickerTargetController(stickerTargetController);
 
 const videoStartTime = ref(0);
 
@@ -76,15 +68,6 @@ if (typeof route.query.t === 'string') {
 		query: { ...route.query, t: undefined },
 	} as RouteLocationRaw);
 }
-
-watch(
-	() => post.value.id,
-	() => {
-		stickerTargetController.value = createStickerTargetController(post.value, {
-			isCreator: computed(() => post.value.displayUser.is_creator === true),
-		});
-	}
-);
 
 function onClickFullscreen(mediaItem: MediaItem) {
 	const index = post.value.media.findIndex(i => i.id === mediaItem.id);
