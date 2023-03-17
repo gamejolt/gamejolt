@@ -15,12 +15,14 @@ import AppFormStickySubmit from '../../../../_common/form-vue/AppFormStickySubmi
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
+	validateAvailability,
 	validateFilesize,
 	validateImageAspectRatio,
 	validateImageMaxDimensions,
 	validateImageMinDimensions,
 	validateMaxLength,
 	validateMinLength,
+	validatePattern,
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLinkHelpDocs from '../../../../_common/link/AppLinkHelpDocs.vue';
@@ -174,6 +176,13 @@ const stickerGridItems = computed(() => {
 	}
 	return items;
 });
+
+const validateAvailabilityPath = computed(() => {
+	if (model?.value) {
+		return `/web/dash/creators/stickers/check-field-availability/${model.value.id}/name`;
+	}
+	return `/web/dash/creators/stickers/check-field-availability/0/name`;
+});
 </script>
 
 <template>
@@ -234,7 +243,12 @@ const stickerGridItems = computed(() => {
 		>
 			<AppFormControl
 				:placeholder="$gettext(`Sticker name...`)"
-				:validators="[validateMinLength(minNameLength), validateMaxLength(maxNameLength)]"
+				:validators="[
+					validateMinLength(minNameLength),
+					validateMaxLength(maxNameLength),
+					validateAvailability({ url: validateAvailabilityPath }),
+					validatePattern(/^[a-z0-9 ]+$/i),
+				]"
 			/>
 
 			<AppFormControlErrors :label="$gettext(`sticker name`)" />
