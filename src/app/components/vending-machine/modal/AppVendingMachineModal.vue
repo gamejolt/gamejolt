@@ -195,6 +195,7 @@ const loadingFadeContentStyles = loadingFadeStyles;
 										:pack="pack"
 										:can-click-pack="coinBalance >= pack.cost_coins"
 										show-details
+										:expiry-info="pack.ends_on"
 										@click-pack="purchasePack(pack)"
 									>
 										<template #overlay>
