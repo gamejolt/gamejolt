@@ -23,7 +23,6 @@ const props = defineProps({
 	},
 	canActivate: {
 		type: Boolean,
-		default: false,
 	},
 });
 

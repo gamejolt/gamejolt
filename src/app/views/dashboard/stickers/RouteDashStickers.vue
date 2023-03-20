@@ -8,10 +8,10 @@ import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
-	validateFilesize,
-	validateImageAspectRatio,
-	validateImageMaxDimensions,
-	validateImageMinDimensions,
+validateFilesize,
+validateImageAspectRatio,
+validateImageMaxDimensions,
+validateImageMinDimensions
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -20,14 +20,14 @@ import { ModelData } from '../../../../_common/model/model.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerPack, {
-	StickerPackRatio,
+StickerPackRatio
 } from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
 import { Sticker } from '../../../../_common/sticker/sticker.model';
 import {
-	$gettext,
-	$gettextInterpolate,
-	$ngettext,
+$gettext,
+$gettextInterpolate,
+$ngettext
 } from '../../../../_common/translate/translate.service';
 import { styleFlexCenter, styleWhen } from '../../../../_styles/mixins';
 import { kLineHeightComputed } from '../../../../_styles/variables';
@@ -236,7 +236,7 @@ function onPackEnabledChanged() {
 
 					<div :style="stickerGridStyles">
 						<template v-if="!isBootstrapped">
-							<AppStickerEditTile v-for="i in stickerSlots" :key="i" />
+							<AppStickerEditTile v-for="i in maxStickerAmount" :key="i" />
 						</template>
 						<template v-else>
 							<AppStickerEditTile

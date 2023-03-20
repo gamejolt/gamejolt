@@ -44,7 +44,6 @@ const props = defineProps({
 	...defineFormProps<Sticker>(),
 	canActivate: {
 		type: Boolean,
-		default: false,
 	},
 });
 
