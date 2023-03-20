@@ -21,9 +21,12 @@ const props = defineProps({
 		type: Function as PropType<(pack: StickerPack | undefined) => void>,
 		default: undefined,
 	},
+	canActivate: {
+		type: Boolean,
+	},
 });
 
-const { sticker, stickers, updatePack } = toRefs(props);
+const { sticker, stickers, updatePack, canActivate } = toRefs(props);
 
 const modal = useModal()!;
 
@@ -59,7 +62,12 @@ function onPackChanged(data: StickerPack | undefined) {
 		</div>
 
 		<div class="modal-body">
-			<FormSticker :model="model" @changed="onFormChanged" @pack="onPackChanged" />
+			<FormSticker
+				:model="model"
+				:can-activate="canActivate"
+				@changed="onFormChanged"
+				@pack="onPackChanged"
+			/>
 		</div>
 	</AppModal>
 </template>
