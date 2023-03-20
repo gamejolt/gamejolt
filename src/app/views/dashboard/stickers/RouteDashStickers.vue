@@ -56,7 +56,7 @@ type PackFormModel = Partial<StickerPack>;
 const stickers = ref([]) as Ref<Sticker[]>;
 const pack = ref(null) as Ref<StickerPack | null>;
 const maxStickerAmount = ref(5);
-const stickerSlots = ref(20);
+const stickerSlots = ref(100);
 
 const packMaxFilesize = ref(5 * 1024 * 1024);
 const packMinWidth = ref(128);
