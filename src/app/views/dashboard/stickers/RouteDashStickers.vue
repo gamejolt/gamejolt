@@ -46,6 +46,7 @@ type InitPayload = {
 	stickers: ModelData<Sticker>[];
 	pack: ModelData<StickerPack> | null;
 	maxStickerAmount: number;
+	stickerSlots: number;
 };
 
 type PackFormModel = Partial<StickerPack>;
@@ -55,6 +56,7 @@ type PackFormModel = Partial<StickerPack>;
 const stickers = ref([]) as Ref<Sticker[]>;
 const pack = ref(null) as Ref<StickerPack | null>;
 const maxStickerAmount = ref(5);
+const stickerSlots = ref(20);
 
 const packMaxFilesize = ref(5 * 1024 * 1024);
 const packMinWidth = ref(128);
@@ -142,6 +144,7 @@ const { isBootstrapped } = createAppRoute({
 		stickers.value = Sticker.populate(payload.stickers);
 		pack.value = payload.pack ? new StickerPack(payload.pack) : null;
 		maxStickerAmount.value = payload.maxStickerAmount;
+		stickerSlots.value = payload.stickerSlots;
 
 		if (pack.value) {
 			packForm.formModel.is_active = pack.value.is_active === true;
@@ -149,7 +152,11 @@ const { isBootstrapped } = createAppRoute({
 	},
 });
 
-const canCreateSticker = computed(() => stickers.value.length < maxStickerAmount.value);
+const canCreateSticker = computed(() => stickers.value.length < stickerSlots.value);
+
+const canActivateSticker = computed(
+	() => stickers.value.filter(i => i.is_active).length < maxStickerAmount.value
+);
 
 const stickerGridStyles = computed(() => {
 	const result: CSSProperties = {
@@ -160,7 +167,7 @@ const stickerGridStyles = computed(() => {
 	if (Screen.isXs) {
 		result.gridTemplateColumns = `repeat(auto-fill, minmax(120px, 1fr))`;
 	} else {
-		const perRow = Math.min(maxStickerAmount.value, 5);
+		const perRow = Math.min(stickerSlots.value, 5);
 		result.gridTemplateColumns = `repeat(${perRow}, 1fr)`;
 	}
 
@@ -210,16 +217,26 @@ function onPackEnabledChanged() {
 					</h1>
 
 					<div class="help-block">
-						{{
-							$gettext(
-								`Create custom stickers that will show up in your own personalized sticker pack! You may edit or disable stickers at any time, but you'll need some enabled to include them in your sticker pack.`
-							)
-						}}
+						<p>
+							{{
+								$gettext(
+									`Create custom stickers that will show up in your own personalized sticker pack! You may edit or disable stickers at any time, but you'll need some enabled to include them in your sticker pack.`
+								)
+							}}
+						</p>
+						<p>
+							{{
+								$gettextInterpolate(`%{ usedSlots } / %{ maxSlots } slots used`, {
+									usedSlots: stickers.length,
+									maxSlots: stickerSlots,
+								})
+							}}
+						</p>
 					</div>
 
 					<div :style="stickerGridStyles">
 						<template v-if="!isBootstrapped">
-							<AppStickerEditTile v-for="i in maxStickerAmount" :key="i" />
+							<AppStickerEditTile v-for="i in stickerSlots" :key="i" />
 						</template>
 						<template v-else>
 							<AppStickerEditTile
@@ -227,6 +244,7 @@ function onPackEnabledChanged() {
 								:key="sticker.id"
 								:sticker="sticker"
 								:stickers="stickers"
+								:can-activate="canActivateSticker"
 								show-name
 								@pack="updatePack"
 							/>
@@ -234,6 +252,7 @@ function onPackEnabledChanged() {
 							<AppStickerEditTile
 								v-if="canCreateSticker"
 								:stickers="stickers"
+								:can-activate="canActivateSticker"
 								@pack="updatePack"
 							>
 								<template #no-sticker>
