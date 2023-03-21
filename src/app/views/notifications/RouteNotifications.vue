@@ -71,9 +71,6 @@ const route = useRoute();
 const feed = ref(null) as Ref<ActivityFeedView | null>;
 
 const itemsPerPage = ref(15);
-const totalStickersCount = ref(0);
-const isStickersLoading = ref(true);
-
 const isBootstrapped = ref(false);
 
 const routeTitle = computed(() => $gettext(`Your Notifications`));
@@ -134,10 +131,6 @@ createAppRoute({
 		if (!fromCache && !hasFilter.value) {
 			grid.value?.pushViewNotifications('notifications');
 		}
-
-		const countPayload = await Api.sendRequest(`/web/stickers/user-count`);
-		totalStickersCount.value = countPayload.count;
-		isStickersLoading.value = false;
 	},
 });
 

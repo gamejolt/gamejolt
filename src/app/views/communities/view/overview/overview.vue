@@ -2,8 +2,8 @@
 import { setup } from 'vue-class-component';
 import { Inject, Options, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../utils/array';
-import { canCreateFiresides } from '../../../../../_common/community/community.model';
-import { Fireside } from '../../../../../_common/fireside/fireside.model';
+import { canCommunityCreateFiresides } from '../../../../../_common/community/community.model';
+import { canDeviceCreateFiresides, Fireside } from '../../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
@@ -118,7 +118,11 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	get canCreateFireside() {
-		return !this.userHasFireside && canCreateFiresides(this.community);
+		return (
+			!this.userHasFireside &&
+			canCommunityCreateFiresides(this.community) &&
+			canDeviceCreateFiresides()
+		);
 	}
 
 	get firesidesGridColumns() {

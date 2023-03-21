@@ -52,11 +52,7 @@ import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import {
-	$gettext,
-	$gettextInterpolate,
-	$ngettext,
-} from '../../../../_common/translate/translate.service';
+import { $gettext, $gettextInterpolate } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import AppContentTargets from '../../content/AppContentTargets.vue';
 import { CONTENT_TARGET_HEIGHT } from '../../content/target/AppContentTarget.vue';
@@ -127,7 +123,7 @@ const { defaultCommunity, defaultChannel, defaultRealm, overlay, model } = toRef
 const { user } = useCommonStore();
 
 const wasPublished = ref(false);
-const attachmentType = ref('');
+const attachmentType = ref<typeof FiresidePost.TYPE_VIDEO | typeof FiresidePost.TYPE_MEDIA>();
 const enabledAttachments = ref(false);
 const longEnabled = ref(false);
 const maxFilesize = ref(0);
@@ -159,7 +155,6 @@ const articleLengthLimit = ref(50_000);
 const isUploadingPastedImage = ref(false);
 const scrollingKey = ref(1);
 const uploadingVideoStatus = ref(VideoStatus.IDLE);
-const hasChangedBackground = ref(false);
 const isShowingMoreOptions = ref(false);
 
 const form: FormController<FormPostModel> = createForm({
@@ -182,9 +177,11 @@ const form: FormController<FormPostModel> = createForm({
 			enableVideo();
 		} else if (_model.hasMedia) {
 			enableImages();
-		} else if (attachmentType.value !== '') {
+		} else if (attachmentType.value) {
 			enabledAttachments.value = true;
-		} else if (form.formModel.background) {
+		}
+
+		if (form.formModel.background) {
 			// Assign the background_id directly instead of calling
 			// [assignBackgroundId], otherwise it'll always assign `null` as we
 			// haven't loaded our eligible backgrounds yet.
@@ -353,10 +350,6 @@ const form: FormController<FormPostModel> = createForm({
 
 		form.formModel.poll_duration = pollDuration.value * 60; // site-api expects duration in seconds.
 
-		if (form.formModel.hasAnyMedia) {
-			assignBackgroundId(null);
-		}
-
 		return form.formModel.$save();
 	},
 	onSubmitSuccess() {
@@ -375,47 +368,6 @@ const mainActionText = computed(() => {
 	} else {
 		return $gettext('Post');
 	}
-});
-
-const backgroundsDisabledText = computed(() => {
-	if (!form.formModel.hasAnyMedia) {
-		return undefined;
-	}
-
-	var vidCount = 0;
-	var imgCount = 0;
-	const media = [...form.formModel.media, ...form.formModel.videos];
-	for (const item of media) {
-		if (item instanceof FiresidePostVideo) {
-			++vidCount;
-			if (vidCount > 1) {
-				break;
-			}
-		} else if (item instanceof MediaItem) {
-			++imgCount;
-			if (imgCount > 1) {
-				break;
-			}
-		}
-	}
-
-	if (vidCount > 0) {
-		return $ngettext(
-			`Remove your video to add a background`,
-			`Remove your videos to add a background`,
-			vidCount
-		);
-	}
-
-	if (imgCount > 0) {
-		return $ngettext(
-			`Remove your image to add a background`,
-			`Remove your images to add a background`,
-			vidCount
-		);
-	}
-
-	return undefined;
 });
 
 const isEditing = computed(() => wasPublished.value || isSavedDraftPost.value);
@@ -568,31 +520,6 @@ watch(incompleteDefaultCommunity, () => {
 	}
 });
 
-watch(
-	() => form.formModel.hasAnyMedia,
-	() => {
-		if (!form.isLoaded) {
-			return;
-		}
-
-		let id: number | null = null;
-
-		if (!form.formModel.hasAnyMedia) {
-			// If a post is being edited and already has a background, we should
-			// default back to that unless they specifically changed the
-			// background themselves.
-			const usablePostBackgroundId = hasChangedBackground.value
-				? null
-				: model.value.background?.id || null;
-
-			// Use the post background, if applicable, or try finding a
-			// background that matches our Pref.
-			id = usablePostBackgroundId ?? _getMatchingBackgroundIdFromPref();
-		}
-		assignBackgroundId(id);
-	}
-);
-
 // When toggling the "Comments enabled?" checkbox back and forth.
 watch(
 	() => form.formModel._comments_enabled,
@@ -734,7 +661,7 @@ function enableVideo() {
 
 function disableAttachments() {
 	enabledAttachments.value = false;
-	attachmentType.value = '';
+	attachmentType.value = undefined;
 
 	form.formModel.media = [];
 	form.formModel.videos = [];
@@ -1056,8 +983,6 @@ function _getMatchingBackgroundIdFromPref() {
 					<AppFormControlBackground
 						:backgrounds="backgrounds"
 						:tile-size="40"
-						:disabled-text="backgroundsDisabledText"
-						:disabled="!!backgroundsDisabledText"
 						@changed="onBackgroundChanged"
 					/>
 				</AppFormGroup>

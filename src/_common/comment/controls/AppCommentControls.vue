@@ -8,7 +8,7 @@ import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
 import { useStickerLayer } from '../../sticker/layer/layer-controller';
-import { setStickerDrawerOpen, useStickerStore } from '../../sticker/sticker-store';
+import { openStickerDrawer, useStickerStore } from '../../sticker/sticker-store';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { $gettext, $gettextInterpolate, $ngettext } from '../../translate/translate.service';
@@ -119,7 +119,10 @@ function showLikers() {
 }
 
 async function placeSticker() {
-	setStickerDrawerOpen(stickerStore, true, stickerLayer);
+	if (!canPlaceStickers.value || !stickerLayer) {
+		return;
+	}
+	openStickerDrawer(stickerStore, stickerLayer);
 }
 </script>
 
@@ -164,7 +167,7 @@ async function placeSticker() {
 			/>
 
 			<AppButton
-				v-if="canPlaceStickers"
+				v-if="canPlaceStickers && stickerLayer"
 				v-app-tooltip="$gettext('Place sticker')"
 				v-app-track-event="`comment-widget:place-sticker`"
 				v-app-auth-required

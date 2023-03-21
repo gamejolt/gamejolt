@@ -24,7 +24,7 @@ import {
 import { getDeviceArch, getDeviceOS } from '../../../../../_common/device/device.service';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { GameBuild } from '../../../../../_common/game/build/build.model';
-import { CustomMessage, Game } from '../../../../../_common/game/game.model';
+import { CustomMessage, Game, handleGameAddFailure } from '../../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../../_common/game/package/package-payload.model';
 import { GameRating } from '../../../../../_common/game/rating/rating.model';
 import { GameScoreTable } from '../../../../../_common/game/score-table/score-table.model';
@@ -39,6 +39,7 @@ import { Registry } from '../../../../../_common/registry/registry.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import { EventSubscription } from '../../../../../_common/system/event/event-topic';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -423,6 +424,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 
 	themeStore = setup(() => useThemeStore());
 	ads = setup(() => useAdsController());
+	commonStore = setup(() => useCommonStore());
 
 	commentStore: CommentStoreModel | null = null;
 
@@ -435,6 +437,10 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 		[Collaborator.ROLE_COMMUNITY_MANAGER]: $gettext('a community manager'),
 		[Collaborator.ROLE_DEVELOPER]: $gettext('a developer'),
 	};
+
+	get user() {
+		return this.commonStore.user;
+	}
 
 	get game() {
 		return this.routeStore.game;
@@ -544,8 +550,13 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	}
 
 	async acceptCollaboration() {
-		await this.collaboratorInvite!.$accept();
-		this.routeStore.acceptCollaboratorInvite(this.collaboratorInvite!);
+		try {
+			await this.collaboratorInvite!.$accept();
+			this.routeStore.acceptCollaboratorInvite(this.collaboratorInvite!);
+		} catch (error: any) {
+			console.log('Error status for accepting game collaboration.', error);
+			handleGameAddFailure(this.user!, error.reason, this.$router);
+		}
 	}
 
 	async declineCollaboration() {

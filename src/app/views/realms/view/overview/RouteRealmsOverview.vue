@@ -3,6 +3,7 @@ import { computed, Ref, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
+import { canDeviceCreateFiresides } from '../../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import {
@@ -47,9 +48,13 @@ const isBootstrapped = ref(false);
 // How many firesides to show in the preview row, including the "add a fireside".
 const firesidesGridColumns = 5;
 
+const canCreateFireside = computed(() => !userHasFireside.value && canDeviceCreateFiresides());
+
 const displayablePreviewFiresides = computed(() => {
 	const previewable = userFireside.value
-		? [userFireside.value, ...firesides.value]
+		? // Move the user's Fireside to the start of the list, and remove it from the rest so it
+		  // doesn't show up twice.
+		  [userFireside.value, ...firesides.value.filter(x => x.id !== userFireside.value!.id)]
 		: firesides.value;
 
 	// -1 to leave room for the "add a fireside"
@@ -131,7 +136,7 @@ function onPostAdded(post: FiresidePost) {
 					marginBottom: kLineHeightComputed.px,
 				}"
 			>
-				<AppFiresideAvatarAdd v-if="realm && !userHasFireside" :realms="[realm]" />
+				<AppFiresideAvatarAdd v-if="realm && canCreateFireside" :realms="[realm]" />
 
 				<AppFiresideAvatar
 					v-for="fireside in displayablePreviewFiresides"

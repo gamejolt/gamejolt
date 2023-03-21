@@ -66,10 +66,6 @@ export function createAppStore({
 	/** Unread items in the notification feed. */
 	const unreadNotificationsCount = ref(0);
 	const hasNewFriendRequests = ref(false);
-	const hasNewUnlockedStickers = ref(false);
-
-	// Wallet currencies.
-	const coinBalance = ref(0);
 
 	const notificationState = ref<ActivityFeedState>();
 
@@ -349,10 +345,6 @@ export function createAppStore({
 		hasNewFriendRequests.value = has;
 	}
 
-	function setHasNewUnlockedStickers(has: boolean) {
-		hasNewUnlockedStickers.value = has;
-	}
-
 	function _setBootstrapped() {
 		isBootstrapped.value = true;
 		_bootstrapResolver.value?.();
@@ -536,7 +528,6 @@ export function createAppStore({
 		unreadActivityCount,
 		unreadNotificationsCount,
 		hasNewFriendRequests,
-		hasNewUnlockedStickers,
 		notificationState,
 		mobileCbarShowing,
 		lastOpenLeftPane,
@@ -573,7 +564,6 @@ export function createAppStore({
 		incrementNotificationCount,
 		setNotificationCount,
 		setHasNewFriendRequests,
-		setHasNewUnlockedStickers,
 		joinCommunity,
 		leaveCommunity,
 		setActiveCommunity,
@@ -581,6 +571,5 @@ export function createAppStore({
 		viewCommunity,
 		getQuestStore,
 		stickerStore,
-		coinBalance,
 	};
 }
