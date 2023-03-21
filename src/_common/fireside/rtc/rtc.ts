@@ -61,7 +61,7 @@ export interface AgoraStreamingInfo {
 	chatToken: string;
 }
 
-type Options = { isMuted?: boolean };
+type Options = { isPreviewMode?: boolean };
 
 export class FiresideRTC {
 	constructor(
@@ -79,12 +79,12 @@ export class FiresideRTC {
 		public readonly hosts: FiresideRTCHost[],
 		public readonly listableHostIds: Set<number>,
 		public readonly hostBackgrounds: Map<number, Background>,
-		{ isMuted }: Options
+		{ isPreviewMode }: Options
 	) {
-		this.isMuted = isMuted ?? false;
+		this.isPreviewMode = isPreviewMode ?? false;
 	}
 
-	readonly isMuted;
+	readonly isPreviewMode;
 
 	generation = new CancelToken();
 
