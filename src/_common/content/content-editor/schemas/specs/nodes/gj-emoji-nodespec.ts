@@ -1,12 +1,11 @@
 import { Node, NodeSpec } from 'prosemirror-model';
 
-const assetPaths = import.meta.glob('../../../../../emoji/*.png', {
-	as: 'url',
-	eager: true,
-});
-
 export const gjEmoji = {
-	attrs: { type: { default: 'grin' }, src: { default: null } },
+	attrs: {
+		id: {
+			default: 0,
+		},
+	},
 	group: 'inline',
 	inline: true,
 	draggable: true,
@@ -15,29 +14,21 @@ export const gjEmoji = {
 
 	// The emoji is rendered as an img to make it selectable without content.
 	toDOM: (node: Node) => {
-		const useNetworkAsset = !!node.attrs.src;
+		const { id } = node.attrs;
+
 		return [
-			'img',
+			'span',
 			{
-				'emoji-type': node.attrs.type,
-				'emoji-src': node.attrs.src,
-				// TODO(reactions) better sizing.
-				class: 'emoji' + (useNetworkAsset ? ' emoji-box' : ''),
-				title: useNetworkAsset ? node.attrs.type : ':' + node.attrs.type + ':',
-				src: useNetworkAsset
-					? node.attrs.src
-					: assetPaths[`../../../../../emoji/${node.attrs.type}.png`],
+				'emoji-id': id,
 			},
 		];
 	},
 	parseDOM: [
 		{
-			tag: 'img[emoji-type]',
+			tag: 'span[emoji-id]',
 			getAttrs: (domNode: Element) => {
-				const type = domNode.getAttribute('emoji-type');
-				// TODO(reactions) I don't know
-				const src = domNode.getAttribute('emoji-src');
-				return { type, src };
+				const id = parseInt(domNode.getAttribute('emoji-id')!, 10);
+				return { id };
 			},
 		},
 	],

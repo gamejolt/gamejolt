@@ -6,6 +6,7 @@ import { inject, InjectionKey, markRaw, nextTick, reactive, unref, watch } from 
 import { isImage } from '../../../utils/image';
 import { uuidv4 } from '../../../utils/uuid';
 import { MaybeRef } from '../../../utils/vue';
+import { Emoji } from '../../emoji/emoji.model';
 import { MediaItem } from '../../media-item/media-item-model';
 import { ContentContext, ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
@@ -103,7 +104,6 @@ export class ContentEditorController {
 
 	stateCounter = 0;
 	isFocused = false;
-	emojiPanelVisible = false;
 
 	/**
 	 * Gets updated through the update-is-empty-plugin.
@@ -880,16 +880,15 @@ export function editorShowEmojiPanel(c: ContentEditorController) {
 	c._emojiPanel?.show();
 }
 
-export function editorInsertEmoji(
-	c: ContentEditorController,
-	{ emojiType, emojiSrc }: { emojiType: string; emojiSrc?: string }
-) {
+export function editorInsertEmoji(c: ContentEditorController, emoji: Emoji) {
 	if (!c.capabilities.emoji) {
 		return;
 	}
 
 	_insertNewInlineNode(c, schema =>
-		schema.nodes.gjEmoji.create({ type: emojiType, src: emojiSrc })
+		schema.nodes.gjEmoji.create({
+			id: emoji.id,
+		})
 	);
 }
 

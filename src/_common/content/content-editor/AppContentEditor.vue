@@ -36,7 +36,7 @@ import {
 import { ContentRules } from './content-rules';
 import { ContentTempResource } from './content-temp-resource.service';
 import AppContentEditorBlockControls from './controls/block-controls.vue';
-import AppContentEditorControlsEmoji from './controls/emoji/emoji.vue';
+import AppContentEditorControlsEmoji from './controls/emoji/AppContentEditorControlsEmoji.vue';
 import AppContentEditorControlsGif from './controls/gif/gif.vue';
 import AppContentEditorInsetControls from './controls/inset-controls.vue';
 import AppContentEditorControlsMentionAutocomplete from './controls/mention/autocomplete.vue';
@@ -241,8 +241,7 @@ const shouldShowTextControls = computed(() => {
 	return (
 		!controller_.value.disabled &&
 		controller_.value.isFocused &&
-		contextCapabilities.value.hasAnyText &&
-		!controller_.value.emojiPanelVisible
+		contextCapabilities.value.hasAnyText
 	);
 });
 
@@ -421,13 +420,6 @@ async function highlightCurrentSelection() {
 	++controller_.value.stateCounter;
 }
 
-function onEmojiPanelVisibilityChanged(visible: boolean) {
-	controller_.value.emojiPanelVisible = visible;
-	if (controller_.value.emojiPanelVisible) {
-		highlightCurrentSelection();
-	}
-}
-
 function onInsertMention() {
 	highlightCurrentSelection();
 	controller_.value.canShowMentionSuggestions = 0; // Hide control
@@ -498,10 +490,7 @@ function focus() {
 						<AppContentEditorControlsGif v-if="shouldShowGifButton" />
 					</transition>
 					<transition name="fade">
-						<AppContentEditorControlsEmoji
-							v-if="shouldShowEmojiPanel"
-							@visibility-change="onEmojiPanelVisibilityChanged"
-						/>
+						<AppContentEditorControlsEmoji v-if="shouldShowEmojiPanel" />
 					</transition>
 				</AppContentEditorInsetControls>
 			</AppScrollScroller>
@@ -671,13 +660,4 @@ function focus() {
 // Add a minimal margin to media items so they don't directly border the top of the editor
 ::v-deep(.media-item)
 	margin-top: ($line-height-computed / 3)
-
-::v-deep(img.emoji)
-	border-radius: 0
-
-// TODO(reactions) better sizing. better way to do this?
-::v-deep(img.emoji-box)
-	width: 24px
-	height: auto
-	max-height: 24px
 </style>

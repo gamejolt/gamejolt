@@ -1,6 +1,6 @@
 import { h } from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import AppEmoji from '../../../emoji/AppEmoji.vue';
+import AppContentEmoji from '../../components/AppContentEmoji.vue';
 import { ContentObject } from '../../content-object';
 
 @Options({})
@@ -9,15 +9,10 @@ export class AppContentViewerGJEmoji extends Vue {
 	contentData!: ContentObject;
 
 	render() {
-		const emoji = this.contentData.attrs.type;
-		// TODO(reactions) get working
-		const useNetworkAsset = !!this.contentData.attrs.src;
+		const { id } = this.contentData.attrs;
 
-		return h(AppEmoji, {
-			emoji,
-			src: useNetworkAsset ? this.contentData.attrs.src : undefined,
-			// TODO(reactions) figure out if "type" will include the colons
-			title: useNetworkAsset ? emoji : `:${emoji}:`,
+		return h(AppContentEmoji, {
+			emojiId: id,
 		});
 	}
 }

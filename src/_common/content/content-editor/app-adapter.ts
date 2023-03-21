@@ -1,6 +1,7 @@
 import { markRaw, reactive } from 'vue';
 import { objectPick } from '../../../utils/object';
 import { assertNever } from '../../../utils/utils';
+import { Emoji } from '../../emoji/emoji.model';
 import { MediaItem } from '../../media-item/media-item-model';
 import { Theme } from '../../theme/theme.model';
 import { ThemeStore } from '../../theme/theme.store';
@@ -341,10 +342,7 @@ export class ContentEditorAppAdapterMessage {
 				return editorInsertCodeBlock(controller);
 
 			case 'emoji':
-				return editorInsertEmoji(controller, {
-					emojiType: this.data.type,
-					emojiSrc: this.data.src,
-				});
+				return editorInsertEmoji(controller, new Emoji(this.data.emoji));
 
 			case 'gif':
 				return editorInsertGif(controller, this.data.result);

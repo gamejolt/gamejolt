@@ -1,8 +1,8 @@
-import AppEmoji from '../../../emoji/AppEmoji.vue';
+import AppContentEmoji from '../../components/AppContentEmoji.vue';
 import { BaseNodeView } from './base';
 
 export class EmojiNodeView extends BaseNodeView {
 	mounted() {
-		this.mountVue(AppEmoji, { emoji: this.node.attrs.type }, { inline: true });
+		this.mountVue(AppContentEmoji, { emojiId: this.node.attrs.id }, { inline: true });
 	}
 }
