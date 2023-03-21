@@ -7,7 +7,7 @@ import {
 	onUnmounted,
 	ref,
 	shallowReadonly,
-	watch
+	watch,
 } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
@@ -26,7 +26,7 @@ import {
 	isInChatRoom,
 	processNewChatOutput,
 	setTimeSplit,
-	updateChatRoomLastMessageOn
+	updateChatRoomLastMessageOn,
 } from './client';
 import { ChatMessage } from './message';
 import { ChatRoom } from './room';
@@ -122,7 +122,11 @@ export function createChatRoomChannel(
 
 	let _freezeMessageLimitRemovals = false;
 	let _queuedMessageLimit: number | undefined = undefined;
-	const channelController = createSocketChannelController(`room:${roomId}`, socketController, firesideSocketParams);
+	const channelController = createSocketChannelController(
+		`room:${roomId}`,
+		socketController,
+		firesideSocketParams
+	);
 	channelController.listenTo('message', _onMsg);
 	channelController.listenTo('user_updated', _onUserUpdated);
 	channelController.listenTo('message_update', _onUpdateMsg);
