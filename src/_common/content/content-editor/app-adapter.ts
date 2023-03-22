@@ -30,9 +30,12 @@ import {
 import { ContentEditorService } from './content-editor.service';
 import { createMediaUploadTask } from './media-upload-task';
 
+const GJEditorAdapterKey = 'gjEditor' as const;
+const GJEditorHandler = 'GJEditorHandler' as const;
+
 export function createContentEditorAppAdapter({ themeStore }: { themeStore: ThemeStore }) {
 	const c = reactive(new ContentEditorAppAdapter(() => themeStore)) as ContentEditorAppAdapter;
-	(window as any).gjEditor = c;
+	(window as any)[GJEditorAdapterKey] = c;
 	return c;
 }
 
@@ -59,7 +62,9 @@ export class ContentEditorAppAdapter {
 		return {
 			postMessage: (message: string) => {
 				if (win.flutter_inappwebview) {
-					win.flutter_inappwebview.callHandler('gjEditor', message);
+					win.flutter_inappwebview.callHandler(GJEditorAdapterKey, message);
+				} else if (win[GJEditorHandler]) {
+					win[GJEditorHandler].postMessage(message);
 				} else {
 					console.log('Sending message over channel:', message);
 				}
@@ -153,7 +158,7 @@ export function editorGetAppAdapter() {
 		throw new Error(`Tried getting app adapter in non-app build.`);
 	}
 
-	const adapter = (window as any).gjEditor as ContentEditorAppAdapter | undefined;
+	const adapter = (window as any)[GJEditorAdapterKey] as ContentEditorAppAdapter | undefined;
 	if (!adapter) {
 		throw new Error(`Tried getting app adapter before it was initialized.`);
 	}
