@@ -9,10 +9,11 @@ export class AppContentViewerGJEmoji extends Vue {
 	contentData!: ContentObject;
 
 	render() {
-		const { id } = this.contentData.attrs;
+		const { id, type } = this.contentData.attrs;
 
 		return h(AppContentEmoji, {
 			emojiId: id,
+			emojiType: type,
 		});
 	}
 }

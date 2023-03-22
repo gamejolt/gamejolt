@@ -5,6 +5,9 @@ export const gjEmoji = {
 		id: {
 			default: 0,
 		},
+		type: {
+			default: '',
+		},
 	},
 	group: 'inline',
 	inline: true,
@@ -14,21 +17,24 @@ export const gjEmoji = {
 
 	// The emoji is rendered as an img to make it selectable without content.
 	toDOM: (node: Node) => {
-		const { id } = node.attrs;
+		const { id, type } = node.attrs;
 
 		return [
 			'span',
 			{
 				'emoji-id': id,
+				'emoji-type': type,
 			},
 		];
 	},
 	parseDOM: [
 		{
+			// TODO(reactions) id may default to 0. is this correct?
 			tag: 'span[emoji-id]',
 			getAttrs: (domNode: Element) => {
-				const id = parseInt(domNode.getAttribute('emoji-id')!, 10);
-				return { id };
+				const id = parseInt(domNode.getAttribute('emoji-id') || '0', 10);
+				const type = domNode.getAttribute('emoji-type');
+				return { id, type };
 			},
 		},
 	],
