@@ -118,10 +118,10 @@ interface NewPostPayload {
 	channel_id: string;
 }
 
-
-export function createGridNotificationChannel(client: GridClient, 
-	options: { userId: number; router: Router }) {
-
+export function createGridNotificationChannel(
+	client: GridClient,
+	options: { userId: number; router: Router }
+) {
 	const { socketController, appStore } = client;
 	const { userId, router } = options;
 	const { communityStates, stickerStore } = appStore;
@@ -138,15 +138,11 @@ export function createGridNotificationChannel(client: GridClient,
 	channelController.listenTo('clear-notifications', _onClearNotifications);
 	channelController.listenTo('sticker-unlock', _onStickerUnlock);
 	channelController.listenTo('post-updated', _onPostUpdated);
-	
+
 	// from community channel
 	channelController.listenTo('feature', _onFeature);
 	channelController.listenTo('new-post', _onNewPost);
 	channelController.listenTo('feature-fireside', _onFeatureFireside);
-
-	
-	
-
 
 	const joinPromise = channelController.join({
 		async onJoin(payload: JoinPayload) {
@@ -241,7 +237,7 @@ export function createGridNotificationChannel(client: GridClient,
 		leave_community,
 		pushCommunityBootstrap,
 	});
-	
+
 	function _onNewNotification(payload: NewNotificationPayload) {
 		const data = payload.notification_data.event_item;
 		const notification = reactive(new Notification(data)) as Notification;
@@ -314,7 +310,7 @@ export function createGridNotificationChannel(client: GridClient,
 
 	// from community channel
 	function _onFeature(payload: FeaturePayload) {
-		console.log('[community chnl test] Capturing feature event with ' + payload)
+		console.log('[community chnl test] Capturing feature event with ' + payload);
 		// Suppress notification if the user featured that post.
 		if (payload.post_id) {
 			const postId = parseInt(payload.post_id, 10);
@@ -324,7 +320,8 @@ export function createGridNotificationChannel(client: GridClient,
 		}
 
 		const communityState = appStore.communityStates.value.getCommunityState(
-			parseInt(payload.community_id, 10));
+			parseInt(payload.community_id, 10)
+		);
 		communityState.hasUnreadFeaturedPosts = true;
 
 		// Only increment when we use the activity feed as the home feed, as it
@@ -334,10 +331,11 @@ export function createGridNotificationChannel(client: GridClient,
 		}
 	}
 
-	function _onNewPost(payload: NewPostPayload) {
+	function _onNewPost(payload: NewPostPayload) {);
 		const channelId = parseInt(payload.channel_id, 10);
 		const communityState = appStore.communityStates.value.getCommunityState(
-			parseInt(payload.community_id, 10));
+			parseInt(payload.community_id, 10)
+		);
 		communityState.markChannelUnread(channelId);
 	}
 
@@ -376,8 +374,6 @@ export function createGridNotificationChannel(client: GridClient,
 		});
 	}
 
-
-
 	/**
 	 * Clear notification status for a particular notification type.
 	 */
@@ -392,23 +388,17 @@ export function createGridNotificationChannel(client: GridClient,
 		});
 	}
 
-	function join_community(
-		data: SubscriptionCommunityData = {}
-	) {
+	function join_community(data: SubscriptionCommunityData = {}) {
 		return channelController.push('follow_community', {
 			community_id: data.community_id,
 		});
 	}
 
-	function leave_community(
-		data: SubscriptionCommunityData = {}
-	) {
+	function leave_community(data: SubscriptionCommunityData = {}) {
 		return channelController.push('unfollow_community', {
 			community_id: data.community_id,
 		});
 	}
-
-
 
 	async function pushCommunityBootstrap(communityId: number) {
 		interface Payload {

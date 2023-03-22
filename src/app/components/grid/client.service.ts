@@ -22,7 +22,7 @@ import { SettingFeedNotifications } from '../../../_common/settings/settings.ser
 import { SiteTrophy } from '../../../_common/site/trophy/trophy.model';
 import {
 	createSocketController,
-	SocketController
+	SocketController,
 } from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
 import { EventTopic } from '../../../_common/system/event/event-topic';
@@ -34,7 +34,6 @@ import { AppStore } from '../../store/index';
 import { router } from '../../views';
 import { ChatClient, clearChat, connectChat, createChatClient } from '../chat/client';
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
-import { GridCommunityChannel } from './community-channel';
 
 import { GridFiresideChannel } from './fireside-channel';
 import { GridFiresideDMChannel } from './fireside-dm-channel';
@@ -123,7 +122,6 @@ export class GridClient {
 	bootstrapTimestamp = 0;
 	bootstrapDelay = 1;
 	chat: ChatClient | null = null;
-	communityChannels: GridCommunityChannel[] = [];
 	firesideChannels: GridFiresideChannel[] = [];
 	firesideDMChannels: GridFiresideDMChannel[] = [];
 	notificationChannel: GridNotificationChannel | null = null;
@@ -224,14 +222,11 @@ export class GridClient {
 
 			this.notificationChannel = markRaw(channel);
 			this.markConnected();
-
-			// this action should now happen as a topic subscription from notification channel
-			// await Promise.all(this.appStore.communities.value.map(i => this.joinCommunity(i)));
 		}
 
 		// Now connect to our chat channels.
 		await connectChat(this.chat!);
-	}	
+	}
 
 	markConnected() {
 		this.connected = true;
@@ -257,7 +252,6 @@ export class GridClient {
 		this.bootstrapReceived = false;
 		this.bootstrapTimestamp = 0;
 
-		this.communityChannels = [];
 		this.firesideChannels = [];
 		this.firesideDMChannels = [];
 		this.notificationChannel = null;
