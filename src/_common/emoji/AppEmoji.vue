@@ -67,6 +67,6 @@ const backgroundImage = computed(() => {
 			}),
 		]"
 		:src="backgroundImage"
-		alt=""
+		:alt="GJ_IS_MOBILE_APP ? undefined : ''"
 	/>
 </template>
