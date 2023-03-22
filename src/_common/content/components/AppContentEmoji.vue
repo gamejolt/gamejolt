@@ -46,7 +46,7 @@ if (props.emojiId) {
 				height: `25px`,
 			}"
 			src=""
-			alt=""
+			:alt="GJ_IS_MOBILE_APP ? undefined : ''"
 		/>
 	</template>
 </template>
