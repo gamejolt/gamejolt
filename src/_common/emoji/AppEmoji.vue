@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, PropType, toRefs } from 'vue';
+import { styleWhen } from '../../_styles/mixins';
 import { Emoji } from './emoji.model';
 
 export const GJ_EMOJIS = [
@@ -48,22 +49,23 @@ const backgroundImage = computed(() => {
 </script>
 
 <template>
-	<span
+	<img
 		:style="[
 			'speak: none',
 			{
 				display: `inline-block`,
 				width: `25px`,
-				height: `25px`,
+				height: `auto`,
+				maxHeight: `25px`,
 				verticalAlign: `middle`,
 				lineHeight: 1,
 				cursor: `default`,
-				backgroundRepeat: `no-repeat`,
-				imageRendering: `pixelated`,
-				backgroundImage: `url('${backgroundImage}')`,
-				backgroundPosition: `center center`,
-				backgroundSize: `contain`,
 			},
+			styleWhen(typeof emoji === 'string', {
+				imageRendering: `pixelated`,
+			}),
 		]"
+		:src="backgroundImage"
+		:alt="`${emoji}-${typeof emoji === 'string' ? emoji : emoji.id}`"
 	/>
 </template>

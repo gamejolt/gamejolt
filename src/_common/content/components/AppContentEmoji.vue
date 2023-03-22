@@ -35,20 +35,18 @@ if (props.emojiId) {
 </script>
 
 <template>
-	<span>
-		<template v-if="emoji">
-			<AppEmoji :emoji="emoji" />
-		</template>
-		<template v-else>
-			<img
-				:style="{
-					display: `inline-block`,
-					width: `25px`,
-					height: `25px`,
-				}"
-				src=""
-				alt=""
-			/>
-		</template>
-	</span>
+	<template v-if="emoji">
+		<AppEmoji :emoji="emoji" />
+	</template>
+	<template v-else>
+		<img
+			:style="{
+				display: `inline-block`,
+				width: `25px`,
+				height: `25px`,
+			}"
+			src=""
+			alt=""
+		/>
+	</template>
 </template>

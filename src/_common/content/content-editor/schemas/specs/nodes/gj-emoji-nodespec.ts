@@ -20,7 +20,7 @@ export const gjEmoji = {
 		const { id, type } = node.attrs;
 
 		return [
-			'span',
+			'img',
 			{
 				'emoji-id': id,
 				'emoji-type': type,
@@ -30,7 +30,7 @@ export const gjEmoji = {
 	parseDOM: [
 		{
 			// TODO(reactions) id may default to 0. is this correct?
-			tag: 'span[emoji-id]',
+			tag: 'img[emoji-id]',
 			getAttrs: (domNode: Element) => {
 				const id = parseInt(domNode.getAttribute('emoji-id') || '0', 10);
 				const type = domNode.getAttribute('emoji-type');
