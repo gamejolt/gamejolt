@@ -56,6 +56,7 @@ const backgroundImage = computed(() => {
 				display: `inline-block`,
 				width: `25px`,
 				height: `auto`,
+				minHeight: `20px`,
 				maxHeight: `25px`,
 				verticalAlign: `middle`,
 				lineHeight: 1,
@@ -66,6 +67,6 @@ const backgroundImage = computed(() => {
 			}),
 		]"
 		:src="backgroundImage"
-		:alt="`${emoji}-${typeof emoji === 'string' ? emoji : emoji.id}`"
+		alt=""
 	/>
 </template>
