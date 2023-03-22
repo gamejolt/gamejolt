@@ -1,15 +1,25 @@
 <script lang="ts" setup>
-import { CSSProperties, nextTick, onMounted, onUnmounted, PropType, ref } from 'vue';
+import {
+	computed,
+	CSSProperties,
+	nextTick,
+	onMounted,
+	onUnmounted,
+	PropType,
+	ref,
+	toRefs,
+} from 'vue';
 import { debounce } from '../../../utils/utils';
 import { styleBorderRadiusCircle, styleChangeBg } from '../../../_styles/mixins';
 import { Api } from '../../api/api.service';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../button/AppButton.vue';
+import { ContentEditorModelData } from '../../content/content-owner';
 import { showErrorGrowl } from '../../growls/growls.service';
 import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
 import { storeModelList } from '../../model/model-store.service';
-import { Model, ModelData } from '../../model/model.service';
+import { ModelData } from '../../model/model.service';
 import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/AppScrollInview.vue';
 import { ReactionGroupData, useCommonStore } from '../../store/common-store';
 import { $gettext } from '../../translate/translate.service';
@@ -20,21 +30,22 @@ import AppEmojiModalItem from './AppEmojiModalItem.vue';
 const InviewConfig = new ScrollInviewConfig({ margin: '100px' });
 
 const props = defineProps({
-	resource: {
-		// TODO(reactions): use model to fetch what we can actually use.
-		type: Object as PropType<Model>,
-		default: undefined,
+	modelData: {
+		type: Object as PropType<ContentEditorModelData>,
+		required: true,
 	},
 });
 
-const modal = useModal<Emoji>()!;
+const { modelData } = toRefs(props);
 
+const modal = useModal<Emoji>()!;
 const { reactionsData, reactionsCursor } = useCommonStore();
+
+let didInitialFetch = false;
 
 const mounted = ref(false);
 const isBootstrapped = ref(false);
 const queuedItemFetches = ref(new Set<ReactionGroupData>());
-let didInitialFetch = false;
 
 const debounceInviewFetch = debounce(() => {
 	if (!mounted.value) {
@@ -46,21 +57,47 @@ const debounceInviewFetch = debounce(() => {
 	fetchCollections(items);
 }, 200);
 
+const requestBodyData = computed(() => {
+	const result: Record<string, string | number | boolean> = {};
+
+	if (modelData.value.type === 'newChatMessage') {
+		result.chatRoomId = modelData.value.chatRoomId;
+	} else if (modelData.value.type === 'commentingOnResource') {
+		result.commentingOnResource = modelData.value.resource;
+		result.commentingOnResourceId = modelData.value.resourceId;
+	} else if (modelData.value.type === 'resource') {
+		result.resource = modelData.value.resource;
+		result.resourceId = modelData.value.resourceId;
+	} else if (modelData.value.type === 'supporterMessage') {
+		result.forSupporterMessage = true;
+	}
+
+	return result;
+});
+
 onMounted(() => {
 	if (!mounted.value) {
 		init();
 		mounted.value = true;
 	}
 });
-onUnmounted(() => (mounted.value = false));
+
+onUnmounted(() => {
+	mounted.value = false;
+});
 
 async function init() {
 	try {
+		const body: Record<string, any> = {
+			...requestBodyData.value,
+		};
+		if (reactionsCursor.value) {
+			body.cursor = reactionsCursor.value;
+		}
+
 		const response = await Api.sendRequest(
 			'/web/emojis/bootstrap-for-picker-placeholders',
-			{
-				cursor: reactionsCursor.value,
-			},
+			body,
 			{ detach: true }
 		);
 
@@ -198,12 +235,14 @@ async function fetchCollections(groups: ReactionGroupData[]) {
 	const groupIds = groupData.map(i => i.group.id);
 
 	try {
-		const body: any = {
+		const body: Record<string, any> = {
 			group_ids: groupIds,
+			...requestBodyData.value,
 		};
 		if (reactionsCursor.value) {
 			body.cursor = reactionsCursor.value;
 		}
+
 		const response = await Api.sendRequest('/web/emojis/fetch-picker-emojis-in-view', body, {
 			detach: true,
 			allowComplexData: ['group_ids'],

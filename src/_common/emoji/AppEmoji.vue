@@ -39,7 +39,6 @@ const props = defineProps({
 
 const { emoji } = toRefs(props);
 
-// TODO(reactions) test this, get working for content viewer
 const backgroundImage = computed(() => {
 	if (typeof emoji.value === 'string') {
 		return assetPaths[`./${emoji.value}.png`];

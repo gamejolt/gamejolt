@@ -478,6 +478,18 @@ function disableTypingTimeout() {
 							:max-height="160"
 							:display-rules="displayRules"
 							:autofocus="!Screen.isMobile"
+							:model-data="
+								room.messageEditing
+									? {
+											type: 'resource',
+											resource: 'Chat_Message',
+											resourceId: room.messageEditing.id,
+									  }
+									: {
+											type: 'newChatMessage',
+											chatRoomId: room.id,
+									  }
+							"
 							:model-id="editorModelId"
 							:focus-token="focusToken"
 							focus-end

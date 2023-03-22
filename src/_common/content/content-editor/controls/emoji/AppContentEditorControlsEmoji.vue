@@ -38,7 +38,13 @@ function onMouseEnter() {
 }
 
 async function show() {
-	const emoji = await EmojiModal.show({ resource: undefined });
+	const modelData = controller._editor?.ownerController().getModelData?.();
+	if (!modelData) {
+		console.error('No model data for emoji selector.');
+		return;
+	}
+
+	const emoji = await EmojiModal.show({ modelData });
 	if (emoji) {
 		editorInsertEmoji(controller, emoji);
 	}
