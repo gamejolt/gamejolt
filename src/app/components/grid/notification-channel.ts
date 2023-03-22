@@ -331,7 +331,7 @@ export function createGridNotificationChannel(
 		}
 	}
 
-	function _onNewPost(payload: NewPostPayload) {);
+	function _onNewPost(payload: NewPostPayload) {
 		const channelId = parseInt(payload.channel_id, 10);
 		const communityState = appStore.communityStates.value.getCommunityState(
 			parseInt(payload.community_id, 10)
