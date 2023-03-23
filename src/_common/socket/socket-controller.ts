@@ -8,7 +8,7 @@ import { getCookie } from '../cookie/cookie.service';
 import { CommonStore } from '../store/common-store';
 
 // These are the features we support for Grid to know and behave properly.
-const SupportedFeatures = ['chat_member_watching'];
+const SupportedFeatures = ['chat_member_watching', 'communities_via_notification_channel'];
 
 export type SocketController = ReturnType<typeof createSocketController>;
 export type SocketChannelController = ReturnType<typeof createSocketChannelController>;
