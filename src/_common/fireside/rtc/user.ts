@@ -58,7 +58,7 @@ export class FiresideRTCUser {
 		public readonly uid: number,
 		public readonly isLocal: boolean
 	) {
-		this.remoteMicAudioMuted = rtc.isMuted;
+		this.remoteMicAudioMuted = rtc.isPreviewMode;
 	}
 
 	// These won't be assigned if this is the local user.
@@ -231,7 +231,7 @@ export function createLocalFiresideRTCUser(rtc: FiresideRTC, uid: number) {
 
 export function initRemoteFiresideRTCUserPrefs(user: FiresideRTCUser) {
 	// Ignore local user and RTC controllers that disable audio.
-	if (user.isLocal || user.rtc.isMuted) {
+	if (user.isLocal || user.rtc.isPreviewMode) {
 		return;
 	}
 
