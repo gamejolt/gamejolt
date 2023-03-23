@@ -28,6 +28,7 @@ export class Environment {
 	static authBaseUrl = 'https://gamejolt.com';
 	static checkoutBaseUrl = 'https://gamejolt.com';
 	static helpBaseUrl = 'https://gamejolt.com/help';
+	static helpDocsBaseUrl = 'https://gamejolt.com/help-docs';
 	static clientSectionUrl = '';
 
 	static jamsBaseUrl = 'http://jams.gamejolt.com';
@@ -63,6 +64,7 @@ if (GJ_ENVIRONMENT === 'development') {
 	Environment.authBaseUrl = 'https://development.gamejolt.com';
 	Environment.checkoutBaseUrl = 'https://development.gamejolt.com';
 	Environment.helpBaseUrl = 'https://development.gamejolt.com/help';
+	Environment.helpDocsBaseUrl = 'https://development.gamejolt.com/help-docs';
 
 	Environment.jamsBaseUrl = 'https://jams.development.gamejolt.com';
 	Environment.jamsIoBaseUrl = 'https://jams.development.gamejolt.io';

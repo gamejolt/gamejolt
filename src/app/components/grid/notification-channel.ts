@@ -12,7 +12,7 @@ import { createSocketChannelController } from '../../../_common/socket/socket-co
 import { commonStore } from '../../../_common/store/common-store';
 import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
 import { shouldUseFYPDefault } from '../../views/home/home-feed.service';
-import { GridClient, onFiresideStart, onNewStickers } from './client.service';
+import { GridClient, onFiresideStart } from './client.service';
 
 import { Router } from 'vue-router';
 const TabLeaderLazy = importNoSSR(async () => await import('../../../utils/tab-leader'));
@@ -39,7 +39,6 @@ interface JoinPayload {
 	notificationUnreadCount: number;
 	unreadFeaturedCommunities: { [communityId: number]: number };
 	unreadCommunities: number[];
-	hasNewUnlockedStickers: boolean;
 	newQuestIds: number[];
 	questActivityIds: number[];
 	questResetHour: number;
@@ -64,8 +63,6 @@ type ClearNotificationsType =
 	// For an individual community channel.
 	| 'community-channel'
 	| 'friend-requests'
-	// For the user's unviewed automatically unlocked stickers.
-	| 'stickers'
 	// A quest became available and is ready to be accepted.
 	| 'new-quest'
 	// A quest has updated progress or rewards available to claim.
@@ -136,7 +133,6 @@ export function createGridNotificationChannel(
 
 	channelController.listenTo('new-notification', _onNewNotification);
 	channelController.listenTo('clear-notifications', _onClearNotifications);
-	channelController.listenTo('sticker-unlock', _onStickerUnlock);
 	channelController.listenTo('post-updated', _onPostUpdated);
 
 	// from community channel
@@ -169,8 +165,6 @@ export function createGridNotificationChannel(
 			});
 
 			appStore.setHasNewFriendRequests(payload.hasNewFriendRequests);
-			appStore.setHasNewUnlockedStickers(payload.hasNewUnlockedStickers);
-			appStore.setHasNewUnlockedStickers(payload.hasNewUnlockedStickers);
 
 			const questStore = appStore.getQuestStore();
 			questStore.addNewQuestIds(payload.newQuestIds);
@@ -286,14 +280,6 @@ export function createGridNotificationChannel(
 		}
 
 		client.clearNotifications(payload.type, payload.data);
-	}
-
-	function _onStickerUnlock(payload: StickerUnlockPayload) {
-		if (!appStore.hasNewUnlockedStickers.value) {
-			appStore.setHasNewUnlockedStickers(true);
-		}
-
-		onNewStickers.next(payload.sticker_img_urls);
 	}
 
 	function _onPostUpdated(payload: PostUpdatedPayload) {

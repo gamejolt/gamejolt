@@ -75,4 +75,9 @@ export class GameListingContainer {
 
 		return addedGames;
 	}
+
+	public setGames(games: Game[]) {
+		this.resetGames();
+		this.addGames(games);
+	}
 }

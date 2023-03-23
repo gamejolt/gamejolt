@@ -6,6 +6,11 @@ import { Seo } from '../seo/seo.service';
 import { CommonStore } from '../store/common-store';
 import { Translate } from '../translate/translate.service';
 
+let payloadActionsChecker: ((payload: any) => void) | null = null;
+export function assignPayloadActionsChecker(fn: (payload: any) => void) {
+	payloadActionsChecker = fn;
+}
+
 export type PayloadFormErrors = { [errorId: string]: boolean };
 
 export class PayloadError {
@@ -102,6 +107,10 @@ export class Payload {
 			this.checkPayloadVersion(responseData, options);
 			this.checkPayloadSeo(responseData, options);
 
+			if (payloadActionsChecker) {
+				payloadActionsChecker(responseData);
+			}
+
 			return responseData.payload;
 		} catch (error: any) {
 			if (!import.meta.env.SSR) {
@@ -166,7 +175,7 @@ export class Payload {
 		}
 
 		// Only process if this payload response had a user attached to it.
-		// It couid be null (for logged out) or an object (if logged in).
+		// It could be null (for logged out) or an object (if logged in).
 		if (typeof data.user !== 'undefined') {
 			if (data.user === null) {
 				this.commonStore.clearUser();

@@ -1,5 +1,6 @@
 import { ContentDocument } from '../../../../_common/content/content-document';
 import { showInfoGrowl } from '../../../../_common/growls/growls.service';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { ChatClient, isChatFocusedOnRoom, openChatRoom } from '../client';
 import { ChatMessage } from '../message';
 import { ChatRoom, getChatRoomTitle } from '../room';
@@ -25,15 +26,24 @@ export class ChatNotificationGrowl {
 			title += ` (@${message.user.username})`;
 		}
 
+		let growlMessage = '';
+		let wantsComponent = true;
+		if (message.type === 'invite') {
+			wantsComponent = false;
+			growlMessage = $gettext(`Invited you to join a chat room`);
+		} else {
+			growlMessage = this.generateSystemMessage(message, groupRoom);
+		}
+
 		showInfoGrowl({
 			onClick: () => openChatRoom(chat, message.room_id),
 			system,
 
 			title,
-			message: this.generateSystemMessage(message, groupRoom),
+			message: growlMessage,
 			icon: message.user.img_avatar,
 
-			component: AppChatNotificationGrowl,
+			component: wantsComponent ? AppChatNotificationGrowl : undefined,
 			props: { chat, message },
 		});
 	}
@@ -127,9 +137,9 @@ export class ChatNotificationGrowl {
 		// Fallback, in case the message somehow ends up empty.
 		if (systemMessage.trim() === '') {
 			if (groupRoom) {
-				systemMessage = 'Sent a message';
+				systemMessage = $gettext(`Sent a message`);
 			} else {
-				systemMessage = 'Sent you a message';
+				systemMessage = $gettext(`Sent you a message`);
 			}
 		}
 

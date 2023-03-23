@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
 import { RouterLink } from 'vue-router';
+import { trackHomeFeedSwitch } from '../../../_common/analytics/analytics.service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { useAppStore } from '../../store';
-import { HomeFeedService } from './home-feed.service';
+import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
 
 defineProps({
 	tabs: {
@@ -20,6 +21,16 @@ defineProps({
 const { unreadActivityCount } = useAppStore();
 
 const hasUnreadActivity = computed(() => unreadActivityCount.value > 0);
+
+function onTabClick(tab: string, isActive: boolean) {
+	trackHomeFeedSwitch({
+		path: tab,
+		isActive,
+		realmCount: undefined,
+		realmId: undefined,
+		realmIndex: undefined,
+	});
+}
 </script>
 
 <template>
@@ -35,6 +46,7 @@ const hasUnreadActivity = computed(() => unreadActivityCount.value > 0);
 				:class="{
 					active: feedTab === 'activity',
 				}"
+				@click.capture="onTabClick(HOME_FEED_ACTIVITY, feedTab === 'activity')"
 			>
 				<AppTranslate>Following</AppTranslate>
 				<span
@@ -52,6 +64,7 @@ const hasUnreadActivity = computed(() => unreadActivityCount.value > 0);
 				:class="{
 					active: feedTab === 'fyp',
 				}"
+				@click.capture="onTabClick(HOME_FEED_FYP, feedTab === 'fyp')"
 			>
 				<AppTranslate>For You</AppTranslate>
 			</RouterLink>

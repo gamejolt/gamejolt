@@ -25,7 +25,7 @@ import { Screen } from '../../../screen/screen-service';
 import AppThemeSvg from '../../../theme/svg/AppThemeSvg.vue';
 import { $gettext } from '../../../translate/translate.service';
 import AppStickerStackItem from '../../stack/AppStickerStackItem.vue';
-import { sortStickerCounts, useStickerStore } from '../../sticker-store';
+import { CreatorStickersMap, sortStickerCounts, useStickerStore } from '../../sticker-store';
 import { Sticker, StickerStack } from '../../sticker.model';
 import AppStickerPack from '../AppStickerPack.vue';
 import { UserStickerPack } from '../user_pack.model';
@@ -89,6 +89,9 @@ export function checkPackOpenPayloadErrors({
 	} else if (reason === 'pack-expired') {
 		errorMessage = $gettext(`This pack has already expired.`);
 		removeFromCollection = true;
+	} else if (reason === 'pack-inactive') {
+		errorMessage = $gettext(`This pack is inactive and cannot be opened.`);
+		removeFromCollection = true;
 	}
 
 	if (!errorMessage) {
@@ -126,7 +129,13 @@ const props = defineProps({
 
 const { pack } = toRefs(props);
 
-const { stickerPacks: myPacks, drawerItems: myStickers } = useStickerStore();
+const {
+	stickerPacks: myPacks,
+	eventStickers,
+	creatorStickers,
+	generalStickers,
+	allStickers,
+} = useStickerStore();
 
 const root = ref<HTMLDivElement>();
 const packSlice = ref<HTMLDivElement>();
@@ -244,17 +253,17 @@ function preloadImages() {
 }
 
 function sortMyStickers(newStickers: Sticker[]) {
-	const allStickers = [...myStickers.value];
+	const myStickers = [...allStickers.value];
 
 	// Increment or add new stickers to our existing list as required.
 	for (const sticker of newStickers) {
 		const cb = (i: StickerStack) => i.sticker_id === sticker.id;
-		const existing = allStickers.find(cb);
+		const existing = myStickers.find(cb);
 
 		if (existing) {
 			++existing.count;
 		} else {
-			allStickers.push({
+			myStickers.push({
 				count: 1,
 				sticker,
 				sticker_id: sticker.id,
@@ -262,23 +271,34 @@ function sortMyStickers(newStickers: Sticker[]) {
 		}
 	}
 
-	const eventStickers: StickerStack[] = [];
-	const generalStickers: StickerStack[] = [];
+	const newEventStickers: StickerStack[] = [];
+	const newCreatorStickers: CreatorStickersMap = new Map();
+	const newGeneralStickers: StickerStack[] = [];
 
-	for (const item of allStickers) {
-		if (item.sticker.is_event) {
-			eventStickers.push(item);
+	for (const item of myStickers) {
+		const creator = item.sticker.owner_user;
+		if (item.sticker.isCreatorSticker && creator) {
+			if (newCreatorStickers.has(creator.id)) {
+				newCreatorStickers.get(creator.id)!.push(item);
+			} else {
+				newCreatorStickers.set(creator.id, [item]);
+			}
+		} else if (item.sticker.is_event) {
+			newEventStickers.push(item);
 		} else {
-			generalStickers.push(item);
+			newGeneralStickers.push(item);
 		}
 	}
 
-	const newStickerIds = newStickers.map(i => i.id);
-	myStickers.value = sortStickerCounts({
-		eventStickers,
-		generalStickers,
-		newStickerIds,
-	}).flat();
+	const data = sortStickerCounts({
+		eventStickers: newEventStickers,
+		creatorStickers: newCreatorStickers,
+		generalStickers: newGeneralStickers,
+	});
+
+	eventStickers.value = data.eventStickers;
+	creatorStickers.value = data.creatorStickers;
+	generalStickers.value = data.generalStickers;
 }
 
 async function setStage(newStage: PackOpenStage) {

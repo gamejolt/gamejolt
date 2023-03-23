@@ -44,6 +44,10 @@ export class Sticker extends Model {
 			this.owner_user = new User(data.owner_user);
 		}
 	}
+
+	get isCreatorSticker() {
+		return !!this.owner_user && this.owner_user.is_creator === true;
+	}
 }
 
 Model.create(Sticker);

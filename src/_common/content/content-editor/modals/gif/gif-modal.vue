@@ -133,6 +133,11 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 				}
 
 				this.isLoading = false;
+
+				// After getting more items, wait for items to build and check
+				// if we should load again.
+				await nextTick();
+				this.onContainerScroll();
 			}
 		} catch (error) {
 			console.error(error);

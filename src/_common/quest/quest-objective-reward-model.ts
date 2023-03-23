@@ -21,6 +21,9 @@ const QuestRewardTypes = {
 	 * Adds charge to the StickerStore.
 	 */
 	userCharge: 6,
+	coin: 7,
+	stickerPack: 8,
+	avatarFrame: 9,
 } as const;
 
 export class QuestObjectiveReward extends Model {
@@ -77,10 +80,23 @@ export class QuestObjectiveReward extends Model {
 		return this.type === QuestRewardTypes.userCharge;
 	}
 
+	get isCoin() {
+		return this.type === QuestRewardTypes.coin;
+	}
+
+	get isStickerPack() {
+		return this.type === QuestRewardTypes.stickerPack;
+	}
+
+	get isAvatarFrame() {
+		return this.type === QuestRewardTypes.avatarFrame;
+	}
+
 	get name() {
 		let result = this.fallback_name;
 		switch (this.type) {
 			case QuestRewardTypes.sticker:
+			case QuestRewardTypes.randomSticker:
 				result = 'Sticker';
 				break;
 
@@ -98,6 +114,18 @@ export class QuestObjectiveReward extends Model {
 
 			case QuestRewardTypes.userCharge:
 				result = 'Charge';
+				break;
+
+			case QuestRewardTypes.coin:
+				result = 'Coin';
+				break;
+
+			case QuestRewardTypes.stickerPack:
+				result = 'Sticker Pack';
+				break;
+
+			case QuestRewardTypes.avatarFrame:
+				result = 'Avatar Frame';
 				break;
 		}
 

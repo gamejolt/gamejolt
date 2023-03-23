@@ -2,7 +2,6 @@ import { shallowReadonly, triggerRef } from 'vue';
 import { createLogger } from '../../../utils/logging';
 import { Background } from '../../../_common/background/background.model';
 import { FiresideChatSettings } from '../../../_common/fireside/chat/chat-settings.model';
-import { FiresideRTCHost } from '../../../_common/fireside/rtc/rtc';
 import {
 	createSocketChannelController,
 	SocketChannelController,
@@ -132,30 +131,34 @@ export function createGridFiresideChannel(
 	function _onStreamingUid(payload: StreamingUIDPayload) {
 		logger.info('Grid streaming uid added.', payload);
 
-		const { hosts } = firesideController;
+		const { hosts, upsertHosts } = firesideController;
 		if (!payload.streaming_uid || !payload.user) {
 			return;
 		}
 
 		const user = new User(payload.user);
-		const host = hosts.value.find(host => host.user.id === user.id);
-		if (host) {
+		const existingHost = hosts.value.find(host => host.user.id === user.id);
+		if (existingHost) {
 			logger.info('Adding streaming uid to existing host');
 
-			host.user = user;
-			host.needsPermissionToView = payload.is_unlisted;
-			host.isLive = payload.is_live;
-			if (host.uids.indexOf(payload.streaming_uid) === -1) {
-				host.uids.push(payload.streaming_uid);
+			existingHost.user = user;
+			existingHost.needsPermissionToView = payload.is_unlisted;
+			existingHost.isLive = payload.is_live;
+			if (existingHost.uids.indexOf(payload.streaming_uid) === -1) {
+				existingHost.uids.push(payload.streaming_uid);
 			}
 		} else {
 			logger.info('Adding streaming uid to new host');
-			hosts.value.push({
-				user: user,
-				needsPermissionToView: payload.is_unlisted,
-				isLive: payload.is_live,
-				uids: [payload.streaming_uid],
-			} as FiresideRTCHost);
+
+			upsertHosts([
+				...hosts.value,
+				{
+					user: user,
+					needsPermissionToView: payload.is_unlisted,
+					isLive: payload.is_live,
+					uids: [payload.streaming_uid],
+				},
+			]);
 		}
 
 		// Vue does not pick up the change to uids for existing hosts, and I

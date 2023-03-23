@@ -1,8 +1,10 @@
 <script lang="ts">
+import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import { Game } from '../../../../../_common/game/game.model';
+import { Game, handleGameAddFailure } from '../../../../../_common/game/game.model';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import { useCommonStore } from '../../../../../_common/store/common-store';
 import FormGame from '../../../../components/forms/game/game.vue';
 import { startWizard } from '../manage/manage.store';
 
@@ -18,8 +20,22 @@ import { startWizard } from '../manage/manage.store';
 	resolver: () => Api.sendRequest('/web/dash/developer/games/add'),
 })
 export default class RouteDashGamesAdd extends BaseRouteComponent {
+	commonStore = setup(() => useCommonStore());
+
+	get user() {
+		return this.commonStore.user;
+	}
+
 	get routeTitle() {
 		return this.$gettext('Add Game');
+	}
+
+	routeResolved(payload: any): void {
+		if (payload.success === false) {
+			console.log('Error status for adding game.', payload);
+
+			handleGameAddFailure(this.user!, payload.reason, this.$router);
+		}
 	}
 
 	onSubmit(game: Game) {

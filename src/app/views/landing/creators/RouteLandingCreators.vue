@@ -31,7 +31,7 @@ import AppCreatorMooMoo from './AppCreatorMooMoo.vue';
 import socialImage from './social.png';
 import { creatorApplyDesktop, creatorApplySm, creatorApplyXs } from './_backgrounds/backgrounds';
 
-const postImages = import.meta.glob('./_posts/*.jpg', {eager: true, as: 'url'});
+const postImages = import.meta.glob('./_posts/*.jpg', { eager: true, as: 'url' });
 
 const boltHeight = computed(() => (Screen.isDesktop ? 182 : 164));
 const boltWidth = computed(() => (104 / 154) * boltHeight.value);
@@ -545,17 +545,6 @@ function getRandomStickers(count = 3) {
 						As a company based in the United States, our government requires us to
 						collect the proper tax forms in order to continue our operations. This is a
 						legal requirement.
-					</div>
-				</div>
-
-				<div class="-col">
-					<div class="-tiny-header-text -faqs-content-header">
-						When will you add new payment withdrawal methods?
-					</div>
-
-					<div>
-						Soon! We support PayPal withdrawals for now, but our goal is to support more
-						currencies and banks across the globe.
 					</div>
 				</div>
 			</div>
