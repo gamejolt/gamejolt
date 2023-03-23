@@ -174,6 +174,7 @@ async function init() {
 		// Allow items to build and queue themselves for a fetch.
 		//
 		// TODO(reactions) test this more
+		// TODO(reactions) do other fixes that were done in app
 		await nextTick();
 		const items = [...queuedItemFetches.value];
 		queuedItemFetches.value = new Set();

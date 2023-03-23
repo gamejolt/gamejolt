@@ -3,10 +3,10 @@ import { Node, NodeSpec } from 'prosemirror-model';
 export const gjEmoji = {
 	attrs: {
 		id: {
-			default: 0,
+			default: undefined,
 		},
 		type: {
-			default: '',
+			default: undefined,
 		},
 	},
 	group: 'inline',
@@ -29,12 +29,18 @@ export const gjEmoji = {
 	},
 	parseDOM: [
 		{
-			// TODO(reactions) id may default to 0. is this correct?
 			tag: 'img[emoji-id]',
 			getAttrs: (domNode: Element) => {
+				const result: Record<string, any> = {};
 				const id = parseInt(domNode.getAttribute('emoji-id') || '0', 10);
+				if (id) {
+					result.id = id;
+				}
 				const type = domNode.getAttribute('emoji-type');
-				return { id, type };
+				if (type) {
+					result.type = type;
+				}
+				return;
 			},
 		},
 	],
