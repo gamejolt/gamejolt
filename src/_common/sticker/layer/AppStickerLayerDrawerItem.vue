@@ -178,34 +178,53 @@ const tagStyles: CSSProperties = {
 
 		<!-- TODO(reactions) hover state -->
 		<template v-if="showMastery && typeof sticker.mastery === 'number'">
-			<AppSpacer vertical :scale="2" />
+			<AppSpacer vertical :scale="1" />
 
 			<div
 				:style="{
 					display: `flex`,
 					alignItems: `center`,
+					gap: `4px`,
 				}"
 			>
 				<div
+					v-if="!count"
 					:style="{
-						...styleBorderRadiusBase,
+						...styleBorderRadiusCircle,
+						width: `6px`,
+						height: `6px`,
+						backgroundColor: sticker.rarityColor || kThemeFg10,
+					}"
+				/>
+
+				<div
+					:style="{
 						flex: `auto`,
-						position: `relative`,
-						height: `4px`,
-						overflow: `hidden`,
-						backgroundColor: kThemeFg10,
+						paddingTop: `4px`,
+						paddingBottom: `4px`,
 					}"
 				>
 					<div
 						:style="{
-							position: `absolute`,
-							left: 0,
-							top: 0,
-							bottom: 0,
-							right: `${Math.max(0, Math.min(100, 100 - sticker.mastery))}%`,
-							backgroundColor: kThemePrimary,
+							...styleBorderRadiusBase,
+							width: `100%`,
+							height: `4px`,
+							position: `relative`,
+							overflow: `hidden`,
+							backgroundColor: kThemeFg10,
 						}"
-					/>
+					>
+						<div
+							:style="{
+								position: `absolute`,
+								left: 0,
+								top: 0,
+								bottom: 0,
+								right: `${Math.max(0, Math.min(100, 100 - sticker.mastery))}%`,
+								backgroundColor: kThemePrimary,
+							}"
+						/>
+					</div>
 				</div>
 
 				<AppJolticon
@@ -215,10 +234,7 @@ const tagStyles: CSSProperties = {
 						color: kThemeFg,
 						fontSize: `12px`,
 						lineHeight: 0,
-						marginLeft: `4px`,
-						marginTop: 0,
-						marginBottom: 0,
-						marginRight: 0,
+						margin: 0,
 					}"
 				/>
 			</div>
