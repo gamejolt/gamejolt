@@ -10,6 +10,7 @@ import AppForm, {
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormControlPrefix from '../../../../_common/form-vue/AppFormControlPrefix.vue';
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormStickySubmit from '../../../../_common/form-vue/AppFormStickySubmit.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
@@ -22,6 +23,7 @@ import {
 	validateImageMinDimensions,
 	validateMaxLength,
 	validateMinLength,
+	validateUsername,
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLinkHelpDocs from '../../../../_common/link/AppLinkHelpDocs.vue';
@@ -38,10 +40,19 @@ import {
 } from '../../../../_styles/mixins';
 import { kLineHeightComputed } from '../../../../_styles/variables';
 
-type FormModel = Partial<Sticker>;
+type FormModel = Partial<Sticker> & {
+	/**
+	 *  Required - should always exist.
+	 */
+	emoji_name?: string;
+};
 
 const props = defineProps({
 	...defineFormProps<Sticker>(),
+	emojiPrefix: {
+		type: String,
+		default: '',
+	},
 });
 
 const emit = defineEmits({
@@ -50,6 +61,11 @@ const emit = defineEmits({
 });
 
 const { model } = toRefs(props);
+
+// TODO(reactions) defaults.
+const minEmojiNameLength = ref(3);
+const maxEmojiNameLength = ref(50);
+const emojiPrefix = ref(props.emojiPrefix);
 
 const minNameLength = ref(3);
 const maxNameLength = ref(50);
@@ -65,6 +81,7 @@ const loadUrl = computed(() => {
 	return `/web/dash/creators/stickers/save`;
 });
 
+// TODO(reactions) test what happens if we have no emoji prefix.
 const form: FormController<FormModel> = createForm({
 	loadUrl,
 	model: ref({ ...model?.value, is_active: false } as FormModel),
@@ -74,6 +91,11 @@ const form: FormController<FormModel> = createForm({
 	onLoad(payload) {
 		minNameLength.value = payload.minNameLength ?? minNameLength.value;
 		maxNameLength.value = payload.maxNameLength ?? maxNameLength.value;
+		// TODO(reactions) check fields.
+		minEmojiNameLength.value = payload.minEmojiNameLength ?? minEmojiNameLength.value;
+		maxEmojiNameLength.value = payload.maxEmojiNameLength ?? maxEmojiNameLength.value;
+		emojiPrefix.value = payload.emojiPrefix ?? emojiPrefix.value;
+
 		maxFilesize.value = payload.maxFilesize ?? maxFilesize.value;
 		minSize.value = payload.minSize ?? minSize.value;
 		maxSize.value = payload.maxSize ?? maxSize.value;
@@ -93,8 +115,9 @@ const form: FormController<FormModel> = createForm({
 	onSubmitError(response) {
 		let message: string | null = null;
 
-		if (response.errors) {
-			if (response.errors['max-sticker-amount-reached']) {
+		const reason = response.reason;
+		if (reason) {
+			if (reason === 'max-sticker-amount-reached') {
 				message = $gettext(
 					`You've reached the limit of stickers you can add. You may edit any existing sticker you've created instead.`
 				);
@@ -176,11 +199,18 @@ const stickerGridItems = computed(() => {
 	return items;
 });
 
-const validateAvailabilityPath = computed(() => {
+const validateNameAvailabilityPath = computed(() => {
 	if (model?.value) {
 		return `/web/dash/creators/stickers/check-field-availability/${model.value.id}/name`;
 	}
 	return `/web/dash/creators/stickers/check-field-availability/0/name`;
+});
+
+const validateEmojiNameAvailabilityPath = computed(() => {
+	if (model?.value) {
+		return `/web/dash/creators/stickers/check-field-availability/${model.value.id}/emojiName`;
+	}
+	return `/web/dash/creators/stickers/check-field-availability/0/emojiName`;
 });
 </script>
 
@@ -235,6 +265,7 @@ const validateAvailabilityPath = computed(() => {
 
 		<AppFormGroup
 			name="name"
+			label="Sticker name"
 			tiny-label-margin
 			:style="{
 				marginBottom: kLineHeightComputed.px,
@@ -245,13 +276,33 @@ const validateAvailabilityPath = computed(() => {
 				:validators="[
 					validateMinLength(minNameLength),
 					validateMaxLength(maxNameLength),
-					validateAvailability({ url: validateAvailabilityPath }),
+					validateAvailability({ url: validateNameAvailabilityPath }),
 				]"
 			/>
 
 			<AppFormControlErrors :label="$gettext(`sticker name`)" />
 		</AppFormGroup>
 
+		<AppFormGroup name="emoji_name" tiny-label-margin label="Emoji name">
+			<AppFormControlPrefix :prefix="emojiPrefix || ''">
+				<AppFormControl
+					:placeholder="emojiPrefix ? undefined : $gettext(`Emoji name...`)"
+					:validators="[
+						validateMinLength(minEmojiNameLength),
+						validateMaxLength(maxEmojiNameLength),
+						// TODO(reactions) regex
+						validateUsername(),
+						validateAvailability({ url: validateEmojiNameAvailabilityPath }),
+					]"
+				/>
+			</AppFormControlPrefix>
+
+			<AppFormControlErrors :label="$gettext(`emoji name`)" />
+		</AppFormGroup>
+
+		<label class="control-label">
+			{{ $gettext(`Sticker preview`) }}
+		</label>
 		<div :style="gridStyles">
 			<AppAspectRatio
 				v-for="gridKey of stickerGridItems"

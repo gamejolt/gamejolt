@@ -21,9 +21,13 @@ const props = defineProps({
 		type: Function as PropType<(pack: StickerPack | undefined) => void>,
 		default: undefined,
 	},
+	emojiPrefix: {
+		type: String,
+		default: undefined,
+	},
 });
 
-const { sticker, stickers, updatePack } = toRefs(props);
+const { sticker, stickers, updatePack, emojiPrefix } = toRefs(props);
 
 const modal = useModal()!;
 
@@ -59,7 +63,12 @@ function onPackChanged(data: StickerPack | undefined) {
 		</div>
 
 		<div class="modal-body">
-			<FormSticker :model="model" @changed="onFormChanged" @pack="onPackChanged" />
+			<FormSticker
+				:model="model"
+				:emoji-prefix="emojiPrefix"
+				@changed="onFormChanged"
+				@pack="onPackChanged"
+			/>
 		</div>
 	</AppModal>
 </template>

@@ -7,6 +7,7 @@ export async function showStickerEditModal({
 	sticker,
 	stickers,
 	updatePack,
+	emojiPrefix,
 }: {
 	/**
 	 * Existing sticker model to be edited.
@@ -22,6 +23,11 @@ export async function showStickerEditModal({
 	 * Function to run when we get a new sticker pack from the backend.
 	 */
 	updatePack?: (_payloadPack: StickerPack | undefined) => void;
+
+	/**
+	 * Our current emoji prefix.
+	 */
+	emojiPrefix?: string;
 }) {
 	return await showModal<void>({
 		modalId: 'StickerEdit',
@@ -30,6 +36,7 @@ export async function showStickerEditModal({
 			sticker,
 			stickers,
 			updatePack,
+			emojiPrefix,
 		},
 		size: 'sm',
 	});
