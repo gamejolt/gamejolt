@@ -261,7 +261,7 @@ function sortMyStickers(newStickers: Sticker[]) {
 		const existing = myStickers.find(cb);
 
 		if (existing) {
-			++existing.count;
+			existing.count = (existing.count ?? 0) + 1;
 		} else {
 			myStickers.push({
 				count: 1,

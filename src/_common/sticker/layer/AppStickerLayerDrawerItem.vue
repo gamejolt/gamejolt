@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, ref, StyleValue, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, StyleValue, toRefs } from 'vue';
 import {
+	styleBorderRadiusBase,
 	styleBorderRadiusCircle,
 	styleBorderRadiusLg,
 	styleChangeBg,
@@ -8,7 +9,10 @@ import {
 } from '../../../_styles/mixins';
 import { kBorderWidthLg } from '../../../_styles/variables';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
+import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppQuestFrame from '../../quest/AppQuestFrame.vue';
+import AppSpacer from '../../spacer/AppSpacer.vue';
+import { kThemeFg, kThemeFg10, kThemePrimary } from '../../theme/variables';
 import AppUserAvatar from '../../user/user-avatar/AppUserAvatar.vue';
 import { useStickerStore } from '../sticker-store';
 import { Sticker } from '../sticker.model';
@@ -20,7 +24,7 @@ const props = defineProps({
 	},
 	count: {
 		type: Number,
-		default: 0,
+		default: undefined,
 	},
 	size: {
 		type: Number,
@@ -45,13 +49,14 @@ const props = defineProps({
 	showCreator: {
 		type: Boolean,
 	},
+	showMastery: {
+		type: Boolean,
+	},
 });
 
 const { sticker, count, size, fitParent, noDrag, hideCount } = toRefs(props);
 
 const { streak, isDragging, sticker: storeSticker } = useStickerStore();
-
-const root = ref<HTMLDivElement>();
 
 const currentStreak = computed(() => {
 	if (streak.value?.sticker.id !== sticker.value.id) {
@@ -74,7 +79,11 @@ const itemStyling = computed(() => {
 	return result;
 });
 
-const isPeeled = computed(() => storeSticker.value?.id === sticker.value.id || count.value < 1);
+const isPeeled = computed(
+	() =>
+		storeSticker.value?.id === sticker.value.id ||
+		(typeof count?.value === 'number' && count.value < 1)
+);
 
 // NOTE: Says unused for me, but it's in the template. Check before deleting.
 const slotName = computed(() => (sticker.value.is_event ? 'above' : 'default'));
@@ -98,7 +107,7 @@ const tagStyles: CSSProperties = {
 </script>
 
 <template>
-	<div ref="root" class="-item" draggable="false" @contextmenu="onContextMenu">
+	<div class="-item" draggable="false" @contextmenu="onContextMenu">
 		<component :is="fitParent ? AppAspectRatio : 'div'" :ratio="1">
 			<component :is="sticker.is_event ? AppQuestFrame : 'div'" :style="itemStyling">
 				<template #[slotName]>
@@ -127,7 +136,7 @@ const tagStyles: CSSProperties = {
 		</div>
 
 		<div
-			v-if="!hideCount"
+			v-if="!hideCount && typeof count === 'number'"
 			:style="{
 				...tagStyles,
 				top: 0,
@@ -136,10 +145,8 @@ const tagStyles: CSSProperties = {
 		>
 			<div
 				class="-rarity"
-				:class="{
-					'-rarity-uncommon': sticker.rarity === 1,
-					'-rarity-rare': sticker.rarity === 2,
-					'-rarity-epic': sticker.rarity === 3,
+				:style="{
+					color: sticker.rarityColor || 'white',
 				}"
 			>
 				{{ count }}
@@ -168,6 +175,54 @@ const tagStyles: CSSProperties = {
 				disable-link
 			/>
 		</div>
+
+		<!-- TODO(reactions) hover state -->
+		<template v-if="showMastery && typeof sticker.mastery === 'number'">
+			<AppSpacer vertical :scale="2" />
+
+			<div
+				:style="{
+					display: `flex`,
+					alignItems: `center`,
+				}"
+			>
+				<div
+					:style="{
+						...styleBorderRadiusBase,
+						flex: `auto`,
+						position: `relative`,
+						height: `4px`,
+						overflow: `hidden`,
+						backgroundColor: kThemeFg10,
+					}"
+				>
+					<div
+						:style="{
+							position: `absolute`,
+							left: 0,
+							top: 0,
+							bottom: 0,
+							right: `${Math.max(0, Math.min(100, 100 - sticker.mastery))}%`,
+							backgroundColor: kThemePrimary,
+						}"
+					/>
+				</div>
+
+				<AppJolticon
+					v-if="sticker.mastery >= 100"
+					icon="star"
+					:style="{
+						color: kThemeFg,
+						fontSize: `12px`,
+						lineHeight: 0,
+						marginLeft: `4px`,
+						marginTop: 0,
+						marginBottom: 0,
+						marginRight: 0,
+					}"
+				/>
+			</div>
+		</template>
 	</div>
 </template>
 
@@ -184,13 +239,4 @@ const tagStyles: CSSProperties = {
 .-rarity
 	font-weight: bold
 	color: white
-
-.-rarity-uncommon
-	color: #1bb804
-
-.-rarity-rare
-	color: #18a5f2
-
-.-rarity-epic
-	color: #ffbc56
 </style>

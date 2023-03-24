@@ -11,7 +11,7 @@ import AppStickerPack from '../../../../_common/sticker/pack/AppStickerPack.vue'
 import { StickerPackOpenModal } from '../../../../_common/sticker/pack/open-modal/modal.service';
 import { UserStickerPack } from '../../../../_common/sticker/pack/user_pack.model';
 import {
-	getStickerCountsFromPayloadData,
+	getStickerStacksFromPayloadData,
 	useStickerStore,
 } from '../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -37,6 +37,7 @@ const form: FormController<FormModel> = createForm({
 			ownedPacks: true,
 			ownedStickers: true,
 			unreadStickerIds: true,
+			unownedStickerMasteries: true,
 		},
 	},
 	sanitizeComplexData: false,
@@ -54,9 +55,10 @@ const form: FormController<FormModel> = createForm({
 	async onLoad(payload) {
 		stickerPacks.value = UserStickerPack.populate(payload.ownedPacks);
 
-		const data = getStickerCountsFromPayloadData({
+		const data = getStickerStacksFromPayloadData({
 			stickerCounts: payload.ownedStickers.stickerCounts,
 			stickers: payload.ownedStickers.stickers,
+			unownedStickerMasteries: payload.unownedStickerMasteries?.stickers,
 		});
 
 		eventStickers.value = data.eventStickers;
@@ -163,9 +165,10 @@ function openPack(pack: UserStickerPack) {
 						v-for="{ sticker, sticker_id, count } in eventStickers"
 						:key="sticker_id"
 						:sticker="sticker"
-						:count="count"
+						:count="count || undefined"
 						fit-parent
 						no-drag
+						show-mastery
 					/>
 				</div>
 			</div>
@@ -211,9 +214,10 @@ function openPack(pack: UserStickerPack) {
 								v-for="{ sticker, sticker_id, count } in stickers"
 								:key="sticker_id"
 								:sticker="sticker"
-								:count="count"
+								:count="count || undefined"
 								fit-parent
 								no-drag
+								show-mastery
 							/>
 						</div>
 					</template>
@@ -230,9 +234,10 @@ function openPack(pack: UserStickerPack) {
 						v-for="{ sticker, sticker_id, count } in generalStickers"
 						:key="sticker_id"
 						:sticker="sticker"
-						:count="count"
+						:count="count || undefined"
 						fit-parent
 						no-drag
+						show-mastery
 					/>
 				</div>
 			</div>
