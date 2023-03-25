@@ -4,6 +4,8 @@ import { Model } from '../model/model.service';
 import { Emoji } from './emoji.model';
 
 export class EmojiGroup implements ModelStoreModel {
+	static readonly TYPE_LOCAL_RECENT = 'local-recent';
+
 	static readonly TYPE_UNICODE = 'unicode';
 	static readonly TYPE_LEGACY = 'legacy';
 	static readonly TYPE_COLLECTION = 'sticker-collection';
@@ -30,13 +32,16 @@ export class EmojiGroup implements ModelStoreModel {
 		if (data.emojis) {
 			this.emojis = storeModelList(Emoji, data.emojis);
 		} else if (!this.emojis) {
-			// TODO(reactions) not sure this is needed.
 			this.emojis = [];
 		}
 
 		if (data.num_emojis < 0) {
 			this.num_emojis = 0;
 		}
+	}
+
+	get isRecentlyUsed() {
+		return this.type === EmojiGroup.TYPE_LOCAL_RECENT && this.id <= 0;
 	}
 }
 

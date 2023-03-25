@@ -42,9 +42,10 @@ function onClickEmoji() {
 				}"
 				@click="onClickEmoji"
 			>
+				<!-- TODO(reactions) Should this be wrapped in colons? -->
 				<img
 					v-if="emoji"
-					v-app-tooltip="emoji.short_name"
+					v-app-tooltip="emoji.commandString"
 					:style="[
 						'user-drag: none',
 						{

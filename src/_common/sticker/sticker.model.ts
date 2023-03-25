@@ -1,3 +1,4 @@
+import { Emoji } from '../emoji/emoji.model';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { User } from '../user/user.model';
@@ -30,6 +31,7 @@ export class Sticker extends Model {
 	owner_user?: User;
 
 	mastery?: number;
+	emoji?: Emoji;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -44,6 +46,10 @@ export class Sticker extends Model {
 
 		if (data.owner_user) {
 			this.owner_user = new User(data.owner_user);
+		}
+
+		if (data.emoji) {
+			this.emoji = new Emoji(data.emoji);
 		}
 	}
 

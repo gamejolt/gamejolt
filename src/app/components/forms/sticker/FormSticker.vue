@@ -18,12 +18,12 @@ import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/A
 import {
 	validateAvailability,
 	validateFilesize,
+	validateHashtag,
 	validateImageAspectRatio,
 	validateImageMaxDimensions,
 	validateImageMinDimensions,
 	validateMaxLength,
 	validateMinLength,
-	validateUsername,
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLinkHelpDocs from '../../../../_common/link/AppLinkHelpDocs.vue';
@@ -41,10 +41,7 @@ import {
 import { kLineHeightComputed } from '../../../../_styles/variables';
 
 type FormModel = Partial<Sticker> & {
-	/**
-	 *  Required - should always exist.
-	 */
-	emoji_name?: string;
+	emoji_name: string;
 };
 
 const props = defineProps({
@@ -62,9 +59,8 @@ const emit = defineEmits({
 
 const { model } = toRefs(props);
 
-// TODO(reactions) defaults.
-const minEmojiNameLength = ref(3);
-const maxEmojiNameLength = ref(50);
+const emojiNameMinLength = ref(3);
+const emojiNameMaxLength = ref(30);
 const emojiPrefix = ref(props.emojiPrefix);
 
 const minNameLength = ref(3);
@@ -81,20 +77,21 @@ const loadUrl = computed(() => {
 	return `/web/dash/creators/stickers/save`;
 });
 
-// TODO(reactions) test what happens if we have no emoji prefix.
 const form: FormController<FormModel> = createForm({
 	loadUrl,
-	model: ref({ ...model?.value, is_active: false } as FormModel),
+	model: ref({
+		...model?.value,
+		is_active: false,
+		emoji_name: model?.value?.emoji?.short_name || '',
+	} as FormModel),
 	onInit() {
 		form.formModel.is_active = !model?.value || model.value.is_active === true;
 	},
 	onLoad(payload) {
 		minNameLength.value = payload.minNameLength ?? minNameLength.value;
 		maxNameLength.value = payload.maxNameLength ?? maxNameLength.value;
-		// TODO(reactions) check fields.
-		minEmojiNameLength.value = payload.minEmojiNameLength ?? minEmojiNameLength.value;
-		maxEmojiNameLength.value = payload.maxEmojiNameLength ?? maxEmojiNameLength.value;
-		emojiPrefix.value = payload.emojiPrefix ?? emojiPrefix.value;
+		emojiNameMinLength.value = payload.emojiNameMinLength ?? emojiNameMinLength.value;
+		emojiNameMaxLength.value = payload.emojiNameMaxLength ?? emojiNameMaxLength.value;
 
 		maxFilesize.value = payload.maxFilesize ?? maxFilesize.value;
 		minSize.value = payload.minSize ?? minSize.value;
@@ -103,6 +100,10 @@ const form: FormController<FormModel> = createForm({
 
 		if (payload.sticker) {
 			model?.value?.assign(payload.sticker);
+			emojiPrefix.value = model?.value?.emoji?.prefix ?? emojiPrefix.value;
+			form.formModel.emoji_name =
+				model?.value?.emoji?.short_name ?? form.formModel.emoji_name;
+
 			form.formModel.is_active = (model?.value?.is_active ?? payload.is_active) === true;
 		}
 	},
@@ -206,7 +207,7 @@ const validateNameAvailabilityPath = computed(() => {
 	return `/web/dash/creators/stickers/check-field-availability/0/name`;
 });
 
-const validateEmojiNameAvailabilityPath = computed(() => {
+const validateEmojiAvailabilityPath = computed(() => {
 	if (model?.value) {
 		return `/web/dash/creators/stickers/check-field-availability/${model.value.id}/emojiName`;
 	}
@@ -288,11 +289,11 @@ const validateEmojiNameAvailabilityPath = computed(() => {
 				<AppFormControl
 					:placeholder="emojiPrefix ? undefined : $gettext(`Emoji name...`)"
 					:validators="[
-						validateMinLength(minEmojiNameLength),
-						validateMaxLength(maxEmojiNameLength),
+						validateMinLength(emojiNameMinLength),
+						validateMaxLength(emojiNameMaxLength),
 						// TODO(reactions) regex
-						validateUsername(),
-						validateAvailability({ url: validateEmojiNameAvailabilityPath }),
+						validateHashtag(),
+						validateAvailability({ url: validateEmojiAvailabilityPath }),
 					]"
 				/>
 			</AppFormControlPrefix>

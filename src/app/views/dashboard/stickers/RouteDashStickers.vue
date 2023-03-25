@@ -3,21 +3,15 @@ import { computed, CSSProperties, Ref, ref } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
-	validateAvailability,
 	validateFilesize,
 	validateImageAspectRatio,
 	validateImageMaxDimensions,
 	validateImageMinDimensions,
-	validateMaxLength,
-	validateMinLength,
-	validateUsername,
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -30,7 +24,6 @@ import AppStickerPack, {
 } from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
 import { Sticker } from '../../../../_common/sticker/sticker.model';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import {
 	$gettext,
 	$gettextInterpolate,
@@ -55,10 +48,6 @@ type InitPayload = {
 	maxStickerAmount: number;
 };
 
-type EmojiPrefixFormModel = {
-	emojiPrefix: string;
-};
-
 type PackFormModel = Partial<StickerPack>;
 </script>
 
@@ -68,9 +57,6 @@ const pack = ref(null) as Ref<StickerPack | null>;
 const maxStickerAmount = ref(5);
 
 const emojiPrefix = ref('');
-const minEmojiPrefixLength = ref(5);
-const maxEmojiPrefixLength = ref(10);
-const validateEmojiPrefixUrl = `/web/dash/creators/stickers/check-field-availability/0/emojiPrefix`;
 
 const packMaxFilesize = ref(5 * 1024 * 1024);
 const packMinWidth = ref(128);
@@ -106,35 +92,6 @@ const isPackDisabled = computed(() => {
 
 const routeTitle = computed(() => $gettext(`Your Stickers`));
 
-const emojiPrefixForm: FormController<EmojiPrefixFormModel> = createForm({
-	model: ref({ emojiPrefix: emojiPrefix.value }),
-	onLoad(payload) {
-		emojiPrefix.value = payload.emojiPrefix ?? emojiPrefix.value;
-	},
-	onSubmit() {
-		return Api.sendRequest(
-			`/web/dash/creators/stickers/save-emoji-prefix`,
-			{ emojiPrefix: emojiPrefixForm.formModel.emojiPrefix },
-			{
-				detach: true,
-			}
-		);
-	},
-	onSubmitError(response) {
-		let message: string | null = null;
-
-		if (response.errors) {
-			// TODO(reactions) error messages
-		}
-
-		showErrorGrowl(message || $gettext(`Could not update your emoji prefix. Try again later.`));
-	},
-	onSubmitSuccess(payload) {
-		emojiPrefix.value = payload.emojiPrefix || emojiPrefixForm.formModel.emojiPrefix;
-	},
-});
-
-// TODO(reactions) test what happens if we have no emoji prefix.
 const packForm: FormController<PackFormModel> = createForm({
 	loadUrl: '/web/dash/creators/stickers/save-pack',
 	model: ref({ ...pack.value }),
@@ -184,7 +141,6 @@ const { isBootstrapped } = createAppRoute({
 		const payload: InitPayload = data.payload;
 
 		emojiPrefix.value = payload.emojiPrefix || '';
-		emojiPrefixForm.formModel.emojiPrefix = emojiPrefix.value;
 
 		stickers.value = Sticker.populate(payload.stickers);
 		pack.value = payload.pack ? new StickerPack(payload.pack) : null;
@@ -253,53 +209,6 @@ function onPackEnabledChanged() {
 							alignItems: `flex-end`,
 						}"
 					>
-						{{ $gettext(`Emoji prefix`) }}
-					</h1>
-
-					<div class="help-block">
-						{{
-							$gettext(
-								`Create a unique emoji prefix for your stickers. This will be used to prefix the emoji name of your stickers.`
-							)
-						}}
-					</div>
-
-					<AppForm
-						:controller="emojiPrefixForm"
-						:forced-is-loading="
-							!emojiPrefixForm.isLoadedBootstrapped || !isBootstrapped
-						"
-					>
-						<AppFormGroup name="emojiPrefix" tiny-label-margin>
-							<AppFormControl
-								:placeholder="$gettext(`Emoji prefix...`)"
-								:validators="[
-									validateMinLength(minEmojiPrefixLength),
-									validateMaxLength(maxEmojiPrefixLength),
-									// TODO(reactions) regex
-									validateUsername(),
-									validateAvailability({
-										url: validateEmojiPrefixUrl,
-										initVal: emojiPrefix,
-									}),
-								]"
-							/>
-
-							<AppFormButton show-when-valid :style="{ marginTop: `6px` }">
-								{{ $gettext(`Save prefix`) }}
-							</AppFormButton>
-
-							<AppFormControlErrors :label="$gettext(`emoji prefix`)" />
-						</AppFormGroup>
-					</AppForm>
-
-					<h1
-						:style="{
-							marginTop: 0,
-							display: `flex`,
-							alignItems: `flex-end`,
-						}"
-					>
 						{{ $gettext(`Stickers`) }}
 					</h1>
 
@@ -316,20 +225,9 @@ function onPackEnabledChanged() {
 							<AppStickerEditTile v-for="i in maxStickerAmount" :key="i" />
 						</template>
 						<template v-else>
-							<!-- TODO(reactions)  not sure if disabling buttons
-							is fine enough, or if we should hide everything in
-							this form except for the emojiPrefix input. -->
 							<AppStickerEditTile
 								v-for="sticker in stickers"
 								:key="sticker.id"
-								v-app-tooltip.touchable="
-									emojiPrefix
-										? undefined
-										: $gettext(
-												`You must set an emoji prefix before editing this.`
-										  )
-								"
-								:disabled="!emojiPrefix"
 								:current-emoji-prefix="emojiPrefix"
 								:sticker="sticker"
 								:stickers="stickers"
@@ -339,14 +237,6 @@ function onPackEnabledChanged() {
 
 							<AppStickerEditTile
 								v-if="canCreateSticker"
-								v-app-tooltip.touchable="
-									emojiPrefix
-										? undefined
-										: $gettext(
-												`You must set an emoji prefix before creating stickers.`
-										  )
-								"
-								:disabled="!emojiPrefix"
 								:current-emoji-prefix="emojiPrefix"
 								:stickers="stickers"
 								@pack="updatePack"

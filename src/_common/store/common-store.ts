@@ -11,7 +11,7 @@ interface UserConsents {
 	eea?: boolean;
 }
 
-export interface ReactionGroupData {
+export interface EmojiGroupData {
 	group: EmojiGroup;
 	isLoading: boolean;
 	isBootstrapped: boolean;
@@ -30,7 +30,7 @@ export function createCommonStore() {
 	const user = ref<User | null>(null);
 	const userBootstrapped = ref(false);
 
-	const reactionsData = ref(new Map()) as Ref<Map<number, ReactionGroupData>>;
+	const reactionsData = ref(new Map()) as Ref<Map<number, EmojiGroupData>>;
 	const reactionsCursor = ref<string>();
 
 	const consents = ref<UserConsents>({});

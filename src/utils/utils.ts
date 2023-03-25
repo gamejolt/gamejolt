@@ -1,3 +1,4 @@
+import { getCurrentServerTime } from './server-time';
 export type RequireContextMap = { [k: string]: string };
 
 export function loadScript(src: string) {
@@ -58,6 +59,50 @@ export function debounce<T extends FunctionType>(
 			timeout = null;
 			fn.apply(this, args);
 		}, delayMs);
+	};
+}
+
+export function debounceWithMaxTimeout<T extends FunctionType>(
+	fn: T,
+	delayMs: number,
+	maxTimeoutMs: number
+): { call: ChangeReturnType<T, void>; cancel: () => void } {
+	let timeout: NodeJS.Timer | null = null;
+	let totalDelay: number | null = null;
+	let lastCallTime: number | null = null;
+
+	function cancel() {
+		if (timeout) {
+			clearTimeout(timeout);
+		}
+	}
+
+	return {
+		call(this: unknown, ...args: any) {
+			const handleCallback = () => {
+				timeout = null;
+				totalDelay = null;
+				lastCallTime = null;
+				fn.apply(this, args);
+			};
+
+			cancel();
+
+			const now = getCurrentServerTime();
+			const last = lastCallTime ?? now;
+			lastCallTime = now;
+
+			const total = totalDelay === null ? 0 : totalDelay + now - last;
+			totalDelay = total;
+
+			const effectiveDelay = Math.min(delayMs, maxTimeoutMs - total);
+			if (effectiveDelay <= 0) {
+				handleCallback();
+			} else {
+				timeout = setTimeout(handleCallback, effectiveDelay);
+			}
+		},
+		cancel,
 	};
 }
 
