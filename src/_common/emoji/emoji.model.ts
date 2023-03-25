@@ -15,9 +15,8 @@ export class Emoji implements ModelStoreModel {
 		Object.assign(this, data);
 	}
 
-	// TODO(reactions) figure this out.
 	get commandString() {
-		return `${this.prefix}${this.short_name}`;
+		return `:${this.prefix}${this.short_name}:`;
 	}
 }
 
