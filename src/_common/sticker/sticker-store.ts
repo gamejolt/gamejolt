@@ -283,7 +283,10 @@ interface SortedStickerStacks {
 	generalStickers: CreatorStickersList;
 }
 
-type StickerSorting = 'rarity' | 'mastery';
+export enum StickerSortMethod {
+	rarity = 'Rarity',
+	mastery = 'Mastery',
+}
 
 /**
  * Returns sorted lists of stickers.
@@ -298,7 +301,7 @@ export function getStickerStacksFromPayloadData({
 	stickerCounts: ModelData<StickerCount>[];
 	stickers: ModelData<Sticker>[];
 	unownedStickerMasteries: ModelData<Sticker>[] | null | undefined;
-	sorting?: StickerSorting;
+	sorting?: StickerSortMethod;
 }): SortedStickerStacks {
 	const eventStickers: CreatorStickersList = [];
 	const creatorStickers: CreatorStickersMap = new Map();
@@ -349,7 +352,7 @@ export function getStickerStacksFromPayloadData({
 		addItemToList(item);
 	});
 
-	return sortStickerCounts({
+	return sortStickerStacks({
 		eventStickers,
 		creatorStickers,
 		generalStickers,
@@ -360,23 +363,23 @@ export function getStickerStacksFromPayloadData({
 /**
  * Sorts stickers in place.
  */
-export function sortStickerCounts({
+export function sortStickerStacks({
 	eventStickers,
 	creatorStickers,
 	generalStickers,
-	sorting = 'rarity',
+	sorting = StickerSortMethod.rarity,
 }: {
 	eventStickers: CreatorStickersList;
 	creatorStickers: CreatorStickersMap;
 	generalStickers: CreatorStickersList;
 	// TODO(reactions) do something with this or remove it.
-	sorting?: StickerSorting;
+	sorting?: StickerSortMethod;
 }): SortedStickerStacks {
 	const lists = [eventStickers, ...creatorStickers.values(), generalStickers];
 
 	lists.forEach(list => {
 		switch (sorting) {
-			case 'rarity':
+			case StickerSortMethod.rarity:
 				list.sort((a, b) => {
 					const aCount = a.count ?? 0;
 					const bCount = b.count ?? 0;
@@ -399,7 +402,7 @@ export function sortStickerCounts({
 				});
 				break;
 
-			case 'mastery':
+			case StickerSortMethod.mastery:
 				list.sort((a, b) => {
 					const aMastery = a.sticker.mastery;
 					const bMastery = b.sticker.mastery;
