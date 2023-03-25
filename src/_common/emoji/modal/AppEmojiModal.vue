@@ -19,7 +19,6 @@ import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../button/AppButton.vue';
 import { ContentEditorModelData } from '../../content/content-owner';
 import { showErrorGrowl } from '../../growls/growls.service';
-import AppLoading from '../../loading/AppLoading.vue';
 import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
 import { storeModelList } from '../../model/model-store.service';
@@ -195,9 +194,6 @@ function onGroupInviewChanged(item: EmojiGroupData, isInview: boolean) {
 	arrayRemove(inviewGroups.value, i => i.group.id === item.group.id);
 
 	if (isInview) {
-		// TODO(reactions) might not work because of proxy. May need to change
-		// inview groups to be a map of EmojiGroupModel.id => {GroupData,
-		// isInview}
 		inviewGroups.value.push(item);
 		queueGroupFetch(item);
 	} else {
@@ -319,7 +315,6 @@ async function fetchGroups(groups: EmojiGroupData[]) {
 			item.hasError = true;
 		});
 
-		// TODO(reactions) messaging
 		showErrorGrowl($gettext(`Couldn't fetch emoji groups. Try again later.`));
 	}
 }
@@ -395,7 +390,6 @@ const gridStyles: CSSProperties = {
 			</template>
 			<template v-else>
 				<div v-for="[key, data] in reactionsData" :key="key">
-					<!-- TODO(reactions) -->
 					<AppScrollInview
 						v-if="!data.hasError && (data.group.emojis.length || data.group.num_emojis)"
 						:config="InviewConfig"
@@ -425,19 +419,6 @@ const gridStyles: CSSProperties = {
 							>
 								{{ data.group.name }}
 							</h6>
-
-							<!-- TODO(reactions) loading indicator -->
-							<template v-if="data.isLoading">
-								<!-- <div
-									:style="{
-										width: kFontSizeBase.px,
-										height: kFontSizeBase.px,
-										borderRadius: `50%`,
-										border: `${kBorderWidthLg.px} solid ${kThemePrimary}`,
-									}"
-								/> -->
-								<AppLoading stationary hide-label />
-							</template>
 						</div>
 
 						<div :style="gridStyles">

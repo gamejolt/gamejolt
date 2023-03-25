@@ -6,13 +6,14 @@ import {
 	styleBorderRadiusLg,
 	styleChangeBg,
 	styleElevate,
+	styleWhen,
 } from '../../../_styles/mixins';
 import { kBorderWidthLg } from '../../../_styles/variables';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppQuestFrame from '../../quest/AppQuestFrame.vue';
 import AppSpacer from '../../spacer/AppSpacer.vue';
-import { kThemeFg, kThemeFg10, kThemePrimary } from '../../theme/variables';
+import { kThemeBgActual, kThemeFg10, kThemePrimary } from '../../theme/variables';
 import AppUserAvatar from '../../user/user-avatar/AppUserAvatar.vue';
 import { useStickerStore } from '../sticker-store';
 import { Sticker } from '../sticker.model';
@@ -57,6 +58,8 @@ const props = defineProps({
 const { sticker, count, size, fitParent, noDrag, hideCount } = toRefs(props);
 
 const { streak, isDragging, sticker: storeSticker } = useStickerStore();
+
+const displayCount = computed(() => count?.value || 0);
 
 const currentStreak = computed(() => {
 	if (streak.value?.sticker.id !== sticker.value.id) {
@@ -108,7 +111,15 @@ const tagStyles: CSSProperties = {
 
 <template>
 	<div class="-item" draggable="false" @contextmenu="onContextMenu">
-		<component :is="fitParent ? AppAspectRatio : 'div'" :ratio="1">
+		<component
+			:is="fitParent ? AppAspectRatio : 'div'"
+			:ratio="1"
+			:style="
+				styleWhen(!displayCount, {
+					opacity: 0.3,
+				})
+			"
+		>
 			<component :is="sticker.is_event ? AppQuestFrame : 'div'" :style="itemStyling">
 				<template #[slotName]>
 					<div :class="{ '-peeled': isPeeled }">
@@ -136,11 +147,14 @@ const tagStyles: CSSProperties = {
 		</div>
 
 		<div
-			v-if="!hideCount && typeof count === 'number'"
+			v-if="!hideCount"
 			:style="{
 				...tagStyles,
 				top: 0,
 				left: 0,
+				...styleWhen(!displayCount, {
+					opacity: 0.3,
+				}),
 			}"
 		>
 			<div
@@ -149,7 +163,7 @@ const tagStyles: CSSProperties = {
 					color: sticker.rarityColor || 'white',
 				}"
 			>
-				{{ count }}
+				{{ displayCount }}
 			</div>
 		</div>
 
@@ -176,7 +190,6 @@ const tagStyles: CSSProperties = {
 			/>
 		</div>
 
-		<!-- TODO(reactions) hover state -->
 		<template v-if="showMastery && typeof sticker.mastery === 'number'">
 			<AppSpacer vertical :scale="1" />
 
@@ -185,18 +198,10 @@ const tagStyles: CSSProperties = {
 					display: `flex`,
 					alignItems: `center`,
 					gap: `4px`,
+					position: `relative`,
+					padding: `0 4px`,
 				}"
 			>
-				<div
-					v-if="!count"
-					:style="{
-						...styleBorderRadiusCircle,
-						width: `6px`,
-						height: `6px`,
-						backgroundColor: sticker.rarityColor || kThemeFg10,
-					}"
-				/>
-
 				<div
 					:style="{
 						flex: `auto`,
@@ -231,10 +236,16 @@ const tagStyles: CSSProperties = {
 					v-if="sticker.mastery >= 100"
 					icon="star"
 					:style="{
-						color: kThemeFg,
-						fontSize: `12px`,
-						lineHeight: 0,
+						color: kThemePrimary,
+						fontSize: `16px`,
 						margin: 0,
+						position: `absolute`,
+						left: `50%`,
+						top: `50%`,
+						transform: `translate(-50%, -50%)`,
+						backgroundColor: kThemeBgActual,
+						borderRadius: `50%`,
+						padding: `2px`,
 					}"
 				/>
 			</div>

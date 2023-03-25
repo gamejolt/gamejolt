@@ -20,8 +20,6 @@ const owner = useContentOwnerController()!;
 
 const emoji = ref<Emoji | (typeof GJ_EMOJIS)[number]>();
 
-// TODO(reactions) See if we need this to be reactive or not, or if we should be
-// doing this within a watcher instead.
 if (props.emojiId) {
 	owner.hydrator.useData('emoji-id', props.emojiId.toString(), data => {
 		if (data) {

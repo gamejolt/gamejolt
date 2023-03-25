@@ -13,10 +13,10 @@ export type StickerStack = {
 };
 
 export class Sticker extends Model {
-	public static readonly RARITY_BRONZE = 0;
-	public static readonly RARITY_SILVER = 1;
-	public static readonly RARITY_GOLD = 2;
-	public static readonly RARITY_PLATINUM = 3;
+	public static readonly RARITY_COMMON = 0;
+	public static readonly RARITY_UNCOMMON = 1;
+	public static readonly RARITY_RARE = 2;
+	public static readonly RARITY_EPIC = 3;
 
 	name?: string;
 	rarity!: number;
@@ -59,13 +59,13 @@ export class Sticker extends Model {
 
 	get rarityColor() {
 		switch (this.rarity) {
-			case Sticker.RARITY_SILVER:
+			case Sticker.RARITY_UNCOMMON:
 				return '#1bb804';
 
-			case Sticker.RARITY_GOLD:
+			case Sticker.RARITY_RARE:
 				return '#18a5f2';
 
-			case Sticker.RARITY_PLATINUM:
+			case Sticker.RARITY_EPIC:
 				return '#ffbc56';
 
 			default:
@@ -75,18 +75,20 @@ export class Sticker extends Model {
 
 	get rarityName() {
 		switch (this.rarity) {
-			// TODO(reactions) rarity names.
-			case Sticker.RARITY_SILVER:
+			case Sticker.RARITY_COMMON:
+				return 'Common';
+
+			case Sticker.RARITY_UNCOMMON:
 				return 'Uncommon';
 
-			case Sticker.RARITY_GOLD:
+			case Sticker.RARITY_RARE:
 				return 'Rare';
 
-			case Sticker.RARITY_PLATINUM:
+			case Sticker.RARITY_EPIC:
 				return 'Epic';
 
 			default:
-				return 'Common';
+				return '???';
 		}
 	}
 }
