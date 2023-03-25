@@ -17,8 +17,8 @@ import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormC
 import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	validateAvailability,
+	validateEmojiName,
 	validateFilesize,
-	validateHashtag,
 	validateImageAspectRatio,
 	validateImageMaxDimensions,
 	validateImageMinDimensions,
@@ -291,8 +291,7 @@ const validateEmojiAvailabilityPath = computed(() => {
 					:validators="[
 						validateMinLength(emojiNameMinLength),
 						validateMaxLength(emojiNameMaxLength),
-						// TODO(reactions) regex
-						validateHashtag(),
+						validateEmojiName(),
 						validateAvailability({ url: validateEmojiAvailabilityPath }),
 					]"
 				/>

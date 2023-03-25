@@ -372,7 +372,6 @@ export function sortStickerStacks({
 	eventStickers: CreatorStickersList;
 	creatorStickers: CreatorStickersMap;
 	generalStickers: CreatorStickersList;
-	// TODO(reactions) do something with this or remove it.
 	sorting?: StickerSortMethod;
 }): SortedStickerStacks {
 	const lists = [eventStickers, ...creatorStickers.values(), generalStickers];

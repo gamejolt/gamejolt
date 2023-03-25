@@ -80,7 +80,6 @@ const icon = computed(() => {
 		}"
 	>
 		<template v-if="mediaItem">
-			<!-- TODO(reactions) test this. -->
 			<AppMediaItemBackdrop
 				:style="{
 					...styleFlexCenter(),
