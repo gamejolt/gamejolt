@@ -150,7 +150,6 @@ async function init() {
 				});
 			} else {
 				const needsRefresh =
-					old.hasError ||
 					staleIds.includes(newGroup.id) ||
 					newGroup.num_emojis !== oldCounts.get(newGroup.id);
 
