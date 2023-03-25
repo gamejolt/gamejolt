@@ -389,6 +389,10 @@ export function sortStickerCounts({
 						return numberSort(bMastery, aMastery);
 					}
 
+					if (aCount <= 0 || bCount <= 0) {
+						return numberSort(bCount, aCount);
+					}
+
 					const aRarity = a.sticker.rarity;
 					const bRarity = b.sticker.rarity;
 					return numberSort(bRarity, aRarity);

@@ -166,6 +166,7 @@ async function placeSticker() {
 				@click="onDownvoteClick()"
 			/>
 
+			<!-- TODO(reactions) reactions -->
 			<AppButton
 				v-if="canPlaceStickers && stickerLayer"
 				v-app-tooltip="$gettext('Place sticker')"
