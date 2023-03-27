@@ -33,6 +33,10 @@ const props = defineProps({
 		type: String,
 		default: undefined,
 	},
+	block: {
+		type: Boolean,
+		default: true,
+	},
 });
 
 const emit = defineEmits({
@@ -42,7 +46,7 @@ const emit = defineEmits({
 	unhovered: () => true,
 });
 
-const { user, disabled, hoverDelay, noStats, to } = toRefs(props);
+const { user, disabled, hoverDelay, noStats, to, block } = toRefs(props);
 
 const isShowing = ref(false);
 const isLoaded = ref(false);
@@ -60,7 +64,7 @@ const componentProps = computed(() => {
 				placement: 'top',
 				trigger: 'hover',
 				showDelay: hoverDelay.value,
-				block: true,
+				block: block.value,
 				to: to?.value,
 		  };
 });

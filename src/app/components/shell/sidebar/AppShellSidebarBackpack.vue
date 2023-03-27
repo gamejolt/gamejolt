@@ -5,6 +5,7 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCurrencyPill from '../../../../_common/currency/AppCurrencyPill.vue';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppStickerLayerDrawerItem from '../../../../_common/sticker/layer/AppStickerLayerDrawerItem.vue';
 import AppStickerPack from '../../../../_common/sticker/pack/AppStickerPack.vue';
@@ -19,6 +20,7 @@ import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { styleBorderRadiusLg, styleChangeBg, styleTextOverflow } from '../../../../_styles/mixins';
 import { illPointyThing } from '../../../img/ill/illustrations';
+import { routeCollections } from '../../../views/collections/collections.route';
 import { routeQuests } from '../../../views/quests/quests.route';
 import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
 
@@ -103,17 +105,20 @@ function openPack(pack: UserStickerPack) {
 			<AppSpacer vertical :scale="4" />
 			<RouterLink class="link-unstyled" :to="{ name: routeQuests.name }">
 				<div
-					class="well"
+					class="well _quest-text"
 					:style="{
 						...styleBorderRadiusLg,
 						...styleChangeBg('bg-offset'),
 					}"
 				>
-					{{
-						$gettext(
-							`Complete quests to earn coins that you can use to purchase packs!`
-						)
-					}}
+					<AppJolticon icon="quest-log" big />
+					<span>
+						{{
+							$gettext(
+								`Complete quests to earn coins that you can use to purchase packs!`
+							)
+						}}
+					</span>
 				</div>
 			</RouterLink>
 
@@ -245,6 +250,15 @@ function openPack(pack: UserStickerPack) {
 					{{ $gettext(`Get packs`) }}
 				</AppButton>
 			</div>
+
+			<hr />
+			<AppButton
+				block
+				solid
+				:to="{ name: routeCollections.name, params: { username: 'me' } }"
+			>
+				{{ $gettext(`Browse Collections`) }}
+			</AppButton>
 		</AppForm>
 	</div>
 </template>
@@ -284,4 +298,9 @@ function openPack(pack: UserStickerPack) {
 	gap: var(--half-pad)
 	grid-template-columns: repeat(auto-fill, minmax(56px, 1fr))
 	margin-bottom: $line-height-computed
+
+._quest-text
+	display: flex
+	gap: 16px
+	align-items: center
 </style>

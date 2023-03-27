@@ -1,6 +1,6 @@
+import { MediaItem } from '../media-item/media-item-model';
 import { Model, ModelData, UnknownModelData } from '../model/model.service';
 import { User } from '../user/user.model';
-import { InventoryCollectible } from './collectible.model';
 
 export const COLLECTION_TYPE_USER = 'user';
 export const COLLECTION_TYPE_GAME = 'game';
@@ -18,8 +18,7 @@ export class InventoryCollection extends Model {
 	declare owner_user?: User;
 	declare started_on: number | null;
 	declare ended_on: number | null;
-
-	declare user_collectibles: InventoryCollectible[];
+	declare header_media_item?: MediaItem;
 
 	constructor(data: UnknownModelData | ModelData<InventoryCollection> = {}) {
 		super(data);
@@ -27,8 +26,8 @@ export class InventoryCollection extends Model {
 		if (data.owner_user) {
 			this.owner_user = new User(data.owner_user);
 		}
-		if (data.user_collectibles) {
-			this.user_collectibles = InventoryCollectible.populate(data.user_collectibles);
+		if (data.header_media_item) {
+			this.header_media_item = new MediaItem(data.header_media_item);
 		}
 	}
 }
