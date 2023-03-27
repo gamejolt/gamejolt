@@ -50,6 +50,9 @@ const props = defineProps({
 		type: String,
 		default: '',
 	},
+	canActivate: {
+		type: Boolean,
+	},
 });
 
 const emit = defineEmits({
@@ -57,7 +60,7 @@ const emit = defineEmits({
 	pack: (_payloadPack: StickerPack | undefined) => true,
 });
 
-const { model } = toRefs(props);
+const { model, canActivate } = toRefs(props);
 
 const emojiNameMinLength = ref(3);
 const emojiNameMaxLength = ref(30);
@@ -85,7 +88,11 @@ const form: FormController<FormModel> = createForm({
 		emoji_name: model?.value?.emoji?.short_name || '',
 	} as FormModel),
 	onInit() {
-		form.formModel.is_active = !model?.value || model.value.is_active === true;
+		if (!model?.value) {
+			form.formModel.is_active = canActivate?.value === true;
+		} else {
+			form.formModel.is_active = model.value.is_active === true;
+		}
 	},
 	onLoad(payload) {
 		minNameLength.value = payload.minNameLength ?? minNameLength.value;
@@ -142,6 +149,17 @@ onUnmounted(() => {
 
 const processedFileData = ref() as Ref<{ file: File; url: string } | undefined>;
 const imgUrl = computed(() => getImgUrl());
+const canToggleActive = computed(() => {
+	if (canActivate.value) {
+		return true;
+	}
+
+	if (model?.value) {
+		return model.value.is_active === true;
+	}
+
+	return false;
+});
 
 function getImgUrl(): string | undefined {
 	if (model?.value) {
@@ -219,7 +237,7 @@ const validateEmojiAvailabilityPath = computed(() => {
 	<!-- FormSticker -->
 	<AppForm :controller="form">
 		<AppFormGroup name="is_active" :label="$gettext(`Enable sticker`)" tiny-label-margin>
-			<AppFormControlToggle />
+			<AppFormControlToggle :disabled="!canToggleActive" />
 		</AppFormGroup>
 
 		<AppFormGroup

@@ -36,9 +36,12 @@ const props = defineProps({
 	disabled: {
 		type: Boolean,
 	},
+	canActivate: {
+		type: Boolean,
+	},
 });
 
-const { sticker, stickers, showName, currentEmojiPrefix, disabled } = toRefs(props);
+const { sticker, stickers, showName, currentEmojiPrefix, disabled, canActivate } = toRefs(props);
 
 const emit = defineEmits({
 	pack: (_payloadPack: StickerPack | undefined) => true,
@@ -56,6 +59,7 @@ function onClickTile() {
 		stickers: stickers?.value,
 		updatePack: pack => emit('pack', pack),
 		emojiPrefix: currentEmojiPrefix?.value,
+		canActivate: canActivate?.value,
 	});
 }
 </script>

@@ -8,6 +8,7 @@ export async function showStickerEditModal({
 	stickers,
 	updatePack,
 	emojiPrefix,
+	canActivate,
 }: {
 	/**
 	 * Existing sticker model to be edited.
@@ -28,6 +29,11 @@ export async function showStickerEditModal({
 	 * Our current emoji prefix.
 	 */
 	emojiPrefix?: string;
+
+	/**
+	 * Whether the sticker can be activated.
+	 */
+	canActivate?: boolean;
 }) {
 	return await showModal<void>({
 		modalId: 'StickerEdit',
@@ -37,6 +43,7 @@ export async function showStickerEditModal({
 			stickers,
 			updatePack,
 			emojiPrefix,
+			canActivate,
 		},
 		size: 'sm',
 	});

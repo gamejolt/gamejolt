@@ -25,9 +25,12 @@ const props = defineProps({
 		type: String,
 		default: undefined,
 	},
+	canActivate: {
+		type: Boolean,
+	},
 });
 
-const { sticker, stickers, updatePack, emojiPrefix } = toRefs(props);
+const { sticker, stickers, updatePack, emojiPrefix, canActivate } = toRefs(props);
 
 const modal = useModal()!;
 
@@ -66,6 +69,7 @@ function onPackChanged(data: StickerPack | undefined) {
 			<FormSticker
 				:model="model"
 				:emoji-prefix="emojiPrefix"
+				:can-activate="canActivate"
 				@changed="onFormChanged"
 				@pack="onPackChanged"
 			/>
