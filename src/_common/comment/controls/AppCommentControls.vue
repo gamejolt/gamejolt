@@ -3,6 +3,7 @@ import { computed, PropType, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import AppButton from '../../button/AppButton.vue';
+import { selectReactionForResource } from '../../emoji/modal/modal.service';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
 import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
@@ -168,7 +169,18 @@ async function placeSticker() {
 
 			<!-- TODO(reactions) reactions -->
 			<AppButton
-				v-if="canPlaceStickers && stickerLayer"
+				v-if="true"
+				v-app-tooltip="$gettext('Add reaction')"
+				v-app-track-event="`comment-widget:add-reaction`"
+				v-app-auth-required
+				class="-control-margin"
+				icon="add-reaction"
+				circle
+				trans
+				@click="selectReactionForResource(comment)"
+			/>
+			<AppButton
+				v-else-if="canPlaceStickers && stickerLayer"
 				v-app-tooltip="$gettext('Place sticker')"
 				v-app-track-event="`comment-widget:place-sticker`"
 				v-app-auth-required

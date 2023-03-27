@@ -3,6 +3,7 @@ import { PropType, ref } from 'vue';
 import AppFadeCollapse from '../AppFadeCollapse.vue';
 import AppContentViewer from '../content/content-viewer/AppContentViewer.vue';
 import { formatDate } from '../filters/date';
+import AppReactionList from '../reaction/list/AppReactionList.vue';
 import AppStickerControlsOverlay from '../sticker/AppStickerControlsOverlay.vue';
 import AppStickerReactions from '../sticker/reactions/AppStickerReactions.vue';
 import AppStickerTarget from '../sticker/target/AppStickerTarget.vue';
@@ -62,8 +63,12 @@ const showFullContent = ref(false);
 			/>
 		</AppStickerTarget>
 
+		<div v-if="comment.reaction_counts.length" class="-reactions-container">
+			<AppReactionList :model="comment" click-action="toggle" context-action="show-details" />
+		</div>
+		<!-- TODO(reactions) -->
 		<AppStickerControlsOverlay
-			v-if="comment.sticker_counts.length"
+			v-else-if="comment.sticker_counts.length"
 			class="-reactions-container"
 		>
 			<AppStickerReactions :controller="stickerTargetController" />

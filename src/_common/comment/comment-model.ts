@@ -6,6 +6,7 @@ import { FiresidePost } from '../fireside/post/post-model';
 import { Game } from '../game/game.model';
 import { showErrorGrowl } from '../growls/growls.service';
 import { Model } from '../model/model.service';
+import { ReactionableModel, ReactionCount } from '../reaction/reaction.model';
 import { constructStickerCounts, StickerCount } from '../sticker/sticker-count';
 import { Subscription } from '../subscription/subscription.model';
 import { User } from '../user/user.model';
@@ -17,7 +18,7 @@ export interface CommentableModel {
 	canInteractWithComments: boolean;
 }
 
-export class Comment extends Model {
+export class Comment extends Model implements ReactionableModel {
 	static readonly STATUS_REMOVED = 0;
 	static readonly STATUS_VISIBLE = 1;
 	static readonly STATUS_SPAM = 2;
@@ -40,10 +41,15 @@ export class Comment extends Model {
 	subscription?: Subscription;
 	is_pinned!: boolean;
 	comment_content!: string;
+	reaction_counts: ReactionCount[] = [];
 	sticker_counts: StickerCount[] = [];
 	supporters: User[] = [];
 
 	isFollowPending = false;
+
+	get typename__() {
+		return 'Comment';
+	}
 
 	get permalink() {
 		return Environment.baseUrl + '/x/permalink/comment/' + this.id;
@@ -62,6 +68,10 @@ export class Comment extends Model {
 
 		if (data.subscription) {
 			this.subscription = new Subscription(data.subscription);
+		}
+
+		if (data.reaction_counts) {
+			this.reaction_counts = ReactionCount.populate(data.reaction_counts);
 		}
 
 		if (data.sticker_counts) {
