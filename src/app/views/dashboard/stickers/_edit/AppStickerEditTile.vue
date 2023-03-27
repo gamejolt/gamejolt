@@ -31,9 +31,12 @@ const props = defineProps({
 	canActivate: {
 		type: Boolean,
 	},
+	warnDeactivate: {
+		type: Boolean,
+	},
 });
 
-const { sticker, stickers, showName, canActivate } = toRefs(props);
+const { sticker, stickers, showName, canActivate, warnDeactivate } = toRefs(props);
 
 const emit = defineEmits({
 	pack: (_payloadPack: StickerPack | undefined) => true,
@@ -47,6 +50,7 @@ function onClickTile() {
 		stickers: stickers?.value,
 		updatePack: pack => emit('pack', pack),
 		canActivate: canActivate?.value,
+		warnDeactivate: warnDeactivate?.value,
 	});
 }
 </script>

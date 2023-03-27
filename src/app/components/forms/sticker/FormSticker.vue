@@ -25,6 +25,7 @@ import {
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLinkHelpDocs from '../../../../_common/link/AppLinkHelpDocs.vue';
+import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { ModelData, UnknownModelData } from '../../../../_common/model/model.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
@@ -45,6 +46,9 @@ const props = defineProps({
 	canActivate: {
 		type: Boolean,
 	},
+	warnDeactivate: {
+		type: Boolean,
+	},
 });
 
 const emit = defineEmits({
@@ -52,7 +56,7 @@ const emit = defineEmits({
 	pack: (_payloadPack: StickerPack | undefined) => true,
 });
 
-const { model, canActivate } = toRefs(props);
+const { model, canActivate, warnDeactivate } = toRefs(props);
 
 const minNameLength = ref(3);
 const maxNameLength = ref(50);
@@ -200,13 +204,43 @@ const validateAvailabilityPath = computed(() => {
 	}
 	return `/web/dash/creators/stickers/check-field-availability/0/name`;
 });
+
+async function onClickIsActive() {
+	if (!model?.value) {
+		return;
+	}
+
+	if (!model.value.is_active) {
+		return;
+	}
+
+	if (!warnDeactivate.value) {
+		return;
+	}
+
+	if (form.formModel.is_active) {
+		return;
+	}
+
+	const response = await ModalConfirm.show(
+		$gettext(
+			`Are you sure you want to deactivate this sticker? When you deactivate it and save, your sticker pack will be disabled. You will need to enable it to make it available again.`
+		),
+		$gettext(`Deactivate Sticker`),
+		'yes'
+	);
+	// If "no" is selected, turn is_active toggle back on.
+	if (!response) {
+		form.formModel.is_active = true;
+	}
+}
 </script>
 
 <template>
 	<!-- FormSticker -->
 	<AppForm :controller="form">
 		<AppFormGroup name="is_active" :label="$gettext(`Enable sticker`)" tiny-label-margin>
-			<AppFormControlToggle :disabled="!canToggleActive" />
+			<AppFormControlToggle :disabled="!canToggleActive" @click="onClickIsActive" />
 		</AppFormGroup>
 
 		<AppFormGroup
