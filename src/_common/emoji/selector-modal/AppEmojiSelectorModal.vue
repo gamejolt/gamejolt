@@ -13,7 +13,6 @@ import {
 import { arrayRemove } from '../../../utils/array';
 import { debounceWithMaxTimeout } from '../../../utils/utils';
 import { styleBorderRadiusCircle, styleChangeBg } from '../../../_styles/mixins';
-import { kFontSizeBase } from '../../../_styles/variables';
 import { Api } from '../../api/api.service';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../button/AppButton.vue';
@@ -23,15 +22,11 @@ import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
 import { storeModelList } from '../../model/model-store.service';
 import { ModelData } from '../../model/model.service';
-import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/AppScrollInview.vue';
 import { EmojiGroupData, useCommonStore } from '../../store/common-store';
 import { $gettext } from '../../translate/translate.service';
 import { EmojiGroup } from '../emoji-group.model';
 import { Emoji } from '../emoji.model';
-import AppEmojiModalItem from './AppEmojiSelectorItem.vue';
-import AppEmojiGroupThumbnail from './_group/AppEmojiSelectorGroupThumbnail.vue';
-
-const InviewConfig = new ScrollInviewConfig({ margin: '100px' });
+import AppEmojiSelectorGroup from './_group/AppEmojiSelectorGroup.vue';
 
 const props = defineProps({
 	type: {
@@ -51,8 +46,9 @@ const { reactionsData, reactionsCursor } = useCommonStore();
 
 let didInitialFetch = false;
 
-const mounted = ref(false);
-const isBootstrapped = ref(false);
+const mounted = ref(import.meta.env.SSR);
+const isBootstrapped = ref(import.meta.env.SSR);
+const hasError = ref(false);
 const inviewGroups = ref([]) as Ref<EmojiGroupData[]>;
 
 const debounceItemsFetch = debounceWithMaxTimeout(
@@ -179,6 +175,7 @@ async function init() {
 		await fetchGroupsFromQueue();
 	} catch (e) {
 		console.error(e);
+		hasError.value = true;
 		showErrorGrowl($gettext(`Something went wrong. Try again later.`));
 	}
 }
@@ -320,15 +317,12 @@ async function fetchGroups(groups: EmojiGroupData[]) {
 }
 
 function selectEmoji(emoji: Emoji) {
-	Api.sendRequest(`/web/emojis/pick-emoji/${emoji.id}`, {}, { detach: true }).catch(e => {
-		console.error('Failed to update recently used emoji.', e);
-	});
 	modal.resolve(emoji);
 }
 
 const gridStyles: CSSProperties = {
 	display: `grid`,
-	gridTemplateColumns: `repeat(auto-fill, minmax(32px, 1fr))`,
+	gridTemplateColumns: `repeat(auto-fill, minmax(40px, 1fr))`,
 	gridGap: `16px`,
 };
 </script>
@@ -358,6 +352,16 @@ const gridStyles: CSSProperties = {
 		<div class="modal-body">
 			<template v-if="!reactionsData.size">
 				<div
+					v-if="hasError || isBootstrapped"
+					class="well fill-notice"
+					:style="{
+						marginBottom: `32px`,
+					}"
+				>
+					{{ $gettext(`We couldn't find anything you can use. Please try again later.`) }}
+				</div>
+				<div
+					v-else
 					:style="{
 						marginBottom: `32px`,
 					}"
@@ -390,52 +394,13 @@ const gridStyles: CSSProperties = {
 			</template>
 			<template v-else>
 				<div v-for="[key, data] in reactionsData" :key="key">
-					<AppScrollInview
-						v-if="!data.hasError && (data.group.emojis.length || data.group.num_emojis)"
-						:config="InviewConfig"
-						:style="{
-							marginBottom: `32px`,
-						}"
+					<AppEmojiSelectorGroup
+						:group-data="data"
+						:grid-styles="gridStyles"
 						@inview="onGroupInviewChanged(data, true)"
 						@outview="onGroupInviewChanged(data, false)"
-					>
-						<div
-							class="section-header"
-							:style="{
-								display: `flex`,
-								gap: `8px`,
-								alignItems: `flex-start`,
-							}"
-						>
-							<AppEmojiGroupThumbnail
-								:group="data.group"
-								:size="kFontSizeBase.value + 2"
-							/>
-
-							<h6
-								:style="{
-									marginTop: 0,
-								}"
-							>
-								{{ data.group.name }}
-							</h6>
-						</div>
-
-						<div :style="gridStyles">
-							<div
-								v-for="(_, index) of Math.max(
-									data.group.emojis.length,
-									data.group.num_emojis
-								)"
-								:key="data.group.emojis[index]?.id || index"
-							>
-								<AppEmojiModalItem
-									:emoji="data.group.emojis[index]"
-									@select="selectEmoji"
-								/>
-							</div>
-						</div>
-					</AppScrollInview>
+						@select-emoji="selectEmoji"
+					/>
 				</div>
 			</template>
 		</div>
