@@ -5,7 +5,7 @@ import type { TabLeaderInterface } from '../../../utils/tab-leader';
 import { Background } from '../../../_common/background/background.model';
 import { importNoSSR } from '../../../_common/code-splitting';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
-import { storeModel } from '../../../_common/model/model-store.service';
+import { getModel, storeModel } from '../../../_common/model/model-store.service';
 import { UnknownModelData } from '../../../_common/model/model.service';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import {
@@ -221,8 +221,14 @@ export function createChatUserChannel(
 	}
 
 	function _onGroupAdd(data: GroupAddPayload) {
+		const roomId = data.room.id as number;
+		const existingGroup = getModel(ChatRoom, roomId);
 		const newGroup = storeModel(ChatRoom, { chat: client, ...data.room });
-		client.groupRooms.push(newGroup);
+
+		// Only push to room list if it's not already there.
+		if (!existingGroup) {
+			client.groupRooms.push(newGroup);
+		}
 	}
 
 	function _onUpdateTitle(data: UpdateGroupTitlePayload) {
