@@ -84,14 +84,14 @@ function openPack(pack: UserStickerPack) {
 	});
 }
 
-function sortStickers(method: StickerSortMethod) {
+function sortStickers(sorting: StickerSortMethod) {
 	Popper.hideAll();
 
 	const data = sortStickerStacks({
 		eventStickers: [...eventStickers.value],
 		creatorStickers: new Map([...creatorStickers.value]),
 		generalStickers: [...generalStickers.value],
-		sorting: method,
+		sorting,
 	});
 
 	eventStickers.value = data.eventStickers;

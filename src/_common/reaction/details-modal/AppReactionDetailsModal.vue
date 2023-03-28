@@ -23,6 +23,7 @@ interface ReactionDetailsFeed {
 	page: number;
 	isLoadingMore: Ref<boolean>;
 	isBootstrapped: Ref<boolean>;
+	hasError: Ref<boolean>;
 	reachedEnd: Ref<boolean>;
 }
 
@@ -51,6 +52,9 @@ const currentFeed = computed(() => {
 	}
 	return null;
 });
+const isCurrentBootstrapped = computed(() => currentFeed.value?.isBootstrapped.value === true);
+const hasCurrentReachedEnd = computed(() => currentFeed.value?.reachedEnd.value === true);
+const currentUsers = computed(() => currentFeed.value?.users.value || []);
 
 function makeReactionFeed(reaction: ReactionCount): ReactionDetailsFeed {
 	return {
@@ -59,6 +63,7 @@ function makeReactionFeed(reaction: ReactionCount): ReactionDetailsFeed {
 		page: 1,
 		isLoadingMore: ref(false),
 		isBootstrapped: ref(false),
+		hasError: ref(false),
 		reachedEnd: ref(false),
 	};
 }
@@ -112,15 +117,22 @@ async function bootstrapFeed(feed: ReactionDetailsFeed) {
 		if (!users.length) {
 			feed.reachedEnd.value = true;
 		}
-	} catch (_) {
+	} catch (e) {
 		// Error state is shown in the modal itself.
+		console.error(e);
 	}
 
 	feed.isBootstrapped.value = true;
 }
 
 async function loadMore(feed: ReactionDetailsFeed | null) {
-	if (!feed || !feed.isBootstrapped.value || feed.isLoadingMore.value || feed.reachedEnd.value) {
+	if (
+		!feed ||
+		!feed.isBootstrapped.value ||
+		feed.isLoadingMore.value ||
+		feed.reachedEnd.value ||
+		feed.hasError.value
+	) {
 		return;
 	}
 
@@ -146,7 +158,10 @@ async function loadMore(feed: ReactionDetailsFeed | null) {
 		} else {
 			feed.users.value = feed.users.value.concat(...users);
 		}
-	} catch (_) {}
+	} catch (e) {
+		console.error(e);
+		feed.hasError.value = true;
+	}
 
 	feed.isLoadingMore.value = false;
 }
@@ -210,22 +225,18 @@ function getQueryParamsForFeed(feed: ReactionDetailsFeed, newPage: number) {
 					{{ $gettext(`Please select a reaction.`) }}
 				</div>
 			</template>
-			<template
-				v-else-if="currentFeed.isBootstrapped.value && !currentFeed.users.value.length"
-			>
+			<template v-else-if="isCurrentBootstrapped && !currentUsers.length">
 				<div class="well fill-offset">
 					{{ $gettext(`We couldn't find any users that used that reaction.`) }}
 				</div>
 			</template>
 			<template v-else>
-				<AppLoadingFade :is-loading="!currentFeed.isBootstrapped.value">
-					<AppUserList :users="currentFeed.users.value" />
+				<AppLoadingFade :is-loading="!isCurrentBootstrapped">
+					<AppUserList :users="currentUsers" />
 
 					<AppScrollAutoload
 						:key="currentFeed.reaction.id"
-						:can-load-more="
-							currentFeed.isBootstrapped.value && !currentFeed.reachedEnd.value
-						"
+						:can-load-more="isCurrentBootstrapped && !hasCurrentReachedEnd"
 						:load-more="() => loadMore(currentFeed)"
 					/>
 				</AppLoadingFade>

@@ -26,17 +26,9 @@ const { reaction, focusedId, size } = toRefs(props);
 const emojiId = computed(() => reaction.value.id);
 const imgUrl = computed(() => reaction.value.img_url);
 const didReact = computed(() => reaction.value.did_react === true);
-const displayText = computed(() => {
-	if (reaction.value) {
-		return reaction.value.count;
-	}
-	return 'Add';
-});
+const displayText = computed(() => reaction.value.count);
 
 const shouldHighlight = computed(() => {
-	if (!reaction.value) {
-		return false;
-	}
 	if (focusedId?.value) {
 		return focusedId.value === emojiId.value;
 	}
@@ -79,6 +71,7 @@ const bgColor = computed(() => {
 				maxHeight: `${size}px`,
 			}"
 			:src="imgUrl"
+			alt=""
 			@dragstart.prevent
 		/>
 

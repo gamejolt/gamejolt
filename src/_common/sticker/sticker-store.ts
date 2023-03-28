@@ -387,7 +387,12 @@ export function sortStickerStacks({
 
 					// If this sticker has no count, compare by mastery. Sort
 					// items nearest to completion to the front.
-					if (aCount <= 0 && bCount <= 0 && aMastery != null && bMastery != null) {
+					if (
+						aCount <= 0 &&
+						bCount <= 0 &&
+						typeof aMastery === 'number' &&
+						typeof bMastery === 'number'
+					) {
 						return numberSort(bMastery, aMastery);
 					}
 
@@ -405,12 +410,14 @@ export function sortStickerStacks({
 				list.sort((a, b) => {
 					const aMastery = a.sticker.mastery;
 					const bMastery = b.sticker.mastery;
+					const aIsNumber = typeof aMastery === 'number';
+					const bIsNumber = typeof bMastery === 'number';
 
-					if (aMastery != null && bMastery == null) {
+					if (aIsNumber && !bIsNumber) {
 						return -1;
-					} else if (aMastery == null && bMastery != null) {
+					} else if (!aIsNumber && bIsNumber) {
 						return 1;
-					} else if (aMastery != null && bMastery != null) {
+					} else if (aIsNumber && bIsNumber) {
 						return numberSort(bMastery, aMastery);
 					}
 

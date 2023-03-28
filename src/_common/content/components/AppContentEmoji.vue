@@ -11,7 +11,7 @@ const props = defineProps({
 	},
 	emojiType: {
 		type: String as PropType<(typeof GJ_EMOJIS)[number]>,
-		validate: (val: any) => GJ_EMOJIS.includes(val),
+		validator: (val: any) => GJ_EMOJIS.includes(val),
 		default: undefined,
 	},
 });

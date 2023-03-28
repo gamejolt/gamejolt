@@ -110,21 +110,20 @@ function onItemContext(reaction: ReactionCount) {
 	}
 }
 
-let mouseOverDirection: 'left' | 'right' | null = null;
-
-function mouseLeaveSide() {
-	mouseOverDirection = null;
+let mouseOverSide: 'left' | 'right' | null = null;
+function onMouseLeaveSide() {
+	mouseOverSide = null;
 }
 
-async function mouseOverSide(direction: typeof mouseOverDirection) {
-	if (mouseOverDirection) {
+async function onMouseOverSide(side: typeof mouseOverSide) {
+	if (mouseOverSide) {
 		return;
 	}
 
-	mouseOverDirection = direction;
+	mouseOverSide = side;
 	let mod = 10;
-	let shouldLoop = !!mouseOverDirection;
-	while ((shouldLoop && mouseOverDirection && mouseOverDirection === direction) || mod > 0) {
+	let shouldLoop = !!mouseOverSide;
+	while ((shouldLoop && mouseOverSide && mouseOverSide === side) || mod > 0) {
 		await new Promise<void>(resolve =>
 			requestAnimationFrame(() => {
 				const element = scrollController.element.value;
@@ -134,12 +133,12 @@ async function mouseOverSide(direction: typeof mouseOverDirection) {
 					return;
 				}
 
-				if (!mouseOverDirection) {
+				if (!mouseOverSide) {
 					--mod;
 				}
 
 				let offsetMod = mod / 2;
-				if (direction === 'left') {
+				if (side === 'left') {
 					offsetMod = -offsetMod;
 				}
 				const offset = element.scrollLeft;
@@ -204,18 +203,18 @@ const scrollerMarginBottom = new CSSPixelValue(12);
 
 		<template v-if="Screen.isPointerMouse && useScroller && hoverScroll">
 			<div
-				v-for="direction in (['left', 'right'] as const)"
-				:key="direction"
+				v-for="side in (['left', 'right'] as const)"
+				:key="side"
 				:style="{
 					position: `absolute`,
-					[direction]: `${-hoverScrollBleed}px`,
+					[side]: `${-hoverScrollBleed}px`,
 					top: 0,
 					bottom: scrollerMarginBottom.px,
 					width: `${hoverScrollWidth}px`,
 					zIndex: 1,
 				}"
-				@mouseover="mouseOverSide(direction)"
-				@mouseleave="mouseLeaveSide()"
+				@mouseover="onMouseOverSide(side)"
+				@mouseleave="onMouseLeaveSide()"
 			/>
 		</template>
 	</div>

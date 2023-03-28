@@ -128,12 +128,16 @@ export async function toggleReactionOnResource({
 		}
 	} catch (e) {
 		if (isReacting) {
-			showErrorGrowl($gettext('Could not react to this resource.'));
+			showErrorGrowl($gettext(`You can't react to this right now. Please try again later.`));
 		} else {
-			showErrorGrowl($gettext('Could not remove reaction from this resource.'));
+			showErrorGrowl(
+				$gettext(
+					`You can't remove your reaction from this right now. Please try again later.`
+				)
+			);
 		}
 
-		const wasReacting = !isReacting;
+		const wasReacted = !isReacting;
 		if (existingReaction) {
 			const newCount = existingReaction.count - countMod;
 
@@ -141,9 +145,9 @@ export async function toggleReactionOnResource({
 				arrayRemove(model.reaction_counts, i => i.id === emojiId);
 			} else {
 				existingReaction.count = newCount;
-				existingReaction.did_react = wasReacting;
+				existingReaction.did_react = wasReacted;
 			}
-		} else if (wasReacting) {
+		} else if (wasReacted) {
 			model.reaction_counts.push(
 				new ReactionCount({
 					id: emojiId,

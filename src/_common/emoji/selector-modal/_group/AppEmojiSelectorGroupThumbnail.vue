@@ -72,7 +72,7 @@ const icon = computed(() => {
 </script>
 
 <template>
-	<!-- AppEmojiGroupThumbnail -->
+	<!-- AppEmojiSelectorGroupThumbnail -->
 	<div
 		:style="{
 			width: `${size}px`,

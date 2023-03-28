@@ -106,6 +106,10 @@ async function init() {
 			reactionsCursor.value = response.cursor;
 		}
 
+		if (response.success === false) {
+			throw response;
+		}
+
 		const staleIds = Array.isArray(response['bustCache']) ? response['bustCache'] : [];
 		const rawRecentEmojis = Array.isArray(response['recentEmojis'])
 			? response['recentEmojis']
@@ -145,6 +149,7 @@ async function init() {
 				});
 			} else {
 				const needsRefresh =
+					old.hasError ||
 					staleIds.includes(newGroup.id) ||
 					newGroup.num_emojis !== oldCounts.get(newGroup.id);
 
@@ -226,9 +231,7 @@ function cancelGroupFetch(item: EmojiGroupData) {
 }
 
 async function fetchGroupsFromQueue() {
-	// Clone our queued items so we can clear the original list.
 	const items = inviewGroups.value.filter(i => !i.isBootstrapped);
-
 	return fetchGroups(items);
 }
 
@@ -328,6 +331,7 @@ const gridStyles: CSSProperties = {
 </script>
 
 <template>
+	<!-- AppEmojiSelectorModal -->
 	<AppModal>
 		<div class="modal-controls">
 			<AppButton @click="modal.dismiss()">

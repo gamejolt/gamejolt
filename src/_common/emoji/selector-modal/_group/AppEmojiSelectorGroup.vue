@@ -62,6 +62,7 @@ function selectEmoji(emoji: Emoji) {
 </script>
 
 <template>
+	<!-- AppEmojiSelectorGroup -->
 	<AppScrollInview
 		:config="GroupInviewConfig"
 		:style="{

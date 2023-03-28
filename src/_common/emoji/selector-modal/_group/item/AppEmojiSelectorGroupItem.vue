@@ -52,9 +52,10 @@ function onOutview() {
 </script>
 
 <template>
+	<!-- AppEmojiSelectorGroupItem -->
 	<component :is="inviewConfig ? AppScrollInview : 'div'" v-bind="rootComponentProps">
 		<div class="_square" @click="onClickEmoji">
-			<div v-if="emoji && (isHydrated || !inviewConfig)" class="_square-inner">
+			<div v-if="isHydrated || !inviewConfig" class="_square-inner">
 				<img
 					class="_img"
 					:src="emoji.img_url"

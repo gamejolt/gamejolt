@@ -41,7 +41,6 @@ provideFormControlHooks({
 	afterMount(_controller, mountedInputElem) {
 		inputElem = mountedInputElem;
 
-		// If there's a prefix.
 		if (inputElem.value) {
 			const styles = window.getComputedStyle(inputElem.value);
 			originalInputPaddingTop.value = parseFloat(styles.paddingTop || '0');
