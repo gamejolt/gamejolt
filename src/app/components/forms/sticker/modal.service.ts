@@ -9,6 +9,7 @@ export async function showStickerEditModal({
 	updatePack,
 	emojiPrefix,
 	canActivate,
+	warnDeactivate,
 }: {
 	/**
 	 * Existing sticker model to be edited.
@@ -34,6 +35,11 @@ export async function showStickerEditModal({
 	 * Whether the sticker can be activated.
 	 */
 	canActivate?: boolean;
+
+	/**
+	 * Whether to show a warning message when deactivating a sticker.
+	 */
+	warnDeactivate?: boolean;
 }) {
 	return await showModal<void>({
 		modalId: 'StickerEdit',
@@ -44,6 +50,7 @@ export async function showStickerEditModal({
 			updatePack,
 			emojiPrefix,
 			canActivate,
+			warnDeactivate,
 		},
 		size: 'sm',
 	});

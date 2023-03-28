@@ -8,10 +8,10 @@ import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
-validateFilesize,
-validateImageAspectRatio,
-validateImageMaxDimensions,
-validateImageMinDimensions
+	validateFilesize,
+	validateImageAspectRatio,
+	validateImageMaxDimensions,
+	validateImageMinDimensions,
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -20,14 +20,14 @@ import { ModelData } from '../../../../_common/model/model.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerPack, {
-StickerPackRatio
+	StickerPackRatio,
 } from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
 import { Sticker } from '../../../../_common/sticker/sticker.model';
 import {
-$gettext,
-$gettextInterpolate,
-$ngettext
+	$gettext,
+	$gettextInterpolate,
+	$ngettext,
 } from '../../../../_common/translate/translate.service';
 import { styleFlexCenter, styleWhen } from '../../../../_styles/mixins';
 import { kLineHeightComputed } from '../../../../_styles/variables';
@@ -161,6 +161,17 @@ const canActivateSticker = computed(
 	() => stickers.value.filter(i => i.is_active).length < maxStickerAmount.value
 );
 
+const warnDeactivateSticker = computed(() => {
+	// Don't warn if pack is already inactive.
+	if (pack.value && !pack.value.is_active) {
+		return false;
+	}
+
+	const minActiveStickers = pack.value?.payout_sticker_num ?? 3;
+	const currentActiveStickers = stickers.value.filter(i => i.is_active).length;
+	return currentActiveStickers <= minActiveStickers;
+});
+
 const stickerGridStyles = computed(() => {
 	const result: CSSProperties = {
 		display: `grid`,
@@ -175,6 +186,18 @@ const stickerGridStyles = computed(() => {
 	}
 
 	return result;
+});
+
+const showStickerPackDisabledWarning = computed(() => {
+	if (!pack.value || pack.value.is_active) {
+		return false;
+	}
+
+	// Show if the pack is inactive, and there are enough active stickers to enable it.
+	const minActiveStickers = pack.value.payout_sticker_num;
+	const currentActiveStickers = stickers.value.filter(i => i.is_active).length;
+
+	return currentActiveStickers >= minActiveStickers;
 });
 
 function updatePack(newPack: StickerPack | undefined) {
@@ -208,6 +231,30 @@ function onPackEnabledChanged() {
 	<AppShellPageBackdrop>
 		<section class="section">
 			<div class="container">
+				<div
+					v-if="showStickerPackDisabledWarning"
+					class="fill-notice well"
+					:style="{
+						display: 'flex',
+						gridGap: '16px',
+						alignItems: 'center',
+					}"
+				>
+					<AppJolticon icon="exclamation-circle" big />
+					<div>
+						<div :style="{ fontWeight: 'bold' }">
+							{{ $gettext(`Your sticker pack is currently turned off! `) }}
+						</div>
+						<div>
+							{{
+								$gettext(
+									`You can enable it again since you have enough active stickers. If you don't enable it, others won't be able to get or see your sticker pack.`
+								)
+							}}
+						</div>
+					</div>
+				</div>
+
 				<div>
 					<h1
 						:style="{
@@ -249,6 +296,7 @@ function onPackEnabledChanged() {
 								:sticker="sticker"
 								:stickers="stickers"
 								:can-activate="canActivateSticker"
+								:warn-deactivate="warnDeactivateSticker"
 								show-name
 								@pack="updatePack"
 							/>
