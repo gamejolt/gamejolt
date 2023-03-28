@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, Ref, shallowRef, toRefs } from 'vue';
-import { kFontSizeBase } from '../../../_styles/variables';
+import { kFontSizeBase, kGridGutterWidth } from '../../../_styles/variables';
 import { Api } from '../../api/api.service';
 import AppButton from '../../button/AppButton.vue';
 import AppLoadingFade from '../../loading/AppLoadingFade.vue';
@@ -174,11 +174,14 @@ function getQueryParamsForFeed(feed: ReactionDetailsFeed, newPage: number) {
 			</template>
 
 			<template #bottom>
-				<!-- TODO(reactions) pin this to the side or make this horizontally scrollable. -->
 				<AppReactionList
 					:model="model"
+					list-type="h-scroll"
 					:focused-id="selectedReaction?.id"
 					click-action="emit-click"
+					hover-scroll
+					:hover-scroll-bleed="kGridGutterWidth.value / 2"
+					:hover-scroll-width="kGridGutterWidth.value / 2"
 					@item-click="selectReaction"
 				/>
 

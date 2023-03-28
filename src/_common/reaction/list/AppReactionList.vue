@@ -1,6 +1,11 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+import { styleWhen } from '../../../_styles/mixins';
+import { CSSPixelValue } from '../../../_styles/variables';
+import { ComponentProps } from '../../component-helpers';
 import { toggleReactionOnResource } from '../../emoji/modal/modal.service';
+import { Screen } from '../../screen/screen-service';
+import AppScrollScroller, { createScroller } from '../../scroll/AppScrollScroller.vue';
 import { ReactionDetailsModal } from '../details-modal/modal.service';
 import { ReactionableModel, ReactionCount } from '../reaction.model';
 import AppReactionListItem from './AppReactionListItem.vue';
@@ -12,6 +17,10 @@ const props = defineProps({
 	model: {
 		type: Object as PropType<ReactionableModel>,
 		required: true,
+	},
+	listType: {
+		type: String as PropType<'wrap' | 'h-scroll'>,
+		default: 'wrap',
 	},
 	focusedId: {
 		type: Number,
@@ -25,16 +34,49 @@ const props = defineProps({
 		type: String as PropType<ContextAction>,
 		default: undefined,
 	},
+	hoverScroll: {
+		type: Boolean,
+	},
+	hoverScrollBleed: {
+		type: Number,
+		default: 0,
+	},
+	hoverScrollWidth: {
+		type: Number,
+		default: 24,
+	},
 });
 
-const { model, focusedId, clickAction, contextAction } = toRefs(props);
+const {
+	model,
+	listType,
+	focusedId,
+	clickAction,
+	contextAction,
+	hoverScroll,
+	hoverScrollBleed,
+	hoverScrollWidth,
+} = toRefs(props);
 
 const emit = defineEmits({
 	'item-click': (_reaction: ReactionCount) => true,
 	'item-context': (_reaction: ReactionCount) => true,
 });
 
+const scrollController = createScroller();
+
 const reactions = computed(() => model.value.reaction_counts);
+const useScroller = computed(() => listType.value === 'h-scroll');
+const scrollerProps = computed(() => {
+	if (!useScroller.value) {
+		return {};
+	}
+
+	return {
+		controller: scrollController,
+		horizontal: true,
+	} as ComponentProps<typeof AppScrollScroller>;
+});
 
 function onItemClick(reaction: ReactionCount) {
 	if (!clickAction?.value) {
@@ -68,34 +110,114 @@ function onItemContext(reaction: ReactionCount) {
 		});
 	}
 }
+
+let mouseOverDirection: 'left' | 'right' | null = null;
+
+function mouseLeaveSide() {
+	mouseOverDirection = null;
+}
+
+async function mouseOverSide(direction: typeof mouseOverDirection) {
+	if (mouseOverDirection) {
+		return;
+	}
+
+	mouseOverDirection = direction;
+	let mod = 10;
+	let shouldLoop = !!mouseOverDirection;
+	while ((shouldLoop && mouseOverDirection && mouseOverDirection === direction) || mod > 0) {
+		await new Promise<void>(resolve =>
+			requestAnimationFrame(() => {
+				const element = scrollController.element.value;
+				if (!element) {
+					shouldLoop = false;
+					mod = 0;
+					return;
+				}
+
+				if (!mouseOverDirection) {
+					--mod;
+				}
+
+				let offsetMod = mod / 2;
+				if (direction === 'left') {
+					offsetMod = -offsetMod;
+				}
+				const offset = element.scrollLeft;
+
+				scrollController.scrollTo(offset + offsetMod, {
+					edge: 'left',
+				});
+				resolve();
+			})
+		);
+	}
+}
+
+const scrollerMarginBottom = new CSSPixelValue(12);
 </script>
 
 <template>
 	<!-- AppReactionList -->
 	<div
 		:style="{
-			display: `inline-block`,
-			margin: `4px 0 8px 0`,
+			position: `relative`,
 		}"
 	>
-		<div
+		<component
+			:is="useScroller ? AppScrollScroller : 'div'"
+			v-bind="scrollerProps"
 			:style="{
-				display: `inline-flex`,
-				flexWrap: `wrap`,
-				gap: `2px 6px`,
+				display: `inline-block`,
+				margin: `4px 0 8px 0`,
+				...styleWhen(useScroller, {
+					display: `block`,
+				}),
 			}"
 		>
-			<AppReactionListItem
-				v-for="reaction of reactions"
-				:key="reaction.id"
+			<div
 				:style="{
-					cursor: `pointer`,
+					display: `inline-flex`,
+					flexWrap: `wrap`,
+					gap: `2px 6px`,
+					...styleWhen(useScroller, {
+						flexWrap: `nowrap`,
+						marginBottom: scrollerMarginBottom.px,
+						zIndex: 0,
+					}),
 				}"
-				:reaction="reaction"
-				:focused-id="focusedId"
-				@click="onItemClick(reaction)"
-				@contextmenu.prevent="onItemContext(reaction)"
+			>
+				<AppReactionListItem
+					v-for="reaction of reactions"
+					:key="reaction.id"
+					:style="
+						styleWhen(!!clickAction, {
+							cursor: `pointer`,
+						})
+					"
+					:reaction="reaction"
+					:focused-id="focusedId"
+					@click="onItemClick(reaction)"
+					@contextmenu.prevent="onItemContext(reaction)"
+				/>
+			</div>
+		</component>
+
+		<template v-if="Screen.isPointerMouse && useScroller && hoverScroll">
+			<div
+				v-for="direction in (['left', 'right'] as const)"
+				:key="direction"
+				:style="{
+					position: `absolute`,
+					[direction]: `${-hoverScrollBleed}px`,
+					top: 0,
+					bottom: scrollerMarginBottom.px,
+					width: `${hoverScrollWidth}px`,
+					zIndex: 1,
+				}"
+				@mouseover="mouseOverSide(direction)"
+				@mouseleave="mouseLeaveSide()"
 			/>
-		</div>
+		</template>
 	</div>
 </template>
