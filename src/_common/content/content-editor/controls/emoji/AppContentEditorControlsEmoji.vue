@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import AppEmoji, { GJ_EMOJIS } from '../../../../emoji/AppEmoji.vue';
-import { EmojiModal } from '../../../../emoji/modal/modal.service';
+import { EmojiSelectorModal } from '../../../../emoji/selector-modal/modal.service';
 import { vAppTooltip } from '../../../../tooltip/tooltip-directive';
 import { editorInsertEmoji, useContentEditorController } from '../../content-editor-controller';
 
@@ -44,7 +44,7 @@ async function show() {
 		return;
 	}
 
-	const emoji = await EmojiModal.show({ modelData });
+	const emoji = await EmojiSelectorModal.show({ modelData });
 	if (emoji) {
 		editorInsertEmoji(controller, emoji);
 	}

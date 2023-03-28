@@ -28,8 +28,8 @@ import { EmojiGroupData, useCommonStore } from '../../store/common-store';
 import { $gettext } from '../../translate/translate.service';
 import { EmojiGroup } from '../emoji-group.model';
 import { Emoji } from '../emoji.model';
-import AppEmojiModalItem from './AppEmojiModalItem.vue';
-import AppEmojiGroupThumbnail from './_group/AppEmojiGroupThumbnail.vue';
+import AppEmojiModalItem from './AppEmojiSelectorItem.vue';
+import AppEmojiGroupThumbnail from './_group/AppEmojiSelectorGroupThumbnail.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: '100px' });
 

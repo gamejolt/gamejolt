@@ -9,18 +9,18 @@ import { ReactionableModel, ReactionCount } from '../../reaction/reaction.model'
 import { $gettext } from '../../translate/translate.service';
 import { Emoji } from '../emoji.model';
 
-interface EmojiModalOptions {
-	type: 'emojis' | 'reactions';
+interface EmojiSelectorModalOptions {
+	type?: 'emojis' | 'reactions';
 	modelData: ContentEditorModelData;
 }
 
-export class EmojiModal {
-	static async show(options: EmojiModalOptions) {
-		const { type, modelData } = options;
+export class EmojiSelectorModal {
+	static async show(options: EmojiSelectorModalOptions) {
+		const { type = 'emojis', modelData } = options;
 
 		return await showModal<Emoji>({
 			modalId: 'EmojiSelector',
-			component: defineAsyncComponent(() => import('./AppEmojiModal.vue')),
+			component: defineAsyncComponent(() => import('./AppEmojiSelectorModal.vue')),
 			props: {
 				type,
 				modelData,
@@ -31,7 +31,7 @@ export class EmojiModal {
 }
 
 export async function selectReactionForResource(model: ReactionableModel) {
-	const emoji = await EmojiModal.show({
+	const emoji = await EmojiSelectorModal.show({
 		type: 'reactions',
 		modelData: {
 			type: 'resource',

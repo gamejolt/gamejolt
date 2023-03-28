@@ -3,7 +3,7 @@ import { computed, PropType, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import AppButton from '../../button/AppButton.vue';
-import { selectReactionForResource } from '../../emoji/modal/modal.service';
+import { selectReactionForResource } from '../../emoji/selector-modal/modal.service';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
 import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
