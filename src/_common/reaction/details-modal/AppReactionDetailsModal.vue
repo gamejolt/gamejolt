@@ -7,6 +7,7 @@ import AppLoadingFade from '../../loading/AppLoadingFade.vue';
 import AppModal, { AppModalInterface } from '../../modal/AppModal.vue';
 import AppModalFloatingHeader from '../../modal/AppModalFloatingHeader.vue';
 import { useModal } from '../../modal/modal.service';
+import AppScrollAutoload from '../../scroll/AppScrollAutoload.vue';
 import { kThemeFgMuted } from '../../theme/variables';
 import { $gettext } from '../../translate/translate.service';
 import AppUserList from '../../user/list/AppUserList.vue';
@@ -16,7 +17,6 @@ import { ReactionableModel, ReactionCount } from '../reaction.model';
 
 const perPage = 30;
 
-// TODO(reactions) isn't reactive
 interface ReactionDetailsFeed {
 	reaction: ReactionCount;
 	users: Ref<User[]>;
@@ -119,9 +119,8 @@ async function bootstrapFeed(feed: ReactionDetailsFeed) {
 	feed.isBootstrapped.value = true;
 }
 
-// TODO(reactions) load more on scroll
-async function loadMore(feed: ReactionDetailsFeed) {
-	if (!feed.isBootstrapped.value || feed.isLoadingMore.value || feed.reachedEnd.value) {
+async function loadMore(feed: ReactionDetailsFeed | null) {
+	if (!feed || !feed.isBootstrapped.value || feed.isLoadingMore.value || feed.reachedEnd.value) {
 		return;
 	}
 
@@ -130,7 +129,7 @@ async function loadMore(feed: ReactionDetailsFeed) {
 	try {
 		const newPage = feed.page + 1;
 		const response = await Api.sendRequest(
-			'/web/reactions/for-resource?${feed.makeParams(newPage: newPage)}',
+			`/web/reactions/for-resource?${getQueryParamsForFeed(feed, newPage)}`,
 			undefined,
 			{ detach: true }
 		);
@@ -218,6 +217,14 @@ function getQueryParamsForFeed(feed: ReactionDetailsFeed, newPage: number) {
 			<template v-else>
 				<AppLoadingFade :is-loading="!currentFeed.isBootstrapped.value">
 					<AppUserList :users="currentFeed.users.value" />
+
+					<AppScrollAutoload
+						:key="currentFeed.reaction.id"
+						:can-load-more="
+							currentFeed.isBootstrapped.value && !currentFeed.reachedEnd.value
+						"
+						:load-more="() => loadMore(currentFeed)"
+					/>
 				</AppLoadingFade>
 			</template>
 		</div>

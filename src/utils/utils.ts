@@ -106,6 +106,28 @@ export function debounceWithMaxTimeout<T extends FunctionType>(
 	};
 }
 
+export function queuedThrottle(delay: number) {
+	let _delayTimer: Promise<void> | null = null;
+
+	return {
+		async call(cb: () => Promise<void>) {
+			if (_delayTimer) {
+				await _delayTimer;
+			}
+
+			await cb();
+
+			// We will wait at least this long before the next call.
+			_delayTimer = new Promise(resolve =>
+				setTimeout(() => {
+					_delayTimer = null;
+					resolve();
+				}, delay)
+			);
+		},
+	};
+}
+
 // For exhaustive switch matching: https://www.typescriptlang.org/docs/handbook/advanced-types.html
 export function assertNever(x: never): never {
 	throw new Error('Unexpected object: ' + x);
