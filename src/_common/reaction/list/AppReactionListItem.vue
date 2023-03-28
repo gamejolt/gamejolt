@@ -43,7 +43,13 @@ const shouldHighlight = computed(() => {
 	return didReact.value;
 });
 
-const borderColor = computed(() => (shouldHighlight.value ? kThemeBacklight : 'transparent'));
+const borderColor = computed(() => {
+	if (focusedId?.value || !shouldHighlight.value) {
+		return 'transparent';
+	}
+	return kThemeBacklight;
+});
+
 const bgColor = computed(() => {
 	const nonHighlightBg = focusedId?.value ? kThemeBgActual : kThemeBgOffset;
 	if (shouldHighlight.value) {
