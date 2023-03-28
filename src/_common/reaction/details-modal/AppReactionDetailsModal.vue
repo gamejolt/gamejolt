@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { computed, PropType, reactive, ref, Ref, toRefs } from 'vue';
+import { computed, PropType, ref, Ref, shallowRef, toRefs } from 'vue';
 import { kFontSizeBase } from '../../../_styles/variables';
 import { Api } from '../../api/api.service';
 import AppButton from '../../button/AppButton.vue';
 import AppLoadingFade from '../../loading/AppLoadingFade.vue';
-import AppModal from '../../modal/AppModal.vue';
+import AppModal, { AppModalInterface } from '../../modal/AppModal.vue';
 import AppModalFloatingHeader from '../../modal/AppModalFloatingHeader.vue';
 import { useModal } from '../../modal/modal.service';
 import { kThemeFgMuted } from '../../theme/variables';
@@ -40,13 +40,14 @@ const props = defineProps({
 const { model, initialReaction } = toRefs(props);
 
 const modal = useModal<void>()!;
+const rootModal = ref<AppModalInterface>();
 
 const selectedReaction = ref(null) as Ref<ReactionCount | null>;
-const reactionFeeds = reactive(new Map<number, ReactionDetailsFeed>());
+const reactionFeeds = shallowRef(new Map<number, ReactionDetailsFeed>());
 
 const currentFeed = computed(() => {
 	if (selectedReaction.value) {
-		return reactionFeeds.get(selectedReaction.value.id) || null;
+		return reactionFeeds.value.get(selectedReaction.value.id) || null;
 	}
 	return null;
 });
@@ -65,8 +66,7 @@ function makeReactionFeed(reaction: ReactionCount): ReactionDetailsFeed {
 function selectReaction(reaction: ReactionCount) {
 	const isSameFeed = selectedReaction.value?.id === reaction.id;
 
-	// TODO(reactions) scroll to top of modal?
-	// Scroll.to(0);
+	rootModal.value?.scrollTo(0);
 
 	if (isSameFeed) {
 		return;
@@ -74,14 +74,14 @@ function selectReaction(reaction: ReactionCount) {
 	selectedReaction.value = reaction;
 
 	let feed: ReactionDetailsFeed | null = null;
-	if (reactionFeeds.has(reaction.id)) {
-		feed = reactionFeeds.get(reaction.id)!;
+	if (reactionFeeds.value.has(reaction.id)) {
+		feed = reactionFeeds.value.get(reaction.id)!;
 	} else {
 		feed = makeReactionFeed(reaction);
-		reactionFeeds.set(reaction.id, feed);
+		reactionFeeds.value.set(reaction.id, feed);
 	}
 
-	if (!feed.isBootstrapped) {
+	if (!feed.isBootstrapped.value) {
 		bootstrapFeed(feed);
 	}
 }
@@ -164,7 +164,7 @@ function getQueryParamsForFeed(feed: ReactionDetailsFeed, newPage: number) {
 </script>
 
 <template>
-	<AppModal>
+	<AppModal ref="rootModal">
 		<AppModalFloatingHeader>
 			<template #modal-controls>
 				<div class="modal-controls">
@@ -174,22 +174,22 @@ function getQueryParamsForFeed(feed: ReactionDetailsFeed, newPage: number) {
 				</div>
 			</template>
 
-			<template #title>
+			<template #bottom>
 				<!-- TODO(reactions) pin this to the side or make this horizontally scrollable. -->
 				<AppReactionList
 					:model="model"
+					:focused-id="selectedReaction?.id"
 					click-action="emit-click"
 					@item-click="selectReaction"
 				/>
-			</template>
 
-			<template #bottom>
 				<div
 					v-if="currentFeed"
 					:style="{
 						color: kThemeFgMuted,
 						fontSize: kFontSizeBase.px,
 						fontWeight: `bold`,
+						paddingBottom: `4px`,
 					}"
 				>
 					{{ currentFeed.reaction.commandName }}
