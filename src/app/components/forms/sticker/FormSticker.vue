@@ -224,7 +224,7 @@ async function onClickIsActive() {
 
 	const response = await ModalConfirm.show(
 		$gettext(
-			`Are you sure you want to deactivate this sticker? When you deactivate it and save, your sticker pack will be disabled. You will need to enable it to make it available again.`
+			`Do you really want to deactivate this sticker? If you do, your sticker pack will be deactivated too. You'll need to activate the pack to make it available again.`
 		),
 		$gettext(`Deactivate Sticker`),
 		'yes'

@@ -240,12 +240,12 @@ function onPackEnabledChanged() {
 					<AppJolticon icon="exclamation-circle" big />
 					<div>
 						<div :style="{ fontWeight: 'bold' }">
-							{{ $gettext(`Your sticker pack is currently disabled!`) }}
+							{{ $gettext(`Your sticker pack is currently turned off! `) }}
 						</div>
 						<div>
 							{{
 								$gettext(
-									`You have enough active stickers to enable it again. If you don't enable your pack, people will be unable to receive or open your pack.`
+									`You can enable it again since you have enough active stickers. If you don't enable it, others won't be able to get or see your sticker pack.`
 								)
 							}}
 						</div>
