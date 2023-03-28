@@ -4,15 +4,11 @@ import AppFadeCollapse from '../AppFadeCollapse.vue';
 import AppContentViewer from '../content/content-viewer/AppContentViewer.vue';
 import { formatDate } from '../filters/date';
 import AppReactionList from '../reaction/list/AppReactionList.vue';
-import AppStickerControlsOverlay from '../sticker/AppStickerControlsOverlay.vue';
-import AppStickerReactions from '../sticker/reactions/AppStickerReactions.vue';
-import AppStickerTarget from '../sticker/target/AppStickerTarget.vue';
-import { createStickerTargetController } from '../sticker/target/target-controller';
 import AppTranslate from '../translate/AppTranslate.vue';
 import { Comment } from './comment-model';
 import './comment.styl';
 
-const props = defineProps({
+defineProps({
 	comment: {
 		type: Object as PropType<Comment>,
 		required: true,
@@ -21,14 +17,9 @@ const props = defineProps({
 		type: String,
 		default: '',
 	},
-	canPlaceStickers: {
+	canReact: {
 		type: Boolean,
 	},
-});
-
-const stickerTargetController = createStickerTargetController(props.comment, {
-	// Can't place charged stickers on comments.
-	isCreator: false,
 });
 
 const canToggleContent = ref(false);
@@ -37,42 +28,37 @@ const showFullContent = ref(false);
 
 <template>
 	<div>
-		<AppStickerTarget :controller="stickerTargetController" :disabled="!canPlaceStickers">
-			<AppFadeCollapse
-				:collapse-height="375"
-				:is-open="showFullContent"
-				@require-change="canToggleContent = $event"
-				@expand="showFullContent = true"
-			>
-				<AppContentViewer :source="content" />
-
-				<p v-if="comment.modified_on" class="text-muted small">
-					<b><AppTranslate>Last modified on</AppTranslate></b>
-					{{ ' ' }}
-					<span :title="formatDate(comment.modified_on, 'medium')">
-						{{ formatDate(comment.modified_on, 'longDate') }}
-					</span>
-				</p>
-			</AppFadeCollapse>
-
-			<a
-				v-if="canToggleContent"
-				v-app-track-event="`comment-widget:toggle-full-content`"
-				class="hidden-text-expander"
-				@click="showFullContent = !showFullContent"
-			/>
-		</AppStickerTarget>
-
-		<div v-if="comment.reaction_counts.length" class="-reactions-container">
-			<AppReactionList :model="comment" click-action="toggle" context-action="show-details" />
-		</div>
-		<!-- TODO(reactions) -->
-		<AppStickerControlsOverlay
-			v-else-if="comment.sticker_counts.length"
-			class="-reactions-container"
+		<AppFadeCollapse
+			:collapse-height="375"
+			:is-open="showFullContent"
+			@require-change="canToggleContent = $event"
+			@expand="showFullContent = true"
 		>
-			<AppStickerReactions :controller="stickerTargetController" />
-		</AppStickerControlsOverlay>
+			<AppContentViewer :source="content" />
+
+			<p v-if="comment.modified_on" class="text-muted small">
+				<b><AppTranslate>Last modified on</AppTranslate></b>
+				{{ ' ' }}
+				<span :title="formatDate(comment.modified_on, 'medium')">
+					{{ formatDate(comment.modified_on, 'longDate') }}
+				</span>
+			</p>
+		</AppFadeCollapse>
+
+		<a
+			v-if="canToggleContent"
+			v-app-track-event="`comment-widget:toggle-full-content`"
+			class="hidden-text-expander"
+			@click="showFullContent = !showFullContent"
+		/>
+
+		<div v-if="comment.reaction_counts.length" class="_reactions-container">
+			<AppReactionList
+				:model="comment"
+				:click-action="canReact ? 'toggle' : undefined"
+				context-action="show-details"
+			/>
+		</div>
 	</div>
 </template>
 
@@ -83,7 +69,7 @@ $-reactions-padding-xs = ($grid-gutter-width-xs / 2) * 0.75
 .hidden-text-expander
 	margin-bottom: $font-size-base
 
-.-reactions-container
+._reactions-container
 	padding-bottom: $-reactions-padding-xs
 
 	@media $media-sm-up

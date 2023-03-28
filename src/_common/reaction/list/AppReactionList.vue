@@ -3,11 +3,10 @@ import { computed, PropType, toRefs } from 'vue';
 import { styleWhen } from '../../../_styles/mixins';
 import { CSSPixelValue } from '../../../_styles/variables';
 import { ComponentProps } from '../../component-helpers';
-import { toggleReactionOnResource } from '../../emoji/selector-modal/modal.service';
 import { Screen } from '../../screen/screen-service';
 import AppScrollScroller, { createScroller } from '../../scroll/AppScrollScroller.vue';
 import { ReactionDetailsModal } from '../details-modal/modal.service';
-import { ReactionableModel, ReactionCount } from '../reaction.model';
+import { ReactionableModel, ReactionCount, toggleReactionOnResource } from '../reaction-count';
 import AppReactionListItem from './AppReactionListItem.vue';
 
 type ClickAction = 'toggle' | 'emit-click';

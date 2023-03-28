@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
-import { styleBorderRadiusBase, styleFlexCenter, styleWhen } from '../../../_styles/mixins';
+import { styleBorderRadiusBase } from '../../../_styles/mixins';
 import { kBorderWidthLg, kFontSizeTiny } from '../../../_styles/variables';
 import { kThemeBacklight, kThemeBgActual, kThemeBgOffset } from '../../theme/variables';
-import { ReactionCount } from '../reaction.model';
+import { ReactionCount } from '../reaction-count';
 
 const props = defineProps({
 	reaction: {
@@ -72,24 +72,15 @@ const bgColor = computed(() => {
 			userSelect: `none`,
 		}"
 	>
-		<div
+		<img
 			:style="{
 				width: `${size}px`,
 				height: `auto`,
 				maxHeight: `${size}px`,
-				...styleWhen(!reaction, styleFlexCenter()),
 			}"
-		>
-			<img
-				:style="{
-					display: `block`,
-					width: `100%`,
-					height: `100%`,
-				}"
-				:src="imgUrl"
-				@dragstart.prevent
-			/>
-		</div>
+			:src="imgUrl"
+			@dragstart.prevent
+		/>
 
 		<div
 			:style="{

@@ -1,6 +1,6 @@
 import { defineAsyncComponent } from 'vue';
 import { showModal } from '../../modal/modal.service';
-import { ReactionableModel, ReactionCount } from '../../reaction/reaction.model';
+import { ReactionableModel, ReactionCount } from '../reaction-count';
 
 interface ReactionDetailsModalOptions {
 	model: ReactionableModel;

@@ -6,8 +6,7 @@ import { FiresidePost } from '../fireside/post/post-model';
 import { Game } from '../game/game.model';
 import { showErrorGrowl } from '../growls/growls.service';
 import { Model } from '../model/model.service';
-import { ReactionableModel, ReactionCount } from '../reaction/reaction.model';
-import { constructStickerCounts, StickerCount } from '../sticker/sticker-count';
+import { ReactionableModel, ReactionCount } from '../reaction/reaction-count';
 import { Subscription } from '../subscription/subscription.model';
 import { User } from '../user/user.model';
 import { CommentVote } from './vote/vote-model';
@@ -42,7 +41,6 @@ export class Comment extends Model implements ReactionableModel {
 	is_pinned!: boolean;
 	comment_content!: string;
 	reaction_counts: ReactionCount[] = [];
-	sticker_counts: StickerCount[] = [];
 	supporters: User[] = [];
 
 	isFollowPending = false;
@@ -72,10 +70,6 @@ export class Comment extends Model implements ReactionableModel {
 
 		if (data.reaction_counts) {
 			this.reaction_counts = ReactionCount.populate(data.reaction_counts);
-		}
-
-		if (data.sticker_counts) {
-			this.sticker_counts = constructStickerCounts(data.sticker_counts);
 		}
 
 		if (data.supporters) {

@@ -3,13 +3,12 @@ import { computed, PropType, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import AppButton from '../../button/AppButton.vue';
-import { selectReactionForResource } from '../../emoji/selector-modal/modal.service';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
 import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
+import { selectReactionForResource } from '../../reaction/reaction-count';
 import { Screen } from '../../screen/screen-service';
-import { useStickerLayer } from '../../sticker/layer/layer-controller';
-import { openStickerDrawer, useStickerStore } from '../../sticker/sticker-store';
+import { useCommonStore } from '../../store/common-store';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { $gettext, $gettextInterpolate, $ngettext } from '../../translate/translate.service';
@@ -39,15 +38,15 @@ const props = defineProps({
 	canVote: {
 		type: Boolean,
 	},
-	canPlaceStickers: {
+	canReact: {
 		type: Boolean,
 	},
 });
 
-const { model, comment, children, showReply, canReply, canPlaceStickers } = toRefs(props);
+const { model, comment, children, showReply, canReply, canReact } = toRefs(props);
 
-const stickerStore = useStickerStore();
-const stickerLayer = useStickerLayer();
+const { reactionsData } = useCommonStore();
+
 const router = useRouter();
 
 const votingTooltip = computed(() => {
@@ -118,13 +117,6 @@ function onReplyClick(autofocus: boolean) {
 function showLikers() {
 	LikersModal.show({ count: comment.value.votes, resource: comment.value });
 }
-
-async function placeSticker() {
-	if (!canPlaceStickers.value || !stickerLayer) {
-		return;
-	}
-	openStickerDrawer(stickerStore, stickerLayer);
-}
 </script>
 
 <template>
@@ -167,9 +159,8 @@ async function placeSticker() {
 				@click="onDownvoteClick()"
 			/>
 
-			<!-- TODO(reactions) reactions -->
 			<AppButton
-				v-if="true"
+				v-if="canReact"
 				v-app-tooltip="$gettext('Add reaction')"
 				v-app-track-event="`comment-widget:add-reaction`"
 				v-app-auth-required
@@ -178,17 +169,6 @@ async function placeSticker() {
 				circle
 				trans
 				@click="selectReactionForResource(comment)"
-			/>
-			<AppButton
-				v-else-if="canPlaceStickers && stickerLayer"
-				v-app-tooltip="$gettext('Place sticker')"
-				v-app-track-event="`comment-widget:place-sticker`"
-				v-app-auth-required
-				class="-control-margin"
-				icon="sticker"
-				circle
-				trans
-				@click="placeSticker()"
 			/>
 		</span>
 

@@ -13,7 +13,7 @@ import { $gettext } from '../../translate/translate.service';
 import AppUserList from '../../user/list/AppUserList.vue';
 import { User } from '../../user/user.model';
 import AppReactionList from '../list/AppReactionList.vue';
-import { ReactionableModel, ReactionCount } from '../reaction.model';
+import { ReactionableModel, ReactionCount } from '../reaction-count';
 
 const perPage = 30;
 

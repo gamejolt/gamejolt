@@ -12,7 +12,6 @@ import AppPopper from '../../popper/AppPopper.vue';
 import { Popper } from '../../popper/popper.service';
 import { ReportModal } from '../../report/modal/modal.service';
 import AppStickerLayer from '../../sticker/layer/AppStickerLayer.vue';
-import { canPlaceStickerOnComment } from '../../sticker/placement/placement.model';
 import { useCommonStore } from '../../store/common-store';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppTranslate from '../../translate/AppTranslate.vue';
@@ -171,9 +170,12 @@ const shouldBlock = computed(() => {
 
 const showReplies = computed(() => !parent?.value && !showChildren.value);
 const canReply = computed(() => showReplies.value && canCommentOnModel(model.value, parent?.value));
-const canPlaceStickers = computed(() =>
-	canPlaceStickerOnComment(model.value, comment.value, parent?.value)
-);
+const canReact = computed(() => {
+	if (comment.value.user.hasAnyBlock === true || parent?.value?.user.hasAnyBlock === true) {
+		return false;
+	}
+	return model.value.canInteractWithComments;
+});
 const canVote = computed(() => model.value.canInteractWithComments);
 
 onMounted(() => {
@@ -359,7 +361,7 @@ function onUnhideBlock() {
 					<AppCommentContent
 						:comment="comment"
 						:content="comment.comment_content"
-						:can-place-stickers="canPlaceStickers"
+						:can-react="canReact"
 					/>
 				</template>
 				<template v-else>
@@ -380,7 +382,7 @@ function onUnhideBlock() {
 					:show-reply="showReplies"
 					:can-reply="canReply"
 					:can-vote="canVote"
-					:can-place-stickers="canPlaceStickers"
+					:can-react="canReact"
 				/>
 			</template>
 
