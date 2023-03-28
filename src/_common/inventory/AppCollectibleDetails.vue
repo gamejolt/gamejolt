@@ -61,6 +61,9 @@ const { collectible, doMaxWidth } = toRefs(props);
 					<AppSpacer vertical :scale="2" />
 					{{ collectible.description }}
 				</div>
+				<div v-else>
+					<AppSpacer vertical :scale="1" />
+				</div>
 				<div v-if="collectible.type === 'Sticker'">
 					<AppSpacer vertical :scale="2" />
 					<hr />

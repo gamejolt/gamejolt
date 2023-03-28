@@ -103,7 +103,7 @@ function openPack(pack: UserStickerPack) {
 			</div>
 
 			<AppSpacer vertical :scale="4" />
-			<RouterLink class="link-unstyled" :to="{ name: routeQuests.name }">
+			<RouterLink class="link-unstyled _quest-link" :to="{ name: routeQuests.name }">
 				<div
 					class="well _quest-text"
 					:style="{
@@ -299,8 +299,12 @@ function openPack(pack: UserStickerPack) {
 	grid-template-columns: repeat(auto-fill, minmax(56px, 1fr))
 	margin-bottom: $line-height-computed
 
+._quest-link:hover
+	text-decoration: none
+
 ._quest-text
 	display: flex
 	gap: 16px
 	align-items: center
+	elevate-hover-1()
 </style>
