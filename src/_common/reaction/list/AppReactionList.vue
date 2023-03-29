@@ -121,20 +121,35 @@ async function onMouseOverSide(side: typeof mouseOverSide) {
 	}
 
 	mouseOverSide = side;
-	let mod = 64;
+	let mod = 8;
 	let shouldLoop = !!mouseOverSide;
-	while ((shouldLoop && mouseOverSide && mouseOverSide === side) || mod > 0) {
+
+	while (mod > 0) {
 		await new Promise<void>(resolve =>
 			requestAnimationFrame(() => {
 				const element = scrollController.element.value;
 				if (!element) {
 					shouldLoop = false;
 					mod = 0;
+					resolve();
 					return;
 				}
 
-				if (!mouseOverSide) {
-					mod /= 1.5;
+				if (mouseOverSide !== side) {
+					shouldLoop = false;
+				}
+
+				if (!shouldLoop) {
+					mod = mod / 1.2;
+				} else {
+					mod = Math.min(mod * 1.2, 10);
+				}
+
+				if (mod <= 1) {
+					shouldLoop = false;
+					mod = 0;
+					resolve();
+					return;
 				}
 
 				let offsetMod = mod / 2;
@@ -145,7 +160,6 @@ async function onMouseOverSide(side: typeof mouseOverSide) {
 
 				scrollController.scrollTo(offset + offsetMod, {
 					edge: 'left',
-					behavior: 'smooth',
 				});
 				resolve();
 			})
