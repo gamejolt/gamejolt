@@ -145,7 +145,9 @@ async function init() {
 					group: newGroup,
 					hasError: false,
 					isLoading: false,
-					isBootstrapped: false,
+					// This is always bootstrapped - we'll never load this when
+					// fetching inview items.
+					isBootstrapped: newGroup.isRecentlyUsed,
 				});
 			} else {
 				const needsRefresh =
