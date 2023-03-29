@@ -121,7 +121,7 @@ async function onMouseOverSide(side: typeof mouseOverSide) {
 	}
 
 	mouseOverSide = side;
-	let mod = 10;
+	let mod = 64;
 	let shouldLoop = !!mouseOverSide;
 	while ((shouldLoop && mouseOverSide && mouseOverSide === side) || mod > 0) {
 		await new Promise<void>(resolve =>
@@ -134,7 +134,7 @@ async function onMouseOverSide(side: typeof mouseOverSide) {
 				}
 
 				if (!mouseOverSide) {
-					--mod;
+					mod /= 1.5;
 				}
 
 				let offsetMod = mod / 2;
@@ -145,6 +145,7 @@ async function onMouseOverSide(side: typeof mouseOverSide) {
 
 				scrollController.scrollTo(offset + offsetMod, {
 					edge: 'left',
+					behavior: 'smooth',
 				});
 				resolve();
 			})
