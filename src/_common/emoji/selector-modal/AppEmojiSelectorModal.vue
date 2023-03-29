@@ -150,17 +150,22 @@ async function init() {
 					isBootstrapped: newGroup.isRecentlyUsed,
 				});
 			} else {
-				const needsRefresh =
-					old.hasError ||
-					staleIds.includes(newGroup.id) ||
-					newGroup.num_emojis !== oldCounts.get(newGroup.id);
-
 				// Update our existing collection with the new data.
 				old.group = newGroup;
 				old.isLoading = false;
 				old.hasError = false;
-				if (needsRefresh && !newGroup.isRecentlyUsed) {
-					old.isBootstrapped = false;
+				if (newGroup.isRecentlyUsed) {
+					// Always bootstrap the recently used group.
+					old.isBootstrapped = true;
+				} else {
+					const needsRefresh =
+						old.hasError ||
+						staleIds.includes(newGroup.id) ||
+						newGroup.num_emojis !== oldCounts.get(newGroup.id);
+
+					if (needsRefresh) {
+						old.isBootstrapped = !needsRefresh;
+					}
 				}
 				result.set(newGroup.id, old);
 			}
