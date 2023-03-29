@@ -215,7 +215,7 @@ const scrollerMarginBottom = new CSSPixelValue(12);
 					zIndex: 1,
 				}"
 				@mouseover="onMouseOverSide(side)"
-				@mouseleave="onMouseLeaveSide()"
+				@mouseout="onMouseLeaveSide()"
 			/>
 		</template>
 	</div>
