@@ -159,7 +159,7 @@ async function init() {
 				old.group = newGroup;
 				old.isLoading = false;
 				old.hasError = false;
-				if (needsRefresh) {
+				if (needsRefresh && !newGroup.isRecentlyUsed) {
 					old.isBootstrapped = false;
 				}
 				result.set(newGroup.id, old);
