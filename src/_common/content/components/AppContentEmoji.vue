@@ -32,7 +32,7 @@ if (props.emojiId) {
 }
 
 // TODO(reactions) remove
-const rtxEnabled = true;
+const rtxEnabled = !GJ_IS_MOBILE_APP;
 </script>
 
 <template>
