@@ -39,7 +39,7 @@ export default class RouteContent extends BaseRouteComponent {
 	lastEdit!: number;
 	resourceTitle!: string;
 	resourceUrl!: string;
-	resource!: string;
+	resourceType!: string;
 	resourceId!: number;
 	ownerName!: string;
 	ownerUrl!: string;
@@ -90,7 +90,7 @@ export default class RouteContent extends BaseRouteComponent {
 		this.resourceUrl = $payload.resourceUrl;
 		this.ownerName = $payload.ownerName;
 		this.ownerUrl = $payload.ownerUrl;
-		this.resource = $payload.resource || this.$route.params.resource;
+		this.resourceType = $payload.resourceType;
 		this.resourceId =
 			$payload.resourceId || parseInt(this.$route.params.resourceId.toString(), 10);
 		this.requireLog = $payload.requireLog;
@@ -176,8 +176,8 @@ export default class RouteContent extends BaseRouteComponent {
 						:content-context="contentContext"
 						:capabilities="contentCapabilities"
 						:model-data="{
-							// TODO(reactions) test this
-							resource,
+							type: 'resource',
+							resource: resourceType,
 							resourceId,
 						}"
 						:model-id="resourceId"
