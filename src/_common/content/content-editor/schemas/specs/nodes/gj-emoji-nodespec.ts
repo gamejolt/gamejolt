@@ -33,14 +33,15 @@ export const gjEmoji = {
 			getAttrs: (domNode: Element) => {
 				const result: Record<string, any> = {};
 				const id = parseInt(domNode.getAttribute('emoji-id') || '0', 10);
+				const type = domNode.getAttribute('emoji-type');
+
 				if (id) {
 					result.id = id;
 				}
-				const type = domNode.getAttribute('emoji-type');
 				if (type) {
 					result.type = type;
 				}
-				return;
+				return result;
 			},
 		},
 	],
