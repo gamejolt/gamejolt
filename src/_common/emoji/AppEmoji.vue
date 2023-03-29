@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, PropType, toRefs } from 'vue';
 import { styleWhen } from '../../_styles/mixins';
+import { CSSPixelValue } from '../../_styles/variables';
 import { Emoji } from './emoji.model';
 
 export const GJ_EMOJIS = [
@@ -26,6 +27,8 @@ export const GJ_EMOJIS = [
 	'yush',
 ] as const;
 
+export const emojiBaseSize = new CSSPixelValue(24);
+
 const assetPaths = import.meta.glob('./*.png', { eager: true, as: 'url' });
 </script>
 
@@ -36,11 +39,15 @@ const props = defineProps({
 		required: true,
 		validator: (val: any) => val instanceof Emoji || GJ_EMOJIS.includes(val),
 	},
+	// TODO(reactions) remove
+	rtxEnabled: {
+		type: Boolean,
+	},
 });
 
 const { emoji } = toRefs(props);
 
-const backgroundImage = computed(() => {
+const src = computed(() => {
 	if (typeof emoji.value === 'string') {
 		return assetPaths[`./${emoji.value}.png`];
 	}
@@ -54,10 +61,10 @@ const backgroundImage = computed(() => {
 			'speak: none',
 			{
 				display: `inline-block`,
-				width: `25px`,
+				width: emojiBaseSize.px,
 				height: `auto`,
 				minHeight: `20px`,
-				maxHeight: `25px`,
+				maxHeight: emojiBaseSize.px,
 				verticalAlign: `middle`,
 				lineHeight: 1,
 				cursor: `default`,
@@ -65,8 +72,14 @@ const backgroundImage = computed(() => {
 			styleWhen(typeof emoji === 'string', {
 				imageRendering: `pixelated`,
 			}),
+			styleWhen(rtxEnabled, {
+				width: `${emojiBaseSize.value * 2}px`,
+				height: `auto`,
+				minHeight: `40px`,
+				maxHeight: `${emojiBaseSize.value * 2}px`,
+			}),
 		]"
-		:src="backgroundImage"
+		:src="src"
 		:alt="GJ_IS_MOBILE_APP ? undefined : ''"
 	/>
 </template>

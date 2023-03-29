@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { PropType, ref } from 'vue';
-import AppEmoji, { GJ_EMOJIS } from '../../emoji/AppEmoji.vue';
+import AppEmoji, { emojiBaseSize, GJ_EMOJIS } from '../../emoji/AppEmoji.vue';
 import { Emoji } from '../../emoji/emoji.model';
 import { useContentOwnerController } from '../content-owner';
 
@@ -30,18 +30,21 @@ if (props.emojiId) {
 	// eslint-disable-next-line vue/no-setup-props-destructure
 	emoji.value = props.emojiType;
 }
+
+// TODO(reactions) remove
+const rtxEnabled = true;
 </script>
 
 <template>
 	<template v-if="emoji">
-		<AppEmoji :emoji="emoji" />
+		<AppEmoji :emoji="emoji" :rtx-enabled="rtxEnabled" />
 	</template>
 	<template v-else>
 		<img
 			:style="{
 				display: `inline-block`,
-				width: `25px`,
-				height: `25px`,
+				width: emojiBaseSize.px,
+				height: emojiBaseSize.px,
 			}"
 			src=""
 			:alt="GJ_IS_MOBILE_APP ? undefined : ''"

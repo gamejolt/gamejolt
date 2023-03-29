@@ -25,7 +25,7 @@ defineProps({
 <template>
 	<div
 		:style="{
-			...styleFlexCenter('row'),
+			...styleFlexCenter({ direction: 'row' }),
 		}"
 	>
 		<div

@@ -311,7 +311,7 @@ function onPackEnabledChanged() {
 								<template #no-sticker>
 									<div
 										:style="{
-											...styleFlexCenter('column'),
+											...styleFlexCenter({ direction: 'column' }),
 											width: `100%`,
 											height: `100%`,
 											fontWeight: `bold`,
