@@ -15,6 +15,9 @@ import AppProgressBarQuest from '../../../../_common/quest/AppQuestProgress.vue'
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
+import AppStickerPack from '../../../../_common/sticker/pack/AppStickerPack.vue';
+import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { routeCollections } from '../collections.route';
 import { useCollectionsRouteStore } from '../collections.store';
@@ -32,6 +35,7 @@ export default {
 		AppMediaItemBackdrop,
 		AppImgResponsive,
 		AppJolticon,
+		AppStickerPack,
 	},
 };
 </script>
@@ -40,6 +44,7 @@ export default {
 const collection = ref<InventoryCollection>();
 const collectibles = ref([]) as Ref<InventoryCollectible[]>;
 const canViewMe = ref<boolean>(false);
+const stickerPacks = ref([]) as Ref<StickerPack[]>;
 const { viewingCollection } = useCollectionsRouteStore();
 
 const routeTitle = computed(() => collection.value?.name || $gettext(`Browse Collection`));
@@ -50,6 +55,7 @@ createAppRoute({
 		collection.value = new InventoryCollection(payload.collection);
 		collectibles.value = InventoryCollectible.populate(payload.collectibles);
 		canViewMe.value = payload.canViewMe;
+		stickerPacks.value = StickerPack.populate(payload.stickerPacks);
 
 		viewingCollection.value = collection.value;
 	},
@@ -160,6 +166,20 @@ const doCollectibleAnimation = computed(() => !Screen.isMobile && collectibles.v
 					/>
 				</div>
 			</section>
+
+			<section v-if="stickerPacks.length > 0" class="section">
+				<div class="page-cut" />
+
+				<div class="_pack-container">
+					<AppStickerPack
+						v-for="pack of stickerPacks"
+						:key="pack.id"
+						v-app-tooltip="pack.name"
+						class="_pack anim-fade-in-up stagger"
+						:pack="pack"
+					/>
+				</div>
+			</section>
 		</div>
 	</div>
 </template>
@@ -233,4 +253,16 @@ $-font-size = $font-size-small
 
 	@media $media-md-up
 		gap: 32px
+
+._pack-container
+	display: flex
+	flex-wrap: wrap
+	gap: 16px
+
+	@media $media-md-up
+		gap: 32px
+
+._pack
+	width: 100px
+	filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)) drop-shadow(0px 1px 8px rgba(0, 0, 0, 0.09))
 </style>
