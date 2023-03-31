@@ -27,7 +27,7 @@ import { ValidStickerResource } from './AppStickerTarget.vue';
 const StickerTargetParentControllerKey: InjectionKey<MaybeRef<StickerTargetController>> =
 	Symbol('sticker-target-parent');
 
-type StickerTargetModel = FiresidePost | Comment | MediaItem | Fireside;
+type StickerTargetModel = FiresidePost | MediaItem | Fireside;
 
 export type StickerTargetController = {
 	isInview: Ref<boolean>;

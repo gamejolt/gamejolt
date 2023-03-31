@@ -5,19 +5,25 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCurrencyPill from '../../../../_common/currency/AppCurrencyPill.vue';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import AppPopper from '../../../../_common/popper/AppPopper.vue';
+import { Popper } from '../../../../_common/popper/popper.service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppStickerLayerDrawerItem from '../../../../_common/sticker/layer/AppStickerLayerDrawerItem.vue';
 import AppStickerPack from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { StickerPackOpenModal } from '../../../../_common/sticker/pack/open-modal/modal.service';
 import { UserStickerPack } from '../../../../_common/sticker/pack/user_pack.model';
 import {
-	getStickerCountsFromPayloadData,
+	getStickerStacksFromPayloadData,
+	sortStickerStacks,
+	StickerSortMethod,
 	useStickerStore,
 } from '../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { styleBorderRadiusLg, styleChangeBg, styleTextOverflow } from '../../../../_styles/mixins';
+import { kFontSizeLarge } from '../../../../_styles/variables';
 import { illPointyThing } from '../../../img/ill/illustrations';
 import { routeQuests } from '../../../views/quests/quests.route';
 import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
@@ -37,6 +43,7 @@ const form: FormController<FormModel> = createForm({
 			ownedPacks: true,
 			ownedStickers: true,
 			unreadStickerIds: true,
+			unownedStickerMasteries: true,
 		},
 	},
 	sanitizeComplexData: false,
@@ -54,9 +61,10 @@ const form: FormController<FormModel> = createForm({
 	async onLoad(payload) {
 		stickerPacks.value = UserStickerPack.populate(payload.ownedPacks);
 
-		const data = getStickerCountsFromPayloadData({
+		const data = getStickerStacksFromPayloadData({
 			stickerCounts: payload.ownedStickers.stickerCounts,
 			stickers: payload.ownedStickers.stickers,
+			unownedStickerMasteries: payload.unownedStickerMasteries?.stickers,
 		});
 
 		eventStickers.value = data.eventStickers;
@@ -74,6 +82,21 @@ function openPack(pack: UserStickerPack) {
 		pack,
 		openImmediate: true,
 	});
+}
+
+function sortStickers(sorting: StickerSortMethod) {
+	Popper.hideAll();
+
+	const data = sortStickerStacks({
+		eventStickers: [...eventStickers.value],
+		creatorStickers: new Map([...creatorStickers.value]),
+		generalStickers: [...generalStickers.value],
+		sorting,
+	});
+
+	eventStickers.value = data.eventStickers;
+	creatorStickers.value = data.creatorStickers;
+	generalStickers.value = data.generalStickers;
 }
 </script>
 
@@ -146,8 +169,43 @@ function openPack(pack: UserStickerPack) {
 
 			<AppSpacer vertical :scale="8" />
 
-			<div class="_section-header">
-				{{ $gettext(`Stickers`) }}
+			<div
+				class="_section-header"
+				:style="{
+					display: `flex`,
+				}"
+			>
+				<span>
+					{{ $gettext(`Stickers`) }}
+				</span>
+
+				<AppPopper
+					:style="{
+						marginLeft: `12px`,
+					}"
+				>
+					<AppJolticon
+						:style="{
+							margin: 0,
+							fontSize: kFontSizeLarge.px,
+							cursor: `pointer`,
+						}"
+						icon="filter"
+					/>
+
+					<template #popover>
+						<div class="list-group">
+							<a
+								v-for="sortMethod in StickerSortMethod"
+								:key="sortMethod"
+								class="list-group-item"
+								@click="sortStickers(sortMethod)"
+							>
+								{{ sortMethod }}
+							</a>
+						</div>
+					</template>
+				</AppPopper>
 			</div>
 
 			<div v-if="eventStickers.length">
@@ -163,9 +221,10 @@ function openPack(pack: UserStickerPack) {
 						v-for="{ sticker, sticker_id, count } in eventStickers"
 						:key="sticker_id"
 						:sticker="sticker"
-						:count="count"
+						:count="count || undefined"
 						fit-parent
 						no-drag
+						show-mastery
 					/>
 				</div>
 			</div>
@@ -211,9 +270,10 @@ function openPack(pack: UserStickerPack) {
 								v-for="{ sticker, sticker_id, count } in stickers"
 								:key="sticker_id"
 								:sticker="sticker"
-								:count="count"
+								:count="count || undefined"
 								fit-parent
 								no-drag
+								show-mastery
 							/>
 						</div>
 					</template>
@@ -230,9 +290,10 @@ function openPack(pack: UserStickerPack) {
 						v-for="{ sticker, sticker_id, count } in generalStickers"
 						:key="sticker_id"
 						:sticker="sticker"
-						:count="count"
+						:count="count || undefined"
 						fit-parent
 						no-drag
+						show-mastery
 					/>
 				</div>
 			</div>

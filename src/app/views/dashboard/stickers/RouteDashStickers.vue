@@ -39,10 +39,10 @@ export default {
 		deps: {},
 		resolver: () => Api.sendRequest('/web/dash/creators/stickers'),
 	}),
-	components: { AppLinkHelpDocs },
 };
 
 type InitPayload = {
+	emojiPrefix: string | null | undefined;
 	stickers: ModelData<Sticker>[];
 	pack: ModelData<StickerPack> | null;
 	maxStickerAmount: number;
@@ -57,6 +57,8 @@ const stickers = ref([]) as Ref<Sticker[]>;
 const pack = ref(null) as Ref<StickerPack | null>;
 const maxStickerAmount = ref(5);
 const stickerSlots = ref(100);
+
+const emojiPrefix = ref('');
 
 const packMaxFilesize = ref(5 * 1024 * 1024);
 const packMinWidth = ref(128);
@@ -114,19 +116,18 @@ const packForm: FormController<PackFormModel> = createForm({
 	onSubmitError(response) {
 		let message: string | null = null;
 
-		if (response.errors) {
-			if (response.errors['not-enough-active-stickers']) {
-				message = $gettextInterpolate(
-					$ngettext(
-						`You need at least %{ num } active sticker to enable your sticker pack.`,
-						`You need at least %{ num } active stickers to enable your sticker pack.`,
-						requiredActiveStickers.value
-					),
-					{
-						num: requiredActiveStickers.value,
-					}
-				);
-			}
+		const reason = response.reason;
+		if (reason === 'not-enough-active-stickers') {
+			message = $gettextInterpolate(
+				$ngettext(
+					`You need at least %{ num } active sticker to enable your sticker pack.`,
+					`You need at least %{ num } active stickers to enable your sticker pack.`,
+					requiredActiveStickers.value
+				),
+				{
+					num: requiredActiveStickers.value,
+				}
+			);
 		}
 
 		showErrorGrowl(message || $gettext(`Could not update your sticker pack. Try again later.`));
@@ -140,6 +141,8 @@ const { isBootstrapped } = createAppRoute({
 	routeTitle,
 	onResolved(data) {
 		const payload: InitPayload = data.payload;
+
+		emojiPrefix.value = payload.emojiPrefix || '';
 
 		stickers.value = Sticker.populate(payload.stickers);
 		pack.value = payload.pack ? new StickerPack(payload.pack) : null;
@@ -289,6 +292,7 @@ function onPackEnabledChanged() {
 							<AppStickerEditTile
 								v-for="sticker in stickers"
 								:key="sticker.id"
+								:current-emoji-prefix="emojiPrefix"
 								:sticker="sticker"
 								:stickers="stickers"
 								:can-activate="canActivateSticker"
@@ -299,6 +303,7 @@ function onPackEnabledChanged() {
 
 							<AppStickerEditTile
 								v-if="canCreateSticker"
+								:current-emoji-prefix="emojiPrefix"
 								:stickers="stickers"
 								:can-activate="canActivateSticker"
 								@pack="updatePack"
@@ -306,7 +311,7 @@ function onPackEnabledChanged() {
 								<template #no-sticker>
 									<div
 										:style="{
-											...styleFlexCenter('column'),
+											...styleFlexCenter({ direction: 'column' }),
 											width: `100%`,
 											height: `100%`,
 											fontWeight: `bold`,

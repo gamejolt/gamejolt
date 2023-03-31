@@ -50,6 +50,11 @@ const form: FormController<Community> = createForm({
 				:placeholder="$gettext(`Write your community description here...`)"
 				content-context="community-description"
 				:capabilities="descriptionContentCapabilities"
+				:model-data="{
+					type: 'resource',
+					resource: 'Community',
+					resourceId: model.id,
+				}"
 				:model-id="model.id"
 				:validators="[
 					validateContentRequired(),

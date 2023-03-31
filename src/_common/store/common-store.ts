@@ -1,4 +1,5 @@
-import { computed, inject, InjectionKey, ref } from 'vue';
+import { computed, inject, InjectionKey, ref, Ref } from 'vue';
+import { EmojiGroup } from '../emoji/emoji-group.model';
 import { Environment } from '../environment/environment.service';
 import '../model/model.service';
 import { Navigate } from '../navigate/navigate.service';
@@ -8,6 +9,13 @@ import { User } from '../user/user.model';
 interface UserConsents {
 	ads?: boolean;
 	eea?: boolean;
+}
+
+export interface EmojiGroupData {
+	group: EmojiGroup;
+	isLoading: boolean;
+	isBootstrapped: boolean;
+	hasError: boolean;
 }
 
 export const CommonStoreKey: InjectionKey<CommonStore> = Symbol('common-store');
@@ -21,6 +29,10 @@ export function useCommonStore() {
 export function createCommonStore() {
 	const user = ref<User | null>(null);
 	const userBootstrapped = ref(false);
+
+	const reactionsData = ref(new Map()) as Ref<Map<number, EmojiGroupData>>;
+	const reactionsCursor = ref<string>();
+
 	const consents = ref<UserConsents>({});
 	const error = ref<number | string | null>(null);
 	const timeout = ref<UserTimeout | null>(null);
@@ -63,6 +75,7 @@ export function createCommonStore() {
 	function clearUser() {
 		user.value = null;
 		userBootstrapped.value = true;
+		reactionsData.value = new Map();
 		coinBalance.value = 0;
 	}
 
@@ -90,6 +103,8 @@ export function createCommonStore() {
 	return {
 		user,
 		userBootstrapped,
+		reactionsData,
+		reactionsCursor,
 		consents,
 		error,
 		timeout,

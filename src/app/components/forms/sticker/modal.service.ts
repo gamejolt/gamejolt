@@ -7,6 +7,7 @@ export async function showStickerEditModal({
 	sticker,
 	stickers,
 	updatePack,
+	emojiPrefix,
 	canActivate,
 	warnDeactivate,
 }: {
@@ -26,6 +27,11 @@ export async function showStickerEditModal({
 	updatePack?: (_payloadPack: StickerPack | undefined) => void;
 
 	/**
+	 * Our current emoji prefix.
+	 */
+	emojiPrefix?: string;
+
+	/**
 	 * Whether the sticker can be activated.
 	 */
 	canActivate?: boolean;
@@ -42,6 +48,7 @@ export async function showStickerEditModal({
 			sticker,
 			stickers,
 			updatePack,
+			emojiPrefix,
 			canActivate,
 			warnDeactivate,
 		},

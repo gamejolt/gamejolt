@@ -138,6 +138,11 @@ function removeItem() {
 						:display-rules="previewContentRules"
 						:max-height="MAX_EDITOR_HEIGHT"
 						:min-height="100"
+						:model-data="{
+							type: 'resource',
+							resource: 'Chat_Command',
+							resourceId: item.id,
+						}"
 						:model-id="item.id"
 						:validators="[
 							validateContentRequired(),

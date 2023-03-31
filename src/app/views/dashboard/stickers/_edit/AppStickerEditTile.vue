@@ -12,6 +12,7 @@ import {
 	styleChangeBg,
 	styleFlexCenter,
 	styleLineClamp,
+	styleWhen,
 } from '../../../../../_styles/mixins';
 import { kFontSizeLarge } from '../../../../../_styles/variables';
 import { showStickerEditModal } from '../../../../components/forms/sticker/modal.service';
@@ -28,6 +29,13 @@ const props = defineProps({
 	showName: {
 		type: Boolean,
 	},
+	currentEmojiPrefix: {
+		type: String,
+		default: undefined,
+	},
+	disabled: {
+		type: Boolean,
+	},
 	canActivate: {
 		type: Boolean,
 	},
@@ -36,7 +44,8 @@ const props = defineProps({
 	},
 });
 
-const { sticker, stickers, showName, canActivate, warnDeactivate } = toRefs(props);
+const { sticker, stickers, showName, currentEmojiPrefix, disabled, canActivate, warnDeactivate } =
+	toRefs(props);
 
 const emit = defineEmits({
 	pack: (_payloadPack: StickerPack | undefined) => true,
@@ -45,10 +54,15 @@ const emit = defineEmits({
 const hasClickAction = computed(() => !!sticker?.value || !!stickers?.value);
 
 function onClickTile() {
+	if (disabled.value) {
+		return;
+	}
+
 	showStickerEditModal({
 		sticker: sticker?.value || null,
 		stickers: stickers?.value,
 		updatePack: pack => emit('pack', pack),
+		emojiPrefix: currentEmojiPrefix?.value,
 		canActivate: canActivate?.value,
 		warnDeactivate: warnDeactivate?.value,
 	});
@@ -120,7 +134,9 @@ function onClickTile() {
 						...styleAbsoluteFill({
 							zIndex: 1,
 						}),
-						cursor: `pointer`,
+						...styleWhen(!disabled, {
+							cursor: `pointer`,
+						}),
 					}"
 					@click="onClickTile"
 				>
