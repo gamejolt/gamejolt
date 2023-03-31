@@ -10,14 +10,14 @@ import AppForm, {
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormControlPrefix from '../../../../_common/form-vue/AppFormControlPrefix.vue';
+// import AppFormControlPrefix from '../../../../_common/form-vue/AppFormControlPrefix.vue';
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormStickySubmit from '../../../../_common/form-vue/AppFormStickySubmit.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	validateAvailability,
-	validateEmojiName,
+	// validateEmojiName
 	validateFilesize,
 	validateImageAspectRatio,
 	validateImageMaxDimensions,
@@ -119,6 +119,9 @@ const form: FormController<FormModel> = createForm({
 		}
 	},
 	onSubmit() {
+		// TODO(reactions) remove this later
+		form.formModel.emoji_name = 'stub';
+
 		return Api.sendRequest(loadUrl.value, form.formModel, {
 			detach: true,
 			file: form.formModel.file,
@@ -336,6 +339,8 @@ async function onClickIsActive() {
 			<AppFormControlErrors :label="$gettext(`sticker name`)" />
 		</AppFormGroup>
 
+		<!-- TODO(reactions) reenable this later -->
+		<!--
 		<AppFormGroup name="emoji_name" tiny-label-margin label="Emoji name">
 			<AppFormControlPrefix :prefix="emojiPrefix || ''">
 				<AppFormControl
@@ -351,6 +356,7 @@ async function onClickIsActive() {
 
 			<AppFormControlErrors :label="$gettext(`emoji name`)" />
 		</AppFormGroup>
+		-->
 
 		<label class="control-label">
 			{{ $gettext(`Sticker preview`) }}
