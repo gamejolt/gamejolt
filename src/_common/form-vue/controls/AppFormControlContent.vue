@@ -4,6 +4,7 @@ import { FocusToken } from '../../../utils/focus-token';
 import { ContentContext, ContextCapabilities } from '../../content/content-context';
 import AppContentEditor from '../../content/content-editor/AppContentEditor.vue';
 import { ContentRules } from '../../content/content-editor/content-rules';
+import { ContentEditorModelData } from '../../content/content-owner';
 import {
 	createFormControl,
 	defineFormControlEmits,
@@ -27,6 +28,10 @@ const props = defineProps({
 	},
 	autofocus: {
 		type: Boolean,
+	},
+	modelData: {
+		type: [Object, null] as PropType<ContentEditorModelData | null>,
+		required: true,
 	},
 	modelId: {
 		type: Number,
@@ -68,6 +73,7 @@ const {
 	capabilities,
 	placeholder,
 	autofocus,
+	modelData,
 	modelId,
 	minHeight,
 	tempResourceContextData,
@@ -156,6 +162,7 @@ function onChange(value: string) {
 			:placeholder="placeholder"
 			:disabled="disabled || contextCapabilities.capabilities.isPlaceholder"
 			:autofocus="autofocus"
+			:model-data="modelData"
 			:model-id="modelId"
 			:value="controlVal"
 			:min-height="minHeight"

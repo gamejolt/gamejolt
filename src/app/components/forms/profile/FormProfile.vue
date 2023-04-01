@@ -262,6 +262,11 @@ function onThemeChanged() {
 				content-context="user-bio"
 				:capabilities="bioContentCapabilities"
 				:disabled="isBioLocked"
+				:model-data="{
+					type: 'resource',
+					resource: 'User',
+					resourceId: user.id,
+				}"
 				:model-id="user.id"
 				:max-height="0"
 				:validators="[validateContentMaxLength(bioLengthLimit)]"

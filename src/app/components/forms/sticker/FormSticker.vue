@@ -10,12 +10,14 @@ import AppForm, {
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
+// import AppFormControlPrefix from '../../../../_common/form-vue/AppFormControlPrefix.vue';
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormStickySubmit from '../../../../_common/form-vue/AppFormStickySubmit.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	validateAvailability,
+	// validateEmojiName
 	validateFilesize,
 	validateImageAspectRatio,
 	validateImageMaxDimensions,
@@ -25,6 +27,7 @@ import {
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLinkHelpDocs from '../../../../_common/link/AppLinkHelpDocs.vue';
+import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { ModelData, UnknownModelData } from '../../../../_common/model/model.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
@@ -38,11 +41,20 @@ import {
 } from '../../../../_styles/mixins';
 import { kLineHeightComputed } from '../../../../_styles/variables';
 
-type FormModel = Partial<Sticker>;
+type FormModel = Partial<Sticker> & {
+	emoji_name: string;
+};
 
 const props = defineProps({
 	...defineFormProps<Sticker>(),
+	emojiPrefix: {
+		type: String,
+		default: '',
+	},
 	canActivate: {
+		type: Boolean,
+	},
+	warnDeactivate: {
 		type: Boolean,
 	},
 });
@@ -52,7 +64,11 @@ const emit = defineEmits({
 	pack: (_payloadPack: StickerPack | undefined) => true,
 });
 
-const { model, canActivate } = toRefs(props);
+const { model, canActivate, warnDeactivate } = toRefs(props);
+
+const emojiNameMinLength = ref(3);
+const emojiNameMaxLength = ref(30);
+const emojiPrefix = ref(props.emojiPrefix);
 
 const minNameLength = ref(3);
 const maxNameLength = ref(50);
@@ -70,7 +86,11 @@ const loadUrl = computed(() => {
 
 const form: FormController<FormModel> = createForm({
 	loadUrl,
-	model: ref({ ...model?.value, is_active: false } as FormModel),
+	model: ref({
+		...model?.value,
+		is_active: false,
+		emoji_name: model?.value?.emoji?.short_name || '',
+	} as FormModel),
 	onInit() {
 		if (!model?.value) {
 			form.formModel.is_active = canActivate?.value === true;
@@ -81,6 +101,9 @@ const form: FormController<FormModel> = createForm({
 	onLoad(payload) {
 		minNameLength.value = payload.minNameLength ?? minNameLength.value;
 		maxNameLength.value = payload.maxNameLength ?? maxNameLength.value;
+		emojiNameMinLength.value = payload.emojiNameMinLength ?? emojiNameMinLength.value;
+		emojiNameMaxLength.value = payload.emojiNameMaxLength ?? emojiNameMaxLength.value;
+
 		maxFilesize.value = payload.maxFilesize ?? maxFilesize.value;
 		minSize.value = payload.minSize ?? minSize.value;
 		maxSize.value = payload.maxSize ?? maxSize.value;
@@ -88,10 +111,17 @@ const form: FormController<FormModel> = createForm({
 
 		if (payload.sticker) {
 			model?.value?.assign(payload.sticker);
+			emojiPrefix.value = model?.value?.emoji?.prefix ?? emojiPrefix.value;
+			form.formModel.emoji_name =
+				model?.value?.emoji?.short_name ?? form.formModel.emoji_name;
+
 			form.formModel.is_active = (model?.value?.is_active ?? payload.is_active) === true;
 		}
 	},
 	onSubmit() {
+		// TODO(reactions) remove this later
+		form.formModel.emoji_name = 'stub';
+
 		return Api.sendRequest(loadUrl.value, form.formModel, {
 			detach: true,
 			file: form.formModel.file,
@@ -100,8 +130,9 @@ const form: FormController<FormModel> = createForm({
 	onSubmitError(response) {
 		let message: string | null = null;
 
-		if (response.errors) {
-			if (response.errors['max-sticker-amount-reached']) {
+		const reason = response.reason;
+		if (reason) {
+			if (reason === 'max-sticker-amount-reached') {
 				message = $gettext(
 					`You've reached the limit of stickers you can add. You may edit any existing sticker you've created instead.`
 				);
@@ -194,19 +225,56 @@ const stickerGridItems = computed(() => {
 	return items;
 });
 
-const validateAvailabilityPath = computed(() => {
+const validateNameAvailabilityPath = computed(() => {
 	if (model?.value) {
 		return `/web/dash/creators/stickers/check-field-availability/${model.value.id}/name`;
 	}
 	return `/web/dash/creators/stickers/check-field-availability/0/name`;
 });
+
+const validateEmojiAvailabilityPath = computed(() => {
+	if (model?.value) {
+		return `/web/dash/creators/stickers/check-field-availability/${model.value.id}/emojiName`;
+	}
+	return `/web/dash/creators/stickers/check-field-availability/0/emojiName`;
+});
+
+async function onClickIsActive() {
+	if (!model?.value) {
+		return;
+	}
+
+	if (!model.value.is_active) {
+		return;
+	}
+
+	if (!warnDeactivate.value) {
+		return;
+	}
+
+	if (form.formModel.is_active) {
+		return;
+	}
+
+	const response = await ModalConfirm.show(
+		$gettext(
+			`Do you really want to deactivate this sticker? If you do, your sticker pack will be deactivated too. You'll need to activate the pack to make it available again.`
+		),
+		$gettext(`Deactivate Sticker`),
+		'yes'
+	);
+	// If "no" is selected, turn is_active toggle back on.
+	if (!response) {
+		form.formModel.is_active = true;
+	}
+}
 </script>
 
 <template>
 	<!-- FormSticker -->
 	<AppForm :controller="form">
 		<AppFormGroup name="is_active" :label="$gettext(`Enable sticker`)" tiny-label-margin>
-			<AppFormControlToggle :disabled="!canToggleActive" />
+			<AppFormControlToggle :disabled="!canToggleActive" @click="onClickIsActive" />
 		</AppFormGroup>
 
 		<AppFormGroup
@@ -253,6 +321,7 @@ const validateAvailabilityPath = computed(() => {
 
 		<AppFormGroup
 			name="name"
+			label="Sticker name"
 			tiny-label-margin
 			:style="{
 				marginBottom: kLineHeightComputed.px,
@@ -263,13 +332,35 @@ const validateAvailabilityPath = computed(() => {
 				:validators="[
 					validateMinLength(minNameLength),
 					validateMaxLength(maxNameLength),
-					validateAvailability({ url: validateAvailabilityPath }),
+					validateAvailability({ url: validateNameAvailabilityPath }),
 				]"
 			/>
 
 			<AppFormControlErrors :label="$gettext(`sticker name`)" />
 		</AppFormGroup>
 
+		<!-- TODO(reactions) reenable this later -->
+		<!--
+		<AppFormGroup name="emoji_name" tiny-label-margin label="Emoji name">
+			<AppFormControlPrefix :prefix="emojiPrefix || ''">
+				<AppFormControl
+					:placeholder="emojiPrefix ? undefined : $gettext(`Emoji name...`)"
+					:validators="[
+						validateMinLength(emojiNameMinLength),
+						validateMaxLength(emojiNameMaxLength),
+						validateEmojiName(),
+						validateAvailability({ url: validateEmojiAvailabilityPath }),
+					]"
+				/>
+			</AppFormControlPrefix>
+
+			<AppFormControlErrors :label="$gettext(`emoji name`)" />
+		</AppFormGroup>
+		-->
+
+		<label class="control-label">
+			{{ $gettext(`Sticker preview`) }}
+		</label>
 		<div :style="gridStyles">
 			<AppAspectRatio
 				v-for="gridKey of stickerGridItems"

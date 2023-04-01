@@ -131,14 +131,14 @@ export type FiresideController = ReturnType<typeof createFiresideController>;
 export function createFiresideController(
 	fireside: Fireside,
 	options: {
-		isMuted?: boolean;
+		isPreviewMode?: boolean;
 		commonStore: CommonStore;
 		stickerStore: StickerStore;
 		gridStore: GridStore;
 		router: Router;
 	}
 ) {
-	const { isMuted = false, commonStore, gridStore, stickerStore, router } = options;
+	const { isPreviewMode = false, commonStore, gridStore, stickerStore, router } = options;
 	const { user } = commonStore;
 	const { grid, loadGrid } = gridStore;
 
@@ -541,7 +541,7 @@ export function createFiresideController(
 				hosts,
 				listableHostIds,
 				hostBackgrounds,
-				{ isMuted }
+				{ isPreviewMode }
 			);
 		} else if (rtc.value) {
 			logger.info('Destroying old rtc');
@@ -794,7 +794,7 @@ export function createFiresideController(
 		listableHostIds,
 		hostBackgrounds,
 		stickerTargetController,
-		isMuted,
+		isPreviewMode,
 		rtc,
 		revalidateRTC,
 		assignHostBackgroundData,
@@ -1022,6 +1022,9 @@ export function createFiresideController(
 								showInfoGrowl($gettext(`You've been kicked from the fireside.`));
 								router.push({ name: 'home' });
 							}
+						},
+						firesideSocketParams: {
+							fireside_viewing_mode: isPreviewMode ? 'preview' : 'full',
 						},
 					});
 

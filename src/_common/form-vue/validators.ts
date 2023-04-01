@@ -35,6 +35,9 @@ const _urlPathRegex = /^[\w-]+$/;
 /** Alphanumeric, underscores. */
 const _hashtagRegex = /^[\w_]+$/;
 
+/** Alphanumeric, only 1 underscore in a row. */
+const _emojiNameRegex = /^([a-z0-9]+_{0,1})+$/;
+
 /**
  * Semver version strings
  * https://github.com/sindresorhus/semver-regex/blob/master/index.js
@@ -164,6 +167,23 @@ export const validateHashtag = (): FormValidator<string> => async value => {
 		return {
 			type: 'hashtag',
 			message: `Please use only letters, numbers, and underscores (_).`,
+		};
+	}
+
+	return null;
+};
+
+export const validateEmojiName = (): FormValidator<string> => async value => {
+	if (value && !_emojiNameRegex.test(value)) {
+		let message = '';
+		if (value.includes('__')) {
+			message = `Only one underscore (_) may be used in a row.`;
+		} else {
+			message = `Please use only letters, numbers, and underscores (_).`;
+		}
+		return {
+			type: 'emoji_name',
+			message,
 		};
 	}
 

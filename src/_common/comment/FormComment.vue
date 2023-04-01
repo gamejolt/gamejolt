@@ -184,6 +184,19 @@ const onlyFriends = computed(
 				]"
 				:max-height="maxHeight"
 				:display-rules="displayRules"
+				:model-data="
+					comment
+						? {
+								type: 'resource',
+								resource: 'Comment',
+								resourceId: comment.id,
+						  }
+						: {
+								type: 'commentingOnResource',
+								resource: getCommentModelResourceName(model),
+								resourceId: model.id,
+						  }
+				"
 				:model-id="contentModelId"
 				focus-end
 				@focus="emit('editor-focus')"

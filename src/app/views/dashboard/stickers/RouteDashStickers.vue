@@ -8,10 +8,10 @@ import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
-validateFilesize,
-validateImageAspectRatio,
-validateImageMaxDimensions,
-validateImageMinDimensions
+	validateFilesize,
+	validateImageAspectRatio,
+	validateImageMaxDimensions,
+	validateImageMinDimensions,
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -20,14 +20,14 @@ import { ModelData } from '../../../../_common/model/model.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerPack, {
-StickerPackRatio
+	StickerPackRatio,
 } from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
 import { Sticker } from '../../../../_common/sticker/sticker.model';
 import {
-$gettext,
-$gettextInterpolate,
-$ngettext
+	$gettext,
+	$gettextInterpolate,
+	$ngettext,
 } from '../../../../_common/translate/translate.service';
 import { styleFlexCenter, styleWhen } from '../../../../_styles/mixins';
 import { kLineHeightComputed } from '../../../../_styles/variables';
@@ -39,10 +39,10 @@ export default {
 		deps: {},
 		resolver: () => Api.sendRequest('/web/dash/creators/stickers'),
 	}),
-	components: { AppLinkHelpDocs },
 };
 
 type InitPayload = {
+	emojiPrefix: string | null | undefined;
 	stickers: ModelData<Sticker>[];
 	pack: ModelData<StickerPack> | null;
 	maxStickerAmount: number;
@@ -57,6 +57,8 @@ const stickers = ref([]) as Ref<Sticker[]>;
 const pack = ref(null) as Ref<StickerPack | null>;
 const maxStickerAmount = ref(5);
 const stickerSlots = ref(100);
+
+const emojiPrefix = ref('');
 
 const packMaxFilesize = ref(5 * 1024 * 1024);
 const packMinWidth = ref(128);
@@ -114,19 +116,18 @@ const packForm: FormController<PackFormModel> = createForm({
 	onSubmitError(response) {
 		let message: string | null = null;
 
-		if (response.errors) {
-			if (response.errors['not-enough-active-stickers']) {
-				message = $gettextInterpolate(
-					$ngettext(
-						`You need at least %{ num } active sticker to enable your sticker pack.`,
-						`You need at least %{ num } active stickers to enable your sticker pack.`,
-						requiredActiveStickers.value
-					),
-					{
-						num: requiredActiveStickers.value,
-					}
-				);
-			}
+		const reason = response.reason;
+		if (reason === 'not-enough-active-stickers') {
+			message = $gettextInterpolate(
+				$ngettext(
+					`You need at least %{ num } active sticker to enable your sticker pack.`,
+					`You need at least %{ num } active stickers to enable your sticker pack.`,
+					requiredActiveStickers.value
+				),
+				{
+					num: requiredActiveStickers.value,
+				}
+			);
 		}
 
 		showErrorGrowl(message || $gettext(`Could not update your sticker pack. Try again later.`));
@@ -140,6 +141,8 @@ const { isBootstrapped } = createAppRoute({
 	routeTitle,
 	onResolved(data) {
 		const payload: InitPayload = data.payload;
+
+		emojiPrefix.value = payload.emojiPrefix || '';
 
 		stickers.value = Sticker.populate(payload.stickers);
 		pack.value = payload.pack ? new StickerPack(payload.pack) : null;
@@ -158,6 +161,17 @@ const canActivateSticker = computed(
 	() => stickers.value.filter(i => i.is_active).length < maxStickerAmount.value
 );
 
+const warnDeactivateSticker = computed(() => {
+	// Don't warn if pack is already inactive.
+	if (pack.value && !pack.value.is_active) {
+		return false;
+	}
+
+	const minActiveStickers = pack.value?.payout_sticker_num ?? 3;
+	const currentActiveStickers = stickers.value.filter(i => i.is_active).length;
+	return currentActiveStickers <= minActiveStickers;
+});
+
 const stickerGridStyles = computed(() => {
 	const result: CSSProperties = {
 		display: `grid`,
@@ -172,6 +186,18 @@ const stickerGridStyles = computed(() => {
 	}
 
 	return result;
+});
+
+const showStickerPackDisabledWarning = computed(() => {
+	if (!pack.value || pack.value.is_active) {
+		return false;
+	}
+
+	// Show if the pack is inactive, and there are enough active stickers to enable it.
+	const minActiveStickers = pack.value.payout_sticker_num;
+	const currentActiveStickers = stickers.value.filter(i => i.is_active).length;
+
+	return currentActiveStickers >= minActiveStickers;
 });
 
 function updatePack(newPack: StickerPack | undefined) {
@@ -205,6 +231,30 @@ function onPackEnabledChanged() {
 	<AppShellPageBackdrop>
 		<section class="section">
 			<div class="container">
+				<div
+					v-if="showStickerPackDisabledWarning"
+					class="fill-notice well"
+					:style="{
+						display: 'flex',
+						gridGap: '16px',
+						alignItems: 'center',
+					}"
+				>
+					<AppJolticon icon="exclamation-circle" big />
+					<div>
+						<div :style="{ fontWeight: 'bold' }">
+							{{ $gettext(`Your sticker pack is currently turned off! `) }}
+						</div>
+						<div>
+							{{
+								$gettext(
+									`You can enable it again since you have enough active stickers. If you don't enable it, others won't be able to get or see your sticker pack.`
+								)
+							}}
+						</div>
+					</div>
+				</div>
+
 				<div>
 					<h1
 						:style="{
@@ -242,15 +292,18 @@ function onPackEnabledChanged() {
 							<AppStickerEditTile
 								v-for="sticker in stickers"
 								:key="sticker.id"
+								:current-emoji-prefix="emojiPrefix"
 								:sticker="sticker"
 								:stickers="stickers"
 								:can-activate="canActivateSticker"
+								:warn-deactivate="warnDeactivateSticker"
 								show-name
 								@pack="updatePack"
 							/>
 
 							<AppStickerEditTile
 								v-if="canCreateSticker"
+								:current-emoji-prefix="emojiPrefix"
 								:stickers="stickers"
 								:can-activate="canActivateSticker"
 								@pack="updatePack"
@@ -258,7 +311,7 @@ function onPackEnabledChanged() {
 								<template #no-sticker>
 									<div
 										:style="{
-											...styleFlexCenter('column'),
+											...styleFlexCenter({ direction: 'column' }),
 											width: `100%`,
 											height: `100%`,
 											fontWeight: `bold`,

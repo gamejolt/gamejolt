@@ -222,7 +222,11 @@ export function createChatUserChannel(
 
 	function _onGroupAdd(data: GroupAddPayload) {
 		const newGroup = storeModel(ChatRoom, { chat: client, ...data.room });
-		client.groupRooms.push(newGroup);
+
+		// Only push to room list if it's not already there.
+		if (client.groupRooms.every(x => x.id !== newGroup.id)) {
+			client.groupRooms.push(newGroup);
+		}
 	}
 
 	function _onUpdateTitle(data: UpdateGroupTitlePayload) {

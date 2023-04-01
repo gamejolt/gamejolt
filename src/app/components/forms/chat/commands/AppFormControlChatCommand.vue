@@ -169,6 +169,11 @@ function _validateUnique(id: number) {
 						:display-rules="previewContentRules"
 						:max-height="MAX_EDITOR_HEIGHT"
 						:min-height="64"
+						:model-data="{
+							type: 'resource',
+							resource: 'Chat_Command',
+							resourceId: item.id,
+						}"
 						:model-id="item.id"
 						:validators="[
 							validateContentRequired(),
