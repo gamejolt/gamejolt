@@ -20,6 +20,9 @@ export class InventoryCollectible extends Model {
 	declare is_secret: boolean;
 	declare is_unlocked: boolean;
 
+	/** Only returned for sticker-type collectibles. Null if no progress. Otherwise percentage value 0-100. */
+	declare sticker_mastery?: number | null;
+
 	constructor(data: UnknownModelData | ModelData<InventoryCollectible> = {}) {
 		super(data);
 

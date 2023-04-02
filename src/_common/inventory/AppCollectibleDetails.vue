@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
 import AppJolticon from '../jolticon/AppJolticon.vue';
+import AppProgressBar from '../progress/AppProgressBar.vue';
 import AppSpacer from '../spacer/AppSpacer.vue';
 import AppCollectibleImg from './AppCollectibleImg.vue';
 import {
@@ -20,6 +21,17 @@ const props = defineProps({
 });
 
 const { collectible, doMaxWidth } = toRefs(props);
+
+const shouldShowStickerMastery = computed(
+	() =>
+		collectible.value.type === 'Sticker' &&
+		collectible.value.sticker_mastery !== undefined &&
+		collectible.value.sticker_mastery !== null
+);
+
+const isMastered = computed(
+	() => !!collectible.value.sticker_mastery && collectible.value.sticker_mastery >= 100
+);
 </script>
 
 <template>
@@ -64,10 +76,30 @@ const { collectible, doMaxWidth } = toRefs(props);
 				<div v-else>
 					<AppSpacer vertical :scale="1" />
 				</div>
-				<div v-if="collectible.type === 'Sticker'">
+				<div v-if="shouldShowStickerMastery">
 					<AppSpacer vertical :scale="2" />
 					<hr />
-					TODO: Sticker mastery progress
+					<AppSpacer vertical :scale="1" />
+					<AppProgressBar
+						class="sans-margin-bottom"
+						:percent="collectible.sticker_mastery!"
+						thin
+						primary
+						glow
+					/>
+					<AppSpacer vertical :scale="1" />
+					<small class="text-center">
+						<div>
+							{{
+								$gettextInterpolate(`Mastery: %{ percentage }%`, {
+									percentage: collectible.sticker_mastery!.toString(),
+								})
+							}}
+						</div>
+						<div v-if="!isMastered">
+							{{ $gettext(`Place stickers to get progress`) }}
+						</div>
+					</small>
 				</div>
 			</div>
 			<div v-else class="text-center">
