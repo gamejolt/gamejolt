@@ -30,14 +30,11 @@ if (props.emojiId) {
 	// eslint-disable-next-line vue/no-setup-props-destructure
 	emoji.value = props.emojiType;
 }
-
-// TODO(reactions) remove
-const rtxEnabled = !GJ_IS_MOBILE_APP;
 </script>
 
 <template>
 	<template v-if="emoji">
-		<AppEmoji :emoji="emoji" :rtx-enabled="rtxEnabled" />
+		<AppEmoji :emoji="emoji" />
 	</template>
 	<template v-else>
 		<img
