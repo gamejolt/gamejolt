@@ -46,7 +46,6 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 	builds: GameBuild[] = [];
 	launchOptions: GameBuildLaunchOption[] = [];
 	buildDownloadCounts: { [buildId: number]: number } = {};
-	areBuildsLockedByJam = false;
 	areWebBuildsLockedBySellable = false;
 
 	get routeTitle() {
@@ -77,8 +76,6 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 			this.buildDownloadCounts = {};
 		}
 
-		// If the game was entered into a jam that locks its builds.
-		this.areBuildsLockedByJam = $payload.areBuildsLockedByJam || false;
 		this.areWebBuildsLockedBySellable = $payload.package.is_in_paid_sellable || false;
 	}
 
@@ -191,7 +188,6 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 					:builds="builds"
 					:launch-options="launchOptions"
 					:build-download-counts="buildDownloadCounts"
-					:are-builds-locked-by-jam="areBuildsLockedByJam"
 					:are-web-builds-locked-by-sellable="areWebBuildsLockedBySellable"
 					@submit="onSaved"
 					@remove-release="removeRelease"

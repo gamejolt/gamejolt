@@ -1,6 +1,5 @@
 import { Api } from '../../../../_common/api/api.service';
 import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
-import { Jam } from '../../../../_common/jam/jam.model';
 import { Model } from '../../../../_common/model/model.service';
 import { commonStore } from '../../../../_common/store/common-store';
 import { User } from '../../../../_common/user/user.model';
@@ -12,7 +11,6 @@ export class GameCollection extends Model {
 	static readonly TYPE_RECOMMENDED = 'recommended';
 	static readonly TYPE_PLAYLIST = 'playlist';
 	static readonly TYPE_BUNDLE = 'bundle';
-	static readonly TYPE_JAM = 'jam';
 
 	static readonly USER_TYPES = [
 		GameCollection.TYPE_FOLLOWED,
@@ -29,7 +27,6 @@ export class GameCollection extends Model {
 	from_subscription!: boolean;
 	owner?: User;
 	playlist?: GamePlaylist;
-	jam?: Jam;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -45,10 +42,6 @@ export class GameCollection extends Model {
 
 		if (data.playlist) {
 			this.playlist = new GamePlaylist(data.playlist);
-		}
-
-		if (data.jam) {
-			this.jam = new Jam(data.jam);
 		}
 	}
 
