@@ -397,6 +397,7 @@ async function refreshQuests() {
 		<AppHomeFeedSwitcher
 			v-if="configHomeFeedSwitcher.value"
 			:style="{
+				marginTop: `8px`,
 				position: `relative`,
 				zIndex: 2,
 				marginBottom: kLineHeightComputed.px,

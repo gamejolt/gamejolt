@@ -1,12 +1,12 @@
 <script lang="ts">
-import { watch } from '@vue/runtime-core';
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, PropType, ref, toRefs, watch } from 'vue';
 import { getMediaserverUrlForBounds } from '../../utils/image';
 import { Api } from '../api/api.service';
 import AppButton from '../button/AppButton.vue';
 import { Jolticon } from '../jolticon/AppJolticon.vue';
 import AppLoading from '../loading/AppLoading.vue';
 import { useStickerStore } from '../sticker/sticker-store';
+import { useCommonStore } from '../store/common-store';
 import { Quest } from './quest-model';
 import { QuestObjectiveReward } from './quest-objective-reward-model';
 import { QuestRewardData } from './reward/AppQuestRewardModal.vue';
@@ -35,6 +35,7 @@ const emit = defineEmits({
 });
 
 const { setChargeData, currentCharge, chargeLimit } = useStickerStore();
+const { coinBalance } = useCommonStore();
 
 const root = ref<HTMLElement>();
 const isProcessingAction = ref(false);
@@ -115,6 +116,7 @@ async function onActionPressed() {
 						img_url: sticker.img_url,
 						name: reward.name,
 						icon: fallbackIcon,
+						xAfterCount: true,
 						isCondensed,
 					});
 				}
@@ -126,7 +128,7 @@ async function onActionPressed() {
 					img_url: processMediaserverUrl(reward.fallback_media?.mediaserver_url),
 					name: reward.name,
 					icon: 'exp',
-					isExp: true,
+					xAfterCount: false,
 					isCondensed,
 				});
 			} else if (reward.isTrophy && !!reward.trophy) {
@@ -137,6 +139,7 @@ async function onActionPressed() {
 					img_url: img_thumbnail,
 					name: reward.name,
 					icon: 'trophy',
+					xAfterCount: true,
 					isCondensed,
 				});
 			} else if (reward.isBackground && !!reward.background) {
@@ -147,6 +150,7 @@ async function onActionPressed() {
 					img_url: processMediaserverUrl(reward.background.media_item.mediaserver_url),
 					name: reward.name,
 					icon: 'paintbrush',
+					xAfterCount: true,
 					isCondensed,
 				});
 			} else if (reward.isCharge) {
@@ -165,6 +169,19 @@ async function onActionPressed() {
 					img_url: processMediaserverUrl(reward.fallback_media?.mediaserver_url),
 					name: reward.name,
 					icon: fallbackIcon,
+					xAfterCount: true,
+					isCondensed,
+				});
+			} else if (reward.isCoin) {
+				coinBalance.value = Math.max(0, coinBalance.value + reward.fallback_amount);
+
+				addOrUpdateReward({
+					key: `coin`,
+					amount: reward.fallback_amount,
+					img_url: processMediaserverUrl(reward.fallback_media?.mediaserver_url),
+					name: reward.name,
+					icon: fallbackIcon,
+					xAfterCount: true,
 					isCondensed,
 				});
 			} else {
@@ -174,6 +191,7 @@ async function onActionPressed() {
 					img_url: processMediaserverUrl(reward.fallback_media?.mediaserver_url),
 					name: reward.name,
 					icon: fallbackIcon,
+					xAfterCount: true,
 					isCondensed,
 				});
 			}

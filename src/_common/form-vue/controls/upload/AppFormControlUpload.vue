@@ -35,6 +35,12 @@ const props = defineProps({
 		type: String,
 		default: null,
 	},
+	/**
+	 * Attempts to fix overflow issues with filenames.
+	 */
+	fixOverflow: {
+		type: Boolean,
+	},
 });
 
 const emit = defineEmits({
@@ -286,6 +292,7 @@ defineExpose<AppFormControlUploadInterface>({
 				:multiple="multiple"
 				:accept="accept"
 				:value="controlVal"
+				:fix-overflow="fixOverflow"
 				@input="onChange"
 			/>
 		</div>

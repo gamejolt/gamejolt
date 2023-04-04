@@ -43,8 +43,8 @@ const contentCapabilities = ref(ContextCapabilities.getPlaceholder());
 
 const isTemplate = computed(() => !action?.value);
 
-const loadUrl = computed(() => `/web/dash/creators/supporters/save_template`);
-const sendUrl = computed(() => `/web/dash/creators/supporters/send_message/${action?.value?.id}`);
+const loadUrl = computed(() => `/web/dash/creators/supporters/save-template`);
+const sendUrl = computed(() => `/web/dash/creators/supporters/send-message/${action?.value?.id}`);
 
 const form: FormController<SupporterMessage> = createForm({
 	model,
@@ -164,6 +164,9 @@ const form: FormController<SupporterMessage> = createForm({
 					<AppFormControlContent
 						content-context="supporter-message"
 						:capabilities="contentCapabilities"
+						:model-data="{
+							type: 'supporterMessage',
+						}"
 						:validators="[
 							validateContentRequired(),
 							validateContentMaxLength(lengthLimit),

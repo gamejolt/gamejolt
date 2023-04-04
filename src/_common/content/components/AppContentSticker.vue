@@ -12,12 +12,6 @@ const props = defineProps({
 		type: Number,
 		required: true,
 	},
-	isEditing: {
-		type: Boolean,
-	},
-	isDisabled: {
-		type: Boolean,
-	},
 	isCharged: {
 		type: Boolean,
 	},

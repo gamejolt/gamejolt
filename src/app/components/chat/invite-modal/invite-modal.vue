@@ -2,6 +2,8 @@
 import { setup } from 'vue-class-component';
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { fuzzysearch } from '../../../../utils/string';
+import { Api } from '../../../../_common/api/api.service';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
@@ -16,6 +18,7 @@ import { ChatUser } from '../user';
 		AppScrollScroller,
 		AppUserAvatarImg,
 		AppUserAvatarList,
+		AppLoading,
 	},
 })
 export default class AppChatInviteModal extends mixins(BaseModal) {
@@ -25,6 +28,8 @@ export default class AppChatInviteModal extends mixins(BaseModal) {
 
 	gridStore = setup(() => useGridStore());
 
+	isLoading = true;
+	invitableFriends: ChatUser[] = this.friends;
 	filterQuery = '';
 	selectedUsers: ChatUser[] = this.initialUser ? [this.initialUser] : [];
 
@@ -34,15 +39,38 @@ export default class AppChatInviteModal extends mixins(BaseModal) {
 
 	get filteredUsers() {
 		if (!this.filterQuery) {
-			return this.friends;
+			return this.invitableFriends;
 		}
 
 		const filter = this.filterQuery.toLowerCase();
-		return this.friends.filter(
+		return this.invitableFriends.filter(
 			i =>
 				fuzzysearch(filter, i.display_name.toLowerCase()) ||
 				fuzzysearch(filter, i.username.toLowerCase())
 		);
+	}
+
+	async created() {
+		// When it's a PM room, this modal is used for creating a new room, so no need to filter
+		// anything: All friends are eligible to be added to a new room.
+		if (!this.room.isPmRoom) {
+			this.isLoading = true;
+
+			// Get which of the friends can be invited to this particular room.
+			const payload = await Api.sendRequest(
+				`/web/chat/rooms/invitable-users/${this.room.id}`
+			);
+
+			if (payload.user_ids) {
+				this.invitableFriends = this.invitableFriends.filter(x =>
+					payload.user_ids.includes(x.id)
+				);
+			} else {
+				this.invitableFriends = [];
+			}
+		}
+
+		this.isLoading = false;
 	}
 
 	invite() {
@@ -53,7 +81,7 @@ export default class AppChatInviteModal extends mixins(BaseModal) {
 		} else {
 			addGroupMembers(this.chat, this.room.id, selectedUsers);
 		}
-		this.modal.dismiss();
+		this.modal.resolve(true);
 	}
 
 	toggle(user: ChatUser) {
@@ -87,7 +115,8 @@ export default class AppChatInviteModal extends mixins(BaseModal) {
 			</div>
 
 			<div class="modal-body">
-				<div class="friend-select-widget">
+				<AppLoading v-if="isLoading" centered />
+				<div v-else class="friend-select-widget">
 					<input
 						v-model="filterQuery"
 						class="-filter form-control"

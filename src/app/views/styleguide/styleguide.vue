@@ -9,6 +9,7 @@ import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
 import { vAppScrollTo } from '../../../_common/scroll/to/to.directive';
 import AppThemeSvgStyleguide from '../../../_common/theme/svg/svg-styleguide.vue';
 import { User } from '../../../_common/user/user.model';
+import AppAvatarFrameStyleguide from './avatar-frame/AppAvatarFrameStyleguide.vue';
 import AppStyleguideColor from './color/color.vue';
 
 @Options({
@@ -42,6 +43,7 @@ export default class RouteStyleguide extends BaseRouteComponent {
 			'progress-bars': 'Progress Bars',
 			colors: 'Colors',
 			'theme-svg': 'Theme SVG',
+			'avatar-frame': 'Avatar Frame',
 			jolticons: 'Jolticons',
 		};
 	}
@@ -53,6 +55,7 @@ export default class RouteStyleguide extends BaseRouteComponent {
 			AppProgressBarStyleguide,
 			AppStyleguideColor,
 			AppThemeSvgStyleguide,
+			AppAvatarFrameStyleguide,
 			AppJolticonsStyleguide,
 		];
 	}

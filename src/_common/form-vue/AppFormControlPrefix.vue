@@ -30,6 +30,8 @@ const originalOffsetLeft = computed(
 function recalcPositioning() {
 	if (prefixElement.value) {
 		paddingLeft.value = Ruler.outerWidth(prefixElement.value) + originalOffsetLeft.value + 'px';
+	} else {
+		paddingLeft.value = originalOffsetLeft.value + 'px';
 	}
 }
 
@@ -39,8 +41,7 @@ provideFormControlHooks({
 	afterMount(_controller, mountedInputElem) {
 		inputElem = mountedInputElem;
 
-		// If there's a prefix.
-		if (inputElem.value && prefixElement.value) {
+		if (inputElem.value) {
 			const styles = window.getComputedStyle(inputElem.value);
 			originalInputPaddingTop.value = parseFloat(styles.paddingTop || '0');
 			originalInputPaddingLeft.value = parseFloat(styles.paddingLeft || '0');
@@ -66,12 +67,14 @@ watch(
 	<div class="form-control-prefix">
 		<slot />
 		<span
-			v-if="prefix"
 			ref="prefixElement"
 			class="-prefix text-muted"
-			:style="{ top: `${originalOffsetTop}px`, left: `${originalOffsetLeft}px` }"
+			:style="{
+				top: `${originalOffsetTop}px`,
+				left: `${originalOffsetLeft}px`,
+			}"
 		>
-			<em>{{ prefix }}</em>
+			<em v-if="prefix">{{ prefix }}</em>
 		</span>
 	</div>
 </template>

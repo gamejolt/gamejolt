@@ -9,7 +9,7 @@ import AppMobileAppPromotionBanner from '../../../_common/mobile-app/AppMobileAp
 import { Screen, triggerOnScreenResize } from '../../../_common/screen/screen-service';
 import { useSidebarStore } from '../../../_common/sidebar/sidebar.store';
 import AppStickerLayer from '../../../_common/sticker/layer/AppStickerLayer.vue';
-import { setStickerDrawerOpen, useStickerStore } from '../../../_common/sticker/sticker-store';
+import { closeStickerDrawer, useStickerStore } from '../../../_common/sticker/sticker-store';
 import { useBannerStore } from '../../store/banner';
 import { useAppStore } from '../../store/index';
 import { AppClientShell, AppClientStatusBar } from '../client/safe-exports';
@@ -102,7 +102,7 @@ onMounted(() => {
 			clearPanes();
 		}
 
-		setStickerDrawerOpen(stickerStore, false, null);
+		closeStickerDrawer(stickerStore);
 	});
 });
 

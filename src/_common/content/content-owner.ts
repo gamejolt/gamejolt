@@ -1,5 +1,4 @@
-import { reactive } from '@vue/reactivity';
-import { computed, inject, InjectionKey, ref } from 'vue';
+import { computed, inject, InjectionKey, reactive, ref } from 'vue';
 import { MaybeRef } from '../../utils/vue';
 import { ContentContext, ContextCapabilities } from './content-context';
 import { ContentRules } from './content-editor/content-rules';
@@ -20,6 +19,7 @@ interface ContentOwnerControllerOptions {
 	capabilities: MaybeRef<ContextCapabilities>;
 	contentRules?: MaybeRef<ContentRules | undefined>;
 	disableLightbox?: MaybeRef<boolean | undefined>;
+	getModelData?: () => ContentEditorModelData | undefined;
 	getModelId?: () => Promise<number>;
 	parentBounds?: MaybeRef<ContentOwnerParentBounds | undefined>;
 }
@@ -28,8 +28,24 @@ export interface ContentOwnerParentBounds {
 	width: MaybeRef<number>;
 }
 
+type EmojiCommentParentResource = 'Fireside_Post' | 'Game' | 'User';
+
+export type ContentEditorModelData =
+	| {
+			type: 'resource';
+			resourceId: number;
+			resource: string;
+	  }
+	| {
+			type: 'commentingOnResource';
+			resourceId: number;
+			resource: EmojiCommentParentResource;
+	  }
+	| { type: 'newChatMessage'; chatRoomId: number }
+	| { type: 'supporterMessage' };
+
 export function createContentOwnerController(options: ContentOwnerControllerOptions) {
-	const { getModelId } = options;
+	const { getModelData, getModelId } = options;
 
 	const hydrator = ref<ContentHydrator>(new ContentHydrator());
 
@@ -47,6 +63,7 @@ export function createContentOwnerController(options: ContentOwnerControllerOpti
 		hydrator,
 		contentRules,
 		disableLightbox,
+		getModelData,
 		getModelId,
 		parentBounds,
 	});

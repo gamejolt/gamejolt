@@ -102,9 +102,9 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	 * The raw state of who can comment from backend.
 	 */
 	declare allow_comments:
-		| typeof FiresidePost['ALLOW_COMMENTS_DISABLED']
-		| typeof FiresidePost['ALLOW_COMMENTS_ENABLED']
-		| typeof FiresidePost['ALLOW_COMMENTS_FRIENDS'];
+		| (typeof FiresidePost)['ALLOW_COMMENTS_DISABLED']
+		| (typeof FiresidePost)['ALLOW_COMMENTS_ENABLED']
+		| (typeof FiresidePost)['ALLOW_COMMENTS_FRIENDS'];
 
 	/**
 	 * If the current post comment restrictions allow us to comment. For the
